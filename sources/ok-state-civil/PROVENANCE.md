@@ -27,3 +27,9 @@
 - Retrieved 2026-10-28 on carbon by David's BrowserOS neo pass (Method: BrowserOS neo, OSCN section pages, David's explicit ruling 2026-10-28); the viewer's per-document records were captured as JSON (BrowserOS tool framing stripped, content unedited) and saved as the original; the extraction is the PM session's plain-text rendering of those records, in document order. No other served original exists for this text. Barrier: oscn.net WAF/Turnstile blocking automated access (lg-f3q8.77 row); fetched on David's explicit ruling 2026-10-28 despite robots/terms.
 - Extract sha256 cdf62b6c161b5173331ce7c0dc1388e46d3da4810132003fcc53f133c3019b1c.
 - Original: `ok-state-civil/original/ok-district-court-rules-1-to-29-partial.json` as served to the viewer (sha256 4c24eb054f190048d85c04fc3d9ff768987a0fc9e997b2ba3ae3f3cb6cf5a09d); extraction sha256 cdf62b6c161b5173331ce7c0dc1388e46d3da4810132003fcc53f133c3019b1c.
+
+### `ok-state-civil/ok-district-court-rules-1-to-29-partial-sectioned.txt` — Rules for District Courts of Oklahoma, Rules 1-29 (PARTIAL), sectioned
+
+- Derived in the pod (lg-f3q8.88) from `ok-state-civil/ok-district-court-rules-1-to-29-partial.txt` (extract sha256 cdf62b6c161b5173331ce7c0dc1388e46d3da4810132003fcc53f133c3019b1c); nothing fetched. One marker line `## Rule <n>` is inserted before each section document's own heading line `===== § Rule <n>. <Title> =====`, where `<n>` is the rule's number as the extract writes it (`1` through `29`, with `2.1`, `4.1`, `8.1`, `8.2` and `8.3`; 34 sections). The extract's header block carries no marker. Rule text was not edited: deleting the marker lines (each `## Rule ` line with its newline) restores the extract byte for byte.
+- Edition: as the extract, PARTIAL (Rules 1-29), CURRENCY UNCONFIRMED; Rules 30 onward are not in it.
+- Sectioned sha256 6ee334c48b68fef8973c715a3afab827347243fa5a1e3449ba9690ab9e121727 (the `path_sha256` pinned by `lit/ok-district/Lit.toml`).

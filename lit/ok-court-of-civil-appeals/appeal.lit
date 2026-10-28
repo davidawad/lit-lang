@@ -1,0 +1,109 @@
+module ok-court-of-civil-appeals.appeal
+
+import ok-state-rules.{
+  DecisionFiled,
+  MandateIssued,
+  NoticeOfAppealFiled,
+  RecordFiled,
+  ReviewPetitionFiled,
+}
+
+// Civil appeals in the Court of Civil Appeals of Oklahoma, from the
+// applicant's (appellant's) side. The appeal statutes (12 O.S. §§
+// 990A-994) and the Oklahoma Supreme Court Rules are not vendored
+// (lg-l6xh, #16): every cite is a hole, and the appealability rules, the
+// time and form of the appeal, the record, briefing periods and limits,
+// rehearing, mandate and certiorari are not stated. The vendored Rules for
+// District Courts report that an order dismissing for failure to state a
+// claim or for lack of jurisdiction, and a judgment on summary judgment
+// or appealable summary disposition, are subject to accelerated review
+// under Supreme Court Rule 1.36 on a limited record (Okla. Dist. Ct. R.
+// 4(m), 13(h); lit/ok-district); that rule is not vendored. The earlier
+// outline named no leading decision; none is cited.
+start threshold
+
+decision threshold: "Appealable order or judgment?" by applicant cite ?("12 O.S. § 994") {
+  note "Appealability of the order or judgment is statutory and not vendored (lg-l6xh, #16): a hole. A judgment in a multi-party or multi-claim case must dispose of all claims and parties, or of at least one entirely with the express determination that there is no just reason for delay and the direction that judgment be filed (12 O.S. § 994, as Okla. Dist. Ct. R. 4(m) and 13(h) report it)."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite ?("12 O.S. § 994") }
+  edge-threshold-yes "Appealable" -> notice { authority cite ?("12 O.S. § 990A") }
+}
+
+decision notice: "Appeal commenced within time?" by applicant cite ?("12 O.S. § 990A") {
+  note "The time and form of commencing the appeal (12 O.S. § 990A and the Supreme Court Rules) are not vendored (lg-l6xh, #16): holes. A motion, however styled, filed more than ten days after the decision is ineffective as a new-trial motion and does not extend appeal time (Okla. Dist. Ct. R. 17, citing 12 O.S. § 653)."
+  edge-notice-late "Untimely" -> dismissed-untimely { authority cite ?("12 O.S. § 990A") }
+  edge-notice-timely "Timely" -> record {
+    event NoticeOfAppealFiled()
+    authority cite ?("12 O.S. § 990A")
+  }
+}
+
+state record: "Record assembled" by office cite ?("Okla. Sup. Ct. R.") {
+  note "The record and transcript rules are in the Supreme Court Rules, not vendored (lg-l6xh, #16): holes. On accelerated review of a dismissal or summary judgment the record is limited to the items Okla. Dist. Ct. R. 4(m) and 13(h) list."
+  edge-record-brief "Record filed" -> briefing {
+    event RecordFiled()
+    authority cite ?("Okla. Sup. Ct. R.")
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite ?("Okla. Sup. Ct. R.") {
+  note "Briefing periods and limits are holes (lg-l6xh, #16); on accelerated review, briefs may not be filed at all (Okla. Sup. Ct. R. 1.36, not vendored)."
+  edge-briefing-argue "Briefing complete" -> argument { authority cite ?("Okla. Sup. Ct. R.") }
+}
+
+state argument: "Submission" by court cite ?("Okla. Sup. Ct. R.") {
+  note "Assignment of the appeal to the Court of Civil Appeals and its submission are holes (lg-l6xh, #16)."
+  edge-argument-decide "Decision" -> decision { authority cite ?("Okla. Sup. Ct. R.") }
+}
+
+state decision: "Opinion filed" by court cite ?("Okla. Sup. Ct. R.") {
+  note "Disposition: affirm, reverse or remand. The earlier outline named no decision; none is cited."
+  edge-decision-issued "Opinion filed" -> rehearing-decision {
+    event DecisionFiled()
+    authority cite ?("Okla. Sup. Ct. R.")
+  }
+}
+
+decision rehearing-decision: "Rehearing sought?" by applicant cite ?("Okla. Sup. Ct. R.") {
+  note "The rehearing period is a hole (lg-l6xh, #16)."
+  edge-rehearing-decision-none "No petition" -> further-review {
+    authority cite ?("Okla. Sup. Ct. R.")
+  }
+  edge-rehearing-decision-sought "Petition filed" -> rehearing-order {
+    authority cite ?("Okla. Sup. Ct. R.")
+  }
+}
+
+state rehearing-order: "Rehearing decided" by court cite ?("Okla. Sup. Ct. R.") {
+  note "The court's order on the rehearing petition."
+  edge-rehearing-order-review "Rehearing decided" -> further-review {
+    authority cite ?("Okla. Sup. Ct. R.")
+  }
+}
+
+decision further-review: "Certiorari sought?" by applicant cite ?("Okla. Sup. Ct. R.") {
+  note "Review in the Supreme Court of Oklahoma (lit/ok-supreme-court); the petition period is a hole (lg-l6xh, #16)."
+  edge-further-review-none "No further review" -> mandate {
+    event MandateIssued()
+    authority cite ?("Okla. Sup. Ct. R.")
+  }
+  edge-further-review-petition "Petition filed" -> review-sought {
+    event ReviewPetitionFiled()
+    authority cite ?("Okla. Sup. Ct. R.")
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: no appellate jurisdiction" outcome [loss, dismissal, jurisdictional] cite ?("12 O.S. § 994") {
+  note "Dismissal for lack of an appealable order. Outcome from the applicant's side."
+}
+
+terminal dismissed-untimely: "Dismissed: untimely" outcome [loss, dismissal] cite ?("12 O.S. § 990A") {
+  note "Dismissal for an untimely appeal. Outcome from the applicant's side."
+}
+
+terminal mandate: "Mandate issued: decision stands" outcome [final] cite ?("Okla. Sup. Ct. R.") {
+  note "The decision stands and the mandate issues; its timing is a hole (lg-l6xh, #16)."
+}
+
+terminal review-sought: "Certiorari petition filed" outcome [appeal] cite ?("Okla. Sup. Ct. R.") {
+  note "Continue in lit/ok-supreme-court."
+}

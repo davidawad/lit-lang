@@ -1,0 +1,135 @@
+module oknd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Northern District of Oklahoma's own civil periods, computed under
+// the federal rules: the local rules supplement the Federal Rules of
+// Civil Procedure (LGnR1-1, LGnR1-2(a)), so FRCP 6(a) counts them. A judge
+// may waive, supplement or modify any local requirement when the
+// administration of justice requires (LGnR1-2(c)). Periods keyed to
+// another period's end stay in notes: a reply brief on new matter in the
+// response may be filed within 14 days from the due date of the response
+// brief (N.D. Okla. LCvR7-1(f)), and a reply on a discovery motion within
+// 7 days from the due date of the response (LCvR37-2(e)). A motion for
+// leave to file an oversized brief is filed no later than one day before
+// the brief is due (LCvR7-1(d)), and motions filed within 14 days of the
+// date a case is set for trial are stricken unless based on a sudden
+// emergency (LCvR7-1(h)). A party opposing a non-dispositive motion who
+// does not respond in time may be deemed to confess it (LCvR7-1(e)). In a
+// removed case the jury demand runs on FRCP 38(b)(1) or 81(c)(3)(B)
+// (LCvR81-1), which lit/frcp encodes. The earlier N.D. Okla. outline's
+// FRCP flow and its decisions (Twombly, Iqbal, Celotex, Anderson v.
+// Liberty Lobby, Matsushita, Unitherm, Bowles v. Russell, Hamer,
+// Microsoft Corp. v. Baker and the Tenth Circuit's Robbins v. Oklahoma)
+// are FRCP and FRAP authority and belong to lit/frcp and lit/frap; they
+// are removed here: no reporter text is vendored.
+/// An opening or response brief: at most 25 pages absent leave of Court
+/// (N.D. Okla. LCvR7-1(d)); briefs in social security actions and in
+/// habeas proceedings under 28 U.S.C. §§ 2241, 2254 and 2255 are not
+/// subject to the limit.
+limit motion-brief { pages <= 25 cite "N.D. Okla. LCvR7-1(d)" } cite "N.D. Okla. LCvR7-1(d)"
+/// A reply or supplemental brief: at most 10 pages absent leave of Court
+/// (N.D. Okla. LCvR7-1(d)).
+limit reply-brief { pages <= 10 cite "N.D. Okla. LCvR7-1(d)" } cite "N.D. Okla. LCvR7-1(d)"
+
+/// The motion to proceed in forma pauperis is denied (N.D. Okla.
+/// LCvR3-2(c)).
+event PauperMotionDenied()
+/// A motion, other than a discovery motion, is filed (N.D. Okla.
+/// LCvR7-1(e)).
+event MotionFiled() paper motion-brief
+/// A discovery motion under FRCP 26 through 37 or 45 is filed (N.D. Okla.
+/// LCvR37-2(e)).
+event DiscoveryMotionFiled() paper motion-brief
+/// The response brief is filed (N.D. Okla. LCvR7-1(e)).
+event ResponseFiled() paper motion-brief
+/// The reply brief is filed (N.D. Okla. LCvR7-1(f)).
+event ReplyFiled() paper reply-brief
+/// The pretrial conference is set (N.D. Okla. LCvR16-1).
+event PretrialConferenceSet()
+/// A settlement conference is set (N.D. Okla. LCvR16-2).
+event SettlementConferenceSet()
+/// A pro se party's name, address, telephone number or email address
+/// changes (N.D. Okla. LCvR17-1(h)).
+event ProSeContactChanged()
+/// A party to the civil case files bankruptcy, or an involuntary
+/// proceeding is commenced against it (N.D. Okla. LCvR21-1).
+event PartyBankruptcyFiled()
+/// A deposition is scheduled to be taken (N.D. Okla. LCvR30-1(a)).
+event DepositionScheduled()
+/// A trial or hearing is set (N.D. Okla. LCvR45-1(a)).
+event TrialOrHearingSet()
+/// Judgment is entered (N.D. Okla. LCvR54-1(a)).
+event JudgmentEntered()
+/// The bill of costs is filed (N.D. Okla. LCvR54-1(b)).
+event BillOfCostsFiled()
+/// The notice of removal is filed (N.D. Okla. LCvR81-2(c)).
+event RemovalNoticeFiled()
+/// In a bankruptcy case, the first meeting of creditors is held (N.D.
+/// Okla. LCvR84-1).
+event CreditorsMeetingHeld()
+/// A motion to withdraw the reference is served (N.D. Okla. LCvR84-1).
+event WithdrawalMotionServed()
+
+/// N.D. Okla. LCvR3-2(c): if the Court denies a motion to proceed in forma
+/// pauperis, the party pays the entire filing fee and has 21 days, unless
+/// the Court specifies a different time, within which to pay it.
+deadline pauper-fee-period: 21.days after PauperMotionDenied() counted_by frcp6 cite "N.D. Okla. LCvR3-2(c)"
+/// N.D. Okla. LCvR7-1(e): each party opposing a motion, other than a
+/// discovery motion, files and serves a response brief within 21 days
+/// from the date the motion was filed.
+deadline motion-response-period: 21.days after MotionFiled() counted_by frcp6 cite "N.D. Okla. LCvR7-1(e)"
+/// N.D. Okla. LCvR37-2(e): notwithstanding LCvR7-1(e) and (f), a response
+/// to a discovery motion under FRCP 26 through 37 or 45 is filed within
+/// 14 days from the date the motion was filed; an unopposed discovery
+/// motion may be deemed confessed.
+deadline discovery-response-period: 14.days after DiscoveryMotionFiled() counted_by frcp6 cite "N.D. Okla. LCvR37-2(e)"
+/// N.D. Okla. LCvR16-1: unless otherwise ordered, plaintiff's counsel
+/// tenders the jointly prepared, proposed final Pretrial Order to the
+/// Clerk of Court 7 days before the pretrial conference.
+deadline pretrial-order-period: 7.days before PretrialConferenceSet() counted_by frcp6 cite "N.D. Okla. LCvR16-1"
+/// N.D. Okla. LCvR16-2: a governmental entity unable to send a
+/// representative with full settlement authority moves for leave to
+/// proceed with limited authority no later than 14 days before the
+/// settlement conference.
+deadline limited-authority-motion-period: 14.days before SettlementConferenceSet() counted_by frcp6 cite "N.D. Okla. LCvR16-2"
+/// N.D. Okla. LCvR17-1(h): every pro se party informs the Clerk of Court
+/// and all parties in writing of any change of name, address, telephone
+/// number or email address within 14 days of the change.
+deadline pro-se-contact-period: 14.days after ProSeContactChanged() counted_by frcp6 cite "N.D. Okla. LCvR17-1(h)"
+/// N.D. Okla. LCvR21-1: when a party to a civil case files bankruptcy, or
+/// an involuntary proceeding is commenced against it, the party notifies
+/// the Court within 7 days of the bankruptcy filing by a formal notice in
+/// the civil case.
+deadline bankruptcy-notice-period: 7.days after PartyBankruptcyFiled() counted_by frcp6 cite "N.D. Okla. LCvR21-1"
+/// N.D. Okla. LCvR30-1(a)(1): subject to an order enlarging or shortening
+/// the time, a subpoena to compel a witness to attend a deposition is
+/// served on the witness at least 7 days before the deposition.
+deadline deposition-subpoena-period: 7.days before DepositionScheduled() counted_by frcp6 cite "N.D. Okla. LCvR30-1(a)"
+/// N.D. Okla. LCvR30-1(a)(2): reasonable notice to parties under FRCP
+/// 30(b)(1) of the taking of a deposition is 7 days.
+deadline deposition-notice-period: 7.days before DepositionScheduled() counted_by frcp6 cite "N.D. Okla. LCvR30-1(a)"
+/// N.D. Okla. LCvR45-1(a): a party proceeding in forma pauperis files its
+/// written motion for issuance of a subpoena not less than 21 days before
+/// the date set for trial or hearing.
+deadline pauper-subpoena-motion-period: 21.days before TrialOrHearingSet() counted_by frcp6 cite "N.D. Okla. LCvR45-1(a)"
+/// N.D. Okla. LCvR54-1(a): a prevailing party seeking costs files and
+/// serves the bill of costs (Form AO-133) and its brief not more than 14
+/// days after entry of judgment.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Okla. LCvR54-1(a)"
+/// N.D. Okla. LCvR54-1(b): objections to the allowance of costs are filed
+/// within 21 days from the date the bill of costs was filed.
+deadline costs-objection-period: 21.days after BillOfCostsFiled() counted_by frcp6 cite "N.D. Okla. LCvR54-1(b)"
+/// N.D. Okla. LCvR81-2(c): the removing party files a Status Report on
+/// Removed Action (Form CV-22) at the time of filing the notice of
+/// removal or within 5 days of its filing.
+deadline removal-status-report-period: 5.days after RemovalNoticeFiled() counted_by frcp6 cite "N.D. Okla. LCvR81-2(c)"
+/// N.D. Okla. LCvR84-1: a motion to withdraw the reference of a bankruptcy
+/// case is filed and served within 14 days after the first meeting of
+/// creditors is held (in an adversary proceeding or contested matter, at
+/// the time of the movant's first responsive pleading, not encoded).
+deadline withdrawal-motion-period: 14.days after CreditorsMeetingHeld() counted_by frcp6 cite "N.D. Okla. LCvR84-1"
+/// N.D. Okla. LCvR84-1: responses to a motion to withdraw the reference
+/// are filed with the bankruptcy clerk within 14 days from service of the
+/// motion; replies only with leave of the bankruptcy court.
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "N.D. Okla. LCvR84-1"

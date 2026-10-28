@@ -1,0 +1,207 @@
+module okwd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Western District of Oklahoma's own civil periods, computed under the
+// federal rules: the local rules supplement the Federal Rules of Civil
+// Procedure (Preamble), so FRCP 6(a) counts them. A filing due on a fixed
+// date that falls on a Saturday, Sunday, legal holiday or day the clerk's
+// office is inaccessible runs to the next accessible day (W.D. Okla.
+// LCvR6.1). Periods the rules state in business days stay in notes, as
+// FRCP 6(a) counts every day: the full filing fee is paid within 3
+// business days of filing a civil action (LCvR3.2), a motion for leave to
+// file an oversized brief is filed one business day before the brief is
+// due (LCvR7.1(e)), and settlement-conference and mediation statements
+// are served at least 3 business days before the conference
+// (LCvR16.2, LCvR16.3), as are exhibit-list exchanges before the pretrial
+// report (LCvR39.4). The Final Pretrial Report is filed on or before the
+// first day of the month the case is set for trial (LCvR16.1), a date set
+// by the trial docket, not a counted period. A response to a motion may
+// be shortened or lengthened by the court (LCvR7.1(g)), and a reply is
+// optional, limited to new matter raised in the response
+// (LCvR7.1(h)). An attorney's conviction, suspension or disbarment
+// elsewhere is reported within 14 days (LCvR83.6), and a disbarment order
+// stands unless the attorney moves within 30 days; those bind counsel,
+// not a case, and stay notes. The earlier W.D. Okla. outline's FRCP flow
+// and its decisions (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby,
+// Matsushita, Unitherm, Bowles v. Russell, Hamer, Microsoft Corp. v.
+// Baker and the Tenth Circuit's Robbins v. Oklahoma) are FRCP and FRAP
+// authority and belong to lit/frcp and lit/frap; they are removed here:
+// no reporter text is vendored.
+/// An opening or response brief on a motion for summary judgment: at most
+/// 30 pages without leave of court (W.D. Okla. LCvR7.1(e)).
+limit summary-judgment-brief {
+  pages <= 30 cite "W.D. Okla. LCvR7.1(e)"
+} cite "W.D. Okla. LCvR7.1(e)"
+
+/// Any other opening or response brief: at most 25 pages without leave of
+/// court (W.D. Okla. LCvR7.1(e)).
+limit motion-brief { pages <= 25 cite "W.D. Okla. LCvR7.1(e)" } cite "W.D. Okla. LCvR7.1(e)"
+/// A reply brief: at most 10 pages unless the court authorizes more (W.D.
+/// Okla. LCvR7.1(h)).
+limit reply-brief { pages <= 10 cite "W.D. Okla. LCvR7.1(h)" } cite "W.D. Okla. LCvR7.1(h)"
+
+/// The application to proceed in forma pauperis is denied (W.D. Okla.
+/// LCvR3.3(e)).
+event PauperApplicationDenied()
+/// Service of process is made (W.D. Okla. LCvR4.2).
+event ServiceEffected()
+/// An official transcript is filed (W.D. Okla. LCvR5.2.1).
+event TranscriptFiled()
+/// A motion is filed (W.D. Okla. LCvR7.1(g)).
+event MotionFiled() paper motion-brief
+/// A motion for summary judgment is filed (W.D. Okla. LCvR7.1(e), (g)).
+event SummaryJudgmentMotionFiled() paper summary-judgment-brief
+/// The response to a motion is filed (W.D. Okla. LCvR7.1(h)).
+event ResponseFiled() paper motion-brief
+/// The reply brief is filed (W.D. Okla. LCvR7.1(h)).
+event ReplyFiled() paper reply-brief
+/// In a bankruptcy appeal, the record is transmitted to the clerk of the
+/// district court (W.D. Okla. LCvR7.2(a)).
+event BankruptcyRecordTransmitted()
+/// In a bankruptcy appeal, the appellant's brief is served (W.D. Okla.
+/// LCvR7.2(a)).
+event BankruptcyAppellantBriefServed()
+/// In a bankruptcy appeal, the appellee's brief is served (W.D. Okla.
+/// LCvR7.2(a)).
+event BankruptcyAppelleeBriefServed()
+/// Leave to amend or supplement a pleading is granted (W.D. Okla.
+/// LCvR15.1).
+event LeaveToAmendGranted()
+/// The status and scheduling conference is set (W.D. Okla. LCvR16.1).
+event SchedulingConferenceSet()
+/// A court-ordered mediation is completed (W.D. Okla. LCvR16.3).
+event MediationCompleted()
+/// A party to the civil case files bankruptcy, or an involuntary
+/// proceeding is commenced against it (W.D. Okla. LCvR21.1).
+event PartyBankruptcyFiled()
+/// A deposition is scheduled to be taken (W.D. Okla. LCvR30.1(a)).
+event DepositionScheduled()
+/// A subpoena to a nonparty to produce documents is to be served (W.D.
+/// Okla. LCvR45.1(a)).
+event NonpartySubpoenaServed()
+/// The notice of a nonparty document subpoena is filed (W.D. Okla.
+/// LCvR45.1(b)).
+event SubpoenaNoticeFiled()
+/// Judgment is entered (W.D. Okla. LCvR54.1).
+event JudgmentEntered()
+/// The bill of costs is filed (W.D. Okla. LCvR54.1).
+event BillOfCostsFiled()
+/// The motion for attorney's fees is filed (W.D. Okla. LCvR54.2).
+event FeeMotionFiled()
+/// The notice of removal is filed (W.D. Okla. LCvR81.1, LCvR81.2(b)).
+event RemovalNoticeFiled()
+/// In a bankruptcy proceeding, the first meeting of creditors is
+/// concluded (W.D. Okla. LCvR81.4).
+event CreditorsMeetingConcluded()
+/// A motion to withdraw the reference of a bankruptcy proceeding is filed
+/// (W.D. Okla. LCvR81.4).
+event WithdrawalMotionFiled()
+/// The response to a motion to withdraw the reference is filed (W.D.
+/// Okla. LCvR81.4).
+event WithdrawalResponseFiled()
+
+/// W.D. Okla. LCvR3.3(e): if the application to proceed in forma pauperis
+/// is denied, the filing party has 21 days, unless the court specifies a
+/// different time, to pay the filing fees; on payment the formal filing
+/// relates back to the conditional filing.
+deadline pauper-fee-period: 21.days after PauperApplicationDenied() counted_by frcp6 cite "W.D. Okla. LCvR3.3(e)"
+/// W.D. Okla. LCvR4.2: proof of service by the server's affidavit is
+/// filed with the Clerk's Office within 14 days of service.
+deadline return-of-service-period: 14.days after ServiceEffected() counted_by frcp6 cite "W.D. Okla. LCvR4.2"
+/// W.D. Okla. LCvR5.2.1(b), (c): a request to redact personal data
+/// identifiers from an official transcript, and a motion for any other
+/// redaction, are filed within 21 days of the filing of the transcript.
+deadline transcript-redaction-period: 21.days after TranscriptFiled() counted_by frcp6 cite "W.D. Okla. LCvR5.2.1(b)"
+/// W.D. Okla. LCvR7.1(g): each party opposing a motion files a response
+/// within 21 days after the date the motion was filed; a motion not
+/// opposed within 21 days may, in the court's discretion, be deemed
+/// confessed.
+deadline motion-response-period: 21.days after MotionFiled() counted_by frcp6 cite "W.D. Okla. LCvR7.1(g)"
+/// W.D. Okla. LCvR7.1(g): the same 21 days to respond to a motion for
+/// summary judgment.
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionFiled() counted_by frcp6 cite "W.D. Okla. LCvR7.1(g)"
+/// W.D. Okla. LCvR7.1(h): unless the court prohibits it, a reply to new
+/// matter raised in the response may be filed within 7 days after the
+/// date the response was filed.
+deadline reply-period: 7.days after ResponseFiled() counted_by frcp6 cite "W.D. Okla. LCvR7.1(h)"
+/// W.D. Okla. LCvR7.2(a): in a bankruptcy appeal, the appellant serves and
+/// files its brief within 21 days after the transmission of the record to
+/// the clerk of the district court.
+deadline bankruptcy-appellant-brief-period: 21.days after BankruptcyRecordTransmitted() counted_by frcp6 cite "W.D. Okla. LCvR7.2(a)"
+/// W.D. Okla. LCvR7.2(a): the appellee serves and files its brief within
+/// 21 days after service of the appellant's brief.
+deadline bankruptcy-appellee-brief-period: 21.days after BankruptcyAppellantBriefServed() counted_by frcp6 cite "W.D. Okla. LCvR7.2(a)"
+/// W.D. Okla. LCvR7.2(a): the appellant may serve and file a reply brief
+/// within 14 days after service of the appellee's brief.
+deadline bankruptcy-reply-brief-period: 14.days after BankruptcyAppelleeBriefServed() counted_by frcp6 cite "W.D. Okla. LCvR7.2(a)"
+/// W.D. Okla. LCvR15.1: unless the court orders otherwise, a party granted
+/// leave to amend or supplement files the new pleading, which may not
+/// differ from the proposed pleading, within 7 days.
+deadline amended-pleading-period: 7.days after LeaveToAmendGranted() counted_by frcp6 cite "W.D. Okla. LCvR15.1"
+/// W.D. Okla. LCvR16.1: unless the court orders otherwise, the parties
+/// file their Joint Status Report and Discovery Plan not later than 7
+/// days prior to the status and scheduling conference.
+deadline joint-status-report-period: 7.days before SchedulingConferenceSet() counted_by frcp6 cite "W.D. Okla. LCvR16.1"
+/// W.D. Okla. LCvR16.3(e): unless otherwise ordered, the mediator's report
+/// in a court-ordered mediation is filed no later than 7 days after
+/// completion of the mediation.
+deadline mediator-report-period: 7.days after MediationCompleted() counted_by frcp6 cite "W.D. Okla. LCvR16.3(e)"
+/// W.D. Okla. LCvR21.1: when a party to a civil case files bankruptcy, or
+/// an involuntary proceeding is commenced against it, counsel (or the
+/// party, if pro se) files a formal notice in the civil case within 7
+/// days of the bankruptcy filing.
+deadline bankruptcy-notice-period: 7.days after PartyBankruptcyFiled() counted_by frcp6 cite "W.D. Okla. LCvR21.1"
+/// W.D. Okla. LCvR30.1(a)(1): subject to an order enlarging or shortening
+/// the time, a subpoena to compel a witness to attend a deposition is
+/// served on the witness at least 14 days before the deposition.
+deadline deposition-subpoena-period: 14.days before DepositionScheduled() counted_by frcp6 cite "W.D. Okla. LCvR30.1(a)"
+/// W.D. Okla. LCvR30.1(a)(2): reasonable notice to parties under FRCP
+/// 30(b)(1) of the taking of a deposition is 14 days.
+deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6 cite "W.D. Okla. LCvR30.1(a)"
+/// W.D. Okla. LCvR45.1(a): the notice FRCP 45(a)(4) requires, with the
+/// subpoena attached, is filed at least 7 days before the subpoena is
+/// served on the nonparty.
+deadline subpoena-notice-period: 7.days before NonpartySubpoenaServed() counted_by frcp6 cite "W.D. Okla. LCvR45.1(a)"
+/// W.D. Okla. LCvR45.1(b): within 7 days from the filing of the notice,
+/// any party may move to preclude service of the subpoena; if the motion
+/// is timely, the subpoena is not served until it is determined.
+deadline subpoena-protective-motion-period: 7.days after SubpoenaNoticeFiled() counted_by frcp6 cite "W.D. Okla. LCvR45.1(b)"
+/// W.D. Okla. LCvR54.1: a prevailing party seeking costs under 28 U.S.C.
+/// § 1920 files the bill of costs and its brief not more than 14 days
+/// after entry of judgment.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "W.D. Okla. LCvR54.1"
+/// W.D. Okla. LCvR54.1: objections to the bill of costs, with a supporting
+/// brief, are filed within 14 days from the date the bill of costs was
+/// filed; without a timely objection, the claimed costs may be allowed in
+/// full.
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "W.D. Okla. LCvR54.1"
+/// W.D. Okla. LCvR54.2: objections to the allowance of attorney's fees are
+/// filed within 14 days from the date the motion for attorney's fees is
+/// filed. The motion's own time is FRCP 54(d)(2)(B)'s (lit/frcp).
+deadline fee-objection-period: 14.days after FeeMotionFiled() counted_by frcp6 cite "W.D. Okla. LCvR54.2"
+/// W.D. Okla. LCvR81.1: unless demanded in the state court, trial by jury
+/// in a removed case is waived unless the removing party files and serves
+/// a demand within 14 days after the notice of removal is filed (a party
+/// that did not remove has 14 days after receiving service of the notice,
+/// not encoded separately).
+deadline removal-jury-demand-period: 14.days after RemovalNoticeFiled() counted_by frcp6 cite "W.D. Okla. LCvR81.1"
+/// W.D. Okla. LCvR81.2(b): a motion pending in state court at the time of
+/// removal is considered withdrawn unless, within 30 days of removal, the
+/// moving party files a notice of pending motion with the state-court
+/// papers needed to adjudicate it.
+deadline pending-motion-notice-period: 30.days after RemovalNoticeFiled() counted_by frcp6 cite "W.D. Okla. LCvR81.2(b)"
+/// W.D. Okla. LCvR81.4: to be timely under 28 U.S.C. § 157(d), a motion to
+/// withdraw the reference of a bankruptcy case is filed and served within
+/// 14 days after the first meeting of creditors is concluded (30 days
+/// from the movant's first pleading in an adversary proceeding or
+/// contested matter, not encoded separately); an untimely motion waives
+/// trial by jury of the claims.
+deadline withdrawal-motion-period: 14.days after CreditorsMeetingConcluded() counted_by frcp6 cite "W.D. Okla. LCvR81.4"
+/// W.D. Okla. LCvR81.4: responses to a motion to withdraw the reference are
+/// filed with the bankruptcy clerk within 14 days from the filing of the
+/// motion.
+deadline withdrawal-response-period: 14.days after WithdrawalMotionFiled() counted_by frcp6 cite "W.D. Okla. LCvR81.4"
+/// W.D. Okla. LCvR81.4: replies are filed within 7 days of the filing of
+/// any response.
+deadline withdrawal-reply-period: 7.days after WithdrawalResponseFiled() counted_by frcp6 cite "W.D. Okla. LCvR81.4"

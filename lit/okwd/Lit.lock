@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "okwd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:035fcd82ac5606d79146b4f97d244fd02adf7ee471bc60eab4942d7553096a76"
+semantic = "sha256:5951b708509bfd507fa420925e6cbe05e14b7f882e67909ecf3cc036b63edf7b"
+texts = [
+    "okwd-lcvr sources/wd-okla/wd-okla-local-rules-2026-civil-sectioned.txt sha256:7007fba8672c98fa3c5d1eb6b43f4daffc77103479df82cdec5970abe31f26fb",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

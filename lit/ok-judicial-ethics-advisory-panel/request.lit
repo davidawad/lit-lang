@@ -1,0 +1,33 @@
+module ok-judicial-ethics-advisory-panel.request
+
+import ok-state-rules.{ ActionCommenced, DecisionFiled }
+
+// Requests to the Oklahoma Judicial Ethics Advisory Panel for an advisory
+// opinion, from the requesting judge's or candidate's (applicant's) side.
+// Neither the Oklahoma Code of Judicial Conduct nor the order creating the
+// panel is vendored (lg-l6xh, #16): every cite is a hole, and who may
+// request, the form, any period and the effect of an opinion are not
+// stated. The earlier outline named no leading decision; none is cited.
+start request
+
+state request: "Request submitted" by applicant cite ?("Okla. Code of Jud. Conduct") {
+  note "A judge or judicial candidate asks the panel for an advisory opinion on judicial ethics; who may ask, the form and any response period are holes (lg-l6xh, #16)."
+  edge-request-decision "Submitted for decision" -> decision {
+    event ActionCommenced()
+    authority cite ?("Okla. Code of Jud. Conduct")
+  }
+}
+
+chance decision: "Panel decides" by court cite ?("Okla. Code of Jud. Conduct") {
+  note "Outcome probabilities are holes."
+  edge-decision-granted "Opinion issued" -> granted p ? { event DecisionFiled() }
+  edge-decision-denied "Declined" -> denied p ? { event DecisionFiled() }
+}
+
+terminal granted: "Opinion issued" outcome [win] cite ?("Okla. Code of Jud. Conduct") {
+  note "The effect of reliance on the opinion is a hole (lg-l6xh, #16)."
+}
+
+terminal denied: "Request declined" outcome [loss] cite ?("Okla. Code of Jud. Conduct") {
+  note "Whether any review lies is a hole (lg-l6xh, #16)."
+}

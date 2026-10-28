@@ -1,0 +1,31 @@
+# Requests to the Oklahoma Judicial Ethics Advisory Panel for an advisory
+# opinion on judicial ethics, as far as the vendored text states. The
+# Oklahoma Code of Judicial Conduct (5 O.S. ch. 1, app. 4) and the order
+# creating the panel are not vendored: Oklahoma's official texts are
+# served by OSCN, whose bot check stopped the fetch (lg-l6xh, #16), so
+# every step's authority is a cite hole and no period is stated. in_force
+# is the date the corpus was taken.
+[package]
+name = "ok-judicial-ethics-advisory-panel"
+version = "0.1.0"
+language = 1
+pack_id = "ok-judicial-ethics-advisory-panel"
+forum = "ok-judicial-ethics-advisory-panel"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "oklahoma"
+title = "Oklahoma Judicial Ethics Advisory Panel"
+description = "Requests for an advisory opinion of the Oklahoma Judicial Ethics Advisory Panel, as far as the vendored text states: the structure of a request and its disposition. Neither the Code of Judicial Conduct nor the order creating the panel is vendored (lg-l6xh, #16), so who may request, the form and any period are holes."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Oklahoma Judicial Ethics Advisory Panel"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+ok-state-rules = { version = "^0.1.0", path = "../ok-rules" }

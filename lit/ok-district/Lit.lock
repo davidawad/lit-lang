@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ok-district-court-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:cbe36cff3d34eb88dd834a00ef869101a30c3816e6460ad48473363b05ee6403"
+semantic = "sha256:efe88ac70fcc5907478f6abfa700164c70a8261f6bd7fe288c1c621d24707c51"
+texts = [
+    "ok-dcr sources/ok-state-civil/ok-district-court-rules-1-to-29-partial-sectioned.txt sha256:6ee334c48b68fef8973c715a3afab827347243fa5a1e3449ba9690ab9e121727",
+]
+dependencies = [
+    "core 1.0.0",
+    "ok-state-rules 0.1.0",
+]
+
+[[package]]
+name = "ok-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

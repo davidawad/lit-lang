@@ -1,0 +1,50 @@
+# Civil actions in the Oklahoma district courts, as far as the vendored
+# text states. Oklahoma civil procedure is statutory: the Oklahoma
+# Pleading Code (12 O.S. §§ 2001-2027), the new-trial and appeal sections
+# (12 O.S. §§ 651-655, 990A-994) and the Oklahoma Supreme Court Rules are
+# not vendored (OSCN blocked the fetch: lg-l6xh, #16; sources/ok-state-
+# civil vendors only 12 O.S. §§ 1-31, none of them procedure), so every
+# step those govern keeps a cite hole. The Rules for District Courts of
+# Oklahoma, Rules 1-29 (PARTIAL, currency unconfirmed; sources/ok-state-
+# civil, retrieved October 28, 2026), are vendored and cited: service and
+# the time to plead, motion practice, the time to assert various claims,
+# the pretrial conference, notice of a default hearing, summary judgment,
+# the new-trial motion and vacation of judgments. Rules 30 onward are not
+# vendored. Computation of time is 12 O.S. § 2006, not vendored and not in
+# lit/core, so periods are stated in notes, not counted. The rules state
+# no edition date, so in_force is the retrieval date. The appeal hands off
+# to lit/ok-supreme-court, which assigns cases to lit/ok-court-of-civil-
+# appeals.
+[package]
+name = "ok-district-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ok-district-court-civil"
+forum = "ok-state-civil"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "oklahoma"
+title = "Oklahoma district courts, civil"
+description = "Civil actions in the Oklahoma district courts, as far as the vendored text states: commencement, service and the 20-day time to plead, motion practice and its 15-day response, claims against third parties, the pretrial conference and its notice, notice of a default hearing, summary judgment and its 15-day response, the new-trial motion, vacation of judgments, and the appeal, with the Pleading Code's and the Supreme Court Rules' provisions as holes (lg-l6xh, #16)."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Oklahoma district courts (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+ok-state-rules = { version = "^0.1.0", path = "../ok-rules" }
+
+[sources.ok-dcr]
+title = "Rules for District Courts of Oklahoma (12 O.S. ch. 2, app.), Rules 1-29 (PARTIAL), as served by OSCN, retrieved 2026-10-28"
+url = "https://www.oscn.net/applications/oscn/index.asp?ftdb=STOKRUCPDC&level=1"
+path = "sources/ok-state-civil/ok-district-court-rules-1-to-29-partial-sectioned.txt"
+path_sha256 = "6ee334c48b68fef8973c715a3afab827347243fa5a1e3449ba9690ab9e121727"
+as_of = "2026-10-28"
+cite_prefixes = ["Okla. Dist. Ct. R."]
+section_heading = "Rule {n}"

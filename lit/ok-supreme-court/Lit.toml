@@ -1,0 +1,35 @@
+# Review in the Supreme Court of Oklahoma of a decision of the Court of
+# Civil Appeals, as far as the vendored text states. The Oklahoma Supreme
+# Court Rules (12 O.S. ch. 15, app. 1) are not vendored: OSCN's bot check
+# stopped the fetch (lg-l6xh, #16; sources/ok-state-civil), so every step's
+# authority is a cite hole and no period or limit is stated. The vendored
+# Rules for District Courts report only that dismissals and summary
+# judgments are subject to accelerated review under Supreme Court Rule
+# 1.36 (Okla. Dist. Ct. R. 4(m), 13(h); lit/ok-district). The appeal from
+# the district court is lit/ok-district; the intermediate court is
+# lit/ok-court-of-civil-appeals. in_force is the date the corpus was
+# taken.
+[package]
+name = "ok-supreme-court"
+version = "0.1.0"
+language = 1
+pack_id = "ok-supreme-court"
+forum = "ok-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "oklahoma"
+title = "Supreme Court of Oklahoma, civil review"
+description = "Review in the Supreme Court of Oklahoma of a Court of Civil Appeals decision, as far as the vendored text states: the structure of certiorari review, briefing, decision, rehearing and mandate. The Oklahoma Supreme Court Rules are not vendored (lg-l6xh, #16), so every period, limit and standard is a hole."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Supreme Court of Oklahoma"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+ok-state-rules = { version = "^0.1.0", path = "../ok-rules" }

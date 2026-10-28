@@ -1,0 +1,36 @@
+# Civil appeals in the Court of Civil Appeals of Oklahoma, as far as the
+# vendored text states. The appeal statutes (12 O.S. §§ 990A-994) and
+# the Oklahoma Supreme Court Rules (12 O.S. ch. 15, app. 1), which govern
+# the petition in error, the record, briefing, assignment to this court,
+# rehearing, mandate and certiorari, are not vendored: OSCN's bot check
+# stopped the fetch (lg-l6xh, #16; sources/ok-state-civil), so every
+# step's authority is a cite hole and no period or limit is stated. The
+# vendored Rules for District Courts (lit/ok-district) report the
+# accelerated review of dismissals and summary judgments under Supreme
+# Court Rule 1.36 and the record on such an appeal (Okla. Dist. Ct. R.
+# 4(m), 13(h)). Certiorari goes to lit/ok-supreme-court. in_force is the
+# date the corpus was taken.
+[package]
+name = "ok-court-of-civil-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "ok-court-of-civil-appeals"
+forum = "ok-state-appellate"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "oklahoma"
+title = "Court of Civil Appeals of Oklahoma"
+description = "Civil appeals assigned to the Court of Civil Appeals of Oklahoma, as far as the vendored text states: appealability, the petition in error, the record, briefing, submission, decision, rehearing, mandate and certiorari to the Supreme Court. The Oklahoma Supreme Court Rules and the appeal statutes are not vendored (lg-l6xh, #16), so every period, limit and standard is a hole."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Court of Civil Appeals of Oklahoma"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+ok-state-rules = { version = "^0.1.0", path = "../ok-rules" }

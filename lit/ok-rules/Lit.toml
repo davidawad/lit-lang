@@ -1,0 +1,30 @@
+# The Oklahoma base library (lg-u561.5 pattern): the trigger events the
+# Oklahoma state court packages route their graphs on: lit/ok-district,
+# lit/ok-court-of-civil-appeals, lit/ok-supreme-court,
+# lit/ok-court-on-the-judiciary and lit/ok-judicial-ethics-advisory-panel.
+# It declares no period: the rules' periods are stated in the court
+# packages' notes. No procedure of its own. The Oklahoma Supreme Court
+# Rules are not vendored (lg-l6xh, #16), so no rule is cited here.
+[package]
+name = "ok-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ok-state-rules"
+forum = "ok-state-rules"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "oklahoma"
+title = "Oklahoma state court rules (base library)"
+description = "The rule layer Oklahoma's court packages share: the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Oklahoma state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

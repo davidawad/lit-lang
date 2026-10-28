@@ -1,0 +1,149 @@
+module oked-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Eastern District of Oklahoma's own civil periods, computed under the
+// federal rules: the local rules supplement the Federal Rules of Civil
+// Procedure (LCvR 1.1, 1.2(a)), so FRCP 6(a) counts them. A motion for
+// leave to file an oversized brief is filed no later than one day before
+// the brief is due (E.D. Okla. LCvR 7.1(c)). A non-dispositive motion or
+// objection not opposed within 14 days may be deemed confessed (LCvR
+// 7.1(d)); if a dispositive motion is not opposed, the Court may allow an
+// additional 14 days to show cause, and a motion for confession of
+// judgment may be granted 14 days after filing (LCvR 7.1(g)); those set
+// what the Court may do, not a party's filing, and stay notes. The Court
+// Clerk may grant a defendant a first extension, not over 14 days, to
+// answer (LCvR 7.1(h)); that bounds an order and stays a note. A matter
+// under advisement more than 90 days may be noticed (LCvR 7.1(l)). Paper
+// copies of oversized documents are delivered within 3 business days
+// (LCvR 7.1(n)) and exhibits are shown to opposing counsel 3 business days
+// before the pretrial order (LCvR 39.4), periods FRCP 6(a) does not count;
+// and the attorneys meet the courtroom deputy within 7 days of the trial
+// date (LCvR 43.1(b)), a window the rule does not anchor to one side. In
+// a removed case the jury demand runs on FRCP 38 and 81 (LCvR 81.1), which
+// lit/frcp encodes. The earlier E.D. Okla. outline's FRCP flow and its
+// decisions (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby,
+// Matsushita, Unitherm, Bowles v. Russell, Hamer, Microsoft Corp. v.
+// Baker and the Tenth Circuit's Robbins v. Oklahoma) are FRCP and FRAP
+// authority and belong to lit/frcp and lit/frap; they are removed here:
+// no reporter text is vendored.
+/// A brief: at most 25 typewritten pages without leave of Court (E.D.
+/// Okla. LCvR 7.1(c)).
+limit motion-brief { pages <= 25 cite "E.D. Okla. LCvR 7.1(c)" } cite "E.D. Okla. LCvR 7.1(c)"
+/// A reply or supplemental brief: at most 10 pages unless the Court
+/// authorizes more (E.D. Okla. LCvR 7.1(e)).
+limit reply-brief { pages <= 10 cite "E.D. Okla. LCvR 7.1(e)" } cite "E.D. Okla. LCvR 7.1(e)"
+
+/// A civil action, suit or proceeding is filed (E.D. Okla. LCvR 3.2).
+event ActionFiled()
+/// The motion to proceed in forma pauperis is denied (E.D. Okla. LCvR
+/// 3.3(d)).
+event PauperMotionDenied()
+/// A motion or objection is filed (E.D. Okla. LCvR 7.1(d)).
+event MotionFiled() paper motion-brief
+/// The response to a motion or objection is filed (E.D. Okla. LCvR
+/// 7.1(e)).
+event ResponseFiled() paper motion-brief
+/// The reply brief is filed (E.D. Okla. LCvR 7.1(e)).
+event ReplyFiled() paper reply-brief
+/// The date the Joint Status Report is to be submitted (E.D. Okla. LCvR
+/// 16.1(a)).
+event JointStatusReportDue()
+/// A settlement conference is set (E.D. Okla. LCvR 16.2).
+event SettlementConferenceSet()
+/// A party to the civil case files bankruptcy, or an involuntary
+/// proceeding is commenced against it (E.D. Okla. LCvR 21.1).
+event PartyBankruptcyFiled()
+/// A deposition is scheduled to be taken (E.D. Okla. LCvR 30.1(a)).
+event DepositionScheduled()
+/// Trial is set (E.D. Okla. LCvR 30.1(f)).
+event TrialSet()
+/// Judgment is entered (E.D. Okla. LCvR 54.1(a), 54.2(a)).
+event JudgmentEntered()
+/// The bill of costs is filed (E.D. Okla. LCvR 54.1(b)).
+event BillOfCostsFiled()
+/// The motion for attorney fees is filed (E.D. Okla. LCvR 54.2(c)).
+event FeeMotionFiled()
+/// The motion for admission pro hac vice is granted (E.D. Okla. LCvR
+/// 83.3(c)).
+event ProHacViceGranted()
+/// In a bankruptcy case, the first meeting of creditors is held (E.D.
+/// Okla. LCvR 84.1).
+event CreditorsMeetingHeld()
+/// A motion to withdraw the reference is served (E.D. Okla. LCvR 84.1).
+event WithdrawalMotionServed()
+
+/// E.D. Okla. LCvR 3.2: except under LCvR 3.3, 3.4, 3.5 or a case order,
+/// the filing fee is paid within 7 days of the filing of a civil action,
+/// suit or proceeding, or it is subject to immediate dismissal without
+/// prejudice to refiling.
+deadline filing-fee-period: 7.days after ActionFiled() counted_by frcp6 cite "E.D. Okla. LCvR 3.2"
+/// E.D. Okla. LCvR 3.3(d): if the motion to proceed in forma pauperis is
+/// denied, the filing party has 21 days, unless the Court specifies a
+/// different time, to pay the filing fees.
+deadline pauper-fee-period: 21.days after PauperMotionDenied() counted_by frcp6 cite "E.D. Okla. LCvR 3.3(d)"
+/// E.D. Okla. LCvR 7.1(d): each party opposing a motion or objection files
+/// and serves a response within 14 days from the date the motion or
+/// objection was filed.
+deadline motion-response-period: 14.days after MotionFiled() counted_by frcp6 cite "E.D. Okla. LCvR 7.1(d)"
+/// E.D. Okla. LCvR 7.1(e): a reply brief on new matters in the response
+/// may be filed within 14 days after the response is filed; the Court may
+/// increase or reduce the time.
+deadline reply-period: 14.days after ResponseFiled() counted_by frcp6 cite "E.D. Okla. LCvR 7.1(e)"
+/// E.D. Okla. LCvR 16.1(a): to prepare the Joint Status Report, counsel
+/// and pro se parties confer at least 14 days before the date it is to be
+/// submitted.
+deadline status-report-conference-period: 14.days before JointStatusReportDue() counted_by frcp6 cite "E.D. Okla. LCvR 16.1(a)"
+/// E.D. Okla. LCvR 16.2(e): a governmental entity unable to send a
+/// representative with full settlement authority files and delivers its
+/// motion to proceed with limited authority no later than 14 days before
+/// the conference.
+deadline limited-authority-motion-period: 14.days before SettlementConferenceSet() counted_by frcp6 cite "E.D. Okla. LCvR 16.2(e)"
+/// E.D. Okla. LCvR 16.2(f): unless the Court orders otherwise, the
+/// settlement statement, at most 5 pages, is submitted to the settlement
+/// judge and served at least 7 days before the settlement conference.
+deadline settlement-statement-period: 7.days before SettlementConferenceSet() counted_by frcp6 cite "E.D. Okla. LCvR 16.2(f)"
+/// E.D. Okla. LCvR 21.1: when a party to a civil case files bankruptcy, or
+/// an involuntary proceeding is commenced against it, notice is given
+/// within 7 days of the bankruptcy filing by a formal notice in the civil
+/// case.
+deadline bankruptcy-notice-period: 7.days after PartyBankruptcyFiled() counted_by frcp6 cite "E.D. Okla. LCvR 21.1"
+/// E.D. Okla. LCvR 30.1(a)(1): subject to an order enlarging or shortening
+/// the time, a subpoena to compel a witness to attend a deposition is
+/// served on the witness at least 7 days before the deposition.
+deadline deposition-subpoena-period: 7.days before DepositionScheduled() counted_by frcp6 cite "E.D. Okla. LCvR 30.1(a)"
+/// E.D. Okla. LCvR 30.1(a)(2): reasonable notice to parties under FRCP
+/// 30(b)(1) of the taking of a deposition is 7 days.
+deadline deposition-notice-period: 7.days before DepositionScheduled() counted_by frcp6 cite "E.D. Okla. LCvR 30.1(a)"
+/// E.D. Okla. LCvR 30.1(f): except by order of the Court, trial
+/// depositions may be taken on reasonable notice up to 14 days before
+/// trial.
+deadline trial-deposition-period: 14.days before TrialSet() counted_by frcp6 cite "E.D. Okla. LCvR 30.1(f)"
+/// E.D. Okla. LCvR 54.1(a): a prevailing party seeking costs under 28
+/// U.S.C. § 1920 files and serves the bill of costs and its brief not more
+/// than 14 days after entry of judgment.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "E.D. Okla. LCvR 54.1(a)"
+/// E.D. Okla. LCvR 54.1(b): objections to the allowance of costs are filed
+/// within 14 days from the date the bill of costs was filed.
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "E.D. Okla. LCvR 54.1(b)"
+/// E.D. Okla. LCvR 54.2(a): the motion for attorney fees, with its brief
+/// and affidavit, is filed and served not more than 14 days after entry of
+/// judgment (as FRCP 54(d)(2)(B) provides).
+deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "E.D. Okla. LCvR 54.2(a)"
+/// E.D. Okla. LCvR 54.2(c): responses in opposition to the allowance of
+/// attorney fees are filed within 14 days from the date the motion is
+/// filed.
+deadline fee-response-period: 14.days after FeeMotionFiled() counted_by frcp6 cite "E.D. Okla. LCvR 54.2(c)"
+/// E.D. Okla. LCvR 83.4(c): an attorney appearing pro hac vice files an
+/// Entry of Appearance and registers for electronic case filing within 7
+/// days after the motion is granted.
+deadline pro-hac-vice-appearance-period: 7.days after ProHacViceGranted() counted_by frcp6 cite "E.D. Okla. LCvR 83.4(c)"
+/// E.D. Okla. LCvR 84.1: a motion to withdraw the reference of a
+/// bankruptcy case is filed and served within 14 days after the first
+/// meeting of creditors is held (in an adversary proceeding or contested
+/// matter, with the movant's first responsive pleading, not encoded).
+deadline withdrawal-motion-period: 14.days after CreditorsMeetingHeld() counted_by frcp6 cite "E.D. Okla. LCvR 84.1"
+/// E.D. Okla. LCvR 84.1: responses to a motion to withdraw the reference
+/// are filed with the bankruptcy clerk within 14 days from service of the
+/// motion; replies only with leave of the bankruptcy court.
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "E.D. Okla. LCvR 84.1"

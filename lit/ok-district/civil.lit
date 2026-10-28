@@ -1,0 +1,150 @@
+module ok-district-court-civil.civil
+
+import ok-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
+// Civil actions in the Oklahoma district courts from the applicant's
+// (plaintiff's) side. The Oklahoma Pleading Code (12 O.S. §§ 2001-2027),
+// 12 O.S. §§ 651-655 (new trial), §§ 990A-994 (appeal) and the Oklahoma
+// Supreme Court Rules are not vendored: OSCN's bot check stopped the fetch
+// (lg-l6xh, #16), so the steps they govern cite holes and their periods
+// are not stated. The Rules for District Courts are vendored only for
+// Rules 1-29. Periods are stated in notes, not counted: computation is 12
+// O.S. § 2006, which is not vendored and not in lit/core. The earlier
+// outline named Indiana National Bank v. State Department of Health, 1990
+// OK 6, 812 P.2d 1307, on pleading; no reporter text is vendored to verify
+// it, so it is removed. The decisions named below are those the vendored
+// text of Rule 17 itself cites, as that rule reports them.
+start complaint-filed
+
+state complaint-filed: "Petition filed" by applicant cite ?("12 O.S. § 2003") {
+  note "Commencement of the action is governed by the Pleading Code (12 O.S. § 2003), not vendored (lg-l6xh, #16): a hole; the vendored rules speak of the summons and petition (Okla. Dist. Ct. R. 2(b)(i)). The Pleading Code governs all proceedings in actions pending on the day it took effect, except where its application would not be feasible or would work injustice (Okla. Dist. Ct. R. 1). The person serving process states in the proof the name of the person served and the date, place and method of service (Okla. Dist. Ct. R. 2(a)). The service period and the summons (12 O.S. § 2004) are holes."
+  edge-complaint-filed-service "Summons issued and served" -> service-check {
+    event ActionCommenced()
+    authority cite ?("12 O.S. § 2004")
+  }
+}
+
+decision service-check: "Service within the required period" by office cite ?("12 O.S. § 2004") {
+  note "The time to serve the summons and the consequence of failing to serve it in time are 12 O.S. § 2004, not vendored (lg-l6xh, #16): a hole. Objections to personal jurisdiction, to the issuance or service of the summons and to venue are waived if the party asks for affirmative relief on a permissive counterclaim, a crossclaim or a third-party petition; a compulsory counterclaim does not waive them (Okla. Dist. Ct. R. 3)."
+  edge-service-check-served "Served" -> answer-due { authority cite "Okla. Dist. Ct. R. 2(b)" }
+  edge-service-check-unserved "Not served in time" -> dismissed-unserved {
+    authority cite ?("12 O.S. § 2004")
+  }
+}
+
+decision answer-due: "Answer, motion or default" by office cite "Okla. Dist. Ct. R. 2(b)"
+{
+  note "Defendants, third-party defendants and joined parties file their responsive pleading and serve it within 20 days after being served with process, unless the time is extended by the service and filing of a motion or by the entry of an appearance; when the summons and petition are served by mail, within 20 days after receipt, or after acceptance was refused (Okla. Dist. Ct. R. 2(b)(i)). After service with the summons, papers are served on a party's attorney of record (Okla. Dist. Ct. R. 2(b)(ii)). A plaintiff may assert a claim against a third-party defendant within 20 days after service of the third-party petition, a third-party defendant against the plaintiff within 20 days after being served, and a reply to a counterclaim in an answer to a third-party petition or crossclaim is served within 20 days; later, only with leave of court (Okla. Dist. Ct. R. 4.1). The Pleading Code's own response periods (12 O.S. § 2012(A)) are not vendored (lg-l6xh, #16)."
+  edge-answer-due-default "No response" -> default-entered {
+    authority cite "Okla. Dist. Ct. R. 10"
+  }
+  edge-answer-due-motion "Motion filed" -> pleading-motion {
+    authority cite "Okla. Dist. Ct. R. 4(b)"
+  }
+  edge-answer-due-answer "Answer filed" -> case-management { authority cite "Okla. Dist. Ct. R. 5" }
+}
+
+decision pleading-motion: "Motion decided" by court cite "Okla. Dist. Ct. R. 4(a)"
+{
+  note "Where objections and defenses are consolidated under 12 O.S. § 2012(E), the court should hear jurisdictional objections first (Okla. Dist. Ct. R. 4(a)). A motion states its grounds and relief specifically (Okla. Dist. Ct. R. 4(b)) and is accompanied by a concise brief or list of authorities, except the motions Rule 4(c) lists (Okla. Dist. Ct. R. 4(c)). A party opposing a motion serves and files a brief or list of authorities within 15 days after service of the motion, or the motion may be deemed confessed (Okla. Dist. Ct. R. 4(e)); objections to motions not requiring briefs are served and filed within 15 days after service (Okla. Dist. Ct. R. 4(d)). If a motion is denied for want of compliance, or for failure to present it or as withdrawn, the moving party serves any responsive pleading within 20 days after notice of the court's action (Okla. Dist. Ct. R. 4(d), (f)). Motions for judgment on the pleadings, for a more definite statement and to strike are not made and are summarily denied without extending the time to plead (Okla. Dist. Ct. R. 4(l)). Denial of a motion to dismiss for failure to state a claim is not reviewed on appeal after trial on the merits (Okla. Dist. Ct. R. 4(i)); an order granting dismissal for failure to state a claim or for lack of jurisdiction is subject to accelerated review under Okla. Sup. Ct. R. 1.36 (Okla. Dist. Ct. R. 4(m)), which is not vendored (lg-l6xh, #16). The dismissal standard (12 O.S. § 2012(B)(6)) and amendment (12 O.S. § 2015) are holes."
+  edge-pleading-motion-dismissed "Granted with prejudice" -> dismissed-pleading {
+    authority cite ?("12 O.S. § 2012(B)(6)")
+  }
+  edge-pleading-motion-leave "Granted with leave to amend" -> case-management {
+    authority cite ?("12 O.S. § 2015")
+  }
+  edge-pleading-motion-denied "Denied: responsive pleading follows" -> case-management {
+    authority cite "Okla. Dist. Ct. R. 4(d)"
+  }
+}
+
+terminal default-entered: "Default judgment against opponent" outcome [win] cite "Okla. Dist. Ct. R. 10"
+{
+  note "Where the party in default has appeared or filed a motion or pleading, default is not taken until a motion is filed and 5 days' notice of the hearing date is mailed or delivered to its attorney of record, or to the party if unrepresented; no notice is required where the defaulting party has not appeared, or in the cases Rule 10 lists (Okla. Dist. Ct. R. 10). The default standard (12 O.S. § 2055) is not vendored (lg-l6xh, #16). Outcome from the applicant's side."
+}
+
+terminal dismissed-unserved: "Dismissed for failure to serve" outcome [loss, dismissal] cite ?("12 O.S. § 2004") {
+  note "Dismissal for untimely service under 12 O.S. § 2004, not vendored (lg-l6xh, #16): whether it is with or without prejudice is a hole. Outcome from the applicant's side."
+}
+
+terminal dismissed-pleading: "Dismissed on motion" outcome [loss, dismissal] cite ?("12 O.S. § 2012(B)(6)") {
+  note "Dismissal for failure to state a claim under 12 O.S. § 2012(B)(6), not vendored (lg-l6xh, #16). An appeal from it is subject to accelerated review on the record Rule 4(m) lists (Okla. Dist. Ct. R. 4(m)). Outcome from the applicant's side."
+}
+
+state case-management: "Scheduling and pretrial conference" by court cite "Okla. Dist. Ct. R. 5"
+{
+  note "A pretrial docket is maintained for the trial of cases (Okla. Dist. Ct. R. 5(A)); at least 20 days' notice of the setting of a case for an initial pretrial conference is given (Okla. Dist. Ct. R. 5(B)). The court schedules the time to join parties, amend, complete discovery and file motions (Okla. Dist. Ct. R. 5(C)), and the pretrial order controls the trial and is modified only to prevent manifest injustice (Okla. Dist. Ct. R. 5(I)). A party who fails to appear at or prepare for a pretrial conference may suffer the sanctions Rule 5(J) lists, including default or dismissal (Okla. Dist. Ct. R. 5(J)). Discovery under 12 O.S. §§ 3224-3237 is not vendored (lg-l6xh, #16)."
+  edge-case-management-discovery "Scheduling order entered" -> discovery {
+    authority cite "Okla. Dist. Ct. R. 5(C)"
+  }
+}
+
+state discovery: "Discovery" by applicant cite ?("12 O.S. § 3226") {
+  note "Discovery scope and sanctions are 12 O.S. §§ 3226 and 3237, not vendored (lg-l6xh, #16): holes."
+  edge-discovery-sj "Summary judgment motion served" -> sj-motion {
+    authority cite "Okla. Dist. Ct. R. 13(a)"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Okla. Dist. Ct. R. 5(H)" }
+  edge-discovery-settle "Settled or dismissed" -> settled { authority cite ?("12 O.S. § 683") }
+}
+
+decision sj-motion: "Summary judgment motion decided" by court cite "Okla. Dist. Ct. R. 13"
+{
+  note "A party may move for summary judgment or summary disposition of any issue, with a concise statement of the undisputed material facts referring to the evidentiary material; the motion may be served at any time after the action is filed, but if the action is set for trial, at least 20 days before the trial date unless a scheduling order sets an earlier deadline (Okla. Dist. Ct. R. 13(a)). A party opposing it files, within 15 days after service of the motion, a concise statement of the material facts in genuine dispute, though not earlier than 45 days after service of the first summons by or upon that party; the movant's supported facts not specifically controverted are deemed admitted (Okla. Dist. Ct. R. 13(b)). The court renders judgment where there is no substantial controversy as to the material facts and a party is entitled to judgment as a matter of law; an order denying summary judgment is interlocutory (Okla. Dist. Ct. R. 13(e)). A judgment on summary judgment is subject to accelerated review under Okla. Sup. Ct. R. 1.36 (Okla. Dist. Ct. R. 13(h)), which is not vendored (lg-l6xh, #16)."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant {
+    authority cite "Okla. Dist. Ct. R. 13(e)"
+  }
+  edge-sj-motion-denied "Denied or partly denied" -> trial {
+    authority cite "Okla. Dist. Ct. R. 13(e)"
+  }
+}
+
+terminal judgment-for-movant: "Judgment for the movant" outcome [win, judgment] cite "Okla. Dist. Ct. R. 13(e)"
+{
+  note "Judgment on summary judgment or appealable summary disposition (Okla. Dist. Ct. R. 13(e)); after it, the pleadings and the pretrial order may not be amended to add facts known and presentable at the hearing, and a motion for new trial on newly discovered evidence must comply with 12 O.S. § 655 (Okla. Dist. Ct. R. 13(g)). Partial summary disposition is not modeled."
+}
+
+state trial: "Trial" by court cite "Okla. Dist. Ct. R. 5(H)"
+{
+  note "Any final pretrial conference is held as close to the time of trial as reasonable (Okla. Dist. Ct. R. 5(H)). The jury demand, its fee (28 O.S. § 152.1, cited in Okla. Dist. Ct. R. 5(I)) and the conduct of trial under 12 O.S. §§ 556-590 are not vendored (lg-l6xh, #16). Voir dire is Okla. Dist. Ct. R. 6 and instructions on issues of fact Okla. Dist. Ct. R. 28."
+  edge-trial-post "Verdict or decision" -> post-trial {
+    event JudgmentEntered()
+    authority cite "Okla. Dist. Ct. R. 17"
+  }
+}
+
+decision post-trial: "New-trial motion decided" by court cite "Okla. Dist. Ct. R. 17"
+{
+  note "A motion for new trial must state separately and with specificity every ground the movant relies on; on hearing or appeal the movant may not rely on errors not fairly embraced in the grounds stated in the timely motion (Okla. Dist. Ct. R. 17, citing Arkansas Louisiana Gas Co. v. Travis, 1984 OK 33, 682 P.2d 225). A motion for reconsideration, rehearing or vacation filed within 10 days of the day the decision was rendered may be regarded as a new-trial motion (Okla. Dist. Ct. R. 17, citing Horizons, Inc. v. Keo Leasing Co., 1984 OK 24, 681 P.2d 757); a motion, however styled, filed after the expiration of ten days following the decision is ineffective as a new-trial motion and does not extend appeal time (Okla. Dist. Ct. R. 17, citing 12 O.S. § 653 and Sellers v. Oklahoma Publishing Co., 1984 OK 11, 687 P.2d 116). 12 O.S. §§ 651-655 are not vendored (lg-l6xh, #16). In a proceeding to vacate, modify or reopen a final judgment commenced more than 30 days after its rendition, defects in the form of proceeding, verification or service are waived if the opposing party appears and does not immediately object (Okla. Dist. Ct. R. 19(a))."
+  edge-post-trial-judgment "Motion denied or none filed" -> judgment-entered {
+    event JudgmentEntered()
+    authority cite "Okla. Dist. Ct. R. 17"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Okla. Dist. Ct. R. 17" }
+}
+
+state judgment-entered: "Judgment filed" by office cite ?("12 O.S. § 696.2") {
+  note "The filing of the judgment and the start of the appeal time are 12 O.S. §§ 696.2-696.3 and 990A, not vendored (lg-l6xh, #16): holes. In multi-party or multi-claim cases the judgment must dispose of all claims and parties, or of at least one entirely with the express determination that there is no just reason for delay (12 O.S. § 994, as Okla. Dist. Ct. R. 13(h) reports it)."
+  edge-judgment-entered-appeal "Next step" -> appeal-decision { authority cite ?("12 O.S. § 990A") }
+}
+
+decision appeal-decision: "Appeal commenced within time?" by applicant cite ?("12 O.S. § 990A") {
+  note "How and when the appeal is commenced (12 O.S. § 990A and the Supreme Court Rules) is not vendored (lg-l6xh, #16): the form and the period are holes. The vendored rules report only that a dismissal or summary judgment is reviewed on an accelerated basis under Okla. Sup. Ct. R. 1.36, on the record Okla. Dist. Ct. R. 4(m) and 13(h) list."
+  edge-appeal-decision-taken "Appeal commenced" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite ?("12 O.S. § 990A")
+  }
+  edge-appeal-decision-none "No appeal" -> final-no-appeal { authority cite ?("12 O.S. § 990A") }
+}
+
+terminal appeal-taken: "Appeal to the Supreme Court" outcome [appeal] cite ?("12 O.S. § 990A") {
+  note "Continue in lit/ok-supreme-court, which may assign the appeal to the Court of Civil Appeals (lit/ok-court-of-civil-appeals)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite ?("12 O.S. § 990A") {
+  note "Final judgment with no appeal commenced in time; the time is a hole (lg-l6xh, #16)."
+}
+
+terminal settled: "Settled or dismissed" outcome [settlement] cite ?("12 O.S. § 683") {
+  note "Dismissal without prejudice by the plaintiff and settlement are statutory (12 O.S. §§ 683-684), not vendored (lg-l6xh, #16). Settlement terms are matter facts."
+}

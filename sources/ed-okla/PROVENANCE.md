@@ -21,3 +21,9 @@
 - Derived in the pod (lg-gddt.24) from `ed-okla/edokla-local-criminal-rules-2016-07-05.txt` (extract sha256 f056c35c58f1058a0bd3cf32cc8f9d1b33ef0eb5b014784be338244500a79628); nothing fetched. In the body (after the table of contents), one marker line `## LCrR <n>` is inserted before each rule's own heading line `LOCAL CRIMINAL RULE <n> - <TITLE>` (LCrR 1.1 through 57.2, 17 rules). The extract ends partway through LCrR 57.2(C) at the folio of page 19 of the 23-page PDF: the rest of LCrR 57.2 and LCrR 58.1, listed in the table of contents, are not in it (PARTIAL; re-extraction from the original on carbon would supply them). Rule text was not edited: deleting the marker lines (each `## LCrR ` line with its newline) restores the extract byte for byte.
 - Edition: as the extract, "Effective Date: July 5, 2016".
 - Sectioned sha256 06d896fc5319f2c22e0445acdadf7fd5c215ad4d86a86b2d2d072b484f82060e (the `path_sha256` pinned by `lit/oked-criminal/Lit.toml`).
+
+### `ed-okla/ed-okla-local-civil-rules-2016-sectioned.txt` — E.D. Okla. Local Civil Rules, sectioned
+
+- Derived in the pod (lg-f3q8.88) from `ed-okla/ed-okla-local-civil-rules-2016.txt` (extract sha256 f5291f852443cc56f7888e77a293905559206289165e6157ad1d2105aefb2f64); nothing fetched. In the body (after the table of contents), one marker line `## <n>` is inserted before each rule's own heading line `<n> <Title>.`, where `<n>` is the rule's designation as written (`LCvR 1.1` through `LCvR 84.1`, 63 rules). The table of contents carries no markers (LCvR 84.1's section runs to the end of the file, appendices included). Rule text was not edited: deleting the marker lines (each `## LCvR ` line with its newline) restores the extract byte for byte.
+- Edition: as the extract, Local Civil Rules "Effective Date July 5, 2016".
+- Sectioned sha256 bd4a1a6c32e665030862ed11c51837474b78ba3835ca024b34975a2408c25c96 (the `path_sha256` pinned by `lit/oked/Lit.toml`).

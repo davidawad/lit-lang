@@ -1,0 +1,31 @@
+# Proceedings against a judge in the Court on the Judiciary of Oklahoma,
+# from the respondent judge's (applicant's) side, as far as the vendored
+# text states. The court's constitutional basis (Okla. Const. art. VII-A),
+# its statutes and its rules are not vendored: Oklahoma's official texts
+# are served by OSCN, whose bot check stopped the fetch (lg-l6xh, #16), so
+# every step's authority is a cite hole and no period, standard of proof
+# or sanction is stated. in_force is the date the corpus was taken.
+[package]
+name = "ok-court-on-the-judiciary"
+version = "0.1.0"
+language = 1
+pack_id = "ok-court-on-the-judiciary"
+forum = "ok-court-on-the-judiciary"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "oklahoma"
+title = "Court on the Judiciary of Oklahoma"
+description = "Proceedings against a judge in the Court on the Judiciary of Oklahoma, as far as the vendored text states: the structure of a petition, answer, trial and decision, and review. Neither Okla. Const. art. VII-A nor the court's rules are vendored (lg-l6xh, #16), so every period, standard and sanction is a hole."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Court on the Judiciary of Oklahoma"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+ok-state-rules = { version = "^0.1.0", path = "../ok-rules" }

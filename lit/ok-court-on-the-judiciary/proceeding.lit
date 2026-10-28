@@ -1,0 +1,61 @@
+module ok-court-on-the-judiciary.proceeding
+
+import ok-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeOfAppealFiled }
+
+// Proceedings against a judge in the Court on the Judiciary of Oklahoma,
+// from the respondent judge's (applicant's) side. Neither Okla. Const.
+// art. VII-A nor the court's statutes and rules are vendored (lg-l6xh,
+// #16): every cite is a hole, and who files, the answer period, the
+// standard of proof, the sanctions and any review are not stated. The
+// earlier outline named no leading decision; none is cited.
+start charges
+
+state charges: "Charges filed" by office cite ?("Okla. Const. art. VII-A") {
+  note "How proceedings against a judge in the Court on the Judiciary begin, who may file them, notice and the respondent's rights are in Okla. Const. art. VII-A and the court's rules, not vendored (lg-l6xh, #16): holes. The applicant is the respondent judge."
+  edge-charges-answer "Respondent served" -> answer {
+    event ActionCommenced()
+    authority cite ?("Okla. Const. art. VII-A")
+  }
+}
+
+state answer: "Answer and pretrial" by applicant cite ?("Okla. Const. art. VII-A") {
+  note "The answer period, discovery and any interim suspension are holes (lg-l6xh, #16)."
+  edge-answer-hearing "Set for trial" -> hearing { authority cite ?("Okla. Const. art. VII-A") }
+}
+
+state hearing: "Trial" by court cite ?("Okla. Const. art. VII-A") {
+  note "The burden and standard of proof are holes (lg-l6xh, #16)."
+  edge-hearing-decision "Decision issued" -> decision {
+    authority cite ?("Okla. Const. art. VII-A")
+  }
+}
+
+chance decision: "Court decides" by court cite ?("Okla. Const. art. VII-A") {
+  note "Outcome probabilities are holes."
+  edge-decision-dismissed "Charges dismissed" -> charges-dismissed p ? { event DecisionFiled() }
+  edge-decision-sanction "Sanction ordered" -> sanction p ? { event DecisionFiled() }
+}
+
+decision sanction: "Review sought?" by applicant cite ?("Okla. Const. art. VII-A") {
+  note "Whether, when and where the respondent may seek review is a hole (lg-l6xh, #16)."
+  edge-sanction-final "No review" -> sanction-final {
+    event JudgmentEntered()
+    authority cite ?("Okla. Const. art. VII-A")
+  }
+  edge-sanction-review "Review sought" -> review-sought {
+    event NoticeOfAppealFiled()
+    authority cite ?("Okla. Const. art. VII-A")
+  }
+}
+
+terminal charges-dismissed: "Charges dismissed" outcome [win] cite ?("Okla. Const. art. VII-A") {
+  note "Costs and confidentiality are holes. Outcome from the respondent's side."
+}
+
+terminal sanction-final: "Order final" outcome [loss] cite ?("Okla. Const. art. VII-A") {
+  note "The order takes effect; its kinds and effect are holes (lg-l6xh, #16). Outcome from the respondent's side."
+}
+
+terminal review-sought: "Review sought" outcome [appeal] cite ?("Okla. Const. art. VII-A") {
+  note "Review proceedings are outside this package."
+}

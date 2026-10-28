@@ -1,0 +1,81 @@
+module ok-supreme-court.review
+
+import ok-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+// Review in the Supreme Court of Oklahoma of a Court of Civil Appeals
+// decision, from the applicant's (petitioner's) side. The Oklahoma Supreme
+// Court Rules are not vendored (lg-l6xh, #16): every cite is a hole, and
+// the petition period, form, length, grant standard, briefing, rehearing
+// and mandate rules are not stated. Direct retention of an appeal and
+// original proceedings are not modeled. The earlier outline named no
+// leading decision; none is cited.
+start petition
+
+decision petition: "Petition for certiorari?" by applicant cite ?("Okla. Sup. Ct. R.") {
+  note "How review of a Court of Civil Appeals decision is sought (by petition for certiorari), its period, form, length and grounds are in the Oklahoma Supreme Court Rules, not vendored (lg-l6xh, #16): holes, the procedure unverified."
+  edge-petition-none "No petition: the Court of Civil Appeals decision stands" -> review-not-sought {
+    authority cite ?("Okla. Sup. Ct. R.")
+  }
+  edge-petition-filed "Petition filed" -> review-decision {
+    event ReviewPetitionFiled()
+    authority cite ?("Okla. Sup. Ct. R.")
+  }
+}
+
+chance review-decision: "Court grants or denies certiorari" by court cite ?("Okla. Sup. Ct. R.") {
+  note "Certiorari is discretionary; the grant standard (not vendored: lg-l6xh, #16) and the grant probability are holes."
+  edge-review-denied "Certiorari denied" -> review-denied p ? {}
+  edge-review-granted "Certiorari granted" -> briefing p ? {}
+}
+
+state briefing: "Briefs filed" by applicant cite ?("Okla. Sup. Ct. R.") {
+  note "Whether and when supplemental briefs are filed after certiorari is granted, and their limits, are in the Supreme Court Rules, not vendored (lg-l6xh, #16): holes."
+  edge-briefing-argument "Submitted" -> argument { authority cite ?("Okla. Sup. Ct. R.") }
+}
+
+state argument: "Argument or submission" by court cite ?("Okla. Sup. Ct. R.") {
+  note "Whether argument is heard is a hole (lg-l6xh, #16)."
+  edge-argument-decision "Decision issued" -> decision { authority cite ?("Okla. Sup. Ct. R.") }
+}
+
+chance decision: "Court decides" by court cite ?("Okla. Sup. Ct. R.") {
+  note "Outcome probabilities are holes."
+  edge-decision-affirmed "Affirmed" -> rehearing p ? { event DecisionFiled() }
+  edge-decision-reversed "Reversed, vacated or remanded" -> rehearing p ? { event DecisionFiled() }
+}
+
+decision rehearing: "Rehearing sought?" by applicant cite ?("Okla. Sup. Ct. R.") {
+  note "The rehearing period and grounds are in the Supreme Court Rules, not vendored (lg-l6xh, #16): holes."
+  edge-rehearing-none "No rehearing" -> mandate-issued {
+    event MandateIssued()
+    authority cite ?("Okla. Sup. Ct. R.")
+  }
+  edge-rehearing-sought "Rehearing sought" -> rehearing-decision {
+    authority cite ?("Okla. Sup. Ct. R.")
+  }
+}
+
+chance rehearing-decision: "Rehearing decided" by court cite ?("Okla. Sup. Ct. R.") {
+  note "The rehearing probability is a hole."
+  edge-rehearing-denied "Rehearing denied" -> mandate-issued p ? {
+    event MandateIssued()
+    authority cite ?("Okla. Sup. Ct. R.")
+  }
+  edge-rehearing-granted "Rehearing granted" -> rehearing-granted p ? {}
+}
+
+terminal review-not-sought: "Review not sought: Court of Civil Appeals decision final" outcome [final] cite ?("Okla. Sup. Ct. R.") {
+  note "The Court of Civil Appeals decision stands and its mandate issues; costs are holes."
+}
+
+terminal review-denied: "Certiorari denied" outcome [final, loss] cite ?("Okla. Sup. Ct. R.") {
+  note "Denial leaves the Court of Civil Appeals decision in place. Federal certiorari (28 U.S.C. § 1257) is outside this package."
+}
+
+terminal mandate-issued: "Mandate issued" outcome [final] cite ?("Okla. Sup. Ct. R.") {
+  note "The case returns to the court below; costs are holes."
+}
+
+terminal rehearing-granted: "Rehearing granted" outcome [final] cite ?("Okla. Sup. Ct. R.") {
+  note "Proceedings on rehearing are outside this package."
+}

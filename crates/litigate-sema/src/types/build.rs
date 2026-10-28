@@ -391,6 +391,7 @@ pub fn check_decl_at<'db>(
         ck,
         manifest: m,
         class: crate::change::class_index(db, file.package(db)).as_ref(),
+        families: crate::change::families(db, file.package(db)),
         links: context.links,
         link_from: None,
     };

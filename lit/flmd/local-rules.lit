@@ -60,111 +60,69 @@ event CloseOutLetterReceived()
 /// the waiver. Failure can result in dismissal without notice and without
 /// prejudice (Local Rule 1.10(d)).
 deadline proof-of-service-period: 21.days after ServiceOrWaiverMade() counted_by frcp6 cite "M.D. Fla. Local Rule 1.10(a)"
-{
-  forum frcp
-}
 
 /// Local Rule 1.10(b): within 28 days after a party's failure to plead or
 /// otherwise defend, a party entitled to a default must apply for it.
 deadline default-application-period: 28.days after FailureToPleadOrDefend() counted_by frcp6 cite "M.D. Fla. Local Rule 1.10(b)"
-{
-  forum frcp
-}
 
 /// Local Rule 1.10(c): within 35 days after entry of a default, the party
 /// entitled to a default judgment must apply for it or file a paper
 /// identifying each unresolved issue necessary to its entry.
 deadline default-judgment-application-period: 35.days after DefaultEntered() counted_by frcp6 cite "M.D. Fla. Local Rule 1.10(c)"
-{
-  forum frcp
-}
 
 /// Local Rule 3.01(d): a party may respond to a motion within 14 days
 /// after service; a motion not timely answered is subject to treatment as
 /// unopposed.
 deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "M.D. Fla. Local Rule 3.01(d)"
-{
-  forum frcp
-}
 
 /// Local Rule 3.01(d): 21 days after service to respond to a motion to
 /// dismiss, for judgment on the pleadings, for summary judgment, to exclude
 /// or limit expert testimony, to certify a class, for a new trial, or to
 /// alter or amend the judgment.
 deadline dispositive-response-period: 21.days after DispositiveMotionServed() counted_by frcp6 cite "M.D. Fla. Local Rule 3.01(d)"
-{
-  forum frcp
-}
 
 /// Local Rule 3.01(e): no reply without leave, except that a party may
 /// reply to a response to a motion for summary judgment within 14 days
 /// after service of the response; the reply must not exceed 7 pages.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "M.D. Fla. Local Rule 3.01(e)"
-{
-  forum frcp
-}
 
 /// Local Rule 3.01(g)(3): if the opposing party is unavailable before the
 /// motion's filing, the movant after filing must try diligently for three
 /// days to contact the opposing party, then promptly supplement the motion.
 deadline conferral-attempt-period: 3.days after MotionFiledWithoutConference() counted_by frcp6 cite "M.D. Fla. Local Rule 3.01(g)(3)"
-{
-  forum frcp
-}
 
 /// Local Rule 3.02(b)(1): the case management report is filed within 40
 /// days after any defendant appears in an action originating in the court.
 deadline case-management-report-period: 40.days after DefendantAppeared() counted_by frcp6 cite "M.D. Fla. Local Rule 3.02(b)(1)"
-{
-  forum frcp
-}
 
 /// Local Rule 3.02(b)(2): within 40 days after the docketing of an action
 /// removed or transferred to the court.
 deadline removed-case-management-report-period: 40.days after RemovedActionDocketed() counted_by frcp6 cite "M.D. Fla. Local Rule 3.02(b)(2)"
-{
-  forum frcp
-}
 
 /// Local Rule 3.02(b)(3): within 70 days after service on the United
 /// States attorney in an action against the United States, its agency, or
 /// its officer or employee.
 deadline united-states-case-management-report-period: 70.days after UnitedStatesAttorneyServed() counted_by frcp6 cite "M.D. Fla. Local Rule 3.02(b)(3)"
-{
-  forum frcp
-}
 
 /// Local Rule 4.03(f): the mediation order requires the mediator to report
 /// within seven days after mediation its result and whether all required
 /// persons attended.
 deadline mediation-report-period: 7.days after MediationHeld() counted_by frcp6 cite "M.D. Fla. Local Rule 4.03(f)"
-{
-  forum frcp
-}
 
 /// Local Rule 7.01(b): within 14 days after entry of judgment, the party
 /// claiming a post-judgment attorney's fee and non-taxable expenses must
 /// move for a determination of entitlement (Local Rule 7.01(a): the
 /// procedure is bifurcated, except in a social security action).
 deadline fee-entitlement-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "M.D. Fla. Local Rule 7.01(b)"
-{
-  forum frcp
-}
 
 /// Local Rule 7.01(c): within 45 days after the order determining
 /// entitlement, the claimant must file the supplemental motion on amount.
 deadline fee-amount-motion-period: 45.days after FeeEntitlementDetermined() counted_by frcp6 cite "M.D. Fla. Local Rule 7.01(c)"
-{
-  forum frcp
-}
 
 /// Local Rule 7.01(e): no later than 14 days after receipt of a
 /// "close-out" letter, a lawyer requesting a fee payable from withheld
 /// social security benefits must move for the fee.
 deadline social-security-fee-motion-period: 14.days after CloseOutLetterReceived() counted_by frcp6 cite "M.D. Fla. Local Rule 7.01(e)"
-{
-  forum frcp
-}
 
 test "proof of service is due 21 days after service" cite "M.D. Fla. Local Rule 1.10(a)"
 {

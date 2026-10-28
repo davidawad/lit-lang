@@ -148,9 +148,6 @@ event MagistrateObjectionFiled() paper magistrate-objection
 /// object timely waives the objection. Outside removal cases the
 /// objection is due within the time for answering (FRCP 12(a)).
 deadline removal-division-objection-period: 30.days after NoticeOfRemovalFiled() counted_by frcp6 cite "D.N.D. Civ. L.R. 3.1(A)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 7.1(A)(1)(a): the adverse party has 28 days after service
 /// and filing of the memorandum in support of a dispositive motion to
@@ -158,31 +155,19 @@ deadline removal-division-objection-period: 30.days after NoticeOfRemovalFiled()
 /// motion for a preliminary injunction or other injunctive relief, other
 /// than a temporary restraining order (Civ. L.R. 7.1(A)(3)(a)).
 deadline dispositive-response-period: 28.days after DispositiveMemorandumFiled() counted_by frcp6 cite "D.N.D. Civ. L.R. 7.1(A)(1)(a)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 7.1(A)(1)(a): the moving party has 14 days after service and
 /// filing of the response to serve and file a reply.
 deadline dispositive-reply-period: 14.days after DispositiveResponseFiled() counted_by frcp6 cite "D.N.D. Civ. L.R. 7.1(A)(1)(a)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 7.1(A)(2): the adverse party has 14 days after service and
 /// filing of the memorandum in support of a non-dispositive motion to
 /// serve and file a response.
 deadline response-period: 14.days after MemorandumFiled() counted_by frcp6 cite "D.N.D. Civ. L.R. 7.1(A)(2)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 7.1(A)(2), (B)(2): the moving party has 7 days to serve and
 /// file a reply, running from the service and filing of the response.
 deadline reply-period: 7.days after ResponseFiled() counted_by frcp6 cite "D.N.D. Civ. L.R. 7.1(A)(2)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 7.1(C)(2), (3): unless the court orders otherwise, an amicus
 /// curiae serves and files its motion for leave and proposed brief, or,
@@ -190,110 +175,68 @@ deadline reply-period: 7.days after ResponseFiled() counted_by frcp6 cite "D.N.D
 /// the party it supports files a memorandum in support of a motion or a
 /// response to a motion.
 deadline amicus-brief-period: 7.days after SupportedPartyFiled() counted_by frcp6 cite "D.N.D. Civ. L.R. 7.1(C)(2)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 7.1.1: every non-government organizational party or
 /// intervenor files a disclosure statement or a certificate that FRCP 7.1
 /// is not applicable within 14 days of its first filing or entry of
 /// appearance.
 deadline disclosure-statement-period: 14.days after FirstFilingOrAppearance() counted_by frcp6 cite "D.N.D. Civ. L.R. 7.1.1"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 26.1(A): in cases exempt from an FRCP 16(b) conference and
 /// cases whose discovery completion date no order provides, discovery is
 /// completed 30 days before the scheduled trial date.
 deadline discovery-completion-period: 30.days before TrialBegins() counted_by frcp6 cite "D.N.D. Civ. L.R. 26.1(A)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 41.1: within 30 days after advising the court the case has
 /// settled, or a longer time the court sets, the parties serve and file
 /// the documents necessary to terminate the case, unless the United
 /// States is a party.
 deadline settlement-papers-period: 30.days after SettlementAdvised() counted_by frcp6 cite "D.N.D. Civ. L.R. 41.1"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 41.1: if the United States is a party, the documents are
 /// served and filed within 60 days of advising the court the case has
 /// settled.
 deadline settlement-papers-united-states-period: 60.days after SettlementAdvisedUnitedStatesParty() counted_by frcp6 cite "D.N.D. Civ. L.R. 41.1"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 41.1: if the court dismisses the case because the parties did
 /// not file those documents, a party may move to reinstate it, showing
 /// good cause, within 60 days after the date of the order.
 deadline reinstatement-motion-period: 60.days after SettledCaseDismissed() counted_by frcp6 cite "D.N.D. Civ. L.R. 41.1"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 51.1(A): unless ordered otherwise, each party serves and
 /// files requested jury instructions and a proposed verdict form at least
 /// 7 days before the first day of trial.
 deadline jury-instructions-period: 7.days before TrialBegins() counted_by frcp6 cite "D.N.D. Civ. L.R. 51.1(A)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 54.1(A)(1): if the parties cannot stipulate to costs, a
 /// party seeking costs serves and files a motion for costs, with a
 /// verified statement of costs, no later than 14 days after entry of
 /// judgment; failure to comply may waive the claim.
 deadline costs-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D.N.D. Civ. L.R. 54.1(A)(1)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 54.1(A)(1): each party objecting to the claimed costs serves
 /// and files a response within 14 days of service or filing of the
 /// motion.
 deadline costs-response-period: 14.days after CostsMotionFiled() counted_by frcp6 cite "D.N.D. Civ. L.R. 54.1(A)(1)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 54.1(A)(1): within 7 days after the response is served and
 /// filed, the moving party may file a reply.
 deadline costs-reply-period: 7.days after CostsResponseFiled() counted_by frcp6 cite "D.N.D. Civ. L.R. 54.1(A)(1)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 54.1(A)(2): the court taxes costs allowable under FRAP 39(e)
 /// if a verified statement of costs is served and filed within 14 days
 /// of the issuance of the court of appeals' mandate.
 deadline appeal-costs-period: 14.days after MandateIssued() counted_by frcp6 cite "D.N.D. Civ. L.R. 54.1(A)(2)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 54.1(B)(2): the United States has 14 days from service and
 /// filing of a motion for attorney's fees against it to respond.
 deadline fee-response-united-states-period: 14.days after FeeMotionAgainstUnitedStatesFiled() counted_by frcp6 cite "D.N.D. Civ. L.R. 54.1(B)(2)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 54.1(B)(2): within 7 days after the response is served and
 /// filed, the moving party may file a reply.
 deadline fee-reply-united-states-period: 7.days after FeeResponseFiled() counted_by frcp6 cite "D.N.D. Civ. L.R. 54.1(B)(2)"
-{
-  forum frcp
-}
 
 /// Civ. L.R. 72.1(D)(2): the adverse party has 7 days after service and
 /// filing of an objection to a magistrate judge's non-dispositive order
 /// to serve and file a response; a reply is not permitted.
 deadline magistrate-objection-response-period: 7.days after MagistrateObjectionFiled() counted_by frcp6 cite "D.N.D. Civ. L.R. 72.1(D)(2)"
-{
-  forum frcp
-}

@@ -164,33 +164,21 @@ event WithdrawalMotionFiled()
 /// consent to the existing venue (L.R. 3.2(c)(3)). A defendant moves with
 /// its first appearance (L.R. 3.2(c)(1)).
 deadline venue-change-motion-period: 14.days after FirstVenueDefeatingAppearance() counted_by frcp6 cite "D. Mont. L.R. 3.2(c)"
-{
-  forum frcp
-}
 
 /// L.R. 3.3(a)(1): within seven days after filing a notice of removal, the
 /// removing party delivers a copy of it to the state court.
 deadline removal-notice-delivery-period: 7.days after RemovalNoticeFiled() counted_by frcp6 cite "D. Mont. L.R. 3.3(a)"
-{
-  forum frcp
-}
 
 /// L.R. 3.3(a)(4): non-member counsel who appeared to seek an extension
 /// must become a member, or new counsel must appear, within seven days of
 /// that appearance.
 deadline non-member-counsel-period: 7.days after NonMemberCounselAppeared() counted_by frcp6 cite "D. Mont. L.R. 3.3(a)"
-{
-  forum frcp
-}
 
 /// L.R. 4.4: a party requesting service of a subpoena by the U.S. Marshals
 /// Service gives the Marshal notice, with all documentation needed to
 /// effect service, no later than 30 days before the desired date of
 /// service; a lesser period only on motion and good cause.
 deadline marshal-subpoena-notice-period: 30.days before SubpoenaServiceDesired() counted_by frcp6 cite "D. Mont. L.R. 4.4"
-{
-  forum frcp
-}
 
 /// L.R. 4.5(a): for FRCP 4(m), where a plaintiff applied to proceed in forma
 /// pauperis and was not denied, the time for service begins the day after
@@ -198,25 +186,16 @@ deadline marshal-subpoena-notice-period: 30.days before SubpoenaServiceDesired()
 /// otherwise, service is accomplished within 90 days. In all other cases
 /// FRCP 4(m) governs (L.R. 4.5(b)).
 deadline ifp-service-period: 90.days after ServiceOrderEntered() counted_by frcp6 cite "D. Mont. L.R. 4.5(a)"
-{
-  forum frcp
-}
 
 /// L.R. 5.1(b)(3): unless otherwise ordered, within ten days of the
 /// conclusion of a hearing or trial a party files in CM/ECF an electronic
 /// version of each documentary exhibit admitted into evidence.
 deadline exhibit-filing-period: 10.days after HearingOrTrialConcluded() counted_by frcp6 cite "D. Mont. L.R. 5.1(b)"
-{
-  forum frcp
-}
 
 /// L.R. 5.1(b)(8): courtesy copies of exhibits are destroyed unless the
 /// filing party requests their return within ten days of the conclusion of
 /// the trial or hearing.
 deadline courtesy-copy-return-period: 10.days after HearingOrTrialConcluded() counted_by frcp6 cite "D. Mont. L.R. 5.1(b)"
-{
-  forum frcp
-}
 
 /// L.R. 5.3(b): the court may dismiss a complaint without prejudice or
 /// strike an answer when a document it directed to an attorney or
@@ -224,175 +203,109 @@ deadline courtesy-copy-return-period: 10.days after HearingOrTrialConcluded() co
 /// does not receive, within 60 days of the return, a written communication
 /// giving a current address for service.
 deadline address-after-returned-mail-period: 60.days after CourtMailReturned() counted_by frcp6 cite "D. Mont. L.R. 5.3(b)"
-{
-  forum frcp
-}
 
 /// L.R. 7.1(d)(1)(B)(i): responses to motions to dismiss, for judgment on
 /// the pleadings or for summary judgment are filed within 21 days after
 /// the motion was entered in the docket.
 deadline dispositive-response-period: 21.days after DispositiveMotionDocketed() counted_by frcp6 cite "D. Mont. L.R. 7.1(d)"
-{
-  forum frcp
-}
 
 /// L.R. 7.1(d)(1)(B)(ii): responses to all other motions are filed within
 /// 14 days after the motion was entered in the docket; except on a pro se
 /// motion for appointment of counsel, failure to respond may be deemed an
 /// admission that the motion is well-taken.
 deadline response-period: 14.days after MotionDocketed() counted_by frcp6 cite "D. Mont. L.R. 7.1(d)"
-{
-  forum frcp
-}
 
 /// L.R. 7.1(d)(1)(C): the moving party may file a reply within 14 days
 /// after the response was entered in the docket; no further briefing
 /// without leave (L.R. 7.1(d)(1)(D)).
 deadline reply-period: 14.days after ResponseDocketed() counted_by frcp6 cite "D. Mont. L.R. 7.1(d)"
-{
-  forum frcp
-}
 
 /// L.R. 7.5(b)(3): parties may respond to a motion for leave to file an
 /// amicus brief within 14 days of its entry by the clerk; there is no
 /// further briefing.
 deadline amicus-response-period: 14.days after AmicusMotionDocketed() counted_by frcp6 cite "D. Mont. L.R. 7.5(b)"
-{
-  forum frcp
-}
 
 /// L.R. 16.2(b): each party's preliminary pretrial statement, the
 /// discovery plan and the statement of stipulated facts are filed no later
 /// than seven days before the preliminary pretrial conference.
 deadline preliminary-pretrial-filings-period: 7.days before PreliminaryPretrialConferenceHeld() counted_by frcp6 cite "D. Mont. L.R. 16.2(b)"
-{
-  forum frcp
-}
 
 /// L.R. 26.1(a): except in cases exempt under FRCP 26(a)(1)(B), or unless
 /// otherwise directed, the parties confer at least 21 days before the
 /// preliminary pretrial conference.
 deadline rule-26f-conference-period: 21.days before PreliminaryPretrialConferenceHeld() counted_by frcp6 cite "D. Mont. L.R. 26.1(a)"
-{
-  forum frcp
-}
 
 /// L.R. 16.4(a): at least 14 days before the proposed final pretrial order
 /// is due, the plaintiff convenes a conference of all counsel and
 /// self-represented parties to prepare it.
 deadline final-pretrial-planning-period: 14.days before FinalPretrialOrderDue() counted_by frcp6 cite "D. Mont. L.R. 16.4(a)"
-{
-  forum frcp
-}
 
 /// L.R. 26.1(b): each party serves initial disclosures under FRCP
 /// 26(a)(1)(A) no more than 14 days after the Rule 26(f) conference;
 /// serving them at least seven days before the conference is encouraged,
 /// not required.
 deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counted_by frcp6 cite "D. Mont. L.R. 26.1(b)"
-{
-  forum frcp
-}
 
 /// L.R. 48.1(b)(1): neither parties nor counsel may interview jurors unless,
 /// within 28 days after entry of judgment, a party files proposed written
 /// questions and an affidavit showing good cause.
 deadline juror-interview-filing-period: 28.days after JudgmentEntered() counted_by frcp6 cite "D. Mont. L.R. 48.1(b)"
-{
-  forum frcp
-}
 
 /// L.R. 54.1(a): within 14 days after entry of a judgment allowing costs,
 /// the prevailing party may serve and file an application for taxation of
 /// costs on Form AO-133, limited to costs under 28 U.S.C. § 1920.
 deadline bill-of-costs-period: 14.days after CostsJudgmentEntered() counted_by frcp6 cite "D. Mont. L.R. 54.1(a)"
-{
-  forum frcp
-}
 
 /// L.R. 54.1(b): the opposing party may object within 14 days after the
 /// application was filed; failure to object waives review of the clerk's
 /// action.
 deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "D. Mont. L.R. 54.1(b)"
-{
-  forum frcp
-}
 
 /// L.R. 58.1(c): objections to a proposed judgment the court ordered may be
 /// filed within seven days of its filing.
 deadline proposed-judgment-objection-period: 7.days after ProposedJudgmentFiled() counted_by frcp6 cite "D. Mont. L.R. 58.1(c)"
-{
-  forum frcp
-}
 
 /// L.R. 72.3(b): an objection is filed within 14 days of service of the
 /// magistrate judge's order or findings and recommendation.
 deadline magistrate-objection-period: 14.days after MagistrateRulingServed() counted_by frcp6 cite "D. Mont. L.R. 72.3(b)"
-{
-  forum frcp
-}
 
 /// L.R. 72.3(b): a response is filed within 14 days of service of the
 /// objection. A reply is not permitted.
 deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "D. Mont. L.R. 72.3(b)"
-{
-  forum frcp
-}
 
 /// L.R. 73.1(d): parties have 14 days from service of the clerk's notice of
 /// assignment to file a notice of withholding of consent; a party whose
 /// form is not timely filed is deemed to consent to magistrate judge
 /// jurisdiction.
 deadline consent-withholding-period: 14.days after ConsentNoticeServed() counted_by frcp6 cite "D. Mont. L.R. 73.1(d)"
-{
-  forum frcp
-}
 
 /// L.R. 78.2(a)(1): unless the defendant moves to dismiss, the plaintiff's
 /// opening brief is filed within 60 days after the administrative record
 /// is filed; failure may result in summary dismissal.
 deadline social-security-opening-brief-period: 60.days after AdministrativeRecordFiled() counted_by frcp6 cite "D. Mont. L.R. 78.2(a)"
-{
-  forum frcp
-}
 
 /// L.R. 78.2(a)(2): the defendant's response brief is filed within 30 days
 /// after the plaintiff's brief is filed.
 deadline social-security-response-brief-period: 30.days after SocialSecurityOpeningBriefFiled() counted_by frcp6 cite "D. Mont. L.R. 78.2(a)"
-{
-  forum frcp
-}
 
 /// L.R. 78.2(a)(3): the plaintiff's reply brief, if any, is filed within 14
 /// days after the defendant's brief is filed.
 deadline social-security-reply-brief-period: 14.days after SocialSecurityResponseBriefFiled() counted_by frcp6 cite "D. Mont. L.R. 78.2(a)"
-{
-  forum frcp
-}
 
 /// L.R. 78.3(a)(1): objections to a bankruptcy judge's ruling subject to de
 /// novo review under 28 U.S.C. § 157 are filed within 14 days of the
 /// ruling.
 deadline bankruptcy-objection-period: 14.days after BankruptcyRulingEntered() counted_by frcp6 cite "D. Mont. L.R. 78.3(a)"
-{
-  forum frcp
-}
 
 /// L.R. 78.3(a)(1): a response may be filed within 14 days of the
 /// objection's filing. A reply is not permitted.
 deadline bankruptcy-objection-response-period: 14.days after BankruptcyObjectionFiled() counted_by frcp6 cite "D. Mont. L.R. 78.3(a)"
-{
-  forum frcp
-}
 
 /// L.R. 83.3(b)(2)(B)(i): without the client's written consent, a motion to
 /// withdraw is supported by an affidavit that a notice of intent to file it
 /// was personally served on the client at least 14 days before the motion
 /// is filed.
 deadline withdrawal-intent-notice-period: 14.days before WithdrawalMotionFiled() counted_by frcp6 cite "D. Mont. L.R. 83.3(b)"
-{
-  forum frcp
-}
 
 test "venue change motion period: 14 days after the trigger" cite "D. Mont. L.R. 3.2(c)"
 {

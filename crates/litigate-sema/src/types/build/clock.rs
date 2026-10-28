@@ -426,8 +426,16 @@ impl Cx<'_, '_> {
 
     /// L3009 when deadline `name`, a period of `forum`'s rules, is counted
     /// by `counted_by`, a rule computing other forums' periods (design
-    /// review 2026-10-23, L2-L4: no cross-forum borrowing).
+    /// review 2026-10-23, L2-L4: no cross-forum borrowing). A rule computes
+    /// the periods of every forum in the family of a forum it names: FRCP
+    /// 6(a) and FRAP 26(a) count "any local rule or court order", so a
+    /// district's or a circuit's own periods are its own forum's.
     fn borrowing(&mut self, name: &Name, counted_by: &RefPath, forum: &str) {
+        let family = crate::change::family_of(self.families, forum);
+        let computes = |forums: &std::collections::BTreeSet<String>| {
+            forums.contains(forum)
+                || family.is_some_and(|f| f.forums.iter().any(|x| forums.contains(x)))
+        };
         // `counted_by` resolved to a counting rule before this is asked.
         let borrowed =
             self.ck
@@ -435,7 +443,7 @@ impl Cx<'_, '_> {
                 .value(counted_by)
                 .ok()
                 .and_then(|(_, found)| match &found.item.kind {
-                    ValueKind::Counting(forums) if !forums.contains(forum) => Some(forums.clone()),
+                    ValueKind::Counting(forums) if !computes(forums) => Some(forums.clone()),
                     _ => None,
                 });
         let Some(forums) = borrowed else {

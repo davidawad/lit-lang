@@ -62,97 +62,58 @@ event MagistrateObjectionsServed()
 /// Disclosure Statement with the initial pleading or other paper, it is
 /// filed within seven days of the date of the original filing.
 deadline disclosure-statement-period: 7.days after DisclosureDeferredFilingMade() counted_by frcp6 cite "W.D. Pa. LCvR 7.1"
-{
-  forum frcp
-}
 
 /// LCvR 7.1.B: a party filing a civil RICO action files a RICO case
 /// statement with the complaint or within fourteen days thereafter.
 deadline rico-case-statement-period: 14.days after RicoComplaintFiled() counted_by frcp6 cite "W.D. Pa. LCvR 7.1"
-{
-  forum frcp
-}
 
 /// LCvR 10.E: within 21 days of commencement of a pro se prisoner civil
 /// rights proceeding, the plaintiff files the form consenting to or
 /// declining the jurisdiction of the magistrate judge.
 deadline plaintiff-consent-form-period: 21.days after PrisonerCivilRightsCommenced() counted_by frcp6 cite "W.D. Pa. LCvR 10"
-{
-  forum frcp
-}
 
 /// LCvR 10.E: the respondent files the same form within 21 days of its
 /// appearance.
 deadline respondent-consent-form-period: 21.days after PrisonerCivilRightsRespondentAppeared() counted_by frcp6 cite "W.D. Pa. LCvR 10"
-{
-  forum frcp
-}
 
 /// LCvR 16.1.C.2: within 30 days of the filing of the plaintiff's pretrial
 /// statement, the defendant files its pretrial statement.
 deadline defendant-pretrial-statement-period: 30.days after PlaintiffPretrialStatementFiled() counted_by frcp6 cite "W.D. Pa. LCvR 16.1"
-{
-  forum frcp
-}
 
 /// LCvR 16.1.C.3: within 30 days of the filing of the defendant's pretrial
 /// statement, any third-party defendant files its pretrial statement.
 deadline third-party-pretrial-statement-period: 30.days after DefendantPretrialStatementFiled() counted_by frcp6 cite "W.D. Pa. LCvR 16.1"
-{
-  forum frcp
-}
 
 /// LCvR 16.1.C.6.f: a motion to supplement a pretrial statement is filed
 /// and served not less than seven days before the final pretrial
 /// conference.
 deadline supplement-pretrial-statement-motion: 7.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "W.D. Pa. LCvR 16.1"
-{
-  forum frcp
-}
 
 /// LCvR 23.E: at least seven days before the Pretrial Conference in a class
 /// action, the parties submit the Joint Report of the Parties and Proposed
 /// Scheduling and Discovery Order.
 deadline class-joint-report: 7.days before ClassPretrialConferenceHeld() counted_by frcp6 cite "W.D. Pa. LCvR 23"
-{
-  forum frcp
-}
 
 /// LCvR 56.C: within 30 days of service of a motion for summary judgment,
 /// the opposing party files its responsive concise statement, memorandum
 /// in opposition and appendix.
 deadline summary-judgment-opposition-period: 30.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "W.D. Pa. LCvR 56"
-{
-  forum frcp
-}
 
 /// LCvR 56.D: within 14 days of service of the opposing party's
 /// submission, the moving party may reply.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6 cite "W.D. Pa. LCvR 56"
-{
-  forum frcp
-}
 
 /// LCvR 72.C.2: a party may object to a magistrate judge's non-dispositive
 /// determination within fourteen days after the date of service of the
 /// order, unless the magistrate judge or district judge prescribes a
 /// different time.
 deadline magistrate-order-objection-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "W.D. Pa. LCvR 72"
-{
-  forum frcp
-}
 
 /// LCvR 72.D.2: a party may object to a magistrate judge's proposed
 /// findings, recommendations or report within fourteen days after the date
 /// of service.
 deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "W.D. Pa. LCvR 72"
-{
-  forum frcp
-}
 
 /// LCvR 72.C.2, 72.D.2: the opposing party may respond to the objections
 /// within fourteen days after the date of service.
 deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6 cite "W.D. Pa. LCvR 72"
-{
-  forum frcp
-}

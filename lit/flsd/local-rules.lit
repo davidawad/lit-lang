@@ -45,94 +45,58 @@ event DraftFeeMotionServed()
 /// served with the summons and complaint, the memorandum is due when the
 /// response to the complaint is.
 deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. Fla. L.R. 7.1(c)"
-{
-  forum frcp
-}
 
 /// Local Rule 7.1(c)(1): the movant may file and serve a reply within 7
 /// days after service of the opposing memorandum, strictly limited to
 /// rebuttal.
 deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "S.D. Fla. L.R. 7.1(c)"
-{
-  forum frcp
-}
 
 /// Local Rule 7.2: a copy of any motion pending on removal or transfer, its
 /// supporting papers and any opposition, is filed and served by the moving
 /// party within 7 days of the order of transfer or the notice of removal.
 deadline pending-motion-papers-period: 7.days after RemovedOrTransferred() counted_by frcp6 cite "S.D. Fla. L.R. 7.2"
-{
-  forum frcp
-}
 
 /// Local Rule 7.2: a supporting memorandum not yet submitted, or an
 /// opposing memorandum not yet filed, is due within 14 days after the
 /// notice of removal or the order of transfer.
 deadline pending-motion-memorandum-period: 14.days after RemovedOrTransferred() counted_by frcp6 cite "S.D. Fla. L.R. 7.2"
-{
-  forum frcp
-}
 
 /// Local Rule 7.8: an opposing party may respond to a notice of
 /// supplemental authority within 7 days of its filing; no replies.
 deadline supplemental-authority-response-period: 7.days after SupplementalAuthorityNoticeFiled() counted_by frcp6 cite "S.D. Fla. L.R. 7.8"
-{
-  forum frcp
-}
 
 /// Local Rule 16.1(b)(2): the joint conference report is submitted within
 /// 14 days of the conference.
 deadline conference-report-period: 14.days after PartiesConferred() counted_by frcp6 cite "S.D. Fla. L.R. 16.1(b)"
-{
-  forum frcp
-}
 
 /// Local Rule 16.2(f)(1): within 7 days following the mediation
 /// conference, the mediator provides the parties a Mediation Report.
 deadline mediation-report-period: 7.days after MediationConferenceHeld() counted_by frcp6 cite "S.D. Fla. L.R. 16.2(f)"
-{
-  forum frcp
-}
 
 /// Local Rule 26.1(g)(2)(A)(i): a dispute about a written discovery
 /// response, objection or privilege log is submitted within 28 days of its
 /// service; the parties may extend it once by up to 7 days by unfiled
 /// written stipulation (Local Rule 26.1(g)(2)(C)).
 deadline discovery-dispute-period: 28.days after DiscoveryResponseServed() counted_by frcp6 cite "S.D. Fla. L.R. 26.1(g)"
-{
-  forum frcp
-}
 
 /// Local Rule 7.3(a)(1): a motion for attorneys' fees or non-taxable
 /// expenses is filed and served within 60 days of entry of the final
 /// judgment or order, whatever the prospect or pendency of review.
 deadline fee-motion-period: 60.days after FinalJudgmentEntered() counted_by frcp6 cite "S.D. Fla. L.R. 7.3(a)"
-{
-  forum frcp
-}
 
 /// Local Rule 7.3(a): within 14 days after service of the fee motion, the
 /// respondent describes each objected time entry or expense with
 /// reasonable particularity.
 deadline fee-objection-period: 14.days after FeeMotionServed() counted_by frcp6 cite "S.D. Fla. L.R. 7.3(a)"
-{
-  forum frcp
-}
 
 /// Local Rule 7.3(b): within 21 days of service of the draft fee motion,
 /// the parties confer in good faith on entitlement and amount.
 deadline draft-fee-conference-period: 21.days after DraftFeeMotionServed() counted_by frcp6 cite "S.D. Fla. L.R. 7.3(b)"
-{
-  forum frcp
-}
 
 /// Local Rule 7.3(c): a bill of costs under 28 U.S.C. § 1920 is filed and
 /// served within 30 days of entry of final judgment or other appealable
 /// order; review or appeal does not toll it.
 deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6 cite "S.D. Fla. L.R. 7.3(c)"
-{
-  forum frcp
-}
 
 test "an opposing memorandum is due 14 days after service" cite "S.D. Fla. L.R. 7.1(c)"
 {

@@ -92,49 +92,31 @@ event QualifyingEmploymentEnded()
 /// heard on the first Thursday not less than 34 days after filing. The
 /// date is the earliest hearing date, not a filing deadline.
 deadline earliest-hearing-date: 34.days after MotionFiled() counted_by frcp6 cite "D.N.M.I. LR 7.1(b)"
-{
-  forum frcp
-}
 
 /// LR 7.1(c)(2): the opposing party files an opposition, or a statement of
 /// non-opposition, no later than 14 days after the motion is served. An
 /// untimely opposition may be disregarded and stricken, and failure to
 /// oppose may be deemed an admission that the motion is meritorious.
 deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "D.N.M.I. LR 7.1(c)"
-{
-  forum frcp
-}
 
 /// LR 7.1(c)(3): the movant serves and files any reply no later than 7
 /// days after the opposition is served; no further filing is accepted
 /// without leave (LR 7.1(c)(4)).
 deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "D.N.M.I. LR 7.1(c)"
-{
-  forum frcp
-}
 
 /// LR 16.2(a): except in exempt cases or for good cause, the court issues
 /// an order setting the case management conference within 14 days after
 /// any defendant has appeared.
 deadline cmc-order-period: 14.days after DefendantAppeared() counted_by frcp6 cite "D.N.M.I. LR 16.2(a)"
-{
-  forum frcp
-}
 
 /// LR 16.2(b): the parties file a joint case management statement not
 /// less than 7 days before the case management conference.
 deadline joint-cmc-statement-period: 7.days before CaseManagementConferenceHeld() counted_by frcp6 cite "D.N.M.I. LR 16.2(b)"
-{
-  forum frcp
-}
 
 /// LR 16.1(b)(1)(A), (B): an Expedited or Standard Track case has a
 /// discovery cut-off no later than 60 days before trial; a Complex Track
 /// case's cut-off is set by the Case Management Scheduling Order.
 deadline track-discovery-cutoff: 60.days before TrackTrialBegins() counted_by frcp6 cite "D.N.M.I. LR 16.1(b)"
-{
-  forum frcp
-}
 
 /// LR 16.5(a)(1)-(3): unless the judge otherwise orders, not less than 14
 /// days before the scheduled trial date each party serves and files briefs
@@ -142,140 +124,89 @@ deadline track-discovery-cutoff: 60.days before TrackTrialBegins() counted_by fr
 /// trial files and serves proposed voir dire questions and jury
 /// instructions, and the parties exchange their pre-marked trial exhibits.
 deadline pretrial-filings-period: 14.days before TrialBegins() counted_by frcp6 cite "D.N.M.I. LR 16.5(a)"
-{
-  forum frcp
-}
 
 /// LR 16.5(a)(2): the defendant files and serves any additional or
 /// different proposed jury instructions seven days after the plaintiff's;
 /// the rule's "after" is read as after the plaintiff's filing.
 deadline defendant-jury-instructions-period: 7.days after PlaintiffJuryInstructionsFiled() counted_by frcp6 cite "D.N.M.I. LR 16.5(a)"
-{
-  forum frcp
-}
 
 /// LR 16.5(a)(4)(B): at least 28 days before trial commences, the
 /// proponent of a foreign language document serves the translation, the
 /// document and the translator's affidavit; absent good cause, failure
 /// renders both inadmissible (LR 16.5(a)(4)(D)).
 deadline translation-service-period: 28.days before TrialBegins() counted_by frcp6 cite "D.N.M.I. LR 16.5(a)"
-{
-  forum frcp
-}
 
 /// LR 16.5(a)(4)(C): at least 14 days before trial commences, a party
 /// serves written objections to the accuracy of a translation; absent good
 /// cause, failure waives the objection (LR 16.5(a)(4)(D)).
 deadline translation-objection-period: 14.days before TrialBegins() counted_by frcp6 cite "D.N.M.I. LR 16.5(a)"
-{
-  forum frcp
-}
 
 /// LR 16.6(a): under FRCP 16(e), a final pretrial conference is held not
 /// later than 7 days before the scheduled trial date, unless the court and
 /// counsel deem it unnecessary.
 deadline final-pretrial-conference-period: 7.days before TrialBegins() counted_by frcp6 cite "D.N.M.I. LR 16.6(a)"
-{
-  forum frcp
-}
 
 /// LR 54.2: when a civil action set for jury trial settles or is otherwise
 /// disposed of before trial, juror costs are assessed against the parties,
 /// except for good cause, unless the Clerk's Office is notified in writing
 /// at least 14 days before the day the action is scheduled for trial.
 deadline juror-cost-notice-period: 14.days before TrialBegins() counted_by frcp6 cite "D.N.M.I. LR 54.2"
-{
-  forum frcp
-}
 
 /// LR 62.1(a): a nonresident plaintiff files a bond for costs of $500
 /// within 10 days after an adverse party's demand, unless the court
 /// dispenses with the bond or fixes a different amount; if a sufficient
 /// bond ordered is not filed, the clerk enters dismissal.
 deadline nonresident-cost-bond-period: 10.days after CostBondDemanded() counted_by frcp6 cite "D.N.M.I. LR 62.1(a)"
-{
-  forum frcp
-}
 
 /// LR 63.1(a)(2): the defendant provides the temporary receiver (or, if
 /// none, the plaintiff) a list of its creditors and their addresses within
 /// 7 days after being served with the order to show cause.
 deadline creditor-list-period: 7.days after ReceivershipOrderServed() counted_by frcp6 cite "D.N.M.I. LR 63.1(a)"
-{
-  forum frcp
-}
 
 /// LR 63.1(a)(2): not less than 5 days before the hearing, the temporary
 /// receiver (or, if none, the plaintiff) mails the listed creditors notice
 /// of the hearing and files proof of mailing.
 deadline creditor-hearing-notice-period: 5.days before ReceivershipHearingHeld() counted_by frcp6 cite "D.N.M.I. LR 63.1(a)"
-{
-  forum frcp
-}
 
 /// LR 63.1(f): within 28 days of appointment, a permanent receiver files a
 /// verified report and petition for instructions.
 deadline receiver-report-period: 28.days after PermanentReceiverAppointed() counted_by frcp6 cite "D.N.M.I. LR 63.1(f)"
-{
-  forum frcp
-}
 
 /// LR 63.1(f): the petition for instructions is heard on 7 days' notice to
 /// all known creditors and parties.
 deadline instructions-petition-notice-period: 7.days before InstructionsPetitionHearingHeld() counted_by frcp6 cite "D.N.M.I. LR 63.1(f)"
-{
-  forum frcp
-}
 
 /// LR 63.1(g): the receiver gives all interested parties at least 10 days'
 /// notice of hearings on dividends, confirmation of sales, the receiver's
 /// reports, and fee applications.
 deadline receivership-hearing-notice-period: 10.days before ReceivershipMatterHearingHeld() counted_by frcp6 cite "D.N.M.I. LR 63.1(g)"
-{
-  forum frcp
-}
 
 /// LR 79.1(b)(1): unless the court permits otherwise, an exhibit in the
 /// clerk's custody is not removed earlier than 14 days after the time for
 /// filing a notice of appeal expires, if no notice is filed. The date is
 /// the earliest removal date.
 deadline exhibit-removal-no-appeal: 14.days after AppealTimeExpired() counted_by frcp6 cite "D.N.M.I. LR 79.1(b)"
-{
-  forum frcp
-}
 
 /// LR 79.1(b)(2): if an appeal was taken, an exhibit is not removed
 /// earlier than 14 days after the mandate issues. The date is the earliest
 /// removal date.
 deadline exhibit-removal-after-mandate: 14.days after MandateIssued() counted_by frcp6 cite "D.N.M.I. LR 79.1(b)"
-{
-  forum frcp
-}
 
 /// LR 79.1(c): unless the court directs otherwise, the clerk may destroy
 /// or dispose of exhibits not reclaimed within 21 days after the time set
 /// for removal.
 deadline unclaimed-exhibit-period: 21.days after ExhibitRemovalTimeArrived() counted_by frcp6 cite "D.N.M.I. LR 79.1(c)"
-{
-  forum frcp
-}
 
 /// LR 79.2(c)(5): unless the court orders otherwise, the clerk unseals
 /// sealed documents, other than the criminal ones LR 79.2(c)(1)-(4) name,
 /// 120 days from entry of the sealing order, unless the order provides
 /// otherwise.
 deadline unsealing-period: 120.days after SealingOrderEntered() counted_by frcp6 cite "D.N.M.I. LR 79.2(c)"
-{
-  forum frcp
-}
 
 /// LR 83.5(d)(3): an attorney temporarily admitted under LR 83.5(d)(1)
 /// notifies the clerk in writing of the end of the qualifying employment
 /// within 14 days.
 deadline temporary-admission-termination-notice: 14.days after QualifyingEmploymentEnded() counted_by frcp6 cite "D.N.M.I. LR 83.5(d)"
-{
-  forum frcp
-}
 
 test "earliest hearing date: 34 days after the trigger" cite "D.N.M.I. LR 7.1(b)"
 {

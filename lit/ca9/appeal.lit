@@ -77,110 +77,68 @@ event RehearingPetitionFiled() paper rehearing-petition
 /// 7) within 5 days of the docketing of a civil appeal; counseled civil
 /// appeals only (9th Cir. R. 3-4(b)).
 deadline mediation-questionnaire-period: 5.days after AppealDocketed() counted_by frap26 cite "9th Cir. R. 3-4(a)"
-{
-  forum frap
-}
 
 /// Within 7 days of filing a notice of appeal from a preliminary
 /// injunction order, the parties arrange for expedited preparation of the
 /// transcript.
 deadline injunction-transcript-period: 7.days after PreliminaryInjunctionNoticeFiled() counted_by frap26 cite "9th Cir. R. 3-3(b)"
-{
-  forum frap
-}
 
 /// Unless a court order sets another schedule, the appellant files the
 /// opening brief and excerpts of record within 28 days of the docketing of
 /// the preliminary injunction notice of appeal in the district court.
 deadline injunction-opening-brief-period: 28.days after PreliminaryInjunctionNoticeDocketed() counted_by frap26 cite "9th Cir. R. 3-3(b)"
-{
-  forum frap
-}
 
 /// The appellee's brief and any supplemental excerpts are due within 28
 /// days of service of the opening brief.
 deadline injunction-answering-brief-period: 28.days after PreliminaryInjunctionOpeningBriefServed() counted_by frap26 cite "9th Cir. R. 3-3(b)"
-{
-  forum frap
-}
 
 /// The appellant may reply within 21 days of service of the appellee's
 /// brief.
 deadline injunction-reply-brief-period: 21.days after PreliminaryInjunctionAnsweringBriefServed() counted_by frap26 cite "9th Cir. R. 3-3(b)"
-{
-  forum frap
-}
 
 /// The appellant serves the initial transcript notice and statement of
 /// issues within 7 days of the filing of the notice of appeal (or of the
 /// order disposing of the last timely FRAP 4(a)(4) motion, not modeled).
 deadline transcript-notice-period: 7.days after NoticeOfAppealFiled() counted_by frap26 cite "9th Cir. R. 10-3"
-{
-  forum frap
-}
 
 /// The appellee may serve its list of additional transcript portions
 /// within 7 days of the service date of the appellant's initial notice.
 deadline transcript-response-period: 7.days after TranscriptNoticeServed() counted_by frap26 cite "9th Cir. R. 10-3"
-{
-  forum frap
-}
 
 /// Unless a court order sets another date, the reply brief is due 21 days
 /// from the service of the last timely filed answering brief, a trigger
 /// FRAP 31(a)(1) does not have.
 deadline circuit-reply-brief-period: 21.days after LastAnsweringBriefServed() counted_by frap26 cite "9th Cir. R. 31-2"
-{
-  forum frap
-}
 
 /// A written motion to extend the time for a brief is filed at least 7
 /// days before the time prescribed for filing the brief expires. (A
 /// single streamlined extension of up to 30 days is requested on or
 /// before the due date.)
 deadline brief-extension-motion-period: 7.days before BriefDue() counted_by frap26 cite "9th Cir. R. 31-2"
-{
-  forum frap
-}
 
 /// A motion for clarification, modification or reconsideration of an
 /// order that does not end the case is filed within 14 days after entry of
 /// the order, unless the court shortens or expands the time.
 deadline reconsideration-period: 14.days after NonDispositiveOrderEntered() counted_by frap26 cite "9th Cir. R. 27-10"
-{
-  forum frap
-}
 
 /// In a case disposed of by a motions panel order, the mandate issues 7
 /// days after the reconsideration time expires or after an order denying a
 /// timely motion, whichever is later.
 deadline motions-panel-mandate-period: 7.days after ReconsiderationClosed() counted_by frap26 cite "9th Cir. R. 41-2"
-{
-  forum frap
-}
 
 /// Absent a statute to the contrary, a request for attorneys fees is filed
 /// no later than 14 days after the period to petition for rehearing
 /// expires, unless a timely petition is filed.
 deadline fee-request-period: 14.days after RehearingClosed(TimeExpired) counted_by frap26 cite "9th Cir. R. 39-1"
-{
-  forum frap
-}
 
 /// If a timely petition for rehearing is filed, the fee request is due no
 /// later than 14 days after the court's disposition of the petition.
 deadline fee-request-after-rehearing-period: 14.days after RehearingPetitionDisposed() counted_by frap26 cite "9th Cir. R. 39-1"
-{
-  forum frap
-}
 
 /// An order of the clerk disposing of a cost bill is subject to
 /// reconsideration by the court if exception is filed within 14 days after
 /// its entry.
 deadline cost-order-exception-period: 14.days after CostOrderEntered() counted_by frap26 cite "9th Cir. R. 39-1"
-{
-  forum frap
-}
 
 test "mediation questionnaire is due 5 days after docketing, rolled past a Saturday" cite "9th Cir. R. 3-4(a)"
 {

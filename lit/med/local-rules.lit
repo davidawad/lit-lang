@@ -85,127 +85,79 @@ event MagistrateOrderObjectionServed() paper magistrate-nondispositive-objection
 /// within 21 days after the motion is filed; one not timely filed is
 /// waived, except for motions filed during trial.
 deadline objection-period: 21.days after MotionFiled() counted_by frcp6 cite "D. Me. Local R. 7(b)"
-{
-  forum frcp
-}
 
 /// Local Rule 7(c): the movant may file a reply memorandum, confined to
 /// new matter in the objection or response, no later than 14 days of its
 /// filing.
 deadline reply-period: 14.days after ObjectionFiled() counted_by frcp6 cite "D. Me. Local R. 7(c)"
-{
-  forum frcp
-}
 
 /// Local Rule 7(e): a party may request oral argument by the Court's form
 /// within 5 days of the filing of the reply.
 deadline oral-argument-request-period: 5.days after ReplyFiled() counted_by frcp6 cite "D. Me. Local R. 7(e)"
-{
-  forum frcp
-}
 
 /// Local Rule 7(f)(1): a motion to reconsider an interlocutory order is
 /// filed within 14 days from the date of the order, unless the movant
 /// shows cause for not filing within that time.
 deadline reconsideration-period: 14.days after InterlocutoryOrderEntered() counted_by frcp6 cite "D. Me. Local R. 7(f)"
-{
-  forum frcp
-}
 
 /// Local Rule 10(d)(2): a party commencing an action under a pseudonym
 /// files and serves a motion for permission to proceed under it within 21
 /// days of service of the complaint.
 deadline pseudonym-motion-period: 21.days after PseudonymousComplaintServed() counted_by frcp6 cite "D. Me. Local R. 10(d)"
-{
-  forum frcp
-}
 
 /// Local Rule 16.2(d): unless a party objects within 21 days of its filing
 /// (14 days in ERISA Track cases), the proposed scheduling order becomes
 /// the FRCP 16(b) scheduling order.
 deadline scheduling-order-objection-period: 21.days after ProposedSchedulingOrderFiled() counted_by frcp6 cite "D. Me. Local R. 16.2(d)"
-{
-  forum frcp
-}
 
 /// Local Rule 16.5(d)(1): unless otherwise ordered, objections to the
 /// final pretrial order are made within 14 days after the parties receive
 /// it.
 deadline pretrial-order-objection-period: 14.days after FinalPretrialOrderReceived() counted_by frcp6 cite "D. Me. Local R. 16.5(d)"
-{
-  forum frcp
-}
 
 /// Local Rule 41.1(a)(1): within 30 days of notifying the Clerk of a
 /// settlement, the parties file the papers terminating the action; if they
 /// do not, the Court dismisses it with prejudice but without costs.
 deadline settlement-papers-period: 30.days after SettlementNoticeGiven() counted_by frcp6 cite "D. Me. Local R. 41.1(a)"
-{
-  forum frcp
-}
 
 /// Local Rule 41.2(d): within 30 days after entry of the order approving a
 /// minor's settlement, the attorney or party paid the funds files the
 /// affidavit the rule describes.
 deadline minor-settlement-affidavit-period: 30.days after MinorSettlementApproved() counted_by frcp6 cite "D. Me. Local R. 41.2(d)"
-{
-  forum frcp
-}
 
 /// Local Rule 54.1(a): on a defending party's request the Clerk orders a
 /// prosecuting party not resident in Maine to provide $500 security for
 /// taxable costs within 21 days.
 deadline security-for-costs-period: 21.days after SecurityForCostsOrdered() counted_by frcp6 cite "D. Me. Local R. 54.1(a)"
-{
-  forum frcp
-}
 
 /// Local Rule 54.2(a)(1): with no timely appeal, an application for
 /// attorneys' fees is filed within 30 days of the expiration of the time
 /// for filing an appeal.
 deadline fee-application-period: 30.days after AppealTimeExpired() counted_by frcp6 cite "D. Me. Local R. 54.2(a)"
-{
-  forum frcp
-}
 
 /// Local Rule 54.2(a)(2): after an appeal, an application for attorneys'
 /// fees is filed within 30 days of the filing of the appellate mandate or
 /// order finally disposing of the appeal; one filed before then has no
 /// effect.
 deadline fee-application-after-appeal-period: 30.days after AppellateMandateFiled() counted_by frcp6 cite "D. Me. Local R. 54.2(a)"
-{
-  forum frcp
-}
 
 /// Local Rule 54.3(b)(1): with no timely appeal, a bill of costs is filed
 /// within 30 days of the expiration of the time for filing an appeal.
 deadline bill-of-costs-period: 30.days after AppealTimeExpired() counted_by frcp6 cite "D. Me. Local R. 54.3(b)"
-{
-  forum frcp
-}
 
 /// Local Rule 54.3(b)(2): after an appeal, a bill of costs is filed within
 /// 30 days of the filing of the appellate mandate or order finally
 /// disposing of the appeal.
 deadline bill-of-costs-after-appeal-period: 30.days after AppellateMandateFiled() counted_by frcp6 cite "D. Me. Local R. 54.3(b)"
-{
-  forum frcp
-}
 
 /// Local Rule 54.3(c): an objection to a bill of costs, with a supporting
 /// memorandum, is filed within 21 days after the bill; otherwise objection
 /// is waived and the Clerk may tax all properly claimed costs.
 deadline bill-of-costs-objection-period: 21.days after BillOfCostsFiled() counted_by frcp6 cite "D. Me. Local R. 54.3(c)"
-{
-  forum frcp
-}
 
 /// Local Rule 56(e)(2): a request to strike made in a reply statement of
 /// material facts may be answered by a response filed within 14 days.
 deadline strike-response-period: 14.days after StrikeRequestInReplyStatement() counted_by frcp6 cite "D. Me. Local R. 56(e)"
-{
-  forum frcp
-}
 
 /// Local Rule 56(h): in a Standard Track case (other than the FRCP
 /// 26(a)(1)(B) categories) a party intending to move for summary judgment
@@ -213,17 +165,11 @@ deadline strike-response-period: 14.days after StrikeRequestInReplyStatement() c
 /// request for a pre-filing conference no later than 7 days after the
 /// close of discovery.
 deadline sj-prefiling-period: 7.days after DiscoveryClosed() counted_by frcp6 cite "D. Me. Local R. 56(h)"
-{
-  forum frcp
-}
 
 /// Local Rule 72(b): a response to an objection to a magistrate judge's
 /// nondispositive order is filed within 14 days of service of the
 /// objection; no reply is permitted.
 deadline magistrate-objection-response-period: 14.days after MagistrateOrderObjectionServed() counted_by frcp6 cite "D. Me. Local R. 72(b)"
-{
-  forum frcp
-}
 
 test "objection period runs 21 days" cite "D. Me. Local R. 7(b)"
 {

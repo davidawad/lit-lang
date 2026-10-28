@@ -1268,6 +1268,8 @@ period (a FRAP 4 appeal period in a district-court package is `forum
 frap`; a certiorari petition's 90 days `forum scotus`). Its counting rule
 must compute that forum's periods (`forums` below); otherwise L3009, so no
 forum borrows another's computation rule (design review 2026-10-23, L2-L4).
+A district's or a circuit's own period is its own forum's: it needs no
+`forum frcp` or `forum frap`, since its family's rule counts it.
 `forum F cite "X" quote "..."` declares the rule by which `F`'s rules set
 the period, the **adopting rule**, with the words that adopt them: a
 Court of Federal Claims appeal is `forum frap cite "28 U.S.C. § 2522"
@@ -1533,7 +1535,10 @@ Counting rule `c` defines (FRCP 6(a) vocabulary):
    (default: its package's forum); a forum's own rules decide it (FRAP 26
    counts the courts of appeals', `frap` and `cafc`; 37 C.F.R. § 42.1(a)
    makes § 1.7 the Patent Trial and Appeal Board's, so `uspto-1-7` is
-   `forums [uspto, ptab]`).
+   `forums [uspto, ptab]`). The rule also computes the periods of every
+   forum in the forum family (§5.7) of one it names: FRCP 6(a) and FRAP
+   26(a) count a period "in any local rule or court order", so `frcp6`
+   counts each district's and `frap26` each circuit's.
 
 `deadline(d)` in a test is the due date `Due {nominal, adjusted}`: bare, or
 as `deadline(d).adjusted`, it is the date after every roll and extension;

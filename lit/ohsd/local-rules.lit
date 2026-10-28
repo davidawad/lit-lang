@@ -41,62 +41,38 @@ event JudgmentEntered()
 /// Civ. R. 7.2(a)(2): any memorandum in opposition is filed within
 /// twenty-one days after the date of service of the motion.
 deadline opposition-period: 21.days after MotionServed() counted_by frcp6 cite "S.D. Ohio Civ. R. 7.2(a)"
-{
-  forum frcp
-}
 
 /// Civ. R. 7.2(a)(2): any reply memorandum is filed within fourteen days
 /// after the date of service of the memorandum in opposition.
 deadline reply-period: 14.days after OppositionServed() counted_by frcp6 cite "S.D. Ohio Civ. R. 7.2(a)"
-{
-  forum frcp
-}
 
 /// Civ. R. 8.1(b): the defendant files and serves a certified copy of the
 /// administrative record, which serves as the answer, within sixty days
 /// after service of the complaint.
 deadline administrative-record-period: 60.days after SocialSecurityComplaintServed() counted_by frcp6 cite "S.D. Ohio Civ. R. 8.1(b)"
-{
-  forum frcp
-}
 
 /// Civ. R. 8.1(c): the plaintiff files and serves a statement of errors
 /// within forty-five days after service of the administrative record.
 deadline statement-of-errors-period: 45.days after AdministrativeRecordServed() counted_by frcp6 cite "S.D. Ohio Civ. R. 8.1(c)"
-{
-  forum frcp
-}
 
 /// Civ. R. 8.1(c): the defendant files and serves its memorandum in
 /// opposition within forty-five days following service of the statement of
 /// errors.
 deadline social-security-opposition-period: 45.days after StatementOfErrorsServed() counted_by frcp6 cite "S.D. Ohio Civ. R. 8.1(c)"
-{
-  forum frcp
-}
 
 /// Civ. R. 8.1(c): the plaintiff may file and serve a reply within fifteen
 /// days of service of the defendant's memorandum in opposition.
 deadline social-security-reply-period: 15.days after SocialSecurityOppositionServed() counted_by frcp6 cite "S.D. Ohio Civ. R. 8.1(c)"
-{
-  forum frcp
-}
 
 /// Civ. R. 54.1: a prevailing party that intends to file a bill of costs
 /// does so within forty-five days from the entry of judgment unless a
 /// statute or court order provides otherwise.
 deadline bill-of-costs-period: 45.days after JudgmentEntered() counted_by frcp6 cite "S.D. Ohio Civ. R. 54.1"
-{
-  forum frcp
-}
 
 /// Civ. R. 54.2(a): unless a statute or court order provides otherwise, a
 /// motion for attorney's fees under FRCP 54 is filed not later than
 /// forty-five days after the entry of judgment.
 deadline fee-motion-period: 45.days after JudgmentEntered() counted_by frcp6 cite "S.D. Ohio Civ. R. 54.2(a)"
-{
-  forum frcp
-}
 
 test "opposition: 21 days after service of the motion" cite "S.D. Ohio Civ. R. 7.2(a)"
 {

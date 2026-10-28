@@ -210,49 +210,31 @@ event BankruptcyAppealReplyFiled() paper bankruptcy-appeal-reply
 /// have appeared file a Notice of Related Cases within five days of
 /// learning of another action pending in this district that may be related.
 deadline related-cases-notice-period: 5.days after RelatedActionLearned() counted_by frcp6 cite "W.D. Wash. LCR 3(g)"
-{
-  forum frcp
-}
 
 /// LCR 3(h): a party files a Notice of Pendency of Other Action within five
 /// days of learning of the other action (and LCR 102(b) for other federal
 /// courts).
 deadline other-action-notice-period: 5.days after OtherActionLearned() counted_by frcp6 cite "W.D. Wash. LCR 3(h)"
-{
-  forum frcp
-}
 
 /// LCR 7(d)(2): a motion for relief from a deadline or for a protective
 /// order is noted no earlier than 14 days after filing; any response is
 /// filed and received by the moving party no later than 9 days after the
 /// filing date of the motion.
 deadline fourteen-day-response-period: 9.days after FourteenDayMotionFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
-{
-  forum frcp
-}
 
 /// LCR 7(d)(2): any reply is filed and received by the opposing party no
 /// later than 14 days after the filing date of the motion.
 deadline fourteen-day-reply-period: 14.days after FourteenDayMotionFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
-{
-  forum frcp
-}
 
 /// LCR 7(d)(3): every other motion, including a Daubert motion, is noted no
 /// earlier than 21 days from filing; any response is filed and received by
 /// the moving party no later than 15 days after the filing date of the
 /// motion.
 deadline twenty-one-day-response-period: 15.days after TwentyOneDayMotionFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
-{
-  forum frcp
-}
 
 /// LCR 7(d)(3): any reply is filed and received by the opposing party no
 /// later than 21 days after the filing date of the motion.
 deadline twenty-one-day-reply-period: 21.days after TwentyOneDayMotionFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
-{
-  forum frcp
-}
 
 /// LCR 7(d)(4): a motion to dismiss, for judgment on the pleadings, for
 /// summary judgment, for a preliminary injunction, for class certification,
@@ -260,266 +242,167 @@ deadline twenty-one-day-reply-period: 21.days after TwentyOneDayMotionFiled() co
 /// any response is filed and received by the moving party no later than 21
 /// days after the filing date of the motion.
 deadline twenty-eight-day-response-period: 21.days after TwentyEightDayMotionFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
-{
-  forum frcp
-}
 
 /// LCR 7(d)(4): any reply is filed and received by the opposing party no
 /// later than 28 days after the filing date of the motion.
 deadline twenty-eight-day-reply-period: 28.days after TwentyEightDayMotionFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
-{
-  forum frcp
-}
 
 /// LCR 7(d)(5): except on good cause or as otherwise ordered, motions in
 /// limine are filed as one motion no later than 21 days before any
 /// scheduled pretrial conference.
 deadline limine-motion-period: 21.days before PretrialConferenceScheduled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
-{
-  forum frcp
-}
 
 /// LCR 7(d)(5): any response is filed and received by the moving party no
 /// later than 6 days before the pretrial conference; no reply is filed.
 deadline limine-response-period: 6.days before PretrialConferenceScheduled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
-{
-  forum frcp
-}
 
 /// LCR 7(f)(1): a motion to file an over-length motion or brief is filed as
 /// soon as possible but no later than three days before the underlying
 /// motion or brief is due, noted for the day it is filed.
 deadline overlength-motion-period: 3.days before UnderlyingBriefDue() counted_by frcp6 cite "W.D. Wash. LCR 7(f)"
-{
-  forum frcp
-}
 
 /// LCR 7(g)(2): a surreply requesting that the court strike material in a
 /// reply brief is filed within five days of the filing of the reply brief,
 /// after a notice of intent filed as soon as practicable (LCR 7(g)(1)).
 deadline surreply-period: 5.days after ReplyBriefFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(g)"
-{
-  forum frcp
-}
 
 /// LCR 7(h)(2): a motion for reconsideration is filed within fourteen days
 /// after the order to which it relates is filed, and noted for the day it
 /// is filed.
 deadline reconsideration-motion-period: 14.days after OrderFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(h)"
-{
-  forum frcp
-}
 
 /// LCR 7(o): any party may file an opposition to a motion for leave to file
 /// an amicus brief within 7 days after service of the motion, or as the
 /// court orders.
 deadline amicus-opposition-period: 7.days after AmicusMotionServed() counted_by frcp6 cite "W.D. Wash. LCR 7(o)"
-{
-  forum frcp
-}
 
 /// LCR 10(f): notice of a change in address, telephone number or email
 /// address must be received by the Clerk's Office within ten days of the
 /// change.
 deadline contact-change-notice-period: 10.days after ContactInformationChanged() counted_by frcp6 cite "W.D. Wash. LCR 10(f)"
-{
-  forum frcp
-}
 
 /// LCR 12(a)(1): where the court, ruling on a motion to dismiss, allows an
 /// amended complaint, the responsive pleading is due 14 days after the
 /// earlier of the amended complaint's filing or the court's deadline for
 /// filing it.
 deadline amended-complaint-response-period: 14.days after AmendedComplaintFiled() counted_by frcp6 cite "W.D. Wash. LCR 12(a)"
-{
-  forum frcp
-}
 
 /// LCR 15(a): a party given leave to amend files and serves the amended
 /// pleading within fourteen days of the filing of the order granting leave,
 /// unless the court orders otherwise.
 deadline amended-pleading-filing-period: 14.days after LeaveToAmendGranted() counted_by frcp6 cite "W.D. Wash. LCR 15(a)"
-{
-  forum frcp
-}
 
 /// LCR 16(h): not later than 30 days before the date for filing the
 /// proposed pretrial order, plaintiff's counsel serves (but does not file)
 /// the plaintiff's pretrial statement.
 deadline plaintiff-pretrial-statement-period: 30.days before ProposedPretrialOrderDue() counted_by frcp6 cite "W.D. Wash. LCR 16(h)"
-{
-  forum frcp
-}
 
 /// LCR 16(i): not later than 20 days before the filing of the proposed
 /// pretrial order, each defense counsel serves (but does not file) the
 /// defendant's pretrial statement.
 deadline defendant-pretrial-statement-period: 20.days before ProposedPretrialOrderDue() counted_by frcp6 cite "W.D. Wash. LCR 16(i)"
-{
-  forum frcp
-}
 
 /// LCR 16(k): not later than ten days before the filing of the proposed
 /// pretrial order, counsel hold the conference of attorneys, which
 /// plaintiff's counsel arranges.
 deadline attorney-conference-period: 10.days before ProposedPretrialOrderDue() counted_by frcp6 cite "W.D. Wash. LCR 16(k)"
-{
-  forum frcp
-}
 
 /// LCR 30(a)(2): without agreement with the institution, the party noting
 /// the deposition of a person in custody serves notice at least 14 days
 /// before the proposed deposition.
 deadline custody-deposition-notice-period: 14.days before CustodyDepositionProposed() counted_by frcp6 cite "W.D. Wash. LCR 30(a)"
-{
-  forum frcp
-}
 
 /// LCR 30(a)(2): not later than seven days before the proposed deposition,
 /// the attorney for the institution may file, serve and note a motion
 /// objecting to it; absent a timely motion the deposition proceeds.
 deadline custody-deposition-objection-period: 7.days before CustodyDepositionProposed() counted_by frcp6 cite "W.D. Wash. LCR 30(a)"
-{
-  forum frcp
-}
 
 /// LCR 37(a)(2)(C): within seven days of receipt of the moving party's LCR
 /// 37 submission, the opposing party serves its rebuttal; if the opposing
 /// party fails to respond, the moving party may file the submission and
 /// state that no response was received.
 deadline discovery-rebuttal-period: 7.days after DiscoverySubmissionReceived() counted_by frcp6 cite "W.D. Wash. LCR 37(a)"
-{
-  forum frcp
-}
 
 /// LCR 37(a)(2)(D): within four days of receipt of the opposing party's
 /// rebuttal, the moving party adds its reply and files the joint
 /// submission, or gives notice that it no longer intends to move.
 deadline discovery-reply-period: 4.days after DiscoveryRebuttalReceived() counted_by frcp6 cite "W.D. Wash. LCR 37(a)"
-{
-  forum frcp
-}
 
 /// LCR 39(d): notice that a case set for jury trial has settled or will be
 /// tried without a jury is filed as soon as possible but no later than five
 /// days before the day the case is set; otherwise the agreeing parties pay
 /// the government's jury expenses.
 deadline jury-waiver-notice-period: 5.days before JuryTrialSet() counted_by frcp6 cite "W.D. Wash. LCR 39(d)"
-{
-  forum frcp
-}
 
 /// LCR 39.1(c)(2): in a case ordered to mediation, the attorneys meet and
 /// attempt in good faith to negotiate a settlement no later than 30 days
 /// before the mediation conference, unless the court sets a different date.
 deadline mediation-settlement-conference-period: 30.days before MediationConferenceSet() counted_by frcp6 cite "W.D. Wash. LCR 39.1(c)"
-{
-  forum frcp
-}
 
 /// LCR 39.1(c)(5)(C): each party's mediation memorandum is delivered to the
 /// mediator and served on all other parties at least seven days before the
 /// mediation conference.
 deadline mediation-memorandum-period: 7.days before MediationConferenceSet() counted_by frcp6 cite "W.D. Wash. LCR 39.1(c)"
-{
-  forum frcp
-}
 
 /// LCR 39.1(d)(16)(A): unless the agreement to arbitrate waived trial de
 /// novo, any party may serve and file a written demand for trial de novo
 /// within 30 days of the filing of the award.
 deadline trial-de-novo-demand-period: 30.days after ArbitrationAwardFiled() counted_by frcp6 cite "W.D. Wash. LCR 39.1(d)"
-{
-  forum frcp
-}
 
 /// LCR 39.2(d): if not already exchanged or due, the FRCP 26(a)(1)(A)
 /// disclosures are exchanged within seven days after the individualized
 /// trial agreement is approved.
 deadline individualized-trial-disclosures-period: 7.days after TrialAgreementApproved() counted_by frcp6 cite "W.D. Wash. LCR 39.2(d)"
-{
-  forum frcp
-}
 
 /// LCR 39.2(e): the initial individualized trial conference occurs no later
 /// than thirty days after the filing of the agreement, unless otherwise
 /// ordered; the plaintiff requests it immediately.
 deadline individualized-trial-conference-period: 30.days after TrialAgreementFiled() counted_by frcp6 cite "W.D. Wash. LCR 39.2(e)"
-{
-  forum frcp
-}
 
 /// LCR 39.2(f): the parties file a Joint Individualized Trial Statement
 /// seven days before the individualized trial conference.
 deadline individualized-trial-statement-period: 7.days before IndividualizedTrialConferenceSet() counted_by frcp6 cite "W.D. Wash. LCR 39.2(f)"
-{
-  forum frcp
-}
 
 /// LCR 41(b)(2): if mail or email directed to a pro se plaintiff is
 /// returned and the plaintiff does not notify the court and opposing
 /// parties of a current address within 60 days, the court may dismiss
 /// without prejudice for failure to prosecute.
 deadline pro-se-address-period: 60.days after ProSeMailReturned() counted_by frcp6 cite "W.D. Wash. LCR 41(b)"
-{
-  forum frcp
-}
 
 /// LCR 51(e): twenty-one days before jury instructions are due, the parties
 /// exchange proposed instructions, verdict forms and any special
 /// interrogatories.
 deadline jury-instruction-exchange-period: 21.days before JuryInstructionsDue() counted_by frcp6 cite "W.D. Wash. LCR 51(e)"
-{
-  forum frcp
-}
 
 /// LCR 54(d)(1): the party in whose favor judgment is rendered and who
 /// seeks costs files and serves a motion for costs (bill of costs) within
 /// twenty-one days after the entry of judgment, noted under LCR 7(d)(3).
 deadline bill-of-costs-period: 21.days after JudgmentEntered() counted_by frcp6 cite "W.D. Wash. LCR 54(d)"
-{
-  forum frcp
-}
 
 /// LCR 54(d)(4): the clerk's taxation of costs is final unless a motion to
 /// retax is filed and served within seven days after costs have been taxed.
 deadline retax-motion-period: 7.days after CostsTaxed() counted_by frcp6 cite "W.D. Wash. LCR 54(d)"
-{
-  forum frcp
-}
 
 /// LCR 79(h): unless extended for good cause, where the agency is the
 /// plaintiff or petitioner the record of the agency proceeding is filed
 /// within thirty days of the filing of the complaint or petition; an agency
 /// defendant files it with the answer.
 deadline agency-record-period: 30.days after AgencyReviewComplaintFiled() counted_by frcp6 cite "W.D. Wash. LCR 79(h)"
-{
-  forum frcp
-}
 
 /// LCR 83.3(b)(1): an attorney who no longer meets the requirements of LCR
 /// 83.1(b) notifies the Clerk of Court in writing no later than 10 days
 /// after the change in status.
 deadline eligibility-change-notice-period: 10.days after EligibilityStatusChanged() counted_by frcp6 cite "W.D. Wash. LCR 83.3(b)"
-{
-  forum frcp
-}
 
 /// LCR 89: a party who files for bankruptcy while an action is pending
 /// notifies the court within three days by filing a Notice of Bankruptcy
 /// Filing.
 deadline bankruptcy-notice-period: 3.days after BankruptcyPetitionFiled() counted_by frcp6 cite "W.D. Wash. LCR 89"
-{
-  forum frcp
-}
 
 /// LCR 89: if the filing party has not filed the Notice, another party who
 /// learns of the bankruptcy files it within five days of learning of the
 /// filing.
 deadline other-party-bankruptcy-notice-period: 5.days after OtherPartyBankruptcyLearned() counted_by frcp6 cite "W.D. Wash. LCR 89"
-{
-  forum frcp
-}
 
 test "related cases notice period: 5 days after the trigger" cite "W.D. Wash. LCR 3(g)"
 {

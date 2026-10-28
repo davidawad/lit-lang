@@ -1,0 +1,174 @@
+module flnd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Northern District's own criminal periods. Discovery runs through the
+// standard procedure of Local Rule 26.2 as "the sole means for the exchange
+// of discovery in criminal cases except in extraordinary circumstances"
+// (26.2(A)); no discovery motion is filed without a certified conference,
+// nor for material within the rule (26.2(G)(3)). The alibi response "within
+// 14 days after the demand" (26.2(F)(2)) is FRCrimP 12.1(a)(2)'s own period
+// and stays with lit/frcrimp; the Jencks Act material follows FRCrimP 26.2
+// and 18 U.S.C. § 3500 (26.2(E)(4)). Sentencing ordinarily occurs about 70
+// days after the plea or verdict, subject to FRCrimP 32 (88.1(A)): a
+// practice, not a period. A presentence report is deemed disclosed on
+// delivery, one day after its availability is orally communicated, or
+// three days after a copy or notice is mailed, and objections follow
+// FRCrimP 32(f) (88.1(C)). Sealed indictments are unsealed by the Clerk at
+// a named defendant's first appearance unless a judicial officer orders
+// otherwise (77.4(E)). A consent misdemeanor appeal from a magistrate judge
+// is governed by FRCrimP 58 (88.2(A)), whose notice period stays with
+// lit/frcrimp; the briefing periods below are the district's own. The
+// earlier outline's FRCrimP flow and its decisions (Salerno, Brady, Barker,
+// Zedner, Boykin, Frye, Jackson, Booker, Flores-Ortega, Garza) belong to
+// lit/frcrimp and are removed here: no reporter text is vendored.
+/// The defendant's first arraignment (N.D. Fla. Loc. R. 11.1(H)(3),
+/// 11.1(I)(1), 26.2(B), 26.2(D), 26.2(F)(1)).
+event Arraigned()
+/// The defendant requests the government's disclosures under the standard
+/// procedure (N.D. Fla. Loc. R. 26.2(B)).
+event DefenseDisclosureRequested()
+/// The government complies with the defendant's request, or receives the
+/// defendant's FRCrimP 12.2 notice of mental-condition expert testimony
+/// (N.D. Fla. Loc. R. 26.2(C)).
+event DefenseRequestMet()
+/// The government makes its own FRCrimP 16 request (N.D. Fla. Loc. R.
+/// 26.2(C)).
+event GovernmentDisclosureRequested()
+/// The date set for trial (N.D. Fla. Loc. R. 26.2(C)(2), 26.2(F)(3)).
+event TrialScheduled()
+/// The date set for jury selection (N.D. Fla. Loc. R. 26.2(G)(1)).
+event JurySelectionScheduled()
+/// The date set for the sentencing hearing (N.D. Fla. Loc. R. 88.1(G)).
+event SentencingHearingScheduled()
+/// In a consent misdemeanor appeal, the transcript is filed, or with no
+/// transcript the notice of appeal is filed (N.D. Fla. Loc. R. 88.2(D)).
+event MisdemeanorAppealRecordReady()
+/// The appellant's brief is served in a consent misdemeanor appeal (N.D.
+/// Fla. Loc. R. 88.2(D)).
+event MisdemeanorAppellantBriefServed()
+/// The appellee's brief is served in a consent misdemeanor appeal (N.D.
+/// Fla. Loc. R. 88.2(D)).
+event MisdemeanorAppelleeBriefServed()
+
+/// N.D. Fla. Loc. R. 11.1(I)(1): unless the Court is notified in writing
+/// within 7 days after arraignment of retained counsel's withdrawal for the
+/// defendant's failure to make satisfactory financial arrangements, counsel
+/// is expected to represent the defendant to the conclusion of the case;
+/// nonpayment is not good cause after the 7 days (and a motion to withdraw
+/// for nonpayment made later ordinarily will be denied, 11.1(H)(3)).
+deadline retained-counsel-withdrawal-period: 7.days after Arraigned() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 11.1(I)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 26.2(B): at the earliest opportunity and no later
+/// than 7 days after arraignment, the defendant's attorney contacts the
+/// government's attorney in a good-faith attempt to obtain discoverable
+/// material.
+deadline defense-discovery-contact-period: 7.days after Arraigned() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(B)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 26.2(B): on the defendant's request the government
+/// provides the defendant's statements, prior record, documents and
+/// tangible objects, reports of examinations and tests, and expert
+/// summaries within 7 days after the request.
+deadline government-disclosure-period: 7.days after DefenseDisclosureRequested() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(B)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 26.2(D): within 7 days after arraignment, or promptly
+/// after acquiring knowledge of it, the government provides Brady and
+/// Giglio material, testifying informants' convictions, identification
+/// procedures, vehicle inspection and latent prints.
+deadline brady-giglio-disclosure-period: 7.days after Arraigned() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(D)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 26.2(C): the government makes its FRCrimP 16 requests
+/// within 3 days after complying with the defendant's request or receiving
+/// the defendant's FRCrimP 12.2 notice of expert testimony.
+deadline government-reciprocal-request-period: 3.days after DefenseRequestMet() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(C)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 26.2(C)(1): within 7 days after the government's
+/// request, the defendant provides the documents and tangible objects it
+/// intends to introduce in its case-in-chief.
+deadline defense-documents-period: 7.days after GovernmentDisclosureRequested() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(C)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 26.2(C)(3): within 14 days after the government's
+/// request, the defendant provides a written summary of expert testimony.
+deadline defense-expert-summary-period: 14.days after GovernmentDisclosureRequested() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(C)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 26.2(C)(2): at least 30 days before trial, the
+/// defendant provides the results or reports of examinations and tests it
+/// intends to introduce or that a defense witness prepared.
+deadline defense-reports-period: 30.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(C)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 26.2(F)(1): a defendant relying on insanity, or
+/// intending expert testimony on a mental condition bearing on guilt (or,
+/// in a capital case, punishment), gives written notice within 14 days
+/// after arraignment.
+deadline insanity-notice-period: 14.days after Arraigned() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(F)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 26.2(F)(3): a defendant relying on entrapment
+/// discloses it by written notice at least 14 days before trial.
+deadline entrapment-notice-period: 14.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(F)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 26.2(G)(1): the attorneys confer at least 7 days
+/// before the scheduled jury selection on discovery and stipulations; a
+/// joint written statement is filed before trial begins.
+deadline discovery-conference-period: 7.days before JurySelectionScheduled() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(G)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 88.1(G): a sentencing memorandum is due three days
+/// before the sentencing hearing.
+deadline sentencing-memorandum-period: 3.days before SentencingHearingScheduled() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 88.1(G)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 88.2(D): the appellant serves and files a brief
+/// within 15 days of the transcript's filing, or with no transcript of the
+/// notice of appeal's filing.
+deadline misdemeanor-appellant-brief-period: 15.days after MisdemeanorAppealRecordReady() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 88.2(D)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 88.2(D): the appellee's brief within 15 days of
+/// service of the appellant's brief.
+deadline misdemeanor-appellee-brief-period: 15.days after MisdemeanorAppellantBriefServed() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 88.2(D)"
+{
+  forum frcrimp
+}
+
+/// N.D. Fla. Loc. R. 88.2(D): an optional reply brief within 7 days of
+/// service of the appellee's brief.
+deadline misdemeanor-reply-brief-period: 7.days after MisdemeanorAppelleeBriefServed() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 88.2(D)"
+{
+  forum frcrimp
+}

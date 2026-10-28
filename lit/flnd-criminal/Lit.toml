@@ -1,0 +1,48 @@
+# The Northern District of Florida's criminal local rules as a local-rule
+# layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares
+# only the periods the Local Rules themselves state for a criminal case and
+# re-encodes no FRCrimP, Speedy Trial Act or FRAP period. Each period is
+# counted under FRCrimP 45(a), which governs "any local rule". The rules
+# are the edition effective November 24, 2015 (sources/nd-fla); the court
+# has no separate criminal part, so the criminal provisions are the
+# criminal-case rules within the one set. Federal habeas is lit/habeas.
+[package]
+name = "flnd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "flnd-criminal-local-rules"
+forum = "flnd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Northern District of Florida: Local Rules (criminal)"
+description = "The Northern District of Florida's criminal-case Local Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): retained counsel's withdrawal window, the standard criminal discovery exchange and its defense notices, the pretrial discovery conference, sentencing memoranda and appeals from a magistrate judge in a consent misdemeanor case."
+in_force = "2015-11-24"
+known_at = "2026-10-28"
+unknown_before = "2015-11-24"
+jurisdiction = "United States District Court, N.D. Florida (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+office = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "flnd-lr"
+issuer = "United States District Court for the Northern District of Florida"
+date = "2015-11-24"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.flnd-lr]
+title = "Local Rules, United States District Court, Northern District of Florida (effective November 24, 2015)"
+url = "https://flnd.uscourts.gov/sites/flnd/files/local_rules/local_rules_0.pdf"
+path = "sources/nd-fla/local-rules-sectioned.txt"
+path_sha256 = "bac984b7c46a868b36137e9654224e443fde8b44201c1f31f7bcc7cfed3e52bc"
+sha256 = "735431487ba914dd394d074f8e1c86d56a4842d11fef865e237713043d045831"
+as_of = "2015-11-24"
+cite_prefixes = ["N.D. Fla. Loc. R."]
+section_heading = "Rule {n}"

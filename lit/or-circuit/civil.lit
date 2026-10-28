@@ -1,0 +1,185 @@
+module or-circuit-civil.civil
+
+// Civil actions in the Oregon circuit courts, from the applicant's
+// (plaintiff's) side. Every period below is stated in a note, not counted:
+// time is computed under ORCP 10 A, which excludes the trigger day,
+// includes the last day unless it is a Saturday or a legal holiday
+// (including Sunday) and then runs to the next day that is neither, and
+// excludes intermediate Saturdays and legal holidays from periods under
+// 7 days; its legal holidays are those of ORS 187.010 and 187.020, for
+// which lit/core has no counting rule. When a period runs from service of
+// a document (other than a summons) served by mail, e-mail, facsimile or
+// electronic service, 3 days are added (ORCP 10 B). The court may allow a
+// late pleading or motion or enlarge the time (ORCP 15 D). The time to
+// commence an action and to serve within the limitations period are set by
+// statute (ORS chapter 12), which is not vendored. No filing fee is stated
+// in the rules. The earlier outline asked for the leading Oregon decisions
+// on the pleading standard and on summary judgment; none is named and no
+// reporter text is vendored, so none is cited.
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "ORCP 3"
+{
+  note "Other than for purposes of statutes of limitations, an action is commenced by filing a complaint with the clerk of the court (Rule 3). The summons directs the defendant to appear and defend within the time required by Rule 7 C(2) and warns that, if the defendant fails to, the plaintiff will apply for the relief demanded (Rule 7 C(1)(b))."
+  edge-complaint-filed-served "Summons and complaint served" -> response-due {
+    authority cite "ORCP 7 D"
+  }
+}
+
+decision response-due: "Answer, Rule 21 motion, or no appearance" by office cite "ORCP 7 C(2)"
+{
+  note "If the summons is served by any manner other than publication, the defendant appears and defends within 30 days from the date of service; if served by publication, within 30 days from the date of first publication stated in the summons (Rule 7 C(2)). An answer or a responsive motion is filed with the clerk within that time (Rule 15 A). A reply to a counterclaim or to affirmative allegations in an answer, and an answer to a cross-claim, is filed within 30 days from service of the counterclaim, answer or cross-claim (Rule 15 A)."
+  edge-response-due-answer "Answer filed" -> answered { authority cite "ORCP 15 A" }
+  edge-response-due-motion "Rule 21 A motion to dismiss" -> dismissal-motion {
+    authority cite "ORCP 21 A(2)(a)"
+  }
+  edge-response-due-default "No appearance: default sought" -> default-sought {
+    authority cite "ORCP 69 A(1)"
+  }
+}
+
+decision dismissal-motion: "Rule 21 A motion decided" by court cite "ORCP 21 A"
+{
+  note "The defenses listed in Rule 21 A(1)(a) through (i), among them lack of subject-matter or personal jurisdiction, insufficiency of summons or service, and failure to state ultimate facts sufficient to constitute a claim, may at the pleader's option be made by a motion to dismiss filed before pleading (Rule 21 A(1), A(2)(a)). If the court grants the motion, it may enter judgment for the moving party or grant leave to file an amended complaint (Rule 21 A(2)(c)). If the court denies a motion, any responsive pleading required is filed within 10 days after service of the order; if it grants a motion and allows or requires an amended pleading, that pleading is filed within 10 days after service of the order, unless the order otherwise directs (Rule 15 B(1), B(2))."
+  edge-dismissal-motion-granted "Granted: judgment for the moving party" -> dismissed-pleading {
+    authority cite "ORCP 21 A(2)(c)"
+  }
+  edge-dismissal-motion-amend "Granted with leave to amend" -> amended {
+    authority cite "ORCP 15 B(2)"
+  }
+  edge-dismissal-motion-denied "Denied: answer due 10 days after service of the order" -> answered {
+    authority cite "ORCP 15 B(1)"
+  }
+}
+
+state amended: "Amended pleading" by applicant cite "ORCP 23 A"
+{
+  note "Apart from amendment as of course, a party may amend a pleading only by leave of court or by written consent of the adverse party, and leave is freely given when justice so requires (Rule 23 A). An amended pleading is complete in itself, without reference to the original (Rule 23 D). A party responds to an amended pleading within the time remaining for response to the original or within 10 days after service of the amended pleading, whichever is longer, unless the court otherwise directs (Rule 15 C)."
+  edge-amended-tested "Amended pleading met with a new Rule 21 A motion" -> dismissal-motion {
+    authority cite "ORCP 21 A"
+  }
+  edge-amended-answered "Amended pleading answered" -> answered { authority cite "ORCP 15 C" }
+}
+
+terminal dismissed-pleading: "Dismissed on a Rule 21 A motion" outcome [loss, dismissal] cite "ORCP 21 A(2)(c)"
+{
+  note "Outcome from the applicant's side: judgment for the moving party under Rule 21 A(2)(c). The appeal is lit/or-court-of-appeals."
+}
+
+state default-sought: "Order of default and judgment by default sought" by applicant cite "ORCP 69 C"
+{
+  note "When a party served with summons under Rule 7 has failed to appear by filing a motion or answer, or otherwise to defend, the party seeking affirmative relief may apply for an order of default and a judgment by default (Rule 69 A(1)). If the party to be defaulted has appeared or given written notice of intent to appear, notice of intent to apply for an order of default is filed and served at least 10 days, unless shortened by the court, before applying, and may not be served before the Rule 7 C(2) time has expired (Rule 69 B(2)). The motion for order of default is supported by an affidavit or declaration (Rule 69 C(1)); the motion for judgment by default shows the relief sought, including any amounts due (Rule 69 D(1)). For good cause shown, the court may set aside an order of default (Rule 69 F)."
+  edge-default-sought-judgment "Judgment by default entered" -> default-judgment {
+    authority cite "ORCP 69 D"
+  }
+  edge-default-sought-set-aside "Order of default set aside for good cause" -> answered {
+    authority cite "ORCP 69 F"
+  }
+}
+
+decision default-judgment: "Judgment by default entered" by court cite "ORCP 69 D"
+{
+  note "A judgment by default may be set aside in accordance with Rule 71 B and C (Rule 69 F). A Rule 71 B(1) motion is made within a reasonable time, and for mistake, inadvertence, surprise or excusable neglect, newly discovered evidence, or fraud not more than one year after receipt of notice by the moving party of the judgment; a motion on those grounds is accompanied by a pleading or Rule 21 A motion asserting a claim or defense (Rule 71 B(1))."
+  edge-default-judgment-stands "No relief sought: judgment stands" -> default-won {
+    authority cite "ORCP 69 D"
+  }
+  edge-default-judgment-relieved "Judgment by default set aside: defendant answers" -> answered {
+    authority cite "ORCP 71 B(1)"
+  }
+}
+
+terminal default-won: "Judgment by default for applicant" outcome [win] cite "ORCP 69 D"
+{
+  note "Outcome from the applicant's side: a judgment by default under Rule 69 D."
+}
+
+state answered: "Answer filed" by applicant cite "ORCP 15 A"
+{
+  note "The trial of all issues of fact is by jury unless the parties consent to trial without a jury by written stipulation filed with the court or oral stipulation in open court entered in the record, or the court finds that no right of jury trial exists on those issues (Rule 51 C). Issues of law are tried by the court (Rule 51 B)."
+  edge-answered-discovery "Case proceeds to discovery" -> discovery { authority cite "ORCP 36 A" }
+}
+
+state discovery: "Discovery" by applicant cite "ORCP 36 A"
+{
+  note "Parties may obtain discovery by depositions on oral examination or written questions, production of documents or things or entry on land, physical and mental examinations, and requests for admission (Rule 36 A). A party against whom a claim is asserted may, at any time up to 14 days before trial, serve an offer to allow judgment; the claimant accepts by filing the endorsed offer before trial and within 7 days from its service, and if it is not accepted and the claimant fails to obtain a more favorable judgment, the claimant recovers no costs, prevailing party fees, disbursements or attorney fees incurred after the offer and pays the offeror's costs and disbursements from its service (Rule 54 E(1)-(3))."
+  edge-discovery-order-disobeyed "Discovery order disobeyed" -> discovery-sanction {
+    authority cite "ORCP 46 B(2)"
+  }
+  edge-discovery-sj "Motion for summary judgment" -> summary-judgment { authority cite "ORCP 47 C" }
+  edge-discovery-trial "Case reaches trial" -> trial { authority cite "ORCP 51 C" }
+  edge-discovery-offer-accepted "Offer to allow judgment accepted" -> settled {
+    authority cite "ORCP 54 E(2)"
+  }
+  edge-discovery-settled "Settlement: notice or stipulation of dismissal" -> settled {
+    authority cite "ORCP 54 A(1)"
+  }
+}
+
+decision discovery-sanction: "Sanction for failure to obey a discovery order" by court cite "ORCP 46 B(2)"
+{
+  note "If a party fails to obey an order to provide or permit discovery, the court in which the action is pending may make any just order, among them an order dismissing the action or any part of it, or rendering a judgment by default against the disobedient party (Rule 46 B(2)(c))."
+  edge-discovery-sanction-continues "Sanction short of dismissal: discovery continues" -> discovery {
+    authority cite "ORCP 46 B(2)"
+  }
+  edge-discovery-sanction-dismissed "Action dismissed as a sanction" -> dismissed-sanction {
+    authority cite "ORCP 46 B(2)(c)"
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "ORCP 46 B(2)(c)"
+{
+  note "Outcome from the applicant's side: dismissal of the action as a sanction under Rule 46 B(2)(c)."
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "ORCP 47 C"
+{
+  note "A claimant may move for summary judgment at any time after the expiration of 20 days from commencement of the action or after service of the adverse party's motion (Rule 47 A); a defending party may move at any time (Rule 47 B). The motion and all supporting documents are served and filed at least 60 days before the date set for trial; the adverse party has 20 days to serve and file opposing affidavits or declarations; the moving party has five days to reply; the court may modify these times (Rule 47 C). The court grants the motion if there is no genuine issue as to any material fact and the moving party is entitled to prevail as a matter of law; no genuine issue exists if, on the record viewed most favorably to the adverse party, no objectively reasonable juror could return a verdict for the adverse party (Rule 47 C)."
+  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered {
+    authority cite "ORCP 47 C"
+  }
+  edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered {
+    authority cite "ORCP 47 C"
+  }
+  edge-summary-judgment-denied "Denied or granted in part: trial" -> trial {
+    authority cite "ORCP 47 C"
+  }
+}
+
+state trial: "Trial by jury or by the court" by court cite "ORCP 51 C"
+{
+  note "In an action tried by the court without a jury, after the plaintiff has presented its evidence the defendant may move for a judgment of dismissal on the ground that the plaintiff has shown no right to relief (Rule 54 B(2)). A plaintiff may dismiss without order of court by filing and serving a notice of dismissal not less than 5 days before the day of trial if no counterclaim has been pleaded (Rule 54 A(1))."
+  edge-trial-verdict "Verdict or decision" -> judgment-entered { authority cite "ORCP 67 C" }
+  edge-trial-settled "Settlement during trial: stipulation of dismissal" -> settled {
+    authority cite "ORCP 54 A(1)"
+  }
+}
+
+decision judgment-entered: "Judgment entered" by court cite "ORCP 67 A"
+{
+  note "Judgment has the meaning given in ORS 18.005 (Rule 67 A). A limited judgment on fewer than all claims or parties may be rendered only if the judge determines that there is no just reason for delay (Rule 67 B). A motion for judgment notwithstanding the verdict is filed not later than 10 days after entry of the judgment, or such further time as the court allows, and is heard and determined within 55 days of entry or is conclusively deemed denied (Rule 63 D(1)). A motion to set aside a judgment and for a new trial is filed not later than 10 days after entry of the judgment, or such further time as the court allows; counteraffidavits are filed within 10 days after the motion; it is heard and determined within 55 days from entry or is conclusively deemed denied (Rule 64 F(1)). The court may order a new trial on its own initiative within 30 days after entry of the judgment (Rule 64 G). A party seeking attorney fees or costs and disbursements files and serves a detailed statement not later than 14 days after entry of a judgment; objections are filed and served within 14 days after service of the statement, and a response within 7 days after service of an objection (Rule 68 C(4)(a)-(c))."
+  edge-judgment-entered-jnov "Judgment notwithstanding the verdict" -> judgment-entered {
+    authority cite "ORCP 63 A"
+  }
+  edge-judgment-entered-new-trial "New trial granted" -> trial { authority cite "ORCP 64 B" }
+  edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "ORAP 2.05"
+  }
+  edge-judgment-entered-final "No post-trial motion or appeal" -> final-no-appeal {
+    authority cite "ORCP 67 A"
+  }
+}
+
+terminal settled: "Settled: dismissal or stipulated judgment" outcome [settlement] cite "ORCP 54 A(1)"
+{
+  note "A plaintiff may dismiss by filing and serving a notice of dismissal not less than 5 days before the day of trial if no counterclaim has been pleaded, or by filing a stipulation of dismissal signed by all adverse parties who have appeared; unless it states otherwise the dismissal is without prejudice, but a notice of dismissal by a plaintiff who has once dismissed an action on or including the same claim operates as an adjudication on the merits (Rule 54 A(1)). A judgment may also be given on stipulation (Rule 67 F(1))."
+}
+
+terminal appeal-taken: "Notice of appeal filed under the Oregon Rules of Appellate Procedure" outcome [appeal] cite "ORAP 2.05"
+{
+  note "The notice of appeal is served and filed within the time allowed by ORS 19.255 or other applicable statute (ORAP 2.05); ORS 19.255 is not vendored, so the period is not stated here. If more than 30 days has elapsed after the date the judgment was entered, the notice states why the appeal is nevertheless timely (ORAP 2.05(8)). A motion for judgment notwithstanding the verdict or for a new trial may be filed and decided after another party has filed a notice of appeal (ORCP 63 D(2), 64 F(2)). The appeal is lit/or-court-of-appeals."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "ORCP 67 A"
+{
+  note "Judgment entered and not appealed. A Rule 71 B(1) motion does not affect the finality of a judgment or suspend its operation (Rule 71 B(1))."
+}

@@ -1,0 +1,20 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "or-circuit-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:e148fc25bcdcc00e34e7e25171df8b74703b6b51f4d798b3cc470460f9f1ecab"
+semantic = "sha256:91112e64e0d30bf6d1a4aae62dd2d27e2d26ea5b2f4dced8f057c62d6d69a211"
+texts = [
+    "orap sources/or-court-of-appeals/orap-sectioned.txt sha256:7699edb4c6eabf5749a33fc31ecd9df2b5d5869ecaee3149a29a7f9968ae849b",
+    "orcp sources/or-circuit/orcp-sectioned.txt sha256:047ba8dd8ccdf7b9a82deaef68bb90df6d51d927b9f43f7b709d824acc1f881e",
+]
+dependencies = [
+    "core 1.0.0",
+]

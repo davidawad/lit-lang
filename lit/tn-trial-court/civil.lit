@@ -1,5 +1,7 @@
 module tn-trial-court-civil.civil
 
+import tn-state-rules.{ JudgmentEntered, NoticeOfAppealFiled }
+
 start complaint-filed
 
 state complaint-filed: "Complaint filed" by applicant cite "Tenn. R. Civ. P. 3"
@@ -73,9 +75,11 @@ decision sj-ruling: "Summary judgment ruling" by court cite "Tenn. R. Civ. P. 56
 {
   note "The motion is served at least thirty (30) days before the time fixed for the hearing, and the adverse party may serve and file opposing affidavits not later than five days before the hearing. Judgment is rendered forthwith if there is no genuine issue as to any material fact and the moving party is entitled to a judgment as a matter of law; the court states the legal grounds for granting or denying the motion in its order; summary judgment may be rendered on liability alone (Tenn. R. Civ. P. 56.04). A plaintiff may not take a voluntary nonsuit while an adverse party's summary judgment motion is pending (Tenn. R. Civ. P. 41.01(1)). An order adjudicating fewer than all claims or parties is not final unless the court expressly determines there is no just reason for delay and directs entry of judgment (Tenn. R. Civ. P. 54.02(1))."
   edge-sj-ruling-judgment-applicant "Granted for applicant" -> judgment-applicant {
+    event JudgmentEntered()
     authority cite "Tenn. R. Civ. P. 56.04"
   }
   edge-sj-ruling-judgment-opponent "Granted for opponent" -> judgment-opponent {
+    event JudgmentEntered()
     authority cite "Tenn. R. Civ. P. 56.04"
   }
   edge-sj-ruling-trial "Denied" -> trial { authority cite "Tenn. R. Civ. P. 56.04" }
@@ -85,9 +89,11 @@ state trial: "Trial (jury or bench)" cite "Tenn. R. Civ. P. 39.01"
 {
   note "When a jury has been demanded under Rule 38 the action is designated a jury action and the demanded issues are tried by jury unless the parties stipulate to a bench trial or the court finds no right to a jury exists (Tenn. R. Civ. P. 39.01). In a bench trial the defendant may move for involuntary dismissal after the plaintiff's proof (Tenn. R. Civ. P. 41.02(2)). The plaintiff may take a voluntary nonsuit at any time before trial, by oral notice in open court during a bench trial, or in jury trials before the jury retires and before the court sustains a directed verdict motion (Tenn. R. Civ. P. 41.01(1))."
   edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    event JudgmentEntered()
     authority cite "Tenn. R. Civ. P. 58"
   }
   edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    event JudgmentEntered()
     authority cite "Tenn. R. Civ. P. 58"
   }
   edge-trial-nonsuit "Voluntary nonsuit during trial" -> nonsuit {
@@ -102,6 +108,7 @@ state judgment-applicant: "Judgment for applicant entered" cite "Tenn. R. Civ. P
     authority cite "Tenn. R. Civ. P. 59.04"
   }
   edge-judgment-applicant-appellate-review "Notice of appeal filed" -> appellate-review {
+    event NoticeOfAppealFiled()
     authority cite "Tenn. R. App. P. 4"
   }
   edge-judgment-applicant-final-win "No appeal within time" -> final-win {
@@ -116,6 +123,7 @@ state judgment-opponent: "Judgment for opponent entered" cite "Tenn. R. Civ. P. 
     authority cite "Tenn. R. Civ. P. 59.04"
   }
   edge-judgment-opponent-appellate-review "Notice of appeal filed" -> appellate-review {
+    event NoticeOfAppealFiled()
     authority cite "Tenn. R. App. P. 4"
   }
   edge-judgment-opponent-final-loss "No appeal within time" -> final-loss {
@@ -130,6 +138,7 @@ decision post-judgment-ruling: "Post-judgment motion ruling" by court cite "Tenn
     authority cite "Tenn. R. Civ. P. 50.02"
   }
   edge-post-judgment-ruling-appellate-review "Denied: appeal time runs from the order" -> appellate-review {
+    event NoticeOfAppealFiled()
     authority cite "Tenn. R. App. P. 4"
   }
 }

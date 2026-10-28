@@ -14,6 +14,7 @@ version = "0.1.0"
 language = 1
 pack_id = "tn-appellate-civil"
 forum = "tn-appellate"
+family = "state-civil"
 authority = "StateRule"
 title = "Tennessee Court of Appeals and Supreme Court, civil appeals"
 description = "Civil appeals from the Tennessee circuit and chancery courts under the Tennessee Rules of Appellate Procedure, as far as the vendored text states: the appeal as of right and its time, tolling motions, the record and transcript, briefs, the scope and standard of review, rehearing and its page limit, and the application for permission to appeal to the Tennessee Supreme Court and its word limits. Certiorari is a federal hand-off under Sup. Ct. R. 13."
@@ -30,6 +31,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+tn-state-rules = { version = "^0.1.0", path = "../tn-rules" }
 
 [sources.tn-r-app-p]
 title = "Tennessee Rules of Appellate Procedure, cited rules, each as in force on October 27, 2026"

@@ -9,12 +9,20 @@ dependencies = []
 name = "tn-appellate-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:8c5864a472b8d73869ec06c31cd006a718653487f4df3185f3bf4d364f6d1c68"
-semantic = "sha256:99cab2750cdfb191c636f98b26d69715ae2d886d5d102c233b2c5bec0cd6fca9"
+source = "sha256:d9fecc426c6e66590c9433f162a6b46ce82c1892964ba477ab69b1cd09dcd635"
+semantic = "sha256:a7f64c9707dcafb75a656335bd18f93dd40ec2f58d18ae843326989b07ac612e"
 texts = [
     "scotus sources/scotus-rules.txt sha256:881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2",
     "tn-r-app-p sources/tn-appellate/tn-rap-cited.txt sha256:e200af46ea7e877b2e4f782d147c7534334b175009b4860470189b36b7a3895d",
 ]
+dependencies = [
+    "core 1.0.0",
+    "tn-state-rules 0.1.0",
+]
+
+[[package]]
+name = "tn-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

@@ -1,0 +1,29 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "tn-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "tn-supreme-court"
+version = "0.1.0"
+language = 1
+source = "sha256:e330b74f1c8d089bdbcf71c23c28bf07a26fd5af9996e3b47cf05dcd525f2a5c"
+semantic = "sha256:676ec01300830abd7a30d1ae050400c0e412e2ae2141621f5b56439941322f16"
+texts = [
+    "scotus sources/scotus-rules.txt sha256:881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2",
+    "tn-rap-cited sources/tn-appellate/tn-rap-cited.txt sha256:e200af46ea7e877b2e4f782d147c7534334b175009b4860470189b36b7a3895d",
+    "tn-rap-pages sources/tn-court-of-criminal-appeals/tn-rap-rule-pages-2026-10-28-sectioned.txt sha256:a09bfdc47268c0e6a740939868490d1df2c0cbbcc57e0bfc8af01497ef2027bc",
+]
+dependencies = [
+    "core 1.0.0",
+    "tn-state-rules 0.1.0",
+]

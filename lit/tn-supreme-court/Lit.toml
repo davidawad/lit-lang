@@ -1,0 +1,65 @@
+# Review in the Tennessee Supreme Court by permission from a final
+# decision of the Court of Appeals or the Court of Criminal Appeals under
+# Tenn. R. App. P. 11, then briefing, argument, decision, rehearing and
+# the mandate, each rule as in force on the Tennessee courts' pages:
+# Rules 11, 13 and 39 on October 27, 2026 (sources/tn-appellate), Rules
+# 29, 30, 35 and 42 on October 28, 2026 (sources/tn-court-of-criminal-
+# appeals). Computation of time is Tenn. R. App. P. 21, and lit/core has
+# no Tennessee counting rule or holiday calendar, so the periods are
+# stated in notes, not encoded as counted deadlines. The Supreme Court's
+# own rules (Tenn. Sup. Ct. R.), direct review under Tenn. R. App. P. 12
+# and the extraordinary appeal of Rule 10 are not modeled. Certiorari is
+# a federal hand-off under Sup. Ct. R. 13.
+[package]
+name = "tn-supreme-court"
+version = "0.1.0"
+language = 1
+pack_id = "tn-supreme-court"
+forum = "tn-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "tennessee"
+title = "Tennessee Supreme Court, appeals by permission"
+description = "Review in the Tennessee Supreme Court of a final decision of the Court of Appeals or Court of Criminal Appeals under Tenn. R. App. P. 11, as far as the vendored text states: the application for permission to appeal, its time, contents and word limit, the answer, the two-justice grant, the briefs and their times and word limits, oral argument, the scope of review, rehearing and its page limit, and the mandate."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Tennessee Supreme Court"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+tn-state-rules = { version = "^0.1.0", path = "../tn-rules" }
+
+[sources.tn-rap-cited]
+title = "Tennessee Rules of Appellate Procedure, cited rules (3, 4, 9, 11, 13, 24, 27, 39), each as in force on October 27, 2026"
+url = "https://www.tncourts.gov/courts/court-rules/rules-appellate-procedure"
+path = "sources/tn-appellate/tn-rap-cited.txt"
+path_sha256 = "e200af46ea7e877b2e4f782d147c7534334b175009b4860470189b36b7a3895d"
+as_of = "2026-10-27"
+cite_prefixes = ["Tenn. R. App. P."]
+section_heading = "Tenn. R. App. P. {n}"
+
+[sources.tn-rap-pages]
+title = "Tennessee Rules of Appellate Procedure, the other rule pages, each as in force on October 28, 2026"
+url = "https://www.tncourts.gov/courts/court-rules/rules-appellate-procedure"
+path = "sources/tn-court-of-criminal-appeals/tn-rap-rule-pages-2026-10-28-sectioned.txt"
+path_sha256 = "a09bfdc47268c0e6a740939868490d1df2c0cbbcc57e0bfc8af01497ef2027bc"
+as_of = "2026-10-28"
+cite_prefixes = ["Tenn. R. App. P."]
+section_heading = "Tenn. R. App. P. {n}"
+
+[sources.scotus]
+title = "Rules of the Supreme Court of the United States (adopted Feb. 17, 2026, effective Mar. 16, 2026)"
+url = "https://www.supremecourt.gov/filingandrules/2026RulesoftheCourt_WEB.pdf"
+path = "sources/scotus-rules.txt"
+path_sha256 = "881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2"
+sha256 = "5200e38d590cc40929cb719987c936dc529717b4037259d1b63a2309cb6b0f32"
+as_of = "2026-03-16"
+cite_prefixes = ["Sup. Ct. R."]
+section_heading = "Sup. Ct. R. {n}"

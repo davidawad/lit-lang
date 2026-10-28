@@ -9,13 +9,21 @@ dependencies = []
 name = "tn-court-of-criminal-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:349104402d534ebca5b4c846745577b1be51bbefa76e460e38c5e0257387270c"
-semantic = "sha256:5875047d6587f1121d3e3fb41acade1531b67e92ddfbd365d8ec8abe4876c326"
+source = "sha256:2885f5e80e7d7434225c8feb66eeabcdec40037e539c87a62b3a5f42f4e60d80"
+semantic = "sha256:caeed8830be599b5328aa5dc7c4601bbef6ed0ed3f31391b994103ecaabe7332"
 texts = [
     "tn-cca-r sources/tn-court-of-criminal-appeals/tn-cca-rules-2026-10-28-sectioned.txt sha256:7961c0732c562a5f5dae5358971a2d285430b9023792cb68cab097067e4a5018",
     "tn-rap-cited sources/tn-appellate/tn-rap-cited.txt sha256:e200af46ea7e877b2e4f782d147c7534334b175009b4860470189b36b7a3895d",
     "tn-rap-pages sources/tn-court-of-criminal-appeals/tn-rap-rule-pages-2026-10-28-sectioned.txt sha256:a09bfdc47268c0e6a740939868490d1df2c0cbbcc57e0bfc8af01497ef2027bc",
 ]
+dependencies = [
+    "core 1.0.0",
+    "tn-state-rules 0.1.0",
+]
+
+[[package]]
+name = "tn-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

@@ -1,5 +1,13 @@
 module tn-court-of-criminal-appeals.appeal
 
+import tn-state-rules.{
+  DecisionFiled,
+  MandateIssued,
+  NoticeOfAppealFiled,
+  RecordFiled,
+  ReviewPetitionFiled,
+}
+
 // Criminal appeals in the Tennessee Court of Criminal Appeals, from the
 // appellant's view of outcomes. Every period below is stated in a note,
 // not counted: computation is Tenn. R. App. P. 21, and lit/core has no
@@ -37,6 +45,7 @@ state judgment-entered: "Judgment entered in the trial court" by applicant cite 
 {
   note "A defendant's appeal as of right lies from a judgment of conviction on a plea of not guilty, and on a plea of guilty or nolo contendere only for a certified question of law reserved under Tenn. R. Crim. P. 37(b)(2)(A) or (D), a sentence imposed without a plea agreement on sentence, or unwaived issues apparent from the record (Tenn. R. App. P. 3(b)). The state's appeal as of right lies only from the orders Tenn. R. App. P. 3(c) lists, among them dismissal of the charge, a judgment of acquittal after a guilty verdict and arrest of judgment. In a jury case an issue of trial error or another ground for a new trial is waived unless stated in a motion for a new trial (Tenn. R. App. P. 3(e)). The notice of appeal is filed with the clerk of the appellate court within 30 days after entry of the judgment; in criminal cases it is not jurisdictional and its timely filing may be waived in the interest of justice (Tenn. R. App. P. 4(a)). A timely motion for judgment of acquittal, suspended sentence, withdrawal of a guilty plea, new trial or arrest of judgment runs the time from the order disposing of it (Tenn. R. App. P. 4(c))."
   edge-judgment-entered-notice-filed "Notice of appeal filed in time, or late filing waived" -> notice-filed {
+    event NoticeOfAppealFiled()
     authority cite "Tenn. R. App. P. 4(a)"
   }
   edge-judgment-entered-time-barred "Appeal time missed and not waived" -> time-barred {
@@ -54,6 +63,7 @@ state record: "Record on appeal" by office cite "Tenn. R. App. P. 24"
 {
   note "Within 15 days after filing the notice of appeal the appellant files and serves a description of the parts of the record it intends to include; the appellee may designate additional parts within 15 days after service (Tenn. R. App. P. 24(a)). The transcript, or a statement of the evidence where none is available, is filed with the clerk of the trial court within 60 days after filing the notice of appeal (Tenn. R. App. P. 24(b), (c)). On receiving the record the appellate clerk files it and immediately serves notice of the filing date; failure to file the transcript or statement in time may lead to dismissal (Tenn. R. App. P. 26(a), (b))."
   edge-record-briefing "Record filed; briefing" -> briefing {
+    event RecordFiled()
     authority cite "Tenn. R. App. P. 29(a)"
   }
 }
@@ -77,12 +87,17 @@ decision appellate-decision: "Court of Criminal Appeals decision" by court cite 
 {
   note "Findings of guilt, by the trial court or a jury, are set aside if the evidence is insufficient to support the finding of guilt beyond a reasonable doubt (Tenn. R. App. P. 13(e)). With the concurrence of all participating judges, the court may affirm by an unpublished memorandum opinion, not to be cited in an unrelated case, when an opinion would have no precedential value, the evidence is sufficient and no error of law requiring reversal is apparent (Tenn. Ct. Crim. App. R. 20)."
   edge-appellate-decision-affirmed "Conviction affirmed" -> after-affirmance {
+    event DecisionFiled()
     authority cite "Tenn. R. App. P. 13(e)"
   }
   edge-appellate-decision-reversed "Reversed or modified" -> reversed {
+    event DecisionFiled()
     authority cite "Tenn. R. App. P. 13(e)"
   }
-  edge-appellate-decision-remanded "Remanded" -> remanded { authority cite "Tenn. R. App. P. 13" }
+  edge-appellate-decision-remanded "Remanded" -> remanded {
+    event DecisionFiled()
+    authority cite "Tenn. R. App. P. 13"
+  }
   edge-appellate-decision-dismissed "Appeal dismissed" -> appeal-dismissed {
     authority cite "Tenn. R. App. P. 3(e)"
   }
@@ -95,9 +110,11 @@ decision after-affirmance: "Rehearing, further review or mandate" by applicant c
     authority cite "Tenn. R. App. P. 39"
   }
   edge-after-affirmance-further "Application for permission to appeal" -> supreme-review {
+    event ReviewPetitionFiled()
     authority cite "Tenn. R. App. P. 11"
   }
   edge-after-affirmance-mandate "Mandate issues" -> affirmed {
+    event MandateIssued()
     authority cite "Tenn. R. App. P. 42(a)"
   }
 }
@@ -109,13 +126,14 @@ state rehearing: "Petition for rehearing" by applicant cite "Tenn. R. App. P. 39
     authority cite "Tenn. R. App. P. 39"
   }
   edge-rehearing-denied "Rehearing denied; application for permission to appeal" -> supreme-review {
+    event ReviewPetitionFiled()
     authority cite "Tenn. R. App. P. 11"
   }
 }
 
 decision supreme-review: "Application for permission to appeal to the Tennessee Supreme Court" by court cite "Tenn. R. App. P. 11"
 {
-  note "Any answer in opposition is filed within 15 days after the application, and no reply is filed (Tenn. R. App. P. 11(d)). The application is granted if two members of the court are satisfied it should be (Tenn. R. App. P. 11(e))."
+  note "Any answer in opposition is filed within 15 days after the application, and no reply is filed (Tenn. R. App. P. 11(d)). The application is granted if two members of the court are satisfied it should be (Tenn. R. App. P. 11(e)). The Supreme Court's side of the application, its briefing, decision, rehearing and mandate is lit/tn-supreme-court."
   edge-supreme-review-denied "Permission denied" -> review-denied {
     authority cite "Tenn. R. App. P. 11"
   }

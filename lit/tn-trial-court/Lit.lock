@@ -6,15 +6,23 @@ version = "1.0.0"
 dependencies = []
 
 [[package]]
+name = "tn-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
 name = "tn-trial-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:9a287c69734f6ea31dffd93bc12d6b611e0d4407d0626c6d7a0f9d2d8cf3c86c"
-semantic = "sha256:ded533837238c88c531b4ce43fb64eb0f12f1da69bcdf79f5a23abf76cacaeab"
+source = "sha256:19c99cda2701a1e75903041cf30cdc8be6ba97ec729b1a96a070fea78f95f5a4"
+semantic = "sha256:a8fa3852f4f13871541bc64ab068ea363aed1da6c6b309b0e2ac50cf71d3d37f"
 texts = [
     "tn-r-app-p sources/tn-appellate/tn-rap-cited.txt sha256:e200af46ea7e877b2e4f782d147c7534334b175009b4860470189b36b7a3895d",
     "tn-r-civ-p sources/tn-trial-court/tn-rcp-cited.txt sha256:7c751540ba51b24667c5d798df11a17ce6452d78973cc0d7f222581246c96554",
 ]
 dependencies = [
     "core 1.0.0",
+    "tn-state-rules 0.1.0",
 ]

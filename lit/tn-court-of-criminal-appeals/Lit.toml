@@ -15,6 +15,7 @@ version = "0.1.0"
 language = 1
 pack_id = "tn-court-of-criminal-appeals"
 forum = "tn-court-of-criminal-appeals"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "tennessee"
 title = "Tennessee Court of Criminal Appeals"
@@ -31,6 +32,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+tn-state-rules = { version = "^0.1.0", path = "../tn-rules" }
 
 [sources.tn-rap-cited]
 title = "Tennessee Rules of Appellate Procedure, cited rules (3, 4, 9, 11, 13, 24, 27, 39), each as in force on October 27, 2026"

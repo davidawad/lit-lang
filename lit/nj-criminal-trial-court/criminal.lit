@@ -1,0 +1,166 @@
+module nj-superior-court-criminal.criminal
+
+// Criminal cases in the Superior Court of New Jersey, Law Division. Part
+// III of the Rules of Court is CURRENCY UNCONFIRMED
+// (sources/nj-criminal-trial-court/PROVENANCE.md), so it is cited for the
+// structure of each step and no period, limit or amount is taken from it:
+// where a step has one, the note names the rule that sets it and says that
+// it is not stated. The Criminal Justice Reform Act and the Part I and
+// Part II rules the criminal rules rely on are not vendored and are holes.
+// Outcomes are from the defendant's side. The earlier outline's leading
+// decisions (County of Riverside v. McLaughlin, Gerstein v. Pugh, Gideon
+// v. Wainwright, Brady v. Maryland, Mapp v. Ohio, Barker v. Wingo, Boykin
+// v. Alabama, Missouri v. Frye, Jackson v. Virginia, Ramos v. Louisiana,
+// Apprendi v. New Jersey, Roe v. Flores-Ortega, Garza v. Idaho) are
+// removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Arrest and complaint" by applicant cite "N.J. Ct. R. 3:4-1"
+{
+  note "A person arrested without a warrant is taken to a police station where a complaint is prepared immediately, on a Complaint-Warrant (CDR-2) form if R. 3:3-1 authorizes a warrant and otherwise on a Complaint-Summons (CDR-1); on a summons the officer may serve it and release the defendant, and on a complaint-warrant the matter is presented to a judicial officer without unnecessary delay within the period R. 3:4-1 sets, which is not stated here (currency unconfirmed) (N.J. Ct. R. 3:4-1; 3:3-1)."
+  edge-arrested-appearance "First appearance" -> initial-appearance {
+    authority cite "N.J. Ct. R. 3:4-2"
+  }
+}
+
+decision initial-appearance: "Pretrial release or detention" by court cite "N.J. Ct. R. 3:4-2"
+{
+  note "After the complaint is filed the defendant is brought before a judge for a first appearance, at which the defendant is advised of the charges and rights, within periods R. 3:4-2 sets for a defendant in custody and for one released on a summons, which are not stated here (currency unconfirmed). The prosecutor may move at any time for pretrial detention of an eligible defendant, and the detention hearing is held before a Superior Court judge no later than the first appearance unless continued, or within the period R. 3:4A sets after a later motion (N.J. Ct. R. 3:4A). Eligibility, the release conditions and the detention standard are set by the Criminal Justice Reform Act, N.J.S.A. 2A:162-15 et seq., which is not vendored."
+  edge-initial-appearance-detained "Detained after a detention hearing" -> probable-cause {
+    authority cite "N.J. Ct. R. 3:4A"
+  }
+  edge-initial-appearance-released "Released on conditions" -> probable-cause {
+    authority cite ?("N.J.S.A. 2A:162-16, -17 (pretrial release conditions; not vendored)")
+  }
+}
+
+decision probable-cause: "Probable-cause hearing or indictment" by court cite "N.J. Ct. R. 3:4-3"
+{
+  note "If the defendant does not waive a hearing as to probable cause and no indictment has been returned, a Superior Court judge hears the State's evidence within a reasonable time, with cross-examination; on probable cause the defendant is bound over to await final determination, otherwise discharged from custody (N.J. Ct. R. 3:4-3). An indictment is found only on the concurrence of the number of grand jurors R. 3:6-8 sets and is returned in open court; the grand jury is governed by R. 3:6."
+  edge-probable-cause-charged "Bound over; indictment returned" -> charged {
+    authority cite "N.J. Ct. R. 3:6-8"
+  }
+  edge-probable-cause-none "No probable cause; discharged" -> dismissed {
+    authority cite "N.J. Ct. R. 3:4-3"
+  }
+}
+
+state charged: "Indictment or accusation" by office cite "N.J. Ct. R. 3:7-2"
+{
+  note "Every crime is prosecuted by indictment unless the defendant, advised of the right, waives it in a signed writing, in which case the defendant may be tried on an accusation prepared by the prosecuting attorney (N.J. Ct. R. 3:7-2); the indictment or accusation is governed by R. 3:7-3. When an indictment is returned or unsealed, the prosecutor provides a copy with the available discovery, and any plea offer in writing (N.J. Ct. R. 3:9-1; 3:13-3)."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite "N.J. Ct. R. 3:9-1"
+  }
+}
+
+state arraignment: "Arraignment" by applicant cite "N.J. Ct. R. 3:9-1"
+{
+  note "The criminal division manager's office notifies the defendant in writing of the arraignment, which occurs within the period after the return or unsealing of the indictment that R. 3:9-1 sets, not stated here (currency unconfirmed); the rule also governs the meet-and-confer, the plea offer, the initial case disposition and status conferences, pretrial hearings and the pretrial conference (N.J. Ct. R. 3:9-1). Counsel's appearance is governed by R. 3:8-1."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "N.J. Ct. R. 3:13-3"
+  }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "N.J. Ct. R. 3:10-2"
+{
+  note "Discovery and inspection, including pre-indictment discovery with a plea offer, are governed by R. 3:13-3; notices of alibi and of defenses under specific Code provisions by R. 3:12. At arraignment counsel advise the court of intended motions, and absent good cause all motions are filed with a brief by the scheduled Initial Case Disposition Conference, with briefing and hearing dates set by the court (N.J. Ct. R. 3:10-2); the effect of a determination is governed by R. 3:10-7. An eligible detained defendant may seek release under the speedy-trial periods of R. 3:25-4, which are not stated here (currency unconfirmed)."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "N.J. Ct. R. 3:10-2"
+  }
+  edge-discovery-speedy "Motion to dismiss for delay, or speedy-trial motion" -> motions-ruling {
+    authority cite "N.J. Ct. R. 3:25-4"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "N.J. Ct. R. 3:9-3"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "N.J. Ct. R. 3:10-2"
+{
+  note "For unreasonable delay in presenting the charge to a grand jury or filing an accusation, the Assignment Judge or designee, and for unreasonable delay in disposing of an indictment or accusation, the assigned judge, may dismiss the matter on the court's own motion or the defendant's (N.J. Ct. R. 3:25-3). For an eligible detained defendant, R. 3:25-4 sets periods for indictment, trial and the State's readiness and the remedies of release or dismissal; they are not stated here (currency unconfirmed)."
+  edge-motions-ruling-speedy "Dismissed for unreasonable delay" -> dismissed {
+    authority cite "N.J. Ct. R. 3:25-3"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "N.J. Ct. R. 3:10-2"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "N.J. Ct. R. 3:10-7"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "N.J. Ct. R. 3:9-2"
+{
+  note "A defendant may plead only guilty or not guilty; the court may refuse a guilty plea and accepts one only after questioning the defendant personally, under oath or affirmation, and finding a factual basis and that the plea is voluntary and made with an understanding of the charge and its consequences (N.J. Ct. R. 3:9-2). Plea discussions, agreements and withdrawals are governed by R. 3:9-3. On the prosecutor's motion the judge may dismiss an indictment, accusation or complaint before trial, and during trial with the defendant's consent (N.J. Ct. R. 3:25-1)."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "N.J. Ct. R. 3:9-2"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite ?("New Jersey Rules of Court, Part I, Rule 1:8-1 (trial by jury and its waiver; not vendored)")
+  }
+  edge-plea-decision-nolle "Dismissal on the prosecutor's motion" -> dismissed {
+    authority cite "N.J. Ct. R. 3:25-1"
+  }
+}
+
+decision trial: "Verdict" by court cite "N.J. Ct. R. 3:19-1"
+{
+  note "At the close of the State's case or of all the evidence, the court on the defendant's motion or its own enters a judgment of acquittal of any offense on which the evidence is insufficient (N.J. Ct. R. 3:18-1). Several defendants or counts and written verdict sheets are governed by R. 3:19-1, and an acquittal by reason of insanity by R. 3:19-2. Trial by jury and its waiver are governed by R. 1:8, which is not vendored."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "N.J. Ct. R. 3:18-1"
+  }
+  edge-trial-guilty "Guilty; post-verdict motions" -> post-trial {
+    authority cite "N.J. Ct. R. 3:18-2"
+  }
+}
+
+decision post-trial: "Post-verdict motions" by court cite "N.J. Ct. R. 3:20-1"
+{
+  note "After a guilty verdict or the jury's discharge, a motion for judgment of acquittal may be made or renewed (N.J. Ct. R. 3:18-2); the trial judge may grant a new trial in the interest of justice, but not against the weight of the evidence unless a manifest denial of justice clearly and convincingly appears (N.J. Ct. R. 3:20-1); judgment is arrested if the charge states no offense, rests on an invalid statute or the court lacked jurisdiction (N.J. Ct. R. 3:21-9). The periods for these motions, set by R. 3:18-2, 3:20-2 and 3:21-9, are not stated here (currency unconfirmed)."
+  edge-post-trial-acquittal "Judgment of acquittal or arrest of judgment" -> acquitted {
+    authority cite "N.J. Ct. R. 3:18-2"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "N.J. Ct. R. 3:20-1"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "N.J. Ct. R. 3:21-4"
+  }
+}
+
+state sentencing: "Presentence procedure and sentencing" by court cite "N.J. Ct. R. 3:21-4"
+{
+  note "The presentence procedure is governed by R. 3:21-2. Sentence is imposed without unreasonable delay; pending sentence the court may commit the defendant or continue or alter the conditions of release; sentence is imposed with the defendant present or after a written waiver, and the court first asks whether the defendant wishes to make a statement and present information in mitigation (N.J. Ct. R. 3:21-4). The judgment of conviction sets out the plea, verdict or findings, adjudication, sentence, the reasons for it and the credits, and is signed by the judge and entered by the clerk (N.J. Ct. R. 3:21-5). A sentence may be reduced or changed under R. 3:21-10."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "N.J. Ct. R. 3:21-5"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "N.J. Ct. R. 3:21-5"
+{
+  note "Appeals lie to the Appellate Division as of right from final judgments of the Superior Court trial divisions (N.J. Ct. R. 2:2-3). The time for a notice of appeal is set by R. 2:4-1, which is not vendored; its period stays a hole."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "N.J. Ct. R. 2:2-3"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite ?("New Jersey Rules of Court, Part II, Rule 2:4-1 (time for appeal; not vendored)") }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "N.J. Ct. R. 3:18-1"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty, a judgment of acquittal, or an arrest of judgment; a defendant found not guilty is discharged by judgment (N.J. Ct. R. 3:18, 3:21-5, 3:21-9)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "N.J. Ct. R. 3:25-3"
+{
+  note "Outcome from the defendant's side. Whether a dismissal for delay, a discharge for want of probable cause, or a dismissal on the prosecutor's motion bars reprosecution is not stated in the rules cited (N.J. Ct. R. 3:4-3, 3:25-1, 3:25-3)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "N.J. Ct. R. 2:2-3"
+{
+  note "The appeal continues before the Appellate Division of the Superior Court under Part II of the Rules of Court, of which only the cited rules are vendored (sources/nj-appellate-civil/)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "N.J. Ct. R. 3:22-12"
+{
+  note "Outcome from the defendant's side. Post-conviction relief is sought by petition under R. 3:22, the exclusive remedy and not a substitute for appeal (N.J. Ct. R. 3:22-1, 3:22-3), within the limitation periods of R. 3:22-12, which run from entry of the judgment of conviction under R. 3:21-5 and are not stated here (currency unconfirmed). Federal habeas belongs to lit/habeas."
+}

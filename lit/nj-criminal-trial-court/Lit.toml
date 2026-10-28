@@ -1,0 +1,57 @@
+# Criminal cases in the Superior Court of New Jersey, Law Division,
+# Criminal Part, under Part III of the New Jersey Court Rules (Rules
+# Governing Criminal Practice), as far as the vendored text states. The
+# base text is the Judiciary's Rules of Court tree as served
+# (sources/nj-criminal-trial-court/), which states no edition date; its
+# PROVENANCE entry records CURRENCY UNCONFIRMED, so in_force is the
+# retrieval date and an earlier query is a hole in the corpus. By the PM's
+# standing ruling of 2026-10-27 such a source yields holes, not values:
+# this package cites the rules only for the structure of the case (which
+# rule governs which step) and states no period, limit or amount from
+# them, including the speedy-trial periods of R. 3:25-4. The Criminal
+# Justice Reform Act (N.J.S.A. 2A:162-15 et seq.), the Code of Criminal
+# Justice, and the Part I and Part II rules the criminal rules rely on
+# (jury waiver under R. 1:8-1, the time for appeal under R. 2:4-1) are not
+# vendored; those cites stay holes. The appeal hand-off cites R. 2:2-3
+# from the cited appellate rules vendored with amendments effective on or
+# before September 1, 2026 (sources/nj-appellate-civil/).
+[package]
+name = "nj-superior-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "nj-superior-court-criminal"
+forum = "nj-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "new-jersey"
+title = "Superior Court of New Jersey, Law Division, criminal"
+description = "Criminal cases in the Superior Court of New Jersey under Part III of the Rules of Court, as far as the vendored text states: the structure of the case from complaint-warrant or complaint-summons and first appearance through pretrial release or detention, the probable-cause hearing, indictment or accusation, arraignment, pretrial motions, plea or trial, post-verdict motions, sentence and judgment, and post-conviction relief; no period from the currency-unconfirmed rules is stated. An appeal goes to the Appellate Division (R. 2:2-3); its period (R. 2:4-1) is not vendored."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Superior Court of New Jersey, Law Division (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.nj-crim]
+title = "New Jersey Court Rules, Part III, Rules Governing Criminal Practice, Rules of Court tree as served (no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.njcourts.gov/attorneys/rules-of-court"
+path = "sources/nj-criminal-trial-court/nj-court-rules-part-iii-criminal-practice-sectioned.txt"
+path_sha256 = "149686ddd4e4de4c93fdc2e4adb3ef71460c4978d3bd4c5818bff9529ed4b071"
+as_of = "2026-10-28"
+cite_prefixes = ["N.J. Ct. R."]
+section_heading = "N.J. Ct. R. {n}"
+
+[sources.nj-rules]
+title = "New Jersey Rules of Court (cited appellate rules), amendments effective on or before Sept. 1, 2026"
+url = "https://www.njcourts.gov/attorneys/rules-of-court"
+path = "sources/nj-appellate-civil/rules-of-court-cited-2026-09-01.txt"
+path_sha256 = "46f0f8e357d3d84e1625181279e8ae7e5dbf8d564b0bf1726f39cf778530af1f"
+as_of = "2026-09-01"
+cite_prefixes = ["N.J. Ct. R."]
+section_heading = "N.J. Ct. R. {n}"

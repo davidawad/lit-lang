@@ -215,7 +215,8 @@ type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Vec<Cow<'a, str>>);
 /// The cites of a filing limit's entries (SPEC §3.7; none for any other
 /// declaration), each its own or else the declaration's, with the words its vendored text must hold: a
 /// bound's number and measure as the rules write them, in digits
-/// (`13,000 words`), in words (`thirty pages`) or both (`thirty (30)
+/// with or without a thousands comma (`13,000 words`; E.D.N.C. LCvR
+/// 7.2(f): `8400 words`), in words (`thirty pages`) or both (`thirty (30)
 /// pages`), the measure singular for a count of one (`one page`), each also with a few words between the count and the measure
 /// (D.S.C. Local Civ. Rule 7.05(B): `Thirty-five (35) double-spaced
 /// pages`; D. Conn. L. Civ. R. 7(a)5: `forty (40) 8 1/2" by 11" printed
@@ -235,15 +236,25 @@ fn limit_cites(d: &Declaration) -> Vec<CiteOf<'_>> {
         };
         let quotes = match &b.max {
             hir::Authored::Known(n) => {
-                let (digits, words) = (grouped(*n), spelled(*n));
+                let words = spelled(*n);
+                let mut digits = vec![grouped(*n)];
+                if *n >= 1_000 {
+                    digits.push(n.to_string());
+                }
                 let measure = b.measure.as_str();
                 let measure = if *n == 1 {
                     measure.strip_suffix('s').unwrap_or(measure)
                 } else {
                     measure
                 };
-                [digits.clone(), words.clone(), format!("{words} ({digits})")]
+                let spelled_with = digits
+                    .iter()
+                    .map(|d| format!("{words} ({d})"))
+                    .collect::<Vec<_>>();
+                digits
                     .into_iter()
+                    .chain([words])
+                    .chain(spelled_with)
                     .flat_map(|count| {
                         [
                             format!("{count} {measure}"),

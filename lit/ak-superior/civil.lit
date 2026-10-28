@@ -1,0 +1,139 @@
+module ak-superior-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "Alaska R. Civ. P. 3(a)"
+{
+  note "A civil action is commenced by filing a complaint, accompanied by a completed case description and, unless filed by fax or e-mail where authorized, an addressed and stamped envelope (Alaska R. Civ. P. 3(a)). Periods in this package are stated, not counted: Civil Rule 6(a) excludes the trigger day, includes the last day unless it is a weekend or legal holiday, and excludes intermediate weekends and holidays from a period under seven days; three calendar days are added after service by non-electronic mail (Alaska R. Civ. P. 6(a), (c)). The filing fee is not stated in the vendored rules. The earlier outline named no leading decision for this step."
+  edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    authority cite "Alaska R. Civ. P. 4"
+  }
+  edge-complaint-filed-unserved "Defendant not served: clerk's 120-day review" -> service-review {
+    authority cite "Alaska R. Civ. P. 4(j)"
+  }
+}
+
+decision service-review: "Good cause for incomplete service shown?" by court cite "Alaska R. Civ. P. 4(j)"
+{
+  note "The clerk reviews each pending case 120 days after the complaint is filed; if a defendant is unserved, the clerk notifies the plaintiff to show good cause in writing. If good cause is not shown within 30 days after distribution of the notice, the court dismisses without prejudice as to that defendant; on good cause it sets a new deadline for proof of service or of diligent efforts (Alaska R. Civ. P. 4(j))."
+  edge-service-review-cause "Good cause: new service deadline" -> answer-due {
+    authority cite "Alaska R. Civ. P. 4(j)"
+  }
+  edge-service-review-dismissed "No good cause shown" -> dismissed-unserved {
+    authority cite "Alaska R. Civ. P. 4(j)"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed without prejudice for want of service" outcome [loss, dismissal] cite "Alaska R. Civ. P. 4(j)"
+
+decision answer-due: "Answer, motion or default" by office cite "Alaska R. Civ. P. 12(a)"
+{
+  note "A defendant serves an answer within 20 days after service of the summons and complaint; the state or a state officer or agency, within 40 days after service on the attorney general; a party served abroad under Rule 4(d)(13), within 40 days. A Rule 12 motion alters the period: if denied or deferred to trial, the responsive pleading is due within 10 days after notice of the court's action (Alaska R. Civ. P. 12(a))."
+  edge-answer-due-default "No appearance or answer" -> default-entered {
+    authority cite "Alaska R. Civ. P. 55(a)"
+  }
+  edge-answer-due-motion "Rule 12(b) motion" -> pleading-motion {
+    authority cite "Alaska R. Civ. P. 12(b)"
+  }
+  edge-answer-due-answer "Answer served" -> discovery { authority cite "Alaska R. Civ. P. 12(a)" }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "Alaska R. Civ. P. 12(b)"
+{
+  note "The defenses of Rule 12(b)(1)-(7) may be made by motion before pleading; if matters outside the pleading are presented on a 12(b)(6) motion it is treated as one for summary judgment under Rule 56. A decision granting a motion to dismiss is not a final judgment under Civil Rule 58; when it adjudicates all claims the judge directs a party to file a proposed final judgment within 20 days of service of the decision (Alaska R. Civ. P. 12(b)). Opposition to a motion to dismiss is due 15 days from service or, if the plaintiff moves, when the answer is due, whichever is later; a reply may be served within five days of service of the opposition (Alaska R. Civ. P. 77(c), (d)). The earlier outline named no Alaska pleading-standard decision."
+  edge-pleading-motion-granted "Granted" -> dismissed { authority cite "Alaska R. Civ. P. 12(b)" }
+  edge-pleading-motion-amend "Leave to amend" -> amend { authority cite "Alaska R. Civ. P. 15(a)" }
+  edge-pleading-motion-denied "Denied: answer within 10 days of notice" -> discovery {
+    authority cite "Alaska R. Civ. P. 12(a)"
+  }
+}
+
+state amend: "Amended pleading" by applicant cite "Alaska R. Civ. P. 15(a)"
+{
+  note "A party may amend once as a matter of course before a responsive pleading is served; otherwise only by leave of court, freely given when justice so requires, or by written consent. A party pleads in response within the time remaining on the original pleading or within 10 days after service of the amendment, whichever is longer (Alaska R. Civ. P. 15(a))."
+  edge-amend-tested "Amended pleading tested again" -> pleading-motion {
+    authority cite "Alaska R. Civ. P. 12(b)"
+  }
+}
+
+terminal dismissed: "Dismissed on the pleadings" outcome [win, dismissal] cite "Alaska R. Civ. P. 12(b)"
+{
+  note "Outcome from the defending side. The proposed final judgment is filed within 20 days of service of the decision (Alaska R. Civ. P. 12(b)); appeal runs from the clerk's certificate of distribution on the judgment (Alaska R. App. P. 204(a))."
+}
+
+decision default-entered: "Default" by court cite "Alaska R. Civ. P. 55(a)"
+{
+  note "When a party against whom affirmative relief is sought fails to appear and answer or otherwise defend, the clerk enters default on application served on all parties, not less than seven days after service of the application (Alaska R. Civ. P. 55(a)). The clerk enters default judgment for a sum certain against a defendant defaulted for failure to appear, on an affidavit of the amount due and of non-military, non-minor status; in other cases the court enters it (Alaska R. Civ. P. 55(b), (c)). The earlier outline named no set-aside decision."
+  edge-default-entered-judgment "Default judgment entered" -> default-judgment {
+    authority cite "Alaska R. Civ. P. 55(b)"
+  }
+  edge-default-entered-set-aside "Default set aside for good cause" -> discovery {
+    authority cite "Alaska R. Civ. P. 55(e)"
+  }
+}
+
+terminal default-judgment: "Default judgment" outcome [loss] cite "Alaska R. Civ. P. 55(b)"
+{
+  note "Outcome from the defending side."
+}
+
+state discovery: "Disclosure, discovery and pretrial" by applicant cite "Alaska R. Civ. P. 26(a)"
+{
+  note "The parties meet at least 14 days before a scheduling conference is held or a scheduling order is due, and report a proposed discovery plan within 10 days after the meeting (Alaska R. Civ. P. 26(f)); initial disclosures are made at or within 10 days after that meeting unless the court directs otherwise (Alaska R. Civ. P. 26(a)(1)). The scheduling order issues within 90 days after the defendants appear (Alaska R. Civ. P. 16(b)). A jury is demanded in writing not later than 10 days after service of the last pleading directed to the issue (Alaska R. Civ. P. 38(b))."
+  edge-discovery-sj "Summary judgment motion" -> summary-judgment {
+    authority cite "Alaska R. Civ. P. 56"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Alaska R. Civ. P. 38" }
+  edge-discovery-settled "Stipulated dismissal" -> settled {
+    authority cite "Alaska R. Civ. P. 41(a)"
+  }
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "Alaska R. Civ. P. 56(c)"
+{
+  note "A claimant may move at any time after 20 days from commencement, a defending party at any time (Alaska R. Civ. P. 56(a), (b)). The motion is made under Rule 77 with a memorandum showing no genuine issue of material fact; the opponent may serve affidavits and a statement of genuine issues; judgment is rendered forthwith if there is no genuine issue and a party is entitled to judgment as a matter of law (Alaska R. Civ. P. 56(c)). Opposition is due 15 days from service, or when the answer is due if the plaintiff moves before then, whichever is later (Alaska R. Civ. P. 77(c)). The outline's Christensen v. Alaska Sales & Service, Inc., 335 P.3d 514 (Alaska 2014), is removed: no reporter text is vendored."
+  edge-summary-judgment-granted "Granted" -> judgment-entered {
+    authority cite "Alaska R. Civ. P. 56(c)"
+  }
+  edge-summary-judgment-denied "Denied" -> trial { authority cite "Alaska R. Civ. P. 56(c)" }
+}
+
+state trial: "Trial by jury or by the court" by court cite "Alaska R. Civ. P. 38"
+{
+  note "Issues triable of right by a jury are so tried on a timely written demand; failure to serve a demand waives a jury (Alaska R. Civ. P. 38(b), (d)). A party who moved for a directed verdict may move for judgment notwithstanding the verdict not later than 10 days after the date shown in the clerk's certificate of distribution on the judgment (Alaska R. Civ. P. 50(b))."
+  edge-trial-judgment "Verdict or decision" -> post-trial { authority cite "Alaska R. Civ. P. 58" }
+  edge-trial-settled "Settled before verdict" -> settled {
+    authority cite "Alaska R. Civ. P. 41(a)"
+  }
+}
+
+decision post-trial: "Post-trial motions" by applicant cite "Alaska R. Civ. P. 59"
+{
+  note "A motion for a new trial, and a motion to alter or amend the judgment, are served not later than 10 days after the clerk's certificate of distribution on the judgment (or its entry); opposing affidavits follow within 10 days (Alaska R. Civ. P. 59(b), (c), (f)). A motion to amend findings is made within the same 10 days (Alaska R. Civ. P. 52(b)). The court may not extend these times (Alaska R. Civ. P. 6(b)). A timely motion under Rules 50(b), 52(b), 59 or 77(k) terminates the running of the time to appeal (Alaska R. App. P. 204(a)(3))."
+  edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered {
+    authority cite "Alaska R. Civ. P. 58"
+  }
+}
+
+decision judgment-entered: "Final judgment entered" by office cite "Alaska R. Civ. P. 58"
+{
+  note "Every judgment is set forth on a separate document; entry is not delayed, nor the time for appeal extended, for costs or fees (Alaska R. Civ. P. 58). The prevailing party files a verified cost bill within 10 days after the clerk's certificate of distribution on the judgment; objections follow within 7 days and a reply within 5 (Alaska R. Civ. P. 79(b), (c)). A motion for attorney's fees is filed within 10 days after that date (Alaska R. Civ. P. 82(c)); the prevailing party recovers fees on the schedule of Rule 82(b)(1) (20, 10, 10 and 10 percent of a money judgment in its tiers after a contested trial) or, without a money judgment, 30 percent of reasonable actual fees after trial and 20 percent without (Alaska R. Civ. P. 82(b))."
+  edge-judgment-entered-appeal "Notice of appeal within 30 days" -> appeal-taken {
+    authority cite "Alaska R. App. P. 204(a)"
+  }
+  edge-judgment-entered-final "No appeal" -> final-no-appeal {
+    authority cite "Alaska R. Civ. P. 58"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Alaska appellate package" outcome [appeal] cite "Alaska R. App. P. 204(a)"
+{
+  note "The notice of appeal is filed within 30 days from the date shown in the clerk's certificate of distribution on the judgment; another party may appeal within 14 days of a timely notice or within the 30 days, whichever expires last (Alaska R. App. P. 204(a)(1), (2)). Hand-off to lit/ak-supreme (ak-appellate-civil)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Alaska R. Civ. P. 58"
+
+terminal settled: "Settled: dismissed by stipulation" outcome [settlement] cite "Alaska R. Civ. P. 41(a)"
+{
+  note "An action may be dismissed without order by a notice of dismissal before service of an answer or summary judgment motion, or by a stipulation signed by all parties who have appeared; it is without prejudice unless stated otherwise (Alaska R. Civ. P. 41(a)(1))."
+}

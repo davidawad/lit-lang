@@ -1,0 +1,50 @@
+# Civil actions in the Alaska Superior Court under the Alaska Rules of
+# Civil Procedure as the court system served them on 2026-10-27 (latest
+# stated amendment SCO 2045, effective April 23, 2026; sources/ak-superior).
+# Computation of time is Civil Rule 6(a), which excludes intermediate
+# Saturdays, Sundays and legal holidays from periods under seven days and
+# has no counting rule in lit/core, so the rules' periods are stated in
+# notes, not encoded as counted deadlines; Civil Rule 6(c) adds three
+# calendar days after service by non-electronic mail. An appeal hands off
+# to lit/ak-supreme.
+[package]
+name = "ak-superior-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ak-superior-court-civil"
+forum = "ak-superior"
+authority = "StateRule"
+title = "Alaska Superior Court, civil"
+description = "Civil actions in the Alaska Superior Court under the Alaska Rules of Civil Procedure, as far as the vendored text states. An appeal hands off to the Alaska appellate package (lit/ak-supreme)."
+in_force = "2026-04-23"
+known_at = "2026-10-27"
+unknown_before = "2026-04-23"
+jurisdiction = "Alaska Superior Court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ak-civ]
+title = "Alaska Rules of Court, Rules of Civil Procedure (as served on October 27, 2026; latest stated amendment SCO 2045 effective April 23, 2026)"
+url = "https://courts.alaska.gov/rules/docs/civ.pdf"
+path = "sources/ak-superior/alaska-civil-procedure-sectioned.txt"
+path_sha256 = "10bdb43435fa80d4049dc39b8a5093891aeb5b4391cfffd5a69a960b3c248d30"
+sha256 = "a08b5ff52d6893ba454e186935052099f6243e82e464b93e7ef9856d103bacdb"
+as_of = "2026-04-23"
+cite_prefixes = ["Alaska R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.ak-app]
+title = "Alaska Rules of Court, Rules of Appellate Procedure (amended through SCO 2035 effective April 15, 2025, as served on October 27, 2026)"
+url = "https://courts.alaska.gov/rules/docs/app.pdf"
+path = "sources/ak-supreme/alaska-appellate-procedure-sectioned.txt"
+path_sha256 = "98b14637ade4bd8b2ce42679338cf16575ff1be63cd074e2cfcfe7019bd31775"
+sha256 = "b5f480666b750db7d9409a3db7d3dc91e796738ee105ea63802d40a737ad5f0c"
+as_of = "2025-04-15"
+cite_prefixes = ["Alaska R. App. P."]
+section_heading = "Rule {n}"

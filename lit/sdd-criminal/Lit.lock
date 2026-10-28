@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "sdd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:ccec661bc10bf8b6efac801b2554f17b6e7ff5552c231005a008d18ee3a8bd75"
+semantic = "sha256:173deb51700f649181edcfaab22fb66f8eb96d4dbdb7b28a6f3e3435f56cdd8f"
+texts = [
+    "sdd-crim-lr sources/sdd/sdd-criminal-local-rules-complete-set.txt sha256:b98938d2f72ee568905e6c9c31c6432d19cfc3eab11e58cbd75927faef635ae8",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

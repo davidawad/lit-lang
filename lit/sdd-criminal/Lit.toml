@@ -1,0 +1,56 @@
+# The District of South Dakota's Criminal Local Rules of Practice (D.S.D.
+# Crim. LR) as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071;
+# FRCrimP 57(a)): it declares only the periods and limits the criminal
+# rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period.
+#
+# The only vendored text is the court's "Complete Set" of the criminal
+# rules (sources/sdd), which the PROVENANCE entry records as CURRENCY
+# UNCONFIRMED: the court's page states no effective date. Every period
+# therefore has a hole cite naming its pinpoint, the value the vendored
+# text's, unverified, as for lit/bankr-arw. The set's pages are footed
+# 2/28/2025, and the Eighth Circuit Judicial Council order printed at its
+# end (JCO 3440, February 24, 2025) makes the amended civil and criminal
+# rules effective as of its date, so the package runs from February 24,
+# 2025; whether a later amendment exists is what stays unconfirmed. A
+# query before that date is a hole in the corpus. The civil rules are
+# lit/sdd's. Habeas (28 U.S.C. §§ 2254, 2255) is lit/habeas's; an appeal
+# goes to the Eighth Circuit under FRAP 4(b) (lit/frcrimp) and lit/ca8.
+[package]
+name = "sdd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "sdd-criminal-local-rules"
+forum = "sdd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the District of South Dakota: Criminal Local Rules of Practice"
+description = "The District of South Dakota's Criminal Local Rules of Practice as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp), every period a hole pending a dated text (the vendored complete set is CURRENCY UNCONFIRMED): the joint discovery stipulation, expert and rebuttal expert disclosures, ex parte subpoena motions and writ applications, additional peremptory challenges, sentencing letters and documents, motion responses and replies, and review of returned exhibits (the brief page limit stays a note)."
+in_force = "2025-02-24"
+known_at = "2026-10-28"
+unknown_before = "2025-02-24"
+jurisdiction = "United States District Court, D. South Dakota (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "sdd-crim-lr"
+issuer = "United States District Court for the District of South Dakota"
+date = "2025-02-24"
+designation = "Criminal Local Rules of Practice (complete set; CURRENCY UNCONFIRMED)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.sdd-crim-lr]
+title = "Criminal Local Rules of Practice of the United States District Court for the District of South Dakota (complete set, pages footed 2/28/2025; CURRENCY UNCONFIRMED)"
+url = "https://www.sdd.uscourts.gov/sites/sdd/files/Criminal%20Local%20Rules%20-%20final%2C%20approved.pdf"
+path = "sources/sdd/sdd-criminal-local-rules-complete-set.txt"
+path_sha256 = "b98938d2f72ee568905e6c9c31c6432d19cfc3eab11e58cbd75927faef635ae8"
+sha256 = "c14f37a0684b4e6add374ae6a70be467f0919fe65b7caae848acdfcbf3a3c25e"
+as_of = "2025-02-24"

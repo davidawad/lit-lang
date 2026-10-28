@@ -1,0 +1,161 @@
+module sdd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of South Dakota's own criminal periods. FRCrimP 45(a)
+// computes a period "in any local rule" of a criminal case, so these
+// count under frcrimp45; the rules' "calendar days" are FRCrimP 45(a)(1)'s
+// count of every day. Every period binds only to the CURRENCY UNCONFIRMED
+// complete set (sources/sdd/PROVENANCE.md), so each has a hole cite naming
+// its pinpoint and the value is the vendored text's, unverified. The
+// presiding judge may modify the rules in any case (LR 1.1(C)); the
+// scheduling and case management order sets the motion, notice and
+// request deadlines (LR 12.1). Stated in the rules but not declared: the
+// fourteen days to object to the draft presentence report (LR 32.1(C)(2)),
+// FRCrimP 32(f)(1)'s; the Probation Office's draft report 35 days and final
+// report 7 days before sentencing (LR 32.1(C)(1), (3)), which bind the
+// court's officers (FRCrimP 32(e)(2) states the 35 days); the substitution
+// of counsel without leave 30 or more days before trial (LR 57.4(B)), a
+// condition, not a deadline; the preservation of returned physical
+// exhibits until 120 days after any appeal is resolved (LR 57.3(C)(2)), a
+// retention condition; the 25-page limit on briefs (LR 47.1(C)(1)), kept
+// out while the text it rests on is unconfirmed, as a limit has no hole
+// form here; and the 21 days' notice of a reinstatement hearing
+// (LR 44.1), the court's. The court's Speedy Trial Plan (LR 1.1(D); 18
+// U.S.C. § 3165) is not vendored. The earlier D.S.D. criminal outline's
+// FRCrimP flow and its decisions (Salerno, Brady, Barker v. Wingo,
+// Zedner, Boykin, Missouri v. Frye, Jackson v. Virginia, Booker, Roe v.
+// Flores-Ortega, Garza v. Idaho) are FRCrimP and constitutional authority
+// and belong to lit/frcrimp; no reporter text is vendored, so they are
+// removed here.
+
+/// Where the Marshals Service is to serve (LR 17.1(A), (C)).
+enum ServiceArea { WithinDistrict, OutsideDistrict }
+
+/// The defendant's initial appearance (LR 16.1(A)).
+event InitialAppearance()
+/// The start of trial (LR 16.1(C)).
+event TrialBegins()
+/// The hearing or trial at which a subpoenaed witness is to testify (LR
+/// 17.1(A)).
+event WitnessHearing(area: ServiceArea)
+/// The hearing or trial at which a witness brought by writ of habeas
+/// corpus ad testificandum is to testify (LR 17.1(C)).
+event WritWitnessHearing(area: ServiceArea)
+/// Jury selection in a multi-defendant case (LR 24.1).
+event JurySelection()
+/// The draft presentence report is filed (LR 32.1(C)(4)).
+event DraftPresentenceReportFiled()
+/// The sentencing (LR 32.1(C)(5)).
+event Sentencing()
+/// A motion and its brief are served (LR 47.1(C)).
+event MotionAndBriefServed()
+/// A responsive brief is served (LR 47.1(C)).
+event ResponsiveBriefServed()
+/// The clerk returns the documentary exhibits it filed after a trial or
+/// proceeding to the offering party (LR 57.3(B)).
+event DocumentaryExhibitsReturned()
+
+/// D.S.D. Crim. LR 16.1(A): within 14 days of an initial appearance, the
+/// government and defense counsel complete and file a joint stipulation
+/// for discovery (the government files it).
+deadline discovery-stipulation-period: 14.days after InitialAppearance() counted_by frcrimp45 cite ?("D.S.D. Crim. LR 16.1(A), complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}
+
+/// D.S.D. Crim. LR 16.1(C)(1): the government and the defendant disclose to
+/// each other no later than 21 calendar days before the start of trial
+/// each retained expert witness for the case-in-chief, with the written
+/// disclosure the rule lists.
+deadline expert-disclosure-period: 21.days before TrialBegins() counted_by frcrimp45 cite ?("D.S.D. Crim. LR 16.1(C), complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}
+
+/// D.S.D. Crim. LR 16.1(C)(2): a rebuttal expert is identified, with the
+/// same written disclosure, no later than 7 calendar days before trial.
+deadline rebuttal-expert-disclosure-period: 7.days before TrialBegins() counted_by frcrimp45 cite ?("D.S.D. Crim. LR 16.1(C), complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}
+
+/// D.S.D. Crim. LR 17.1(A): a defendant unable to pay files an ex parte
+/// motion at least 14 calendar days before a hearing or trial for a
+/// subpoena the Marshals Service is to serve within the district.
+deadline subpoena-motion-in-district-period: 14.days before WitnessHearing(WithinDistrict) counted_by frcrimp45 cite ?("D.S.D. Crim. LR 17.1(A), complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}
+
+/// D.S.D. Crim. LR 17.1(A): at least 21 calendar days before, for one to be
+/// served outside the district.
+deadline subpoena-motion-out-of-district-period: 21.days before WitnessHearing(OutsideDistrict) counted_by frcrimp45 cite ?("D.S.D. Crim. LR 17.1(A), complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}
+
+/// D.S.D. Crim. LR 17.1(C): an application for a writ of habeas corpus ad
+/// testificandum the Marshals Service is to serve within the district is
+/// filed, with a proposed writ, at least 14 calendar days before the
+/// hearing or trial.
+deadline writ-application-in-district-period: 14.days before WritWitnessHearing(WithinDistrict) counted_by frcrimp45 cite ?("D.S.D. Crim. LR 17.1(C), complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}
+
+/// D.S.D. Crim. LR 17.1(C): at least 21 calendar days before, for one to be
+/// served outside the district.
+deadline writ-application-out-of-district-period: 21.days before WritWitnessHearing(OutsideDistrict) counted_by frcrimp45 cite ?("D.S.D. Crim. LR 17.1(C), complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}
+
+/// D.S.D. Crim. LR 24.1: in a multi-defendant case a defendant's request for
+/// additional peremptory challenges is made in writing at least 14
+/// calendar days before jury selection.
+deadline peremptory-request-period: 14.days before JurySelection() counted_by frcrimp45 cite ?("D.S.D. Crim. LR 24.1, complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}
+
+/// D.S.D. Crim. LR 32.1(C)(4): unless otherwise ordered, counsel file all
+/// letters of support, sealed, no later than 28 days after the draft
+/// presentence report is filed.
+deadline support-letters-period: 28.days after DraftPresentenceReportFiled() counted_by frcrimp45 cite ?("D.S.D. Crim. LR 32.1(C), complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}
+
+/// D.S.D. Crim. LR 32.1(C)(5): unless otherwise ordered, all other
+/// sentencing documents (motions for departure or variance, sentencing
+/// memoranda) are filed no later than 7 days before sentencing and served
+/// manually on the participants entitled to notice.
+deadline sentencing-documents-period: 7.days before Sentencing() counted_by frcrimp45 cite ?("D.S.D. Crim. LR 32.1(C), complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}
+
+/// D.S.D. Crim. LR 47.1(C): on or before 7 calendar days after service of a
+/// motion and brief, unless the court orders otherwise, every opposing
+/// party serves and files a responsive brief.
+deadline motion-response-period: 7.days after MotionAndBriefServed() counted_by frcrimp45 cite ?("D.S.D. Crim. LR 47.1(C), complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}
+
+/// D.S.D. Crim. LR 47.1(C): the movant may file a reply brief within 4
+/// calendar days after service of the responsive brief.
+deadline motion-reply-period: 4.days after ResponsiveBriefServed() counted_by frcrimp45 cite ?("D.S.D. Crim. LR 47.1(C), complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}
+
+/// D.S.D. Crim. LR 57.3(B)(2): the parties have 21 days to review their
+/// returned documentary exhibits for the redactions D.S.D. Crim. LR 49.1.1
+/// requires; the offering party then files them, or the clerk unrestricts
+/// them.
+deadline exhibit-redaction-review-period: 21.days after DocumentaryExhibitsReturned() counted_by frcrimp45 cite ?("D.S.D. Crim. LR 57.3(B), complete set: CURRENCY UNCONFIRMED (no effective date on the court's page); the value is the vendored text, unverified")
+{
+  forum frcrimp
+}

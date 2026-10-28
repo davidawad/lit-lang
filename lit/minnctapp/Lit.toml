@@ -1,25 +1,26 @@
-# Civil appeals to the Minnesota Court of Appeals and petitions for review
-# in the Minnesota Supreme Court under the Minnesota Rules of Civil
-# Appellate Procedure, with amendments effective April 1, 2025
+# Civil appeals to the Minnesota Court of Appeals under the Minnesota
+# Rules of Civil Appellate Procedure, with amendments effective April 1, 2025
 # (sources/minnctapp). Computation of time is Minn. R. Civ. P. 6.01, which
 # Rule 126.01 applies and which takes its legal holidays from Minn. Stat.
 # § 645.44, subd. 5; lit/core has no counting rule for it, so the periods
 # are stated in notes, not encoded as counted deadlines. The brief and
-# petition length limits are declared as paper limits.
+# petition length limits are lit/mn-rules'. A petition for review hands
+# off to the Minnesota Supreme Court package (lit/mn-supreme-court).
 [package]
 name = "mn-court-of-appeals-civil"
 version = "0.1.0"
 language = 1
 pack_id = "mn-court-of-appeals-civil"
 forum = "minnctapp"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "minnesota"
-title = "Minnesota Court of Appeals and Minnesota Supreme Court, civil appeals"
-description = "Civil appeals from the Minnesota district courts to the Minnesota Court of Appeals, and petitions for further review in the Minnesota Supreme Court, under the Minnesota Rules of Civil Appellate Procedure (amendments effective April 1, 2025): appealability, the record, briefing and its length limits, argument, decision, review and judgment."
+title = "Minnesota Court of Appeals, civil appeals"
+description = "Civil appeals from the Minnesota district courts to the Minnesota Court of Appeals under the Minnesota Rules of Civil Appellate Procedure (amendments effective April 1, 2025): appealability, the record, briefing, argument, decision and judgment. A petition for review hands off to the Minnesota Supreme Court package (lit/mn-supreme-court); the length limits are lit/mn-rules'."
 in_force = "2025-04-01"
 known_at = "2026-10-28"
 unknown_before = "2025-04-01"
-jurisdiction = "Minnesota Court of Appeals; Minnesota Supreme Court"
+jurisdiction = "Minnesota Court of Appeals"
 
 [package.roles]
 applicant = "self"
@@ -28,6 +29,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the brief and petition length limits of Minn. R. Civ. App. P. 117 and 132.01, the briefs' paper events and the trigger events.
+mn-state-rules = { version = "^0.1.0", path = "../mn-rules" }
 
 [sources.mnrcap]
 title = "Minnesota Rules of Civil Appellate Procedure, with amendments effective April 1, 2025"

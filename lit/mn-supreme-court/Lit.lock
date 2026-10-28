@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "mn-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "mn-supreme-court-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:899146297fe856681470df5d326f863b7cc4e2014636f4a8bb6b511150425356"
+semantic = "sha256:814d8814c1a6d2877c42f43c2792930c50b310a89482a29cd06e0d2def248528"
+texts = [
+    "mnrcap sources/minnctapp/mnrcap-2025-04-01-sectioned.txt sha256:9351c7e8731c2e496ba1ddd3c038b61c25e310f361a27c178889aff43fc6dbfa",
+]
+dependencies = [
+    "core 1.0.0",
+    "mn-state-rules 0.1.0",
+]

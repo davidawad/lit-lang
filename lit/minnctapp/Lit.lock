@@ -9,11 +9,19 @@ dependencies = []
 name = "mn-court-of-appeals-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:cf65d8201b47d82a98e297d04109689f517d8df1d083b79c8564545da481d2ba"
-semantic = "sha256:3c35a98c11215e5b89152344c60ae51ff361ad02cec19b6010aef471b4734749"
+source = "sha256:51c1203d35d56901d99c1cc7b3b8c5f3eff960ce43ecaa220f60edc147d676d2"
+semantic = "sha256:b30832ce2b4d1cf877a3697d2a3e00e81cd844083b2facabba0238599bb2951b"
 texts = [
     "mnrcap sources/minnctapp/mnrcap-2025-04-01-sectioned.txt sha256:9351c7e8731c2e496ba1ddd3c038b61c25e310f361a27c178889aff43fc6dbfa",
 ]
+dependencies = [
+    "core 1.0.0",
+    "mn-state-rules 0.1.0",
+]
+
+[[package]]
+name = "mn-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

@@ -1,0 +1,87 @@
+module mn-supreme-court-civil.review
+
+import mn-state-rules.{ AppellantBriefFiled, DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+// Supreme Court review of a Court of Appeals civil decision, from the
+// petitioner's side. Every period is stated in a note, not counted (Minn.
+// R. Civ. App. P. 126.01 applies Minn. R. Civ. P. 6.01). The outline's
+// grant and outcome probabilities are court decisions here, and its
+// rehearing nodes fold into the decision's note: a petition for rehearing
+// stays the entry of judgment only. The outline named no leading decision.
+start petition
+
+decision petition: "Petition for review?" by applicant cite "Minn. R. Civ. App. P. 117"
+{
+  note "Any party seeking review of a Court of Appeals decision separately petitions the Supreme Court; the petition with proof of service is filed with the clerk of the appellate courts within 30 days of the filing of the Court of Appeals' decision, with a $550 filing fee. Failure to take any step other than timely filing the petition does not require dismissal but permits any action the court deems appropriate (Minn. R. Civ. App. P. 117, subd. 1). The petition is at most 2,000 words, exclusive of the caption, signature block and addendum, and states the issues and their disposition below, the criteria relied on, the statement of the case and a brief argument, with a Certificate of Document Length (subd. 3)."
+  edge-petition-none "No petition: the Court of Appeals decision stands" -> review-not-sought {
+    event MandateIssued()
+    authority cite "Minn. R. Civ. App. P. 136.02"
+  }
+  edge-petition-filed "Petition for review filed" -> review-decision {
+    event ReviewPetitionFiled()
+    authority cite "Minn. R. Civ. App. P. 117"
+  }
+}
+
+decision review-decision: "Petition for review decided" by court cite "Minn. R. Civ. App. P. 117"
+{
+  note "An opposing party may file a response within 21 days of service, meeting the petition's requirements, and may conditionally seek review of additional issues; the petitioner then files no response unless the court requests one (Minn. R. Civ. App. P. 117, subd. 4). An amicus who wants to argue the question of granting review requests leave not later than 14 days after the petition is filed (subd. 5). Review is discretionary; the court may consider whether the question is important, whether the Court of Appeals ruled on the constitutionality of a statute, whether the lower courts so departed from the usual course of justice as to call for supervision, and whether a decision will help develop, clarify or harmonize the law (subd. 2)."
+  edge-review-decision-denied "Review denied" -> review-denied {
+    event MandateIssued()
+    authority cite "Minn. R. Civ. App. P. 136.02"
+  }
+  edge-review-decision-granted "Review granted" -> briefing {
+    authority cite "Minn. R. Civ. App. P. 136.03"
+  }
+}
+
+state briefing: "Record transmitted; briefs filed" by applicant cite "Minn. R. Civ. App. P. 131.01"
+{
+  note "On a grant of review the clerk transmits the entire record on appeal, one copy of each brief on file and the Court of Appeals decision to the Supreme Court unless the order granting review directs otherwise (Minn. R. Civ. App. P. 136.03, subd. 1). Where the transcript was obtained before the appeal or the record includes none, the appellant serves and files its brief and addendum within 30 days after the order granting review; the respondent within 30 days after service of the appellant's brief; a reply within 14 days after service of the respondent's brief (Rule 131.01, subds. 1-3). An amicus requests leave within 14 days after the order granting review (Rule 129.01). Principal briefs are limited to 45 pages, 14,000 words or 1,300 lines; reply briefs to 20 pages, 7,000 words or 650 lines (Rule 132.01, subd. 3)."
+  edge-briefing-decision "Briefs complete: argued or submitted" -> decision {
+    event AppellantBriefFiled()
+    authority cite "Minn. R. Civ. App. P. 135"
+  }
+}
+
+decision decision: "Supreme Court decision on review" by court cite "Minn. R. Civ. App. P. 135"
+{
+  note "Cases scheduled for oral argument are heard and decided en banc; cases submitted on briefs may be considered by a nonoral panel of three or more justices assigned by the Chief Justice, whose proposed disposition circulates to the full court (Minn. R. Civ. App. P. 135). A petition for rehearing may be filed within 14 days after the filing of the decision unless the court enlarges the time within that period, stating with particularity what the court overlooked, failed to consider, misapplied or misconceived (Rule 140.01); the opposing party may answer within 7 days after service, no oral argument is permitted, and a $100 fee accompanies the petition (Rule 140.02). Rehearing stays the entry of judgment, not the taxation of costs; on denial the responding party may be awarded attorney fees not exceeding $500 (Rule 140.03). Judgment is entered not less than 30 days after the decision is filed unless the parties stipulate to immediate entry, and upon denial of rehearing (Rule 136.02)."
+  edge-decision-affirmed "Court of Appeals decision affirmed" -> affirmed-final {
+    event DecisionFiled()
+    authority cite "Minn. R. Civ. App. P. 136.03"
+  }
+  edge-decision-reversed "Court of Appeals decision reversed" -> reversed-final {
+    event DecisionFiled()
+    authority cite "Minn. R. Civ. App. P. 136.03"
+  }
+  edge-decision-remanded "Remanded" -> remanded-final {
+    event DecisionFiled()
+    authority cite "Minn. R. Civ. App. P. 136.03"
+  }
+}
+
+terminal review-not-sought: "No petition: the Court of Appeals decision is final" outcome [final] cite "Minn. R. Civ. App. P. 136.02"
+{
+  note "The clerk enters judgment not less than 30 days after the filing of the Court of Appeals decision and transmits it to the trial court administrator (Minn. R. Civ. App. P. 136.02, 136.03, subd. 1)."
+}
+
+terminal review-denied: "Review denied" outcome [final, loss] cite "Minn. R. Civ. App. P. 136.02"
+{
+  note "Judgment is entered upon the denial of a petition for review (Minn. R. Civ. App. P. 136.02). No petition for reconsideration or rehearing of a denial of review is allowed (Rule 140.01). Federal certiorari (28 U.S.C. § 1257) is not modelled. Outcome from the petitioner's side."
+}
+
+terminal affirmed-final: "Affirmed: final" outcome [loss] cite "Minn. R. Civ. App. P. 136.03"
+{
+  note "When judgment is entered the clerk transmits it to the trial court administrator (Minn. R. Civ. App. P. 136.03, subd. 2). Outcome from the petitioner's side."
+}
+
+terminal reversed-final: "Reversed: final" outcome [win] cite "Minn. R. Civ. App. P. 136.03"
+{
+  note "When judgment is entered the clerk transmits it to the trial court administrator (Minn. R. Civ. App. P. 136.03, subd. 2). Outcome from the petitioner's side."
+}
+
+terminal remanded-final: "Remanded" outcome [procedural] cite "Minn. R. Civ. App. P. 136.03"
+{
+  note "When judgment is entered the clerk transmits it to the trial court administrator, or notifies the Court of Appeals if the matter is remanded to it with special instructions (Minn. R. Civ. App. P. 136.03, subd. 2); proceedings continue in lit/mn-district or lit/minnctapp."
+}

@@ -1,0 +1,45 @@
+# The Minnesota Supreme Court's review of a Court of Appeals civil decision
+# (lg-u561.5) under the Minnesota Rules of Civil Appellate Procedure, with
+# amendments effective April 1, 2025 (sources/minnctapp): the petition for
+# review (Rule 117), en banc or nonoral consideration (Rule 135), judgment
+# and remittitur (Rule 136) and rehearing (Rule 140), from
+# lit/minnctapp. Periods are stated in notes, as there: Rule 126.01
+# applies Minn. R. Civ. P. 6.01, for which lit/core has no counting rule.
+# Direct appeals, accelerated review (Rule 118), Workers' Compensation
+# Court of Appeals and Tax Court review (Rule 116) and original writs are
+# not modelled. The length limits are lit/mn-rules'.
+[package]
+name = "mn-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "mn-supreme-court-civil"
+forum = "mn-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "minnesota"
+title = "Minnesota Supreme Court, review of Court of Appeals decisions (civil)"
+description = "Supreme Court review of a Minnesota Court of Appeals civil decision under Minn. R. Civ. App. P. 117: the petition for review and its response, the grant or denial of review, briefing, en banc or nonoral consideration, the decision, rehearing and the remittitur. The length limits are lit/mn-rules'."
+in_force = "2025-04-01"
+known_at = "2026-10-28"
+unknown_before = "2025-04-01"
+jurisdiction = "Minnesota Supreme Court (review of Court of Appeals decisions, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the brief and petition length limits of Minn. R. Civ. App. P. 117 and 132.01, the briefs' paper events and the trigger events.
+mn-state-rules = { version = "^0.1.0", path = "../mn-rules" }
+
+[sources.mnrcap]
+title = "Minnesota Rules of Civil Appellate Procedure, with amendments effective April 1, 2025"
+url = "https://mncourts.gov/_media/migration/appellate/supreme-court/court-rules/rules-of-civil-app-proc-effective040125.pdf"
+path = "sources/minnctapp/mnrcap-2025-04-01-sectioned.txt"
+path_sha256 = "9351c7e8731c2e496ba1ddd3c038b61c25e310f361a27c178889aff43fc6dbfa"
+sha256 = "35f2dc1e2847e13cba11df37a73290ce7fb5d469024e70b77f349526dddfb068"
+as_of = "2025-04-01"
+cite_prefixes = ["Minn. R. Civ. App. P."]
+section_heading = "Rule {n}"

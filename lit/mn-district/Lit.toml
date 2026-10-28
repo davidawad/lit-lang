@@ -15,6 +15,7 @@ version = "0.1.0"
 language = 1
 pack_id = "mn-district-court-civil"
 forum = "mn-district"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "minnesota"
 title = "Minnesota district court, civil"
@@ -31,6 +32,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the trigger events.
+mn-state-rules = { version = "^0.1.0", path = "../mn-rules" }
 
 [sources.mnrcp]
 title = "Minnesota Rules of Civil Procedure, with amendments effective July 1, 2025"

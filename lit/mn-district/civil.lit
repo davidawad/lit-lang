@@ -1,5 +1,7 @@
 module mn-district-court-civil.civil
 
+import mn-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
 // Civil actions in the Minnesota district courts, from the applicant's
 // (plaintiff's) side. Every period below is stated in a note, not counted:
 // Minn. R. Civ. P. 6.01 takes its legal holidays from Minn. Stat. § 645.44,
@@ -16,6 +18,7 @@ state complaint-filed: "Action commenced" by applicant cite "Minn. R. Civ. P. 3.
 {
   note "A civil action is commenced against each defendant when the summons is served on that defendant, at the date of signing of a waiver of service under Rule 4.05, or when the summons is delivered for service to the sheriff in the county where the defendant resides, but such delivery is ineffectual unless the summons is actually served, or first published, within 60 days thereafter (Minn. R. Civ. P. 3.01). A copy of the complaint is served with the summons, except on service by publication (Rule 3.02). An action not filed with the court within one year of commencement against any party is deemed dismissed with prejudice against all parties unless the parties sign a stipulation within that year to extend the filing period (Rule 5.04(a)). Periods are computed under Rule 6.01: the trigger day is excluded, every day is counted, and a last day falling on a Saturday, Sunday or legal holiday runs to the next day that is not one; 3 days are added after service by United States Mail, and 1 day after other service accomplished after 5:00 p.m. (Rule 6.01(e)). The filing fee is not stated in the vendored rules."
   edge-complaint-filed-response-due "Summons served" -> response-due {
+    event ActionCommenced()
     authority cite "Minn. R. Civ. P. 4.03"
   }
   edge-complaint-filed-unfiled "Not filed within one year of commencement" -> dismissed-with-prejudice {
@@ -76,9 +79,11 @@ decision sj-ruling: "Summary judgment ruling" by court cite "Minn. R. Civ. P. 56
 {
   note "The court grants summary judgment if the movant shows that there is no genuine issue as to any material fact and that it is entitled to judgment as a matter of law, and states its reasons on the record or in a written decision (Minn. R. Civ. P. 56.01); factual positions are supported as Rule 56.03 provides. The motion's service and filing deadlines are set by the General Rules of Practice (Rule 6.04), which are not vendored. No leading decision is named."
   edge-sj-ruling-judgment-applicant "Granted for applicant" -> judgment-applicant {
+    event JudgmentEntered()
     authority cite "Minn. R. Civ. P. 58.01"
   }
   edge-sj-ruling-judgment-opponent "Granted for opponent" -> judgment-opponent {
+    event JudgmentEntered()
     authority cite "Minn. R. Civ. P. 58.01"
   }
   edge-sj-ruling-pretrial "Denied" -> pretrial { authority cite "Minn. R. Civ. P. 56.01" }
@@ -94,9 +99,11 @@ state trial: "Trial (jury or bench)" cite "Minn. R. Civ. P. 38.01"
 {
   note "In actions for the recovery of money only, or of specific real or personal property, issues of fact are tried by a jury unless jury trial is waived or a reference ordered (Minn. R. Civ. P. 38.01). Waiver is by failing to appear at trial or by written or oral consent; failing to file a jury request or pay a jury fee is not a waiver (Rule 38.02)."
   edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    event JudgmentEntered()
     authority cite "Minn. R. Civ. P. 58.01"
   }
   edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    event JudgmentEntered()
     authority cite "Minn. R. Civ. P. 58.01"
   }
 }
@@ -108,6 +115,7 @@ state judgment-applicant: "Judgment for applicant entered" cite "Minn. R. Civ. P
     authority cite "Minn. R. Civ. P. 59.03"
   }
   edge-judgment-applicant-appellate-review "Notice of appeal filed" -> appellate-review {
+    event NoticeOfAppealFiled()
     authority cite "Minn. R. Civ. App. P. 103.01"
   }
   edge-judgment-applicant-final-win "No appeal within time" -> final-win {
@@ -122,6 +130,7 @@ state judgment-opponent: "Judgment for opponent entered" cite "Minn. R. Civ. P. 
     authority cite "Minn. R. Civ. P. 59.03"
   }
   edge-judgment-opponent-appellate-review "Notice of appeal filed" -> appellate-review {
+    event NoticeOfAppealFiled()
     authority cite "Minn. R. Civ. App. P. 103.01"
   }
   edge-judgment-opponent-final-loss "No appeal within time" -> final-loss {
@@ -136,6 +145,7 @@ decision post-judgment-ruling: "Post-trial motion ruling" by court cite "Minn. R
     authority cite "Minn. R. Civ. P. 59.01"
   }
   edge-post-judgment-ruling-appellate-review "Denied: appeal time runs from notice of filing of the order" -> appellate-review {
+    event NoticeOfAppealFiled()
     authority cite "Minn. R. Civ. App. P. 104.01"
   }
 }

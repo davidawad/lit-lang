@@ -1,0 +1,60 @@
+module mn-state-rules
+
+/// `lit/mn-rules` is a base library: it declares what Minnesota's court
+/// packages share and no procedure of its own. Its pack holds only this
+/// placeholder terminal, which no link or case may route through.
+start library
+
+terminal library: "Minnesota state court rules library (no procedure)"
+
+/// A principal brief: at most 45 pages, exclusive of the tables and any
+/// addendum, or 14,000 words, or 1,300 lines of monospaced text, except for
+/// good cause and with the court's permission; a word or line count is
+/// certified (Minn. R. Civ. App. P. 132.01, subd. 3(a)). A motion to file
+/// an enlarged brief is filed at least 14 days before the brief is due.
+limit principal-brief {
+  words <= 14_000 cite "Minn. R. Civ. App. P. 132.01"
+  lines <= 1_300 cite "Minn. R. Civ. App. P. 132.01"
+  pages <= 45 cite "Minn. R. Civ. App. P. 132.01"
+} cite "Minn. R. Civ. App. P. 132.01"
+
+/// A reply brief: at most 20 pages, or 7,000 words, or 650 lines of
+/// monospaced text (Minn. R. Civ. App. P. 132.01, subd. 3(b)).
+limit reply-brief {
+  words <= 7_000 cite "Minn. R. Civ. App. P. 132.01"
+  lines <= 650 cite "Minn. R. Civ. App. P. 132.01"
+  pages <= 20 cite "Minn. R. Civ. App. P. 132.01"
+} cite "Minn. R. Civ. App. P. 132.01"
+
+/// A petition for review, and a response to it: at most 2,000 words,
+/// exclusive of the caption, signature block and addendum, with a
+/// Certificate of Document Length (Minn. R. Civ. App. P. 117, subds. 3, 4).
+limit review-petition {
+  words <= 2_000 cite "Minn. R. Civ. App. P. 117"
+} cite "Minn. R. Civ. App. P. 117"
+
+/// The appellant serves and files its brief and addendum (Minn. R. Civ.
+/// App. P. 131.01, subd. 1).
+event AppellantBriefFiled() paper principal-brief
+/// The respondent serves and files its brief (Minn. R. Civ. App. P. 131.01,
+/// subd. 2).
+event RespondentBriefFiled() paper principal-brief
+/// The appellant serves and files a reply brief (Minn. R. Civ. App. P.
+/// 131.01, subd. 3).
+event ReplyBriefFiled() paper reply-brief
+// The trigger events the court packages' graphs route on.
+/// An action, claim, petition or charge is filed and the proceeding begins.
+event ActionCommenced()
+/// A final judgment, decision or appealable order is entered.
+event JudgmentEntered()
+/// A notice of appeal, or a petition or appeal for review of a lower court's or tribunal's decision, is filed.
+event NoticeOfAppealFiled()
+/// The record on appeal or review is filed or transmitted.
+event RecordFiled()
+/// The reviewing court's or tribunal's decision or opinion is filed.
+event DecisionFiled()
+/// A petition for discretionary review in a higher court (certiorari, transfer, leave or review) is filed:
+/// in Minnesota, the petition for review of a Court of Appeals decision (Minn. R. Civ. App. P. 117, subd. 1).
+event ReviewPetitionFiled() paper review-petition
+/// The mandate, remittitur or certificate of judgment issues.
+event MandateIssued()

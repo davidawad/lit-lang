@@ -1,0 +1,58 @@
+# Criminal prosecutions in the Montana district courts, as far as the
+# vendored text states. Montana has no separate court rules of criminal
+# procedure: criminal procedure is Title 46 of the Montana Code Annotated.
+# Only Title 46, chapter 13 (pretrial motions, including the 46-13-401
+# dismissal), is vendored (sources/mt-criminal-trial-court), from the MCA
+# 2025 section pages, and its PROVENANCE entry records a PARTIAL set. By
+# the bead's rule a PARTIAL source stays a hole: this package cites the
+# vendored chapter 13 sections for the structure of the steps they govern
+# and states no period from them, and every other step of the case cites
+# a hole for the Title 46 chapter that governs it (arrest, initial
+# appearance, bail, charging, arraignment, discovery, trial, sentencing,
+# post-conviction relief). The appeal hand-off cites Montana Rule of
+# Appellate Procedure 4(5)(b), bound to the text lit/mt-supreme binds
+# (date of last amendment October 12, 2021; sources/mt-supreme), whose
+# periods are stated; lit/core has no counting rule for them, so they are
+# stated in notes, not encoded. in_force is the retrieval date and an
+# earlier query is a hole in the corpus.
+[package]
+name = "mt-district-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "mt-district-court-criminal"
+forum = "mt-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "montana"
+title = "Montana district courts, criminal"
+description = "Criminal prosecutions in the Montana district courts under Title 46 of the Montana Code Annotated, as far as the partial vendored text states: the structure of the case, with the chapter 13 pretrial motions, omnibus hearing, continuance and dismissal provisions cited and every other step a hole; no period from the partial statute is stated. An appeal goes to the Montana Supreme Court under M. R. App. P. 4(5)(b)."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Montana district courts (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mt-mca-46-13]
+title = "Montana Code Annotated 2025, Title 46, chapter 13 (Pretrial Motions), section pages as served by the Montana Legislature; PARTIAL (the rest of Title 46 is not vendored)"
+url = "https://mca.legmt.gov/bills/mca/title_0460/chapter_0130/parts_index.html"
+path = "sources/mt-criminal-trial-court/mt-mca-title-46-chapter-13-pretrial-motions-sectioned.txt"
+path_sha256 = "b3089fd922514a78048e18dc12190bb3e40ba9d8923ec674f32369e942b288e9"
+as_of = "2026-10-28"
+cite_prefixes = ["MCA"]
+section_heading = "MCA {n}"
+
+[sources.mt-app]
+title = "Montana Rules of Appellate Procedure (State Law Library of Montana; date of last amendment October 12, 2021; AF 07-0016)"
+url = "https://courts.mt.gov/external/rules/mtr_app_pro.pdf"
+path = "sources/mt-supreme/mrap-sectioned.txt"
+path_sha256 = "8565e044af165525fbe7aa6f34d39bb48e12c22c22b681d36d356e8a1d31e217"
+sha256 = "e1e2f5bc2dcd9b5f6a733719b8a43f3f8be70b330372e34eb9498f22ecbbaea8"
+as_of = "2021-10-12"
+cite_prefixes = ["M. R. App. P."]
+section_heading = "Rule {n}"

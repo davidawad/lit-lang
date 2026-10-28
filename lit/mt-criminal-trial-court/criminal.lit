@@ -1,0 +1,135 @@
+module mt-district-court-criminal.criminal
+
+// Criminal prosecutions in the Montana district courts. Only Title 46,
+// chapter 13 of the Montana Code Annotated is vendored, and the set is
+// PARTIAL (sources/mt-criminal-trial-court/PROVENANCE.md): the chapter 13
+// sections are cited for the structure of the steps they govern and no
+// period is taken from them, and every other step cites a hole for the
+// Title 46 chapter that governs it. The appeal periods are stated from M.
+// R. App. P. 4(5)(b), which has a stated edition. Outcomes are from the
+// defendant's side. The earlier outline's leading decisions (County of
+// Riverside v. McLaughlin, Gerstein v. Pugh, Gideon v. Wainwright, Brady v.
+// Maryland, Mapp v. Ohio, Barker v. Wingo, Boykin v. Alabama, Missouri v.
+// Frye, Jackson v. Virginia, Apprendi v. New Jersey, Roe v. Flores-Ortega,
+// Garza v. Idaho) are removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite ?("Mont. Code Ann. Title 46, chapters 6 and 7 (arrest; initial appearance): not vendored") {
+  note "Arrest and the initial appearance before a judge are governed by Title 46, chapters 6 and 7, which are not vendored; their periods are holes."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite ?("Mont. Code Ann. Title 46, chapter 7 (initial appearance): not vendored")
+  }
+}
+
+decision initial-appearance: "Bail or release" by court cite ?("Mont. Code Ann. Title 46, chapter 9 (bail): not vendored") {
+  note "Bail and release are governed by Title 46, chapter 9, which is not vendored."
+  edge-initial-appearance-detained "Held on bail not posted" -> probable-cause {
+    authority cite ?("Mont. Code Ann. Title 46, chapter 9: not vendored")
+  }
+  edge-initial-appearance-released "Released" -> probable-cause {
+    authority cite ?("Mont. Code Ann. Title 46, chapter 9: not vendored")
+  }
+}
+
+decision probable-cause: "Leave to file an information, preliminary examination or grand jury" by court cite ?("Mont. Code Ann. Title 46, chapters 10 and 11 (preliminary examination; charging): not vendored") {
+  note "Probable cause for a felony charge (leave to file an information, a preliminary examination or a grand jury indictment) is governed by Title 46, chapters 10 and 11, which are not vendored."
+  edge-probable-cause-charged "Information filed or indictment returned" -> charged {
+    authority cite ?("Mont. Code Ann. Title 46, chapter 11: not vendored")
+  }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite ?("Mont. Code Ann. Title 46, chapter 10: not vendored")
+  }
+}
+
+state charged: "Information, indictment or complaint" by office cite ?("Mont. Code Ann. Title 46, chapter 11 (charging): not vendored") {
+  note "The charging documents are governed by Title 46, chapter 11, which is not vendored. Charges and defendants may be tried together and relief from prejudicial joinder sought under MCA 46-13-210 and 46-13-211."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite ?("Mont. Code Ann. Title 46, chapter 12 (arraignment): not vendored")
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite ?("Mont. Code Ann. Title 46, chapter 12 (arraignment and pleas): not vendored") {
+  note "Arraignment and pleas are governed by Title 46, chapter 12, which is not vendored. Within a reasonable time after a not guilty plea, and before trial within the period MCA 46-13-110(1) sets, the court holds an omnibus hearing; the period is not stated here (partial source)."
+  edge-arraignment-discovery "Discovery and the omnibus hearing" -> discovery {
+    authority cite "MCA 46-13-110"
+  }
+}
+
+state discovery: "Pretrial motions and the omnibus hearing" by applicant cite "MCA 46-13-101"
+{
+  note "Except for good cause, any defense, objection or request capable of determination without trial of the general issue must be raised at or before the omnibus hearing unless Title 46 provides otherwise (MCA 46-13-101(1)). Either party may move for a continuance, and the court may require an affidavit for a motion made after the point MCA 46-13-202(1) names; that period is not stated here (partial source). Confessions and evidence are suppressed on motion under MCA 46-13-301 and 46-13-302. Discovery (Title 46, chapter 15) is not vendored."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "MCA 46-13-101"
+  }
+  edge-discovery-speedy "Motion to dismiss" -> motions-ruling { authority cite "MCA 46-13-401" }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite ?("Mont. Code Ann. Title 46, chapter 12 (plea agreements): not vendored")
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "MCA 46-13-104"
+{
+  note "A pretrial motion is determined before trial unless the court for good cause defers it, but not if deferral would adversely affect a party's right to appeal (MCA 46-13-104(1)). The court may, on its own motion or the prosecutor's application and in furtherance of justice, dismiss a complaint, information or indictment, but a felony count only for good cause set forth in an order on the minutes (MCA 46-13-401(1)); the misdemeanor delay provision of MCA 46-13-401(2) and the effect of a dismissal (MCA 46-13-402) are cited without their periods (partial source). Felony speedy trial rests on the constitutions, whose case law is not vendored."
+  edge-motions-ruling-speedy "Dismissed" -> dismissed { authority cite "MCA 46-13-401" }
+  edge-motions-ruling-suppressed "Evidence suppressed; charges dismissed" -> dismissed {
+    authority cite "MCA 46-13-302"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "MCA 46-13-104"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite ?("Mont. Code Ann. Title 46, chapters 12 and 16 (pleas; trial): not vendored") {
+  note "Pleas and plea agreements (Title 46, chapter 12) and jury trial (Title 46, chapter 16) are not vendored."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite ?("Mont. Code Ann. Title 46, chapter 12: not vendored")
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite ?("Mont. Code Ann. Title 46, chapter 16: not vendored")
+  }
+}
+
+decision trial: "Verdict" by court cite ?("Mont. Code Ann. Title 46, chapter 16 (trial and verdict): not vendored") {
+  note "Trial, verdict and post-trial motions are governed by Title 46, chapter 16, which is not vendored."
+  edge-trial-acquittal "Not guilty" -> acquitted {
+    authority cite ?("Mont. Code Ann. Title 46, chapter 16: not vendored")
+  }
+  edge-trial-guilty "Guilty; sentencing" -> sentencing {
+    authority cite ?("Mont. Code Ann. Title 46, chapter 18 (sentencing): not vendored")
+  }
+  edge-trial-new-trial "New trial granted" -> trial {
+    authority cite ?("Mont. Code Ann. Title 46, chapter 16 (new trial): not vendored")
+  }
+}
+
+state sentencing: "Sentencing and judgment" by court cite ?("Mont. Code Ann. Title 46, chapter 18 (sentencing and judgment): not vendored") {
+  note "Sentencing and the written judgment (Title 46, chapter 18, including section 46-18-116) are not vendored."
+  edge-sentencing-judgment "Judgment entered" -> judgment { authority cite "M. R. App. P. 4(5)" }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "M. R. App. P. 4(5)"
+{
+  note "An appeal from a judgment entered under section 46-18-116 must be taken within 60 days after entry of the judgment; a notice filed after the oral pronouncement but before the written entry is treated as filed on the date of entry (M. R. App. P. 4(5)(b)(i)). An appeal from a judgment or order made appealable by section 46-20-103 must be taken within 20 days of its written entry (M. R. App. P. 4(5)(b)(iii))."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "M. R. App. P. 4(5)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "M. R. App. P. 4(5)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite ?("Mont. Code Ann. Title 46, chapter 16: not vendored") {
+  note "Outcome from the defendant's side: a verdict of not guilty."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "MCA 46-13-402"
+{
+  note "Outcome from the defendant's side: a dismissal under MCA 46-13-401, whose effect MCA 46-13-402 states, or a discharge for want of probable cause."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "M. R. App. P. 4(5)"
+{
+  note "The appeal continues before the Montana Supreme Court under the Montana Rules of Appellate Procedure (lit/mt-supreme)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("Mont. Code Ann. Title 46, chapter 21 (postconviction relief): not vendored") {
+  note "Outcome from the defendant's side. Postconviction relief (Title 46, chapter 21) is not vendored; federal habeas belongs to lit/habeas."
+}

@@ -30,3 +30,9 @@
 - Extraction sha256 38a0c549dc8a7f3742a84137ae9c9716611a8784280b0515faad1e1e8212d822.
 
 - Note (lg-gddt): PARTIAL: only MCA 46-13 (pretrial motions, incl. 46-13-401 speedy-trial dismissal) vendored; other Title 46 chapters are not. Montana has no separate court rules of criminal procedure; criminal appeals are in the Montana Rules of Appellate Procedure, covered by sources/mt-supreme/.
+
+### `mt-criminal-trial-court/mt-mca-title-46-chapter-13-pretrial-motions-sectioned.txt` — Montana Code Annotated 2025, Title 46 chapter 13, sectioned
+
+- Derived in the pod (lg-gddt.22) from `mt-criminal-trial-court/mt-mca-title-46-chapter-13-pretrial-motions.txt` (extract sha256 38a0c549dc8a7f3742a84137ae9c9716611a8784280b0515faad1e1e8212d822); nothing fetched. One marker line `## MCA <n>` is inserted right after each section page's own `## 46-13-<n> <catchline>` heading (20 section pages, 46-13-101 through 46-13-402, repealed, renumbered and reserved entries included). Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract, Montana Code Annotated 2025; PARTIAL stands (only chapter 13 is vendored). `lit/mt-criminal-trial-court` cites it for structure only and takes no value from it.
+- Sectioned sha256 b3089fd922514a78048e18dc12190bb3e40ba9d8923ec674f32369e942b288e9 (the `path_sha256` pinned by `lit/mt-criminal-trial-court/Lit.toml`).

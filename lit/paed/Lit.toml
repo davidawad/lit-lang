@@ -1,0 +1,50 @@
+# The United States District Court for the Eastern District of
+# Pennsylvania's Local Rules of Civil Procedure as a local-rule layer over
+# lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it declares only the periods the
+# Local Civil Rules themselves state and re-encodes no FRCP deadline. FRCP
+# 6(a) computes a period stated in a local rule. The rules are the
+# consolidated edition the court publishes as amended through May 8, 2023
+# (sources/paed). The one later amending order, of Oct. 8, 2024 (effective
+# Sept. 9, 2024), adds a case-assignment category to Local Civil Rule 40.1
+# and states no period or limit, so no declaration here rests on it. An
+# appeal goes to the Third Circuit under lit/frap.
+[package]
+name = "paed-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "paed-local-rules"
+forum = "paed"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Eastern District of Pennsylvania: Local Rules of Civil Procedure"
+description = "The Eastern District of Pennsylvania's Local Rules of Civil Procedure as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): the Commissioner's response in a Social Security review, the motion opposition period, the post-trial transcript order, reconsideration, third-party joinder, dismissal for inactivity and vacatur of a settlement dismissal, the demand for trial de novo after compulsory arbitration, taxation of costs, and objections to a magistrate judge's orders and reports."
+in_force = "2023-05-08"
+known_at = "2026-10-28"
+unknown_before = "2023-05-08"
+jurisdiction = "United States District Court, E.D. Pa."
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "paed-lr"
+issuer = "United States District Court for the Eastern District of Pennsylvania"
+date = "2023-05-08"
+designation = "Local Rules of Civil Procedure (amended through May 8, 2023)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.paed-lr]
+title = "Local Rules of Civil Procedure of the United States District Court for the Eastern District of Pennsylvania (amended through May 8, 2023)"
+url = "https://www.paed.uscourts.gov/sites/paed/files/documents/locrules/civil/cvrules.pdf"
+path = "sources/paed/local-rules-civ-2023-05-08-sectioned.txt"
+path_sha256 = "7959d81083b0ae9e32bab9e17cbfb0cc18160bdc53a982a6b94877095c8802e7"
+sha256 = "ef72f10ec2b6f6972ecb782bac0b1464b73b83197ed105158e2916e5c2479db0"
+as_of = "2023-05-08"
+cite_prefixes = ["E.D. Pa. L. Civ. R."]
+section_heading = "Rule {n}"

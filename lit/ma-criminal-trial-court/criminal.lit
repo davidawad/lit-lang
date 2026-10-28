@@ -84,9 +84,7 @@ decision plea-decision: "Plea or trial" by applicant cite "Mass. R. Crim. P. 12(
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Mass. R. Crim. P. 12(c)"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "Mass. R. Crim. P. 19(a)"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Mass. R. Crim. P. 19(a)" }
   edge-plea-decision-nolle "Prosecutor enters a nolle prosequi" -> dismissed {
     authority cite "Mass. R. Crim. P. 16(a)"
   }

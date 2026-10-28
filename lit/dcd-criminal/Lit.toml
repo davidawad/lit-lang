@@ -1,0 +1,53 @@
+# The U.S. District Court for the District of Columbia's local criminal
+# rules (LCrR) as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071;
+# FRCrimP 57(a)): it declares only the periods and limits the local
+# criminal rules themselves state and re-encodes no FRCrimP, Speedy Trial
+# Act or FRAP 4(b) period (one source of truth: lit/frcrimp). Each period
+# is counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the edition the court
+# serves as current (cover: "Effective as of September 2015, Updated:
+# September 2026"; newest listed change: Local Rule 6.2, September 14,
+# 2026; sources/ddc), so in_force is that date; earlier editions are not
+# vendored, so a query before it is a hole in the corpus. The court's
+# Speedy Trial Plan (LCrR 45.1) is not vendored. An appeal goes to the
+# D.C. Circuit under lit/frcrimp's FRAP 4(b) period and lit/cadc.
+[package]
+name = "dcd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "dcd-criminal-local-rules"
+forum = "dcd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Columbia: Local Criminal Rules"
+description = "The U.S. District Court for the District of Columbia's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the initial presentence report disclosure, the motion opposition and reply periods and page limits, notice of a change of address, the related-case objection, objections to and review of magistrate judge rulings, and the retaking of exhibits."
+in_force = "2026-09-14"
+known_at = "2026-10-28"
+unknown_before = "2026-09-14"
+jurisdiction = "U.S. District Court for the District of Columbia (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ddc-lcrr"
+issuer = "U.S. District Court for the District of Columbia"
+date = "2026-09-14"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ddc-lcrr]
+title = "Local Rules of the U.S. District Court for the District of Columbia, criminal rules (LCrR), edition effective as of September 2015, updated September 2026"
+url = "https://www.dcd.uscourts.gov/sites/dcd/files/local_rules/Local%20Rules%20SEP_2026.pdf"
+path = "sources/ddc/ddc-local-rules-sectioned.txt"
+path_sha256 = "0e04784a9c977eb2e470365b39310b429af07b64bdfe4a73ea31c95655d0d95b"
+sha256 = "e836e8706dc824294b73933ece7429cdbfc321104305501629b994631ebf5a86"
+as_of = "2026-09-14"
+cite_prefixes = ["D.D.C. LCrR", "LCrR"]
+section_heading = "LCrR {n}"

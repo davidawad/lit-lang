@@ -1,0 +1,202 @@
+module dcd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The District of Columbia district court's own criminal periods, counted
+// under the criminal rules (FRCrimP 45(a) governs "any local rule"). The
+// local criminal rules supplement the Federal Rules of Criminal Procedure
+// and are construed in harmony with them (LCrR 1.1). No trigger carries a
+// service method: FRCrimP 45(c)'s three added days follow the manner of
+// service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the objections to the presentence report, within 14 days after its
+// disclosure (LCrR 32.2(a); FRCrimP 32(f)(1)), and the final report with
+// its addendum to the sentencing judge not less than 7 days before
+// sentencing (LCrR 32.2(c); FRCrimP 32(g)). The hearing on disputed
+// sentencing facts is held not more than 7 days before sentencing (LCrR
+// 32.2(d)), a window rather than a deadline from an event, so it stays in
+// this note. The court may modify any LCrR 32.2 period on its own motion
+// or for good cause, but the 14-day objection period may be shortened
+// only with the defendant's consent (LCrR 32.2(g)). A presentence report
+// is deemed disclosed when physically delivered, one day after its
+// availability for inspection is orally communicated, or three days after
+// a copy or notice of availability is mailed (LCrR 32.2(i)); the corpus
+// models no such deemed-disclosure trigger, so it stays in this note.
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// government's Brady disclosure under LCrR 5.1 begins at arraignment and
+// runs "as soon as reasonably possible" (LCrR 5.1(a)), impeachment and
+// witness-credibility information need not be disclosed before a trial
+// date is set (LCrR 5.1(c)), and the court may set specific timelines
+// (LCrR 5.1(f)); defense counsel consults the prosecutor for voluntary
+// discovery before the first status conference, and a discovery motion is
+// heard only if it states that the request was refused (LCrR 16.1); a CJA
+// or Public Defender Service subpoena issued in blank may be served only
+// within 25 miles of the district (LCrR 17.1); defense counsel continues
+// until dismissal, acquittal or the expiry of the time for post-trial
+// motions and a notice of appeal, unless granted leave to withdraw (LCrR
+// 44.5(c)); a criminal case whose only defendant is a fugitive or
+// incompetent is sent to the Calendar and Case Management Committee after
+// it has been pending 90 days or more, as is that of a defendant who
+// absconds between plea and sentencing after 90 days (LCrR 57.13(d)).
+// Release and detention follow the Pretrial Services Agency report and the
+// conditions set by a magistrate judge or the assigned judge (LCrR 46.1),
+// and the court's Speedy Trial Plan is incorporated by reference but not
+// vendored (LCrR 45.1). Attorney admission and discipline (LCrR 57.21 to
+// 57.31) are not part of the criminal case and are not encoded.
+//
+// The earlier D.D.C. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner v.
+// United States, Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia,
+// United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
+// FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A memorandum of points and authorities in support of or in opposition
+/// to a motion: at most 45 pages without prior approval of the Court; the
+/// Clerk does not file a nonconforming document (D.D.C. LCrR 47(e)).
+limit motion-memorandum {
+  pages <= 45 cite "D.D.C. LCrR 47(e)"
+} cite "D.D.C. LCrR 47(e)"
+
+/// A reply memorandum: at most 25 pages without prior approval of the
+/// Court (D.D.C. LCrR 47(e)).
+limit reply-memorandum {
+  pages <= 25 cite "D.D.C. LCrR 47(e)"
+} cite "D.D.C. LCrR 47(e)"
+
+/// A motion with its statement of points and authorities is served (D.D.C.
+/// LCrR 47(a), (b)).
+event MotionServed() paper motion-memorandum
+/// The memorandum in opposition to a motion is served (D.D.C. LCrR 47(d)).
+event OppositionServed() paper motion-memorandum
+/// A reply memorandum is filed (D.D.C. LCrR 47(d)).
+event ReplyFiled() paper reply-memorandum
+/// An attorney's or an unrepresented party's address or telephone number
+/// changes (D.D.C. LCrR 49(f)(3)(i)).
+event AddressChanged()
+/// The defendant is arraigned on an indictment that the United States
+/// Attorney designated as related to another case (D.D.C. LCrR
+/// 57.12(b)(1)).
+event ArraignedOnRelatedDesignation()
+/// The case is finally disposed of in the District Court, or, if an appeal
+/// is perfected, by the appellate courts (D.D.C. LCrR 56.2(b)).
+event FinalDisposition()
+/// A party receives the Clerk's notice to retake its exhibits (D.D.C. LCrR
+/// 56.2(d)).
+event ExhibitRetakeNoticed()
+/// A party is served with a magistrate judge's ruling on a nondispositive
+/// pretrial motion or matter in a felony case, or the oral order is stated
+/// on the record (D.D.C. LCrR 59.1(a), (b)).
+event MagistrateRulingServed()
+/// A party is served with a magistrate judge's proposed findings and
+/// recommendations (D.D.C. LCrR 59.2(a), (b)).
+event MagistrateRecommendationServed()
+/// A party is served with a magistrate judge's order in a criminal matter
+/// not assigned to a district judge (D.D.C. LCrR 59.3(a)).
+event UnassignedMagistrateOrderServed()
+
+/// D.D.C. LCrR 32.2(a): not less than 28 days before the date set for
+/// sentencing, the probation officer discloses the initial presentence
+/// report to the defendant and the prosecution. FRCrimP 32(e)(2)'s own
+/// period (lit/frcrimp psr-disclosure) is not restated. The Court may
+/// modify the period on its own motion or for good cause (LCrR 32.2(g)).
+deadline initial-psr-disclosure: 28.days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.D.C. LCrR 32.2(a); D.D.C. LCrR 32.2(g)"
+{
+  forum frcrimp
+}
+
+/// D.D.C. LCrR 47(b): within 14 days of the date of service, or at such
+/// other time as the Court directs, an opposing party serves and files a
+/// memorandum of points and authorities in opposition; if none is filed in
+/// time, the Court may treat the motion as conceded.
+deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.D.C. LCrR 47(b)"
+{
+  forum frcrimp
+}
+
+/// D.D.C. LCrR 47(d): within seven days after service of the memorandum in
+/// opposition, the moving party may serve and file a reply memorandum.
+deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 cite "D.D.C. LCrR 47(d)"
+{
+  forum frcrimp
+}
+
+/// D.D.C. LCrR 49(f)(3)(i): notice of a change in the address or telephone
+/// number of an attorney or of a party not represented by an attorney is
+/// filed within 14 days of the change.
+deadline address-change-notice: 14.days after AddressChanged() counted_by frcrimp45 cite "D.D.C. LCrR 49(f)"
+{
+  forum frcrimp
+}
+
+/// D.D.C. LCrR 57.12(b)(1): a defendant's objection to the United States
+/// Attorney's related-case designation is served on the U.S. Attorney and
+/// filed with the Clerk within 21 days after arraignment; the assigned
+/// judge decides it (LCrR 57.12(c)(3)).
+deadline related-case-objection: 21.days after ArraignedOnRelatedDesignation() counted_by frcrimp45 cite "D.D.C. LCrR 57.12(b)"
+{
+  forum frcrimp
+}
+
+/// D.D.C. LCrR 56.2(b): after a guilty verdict the Clerk keeps the
+/// exhibits; each party retakes its exhibits within 30 days after the
+/// final disposition of the case in this Court or, if an appeal is
+/// perfected, by the appellate courts. After an acquittal or mistrial the
+/// parties retake them immediately unless the Court orders otherwise.
+deadline exhibit-retake: 30.days after FinalDisposition() counted_by frcrimp45 cite "D.D.C. LCrR 56.2(b)"
+{
+  forum frcrimp
+}
+
+/// D.D.C. LCrR 56.2(d): a party that fails to retake its exhibits within
+/// 30 days of the Clerk's notice may have them destroyed or otherwise
+/// disposed of by the Clerk.
+deadline exhibit-retake-after-notice: 30.days after ExhibitRetakeNoticed() counted_by frcrimp45 cite "D.D.C. LCrR 56.2(d)"
+{
+  forum frcrimp
+}
+
+/// D.D.C. LCrR 59.1(b): written objections to a magistrate judge's ruling
+/// on a nondispositive matter are filed within 14 days after service of
+/// the order or after the oral order is stated on the record, unless the
+/// magistrate judge or the district judge prescribes a different time;
+/// oppositions and replies follow LCrR 47(b) and (d).
+deadline magistrate-ruling-objection: 14.days after MagistrateRulingServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.D.C. LCrR 59.1(b)"
+{
+  forum frcrimp
+}
+
+/// D.D.C. LCrR 59.2(b): written objections to a magistrate judge's
+/// proposed findings and recommendations are filed within 14 days after
+/// service; failure to object in time may waive appellate review of an
+/// order adopting the report (Thomas v. Arn, 474 U.S. 140 (1985), as the
+/// rule's required notice quotes it).
+deadline magistrate-recommendation-objection: 14.days after MagistrateRecommendationServed() counted_by frcrimp45 cite "D.D.C. LCrR 59.2(b)"
+{
+  forum frcrimp
+}
+
+/// D.D.C. LCrR 59.3(a): a request for review of a magistrate judge's order
+/// in a criminal matter not assigned to a district judge is made to the
+/// Chief Judge within 14 days after service of the order, unless the
+/// magistrate judge or the Chief Judge prescribes a different time.
+deadline unassigned-magistrate-review: 14.days after UnassignedMagistrateOrderServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.D.C. LCrR 59.3(a)"
+{
+  forum frcrimp
+}

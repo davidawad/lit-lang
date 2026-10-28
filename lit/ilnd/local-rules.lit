@@ -1,0 +1,224 @@
+module ilnd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Northern District of Illinois's own periods, computed under the
+// federal rules (FRCP 6(a) governs "any local rule"). Each period applies
+// "unless otherwise ordered" where the rule says so. Rules that state no
+// period or limit stay out, and so do periods the rules state in units
+// lit/core does not count or that bind no party: a motion filed by 4:30
+// p.m. of the second business day before presentment (LR 78.1), a status
+// report request on a motion pending seven months (LR 78.5), the court's
+// usual scheduling conference within 60 days after a defendant appears and
+// 90 days after service (LR 16.1, a practice, not a period), the clerk's
+// 63-day hold on sealed paper documents after final disposition and the
+// 30 days to retrieve them (LR 26.2(h)), and the 30 days to remove
+// exhibits after the clerk's notice (LR 79.1(c)). The statement of
+// material facts on summary judgment is limited to 80 numbered paragraphs
+// and the statement of additional facts to 40 (LR 56.1(d)(5)); lit/core
+// bounds pages, words and lines, not paragraphs, so the limit is stated
+// here and not declared. The Social Security briefing schedule (LR 16.4)
+// and motion presentment rules LR 5.4 and 78.2 are abrogated by General
+// Orders 23-0039, 23-0026 and 23-0036 and are not encoded. The earlier
+// N.D. Ill. outline's FRCP flow and its Supreme Court decisions (Twombly,
+// Iqbal, Celotex, Anderson v. Liberty Lobby) are FRCP authority and belong
+// to lit/frcp and lit/frap; its Seventh Circuit decisions (Cracco v. Vitran
+// Express, Inc.; Swanson v. Citibank, N.A.) are removed: no reporter text
+// is vendored.
+/// A motion, a brief in support of or in opposition to any motion, or an
+/// objection to a magistrate judge's or special master's report and
+/// recommendation or order: at most 15 pages without prior approval of the
+/// court (LR 7.1).
+limit motion-brief { pages <= 15 cite "N.D. Ill. L.R. 7.1" } cite "N.D. Ill. L.R. 7.1"
+
+/// A nongovernmental party learns of a change in the affiliate information
+/// it reported (LR 3.2(f)).
+event AffiliateChangeLearned()
+/// The clerk notifies the plaintiff of the fees due after the court denies
+/// leave to proceed in forma pauperis (LR 3.3(f)).
+event IfpDenialNotified()
+/// A motion or objection to a magistrate judge's order is delivered to the
+/// court (LR 5.3(b)).
+event MotionDelivered() paper motion-brief
+/// The final pretrial conference is held on its scheduled date (LR 16.1).
+event FinalPretrialConferenceHeld()
+/// The clerk notifies the parties that the mandate in a case reassigned to
+/// the Executive Committee on remand has been filed (LR 40.5(b)).
+event RemandMandateNoticeGiven()
+/// Judgment is entered (LR 54.1(a), 54.3(b)).
+event JudgmentEntered()
+/// The movant provides its fee information to the respondent (LR
+/// 54.3(d)(5)).
+event FeeInformationReceived()
+/// The exchange of fee information under LR 54.3(d) is complete.
+event FeeExchangeCompleted()
+/// The time to deliver disputed fee materials under LR 54.3 or the court's
+/// order expires (LR 54.3(g)).
+event FeeMaterialsDueDatePassed()
+/// A receiver or similar officer is appointed (LR 66.1(b)).
+event ReceiverAppointed()
+/// A case in which consent has been filed is reassigned to a magistrate
+/// judge other than the one designated under LR 72.1 (LR 73.1(e)).
+event MagistrateReassigned()
+/// A party added after the case was transferred to a magistrate judge on
+/// consent appears (LR 73.1(f)).
+event AddedPartyAppeared()
+/// A final decision is rendered and no appeal is taken (LR 79.1(c)).
+event FinalDecisionUnappealed()
+/// The mandate of the reviewing court is filed (LR 79.1(c)).
+event MandateFiled()
+/// An order remanding a case to state court under 28 U.S.C. § 1447(c) is
+/// docketed (LR 81.2).
+event RemandOrderDocketed()
+/// A motion is fully briefed (LR 78.5).
+event MotionFullyBriefed()
+
+/// LR 3.2(f): a supplement to the notification of affiliates is filed
+/// within 30 days of the party becoming aware of any change in the
+/// information reported.
+deadline affiliate-supplement-period: 30.days after AffiliateChangeLearned() counted_by frcp6 cite "N.D. Ill. L.R. 3.2(f)"
+{
+  forum frcp
+}
+
+/// LR 3.3(f): if the required fees are not paid within 15 days of the
+/// clerk's notification after denial of an IFP petition, or other time the
+/// court fixes, the clerk notifies the judge, who may impose sanctions
+/// including dismissal.
+deadline ifp-fee-period: 15.days after IfpDenialNotified() counted_by frcp6 cite "N.D. Ill. L.R. 3.3(f)"
+{
+  forum frcp
+}
+
+/// LR 5.3(b): where a judge requires a notice of presentment, the date of
+/// presentment is not more than 14 days after the motion or objection is
+/// delivered to the court.
+deadline presentment-period: 14.days after MotionDelivered() counted_by frcp6 cite "N.D. Ill. L.R. 5.3(b)"
+{
+  forum frcp
+}
+
+/// LR 16.1 (Standing Order, ¶ 8): no request to extend the final pretrial
+/// order and conference dates should be made less than 14 days before the
+/// scheduled conference.
+deadline pretrial-extension-request-period: 14.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "N.D. Ill. L.R. 16.1"
+{
+  forum frcp
+}
+
+/// LR 40.5(b): unless all parties file a stipulation within 14 days after
+/// the date of the clerk's notice asking that the case return to the prior
+/// judge, the case is reassigned to another judge.
+deadline remand-stipulation-period: 14.days after RemandMandateNoticeGiven() counted_by frcp6 cite "N.D. Ill. L.R. 40.5(b)"
+{
+  forum frcp
+}
+
+/// LR 54.1(a): within 30 days of the entry of a judgment, the prevailing
+/// party files a bill of costs and serves it on each adverse party; costs
+/// other than the clerk's are otherwise deemed waived.
+deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "N.D. Ill. L.R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// LR 54.3(d)(4): unless the court sets a different schedule, the movant
+/// provides its time records, rates and expense evidence within 21 days of
+/// the judgment or settlement agreement on which the fee motion is based.
+deadline fee-information-period: 21.days after JudgmentEntered() counted_by frcp6 cite "N.D. Ill. L.R. 54.3(d)"
+{
+  forum frcp
+}
+
+/// LR 54.3(d)(5): if no agreement is reached, the respondent discloses the
+/// fees it paid and its own records within 21 days of receipt of the
+/// movant's information.
+deadline fee-disclosure-period: 21.days after FeeInformationReceived() counted_by frcp6 cite "N.D. Ill. L.R. 54.3(d)"
+{
+  forum frcp
+}
+
+/// LR 54.3(d): within 14 days after the exchange of information is
+/// completed and before the motion is filed, the parties identify the
+/// hours, rates and expenses that will and will not be objected to.
+deadline fee-objection-period: 14.days after FeeExchangeCompleted() counted_by frcp6 cite "N.D. Ill. L.R. 54.3(d)"
+{
+  forum frcp
+}
+
+/// LR 54.3(e): unless the court orders otherwise, the parties complete the
+/// joint statement no later than 70 days after the entry of the judgment
+/// or settlement agreement.
+deadline fee-joint-statement-period: 70.days after JudgmentEntered() counted_by frcp6 cite "N.D. Ill. L.R. 54.3(e)"
+{
+  forum frcp
+}
+
+/// LR 54.3(b): unless the court's order sets a different schedule, the fee
+/// motion is filed and served no later than 91 days after the entry of the
+/// judgment or settlement agreement on which it is founded.
+deadline fee-motion-period: 91.days after JudgmentEntered() counted_by frcp6 cite "N.D. Ill. L.R. 54.3(b)"
+{
+  forum frcp
+}
+
+/// LR 54.3(g): a motion for instructions is filed not later than 14 days
+/// after the time within which the disputed matter or materials should
+/// have been delivered.
+deadline fee-instructions-motion-period: 14.days after FeeMaterialsDueDatePassed() counted_by frcp6 cite "N.D. Ill. L.R. 54.3(g)"
+{
+  forum frcp
+}
+
+/// LR 66.1(b): unless otherwise ordered, a receiver files an inventory,
+/// list of known liabilities and report not later than 21 days after
+/// appointment.
+deadline receiver-inventory-period: 21.days after ReceiverAppointed() counted_by frcp6 cite "N.D. Ill. L.R. 66.1(b)"
+{
+  forum frcp
+}
+
+/// LR 73.1(e): the parties may object within 21 days of a reassignment to
+/// a magistrate judge other than the designated one; without objection
+/// they are deemed to consent.
+deadline magistrate-reassignment-objection-period: 21.days after MagistrateReassigned() counted_by frcp6 cite "N.D. Ill. L.R. 73.1(e)"
+{
+  forum frcp
+}
+
+/// LR 73.1(f): a party added after transfer to a magistrate judge on
+/// consent who chooses to consent files its statement within 30 days of
+/// appearance.
+deadline added-party-consent-period: 30.days after AddedPartyAppeared() counted_by frcp6 cite "N.D. Ill. L.R. 73.1(f)"
+{
+  forum frcp
+}
+
+/// LR 78.5: a party may ask the clerk to report on the status of a motion
+/// on file and fully briefed for at least sixty days.
+deadline status-request-period: 60.days after MotionFullyBriefed() counted_by frcp6 cite "N.D. Ill. L.R. 78.5"
+{
+  forum frcp
+}
+
+/// LR 79.1(c)(1): exhibits deposited with the clerk are removed 90 days
+/// after a final decision if no appeal is taken.
+deadline exhibit-removal-period: 90.days after FinalDecisionUnappealed() counted_by frcp6 cite "N.D. Ill. L.R. 79.1(c)"
+{
+  forum frcp
+}
+
+/// LR 79.1(c)(2): where an appeal is taken, exhibits are removed within 30
+/// days after the reviewing court's mandate is filed.
+deadline exhibit-removal-after-mandate-period: 30.days after MandateFiled() counted_by frcp6 cite "N.D. Ill. L.R. 79.1(c)"
+{
+  forum frcp
+}
+
+/// LR 81.2: unless the court directs earlier transmittal, the clerk does
+/// not transmit the certified copy of a remand order for 14 days following
+/// the date it is docketed.
+deadline remand-transmittal-period: 14.days after RemandOrderDocketed() counted_by frcp6 cite "N.D. Ill. L.R. 81.2"
+{
+  forum frcp
+}

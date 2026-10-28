@@ -20,27 +20,18 @@ import core.frcp6.{ frcp6 }
 // Rule 105.2(a)). The FRCP periods (service under Rule 4(m), the answer,
 // Rule 50, 52, 59 and 60 motions) are lit/frcp's, and the notice of
 // appeal is FRAP's (lit/frcp, lit/ca4); none is declared again.
-
 /// A pleading (Local Rule 103.1(d)): no longer than necessary and, except in
 /// a removal of a state action, no more than 40 pages; leave of Court may
 /// allow more in extraordinary circumstances.
-limit pleading {
-  pages <= 40 cite "D. Md. Local Rule 103.1(d)"
-} cite "D. Md. Local Rule 103.1(d)"
-
+limit pleading { pages <= 40 cite "D. Md. Local Rule 103.1(d)" } cite "D. Md. Local Rule 103.1(d)"
 /// A memorandum in support of or in opposition to a motion, or a trial
 /// brief (Local Rule 105.3): 30 pages inclusive of footnotes, exclusive of
 /// affidavits and exhibits, tables of contents and citations, and addenda of
 /// statutes, rules and regulations. A memorandum over 15 pages has a table
 /// of contents (Local Rule 105.4).
-limit memorandum {
-  pages <= 30 cite "D. Md. Local Rule 105.3"
-} cite "D. Md. Local Rule 105.3"
-
+limit memorandum { pages <= 30 cite "D. Md. Local Rule 105.3" } cite "D. Md. Local Rule 105.3"
 /// A reply memorandum (Local Rule 105.3): 15 pages.
-limit reply-memorandum {
-  pages <= 15 cite "D. Md. Local Rule 105.3"
-} cite "D. Md. Local Rule 105.3"
+limit reply-memorandum { pages <= 15 cite "D. Md. Local Rule 105.3" } cite "D. Md. Local Rule 105.3"
 
 /// An amicus brief (Local Rule 105.12(c)): no more than 15 pages.
 limit amicus-brief {

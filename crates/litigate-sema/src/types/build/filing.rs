@@ -15,18 +15,7 @@ use std::collections::BTreeMap;
 impl Cx<'_, '_> {
     /// `limit k clauses { entries } clauses`.
     pub fn limit(&mut self, item: &Item, rule: Option<&Item>, l: &LimitItem) -> Option<Limit> {
-        if !l.name.is_simple() {
-            self.report(
-                Report::new(
-                    C::InvalidField,
-                    l.name.range,
-                    format!(
-                        "`limit {}` names a paper kind with a plain identifier",
-                        l.name.display()
-                    ),
-                )
-                .note("a layer names the limit it changes with a relation: `override pack::kind`"),
-            );
+        if !self.simple_limit_name(l) {
             return None;
         }
         let meta = self.meta(&l.name.head, None, item, rule);
@@ -78,7 +67,7 @@ impl Cx<'_, '_> {
                     if !self.first(&mut seen, "excludes", entry, "a second") {
                         continue;
                     }
-                    if let Some(reason) = hole {
+                    if let Some(CiteHole(reason)) = hole {
                         limit.holes.insert("excludes/cite".to_owned(), reason);
                     }
                     limit.excludes = Some(Exclusions {
@@ -97,6 +86,26 @@ impl Cx<'_, '_> {
         }
         self.unbounded(&limit, &certified);
         Some(limit)
+    }
+
+    /// Whether `limit k` names its paper kind with a plain identifier;
+    /// L2007 when not.
+    fn simple_limit_name(&mut self, l: &LimitItem) -> bool {
+        if l.name.is_simple() {
+            return true;
+        }
+        self.report(
+            Report::new(
+                C::InvalidField,
+                l.name.range,
+                format!(
+                    "`limit {}` names a paper kind with a plain identifier",
+                    l.name.display()
+                ),
+            )
+            .note("a layer names the limit it changes with a relation: `override pack::kind`"),
+        );
+        false
     }
 
     /// L2007 for each measure a certificate goes with that `limit` does
@@ -187,8 +196,8 @@ impl Cx<'_, '_> {
     /// The entry's cite: its first `cite`, at most one. A cite hole
     /// (`cite ?("...")`, a source whose currency is unconfirmed) is
     /// recorded as a hole and its reason stands as the cite, as on the
-    /// declaration; the second value is that hole's reason.
-    fn entry_cite(&mut self, cites: &[Field]) -> (Option<String>, Option<Option<String>>) {
+    /// declaration; the second value is that hole.
+    fn entry_cite(&mut self, cites: &[Field]) -> (Option<String>, Option<CiteHole>) {
         for extra in cites.iter().skip(1) {
             self.report(Report::new(
                 C::InvalidField,
@@ -203,7 +212,7 @@ impl Cx<'_, '_> {
             Some(Expr {
                 kind: ExprKind::Hole(reason),
                 ..
-            }) => Some(reason.clone()),
+            }) => Some(CiteHole(reason.clone())),
             _ => None,
         };
         (self.cite_text(Some(&first)), hole)
@@ -289,15 +298,18 @@ impl Cx<'_, '_> {
     }
 }
 
+/// A limit entry's cite hole, with its reason (if the hole gives one).
+struct CiteHole(Option<String>);
+
 /// Records `hole`, the cite hole of the `at`th entry of `list`, under its
 /// field path (`bounds/0/cite`).
 fn cite_hole(
     holes: &mut BTreeMap<String, Option<String>>,
     list: &str,
     at: usize,
-    hole: Option<Option<String>>,
+    hole: Option<CiteHole>,
 ) {
-    if let Some(reason) = hole {
+    if let Some(CiteHole(reason)) = hole {
         holes.insert(format!("{list}/{at}/cite"), reason);
     }
 }

@@ -15,3 +15,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 66063b8bc957c37a4732495370b9df2676fcf16711c34d38764e33ae20a857f6. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `fed-edwash/original/edwash-local-criminal-rules-2015-02-20.pdf` as served (sha256 b9115c4078491a7bb4a5f8b37e228a4f57e3a045e9e4077a21d1c5d97b6968a4); extraction sha256 66063b8bc957c37a4732495370b9df2676fcf16711c34d38764e33ae20a857f6.
+
+### `fed-edwash/edwash-local-civil-rules-sectioned.txt` — E.D. Washington Local Civil Rules, sectioned
+
+- Derived in the pod (lg-f3q8.48) from `fed-edwash/edwash-local-civil-rules.txt` (extract sha256 fd9445ae2e9d1c2d26c33bb482e9060fc5b2e973fe5091b080e6dfad84fdb0e5); nothing fetched. One `## LCivR <n>` line is inserted before each rule's own centered heading line (a line holding only `LCivR <n>` or `LCivR <n>.<n>`, from `LCivR 1` through `LCivR 86`, 102 rules); the introduction is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LCivR /d'`) restores the extract byte for byte.
+- Edition: as the extract, Local Civil Rules effective November 17, 2025.
+- Sectioned sha256 6ca79396cb160e969bb8dd5bdbba675dd6b3b726a3205648555481b23f5ca095 (the `path_sha256` pinned by `lit/waed/Lit.toml`).

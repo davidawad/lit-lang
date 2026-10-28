@@ -1,0 +1,334 @@
+module waed-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Eastern District of Washington's own civil periods, computed under
+// the federal rules (FRCP 6(a) governs "any local rule"). The LCivR 7(c)
+// and 7(d) response and reply periods already include the FRCP 6(d) three
+// days. The LCivR 7(i)(2) hearing dates (at least 30 days after a
+// nondispositive motion's filing, 50 after a dispositive one's, 7 on an
+// expedited motion) are the date the movant sets, not a party's deadline.
+// Rules that restate an FRCP period stay in lit/frcp: the presumptive
+// 90-day service period (LCivR 4(m); FRCP 4(m)), the removed-action jury
+// demand within 14 days (LCivR 38(d); FRCP 81(c)(3)(B)) and the
+// attorney's-fee motion within 14 days after judgment (LCivR 54(d)(2);
+// FRCP 54(d)(2)(B)). Duties of the court and its officers stay out (the
+// LCivR 37 discovery conference within 5-10 business days, the LCivR 41(b)
+// show-cause periods, the LCivR 66 receiver's inventory), as do the
+// exhibit and instruction dates in the LCivR 16(e) form pretrial order,
+// which the court sets in each case. Filing fees are not stated in the
+// rules. The earlier E.D. Washington outline's FRCP flow and its Supreme
+// Court decisions (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby,
+// Reeves, Catlin, Bowles, Hamer) are FRCP and FRAP authority and belong to
+// lit/frcp and lit/frap; its Ninth Circuit decisions (Eitel v. McCool; Lopez v.
+// Smith) are removed: no
+// reporter text is vendored.
+/// A dispositive motion, and the response memorandum: at most 20 pages
+/// (LCivR 7(f)(1)), excluding the party's name and address, caption, table
+/// of contents, signatures, certificates of service, copies of decisions
+/// required by LCivR 7(g), LCivR 56(c) statements of material fact and
+/// exhibits (LCivR 7(f)(4)); the limit is exceeded only with the court's
+/// prior approval (LCivR 7(f)(5)).
+limit dispositive-memorandum {
+  pages <= 20 cite "E.D. Wash. LCivR 7(f)"
+} cite "E.D. Wash. LCivR 7(f)"
+
+/// A nondispositive motion, and the response memorandum: at most 10 pages
+/// (LCivR 7(f)(2)).
+limit nondispositive-memorandum {
+  pages <= 10 cite "E.D. Wash. LCivR 7(f)"
+} cite "E.D. Wash. LCivR 7(f)"
+
+/// A reply memorandum: at most 10 pages (LCivR 7(f)(3)).
+limit reply-memorandum { pages <= 10 cite "E.D. Wash. LCivR 7(f)" } cite "E.D. Wash. LCivR 7(f)"
+/// The motion in support of a request for an injunction or temporary
+/// restraining order: at most 20 pages (LCivR 65(g)).
+limit injunction-motion { pages <= 20 cite "E.D. Wash. LCivR 65" } cite "E.D. Wash. LCivR 65"
+
+/// A dispositive motion is filed (LCivR 7(c)(2)(B)).
+event DispositiveMotionFiled() paper dispositive-memorandum
+/// A nondispositive motion is filed (LCivR 7(c)(2)(B)).
+event NondispositiveMotionFiled() paper nondispositive-memorandum
+/// A dispositive motion is mailed to a pro se litigant not registered for
+/// Electronic Case Filing, as noted on the certificate of mailing (LCivR
+/// 7(c)(2)(A)).
+event DispositiveMotionMailed()
+/// A nondispositive motion is mailed to a pro se litigant not registered
+/// for Electronic Case Filing, as noted on the certificate of mailing
+/// (LCivR 7(c)(2)(A)).
+event NondispositiveMotionMailed()
+/// The response to a dispositive motion is filed (LCivR 7(d)(2)(B)).
+event DispositiveResponseFiled() paper dispositive-memorandum
+/// The response to a nondispositive motion is filed (LCivR 7(d)(2)(B)).
+event NondispositiveResponseFiled() paper nondispositive-memorandum
+/// The response to a pro se litigant's motion is mailed to the litigant, as
+/// noted on the certificate of mailing, or filed if the litigant is
+/// registered for Electronic Case Filing (LCivR 7(d)(2)(A)).
+event ResponseToProSeMovantServed()
+/// A reply memorandum is filed (LCivR 7(d)).
+event ReplyFiled() paper reply-memorandum
+/// Counsel discovers that a party has died (LCivR 25(a)).
+event PartyDeathDiscovered()
+/// The pretrial conference (LCivR 32(a)).
+event PretrialConferenceSet()
+/// The discovery cutoff (LCivR 40).
+event DiscoveryCutoff()
+/// Mail or email directed to a pro se plaintiff is returned (LCivR
+/// 41(b)(2)).
+event ProSeMailReturned()
+/// The day trial begins (LCivR 47(a)).
+event TrialSet()
+/// Judgment is entered for a prevailing party entitled to claim its costs
+/// (LCivR 54(d)(1)(A)).
+event JudgmentEntered()
+/// The clerk taxes costs (LCivR 54(d)(1)(D)).
+event CostsTaxed()
+/// A motion for entry of default is filed (LCivR 55(a)(1)).
+event DefaultMotionFiled()
+/// A motion for an injunction or temporary restraining order is filed
+/// (LCivR 65(g)).
+event InjunctionMotionFiled() paper injunction-motion
+/// The judicial officer's report and recommendation in an attorney
+/// discipline matter is dated and served on the attorney (LCivR
+/// 83.3(f)(2)).
+event DisciplineReportIssued()
+
+/// LCivR 7(c)(2)(B)(i): unless the court orders otherwise, counsel files
+/// the response within 14 days after the filing of a nondispositive motion.
+/// The period includes the FRCP 6(d) three days and applies however the
+/// motion was served (LCivR 7(c)(1)).
+deadline nondispositive-response-period: 14.days after NondispositiveMotionFiled() counted_by frcp6 cite "E.D. Wash. LCivR 7(c)"
+{
+  forum frcp
+}
+
+/// LCivR 7(c)(2)(B)(ii): counsel files the response within 21 days after
+/// the filing of a dispositive motion.
+deadline dispositive-response-period: 21.days after DispositiveMotionFiled() counted_by frcp6 cite "E.D. Wash. LCivR 7(c)"
+{
+  forum frcp
+}
+
+/// LCivR 7(c)(2)(A)(i): a pro se litigant files the response within 21 days
+/// after the mailing of the nondispositive motion as noted on the
+/// certificate of mailing; for a litigant registered for Electronic Case
+/// Filing the filing of the motion starts the period.
+deadline pro-se-nondispositive-response-period: 21.days after NondispositiveMotionMailed() counted_by frcp6 cite "E.D. Wash. LCivR 7(c)"
+{
+  forum frcp
+}
+
+/// LCivR 7(c)(2)(A)(ii): a pro se litigant files the response within 30
+/// days after the mailing of the dispositive motion as noted on the
+/// certificate of mailing.
+deadline pro-se-dispositive-response-period: 30.days after DispositiveMotionMailed() counted_by frcp6 cite "E.D. Wash. LCivR 7(c)"
+{
+  forum frcp
+}
+
+/// LCivR 7(d)(2)(B)(i): unless the court orders otherwise, counsel files
+/// any reply within 7 days after the filing of the response to a
+/// nondispositive motion; the period includes the FRCP 6(d) three days
+/// (LCivR 7(d)(1)).
+deadline nondispositive-reply-period: 7.days after NondispositiveResponseFiled() counted_by frcp6 cite "E.D. Wash. LCivR 7(d)"
+{
+  forum frcp
+}
+
+/// LCivR 7(d)(2)(B)(ii): counsel files any reply within 14 days after the
+/// filing of the response to a dispositive motion.
+deadline dispositive-reply-period: 14.days after DispositiveResponseFiled() counted_by frcp6 cite "E.D. Wash. LCivR 7(d)"
+{
+  forum frcp
+}
+
+/// LCivR 7(d)(2)(A): a pro se litigant files any reply within 21 days after
+/// the date the response was mailed as noted on the certificate of mailing,
+/// or filed if the litigant is registered for Electronic Case Filing.
+deadline pro-se-reply-period: 21.days after ResponseToProSeMovantServed() counted_by frcp6 cite "E.D. Wash. LCivR 7(d)"
+{
+  forum frcp
+}
+
+/// LCivR 25(a): if a party dies, counsel files a statement noting the death
+/// within 14 days after discovery of the death; substitution or dismissal
+/// follows FRCP 25(a).
+deadline death-statement-period: 14.days after PartyDeathDiscovered() counted_by frcp6 cite "E.D. Wash. LCivR 25(a)"
+{
+  forum frcp
+}
+
+/// LCivR 32(a): unless the court orders otherwise, the purged depositions
+/// to be used at trial, or their designations, are served on the opposing
+/// party no later than 14 days before the pretrial conference.
+deadline deposition-designation-period: 14.days before PretrialConferenceSet() counted_by frcp6 cite "E.D. Wash. LCivR 32(a)"
+{
+  forum frcp
+}
+
+/// LCivR 32(a): the opposing party's objections and counter-designations
+/// are served no later than 7 days before the pretrial conference, which
+/// resolves them.
+deadline deposition-objection-period: 7.days before PretrialConferenceSet() counted_by frcp6 cite "E.D. Wash. LCivR 32(a)"
+{
+  forum frcp
+}
+
+/// LCivR 40: each party files and serves a notice, no later than seven days
+/// after the Discovery Cutoff, of the previously pleaded claims and
+/// affirmative defenses that will be adjudicated at trial.
+deadline issues-notice-period: 7.days after DiscoveryCutoff() counted_by frcp6 cite "E.D. Wash. LCivR 40"
+{
+  forum frcp
+}
+
+/// LCivR 41(b)(2): if mail or email directed to a pro se plaintiff is
+/// returned and the plaintiff does not notify the court and opposing
+/// parties of a current address within 60 days, the court may dismiss the
+/// action.
+deadline pro-se-address-period: 60.days after ProSeMailReturned() counted_by frcp6 cite "E.D. Wash. LCivR 41(b)"
+{
+  forum frcp
+}
+
+/// LCivR 47(a): each party files and serves any suggested voir dire
+/// questions no later than seven days before trial.
+deadline voir-dire-questions-period: 7.days before TrialSet() counted_by frcp6 cite "E.D. Wash. LCivR 47(a)"
+{
+  forum frcp
+}
+
+/// LCivR 54(d)(1)(A): a prevailing party entitled to costs files and serves
+/// a verified bill of costs (form AO 133 or its equivalent) within 14 days
+/// after entry of judgment, noted for hearing not less than 14 days from
+/// service; objections are due on or before the hearing date (LCivR
+/// 54(d)(1)(B)).
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "E.D. Wash. LCivR 54(d)"
+{
+  forum frcp
+}
+
+/// LCivR 54(d)(1)(D): any party may file and serve a motion to retax costs
+/// within 7 days after the clerk's taxation, which is otherwise final
+/// (LCivR 54(d)(1)(C)).
+deadline retax-motion-period: 7.days after CostsTaxed() counted_by frcp6 cite "E.D. Wash. LCivR 54(d)"
+{
+  forum frcp
+}
+
+/// LCivR 55(a)(1): written notice of the intention to move for entry of
+/// default is given to counsel, or to the party if counsel is unknown, at
+/// least 14 days before the motion for entry of default is filed.
+deadline default-intent-notice-period: 14.days before DefaultMotionFiled() counted_by frcp6 cite "E.D. Wash. LCivR 55(a)"
+{
+  forum frcp
+}
+
+/// LCivR 83.3(f)(2): the attorney has 21 days from the date of the report
+/// and recommendation to file a response.
+deadline discipline-response-period: 21.days after DisciplineReportIssued() counted_by frcp6 cite "E.D. Wash. LCivR 83.3(f)"
+{
+  forum frcp
+}
+
+test "nondispositive response period: 14 days after the trigger" cite "E.D. Wash. LCivR 7(c)"
+{
+  given NondispositiveMotionFiled() on 2026-11-02
+  expect deadline(nondispositive-response-period) == 2026-11-16
+}
+
+test "dispositive response period: 21 days after the trigger" cite "E.D. Wash. LCivR 7(c)"
+{
+  given DispositiveMotionFiled() on 2026-11-02
+  expect deadline(dispositive-response-period) == 2026-11-23
+}
+
+test "pro se nondispositive response period: 21 days after the trigger" cite "E.D. Wash. LCivR 7(c)"
+{
+  given NondispositiveMotionMailed() on 2026-11-02
+  expect deadline(pro-se-nondispositive-response-period) == 2026-11-23
+}
+
+test "pro se dispositive response period: 30 days after the trigger" cite "E.D. Wash. LCivR 7(c)"
+{
+  given DispositiveMotionMailed() on 2026-11-02
+  expect deadline(pro-se-dispositive-response-period) == 2026-12-02
+}
+
+test "nondispositive reply period: 7 days after the trigger" cite "E.D. Wash. LCivR 7(d)"
+{
+  given NondispositiveResponseFiled() on 2026-11-02
+  expect deadline(nondispositive-reply-period) == 2026-11-09
+}
+
+test "dispositive reply period: 14 days after the trigger" cite "E.D. Wash. LCivR 7(d)"
+{
+  given DispositiveResponseFiled() on 2026-11-02
+  expect deadline(dispositive-reply-period) == 2026-11-16
+}
+
+test "pro se reply period: 21 days after the trigger" cite "E.D. Wash. LCivR 7(d)"
+{
+  given ResponseToProSeMovantServed() on 2026-11-02
+  expect deadline(pro-se-reply-period) == 2026-11-23
+}
+
+test "death statement period: 14 days after the trigger" cite "E.D. Wash. LCivR 25(a)"
+{
+  given PartyDeathDiscovered() on 2026-11-02
+  expect deadline(death-statement-period) == 2026-11-16
+}
+
+test "deposition designation period: 14 days before the trigger" cite "E.D. Wash. LCivR 32(a)"
+{
+  given PretrialConferenceSet() on 2027-03-02
+  expect deadline(deposition-designation-period) == 2027-02-16
+}
+
+test "deposition objection period: 7 days before the trigger" cite "E.D. Wash. LCivR 32(a)"
+{
+  given PretrialConferenceSet() on 2027-03-02
+  expect deadline(deposition-objection-period) == 2027-02-23
+}
+
+test "issues notice period: 7 days after the trigger" cite "E.D. Wash. LCivR 40"
+{
+  given DiscoveryCutoff() on 2026-11-02
+  expect deadline(issues-notice-period) == 2026-11-09
+}
+
+test "pro se address period: 60 days after the trigger" cite "E.D. Wash. LCivR 41(b)"
+{
+  given ProSeMailReturned() on 2026-11-02
+  expect deadline(pro-se-address-period) == 2027-01-04
+}
+
+test "voir dire questions period: 7 days before the trigger" cite "E.D. Wash. LCivR 47(a)"
+{
+  given TrialSet() on 2027-03-02
+  expect deadline(voir-dire-questions-period) == 2027-02-23
+}
+
+test "bill of costs period: 14 days after the trigger" cite "E.D. Wash. LCivR 54(d)"
+{
+  given JudgmentEntered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-11-16
+}
+
+test "retax motion period: 7 days after the trigger" cite "E.D. Wash. LCivR 54(d)"
+{
+  given CostsTaxed() on 2026-11-02
+  expect deadline(retax-motion-period) == 2026-11-09
+}
+
+test "default intent notice period: 14 days before the trigger" cite "E.D. Wash. LCivR 55(a)"
+{
+  given DefaultMotionFiled() on 2027-03-02
+  expect deadline(default-intent-notice-period) == 2027-02-16
+}
+
+test "discipline response period: 21 days after the trigger" cite "E.D. Wash. LCivR 83.3(f)"
+{
+  given DisciplineReportIssued() on 2026-11-02
+  expect deadline(discipline-response-period) == 2026-11-23
+}

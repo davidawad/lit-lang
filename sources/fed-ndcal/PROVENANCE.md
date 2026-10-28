@@ -17,6 +17,7 @@
 
 - Source: https://www.cand.uscourts.gov/sites/default/files/local-rules/Local_Rules_Criminal_rev_7-29-2026.pdf (official site; 29 pages, sha256 32aa44b72876fa1c23493e5c6e22c81957411a6e3fabc809ab8dfdcacf78053d).
 - Edition: Criminal Local Rules, the PDF file named 'Local_Rules_Criminal_rev_7-29-2026', listed under Local Rules at https://www.cand.uscourts.gov/rules/local-rules. robots.txt answered with a redirect, no rules read; the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): cand-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 3aca8c4503552bbc014ccb2cacc8688c853498f8a4e44b4e1de0622ddf771880. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `fed-ndcal/original/ndcal-criminal-local-rules-rev-2026-07-29.pdf` as served (sha256 32aa44b72876fa1c23493e5c6e22c81957411a6e3fabc809ab8dfdcacf78053d); extraction sha256 3aca8c4503552bbc014ccb2cacc8688c853498f8a4e44b4e1de0622ddf771880.

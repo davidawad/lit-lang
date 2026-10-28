@@ -1,0 +1,111 @@
+module ia-supreme-court-civil.review
+
+import ia-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+/// A petition for rehearing is filed (Iowa R. App. P. 6.1205).
+event RehearingPetitionFiled()
+
+// Further review of a court of appeals civil decision, from the side of the
+// party the court of appeals decided against. Every period is stated in a
+// note, not counted (Iowa Code section 4.1(34) is not vendored).
+start application
+
+decision application: "Apply for further review within 20 days?" by applicant cite "Iowa R. App. P. 6.1103"
+{
+  note "An application for further review is filed within 20 days following the filing of the court of appeals decision, or within ten days in a chapter 232 child in need of assistance or termination of parental rights appeal; the court of appeals must extend the time if the failure to file timely was due to the clerk of the supreme court's failure to notify the applicant of the decision (Iowa R. App. P. 6.1103(1)(a)). The application is a single document in the rule 6.903(1) form containing, in order, the questions presented on the first page after the cover, a table of contents, a statement supporting further review that identifies the specific issue of importance and any conflicting authority, a brief with all contentions and authorities (none incorporated by reference), and the court of appeals decision showing its filing date; the only other attachments are relevant district court record materials of at most ten pages, district court orders and agency rulings (Iowa R. App. P. 6.1103(1)(c)). The cover states the court and appellate number, the caption, the date the decision was filed, the title and counsel's or the self-represented party's contact details (Iowa R. App. P. 6.1103(4)). The application may not exceed two-fifths of the length limitations for a required brief in rule 6.903(1)(i) (13,000 words in a proportionally spaced typeface, Iowa R. App. P. 6.903(1)(i)(1)), exclusive of the court of appeals decision, the tables and the attached record materials, orders and agency decisions, and includes a Form 10 certificate of compliance (Iowa R. App. P. 6.1103(5)); the limit is stated here and not declared, since the rule states it only as a fraction. The applicant pays the clerk of the supreme court a filing fee or moves to waive or defer it under rules 6.703(1)(g) and 6.703(2) (Iowa R. App. P. 6.1103(1)(e)); the amount is in rule 6.703, not stated here. The decision arrives from lit/iowactapp."
+  edge-application-none "No application: the court of appeals decision stands" -> review-not-sought {
+    authority cite "Iowa R. App. P. 6.1208"
+  }
+  edge-application-filed "Application for further review filed" -> review-decision {
+    event ReviewPetitionFiled()
+    authority cite "Iowa R. App. P. 6.1103"
+  }
+}
+
+decision review-decision: "Further review granted or denied" by court cite "Iowa R. App. P. 6.1103"
+{
+  note "Further review is not a matter of right but of judicial discretion and will not be granted in normal circumstances. The reasons the court considers, neither controlling nor fully measuring its discretion, include a court of appeals decision in conflict with a decision of the supreme court or the court of appeals on an important matter, a substantial constitutional question or important unsettled question of law that the supreme court should settle, an important question of changing legal principles, and an issue of broad public importance the supreme court should ultimately determine (Iowa R. App. P. 6.1103(1)(b)). A party may resist within ten days after service of the application, in the rule 6.903(1) form and within the same length limit; no resistance is permitted in a chapter 232 appeal unless the court requests one, and no reply to a resistance is allowed (Iowa R. App. P. 6.1103(2), (3), (5)). While the application is pending procedendo does not issue from the court of appeals (Iowa R. App. P. 6.1208(2)). The outline named no leading decision on the grant standard."
+  edge-review-decision-denied "Further review denied" -> review-denied {
+    event MandateIssued()
+    authority cite "Iowa R. App. P. 6.1103"
+  }
+  edge-review-decision-granted "Further review granted" -> briefing {
+    authority cite "Iowa R. App. P. 6.1103"
+  }
+}
+
+state briefing: "Supplemental briefs, if required" by applicant cite "Iowa R. App. P. 6.1103"
+{
+  note "If further review is granted, the supreme court may require the parties to file supplemental briefs on all or some of the issues to be reviewed (Iowa R. App. P. 6.1103(6)). It may review any or all of the issues raised in the original appeal or limit its review to those the application brought to its attention (Iowa R. App. P. 6.1103(1)(d)). No supplemental briefing period is stated in the vendored text."
+  edge-briefing-submission "Ready for submission" -> submission { authority cite "Iowa R. App. P. 6.908" }
+}
+
+decision submission: "Oral argument or nonoral submission" by court cite "Iowa R. App. P. 6.908"
+{
+  note "Oral argument is requested in the party's brief and is ordinarily not granted otherwise except by order; the court denies it if it is unlikely to assist the court, and if it grants it sets the time allotted, in person, by video conference or by telephone. Issues properly raised in the briefs are not waived by not addressing them at argument. A notice of additional authorities, citations with concise parentheticals and no further argument, is served at least seven days before a set argument unless the authorities did not exist earlier (Iowa R. App. P. 6.908)."
+  edge-submission-argued "Argued" -> decision { authority cite "Iowa R. App. P. 6.908" }
+  edge-submission-nonoral "Submitted without argument" -> decision { authority cite "Iowa R. App. P. 6.908" }
+}
+
+decision decision: "Supreme court decision" by court cite "Iowa R. App. P. 6.1205"
+{
+  note "The supreme court files its opinion; a petition for rehearing runs from that filing (Iowa R. App. P. 6.1205(1)). Unless the court orders otherwise, procedendo does not issue until 21 days after the opinion is filed or while a properly filed petition for rehearing or application for extension of time to file one is pending (Iowa R. App. P. 6.1208(1)(a)). The opposing party may seek rehearing of a decision for the applicant on the same terms."
+  edge-decision-for "For the applicant" -> decided-for {
+    event DecisionFiled()
+    authority cite "Iowa R. App. P. 6.1208"
+  }
+  edge-decision-against "Against the applicant" -> rehearing {
+    event DecisionFiled()
+    authority cite "Iowa R. App. P. 6.1205"
+  }
+}
+
+decision rehearing: "Petition for rehearing within 14 days?" by applicant cite "Iowa R. App. P. 6.1205"
+{
+  note "A petition for rehearing is filed within 14 days after the filing of the supreme court opinion unless the court shortens or enlarges the time; none lies from an order denying further review. It states with particularity the points of law or fact the court overlooked or misapprehended, in the rule 6.903(1) form and, except by the court's permission, not exceeding one-fifth of the length limitations for a required brief in rule 6.903(1)(i). Oral argument on it is not permitted (Iowa R. App. P. 6.1205(1), (2), (4))."
+  edge-rehearing-none "No rehearing petition" -> decided-against {
+    event MandateIssued()
+    authority cite "Iowa R. App. P. 6.1208"
+  }
+  edge-rehearing-filed "Rehearing petition filed" -> rehearing-decision {
+    event RehearingPetitionFiled()
+    authority cite "Iowa R. App. P. 6.1205"
+  }
+}
+
+decision rehearing-decision: "Rehearing granted or denied" by court cite "Iowa R. App. P. 6.1205"
+{
+  note "No response to the petition is permitted unless the court requests one, and a petition will ordinarily not be granted without such a request. The court may deny rehearing but simultaneously amend the opinion (Iowa R. App. P. 6.1205(3), (5)); procedendo then does not issue until 21 days after that order is filed (Iowa R. App. P. 6.1208(1)(b))."
+  edge-rehearing-decision-denied "Rehearing denied" -> decided-against {
+    event MandateIssued()
+    authority cite "Iowa R. App. P. 6.1208"
+  }
+  edge-rehearing-decision-granted "Rehearing granted" -> rehearing-granted {
+    authority cite "Iowa R. App. P. 6.1205"
+  }
+}
+
+terminal review-not-sought: "No further review: court of appeals decision final" outcome [loss, final] cite "Iowa R. App. P. 6.1208"
+{
+  note "Unless the court of appeals orders otherwise, procedendo does not issue until 27 days after its opinion is filed, or 17 days in a chapter 232 case (Iowa R. App. P. 6.1208(2))."
+}
+
+terminal review-denied: "Further review denied: procedendo issued" outcome [loss, final] cite "Iowa R. App. P. 6.1103"
+{
+  note "When further review is denied the clerk of the supreme court immediately issues procedendo (Iowa R. App. P. 6.1103(7)), and no petition for rehearing lies from the order (Iowa R. App. P. 6.1205(1)). Federal certiorari (28 U.S.C. § 1257) is outside this package."
+}
+
+terminal decided-for: "Decision for the applicant: procedendo issued" outcome [win, final] cite "Iowa R. App. P. 6.1208"
+{
+  note "The case returns to the district court on procedendo (Iowa R. App. P. 6.1208(1))."
+}
+
+terminal decided-against: "Decision against the applicant: procedendo issued" outcome [loss, final] cite "Iowa R. App. P. 6.1208"
+{
+  note "The case returns to the district court on procedendo (Iowa R. App. P. 6.1208(1))."
+}
+
+terminal rehearing-granted: "Rehearing granted" outcome [final] cite "Iowa R. App. P. 6.1205"
+{
+  note "On rehearing the court may make a final disposition with or without oral argument, order resubmission or enter any other appropriate order (Iowa R. App. P. 6.1205(5)); proceedings on rehearing are outside this package."
+}

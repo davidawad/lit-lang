@@ -1,0 +1,47 @@
+# Further review in the Supreme Court of Iowa of a civil decision of the
+# Iowa Court of Appeals, under the Iowa Rules of Appellate Procedure (Iowa
+# Court Rules, chapter 6, running header December 2025, in the Iowa
+# Legislature's compilation of September 30, 2026; sources/iowactapp).
+# Time is computed under Iowa Code section 4.1(34), which is not vendored,
+# and core has no Iowa holiday calendar, so the rules' periods are stated in
+# notes, not encoded as counted deadlines. Chapter 232 child welfare
+# appeals (their shorter times are noted), cases the Supreme Court retains
+# and decides without transfer, original proceedings, certified questions
+# and 28 U.S.C. § 1257 are not modeled. The appeal through the Court of
+# Appeals decision, and the further-review steps it reaches in outline, is
+# lit/iowactapp.
+[package]
+name = "ia-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ia-supreme-court-civil"
+forum = "ia-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "iowa"
+title = "Supreme Court of Iowa, civil further review"
+description = "An application to the Supreme Court of Iowa for further review of a Court of Appeals decision under Iowa R. App. P. 6.1103, as far as the vendored text states: the application's time, grounds, form, length and fee, the resistance, the grant or denial and procedendo on denial, supplemental briefs, oral or nonoral submission, the decision, rehearing with its length limit, and procedendo."
+in_force = "2026-09-30"
+known_at = "2026-10-28"
+unknown_before = "2026-09-30"
+jurisdiction = "Supreme Court of Iowa (further review, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ia-state-rules = { version = "^0.1.0", path = "../ia-rules" }
+
+[sources.ia-r-app-p]
+title = "Iowa Court Rules, Chapter 6, Rules of Appellate Procedure (Iowa Legislature compilation of September 30, 2026)"
+url = "https://www.legis.iowa.gov/docs/ACO/CR/LINC/09-30-2026.chapter.6.pdf"
+path = "sources/iowactapp/iowa-rules-appellate-procedure-sectioned.txt"
+path_sha256 = "a6cb0e7fcb06ccd217389445992200360cfe96182b201bea2d150cc13109326d"
+sha256 = "8d3078cdc61be6ddb556a18c8dacf85f9126c6663ed4db7be2858419daf0e8b6"
+as_of = "2026-09-30"
+cite_prefixes = ["Iowa R. App. P."]
+section_heading = "Rule {n}"

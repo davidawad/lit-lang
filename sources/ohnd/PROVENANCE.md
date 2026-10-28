@@ -20,6 +20,7 @@
 
 - Source: https://www.ohnd.uscourts.gov/sites/ohnd/files/Full_Criminal_Rules_10-1-2024.pdf (official site; 89 pages, sha256 cb7a73f4f7963e4935b64a6346acbb11c5229042e75f1ee2eac3f7421d77ff85).
 - Edition: Full Criminal Rules, the PDF 'Full_Criminal_Rules_10-1-2024' linked at https://www.ohnd.uscourts.gov/local-criminal-rules; later single-rule redlines on https://www.ohnd.uscourts.gov/court-info/local-rules-and-orders (for example Local Criminal Rule 17.1.1) are not vendored. robots.txt of www.ohnd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): ohnd-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 8c27b13ef28a0e2e96cc6c051406ac6acb47e94b5d40b2ffca263c10515fb9d8. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `ohnd/original/ohnd-local-criminal-rules-2024-10-01.pdf` as served (sha256 cb7a73f4f7963e4935b64a6346acbb11c5229042e75f1ee2eac3f7421d77ff85); extraction sha256 8c27b13ef28a0e2e96cc6c051406ac6acb47e94b5d40b2ffca263c10515fb9d8.

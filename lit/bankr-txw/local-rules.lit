@@ -34,24 +34,34 @@ import frbp.events.{ CaseConverted, PetitionFiled }
 /// proceeding, or a response to one: not more than 20 pages, exclusive of
 /// the caption, signature block, certificates and accompanying documents
 /// (Bankr. W.D. Tex. L. Rule 7007-1(a)(2), (b)(3)).
-limit dispositive-motion { pages <= 20 cite "Bankr. W.D. Tex. L. Rule 7007-1(a)" } cite "Bankr. W.D. Tex. L. Rule 7007-1(a)"
+limit dispositive-motion {
+  pages <= 20 cite "Bankr. W.D. Tex. L. Rule 7007-1(a)"
+} cite "Bankr. W.D. Tex. L. Rule 7007-1(a)"
 
 /// Any other motion in an adversary proceeding, or a response to one: not
 /// more than 10 pages (Bankr. W.D. Tex. L. Rule 7007-1(a)(2), (b)(3)).
-limit non-dispositive-motion { pages <= 10 cite "Bankr. W.D. Tex. L. Rule 7007-1(a)" } cite "Bankr. W.D. Tex. L. Rule 7007-1(a)"
+limit non-dispositive-motion {
+  pages <= 10 cite "Bankr. W.D. Tex. L. Rule 7007-1(a)"
+} cite "Bankr. W.D. Tex. L. Rule 7007-1(a)"
 
 /// A reply in support of a dispositive motion: not more than 10 pages
 /// (Bankr. W.D. Tex. L. Rule 7007-1(c)(3)).
-limit dispositive-reply { pages <= 10 cite "Bankr. W.D. Tex. L. Rule 7007-1(c)" } cite "Bankr. W.D. Tex. L. Rule 7007-1(c)"
+limit dispositive-reply {
+  pages <= 10 cite "Bankr. W.D. Tex. L. Rule 7007-1(c)"
+} cite "Bankr. W.D. Tex. L. Rule 7007-1(c)"
 
 /// A reply in support of a non-dispositive motion: not more than 5 pages
 /// (Bankr. W.D. Tex. L. Rule 7007-1(c)(3)).
-limit non-dispositive-reply { pages <= 5 cite "Bankr. W.D. Tex. L. Rule 7007-1(c)" } cite "Bankr. W.D. Tex. L. Rule 7007-1(c)"
+limit non-dispositive-reply {
+  pages <= 5 cite "Bankr. W.D. Tex. L. Rule 7007-1(c)"
+} cite "Bankr. W.D. Tex. L. Rule 7007-1(c)"
 
 /// A party's trial briefs on the merits of an adversary complaint: not more
 /// than 25 pages, cumulative of all its trial briefs, unless the court
 /// orders otherwise (Bankr. W.D. Tex. L. Rule 7016-1(f)).
-limit trial-briefs { pages <= 25 cite "Bankr. W.D. Tex. L. Rule 7016-1(f)" } cite "Bankr. W.D. Tex. L. Rule 7016-1(f)"
+limit trial-briefs {
+  pages <= 25 cite "Bankr. W.D. Tex. L. Rule 7016-1(f)"
+} cite "Bankr. W.D. Tex. L. Rule 7016-1(f)"
 
 /// A chapter 13 debtor files a post-petition annual federal or state income
 /// tax return (Bankr. W.D. Tex. L. Rule 1007-1(f)).
@@ -472,7 +482,9 @@ state motion-filed: "Motion filed and served with negative notice" by applicant 
 state opposed: "Response filed; contested matter set for hearing" by opponent cite "Bankr. W.D. Tex. L. Rule 9014-1(b)"
 {
   note "Any reply is due within 7 days after service of the response; witness and exhibit lists are exchanged 5 days before the hearing (L. Rule 9014-1(b)(2), (g))."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. W.D. Tex. L. Rule 9014-1(c)" }
+  edge-opposed-ruling "Hearing held" -> ruling {
+    authority cite "Bankr. W.D. Tex. L. Rule 9014-1(c)"
+  }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. W.D. Tex. L. Rule 9014-1(d)"

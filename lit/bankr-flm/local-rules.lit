@@ -494,14 +494,20 @@ state paper-served: "Paper served with the negative notice legend" by applicant 
 state responded: "Response filed" by opponent cite "Bankr. M.D. Fla. Local Rule 2002-4(d)"
 {
   note "On a timely response the court may, but need not, schedule a hearing on notice to the movant's attorney, the objecting parties and others (Local Rule 2002-4(d))."
-  edge-responded-considered "Hearing held or response considered" -> ruling { authority cite "Bankr. M.D. Fla. Local Rule 2002-4(d)" }
+  edge-responded-considered "Hearing held or response considered" -> ruling {
+    authority cite "Bankr. M.D. Fla. Local Rule 2002-4(d)"
+  }
 }
 
 decision ruling: "Matter decided" by court cite "Bankr. M.D. Fla. Local Rule 2002-4(e)"
 {
   note "Absent a response, the court considers the matter in chambers on the movant's proposed order, submitted within three business days after the response period expires and reciting service, the absence of response and that the matter is unopposed (Local Rule 2002-4(e)); it may still hold a hearing (Local Rule 2002-4(f))."
-  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. M.D. Fla. Local Rule 2002-4(e)" }
-  edge-ruling-denied "Denied or overruled" -> decided { authority cite "Bankr. M.D. Fla. Local Rule 2002-4(f)" }
+  edge-ruling-granted "Granted" -> decided {
+    authority cite "Bankr. M.D. Fla. Local Rule 2002-4(e)"
+  }
+  edge-ruling-denied "Denied or overruled" -> decided {
+    authority cite "Bankr. M.D. Fla. Local Rule 2002-4(f)"
+  }
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. M.D. Fla. Local Rule 1001-1(a)"

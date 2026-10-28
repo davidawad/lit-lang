@@ -33,15 +33,21 @@ import frbp.events.{ CaseConverted, FirstMeetingDate, OrderForReliefEntered }
 // these rules, and are removed here: no reporter text is vendored.
 /// A motion for summary judgment with its supporting brief: not more than
 /// 30 pages, excluding attachments (Bankr. E.D. Tex. LBR 7056-1(a)).
-limit summary-judgment-motion { pages <= 30 cite "Bankr. E.D. Tex. LBR 7056-1(a)" } cite "Bankr. E.D. Tex. LBR 7056-1(a)"
+limit summary-judgment-motion {
+  pages <= 30 cite "Bankr. E.D. Tex. LBR 7056-1(a)"
+} cite "Bankr. E.D. Tex. LBR 7056-1(a)"
 
 /// A response opposing summary judgment: not more than 30 pages, excluding
 /// attachments (Bankr. E.D. Tex. LBR 7056-1(b)).
-limit summary-judgment-response { pages <= 30 cite "Bankr. E.D. Tex. LBR 7056-1(b)" } cite "Bankr. E.D. Tex. LBR 7056-1(b)"
+limit summary-judgment-response {
+  pages <= 30 cite "Bankr. E.D. Tex. LBR 7056-1(b)"
+} cite "Bankr. E.D. Tex. LBR 7056-1(b)"
 
 /// A reply brief on an opposed summary judgment motion: not more than 10
 /// pages, excluding attachments (Bankr. E.D. Tex. LBR 7056-1(c)).
-limit summary-judgment-reply { pages <= 10 cite "Bankr. E.D. Tex. LBR 7056-1(c)" } cite "Bankr. E.D. Tex. LBR 7056-1(c)"
+limit summary-judgment-reply {
+  pages <= 10 cite "Bankr. E.D. Tex. LBR 7056-1(c)"
+} cite "Bankr. E.D. Tex. LBR 7056-1(c)"
 
 /// A motion to dismiss carrying 14-day negative notice is served (Bankr.
 /// E.D. Tex. LBR 1017-1(b)).

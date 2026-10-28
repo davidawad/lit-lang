@@ -36,17 +36,23 @@ import frbp.events.{ PetitionFiled }
 /// A brief in support of a motion for summary judgment: not more than
 /// twenty pages, exclusive of attachments or appendices (W.D. Okla. LBR
 /// 7056-1(B)).
-limit summary-judgment-brief { pages <= 20 cite "W.D. Okla. LBR 7056-1(B)" } cite "W.D. Okla. LBR 7056-1(B)"
+limit summary-judgment-brief {
+  pages <= 20 cite "W.D. Okla. LBR 7056-1(B)"
+} cite "W.D. Okla. LBR 7056-1(B)"
 
 /// A brief in response to a motion for summary judgment: not more than
 /// twenty pages, exclusive of attachments or appendices (W.D. Okla. LBR
 /// 7056-1(C)).
-limit summary-judgment-response { pages <= 20 cite "W.D. Okla. LBR 7056-1(C)" } cite "W.D. Okla. LBR 7056-1(C)"
+limit summary-judgment-response {
+  pages <= 20 cite "W.D. Okla. LBR 7056-1(C)"
+} cite "W.D. Okla. LBR 7056-1(C)"
 
 /// A reply brief addressing new matters in a summary judgment response: not
 /// more than five pages, exclusive of attachments or appendices (W.D. Okla.
 /// LBR 7056-1(D)).
-limit summary-judgment-reply { pages <= 5 cite "W.D. Okla. LBR 7056-1(D)" } cite "W.D. Okla. LBR 7056-1(D)"
+limit summary-judgment-reply {
+  pages <= 5 cite "W.D. Okla. LBR 7056-1(D)"
+} cite "W.D. Okla. LBR 7056-1(D)"
 
 /// A filing fee is overpaid (W.D. Okla. LBR 1006-1(F)).
 event FeeOverpaid()

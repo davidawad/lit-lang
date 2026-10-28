@@ -107,15 +107,10 @@ event InitialPretrialConferenceConcluded()
 /// M.D. Ga. LBR 9013-1(d)(1): except on good cause and leave, all motions,
 /// responses and briefs are limited to 20 pages, exhibits excluded (amended
 /// October 1, 2026).
-limit motion {
-  pages <= 20 cite "M.D. Ga. LBR 9013-1(d)"
-} cite "M.D. Ga. LBR 9013-1(d)"
-
+limit motion { pages <= 20 cite "M.D. Ga. LBR 9013-1(d)" } cite "M.D. Ga. LBR 9013-1(d)"
 /// M.D. Ga. LBR 9013-1(d)(1): a movant's reply brief may not exceed 10 pages,
 /// exhibits excluded (amended October 1, 2026).
-limit reply-brief {
-  pages <= 10 cite "M.D. Ga. LBR 9013-1(d)"
-} cite "M.D. Ga. LBR 9013-1(d)"
+limit reply-brief { pages <= 10 cite "M.D. Ga. LBR 9013-1(d)" } cite "M.D. Ga. LBR 9013-1(d)"
 
 /// M.D. Ga. LBR 1007-1(a)(1): the time to file the schedules and statements
 /// may be extended only to a date not less than five days before the first

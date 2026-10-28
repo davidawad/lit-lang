@@ -40,7 +40,6 @@ import frbp.events.{ FirstMeetingDate, PetitionFiled }
 /// statements of issues and facts, and exhibits (Bankr. D. Utah LBR
 /// 9013-1(h)).
 limit motion { pages <= 15 cite "Bankr. D. Utah LBR 9013-1(h)" } cite "Bankr. D. Utah LBR 9013-1(h)"
-
 /// A reply to a response to a motion: not more than 10 pages absent leave
 /// (Bankr. D. Utah LBR 9013-1(h)).
 limit reply { pages <= 10 cite "Bankr. D. Utah LBR 9013-1(h)" } cite "Bankr. D. Utah LBR 9013-1(h)"
@@ -48,11 +47,15 @@ limit reply { pages <= 10 cite "Bankr. D. Utah LBR 9013-1(h)" } cite "Bankr. D. 
 /// A motion for summary judgment, or a memorandum opposing one: not more
 /// than 25 pages, exclusive of face sheet, table of contents, statements of
 /// issues and facts, and exhibits (Bankr. D. Utah LBR 7056-1(g)).
-limit summary-judgment-memorandum { pages <= 25 cite "Bankr. D. Utah LBR 7056-1(g)" } cite "Bankr. D. Utah LBR 7056-1(g)"
+limit summary-judgment-memorandum {
+  pages <= 25 cite "Bankr. D. Utah LBR 7056-1(g)"
+} cite "Bankr. D. Utah LBR 7056-1(g)"
 
 /// A reply memorandum in support of summary judgment: not more than 10
 /// pages (Bankr. D. Utah LBR 7056-1(g)).
-limit summary-judgment-reply { pages <= 10 cite "Bankr. D. Utah LBR 7056-1(g)" } cite "Bankr. D. Utah LBR 7056-1(g)"
+limit summary-judgment-reply {
+  pages <= 10 cite "Bankr. D. Utah LBR 7056-1(g)"
+} cite "Bankr. D. Utah LBR 7056-1(g)"
 
 /// After an order converting the case, the trustee or the United States
 /// trustee makes a written request for updated lists, schedules and

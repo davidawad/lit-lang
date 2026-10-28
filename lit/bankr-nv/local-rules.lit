@@ -34,13 +34,11 @@ import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
 // order (LR 9021(a)). The earlier outline's Supreme Court decisions
 // construe the Code and the FRBP, not these rules, and are removed here:
 // no reporter text is vendored.
-
 /// Prehearing and posthearing briefs and points and authorities on a
 /// motion: not more than 20 pages, including the motion but excluding
 /// exhibits, unless the court orders otherwise (Bankr. D. Nev. LR
 /// 9014(e)).
 limit brief { pages <= 20 cite "Bankr. D. Nev. LR 9014(e)" } cite "Bankr. D. Nev. LR 9014(e)"
-
 /// Reply briefs and points and authorities: not more than 15 pages (Bankr.
 /// D. Nev. LR 9014(e)).
 limit reply-brief { pages <= 15 cite "Bankr. D. Nev. LR 9014(e)" } cite "Bankr. D. Nev. LR 9014(e)"

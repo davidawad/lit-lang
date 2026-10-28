@@ -31,15 +31,18 @@ import frbp.events.{ FirstMeetingDate, OrderForReliefEntered }
 // (LBR 9017-1(e)). The earlier outline's Supreme Court decisions construe
 // the Code and the FRBP, not these rules, and are removed here: no
 // reporter text is vendored.
-
 /// A nondiscovery brief in an adversary proceeding: not more than 20 pages,
 /// exclusive of exhibits, unless the court authorizes an over-length brief
 /// (Bankr. D. Or. LBR 7007-1(b)).
-limit nondiscovery-brief { pages <= 20 cite "Bankr. D. Or. LBR 7007-1(b)" } cite "Bankr. D. Or. LBR 7007-1(b)"
+limit nondiscovery-brief {
+  pages <= 20 cite "Bankr. D. Or. LBR 7007-1(b)"
+} cite "Bankr. D. Or. LBR 7007-1(b)"
 
 /// A discovery brief in an adversary proceeding: not more than ten pages,
 /// exclusive of exhibits (Bankr. D. Or. LBR 7007-1(b)).
-limit discovery-brief { pages <= 10 cite "Bankr. D. Or. LBR 7007-1(b)" } cite "Bankr. D. Or. LBR 7007-1(b)"
+limit discovery-brief {
+  pages <= 10 cite "Bankr. D. Or. LBR 7007-1(b)"
+} cite "Bankr. D. Or. LBR 7007-1(b)"
 
 /// The meeting of creditors is completed or concludes (Bankr. D. Or. LBR
 /// 1002-1(a), 3015-1(b), 3015-3(c)).

@@ -42,11 +42,12 @@ import frbp.events.{ CaseConverted, FirstMeetingDate, OrderForReliefEntered, Pet
 // of the appendices to LBR 9075-1. The earlier outline's Supreme Court
 // decisions construe the Code and the FRBP, not these rules, and are
 // removed here: no reporter text is vendored.
-
 /// A brief or memorandum of points and authorities: not more than 35
 /// pages, unless the court orders otherwise on motion (Bankr. C.D. Cal. LBR
 /// 9013-2(b)).
-limit brief { pages <= 35 cite "Bankr. C.D. Cal. LBR 9013-2(b)" } cite "Bankr. C.D. Cal. LBR 9013-2(b)"
+limit brief {
+  pages <= 35 cite "Bankr. C.D. Cal. LBR 9013-2(b)"
+} cite "Bankr. C.D. Cal. LBR 9013-2(b)"
 
 /// The date set for an FRBP 2004 examination (Bankr. C.D. Cal. LBR
 /// 2004-1(c), (f)).

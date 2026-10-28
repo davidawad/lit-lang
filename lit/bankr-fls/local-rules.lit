@@ -462,19 +462,25 @@ state motion-served: "Motion served on negative notice" by applicant cite "Bankr
 state responded: "Response filed; matter set for hearing" by opponent cite "Bankr. S.D. Fla. Local Rule 9014-2(a)"
 {
   note "A written objection or response states its legal and factual basis (Local Rule 9014-2(a)); the judge may set any negatively noticed motion for hearing (Local Rule 9013-3(a)(1))."
-  edge-responded-hearing "Hearing held" -> ruling { authority cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(1)" }
+  edge-responded-hearing "Hearing held" -> ruling {
+    authority cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(1)"
+  }
 }
 
 state order-uploaded: "Proposed order uploaded" by applicant cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(4)"
 {
   note "The movant uploads the proposed order no later than seven days after the negative notice period expires (Local Rule 9013-3(a)(4)); its preamble recites service, the expired response time and the absence of a response (Local Rule 9013-3(b)(1)(B), (c)(1)(B))."
-  edge-order-uploaded-ruling "Order considered" -> ruling { authority cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(1)" }
+  edge-order-uploaded-ruling "Order considered" -> ruling {
+    authority cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(1)"
+  }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(1)"
 {
   note "The court may consider the motion without a hearing after the negative notice period expires (Local Rule 9013-3(a)(1))."
-  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(1)" }
+  edge-ruling-granted "Granted" -> decided {
+    authority cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(1)"
+  }
   edge-ruling-denied "Denied" -> decided { authority cite "Bankr. S.D. Fla. Local Rule 9029-1(a)" }
 }
 

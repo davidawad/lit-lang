@@ -31,20 +31,28 @@ import frbp.events.{ FirstMeetingDate, OrderForReliefEntered }
 /// A brief on a motion in an adversary proceeding: not more than 25 pages,
 /// excluding the tables of contents and authorities (Bankr. N.D. Tex.
 /// L.B.R. 7007-2(c)).
-limit motion-brief { pages <= 25 cite "Bankr. N.D. Tex. L.B.R. 7007-2(c)" } cite "Bankr. N.D. Tex. L.B.R. 7007-2(c)"
+limit motion-brief {
+  pages <= 25 cite "Bankr. N.D. Tex. L.B.R. 7007-2(c)"
+} cite "Bankr. N.D. Tex. L.B.R. 7007-2(c)"
 
 /// A reply brief on a motion: not more than 10 pages (Bankr. N.D. Tex.
 /// L.B.R. 7007-2(c)).
-limit motion-reply-brief { pages <= 10 cite "Bankr. N.D. Tex. L.B.R. 7007-2(c)" } cite "Bankr. N.D. Tex. L.B.R. 7007-2(c)"
+limit motion-reply-brief {
+  pages <= 10 cite "Bankr. N.D. Tex. L.B.R. 7007-2(c)"
+} cite "Bankr. N.D. Tex. L.B.R. 7007-2(c)"
 
 /// A principal brief on summary judgment: not more than 50 pages, excluding
 /// the tables of contents and authorities, unless the presiding judge
 /// orders otherwise (Bankr. N.D. Tex. L.B.R. 7056-1(e)(2)).
-limit summary-judgment-brief { pages <= 50 cite "Bankr. N.D. Tex. L.B.R. 7056-1(e)" } cite "Bankr. N.D. Tex. L.B.R. 7056-1(e)"
+limit summary-judgment-brief {
+  pages <= 50 cite "Bankr. N.D. Tex. L.B.R. 7056-1(e)"
+} cite "Bankr. N.D. Tex. L.B.R. 7056-1(e)"
 
 /// A reply brief on summary judgment: not more than 25 pages (Bankr. N.D.
 /// Tex. L.B.R. 7056-1(e)(2)).
-limit summary-judgment-reply-brief { pages <= 25 cite "Bankr. N.D. Tex. L.B.R. 7056-1(e)" } cite "Bankr. N.D. Tex. L.B.R. 7056-1(e)"
+limit summary-judgment-reply-brief {
+  pages <= 25 cite "Bankr. N.D. Tex. L.B.R. 7056-1(e)"
+} cite "Bankr. N.D. Tex. L.B.R. 7056-1(e)"
 
 /// An individual debtor's temporary exclusion from means testing under §
 /// 707(b)(2)(D)(ii) expires (Bankr. N.D. Tex. L.B.R. 1007-1(c)).
@@ -331,7 +339,9 @@ state motion-filed: "Motion filed and served with negative notice" by applicant 
 state opposed: "Response filed; contested matter heard" by opponent cite "Bankr. N.D. Tex. L.B.R. 9014-1(a)"
 {
   note "Exhibits, exhibit and witness lists and deposition designations are exchanged at least 3 calendar days before the hearing (L.B.R. 9014-1(c))."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. N.D. Tex. L.B.R. 9014-1(d)" }
+  edge-opposed-ruling "Hearing held" -> ruling {
+    authority cite "Bankr. N.D. Tex. L.B.R. 9014-1(d)"
+  }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. N.D. Tex. L.B.R. 9007-1(c)"

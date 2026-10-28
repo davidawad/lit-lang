@@ -301,9 +301,7 @@ start motion-filed
 state motion-filed: "Motion filed and noticed for hearing or with an objection deadline" by applicant cite "D. Kan. LBR 9013.2"
 {
   note "A motion is set on the judge's docket with notice of hearing, filed at least 14 days before the hearing, or filed with a separate notice of objection deadline (LBR 9013.2). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Objection filed" -> opposed {
-    authority cite "D. Kan. LBR 9013.2"
-  }
+  edge-motion-filed-opposed "Objection filed" -> opposed { authority cite "D. Kan. LBR 9013.2" }
   edge-motion-filed-unopposed "No objection by the deadline" -> ruling {
     authority cite "D. Kan. LBR 9013.2"
   }

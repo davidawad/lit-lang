@@ -27,7 +27,6 @@ import core.frcp6.{ frcp6 }
 // Bowles, Hamer) are FRCP and FRAP authority and belong to lit/frcp and
 // lit/frap; its Ninth Circuit decisions (Eitel v. McCool; Lopez v. Smith)
 // are removed: no reporter text is vendored.
-
 /// A brief or memorandum supporting or opposing any motion, petition or
 /// appeal, including a pro se party's: at most 25 pages, or longer if it
 /// contains no more than 6,250 words and carries the word-count certificate
@@ -58,9 +57,7 @@ limit concise-statement {
 /// A letter brief under the expedited discovery procedure: five pages or
 /// less, inclusive of all exhibits, unless the court orders otherwise
 /// (LR37.1(c)(2)).
-limit discovery-letter-brief {
-  pages <= 5 cite "D. Haw. LR 37.1(c)"
-} cite "D. Haw. LR 37.1(c)"
+limit discovery-letter-brief { pages <= 5 cite "D. Haw. LR 37.1(c)" } cite "D. Haw. LR 37.1(c)"
 
 /// A motion to file under seal is filed (LR5.2(c)).
 event SealMotionFiled()

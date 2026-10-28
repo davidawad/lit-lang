@@ -33,16 +33,19 @@ import frbp.events.{ CaseConverted, FirstMeetingDate, OrderForReliefEntered, Pet
 // 9072-9). The earlier outline's Supreme Court decisions construe the Code
 // and the FRBP, not these rules, and are removed here: no reporter text is
 // vendored.
-
 /// A motion, a response or reply and the supporting memoranda: not more
 /// than 15 pages exclusive of attachments, unless ordered otherwise (Bankr.
 /// D. Ariz. LR 9013-1(b)).
-limit motion-paper { pages <= 15 cite "Bankr. D. Ariz. LR 9013-1(b)" } cite "Bankr. D. Ariz. LR 9013-1(b)"
+limit motion-paper {
+  pages <= 15 cite "Bankr. D. Ariz. LR 9013-1(b)"
+} cite "Bankr. D. Ariz. LR 9013-1(b)"
 
 /// Any other document: not more than 15 pages exclusive of attachments,
 /// except chapter 11 disclosure statements, plans and objections (Bankr. D.
 /// Ariz. LR 9004-1(h)).
-limit document { pages <= 15 cite "Bankr. D. Ariz. LR 9004-1(h)" } cite "Bankr. D. Ariz. LR 9004-1(h)"
+limit document {
+  pages <= 15 cite "Bankr. D. Ariz. LR 9004-1(h)"
+} cite "Bankr. D. Ariz. LR 9004-1(h)"
 
 /// A miscellaneous proceeding is filed without its fee (Bankr. D. Ariz. LR
 /// 1006-1(c)).

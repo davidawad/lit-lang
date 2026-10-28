@@ -34,12 +34,16 @@ import frbp.events.{ PetitionFiled }
 // reporter text is vendored.
 /// A memorandum filed with a motion: not more than fifteen pages, excluding
 /// attachments, without leave of court (Bankr. M.D. La. LR 9013-2).
-limit motion-memorandum { pages <= 15 cite "Bankr. M.D. La. LR 9013-2" } cite "Bankr. M.D. La. LR 9013-2"
+limit motion-memorandum {
+  pages <= 15 cite "Bankr. M.D. La. LR 9013-2"
+} cite "Bankr. M.D. La. LR 9013-2"
 
 /// An objection to a motion: not more than fifteen pages, excluding
 /// attachments, without prior leave of court (Bankr. M.D. La. LR
 /// 9014-1(a)(3)).
-limit objection-paper { pages <= 15 cite "Bankr. M.D. La. LR 9014-1(a)" } cite "Bankr. M.D. La. LR 9014-1(a)"
+limit objection-paper {
+  pages <= 15 cite "Bankr. M.D. La. LR 9014-1(a)"
+} cite "Bankr. M.D. La. LR 9014-1(a)"
 
 /// An order substituting or enrolling new counsel for the debtor is entered
 /// (Bankr. M.D. La. LR 1008-1(b)(2)).

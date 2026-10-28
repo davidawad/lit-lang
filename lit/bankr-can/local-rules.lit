@@ -36,15 +36,18 @@ import frbp.events.{ FirstMeetingDate }
 // no period. The earlier outline's Supreme Court decisions construe the
 // Code and the FRBP, not these rules, and are removed here: no reporter
 // text is vendored.
-
 /// An initial or response memorandum of points and authorities: not more
 /// than 25 pages of text unless the court orders otherwise (Bankr. N.D.
 /// Cal. B.L.R. 9013-1(c)).
-limit memorandum { pages <= 25 cite "Bankr. N.D. Cal. B.L.R. 9013-1(c)" } cite "Bankr. N.D. Cal. B.L.R. 9013-1(c)"
+limit memorandum {
+  pages <= 25 cite "Bankr. N.D. Cal. B.L.R. 9013-1(c)"
+} cite "Bankr. N.D. Cal. B.L.R. 9013-1(c)"
 
 /// A reply memorandum: not more than 15 pages of text unless the court
 /// orders otherwise (Bankr. N.D. Cal. B.L.R. 9013-1(c)).
-limit reply-memorandum { pages <= 15 cite "Bankr. N.D. Cal. B.L.R. 9013-1(c)" } cite "Bankr. N.D. Cal. B.L.R. 9013-1(c)"
+limit reply-memorandum {
+  pages <= 15 cite "Bankr. N.D. Cal. B.L.R. 9013-1(c)"
+} cite "Bankr. N.D. Cal. B.L.R. 9013-1(c)"
 
 /// Notice of a deposit in a Designated Fund is mailed (Bankr. N.D. Cal.
 /// B.L.R. 2015-1(c)).
@@ -211,7 +214,9 @@ state motion-filed: "Request for relief with notice and opportunity for hearing"
 state opposed: "Objection filed; hearing noticed" by opponent cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"
 {
   note "The initiating party gives at least seven days' written notice of the hearing, or the tentative hearing goes forward as an actual hearing on notice filed not less than 7 days before it (B.L.R. 9014-1(b)(3))."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)" }
+  edge-opposed-ruling "Hearing held" -> ruling {
+    authority cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
+  }
 }
 
 decision ruling: "Relief decided" by court cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"

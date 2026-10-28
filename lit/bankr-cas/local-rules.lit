@@ -34,14 +34,17 @@ import frbp.events.{ CaseConverted, FirstMeetingDate, OrderForReliefEntered, Pet
 // earlier outline's Supreme Court decisions construe the Code and the
 // FRBP, not these rules, and are removed here: no reporter text is
 // vendored.
-
 /// A brief or memorandum in support of or in opposition to a motion or
 /// application: not more than 25 pages (Bankr. S.D. Cal. LBR 9013-7(d)).
-limit brief { pages <= 25 cite "Bankr. S.D. Cal. LBR 9013-7(d)" } cite "Bankr. S.D. Cal. LBR 9013-7(d)"
+limit brief {
+  pages <= 25 cite "Bankr. S.D. Cal. LBR 9013-7(d)"
+} cite "Bankr. S.D. Cal. LBR 9013-7(d)"
 
 /// A reply memorandum: not more than 10 pages (Bankr. S.D. Cal. LBR
 /// 9013-7(d)).
-limit reply-memorandum { pages <= 10 cite "Bankr. S.D. Cal. LBR 9013-7(d)" } cite "Bankr. S.D. Cal. LBR 9013-7(d)"
+limit reply-memorandum {
+  pages <= 10 cite "Bankr. S.D. Cal. LBR 9013-7(d)"
+} cite "Bankr. S.D. Cal. LBR 9013-7(d)"
 
 /// An individual debtor dies during the case (Bankr. S.D. Cal. LBR 1016-1).
 event DebtorDied()

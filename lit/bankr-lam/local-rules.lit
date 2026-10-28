@@ -202,6 +202,12 @@ deadline monday-hearing-objection-period: 7.days before MondayAfternoonHearing()
 /// court from which the cause was removed that relate to it.
 deadline removal-record-period: 7.days after RemovalNoticeFiled() counted_by frbp9006 cite "Bankr. M.D. La. LR 9027-1"
 
+test "a Monday afternoon hearing's objection deadline is the prior Monday" cite ?("the standing order is not vendored")
+{
+  given MondayAfternoonHearing() on 2025-12-01
+  expect deadline(monday-hearing-objection-period) == 2025-11-24
+}
+
 start motion-filed
 
 state motion-filed: "Motion filed and noticed for hearing" by applicant cite "Bankr. M.D. La. LR 9013-1(b)"

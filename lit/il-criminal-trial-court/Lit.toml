@@ -1,0 +1,128 @@
+# Criminal cases in the Illinois circuit courts under the Code of Criminal
+# Procedure of 1963 (725 ILCS 5/) and the Illinois Supreme Court Rules,
+# Article IV (criminal proceedings in the trial court) and Article VI
+# (appeals in criminal cases), as far as the vendored text states. Both
+# vendored texts are CURRENCY UNCONFIRMED (sources/il-criminal-trial-court/
+# PROVENANCE.md): 725 ILCS 5/ as the General Assembly's database served it
+# on 2026-10-28, which states no edition date and notes that recent laws
+# may not yet be included, and the Supreme Court Rules as 43 per-rule PDFs
+# with no consolidated edition date. By the PM's standing ruling of
+# 2026-10-27 such a source yields holes, not values: this package cites
+# the Code and the Rules only for the structure of the case (which section
+# or rule governs which step) and states no period, limit or amount from
+# them. in_force is the retrieval date, so an earlier query is a hole in
+# the corpus. The Unified Code of Corrections (730 ILCS 5/: sentencing)
+# and the Statute on Statutes (5 ILCS 70/1.11: computation of time) are
+# not vendored; lit/core has no counting rule for Illinois.
+[package]
+name = "il-circuit-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "il-circuit-court-criminal"
+forum = "il-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "illinois"
+title = "Illinois circuit courts, criminal"
+description = "Criminal cases in the Illinois circuit courts under the Code of Criminal Procedure of 1963 and Supreme Court Rules Articles IV and VI, as far as the vendored text states: the structure of the case from arrest and pretrial release through preliminary examination or indictment, arraignment, pretrial motions and the speedy-trial statute, plea or trial, post-trial motions, sentence and the appeal; no period from the currency-unconfirmed texts is stated."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Illinois trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ill-sct-rules-crim]
+title = "Illinois Supreme Court Rules, Article IV (Rules 401-472) and Article VI (Rules 601-663), per-rule PDFs as served (no consolidated edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.illinoiscourts.gov/rules-law/supreme-court-rules"
+path = "sources/il-criminal-trial-court/il-supreme-court-rules-articles-iv-and-vi-sectioned.txt"
+path_sha256 = "3faeedf052830a5307ac1c93c6a04484db50264b4ffd6dd5ee9b3a79f8d30527"
+as_of = "2026-10-28"
+cite_prefixes = ["Ill. S. Ct. R."]
+section_heading = "Ill. S. Ct. R. {n}"
+
+[sources.ilcs-725-5-art103]
+title = "Code of Criminal Procedure of 1963, 725 ILCS 5/ Article 103, as served by the Illinois General Assembly's ILCS database (no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1966&ChapterID=54"
+path = "sources/il-criminal-trial-court/il-725-ilcs-5-code-of-criminal-procedure-1963-sectioned.txt"
+path_sha256 = "31d06fdac595a3f6ff277277f25e5d8ea7183259058cd11e587a4c8c9eaaf900"
+as_of = "2026-10-28"
+cite_prefixes = ["725 ILCS 5/103-"]
+section_heading = "725 ILCS 5/103-{n}"
+
+[sources.ilcs-725-5-art109]
+title = "Code of Criminal Procedure of 1963, 725 ILCS 5/ Article 109, as served by the Illinois General Assembly's ILCS database (no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1966&ChapterID=54"
+path = "sources/il-criminal-trial-court/il-725-ilcs-5-code-of-criminal-procedure-1963-sectioned.txt"
+path_sha256 = "31d06fdac595a3f6ff277277f25e5d8ea7183259058cd11e587a4c8c9eaaf900"
+as_of = "2026-10-28"
+cite_prefixes = ["725 ILCS 5/109-"]
+section_heading = "725 ILCS 5/109-{n}"
+
+[sources.ilcs-725-5-art110]
+title = "Code of Criminal Procedure of 1963, 725 ILCS 5/ Article 110, as served by the Illinois General Assembly's ILCS database (no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1966&ChapterID=54"
+path = "sources/il-criminal-trial-court/il-725-ilcs-5-code-of-criminal-procedure-1963-sectioned.txt"
+path_sha256 = "31d06fdac595a3f6ff277277f25e5d8ea7183259058cd11e587a4c8c9eaaf900"
+as_of = "2026-10-28"
+cite_prefixes = ["725 ILCS 5/110-"]
+section_heading = "725 ILCS 5/110-{n}"
+
+[sources.ilcs-725-5-art111]
+title = "Code of Criminal Procedure of 1963, 725 ILCS 5/ Article 111, as served by the Illinois General Assembly's ILCS database (no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1966&ChapterID=54"
+path = "sources/il-criminal-trial-court/il-725-ilcs-5-code-of-criminal-procedure-1963-sectioned.txt"
+path_sha256 = "31d06fdac595a3f6ff277277f25e5d8ea7183259058cd11e587a4c8c9eaaf900"
+as_of = "2026-10-28"
+cite_prefixes = ["725 ILCS 5/111-"]
+section_heading = "725 ILCS 5/111-{n}"
+
+[sources.ilcs-725-5-art113]
+title = "Code of Criminal Procedure of 1963, 725 ILCS 5/ Article 113, as served by the Illinois General Assembly's ILCS database (no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1966&ChapterID=54"
+path = "sources/il-criminal-trial-court/il-725-ilcs-5-code-of-criminal-procedure-1963-sectioned.txt"
+path_sha256 = "31d06fdac595a3f6ff277277f25e5d8ea7183259058cd11e587a4c8c9eaaf900"
+as_of = "2026-10-28"
+cite_prefixes = ["725 ILCS 5/113-"]
+section_heading = "725 ILCS 5/113-{n}"
+
+[sources.ilcs-725-5-art114]
+title = "Code of Criminal Procedure of 1963, 725 ILCS 5/ Article 114, as served by the Illinois General Assembly's ILCS database (no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1966&ChapterID=54"
+path = "sources/il-criminal-trial-court/il-725-ilcs-5-code-of-criminal-procedure-1963-sectioned.txt"
+path_sha256 = "31d06fdac595a3f6ff277277f25e5d8ea7183259058cd11e587a4c8c9eaaf900"
+as_of = "2026-10-28"
+cite_prefixes = ["725 ILCS 5/114-"]
+section_heading = "725 ILCS 5/114-{n}"
+
+[sources.ilcs-725-5-art115]
+title = "Code of Criminal Procedure of 1963, 725 ILCS 5/ Article 115, as served by the Illinois General Assembly's ILCS database (no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1966&ChapterID=54"
+path = "sources/il-criminal-trial-court/il-725-ilcs-5-code-of-criminal-procedure-1963-sectioned.txt"
+path_sha256 = "31d06fdac595a3f6ff277277f25e5d8ea7183259058cd11e587a4c8c9eaaf900"
+as_of = "2026-10-28"
+cite_prefixes = ["725 ILCS 5/115-"]
+section_heading = "725 ILCS 5/115-{n}"
+
+[sources.ilcs-725-5-art116]
+title = "Code of Criminal Procedure of 1963, 725 ILCS 5/ Article 116, as served by the Illinois General Assembly's ILCS database (no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1966&ChapterID=54"
+path = "sources/il-criminal-trial-court/il-725-ilcs-5-code-of-criminal-procedure-1963-sectioned.txt"
+path_sha256 = "31d06fdac595a3f6ff277277f25e5d8ea7183259058cd11e587a4c8c9eaaf900"
+as_of = "2026-10-28"
+cite_prefixes = ["725 ILCS 5/116-"]
+section_heading = "725 ILCS 5/116-{n}"
+
+[sources.ilcs-725-5-art122]
+title = "Code of Criminal Procedure of 1963, 725 ILCS 5/ Article 122, as served by the Illinois General Assembly's ILCS database (no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1966&ChapterID=54"
+path = "sources/il-criminal-trial-court/il-725-ilcs-5-code-of-criminal-procedure-1963-sectioned.txt"
+path_sha256 = "31d06fdac595a3f6ff277277f25e5d8ea7183259058cd11e587a4c8c9eaaf900"
+as_of = "2026-10-28"
+cite_prefixes = ["725 ILCS 5/122-"]
+section_heading = "725 ILCS 5/122-{n}"

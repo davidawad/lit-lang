@@ -1,0 +1,168 @@
+module il-circuit-court-criminal.criminal
+
+// Criminal cases in the Illinois circuit courts. The Code of Criminal
+// Procedure of 1963 (725 ILCS 5/) and Supreme Court Rules Articles IV and
+// VI are CURRENCY UNCONFIRMED (sources/il-criminal-trial-court/
+// PROVENANCE.md), so they are cited for the structure of each step and no
+// period, limit or amount is taken from them: where a step has one, the
+// note names the section or rule that sets it and says that it is not
+// stated. The Supreme Court Rules supersede and replace Articles 120 and
+// 121 of the Code on review, except Sections 121-1 and 121-13 (Ill. S. Ct.
+// R. 601). Sentencing under the Unified Code of Corrections
+// (730 ILCS 5/) is not vendored. Outcomes are from the defendant's side.
+// The earlier outline's leading decisions (County of Riverside v.
+// McLaughlin, Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland,
+// Mapp v. Ohio, Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye,
+// Jackson v. Virginia, Ramos v. Louisiana, Apprendi v. New Jersey, Roe v.
+// Flores-Ortega, Garza v. Idaho) are removed: no reporter text is
+// vendored.
+start arrested
+
+state arrested: "Arrest and first appearance" by applicant cite "725 ILCS 5/109-1(a)"
+{
+  note "A person arrested with or without a warrant is taken without unnecessary delay before the nearest and most accessible judge, and a charge is filed (725 ILCS 5/109-1(a)); the outer limit that section sets for a regional jail authority's county, and the arrest provisions of Article 107, are not stated here (currency unconfirmed). The appearance may be by two-way audio-visual communication where the section allows it."
+  edge-arrested-appearance "First appearance; pretrial release determined" -> pretrial-release {
+    authority cite "725 ILCS 5/109-1(a)"
+  }
+}
+
+decision pretrial-release: "Pretrial release or denial" by court cite "725 ILCS 5/110-2(a)"
+{
+  note "All persons charged with an offense are eligible for pretrial release; release on personal recognizance on conditions is presumed, and release may be denied only for an offense listed in Section 110-6.1 after a hearing under that section (725 ILCS 5/110-2(a)). Denial follows the State's verified petition and a hearing at which the court finds the grounds Section 110-6.1(a) lists; the timing of the petition and hearing, the State's burden and the review periods are set by Section 110-6.1 and are not stated here (currency unconfirmed). Counsel and the waiver of counsel are governed by Ill. S. Ct. R. 401."
+  edge-pretrial-release-denied "Pretrial release denied after a hearing" -> probable-cause {
+    authority cite "725 ILCS 5/110-6.1(a)"
+  }
+  edge-pretrial-release-released "Released on conditions" -> probable-cause {
+    authority cite "725 ILCS 5/110-2(a)"
+  }
+}
+
+decision probable-cause: "Preliminary examination or indictment" by court cite "725 ILCS 5/109-3.1(b)"
+{
+  note "A person charged with a felony receives either a preliminary examination under Section 109-3 or an indictment by grand jury under Section 111-2 within the periods Section 109-3.1(b) sets for a person in custody and for a person released pretrial, which are not stated here (currency unconfirmed). At the examination the judge holds the defendant to answer if there is probable cause to believe a felony was committed by the defendant, and otherwise discharges the defendant (725 ILCS 5/109-3(a), (b)). A felony may be prosecuted by information only after a preliminary hearing held or waived with probable cause found; other offenses may be prosecuted by indictment, information or complaint (725 ILCS 5/111-2(a), (b))."
+  edge-probable-cause-charged "Held to answer; information or indictment filed" -> charged {
+    authority cite "725 ILCS 5/111-2(a)"
+  }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite "725 ILCS 5/109-3(b)"
+  }
+}
+
+state charged: "Information or indictment" by office cite "725 ILCS 5/111-2"
+{
+  note "All prosecutions of felonies are by information or indictment (725 ILCS 5/111-2(a)); the grand jury is governed by Article 112. The speedy-trial statute runs from custody for a person in custody and from the trial demand for a person on pretrial release or recognizance; its periods are set by 725 ILCS 5/103-5(a) and (b) and are not stated here (currency unconfirmed). Delay is agreed to by a defendant in custody unless the defendant objects by a written or oral demand for trial on the record (725 ILCS 5/103-5(a))."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite "725 ILCS 5/113-1"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "725 ILCS 5/113-1"
+{
+  note "Before trial the defendant is called into open court, informed of the charge and called upon to plead; on request the formal charge is read, and the arraignment is entered of record (725 ILCS 5/113-1). Discovery is governed by Supreme Court Rules 411 to 417: on defense counsel's written motion the State discloses the witnesses, statements and other material Rule 412(a) lists, and the defense discloses under Rule 413; the times Rule 415 regulates are not stated here (currency unconfirmed)."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "Ill. S. Ct. R. 412(a)"
+  }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "725 ILCS 5/114-1(a)"
+{
+  note "On the defendant's written motion before trial, before or after a plea, the court may dismiss the charge on the grounds Section 114-1(a) lists, among them that the defendant has not been tried in compliance with Section 103-5, that the prosecution is time-barred, immunity, and grand jury defects (725 ILCS 5/114-1(a)). Other pretrial motions (continuances, substitution of judge, suppression) are in Article 114."
+  edge-discovery-motions "Motion to dismiss or other pretrial motion" -> motions-ruling {
+    authority cite "725 ILCS 5/114-1(a)"
+  }
+  edge-discovery-speedy "Speedy-trial term expired" -> motions-ruling {
+    authority cite "725 ILCS 5/103-5(d)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "Ill. S. Ct. R. 402"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "725 ILCS 5/114-1(a)"
+{
+  note "Every person not tried within the Section 103-5 periods is discharged from custody or released from the obligations of pretrial release or recognizance (725 ILCS 5/103-5(d)), and the failure is a ground for dismissing the charge on motion (725 ILCS 5/114-1(a)(1)). The State may appeal an order whose substantive effect dismisses a charge on a Section 114-1 ground or suppresses evidence (Ill. S. Ct. R. 604(a)(1))."
+  edge-motions-ruling-speedy "Not tried in time: charge dismissed" -> dismissed {
+    authority cite "725 ILCS 5/114-1(a)"
+  }
+  edge-motions-ruling-dismissed "Charge dismissed on another ground" -> dismissed {
+    authority cite "725 ILCS 5/114-1(a)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "725 ILCS 5/114-1(a)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Ill. S. Ct. R. 402(a)"
+{
+  note "The court does not accept a plea of guilty, or a stipulation that the evidence is sufficient to convict, without first addressing the defendant personally in open court and determining that the defendant understands the nature of the charge, the sentencing range, and the rights waived, and that the plea is voluntary and has a factual basis (Ill. S. Ct. R. 402). All prosecutions except on a plea of guilty or guilty but mentally ill are tried by the court and a jury unless the defendant waives a jury in writing (725 ILCS 5/115-1)."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "Ill. S. Ct. R. 402(a)"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "725 ILCS 5/115-1"
+  }
+}
+
+decision trial: "Verdict" by court cite "725 ILCS 5/115-1"
+{
+  note "Trial is by the court and a jury unless the defendant waives the jury in writing (725 ILCS 5/115-1). Voir dire, jury selection and instructions follow Ill. S. Ct. R. 431, 434 and 451."
+  edge-trial-acquittal "Not guilty" -> acquitted {
+    authority cite "725 ILCS 5/115-1"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "725 ILCS 5/116-1(a)"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "725 ILCS 5/116-1"
+{
+  note "Following a verdict or finding of guilty the court may grant a new trial on the defendant's written motion specifying its grounds, with reasonable notice to the State (725 ILCS 5/116-1); a written motion in arrest of judgment lies where the charge states no offense or the court lacks jurisdiction (725 ILCS 5/116-2). The periods for both motions, set by Sections 116-1(b) and 116-2(a), are not stated here (currency unconfirmed)."
+  edge-post-trial-arrest "Judgment arrested" -> dismissed {
+    authority cite "725 ILCS 5/116-2(b)"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "725 ILCS 5/116-1(a)"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "725 ILCS 5/116-1(a)"
+  }
+}
+
+state sentencing: "Sentencing" by court cite ?("730 ILCS 5/5-4-1 (sentencing hearing; Unified Code of Corrections not vendored)")
+{
+  note "Sentencing, the presentence report and the sentencing ranges are governed by the Unified Code of Corrections (730 ILCS 5/), which is not vendored. The sentencing order is prepared under Ill. S. Ct. R. 452. At sentence after a plea of not guilty the court advises the defendant of the right to appeal and to appointed counsel and a transcript (Ill. S. Ct. R. 605(a)); after a guilty plea, of the motion Rule 604(d) requires before an appeal (Ill. S. Ct. R. 605(b), (c))."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "Ill. S. Ct. R. 605(a)"
+  }
+}
+
+decision judgment: "Judgment and appeal" by applicant cite "Ill. S. Ct. R. 606(b)"
+{
+  note "An appeal is perfected by filing a notice of appeal with the trial court clerk; the clerk files one for an unrepresented defendant who asks in open court or in writing (Ill. S. Ct. R. 606(a)). The notice is due within the period Rule 606(b) sets after the entry of the final judgment or, after a timely motion directed against the judgment, after the order disposing of it, and a premature notice is treated as filed on entry; the period is not stated here (currency unconfirmed). After a judgment on a plea of guilty no appeal lies unless the defendant first files in the trial court a motion to reconsider the sentence or to withdraw the plea and vacate the judgment within the period Rule 604(d) sets, which is not stated here (currency unconfirmed). lit/core has no counting rule for Illinois."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Ill. S. Ct. R. 606(a)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final {
+    authority cite "Ill. S. Ct. R. 606(b)"
+  }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "725 ILCS 5/115-1"
+{
+  note "Outcome from the defendant's side: a verdict or finding of not guilty."
+}
+
+terminal dismissed: "Charges dismissed or defendant discharged" outcome [win, dismissal] cite "725 ILCS 5/114-1(a)"
+{
+  note "Outcome from the defendant's side. Whether a dismissal bars a new prosecution depends on its ground (725 ILCS 5/114-1); the provisions on refiling are not stated here (currency unconfirmed)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Ill. S. Ct. R. 603"
+{
+  note "An appeal in a criminal case in which a statute of the United States or of Illinois has been held invalid lies directly to the Supreme Court as of right; all other criminal appeals are taken to the Appellate Court (Ill. S. Ct. R. 603). The appeal proceeds under Rules 606 to 615 (sources/il-criminal-trial-court/)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "725 ILCS 5/122-1(a)"
+{
+  note "Outcome from the defendant's side. A person imprisoned in the penitentiary may petition under the Post-Conviction Hearing Act asserting a substantial denial of constitutional rights in the proceedings that resulted in the conviction (725 ILCS 5/122-1(a)); its filing periods are not stated here (currency unconfirmed). Federal habeas belongs to lit/habeas."
+}

@@ -77,20 +77,15 @@ path_sha256 = "5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8"
 cite_prefixes = ["28 USC", "28 U.S.C."]
 section_heading = "28 U.S.C. § {n}"
 
+# The TBMP sections the graph cites, each with its numbered subsections
+# (§ 309.03 without (a)-(c), the pleading grounds it does not cite), cited
+# `TBMP § N` or `TBMP N`.
 [sources.tbmp]
-title = "TTAB Manual of Procedure (TBMP), June 2026"
-url = "https://tbmp.uspto.gov/RDMS/TBMP/current"
-sha256 = "015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e"
-as_of = "2026-06-30"
-
-# The TBMP sections vendored so far, cited `TBMP § N`; a `TBMP N` cite
-# names the unvendored manual above.
-[sources.tbmp-vendored]
-title = "TTAB Manual of Procedure (TBMP), June 2026, §§ 112, 113.05 and 509"
+title = "TTAB Manual of Procedure (TBMP), June 2026, §§ 112, 113.05, 207.03, 212, 309.03, 309.03(d), 310.03, 310.03(a), 311, 312, 313.02, 401.01, 401.02, 509, 528.05, 528.05(a), 528.05(a)(2), 602.01, 605, 702.01, 702.04, 801, 901.01 and 902.02"
 url = "https://www.uspto.gov/sites/default/files/documents/tbmp-Master-June2026.pdf"
 path = "sources/tbmp.txt"
-path_sha256 = "39df33edc821a318331129cdc6730ac961cd962d7d3f3f1c758309465eb21d86"
-cite_prefixes = ["TBMP §"]
+path_sha256 = "322faf8011de80f6cfde7139ba5366d9c24d5fed71fe1867a0c6d249b8263ec2"
+cite_prefixes = ["TBMP §", "TBMP"]
 section_heading = "TBMP § {n}"
 sha256 = "015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e"
 as_of = "2026-06-30"

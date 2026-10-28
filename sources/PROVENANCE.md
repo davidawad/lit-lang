@@ -915,29 +915,36 @@ Entries live in the forum's own
 - sha256 (this file): `9ea6b13b33cf0bb61a2a1ea337097c0981665d4d30a045fece2a77324dae6c4c`
 - Original: `original/usc-15-lanham.pdf` as served (sha256 58805be56f2dec79c4220800fb4c6d4207a17fc4dd3277bd44b859ec7e3b2830); extraction sha256 9ea6b13b33cf0bb61a2a1ea337097c0981665d4d30a045fece2a77324dae6c4c. Served at https://www.uspto.gov/sites/default/files/documents/tmlaw.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 
-### `tbmp.txt` — Trademark Trial and Appeal Board Manual of Procedure §§ 112, 113.05 and 509 (June 2026)
+### `tbmp.txt` — Trademark Trial and Appeal Board Manual of Procedure, the sections the TTAB package cites (June 2026)
 
-- The TBMP sections the TTAB package's chained briefing periods (§ 112:
-  a period running from a prior due date counts from "the actual due date
-  ..., not the adjusted date under 37 C.F.R. § 2.196") and its service rule
-  (§ 113.05: no added time after service by mail) cite, and § 509 (motions
-  to extend or reopen time, 509 through 509.02: FRCP 6(b) "made applicable
-  to Board proceedings by 37 C.F.R. § 2.116(a)"), which the answer-time
-  extension cites as practice guidance, one `## TBMP § N` section each
-  (each numbered subsection its own), the section's own heading as its
-  first line. § 509 opens with the rule texts the manual reprints (FRCP
-  6(b), 37 C.F.R. §§ 2.120(a), 2.121, 2.127(a)), kept as printed.
+- The TBMP sections the TTAB package cites, `TBMP § N` or `TBMP N`: § 112
+  (a period running from a prior due date counts from "the actual due date
+  ..., not the adjusted date under 37 C.F.R. § 2.196"), § 113.05 (no added
+  time after service by mail), § 509 (motions to extend or reopen time:
+  FRCP 6(b) "made applicable to Board proceedings by 37 C.F.R. § 2.116(a)"),
+  and the practice the opposition graph cites: §§ 207.03, 212, 309.03,
+  309.03(d), 310.03, 310.03(a), 311, 312, 313.02, 401.01, 401.02, 528.05,
+  528.05(a), 528.05(a)(2), 602.01, 605, 702.01, 702.04, 801, 901.01 and
+  902.02. Each cited section is cut with its numbered subsections, except
+  § 309.03, whose subsections (a)-(c) (the pleading grounds, which the
+  graph does not cite) are left out, and §§ 310.03 and 528.05, kept for
+  their headings only. One `## TBMP § N` section each (each numbered
+  subsection its own), the section's own heading as its first line;
+  § 528.05(a) bears no title in the manual, so its heading line is the bare
+  number. Sections that open with the rule texts the manual reprints keep
+  them as printed.
 - Fetched 2026-10-23 from
   `www.uspto.gov/sites/default/files/documents/tbmp-Master-June2026.pdf`
   (sha256 `015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e`,
   the digest `lit/ttab/Lit.toml` records for its `tbmp` source),
   `pdftotext` (no `-layout`); running page headers and page numbers
-  removed and each section's NOTES (its footnoted authorities) omitted. No
-  wording changed. The TBMP binds no one: it restates the Board's practice
-  under 37 C.F.R. Part 2. § 509 was cut the same way on 2026-10-24 from
-  the same PDF (digest checked again), with form feeds dropped.
-- sha256 (this file): `39df33edc821a318331129cdc6730ac961cd962d7d3f3f1c758309465eb21d86`
-- Original: `original/tbmp.pdf` as served (sha256 015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e); extraction sha256 39df33edc821a318331129cdc6730ac961cd962d7d3f3f1c758309465eb21d86. Served at https://www.uspto.gov/sites/default/files/documents/tbmp-Master-June2026.pdf; retrieved 2026-10-23 (fetched as recorded above).
+  removed, form feeds dropped and each section's NOTES (its footnoted
+  authorities) omitted. No wording changed. The TBMP binds no one: it
+  restates the Board's practice under 37 C.F.R. Part 2. § 509 was cut the
+  same way on 2026-10-24, and the remaining sections on 2026-10-28, from the
+  same PDF (digest checked again).
+- sha256 (this file): `322faf8011de80f6cfde7139ba5366d9c24d5fed71fe1867a0c6d249b8263ec2`
+- Original: `original/tbmp.pdf` as served (sha256 015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e); extraction sha256 322faf8011de80f6cfde7139ba5366d9c24d5fed71fe1867a0c6d249b8263ec2. Served at https://www.uspto.gov/sites/default/files/documents/tbmp-Master-June2026.pdf; retrieved 2026-10-23 (fetched as recorded above).
 
 ### `fr-uspto-90-3-history.txt` — 37 C.F.R. § 90.3 as added in 2012 (77 FR 48612, 48677-48678)
 

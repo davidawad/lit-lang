@@ -12,8 +12,11 @@ startNodeId `published`. 60 nodes / 111 edges / 13 terminals / 5 sources.
   2.136, 2.145(d)-(e), 2.196. Vendored as `sources/cfr-37-part2.txt`.
 - Lanham Act (USPTO compilation 2026-07-15): 15 USC 1051(d), 1052(d), 1063,
   1064, 1068, 1071, 1114, 1117(a). Vendored as `sources/usc-15-lanham.txt`.
-- TBMP June 2026 (not vendored; 6.9 MB): 207.03, 310.03(a) (answer 40 days,
-  practice changing to 60), 313.02, 602.01, 605.02, 702.04, 902.02.
+- TBMP June 2026: the sections the graph cites, 207.03, 212, 309.03,
+  309.03(d), 310.03(a) (answer 40 days, practice changing to 60), 311, 312,
+  313.02, 401.01, 401.02, 528.05(a)(2), 602.01, 605, 702.01, 702.04, 801,
+  901.01, 902.02 (with 112, 113.05, 509), each with its subsections.
+  Vendored as `sources/tbmp.txt`.
 
 ## Conventions a scenario must know
 
@@ -46,4 +49,3 @@ startNodeId `published`. 60 nodes / 111 edges / 13 terminals / 5 sources.
 - Ex parte appeals, cancellation proceedings as a first-class path, concurrent
   use and Section 66(a) oppositions are not modeled (a post-registration
   cancellation appears only as a risk branch).
-- `sources/` has no TBMP text, so TBMP cites are not mechanically verified.

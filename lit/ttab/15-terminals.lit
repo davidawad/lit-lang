@@ -11,7 +11,7 @@ terminal registered: "Registration issues (opposition lapsed or defeated)" outco
   payoff 0.usd
 }
 
-terminal registration-restricted: "Restricted registration (ID narrowed by consent or Board 2.133(b))" outcome [restricted, registered] cite ?("37 CFR 2.133(b); TBMP 212") {
+terminal registration-restricted: "Restricted registration (ID narrowed by consent or Board 2.133(b))" outcome [restricted, registered] cite "37 CFR 2.133(b); TBMP 212" {
   group terminals
   note "Applicant payoff at placeholder inputs = -6,000 (rb=0, fx=-6000, sh=0); scenarios recompute it from params."
   attrs { fx: -6000, rb: 0, sfx: 0, sh: 0, sw: 0.15 }
@@ -25,7 +25,7 @@ terminal opposition-sustained: "Opposition sustained: application refused; no da
   payoff -115_000.usd
 }
 
-terminal judgment-2135: "Abandoned without consent after commencement: judgment against applicant" outcome [loss, judgment] cite ?("37 CFR 2.135; TBMP 602.01") {
+terminal judgment-2135: "Abandoned without consent after commencement: judgment against applicant" outcome [loss, judgment] cite "37 CFR 2.135; TBMP 602.01" {
   group terminals
   note "Applicant payoff at placeholder inputs = -115,000 (rb=1, fx=-15000, sh=0); scenarios recompute it from params."
   attrs { fx: -15000, rb: 1, sfx: 10000, sh: 0, sw: 1 }
@@ -39,14 +39,14 @@ terminal rebrand-orderly: "Orderly rebrand on negotiated timetable, no cost cont
   payoff -100_000.usd
 }
 
-terminal settle-rebrand-transition: "Settlement: rebrand on a transition period with the opposer cost contribution" outcome [settlement, rebrand, cost-share] cite ?("TBMP 605.03") {
+terminal settle-rebrand-transition: "Settlement: rebrand on a transition period with the opposer cost contribution" outcome [settlement, rebrand, cost-share] cite "TBMP 605.03" {
   group terminals
   note "Applicant payoff at placeholder inputs = -70,000 (rb=1, fx=0, sh=1); scenarios recompute it from params."
   attrs { fx: 0, rb: 1, sfx: 0, sh: 1, sw: 1 }
   payoff -70_000.usd
 }
 
-terminal settle-coexistence: "Settlement: coexistence agreement; registration proceeds" outcome [settlement, coexistence, registered] cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)") {
+terminal settle-coexistence: "Settlement: coexistence agreement; registration proceeds" outcome [settlement, coexistence, registered] cite "TBMP 605.03; TMEP 1207.01(d)(viii)" {
   group terminals
   note "Applicant payoff at placeholder inputs = -10,000 (rb=0, fx=-10000, sh=0); scenarios recompute it from params."
   attrs { fx: -10000, rb: 0, sfx: 0, sh: 0, sw: 0.15 }

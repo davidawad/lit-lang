@@ -37,7 +37,7 @@ state opposition-filed: "Notice of opposition filed (commenced)" by board cite "
   }
 }
 
-decision instituted: "Board institutes; answer due on the date the notice of institution designates" by applicant cite ?("37 CFR 2.105(a); 2.106(a); TBMP 310.03(a)") {
+decision instituted: "Board institutes; answer due on the date the notice of institution designates" by applicant cite "37 CFR 2.105(a); 2.106(a); TBMP 310.03(a)" {
   group opposition
   answer-plain "File answer (denials, crowded-field amplification), no counterclaim" -> answered {
     authority cite "37 CFR 2.106(b)(1)-(2)"
@@ -48,7 +48,7 @@ decision instituted: "Board institutes; answer due on the date the notice of ins
     tags [answer-plain]
   }
   answer-s18 "File answer WITH Section 18 restriction counterclaim against the opposer's pleaded registration ($600/class)" -> answered {
-    authority cite ?("37 CFR 2.106(b)(3); 2.133(d); 15 USC 1068; 37 CFR 2.6(a)(16)(ii); TBMP 313.02, 309.03(d)")
+    authority cite "37 CFR 2.106(b)(3); 2.133(d); 15 USC 1068; 37 CFR 2.6(a)(16)(ii); TBMP 313.02, 309.03(d)"
     effort 33.hours
     cost 600.usd
     event AnswerFiled(WithCounterclaim)
@@ -65,14 +65,14 @@ decision instituted: "Board institutes; answer due on the date the notice of ins
     tags [waiver-trap]
   }
   edge-07-opposition-to-trial-judgment-2135-1 "Abandon application without opposer's consent (judgment)" -> judgment-2135 {
-    authority cite ?("37 CFR 2.135; TBMP 602.01")
+    authority cite "37 CFR 2.135; TBMP 602.01"
     effort 1.hours
     valence bad
     tags [abandon-no-consent]
     attrs { opp_hours: 1 }
   }
   edge-07-opposition-to-trial-talks-instituted-1 "Suspend for settlement negotiations (stipulated, up to 6 months)" -> talks-instituted {
-    authority cite ?("37 CFR 2.117(c); TBMP 605.02")
+    authority cite "37 CFR 2.117(c); TBMP 605.02"
     effort 15.hours
     duration { min 45.days, mode 90.days, max 180.days }
     tags [suspend-settle]
@@ -86,7 +86,7 @@ chance notice-of-default: "Notice of default for no answer: applicant must show 
 {
   group opposition
   edge-07-opposition-to-trial-answered-1 "Default set aside for good cause; answer filed" -> answered p 0.7 {
-    authority cite ?("FRCP 55(c) via 37 CFR 2.116(a); TBMP 312")
+    authority cite "FRCP 55(c) via 37 CFR 2.116(a); TBMP 312"
     effort 12.hours
     note "Teaching estimate. Board applies liberal good-cause standard for setting aside default; first-time pro-se-adjacent applicant, short delay. No data point in the KB; treat as an assumption."
   }
@@ -96,23 +96,23 @@ chance notice-of-default: "Notice of default for no answer: applicant must show 
   }
 }
 
-decision answered: "Answer on file; exits and next stage" by applicant cite ?("37 CFR 2.106(b); TBMP 311") {
+decision answered: "Answer on file; exits and next stage" by applicant cite "37 CFR 2.106(b); TBMP 311" {
   group opposition
   edge-07-opposition-to-trial-judgment-2135-2 "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
-    authority cite ?("37 CFR 2.135; TBMP 602.01")
+    authority cite "37 CFR 2.135; TBMP 602.01"
     effort 1.hours
     valence bad
     tags [abandon-no-consent]
     attrs { opp_hours: 1 }
   }
   edge-07-opposition-to-trial-opposer-consent-decision-1 "Seek opposer's written consent to abandonment" -> opposer-consent-decision {
-    authority cite ?("37 CFR 2.135; TBMP 602.01")
+    authority cite "37 CFR 2.135; TBMP 602.01"
     effort 3.hours
     tags [abandon-with-consent]
     attrs { opp_hours: 2 }
   }
   edge-07-opposition-to-trial-talks-answered-1 "Suspend for settlement negotiations" -> talks-answered {
-    authority cite ?("37 CFR 2.117(c); TBMP 605.02")
+    authority cite "37 CFR 2.117(c); TBMP 605.02"
     effort 15.hours
     duration { min 45.days, mode 90.days, max 180.days }
     tags [suspend-settle]
@@ -121,7 +121,7 @@ decision answered: "Answer on file; exits and next stage" by applicant cite ?("3
     forbids [talked]
   }
   edge-07-opposition-to-trial-discovery-conference-1 "Proceed to discovery conference (30 days after answer due)" -> discovery-conference {
-    authority cite ?("37 CFR 2.120(a)(2)(i); TBMP 401.01")
+    authority cite "37 CFR 2.120(a)(2)(i); TBMP 401.01"
     effort 5.hours
     duration { min 30.days, mode 30.days, max 45.days }
     tags [continue]
@@ -129,16 +129,16 @@ decision answered: "Answer on file; exits and next stage" by applicant cite ?("3
   }
 }
 
-chance talks-instituted: "Suspended for settlement after institution" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+chance talks-instituted: "Suspended for settlement after institution" by board cite "37 CFR 2.117(c); TBMP 605.02" {
   group opposition
   tags [negotiation]
   edge-07-opposition-to-trial-settle-rebrand-transition-1 "Settlement: rebrand on transition period, cost contribution" -> settle-rebrand-transition p 0.3 {
-    authority cite ?("TBMP 605.03")
+    authority cite "TBMP 605.03"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
   edge-07-opposition-to-trial-settle-coexistence-1 "Settlement: coexistence agreement" -> settle-coexistence p 0.25 {
-    authority cite ?("TBMP 605.03")
+    authority cite "TBMP 605.03"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
@@ -148,7 +148,7 @@ chance talks-instituted: "Suspended for settlement after institution" by board c
     tags [deal, inproc]
   }
   edge-07-opposition-to-trial-answered-2 "Talks fail; proceedings resume" -> answered p 0.35 {
-    authority cite ?("TBMP 605.02")
+    authority cite "TBMP 605.02"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [no-deal, inproc]
   }
@@ -169,16 +169,16 @@ decision opposer-consent-decision: "Opposer decides whether to consent to abando
   }
 }
 
-chance talks-answered: "Suspended for settlement after answer" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+chance talks-answered: "Suspended for settlement after answer" by board cite "37 CFR 2.117(c); TBMP 605.02" {
   group opposition
   tags [negotiation]
   edge-07-opposition-to-trial-settle-rebrand-transition-2 "Settlement: rebrand on transition period, cost contribution" -> settle-rebrand-transition p 0.3 {
-    authority cite ?("TBMP 605.03")
+    authority cite "TBMP 605.03"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
   edge-07-opposition-to-trial-settle-coexistence-2 "Settlement: coexistence agreement" -> settle-coexistence p 0.25 {
-    authority cite ?("TBMP 605.03")
+    authority cite "TBMP 605.03"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
@@ -188,7 +188,7 @@ chance talks-answered: "Suspended for settlement after answer" by board cite ?("
     tags [deal, inproc]
   }
   edge-07-opposition-to-trial-discovery-conference-2 "Talks fail; proceedings resume" -> discovery-conference p 0.35 {
-    authority cite ?("TBMP 605.02")
+    authority cite "TBMP 605.02"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [no-deal, inproc]
   }
@@ -206,7 +206,7 @@ state discovery-conference: "Discovery conference held (Board attorney on reques
   }
 }
 
-state initial-disclosures: "Initial disclosures served (30 days after discovery opens)" by board cite ?("37 CFR 2.120(a)(2)(ii); TBMP 401.02") {
+state initial-disclosures: "Initial disclosures served (30 days after discovery opens)" by board cite "37 CFR 2.120(a)(2)(ii); TBMP 401.02" {
   group discovery
   edge-07-opposition-to-trial-discovery-open-1 "Discovery period opens" -> discovery-open {
     authority cite "37 CFR 2.120(a)(2)(i)"
@@ -218,20 +218,20 @@ decision discovery-open: "Discovery open (180 days)" by applicant cite "37 CFR 2
 {
   group discovery
   edge-07-opposition-to-trial-judgment-2135-4 "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
-    authority cite ?("37 CFR 2.135; TBMP 602.01")
+    authority cite "37 CFR 2.135; TBMP 602.01"
     effort 1.hours
     valence bad
     tags [abandon-no-consent]
     attrs { opp_hours: 1 }
   }
   edge-07-opposition-to-trial-opposer-consent-decision-2 "Seek opposer's written consent to abandonment" -> opposer-consent-decision {
-    authority cite ?("37 CFR 2.135; TBMP 602.01")
+    authority cite "37 CFR 2.135; TBMP 602.01"
     effort 3.hours
     tags [abandon-with-consent]
     attrs { opp_hours: 2 }
   }
   edge-07-opposition-to-trial-talks-discovery-1 "Suspend for settlement negotiations" -> talks-discovery {
-    authority cite ?("37 CFR 2.117(c); TBMP 605.02")
+    authority cite "37 CFR 2.117(c); TBMP 605.02"
     effort 15.hours
     duration { min 45.days, mode 90.days, max 180.days }
     tags [suspend-settle]
@@ -249,23 +249,23 @@ decision discovery-open: "Discovery open (180 days)" by applicant cite "37 CFR 2
   }
 }
 
-decision discovery-closed: "Discovery closed; ACR/trial/settlement decision" by applicant cite ?("37 CFR 2.121(a); TBMP 702.04") {
+decision discovery-closed: "Discovery closed; ACR/trial/settlement decision" by applicant cite "37 CFR 2.121(a); TBMP 702.04" {
   group discovery
   edge-07-opposition-to-trial-judgment-2135-5 "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
-    authority cite ?("37 CFR 2.135; TBMP 602.01")
+    authority cite "37 CFR 2.135; TBMP 602.01"
     effort 1.hours
     valence bad
     tags [abandon-no-consent]
     attrs { opp_hours: 1 }
   }
   edge-07-opposition-to-trial-opposer-consent-decision-3 "Seek opposer's written consent to abandonment" -> opposer-consent-decision {
-    authority cite ?("37 CFR 2.135; TBMP 602.01")
+    authority cite "37 CFR 2.135; TBMP 602.01"
     effort 3.hours
     tags [abandon-with-consent]
     attrs { opp_hours: 2 }
   }
   edge-07-opposition-to-trial-talks-trial-1 "Suspend for settlement negotiations" -> talks-trial {
-    authority cite ?("37 CFR 2.117(c); TBMP 605.02")
+    authority cite "37 CFR 2.117(c); TBMP 605.02"
     effort 15.hours
     duration { min 45.days, mode 90.days, max 180.days }
     tags [suspend-settle]
@@ -274,7 +274,7 @@ decision discovery-closed: "Discovery closed; ACR/trial/settlement decision" by 
     forbids [talked]
   }
   edge-07-opposition-to-trial-acr-record-1 "Propose ACR (stipulate to record and expedited decision)" -> acr-record {
-    authority cite ?("TBMP 702.04; 37 CFR 2.120(a)(2)(iv)")
+    authority cite "TBMP 702.04; 37 CFR 2.120(a)(2)(iv)"
     effort 40.hours
     duration { min 90.days, mode 150.days, max 240.days }
     note "Teaching estimate. ACR assumed to cost ~55% of full trial + briefs (hours 40 vs 65 for trial 30 + briefs 30 + prep). Evidence: ACR notice and FAQ in the KB describe stipulated records; no cost data there."
@@ -288,16 +288,16 @@ decision discovery-closed: "Discovery closed; ACR/trial/settlement decision" by 
   }
 }
 
-chance talks-discovery: "Suspended for settlement during discovery" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+chance talks-discovery: "Suspended for settlement during discovery" by board cite "37 CFR 2.117(c); TBMP 605.02" {
   group discovery
   tags [negotiation]
   edge-07-opposition-to-trial-settle-rebrand-transition-3 "Settlement: rebrand on transition period, cost contribution" -> settle-rebrand-transition p 0.3 {
-    authority cite ?("TBMP 605.03")
+    authority cite "TBMP 605.03"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
   edge-07-opposition-to-trial-settle-coexistence-3 "Settlement: coexistence agreement" -> settle-coexistence p 0.25 {
-    authority cite ?("TBMP 605.03")
+    authority cite "TBMP 605.03"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
@@ -307,22 +307,22 @@ chance talks-discovery: "Suspended for settlement during discovery" by board cit
     tags [deal, inproc]
   }
   edge-07-opposition-to-trial-discovery-closed-2 "Talks fail; proceedings resume" -> discovery-closed p 0.35 {
-    authority cite ?("TBMP 605.02")
+    authority cite "TBMP 605.02"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [no-deal, inproc]
   }
 }
 
-chance talks-trial: "Suspended for settlement after discovery" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+chance talks-trial: "Suspended for settlement after discovery" by board cite "37 CFR 2.117(c); TBMP 605.02" {
   group discovery
   tags [negotiation]
   edge-07-opposition-to-trial-settle-rebrand-transition-4 "Settlement: rebrand on transition period, cost contribution" -> settle-rebrand-transition p 0.3 {
-    authority cite ?("TBMP 605.03")
+    authority cite "TBMP 605.03"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
   edge-07-opposition-to-trial-settle-coexistence-4 "Settlement: coexistence agreement" -> settle-coexistence p 0.25 {
-    authority cite ?("TBMP 605.03")
+    authority cite "TBMP 605.03"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
@@ -332,22 +332,22 @@ chance talks-trial: "Suspended for settlement after discovery" by board cite ?("
     tags [deal, inproc]
   }
   edge-07-opposition-to-trial-trial-periods-2 "Talks fail; proceedings resume" -> trial-periods p 0.35 {
-    authority cite ?("TBMP 605.02")
+    authority cite "TBMP 605.02"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [no-deal, inproc]
   }
 }
 
-state acr-record: "ACR: stipulated record, Board decides on summary-judgment-style briefs" by board cite ?("TBMP 702.04; TBMP 528.05(a)(2); TTAB ACR notice (2011-12-22)") {
+state acr-record: "ACR: stipulated record, Board decides on summary-judgment-style briefs" by board cite "TBMP 702.04; TBMP 528.05(a)(2); TTAB ACR notice (2011-12-22)" {
   group trial
   note "Accelerated Case Resolution. Cost saving is an assumption (see edge)."
   edge-07-opposition-to-trial-final-decision-1 "Board decides on the ACR record" -> final-decision {
-    authority cite ?("TBMP 702.04")
+    authority cite "TBMP 702.04"
     duration { min 90.days, mode 120.days, max 180.days }
   }
 }
 
-state trial-periods: "Trial periods: pretrial disclosures, plaintiff 30d, defendant 30d, rebuttal 15d" by applicant cite ?("37 CFR 2.121(a)-(c); TBMP 702.01") {
+state trial-periods: "Trial periods: pretrial disclosures, plaintiff 30d, defendant 30d, rebuttal 15d" by applicant cite "37 CFR 2.121(a)-(c); TBMP 702.01" {
   group trial
   edge-07-opposition-to-trial-trial-closed-1 "Take trial testimony / notices of reliance" -> trial-closed {
     authority cite "37 CFR 2.121; 2.123; 2.125"
@@ -361,20 +361,20 @@ decision trial-closed: "Trial closed; briefing decision" by applicant cite "37 C
 {
   group trial
   edge-07-opposition-to-trial-judgment-2135-6 "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
-    authority cite ?("37 CFR 2.135; TBMP 602.01")
+    authority cite "37 CFR 2.135; TBMP 602.01"
     effort 1.hours
     valence bad
     tags [abandon-no-consent]
     attrs { opp_hours: 1 }
   }
   edge-07-opposition-to-trial-opposer-consent-decision-4 "Seek opposer's written consent to abandonment" -> opposer-consent-decision {
-    authority cite ?("37 CFR 2.135; TBMP 602.01")
+    authority cite "37 CFR 2.135; TBMP 602.01"
     effort 3.hours
     tags [abandon-with-consent]
     attrs { opp_hours: 2 }
   }
   edge-07-opposition-to-trial-talks-briefs-1 "Suspend for settlement negotiations" -> talks-briefs {
-    authority cite ?("37 CFR 2.117(c); TBMP 605.02")
+    authority cite "37 CFR 2.117(c); TBMP 605.02"
     effort 15.hours
     duration { min 45.days, mode 90.days, max 180.days }
     tags [suspend-settle]
@@ -383,7 +383,7 @@ decision trial-closed: "Trial closed; briefing decision" by applicant cite "37 C
     forbids [talked]
   }
   edge-07-opposition-to-trial-briefs-filed-1 "File briefs (55-page cap) and any oral hearing" -> briefs-filed {
-    authority cite ?("37 CFR 2.128(a)-(b); TBMP 801.02")
+    authority cite "37 CFR 2.128(a)-(b); TBMP 801.02"
     effort 30.hours
     duration { min 105.days, mode 105.days, max 150.days }
     tags [continue]
@@ -391,16 +391,16 @@ decision trial-closed: "Trial closed; briefing decision" by applicant cite "37 C
   }
 }
 
-chance talks-briefs: "Suspended for settlement before briefs" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+chance talks-briefs: "Suspended for settlement before briefs" by board cite "37 CFR 2.117(c); TBMP 605.02" {
   group trial
   tags [negotiation]
   edge-07-opposition-to-trial-settle-rebrand-transition-5 "Settlement: rebrand on transition period, cost contribution" -> settle-rebrand-transition p 0.3 {
-    authority cite ?("TBMP 605.03")
+    authority cite "TBMP 605.03"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
   edge-07-opposition-to-trial-settle-coexistence-5 "Settlement: coexistence agreement" -> settle-coexistence p 0.25 {
-    authority cite ?("TBMP 605.03")
+    authority cite "TBMP 605.03"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
@@ -410,7 +410,7 @@ chance talks-briefs: "Suspended for settlement before briefs" by board cite ?("3
     tags [deal, inproc]
   }
   edge-07-opposition-to-trial-briefs-filed-2 "Talks fail; proceedings resume" -> briefs-filed p 0.35 {
-    authority cite ?("TBMP 605.02")
+    authority cite "TBMP 605.02"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [no-deal, inproc]
   }
@@ -420,7 +420,7 @@ state briefs-filed: "Final briefs filed (plaintiff 60d, defendant +30d, reply +1
 {
   group trial
   edge-07-opposition-to-trial-final-decision-2 "Board panel decides" -> final-decision {
-    authority cite ?("37 CFR 2.129; TBMP 801")
+    authority cite "37 CFR 2.129; TBMP 801"
     duration { min 90.days, mode 120.days, max 240.days }
   }
 }

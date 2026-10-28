@@ -1,0 +1,76 @@
+# The Rules of the United States Bankruptcy Appellate Panel of the Ninth
+# Circuit over lit/frbp (FRBP 8026; 9th Cir. BAP R. Preamble): it declares
+# only the periods and the limit the panel's own rules state and
+# re-encodes no FRBP period (notice, election, record, briefing,
+# rehearing and the direct-review periods are lit/frbp's; 28 U.S.C.
+# § 158(c)(1) election is lit/frbp's too). The rules are those adopted
+# February 24, 2000, as revised June 15, 2015, the latest revision the
+# panel's site lists (sources/fed-ca9-bap/PROVENANCE.md); no later order
+# amends them, so the revision is the only layer. The package is in force
+# from the FRBP December 1, 2025 edition it composes with, a lower bound:
+# a query before then is a hole in the corpus. Each period is counted
+# under FRBP 9006(a), the FRCP 6(a) method (core's frcp6). Like lit/bap8 it
+# is a base package, not a `kind = "local-rule"` layer: lit/core has no
+# bankruptcy forum family.
+[package]
+name = "ninth-circuit-bankruptcy-appellate-panel"
+version = "0.1.0"
+language = 1
+pack_id = "ninth-circuit-bankruptcy-appellate-panel"
+forum = "bap9"
+authority = "FederalRule"
+title = "Ninth Circuit Bankruptcy Appellate Panel Procedure"
+description = "Appeals before the Bankruptcy Appellate Panel of the Ninth Circuit under the current Federal Rules of Bankruptcy Procedure (lit/frbp) and the panel's rules: the order attached to the notice, district court election and transfer, the excerpts of the record, fax filing, clerk orders and their review, brief extensions and dismissal for failure to prosecute, oral argument, en banc hearing, disposition and publication, rehearing and further review in the Ninth Circuit."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "Bankruptcy Appellate Panel of the Ninth Circuit"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+appellee = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods themselves (Part 8 appeal periods); this package layers the panel's rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.bap9-rules]
+title = "Rules of the United States Bankruptcy Appellate Panel of the Ninth Circuit, adopted February 24, 2000, as revised June 15, 2015"
+url = "https://cdn.ca9.uscourts.gov/datastore/bap/2015/06/18/baprules.pdf"
+path = "sources/fed-ca9-bap/bap-rules-sectioned.txt"
+path_sha256 = "b5aec944ffeb327f606162ed9bc35cb452019b03e27ee87d7d1e19d27fa5ac6c"
+sha256 = "5981518c291767df123476c621db8286c0443438c773e77b65277c17ba17a9e7"
+as_of = "2015-06-15"
+cite_prefixes = ["9th Cir. BAP R."]
+section_heading = "9th Cir. BAP R. {n}"
+
+[sources.frbp]
+title = "Federal Rules of Bankruptcy Procedure, December 1, 2025 edition"
+url = "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf"
+path = "sources/frbp.txt"
+path_sha256 = "0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8"
+as_of = "2025-12-01"
+cite_prefixes = ["FRBP"]
+section_heading = "FRBP {n}"
+
+[sources.frap]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+path_sha256 = "b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172"
+as_of = "2024-12-01"
+cite_prefixes = ["FRAP"]
+section_heading = "FRAP {n}"
+
+[sources.usc28-158]
+title = "28 U.S.C. § 158, current preliminary edition"
+url = "https://uscode.house.gov/us/usc/119-118/t28/s158/"
+path = "sources/usc-28-158.txt"
+path_sha256 = "a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+as_of = "2026-10-07"

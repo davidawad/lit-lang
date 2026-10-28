@@ -1,0 +1,278 @@
+module bap9.panel
+
+import core.frcp6.{ frcp6 }
+
+import frbp.appeals.{
+  appellant-brief-period,
+  appellant-designation-period,
+  appellant-election-period,
+  notice-period,
+  other-party-election-period,
+  rehearing-period,
+}
+
+// The Ninth Circuit BAP's own periods, counted under FRBP 9006(a). The
+// FRBP and 28 U.S.C. § 158(c)(1) periods (notice, election, record,
+// transcript, briefing, motions, costs, rehearing, direct certification)
+// are lit/frbp's and are not declared again. Where Part VIII of the FRBP
+// and these rules are silent, the panel may apply the Ninth Circuit Rules
+// and the FRAP (9th Cir. BAP R. 8026-1); that fallback is not encoded.
+//
+// Stated in the rules but not declared: the en banc motion is due "not
+// later than the date set for the filing of that party's opening brief"
+// (8019-2(b)(1)), a date the briefing order sets, not a period; once
+// argument is calendared a continuance is granted only in exceptional
+// circumstances (8019-1). The rules' explanatory notes cite decisions
+// (In re McCarthy, 230 B.R. 414; In re Friedman, 126 B.R. 63; In re
+// Kritt, 190 B.R. 382; N/S Corp. v. Liberty Mutual, 127 F.3d 1145; Nken
+// v. Holder, 556 U.S. 418); the notes are the panel's commentary, the
+// decisions are not vendored, and they are not cited here. The outline
+// named no leading decision.
+/// A motion or response on an en banc request, with its supporting brief
+/// (9th Cir. BAP R. 8019-2(b)(3)).
+limit en-banc-papers {
+  pages <= 15 cite "9th Cir. BAP R. 8019-2(b)(3)"
+} cite "9th Cir. BAP R. 8019-2(b)(3)"
+
+/// A document is transmitted to the BAP by fax with the BAP Clerk's prior
+/// permission in an emergency (9th Cir. BAP R. 8011(a)-2).
+event FaxFilingTransmitted()
+/// The BAP Clerk enters an order on a motion under delegated authority
+/// (9th Cir. BAP R. 8013(e)-1).
+event ClerkMotionOrderEntered()
+/// The BAP Clerk, after notice, enters an order dismissing the appeal for
+/// failure to file a timely opening brief or to comply with rules or
+/// orders (9th Cir. BAP R. 8018(a)-2).
+event ClerkDismissalOrderEntered()
+/// A party's motion for en banc hearing and decision is filed (9th Cir.
+/// BAP R. 8019-2(b)(1)).
+event EnBancMotionFiled() paper en-banc-papers
+/// The Clerk initially polls the eligible regular members of the Panel on
+/// a timely en banc request (9th Cir. BAP R. 8019-2(d)(1)).
+event EnBancPollInitiated()
+/// A disposition of the appeal is filed with the Clerk (9th Cir. BAP R.
+/// 8024-1(b)(3)(A)).
+event DispositionFiled()
+/// A disposition designated a Memorandum or Order is filed (9th Cir. BAP
+/// R. 8024-1(b)(3)(B)).
+event MemorandumOrOrderFiled()
+
+/// 9th Cir. BAP R. 8011(a)-2: within three days after a fax transmittal,
+/// the filing party files a signed original with the BAP.
+deadline fax-original-period: 3.days after FaxFilingTransmitted() counted_by frcp6 cite "9th Cir. BAP R. 8011(a)-2"
+{
+  forum frcp
+}
+
+/// 9th Cir. BAP R. 8013(e)-1: a clerk's order on a motion is subject to
+/// reconsideration by a judge if a written request for judicial review is
+/// received within 14 days of its entry.
+deadline clerk-order-review-period: 14.days after ClerkMotionOrderEntered() counted_by frcp6 cite "9th Cir. BAP R. 8013(e)-1"
+{
+  forum frcp
+}
+
+/// 9th Cir. BAP R. 8018(a)-2: the clerk's dismissal order is subject to
+/// reconsideration by the Panel if a written request for judicial review
+/// is received within 14 days of its entry.
+deadline clerk-dismissal-review-period: 14.days after ClerkDismissalOrderEntered() counted_by frcp6 cite "9th Cir. BAP R. 8018(a)-2"
+{
+  forum frcp
+}
+
+/// 9th Cir. BAP R. 8019-2(b)(2): any other party may file and serve a
+/// response to an en banc motion and brief not later than 14 days after
+/// the motion is filed; no reply is authorized.
+deadline en-banc-response-period: 14.days after EnBancMotionFiled() counted_by frcp6 cite "9th Cir. BAP R. 8019-2(b)(2)"
+{
+  forum frcp
+}
+
+/// 9th Cir. BAP R. 8019-2(d)(3): without the required affirmative vote
+/// within 14 days of the initial polling, the matter is not heard en banc.
+deadline en-banc-vote-period: 14.days after EnBancPollInitiated() counted_by frcp6 cite "9th Cir. BAP R. 8019-2(d)(3)"
+{
+  forum frcp
+}
+
+/// 9th Cir. BAP R. 8024-1(b)(3)(A): two of the three assigned judges,
+/// including the author, may designate a disposition an Opinion when it is
+/// filed or within 28 days thereof.
+deadline opinion-designation-period: 28.days after DispositionFiled() counted_by frcp6 cite "9th Cir. BAP R. 8024-1(b)(3)(A)"
+{
+  forum frcp
+}
+
+/// 9th Cir. BAP R. 8024-1(b)(3)(B): a request that a Memorandum or Order
+/// be redesignated an Opinion and published must be received no later
+/// than 28 days after its filing.
+deadline publication-request-period: 28.days after MemorandumOrOrderFiled() counted_by frcp6 cite "9th Cir. BAP R. 8024-1(b)(3)(B)"
+{
+  forum frcp
+}
+
+test "a signed original follows a fax filing within three days" cite "9th Cir. BAP R. 8011(a)-2"
+{
+  given FaxFilingTransmitted() on 2026-03-03
+  expect deadline(fax-original-period) == 2026-03-06
+}
+
+test "review of a clerk's motion order is requested within 14 days" cite "9th Cir. BAP R. 8013(e)-1"
+{
+  given ClerkMotionOrderEntered() on 2026-03-03
+  expect deadline(clerk-order-review-period) == 2026-03-17
+}
+
+test "review of a clerk's dismissal order is requested within 14 days" cite "9th Cir. BAP R. 8018(a)-2"
+{
+  given ClerkDismissalOrderEntered() on 2026-03-03
+  expect deadline(clerk-dismissal-review-period) == 2026-03-17
+}
+
+test "a response to an en banc motion is due 14 days after filing" cite "9th Cir. BAP R. 8019-2(b)(2)"
+{
+  given EnBancMotionFiled() on 2026-03-03
+  expect deadline(en-banc-response-period) == 2026-03-17
+}
+
+test "an en banc call fails without the vote within 14 days of polling" cite "9th Cir. BAP R. 8019-2(d)(3)"
+{
+  given EnBancPollInitiated() on 2026-03-03
+  expect deadline(en-banc-vote-period) == 2026-03-17
+}
+
+test "a disposition may be designated an Opinion within 28 days of filing" cite "9th Cir. BAP R. 8024-1(b)(3)(A)"
+{
+  given DispositionFiled() on 2026-03-03
+  expect deadline(opinion-designation-period) == 2026-03-31
+}
+
+test "a publication request is received within 28 days of a memorandum" cite "9th Cir. BAP R. 8024-1(b)(3)(B)"
+{
+  given MemorandumOrOrderFiled() on 2026-03-03
+  expect deadline(publication-request-period) == 2026-03-31
+}
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "FRBP 8002(a)(1)"
+{
+  note "The notice of appeal is filed with the bankruptcy clerk within 14 days after entry of the judgment, order or decree (FRBP 8002(a)(1), lit/frbp). The appellant attaches a copy of the entered judgment, order or decree; if the notice precedes entry, the appellant forwards a copy to the BAP Clerk immediately upon entry (9th Cir. BAP R. 8003-1)."
+  edge-notice-filed-appealability "Notice filed within 14 days" -> appealability {
+    authority cite "FRBP 8002(a)(1)"
+    within notice-period
+  }
+  edge-notice-filed-dismissed-untimely "Notice filed outside the period" -> dismissed-untimely {
+    authority cite "FRBP 8002(a)(1)"
+  }
+}
+
+terminal dismissed-untimely: "Dismissed as untimely" outcome [loss] cite "FRBP 8002(a)(1)"
+
+decision appealability: "Appealable order and appeal route" by court cite "28 U.S.C. § 158(a)"
+{
+  note "Appeals lie from final judgments, orders and decrees, from interlocutory orders under 11 U.S.C. § 1121(d), and with leave from other interlocutory orders (28 U.S.C. § 158(a)). The BAP hears the appeal unless the appellant elects the district court when filing or another party elects within 30 days after service of the notice (28 U.S.C. § 158(c)(1), lit/frbp). The Panel may also transfer an appeal to the district court in the interests of justice, as when a timely election was filed in a related appeal (9th Cir. BAP R. 8005-1)."
+  edge-appealability-dismissed-jurisdiction "Not appealable" -> dismissed-jurisdiction {
+    authority cite "28 U.S.C. § 158(a)"
+  }
+  edge-appealability-record-assembled "BAP appeal proceeds" -> record-assembled {
+    authority cite "28 U.S.C. § 158(c)(1)"
+  }
+  edge-appealability-appellant-election "Appellant elects district court when filing" -> district-handoff {
+    authority cite "28 U.S.C. § 158(c)(1)(A)"
+    within appellant-election-period
+  }
+  edge-appealability-other-election "Another party elects district court" -> district-handoff {
+    authority cite "28 U.S.C. § 158(c)(1)(B)"
+    within other-party-election-period
+  }
+  edge-appealability-transfer "Panel transfers the appeal" -> district-handoff {
+    authority cite "9th Cir. BAP R. 8005-1"
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of an appealable order" outcome [loss] cite "28 U.S.C. § 158(a)"
+
+terminal district-handoff: "Appeal heard by the district court" outcome [procedural] cite "FRBP 8005(b)"
+{
+  note "The district court's local rules govern from here; they are outside this panel package."
+}
+
+state record-assembled: "Record assembled" by applicant cite "FRBP 8009"
+{
+  note "The appellant designates the record, states the issues and orders any transcript within 14 days after the notice of appeal becomes effective (FRBP 8009(a)(1)(B), (b)(1), lit/frbp). The excerpts of the record include the transcripts needed for review under the applicable standard; the Panel need consider only the portions included (9th Cir. BAP R. 8009-1). When the designations and transcripts are filed, the bankruptcy clerk certifies to the BAP Clerk that the record is complete and retains the record (9th Cir. BAP R. 8010-1)."
+  edge-record-assembled-briefing "Record complete" -> briefing {
+    authority cite "9th Cir. BAP R. 8010-1"
+    within appellant-designation-period
+  }
+}
+
+state briefing: "Briefing" by applicant cite "FRBP 8018(a)"
+{
+  note "The FRBP 8018(a) brief periods are lit/frbp's; FRBP 8015 governs form and length. Each non-governmental party attaches to its initial brief a certification of interested parties, and the appellant a statement of related cases (9th Cir. BAP R. 8015(a)-1). The appendix (excerpts of the record) is filed electronically by electronic filers, with a complete table of contents (9th Cir. BAP R. 8018(b)-1). A motion to extend a brief's time is filed within the time for that brief with a supporting declaration; a brief received late is not accepted without a granted extension (9th Cir. BAP R. 8018(a)-1)."
+  edge-briefing-argument "Briefing complete" -> argument {
+    authority cite "FRBP 8018(a)(1)"
+    within appellant-brief-period
+  }
+  edge-briefing-dismissed-prosecution "Opening brief not timely filed" -> dismissed-prosecution {
+    authority cite "9th Cir. BAP R. 8018(a)-2"
+  }
+}
+
+terminal dismissed-prosecution: "Dismissed for failure to prosecute" outcome [loss] cite "9th Cir. BAP R. 8018(a)-2"
+{
+  note "The BAP Clerk may dismiss after notice; a written request for review by the Panel is due within 14 days of entry (clerk-dismissal-review-period)."
+}
+
+decision argument: "Argument or submission" by court cite "9th Cir. BAP R. 8019-1"
+{
+  note "The BAP Clerk gives notice of the time and place of argument; the Panel may decide, on its own or on motion, that argument is not needed and submit the appeal on the briefs (9th Cir. BAP R. 8019-1; FRBP 8019). A party may move for en banc hearing (9th Cir. BAP R. 8019-2(b)); en banc hearing is not favored (8019-2(a))."
+  edge-argument-decision-issued "Argued or submitted" -> decision-issued {
+    authority cite "FRBP 8019"
+  }
+}
+
+decision decision-issued: "Disposition" by court cite "9th Cir. BAP R. 8024-1(a)"
+{
+  note "The Panel disposes of every appeal by Opinion, Memorandum or Order (9th Cir. BAP R. 8024-1(a)). Opinions are published and bind the Panel as precedent; Memoranda and Orders are unpublished and have no precedential value unless redesignated (8024-1(c)). The clerk prepares, signs and dockets the judgment (FRBP 8024(a))."
+  edge-decision-issued-rehearing-window "Judgment entered" -> rehearing-window {
+    authority cite "FRBP 8024(a)"
+  }
+}
+
+decision rehearing-window: "Rehearing" by applicant cite "FRBP 8022(a)(1)"
+{
+  note "A motion for rehearing is due within 14 days after entry of the judgment on appeal (FRBP 8022(a)(1), lit/frbp); the BAP rules set no other period."
+  edge-rehearing-window-further-review "No motion" -> further-review {
+    authority cite "FRBP 8022(a)(1)"
+  }
+  edge-rehearing-window-rehearing-ruling "Motion filed" -> rehearing-ruling {
+    authority cite "FRBP 8022(a)(1)"
+    within rehearing-period
+  }
+}
+
+decision rehearing-ruling: "Rehearing decided" by court cite "FRBP 8022(a)(5)"
+{
+  edge-rehearing-ruling-further-review "Denied" -> further-review {
+    authority cite "FRAP 6(b)(2)(A)(i)"
+  }
+  edge-rehearing-ruling-rehearing-granted "Granted" -> rehearing-granted {
+    authority cite "FRBP 8022(a)(5)"
+  }
+}
+
+terminal rehearing-granted: "Rehearing granted" outcome [appeal] cite "FRBP 8022(a)(5)"
+{
+  note "The BAP may dispose of the appeal without reargument, restore it to the calendar, or issue another order (FRBP 8022(a)(5)). Modeled as an exit."
+}
+
+decision further-review: "Appeal to the Ninth Circuit" by applicant cite "28 U.S.C. § 158(d)(1)"
+{
+  note "The court of appeals has jurisdiction of appeals from all final decisions of the BAP (28 U.S.C. § 158(d)(1)); the FRAP apply as FRAP 6(b) provides, and after a timely rehearing motion the time to appeal runs from the order disposing of it (FRAP 6(b)(2)(A)(i)). The appeal periods are lit/frap's."
+  edge-further-review-circuit "Appeal taken" -> circuit-appeal { authority cite "FRAP 6(b)(1)" }
+  edge-further-review-final "No appeal" -> final-appellate { authority cite "FRBP 8024(b)" }
+}
+
+terminal circuit-appeal: "Appeal to the court of appeals" outcome [appeal] cite "28 U.S.C. § 158(d)(1)"
+terminal final-appellate: "BAP judgment final" outcome [judgment] cite "FRBP 8024"

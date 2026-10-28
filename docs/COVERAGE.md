@@ -88,7 +88,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Texas | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/texas/state-appellate`, `outlines/fifth-circuit/texas/state-civil` |
 | Utah | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/utah/state-appellate`, `outlines/tenth-circuit/utah/state-civil` |
 | Vermont | state | outline | 0 | 0 | 0 | 0 | `outlines/second-circuit/vermont/state-appellate`, `outlines/second-circuit/vermont/state-civil` |
-| Virginia | state | promoted | 0 | 0 | 0 | 0 | `lit/va-circuit-civil` |
+| Virginia | state | promoted | 0 | 0 | 0 | 0 | `lit/va-appellate-civil`, `lit/va-circuit-civil` |
 | Washington | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/washington/state-appellate`, `outlines/ninth-circuit/washington/state-civil` |
 | West Virginia | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/west-virginia/state-appellate`, `outlines/fourth-circuit/west-virginia/state-civil` |
 | Wisconsin | state | outline | 0 | 0 | 0 | 0 | `outlines/seventh-circuit/wisconsin/state-appellate`, `outlines/seventh-circuit/wisconsin/state-civil` |

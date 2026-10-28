@@ -1,0 +1,108 @@
+module nc-appellate-court-civil.appeal
+
+/// A principal brief filed in the Court of Appeals: no more than 8,750
+/// words, with a certificate of compliance (N.C. R. App. P. 28(j)).
+limit principal-brief {
+  words <= 8_750 cite "N.C. R. App. P. 28(j)"
+  requires certificate compliance for [words] cite "N.C. R. App. P. 28(j)"
+} cite "N.C. R. App. P. 28(j)"
+
+/// A reply brief filed in the Court of Appeals: no more than 3,750 words,
+/// with a certificate of compliance (N.C. R. App. P. 28(h), (j)).
+limit reply-brief {
+  words <= 3_750 cite "N.C. R. App. P. 28(j)"
+  requires certificate compliance for [words] cite "N.C. R. App. P. 28(j)"
+} cite "N.C. R. App. P. 28(j)"
+
+/// The appellant's brief is filed (N.C. R. App. P. 13(a)(1)).
+event AppellantBriefFiled() paper principal-brief
+/// The appellee's brief is filed (N.C. R. App. P. 13(a)(1)).
+event AppelleeBriefFiled() paper principal-brief
+/// The appellant's reply brief is filed (N.C. R. App. P. 28(h)).
+event ReplyBriefFiled() paper reply-brief
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed and served" by applicant cite "N.C. R. App. P. 3(c)"
+{
+  note "A party entitled to appeal from a judgment or order of a superior or district court in a civil action files a notice of appeal with the clerk of superior court and serves it on all other parties (N.C. R. App. P. 3(a)), within thirty days after entry of judgment if served with a copy within the three days Rule 58 of the Rules of Civil Procedure prescribes, or otherwise within thirty days after service of the judgment; a timely motion under Rules 50(b), 52(b) or 59 tolls the period for all parties until entry of the order disposing of it. The mail additions of Rule 27(b) and N.C. R. Civ. P. 6(e) do not apply, and any other party may appeal within ten days after the first notice was served on it (N.C. R. App. P. 3(c)). Periods in this package are stated, not counted: Rule 27(a) excludes the day of the event and includes the last day unless it is a Saturday, Sunday or legal holiday when the courthouse is closed; three days are added after service by mail or e-mail except for the notice of appeal (N.C. R. App. P. 27(b)); and no court may extend the time for taking an appeal or for a petition for discretionary review or rehearing (N.C. R. App. P. 27(c)). The earlier outline named no leading decision."
+  edge-notice-filed-transcript "Transcript ordered" -> record { authority cite "N.C. R. App. P. 7" }
+}
+
+state record: "Transcript delivered and record settled" by applicant cite "N.C. R. App. P. 11"
+{
+  note "An appellant serves its transcript contract on each party and the transcriptionist no later than fourteen days after filing or giving notice of appeal, an appellee no later than twenty-eight days after any appellant does, and the transcriptionist delivers the transcript no later than ninety days after being served with the contract (N.C. R. App. P. 7(b)(2), (e)(1)); the trial tribunal may extend that delivery time once by no more than thirty days (N.C. R. App. P. 27(c)(1)). Within forty-five days after all ordered transcripts are delivered, or after the last notice of appeal, whichever is later, the parties may settle the record by agreement; otherwise the appellant serves a proposed record within the same time, and an appellee may respond within thirty days after its service (N.C. R. App. P. 11(a), (b)). The record on appeal contains what Rule 9 lists (N.C. R. App. P. 9)."
+  edge-record-filed "Record filed and appeal docketed" -> docketed {
+    authority cite "N.C. R. App. P. 12(a)"
+  }
+}
+
+state docketed: "Record filed; appeal docketed" by office cite "N.C. R. App. P. 12(b)"
+{
+  note "The appellant files the record on appeal no later than fifteen days after it is settled (N.C. R. App. P. 12(a)) and pays the docket fee fixed under N.C.G.S. § 7A-20(b), and the clerk dockets the appeal and notifies all parties of the date (N.C. R. App. P. 12(b)). A petition for discretionary review before determination by the Court of Appeals is filed within fifteen days after the appeal is docketed there (N.C. R. App. P. 15(b))."
+  edge-docketed-briefs "Briefing" -> briefing { authority cite "N.C. R. App. P. 13(a)" }
+}
+
+state briefing: "Briefs filed" by applicant cite "N.C. R. App. P. 13(a)"
+{
+  note "The appellant files and serves its brief within thirty days after the record is filed, and the appellee within thirty days after the appellant's brief is served on it (N.C. R. App. P. 13(a)(1)); a reply brief may be filed within fourteen days after the appellee's brief is served, limited to a concise rebuttal (N.C. R. App. P. 28(h)). A principal brief in the Court of Appeals contains no more than 8,750 words and a reply brief no more than 3,750, with a certificate of compliance (N.C. R. App. P. 28(j)). If the appellant fails to file and serve its brief in time, the appeal may be dismissed (N.C. R. App. P. 13(c)). A response opposing a motion is filed within ten days after the motion is served or before the case is called for argument, whichever is shorter (N.C. R. App. P. 37(a))."
+  edge-briefing-calendared "Calendared for hearing" -> argument {
+    authority cite "N.C. R. App. P. 29(b)"
+  }
+  edge-briefing-dismissed "Appellant's brief not filed: appeal dismissed" -> dismissed-procedural {
+    authority cite "N.C. R. App. P. 13(c)"
+  }
+}
+
+terminal dismissed-procedural: "Appeal dismissed for failure to file the brief" outcome [loss, dismissal] cite "N.C. R. App. P. 13(c)"
+{
+  note "Outcome from the appellant's side."
+}
+
+decision argument: "Oral argument or decision without it" by court cite "N.C. R. App. P. 30"
+{
+  note "Except on peremptory setting, no appeal is calendared for hearing less than thirty days after the appellant's brief is filed (N.C. R. App. P. 29(b)). Ordinarily thirty minutes are allowed all appellants and thirty minutes all appellees (N.C. R. App. P. 30(b)); the court may decide an appeal without oral argument (N.C. R. App. P. 30(f))."
+  edge-argument-decided "Opinion filed" -> decided { authority cite "N.C. R. App. P. 30" }
+}
+
+state decided: "Opinion filed" by court cite "N.C. R. App. P. 32(b)"
+{
+  note "Unless the court orders otherwise, its clerk enters judgment and issues the mandate twenty days after the written opinion is filed (N.C. R. App. P. 32(b)). A motion to publish an unpublished opinion is filed within ten days of the filing of the opinion, and any objection within five days after service of the motion (N.C. R. App. P. 30(e))."
+  edge-decided-rehearing "Petition for rehearing" -> rehearing {
+    authority cite "N.C. R. App. P. 31(a)"
+  }
+  edge-decided-supreme "Appeal of right or petition for discretionary review" -> further-review {
+    authority cite "N.C. R. App. P. 15(b)"
+  }
+  edge-decided-mandate "No further review" -> mandate-issued { authority cite "N.C. R. App. P. 32" }
+}
+
+decision rehearing: "Petition for rehearing decided" by court cite "N.C. R. App. P. 31(c)"
+{
+  note "A petition for rehearing in a civil action is filed within fifteen days after the mandate issues, with the certificate of two disinterested attorneys of at least five years' standing (N.C. R. App. P. 31(a)); within thirty days after it is filed the court grants or denies it on the petition alone, without response or argument, and its determination is final (N.C. R. App. P. 31(c)). A timely petition restarts the time for an appeal of right or a petition for discretionary review, which then runs from entry of the order denying rehearing (N.C. R. App. P. 14(a), 15(b))."
+  edge-rehearing-denied "Denied" -> further-review { authority cite "N.C. R. App. P. 15(b)" }
+  edge-rehearing-final "Denied: no further review" -> mandate-issued {
+    authority cite "N.C. R. App. P. 31(c)"
+  }
+}
+
+decision further-review: "Supreme Court review" by court cite "N.C. R. App. P. 15"
+{
+  note "An appeal of right under N.C.G.S. § 7A-30 is taken by filing notices of appeal with both clerks and serving them within fifteen days after the Court of Appeals' mandate issues; any other party may appeal within ten days after the first notice (N.C. R. App. P. 14(a)). A petition for discretionary review following determination by the Court of Appeals is filed and served within fifteen days after the mandate issues, any other party may petition within ten days after the first petition, and a response may be filed within ten days after service of the petition (N.C. R. App. P. 15(b), (d)); certification is determined on the papers without oral argument (N.C. R. App. P. 15(e)). The earlier outline cited N.C. Gen. Stat. § 7A-31 for the grounds of review; that statute is not vendored, so the grounds stay out."
+  edge-further-review-denied "Review denied" -> mandate-issued {
+    authority cite "N.C. R. App. P. 15(e)"
+  }
+  edge-further-review-granted "Review granted or appeal of right heard" -> supreme-merits {
+    authority cite "N.C. R. App. P. 15(e)"
+  }
+}
+
+terminal mandate-issued: "Mandate issued to the trial tribunal" outcome [final] cite "N.C. R. App. P. 32"
+{
+  note "The mandate, unless a formal mandate is directed, consists of certified copies of the judgment and opinion and any direction as to costs, transmitted by the clerk to the tribunal appealed from (N.C. R. App. P. 32(a))."
+}
+
+terminal supreme-merits: "Supreme Court review on the merits" outcome [final] cite "N.C. R. App. P. 15"
+{
+  note "When a case is certified for review of a Court of Appeals determination, the appellant files a new brief within thirty days after the order of certification is entered and the appellee within thirty days after service of the appellant's brief (N.C. R. App. P. 15(g)(2)). The merits outcome is outside this package."
+}

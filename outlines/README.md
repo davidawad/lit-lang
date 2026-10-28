@@ -48,7 +48,8 @@ way: it depends on `lit/frcrimp`, imports the FRCrimP, Speedy Trial Act and
 FRAP 4(b) periods from `frcrimp.deadlines`, and declares only the district's
 local criminal rules and Speedy Trial Act plan (18 U.S.C. § 3165) as `?(...)`
 cites and holes. It carries a `Lit.lock`. Copy
-`outlines/third-circuit/new-jersey/federal-district-criminal/` as the template.
+`outlines/eighth-circuit/arkansas/federal-eastern-district-criminal/` as the
+template; `lit/njd-criminal` shows the promoted form.
 
 ## Rules for every outline
 

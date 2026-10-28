@@ -1,0 +1,225 @@
+module nynd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Northern District of New York's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp or are only named
+// here: the notice of appeal from a magistrate judge's release or
+// detention order is filed within 14 days of its entry under FRCrimP
+// 58(g)(2)(A) (N.D.N.Y. L.R. Cr. P. 59.1), and a tracking-warrant return
+// is due within 10 days after the device's use ends under FRCrimP
+// 41(f)(2)(B) (L.R. Cr. P. 41.1(b)).
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// proposed jury verdict form follows the Criminal Pretrial Scheduling
+// Order issued at arraignment (L.R. Cr. P. 31.1), and the presentence
+// report, objections, presentence memoranda and sentencing follow the
+// Uniform Presentence Order, which the court may modify subject to 18
+// U.S.C. § 3552(d) (L.R. Cr. P. 32.1(a), (c)); neither order is vendored.
+// A continuance of arraignment to obtain counsel is at most one week at a
+// time (L.R. Cr. P. 44.1), a limit on a continuance rather than a period
+// from an event. The Clerk serves the judgment within three days after
+// sentencing (L.R. Cr. P. 32.1(d)), a duty of the Clerk, not of a party.
+// A search warrant return after a delayed notice is due 30 days after the
+// delayed-notice deadline expires, and the motion to unseal or the request
+// to extend sealing then 30 days after that expiry (L.R. Cr. P. 41.1(b)-
+// (d)): periods counted from another deadline, not from an event.
+//
+// The earlier N.D.N.Y. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Barker v. Wingo, Zedner v. United States,
+// Brady v. Maryland and the others it named) are FRCrimP, Speedy Trial
+// Act or constitutional authority and belong to lit/frcrimp; they are
+// removed here: no reporter text is vendored.
+
+/// A memorandum of law: at most 25 pages unless the party obtains the
+/// Court's permission before filing (N.D.N.Y. L.R. Cr. P. 12.1(a)).
+limit memorandum-of-law {
+  pages <= 25 cite "N.D.N.Y. L.R. Cr. P. 12.1(a)"
+} cite "N.D.N.Y. L.R. Cr. P. 12.1(a)"
+
+/// A motion is served (N.D.N.Y. L.R. Cr. P. 12.1(a)).
+event MotionServed() paper memorandum-of-law
+/// The opposition (response) papers are served (N.D.N.Y. L.R. Cr. P.
+/// 12.1(a)).
+event ResponseServed() paper memorandum-of-law
+/// Reply papers are filed and served (N.D.N.Y. L.R. Cr. P. 12.1(a)). The
+/// rule says reply papers "may not exceed (10) pages in length" and bars a
+/// sur-reply; the vendored text writes the count only as "(10)", which no
+/// page-limit cite binds, so the limit stays in this note.
+event ReplyServed()
+/// The Court decides a motion (N.D.N.Y. L.R. Cr. P. 12.1(h)).
+event DecisionEntered()
+/// The defendant is arraigned (N.D.N.Y. L.R. Cr. P. 14.1).
+event Arraigned()
+/// The date set for the start of jury selection (N.D.N.Y. L.R. Cr. P.
+/// 14.1(d)).
+event JurySelectionScheduled()
+/// The Court orders the presentence report (N.D.N.Y. L.R. Cr. P. 32.1(b)).
+event PresentenceReportOrdered()
+/// The date set for sentencing (N.D.N.Y. L.R. Cr. P. 32.3).
+event SentencingScheduled()
+/// A search warrant is executed (N.D.N.Y. L.R. Cr. P. 41.1(b)).
+event SearchWarrantExecuted()
+/// The search warrant return is filed (N.D.N.Y. L.R. Cr. P. 41.1(c), (d)).
+event SearchWarrantReturnFiled()
+/// Defense counsel files the notice of appearance (N.D.N.Y. L.R. Cr. P.
+/// 44.2(a)).
+event AppearanceFiled()
+/// The notice of appeal from a magistrate judge's release or detention
+/// order, or from a magistrate judge's judgment of conviction in a consent
+/// misdemeanor case, is filed (N.D.N.Y. L.R. Cr. P. 59.1).
+event MagistrateAppealNoticed()
+/// The appellant's brief on such an appeal is submitted (N.D.N.Y. L.R. Cr.
+/// P. 59.1).
+event MagistrateAppellantBriefFiled()
+/// The appellee's brief on an appeal from a release or detention order is
+/// submitted (N.D.N.Y. L.R. Cr. P. 59.1(a)).
+event MagistrateAppelleeBriefFiled()
+
+/// N.D.N.Y. L.R. Cr. P. 12.1(a): the opposing party files and serves its
+/// opposition no more than 21 days after service of the motion, unless the
+/// Court orders otherwise.
+deadline opposition-period: 21.days after MotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D.N.Y. L.R. Cr. P. 12.1(a)"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 12.1(a): the moving party files and serves any
+/// reply no more than seven days after service of the response papers,
+/// unless the Court orders otherwise.
+deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D.N.Y. L.R. Cr. P. 12.1(a)"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 12.1(h): a motion for reconsideration of a Court
+/// order is filed within 14 days of the date of the decision.
+deadline reconsideration-period: 14.days after DecisionEntered() counted_by frcrimp45 cite "N.D.N.Y. L.R. Cr. P. 12.1(h)"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 14.1(b): 14 days after arraignment, or on a date
+/// the Court sets for good cause shown, the government makes available the
+/// FRCrimP 16(a) information with notice of its intent to use it, Brady
+/// material and notice of Federal Rule of Evidence 404(b) evidence.
+deadline government-discovery: 14.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D.N.Y. L.R. Cr. P. 14.1(b)"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 14.1(c): unless the defendant refuses in writing
+/// the FRCrimP 16(a)(1)(C)-(E) materials, the defendant makes available all
+/// FRCrimP 16(b) information within 21 days of arraignment.
+deadline defense-discovery: 21.days after Arraigned() counted_by frcrimp45 cite "N.D.N.Y. L.R. Cr. P. 14.1(c)"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 14.1(d): no less than 14 days before the start of
+/// jury selection, or on a date the Court sets for good cause shown, the
+/// government tenders Giglio material and the prior convictions of any
+/// informant who will testify.
+deadline giglio-disclosure: 14.days before JurySelectionScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D.N.Y. L.R. Cr. P. 14.1(d)"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 32.1(b): defense counsel who wishes to attend the
+/// probation officer's interview of the defendant advises the Probation
+/// Office within two days of the date the presentence report is ordered.
+deadline presentence-interview-notice: 2.days after PresentenceReportOrdered() counted_by frcrimp45 cite "N.D.N.Y. L.R. Cr. P. 32.1(b)"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 32.3: letters in support of the defendant's
+/// character are filed on CM/ECF no later than seven days before the
+/// sentencing date to be considered, unless good cause is shown.
+deadline letters-in-support: 7.days before SentencingScheduled() counted_by frcrimp45 cite "N.D.N.Y. L.R. Cr. P. 32.3"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 41.1(b): the search warrant return is filed within
+/// 30 days after the execution of the warrant.
+deadline search-warrant-return: 30.days after SearchWarrantExecuted() counted_by frcrimp45 cite "N.D.N.Y. L.R. Cr. P. 41.1(b)"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 41.1(c), (d): in a sealed search warrant case the
+/// government files a motion to unseal, or a request to extend the
+/// unsealing deadline, no later than 180 days after the search warrant
+/// return is filed; the sealing order's expiration may not exceed that
+/// unless extended (L.R. Cr. P. 41.1(a)).
+deadline search-warrant-unseal: 180.days after SearchWarrantReturnFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D.N.Y. L.R. Cr. P. 41.1(c); N.D.N.Y. L.R. Cr. P. 41.1(d)"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 44.2(a): defense counsel's appearance certifies
+/// six credit hours of federal criminal defense continuing education in
+/// the past two years or, if not, that counsel will complete them within
+/// 30 days of filing the notice of appearance.
+deadline defense-cle-certification: 30.days after AppearanceFiled() counted_by frcrimp45 cite "N.D.N.Y. L.R. Cr. P. 44.2(a)"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 59.1(a), (c): unless otherwise ordered, on an
+/// appeal from a magistrate judge's release or detention order or from a
+/// magistrate judge's judgment in a consent misdemeanor case, the
+/// appellant's brief is filed within 14 days following the filing of the
+/// notice of appeal.
+deadline magistrate-appeal-appellant-brief: 14.days after MagistrateAppealNoticed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D.N.Y. L.R. Cr. P. 59.1(a); N.D.N.Y. L.R. Cr. P. 59.1(c)"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 59.1(a), (c): unless otherwise ordered, the
+/// appellee's brief is filed within 14 days following submission of the
+/// appellant's brief; the appeal is taken on submission without oral
+/// argument unless the Court orders otherwise.
+deadline magistrate-appeal-appellee-brief: 14.days after MagistrateAppellantBriefFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D.N.Y. L.R. Cr. P. 59.1(a); N.D.N.Y. L.R. Cr. P. 59.1(c)"
+{
+  forum frcrimp
+}
+
+/// N.D.N.Y. L.R. Cr. P. 59.1(a): on an appeal from a release or detention
+/// order, any reply brief is filed within seven days following submission
+/// of the appellee's brief, unless otherwise ordered. The consent
+/// misdemeanor appeal (L.R. Cr. P. 59.1(c)) provides for no reply.
+deadline magistrate-appeal-reply-brief: 7.days after MagistrateAppelleeBriefFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D.N.Y. L.R. Cr. P. 59.1(a)"
+{
+  forum frcrimp
+}

@@ -1,0 +1,53 @@
+# The U.S. District Court for the Northern District of New York's Local
+# Rules of Criminal Procedure (Section XI of its Local Rules of Practice,
+# cited "L.R. Cr. P.") as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods and limits the
+# criminal rules themselves state and re-encodes no FRCrimP, Speedy Trial
+# Act or FRAP 4(b) period (one source of truth: lit/frcrimp). Each period
+# is counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the edition effective
+# January 1, 2026 (sources/ndny); earlier editions are not vendored, so a
+# query before that date is a hole in the corpus. The Criminal Pretrial
+# Scheduling Order and the Uniform Presentence Order the rules refer to
+# are not vendored. An appeal goes to the Second Circuit under
+# lit/frcrimp's FRAP 4(b) period and lit/ca2.
+[package]
+name = "nynd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "nynd-criminal-local-rules"
+forum = "nynd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Northern District of New York: Local Rules of Criminal Procedure"
+description = "The Northern District of New York's Local Rules of Criminal Procedure as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the motion opposition and reply periods and page limits, reconsideration, the government's and the defendant's discovery counted from arraignment, the government's Giglio disclosures before jury selection, counsel's notice for the presentence interview, letters in support before sentencing, search warrant returns and unsealing, defense counsel's continuing-education certification, and the briefing of appeals from magistrate judges' release, detention and misdemeanor judgments."
+in_force = "2026-01-01"
+known_at = "2026-10-28"
+unknown_before = "2026-01-01"
+jurisdiction = "U.S. District Court for the Northern District of New York (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ndny-lrcrp"
+issuer = "United States District Court for the Northern District of New York"
+date = "2026-01-01"
+designation = "Local Rules of Practice, Section XI (Criminal Procedure)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ndny-lrcrp]
+title = "Local Rules of Practice of the United States District Court for the Northern District of New York, Section XI, Criminal Procedure (effective January 1, 2026)"
+url = "https://www.nynd.uscourts.gov/sites/nynd/files/local_rules/Local%20Rules%202026_Final.pdf"
+path = "sources/ndny/local-rules-criminal-sectioned.txt"
+path_sha256 = "2091bc964cb5ef05e8342415bf088cb800b402c30c1dfeeaf9460832c56d1a02"
+sha256 = "707fdaa7e094b33f33ee9a44753473626949234f550a0e726ac9a9c2eb9dea96"
+as_of = "2026-01-01"
+cite_prefixes = ["N.D.N.Y. L.R. Cr. P."]
+section_heading = "L.R. Cr. P. {n}"

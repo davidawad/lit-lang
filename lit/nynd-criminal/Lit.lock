@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "nynd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:bca47c0ac77eb9b0332eef0b7c7af7bee693ddb11d0616ad71d2165d51b69d7c"
+semantic = "sha256:b3d04434c052f1d1843ad93e5fe07a58e1fea5f9b8b1b840c2b62bfd15e9c1d0"
+texts = [
+    "ndny-lrcrp sources/ndny/local-rules-criminal-sectioned.txt sha256:2091bc964cb5ef05e8342415bf088cb800b402c30c1dfeeaf9460832c56d1a02",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

@@ -1,0 +1,46 @@
+# Criminal prosecutions in the Arkansas circuit courts under the Arkansas
+# Rules of Criminal Procedure, with their speedy-trial rule (Ark. R. Crim.
+# P. 28). The only vendored text is the rules as served by the Arkansas
+# Judiciary's court rules database (sources/ar-criminal-trial-court),
+# which states no edition date beyond its "Current To: 2026" heading:
+# CURRENCY UNCONFIRMED. Every cite is therefore a hole naming its
+# pinpoint, and every value in a note is the vendored text's, unverified,
+# as for lit/bankr-arw. The newest amendment note in the text is the per
+# curiam order of November 1, 2023, effective January 1, 2024, so the
+# package runs from that date. The notice-of-appeal period is set by the
+# Arkansas Rules of Appellate Procedure--Criminal, Rule 2, which is not
+# vendored (sources/arkctapp carries only the civil appellate rules), so
+# it stays a hole. Computation of time is Ark. R. Crim. P. 1.4, with
+# state holidays, for which lit/core has no counting rule, so the periods
+# are stated in notes, not encoded as counted deadlines. Postconviction
+# relief (Rule 37) is noted at the end; federal habeas is lit/habeas's.
+[package]
+name = "ar-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "ar-criminal-trial-court"
+forum = "ar-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "arkansas"
+title = "Arkansas Circuit Courts, criminal"
+description = "Criminal prosecutions in the Arkansas circuit courts under the Arkansas Rules of Criminal Procedure, every cite a hole pending a dated text (the vendored rules are CURRENCY UNCONFIRMED): the 48-hour reasonable cause determination, the first appearance and pretrial release, the 60-day formal charge for a detained defendant, the suppression motion deadline, the speedy-trial rule (release after nine months, dismissal after twelve), pleas, trial, sentencing within 30 days, posttrial motions within 30 days and their deemed denial, the notice of appeal (a hole: the Rules of Appellate Procedure--Criminal are not vendored), and the Rule 37 petition."
+in_force = "2024-01-01"
+known_at = "2026-10-28"
+unknown_before = "2024-01-01"
+jurisdiction = "Arkansas circuit courts (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ark-r-crim-p]
+title = "Arkansas Rules of Criminal Procedure, Arkansas Judiciary court rules database ('Current To: 2026'; CURRENCY UNCONFIRMED)"
+url = "https://opinions.arcourts.gov/ark/cr/en/1879/1/document.do"
+path = "sources/ar-criminal-trial-court/ar-rules-of-criminal-procedure.txt"
+path_sha256 = "360930a985cb80e7e1d8d8903b946341cd32baade7e49d4da48ce0cf9bb2d41d"
+sha256 = "04fadc2ef815d08b2d1a14f102e21762b9e803cee50d1495c49aa173674da35b"
+as_of = "2024-01-01"

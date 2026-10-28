@@ -12,7 +12,7 @@ import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
 // fees within forty-eight hours, LR 1006-1(A)(1); the United States
 // Trustee's 48-hour scheduling of the § 341 meeting, LR 2003-1(A),
 // 4002-1(A)(5); the confirmation docket published 24 hours before the
-// hearing, LR 3016-1(B)); notice periods a movant gives for a hearing it
+// hearing, LR 3015-4(B)); notice periods a movant gives for a hearing it
 // sets (21 days on a motion requiring a hearing, LR 9013-1(B); dismissal
 // or conversion of a chapter 11 case, LR 1017-1(C); fees under $1,000, LR
 // 2016-1(C); final employment approval and counsel's withdrawal, LR
@@ -51,7 +51,7 @@ event RescheduledMeetingConcluded()
 /// motion (Bankr. E.D. La. LR 2004-1(B)(1)).
 event ProposedExaminationDate()
 /// The hearing on confirmation of a plan (Bankr. E.D. La. LR 3015-1(B),
-/// 3015-2(A), 3016-1(B), 3018-1).
+/// 3015-2(A), 3015-4(B), 3018-1).
 event ConfirmationHearing()
 /// The hearing on a chapter 11 disclosure statement or on plan confirmation
 /// (Bankr. E.D. La. LR 3015-1(D)).
@@ -225,11 +225,11 @@ deadline material-amendment-notice-period: 28.days before ConfirmationHearing() 
   forum frcp
 }
 
-/// Bankr. E.D. La. LR 3016-1(B): in a chapter 13 case, if debtor's counsel
+/// Bankr. E.D. La. LR 3015-4(B): in a chapter 13 case, if debtor's counsel
 /// files a confirmation affidavit no later than five days before the
 /// confirmation hearing and no objection is made, the court may confirm the
 /// plan without a hearing.
-deadline confirmation-affidavit-period: 5.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 3016-1(B)"
+deadline confirmation-affidavit-period: 5.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 3015-4(B)"
 {
   forum frcp
 }

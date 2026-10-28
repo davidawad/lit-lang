@@ -230,7 +230,7 @@ event Chapter13DismissalMotionServed()
 /// Rule 13-17(c)).
 event ConfirmationDenied()
 /// A chapter 13 debtor's Motion for Entry of Discharge is served (App. 1
-/// Rule 13-19(b)).
+/// Rule 13-22(b)).
 event DischargeMotionServed()
 
 /// MLBR 1006-2(b)(2): unless the court orders otherwise, payment in full or
@@ -877,9 +877,9 @@ deadline converted-chapter13-documents-period: 14.days after CaseConverted() cou
   forum frcp
 }
 
-/// App. 1 Rule 13-19(b): objections to a chapter 13 debtor's Motion for
+/// App. 1 Rule 13-22(b): objections to a chapter 13 debtor's Motion for
 /// Entry of Discharge are filed within 14 days after service.
-deadline discharge-motion-objection-period: 14.days after DischargeMotionServed() counted_by frcp6 cite "MLBR App. 1 Rule 13-19(b)"
+deadline discharge-motion-objection-period: 14.days after DischargeMotionServed() counted_by frcp6 cite "MLBR App. 1 Rule 13-22(b)"
 {
   forum frcp
 }

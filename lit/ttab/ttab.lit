@@ -167,7 +167,10 @@ rule duty extensions-of-time effective [2017-01-14, ..) known_at 2016-10-07 cite
 {
   deadline first-extension-90: 90.days from OppositionPeriodExpired() counted_by ttab-2-196 cite "37 CFR 2.102(c)(1)(ii)"
   deadline second-extension-60: 60.days from FirstExtensionExpired() counted_by ttab-2-196 cite "37 CFR 2.102(c)(2)"
-  deadline extended-period-120: 120.days from Published() counted_by ttab-2-196 cite "37 CFR 2.102(c)(3)"
+  /// The end of extensions "totaling ninety days" (§ 2.102(c)(3)), counted
+  /// from the end of the thirty-day opposition period: day 120 from
+  /// publication.
+  deadline extended-period-120: 90.days from deadline(opposition-period).nominal counted_by ttab-2-196 cite "37 CFR 2.102(c)(3)"
   deadline outer-limit-180: 180.days from Published() counted_by ttab-2-196 cite "37 CFR 2.102(c)"
 }
 

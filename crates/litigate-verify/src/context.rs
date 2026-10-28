@@ -206,7 +206,7 @@ type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Vec<Cow<'a, str>>);
 /// else the declaration's, with the words its vendored text must hold: a
 /// bound's number and measure as the rules write them, in digits
 /// (`13,000 words`), in words (`thirty pages`) or both (`thirty (30)
-/// pages`), each also with a few words between the count and the measure
+/// pages`), the measure singular for a count of one (`one page`), each also with a few words between the count and the measure
 /// (D.S.C. Local Civ. Rule 7.05(B): `Thirty-five (35) double-spaced
 /// pages`; D. Conn. L. Civ. R. 7(a)5: `forty (40) 8 1/2" by 11" printed
 /// pages`, [`GAP`]), and each excluded part named, hyphens read as spaces
@@ -222,7 +222,13 @@ fn limit_cites(l: &hir::Limit) -> Vec<CiteOf<'_>> {
         };
         let quotes = match &b.max {
             hir::Authored::Known(n) => {
-                let (digits, words, measure) = (grouped(*n), spelled(*n), b.measure.as_str());
+                let (digits, words) = (grouped(*n), spelled(*n));
+                let measure = b.measure.as_str();
+                let measure = if *n == 1 {
+                    measure.strip_suffix('s').unwrap_or(measure)
+                } else {
+                    measure
+                };
                 [digits.clone(), words.clone(), format!("{words} ({digits})")]
                     .into_iter()
                     .flat_map(|count| {

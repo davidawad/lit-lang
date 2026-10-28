@@ -1,0 +1,59 @@
+# The Local Rules of the U.S. Bankruptcy Court for the Northern District of
+# Florida over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
+# the periods the rules themselves state and re-encodes no FRBP period. It
+# is a base package, not a `kind = "local-rule"` layer: lit/core has no
+# bankruptcy forum family (L2011 for `bankr-fln`), as for lit/bankr-dc.
+# Each period is counted under FRBP 9006(a), the FRCP 6(a) method (core's
+# frcp6).
+#
+# Layers, in date order: the Local Rules effective February 26, 2024 (the
+# consolidation), then Administrative Order No. 24-003 (done November 27,
+# 2024), which amends LBR 4004-1(A) effective December 1, 2024 to follow
+# the FRBP 1007(b)(7) amendment abrogating Official Form 423. LBR 4004-1(A)
+# states no period before or after the amendment, so the order changes no
+# declaration here and needs no dated version; it is bound below as the
+# rules' later layer. No earlier edition is vendored, so a query before
+# February 26, 2024 is a hole in the corpus.
+[package]
+name = "bankr-fln-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-fln-local-rules"
+forum = "bankr-fln"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Northern District of Florida: Local Rules"
+description = "The Bankr. N.D. Fla. Local Rules (effective February 26, 2024, with Administrative Order 24-003) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): divisional transfer, conversion to chapter 7, negative notice (LBR 2002-2), Rule 2004 examinations, operating reports, trustee record destruction, professional compensation, chapter 11 post-confirmation duties, chapter 12 and 13 duties, claim transfers, chapter 13 deficiency claims and objections, valuation of collateral and lien stripping (LBR 3012-1, 3012-2), disclosure statements, ballots and confirmation objections, stay relief (LBR 4001-1), § 362(c)(3) motions, lien avoidance, transcript redaction, withdrawal of the reference and abstention, core determinations, motion responses (LBR 9013-1), jury consent and exhibits."
+in_force = "2024-02-26"
+known_at = "2026-10-28"
+unknown_before = "2024-02-26"
+jurisdiction = "U.S. Bankruptcy Court for the Northern District of Florida"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.flnb-lbr]
+title = "Local Rules of the United States Bankruptcy Court for the Northern District of Florida (effective February 26, 2024)"
+url = "https://www.flnb.uscourts.gov/sites/flnb/files/local_rules_02-26-2024.pdf"
+path = "sources/bankr-fln/flnb-lbr-2024-02-26-sectioned.txt"
+path_sha256 = "415f88c98e634662e38ed01ac40c8ba6dbba2f2bd1a72949d7f76e8705fca8fe"
+sha256 = "b0ee17e686b0659716b3d876ca79dfa76eb38757ea87530a43ced3215a1d4d34"
+as_of = "2024-02-26"
+cite_prefixes = ["N.D. Fla. LBR"]
+section_heading = "Rule {n}"
+
+[sources.flnb-ao-24-003]
+title = "Administrative Order No. 24-003, Order Amending Local Rule 4004-1(A) (done November 27, 2024; effective December 1, 2024)"
+url = "https://www.flnb.uscourts.gov/sites/flnb/files/general-orders/AO24-003.pdf"
+path = "sources/bankr-fln/flnb-ao-24-003-lr-4004-1a.txt"
+path_sha256 = "99ff592251e3e1929a22d64df533ad9eded35217fc5aeb097b27e64627ed7cc9"
+sha256 = "75f38655d7a7a5cf5239eb9e38d17d93b37565b97e26097b590543f52ae20c4c"
+as_of = "2024-12-01"

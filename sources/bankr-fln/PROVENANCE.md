@@ -14,3 +14,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 99ff592251e3e1929a22d64df533ad9eded35217fc5aeb097b27e64627ed7cc9. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-fln/original/flnb-ao-24-003-lr-4004-1a.pdf` as served (sha256 75f38655d7a7a5cf5239eb9e38d17d93b37565b97e26097b590543f52ae20c4c); extraction sha256 99ff592251e3e1929a22d64df533ad9eded35217fc5aeb097b27e64627ed7cc9.
+
+### `bankr-fln/flnb-lbr-2024-02-26-sectioned.txt` — N.D. Fla. Local Rules, sectioned
+
+- Derived in the pod (lg-u561.29) from `bankr-fln/flnb-lbr-2024-02-26.txt` (extract sha256 a9fd42459a99d2f1dfc6b5301544342e8234b56d6d53723785a9e9d61542d096); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (the `RULE <n>` line standing alone above the rule title, `RULE 1001-1` through `RULE 9073-1`, including the `[REMOVED]` rules, the dotted `3002.1-1` and `3017.1-1` and the headings that follow a form feed; 74 sections, matching the table of contents); the cover and table of contents (extract lines 1-120), Addenda A and B and the Index are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, the Local Rules effective February 26, 2024. Administrative Order 24-003 (`bankr-fln/flnb-ao-24-003-lr-4004-1a.txt`) amends LBR 4004-1(A) from December 1, 2024 and is bound separately by `lit/bankr-fln/Lit.toml`; the sectioned file keeps the 2024 text of that subdivision.
+- Sectioned sha256 415f88c98e634662e38ed01ac40c8ba6dbba2f2bd1a72949d7f76e8705fca8fe (the `path_sha256` pinned by `lit/bankr-fln/Lit.toml` for source `flnb-lbr`).

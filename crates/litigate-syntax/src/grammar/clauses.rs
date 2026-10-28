@@ -55,6 +55,7 @@ impl Clauses {
                 KwRetracted,
                 KwUnknownBefore,
                 KwCommenced,
+                KwRepealed,
             ]);
         }
         if self.has(Self::RELATION) {
@@ -143,8 +144,13 @@ pub(crate) fn keyword_field(
 }
 
 /// `VersionClause = ("effective" | "commenced") Interval | ("known_at" |
-/// "retracted" | "unknown_before") Date`.
+/// "retracted" | "unknown_before") Date | "repealed"`, the bare `repealed`
+/// a `Field` node.
 pub(crate) fn version_clause(p: &mut Parser<'_>) -> bool {
+    if p.at_kw(KwRepealed) {
+        keyword_field(p, KwRepealed, None);
+        return true;
+    }
     let (kw, value): (SyntaxKind, super::values::Value) =
         if let Some(kw) = p.at_any_kw(&[KwEffective, KwCommenced]) {
             (kw, interval)

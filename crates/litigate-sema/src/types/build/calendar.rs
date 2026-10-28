@@ -184,6 +184,7 @@ impl Cx<'_, '_> {
                         retracted: meta.effective.retracted.clone(),
                         unknown_before: None,
                         commenced: None,
+                        repealed: false,
                     },
                     observed,
                 });

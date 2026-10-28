@@ -251,6 +251,7 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
             retracted: None,
             unknown_before: p.unknown_before.as_ref().map(|s| s.get_ref().clone()),
             commenced: None,
+            repealed: false,
         },
         sources,
         dependencies,

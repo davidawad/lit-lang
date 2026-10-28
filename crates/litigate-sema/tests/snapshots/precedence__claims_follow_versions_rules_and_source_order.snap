@@ -5,7 +5,7 @@ expression: "table(&[(\"1 versions of a deadline in versions of its duty\",\n&fo
 {
     "1 versions of a deadline in versions of its duty": [],
     "1b versions in two differently named duties (each its own rule; r1 ends undeclared)": [
-        "pkgs/demo/main.lit:13:14 L3002 `r1` has no version in force on [2015-01-01, ..)\n    note: a gap is legal only when declared: a declaration that `supersedes r1` over the gap\n    fix @13:24-13:48: \"[2009-12-01, ..)\"",
+        "pkgs/demo/main.lit:13:14 L3002 `r1` has no version in force on [2015-01-01, ..)\n    note: a gap is legal only when declared: `repealed` on the version ending 2015-01-01, or a declaration that `supersedes r1` over the gap\n    fix @13:24-13:48: \"[2009-12-01, ..)\"",
     ],
     "2 a later rule does not make a package-level version specific": [
         "pkgs/demo/main.lit:15:98 L3003 `x@2009-12-01` and `c@2009-12-01` both apply to `tgt` on [2009-12-01, 2015-01-01), and neither prevails\n    note @14:98: `c@2009-12-01` is declared here\n    note: no declared relation (`notwithstanding`, `override`, `subject_to`) orders them\n    note: the canons tie: both are FederalRule; neither applies to a narrower subject matter; both at package level; both take effect on 2009-12-01\n    note: declare `x notwithstanding c` or `x subject_to c`",

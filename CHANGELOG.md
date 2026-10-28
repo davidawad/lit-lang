@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **A version can be declared `repealed`** (lg-zpia; SPEC §5.4). A
+  later edition that drops a declaration ends its last version with no
+  successor, an undeclared trailing gap (L3002) unless something
+  supersedes it. The bare version clause `repealed`, on a version with a
+  closed `effective` end (L2007 on an open one), declares the gap from that
+  end. lit/bankr-waw declares the 2023 LBR 2015-1(c) budget and 2016-1(e)(2)
+  excess-fee periods the 2026 rules drop this way.
 - **A matter declares per-decision opponent models** (lg-6wxa; SPEC
   §3.2, §5.6, §8.3). A `.case`'s `opponents` block, between `beliefs` and
   `analysis`, names a decision and how the opponent decides there:

@@ -641,6 +641,7 @@ module.exports = {
     $.retracted_clause,
     $.unknown_before_clause,
     $.commenced_clause,
+    $.repealed_clause,
   ),
 
   effective_clause: $ => seq('effective', $.interval),
@@ -652,6 +653,8 @@ module.exports = {
   unknown_before_clause: $ => seq('unknown_before', $.date),
 
   commenced_clause: $ => seq('commenced', $.interval),
+
+  repealed_clause: $ => 'repealed',
 
   interval: $ => seq(
     '[',

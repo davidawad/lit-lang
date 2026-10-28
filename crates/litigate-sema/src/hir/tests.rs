@@ -17,6 +17,7 @@ fn meta(id: &str) -> Metadata {
                 from: "2009-12-01".into(),
                 to: None,
             }),
+            repealed: false,
         },
         authority: "FederalRule".into(),
         relations: vec![Relation::SubjectTo("frcp.rule6::computing-time".into())],

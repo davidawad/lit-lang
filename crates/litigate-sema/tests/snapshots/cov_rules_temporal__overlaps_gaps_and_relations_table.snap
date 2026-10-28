@@ -11,7 +11,7 @@ expression: "table(&[(\"1 unversioned self-supersession documents succession\",\
         "pkgs/demo/main.lit:13:58 L3001 versions of `p` overlap on [2016-12-01, 2017-01-01): [2009-12-01, 2017-01-01) and [2016-12-01, ..)\n    note @14:58: the overlapping version is declared here\n    note: versions of one declaration must be pairwise disjoint so `as_of` selects exactly one\n    fix @14:68-14:92: \"[2009-12-01, 2016-12-01)\"",
     ],
     "4 trailing gap after two versions": [
-        "pkgs/demo/main.lit:14:58 L3002 `p` has no version in force on [2014-01-01, ..)\n    note: a gap is legal only when declared: a declaration that `supersedes p` over the gap\n    fix @14:68-14:92: \"[2012-01-01, ..)\"",
+        "pkgs/demo/main.lit:14:58 L3002 `p` has no version in force on [2014-01-01, ..)\n    note: a gap is legal only when declared: `repealed` on the version ending 2014-01-01, or a declaration that `supersedes p` over the gap\n    fix @14:68-14:92: \"[2012-01-01, ..)\"",
     ],
     "5 a third declaration's revives ends a suspension": [],
     "6 amending the first version with a foreign arm": [

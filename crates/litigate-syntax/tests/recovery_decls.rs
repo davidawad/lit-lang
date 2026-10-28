@@ -21,7 +21,7 @@ macro_rules! items {
 /// What may follow a node declaration's header.
 macro_rules! node_clauses {
     () => {
-        "one of `by`, `discretion`, `info`, `outcome`, `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, \
+        "one of `by`, `discretion`, `info`, `outcome`, `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `repealed`, `subject_to`, \
          `notwithstanding`, `supersedes`, `revives`, `override`, `interprets`, `delegable`, `cite`, or `{`"
     };
 }
@@ -344,7 +344,7 @@ const DEADLINES_COUNTING_AND_CALENDARS: Cases = &[
         (
             "module m\ncounting c x\n",
             &[
-                "L0001 2:12-2:13 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `interprets`, `delegable`, `cite`, or `{`, found `x`",
+                "L0001 2:12-2:13 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `repealed`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `interprets`, `delegable`, `cite`, or `{`, found `x`",
             ],
         ),
         (
@@ -368,7 +368,7 @@ const DEADLINES_COUNTING_AND_CALENDARS: Cases = &[
         (
             "module m\ncalendar c x\n",
             &[
-                "L0001 2:12-2:13 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `cite`, or `{`, found `x`",
+                "L0001 2:12-2:13 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `repealed`, `cite`, or `{`, found `x`",
             ],
         ),
         (
@@ -418,7 +418,7 @@ const TRANSITIONS_DEFAULTS_EXCEPTIONS_AND_TESTS: Cases = &[
         (
             "module m\ndefault d x\n",
             &[
-                "L0001 2:11-2:12 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `interprets`, `delegable`, `cite`, or `when`, found `x`",
+                "L0001 2:11-2:12 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `repealed`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `interprets`, `delegable`, `cite`, or `when`, found `x`",
             ],
         ),
         (
@@ -468,7 +468,7 @@ fn grants_and_delegations() {
             ),
             (
                 "module m\ngrant g on [d]\n",
-                &["L0001 3:1-3:1 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `cite`, or `{`, found end of file"],
+                &["L0001 3:1-3:1 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `repealed`, `cite`, or `{`, found end of file"],
             ),
             (
                 "module m\ngrant g on [d] effective [2020-01-01, 2020-02-01) { delegable x }\n",
@@ -476,7 +476,7 @@ fn grants_and_delegations() {
             ),
             (
                 "module m\ndeadline d: 1.days from E() counted_by c delegable x\n",
-                &["L0001 2:42-2:51 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `interprets`, `delegable`, `cite`, or `{`, found `delegable`"],
+                &["L0001 2:42-2:51 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `repealed`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `interprets`, `delegable`, `cite`, or `{`, found `delegable`"],
             ),
             (
                 "module m\ndeadline d: 1.days from E() counted_by c retracted x\n",
@@ -545,13 +545,13 @@ fn recharacterizations_and_invalidations() {
             (
                 "module m\ninvalidate i: d efective [2007-06-14, ..)\n",
                 &["L0001 2:17-2:25 expected one of `effective`, `known_at`, `retracted`, \
-                   `unknown_before`, `commenced`, or `cite`, found `efective` | note: did you \
+                   `unknown_before`, `commenced`, `repealed`, or `cite`, found `efective` | note: did you \
                    mean `effective`? | fix 2:17-2:25 \"effective\""],
             ),
             (
                 "module m\ninvalidate i: d effective [2007-06-14, ..) cite \"X\" stray\n",
                 &["L0001 2:53-2:58 expected one of `effective`, `known_at`, `retracted`, \
-                   `unknown_before`, `commenced`, or `cite`, found `stray`"],
+                   `unknown_before`, `commenced`, `repealed`, or `cite`, found `stray`"],
             ),
         ],
     );

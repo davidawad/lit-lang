@@ -4,7 +4,7 @@ expression: "(with_spans, without)"
 ---
 (
     [
-        "pkgs/demo/main.lit:18:1 L3002 `g` has no version in force on [2012-01-01, ..)\n    note: a gap is legal only when declared: a declaration that `supersedes g` over the gap",
+        "pkgs/demo/main.lit:18:1 L3002 `g` has no version in force on [2012-01-01, ..)\n    note: a gap is legal only when declared: `repealed` on the version ending 2012-01-01, or a declaration that `supersedes g` over the gap",
         "pkgs/demo/main.lit:16:1 L3001 versions of `p` overlap on [2012-01-01, 2014-01-01): [2009-12-01, ..) and [2012-01-01, 2014-01-01)\n    note @pkgs/demo/main.lit:15:1: the overlapping version is declared here\n    note: versions of one declaration must be pairwise disjoint so `as_of` selects exactly one",
         "pkgs/demo/main.lit:21:44 L3008 a transition condition may test only `has_event(...)`, `true`/`false`, and `!`, `&&`, `||`\n    note: a transition chooses between versions from the matter's history alone",
         "authority:1:1 L3006 authority `B > A` makes the order cyclic\n    note: levels on the cycle: A, B\n    note: authority is a strict partial order: no level may outrank itself",
@@ -16,7 +16,7 @@ expression: "(with_spans, without)"
         "pkgs/demo/main.lit:31:1 L2007 a `duty` rule must contain the deadline it imposes\n    note: rule `empty` is a `duty`",
     ],
     [
-        "g:1:1 L3002 `g` has no version in force on [2012-01-01, ..)\n    note: a gap is legal only when declared: a declaration that `supersedes g` over the gap",
+        "g:1:1 L3002 `g` has no version in force on [2012-01-01, ..)\n    note: a gap is legal only when declared: `repealed` on the version ending 2012-01-01, or a declaration that `supersedes g` over the gap",
         "p:1:1 L3001 versions of `p` overlap on [2012-01-01, 2014-01-01): [2009-12-01, ..) and [2012-01-01, 2014-01-01)\n    note @p:1:1: the overlapping version is declared here\n    note: versions of one declaration must be pairwise disjoint so `as_of` selects exactly one",
         "tr:1:1 L3008 a transition condition may test only `has_event(...)`, `true`/`false`, and `!`, `&&`, `||`\n    note: a transition chooses between versions from the matter's history alone",
         "authority:1:1 L3006 authority `B > A` makes the order cyclic\n    note: levels on the cycle: A, B\n    note: authority is a strict partial order: no level may outrank itself",

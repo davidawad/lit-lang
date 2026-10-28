@@ -469,6 +469,7 @@ fn versions_are_selected_at_the_build_dates() {
         retracted: None,
         unknown_before: None,
         commenced: None,
+        repealed: false,
     };
     old.meta.label = "Answer filed (pre-2015)".into();
     p.modules[0].declarations.push(Declaration::Node(old));

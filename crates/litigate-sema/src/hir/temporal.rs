@@ -25,6 +25,10 @@ pub struct Interval {
     /// those commenced in the window; `None`: every proceeding.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub commenced: Option<Commenced>,
+    /// The version is repealed at its `to` (`repealed`): the gap from
+    /// there to the next version or the package's end is declared (L3002).
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub repealed: bool,
 }
 
 /// A window of proceeding commencement dates (design review §2.6:

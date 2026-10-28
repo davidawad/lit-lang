@@ -406,6 +406,15 @@ impl Cx<'_, '_> {
         let commenced = self
             .commenced(item)
             .or_else(|| rule.and_then(|r| self.commenced(r)));
+        // A repeal ends the version itself, so it is never a rule's.
+        let repealed = clause(clauses_of(item), "repealed");
+        if let (Some(f), None) = (repealed, &to) {
+            self.report(Report::new(
+                C::InvalidField,
+                f.key.range,
+                "`repealed` ends a version at its `effective` end, and this version's `effective` interval is open: close it at the date of the repeal",
+            ));
+        }
         Interval {
             from,
             to,
@@ -413,6 +422,7 @@ impl Cx<'_, '_> {
             retracted: retracted.map(|(d, _)| d),
             unknown_before,
             commenced,
+            repealed: repealed.is_some(),
         }
     }
 

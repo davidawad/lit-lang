@@ -186,7 +186,7 @@ fn declarations() {
             (
                 "module m\nrule duty r subject_to { start s }\n",
                 &[
-                    "L0001 2:13-2:23 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, \
+                    "L0001 2:13-2:23 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `repealed`, `subject_to`, \
                    `notwithstanding`, `supersedes`, `revives`, `override`, `interprets`, `delegable`, \
                    `cite`, or `{`, found `subject_to`",
                 ],

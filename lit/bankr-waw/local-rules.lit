@@ -7,15 +7,14 @@ import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
 // Each is declared in the Local Rules effective December 1, 2023 and, from
 // December 1, 2026, in the amended Local Rules General Order 2026-6 adopts
 // (entered October 26, 2026), each version citing its own vendored text;
-// a period they add begins on December 1, 2026. Three periods of the 2023
-// rules the 2026 rules delete are not declared, as lit/frbp does for the
-// deleted FRBP 1007(c)(4) periods: a period that ends with no successor
-// needs a sunset relation the package has no target for. They are the
-// debtor in possession's six-month budget 14 days after the order for
-// relief (LBR 2015-1(c) (2023)), chapter 13 fees above the presumptive fee
-// on application not more than 21 days after confirmation (LBR 2016-1(e)(2)
-// (2023)), and the redacted version filed within 7 days of an order to
-// redact (LBR 9018-1(g) (2023)). The FRBP periods (schedules and their
+// a period they add begins on December 1, 2026. Two periods of the 2023
+// rules the 2026 rules delete are declared `repealed` at December 1, 2026:
+// the individual debtor in possession's six-month budget 14 days after the
+// order for relief (LBR 2015-1(c) (2023)) and chapter 13 fees above the
+// presumptive fee on application not more than 21 days after confirmation
+// (LBR 2016-1(e)(2) (2023)). A third, the redacted version filed within 7
+// days of an order to redact (LBR 9018-1(g) (2023)), is not declared: the
+// package has no event for the order to redact. The FRBP periods (schedules and their
 // extension, the chapter 13 plan, claims in chapter 7, 12 and 13 cases,
 // exemptions, discharge, dischargeability, the adversary answer and
 // summons, new trial, appeals) are lit/frbp's and are not declared again;
@@ -165,6 +164,24 @@ deadline dip-insurance-period: 7.days after OrderForReliefEntered() counted_by f
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 2015-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline dip-insurance-period: 7.days after OrderForReliefEntered() counted_by frcp6 effective [2026-12-01, ..) supersedes dip-insurance-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 2015-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. Wash. LBR 2015-1(c): an individual debtor in possession
+/// files a projected budget for the six months after the petition within
+/// 14 days after the order for relief (the rules effective December 1,
+/// 2023). The amended rules of December 1, 2026 drop it.
+deadline dip-budget-period: 14.days after OrderForReliefEntered() counted_by frcp6 effective [2023-12-01, 2026-12-01) repealed cite "Bankr. W.D. Wash. LBR 2015-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. Wash. LBR 2016-1(e)(2): chapter 13 attorneys' fees above
+/// the presumptive fee are requested by application not more than 21 days
+/// after the order of confirmation (the rules effective December 1, 2023).
+/// The amended rules of December 1, 2026 drop it.
+deadline excess-fee-application-period: 21.days after PlanConfirmed() counted_by frcp6 effective [2023-12-01, 2026-12-01) repealed cite "Bankr. W.D. Wash. LBR 2016-1(e)"
 {
   forum frcp
 }

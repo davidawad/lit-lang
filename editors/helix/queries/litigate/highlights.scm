@@ -44,6 +44,7 @@
 ] @keyword
 
 (discretion) @keyword
+(repealed_clause) @keyword
 
 ; These words are keywords only in typed guard operations, never in expressions.
 (guard_op operator: ["and" "or"] @keyword)

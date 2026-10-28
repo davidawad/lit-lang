@@ -59,6 +59,7 @@ fn op(kind: GuardOpKind, condition: Expr, by: &str, from: &str, to: Option<&str>
             retracted: None,
             unknown_before: None,
             commenced: None,
+            repealed: false,
         },
         span: None,
     }

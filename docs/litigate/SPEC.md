@@ -321,7 +321,8 @@ CalibrationItem = "note", String
                "{", { ("source", Ident | "n", Number | "method", String), Sep }, "}" ;
 
 VersionClause= ("effective" | "commenced"), Interval
-             | ("known_at" | "retracted" | "unknown_before"), Date ;
+             | ("known_at" | "retracted" | "unknown_before"), Date
+             | "repealed" ;                                     (* §5.4 *)
 Interval     = "[", Date, ",", (Date | ".."), ")" ;
 Relation     = ("subject_to" | "notwithstanding" | "supersedes" | "revives"
              | "override" | "interprets"), Ref | "delegable", Delegation
@@ -1550,7 +1551,10 @@ Every rule-bearing declaration has a half-open `in_force` interval
 package defaults. Declarations with the same name are versions of one
 logical declaration. Their intervals must be pairwise disjoint (L3001) and
 must cover the package lifetime. A gap is legal only when declared with
-`supersedes`/`revives` (L3002). A query at `(as_of, known_at)` selects the
+`supersedes`/`revives`, or by `repealed` on the version it follows: a
+later edition drops the declaration, so the version is repealed at its
+closed `effective` end (L2007 on an open one) and no version need follow
+(L3002). A query at `(as_of, known_at)` selects the
 version with `from <= as_of < to`, among versions the corpus held on the
 query's `known_at` (latest when omitted) that apply to the query's
 proceeding. No version is L3007, or L3010 before `unknown_before`.

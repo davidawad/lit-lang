@@ -270,6 +270,7 @@ impl Cx<'_, '_> {
             retracted: None,
             unknown_before: None,
             commenced: None,
+            repealed: false,
         })
     }
 

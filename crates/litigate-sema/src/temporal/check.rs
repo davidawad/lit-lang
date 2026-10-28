@@ -4,9 +4,10 @@
 //! A declaration's lifetime runs from its earliest version to the end of
 //! its package. A day of it no version covers is a gap, legal only when
 //! declared: covered by a declaration that `supersedes` it, ended by a
-//! version that `revives` it, or — for the trailing gap — left by a version
-//! that is itself a declared amendment (it `supersedes` or `revives`
-//! something), such as a sunset provision.
+//! version that `revives` it, left by a `repealed` version (a later
+//! edition drops the declaration), or — for the trailing gap — left by a
+//! version that is itself a declared amendment (it `supersedes` or
+//! `revives` something), such as a sunset provision.
 use super::activity::{revival_points, suspended_windows};
 use super::interval::{gaps, Window};
 use super::version::VersionSet;
@@ -90,12 +91,15 @@ fn coverage(
         .into_iter()
         .filter(|g| {
             let revived = g.to.as_ref().is_some_and(|t| revivals.contains(t));
+            let repealed = set.versions.iter().any(|v| {
+                v.in_force.to.as_ref() == Some(&g.from) && world.decls[v.decl].meta.effective.repealed
+            });
             let temporary = g.to == lifetime.to
                 && set.versions.iter().any(|v| {
                     v.in_force.to.as_ref() == Some(&g.from)
                         && !world.decls[v.decl].meta.relations.is_empty()
                 });
-            !revived && !temporary && !gaps(g, &suspended).is_empty()
+            !revived && !repealed && !temporary && !gaps(g, &suspended).is_empty()
         })
         .map(|g| {
             let before = set.versions.iter().find(|v| v.in_force.to.as_ref() == Some(&g.from));
@@ -109,8 +113,9 @@ fn coverage(
             .with_note(
                 None,
                 format!(
-                    "a gap is legal only when declared: {}a declaration that `supersedes {name}` over the gap",
-                    g.to.as_deref().map_or_else(String::new, |t| format!("a version starting {t} that `revives {name}`, or "))
+                    "a gap is legal only when declared: `repealed` on the version ending {}, {}or a declaration that `supersedes {name}` over the gap",
+                    g.from,
+                    g.to.as_deref().map_or_else(String::new, |t| format!("a version starting {t} that `revives {name}`, "))
                 ),
             );
             let fix = before.and_then(|prev| {

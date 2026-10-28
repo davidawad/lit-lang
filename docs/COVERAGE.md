@@ -112,7 +112,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Wyoming | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/wyoming/state-appellate`, `outlines/tenth-circuit/wyoming/state-civil` |
 | District of Columbia | district | outline | 0 | 0 | 0 | 0 | `outlines/dc-circuit/district-of-columbia/state-appellate`, `outlines/dc-circuit/district-of-columbia/state-civil` |
 | American Samoa | territory | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/american-samoa/state-appellate`, `outlines/ninth-circuit/american-samoa/state-civil` |
-| Guam | territory | promoted | 0 | 0 | 0 | 0 | `lit/gu-superior` |
+| Guam | territory | promoted | 0 | 0 | 0 | 0 | `lit/gu-superior`, `lit/gu-supreme` |
 | Northern Mariana Islands | territory | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/northern-mariana-islands/state-appellate`, `outlines/ninth-circuit/northern-mariana-islands/state-civil` |
 | Puerto Rico | territory | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/puerto-rico/state-appellate`, `outlines/first-circuit/puerto-rico/state-civil` |
 | U.S. Virgin Islands | territory | outline | 0 | 0 | 0 | 0 | `outlines/third-circuit/virgin-islands/state-appellate`, `outlines/third-circuit/virgin-islands/state-civil` |

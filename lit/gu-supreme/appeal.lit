@@ -1,0 +1,133 @@
+module gu-supreme-court-appellate.appeal
+
+/// A principal brief: at most 30 pages, or, under the type-volume
+/// limitation, no more than 14,000 words or 1,300 lines of monospaced text;
+/// a brief relying on the type-volume limitation carries a certificate of
+/// compliance (Guam R. App. P. 16(a)(7)). A reply brief is limited to 15
+/// pages or half the principal type volume; the half is not stated as a
+/// number in the vendored text, so the reply brief has no `limit` here.
+/// The excluded addendum is one "containing statutes, rules or
+/// regulations" (Guam R. App. P. 16(a)(7)(B)(iii)).
+limit principal-brief {
+  pages <= 30 cite "Guam R. App. P. 16(a)"
+  words <= 14_000 cite "Guam R. App. P. 16(a)"
+  lines <= 1_300 cite "Guam R. App. P. 16(a)"
+  requires certificate compliance for [words, lines] cite "Guam R. App. P. 16(a)"
+  excludes [corporate-disclosure-statement, table-of-contents, table-of-citations, statement-with-respect-to-oral-argument, certificates-of-counsel, addendum] cite "Guam R. App. P. 16(a)"
+} cite "Guam R. App. P. 16(a)"
+
+/// A petition for panel rehearing: at most 15 pages unless the court
+/// permits (Guam R. App. P. 30(b)).
+limit rehearing-petition { pages <= 15 cite "Guam R. App. P. 30(b)" } cite "Guam R. App. P. 30(b)"
+
+/// The appellant's opening brief is served and filed (Guam R. App. P.
+/// 17(a)).
+event OpeningBriefFiled() paper principal-brief
+/// The appellee's brief is served and filed (Guam R. App. P. 17(a)).
+event AppelleeBriefFiled() paper principal-brief
+/// A petition for rehearing is filed (Guam R. App. P. 30(a)).
+event RehearingPetitionFiled() paper rehearing-petition
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "Guam R. App. P. 4(a)"
+{
+  note "An appeal of right is taken by filing a notice of appeal with the Clerk of the Superior Court within the time Rule 4 allows, and the appellant submits a file-stamped copy to the Supreme Court (Guam R. App. P. 3(a)). In a civil case the notice is filed within 30 days after the judgment or order appealed from is entered; another party may appeal within 14 days after the first notice or within the time otherwise prescribed, whichever ends later; a timely motion under GRCP 50(b), 52(b), 54(d)(2) (where the time to appeal is extended under Rule 58(c)), 59, or 60 filed within 10 days after judgment runs the time from the order disposing of the last such motion (Guam R. App. P. 4(a)(1), (3), (4)). The Superior Court may extend the time on a motion filed no later than 14 days after the time expires, on excusable neglect or good cause, by no more than 30 days after the prescribed time or 10 days after the order granting the motion, whichever is later; it may reopen the time for 14 days on a motion filed within 180 days after entry or 7 days after notice, whichever is earlier, when the movant received no notice within 21 days after entry (Guam R. App. P. 4(a)(5), (6)). Periods are computed under Rule 11(a): intermediate Saturdays, Sundays and legal holidays are excluded from periods under eleven days unless stated in calendar days (Guam R. App. P. 11(a))."
+  edge-notice-filed-timely "Timely notice" -> appealability {
+    authority cite "Guam R. App. P. 4(a)"
+  }
+  edge-notice-filed-untimely "Late notice, time not extended or reopened" -> dismissed-untimely {
+    authority cite "Guam R. App. P. 4(a)"
+  }
+}
+
+terminal dismissed-untimely: "Appeal fails: notice untimely" outcome [loss, dismissal] cite "Guam R. App. P. 4(a)"
+{
+  note "The earlier outline named no Guam timeliness decision; the jurisdictional treatment of a late notice is not stated in the vendored rules."
+}
+
+decision appealability: "Statement of jurisdiction: appealable judgment entered?" by court cite "Guam R. App. P. 4.1"
+{
+  note "Within 10 days after filing the notice of appeal the appellant submits a statement of jurisdiction stating the basis for finality or appealability, the statutory basis of jurisdiction and the date the judgment or order was entered on the Superior Court docket, with a copy of it attached (Guam R. App. P. 4.1(a)). If no statement is filed within the 10 days, or it shows that no final appealable judgment or order has been entered, the case is dismissed for lack of jurisdiction, except for a premature notice under Rule 4(a)(2) (Guam R. App. P. 4.1(b)). The appellate jurisdiction statute named by the earlier outline (7 GCA § 3107) is not vendored and is not cited."
+  edge-appealability-dismissed "No statement, or no appealable judgment entered" -> dismissed-jurisdiction {
+    authority cite "Guam R. App. P. 4.1(b)"
+  }
+  edge-appealability-record "Appealable judgment entered" -> record {
+    authority cite "Guam R. App. P. 4.1(a)"
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of jurisdiction" outcome [loss, dismissal] cite "Guam R. App. P. 4.1(b)"
+{
+  note "A case dismissed under Rule 4.1 for want of an entered final judgment may be re-filed under Rule 4 (Guam R. App. P. 4.1(b))."
+}
+
+state record: "Record and transcript" by applicant cite "Guam R. App. P. 7(b)"
+{
+  note "Within 10 days after filing the notice of appeal or entry of the order disposing of the last timely Rule 4(a)(4)(A) motion, whichever is later, the appellant orders in writing the transcript it considers necessary or files a certificate that none will be ordered; unless the entire transcript is ordered, the appellant files a statement of the issues within the same 10 days, the appellee may designate additional parts within 10 days after service, and the appellee may order them or move within the following 10 days (Guam R. App. P. 7(b)(1), (3)). A reporter who cannot complete the transcript within 45 days of receiving the order may ask the Supreme Court Clerk for more time (Guam R. App. P. 7.1(b)). On the filing of the transcript, or notice that none will be ordered, the Superior Court Clerk files a certificate of record, and its filing means the record is filed (Guam R. App. P. 7.1(c))."
+  edge-record-briefing "Certificate of record filed" -> briefing {
+    authority cite "Guam R. App. P. 7.1(c)"
+  }
+}
+
+state briefing: "Briefing" by applicant cite "Guam R. App. P. 17(a)"
+{
+  note "The appellant serves and files its brief within 40 days after the record was filed, the appellee within 30 days after service of the appellant's brief, and any reply within 14 days after service of the appellee's brief and, except for good cause, at least 14 days before argument (Guam R. App. P. 17(a)). The Clerk may grant one oral extension of no more than 14 days for good cause; any other extension is by written motion made at least 5 days before the brief is due (Guam R. App. P. 17(c)). A principal brief is limited to 30 pages, or 14,000 words or 1,300 lines; a reply brief to 15 pages or half that type volume; a motion to exceed is filed at least 14 days before the brief is due (7 days for a reply) (Guam R. App. P. 16(a))."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "Guam R. App. P. 17(a)" }
+}
+
+decision argument: "Oral argument or submission on the briefs" by court cite "Guam R. App. P. 19(a)"
+{
+  note "Oral argument must be allowed unless a panel of three justices who have examined the briefs and record unanimously agrees it is unnecessary because the appeal is frivolous, the dispositive issues have been authoritatively decided, or the briefs and record adequately present the facts and arguments (Guam R. App. P. 19(a)). Each side is allowed 30 minutes; a request for more time is made by letter to the Clerk within 7 days of the date fixed for argument (Guam R. App. P. 19(c))."
+  edge-argument-decided "Argued or submitted" -> decision-issued {
+    authority cite "Guam R. App. P. 19(a)"
+  }
+}
+
+decision decision-issued: "Decision and entry of judgment" by court cite "Guam R. App. P. 27(b)"
+{
+  note "A decision is determined by a majority of the panel (Guam R. App. P. 27(a)). A judgment is entered when noted on the docket, and the Clerk serves the opinion, or the judgment, and notice of the date of entry on all parties that day (Guam R. App. P. 27(b)(2))."
+  edge-decision-issued-rehearing "Judgment entered" -> rehearing-window {
+    authority cite "Guam R. App. P. 27(b)"
+  }
+}
+
+decision rehearing-window: "Petition for rehearing?" by applicant cite "Guam R. App. P. 30(a)"
+{
+  note "Unless the time is shortened or extended, a petition for rehearing may be filed within 14 days after entry of judgment; in a civil case in which the Government of Guam or its officer or agency is a party, within 45 days. The petition states with particularity each point overlooked or misapprehended; an issue not previously briefed cannot be raised for the first time (Guam R. App. P. 30(a)(1), (2)). It is limited to 15 pages unless the court permits (Guam R. App. P. 30(b))."
+  edge-rehearing-window-none "No petition" -> mandate-issued {
+    authority cite "Guam R. App. P. 27(c)"
+  }
+  edge-rehearing-window-filed "Petition filed" -> rehearing-ruling {
+    authority cite "Guam R. App. P. 30(a)"
+  }
+}
+
+decision rehearing-ruling: "Rehearing decided" by court cite "Guam R. App. P. 30(a)"
+{
+  note "No answer to a petition for panel rehearing is permitted unless the court requests one, and rehearing will ordinarily not be granted without such a request. If rehearing is granted, the court may decide the case without reargument, restore it to the calendar for reargument or resubmission, or issue any other appropriate order (Guam R. App. P. 30(a)(3), (4))."
+  edge-rehearing-ruling-denied "Denied" -> mandate-issued { authority cite "Guam R. App. P. 27(c)" }
+  edge-rehearing-ruling-granted "Granted" -> rehearing-granted {
+    authority cite "Guam R. App. P. 30(a)"
+  }
+}
+
+terminal rehearing-granted: "Rehearing granted: the case is redecided or reargued" outcome [appeal] cite "Guam R. App. P. 30(a)"
+
+decision mandate-issued: "Mandate issued" by office cite "Guam R. App. P. 27(c)"
+{
+  note "The mandate issues 7 calendar days after the time to petition for rehearing expires, or 7 calendar days after entry of an order denying a timely petition for rehearing or motion to stay the mandate, whichever is later, and is effective when issued; a timely petition or motion stays it until disposition (Guam R. App. P. 27(c)(2)-(4)). A party may move to stay the mandate pending a petition for certiorari; the stay may not exceed 90 days unless extended for good cause or the party files the petition and notifies the Clerk within the stay (Guam R. App. P. 27(c)(4)). A copy of a certiorari petition is filed with the Supreme Court of Guam (Guam R. App. P. 27(d)). The certiorari statute named by the earlier outline (28 U.S.C. § 1259) is not vendored and is not cited."
+  edge-mandate-issued-certiorari "Certiorari sought" -> certiorari-sought {
+    authority cite "Guam R. App. P. 27(d)"
+  }
+  edge-mandate-issued-final "No further review" -> final-appellate {
+    authority cite "Guam R. App. P. 27(c)"
+  }
+}
+
+terminal certiorari-sought: "Certiorari petition filed in the Supreme Court of the United States" outcome [appeal] cite "Guam R. App. P. 27(d)"
+
+terminal final-appellate: "Mandate effective: appeal concluded" outcome [final] cite "Guam R. App. P. 27(c)"
+{
+  note "If the case is remanded, the Supreme Court does not retain jurisdiction, and review of the proceedings on remand needs a new notice of appeal or petition for review (Guam R. App. P. 27(c)(5))."
+}

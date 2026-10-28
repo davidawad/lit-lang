@@ -1,0 +1,206 @@
+module laed-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Eastern District of Louisiana's own civil periods, computed under
+// the federal rules (FRCP 6(a) governs "any local rule"). A contested
+// motion is noticed for a submission date: the noticed date is the date
+// the motion is deemed submitted, after which no further briefing is
+// allowed without leave, and no oral argument is held unless requested
+// under LR 78.1 or ordered (LR 7.2). The reply under LR 7.5 is due "no
+// later than 4:00 p.m., two working days before the noticed submission
+// date"; a working day is counted here as a court day (FRCP 6(a)(6) legal
+// holidays and weekends skipped), and the 4:00 p.m. cutoff is the rule's,
+// not computed. LR 7.8 allows one ex parte extension of time to plead of
+// 21 days from the time the pleading would otherwise be due, on the
+// movant's certification of no previous extension and no objection of
+// record; it extends an FRCP period and declares none of its own, so it
+// stays in this note. Rules that state no period or limit stay out:
+// motion memoranda (7.4), consent motions (7.3, 7.6), the scheduling order
+// (16.1), disclosure timing, which the court sets (26.1), review of a
+// magistrate judge's order, noticed for submission as a motion (72.2), and
+// attorney's fees, which need a verified contemporaneous report (54.2).
+// The clerk's call of the docket on 14 days' notice for cases pending 90
+// days without issue joined (16.2) and dismissal for failure to correct a
+// returned address within 35 days (41.3.1) are court actions on the
+// court's own motion, so they stay in this note. The earlier E.D. La.
+// outline's FRCP flow and its decisions (Twombly, Iqbal, Celotex,
+// Anderson, Matsushita, Frow v. De La Vega) are FRCP authority and belong
+// to lit/frcp; they are removed here: no reporter text is vendored.
+
+/// A trial brief or memorandum supporting or opposing a motion: at most
+/// 25 pages, excluding exhibits, except with prior leave of court
+/// (E.D. La. LR 7.7).
+limit memorandum {
+  pages <= 25 cite "E.D. La. LR 7.7"
+} cite "E.D. La. LR 7.7"
+
+/// A reply brief or memorandum: at most 10 pages, excluding exhibits,
+/// except with prior leave of court (E.D. La. LR 7.7).
+limit reply-memorandum {
+  pages <= 10 cite "E.D. La. LR 7.7"
+} cite "E.D. La. LR 7.7"
+
+/// A notice of removal is filed (E.D. La. LR 3.2).
+event NoticeOfRemovalFiled()
+/// A Motion to Consider Whether Another Party's Material Should Be Sealed
+/// is filed and served on the Designating Party (E.D. La. LR 5.6(D)).
+event OtherPartySealMotionFiled()
+/// The court grants a motion to seal (E.D. La. LR 5.6(D)).
+event SealMotionGranted()
+/// The court denies a motion to file under seal (E.D. La. LR 5.6(G)).
+event SealMotionDenied()
+/// The noticed submission date of a contested motion (E.D. La. LR 7.2).
+event SubmissionDate()
+/// A motion is filed (E.D. La. LR 7.2).
+event MotionFiled() paper memorandum
+/// A memorandum in opposition to a motion is filed and served
+/// (E.D. La. LR 7.5).
+event OppositionFiled() paper memorandum
+/// A reply brief in support of a motion is filed and served
+/// (E.D. La. LR 7.5).
+event ReplyFiled() paper reply-memorandum
+/// A case is ordered separated from a consolidation (E.D. La. LR 10.2).
+event DeconsolidationOrdered()
+/// The scheduled preliminary conference (E.D. La. LR 26.2(A)).
+event PreliminaryConference()
+/// The scheduled FRCP 16(b) conference (E.D. La. LR 26.2(B)).
+event SchedulingConference()
+/// The prevailing party receives notice of entry of judgment
+/// (E.D. La. LR 54.3).
+event JudgmentEntryNoticed()
+/// A party receives the opposition memorandum to a motion
+/// (E.D. La. LR 78.1).
+event OppositionReceived()
+/// The case is finally disposed of (E.D. La. LR 79.3).
+event FinalDisposition()
+/// An order transferring a case to a district court outside the Fifth
+/// Circuit is entered on the docket (E.D. La. LR 83.5.1).
+event TransferOrderEntered()
+
+/// E.D. La. LR 3.2: in every case in which a notice of removal is filed,
+/// the moving defendant files, within 14 days of removal, a list of all
+/// parties remaining in the action, copies of all pleadings filed in state
+/// court, and copies of the returns of service filed in state court.
+deadline removal-record-period: 14.days after NoticeOfRemovalFiled() counted_by frcp6 cite "E.D. La. LR 3.2"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 5.6(D)(2)(b): within seven days of the filing of a Motion
+/// to Consider Whether Another Party's Material Should Be Sealed, the
+/// Designating Party files a statement or declaration supporting sealing;
+/// failing to do so may result in unsealing without further notice.
+deadline designating-party-statement-period: 7.days after OtherPartySealMotionFiled() counted_by frcp6 cite "E.D. La. LR 5.6(D)"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 5.6(D)(2)(c): any other party who wishes to respond to the
+/// motion does so no later than 14 days after the motion is filed.
+deadline other-party-seal-response-period: 14.days after OtherPartySealMotionFiled() counted_by frcp6 cite "E.D. La. LR 5.6(D)"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 5.6(D)(3): if the court grants the motion to seal, the
+/// movant files a redacted version of the sealed document within 14 days
+/// of the order granting the motion.
+deadline redacted-version-period: 14.days after SealMotionGranted() counted_by frcp6 cite "E.D. La. LR 5.6(D)"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 5.6(G): if the motion to file under seal is denied, the
+/// movant may file another motion to remove the documents from the record
+/// within seven days; if none is timely filed, the documents are filed as
+/// a public record.
+deadline seal-denial-removal-period: 7.days after SealMotionDenied() counted_by frcp6 cite "E.D. La. LR 5.6(G)"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 7.2: unless otherwise ordered, actual notice of the
+/// submission date is given to opposing counsel at least fifteen days
+/// before the submission date, whatever FRCP 5(b) service method is used,
+/// and the motion is filed not later than the fifteenth day preceding it.
+deadline motion-notice-period: 15.days before SubmissionDate() counted_by frcp6 cite "E.D. La. LR 7.2"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 7.5: each party opposing a motion files and serves a
+/// memorandum in opposition no later than eight days before the noticed
+/// submission date.
+deadline opposition-period: 8.days before SubmissionDate() counted_by frcp6 cite "E.D. La. LR 7.5"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 7.5: the movant may file and serve a reply brief no later
+/// than 4:00 p.m., two working days before the noticed submission date.
+deadline reply-period: 2.court_days before SubmissionDate() counted_by frcp6 cite "E.D. La. LR 7.5"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 10.2: if a case is ordered separated from a consolidation,
+/// counsel jointly designate the documents in the master record needed for
+/// the separated case and file the designation within seven days of the
+/// deconsolidation order.
+deadline deconsolidation-designation-period: 7.days after DeconsolidationOrdered() counted_by frcp6 cite "E.D. La. LR 10.2"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 26.2(A): except as otherwise ordered, the FRCP 26(f)
+/// conference is held no later than seven working days before the
+/// scheduled preliminary conference.
+deadline rule26f-conference-period: 7.court_days before PreliminaryConference() counted_by frcp6 cite "E.D. La. LR 26.2(A)"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 26.2(B): when a party objects at the FRCP 26(f) conference
+/// that initial disclosures are not appropriate, the parties file a
+/// written discovery plan, including the nature of the objection, no later
+/// than three working days before the scheduled Rule 16(b) conference.
+deadline discovery-plan-report-period: 3.court_days before SchedulingConference() counted_by frcp6 cite "E.D. La. LR 26.2(B)"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 54.3: within 35 days of receiving notice of entry of
+/// judgment, unless otherwise ordered, the party allowed costs serves and
+/// files a motion to tax costs with a certification that the items are
+/// correct and necessarily incurred.
+deadline costs-motion-period: 35.days after JudgmentEntryNoticed() counted_by frcp6 cite "E.D. La. LR 54.3"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 78.1: a party seeking oral argument files a separate
+/// written request with the motion or opposition, or within three days
+/// after receipt of the opposition memorandum; argument is held only if
+/// ordered.
+deadline oral-argument-request-period: 3.days after OppositionReceived() counted_by frcp6 cite "E.D. La. LR 78.1"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 79.3: exhibits in the clerk's custody are removed within
+/// 35 days of the final disposition of the case, or may be destroyed or
+/// otherwise disposed of by the clerk.
+deadline exhibit-removal-period: 35.days after FinalDisposition() counted_by frcp6 cite "E.D. La. LR 79.3"
+{
+  forum frcp
+}
+
+/// E.D. La. LR 83.5.1: unless all affected parties consent, an order
+/// transferring a case to a district court outside the Fifth Circuit
+/// (other than a JPML transfer order) is stayed for 21 days from its entry
+/// on the docket.
+deadline transfer-stay-period: 21.days after TransferOrderEntered() counted_by frcp6 cite "E.D. La. LR 83.5.1"
+{
+  forum frcp
+}

@@ -1,0 +1,92 @@
+module bankr-ohn-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ PetitionFiled }
+
+// The Bankr. N.D. Ohio court's own periods and page limit, counted under
+// FRBP 9006(a), the FRCP 6(a) method: the Local Bankruptcy Rules as last
+// revised May 19, 2022. The FRBP periods (schedules, claims, the chapter 13
+// plan, discharge, dischargeability, exemptions, the adversary answer,
+// appeals) are lit/frbp's and are not declared again. The motion response
+// period of LBR 9013-1(a)-(b) is 14 days unless an FRBP, a statute or the
+// court sets another time; it is declared at 14 days and yields to those.
+// Stated in the rules but not declared: the certification of plan votes,
+// due 'prior to or at' the confirmation hearing (LBR 3018-2), which has no
+// counted period.
+/// A motion or a response to it, including written argument and cited
+/// authorities, exclusive of appendices and attached unreported opinions
+/// (LBR 9013-2(a), (d)).
+limit motion-paper { pages <= 20 cite "N.D. Ohio LBR 9013-2(a)" } cite "N.D. Ohio LBR 9013-2(a)"
+
+/// A trial or hearing on any matter is scheduled to be held (LBR
+/// 2091-1(c)).
+event TrialOrHearingScheduled()
+/// The discovery cut-off passes (LBR 7026-1).
+event DiscoveryCutoff()
+/// A motion or application is served, as shown on its certificate of
+/// service (LBR 9013-1(a)-(b)).
+event MotionServed()
+/// A response to a motion or application is served, as shown on its
+/// certificate of service (LBR 9013-1(c)).
+event ResponseServed()
+/// The final pretrial is scheduled to be held (LBR 9070-1(a)(6)).
+event FinalPretrialScheduled()
+/// Final judgment, or final judgment on appeal, is entered (LBR
+/// 9070-1(b)(2)).
+event FinalJudgmentEntered()
+/// A motion or response to a motion is filed (LBR 9013-2(a)).
+event MotionPaperFiled() paper motion-paper
+
+/// LBR 2016-2(c): a bankruptcy petition preparer seeking a determination
+/// that its services are worth more than the presumptive $125 files a
+/// motion requesting a hearing within 14 days after the petition is filed.
+deadline preparer-fee-motion-period: 14.days after PetitionFiled() counted_by frcp6 cite "N.D. Ohio LBR 2016-2(c)"
+{
+  forum frcp
+}
+
+/// LBR 2091-1(c): unless otherwise ordered, an attorney of record may not
+/// withdraw within 21 days before a trial or hearing on any matter.
+deadline attorney-withdrawal-period: 21.days before TrialOrHearingScheduled() counted_by frcp6 cite "N.D. Ohio LBR 2091-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 7026-1: unless otherwise ordered, no discovery dispute may be
+/// brought to a judge, and no motion to compel filed, more than 14 days
+/// after the discovery cut-off.
+deadline discovery-dispute-period: 14.days after DiscoveryCutoff() counted_by frcp6 cite "N.D. Ohio LBR 7026-1"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(a)-(b): unless the court orders otherwise, a response
+/// opposing a motion or application is filed within 14 days (or such other
+/// time as an FRBP, a statute or the court sets) from the date of service
+/// on the certificate of service, subject to FRBP 9006(f).
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "N.D. Ohio LBR 9013-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(c): subject to FRBP 9006(f), a reply may be filed within 7
+/// days after the date of service of the response.
+deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "N.D. Ohio LBR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 9070-1(a)(6): unless otherwise ordered, the index of trial exhibits
+/// is filed and served no later than 7 days before the final pretrial.
+deadline exhibit-index-period: 7.days before FinalPretrialScheduled() counted_by frcp6 cite "N.D. Ohio LBR 9070-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 9070-1(b)(2): counsel removes an exhibit held by the Clerk within 60
+/// days after final judgment or final judgment on appeal; the Clerk
+/// disposes of exhibits not removed.
+deadline exhibit-removal-period: 60.days after FinalJudgmentEntered() counted_by frcp6 cite "N.D. Ohio LBR 9070-1(b)"
+{
+  forum frcp
+}

@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-ohn-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:93c455f2012c8104d420f36579916803f23ae91cae095e9daec8830dd285039c"
+semantic = "sha256:97096c5efee3c7271dae275d70c0abee40f5a78a3a0695d51774858d925c632f"
+texts = [
+    "ohnb-lbr sources/bankr-ohn/ohn-local-rules-2022-05-19-sectioned.txt sha256:180e7538f8f7b295a5cf5fb71603dade61dab696c055a41864a5215af8f5d085",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-ohn"
-version = "0.0.1"
-language = 1
-source = "sha256:9eaf90f0da1028f0366f4bbc4001e9f9cfa9b76a9c34bef1d1f5f68dee720174"
-semantic = "sha256:eaf8fcbb22a23172ef5c4d7aa420da7271e23c55f6ba92c334cc3aab0da648ec"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

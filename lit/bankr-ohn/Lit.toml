@@ -1,0 +1,51 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the Northern
+# District of Ohio over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# declares only the periods and page limit the rules themselves state and
+# re-encodes no FRBP period. Each period is counted under FRBP 9006(a), the
+# FRCP 6(a) method (core's frcp6). The rules are those last revised May 19,
+# 2022; the court's general orders page lists no order amending them
+# (sources/bankr-ohn/PROVENANCE.md), so the consolidation is the only
+# layer. The earlier revisions are not vendored, so a query before May 19,
+# 2022 is a hole in the corpus.
+[package]
+name = "bankr-ohn-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-ohn-local-rules"
+forum = "bankr-ohn"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. Bankruptcy Court for the Northern District of Ohio: Local Bankruptcy Rules"
+description = "The Bankr. N.D. Ohio Local Bankruptcy Rules (last revised May 19, 2022) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): petition preparer fee motions, the attorney withdrawal cutoff before a hearing, discovery disputes after the cut-off, motion responses and replies (LBR 9013-1), the exhibit index and exhibit removal, and the 20-page limit on motions and responses (LBR 9013-2)."
+in_force = "2022-05-19"
+known_at = "2026-10-28"
+unknown_before = "2022-05-19"
+jurisdiction = "U.S. Bankruptcy Court for the Northern District of Ohio"
+counting = "frcp6"
+
+[package.instrument]
+source = "ohnb-lbr"
+issuer = "United States Bankruptcy Court for the Northern District of Ohio"
+date = "2022-05-19"
+designation = "Local Bankruptcy Rules"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.ohnb-lbr]
+title = "Local Bankruptcy Rules of the United States Bankruptcy Court for the Northern District of Ohio (last revised May 19, 2022)"
+url = "https://www.ohnb.uscourts.gov/sites/default/files/file-list/local-bankruptcy-rules-northern-district-ohio.pdf"
+path = "sources/bankr-ohn/ohn-local-rules-2022-05-19-sectioned.txt"
+path_sha256 = "180e7538f8f7b295a5cf5fb71603dade61dab696c055a41864a5215af8f5d085"
+sha256 = "2b6401935f93f0d041edc24e3673dc8e85343f46b51f6d00221634c3d71e6d9d"
+as_of = "2022-05-19"
+cite_prefixes = ["N.D. Ohio LBR"]
+section_heading = "Rule {n}"

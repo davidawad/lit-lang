@@ -1,0 +1,128 @@
+module ri-supreme-court-civil-appeals.appeal
+
+// Civil appeals from the Superior Court to the Rhode Island Supreme Court,
+// from the appellant's side. Every period below is stated in a note, not
+// counted: time is computed under Art. I, Rule 20(a), with Rhode Island's
+// legal holidays, for which lit/core has no counting rule. The earlier
+// outline cited Rule 34 for argument and decision and Rule 17 for
+// rehearing; Rule 34 governs emergency filings and Rule 17 the appendix,
+// so those steps cite the rules that govern them: the Rule 12A statement
+// and conference, assignment and argument (22, 24) and reargument (25). The
+// Court has no mandate rule; the outline's mandate and further-review
+// steps are dropped, and certiorari to the Supreme Court of the United
+// States belongs to lit/scotus. The outline's decision, Votolato v. Kiff,
+// was marked unverified and no reporter text is vendored, so it is removed.
+/// A Rule 12A statement of the case, a counter-statement, or a show cause
+/// supplemental statement: at most 3,000 words unless the Court or a
+/// justice permits more (Art. I, Rule 12A(1), (2), (4)).
+limit rule-12a-statement {
+  words <= 3_000 cite "R.I. Sup. Ct. R. App. P. 12A(1)"
+} cite "R.I. Sup. Ct. R. App. P. 12A(1)"
+
+/// A brief: at most 15,000 words unless the Court authorizes more on
+/// written motion (Art. I, Rule 16(f)).
+limit brief {
+  words <= 15_000 cite "R.I. Sup. Ct. R. App. P. 16(f)"
+} cite "R.I. Sup. Ct. R. App. P. 16(f)"
+
+/// A reply brief: at most 7,500 words (Art. I, Rule 16(f)).
+limit reply-brief {
+  words <= 7_500 cite "R.I. Sup. Ct. R. App. P. 16(f)"
+} cite "R.I. Sup. Ct. R. App. P. 16(f)"
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "R.I. Sup. Ct. R. App. P. 3(a)"
+{
+  note "An appeal is taken by filing a notice of appeal in the trial court, served on each party's attorney of record or an unrepresented party; failure to take any other step does not affect the validity of the appeal but is ground for action the Court deems appropriate, including dismissal (R.I. Sup. Ct. R. App. P. 3(a), (d)). In a civil case the notice is filed with the clerk of the trial court within 20 days of the entry of the judgment, order or decree appealed from, with a filing fee of $150; any other party may appeal within 20 days of the first notice. A timely motion under Super. R. Civ. P. 50(b), 52(b) or 59 terminates the running of the time, which runs in full from entry of the order deciding it; on excusable neglect the trial court may extend the time by up to 30 days from its expiration (R.I. Sup. Ct. R. App. P. 4(a)). The Supreme Court may not extend the time for filing a notice of appeal (R.I. Sup. Ct. R. App. P. 20(b))."
+  edge-notice-filed-timeliness "Notice filed" -> timeliness {
+    authority cite "R.I. Sup. Ct. R. App. P. 4(a)"
+  }
+}
+
+decision timeliness: "Notice timely?" by court cite "R.I. Sup. Ct. R. App. P. 4(a)"
+{
+  note "A notice filed after the decision but before entry of the judgment is deemed filed on the day of entry (R.I. Sup. Ct. R. App. P. 4(a)). A petition to the trial court for relief from the filing fee, filed within the time for the notice, terminates the running of the time for the petitioner (R.I. Sup. Ct. R. App. P. 5(b))."
+  edge-timeliness-dismissed "Untimely and not extended" -> dismissed-untimely {
+    authority cite "R.I. Sup. Ct. R. App. P. 4(a)"
+  }
+  edge-timeliness-record "Timely" -> record { authority cite "R.I. Sup. Ct. R. App. P. 10(b)" }
+}
+
+terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismissal] cite "R.I. Sup. Ct. R. App. P. 4(a)"
+
+state record: "Transcript ordered and record transmitted" by applicant cite "R.I. Sup. Ct. R. App. P. 11(a)"
+{
+  note "Within 20 days after filing the notice of appeal the appellant orders the transcript it deems necessary and, unless the entire transcript is included, files and serves a description of the parts and a statement of the points it will rely on (R.I. Sup. Ct. R. App. P. 10(b)), except in cases eligible for mediation (R.I. Sup. Ct. R. App. P. 35). If no transcript is available the appellant may prepare a statement of the proceedings, to which the appellee may object within 10 days after service (R.I. Sup. Ct. R. App. P. 10(c)). The record is transmitted to the Supreme Court within 60 days after the filing of the notice of appeal; the trial court may extend the time on a request made within it, but not beyond 90 days from the filing of the first notice (R.I. Sup. Ct. R. App. P. 11(a), (c)). If the appellant fails to cause timely transmission, an appellee may move in the trial court to dismiss or docket the appeal itself (R.I. Sup. Ct. R. App. P. 12(c))."
+  edge-record-docketed "Record filed; appeal docketed" -> statement {
+    authority cite "R.I. Sup. Ct. R. App. P. 12(b)"
+  }
+}
+
+state statement: "Rule 12A statement and counter-statement filed" by applicant cite "R.I. Sup. Ct. R. App. P. 12A(1)"
+{
+  note "On filing the record the Clerk dockets the appeal and notifies the parties, who report errors in the title within 7 days (R.I. Sup. Ct. R. App. P. 12(b)); motions to correct the record are made within 20 days after docketing (R.I. Sup. Ct. R. App. P. 12(d)). Within 20 days after docketing the appellant files a statement of the case and summary of issues, with the judgment and the trial justice's decision, of at most 3,000 words; within 15 days after it the appellee files a counter-statement of at most 3,000 words (R.I. Sup. Ct. R. App. P. 12A(1), (2)). An appellant that misses the statement is conditionally dismissed, and an appellee that misses the counter-statement conditionally defaulted, subject to reinstatement on a filing within 10 days of the order (R.I. Sup. Ct. R. App. P. 18A). The Clerk may grant one 30-day extension on motion, and the Clerk of the Supreme Court a further one unless an objection is filed within 7 days (R.I. Sup. Ct. R. App. P. 20(b))."
+  edge-statement-conference "Single justice conference" -> conference {
+    authority cite "R.I. Sup. Ct. R. App. P. 12A(3)"
+  }
+}
+
+decision conference: "Single justice conference" by court cite "R.I. Sup. Ct. R. App. P. 12A(3)"
+{
+  note "A single justice may hold a conference to seek settlement in civil cases and determine the issues and how the appeal will proceed, and may order the parties to show cause why the appeal should not be decided on the show cause calendar, refer it to the full Court in conference, or place it on the regular calendar for full briefing and argument (R.I. Sup. Ct. R. App. P. 12A(3)). Eligible civil appeals may first go to the Appellate Mediation Program (R.I. Sup. Ct. R. App. P. 35)."
+  edge-conference-show-cause "Show cause order" -> show-cause {
+    authority cite "R.I. Sup. Ct. R. App. P. 12A(4)"
+  }
+  edge-conference-briefing "Regular calendar for full briefing" -> briefing {
+    authority cite "R.I. Sup. Ct. R. App. P. 16(a)"
+  }
+  edge-conference-settled "Settled or withdrawn" -> withdrawn {
+    authority cite "R.I. Sup. Ct. R. App. P. 18B"
+  }
+}
+
+state show-cause: "Show cause calendar" by applicant cite "R.I. Sup. Ct. R. App. P. 12A(4)"
+{
+  note "Either party may file a supplemental statement of at most 3,000 words: the appellant within 20 days of the show cause order, the appellee within 10 days thereafter (R.I. Sup. Ct. R. App. P. 12A(4)). The show cause argument is before a panel of at least three justices, each side having 10 minutes and the appellant 2 more for rebuttal; the panel may decide the appeal or place it on the regular calendar (R.I. Sup. Ct. R. App. P. 12A(7), 24(b))."
+  edge-show-cause-decided "Panel decides" -> decision {
+    authority cite "R.I. Sup. Ct. R. App. P. 12A(7)"
+  }
+  edge-show-cause-briefing "Placed on the regular calendar" -> briefing {
+    authority cite "R.I. Sup. Ct. R. App. P. 12A(7)"
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite "R.I. Sup. Ct. R. App. P. 16(a)"
+{
+  note "The appellant files its brief within 40 days after the Clerk gives notice of assignment to the regular calendar; the appellee within 40 days after the appellant's brief; the appellant may reply within 20 days after the appellee's brief (R.I. Sup. Ct. R. App. P. 16(a)-(c)). Briefs may not exceed 15,000 words and reply briefs 7,500 words without leave on written motion (R.I. Sup. Ct. R. App. P. 16(f)); the appendix is Rule 17's. A response to a citation of supplemental authority is filed within 10 days (R.I. Sup. Ct. R. App. P. 16(e)). An appellant that misses its brief is conditionally dismissed, and an appellee conditionally defaulted, subject to reinstatement on filing within 10 days of the order (R.I. Sup. Ct. R. App. P. 18A)."
+  edge-briefing-argument "Briefing complete" -> argument {
+    authority cite "R.I. Sup. Ct. R. App. P. 22(a)"
+  }
+}
+
+state argument: "Argument" by court cite "R.I. Sup. Ct. R. App. P. 24(b)"
+{
+  note "The Clerk places a case on the argument list 30 days after the moving party's briefs are filed or 5 days after the adverse party's, whichever is sooner, and assigns hearing dates in order, Group A cases first (R.I. Sup. Ct. R. App. P. 22(a)). On the regular calendar each side has 30 minutes and the appellant 10 more for rebuttal (R.I. Sup. Ct. R. App. P. 24(b))."
+  edge-argument-decided "Court decides" -> decision {
+    authority cite "R.I. Sup. Ct. R. App. P. 24(b)"
+  }
+}
+
+decision decision: "Decision" by court cite "R.I. Sup. Ct. R. App. P. 25(a)"
+{
+  note "A petition for reargument is filed within 10 days after the filing of the decision, with a memorandum of its grounds; an adverse party may file a memorandum in opposition within 10 days after receipt (R.I. Sup. Ct. R. App. P. 25(a), (b)). The Clerk's extensions do not apply to reargument petitions (R.I. Sup. Ct. R. App. P. 20(b)). No leading decision is named."
+  edge-decision-affirmed "Affirmed or appeal dismissed" -> affirmed {
+    authority cite "R.I. Sup. Ct. R. App. P. 12A(7)"
+  }
+  edge-decision-reversed "Reversed, modified or remanded" -> reversed {
+    authority cite "R.I. Sup. Ct. R. App. P. 12A(7)"
+  }
+}
+
+terminal affirmed: "Judgment affirmed" outcome [loss, final] cite "R.I. Sup. Ct. R. App. P. 25(a)"
+terminal reversed: "Judgment reversed, modified or remanded" outcome [win, final] cite "R.I. Sup. Ct. R. App. P. 25(a)"
+
+terminal withdrawn: "Appeal withdrawn or dismissed by stipulation" outcome [settlement] cite "R.I. Sup. Ct. R. App. P. 18B"
+{
+  note "Before oral argument is scheduled the appellant may withdraw the appeal by written notice; thereafter the Court may dismiss on a stipulation signed by the parties (R.I. Sup. Ct. R. App. P. 18B(1))."
+}

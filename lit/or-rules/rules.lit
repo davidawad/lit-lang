@@ -1,0 +1,40 @@
+module or-state-rules
+
+/// `lit/or-rules` is a base library: it declares what Oregon's court
+/// packages share and no procedure of its own. Its pack holds only this
+/// placeholder terminal, which no link or case may route through.
+start library
+
+terminal library: "Oregon state court rules library (no procedure)"
+
+// The Supreme Court word limits of ORAP 5.05(1)(b)(i) (other than for
+// automatic review of a death sentence under ORAP 12.10). Headings,
+// footnotes and quoted material count; the cover, indexes, excerpt of
+// record, appendices, certificates and signature block do not (ORAP
+// 5.05(1)(a)). A party without a word count may instead file an opening,
+// answering or combined brief of at most 50 pages and a reply of at most 15
+// (ORAP 5.05(1)(c)); each brief ends with the word-count certificate of
+// ORAP 5.05(1)(d).
+/// An opening or answering brief in the Supreme Court: no more than 14,000
+/// words (ORAP 5.05(1)(b)(i)(A), (B)).
+limit sct-principal-brief { words <= 14_000 cite "ORAP 5.05(1)(b)" } cite "ORAP 5.05(1)(b)"
+/// A reply brief in the Supreme Court: no more than 4,000 words (ORAP
+/// 5.05(1)(b)(i)(E)).
+limit sct-reply-brief { words <= 4_000 cite "ORAP 5.05(1)(b)" } cite "ORAP 5.05(1)(b)"
+
+// The trigger events the court packages' graphs route on.
+/// An action, claim, petition or charge is filed and the proceeding begins.
+event ActionCommenced()
+/// A final judgment, decision or appealable order is entered.
+event JudgmentEntered()
+/// A notice of appeal, or a petition or appeal for review of a lower court's or tribunal's decision, is filed.
+event NoticeOfAppealFiled()
+/// The record on appeal or review is filed or transmitted.
+event RecordFiled()
+/// The reviewing court's or tribunal's decision or opinion is filed.
+event DecisionFiled()
+/// A petition for discretionary review in a higher court (certiorari, transfer, leave or review) is filed.
+event ReviewPetitionFiled()
+/// The appellate judgment issues and a copy is sent to the court below
+/// (ORAP 14.05(3)).
+event MandateIssued()

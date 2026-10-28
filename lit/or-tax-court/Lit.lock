@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "or-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "or-tax-court"
+version = "0.1.0"
+language = 1
+source = "sha256:551e0b6380b8e257155bb065962e07809b7e8ad6ef593b676b932eefe7740c9c"
+semantic = "sha256:7993c315364f3d66cc43ee412b5fd7cdb93a44be8eaaf71a484d7b7d5e773665"
+texts = [
+    "orap sources/or-court-of-appeals/orap-sectioned.txt sha256:7699edb4c6eabf5749a33fc31ecd9df2b5d5869ecaee3149a29a7f9968ae849b",
+]
+dependencies = [
+    "core 1.0.0",
+    "or-state-rules 0.1.0",
+]

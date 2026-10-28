@@ -1,0 +1,127 @@
+module or-tax-court.tax
+
+import or-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeOfAppealFiled }
+
+// An appeal in the Oregon Tax Court and the direct appeal of its judgment
+// to the Supreme Court, from the applicant's (taxpayer's) side. The Tax
+// Court Rules and ORS chapter 305 are not vendored: commencement in the
+// Magistrate Division, de novo trial in the Regular Division, their
+// periods, fees and procedure are holes. The direct appeal follows ORAP
+// chapters 2 and 3 except as a statute or another rule provides (ORAP
+// 12.05(2)); its time is set by ORS 305.445 (named in ORAP 12.05, not
+// vendored). Every period below is stated in a note, not counted (ORAP
+// 1.25). The earlier outline named no decision; none is cited. Its TCR
+// cites (7, 21, 36, 47, 67) are carried as holes, not verified.
+/// An opening or answering brief in the Supreme Court (ORAP 5.05(1)(b)(i)).
+event PrincipalBriefFiled() paper or-state-rules.sct-principal-brief
+/// A reply brief in the Supreme Court (ORAP 5.05(1)(b)(i)(E)).
+event ReplyBriefFiled() paper or-state-rules.sct-reply-brief
+
+start commenced
+
+state commenced: "Appeal filed in the Tax Court" by applicant cite ?("ORS 305.280; Tax Court Rules: not vendored")
+{
+  note "Commencement of an appeal in the Tax Court (in the Magistrate Division, with de novo trial in the Regular Division), its filing period, fee and form: holes, because neither the Tax Court Rules nor ORS chapter 305 is vendored. Tax Court Rule 9 A incorporates UTCR chapter 21 in Tax Court proceedings (ORAP 2.05, note); UTCR chapter 21 is not vendored."
+  edge-commenced-proceeds "Appeal docketed" -> tax-decision {
+    event ActionCommenced()
+    authority cite ?("Tax Court Rules: not vendored")
+  }
+}
+
+decision tax-decision: "Tax Court decision" by court cite ?("ORS 305.425; Tax Court Rules: not vendored")
+{
+  note "Pleadings, discovery, summary judgment, trial and the entry of judgment in the Tax Court are holes (Tax Court Rules and ORS chapter 305 not vendored). A ruling of the Tax Court is a decision whose appealability the Supreme Court may determine summarily (ORAP 2.35(1), (2))."
+  edge-tax-decision-won "Decided for the taxpayer" -> won {
+    event JudgmentEntered()
+    authority cite ?("Tax Court Rules: not vendored")
+  }
+  edge-tax-decision-lost "Decided against the taxpayer" -> post-judgment {
+    event JudgmentEntered()
+    authority cite ?("Tax Court Rules: not vendored")
+  }
+  edge-tax-decision-settled "Settled or withdrawn" -> settled {
+    authority cite ?("Tax Court Rules: not vendored")
+  }
+}
+
+terminal won: "Decided for the taxpayer" outcome [win] cite ?("Tax Court Rules: not vendored")
+{
+  note "The adverse party may appeal directly to the Supreme Court under ORS 305.445 (not vendored) and ORAP 12.05. Outcome from the applicant's side."
+}
+
+terminal settled: "Settled or withdrawn" outcome [settlement] cite ?("Tax Court Rules: not vendored")
+{
+  note "Settlement terms are outside this package."
+}
+
+decision post-judgment: "Direct appeal to the Supreme Court?" by applicant cite "ORAP 12.05"
+{
+  note "A direct appeal from a court of law to the Supreme Court is taken in the manner of ORAP chapters 2 and 3 except as a statute or another rule provides (ORAP 12.05(1)(a), (2)); ORS 305.445 governs Tax Court judgments and orders and is not vendored, so the time for the notice of appeal is a hole. The notice is served and filed within the time the statute allows, substantially in the form of Appendix 2.05, with the complete title and case number below, a statement of the judgment appealed from and the judge who signed it, the adverse parties, and a copy of the judgment (ORAP 2.05(1)-(4), (12)); the entry date of a Tax Court judgment is identified under UTCR 21.060(3)(b), which Tax Court Rule 9 A incorporates (ORAP 2.05, note). The case-initiating document states the statutory authority for filing directly in the Supreme Court, and filing fees are assessed under ORS 21.010, not vendored (ORAP 12.05(4))."
+  edge-post-judgment-appeal "Notice of appeal filed" -> appealability {
+    event NoticeOfAppealFiled()
+    authority cite "ORAP 12.05(2)"
+  }
+  edge-post-judgment-final "No appeal" -> lost-final {
+    authority cite ?("ORS 305.445: not vendored")
+  }
+}
+
+decision appealability: "Appealability" by court cite "ORAP 2.35"
+{
+  note "In a direct appeal the Supreme Court may make a summary determination of whether the Tax Court decision is appealable; the order or opinion says so expressly, and a petition for reconsideration of it is filed within 14 days after the determination unless a shorter time is ordered (ORAP 2.35(1)-(4)). If the court determines the decision is not appealable and dismisses, and reconsideration is exhausted or expired, the appellate judgment issues immediately (ORAP 2.35(5))."
+  edge-appealability-dismissed "Not appealable: appeal dismissed" -> dismissed-jurisdiction {
+    authority cite "ORAP 2.35(5)"
+  }
+  edge-appealability-briefing "Appealable: briefing" -> briefing {
+    authority cite "ORAP 5.80"
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: decision not appealable" outcome [loss, dismissal] cite "ORAP 2.35(5)"
+{
+  note "Outcome from the applicant's side: dismissal on a determination that the decision is not appealable (ORAP 2.35(5))."
+}
+
+state briefing: "Briefs in the Supreme Court" by applicant cite "ORAP 5.80"
+{
+  note "Unless a statute or the rules provide otherwise, the opening brief and excerpt of record are filed within 49 days after the transcript is settled or waived, an agreed narrative statement is filed, or, if none is designated, the notice of appeal is filed; the answering brief within 49 days after the opening brief; a reply within 21 days after the answering brief (ORAP 5.80(1)-(3)). The court may set a special briefing schedule on motion or on its own initiative (ORAP 12.05(5)). An opening or answering brief may not exceed 14,000 words and a reply 4,000, or 50 and 15 pages for a party without a word count, with the word-count certificate at the end (ORAP 5.05(1)(b)(i), (c), (d))."
+  edge-briefing-opening "Opening brief filed" -> answering {
+    event PrincipalBriefFiled()
+    authority cite "ORAP 5.80(1)"
+  }
+}
+
+state answering: "Answering and reply briefs" by applicant cite "ORAP 5.80"
+{
+  note "The respondent's answering brief is due within 49 days after the opening brief, and the appellant's reply, if any, within 21 days after the answering brief (ORAP 5.80(2), (3))."
+  edge-answering-reply "Reply filed: submitted" -> decision {
+    event ReplyBriefFiled()
+    authority cite "ORAP 5.80(3)"
+  }
+  edge-answering-submitted "No reply: submitted" -> decision {
+    authority cite "ORAP 5.80(3)"
+  }
+}
+
+decision decision: "Supreme Court decision" by court cite "ORAP 14.05"
+{
+  note "In an appeal from the Tax Court the decision is a designation of prevailing party and allowance of costs with the order disposing of the appeal, or the title page of the opinion stating the disposition (ORAP 14.05(1)(b)(i)). A petition for reconsideration is filed within 14 days after the decision (ORAP 9.25(1)). The Administrator does not issue the appellate judgment for 28 days after a Supreme Court decision, to allow for reconsideration and for a statement of costs or petition for attorney fees, nor until any of them is determined (ORAP 14.05(3)(b), (c))."
+  edge-decision-reversed "Reversed or modified" -> appellate-judgment-won {
+    event DecisionFiled()
+    authority cite "ORAP 14.05(1)"
+  }
+  edge-decision-affirmed "Affirmed" -> lost-final {
+    event DecisionFiled()
+    authority cite "ORAP 14.05(1)"
+  }
+}
+
+terminal appellate-judgment-won: "Reversed: appellate judgment issued" outcome [win, final] cite "ORAP 14.05(2)"
+{
+  note "The decision is effective on the date the Administrator sends a copy of the appellate judgment to the Tax Court (ORAP 14.05(2)(a), (3)); a party may request immediate issuance on a showing that no party intends to seek reconsideration, fees or another ruling (ORAP 14.05(3)(d)). Outcome from the applicant's side."
+}
+
+terminal lost-final: "Tax Court judgment stands" outcome [loss, final] cite "ORAP 14.05(2)"
+{
+  note "Without an appeal the Tax Court judgment is final under ORS 305.445 (not vendored); after affirmance the decision is effective when the appellate judgment is sent to the Tax Court (ORAP 14.05(2)(a)). Outcome from the applicant's side."
+}

@@ -1,0 +1,42 @@
+# The Oregon base library (lg-u561.5): what the Oregon court packages share:
+# the Supreme Court brief limits of the Oregon Rules of Appellate Procedure
+# (ORAP 5.05; sources/or-court-of-appeals) and the trigger events the court
+# packages route their graphs on. No procedure of its own. The ORAP text is
+# the court's consolidated edition with permanent amendments effective
+# January 1, 2025 and the temporary amendments incorporated through October
+# 16, 2026; the earlier text is not vendored, so the layer starts on that
+# date. The Oregon Rules of Civil Procedure (sources/or-circuit) are the
+# circuit courts' rules and are cited from lit/or-circuit.
+[package]
+name = "or-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "or-state-rules"
+forum = "or-state-rules"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "oregon"
+title = "Oregon state court rules (base library)"
+description = "The rule layer Oregon's court packages share: the Supreme Court brief word limits of ORAP 5.05(1)(b)(i), and the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-10-16"
+known_at = "2026-10-28"
+unknown_before = "2026-10-16"
+jurisdiction = "Oregon state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.orap]
+title = "Oregon Rules of Appellate Procedure, permanent amendments effective January 1, 2025, with the temporary amendments effective through October 16, 2026 (version date September 3, 2026)"
+url = "https://www.courts.oregon.gov/rules/ORAP/ORAP_2026-FullPermanentAndTempAmendments-Eff_2026-10-16.pdf"
+path = "sources/or-court-of-appeals/orap-sectioned.txt"
+path_sha256 = "7699edb4c6eabf5749a33fc31ecd9df2b5d5869ecaee3149a29a7f9968ae849b"
+sha256 = "ba5ceab5b0e6278daf19f31dfbaac3700c72b3cdc97c1593cac01b7d4a63fcae"
+as_of = "2026-10-16"
+cite_prefixes = ["ORAP"]
+section_heading = "ORAP {n}"

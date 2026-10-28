@@ -13,7 +13,10 @@ import frcrimp.deadlines.{ SentencingScheduled }
 // here: the proposed presentence report is furnished at least 35 days
 // before sentencing (Crim. L.R. 32-4(a)), FRCrimP 32(e)(2)'s period
 // (psr-disclosure), and the parties respond to it within 14 days after it
-// is furnished (Crim. L.R. 32-4(b)), FRCrimP 32(f)(1)'s period. If the
+// is furnished (Crim. L.R. 32-4(b)), FRCrimP 32(f)(1)'s period; counsel
+// confer on a Rule 16 disclosure schedule within 14 days after the plea of
+// not guilty (Crim. L.R. 16-1(a)), FRCrimP 16.1(a)'s period from
+// arraignment, extendable by stipulation to 21 days. If the
 // sentencing date changes, the Crim. L.R. 32-3 to 32-5 deadlines adjust to
 // the new date unless otherwise ordered (Crim. L.R. 32-2(d)).
 //
@@ -21,8 +24,7 @@ import frcrimp.deadlines.{ SentencingScheduled }
 // the Court determines otherwise, sentencing is set no earlier than 75
 // days after referral for an in-custody defendant and 95 days for one out
 // of custody (Crim. L.R. 32-1(a)), a floor on the setting rather than a
-// deadline; the Rule 16 conference may be extended by stipulation to a
-// day within 21 days after the plea (Crim. L.R. 16-1(a)); no Rule 17(c)
+// deadline; no Rule 17(c)
 // subpoena may require production in fewer than 14 days from service,
 // absent good cause (Crim. L.R. 17-2(d)), a floor on the return date; the
 // record on a misdemeanor appeal is deemed complete 14 days after the
@@ -59,8 +61,6 @@ limit misdemeanor-appeal-reply {
 /// A Notice of Related Case in a Criminal Action is served (N.D. Cal.
 /// Crim. L.R. 8-1(d)).
 event RelatedCaseNoticeServed()
-/// The defendant pleads not guilty (N.D. Cal. Crim. L.R. 16-1(a)).
-event NotGuiltyPlea()
 /// A pretrial conference is scheduled (N.D. Cal. Crim. L.R. 17.1-1(b)).
 event PretrialConferenceScheduled()
 /// The government receives the Probation Officer's written request for
@@ -98,14 +98,6 @@ event MisdemeanorAppealReplyFiled() paper misdemeanor-appeal-reply
 /// Notice of Related Case in a Criminal Action, any party may serve and
 /// file a statement supporting or opposing it.
 deadline related-case-response: 7.days after RelatedCaseNoticeServed() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 8-1(d)"
-{
-  forum frcrimp
-}
-
-/// N.D. Cal. Crim. L.R. 16-1(a): within 14 days after a plea of not
-/// guilty, the attorneys confer on a schedule for disclosure under FRCrimP
-/// 16; the parties may stipulate to a day within 21 days after the plea.
-deadline disclosure-conference: 14.days after NotGuiltyPlea() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 16-1(a)"
 {
   forum frcrimp
 }

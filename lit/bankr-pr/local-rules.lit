@@ -1,0 +1,673 @@
+module bankr-pr-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. D.P.R. court's own periods, counted under FRBP 9006(a). The
+// FRBP and statutory periods are lit/frbp's and the Code's and are not
+// declared again: the 21 days' notice of a sale (P.R. LBR 6004-1(b); FRBP
+// 2002(a)(2)), the 14 days to object to abandonment (P.R. LBR 6007-1(b);
+// FRBP 6007(a)), the 28 days' service of a plan avoiding a lien and the 7
+// days to object to confirmation (P.R. LBR 3015-3(c)(2), (d)(3); FRBP
+// 2002(b), 3015(f)), the 180-day governmental bar date (P.R. LBR 3003-1; 11
+// U.S.C. § 502(b)(9)) and the first chapter 13 plan payment within 30 days
+// (P.R. LBR 2016-1(f); 11 U.S.C. § 1326(a)(1)).
+//
+// Layers, in date order: the Local Bankruptcy Rules' "complete list" (file
+// PRLBRs-2013_Complete_2, undated; it already carries the 2018 text of
+// P.R. LBR 3015-3 and 9013-1) is CURRENCY UNCONFIRMED (sources/bankr-pr/
+// PROVENANCE.md): General Order 19-01 (June 28, 2019) is listed by the
+// court but its link is dead and it is not vendored. So every period bound
+// only to that file is declared with a hole cite naming its pinpoint, the
+// value the vendored text's, unverified. General Order 17-08 (December 1,
+// 2017) adopted P.R. LBR 3015-2 and Local Form G; General Orders 18-01 and
+// 18-02, each "effective immediately" on June 19, 2018, adopted P.R. LBR
+// 3015-3 (superseding 3015-2) and amended P.R. LBR 9013-1, and their
+// periods bind to the orders' own text; the package runs from that date.
+// General Order 26-01, "effective immediately" on August 5, 2026, adopted
+// P.R. LBR 9019-1 and 9019-2, whose periods run from then.
+//
+// Stated in the rules but not declared: the monthly operating report due
+// the 21st day of the next month and the quarterly post-confirmation
+// reports (P.R. LBR 2015-2), calendar dates rather than periods; the
+// mediator's status report every 30 days (P.R. LBR 9019-1(d)); the
+// certificate of service on a stay motion "within seven (7) days", whose
+// trigger the text does not name (P.R. LBR 4001-5(c)); the court's own
+// acts (dismissal 30 days after an inactivity order, P.R. LBR 7055-2(b); a
+// stay hearing within 30 days of the petition, P.R. LBR 4001-5(d); the 21
+// days the court keeps jurisdiction after a dismissal becomes final, P.R.
+// LBR 2016-1(f)); and the next-business-day certificates of service (P.R.
+// LBR 3015-3(c)(3), (d)(2)(B), (i)(2)). A paper
+// served by mail gets 3 more days under FRBP 9006(f), as the notice
+// language says.
+/// An order granting ex parte relief is served (P.R. LBR 9013-1(b)).
+event ExParteOrderServed()
+/// A motion requiring response-time language is served (P.R. LBR
+/// 9013-1(c)(1)).
+event MotionServed()
+/// A motion to compromise is served (P.R. LBR 9013-1(c)(2)(A)).
+event CompromiseMotionServed()
+/// A motion or notice of intended sale is served (P.R. LBR
+/// 9013-1(c)(2)(B)).
+event SaleNoticeServed()
+/// A motion to modify a plan after confirmation is served (P.R. LBR
+/// 9013-1(c)(2)(C)).
+event PlanModificationMotionServed()
+/// A motion to dismiss a chapter 7, 12 or 13 case is served (P.R. LBR
+/// 9013-1(c)(2)(D)).
+event DismissalMotionServed()
+/// The date set for the hearing on confirmation of a chapter 13 plan (P.R.
+/// LBR 3015-3(d)).
+event ConfirmationHearingScheduled()
+/// The court denies confirmation of a chapter 13 plan (P.R. LBR 3015-3(g)).
+event ConfirmationDenied()
+/// The order confirming a chapter 13 plan is entered on the docket (P.R.
+/// LBR 3015-3(h)).
+event ConfirmationOrderEntered()
+/// The court issues notice of intent to close a chapter 13 case without a
+/// discharge for unverified domestic support obligations (P.R. LBR
+/// 3015-3(k)).
+event CloseWithoutDischargeNoticeIssued()
+/// A court-ordered mediation concludes (P.R. LBR 9019-1(c)).
+event MediationConcluded()
+/// A non-judicial mediator is appointed by the order to mediate (P.R. LBR
+/// 9019-1(f)).
+event MediatorAppointed()
+/// The date of the § 341 meeting of creditors (P.R. LBR 1007-1(e)).
+event MeetingOfCreditorsScheduled()
+/// The § 341 meeting of creditors is held (P.R. LBR 2003-1(a)).
+event MeetingOfCreditorsHeld()
+/// The § 341 meeting of creditors in a chapter 7 case is concluded or
+/// closed (P.R. LBR 2003-1(a)).
+event MeetingOfCreditorsConcluded()
+/// The schedules of liabilities are filed in a chapter 11 case (P.R. LBR
+/// 1007-1(f)).
+event Chapter11SchedulesFiled()
+/// A creditor scheduled as disputed, contingent or unliquidated is added to
+/// previously filed chapter 11 schedules (P.R. LBR 1007-1(f)).
+event DisputedCreditorAdded()
+/// The debtor serves Local Form A on the disputed, contingent or
+/// unliquidated creditors (P.R. LBR 1007-1(f)).
+event DisputedCreditorNoticeServed()
+/// The debtor serves a creditor added by amendment with the required notice
+/// (P.R. LBR 1009-1).
+event AddedCreditorNoticeServed()
+/// An order granting substantive consolidation is entered (P.R. LBR
+/// 1015-1(c)).
+event ConsolidationGranted()
+/// The court's notice of intent to dismiss for want of prosecution is
+/// served (P.R. LBR 1017-2(a)).
+event DismissalNoticeServed()
+/// The date of a proposed Rule 2004 examination (P.R. LBR 2004-1(d)).
+event ExaminationScheduled()
+/// A motion for a Rule 2004 examination is served (P.R. LBR 2004-1(d)).
+event ExaminationMotionServed()
+/// The later of the commencement of the case and the date a professional
+/// first rendered services (P.R. LBR 2014-1(e)).
+event ProfessionalEngagementBegan()
+/// A chapter 13 fee application of $500 or less lacking the debtor's and
+/// trustee's approval is noticed (P.R. LBR 2016-1(f)).
+event FeeApplicationNoticed()
+/// An order dismissing a chapter 13 case with no plan confirmed becomes
+/// final (P.R. LBR 2016-1(f)).
+event UnconfirmedDismissalFinal()
+/// An objection to a claim is served (P.R. LBR 3007-1(c)).
+event ClaimObjectionServed()
+/// A chapter 11 trustee is appointed (P.R. LBR 3016-1).
+event TrusteeAppointed()
+/// The date set for the hearing on confirmation of a chapter 11 plan (P.R.
+/// LBR 3018-2).
+event Chapter11ConfirmationHearingScheduled()
+/// The order confirming a chapter 11 plan becomes final (P.R. LBR
+/// 3022-1(b)).
+event ConfirmationOrderFinal()
+/// An application for a chapter 11 final decree is filed (P.R. LBR
+/// 3022-1(d)).
+event FinalDecreeApplicationFiled()
+/// The notice of hearing on a motion for relief from stay is issued (P.R.
+/// LBR 4001-1(c)).
+event StayReliefNoticeIssued()
+/// The movant serves the motion for relief from stay and the notice (P.R.
+/// LBR 4001-1(c), (e)).
+event StayReliefNoticeServed()
+/// The date set in the notice for the hearing on a motion for relief from
+/// stay (P.R. LBR 4001-1(g)).
+event StayReliefHearingScheduled()
+/// A motion to continue or impose the automatic stay under 11 U.S.C. §
+/// 362(c)(3)(B) or (c)(4)(B) is filed (P.R. LBR 4001-5(c)).
+event StayMotionFiled()
+/// A motion to continue or impose the automatic stay is served (P.R. LBR
+/// 4001-5(c)).
+event StayMotionServed()
+/// A motion to avoid a lien under 11 U.S.C. § 522(f) is served (P.R. LBR
+/// 4003-2(c)).
+event LienAvoidanceMotionServed()
+/// A filing user receives the Notice of Electronic Filing (P.R. LBR
+/// 5005-4(h)).
+event ElectronicFilingNoticeReceived()
+/// A motion to reopen a case is served (P.R. LBR 5010-1).
+event ReopenMotionServed()
+/// The date set for a hearing or trial (P.R. LBR 5071-1(a), 9074-1(a)).
+event HearingScheduled()
+/// The date set for a proposed use, sale or lease outside the ordinary
+/// course of business (P.R. LBR 6004-1(c)).
+event ProposedSaleDate()
+/// A sale of estate property outside the ordinary course of business takes
+/// place (P.R. LBR 6004-1(d)).
+event SaleClosed()
+/// A date set in an adversary scheduling order (P.R. LBR 7016-1(b)).
+event ScheduledDate()
+/// The date of the final pretrial conference in an adversary proceeding
+/// (P.R. LBR 7016-1(c)).
+event FinalPretrialConferenceScheduled()
+/// The plaintiff or movant serves its portion of the Joint Pretrial Report
+/// (P.R. LBR 7016-1(c)(1)).
+event PretrialReportDraftServed()
+/// The date an evidentiary hearing commences (P.R. LBR 7016-1(d)).
+event EvidentiaryHearingScheduled()
+/// An adversary matter is dismissed for the plaintiff's default on the FRCP
+/// 26(f) requirements (P.R. LBR 7026-1).
+event DismissedForNoncompliance()
+/// An order giving notice that an inactive adversary proceeding will be
+/// dismissed is entered (P.R. LBR 7055-2(a)).
+event InactivityOrderEntered()
+/// The date set for the hearing of a matter that is or becomes contested in
+/// which an attorney appears pro hac vice without local counsel (P.R. LBR
+/// 9010-1(b)).
+event ContestedHearingScheduled()
+/// The date the last responsive pleading is required to be filed in an
+/// adversary proceeding (P.R. LBR 9015-1(a)).
+event LastResponsivePleadingDue()
+/// A notice of removal is filed under FRBP 9027 (P.R. LBR 9027-1(a)).
+event RemovalNoticeFiled()
+/// An electronic transcript is filed (P.R. LBR 9037-1(c)).
+event TranscriptFiled()
+/// The time for a notice of appeal from the court's decision elapses with
+/// no appeal, or an appeal is finally determined (P.R. LBR 9070-1(d)).
+event AppealPeriodEnded()
+
+/// P.R. LBR 9013-1(b) (General Order 18-02): an affected party may request
+/// a hearing on ex parte relief by a motion for review filed within 14 days
+/// of service of the order.
+deadline ex-parte-review-period: 14.days after ExParteOrderServed() counted_by frcp6 cite "P.R. LBR (GO 18-02) 9013-1(b)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 9013-1(c)(1) (General Order 18-02): an objection or response to
+/// a motion is served and filed within 14 days after service, plus 3 days
+/// under FRBP 9006(f) if served by mail; otherwise the paper is deemed
+/// unopposed.
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 9013-1(c)(2)(A) (General Order 18-02): the response time on a
+/// motion to compromise is 21 days.
+deadline compromise-response-period: 21.days after CompromiseMotionServed() counted_by frcp6 cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 9013-1(c)(2)(B) (General Order 18-02): the response time on a
+/// motion or notice of intended sale is 21 days.
+deadline sale-response-period: 21.days after SaleNoticeServed() counted_by frcp6 cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 9013-1(c)(2)(C) (General Order 18-02): the response time on a
+/// motion to modify a plan after confirmation is 21 days.
+deadline plan-modification-response-period: 21.days after PlanModificationMotionServed() counted_by frcp6 cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 9013-1(c)(2)(D) (General Order 18-02): the response time on a
+/// motion to dismiss a chapter 7, 12 or 13 case is 30 days.
+deadline dismissal-response-period: 30.days after DismissalMotionServed() counted_by frcp6 cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 3015-3(d)(4)(B) (General Order 18-01): if the § 341 meeting is
+/// held within 7 days of the confirmation hearing, the trustee may file the
+/// minutes with an objection not later than one day before the confirmation
+/// hearing.
+deadline trustee-minutes-period: 1.days before ConfirmationHearingScheduled() counted_by frcp6 cite "P.R. LBR (GO 18-01) 3015-3(d)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 3015-3(d)(5) (General Order 18-01): if an objection to a
+/// chapter 13 plan is filed 7 days before the confirmation hearing, the
+/// debtor files a response, amending the plan or replying, not later than
+/// one day before the hearing.
+deadline objection-response-period: 1.days before ConfirmationHearingScheduled() counted_by frcp6 cite "P.R. LBR (GO 18-01) 3015-3(d)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 3015-3(g)(1) (General Order 18-01): if confirmation is denied,
+/// the court may dismiss the case unless within 14 days the debtor files an
+/// amended plan, moves to convert, seeks to alter or amend the order under
+/// FRBP 9023, or the court orders otherwise.
+deadline confirmation-denial-cure-period: 14.days after ConfirmationDenied() counted_by frcp6 cite "P.R. LBR (GO 18-01) 3015-3(g)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 3015-3(h)(2)(A) (General Order 18-01): where the plan provides
+/// for compensation on an application, the debtor's attorney files it no
+/// later than 14 days from the docket entry of the confirmation order.
+deadline confirmation-fee-application-period: 14.days after ConfirmationOrderEntered() counted_by frcp6 cite "P.R. LBR (GO 18-01) 3015-3(h)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 3015-3(k)(2) (General Order 18-01): the case closes without a
+/// discharge unless within 14 days the debtor certifies under penalty of
+/// perjury that all post-petition domestic support obligations are current.
+deadline support-obligation-certification-period: 14.days after CloseWithoutDischargeNoticeIssued() counted_by frcp6 cite "P.R. LBR (GO 18-01) 3015-3(k)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 9019-1(c)(1)(D) (General Order 26-01): the parties or the
+/// mediator report the results of the mediation immediately on its
+/// conclusion and not later than 14 days thereafter.
+deadline mediation-report-period: 14.days after MediationConcluded() counted_by frcp6 effective [2026-08-05, ..) cite "P.R. LBR (GO 26-01) 9019-1(c)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 9019-1(f)(3) (General Order 26-01): within 14 days of
+/// appointment, a non-judicial mediator files a disclosure of conflicts and
+/// prior service.
+deadline mediator-disclosure-period: 14.days after MediatorAppointed() counted_by frcp6 effective [2026-08-05, ..) cite "P.R. LBR (GO 26-01) 9019-1(f)"
+{
+  forum frcp
+}
+
+/// P.R. LBR 1006-1(a): after $50.00 at filing, the balance of an
+/// installment fee is paid in no more than 3 equal installments every 30
+/// days thereafter.
+deadline installment-period: 30.days after PetitionFiled() counted_by frcp6 cite ?("P.R. LBR 1006-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 1007-1(c)-(d): the statement of social security number,
+/// corporate resolution, fee payment or application, creditor matrix,
+/// 20-largest list and § 342(b) notice are filed within 2 days of the
+/// bankruptcy filing, or the case is dismissed.
+deadline two-day-documents-period: 2.days after PetitionFiled() counted_by frcp6 cite ?("P.R. LBR 1007-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 1007-1(e): the debtor provides the trustee and any timely
+/// requesting creditor copies of payment advices at least 7 days before the
+/// § 341 meeting.
+deadline payment-advices-period: 7.days before MeetingOfCreditorsScheduled() counted_by frcp6 cite ?("P.R. LBR 1007-1(e), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 1007-1(e): a creditor's request for payment advices is timely
+/// if received at least 14 days before the first date set for the meeting
+/// of creditors.
+deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frcp6 cite ?("P.R. LBR 1007-1(e), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 1007-1(f): the chapter 11 debtor serves Local Form A on each
+/// creditor scheduled as disputed, contingent or unliquidated within 14
+/// days after filing the schedules of liabilities.
+deadline disputed-creditor-notice-period: 14.days after Chapter11SchedulesFiled() counted_by frcp6 cite ?("P.R. LBR 1007-1(f), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 1007-1(f): or within 14 days of adding such creditors to
+/// previously filed schedules.
+deadline added-disputed-creditor-notice-period: 14.days after DisputedCreditorAdded() counted_by frcp6 cite ?("P.R. LBR 1007-1(f), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 1007-1(f): the debtor files a certificate of service within 14
+/// days of service.
+deadline disputed-creditor-certificate-period: 14.days after DisputedCreditorNoticeServed() counted_by frcp6 cite ?("P.R. LBR 1007-1(f), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 1009-1: in asset cases, a creditor added by amendment may file
+/// a proof of claim within 90 days of service of the notice, or within the
+/// time set for previously scheduled creditors, whichever is later.
+deadline added-creditor-claim-period: 90.days after AddedCreditorNoticeServed() counted_by frcp6 cite ?("P.R. LBR 1009-1, 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 1009-1: in a chapter 7 case, an added creditor may file
+/// complaints under 11 U.S.C. §§ 523 and 727 and exemption objections
+/// within 60 days of service of the notice, or within the time set for
+/// previously scheduled creditors, whichever is later.
+deadline added-creditor-objection-period: 60.days after AddedCreditorNoticeServed() counted_by frcp6 cite ?("P.R. LBR 1009-1, 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 1015-1(c): after substantive consolidation, the debtor files
+/// consolidated schedules and matrix within 14 days from the order.
+deadline consolidated-schedules-period: 14.days after ConsolidationGranted() counted_by frcp6 cite ?("P.R. LBR 1015-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 1017-2(a): the court may dismiss for want of prosecution unless
+/// the debtor cures or a party requests a hearing within 14 days of service
+/// of the notice of intent to dismiss.
+deadline dismissal-hearing-request-period: 14.days after DismissalNoticeServed() counted_by frcp6 cite ?("P.R. LBR 1017-2(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 2003-1(a): the presiding officer files a report of action taken
+/// no later than 3 days after the § 341 meeting.
+deadline meeting-report-period: 3.days after MeetingOfCreditorsHeld() counted_by frcp6 cite ?("P.R. LBR 2003-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 2003-1(a): the chapter 7 trustee files a Report of No
+/// Distribution no later than 14 days after the § 341 meeting is concluded
+/// or closed.
+deadline no-distribution-report-period: 14.days after MeetingOfCreditorsConcluded() counted_by frcp6 cite ?("P.R. LBR 2003-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 2004-1(d): the examinee, its counsel and affected parties get
+/// no less than 14 days' written notice of a proposed examination.
+deadline examination-notice-period: 14.days before ExaminationScheduled() counted_by frcp6 cite ?("P.R. LBR 2004-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 2004-1(d): an objection or motion for protective order is filed
+/// within 14 days of service of the motion, plus 3 days if served by mail.
+deadline examination-objection-period: 14.days after ExaminationMotionServed() counted_by frcp6 cite ?("P.R. LBR 2004-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 2014-1(e): an employment application filed within 14 days of
+/// the later of commencement or first services is approved effective from
+/// the first services; otherwise from its filing.
+deadline retroactive-employment-period: 14.days after ProfessionalEngagementBegan() counted_by frcp6 cite ?("P.R. LBR 2014-1(e), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 2016-1(f): a chapter 13 fee application of $500 or less may be
+/// approved if no objection is filed within 21 days from the notice.
+deadline small-fee-application-objection-period: 21.days after FeeApplicationNoticed() counted_by frcp6 cite ?("P.R. LBR 2016-1(f), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 2016-1(f): after dismissal of an unconfirmed chapter 13 case,
+/// the debtor's attorney or other professional moves within 21 days after
+/// the dismissal order becomes final for a determination that its fees are
+/// an administrative expense.
+deadline administrative-fee-motion-period: 21.days after UnconfirmedDismissalFinal() counted_by frcp6 cite ?("P.R. LBR 2016-1(f), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 3003-1: in a chapter 11 case, a creditor whose claim is
+/// unscheduled or scheduled as disputed, contingent or unliquidated may
+/// file a claim not later than 90 days after the date first set for the §
+/// 341 meeting, unless the court orders otherwise.
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite ?("P.R. LBR 3003-1, 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 3007-1(c): a response to an objection to a claim is served and
+/// filed within 30 days after service, plus 3 days if served by mail.
+deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frcp6 cite ?("P.R. LBR 3007-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 3016-1: a chapter 11 trustee files a report within 60 days of
+/// appointment, or another date the court directs.
+deadline trustee-report-period: 60.days after TrusteeAppointed() counted_by frcp6 cite ?("P.R. LBR 3016-1, 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 3018-2(a)(1) and (b): at least 7 days prior to the confirmation
+/// hearing, the plan proponent files and serves the § 1129 statement and
+/// lists of claims and expenses.
+deadline section-1129-statement-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite ?("P.R. LBR 3018-2(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 3018-2(a)(2): at least 2 days before the confirmation hearing,
+/// the plan proponent files the list and computation of acceptances and
+/// rejections.
+deadline ballot-tally-period: 2.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite ?("P.R. LBR 3018-2(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 3022-1(b): unless the confirmation order provides otherwise,
+/// the plan proponent files a Final Report and Motion for Entry of Final
+/// Decree not later than 90 days after the confirmation order becomes
+/// final.
+deadline final-decree-motion-period: 90.days after ConfirmationOrderFinal() counted_by frcp6 cite ?("P.R. LBR 3022-1(b), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 3022-1(d): a party in interest may object to an application for
+/// a final decree within 21 days from its filing.
+deadline final-decree-objection-period: 21.days after FinalDecreeApplicationFiled() counted_by frcp6 cite ?("P.R. LBR 3022-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 4001-1(c): the movant serves the stay-relief motion and notice
+/// within 3 days of issuance of the notice.
+deadline stay-relief-service-period: 3.days after StayReliefNoticeIssued() counted_by frcp6 cite ?("P.R. LBR 4001-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 4001-1(c): the movant files a certificate of service within 7
+/// days of effecting service.
+deadline stay-relief-certificate-period: 7.days after StayReliefNoticeServed() counted_by frcp6 cite ?("P.R. LBR 4001-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 4001-1(e): the respondent files an answer to a motion for
+/// relief from stay within 14 days after service of the notice.
+deadline stay-relief-answer-period: 14.days after StayReliefNoticeServed() counted_by frcp6 cite ?("P.R. LBR 4001-1(e), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 4001-1(g): at least 3 days prior to the hearing, the respondent
+/// files and serves any appraiser's report and other documents to be used.
+deadline stay-relief-documents-period: 3.days before StayReliefHearingScheduled() counted_by frcp6 cite ?("P.R. LBR 4001-1(g), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 4001-5(b): a motion to continue the automatic stay under 11
+/// U.S.C. § 362(c)(3)(B) is filed with the petition or within 3 days
+/// thereafter.
+deadline stay-continuation-motion-period: 3.days after PetitionFiled() counted_by frcp6 cite ?("P.R. LBR 4001-5(b), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 4001-5(b): a motion to impose the stay under 11 U.S.C. §
+/// 362(c)(4)(B) is filed within 30 days from the filing of the petition.
+deadline stay-imposition-motion-period: 30.days after PetitionFiled() counted_by frcp6 cite ?("P.R. LBR 4001-5(b), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 4001-5(c): the motion to continue or impose the stay is served
+/// on all creditors and parties in interest within 3 days from its filing.
+deadline stay-motion-service-period: 3.days after StayMotionFiled() counted_by frcp6 cite ?("P.R. LBR 4001-5(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 4001-5(c): the motion allows 14 days from service to file an
+/// opposition.
+deadline stay-motion-opposition-period: 14.days after StayMotionServed() counted_by frcp6 cite ?("P.R. LBR 4001-5(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 4002-1(d)(4): no later than 14 days after the order for relief,
+/// the natural persons who will perform a non-individual debtor's duties
+/// are identified by name, title and address.
+deadline debtor-representative-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite ?("P.R. LBR 4002-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 4003-2(c): a response to a motion to avoid a lien under 11
+/// U.S.C. § 522(f) is filed within 21 days after service.
+deadline lien-avoidance-response-period: 21.days after LienAvoidanceMotionServed() counted_by frcp6 cite ?("P.R. LBR 4003-2(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 5005-4(h)(2): the filing user files the certificate of service
+/// within 2 days following receipt of the Notice of Electronic Filing.
+deadline electronic-service-certificate-period: 2.days after ElectronicFilingNoticeReceived() counted_by frcp6 cite ?("P.R. LBR 5005-4(h), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 5010-1: a motion to reopen gives all parties in interest 21
+/// days' notice for filing objections.
+deadline reopen-objection-period: 21.days after ReopenMotionServed() counted_by frcp6 cite ?("P.R. LBR 5010-1, 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 5071-1(a): a request to continue a matter set for hearing or
+/// trial is filed 7 days prior to the hearing.
+deadline continuance-request-period: 7.days before HearingScheduled() counted_by frcp6 cite ?("P.R. LBR 5071-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 6004-1(c): an objection to a proposed use, sale or lease
+/// outside the ordinary course is filed and served not less than 7 days
+/// before the date set for the proposed action.
+deadline sale-objection-period: 7.days before ProposedSaleDate() counted_by frcp6 cite ?("P.R. LBR 6004-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 6004-1(d): the trustee or debtor in possession files a report
+/// of the sale within 30 days after it.
+deadline sale-report-period: 30.days after SaleClosed() counted_by frcp6 cite ?("P.R. LBR 6004-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 7016-1(b): a motion to continue a date set in the scheduling
+/// order is filed at least 7 days prior to that date.
+deadline scheduling-continuance-motion-period: 7.days before ScheduledDate() counted_by frcp6 cite ?("P.R. LBR 7016-1(b), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 7016-1(c): the parties file the proposed Joint Pretrial Report
+/// at least 7 days prior to the final pretrial conference.
+deadline joint-pretrial-report-period: 7.days before FinalPretrialConferenceScheduled() counted_by frcp6 cite ?("P.R. LBR 7016-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 7016-1(c)(1): the opposing party submits its portion of the
+/// Joint Pretrial Report within 2 days after the plaintiff's portion is
+/// served.
+deadline pretrial-report-portion-period: 2.days after PretrialReportDraftServed() counted_by frcp6 cite ?("P.R. LBR 7016-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 7016-1(d): at least 10 days prior to an evidentiary hearing,
+/// counsel confer in good faith to resolve the dispute.
+deadline evidentiary-hearing-confer-period: 10.days before EvidentiaryHearingScheduled() counted_by frcp6 cite ?("P.R. LBR 7016-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 7026-1(1): a plaintiff whose matter was dismissed for default
+/// on the FRCP 26(f) requirements may have it reinstated only by a motion
+/// showing special circumstances within 14 days of the dismissal.
+deadline reinstatement-motion-period: 14.days after DismissedForNoncompliance() counted_by frcp6 cite ?("P.R. LBR 7026-1, 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 7055-2(c): an inactive adversary proceeding is not dismissed if
+/// a party files a motion within 30 days of the entry of the order.
+deadline inactivity-motion-period: 30.days after InactivityOrderEntered() counted_by frcp6 cite ?("P.R. LBR 7055-2(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 9010-1(b): if a matter in which an attorney appears pro hac
+/// vice without local counsel is or becomes contested, local counsel enters
+/// an appearance at least 7 days before the hearing.
+deadline local-counsel-appearance-period: 7.days before ContestedHearingScheduled() counted_by frcp6 cite ?("P.R. LBR 9010-1(b), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 9015-1(a)(4): the parties jointly file a statement of consent
+/// to a jury trial before the bankruptcy judge within 30 days following the
+/// date the last responsive pleading is required.
+deadline jury-consent-period: 30.days after LastResponsivePleadingDue() counted_by frcp6 cite ?("P.R. LBR 9015-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 9027-1(a): the removing party files copies of all pertinent
+/// papers and a certified copy of the docket entries within 14 days of
+/// filing the notice of removal.
+deadline removal-papers-period: 14.days after RemovalNoticeFiled() counted_by frcp6 cite ?("P.R. LBR 9027-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 9037-1(c)(1): a party wishing to redact personal data
+/// identifiers files and serves a Notice of Redaction within 7 calendar
+/// days of the filing of the electronic transcript.
+deadline transcript-redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp6 cite ?("P.R. LBR 9037-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 9037-1(c)(2): within 21 calendar days from the filing of the
+/// transcript, the party files and serves the statement of the redactions'
+/// locations.
+deadline transcript-redaction-statement-period: 21.days after TranscriptFiled() counted_by frcp6 cite ?("P.R. LBR 9037-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 9070-1(d): exhibits not withdrawn within 30 days after the
+/// appeal time elapses or an appeal is finally determined are disposed of
+/// by the clerk.
+deadline exhibit-withdrawal-period: 30.days after AppealPeriodEnded() counted_by frcp6 cite ?("P.R. LBR 9070-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// P.R. LBR 9074-1(a): a request to conduct a hearing or conference by
+/// telephone is made in writing no less than 3 days prior to the hearing,
+/// unless the court authorizes otherwise.
+deadline telephone-request-period: 3.days before HearingScheduled() counted_by frcp6 cite ?("P.R. LBR 9074-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed with response-time notice" by applicant cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  note "A motion carries the notice of P.R. LBR 9013-1(c)(1): 14 days to respond after service (the excepted periods of 9013-1(c)(2)), unless it is one of the matters of 9013-1(c)(3) that need no response time; an urgent motion follows 9013-1(a) and an ex parte motion 9013-1(b). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-response "Objection or response filed" -> response {
+    authority cite "P.R. LBR (GO 18-02) 9013-1(c)"
+    within response-period
+  }
+  edge-motion-filed-unopposed "No timely response; deemed unopposed and may be granted" -> decided {
+    authority cite "P.R. LBR (GO 18-02) 9013-1(c)"
+  }
+}
+
+state response: "Objection or response filed" by opponent cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  note "An opposition, reply or sur-reply needs no response-time language (P.R. LBR 9013-1(c)(3)(C))."
+  edge-response-ruling "Matter heard" -> ruling { authority cite "P.R. LBR (GO 18-02) 9013-1(c)" }
+}
+
+decision ruling: "Motion decided" by court cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  note "A remedy granted by default needs the movant's affidavit of military service under the Servicemembers Civil Relief Act (P.R. LBR 9013-1(c)(4))."
+  edge-ruling-granted "Granted" -> decided { authority cite "P.R. LBR (GO 18-02) 9013-1(c)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "P.R. LBR (GO 18-02) 9013-1(c)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  note "The Local Bankruptcy Rules govern cases before the court (P.R. LBR 1001-1; its text is the CURRENCY UNCONFIRMED complete list)."
+}

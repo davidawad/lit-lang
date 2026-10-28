@@ -1,6 +1,24 @@
 version = 2
 
 [[package]]
+name = "bankr-pr-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:147cad3e49fe04812cbd3c9eb68a60646fe13b62cfa145784de2071ff690f726"
+semantic = "sha256:5ca10f5f30dadcf9934f5559c40924d3713797a57f22d5c67a62968eae823224"
+texts = [
+    "prb-go-17-08 sources/bankr-pr/pr-go-17-08.txt sha256:b2eaca40bfb2409760ed9192faa4c070b809043d071e9e294f711d70de935998",
+    "prb-go-18-01 sources/bankr-pr/pr-go-18-01-sectioned.txt sha256:0fba347dac2d3cb6f38507eaa381710cd88dc1c015a027e34ee3e766634982dc",
+    "prb-go-18-02 sources/bankr-pr/pr-go-18-02-sectioned.txt sha256:59ee1b87f50e035ba9bc8d7427390fa355d66f1e74c5d612aeb2af65dc0a2723",
+    "prb-go-26-01 sources/bankr-pr/pr-go-26-01-sectioned.txt sha256:a6051b908c826581beae48c17b85f3d25dd1fdab1e55b117b50962a6efc4f6ca",
+    "prb-lbr sources/bankr-pr/pr-local-rules-2013-complete.txt sha256:9020c0637fec02fef56dad8e131492b22f4eacb553b76e32cc7c078640db82da",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +62,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-pr"
-version = "0.0.1"
-language = 1
-source = "sha256:0704b502064c24e2ab32359c69dd5d6545eb4fad6901d9e1fefd5c83060e7566"
-semantic = "sha256:09a7b21559da9b10ff8bb70c73a48f5204b0603842655461822a289a8a161f6f"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

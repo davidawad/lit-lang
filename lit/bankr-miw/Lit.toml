@@ -1,0 +1,52 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the Western
+# District of Michigan over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# declares only the periods and page limits the rules themselves state and
+# re-encodes no FRBP period. Each period is counted under FRBP 9006(a), the
+# FRCP 6(a) method (core's frcp6). The rules are those effective October
+# 11, 2026, which supersede all previous local rules and conflicting
+# administrative orders (W.D. Mich. LBR 9029(a)); no later amending order
+# is vendored (sources/bankr-miw/PROVENANCE.md), so the consolidation is
+# the only layer. The earlier editions are not vendored, so a query before
+# October 11, 2026 is a hole in the corpus.
+[package]
+name = "bankr-miw-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-miw-local-rules"
+forum = "bankr-miw"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. Bankruptcy Court for the Western District of Michigan: Local Bankruptcy Rules"
+description = "The Bankr. W.D. Mich. Local Bankruptcy Rules (effective October 11, 2026) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): the asset protection report on conversion, documents for the trustee and creditor requests for payment advices and tax information, professional employment objections, chapter 12 and 13 fee agreements, chapter 13 dismissal for missing documents and plan amendment objections, expedited financing orders, stay extension motions, review of the Clerk's actions, missing petition documents, withdrawal of the reference, chapter 13 sale closing statements, adversary settlements, pro hac vice fees, the social security number statement, notice-and-opportunity response periods (LBR 9013(c)) and dismissal motion responses, contested-motion briefs, the ADR Program (referral, selection, conferences, mediation summaries and reports, mediator bills, case evaluation fees and awards), transcript redaction, and the mediation and case evaluation summary page limits."
+in_force = "2026-10-11"
+known_at = "2026-10-28"
+unknown_before = "2026-10-11"
+jurisdiction = "U.S. Bankruptcy Court for the Western District of Michigan"
+counting = "frcp6"
+
+[package.instrument]
+source = "miwb-lbr"
+issuer = "United States Bankruptcy Court for the Western District of Michigan"
+date = "2026-10-11"
+designation = "Local Bankruptcy Rules"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.miwb-lbr]
+title = "Local Bankruptcy Rules of the United States Bankruptcy Court for the Western District of Michigan (effective October 11, 2026)"
+url = "https://www.miwb.uscourts.gov/sites/miwb/files/local_rules/Final%20-%20Clean_1.pdf"
+path = "sources/bankr-miw/miw-local-rules-2026-10-11-sectioned.txt"
+path_sha256 = "bb33a02a0ebfbad60086f79d1e6f6458e01ebf9eefd1bcb047d5efbc7852db04"
+sha256 = "08d50ea717428eedb60e3960ff67369ed21e144e06bc9509203fde2d2d0fb9f6"
+as_of = "2026-10-11"
+cite_prefixes = ["W.D. Mich. LBR"]
+section_heading = "Rule {n}"

@@ -17,7 +17,7 @@
 //! A cite of a declaration `litigate import` marked `/// imported` is
 //! exempt in `dev`: its failures are warnings, so a freshly imported pack
 //! checks while its citations are ported. `strict` exempts nothing.
-use crate::context::Cite;
+use crate::context::{Cite, GAP};
 use crate::diag::{emit, note};
 use crate::Context;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity, Span};
@@ -66,8 +66,9 @@ pub(crate) fn unresolved(
 /// `quotes`, the words it is cited for, compared with whitespace runs
 /// collapsed and case folded (the rules capitalize a part or count that
 /// opens a sentence or list item: `A Table of Contents`) and digit
-/// grouping dropped (D. Mont. L.R. 7.1(d)(2) writes `6500 words`): a quote
-/// the corpus cannot show is not the rule's text. No quotes, no check.
+/// grouping dropped (D. Mont. L.R. 7.1(d)(2) writes `6500 words`), a
+/// [`GAP`] standing for any one word: a quote the corpus cannot show is
+/// not the rule's text. No quotes, no check.
 fn unquoted(
     cx: &Context<'_>,
     corpus: &SourceCorpus,
@@ -98,7 +99,7 @@ fn unquoted(
     let found = sections.iter().any(|s| {
         corpus.lookup_all(&s.heading).iter().any(|(file, section)| {
             let body = words(&unpaged(&section.body));
-            s.path.as_ref() == Some(file) && folded.iter().any(|q| body.contains(q.as_str()))
+            s.path.as_ref() == Some(file) && folded.iter().any(|q| holds(&body, q))
         })
     });
     if found || quotes.is_empty() {
@@ -106,6 +107,7 @@ fn unquoted(
     }
     let quote = quotes
         .iter()
+        .filter(|q| !q.contains(GAP))
         .map(|q| format!("\"{}\"", q.split_whitespace().collect::<Vec<_>>().join(" ")))
         .collect::<Vec<_>>()
         .join(" or ");
@@ -120,6 +122,24 @@ fn unquoted(
         None,
         "quote the cited rule's words exactly as the vendored source gives them",
     ))
+}
+
+/// Whether `body` holds `quote`, a [`GAP`] in it matching any one
+/// whitespace-free word.
+fn holds(body: &str, quote: &str) -> bool {
+    let Some((before, after)) = quote.split_once(&format!(" {GAP} ")) else {
+        return body.contains(quote);
+    };
+    body.match_indices(before).any(|(i, _)| {
+        let rest = &body[i + before.len()..];
+        rest.strip_prefix(' ').is_some_and(|rest| {
+            let word = rest.find(' ').unwrap_or(rest.len());
+            word > 0
+                && rest[word..]
+                    .strip_prefix(' ')
+                    .is_some_and(|r| r.starts_with(after))
+        })
+    })
 }
 
 /// `body` without the page number a `pdftotext -layout` extract sets on

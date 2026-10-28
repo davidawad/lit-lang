@@ -206,7 +206,9 @@ type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Vec<Cow<'a, str>>);
 /// else the declaration's, with the words its vendored text must hold: a
 /// bound's number and measure as the rules write them, in digits
 /// (`13,000 words`), in words (`thirty pages`) or both (`thirty (30)
-/// pages`), and each excluded part named, hyphens read as spaces
+/// pages`), each also with one word between the count and the measure
+/// (D.S.C. Local Civ. Rule 7.05(B): `Thirty-five (35) double-spaced
+/// pages`, [`GAP`]), and each excluded part named, hyphens read as spaces
 /// (`cover page`).
 /// A hole cites nothing and quotes nothing.
 fn limit_cites(l: &hir::Limit) -> Vec<CiteOf<'_>> {
@@ -220,11 +222,16 @@ fn limit_cites(l: &hir::Limit) -> Vec<CiteOf<'_>> {
         let quotes = match &b.max {
             hir::Authored::Known(n) => {
                 let (digits, words, measure) = (grouped(*n), spelled(*n), b.measure.as_str());
-                vec![
-                    Cow::Owned(format!("{digits} {measure}")),
-                    Cow::Owned(format!("{words} {measure}")),
-                    Cow::Owned(format!("{words} ({digits}) {measure}")),
-                ]
+                [digits.clone(), words.clone(), format!("{words} ({digits})")]
+                    .into_iter()
+                    .flat_map(|count| {
+                        [
+                            format!("{count} {measure}"),
+                            format!("{count} {GAP} {measure}"),
+                        ]
+                    })
+                    .map(Cow::Owned)
+                    .collect()
             }
             hir::Authored::Hole(_) => Vec::new(),
         };
@@ -254,6 +261,10 @@ fn limit_cites(l: &hir::Limit) -> Vec<CiteOf<'_>> {
     }
     out
 }
+
+/// In a quote, any one word of the cited text: a limit's count and
+/// measure with a word between them (`35 double-spaced pages`).
+pub(crate) const GAP: char = '\u{2026}';
 
 /// `n` with its thousands grouped by commas, as the rules write counts.
 fn grouped(n: u64) -> String {

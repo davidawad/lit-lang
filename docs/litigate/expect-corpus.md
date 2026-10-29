@@ -468,7 +468,7 @@ Amending after the scheduling-order deadline: good cause first.
 
 | court | decision | citation | position (planner; batch confirms) | status |
 |---|---|---|---|---|
-| U.S. | Foman v. Davis | 371 U.S. 178 (1962) |  | corpus (`foman-scotus-1962`); not encoded: FRCP 73(a) and 6(a) before 1963 are not modeled (lg-wvlf.4) |
+| U.S. | Foman v. Davis | 371 U.S. 178 (1962) |  | corpus (`foman-scotus-1962`); not yet encoded: its rules are the base layer `change-frcp-1948-appeal` (lg-2j7e), the expect test is the QA pass's (lg-wvlf.4) |
 | 1st Cir. | O'Connell v. Hyatt Hotels of Puerto Rico | 357 F.3d 152 (1st Cir. 2004) |  | planned |
 | 2d Cir. | Parker v. Columbia Pictures Industries | 204 F.3d 326 (2d Cir. 2000) |  | planned |
 | 3d Cir. | Eastern Minerals & Chemicals Co. v. Mahan | 225 F.3d 330 (3d Cir. 2000) |  | planned |
@@ -719,6 +719,21 @@ but the applicable FRCP 73(a) appeal-tolling rule and contemporaneous Rule
 6(a) computation predate the modeled timeline. Modeling the deadline needs
 a sourced, dated historical rule layer; this batch does not infer one from
 the opinion. See the FRCP 16(b)(4) row above.
+
+That layer is now `change-frcp-1948-appeal` (lg-2j7e,
+`docs/litigate/change/frcp-1948`): Rules 59(b), 59(e) and 73(a) as the
+1946 and 1948 amendments state them (329 U.S. 839; 335 U.S. 919), counted
+under Rule 6(a) and 6(e) as adopted in 1938 (308 U.S. 645), which roll a
+last day off a Sunday or legal holiday but not off a Saturday, with the
+pre-1971 fixed-date federal holidays. Replayed under it, the December 19,
+1960 judgment opens the 30 days (due January 18, 1961), the timely Rule
+59(e) motion of December 20 (due December 29) leads to the order of January
+23, 1961, from which the full 30 days run again, to Wednesday, February 22,
+Washington's Birthday, so Thursday, February 23; the January 26 notice is
+timely. The January 17 notice is not an event of the matter: the Court of
+Appeals held it premature and of no effect, and the Court did not decide
+otherwise (371 U.S. at 180-181). The expect test itself is left to the QA
+pass.
 
 The three encoded cases use opinion-cited record entries and dates. Their
 RECAP/PACER docket entries were not independently retrieved in this run;

@@ -44,6 +44,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The appeal time before 1963 as a base layer** (lg-2j7e).
+  `change-frcp-1948-appeal` (docs/litigate/change/frcp-1948) states FRCP
+  59(b), 59(e) and 73(a) as amended in 1946 and 1948, counted under the
+  1938 Rule 6(a) and 6(e), vendored from the U.S. Reports back matter
+  (sources/change-frcp-19*-excerpt.txt), so Foman v. Davis's 1960-61
+  notices of appeal can be replayed. A counting rule's `roll_forward_on`
+  takes `sunday` in place of `weekend`: Sunday alone closes, as Rule 6(a)
+  read until July 1, 1963.
+
 - **Expect batch 3 (criminal): Booker's certiorari petition** (lg-94rl).
   A base layer, `change-certiorari-criminal-2003`
   (docs/litigate/change/scotus-2003-criminal), states the criminal

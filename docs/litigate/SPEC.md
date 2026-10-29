@@ -1509,6 +1509,9 @@ Counting rule `c` defines (FRCP 6(a) vocabulary):
 4. `include_last_day`, with `roll_forward_on`: when the last day falls on a
    listed kind (`weekend`, `legal_holiday`, `inaccessible`), move one day
    in the counting direction until it doesn't (FRCP 6(a)(1)(C), 6(a)(5)).
+   `sunday` in place of `weekend` closes Sunday alone, so Saturday is a day
+   like any other, for the court and business days of step 3 too (FRCP
+   6(a) before July 1, 1963: "unless it is a Sunday or a legal holiday").
    `inaccessible` days come from case events. In a pure `.lit` test they are
    none.
 5. `service_extension { Method: K.days | unrecognized, ... }` is total over
@@ -2852,7 +2855,7 @@ L6001:
 |---|---|
 | id, `cite` | `id`, `label` (the cite, else the id); each step's `text` is generated as `"<cite>: ..."` |
 | the `url` of the source its cite binds to (§4.3) | `sourceUrl` (required: no bound url is L6001) |
-| (always) | `closedWeekdays: ["saturday", "sunday"]` |
+| (always; `sunday` in `roll_forward_on`: `["sunday"]`) | `closedWeekdays: ["saturday", "sunday"]` |
 | `holidays k`, `declared_holidays j` | `holidays: ["k", "j"]`, and each calendar in the fragment (with its own package's source url, so every fragment carrying a calendar carries the same one) |
 | `forward_holidays f` | `forwardHolidays: ["f"]`, and calendar `f` in the fragment |
 | `anchor trigger_day` + `exclude_trigger_day` | `{"op": "anchor", "kind": "trigger"}` |
@@ -2872,7 +2875,8 @@ moves nothing and says nothing, and one in `unrecognized` refuses the
 period ("service method X is not valid under ..."). The
 engine always includes the last day and rolls off any closed day, so a
 rule without `include_last_day`, or whose `roll_forward_on` lists only one
-of `weekend`/`legal_holiday`, is L6001. Service days are added after the
+of `weekend` (or `sunday`) and `legal_holiday`, or both `weekend` and
+`sunday`, is L6001. Service days are added after the
 roll, as FRCP 6(d) and FRAP 26(c) read ("3 days are added after the
 period would otherwise expire under Rule 6(a)"), and `base` records that
 day: the period's own last day after its roll, before any added days. The

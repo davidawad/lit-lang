@@ -334,14 +334,26 @@ fn anchor(sink: &mut Sink, c: &hir::Counting, cite: &str, span: Option<&Span>) -
     }
 }
 
-/// The last-day roll, or `None` when nothing rolls. Weekends and legal
-/// holidays roll together: the engine rolls off any closed day.
+/// The weekdays `c` closes: Sunday alone under `sunday`, else Saturday
+/// and Sunday.
+fn closed_weekdays(c: &hir::Counting) -> Vec<Weekday> {
+    if c.roll_on.contains(&RollOn::Sunday) {
+        vec![Weekday::Sunday]
+    } else {
+        vec![Weekday::Saturday, Weekday::Sunday]
+    }
+}
+
+/// The last-day roll, or `None` when nothing rolls. Closed weekdays
+/// (`weekend` or `sunday`) and legal holidays roll together: the engine
+/// rolls off any closed day.
 fn roll(
     sink: &mut Sink,
     c: &hir::Counting,
     cite: &str,
     span: Option<&Span>,
 ) -> Result<Option<Step>, ()> {
+    let sunday = c.roll_on.contains(&RollOn::Sunday);
     let weekend = c.roll_on.contains(&RollOn::Weekend);
     let holiday = c.roll_on.contains(&RollOn::LegalHoliday);
     if !c.include_last_day {
@@ -351,17 +363,25 @@ fn roll(
         );
         return Err(());
     }
-    if weekend != holiday {
+    if weekend && sunday {
         sink.unsupported(
             span,
-            "`roll_forward_on` must list both `weekend` and `legal_holiday`, or neither: the \
-             engine rolls off every closed day",
+            "`roll_forward_on` lists `weekend` or `sunday`, not both: `sunday` closes Sunday alone",
         );
         return Err(());
     }
-    Ok(weekend.then(|| {
+    if (weekend || sunday) != holiday {
+        sink.unsupported(
+            span,
+            "`roll_forward_on` must list both `weekend` (or `sunday`) and `legal_holiday`, or \
+             neither: the engine rolls off every closed day",
+        );
+        return Err(());
+    }
+    let closed = if sunday { "Sunday" } else { "weekend" };
+    Ok(holiday.then(|| {
         let text = |dir: &str| {
-            format!("{cite}: the last day is a weekend or legal holiday; roll {dir} -> {{date}}")
+            format!("{cite}: the last day is a {closed} or legal holiday; roll {dir} -> {{date}}")
         };
         Step::Roll {
             forward: Roll {
@@ -471,7 +491,7 @@ fn rule(
         id: c.meta.id.clone(),
         label: cite.to_owned(),
         source_url,
-        closed_weekdays: vec![Weekday::Saturday, Weekday::Sunday],
+        closed_weekdays: closed_weekdays(c),
         holidays: closing.both.iter().map(|k| k.meta.id.clone()).collect(),
         forward_holidays: closing.forward.iter().map(|k| k.meta.id.clone()).collect(),
         min_length,

@@ -1,0 +1,72 @@
+# The deadline domain's change files (lg-2j7e): the base layer of the
+# district-court appeal time before the Federal Rules of Appellate
+# Procedure, as the Federal Rules of Civil Procedure stated it from the
+# amendments of December 27, 1946 (effective March 19, 1948) until Rule
+# 6(a) began closing Saturdays on July 1, 1963. Rule 73(a) (the 1946 text,
+# and the 1948 text that renamed the "circuit court of appeals"): 30 days
+# from entry of the judgment, terminated by a timely Rule 50(b), 52(b) or 59
+# motion and run in full again from the order on it; Rule 59(b) and (e):
+# 10 days after entry; Rule 6(b): none of them may be enlarged but as they
+# state. Counted under Rule 6(a) and 6(e) as adopted in 1938, which close
+# Sundays and legal holidays only. Vendored from the U.S. Reports back
+# matter (vols. 308, 329 and 335) in sources/change-frcp-19*-excerpt.txt.
+# The expect tests of tests/expect/ replay the appeals of the cases the
+# library cites that ran under these rules (Foman v. Davis, 1960-61).
+[package]
+name = "change-frcp-1948-appeal"
+version = "1.0.0"
+language = 1
+pack_id = "change-frcp-1948-appeal"
+forum = "frcp"
+family = "district-civil"
+authority = "FederalRule"
+title = "Deadline domain: FRCP 59 and 73(a) appeal time before 1963, counted under 1938 Rule 6(a) (base)"
+in_force = "1948-03-19"
+known_at = "2026-10-29"
+
+[package.roles]
+appellant = "self"
+appellee = "opponent"
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../lit/core" }
+
+[sources.frcp-1938]
+title = "Rules of Civil Procedure for the District Courts of the United States (adopted December 20, 1937), 308 U.S. 645: Rules 6(a), 6(e), 86"
+url = "https://www.govinfo.gov/content/pkg/USREPORTS-308/pdf/USREPORTS-308.pdf"
+path = "sources/change-frcp-1938-rule6-excerpt.txt"
+path_sha256 = "d215d6a8fea0fc3c2184ddc586fee237acc658808298bbff33fcd406b53b230c"
+sha256 = "180cb7e5e277f8acaecaa2feded8a6d0a94b7c69f4c0a30747a655d944d1456a"
+as_of = "1938-09-16"
+cite_prefixes = ["FRCP (1938)"]
+section_heading = "FRCP (1938) Rule {n}"
+
+[sources.frcp-1946]
+title = "Amendments to the Rules of Civil Procedure (adopted December 27, 1946), 329 U.S. 839: Rules 6(b), 59(b), 59(e), 73(a), 86(b)"
+url = "https://www.govinfo.gov/content/pkg/USREPORTS-329/pdf/USREPORTS-329.pdf"
+path = "sources/change-frcp-1946-appeal-time-excerpt.txt"
+path_sha256 = "3a8accde6ea0b2d7c0f2260f43eacf74bed06fc881de098aa5548c9ccdf4032d"
+sha256 = "d36cb90b0b8aec1919e02c7f3cbc3a97cab9cdd21c97ca445f07294febc0c276"
+as_of = "1948-03-19"
+cite_prefixes = ["FRCP (1946)"]
+section_heading = "FRCP (1946) Rule {n}"
+
+[sources.frcp-1948]
+title = "Amendments to the Rules of Civil Procedure (adopted December 29, 1948), 335 U.S. 919: Rules 73(a), 86(c)"
+url = "https://www.govinfo.gov/content/pkg/USREPORTS-335/pdf/USREPORTS-335.pdf"
+path = "sources/change-frcp-1948-rule73-excerpt.txt"
+path_sha256 = "a8d4feaec7d1803613ef0cdb367ad3da0b8bc118bee7862e5cedab468d05575e"
+sha256 = "ad2cb4191cb508c0eb0d89e20f27e47623e4be44a875c2cf8bab1b68f4e4e6e8"
+as_of = "1949-10-20"
+cite_prefixes = ["FRCP (1948)"]
+section_heading = "FRCP (1948) Rule {n}"
+
+[sources.usc-5]
+title = "5 U.S.C. § 6103 (legal public holidays), U.S. Code 2023 ed."
+url = "https://www.govinfo.gov/content/pkg/USCODE-2023-title5/html/USCODE-2023-title5-partIII-subpartE-chap61-subchapI-sec6103.htm"
+path = "sources/usc-5-6103.txt"
+path_sha256 = "c1c9c35af37ca67e297aa61bd83e90d34ffed96045097fc97b99dfc342903dbf"
+as_of = "2026-10-22"
+cite_prefixes = ["5 U.S.C."]
+section_heading = "5 U.S.C. § {n}"

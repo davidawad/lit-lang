@@ -816,6 +816,9 @@ pub enum EndOfMonth {
 pub enum RollOn {
     /// Saturday or Sunday.
     Weekend,
+    /// Sunday only: Saturday is a day like any other (FRCP 6(a) before
+    /// July 1, 1963).
+    Sunday,
     /// A holiday of the referenced calendar.
     LegalHoliday,
     /// A day the clerk's office is inaccessible (case-supplied dates).

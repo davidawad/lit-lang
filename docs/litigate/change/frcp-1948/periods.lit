@@ -1,0 +1,192 @@
+module change-frcp-1948-appeal.periods
+
+// A base layer declares rules from nothing (docs/litigate/CHANGE.md §2.1).
+// The time to appeal a district court's civil judgment before the Federal
+// Rules of Appellate Procedure: Rule 73(a) as the amendments of December
+// 27, 1946 state it (in force March 19, 1948, three months after the first
+// regular session of the 80th Congress adjourned, Rule 86(b)) and as those
+// of December 29, 1948 restate it (in force October 20, 1949, the day after
+// the 81st Congress's first session adjourned, Rule 86(c)), with Rule 59's
+// motions that terminate it. Each period runs from entry, never from
+// service, so Rule 6(e)'s 3 days for mail add nothing. Rule 59(b) and (e)
+// say "served", not filed; a matter dates the motion as its source does.
+// The versions have no end here: no later text of Rules 59 and 73 is
+// vendored, and the counting rule ends where the 1963 Rule 6(a) (lit/core's
+// `frcp6`) begins, so a period triggered from July 1, 1963 has no count here.
+/// After the district court enters a judgment, the losing party may move
+/// for a new trial or to alter or amend the judgment, or appeal to the
+/// court of appeals.
+start judgment
+
+/// What the district clerk enters that starts the time for appeal: the
+/// judgment appealed from, or the order granting or denying a timely
+/// motion under Rule 50(b), 52(b) or 59 to alter or amend, or denying a
+/// timely new-trial motion, from which "the full time for appeal ...
+/// commences to run" again (FRCP (1946) 73(a)).
+enum Entry { Judgment, MotionOrder }
+
+/// The clerk notes the judgment or order in the civil docket, which "constitutes
+/// the entry" (Rule 58, 79(a)).
+event Entered(entry: Entry)
+/// A motion for a new trial is served (FRCP (1946) 59(b)).
+event NewTrialMoved()
+/// A motion to alter or amend the judgment is served (FRCP (1946) 59(e)).
+event AlterAmendMoved()
+/// The appellant files a notice of appeal with the district court (FRCP
+/// (1946) 73(a)).
+event NoticeOfAppealFiled()
+/// A party asks the district court to extend the time for appeal for
+/// excusable neglect based on a failure to learn of the entry (FRCP (1946)
+/// 73(a)).
+event AppealExtensionMoved()
+
+/// The legal holidays of former 5 U.S.C. 87, 87a and 87b, which 5 U.S.C.
+/// § 6103(a) restates (its Historical and Revision Notes): New Year's Day,
+/// Washington's Birthday (February 22, until Pub. L. 90-363 moved it to a
+/// Monday from 1971), Memorial Day (May 30), Independence Day, Labor Day,
+/// November 11 (Act of May 13, 1938), Thanksgiving Day (the fourth Thursday
+/// of November, Act of December 26, 1941) and Christmas Day. lit/core's
+/// `us-federal-holidays` dates the same days but is in force only from its
+/// package's July 1, 1963, so the years the 1938 Rule 6(a) counted are
+/// declared here, ending where that calendar begins. As there, no day is
+/// observed in place of a holiday on a weekend before 1971, and days the
+/// President proclaims (Thanksgiving before 1942) are not listed. The cite
+/// is today's § 6103, whose notes date each entry: a later text, cited for
+/// the whole history on purpose.
+calendar us-legal-holidays-1938 effective [1938-09-16, 1963-07-01) repealed cite "5 U.S.C. § 6103(a)" historical
+{
+  new-years-day: fixed(1, 1) effective [1894-06-28, ..)
+  washingtons-birthday: fixed(2, 22) effective [1894-06-28, ..)
+  memorial-day: fixed(5, 30) effective [1894-06-28, ..)
+  independence-day: fixed(7, 4) effective [1894-06-28, ..)
+  labor-day: nth(1, monday, 9) effective [1894-06-28, ..)
+  armistice-day: fixed(11, 11) effective [1938-05-13, ..)
+  thanksgiving-day: nth(4, thursday, 11) effective [1941-12-26, ..)
+  christmas-day: fixed(12, 25) effective [1894-06-28, ..)
+}
+
+/// FRCP 6(a) and 6(e) as adopted in 1938, unamended until July 1, 1963:
+/// the day of the act or event is not included; the last day is "unless it
+/// is a Sunday or a legal holiday, in which event the period runs until the
+/// end of the next day which is neither a Sunday nor a holiday", so a
+/// Saturday is a day like any other. A period "less than 7 days" excludes
+/// intermediate Sundays and holidays; "A half holiday shall be considered
+/// as other days". Service by mail adds 3 days (6(e)); the other methods
+/// of Rule 5(b) add none. The rule does not define "legal holiday": the
+/// federal holidays above are declared, and no State's (which a district
+/// may have closed on) is vendored. The amendments of January 21, 1963
+/// rewrote 6(a) to close Saturdays from July 1, 1963 (sources/change-
+/// corpus/rules/us-reports/ur374-civ-1963-text.txt): that text is
+/// lit/core's `frcp6`, so this one ends there.
+counting frcp6-1938 effective [1938-09-16, 1963-07-01) repealed cite "FRCP (1938) 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [sunday, legal_holiday]
+  short_period { below: 7.days, count: business_days }
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 3.days
+    Clerk: 0.days
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP (1938) 6(e)"
+  holidays us-legal-holidays-1938
+  forums [frcp]
+}
+
+/// FRCP (1946) 59(b): "A motion for a new trial shall be served not later
+/// than 10 days after the entry of the judgment." Rule 6(b) "may not
+/// extend the time for taking any action under rules ... 59 (b), (d) and
+/// (e)".
+deadline new-trial-motion: 10.days after Entered(Judgment) counted_by frcp6-1938 effective [1948-03-19, ..) cite "FRCP (1946) 59(b)"
+{
+  extend { never cite "FRCP (1946) 6(b)" }
+}
+
+/// FRCP (1946) 59(e): "A motion to alter or amend the judgment shall be
+/// served not later than 10 days after entry of the judgment"; Rule 6(b)
+/// forbids enlarging it.
+deadline alter-amend-motion: 10.days after Entered(Judgment) counted_by frcp6-1938 effective [1948-03-19, ..) cite "FRCP (1946) 59(e)"
+{
+  extend { never cite "FRCP (1946) 6(b)" }
+}
+
+/// FRCP (1946) 73(a): the time for appeal "shall be 30 days from the entry
+/// of the judgment appealed from"; a timely Rule 50(b), 52(b) or 59 motion
+/// terminates it, and "the full time for appeal fixed in this subdivision
+/// commences to run and is to be computed from the entry" of the order on
+/// it, so the latest entry runs the period. A matter enters the order as
+/// `Entered(MotionOrder)` only when the motion was timely: the rule
+/// restarts the time on no other. The 60 days when the United States is a
+/// party are not declared. The district court may extend the time, "upon a
+/// showing of excusable neglect based on a failure of a party to learn of
+/// the entry of the judgment", by "not exceeding 30 days from the
+/// expiration of the original time"; Rule 6(b) allows no other extension.
+deadline notice-of-appeal: 30.days after Entered() counted_by frcp6-1938 effective [1948-03-19, 1949-10-20) cite "FRCP (1946) 73(a)"
+{
+  trigger latest
+  extend {
+    by court
+    discretion ExcusableNeglect
+    max 30.days
+    after_expiry
+    on AppealExtensionMoved()
+  }
+}
+
+/// FRCP (1948) 73(a), in force October 20, 1949: the 1946 text with
+/// "circuit court of appeals" renamed "court of appeals" (28 U.S.C. § 43,
+/// 1948), the same periods.
+deadline notice-of-appeal: 30.days after Entered() counted_by frcp6-1938 effective [1949-10-20, ..) known_at 1948-12-29 supersedes notice-of-appeal@1948-03-19 cite "FRCP (1948) 73(a)"
+{
+  trigger latest
+  extend {
+    by court
+    discretion ExcusableNeglect
+    max 30.days
+    after_expiry
+    on AppealExtensionMoved()
+  }
+}
+
+decision judgment: "Judgment entered: move for a new trial, move to alter or amend it, or appeal?" by appellant effective [1948-03-19, ..) cite "FRCP (1946) 73(a)"
+{
+  new-trial "Move for a new trial" -> motion-pending {
+    event NewTrialMoved()
+    within new-trial-motion
+  }
+  alter-amend "Move to alter or amend the judgment" -> motion-pending {
+    event AlterAmendMoved()
+    within alter-amend-motion
+  }
+  appeal "File the notice of appeal" -> appealed {
+    event NoticeOfAppealFiled()
+    within notice-of-appeal
+  }
+  forgo "Let the judgment stand" -> judgment-stands
+}
+
+decision motion-pending: "A timely Rule 59 motion is pending: the court grants or denies it" by court effective [1948-03-19, ..) cite "FRCP (1946) 73(a)"
+{
+  rule "Enter the order granting or denying the motion" -> motion-decided {
+    event Entered(MotionOrder)
+  }
+}
+
+decision motion-decided: "The order on the motion is entered: appeal?" by appellant effective [1948-03-19, ..) cite "FRCP (1946) 73(a)"
+{
+  appeal "File the notice of appeal" -> appealed {
+    event NoticeOfAppealFiled()
+    within notice-of-appeal
+  }
+  forgo "Let the judgment stand" -> judgment-stands
+}
+
+terminal appealed: "Notice of appeal filed" effective [1948-03-19, ..)
+terminal judgment-stands: "The judgment stands" effective [1948-03-19, ..)

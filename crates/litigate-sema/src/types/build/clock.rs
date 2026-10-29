@@ -624,6 +624,7 @@ impl Cx<'_, '_> {
                     r,
                     &[
                         ("weekend", RollOn::Weekend),
+                        ("sunday", RollOn::Sunday),
                         ("legal_holiday", RollOn::LegalHoliday),
                         ("inaccessible", RollOn::Inaccessible),
                     ],

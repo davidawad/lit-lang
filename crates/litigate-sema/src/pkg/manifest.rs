@@ -258,15 +258,7 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         jurisdiction: text_of(&p.jurisdiction),
         jurisdiction_id: text_of(&p.jurisdiction_id),
         roles,
-        in_force: Interval {
-            from: p.in_force.get_ref().clone(),
-            to: p.in_force_until.as_ref().map(|s| s.get_ref().clone()),
-            known_at: p.known_at.get_ref().clone(),
-            retracted: None,
-            unknown_before: p.unknown_before.as_ref().map(|s| s.get_ref().clone()),
-            commenced: None,
-            repealed: false,
-        },
+        in_force: in_force(p),
         sources,
         dependencies,
         counting: text_of(&p.counting),
@@ -286,6 +278,19 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         manifest,
         dependency_paths,
     })
+}
+
+/// The package's `in_force` interval from its date fields.
+fn in_force(p: &RawPackage) -> Interval {
+    Interval {
+        from: p.in_force.get_ref().clone(),
+        to: p.in_force_until.as_ref().map(|s| s.get_ref().clone()),
+        known_at: p.known_at.get_ref().clone(),
+        retracted: None,
+        unknown_before: p.unknown_before.as_ref().map(|s| s.get_ref().clone()),
+        commenced: None,
+        repealed: false,
+    }
 }
 
 /// `package.counting` must be a rule id; `package.recounts` needs that

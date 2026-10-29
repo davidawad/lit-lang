@@ -85,52 +85,7 @@ impl Cx<'_, '_> {
         let counting = self.value_ref(counted_by, "counting rule", |k| {
             matches!(k, ValueKind::Counting { .. })
         });
-        // The rule's signature carries `allow_hours` and `end_of_month`,
-        // local or imported.
-        let lacks = |cx: &Self, key: fn(&ValueKind) -> bool| {
-            counting.is_some()
-                && cx
-                    .ck
-                    .scope
-                    .value(counted_by)
-                    .is_ok_and(|(_, found)| !key(&found.item.kind))
-        };
-        let period = match self.ck.infer(amount).value {
-            Some(Value::Days { amount: n, unit }) => {
-                let refused = unit.is_monthly()
-                    && lacks(self, |k| {
-                        matches!(
-                            k,
-                            ValueKind::Counting {
-                                end_of_month: true,
-                                ..
-                            }
-                        )
-                    });
-                if refused {
-                    self.report(Report::new(
-                        C::InvalidCounting,
-                        amount.range,
-                        "a month or year deadline needs a counting rule with `end_of_month`",
-                    ));
-                }
-                u64::try_from(n).ok().map(|n| (n, unit))
-            }
-            Some(Value::Hours(h)) => {
-                let refused = lacks(self, |k| {
-                    matches!(k, ValueKind::Counting { hours: true, .. })
-                });
-                self.hours(h, amount, refused)
-            }
-            _ => {
-                self.report(Report::new(
-                    C::TypeMismatch,
-                    amount.range,
-                    "a deadline period is a duration such as `21.days`",
-                ));
-                None
-            }
-        };
+        let period = self.period(amount, counted_by, counting.is_some());
         let direction = match direction.text.as_str() {
             "before" => Direction::Backward,
             _ => Direction::Forward,
@@ -170,6 +125,63 @@ impl Cx<'_, '_> {
         })
     }
 
+    /// Deadline `amount`'s period, checked against counting rule
+    /// `counted_by` (when it resolved, `counted`): a month or year period
+    /// needs `end_of_month`, an hours period `allow_hours`.
+    fn period(
+        &mut self,
+        amount: &Expr,
+        counted_by: &RefPath,
+        counted: bool,
+    ) -> Option<(u64, DayUnit)> {
+        // The rule's signature carries `allow_hours` and `end_of_month`,
+        // local or imported.
+        let lacks = |cx: &Self, key: fn(&ValueKind) -> bool| {
+            counted
+                && cx
+                    .ck
+                    .scope
+                    .value(counted_by)
+                    .is_ok_and(|(_, found)| !key(&found.item.kind))
+        };
+        match self.ck.infer(amount).value {
+            Some(Value::Days { amount: n, unit }) => {
+                let refused = unit.is_monthly()
+                    && lacks(self, |k| {
+                        matches!(
+                            k,
+                            ValueKind::Counting {
+                                end_of_month: true,
+                                ..
+                            }
+                        )
+                    });
+                if refused {
+                    self.report(Report::new(
+                        C::InvalidCounting,
+                        amount.range,
+                        "a month or year deadline needs a counting rule with `end_of_month`",
+                    ));
+                }
+                u64::try_from(n).ok().map(|n| (n, unit))
+            }
+            Some(Value::Hours(h)) => {
+                let refused = lacks(self, |k| {
+                    matches!(k, ValueKind::Counting { hours: true, .. })
+                });
+                self.hours(h, amount, refused)
+            }
+            _ => {
+                self.report(Report::new(
+                    C::TypeMismatch,
+                    amount.range,
+                    "a deadline period is a duration such as `21.days`",
+                ));
+                None
+            }
+        }
+    }
+
     /// The period of an `N.hours` deadline: whole hours, under a counting
     /// rule whose signature carries `allow_hours` (L3009 when `refused`).
     fn hours(&mut self, h: Rational, amount: &Expr, refused: bool) -> Option<(u64, DayUnit)> {
@@ -206,56 +218,9 @@ impl Cx<'_, '_> {
         let fields: Vec<&Field> = opts.iter().filter(|f| f.key.text == "derived").collect();
         let mut terms = Vec::new();
         for f in &fields {
-            let Some(e) = first_expr(f) else { continue };
-            let Some(Value::Days { amount, unit }) = self.ck.infer(e).value else {
-                self.report(Report::new(
-                    C::TypeMismatch,
-                    e.range,
-                    "a derived term is a duration such as `1.months`",
-                ));
-                continue;
-            };
-            let Ok(amount) = u64::try_from(amount) else {
-                continue;
-            };
-            let rest = Field {
-                key: f.key.clone(),
-                values: f.values.iter().skip(1).cloned().collect(),
-                range: f.range,
-            };
-            let Some(cite) = first_expr(&rest) else {
-                continue;
-            };
-            let hole = matches!(cite.kind, ExprKind::Hole(_));
-            let historical = matches!(cite.kind, ExprKind::Cite(_, true));
-            let quote = match rest.values.get(1) {
-                Some((
-                    Atom::Expr(Expr {
-                        kind: ExprKind::Str(q),
-                        range,
-                    }),
-                    _,
-                )) => Some((q.clone(), *range)),
-                _ => None,
-            };
-            if let (true, Some((_, range))) = (hole, &quote) {
-                self.report(Report::new(
-                    C::InvalidField,
-                    *range,
-                    "a `quote` quotes the text of its cite, and a cite hole has none",
-                ));
-                continue;
+            if let Some(term) = self.derived_term(f) {
+                terms.push(term);
             }
-            let Some(cite) = self.cite_text(Some(&&rest)) else {
-                continue;
-            };
-            terms.push(Derivation {
-                amount,
-                unit,
-                cite,
-                historical,
-                quote: quote.map(|(q, _)| q),
-            });
         }
         let Some((amount, unit)) = period.filter(|_| terms.len() == fields.len()) else {
             return terms;
@@ -287,6 +252,55 @@ impl Cx<'_, '_> {
             ));
         }
         terms
+    }
+
+    /// One `derived N.unit cite "X" [quote "..."]` term, or `None` after
+    /// reporting why it is malformed.
+    fn derived_term(&mut self, f: &Field) -> Option<Derivation> {
+        let e = first_expr(f)?;
+        let Some(Value::Days { amount, unit }) = self.ck.infer(e).value else {
+            self.report(Report::new(
+                C::TypeMismatch,
+                e.range,
+                "a derived term is a duration such as `1.months`",
+            ));
+            return None;
+        };
+        let amount = u64::try_from(amount).ok()?;
+        let rest = Field {
+            key: f.key.clone(),
+            values: f.values.iter().skip(1).cloned().collect(),
+            range: f.range,
+        };
+        let cite = first_expr(&rest)?;
+        let hole = matches!(cite.kind, ExprKind::Hole(_));
+        let historical = matches!(cite.kind, ExprKind::Cite(_, true));
+        let quote = match rest.values.get(1) {
+            Some((
+                Atom::Expr(Expr {
+                    kind: ExprKind::Str(q),
+                    range,
+                }),
+                _,
+            )) => Some((q.clone(), *range)),
+            _ => None,
+        };
+        if let (true, Some((_, range))) = (hole, &quote) {
+            self.report(Report::new(
+                C::InvalidField,
+                *range,
+                "a `quote` quotes the text of its cite, and a cite hole has none",
+            ));
+            return None;
+        }
+        let cite = self.cite_text(Some(&&rest))?;
+        Some(Derivation {
+            amount,
+            unit,
+            cite,
+            historical,
+            quote: quote.map(|(q, _)| q),
+        })
     }
 
     /// Deadline `name`'s forum, its `forum F` option's or its package's;

@@ -197,7 +197,7 @@ After the 2014 amendment, is an untimely Rule 12(b)(3) argument reviewed for pla
 
 | court | decision | citation | position (planner; batch confirms) | status |
 |---|---|---|---|---|
-| U.S. | Davis v. United States | 411 U.S. 233 (1973) |  | planned |
+| U.S. | Davis v. United States | 411 U.S. 233 (1973) | a Rule 12(b)(2) waiver binds a later 2255 motion absent cause (411 U.S. at 242) | corpus (`davis-scotus-1973`); not encoded: no dated trigger or filing (lg-wvlf.6, lg-bdvf) |
 | 3d Cir. | United States v. Fattah | 858 F.3d 801 (3d Cir. 2017) |  | planned |
 | 5th Cir. | United States v. Vasquez | 899 F.3d 363 (5th Cir. 2018) |  | planned |
 | 6th Cir. | United States v. Soto | 794 F.3d 635 (6th Cir. 2015) | plain error | planned |
@@ -729,6 +729,38 @@ NEW_BUG: Add a sourced historical FRCP 73(a)/Rule 6(a) deadline layer so
 Foman v. Davis can be encoded as an expect test; the current rule timeline
 begins after its 1960-61 filings. The other six non-encoded appellate cases
 have no dated filing interval this engine can currently assert.
+
+### lg-wvlf.6 batch disposition (2026-10-29, lg-bdvf)
+
+Batch 3 stores ten criminal Supreme Court decisions that `lit/` cites
+(Arizona v. Washington, Blockburger, Brady, Burks, Davis v. United States,
+Giglio, Jackson v. Virginia, Luce, Mapp and Booker) under
+`sources/change-corpus/rulings/`, each with its `lit_cites`; the table in
+that directory's README confirms or rejects each cited position. None is
+encoded as an expect test, and none may be until a source supplies what an
+expect test asserts: a dated trigger (verdict, sentence, judgment entry)
+and a dated filing that a `lit/frcrimp` or FRAP 4(b) period counts.
+
+- The opinions give argument and decision dates only, and none decides
+  whether a filing was timely. Do not infer a trigger or filing date from
+  the opinion text.
+- The trial and circuit dockets predate PACER. Booker's (W.D. Wis. 2003;
+  7th Cir. No. 03-4225) is on RECAP but needs the authenticated
+  CourtListener API. Its stored Supreme Court docket (No. 04-104) dates the
+  certiorari petition, but `change-certiorari-base` starts with the
+  May 2, 2005 Rules edition, so a 2004 petition has no period in force.
+- `lit/frcrimp`'s periods and FRCrimP 45 counting take effect 2009-2024,
+  so any trigger from 1932-2005 also needs a sourced, dated historical
+  base layer (FRCrimP 45 and FRAP 4(b) before 2009) first.
+
+The opinions remain sources for the `lit/` positions they hold. Blockburger
+and Luce do not hold the positions `lit/` cites them for (see the README);
+that is a citation fix, not an expect test.
+
+NEW_BUG: Encode a batch 3 criminal expect test once a dated source exists:
+Booker's district and 7th Cir. RECAP dockets (verdict, sentence, notice of
+appeal) or a Rules of the Supreme Court edition in force in 2004 for its
+certiorari petition, plus a pre-2009 FRCrimP 45 / FRAP 4(b) base layer.
 
 ## 4. Batches
 

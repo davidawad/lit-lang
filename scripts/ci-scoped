@@ -411,7 +411,8 @@ visible_words() {
 # Extract -> one line for any page section that retains under 10% of the
 # visible words in its corresponding HTML/API original (minimum 30 words in
 # the source to avoid noise from short records). PDF originals have no
-# comparable text here and are handled by the empty-section check.
+# comparable text here (by .pdf name or %PDF- magic) and are left to the
+# empty-section check.
 truncated_sections() {
   local extract="$1" entry="$2" i=0 section orig words source_words
   local -a originals=() headings=() counts=()
@@ -430,6 +431,9 @@ truncated_sections() {
     orig="${originals[$i]}"; source="${orig#sources/}"
     source="sources/$source"
     [ -f "$source" ] || continue
+    # A PDF original's raw bytes are not its words.
+    case "$source" in *.[pP][dD][fF]) continue ;; esac
+    [ "$(head -c 5 "$source")" = "%PDF-" ] && continue
     source_words="$(visible_words "$source")"
     [ "$source_words" -ge 30 ] || continue
     words="${counts[$i]}"

@@ -1,0 +1,9 @@
+# Legal-holiday statute provenance (in-holidays)
+
+### `in-holidays/in-legal-holidays.txt` — IC 1-1-9-1 and 1-1-9-2 (Indiana legal holidays)
+
+- Source: https://iga.in.gov/ic/2026/Title_1.html (official Indiana General Assembly site; Indiana Code 2026, Title 1, General Provisions, Article 1, Chapter 9, Legal Holidays; the whole Title 1 file, 444704 characters, is the original).
+- Edition: the file is the '2026' Indiana Code Title 1; the served response carried Last-Modified Tue, 30 Jun 2026 04:19:53 GMT; the chapter's source notes end P.L.26-2000 (IC 1-1-9-1) and P.L.4-1989 (IC 1-1-9-2); no pending amendment shown. IC 1-1-9-1(b): a holiday on Sunday moves to the following Monday, on Saturday to the preceding Friday; Election Day (general, municipal or primary) is a legal holiday; IC 1-1-9-2: the governor may shift observance.
+- Retrieved 2026-10-29 on carbon (lg-br7q); plain curl with the identifying UA was served the single-page application shell (691 bytes), not the file, so the document was read once with BrowserOS neo, an in-page fetch of the same URL with credentials included (no forged headers or user agent) after the application page https://iga.in.gov/laws/2026/ic/titles/1 was loaded once to find the file URL; robots.txt (read with curl) is the same application shell, no directives, so none apply; the body text was saved as returned and the tab closed; terms not separately fetched; tags stripped, entities decoded, whitespace collapsed (html2txt2.py); the text of the cited section(s) is kept under `## <cite>` headings; otherwise unedited.
+- Extract sha256 56115846621fb6ce49e5e26d7eea35d007229a2e671f1c4c5d39c7efc0bbbd2d.
+- Original: `in-holidays/original/in-title-1-2026.html` as served (sha256 8e1482f57ad996b357bda7f9a22bf0e4480a6162c6d9e54f9153043254c69651). Served at https://iga.in.gov/ic/2026/Title_1.html.

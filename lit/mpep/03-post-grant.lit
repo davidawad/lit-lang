@@ -11,7 +11,38 @@ import mpep.deadlines.{
 
 import mpep.{ post-grant-group }
 
-decision patent-challenged: "Patent Challenged (Post-Grant)" effective [2024-01-31, ..) cite "35 U.S.C. 311; 321; 302"
+decision patent-challenged: "Patent Challenged (Post-Grant)" effective [2024-01-31, 2025-01-19) cite "35 U.S.C. 311; 321; 302"
+{
+  group post-grant-group
+  note "A third party (or, for reexam, anyone including the owner) attacks the issued patent. Three doors, decided by the CHALLENGER: inter partes review (IPR, 102/103 on patents/publications, subject to the 315(b) one-year bar), post-grant review (PGR, broad grounds incl. 101/112 but only within 9 months of grant), or ex parte reexamination (EPR, SNQ standard, no petitioner estoppel). This is the first genuinely ADVERSARIAL region of the chart — the outcomes are opposing-party draws, not examiner draws."
+  edge-patent-challenged-ipr-petition-filed "Challenger files IPR petition (35 U.S.C. 311)" -> ipr-petition-filed {
+    authority cite "35 U.S.C. 311–314; 37 CFR 42.100"
+    cost 19_000.usd
+    within ipr-time-bar {
+      extendable false
+      note "If the petitioner was served with an infringement complaint, 35 U.S.C. 315(b) bars a petition filed more than one year later — unextendable."
+    }
+    duration { min 54.8.days, mode 182.5.days, max 365.days }
+    note "IPR request fee $19,000.00, verified, in force until 1/19/2025 (37 CFR 42.15(a)(1)): covers up to 20 claims; $375.00 per claim over 20 at request (42.15(a)(3)). A post-institution fee of $22,500.00 (42.15(a)(2)), plus $750.00 per claim over 20 instituted (42.15(a)(4)), falls due only if the Board institutes -- not modeled on this edge."
+  }
+  edge-patent-challenged-pgr-petition-filed "Challenger files PGR petition within 9 months (35 U.S.C. 321)" -> pgr-petition-filed {
+    authority cite "35 U.S.C. 321–324; 37 CFR 42.200"
+    cost 20_000.usd
+    within pgr-window {
+      extendable false
+      note "PGR must be filed within 9 months of grant (35 U.S.C. 321(c)); AIA patents only. Unextendable, jurisdictional."
+    }
+    duration { min 40.5.days, mode 135.days, max 270.days }
+    note "PGR request fee $20,000.00, verified, in force until 1/19/2025 (37 CFR 42.15(b)(1)): covers up to 20 claims; $475.00 per claim over 20 at request (42.15(b)(3)). A post-institution fee of $27,500.00 (42.15(b)(2)), plus $1,050.00 per claim over 20 instituted (42.15(b)(4)), falls due only if the Board institutes -- not modeled on this edge. (This edge previously and incorrectly reused the IPR request fee of $19,000.00; corrected to the PGR-specific fee.)"
+  }
+  edge-patent-challenged-epr-requested "Requester files ex parte reexam request (35 U.S.C. 302)" -> epr-requested {
+    authority cite "35 U.S.C. 302; 37 CFR 1.510; MPEP 2209"
+    cost 12_600.usd
+    note "Any person, any time during enforceability, even anonymously. Non-streamlined ex parte reexam request fee $12,600.00, undiscounted/large-entity, in force until 1/19/2025 (37 CFR 1.20(c)(2)); a streamlined ex parte reexam (a newer, faster USPTO option, narrower eligibility) costs $6,300.00 instead (37 CFR 1.20(c)(1)(i)) -- this edge models the non-streamlined default since streamlined-track eligibility isn't tracked by this pack."
+  }
+}
+
+decision patent-challenged: "Patent Challenged (Post-Grant)" effective [2025-01-19, ..) cite "35 U.S.C. 311; 321; 302"
 {
   group post-grant-group
   note "A third party (or, for reexam, anyone including the owner) attacks the issued patent. Three doors, decided by the CHALLENGER: inter partes review (IPR, 102/103 on patents/publications, subject to the 315(b) one-year bar), post-grant review (PGR, broad grounds incl. 101/112 but only within 9 months of grant), or ex parte reexamination (EPR, SNQ standard, no petitioner estoppel). This is the first genuinely ADVERSARIAL region of the chart — the outcomes are opposing-party draws, not examiner draws."

@@ -287,6 +287,13 @@ Entries live in the forum's own
 - sha256 (this file): `e5765fec0e8c5f295d4f230ed9743b7972dbd41340693833abf990fe1918d1ec`
 - Original: `original/cfr-37-part1.xml` as served (sha256 7e024b8a8d1f7b4b32939771ec577d62e5b4dace4c40ca0f8b92f9d8c6f76637); extraction sha256 e5765fec0e8c5f295d4f230ed9743b7972dbd41340693833abf990fe1918d1ec. Served at https://www.govinfo.gov/content/pkg/CFR-2024-title37-vol1/xml/CFR-2024-title37-vol1-part1.xml; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 
+### `cfr-37-fees-2025-07-01.txt` — 37 C.F.R. §§ 1.16, 1.17, 1.18, 1.20, 41.20, 42.15 (fees; annual edition revised as of 2025-07-01)
+
+- Fetched 2026-10-29 from `www.govinfo.gov` (`CFR-2025-title37-vol1-part1.xml`, `...-part41.xml`, `...-part42.xml`, the 2025-07-01 edition), same method as `cfr-37-part1.txt`: XML tags stripped, one paragraph per line, each fee table flattened to one line; no wording changed. The extraction reproduces `cfr-37-part1.txt` from the 2024 edition word for word (only the `[Reserved]` range headings differ). Headings `## 37 C.F.R. (2025) § N` keep it apart from the 2024 base files `cfr-37-part1.txt`, `cfr-37-part41.txt` and `cfr-37-part42.txt`. A dated layer over those files: the fees the January 19, 2025 fee rule (89 FR 91662, Nov. 20, 2024) set, which `lit/mpep`'s 2025-01-19 node versions cite.
+- The eCFR versioner (`ecfr-versions-title-37.txt`) records later amendments to § 1.17 (2025-08-14, 2026-02-17, 2026-06-24, 2026-08-13) and § 1.20 (2026-03-30) that this edition predates; the 2026 annual edition was not yet on govinfo when fetched.
+- sha256 (this file): `ac39bb4a121f72298602669dd48e02050438a3b3c3394abb9180e5e9c677072d`
+- Original: `original/cfr-37-fees-2025-07-01/001-CFR-2025-title37-vol1-part1.xml` as served (sha256 d1437bebcfc70bc9fbb56b303fb3c79c7194943770ee8b62fcb770529262d186) and `original/cfr-37-fees-2025-07-01/002-CFR-2025-title37-vol1-part41.xml` as served (sha256 8662907257a9d0062f4f1c0084306381829481858a1bdb47615d0709c8171e73); § 42.15 is from the Part 42 edition already kept as `original/change-cfr-37-42-5-71-75-2026-10-20/001-CFR-2025-title37-vol1-part42.xml` (sha256 77256147aecfeded3601dc9b424fa11979b08755beafb7e544cde110da7654ec, identical bytes). Served at https://www.govinfo.gov/content/pkg/CFR-2025-title37-vol1/xml/CFR-2025-title37-vol1-part1.xml and `...-part41.xml`; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+
 ### `cfr-37-part41.txt` — 37 C.F.R. Part 41 (Board of Patent Appeals and Interferences / PTAB ex parte appeal practice, 75 sections)
 
 - Fetched 2026-09-29 from `www.govinfo.gov` (`CFR-2024-title37-vol1-part41.xml`,

@@ -2,7 +2,8 @@
 # strict). in_force is the MPEP 9th ed. Rev. 01.2024 date every MPEP source
 # below records as `as_of`: the pack's citations were verified against that
 # edition, so it is the earliest date this package claims to be in force.
-# known_at is the vendored 37 C.F.R. corpus date (`cfr-37-patents.as_of`).
+# known_at postdates every vendored 37 C.F.R. edition cited (the latest is
+# the 2025-07-01 edition of the fee sections, `cfr-37-fees-2025`).
 # The rules here are agency regulations (37 C.F.R.) and their statutes, so
 # the package level is core's `Regulation`. The MPEP itself is guidance,
 # not regulation, and no declaration rests on it: every counting rule,
@@ -143,9 +144,23 @@ url = "https://www.uspto.gov/web/offices/pac/mpep/consolidated_rules.pdf"
 path = "sources/cfr-37-part1.txt"
 path_sha256 = "e5765fec0e8c5f295d4f230ed9743b7972dbd41340693833abf990fe1918d1ec"
 sha256 = "54c190418121ba3ede5240a1b1466522e48b08a95129caf2d7825e5acd5a6f89"
-as_of = "2026-01-01"
+as_of = "2024-07-01"
 cite_prefixes = ["37 CFR", "37 C.F.R."]
 section_heading = "37 C.F.R. § {n}"
+
+# The fee sections as the January 19, 2025 fee rule (89 FR 91662, Nov. 20,
+# 2024) left them, from the 2025-07-01 annual edition: the text the
+# 2025-01-19 version of each fee-bearing node cites. The base Part 1, 41
+# and 42 files above are the 2024-07-01 edition, which the earlier version
+# of the same node cites.
+[sources.cfr-37-fees-2025]
+title = "37 C.F.R. §§ 1.16, 1.17, 1.18, 1.20, 41.20 and 42.15 (patent and PTAB fees; annual edition revised as of 2025-07-01)"
+url = "https://www.govinfo.gov/content/pkg/CFR-2025-title37-vol1/xml/CFR-2025-title37-vol1-part1.xml"
+path = "sources/cfr-37-fees-2025-07-01.txt"
+path_sha256 = "ac39bb4a121f72298602669dd48e02050438a3b3c3394abb9180e5e9c677072d"
+as_of = "2025-07-01"
+cite_prefixes = ["37 CFR (2025)", "37 C.F.R. (2025)"]
+section_heading = "37 C.F.R. (2025) § {n}"
 
 # The eCFR versioner's version list of each 37 C.F.R. section cited: the
 # amendment history `cite-resolves` reads to prove a text dated after a

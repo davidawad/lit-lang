@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Regenerates every committed Lit.lock and the shared clock library
+# Regenerates every committed Lit.lock (creating one for a new lit/
+# package) and the shared clock library
 # (crates/litigate-engine/clock/litigate-core.json) from the checked-in
 # lit/ sources (lg-wuzi). These are the files .gitattributes marks
 # linguist-generated: a land resolves a rebase conflict on one by taking
@@ -52,11 +53,16 @@ fi
 
 # Every Lit.lock in the tree, tracked or new (lg-310r), except the
 # lock-format-1 fixture, which pins the superseded lock format.
-mapfile -t lockfiles < <(git ls-files --cached --others --exclude-standard -- '*Lit.lock' \
-  | grep -v -x 'crates/litigate-cli/tests/fixtures/lock-format-1/Lit.lock')
+# A new package under lit/ (a Lit.toml with no Lit.lock beside it) gets
+# its first lock here too (lg-8xc7).
+mapfile -t lockfiles < <({
+  git ls-files --cached --others --exclude-standard -- '*Lit.lock'
+  git ls-files --cached --others --exclude-standard -- 'lit/*/Lit.toml' \
+    | sed 's/Lit\.toml$/Lit.lock/'
+} | sort -u | grep -v -x 'crates/litigate-cli/tests/fixtures/lock-format-1/Lit.lock')
 n=0
 for lockfile in "${lockfiles[@]}"; do
-  [ -e "$lockfile" ] || continue
+  [ -e "$lockfile" ] || [ -e "$(dirname "$lockfile")/Lit.toml" ] || continue
   "${lit[@]}" lock "$(dirname "$lockfile")" > /dev/null
   n=$((n + 1))
 done

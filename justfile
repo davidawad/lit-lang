@@ -339,7 +339,8 @@ lit_build_args := "crates/litgraph-packs/build.args"
 # Where `lit-sync` writes the build for inspection (and `litigate diff`).
 lit_build_dir := "target/lit-build"
 
-# Regenerate every committed Lit.lock and the engine's shared clock library
+# Regenerate every committed Lit.lock (and create one for a new lit/
+# package) and the engine's shared clock library
 # (crates/litigate-engine/clock/litigate-core.json: lit/core lowered, the one
 # generated file committed, since the engine cannot run the compiler), then
 # build packs/, packs/links.json, generated packs/clock/ fragments,

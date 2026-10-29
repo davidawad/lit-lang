@@ -194,8 +194,12 @@ deadline motion-objection-period: 8.days before MotionHearing() counted_by frbp9
 /// Bankr. M.D. La. Standing Order 2025-1 (November 25, 2025):
 /// notwithstanding LR 9014-1(a)(1), for hearings on Mondays at 2:00 p.m.
 /// the deadline to file objections or responses is 11:59 p.m. on the prior
-/// Monday.
+/// Monday. The order states no day count: the prior Monday is derived, seven
+/// days before a Monday hearing.
 deadline monday-hearing-objection-period: 7.days before MondayAfternoonHearing() counted_by frbp9006 effective [2025-11-25, ..) cite "Bankr. M.D. La. LR (SO 2025-1) 9014-1"
+{
+  derived 7.days cite "Bankr. M.D. La. LR (SO 2025-1) 9014-1" quote "on the prior Monday"
+}
 
 /// Bankr. M.D. La. LR 9027-1: within seven days of removal, the party
 /// filing the notice of removal files a complete copy of all records of the

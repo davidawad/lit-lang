@@ -294,7 +294,10 @@ impl Measure {
 /// up to [`COUNT_WORDS`] words before a measure (`14 days`, `fourteen (14)
 /// calendar days`, `one hundred eighty days`, `35days`), hyphened to it
 /// (`14-day`, `seven-day`), or an ordinal day (`the 21st day`, `the next
-/// day`); `the prior Monday` is a week. A page opening on a measure, under
+/// day`); `the prior Monday` is a week where the body counts from a
+/// Monday (`hearings scheduled on Mondays`, Bankr. M.D. La. SO 2025-1),
+/// and no count where it counts from another day (`falls on a Saturday
+/// ... the following Monday`, two days). A page opening on a measure, under
 /// any running head, takes a count ending one of the previous page's last
 /// lines (`within 3`, `seven (7)`): the footer and running head a
 /// `pdftotext -layout` extract sets between them (`within 3` / `Page 38` /
@@ -342,12 +345,10 @@ fn counts(body: &str) -> Vec<(u64, Measure)> {
             if let (Some(n), Some(m)) = (number(count), Measure::named(measure)) {
                 out.push((n, m));
             }
-        } else if WEEKDAYS.contains(&word.as_str())
-            && i > 0
-            && matches!(
-                words[i - 1].as_str(),
-                "prior" | "preceding" | "following" | "next"
-            )
+        } else if relative_weekday(&words, i)
+            && words.iter().enumerate().any(|(j, w)| {
+                j != i && !relative_weekday(&words, j) && w.trim_end_matches('s') == word.as_str()
+            })
         {
             out.push((1, Measure::Week));
         }
@@ -388,6 +389,17 @@ fn within_count(words: &[String], j: usize, k: usize, i: usize) -> bool {
     (j.saturating_sub(3)..=j).any(|a| {
         (k..=i.min(a + 3)).any(|b| (a, b) != (j, k) && number(&words[a..b].join(" ")).is_some())
     })
+}
+
+/// Whether `words[i]` is a weekday counted from another (`the prior
+/// Monday`, `the following Monday`).
+fn relative_weekday(words: &[String], i: usize) -> bool {
+    WEEKDAYS.contains(&words[i].as_str())
+        && i > 0
+        && matches!(
+            words[i - 1].as_str(),
+            "prior" | "preceding" | "following" | "next"
+        )
 }
 
 /// The words that introduce a period's count (`within 3`, `at least 7`).

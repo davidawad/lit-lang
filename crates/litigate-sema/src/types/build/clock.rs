@@ -101,18 +101,20 @@ impl Cx<'_, '_> {
                 u64::try_from(n).ok().map(|n| (n, unit))
             }
             Some(Value::Hours(_)) => {
-                let allowed = counting
+                // Only a local rule's keys are visible here: an imported rule
+                // (`None`) may declare `allow_hours`, so the real reason applies.
+                let refused = counting
                     .as_deref()
-                    .is_some_and(|c| local_counting(c, "allow_hours") == Some(true));
-                let (code, message) = if allowed {
-                    (
-                        C::LoweringUnsupported,
-                        "hour deadlines have no HIR/litgraph representation in language version 1",
-                    )
-                } else {
+                    .is_some_and(|c| local_counting(c, "allow_hours") == Some(false));
+                let (code, message) = if refused {
                     (
                         C::InvalidCounting,
                         "an hours deadline needs a counting rule with `allow_hours`",
+                    )
+                } else {
+                    (
+                        C::LoweringUnsupported,
+                        "hour deadlines have no HIR/litgraph representation in language version 1",
                     )
                 };
                 self.report(Report::new(code, amount.range, message));

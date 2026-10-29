@@ -9,9 +9,10 @@ import frap.events.{ NoticeOfAppealFiled }
 // 40(d)(1) and the mandate period of FRAP 41(b). This package is the
 // Seventh Circuit's layer over them: it declares the circuit's own periods.
 // Except in agency cases the time for filing briefs runs from docketing,
-// not from the filing of the record (7th Cir. R. 31(a)), so the appellant's
-// 40 days of FRAP 31(a)(1) are a period of their own here rather than an
-// override of lit/frap's period from the record. The leading decisions on
+// not from the filing of the record (7th Cir. R. 31(a)). The appellant's
+// 40 days are FRAP 31(a)(1)'s, lit/frap's `appellant-brief-period`, and are
+// not declared again here: the circuit rule states no period of its own,
+// only the date the national one runs from. The leading decisions on
 // appellate jurisdiction and the notice deadline (Catlin v. United States,
 // Bowles v. Russell) are lit/frap's. The counsel-names notice due five
 // business days before argument (7th Cir. R. 34(a)) is not declared: the
@@ -97,10 +98,6 @@ deadline disclosure-statement-period: 21.days after AppealDocketed() counted_by 
 /// Counsel files an updated disclosure statement within 14 days of any
 /// change in the information it must disclose.
 deadline disclosure-update-period: 14.days after DisclosureChanged() counted_by frap26 cite "7th Cir. R. 26.1(d)"
-/// The time for briefs runs from docketing: the appellant's FRAP 31(a)(1)
-/// 40 days count from the date the appeal is docketed, whatever the state
-/// of the record.
-deadline appellant-brief-period: 40.days after AppealDocketed() counted_by frap26 cite "FRAP 31(a)(1); 7th Cir. R. 31(a)"
 /// Counsel answers the clerk's order to show cause for a brief not filed
 /// when due within 14 days.
 deadline brief-show-cause-period: 14.days after BriefShowCauseEntered() counted_by frap26 cite "7th Cir. R. 31(c)(1); 7th Cir. R. 31(d)"
@@ -209,12 +206,6 @@ test "updated disclosure statement is due 14 days after a change" cite "7th Cir.
 {
   given DisclosureChanged() on 2026-11-02
   expect deadline(disclosure-update-period) == 2026-11-16
-}
-
-test "appellant's brief is due 40 days after docketing, past a Saturday" cite "7th Cir. R. 31(a)"
-{
-  given AppealDocketed() on 2026-11-02
-  expect deadline(appellant-brief-period) == 2026-12-14
 }
 
 test "show-cause response is due 14 days after the order" cite "7th Cir. R. 31(c)(1)"
@@ -326,7 +317,7 @@ state record: "Record and Transcript" by applicant cite "FRAP 10; 7th Cir. R. 10
 
 state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 7th Cir. R. 31(a)"
 {
-  note "Except in agency cases the brief periods run from docketing, regardless of the record (7th Cir. R. 31(a)). Extensions are not favored and need a motion with an affidavit filed at least seven days before the due date (7th Cir. R. 26). A principal brief may contain up to 14,000 words and a reply 7,000, in 12-point type with 11-point footnotes (7th Cir. R. 32(b), (c)); in a cross-appeal the appellee's combined brief may contain 16,500 words (7th Cir. R. 28.1), and an amicus brief 7,000 (7th Cir. R. 29). The appendix bound with the brief holds the judgment and the reasons for it (7th Cir. R. 30(a))."
+  note "Except in agency cases the brief periods run from docketing, regardless of the record (7th Cir. R. 31(a)): the appellant's 40 days of FRAP 31(a)(1) count from the date the appeal is docketed. Extensions are not favored and need a motion with an affidavit filed at least seven days before the due date (7th Cir. R. 26). A principal brief may contain up to 14,000 words and a reply 7,000, in 12-point type with 11-point footnotes (7th Cir. R. 32(b), (c)); in a cross-appeal the appellee's combined brief may contain 16,500 words (7th Cir. R. 28.1), and an amicus brief 7,000 (7th Cir. R. 29). The appendix bound with the brief holds the judgment and the reasons for it (7th Cir. R. 30(a))."
   edge-briefing-argue "Briefing complete" -> argument {
     authority cite "FRAP 31(a)(1); 7th Cir. R. 31(a)"
   }

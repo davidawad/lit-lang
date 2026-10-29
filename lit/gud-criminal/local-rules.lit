@@ -257,3 +257,117 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by 
 {
   forum frcrimp
 }
+
+test "proposed summons: 2 business days after the trigger" cite "D. Guam CRLR 4"
+{
+  given SummonsRequestGranted() on 2027-03-01
+  expect deadline(proposed-summons) == 2027-03-03
+}
+
+test "plea objection response: 7 days after the trigger" cite "D. Guam CRLR 11(b)"
+{
+  given PleaObjectionsServed() on 2027-03-01
+  expect deadline(plea-objection-response) == 2027-03-08
+}
+
+test "referred motion recommendation: 30 days after the trigger" cite "D. Guam CRLR 12(e)"
+{
+  given ReferredMotionSubmitted() on 2027-03-01
+  expect deadline(referred-motion-recommendation) == 2027-03-31
+}
+
+test "magistrate objection response: 7 days after the trigger" cite "D. Guam CRLR 12(f)"
+{
+  given MagistrateObjectionServed() on 2027-03-01
+  expect deadline(magistrate-objection-response) == 2027-03-08
+}
+
+test "government initial disclosure: 7 days after the trigger" cite "D. Guam CRLR 16(b)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(government-initial-disclosure) == 2027-03-08
+}
+
+test "giglio disclosure: 14 days before the trigger" cite "D. Guam CRLR 16(b)"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(giglio-disclosure) == 2027-02-16
+}
+
+test "defense disclosure: 14 days after the trigger" cite "D. Guam CRLR 16(b)"
+{
+  given GovernmentDisclosuresMade() on 2027-03-01
+  expect deadline(defense-disclosure) == 2027-03-15
+}
+
+test "voir dire questions: 14 days before the trigger" cite "D. Guam CRLR 24(a)"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(voir-dire-questions) == 2027-02-16
+}
+
+test "jury instructions: 14 days before the trigger" cite "D. Guam CRLR 30"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(jury-instructions) == 2027-02-16
+}
+
+test "verdict form: 14 days before the trigger" cite "D. Guam CRLR 31"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(verdict-form) == 2027-02-16
+}
+
+test "draft psr: 45 days before the trigger" cite "D. Guam CRLR 32(a)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(draft-psr) == 2027-01-15
+}
+
+test "psr objection reply: 7 days after the trigger" cite "D. Guam CRLR 32(a)"
+{
+  given PsrObjectionFiled() on 2027-03-01
+  expect deadline(psr-objection-reply) == 2027-03-08
+}
+
+test "final psr: 7 days after the trigger" cite "D. Guam CRLR 32(a)"
+{
+  given PsrRepliesFiled() on 2027-03-01
+  expect deadline(final-psr) == 2027-03-08
+}
+
+test "sentencing memorandum after final psr: 7 days after the trigger" cite "D. Guam CRLR 32(a)"
+{
+  given FinalPsrReceived() on 2027-03-01
+  expect deadline(sentencing-memorandum-after-final-psr) == 2027-03-08
+}
+
+test "sentencing memorandum: 10 days before the trigger" cite "D. Guam CRLR 32(a)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-memorandum) == 2027-02-19
+}
+
+test "misdemeanor appeal transcript: 30 days after the trigger" cite "D. Guam CRLR 58(b)"
+{
+  given AppealTranscriptOrdered() on 2027-03-01
+  expect deadline(misdemeanor-appeal-transcript) == 2027-03-31
+}
+
+test "misdemeanor appellant brief: 21 days after the trigger" cite "D. Guam CRLR 58(b)"
+{
+  given AppealRecordComplete() on 2027-03-01
+  expect deadline(misdemeanor-appellant-brief) == 2027-03-22
+}
+
+test "misdemeanor appellee brief: 21 days after the trigger" cite "D. Guam CRLR 58(b)"
+{
+  given AppellantBriefServed() on 2027-03-01
+  expect deadline(misdemeanor-appellee-brief) == 2027-03-22
+}
+
+test "misdemeanor reply brief: 7 days after the trigger" cite "D. Guam CRLR 58(b)"
+{
+  given AppelleeBriefServed() on 2027-03-01
+  expect deadline(misdemeanor-reply-brief) == 2027-03-08
+}

@@ -81,3 +81,39 @@ deadline magistrate-appeal-answer-period: 30.days after AppellantMemorandumFiled
 {
   forum frcrimp
 }
+
+test "opposition period: 14 days after the trigger" cite "D. Md. Local Rule 105.2(a)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(opposition-period) == 2027-03-15
+}
+
+test "reply period: 14 days after the trigger" cite "D. Md. Local Rule 105.2(a)"
+{
+  given OppositionServed() on 2027-03-01
+  expect deadline(reply-period) == 2027-03-15
+}
+
+test "reconsideration period: 14 days after the trigger" cite "D. Md. Local Rule 105.10"
+{
+  given OrderEntered() on 2027-03-01
+  expect deadline(reconsideration-period) == 2027-03-15
+}
+
+test "surety forfeiture period: 14 days after the trigger" cite "D. Md. Local Rule 206.3(a)"
+{
+  given BailForfeitureOrdered() on 2027-03-01
+  expect deadline(surety-forfeiture-period) == 2027-03-15
+}
+
+test "magistrate appeal memorandum period: 30 days after the trigger" cite "D. Md. Local Rule 302.1"
+{
+  given MagistrateAppealDocketed() on 2027-03-01
+  expect deadline(magistrate-appeal-memorandum-period) == 2027-03-31
+}
+
+test "magistrate appeal answer period: 30 days after the trigger" cite "D. Md. Local Rule 302.1"
+{
+  given AppellantMemorandumFiled() on 2027-03-01
+  expect deadline(magistrate-appeal-answer-period) == 2027-03-31
+}

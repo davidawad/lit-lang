@@ -62,3 +62,15 @@ deadline rebuttal-period: 5.days after ResponseServed() counted_by frcrimp45 cit
 {
   forum frcrimp
 }
+
+test "response period: 11 days after the trigger" cite "U.L.Cr.R. 47(C)"
+{
+  given MotionFiled() on 2027-03-01
+  expect deadline(response-period) == 2027-03-12
+}
+
+test "rebuttal period: 5 days after the trigger" cite "U.L.Cr.R. 47(D)"
+{
+  given ResponseServed() on 2027-03-03
+  expect deadline(rebuttal-period) == 2027-03-08
+}

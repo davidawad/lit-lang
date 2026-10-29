@@ -46,3 +46,15 @@ deadline motion-reply-period: 14.days after MotionResponseServed() counted_by fr
 {
   forum frcrimp
 }
+
+test "motion response period: 21 days after the trigger" cite "M.D. Ga. Local Criminal Rule 47.2"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(motion-response-period) == 2027-03-22
+}
+
+test "motion reply period: 14 days after the trigger" cite "M.D. Ga. Local Criminal Rule 47.3"
+{
+  given MotionResponseServed() on 2027-03-01
+  expect deadline(motion-reply-period) == 2027-03-15
+}

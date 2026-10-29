@@ -124,3 +124,51 @@ deadline redaction-motion: 21.days after TranscriptFiled() counted_by frcrimp45 
 {
   forum frcrimp
 }
+
+test "pretrial motions: 21 days after the trigger" cite "C.D. Ill. Crim. L.R. 12.1"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(pretrial-motions) == 2027-03-22
+}
+
+test "discovery conference: 7 days after the trigger" cite "C.D. Ill. Crim. L.R. 16.1(A)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(discovery-conference) == 2027-03-08
+}
+
+test "additional discovery conference: 14 days after the trigger" cite "C.D. Ill. Crim. L.R. 16.1(C)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(additional-discovery-conference) == 2027-03-15
+}
+
+test "motion to compel discovery: 14 days after the trigger" cite "C.D. Ill. Crim. L.R. 16.1(D)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(motion-to-compel-discovery) == 2027-03-15
+}
+
+test "contact change notice: 14 days after the trigger" cite "C.D. Ill. Crim. L.R. 49.3"
+{
+  given ContactInformationChanged() on 2027-03-01
+  expect deadline(contact-change-notice) == 2027-03-15
+}
+
+test "authenticity objection: 14 days after the trigger" cite "C.D. Ill. Crim. L.R. 49.10(C)"
+{
+  given FilingNoticeReceived() on 2027-03-01
+  expect deadline(authenticity-objection) == 2027-03-15
+}
+
+test "redaction notice: 7 days after the trigger" cite "C.D. Ill. Crim. L.R. 49.12(C)"
+{
+  given TranscriptFiled() on 2027-03-01
+  expect deadline(redaction-notice) == 2027-03-08
+}
+
+test "redaction motion: 21 days after the trigger" cite "C.D. Ill. Crim. L.R. 49.12(C)"
+{
+  given TranscriptFiled() on 2027-03-01
+  expect deadline(redaction-motion) == 2027-03-22
+}

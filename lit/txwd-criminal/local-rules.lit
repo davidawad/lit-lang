@@ -184,3 +184,69 @@ deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcrimp45 
 {
   forum frcrimp
 }
+
+test "defendant pretrial motions: 14 days after the trigger" cite "W.D. Tex. Local Rule CR-12(a)"
+{
+  given ArraignmentOrScheduledDate() on 2027-03-01
+  expect deadline(defendant-pretrial-motions) == 2027-03-15
+}
+
+test "material witness deposition: 35 days after the trigger" cite "W.D. Tex. Local Rule CR-15B(b)"
+{
+  given MaterialWitnessAppeared() on 2027-03-01
+  expect deadline(material-witness-deposition) == 2027-04-05
+}
+
+test "material witness release: 45 days after the trigger" cite "W.D. Tex. Local Rule CR-15B(c)"
+{
+  given MaterialWitnessAppeared() on 2027-03-01
+  expect deadline(material-witness-release) == 2027-04-15
+}
+
+test "material witness release after deposition: 24 hours after the trigger" cite "W.D. Tex. Local Rule CR-15B(c)"
+{
+  given MaterialWitnessDepositionCertified() on 2027-03-01
+  expect deadline(material-witness-release-after-deposition) == 2027-03-02
+}
+
+test "undisclosed information motion: 14 days after the trigger" cite "W.D. Tex. Local Rule CR-16(a)"
+{
+  given RefusalChecklistFiled() on 2027-03-01
+  expect deadline(undisclosed-information-motion) == 2027-03-15
+}
+
+test "trial discovery: 14 days after the trigger" cite "W.D. Tex. Local Rule CR-16(b)"
+{
+  given ArraignmentOrScheduledDate() on 2027-03-01
+  expect deadline(trial-discovery) == 2027-03-15
+}
+
+test "pretrial hearing discovery: 48 hours before the trigger" cite "W.D. Tex. Local Rule CR-16(b)"
+{
+  given PretrialHearing() on 2027-03-03
+  expect deadline(pretrial-hearing-discovery) == 2027-03-01
+}
+
+test "sentencing time: 60 days after the trigger" cite "W.D. Tex. Local Rule CR-32(a)"
+{
+  given VerdictOrPlea() on 2027-03-01
+  expect deadline(sentencing-time) == 2027-04-30
+}
+
+test "detained witness recommendation: 7 days after the trigger" cite "W.D. Tex. Local Rule CR-46(b)"
+{
+  given DetainedWitnessReportReceived() on 2027-03-01
+  expect deadline(detained-witness-recommendation) == 2027-03-08
+}
+
+test "response period: 11 days after the trigger" cite "W.D. Tex. Local Rule CR-47(b)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(response-period) == 2027-03-12
+}
+
+test "exhibit removal: 60 days after the trigger" cite "W.D. Tex. Local Rule CR-55(b)"
+{
+  given FinalDisposition() on 2027-03-01
+  expect deadline(exhibit-removal) == 2027-04-30
+}

@@ -222,3 +222,87 @@ deadline magistrate-appeal-reply-brief: 7.days after MagistrateAppelleeBriefFile
 {
   forum frcrimp
 }
+
+test "opposition period: 21 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 12.1(a)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(opposition-period) == 2027-03-22
+}
+
+test "reply period: 7 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 12.1(a)"
+{
+  given ResponseServed() on 2027-03-01
+  expect deadline(reply-period) == 2027-03-08
+}
+
+test "reconsideration period: 14 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 12.1(h)"
+{
+  given DecisionEntered() on 2027-03-01
+  expect deadline(reconsideration-period) == 2027-03-15
+}
+
+test "government discovery: 14 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 14.1(b)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(government-discovery) == 2027-03-15
+}
+
+test "defense discovery: 21 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 14.1(c)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(defense-discovery) == 2027-03-22
+}
+
+test "giglio disclosure: 14 days before the trigger" cite "N.D.N.Y. L.R. Cr. P. 14.1(d)"
+{
+  given JurySelectionScheduled() on 2027-03-02
+  expect deadline(giglio-disclosure) == 2027-02-16
+}
+
+test "presentence interview notice: 2 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 32.1(b)"
+{
+  given PresentenceReportOrdered() on 2027-03-01
+  expect deadline(presentence-interview-notice) == 2027-03-03
+}
+
+test "letters in support: 7 days before the trigger" cite "N.D.N.Y. L.R. Cr. P. 32.3"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(letters-in-support) == 2027-02-22
+}
+
+test "search warrant return: 30 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 41.1(b)"
+{
+  given SearchWarrantExecuted() on 2027-03-01
+  expect deadline(search-warrant-return) == 2027-03-31
+}
+
+test "search warrant unseal: 180 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 41.1(c); N.D.N.Y. L.R. Cr. P. 41.1(d)"
+{
+  given SearchWarrantReturnFiled() on 2027-03-03
+  expect deadline(search-warrant-unseal) == 2027-08-30
+}
+
+test "defense cle certification: 30 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 44.2(a)"
+{
+  given AppearanceFiled() on 2027-03-01
+  expect deadline(defense-cle-certification) == 2027-03-31
+}
+
+test "magistrate appeal appellant brief: 14 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 59.1(a); N.D.N.Y. L.R. Cr. P. 59.1(c)"
+{
+  given MagistrateAppealNoticed() on 2027-03-01
+  expect deadline(magistrate-appeal-appellant-brief) == 2027-03-15
+}
+
+test "magistrate appeal appellee brief: 14 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 59.1(a); N.D.N.Y. L.R. Cr. P. 59.1(c)"
+{
+  given MagistrateAppellantBriefFiled() on 2027-03-01
+  expect deadline(magistrate-appeal-appellee-brief) == 2027-03-15
+}
+
+test "magistrate appeal reply brief: 7 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 59.1(a)"
+{
+  given MagistrateAppelleeBriefFiled() on 2027-03-01
+  expect deadline(magistrate-appeal-reply-brief) == 2027-03-08
+}

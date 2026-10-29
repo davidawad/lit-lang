@@ -108,3 +108,69 @@ deadline nondispositive-response-period: 14.days after NondispositiveMotionServe
 /// authenticity of a signature on an electronically filed document files
 /// an objection within fourteen days after service of the document.
 deadline signature-objection-period: 14.days after SignedDocumentServed() counted_by frcrimp45 cite "W.D. Mich. LCrR 49.10(e)"
+
+test "marshal subpoena lead time: 14 days before the trigger" cite "W.D. Mich. LCrR 17.1"
+{
+  given SubpoenaAppearanceDate() on 2027-03-02
+  expect deadline(marshal-subpoena-lead-time) == 2027-02-16
+}
+
+test "initial interview period: 7 days after the trigger" cite "W.D. Mich. LCrR 32.2(a)"
+{
+  given SentencingDateOrderEntered() on 2027-03-01
+  expect deadline(initial-interview-period) == 2027-03-08
+}
+
+test "offense conduct period: 7 days after the trigger" cite "W.D. Mich. LCrR 32.2(a)"
+{
+  given SentencingDateOrderEntered() on 2027-03-01
+  expect deadline(offense-conduct-period) == 2027-03-08
+}
+
+test "psr disclosure period: 47 days before the trigger" cite "W.D. Mich. LCrR 32.2(b)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(psr-disclosure-period) == 2027-01-13
+}
+
+test "final report period: 21 days before the trigger" cite "W.D. Mich. LCrR 32.2(f)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(final-report-period) == 2027-02-08
+}
+
+test "departure motion period: 14 days before the trigger" cite "W.D. Mich. LCrR 32.2(g)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(departure-motion-period) == 2027-02-16
+}
+
+test "sentencing response period: 7 days before the trigger" cite "W.D. Mich. LCrR 32.2(g)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-response-period) == 2027-02-22
+}
+
+test "earliest sentencing date: 10 days after the trigger" cite "W.D. Mich. LCrR 32.2(j)"
+{
+  given PresentenceReportDisclosed() on 2027-03-01
+  expect deadline(earliest-sentencing-date) == 2027-03-11
+}
+
+test "dispositive response period: 28 days after the trigger" cite "W.D. Mich. LCrR 47.1(c)"
+{
+  given DispositiveMotionServed() on 2027-03-01
+  expect deadline(dispositive-response-period) == 2027-03-29
+}
+
+test "nondispositive response period: 14 days after the trigger" cite "W.D. Mich. LCrR 47.2(c)"
+{
+  given NondispositiveMotionServed() on 2027-03-01
+  expect deadline(nondispositive-response-period) == 2027-03-15
+}
+
+test "signature objection period: 14 days after the trigger" cite "W.D. Mich. LCrR 49.10(e)"
+{
+  given SignedDocumentServed() on 2027-03-01
+  expect deadline(signature-objection-period) == 2027-03-15
+}

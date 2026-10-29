@@ -171,3 +171,75 @@ deadline magistrate-objection-reply: 7.days after MagistrateObjectionResponseSer
 {
   forum frcrimp
 }
+
+test "plea agreement filing: 7 days before the trigger" cite "D.R.I. LR Cr 11(a)"
+{
+  given EmpanelmentScheduled() on 2027-03-01
+  expect deadline(plea-agreement-filing) == 2027-02-22
+}
+
+test "discovery request exchange: 7 days after the trigger" cite "D.R.I. LR Cr 16"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(discovery-request-exchange) == 2027-03-08
+}
+
+test "subpoena inspection: 7 days after the trigger" cite "D.R.I. LR Cr 17(a)"
+{
+  given SubpoenaProduction() on 2027-03-01
+  expect deadline(subpoena-inspection) == 2027-03-08
+}
+
+test "recording transcripts: 14 days before the trigger" cite "D.R.I. LR Cr 23(b)"
+{
+  given EmpanelmentScheduled() on 2027-03-02
+  expect deadline(recording-transcripts) == 2027-02-16
+}
+
+test "recording objection: 7 days after the trigger" cite "D.R.I. LR Cr 23(b)"
+{
+  given RecordingTranscriptsFurnished() on 2027-03-01
+  expect deadline(recording-objection) == 2027-03-08
+}
+
+test "magistrate empanelment objection: 7 days before the trigger" cite "D.R.I. LR Cr 24(b)"
+{
+  given EmpanelmentScheduled() on 2027-03-01
+  expect deadline(magistrate-empanelment-objection) == 2027-02-22
+}
+
+test "voir dire questions: 5 days before the trigger" cite "D.R.I. LR Cr 24(c)"
+{
+  given EmpanelmentScheduled() on 2027-03-01
+  expect deadline(voir-dire-questions) == 2027-02-24
+}
+
+test "sentencing witness notice: 7 days before the trigger" cite "D.R.I. LR Cr 32(a)"
+{
+  given SentencingHearingScheduled() on 2027-03-01
+  expect deadline(sentencing-witness-notice) == 2027-02-22
+}
+
+test "response period: 14 days after the trigger" cite "D.R.I. LR Cr 47(a)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(response-period) == 2027-03-15
+}
+
+test "reply period: 7 days after the trigger" cite "D.R.I. LR Cr 47(a)"
+{
+  given ResponseServed() on 2027-03-01
+  expect deadline(reply-period) == 2027-03-08
+}
+
+test "magistrate objection response: 14 days after the trigger" cite "D.R.I. LR Cr 57.2(c); D.R.I. LR Cr 57.2(d)"
+{
+  given MagistrateObjectionServed() on 2027-03-01
+  expect deadline(magistrate-objection-response) == 2027-03-15
+}
+
+test "magistrate objection reply: 7 days after the trigger" cite "D.R.I. LR Cr 57.2(c); D.R.I. LR Cr 57.2(d)"
+{
+  given MagistrateObjectionResponseServed() on 2027-03-01
+  expect deadline(magistrate-objection-reply) == 2027-03-08
+}

@@ -145,3 +145,75 @@ deadline retained-counsel-withdrawal-period: 14.days after Arraigned() counted_b
 {
   forum frcrimp
 }
+
+test "pretrial motion period: 14 days after the trigger" cite "S.D. Ala. CrLR 12(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(pretrial-motion-period) == 2027-03-15
+}
+
+test "motion response period: 7 days after the trigger" cite "S.D. Ala. CrLR 12(a)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(motion-response-period) == 2027-03-08
+}
+
+test "motion reply period: 7 days after the trigger" cite "S.D. Ala. CrLR 12(a)"
+{
+  given MotionResponseServed() on 2027-03-01
+  expect deadline(motion-reply-period) == 2027-03-08
+}
+
+test "evidentiary hearing response period: 7 days after the trigger" cite "S.D. Ala. CrLR 12(b)"
+{
+  given EvidentiaryHearingMotionServed() on 2027-03-01
+  expect deadline(evidentiary-hearing-response-period) == 2027-03-08
+}
+
+test "government disclosure statement period: 14 days after the trigger" cite "S.D. Ala. CrLR 12.4(b)"
+{
+  given ChargeFiled() on 2027-03-01
+  expect deadline(government-disclosure-statement-period) == 2027-03-15
+}
+
+test "related case objection period: 7 days after the trigger" cite "S.D. Ala. CrLR 13(b)"
+{
+  given RelatedCaseMotionFiled() on 2027-03-01
+  expect deadline(related-case-objection-period) == 2027-03-08
+}
+
+test "post conviction disclosure period: 3 days after the trigger" cite "S.D. Ala. CrLR 16(e)"
+{
+  given Convicted() on 2027-03-01
+  expect deadline(post-conviction-disclosure-period) == 2027-03-04
+}
+
+test "sentencing position period: 14 days before the trigger" cite "S.D. Ala. CrLR 32(b)"
+{
+  given SentencingHearingScheduled() on 2027-03-02
+  expect deadline(sentencing-position-period) == 2027-02-16
+}
+
+test "sentencing conference period: 10 days before the trigger" cite "S.D. Ala. CrLR 32(b)"
+{
+  given SentencingHearingScheduled() on 2027-03-01
+  expect deadline(sentencing-conference-period) == 2027-02-19
+}
+
+test "sentencing length notice period: 7 days before the trigger" cite "S.D. Ala. CrLR 32(b)"
+{
+  given SentencingHearingScheduled() on 2027-03-01
+  expect deadline(sentencing-length-notice-period) == 2027-02-22
+}
+
+test "presentence addendum period: 7 days before the trigger" cite "S.D. Ala. CrLR 32(b)"
+{
+  given SentencingHearingScheduled() on 2027-03-01
+  expect deadline(presentence-addendum-period) == 2027-02-22
+}
+
+test "retained counsel withdrawal period: 14 days after the trigger" cite "S.D. Ala. CrLR 44(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(retained-counsel-withdrawal-period) == 2027-03-15
+}

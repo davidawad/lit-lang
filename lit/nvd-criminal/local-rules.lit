@@ -308,3 +308,153 @@ deadline exhibit-claim: 21.days after ExhibitClaimNoticed() counted_by frcrimp45
 {
   forum frcrimp
 }
+
+test "arraignment waiver: 7 days before the trigger" cite "D. Nev. LCR 10-1"
+{
+  given ArraignmentScheduled() on 2027-03-01
+  expect deadline(arraignment-waiver) == 2027-02-22
+}
+
+test "pretrial motions: 30 days after the trigger" cite "D. Nev. LCR 12-1(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(pretrial-motions) == 2027-03-31
+}
+
+test "pretrial response: 14 days after the trigger" cite "D. Nev. LCR 12-1(a)"
+{
+  given PretrialMotionServed() on 2027-03-01
+  expect deadline(pretrial-response) == 2027-03-15
+}
+
+test "pretrial reply: 7 days after the trigger" cite "D. Nev. LCR 12-1(a)"
+{
+  given PretrialResponseServed() on 2027-03-01
+  expect deadline(pretrial-reply) == 2027-03-08
+}
+
+test "detention review response: 14 days after the trigger" cite "D. Nev. LCR 12-3"
+{
+  given DetentionReviewMotionFiled() on 2027-03-01
+  expect deadline(detention-review-response) == 2027-03-15
+}
+
+test "complex case conference: 7 days after the trigger" cite "D. Nev. LCR 16-1(a)"
+{
+  given ComplexCaseDesignated() on 2027-03-01
+  expect deadline(complex-case-conference) == 2027-03-08
+}
+
+test "complex case schedule: 7 days after the trigger" cite "D. Nev. LCR 16-1(a)"
+{
+  given ComplexCaseConferenceHeld() on 2027-03-01
+  expect deadline(complex-case-schedule) == 2027-03-08
+}
+
+test "joint discovery agreement: 7 days after the trigger" cite "D. Nev. LCR 16-1(b)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(joint-discovery-agreement) == 2027-03-08
+}
+
+test "joint agreement government disclosure: 7 days after the trigger" cite "D. Nev. LCR 16-1(b)"
+{
+  given JointDiscoveryAgreementFiled() on 2027-03-01
+  expect deadline(joint-agreement-government-disclosure) == 2027-03-08
+}
+
+test "joint agreement reciprocal disclosure: 14 days before the trigger" cite "D. Nev. LCR 16-1(b)"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(joint-agreement-reciprocal-disclosure) == 2027-02-16
+}
+
+test "disclosure conference: 7 days after the trigger" cite "D. Nev. LCR 16-1(b)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(disclosure-conference) == 2027-03-08
+}
+
+test "disclosure statement after conference: 7 days after the trigger" cite "D. Nev. LCR 16-1(b)"
+{
+  given DisclosureConferenceHeld() on 2027-03-01
+  expect deadline(disclosure-statement-after-conference) == 2027-03-08
+}
+
+test "disclosure statement: 14 days after the trigger" cite "D. Nev. LCR 16-1(b)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(disclosure-statement) == 2027-03-15
+}
+
+test "psr submission: 7 business days before the trigger" cite "D. Nev. LCR 32-1(c)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(psr-submission) == 2027-02-18
+}
+
+test "sentencing memorandum: 5 business days before the trigger" cite "D. Nev. LCR 32-1(d)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-memorandum) == 2027-02-22
+}
+
+test "sentencing memorandum response: 3 business days before the trigger" cite "D. Nev. LCR 32-1(d)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-memorandum-response) == 2027-02-24
+}
+
+test "forfeiture motion: 28 days before the trigger" cite "D. Nev. LCR 32-1(f)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(forfeiture-motion) == 2027-02-01
+}
+
+test "forfeiture response: 14 days after the trigger" cite "D. Nev. LCR 32-1(f)"
+{
+  given ForfeitureMotionServed() on 2027-03-01
+  expect deadline(forfeiture-response) == 2027-03-15
+}
+
+test "forfeiture reply: 7 days after the trigger" cite "D. Nev. LCR 32-1(f)"
+{
+  given ForfeitureResponseServed() on 2027-03-01
+  expect deadline(forfeiture-reply) == 2027-03-08
+}
+
+test "records application: 14 days before the trigger" cite "D. Nev. LCR 32-2(c)"
+{
+  given RecordsProductionRequired() on 2027-03-02
+  expect deadline(records-application) == 2027-02-16
+}
+
+test "rule35 response: 21 days after the trigger" cite "D. Nev. LCR 35-1"
+{
+  given Rule35MotionServed() on 2027-03-01
+  expect deadline(rule35-response) == 2027-03-22
+}
+
+test "registry investment: 14 days after the trigger" cite "D. Nev. LCR 46-9(d)"
+{
+  given InvestmentOrderServed() on 2027-03-01
+  expect deadline(registry-investment) == 2027-03-15
+}
+
+test "registry investment verification: 14 days after the trigger" cite "D. Nev. LCR 46-9(e)"
+{
+  given InvestmentOrderServed() on 2027-03-01
+  expect deadline(registry-investment-verification) == 2027-03-15
+}
+
+test "timed instrument notice: 14 days before the trigger" cite "D. Nev. LCR 46-9(h)"
+{
+  given TimedInstrumentMatures() on 2027-03-02
+  expect deadline(timed-instrument-notice) == 2027-02-16
+}
+
+test "exhibit claim: 21 days after the trigger" cite "D. Nev. LCR 55-1(e)"
+{
+  given ExhibitClaimNoticed() on 2027-03-01
+  expect deadline(exhibit-claim) == 2027-03-22
+}

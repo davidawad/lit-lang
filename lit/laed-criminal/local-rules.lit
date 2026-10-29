@@ -78,3 +78,27 @@ deadline sentencing-response: 3.court_days before SentencingScheduled() counted_
 {
   forum frcrimp
 }
+
+test "discovery response: 8 days before the trigger" cite "E.D. La. LCrR 12"
+{
+  given DiscoveryMotionHearing() on 2027-03-02
+  expect deadline(discovery-response) == 2027-02-22
+}
+
+test "departure request: 3 court days before the trigger" cite "E.D. La. LCrR 32.1.1"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(departure-request) == 2027-02-24
+}
+
+test "sentencing submission: 5 court days before the trigger" cite "E.D. La. LCrR 32.1.2"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-submission) == 2027-02-22
+}
+
+test "sentencing response: 3 court days before the trigger" cite "E.D. La. LCrR 32.1.2"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-response) == 2027-02-24
+}

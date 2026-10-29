@@ -96,3 +96,33 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefReceived() counted_b
 {
   forum frcrimp
 }
+
+test "rule12 motions: 30 days after the trigger" cite "D.N.J. L.Cr.R. 12.1"
+{
+  given PleaEntered() on 2027-03-01
+  expect deadline(rule12-motions) == 2027-03-31
+}
+
+test "rule41 motions: 30 days after the trigger" cite "D.N.J. L.Cr.R. 41.1"
+{
+  given PleaEntered() on 2027-03-01
+  expect deadline(rule41-motions) == 2027-03-31
+}
+
+test "misdemeanor appellant brief: 21 days after the trigger" cite "D.N.J. L.Cr.R. 58.1(d)"
+{
+  given MisdemeanorAppealNoticed() on 2027-03-01
+  expect deadline(misdemeanor-appellant-brief) == 2027-03-22
+}
+
+test "misdemeanor appellee brief: 21 days after the trigger" cite "D.N.J. L.Cr.R. 58.1(d)"
+{
+  given AppellantBriefReceived() on 2027-03-01
+  expect deadline(misdemeanor-appellee-brief) == 2027-03-22
+}
+
+test "misdemeanor reply brief: 7 days after the trigger" cite "D.N.J. L.Cr.R. 58.1(d)"
+{
+  given AppelleeBriefReceived() on 2027-03-01
+  expect deadline(misdemeanor-reply-brief) == 2027-03-08
+}

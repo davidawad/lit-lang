@@ -152,3 +152,81 @@ deadline downward-departure-motion-period: 7.days before Sentencing() counted_by
 {
   forum frcrimp
 }
+
+test "redaction statement period: 21 days after the trigger" cite "D. Minn. LR 5.5(b)(2)"
+{
+  given TranscriptFiled() on 2027-03-01
+  expect deadline(redaction-statement-period) == 2027-03-22
+}
+
+test "government discovery period: 7 days after the trigger" cite "D. Minn. LR 12.1(a)(2)"
+{
+  given Arraignment() on 2027-03-01
+  expect deadline(government-discovery-period) == 2027-03-08
+}
+
+test "defendant discovery period: 14 days after the trigger" cite "D. Minn. LR 12.1(a)(3)"
+{
+  given Arraignment() on 2027-03-01
+  expect deadline(defendant-discovery-period) == 2027-03-15
+}
+
+test "pretrial motion period: 21 days after the trigger" cite "D. Minn. LR 12.1(c)(1)(A)"
+{
+  given Arraignment() on 2027-03-01
+  expect deadline(pretrial-motion-period) == 2027-03-22
+}
+
+test "pretrial motion response period: 35 days after the trigger" cite "D. Minn. LR 12.1(c)(2)"
+{
+  given Arraignment() on 2027-03-01
+  expect deadline(pretrial-motion-response-period) == 2027-04-05
+}
+
+test "witness notice period: 35 days after the trigger" cite "D. Minn. LR 12.1(c)(3)(A)"
+{
+  given Arraignment() on 2027-03-01
+  expect deadline(witness-notice-period) == 2027-04-05
+}
+
+test "responsive witness notice period: 38 days after the trigger" cite "D. Minn. LR 12.1(c)(3)(B)"
+{
+  given Arraignment() on 2027-03-01
+  expect deadline(responsive-witness-notice-period) == 2027-04-08
+}
+
+test "sealed document withdrawal period: 7 days after the trigger" cite "D. Minn. LR 49.1(d)(5)(A)"
+{
+  given SealDenied() on 2027-03-01
+  expect deadline(sealed-document-withdrawal-period) == 2027-03-08
+}
+
+test "objection response period: 14 days after the trigger" cite "D. Minn. LR 72.2(a)(2); D. Minn. LR 72.2(b)(2)"
+{
+  given ObjectionsServed() on 2027-03-01
+  expect deadline(objection-response-period) == 2027-03-15
+}
+
+test "sentencing position period: 14 days after the trigger" cite "D. Minn. LR 83.10(e)"
+{
+  given FinalPresentenceReport() on 2027-03-01
+  expect deadline(sentencing-position-period) == 2027-03-15
+}
+
+test "sentencing hearing lists period: 7 days before the trigger" cite "D. Minn. LR 83.10(f)(2)"
+{
+  given SentencingEvidentiaryHearing() on 2027-03-01
+  expect deadline(sentencing-hearing-lists-period) == 2027-02-22
+}
+
+test "sentencing response period: 7 days before the trigger" cite "D. Minn. LR 83.10(g)(1)"
+{
+  given Sentencing() on 2027-03-01
+  expect deadline(sentencing-response-period) == 2027-02-22
+}
+
+test "downward departure motion period: 7 days before the trigger" cite "D. Minn. LR 83.10(g)(2)"
+{
+  given Sentencing() on 2027-03-01
+  expect deadline(downward-departure-motion-period) == 2027-02-22
+}

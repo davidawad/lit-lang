@@ -393,3 +393,219 @@ deadline objection-opposition-period: 14.days after ObjectionsServed() counted_b
 {
   forum frcrimp
 }
+
+test "grand jury subpoena motion period: 7 days before the trigger" cite "NECrimR 6.2(b)"
+{
+  given GrandJuryReturnDate() on 2027-03-01
+  expect deadline(grand-jury-subpoena-motion-period) == 2027-02-22
+}
+
+test "plea interpreter request period: 7 days before the trigger" cite "NECrimR 11.1(c)"
+{
+  given ChangeOfPleaHearing() on 2027-03-01
+  expect deadline(plea-interpreter-request-period) == 2027-02-22
+}
+
+test "plea recommendation objection period: 14 days after the trigger" cite "NECrimR 11.2(c)"
+{
+  given PleaTranscriptFiled() on 2027-03-01
+  expect deadline(plea-recommendation-objection-period) == 2027-03-15
+}
+
+test "discovery notice period: 2 days after the trigger" cite "NECrimR 16.1(a)"
+{
+  given Arraignment() on 2027-03-01
+  expect deadline(discovery-notice-period) == 2027-03-03
+}
+
+test "government discovery period: 14 days after the trigger" cite "NECrimR 16.1(a)"
+{
+  given Arraignment() on 2027-03-01
+  expect deadline(government-discovery-period) == 2027-03-15
+}
+
+test "defendant discovery period: 30 days after the trigger" cite "NECrimR 16.1(b)"
+{
+  given Arraignment() on 2027-03-01
+  expect deadline(defendant-discovery-period) == 2027-03-31
+}
+
+test "peremptory request period: 14 days before the trigger" cite "NECrimR 24.2(c)"
+{
+  given JurySelection() on 2027-03-02
+  expect deadline(peremptory-request-period) == 2027-02-16
+}
+
+test "bill of costs period: 30 days before the trigger" cite "NECrimR 31.2"
+{
+  given Sentencing() on 2027-03-03
+  expect deadline(bill-of-costs-period) == 2027-02-01
+}
+
+test "probation information period: 7 days after the trigger" cite "NECrimR 32.1(a)"
+{
+  given ProbationRequestReceived() on 2027-03-01
+  expect deadline(probation-information-period) == 2027-03-08
+}
+
+test "interview notice period: 2 days after the trigger" cite "NECrimR 32.1(a)"
+{
+  given PresentenceReportOrdered() on 2027-03-01
+  expect deadline(interview-notice-period) == 2027-03-03
+}
+
+test "offense version period: 7 days after the trigger" cite "NECrimR 32.1(b)"
+{
+  given GuiltyPleaOrVerdict() on 2027-03-01
+  expect deadline(offense-version-period) == 2027-03-08
+}
+
+test "financial information period: 21 days after the trigger" cite "NECrimR 32.1(b)"
+{
+  given GuiltyPleaOrVerdict() on 2027-03-01
+  expect deadline(financial-information-period) == 2027-03-29
+}
+
+test "initial report period: 14 days after the trigger" cite "NECrimR 32.1(b)"
+{
+  given GuiltyPleaOrVerdict() on 2027-03-01
+  expect deadline(initial-report-period) == 2027-04-12
+}
+
+test "initial report objection period: 14 days after the trigger" cite "NECrimR 32.1(b)"
+{
+  given GuiltyPleaOrVerdict() on 2027-03-01
+  expect deadline(initial-report-objection-period) == 2027-04-26
+}
+
+test "final report period: 7 days after the trigger" cite "NECrimR 32.1(b)"
+{
+  given GuiltyPleaOrVerdict() on 2027-03-01
+  expect deadline(final-report-period) == 2027-05-03
+}
+
+test "sentencing filings period: 7 days after the trigger" cite "NECrimR 32.1(b)"
+{
+  given GuiltyPleaOrVerdict() on 2027-03-01
+  expect deadline(sentencing-filings-period) == 2027-05-10
+}
+
+test "post trial response period: 7 days after the trigger" cite "NECrimR 33.1"
+{
+  given PostTrialMotionFiled() on 2027-03-01
+  expect deadline(post-trial-response-period) == 2027-03-08
+}
+
+test "interception stipulation period: 60 days before the trigger" cite "NECrimR 41.2(d)"
+{
+  given InterceptionTrial() on 2027-03-01
+  expect deadline(interception-stipulation-period) == 2026-12-31
+}
+
+test "interception motion period: 50 days before the trigger" cite "NECrimR 41.2(d)"
+{
+  given InterceptionTrial() on 2027-03-02
+  expect deadline(interception-motion-period) == 2027-01-11
+}
+
+test "counsel notice period: 14 days after the trigger" cite "NECrimR 44.1(b)"
+{
+  given FirstAppearance() on 2027-03-01
+  expect deadline(counsel-notice-period) == 2027-03-15
+}
+
+test "contact change period: 30 days after the trigger" cite "NECrimR 44.1(d)"
+{
+  given AttorneyContactChanged() on 2027-03-01
+  expect deadline(contact-change-period) == 2027-03-31
+}
+
+test "cja voucher period: 45 days after the trigger" cite "NECrimR 44.3(a)"
+{
+  given SentencingOrDismissal() on 2027-03-01
+  expect deadline(cja-voucher-period) == 2027-04-15
+}
+
+test "joint representation response period: 14 days after the trigger" cite "NECrimR 44.4(b)"
+{
+  given JointRepresentationMotionFiled() on 2027-03-01
+  expect deadline(joint-representation-response-period) == 2027-03-15
+}
+
+test "signature objection period: 7 days after the trigger" cite "NECrimR 49.2(c)"
+{
+  given NefReceived() on 2027-03-01
+  expect deadline(signature-objection-period) == 2027-03-08
+}
+
+test "file return period: 7 days after the trigger" cite "NECrimR 55.1(d)"
+{
+  given FileCheckedOut() on 2027-03-01
+  expect deadline(file-return-period) == 2027-03-08
+}
+
+test "exhibit withdrawal period: 14 days after the trigger" cite "NECrimR 55.1(g)"
+{
+  given VerdictOrJudgment() on 2027-03-01
+  expect deadline(exhibit-withdrawal-period) == 2027-03-15
+}
+
+test "exhibit destruction objection period: 30 days after the trigger" cite "NECrimR 55.1(g)"
+{
+  given FinalDisposition() on 2027-03-01
+  expect deadline(exhibit-destruction-objection-period) == 2027-03-31
+}
+
+test "objection opposition period: 14 days after the trigger" cite "NECrimR 59.2(a)"
+{
+  given ObjectionsServed() on 2027-03-01
+  expect deadline(objection-opposition-period) == 2027-03-15
+}
+
+test "suppression response period: 14 days after the trigger" cite "NECrimR 12.3(c)"
+{
+  given MotionFiled(Suppression) on 2027-03-01
+  expect deadline(suppression-response-period) == 2027-03-15
+}
+
+test "motion response period: 7 days after the trigger" cite "NECrimR 12.3(c)"
+{
+  given MotionFiled(Other) on 2027-03-01
+  expect deadline(motion-response-period) == 2027-03-08
+}
+
+test "subpoena in district period: 14 days before the trigger" cite "NECrimR 17.1(a)"
+{
+  given WitnessHearing(WithinDistrict, Subpoena) on 2027-03-02
+  expect deadline(subpoena-in-district-period) == 2027-02-16
+}
+
+test "subpoena out of district period: 21 days before the trigger" cite "NECrimR 17.1(a)"
+{
+  given WitnessHearing(OutsideDistrict, Subpoena) on 2027-03-01
+  expect deadline(subpoena-out-of-district-period) == 2027-02-08
+}
+
+test "writ in district period: 14 days before the trigger" cite "NECrimR 17.1(b)"
+{
+  given WitnessHearing(WithinDistrict, WritAdTestificandum) on 2027-03-02
+  expect deadline(writ-in-district-period) == 2027-02-16
+}
+
+test "writ out of district period: 30 days before the trigger" cite "NECrimR 17.1(b)"
+{
+  given WitnessHearing(OutsideDistrict, WritAdTestificandum) on 2027-03-03
+  expect deadline(writ-out-of-district-period) == 2027-02-01
+}
+
+test "trial interpreter request period: 14 days before the trigger" cite "NECrimR 28.2(a)"
+{
+  given InterpretedProceeding(Trial) on 2027-03-02
+  expect deadline(trial-interpreter-request-period) == 2027-02-16
+}
+
+test "hearing interpreter request period: 7 days before the trigger" cite "NECrimR 28.2(a)"
+{
+  given InterpretedProceeding(Hearing) on 2027-03-01
+  expect deadline(hearing-interpreter-request-period) == 2027-02-22
+}

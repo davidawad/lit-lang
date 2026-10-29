@@ -73,3 +73,33 @@ deadline sealing-objection-period: 14.days after SealSupportFiled() counted_by f
 {
   forum frcrimp
 }
+
+test "draft report period: 45 days before the trigger" cite "M.D.N.C. LCrR 32.2(b)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(draft-report-period) == 2027-01-15
+}
+
+test "position paper period: 21 days after the trigger" cite "M.D.N.C. LCrR 32.2(d)"
+{
+  given DraftReportDisclosed() on 2027-03-01
+  expect deadline(position-paper-period) == 2027-03-22
+}
+
+test "position response period: 28 days after the trigger" cite "M.D.N.C. LCrR 32.2(d)"
+{
+  given DraftReportDisclosed() on 2027-03-01
+  expect deadline(position-response-period) == 2027-03-29
+}
+
+test "sealing response period: 14 days after the trigger" cite "M.D.N.C. LR 5.4(c)"
+{
+  given SealMotionFiled() on 2027-03-01
+  expect deadline(sealing-response-period) == 2027-03-15
+}
+
+test "sealing objection period: 14 days after the trigger" cite "M.D.N.C. LR 5.4(c)"
+{
+  given SealSupportFiled() on 2027-03-01
+  expect deadline(sealing-objection-period) == 2027-03-15
+}

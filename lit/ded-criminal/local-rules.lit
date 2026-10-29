@@ -180,3 +180,63 @@ deadline sentencing-memorandum-response: 8.days before SentencingScheduled() cou
 {
   forum frcrimp
 }
+
+test "arraignment period: 10 days after the trigger" cite "D. Del. Crim. Plan § 4(a)"
+{
+  given TrialClockEvent(Indictment) on 2027-03-01
+  expect deadline(arraignment-period) == 2027-03-11
+}
+
+test "pretrial motions: 10 days after the trigger" cite "D. Del. Crim. Plan § 5(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(pretrial-motions) == 2027-03-11
+}
+
+test "mental condition notice: 10 days after the trigger" cite "D. Del. Crim. Plan § 5(c)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(mental-condition-notice) == 2027-03-11
+}
+
+test "post hearing submissions: 30 days after the trigger" cite "D. Del. Crim. Plan § 5(d)"
+{
+  given MotionProceedingConcluded() on 2027-03-01
+  expect deadline(post-hearing-submissions) == 2027-03-31
+}
+
+test "reschedule motion: 5 days after the trigger" cite "D. Del. Crim. Plan § 6(g)"
+{
+  given TrialSettingOrdered() on 2027-03-03
+  expect deadline(reschedule-motion) == 2027-03-08
+}
+
+test "continuance grounds notice: 5 days after the trigger" cite "D. Del. Crim. Plan § 10(d)"
+{
+  given ContinuanceGroundsEnded() on 2027-03-03
+  expect deadline(continuance-grounds-notice) == 2027-03-08
+}
+
+test "prisoner presence: 20 days after the trigger" cite "D. Del. Crim. Plan § 13"
+{
+  given PrisonerCharged() on 2027-03-02
+  expect deadline(prisoner-presence) == 2027-03-22
+}
+
+test "final draft psr: 20 days before the trigger" cite "D. Del. Crim. Plan § 8(b)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(final-draft-psr) == 2027-02-09
+}
+
+test "sentencing memorandum: 14 days before the trigger" cite "D. Del. Crim. Plan § 8(b)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(sentencing-memorandum) == 2027-02-16
+}
+
+test "sentencing memorandum response: 8 days before the trigger" cite "D. Del. Crim. Plan § 8(b)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(sentencing-memorandum-response) == 2027-02-22
+}

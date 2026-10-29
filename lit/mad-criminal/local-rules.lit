@@ -195,3 +195,75 @@ deadline defendant-witness-exhibit-disclosure: 7.days before TrialDateSet() coun
 {
   forum frcrimp
 }
+
+test "government automatic discovery: 28 days after the trigger" cite "D. Mass. L.R. 116.1(c); D. Mass. L.R. 116.2(b)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(government-automatic-discovery) == 2027-03-29
+}
+
+test "defendant automatic discovery: 28 days after the trigger" cite "D. Mass. L.R. 116.1(d)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(defendant-automatic-discovery) == 2027-03-29
+}
+
+test "waiver discovery response: 28 days after the trigger" cite "D. Mass. L.R. 116.1(g)"
+{
+  given DiscoveryRequestReceived() on 2027-03-01
+  expect deadline(waiver-discovery-response) == 2027-03-29
+}
+
+test "discovery letter: 14 days after the trigger" cite "D. Mass. L.R. 116.3(a)"
+{
+  given AutomaticDiscoveryCompleted() on 2027-03-01
+  expect deadline(discovery-letter) == 2027-03-15
+}
+
+test "discovery letter reply: 14 days after the trigger" cite "D. Mass. L.R. 116.3(a)"
+{
+  given DiscoveryRequestReceived() on 2027-03-01
+  expect deadline(discovery-letter-reply) == 2027-03-15
+}
+
+test "discovery motion: 14 days after the trigger" cite "D. Mass. L.R. 116.3(g)"
+{
+  given DiscoveryReplyReceived() on 2027-03-01
+  expect deadline(discovery-motion) == 2027-03-15
+}
+
+test "discovery motion response: 14 days after the trigger" cite "D. Mass. L.R. 116.3(i)"
+{
+  given DiscoveryMotionReceived() on 2027-03-01
+  expect deadline(discovery-motion-response) == 2027-03-15
+}
+
+test "status joint memorandum: 7 days before the trigger" cite "D. Mass. L.R. 116.5(a); D. Mass. L.R. 116.5(b); D. Mass. L.R. 116.5(c)"
+{
+  given StatusConferenceScheduled() on 2027-03-01
+  expect deadline(status-joint-memorandum) == 2027-02-22
+}
+
+test "initial pretrial conference: 14 days after the trigger" cite "D. Mass. L.R. 117.1(a)"
+{
+  given FinalStatusReportReceived() on 2027-03-01
+  expect deadline(initial-pretrial-conference) == 2027-03-15
+}
+
+test "exculpatory trial disclosure: 21 days before the trigger" cite "D. Mass. L.R. 116.2(b); D. Mass. L.R. 117.1(a)"
+{
+  given TrialDateSet() on 2027-03-01
+  expect deadline(exculpatory-trial-disclosure) == 2027-02-08
+}
+
+test "government witness exhibit disclosure: 7 days before the trigger" cite "D. Mass. L.R. 117.1(a)"
+{
+  given TrialDateSet() on 2027-03-01
+  expect deadline(government-witness-exhibit-disclosure) == 2027-02-22
+}
+
+test "defendant witness exhibit disclosure: 7 days before the trigger" cite "D. Mass. L.R. 117.1(a)"
+{
+  given TrialDateSet() on 2027-03-01
+  expect deadline(defendant-witness-exhibit-disclosure) == 2027-02-22
+}

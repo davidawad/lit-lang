@@ -93,3 +93,27 @@ deadline search-warrant-show-cause: 14.days after SearchWarrantShowCauseNoticeIs
 {
   forum frcrimp
 }
+
+test "exhibit removal: 90 days after the trigger" cite "SDIL-LR 79.1(b)"
+{
+  given FinalDecisionUnappealed() on 2027-03-03
+  expect deadline(exhibit-removal) == 2027-06-01
+}
+
+test "exhibit removal after mandate: 90 days after the trigger" cite "SDIL-LR 79.1(b)"
+{
+  given AppellateMandateFiled() on 2027-03-03
+  expect deadline(exhibit-removal-after-mandate) == 2027-06-01
+}
+
+test "presentence objection response: 7 days after the trigger" cite "SDIL-LR Appendix A, Cr32.1(b)(1)"
+{
+  given PresentenceObjectionsReceived() on 2027-03-01
+  expect deadline(presentence-objection-response) == 2027-03-08
+}
+
+test "search warrant show cause: 14 days after the trigger" cite "SDIL-LR Appendix A, Cr41.1(a)(2)"
+{
+  given SearchWarrantShowCauseNoticeIssued() on 2027-03-01
+  expect deadline(search-warrant-show-cause) == 2027-03-15
+}

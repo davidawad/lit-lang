@@ -161,3 +161,99 @@ deadline post-trial-response-period: 14.days after PostTrialMotionFiled() counte
 {
   forum frcrimp
 }
+
+test "arraignment waiver period: 4 days before the trigger" cite "N.D. W. Va. LR Cr P 10.01(c)"
+{
+  given Arraignment() on 2027-03-01
+  expect deadline(arraignment-waiver-period) == 2027-02-25
+}
+
+test "standard discovery period: 7 days after the trigger" cite "N.D. W. Va. LR Cr P 16.01(d)"
+{
+  given StandardDiscoveryRequested() on 2027-03-01
+  expect deadline(standard-discovery-period) == 2027-03-08
+}
+
+test "reciprocal discovery period: 7 days after the trigger" cite "N.D. W. Va. LR Cr P 16.01(e)"
+{
+  given GovernmentDiscoveryReceived() on 2027-03-01
+  expect deadline(reciprocal-discovery-period) == 2027-03-08
+}
+
+test "complex conference period: 7 days after the trigger" cite "N.D. W. Va. LR Cr P 16.01(h)"
+{
+  given ComplexDesignation() on 2027-03-01
+  expect deadline(complex-conference-period) == 2027-03-08
+}
+
+test "complex schedule period: 7 days after the trigger" cite "N.D. W. Va. LR Cr P 16.01(h)"
+{
+  given ComplexConference() on 2027-03-01
+  expect deadline(complex-schedule-period) == 2027-03-08
+}
+
+test "additional discovery conference period: 14 days after the trigger" cite "N.D. W. Va. LR Cr P 16.03"
+{
+  given Arraignment() on 2027-03-01
+  expect deadline(additional-discovery-conference-period) == 2027-03-15
+}
+
+test "impeachment disclosure period: 14 days before the trigger" cite "N.D. W. Va. LR Cr P 16.06"
+{
+  given Trial() on 2027-03-02
+  expect deadline(impeachment-disclosure-period) == 2027-02-16
+}
+
+test "witness list period: 14 days before the trigger" cite "N.D. W. Va. LR Cr P 16.07"
+{
+  given Trial() on 2027-03-02
+  expect deadline(witness-list-period) == 2027-02-16
+}
+
+test "exhibit list period: 14 days before the trigger" cite "N.D. W. Va. LR Cr P 16.08"
+{
+  given Trial() on 2027-03-02
+  expect deadline(exhibit-list-period) == 2027-02-16
+}
+
+test "disclosure refusal period: 5 days after the trigger" cite "N.D. W. Va. LR Cr P 16.12"
+{
+  given Arraignment() on 2027-03-03
+  expect deadline(disclosure-refusal-period) == 2027-03-08
+}
+
+test "limine period: 10 days before the trigger" cite "N.D. W. Va. LR Cr P 24.01"
+{
+  given PretrialConference() on 2027-03-01
+  expect deadline(limine-period) == 2027-02-19
+}
+
+test "limine response period: 1 day before the trigger" cite "N.D. W. Va. LR Cr P 24.01"
+{
+  given PretrialConference() on 2027-03-02
+  expect deadline(limine-response-period) == 2027-03-01
+}
+
+test "limine no conference period: 7 days before the trigger" cite "N.D. W. Va. LR Cr P 24.01"
+{
+  given Trial() on 2027-03-01
+  expect deadline(limine-no-conference-period) == 2027-02-22
+}
+
+test "pretrial motion period: 14 days after the trigger" cite "N.D. W. Va. LR Cr P 47.01(a)"
+{
+  given DiscoveryMaterialsReceived() on 2027-03-01
+  expect deadline(pretrial-motion-period) == 2027-03-15
+}
+
+test "pretrial response period: 7 days after the trigger" cite "N.D. W. Va. LR Cr P 47.01(a)"
+{
+  given PretrialMotionServed() on 2027-03-01
+  expect deadline(pretrial-response-period) == 2027-03-08
+}
+
+test "post trial response period: 14 days after the trigger" cite "N.D. W. Va. LR Cr P 47.01(b)"
+{
+  given PostTrialMotionFiled() on 2027-03-01
+  expect deadline(post-trial-response-period) == 2027-03-15
+}

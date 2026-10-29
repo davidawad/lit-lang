@@ -96,3 +96,33 @@ deadline cja-voucher: 45.days after CaseDismissedOrSentenced() counted_by frcrim
 {
   forum frcrimp
 }
+
+test "motions period: 14 days after the trigger" cite "E.D. Okla. LCrR 12.1(E)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(motions-period) == 2027-03-15
+}
+
+test "response period: 7 days after the trigger" cite "E.D. Okla. LCrR 12.1(E)"
+{
+  given MotionFiled() on 2027-03-01
+  expect deadline(response-period) == 2027-03-08
+}
+
+test "psr objection response: 7 days after the trigger" cite "E.D. Okla. LCrR 32.1(B)"
+{
+  given PsrObjectionsSubmitted() on 2027-03-01
+  expect deadline(psr-objection-response) == 2027-03-08
+}
+
+test "unresolved sentencing factors: 7 days before the trigger" cite "E.D. Okla. LCrR 32.1(D)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(unresolved-sentencing-factors) == 2027-02-22
+}
+
+test "cja voucher: 45 days after the trigger" cite "E.D. Okla. LCrR 57.2(B)"
+{
+  given CaseDismissedOrSentenced() on 2027-03-01
+  expect deadline(cja-voucher) == 2027-04-15
+}

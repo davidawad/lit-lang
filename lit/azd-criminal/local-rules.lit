@@ -131,3 +131,45 @@ deadline misdemeanor-appeal-reply-memorandum: 14.days after AppelleeMemorandumSe
 {
   forum frcrimp
 }
+
+test "complex case status conference: 21 days after the trigger" cite "D. Ariz. LRCrim 16.2(a)"
+{
+  given ComplexCaseDeclared() on 2027-03-01
+  expect deadline(complex-case-status-conference) == 2027-03-22
+}
+
+test "case in chief expert disclosure: 45 days before the trigger" cite "D. Ariz. LRCrim 16.3(a)"
+{
+  given FinalPretrialConferenceScheduled() on 2027-03-01
+  expect deadline(case-in-chief-expert-disclosure) == 2027-01-15
+}
+
+test "rebuttal expert disclosure: 14 days before the trigger" cite "D. Ariz. LRCrim 16.3(a)"
+{
+  given FinalPretrialConferenceScheduled() on 2027-03-02
+  expect deadline(rebuttal-expert-disclosure) == 2027-02-16
+}
+
+test "sealing resubmission: 5 days after the trigger" cite "D. Ariz. LRCrim 49.4(d)"
+{
+  given SealingDenied() on 2027-03-03
+  expect deadline(sealing-resubmission) == 2027-03-08
+}
+
+test "misdemeanor appeal opening memorandum: 30 days after the trigger" cite "D. Ariz. LRCrim 58.2(c)"
+{
+  given MisdemeanorAppealNoticed() on 2027-03-01
+  expect deadline(misdemeanor-appeal-opening-memorandum) == 2027-03-31
+}
+
+test "misdemeanor appeal answering memorandum: 21 days after the trigger" cite "D. Ariz. LRCrim 58.2(d)"
+{
+  given AppellantMemorandumServed() on 2027-03-01
+  expect deadline(misdemeanor-appeal-answering-memorandum) == 2027-03-22
+}
+
+test "misdemeanor appeal reply memorandum: 14 days after the trigger" cite "D. Ariz. LRCrim 58.2(e)"
+{
+  given AppelleeMemorandumServed() on 2027-03-01
+  expect deadline(misdemeanor-appeal-reply-memorandum) == 2027-03-15
+}

@@ -119,3 +119,39 @@ deadline objection-extension-motion: 14.days after RecommendedDispositionServed(
 {
   forum frcrimp
 }
+
+test "opposition period: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Crim. P. 12(b)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(opposition-period) == 2027-03-15
+}
+
+test "reply period: 7 days after the trigger" cite "W.D.N.Y. Loc. R. Crim. P. 12(b)"
+{
+  given ResponseServed() on 2027-03-01
+  expect deadline(reply-period) == 2027-03-08
+}
+
+test "video deposition objections: 7 days before the trigger" cite "W.D.N.Y. Loc. R. Crim. P. 15(d)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(video-deposition-objections) == 2027-02-22
+}
+
+test "exhibit removal: 30 days after the trigger" cite "W.D.N.Y. Loc. R. Crim. P. 26(c)"
+{
+  given ExhibitRemovalNoticed() on 2027-03-01
+  expect deadline(exhibit-removal) == 2027-03-31
+}
+
+test "search warrant return: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Crim. P. 41(b)"
+{
+  given SearchWarrantExecuted() on 2027-03-01
+  expect deadline(search-warrant-return) == 2027-03-15
+}
+
+test "objection extension motion: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Crim. P. 59(c)"
+{
+  given RecommendedDispositionServed() on 2027-03-01
+  expect deadline(objection-extension-motion) == 2027-03-15
+}

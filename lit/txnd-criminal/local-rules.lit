@@ -149,3 +149,57 @@ deadline magistrate-objection-response: 14.days after MagistrateObjectionsFiled(
 {
   forum frcrimp
 }
+
+test "exhibit exchange: 14 days before the trigger" cite "N.D. Tex. LCrR 16.1"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(exhibit-exchange) == 2027-02-16
+}
+
+test "proposed findings: 14 days before the trigger" cite "N.D. Tex. LCrR 23.1"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(proposed-findings) == 2027-02-16
+}
+
+test "requested jury charge: 14 days before the trigger" cite "N.D. Tex. LCrR 30.1"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(requested-jury-charge) == 2027-02-16
+}
+
+test "response period: 14 days after the trigger" cite "N.D. Tex. LCrR 47.1(e)"
+{
+  given OpposedMotionFiled() on 2027-03-01
+  expect deadline(response-period) == 2027-03-15
+}
+
+test "ecf registration: 14 days after the trigger" cite "N.D. Tex. LCrR 49.2(g)"
+{
+  given AttorneyAppeared() on 2027-03-01
+  expect deadline(ecf-registration) == 2027-03-15
+}
+
+test "paper original: 7 days after the trigger" cite "N.D. Tex. LCrR 49.6"
+{
+  given SignedDocumentSubmitted() on 2027-03-01
+  expect deadline(paper-original) == 2027-03-08
+}
+
+test "exhibit removal: 60 days after the trigger" cite "N.D. Tex. LCrR 55.2(b)"
+{
+  given FinalDisposition() on 2027-03-01
+  expect deadline(exhibit-removal) == 2027-04-30
+}
+
+test "keep sealed motion: 60 days after the trigger" cite "N.D. Tex. LCrR 55.4"
+{
+  given FinalDisposition() on 2027-03-01
+  expect deadline(keep-sealed-motion) == 2027-04-30
+}
+
+test "magistrate objection response: 14 days after the trigger" cite "N.D. Tex. LCrR 59.1(b); N.D. Tex. LCrR 59.2(b)"
+{
+  given MagistrateObjectionsFiled() on 2027-03-01
+  expect deadline(magistrate-objection-response) == 2027-03-15
+}

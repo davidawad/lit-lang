@@ -157,3 +157,81 @@ deadline exhibit-redaction-review-period: 21.days after DocumentaryExhibitsRetur
 {
   forum frcrimp
 }
+
+test "discovery stipulation period: 14 days after the trigger" cite "D.S.D. Crim. LR 16.1(A)"
+{
+  given InitialAppearance() on 2027-03-01
+  expect deadline(discovery-stipulation-period) == 2027-03-15
+}
+
+test "expert disclosure period: 21 days before the trigger" cite "D.S.D. Crim. LR 16.1(C)"
+{
+  given TrialBegins() on 2027-03-01
+  expect deadline(expert-disclosure-period) == 2027-02-08
+}
+
+test "rebuttal expert disclosure period: 7 days before the trigger" cite "D.S.D. Crim. LR 16.1(C)"
+{
+  given TrialBegins() on 2027-03-01
+  expect deadline(rebuttal-expert-disclosure-period) == 2027-02-22
+}
+
+test "peremptory request period: 14 days before the trigger" cite "D.S.D. Crim. LR 24.1"
+{
+  given JurySelection() on 2027-03-02
+  expect deadline(peremptory-request-period) == 2027-02-16
+}
+
+test "support letters period: 28 days after the trigger" cite "D.S.D. Crim. LR 32.1(C)"
+{
+  given DraftPresentenceReportFiled() on 2027-03-01
+  expect deadline(support-letters-period) == 2027-03-29
+}
+
+test "sentencing documents period: 7 days before the trigger" cite "D.S.D. Crim. LR 32.1(C)"
+{
+  given Sentencing() on 2027-03-01
+  expect deadline(sentencing-documents-period) == 2027-02-22
+}
+
+test "motion response period: 7 days after the trigger" cite "D.S.D. Crim. LR 47.1(C)"
+{
+  given MotionAndBriefServed() on 2027-03-01
+  expect deadline(motion-response-period) == 2027-03-08
+}
+
+test "motion reply period: 4 days after the trigger" cite "D.S.D. Crim. LR 47.1(C)"
+{
+  given ResponsiveBriefServed() on 2027-03-01
+  expect deadline(motion-reply-period) == 2027-03-05
+}
+
+test "exhibit redaction review period: 21 days after the trigger" cite "D.S.D. Crim. LR 57.3(B)"
+{
+  given DocumentaryExhibitsReturned() on 2027-03-01
+  expect deadline(exhibit-redaction-review-period) == 2027-03-22
+}
+
+test "subpoena motion in district period: 14 days before the trigger" cite "D.S.D. Crim. LR 17.1(A)"
+{
+  given WitnessHearing(WithinDistrict) on 2027-03-02
+  expect deadline(subpoena-motion-in-district-period) == 2027-02-16
+}
+
+test "subpoena motion out of district period: 21 days before the trigger" cite "D.S.D. Crim. LR 17.1(A)"
+{
+  given WitnessHearing(OutsideDistrict) on 2027-03-01
+  expect deadline(subpoena-motion-out-of-district-period) == 2027-02-08
+}
+
+test "writ application in district period: 14 days before the trigger" cite "D.S.D. Crim. LR 17.1(C)"
+{
+  given WritWitnessHearing(WithinDistrict) on 2027-03-02
+  expect deadline(writ-application-in-district-period) == 2027-02-16
+}
+
+test "writ application out of district period: 21 days before the trigger" cite "D.S.D. Crim. LR 17.1(C)"
+{
+  given WritWitnessHearing(OutsideDistrict) on 2027-03-01
+  expect deadline(writ-application-out-of-district-period) == 2027-02-08
+}

@@ -61,3 +61,39 @@ deadline sentencing-position-period: 1.weeks before SentencingScheduled() counte
 /// violation reports to the defendant, defense counsel and the United
 /// States Attorney.
 deadline violation-report-disclosure: 48.hours before RevocationHearing() counted_by frcrimp45 cite "N.D. Ohio LCrR 32.1.1"
+
+test "magistrate objection response period: 14 days after the trigger" cite "N.D. Ohio LCrR 5.3(b)"
+{
+  given MagistrateObjectionsServed() on 2027-03-01
+  expect deadline(magistrate-objection-response-period) == 2027-03-15
+}
+
+test "earliest sentencing date: 14 weeks after the trigger" cite "N.D. Ohio LCrR 32.2(a)"
+{
+  given GuiltEnteredReportOrdered() on 2027-03-01
+  expect deadline(earliest-sentencing-date) == 2027-06-07
+}
+
+test "psr disclosure period: 6 weeks before the trigger" cite "N.D. Ohio LCrR 32.2(b)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(psr-disclosure-period) == 2027-01-19
+}
+
+test "revised psr period: 2 weeks before the trigger" cite "N.D. Ohio LCrR 32.2(b)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(revised-psr-period) == 2027-02-16
+}
+
+test "sentencing position period: 1 week before the trigger" cite "N.D. Ohio LCrR 32.2(c)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-position-period) == 2027-02-22
+}
+
+test "violation report disclosure: 48 hours before the trigger" cite "N.D. Ohio LCrR 32.1.1"
+{
+  given RevocationHearing() on 2027-03-03
+  expect deadline(violation-report-disclosure) == 2027-03-01
+}

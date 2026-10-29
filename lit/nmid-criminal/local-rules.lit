@@ -29,3 +29,9 @@ deadline pretrial-motions: 14.days after PleaEntered() counted_by frcrimp45 dele
 {
   forum frcrimp
 }
+
+test "pretrial motions: 14 days after the trigger" cite "D.N.M.I. LCrR 12.1"
+{
+  given PleaEntered() on 2027-03-01
+  expect deadline(pretrial-motions) == 2027-03-15
+}

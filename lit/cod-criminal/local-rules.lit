@@ -173,3 +173,87 @@ deadline asl-interpreter-trial: 30.days before TrialScheduled() counted_by frcri
 {
   forum frcrimp
 }
+
+test "disposition notice: 14 days before the trigger" cite "D.C.COLO.LCrR 11.1(a)"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(disposition-notice) == 2027-02-16
+}
+
+test "discovery conference order: 14 days after the trigger" cite "D.C.COLO.LCrR 17.1.1"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(discovery-conference-order) == 2027-03-15
+}
+
+test "defendant sentencing statement: 14 days after the trigger" cite "D.C.COLO.LCrR 32.1(a)"
+{
+  given GovernmentSentencingStatementFiled() on 2027-03-01
+  expect deadline(defendant-sentencing-statement) == 2027-03-15
+}
+
+test "departure variance motion: 14 days before the trigger" cite "D.C.COLO.LCrR 32.1(c)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(departure-variance-motion) == 2027-02-16
+}
+
+test "departure variance response: 7 days before the trigger" cite "D.C.COLO.LCrR 32.1(c)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(departure-variance-response) == 2027-02-22
+}
+
+test "sentencing documents to probation: 10 days before the trigger" cite "D.C.COLO.LCrR 32.1(e)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-documents-to-probation) == 2027-02-19
+}
+
+test "sentencing documents filed: 7 days before the trigger" cite "D.C.COLO.LCrR 32.1(e)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-documents-filed) == 2027-02-22
+}
+
+test "unrepresented contact notice: 5 days after the trigger" cite "D.C.COLO.LCrR 49.1(c)"
+{
+  given UnrepresentedContactChanged() on 2027-03-03
+  expect deadline(unrepresented-contact-notice) == 2027-03-08
+}
+
+test "exhibit disposal objection: 14 days after the trigger" cite "D.C.COLO.LCrR 55.1(b)"
+{
+  given ExhibitDisposalNoticed() on 2027-03-01
+  expect deadline(exhibit-disposal-objection) == 2027-03-15
+}
+
+test "ada accommodation hearing: 7 days before the trigger" cite "D.C.COLO.LCrR 57.5"
+{
+  given HearingScheduled() on 2027-03-01
+  expect deadline(ada-accommodation-hearing) == 2027-02-22
+}
+
+test "ada accommodation trial: 7 days before the trigger" cite "D.C.COLO.LCrR 57.5"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(ada-accommodation-trial) == 2027-02-22
+}
+
+test "asl interpreter hearing: 30 days before the trigger" cite "D.C.COLO.LCrR 57.5"
+{
+  given HearingScheduled() on 2027-03-03
+  expect deadline(asl-interpreter-hearing) == 2027-02-01
+}
+
+test "asl interpreter trial: 30 days before the trigger" cite "D.C.COLO.LCrR 57.5"
+{
+  given TrialScheduled() on 2027-03-03
+  expect deadline(asl-interpreter-trial) == 2027-02-01
+}
+
+test "government sentencing statement: 30 days after the trigger" cite "D.C.COLO.LCrR 32.1(a)"
+{
+  given VerdictOrDischarge(Verdict) on 2027-03-01
+  expect deadline(government-sentencing-statement) == 2027-03-31
+}

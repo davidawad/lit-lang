@@ -193,3 +193,57 @@ deadline magistrate-objection-response: 14.days after MagistrateObjectionServed(
 {
   forum frcrimp
 }
+
+test "dispositive response period: 14 days after the trigger" cite "E.D. Tex. Local Rule CR-47(b)"
+{
+  given DispositiveMotionServed() on 2027-03-01
+  expect deadline(dispositive-response-period) == 2027-03-15
+}
+
+test "nondispositive response period: 14 days after the trigger" cite "E.D. Tex. Local Rule CR-47(b)"
+{
+  given NondispositiveMotionServed() on 2027-03-01
+  expect deadline(nondispositive-response-period) == 2027-03-15
+}
+
+test "reply period: 7 days after the trigger" cite "E.D. Tex. Local Rule CR-47(b)"
+{
+  given ResponseServed() on 2027-03-01
+  expect deadline(reply-period) == 2027-03-08
+}
+
+test "sur reply period: 7 days after the trigger" cite "E.D. Tex. Local Rule CR-47(b)"
+{
+  given ReplyServed() on 2027-03-01
+  expect deadline(sur-reply-period) == 2027-03-08
+}
+
+test "redaction notice: 7 days after the trigger" cite "E.D. Tex. Local Rule CR-49.1(b)"
+{
+  given TranscriptFiled() on 2027-03-01
+  expect deadline(redaction-notice) == 2027-03-08
+}
+
+test "redaction statement: 21 days after the trigger" cite "E.D. Tex. Local Rule CR-49.1(b)"
+{
+  given TranscriptDelivered() on 2027-03-01
+  expect deadline(redaction-statement) == 2027-03-22
+}
+
+test "redacted transcript: 31 days after the trigger" cite "E.D. Tex. Local Rule CR-49.1(b)"
+{
+  given TranscriptFiled() on 2027-03-01
+  expect deadline(redacted-transcript) == 2027-04-01
+}
+
+test "exhibit removal: 30 days after the trigger" cite "E.D. Tex. Local Rule CR-55(c)"
+{
+  given FinalDisposition() on 2027-03-01
+  expect deadline(exhibit-removal) == 2027-03-31
+}
+
+test "magistrate objection response: 14 days after the trigger" cite "E.D. Tex. Local Rule CR-59(b)"
+{
+  given MagistrateObjectionServed() on 2027-03-01
+  expect deadline(magistrate-objection-response) == 2027-03-15
+}

@@ -97,3 +97,69 @@ deadline other-sentencing-filings-period: 3.days before SentencingScheduled() co
 /// filed at least fourteen days before the date of the hearing; relief
 /// requires an order of the court.
 deadline production-motion-period: 14.days before ProductionHearingScheduled() counted_by frcrimp45 cite "M.D. Tenn. LCrR 57.05"
+
+test "law motion response period: 14 days after the trigger" cite "M.D. Tenn. LCrR 12.01(c)"
+{
+  given LawMotionServed() on 2027-03-01
+  expect deadline(law-motion-response-period) == 2027-03-15
+}
+
+test "law motion reply period: 7 days after the trigger" cite "M.D. Tenn. LCrR 12.01(c)"
+{
+  given LawResponseServed() on 2027-03-01
+  expect deadline(law-motion-reply-period) == 2027-03-08
+}
+
+test "automatic discovery period: 14 days after the trigger" cite "M.D. Tenn. LCrR 16.01(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(automatic-discovery-period) == 2027-03-15
+}
+
+test "discovery motion period: 14 days after the trigger" cite "M.D. Tenn. LCrR 16.01(b)"
+{
+  given DiscoveryDeniedOrDue() on 2027-03-01
+  expect deadline(discovery-motion-period) == 2027-03-15
+}
+
+test "discovery motion response period: 7 days after the trigger" cite "M.D. Tenn. LCrR 16.01(b)"
+{
+  given DiscoveryMotionFiled() on 2027-03-01
+  expect deadline(discovery-motion-response-period) == 2027-03-08
+}
+
+test "earliest sentencing date: 80 days after the trigger" cite "M.D. Tenn. LCrR 32.01(a)"
+{
+  given GuiltFoundOrPleaHearing() on 2027-03-01
+  expect deadline(earliest-sentencing-date) == 2027-05-20
+}
+
+test "objection disclosure period: 7 days after the trigger" cite "M.D. Tenn. LCrR 32.01(c)"
+{
+  given ReportObjectionsReceived() on 2027-03-01
+  expect deadline(objection-disclosure-period) == 2027-03-08
+}
+
+test "position paper period: 7 days before the trigger" cite "M.D. Tenn. LCrR 32.01(c)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(position-paper-period) == 2027-02-22
+}
+
+test "section 3553a statement period: 3 days before the trigger" cite "M.D. Tenn. LCrR 32.01(e)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(section-3553a-statement-period) == 2027-02-26
+}
+
+test "other sentencing filings period: 3 days before the trigger" cite "M.D. Tenn. LCrR 32.01(f)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(other-sentencing-filings-period) == 2027-02-26
+}
+
+test "production motion period: 14 days before the trigger" cite "M.D. Tenn. LCrR 57.05"
+{
+  given ProductionHearingScheduled() on 2027-03-02
+  expect deadline(production-motion-period) == 2027-02-16
+}

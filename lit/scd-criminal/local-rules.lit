@@ -66,3 +66,33 @@ deadline state-custody-objection-period: 7.days after StateCustodyRequestNoticed
 {
   forum frcrimp
 }
+
+test "response period: 14 days after the trigger" cite "D.S.C. Local Crim. Rule 12.05"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(response-period) == 2027-03-15
+}
+
+test "subpoena delivery period: 14 days before the trigger" cite "D.S.C. Local Crim. Rule 17.01"
+{
+  given TrialWeekMonday() on 2027-03-02
+  expect deadline(subpoena-delivery-period) == 2027-02-16
+}
+
+test "voir dire period: 7 days before the trigger" cite "D.S.C. Local Crim. Rule 26.04(A)"
+{
+  given JurySelection() on 2027-03-01
+  expect deadline(voir-dire-period) == 2027-02-22
+}
+
+test "jury instructions period: 7 days before the trigger" cite "D.S.C. Local Crim. Rule 26.04(B)"
+{
+  given TrialBegins() on 2027-03-01
+  expect deadline(jury-instructions-period) == 2027-02-22
+}
+
+test "state custody objection period: 7 days after the trigger" cite "D.S.C. Local Crim. Rule 57.VI.02(B)"
+{
+  given StateCustodyRequestNoticed() on 2027-03-01
+  expect deadline(state-custody-objection-period) == 2027-03-08
+}

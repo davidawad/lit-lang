@@ -94,3 +94,27 @@ deadline exhibit-removal: 30.days after FinalDisposition() counted_by frcrimp45 
 {
   forum frcrimp
 }
+
+test "response period: 21 days after the trigger" cite "M.D. La. LCrR 12; M.D. La. LR 7(f)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(response-period) == 2027-03-22
+}
+
+test "sentencing memorandum: 14 days before the trigger" cite "M.D. La. LCrR 32(b)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(sentencing-memorandum) == 2027-02-16
+}
+
+test "substantial assistance motion: 14 days before the trigger" cite "M.D. La. LCrR 32(c)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(substantial-assistance-motion) == 2027-02-16
+}
+
+test "exhibit removal: 30 days after the trigger" cite "M.D. La. LCrR 55(f)"
+{
+  given FinalDisposition() on 2027-03-01
+  expect deadline(exhibit-removal) == 2027-03-31
+}

@@ -22,3 +22,9 @@ import frcrimp.deadlines.{ SentencingScheduled }
 /// forfeiture no later than three weeks before the initial date scheduled
 /// for the sentencing hearing, unless it shows that is impracticable.
 deadline preliminary-forfeiture-motion-period: 3.weeks before SentencingScheduled() counted_by frcrimp45 cite "E.D. Mich. LCrR 32.3"
+
+test "preliminary forfeiture motion period: 3 weeks before the trigger" cite "E.D. Mich. LCrR 32.3"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(preliminary-forfeiture-motion-period) == 2027-02-08
+}

@@ -229,3 +229,105 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by 
 {
   forum frcrimp
 }
+
+test "plea recommendation objection: 14 days after the trigger" cite "S.D. Cal. CrimLR 11.1(d)"
+{
+  given PleaRecommendationEntered() on 2027-03-01
+  expect deadline(plea-recommendation-objection) == 2027-03-15
+}
+
+test "allocution transcript: 7 days before the trigger" cite "S.D. Cal. CrimLR 11.1(f)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(allocution-transcript) == 2027-02-22
+}
+
+test "discovery timetable report: 7 days before the trigger" cite "S.D. Cal. CrimLR 16.1.a"
+{
+  given FirstMotionHearingScheduled() on 2027-03-01
+  expect deadline(discovery-timetable-report) == 2027-02-22
+}
+
+test "psr objections: 14 days before the trigger" cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(psr-objections) == 2027-02-16
+}
+
+test "psr objections after late report: 17 days after the trigger" cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  given LatePsrFiled() on 2027-03-01
+  expect deadline(psr-objections-after-late-report) == 2027-03-18
+}
+
+test "departure motion: 14 days before the trigger" cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(departure-motion) == 2027-02-16
+}
+
+test "sentencing filings: 7 days before the trigger" cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-filings) == 2027-02-22
+}
+
+test "psr addendum: 7 days before the trigger" cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(psr-addendum) == 2027-02-22
+}
+
+test "motion filing: 14 days before the trigger" cite "S.D. Cal. CrimLR 47.1(b)"
+{
+  given MotionHearingScheduled() on 2027-03-02
+  expect deadline(motion-filing) == 2027-02-16
+}
+
+test "motion opposition: 7 days before the trigger" cite "S.D. Cal. CrimLR 47.1(c)"
+{
+  given MotionHearingScheduled() on 2027-03-01
+  expect deadline(motion-opposition) == 2027-02-22
+}
+
+test "related case objection: 7 days after the trigger" cite "S.D. Cal. CrimLR 57.2.1(d)"
+{
+  given RelatedCaseObjectionWindowOpens() on 2027-03-01
+  expect deadline(related-case-objection) == 2027-03-08
+}
+
+test "related case reply: 7 days after the trigger" cite "S.D. Cal. CrimLR 57.2.1(d)"
+{
+  given RelatedCaseObjectionFiled() on 2027-03-01
+  expect deadline(related-case-reply) == 2027-03-08
+}
+
+test "related case ruling: 7 days after the trigger" cite "S.D. Cal. CrimLR 57.2.1(d)"
+{
+  given RelatedCaseReplyDue() on 2027-03-01
+  expect deadline(related-case-ruling) == 2027-03-08
+}
+
+test "misdemeanor appeal transcript: 30 days after the trigger" cite "S.D. Cal. CrimLR 58.1(b)"
+{
+  given AppealTranscriptOrdered() on 2027-03-01
+  expect deadline(misdemeanor-appeal-transcript) == 2027-03-31
+}
+
+test "misdemeanor appellant brief: 21 days after the trigger" cite "S.D. Cal. CrimLR 58.1(b)"
+{
+  given MisdemeanorAppealHearingNoticed() on 2027-03-01
+  expect deadline(misdemeanor-appellant-brief) == 2027-03-22
+}
+
+test "misdemeanor appellee brief: 21 days after the trigger" cite "S.D. Cal. CrimLR 58.1(b)"
+{
+  given AppellantBriefServed() on 2027-03-01
+  expect deadline(misdemeanor-appellee-brief) == 2027-03-22
+}
+
+test "misdemeanor reply brief: 7 days after the trigger" cite "S.D. Cal. CrimLR 58.1(b)"
+{
+  given AppelleeBriefServed() on 2027-03-01
+  expect deadline(misdemeanor-reply-brief) == 2027-03-08
+}

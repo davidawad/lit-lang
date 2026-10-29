@@ -356,3 +356,171 @@ deadline unscannable-filing-service: 3.business_days after UnscannableFilingNoti
 {
   forum frcrimp
 }
+
+test "continuance position: 3 business days after the trigger" cite "D. Haw. CrimLR 2.2"
+{
+  given MultiDefendantContinuanceMotionFiled() on 2027-03-01
+  expect deadline(continuance-position) == 2027-03-04
+}
+
+test "joint trial presentation statement: 7 days before the trigger" cite "D. Haw. CrimLR 2.3(b)"
+{
+  given TrialConferenceScheduled() on 2027-03-01
+  expect deadline(joint-trial-presentation-statement) == 2027-02-22
+}
+
+test "sealing opposition: 7 days after the trigger" cite "D. Haw. CrimLR 5.2(b)"
+{
+  given SealingMotionFiled() on 2027-03-01
+  expect deadline(sealing-opposition) == 2027-03-08
+}
+
+test "sealing denial election: 4 days after the trigger" cite "D. Haw. CrimLR 5.2(b)"
+{
+  given SealingMotionDenied() on 2027-03-01
+  expect deadline(sealing-denial-election) == 2027-03-05
+}
+
+test "public filing opposition: 7 days after the trigger" cite "D. Haw. CrimLR 5.2(b)"
+{
+  given PublicFilingMotionFiled() on 2027-03-01
+  expect deadline(public-filing-opposition) == 2027-03-08
+}
+
+test "hearing sealing motion: 5 days before the trigger" cite "D. Haw. CrimLR 5.3(b)"
+{
+  given HearingScheduled() on 2027-03-01
+  expect deadline(hearing-sealing-motion) == 2027-02-24
+}
+
+test "hearing sealing opposition: 3 days after the trigger" cite "D. Haw. CrimLR 5.3(b)"
+{
+  given HearingSealingMotionFiled() on 2027-03-01
+  expect deadline(hearing-sealing-opposition) == 2027-03-04
+}
+
+test "deadline continuance motion: 1 day before the trigger" cite "D. Haw. CrimLR 12.2(a)"
+{
+  given MotionDeadline() on 2027-03-02
+  expect deadline(deadline-continuance-motion) == 2027-03-01
+}
+
+test "reply leave motion: 2 days after the trigger" cite "D. Haw. CrimLR 12.2(a)"
+{
+  given ResponseFiled() on 2027-03-01
+  expect deadline(reply-leave-motion) == 2027-03-03
+}
+
+test "joinder: 3 days after the trigger" cite "D. Haw. CrimLR 12.4"
+{
+  given JoinableFilingMade() on 2027-03-01
+  expect deadline(joinder) == 2027-03-04
+}
+
+test "discovery declination: 5 days after the trigger" cite "D. Haw. CrimLR 16(b)"
+{
+  given Arraigned() on 2027-03-03
+  expect deadline(discovery-declination) == 2027-03-08
+}
+
+test "final psr: 14 days before the trigger" cite "D. Haw. CrimLR 32.2(b)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(final-psr) == 2027-02-16
+}
+
+test "substantial assistance motion: 14 days before the trigger" cite "D. Haw. CrimLR 32.2(c)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(substantial-assistance-motion) == 2027-02-16
+}
+
+test "evidentiary hearing request: 10 days before the trigger" cite "D. Haw. CrimLR 32.2(d)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(evidentiary-hearing-request) == 2027-02-19
+}
+
+test "evidentiary hearing response: 7 days before the trigger" cite "D. Haw. CrimLR 32.2(d)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(evidentiary-hearing-response) == 2027-02-22
+}
+
+test "sentencing memoranda: 5 days before the trigger" cite "D. Haw. CrimLR 32.2(e)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-memoranda) == 2027-02-24
+}
+
+test "expedited sentencing request: 1 business day after the trigger" cite "D. Haw. CrimLR 32.2(h)"
+{
+  given ExpeditedPleaEntered() on 2027-03-01
+  expect deadline(expedited-sentencing-request) == 2027-03-02
+}
+
+test "expedited draft psr: 30 days after the trigger" cite "D. Haw. CrimLR 32.2(h)"
+{
+  given ExpeditedSentencingGranted() on 2027-03-01
+  expect deadline(expedited-draft-psr) == 2027-03-31
+}
+
+test "expedited sentencing statements: 3 days after the trigger" cite "D. Haw. CrimLR 32.2(h)"
+{
+  given ExpeditedDraftPsrReceived() on 2027-03-01
+  expect deadline(expedited-sentencing-statements) == 2027-03-04
+}
+
+test "expedited final psr: 3 days before the trigger" cite "D. Haw. CrimLR 32.2(h)"
+{
+  given ExpeditedSentencingScheduled() on 2027-03-01
+  expect deadline(expedited-final-psr) == 2027-02-26
+}
+
+test "misdemeanor appeal transcript: 35 days after the trigger" cite "D. Haw. CrimLR 58.3(b)"
+{
+  given AppealTranscriptOrdered() on 2027-03-01
+  expect deadline(misdemeanor-appeal-transcript) == 2027-04-05
+}
+
+test "misdemeanor appellant brief: 21 days after the trigger" cite "D. Haw. CrimLR 58.3(e)"
+{
+  given AppealRecordComplete() on 2027-03-01
+  expect deadline(misdemeanor-appellant-brief) == 2027-03-22
+}
+
+test "misdemeanor appellee brief: 21 days after the trigger" cite "D. Haw. CrimLR 58.3(e)"
+{
+  given AppellantBriefServed() on 2027-03-01
+  expect deadline(misdemeanor-appellee-brief) == 2027-03-22
+}
+
+test "misdemeanor reply brief: 7 days after the trigger" cite "D. Haw. CrimLR 58.3(e)"
+{
+  given AppelleeBriefServed() on 2027-03-01
+  expect deadline(misdemeanor-reply-brief) == 2027-03-08
+}
+
+test "proposed order objection: 1 day after the trigger" cite "D. Haw. CrimLR 59.1"
+{
+  given ProposedOrderDraftReceived() on 2027-03-01
+  expect deadline(proposed-order-objection) == 2027-03-02
+}
+
+test "reconsideration manifest error: 14 days after the trigger" cite "D. Haw. CrimLR 60.1"
+{
+  given OrderEntered() on 2027-03-01
+  expect deadline(reconsideration-manifest-error) == 2027-03-15
+}
+
+test "unsealing notice: 60 days before the trigger" cite "D. Haw. CrimLR 79.2"
+{
+  given SealingOrderExpires() on 2027-03-01
+  expect deadline(unsealing-notice) == 2026-12-31
+}
+
+test "unscannable filing service: 3 business days after the trigger" cite "D. Haw. CrimLR 81.1(c)"
+{
+  given UnscannableFilingNoticed() on 2027-03-01
+  expect deadline(unscannable-filing-service) == 2027-03-04
+}

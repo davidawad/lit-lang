@@ -179,3 +179,75 @@ deadline supplemental-response: 3.days before SentencingScheduled() counted_by f
 {
   forum frcrimp
 }
+
+test "pretrial motions: 14 days after the trigger" cite "W.D. Pa. LCrR 12"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(pretrial-motions) == 2027-03-15
+}
+
+test "motion response: 14 days after the trigger" cite "W.D. Pa. LCrR 12"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(motion-response) == 2027-03-15
+}
+
+test "motion reply: 14 days after the trigger" cite "W.D. Pa. LCrR 12"
+{
+  given ResponseServed() on 2027-03-01
+  expect deadline(motion-reply) == 2027-03-15
+}
+
+test "rule16 disclosure: 7 days after the trigger" cite "W.D. Pa. LCrR 16"
+{
+  given DiscoveryRequested() on 2027-03-01
+  expect deadline(rule16-disclosure) == 2027-03-08
+}
+
+test "tentative psr disclosure: 7 weeks before the trigger" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(tentative-psr-disclosure) == 2027-01-11
+}
+
+test "administrative resolution: 2 weeks after the trigger" cite "W.D. Pa. LCrR 32"
+{
+  given TentativePsrDisclosed() on 2027-03-01
+  expect deadline(administrative-resolution) == 2027-03-15
+}
+
+test "psr to court: 5 weeks before the trigger" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(psr-to-court) == 2027-01-25
+}
+
+test "sentencing position: 4 weeks before the trigger" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-position) == 2027-02-01
+}
+
+test "sentencing position response: 3 weeks before the trigger" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-position-response) == 2027-02-08
+}
+
+test "psr addendum: 2 weeks before the trigger" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(psr-addendum) == 2027-02-16
+}
+
+test "supplemental memorandum: 1 week before the trigger" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(supplemental-memorandum) == 2027-02-22
+}
+
+test "supplemental response: 3 days before the trigger" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(supplemental-response) == 2027-02-26
+}

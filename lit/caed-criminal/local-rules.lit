@@ -254,3 +254,111 @@ deadline psr-formal-objections: 14.days before SentencingScheduled() counted_by 
 {
   forum frcrimp
 }
+
+test "interpreter cancellation notice: 2 court days before the trigger" cite "E.D. Cal. L.R. 403(d)"
+{
+  given InterpretedHearingScheduled() on 2027-03-01
+  expect deadline(interpreter-cancellation-notice) == 2027-02-25
+}
+
+test "misdemeanor appeal transcript: 14 days after the trigger" cite "E.D. Cal. L.R. 422(b)"
+{
+  given MisdemeanorAppealNoticed() on 2027-03-01
+  expect deadline(misdemeanor-appeal-transcript) == 2027-03-15
+}
+
+test "misdemeanor appellant brief: 21 days after the trigger" cite "E.D. Cal. L.R. 422(e)"
+{
+  given AppealTranscriptFiled() on 2027-03-01
+  expect deadline(misdemeanor-appellant-brief) == 2027-03-22
+}
+
+test "misdemeanor appellee brief: 21 days after the trigger" cite "E.D. Cal. L.R. 422(e)"
+{
+  given AppellantBriefServed() on 2027-03-01
+  expect deadline(misdemeanor-appellee-brief) == 2027-03-22
+}
+
+test "misdemeanor reply brief: 7 days after the trigger" cite "E.D. Cal. L.R. 422(e)"
+{
+  given AppelleeBriefServed() on 2027-03-01
+  expect deadline(misdemeanor-reply-brief) == 2027-03-08
+}
+
+test "class a election prosecution: 91 days after the trigger" cite "E.D. Cal. L.R. 423(c)"
+{
+  given DistrictJudgeElectionNoticed() on 2027-03-02
+  expect deadline(class-a-election-prosecution) == 2027-06-01
+}
+
+test "bail review notice: 7 days before the trigger" cite "E.D. Cal. L.R. 429(a)"
+{
+  given BailReviewHearingScheduled() on 2027-03-01
+  expect deadline(bail-review-notice) == 2027-02-22
+}
+
+test "bail review opposition: 2 days before the trigger" cite "E.D. Cal. L.R. 429(c)"
+{
+  given BailReviewHearingScheduled() on 2027-03-03
+  expect deadline(bail-review-opposition) == 2027-03-01
+}
+
+test "motion notice: 14 days before the trigger" cite "E.D. Cal. L.R. 430.1(e)"
+{
+  given MotionHearingScheduled() on 2027-03-02
+  expect deadline(motion-notice) == 2027-02-16
+}
+
+test "motion opposition: 7 days after the trigger" cite "E.D. Cal. L.R. 430.1(f)"
+{
+  given MotionFiled() on 2027-03-01
+  expect deadline(motion-opposition) == 2027-03-08
+}
+
+test "motion reply: 4 days after the trigger" cite "E.D. Cal. L.R. 430.1(f)"
+{
+  given OppositionDue() on 2027-03-01
+  expect deadline(motion-reply) == 2027-03-05
+}
+
+test "magistrate decision appeal: 14 days after the trigger" cite "E.D. Cal. L.R. 430.1(j)"
+{
+  given MagistrateDecision() on 2027-03-01
+  expect deadline(magistrate-decision-appeal) == 2027-03-15
+}
+
+test "government initial disclosure: 14 days after the trigger" cite "E.D. Cal. L.R. 440(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(government-initial-disclosure) == 2027-03-15
+}
+
+test "examination report disclosure: 7 days before the trigger" cite "E.D. Cal. L.R. 440(b)"
+{
+  given TrialConfirmationScheduled() on 2027-03-01
+  expect deadline(examination-report-disclosure) == 2027-02-22
+}
+
+test "defense discovery: 21 days after the trigger" cite "E.D. Cal. L.R. 440(c)"
+{
+  given DefenseDiscoveryRequested() on 2027-03-01
+  expect deadline(defense-discovery) == 2027-03-22
+}
+
+test "psr informal objections: 28 days before the trigger" cite "E.D. Cal. L.R. 461(b)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(psr-informal-objections) == 2027-02-01
+}
+
+test "psr submission: 21 days before the trigger" cite "E.D. Cal. L.R. 461(c)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(psr-submission) == 2027-02-08
+}
+
+test "psr formal objections: 14 days before the trigger" cite "E.D. Cal. L.R. 461(d)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(psr-formal-objections) == 2027-02-16
+}

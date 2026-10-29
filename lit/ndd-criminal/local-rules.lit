@@ -159,3 +159,63 @@ deadline objection-response-period: 7.days after ObjectionServedAndFiled() count
 {
   forum frcrimp
 }
+
+test "grand jury subpoena motion period: 7 days before the trigger" cite "D.N.D. Crim. L.R. 6.1(C)"
+{
+  given GrandJuryReturnDate() on 2027-03-01
+  expect deadline(grand-jury-subpoena-motion-period) == 2027-02-22
+}
+
+test "jury instructions period: 7 days before the trigger" cite "D.N.D. Crim. L.R. 30.1(A)"
+{
+  given TrialBegins() on 2027-03-01
+  expect deadline(jury-instructions-period) == 2027-02-22
+}
+
+test "sentencing memorandum period: 7 days before the trigger" cite "D.N.D. Crim. L.R. 32.1(B)"
+{
+  given SentencingHearing() on 2027-03-01
+  expect deadline(sentencing-memorandum-period) == 2027-02-22
+}
+
+test "sentencing response period: 2 days before the trigger" cite "D.N.D. Crim. L.R. 32.1(B)"
+{
+  given SentencingHearing() on 2027-03-03
+  expect deadline(sentencing-response-period) == 2027-03-01
+}
+
+test "motion response period: 14 days after the trigger" cite "D.N.D. Crim. L.R. 47.1(A)"
+{
+  given MotionMemorandumServedAndFiled() on 2027-03-01
+  expect deadline(motion-response-period) == 2027-03-15
+}
+
+test "motion reply period: 7 days after the trigger" cite "D.N.D. Crim. L.R. 47.1(A)"
+{
+  given ResponseServedAndFiled() on 2027-03-01
+  expect deadline(motion-reply-period) == 2027-03-08
+}
+
+test "sentence reduction response period: 28 days after the trigger" cite "D.N.D. Crim. L.R. 47.1(A)"
+{
+  given SentenceReductionMotionServedAndFiled() on 2027-03-01
+  expect deadline(sentence-reduction-response-period) == 2027-03-29
+}
+
+test "sentence reduction reply period: 14 days after the trigger" cite "D.N.D. Crim. L.R. 47.1(A)"
+{
+  given SentenceReductionResponseServedAndFiled() on 2027-03-01
+  expect deadline(sentence-reduction-reply-period) == 2027-03-15
+}
+
+test "warrant sealing period: 90 days after the trigger" cite "D.N.D. Crim. L.R. 49.1(C)"
+{
+  given WarrantReturnFiled() on 2027-03-03
+  expect deadline(warrant-sealing-period) == 2027-06-01
+}
+
+test "objection response period: 7 days after the trigger" cite "D.N.D. Crim. L.R. 59.1(D)"
+{
+  given ObjectionServedAndFiled() on 2027-03-01
+  expect deadline(objection-response-period) == 2027-03-08
+}

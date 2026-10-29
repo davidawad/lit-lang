@@ -137,3 +137,63 @@ deadline warrant-seal-motion-period: 14.days after WarrantMaterialReceived() cou
 {
   forum frcrimp
 }
+
+test "disclosure statement period: 28 days after the trigger" cite "E.D. Mo. L.R. 2.09(B)(2)"
+{
+  given InitialAppearance() on 2027-03-01
+  expect deadline(disclosure-statement-period) == 2027-03-29
+}
+
+test "supplemental disclosure period: 7 days after the trigger" cite "E.D. Mo. L.R. 2.09(B)(2)"
+{
+  given DisclosureInformationChanged() on 2027-03-01
+  expect deadline(supplemental-disclosure-period) == 2027-03-08
+}
+
+test "opposition period: 14 days after the trigger" cite "E.D. Mo. L.R. 4.01(B)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(opposition-period) == 2027-03-15
+}
+
+test "extension opposition period: 7 days after the trigger" cite "E.D. Mo. L.R. 4.01(B)"
+{
+  given ExtensionMotionServed() on 2027-03-01
+  expect deadline(extension-opposition-period) == 2027-03-08
+}
+
+test "reply period: 10 days after the trigger" cite "E.D. Mo. L.R. 4.01(C)"
+{
+  given OppositionServed() on 2027-03-01
+  expect deadline(reply-period) == 2027-03-11
+}
+
+test "exhibit removal period: 30 days after the trigger" cite "E.D. Mo. L.R. 7.02(C)"
+{
+  given BenchTrialDecision() on 2027-03-01
+  expect deadline(exhibit-removal-period) == 2027-03-31
+}
+
+test "sealing opposition period: 7 days after the trigger" cite "E.D. Mo. L.R. 13.05(A)(4)(d)"
+{
+  given SealingMotionFiled() on 2027-03-01
+  expect deadline(sealing-opposition-period) == 2027-03-08
+}
+
+test "sealing reply period: 7 days after the trigger" cite "E.D. Mo. L.R. 13.05(A)(4)(e)"
+{
+  given SealingOppositionFiled() on 2027-03-01
+  expect deadline(sealing-reply-period) == 2027-03-08
+}
+
+test "sealing denial stay period: 14 days after the trigger" cite "E.D. Mo. L.R. 13.05(A)(4)(g)"
+{
+  given SealingDenied() on 2027-03-01
+  expect deadline(sealing-denial-stay-period) == 2027-03-15
+}
+
+test "warrant seal motion period: 14 days after the trigger" cite "E.D. Mo. L.R. 13.05(C)(4)(b)"
+{
+  given WarrantMaterialReceived() on 2027-03-01
+  expect deadline(warrant-seal-motion-period) == 2027-03-15
+}

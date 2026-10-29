@@ -117,3 +117,45 @@ deadline returned-exhibit-removal: 14.days after ReturnedExhibitsNoticed() count
 {
   forum frcrimp
 }
+
+test "interview attendance notice: 7 days after the trigger" cite "S.D. Tex. Cr 32.3(A)"
+{
+  given GuiltDetermined() on 2027-03-01
+  expect deadline(interview-attendance-notice) == 2027-03-08
+}
+
+test "final report: 14 days after the trigger" cite "S.D. Tex. Cr 32.7(B)"
+{
+  given ObjectionPeriodEnded() on 2027-03-01
+  expect deadline(final-report) == 2027-03-15
+}
+
+test "authentication notice: 7 days after the trigger" cite "S.D. Tex. Cr 55.2(A)"
+{
+  given ExhibitListed() on 2027-03-01
+  expect deadline(authentication-notice) == 2027-03-08
+}
+
+test "exhibit objections: 7 days before the trigger" cite "S.D. Tex. Cr 55.2(B)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(exhibit-objections) == 2027-02-22
+}
+
+test "oversized exhibit withdrawal: 7 days after the trigger" cite "S.D. Tex. Cr 55.2(C)"
+{
+  given TrialCompleted() on 2027-03-01
+  expect deadline(oversized-exhibit-withdrawal) == 2027-03-08
+}
+
+test "exhibit removal: 30 days after the trigger" cite "S.D. Tex. Cr 55.2(C)"
+{
+  given DisposedWithoutAppeal() on 2027-03-01
+  expect deadline(exhibit-removal) == 2027-03-31
+}
+
+test "returned exhibit removal: 14 days after the trigger" cite "S.D. Tex. Cr 55.2(C)"
+{
+  given ReturnedExhibitsNoticed() on 2027-03-01
+  expect deadline(returned-exhibit-removal) == 2027-03-15
+}

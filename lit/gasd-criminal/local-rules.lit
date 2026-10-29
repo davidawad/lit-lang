@@ -171,3 +171,87 @@ deadline sealing-appeal-notice-period: 14.days after SealingDenied() counted_by 
 {
   forum frcrimp
 }
+
+test "pretrial motion period: 14 days after the trigger" cite "S.D. Ga. LR Crim. 12(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(pretrial-motion-period) == 2027-03-15
+}
+
+test "pretrial motion response period: 14 days after the trigger" cite "S.D. Ga. LR Crim. 12(a)"
+{
+  given MotionDeadlinePassed() on 2027-03-01
+  expect deadline(pretrial-motion-response-period) == 2027-03-15
+}
+
+test "other motion response period: 7 days after the trigger" cite "S.D. Ga. LR Crim. 12(a)"
+{
+  given PretrialMotionFiled() on 2027-03-01
+  expect deadline(other-motion-response-period) == 2027-03-08
+}
+
+test "government initial disclosure period: 14 days after the trigger" cite "S.D. Ga. LR Crim. 16B(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(government-initial-disclosure-period) == 2027-03-15
+}
+
+test "government later disclosure period: 14 days before the trigger" cite "S.D. Ga. LR Crim. 16B(b)"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(government-later-disclosure-period) == 2027-02-16
+}
+
+test "defense disclosure period: 7 days after the trigger" cite "S.D. Ga. LR Crim. 16D"
+{
+  given GovernmentDisclosureRequested() on 2027-03-01
+  expect deadline(defense-disclosure-period) == 2027-03-08
+}
+
+test "stipulation conference period: 7 days before the trigger" cite "S.D. Ga. LR Crim. 16E(c)"
+{
+  given PretrialConferenceScheduled() on 2027-03-01
+  expect deadline(stipulation-conference-period) == 2027-02-22
+}
+
+test "stipulation filing period: 2 days before the trigger" cite "S.D. Ga. LR Crim. 16E(c)"
+{
+  given TrialScheduled() on 2027-03-03
+  expect deadline(stipulation-filing-period) == 2027-03-01
+}
+
+test "demonstrative exhibit period: 2 days before the trigger" cite "S.D. Ga. LR Crim. 16E(d)"
+{
+  given TrialScheduled() on 2027-03-03
+  expect deadline(demonstrative-exhibit-period) == 2027-03-01
+}
+
+test "voir dire request period: 7 days before the trigger" cite "S.D. Ga. LR Crim. 24(a)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(voir-dire-request-period) == 2027-02-22
+}
+
+test "sentencing memorandum period: 1 day before the trigger" cite "S.D. Ga. LR Crim. 32A(d)"
+{
+  given SentencingHearingScheduled() on 2027-03-02
+  expect deadline(sentencing-memorandum-period) == 2027-03-01
+}
+
+test "post conviction certification period: 14 days after the trigger" cite "S.D. Ga. LR Crim. 32B(b)"
+{
+  given Sentenced() on 2027-03-01
+  expect deadline(post-conviction-certification-period) == 2027-03-15
+}
+
+test "joint representation response period: 7 days after the trigger" cite "S.D. Ga. LR Crim. 44D(a)"
+{
+  given JointRepresentationMotionFiled() on 2027-03-01
+  expect deadline(joint-representation-response-period) == 2027-03-08
+}
+
+test "sealing appeal notice period: 14 days after the trigger" cite "S.D. Ga. LR Crim. 49.1(d)"
+{
+  given SealingDenied() on 2027-03-01
+  expect deadline(sealing-appeal-notice-period) == 2027-03-15
+}

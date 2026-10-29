@@ -81,3 +81,21 @@ deadline discovery-conference: 7.days after Arraigned() counted_by frcrimp45 del
 {
   forum frcrimp
 }
+
+test "pretrial motions: 14 days after the trigger" cite "E.D. Pa. LCrR 12.1"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(pretrial-motions) == 2027-03-15
+}
+
+test "motion answer: 7 days after the trigger" cite "E.D. Pa. LCrR 12.1"
+{
+  given MotionReceived() on 2027-03-01
+  expect deadline(motion-answer) == 2027-03-08
+}
+
+test "discovery conference: 7 days after the trigger" cite "E.D. Pa. LCrR 16.1(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(discovery-conference) == 2027-03-08
+}

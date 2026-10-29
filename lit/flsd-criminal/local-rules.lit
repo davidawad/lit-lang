@@ -127,3 +127,63 @@ deadline sentencing-notice-period: 5.days before SentencingHearingScheduled() co
 {
   forum frcrimp
 }
+
+test "speedy trial report period: 21 days after the trigger" cite "S.D. Fla. L.R. 88.5"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(speedy-trial-report-period) == 2027-03-22
+}
+
+test "criminal motion period: 28 days after the trigger" cite "S.D. Fla. L.R. 88.9(c)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(criminal-motion-period) == 2027-03-29
+}
+
+test "trial discovery period: 14 days after the trigger" cite "S.D. Fla. L.R. 88.10(o)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(trial-discovery-period) == 2027-03-15
+}
+
+test "expert summary period: 14 days after the trigger" cite "S.D. Fla. L.R. 88.10(o)"
+{
+  given ExpertSummaryRequested() on 2027-03-01
+  expect deadline(expert-summary-period) == 2027-03-15
+}
+
+test "expert case in chief disclosure period: 21 days before the trigger" cite "S.D. Fla. L.R. 88.10(o)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(expert-case-in-chief-disclosure-period) == 2027-02-08
+}
+
+test "expert rebuttal disclosure period: 7 days before the trigger" cite "S.D. Fla. L.R. 88.10(o)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(expert-rebuttal-disclosure-period) == 2027-02-22
+}
+
+test "post trial discovery period: 7 days before the trigger" cite "S.D. Fla. L.R. 88.10(o)"
+{
+  given PostTrialHearingScheduled() on 2027-03-01
+  expect deadline(post-trial-discovery-period) == 2027-02-22
+}
+
+test "presentence interview period: 7 days after the trigger" cite "S.D. Fla. L.R. 88.8(a)"
+{
+  given GuiltEntered() on 2027-03-01
+  expect deadline(presentence-interview-period) == 2027-03-08
+}
+
+test "sentencing conference period: 7 days before the trigger" cite "S.D. Fla. L.R. 88.8(b)"
+{
+  given SentencingHearingScheduled() on 2027-03-01
+  expect deadline(sentencing-conference-period) == 2027-02-22
+}
+
+test "sentencing notice period: 5 days before the trigger" cite "S.D. Fla. L.R. 88.8(b)"
+{
+  given SentencingHearingScheduled() on 2027-03-01
+  expect deadline(sentencing-notice-period) == 2027-02-24
+}

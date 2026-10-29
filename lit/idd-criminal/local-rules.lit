@@ -110,3 +110,33 @@ deadline magistrate-objection-response-period: 14.days after MagistrateObjection
 {
   forum frcrimp
 }
+
+test "misdemeanor appeal transcript: 30 days after the trigger" cite "Dist. Idaho Loc. Crim. R. 58.2(b)"
+{
+  given AppealTranscriptOrdered() on 2027-03-01
+  expect deadline(misdemeanor-appeal-transcript) == 2027-03-31
+}
+
+test "misdemeanor appellant brief: 21 days after the trigger" cite "Dist. Idaho Loc. Crim. R. 58.2(e)"
+{
+  given MisdemeanorAppealHearingNoticed() on 2027-03-01
+  expect deadline(misdemeanor-appellant-brief) == 2027-03-22
+}
+
+test "misdemeanor appellee brief: 21 days after the trigger" cite "Dist. Idaho Loc. Crim. R. 58.2(e)"
+{
+  given AppellantBriefServed() on 2027-03-01
+  expect deadline(misdemeanor-appellee-brief) == 2027-03-22
+}
+
+test "misdemeanor reply brief: 7 days after the trigger" cite "Dist. Idaho Loc. Crim. R. 58.2(e)"
+{
+  given AppelleeBriefServed() on 2027-03-01
+  expect deadline(misdemeanor-reply-brief) == 2027-03-08
+}
+
+test "magistrate objection response period: 14 days after the trigger" cite "Dist. Idaho Loc. Crim. R. 59.1(b)"
+{
+  given MagistrateObjectionServed() on 2027-03-01
+  expect deadline(magistrate-objection-response-period) == 2027-03-15
+}

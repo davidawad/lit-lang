@@ -188,3 +188,69 @@ deadline petty-reply-brief-period: 7.days after PettyAppelleeBriefFiled() counte
 {
   forum frcrimp
 }
+
+test "psr interview response: 7 days after the trigger" cite "D.N.M.LR-Cr. 32.A"
+{
+  given PsrInterviewRequested() on 2027-03-01
+  expect deadline(psr-interview-response) == 2027-03-08
+}
+
+test "psr objection conferral: 14 days after the trigger" cite "D.N.M.LR-Cr. 32.C(1); D.N.M.LR-Cr. 32.C(5)"
+{
+  given InitialPsrFiled() on 2027-03-01
+  expect deadline(psr-objection-conferral) == 2027-03-15
+}
+
+test "unresolved objection or departure: 14 days before the trigger" cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(unresolved-objection-or-departure) == 2027-02-16
+}
+
+test "sentencing objection response: 7 days after the trigger" cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
+{
+  given SentencingObjectionFiled() on 2027-03-01
+  expect deadline(sentencing-objection-response) == 2027-03-08
+}
+
+test "sentencing objection reply: 3 days after the trigger" cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
+{
+  given SentencingResponseFiled() on 2027-03-01
+  expect deadline(sentencing-objection-reply) == 2027-03-04
+}
+
+test "sentencing memorandum: 14 days before the trigger" cite "D.N.M.LR-Cr. 32.C(3); D.N.M.LR-Cr. 32.C(5)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(sentencing-memorandum) == 2027-02-16
+}
+
+test "response period: 14 days after the trigger" cite "D.N.M.LR-Cr. 47.8(a)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(response-period) == 2027-03-15
+}
+
+test "reply period: 14 days after the trigger" cite "D.N.M.LR-Cr. 47.8(a)"
+{
+  given ResponseServed() on 2027-03-01
+  expect deadline(reply-period) == 2027-03-15
+}
+
+test "petty appellant brief period: 14 days after the trigger" cite "D.N.M.LR-Cr. 58.2(a)"
+{
+  given PettyAppealNoticed() on 2027-03-01
+  expect deadline(petty-appellant-brief-period) == 2027-03-15
+}
+
+test "petty appellee brief period: 14 days after the trigger" cite "D.N.M.LR-Cr. 58.2(b)"
+{
+  given PettyAppellantBriefFiled() on 2027-03-01
+  expect deadline(petty-appellee-brief-period) == 2027-03-15
+}
+
+test "petty reply brief period: 7 days after the trigger" cite "D.N.M.LR-Cr. 58.2(c)"
+{
+  given PettyAppelleeBriefFiled() on 2027-03-01
+  expect deadline(petty-reply-brief-period) == 2027-03-08
+}

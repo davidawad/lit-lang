@@ -99,3 +99,51 @@ deadline record-stipulation-period: 21.days after NoticeOfAppealFiled() counted_
 {
   forum frcrimp
 }
+
+test "pretrial motion period: 14 days after the trigger" cite "E.D. Va. Loc. Crim. R. 12(A)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(pretrial-motion-period) == 2027-03-15
+}
+
+test "pretrial response period: 14 days after the trigger" cite "E.D. Va. Loc. Crim. R. 12(A)"
+{
+  given PretrialMotionFiled() on 2027-03-01
+  expect deadline(pretrial-response-period) == 2027-03-15
+}
+
+test "peremptory challenge motion period: 21 days before the trigger" cite "E.D. Va. Loc. Crim. R. 24(B)"
+{
+  given TrialDate() on 2027-03-01
+  expect deadline(peremptory-challenge-motion-period) == 2027-02-08
+}
+
+test "jury instructions period: 7 days before the trigger" cite "E.D. Va. Loc. Crim. R. 30"
+{
+  given TrialDate() on 2027-03-01
+  expect deadline(jury-instructions-period) == 2027-02-22
+}
+
+test "motion setting period: 30 days after the trigger" cite "E.D. Va. Loc. Crim. R. 47(E)"
+{
+  given MotionFiled() on 2027-03-01
+  expect deadline(motion-setting-period) == 2027-03-31
+}
+
+test "response period: 14 days after the trigger" cite "E.D. Va. Loc. Crim. R. 47(F)(1)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(response-period) == 2027-03-15
+}
+
+test "reply period: 6 days after the trigger" cite "E.D. Va. Loc. Crim. R. 47(F)(1)"
+{
+  given ResponseServed() on 2027-03-02
+  expect deadline(reply-period) == 2027-03-08
+}
+
+test "record stipulation period: 21 days after the trigger" cite "E.D. Va. Loc. Crim. R. 57.3(D)"
+{
+  given NoticeOfAppealFiled() on 2027-03-01
+  expect deadline(record-stipulation-period) == 2027-03-22
+}

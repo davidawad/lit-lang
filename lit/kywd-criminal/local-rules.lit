@@ -43,3 +43,27 @@ deadline motion-reply-period: 14.days after ResponseServed() counted_by frcrimp4
 /// an attorney of record may not withdraw within twenty-one days of trial
 /// or an evidentiary hearing.
 deadline withdrawal-cutoff: 21.days before TrialOrHearingScheduled() counted_by frcrimp45 cite "W.D. Ky. LCrR 57.6"
+
+test "extension response period: 7 days after the trigger" cite "W.D. Ky. LCrR 47.1(b)"
+{
+  given ExtensionMotionServed() on 2027-03-01
+  expect deadline(extension-response-period) == 2027-03-08
+}
+
+test "motion response period: 14 days after the trigger" cite "W.D. Ky. LCrR 47.1(d)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(motion-response-period) == 2027-03-15
+}
+
+test "motion reply period: 14 days after the trigger" cite "W.D. Ky. LCrR 47.1(d)"
+{
+  given ResponseServed() on 2027-03-01
+  expect deadline(motion-reply-period) == 2027-03-15
+}
+
+test "withdrawal cutoff: 21 days before the trigger" cite "W.D. Ky. LCrR 57.6"
+{
+  given TrialOrHearingScheduled() on 2027-03-01
+  expect deadline(withdrawal-cutoff) == 2027-02-08
+}

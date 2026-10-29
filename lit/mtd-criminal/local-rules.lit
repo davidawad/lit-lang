@@ -227,3 +227,99 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefFiled() counted_by f
 {
   forum frcrimp
 }
+
+test "impeachment disclosure: 7 days before the trigger" cite "D. Mont. L.R. CR 16.1(c)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(impeachment-disclosure) == 2027-02-22
+}
+
+test "government discovery: 14 days after the trigger" cite "D. Mont. L.R. CR 16.1(f)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(government-discovery) == 2027-03-15
+}
+
+test "examination report disclosure: 7 days before the trigger" cite "D. Mont. L.R. CR 16.1(f)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(examination-report-disclosure) == 2027-02-22
+}
+
+test "defense discovery: 21 days after the trigger" cite "D. Mont. L.R. CR 16.2"
+{
+  given DefenseDiscoveryRequested() on 2027-03-01
+  expect deadline(defense-discovery) == 2027-03-22
+}
+
+test "expert disclosure: 21 days before the trigger" cite "D. Mont. L.R. CR 16.3"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(expert-disclosure) == 2027-02-08
+}
+
+test "prisoner production order: 21 days before the trigger" cite "D. Mont. L.R. CR 17.1"
+{
+  given ProceedingScheduled() on 2027-03-01
+  expect deadline(prisoner-production-order) == 2027-02-08
+}
+
+test "marshal service request: 21 days before the trigger" cite "D. Mont. L.R. CR 17.2(a)"
+{
+  given DesiredServiceDate() on 2027-03-01
+  expect deadline(marshal-service-request) == 2027-02-08
+}
+
+test "voir dire questions: 1 court day before the trigger" cite "D. Mont. L.R. CR 24.1(a)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(voir-dire-questions) == 2027-02-26
+}
+
+test "juror interview request: 14 days after the trigger" cite "D. Mont. L.R. CR 24.2(b)"
+{
+  given VerdictReturned() on 2027-03-01
+  expect deadline(juror-interview-request) == 2027-03-15
+}
+
+test "motion response: 14 days after the trigger" cite "D. Mont. L.R. CR 47.2(a)"
+{
+  given MotionFiled() on 2027-03-01
+  expect deadline(motion-response) == 2027-03-15
+}
+
+test "motion reply: 7 days after the trigger" cite "D. Mont. L.R. CR 47.2(a)"
+{
+  given ResponseFiled() on 2027-03-01
+  expect deadline(motion-reply) == 2027-03-08
+}
+
+test "misdemeanor transcript order: 7 days after the trigger" cite "D. Mont. L.R. CR 58.2(a)"
+{
+  given MisdemeanorAppealNoticed() on 2027-03-01
+  expect deadline(misdemeanor-transcript-order) == 2027-03-08
+}
+
+test "misdemeanor transcript filing: 21 days after the trigger" cite "D. Mont. L.R. CR 58.2(a)"
+{
+  given MisdemeanorAppealNoticed() on 2027-03-01
+  expect deadline(misdemeanor-transcript-filing) == 2027-03-22
+}
+
+test "misdemeanor appellant brief: 14 days after the trigger" cite "D. Mont. L.R. CR 58.2(a)"
+{
+  given AppealTranscriptFiled() on 2027-03-01
+  expect deadline(misdemeanor-appellant-brief) == 2027-03-15
+}
+
+test "misdemeanor appellee brief: 14 days after the trigger" cite "D. Mont. L.R. CR 58.2(a)"
+{
+  given AppellantBriefFiled() on 2027-03-01
+  expect deadline(misdemeanor-appellee-brief) == 2027-03-15
+}
+
+test "misdemeanor reply brief: 7 days after the trigger" cite "D. Mont. L.R. CR 58.2(a)"
+{
+  given AppelleeBriefFiled() on 2027-03-01
+  expect deadline(misdemeanor-reply-brief) == 2027-03-08
+}

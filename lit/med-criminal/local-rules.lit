@@ -207,3 +207,75 @@ deadline exhibit-withdrawal: 30.days after FinalDetermination() counted_by frcri
 {
   forum frcrimp
 }
+
+test "plea agreement filing: 2 business days before the trigger" cite "D. Me. Local R. 111"
+{
+  given ChangeOfPleaScheduled() on 2027-03-01
+  expect deadline(plea-agreement-filing) == 2027-02-25
+}
+
+test "voir dire questions: 3 days before the trigger" cite "D. Me. Local R. 124.1"
+{
+  given EmpanelmentScheduled() on 2027-03-01
+  expect deadline(voir-dire-questions) == 2027-02-26
+}
+
+test "jury instruction requests: 3 days before the trigger" cite "D. Me. Local R. 130"
+{
+  given EmpanelmentScheduled() on 2027-03-01
+  expect deadline(jury-instruction-requests) == 2027-02-26
+}
+
+test "trial brief filing: 3 days before the trigger" cite "D. Me. Local R. 157.2"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(trial-brief-filing) == 2027-02-26
+}
+
+test "cooperation motion: 5 business days before the trigger" cite "D. Me. Local R. 132(g)"
+{
+  given SentencingHearingScheduled() on 2027-03-01
+  expect deadline(cooperation-motion) == 2027-02-22
+}
+
+test "sentencing exhibits: 5 business days before the trigger" cite "D. Me. Local R. 132(g)"
+{
+  given SentencingHearingScheduled() on 2027-03-01
+  expect deadline(sentencing-exhibits) == 2027-02-22
+}
+
+test "revocation report: 10 days after the trigger" cite "D. Me. Local R. 132.1(a)"
+{
+  given RevocationTrigger() on 2027-03-01
+  expect deadline(revocation-report) == 2027-03-11
+}
+
+test "objection period: 21 days after the trigger" cite "D. Me. Local R. 147(b)"
+{
+  given MotionFiled() on 2027-03-01
+  expect deadline(objection-period) == 2027-03-22
+}
+
+test "dispositive objection period: 21 days after the trigger" cite "D. Me. Local R. 147(b)"
+{
+  given DispositiveMotionFiled() on 2027-03-01
+  expect deadline(dispositive-objection-period) == 2027-03-22
+}
+
+test "reply period: 14 days after the trigger" cite "D. Me. Local R. 147(c)"
+{
+  given ObjectionFiled() on 2027-03-01
+  expect deadline(reply-period) == 2027-03-15
+}
+
+test "exhibit withdrawal: 30 days after the trigger" cite "D. Me. Local R. 123(f)"
+{
+  given FinalDetermination() on 2027-03-01
+  expect deadline(exhibit-withdrawal) == 2027-03-31
+}
+
+test "revised psr filing: 77 days after the trigger" cite "D. Me. Local R. 132(b); D. Me. Local R. 132(e)"
+{
+  given VerdictOrDischarge(Verdict) on 2027-03-01
+  expect deadline(revised-psr-filing) == 2027-05-17
+}

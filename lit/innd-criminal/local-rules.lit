@@ -65,3 +65,21 @@ deadline authentication-objection: 14.days before TrialDateSet() counted_by frcr
 {
   forum frcrimp
 }
+
+test "grand jury subpoena challenge: 7 days before the trigger" cite "N.D. Ind. L. Cr. R. 6-1(d)"
+{
+  given GrandJurySubpoenaReturnDate() on 2027-03-01
+  expect deadline(grand-jury-subpoena-challenge) == 2027-02-22
+}
+
+test "authentication notice: 30 days before the trigger" cite "N.D. Ind. L. Cr. R. 12-1(a)"
+{
+  given TrialDateSet() on 2027-03-03
+  expect deadline(authentication-notice) == 2027-02-01
+}
+
+test "authentication objection: 14 days before the trigger" cite "N.D. Ind. L. Cr. R. 12-1(b)"
+{
+  given TrialDateSet() on 2027-03-02
+  expect deadline(authentication-objection) == 2027-02-16
+}

@@ -114,3 +114,39 @@ deadline magistrate-order-review: 14.days after MagistrateOrderEntered() counted
 {
   forum frcrimp
 }
+
+test "response period: 14 days after the trigger" cite "D. Kan. Rule CR1.2"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(response-period) == 2027-03-15
+}
+
+test "reply period: 7 days after the trigger" cite "D. Kan. Rule CR1.2"
+{
+  given ResponseServed() on 2027-03-01
+  expect deadline(reply-period) == 2027-03-08
+}
+
+test "supplemental authority response: 5 days after the trigger" cite "D. Kan. Rule CR1.3(c)"
+{
+  given SupplementalAuthorityNoticed() on 2027-03-03
+  expect deadline(supplemental-authority-response) == 2027-03-08
+}
+
+test "sentencing factors statement: 5 days before the trigger" cite "D. Kan. Rule CR32.1(c)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-factors-statement) == 2027-02-24
+}
+
+test "reconsideration motion: 14 days after the trigger" cite "D. Kan. Rule 7.3"
+{
+  given OrderServed() on 2027-03-01
+  expect deadline(reconsideration-motion) == 2027-03-15
+}
+
+test "magistrate order review: 14 days after the trigger" cite "D. Kan. Rule 72.1.4(e)"
+{
+  given MagistrateOrderEntered() on 2027-03-01
+  expect deadline(magistrate-order-review) == 2027-03-15
+}

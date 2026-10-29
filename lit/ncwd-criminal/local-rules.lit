@@ -74,3 +74,39 @@ deadline response-period: 7.days after MotionServed() counted_by frcrimp45 cite 
 {
   forum frcrimp
 }
+
+test "subpoena request period: 14 days before the trigger" cite "W.D.N.C. LCrR 17.2"
+{
+  given WitnessNeeded() on 2027-03-02
+  expect deadline(subpoena-request-period) == 2027-02-16
+}
+
+test "writ out of district period: 21 days before the trigger" cite "W.D.N.C. LCrR 17.3"
+{
+  given WitnessNeeded() on 2027-03-01
+  expect deadline(writ-out-of-district-period) == 2027-02-08
+}
+
+test "writ in district period: 14 days before the trigger" cite "W.D.N.C. LCrR 17.3"
+{
+  given WitnessNeeded() on 2027-03-02
+  expect deadline(writ-in-district-period) == 2027-02-16
+}
+
+test "relevant conduct response period: 7 days after the trigger" cite "W.D.N.C. LCrR 32.4(b)"
+{
+  given RelevantConductSubmitted() on 2027-03-01
+  expect deadline(relevant-conduct-response-period) == 2027-03-08
+}
+
+test "sentencing memoranda period: 7 days before the trigger" cite "W.D.N.C. LCrR 32.5(c)"
+{
+  given SentencingHearing() on 2027-03-01
+  expect deadline(sentencing-memoranda-period) == 2027-02-22
+}
+
+test "response period: 7 days after the trigger" cite "W.D.N.C. LCrR 47.1(e)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(response-period) == 2027-03-08
+}

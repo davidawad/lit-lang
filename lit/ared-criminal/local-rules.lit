@@ -52,3 +52,15 @@ deadline magistrate-review-period: 14.days after MagistrateActionTaken() counted
 {
   forum frcrimp
 }
+
+test "opposition period: 14 days after the trigger" cite "E.D. Ark. L.R. 7.2(b)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(opposition-period) == 2027-03-15
+}
+
+test "magistrate review period: 14 days after the trigger" cite "E.D. Ark. L.R. 72.1"
+{
+  given MagistrateActionTaken() on 2027-03-01
+  expect deadline(magistrate-review-period) == 2027-03-15
+}

@@ -112,3 +112,57 @@ deadline oral-order-joint-statement-period: 14.days after ObjectionsServed() cou
 {
   forum frcrimp
 }
+
+test "nolo response period: 7 days after the trigger" cite "N.D. Ga. LCrR 11.1(B)"
+{
+  given NoloTenderFiled() on 2027-03-01
+  expect deadline(nolo-response-period) == 2027-03-08
+}
+
+test "criminal motion period: 14 days after the trigger" cite "N.D. Ga. LCrR 12.1(B)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(criminal-motion-period) == 2027-03-15
+}
+
+test "defense discovery period: 21 days before the trigger" cite "N.D. Ga. LCrR 16.1"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(defense-discovery-period) == 2027-02-08
+}
+
+test "pretrial conference period: 14 days after the trigger" cite "N.D. Ga. LCrR 17.1(A)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(pretrial-conference-period) == 2027-03-15
+}
+
+test "retained appearance period: 3 days after the trigger" cite "N.D. Ga. LCrR 57.1(D)"
+{
+  given CounselRetained() on 2027-03-01
+  expect deadline(retained-appearance-period) == 2027-03-04
+}
+
+test "withdrawal client notice period: 14 days before the trigger" cite "N.D. Ga. LCrR 57.1(E)"
+{
+  given WithdrawalMotionFiled() on 2027-03-02
+  expect deadline(withdrawal-client-notice-period) == 2027-02-16
+}
+
+test "replacement counsel period: 21 days after the trigger" cite "N.D. Ga. LCrR 57.1(E)"
+{
+  given AttorneyCeasedToAct() on 2027-03-01
+  expect deadline(replacement-counsel-period) == 2027-03-22
+}
+
+test "objection response period: 14 days after the trigger" cite "N.D. Ga. LCrR 59"
+{
+  given ObjectionsServed() on 2027-03-01
+  expect deadline(objection-response-period) == 2027-03-15
+}
+
+test "oral order joint statement period: 14 days after the trigger" cite "N.D. Ga. LCrR 59"
+{
+  given ObjectionsServed() on 2027-03-01
+  expect deadline(oral-order-joint-statement-period) == 2027-03-15
+}

@@ -282,3 +282,111 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 cite
 {
   forum frcrimp
 }
+
+test "discovery motion: 14 days after the trigger" cite "D.P.R. L.Crim.R. 116(b)"
+{
+  given DiscoveryReplyReceived() on 2027-03-01
+  expect deadline(discovery-motion) == 2027-03-15
+}
+
+test "discovery motion response: 14 days after the trigger" cite "D.P.R. L.Crim.R. 116(b)"
+{
+  given DiscoveryMotionReceived() on 2027-03-01
+  expect deadline(discovery-motion-response) == 2027-03-15
+}
+
+test "law enforcement notes: 30 days after the trigger" cite "D.P.R. L.Crim.R. 116B"
+{
+  given IndictmentFiled() on 2027-03-01
+  expect deadline(law-enforcement-notes) == 2027-03-31
+}
+
+test "exhibit removal: 30 days after the trigger" cite "D.P.R. L.Crim.R. 123(e)"
+{
+  given ExhibitRemovalNoticed() on 2027-03-01
+  expect deadline(exhibit-removal) == 2027-03-31
+}
+
+test "special voir dire: 7 days before the trigger" cite "D.P.R. L.Crim.R. 124(a)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(special-voir-dire) == 2027-02-22
+}
+
+test "jury instruction requests: 7 days before the trigger" cite "D.P.R. L.Crim.R. 130"
+{
+  given ImpanelmentScheduled() on 2027-03-01
+  expect deadline(jury-instruction-requests) == 2027-02-22
+}
+
+test "government version of facts: 21 days after the trigger" cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
+{
+  given GuiltEstablished() on 2027-03-01
+  expect deadline(government-version-of-facts) == 2027-03-22
+}
+
+test "presentence interview: 14 days after the trigger" cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
+{
+  given ChangeOfPleaHearing() on 2027-03-01
+  expect deadline(presentence-interview) == 2027-03-15
+}
+
+test "departure motion: 14 days before the trigger" cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
+{
+  given SentencingHearingScheduled() on 2027-03-02
+  expect deadline(departure-motion) == 2027-02-16
+}
+
+test "revocation disclosure: 14 days after the trigger" cite "D.P.R. L.Crim.R. 132.1(a)"
+{
+  given RevocationInitialAppearance() on 2027-03-01
+  expect deadline(revocation-disclosure) == 2027-03-15
+}
+
+test "cja voucher: 45 days after the trigger" cite "D.P.R. L.Crim.R. 144(b)"
+{
+  given CjaDisposition() on 2027-03-01
+  expect deadline(cja-voucher) == 2027-04-15
+}
+
+test "cja reduction response: 10 days after the trigger" cite "D.P.R. L.Crim.R. 144(c)"
+{
+  given CjaVoucherReduced() on 2027-03-01
+  expect deadline(cja-reduction-response) == 2027-03-11
+}
+
+test "capital mitigation submission: 90 days after the trigger" cite "D.P.R. L.Crim.R. 144A(k)"
+{
+  given CapitalIndictment() on 2027-03-03
+  expect deadline(capital-mitigation-submission) == 2027-06-01
+}
+
+test "death penalty evaluation: 60 days after the trigger" cite "D.P.R. L.Crim.R. 144A(k)"
+{
+  given CapitalMitigationPeriodElapsed() on 2027-03-01
+  expect deadline(death-penalty-evaluation) == 2027-04-30
+}
+
+test "death penalty notice: 30 days after the trigger" cite "D.P.R. L.Crim.R. 144A(k)"
+{
+  given DeathPenaltyEvaluationSubmitted() on 2027-03-01
+  expect deadline(death-penalty-notice) == 2027-03-31
+}
+
+test "opposition period: 14 days after the trigger" cite "D.P.R. L.Crim.R. 147(b)"
+{
+  given MotionFiled() on 2027-03-01
+  expect deadline(opposition-period) == 2027-03-15
+}
+
+test "dispositive opposition period: 14 days after the trigger" cite "D.P.R. L.Crim.R. 147(b)"
+{
+  given DispositiveMotionFiled() on 2027-03-01
+  expect deadline(dispositive-opposition-period) == 2027-03-15
+}
+
+test "reply period: 7 days after the trigger" cite "D.P.R. L.Crim.R. 147(c)"
+{
+  given OppositionServed() on 2027-03-01
+  expect deadline(reply-period) == 2027-03-08
+}

@@ -181,3 +181,87 @@ deadline objection-response-before-trial-period: 7.days before TrialScheduled() 
 {
   forum frcrimp
 }
+
+test "release detention review period: 14 days after the trigger" cite "S.D. Iowa LCrR 5(a)"
+{
+  given ReleaseOrDetentionOrderFiled() on 2027-03-01
+  expect deadline(release-detention-review-period) == 2027-03-15
+}
+
+test "arraignment waiver period: 4 days before the trigger" cite "S.D. Iowa LCrR 10"
+{
+  given ArraignmentScheduled() on 2027-03-01
+  expect deadline(arraignment-waiver-period) == 2027-02-25
+}
+
+test "non trial motion period: 28 days after the trigger" cite "S.D. Iowa LCrR 12(a)"
+{
+  given FirstArraignment() on 2027-03-01
+  expect deadline(non-trial-motion-period) == 2027-03-29
+}
+
+test "notice motion period: 7 days after the trigger" cite "S.D. Iowa LCrR 12(a)"
+{
+  given NoticeOrRequestServed() on 2027-03-01
+  expect deadline(notice-motion-period) == 2027-03-08
+}
+
+test "new deadlines request period: 7 days after the trigger" cite "S.D. Iowa LCrR 12(b)"
+{
+  given ContinuanceOrderEntered() on 2027-03-01
+  expect deadline(new-deadlines-request-period) == 2027-03-08
+}
+
+test "trial motion period: 7 days before the trigger" cite "S.D. Iowa LCrR 12(c)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(trial-motion-period) == 2027-02-22
+}
+
+test "peremptory request period: 14 days before the trigger" cite "S.D. Iowa LCrR 24"
+{
+  given JurySelection() on 2027-03-02
+  expect deadline(peremptory-request-period) == 2027-02-16
+}
+
+test "resistance period: 7 days after the trigger" cite "S.D. Iowa LCrR 47"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(resistance-period) == 2027-03-08
+}
+
+test "resistance before hearing period: 4 days before the trigger" cite "S.D. Iowa LCrR 47"
+{
+  given MotionHearing() on 2027-03-01
+  expect deadline(resistance-before-hearing-period) == 2027-02-25
+}
+
+test "objection response period: 7 days after the trigger" cite "S.D. Iowa LCrR 59"
+{
+  given ObjectionsServed() on 2027-03-01
+  expect deadline(objection-response-period) == 2027-03-08
+}
+
+test "objection before trial period: 14 days before the trigger" cite "S.D. Iowa LCrR 59"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(objection-before-trial-period) == 2027-02-16
+}
+
+test "objection response before trial period: 7 days before the trigger" cite "S.D. Iowa LCrR 59"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(objection-response-before-trial-period) == 2027-02-22
+}
+
+test "marshal delivery in district period: 14 days before the trigger" cite "S.D. Iowa LCrR 17(a); S.D. Iowa LCrR 17(c)"
+{
+  given WitnessHearing(WithinDistrict) on 2027-03-02
+  expect deadline(marshal-delivery-in-district-period) == 2027-02-16
+}
+
+test "marshal delivery out of district period: 21 days before the trigger" cite "S.D. Iowa LCrR 17(a); S.D. Iowa LCrR 17(c)"
+{
+  given WitnessHearing(OutsideDistrict) on 2027-03-01
+  expect deadline(marshal-delivery-out-of-district-period) == 2027-02-08
+}

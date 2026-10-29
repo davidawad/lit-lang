@@ -44,3 +44,15 @@ deadline drug-test-materials-period: 7.days before RevocationHearingScheduled() 
 {
   forum frcrimp
 }
+
+test "drug test challenge notice period: 14 days before the trigger" cite "M.D. Ala. LCrR 57.1"
+{
+  given RevocationHearingScheduled() on 2027-03-02
+  expect deadline(drug-test-challenge-notice-period) == 2027-02-16
+}
+
+test "drug test materials period: 7 days before the trigger" cite "M.D. Ala. LCrR 57.1"
+{
+  given RevocationHearingScheduled() on 2027-03-01
+  expect deadline(drug-test-materials-period) == 2027-02-22
+}

@@ -48,3 +48,21 @@ deadline appeal-response-period: 21.days after AppellantCaseComplete() counted_b
 {
   forum frcrimp
 }
+
+test "appeal grounds period: 14 days after the trigger" cite "W.D. Va. Crim. R. 59(a)"
+{
+  given MagistrateAppealNoticed() on 2027-03-01
+  expect deadline(appeal-grounds-period) == 2027-03-15
+}
+
+test "transcript memorandum period: 14 days after the trigger" cite "W.D. Va. Crim. R. 59(a)"
+{
+  given AppealTranscriptFiled() on 2027-03-01
+  expect deadline(transcript-memorandum-period) == 2027-03-15
+}
+
+test "appeal response period: 21 days after the trigger" cite "W.D. Va. Crim. R. 59(b)"
+{
+  given AppellantCaseComplete() on 2027-03-01
+  expect deadline(appeal-response-period) == 2027-03-22
+}

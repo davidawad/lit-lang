@@ -140,3 +140,57 @@ deadline violation-notice-election: 21.days after ViolationNoticeIssued() counte
 {
   forum frcrimp
 }
+
+test "continuance opposition: 7 days after the trigger" cite "M.D. Pa. LCrR 12.1(c)"
+{
+  given ContinuanceMotionServed() on 2027-03-01
+  expect deadline(continuance-opposition) == 2027-03-08
+}
+
+test "psr disclosure date: 56 days after the trigger" cite "M.D. Pa. LCrR 32.1(a); M.D. Pa. LCrR 32.1(j)"
+{
+  given GuiltyVerdictOrPlea() on 2027-03-01
+  expect deadline(psr-disclosure-date) == 2027-04-26
+}
+
+test "sentencing date: 98 days after the trigger" cite "M.D. Pa. LCrR 32.1(a); M.D. Pa. LCrR 32.1(j)"
+{
+  given GuiltyVerdictOrPlea() on 2027-03-01
+  expect deadline(sentencing-date) == 2027-06-07
+}
+
+test "offense conduct statement: 7 days after the trigger" cite "M.D. Pa. LCrR 32.1(c); M.D. Pa. LCrR 32.1(j)"
+{
+  given GuiltyVerdictOrPlea() on 2027-03-01
+  expect deadline(offense-conduct-statement) == 2027-03-08
+}
+
+test "restitution information: 28 days after the trigger" cite "M.D. Pa. LCrR 32.1(c); M.D. Pa. LCrR 32.1(j)"
+{
+  given GuiltyVerdictOrPlea() on 2027-03-01
+  expect deadline(restitution-information) == 2027-03-29
+}
+
+test "misdemeanor appellant brief: 14 days after the trigger" cite "M.D. Pa. LCrR 58.1"
+{
+  given MisdemeanorAppealFiled() on 2027-03-01
+  expect deadline(misdemeanor-appellant-brief) == 2027-03-15
+}
+
+test "misdemeanor appellee brief: 14 days after the trigger" cite "M.D. Pa. LCrR 58.1"
+{
+  given AppellantBriefReceived() on 2027-03-01
+  expect deadline(misdemeanor-appellee-brief) == 2027-03-15
+}
+
+test "misdemeanor reply brief: 7 days after the trigger" cite "M.D. Pa. LCrR 58.1"
+{
+  given AppelleeBriefReceived() on 2027-03-01
+  expect deadline(misdemeanor-reply-brief) == 2027-03-08
+}
+
+test "violation notice election: 21 days after the trigger" cite "M.D. Pa. LCrR 58.3(b)"
+{
+  given ViolationNoticeIssued() on 2027-03-01
+  expect deadline(violation-notice-election) == 2027-03-22
+}

@@ -119,3 +119,39 @@ deadline reconsideration-period: 14.days after MotionDetermined() counted_by frc
 {
   forum frcrimp
 }
+
+test "supplemental disclosure statement: 14 days after the trigger" cite "E.D.N.Y. Local Crim. R. 12.4"
+{
+  given DisclosureInformationChanged() on 2027-03-01
+  expect deadline(supplemental-disclosure-statement) == 2027-03-15
+}
+
+test "government expert disclosure: 60 days before the trigger" cite "E.D.N.Y. Local Crim. R. 16.2"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(government-expert-disclosure) == 2026-12-31
+}
+
+test "defense expert disclosure: 30 days before the trigger" cite "E.D.N.Y. Local Crim. R. 16.2"
+{
+  given TrialScheduled() on 2027-03-03
+  expect deadline(defense-expert-disclosure) == 2027-02-01
+}
+
+test "opposition period: 14 days after the trigger" cite "E.D.N.Y. Local Crim. R. 49.1(a)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(opposition-period) == 2027-03-15
+}
+
+test "reply period: 7 days after the trigger" cite "E.D.N.Y. Local Crim. R. 49.1(a)"
+{
+  given OppositionServed() on 2027-03-01
+  expect deadline(reply-period) == 2027-03-08
+}
+
+test "reconsideration period: 14 days after the trigger" cite "E.D.N.Y. Local Crim. R. 49.1(b)"
+{
+  given MotionDetermined() on 2027-03-01
+  expect deadline(reconsideration-period) == 2027-03-15
+}

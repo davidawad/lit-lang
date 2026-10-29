@@ -172,3 +172,93 @@ deadline misdemeanor-reply-brief-period: 7.days after MisdemeanorAppelleeBriefSe
 {
   forum frcrimp
 }
+
+test "retained counsel withdrawal period: 7 days after the trigger" cite "N.D. Fla. Loc. R. 11.1(I)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(retained-counsel-withdrawal-period) == 2027-03-08
+}
+
+test "defense discovery contact period: 7 days after the trigger" cite "N.D. Fla. Loc. R. 26.2(B)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(defense-discovery-contact-period) == 2027-03-08
+}
+
+test "government disclosure period: 7 days after the trigger" cite "N.D. Fla. Loc. R. 26.2(B)"
+{
+  given DefenseDisclosureRequested() on 2027-03-01
+  expect deadline(government-disclosure-period) == 2027-03-08
+}
+
+test "brady giglio disclosure period: 7 days after the trigger" cite "N.D. Fla. Loc. R. 26.2(D)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(brady-giglio-disclosure-period) == 2027-03-08
+}
+
+test "government reciprocal request period: 3 days after the trigger" cite "N.D. Fla. Loc. R. 26.2(C)"
+{
+  given DefenseRequestMet() on 2027-03-01
+  expect deadline(government-reciprocal-request-period) == 2027-03-04
+}
+
+test "defense documents period: 7 days after the trigger" cite "N.D. Fla. Loc. R. 26.2(C)"
+{
+  given GovernmentDisclosureRequested() on 2027-03-01
+  expect deadline(defense-documents-period) == 2027-03-08
+}
+
+test "defense expert summary period: 14 days after the trigger" cite "N.D. Fla. Loc. R. 26.2(C)"
+{
+  given GovernmentDisclosureRequested() on 2027-03-01
+  expect deadline(defense-expert-summary-period) == 2027-03-15
+}
+
+test "defense reports period: 30 days before the trigger" cite "N.D. Fla. Loc. R. 26.2(C)"
+{
+  given TrialScheduled() on 2027-03-03
+  expect deadline(defense-reports-period) == 2027-02-01
+}
+
+test "insanity notice period: 14 days after the trigger" cite "N.D. Fla. Loc. R. 26.2(F)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(insanity-notice-period) == 2027-03-15
+}
+
+test "entrapment notice period: 14 days before the trigger" cite "N.D. Fla. Loc. R. 26.2(F)"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(entrapment-notice-period) == 2027-02-16
+}
+
+test "discovery conference period: 7 days before the trigger" cite "N.D. Fla. Loc. R. 26.2(G)"
+{
+  given JurySelectionScheduled() on 2027-03-01
+  expect deadline(discovery-conference-period) == 2027-02-22
+}
+
+test "sentencing memorandum period: 3 days before the trigger" cite "N.D. Fla. Loc. R. 88.1(G)"
+{
+  given SentencingHearingScheduled() on 2027-03-01
+  expect deadline(sentencing-memorandum-period) == 2027-02-26
+}
+
+test "misdemeanor appellant brief period: 15 days after the trigger" cite "N.D. Fla. Loc. R. 88.2(D)"
+{
+  given MisdemeanorAppealRecordReady() on 2027-03-01
+  expect deadline(misdemeanor-appellant-brief-period) == 2027-03-16
+}
+
+test "misdemeanor appellee brief period: 15 days after the trigger" cite "N.D. Fla. Loc. R. 88.2(D)"
+{
+  given MisdemeanorAppellantBriefServed() on 2027-03-01
+  expect deadline(misdemeanor-appellee-brief-period) == 2027-03-16
+}
+
+test "misdemeanor reply brief period: 7 days after the trigger" cite "N.D. Fla. Loc. R. 88.2(D)"
+{
+  given MisdemeanorAppelleeBriefServed() on 2027-03-01
+  expect deadline(misdemeanor-reply-brief-period) == 2027-03-08
+}

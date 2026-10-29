@@ -78,3 +78,39 @@ deadline encumbrance-notice-period: 14.days after RealPropertyBondApproved() cou
 {
   forum frcrimp
 }
+
+test "pretrial motion period: 14 days before the trigger" cite "S.D. W. Va. LR Cr P 12.1(a)"
+{
+  given PretrialMotionsHearing() on 2027-03-02
+  expect deadline(pretrial-motion-period) == 2027-02-16
+}
+
+test "pretrial response period: 7 days after the trigger" cite "S.D. W. Va. LR Cr P 12.1(c)"
+{
+  given PretrialMotionFiled() on 2027-03-01
+  expect deadline(pretrial-response-period) == 2027-03-08
+}
+
+test "technology certification period: 7 days before the trigger" cite "S.D. W. Va. LR Cr P 12.1(e)"
+{
+  given TechnologyProceeding() on 2027-03-01
+  expect deadline(technology-certification-period) == 2027-02-22
+}
+
+test "standard discovery period: 14 days after the trigger" cite "S.D. W. Va. LR Cr P 16.1(c)"
+{
+  given StandardDiscoveryRequested() on 2027-03-01
+  expect deadline(standard-discovery-period) == 2027-03-15
+}
+
+test "reciprocal discovery period: 14 days after the trigger" cite "S.D. W. Va. LR Cr P 16.1(d)"
+{
+  given GovernmentDiscoveryReceived() on 2027-03-01
+  expect deadline(reciprocal-discovery-period) == 2027-03-15
+}
+
+test "encumbrance notice period: 14 days after the trigger" cite "S.D. W. Va. LR Cr P 46.1(c)(2)"
+{
+  given RealPropertyBondApproved() on 2027-03-01
+  expect deadline(encumbrance-notice-period) == 2027-03-15
+}

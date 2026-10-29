@@ -230,3 +230,93 @@ deadline reply-brief: 7.days after AnsweringBriefReceived() counted_by frcrimp45
 {
   forum frcrimp
 }
+
+test "pretrial motions: 21 days after the trigger" cite "N.D. Ill. LCR 12.1(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(pretrial-motions) == 2027-03-22
+}
+
+test "discovery conference: 7 days after the trigger" cite "N.D. Ill. LCR 16.1(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(discovery-conference) == 2027-03-08
+}
+
+test "disclosure declination: 5 days after the trigger" cite "N.D. Ill. LCR 16.1(b)"
+{
+  given DiscoveryConferenceHeld() on 2027-03-03
+  expect deadline(disclosure-declination) == 2027-03-08
+}
+
+test "additional discovery motion: 7 days after the trigger" cite "N.D. Ill. LCR 12.1(b)"
+{
+  given DiscoveryConferenceHeld() on 2027-03-01
+  expect deadline(additional-discovery-motion) == 2027-03-08
+}
+
+test "presentence interview: 14 days after the trigger" cite "N.D. Ill. LCR 32.1(d)"
+{
+  given GuiltDetermined() on 2027-03-01
+  expect deadline(presentence-interview) == 2027-03-15
+}
+
+test "government version: 14 days after the trigger" cite "N.D. Ill. LCR 32.1(e)"
+{
+  given GuiltDetermined() on 2027-03-01
+  expect deadline(government-version) == 2027-03-15
+}
+
+test "defendant version: 7 days after the trigger" cite "N.D. Ill. LCR 32.1(e)"
+{
+  given GovernmentVersionSubmitted() on 2027-03-01
+  expect deadline(defendant-version) == 2027-03-08
+}
+
+test "codefendant role version: 7 days after the trigger" cite "N.D. Ill. LCR 32.1(e)"
+{
+  given CodefendantVersionsReceived() on 2027-03-01
+  expect deadline(codefendant-role-version) == 2027-03-08
+}
+
+test "defense position paper: 14 days before the trigger" cite "N.D. Ill. LCR 32.1(g); N.D. Ill. LCR 32.1(c)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(defense-position-paper) == 2027-02-16
+}
+
+test "government position response: 7 days after the trigger" cite "N.D. Ill. LCR 32.1(g)"
+{
+  given DefensePositionPaperFiled() on 2027-03-01
+  expect deadline(government-position-response) == 2027-03-08
+}
+
+test "seal extension motion: 3 days before the trigger" cite "N.D. Ill. LCR 41(e)"
+{
+  given WarrantSealExpires() on 2027-03-01
+  expect deadline(seal-extension-motion) == 2027-02-26
+}
+
+test "warrant return filing: 60 days after the trigger" cite "N.D. Ill. LCR 41(f)"
+{
+  given WarrantExecuted() on 2027-03-01
+  expect deadline(warrant-return-filing) == 2027-04-30
+}
+
+test "cja final voucher: 45 days after the trigger" cite "N.D. Ill. LCR 44.1"
+{
+  given CjaRepresentationConcluded() on 2027-03-01
+  expect deadline(cja-final-voucher) == 2027-04-15
+}
+
+test "answering brief: 14 days after the trigger" cite "N.D. Ill. LCR 47.1(b)"
+{
+  given SupportingBriefReceived() on 2027-03-01
+  expect deadline(answering-brief) == 2027-03-15
+}
+
+test "reply brief: 7 days after the trigger" cite "N.D. Ill. LCR 47.1(b)"
+{
+  given AnsweringBriefReceived() on 2027-03-01
+  expect deadline(reply-brief) == 2027-03-08
+}

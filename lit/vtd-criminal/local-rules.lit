@@ -111,3 +111,45 @@ deadline presentence-interview-availability: 10.days after ConvictionOrGuiltyPle
 {
   forum frcrimp
 }
+
+test "government discovery: 14 days after the trigger" cite "D. Vt. L. Cr. R. 16(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(government-discovery) == 2027-03-15
+}
+
+test "reciprocal discovery refusal: 5 days after the trigger" cite "D. Vt. L. Cr. R. 16(b)"
+{
+  given Arraigned() on 2027-03-03
+  expect deadline(reciprocal-discovery-refusal) == 2027-03-08
+}
+
+test "defense discovery: 21 days after the trigger" cite "D. Vt. L. Cr. R. 16(b)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(defense-discovery) == 2027-03-22
+}
+
+test "defense notices: 21 days after the trigger" cite "D. Vt. L. Cr. R. 16(c)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(defense-notices) == 2027-03-22
+}
+
+test "government pretrial disclosure: 14 days before the trigger" cite "D. Vt. L. Cr. R. 16(d)"
+{
+  given JurySelectionScheduled() on 2027-03-02
+  expect deadline(government-pretrial-disclosure) == 2027-02-16
+}
+
+test "pretrial filings: 3 days before the trigger" cite "D. Vt. L. Cr. R. 16(h)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(pretrial-filings) == 2027-02-26
+}
+
+test "presentence interview availability: 10 days after the trigger" cite "D. Vt. L. Cr. R. 32(b)"
+{
+  given ConvictionOrGuiltyPlea() on 2027-03-01
+  expect deadline(presentence-interview-availability) == 2027-03-11
+}

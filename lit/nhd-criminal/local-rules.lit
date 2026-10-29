@@ -312,3 +312,165 @@ deadline cja-voucher: 45.days after CjaDisposition() counted_by frcrimp45 cite "
 {
   forum frcrimp
 }
+
+test "complex case status conference: 14 days after the trigger" cite "D.N.H. LCrR 10.2"
+{
+  given ArraignedComplexCase() on 2027-03-01
+  expect deadline(complex-case-status-conference) == 2027-03-15
+}
+
+test "post arraignment meeting: 7 days after the trigger" cite "D.N.H. LCrR 10.3"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(post-arraignment-meeting) == 2027-03-08
+}
+
+test "expedited hearing: 45 days after the trigger" cite "D.N.H. LCrR 11.2(b); D.N.H. LCrR 11.2(e)"
+{
+  given ExpeditedNoticeFiled() on 2027-03-01
+  expect deadline(expedited-hearing) == 2027-04-15
+}
+
+test "expedited psr disclosure: 5 days before the trigger" cite "D.N.H. LCrR 11.2(c)"
+{
+  given ExpeditedHearingScheduled() on 2027-03-01
+  expect deadline(expedited-psr-disclosure) == 2027-02-24
+}
+
+test "discovery motions: 30 days after the trigger" cite "D.N.H. LCrR 12.1(a); D.N.H. LCrR 10.2"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(discovery-motions) == 2027-03-31
+}
+
+test "dispositive motions: 21 days before the trigger" cite "D.N.H. LCrR 12.1(b); D.N.H. LCrR 10.2"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(dispositive-motions) == 2027-02-08
+}
+
+test "motions in limine: 7 days before the trigger" cite "D.N.H. LCrR 12.1(c)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(motions-in-limine) == 2027-02-22
+}
+
+test "indictment extension waiver: 10 days after the trigger" cite "D.N.H. LCrR 12.1(e)"
+{
+  given ExtensionToIndictGranted() on 2027-03-01
+  expect deadline(indictment-extension-waiver) == 2027-03-11
+}
+
+test "objection period: 14 days after the trigger" cite "D.N.H. LCrR 12.1(f)"
+{
+  given MotionFiled() on 2027-03-01
+  expect deadline(objection-period) == 2027-03-15
+}
+
+test "government routine discovery: 14 days after the trigger" cite "D.N.H. LCrR 16.1(b); D.N.H. LCrR 16.1(c)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(government-routine-discovery) == 2027-03-15
+}
+
+test "defendant routine discovery: 30 days after the trigger" cite "D.N.H. LCrR 16.1(b)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(defendant-routine-discovery) == 2027-03-31
+}
+
+test "later expert disclosure: 30 days before the trigger" cite "D.N.H. LCrR 16.1(b)"
+{
+  given TrialScheduled() on 2027-03-03
+  expect deadline(later-expert-disclosure) == 2027-02-01
+}
+
+test "rebuttal expert disclosure: 15 days before the trigger" cite "D.N.H. LCrR 16.1(b)"
+{
+  given TrialScheduled() on 2027-03-03
+  expect deadline(rebuttal-expert-disclosure) == 2027-02-16
+}
+
+test "exculpatory disclosure: 21 days before the trigger" cite "D.N.H. LCrR 16.1(d)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(exculpatory-disclosure) == 2027-02-08
+}
+
+test "witness statements: 7 days before the trigger" cite "D.N.H. LCrR 16.1(e)"
+{
+  given ProceedingScheduled() on 2027-03-01
+  expect deadline(witness-statements) == 2027-02-22
+}
+
+test "rule 404b notice: 7 days before the trigger" cite "D.N.H. LCrR 16.1(f)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(rule-404b-notice) == 2027-02-22
+}
+
+test "exhibit lists: 7 days before the trigger" cite "D.N.H. LCrR 16.1(g)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(exhibit-lists) == 2027-02-22
+}
+
+test "jers statement: 7 days before the trigger" cite "D.N.H. LCrR 16.1(h)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(jers-statement) == 2027-02-22
+}
+
+test "witness lists: 7 days before the trigger" cite "D.N.H. LCrR 16.1(i)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(witness-lists) == 2027-02-22
+}
+
+test "special voir dire: 7 days before the trigger" cite "D.N.H. LCrR 24.1"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(special-voir-dire) == 2027-02-22
+}
+
+test "sentencing period: 98 days after the trigger" cite "D.N.H. LCrR 32.1(a)"
+{
+  given GuiltEstablished() on 2027-03-01
+  expect deadline(sentencing-period) == 2027-06-07
+}
+
+test "government version of facts: 14 days after the trigger" cite "D.N.H. LCrR 32.1(c)"
+{
+  given GuiltEstablished() on 2027-03-01
+  expect deadline(government-version-of-facts) == 2027-03-15
+}
+
+test "initial psr disclosure: 42 days before the trigger" cite "D.N.H. LCrR 32.1(d)"
+{
+  given SentencingHearingScheduled() on 2027-03-02
+  expect deadline(initial-psr-disclosure) == 2027-01-19
+}
+
+test "revised psr disclosure: 14 days before the trigger" cite "D.N.H. LCrR 32.1(g)"
+{
+  given SentencingHearingScheduled() on 2027-03-02
+  expect deadline(revised-psr-disclosure) == 2027-02-16
+}
+
+test "sentencing memorandum: 10 days before the trigger" cite "D.N.H. LCrR 32.1(i)"
+{
+  given SentencingHearingScheduled() on 2027-03-01
+  expect deadline(sentencing-memorandum) == 2027-02-19
+}
+
+test "sentencing response: 4 days before the trigger" cite "D.N.H. LCrR 32.1(i)"
+{
+  given SentencingHearingScheduled() on 2027-03-01
+  expect deadline(sentencing-response) == 2027-02-25
+}
+
+test "cja voucher: 45 days after the trigger" cite "D.N.H. LCrR 44.1(b)"
+{
+  given CjaDisposition() on 2027-03-01
+  expect deadline(cja-voucher) == 2027-04-15
+}

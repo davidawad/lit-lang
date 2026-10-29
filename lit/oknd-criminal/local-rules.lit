@@ -136,3 +136,63 @@ deadline response-period: 7.days after MotionFiled() counted_by frcrimp45 delega
 {
   forum frcrimp
 }
+
+test "expert disclosure: 15 days before the trigger" cite "N.D. Okla. LCrR16-2"
+{
+  given PretrialConferenceScheduled() on 2027-03-03
+  expect deadline(expert-disclosure) == 2027-02-16
+}
+
+test "late request expert disclosure: 6 days after the trigger" cite "N.D. Okla. LCrR16-2"
+{
+  given LateExpertDisclosureRequested() on 2027-03-02
+  expect deadline(late-request-expert-disclosure) == 2027-03-08
+}
+
+test "psr objection of record: 14 days before the trigger" cite "N.D. Okla. LCrR32-4"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(psr-objection-of-record) == 2027-02-16
+}
+
+test "departure variance motion: 14 days before the trigger" cite "N.D. Okla. LCrR32-5"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(departure-variance-motion) == 2027-02-16
+}
+
+test "departure variance response: 7 days before the trigger" cite "N.D. Okla. LCrR32-5"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(departure-variance-response) == 2027-02-22
+}
+
+test "sentencing memorandum: 14 days before the trigger" cite "N.D. Okla. LCrR32-5"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(sentencing-memorandum) == 2027-02-16
+}
+
+test "sentencing memorandum response: 7 days before the trigger" cite "N.D. Okla. LCrR32-5"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-memorandum-response) == 2027-02-22
+}
+
+test "sentencing recommendation: 7 days before the trigger" cite "N.D. Okla. LCrR32-7"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-recommendation) == 2027-02-22
+}
+
+test "motions period: 14 days after the trigger" cite "N.D. Okla. LCrR47-2"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(motions-period) == 2027-03-15
+}
+
+test "response period: 7 days after the trigger" cite "N.D. Okla. LCrR47-2"
+{
+  given MotionFiled() on 2027-03-01
+  expect deadline(response-period) == 2027-03-08
+}

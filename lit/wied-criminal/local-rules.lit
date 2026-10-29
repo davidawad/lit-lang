@@ -149,3 +149,57 @@ deadline psr-objections-on-waiver: 10.days before SentencingScheduled() counted_
 {
   forum frcrimp
 }
+
+test "pretrial motions: 20 days after the trigger" cite "E.D. Wis. Criminal L. R. 12(b); E.D. Wis. Criminal L. R. 58(a)"
+{
+  given ArraignedOnIndictment() on 2027-03-02
+  expect deadline(pretrial-motions) == 2027-03-22
+}
+
+test "pretrial motion response: 10 days after the trigger" cite "E.D. Wis. Criminal L. R. 12(b)"
+{
+  given PretrialMotionDue() on 2027-03-01
+  expect deadline(pretrial-motion-response) == 2027-03-11
+}
+
+test "pretrial motion reply: 5 days after the trigger" cite "E.D. Wis. Criminal L. R. 12(b)"
+{
+  given PretrialResponseDue() on 2027-03-03
+  expect deadline(pretrial-motion-reply) == 2027-03-08
+}
+
+test "evidentiary hearing opposition: 3 days after the trigger" cite "E.D. Wis. Criminal L. R. 12(c)"
+{
+  given EvidentiaryHearingMotionFiled() on 2027-03-01
+  expect deadline(evidentiary-hearing-opposition) == 2027-03-04
+}
+
+test "reassignment objection: 7 days after the trigger" cite "E.D. Wis. Criminal L. R. 13(b)"
+{
+  given ReassignmentMotionFiled() on 2027-03-01
+  expect deadline(reassignment-objection) == 2027-03-08
+}
+
+test "discovery conference: 14 days after the trigger" cite "E.D. Wis. Criminal L. R. 16.1(a)"
+{
+  given ArraignedOnIndictment() on 2027-03-01
+  expect deadline(discovery-conference) == 2027-03-15
+}
+
+test "expert disclosure: 15 days before the trigger" cite "E.D. Wis. Criminal L. R. 16(a)"
+{
+  given TrialCommences() on 2027-03-03
+  expect deadline(expert-disclosure) == 2027-02-16
+}
+
+test "defense reciprocal disclosure: 15 days before the trigger" cite "E.D. Wis. Criminal L. R. 16(a)"
+{
+  given TrialCommences() on 2027-03-03
+  expect deadline(defense-reciprocal-disclosure) == 2027-02-16
+}
+
+test "psr objections on waiver: 10 days before the trigger" cite "E.D. Wis. Criminal L. R. 32(b)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(psr-objections-on-waiver) == 2027-02-19
+}

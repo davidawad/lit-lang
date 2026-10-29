@@ -194,3 +194,63 @@ deadline unassigned-magistrate-review: 14.days after UnassignedMagistrateOrderSe
 {
   forum frcrimp
 }
+
+test "initial psr disclosure: 28 days before the trigger" cite "D.D.C. LCrR 32.2(a); D.D.C. LCrR 32.2(g)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(initial-psr-disclosure) == 2027-02-01
+}
+
+test "opposition period: 14 days after the trigger" cite "D.D.C. LCrR 47(b)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(opposition-period) == 2027-03-15
+}
+
+test "reply period: 7 days after the trigger" cite "D.D.C. LCrR 47(d)"
+{
+  given OppositionServed() on 2027-03-01
+  expect deadline(reply-period) == 2027-03-08
+}
+
+test "address change notice: 14 days after the trigger" cite "D.D.C. LCrR 49(f)"
+{
+  given AddressChanged() on 2027-03-01
+  expect deadline(address-change-notice) == 2027-03-15
+}
+
+test "related case objection: 21 days after the trigger" cite "D.D.C. LCrR 57.12(b)"
+{
+  given ArraignedOnRelatedDesignation() on 2027-03-01
+  expect deadline(related-case-objection) == 2027-03-22
+}
+
+test "exhibit retake: 30 days after the trigger" cite "D.D.C. LCrR 56.2(b)"
+{
+  given FinalDisposition() on 2027-03-01
+  expect deadline(exhibit-retake) == 2027-03-31
+}
+
+test "exhibit retake after notice: 30 days after the trigger" cite "D.D.C. LCrR 56.2(d)"
+{
+  given ExhibitRetakeNoticed() on 2027-03-01
+  expect deadline(exhibit-retake-after-notice) == 2027-03-31
+}
+
+test "magistrate ruling objection: 14 days after the trigger" cite "D.D.C. LCrR 59.1(b)"
+{
+  given MagistrateRulingServed() on 2027-03-01
+  expect deadline(magistrate-ruling-objection) == 2027-03-15
+}
+
+test "magistrate recommendation objection: 14 days after the trigger" cite "D.D.C. LCrR 59.2(b)"
+{
+  given MagistrateRecommendationServed() on 2027-03-01
+  expect deadline(magistrate-recommendation-objection) == 2027-03-15
+}
+
+test "unassigned magistrate review: 14 days after the trigger" cite "D.D.C. LCrR 59.3(a)"
+{
+  given UnassignedMagistrateOrderServed() on 2027-03-01
+  expect deadline(unassigned-magistrate-review) == 2027-03-15
+}

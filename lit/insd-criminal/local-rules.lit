@@ -109,3 +109,27 @@ deadline unseal-after-denial: 21.days after SealDenialServed() counted_by frcrim
 {
   forum frcrimp
 }
+
+test "reassignment objection: 7 days after the trigger" cite "S.D. Ind. L. Cr. R. 12-2(b)"
+{
+  given ReassignmentMotionFiled() on 2027-03-01
+  expect deadline(reassignment-objection) == 2027-03-08
+}
+
+test "offense versions: 14 days after the trigger" cite "S.D. Ind. L. Cr. R. 32-2(c)"
+{
+  given SentencingProcessCommenced() on 2027-03-01
+  expect deadline(offense-versions) == 2027-03-15
+}
+
+test "designating party statement: 14 days after the trigger" cite "S.D. Ind. L. Cr. R. 49.1-2(g)"
+{
+  given SealMotionServed() on 2027-03-01
+  expect deadline(designating-party-statement) == 2027-03-15
+}
+
+test "unseal after denial: 21 days after the trigger" cite "S.D. Ind. L. Cr. R. 49.1-2(j); S.D. Ind. L. Cr. R. 49.1-2(a)"
+{
+  given SealDenialServed() on 2027-03-01
+  expect deadline(unseal-after-denial) == 2027-03-22
+}

@@ -330,3 +330,147 @@ deadline recommendation-objection-response: 7.days after RecommendationObjection
 {
   forum frcrimp
 }
+
+test "presentence interview: 14 days after the trigger" cite "D. Alaska L.Crim.R. 11.1(b)"
+{
+  given ChangeOfPleaProposed() on 2027-03-01
+  expect deadline(presentence-interview) == 2027-03-15
+}
+
+test "rule16 discovery: 14 days after the trigger" cite "D. Alaska L.Crim.R. 16.1(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(rule16-discovery) == 2027-03-15
+}
+
+test "sensitive exhibit marshal contact: 2 business days before the trigger" cite "D. Alaska L.Crim.R. 23.1(a)"
+{
+  given SensitiveExhibitScheduled() on 2027-03-01
+  expect deadline(sensitive-exhibit-marshal-contact) == 2027-02-25
+}
+
+test "weapon exhibit marshal contact: 7 days before the trigger" cite "D. Alaska L.Crim.R. 23.1(b)"
+{
+  given WeaponExhibitScheduled() on 2027-03-01
+  expect deadline(weapon-exhibit-marshal-contact) == 2027-02-22
+}
+
+test "draft psr disclosure: 42 days before the trigger" cite "D. Alaska L.Crim.R. 32.1(b)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(draft-psr-disclosure) == 2027-01-19
+}
+
+test "final psr disclosure: 21 days before the trigger" cite "D. Alaska L.Crim.R. 32.1(c)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(final-psr-disclosure) == 2027-02-08
+}
+
+test "sentencing memorandum: 7 days before the trigger" cite "D. Alaska L.Crim.R. 32.1(e)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-memorandum) == 2027-02-22
+}
+
+test "sentencing reply: 3 days before the trigger" cite "D. Alaska L.Crim.R. 32.1(e)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-reply) == 2027-02-26
+}
+
+test "revocation initial appearance: 7 days after the trigger" cite "D. Alaska L.Crim.R. 32.1.1(a)"
+{
+  given RevocationPetitionFiledInCustody() on 2027-03-01
+  expect deadline(revocation-initial-appearance) == 2027-03-08
+}
+
+test "revocation recommendation objection: 7 days after the trigger" cite "D. Alaska L.Crim.R. 32.1.1(c)"
+{
+  given RevocationRecommendationAnnounced() on 2027-03-01
+  expect deadline(revocation-recommendation-objection) == 2027-03-08
+}
+
+test "violation recommendation filing: 7 days before the trigger" cite "D. Alaska L.Crim.R. 32.1.1(e)"
+{
+  given DispositionHearingScheduled() on 2027-03-01
+  expect deadline(violation-recommendation-filing) == 2027-02-22
+}
+
+test "disposition memorandum: 2 business days before the trigger" cite "D. Alaska L.Crim.R. 32.1.1(e)"
+{
+  given DispositionHearingScheduled() on 2027-03-01
+  expect deadline(disposition-memorandum) == 2027-02-25
+}
+
+test "psr disclosure opposition: 14 days after the trigger" cite "D. Alaska L.Crim.R. 32.1.2(e)"
+{
+  given PsrDisclosureMotionFiled() on 2027-03-01
+  expect deadline(psr-disclosure-opposition) == 2027-03-15
+}
+
+test "release services request: 4 business days before the trigger" cite "D. Alaska L.Crim.R. 46.1(d)"
+{
+  given ReleaseServicesHearingScheduled() on 2027-03-01
+  expect deadline(release-services-request) == 2027-02-23
+}
+
+test "travel request: 10 days before the trigger" cite "D. Alaska L.Crim.R. 46.2"
+{
+  given IntendedTravel() on 2027-03-01
+  expect deadline(travel-request) == 2027-02-19
+}
+
+test "pretrial opposition: 7 days after the trigger" cite "D. Alaska L.Crim.R. 47.1(c)"
+{
+  given PretrialMotionFiled() on 2027-03-01
+  expect deadline(pretrial-opposition) == 2027-03-08
+}
+
+test "post conviction opposition: 14 days after the trigger" cite "D. Alaska L.Crim.R. 47.1(c)"
+{
+  given PostConvictionMotionFiled() on 2027-03-01
+  expect deadline(post-conviction-opposition) == 2027-03-15
+}
+
+test "reconsideration manifest error: 7 days after the trigger" cite "D. Alaska L.Crim.R. 47.1(g)"
+{
+  given OrderEntered() on 2027-03-01
+  expect deadline(reconsideration-manifest-error) == 2027-03-08
+}
+
+test "reconsideration new facts: 14 days after the trigger" cite "D. Alaska L.Crim.R. 47.1(g)"
+{
+  given NewFactsOrLawChange() on 2027-03-01
+  expect deadline(reconsideration-new-facts) == 2027-03-15
+}
+
+test "reconsideration response: 7 days after the trigger" cite "D. Alaska L.Crim.R. 47.1(g)"
+{
+  given ReconsiderationResponseRequested() on 2027-03-01
+  expect deadline(reconsideration-response) == 2027-03-08
+}
+
+test "reconsideration reply: 7 days after the trigger" cite "D. Alaska L.Crim.R. 47.1(g)"
+{
+  given ReconsiderationReplyRequested() on 2027-03-01
+  expect deadline(reconsideration-reply) == 2027-03-08
+}
+
+test "in camera filing: 7 days after the trigger" cite "D. Alaska L.Crim.R. 47.1(j)"
+{
+  given InCameraReviewGranted() on 2027-03-01
+  expect deadline(in-camera-filing) == 2027-03-08
+}
+
+test "recommendation objection: 14 days after the trigger" cite "D. Alaska L.Crim.R. 59.1"
+{
+  given RecommendationIssued() on 2027-03-01
+  expect deadline(recommendation-objection) == 2027-03-15
+}
+
+test "recommendation objection response: 7 days after the trigger" cite "D. Alaska L.Crim.R. 59.1"
+{
+  given RecommendationObjectionsFiled() on 2027-03-01
+  expect deadline(recommendation-objection-response) == 2027-03-08
+}

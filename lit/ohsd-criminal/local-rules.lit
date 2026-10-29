@@ -56,3 +56,45 @@ deadline earliest-sentencing-after-final-report: 14.days after FinalReportFiled(
 /// since the filing of the initial report, unless the defendant waives the
 /// time requirement; this is the earliest such date.
 deadline earliest-sentencing-after-initial-report: 35.days after InitialReportDisclosed() counted_by frcrimp45 cite "S.D. Ohio Crim. R. 32.1(h)"
+
+test "initial report disclosure period: 44 days after the trigger" cite "S.D. Ohio Crim. R. 32.1(b)"
+{
+  given GuiltOrConsentEntered() on 2027-03-01
+  expect deadline(initial-report-disclosure-period) == 2027-04-14
+}
+
+test "report objection period: 21 days after the trigger" cite "S.D. Ohio Crim. R. 32.1(c)"
+{
+  given InitialReportDisclosed() on 2027-03-01
+  expect deadline(report-objection-period) == 2027-03-22
+}
+
+test "objection conference period: 31 days after the trigger" cite "S.D. Ohio Crim. R. 32.1(d)"
+{
+  given InitialReportDisclosed() on 2027-03-01
+  expect deadline(objection-conference-period) == 2027-04-01
+}
+
+test "unresolved objection period: 7 days after the trigger" cite "S.D. Ohio Crim. R. 32.1(d)"
+{
+  given ObjectionConferenceHeld() on 2027-03-01
+  expect deadline(unresolved-objection-period) == 2027-03-08
+}
+
+test "final report period: 42 days after the trigger" cite "S.D. Ohio Crim. R. 32.1(e)"
+{
+  given InitialReportDisclosed() on 2027-03-01
+  expect deadline(final-report-period) == 2027-04-12
+}
+
+test "earliest sentencing after final report: 14 days after the trigger" cite "S.D. Ohio Crim. R. 32.1(h)"
+{
+  given FinalReportFiled() on 2027-03-01
+  expect deadline(earliest-sentencing-after-final-report) == 2027-03-15
+}
+
+test "earliest sentencing after initial report: 35 days after the trigger" cite "S.D. Ohio Crim. R. 32.1(h)"
+{
+  given InitialReportDisclosed() on 2027-03-01
+  expect deadline(earliest-sentencing-after-initial-report) == 2027-04-05
+}

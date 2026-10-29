@@ -225,3 +225,99 @@ deadline misdemeanor-appeal-reply-brief: 14.days before MisdemeanorAppealHearing
 {
   forum frcrimp
 }
+
+test "related case response: 7 days after the trigger" cite "N.D. Cal. Crim. L.R. 8-1(d)"
+{
+  given RelatedCaseNoticeServed() on 2027-03-01
+  expect deadline(related-case-response) == 2027-03-08
+}
+
+test "pretrial conference statement: 7 days before the trigger" cite "N.D. Cal. Crim. L.R. 17.1-1(b)"
+{
+  given PretrialConferenceScheduled() on 2027-03-01
+  expect deadline(pretrial-conference-statement) == 2027-02-22
+}
+
+test "sentencing information response: 7 days after the trigger" cite "N.D. Cal. Crim. L.R. 32-3(b)"
+{
+  given ProbationRequestReceived() on 2027-03-01
+  expect deadline(sentencing-information-response) == 2027-03-08
+}
+
+test "sentencing material submission: 45 days before the trigger" cite "N.D. Cal. Crim. L.R. 32-3(c)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-material-submission) == 2027-01-15
+}
+
+test "final psr disclosure: 14 days before the trigger" cite "N.D. Cal. Crim. L.R. 32-5(a)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(final-psr-disclosure) == 2027-02-16
+}
+
+test "sentencing memorandum: 7 days before the trigger" cite "N.D. Cal. Crim. L.R. 32-5(b)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-memorandum) == 2027-02-22
+}
+
+test "sentencing memorandum response: 3 days before the trigger" cite "N.D. Cal. Crim. L.R. 32-5(c)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(sentencing-memorandum-response) == 2027-02-26
+}
+
+test "accuracy addendum: 5 days before the trigger" cite "N.D. Cal. Crim. L.R. 32-6(c)"
+{
+  given PsrToBureauScheduled() on 2027-03-01
+  expect deadline(accuracy-addendum) == 2027-02-24
+}
+
+test "revocation dispositional report: 7 days before the trigger" cite "N.D. Cal. Crim. L.R. 32.1-1(e)"
+{
+  given RevocationSentencingScheduled() on 2027-03-01
+  expect deadline(revocation-dispositional-report) == 2027-02-22
+}
+
+test "motion notice: 14 days before the trigger" cite "N.D. Cal. Crim. L.R. 47-2(a)"
+{
+  given MotionHearingScheduled() on 2027-03-02
+  expect deadline(motion-notice) == 2027-02-16
+}
+
+test "motion opposition: 7 days after the trigger" cite "N.D. Cal. Crim. L.R. 47-2(d)"
+{
+  given MotionFiled() on 2027-03-01
+  expect deadline(motion-opposition) == 2027-03-08
+}
+
+test "motion reply: 4 days after the trigger" cite "N.D. Cal. Crim. L.R. 47-2(d)"
+{
+  given OppositionDue() on 2027-03-01
+  expect deadline(motion-reply) == 2027-03-05
+}
+
+test "sealing refiling: 7 days after the trigger" cite "N.D. Cal. Crim. L.R. 56-1(d)"
+{
+  given SealingDenied() on 2027-03-01
+  expect deadline(sealing-refiling) == 2027-03-08
+}
+
+test "misdemeanor appeal opening brief: 35 days before the trigger" cite "N.D. Cal. Crim. L.R. 58-2(d)"
+{
+  given MisdemeanorAppealHearingScheduled() on 2027-03-01
+  expect deadline(misdemeanor-appeal-opening-brief) == 2027-01-25
+}
+
+test "misdemeanor appeal responsive brief: 21 days before the trigger" cite "N.D. Cal. Crim. L.R. 58-2(d)"
+{
+  given MisdemeanorAppealHearingScheduled() on 2027-03-01
+  expect deadline(misdemeanor-appeal-responsive-brief) == 2027-02-08
+}
+
+test "misdemeanor appeal reply brief: 14 days before the trigger" cite "N.D. Cal. Crim. L.R. 58-2(d)"
+{
+  given MisdemeanorAppealHearingScheduled() on 2027-03-02
+  expect deadline(misdemeanor-appeal-reply-brief) == 2027-02-16
+}

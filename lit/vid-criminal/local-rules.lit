@@ -218,3 +218,87 @@ deadline interpreter-request: 7.days before InterpretedAppearance() counted_by f
 {
   forum frcrimp
 }
+
+test "continuance opposition: 7 days after the trigger" cite "D.V.I. LRCr 12.5(c)"
+{
+  given ContinuanceMotionServed() on 2027-03-01
+  expect deadline(continuance-opposition) == 2027-03-08
+}
+
+test "complex designation response: 7 days after the trigger" cite "D.V.I. LRCr 12.6(a); D.V.I. LRCr 12.6(c)"
+{
+  given DiscoveryConferenceCompleted() on 2027-03-01
+  expect deadline(complex-designation-response) == 2027-03-08
+}
+
+test "defendant complex designation: 5 days after the trigger" cite "D.V.I. LRCr 12.6(b); D.V.I. LRCr 12.6(c)"
+{
+  given GovernmentDiscoveryDue() on 2027-03-03
+  expect deadline(defendant-complex-designation) == 2027-03-08
+}
+
+test "initial discovery conference: 14 days after the trigger" cite "D.V.I. LRCr 16.1(a)"
+{
+  given ArraignedOnFirstCharge() on 2027-03-01
+  expect deadline(initial-discovery-conference) == 2027-03-15
+}
+
+test "discovery timetable notice: 5 days after the trigger" cite "D.V.I. LRCr 16.1(a)"
+{
+  given DiscoveryConferenceCompleted() on 2027-03-03
+  expect deadline(discovery-timetable-notice) == 2027-03-08
+}
+
+test "government rule16: 28 days after the trigger" cite "D.V.I. LRCr 16.1(b)"
+{
+  given GovernmentDiscoveryClock(Arraignment) on 2027-03-01
+  expect deadline(government-rule16) == 2027-03-29
+}
+
+test "defendant rule16: 14 days after the trigger" cite "D.V.I. LRCr 16.1(c)"
+{
+  given DefendantDiscoveryClock(GovernmentRequest) on 2027-03-01
+  expect deadline(defendant-rule16) == 2027-03-15
+}
+
+test "superseding request limit: 1 day after the trigger" cite "D.V.I. LRCr 16.1(d)"
+{
+  given ArraignedOnSupersedingCharge() on 2027-03-01
+  expect deadline(superseding-request-limit) == 2027-03-02
+}
+
+test "superseding government rule16: 14 days after the trigger" cite "D.V.I. LRCr 16.1(d)"
+{
+  given ArraignedOnSupersedingCharge() on 2027-03-01
+  expect deadline(superseding-government-rule16) == 2027-03-15
+}
+
+test "superseding defendant rule16: 7 days after the trigger" cite "D.V.I. LRCr 16.1(d)"
+{
+  given GovernmentDiscoveryDue() on 2027-03-01
+  expect deadline(superseding-defendant-rule16) == 2027-03-08
+}
+
+test "discovery modification response: 3 business days after the trigger" cite "D.V.I. LRCr 16.1(f)"
+{
+  given DiscoveryModificationMotionServed() on 2027-03-01
+  expect deadline(discovery-modification-response) == 2027-03-04
+}
+
+test "discovery modification reply: 3 business days after the trigger" cite "D.V.I. LRCr 16.1(f)"
+{
+  given DiscoveryModificationResponseServed() on 2027-03-01
+  expect deadline(discovery-modification-reply) == 2027-03-04
+}
+
+test "joint discovery statement: 7 days before the trigger" cite "D.V.I. LRCr 16.1(h)"
+{
+  given TrialCommencement() on 2027-03-01
+  expect deadline(joint-discovery-statement) == 2027-02-22
+}
+
+test "interpreter request: 7 days before the trigger" cite "D.V.I. LRCr 28.1"
+{
+  given InterpretedAppearance() on 2027-03-01
+  expect deadline(interpreter-request) == 2027-02-22
+}

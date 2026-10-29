@@ -53,3 +53,39 @@ deadline defendant-departure-notice-period: 14.days before SentencingScheduled()
 /// filed at least 14 days before the sentencing hearing; failure to comply
 /// may result in denial of a departure or variance.
 deadline sentencing-memoranda-period: 14.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Tenn. L.R. 83.9(j)"
+
+test "pretrial attendance request period: 7 days before the trigger" cite "E.D. Tenn. L.R. 16.2"
+{
+  given PretrialConferenceScheduled() on 2027-03-01
+  expect deadline(pretrial-attendance-request-period) == 2027-02-22
+}
+
+test "misdemeanor appeal brief period: 14 days after the trigger" cite "E.D. Tenn. L.R. 72.4(c)"
+{
+  given MisdemeanorAppealNoticeFiled() on 2027-03-01
+  expect deadline(misdemeanor-appeal-brief-period) == 2027-03-15
+}
+
+test "earliest sentencing date: 65 days after the trigger" cite "E.D. Tenn. L.R. 83.9(a)"
+{
+  given GuiltyPleaOrVerdict() on 2027-03-01
+  expect deadline(earliest-sentencing-date) == 2027-05-05
+}
+
+test "government departure motion period: 7 days before the trigger" cite "E.D. Tenn. L.R. 83.9(j)"
+{
+  given SentencingScheduled() on 2027-03-01
+  expect deadline(government-departure-motion-period) == 2027-02-22
+}
+
+test "defendant departure notice period: 14 days before the trigger" cite "E.D. Tenn. L.R. 83.9(j)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(defendant-departure-notice-period) == 2027-02-16
+}
+
+test "sentencing memoranda period: 14 days before the trigger" cite "E.D. Tenn. L.R. 83.9(j)"
+{
+  given SentencingScheduled() on 2027-03-02
+  expect deadline(sentencing-memoranda-period) == 2027-02-16
+}

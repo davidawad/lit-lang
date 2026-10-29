@@ -121,3 +121,51 @@ deadline unresolved-objection-notice-period: 7.days after PresentenceReportSubmi
 {
   forum frcrimp
 }
+
+test "opposing suggestions period: 14 days after the trigger" cite "W.D. Mo. L.R. 7.0(c); W.D. Mo. L.R. 99.0"
+{
+  given MotionFiled() on 2027-03-01
+  expect deadline(opposing-suggestions-period) == 2027-03-15
+}
+
+test "reply suggestions period: 14 days after the trigger" cite "W.D. Mo. L.R. 7.0(c); W.D. Mo. L.R. 99.0"
+{
+  given OpposingSuggestionsFiled() on 2027-03-01
+  expect deadline(reply-suggestions-period) == 2027-03-15
+}
+
+test "objection response period: 14 days after the trigger" cite "W.D. Mo. L.R. 74.1(b); W.D. Mo. L.R. 99.0"
+{
+  given ObjectionsServed() on 2027-03-01
+  expect deadline(objection-response-period) == 2027-03-15
+}
+
+test "exhibit withdrawal period: 14 days after the trigger" cite "W.D. Mo. L.R. 79.2(a); W.D. Mo. L.R. 99.0"
+{
+  given VerdictOrJudgment() on 2027-03-01
+  expect deadline(exhibit-withdrawal-period) == 2027-03-15
+}
+
+test "redaction notice period: 7 days after the trigger" cite "W.D. Mo. L.R. 80.1(a); W.D. Mo. L.R. 99.0"
+{
+  given TranscriptFiled() on 2027-03-01
+  expect deadline(redaction-notice-period) == 2027-03-08
+}
+
+test "redaction statement period: 21 days after the trigger" cite "W.D. Mo. L.R. 80.1(a); W.D. Mo. L.R. 99.0"
+{
+  given TranscriptFiled() on 2027-03-01
+  expect deadline(redaction-statement-period) == 2027-03-22
+}
+
+test "surety objection period: 14 days after the trigger" cite "W.D. Mo. L.R. 99.1(d)"
+{
+  given SuretyDisqualificationServed() on 2027-03-01
+  expect deadline(surety-objection-period) == 2027-03-15
+}
+
+test "unresolved objection notice period: 7 days after the trigger" cite "W.D. Mo. L.R. 99.8(i)"
+{
+  given PresentenceReportSubmitted() on 2027-03-01
+  expect deadline(unresolved-objection-notice-period) == 2027-03-08
+}

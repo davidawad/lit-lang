@@ -146,3 +146,69 @@ deadline magistrate-appeal-reply-brief: 7.days after AppelleeBriefServed() count
 {
   forum frcrimp
 }
+
+test "plea objection response: 7 days after the trigger" cite "E.D. Wash. LCrR 11(i)"
+{
+  given PleaObjectionsServed() on 2027-03-01
+  expect deadline(plea-objection-response) == 2027-03-08
+}
+
+test "government disclosure: 14 days after the trigger" cite "E.D. Wash. LCrR 16(a)"
+{
+  given Arraigned() on 2027-03-01
+  expect deadline(government-disclosure) == 2027-03-15
+}
+
+test "government pretrial disclosure: 28 days before the trigger" cite "E.D. Wash. LCrR 16(a)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(government-pretrial-disclosure) == 2027-02-01
+}
+
+test "defense disclosure: 14 days before the trigger" cite "E.D. Wash. LCrR 16(b)"
+{
+  given TrialScheduled() on 2027-03-02
+  expect deadline(defense-disclosure) == 2027-02-16
+}
+
+test "defense notices: 21 days before the trigger" cite "E.D. Wash. LCrR 16(b)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(defense-notices) == 2027-02-08
+}
+
+test "trial brief: 7 days before the trigger" cite "E.D. Wash. LCrR 23(d)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(trial-brief) == 2027-02-22
+}
+
+test "voir dire questions: 7 days before the trigger" cite "E.D. Wash. LCrR 24(a)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(voir-dire-questions) == 2027-02-22
+}
+
+test "jury instructions: 7 days before the trigger" cite "E.D. Wash. LCrR 30(a)"
+{
+  given TrialScheduled() on 2027-03-01
+  expect deadline(jury-instructions) == 2027-02-22
+}
+
+test "magistrate appeal appellant brief: 28 days after the trigger" cite "E.D. Wash. LCrR 58(g)"
+{
+  given MagistrateAppealNoticed() on 2027-03-01
+  expect deadline(magistrate-appeal-appellant-brief) == 2027-03-29
+}
+
+test "magistrate appeal appellee brief: 14 days after the trigger" cite "E.D. Wash. LCrR 58(g)"
+{
+  given AppellantBriefServed() on 2027-03-01
+  expect deadline(magistrate-appeal-appellee-brief) == 2027-03-15
+}
+
+test "magistrate appeal reply brief: 7 days after the trigger" cite "E.D. Wash. LCrR 58(g)"
+{
+  given AppelleeBriefServed() on 2027-03-01
+  expect deadline(magistrate-appeal-reply-brief) == 2027-03-08
+}

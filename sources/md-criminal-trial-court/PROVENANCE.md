@@ -142,3 +142,10 @@
 - Extraction sha256 0ff3adcb22012ce133119429f22e6371e219074c904ca9a3adbe06e849932161.
 
 - Note (lg-gddt): Criminal appeals: Maryland Rules Title 8, covered by sources/md-appellate-civil/ (md-appellate-civil-rules-westlaw.txt). The statutory speedy-trial provision, Md. Code, Criminal Procedure Art. section 6-103, is not vendored (rule 4-271 implements it).
+
+### `md-criminal-trial-court/md-rules-title-4-criminal-causes-sectioned.txt` — Maryland Rules Title 4, sectioned
+
+- Derived in the pod (lg-j9gm) from `md-criminal-trial-court/md-rules-title-4-criminal-causes-westlaw.txt` (extract sha256 0ff3adcb22012ce133119429f22e6371e219074c904ca9a3adbe06e849932161); nothing fetched. After each page heading of a rule (`## Rule 4–252. Motions in Circuit Court`) one `## Rule <n>` line with an ASCII hyphen (`## Rule 4-252`) is inserted, so the rule's text sits under the marker; 121 markers (every rule page). Pages without a rule number (the Chapter 200 Refs & Annos note, the Forms) are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule [0-9]-[0-9.]*$/d'`) restores the extract byte for byte.
+- Upstream: https://govt.westlaw.com/mdc/Index, retrieved 2026-10-28, as recorded on the `md-criminal-trial-court/md-rules-title-4-criminal-causes-westlaw.txt` entry this file is derived from.
+- Edition: as the extract; every page's currentness line reads "Current with amendments received through September 1, 2026".
+- Sectioned sha256 c8dea67312315f43d5ee3dfdc4815b05c462ea62d7f68b6c8a2b90816bc1ab62 (the `path_sha256` pinned by `lit/md-criminal-trial-court/Lit.toml`).

@@ -1,130 +1,133 @@
 module md-criminal-trial-court.criminal
 
 // Criminal causes in the Maryland trial courts, from the defendant's view
-// of outcomes. Title 4 and Title 8 are vendored only as CURRENCY
-// UNCONFIRMED Westlaw extracts, so every cite is a hole naming the rule and
-// every period below is the vendored text, unverified, stated in a note
-// (Md. Rule 1-203 computes time and is not vendored). Not vendored, and so
-// holes: the speedy-trial statute, Code, Criminal Procedure Article,
-// § 6-103, which Rule 4-271 cross-references; the Uniform Post Conviction
-// Procedure Act; and the reporter text of the decisions the outline named
-// (Gideon, Brady, Barker, Boykin, Frye, Jackson v. Virginia, Ramos,
-// Apprendi, Flores-Ortega, Garza, McLaughlin, Gerstein, Mapp), which are
-// removed. Rule 4-271(a)(1)'s cross-reference to Jackson v. State, 485 Md.
+// of outcomes. Title 4 and Title 8 are vendored as the Westlaw extracts
+// current through September 1, 2026; every period below is stated in a
+// note as the rule states it (Md. Rule 1-203 computes time and is not
+// vendored). Not vendored, and so holes: the speedy-trial statute, Code,
+// Criminal Procedure Article, § 6-103, which Rule 4-271 cross-references;
+// the Uniform Post Conviction Procedure Act; and the reporter text of the
+// decisions the outline named (Gideon, Brady, Barker, Boykin, Frye,
+// Jackson v. Virginia, Ramos, Apprendi, Flores-Ortega, Garza, McLaughlin,
+// Gerstein, Mapp), which are removed. Rule 4-271(a)(1)'s cross-reference to Jackson v. State, 485 Md.
 // 1 (2023), is kept as the rule prints it.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite ?("Md. Rule 4-212, CURRENCY UNCONFIRMED") {
-  note "A defendant arrested appears before a judicial officer of the District Court, who advises of the charges, the right to counsel and, for a felony outside the District Court's jurisdiction that is not indicted, the right to a preliminary hearing on a request made then or within ten days (Md. Rule 4-213(a)); in the circuit court the initial appearance occurs on execution of a warrant or on appearance in response to a summons (Md. Rule 4-213(c)). CURRENCY UNCONFIRMED: the value is the vendored text, unverified."
+state arrested: "Arrest or summons" by applicant cite "Md. Rule 4-212"
+{
+  note "A defendant arrested appears before a judicial officer of the District Court, who advises of the charges, the right to counsel and, for a felony outside the District Court's jurisdiction that is not indicted, the right to a preliminary hearing on a request made then or within ten days (Md. Rule 4-213(a)); in the circuit court the initial appearance occurs on execution of a warrant or on appearance in response to a summons (Md. Rule 4-213(c))."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
-    authority cite ?("Md. Rule 4-213, CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-213"
   }
 }
 
-decision initial-appearance: "Pretrial release or detention" by court cite ?("Md. Rule 4-216, CURRENCY UNCONFIRMED") {
-  note "The judicial officer determines eligibility for pretrial release under Md. Rules 4-216 and 4-216.1, and a commissioner's order is reviewed under Md. Rule 4-216.2. The standards are not reduced to periods here. CURRENCY UNCONFIRMED."
+decision initial-appearance: "Pretrial release or detention" by court cite "Md. Rule 4-216"
+{
+  note "The judicial officer determines eligibility for pretrial release under Md. Rules 4-216 and 4-216.1, and a commissioner's order is reviewed under Md. Rule 4-216.2. The standards are not reduced to periods here."
   edge-initial-appearance-detained "Detained" -> probable-cause {
-    authority cite ?("Md. Rule 4-216.1, CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-216.1"
   }
   edge-initial-appearance-released "Released on conditions" -> probable-cause {
-    authority cite ?("Md. Rule 4-216.1, CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-216.1"
   }
 }
 
-decision probable-cause: "Preliminary hearing or waiver" by court cite ?("Md. Rule 4-221, CURRENCY UNCONFIRMED") {
-  note "A defendant charged with a felony outside the District Court's jurisdiction may request a preliminary hearing at or within ten days after the initial appearance; failure to request it in time waives it unless the court orders otherwise, and the State may request one within ten days after a waiver (Md. Rule 4-221(a)). The hearing is scheduled within 30 days after a timely request (Md. Rule 4-221(b)). Within 30 days after a finding of probable cause or a waiver, the State's Attorney acts under Md. Rule 4-221(f). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+decision probable-cause: "Preliminary hearing or waiver" by court cite "Md. Rule 4-221"
+{
+  note "A defendant charged with a felony outside the District Court's jurisdiction may request a preliminary hearing at or within ten days after the initial appearance; failure to request it in time waives it unless the court orders otherwise, and the State may request one within ten days after a waiver (Md. Rule 4-221(a)). The hearing is scheduled within 30 days after a timely request (Md. Rule 4-221(b)). Within 30 days after a finding of probable cause or a waiver, the State's Attorney acts under Md. Rule 4-221(f)."
   edge-probable-cause-charged "Probable cause found or hearing waived; charged in circuit court" -> charged {
-    authority cite ?("Md. Rule 4-221(f), CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-221(f)"
   }
   edge-probable-cause-none "No probable cause; discharged" -> dismissed {
-    authority cite ?("Md. Rule 4-221, CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-221"
   }
 }
 
-state charged: "Charging document filed in circuit court" by office cite ?("Md. Rule 4-201, CURRENCY UNCONFIRMED") {
-  note "Counsel appears or the defendant first appears before the circuit court (Md. Rules 4-213(c), 4-214). The earlier of those two events starts the mandatory-motion, State-disclosure and trial-date periods below. CURRENCY UNCONFIRMED."
+state charged: "Charging document filed in circuit court" by office cite "Md. Rule 4-201"
+{
+  note "Counsel appears or the defendant first appears before the circuit court (Md. Rules 4-213(c), 4-214). The earlier of those two events starts the mandatory-motion, State-disclosure and trial-date periods below."
   edge-charged-motions "Appearance of counsel or first appearance" -> pretrial {
-    authority cite ?("Md. Rule 4-214, CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-214"
   }
 }
 
-state pretrial: "Mandatory motions and discovery" by applicant cite ?("Md. Rule 4-252, CURRENCY UNCONFIRMED") {
-  note "A defect in the institution of the prosecution or in the charging document, an unlawful search, seizure, interception or pretrial identification, an unlawfully obtained statement, and a request for joint or separate trial are raised by motion or waived (Md. Rule 4-252(a)); the motion is filed within 30 days after the earlier of the appearance of counsel or the first appearance before the court under Rule 4-213(c), or within five days after discovery disclosing its basis is furnished (Md. Rule 4-252(b)). A motion to transfer to juvenile court has the same 30 days (Md. Rule 4-252(c)). A response, if made, is filed within 15 days after service of the motion (Md. Rule 4-252(f)). The State's Attorney makes its disclosure within 30 days after the earlier of the appearance of counsel or the first appearance, and the defense no later than 30 days before the first scheduled trial date, a defense under Md. Rule 4-263(e)(6) at least 10 days before it (Md. Rule 4-263(h)); a motion to compel is filed within ten days after the discovery was due or received, and a response within five days after its service (Md. Rule 4-263(i)). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+state pretrial: "Mandatory motions and discovery" by applicant cite "Md. Rule 4-252"
+{
+  note "A defect in the institution of the prosecution or in the charging document, an unlawful search, seizure, interception or pretrial identification, an unlawfully obtained statement, and a request for joint or separate trial are raised by motion or waived (Md. Rule 4-252(a)); the motion is filed within 30 days after the earlier of the appearance of counsel or the first appearance before the court under Rule 4-213(c), or within five days after discovery disclosing its basis is furnished (Md. Rule 4-252(b)). A motion to transfer to juvenile court has the same 30 days (Md. Rule 4-252(c)). A response, if made, is filed within 15 days after service of the motion (Md. Rule 4-252(f)). The State's Attorney makes its disclosure within 30 days after the earlier of the appearance of counsel or the first appearance, and the defense no later than 30 days before the first scheduled trial date, a defense under Md. Rule 4-263(e)(6) at least 10 days before it (Md. Rule 4-263(h)); a motion to compel is filed within ten days after the discovery was due or received, and a response within five days after its service (Md. Rule 4-263(i))."
   edge-pretrial-motion "Mandatory motion filed" -> motions-ruling {
-    authority cite ?("Md. Rule 4-252(b), CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-252(b)"
   }
-  edge-pretrial-plea "Plea negotiations" -> plea-decision {
-    authority cite ?("Md. Rule 4-243, CURRENCY UNCONFIRMED")
-  }
+  edge-pretrial-plea "Plea negotiations" -> plea-decision { authority cite "Md. Rule 4-243" }
 }
 
-decision motions-ruling: "Ruling on mandatory motions" by court cite ?("Md. Rule 4-252(g), CURRENCY UNCONFIRMED") {
-  note "The court determines the motion before trial (Md. Rule 4-252(g)). Dismissal for violation of the trial-date rule turns on Code, Criminal Procedure Article, § 6-103, which is not vendored (a hole). CURRENCY UNCONFIRMED."
+decision motions-ruling: "Ruling on mandatory motions" by court cite "Md. Rule 4-252(g)"
+{
+  note "The court determines the motion before trial (Md. Rule 4-252(g)). Dismissal for violation of the trial-date rule turns on Code, Criminal Procedure Article, § 6-103, which is not vendored (a hole)."
   edge-motions-ruling-dismissed "Charges dismissed" -> dismissed {
-    authority cite ?("Md. Rule 4-252(g), CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-252(g)"
   }
   edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
-    authority cite ?("Md. Rule 4-252(g), CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-252(g)"
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite ?("Md. Rule 4-242, CURRENCY UNCONFIRMED") {
-  note "The circuit court trial date is set within 30 days after the earlier of the appearance of counsel or the defendant's first appearance before the circuit court, and not later than 180 days after the earlier of those events; only the county administrative judge or a designee may change it, for good cause (Md. Rule 4-271(a)(1), cross-referencing Code, Criminal Procedure Article, § 6-103, and Jackson v. State, 485 Md. 1 (2023)). Pleas and plea agreements are governed by Md. Rules 4-242 and 4-243. CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
-  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
-    authority cite ?("Md. Rule 4-242, CURRENCY UNCONFIRMED")
-  }
+decision plea-decision: "Plea or trial" by applicant cite "Md. Rule 4-242"
+{
+  note "The circuit court trial date is set within 30 days after the earlier of the appearance of counsel or the defendant's first appearance before the circuit court, and not later than 180 days after the earlier of those events; only the county administrative judge or a designee may change it, for good cause (Md. Rule 4-271(a)(1), cross-referencing Code, Criminal Procedure Article, § 6-103, and Jackson v. State, 485 Md. 1 (2023)). Pleas and plea agreements are governed by Md. Rules 4-242 and 4-243."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "Md. Rule 4-242" }
   edge-plea-decision-trial "Trial within 180 days" -> trial {
-    authority cite ?("Md. Rule 4-271(a)(1), CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-271(a)(1)"
   }
 }
 
-decision trial: "Verdict" by court cite ?("Md. Rule 4-327, CURRENCY UNCONFIRMED") {
-  note "Trial by jury unless waived (Md. Rules 4-246, 4-311); a motion for judgment of acquittal is made at the close of the evidence (Md. Rule 4-324). CURRENCY UNCONFIRMED."
-  edge-trial-acquittal "Not guilty" -> acquitted {
-    authority cite ?("Md. Rule 4-327, CURRENCY UNCONFIRMED")
-  }
+decision trial: "Verdict" by court cite "Md. Rule 4-327"
+{
+  note "Trial by jury unless waived (Md. Rules 4-246, 4-311); a motion for judgment of acquittal is made at the close of the evidence (Md. Rule 4-324)."
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "Md. Rule 4-327" }
   edge-trial-guilty "Guilty; motion for new trial" -> post-trial {
-    authority cite ?("Md. Rule 4-331(a), CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-331(a)"
   }
 }
 
-decision post-trial: "Motion for new trial" by court cite ?("Md. Rule 4-331, CURRENCY UNCONFIRMED") {
-  note "On a motion filed within ten days after a verdict the court may order a new trial in the interest of justice (Md. Rule 4-331(a)); on a motion filed within 90 days after sentence it has revisory power over the judgment, and later only for fraud, mistake or irregularity (Md. Rule 4-331(b)); a motion on newly discovered evidence is filed within one year after the later of the sentence or the final appellate mandate (Md. Rule 4-331(c)(1)). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
-  edge-post-trial-new-trial "New trial granted" -> trial {
-    authority cite ?("Md. Rule 4-331(a), CURRENCY UNCONFIRMED")
-  }
+decision post-trial: "Motion for new trial" by court cite "Md. Rule 4-331"
+{
+  note "On a motion filed within ten days after a verdict the court may order a new trial in the interest of justice (Md. Rule 4-331(a)); on a motion filed within 90 days after sentence it has revisory power over the judgment, and later only for fraud, mistake or irregularity (Md. Rule 4-331(b)); a motion on newly discovered evidence is filed within one year after the later of the sentence or the final appellate mandate (Md. Rule 4-331(c)(1))."
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Md. Rule 4-331(a)" }
   edge-post-trial-denied "Motion denied or not filed; sentencing" -> sentencing {
-    authority cite ?("Md. Rule 4-342, CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-342"
   }
 }
 
-state sentencing: "Presentence investigation and sentencing" by court cite ?("Md. Rule 4-342, CURRENCY UNCONFIRMED") {
-  note "A presentence investigation and report are governed by Md. Rule 4-341 and the sentencing procedure by Md. Rule 4-342. On a motion filed within 90 days after a sentence is imposed, the court has revisory power over it (in the District Court only if no appeal is perfected or it is dismissed), for up to five years from the original sentence, extendable for good cause by 60 days (Md. Rule 4-345(e)(1), (2)). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+state sentencing: "Presentence investigation and sentencing" by court cite "Md. Rule 4-342"
+{
+  note "A presentence investigation and report are governed by Md. Rule 4-341 and the sentencing procedure by Md. Rule 4-342. On a motion filed within 90 days after a sentence is imposed, the court has revisory power over it (in the District Court only if no appeal is perfected or it is dismissed), for up to five years from the original sentence, extendable for good cause by 60 days (Md. Rule 4-345(e)(1), (2))."
   edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite ?("Md. Rule 4-342, CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 4-342"
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite ?("Md. Rule 8-202, CURRENCY UNCONFIRMED") {
-  note "The notice of appeal is filed within 30 days after entry of the judgment (Md. Rule 8-202(a)); when a timely motion for new trial under Rule 4-331(a) is filed, within 30 days after the later of the entry of judgment or the entry of a notice withdrawing the motion or an order denying it (Md. Rule 8-202(b)). The appeal goes to the Appellate Court of Maryland. CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+decision judgment: "Judgment of conviction" by applicant cite "Md. Rule 8-202"
+{
+  note "The notice of appeal is filed within 30 days after entry of the judgment (Md. Rule 8-202(a)); when a timely motion for new trial under Rule 4-331(a) is filed, within 30 days after the later of the entry of judgment or the entry of a notice withdrawing the motion or an order denying it (Md. Rule 8-202(b)). The appeal goes to the Appellate Court of Maryland."
   edge-judgment-appeal "Notice of appeal filed within 30 days" -> appeal-taken {
-    authority cite ?("Md. Rule 8-202(a), CURRENCY UNCONFIRMED")
+    authority cite "Md. Rule 8-202(a)"
   }
-  edge-judgment-no-appeal "No appeal" -> conviction-final {
-    authority cite ?("Md. Rule 8-202(a), CURRENCY UNCONFIRMED")
-  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Md. Rule 8-202(a)" }
 }
 
-terminal acquitted: "Acquitted" outcome [win] cite ?("Md. Rule 4-327, CURRENCY UNCONFIRMED")
+terminal acquitted: "Acquitted" outcome [win] cite "Md. Rule 4-327"
 
-terminal dismissed: "Charges dismissed or defendant discharged" outcome [win, dismissal] cite ?("Md. Rule 4-252(g), CURRENCY UNCONFIRMED") {
+terminal dismissed: "Charges dismissed or defendant discharged" outcome [win, dismissal] cite "Md. Rule 4-252(g)"
+{
   note "Whether a dismissal bars refiling is not stated in the vendored text (a hole)."
 }
 
-terminal appeal-taken: "Appeal taken" outcome [appeal] cite ?("Md. Rule 8-202(a), CURRENCY UNCONFIRMED") {
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Md. Rule 8-202(a)"
+{
   note "The appeal continues in the Appellate Court of Maryland under Title 8; no criminal appellate package is promoted."
 }
 
-terminal conviction-final: "Conviction final" outcome [loss] cite ?("Md. Rule 8-202(a), CURRENCY UNCONFIRMED") {
+terminal conviction-final: "Conviction final" outcome [loss] cite "Md. Rule 8-202(a)"
+{
   note "Post-conviction relief (Md. Rules 4-401 to 4-408) and its statute are not modeled; federal habeas under 28 U.S.C. § 2254 is lit/habeas's."
 }

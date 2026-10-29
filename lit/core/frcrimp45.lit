@@ -294,6 +294,10 @@ counting frcrimp45-delaware effective [2023-12-01, ..) known_at 2023-04-24 super
 deadline frcrimp45-14-days: 14.days after Served() counted_by frcrimp45 { forum frcrimp }
 deadline frcrimp45-7-days-before: 7.days before Scheduled() counted_by frcrimp45 { forum frcrimp }
 
+deadline frcrimp45-delaware-2-days: 2.days after Served() counted_by frcrimp45-delaware {
+  forum frcrimp
+}
+
 test "fourteen days count every day" cite "FRCrimP 45(a)(1)(B)"
 {
   given Served(Personal) on 2025-03-03
@@ -322,4 +326,10 @@ test "counted back, a Sunday last day moves to Friday" cite "FRCrimP 45(a)(5)"
 {
   given Scheduled() on 2025-03-16
   expect deadline(frcrimp45-7-days-before) == 2025-03-07
+}
+
+test "Delaware Good Friday rolls a criminal-rule deadline" cite "FRCrimP 45(a)(6)(C)"
+{
+  given Served(Personal) on 2024-03-27
+  expect deadline(frcrimp45-delaware-2-days) == 2024-04-01
 }

@@ -103,8 +103,9 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
     assert_eq!(default.status.code(), Some(2));
     let default_text = String::from_utf8_lossy(&default.stdout);
     assert!(default_text.contains("designates `answer-period` due 2026-11-05"));
-    assert!(default_text
-        .contains("ttab-trademark-trial-and-appeal-board: 77 holes; --verbose to show"));
+    assert!(
+        default_text.contains("ttab-trademark-trial-and-appeal-board: 77 holes; --verbose to show")
+    );
     assert!(!default_text.contains("[L9003]"));
     insta::assert_snapshot!("ttab_check_human_default", default_text);
 

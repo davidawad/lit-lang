@@ -11,8 +11,8 @@ expression: default_text
     │ 
     │ Note: a designated due date must allow at least the deadline's own period; correct the date as the notice gives it
 ────╯
-ttab-trademark-trial-and-appeal-board: 124 holes; --verbose to show
-litigate check: failed (1 error(s), 124 warning(s))
+ttab-trademark-trial-and-appeal-board: 77 holes; --verbose to show
+litigate check: failed (1 error(s), 77 warning(s))
 {
   "profile": "dev",
   "files": [
@@ -23,6 +23,8 @@ litigate check: failed (1 error(s), 124 warning(s))
     "lit/ttab/../core/core.lit",
     "lit/ttab/../core/frap26-tests.lit",
     "lit/ttab/../core/frap26.lit",
+    "lit/ttab/../core/frbp9006-tests.lit",
+    "lit/ttab/../core/frbp9006.lit",
     "lit/ttab/../core/frcp6-history-tests.lit",
     "lit/ttab/../core/frcp6-tests.lit",
     "lit/ttab/../core/frcp6.lit",
@@ -58,7 +60,7 @@ litigate check: failed (1 error(s), 124 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 375,
+        "checked": 385,
         "subjects": "declarations"
       }
     },
@@ -68,7 +70,7 @@ litigate check: failed (1 error(s), 124 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 389,
+        "checked": 397,
         "subjects": "cites"
       }
     },
@@ -78,7 +80,7 @@ litigate check: failed (1 error(s), 124 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 141,
+        "checked": 147,
         "subjects": "version sets"
       }
     },
@@ -88,7 +90,7 @@ litigate check: failed (1 error(s), 124 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 141,
+        "checked": 147,
         "subjects": "version sets"
       }
     },
@@ -178,7 +180,7 @@ litigate check: failed (1 error(s), 124 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 167,
+        "checked": 170,
         "subjects": "inline tests"
       }
     },
@@ -197,19 +199,19 @@ litigate check: failed (1 error(s), 124 warning(s))
     {
       "name": "holes",
       "status": "warning",
-      "count": 124,
+      "count": 77,
       "examples": [
-        "lit/ttab/01-pre.lit:22:1: L9002 hole: `15 USC 1063(a); 37 CFR 2.101(c)` is not proved the text in force from 2025-01-18: 15 U.S.C. § 1063 (source `lanham` as of 2026-07-15): no source binding pins a `## versions 15 U.S.C. § 1063` amendment history",
-        "lit/ttab/01-pre.lit:79:145: L9002 hole: 37 CFR 2.102(c)(3); TBMP 207.03",
-        "lit/ttab/02-standstill.lit:18:88: L9002 hole: 37 CFR 2.102(c)(3); TBMP 605",
-        "lit/ttab/02-standstill.lit:21:20: L9002 hole: TBMP 605.01",
-        "lit/ttab/02-standstill.lit:28:20: L9002 hole: TBMP 605.03; TMEP 1207.01(d)(viii)",
-        "lit/ttab/02-standstill.lit:36:89: L9002 hole: TBMP 605.01",
-        "lit/ttab/02-standstill.lit:40:20: L9002 hole: TBMP 605.03",
-        "lit/ttab/02-standstill.lit:45:20: L9002 hole: TBMP 605.03; TMEP 1207.01(d)(viii)"
+        "lit/ttab/01-pre.lit:79:1: L9002 hole: `37 CFR 2.102(c)(3); TBMP 207.03` is not proved the text in force from 2025-01-18: TBMP § 207.03 (source `tbmp` as of 2026-06-30): amended effective 2025-06-01 (version 2025-06-01, issued on an unrecorded date), per `sources/tbmp-versions.txt`",
+        "lit/ttab/02-standstill.lit:18:1: L9002 hole: `37 CFR 2.102(c)(3); TBMP 605` is not proved the text in force from 2025-01-18: TBMP § 605 (source `tbmp` as of 2026-06-30): amended effective 2025-06-01 (version 2025-06-01, issued on an unrecorded date) and 1 later, per `sources/tbmp-versions.txt`",
+        "lit/ttab/02-standstill.lit:21:3: L9002 hole: `TBMP 605.01` is not proved the text in force from 2025-01-18: TBMP § 605.01 (source `tbmp` as of 2026-06-30): amended effective 2026-06-01 (version 2026-06-01, issued on an unrecorded date), per `sources/tbmp-versions.txt`",
+        "lit/ttab/02-standstill.lit:28:3: L9002 hole: `TBMP 605.03; TMEP 1207.01(d)(viii)` is not proved the text in force from 2025-01-18: TBMP § 605.03 (source `tbmp` as of 2026-06-30): amended effective 2025-06-01 (version 2025-06-01, issued on an unrecorded date) and 1 later, per `sources/tbmp-versions.txt`",
+        "lit/ttab/02-standstill.lit:37:1: L9002 hole: `TBMP 605.01` is not proved the text in force from 2025-01-18: TBMP § 605.01 (source `tbmp` as of 2026-06-30): amended effective 2026-06-01 (version 2026-06-01, issued on an unrecorded date), per `sources/tbmp-versions.txt`",
+        "lit/ttab/02-standstill.lit:41:3: L9002 hole: `TBMP 605.03` is not proved the text in force from 2025-01-18: TBMP § 605.03 (source `tbmp` as of 2026-06-30): amended effective 2025-06-01 (version 2025-06-01, issued on an unrecorded date) and 1 later, per `sources/tbmp-versions.txt`",
+        "lit/ttab/02-standstill.lit:46:3: L9002 hole: `TBMP 605.03; TMEP 1207.01(d)(viii)` is not proved the text in force from 2025-01-18: TBMP § 605.03 (source `tbmp` as of 2026-06-30): amended effective 2025-06-01 (version 2025-06-01, issued on an unrecorded date) and 1 later, per `sources/tbmp-versions.txt`",
+        "lit/ttab/02-standstill.lit:51:3: L9002 hole: `TBMP 212.01, 212.02; 37 CFR 2.133(a)` is not proved the text in force from 2025-01-18: TBMP § 212.01 (source `tbmp` as of 2026-06-30): amended effective 2025-06-01 (version 2025-06-01, issued on an unrecorded date) and 1 later, per `sources/tbmp-versions.txt`"
       ],
       "evidence": {
-        "checked": 124,
+        "checked": 77,
         "subjects": "holes"
       }
     },
@@ -219,7 +221,7 @@ litigate check: failed (1 error(s), 124 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 85,
+        "checked": 89,
         "subjects": "deadline and counting rules"
       }
     }
@@ -228,10 +230,10 @@ litigate check: failed (1 error(s), 124 warning(s))
     {
       "name": "ttab-trademark-trial-and-appeal-board",
       "version": "0.1.0",
-      "digest": "sha256:e86ca9eb2800bfa943d8d807b81b7fddd90c9120c9b8c824c2bc46482bcde8f1",
+      "digest": "sha256:090b008ae57f07f6b73980981e19571a3c453478aa50884ee1645d8c0af7e478",
       "root": "lit/ttab",
       "requested": false,
-      "holes": 124,
+      "holes": 77,
       "tests": {
         "passed": 30,
         "failed": 0
@@ -240,12 +242,12 @@ litigate check: failed (1 error(s), 124 warning(s))
     {
       "name": "core",
       "version": "1.0.0",
-      "digest": "sha256:24df2228c716b93db97eb6d919ea5c38931b83e4db3c97688b45443dd4bba283",
+      "digest": "sha256:55260e289402ade6368bef76fb37f1a032076b55dbbbf11607bf9c96d7b33e8f",
       "root": "lit/ttab/../core",
       "requested": false,
       "holes": 0,
       "tests": {
-        "passed": 137,
+        "passed": 140,
         "failed": 0
       }
     }

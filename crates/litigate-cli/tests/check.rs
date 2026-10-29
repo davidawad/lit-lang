@@ -104,7 +104,7 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
     let default_text = String::from_utf8_lossy(&default.stdout);
     assert!(default_text.contains("designates `answer-period` due 2026-11-05"));
     assert!(default_text
-        .contains("ttab-trademark-trial-and-appeal-board: 124 holes; --verbose to show"));
+        .contains("ttab-trademark-trial-and-appeal-board: 77 holes; --verbose to show"));
     assert!(!default_text.contains("[L9003]"));
     insta::assert_snapshot!("ttab_check_human_default", default_text);
 
@@ -128,7 +128,7 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
         "crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case",
     ]);
     let document: serde_json::Value = serde_json::from_slice(&json.stdout).unwrap();
-    assert_eq!(document["diagnostics"].as_array().unwrap().len(), 125);
+    assert_eq!(document["diagnostics"].as_array().unwrap().len(), 78);
     assert!(document["diagnostics"]
         .as_array()
         .unwrap()

@@ -2,57 +2,61 @@ module ny-court-for-the-trial-of-impeachments.trial
 
 // From the respondent's side. No rule text is vendored: every cite ?(...)
 // and every value ? is a hole (Lit.toml).
-
 import ny-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeOfAppealFiled }
 
 start charges
 
-state charges: "Formal charges or articles filed" by office cite ?("N.Y. Const. art. VI, § 24: not vendored")
-{
+state charges: "Formal charges or articles filed" by office cite ?("N.Y. Const. art. VI, § 24: not vendored") {
   note "The court is composed of the President of the Senate, the senators and the judges of the Court of Appeals, and tries impeachments the Assembly votes (N.Y. Const. art. VI, § 24, not vendored; unverified here). Whether any review lies from its judgment is a hole. Proceedings in the Court for the Trial of Impeachments: who files, notice and the respondent's rights are holes. The applicant is the respondent. No leading decision is named."
-  edge-charges-answer "Respondent served" -> answer { event ActionCommenced() authority cite ?("N.Y. Const. art. VI, § 24: not vendored") }
+  edge-charges-answer "Respondent served" -> answer {
+    event ActionCommenced()
+    authority cite ?("N.Y. Const. art. VI, § 24: not vendored")
+  }
 }
 
-state answer: "Answer and pretrial" by applicant cite ?("N.Y. Judiciary Law, impeachment trials: not vendored")
-{
+state answer: "Answer and pretrial" by applicant cite ?("N.Y. Judiciary Law, impeachment trials: not vendored") {
   note "Answer period, discovery and interim suspension are holes."
-  edge-answer-hearing "Set for trial or hearing" -> hearing { authority cite ?("N.Y. Const. art. VI, § 24: not vendored") }
+  edge-answer-hearing "Set for trial or hearing" -> hearing {
+    authority cite ?("N.Y. Const. art. VI, § 24: not vendored")
+  }
 }
 
-state hearing: "Trial or hearing" by court cite ?("N.Y. Const. art. VI, § 24: not vendored")
-{
+state hearing: "Trial or hearing" by court cite ?("N.Y. Const. art. VI, § 24: not vendored") {
   note "Burden and standard of proof are holes."
-  edge-hearing-decision "Decision issued" -> decision { authority cite ?("N.Y. Const. art. VI, § 24: not vendored") }
+  edge-hearing-decision "Decision issued" -> decision {
+    authority cite ?("N.Y. Const. art. VI, § 24: not vendored")
+  }
 }
 
-chance decision: "Tribunal decides" by court cite ?("N.Y. Const. art. VI, § 24: not vendored")
-{
+chance decision: "Tribunal decides" by court cite ?("N.Y. Const. art. VI, § 24: not vendored") {
   note "Outcome probabilities are holes."
   edge-decision-dismissed "Charges dismissed" -> charges-dismissed p ? { event DecisionFiled() }
   edge-decision-sanction "Sanction imposed" -> sanction p ? { event DecisionFiled() }
 }
 
-decision sanction: "Review sought?" by applicant cite ?("N.Y. Const. art. VI, § 24: not vendored")
-{
+decision sanction: "Review sought?" by applicant cite ?("N.Y. Const. art. VI, § 24: not vendored") {
   note "Review period and reviewing body are holes."
-  edge-sanction-final "No review" -> sanction-final { event JudgmentEntered() authority cite ?("N.Y. Const. art. VI, § 24: not vendored") }
-  edge-sanction-review "Review sought" -> review-sought { event NoticeOfAppealFiled() authority cite ?("N.Y. Const. art. VI, § 24: not vendored") }
+  edge-sanction-final "No review" -> sanction-final {
+    event JudgmentEntered()
+    authority cite ?("N.Y. Const. art. VI, § 24: not vendored")
+  }
+  edge-sanction-review "Review sought" -> review-sought {
+    event NoticeOfAppealFiled()
+    authority cite ?("N.Y. Const. art. VI, § 24: not vendored")
+  }
 }
 
-terminal charges-dismissed: "Charges dismissed" outcome [win] cite ?("N.Y. Const. art. VI, § 24: not vendored")
-{
+terminal charges-dismissed: "Charges dismissed" outcome [win] cite ?("N.Y. Const. art. VI, § 24: not vendored") {
   note "Costs and confidentiality are holes."
   payoff ?
 }
 
-terminal sanction-final: "Sanction final" outcome [loss] cite ?("N.Y. Const. art. VI, § 24: not vendored")
-{
+terminal sanction-final: "Sanction final" outcome [loss] cite ?("N.Y. Const. art. VI, § 24: not vendored") {
   note "Removal, suspension or censure takes effect."
   payoff ?
 }
 
-terminal review-sought: "Review sought" outcome [final] cite ?("N.Y. Const. art. VI, § 24: not vendored")
-{
+terminal review-sought: "Review sought" outcome [final] cite ?("N.Y. Const. art. VI, § 24: not vendored") {
   note "The reviewing court is its own package."
   payoff ?
 }

@@ -2,64 +2,80 @@ module ny-commission-of-appeals.appeal
 
 // No rule text is vendored: every cite ?(...) and every value ? is a hole
 // (Lit.toml).
-
-import ny-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+import ny-state-rules.{
+  DecisionFiled,
+  MandateIssued,
+  NoticeOfAppealFiled,
+  RecordFiled,
+  ReviewPetitionFiled,
+}
 
 start notice
 
-decision notice: "Notice of appeal within time?" by applicant cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
-{
+decision notice: "Notice of appeal within time?" by applicant cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") {
   note "Historical court: the Commission of Appeals heard causes pending in the Court of Appeals in the early 1870s; its dates are unverified here, no source being vendored. Appeal to the New York Commission of Appeals: appealability, the notice period and service are holes. No leading decision is named."
-  edge-notice-late "No timely notice" -> dismissed-untimely { authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") }
-  edge-notice-filed "Timely notice" -> record { event NoticeOfAppealFiled() authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") }
+  edge-notice-late "No timely notice" -> dismissed-untimely {
+    authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
+  }
+  edge-notice-filed "Timely notice" -> record {
+    event NoticeOfAppealFiled()
+    authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
+  }
 }
 
-state record: "Record or transcript prepared" by office cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
-{
+state record: "Record or transcript prepared" by office cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") {
   note "Record contents, transcript and fees are holes."
-  edge-record-briefing "Record filed" -> briefing { event RecordFiled() authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") }
+  edge-record-briefing "Record filed" -> briefing {
+    event RecordFiled()
+    authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
+  }
 }
 
-state briefing: "Briefs filed" by applicant cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
-{
+state briefing: "Briefs filed" by applicant cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") {
   note "Briefing periods, form and length are holes."
-  edge-briefing-argument "Argument or submission" -> argument { authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") }
+  edge-briefing-argument "Argument or submission" -> argument {
+    authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
+  }
 }
 
-state argument: "Argument or submission" by court cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
-{
+state argument: "Argument or submission" by court cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") {
   note "Argument may be discretionary."
-  edge-argument-decision "Decision issued" -> decision { authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") }
+  edge-argument-decision "Decision issued" -> decision {
+    authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
+  }
 }
 
-chance decision: "Court decides" by court cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
-{
+chance decision: "Court decides" by court cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") {
   note "Outcome probabilities are holes."
   edge-decision-affirmed "Affirmed" -> post-decision p ? { event DecisionFiled() }
-  edge-decision-reversed "Reversed, vacated or remanded" -> post-decision p ? { event DecisionFiled() }
+  edge-decision-reversed "Reversed, vacated or remanded" -> post-decision p ? {
+    event DecisionFiled()
+  }
 }
 
-decision post-decision: "Rehearing or further review?" by applicant cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
-{
+decision post-decision: "Rehearing or further review?" by applicant cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") {
   note "Rehearing and further-review periods are holes."
-  edge-post-mandate "No further review" -> mandate-issued { event MandateIssued() authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") }
-  edge-post-further "Further review sought" -> further-review { event ReviewPetitionFiled() authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") }
+  edge-post-mandate "No further review" -> mandate-issued {
+    event MandateIssued()
+    authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
+  }
+  edge-post-further "Further review sought" -> further-review {
+    event ReviewPetitionFiled()
+    authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
+  }
 }
 
-terminal dismissed-untimely: "Dismissed: no timely notice" outcome [loss, dismissal] cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
-{
+terminal dismissed-untimely: "Dismissed: no timely notice" outcome [loss, dismissal] cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") {
   note "Whether the time limit is jurisdictional is a hole."
   payoff ?
 }
 
-terminal mandate-issued: "Mandate or remittitur issued" outcome [final] cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
-{
+terminal mandate-issued: "Mandate or remittitur issued" outcome [final] cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") {
   note "The case returns to the court below; costs are holes."
   payoff ?
 }
 
-terminal further-review: "Further review sought in a higher court" outcome [final] cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
-{
+terminal further-review: "Further review sought in a higher court" outcome [final] cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") {
   note "Review in the higher court is its own package."
   payoff ?
 }

@@ -77,7 +77,8 @@ state trial: "Trial" by court cite "CPLR 4011"
 decision post-trial: "Post-trial motions decided" by court cite "CPLR 4404(a)"
 {
   note "After a jury trial the court, on motion or its own initiative, may set aside the verdict and direct judgment as a matter of law, or order a new trial where the verdict is contrary to the weight of the evidence or in the interest of justice (CPLR 4404(a)); after a nonjury trial it may set aside its decision, make new findings and direct judgment or a new trial (CPLR 4404(b)). The time for the motion (CPLR 4405) is not vendored and is not stated."
-  edge-post-trial-judgment "Motions resolved or none made" -> judgment-entered { event JudgmentEntered()
+  edge-post-trial-judgment "Motions resolved or none made" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "CPLR 5016(b)"
   }
 }

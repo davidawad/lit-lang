@@ -1,6 +1,12 @@
 module ny-appellate-terms-civil-appeals.appeal
 
-import ny-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+import ny-state-rules.{
+  DecisionFiled,
+  MandateIssued,
+  NoticeOfAppealFiled,
+  RecordFiled,
+  ReviewPetitionFiled,
+}
 
 // A civil appeal to an Appellate Term, from the appellant's side. Only
 // CPLR 5513 is vendored; whether and how it applies to an appeal from a
@@ -13,20 +19,25 @@ import ny-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, Recor
 // Part 640) and CPLR 5703 are not vendored: First Department values stay
 // holes. 22 NYCRR Part 732 is repealed. The outline named no leading
 // decision; none is kept.
-
 start notice
 
 decision notice: "Notice of appeal within 30 days of service with notice of entry?" by applicant cite "CPLR 5513(a)"
 {
   note "An appeal as of right is taken within 30 days after service by a party upon the appellant of a copy of the judgment or order and written notice of its entry, or, when the appellant served them, within 30 days of that service (CPLR 5513(a)); a party served with the adverse party's notice of appeal may appeal within 10 days after that service or within the subdivision (a) time, whichever is longer (CPLR 5513(c)). Service by mail or overnight delivery adds the days CPLR 2103(b)(2) and (6) provide (CPLR 5513(d)); CPLR 2103 is not vendored and the days are not stated. Appealability to the Appellate Term, and how the lower-court acts (UCCA, UDCA, UCtCA, UJCA art. 17) take up CPLR 5513, are holes: those acts are not vendored."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "CPLR 5513(a)" }
-  edge-notice-filed "Timely notice" -> record { event NoticeOfAppealFiled() authority cite "CPLR 5513(a)" }
+  edge-notice-filed "Timely notice" -> record {
+    event NoticeOfAppealFiled()
+    authority cite "CPLR 5513(a)"
+  }
 }
 
 state record: "Record or transcript prepared" by office cite "22 NYCRR 731.2(a)"
 {
   note "Second Department: the notice of appeal is served and filed in the court of original instance under CPLR 5515(1); the appellant also files a duplicate notice, a copy of the order or judgment appealed from and a Request for Appellate Term Action (RATA) form, and that court's clerk endorses the filing date and transmits them to the chief clerk (22 NYCRR 731.2(a)); the appeal is then on the general calendar (22 NYCRR 731.6(a)(1)). Record contents, the transcript and fees are holes: the reproduced printed record rule (731.9(a)(2)) is not in the vendored copy, and the First Department's rules (22 NYCRR Part 640) are not vendored."
-  edge-record-briefing "Record filed" -> briefing { event RecordFiled() authority cite "22 NYCRR 731.6(a)(1)" }
+  edge-record-briefing "Record filed" -> briefing {
+    event RecordFiled()
+    authority cite "22 NYCRR 731.6(a)(1)"
+  }
 }
 
 state briefing: "Briefs filed" by applicant cite "22 NYCRR 731.7(b)(1)"
@@ -45,14 +56,21 @@ chance decision: "Court decides" by court cite "22 NYCRR 731.14(a)"
 {
   note "Second Department: the court drafts its decision and order, which is entered in the Office of the Chief Clerk and deemed entered on the date it issues (22 NYCRR 731.14(a)). Outcome probabilities are holes."
   edge-decision-affirmed "Affirmed" -> post-decision p ? { event DecisionFiled() }
-  edge-decision-reversed "Reversed, vacated or remanded" -> post-decision p ? { event DecisionFiled() }
+  edge-decision-reversed "Reversed, vacated or remanded" -> post-decision p ? {
+    event DecisionFiled()
+  }
 }
 
-decision post-decision: "Reargument or further review?" by applicant cite ?("appeal by permission from the Appellate Term (CPLR 5703(a)): not vendored")
-{
+decision post-decision: "Reargument or further review?" by applicant cite ?("appeal by permission from the Appellate Term (CPLR 5703(a)): not vendored") {
   note "Further review of an Appellate Term order is in the Appellate Division by permission (CPLR 5703(a), not vendored); the time to move for permission is computed under CPLR 5513(b): within 30 days after service of the order with written notice of its entry, or, where permission has already been denied by the court whose determination is sought to be reviewed, of that order with notice of entry (CPLR 5513(b)). In the Second Department that motion is made to the Appellate Term in the manner and time CPLR 5513(b) and 5516 prescribe, and a motion for leave from an order granting or affirming a new trial or hearing must stipulate to judgment absolute if affirmed (22 NYCRR 731.12(b), (d)); motions to reargue, resettle or amend are made within 30 days after the appeal is decided, later only for good cause (22 NYCRR 731.12(a)). The remittitur and all First Department practice are holes."
-  edge-post-mandate "No further review" -> mandate-issued { event MandateIssued() authority cite "22 NYCRR 731.12(a)" }
-  edge-post-further "Permission to appeal sought" -> further-review { event ReviewPetitionFiled() authority cite "CPLR 5513(b)" }
+  edge-post-mandate "No further review" -> mandate-issued {
+    event MandateIssued()
+    authority cite "22 NYCRR 731.12(a)"
+  }
+  edge-post-further "Permission to appeal sought" -> further-review {
+    event ReviewPetitionFiled()
+    authority cite "CPLR 5513(b)"
+  }
 }
 
 terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismissal] cite "CPLR 5513(a)"

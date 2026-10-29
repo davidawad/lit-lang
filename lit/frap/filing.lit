@@ -7,8 +7,12 @@ import core.authority.{ CaseOrder, LocalRule }
 /// of monospaced type. The bounds are alternatives, and the certificate
 /// of compliance goes with the type volume only (FRAP 32(g)(1): "a brief
 /// submitted under ... 32(a)(7)(B)"). FRAP 32(f) lists what does not
-/// count; its last item, "any item specifically excluded by these rules
-/// or by local rule", names no part, so it is a hole. The type volume is
+/// count. Its last item, "any item specifically excluded by these rules
+/// or by local rule", adds no part of a principal brief: the only other
+/// exclusions the rules write are of the papers accompanying a petition
+/// (FRAP 5(c), 21(d)) or a motion (FRAP 27(d)(2)), and a local rule that
+/// excludes more is a `LocalRule` layer setting this limit (the
+/// delegation below), as a circuit package declares it. The type volume is
 /// the December 1, 2016 amendments'; the text before them is not
 /// vendored, so a brief filed earlier has no encoded limit
 /// (`unknown_before`) rather than this one. FRAP 32(e) lets a local rule
@@ -18,7 +22,7 @@ limit principal-brief delegable { to [LocalRule, CaseOrder], op set } {
   words <= 13_000 cite "FRAP 32(a)(7)(B)(i)"
   lines <= 1_300 cite "FRAP 32(a)(7)(B)(i)"
   requires certificate compliance for [words, lines] cite "FRAP 32(g)(1)"
-  excludes [cover-page, disclosure-statement, table-of-contents, table-of-citations, statement-regarding-oral-argument, addendum, certificate-of-counsel, signature-block, proof-of-service, ?("any item specifically excluded by these rules or by local rule")] cite "FRAP 32(f)"
+  excludes [cover-page, disclosure-statement, table-of-contents, table-of-citations, statement-regarding-oral-argument, addendum, certificate-of-counsel, signature-block, proof-of-service] cite "FRAP 32(f)"
 } effective [2016-12-01, ..) unknown_before 2016-12-01 cite "FRAP 32(a)(7)"
 
 /// An appellant's or appellee's principal brief filed with the circuit

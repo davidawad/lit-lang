@@ -69,6 +69,26 @@ rule duty tax-appellate-costs effective [2025-12-01, ..) known_at 2025-04-23 sup
   } cite "FRAP 39(e)(3)(B)"
 }
 
+/// The tests run in 2025, under the FRAP 39(d) version the package's
+/// `known_at` records; FRAP 39(e)(3) carries the same periods over.
+test "the bill of costs is due 14 days after the judgment is entered" cite "FRAP 39(e)(3)(A)"
+{
+  given EnteredOnAppeal(Judgment) on 2025-03-03
+  expect deadline(bill-of-costs-period) == 2025-03-17
+}
+
+test "objections are due 14 days after the bill is served electronically" cite "FRAP 39(e)(3)(B)"
+{
+  given ServedPaper(BillOfCosts, Electronic) on 2025-03-17
+  expect deadline(cost-objection-period) == 2025-03-31
+}
+
+test "a bill served by mail gains 3 days for objections" cite "FRAP 26(c)"
+{
+  given ServedPaper(BillOfCosts, Mail) on 2025-03-17
+  expect deadline(cost-objection-period) == 2025-04-03
+}
+
 state mandate-issued: "Mandate Issues" by office cite "Fed. R. App. P. 41(a)–(b)"
 {
   group mandate-group

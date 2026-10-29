@@ -648,7 +648,7 @@ limit principal-brief delegable { to [LocalRule, CaseOrder], op set } {
   words <= 13_000 cite "FRAP 32(a)(7)(B)(i)"
   lines <= 1_300 cite "FRAP 32(a)(7)(B)(i)"
   requires certificate compliance for [words, lines] cite "FRAP 32(g)(1)"
-  excludes [cover-page, disclosure-statement, table-of-contents, table-of-citations, statement-regarding-oral-argument, addendum, certificate-of-counsel, signature-block, proof-of-service, ?("any item specifically excluded by these rules or by local rule")] cite "FRAP 32(f)"
+  excludes [cover-page, disclosure-statement, table-of-contents, table-of-citations, statement-regarding-oral-argument, addendum, certificate-of-counsel, signature-block, proof-of-service] cite "FRAP 32(f)"
 } effective [2016-12-01, ..) unknown_before 2016-12-01 cite "FRAP 32(a)(7)"
 
 event PrincipalBriefFiled() paper principal-brief

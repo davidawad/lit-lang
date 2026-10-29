@@ -2891,9 +2891,8 @@ lowered rule reproduces their `due_date`, `base_date` and
 | `fixed(m, d)` | `date: {fixed: {month, day}}` |
 | `nth(n, w, m)` / `last(w, m)` | `date: {nthWeekday: {month, weekday, nth}}`, `nth` = n / -1 |
 | `every(y, from, m, d)` | `fixed` plus `cycle: {every: y, anchorYear: from}`, effective from no earlier than January 1 of `from` |
-| `once(date)` | `fixed` on that month and day, effective `[date, date + 1)` (widened by a day each side under `nearest_weekday`) |
-| `observed nearest_weekday` / none | `observed: "nearest-weekday"` / `"actual"` |
-| `observed next_day` | L6001: the engine has no Sunday-only observance |
+| `once(date)` | `fixed` on that month and day, effective `[date, date + 1)` (widened by a day each side under `nearest_weekday`, and forward by a day under `next_day`) |
+| `observed nearest_weekday` / `next_day` / none | `observed: "nearest-weekday"` / `"next-day"` / `"actual"` |
 
 A `within d` window lowers `Deadline.counting` when `d`'s counting rule
 is not the pack's `counting` (a FRAP 4 period in a district-court pack, a
@@ -3674,7 +3673,7 @@ gets one row per condition when the conditions classify differently.
 | C59 | L5004 non-terminal without an exit | verify | a | O9. |
 | C60 | L5005 mandatory deadlines unsatisfiable | verify | c | O11. |
 | C61 | L5006 test failed | verify | c | O12. |
-| C62 | L6001 business days in an edge deadline; `observed next_day`; non-calendar service days; service method not an engine method; rule without `include_last_day` or both roll kinds (§8.1, §8.2) | lower, sema | a | Target-capability sorts: the edge `deadline` field is `Days<CalendarDays\|CourtDays>`; the lowering-target counting type requires `include_last_day` and `{weekend, legal_holiday} ⊆ roll`; `ServiceMethod` is the engine's closed enum; `Observance` without `next_day` in the engine sort. |
+| C62 | L6001 business days in an edge deadline; non-calendar service days; service method not an engine method; rule without `include_last_day` or both roll kinds (§8.1, §8.2) | lower, sema | a | Target-capability sorts: the edge `deadline` field is `Days<CalendarDays\|CourtDays>`; the lowering-target counting type requires `include_last_day` and `{weekend, legal_holiday} ⊆ roll`; `ServiceMethod` is the engine's closed enum. |
 | C63 | L6001 manifest `counting` names an undeclared rule while some are declared; cite with no bound `url` (§8.2) | lower | b | Finite-set membership over the package's counting declarations and its bound sources. |
 | C64 | L6001 clock fragment rejected by `ClockLibrary::from_json`; patching instance without its base pack loaded (§8.2, §8.4) | lower | c | Runs the engine's own loader or depends on the set of packs in the build. |
 | C65 | L6002 import has no exact spelling; generated output differs from the expected document (§8.6, §8.7) | import, cli | c | Compares against an external JSON document. |

@@ -101,6 +101,8 @@ pub enum Observance {
     /// Saturday is observed the preceding Friday; Sunday the following
     /// Monday.
     NearestWeekday,
+    /// Sunday is observed the following Monday; Saturday is not moved.
+    NextDay,
 }
 
 /// A half-open date interval `[from, until)`; either end may be open.
@@ -173,7 +175,7 @@ impl Holiday {
         };
         let d = match (self.observed, raw.weekday()) {
             (Observance::NearestWeekday, date::SATURDAY) => raw.add_days(-1),
-            (Observance::NearestWeekday, date::SUNDAY) => raw.add_days(1),
+            (Observance::NearestWeekday | Observance::NextDay, date::SUNDAY) => raw.add_days(1),
             _ => raw,
         };
         self.effective

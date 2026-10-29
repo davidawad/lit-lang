@@ -248,7 +248,7 @@ litgraph-schema-bundle`) carries its JSON Schema.
 | `id`, `name` | string | |
 | `date` | `{"fixed": {month, day}}` or `{"nthWeekday": {month, weekday, nth}}` | `weekday` is `sunday`..`saturday`; `nth` is 1..=5, or -1..=-5 from the end of the month. A fifth weekday that does not exist in a month is skipped |
 | `cycle` | `{every, anchorYear}`? | occurs only in years `anchorYear + k*every` (e.g. every 4 from 1965) |
-| `observed` | `actual` (default) \| `nearest-weekday` | `nearest-weekday`: Saturday is observed Friday, Sunday Monday |
+| `observed` | `actual` (default) \| `nearest-weekday` \| `next-day` | `nearest-weekday`: Saturday is observed Friday, Sunday Monday; `next-day`: Sunday is observed Monday, Saturday stays |
 | `effective` | `{from?, until?}` | half-open `[from, until)` ISO dates, tested against the **observed** date |
 | `cite` | string? | authority for the holiday or its effective date |
 

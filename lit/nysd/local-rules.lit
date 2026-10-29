@@ -318,3 +318,135 @@ deadline plan-discovery-period: 28.days after PlanFirstAnswerFiled() counted_by 
 {
   forum frcp
 }
+
+test "discovery opposition period: 7 days after the trigger" cite "S.D.N.Y. Local Civ. R. 6.1(a)"
+{
+  given DiscoveryMotionServed() on 2026-11-02
+  expect deadline(discovery-opposition-period) == 2026-11-09
+}
+
+test "discovery reply period: 2 days after the trigger" cite "S.D.N.Y. Local Civ. R. 6.1(a)"
+{
+  given DiscoveryOppositionServed() on 2026-11-02
+  expect deadline(discovery-reply-period) == 2026-11-04
+}
+
+test "opposition period: 14 days after the trigger" cite "S.D.N.Y. Local Civ. R. 6.1(b)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(opposition-period) == 2026-11-16
+}
+
+test "reply period: 7 days after the trigger" cite "S.D.N.Y. Local Civ. R. 6.1(b)"
+{
+  given OppositionServed() on 2026-11-02
+  expect deadline(reply-period) == 2026-11-09
+}
+
+test "reconsideration period: 14 days after the trigger" cite "S.D.N.Y. Local Civ. R. 6.3"
+{
+  given OrderEntered() on 2026-11-02
+  expect deadline(reconsideration-period) == 2026-11-16
+}
+
+test "supplemental disclosure period: 14 days after the trigger" cite "S.D.N.Y. Local Civ. R. 7.1.1"
+{
+  given DisclosureInformationChanged() on 2026-11-02
+  expect deadline(supplemental-disclosure-period) == 2026-11-16
+}
+
+test "pro se notice period: 14 days after the trigger" cite "S.D.N.Y. Local Civ. R. 12.1"
+{
+  given ConversionRuled() on 2026-11-02
+  expect deadline(pro-se-notice-period) == 2026-11-16
+}
+
+test "amended pleading period: 7 days after the trigger" cite "S.D.N.Y. Local Civ. R. 15.1(b)"
+{
+  given AmendmentGranted() on 2026-11-02
+  expect deadline(amended-pleading-period) == 2026-11-09
+}
+
+test "prisoner discovery period: 120 days after the trigger" cite "S.D.N.Y. Local Civ. R. 33.2(d)"
+{
+  given PrisonerComplaintServed() on 2026-11-02
+  expect deadline(prisoner-discovery-period) == 2027-03-02
+}
+
+test "contention interrogatory period: 30 days before the trigger" cite "S.D.N.Y. Local Civ. R. 33.3(c)"
+{
+  given DiscoveryCutoff() on 2027-03-02
+  expect deadline(contention-interrogatory-period) == 2027-01-29
+}
+
+test "exhibit removal period: 90 days after the trigger" cite "S.D.N.Y. Local Civ. R. 39.1(b)"
+{
+  given FinalDecisionRendered() on 2026-11-02
+  expect deadline(exhibit-removal-period) == 2027-02-01
+}
+
+test "exhibit removal appeal period: 30 days after the trigger" cite "S.D.N.Y. Local Civ. R. 39.1(b)"
+{
+  given AppealDisposed() on 2026-11-02
+  expect deadline(exhibit-removal-appeal-period) == 2026-12-02
+}
+
+test "taxation notice period: 30 days after the trigger" cite "S.D.N.Y. Local Civ. R. 54.1(a)"
+{
+  given FinalJudgmentEntered() on 2026-11-02
+  expect deadline(taxation-notice-period) == 2026-12-02
+}
+
+test "taxation notice appeal period: 30 days after the trigger" cite "S.D.N.Y. Local Civ. R. 54.1(a)"
+{
+  given AppealDisposed() on 2026-11-02
+  expect deadline(taxation-notice-appeal-period) == 2026-12-02
+}
+
+test "magistrate objection response period: 14 days after the trigger" cite "S.D.N.Y. Local Civ. R. 72.1(b)"
+{
+  given MagistrateObjectionServed() on 2026-11-02
+  expect deadline(magistrate-objection-response-period) == 2026-11-16
+}
+
+test "commissioner pro se brief period: 30 days after the trigger" cite "S.D.N.Y. Local Soc. Sec. R. 7.1"
+{
+  given PlaintiffBriefDue() on 2026-11-02
+  expect deadline(commissioner-pro-se-brief-period) == 2026-12-02
+}
+
+test "pro se opposition period: 14 days after the trigger" cite "S.D.N.Y. Local Soc. Sec. R. 8.1"
+{
+  given CommissionerBriefServed() on 2026-11-02
+  expect deadline(pro-se-opposition-period) == 2026-11-16
+}
+
+test "plan answer period: 80 days after the trigger" cite "S.D.N.Y. Local Civ. R. 83.10(c)"
+{
+  given PlanComplaintServedWithRelease() on 2026-11-02
+  expect deadline(plan-answer-period) == 2027-01-21
+}
+
+test "plan conference period: 14 days after the trigger" cite "S.D.N.Y. Local Civ. R. 83.10(d)"
+{
+  given PlanFirstAnswerFiled() on 2026-11-02
+  expect deadline(plan-conference-period) == 2026-11-16
+}
+
+test "plan exemption period: 21 days after the trigger" cite "S.D.N.Y. Local Civ. R. 83.10(d)"
+{
+  given PlanFirstAnswerFiled() on 2026-11-02
+  expect deadline(plan-exemption-period) == 2026-11-23
+}
+
+test "plan disclosure period: 21 days after the trigger" cite "S.D.N.Y. Local Civ. R. 83.10(d)"
+{
+  given PlanFirstAnswerFiled() on 2026-11-02
+  expect deadline(plan-disclosure-period) == 2026-11-23
+}
+
+test "plan discovery period: 28 days after the trigger" cite "S.D.N.Y. Local Civ. R. 83.10(e)"
+{
+  given PlanFirstAnswerFiled() on 2026-11-02
+  expect deadline(plan-discovery-period) == 2026-11-30
+}

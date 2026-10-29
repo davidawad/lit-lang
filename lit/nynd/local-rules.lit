@@ -333,3 +333,159 @@ deadline bankruptcy-reply-brief-period: 20.days after BankruptcyAppelleeBriefFil
 {
   forum frcp
 }
+
+test "expedited service period: 60 days after the trigger" cite "N.D.N.Y. L.R. 4.1(b)"
+{
+  given ComplaintFiled() on 2026-11-02
+  expect deadline(expedited-service-period) == 2027-01-04
+}
+
+test "waiver answer period: 60 days after the trigger" cite "N.D.N.Y. L.R. 4.1(d)"
+{
+  given WaiverRequestSent() on 2026-11-02
+  expect deadline(waiver-answer-period) == 2027-01-04
+}
+
+test "complaint demand period: 14 days after the trigger" cite "N.D.N.Y. L.R. 5.1(f)"
+{
+  given SummonsWithNoticeRemoved() on 2026-11-02
+  expect deadline(complaint-demand-period) == 2026-11-16
+}
+
+test "removed complaint period: 20 days after the trigger" cite "N.D.N.Y. L.R. 5.1(f)"
+{
+  given ComplaintDemandServed() on 2026-11-02
+  expect deadline(removed-complaint-period) == 2026-11-23
+}
+
+test "dispositive opposition period: 21 days after the trigger" cite "N.D.N.Y. L.R. 7.1(a)"
+{
+  given DispositiveMotionServed() on 2026-11-02
+  expect deadline(dispositive-opposition-period) == 2026-11-23
+}
+
+test "dispositive reply period: 7 days after the trigger" cite "N.D.N.Y. L.R. 7.1(a)"
+{
+  given DispositiveResponseServed() on 2026-11-02
+  expect deadline(dispositive-reply-period) == 2026-11-09
+}
+
+test "nondispositive opposition period: 21 days after the trigger" cite "N.D.N.Y. L.R. 7.1(a)"
+{
+  given NonDispositiveMotionServed() on 2026-11-02
+  expect deadline(nondispositive-opposition-period) == 2026-11-23
+}
+
+test "cross motion reply period: 7 days after the trigger" cite "N.D.N.Y. L.R. 7.1(c)"
+{
+  given CrossMotionServed() on 2026-11-02
+  expect deadline(cross-motion-reply-period) == 2026-11-09
+}
+
+test "amicus period: 7 days after the trigger" cite "N.D.N.Y. L.R. 7.2(c)"
+{
+  given PrincipalBriefFiled() on 2026-11-02
+  expect deadline(amicus-period) == 2026-11-09
+}
+
+test "rico statement period: 30 days after the trigger" cite "N.D.N.Y. L.R. 9.2"
+{
+  given RicoPleadingFiled() on 2026-11-02
+  expect deadline(rico-statement-period) == 2026-12-02
+}
+
+test "amended pleading period: 14 days after the trigger" cite "N.D.N.Y. L.R. 15.1(c)"
+{
+  given AmendmentGranted() on 2026-11-02
+  expect deadline(amended-pleading-period) == 2026-11-16
+}
+
+test "motion to compel period: 14 days after the trigger" cite "N.D.N.Y. L.R. 16.2"
+{
+  given DiscoveryCutoff() on 2026-11-02
+  expect deadline(motion-to-compel-period) == 2026-11-16
+}
+
+test "stipulation of dismissal period: 30 days after the trigger" cite "N.D.N.Y. L.R. 41.3"
+{
+  given SettlementNotified() on 2026-11-02
+  expect deadline(stipulation-of-dismissal-period) == 2026-12-02
+}
+
+test "municipal stipulation of dismissal period: 90 days after the trigger" cite "N.D.N.Y. L.R. 41.3"
+{
+  given SettlementNotified() on 2026-11-02
+  expect deadline(municipal-stipulation-of-dismissal-period) == 2027-02-01
+}
+
+test "bill of costs period: 30 days after the trigger" cite "N.D.N.Y. L.R. 54.1(a)"
+{
+  given JudgmentEntered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-12-02
+}
+
+test "cost objections period: 14 days after the trigger" cite "N.D.N.Y. L.R. 54.1(a)"
+{
+  given BillOfCostsFiled() on 2026-11-02
+  expect deadline(cost-objections-period) == 2026-11-16
+}
+
+test "cost reply period: 7 days after the trigger" cite "N.D.N.Y. L.R. 54.1(a)"
+{
+  given CostObjectionsFiled() on 2026-11-02
+  expect deadline(cost-reply-period) == 2026-11-09
+}
+
+test "reconsideration period: 14 days after the trigger" cite "N.D.N.Y. L.R. 60.1"
+{
+  given ChallengedOrderEntered() on 2026-11-02
+  expect deadline(reconsideration-period) == 2026-11-16
+}
+
+test "magistrate appeal period: 14 days after the trigger" cite "N.D.N.Y. L.R. 72.1(b)"
+{
+  given MagistrateOrderServed() on 2026-11-02
+  expect deadline(magistrate-appeal-period) == 2026-11-16
+}
+
+test "magistrate appeal opposition period: 14 days after the trigger" cite "N.D.N.Y. L.R. 72.1(b)"
+{
+  given MagistrateAppealBriefFiled() on 2026-11-02
+  expect deadline(magistrate-appeal-opposition-period) == 2026-11-16
+}
+
+test "magistrate appeal reply period: 7 days after the trigger" cite "N.D.N.Y. L.R. 72.1(b)"
+{
+  given MagistrateAppealOppositionFiled() on 2026-11-02
+  expect deadline(magistrate-appeal-reply-period) == 2026-11-09
+}
+
+test "recommendation objection period: 14 days after the trigger" cite "N.D.N.Y. L.R. 72.1(c)"
+{
+  given RecommendationServed() on 2026-11-02
+  expect deadline(recommendation-objection-period) == 2026-11-16
+}
+
+test "recommendation response period: 14 days after the trigger" cite "N.D.N.Y. L.R. 72.1(c)"
+{
+  given ObjectionsServed() on 2026-11-02
+  expect deadline(recommendation-response-period) == 2026-11-16
+}
+
+test "bankruptcy appellant brief period: 40 days after the trigger" cite "N.D.N.Y. L.R. 81.2(b)"
+{
+  given BankruptcySchedulingNoticeFiled() on 2026-11-02
+  expect deadline(bankruptcy-appellant-brief-period) == 2026-12-14
+}
+
+test "bankruptcy appellee brief period: 40 days after the trigger" cite "N.D.N.Y. L.R. 81.2(b)"
+{
+  given BankruptcyAppellantBriefFiled() on 2026-11-02
+  expect deadline(bankruptcy-appellee-brief-period) == 2026-12-14
+}
+
+test "bankruptcy reply brief period: 20 days after the trigger" cite "N.D.N.Y. L.R. 81.2(b)"
+{
+  given BankruptcyAppelleeBriefFiled() on 2026-11-02
+  expect deadline(bankruptcy-reply-brief-period) == 2026-11-23
+}

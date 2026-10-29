@@ -317,3 +317,159 @@ deadline exhibit-removal-period: 30.days after ExhibitRemovalNoticeGiven() count
 {
   forum frcp
 }
+
+test "unsealed filing period: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 5.3(g)"
+{
+  given SealingDenied() on 2026-11-02
+  expect deadline(unsealed-filing-period) == 2026-11-16
+}
+
+test "social security judgment final period: 60 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
+{
+  given SocialSecurityJudgmentEntered() on 2026-11-02
+  expect deadline(social-security-judgment-final-period) == 2027-01-04
+}
+
+test "eaja petition period: 30 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
+{
+  given SocialSecurityJudgmentFinal() on 2026-11-02
+  expect deadline(eaja-petition-period) == 2026-12-02
+}
+
+test "eaja response period: 30 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
+{
+  given EajaPetitionFiled() on 2026-11-02
+  expect deadline(eaja-response-period) == 2026-12-02
+}
+
+test "fee petition response period: 30 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 5.5(g)"
+{
+  given FeePetitionServed() on 2026-11-02
+  expect deadline(fee-petition-response-period) == 2026-12-02
+}
+
+test "page extension request period: 7 days before the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 7(a)"
+{
+  given MemorandumDue() on 2027-03-02
+  expect deadline(page-extension-request-period) == 2027-02-23
+}
+
+test "summary judgment response period: 28 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  given SummaryJudgmentMotionServed() on 2026-11-02
+  expect deadline(summary-judgment-response-period) == 2026-11-30
+}
+
+test "summary judgment reply period: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  given SummaryJudgmentResponseServed() on 2026-11-02
+  expect deadline(summary-judgment-reply-period) == 2026-11-16
+}
+
+test "cross motion response period: 28 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  given CrossMotionServed() on 2026-11-02
+  expect deadline(cross-motion-response-period) == 2026-11-30
+}
+
+test "cross motion reply period: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  given CrossMotionResponseServed() on 2026-11-02
+  expect deadline(cross-motion-reply-period) == 2026-11-16
+}
+
+test "response period: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(response-period) == 2026-11-16
+}
+
+test "reply period: 7 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  given ResponseServed() on 2026-11-02
+  expect deadline(reply-period) == 2026-11-09
+}
+
+test "amended pleading period: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 15(c)"
+{
+  given AmendmentGranted() on 2026-11-02
+  expect deadline(amended-pleading-period) == 2026-11-16
+}
+
+test "settlement demand period: 14 days before the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
+{
+  given SettlementConferenceHeld() on 2027-03-02
+  expect deadline(settlement-demand-period) == 2027-02-16
+}
+
+test "settlement response period: 7 days before the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
+{
+  given SettlementConferenceHeld() on 2027-03-02
+  expect deadline(settlement-response-period) == 2027-02-23
+}
+
+test "pretrial statement period: 14 days before the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 16(e)"
+{
+  given FinalPretrialConferenceHeld() on 2027-03-02
+  expect deadline(pretrial-statement-period) == 2027-02-16
+}
+
+test "deposition privilege log period: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 26(d)"
+{
+  given PrivilegeAssertedAtDeposition() on 2026-11-02
+  expect deadline(deposition-privilege-log-period) == 2026-11-16
+}
+
+test "deposition notice period: 21 days before the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 30(a)"
+{
+  given DepositionHeld() on 2027-03-02
+  expect deadline(deposition-notice-period) == 2027-02-09
+}
+
+test "deposition documents period: 7 days before the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 30(b)"
+{
+  given DepositionHeld() on 2027-03-02
+  expect deadline(deposition-documents-period) == 2027-02-23
+}
+
+test "video objection motion period: 7 days before the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 30(c)"
+{
+  given TrialBegins() on 2027-03-02
+  expect deadline(video-objection-motion-period) == 2027-02-23
+}
+
+test "stipulation of dismissal period: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 41(a)"
+{
+  given CaseSettled() on 2026-11-02
+  expect deadline(stipulation-of-dismissal-period) == 2026-11-16
+}
+
+test "bill of costs period: 30 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 54(a)"
+{
+  given FinalJudgmentEntered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-12-02
+}
+
+test "cost opposition period: 21 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 54(b)"
+{
+  given BillOfCostsServed() on 2026-11-02
+  expect deadline(cost-opposition-period) == 2026-11-23
+}
+
+test "cost reply period: 21 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 54(c)"
+{
+  given CostOppositionServed() on 2026-11-02
+  expect deadline(cost-reply-period) == 2026-11-23
+}
+
+test "objection extension period: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 72(b)"
+{
+  given RecommendationServed() on 2026-11-02
+  expect deadline(objection-extension-period) == 2026-11-16
+}
+
+test "exhibit removal period: 30 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 79(c)"
+{
+  given ExhibitRemovalNoticeGiven() on 2026-11-02
+  expect deadline(exhibit-removal-period) == 2026-12-02
+}

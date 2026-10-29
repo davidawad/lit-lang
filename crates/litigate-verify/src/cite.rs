@@ -164,6 +164,31 @@ fn miscounted(
 ) -> Option<Diagnostic> {
     let (amount, unit) = period.filter(|&(n, _)| n > 0)?;
     let family = Measure::of(unit);
+    // A pinpoint the corpus does not section apart (`LR Crim. 32A(d)`
+    // under `LR Crim. 32A`, S.D. Ga.) that states no count of the measure
+    // sets its period in words (`the day prior to`), not by a sibling
+    // subdivision's count (`Within 14 days`, 32A(c)).
+    let uncounted = sections.iter().any(|s| {
+        let Some((k, body)) = (0..=s.pinpoint.len()).rev().find_map(|k| {
+            let heading = s.pinpoint[..k]
+                .iter()
+                .fold(s.heading.clone(), |h, p| format!("{h}({p})"));
+            corpus
+                .lookup_all(&heading)
+                .iter()
+                .find(|(file, _)| s.path.as_ref() == Some(file))
+                .map(|(_, section)| (k, unpaged(&section.body).into_owned()))
+        }) else {
+            return false;
+        };
+        k < s.pinpoint.len()
+            && !counts(&subdivision(&body, &s.pinpoint[k..]))
+                .iter()
+                .any(|(_, m)| m.monthly() == family.monthly())
+    });
+    if uncounted {
+        return None;
+    }
     let counts: Vec<(usize, u64, Measure)> = sections
         .iter()
         .enumerate()
@@ -216,6 +241,34 @@ fn miscounted(
         None,
         "set the period the cited rule states, or cite the rule that sets this one",
     ))
+}
+
+/// The lines of `body` under its pinpoint `markers` in turn (`(d)`, then
+/// `(1)` under it), each running to the next marker no deeper than its
+/// own; a marker the body does not write stops the narrowing there.
+fn subdivision(body: &str, markers: &[String]) -> String {
+    let lines: Vec<&str> = body.lines().collect();
+    let indent = |l: &str| l.len() - l.trim_start().len();
+    let marker = |l: &str| {
+        let t = l.trim_start();
+        t.starts_with('(')
+            && t[1..].split_once(')').is_some_and(|(m, _)| {
+                !m.is_empty() && m.len() <= 5 && m.chars().all(char::is_alphanumeric)
+            })
+    };
+    let (mut first, mut last) = (0, lines.len());
+    for m in markers {
+        let open = format!("({m})");
+        let Some(at) = (first..last).find(|&i| lines[i].trim_start().starts_with(&open)) else {
+            break;
+        };
+        let depth = indent(lines[at]);
+        last = (at + 1..last)
+            .find(|&i| marker(lines[i]) && indent(lines[i]) <= depth + 1)
+            .unwrap_or(last);
+        first = at;
+    }
+    lines[first..last].join("\n")
 }
 
 /// The most words between a count and its measure: `fourteen (14)

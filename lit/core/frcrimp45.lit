@@ -1,6 +1,6 @@
 module core.frcrimp45
 
-import core.calendar.{ delaware-holidays, us-federal-holidays }
+import core.calendar.{ delaware-holidays, district-state-holidays, us-federal-holidays }
 import core.time.{ Served, Scheduled, ServiceMethod }
 
 /// FRCrimP 45 from the 1985 amendments (effective August 1, 1985) as the
@@ -133,6 +133,7 @@ counting frcrimp45 effective [2009-12-01, 2016-12-01) known_at 2009-03-26 supers
     ExpressForeign: unrecognized
   } cite "FRCrimP (2011 ed.) 45(c)"
   holidays us-federal-holidays
+  forward_holidays district-state-holidays cite "FRCrimP 45(a)(6)(C)"
   forums [frcrimp]
   allow_hours
 }
@@ -164,6 +165,7 @@ counting frcrimp45 effective [2016-12-01, 2023-12-01) known_at 2016-04-28 supers
     ExpressForeign: unrecognized
   } cite "FRCrimP (2017 ed.) 45(c)"
   holidays us-federal-holidays
+  forward_holidays district-state-holidays cite "FRCrimP 45(a)(6)(C)"
   forums [frcrimp]
   allow_hours
 }
@@ -184,9 +186,11 @@ counting frcrimp45 effective [2016-12-01, 2023-12-01) known_at 2016-04-28 supers
 /// 45(a)(6)(A)'s list; `us-federal-holidays` has closed it since June 17,
 /// 2021, when Congress declared it a holiday (45(a)(6)(B)), so the count is
 /// that of the 2016 version above. 45(a)(6)(B)'s other declared holidays
-/// stay undeclared (no declaration is vendored), and (C)'s state holidays
-/// are a district's own count (`frcrimp45-delaware` below). Rule 45 is
-/// silent on periods stated in months or years, so none is counted.
+/// stay undeclared (no declaration is vendored). For forward-counted
+/// periods, (C)'s state holidays use the district-state calendar; its dates
+/// remain unavailable where the state's holiday law is not vendored. D. Del.
+/// has a sourced calendar below. Rule 45 is silent on periods stated in
+/// months or years, so none is counted.
 counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 supersedes frcrimp45@2016-12-01 cite "FRCrimP 45(a)"
 {
   exclude_trigger_day
@@ -205,6 +209,7 @@ counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 supersedes frc
     ExpressForeign: unrecognized
   } cite "FRCrimP 45(c)"
   holidays us-federal-holidays
+  forward_holidays district-state-holidays cite "FRCrimP 45(a)(6)(C)"
   forums [frcrimp]
   allow_hours
 }
@@ -293,6 +298,7 @@ counting frcrimp45-delaware effective [2023-12-01, ..) known_at 2023-04-24 super
 // force, and each test cites the rule it checks.
 deadline frcrimp45-14-days: 14.days after Served() counted_by frcrimp45 { forum frcrimp }
 deadline frcrimp45-7-days-before: 7.days before Scheduled() counted_by frcrimp45 { forum frcrimp }
+deadline frcrimp45-delaware-1-day: 1.days after Served() counted_by frcrimp45-delaware { forum frcrimp }
 
 deadline frcrimp45-delaware-2-days: 2.days after Served() counted_by frcrimp45-delaware {
   forum frcrimp
@@ -302,6 +308,13 @@ test "fourteen days count every day" cite "FRCrimP 45(a)(1)(B)"
 {
   given Served(Personal) on 2025-03-03
   expect deadline(frcrimp45-14-days) == 2025-03-17
+}
+
+test "a Delaware state holiday closes a forward criminal period" cite "FRCrimP 45(a)(6)(C)"
+{
+  given Served(Personal) on 2027-03-25
+  expect deadline(frcrimp45-delaware-1-day).nominal == 2027-03-26
+  expect deadline(frcrimp45-delaware-1-day) == 2027-03-29
 }
 
 test "a last day on a Saturday runs to Monday" cite "FRCrimP 45(a)(1)(C)"

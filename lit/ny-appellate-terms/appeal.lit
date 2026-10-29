@@ -5,9 +5,14 @@ import ny-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, Recor
 // A civil appeal to an Appellate Term, from the appellant's side. Only
 // CPLR 5513 is vendored; whether and how it applies to an appeal from a
 // lower court is a matter of the court acts (UCCA, UDCA, UCtCA, UJCA
-// art. 17), which are not vendored. The Appellate Terms' rules (22 NYCRR
-// Parts 640, 731, 732) and CPLR 5703 are not vendored: their cites and
-// values stay holes. The outline named no leading decision; none is kept.
+// art. 17), which are not vendored. The Second Department Appellate
+// Terms' rules (22 NYCRR Part 731) are vendored from Cornell LII's copy,
+// whose sections mix two numberings; only the current-numbering sections
+// (731.2, 731.6, 731.7, 731.12, 731.14) are cited, and the cites hold for
+// the Second Department only. The First Department's rules (22 NYCRR
+// Part 640) and CPLR 5703 are not vendored: First Department values stay
+// holes. 22 NYCRR Part 732 is repealed. The outline named no leading
+// decision; none is kept.
 
 start notice
 
@@ -18,35 +23,35 @@ decision notice: "Notice of appeal within 30 days of service with notice of entr
   edge-notice-filed "Timely notice" -> record { event NoticeOfAppealFiled() authority cite "CPLR 5513(a)" }
 }
 
-state record: "Record or transcript prepared" by office cite ?("22 NYCRR Parts 640, 731, 732: not vendored")
+state record: "Record or transcript prepared" by office cite "22 NYCRR 731.2(a)"
 {
-  note "Record contents, the transcript and fees are holes: the Appellate Terms' rules (22 NYCRR Parts 640, 731, 732) are not vendored."
-  edge-record-briefing "Record filed" -> briefing { event RecordFiled() authority cite ?("22 NYCRR Parts 640, 731, 732: not vendored") }
+  note "Second Department: the notice of appeal is served and filed in the court of original instance under CPLR 5515(1); the appellant also files a duplicate notice, a copy of the order or judgment appealed from and a Request for Appellate Term Action (RATA) form, and that court's clerk endorses the filing date and transmits them to the chief clerk (22 NYCRR 731.2(a)); the appeal is then on the general calendar (22 NYCRR 731.6(a)(1)). Record contents, the transcript and fees are holes: the reproduced printed record rule (731.9(a)(2)) is not in the vendored copy, and the First Department's rules (22 NYCRR Part 640) are not vendored."
+  edge-record-briefing "Record filed" -> briefing { event RecordFiled() authority cite "22 NYCRR 731.6(a)(1)" }
 }
 
-state briefing: "Briefs filed" by applicant cite ?("22 NYCRR Parts 640, 731, 732: not vendored")
+state briefing: "Briefs filed" by applicant cite "22 NYCRR 731.7(b)(1)"
 {
-  note "Briefing periods, form and length are holes: the Appellate Terms' rules are not vendored."
-  edge-briefing-argument "Argument or submission" -> argument { authority cite ?("22 NYCRR Parts 640, 731, 732: not vendored") }
+  note "Second Department, civil appeal: the original and four copies of the appellant's brief, with proof of service of one copy on each party, are filed within six months of the date of filing of the notice of appeal (22 NYCRR 731.7(b)(1)); the respondent's brief is due not more than 21 days after service of the appellant's brief and a reply brief not more than 7 days after service of the last respondent's brief (22 NYCRR 731.7(d)(1)). The parties may stipulate once to extend the time to perfect by up to 60 days, an answering brief by up to 21 days and a reply by up to 7 days, the stipulation effective only when filed; the chief clerk or a justice may extend for cause on letter application (22 NYCRR 731.7(g)). Dismissal for failure to perfect is a hole: the vendored 731.8 is of the older numbering. Brief form and length, and all First Department periods (22 NYCRR Part 640), are holes. The periods are stated, not counted."
+  edge-briefing-argument "Argument or submission" -> argument { authority cite "22 NYCRR 731.7(a)" }
 }
 
-state argument: "Argument or submission" by court cite ?("22 NYCRR Parts 640, 731, 732: not vendored")
+state argument: "Argument or submission" by court cite "22 NYCRR 731.7(e)"
 {
-  note "Whether argument is of right or discretionary is a hole: the Appellate Terms' rules are not vendored."
-  edge-argument-decision "Decision issued" -> decision { authority cite ?("22 NYCRR Parts 640, 731, 732: not vendored") }
+  note "Second Department: a calendar of the appeals set for argument or submission on a date is published in the New York Law Journal and/or on the court's website not less than 12 days before it, and the parties or their attorneys are notified by mail or email not less than five days before it (22 NYCRR 731.7(e)). Whether argument is of right or discretionary, and the First Department's practice, are holes."
+  edge-argument-decision "Decision issued" -> decision { authority cite "22 NYCRR 731.14(a)" }
 }
 
-chance decision: "Court decides" by court cite ?("22 NYCRR Parts 640, 731, 732: not vendored")
+chance decision: "Court decides" by court cite "22 NYCRR 731.14(a)"
 {
-  note "Outcome probabilities are holes."
+  note "Second Department: the court drafts its decision and order, which is entered in the Office of the Chief Clerk and deemed entered on the date it issues (22 NYCRR 731.14(a)). Outcome probabilities are holes."
   edge-decision-affirmed "Affirmed" -> post-decision p ? { event DecisionFiled() }
   edge-decision-reversed "Reversed, vacated or remanded" -> post-decision p ? { event DecisionFiled() }
 }
 
 decision post-decision: "Reargument or further review?" by applicant cite ?("appeal by permission from the Appellate Term (CPLR 5703(a)): not vendored")
 {
-  note "Further review of an Appellate Term order is in the Appellate Division by permission (CPLR 5703(a), not vendored); the time to move for permission is computed under CPLR 5513(b): within 30 days after service of the order with written notice of its entry, or, where permission has already been denied by the court whose determination is sought to be reviewed, of that order with notice of entry (CPLR 5513(b)). Reargument and the remittitur are holes: the Appellate Terms' rules are not vendored."
-  edge-post-mandate "No further review" -> mandate-issued { event MandateIssued() authority cite ?("22 NYCRR Parts 640, 731, 732: not vendored") }
+  note "Further review of an Appellate Term order is in the Appellate Division by permission (CPLR 5703(a), not vendored); the time to move for permission is computed under CPLR 5513(b): within 30 days after service of the order with written notice of its entry, or, where permission has already been denied by the court whose determination is sought to be reviewed, of that order with notice of entry (CPLR 5513(b)). In the Second Department that motion is made to the Appellate Term in the manner and time CPLR 5513(b) and 5516 prescribe, and a motion for leave from an order granting or affirming a new trial or hearing must stipulate to judgment absolute if affirmed (22 NYCRR 731.12(b), (d)); motions to reargue, resettle or amend are made within 30 days after the appeal is decided, later only for good cause (22 NYCRR 731.12(a)). The remittitur and all First Department practice are holes."
+  edge-post-mandate "No further review" -> mandate-issued { event MandateIssued() authority cite "22 NYCRR 731.12(a)" }
   edge-post-further "Permission to appeal sought" -> further-review { event ReviewPetitionFiled() authority cite "CPLR 5513(b)" }
 }
 
@@ -56,9 +61,9 @@ terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismi
   payoff ?
 }
 
-terminal mandate-issued: "Remittitur to the court below" outcome [final] cite ?("22 NYCRR Parts 640, 731, 732: not vendored")
+terminal mandate-issued: "Remittitur to the court below" outcome [final] cite "22 NYCRR 731.14(b)"
 {
-  note "The case returns to the court below; costs are holes."
+  note "The case returns to the court below. Second Department: costs and disbursements are allowed only as the court's order directs, and an award of costs includes disbursements under CPLR 8301 unless it directs otherwise (22 NYCRR 731.14(b)); amounts are holes, and so is the remittitur procedure."
   payoff ?
 }
 

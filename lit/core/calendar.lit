@@ -87,6 +87,13 @@ calendar district-state-holidays effective [1963-07-01, 2016-12-01) cite "FRCP 6
 /// earlier-date result (the missing source is the district's state-holiday
 /// statute/rule). Delaware's are vendored: `delaware-holidays`, read by
 /// core's `frcp6-delaware` and `frcrimp45-delaware` (the D. Del. counts).
+/// Colorado, Hawaii, Utah and New Mexico districts declare their own sourced
+/// lists in their packages (`cod`, `bankr-co`, `bankr-hi`, `utd`, `bankr-ut`,
+/// `nmd`, `bankr-nm`). For state statutes not yet vendored, the known holes
+/// include California, Arkansas, Georgia, Mississippi, Ohio, Oklahoma and
+/// Tennessee (`lg-ovyp`, GitHub #23); the Virgin Islands uses its court rule.
+/// The Tenth Circuit BAP (`bap10`) counts Colorado holidays only because a
+/// matter does not identify its originating district.
 calendar district-state-holidays effective [2016-12-01, ..) cite "FRCP 6(a)(6)(C)" historical
 {}
 

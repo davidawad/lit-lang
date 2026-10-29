@@ -14,9 +14,11 @@ import frap.events.{ AppealExtensionMoved, EnteredBelow, NoticeOfAppealFiled }
 // party's notice or motion discharges it. A co-party's notice is not
 // another's appeal: "the failure to name a party in a notice of appeal
 // ... constitutes a failure of that party to appeal" (Torres v. Oakland
-// Scavenger Co., 487 U.S. 312, 314 (1988)). The cross-appeal period names
-// the same bearer, so `later_of` absorbs that party's own open notice
-// period (an absorbed instance must share its bearer or be unbound).
+// Scavenger Co., 487 U.S. 312, 314 (1988)). The cross-appeal period is
+// borne by "any other party" than the first notice's (`bearer
+// other(applicant)`), each such party's own, so `later_of` absorbs that
+// party's own open notice period (an absorbed instance must share its
+// bearer or be unbound).
 /// FRAP 4(a)(1) and 4(a)(3) before the 2009 amendments, as the 2008
 /// edition of 28 U.S.C. App. prints them: the same 30, 60 and 14 days and
 /// the same FRAP 4(a)(5) grant, except that no extension "may exceed 30
@@ -69,7 +71,7 @@ rule duty cross-appeal effective [2002-12-01, 2009-12-01) known_at 2002-04-29 ci
 {
   deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "FRAP (2008 ed.) 4(a)(3)"
   {
-    bearer applicant
+    bearer other(applicant)
     trigger later_of(notice-civil-period)
     extend {
       by court
@@ -145,9 +147,10 @@ rule duty civil-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-26 
 /// (SPEC §5.3); where the United States is a party, its 60-day period is
 /// not the floor, so the date is the earlier, never a later one. A matter
 /// records only the first notice as `NoticeOfAppealFiled`, filed by
-/// "another party" than the one that may cross-appeal: a notice by a
-/// party not playing applicant opens an instance for each party that
-/// does, each absorbing that party's own notice period. The district
+/// "another party" than the one that may cross-appeal: it opens an
+/// instance for each party playing applicant other than the notice's own
+/// (`bearer other(applicant)`), each absorbing that party's own notice
+/// period; the first appellant has no cross-appeal period. The district
 /// court's power to extend "the time to file a notice of appeal" (FRAP
 /// 4(a)(5)(A)) reaches a cross-appeal notice (and 4(a)(5)(B) names
 /// 4(a)(3)), so the period carries the notice of appeal's FRAP 4(a)(5)
@@ -156,7 +159,7 @@ rule duty cross-appeal effective [2009-12-01, ..) known_at 2009-03-26 supersedes
 {
   deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "FRAP 4(a)(3)"
   {
-    bearer applicant
+    bearer other(applicant)
     trigger later_of(notice-civil-period)
     extend {
       by court

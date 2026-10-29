@@ -274,7 +274,7 @@ DeadlineDecl = "deadline", Ident, ":", Duration, ("from" | "after" | "before"),
                Expr, "counted_by", Ref, { VersionClause | Relation | Cite },
                [ DeclOpts ] ;
 DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", (String | Hole)
-             | "note", String | "bearer", Ref | "trigger", ( Ref | CallExpr )
+             | "note", String | "bearer", ( Ref | CallExpr ) | "trigger", ( Ref | CallExpr )
              | "designated", Ref | "interpretation", String
              | ("extend" | "waive"), Capability | "forum", Ref
              | "characterization", Ident, [ Cite ]
@@ -1296,7 +1296,10 @@ creates (design review 2026-10-23 §2.4, §2.7):
 - `bearer A`: the actor bearing each instance. A trigger done to (or by)
   a party playing `A` binds the instance to that party; otherwise one
   instance is created for each party playing `A`. With no `bearer`, or no
-  party playing it, the instance is unbound.
+  party playing it, the instance is unbound. `bearer other(A)`: the
+  trigger's own party never bears it; one instance is created for each
+  other party playing `A`, and none when no other does (FRAP 4(a)(3),
+  "any other party" after the first notice of appeal).
 - `trigger first | latest | each | later_of(e)`: what a matching trigger
   does while an instance for the same bearer is open. `first` (the
   default) ignores it, so a second service does not restart the period.

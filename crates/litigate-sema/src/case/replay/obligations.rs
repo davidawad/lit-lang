@@ -365,24 +365,28 @@ impl<'g> Cx<'_, 'g> {
     /// The parties bearing a new instance of `d` triggered by event `k`:
     /// the event's own party when it plays `d`'s bearer, else every party
     /// that does; one unbound instance when `d` names no bearer or no
-    /// party plays it.
+    /// party plays it. Under `bearer other(A)` the event's own party never
+    /// bears it: every other party playing `A` does (FRAP 4(a)(3), "any
+    /// other party"), and none when it is the only one.
     fn bearers(&self, d: &Deadline, k: usize) -> Vec<Option<String>> {
         let Some(actor) = &d.bearer else {
             return vec![None];
         };
         let party = &self.sorted[k].1.party;
-        let players: Vec<&str> = self
+        let mut players: Vec<&str> = self
             .case
             .parties
             .iter()
             .filter(|p| p.actor == *actor)
             .map(|p| p.id.as_str())
             .collect();
-        if players.contains(&party.as_str()) {
-            return vec![Some(party.clone())];
-        }
         if players.is_empty() {
             return vec![None];
+        }
+        if d.bearer_other {
+            players.retain(|p| *p != party.as_str());
+        } else if players.contains(&party.as_str()) {
+            return vec![Some(party.clone())];
         }
         players.into_iter().map(|p| Some(p.to_owned())).collect()
     }

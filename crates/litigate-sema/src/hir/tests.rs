@@ -224,6 +224,7 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
         extension_authority: None,
         note: None,
         bearer: None,
+        bearer_other: false,
         policy: TriggerPolicy::First,
         linear: false,
         extend: Vec::new(),

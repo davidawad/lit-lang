@@ -72,6 +72,7 @@ pub fn operations(world: &World<'_>, by: usize, target: usize, suspend: bool) ->
             let same_trigger = matches(&ta, &tb) && matches(&tb, &ta);
             if !same_trigger
                 || a.bearer != b.bearer
+                || a.bearer_other != b.bearer_other
                 || a.policy != b.policy
                 || a.extend != b.extend
                 || a.waive != b.waive

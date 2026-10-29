@@ -79,6 +79,10 @@ pub struct Deadline {
     /// whoever takes the `within` edge.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bearer: Option<String>,
+    /// The bearer is a party other than the trigger's (`bearer other(A)`):
+    /// FRAP 4(a)(3)'s "any other party" after the first notice of appeal.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub bearer_other: bool,
     /// How a trigger is treated while an instance is open (`trigger ...`).
     #[serde(default, skip_serializing_if = "TriggerPolicy::is_first")]
     pub policy: TriggerPolicy,

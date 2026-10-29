@@ -231,6 +231,7 @@ impl Spans for super::Deadline {
             extension_authority: _,
             note: _,
             bearer: _,
+            bearer_other: _,
             policy: _,
             linear: _,
             extend,

@@ -115,6 +115,7 @@ impl Cx<'_, '_> {
             extension_authority: self.string_or_hole(o.get("extension_authority")),
             note: Self::string(o.get("note")),
             bearer: obligation.bearer,
+            bearer_other: obligation.bearer_other,
             policy: obligation.policy,
             linear: obligation.linear,
             extend: obligation.extend,

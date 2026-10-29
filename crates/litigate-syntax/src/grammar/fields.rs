@@ -73,7 +73,7 @@ pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
     (KwExtendable, Some(boolean)),
     (KwExtensionAuthority, Some(string_or_hole)),
     (KwNote, Some(string)),
-    (KwBearer, Some(reference)),
+    (KwBearer, Some(ref_or_call)),
     (KwTrigger, Some(ref_or_call)),
     (KwExtend, Some(capability)),
     (KwWaive, Some(capability)),

@@ -16,6 +16,7 @@ use std::collections::BTreeMap;
 /// The obligation options of one deadline declaration.
 pub(super) struct Obligation {
     pub bearer: Option<String>,
+    pub bearer_other: bool,
     pub policy: TriggerPolicy,
     pub linear: bool,
     pub extend: Vec<Extension>,
@@ -36,7 +37,10 @@ impl Cx<'_, '_> {
         o: &BTreeMap<&str, &Field>,
         rule: Option<&Item>,
     ) -> Obligation {
-        let bearer = first_ref(o.get("bearer")).map(|r| self.actor(r));
+        let (bearer, bearer_other) = o
+            .get("bearer")
+            .and_then(|f| self.bearer(f))
+            .map_or((None, false), |(a, other)| (Some(a), other));
         let policy = o
             .get("trigger")
             .and_then(|f| self.policy(name, f))
@@ -78,11 +82,35 @@ impl Cx<'_, '_> {
         let extend = built.into_iter().flatten().collect();
         Obligation {
             bearer,
+            bearer_other,
             policy,
             linear,
             extend,
             waive,
         }
+    }
+
+    /// `bearer A` or `bearer other(A)`: the actor, and whether the bearer
+    /// is a party other than the trigger's.
+    fn bearer(&mut self, f: &Field) -> Option<(String, bool)> {
+        let e = first_expr(f)?;
+        match &e.kind {
+            ExprKind::Ref(r) => return Some((self.actor(r), false)),
+            ExprKind::Call(callee, args) if callee.is_simple() && callee.head.text == "other" => {
+                if let [a] = args.as_slice() {
+                    if let ExprKind::Ref(r) = &a.kind {
+                        return Some((self.actor(r), true));
+                    }
+                }
+            }
+            _ => {}
+        }
+        self.report(Report::new(
+            C::InvalidField,
+            e.range,
+            "expected `bearer <actor>` or `bearer other(<actor>)`",
+        ));
+        None
     }
 
     /// `trigger first | latest | each | later_of(d)`.

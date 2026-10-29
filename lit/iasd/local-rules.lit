@@ -1,6 +1,6 @@
 module iasd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frcp6.{ frcp6-iowa }
 
 // The Southern District of Iowa's own periods under the joint N.D. and
 // S.D. Iowa Local Rules, computed under FRCP 6(a) (LR 1(j)). Every local
@@ -133,144 +133,144 @@ event BankruptcyReplyBriefFiled() paper bankruptcy-reply-brief
 /// LR 7.1(a): within 21 days after a civil complaint is filed, each
 /// nongovernmental plaintiff that is not a natural person files its
 /// disclosure form.
-deadline plaintiff-disclosure-period: 21.days after ComplaintFiled() counted_by frcp6 cite "S.D. Iowa LR 7.1(a)"
+deadline plaintiff-disclosure-period: 21.days after ComplaintFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 7.1(a)"
 /// LR 7.1(b): within 30 days after service of a civil complaint on a
 /// nongovernmental defendant that is not a natural person, the defendant
 /// files its disclosure statement.
-deadline defendant-disclosure-period: 30.days after ComplaintServed() counted_by frcp6 cite "S.D. Iowa LR 7.1(b)"
+deadline defendant-disclosure-period: 30.days after ComplaintServed() counted_by frcp6-iowa cite "S.D. Iowa LR 7.1(b)"
 /// LR 7(e): each party resisting a motion files its resistance brief within
 /// 14 days after the motion is served; a resistance to a motion for summary
 /// judgment follows LR 56.
-deadline resistance-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. Iowa LR 7(e)"
+deadline resistance-period: 14.days after MotionServed() counted_by frcp6-iowa cite "S.D. Iowa LR 7(e)"
 /// LR 7(e): when the court rules on a motion without waiting for a
 /// resistance, any party may move for reconsideration within 7 days after
 /// the order is entered.
-deadline reconsideration-period: 7.days after OrderEnteredWithoutResistance() counted_by frcp6 cite "S.D. Iowa LR 7(e)"
+deadline reconsideration-period: 7.days after OrderEnteredWithoutResistance() counted_by frcp6-iowa cite "S.D. Iowa LR 7(e)"
 /// LR 7(g): the moving party may file a reply brief, not more than 5 pages,
 /// within 7 days after a resistance is served, to assert newly decided
 /// authority or answer new and unanticipated arguments.
-deadline reply-period: 7.days after ResistanceServed() counted_by frcp6 cite "S.D. Iowa LR 7(g)"
+deadline reply-period: 7.days after ResistanceServed() counted_by frcp6-iowa cite "S.D. Iowa LR 7(g)"
 /// LR 5A(g)(8): within 7 days after an electronically filed motion,
 /// resistance or reply totaling more than 100 pages with its supporting
 /// filings is filed, the filer delivers a paper copy to the clerk (also LR
 /// 10(c)(3), 56(f)).
-deadline paper-copy-period: 7.days after LongFilingFiled() counted_by frcp6 cite "S.D. Iowa LR 5A(g)(8)"
+deadline paper-copy-period: 7.days after LongFilingFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 5A(g)(8)"
 /// LR 5A(g)(9): within 7 days after an administrative record is filed
 /// electronically, the filer delivers a paper copy to the clerk.
-deadline record-copy-period: 7.days after AdministrativeRecordFiled() counted_by frcp6 cite "S.D. Iowa LR 5A(g)(9)"
+deadline record-copy-period: 7.days after AdministrativeRecordFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 5A(g)(9)"
 /// LR 5A(i): a lawyer or party who disputes the authenticity of a signature
 /// on an electronically filed document files an objection within 14 days
 /// after receiving the NEF; otherwise the signature is presumed authentic.
-deadline signature-objection-period: 14.days after NefReceived() counted_by frcp6 cite "S.D. Iowa LR 5A(i)"
+deadline signature-objection-period: 14.days after NefReceived() counted_by frcp6-iowa cite "S.D. Iowa LR 5A(i)"
 /// LR 16(a): within 90 days after the complaint is filed, all attorneys of
 /// record and unrepresented parties submit a proposed Rule 16(b) and 26(f)
 /// scheduling order and discovery plan, except in the cases LR 16(d) lists.
-deadline scheduling-plan-period: 90.days after ComplaintFiled() counted_by frcp6 cite "S.D. Iowa LR 16(a)"
+deadline scheduling-plan-period: 90.days after ComplaintFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 16(a)"
 /// LR 81(b): within 60 days after a notice of removal is filed, counsel
 /// submit the proposed scheduling order and discovery plan (also LR 16(a)).
-deadline removal-scheduling-plan-period: 60.days after NoticeOfRemovalFiled() counted_by frcp6 cite "S.D. Iowa LR 81(b)"
+deadline removal-scheduling-plan-period: 60.days after NoticeOfRemovalFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 81(b)"
 /// LR 16(h): in an action for judicial review on an administrative record
 /// other than a Social Security benefits case, the parties confer and
 /// submit a proposed scheduling order within 90 days after the complaint is
 /// filed.
-deadline judicial-review-schedule-period: 90.days after ComplaintFiled() counted_by frcp6 cite "S.D. Iowa LR 16(h)"
+deadline judicial-review-schedule-period: 90.days after ComplaintFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 16(h)"
 /// LR 26(a): objections to the initial disclosures or their timing, made at
 /// the Rule 26(f) conference, are memorialized in a document filed within
 /// 14 days after the scheduling order and discovery plan is filed.
-deadline disclosure-objection-period: 14.days after SchedulingPlanFiled() counted_by frcp6 cite "S.D. Iowa LR 26(a)"
+deadline disclosure-objection-period: 14.days after SchedulingPlanFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 26(a)"
 /// LR 16A(b): the proposed final pretrial order is submitted at least 3
 /// days before the final pretrial conference.
-deadline proposed-pretrial-order-period: 3.days before FinalPretrialConference() counted_by frcp6 cite "S.D. Iowa LR 16A(b)"
+deadline proposed-pretrial-order-period: 3.days before FinalPretrialConference() counted_by frcp6-iowa cite "S.D. Iowa LR 16A(b)"
 /// LR 16A(c): the FRCP 26(a)(3)(A) and LR 83E disclosures of witnesses and
 /// exhibits are served at least 21 days before the final pretrial
 /// conference (restated in LR 26(c)).
-deadline pretrial-disclosure-period: 21.days before FinalPretrialConference() counted_by frcp6 cite "S.D. Iowa LR 16A(c)"
+deadline pretrial-disclosure-period: 21.days before FinalPretrialConference() counted_by frcp6-iowa cite "S.D. Iowa LR 16A(c)"
 /// LR 16A(d): trial briefs, proposed voir dire, the statement of the case
 /// and proposed jury instructions with a verdict form are filed at least 3
 /// days before the final pretrial conference.
-deadline pretrial-filings-period: 3.days before FinalPretrialConference() counted_by frcp6 cite "S.D. Iowa LR 16A(d)"
+deadline pretrial-filings-period: 3.days before FinalPretrialConference() counted_by frcp6-iowa cite "S.D. Iowa LR 16A(d)"
 /// LR 23(a): in an action brought as a class or representative action, the
 /// party seeking to maintain it moves for certification within 180 days
 /// after commencement.
-deadline class-certification-period: 180.days after ComplaintFiled() counted_by frcp6 cite "S.D. Iowa LR 23(a)"
+deadline class-certification-period: 180.days after ComplaintFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 23(a)"
 /// LR 23(b): in a derivative action under FRCP 23.1, the plaintiff files
 /// its certification of adequate representation within 180 days after
 /// commencement.
-deadline derivative-certification-period: 180.days after ComplaintFiled() counted_by frcp6 cite "S.D. Iowa LR 23(b)"
+deadline derivative-certification-period: 180.days after ComplaintFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 23(b)"
 /// LR 23(c): in an action under FRCP 23.2 by or against members of an
 /// unincorporated association, the parties bringing it file their
 /// certification within 180 days after commencement.
-deadline association-certification-period: 180.days after ComplaintFiled() counted_by frcp6 cite "S.D. Iowa LR 23(c)"
+deadline association-certification-period: 180.days after ComplaintFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 23(c)"
 /// LR 37(c): except for good cause shown, motions to compel are filed
 /// within 14 days after the discovery deadline.
-deadline motion-to-compel-period: 14.days after DiscoveryDeadline() counted_by frcp6 cite "S.D. Iowa LR 37(c)"
+deadline motion-to-compel-period: 14.days after DiscoveryDeadline() counted_by frcp6-iowa cite "S.D. Iowa LR 37(c)"
 /// LR 41(a)(1): where no defendant is served within 90 days after the
 /// complaint is filed, the clerk dismisses without prejudice unless the
 /// plaintiff files a statement of good cause within 97 days after the
 /// complaint is filed.
-deadline service-statement-period: 97.days after ComplaintFiled() counted_by frcp6 cite "S.D. Iowa LR 41(a)(1)"
+deadline service-statement-period: 97.days after ComplaintFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 41(a)(1)"
 /// LR 41(a)(3): the clerk dismisses without prejudice where a motion for
 /// default judgment under FRCP 55(b) is not made within 30 days after the
 /// entry of default, unless the plaintiff advises that further court action
 /// is needed first.
-deadline default-judgment-motion-period: 30.days after DefaultEntered() counted_by frcp6 cite "S.D. Iowa LR 41(a)(3)"
+deadline default-judgment-motion-period: 30.days after DefaultEntered() counted_by frcp6-iowa cite "S.D. Iowa LR 41(a)(3)"
 /// LR 41(b): within 30 days after advising the court that an action has
 /// been settled, the parties file the documents required to terminate it.
-deadline settlement-papers-period: 30.days after SettlementAdvised() counted_by frcp6 cite "S.D. Iowa LR 41(b)"
+deadline settlement-papers-period: 30.days after SettlementAdvised() counted_by frcp6-iowa cite "S.D. Iowa LR 41(b)"
 /// LR 41(b): either party may move to reinstate a settled case dismissed
 /// under LR 41(b) within 60 days after the date of the dismissal order.
-deadline reinstatement-period: 60.days after SettlementDismissalEntered() counted_by frcp6 cite "S.D. Iowa LR 41(b)"
+deadline reinstatement-period: 60.days after SettlementDismissalEntered() counted_by frcp6-iowa cite "S.D. Iowa LR 41(b)"
 /// LR 54(a)(1)(A): within 14 days after entry of judgment, a party entitled
 /// to costs files the AO 133 form; failing to file it by then waives
 /// taxation of costs.
-deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "S.D. Iowa LR 54(a)(1)(A)"
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6-iowa cite "S.D. Iowa LR 54(a)(1)(A)"
 /// LR 54(a)(1)(C): a party opposing taxation of costs files a resistance
 /// within 14 days after service of the AO 133 form.
-deadline costs-resistance-period: 14.days after CostFormServed() counted_by frcp6 cite "S.D. Iowa LR 54(a)(1)(C)"
+deadline costs-resistance-period: 14.days after CostFormServed() counted_by frcp6-iowa cite "S.D. Iowa LR 54(a)(1)(C)"
 /// LR 54(a)(2): costs on appeal taxable in the district court under FRAP
 /// 39(e) are waived unless the party entitled to them requests their
 /// taxation within 21 days after the mandate issues.
-deadline appeal-costs-period: 21.days after MandateIssued() counted_by frcp6 cite "S.D. Iowa LR 54(a)(2)"
+deadline appeal-costs-period: 21.days after MandateIssued() counted_by frcp6-iowa cite "S.D. Iowa LR 54(a)(2)"
 /// LR 54A(b): in a Social Security benefits case the plaintiff won, counsel
 /// files an EAJA fee application or a certificate that the government's
 /// positions were substantially justified within 30 days after entry of
 /// final judgment.
-deadline social-security-fee-period: 30.days after SocialSecurityJudgmentEntered() counted_by frcp6 cite "S.D. Iowa LR 54A(b)"
+deadline social-security-fee-period: 30.days after SocialSecurityJudgmentEntered() counted_by frcp6-iowa cite "S.D. Iowa LR 54A(b)"
 /// LR 54A(c): a petition under 5 U.S.C. § 504(c)(2) for leave to appeal an
 /// agency fee determination is filed within 30 days after entry of the
 /// agency's order.
-deadline agency-fee-petition-period: 30.days after AgencyFeeOrderEntered() counted_by frcp6 cite "S.D. Iowa LR 54A(c)"
+deadline agency-fee-petition-period: 30.days after AgencyFeeOrderEntered() counted_by frcp6-iowa cite "S.D. Iowa LR 54A(c)"
 /// LR 54A(c): any answer to a petition for leave to appeal an agency fee
 /// determination is filed within 30 days after service of the petition.
-deadline agency-fee-answer-period: 30.days after FeePetitionServed() counted_by frcp6 cite "S.D. Iowa LR 54A(c)"
+deadline agency-fee-answer-period: 30.days after FeePetitionServed() counted_by frcp6-iowa cite "S.D. Iowa LR 54A(c)"
 /// LR 56(b): a party resisting a motion for summary judgment files its
 /// brief, response to the statement of material facts, statement of
 /// additional facts and appendix within 21 days after service of the
 /// motion.
-deadline summary-judgment-resistance-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "S.D. Iowa LR 56(b)"
+deadline summary-judgment-resistance-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-iowa cite "S.D. Iowa LR 56(b)"
 /// LR 56(g): a request for relief under FRCP 56(d) is made by separate
 /// motion filed within 14 days after service of the motion for summary
 /// judgment.
-deadline rule-56d-motion-period: 14.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "S.D. Iowa LR 56(g)"
+deadline rule-56d-motion-period: 14.days after SummaryJudgmentMotionServed() counted_by frcp6-iowa cite "S.D. Iowa LR 56(g)"
 /// LR 56(d): the moving party replies to the resisting party's statement of
 /// additional facts within 7 days after its service.
-deadline summary-judgment-reply-period: 7.days after AdditionalFactsServed() counted_by frcp6 cite "S.D. Iowa LR 56(d)"
+deadline summary-judgment-reply-period: 7.days after AdditionalFactsServed() counted_by frcp6-iowa cite "S.D. Iowa LR 56(d)"
 /// LR 72A: a party seeking review of a magistrate judge's pretrial order or
 /// report and recommendation files specific written objections within 14
 /// days after service of the order or report.
-deadline magistrate-objection-period: 14.days after MagistrateRulingServed() counted_by frcp6 cite "S.D. Iowa LR 72A"
+deadline magistrate-objection-period: 14.days after MagistrateRulingServed() counted_by frcp6-iowa cite "S.D. Iowa LR 72A"
 /// LR 72A: any response to objections to a magistrate judge's ruling is
 /// filed within 14 days after service of the objections.
-deadline magistrate-objection-response-period: 14.days after ObjectionsServed() counted_by frcp6 cite "S.D. Iowa LR 72A"
+deadline magistrate-objection-response-period: 14.days after ObjectionsServed() counted_by frcp6-iowa cite "S.D. Iowa LR 72A"
 /// LR 81(c): within 21 days after filing a notice of removal, each
 /// nongovernmental removing party that is not a natural person files its
 /// disclosure statement.
-deadline removing-party-disclosure-period: 21.days after NoticeOfRemovalFiled() counted_by frcp6 cite "S.D. Iowa LR 81(c)"
+deadline removing-party-disclosure-period: 21.days after NoticeOfRemovalFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 81(c)"
 /// LR 81(d): within 30 days after service of the notice of removal, each
 /// remaining nongovernmental party that is not a natural person files its
 /// disclosure statement.
-deadline remaining-party-disclosure-period: 30.days after NoticeOfRemovalServed() counted_by frcp6 cite "S.D. Iowa LR 81(d)"
+deadline remaining-party-disclosure-period: 30.days after NoticeOfRemovalServed() counted_by frcp6-iowa cite "S.D. Iowa LR 81(d)"
 /// LR 83B(b): when a case set for jury trial settles, the clerk is notified
 /// at least 7 days before the day scheduled for jury selection; otherwise
 /// juror costs may be assessed, except for good cause.
-deadline jury-cost-notice-period: 7.days before JurySelection() counted_by frcp6 cite "S.D. Iowa LR 83B(b)"
+deadline jury-cost-notice-period: 7.days before JurySelection() counted_by frcp6-iowa cite "S.D. Iowa LR 83B(b)"

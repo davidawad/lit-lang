@@ -7,16 +7,39 @@ import frap.events.{ RecordFiled, ServedPaper }
 import frap.filing.{ PrincipalBriefFiled }
 import frap.{ briefing-group }
 
-/// FRAP 31(a)(1): the appellant's brief is due 40 days after the record is
+/// FRAP 31(a)(1) as the 2009 amendments left it (2017 edition of 28
+/// U.S.C. App.): the appellant's brief is due 40 days after the record is
 /// filed, the appellee's 30 days after the appellant's brief is served,
-/// and a reply 21 days after the appellee's brief is served (the 2009
-/// amendments set 21 days in place of 14; FRAP 26, 2009 Committee Note,
-/// citing Rule 31(a)). A court of appeals "may shorten the time to serve
+/// and a reply "within 14 days after service of the appellee's brief" (the
+/// 2009 amendment changed only the reply's "3 days" before argument to "7
+/// days"; 2009 Committee Note). The December 1, 2018 amendment's 21 days
+/// is the version below. A court of appeals "may shorten the time to serve
 /// and file briefs, either by local rule or by order in a particular case"
 /// (FRAP 31(a)(2)), and may extend it for good cause (FRAP 26(b)), so each
 /// period delegates to `LocalRule` and `CaseOrder`. The two served briefs
 /// gain FRAP 26(c)'s 3 days after mail, carrier or prison-mail service.
-rule duty serve-and-file-briefs effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 31(a)"
+rule duty serve-and-file-briefs effective [2009-12-01, 2018-12-01) known_at 2009-03-26 cite "FRAP (2017 ed.) 31(a)"
+{
+  deadline appellant-brief-period: 40.days after RecordFiled() counted_by frap26 delegable {
+    to [LocalRule, CaseOrder]
+    op set
+  } cite "FRAP (2017 ed.) 31(a)(1)"
+  deadline appellee-brief-period: 30.days after ServedPaper(AppellantBrief) counted_by frap26 delegable {
+    to [LocalRule, CaseOrder]
+    op set
+  } cite "FRAP (2017 ed.) 31(a)(1)"
+  deadline reply-brief-period: 14.days after ServedPaper(AppelleeBrief) counted_by frap26 delegable {
+    to [LocalRule, CaseOrder]
+    op set
+  } cite "FRAP (2017 ed.) 31(a)(1)"
+}
+
+/// FRAP 31(a)(1) as amended December 1, 2018 (Apr. 26, 2018 order): the
+/// appellant "may serve and file a reply brief within 21 days after
+/// service of the appellee's brief", in place of 14. The 40 and 30 days
+/// and the delegation to `LocalRule` and `CaseOrder` (FRAP 31(a)(2), 26(b))
+/// are unchanged from the 2009 version above.
+rule duty serve-and-file-briefs effective [2018-12-01, ..) known_at 2018-04-26 supersedes serve-and-file-briefs@2009-12-01 cite "FRAP 31(a)"
 {
   deadline appellant-brief-period: 40.days after RecordFiled() counted_by frap26 delegable {
     to [LocalRule, CaseOrder]

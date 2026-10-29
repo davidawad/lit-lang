@@ -27,7 +27,7 @@ pix_fmt=yuv420p
 r_frame_rate=30/1
 nb_frames=1350
 duration=45.000000
-size=3619138
+size=4295780
 ```
 
 Both files have `moov` before `mdat` (faststart).

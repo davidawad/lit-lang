@@ -16,6 +16,7 @@ gets a FILED stamp showing that request's real `elapsed_ms`.
   Frames were rendered deterministically with `__render(t)` in headless
   Chromium and piped into ffmpeg.
   Poster: `docs/media/litgraph-engine.png` (1280×720, the index card at t = 1.5 s).
+  Both were last rendered from this `index.html` as of 2c338cf2 (litigate 0.6.0).
 
 ## Storyboard (45 s loop; starts and ends on the same card, so it loops seamlessly)
 

@@ -1262,6 +1262,207 @@ government publication or a court opinion; no client material.
 - `malek-2cir-2024.txt` sha256: `f22550982999b90cc8f8e0be2852817e4c47d7d23daac14371f1c1c9818e440b`.
 - Manifest id `malek-2cir-2024`.
 
+## Rulings: Supreme Court decisions of the expect corpus (`rulings/`)
+
+Stored by lg-wvlf.4 and lg-wvlf.6 on 2026-10-28 the way the CAP entries above are; `rulings/MANIFEST.json` has an entry for each (`rulings/README.md`).
+
+### `rulings/arizona-v-washington-scotus-1978.html`, `rulings/arizona-v-washington-scotus-1978.json`, `rulings/arizona-v-washington-scotus-1978.txt`
+
+- Arizona v. Washington, 434 U.S. 497 (U.S. 1978-02-21), No. 76-1168.
+- Source: <https://static.case.law/us/434/html/0497-01.html>; metadata <https://static.case.law/us/434/cases/0497-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:06:10Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `arizona-v-washington-scotus-1978.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `arizona-v-washington-scotus-1978.html` sha256: `62e91b97af21253a49af40d5422d1c04b7b41371faab729980a72b2730166402`.
+- `arizona-v-washington-scotus-1978.json` sha256: `65a447057a64f99d1c512c3a2a2f5463e2e96f87674cfb6689330aa244af1f06`.
+- `arizona-v-washington-scotus-1978.txt` sha256: `9498c625ebe007a1b1d93b2fccee168729322daa4e3a2e167ca5b820d64b7d6d`.
+- Manifest id `arizona-v-washington-scotus-1978`.
+
+### `rulings/blockburger-scotus-1932.html`, `rulings/blockburger-scotus-1932.json`, `rulings/blockburger-scotus-1932.txt`
+
+- Blockburger v. United States, 284 U.S. 299 (U.S. 1932-01-04), No. 374.
+- Source: <https://static.case.law/us/284/html/0299-01.html>; metadata <https://static.case.law/us/284/cases/0299-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:06:10Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `blockburger-scotus-1932.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `blockburger-scotus-1932.html` sha256: `330ecff0850cedc9be6b3352cf46f2b069c6826c19259cda4ae5b9559c979309`.
+- `blockburger-scotus-1932.json` sha256: `173fca35016d98fd445d87decb515c142a315837ec403d4ac7b1e8e2392bba9b`.
+- `blockburger-scotus-1932.txt` sha256: `4807c967318bf71686a7dac7037bca7439bd374a3e458df07673f8ee7a20d045`.
+- Manifest id `blockburger-scotus-1932`.
+
+### `rulings/brady-scotus-1963.html`, `rulings/brady-scotus-1963.json`, `rulings/brady-scotus-1963.txt`
+
+- Brady v. Maryland, 373 U.S. 83 (U.S. 1963-05-13), No. 490.
+- Source: <https://static.case.law/us/373/html/0083-01.html>; metadata <https://static.case.law/us/373/cases/0083-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:06:11Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `brady-scotus-1963.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `brady-scotus-1963.html` sha256: `3a907e498e32719a604db2690d884be26fc20b47fad1934b6b6bd827201ec0d4`.
+- `brady-scotus-1963.json` sha256: `7b6ba79157ce0259aa239bdfab15a78bb2ad59aced5750f961ca6946df5342af`.
+- `brady-scotus-1963.txt` sha256: `9c63c62c1a7b8e3994df516dadde09bf3fb73f54256b75c2d6d9b462ac0c08cf`.
+- Manifest id `brady-scotus-1963`.
+
+### `rulings/burks-scotus-1978.html`, `rulings/burks-scotus-1978.json`, `rulings/burks-scotus-1978.txt`
+
+- Burks v. United States, 437 U.S. 1 (U.S. 1978-06-14), No. 76-6528.
+- Source: <https://static.case.law/us/437/html/0001-01.html>; metadata <https://static.case.law/us/437/cases/0001-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:06:11Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `burks-scotus-1978.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `burks-scotus-1978.html` sha256: `29745877ee837814f40f067f24eac01df9383b0581892df37656f705498464ef`.
+- `burks-scotus-1978.json` sha256: `a26d6415e108072f6e339f46da00276966194e7b99aaa16671186b515f286eda`.
+- `burks-scotus-1978.txt` sha256: `89e9734859b304604da3ccb6d63e327a89f06a8b975eb53dac436b94707e776f`.
+- Manifest id `burks-scotus-1978`.
+
+### `rulings/davis-scotus-1973.html`, `rulings/davis-scotus-1973.json`, `rulings/davis-scotus-1973.txt`
+
+- Davis v. United States, 411 U.S. 233 (U.S. 1973-04-17), No. 71-6481.
+- Source: <https://static.case.law/us/411/html/0233-01.html>; metadata <https://static.case.law/us/411/cases/0233-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:06:13Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `davis-scotus-1973.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `davis-scotus-1973.html` sha256: `e62ef48f1515dbf6ba1a554252ac09f79fcfcf86b1a32030b0ab14edd459c6aa`.
+- `davis-scotus-1973.json` sha256: `d0a63567f80b05d465f0e78ce0d8c7515339096cf5f2811a07eee56f4f7c1a6c`.
+- `davis-scotus-1973.txt` sha256: `c5e96baeef249e2b9a33b1d4780bae212792244d665af7697fe9603cb8c544bb`.
+- Manifest id `davis-scotus-1973`.
+
+### `rulings/giglio-scotus-1972.html`, `rulings/giglio-scotus-1972.json`, `rulings/giglio-scotus-1972.txt`
+
+- Giglio v. United States, 405 U.S. 150 (U.S. 1972-02-24), No. 70-29.
+- Source: <https://static.case.law/us/405/html/0150-01.html>; metadata <https://static.case.law/us/405/cases/0150-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:06:14Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `giglio-scotus-1972.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `giglio-scotus-1972.html` sha256: `1b7bbeb633af75db5fdd6cee8b684c911648581f808210264ff121b270f23266`.
+- `giglio-scotus-1972.json` sha256: `270d2d573572dbc99ec50e4ef1ef447901b17fd2dd2d59e49facdd256b55715d`.
+- `giglio-scotus-1972.txt` sha256: `43c35fdc0a3255b0f5648dcdbb6439a1c14e1ba953a03ca224adf0a4bb686fa6`.
+- Manifest id `giglio-scotus-1972`.
+
+### `rulings/jackson-v-virginia-scotus-1979.html`, `rulings/jackson-v-virginia-scotus-1979.json`, `rulings/jackson-v-virginia-scotus-1979.txt`
+
+- Jackson v. Virginia, 443 U.S. 307 (U.S. 1979-06-28), No. 78-5283.
+- Source: <https://static.case.law/us/443/html/0307-01.html>; metadata <https://static.case.law/us/443/cases/0307-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:06:14Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `jackson-v-virginia-scotus-1979.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `jackson-v-virginia-scotus-1979.html` sha256: `82c2a9ec599ea1fa3fa374842321927d97ef695f65bd9790420256d451061478`.
+- `jackson-v-virginia-scotus-1979.json` sha256: `2981587f3eb477a6869ea64ec3f0675194ba578ec1d634c8afd9864a11fbb2ed`.
+- `jackson-v-virginia-scotus-1979.txt` sha256: `9b5e22fc935a13bb8ddc99386bb690d4ff7c9dd588d69354429c38733fd36566`.
+- Manifest id `jackson-v-virginia-scotus-1979`.
+
+### `rulings/luce-scotus-1984.html`, `rulings/luce-scotus-1984.json`, `rulings/luce-scotus-1984.txt`
+
+- Luce v. United States, 469 U.S. 38 (U.S. 1984-12-10), No. 83-912.
+- Source: <https://static.case.law/us/469/html/0038-01.html>; metadata <https://static.case.law/us/469/cases/0038-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:06:15Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `luce-scotus-1984.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `luce-scotus-1984.html` sha256: `4c9f34481cf0b29ab82ebddb419b9dc4369127f5eb310e3eae3a6c0c6a36b2ed`.
+- `luce-scotus-1984.json` sha256: `725d56fe3e1207db4149436a0554dd31c71c9d6f7bfe8e7aef85cf3fe7834f1e`.
+- `luce-scotus-1984.txt` sha256: `df86b5db7ab6affbf981084dc96eb642ab3b6878383ba927c28042dfe6fd9d55`.
+- Manifest id `luce-scotus-1984`.
+
+### `rulings/mapp-scotus-1961.html`, `rulings/mapp-scotus-1961.json`, `rulings/mapp-scotus-1961.txt`
+
+- Mapp v. Ohio, 367 U.S. 643 (U.S. 1961-06-19), No. 236.
+- Source: <https://static.case.law/us/367/html/0643-01.html>; metadata <https://static.case.law/us/367/cases/0643-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:06:15Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `mapp-scotus-1961.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `mapp-scotus-1961.html` sha256: `3253654902b470cc221a7c856041b3791ed6c6a8143a48756b10ec455d5b34b3`.
+- `mapp-scotus-1961.json` sha256: `583b80d79a6cdb6912cd5a943160c069adfcdac815be7ab3085a08e32cee2bab`.
+- `mapp-scotus-1961.txt` sha256: `611c744d24b25dd3686f0a3f2d5a3effe48b78ce0fb062110d2a043abd2b6565`.
+- Manifest id `mapp-scotus-1961`.
+
+### `rulings/booker-scotus-2005.html`, `rulings/booker-scotus-2005.json`, `rulings/booker-scotus-2005.txt`
+
+- United States v. Booker, 543 U.S. 220 (U.S. 2005-01-12), No. 04-104.
+- Source: <https://static.case.law/us/543/html/0220-01.html>; metadata <https://static.case.law/us/543/cases/0220-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:06:16Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `booker-scotus-2005.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `booker-scotus-2005.html` sha256: `1fdd940ceaa15c4446f9e41c5d45f64ee036b272e2f69447bc5d0dec0ca06b10`.
+- `booker-scotus-2005.json` sha256: `98692bdb2651163b3055b79ae3e8fcb54129b12c1fe81c1fd61fc19b08fdd0bf`.
+- `booker-scotus-2005.txt` sha256: `d6e67fab19caa4c3a0d53c12d7bcde5ad1d6cd550e5f0715571bde922f2b4465`.
+- Manifest id `booker-scotus-2005`.
+
+### `rulings/booker-scotus-2005.docket.html`
+
+- Supreme Court docket No. 04-104, United States v. Booker: the docket page as served.
+- Source: <https://www.supremecourt.gov/search.aspx?filename=/docketfiles/04-104.htm>.
+- Retrieved 2026-10-28 (2026-10-28T14:07:59Z). Downloaded as served (fetched with curl); stored unedited.
+- sha256: `8e09158bed73280455fb265a8808e5714025710b5b7c27061a7562b9f4379a5b`.
+- Manifest id `booker-scotus-2005` (`docket_file`).
+
+### `rulings/smith-v-barry-scotus-1992.html`, `rulings/smith-v-barry-scotus-1992.json`, `rulings/smith-v-barry-scotus-1992.txt`
+
+- Smith v. Barry, 502 U.S. 244 (U.S. 1992-01-14), No. 90-7477.
+- Source: <https://static.case.law/us/502/html/0244-01.html>; metadata <https://static.case.law/us/502/cases/0244-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:04:31Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `smith-v-barry-scotus-1992.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `smith-v-barry-scotus-1992.html` sha256: `05805beb65772fb7e36c9a104d2324cf0d3994b474029a8d83f950401df5f79a`.
+- `smith-v-barry-scotus-1992.json` sha256: `df34b88f3fcd0ab76970d6e9dc07e1991b886d36a33908792e579366cfc677fd`.
+- `smith-v-barry-scotus-1992.txt` sha256: `02e8a58e1ba3ada08840ac56cb54a77ea5244835dadc07a12391260d3dd1b3ef`.
+- Manifest id `smith-v-barry-scotus-1992`.
+
+### `rulings/torres-scotus-1988.html`, `rulings/torres-scotus-1988.json`, `rulings/torres-scotus-1988.txt`
+
+- Torres v. Oakland Scavenger Co., 487 U.S. 312 (U.S. 1988-06-24), No. 86-1845.
+- Source: <https://static.case.law/us/487/html/0312-01.html>; metadata <https://static.case.law/us/487/cases/0312-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:04:32Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `torres-scotus-1988.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `torres-scotus-1988.html` sha256: `f00d5a85ddadf34a2db62d0c01077fd440588cc274cb8a95c84834c1f12e883f`.
+- `torres-scotus-1988.json` sha256: `cb4174c18740cf513ce85ebff0d1f58a2bd695fc7ca1f351be0c128767de7ef3`.
+- `torres-scotus-1988.txt` sha256: `c7746cce94f058affcc0ac7797c3facad7335d9abfc7be25316e28cd8cb036c5`.
+- Manifest id `torres-scotus-1988`.
+
+### `rulings/foman-scotus-1962.html`, `rulings/foman-scotus-1962.json`, `rulings/foman-scotus-1962.txt`
+
+- Foman v. Davis, 371 U.S. 178 (U.S. 1962-12-03), No. 41.
+- Source: <https://static.case.law/us/371/html/0178-01.html>; metadata <https://static.case.law/us/371/cases/0178-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:04:33Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `foman-scotus-1962.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `foman-scotus-1962.html` sha256: `f3a16d7000b0f6dc2579d5a97651e59732959b365ad3f24fdb75d333af3179fa`.
+- `foman-scotus-1962.json` sha256: `8caa0f0bf23b3907b7b7b69a1d965588abb0561de7d1912970645f161b4ba999`.
+- `foman-scotus-1962.txt` sha256: `044761ffa6e99778620eccdb990c47e6eff8017a3df32a988439cbdda6624c44`.
+- Manifest id `foman-scotus-1962`.
+
+### `rulings/gonzalez-v-crosby-scotus-2005.html`, `rulings/gonzalez-v-crosby-scotus-2005.json`, `rulings/gonzalez-v-crosby-scotus-2005.txt`
+
+- Gonzalez v. Crosby, 545 U.S. 524 (U.S. 2005-06-23), No. 04-6432.
+- Source: <https://static.case.law/us/545/html/0524-01.html>; metadata <https://static.case.law/us/545/cases/0524-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:04:34Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `gonzalez-v-crosby-scotus-2005.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `gonzalez-v-crosby-scotus-2005.html` sha256: `cb61f181b1a948a333b405d9667cc4d557093a32af5ee2ebec1e82fb403f5ae8`.
+- `gonzalez-v-crosby-scotus-2005.json` sha256: `d9b80e2898af0a93f4a43772d4e62b964e58278a672a90cb9fd50bc694354842`.
+- `gonzalez-v-crosby-scotus-2005.txt` sha256: `eb8e5f552e29f587ae22c7289a3295f2a5fee2c12de7a3b75d2828ef20fc3abd`.
+- Manifest id `gonzalez-v-crosby-scotus-2005`.
+
+### `rulings/anderson-bessemer-scotus-1985.html`, `rulings/anderson-bessemer-scotus-1985.json`, `rulings/anderson-bessemer-scotus-1985.txt`
+
+- Anderson v. City of Bessemer City, 470 U.S. 564 (U.S. 1985-03-19), No. 83-1623.
+- Source: <https://static.case.law/us/470/html/0564-01.html>; metadata <https://static.case.law/us/470/cases/0564-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:04:35Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `anderson-bessemer-scotus-1985.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `anderson-bessemer-scotus-1985.html` sha256: `e8f2abcf2f09d1a651d2b1222e768fa15b58556df46c39768cd705a0c64e33bf`.
+- `anderson-bessemer-scotus-1985.json` sha256: `c19fe6fba3b3df2870823b2d8a07f9c2e4ee0b44e0aba1c1917612d3969fdbc4`.
+- `anderson-bessemer-scotus-1985.txt` sha256: `883472f1d83aa7f3b9e2b7823fc539a27cebc379e4554715cc7a8177fd7bf3b1`.
+- Manifest id `anderson-bessemer-scotus-1985`.
+
+### `rulings/cooter-gell-scotus-1990.html`, `rulings/cooter-gell-scotus-1990.json`, `rulings/cooter-gell-scotus-1990.txt`
+
+- Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (U.S. 1990-06-11), No. 89-275.
+- Source: <https://static.case.law/us/496/html/0384-01.html>; metadata <https://static.case.law/us/496/cases/0384-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:04:36Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `cooter-gell-scotus-1990.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `cooter-gell-scotus-1990.html` sha256: `f4949577b8f9370295da86c0448e4cb3ed35b1e8443901740a4ba2f6ed908ad6`.
+- `cooter-gell-scotus-1990.json` sha256: `70068a3e424b6d2d3f693b95e95fd62afb233441abe01d0dc0f057c37b05ef46`.
+- `cooter-gell-scotus-1990.txt` sha256: `87e298b0517b80e7783511f872a3659d5ab0b0a46588c50e2992571e11afa60e`.
+- Manifest id `cooter-gell-scotus-1990`.
+
+### `rulings/cohen-scotus-1949.html`, `rulings/cohen-scotus-1949.json`, `rulings/cohen-scotus-1949.txt`
+
+- Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (U.S. 1949-06-20), NO. 442.
+- Source: <https://static.case.law/us/337/html/0541-01.html>; metadata <https://static.case.law/us/337/cases/0541-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:04:37Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `cohen-scotus-1949.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `cohen-scotus-1949.html` sha256: `0ca388a60f8754e00393236432e3bce8d25372fa8d8d3ae68196cf8108872d67`.
+- `cohen-scotus-1949.json` sha256: `c6cdf95328353116526b1f5c94f59148890c40470a319e882837bb6c1b51867c`.
+- `cohen-scotus-1949.txt` sha256: `bd1b7785bb68431cc44a373188fad78c30a0ac82cc4ec9024de0de57f5e6627e`.
+- Manifest id `cohen-scotus-1949`.
+
+### `rulings/ornelas-scotus-1996.html`, `rulings/ornelas-scotus-1996.json`, `rulings/ornelas-scotus-1996.txt`
+
+- Ornelas v. United States, 517 U.S. 690 (U.S. 1996-05-28), No. 95-5257.
+- Source: <https://static.case.law/us/517/html/0690-01.html>; metadata <https://static.case.law/us/517/cases/0690-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:04:38Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `ornelas-scotus-1996.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `ornelas-scotus-1996.html` sha256: `a110dff1a7b4a098f8447f39bad4f4ac51a249aa0cc6bc12a0d2669b7c7f48fb`.
+- `ornelas-scotus-1996.json` sha256: `3ca9a50dbdc3029c3e17f1872009f503f3d4378ef076f313eb306eded872e898`.
+- `ornelas-scotus-1996.txt` sha256: `701aaff90586c07f91b7f78484b83ba5a7e8c5bc25771b33cd22019b6c9a7b4c`.
+- Manifest id `ornelas-scotus-1996`.
+
+### `rulings/american-railway-express-scotus-1924.html`, `rulings/american-railway-express-scotus-1924.json`, `rulings/american-railway-express-scotus-1924.txt`
+
+- United States & Interstate Commerce Commission v. American Railway Express Co., 265 U.S. 425 (U.S. 1924-06-02), Nos. 666-668.
+- Source: <https://static.case.law/us/265/html/0425-01.html>; metadata <https://static.case.law/us/265/cases/0425-01.json>.
+- Retrieved 2026-10-28 (2026-10-28T14:04:39Z). Downloaded as served (Caselaw Access Project static copy of the official reporter text (Harvard Law School Library); star page markers [*N] are reporter pages); `american-railway-express-scotus-1924.txt`: tags stripped from the .html; page labels rendered as [*N].
+- `american-railway-express-scotus-1924.html` sha256: `8072f2934f2671ff6501da72c7a31e9099670a52636c64059726ff7e6c8efdde`.
+- `american-railway-express-scotus-1924.json` sha256: `03b0565a7897447486df24a187c5d3f8753d5a40f8c6b700c83f052a29e54682`.
+- `american-railway-express-scotus-1924.txt` sha256: `3721d50e3d23553ea2408f8b993480b58bf89f55a51df51677f54801b81464fb`.
+- Manifest id `american-railway-express-scotus-1924`.
 ## CourtListener copies (`rulings/*.cl.pdf`)
 
 The court-issued slip opinions of five rulings whose reporter text above
@@ -1317,7 +1518,7 @@ The Court's docket pages of the five certiorari cases of the lg-wvlf.5 expect ba
 
 - Supreme Court docket No. 04-104, United States v. Booker.
 - Source: <https://www.supremecourt.gov/search.aspx?filename=/docketfiles/04-104.htm>.
-- Extracted 2026-10-29 by script as above from the HTML stored in lg-bdvf as `rulings/booker-scotus-2005.docket.html`, which `dockets/original/scotus-04-104.html` copies byte for byte.
+- Retrieved 2026-10-28 (2026-10-28T14:07:59Z, the `docket_retrieved_at` of `booker-scotus-2005` in `rulings/MANIFEST.json`); extracted 2026-10-29 by script as above from the HTML stored in lg-bdvf as `rulings/booker-scotus-2005.docket.html`, which `dockets/original/scotus-04-104.html` copies byte for byte.
 - `dockets/scotus-04-104.txt` sha256: `c602955a92cb75ef40237674845bdecfdf28ce54335041164148baa04380f868`.
 - Original: `dockets/original/scotus-04-104.html` as served (sha256 8e09158bed73280455fb265a8808e5714025710b5b7c27061a7562b9f4379a5b); extraction sha256 c602955a92cb75ef40237674845bdecfdf28ce54335041164148baa04380f868. Served at https://www.supremecourt.gov/search.aspx?filename=/docketfiles/04-104.htm; fetched with curl (lg-bdvf).
 

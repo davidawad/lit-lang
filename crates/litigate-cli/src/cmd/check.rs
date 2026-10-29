@@ -5,7 +5,7 @@ use crate::out::{Failure, Outcome, Report};
 use crate::queries::{case_check, package_verdict, Build};
 use crate::verdict::Verdict;
 use crate::ws::{self, Session};
-use litigate_base::{Diagnostic, Profile};
+use litigate_base::{Diagnostic, DiagnosticCode, Note, Profile, Severity};
 use litigate_lower::Options;
 use litigate_lower::{EngineClock, Lowerer};
 use litigate_sema::change::world::{check_world, WorldCheck};
@@ -139,6 +139,9 @@ pub fn check_session_with(
         .map(|c| {
             let mut check = case_check(&session.db, session.ws, *c, build).clone();
             crate::matter::upgrade_lock(&session, &mut check);
+            if fixture(&session, &check.path) {
+                outcomes(&mut check.diagnostics);
+            }
             check
         })
         .collect();
@@ -173,6 +176,32 @@ pub fn check_session_with(
         findings,
         profile,
         complete,
+    }
+}
+
+/// Whether the matter at `path` is a world fixture (SPEC §5.8): a `.world`
+/// file the session checks sits in its directory, so the matter is replayed
+/// under the worlds (`litigate worlds`), not only in the actual world.
+fn fixture(session: &Session, path: &str) -> bool {
+    let dir = std::path::Path::new(path).parent();
+    session
+        .worlds
+        .iter()
+        .any(|w| std::path::Path::new(&w.path).parent() == dir)
+}
+
+/// A world fixture's late filings are outcomes, never errors (SPEC §5.8):
+/// its actual world lacks the law its worlds bind (a circuit's precedent),
+/// so each L4002 there is a warning, the outcome `worlds` judges per world.
+fn outcomes(diagnostics: &mut [Diagnostic]) {
+    for d in diagnostics
+        .iter_mut()
+        .filter(|d| d.code == DiagnosticCode::DeadlineMissed && d.severity == Severity::Error)
+    {
+        d.severity = Severity::Warning;
+        d.notes.push(Note {
+            message: "a world fixture (a `.world` file beside it): a late filing is an outcome; `litigate worlds` judges it in each world".to_owned(),
+        });
     }
 }
 

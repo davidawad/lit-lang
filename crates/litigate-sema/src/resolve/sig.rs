@@ -28,9 +28,14 @@ pub enum ValueKind {
     },
     /// Deadline.
     Deadline,
-    /// Counting rule, with the forums whose periods its versions compute
-    /// (`forums [...]`, else the declaring package's forum).
-    Counting(std::collections::BTreeSet<String>),
+    /// Counting rule.
+    Counting {
+        /// The forums whose periods its versions compute (`forums [...]`,
+        /// else the declaring package's forum).
+        forums: BTreeSet<String>,
+        /// Some version counts periods stated in hours (`allow_hours`).
+        hours: bool,
+    },
     /// Holiday calendar; `true` when it lists only declared days: every
     /// holiday a `once(date)` with no observance.
     Calendar(bool),
@@ -65,7 +70,7 @@ impl ValueKind {
         match self {
             Self::Node { .. } => "node",
             Self::Deadline => "deadline",
-            Self::Counting(_) => "counting rule",
+            Self::Counting { .. } => "counting rule",
             Self::Calendar(_) => "calendar",
             Self::Default(_) => "default",
             Self::Exception(_) => "exception",
@@ -207,12 +212,13 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
         ItemKind::Deadline { name, .. } => (name.text.as_str(), ValueKind::Deadline),
         ItemKind::Counting(name, _, fields) => (
             name.text.as_str(),
-            ValueKind::Counting(
-                crate::types::build::refs(clause(fields, "forums").as_ref())
+            ValueKind::Counting {
+                forums: crate::types::build::refs(clause(fields, "forums").as_ref())
                     .into_iter()
                     .map(RefPath::display)
                     .collect(),
-            ),
+                hours: clause(fields, "allow_hours").is_some(),
+            },
         ),
         ItemKind::Calendar(name, _, holidays) => (
             name.text.as_str(),
@@ -334,7 +340,7 @@ fn collect(sig: &mut Signature, items: &[(&Item, Option<&Item>)], m: Option<&Man
         if let Some((name, mut kind)) = value_of(item) {
             let from = effective_from(item, *rule, m);
             // A counting rule with no `forums` computes its own package's.
-            if let ValueKind::Counting(forums) = &mut kind {
+            if let ValueKind::Counting { forums, .. } = &mut kind {
                 if forums.is_empty() {
                     forums.insert(m.map(|m| m.forum.clone()).unwrap_or_default());
                 }
@@ -344,10 +350,16 @@ fn collect(sig: &mut Signature, items: &[(&Item, Option<&Item>)], m: Option<&Man
                     if std::mem::discriminant(&existing.kind) == std::mem::discriminant(&kind) =>
                 {
                     existing.versions.push(from);
-                    if let (ValueKind::Counting(all), ValueKind::Counting(more)) =
-                        (&mut existing.kind, kind)
+                    if let (
+                        ValueKind::Counting { forums, hours },
+                        ValueKind::Counting {
+                            forums: more,
+                            hours: more_hours,
+                        },
+                    ) = (&mut existing.kind, kind)
                     {
-                        all.extend(more);
+                        forums.extend(more);
+                        *hours |= more_hours;
                     }
                 }
                 Some(_) => {}

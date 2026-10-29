@@ -84,7 +84,7 @@ impl Cx<'_, '_> {
     ) -> Option<Deadline> {
         let meta = self.meta(name, None, item, rule);
         let counting = self.value_ref(counted_by, "counting rule", |k| {
-            matches!(k, ValueKind::Counting(_))
+            matches!(k, ValueKind::Counting { .. })
         });
         let period = match self.ck.infer(amount).value {
             Some(Value::Days { amount: n, unit }) => {
@@ -101,11 +101,11 @@ impl Cx<'_, '_> {
                 u64::try_from(n).ok().map(|n| (n, unit))
             }
             Some(Value::Hours(_)) => {
-                // Only a local rule's keys are visible here: an imported rule
-                // (`None`) may declare `allow_hours`, so the real reason applies.
-                let refused = counting
-                    .as_deref()
-                    .is_some_and(|c| local_counting(c, "allow_hours") == Some(false));
+                // The rule's signature carries `allow_hours`, local or imported.
+                let refused = counting.is_some()
+                    && self.ck.scope.value(counted_by).is_ok_and(|(_, found)| {
+                        matches!(found.item.kind, ValueKind::Counting { hours: false, .. })
+                    });
                 let (code, message) = if refused {
                     (
                         C::InvalidCounting,
@@ -544,7 +544,7 @@ impl Cx<'_, '_> {
                 .value(counted_by)
                 .ok()
                 .and_then(|(_, found)| match &found.item.kind {
-                    ValueKind::Counting(forums) if !computes(forums) => Some(forums.clone()),
+                    ValueKind::Counting { forums, .. } if !computes(forums) => Some(forums.clone()),
                     _ => None,
                 });
         let Some(forums) = borrowed else {

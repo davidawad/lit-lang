@@ -3,6 +3,13 @@ module change-deadline-frap-base.appeal
 // A base layer declares rules from nothing (docs/litigate/CHANGE.md §2.1).
 // Every period here runs from entry or from a dated notice, never from
 // service, so FRAP 26(c) adds nothing (VALIDATION.md §3).
+//
+// Every period is the appellant's own (`bearer appellant`): a judgment
+// opens one instance for each party playing appellant, and only that
+// party's notice or motion discharges it. A co-party's notice is not
+// another's appeal: "the failure to name a party in a notice of appeal
+// ... constitutes a failure of that party to appeal" (Torres v. Oakland
+// Scavenger Co., 487 U.S. 312, 314 (1988)).
 import core.frap26.{ frap26 }
 
 /// After the district court enters a judgment or order, the appellant
@@ -25,9 +32,17 @@ event ReopeningMoved()
 /// the judgment or order appealed from (30 days since FRAP took effect on
 /// July 1, 1968; 28 U.S.C. § 2107(a)).
 deadline notice-of-appeal: 30.days after JudgmentEntered() counted_by frap26 effective [1968-07-01, ..) cite "FRAP (2008 ed.) 4(a)(1)(A)" historical
+{
+  bearer appellant
+}
+
 /// FRAP 4(a)(5)(A)(i): a motion to extend the time to appeal is due no
 /// later than 30 days after the time FRAP 4(a) prescribes expires.
 deadline appeal-extension-motion: 30.days after deadline(notice-of-appeal).adjusted counted_by frap26 effective [1968-07-01, ..) cite "FRAP (2008 ed.) 4(a)(5)(A)(i)" historical
+{
+  bearer appellant
+}
+
 /// FRAP 4(a)(6) as added December 1, 1991 (order of April 30, 1991): a
 /// motion to reopen the time to appeal is due 7 days after the moving
 /// party receives notice of entry, or 180 days after entry, whichever is
@@ -36,10 +51,17 @@ deadline appeal-extension-motion: 30.days after deadline(notice-of-appeal).adjus
 /// (docs/litigate/validation/splits.lit): a matter gives the receipt its
 /// court held opened it. The layers `frap-2005` and `frap-2009` amend it.
 deadline reopen-motion-window: 7.days after NoticeOfEntryReceived() counted_by frap26 effective [1991-12-01, ..) known_at 1991-04-30 cite "FRAP (2008 ed.) 4(a)(6)" historical
+{
+  bearer appellant
+}
+
 /// FRAP 4(a)(6) since 1991: the outer bound, 180 days after entry. An act
 /// is judged against one period, the window above; the earlier of the two
 /// is not a form of the language (docs/litigate/CHANGE-REPORT.md).
 deadline reopen-motion-outer: 180.days after JudgmentEntered() counted_by frap26 effective [1991-12-01, ..) known_at 1991-04-30 cite "FRAP (2008 ed.) 4(a)(6)" historical
+{
+  bearer appellant
+}
 
 decision judgment: "Judgment entered: appeal, move to extend the time, or move to reopen it?" by appellant effective [1968-07-01, ..) cite "FRAP (2008 ed.) 4(a)" historical
 {

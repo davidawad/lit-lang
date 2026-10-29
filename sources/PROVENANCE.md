@@ -1424,15 +1424,6 @@ FRBP 8002. Neither decision supports a proposition needed by this outline.
 - sha256 (this file): `2fb5815bf87b25d8af30298fa0fa21e148d81ddc6992c305bd94716c68fb0485`
 - Original: `original/ca8-bap-iop.pdf` as served (sha256 bbc4c6ea689d554ebc20ae3d3ae24cb0202c95df6d36cbd71d3e3f37411260c0); extraction sha256 2fb5815bf87b25d8af30298fa0fa21e148d81ddc6992c305bd94716c68fb0485. Served at https://www.ca8.uscourts.gov/sites/ca8/files/iops%20jan%202024.pdf; fetched with curl, retrieved 2026-10-28.
 
-### `ca8-iop.txt` — Eighth Circuit Internal Operating Procedures, revised February 26, 2024
-
-- The court's official PDF (the edition the Rules & Procedures page
-  links), retrieved 2026-10-27. Extracted with `pdftotext -layout`; no
-  wording changed (the extraction of the PDF as served 2026-10-28 matches
-  this file word for word; only whitespace and page breaks differ).
-- sha256 (this file): `a346115379cdf130c46d5d6c33462f03a0984fcebac95a8617b2d0222e6bc8f8`
-- Original: `original/ca8-iop.pdf` as served (sha256 41097628db55700c9774760cb4a7334e427d086d69c429a1f4ec3edd1c9e0ff4); extraction sha256 a346115379cdf130c46d5d6c33462f03a0984fcebac95a8617b2d0222e6bc8f8. Served at https://ecf.ca8.uscourts.gov/newrules/coa/iops.pdf; fetched with curl, retrieved 2026-10-28.
-
 ### `usc-28-158.txt` — 28 U.S.C. § 158 (bankruptcy appeals)
 
 - The Office of the Law Revision Counsel page (text current through Public

@@ -902,7 +902,7 @@ terminal abandoned-no-reply: "ABANDONED — Failure to Reply" by applicant outco
   }
 }
 
-terminal abandoned-no-reply: "ABANDONED — Failure to Reply" by applicant outcome [loss, abandoned, waiver-trap] effective [2025-01-19, ..) cite "35 U.S.C. 133; 37 CFR 1.135"
+terminal abandoned-no-reply: "ABANDONED — Failure to Reply" by applicant outcome [loss, abandoned, waiver-trap] effective [2025-01-19, 2026-08-13) cite "35 U.S.C. 133; 37 CFR 1.135"
 {
   group examination-group
   note "PERMADEATH. Application abandoned for failure to reply within the 6-month statutory ceiling. The 6-month period under 35 U.S.C. 133 cannot be extended for any reason. Revival requires a petition under 37 CFR 1.137 (unintentional delay standard). Revival is not guaranteed. PLACEHOLDER PAYOFF: $0, override per matter."
@@ -912,7 +912,21 @@ terminal abandoned-no-reply: "ABANDONED — Failure to Reply" by applicant outco
     authority cite "37 CFR 1.137; 37 CFR (2025) 1.17(m); MPEP 711.03(c)"
     effort 4.hours
     cost 2_260.usd
-    note "Revival requires (1) the required reply, (2) the petition fee under 37 CFR 1.17(m), and (3) a statement that the ENTIRE delay from the due date until the reply was UNINTENTIONAL (37 CFR 1.137(a)). Revival is not guaranteed and does not undo intervening rights. Reinstates the open reply window. Petition fee $2,260.00, undiscounted/large-entity, effective 1/19/2025, for a petition filed within 2 years of the due date (37 CFR 1.17(m)(2)); one filed more than 2 years after it is $3,000.00 (1.17(m)(1))."
+    note "Revival requires (1) the required reply, (2) the petition fee under 37 CFR 1.17(m), and (3) a statement that the ENTIRE delay from the due date until the reply was UNINTENTIONAL (37 CFR 1.137(a)). Revival is not guaranteed and does not undo intervening rights. Reinstates the open reply window. Petition fee $2,260.00, undiscounted/large-entity, effective 1/19/2025 until 8/13/2026, for a petition filed within 2 years of the due date (37 CFR 1.17(m)(2)); one filed more than 2 years after it is $3,000.00 (1.17(m)(1))."
+  }
+}
+
+terminal abandoned-no-reply: "ABANDONED — Failure to Reply" by applicant outcome [loss, abandoned, waiver-trap] effective [2026-08-13, ..) cite "35 U.S.C. 133; 37 CFR 1.135"
+{
+  group examination-group
+  note "PERMADEATH. Application abandoned for failure to reply within the 6-month statutory ceiling. The 6-month period under 35 U.S.C. 133 cannot be extended for any reason. Revival requires a petition under 37 CFR 1.137 (unintentional delay standard). Revival is not guaranteed. PLACEHOLDER PAYOFF: $0, override per matter."
+  valence bad
+  payoff 0.usd
+  edge-abandoned-no-reply-applicant-response-window "Petition to revive — unintentional delay (37 CFR 1.137)" -> applicant-response-window {
+    authority cite "37 CFR 1.137; 37 CFR (2026) 1.17(m); MPEP 711.03(c)"
+    effort 4.hours
+    cost 2_260.usd
+    note "Revival requires (1) the required reply, (2) the petition fee under 37 CFR 1.17(m), and (3) a statement that the ENTIRE delay from the due date until the reply was UNINTENTIONAL (37 CFR 1.137(a)). Revival is not guaranteed and does not undo intervening rights. Reinstates the open reply window. Petition fee $2,260.00, undiscounted/large-entity, for a petition filed within 1 year of the due date (37 CFR 1.17(m)(2)); one filed more than 1 year after it is $3,000.00 (1.17(m)(1)). The one-year tier is in force from 8/13/2026, for a petition filed after that date (91 FR 37826); it was 2 years before."
   }
 }
 
@@ -930,7 +944,7 @@ terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant ou
   }
 }
 
-terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant outcome [loss, abandoned, waiver-trap] effective [2025-01-19, ..) cite "37 CFR 1.311; 37 CFR 1.135"
+terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant outcome [loss, abandoned, waiver-trap] effective [2025-01-19, 2026-08-13) cite "37 CFR 1.311; 37 CFR 1.135"
 {
   group allowance-group
   note "PERMADEATH. Application abandoned for failure to pay the issue fee within the extended period. Revival available under 37 CFR 1.137 for unintentional delay. Competitor may have relied on abandonment — revival does not undo intervening rights. PLACEHOLDER PAYOFF: $0, override per matter."
@@ -940,7 +954,21 @@ terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant ou
     authority cite "37 CFR 1.137; 37 CFR (2025) 1.17(m); MPEP 711.03(c)"
     effort 4.hours
     cost 2_260.usd
-    note "Same 37 CFR 1.137 unintentional-delay standard + 37 CFR 1.17(m) petition fee. Because the issue-fee period is itself unextendable (MPEP 1306), revival is the ONLY route back after a missed issue fee. Reinstates the allowance posture so the issue fee can be paid. Petition fee $2,260.00, undiscounted/large-entity, effective 1/19/2025, for a petition filed within 2 years of the due date (37 CFR 1.17(m)(2)); one filed more than 2 years after it is $3,000.00 (1.17(m)(1))."
+    note "Same 37 CFR 1.137 unintentional-delay standard + 37 CFR 1.17(m) petition fee. Because the issue-fee period is itself unextendable (MPEP 1306), revival is the ONLY route back after a missed issue fee. Reinstates the allowance posture so the issue fee can be paid. Petition fee $2,260.00, undiscounted/large-entity, effective 1/19/2025 until 8/13/2026, for a petition filed within 2 years of the due date (37 CFR 1.17(m)(2)); one filed more than 2 years after it is $3,000.00 (1.17(m)(1))."
+  }
+}
+
+terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant outcome [loss, abandoned, waiver-trap] effective [2026-08-13, ..) cite "37 CFR 1.311; 37 CFR 1.135"
+{
+  group allowance-group
+  note "PERMADEATH. Application abandoned for failure to pay the issue fee within the extended period. Revival available under 37 CFR 1.137 for unintentional delay. Competitor may have relied on abandonment — revival does not undo intervening rights. PLACEHOLDER PAYOFF: $0, override per matter."
+  valence bad
+  payoff 0.usd
+  edge-abandoned-issue-fee-noa-received "Petition to revive — pay issue fee late (37 CFR 1.137)" -> noa-received {
+    authority cite "37 CFR 1.137; 37 CFR (2026) 1.17(m); MPEP 711.03(c)"
+    effort 4.hours
+    cost 2_260.usd
+    note "Same 37 CFR 1.137 unintentional-delay standard + 37 CFR 1.17(m) petition fee. Because the issue-fee period is itself unextendable (MPEP 1306), revival is the ONLY route back after a missed issue fee. Reinstates the allowance posture so the issue fee can be paid. Petition fee $2,260.00, undiscounted/large-entity, for a petition filed within 1 year of the due date (37 CFR 1.17(m)(2)); one filed more than 1 year after it is $3,000.00 (1.17(m)(1)). The one-year tier is in force from 8/13/2026, for a petition filed after that date (91 FR 37826); it was 2 years before."
   }
 }
 

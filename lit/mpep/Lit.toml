@@ -2,8 +2,9 @@
 # strict). in_force is the MPEP 9th ed. Rev. 01.2024 date every MPEP source
 # below records as `as_of`: the pack's citations were verified against that
 # edition, so it is the earliest date this package claims to be in force.
-# known_at postdates every vendored 37 C.F.R. edition cited (the latest is
-# the 2025-07-01 edition of the fee sections, `cfr-37-fees-2025`).
+# known_at postdates every vendored 37 C.F.R. text cited (the latest is
+# § 1.17(m) as of 2026-08-13, `cfr-37-1-17-m-2026`) and is the date of the
+# eCFR version list (`ecfr-versions-37`), which shows no later amendment.
 # The rules here are agency regulations (37 C.F.R.) and their statutes, so
 # the package level is core's `Regulation`. The MPEP itself is guidance,
 # not regulation, and no declaration rests on it: every counting rule,
@@ -23,7 +24,7 @@ title = "U.S. Utility Patent Prosecution"
 description = "Canonical pre-filing → prosecution → appeal → issuance flowchart for a U.S. nonprovisional utility application. MPEP and 37 CFR citations verified against live USPTO/eCFR sources (2024-07-01 edition). Walk mode teaches the RCE-vs-appeal fork economics, the unextendable 6-month ceiling, and abandonment-as-permadeath."
 jurisdiction = "USPTO / MPEP"
 in_force = "2024-01-31"
-known_at = "2026-01-01"
+known_at = "2026-10-24"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
@@ -161,6 +162,18 @@ path_sha256 = "ac39bb4a121f72298602669dd48e02050438a3b3c3394abb9180e5e9c677072d"
 as_of = "2025-07-01"
 cite_prefixes = ["37 CFR (2025)", "37 C.F.R. (2025)"]
 section_heading = "37 C.F.R. (2025) § {n}"
+
+# § 1.17(m) as 91 FR 37826 (June 24, 2026) left it from August 13, 2026:
+# the (m)(1) tier now starts at one year, not two. The text the 2026-08-13
+# version of each revival node cites.
+[sources.cfr-37-1-17-m-2026]
+title = "37 C.F.R. § 1.17(m) (unintentional-delay petition fees, as revised by 91 FR 37826, effective 2026-08-13)"
+url = "https://www.govinfo.gov/content/pkg/FR-2026-06-24/pdf/2026-12717.pdf"
+path = "sources/cfr-37-1-17-m-2026-08-13.txt"
+path_sha256 = "81ab38da9775e6572daff39c3692472948873dd2359129581e06e905000f9eb0"
+as_of = "2026-08-13"
+cite_prefixes = ["37 CFR (2026)", "37 C.F.R. (2026)"]
+section_heading = "37 C.F.R. (2026) § {n}"
 
 # The eCFR versioner's version list of each 37 C.F.R. section cited: the
 # amendment history `cite-resolves` reads to prove a text dated after a

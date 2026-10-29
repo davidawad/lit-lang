@@ -446,13 +446,16 @@ fn ordinal_of(spelled: &str) -> String {
 }
 
 /// Whether `body` holds `quote`, a [`GAP`] in it matching one to
-/// [`GAP_WORDS`] whitespace-free words.
+/// [`GAP_WORDS`] whitespace-free words. Punctuation may end the words
+/// before the gap: `five … pages` holds in `five, single-spaced pages`
+/// (LCvR16-2(d)(3), N.D. Okla.).
 fn holds(body: &str, quote: &str) -> bool {
     let Some((before, after)) = quote.split_once(&format!(" {GAP} ")) else {
         return body.contains(quote);
     };
     body.match_indices(before).any(|(i, _)| {
-        let mut rest = &body[i + before.len()..];
+        let mut rest =
+            body[i + before.len()..].trim_start_matches(|c: char| c.is_ascii_punctuation());
         (0..GAP_WORDS).any(|_| {
             let Some(r) = rest.strip_prefix(' ') else {
                 return false;

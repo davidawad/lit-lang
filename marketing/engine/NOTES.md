@@ -24,7 +24,7 @@ gets a FILED stamp showing that request's real `elapsed_ms`.
 3. **8.5–13.5 s: 02 Request.** The `examples/cofc-explain-dispositive-fork.json` request is typed as a heredoc. packs / scenario / op are highlighted in sync with the caption.
 4. **13.5–22 s: 03 Response.** The real envelope streams in (abridged with `…`), FILED 13.293 ms. The camera moves through policy (chosen/regret), warnings (codes + counts), and provenance (fingerprints, modes).
 5. **22–37 s: 04 Capabilities.** Six 2.5 s cards, each with a real command, an animated visual, and a real fragment: compose forums, deadline math, tornado, state flags, named scenario, calibration.
-6. **37–42 s: 05 MCP.** `claude mcp add litgraph -- litgraph-mcp`, the 20 tool names from `tools/list`, then `tools/call deadlines` returns the same envelope (`due_date` 2026-11-27).
+6. **37–42 s: 05 MCP.** `claude mcp add litigate -- litigate mcp`, the 20 tool names from `tools/list`, then `tools/call deadlines` returns the same envelope (`due_date` 2026-11-27).
 7. **42–45 s:** back to the end card.
 
 Controls: Pause/Play, Replay, and a scrubbable rail; Space toggles.

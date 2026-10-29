@@ -140,50 +140,19 @@ impl<'a> Context<'a> {
                     .and_then(|c| Some((c.cite.as_deref()?, span, historical, Vec::new()))),
                 _ => None,
             };
-            let test = match d {
-                Declaration::Test(t) => t
-                    .cite
-                    .as_deref()
-                    .map(|c| (c, t.span.as_ref(), false, Vec::new())),
-                _ => None,
-            };
-            let adoption = match d {
-                Declaration::Deadline(x) => x.adoption.as_ref().map(|a| {
-                    (
-                        a.cite.as_str(),
-                        x.meta.span.as_ref(),
-                        a.historical,
-                        a.quote.as_deref().map(Cow::Borrowed).into_iter().collect(),
-                    )
-                }),
-                _ => None,
-            };
             let own = own.map(|c| (c, period(d)));
-            // Each term of a derived period, held to its own count, or to
-            // its quote where it quotes the words stating it.
-            let derived = match d {
-                Declaration::Deadline(x) => x
-                    .derived
-                    .iter()
-                    .map(|t| {
-                        let quotes: Vec<Cow<'_, str>> =
-                            t.quote.as_deref().map(Cow::Borrowed).into_iter().collect();
-                        let period = t.quote.is_none().then_some((t.amount, t.unit));
-                        ((t.cite.as_str(), span, t.historical, quotes), period)
-                    })
-                    .collect(),
-                _ => Vec::new(),
-            };
-            let others = test
+            let others = test_cite(d)
                 .into_iter()
                 .chain(limit_cites(d))
-                .chain(adoption)
+                .chain(adoption_cite(d))
                 .chain(edge_cites(d))
                 .chain(delegated)
                 .chain(characterized)
                 .map(|c| (c, None));
-            own.into_iter().chain(derived).chain(others).map(
-                move |((text, span, historical, quotes), period)| Cite {
+            own.into_iter()
+                .chain(derived_cites(d, span))
+                .chain(others)
+                .map(move |((text, span, historical, quotes), period)| Cite {
                     text,
                     span,
                     window,
@@ -191,8 +160,7 @@ impl<'a> Context<'a> {
                     imported,
                     quotes,
                     period,
-                },
-            )
+                })
         })
     }
 }
@@ -206,6 +174,53 @@ fn period(d: &Declaration) -> Option<(u64, hir::DayUnit)> {
             Some((x.amount, x.unit))
         }
         _ => None,
+    }
+}
+
+/// A test's `cite` (no window).
+fn test_cite(d: &Declaration) -> Option<CiteOf<'_>> {
+    match d {
+        Declaration::Test(t) => t
+            .cite
+            .as_deref()
+            .map(|c| (c, t.span.as_ref(), false, Vec::new())),
+        _ => None,
+    }
+}
+
+/// A deadline's adopting rule, with the words it quotes.
+fn adoption_cite(d: &Declaration) -> Option<CiteOf<'_>> {
+    match d {
+        Declaration::Deadline(x) => x.adoption.as_ref().map(|a| {
+            (
+                a.cite.as_str(),
+                x.meta.span.as_ref(),
+                a.historical,
+                a.quote.as_deref().map(Cow::Borrowed).into_iter().collect(),
+            )
+        }),
+        _ => None,
+    }
+}
+
+/// Each term of a derived period, held to its own count, or to its quote
+/// where it quotes the words stating it.
+fn derived_cites<'a>(
+    d: &'a Declaration,
+    span: Option<&'a Span>,
+) -> Vec<(CiteOf<'a>, Option<(u64, hir::DayUnit)>)> {
+    match d {
+        Declaration::Deadline(x) => x
+            .derived
+            .iter()
+            .map(|t| {
+                let quotes: Vec<Cow<'_, str>> =
+                    t.quote.as_deref().map(Cow::Borrowed).into_iter().collect();
+                let period = t.quote.is_none().then_some((t.amount, t.unit));
+                ((t.cite.as_str(), span, t.historical, quotes), period)
+            })
+            .collect(),
+        _ => Vec::new(),
     }
 }
 
@@ -234,7 +249,7 @@ type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Vec<Cow<'a, str>>);
 /// The cites of a filing limit's entries (SPEC §3.7; none for any other
 /// declaration), each its own or else the declaration's, with the words its vendored text must hold: a
 /// bound's number and measure as the rules write them, in digits
-/// with or without a thousands comma (`13,000 words`; E.D.N.C. LCvR
+/// with or without a thousands comma (`13,000 words`; E.D.N.C. `LCvR`
 /// 7.2(f): `8400 words`), in words (`thirty pages`) or both (`thirty (30)
 /// pages`), the measure singular for a count of one (`one page`), each also with a few words between the count and the measure
 /// (D.S.C. Local Civ. Rule 7.05(B): `Thirty-five (35) double-spaced

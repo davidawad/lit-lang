@@ -722,6 +722,23 @@ Entries live in the forum's own
 - Original: `original/ecfr-versions-title-19/016-api-versioner-v1-versions-title-19.json_section-210.43.json` as served (sha256 4048f37873e05866e148dc1f54f88d358cbe4e005034dd5ac038c0d58c0ae78f); extraction sha256 f5772fc7e9852994796aa81a644ffa7be4c3f664a3543d5c6297c186c79e7b32. Served at https://www.ecfr.gov/api/versioner/v1/versions/title-19.json?section=210.43; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-28.
 - Original: `original/ecfr-versions-title-19/017-api-versioner-v1-versions-title-19.json_section-210.51.json` as served (sha256 94c857f3808eb454a448d7c646dc76da77904191d3f5d9ae4401e7cdb31c1ffc); extraction sha256 f5772fc7e9852994796aa81a644ffa7be4c3f664a3543d5c6297c186c79e7b32. Served at https://www.ecfr.gov/api/versioner/v1/versions/title-19.json?section=210.51; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-28.
 
+### `frap22-amendment-history.txt` — amendment history of FRAP 22
+
+- One `## versions FRAP 22` block (SPEC §4.3), in the form of
+  `rule-amendment-history.txt`, for `lit/habeas` (from 2024-12-01) citing
+  FRAP 22 in `frap.txt` (as of 2025-12-01) (lg-cnge, 2026-10-29). Transcribed
+  from the credit closing FRAP 22 in the govinfo 2024 edition of 28 U.S.C.
+  App. (current through January 6, 2025): "(As amended Pub. L. 104–132,
+  title I, §103, Apr. 24, 1996, 110 Stat. 1218; Apr. 24, 1998, eff. Dec. 1,
+  1998; Mar. 26, 2009, eff. Dec. 1, 2009.)"; `date` and `amendment_date`
+  the "eff." date (the 1996 act's approval date, as `FRAP 4`'s 1988 act is
+  dated in `rule-amendment-history.txt`), `issue_date` the order date. Read
+  to the House Judiciary print of December 1, 2025 (`frap/frap.txt`,
+  printed p. 23), whose credit for Rule 22 lists the same three amendments
+  (its 2025 amendments touch only FRAP 6 and 39), so `as_of` is 2025-12-01.
+- sha256 (this file): `45dc79a4517f57b2bddd5c5a2d1829e2da57a4f3d4232847e2623b83fdc82bd2`
+- Original: `original/frap22-amendment-history/USCODE-2024-title28-app-federalru-rule22.htm` as served (sha256 98c369e6e1da8640dd961e7e724cce736d4866b1417b46da3bd38151899b6df5); extraction sha256 45dc79a4517f57b2bddd5c5a2d1829e2da57a4f3d4232847e2623b83fdc82bd2. Served at https://www.govinfo.gov/content/pkg/USCODE-2024-title28/html/USCODE-2024-title28-app-federalru-rule22.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+
 ### `usc-28-app-frap4-history.txt` — FRAP 4 as printed in the 2008 and 2011 editions of 28 U.S.C. App.
 
 - The pre-December 1, 2009 text of FRAP 4 and its amendment history, which

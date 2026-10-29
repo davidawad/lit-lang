@@ -58,6 +58,23 @@ path_sha256 = "b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172"
 sha256 = "a6f417607a71c05a3a54df68a43ec67e691dcf276c46a415e78038ae4f9305f4"
 as_of = "2025-12-01"
 
+# The amendment history of each rule or section this package cites with a
+# text dated after the citing version took effect (SPEC §4.3), as
+# sources/PROVENANCE.md records its making: `cite-resolves` reads it to
+# prove the text unamended since. No cite resolves through this binding.
+[sources.rule-amendment-history]
+title = "Amendment histories of FRCP, FRAP, FRCrimP, Federal Circuit and RCFC rules, Lanham Act sections and 19 C.F.R. § 201.14"
+url = "https://www.govinfo.gov/app/collection/uscode/2024"
+path = "sources/rule-amendment-history.txt"
+path_sha256 = "c8fe539757c62a26f18ad031f3a291d826f104a130fc58b1394e1efc2173daaf"
+
+# FRAP 22's amendment history, for the same proof: the general file has none.
+[sources.frap22-amendment-history]
+title = "Amendment history of FRAP 22 (28 U.S.C. App., 2024 ed., credits)"
+url = "https://www.govinfo.gov/content/pkg/USCODE-2024-title28/html/USCODE-2024-title28-app-federalru-rule22.htm"
+path = "sources/frap22-amendment-history.txt"
+path_sha256 = "45dc79a4517f57b2bddd5c5a2d1829e2da57a4f3d4232847e2623b83fdc82bd2"
+
 [[cite_syntax.rules]]
 prefixes = ["FRAP", "Fed. R. App. P."]
 heading = "FRAP {}"

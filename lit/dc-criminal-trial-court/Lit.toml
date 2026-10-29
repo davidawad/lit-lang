@@ -8,11 +8,12 @@
 # hole in the corpus. By the PM's standing ruling of 2026-10-27 such a
 # source yields holes, not values: this package cites the rules only for
 # the structure of the case (which rule governs which step) and states no
-# period, limit or amount from them. The D.C. Code's Title 23 (criminal
-# procedure, including the speedy-trial provision D.C. Code § 23-102, the
-# release and detention provisions §§ 23-1321 to -1331 that Rule 46
-# adopts, and collateral attack under § 23-110) is not vendored; those
-# cites stay holes. The appeal hand-off cites D.C. App. R. 4(b), whose
+# period, limit or amount from them. Of the D.C. Code's Title 23
+# (criminal procedure) only § 23-110 (collateral attack) and § 23-1322
+# (pretrial detention) are vendored, also CURRENCY UNCONFIRMED and cited
+# for structure only; the rest of Title 23 (the speedy-trial provision
+# § 23-102 and the other release provisions §§ 23-1321 to -1331 that
+# Rule 46 adopts) is not vendored. The appeal hand-off cites D.C. App. R. 4(b), whose
 # vendored text has a stated edition (amendments in effect as of May 11,
 # 2026; sources/dc-state-appellate/); lit/core has no counting rule for
 # the D.C. Court of Appeals rules, so its period is stated in a note, not
@@ -59,3 +60,13 @@ sha256 = "5b71b874d774c74dc7f98b2873d3393363d259dd7edbaf315a18b7962d0197bf"
 as_of = "2026-05-11"
 cite_prefixes = ["D.C. App. R."]
 section_heading = "Rule {n}"
+
+[sources.dc-code]
+title = "Code of the District of Columbia, §§ 23-110 (remedies on motion attacking sentence) and 23-1322 (detention prior to trial), as served by the Council of the District of Columbia (no 'current through' date; retrieved 2026-10-29); CURRENCY UNCONFIRMED"
+url = "https://code.dccouncil.gov/us/dc/council/code/sections/23-1322"
+path = "sources/dc-criminal-trial-court/dc-code-23-110-23-1322-sectioned.txt"
+path_sha256 = "303646849d0ed23af1a80e2aad48a4f7da048504b31abd04f9cbc17721fddb88"
+sha256 = "8cb5b173f472373b898fe32db80bd86bfcbe73c5a170858d412a03bff1b1e9dd"
+as_of = "2026-10-29"
+cite_prefixes = ["D.C. Code §"]
+section_heading = "§ {n}"

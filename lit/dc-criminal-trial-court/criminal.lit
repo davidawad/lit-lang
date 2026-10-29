@@ -5,9 +5,11 @@ module dc-superior-court-criminal.criminal
 // (sources/dc-criminal-trial-court/PROVENANCE.md), so they are cited for
 // the structure of each step and no period, limit or amount is taken from
 // them: where a step has one, the note names the rule that sets it and
-// says that it is not stated. The D.C. Code's criminal-procedure title
-// (Title 23) is not vendored, so its speedy-trial, release and detention,
-// and collateral-attack provisions are holes. Outcomes are from the
+// says that it is not stated. Of the D.C. Code's criminal-procedure
+// title (Title 23) only § 23-110 (collateral attack) and § 23-1322
+// (pretrial detention) are vendored, also CURRENCY UNCONFIRMED and cited
+// for structure only; its speedy-trial and other release provisions are
+// not vendored. Outcomes are from the
 // defendant's side. The earlier outline's leading decisions (County of
 // Riverside v. McLaughlin, Gerstein v. Pugh, Gideon v. Wainwright, Brady
 // v. Maryland, Mapp v. Ohio, Barker v. Wingo, Boykin v. Alabama, Missouri
@@ -26,9 +28,9 @@ state arrested: "Arrest or summons" by applicant cite "D.C. Super. Ct. R. Crim. 
 
 decision initial-appearance: "Release or detention" by court cite "D.C. Super. Ct. R. Crim. P. 5(d)"
 {
-  note "At the initial appearance the court informs the defendant of the complaint, the right to retained or appointed counsel, the right to a preliminary hearing if a felony is charged, and the right to remain silent, allows time to consult counsel, and detains or releases the defendant as provided by statute or the rules (D.C. Super. Ct. R. Crim. P. 5(b)-(d)); counsel is assigned under Rule 44 and Rule 44-I. After an arrest without a warrant, if the release conditions significantly restrain pretrial liberty, the prosecutor files a sworn statement of fact and the court determines probable cause, with or without a hearing; the filing period Rule 5(e)(1) sets is not stated here (currency unconfirmed). Pretrial release and detention are governed by D.C. Code §§ 23-1321 to -1331, which Rule 46(a) adopts and which are not vendored."
+  note "At the initial appearance the court informs the defendant of the complaint, the right to retained or appointed counsel, the right to a preliminary hearing if a felony is charged, and the right to remain silent, allows time to consult counsel, and detains or releases the defendant as provided by statute or the rules (D.C. Super. Ct. R. Crim. P. 5(b)-(d)); counsel is assigned under Rule 44 and Rule 44-I. After an arrest without a warrant, if the release conditions significantly restrain pretrial liberty, the prosecutor files a sworn statement of fact and the court determines probable cause, with or without a hearing; the filing period Rule 5(e)(1) sets is not stated here (currency unconfirmed). Pretrial release and detention are governed by D.C. Code §§ 23-1321 to -1331, which Rule 46(a) adopts; of these only § 23-1322 is vendored. On the government's motion in the cases § 23-1322(b) lists, the judicial officer holds a hearing to determine whether any condition or combination of conditions will reasonably assure the person's appearance and the safety of any other person and the community (D.C. Code § 23-1322(b)); the periods § 23-1322 sets are not stated here (currency unconfirmed)."
   edge-initial-appearance-detained "Detained" -> probable-cause {
-    authority cite ?("D.C. Code § 23-1322 (pretrial detention; not vendored)")
+    authority cite "D.C. Code § 23-1322(b)"
   }
   edge-initial-appearance-released "Released on conditions" -> probable-cause {
     authority cite "D.C. Super. Ct. R. Crim. P. 46(a)"
@@ -159,6 +161,6 @@ terminal appeal-taken: "Appeal taken" outcome [appeal] cite "D.C. App. R. 4(b)"
   note "The appeal continues before the District of Columbia Court of Appeals under its rules (sources/dc-state-appellate/)."
 }
 
-terminal conviction-final: "Conviction final" outcome [loss] cite ?("D.C. Code § 23-110 (collateral attack on sentence; not vendored)") {
-  note "Outcome from the defendant's side. Collateral attack on a sentence under D.C. Code § 23-110 and federal habeas review are not vendored here; federal habeas belongs to lit/habeas."
+terminal conviction-final: "Conviction final" outcome [loss] cite "D.C. Code § 23-110(a)" {
+  note "Outcome from the defendant's side. A prisoner in custody under sentence of the Superior Court may move the court to vacate, set aside or correct the sentence on the grounds D.C. Code § 23-110(a) lists (currency unconfirmed); that motion and federal habeas review are not modelled here; federal habeas belongs to lit/habeas."
 }

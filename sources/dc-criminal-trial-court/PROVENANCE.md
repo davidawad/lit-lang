@@ -25,3 +25,10 @@
 - Original: `dc-criminal-trial-court/original/dc-code-sections/0001-23-110.html` as served (sha256 cf366bfa9172430ad5ebc2c3246c7765a99ac9a8b23cc0ce2a1170153ecba313). Served at https://code.dccouncil.gov/us/dc/council/code/sections/23-110.
 - Original: `dc-criminal-trial-court/original/dc-code-sections/0002-23-1322.html` as served (sha256 8cb5b173f472373b898fe32db80bd86bfcbe73c5a170858d412a03bff1b1e9dd). Served at https://code.dccouncil.gov/us/dc/council/code/sections/23-1322.
 - Extraction sha256 6b3320fc8dc71f9740db0c31e93608964b74b3208d70189a28fbeb0808130040.
+
+### `dc-criminal-trial-court/dc-code-23-110-23-1322-sectioned.txt` — D.C. Code §§ 23-110 and 23-1322, sectioned
+
+- Derived in the pod (lg-8pxc) from `dc-criminal-trial-court/dc-code-23-110-23-1322.txt` (extract sha256 6b3320fc8dc71f9740db0c31e93608964b74b3208d70189a28fbeb0808130040); nothing fetched. One marker line `## § 23-110` or `## § 23-1322` (ASCII hyphen) is inserted before each page heading `## § 23–110. ...` and `## § 23–1322. ...` (en dash, as served). Every other line is the extract unchanged, so deleting the marker lines (`sed -E '/^## § 23-[0-9]+$/d'`) gives back the extract byte for byte.
+- Upstream: https://code.dccouncil.gov/us/dc/council/code/sections/23-110 and https://code.dccouncil.gov/us/dc/council/code/sections/23-1322, retrieved 2026-10-29, as recorded on the source extract entry this file is derived from.
+- Edition: as the extract; CURRENCY UNCONFIRMED stands. `lit/dc-criminal-trial-court` cites it for structure only (§ 23-1322(b) on the detention edge, § 23-110(a) on the conviction-final terminal) and takes no period from it.
+- Sectioned sha256 303646849d0ed23af1a80e2aad48a4f7da048504b31abd04f9cbc17721fddb88 (the `path_sha256` pinned by `lit/dc-criminal-trial-court/Lit.toml`).

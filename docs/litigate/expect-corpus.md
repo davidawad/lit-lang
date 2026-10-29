@@ -736,31 +736,33 @@ Batch 3 stores ten criminal Supreme Court decisions that `lit/` cites
 (Arizona v. Washington, Blockburger, Brady, Burks, Davis v. United States,
 Giglio, Jackson v. Virginia, Luce, Mapp and Booker) under
 `sources/change-corpus/rulings/`, each with its `lit_cites`; the table in
-that directory's README confirms or rejects each cited position. None is
-encoded as an expect test, and none may be until a source supplies what an
-expect test asserts: a dated trigger (verdict, sentence, judgment entry)
-and a dated filing that a `lit/frcrimp` or FRAP 4(b) period counts.
+that directory's README confirms or rejects each cited position. Only
+Booker's certiorari petition is encoded (`tests/expect/united-states-v-booker`,
+lg-94rl); the rest may not be until a source supplies what an expect test
+asserts: a dated trigger (verdict, sentence, judgment entry) and a dated
+filing that a `lit/frcrimp` or FRAP 4(b) period counts.
 
 - The opinions give argument and decision dates only, and none decides
   whether a filing was timely. Do not infer a trigger or filing date from
   the opinion text.
 - The trial and circuit dockets predate PACER. Booker's (W.D. Wis. 2003;
   7th Cir. No. 03-4225) is on RECAP but needs the authenticated
-  CourtListener API. Its stored Supreme Court docket (No. 04-104) dates the
-  certiorari petition, but `change-certiorari-base` starts with the
-  May 2, 2005 Rules edition, so a 2004 petition has no period in force.
+  CourtListener API. Its Supreme Court docket (No. 04-104,
+  `sources/change-corpus/dockets/scotus-04-104.txt`) dates the Seventh
+  Circuit's judgment (July 9, 2004) and the certiorari petition (July 21,
+  2004). `change-certiorari-base` starts with the May 2, 2005 Rules
+  edition, so the petition runs under its own base layer of the Rules
+  effective May 1, 2003 (`docs/litigate/change/scotus-2003-criminal`,
+  lg-94rl): due October 7, 2004, filed timely.
 - `lit/frcrimp`'s periods and FRCrimP 45 counting take effect 2009-2024,
   so any trigger from 1932-2005 also needs a sourced, dated historical
   base layer (FRCrimP 45 and FRAP 4(b) before 2009) first.
 
 The opinions remain sources for the `lit/` positions they hold. Blockburger
 and Luce do not hold the positions `lit/` cites them for (see the README);
-that is a citation fix, not an expect test.
-
-NEW_BUG: Encode a batch 3 criminal expect test once a dated source exists:
-Booker's district and 7th Cir. RECAP dockets (verdict, sentence, notice of
-appeal) or a Rules of the Supreme Court edition in force in 2004 for its
-certiorari petition, plus a pre-2009 FRCrimP 45 / FRAP 4(b) base layer.
+that is a citation fix, not an expect test. A trial-level criminal expect
+test (a `lit/frcrimp` or FRAP 4(b) period) still needs Booker's RECAP
+dockets and a pre-2009 FRCrimP 45 / FRAP 4(b) base layer.
 
 ## 4. Batches
 

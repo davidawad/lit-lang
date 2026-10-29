@@ -1311,7 +1311,15 @@ exact download time was not recorded.
 
 ## Dockets: Supreme Court of the United States (`dockets/`)
 
-The Court's docket pages of the five certiorari cases of the lg-wvlf.5 expect batch (`tests/expect/`), the record their petition dates come from. Each `.txt` is the page's case header and "Proceedings and Orders" table, one line per field or cell, extracted from the as-served HTML with a script (tags dropped, entities decoded, whitespace runs collapsed, the counsel table left out); no wording changed. The HTML as served is beside it under `dockets/original/`.
+The Court's docket pages of the five certiorari cases of the lg-wvlf.5 expect batch and of Booker's (lg-94rl) (`tests/expect/`), the record their petition dates come from. Each `.txt` is the page's case header and "Proceedings and Orders" table, one line per field or cell, extracted from the as-served HTML with a script (tags dropped, entities decoded, whitespace runs collapsed, the counsel table left out); no wording changed. The HTML as served is beside it under `dockets/original/`.
+
+### `dockets/scotus-04-104.txt`
+
+- Supreme Court docket No. 04-104, United States v. Booker.
+- Source: <https://www.supremecourt.gov/search.aspx?filename=/docketfiles/04-104.htm>.
+- Extracted 2026-10-29 by script as above from the HTML stored in lg-bdvf as `rulings/booker-scotus-2005.docket.html`, which `dockets/original/scotus-04-104.html` copies byte for byte.
+- `dockets/scotus-04-104.txt` sha256: `c602955a92cb75ef40237674845bdecfdf28ce54335041164148baa04380f868`.
+- Original: `dockets/original/scotus-04-104.html` as served (sha256 8e09158bed73280455fb265a8808e5714025710b5b7c27061a7562b9f4379a5b); extraction sha256 c602955a92cb75ef40237674845bdecfdf28ce54335041164148baa04380f868. Served at https://www.supremecourt.gov/search.aspx?filename=/docketfiles/04-104.htm; fetched with curl (lg-bdvf).
 
 ### `dockets/scotus-06-1164.txt`
 

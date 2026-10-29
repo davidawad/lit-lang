@@ -1,0 +1,40 @@
+# The deadline domain's change files (lg-94rl): the base layer of the
+# certiorari period in a criminal case, as the Rules of the Supreme Court
+# adopted January 27, 2003 and in force from May 1, 2003 to May 2, 2005
+# state it (vendored in sources/change-scotus-rules-2003-cert-excerpt.txt).
+# The petition is due 90 days after entry of the judgment below, or after
+# the denial of a timely rehearing petition there (Rule 13.1, 13.3),
+# counted under Rule 30.1; a Justice may extend it by not more than 60 days
+# (Rule 13.5). The May 2, 2005 edition onward is change-certiorari-base's
+# (docs/litigate/change/scotus-base). The expect tests of tests/expect/
+# replay the petitions of the criminal cases the library cites against it,
+# from the Court's dockets.
+[package]
+name = "change-certiorari-criminal-2003"
+version = "1.0.0"
+language = 1
+pack_id = "change-certiorari-criminal-2003"
+forum = "scotus"
+authority = "FederalRule"
+title = "Deadline domain: the certiorari period in a criminal case, 2003 Rules of the Supreme Court (base)"
+in_force = "2003-05-01"
+known_at = "2026-10-29"
+
+[package.roles]
+petitioner = "self"
+respondent = "opponent"
+justice = "nature"
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../lit/core" }
+
+[sources.scotus-2003]
+title = "Rules of the Supreme Court of the United States (adopted January 27, 2003, effective May 1, 2003): Rules 13, 29.3, 30.1-30.3, 48.1"
+url = "https://www.supremecourt.gov/pdfs/rules/rules_2003.pdf"
+path = "sources/change-scotus-rules-2003-cert-excerpt.txt"
+path_sha256 = "bcae90de46622b558e7950dcc3a21deff62093b980f635620d86f3f9d171ce50"
+sha256 = "2a67774e0cedb132ca80a161714519fbe9c0da6e2b837ae4047c024319e51ffe"
+as_of = "2003-05-01"
+cite_prefixes = ["Sup. Ct. R. (2003)"]
+section_heading = "Sup. Ct. R. (2003) {n}"

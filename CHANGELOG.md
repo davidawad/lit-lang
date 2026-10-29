@@ -44,6 +44,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Expect batch 3 (criminal): Booker's certiorari petition** (lg-94rl).
+  A base layer, `change-certiorari-criminal-2003`
+  (docs/litigate/change/scotus-2003-criminal), states the criminal
+  certiorari period of the Rules of the Supreme Court effective May 1,
+  2003 (Rule 13.1, 13.3, 13.5, 30.1), vendored as served
+  (sources/change-scotus-rules-2003-cert-excerpt.txt). The expect test
+  `tests/expect/united-states-v-booker` replays the United States'
+  petition of July 21, 2004 from the Seventh Circuit's judgment of July 9,
+  2004 (sources/change-corpus/dockets/scotus-04-104.txt): due October 7,
+  2004, timely.
+
 - **Expect batch 2 (civil): the certiorari petitions of five cases the
   library cites** (lg-wvlf.5). A base layer, `change-certiorari-base`
   (docs/litigate/change/scotus-base), states the civil certiorari period

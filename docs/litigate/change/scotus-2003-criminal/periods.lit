@@ -1,0 +1,108 @@
+module change-certiorari-criminal-2003.periods
+
+import core.calendar.{ us-federal-holidays }
+
+// A base layer declares rules from nothing (docs/litigate/CHANGE.md §2.1).
+// The certiorari period of a criminal case as the Rules of the Supreme
+// Court adopted January 27, 2003 state it, in force from May 1, 2003
+// (Rule 48.1). Its versions have no end here: the Rules effective May 2,
+// 2005 and after are change-certiorari-base's (scotus-base), so a matter
+// whose judgment below is entered from May 2, 2005 runs under that layer.
+/// After a United States court of appeals enters its judgment in a
+/// criminal case, a party may petition the Supreme Court for a writ of
+/// certiorari.
+start judgment-below
+
+/// Entry of the court of appeals' judgment (Sup. Ct. R. 13.1), or, after a
+/// timely petition for rehearing there, the denial of rehearing or the
+/// later judgment on rehearing (Sup. Ct. R. 13.3).
+event LowerCourtEntry()
+/// An application to a Justice to extend the time to file the petition
+/// (Sup. Ct. R. 13.5, 22, 30.2, 30.3).
+event PetitionExtensionApplied()
+/// A Justice's denial of the application: "Once denied, such an
+/// application may not be renewed" (Sup. Ct. R. 30.3).
+event PetitionExtensionDenied()
+/// A Justice's order extending the time to file the petition to `until`
+/// (Sup. Ct. R. 13.5).
+event PetitionTimeExtended(until: Date) extends petition-period to until
+/// The petition for a writ of certiorari is filed with the Clerk (Sup. Ct.
+/// R. 12.1, 13.1).
+event PetitionFiled()
+
+/// Sup. Ct. R. 30.1 of the Rules effective May 1, 2003: the day of the act
+/// or event is not included; the last day is, "unless it is a Saturday,
+/// Sunday, federal legal holiday listed in 5 U. S. C. § 6103, or day on
+/// which the Court building is closed by order of the Court or the Chief
+/// Justice". No closure order is vendored, so none is declared. Service
+/// adds no time: Rule 29.3 serves "personally, by mail, or by third-party
+/// commercial carrier", and Rule 30 adds nothing for any of them.
+counting sup-ct-30 effective [2003-05-01, ..) known_at 2003-01-27 cite "Sup. Ct. R. (2003) 30.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: 0.days
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (2003) 29.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+/// Sup. Ct. R. 13.1 of the Rules effective May 1, 2003: a petition to
+/// review a judgment "in any case, civil or criminal", of a United States
+/// court of appeals "is timely when it is filed with the Clerk of this
+/// Court within 90 days after entry of the judgment"; after a timely
+/// petition for rehearing below it runs from the denial of rehearing (Rule
+/// 13.3), so from the latest entry. Unlike the 2005 edition, Rule 13.3
+/// does not yet restart the period when the court below entertains an
+/// untimely rehearing petition or considers rehearing sua sponte. Rule
+/// 13.2 refuses a petition "jurisdictionally out of time" and cites 28
+/// U. S. C. § 2101(c), which governs civil cases; no vendored source says
+/// whether the criminal limit is jurisdictional, so no characterization
+/// is declared. Its only extension is a Justice's, for good cause, "for a
+/// period not exceeding 60 days", on an application filed "at least 10
+/// days before the date the petition is due, except in extraordinary
+/// circumstances" (Rule 13.5, 30.2); "Once denied, such an application
+/// may not be renewed" (Rule 30.3).
+deadline petition-period: 90.days after LowerCourtEntry() counted_by sup-ct-30 effective [2003-05-01, ..) known_at 2003-01-27 cite "Sup. Ct. R. (2003) 13.1"
+{
+  trigger latest
+  extend {
+    by justice
+    discretion GoodCause
+    max 60.days
+    on PetitionExtensionApplied()
+    within current_due - 10.days
+    unless PetitionExtensionDenied()
+  }
+  extend {
+    by justice
+    discretion ExtraordinaryCircumstances
+    max 60.days
+    on PetitionExtensionApplied()
+    within current_due
+    unless PetitionExtensionDenied()
+  }
+}
+
+decision judgment-below: "Judgment of the court of appeals entered: petition for certiorari?" by petitioner effective [2003-05-01, ..) known_at 2003-01-27 cite "Sup. Ct. R. (2003) 13.1"
+{
+  petition "File the petition for a writ of certiorari" -> petition-filed {
+    event PetitionFiled()
+    within petition-period
+  }
+  forgo "File no petition" -> judgment-stands
+}
+
+terminal petition-filed: "Petition for a writ of certiorari filed" effective [2003-05-01, ..) known_at 2003-01-27
+terminal judgment-stands: "The judgment of the court of appeals stands" effective [2003-05-01, ..) known_at 2003-01-27

@@ -1,0 +1,34 @@
+# United States v. Booker, 543 U.S. 220 (2005) (lg-94rl; public record).
+# The United States' petition for certiorari against the base layer of the
+# 2003 Rules of the Supreme Court (docs/litigate/change/scotus-2003-
+# criminal), from the Court's docket No. 04-104 (https://www.supremecourt.
+# gov/search.aspx?filename=/docketfiles/04-104.htm, as served in sources/
+# change-corpus/dockets/; the case's `docket N` is the row of its
+# Proceedings and Orders). The Seventh Circuit decided the appeal July 9,
+# 2004, with no rehearing listed (docket header); the petition was filed
+# July 21, 2004 (row 1). Rule 13.1 (2003 Rules) runs the 90 days from the
+# entry of the judgment: due Thursday, October 7, 2004. The Court granted
+# the petition August 2, 2004 and decided the case January 12, 2005. The
+# merits holding edits no period the library models, so no precedent layer
+# is added. Re-record with `litigate test tests/expect --bless`, and say
+# why in the commit.
+
+paths = ["docs/litigate/change/scotus-2003-criminal"]
+
+[[run]]
+world = "ca7.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["change-certiorari-criminal-2003"]
+
+[run.expect.w1.outcome]
+petition = "timely"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-certiorari-criminal-2003::petition-period"
+trigger = "2004-07-09"
+due = "2004-10-07"
+status = "discharged"
+cite = "Sup. Ct. R. (2003) 13.1"
+counted_by = "Sup. Ct. R. (2003) 30.1"

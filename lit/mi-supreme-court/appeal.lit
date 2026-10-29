@@ -10,7 +10,6 @@ import mi-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
 // "7.214" and "7.215" cites for briefing, argument, decision and rehearing
 // are Court of Appeals rules; the Supreme Court's own are MCR 7.311 to
 // 7.315. The outline named no leading decisions.
-
 /// A brief on appeal, prepared in conformity with MCR 7.212(B) as to
 /// length (MCR 7.312(A)(1)), and an application for leave prepared in
 /// conformity with it (MCR 7.305(A)(1)): at most 16,000 words unless the
@@ -37,7 +36,8 @@ decision application: "Application for leave to appeal?" by applicant cite "MCR 
   edge-application-none "No application: the Court of Appeals decision stands" -> not-sought {
     authority cite "MCR 7.305(C)"
   }
-  edge-application-filed "Application filed" -> answer-reply { event ReviewPetitionFiled()
+  edge-application-filed "Application filed" -> answer-reply {
+    event ReviewPetitionFiled()
     authority cite "MCR 7.305(A)"
   }
 }
@@ -45,7 +45,9 @@ decision application: "Application for leave to appeal?" by applicant cite "MCR 
 state answer-reply: "Answer and reply; application submitted" by office cite "MCR 7.305(H)"
 {
   note "A responding party may file 1 signed copy of an answer in accordance with MCR 7.212(B) within 28 days after service of the application (MCR 7.305(D)). The appellant may reply within 21 days after service of the answer, with a rebuttal only, a table of contents and an index of authorities (MCR 7.305(E)). An amicus brief on the application is filed on motion granted, within 21 days after the answer is filed or the time for it has passed (MCR 7.305(F)). A nonconforming pleading may be ordered corrected or struck, and does not satisfy the time limit unless corrected in the time specified (MCR 7.305(G)). The application may be submitted for decision after the reply is filed or the time for it has expired, whichever occurs first; there is no oral argument on it unless the Court orders argument (MCR 7.305(H))."
-  edge-answer-reply-submitted "Submitted for decision" -> leave-decision { authority cite "MCR 7.305(H)" }
+  edge-answer-reply-submitted "Submitted for decision" -> leave-decision {
+    authority cite "MCR 7.305(H)"
+  }
 }
 
 decision leave-decision: "Application decided" by court cite "MCR 7.305(I)"
@@ -53,7 +55,8 @@ decision leave-decision: "Application decided" by court cite "MCR 7.305(I)"
   note "The Court may grant or deny the application, enter a final decision, direct argument on the application, or issue a peremptory order; the clerk issues the order to each party and the Court of Appeals clerk (MCR 7.305(I)(1)). If leave is denied, the Court of Appeals decision becomes the final adjudication and may be enforced in accordance with its terms; if granted, jurisdiction vests in the Supreme Court and subchapter 7.300 applies (MCR 7.305(I)(3)). Unless otherwise ordered, the appeal is limited to the issues raised in the application (MCR 7.305(I)(4)(a)). The reasons for denying leave, filed in the clerk's office, are not published and are not precedent (MCR 7.301(E)). A motion for reconsideration of the order is filed within 21 days after its certification and does not stay it (MCR 7.311(G))."
   edge-leave-decision-denied "Leave denied" -> leave-denied { authority cite "MCR 7.305(I)" }
   edge-leave-decision-peremptory "Final decision or peremptory order on the application" -> peremptory-order {
-    event DecisionFiled() authority cite "MCR 7.305(I)"
+    event DecisionFiled()
+    authority cite "MCR 7.305(I)"
   }
   edge-leave-decision-granted "Leave granted, or argument on the application directed" -> briefing {
     authority cite "MCR 7.305(I)"
@@ -77,16 +80,28 @@ state argument: "Session calendar; argument or submission on briefs" by office c
 decision decision: "Supreme Court decision" by court cite "MCR 7.315(A)"
 {
   note "An opinion is written and signed by each justice deciding the case; except for affirmance by an even division, a decision is made by concurrence of a majority of the justices voting (MCR 7.315(A)). The Court may enter any judgment or order that ought to have been entered and grant relief as the case requires (MCR 7.316(A)(7)). The clerk enters an order or judgment pursuant to the opinion as of the date the opinion is filed (MCR 7.315(C)(1)). A motion for rehearing is filed within 21 days after the opinion is filed (MCR 7.311(F)(1))."
-  edge-decision-affirmed "Court of Appeals affirmed" -> affirmed { event DecisionFiled() authority cite "MCR 7.315(C)" }
-  edge-decision-reversed "Reversed, vacated or remanded" -> reversed { event DecisionFiled() authority cite "MCR 7.316(A)" }
-  edge-decision-rehearing "Rehearing moved" -> rehearing { event DecisionFiled() authority cite "MCR 7.311(F)" }
+  edge-decision-affirmed "Court of Appeals affirmed" -> affirmed {
+    event DecisionFiled()
+    authority cite "MCR 7.315(C)"
+  }
+  edge-decision-reversed "Reversed, vacated or remanded" -> reversed {
+    event DecisionFiled()
+    authority cite "MCR 7.316(A)"
+  }
+  edge-decision-rehearing "Rehearing moved" -> rehearing {
+    event DecisionFiled()
+    authority cite "MCR 7.311(F)"
+  }
 }
 
 decision rehearing: "Motion for rehearing decided" by court cite "MCR 7.311(F)"
 {
   note "The motion is filed within 21 days after the opinion, states why the Court should modify its opinion, and is subject to the restrictions of MCR 2.119(F)(3); any party or participating amicus may answer within 14 days after service; there is no oral argument on it unless ordered; and the clerk refuses a late motion or a motion to reconsider an order denying rehearing (MCR 7.311(F)(1), (3)-(5)). A timely motion postpones issuance of the judgment order until the motion is denied or, if granted, until at least 21 days after the decision on rehearing (MCR 7.311(F)(2))."
-  edge-rehearing-granted "Granted: decision on rehearing" -> decision { authority cite "MCR 7.311(F)" }
-  edge-rehearing-denied "Denied: judgment order issues" -> judgment-issued { event MandateIssued()
+  edge-rehearing-granted "Granted: decision on rehearing" -> decision {
+    authority cite "MCR 7.311(F)"
+  }
+  edge-rehearing-denied "Denied: judgment order issues" -> judgment-issued {
+    event MandateIssued()
     authority cite "MCR 7.315(C)"
   }
 }

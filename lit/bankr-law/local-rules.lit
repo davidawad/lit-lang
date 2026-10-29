@@ -115,122 +115,100 @@ event FinalDisposition()
 /// Trustee, the trustee and all affected creditors, with the case notices
 /// and orders, and files a certificate of service.
 deadline amended-schedule-service-period: 3.days after AmendedScheduleFiled() counted_by frbp9006 cite "Bankr. W.D. La. LBR 1009-1(b)"
-
 /// Bankr. W.D. La. LBR 1009-1(c): within three days of amending the
 /// schedule of exemptions, the debtor serves notice of the amendment on all
 /// creditors and any trustee and files a certificate of service.
 deadline exemption-amendment-notice-period: 3.days after ExemptionScheduleAmended() counted_by frbp9006 cite "Bankr. W.D. La. LBR 1009-1(c)"
-
 /// Bankr. W.D. La. LBR 1016-1(a): in an open case, a Notice of Death of the
 /// debtor is filed within sixty days of the death by the deceased debtor's
 /// counsel or the person who intends to be appointed representative or
 /// successor.
 deadline notice-of-death-period: 60.days after DebtorDied() counted_by frbp9006 cite "Bankr. W.D. La. LBR 1016-1(a)"
-
 /// Bankr. W.D. La. LBR 1017-1(b)(2): objections to the Clerk's order to
 /// show cause why a chapter 7 or 13 case should not be dismissed should be
 /// filed at least seven days before the hearing date; without a timely
 /// response the court may dismiss without a hearing.
 deadline show-cause-objection-period: 7.days before ShowCauseHearing() counted_by frbp9006 cite "Bankr. W.D. La. LBR 1017-1(b)"
-
 /// Bankr. W.D. La. LBR 1017-1(b)(3): the United States Trustee may seek ex
 /// parte dismissal if the debtor failed to attend the § 341 meeting and did
 /// not request that it be rescheduled within twenty-one days of the missed
 /// meeting.
 deadline missed-meeting-reschedule-period: 21.days after MissedCreditorsMeeting() counted_by frbp9006 cite "Bankr. W.D. La. LBR 1017-1(b)"
-
 /// Bankr. W.D. La. LBR 2004-1(b): a consensual FRBP 2004 examination
 /// initiated by notice is filed and served no later than fourteen days
 /// before the date set for the examination.
 deadline examination-notice-period: 14.days before ExaminationDate() counted_by frbp9006 cite "Bankr. W.D. La. LBR 2004-1(b)"
-
 /// Bankr. W.D. La. LBR 2014-1(b)(1): a motion to approve a professional's
 /// employment made within thirty days of the professional (other than
 /// special counsel) commencing work is deemed contemporaneous; a later
 /// motion seeking retroactive authority must explain the delay (b)(2).
 deadline contemporaneous-employment-period: 30.days after ProfessionalCommencedWork() counted_by frbp9006 cite "Bankr. W.D. La. LBR 2014-1(b)"
-
 /// Bankr. W.D. La. LBR 2015-1: in a chapter 11 case and an operating
 /// chapter 7 case, the Monthly Operating Report is filed on or before the
 /// 20th day of each month following the month reported, until a plan is
 /// confirmed or the case is converted or dismissed.
 deadline monthly-operating-report-period: 20.days after CalendarMonthEnded() counted_by frbp9006 cite "Bankr. W.D. La. LBR 2015-1"
-
 /// Bankr. W.D. La. LBR 3007-1(b)(1): a claimant opposing an objection to
 /// its claim noticed "if and only if" files a response at least seven days
 /// before the hearing date, or the claim may be disallowed without a
 /// hearing.
 deadline claim-objection-response-period: 7.days before ClaimObjectionHearing() counted_by frbp9006 cite "Bankr. W.D. La. LBR 3007-1(b)"
-
 /// Bankr. W.D. La. LBR 3011-1(d)(1): parties served with an Application for
 /// Payment of Unclaimed Funds have twenty-one days thereafter to object;
 /// without an objection the court may consider it without a hearing.
 deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsApplicationServed() counted_by frbp9006 cite "Bankr. W.D. La. LBR 3011-1(d)"
-
 /// Bankr. W.D. La. LBR 3015-1(c)(1): written objections to chapter 12 or 13
 /// plan confirmation by parties other than the trustees are filed and
 /// served at least fourteen days before the scheduled confirmation hearing.
 deadline chapter-12-13-confirmation-objection-period: 14.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. W.D. La. LBR 3015-1(c)"
-
 /// Bankr. W.D. La. LBR 3015-1(e)(1): an objection to a proposed
 /// modification of a confirmed chapter 12 or 13 plan is filed at least
 /// fourteen days before the hearing date, which is held if, and only if, an
 /// objection is filed (also (f) for a trustee's or creditor's
 /// modification).
 deadline plan-modification-objection-period: 14.days before PlanModificationHearing() counted_by frbp9006 cite "Bankr. W.D. La. LBR 3015-1(e)"
-
 /// Bankr. W.D. La. LBR 3020-1(a): unless the court orders otherwise, an
 /// objection to confirmation of a chapter 11 plan is filed and served no
 /// later than seven days before the confirmation hearing.
 deadline chapter-11-confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. W.D. La. LBR 3020-1(a)"
-
 /// Bankr. W.D. La. LBR 4001-1(h): a hearing on a motion to lift the stay is
 /// held if and only if a response is filed and mailed to movant's counsel
 /// at least seventeen days from the mailing date on the certificate of
 /// mailing (the RESPONSE DEADLINE, stated in bold on the notice).
 deadline stay-relief-response-period: 17.days after StayReliefMotionMailed() counted_by frbp9006 cite "Bankr. W.D. La. LBR 4001-1(h)"
-
 /// Bankr. W.D. La. LBR 5009-1(b): no later than thirty days after the date
 /// of the trustee's Notice of Plan Completion, a debtor eligible for a §
 /// 1328 discharge files the Statement Regarding Domestic Support
 /// Obligations and § 522(q) Exemptions (Form B2830).
 deadline discharge-certification-period: 30.days after PlanCompletionNoticed() counted_by frbp9006 cite "Bankr. W.D. La. LBR 5009-1(b)"
-
 /// Bankr. W.D. La. LBR 7007-1(c): when no objection has been timely filed,
 /// movant's counsel uploads a proposed order granting the motion within
 /// seven days before the proposed hearing date.
 deadline unopposed-order-upload-period: 7.days before ProposedHearingDate() counted_by frbp9006 cite "Bankr. W.D. La. LBR 7007-1(c)"
-
 /// Bankr. W.D. La. LBR 7007-1(e): absent a deadline set by the court or the
 /// notice of hearing, a response and brief to an opposed motion are filed
 /// not later than seven days before the proposed hearing date.
 deadline adversary-motion-response-period: 7.days before ProposedHearingDate() counted_by frbp9006 cite "Bankr. W.D. La. LBR 7007-1(e)"
-
 /// Bankr. W.D. La. LBR 7016-1(a): unless the presiding judge directs
 /// otherwise, the joint pretrial order is uploaded at least seven days
 /// before trial.
 deadline joint-pretrial-order-period: 7.days before TrialDate() counted_by frbp9006 cite "Bankr. W.D. La. LBR 7016-1(a)"
-
 /// Bankr. W.D. La. LBR 7016-1(b): proposed findings of fact and conclusions
 /// of law are filed at least seven days before trial.
 deadline proposed-findings-period: 7.days before TrialDate() counted_by frbp9006 cite "Bankr. W.D. La. LBR 7016-1(b)"
-
 /// Bankr. W.D. La. LBR 7056-1(d): responses to a motion for summary
 /// judgment noticed with twenty-one-day "if and only if" language are filed
 /// not later than seven days before the scheduled hearing.
 deadline summary-judgment-response-period: 7.days before SummaryJudgmentHearing() counted_by frbp9006 cite "Bankr. W.D. La. LBR 7056-1(d)"
-
 /// Bankr. W.D. La. LBR 9013-1(g): unless the FRBP, these rules, the
 /// Administrative Procedures or the court provide otherwise, a motion is
 /// filed and served at least twenty-one days before the hearing date set to
 /// consider it.
 deadline motion-filing-period: 21.days before MotionHearing() counted_by frbp9006 cite "Bankr. W.D. La. LBR 9013-1(g)"
-
 /// Bankr. W.D. La. LBR 9013-1(i): unless otherwise provided (LBR 3015-1(c),
 /// 9014-1(f)(2)), responsive pleadings and objections are served and filed
 /// so as to be received not later than seven days before the hearing date.
 deadline motion-response-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. W.D. La. LBR 9013-1(i)"
-
 /// Bankr. W.D. La. LBR 9070-1(b): exhibits in the Clerk's custody are
 /// removed within sixty days after final disposition of the case, by the
 /// attorney who introduced them, or may be destroyed.

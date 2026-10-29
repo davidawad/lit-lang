@@ -112,182 +112,144 @@ event OrderDirected()
 /// identification is provided to the Clerk's Office within 14 days, or a
 /// motion for waiver is made within that time.
 deadline photo-identification-period: 14.days after PetitionFiled() counted_by frbp9006 cite "E.D.N.Y. LBR 1002-1(d)"
-
 /// LBR 1007-4(b): in an involuntary chapter 11 case, the debtor's affidavit
 /// is filed within 14 days after the order for relief is entered.
 deadline involuntary-chapter11-affidavit-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "E.D.N.Y. LBR 1007-4(b)"
-
 /// LBR 1073-3(b)(ii): in an involuntary case, the debtor files the LBR
 /// 1073-3 corporate disclosure statement within 14 days after the order for
 /// relief.
 deadline involuntary-disclosure-statement-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "E.D.N.Y. LBR 1073-3(b)"
-
 /// LBR 2002-1(e): an objection to a proposed order noticed for presentment
 /// is served so as to be received, and filed with proof of service, at
 /// least 7 days before the presentment date.
 deadline presentment-objection-period: 7.days before PresentmentDate() counted_by frbp9006 cite "E.D.N.Y. LBR 2002-1(e)"
-
 /// LBR 2003-1(a): in a chapter 13 case, the debtor provides the trustee the
 /// mandatory disclosures (payment advices, contribution affidavits,
 /// valuations, leases, a prior-case affidavit and post-petition payment
 /// proof) no later than 7 days before the first date set for the § 341
 /// meeting.
 deadline chapter13-meeting-disclosures-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "E.D.N.Y. LBR 2003-1(a)"
-
 /// LBR 2003-1(b): the chapter 13 debtor provides the trustee the further
 /// documents no later than 7 days before the first date set for
 /// confirmation.
 deadline chapter13-confirmation-disclosures-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frbp9006 cite "E.D.N.Y. LBR 2003-1(b)"
-
 /// LBR 2016-2: an application for a final award of compensation in a
 /// chapter 7 case is filed and served no later than 21 days before the
 /// hearing on the trustee's final account.
 deadline final-compensation-application-period: 21.days before FinalAccountHearingScheduled() counted_by frbp9006 cite "E.D.N.Y. LBR 2016-2"
-
 /// LBR 2016-2: objections to the application are filed at least 7 days
 /// before the hearing.
 deadline final-compensation-objection-period: 7.days before FinalAccountHearingScheduled() counted_by frbp9006 cite "E.D.N.Y. LBR 2016-2"
-
 /// LBR 2090-2: where the debtor's retainer agreement excludes the defense of
 /// an adversary proceeding, the attorney of record files and serves the
 /// relevant portions of the agreement within 14 days of service of the
 /// summons and complaint.
 deadline retainer-exclusion-period: 14.days after SummonsServed() counted_by frbp9006 cite "E.D.N.Y. LBR 2090-2"
-
 /// LBR 3007-2: a creditor whose scheduled claim is modified, or who is
 /// added, when the bar date has expired or will expire in less than 30
 /// days, has 30 days from the effective date of the amendment to file a
 /// proof of claim.
 deadline amended-schedule-claim-period: 30.days after ScheduleAmendmentEffective() counted_by frbp9006 cite "E.D.N.Y. LBR 3007-2"
-
 /// LBR 3015-1(b): unless the plan is filed with the petition, the chapter 13
 /// debtor serves the plan on the trustee and all creditors within 7 days of
 /// filing it, and files proof of service.
 deadline chapter13-plan-service-period: 7.days after Chapter13PlanFiled() counted_by frbp9006 cite "E.D.N.Y. LBR 3015-1(b)"
-
 /// LBR 3015-1(c): a plan or summary stating the payments to the debtor's
 /// attorney as an administrative expense stands in for separate notice only
 /// if served on all parties in interest at least 14 days before the
 /// confirmation hearing.
 deadline attorney-fee-notice-period: 14.days before Chapter13ConfirmationHearingScheduled() counted_by frbp9006 cite "E.D.N.Y. LBR 3015-1(c)"
-
 /// LBR 3015-2(a): a pre-confirmation modification that adversely affects a
 /// creditor is served on the trustee and all creditors not later than 14
 /// days before the confirmation hearing or any adjournment.
 deadline chapter13-modification-service-period: 14.days before Chapter13ConfirmationHearingScheduled() counted_by frbp9006 cite "E.D.N.Y. LBR 3015-2(a)"
-
 /// LBR 3018-1(a): at least 7 days before the confirmation hearing on a
 /// chapter 9 or 11 plan, the proponent files and serves a summary of the
 /// ballots and any notice of cramdown.
 deadline ballot-summary-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006 cite "E.D.N.Y. LBR 3018-1(a)"
-
 /// LBR 3018-1(b): at least 7 days before the confirmation hearing, the
 /// proponent or the balloting agent files the certification of the vote.
 deadline vote-certification-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006 cite "E.D.N.Y. LBR 3018-1(b)"
-
 /// LBR 3018-1(c): the person tabulating ballots notifies a holder whose
 /// election is ineffective at least 7 days before the confirmation hearing.
 deadline ineffective-election-notice-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006 cite "E.D.N.Y. LBR 3018-1(c)"
-
 /// LBR 3020-1(a): objections to confirmation of a chapter 9 or 11 plan are
 /// filed at least 7 days before the first date set for the confirmation
 /// hearing.
 deadline chapter11-confirmation-objection-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006 cite "E.D.N.Y. LBR 3020-1(a)"
-
 /// LBR 3021(a): within 14 days after the order confirming a chapter 11
 /// plan, the plan proponent files on presentment a proposed order with a
 /// timetable for substantial consummation and a final decree.
 deadline consummation-timetable-period: 14.days after PlanConfirmed() counted_by frbp9006 cite "E.D.N.Y. LBR 3021(a)"
-
 /// LBR 3022-1: the plan proponent applies for a final decree within 14 days
 /// following the full administration of the estate (this period and the
 /// next; the earlier controls).
 deadline final-decree-application-period: 14.days after EstateFullyAdministered() counted_by frbp9006 cite "E.D.N.Y. LBR 3022-1"
-
 /// LBR 3022-1: and not later than 18 months following the entry of the
 /// confirmation order.
 deadline final-decree-outside-period: 18.months after PlanConfirmed() counted_by frbp9006 cite "E.D.N.Y. LBR 3022-1"
-
 /// LBR 4001-4(b): the lessor may, no later than 14 days after the Clerk's
 /// notice of compliance, consent to receive the debtor's check or object to
 /// the debtor's certification; silence is consent.
 deadline lessor-election-period: 14.days after CureComplianceNoticed() counted_by frbp9006 cite "E.D.N.Y. LBR 4001-4(b)"
-
 /// LBR 4003-1(a): an amendment to a claim of exemptions is not effective
 /// until proof of service is filed, which is done within 7 days of service.
 deadline exemption-amendment-proof-period: 7.days after ExemptionAmendmentServed() counted_by frbp9006 cite "E.D.N.Y. LBR 4003-1(a)"
-
 /// LBR 4003-1(b): a creditor added fewer than 30 days before, or after, the
 /// FRBP 4003(b) deadline has 30 days from service of the amendment to
 /// object to the property claimed as exempt.
 deadline added-creditor-exemption-objection-period: 30.days after CreditorAddedToSchedulesServed() counted_by frbp9006 cite "E.D.N.Y. LBR 4003-1(b)"
-
 /// LBR 6004-1(b): a trustee may sell estate property it reasonably believes
 /// worth no more than $10,000 in aggregate on 7 days' written notice to the
 /// United States trustee, interested parties and the landlord.
 deadline small-sale-notice-period: 7.days before SmallSaleDate() counted_by frbp9006 cite "E.D.N.Y. LBR 6004-1(b)"
-
 /// LBR 6004-1(e)(i): the auctioneer pays the gross proceeds to the trustee
 /// or debtor in possession no later than 7 days after receiving them.
 deadline auction-proceeds-period: 7.days after AuctionProceedsReceived() counted_by frbp9006 cite "E.D.N.Y. LBR 6004-1(e)"
-
 /// LBR 6004-1(f): within 21 days after the last date of the auction, the
 /// auctioneer files a verified report.
 deadline auction-report-period: 21.days after AuctionConcluded() counted_by frbp9006 cite "E.D.N.Y. LBR 6004-1(f)"
-
 /// LBR 6004-1(f): if not all proceeds were received by then, the auctioneer
 /// files a supplemental report within 14 days after all are received.
 deadline auction-supplemental-report-period: 14.days after AllAuctionProceedsReceived() counted_by frbp9006 cite "E.D.N.Y. LBR 6004-1(f)"
-
 /// LBR 7033-1(c): contention interrogatories may be served at the
 /// conclusion of a party's discovery and at least 30 days before the
 /// discovery cut-off.
 deadline contention-interrogatory-period: 30.days before DiscoveryCutoff() counted_by frbp9006 cite "E.D.N.Y. LBR 7033-1(c)"
-
 /// LBR 7033-1(f)(4): records referred to in answers to interrogatories are
 /// made available for inspection within 14 days after service of the
 /// answers, or on an agreed date.
 deadline records-inspection-period: 14.days after InterrogatoryAnswersServed() counted_by frbp9006 cite "E.D.N.Y. LBR 7033-1(f)"
-
 /// LBR 8024-1: on a remand for further proceedings, the appropriate party
 /// moves for them within 21 days of the remand, unless the appellate court
 /// orders otherwise.
 deadline remand-motion-period: 21.days after Remanded() counted_by frbp9006 cite "E.D.N.Y. LBR 8024-1"
-
 /// LBR 9006-1(a)(i): unless the rules provide otherwise, motion papers are
 /// served at least 14 days before the hearing date.
 deadline motion-service-period: 14.days before HearingScheduled() counted_by frbp9006 cite "E.D.N.Y. LBR 9006-1(a)"
-
 /// LBR 9006-1(a)(ii): answering papers are served so as to be received at
 /// least 7 days before the hearing date.
 deadline answering-papers-period: 7.days before HearingScheduled() counted_by frbp9006 cite "E.D.N.Y. LBR 9006-1(a)"
-
 /// LBR 9006-1(a)(iii): reply papers are served and filed at least 3 days
 /// before the hearing date.
 deadline reply-papers-period: 3.days before HearingScheduled() counted_by frbp9006 cite "E.D.N.Y. LBR 9006-1(a)"
-
 /// LBR 9019-1(b): the mediation participants select a mediator and an
 /// alternate from the Mediation Register within 7 days of the order
 /// assigning the matter to mediation.
 deadline mediator-selection-period: 7.days after MediationOrdered() counted_by frbp9006 cite "E.D.N.Y. LBR 9019-1(b)"
-
 /// LBR 9019-1(b): within 7 days of selecting a mediator, the participants
 /// and the mediator submit a proposed Mediation Order.
 deadline mediation-order-submission-period: 7.days after MediatorSelected() counted_by frbp9006 cite "E.D.N.Y. LBR 9019-1(b)"
-
 /// LBR 9019-1(c)(i): the initial mediation conference takes place no later
 /// than 30 days after the entry of the Mediation Order.
 deadline initial-mediation-conference-period: 30.days after MediationOrderEntered() counted_by frbp9006 cite "E.D.N.Y. LBR 9019-1(c)"
-
 /// LBR 9037-1(e): the party seeking redaction files a correctly redacted
 /// document or proof of claim within 21 days of the granting of the motion.
 deadline redacted-filing-period: 21.days after RedactionGranted() counted_by frbp9006 cite "E.D.N.Y. LBR 9037-1(e)"
-
 /// LBR 9070-1(b)(ii): if an appeal has been taken, the responsible party
 /// removes its filed exhibits within 30 days after the record on appeal is
 /// returned to the Clerk.
 deadline exhibit-removal-period: 30.days after RecordReturned() counted_by frbp9006 cite "E.D.N.Y. LBR 9070-1(b)"
-
 /// LBR 9072-1(a), (b): a party directed to settle or submit an order,
 /// judgment or decree files it within 14 days of the court's direction, or
 /// such other time as the court directs.

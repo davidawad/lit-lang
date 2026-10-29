@@ -45,17 +45,13 @@ decision probable-cause: "Preliminary examination or grand jury" by court cite "
 state charged: "Indictment or information" by office cite "NMRA 5-201"
 {
   note "An information is a written statement signed by the district attorney containing the essential facts and the common name of the offense (NMRA 5-201(C)). The defendant is arraigned on the information or indictment within 15 days after its filing or the arrest, whichever is later (NMRA 5-303(A))."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "NMRA 5-303"
-  }
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "NMRA 5-303" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by applicant cite "NMRA 5-303"
 {
   note "Arraignment is on the information or indictment within 15 days after its filing or the arrest, whichever is later; the defendant may appear by two-way audio-visual communication as Rule 5-303(A) allows (NMRA 5-303(A)). The pleas are those Rule 5-304(A) allows. Disclosure by the state and by the defendant are governed by Rules 5-501 and 5-502."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "NMRA 5-501"
-  }
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "NMRA 5-501" }
 }
 
 state discovery: "Discovery and pretrial motions" by applicant cite "NMRA 5-601"
@@ -67,9 +63,7 @@ state discovery: "Discovery and pretrial motions" by applicant cite "NMRA 5-601"
   edge-discovery-speedy "Motion to dismiss for violation of the right to a speedy trial" -> motions-ruling {
     authority cite "NMRA 5-604(B)"
   }
-  edge-discovery-plea "Plea negotiations" -> plea-decision {
-    authority cite "NMRA 5-304(E)"
-  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "NMRA 5-304(E)" }
 }
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite "NMRA 5-601(G)"
@@ -89,34 +83,22 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "NMRA 5-601(
 decision plea-decision: "Plea or trial" by applicant cite "NMRA 5-304"
 {
   note "A plea agreement that would eliminate the need for trial is submitted by a deadline the court sets, and no plea agreement may be entered later than five days before the scheduled date for jury selection or the start of a bench trial; the court sets a hearing within the plea deadline at which the defendant must be present (NMRA 5-304(E)). An untimely plea agreement is governed by Rule 5-304(F)."
-  edge-plea-decision-plea "Plea accepted" -> sentencing {
-    authority cite "NMRA 5-304(C)"
-  }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "NMRA 5-605(A)"
-  }
+  edge-plea-decision-plea "Plea accepted" -> sentencing { authority cite "NMRA 5-304(C)" }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "NMRA 5-605(A)" }
 }
 
 decision trial: "Verdict" by court cite "NMRA 5-611(A)"
 {
   note "Cases required to be tried by jury are so tried unless the defendant waives a jury with the court's approval and the state's consent (NMRA 5-605(A)). The verdict is unanimous, signed by the foreman and returned in open court (NMRA 5-611(A))."
-  edge-trial-acquittal "Not guilty" -> acquitted {
-    authority cite "NMRA 5-611(A)"
-  }
-  edge-trial-guilty "Guilty; post-verdict motions" -> post-trial {
-    authority cite "NMRA 5-614"
-  }
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "NMRA 5-611(A)" }
+  edge-trial-guilty "Guilty; post-verdict motions" -> post-trial { authority cite "NMRA 5-614" }
 }
 
 decision post-trial: "Post-verdict motions" by court cite "NMRA 5-614"
 {
   note "A defendant may move for or renew a motion for judgment of acquittal within 14 days after the jury returns a guilty verdict or the court discharges the jury, whichever is later (NMRA 5-614.1(B)). A motion for a new trial on a ground other than newly discovered evidence is made within ten days after the verdict or finding of guilty, or further time the court fixes within those ten days; one on newly discovered evidence may be made before final judgment or within two years after it (NMRA 5-614(C)). Failure to move for a new trial does not waive error properly brought to the court's attention (NMRA 5-614(E)). A Rule 5-614 motion filed not later than 30 days after the judgment is filed restarts the time for appeal from the order disposing of it (NMRA 12-201(D))."
-  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
-    authority cite "NMRA 5-614.1"
-  }
-  edge-post-trial-new-trial "New trial granted" -> trial {
-    authority cite "NMRA 5-614(A)"
-  }
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted { authority cite "NMRA 5-614.1" }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "NMRA 5-614(A)" }
   edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
     authority cite "NMRA 5-701(A)"
   }
@@ -133,9 +115,7 @@ state sentencing: "Judgment and sentence" by court cite "NMRA 5-701(A)"
 decision judgment: "Judgment of conviction" by applicant cite "NMRA 5-702"
 {
   note "Within the time the Rules of Appellate Procedure allow, defense counsel files either a notice of appeal under Rule 12-201 or the defendant's sworn affidavit, in the approved form and witnessed by counsel, stating the decision not to appeal (NMRA 5-702(B)). A notice of appeal is filed within 30 days after the judgment or order appealed from is filed in the district court clerk's office (ten days for the state's appeal of a suppression order), and Rule 12-308(B)'s three added days do not apply (NMRA 12-201(A)). A sentence imposed in an illegal manner may be corrected within 30 days after it is imposed, and a motion to reduce a sentence may be filed within 90 days of the written judgment and sentence or the other events Rule 5-801(B) lists; a motion to reduce tolls the time for appeal only if filed within 30 days of the written judgment and sentence (NMRA 5-801(A)-(C)). lit/core has no counting rule for the appellate rules, so the period is not encoded as a counted deadline."
-  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
-    authority cite "NMRA 12-201(A)"
-  }
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "NMRA 12-201(A)" }
   edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "NMRA 12-201(A)" }
 }
 

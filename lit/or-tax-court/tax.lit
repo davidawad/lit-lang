@@ -19,8 +19,7 @@ event ReplyBriefFiled() paper or-state-rules.sct-reply-brief
 
 start commenced
 
-state commenced: "Appeal filed in the Tax Court" by applicant cite ?("ORS 305.280; Tax Court Rules: not vendored")
-{
+state commenced: "Appeal filed in the Tax Court" by applicant cite ?("ORS 305.280; Tax Court Rules: not vendored") {
   note "Commencement of an appeal in the Tax Court (in the Magistrate Division, with de novo trial in the Regular Division), its filing period, fee and form: holes, because neither the Tax Court Rules nor ORS chapter 305 is vendored. Tax Court Rule 9 A incorporates UTCR chapter 21 in Tax Court proceedings (ORAP 2.05, note); UTCR chapter 21 is not vendored."
   edge-commenced-proceeds "Appeal docketed" -> tax-decision {
     event ActionCommenced()
@@ -28,8 +27,7 @@ state commenced: "Appeal filed in the Tax Court" by applicant cite ?("ORS 305.28
   }
 }
 
-decision tax-decision: "Tax Court decision" by court cite ?("ORS 305.425; Tax Court Rules: not vendored")
-{
+decision tax-decision: "Tax Court decision" by court cite ?("ORS 305.425; Tax Court Rules: not vendored") {
   note "Pleadings, discovery, summary judgment, trial and the entry of judgment in the Tax Court are holes (Tax Court Rules and ORS chapter 305 not vendored). A ruling of the Tax Court is a decision whose appealability the Supreme Court may determine summarily (ORAP 2.35(1), (2))."
   edge-tax-decision-won "Decided for the taxpayer" -> won {
     event JudgmentEntered()
@@ -44,13 +42,11 @@ decision tax-decision: "Tax Court decision" by court cite ?("ORS 305.425; Tax Co
   }
 }
 
-terminal won: "Decided for the taxpayer" outcome [win] cite ?("Tax Court Rules: not vendored")
-{
+terminal won: "Decided for the taxpayer" outcome [win] cite ?("Tax Court Rules: not vendored") {
   note "The adverse party may appeal directly to the Supreme Court under ORS 305.445 (not vendored) and ORAP 12.05. Outcome from the applicant's side."
 }
 
-terminal settled: "Settled or withdrawn" outcome [settlement] cite ?("Tax Court Rules: not vendored")
-{
+terminal settled: "Settled or withdrawn" outcome [settlement] cite ?("Tax Court Rules: not vendored") {
   note "Settlement terms are outside this package."
 }
 
@@ -72,9 +68,7 @@ decision appealability: "Appealability" by court cite "ORAP 2.35"
   edge-appealability-dismissed "Not appealable: appeal dismissed" -> dismissed-jurisdiction {
     authority cite "ORAP 2.35(5)"
   }
-  edge-appealability-briefing "Appealable: briefing" -> briefing {
-    authority cite "ORAP 5.80"
-  }
+  edge-appealability-briefing "Appealable: briefing" -> briefing { authority cite "ORAP 5.80" }
 }
 
 terminal dismissed-jurisdiction: "Dismissed: decision not appealable" outcome [loss, dismissal] cite "ORAP 2.35(5)"
@@ -98,9 +92,7 @@ state answering: "Answering and reply briefs" by applicant cite "ORAP 5.80"
     event ReplyBriefFiled()
     authority cite "ORAP 5.80(3)"
   }
-  edge-answering-submitted "No reply: submitted" -> decision {
-    authority cite "ORAP 5.80(3)"
-  }
+  edge-answering-submitted "No reply: submitted" -> decision { authority cite "ORAP 5.80(3)" }
 }
 
 decision decision: "Supreme Court decision" by court cite "ORAP 14.05"

@@ -108,7 +108,8 @@ terminal dismissed-1500-bar: "DISMISSED -- §1500 Same-Claim-Pending Bar" outcom
   payoff 0.usd
 }
 
-decision filing-track-fork: "Standard Complaint or Procurement-Protest Complaint?" by applicant cite "28 U.S.C. § 1491(b); RCFC App. C 1" {
+decision filing-track-fork: "Standard Complaint or Procurement-Protest Complaint?" by applicant cite "28 U.S.C. § 1491(b); RCFC App. C 1"
+{
   group threshold-group
   note "A §1491(b) bid/proposal protest (challenging a federal procurement solicitation, award, or proposed award) follows a materially different, expedited pre-filing and briefing track under RCFC Appendix C. All other claims (contract, §1498(a) patent, takings, illegal exaction, federal pay, etc.) follow the standard RCFC 3/4/12 complaint track."
   e-filingfork-standard "File a standard RCFC 3 complaint" -> complaint-filed {

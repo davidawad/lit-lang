@@ -579,8 +579,7 @@ terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effec
   }
 }
 
-state maintenance-due: "Maintenance Fees Required" by applicant effective [2024-01-31, ..) cite ?("37 CFR 1.362; 35 U.S.C. 41(b): the vendored sources/usc-cfr-prosecution-fragments.txt excerpts 35 U.S.C. § 41 without its maintenance-fee subsection (b)")
-{
+state maintenance-due: "Maintenance Fees Required" by applicant effective [2024-01-31, ..) cite ?("37 CFR 1.362; 35 U.S.C. 41(b): the vendored sources/usc-cfr-prosecution-fragments.txt excerpts 35 U.S.C. § 41 without its maintenance-fee subsection (b)") {
   group allowance-group
   note "Maintenance fees required at 3.5, 7.5, and 11.5 years after grant (37 CFR 1.362). A 6-month grace period with surcharge is available. Failure to pay within the grace period = expiration. Small and micro entities pay reduced fees."
   edge-maintenance-due-maintenance-due "Pay maintenance fee on time" -> maintenance-due {
@@ -625,8 +624,7 @@ terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant ou
   }
 }
 
-terminal patent-expired: "Patent Expired" outcome [loss, expired, waiver-trap] effective [2024-01-31, ..) cite ?("37 CFR 1.362; 35 U.S.C. 41(b): the vendored sources/usc-cfr-prosecution-fragments.txt excerpts 35 U.S.C. § 41 without its maintenance-fee subsection (b)")
-{
+terminal patent-expired: "Patent Expired" outcome [loss, expired, waiver-trap] effective [2024-01-31, ..) cite ?("37 CFR 1.362; 35 U.S.C. 41(b): the vendored sources/usc-cfr-prosecution-fragments.txt excerpts 35 U.S.C. § 41 without its maintenance-fee subsection (b)") {
   group allowance-group
   note "Patent expired for failure to pay maintenance fees after the 6-month grace period. Reinstatement is not available for expired patents (unlike abandoned applications). The invention enters the public domain. PLACEHOLDER PAYOFF: $0, override per matter. Premature expiration for a missed maintenance-fee payment, not the natural end of a full term."
   valence bad

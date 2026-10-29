@@ -1,6 +1,12 @@
 module tx-courts-of-appeals-civil.appeal
 
-import tx-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+import tx-state-rules.{
+  DecisionFiled,
+  MandateIssued,
+  NoticeOfAppealFiled,
+  RecordFiled,
+  ReviewPetitionFiled,
+}
 
 // A civil appeal to a Texas court of appeals, from the appellant's side.
 // Every period below is stated in a note, not counted: time is computed
@@ -19,9 +25,7 @@ start notice
 decision notice: "Notice of appeal within time?" by applicant cite "Tex. R. App. P. 26.1"
 {
   note "An appeal is perfected when a written notice of appeal is filed with the trial court clerk; a notice mistakenly filed with the appellate court is deemed filed the same day with the trial court clerk (Tex. R. App. P. 25.1(a)). A party who seeks to alter the judgment must file a notice (Tex. R. App. P. 25.1(c)); the notice must state what Rule 25.1(d) lists, be served on all parties and be delivered to each court reporter (Tex. R. App. P. 25.1(e)), and may be amended to correct a defect before the appellant's brief is filed (Tex. R. App. P. 25.1(g)). The notice is filed within 30 days after the judgment is signed, or within 90 days if any party timely files a motion for new trial, a motion to modify the judgment, a motion to reinstate under Tex. R. Civ. P. 165a, or a request for findings of fact and conclusions of law that are required or could properly be considered; within 20 days in an accelerated appeal; within six months in a restricted appeal; and another party may file within the applicable period or 14 days after the first notice, whichever is later (Tex. R. App. P. 26.1). The appellate court may extend the time if, within 15 days after the deadline, the party files the notice in the trial court and a motion complying with Rule 10.5(b) in the appellate court (Tex. R. App. P. 26.3). Filing the notice does not suspend enforcement of the judgment unless it is superseded under Rule 24 (Tex. R. App. P. 25.1(h))."
-  edge-notice-late "No timely notice" -> time-barred {
-    authority cite "Tex. R. App. P. 26.1"
-  }
+  edge-notice-late "No timely notice" -> time-barred { authority cite "Tex. R. App. P. 26.1" }
   edge-notice-filed "Notice of appeal filed" -> record {
     event NoticeOfAppealFiled()
     authority cite "Tex. R. App. P. 25.1"
@@ -57,9 +61,7 @@ state briefing: "Briefs filed" by applicant cite "Tex. R. App. P. 38.6"
 decision submission: "Oral argument or submission without argument" by court cite "Tex. R. App. P. 39.1"
 {
   note "A party who has filed a brief and timely requested oral argument may argue unless the court, after examining the briefs, decides argument is unnecessary because the appeal is frivolous, the dispositive issues have been authoritatively decided, the briefs and record adequately present the facts and arguments, or argument would not significantly aid the decision (Tex. R. App. P. 39.1). If the court sets argument, every party that filed a brief may participate (Tex. R. App. P. 39.7). The clerk sends notice at least 21 days before the date set for argument or submission of whether argument is allowed, the date, the time allotted and the panel (Tex. R. App. P. 39.8). A case is decided by a panel of three justices unless the court votes to decide it en banc (Tex. R. App. P. 41.1)."
-  edge-submission-argued "Argued" -> decision {
-    authority cite "Tex. R. App. P. 39.1"
-  }
+  edge-submission-argued "Argued" -> decision { authority cite "Tex. R. App. P. 39.1" }
   edge-submission-briefs "Submitted without argument" -> decision {
     authority cite "Tex. R. App. P. 39.8"
   }
@@ -121,9 +123,7 @@ decision after-judgment-won: "Judgment for the appellant: the appellee's reheari
 decision rehearing: "Rehearing or en banc reconsideration decided" by court cite "Tex. R. App. P. 49.3"
 {
   note "A motion for rehearing may be granted by a majority of the justices who participated in the decision; if rehearing is granted, the court may dispose of the case with or without rebriefing and oral argument (Tex. R. App. P. 49.3). A majority of the en banc court may order reconsideration, and the judgment then does not become final (Tex. R. App. P. 49.5)."
-  edge-rehearing-granted "Rehearing granted" -> decision {
-    authority cite "Tex. R. App. P. 49.3"
-  }
+  edge-rehearing-granted "Rehearing granted" -> decision { authority cite "Tex. R. App. P. 49.3" }
   edge-rehearing-denied-review "Rehearing denied; petition for review" -> review-sought {
     event ReviewPetitionFiled()
     authority cite "Tex. R. App. P. 53.7"

@@ -13,11 +13,9 @@ module nmcca.review
 // against a reporter and are dropped; the only decision named here,
 // United States v. Grostefon, 12 M.J. 431 (C.M.A. 1982), is the one the
 // vendored Rule 18(b) itself cites.
-
 start trial-result
 
-state trial-result: "Court-martial findings and sentence" by office cite ?("10 U.S.C. § 816")
-{
+state trial-result: "Court-martial findings and sentence" by office cite ?("10 U.S.C. § 816") {
   note "General or special court-martial findings and sentence. The trial, the entry of judgment under Article 60c, UCMJ, and post-trial processing are holes: neither the UCMJ nor the Rules for Courts-Martial is vendored."
   edge-trial-result-judgment "Judgment entered" -> review-route {
     authority cite ?("10 U.S.C. § 860c")
@@ -33,9 +31,7 @@ state trial-result: "Court-martial findings and sentence" by office cite ?("10 U
 decision review-route: "Which review the case receives" by court cite "NMCCA R. 5"
 {
   note "Automatic review under Article 66 where the sentence as entered in the judgment includes death, dismissal of a commissioned officer, cadet or midshipman, a dishonorable or bad-conduct discharge, or confinement for two years or more (Rule 5(b)(1)). Otherwise, on the accused's timely appeal, where the sentence includes confinement for more than six months, the United States previously appealed under Article 62, or the Judge Advocate General sent the case for review of the sentence under Article 56(d) (Rule 5(b)(2)). Other findings of guilty and sentences go to the Judge Advocate General under Article 69 (Rule 5(b)(3), (4)). Nothing in the rules extends or limits the Court's jurisdiction (Rule 5(a))."
-  edge-review-route-automatic "Automatic review" -> docketed {
-    authority cite "NMCCA R. 5"
-  }
+  edge-review-route-automatic "Automatic review" -> docketed { authority cite "NMCCA R. 5" }
   edge-review-route-appeal "Eligible for appeal by the accused" -> appeal-election {
     authority cite "NMCCA R. 5"
   }
@@ -47,12 +43,8 @@ decision review-route: "Which review the case receives" by court cite "NMCCA R. 
 decision appeal-election: "Accused files a Notice of Appeal" by applicant cite "NMCCA R. 18"
 {
   note "An appeal by the accused under Article 66(b)(1)(A) or (B) is timely if the Notice of Appeal is filed with the Court within 90 days of the date the Office of the Judge Advocate General mails the Article 65(c) notice of the right to appeal to the accused's last known address; the appeal is docketed on the Court's receipt of the Notice (Service Court rule on appeals by the accused under Article 66(b)(1), Rule 18.5(a)(1); Appendix L item 4). A cross-appeal from a United States sentence appeal is timely within 90 days of the mailing of notice of that appeal (Rule 18.5(b)(2))."
-  edge-appeal-election-filed "Notice of Appeal filed" -> docketed {
-    authority cite "NMCCA R. 18"
-  }
-  edge-appeal-election-none "No timely appeal" -> not-appealed {
-    authority cite "NMCCA R. 18"
-  }
+  edge-appeal-election-filed "Notice of Appeal filed" -> docketed { authority cite "NMCCA R. 18" }
+  edge-appeal-election-none "No timely appeal" -> not-appealed { authority cite "NMCCA R. 18" }
 }
 
 state docketed: "Case docketed; assignments of error due" by applicant cite "NMCCA R. 18"
@@ -72,24 +64,17 @@ state docketed: "Case docketed; assignments of error due" by applicant cite "NMC
 decision withdrawal: "Court acts on the waiver or withdrawal" by court cite "NMCCA R. 16"
 {
   note "A waiver or withdrawal filed under R.C.M. 1115 is referred to the Court, which may require a motion, issue a show-cause order, or grant or deny it without further action; the accused may withdraw at any time before the Court completes its review, in writing, personally signed by the accused and defense counsel on DD Form 2330 or 2330-1 or by a declaration in the Appendix G format (Rule 16). In a case without a death sentence, a properly waived or withdrawn appeal is outside the Court's jurisdiction (Rule 5(c))."
-  edge-withdrawal-granted "Granted" -> waived {
-    authority cite "NMCCA R. 16"
-  }
-  edge-withdrawal-denied "Denied: review continues" -> docketed {
-    authority cite "NMCCA R. 16"
-  }
+  edge-withdrawal-granted "Granted" -> waived { authority cite "NMCCA R. 16" }
+  edge-withdrawal-denied "Denied: review continues" -> docketed { authority cite "NMCCA R. 16" }
 }
 
 state answer: "Government answer and reply" by office cite "NMCCA R. 18"
 {
   note "The Government's answer is due within 30 days after the brief and assignments of error (Rule 18(d); Rule 18.4(a)). The Service Court rule gives the accused 20 days after the answer for a reply, notwithstanding the 7 days of Joint Rule 18(d) (Rule 18.4(b); Appendix L item 3). If the accused files no brief, the Government may file one within 30 days after the accused's time expires (Rule 18(d)). A motion for oral argument is due 7 days after the answer (Appendix L item 15; Rule 25)."
-  edge-answer-submitted "Briefing complete" -> ccca-decision {
-    authority cite "NMCCA R. 18"
-  }
+  edge-answer-submitted "Briefing complete" -> ccca-decision { authority cite "NMCCA R. 18" }
 }
 
-decision ccca-decision: "Court of Criminal Appeals decision" by court cite ?("10 U.S.C. § 866")
-{
+decision ccca-decision: "Court of Criminal Appeals decision" by court cite ?("10 U.S.C. § 866") {
   note "The Court's powers on review under Article 66 are a hole: the UCMJ is not vendored. On a merit submission the Court may decide unless told within 10 days that the Government will file a brief (Rule 18.2(b)). The Court may order a remand under Article 66(f)(3) for further proceedings, directed to the chief trial judge, and keeps jurisdiction unless it expressly dismisses (Rule 29)."
   edge-ccca-decision-affirmed "Findings and sentence affirmed" -> ccca-affirmed {
     authority cite ?("10 U.S.C. § 866")
@@ -114,24 +99,18 @@ decision reconsideration: "Reconsideration" by court cite "NMCCA R. 31"
   edge-reconsideration-granted "Reconsidered: decision revisited" -> ccca-decision {
     authority cite "NMCCA R. 31"
   }
-  edge-reconsideration-denied "Denied" -> caaf-petition {
-    authority cite "NMCCA R. 31"
-  }
+  edge-reconsideration-denied "Denied" -> caaf-petition { authority cite "NMCCA R. 31" }
 }
 
-decision caaf-petition: "Petition for grant of review to CAAF" by applicant cite ?("10 U.S.C. § 867")
-{
+decision caaf-petition: "Petition for grant of review to CAAF" by applicant cite ?("10 U.S.C. § 867") {
   note "Review by the Court of Appeals for the Armed Forces under Article 67 (UCMJ not vendored, so the cite is a hole). CAAF's own procedure, including the 60-day petition period of CAAF R. 19(a)(1), is in lit/caaf."
-  edge-caaf-petition-filed "Petition filed" -> caaf-review {
-    authority cite ?("10 U.S.C. § 867")
-  }
+  edge-caaf-petition-filed "Petition filed" -> caaf-review { authority cite ?("10 U.S.C. § 867") }
   edge-caaf-petition-none "No petition: decision final" -> ccca-final {
     authority cite ?("10 U.S.C. § 867")
   }
 }
 
-state tjag-review: "Review by the Judge Advocate General" by office cite ?("10 U.S.C. § 869")
-{
+state tjag-review: "Review by the Judge Advocate General" by office cite ?("10 U.S.C. § 869") {
   note "Article 69 review by the Judge Advocate General: its request and periods are holes (UCMJ not vendored). The Court reviews the action only by the Judge Advocate General's order or on the accused's application, and only on matters of law (Rule 5(b)(3), (4); Rule 18.6(a))."
   edge-tjag-review-ordered "Judge Advocate General sends the case to the Court" -> docketed {
     authority cite "NMCCA R. 5"
@@ -139,20 +118,14 @@ state tjag-review: "Review by the Judge Advocate General" by office cite ?("10 U
   edge-tjag-review-application "Accused applies for review of the action" -> application {
     authority cite "NMCCA R. 18"
   }
-  edge-tjag-review-final "No further review" -> tjag-decided {
-    authority cite ?("10 U.S.C. § 869")
-  }
+  edge-tjag-review-final "No further review" -> tjag-decided { authority cite ?("10 U.S.C. § 869") }
 }
 
 decision application: "Application for review under Article 69(d)" by court cite "NMCCA R. 18"
 {
   note "The application must be filed not later than the earlier of 60 days after the accused is notified of the Judge Advocate General's decision or 60 days after a copy is deposited in the mails, and must show a substantial basis for concluding the action was prejudicial error; the Government files no response unless the Court grants it or orders otherwise. If granted, the accused's supplemental brief is due within 90 days of the mailing of notice of the grant (Rule 18.6(c))."
-  edge-application-granted "Granted" -> docketed {
-    authority cite "NMCCA R. 18"
-  }
-  edge-application-denied "Denied" -> tjag-decided {
-    authority cite "NMCCA R. 18"
-  }
+  edge-application-granted "Granted" -> docketed { authority cite "NMCCA R. 18" }
+  edge-application-denied "Denied" -> tjag-decided { authority cite "NMCCA R. 18" }
 }
 
 state government-appeal: "Government appeal under Article 62" by office cite "NMCCA R. 20"
@@ -181,13 +154,11 @@ terminal waived: "Appellate review waived or withdrawn" outcome [decided] cite "
   note "Once granted, the Court returns the record of trial to the Judge Advocate General (Rule 16)."
 }
 
-terminal ccca-affirmed: "Findings and sentence affirmed" outcome [loss] cite ?("10 U.S.C. § 866")
-{
+terminal ccca-affirmed: "Findings and sentence affirmed" outcome [loss] cite ?("10 U.S.C. § 866") {
   note "Affirmance. A petition to CAAF may follow (a hole)."
 }
 
-terminal ccca-relief: "Findings set aside or sentence reduced" outcome [win] cite ?("10 U.S.C. § 866")
-{
+terminal ccca-relief: "Findings set aside or sentence reduced" outcome [win] cite ?("10 U.S.C. § 866") {
   note "Relief on findings or sentence; its scope is a hole."
 }
 
@@ -196,18 +167,15 @@ terminal ccca-remanded: "Remanded under Article 66(f)(3)" outcome [remand] cite 
   note "The Court keeps jurisdiction unless it expressly dismisses the appellate proceeding (Rule 29(b)); the further process is a hole."
 }
 
-terminal ccca-final: "Court of Criminal Appeals decision final" outcome [decided] cite ?("10 U.S.C. § 867")
-{
+terminal ccca-final: "Court of Criminal Appeals decision final" outcome [decided] cite ?("10 U.S.C. § 867") {
   note "No petition to CAAF; the decision stands."
 }
 
-terminal caaf-review: "Review by the Court of Appeals for the Armed Forces" outcome [decided] cite ?("10 U.S.C. § 867")
-{
+terminal caaf-review: "Review by the Court of Appeals for the Armed Forces" outcome [decided] cite ?("10 U.S.C. § 867") {
   note "CAAF's grant, review and outcome are outside this package."
 }
 
-terminal tjag-decided: "Judge Advocate General action stands" outcome [decided] cite ?("10 U.S.C. § 869")
-{
+terminal tjag-decided: "Judge Advocate General action stands" outcome [decided] cite ?("10 U.S.C. § 869") {
   note "The Article 69 outcome is a hole."
 }
 

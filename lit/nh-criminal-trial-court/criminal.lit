@@ -55,17 +55,13 @@ decision charged: "Indictment or information" by office cite "N.H. R. Crim. P. 8
   edge-charged-indicted "Indictment returned, or information on a waiver" -> arraignment {
     authority cite "N.H. R. Crim. P. 8(d); N.H. R. Crim. P. 9"
   }
-  edge-charged-no-true-bill "No true bill" -> dismissed {
-    authority cite "N.H. R. Crim. P. 8(c)"
-  }
+  edge-charged-no-true-bill "No true bill" -> dismissed { authority cite "N.H. R. Crim. P. 8(c)" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by applicant cite "N.H. R. Crim. P. 10(b)"
 {
   note "Arraignment is conducted in open court by reading the indictment or information, or stating its substance, and calling on the defendant to plead (N.H. R. Crim. P. 10(b)); a represented defendant may plead not guilty and waive formal arraignment in writing (N.H. R. Crim. P. 10(c)). A person arrested on a direct indictment is brought before the superior court as Rule 10(a) provides."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "N.H. R. Crim. P. 12(b)"
-  }
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "N.H. R. Crim. P. 12(b)" }
 }
 
 state discovery: "Discovery and pretrial motions" by applicant cite "N.H. R. Crim. P. 12(b)"
@@ -102,17 +98,13 @@ decision plea-decision: "Plea or trial" by applicant cite "N.H. R. Crim. P. 11(b
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "N.H. R. Crim. P. 11(b)"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "N.H. R. Crim. P. 21(b)"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "N.H. R. Crim. P. 21(b)" }
 }
 
 decision trial: "Verdict" by court cite "N.H. R. Crim. P. 25(b)"
 {
   note "Trial procedure in the superior court is governed by Rule 24(b). A jury verdict is unanimous and returned in open court (N.H. R. Crim. P. 25(b)); a non-jury verdict is returned within a reasonable time after trial (N.H. R. Crim. P. 25(a)); the jury may be polled (N.H. R. Crim. P. 25(c))."
-  edge-trial-acquittal "Not guilty" -> acquitted {
-    authority cite "N.H. R. Crim. P. 25(b)"
-  }
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "N.H. R. Crim. P. 25(b)" }
   edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
     authority cite "N.H. R. Crim. P. 25(e)"
   }
@@ -161,7 +153,6 @@ terminal appeal-taken: "Appeal taken" outcome [appeal] cite "N.H. Sup. Ct. R. 7"
   note "The appeal continues before the New Hampshire Supreme Court under its rules (sources/nh-supreme/)."
 }
 
-terminal conviction-final: "Conviction final" outcome [loss] cite ?("RSA 534 (habeas corpus; not vendored)")
-{
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("RSA 534 (habeas corpus; not vendored)") {
   note "Outcome from the defendant's side. State collateral review is not vendored; federal habeas belongs to lit/habeas."
 }

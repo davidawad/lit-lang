@@ -97,150 +97,120 @@ event CaseDismissedBeforeConfirmation()
 /// administered unless a party in interest objects within 14 days after the
 /// meeting of creditors is concluded.
 deadline joint-estates-objection-period: 14.days after FirstMeetingConcluded() counted_by frbp9006 cite "Neb. R. Bankr. P. 1015-1(A)"
-
 /// Neb. R. Bankr. P. 2004-1: to the extent a Rule 2004 request for
 /// production may be construed as an FRBP 7034 request, the time to respond
 /// is shortened to 14 days.
 deadline exam-production-response-period: 14.days after ExamNoticeServed() counted_by frbp9006 cite "Neb. R. Bankr. P. 2004-1"
-
 /// Neb. R. Bankr. P. 2016-1(A): an appointed trustee notifies the trustee's
 /// court-approved professionals 14 days before filing a final report so
 /// they may timely apply for fees.
 deadline professional-fee-notice-period: 14.days before TrusteeFinalReportFiled() counted_by frbp9006 cite "Neb. R. Bankr. P. 2016-1(A)"
-
 /// Neb. R. Bankr. P. 2080-1(A): the chapter 9 debtor files a certificate of
 /// service of the clerk's notice at least 7 days before the last date to
 /// file a resistance to the petition.
 deadline chapter9-service-certificate-period: 7.days before Chapter9ResistanceDeadline() counted_by frbp9006 cite "Neb. R. Bankr. P. 2080-1(A)"
-
 /// Neb. R. Bankr. P. 2080-1(B): the chapter 9 debtor files the list of
 /// creditors within 14 days of the petition date.
 deadline chapter9-creditor-list-period: 14.days after PetitionFiled() counted_by frbp9006 cite "Neb. R. Bankr. P. 2080-1(B)"
-
 /// Neb. R. Bankr. P. 2080-1(C): the chapter 9 debtor serves the plan and
 /// disclosure statement no later than 90 days after the creditors'
 /// committee is appointed; the court may extend the time for good cause.
 deadline chapter9-plan-period: 90.days after CommitteeAppointed() counted_by frbp9006 cite "Neb. R. Bankr. P. 2080-1(C)"
-
 /// Neb. R. Bankr. P. 2080-1(D): the last date of publication of the chapter
 /// 9 notices is not less than 14 days before the last day to file
 /// resistances to the petition.
 deadline chapter9-publication-period: 14.days before Chapter9ResistanceDeadline() counted_by frbp9006 cite "Neb. R. Bankr. P. 2080-1(D)"
-
 /// Neb. R. Bankr. P. 2080-1(D): the debtor files proofs of publication no
 /// later than 14 days after the last publication.
 deadline chapter9-publication-proof-period: 14.days after LastPublication() counted_by frbp9006 cite "Neb. R. Bankr. P. 2080-1(D)"
-
 /// Neb. R. Bankr. P. 2080-1(E): a resistance to a chapter 9 petition is
 /// filed no later than 45 days after service of the notice.
 deadline chapter9-resistance-period: 45.days after Chapter9NoticeServed() counted_by frbp9006 cite "Neb. R. Bankr. P. 2080-1(E)"
-
 /// Neb. R. Bankr. P. 3002-1(C): unless a confirmed plan provides otherwise,
 /// an amended proof of claim asserting an unsecured deficiency on real
 /// property is filed within 180 days after stay relief or surrender,
 /// whichever occurs first.
 deadline real-property-deficiency-claim-period: 180.days after CollateralReleased() counted_by frbp9006 cite "Neb. R. Bankr. P. 3002-1(C)"
-
 /// Neb. R. Bankr. P. 3002-1(C): for personal property, the amended
 /// deficiency claim is filed within 90 days after stay relief or surrender,
 /// whichever occurs first.
 deadline personal-property-deficiency-claim-period: 90.days after CollateralReleased() counted_by frbp9006 cite "Neb. R. Bankr. P. 3002-1(C)"
-
 /// Neb. R. Bankr. P. 3007-1(B): in a chapter 13 case the debtor may object
 /// to any claim within 30 days after the trustee's notice is filed;
 /// otherwise the claim is allowed as stated in the notice.
 deadline chapter13-claim-objection-period: 30.days after TrusteeClaimsNoticeFiled() counted_by frbp9006 cite "Neb. R. Bankr. P. 3007-1(B)"
-
 /// Neb. R. Bankr. P. 3015-2(B): an attorney's filing of a chapter 13
 /// petition is an application for employment, approved without further
 /// order unless a party in interest objects within 14 days of the petition.
 deadline attorney-employment-objection-period: 14.days after PetitionFiled() counted_by frbp9006 cite "Neb. R. Bankr. P. 3015-2(B)"
-
 /// Neb. R. Bankr. P. 3015-2(E), 3015-3(E): no resistance deadline for a
 /// chapter 13 plan, or for an amended subchapter V, chapter 12 or chapter 13
 /// plan, may be earlier than 14 days after the meeting of creditors is
 /// concluded; a plan filed with the petition may give that as its deadline.
 deadline plan-resistance-period: 14.days after FirstMeetingConcluded() counted_by frbp9006 cite "Neb. R. Bankr. P. 3015-2(E)"
-
 /// Neb. R. Bankr. P. 3015-2(F): a debtor granted an extension to file a
 /// chapter 13 plan files and notices it at least 14 days before the date
 /// set for the meeting of creditors, or the trustee reschedules the meeting
 /// (and after a second miss may move to dismiss on notice).
 deadline extended-plan-filing-period: 14.days before MeetingOfCreditorsScheduled() counted_by frbp9006 cite "Neb. R. Bankr. P. 3015-2(F)"
-
 /// Neb. R. Bankr. P. 3015-2(G): if an objection to a limited motion to
 /// modify a confirmed plan is filed, the debtor files a response within 14
 /// days after the objection deadline, or the court may deny the motion.
 deadline limited-modification-response-period: 14.days after ModificationObjectionDeadline() counted_by frbp9006 cite "Neb. R. Bankr. P. 3015-2(G)"
-
 /// Neb. R. Bankr. P. 3015-2(H): within 14 days after the trustee files a
 /// certificate of final payment, the chapter 13 debtor files the domestic
 /// support obligation and § 522(q) certification (Form B2830), or the case
 /// may be closed without a discharge.
 deadline chapter13-discharge-certification-period: 14.days after FinalPaymentCertified() counted_by frbp9006 cite "Neb. R. Bankr. P. 3015-2(H)"
-
 /// Neb. R. Bankr. P. 3015-3(A): in an individual chapter 12 or 13 case the
 /// debtor files the certification in support of confirmation at least 7
 /// days before the objection to confirmation deadline.
 deadline confirmation-certification-period: 7.days before ConfirmationObjectionDeadline() counted_by frbp9006 cite "Neb. R. Bankr. P. 3015-3(A)"
-
 /// Neb. R. Bankr. P. 3015-3(B): if an objection to confirmation is timely
 /// filed, the court may deny confirmation or dismiss unless the debtor
 /// responds within 14 days after the objection deadline.
 deadline confirmation-objection-response-period: 14.days after ConfirmationObjectionDeadline() counted_by frbp9006 cite "Neb. R. Bankr. P. 3015-3(B)"
-
 /// Neb. R. Bankr. P. 3015-3(C): a request for confirmation trial is filed
 /// within 30 days in a chapter 12 case after the debtor's deadline to
 /// respond to a plan objection.
 deadline chapter12-confirmation-trial-request-period: 30.days after ObjectionResponseDeadline() counted_by frbp9006 cite "Neb. R. Bankr. P. 3015-3(C)"
-
 /// Neb. R. Bankr. P. 3015-3(C): in a chapter 13 case the request for
 /// confirmation trial is filed within 70 days after the debtor's deadline
 /// to respond to a plan objection.
 deadline chapter13-confirmation-trial-request-period: 70.days after ObjectionResponseDeadline() counted_by frbp9006 cite "Neb. R. Bankr. P. 3015-3(C)"
-
 /// Neb. R. Bankr. P. 3015-4: a subchapter V, chapter 12 or chapter 13 case
 /// may be dismissed for a payment default the trustee's notice warns must be
 /// cured within 21 days.
 deadline payment-default-cure-period: 21.days after DefaultNoticeFiled() counted_by frbp9006 cite "Neb. R. Bankr. P. 3015-4"
-
 /// Neb. R. Bankr. P. 3020-1(A); Appendix D: a subchapter V or chapter 12
 /// debtor pays the trustee an advance fee and expense deposit within 5 days
 /// after the petition is filed.
 deadline trustee-deposit-period: 5.days after PetitionFiled() counted_by frbp9006 cite "Neb. R. Bankr. P. 3020-1(A)"
-
 /// Neb. R. Bankr. P. 4001-1(B): the movant for relief from stay files a
 /// certificate of service at least 5 days before the hearing.
 deadline stay-relief-service-certificate-period: 5.days before StayReliefHearing() counted_by frbp9006 cite "Neb. R. Bankr. P. 4001-1(B)"
-
 /// Neb. R. Bankr. P. 7007-1(C): instead of a resistance, the opposing party
 /// files a brief within 14 days after an adversary motion is filed.
 deadline adversary-opposing-brief-period: 14.days after AdversaryMotionFiled() counted_by frbp9006 cite "Neb. R. Bankr. P. 7007-1(C)"
-
 /// Neb. R. Bankr. P. 7007-1(C): the opposing brief is due within 21 days if
 /// the motion is for summary judgment, to dismiss or for judgment on the
 /// pleadings.
 deadline dispositive-opposing-brief-period: 21.days after DispositiveMotionFiled() counted_by frbp9006 cite "Neb. R. Bankr. P. 7007-1(C)"
-
 /// Neb. R. Bankr. P. 7007-1(D): a reply brief may be filed within 7 days
 /// after the opposing brief is filed.
 deadline adversary-reply-brief-period: 7.days after OpposingBriefFiled() counted_by frbp9006 cite "Neb. R. Bankr. P. 7007-1(D)"
-
 /// Neb. R. Bankr. P. 9006-1(B): after the non-governmental bar date, a
 /// debtor's motion to borrow to replace a motor vehicle may carry a
 /// shortened Rule 9013-1(B) resistance deadline of 10 days without leave.
 deadline replacement-vehicle-resistance-period: 10.days after ReplacementVehicleMotionFiled() counted_by frbp9006 cite "Neb. R. Bankr. P. 9006-1(B)"
-
 /// Neb. R. Bankr. P. 9013-1(B): the resistance deadline served with a motion
 /// is at least 21 days after the motion is filed, unless an FRBP provides
 /// otherwise (e.g., FRBP 4001(c)-(d), 2002(b)).
 deadline motion-resistance-period: 21.days after MotionFiled() counted_by frbp9006 cite "Neb. R. Bankr. P. 9013-1(B)"
-
 /// Neb. R. Bankr. P. 9014-1: hearings on contested matters are by
 /// affidavit; a party may request an evidentiary hearing by motion filed at
 /// least 7 days before the hearing.
 deadline evidentiary-hearing-request-period: 7.days before ContestedHearingScheduled() counted_by frbp9006 cite "Neb. R. Bankr. P. 9014-1"
-
 /// Neb. R. Bankr. P. 2016-1(D), Appendix B C.3: chapter 13 fee requests are
 /// governed by Appendix B, under which, in a case dismissed before the
 /// initial plan is confirmed, the debtor's attorney files the fee

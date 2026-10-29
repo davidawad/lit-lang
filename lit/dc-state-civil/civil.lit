@@ -15,7 +15,8 @@ start complaint-filed
 state complaint-filed: "Complaint filed" by applicant cite "Super. Ct. Civ. R. 3"
 {
   note "A civil action is commenced by filing a complaint with the court (Super. Ct. Civ. R. 3). Within 60 days of the filing of the complaint, or within 60 days from the return date of an order of publication, the plaintiff files an acknowledgment of service or proof of service of the summons, complaint, Initial Order and the other orders directed at filing, separately for each defendant who has not responded; foreclosures of the right of redemption under D.C. Code § 47-1370 have 180 days, collection and subrogation cases follow Rule 40-III, and service abroad follows the governing statute or treaty (Super. Ct. Civ. R. 4(m)(1)). Before the period expires the plaintiff may move to extend it, and on good cause the court must extend it (Super. Ct. Civ. R. 4(m)(2)). The court must hold an initial scheduling and settlement conference as soon as practicable after the complaint is filed (Super. Ct. Civ. R. 16(b)(1))."
-  edge-complaint-filed-served "Summons and complaint served; proof filed" -> answer-due { event ActionCommenced()
+  edge-complaint-filed-served "Summons and complaint served; proof filed" -> answer-due {
+    event ActionCommenced()
     authority cite "Super. Ct. Civ. R. 4"
   }
   edge-complaint-filed-unserved "No proof of service within the period" -> dismissed-unserved {
@@ -77,9 +78,7 @@ state discovery: "Discovery" by applicant cite "Super. Ct. Civ. R. 26"
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
     authority cite "Super. Ct. Civ. R. 56"
   }
-  edge-discovery-trial "No dispositive motion" -> trial {
-    authority cite "Super. Ct. Civ. R. 38"
-  }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Super. Ct. Civ. R. 38" }
   edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
     authority cite "Super. Ct. Civ. R. 41"
   }
@@ -88,9 +87,7 @@ state discovery: "Discovery" by applicant cite "Super. Ct. Civ. R. 26"
 decision sj-motion: "Summary judgment decided" by court cite "Super. Ct. Civ. R. 56"
 {
   note "The opposition is filed within 14 days after service of the motion and the reply within 7 calendar days after service of the opposition, unless the court directs otherwise (Super. Ct. Civ. R. 12-I(e), (g)). A party asserting that a fact is or is not genuinely disputed supports the assertion by citing particular parts of the record (Super. Ct. Civ. R. 56(c)(1))."
-  edge-sj-motion-granted "Granted" -> judgment-for-movant {
-    authority cite "Super. Ct. Civ. R. 56"
-  }
+  edge-sj-motion-granted "Granted" -> judgment-for-movant { authority cite "Super. Ct. Civ. R. 56" }
   edge-sj-motion-denied "Denied or partly denied" -> trial {
     authority cite "Super. Ct. Civ. R. 56"
   }
@@ -104,15 +101,14 @@ terminal judgment-for-movant: "Judgment for the movant" outcome [win, judgment] 
 state trial: "Trial" by court cite "Super. Ct. Civ. R. 38"
 {
   note "Trial by jury on a timely demand, otherwise by the court (Super. Ct. Civ. R. 38(d)). Trial setting follows the scheduling order (Super. Ct. Civ. R. 16)."
-  edge-trial-post "Verdict or decision" -> post-trial {
-    authority cite "Super. Ct. Civ. R. 50"
-  }
+  edge-trial-post "Verdict or decision" -> post-trial { authority cite "Super. Ct. Civ. R. 50" }
 }
 
 decision post-trial: "Post-trial motions decided" by court cite "Super. Ct. Civ. R. 59"
 {
   note "A renewed motion for judgment as a matter of law is filed no later than 28 days after entry of judgment, or 28 days after the jury was discharged if the motion addresses a jury issue not decided by a verdict (Super. Ct. Civ. R. 50(b)). A motion for a new trial, and a motion to alter or amend a judgment, are filed no later than 28 days after entry of judgment (Super. Ct. Civ. R. 59(b), (e)). A motion for relief from judgment is made within a reasonable time, and for mistake, newly discovered evidence or fraud no more than a year after entry; it does not suspend the judgment (Super. Ct. Civ. R. 60(c)). A timely Rule 50(b), 52(b) or 59 motion, or a Rule 60 motion filed no later than 10 days after entry, restarts the time to appeal from the order disposing of the last such motion (D.C. App. R. 4(a)(4))."
-  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered { event JudgmentEntered()
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "Super. Ct. Civ. R. 58"
   }
   edge-post-trial-jmol "Judgment as a matter of law granted" -> judgment-for-movant {
@@ -123,20 +119,17 @@ decision post-trial: "Post-trial motions decided" by court cite "Super. Ct. Civ.
 state judgment-entered: "Judgment entered" by office cite "Super. Ct. Civ. R. 58"
 {
   note "Every judgment and amended judgment is set out in a separate document, except an order disposing of a Rule 50(b), 52(b), 54, 59 or 60 motion; the clerk enters judgment on a general verdict, for costs or a sum certain, or on denial of all relief without awaiting the court's direction (Super. Ct. Civ. R. 58(a), (b))."
-  edge-judgment-entered-appeal "Next step" -> appeal-decision {
-    authority cite "D.C. App. R. 4"
-  }
+  edge-judgment-entered-appeal "Next step" -> appeal-decision { authority cite "D.C. App. R. 4" }
 }
 
 decision appeal-decision: "Notice of appeal within time?" by applicant cite "D.C. App. R. 4"
 {
   note "The notice of appeal is filed with the Clerk of the Superior Court within 30 days after entry of the judgment or order appealed from, unless another time is specified (D.C. App. R. 4(a)(1)); the Superior Court may extend the time on excusable neglect or good cause if the notice is filed no later than 30 days after the time expires (D.C. App. R. 4(a)(5)). The appeal continues in lit/dc-state-appellate."
-  edge-appeal-decision-taken "Notice filed" -> appeal-taken { event NoticeOfAppealFiled()
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
     authority cite "D.C. App. R. 4"
   }
-  edge-appeal-decision-none "No notice filed" -> final-no-appeal {
-    authority cite "D.C. App. R. 4"
-  }
+  edge-appeal-decision-none "No notice filed" -> final-no-appeal { authority cite "D.C. App. R. 4" }
 }
 
 terminal appeal-taken: "Appeal to the District of Columbia Court of Appeals" outcome [appeal] cite "D.C. App. R. 4"

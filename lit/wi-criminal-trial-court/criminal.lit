@@ -49,9 +49,7 @@ decision probable-cause: "Preliminary examination" by court cite "Wis. Stat. § 
 state charged: "Information filed" by office cite "Wis. Stat. § 971.01(1)"
 {
   note "The district attorney files an information with the clerk within 30 days after the completion of the preliminary examination or its waiver, unless the court extends the period for cause on the district attorney's motion with notice to the defendant; failure to file in time entitles the defendant to have the action dismissed without prejudice (Wis. Stat. § 971.01(2)). The omission of a preliminary examination does not invalidate an information unless the defendant moves to dismiss before entering a plea (Wis. Stat. § 971.02(1)). A defendant has a right to one substitution of judge: a request to substitute the judge originally assigned to the trial is filed before any motion to the trial court and before arraignment, and one to substitute a newly assigned trial judge within 15 days of the clerk's notice of the assignment, or within 48 hours if notice comes within 20 days of the trial date (Wis. Stat. § 971.20(2), (4), (5))."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "Wis. Stat. § 971.05"
-  }
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Wis. Stat. § 971.05" }
   edge-charged-late-information "Information not filed in time: dismissed without prejudice" -> dismissed {
     authority cite "Wis. Stat. § 971.01(2)"
   }
@@ -60,9 +58,7 @@ state charged: "Information filed" by office cite "Wis. Stat. § 971.01(1)"
 state arraignment: "Arraignment and plea of not guilty" by applicant cite "Wis. Stat. § 971.05"
 {
   note "Arraignment is in open court; the district attorney delivers a copy of the information in a felony case and reads the information or complaint unless the defendant waives the reading, and the defendant then pleads unless a motion under § 971.31 requires determination first (Wis. Stat. § 971.05). The defendant may plead guilty, not guilty, no contest with the court's approval, or not guilty by reason of mental disease or defect; a defendant who stands mute is entered as pleading not guilty (Wis. Stat. § 971.06). An alibi is noticed at the arraignment or at least 30 days before trial (Wis. Stat. § 971.23(8)(a))."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "Wis. Stat. § 971.23(1)"
-  }
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Wis. Stat. § 971.23(1)" }
 }
 
 state discovery: "Discovery, pretrial motions and speedy-trial demand" by applicant cite "Wis. Stat. § 971.31(5)"
@@ -99,9 +95,7 @@ decision plea-decision: "Plea or trial" by applicant cite "Wis. Stat. § 971.06(
   edge-plea-decision-plea "Guilty or no-contest plea accepted" -> sentencing {
     authority cite "Wis. Stat. § 971.08(1)"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "Wis. Stat. § 972.02(1)"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Wis. Stat. § 972.02(1)" }
 }
 
 decision trial: "Verdict" by court cite "Wis. Stat. § 972.02"
@@ -110,9 +104,7 @@ decision trial: "Verdict" by court cite "Wis. Stat. § 972.02"
   edge-trial-acquittal "Not guilty, or dismissal on the evidence" -> acquitted {
     authority cite "Wis. Stat. § 972.10(4)"
   }
-  edge-trial-guilty "Guilty; sentencing" -> sentencing {
-    authority cite "Wis. Stat. § 972.13(1)"
-  }
+  edge-trial-guilty "Guilty; sentencing" -> sentencing { authority cite "Wis. Stat. § 972.13(1)" }
 }
 
 state sentencing: "Presentence investigation and sentencing" by court cite "Wis. Stat. § 972.15(1)"

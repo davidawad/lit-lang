@@ -30,7 +30,6 @@ import core.frcp6.{ frcp6 }
 // lit/frap; its Supreme Court decisions (Twombly, Iqbal, Frow v. De La
 // Vega, Celotex, Anderson v. Liberty Lobby, Matsushita) are FRCP authority,
 // and no reporter text is vendored, so they are removed here.
-
 /// A discovery or case management motion, or a response to one: at most
 /// 10 pages, exclusive of the caption, signature block, certificates and
 /// accompanying documents, unless the court authorizes otherwise (W.D.
@@ -41,9 +40,7 @@ limit discovery-motion {
 
 /// Any other motion, or a response to one: at most 20 pages (W.D. Tex.
 /// Local Rule CV-7(c)(2), (d)(3)).
-limit motion {
-  pages <= 20 cite "W.D. Tex. Local Rule CV-7(c)"
-} cite "W.D. Tex. Local Rule CV-7(c)"
+limit motion { pages <= 20 cite "W.D. Tex. Local Rule CV-7(c)" } cite "W.D. Tex. Local Rule CV-7(c)"
 
 /// A reply in support of a discovery or case management motion: at most 5
 /// pages (W.D. Tex. Local Rule CV-7(e)(3)).
@@ -53,9 +50,7 @@ limit discovery-reply {
 
 /// A reply in support of any other motion: at most 10 pages (W.D. Tex.
 /// Local Rule CV-7(e)(3)).
-limit reply {
-  pages <= 10 cite "W.D. Tex. Local Rule CV-7(e)"
-} cite "W.D. Tex. Local Rule CV-7(e)"
+limit reply { pages <= 10 cite "W.D. Tex. Local Rule CV-7(e)" } cite "W.D. Tex. Local Rule CV-7(e)"
 
 /// The clerk informs the filing party that the civil cover sheet must be
 /// completed and executed (W.D. Tex. Local Rule CV-3(a)).

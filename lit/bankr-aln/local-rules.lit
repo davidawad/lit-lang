@@ -55,45 +55,37 @@ event FinalDisposition()
 /// may be dismissed without a hearing. The debtor files the application
 /// with the petition, so the period runs from the petition date.
 deadline prior-fee-payment-period: 14.days after PetitionFiled() counted_by frbp9006 cite "Bankr. N.D. Ala. R. 1006-1(a)"
-
 /// Bankr. N.D. Ala. R. 1006-1(b)(1): an installment application is approved
 /// without a hearing only if a minimum payment of 25 percent of the filing
 /// fee is paid within 30 days of the petition date.
 deadline first-installment-period: 30.days after PetitionFiled() counted_by frbp9006 cite "Bankr. N.D. Ala. R. 1006-1(b)(1)"
-
 /// Bankr. N.D. Ala. R. 3007-1(c)(5): if no response is filed to a
 /// negative-notice objection to claim, the objecting party submits a
 /// proposed order no later than 45 days after the objection was filed and
 /// served (and no sooner than 30 days after).
 deadline claim-objection-order-period: 45.days after ClaimObjectionServed() counted_by frbp9006 cite "Bankr. N.D. Ala. R. 3007-1(c)(5)"
-
 /// Bankr. N.D. Ala. R. 3015-2(a): unless the court orders otherwise, an
 /// objection to confirmation of a chapter 13 plan, or to the attorney's
 /// compensation it proposes, is filed at least 7 days before the
 /// confirmation hearing.
 deadline confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. N.D. Ala. R. 3015-2(a)"
-
 /// Bankr. N.D. Ala. R. 4001-1(c): in a chapter 7 or 13 case the movant files
 /// and serves the completed fact summary sheet at least 14 days prior to the
 /// first hearing date on the motion.
 deadline fact-summary-period: 14.days before StayReliefHearing() counted_by frbp9006 cite "Bankr. N.D. Ala. R. 4001-1(c)"
-
 /// Bankr. N.D. Ala. R. 4002-1: upon conversion of an individual debtor's
 /// case to chapter 7, the debtor files within 14 days of the conversion the
 /// chapter 7 means-test forms (122A-1, 122A-2), a statement of compensation
 /// paid to professionals and the Summary of Assets and Liabilities (106Sum).
 deadline conversion-filings-period: 14.days after ConvertedToChapter7() counted_by frbp9006 cite "Bankr. N.D. Ala. R. 4002-1"
-
 /// Bankr. N.D. Ala. R. 4003-2(c): the notice of opportunity to object to a
 /// § 522(f) lien avoidance motion advises that objections must be filed
 /// within 30 days of the date of service of the motion.
 deadline lien-avoidance-objection-period: 30.days after LienAvoidanceMotionServed() counted_by frbp9006 cite "Bankr. N.D. Ala. R. 4003-2(c)"
-
 /// Bankr. N.D. Ala. R. 4003-2(e): if no objection or response is filed, the
 /// movant submits a proposed order no later than 45 days after the motion
 /// was filed and served (and no sooner than 30 days after).
 deadline lien-avoidance-order-period: 45.days after LienAvoidanceMotionServed() counted_by frbp9006 cite "Bankr. N.D. Ala. R. 4003-2(e)"
-
 /// Bankr. N.D. Ala. R. 9070-1: exhibits received into evidence that are not
 /// withdrawn within 30 days after final disposition may be destroyed or
 /// otherwise disposed of by the clerk's office.

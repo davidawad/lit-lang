@@ -53,17 +53,13 @@ decision petition-order: "Order on the petition" by court cite "Tex. R. App. P. 
   edge-petition-order-denied "Denied, dismissed or refused" -> petition-denied {
     authority cite "Tex. R. App. P. 56.1"
   }
-  edge-petition-order-granted "Granted" -> submission {
-    authority cite "Tex. R. App. P. 59.2"
-  }
+  edge-petition-order-granted "Granted" -> submission { authority cite "Tex. R. App. P. 59.2" }
 }
 
 decision submission: "Submission with or without argument" by court cite "Tex. R. App. P. 59.2"
 {
   note "If at least six members of the Court so vote, a petition may be granted and an opinion handed down without oral argument (Tex. R. App. P. 59.1). If argument would aid the Court, it sets the case for argument and the clerk notifies the parties of the submission date (Tex. R. App. P. 59.2); each side has the time the Court orders, extendable on a motion filed before the day of argument (Tex. R. App. P. 59.4). If the Court later decides review should not have been granted, it may set aside the grant and dismiss, deny or refuse the petition (Tex. R. App. P. 56.1(d))."
-  edge-submission-argued "Argued" -> judgment {
-    authority cite "Tex. R. App. P. 59.2"
-  }
+  edge-submission-argued "Argued" -> judgment { authority cite "Tex. R. App. P. 59.2" }
   edge-submission-per-curiam "Decided without argument" -> judgment {
     authority cite "Tex. R. App. P. 59.1"
   }

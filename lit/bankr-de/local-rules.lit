@@ -230,313 +230,254 @@ event AdrNoticeServed()
 /// Affairs is extended to 28 days from the petition date; the time may be
 /// further extended on motion for cause shown.
 deadline chapter11-schedules-period: 28.days after PetitionFiled() counted_by frbp9006 cite "Del. Bankr. L.R. 1007-1(a)"
-
 /// Local Rule 1009-2: when a chapter 11 debtor's schedules are amended to
 /// change the amount, nature, classification or characterization of a
 /// creditor's debt, the debtor or trustee serves notice of the amendment on
 /// the creditor within 14 days of the amendment.
 deadline amendment-notice-period: 14.days after ScheduleAmendmentFiled() counted_by frbp9006 cite "Del. Bankr. L.R. 1009-2"
-
 /// Local Rule 1009-2: a certificate of service of the notice of a chapter 11
 /// schedule amendment is filed within 7 days after service.
 deadline amendment-certificate-period: 7.days after AmendmentNoticeServed() counted_by frbp9006 cite "Del. Bankr. L.R. 1009-2"
-
 /// Local Rule 2002-1(e): a chapter 11 debtor with more than 200 parties on
 /// its Local Rule 1007-2(a) list files the motion to retain a claims agent
 /// with its petition or within 7 days thereafter, unless the court orders
 /// otherwise.
 deadline claims-agent-motion-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Del. Bankr. L.R. 2002-1(e)"
-
 /// Local Rule 2002-1(e)(ii): the claims agent files within 7 days after
 /// service a certificate of service referencing the document served and its
 /// docket number and each party served and the method of service.
 deadline claims-agent-service-certificate-period: 7.days after ClaimsAgentNoticeServed() counted_by frbp9006 cite "Del. Bankr. L.R. 2002-1(e)(ii)"
-
 /// Local Rule 2002-1(e)(ix): within 14 days after entry of an order
 /// dismissing a case, the claims agent forwards the clerk an electronic
 /// version of all proofs of claim, uploads the creditor matrix into CM/ECF
 /// and dockets a final claims register.
 deadline claims-agent-dismissal-register-period: 14.days after DismissalOrderEntered() counted_by frbp9006 cite "Del. Bankr. L.R. 2002-1(e)(ix)"
-
 /// Local Rule 2002-1(e)(ix): within 28 days after entry of a final decree,
 /// the claims agent forwards the clerk an electronic version of all proofs of
 /// claim, uploads the creditor matrix into CM/ECF and dockets a final claims
 /// register.
 deadline claims-agent-decree-register-period: 28.days after FinalDecreeEntered() counted_by frbp9006 cite "Del. Bankr. L.R. 2002-1(e)(ix)"
-
 /// Local Rule 2002-1(e)(x): within 14 days after the earlier of entry of an
 /// order converting the case or terminating the claims agent's services, the
 /// claims agent forwards the proofs of claim, uploads the public creditor
 /// matrix, forwards its sealed portions and dockets a final claims register.
 deadline claims-agent-conversion-register-period: 14.days after ClaimsAgentEndOrderEntered() counted_by frbp9006 cite "Del. Bankr. L.R. 2002-1(e)(x)"
-
 /// Local Rule 2002-1(f)(ii): in a case with no claims agent, the debtor
 /// provides an updated creditor matrix within 14 days after entry of an order
 /// converting the case.
 deadline conversion-matrix-period: 14.days after ConversionOrderEntered() counted_by frbp9006 cite "Del. Bankr. L.R. 2002-1(f)(ii)"
-
 /// Local Rule 2002-1(f)(ii): in a case with no claims agent, the debtor
 /// provides an updated creditor matrix within 28 days after entry of a final
 /// decree.
 deadline decree-matrix-period: 28.days after FinalDecreeEntered() counted_by frbp9006 cite "Del. Bankr. L.R. 2002-1(f)(ii)"
-
 /// Local Rule 2004-1(b)(iii): a party in interest may object to an agreed
 /// Rule 2004 examination notice within 7 days after it is filed and served;
 /// Local Rule 7026-1 governs the objection unless the court orders otherwise.
 deadline examination-notice-objection-period: 7.days after ExaminationNoticeServed() counted_by frbp9006 cite "Del. Bankr. L.R. 2004-1(b)(iii)"
-
 /// Local Rule 2016-1(i): in a case converted from chapter 11 to chapter 7,
 /// the proposed final fee order requires debtor's counsel to file, within 14
 /// days of entry of the final fee order, a notice of the approved fees and
 /// expenses paid and outstanding for all chapter 11 professionals.
 deadline final-fee-notice-period: 14.days after FinalFeeOrderEntered() counted_by frbp9006 cite "Del. Bankr. L.R. 2016-1(i)"
-
 /// Local Rule 3001-1(c): in a subchapter V case the general claims bar date
 /// is 60 days after the order for relief, unless a court order or the Code
 /// sets a different deadline.
 deadline subchapter-v-bar-period: 60.days after OrderForReliefEntered() counted_by frbp9006 cite "Del. Bankr. L.R. 3001-1(c)"
-
 /// Local Rule 3007-1(d)(vi)(B)(1): for a substantive objection, unless the
 /// presiding judge's procedure provides otherwise, the objector files and
 /// delivers to chambers a Notice of Submission of Proofs of Claim with the
 /// objection and copies of the claims at least 14 days before the hearing.
 deadline claim-submission-notice-period: 14.days before ClaimObjectionHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 3007-1(d)(vi)"
-
 /// Local Rule 3015-1(d): a chapter 12 debtor who amends the plan before the
 /// confirmation hearing serves the amended plan and a new notice of hearing
 /// on the trustee, all creditors and all parties requesting notice at least 7
 /// days before the confirmation hearing.
 deadline chapter12-amended-plan-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 3015-1(d)"
-
 /// Local Rule 3023-1(d)(i): a chapter 13 amended plan filed before the
 /// scheduled confirmation hearing is served on the scheduled creditors, the
 /// chapter 13 trustee and the U.S. Trustee so that they receive it no less
 /// than seven days before the confirmation hearing.
 deadline chapter13-amended-plan-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 3023-1(d)(i)"
-
 /// Local Rule 3016-2(a): a subchapter V debtor files a status report
 /// substantially conforming to Local Form 136 at least 14 days before the
 /// initial status conference.
 deadline subchapter-v-status-report-period: 14.days before InitialStatusConference() counted_by frbp9006 cite "Del. Bankr. L.R. 3016-2(a)"
-
 /// Local Rule 3016-3: unless the court orders otherwise, the plan proponent
 /// files any plan supplement at least 7 days before the earlier of the ballot
 /// deadline and the deadline to object to confirmation.
 deadline plan-supplement-period: 7.days before SolicitationDeadline() counted_by frbp9006 cite "Del. Bankr. L.R. 3016-3"
-
 /// Local Rule 3017-1(a): unless the court orders otherwise, the notice served
 /// under FRBP 2002(b) and 3017 gives at least 35 days' notice of the
 /// disclosure statement hearing.
 deadline disclosure-hearing-notice-period: 35.days before DisclosureStatementHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 3017-1(a)"
-
 /// Local Rule 3017-1(a): unless the court orders otherwise, the notice gives
 /// at least 28 days' notice of the deadline to object to approval of the
 /// disclosure statement.
 deadline disclosure-objection-notice-period: 28.days before DisclosureObjectionDeadline() counted_by frbp9006 cite "Del. Bankr. L.R. 3017-1(a)"
-
 /// Local Rule 3017-1(b): the plan proponent files a motion to approve the
 /// voting procedures (the ballots, the voting agent and the time and manner
 /// of voting) at least 21 days before the disclosure statement hearing; Local
 /// Rule 9006-1(c)(i) states the same 21 days.
 deadline voting-procedures-motion-period: 21.days before DisclosureStatementHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 3017-1(b)"
-
 /// Local Rule 3017-2(b)(ii): a combined hearing motion is filed at least 21
 /// days before the hearing; if no objection is filed within 14 days after the
 /// motion is served, the court may grant it without a hearing.
 deadline combined-hearing-objection-period: 14.days after CombinedHearingMotionServed() counted_by frbp9006 cite "Del. Bankr. L.R. 3017-2(b)(ii)"
-
 /// Local Rule 3022-1(a)(i): a chapter 11 motion for a final decree is served
 /// on the Local Rule 2002-1(b) parties at least 21 days before the hearing.
 deadline final-decree-service-period: 21.days before FinalDecreeHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 3022-1(a)(i)"
-
 /// Local Rule 3022-1(a)(ii): the debtor or trustee files a final report and
 /// account at least 14 days before the hearing on the motion for a final
 /// decree.
 deadline final-report-period: 14.days before FinalDecreeHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 3022-1(a)(ii)"
-
 /// Local Rule 3023-1(c)(ii)(N): within 21 days of service of the trustee's
 /// Notice of Final Cure and Completion of Plan Payments, the chapter 13
 /// debtor files an executed Local Form 104.
 deadline completion-certification-period: 21.days after FinalCureNoticeServed() counted_by frbp9006 cite "Del. Bankr. L.R. 3023-1(c)(ii)(N)"
-
 /// Local Rule 3023-1(c)(ii)(N): within 21 days of the filing of a servicer's
 /// FRBP 3002.1(g) response asserting unpaid plan arrears, the trustee submits
 /// evidence of the payments made on the allowed arrears claim and files a
 /// certification with the court.
 deadline cure-response-evidence-period: 21.days after CureResponseFiled() counted_by frbp9006 cite "Del. Bankr. L.R. 3023-1(c)(ii)(N)"
-
 /// Local Rule 4001-1(c)(ii): a party opposing a motion for relief from stay
 /// to exercise remedies against collateral files and serves its response and
 /// an affidavit of the amount due and the collateral's value at least 7 days
 /// before the hearing.
 deadline stay-relief-response-period: 7.days before StayReliefHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 4001-1(c)(ii)"
-
 /// Local Rule 5009-1(a): the chapter 7 trustee's notice of a final report and
 /// account states that a person seeking compensation, reimbursement or
 /// administrative expenses files a motion and serves the trustee and the U.S.
 /// Trustee at least 21 days before the hearing on the final account.
 deadline final-account-fee-motion-period: 21.days before FinalAccountHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 5009-1(a)"
-
 /// Local Rule 5009-2(b): if no objection to a chapter 15 foreign
 /// representative's motion for a final decree is filed within 30 days after
 /// service, the case is presumed fully administered and the court may enter
 /// the final decree.
 deadline chapter15-closing-objection-period: 30.days after ClosingMotionServed() counted_by frbp9006 cite "Del. Bankr. L.R. 5009-2(b)"
-
 /// Local Rule 5010-1(a): a motion to reopen a chapter 7 or 12 case is served
 /// on the debtor, the U.S. Trustee, the case trustee and all other parties in
 /// interest at least 21 days before the hearing.
 deadline reopen-service-period: 21.days before ReopenHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 5010-1(a)"
-
 /// Local Rule 6004-1(c): a Sale Procedures Motion is filed not less than 21
 /// days before the hearing on it, and the court hears it on at least 21 days'
 /// notice unless a motion to shorten notice is granted; Local Rule
 /// 9006-1(c)(i) states the same 21 days.
 deadline sale-procedures-motion-period: 21.days before SaleProceduresHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 6004-1(c)"
-
 /// Local Rule 7004-1: the completed Summons and certificate of service are
 /// filed in the adversary proceeding within 7 days after service of the
 /// Summons, complaint and notice of dispute resolution alternatives.
 deadline summons-certificate-period: 7.days after SummonsServed() counted_by frbp9006 cite "Del. Bankr. L.R. 7004-1"
-
 /// Local Rule 7007-1(a)(ii): unless the court orders or the parties agree
 /// otherwise, the answering brief and any supporting affidavit or appendix on
 /// a motion in an adversary proceeding are filed and served no later than 14
 /// days after service of the opening brief.
 deadline answering-brief-period: 14.days after OpeningBriefServed() counted_by frbp9006 cite "Del. Bankr. L.R. 7007-1(a)(ii)"
-
 /// Local Rule 7007-1(a)(iii): the reply brief and any supporting affidavit or
 /// appendix are filed and served no later than seven days after service of
 /// the answering brief.
 deadline reply-brief-period: 7.days after AnsweringBriefServed() counted_by frbp9006 cite "Del. Bankr. L.R. 7007-1(a)(iii)"
-
 /// Local Rule 7007-3: an application for oral argument on an adversary
 /// proceeding motion is filed and served no later than 3 days after service
 /// of the reply brief or expiration without response of the deadline to
 /// answer or reply.
 deadline oral-argument-application-period: 3.days after ReplyBriefServed() counted_by frbp9006 cite "Del. Bankr. L.R. 7007-3"
-
 /// Local Rule 7007-4: counsel to the movant files and serves the Notice of
 /// Completion of Briefing no later than 7 days after briefing is concluded.
 deadline briefing-completion-notice-period: 7.days after BriefingConcluded() counted_by frbp9006 cite "Del. Bankr. L.R. 7007-4"
-
 /// Local Rule 7016-1(a): the attorneys for all parties confer at least 7 days
 /// before the FRCP 16(b) scheduling conference.
 deadline scheduling-conference-meet-period: 7.days before SchedulingConference() counted_by frbp9006 cite "Del. Bankr. L.R. 7016-1(a)"
-
 /// Local Rule 7016-1(d): the plaintiff files a proposed scheduling order no
 /// later than 3 days before the scheduling conference.
 deadline plaintiff-scheduling-order-period: 3.days before SchedulingConference() counted_by frbp9006 cite "Del. Bankr. L.R. 7016-1(d)"
-
 /// Local Rule 7016-1(d): any other party may file a proposed scheduling order
 /// no later than 1 day before the scheduling conference.
 deadline other-party-scheduling-order-period: 1.days before SchedulingConference() counted_by frbp9006 cite "Del. Bankr. L.R. 7016-1(d)"
-
 /// Local Rule 7016-2(a): the attorney for the party requesting a pretrial
 /// conference after discovery gives all parties in interest at least 14 days'
 /// notice of its time and place.
 deadline pretrial-conference-notice-period: 14.days before PretrialConference() counted_by frbp9006 cite "Del. Bankr. L.R. 7016-2(a)"
-
 /// Local Rule 7016-2(d): at least 7 days before the final pretrial
 /// conference, the plaintiff's attorney files a proposed pretrial order
 /// signed by an attorney for each party.
 deadline pretrial-order-period: 7.days before PretrialConference() counted_by frbp9006 cite "Del. Bankr. L.R. 7016-2(d)"
-
 /// Local Rule 7026-1(b): all motion papers under FRBP 7026-7037 and 9016 are
 /// filed and served so as to be received at least 7 days before the hearing
 /// date.
 deadline discovery-motion-notice-period: 7.days before DiscoveryMotionHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 7026-1(b)"
-
 /// Local Rule 7030-1(b): unless the court orders otherwise, reasonable notice
 /// of a deposition under FRCP 30(b) is not less than 7 days.
 deadline deposition-notice-period: 7.days before Deposition() counted_by frbp9006 cite "Del. Bankr. L.R. 7030-1(b)"
-
 /// Local Rule 8003-1(c): an official committee wishing to be on the service
 /// list for an appeal files a request for notice within 21 days of service of
 /// the notice of appeal or cross-appeal.
 deadline committee-appeal-notice-period: 21.days after NoticeOfAppealServed() counted_by frbp9006 cite "Del. Bankr. L.R. 8003-1(c)"
-
 /// Local Rule 8024-1: within 3 days of issuance of an order disposing of an
 /// appeal in whole or in part, or of a filing reflecting its resolution or
 /// withdrawal, counsel for the appellant files notice of the disposition and
 /// gives the bankruptcy judge a copy.
 deadline appeal-disposition-notice-period: 3.days after AppealDisposed() counted_by frbp9006 cite "Del. Bankr. L.R. 8024-1"
-
 /// Local Rule 9006-1(c)(i): unless the FRBP or the Local Rules state
 /// otherwise, all motion papers are filed and served under Local Rule
 /// 2002-1(b) at least 14 days before the hearing date.
 deadline motion-service-period: 14.days before MotionHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 9006-1(c)(i)"
-
 /// Local Rule 9006-1(c)(ii): where a motion is filed and served less than 21
 /// days before the hearing date, the deadline for objections is 7 days before
 /// the hearing date (on 21 days' notice the movant may set any deadline no
 /// earlier than 14 days after service and no later than 7 days before the
 /// hearing).
 deadline motion-objection-period: 7.days before MotionHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 9006-1(c)(ii)"
-
 /// Local Rule 9010-1(d): a party not appearing pro se obtains representation
 /// by, or has its counsel associate with, a member of the District Court bar
 /// within 28 days after the first paper filed on its behalf or the filing of
 /// a case transferred or removed to the court.
 deadline delaware-counsel-period: 28.days after FirstPaperFiled() counted_by frbp9006 cite "Del. Bankr. L.R. 9010-1(d)"
-
 /// Local Rule 9010-2(b): a motion to withdraw an appearance is served on each
 /// party, and on the client by registered or certified mail, at least 14 days
 /// before the motion is heard.
 deadline withdrawal-service-period: 14.days before WithdrawalHearing() counted_by frbp9006 cite "Del. Bankr. L.R. 9010-2(b)"
-
 /// Local Rule 9013-1(m)(v): unless the court orders otherwise, a party in
 /// interest may move to reconsider a First Day Order (other than a cash
 /// collateral or postpetition financing order under §§ 363 and 364) within 28
 /// days of its entry.
 deadline first-day-reconsideration-period: 28.days after FirstDayOrderEntered() counted_by frbp9006 cite "Del. Bankr. L.R. 9013-1(m)(v)"
-
 /// Local Rule 9018-1(c): if an appeal has been taken, exhibits in the clerk's
 /// custody are removed by the responsible party within 28 days after the
 /// record on appeal is returned to the clerk.
 deadline appeal-exhibit-removal-period: 28.days after AppealRecordReturned() counted_by frbp9006 cite "Del. Bankr. L.R. 9018-1(c)"
-
 /// Local Rule 9018-1(c): the clerk may dispose of exhibits a party fails to
 /// remove 28 days after notifying it to remove them.
 deadline exhibit-notice-removal-period: 28.days after ExhibitRemovalNotified() counted_by frbp9006 cite "Del. Bankr. L.R. 9018-1(c)"
-
 /// Local Rule 9019-2(e)(ii): a mediator or arbitrator unable or electing not
 /// to serve files and serves a notice of inability to accept the appointment
 /// within 14 days after receipt of notice of appointment.
 deadline mediator-declination-period: 14.days after MediatorAppointmentNoticed() counted_by frbp9006 cite "Del. Bankr. L.R. 9019-2(e)(ii)"
-
 /// Local Rule 9019-4(f)(i): within 30 days after an arbitration award is
 /// filed with the clerk, any party may file a written demand for a
 /// determination de novo.
 deadline arbitration-de-novo-period: 30.days after ArbitrationAwardFiled() counted_by frbp9006 cite "Del. Bankr. L.R. 9019-4(f)(i)"
-
 /// Local Rule 9019-5(c)(iii): unless the mediator instructs otherwise, each
 /// party submits its Submission to the mediator and serves it on all counsel
 /// and pro se parties not less than 7 days before the mediation conference.
 deadline mediation-submission-period: 7.days before MediationConference() counted_by frbp9006 cite "Del. Bankr. L.R. 9019-5(c)(iii)"
-
 /// Local Rule 9019-5(f)(i): if a settlement is reached at a mediation, the
 /// plaintiff files a Notice of Settlement or a motion and proposed order
 /// seeking approval within 28 days after the settlement is reached.
 deadline mediation-settlement-filing-period: 28.days after MediationSettlement() counted_by frbp9006 cite "Del. Bankr. L.R. 9019-5(f)(i)"
-
 /// Local Rule 9019-5(f)(i): within 60 days after the Notice of Settlement is
 /// filed or an order approving the settlement is entered, the parties file a
 /// Stipulation of Dismissal; otherwise the clerk's office closes the case.
 deadline mediation-dismissal-period: 60.days after SettlementNoticed() counted_by frbp9006 cite "Del. Bankr. L.R. 9019-5(f)(i)"
-
 /// Local Rule 9019-5(j): in an avoidance proceeding of $75,000 or less from
 /// any one defendant, the defendant may opt in to prompt mediation by filing
 /// and serving a Local Form 118 certificate on or within 28 days after its
 /// response is due under the Summons; an agreed extension of the response
 /// deadline does not extend this period.
 deadline avoidance-mediation-opt-in-period: 28.days after AvoidanceResponseDue() counted_by frbp9006 cite "Del. Bankr. L.R. 9019-5(j)"
-
 /// Local Rule 9019-5(j): within 7 days after the opt-in certificate is filed,
 /// the parties file a Local Form 119 stipulation appointing a mediator,
 /// failing which the court assigns one.
 deadline avoidance-mediator-stipulation-period: 7.days after MediationCertificateFiled() counted_by frbp9006 cite "Del. Bankr. L.R. 9019-5(j)"
-
 /// Local Rule 9019-7: a certificate of service of the notice of dispute
 /// resolution alternatives is filed within 7 days of service of the notice.
 deadline adr-notice-certificate-period: 7.days after AdrNoticeServed() counted_by frbp9006 cite "Del. Bankr. L.R. 9019-7"

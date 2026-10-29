@@ -26,8 +26,7 @@ decision petition: "Petition for certiorari?" by applicant cite "P.R. R. Civ. P.
   }
 }
 
-decision review-decision: "Writ granted or denied" by court cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
-{
+decision review-decision: "Writ granted or denied" by court cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored") {
   note "Review by certiorari is discretionary (P.R. R. Civ. P. 52.2(b)). Filing the petition does not stay proceedings in the court below unless the Supreme Court orders otherwise on its own motion or a party's request (P.R. R. Civ. P. 52.3(b)). The grant standard and the procedure on the petition are in the Reglamento del Tribunal Supremo, which is not vendored: a hole."
   edge-review-decision-denied "Writ denied" -> review-denied {
     authority cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
@@ -37,16 +36,14 @@ decision review-decision: "Writ granted or denied" by court cite ?("Reglamento d
   }
 }
 
-state merits: "Merits briefing and submission" by applicant cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
-{
+state merits: "Merits briefing and submission" by applicant cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored") {
   note "Merits briefing periods, form and length limits, and whether argument is heard, are in the Reglamento del Tribunal Supremo, which is not vendored: holes."
   edge-merits-decision "Submitted for decision" -> decision {
     authority cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
   }
 }
 
-decision decision: "Court decides" by court cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
-{
+decision decision: "Court decides" by court cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored") {
   note "The Supreme Court's decision on the merits. Reconsideration in the Supreme Court and the issuance of its mandate are in the Reglamento del Tribunal Supremo, which is not vendored: holes."
   edge-decision-affirmed "Affirmed" -> affirmed {
     event DecisionFiled()
@@ -63,8 +60,7 @@ terminal review-not-sought: "Review not sought: the Court of Appeals' decision i
   note "The Court of Appeals' clerk sends the mandate to the Court of First Instance ten business days after its decision becomes final and firm, or earlier if that court so orders for cause (Regl. T.A. R. 84(E))."
 }
 
-terminal review-denied: "Writ denied" outcome [final, loss] cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
-{
+terminal review-denied: "Writ denied" outcome [final, loss] cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored") {
   note "Outcome from the petitioner's side. Denial leaves the Court of Appeals' decision in place. Review in the Supreme Court of the United States (28 U.S.C. § 1258) is outside this package."
 }
 

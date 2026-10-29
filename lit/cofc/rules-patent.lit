@@ -36,7 +36,8 @@ event SettlementDiscussionReported(paper: SettlementReport)
 /// sources/rcfc-appendices.txt (`PRCFC n`); the deadlines are in force as
 /// amended through July 27, 2026 (the vendored text's as-of date). Rule 1(b) lets the court modify them for complexity or good cause,
 /// the delegation each extendable one declares.
-rule duty patent-cascade cite "PRCFC 1" {
+rule duty patent-cascade cite "PRCFC 1"
+{
   /// Rule 3: the Joint Preliminary Status Report is due 49 days after the answer.
   deadline patent-jpsr-period: 49.days after AnswerFiled() counted_by rcfc6 delegable {
     to CaseOrder
@@ -104,7 +105,8 @@ rule duty patent-cascade cite "PRCFC 1" {
   deadline settlement-statement-period: 7.days after SettlementDiscussionHeld() counted_by rcfc6 cite "PRCFC 17"
 }
 
-test "patent-jpsr-period: 49 days after AnswerFiled" cite "PRCFC 3" {
+test "patent-jpsr-period: 49 days after AnswerFiled" cite "PRCFC 3"
+{
   given AnswerFiled() on 2026-08-03
   expect deadline(patent-jpsr-period) == 2026-09-21
 }
@@ -115,7 +117,8 @@ test "patent-jpsr-period: Thanksgiving rolls to Friday" cite "RCFC 6(a)(1)(C)"
   expect deadline(patent-jpsr-period) == 2026-11-27
 }
 
-test "patent-jpsr-noticed-period: 98 days after AnswerFiled" cite "PRCFC 3" {
+test "patent-jpsr-noticed-period: 98 days after AnswerFiled" cite "PRCFC 3"
+{
   given AnswerFiled() on 2026-08-03
   expect deadline(patent-jpsr-noticed-period) == 2026-11-09
 }
@@ -126,7 +129,8 @@ test "patent-jpsr-noticed-period: Thanksgiving rolls to Friday" cite "RCFC 6(a)(
   expect deadline(patent-jpsr-noticed-period) == 2026-11-27
 }
 
-test "infringement-contentions-period: 56 days after AnswerFiled" cite "PRCFC 4" {
+test "infringement-contentions-period: 56 days after AnswerFiled" cite "PRCFC 4"
+{
   given AnswerFiled() on 2026-08-03
   expect deadline(infringement-contentions-period) == 2026-09-28
 }
@@ -137,7 +141,8 @@ test "infringement-contentions-period: Columbus Day rolls to Tuesday" cite "RCFC
   expect deadline(infringement-contentions-period) == 2026-10-13
 }
 
-test "invalidity-contentions-period: 56 days after InfringementContentionsServed" cite "PRCFC 6" {
+test "invalidity-contentions-period: 56 days after InfringementContentionsServed" cite "PRCFC 6"
+{
   given InfringementContentionsServed() on 2026-08-03
   expect deadline(invalidity-contentions-period) == 2026-09-28
 }
@@ -148,7 +153,8 @@ test "invalidity-contentions-period: Christmas Day rolls to Monday" cite "RCFC 6
   expect deadline(invalidity-contentions-period) == 2026-12-28
 }
 
-test "claim-terms-period: 42 days after InvalidityContentionsServed" cite "PRCFC 9" {
+test "claim-terms-period: 42 days after InvalidityContentionsServed" cite "PRCFC 9"
+{
   given InvalidityContentionsServed() on 2026-08-03
   expect deadline(claim-terms-period) == 2026-09-14
 }
@@ -159,7 +165,8 @@ test "claim-terms-period: Labor Day rolls to Tuesday" cite "RCFC 6(a)(1)(C)"
   expect deadline(claim-terms-period) == 2026-09-08
 }
 
-test "joint-chart-period: 35 days after ClaimTermsExchanged" cite "PRCFC 11" {
+test "joint-chart-period: 35 days after ClaimTermsExchanged" cite "PRCFC 11"
+{
   given ClaimTermsExchanged() on 2026-08-10
   expect deadline(joint-chart-period) == 2026-09-14
 }
@@ -170,7 +177,8 @@ test "joint-chart-period: Veterans Day rolls to Thursday" cite "RCFC 6(a)(1)(C)"
   expect deadline(joint-chart-period) == 2026-11-12
 }
 
-test "cc-discovery-period: 28 days after ClaimConstructionAppendixFiled" cite "PRCFC 13" {
+test "cc-discovery-period: 28 days after ClaimConstructionAppendixFiled" cite "PRCFC 13"
+{
   given ClaimConstructionAppendixFiled() on 2026-08-03
   expect deadline(cc-discovery-period) == 2026-08-31
 }
@@ -181,7 +189,8 @@ test "cc-discovery-period: Saturday rolls to Monday" cite "RCFC 6(a)(1)(C)"
   expect deadline(cc-discovery-period) == 2026-08-31
 }
 
-test "cc-status-conference-period: 7 days after ClaimConstructionAppendixFiled" cite "PRCFC 14" {
+test "cc-status-conference-period: 7 days after ClaimConstructionAppendixFiled" cite "PRCFC 14"
+{
   given ClaimConstructionAppendixFiled() on 2026-08-03
   expect deadline(cc-status-conference-period) == 2026-08-10
 }
@@ -192,7 +201,8 @@ test "cc-status-conference-period: Labor Day rolls to Tuesday" cite "RCFC 6(a)(1
   expect deadline(cc-status-conference-period) == 2026-09-08
 }
 
-test "settlement-discussion-period: 14 days after ClaimConstructionOrderEntered" cite "PRCFC 16(a)" {
+test "settlement-discussion-period: 14 days after ClaimConstructionOrderEntered" cite "PRCFC 16(a)"
+{
   given ClaimConstructionOrderEntered() on 2026-08-03
   expect deadline(settlement-discussion-period) == 2026-08-17
 }

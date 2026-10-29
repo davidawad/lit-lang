@@ -48,17 +48,13 @@ decision probable-cause: "Probable-cause hearing or indictment" by court cite "N
 state charged: "Indictment or accusation" by office cite "N.J. Ct. R. 3:7-2"
 {
   note "Every crime is prosecuted by indictment unless the defendant, advised of the right, waives it in a signed writing, in which case the defendant may be tried on an accusation prepared by the prosecuting attorney (N.J. Ct. R. 3:7-2); the indictment or accusation is governed by R. 3:7-3. When an indictment is returned or unsealed, the prosecutor provides a copy with the available discovery, and any plea offer in writing (N.J. Ct. R. 3:9-1; 3:13-3)."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "N.J. Ct. R. 3:9-1"
-  }
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "N.J. Ct. R. 3:9-1" }
 }
 
 state arraignment: "Arraignment" by applicant cite "N.J. Ct. R. 3:9-1"
 {
   note "The criminal division manager's office notifies the defendant in writing of the arraignment, which occurs within the period after the return or unsealing of the indictment that R. 3:9-1 sets, not stated here (currency unconfirmed); the rule also governs the meet-and-confer, the plea offer, the initial case disposition and status conferences, pretrial hearings and the pretrial conference (N.J. Ct. R. 3:9-1). Counsel's appearance is governed by R. 3:8-1."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "N.J. Ct. R. 3:13-3"
-  }
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "N.J. Ct. R. 3:13-3" }
 }
 
 state discovery: "Discovery and pretrial motions" by applicant cite "N.J. Ct. R. 3:10-2"
@@ -70,9 +66,7 @@ state discovery: "Discovery and pretrial motions" by applicant cite "N.J. Ct. R.
   edge-discovery-speedy "Motion to dismiss for delay, or speedy-trial motion" -> motions-ruling {
     authority cite "N.J. Ct. R. 3:25-4"
   }
-  edge-discovery-plea "Plea negotiations" -> plea-decision {
-    authority cite "N.J. Ct. R. 3:9-3"
-  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "N.J. Ct. R. 3:9-3" }
 }
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite "N.J. Ct. R. 3:10-2"
@@ -120,9 +114,7 @@ decision post-trial: "Post-verdict motions" by court cite "N.J. Ct. R. 3:20-1"
   edge-post-trial-acquittal "Judgment of acquittal or arrest of judgment" -> acquitted {
     authority cite "N.J. Ct. R. 3:18-2"
   }
-  edge-post-trial-new-trial "New trial granted" -> trial {
-    authority cite "N.J. Ct. R. 3:20-1"
-  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "N.J. Ct. R. 3:20-1" }
   edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
     authority cite "N.J. Ct. R. 3:21-4"
   }
@@ -142,7 +134,9 @@ decision judgment: "Judgment of conviction" by applicant cite "N.J. Ct. R. 3:21-
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
     authority cite "N.J. Ct. R. 2:2-3"
   }
-  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite ?("New Jersey Rules of Court, Part II, Rule 2:4-1 (time for appeal; not vendored)") }
+  edge-judgment-no-appeal "No appeal" -> conviction-final {
+    authority cite ?("New Jersey Rules of Court, Part II, Rule 2:4-1 (time for appeal; not vendored)")
+  }
 }
 
 terminal acquitted: "Acquitted" outcome [win] cite "N.J. Ct. R. 3:18-1"

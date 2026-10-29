@@ -118,133 +118,107 @@ limit reply-brief { pages <= 10 cite "M.D. Ga. LBR 9013-1(d)" } cite "M.D. Ga. L
 /// schedules and statement of financial affairs on the trustee not later than
 /// five days before that date.
 deadline extended-schedules-service-period: 5.days before FirstMeetingDate() counted_by frbp9006 cite "M.D. Ga. LBR 1007-1(a)"
-
 /// M.D. Ga. LBR 1009-1(b): a chapter 13 debtor amends the schedules to
 /// disclose an asset or income over $10,000 acquired before the final plan
 /// payment within 60 days after the asset becomes the debtor's property or
 /// the debtor becomes eligible to receive the income.
 deadline new-asset-amendment-period: 60.days after NewAssetAcquired() counted_by frbp9006 cite "M.D. Ga. LBR 1009-1(b)"
-
 /// M.D. Ga. LBR 1009-1(b): the chapter 13 trustee has 90 days after the
 /// amendment is filed to file a plan modification or take other action.
 deadline new-asset-modification-period: 90.days after NewAssetAmendmentFiled() counted_by frbp9006 cite "M.D. Ga. LBR 1009-1(b)"
-
 /// M.D. Ga. LBR 1015-1(b)(3): upon separate administration of a joint case,
 /// the debtors file amended schedules for the separate estates, and in
 /// chapter 11, 12 or 13 separate modified plans, within 14 days following
 /// entry of the order.
 deadline separation-filings-period: 14.days after SeparationOrdered() counted_by frbp9006 cite "M.D. Ga. LBR 1015-1(b)"
-
 /// M.D. Ga. LBR 1017-2(f): missing § 521 and FRBP 1007 information is filed
 /// within 14 days from the date of the clerk's notice; absent filing or a
 /// request for hearing in that time, the case may be dismissed without
 /// further notice or hearing.
 deadline missing-documents-period: 14.days after MissingDocumentsNoticed() counted_by frbp9006 cite "M.D. Ga. LBR 1017-2(f)"
-
 /// M.D. Ga. LBR 1017-2(h): after dismissal, pending contested matters are
 /// deemed moot unless within 14 days after entry of the order of dismissal
 /// the movant requests that the motion remain active.
 deadline pending-motion-retention-period: 14.days after DismissalOrderEntered() counted_by frbp9006 cite "M.D. Ga. LBR 1017-2(h)"
-
 /// M.D. Ga. LBR 1019-1(d): upon conversion, the debtor files or amends the
 /// inventories, schedules and statements of financial affairs, or a
 /// certificate that none is needed, within 14 days of the effective date of
 /// conversion.
 deadline conversion-amendment-period: 14.days after ConversionEffective() counted_by frbp9006 cite "M.D. Ga. LBR 1019-1(d)"
-
 /// M.D. Ga. LBR 2014-1(c)(1): an application to employ a professional made
 /// within 14 days after the filing of the case is deemed contemporaneous; one
 /// made later and asking approval nunc pro tunc must explain the delay and is
 /// approved only on notice and opportunity for hearing.
 deadline contemporaneous-employment-period: 14.days after PetitionFiled() counted_by frbp9006 cite "M.D. Ga. LBR 2014-1(c)"
-
 /// M.D. Ga. LBR 2014-1(c)(1): an application to employ a professional made
 /// within 14 days of the commencement of the professional's services is
 /// deemed contemporaneous.
 deadline services-employment-period: 14.days after ServicesCommenced() counted_by frbp9006 cite "M.D. Ga. LBR 2014-1(c)"
-
 /// M.D. Ga. LBR 3001-1(c): a creditor added by amendment later than 60 days
 /// before the original bar date has 60 days from the filing of the amendment
 /// to file a proof of claim.
 deadline late-creditor-claim-period: 60.days after LateCreditorAmendmentFiled() counted_by frbp9006 cite "M.D. Ga. LBR 3001-1(c)"
-
 /// M.D. Ga. LBR 3001-1(d): in a chapter 11 case other than under subchapter
 /// V, the bar date for proofs of claim or interest is 90 days from the first
 /// scheduled § 341(a) meeting of creditors.
 deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "M.D. Ga. LBR 3001-1(d)"
-
 /// M.D. Ga. LBR 3001-1(e): in a subchapter V case, the bar date for proofs of
 /// claim or interest is 70 days after docketing of the order for relief.
 deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "M.D. Ga. LBR 3001-1(e)"
-
 /// M.D. Ga. LBR 3012-1(b): a party introducing expert valuation testimony
 /// serves the expert disclosure and any required reports so that they are
 /// received no later than seven days prior to the hearing or trial.
 deadline valuation-expert-disclosure-period: 7.days before ValuationHearing() counted_by frbp9006 cite "M.D. Ga. LBR 3012-1(b)"
-
 /// M.D. Ga. LBR 3022-1(a), 3022-2(a)(1): a non-individual chapter 11 debtor,
 /// or a subchapter V debtor under a consensual plan, files within 14 days of
 /// the entry of the confirmation order a report of the projected date for
 /// substantial consummation.
 deadline consummation-report-period: 14.days after ConfirmationOrderEntered() counted_by frbp9006 cite "M.D. Ga. LBR 3022-1(a)"
-
 /// M.D. Ga. LBR 4002-1(b): upon request and without order, the debtor
 /// produces the listed books and records to the trustee within 14 days of the
 /// request.
 deadline records-production-period: 14.days after RecordsRequested() counted_by frbp9006 cite "M.D. Ga. LBR 4002-1(b)"
-
 /// M.D. Ga. LBR 4071-1(b): the notice of a motion to terminate a garnishment
 /// provides 14 days for a response; absent objection the court may order the
 /// garnished funds released.
 deadline garnishment-response-period: 14.days after GarnishmentMotionServed() counted_by frbp9006 cite "M.D. Ga. LBR 4071-1(b)"
-
 /// M.D. Ga. LBR 5003-1: parties wanting exhibits or documentary evidence
 /// returned contact the court within the 14 days' notice the clerk gives of
 /// their intended destruction.
 deadline exhibit-return-period: 14.days after ExhibitDestructionNoticed() counted_by frbp9006 cite "M.D. Ga. LBR 5003-1"
-
 /// M.D. Ga. LBR 5075-1(a): the party requesting redaction files a properly
 /// redacted replacement document within 14 days from the date of the request,
 /// or the original returns to the public docket.
 deadline redaction-replacement-period: 14.days after RedactionRequested() counted_by frbp9006 cite "M.D. Ga. LBR 5075-1(a)"
-
 /// M.D. Ga. LBR 6007-1(a)(2): an objection to an abandonment announced or
 /// noticed at the § 341 meeting is filed and served within 14 days after the
 /// meeting, or the property is deemed abandoned.
 deadline trustee-abandonment-objection-period: 14.days after TrusteeAbandonmentMeeting() counted_by frbp9006 cite "M.D. Ga. LBR 6007-1(a)"
-
 /// M.D. Ga. LBR 7041-1(c): a plaintiff's motion to dismiss a § 727 complaint
 /// provides a 21-day opportunity to object from its service.
 deadline discharge-dismissal-objection-period: 21.days after DischargeDismissalMotionServed() counted_by frbp9006 cite "M.D. Ga. LBR 7041-1"
-
 /// M.D. Ga. LBR 7054-1(b): the prevailing party files a Bill of Costs within
 /// 30 days from the entry of the judgment that awarded the costs.
 deadline bill-of-costs-period: 30.days after CostsJudgmentEntered() counted_by frbp9006 cite "M.D. Ga. LBR 7054-1(b)"
-
 /// M.D. Ga. LBR 7054-1(b): opposing counsel has 21 days from service of the
 /// Bill of Costs to file a response.
 deadline bill-of-costs-response-period: 21.days after BillOfCostsServed() counted_by frbp9006 cite "M.D. Ga. LBR 7054-1(b)"
-
 /// M.D. Ga. LBR 7056-1(b): the response to a summary judgment motion, with
 /// its brief and statement of material facts in dispute, is filed and served
 /// within 21 days of service of the movant's brief and Statement of
 /// Uncontested Material Facts.
 deadline summary-judgment-response-period: 21.days after SummaryJudgmentBriefServed() counted_by frbp9006 cite "M.D. Ga. LBR 7056-1(b)"
-
 /// M.D. Ga. LBR 7056-1(c): the movant files and serves any reply within 14
 /// days after service of the response.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frbp9006 cite "M.D. Ga. LBR 7056-1(c)"
-
 /// M.D. Ga. LBR 9013-1(d)(2): a party seeking to exceed the page limits files
 /// a written motion, specifying the pages requested, no later than five days
 /// in advance of the applicable deadline.
 deadline page-extension-motion-period: 5.days before PageLimitedFilingDue() counted_by frbp9006 cite "M.D. Ga. LBR 9013-1(d)"
-
 /// M.D. Ga. LBR 9013-3(b): a missing certificate of service is filed within
 /// 14 days from the clerk's notice, or relief requested, or the motion, brief
 /// or document is dismissed or stricken without further notice or hearing.
 deadline service-certificate-cure-period: 14.days after ServiceCertificateNoticed() counted_by frbp9006 cite "M.D. Ga. LBR 9013-3(b)"
-
 /// M.D. Ga. LBR 9015-1(b): the parties consent to a jury trial before a
 /// bankruptcy judge by filing statements of consent no later than 30 days
 /// after the conclusion of the initial pretrial conference.

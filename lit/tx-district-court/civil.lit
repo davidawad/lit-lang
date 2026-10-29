@@ -34,9 +34,7 @@ state petition-filed: "Petition filed" by applicant cite "Tex. R. Civ. P. 22"
 state service-made: "Citation served" by applicant cite "Tex. R. Civ. P. 106"
 {
   note "Unless the citation or a court order directs otherwise, the citation is served by delivering it and the petition to the defendant in person or by registered or certified mail, return receipt requested; on a sworn motion showing unsuccessful attempts, the court may authorize substituted service, including electronically by social media or email (Tex. R. Civ. P. 106). A sheriff, constable, person authorized by law or by written order who is at least eighteen, or a certified process server may serve; a party or interested person may not (Tex. R. Civ. P. 103). The return of service must be completed, signed and filed (Tex. R. Civ. P. 107). The vendored rules state no period within which the citation must be served; a case not prosecuted may be dismissed under Rule 165a."
-  edge-service-made-response "Answer day" -> response-due {
-    authority cite "Tex. R. Civ. P. 99"
-  }
+  edge-service-made-response "Answer day" -> response-due { authority cite "Tex. R. Civ. P. 99" }
   edge-service-made-unserved "Not prosecuted; dismissal for want of prosecution" -> inactivity-dismissal {
     authority cite "Tex. R. Civ. P. 165a"
   }
@@ -45,15 +43,11 @@ state service-made: "Citation served" by applicant cite "Tex. R. Civ. P. 106"
 decision response-due: "Answer, Rule 91a motion or special exception, or no answer" by office cite "Tex. R. Civ. P. 99"
 {
   note "The citation directs the defendant to file a written answer on or before 10:00 a.m. on the Monday next after the expiration of twenty days after the date of service, and warns that a default judgment may be taken otherwise (Tex. R. Civ. P. 99(b), (c)). A general denial puts in issue matters not required to be denied under oath and extends to matters a later amended pleading sets up (Tex. R. Civ. P. 92); affirmative defenses must be pleaded (Tex. R. Civ. P. 94)."
-  edge-response-due-answer "Answer filed" -> answered {
-    authority cite "Tex. R. Civ. P. 92"
-  }
+  edge-response-due-answer "Answer filed" -> answered { authority cite "Tex. R. Civ. P. 92" }
   edge-response-due-motion "Rule 91a motion to dismiss or special exception" -> pleading-motion {
     authority cite "Tex. R. Civ. P. 91a.1"
   }
-  edge-response-due-default "No answer" -> default-request {
-    authority cite "Tex. R. Civ. P. 239"
-  }
+  edge-response-due-default "No answer" -> default-request { authority cite "Tex. R. Civ. P. 239" }
 }
 
 state pleading-motion: "Rule 91a motion to dismiss or special exception" by office cite "Tex. R. Civ. P. 91a.3"
@@ -70,12 +64,8 @@ decision pleading-ruling: "Ruling on the motion or exception" by court cite "Tex
   edge-pleading-ruling-dismissed "Cause of action dismissed" -> dismissed-merits {
     authority cite "Tex. R. Civ. P. 91a.1"
   }
-  edge-pleading-ruling-amend "Pleading amended" -> amended {
-    authority cite "Tex. R. Civ. P. 63"
-  }
-  edge-pleading-ruling-denied "Denied" -> answered {
-    authority cite "Tex. R. Civ. P. 91a.3"
-  }
+  edge-pleading-ruling-amend "Pleading amended" -> amended { authority cite "Tex. R. Civ. P. 63" }
+  edge-pleading-ruling-denied "Denied" -> answered { authority cite "Tex. R. Civ. P. 91a.3" }
 }
 
 state amended: "Amended pleading filed" by applicant cite "Tex. R. Civ. P. 63"
@@ -113,20 +103,14 @@ decision default-entered: "Default judgment signed; motion for new trial?" by of
 decision set-aside-ruling: "New trial after default?" by court cite "Tex. R. Civ. P. 329b"
 {
   note "A motion for new trial not determined by written order signed within seventy-five days after the judgment was signed is overruled by operation of law (Tex. R. Civ. P. 329b(c)); the court has plenary power to grant a new trial until thirty days after all timely motions are overruled (Tex. R. Civ. P. 329b(e))."
-  edge-set-aside-granted "New trial granted" -> answered {
-    authority cite "Tex. R. Civ. P. 329b"
-  }
-  edge-set-aside-refused "Overruled" -> default-judgment {
-    authority cite "Tex. R. Civ. P. 329b"
-  }
+  edge-set-aside-granted "New trial granted" -> answered { authority cite "Tex. R. Civ. P. 329b" }
+  edge-set-aside-refused "Overruled" -> default-judgment { authority cite "Tex. R. Civ. P. 329b" }
 }
 
 state answered: "Answer on file" by applicant cite "Tex. R. Civ. P. 92"
 {
   note "A party makes the initial disclosures of Rule 194.2(b) within 30 days after the filing of the first answer or general appearance unless agreement or order sets a different time; a party first served or joined later makes them within 30 days after being served or joined (Tex. R. Civ. P. 194.2(a)). Some proceedings are exempt (Tex. R. Civ. P. 194.2(c))."
-  edge-answered-discovery "Discovery period" -> discovery {
-    authority cite "Tex. R. Civ. P. 194.2"
-  }
+  edge-answered-discovery "Discovery period" -> discovery { authority cite "Tex. R. Civ. P. 194.2" }
 }
 
 state discovery: "Discovery under the discovery control plan" by applicant cite "Tex. R. Civ. P. 190.1"
@@ -135,18 +119,10 @@ state discovery: "Discovery under the discovery control plan" by applicant cite 
   edge-discovery-dispute "Motion to compel or for sanctions" -> discovery-ruling {
     authority cite "Tex. R. Civ. P. 215.1"
   }
-  edge-discovery-sj "Summary judgment motion" -> sj-motion {
-    authority cite "Tex. R. Civ. P. 166a"
-  }
-  edge-discovery-trial "Trial setting" -> trial-setting {
-    authority cite "Tex. R. Civ. P. 216"
-  }
-  edge-discovery-settled "Settled" -> settled {
-    authority cite "Tex. R. Civ. P. 11"
-  }
-  edge-discovery-nonsuit "Nonsuit" -> voluntary-dismissal {
-    authority cite "Tex. R. Civ. P. 162"
-  }
+  edge-discovery-sj "Summary judgment motion" -> sj-motion { authority cite "Tex. R. Civ. P. 166a" }
+  edge-discovery-trial "Trial setting" -> trial-setting { authority cite "Tex. R. Civ. P. 216" }
+  edge-discovery-settled "Settled" -> settled { authority cite "Tex. R. Civ. P. 11" }
+  edge-discovery-nonsuit "Nonsuit" -> voluntary-dismissal { authority cite "Tex. R. Civ. P. 162" }
   edge-discovery-inactive "Not prosecuted" -> inactivity-dismissal {
     authority cite "Tex. R. Civ. P. 165a"
   }
@@ -166,9 +142,7 @@ decision discovery-ruling: "Discovery ruling" by court cite "Tex. R. Civ. P. 215
 state sj-motion: "Summary judgment motion" by office cite "Tex. R. Civ. P. 166a"
 {
   note "A traditional motion seeks to establish that no genuine issue of material fact exists and the movant is entitled to judgment as a matter of law; a no-evidence motion, filed after adequate time for discovery, that there is no evidence of an essential element on which the nonmovant has the burden; a motion may combine both and must be titled accordingly (Tex. R. Civ. P. 166a(a), (b)). Except on leave or agreement, the nonmovant files a response within 21 days after the motion is filed, and the movant a reply within 7 days after the response is filed (Tex. R. Civ. P. 166a(d), (e)). No hearing or submission may be set within 35 days after the motion's filing, and the court must set it within 60 days, or 90 days if the docket requires, on good cause, or if the movant agrees (Tex. R. Civ. P. 166a(g)); no oral testimony is received (Tex. R. Civ. P. 166a(g))."
-  edge-sj-motion-ruling "Heard or submitted" -> sj-ruling {
-    authority cite "Tex. R. Civ. P. 166a"
-  }
+  edge-sj-motion-ruling "Heard or submitted" -> sj-ruling { authority cite "Tex. R. Civ. P. 166a" }
 }
 
 decision sj-ruling: "Summary judgment ruling" by court cite "Tex. R. Civ. P. 166a"
@@ -181,20 +155,14 @@ decision sj-ruling: "Summary judgment ruling" by court cite "Tex. R. Civ. P. 166
     event JudgmentEntered()
     authority cite "Tex. R. Civ. P. 166a"
   }
-  edge-sj-ruling-denied "Denied" -> trial-setting {
-    authority cite "Tex. R. Civ. P. 166a"
-  }
+  edge-sj-ruling-denied "Denied" -> trial-setting { authority cite "Tex. R. Civ. P. 166a" }
 }
 
 state trial-setting: "Trial setting and jury request" by office cite "Tex. R. Civ. P. 216"
 {
   note "No jury trial is had unless a written request is filed a reasonable time before the date set for trial on the non-jury docket, but not less than thirty days in advance, with the jury fee (ten dollars in the district court) deposited within the same time (Tex. R. Civ. P. 216). In an expedited action, on any party's request the court sets trial within 90 days after the discovery period ends, may continue it twice for no more than 60 days in total, and each side has no more than eight hours for trial (Tex. R. Civ. P. 169(d))."
-  edge-trial-setting-tried "Tried" -> trial-result {
-    authority cite "Tex. R. Civ. P. 301"
-  }
-  edge-trial-setting-settled "Settled" -> settled {
-    authority cite "Tex. R. Civ. P. 11"
-  }
+  edge-trial-setting-tried "Tried" -> trial-result { authority cite "Tex. R. Civ. P. 301" }
+  edge-trial-setting-settled "Settled" -> settled { authority cite "Tex. R. Civ. P. 11" }
   edge-trial-setting-nonsuit "Nonsuit before the plaintiff rests" -> voluntary-dismissal {
     authority cite "Tex. R. Civ. P. 162"
   }

@@ -29,26 +29,17 @@ import core.frcp6.{ frcp6 }
 // lit/frap; its Supreme Court decisions (Twombly, Iqbal, Frow v. De La
 // Vega, Celotex, Anderson v. Liberty Lobby, Matsushita) are FRCP authority,
 // and no reporter text is vendored, so they are removed here.
-
 /// A brief, unless another local civil rule provides otherwise: at most 25
 /// pages, excluding the table of contents and table of authorities;
 /// permission to exceed it is granted only for extraordinary and
 /// compelling reasons (N.D. Tex. LR 7.2(c)).
-limit brief {
-  pages <= 25 cite "N.D. Tex. LR 7.2(c)"
-} cite "N.D. Tex. LR 7.2(c)"
-
+limit brief { pages <= 25 cite "N.D. Tex. LR 7.2(c)" } cite "N.D. Tex. LR 7.2(c)"
 /// A reply brief: at most 10 pages (N.D. Tex. LR 7.2(c)).
-limit reply-brief {
-  pages <= 10 cite "N.D. Tex. LR 7.2(c)"
-} cite "N.D. Tex. LR 7.2(c)"
-
+limit reply-brief { pages <= 10 cite "N.D. Tex. LR 7.2(c)" } cite "N.D. Tex. LR 7.2(c)"
 /// A principal brief supporting or opposing a summary judgment motion: at
 /// most 50 pages, excluding the tables; the presiding judge may set fewer
 /// (N.D. Tex. LR 56.5(b)).
-limit summary-judgment-brief {
-  pages <= 50 cite "N.D. Tex. LR 56.5(b)"
-} cite "N.D. Tex. LR 56.5(b)"
+limit summary-judgment-brief { pages <= 50 cite "N.D. Tex. LR 56.5(b)" } cite "N.D. Tex. LR 56.5(b)"
 
 /// A summary judgment reply brief: at most 25 pages (N.D. Tex. LR
 /// 56.5(b)).
@@ -60,15 +51,10 @@ limit summary-judgment-reply-brief {
 /// sentence, the application, motion or petition with any supporting brief
 /// or memorandum, or the answer with its brief: at most 100 pages in total,
 /// excluding the tables (N.D. Tex. LR 7.5(a), (b)).
-limit capital-habeas-petition {
-  pages <= 100 cite "N.D. Tex. LR 7.5"
-} cite "N.D. Tex. LR 7.5"
-
+limit capital-habeas-petition { pages <= 100 cite "N.D. Tex. LR 7.5" } cite "N.D. Tex. LR 7.5"
 /// The reply in such a proceeding, with any supporting brief or
 /// memorandum: at most 25 pages in total (N.D. Tex. LR 7.5(c)).
-limit capital-habeas-reply {
-  pages <= 25 cite "N.D. Tex. LR 7.5"
-} cite "N.D. Tex. LR 7.5"
+limit capital-habeas-reply { pages <= 25 cite "N.D. Tex. LR 7.5" } cite "N.D. Tex. LR 7.5"
 
 /// An attorney, other than a prisoner pro se party, appears in a case (N.D.
 /// Tex. LR 5.1(f)).

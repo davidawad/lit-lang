@@ -136,278 +136,221 @@ event RemovalNoticeFiled()
 /// guardian ad litem on all creditors and parties in interest within three
 /// days of its entry.
 deadline next-friend-order-service-period: 3.days after NextFriendOrderEntered() counted_by frbp9006 cite "E.D.N.C. LBR 1002-1(b)"
-
 /// LBR 1002-1(b): the movant files a certificate of service within seven
 /// days after serving the order of appointment.
 deadline next-friend-certificate-period: 7.days after NextFriendOrderServed() counted_by frbp9006 cite "E.D.N.C. LBR 1002-1(b)"
-
 /// LBR 1002-1(c): a movant without the required information at filing has
 /// thirty days from the petition date to file the declaration and
 /// attachments, or the case is subject to dismissal.
 deadline next-friend-declaration-period: 30.days after PetitionFiled() counted_by frbp9006 cite "E.D.N.C. LBR 1002-1(c)"
-
 /// LBR 1006-1(a): a debtor whose installment application is denied pays the
 /// full fee within fourteen days of the order or the petition may be
 /// dismissed.
 deadline installment-denial-fee-period: 14.days after InstallmentApplicationDenied() counted_by frbp9006 cite "E.D.N.C. LBR 1006-1(a)"
-
 /// LBR 1006-1(b): final installments of the filing fee are paid within
 /// fourteen days following the date first set for the meeting of creditors,
 /// unless the court orders otherwise.
 deadline final-installment-period: 14.days after FirstMeetingDate() counted_by frbp9006 cite "E.D.N.C. LBR 1006-1(b)"
-
 /// LBR 1007-3: a chapter 7 debtor serves the statement of intention on the
 /// secured creditor and files a certificate of service within seven days of
 /// filing the statement.
 deadline intention-certificate-period: 7.days after StatementOfIntentionFiled() counted_by frbp9006 cite "E.D.N.C. LBR 1007-3"
-
 /// LBR 1019-1(a): an individual debtor converting to another chapter files
 /// Official Forms B 106I and B 106J for the new chapter within fourteen
 /// days of the conversion order.
 deadline conversion-income-forms-period: 14.days after ConversionOrderEntered() counted_by frbp9006 cite "E.D.N.C. LBR 1019-1(a)"
-
 /// LBR 1019-1(b): on conversion to chapter 7 the bankruptcy administrator
 /// has fourteen days from the first meeting scheduled as a result to file a
 /// § 707(b) presumed-abuse statement.
 deadline conversion-abuse-statement-period: 14.days after ConversionMeetingDate() counted_by frbp9006 cite "E.D.N.C. LBR 1019-1(b)"
-
 /// LBR 1019-1(b): after filing that statement the bankruptcy administrator
 /// has twenty-eight days to comply with § 704(b)(2).
 deadline conversion-abuse-motion-period: 28.days after AbuseStatementFiled() counted_by frbp9006 cite "E.D.N.C. LBR 1019-1(b)"
-
 /// LBR 2002-1(a): the debtor serves the notice of commencement on creditors
 /// added after notice and files a certificate of service within seven days
 /// after service.
 deadline added-creditor-certificate-period: 7.days after AddedCreditorNoticeServed() counted_by frbp9006 cite "E.D.N.C. LBR 2002-1(a)"
-
 /// LBR 2015-2: the chapter 11 debtor in possession files a certificate of
 /// service within seven days of serving the notices and documents the rule
 /// lists.
 deadline possession-notice-certificate-period: 7.days after PossessionNoticeServed() counted_by frbp9006 cite "E.D.N.C. LBR 2015-2"
-
 /// LBR 2016-1(e)(1): an attorney who begins representing a debtor after the
 /// petition or order for relief files the FRBP 2016(b) disclosure within
 /// fourteen days from the date representation begins.
 deadline postpetition-disclosure-period: 14.days after RepresentationBegan() counted_by frbp9006 cite "E.D.N.C. LBR 2016-1(e)(1)"
-
 /// LBR 2090-2(c): an attorney publicly disciplined by any court or state
 /// bar informs the clerk within fourteen days of notification.
 deadline discipline-report-period: 14.days after DisciplineNotified() counted_by frbp9006 cite "E.D.N.C. LBR 2090-2(c)"
-
 /// LBR 3002-1: a chapter 11 debtor notifies each creditor whose claim is
 /// scheduled as contingent, disputed or unliquidated within fourteen days
 /// after filing the schedules or adding the creditor.
 deadline disputed-claim-notice-period: 14.days after Chapter11SchedulesFiled() counted_by frbp9006 cite "E.D.N.C. LBR 3002-1"
-
 /// LBR 3002-1: the chapter 11 debtor files a certificate of service within
 /// seven days after serving that notice.
 deadline disputed-claim-certificate-period: 7.days after DisputedClaimNoticeServed() counted_by frbp9006 cite "E.D.N.C. LBR 3002-1"
-
 /// LBR 3003-1: in a chapter 11 case a proof of claim or interest is filed
 /// within ninety days after the date first set for the meeting of
 /// creditors, except as the court orders.
 deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "E.D.N.C. LBR 3003-1"
-
 /// LBR 3015-3(c)(4): if the court sustains an objection to confirmation,
 /// the chapter 13 debtor has thirty days to file and serve an amended plan,
 /// unless otherwise ordered.
 deadline amended-plan-after-objection-period: 30.days after ConfirmationObjectionSustained() counted_by frbp9006 cite "E.D.N.C. LBR 3015-3(c)(4)"
-
 /// LBR 3015-3(c)(5): where an objection is announced resolved at the
 /// confirmation hearing, the debtor files and serves the amended plan
 /// incorporating the settlement within fourteen days of the hearing.
 deadline settled-amended-plan-period: 14.days after ConfirmationHearingDate() counted_by frbp9006 cite "E.D.N.C. LBR 3015-3(c)(5)"
-
 /// LBR 3070-1(b)(1): debtor's counsel files an application for fees within
 /// fourteen days from entry of an order dismissing an unconfirmed chapter
 /// 13 case.
 deadline dismissed-case-fee-application-period: 14.days after UnconfirmedDismissalEntered() counted_by frbp9006 cite "E.D.N.C. LBR 3070-1(b)(1)"
-
 /// LBR 3070-1(b)(1): the debtor, the chapter 13 trustee and parties in
 /// interest have fourteen days, including any days for mailing, to respond
 /// to the application.
 deadline dismissed-case-fee-response-period: 14.days after FeeApplicationServed() counted_by frbp9006 cite "E.D.N.C. LBR 3070-1(b)(1)"
-
 /// LBR 3070-2(c)(2): at least twenty-one days before a change in the name
 /// or identity of the real property creditor or servicer takes effect,
 /// notice of the change is filed and served.
 deadline servicer-change-notice-period: 21.days before ServicerChangeEffective() counted_by frbp9006 cite "E.D.N.C. LBR 3070-2(c)(2)"
-
 /// LBR 4001-1(d)(1): the court may rule without hearing on a motion to
 /// continue or impose the stay under § 362(c)(3)(B) or (c)(4)(B) only if
 /// the debtor files it within five days of the petition date.
 deadline stay-continuation-motion-period: 5.days after PetitionFiled() counted_by frbp9006 cite "E.D.N.C. LBR 4001-1(d)(1)"
-
 /// LBR 4002-1(a)(1): an individual debtor gives the trustee evidence of
 /// current income, including payment advices for the sixty days before
 /// filing, no later than fourteen days after the petition.
 deadline trustee-financial-information-period: 14.days after PetitionFiled() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(a)(1)"
-
 /// LBR 4002-1(a)(2): an individual debtor gives the trustee the most recent
 /// federal income tax return no later than fourteen days after the
 /// petition, unless the trustee consents to a later time.
 deadline trustee-tax-return-period: 14.days after PetitionFiled() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(a)(2)"
-
 /// LBR 4002-1(b)(2)(A): an individual chapter 7 debtor gives the bankruptcy
 /// administrator the tax return and payment advices no later than fourteen
 /// days after the petition.
 deadline administrator-tax-return-period: 14.days after PetitionFiled() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(b)(2)(A)"
-
 /// LBR 4002-1(c)(3)(A): a chapter 11 debtor gives the bankruptcy
 /// administrator evidence of closure of its prepetition bank accounts no
 /// later than ten days after the petition or conversion.
 deadline chapter11-account-closure-period: 10.days after Chapter11PetitionOrConversion() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(c)(3)(A)"
-
 /// LBR 4002-1(c)(3)(B): a chapter 11 debtor names its depository bank to
 /// the bankruptcy administrator no later than ten days after the petition
 /// or conversion.
 deadline chapter11-depository-period: 10.days after Chapter11PetitionOrConversion() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(c)(3)(B)"
-
 /// LBR 4002-1(c)(4)(D): a chapter 11 debtor gives the bankruptcy
 /// administrator all its insurance policies within ten days of the petition
 /// or conversion.
 deadline chapter11-insurance-period: 10.days after Chapter11PetitionOrConversion() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(c)(4)(D)"
-
 /// LBR 4002-1(c)(5): a chapter 11 debtor gives the bankruptcy administrator
 /// its bank records, tax returns and financial documents no later than ten
 /// days after the petition or conversion.
 deadline chapter11-records-period: 10.days after Chapter11PetitionOrConversion() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(c)(5)"
-
 /// LBR 4002-1(c)(6): a chapter 11 debtor gives the bankruptcy administrator
 /// a physical inventory within ten days of the petition or conversion, or
 /// such other time as the court directs.
 deadline chapter11-inventory-period: 10.days after Chapter11PetitionOrConversion() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(c)(6)"
-
 /// LBR 4002-1(c)(7): a chapter 11 debtor gives the bankruptcy administrator
 /// a projected operating statement for its first thirty days within ten
 /// days of the petition or conversion.
 deadline chapter11-operating-statement-period: 10.days after Chapter11PetitionOrConversion() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(c)(7)"
-
 /// LBR 4002-1(c)(8): a chapter 11 debtor seeking waiver, modification or
 /// delay of those duties files its motion within ten days from the petition
 /// date, unless the need arises later.
 deadline chapter11-duty-waiver-period: 10.days after Chapter11PetitionOrConversion() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(c)(8)"
-
 /// LBR 4002-1(c)(9): a chapter 11 debtor files a plan and disclosure
 /// statement within one hundred twenty days of the petition or conversion,
 /// unless the court sets another deadline.
 deadline chapter11-plan-period: 120.days after Chapter11PetitionOrConversion() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(c)(9)"
-
 /// LBR 4002-1(e)(2): a chapter 12 debtor's first monthly report to the
 /// trustee is due within thirty days following the end of the month of the
 /// petition or conversion.
 deadline chapter12-first-report-period: 30.days after Chapter12MonthEnded() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(e)(2)"
-
 /// LBR 4002-1(e)(4): a chapter 12 debtor gives the trustee proof of
 /// insurance within fourteen days of the filing of the case.
 deadline chapter12-insurance-proof-period: 14.days after PetitionFiled() counted_by frbp9006 cite "E.D.N.C. LBR 4002-1(e)(4)"
-
 /// LBR 5005-4(12)(c): for papers submitted through eSR, the declaration,
 /// Statement of Social Security Number and filing fee or fee application
 /// reach the clerk within fourteen days before the petition is deemed
 /// filed.
 deadline esr-originals-period: 14.days after EsrPapersSubmitted() counted_by frbp9006 cite "E.D.N.C. LBR 5005-4(12)(c)"
-
 /// LBR 7007-1(b): a party may respond to a motion in an adversary
 /// proceeding within twenty-one days after service, unless the court or the
 /// bankruptcy rules provide otherwise.
 deadline adversary-motion-response-period: 21.days after AdversaryMotionServed() counted_by frbp9006 cite "E.D.N.C. LBR 7007-1(b)"
-
 /// LBR 7007-1(c): a reply to matters first raised in a response is filed
 /// within fourteen days after service of the response, unless otherwise
 /// ordered.
 deadline adversary-motion-reply-period: 14.days after AdversaryResponseServed() counted_by frbp9006 cite "E.D.N.C. LBR 7007-1(c)"
-
 /// LBR 7016-1(a)(3): counsel file a joint report at least seven days before
 /// the preliminary pretrial conference.
 deadline preliminary-pretrial-report-period: 7.days before PreliminaryPretrialConferenceDate() counted_by frbp9006 cite "E.D.N.C. LBR 7016-1(a)(3)"
-
 /// LBR 7016-1(b)(2)(A): all parties make the FRCP 26(a)(3) pretrial
 /// disclosures at least twenty-eight days before the pretrial conference.
 deadline pretrial-disclosures-period: 28.days before FinalPretrialConferenceDate() counted_by frbp9006 cite "E.D.N.C. LBR 7016-1(b)(2)(A)"
-
 /// LBR 7016-1(b)(2)(B): trial counsel confer and prepare a proposed final
 /// pretrial order at least fourteen days before the final pretrial
 /// conference.
 deadline pretrial-order-conference-period: 14.days before FinalPretrialConferenceDate() counted_by frbp9006 cite "E.D.N.C. LBR 7016-1(b)(2)(B)"
-
 /// LBR 7016-1(b)(2)(B): with no pretrial conference scheduled, counsel
 /// submit the proposed final pretrial order no later than fourteen days
 /// before trial unless the court sets another date.
 deadline pretrial-order-trial-period: 14.days before TrialDate() counted_by frbp9006 cite "E.D.N.C. LBR 7016-1(b)(2)(B)"
-
 /// LBR 7055-1(a)(1): except on a complaint objecting to discharge, an
 /// adversary proceeding may be dismissed for lack of prosecution if service
 /// is not made and certified within thirty days after the complaint is
 /// filed.
 deadline adversary-service-prosecution-period: 30.days after AdversaryComplaintFiled() counted_by frbp9006 cite "E.D.N.C. LBR 7055-1(a)(1)"
-
 /// LBR 7055-1(a)(2): it may be dismissed if no responsive pleading is filed
 /// and the plaintiff has not moved for default within thirty days after the
 /// time to respond expires.
 deadline default-prosecution-period: 30.days after ResponsivePleadingTimeExpired() counted_by frbp9006 cite "E.D.N.C. LBR 7055-1(a)(2)"
-
 /// LBR 7056-1(c): a party opposing summary judgment files its brief and
 /// responsive statement of facts within twenty-one days after service of
 /// the motion.
 deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006 cite "E.D.N.C. LBR 7056-1(c)"
-
 /// LBR 7056-1(d): the movant may reply to an opponent's additional material
 /// facts within fourteen days after service.
 deadline summary-judgment-facts-reply-period: 14.days after AdditionalFactsServed() counted_by frbp9006 cite "E.D.N.C. LBR 7056-1(d)"
-
 /// LBR 9014-1(c): a response to any motion is filed within fourteen days
 /// from service of the motion, unless otherwise ordered or provided by the
 /// FRBP or the Local Rules.
 deadline motion-response-period: 14.days after MotionServed() counted_by frbp9006 cite "E.D.N.C. LBR 9014-1(c)"
-
 /// LBR 9019-1(b): parties to a settlement submit a motion to approve it or
 /// a consent order within twenty-one days of notifying the court of the
 /// settlement, unless the court directs otherwise.
 deadline settlement-motion-period: 21.days after SettlementNotified() counted_by frbp9006 cite "E.D.N.C. LBR 9019-1(b)"
-
 /// LBR 9019-2(1)(c): a party may move to dispense with a court-ordered
 /// mediated settlement conference within fourteen days after entry of the
 /// order.
 deadline dispense-mediation-motion-period: 14.days after MediationOrderEntered() counted_by frbp9006 cite "E.D.N.C. LBR 9019-2(1)(c)"
-
 /// LBR 9019-2(1)(d): objections to a motion for a court-ordered mediated
 /// settlement conference may be filed within fourteen days after its
 /// service.
 deadline mediation-motion-objection-period: 14.days after MediationMotionServed() counted_by frbp9006 cite "E.D.N.C. LBR 9019-2(1)(d)"
-
 /// LBR 9019-2(2)(a): the plaintiff or movant files notice of a mediator
 /// selected by agreement within fourteen days of the order requiring
 /// mediation.
 deadline mediator-selection-notice-period: 14.days after MediationOrderEntered() counted_by frbp9006 cite "E.D.N.C. LBR 9019-2(2)(a)"
-
 /// LBR 9019-2(6)(b)(5): the mediator files the Report of Mediator within
 /// two weeks of the conclusion of the conference, or on receipt of a
 /// written settlement agreement if earlier.
 deadline mediator-report-period: 2.weeks after MediationConcluded() counted_by frbp9006 cite "E.D.N.C. LBR 9019-2(6)(b)(5)"
-
 /// LBR 9019-2(6)(b)(5)(B): if the mediation is suspended without impasse or
 /// agreement, the mediator submits an interim report within two weeks of
 /// the suspension.
 deadline mediator-interim-report-period: 2.weeks after MediationSuspended() counted_by frbp9006 cite "E.D.N.C. LBR 9019-2(6)(b)(5)(B)"
-
 /// LBR 9022-1: the party that submitted an entered order serves it and
 /// files a certificate of service within three days of serving it, or as
 /// the court directs.
 deadline order-service-certificate-period: 3.days after SubmittedOrderServed() counted_by frbp9006 cite "E.D.N.C. LBR 9022-1"
-
 /// LBR 9027-1(b)(8): the party filing a notice of removal files a
 /// certificate of service not later than seven days after service.
 deadline removal-certificate-period: 7.days after RemovalNoticeServed() counted_by frbp9006 cite "E.D.N.C. LBR 9027-1(b)(8)"
-
 /// LBR 9027-1(c): the removing party files all the documents the rule
 /// requires within thirty days of filing the notice of removal.
 deadline removal-documents-period: 30.days after RemovalNoticeFiled() counted_by frbp9006 cite "E.D.N.C. LBR 9027-1(c)"
-
 /// LBR 9027-1(d): a motion for remand is filed within thirty days after the
 /// notice of removal is filed.
 deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frbp9006 cite "E.D.N.C. LBR 9027-1(d)"
-
 /// LBR 9027-1(f): when an action is removed with pending unbriefed motions,
 /// the movant serves a supporting memorandum within fourteen days after
 /// removal.

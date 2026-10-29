@@ -68,17 +68,13 @@ decision grant-decision: "Petition for grant of review granted or denied" by cou
   edge-grant-decision-granted "Review granted" -> granted-briefing {
     authority cite "CAAF R. 19(a)(6)"
   }
-  edge-grant-decision-denied "Review denied" -> denied-final {
-    authority cite "CAAF R. 21(a)"
-  }
+  edge-grant-decision-denied "Review denied" -> denied-final { authority cite "CAAF R. 21(a)" }
 }
 
 state granted-briefing: "Briefing on the granted issues" by applicant cite "CAAF R. 19(a)(6)"
 {
   note "In an Article 62 appeal no further pleadings may be filed after the grant and the Court gives the case priority (CAAF R. 19(a)(6)(A)). In other granted cases the Clerk issues a briefing order setting the timing and sequence of filings (CAAF R. 19(a)(6)(B)), so those periods are holes until the order. A Judge Advocate General may certify issues after the grant (CAAF R. 19(b)(3), 22(b)(3), which state thirty and twenty-eight days respectively), and the Clerk may set a consolidated schedule. Briefs follow CAAF R. 24: 13,000 words for a brief or answer, 6,500 for a reply (CAAF R. 24(b)), with a certificate of compliance and a joint appendix (CAAF R. 24(c), (e)); briefs are required in support of granted petitions (CAAF R. 25)."
-  edge-granted-briefing-complete "Briefing complete" -> hearing {
-    authority cite "CAAF R. 40(a)"
-  }
+  edge-granted-briefing-complete "Briefing complete" -> hearing { authority cite "CAAF R. 40(a)" }
 }
 
 state certified-briefing: "Briefing on the certified issues" by applicant cite "CAAF R. 19(b)"
@@ -106,9 +102,7 @@ state mandatory-briefing: "Mandatory review: record and briefs" by office cite "
 state hearing: "Hearing on the merits" by court cite "CAAF R. 40(a)"
 {
   note "After all filings are received the Court may order a hearing on the merits; the Clerk gives at least 21 days' notice, and only one counsel per party argues (CAAF R. 40(a), (b)). Once a hearing date is set, no motion may be filed within 7 days of it without prior leave (CAAF R. 30(e)). Whether and when the Court orders a hearing is a hole."
-  edge-hearing-decision "Case submitted" -> decision-on-merits {
-    authority cite "CAAF R. 40(a)"
-  }
+  edge-hearing-decision "Case submitted" -> decision-on-merits { authority cite "CAAF R. 40(a)" }
 }
 
 decision decision-on-merits: "Decision on the merits" by court cite "CAAF R. 43(a)"

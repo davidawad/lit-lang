@@ -133,215 +133,169 @@ event EmploymentApplicationServed()
 /// Bankr. S.D. Cal. LBR 1016-1: a Suggestion of Death of an individual
 /// debtor is filed within 60 days of the death.
 deadline death-suggestion-period: 60.days after DebtorDied() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 1016-1"
-
 /// Bankr. S.D. Cal. LBR 1017-3(a)(2): to avoid dismissal for lack of
 /// prosecution, the debtor moves for an extension of time or an excuse from
 /// performance within 14 days of service of the notice.
 deadline deficiency-extension-motion-period: 14.days after DeficiencyNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 1017-3(a)"
-
 /// Bankr. S.D. Cal. LBR 1019-1(c): on conversion of a chapter 11 case to
 /// chapter 7, the debtor or chapter 11 trustee files and serves a verified
 /// schedule of all property of the estate within 7 days after entry of the
 /// order for relief.
 deadline conversion-property-schedule-period: 7.days after CaseConverted() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 1019-1"
-
 /// Bankr. S.D. Cal. LBR 2002-1(b)(1): the notice of a motion under 11
 /// U.S.C. § 362(c)(3)(B) to extend the automatic stay is filed and served
 /// within 7 days after the petition date.
 deadline stay-extension-notice-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 2002-1(b)"
-
 /// Bankr. S.D. Cal. LBR 2002-1(b)(3): the notice of a motion under 11
 /// U.S.C. § 362(c)(4)(B) to impose the automatic stay is served within 30
 /// days after the petition date.
 deadline stay-imposition-notice-period: 30.days after PetitionFiled() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 2002-1(b)"
-
 /// Bankr. S.D. Cal. LBR 2002-1(b)(2), (4): at least 14 days' notice is
 /// given of the hearing on a motion to extend or impose the automatic stay.
 deadline stay-motion-hearing-notice-period: 14.days before StayMotionHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 2002-1(b)"
-
 /// Bankr. S.D. Cal. LBR 2002-2(d): any opposition or response to a notice
 /// of intended action is filed and served not more than 14 days after its
 /// service, with a request and notice for hearing.
 deadline intended-action-response-period: 14.days after IntendedActionNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 2002-2(d)"
-
 /// Bankr. S.D. Cal. LBR 2004-1(e): an order for an FRBP 2004 examination
 /// requires a minimum of 21 days' notice from the date of service of the
 /// order, unless otherwise agreed.
 deadline examination-notice-period: 21.days before ExaminationDate() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 2004-1(e)"
-
 /// Bankr. S.D. Cal. LBR 2014-1(a): chapter 11 debtors file an application
 /// to retain all professionals as of the outset of the case within 30 days
 /// from the petition date.
 deadline chapter-11-employment-period: 30.days after PetitionFiled() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 2014-1(a)"
-
 /// Bankr. S.D. Cal. LBR 2014-1(b): an application to employ a professional
 /// is filed within 30 days from the commencement of employment; otherwise a
 /// noticed motion is required.
 deadline employment-application-period: 30.days after EmploymentCommenced() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 2014-1(b)"
-
 /// Bankr. S.D. Cal. LBR 3002-2(c): the creditor files a response to an
 /// objection to a notice of mortgage payment change within 14 days after
 /// its service.
 deadline payment-change-response-period: 14.days after PaymentChangeObjectionServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3002-2(c)"
-
 /// Bankr. S.D. Cal. LBR 3003-1: unless the court orders otherwise under
 /// FRBP 3003(c)(3), a proof of claim or interest in a chapter 11 case is
 /// filed within 70 days after the order for relief.
 deadline chapter-11-claim-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3003-1"
-
 /// Bankr. S.D. Cal. LBR 3013-1: a party objecting to the classification of
 /// its claim files and serves the objection within 30 days after service of
 /// the Notice of Classification.
 deadline classification-objection-period: 30.days after ClassificationNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3013-1"
-
 /// Bankr. S.D. Cal. LBR 3015-5(a): objections to confirmation of an
 /// original chapter 13 plan are filed within 7 days after the filing of the
 /// Notice of Meeting of Creditors Held and Concluded.
 deadline plan-objection-period: 7.days after MeetingConcludedNoticeFiled() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3015-5(a)"
-
 /// Bankr. S.D. Cal. LBR 3015-5(c): any response to an objection to
 /// confirmation is filed within 14 days after service of the objection.
 deadline plan-objection-response-period: 14.days after PlanObjectionServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3015-5(c)"
-
 /// Bankr. S.D. Cal. LBR 3015-6(a), (b): objections to a chapter 13 plan
 /// modification are filed within 28 days of its service.
 deadline modification-objection-period: 28.days after ModificationServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3015-6(a)"
-
 /// Bankr. S.D. Cal. LBR 3015-6(b): a response to an objection to a post-
 /// confirmation modification is filed within 14 days of the objection's
 /// service.
 deadline modification-objection-response-period: 14.days after PlanObjectionServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3015-6(b)"
-
 /// Bankr. S.D. Cal. LBR 3015-7: at least 7 days before the confirmation
 /// hearing, each party files a status report on any unresolved issues.
 deadline confirmation-status-report-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3015-7"
-
 /// Bankr. S.D. Cal. LBR 3015-8: the debtor prepares and uploads the
 /// confirmation order for the chapter 13 trustee's review within 14 days of
 /// the time the plan is first ready for confirmation.
 deadline confirmation-order-upload-period: 14.days after PlanReadyForConfirmation() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3015-8"
-
 /// Bankr. S.D. Cal. LBR 3015-10(d)(4): opposition to a lien strip motion is
 /// due 28 days after service of the motion.
 deadline valuation-opposition-period: 28.days after ValuationMotionServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3015-10(d)"
-
 /// Bankr. S.D. Cal. LBR 3018-2: if ordered, the chapter 11 plan proponent
 /// files and serves completed ballots at least 7 days before the
 /// confirmation hearing.
 deadline ballot-filing-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3018-2"
-
 /// Bankr. S.D. Cal. LBR 3020-1: at least 21 days before the confirmation
 /// hearing, the plan proponent requests the case administrator's statement.
 deadline confirmation-statement-request-period: 21.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3020-1"
-
 /// Bankr. S.D. Cal. LBR 3020-2: at least 7 days before the confirmation
 /// hearing, the plan proponent files a schedule of estimated expenses.
 deadline estimated-expenses-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3020-2"
-
 /// Bankr. S.D. Cal. LBR 3022-1: an application for a final decree is
 /// considered without a hearing unless within 14 days after service of the
 /// notice a party in interest files an objection.
 deadline final-decree-objection-period: 14.days after FinalDecreeNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3022-1"
-
 /// Bankr. S.D. Cal. LBR 4001-3(a): oppositions to a motion for relief from
 /// stay are filed and served not later than 11 days after service of the
 /// motion and notice.
 deadline stay-relief-opposition-period: 11.days after StayReliefMotionServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 4001-3(a)"
-
 /// Bankr. S.D. Cal. LBR 4002-1(b): the debtor submits copies of the listed
 /// books and records to the trustee at least 14 days before the date
 /// initially set for the § 341(a) meeting.
 deadline books-and-records-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 4002-1(b)"
-
 /// Bankr. S.D. Cal. LBR 4002-2(c): an individual chapter 11 debtor files
 /// the LBR 4002-2(d) notice within 7 days of the petition date to pay
 /// salary and expenses for the first 45 days.
 deadline individual-chapter-11-notice-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 4002-2(c)"
-
 /// Bankr. S.D. Cal. LBR 4002-2(d)(5): an insider may receive compensation
 /// if no objection is received within 14 days after service of the notice.
 deadline insider-compensation-objection-period: 14.days after InsiderCompensationNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 4002-2(d)"
-
 /// Bankr. S.D. Cal. LBR 5011-1(b): responses to a motion to withdraw the
 /// reference are filed within 14 days from its service.
 deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 5011-1(b)"
-
 /// Bankr. S.D. Cal. LBR 5011-1(c): replies are filed within 7 days after
 /// service of the response.
 deadline withdrawal-reply-period: 7.days after WithdrawalResponseServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 5011-1(c)"
-
 /// Bankr. S.D. Cal. LBR 6004-3(b): the U.S. Trustee files notice of the
 /// appointment of a privacy ombudsman at least 14 days before the hearing.
 deadline ombudsman-appointment-period: 14.days before PiiSaleHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 6004-3(b)"
-
 /// Bankr. S.D. Cal. LBR 6004-3(c): the privacy ombudsman files a report at
 /// least 7 days before the hearing.
 deadline ombudsman-report-period: 7.days before PiiSaleHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 6004-3(c)"
-
 /// Bankr. S.D. Cal. LBR 7016-1(c): no later than 7 days after the Early
 /// Conference, plaintiff's counsel files and serves the completed Local
 /// Form CSD 3018.
 deadline early-conference-certificate-period: 7.days after EarlyConferenceHeld() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7016-1(c)"
-
 /// Bankr. S.D. Cal. LBR 7016-5(a): the parties convene at least 28 days
 /// before the final pretrial conference to draft stipulations.
 deadline pretrial-meeting-period: 28.days before FinalPretrialConference() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7016-5(a)"
-
 /// Bankr. S.D. Cal. LBR 7016-5(a): the plaintiff files the prepared
 /// pretrial order at least 7 days before the final pretrial conference.
 deadline pretrial-order-period: 7.days before FinalPretrialConference() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7016-5(a)"
-
 /// Bankr. S.D. Cal. LBR 7016-5(c): each party exchanges exhibits at least
 /// 14 days before the final pretrial conference.
 deadline pretrial-exhibit-exchange-period: 14.days before FinalPretrialConference() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7016-5(c)"
-
 /// Bankr. S.D. Cal. LBR 7016-9: the parties serve and file trial briefs and
 /// designations at least 7 days before the start of trial.
 deadline trial-briefs-period: 7.days before Trial() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7016-9"
-
 /// Bankr. S.D. Cal. LBR 7026-2: the parties meet on disputed discovery
 /// issues within 14 days of service of a letter or email requesting the
 /// meeting.
 deadline discovery-meeting-period: 14.days after DiscoveryMeetingRequested() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7026-2"
-
 /// Bankr. S.D. Cal. LBR 7041-2(a): a pending related adversary proceeding
 /// is closed on dismissal of the bankruptcy case unless a party moves to
 /// continue it within 21 days of case dismissal.
 deadline adversary-continuation-period: 21.days after CaseDismissed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7041-2(a)"
-
 /// Bankr. S.D. Cal. LBR 7054-2: within 14 days after a ruling, the
 /// prevailing party prepares and submits any final or proposed judgment or
 /// order.
 deadline proposed-judgment-period: 14.days after RulingMade() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7054-2"
-
 /// Bankr. S.D. Cal. LBR 7054-3(b), (c): an objection to a lodged order,
 /// with an alternative proposed order, is filed within 7 days from service
 /// of the Notice of Lodgment.
 deadline lodged-order-objection-period: 7.days after LodgmentNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7054-3(c)"
-
 /// Bankr. S.D. Cal. LBR 9013-6(a)(1): a motion on which the movant requests
 /// a hearing is filed and served at least 28 days before the hearing date.
 deadline motion-notice-period: 28.days before MotionHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 9013-6(a)"
-
 /// Bankr. S.D. Cal. LBR 9013-6(a)(2): a motion to approve a disclosure
 /// statement or confirm a chapter 11 plan is filed and served no later than
 /// 42 days before the hearing date.
 deadline plan-motion-notice-period: 42.days before MotionHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 9013-6(a)"
-
 /// Bankr. S.D. Cal. LBR 9013-6(a)(3), (b): opposition to a motion is served
 /// no later than 14 days after service of the notice of motion.
 deadline motion-opposition-period: 14.days after MotionNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 9013-6(a)"
-
 /// Bankr. S.D. Cal. LBR 9013-6(a)(4): opposition to a motion to approve a
 /// disclosure statement or confirm a chapter 11 plan is served no later
 /// than 28 days after service of the notice of motion.
 deadline plan-motion-opposition-period: 28.days after MotionNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 9013-6(a)"
-
 /// Bankr. S.D. Cal. LBR 9034-1(d): the U.S. Trustee has 7 days from filing
 /// and service of a motion to extend the time for schedules to file a
 /// statement of position.
 deadline ust-extension-position-period: 7.days after ExtensionMotionServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 9034-1(d)"
-
 /// Bankr. S.D. Cal. LBR 9034-1(e): the U.S. Trustee has 14 days from filing
 /// and service of an application to employ a professional or for a final
 /// decree to file a statement of position.

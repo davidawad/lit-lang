@@ -97,9 +97,7 @@ decision plea-decision: "Plea or trial" by applicant cite "M.R.U. Crim. P. 18(d)
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "M.R.U. Crim. P. 11(b)"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "M.R.U. Crim. P. 23(a)"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "M.R.U. Crim. P. 23(a)" }
   edge-plea-decision-dismissed "State files a dismissal" -> dismissed {
     authority cite "M.R.U. Crim. P. 48(a)"
   }
@@ -122,9 +120,7 @@ decision post-trial: "Post-trial motions" by court cite "M.R.U. Crim. P. 33"
   edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
     authority cite "M.R.U. Crim. P. 29(b)"
   }
-  edge-post-trial-new-trial "New trial granted" -> trial {
-    authority cite "M.R.U. Crim. P. 33"
-  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "M.R.U. Crim. P. 33" }
   edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
     authority cite "M.R.U. Crim. P. 32(a)"
   }
@@ -162,7 +158,6 @@ terminal appeal-taken: "Appeal taken" outcome [appeal] cite "M.R. App. P. 2B(b)"
   note "The appeal continues before the Maine Supreme Judicial Court sitting as the Law Court under the Maine Rules of Appellate Procedure (sources/me-law-court/)."
 }
 
-terminal conviction-final: "Conviction final" outcome [loss] cite ?("15 M.R.S. § 2121 (post-conviction review; not vendored)")
-{
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("15 M.R.S. § 2121 (post-conviction review; not vendored)") {
   note "Outcome from the defendant's side. Post-conviction review under 15 M.R.S. §§ 2121 to 2132 (procedure in M.R.U. Crim. P. 65 to 75A) and its statutory limitations period are not vendored; federal habeas belongs to lit/habeas."
 }

@@ -222,54 +222,45 @@ event NondispositiveOrderServed()
 /// persons noticed not less than 7 days before the date objections or responses
 /// are due.
 deadline certificate-of-service-period: 7.days before ObjectionDeadline() counted_by frbp9006 cite "AK LBR 2002-1(e)"
-
 /// AK LBR 2015-1(c)(1): no later than 7 days after the Notice of Appointment of
 /// Trustee is filed, the debtor tenders the Subchapter V trustee an advance fee
 /// and expense deposit of $1,000.00; failure may result in dismissal. Monthly
 /// deposits of $500.00 follow, on the day of the month of the petition date,
 /// until the segregated funds reach $3,000.00 (AK LBR 2015-1(c)(2)).
 deadline subchapter-v-deposit-period: 7.days after TrusteeAppointmentNoticeFiled() counted_by frbp9006 cite "AK LBR 2015-1(c)"
-
 /// AK LBR 2015-1(c)(4): no later than 10 days after the court approves the
 /// Subchapter V trustee's final application for compensation, the trustee
 /// returns any excess funds to the debtor.
 deadline subchapter-v-excess-funds-period: 10.days after SubchapterVFinalFeeApproved() counted_by frbp9006 cite "AK LBR 2015-1(c)"
-
 /// AK LBR 2016-1(b)(2): in a chapter 13 case dismissed before confirmation, the
 /// standing trustee may deduct $450.00 plus $90.00 for each hearing or meeting
 /// of creditors beyond the first; the debtor may object to the award within 14
 /// days of the entry of the order dismissing the case.
 deadline trustee-award-objection-period: 14.days after UnconfirmedChapter13Dismissed() counted_by frbp9006 cite "AK LBR 2016-1(b)"
-
 /// AK LBR 2016-1(i)(1): final applications for professional fees in chapter 7
 /// cases are filed and transmitted to the United States trustee not later than
 /// 7 days after the Trustee's Final Report Before Distribution is transmitted
 /// to the United States trustee.
 deadline chapter7-final-fee-application-period: 7.days after TrusteeFinalReportTransmitted() counted_by frbp9006 cite "AK LBR 2016-1(i)"
-
 /// AK LBR 2016-3(c)(1): unless the confirmed plan or the confirmation order
 /// provides otherwise, in a chapter 9 or 11 case all applications for unpaid
 /// administrative expenses are filed and served not later than 60 days after
 /// the effective date of the plan.
 deadline admin-expense-application-period: 60.days after PlanEffective() counted_by frbp9006 cite "AK LBR 2016-3(c)"
-
 /// AK LBR 2016-3(c)(2): not less than 30 days before the deadline for filing
 /// applications for administrative expenses, the debtor in possession or
 /// trustee notices all known administrative expense claimants of the deadline.
 deadline admin-expense-notice-period: 30.days before AdminExpenseDeadline() counted_by frbp9006 cite "AK LBR 2016-3(c)"
-
 /// AK LBR 3002-1(b)(1): a claim arising from the rejection of an executory
 /// contract is filed on or before the later of the last date for filing proofs
 /// of claim and 30 days after entry of the order authorizing rejection; this is
 /// the 30-day period, and the claims bar date governs when later.
 deadline rejection-claim-period: 30.days after RejectionOrderEntered() counted_by frbp9006 cite "AK LBR 3002-1(b)"
-
 /// AK LBR 3002-1(d)(1): a secured creditor whose claim for post-petition fees,
 /// costs or charges under 11 U.S.C. § 506(b) is to be paid by the chapter 13
 /// trustee files and serves its application not later than 30 days after entry
 /// of the order confirming the plan.
 deadline chapter13-fee-claim-application-period: 30.days after Chapter13ConfirmationOrderEntered() counted_by frbp9006 cite "AK LBR 3002-1(d)"
-
 /// AK LBR 3002-1(d)(2): a party objecting to an application for allowance of
 /// post-petition fees, costs and charges may serve and file an objection within
 /// 14 days after service of the application; without one the application is
@@ -277,73 +268,60 @@ deadline chapter13-fee-claim-application-period: 30.days after Chapter13Confirma
 /// application (AK LBR 3003-1(d)(4)) and the sale application (AK LBR
 /// 6004-1(g)(2)) carry the same 14 days.
 deadline fee-claim-objection-period: 14.days after FeeApplicationServed() counted_by frbp9006 cite "AK LBR 3002-1(d)"
-
 /// AK LBR 3003-1(a)(1): the deadline for filing proofs of claim in a chapter 9
 /// or chapter 11 case, other than a subchapter V case, is 90 days from the date
 /// of the order for relief. Governmental units keep the 180 days of 11 U.S.C. §
 /// 502(b)(9) (AK LBR 3003-1(a)(3)).
 deadline chapter11-claims-bar-period: 90.days after OrderForReliefEntered() counted_by frbp9006 cite "AK LBR 3003-1(a)"
-
 /// AK LBR 3003-1(a)(2): the deadline for filing proofs of claim in a subchapter
 /// V small business case is 70 days from the date of the order for relief.
 deadline subchapter-v-claims-bar-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "AK LBR 3003-1(a)"
-
 /// AK LBR 3003-1(c)(3): a creditor or equity security holder affected by an
 /// amendment to the schedules may file a proof of claim or interest within 45
 /// days from service of notice of the amendment, or by the claims bar date,
 /// whichever is later.
 deadline amended-schedule-claim-period: 45.days after ScheduleAmendmentNoticeServed() counted_by frbp9006 cite "AK LBR 3003-1(c)"
-
 /// AK LBR 3003-1(d)(2): absent agreement, unless otherwise ordered, a secured
 /// creditor files its application for post-petition interest, fees, costs and
 /// expenses under 11 U.S.C. § 506(b) not later than 60 days after notice of
 /// entry of the order confirming the plan of reorganization.
 deadline chapter11-fee-claim-application-period: 60.days after Chapter11ConfirmationNoticed() counted_by frbp9006 cite "AK LBR 3003-1(d)"
-
 /// AK LBR 3012-1(c)(2): a secured creditor's objection to a motion to value
 /// collateral is filed and served not later than 21 days after the motion is
 /// served.
 deadline valuation-objection-period: 21.days after ValuationMotionServed() counted_by frbp9006 cite "AK LBR 3012-1(c)"
-
 /// AK LBR 3012-1(c)(4)-(5): not later than 7 days after an objection to
 /// valuation is served, the debtor files and serves a reply accepting or
 /// controverting the creditor's valuation; failure to file a timely
 /// controverting reply is deemed acceptance of the creditor's valuation.
 deadline valuation-reply-period: 7.days after ValuationObjectionServed() counted_by frbp9006 cite "AK LBR 3012-1(c)"
-
 /// AK LBR 3012-1(e)(1): unless otherwise ordered, when the valuation of
 /// collateral is at issue the parties exchange all valuation data and
 /// appraisals not later than 7 days before the hearing.
 deadline valuation-exchange-period: 7.days before MatterHearing() counted_by frbp9006 cite "AK LBR 3012-1(e)"
-
 /// AK LBR 3015-2(b)(1)[B]: a pre-confirmation amendment that would adversely
 /// affect another party in interest is mailed to each adversely affected party
 /// with a notice providing 28 days to object.
 deadline amended-plan-objection-period: 28.days after AmendedPlanMailed() counted_by frbp9006 cite "AK LBR 3015-2(b)"
-
 /// AK LBR 3015-3(b)(1)[A]: in a case commenced under chapter 13, the debtor
 /// mails the plan, plan analysis, Notice of Date to File Objections and Notice
 /// of Confirmation Hearing Date to creditors not later than 28 days after the
 /// petition is filed; the trustee may lodge a dismissal order if the plan is
 /// not timely noticed (AK LBR 3015-3(b)(2)).
 deadline chapter13-plan-service-period: 28.days after PetitionFiled() counted_by frbp9006 cite "AK LBR 3015-3(b)"
-
 /// AK LBR 3015-3(b)(1)[B]: in a case converted to chapter 13, the plan and
 /// notices are mailed not later than 28 days after the date of the order
 /// converting the case.
 deadline converted-plan-service-period: 28.days after CaseConverted() counted_by frbp9006 cite "AK LBR 3015-3(b)"
-
 /// AK LBR 3015-3(c)(1)[B]: an objection to confirmation of a chapter 13 plan is
 /// filed not later than 21 days after the first date set for the § 341(a)
 /// meeting of creditors (after conversion, the first date set following
 /// conversion).
 deadline chapter13-confirmation-objection-period: 21.days after FirstMeetingDate() counted_by frbp9006 cite "AK LBR 3015-3(c)"
-
 /// AK LBR 3015-3(d)(1): the chapter 13 trustee files a recommendation on plan
 /// confirmation not later than 28 days after the first date set for the §
 /// 341(a) meeting of creditors.
 deadline trustee-recommendation-period: 28.days after FirstMeetingDate() counted_by frbp9006 cite "AK LBR 3015-3(d)"
-
 /// AK LBR 3015-3(e)(2)-(3): when an objection is timely filed or the trustee
 /// recommends against confirmation, the debtor serves and files an amended plan
 /// or a response not later than 35 days after the first date set for the §
@@ -351,24 +329,20 @@ deadline trustee-recommendation-period: 28.days after FirstMeetingDate() counted
 /// order. The court may continue the confirmation hearing for not more than 30
 /// days for good cause (AK LBR 3015-3(g)(2)).
 deadline plan-objection-response-period: 35.days after FirstMeetingDate() counted_by frbp9006 cite "AK LBR 3015-3(e)"
-
 /// AK LBR 3015-3(f)(1): when no objection is timely filed and the trustee
 /// recommends confirmation, the debtor files, transmits and serves a
 /// certification that all domestic support payments due since the petition have
 /// been paid not later than 7 days after the trustee's recommendation is served
 /// and filed.
 deadline support-certification-period: 7.days after TrusteeRecommendationFiled() counted_by frbp9006 cite "AK LBR 3015-3(f)"
-
 /// AK LBR 3015-6(c)(1): in a chapter 12 case, a motion to value collateral
 /// under FRBP 3012 is filed not later than the later of 21 days after the
 /// conclusion of the § 341 meeting and 60 days after the petition is filed;
 /// this is the period from the meeting.
 deadline chapter12-valuation-meeting-period: 21.days after MeetingOfCreditorsConcluded() counted_by frbp9006 cite "AK LBR 3015-6(c)"
-
 /// AK LBR 3015-6(c)(2): the chapter 12 valuation period running 60 days after
 /// the petition is filed; the later of the two governs.
 deadline chapter12-valuation-petition-period: 60.days after PetitionFiled() counted_by frbp9006 cite "AK LBR 3015-6(c)"
-
 /// AK LBR 3016-1(b)(1): notice of a chapter 11 status and scheduling conference
 /// is given to all parties in interest not less than 14 days before the
 /// conference. The conference is ordinarily not set less than 45 days after the
@@ -376,295 +350,239 @@ deadline chapter12-valuation-petition-period: 60.days after PetitionFiled() coun
 /// 3016-1(a)(1)[B]); other parties may file a statement not less than 3
 /// business days before it (AK LBR 3016-1(c)(3)).
 deadline status-conference-notice-period: 14.days before StatusConference() counted_by frbp9006 cite "AK LBR 3016-1(b)"
-
 /// AK LBR 3016-1(c)(1): not less than 7 days before the status and scheduling
 /// conference, the debtor in possession or trustee files a statement of the
 /// status of the case.
 deadline status-statement-period: 7.days before StatusConference() counted_by frbp9006 cite "AK LBR 3016-1(c)"
-
 /// AK LBR 3016-2(d): unless the United States trustee waives it, not less than
 /// 7 days before a chapter 11 plan and disclosure statement are filed the
 /// proponent consults with the United States trustee on their formulation.
 deadline plan-consultation-period: 7.days before PlanAndDisclosureFiled() counted_by frbp9006 cite "AK LBR 3016-2(d)"
-
 /// AK LBR 3017-1(a)(1): unless otherwise ordered, within 7 days after filing
 /// the proposed plan and disclosure statement the proponent files a calendar
 /// request for a hearing on the disclosure statement.
 deadline disclosure-hearing-request-period: 7.days after PlanAndDisclosureFiled() counted_by frbp9006 cite "AK LBR 3017-1(a)"
-
 /// AK LBR 3017-1(b)(1): the proponent serves the Order and Notice for Hearing
 /// on Disclosure Statement (Official Form 312) on the Matrix in the time
 /// ordered, and in any event not less than 28 days before the last day to
 /// object to approval of the disclosure statement.
 deadline disclosure-hearing-notice-period: 28.days before DisclosureObjectionDeadline() counted_by frbp9006 cite "AK LBR 3017-1(b)"
-
 /// AK LBR 3017-1(c)(1): objections to a disclosure statement are filed, served
 /// on the proponent and transmitted to the United States trustee not less than
 /// 7 days before the hearing on its approval.
 deadline disclosure-objection-period: 7.days before DisclosureHearing() counted_by frbp9006 cite "AK LBR 3017-1(c)"
-
 /// AK LBR 3017-2(c)(1): in a small business case, within 14 days after the
 /// disclosure statement is filed and transmitted, the United States trustee
 /// files and serves a statement that it has reviewed it and finds its
 /// information adequate or deficient.
 deadline ust-disclosure-statement-period: 14.days after PlanAndDisclosureFiled() counted_by frbp9006 cite "AK LBR 3017-2(c)"
-
 /// AK LBR 3017-2(d)(1), (3): unless otherwise ordered, objections to a
 /// conditionally approved disclosure statement are filed, served and
 /// transmitted not less than 7 days before the confirmation hearing; without a
 /// timely objection the conditional approval is final.
 deadline conditional-disclosure-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "AK LBR 3017-2(d)"
-
 /// AK LBR 3017-2(f)(1)[A]: in a small business case, objections to claims under
 /// FRBP 3007 are filed not later than 35 days after the claims bar date.
 deadline small-business-claim-objection-period: 35.days after ClaimsBarDate() counted_by frbp9006 cite "AK LBR 3017-2(f)"
-
 /// AK LBR 3017-2(f)(2)[A]: in a small business case, requests for valuation of
 /// security and estimation of contingent or unliquidated claims are served and
 /// filed not less than 35 days before the confirmation hearing.
 deadline small-business-valuation-request-period: 35.days before ConfirmationHearing() counted_by frbp9006 cite "AK LBR 3017-2(f)"
-
 /// AK LBR 3018-2(a): unless otherwise ordered, ballots accepting or rejecting a
 /// chapter 11 plan are delivered to the plan proponent, not filed, at least 7
 /// days before the confirmation hearing. The proponent certifies the balloting
 /// at least 2 business days before the hearing (AK LBR 3018-1(a)).
 deadline ballot-delivery-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "AK LBR 3018-2(a)"
-
 /// AK LBR 3018-2(b)(1): objections to confirmation of a chapter 11 plan are
 /// filed, transmitted and served not less than 7 days before the confirmation
 /// hearing.
 deadline chapter11-confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "AK LBR 3018-2(b)"
-
 /// AK LBR 3022-1(a)(1): unless the court orders otherwise, not later than 30
 /// days after the end of the calendar quarter in which the confirmation order
 /// is entered, and of each quarter after it until the final decree or a motion
 /// for one, the plan proponent files and transmits a progress report. A motion
 /// for a final decree carries 21 days' notice to the Matrix (AK LBR 3022-1(c)).
 deadline postconfirmation-report-period: 30.days after CalendarQuarterEnded() counted_by frbp9006 cite "AK LBR 3022-1(a)"
-
 /// AK LBR 4001-1(c)(1), (e)(1): written objections to a motion for relief from
 /// the automatic stay under 11 U.S.C. § 362(d) are filed and served within 14
 /// days following service by mail of the notice. The objecting party submits a
 /// Calendar Request within 24 hours of filing (AK LBR 4001-1(f)(1)[A]).
 deadline stay-relief-objection-period: 14.days after StayReliefNoticeServed() counted_by frbp9006 cite "AK LBR 4001-1(c)"
-
 /// AK LBR 4001-1(c)(2), (e)(1): written objections to a motion for relief from
 /// the codebtor stay under 11 U.S.C. § 1201 or § 1301 are filed and served
 /// within 20 days after the motion is filed.
 deadline codebtor-stay-objection-period: 20.days after CodebtorStayMotionFiled() counted_by frbp9006 cite "AK LBR 4001-1(c)"
-
 /// AK LBR 4001-1(f)(2)[B]: live testimony at a preliminary stay-relief hearing
 /// needs the court's prior written approval, on a motion filed not less than 5
 /// days before the hearing.
 deadline live-testimony-motion-period: 5.days before MatterHearing() counted_by frbp9006 cite "AK LBR 4001-1(f)"
-
 /// AK LBR 4001-1(h)(2): an objection to a motion to continue or impose the stay
 /// under 11 U.S.C. § 362(c) is filed not later than 14 days after the motion is
 /// served.
 deadline stay-continuation-objection-period: 14.days after StayContinuationMotionServed() counted_by frbp9006 cite "AK LBR 4001-1(h)"
-
 /// AK LBR 4001-1(j)(1): unless otherwise ordered, the Clerk forwards a § 362(l)
 /// rent deposit to the lessor no later than 7 days after receiving it.
 deadline rent-deposit-forwarding-period: 7.days after RentDepositReceived() counted_by frbp9006 cite "AK LBR 4001-1(j)"
-
 /// AK LBR 4001-1(l)(1): unless the court orders otherwise, not later than 7
 /// days after service of an objection or response to a motion under 11 U.S.C. §
 /// 362, § 1201 or § 1301 governed by FRBP 9014, the movant and each objecting
 /// party make the disclosures of FRCP 26(a)(1) and (2).
 deadline stay-disclosure-period: 7.days after StayObjectionServed() counted_by frbp9006 cite "AK LBR 4001-1(l)"
-
 /// AK LBR 4001-2(e): unless the court specifically orders otherwise, an interim
 /// cash collateral or financing order expires not later than 21 days after the
 /// motion is filed.
 deadline interim-cash-collateral-order-expiry: 21.days after CashCollateralMotionFiled() counted_by frbp9006 cite "AK LBR 4001-2(e)"
-
 /// AK LBR 4002-1(b)(1): an individual debtor obligated on a domestic support
 /// obligation gives the trustee the holder's contact information, the payments
 /// and arrears, the decree and the employer's contact information within 14
 /// days of filing the petition in every case except chapter 11.
 deadline support-information-period: 14.days after PetitionFiled() counted_by frbp9006 cite "AK LBR 4002-1(b)"
-
 /// AK LBR 4002-1(b)(1): in a chapter 11 case, the domestic support information
 /// is given within 7 days of the appointment of a trustee.
 deadline chapter11-support-information-period: 7.days after Chapter11TrusteeAppointed() counted_by frbp9006 cite "AK LBR 4002-1(b)"
-
 /// AK LBR 4002-1(b)(2): within 7 days of making the first domestic support
 /// payment coming due after the petition, the debtor gives the trustee evidence
 /// of it.
 deadline support-payment-evidence-period: 7.days after FirstSupportPaymentMade() counted_by frbp9006 cite "AK LBR 4002-1(b)"
-
 /// AK LBR 4002-1(b)(3): within 14 days of receiving notice of a change of
 /// address or telephone number of a domestic support obligation holder, the
 /// debtor gives the trustee the new information.
 deadline support-holder-change-period: 14.days after SupportHolderChangeNoticed() counted_by frbp9006 cite "AK LBR 4002-1(b)"
-
 /// AK LBR 4002-1(b)(4): within 14 days of any change in employment, the debtor
 /// gives the trustee the new employer's name, address and telephone number.
 deadline employment-change-period: 14.days after EmploymentChanged() counted_by frbp9006 cite "AK LBR 4002-1(b)"
-
 /// AK LBR 4002-1(b)(5): within 7 days of executing a reaffirmation agreement,
 /// the debtor gives the trustee a copy. Entry of discharge may be delayed up to
 /// 30 days on the debtor's ex parte motion to accommodate a reaffirmation
 /// agreement (AK LBR 4008-1(b)).
 deadline reaffirmation-copy-period: 7.days after ReaffirmationExecuted() counted_by frbp9006 cite "AK LBR 4002-1(b)"
-
 /// AK LBR 4003-1: the court determines an objection to a claim of exemption
 /// only after a hearing; the party requesting it gives notice of the hearing
 /// date (AK LBF 34) within 7 days of receiving it from the court.
 deadline exemption-hearing-notice-period: 7.days after ExemptionHearingDateReceived() counted_by frbp9006 cite "AK LBR 4003-1"
-
 /// AK LBR 5011-1(c)(1): an objection to withdrawal of the reference is filed in
 /// writing not later than 21 days after the later of service of the motion and
 /// mailing of the notice.
 deadline withdrawal-of-reference-objection-period: 21.days after WithdrawalOfReferenceServed() counted_by frbp9006 cite "AK LBR 5011-1(c)"
-
 /// AK LBR 5074-1(a)(2): a time-critical document accepted by facsimile or email
 /// is timely only if the original signed document is filed, and any fee
 /// received, within 7 days of the authorization.
 deadline fax-original-filing-period: 7.days after FaxFilingAuthorized() counted_by frbp9006 cite "AK LBR 5074-1(a)"
-
 /// AK LBR 6004-1(c): not later than 14 days after service of an objection to a
 /// sale of property, the parties make the disclosures of FRCP 26(a).
 deadline sale-disclosure-period: 14.days after SaleObjectionServed() counted_by frbp9006 cite "AK LBR 6004-1(c)"
-
 /// AK LBR 6004-1(d)(2): all liquidation proceeds are remitted to the case
 /// trustee within 14 days after the sale.
 deadline sale-proceeds-remittance-period: 14.days after SaleHeld() counted_by frbp9006 cite "AK LBR 6004-1(d)"
-
 /// AK LBR 6004-1(e): within 30 days after a sale, an auctioneer submits to the
 /// trustee the report of sale FRBP 6004(f) requires.
 deadline report-of-sale-period: 30.days after SaleHeld() counted_by frbp9006 cite "AK LBR 6004-1(e)"
-
 /// AK LBR 6004-1(g)(1): unless the claim was noticed with the proposed sale, a
 /// creditor claiming post-petition fees, costs or charges under 11 U.S.C. §
 /// 506(b) against property sold files and serves its application not later than
 /// 30 days after the order approving the sale is entered.
 deadline sale-fee-claim-application-period: 30.days after SaleOrderEntered() counted_by frbp9006 cite "AK LBR 6004-1(g)"
-
 /// AK LBR 6006-1(c): not later than 14 days after an objection to a motion to
 /// assume, reject or assign an executory contract or unexpired lease is filed,
 /// the parties make the disclosures of FRCP 26(a). The motion itself carries 21
 /// days' notice (AK LBR 6006-1(a)(1)).
 deadline contract-disclosure-period: 14.days after ContractObjectionFiled() counted_by frbp9006 cite "AK LBR 6006-1(c)"
-
 /// AK LBR 6008-1(d)(1), (3): an objection to a motion to redeem property is
 /// served and filed not later than 21 days after the motion is transmitted and
 /// served; without one the motion is deemed approved, except as AK LBR
 /// 6008-1(e) requires a hearing.
 deadline redemption-objection-period: 21.days after RedemptionMotionServed() counted_by frbp9006 cite "AK LBR 6008-1(d)"
-
 /// AK LBR 7016-1(e)(1): notice of a pretrial, status or settlement conference
 /// is given to all parties who have appeared in the adversary proceeding not
 /// less than 14 days before the conference.
 deadline adversary-conference-notice-period: 14.days before AdversaryConference() counted_by frbp9006 cite "AK LBR 7016-1(e)"
-
 /// AK LBR 7041-1(c)(1): a party in interest opposing dismissal of a complaint
 /// under 11 U.S.C. § 727 may file a written opposition within 21 days of the
 /// date the notice is served. A proceeding inactive for more than one year may
 /// be dismissed for want of prosecution after notice (AK LBR 7041-1(e)).
 deadline discharge-dismissal-opposition-period: 21.days after DischargeDismissalNoticeServed() counted_by frbp9006 cite "AK LBR 7041-1(c)"
-
 /// AK LBR 7056-1(b): unless the court orders otherwise, an opposition to a
 /// motion for summary judgment, with a statement of genuine issues (AK LBR
 /// 7056-1(a)), is served and filed within 21 days of service of the motion.
 deadline adversary-sj-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006 cite "AK LBR 7056-1(b)"
-
 /// AK LBR 7056-1(b): a reply on a motion for summary judgment, if any, is
 /// served and filed within 14 days after service of the opposition.
 deadline adversary-sj-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frbp9006 cite "AK LBR 7056-1(b)"
-
 /// AK LBR 9010-1: an attorney withdrawing from a debtor without written
 /// consent, or from a chapter 11 debtor, files a noticed motion whose notice
 /// states a withdrawal date not less than 21 days after the notice is served.
 deadline attorney-withdrawal-date-period: 21.days after WithdrawalNoticeServed() counted_by frbp9006 cite "AK LBR 9010-1"
-
 /// AK LBR 9010-1: the notice states that an order permitting withdrawal may be
 /// entered without further notice or hearing unless an objection is filed
 /// within 14 days of service of the notice. The court may dismiss the case of a
 /// non-individual debtor if a new attorney does not appear within 14 days of
 /// the withdrawal.
 deadline attorney-withdrawal-objection-period: 14.days after WithdrawalNoticeServed() counted_by frbp9006 cite "AK LBR 9010-1"
-
 /// AK LBR 9011-1: the original Declaration re: Electronic Filing, signed by the
 /// debtor and the debtor's attorney before the petition is filed, is filed
 /// conventionally within 14 days of the date the related document is
 /// electronically filed.
 deadline declaration-filing-period: 14.days after DocumentElectronicallyFiled() counted_by frbp9006 cite "AK LBR 9011-1"
-
 /// AK LBR 9011-2(a)(1): a motion under 11 U.S.C. § 707(b)(4) is served and
 /// filed no later than 14 days after the order dismissing the case is entered,
 /// unless the court extends the time for cause.
 deadline section-707b4-motion-period: 14.days after CaseDismissed() counted_by frbp9006 cite "AK LBR 9011-2(a)"
-
 /// AK LBR 9011-2(b)(1): a motion under 11 U.S.C. § 707(b)(5) is served and
 /// filed no later than 21 days after the order denying the motion to dismiss is
 /// entered, unless the court extends the time for cause.
 deadline section-707b5-motion-period: 21.days after DismissalDenied() counted_by frbp9006 cite "AK LBR 9011-2(b)"
-
 /// AK LBR 9011-2(a)(2), (b)(2): any opposition to a motion under 11 U.S.C. §
 /// 707(b)(4) or (b)(5) is filed not later than 14 days after the motion is
 /// served.
 deadline sanction-opposition-period: 14.days after SanctionMotionServed() counted_by frbp9006 cite "AK LBR 9011-2(a)"
-
 /// AK LBR 9011-2(a)(3), (b)(3): the moving party may file a reply 7 days after
 /// the opposition is served and filed.
 deadline sanction-reply-period: 7.days after SanctionOppositionServed() counted_by frbp9006 cite "AK LBR 9011-2(a)"
-
 /// AK LBR 9013-1(b): unless the FRBP or these rules specify another time, a
 /// party opposing a motion or application serves and files a written opposition
 /// within 21 days of service of notice of the motion. Failure to file timely
 /// may subject the motion to summary ruling (AK LBR 9013-1(e)); a stipulated
 /// extension of 10 days or less is effective on filing (AK LBR 9013-1(d)(1)).
 deadline motion-opposition-period: 21.days after MotionNoticeServed() counted_by frbp9006 cite "AK LBR 9013-1(b)"
-
 /// AK LBR 9013-1(c)(1): within 7 days after service of an opposition, the
 /// moving party may serve and file a reply.
 deadline motion-reply-period: 7.days after OppositionServed() counted_by frbp9006 cite "AK LBR 9013-1(c)"
-
 /// AK LBR 9013-1(c)(2): for motions under FRCP 12(b), 12(c) and 56, the reply
 /// deadline is 14 days after service of the opposition.
 deadline dispositive-motion-reply-period: 14.days after DispositiveOppositionServed() counted_by frbp9006 cite "AK LBR 9013-1(c)"
-
 /// AK LBR 9013-1(g): if the filing fee for a hard copy filing is not received
 /// within 7 days of filing (3 business days for an electronic filing), the
 /// court may issue an order to show cause why the relief should not be denied.
 deadline hard-copy-fee-period: 7.days after HardCopyFiled() counted_by frbp9006 cite "AK LBR 9013-1(g)"
-
 /// AK LBR 9013-3(b): unless otherwise ordered, a bankruptcy petition preparer
 /// against whom a § 110(i) motion is brought serves and files a response within
 /// 28 days after the motion is served and filed.
 deadline petition-preparer-response-period: 28.days after PreparerMotionFiled() counted_by frbp9006 cite "AK LBR 9013-3(b)"
-
 /// AK LBR 9015-1(b)(1): a statement of consent to a jury trial by a bankruptcy
 /// judge under FRBP 9015(b) is filed not later than 60 days after the later of
 /// the demand and the last answer.
 deadline jury-consent-period: 60.days after JuryDemandOrLastAnswer() counted_by frbp9006 cite "AK LBR 9015-1(b)"
-
 /// AK LBR 9015-2(c)(1): unless the district court orders otherwise, not later
 /// than 120 days after the last responsive pleading is filed the parties lodge
 /// with the Bankruptcy Court a joint status report; the Bankruptcy Court
 /// endorses it within 14 days (AK LBR 9015-2(c)(2)).
 deadline district-jury-status-report-period: 120.days after LastResponsivePleadingFiled() counted_by frbp9006 cite "AK LBR 9015-2(c)"
-
 /// AK LBR 9021-1(c)(2)[C]: where no opposition was filed or no party requested
 /// a hearing, the moving party submits an appropriate order or findings no
 /// later than 14 days after the opposition deadline. A matter not set for
 /// hearing is deemed submitted 7 days after the opposition deadline (AK LBR
 /// 9075-1(c)(1)[A]).
 deadline proposed-order-period: 14.days after OppositionDeadlinePassed() counted_by frbp9006 cite "AK LBR 9021-1(c)"
-
 /// AK LBR 9033-1(c)(2): within 14 days after being served with the bankruptcy
 /// judge's order on a nondispositive matter, a party may serve and file
 /// objections; an untimely objection waives the error.
 deadline nondispositive-order-objection-period: 14.days after NondispositiveOrderServed() counted_by frbp9006 cite "AK LBR 9033-1(c)"
-
 /// AK LBR 9075-1(d)(1), (3): unless otherwise provided, the party requesting a
 /// hearing files and serves written notice of it no later than 7 days before
 /// the hearing; the court may decline to hear the matter otherwise. A motion to
 /// continue is filed at least 2 business days before the proceeding (AK LBR
 /// 9075-1(e)(1)).
 deadline hearing-notice-period: 7.days before MatterHearing() counted_by frbp9006 cite "AK LBR 9075-1(d)"
-
 /// AK LBR 9075-1(g)(1): unless otherwise ordered, not later than 7 days before
 /// the hearing each party presenting evidence complies with FRCP 26(a)(3) and
 /// serves and files its affidavits or declarations and exhibit list; FRCP

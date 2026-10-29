@@ -66,94 +66,63 @@ event ClaimObjectionServed()
 /// LBR 1007-1(d): copies of payment advices and other evidence of payment
 /// received within 60 days before the petition are filed through the
 /// restricted CM/ECF entry at least 7 days prior to the meeting of creditors.
-deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite ?("S.D. Ala. LBR 1007-1(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite ?("S.D. Ala. LBR 1007-1(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 1019-1: if a chapter 13 case is converted to chapter 7, the chapter
 /// 13 trustee files a final report and account within 30 days after all
 /// outstanding checks the trustee issued in the case have cleared.
-deadline conversion-final-report-period: 30.days after TrusteeChecksCleared() counted_by frbp9006 cite ?("S.D. Ala. LBR 1019-1, July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline conversion-final-report-period: 30.days after TrusteeChecksCleared() counted_by frbp9006 cite ?("S.D. Ala. LBR 1019-1, July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 2004-1(c): attendance and production may not be required less than
 /// 21 days after service of the notice, and a request construed under FRBP
 /// 7034 has its time to respond shortened to 21 days.
-deadline examination-production-period: 21.days after ExaminationNoticeServed() counted_by frbp9006 cite ?("S.D. Ala. LBR 2004-1(c), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline examination-production-period: 21.days after ExaminationNoticeServed() counted_by frbp9006 cite ?("S.D. Ala. LBR 2004-1(c), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 2004-1(d): a party in interest who wishes to attend files and serves a
 /// cross-notice of examination at least 14 days in advance of it.
-deadline cross-notice-period: 14.days before ExaminationDate() counted_by frbp9006 cite ?("S.D. Ala. LBR 2004-1(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline cross-notice-period: 14.days before ExaminationDate() counted_by frbp9006 cite ?("S.D. Ala. LBR 2004-1(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 2004-1(e): an interested party may file a motion for protective order,
 /// with a request for expedited hearing, at least 7 days before the date of
 /// the proposed examination or production.
-deadline protective-order-period: 7.days before ExaminationDate() counted_by frbp9006 cite ?("S.D. Ala. LBR 2004-1(e), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline protective-order-period: 7.days before ExaminationDate() counted_by frbp9006 cite ?("S.D. Ala. LBR 2004-1(e), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 3015-2(d): within 14 days of the chapter 13 trustee's recommendation
 /// of confirmation, the debtor files a final plan summary on the court's form.
-deadline final-plan-summary-period: 14.days after ConfirmationRecommended() counted_by frbp9006 cite ?("S.D. Ala. LBR 3015-2(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline final-plan-summary-period: 14.days after ConfirmationRecommended() counted_by frbp9006 cite ?("S.D. Ala. LBR 3015-2(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 3015-2(d): if the trustee files a notice to correct the final plan
 /// summary, debtor's counsel files a corrected summary within 10 days of the
 /// notice.
-deadline corrected-plan-summary-period: 10.days after CorrectionNoticeFiled() counted_by frbp9006 cite ?("S.D. Ala. LBR 3015-2(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline corrected-plan-summary-period: 10.days after CorrectionNoticeFiled() counted_by frbp9006 cite ?("S.D. Ala. LBR 3015-2(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 3015-2(e): the confirmation order's negative notice provision lets a
 /// creditor with an allowed unsecured claim object to the treatment of
 /// unsecured claims within 21 days of the order's entry.
-deadline unsecured-treatment-objection-period: 21.days after ConfirmationOrderEntered() counted_by frbp9006 cite ?("S.D. Ala. LBR 3015-2(e), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline unsecured-treatment-objection-period: 21.days after ConfirmationOrderEntered() counted_by frbp9006 cite ?("S.D. Ala. LBR 3015-2(e), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 4001-1(b): all affidavits or other pleadings on a motion for relief
 /// from stay are filed and served on all adverse parties at least 7 days
 /// prior to the hearing.
-deadline stay-relief-affidavit-period: 7.days before StayReliefHearing() counted_by frbp9006 cite ?("S.D. Ala. LBR 4001-1(b), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline stay-relief-affidavit-period: 7.days before StayReliefHearing() counted_by frbp9006 cite ?("S.D. Ala. LBR 4001-1(b), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 4001-1(c): an attorney seeking foreclosure or repossession files the
 /// fact summary at least 7 days before the hearing on the motion.
-deadline fact-summary-period: 7.days before StayReliefHearing() counted_by frbp9006 cite ?("S.D. Ala. LBR 4001-1(c), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline fact-summary-period: 7.days before StayReliefHearing() counted_by frbp9006 cite ?("S.D. Ala. LBR 4001-1(c), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 4001-2(e): an amended or supplemental proof of claim for postpetition
 /// arrearage or fees authorized by a conditional denial order is filed within
 /// 60 days of the order's entry.
-deadline conditional-denial-claim-period: 60.days after ConditionalDenialEntered() counted_by frbp9006 cite ?("S.D. Ala. LBR 4001-2(e), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline conditional-denial-claim-period: 60.days after ConditionalDenialEntered() counted_by frbp9006 cite ?("S.D. Ala. LBR 4001-2(e), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 4001-2(f): when the denial is conditioned on direct payments to the
 /// creditor, the cure period after notice of default is at least 20 days
 /// from the date of mailing.
-deadline direct-payment-cure-period: 20.days after DirectPaymentDefaultMailed() counted_by frbp9006 cite ?("S.D. Ala. LBR 4001-2(f), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline direct-payment-cure-period: 20.days after DirectPaymentDefaultMailed() counted_by frbp9006 cite ?("S.D. Ala. LBR 4001-2(f), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 4001-2(g): when the denial is conditioned on plan payments to the
 /// trustee, the cure period after notice of default is at least 15 days from
 /// the date of mailing.
-deadline plan-payment-cure-period: 15.days after PlanPaymentDefaultMailed() counted_by frbp9006 cite ?("S.D. Ala. LBR 4001-2(g), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline plan-payment-cure-period: 15.days after PlanPaymentDefaultMailed() counted_by frbp9006 cite ?("S.D. Ala. LBR 4001-2(g), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 4004-1: if the chapter 12 or 13 debtor's motion for discharge and
 /// certifications are not filed within 21 days after the trustee files the
 /// notice of completion, the court may close the case without a discharge.
-deadline discharge-motion-period: 21.days after PlanCompletionNoticeFiled() counted_by frbp9006 cite ?("S.D. Ala. LBR 4004-1, July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline discharge-motion-period: 21.days after PlanCompletionNoticeFiled() counted_by frbp9006 cite ?("S.D. Ala. LBR 4004-1, July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 9007-1(b)(3): the number of days placed in the negative notice legend
 /// for a written objection is 21 days from the date of service, except as
 /// (A) and (B) provide.
-deadline negative-notice-objection-period: 21.days after NegativeNoticeServed() counted_by frbp9006 cite ?("S.D. Ala. LBR 9007-1(b), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
-
+deadline negative-notice-objection-period: 21.days after NegativeNoticeServed() counted_by frbp9006 cite ?("S.D. Ala. LBR 9007-1(b), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 /// LBR 9007-1(b)(3)(B): for an objection to a proof of claim under FRBP 3007
 /// on negative notice, the time to object is 30 days.
-deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006 cite ?("S.D. Ala. LBR 9007-1(b), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
-}
+deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006 cite ?("S.D. Ala. LBR 9007-1(b), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
 
 start matter-served
 

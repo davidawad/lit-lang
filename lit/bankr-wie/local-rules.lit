@@ -138,134 +138,109 @@ event SettlementNoticeFiled()
 /// bill, the two most recent years' federal and state income tax returns, any
 /// marital agreement and other documents the trustee reasonably requests.
 deadline chapter7-trustee-documents-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 1007-2(a)"
-
 /// LBR 1007-2(b): in a chapter 12 or 13 case the debtor provides the trustee,
 /// no later than seven days before the first-scheduled meeting of creditors,
 /// the two most recent years' federal and state income tax returns, any
 /// marital agreement and other documents the trustee reasonably requests.
 deadline chapter13-trustee-documents-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 1007-2(b)"
-
 /// LBR 1016-1(c): a party who wants to be heard on a declaration of the
 /// debtor's death files a request for a hearing within 14 days of its
 /// service; absent objection the court may enter the LBR 1016-1(d) order.
 deadline death-declaration-hearing-period: 14.days after DeathDeclarationServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 1016-1(c)"
-
 /// LBR 2004-1(d)(4): an objection to a motion for a protective order or to
 /// quash or modify a Rule 2004 subpoena is filed no later than seven days
 /// after the motion is filed and addresses the objector's good faith efforts
 /// to confer.
 deadline rule-2004-protective-objection-period: 7.days after ProtectiveMotionFiled() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 2004-1(d)"
-
 /// LBR 2014-1(c)(2), (3): the applicant serves the United States trustee, the
 /// debtor and any committee with notice of a 14-day objection period on an
 /// application to employ a professional; the court may act before it expires
 /// and treats a timely objection as a request for reconsideration.
 deadline employment-objection-period: 14.days after EmploymentApplicationServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 2014-1(c)"
-
 /// LBR 2016-1(b): if the court disallows a noncompliant fee request without a
 /// hearing, the applicant may request a hearing, or file a compliant new
 /// application, within 14 days after the disallowance order.
 deadline fee-disallowance-hearing-period: 14.days after FeeDisallowanceOrdered() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 2016-1(b)"
-
 /// LBR 2016-1(e): unless otherwise ordered, if no one timely objects to an
 /// application for compensation, the applicant files a proposed order
 /// granting it no later than fourteen days after the objection period ends.
 deadline fee-proposed-order-period: 14.days after FeeObjectionPeriodEnded() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 2016-1(e)"
-
 /// LBR 3002-1(b)(1): unless the court orders otherwise, a creditor authorized
 /// by court order to file a supplemental proof of claim files it no later
 /// than 70 days after entry of the order.
 deadline supplemental-claim-order-period: 70.days after SupplementalClaimOrdered() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 3002-1(b)"
-
 /// LBR 3002-1(b)(2): a creditor authorized by stipulation files any
 /// supplemental proof of claim by the date the stipulation provides or, if
 /// none, no later than 70 days after the stipulation is filed.
 deadline supplemental-claim-stipulation-period: 70.days after SupplementalClaimStipulated() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 3002-1(b)"
-
 /// LBR 3007-1(c), (e): the notice of a claim objection states that the court
 /// may grant relief without a hearing if the claimant does not file and serve
 /// a response within 30 days after service of the notice.
 deadline claim-objection-response-period: 30.days after ClaimObjectionNoticeServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 3007-1(c)"
-
 /// LBR 3015-1(d): unless the court orders otherwise, the deadline to object
 /// to confirmation of a chapter 13 plan is the later of 28 days after the
 /// trustee concludes the meeting of creditors or 21 days after the filing of
 /// a § 1323 modification (this limb and the next; the later governs).
 deadline chapter13-confirmation-objection-meeting-period: 28.days after MeetingConcluded() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 3015-1(d)"
-
 /// LBR 3015-1(d): the same objection deadline, measured from the filing of a
 /// § 1323 modification.
 deadline chapter13-confirmation-objection-modification-period: 21.days after PreconfirmationModificationFiled() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 3015-1(d)"
-
 /// LBR 3015-1(e)(2), (3): an objection to a motion to modify a confirmed
 /// chapter 13 plan is filed and served on the movant, the chapter 13 trustee
 /// and the United States trustee no later than 21 days after service of the
 /// motion.
 deadline confirmed-plan-modification-objection-period: 21.days after ConfirmedPlanModificationServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 3015-1(e)"
-
 /// LBR 3022-1(b), (c)(1), 3022-2(b)(1), (c)(1): a chapter 11 motion for a
 /// final decree or for interim closure, and a subchapter V final report or
 /// motion, is served with 28 days' notice of the deadline to object on all
 /// parties served with the plan.
 deadline closing-motion-objection-period: 28.days after ClosingMotionServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 3022-1(b)"
-
 /// LBR 3022-2(c)(1): in a subchapter V case with a plan confirmed under §
 /// 1191(b), no later than 60 days after the final distribution the debtor
 /// files a final report and account and a motion for final decree, and the
 /// subchapter V trustee who received § 1194 funds files a final report.
 deadline subchapter-v-final-report-period: 60.days after FinalDistributionMade() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 3022-2(c)"
-
 /// LBR 4001-1(b)(2): the debtor files notice of every adequate protection
 /// payment made directly to a creditor no later than 28 days after making it.
 deadline direct-adequate-protection-notice-period: 28.days after DirectAdequateProtectionPaid() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 4001-1(b)"
-
 /// LBR 4001-2(a): the notice of a motion for relief from the automatic stay
 /// or the § 1301(a) codebtor stay states that any objection must be filed no
 /// more than 14 days after its service; failure to so notice is cause to deny
 /// the motion.
 deadline stay-relief-objection-period: 14.days after StayReliefNoticeServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 4001-2(a)"
-
 /// LBR 4004-1(a)(1): an individual chapter 7 debtor whose homestead exemption
 /// exceeds the § 522(q)(1) amount files Local Form 2829 not later than 7 days
 /// before the first date set to object to the discharge under § 727.
 deadline homestead-form-period: 7.days before DischargeObjectionDeadline() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 4004-1(a)"
-
 /// LBR 4004-1(a)(2)(A): no more than 30 days after the debtor's final plan
 /// payment to the trustee, the trustee files a certification that the debtor
 /// has made all required payments under the confirmed plan.
 deadline plan-payments-certification-period: 30.days after FinalPlanPaymentMade() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 4004-1(a)"
-
 /// LBR 4004-1(a)(2)(B): unless otherwise ordered, to receive a chapter 12
 /// discharge the debtor files Local Form 2830 within 60 days after the
 /// trustee files the certification of plan payments; if it is not timely
 /// filed the court may close the case without a discharge (LBR 4004-1(b)(1)).
 deadline chapter12-discharge-form-period: 60.days after PaymentsCertificationFiled() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 4004-1(a)"
-
 /// LBR 4004-1(a)(2)(C): unless otherwise ordered, to receive a chapter 13
 /// discharge the debtor files Local Form 2831 within 60 days after the
 /// trustee files the certification of plan payments; if it is not timely
 /// filed the court may close the case without a discharge (LBR 4004-1(b)(1)).
 deadline chapter13-discharge-form-period: 60.days after PaymentsCertificationFiled() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 4004-1(a)"
-
 /// LBR 4004-2(b)(2), (c)(2)(B): a motion for a discharge under § 1141(d)(5)
 /// or § 1192 is served with 28 days' notice of the deadline to object on all
 /// parties served with the plan.
 deadline plan-discharge-objection-period: 28.days after PlanDischargeMotionServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 4004-2(b)"
-
 /// LBR 5011-1(b)(1): unless otherwise ordered, a party opposing a motion to
 /// withdraw the reference files and serves a combined objection and
 /// supporting memorandum no later than 21 days after service of the motion.
 deadline reference-withdrawal-objection-period: 21.days after ReferenceWithdrawalMotionServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 5011-1(b)"
-
 /// LBR 5011-1(b)(2): a party supporting the motion may file notice that it
 /// joins and a supplemental memorandum no later than 14 days after service of
 /// the motion.
 deadline reference-withdrawal-joinder-period: 14.days after ReferenceWithdrawalMotionServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 5011-1(b)"
-
 /// LBR 5011-1(b)(3): the movant and any party that timely joined may reply no
 /// later than 7 days after service of any objection.
 deadline reference-withdrawal-reply-period: 7.days after ReferenceWithdrawalObjectionServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 5011-1(b)"
-
 /// LBR 7041-1(a), (c): a proceeding or motion to deny or revoke a discharge
 /// under §§ 727, 1141, 1144, 1228 or 1328 is dismissed only on motion with 21
 /// days' notice; the court may act without a hearing if no one objects or
@@ -273,67 +248,55 @@ deadline reference-withdrawal-reply-period: 7.days after ReferenceWithdrawalObje
 /// a trustee or creditor who would prosecute it must seek leave by the
 /// objection deadline.
 deadline discharge-dismissal-objection-period: 21.days after DischargeDismissalMotionServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 7041-1(c)"
-
 /// LBR 7056-1(b): unless the court orders otherwise, a motion for summary
 /// judgment or other dispositive relief is filed before the earlier of 30
 /// days after the close of all discovery or 60 days before the initial date
 /// set for an evidentiary hearing on the issue (this limb and the next; the
 /// earlier governs).
 deadline summary-judgment-discovery-period: 30.days after DiscoveryClosed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 7056-1(b)"
-
 /// LBR 7056-1(b): the same motion, measured back from the initial date set
 /// for an evidentiary hearing.
 deadline summary-judgment-hearing-period: 60.days before InitialEvidentiaryHearing() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 7056-1(b)"
-
 /// LBR 7056-1(c)(2): unless the court orders otherwise, a response to a
 /// motion for summary judgment is filed no later than 28 days after the
 /// motion is filed; LBR 7012-2 applies the same to motions under FRBP 7012.
 deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionFiled() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 7056-1(c)"
-
 /// LBR 7056-1(c)(3): no reply is required, but one may be filed no later than
 /// 14 days after the response is filed.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 7056-1(c)"
-
 /// LBR 9006-1(c)(2)(F): the order on a motion to expedite or to shorten or
 /// limit notice requires the movant to serve the underlying request with
 /// notice of the objection period and any hearing date and to file proof of
 /// service no more than one day after the court grants the motion.
 deadline expedited-service-proof-period: 1.days after ExpeditingMotionGranted() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 9006-1(c)"
-
 /// LBR 9013-3(b): unless the court for cause orders otherwise, the notice of
 /// a motion to continue the stay under § 362(c)(3) or impose it under §
 /// 362(c)(4) provides 14 days to object and states the hearing date if a
 /// party timely objects.
 deadline stay-continuation-objection-period: 14.days after StayContinuationNoticeServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 9013-3(b)"
-
 /// LBR 9013-3(d)(1), (2): the movant serves the notice of hearing on a §
 /// 362(c)(3) or (4) motion at least 17 days before the hearing date.
 deadline stay-continuation-hearing-notice-period: 17.days before StayContinuationHearing() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 9013-3(d)"
-
 /// LBR 9013-4(b)(1): unless the court orders otherwise, the notice of a §
 /// 1112(b) motion to convert or dismiss a chapter 11 case states that any
 /// objection must be filed not later than 21 days after its service; on a
 /// timely objection the court hears the motion on the date obtained.
 deadline chapter11-conversion-objection-period: 21.days after ConversionMotionNoticeServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 9013-4(b)"
-
 /// LBR 9014-1(a)(2)(A): the notice of a motion, application or intended
 /// action affords at least 14 days after its service to object, unless the
 /// court orders, or the Code, the FRBP or these rules require, a different
 /// period; absent a timely objection the court may grant the relief without a
 /// hearing.
 deadline motion-objection-period: 14.days after MotionNoticeServed() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 9014-1(a)"
-
 /// LBR 9014-2(a): if no objection or response is timely filed, the movant
 /// files a proposed order within seven days after the objection period
 /// expires; the request is not under advisement until then.
 deadline unopposed-proposed-order-period: 7.days after ObjectionPeriodExpired() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 9014-2(a)"
-
 /// LBR 9014-2(b): unless the court orders otherwise, the movant files a
 /// proposed order after adjudication at a hearing; if none is submitted
 /// within seven days, the court may act adversely, including by an order to
 /// show cause.
 deadline adjudicated-proposed-order-period: 7.days after MotionAdjudicated() counted_by frbp9006 cite "Bankr. E.D. Wis. LBR 9014-2(b)"
-
 /// LBR 9014-2(c): a chapter 13 trustee who files a notice regarding
 /// settlement of a motion to dismiss or an objection to confirmation files a
 /// proposed order giving effect to the compromise no later than seven days

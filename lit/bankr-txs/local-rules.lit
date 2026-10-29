@@ -100,190 +100,155 @@ event RemoteWitnessNoticeFiled()
 /// clerk with a conventionally filed petition and within 7 days of an
 /// electronically filed petition.
 deadline ssn-statement-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 1007-1(b)"
-
 /// Bankr. S.D. Tex. BLR 1009-1(a): no later than two days after filing an
 /// amendment or supplement adding a creditor or changing a creditor's
 /// status, classification or amount, the debtor serves it and the required
 /// notices.
 deadline creditor-amendment-service-period: 2.days after CreditorAmendmentFiled() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 1009-1(a)"
-
 /// Bankr. S.D. Tex. BLR 1017-2(b): responses and requests for hearing on a
 /// chapter 13 trustee's motion to dismiss are filed not later than 21 days
 /// after service; without one the court may dismiss without a hearing.
 deadline trustee-dismissal-response-period: 21.days after TrusteeDismissalMotionServed() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 1017-2(b)"
-
 /// Bankr. S.D. Tex. BLR 1017-2(c)(1): in chapter 13 cases, the Internal
 /// Revenue Service sends a tax transcript to the trustee, the debtor and
 /// debtor's counsel at or before 7 days before the date first set for the §
 /// 341 meeting.
 deadline irs-transcript-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 1017-2(c)"
-
 /// Bankr. S.D. Tex. BLR 1017-2(c)(2): within 7 days after the § 341
 /// meeting, the chapter 13 trustee moves to dismiss any case whose IRS
 /// transcript shows a delinquent priority-period return.
 deadline tax-dismissal-motion-period: 7.days after CreditorsMeetingConcluded() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 1017-2(c)"
-
 /// Bankr. S.D. Tex. BLR 1017-2(c)(3): within 21 days after the trustee
 /// files a motion to dismiss for delinquent tax returns, the debtor files a
 /// response.
 deadline tax-dismissal-response-period: 21.days after TaxDismissalMotionFiled() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 1017-2(c)"
-
 /// Bankr. S.D. Tex. BLR 1019-1: within 14 days after entry of an order
 /// converting a case from one chapter to another, the debtor files
 /// supplemental schedules itemizing changes in estate property and creditor
 /// lists, or a statement that there are none.
 deadline conversion-supplemental-schedules-period: 14.days after CaseConverted() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 1019-1"
-
 /// Bankr. S.D. Tex. BLR 2004-1(d): not fewer than 14 days' written notice
 /// of a proposed Rule 2004 examination, stating its scope and the documents
 /// sought, is given to the examinee, its counsel and affected parties and
 /// filed.
 deadline examination-notice-period: 14.days before ExaminationDate() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 2004-1(d)"
-
 /// Bankr. S.D. Tex. BLR 2006-1: a party seeking to conduct an election of a
 /// trustee gives written notice to the U.S. trustee not later than 7 days
 /// before the commencement of the § 341 meeting.
 deadline trustee-election-notice-period: 7.days before CreditorsMeetingCommenced() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 2006-1"
-
 /// Bankr. S.D. Tex. BLR 2014-1(b)(1): an application to approve a
 /// professional's employment made within 30 days of the commencement of its
 /// services is deemed contemporaneous; a later retroactive application must
 /// explain the delay (b)(2).
 deadline contemporaneous-employment-period: 30.days after ProfessionalCommencedServices() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 2014-1(b)"
-
 /// Bankr. S.D. Tex. BLR 2016-1(c): in a chapter 11 case, a retainer may be
 /// applied to fees and expenses only if no objection has been filed and 21
 /// days have elapsed from the filing and service of a notice for its
 /// distribution.
 deadline retainer-distribution-period: 21.days after RetainerNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 2016-1(c)"
-
 /// Bankr. S.D. Tex. BLR 2016-1(d)(1): a chapter 13 debtor's attorney's
 /// fixed fee agreement is filed within 21 days of the petition date, in the
 /// court's form.
 deadline fixed-fee-agreement-period: 21.days after PetitionFiled() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 2016-1(d)"
-
 /// Bankr. S.D. Tex. BLR 3003-1(a): unless otherwise ordered, in chapter 9
 /// cases and chapter 11 cases other than under Subchapter V, a proof of
 /// claim or interest is timely if filed not later than 90 days after the
 /// first date set for the § 341(a) meeting.
 deadline chapter-11-claims-bar-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 3003-1(a)"
-
 /// Bankr. S.D. Tex. BLR 3003-1(b): in a Subchapter V case, a proof of claim
 /// or interest is timely if filed not later than 70 days after the date of
 /// the order for relief.
 deadline subchapter-v-claims-bar-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 3003-1(b)"
-
 /// Bankr. S.D. Tex. BLR 3007-1(b), (c): an objection to a claim states that
 /// if the claimant does not file a response within 30 days after the
 /// objection was served, the claim may be disallowed without a hearing.
 deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 3007-1(b)"
-
 /// Bankr. S.D. Tex. BLR 3010-1: in a dismissed chapter 13 case, timely
 /// motions for administrative expenses are those filed within 21 days of
 /// the dismissal order; the trustee distributes after they are disposed of.
 deadline dismissal-administrative-expense-period: 21.days after DismissalOrderEntered() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 3010-1"
-
 /// Bankr. S.D. Tex. BLR 3016-2: objections to a motion for conditional
 /// approval of a disclosure statement, given on at least fourteen days'
 /// notice, are filed within fourteen days.
 deadline conditional-approval-objection-period: 14.days after ConditionalApprovalMotionServed() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 3016-2"
-
 /// Bankr. S.D. Tex. BLR 4001-1(a)(3): a party opposing a motion for relief
 /// from the stay who cannot settle files a response and sends a copy to the
 /// movant at least 7 days before the hearing.
 deadline stay-relief-response-period: 7.days before StayReliefHearing() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 4001-1(a)"
-
 /// Bankr. S.D. Tex. BLR 4001-1(b): on a motion under FRBP 4001(b), (c) or
 /// (d), a response is filed and served within 14 days of the date the
 /// motion was served; otherwise the relief may be granted without further
 /// notice.
 deadline stay-agreement-response-period: 14.days after StayAgreementMotionServed() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 4001-1(b)"
-
 /// Bankr. S.D. Tex. BLR 4001-1(e)(1): the chapter 13 vehicle adequate
 /// protection order requires the debtor to enter into a wage order or EFT
 /// order not later than 14 days after the petition date.
 deadline vehicle-wage-order-period: 14.days after PetitionFiled() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 4001-1(e)"
-
 /// Bankr. S.D. Tex. BLR 4001-1(e)(2)(B): after dismissal, debtor's counsel
 /// shares in the distribution only for unpaid fees on an application filed
 /// on or before 21 days after entry of the dismissal order.
 deadline dismissal-counsel-fee-application-period: 21.days after DismissalOrderEntered() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 4001-1(e)"
-
 /// Bankr. S.D. Tex. BLR 4001-1(e)(2)(D): payments to vehicle lien holders
 /// under the adequate protection reserve are made after the expiration of
 /// 14 days of entry of the dismissal order, unless the order is stayed.
 deadline dismissal-distribution-wait-period: 14.days after DismissalOrderEntered() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 4001-1(e)"
-
 /// Bankr. S.D. Tex. BLR 4001-1(e)(3): the debtor or another party in
 /// interest may object to the vehicle adequate protection order not later
 /// than 30 days after its entry, setting the hearing at the next chapter 13
 /// panel after 14 days.
 deadline vehicle-protection-objection-period: 30.days after VehicleProtectionOrderEntered() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 4001-1(e)"
-
 /// Bankr. S.D. Tex. BLR 4001-1(f)(5), (6): on a Consumer Lift Stay Motion
 /// the debtor's response (an agreed order or an answer) is filed at least 7
 /// days before the hearing; otherwise the court may issue a default order.
 deadline consumer-stay-response-period: 7.days before StayReliefHearing() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 4001-1(f)"
-
 /// Bankr. S.D. Tex. BLR 6007-1(c): surrender procedures under paragraph 7
 /// of a chapter 13 plan commence not later than 7 days following entry of
 /// the order approving the plan.
 deadline plan-surrender-commencement-period: 7.days after PlanApprovalOrderEntered() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 6007-1(c)"
-
 /// Bankr. S.D. Tex. BLR 6007-1(d): surrender procedures under paragraph 18
 /// of a confirmed plan commence no earlier than 21 days nor later than 28
 /// days after a Surrender Notice is filed.
 deadline notice-surrender-commencement-period: 28.days after SurrenderNoticeFiled() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 6007-1(d)"
-
 /// Bankr. S.D. Tex. BLR 6007-1(e)(3): when security interest holders
 /// dispute the disposition of surrendered property, the debtor vacates it
 /// within 14 days of receipt of their notice.
 deadline lien-dispute-vacate-period: 14.days after LienDisputeNoticeReceived() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 6007-1(e)"
-
 /// Bankr. S.D. Tex. BLR 6007-1(f)(1): the debtor delivers a surrendered
 /// vehicle to the location in the Delivery Notice within 14 days of its
 /// filing.
 deadline vehicle-delivery-period: 14.days after DeliveryNoticeFiled() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 6007-1(f)"
-
 /// Bankr. S.D. Tex. BLR 6007-1(f): if the vehicle is not in the debtor's
 /// possession or control, the debtor notifies the security interest holder
 /// in writing of the circumstances within 7 days of the filing of the
 /// Delivery Notice.
 deadline vehicle-unavailable-notice-period: 7.days after DeliveryNoticeFiled() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 6007-1(f)"
-
 /// Bankr. S.D. Tex. BLR 6007-1(g): the holder of a security interest makes
 /// reasonable efforts to take possession of other surrendered property
 /// before the expiration of 28 days following confirmation of a plan
 /// providing for surrender under its paragraph 7.
 deadline plan-surrender-retrieval-period: 28.days after PlanApprovalOrderEntered() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 6007-1(g)"
-
 /// Bankr. S.D. Tex. BLR 6007-1(g): the holder makes reasonable efforts to
 /// take possession before the expiration of 28 days following the filing of
 /// a Surrender Notice under paragraph 18 of a confirmed plan.
 deadline notice-surrender-retrieval-period: 28.days after SurrenderNoticeFiled() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 6007-1(g)"
-
 /// Bankr. S.D. Tex. BLR 6007-2: if no objection is filed within 14 days of
 /// the clerk's sending of a chapter 7 trustee's Notice of Proposed
 /// Abandonment and Report of No Distribution, the scheduled property is
 /// abandoned without further order.
 deadline abandonment-objection-period: 14.days after AbandonmentNoticeSent() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 6007-2"
-
 /// Bankr. S.D. Tex. BLR 9013-1(b): except as BLR 9013-1(e) provides, a
 /// pleading seeking an order states that a response must be filed and
 /// served within 21 days of the date it was served; without a timely
 /// response the relief may be granted without further notice.
 deadline motion-response-period: 21.days after MotionServed() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 9013-1(b)"
-
 /// Bankr. S.D. Tex. BLR 9013-1(f): whenever service is required, the
 /// serving party serves the pleading, notice or other document no later
 /// than the next day after it is filed, and files a certificate of service.
 deadline pleading-service-period: 1.days after PleadingFiled() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 9013-1(f)"
-
 /// Bankr. S.D. Tex. BLR 9017-1(c)(2)(B): a Notice of Intent to Call Live
 /// Witness by Telephone and Video Technology is filed at least 7 days
 /// before the scheduled hearing or trial.
 deadline remote-witness-notice-period: 7.days before RemoteWitnessHearing() counted_by frbp9006 cite "Bankr. S.D. Tex. BLR 9017-1(c)"
-
 /// Bankr. S.D. Tex. BLR 9017-1(c)(2)(B): any party in interest may object
 /// to a Notice of Intent to Call Live Witness within 3 days of its filing;
 /// absent a timely objection the witness may testify remotely.

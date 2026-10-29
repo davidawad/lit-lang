@@ -11,62 +11,56 @@ module mo-court-of-appeals-western-district-civil.appeal
 // until the rule text is vendored and read.
 // The outline's decision (Nazeri v. Missouri Valley College) has no
 // reporter text vendored, so it is removed here.
-
 import mo-state-rules.{ MandateIssued, NoticeOfAppealFiled, RecordFiled }
 
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite ?("Mo. Sup. Ct. R. 81.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+state notice-filed: "Notice of appeal filed" by applicant cite ?("Mo. Sup. Ct. R. 81.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Missouri Court of Appeals, Western District: the district's local rules and special rules (unverified) supplement the statewide rules. Notice of appeal under Rule 81.04; period is a hole (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-notice-filed-appealability "Notice filed" -> appealability {
     authority cite ?("Mo. Sup. Ct. R. 81.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
 }
 
-decision appealability: "Appellate jurisdiction check" by court cite ?("Mo. Const. art. V, § 3; Mo. Sup. Ct. R. 81.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision appealability: "Appellate jurisdiction check" by court cite ?("Mo. Const. art. V, § 3; Mo. Sup. Ct. R. 81.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Final judgment and appealable orders (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-appealability-dismissed-jurisdiction "Not an appealable order, or untimely" -> dismissed-jurisdiction {
     authority cite ?("Mo. Const. art. V, § 3; Mo. Sup. Ct. R. 81.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
-  edge-appealability-record "Appealable order" -> record { event NoticeOfAppealFiled()
+  edge-appealability-record "Appealable order" -> record {
+    event NoticeOfAppealFiled()
     authority cite ?("Mo. Const. art. V, § 3; Mo. Sup. Ct. R. 81.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
 }
 
-terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" outcome [loss] cite ?("Mo. Const. art. V, § 3; Mo. Sup. Ct. R. 81.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" outcome [loss] cite ?("Mo. Const. art. V, § 3; Mo. Sup. Ct. R. 81.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Outcome from the applicant's side. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   payoff ?
 }
 
-state record: "Record settled and transmitted" cite ?("Mo. Sup. Ct. R. 81.12; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+state record: "Record settled and transmitted" cite ?("Mo. Sup. Ct. R. 81.12; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Record on appeal (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
-  edge-record-briefing "Record filed" -> briefing { event RecordFiled()
+  edge-record-briefing "Record filed" -> briefing {
+    event RecordFiled()
     authority cite ?("Mo. Sup. Ct. R. 81.12; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
 }
 
-state briefing: "Briefing: opening, response, reply" cite ?("Mo. Sup. Ct. R. 84.04, 84.06; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+state briefing: "Briefing: opening, response, reply" cite ?("Mo. Sup. Ct. R. 84.04, 84.06; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Briefing schedule is a hole. Brief content under Rules 84.04 and 84.06; length is a hole. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-briefing-argument "Briefs complete" -> argument {
     authority cite ?("Mo. Sup. Ct. R. 84.04, 84.06; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
 }
 
-state argument: "Oral argument or submission on briefs" cite ?("Mo. Sup. Ct. R. 84.16; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+state argument: "Oral argument or submission on briefs" cite ?("Mo. Sup. Ct. R. 84.16; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Argument may be waived. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-argument-disposition "Submitted for decision" -> disposition {
     authority cite ?("Mo. Sup. Ct. R. 84.16; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
 }
 
-decision disposition: "Disposition" by court cite ?("Mo. Sup. Ct. R. 84.14; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision disposition: "Disposition" by court cite ?("Mo. Sup. Ct. R. 84.14; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Disposition (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-disposition-affirmed-entered "Affirmed" -> affirmed-entered {
     authority cite ?("Mo. Sup. Ct. R. 84.14; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
@@ -79,21 +73,21 @@ decision disposition: "Disposition" by court cite ?("Mo. Sup. Ct. R. 84.14; not 
   }
 }
 
-decision affirmed-entered: "Affirmed: rehearing election" by applicant cite ?("Mo. Sup. Ct. R. 84.14; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision affirmed-entered: "Affirmed: rehearing election" by applicant cite ?("Mo. Sup. Ct. R. 84.14; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Rehearing and mandate clocks run from entry. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-affirmed-entered-rehearing-affirmed "Rehearing petition filed" -> rehearing-affirmed {
     authority cite ?("Mo. Sup. Ct. R. 84.17; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
-  edge-affirmed-entered-mandate-affirmed "No rehearing petition" -> mandate-affirmed { event MandateIssued()
+  edge-affirmed-entered-mandate-affirmed "No rehearing petition" -> mandate-affirmed {
+    event MandateIssued()
     authority cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
 }
 
-decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite ?("Mo. Sup. Ct. R. 84.17; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite ?("Mo. Sup. Ct. R. 84.17; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Rehearing (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
-  edge-rehearing-affirmed-mandate-affirmed "Rehearing denied" -> mandate-affirmed { event MandateIssued()
+  edge-rehearing-affirmed-mandate-affirmed "Rehearing denied" -> mandate-affirmed {
+    event MandateIssued()
     authority cite ?("Mo. Sup. Ct. R. 84.17; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
   edge-rehearing-affirmed-disposition "Rehearing granted: re-decide" -> disposition {
@@ -101,8 +95,7 @@ decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite ?("Mo. 
   }
 }
 
-decision mandate-affirmed: "Mandate issued: further review election" by applicant cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision mandate-affirmed: "Mandate issued: further review election" by applicant cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Mandate and its effect on the trial court. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-mandate-affirmed-review-affirmed "Further review sought" -> review-affirmed {
     authority cite ?("Mo. Sup. Ct. R. 83.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
@@ -112,8 +105,7 @@ decision mandate-affirmed: "Mandate issued: further review election" by applican
   }
 }
 
-decision review-affirmed: "Further review ruling (affirmed)" by court cite ?("Mo. Sup. Ct. R. 83.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision review-affirmed: "Further review ruling (affirmed)" by court cite ?("Mo. Sup. Ct. R. 83.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Transfer to the Supreme Court under Rule 83.04 (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-review-affirmed-affirmed-final "Review denied" -> affirmed-final {
     authority cite ?("Mo. Sup. Ct. R. 83.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
@@ -123,27 +115,26 @@ decision review-affirmed: "Further review ruling (affirmed)" by court cite ?("Mo
   }
 }
 
-terminal affirmed-final: "Affirmed: final" outcome [loss] cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+terminal affirmed-final: "Affirmed: final" outcome [loss] cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Outcome from the applicant's side. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   payoff ?
 }
 
-decision reversed-entered: "Reversed or vacated: rehearing election" by applicant cite ?("Mo. Sup. Ct. R. 84.14; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision reversed-entered: "Reversed or vacated: rehearing election" by applicant cite ?("Mo. Sup. Ct. R. 84.14; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Rehearing and mandate clocks run from entry. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-reversed-entered-rehearing-reversed "Rehearing petition filed" -> rehearing-reversed {
     authority cite ?("Mo. Sup. Ct. R. 84.17; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
-  edge-reversed-entered-mandate-reversed "No rehearing petition" -> mandate-reversed { event MandateIssued()
+  edge-reversed-entered-mandate-reversed "No rehearing petition" -> mandate-reversed {
+    event MandateIssued()
     authority cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
 }
 
-decision rehearing-reversed: "Rehearing ruling (reversed or vacated)" by court cite ?("Mo. Sup. Ct. R. 84.17; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision rehearing-reversed: "Rehearing ruling (reversed or vacated)" by court cite ?("Mo. Sup. Ct. R. 84.17; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Rehearing (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
-  edge-rehearing-reversed-mandate-reversed "Rehearing denied" -> mandate-reversed { event MandateIssued()
+  edge-rehearing-reversed-mandate-reversed "Rehearing denied" -> mandate-reversed {
+    event MandateIssued()
     authority cite ?("Mo. Sup. Ct. R. 84.17; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
   edge-rehearing-reversed-disposition "Rehearing granted: re-decide" -> disposition {
@@ -151,8 +142,7 @@ decision rehearing-reversed: "Rehearing ruling (reversed or vacated)" by court c
   }
 }
 
-decision mandate-reversed: "Mandate issued: further review election" by applicant cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision mandate-reversed: "Mandate issued: further review election" by applicant cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Mandate and its effect on the trial court. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-mandate-reversed-review-reversed "Further review sought" -> review-reversed {
     authority cite ?("Mo. Sup. Ct. R. 83.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
@@ -162,8 +152,7 @@ decision mandate-reversed: "Mandate issued: further review election" by applican
   }
 }
 
-decision review-reversed: "Further review ruling (reversed or vacated)" by court cite ?("Mo. Sup. Ct. R. 83.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision review-reversed: "Further review ruling (reversed or vacated)" by court cite ?("Mo. Sup. Ct. R. 83.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Transfer to the Supreme Court under Rule 83.04 (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-review-reversed-reversed-final "Review denied" -> reversed-final {
     authority cite ?("Mo. Sup. Ct. R. 83.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
@@ -173,27 +162,26 @@ decision review-reversed: "Further review ruling (reversed or vacated)" by court
   }
 }
 
-terminal reversed-final: "Reversed or vacated: final" outcome [win] cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+terminal reversed-final: "Reversed or vacated: final" outcome [win] cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Outcome from the applicant's side. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   payoff ?
 }
 
-decision remanded-entered: "Remanded: rehearing election" by applicant cite ?("Mo. Sup. Ct. R. 84.14; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision remanded-entered: "Remanded: rehearing election" by applicant cite ?("Mo. Sup. Ct. R. 84.14; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Rehearing and mandate clocks run from entry. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-remanded-entered-rehearing-remanded "Rehearing petition filed" -> rehearing-remanded {
     authority cite ?("Mo. Sup. Ct. R. 84.17; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
-  edge-remanded-entered-mandate-remanded "No rehearing petition" -> mandate-remanded { event MandateIssued()
+  edge-remanded-entered-mandate-remanded "No rehearing petition" -> mandate-remanded {
+    event MandateIssued()
     authority cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
 }
 
-decision rehearing-remanded: "Rehearing ruling (remanded)" by court cite ?("Mo. Sup. Ct. R. 84.17; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision rehearing-remanded: "Rehearing ruling (remanded)" by court cite ?("Mo. Sup. Ct. R. 84.17; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Rehearing (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
-  edge-rehearing-remanded-mandate-remanded "Rehearing denied" -> mandate-remanded { event MandateIssued()
+  edge-rehearing-remanded-mandate-remanded "Rehearing denied" -> mandate-remanded {
+    event MandateIssued()
     authority cite ?("Mo. Sup. Ct. R. 84.17; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
   }
   edge-rehearing-remanded-disposition "Rehearing granted: re-decide" -> disposition {
@@ -201,8 +189,7 @@ decision rehearing-remanded: "Rehearing ruling (remanded)" by court cite ?("Mo. 
   }
 }
 
-decision mandate-remanded: "Mandate issued: further review election" by applicant cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision mandate-remanded: "Mandate issued: further review election" by applicant cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Mandate and its effect on the trial court. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-mandate-remanded-review-remanded "Further review sought" -> review-remanded {
     authority cite ?("Mo. Sup. Ct. R. 83.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
@@ -212,8 +199,7 @@ decision mandate-remanded: "Mandate issued: further review election" by applican
   }
 }
 
-decision review-remanded: "Further review ruling (remanded)" by court cite ?("Mo. Sup. Ct. R. 83.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+decision review-remanded: "Further review ruling (remanded)" by court cite ?("Mo. Sup. Ct. R. 83.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Transfer to the Supreme Court under Rule 83.04 (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-review-remanded-remanded-final "Review denied" -> remanded-final {
     authority cite ?("Mo. Sup. Ct. R. 83.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
@@ -223,8 +209,7 @@ decision review-remanded: "Further review ruling (remanded)" by court cite ?("Mo
   }
 }
 
-terminal remanded-final: "Remanded: final" cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
-{
+terminal remanded-final: "Remanded: final" cite ?("Mo. Sup. Ct. R. 84.22-84.24; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Outcome from the applicant's side. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   payoff ?
 }

@@ -102,159 +102,126 @@ limit brief { pages <= 25 cite "W.D.N.C. LBR 9013-2(a)" } cite "W.D.N.C. LBR 901
 /// proponent files a certificate of service within 7 days of serving the
 /// plan, disclosure statement, orders and ballots.
 deadline plan-papers-certificate-period: 7.days after Chapter11PlanPapersServed() counted_by frbp9006 cite "W.D.N.C. LBR 2002-1(e)"
-
 /// LBR 2002-1(f): within 7 days of filing a chapter 13 plan or amended
 /// plan, the debtor serves it on all parties in interest.
 deadline chapter13-plan-service-period: 7.days after Chapter13PlanFiled() counted_by frbp9006 cite "W.D.N.C. LBR 2002-1(f)"
-
 /// LBR 2002-3(b): if the plan is served as LBR 2002-1(f) requires,
 /// objections to confirmation are filed no later than 14 days following the
 /// conclusion of the § 341 meeting.
 deadline chapter13-confirmation-objection-period: 14.days after MeetingConcluded() counted_by frbp9006 cite "W.D.N.C. LBR 2002-3(b)"
-
 /// LBR 2003-1(b): a debtor should move to continue a § 341 meeting not
 /// later than 7 days before it.
 deadline meeting-continuance-motion-period: 7.days before ScheduledMeetingDate() counted_by frbp9006 cite "W.D.N.C. LBR 2003-1(b)"
-
 /// LBR 2003-1(d): a debtor who granted a power of attorney must attend the
 /// § 341 meeting unless waived on a no-protest motion filed no later than 7
 /// days after the petition.
 deadline attendance-waiver-motion-period: 7.days after PetitionFiled() counted_by frbp9006 cite "W.D.N.C. LBR 2003-1(d)"
-
 /// LBR 2016-1(c): in a chapter 11 case fees through confirmation should be
 /// applied for within 30 days of the end of the month in which the
 /// confirmation order is entered, unless the plan or order provides
 /// otherwise.
 deadline confirmation-fees-period: 30.days after ConfirmationMonthEnded() counted_by frbp9006 cite "W.D.N.C. LBR 2016-1(c)"
-
 /// LBR 2016-2(c)(2)(B): substituted counsel who must perform base-fee
 /// services files a motion within 30 days of entering the case.
 deadline substitute-counsel-base-fee-motion-period: 30.days after SubstituteCounselEntered() counted_by frbp9006 cite "W.D.N.C. LBR 2016-2(c)(2)(B)"
-
 /// LBR 2016-2(e)(1): an attorney who takes a deposit or agreement above the
 /// presumptive base fee applies for approval within 30 days after the
 /// petition.
 deadline excess-fee-application-period: 30.days after PetitionFiled() counted_by frbp9006 cite "W.D.N.C. LBR 2016-2(e)(1)"
-
 /// LBR 2016-2(e)(2): the debtor and counsel elect time-and-expense fees
 /// instead of the standard fees within 30 days after the petition, with
 /// notice and a hearing.
 deadline hourly-fee-election-period: 30.days after PetitionFiled() counted_by frbp9006 cite "W.D.N.C. LBR 2016-2(e)(2)"
-
 /// LBR 3001-1(c)(1): in a subchapter V case a proof of claim or interest is
 /// timely if filed within 70 days after the order for relief, unless the
 /// court orders otherwise.
 deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "W.D.N.C. LBR 3001-1(c)(1)"
-
 /// LBR 3001-1(c)(2): in a standard chapter 11 case, entities other than
 /// governmental units file within 90 days after the order for relief.
 deadline chapter11-claim-period: 90.days after OrderForReliefEntered() counted_by frbp9006 cite "W.D.N.C. LBR 3001-1(c)(2)"
-
 /// LBR 3003-1(c)(1): a debtor seeking to be excused from conduit mortgage
 /// payments files a motion and notice of hearing within 7 days after the
 /// petition.
 deadline conduit-exception-motion-period: 7.days after PetitionFiled() counted_by frbp9006 cite "W.D.N.C. LBR 3003-1(c)(1)"
-
 /// LBR 3003-1(e)(1): a conduit creditor objecting to the commencement date
 /// the confirmation order designates files its objection within 14 days
 /// following entry of the order.
 deadline conduit-commencement-objection-period: 14.days after ConfirmationOrderEntered() counted_by frbp9006 cite "W.D.N.C. LBR 3003-1(e)(1)"
-
 /// LBR 3003-1(e)(3): at least 21 days before a change in the conduit
 /// creditor's or servicer's name or disbursement address takes effect, it
 /// files Local Form 12 or an amended proof of claim.
 deadline conduit-change-notice-period: 21.days before ConduitChangeEffective() counted_by frbp9006 cite "W.D.N.C. LBR 3003-1(e)(3)"
-
 /// LBR 3011-1(c): a claimant serves Local Form 5 on the U.S. Attorney, the
 /// Bankruptcy Administrator, the trustee and the debtor at least 14 days
 /// before the hearing.
 deadline unclaimed-funds-service-period: 14.days before UnclaimedFundsHearingDate() counted_by frbp9006 cite "W.D.N.C. LBR 3011-1(c)"
-
 /// LBR 3015-2(b): a party objecting to the chapter 13 trustee's proposed
 /// disbursement to the debtor has 28 days from the filing of the notice to
 /// object and request a hearing.
 deadline converted-funds-objection-period: 28.days after ConvertedFundsNoticeFiled() counted_by frbp9006 cite "W.D.N.C. LBR 3015-2(b)"
-
 /// LBR 4001-1(a)(7): a debtor disputing the payment history serves its own
 /// post-petition payment history (Local Form 11) at least 7 days before the
 /// initial hearing.
 deadline debtor-payment-history-period: 7.days before InitialStayHearingDate() counted_by frbp9006 cite "W.D.N.C. LBR 4001-1(a)(7)"
-
 /// LBR 4001-1(d)(4): a proposed stay-relief order states that the creditor
 /// has 120 days from the property's removal from the stay to file a
 /// deficiency claim.
 deadline personal-property-deficiency-claim-period: 120.days after StayProtectionRemoved() counted_by frbp9006 cite "W.D.N.C. LBR 4001-1(d)(4)"
-
 /// LBR 4001-1(d)(4)(A): where the property is real estate or manufactured
 /// housing the deficiency-claim period is 180 days.
 deadline real-property-deficiency-claim-period: 180.days after StayProtectionRemoved() counted_by frbp9006 cite "W.D.N.C. LBR 4001-1(d)(4)(A)"
-
 /// LBR 4001-1(e)(5): a secured creditor gives the debtor and debtor's
 /// attorney written notice of an escrow payment change at least 30 days
 /// before the changed payment is due.
 deadline escrow-change-notice-period: 30.days before PaymentChangeDue() counted_by frbp9006 cite "W.D.N.C. LBR 4001-1(e)(5)"
-
 /// LBR 4001-1(e)(6): on a non-escrowed loan a creditor gives at least 30
 /// days' written notice before paying taxes or insurance, unless it would
 /// suffer an immediate loss.
 deadline advance-notice-period: 30.days before TaxInsuranceAdvance() counted_by frbp9006 cite "W.D.N.C. LBR 4001-1(e)(6)"
-
 /// LBR 4002-1(c)(1): a chapter 7 debtor complies with the trustee's request
 /// for turnover or production within 14 days of the request.
 deadline trustee-request-period: 14.days after TrusteeRequestMade() counted_by frbp9006 cite "W.D.N.C. LBR 4002-1(c)(1)"
-
 /// LBR 4003-1(b): an amendment to the exemption election announced at the §
 /// 341 meeting is timely if filed in writing no later than 14 days after
 /// the meeting concludes.
 deadline exemption-amendment-period: 14.days after MeetingConcluded() counted_by frbp9006 cite "W.D.N.C. LBR 4003-1(b)"
-
 /// LBR 4004-1(b): each chapter 13 debtor files and serves Local Form 8, the
 /// motion for entry of discharge, within 60 days of the filing of the
 /// trustee's report.
 deadline discharge-motion-period: 60.days after TrusteeFinalReportFiled() counted_by frbp9006 cite "W.D.N.C. LBR 4004-1(b)"
-
 /// LBR 7007-1(b): a party objecting to final orders or judgments by the
 /// court moves for a determination not later than 14 days before the
 /// earlier of the pre-trial conference or the dispositive-motion hearing,
 /// or consents.
 deadline final-order-objection-period: 14.days before PretrialOrDispositiveHearingDate() counted_by frbp9006 cite "W.D.N.C. LBR 7007-1(b)"
-
 /// LBR 7041-1(a)(1): except on a complaint objecting to discharge, an
 /// adversary proceeding may be dismissed for lack of prosecution if no
 /// service is made and certified within 30 days after the complaint.
 deadline adversary-service-prosecution-period: 30.days after AdversaryComplaintFiled() counted_by frbp9006 cite "W.D.N.C. LBR 7041-1(a)(1)"
-
 /// LBR 7041-1(a)(2): it may be dismissed if no responsive pleading is filed
 /// and the plaintiff has not moved for default within 30 days after the
 /// time to respond expires.
 deadline default-prosecution-period: 30.days after ResponsivePleadingTimeExpired() counted_by frbp9006 cite "W.D.N.C. LBR 7041-1(a)(2)"
-
 /// LBR 7041-1(a)(3): it may be dismissed where there has been no activity
 /// for four months.
 deadline inactivity-prosecution-period: 4.months after LastAdversaryActivity() counted_by frbp9006 cite "W.D.N.C. LBR 7041-1(a)(3)"
-
 /// LBR 9013-1(d): scheduling and evidentiary issues are raised to the court
 /// no later than one week before a special setting.
 deadline special-setting-issues-period: 1.weeks before SpecialSettingDate() counted_by frbp9006 cite "W.D.N.C. LBR 9013-1(d)"
-
 /// LBR 9013-1(e): a hearing on a no-protest motion is requested by filing
 /// and serving a response within 14 days, or the longer period specified,
 /// of service of the notice.
 deadline no-protest-response-period: 14.days after NoProtestNoticeServed() counted_by frbp9006 cite "W.D.N.C. LBR 9013-1(e)"
-
 /// LBR 9013-1(f): any party may request a hearing or reconsideration of ex
 /// parte relief within 14 days of service of notice of its entry.
 deadline ex-parte-reconsideration-period: 14.days after ExParteEntryNoticeServed() counted_by frbp9006 cite "W.D.N.C. LBR 9013-1(f)"
-
 /// LBR 9019-2(c)(3): the mediator issues the report of outcome within 7
 /// days of the conclusion of the mediated settlement conference.
 deadline mediator-report-period: 7.days after MediationConcluded() counted_by frbp9006 cite "W.D.N.C. LBR 9019-2(c)(3)"
-
 /// LBR 9029-1(f): arrangements to appear at a meeting of creditors by
 /// telephone or video are made with the trustee at least 30 days before the
 /// meeting, unless the trustee approves a shorter period.
 deadline remote-meeting-arrangement-period: 30.days before ScheduledMeetingDate() counted_by frbp9006 cite "W.D.N.C. LBR 9029-1(f)"
-
 /// LBR 9037-1(d): before docketing a transcript the court allows 7 days
 /// after its notice for requests to redact personal identifiers.
 deadline transcript-redaction-request-period: 7.days after TranscriptNoticeGiven() counted_by frbp9006 cite "W.D.N.C. LBR 9037-1(d)"

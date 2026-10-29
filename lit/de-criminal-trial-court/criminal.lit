@@ -95,9 +95,7 @@ decision plea-decision: "Plea or trial" by applicant cite "Del. Super. Ct. Crim.
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Del. Super. Ct. Crim. R. 11(c)"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "Del. Super. Ct. Crim. R. 23(a)"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Del. Super. Ct. Crim. R. 23(a)" }
   edge-plea-decision-nolle "Attorney General files a dismissal" -> dismissed {
     authority cite "Del. Super. Ct. Crim. R. 48(a)"
   }
@@ -142,7 +140,9 @@ decision judgment: "Judgment of conviction" by applicant cite "Del. Super. Ct. C
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
     authority cite "Del. Supr. Ct. R. 6(a)"
   }
-  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Del. Supr. Ct. R. 6(a)" }
+  edge-judgment-no-appeal "No appeal" -> conviction-final {
+    authority cite "Del. Supr. Ct. R. 6(a)"
+  }
 }
 
 terminal acquitted: "Acquitted" outcome [win] cite "Del. Super. Ct. Crim. R. 29"

@@ -61,9 +61,7 @@ state charged: "Accusation (acusación)" by office cite "R. P. Crim. Regla 34"
 state arraignment: "Arraignment and plea of not guilty" by applicant cite "R. P. Crim. Regla 52"
 {
   note "The accusation is read to the defendant as Reglas 52 to 58 provide, and the defendant answers it as Regla 61 provides; pleas (alegaciones) are governed by Regla 68 and following."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "R. P. Crim. Regla 95"
-  }
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "R. P. Crim. Regla 95" }
 }
 
 state discovery: "Discovery and motions to dismiss" by applicant cite "R. P. Crim. Regla 63"
@@ -75,9 +73,7 @@ state discovery: "Discovery and motions to dismiss" by applicant cite "R. P. Cri
   edge-discovery-speedy "Speedy-trial motion to dismiss" -> motions-ruling {
     authority cite "R. P. Crim. Regla 64(n)"
   }
-  edge-discovery-plea "Plea negotiations" -> plea-decision {
-    authority cite "R. P. Crim. Regla 68"
-  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "R. P. Crim. Regla 68" }
 }
 
 decision motions-ruling: "Ruling on motions to dismiss" by court cite "R. P. Crim. Regla 64"
@@ -100,9 +96,7 @@ decision plea-decision: "Plea or trial" by applicant cite "R. P. Crim. Regla 68"
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "R. P. Crim. Regla 68"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "R. P. Crim. Regla 111"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "R. P. Crim. Regla 111" }
 }
 
 decision trial: "Verdict or judgment (fallo)" by court cite "R. P. Crim. Regla 145"
@@ -119,9 +113,7 @@ decision trial: "Verdict or judgment (fallo)" by court cite "R. P. Crim. Regla 1
 decision post-trial: "New-trial motion" by court cite "R. P. Crim. Regla 188"
 {
   note "A new trial is granted on the grounds of Regla 188 (newly discovered evidence, a verdict reached by chance, a verdict contrary to law or the evidence, misconduct, an unobtainable transcript) and as Regla 187 provides; a new trial on newly learned facts lies under Regla 192. The times for these motions are not stated here (currency unconfirmed). A timely new-trial motion under Reglas 188(e) and 192, or a reconsideration motion under Regla 194, extends the time to appeal (Regl. T.A. R. 23(A))."
-  edge-post-trial-new-trial "New trial granted" -> trial {
-    authority cite "R. P. Crim. Regla 188"
-  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "R. P. Crim. Regla 188" }
   edge-post-trial-denied "Motion denied; sentencing" -> sentencing {
     authority cite "R. P. Crim. Regla 162"
   }
@@ -138,9 +130,7 @@ state sentencing: "Presentence report and sentence" by court cite "R. P. Crim. R
 decision judgment: "Judgment of conviction" by applicant cite "R. P. Crim. Regla 193"
 {
   note "The defendant may appeal a final judgment to the Tribunal de Apelaciones, except that a conviction on a guilty plea is reviewable only by discretionary certiorari (R. P. Crim. Regla 193). The appeal of a final judgment in a criminal case is filed within thirty days after the judgment is pronounced; the term is jurisdictional, and a timely new-trial motion under Reglas 188(e) and 192 or a reconsideration motion under Regla 194 extends it to thirty days after notice of the order disposing of the motion (Regl. T.A. R. 23(A)). The prosecutor and the Solicitor General are notified within the same thirty days, a term of strict compliance (Regl. T.A. R. 23(B)). Correction or modification of sentence lies under Regla 185, and post-sentence relief under Regla 192.1; bail on appeal under Regla 198. lit/core has no counting rule for the Puerto Rico rules, so the 30-day period is not encoded as a counted deadline."
-  edge-judgment-appeal "Appeal filed" -> appeal-taken {
-    authority cite "Regl. T.A. R. 23"
-  }
+  edge-judgment-appeal "Appeal filed" -> appeal-taken { authority cite "Regl. T.A. R. 23" }
   edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Regl. T.A. R. 23" }
 }
 

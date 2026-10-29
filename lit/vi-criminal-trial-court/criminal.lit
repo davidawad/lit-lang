@@ -40,17 +40,13 @@ decision initial-appearance: "Probable cause and bail at the initial appearance"
 state charged: "Information" by office cite "V.I. R. Crim. P. 3"
 {
   note "The information is a plain, concise and definite written statement of the essential facts constituting the offense, citing the provision of law allegedly violated; the court may strike surplusage, permit amendment before verdict unless an additional offense is charged or a substantial right prejudiced, and direct a bill of particulars (V.I. R. Crim. P. 3(b)-(e)). Joinder is governed by Rule 8."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "V.I. R. Crim. P. 10(a)"
-  }
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "V.I. R. Crim. P. 10(a)" }
 }
 
 state arraignment: "Arraignment" by applicant cite "V.I. R. Crim. P. 10"
 {
   note "Arraignment is conducted in open court: counsel enters an appearance, the court ensures the defendant has a copy of the information, reads it or states its substance unless reading is waived, and asks the defendant to plead (V.I. R. Crim. P. 10(a)); appearance may be waived in a written waiver signed by the defendant and counsel that affirms a plea of not guilty, and video teleconferencing may be used (V.I. R. Crim. P. 10(b), (c)). A defendant who refuses to plead is entered as pleading not guilty (V.I. R. Crim. P. 11(a)(4))."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "V.I. R. Crim. P. 16"
-  }
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "V.I. R. Crim. P. 16" }
 }
 
 state discovery: "Discovery and pretrial motions" by applicant cite "V.I. R. Crim. P. 12(b)"
@@ -62,9 +58,7 @@ state discovery: "Discovery and pretrial motions" by applicant cite "V.I. R. Cri
   edge-discovery-speedy "Motion to dismiss for unnecessary delay" -> motions-ruling {
     authority cite "V.I. R. Crim. P. 48(b)"
   }
-  edge-discovery-plea "Plea negotiations" -> plea-decision {
-    authority cite "V.I. R. Crim. P. 11"
-  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "V.I. R. Crim. P. 11" }
 }
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite "V.I. R. Crim. P. 12"
@@ -87,9 +81,7 @@ decision plea-decision: "Plea or trial" by applicant cite "V.I. R. Crim. P. 11(a
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "V.I. R. Crim. P. 11(b)"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "V.I. R. Crim. P. 23(a)"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "V.I. R. Crim. P. 23(a)" }
   edge-plea-decision-nolle "Government dismisses or enters a nolle prosequi" -> dismissed {
     authority cite "V.I. R. Crim. P. 48(a)"
   }
@@ -112,9 +104,7 @@ decision post-trial: "Post-trial motions" by court cite "V.I. R. Crim. P. 33(a)"
   edge-post-trial-acquittal "Judgment of acquittal or arrest of judgment" -> acquitted {
     authority cite "V.I. R. Crim. P. 29(c)"
   }
-  edge-post-trial-new-trial "New trial granted" -> trial {
-    authority cite "V.I. R. Crim. P. 33(a)"
-  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "V.I. R. Crim. P. 33(a)" }
   edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
     authority cite "V.I. R. Crim. P. 32(b)"
   }
@@ -152,7 +142,6 @@ terminal appeal-taken: "Appeal taken" outcome [appeal] cite "V.I. R. App. P. 5(b
   note "The appeal continues before the Supreme Court of the Virgin Islands under its Rules of Appellate Procedure (lit/vi-supreme-civil; sources/vi-supreme-civil/)."
 }
 
-terminal conviction-final: "Conviction final" outcome [loss] cite ?("Virgin Islands Code, Title 5, habeas corpus provisions (collateral attack; not vendored)")
-{
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("Virgin Islands Code, Title 5, habeas corpus provisions (collateral attack; not vendored)") {
   note "Outcome from the defendant's side. Local collateral attack by habeas corpus under Title 5 of the Virgin Islands Code is not vendored; federal habeas belongs to lit/habeas."
 }

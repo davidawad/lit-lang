@@ -93,9 +93,7 @@ decision plea-decision: "Plea or trial" by applicant cite "R.I. Super. R. Crim. 
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "R.I. Super. R. Crim. P. 11"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "R.I. Super. R. Crim. P. 23(a)"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "R.I. Super. R. Crim. P. 23(a)" }
   edge-plea-decision-dismissed "State files a dismissal, or diversion completed" -> dismissed {
     authority cite "R.I. Super. R. Crim. P. 48"
   }
@@ -140,7 +138,9 @@ decision judgment: "Judgment of conviction" by applicant cite "R.I. Super. R. Cr
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
     authority cite "R.I. Sup. Ct. R. App. P. 4(b)"
   }
-  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "R.I. Sup. Ct. R. App. P. 4(b)" }
+  edge-judgment-no-appeal "No appeal" -> conviction-final {
+    authority cite "R.I. Sup. Ct. R. App. P. 4(b)"
+  }
 }
 
 terminal acquitted: "Acquitted" outcome [win] cite "R.I. Super. R. Crim. P. 29"
@@ -158,7 +158,6 @@ terminal appeal-taken: "Appeal taken" outcome [appeal] cite "R.I. Sup. Ct. R. Ap
   note "The appeal continues before the Rhode Island Supreme Court under Article I of its rules (sources/ri-supreme/)."
 }
 
-terminal conviction-final: "Conviction final" outcome [loss] cite ?("R.I. Gen. Laws § 10-9.1-1 (post-conviction relief; not vendored)")
-{
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("R.I. Gen. Laws § 10-9.1-1 (post-conviction relief; not vendored)") {
   note "Outcome from the defendant's side. Post-conviction relief under R.I. Gen. Laws ch. 10-9.1 is not vendored; federal habeas belongs to lit/habeas."
 }

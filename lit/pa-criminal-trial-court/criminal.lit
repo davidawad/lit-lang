@@ -34,9 +34,7 @@ decision initial-appearance: "Preliminary arraignment and bail" by court cite "P
 decision probable-cause: "Preliminary hearing or indicting grand jury" by court cite "Pa.R.Crim.P. 543"
 {
   note "At the preliminary hearing the defendant may be represented, cross-examine, call witnesses and testify (Pa.R.Crim.P. 542(C)). If the Commonwealth establishes a prima facie case the issuing authority holds the defendant for court, otherwise it discharges the defendant (Pa.R.Crim.P. 543(B)). On a showing of witness intimidation, the attorney for the Commonwealth may instead present the matter to an indicting grand jury without a preliminary hearing (Pa.R.Crim.P. 556.2)."
-  edge-probable-cause-charged "Held for court" -> charged {
-    authority cite "Pa.R.Crim.P. 543(B)"
-  }
+  edge-probable-cause-charged "Held for court" -> charged { authority cite "Pa.R.Crim.P. 543(B)" }
   edge-probable-cause-none "No prima facie case; discharged" -> dismissed {
     authority cite "Pa.R.Crim.P. 543(B)"
   }
@@ -45,17 +43,13 @@ decision probable-cause: "Preliminary hearing or indicting grand jury" by court 
 state charged: "Information" by office cite "Pa.R.Crim.P. 560"
 {
   note "After the defendant is held for court or indicted, the attorney for the Commonwealth prepares an information and files it with the court of common pleas (Pa.R.Crim.P. 560(A)). Trial in a court case commences within 365 days from the filing of the written complaint, counting only delay caused by the Commonwealth's want of due diligence; a defendant entitled to bail is not held in pretrial incarceration more than 180 days from the complaint, counting all delay not caused by the defendant (Pa.R.Crim.P. 600(A)(2)(a), (B)(1), (C))."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "Pa.R.Crim.P. 571(A)"
-  }
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Pa.R.Crim.P. 571(A)" }
 }
 
 state arraignment: "Arraignment" by applicant cite "Pa.R.Crim.P. 571"
 {
   note "Unless local rule provides otherwise or the court postpones it for cause, arraignment takes place no later than 10 days after the information is filed (Pa.R.Crim.P. 571(A)). The defendant is advised of the right to counsel, the charges, the right to file motions and their time limits, and the effect of failing to appear; appearance may be waived on the conditions of Pa.R.Crim.P. 571(D)."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "Pa.R.Crim.P. 573"
-  }
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Pa.R.Crim.P. 573" }
 }
 
 state discovery: "Discovery and the omnibus pretrial motion" by applicant cite "Pa.R.Crim.P. 578"
@@ -64,12 +58,8 @@ state discovery: "Discovery and the omnibus pretrial motion" by applicant cite "
   edge-discovery-motions "Omnibus pretrial motion filed" -> motions-ruling {
     authority cite "Pa.R.Crim.P. 579(A)"
   }
-  edge-discovery-speedy "Rule 600 motion" -> motions-ruling {
-    authority cite "Pa.R.Crim.P. 600(D)"
-  }
-  edge-discovery-plea "Plea negotiations" -> plea-decision {
-    authority cite "Pa.R.Crim.P. 590(B)"
-  }
+  edge-discovery-speedy "Rule 600 motion" -> motions-ruling { authority cite "Pa.R.Crim.P. 600(D)" }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "Pa.R.Crim.P. 590(B)" }
 }
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite "Pa.R.Crim.P. 600(D)"
@@ -92,12 +82,8 @@ decision plea-decision: "Plea or trial" by applicant cite "Pa.R.Crim.P. 590"
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Pa.R.Crim.P. 590(A)"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "Pa.R.Crim.P. 600(A)"
-  }
-  edge-plea-decision-nolle "Nolle prosequi" -> dismissed {
-    authority cite "Pa.R.Crim.P. 585(A)"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Pa.R.Crim.P. 600(A)" }
+  edge-plea-decision-nolle "Nolle prosequi" -> dismissed { authority cite "Pa.R.Crim.P. 585(A)" }
 }
 
 decision trial: "Verdict" by court cite "Pa.R.Crim.P. 648"
@@ -106,9 +92,7 @@ decision trial: "Verdict" by court cite "Pa.R.Crim.P. 648"
   edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
     authority cite "Pa.R.Crim.P. 606(A)"
   }
-  edge-trial-guilty "Guilty; sentencing" -> sentencing {
-    authority cite "Pa.R.Crim.P. 704(A)"
-  }
+  edge-trial-guilty "Guilty; sentencing" -> sentencing { authority cite "Pa.R.Crim.P. 704(A)" }
 }
 
 state sentencing: "Sentencing" by court cite "Pa.R.Crim.P. 704"
@@ -125,9 +109,7 @@ decision post-sentence: "Post-sentence motion" by court cite "Pa.R.Crim.P. 720(B
   edge-post-sentence-acquittal "Judgment of acquittal or arrest of judgment" -> acquitted {
     authority cite "Pa.R.Crim.P. 720(B)"
   }
-  edge-post-sentence-new-trial "New trial granted" -> trial {
-    authority cite "Pa.R.Crim.P. 720(B)"
-  }
+  edge-post-sentence-new-trial "New trial granted" -> trial { authority cite "Pa.R.Crim.P. 720(B)" }
   edge-post-sentence-denied "Motion denied, withdrawn, or not filed" -> judgment {
     authority cite "Pa.R.Crim.P. 720(A)"
   }
@@ -136,9 +118,7 @@ decision post-sentence: "Post-sentence motion" by court cite "Pa.R.Crim.P. 720(B
 decision judgment: "Judgment of sentence" by applicant cite "Pa.R.Crim.P. 720(A)"
 {
   note "After a timely post-sentence motion, the notice of appeal is filed within 30 days of the entry of the order deciding it, denying it by operation of law, or memorializing its withdrawal; without one, within 30 days of imposition of sentence; after a timely Commonwealth motion to modify sentence, within 30 days of the order disposing of it (Pa.R.Crim.P. 720(A)(2)-(4); Pa.R.A.P. 903(a), (c)(3)). A cross-appeal may be filed within 14 days of service of the first notice of appeal (Pa.R.A.P. 903(b)). lit/core has no counting rule for the Pennsylvania rules, so the periods are not encoded as counted deadlines."
-  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
-    authority cite "Pa.R.A.P. 903"
-  }
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "Pa.R.A.P. 903" }
   edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Pa.R.A.P. 903" }
 }
 

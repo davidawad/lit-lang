@@ -51,17 +51,13 @@ decision probable-cause: "Preliminary examination or indictment" by court cite "
 state charged: "Information or indictment" by office cite "725 ILCS 5/111-2"
 {
   note "All prosecutions of felonies are by information or indictment (725 ILCS 5/111-2(a)); the grand jury is governed by Article 112. The speedy-trial statute runs from custody for a person in custody and from the trial demand for a person on pretrial release or recognizance; its periods are set by 725 ILCS 5/103-5(a) and (b) and are not stated here (currency unconfirmed). Delay is agreed to by a defendant in custody unless the defendant objects by a written or oral demand for trial on the record (725 ILCS 5/103-5(a))."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "725 ILCS 5/113-1"
-  }
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "725 ILCS 5/113-1" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by applicant cite "725 ILCS 5/113-1"
 {
   note "Before trial the defendant is called into open court, informed of the charge and called upon to plead; on request the formal charge is read, and the arraignment is entered of record (725 ILCS 5/113-1). Discovery is governed by Supreme Court Rules 411 to 417: on defense counsel's written motion the State discloses the witnesses, statements and other material Rule 412(a) lists, and the defense discloses under Rule 413; the times Rule 415 regulates are not stated here (currency unconfirmed)."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "Ill. S. Ct. R. 412(a)"
-  }
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Ill. S. Ct. R. 412(a)" }
 }
 
 state discovery: "Discovery and pretrial motions" by applicant cite "725 ILCS 5/114-1(a)"
@@ -73,9 +69,7 @@ state discovery: "Discovery and pretrial motions" by applicant cite "725 ILCS 5/
   edge-discovery-speedy "Speedy-trial term expired" -> motions-ruling {
     authority cite "725 ILCS 5/103-5(d)"
   }
-  edge-discovery-plea "Plea negotiations" -> plea-decision {
-    authority cite "Ill. S. Ct. R. 402"
-  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "Ill. S. Ct. R. 402" }
 }
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite "725 ILCS 5/114-1(a)"
@@ -98,17 +92,13 @@ decision plea-decision: "Plea or trial" by applicant cite "Ill. S. Ct. R. 402(a)
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Ill. S. Ct. R. 402(a)"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "725 ILCS 5/115-1"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "725 ILCS 5/115-1" }
 }
 
 decision trial: "Verdict" by court cite "725 ILCS 5/115-1"
 {
   note "Trial is by the court and a jury unless the defendant waives the jury in writing (725 ILCS 5/115-1). Voir dire, jury selection and instructions follow Ill. S. Ct. R. 431, 434 and 451."
-  edge-trial-acquittal "Not guilty" -> acquitted {
-    authority cite "725 ILCS 5/115-1"
-  }
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "725 ILCS 5/115-1" }
   edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
     authority cite "725 ILCS 5/116-1(a)"
   }
@@ -117,19 +107,14 @@ decision trial: "Verdict" by court cite "725 ILCS 5/115-1"
 decision post-trial: "Post-trial motions" by court cite "725 ILCS 5/116-1"
 {
   note "Following a verdict or finding of guilty the court may grant a new trial on the defendant's written motion specifying its grounds, with reasonable notice to the State (725 ILCS 5/116-1); a written motion in arrest of judgment lies where the charge states no offense or the court lacks jurisdiction (725 ILCS 5/116-2). The periods for both motions, set by Sections 116-1(b) and 116-2(a), are not stated here (currency unconfirmed)."
-  edge-post-trial-arrest "Judgment arrested" -> dismissed {
-    authority cite "725 ILCS 5/116-2(b)"
-  }
-  edge-post-trial-new-trial "New trial granted" -> trial {
-    authority cite "725 ILCS 5/116-1(a)"
-  }
+  edge-post-trial-arrest "Judgment arrested" -> dismissed { authority cite "725 ILCS 5/116-2(b)" }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "725 ILCS 5/116-1(a)" }
   edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
     authority cite "725 ILCS 5/116-1(a)"
   }
 }
 
-state sentencing: "Sentencing" by court cite ?("730 ILCS 5/5-4-1 (sentencing hearing; Unified Code of Corrections not vendored)")
-{
+state sentencing: "Sentencing" by court cite ?("730 ILCS 5/5-4-1 (sentencing hearing; Unified Code of Corrections not vendored)") {
   note "Sentencing, the presentence report and the sentencing ranges are governed by the Unified Code of Corrections (730 ILCS 5/), which is not vendored. The sentencing order is prepared under Ill. S. Ct. R. 452. At sentence after a plea of not guilty the court advises the defendant of the right to appeal and to appointed counsel and a transcript (Ill. S. Ct. R. 605(a)); after a guilty plea, of the motion Rule 604(d) requires before an appeal (Ill. S. Ct. R. 605(b), (c))."
   edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
     authority cite "Ill. S. Ct. R. 605(a)"
@@ -142,9 +127,7 @@ decision judgment: "Judgment and appeal" by applicant cite "Ill. S. Ct. R. 606(b
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
     authority cite "Ill. S. Ct. R. 606(a)"
   }
-  edge-judgment-no-appeal "No appeal" -> conviction-final {
-    authority cite "Ill. S. Ct. R. 606(b)"
-  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Ill. S. Ct. R. 606(b)" }
 }
 
 terminal acquitted: "Acquitted" outcome [win] cite "725 ILCS 5/115-1"

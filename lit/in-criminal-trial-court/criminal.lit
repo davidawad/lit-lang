@@ -81,20 +81,14 @@ decision plea-decision: "Plea or trial" by applicant cite "Ind. Crim. Rule 3.3(A
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Ind. Crim. Rule 3.3(C)"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "Ind. Crim. Rule 3.1"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Ind. Crim. Rule 3.1" }
 }
 
 decision trial: "Verdict" by court cite "Ind. Crim. Rule 3.4"
 {
   note "A defendant charged with a felony is tried by jury unless the defendant waives it personally, knowingly, voluntarily and intelligently, with the consent of the state and the court; in a misdemeanor case a jury is had only on a timely written demand, and the state may not request one (Ind. Crim. Rule 3.1). Jury instructions follow Jury Rules 20 and 26 and Trial Rule 51 (Ind. Crim. Rule 3.2). The court promptly notes the verdict or decision in the chronological case summary and enters judgment of conviction at or before sentencing (Ind. Crim. Rule 3.4)."
-  edge-trial-acquittal "Not guilty" -> acquitted {
-    authority cite "Ind. Crim. Rule 3.4"
-  }
-  edge-trial-guilty "Guilty; sentencing" -> sentencing {
-    authority cite "Ind. Crim. Rule 5.1(A)"
-  }
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "Ind. Crim. Rule 3.4" }
+  edge-trial-guilty "Guilty; sentencing" -> sentencing { authority cite "Ind. Crim. Rule 5.1(A)" }
 }
 
 state sentencing: "Sentencing and advisements" by court cite "Ind. Crim. Rule 5.1"
@@ -148,7 +142,6 @@ terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Ind. Appellate Rule
   note "The appeal continues before the Indiana Court of Appeals, or the Supreme Court where the Appellate Rules give it jurisdiction, under the Appellate Rules (sources/indctapp; lit/indctapp)."
 }
 
-terminal conviction-final: "Conviction final" outcome [loss] cite ?("Ind. Post-Conviction Rule 1 (post-conviction relief; not vendored)")
-{
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("Ind. Post-Conviction Rule 1 (post-conviction relief; not vendored)") {
   note "Outcome from the defendant's side. Post-conviction relief under Post-Conviction Rule 1 and a belated appeal under Post-Conviction Rule 2 are not vendored; federal habeas belongs to lit/habeas."
 }

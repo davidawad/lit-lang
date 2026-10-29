@@ -8,13 +8,17 @@ module ok-court-of-criminal-appeals.appeal
 // has no counting rule for Rule 1.4. Outcomes are from the defendant's
 // side. The earlier outline's decisions (Simpson v. State, Spuehler v.
 // State, Jackson v. Virginia) are removed: no reporter text is vendored.
-
 /// A brief in chief or answer brief: at most 50 typewritten pages, except
 /// as otherwise specified (Okla. Ct. Crim. App. R. 3.5(D)).
-limit principal-brief { pages <= 50 cite "Okla. Ct. Crim. App. R. 3.5(D)" } cite "Okla. Ct. Crim. App. R. 3.5(D)"
+limit principal-brief {
+  pages <= 50 cite "Okla. Ct. Crim. App. R. 3.5(D)"
+} cite "Okla. Ct. Crim. App. R. 3.5(D)"
+
 /// A reply or supplemental brief: at most 10 pages unless leave is given
 /// (Okla. Ct. Crim. App. R. 3.4(F)(3)).
-limit reply-brief { pages <= 10 cite "Okla. Ct. Crim. App. R. 3.4(F)" } cite "Okla. Ct. Crim. App. R. 3.4(F)"
+limit reply-brief {
+  pages <= 10 cite "Okla. Ct. Crim. App. R. 3.4(F)"
+} cite "Okla. Ct. Crim. App. R. 3.4(F)"
 
 /// The appellant's brief is filed (Okla. Ct. Crim. App. R. 3.4(B)).
 event AppellantBriefFiled() paper principal-brief
@@ -69,9 +73,7 @@ decision perfection: "Appeal perfected within 90 days?" by court cite "Okla. Ct.
   edge-perfection-dismissed "Not perfected in time; dismissed" -> review-dismissed {
     authority cite "Okla. Ct. Crim. App. R. 2.1(C)"
   }
-  edge-perfection-record "Perfected" -> record {
-    authority cite "Okla. Ct. Crim. App. R. 2.3"
-  }
+  edge-perfection-record "Perfected" -> record { authority cite "Okla. Ct. Crim. App. R. 2.3" }
 }
 
 terminal review-dismissed: "Appeal dismissed or review waived" outcome [loss, dismissal, jurisdictional] cite "Okla. Ct. Crim. App. R. 2.1(B)"
@@ -101,9 +103,7 @@ state briefing: "Briefing" by applicant cite "Okla. Ct. Crim. App. R. 3.4"
 decision argument: "Submission on the briefs or oral argument" by court cite "Okla. Ct. Crim. App. R. 3.8"
 {
   note "Cases are submitted for decision without oral argument on the Presiding Judge's order, except that argument is set in all capital cases; in other cases argument is granted only on an application filed with the brief, or on the Court's own order (Okla. Ct. Crim. App. R. 3.8). Argument, when granted, is limited to 30 minutes a side, with ten minutes of rebuttal for the appellant (Okla. Ct. Crim. App. R. 3.9(A))."
-  edge-argument-argued "Argued" -> decision {
-    authority cite "Okla. Ct. Crim. App. R. 3.9"
-  }
+  edge-argument-argued "Argued" -> decision { authority cite "Okla. Ct. Crim. App. R. 3.9" }
   edge-argument-submitted "Submitted on the briefs" -> decision {
     authority cite "Okla. Ct. Crim. App. R. 3.8"
   }

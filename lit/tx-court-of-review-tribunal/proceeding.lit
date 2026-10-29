@@ -12,8 +12,7 @@ import tx-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeO
 // either. No leading decision was named; none is kept.
 start charges
 
-state charges: "Commission recommendation filed" by office cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)")
-{
+state charges: "Commission recommendation filed" by office cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)") {
   note "Who files the recommendation, the notice to the judge and the judge's rights are stated in text that is not vendored; they stay holes."
   edge-charges-answer "Respondent served" -> answer {
     event ActionCommenced()
@@ -21,16 +20,14 @@ state charges: "Commission recommendation filed" by office cite ?("Tex. Const. a
   }
 }
 
-state answer: "Answer and pretrial" by applicant cite ?("Tex. Gov't Code ch. 33 (not vendored)")
-{
+state answer: "Answer and pretrial" by applicant cite ?("Tex. Gov't Code ch. 33 (not vendored)") {
   note "The answer period, discovery and any interim suspension are stated in text that is not vendored; they stay holes."
   edge-answer-hearing "Set for hearing" -> hearing {
     authority cite ?("Procedural rules for the removal or retirement of judges (not vendored)")
   }
 }
 
-decision hearing: "Tribunal decides" by court cite ?("Procedural rules for the removal or retirement of judges (not vendored)")
-{
+decision hearing: "Tribunal decides" by court cite ?("Procedural rules for the removal or retirement of judges (not vendored)") {
   note "The burden and standard of proof and the sanctions the tribunal may order are stated in text that is not vendored; they stay holes."
   edge-hearing-dismissed "Recommendation rejected" -> charges-dismissed {
     event DecisionFiled()
@@ -42,8 +39,7 @@ decision hearing: "Tribunal decides" by court cite ?("Procedural rules for the r
   }
 }
 
-decision sanction: "Review sought?" by applicant cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)")
-{
+decision sanction: "Review sought?" by applicant cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)") {
   note "Whether and where the tribunal's order may be reviewed, and the period, are stated in text that is not vendored; they stay holes."
   edge-sanction-final "No review" -> sanction-final {
     event JudgmentEntered()
@@ -55,17 +51,14 @@ decision sanction: "Review sought?" by applicant cite ?("Tex. Const. art. V, § 
   }
 }
 
-terminal charges-dismissed: "Recommendation rejected" outcome [win] cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)")
-{
+terminal charges-dismissed: "Recommendation rejected" outcome [win] cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)") {
   note "Costs and confidentiality are stated in text that is not vendored."
 }
 
-terminal sanction-final: "Removal or retirement final" outcome [loss] cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)")
-{
+terminal sanction-final: "Removal or retirement final" outcome [loss] cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)") {
   note "The order takes effect as the text that is not vendored provides."
 }
 
-terminal review-sought: "Review sought" outcome [final] cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)")
-{
+terminal review-sought: "Review sought" outcome [final] cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)") {
   note "The reviewing court's procedure is not vendored and not modeled."
 }

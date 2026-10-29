@@ -26,11 +26,14 @@ event ProtestFiled()
 /// "Except in exceptional circumstances to be described
 /// in moving papers" excuses the notice; it delegates no period to an
 /// order, so none is declared.
-rule duty protest-prefiling-notice effective [2021-08-02, ..) known_at 2021-08-02 cite "RCFC App. C 2" {
-  deadline protest-notice-earliest: 5.court_days before ProtestFiled() counted_by rcfc6 cite "RCFC App. C 2" {
+rule duty protest-prefiling-notice effective [2021-08-02, ..) known_at 2021-08-02 cite "RCFC App. C 2"
+{
+  deadline protest-notice-earliest: 5.court_days before ProtestFiled() counted_by rcfc6 cite "RCFC App. C 2"
+  {
     extendable false
   }
-  deadline protest-notice-latest: 1.court_days before ProtestFiled() counted_by rcfc6 cite "RCFC App. C 2" {
+  deadline protest-notice-latest: 1.court_days before ProtestFiled() counted_by rcfc6 cite "RCFC App. C 2"
+  {
     extendable false
   }
   /// The same outer bound counted forward from the notice, which is the
@@ -39,7 +42,8 @@ rule duty protest-prefiling-notice effective [2021-08-02, ..) known_at 2021-08-0
   /// fifth court day before the filing, since both say at most four court
   /// days lie strictly between them. The one-day minimum has no forward
   /// edge window; `protest-notice-latest` states it.
-  deadline protest-notice-window: 5.court_days after ProtestNoticeGiven() counted_by rcfc6 cite "RCFC App. C 2" {
+  deadline protest-notice-window: 5.court_days after ProtestNoticeGiven() counted_by rcfc6 cite "RCFC App. C 2"
+  {
     extendable false
   }
 }

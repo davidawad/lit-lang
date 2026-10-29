@@ -93,106 +93,84 @@ event TentativeHearing()
 /// deposit in a Designated Fund within 14 days of the mailing of the
 /// notice, or within the time the court fixes.
 deadline fund-objection-period: 14.days after FundNoticeMailed() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 2015-1(c)"
-
 /// Bankr. N.D. Cal. B.L.R. 3003-1: unless the court orders otherwise under
 /// FRBP 3003(c)(3), a proof of claim or interest in a chapter 11 case is
 /// filed within 90 days after the first date set for the § 341(a) meeting.
 deadline chapter-11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 3003-1"
-
 /// Bankr. N.D. Cal. B.L.R. 3007-1(c): on a claim objection, the time to
 /// object and request a hearing under B.L.R. 9014-1(b)(3)(A) is 30 days.
 deadline claim-objection-request-period: 30.days after ClaimObjectionNoticeMailed() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 3007-1(c)"
-
 /// Bankr. N.D. Cal. B.L.R. 3007-1(c): on a claim objection, notice of the
 /// scheduled hearing date under B.L.R. 9014-1(c)(1) and (2) is 30 days.
 deadline claim-objection-hearing-notice-period: 30.days before ClaimObjectionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 3007-1(c)"
-
 /// Bankr. N.D. Cal. B.L.R. 3015-1(a)(1): unless otherwise ordered, notice
 /// of the hearing on confirmation of a chapter 12 plan is served not less
 /// than 35 days before the hearing.
 deadline chapter-12-confirmation-notice-period: 35.days before ChapterTwelveConfirmationHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 3015-1(a)"
-
 /// Bankr. N.D. Cal. B.L.R. 3015-1(a)(1): objections to confirmation of a
 /// chapter 12 plan are filed and served not less than 7 days before the
 /// hearing.
 deadline chapter-12-confirmation-objection-period: 7.days before ChapterTwelveConfirmationHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 3015-1(a)"
-
 /// Bankr. N.D. Cal. B.L.R. 3015-1(b)(2): before confirmation, the debtor
 /// serves an amended chapter 13 plan with at least 21 days' notice of the
 /// hearing on its confirmation.
 deadline amended-plan-notice-period: 21.days before AmendedPlanHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 3015-1(b)"
-
 /// Bankr. N.D. Cal. B.L.R. 3015-1(b)(3): objections to an amended chapter
 /// 13 plan are filed and served within 14 days of service of the amended
 /// plan.
 deadline amended-plan-objection-period: 14.days after AmendedPlanServed() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 3015-1(b)"
-
 /// Bankr. N.D. Cal. B.L.R. 3017-1(a): notice of the hearing on a disclosure
 /// statement is served not less than 35 days before the hearing.
 deadline disclosure-statement-notice-period: 35.days before DisclosureStatementHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 3017-1(a)"
-
 /// Bankr. N.D. Cal. B.L.R. 3017-1(a): unless the court orders otherwise,
 /// the deadline for objections to a disclosure statement is 7 days before
 /// the hearing; a certificate of service is filed at least 7 days before
 /// it.
 deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 3017-1(a)"
-
 /// Bankr. N.D. Cal. B.L.R. 3022-1(b): an application for a final decree is
 /// considered without a hearing unless within 14 days after service of the
 /// notice a party in interest files and serves an objection.
 deadline final-decree-objection-period: 14.days after FinalDecreeNoticeServed() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 3022-1(b)"
-
 /// Bankr. N.D. Cal. B.L.R. 4004-1(d)(2): a party requesting delay of the
 /// entry of discharge files a written response no later than 21 days from
 /// service of the debtor's statement and certification.
 deadline discharge-delay-request-period: 21.days after DischargeStatementServed() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 4004-1(d)"
-
 /// Bankr. N.D. Cal. B.L.R. 7007-1(a): except as otherwise ordered, a motion
 /// in an adversary proceeding is filed and served at least 28 days before
 /// the hearing.
 deadline adversary-motion-notice-period: 28.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 7007-1(a)"
-
 /// Bankr. N.D. Cal. B.L.R. 7007-1(b): any opposition is filed and served at
 /// least 14 days before the hearing.
 deadline adversary-opposition-period: 14.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 7007-1(b)"
-
 /// Bankr. N.D. Cal. B.L.R. 7007-1(e): any reply is filed and served by the
 /// moving party at least 7 days before the hearing.
 deadline adversary-reply-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 7007-1(e)"
-
 /// Bankr. N.D. Cal. B.L.R. 9014-1(b)(3)(A): an objection to relief sought
 /// on notice and opportunity for hearing, or a request for hearing, is
 /// filed and served within 21 days of mailing the notice.
 deadline opportunity-objection-period: 21.days after OpportunityNoticeMailed() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"
-
 /// Bankr. N.D. Cal. B.L.R. 9014-1(b)(3)(B): a tentative hearing is set at
 /// least 14 days after the last date to object or request a hearing.
 deadline tentative-hearing-period: 14.days after ObjectionDeadline() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"
-
 /// Bankr. N.D. Cal. B.L.R. 9014-1(b)(3)(B): on a timely objection, the
 /// initiating party files and serves not less than 7 days before the
 /// hearing notice that the tentative hearing will be conducted as an actual
 /// hearing.
 deadline actual-hearing-notice-period: 7.days before TentativeHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"
-
 /// Bankr. N.D. Cal. B.L.R. 9014-1(c)(1): where relief is sought against an
 /// identified, named entity, the motion and papers are filed and served at
 /// least 28 days before the hearing.
 deadline named-entity-motion-period: 28.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
-
 /// Bankr. N.D. Cal. B.L.R. 9014-1(c)(1): opposition is filed and served at
 /// least 14 days before the hearing.
 deadline named-entity-opposition-period: 14.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
-
 /// Bankr. N.D. Cal. B.L.R. 9014-1(c)(1): any reply is filed and served at
 /// least 7 days before the hearing.
 deadline named-entity-reply-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
-
 /// Bankr. N.D. Cal. B.L.R. 9014-1(c)(2): where relief is sought generally,
 /// the motion and papers are filed and served at least 21 days before the
 /// hearing.
 deadline general-relief-motion-period: 21.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
-
 /// Bankr. N.D. Cal. B.L.R. 9014-1(c)(2): opposition to relief sought
 /// generally is filed and served no less than 7 days before the hearing.
 deadline general-relief-opposition-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"

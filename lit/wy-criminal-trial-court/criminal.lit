@@ -46,31 +46,23 @@ decision probable-cause: "Preliminary examination or indictment" by court cite "
 state charged: "Indictment or information" by office cite "W.R.Cr.P. 3"
 {
   note "The charging documents are the indictment, the information or the citation (W.R.Cr.P. 3; 12(a)). The Rule 48(b) speedy-trial period is not stated here (currency unconfirmed)."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "W.R.Cr.P. 10"
-  }
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "W.R.Cr.P. 10" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by applicant cite "W.R.Cr.P. 10"
 {
   note "Arraignment is conducted in open court by reading the charge or stating its substance and calling on the defendant to plead, after the defendant is given a copy of the charging document (W.R.Cr.P. 10). A defendant may plead not guilty, not guilty by reason of mental illness or deficiency, guilty, or nolo contendere; a refusal to plead is entered as not guilty (W.R.Cr.P. 11(a)(1))."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "W.R.Cr.P. 16"
-  }
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "W.R.Cr.P. 16" }
 }
 
 state discovery: "Discovery and pretrial motions" by applicant cite "W.R.Cr.P. 12"
 {
   note "Discovery and inspection are governed by W.R.Cr.P. 16. The pleadings are the charging document and the W.R.Cr.P. 11 pleas; other pleas, demurrers and motions to quash are abolished, and defenses and objections are raised by motion under W.R.Cr.P. 12, whose time limits are not stated here (currency unconfirmed). Notices of alibi, mental illness and unconsciousness defenses are W.R.Cr.P. 12.1 to 12.3. Dismissal for want of a speedy trial is governed by W.R.Cr.P. 48(b), whose period and exclusions are not stated here (currency unconfirmed)."
-  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
-    authority cite "W.R.Cr.P. 12"
-  }
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling { authority cite "W.R.Cr.P. 12" }
   edge-discovery-speedy "Motion to dismiss for want of a speedy trial" -> motions-ruling {
     authority cite "W.R.Cr.P. 48(b)"
   }
-  edge-discovery-plea "Plea negotiations" -> plea-decision {
-    authority cite "W.R.Cr.P. 11"
-  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "W.R.Cr.P. 11" }
 }
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite "W.R.Cr.P. 12"
@@ -90,12 +82,8 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "W.R.Cr.P. 1
 decision plea-decision: "Plea or trial" by applicant cite "W.R.Cr.P. 11"
 {
   note "The court's advice to the defendant and its acceptance of a guilty or nolo contendere plea, and plea agreements, are governed by W.R.Cr.P. 11. The attorney for the state may, by leave of court, dismiss an indictment, information or citation, and the prosecution thereupon terminates, but not during trial without the defendant's consent (W.R.Cr.P. 48(a)(1))."
-  edge-plea-decision-plea "Plea accepted" -> sentencing {
-    authority cite "W.R.Cr.P. 11"
-  }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "W.R.Cr.P. 23(a)"
-  }
+  edge-plea-decision-plea "Plea accepted" -> sentencing { authority cite "W.R.Cr.P. 11" }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "W.R.Cr.P. 23(a)" }
   edge-plea-decision-nolle "State dismisses by leave of court" -> dismissed {
     authority cite "W.R.Cr.P. 48(a)"
   }
@@ -107,9 +95,7 @@ decision trial: "Verdict" by court cite "W.R.Cr.P. 31(a)"
   edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
     authority cite "W.R.Cr.P. 29(a)"
   }
-  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
-    authority cite "W.R.Cr.P. 29(c)"
-  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial { authority cite "W.R.Cr.P. 29(c)" }
 }
 
 decision post-trial: "Post-trial motions" by court cite "W.R.Cr.P. 33(a)"
@@ -118,9 +104,7 @@ decision post-trial: "Post-trial motions" by court cite "W.R.Cr.P. 33(a)"
   edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
     authority cite "W.R.Cr.P. 29(c)"
   }
-  edge-post-trial-new-trial "New trial granted" -> trial {
-    authority cite "W.R.Cr.P. 33(a)"
-  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "W.R.Cr.P. 33(a)" }
   edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
     authority cite "W.R.Cr.P. 32"
   }

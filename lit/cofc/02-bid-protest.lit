@@ -3,7 +3,8 @@ module cofc.bid-protest
 import cofc.rules-protest.{ protest-notice-window }
 import cofc.{ bid-protest-group }
 
-state bid-protest-prefiling-notice: "Pre-Filing Notice to DOJ, Clerk, Contracting Officer & Awardee" by applicant cite "RCFC App. C 2; RCFC App. C 3" {
+state bid-protest-prefiling-notice: "Pre-Filing Notice to DOJ, Clerk, Contracting Officer & Awardee" by applicant cite "RCFC App. C 2; RCFC App. C 3"
+{
   group bid-protest-group
   note "Except in exceptional circumstances, protest counsel must give advance notice of the intent to file -- at least 1 day but no more than 5 days before filing (excluding Saturdays/Sundays/legal holidays) -- to DOJ Commercial Litigation Branch, the CoFC clerk, the procuring agency's contracting officer, and (if known) the apparently successful offeror. The notice must include the disclosure required by RCFC 7.1(a) plus solicitation number, contracting officer, whether injunctive relief will be sought, any prior GAO protest, and whether a protective order will be needed."
   e-protest-notice-to-complaint "File the protest complaint (1-5 court days after pre-filing notice)" -> bid-protest-complaint-filed {
@@ -16,7 +17,8 @@ state bid-protest-prefiling-notice: "Pre-Filing Notice to DOJ, Clerk, Contractin
   }
 }
 
-state bid-protest-complaint-filed: "Protest Complaint Filed (Possibly Under Seal)" by office cite "RCFC 3; RCFC App. C 4; RCFC App. C 5; RCFC App. C 6; RCFC App. C 7" {
+state bid-protest-complaint-filed: "Protest Complaint Filed (Possibly Under Seal)" by office cite "RCFC 3; RCFC App. C 4; RCFC App. C 5; RCFC App. C 6; RCFC App. C 7"
+{
   group bid-protest-group
   note "Filed as any civil action (RCFC 3), fee $405.00 (§1491(b) protests pay the standard complaint fee, not a separate schedule). If the complaint contains confidential/proprietary information, plaintiff must move for leave to file under seal with a proposed redacted version attached."
   e-protest-complaint-to-conference "Court schedules and holds the initial status conference as soon as practicable" -> bid-protest-initial-status-conference {
@@ -24,13 +26,15 @@ state bid-protest-complaint-filed: "Protest Complaint Filed (Possibly Under Seal
   }
 }
 
-state bid-protest-initial-status-conference: "Initial Status Conference" cite "RCFC App. C 8" {
+state bid-protest-initial-status-conference: "Initial Status Conference" cite "RCFC App. C 8"
+{
   group bid-protest-group
   note "Scheduled as soon as practicable after filing -- NOT on the 49-day Appendix A JPSR clock that governs standard cases. Addresses interested-party identification, intervention by the successful offeror, protective-order content, administrative-record timing, and TRO/PI issues."
   e-protest-conference-to-pi-fork "Conference addresses intervention, protective order, AR timing, and injunctive relief" -> bid-protest-injunctive-relief-fork
 }
 
-decision bid-protest-injunctive-relief-fork: "Temporary Restraining Order / Preliminary Injunction Sought?" by applicant cite "RCFC App. C 9; RCFC App. C 10; RCFC App. C 11; RCFC App. C 12; RCFC App. C 13; RCFC App. C 14; RCFC App. C 15; RCFC 65" {
+decision bid-protest-injunctive-relief-fork: "Temporary Restraining Order / Preliminary Injunction Sought?" by applicant cite "RCFC App. C 9; RCFC App. C 10; RCFC App. C 11; RCFC App. C 12; RCFC App. C 13; RCFC App. C 14; RCFC App. C 15; RCFC 65"
+{
   group bid-protest-group
   note "An application for a TRO/PI must be filed with (or promptly after) the complaint, accompanied by affidavits and proof that DOJ and the awardee received copies. The court expedites PI hearings in protest cases specifically so plaintiffs rarely need a standalone TRO first."
   e-protest-no-pi "No TRO/PI sought -- proceed directly to administrative-record briefing" -> bid-protest-merits-briefing {
@@ -44,7 +48,8 @@ decision bid-protest-injunctive-relief-fork: "Temporary Restraining Order / Prel
   }
 }
 
-state bid-protest-merits-briefing: "Administrative-Record Briefing (Cross-Motions for Judgment on the AR)" by applicant cite "RCFC 52.1; RCFC App. C 8(e); RCFC App. C 8(f)" {
+state bid-protest-merits-briefing: "Administrative-Record Briefing (Cross-Motions for Judgment on the AR)" by applicant cite "RCFC 52.1; RCFC App. C 8(e); RCFC App. C 8(f)"
+{
   group bid-protest-group
   note "Protests are ordinarily decided on the administrative record via cross-motions for judgment on the AR under RCFC 52.1 rather than a full RCFC 56 summary-judgment/trial sequence -- the record is what the agency actually considered, supplemented only on a showing of necessity."
   e-protest-briefing-to-ruling "Complete cross-motions for judgment on the administrative record" -> bid-protest-merits-ruling {

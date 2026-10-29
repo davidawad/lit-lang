@@ -103,70 +103,57 @@ event PleadingsMotionServed()
 /// the notice provides that the creditor has 30 days after its service to
 /// file a proof of claim.
 deadline omitted-creditor-claim-period: 30.days after AmendmentNoticeServed() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 1009-1(B)"
-
 /// D.N.D. Bankr. L.R. 1009-1(B)(4): where the deadline for a complaint
 /// objecting to discharge or dischargeability has passed or will pass
 /// within 30 days, the notice provides that the creditor has 30 days after
 /// its service to file a complaint.
 deadline omitted-creditor-complaint-period: 30.days after AmendmentNoticeServed() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 1009-1(B)"
-
 /// D.N.D. Bankr. L.R. 1015-1: the estates in a joint case are jointly
 /// administered without further order unless the trustee or another party
 /// in interest objects within 14 days after the conclusion of the first
 /// meeting of creditors.
 deadline joint-administration-objection-period: 14.days after FirstMeetingConcluded() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 1015-1"
-
 /// D.N.D. Bankr. L.R. 2002-1(B): where neither these rules nor the FRBP
 /// provide a specific notice period, the proponent of a motion, application
 /// or other request for relief provides a 14-day notice.
 deadline default-notice-period: 14.days after RequestServed() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 2002-1(B)"
-
 /// D.N.D. Bankr. L.R. 3003-1: unless otherwise ordered or provided in the
 /// FRBP, the last day to file a proof of claim or interest in a chapter 11
 /// case is 70 days after the order for relief (the bar date FRBP 3003(c)(3)
 /// leaves to the court).
 deadline chapter11-claim-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 3003-1"
-
 /// D.N.D. Bankr. L.R. 3011-1(C): if no objection is received within 14 days
 /// after service of the motion and notice, an order may be entered granting
 /// payment of unclaimed funds.
 deadline unclaimed-funds-objection-period: 14.days after UnclaimedFundsMotionServed() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 3011-1(C)"
-
 /// D.N.D. Bankr. L.R. 5010-1: the notice period for an application or
 /// motion seeking relief after a case is reopened is 14 days, except for an
 /// amendment adding an omitted creditor or modifying a claim under L.R.
 /// 1009-1.
 deadline reopened-relief-notice-period: 14.days after ReopenedReliefRequestServed() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 5010-1"
-
 /// D.N.D. Bankr. L.R. 7007-1(A): the adverse party has 21 days after service
 /// of the memorandum in support of a dispositive motion to serve and file a
 /// response.
 deadline dispositive-response-period: 21.days after DispositiveMemorandumServed() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 7007-1(A)"
-
 /// D.N.D. Bankr. L.R. 7007-1(A): the moving party has 14 days to serve and
 /// file a reply on a dispositive motion.
 deadline dispositive-reply-period: 14.days after DispositiveResponseServed() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 7007-1(A)"
-
 /// D.N.D. Bankr. L.R. 7007-1(B): the adverse party has 14 days after service
 /// of the memorandum in support of a non-dispositive motion to serve and
 /// file a response.
 deadline nondispositive-response-period: 14.days after NondispositiveMemorandumServed() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 7007-1(B)"
-
 /// D.N.D. Bankr. L.R. 7007-1(B): the moving party has 7 days to serve and
 /// file a reply on a non-dispositive motion.
 deadline nondispositive-reply-period: 7.days after NondispositiveResponseServed() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 7007-1(B)"
-
 /// D.N.D. Bankr. L.R. 7007-1(G): where the trustee is not a party, the
 /// moving party serves a 21-day notice of the motion to approve a
 /// stipulation or settlement agreement on all parties appearing in the
 /// adversary proceeding, the trustee and the United States Trustee.
 deadline adversary-settlement-notice-period: 21.days after AdversarySettlementMotionServed() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 7007-1(G)"
-
 /// D.N.D. Bankr. L.R. 9013-1(A): for motions, applications and requests
 /// governed by FRBP 9013, interested parties have 14 days to file a
 /// response.
 deadline motion-response-period: 14.days after RequestServed() counted_by frbp9006 cite "D.N.D. Bankr. L.R. 9013-1(A)"
-
 /// D.N.D. Bankr. L.R. 9014-1(D): Fed. R. Civ. P. 12(c) applies in contested
 /// matters, and a party opposing a motion for judgment on the pleadings has
 /// 21 days to file an objection.

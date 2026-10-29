@@ -972,7 +972,8 @@ state partial-summary-judgment: "Partial Summary Judgment" by applicant cite "FR
   }
 }
 
-state daubert-motion-filed: "Daubert / Rule 702 Motion Filed" by applicant cite "FRE 702; FRE 104(a)" {
+state daubert-motion-filed: "Daubert / Rule 702 Motion Filed" by applicant cite "FRE 702; FRE 104(a)"
+{
   group pretrial-motions-group
   note "The proponent of expert testimony must show by a preponderance of the evidence (2023 amendment to FRE 702 made this explicit) that the witness's specialized knowledge will help the trier of fact, the testimony is based on sufficient facts/data, is the product of reliable principles/methods, and reflects a reliable application of those principles to the case's facts. The court decides this preliminary admissibility question itself under FRE 104(a), not the jury -- a pretrial gatekeeping motion, not a trial objection."
   edge-daubert-motion-filed-daubert-ruling "Complete FRE 702 gatekeeping briefing (FRE 104(a))" -> daubert-ruling {
@@ -982,7 +983,8 @@ state daubert-motion-filed: "Daubert / Rule 702 Motion Filed" by applicant cite 
 }
 
 // The rule text commits this ruling to the court's discretion.
-chance daubert-ruling: "Court Rules on Daubert Motion" by examiner discretion cite "FRE 702" {
+chance daubert-ruling: "Court Rules on Daubert Motion" by examiner discretion cite "FRE 702"
+{
   group pretrial-motions-group
   note "Outcome distribution authored at 0.6 admitted / 0.4 excluded-in-whole-or-part -- APPROXIMATE. Missing the scheduling-order's expert-motion cutoff forfeits a pretrial Daubert challenge entirely -- a mid-trial objection to qualified expert testimony is ordinarily too late and the jury has already heard the opinion, the trap this pack's frcp-fragment rulepack flags as fre/daubert-not-moved."
   daubert-admitted "Expert testimony admitted -- reliability and fit satisfied" -> motions-in-limine-filed p 0.6 {
@@ -993,7 +995,8 @@ chance daubert-ruling: "Court Rules on Daubert Motion" by examiner discretion ci
   }
 }
 
-state motions-in-limine-filed: "Motions in Limine" by applicant cite "FRE 103(d)" {
+state motions-in-limine-filed: "Motions in Limine" by applicant cite "FRE 103(d)"
+{
   group pretrial-motions-group
   note "Pretrial motions to admit or exclude specific categories of evidence before trial begins, avoiding prejudicial suggestion to the jury. A ruling on a motion in limine is often preliminary and non-definitive; under FRE 103(b), added by the 2000 amendment, a party need not renew an objection or offer of proof once the court rules definitively on the record; absent a definitive ruling, the losing party must RENEW its objection when the evidence is actually offered at trial to preserve the issue for appeal -- failing to renew forfeits appellate review of a non-definitive ruling. An in limine ruling remains subject to change as the case unfolds, and a criminal defendant who does not testify cannot obtain review of an in limine ruling allowing Rule 609 impeachment (Luce v. United States, 469 U.S. 38, 41-43 (1984))."
   court_listener_url "https://www.courtlistener.com/opinion/111284/luce-v-united-states/"

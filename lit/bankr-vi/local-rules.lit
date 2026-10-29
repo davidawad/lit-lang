@@ -137,185 +137,148 @@ event AppealTimeExpired()
 /// within seven days after the date of service (immediately in an expedited
 /// matter).
 deadline certificate-of-service-period: 7.days after DocumentServed() counted_by frbp9006 cite "D.V.I. LBR 2002-1"
-
 /// LBR 1007-3(B): the debtor provides the trustee, not later than fourteen
 /// days before the date first set for the first meeting of creditors, a copy
 /// (or transcript) of the federal income tax return for the most recent tax
 /// year, or a statement why none is available.
 deadline tax-return-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "D.V.I. LBR 1007-3(B)"
-
 /// LBR 1007-3(C): each individual debtor reports to the trustee, not later
 /// than fourteen days before the date first set for the first meeting of
 /// creditors, any other source of income not on its tax return or payment
 /// advices.
 deadline other-income-report-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "D.V.I. LBR 1007-3(C)"
-
 /// LBR 1007-3(D): a chapter 13 debtor provides the trustee, at least 7 days
 /// before the date set for the § 341 meeting, proof of current monthly income
 /// and the other documents listed.
 deadline chapter13-income-proof-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "D.V.I. LBR 1007-3(D)"
-
 /// LBR 1007-4(A): at least seven days before the date set for the § 341
 /// meeting, a chapter 13 debtor subject to a domestic support obligation
 /// provides the name, address and phone numbers of each claim holder (and of
 /// the DSO agency for a holder outside the Virgin Islands).
 deadline domestic-support-disclosure-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "D.V.I. LBR 1007-4(A)"
-
 /// LBR 2004-1(D): not less than twenty-one days' written notice of the motion
 /// for a proposed Rule 2004 examination is given to the entity to be
 /// examined, its counsel and other affected parties.
 deadline examination-notice-period: 21.days before Examination() counted_by frbp9006 cite "D.V.I. LBR 2004-1(D)"
-
 /// LBR 2004-1(D): the entity to be examined and other affected parties have
 /// fourteen days after service, plus three days when the notice is served by
 /// mail, to respond or object to the proposed examination.
 deadline examination-objection-period: 14.days after ExaminationMotionNoticeServed() counted_by frbp9006 cite "D.V.I. LBR 2004-1(D)"
-
 /// LBR 2015-1(A): within sixty days of the initial filing of the petition,
 /// each debtor or debtor-in-possession files all federal and territorial tax
 /// returns due but unfiled as of the petition date.
 deadline delinquent-tax-returns-period: 60.days after PetitionFiled() counted_by frbp9006 cite "D.V.I. LBR 2015-1(A)"
-
 /// LBR 2015-1: a chapter 13 debtor engaged in business serves the chapter 13
 /// trustee a Business Case Questionnaire (LBF 5) at least fourteen days
 /// before the first date set for the meeting of creditors.
 deadline business-questionnaire-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "D.V.I. LBR 2015-1"
-
 /// LBR 2016-3(B): within twenty-one days after the petition, the chapter 11
 /// debtor files and serves on the United States Trustee and the creditors'
 /// committee (or the FRBP 1007(d) creditors) a statement of the compensation
 /// paid to insiders.
 deadline insider-compensation-statement-period: 21.days after PetitionFiled() counted_by frbp9006 cite "D.V.I. LBR 2016-3(B)"
-
 /// LBR 3002-1(B): if the claims bar date has expired or will expire within
 /// thirty days after an amendment adding a creditor, the affected creditor
 /// may file a proof of claim within thirty days of the date notice of the
 /// amendment is sent.
 deadline added-creditor-claim-period: 30.days after AmendmentNoticeSent() counted_by frbp9006 cite "D.V.I. LBR 3002-1(B)"
-
 /// LBR 3002-2(D): any objection to the transfer of a chapter 13 claim is
 /// filed within 21 days of the notice; with none, the assignee may file a
 /// certificate of no objection.
 deadline claim-transfer-objection-period: 21.days after TransferNoticed() counted_by frbp9006 cite "D.V.I. LBR 3002-2(D)"
-
 /// LBR 3002-3(C): no deficiency is paid after the consensual relinquishment
 /// of collateral unless the creditor files and serves a notice of intention
 /// to collect a deficiency within twenty-eight days after the surrender takes
 /// effect.
 deadline deficiency-notice-period: 28.days after CollateralSurrendered() counted_by frbp9006 cite "D.V.I. LBR 3002-3(C)"
-
 /// LBR 3002-3(D): all objections to an amended proof of claim filed after the
 /// claims deadline are filed and served within 21 days.
 deadline amended-claim-objection-period: 21.days after AmendedClaimServed() counted_by frbp9006 cite "D.V.I. LBR 3002-3(D)"
-
 /// LBR 3002-3(H): the chapter 13 debtor or its attorney reviews the claims
 /// and files objections to any disputed claims within ninety days of the
 /// claims bar date.
 deadline chapter13-claim-objection-period: 90.days after ClaimsBarDate() counted_by frbp9006 cite "D.V.I. LBR 3002-3(H)"
-
 /// LBR 3015-2(A)(1)-(2): a late-filed unsecured, priority or secured claim
 /// participates in distributions as the rule provides unless an objection is
 /// filed within fourteen days after its service.
 deadline late-claim-objection-period: 14.days after LateClaimServed() counted_by frbp9006 cite "D.V.I. LBR 3015-2(A)"
-
 /// LBR 3018-1(D): an amended summary of ballots, accounting for ballots cast
 /// with court approval after the voting deadline, is filed within two days
 /// after the plan hearing.
 deadline amended-ballot-summary-period: 2.days after PlanHearing() counted_by frbp9006 cite "D.V.I. LBR 3018-1(D)"
-
 /// LBR 3021-1(B): within ninety days of confirmation of a chapter 11 plan,
 /// and each ninety days thereafter until the case is closed, the disbursing
 /// agent files an accounting of funds received, disbursed and remaining.
 deadline first-accounting-period: 90.days after PlanConfirmed() counted_by frbp9006 cite "D.V.I. LBR 3021-1(B)"
-
 /// LBR 3022-1(A): the proponent of the confirmed plan or its administering
 /// agent files and serves a motion for final decree within ninety days after
 /// consummation of the plan, or such further date as the court or plan sets.
 deadline final-decree-motion-period: 90.days after PlanConsummated() counted_by frbp9006 cite "D.V.I. LBR 3022-1(A)"
-
 /// LBR 5011-1(D): within seven days of the order deciding the core/non-core
 /// issue, the moving party files a designation of pleadings related to the
 /// motion to withdraw the reference.
 deadline withdrawal-designation-period: 7.days after CoreDecisionEntered() counted_by frbp9006 cite "D.V.I. LBR 5011-1(D)"
-
 /// LBR 5011-1(D): the respondents file any designation of additional items
 /// within seven days of the moving party's designation.
 deadline withdrawal-counter-designation-period: 7.days after MovantDesignationFiled() counted_by frbp9006 cite "D.V.I. LBR 5011-1(D)"
-
 /// LBR 6002-1: a custodian files and serves on the United States Trustee the
 /// report and accounting under FRBP 6002(a) within thirty days from acquiring
 /// knowledge of the commencement of the case.
 deadline custodian-account-period: 30.days after CustodianLearnedOfCase() counted_by frbp9006 cite "D.V.I. LBR 6002-1"
-
 /// LBR 6004-1(D): responses and objections to a sale motion are filed and
 /// served no later than fourteen days after service of the motion (and at
 /// least seven days before the sale hearing).
 deadline sale-response-period: 14.days after SaleMotionServed() counted_by frbp9006 cite "D.V.I. LBR 6004-1(D)"
-
 /// LBR 6004-1(D): responses and objections to a sale motion are filed and
 /// served at least seven days before the sale hearing date.
 deadline sale-response-hearing-period: 7.days before SaleHearing() counted_by frbp9006 cite "D.V.I. LBR 6004-1(D)"
-
 /// LBR 6004-1(E): if no objection to a chapter 13 sale motion on a
 /// stipulation to sell without publication is filed within 21 days of its
 /// filing, the court may approve the sale without further notice or hearing.
 deadline chapter13-sale-objection-period: 21.days after SaleMotionFiled() counted_by frbp9006 cite "D.V.I. LBR 6004-1(E)"
-
 /// LBR 6004-1(F)(5): the sale advertisement is published no more than twenty-
 /// one nor less than seven days before the scheduled date of the auction or
 /// sale hearing.
 deadline sale-publication-period: 7.days before AuctionOrSaleHearing() counted_by frbp9006 cite "D.V.I. LBR 6004-1(F)"
-
 /// LBR 6004-1(F)(6): an itemized Report of Sale is filed within five calendar
 /// days of the date of consummation of the sale.
 deadline report-of-sale-period: 5.days after SaleConsummated() counted_by frbp9006 cite "D.V.I. LBR 6004-1(F)"
-
 /// LBR 7008-1(B): the response to a motion in an adversary proceeding is
 /// filed and served within fourteen days after service of the motion, plus
 /// three days when service is by mail.
 deadline adversary-response-period: 14.days after AdversaryMotionServed() counted_by frbp9006 cite "D.V.I. LBR 7008-1(B)"
-
 /// LBR 7008-1(B): if the court permits them, replies and sur-replies are
 /// filed and served within seven days (plus three days for mail) after
 /// service of the response or reply.
 deadline adversary-reply-period: 7.days after AdversaryResponseServed() counted_by frbp9006 cite "D.V.I. LBR 7008-1(B)"
-
 /// LBR 7008-1(D): a motion for continuance of a trial date is considered only
 /// if filed and served at least seven days before the scheduled trial.
 deadline trial-continuance-motion-period: 7.days before Trial() counted_by frbp9006 cite "D.V.I. LBR 7008-1(D)"
-
 /// LBR 7014-1: the third-party plaintiff delivers to a newly joined third-
 /// party defendant copies of all pleadings, orders, discovery materials and
 /// exhibits of record within fourteen days after its appearance or responsive
 /// pleading.
 deadline third-party-documents-period: 14.days after ThirdPartyAppeared() counted_by frbp9006 cite "D.V.I. LBR 7014-1"
-
 /// LBR 9006-1(B) (and 9013-1(B)): every responsive pleading is filed and
 /// served within fourteen days from the date the motion is filed and served.
 deadline motion-response-period: 14.days after MotionServed() counted_by frbp9006 cite "D.V.I. LBR 9006-1(B)"
-
 /// LBR 9013-1(D): sur-replies are not permitted without leave; if permitted,
 /// they are filed and served within seven days after the response or reply.
 deadline sur-reply-period: 7.days after ResponseServed() counted_by frbp9006 cite "D.V.I. LBR 9013-1(D)"
-
 /// LBR 9015-1(A): the last date for any party to demand a jury trial is
 /// fourteen days after an answer, or a response to a motion or objection, is
 /// filed and served.
 deadline jury-demand-period: 14.days after JuryTriggeringResponseFiled() counted_by frbp9006 cite "D.V.I. LBR 9015-1(A)"
-
 /// LBR 9015-1(C): within thirty days of filing the jury trial demand, the
 /// demanding party files and serves the consents the rule requires.
 deadline jury-consents-period: 30.days after JuryDemandFiled() counted_by frbp9006 cite "D.V.I. LBR 9015-1(C)"
-
 /// LBR 9019-2(C): a party may move to dispense with mediation within fourteen
 /// days after the order directing mediation.
 deadline dispense-mediation-motion-period: 14.days after MediationOrdered() counted_by frbp9006 cite "D.V.I. LBR 9019-2(C)"
-
 /// LBR 9019-2(E)(1)-(2): within seven days of the order directing mediation,
 /// the parties may stipulate to a mediator for the court's approval; failing
 /// agreement, the court may appoint a certified mediator.
 deadline mediator-stipulation-period: 7.days after MediationOrdered() counted_by frbp9006 cite "D.V.I. LBR 9019-2(E)"
-
 /// LBR 9070-1: unless an appeal is filed, exhibits introduced at a trial or
 /// hearing are retrieved within fourteen calendar days after the time to
 /// appeal the final disposition expires, or the Clerk may destroy them.

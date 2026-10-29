@@ -49,17 +49,13 @@ decision probable-cause: "Preliminary hearing or indictment" by court cite "Crim
 state charged: "Indictment or information" by office cite "Crim. P. 7"
 {
   note "An indictment is a written statement presented in open court by a grand jury to the district court charging a crime (Crim. P. 7(a)(1)); an information is filed by the prosecuting attorney (Crim. P. 7(b)). Arraignment follows the preliminary proceedings under Crim. P. 5, 7 and 12 (Crim. P. 10)."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "Crim. P. 10"
-  }
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Crim. P. 10" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by applicant cite "Crim. P. 10"
 {
   note "Arraignment is conducted in open court in the court having trial jurisdiction: the defendant is informed of the offense charged and required to plead (Crim. P. 10). For a felony, a class 1 misdemeanor, or an offense punishable by more than one year's imprisonment, the defendant must be present, though for good cause the court may accept a not-guilty plea by counsel (Crim. P. 10(a)). A defendant may plead guilty, not guilty, not guilty by reason of insanity, or with the court's consent nolo contendere (Crim. P. 11(a)). The Crim. P. 48(b) speedy-trial period runs from the entry of a plea of not guilty."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "Crim. P. 16"
-  }
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Crim. P. 16" }
 }
 
 state discovery: "Discovery and pretrial motions" by applicant cite "Crim. P. 12(b)"
@@ -71,9 +67,7 @@ state discovery: "Discovery and pretrial motions" by applicant cite "Crim. P. 12
   edge-discovery-speedy "Motion to dismiss for want of a speedy trial" -> motions-ruling {
     authority cite "Crim. P. 48(b)"
   }
-  edge-discovery-plea "Plea negotiations" -> plea-decision {
-    authority cite "Crim. P. 11"
-  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "Crim. P. 11" }
 }
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite "Crim. P. 12(b)"
@@ -93,12 +87,8 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Crim. P. 12
 decision plea-decision: "Plea or trial" by applicant cite "Crim. P. 11(b)"
 {
   note "The court accepts a guilty or nolo contendere plea only after advising the defendant of the Crim. P. 5(a)(2) rights and determining that the defendant understands the charge, its elements and the effect of the plea, that the plea is voluntary, that the defendant waives a jury trial, and the possible penalties (Crim. P. 11(b)). The prosecuting attorney may dismiss or enter a nolle prosequi only on a motion in open court with the court's consent and a written statement of reasons, and not during trial without the defendant's consent (Crim. P. 48(a))."
-  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
-    authority cite "Crim. P. 11(b)"
-  }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "Crim. P. 23(a)"
-  }
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "Crim. P. 11(b)" }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Crim. P. 23(a)" }
   edge-plea-decision-nolle "Dismissal or nolle prosequi with the court's consent" -> dismissed {
     authority cite "Crim. P. 48(a)"
   }
@@ -107,23 +97,15 @@ decision plea-decision: "Plea or trial" by applicant cite "Crim. P. 11(b)"
 decision trial: "Verdict" by court cite "Crim. P. 31"
 {
   note "A person accused of a felony has the right to a jury of twelve; before the jury is sworn the defendant may, except in class 1 felonies, elect a jury of fewer than twelve but no fewer than six with the court's consent (Crim. P. 23(a)(1)). The court submits written verdict forms to the jury (Crim. P. 31(a)). Peremptory challenges are governed by Crim. P. 24, as amended by Rule Change 2025(15) effective January 2, 2026."
-  edge-trial-acquittal "Not guilty" -> acquitted {
-    authority cite "Crim. P. 31"
-  }
-  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
-    authority cite "Crim. P. 29(c)"
-  }
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "Crim. P. 31" }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial { authority cite "Crim. P. 29(c)" }
 }
 
 decision post-trial: "Post-trial motions" by court cite "Crim. P. 29(c)"
 {
   note "A motion for judgment of acquittal may be made or renewed within 14 days after the jury is discharged, or within further time the court fixes during that period (Crim. P. 29(c)); a motion for a new trial on a ground other than newly discovered evidence is filed within 14 days after verdict or finding of guilt, or additional time the court fixes during that period (Crim. P. 33(c)); a motion in arrest of judgment is made within 14 days after verdict or finding of guilt, or further time fixed during that period (Crim. P. 34). A timely motion in arrest of judgment, for judgment of acquittal, or for a new trial on a ground other than newly discovered evidence moves the time to appeal to 49 days after entry of the order denying it (C.A.R. 4(b)(2))."
-  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
-    authority cite "Crim. P. 29(c)"
-  }
-  edge-post-trial-new-trial "New trial granted" -> trial {
-    authority cite "Crim. P. 33(c)"
-  }
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted { authority cite "Crim. P. 29(c)" }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Crim. P. 33(c)" }
   edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
     authority cite "Crim. P. 32(b)"
   }
@@ -140,9 +122,7 @@ state sentencing: "Presentence report and sentencing" by court cite "Crim. P. 32
 decision judgment: "Judgment of conviction" by applicant cite "Crim. P. 32(c)"
 {
   note "After a trial the court, on passing sentence, informs the defendant of the right to seek review and of the time limits for a notice of appeal (Crim. P. 32(c)(1)). The defendant's notice of appeal is filed in the appellate court, with an advisory copy served on the trial court, within 49 days after entry of the judgment or order appealed from (C.A.R. 4(b)(1)); on a showing of excusable neglect the appellate court may extend the time by up to 35 days from its expiry (C.A.R. 4(b)(3)). A judgment is entered when it is entered in the criminal docket (C.A.R. 4(b)(4)). A felony sentence may be reviewed once on appeal (C.A.R. 4(b)(5); C.R.S. 18-1-409, not vendored). lit/core has no counting rule for C.A.R. 26, so the period is not encoded as a counted deadline."
-  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
-    authority cite "C.A.R. 4(b)"
-  }
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "C.A.R. 4(b)" }
   edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "C.A.R. 4(b)" }
 }
 

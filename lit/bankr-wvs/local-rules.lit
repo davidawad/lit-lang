@@ -85,132 +85,104 @@ event HearingDate()
 /// requires all schedules and statements no later than 7 days before the
 /// scheduled § 341 meeting.
 deadline extended-schedules-period: 7.days before ScheduledMeetingDate() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 1007-1(b)"
-
 /// R. 1015-1(b)(3): within 14 days of the order of joint administration,
 /// the designated party files a consolidated mailing matrix for all the
 /// jointly administered cases.
 deadline joint-matrix-period: 14.days after JointAdministrationOrdered() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 1015-1(b)(3)"
-
 /// R. 1017-2(b): a party raising automatic dismissal under § 521(i) for
 /// missing § 521(a)(1) or (e)(2) information files a motion to dismiss
 /// within 75 days of the petition, or the issue is barred.
 deadline automatic-dismissal-motion-period: 75.days after PetitionFiled() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 1017-2(b)"
-
 /// R. 1019-1.1(b)(2): on conversion or dismissal of a chapter 13 case
 /// without a confirmed plan, the trustee distributes under § 1326 unless a
 /// written objection is filed within 21 days of the notice.
 deadline undistributed-funds-objection-period: 21.days after ConversionOrDismissalNoticed() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 1019-1.1(b)(2)"
-
 /// R. 2003-1(c)(2): debtor's counsel files the notice of the continued
 /// meeting and a certificate of service within 7 days of service.
 deadline continued-meeting-certificate-period: 7.days after ContinuedMeetingNoticeServed() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 2003-1(c)(2)"
-
 /// R. 2003-1(d)(3): a debtor unable to agree with the U.S. Trustee on an
 /// alternative appearance may move, at least 7 days before the meeting, to
 /// extend or waive appearance.
 deadline appearance-motion-period: 7.days before ScheduledMeetingDate() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 2003-1(d)(3)"
-
 /// R. 2003-1(d)(4): debtor's counsel should notify the trustee and U.S.
 /// Trustee of a disability needing accommodation not less than 7 days
 /// before the § 341 meeting.
 deadline accommodation-notice-period: 7.days before ScheduledMeetingDate() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 2003-1(d)(4)"
-
 /// R. 2016-1(b): an application for attorneys' fees and expenses through
 /// conversion, dismissal or a plan's effective date is filed within 21 days
 /// after the notice or order.
 deadline cutoff-fee-application-period: 21.days after FeeCutoffNoticed() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 2016-1(b)"
-
 /// R. 2083-1.1: within 14 days of a stipulated purchase, the chapter 13
 /// debtor amends Schedule B, and Schedule C if an exemption is claimed.
 deadline asset-purchase-schedule-period: 14.days after AssetPurchased() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 2083-1.1"
-
 /// R. 2091-1(d)(2): an attorney who substitutes as debtor's counsel files a
 /// Statement of Compensation within 7 days of the earliest of the notice,
 /// first filing or appearance, or the substitution order.
 deadline substitute-compensation-statement-period: 7.days after SubstitutionEvent() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 2091-1(d)(2)"
-
 /// R. 3001-1(a)(3): in a chapter 11 case, unless the court orders
 /// otherwise, an entity other than a governmental unit files a proof of
 /// claim within 90 days after the date first set for the § 341(a) meeting.
 deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 3001-1(a)(3)"
-
 /// R. 3015-3(b)(1): if no objection is pending but the trustee cannot yet
 /// recommend confirmation, the trustee or debtor may move at least one week
 /// before the hearing to continue it past the non-governmental bar date.
 deadline confirmation-continuance-motion-period: 1.weeks before ConfirmationHearingDate() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 3015-3(b)(1)"
-
 /// R. 3018-1(a)(1): a chapter 11 plan proponent files the Certification of
 /// Acceptance and Rejection at least 3 days before the confirmation
 /// hearing.
 deadline ballot-certification-period: 3.days before Chapter11ConfirmationHearingDate() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 3018-1(a)(1)"
-
 /// R. 4001-1(d): three days before a final stay-relief hearing, the parties
 /// file any stipulations and file and exchange witness and exhibit lists.
 deadline stay-final-hearing-exchange-period: 3.days before StayFinalHearingDate() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 4001-1(d)"
-
 /// R. 4001-1(g)(3): unless ordered otherwise, an objection to a notice of
 /// default or of election is filed within 30 days of its service; the stay
 /// remains in effect until the court rules.
 deadline default-notice-objection-period: 30.days after DefaultNoticeServed() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 4001-1(g)(3)"
-
 /// R. 4002-1.1(b): a debtor who files electronically files the Certificate
 /// of Intent to Cure Default in Rent Payments no more than 7 days after the
 /// petition.
 deadline electronic-cure-certificate-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 4002-1.1(b)"
-
 /// R. 4002-1.1(c): the lessor has 14 days to file a written objection to
 /// the debtor's certification.
 deadline lessor-objection-period: 14.days after CureCertificateNoticeServed() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 4002-1.1(c)"
-
 /// R. 5005-1(b): within 7 days of sending an authorized facsimile filing,
 /// the signed original is filed with the clerk.
 deadline facsimile-original-period: 7.days after FacsimileSent() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 5005-1(b)"
-
 /// R. 5077-1(b)(2): parties have 7 calendar days from the filing of the
 /// transcript to file a Notice of Intent to Request Redaction.
 deadline redaction-intent-period: 7.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 5077-1(b)(2)"
-
 /// R. 5077-1(b)(3): a party that timely gave notice files and serves the
 /// Request for Redaction within 21 calendar days of the filing of the
 /// transcript, unless the court orders otherwise.
 deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 5077-1(b)(3)"
-
 /// R. 5077-1(b)(6): the transcriber files the redacted transcript within 31
 /// calendar days from the filing of the transcript.
 deadline redacted-transcript-period: 31.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 5077-1(b)(6)"
-
 /// R. 6005-1.1(c): the debtor or trustee files the FRBP 6004 report of sale
 /// within 21 days of an auction.
 deadline auction-report-period: 21.days after AuctionHeld() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 6005-1.1(c)"
-
 /// R. 7007-1(a): unless otherwise provided, a reply or response to a motion
 /// in an adversary proceeding is filed within 21 days from the motion's
 /// filing, or 3 days before a scheduled hearing if earlier.
 deadline adversary-motion-response-period: 21.days after AdversaryMotionFiled() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 7007-1(a)"
-
 /// R. 9013-1(c)(2)(iii): a motion for relief from stay in a chapter 7 case
 /// involving personal property, non-residential or surrendered residential
 /// real property may proceed on a 14-day negative notice.
 deadline stay-relief-negative-notice-period: 14.days after NegativeNoticeMailed() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 9013-1(c)(2)(iii)"
-
 /// R. 9013-1(c)(2)(iv): motions for redemption, lien avoidance and
 /// assumption, rejection or assignment of executory contracts proceed on a
 /// 21-day negative notice (R. 9013-1(c)(2)(iv)-(vi)).
 deadline default-motion-negative-notice-period: 21.days after NegativeNoticeMailed() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 9013-1(c)(2)(iv)"
-
 /// R. 9070-1(a)(1): a party wanting an exhibit returned files a written
 /// request within 90 days after the time for appeal expires with no appeal.
 deadline exhibit-return-period: 90.days after AppealTimeExpired() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 9070-1(a)(1)"
-
 /// R. 9070-1(a)(2): if an appeal is taken, the request is filed within 90
 /// days after the record on appeal is returned to the clerk.
 deadline exhibit-return-after-appeal-period: 90.days after AppealRecordReturned() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 9070-1(a)(2)"
-
 /// R. 9072-1(b): an attorney the court requests to submit an order
 /// reflecting a hearing submits it within 7 days, unless otherwise
 /// directed.
 deadline requested-order-period: 7.days after OrderRequested() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 9072-1(b)"
-
 /// R. 9074-1: a party wishing to appear at a scheduled hearing by telephone
 /// or video files a written motion at least 7 days before it.
 deadline telephone-appearance-motion-period: 7.days before HearingDate() counted_by frbp9006 cite "Bankr. S.D. W.Va. R. 9074-1"

@@ -13,7 +13,8 @@ start commenced
 state commenced: "Complaint filed" by applicant cite "R.I. Super. Ct. R. Civ. P. 3"
 {
   note "A civil action is commenced by filing a complaint and all other required documents together with the fees prescribed by law (R.I. Super. Ct. R. Civ. P. 3). If service of the summons, complaint, Language Assistance Notice and other required documents is not made on a defendant within 120 days after commencement, the court on motion or on its own initiative after notice to the plaintiff dismisses the action without prejudice as to that defendant or directs service within a specified time; on good cause the court extends the time (R.I. Super. Ct. R. Civ. P. 4(l)). A defendant asked to waive service has at least 30 days from the request (60 if addressed outside the United States) to return the waiver (R.I. Super. Ct. R. Civ. P. 4(d))."
-  edge-commenced-served "Defendant served" -> answer-due { event ActionCommenced()
+  edge-commenced-served "Defendant served" -> answer-due {
+    event ActionCommenced()
     authority cite "R.I. Super. Ct. R. Civ. P. 12(a)"
   }
   edge-commenced-unserved "Not served within 120 days" -> dismissed-unserved {
@@ -96,7 +97,8 @@ state trial: "Trial" by court cite "R.I. Super. Ct. R. Civ. P. 50(a)"
 decision post-trial: "Post-trial motions decided" by court cite "R.I. Super. Ct. R. Civ. P. 59(b)"
 {
   note "Every judgment is set forth on a separate document and is entered when so set forth and signed by the clerk; entry is not delayed for taxing costs (R.I. Super. Ct. R. Civ. P. 58(a)). A motion for judgment as a matter of law may be renewed not later than 10 days after entry of judgment (R.I. Super. Ct. R. Civ. P. 50(b)); a motion to amend findings, not later than 10 days after entry (R.I. Super. Ct. R. Civ. P. 52(b)); a motion for a new trial, not later than 10 days after entry, with opposing affidavits within 10 days after service of the motion's affidavits (R.I. Super. Ct. R. Civ. P. 59(b), (c)); a motion to alter or amend the judgment, not later than 10 days after entry (R.I. Super. Ct. R. Civ. P. 59(e)). These times may not be enlarged except as those rules state (R.I. Super. Ct. R. Civ. P. 6(b)). Costs may be taxed by the clerk on 10 days' notice by the prevailing party, served with the bill of costs (R.I. Super. Ct. R. Civ. P. 54(d)). No execution issues until 20 days after entry of judgment or until the time for appeal has expired (R.I. Super. Ct. R. Civ. P. 62(a))."
-  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered { event JudgmentEntered()
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "R.I. Super. Ct. R. Civ. P. 58(a)"
   }
 }
@@ -112,7 +114,8 @@ state judgment-entered: "Final judgment entered" by office cite "R.I. Super. Ct.
 decision appeal-decision: "Notice of appeal within 20 days of entry?" by applicant cite "R.I. Sup. Ct. R. App. P. 4(a)"
 {
   note "In a civil case the notice of appeal is filed with the clerk of the trial court within 20 days of the entry of the judgment, order or decree appealed from, with a filing fee of $150; once a timely notice is filed any other party may file a notice within 20 days of it. A timely motion under Super. R. Civ. P. 50(b), 52(b) or 59 terminates the running of the time, which runs in full from entry of the order deciding it. On a showing of excusable neglect the trial court may extend the time by up to 30 days from the expiration of the original time (R.I. Sup. Ct. R. App. P. 4(a))."
-  edge-appeal-decision-taken "Notice filed" -> appeal-taken { event NoticeOfAppealFiled()
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
     authority cite "R.I. Sup. Ct. R. App. P. 3(a)"
   }
   edge-appeal-decision-none "No notice filed" -> final-no-appeal {

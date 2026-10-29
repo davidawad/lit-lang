@@ -11,8 +11,7 @@ import tx-state-rules.{ ActionCommenced, DecisionFiled }
 // leading decision was named; none is kept.
 start request
 
-state request: "Motion to transfer filed" by applicant cite ?("Tex. R. Jud. Admin. 13.3 (not vendored)")
-{
+state request: "Motion to transfer filed" by applicant cite ?("Tex. R. Jud. Admin. 13.3 (not vendored)") {
   note "Who may move, the form of the motion and the response periods are stated in Rule 13 of the Rules of Judicial Administration, which is not vendored; they stay holes. Pretrial proceedings in multidistrict litigation may also be governed by Rules 11 and 13 of the Rules of Judicial Administration (Tex. R. Civ. P. 166)."
   edge-request-decision "Submitted for decision" -> decision {
     event ActionCommenced()
@@ -20,8 +19,7 @@ state request: "Motion to transfer filed" by applicant cite ?("Tex. R. Jud. Admi
   }
 }
 
-decision decision: "Panel decides" by court cite ?("Tex. Gov't Code § 74.162 (not vendored)")
-{
+decision decision: "Panel decides" by court cite ?("Tex. Gov't Code § 74.162 (not vendored)") {
   note "The panel's standard for transfer and the effect of its order are stated in text that is not vendored; they stay holes."
   edge-decision-granted "Transfer ordered" -> granted {
     event DecisionFiled()
@@ -33,12 +31,10 @@ decision decision: "Panel decides" by court cite ?("Tex. Gov't Code § 74.162 (n
   }
 }
 
-terminal granted: "Transfer to a pretrial court ordered" outcome [win] cite ?("Tex. Gov't Code § 74.162 (not vendored)")
-{
+terminal granted: "Transfer to a pretrial court ordered" outcome [win] cite ?("Tex. Gov't Code § 74.162 (not vendored)") {
   note "Pretrial proceedings in the pretrial court may be governed by Rules 11 and 13 of the Rules of Judicial Administration (Tex. R. Civ. P. 166), which are not vendored."
 }
 
-terminal denied: "Transfer denied" outcome [loss] cite ?("Tex. Gov't Code § 74.162 (not vendored)")
-{
+terminal denied: "Transfer denied" outcome [loss] cite ?("Tex. Gov't Code § 74.162 (not vendored)") {
   note "Whether and how the panel's order may be reviewed is stated in text that is not vendored; it stays a hole."
 }

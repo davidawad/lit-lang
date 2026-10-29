@@ -95,134 +95,107 @@ event JudgmentFinal()
 /// fee in installments the clerk may sign provides for the initial
 /// installment with the petition or within 31 days thereafter.
 deadline installment-initial-period: 31.days after PetitionFiled() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 1006-1(a)"
-
 /// N.D. Iowa Bankr. L.R. 1006-1(b): a debtor whose fee waiver application is
 /// denied and who is not eligible for installments is ordered to pay the
 /// full filing fee within 7 days of the order denying it.
 deadline fee-after-waiver-denial-period: 7.days after FeeWaiverDenied() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 1006-1(b)"
-
 /// N.D. Iowa Bankr. L.R. 1007-1(g)(1): an individual debtor unable to
 /// provide the tax return under 11 U.S.C. § 521(e)(2)(A)(i) files a Motion
 /// for Exception from Dismissal not later than 7 days before the first date
 /// set for the meeting of creditors.
 deadline tax-return-exception-motion-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 1007-1(g)"
-
 /// N.D. Iowa Bankr. L.R. 1075-1(d)-(e): the clerk's deficiency notice for a
 /// missing corporate disclosure statement allows 14 days for cure; failure
 /// may result in striking or dismissal.
 deadline disclosure-deficiency-cure-period: 14.days after DisclosureDeficiencyNoticed() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 1075-1(d)"
-
 /// N.D. Iowa Bankr. L.R. 2004-1(c)(2): the party opposing a contested Rule
 /// 2004 examination has 14 days from service to file an objection.
 deadline exam-objection-period: 14.days after ExamMotionServed() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 2004-1(c)"
-
 /// N.D. Iowa Bankr. L.R. 2090-1(b)(3)(C): if not filed with a pro hac vice
 /// application, the bar association's good-standing letter or certificate
 /// is filed within 21 days of the application.
 deadline good-standing-certificate-period: 21.days after ProHacViceApplicationFiled() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 2090-1(b)"
-
 /// N.D. Iowa Bankr. L.R. 3011-1(c)(1)(B): unless the plan provides
 /// otherwise, the disbursing agent under a chapter 11 liquidating plan pays
 /// into the Court Registry funds left unclaimed 120 calendar days after the
 /// final distribution.
 deadline liquidating-plan-unclaimed-funds-period: 120.days after PlanFinalDistribution() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 3011-1(c)"
-
 /// N.D. Iowa Bankr. L.R. 3012-1(c): a party offering an appraisal serves the
 /// appraisal exhibit and affidavit at least 14 days before the valuation
 /// hearing.
 deadline appraisal-service-period: 14.days before ValuationHearing() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 3012-1(c)"
-
 /// N.D. Iowa Bankr. L.R. 3012-1(d): unless an opposing party files and
 /// serves a written objection at least 7 days before the hearing, the
 /// appraisal exhibit is admitted.
 deadline appraisal-objection-period: 7.days before ValuationHearing() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 3012-1(d)"
-
 /// N.D. Iowa Bankr. L.R. 3015-1(c): an objection raised orally at an initial
 /// confirmation hearing held the day of the § 341 meeting is filed in
 /// writing within 7 days after the hearing, or it is waived as to the
 /// initial plan.
 deadline oral-objection-writing-period: 7.days after InitialConfirmationHearing() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 3015-1(c)"
-
 /// N.D. Iowa Bankr. L.R. 3018-1(b): the plan proponent files a verified
 /// report on the balloting at least 7 days before the confirmation hearing.
 deadline ballot-report-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 3018-1(b)"
-
 /// N.D. Iowa Bankr. L.R. 3070-2(a): a chapter 12 debtor pays the standing
 /// trustee the deposit for court costs within 14 days of filing.
 deadline chapter12-deposit-period: 14.days after PetitionFiled() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 3070-2(a)"
-
 /// N.D. Iowa Bankr. L.R. 3070-2(d): objections to the standing trustee's
 /// proposed distribution of a chapter 12 deposit may be filed within 21
 /// days of its service.
 deadline deposit-distribution-objection-period: 21.days after DepositDistributionServed() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 3070-2(d)"
-
 /// N.D. Iowa Bankr. L.R. 4001-1(b)(5), (c): a party opposing a motion for
 /// relief from stay files and serves an answer at least 7 days before the
 /// preliminary hearing, or the court may grant the motion by default.
 deadline stay-relief-answer-period: 7.days before StayReliefPreliminaryHearing() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 4001-1(c)"
-
 /// N.D. Iowa Bankr. L.R. 4002-1: a chapter 11, 12 or 13 debtor files any
 /// prepetition delinquent tax return within 30 days of the petition date,
 /// unless the court extends the time after notice and hearing.
 deadline delinquent-tax-return-period: 30.days after PetitionFiled() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 4002-1"
-
 /// N.D. Iowa Bankr. L.R. 4003-1(a)-(b): the debtor has 21 days to file and
 /// serve a resistance to an objection to a claim of exemption, or an order
 /// sustaining the objection enters.
 deadline exemption-objection-resistance-period: 21.days after ExemptionObjectionServed() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 4003-1(a)"
-
 /// N.D. Iowa Bankr. L.R. 4003-2(b): parties against whom § 522(f) lien
 /// avoidance is sought have 21 days to object.
 deadline lien-avoidance-objection-period: 21.days after LienAvoidanceMotionServed() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 4003-2(b)"
-
 /// N.D. Iowa Bankr. L.R. 4003-2(b): the objection period is 35 days if the
 /// lienholder is the United States or an officer or agency thereof.
 deadline united-states-lien-avoidance-objection-period: 35.days after LienAvoidanceMotionServed() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 4003-2(b)"
-
 /// N.D. Iowa Bankr. L.R. 4008-1(c): the clerk cancels a hearing on a
 /// deficient reaffirmation agreement only if the deficiencies are cured 14
 /// days before the hearing.
 deadline reaffirmation-cure-period: 14.days before ReaffirmationHearing() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 4008-1(c)"
-
 /// N.D. Iowa Bankr. L.R. 5005-4(a)(2): the show-cause hearing on a paper
 /// filed conventionally is cancelled only on a Consent to Order Imposing
 /// Sanctions signed by the filing attorney within 14 days of the Order to
 /// Show Cause.
 deadline sanctions-consent-period: 14.days after ShowCauseOrderEntered() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 5005-4(a)"
-
 /// N.D. Iowa Bankr. L.R. 5007-1(e): parties have 7 days from the filing of a
 /// transcript to file a Notice of Intent to Request Redaction of Transcript.
 deadline redaction-intent-period: 7.days after TranscriptFiled() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 5007-1(e)"
-
 /// N.D. Iowa Bankr. L.R. 5007-1(f): a party that filed the notice of intent
 /// submits its Statement of Personal Data Identifier Redaction Request to
 /// the transcriber within 21 days of the filing of the transcript.
 deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 5007-1(f)"
-
 /// N.D. Iowa Bankr. L.R. 6004-1(b): an entity objecting to a chapter 7
 /// trustee's sale, compromise or abandonment on limited notice files its
 /// objection within 21 days after the trustee files the report.
 deadline limited-notice-disposition-objection-period: 21.days after DispositionReportFiled() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 6004-1(b)"
-
 /// N.D. Iowa Bankr. L.R. 7054-1(a): a prevailing party allowed costs files
 /// and serves a Bill of Costs within 21 days of the allowance, or recovery
 /// is waived.
 deadline bill-of-costs-period: 21.days after CostsAllowed() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 7054-1(a)"
-
 /// N.D. Iowa Bankr. L.R. 7055-1: upon notice that an adversary proceeding
 /// has settled, the parties file the papers disposing of it within 30 days,
 /// or the court may dismiss it.
 deadline settled-proceeding-papers-period: 30.days after SettlementNoticed() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 7055-1"
-
 /// N.D. Iowa Bankr. L.R. 9070-1(d): all exhibits are served on opposing
 /// counsel at least 14 days before the hearing or trial.
 deadline exhibit-exchange-period: 14.days before HearingOrTrial() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 9070-1(d)"
-
 /// N.D. Iowa Bankr. L.R. 9070-1(d): a served exhibit is admitted without
 /// further foundation unless a written objection is served and filed at
 /// least 7 days before the hearing or trial.
 deadline exhibit-objection-period: 7.days before HearingOrTrial() counted_by frbp9006 cite "N.D. Iowa Bankr. L.R. 9070-1(d)"
-
 /// N.D. Iowa Bankr. L.R. 9070-1(f): exhibits not claimed and withdrawn within
 /// 60 days after the judgment becomes final may be destroyed or otherwise
 /// disposed of by the clerk.

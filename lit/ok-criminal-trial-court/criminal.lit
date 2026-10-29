@@ -18,16 +18,14 @@ module ok-criminal-trial-court.criminal
 // are removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite ?("Okla. Stat. tit. 22, arrest, summons and complaint (not vendored)")
-{
+state arrested: "Arrest or summons" by applicant cite ?("Okla. Stat. tit. 22, arrest, summons and complaint (not vendored)") {
   note "Arrest, presentment before a magistrate and the complaint are governed by Title 22, which is not vendored; any period for presentment is a hole."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
     authority cite ?("Okla. Stat. tit. 22, initial appearance (not vendored)")
   }
 }
 
-decision initial-appearance: "Counsel, bail, release or detention" by court cite ?("Okla. Stat. tit. 22, bail and pretrial release (not vendored)")
-{
+decision initial-appearance: "Counsel, bail, release or detention" by court cite ?("Okla. Stat. tit. 22, bail and pretrial release (not vendored)") {
   note "Release, bail and detention are governed by Title 22 (not vendored). Indigency for court-appointed counsel and a transcript at state expense is determined on the qualifications OCCA Rule 1.14(A) sets, on the sworn application form it prescribes (Okla. Ct. Crim. App. R. 1.14(A))."
   edge-initial-appearance-detained "Detained" -> probable-cause {
     authority cite ?("Okla. Stat. tit. 22, pretrial detention (not vendored)")
@@ -37,8 +35,7 @@ decision initial-appearance: "Counsel, bail, release or detention" by court cite
   }
 }
 
-decision probable-cause: "Preliminary hearing or grand jury" by court cite ?("Okla. Stat. tit. 22, preliminary hearing (not vendored)")
-{
+decision probable-cause: "Preliminary hearing or grand jury" by court cite ?("Okla. Stat. tit. 22, preliminary hearing (not vendored)") {
   note "Whether a felony proceeds by information after a preliminary hearing or by indictment, and the periods to the hearing, are governed by Title 22 and are holes."
   edge-probable-cause-charged "Bound over; information or indictment filed" -> charged {
     authority cite ?("Okla. Stat. tit. 22, indictment and information (not vendored)")
@@ -48,24 +45,21 @@ decision probable-cause: "Preliminary hearing or grand jury" by court cite ?("Ok
   }
 }
 
-state charged: "Indictment or information" by office cite ?("Okla. Stat. tit. 22, indictment and information (not vendored)")
-{
+state charged: "Indictment or information" by office cite ?("Okla. Stat. tit. 22, indictment and information (not vendored)") {
   note "The statutory speedy-trial provision (Okla. Stat. tit. 22, § 812.1) is not vendored; its periods and exclusions are holes."
   edge-charged-arraignment "Arraignment" -> arraignment {
     authority cite ?("Okla. Stat. tit. 22, arraignment (not vendored)")
   }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite ?("Okla. Stat. tit. 22, arraignment (not vendored)")
-{
+state arraignment: "Arraignment and plea of not guilty" by applicant cite ?("Okla. Stat. tit. 22, arraignment (not vendored)") {
   note "Arraignment, pleas and discovery are governed by Title 22 (not vendored); their periods are holes."
   edge-arraignment-discovery "Discovery" -> discovery {
     authority cite ?("Okla. Stat. tit. 22, discovery (not vendored)")
   }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)")
-{
+state discovery: "Discovery and pretrial motions" by applicant cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)") {
   note "The pretrial-motion period and the statutory speedy-trial demand and dismissal (Okla. Stat. tit. 22, § 812.1) are holes."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
     authority cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)")
@@ -78,8 +72,7 @@ state discovery: "Discovery and pretrial motions" by applicant cite ?("Okla. Sta
   }
 }
 
-decision motions-ruling: "Ruling on pretrial motions" by court cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)")
-{
+decision motions-ruling: "Ruling on pretrial motions" by court cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)") {
   note "Dismissal for a speedy-trial violation and its effect on refiling are holes (Okla. Stat. tit. 22, § 812.1, not vendored)."
   edge-motions-ruling-speedy "Dismissed for a speedy-trial violation" -> dismissed {
     authority cite ?("Okla. Stat. tit. 22, § 812.1 (not vendored)")
@@ -103,8 +96,7 @@ decision plea-decision: "Plea or trial" by applicant cite "Okla. Ct. Crim. App. 
   }
 }
 
-decision trial: "Verdict" by court cite ?("Okla. Stat. tit. 22, trial and verdict (not vendored)")
-{
+decision trial: "Verdict" by court cite ?("Okla. Stat. tit. 22, trial and verdict (not vendored)") {
   note "The jury-trial right, jury size and verdict are governed by the Oklahoma Constitution and Title 22 (not vendored)."
   edge-trial-acquittal "Not guilty" -> acquitted {
     authority cite ?("Okla. Stat. tit. 22, trial and verdict (not vendored)")
@@ -131,16 +123,16 @@ decision judgment: "Notice of intent to appeal" by applicant cite "Okla. Ct. Cri
   edge-judgment-plea "Application to withdraw the plea filed" -> appeal-taken {
     authority cite "Okla. Ct. Crim. App. R. 4.2(A)"
   }
-  edge-judgment-no-appeal "No timely notice" -> conviction-final { authority cite "Okla. Ct. Crim. App. R. 2.1(B)" }
+  edge-judgment-no-appeal "No timely notice" -> conviction-final {
+    authority cite "Okla. Ct. Crim. App. R. 2.1(B)"
+  }
 }
 
-terminal acquitted: "Acquitted" outcome [win] cite ?("Okla. Stat. tit. 22, trial and verdict (not vendored)")
-{
+terminal acquitted: "Acquitted" outcome [win] cite ?("Okla. Stat. tit. 22, trial and verdict (not vendored)") {
   note "Outcome from the defendant's side."
 }
 
-terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite ?("Okla. Stat. tit. 22, dismissal (not vendored)")
-{
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite ?("Okla. Stat. tit. 22, dismissal (not vendored)") {
   note "Outcome from the defendant's side. Whether a dismissal bars refiling is a hole."
 }
 

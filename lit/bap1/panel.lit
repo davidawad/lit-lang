@@ -38,33 +38,26 @@ import frbp.events.{ LeaveToAppealGranted, NoticeOfAppealFiled }
 // Jackson Masonry, LLC, 589 U.S. 35 (2020), and Anderson v. City of
 // Bessemer City, 470 U.S. 564 (1985); no opinion is vendored and neither
 // the FRBP nor the panel's rules state them, so they are not cited.
-
 /// The bankruptcy court enters an order denying a motion to waive the
 /// filing fee (1st Cir. BAP L.R. 8003-1(c)(2)).
 event FeeWaiverDenied()
-
 /// The bankruptcy court issues an indicative ruling under FRBP 8008(a) on
 /// a motion it lacks authority to grant because of a pending appeal (1st
 /// Cir. BAP L.R. 8008-1(a)).
 event IndicativeRulingIssued()
-
 /// After the BAP remands and retains jurisdiction, the bankruptcy court
 /// issues its order on the underlying motion for relief (1st Cir. BAP L.R.
 /// 8008-1(b)).
 event RemandedMotionDecided()
-
 /// Notice of the entry of a BAP clerk's order on a motion listed in 1st
 /// Cir. BAP L.R. 8013-1(a)(1) is served (8013-1(a)(2)).
 event ClerkOrderEntryServed()
-
 /// The BAP clerk's order dismissing the appeal for failure to prosecute is
 /// served (1st Cir. BAP L.R. 8020-1(b)(1)).
 event ProsecutionDismissalServed()
-
 /// A motion for sanctions or an order to show cause under 1st Cir. BAP
 /// L.R. 8020-1(c) is served.
 event SanctionsMotionServed()
-
 /// A motion for rehearing is served (1st Cir. BAP L.R. 8022-1(a)).
 event RehearingMotionServed()
 
@@ -72,39 +65,31 @@ event RehearingMotionServed()
 /// within 14 days after filing the notice of appeal, the appellant pays the
 /// filing fee or moves to waive it.
 deadline fee-payment-period: 14.days after NoticeOfAppealFiled() counted_by frbp9006 cite "1st Cir. BAP L.R. 8003-1(c)(1)"
-
 /// 1st Cir. BAP L.R. 8003-1(c)(1): on an appeal by leave, within 14 days
 /// after the order granting the motion for leave to appeal.
 deadline fee-payment-leave-period: 14.days after LeaveToAppealGranted() counted_by frbp9006 cite "1st Cir. BAP L.R. 8003-1(c)(1)"
-
 /// 1st Cir. BAP L.R. 8003-1(c)(2): the fee is paid within 14 days after
 /// entry of the order denying the waiver motion unless the bankruptcy court
 /// orders otherwise.
 deadline fee-after-waiver-denial-period: 14.days after FeeWaiverDenied() counted_by frbp9006 cite "1st Cir. BAP L.R. 8003-1(c)(2)"
-
 /// 1st Cir. BAP L.R. 8008-1(a): within 7 days the movant moves in the BAP,
 /// notifying it of the indicative ruling and stating whether it seeks a
 /// remand with retained jurisdiction or dismissal of the appeal.
 deadline indicative-ruling-notice-period: 7.days after IndicativeRulingIssued() counted_by frbp9006 cite "1st Cir. BAP L.R. 8008-1(a)"
-
 /// 1st Cir. BAP L.R. 8008-1(b): within 7 days after the bankruptcy court's
 /// order on the underlying motion, the movant reports its disposition and
 /// whether the appeal is moot or will proceed.
 deadline remand-report-period: 7.days after RemandedMotionDecided() counted_by frbp9006 cite "1st Cir. BAP L.R. 8008-1(b)"
-
 /// 1st Cir. BAP L.R. 8013-1(a)(2): a motion to reconsider a clerk's order
 /// is filed within 14 days of service of notice of its entry.
 deadline clerk-order-reconsideration-period: 14.days after ClerkOrderEntryServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8013-1(a)(2)"
-
 /// 1st Cir. BAP L.R. 8020-1(b)(1): the defaulting party moves to reinstate
 /// within 14 days of service of the dismissal order.
 deadline reinstatement-period: 14.days after ProsecutionDismissalServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8020-1(b)(1)"
-
 /// 1st Cir. BAP L.R. 8020-1(c): a party or attorney facing sanctions may
 /// respond within fourteen days of service of the motion or order to show
 /// cause.
 deadline sanctions-response-period: 14.days after SanctionsMotionServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8020-1(c)"
-
 /// 1st Cir. BAP L.R. 8022-1(a): a response to a motion for rehearing may
 /// be filed within 7 days after its service.
 deadline rehearing-response-period: 7.days after RehearingMotionServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8022-1(a)"
@@ -136,9 +121,7 @@ state fee: "Filing fee" by applicant cite "1st Cir. BAP L.R. 8003-1(c)"
     authority cite "1st Cir. BAP L.R. 8003-1(c)(2)"
     within fee-after-waiver-denial-period
   }
-  edge-fee-unpaid "Fee not paid" -> dismissed-fee {
-    authority cite "1st Cir. BAP L.R. 8003-1(c)"
-  }
+  edge-fee-unpaid "Fee not paid" -> dismissed-fee { authority cite "1st Cir. BAP L.R. 8003-1(c)" }
 }
 
 terminal dismissed-fee: "Dismissed for nonpayment of the fee" outcome [loss] cite "1st Cir. BAP L.R. 8003-1(c)"

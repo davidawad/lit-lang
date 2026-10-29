@@ -95,140 +95,114 @@ event NoDistributionReportFiled()
 /// execution, or else a properly executed amendment indicating the changes
 /// since execution is filed.
 deadline petition-execution-period: 14.days after PetitionExecuted() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1002-1(a)"
-
 /// W.D. Ky. L.B.R. 1019(b): unless the court directs otherwise, within 14
 /// days of the notice of conversion of a chapter 11 or 12 case to chapter
 /// 7, the debtor in possession or the trustee serving at conversion files a
 /// schedule of unpaid postpetition, preconversion debts.
 deadline converted-postpetition-debts-period: 14.days after ConversionNoticed() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1019(b)"
-
 /// W.D. Ky. L.B.R. 1019(c): unless the court directs otherwise, within 14
 /// days of the notice of conversion of a chapter 13 case to chapter 7, the
 /// debtor files a notice of unpaid postpetition debts and amended Schedules
 /// I and J.
 deadline converted-chapter13-filings-period: 14.days after Chapter13ConversionNoticed() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1019(c)"
-
 /// W.D. Ky. L.B.R. 1094-1(b)(1): within 10 days after appointment of a
 /// Subchapter V trustee, the debtor confers with the trustee about the
 /// monthly postpetition deposit for administrative expenses.
 deadline deposit-conference-period: 10.days after SubchapterVTrusteeAppointed() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1094-1(b)"
-
 /// W.D. Ky. L.B.R. 1094-1(b)(2): a party in interest opposing the
 /// stipulated deposit motion may object within 21 days after the date of
 /// service.
 deadline deposit-stipulation-objection-period: 21.days after DepositStipulationServed() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1094-1(b)"
-
 /// W.D. Ky. L.B.R. 1094-1(b)(3): if no deposit agreement is reached, the
 /// debtor files a motion for an expedited hearing on the deposit
 /// immediately and no later than the close of the 10th day after the
 /// Subchapter V trustee is appointed.
 deadline deposit-motion-period: 10.days after SubchapterVTrusteeAppointed() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1094-1(b)"
-
 /// W.D. Ky. L.B.R. 1095-1(a)(2): under a confirmed nonconsensual plan, the
 /// debtor gives the Subchapter V trustee written notice of significant
 /// after-acquired property within 30 days of acquiring it.
 deadline after-acquired-property-notice-period: 30.days after AfterAcquiredPropertyAcquired() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1095-1(a)"
-
 /// W.D. Ky. L.B.R. 1095-1(a)(6): if no objection to the Subchapter V
 /// trustee's monthly fee notice is filed within 14 days of its filing, the
 /// debtor promptly pays the balance.
 deadline trustee-fee-notice-objection-period: 14.days after TrusteeFeeNoticeFiled() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1095-1(a)"
-
 /// W.D. Ky. L.B.R. 1095-1(b): the debtor files and serves the Notice of
 /// Substantial Consummation within 14 days following substantial
 /// consummation (11 U.S.C. § 1183(c)).
 deadline substantial-consummation-notice-period: 14.days after SubstantialConsummation() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1095-1(b)"
-
 /// W.D. Ky. L.B.R. 1095-1(c)(2): in a consensual Subchapter V case, within
 /// 90 days of the Notice of Substantial Consummation the trustee files a
 /// final compensation application and the NDR or TFR.
 deadline consensual-final-report-period: 90.days after SubstantialConsummationNoticeFiled() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1095-1(c)"
-
 /// W.D. Ky. L.B.R. 1095-1(c)(3): within 30 days of the trustee's NDR or TFR
 /// in a consensual case, the debtor files a motion for final decree.
 deadline consensual-final-decree-motion-period: 30.days after SubchapterVFinalReportFiled() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1095-1(c)"
-
 /// W.D. Ky. L.B.R. 1095-1(d)(2): in a nonconsensual Subchapter V case,
 /// within 90 days of the notice of plan completion the trustee files a
 /// final compensation application and the NDR or TFR.
 deadline nonconsensual-final-report-period: 90.days after PlanCompletionNoticeFiled() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1095-1(d)"
-
 /// W.D. Ky. L.B.R. 1095-1(d)(3): within 30 days of the trustee's NDR or TFR
 /// in a nonconsensual case, the debtor files a motion for entry of
 /// discharge and a motion for final decree.
 deadline nonconsensual-discharge-motion-period: 30.days after SubchapterVFinalReportFiled() counted_by frbp9006 cite "W.D. Ky. L.B.R. 1095-1(d)"
-
 /// W.D. Ky. L.B.R. 2007-1: the court orders a patient care ombudsman
 /// appointed without a hearing within 30 days of commencement of a health
 /// care case unless, within 21 days, a motion is filed for an order that
 /// the appointment is not necessary.
 deadline ombudsman-motion-period: 21.days after HealthCareCaseCommenced() counted_by frbp9006 cite "W.D. Ky. L.B.R. 2007-1"
-
 /// W.D. Ky. L.B.R. 2081-1(a): unless the confirmation order provides
 /// otherwise, the debtor in possession or plan proponent files the
 /// Certification and Request for Entry of Final Decree (Local Form U)
 /// within 60 days of entry of the order of confirmation; extendable on
 /// motion for cause.
 deadline final-decree-certification-period: 60.days after Chapter11ConfirmationOrderEntered() counted_by frbp9006 cite "W.D. Ky. L.B.R. 2081-1(a)"
-
 /// W.D. Ky. L.B.R. 2082-1(a)(2): a chapter 12 debtor files the
 /// Certification of Plan Completion and Request for Discharge (Local Form
 /// V) within 30 days of the trustee's notice; extendable on motion for
 /// cause.
 deadline chapter12-discharge-certification-period: 30.days after Chapter12CompletionNoticeServed() counted_by frbp9006 cite "W.D. Ky. L.B.R. 2082-1(a)"
-
 /// W.D. Ky. L.B.R. 2083-1(a)(2): a chapter 13 debtor files the
 /// Certification of Plan Completion and Request for Discharge (Local Form
 /// Q) within 30 days of the trustee's notice; extendable on motion for
 /// cause.
 deadline chapter13-discharge-certification-period: 30.days after Chapter13CompletionNoticeServed() counted_by frbp9006 cite "W.D. Ky. L.B.R. 2083-1(a)"
-
 /// W.D. Ky. L.B.R. 3001-1(b): in a chapter 13 case, secured and priority
 /// claims should be filed within 7 days preceding the meeting of creditors;
 /// failure may delay distribution.
 deadline secured-priority-claim-period: 7.days before MeetingOfCreditorsHeld() counted_by frbp9006 cite "W.D. Ky. L.B.R. 3001-1(b)"
-
 /// W.D. Ky. L.B.R. 3001-1(c)(1)-(3): a deficiency claim arising from
 /// disposition of secured collateral is filed no later than 180 days
 /// following the order granting relief from the stay (in chapter 7, and no
 /// later than the final report); enlargeable only on motion within the 180
 /// days for cause.
 deadline deficiency-claim-period: 180.days after StayReliefGranted() counted_by frbp9006 cite "W.D. Ky. L.B.R. 3001-1(c)"
-
 /// W.D. Ky. L.B.R. 3001-1(c)(2)(ii): in a chapter 12 or 13 case, debtor's
 /// counsel has 30 days from the filing of a deficiency proof of claim to
 /// object; an untimely objection leaves the claim deemed allowed.
 deadline deficiency-claim-objection-period: 30.days after DeficiencyClaimFiled() counted_by frbp9006 cite "W.D. Ky. L.B.R. 3001-1(c)"
-
 /// W.D. Ky. L.B.R. 3001-1(c)(2)(iii): following allowance of the deficiency
 /// claim, debtor's counsel has 30 days to file a supplemental schedule of
 /// allowed claims.
 deadline supplemental-schedule-period: 30.days after DeficiencyClaimAllowed() counted_by frbp9006 cite "W.D. Ky. L.B.R. 3001-1(c)"
-
 /// W.D. Ky. L.B.R. 3070-1(b): proposed plan payments held in counsel's
 /// escrow are paid to the chapter 13 trustee within 10 days after
 /// confirmation of the plan.
 deadline plan-payment-turnover-period: 10.days after Chapter13PlanConfirmed() counted_by frbp9006 cite "W.D. Ky. L.B.R. 3070-1(b)"
-
 /// W.D. Ky. L.B.R. 4001-1(d)(1): in a chapter 7 case, if no response to a
 /// stay motion is filed within 14 days, the relief may be granted.
 deadline chapter7-stay-response-period: 14.days after Chapter7StayMotionFiled() counted_by frbp9006 cite "W.D. Ky. L.B.R. 4001-1(d)"
-
 /// W.D. Ky. L.B.R. 4001-1(e)(4): in a chapter 13 case, the debtor has until
 /// 7 days before the hearing to respond to a stay motion; if no response is
 /// filed the relief is granted.
 deadline chapter13-stay-response-period: 7.days before Chapter13StayHearingScheduled() counted_by frbp9006 cite "W.D. Ky. L.B.R. 4001-1(e)"
-
 /// W.D. Ky. L.B.R. 4070-1(a)(1)-(2): proof of insurance is furnished to the
 /// trustee and the creditor within 10 days of a request; failure is
 /// presumed to mean no insurance is in effect.
 deadline insurance-proof-period: 10.days after InsuranceProofRequested() counted_by frbp9006 cite "W.D. Ky. L.B.R. 4070-1(a)"
-
 /// W.D. Ky. L.B.R. 5005-1(e): a party may request one who filed an excerpt
 /// to provide a complete copy of the attachment within 7 days of receipt of
 /// the request.
 deadline complete-attachment-period: 7.days after CompleteAttachmentRequested() counted_by frbp9006 cite "W.D. Ky. L.B.R. 5005-1(e)"
-
 /// W.D. Ky. L.B.R. 6007-1(a): property of the estate is deemed abandoned if
 /// the trustee files a report of no distribution and no objection is filed
 /// within 30 days from the report.

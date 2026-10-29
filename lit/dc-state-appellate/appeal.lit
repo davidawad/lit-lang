@@ -14,24 +14,20 @@ import dc-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, Recor
 // outline named no leading decision; none is cited.
 start threshold
 
-decision threshold: "Appealable order or judgment?" by applicant cite ?("D.C. Code § 11-721")
-{
+decision threshold: "Appealable order or judgment?" by applicant cite ?("D.C. Code § 11-721") {
   note "Whether the order or judgment is appealable as of right is set by D.C. Code § 11-721, which is not vendored; the hole stays. An appeal permitted by law as of right from the Superior Court is taken only by filing a notice of appeal with the Clerk of the Superior Court within the time Rule 4 allows (D.C. App. R. 3(a))."
   edge-threshold-no "Not appealable" -> dismissed-jurisdiction {
     authority cite ?("D.C. Code § 11-721")
   }
-  edge-threshold-yes "Appealable" -> notice {
-    authority cite "D.C. App. R. 3"
-  }
+  edge-threshold-yes "Appealable" -> notice { authority cite "D.C. App. R. 3" }
 }
 
 decision notice: "Notice of appeal within time?" by applicant cite "D.C. App. R. 4"
 {
   note "The notice of appeal in a civil case is filed with the Clerk of the Superior Court within 30 days after entry of the judgment or order appealed from, unless the rules or the D.C. Code specify a different time (for example D.C. Code § 17-307(b), small claims); filing is not timely unless the Superior Court Clerk in fact receives the notice within the time (D.C. App. R. 3(a), 4(a)(1)). A notice filed after the decision is announced but before entry is treated as filed on and after the date of entry (D.C. App. R. 4(a)(2)). If one party files a timely notice, any other party may file within 14 days after the first notice was filed or within the Rule 4(a)(1) time, whichever ends later (D.C. App. R. 4(a)(3)). A timely motion in the Superior Court for judgment as a matter of law, to amend or add findings, to vacate, alter or amend, for a new trial, or for relief from judgment filed no later than 10 days after entry, makes the time run for all parties from entry of the order disposing of the last such motion (D.C. App. R. 4(a)(4)). The Superior Court may extend the time if the notice is filed no later than 30 days after the prescribed time expires and the party shows excusable neglect or good cause (D.C. App. R. 4(a)(5)). A judgment signed or decided outside the parties' presence is not entered for this purpose until the fifth day after the Clerk dockets service of notice of it (D.C. App. R. 4(a)(6)). The Superior Court may reopen the time for 14 days after its order if the movant did not receive notice of entry within 21 days, moves within 180 days after entry or 14 days after receiving notice, whichever is earlier, and no party is prejudiced (D.C. App. R. 4(a)(7))."
-  edge-notice-late "Untimely notice" -> dismissed-untimely {
-    authority cite "D.C. App. R. 4"
-  }
-  edge-notice-timely "Timely notice filed" -> record { event NoticeOfAppealFiled()
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "D.C. App. R. 4" }
+  edge-notice-timely "Timely notice filed" -> record {
+    event NoticeOfAppealFiled()
     authority cite "D.C. App. R. 4"
   }
 }
@@ -39,7 +35,8 @@ decision notice: "Notice of appeal within time?" by applicant cite "D.C. App. R.
 state record: "Transcript ordered; record assembled" by office cite "D.C. App. R. 10"
 {
   note "Within 10 days after filing the notice of appeal, the appellant orders from the reporter the transcript it considers necessary, or files in the Court of Appeals a certificate that no transcript will be ordered, and files and serves the order (D.C. App. R. 10(b)(1)). Where no transcript is available, the appellant may prepare a statement of the evidence; the other parties may serve objections or amendments within ten days after service (D.C. App. R. 10(c)). A reporter who cannot complete the transcript within 60 days of receiving the order may ask the court for more time; the Clerk of the Superior Court sends the court a certified index of the record when it is complete (D.C. App. R. 11(b))."
-  edge-record-filed "Record filed; the Clerk notifies the parties" -> briefing { event RecordFiled()
+  edge-record-filed "Record filed; the Clerk notifies the parties" -> briefing {
+    event RecordFiled()
     authority cite "D.C. App. R. 11"
   }
 }
@@ -55,7 +52,8 @@ state briefing: "Briefs filed" by applicant cite "D.C. App. R. 31"
 state argument: "Oral argument or submission" by court cite "D.C. App. R. 34"
 {
   note "Each month the Chief Judge prepares a calendar of cases to be argued in the second month after posting; on the regular calendar the Clerk notifies counsel of the argument date approximately 30 days in advance, and a summary-calendar case is not argued unless a motion for oral argument, filed within 10 days after notice of calendaring, is granted or the court orders argument (D.C. App. R. 33). Argument proceeds under D.C. App. R. 34."
-  edge-argument-decide "Opinion or judgment entered" -> decision { event DecisionFiled()
+  edge-argument-decide "Opinion or judgment entered" -> decision {
+    event DecisionFiled()
     authority cite "D.C. App. R. 36"
   }
 }
@@ -71,7 +69,8 @@ state decision: "Judgment entered" by office cite "D.C. App. R. 36"
 decision rehearing-decision: "Rehearing sought?" by applicant cite "D.C. App. R. 40"
 {
   note "A party may seek division rehearing, rehearing en banc, or both in a single document (D.C. App. R. 40(a)). The petition is filed within 14 days after judgment is entered, or within 14 days after an amended decision is entered, and may not exceed 15 pages; no response is permitted unless the court requests one (D.C. App. R. 40(d)). Rehearing en banc is not favored (D.C. App. R. 40(c)), and no motion to reconsider the denial of a petition is allowed (D.C. App. R. 40(h))."
-  edge-rehearing-decision-none "No petition" -> mandate { event MandateIssued()
+  edge-rehearing-decision-none "No petition" -> mandate {
+    event MandateIssued()
     authority cite "D.C. App. R. 41"
   }
   edge-rehearing-decision-sought "Petition filed" -> rehearing-order {
@@ -82,7 +81,8 @@ decision rehearing-decision: "Rehearing sought?" by applicant cite "D.C. App. R.
 state rehearing-order: "Petition for rehearing decided" by court cite "D.C. App. R. 40"
 {
   note "If the petition is granted, the court may dispose of the case without further briefing or argument, order additional briefing or argument, or issue any other appropriate order (D.C. App. R. 40(e)). A timely petition stays the mandate until it is decided (D.C. App. R. 41(d)(1))."
-  edge-rehearing-order-mandate "Petition decided" -> mandate { event MandateIssued()
+  edge-rehearing-order-mandate "Petition decided" -> mandate {
+    event MandateIssued()
     authority cite "D.C. App. R. 41"
   }
 }
@@ -90,13 +90,9 @@ state rehearing-order: "Petition for rehearing decided" by court cite "D.C. App.
 state mandate: "Mandate issued" by office cite "D.C. App. R. 41"
 {
   note "The mandate issues 7 calendar days after the time to petition for rehearing expires, or 7 calendar days after entry of an order denying a timely petition or motion for stay of mandate, whichever is later; the court may shorten or extend the time (D.C. App. R. 41(b)). A stay of the mandate pending a petition for certiorari may not exceed 90 days unless extended for good cause or the Clerk is notified that the time to petition was extended or the petition filed (D.C. App. R. 41(d)(2)(B)). A motion to recall the mandate is filed within 180 days from its issuance (D.C. App. R. 41(f)). Review by the Supreme Court of the United States under 28 U.S.C. § 1257 is not modeled: the statute is not vendored."
-  edge-mandate-final "Mandate issued" -> final-decision {
-    authority cite "D.C. App. R. 41"
-  }
+  edge-mandate-final "Mandate issued" -> final-decision { authority cite "D.C. App. R. 41" }
 }
 
 terminal dismissed-jurisdiction: "Dismissed: no appellate jurisdiction" outcome [loss, dismissal, jurisdictional] cite ?("D.C. Code § 11-721")
-
 terminal dismissed-untimely: "Dismissed: untimely notice of appeal" outcome [loss, dismissal] cite "D.C. App. R. 4"
-
 terminal final-decision: "Final: the Court of Appeals' judgment stands" outcome [final] cite "D.C. App. R. 41"

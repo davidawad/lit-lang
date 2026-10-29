@@ -106,144 +106,115 @@ event SettlementConference()
 /// Se Disclosure form when the petition is filed files it as fully as
 /// possible and files an Amended Pro Se Disclosure within seven days.
 deadline amended-pro-se-disclosure-period: 7.days after PetitionFiled() counted_by frbp9006 cite ?("E.D. Okla. LBR 1007-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 2003-2: a corporate committee member's ownership
 /// statement is filed within fourteen days of its appointment to the
 /// committee.
 deadline committee-ownership-statement-period: 14.days after CommitteeAppointed() counted_by frbp9006 cite ?("E.D. Okla. LBR 2003-2, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 3003-1: the debtor files a certificate of mailing within
 /// two days after serving the bar date notice on a creditor added after the
 /// bar date notice.
 deadline added-creditor-mailing-certificate-period: 2.days after BarDateNoticeServed() counted_by frbp9006 cite ?("E.D. Okla. LBR 3003-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 3015-2: an amended chapter 12 or 13 plan, with Local Form
 /// 420C-1, is mailed to the matrix, the United States trustee and the
 /// trustee twenty-eight days prior to the confirmation hearing.
 deadline amended-plan-mailing-period: 28.days before ConfirmationHearing() counted_by frbp9006 cite ?("E.D. Okla. LBR 3015-2, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 3015-5: the clerk, or the debtor in possession if the
 /// court directs, mails the chapter 12 confirmation notice and plan to the
 /// matrix within seven days of entry of the notice.
 deadline chapter-12-notice-mailing-period: 7.days after ConfirmationHearingNoticed() counted_by frbp9006 cite ?("E.D. Okla. LBR 3015-5, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 3015-5: proof of service of a mailed confirmation notice,
 /// or a certificate of mailing of a disclosure statement (LBR 3016-1(A),
 /// 3020-1(B)), is filed within two days of the mailing.
 deadline notice-mailing-proof-period: 2.days after NoticeMailed() counted_by frbp9006 cite ?("E.D. Okla. LBR 3015-5, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 3015-6: objections to a chapter 12 or 13 plan are filed
 /// no later than seven days prior to the confirmation hearing; untimely
 /// objections may be disregarded.
 deadline chapter-12-13-plan-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite ?("E.D. Okla. LBR 3015-6, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 3016-1(A): the proponent mails the disclosure statement
 /// as FRBP 3017(a) requires within three days of filing.
 deadline disclosure-statement-mailing-period: 3.days after DisclosureStatementFiled() counted_by frbp9006 cite ?("E.D. Okla. LBR 3016-1(A), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 3020-1(B): the plan proponent mails the notice, plan,
 /// ballot and approved disclosure statement under FRBP 3017(d) within three
 /// days of entry of the notice of confirmation hearing.
 deadline chapter-11-confirmation-mailing-period: 3.days after ConfirmationHearingNoticed() counted_by frbp9006 cite ?("E.D. Okla. LBR 3020-1(B), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 3020-1(C): objections to confirmation of a chapter 11
 /// plan are filed at least fourteen days before the confirmation hearing
 /// unless the court shortens notice or in a small business case.
 deadline chapter-11-confirmation-objection-period: 14.days before ConfirmationHearing() counted_by frbp9006 cite ?("E.D. Okla. LBR 3020-1(C), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 3022-1: the plan proponent files the Chapter 11 Final
 /// Report and Application for Final Decree within six months after
 /// confirmation or within thirty days after substantial consummation,
 /// whichever is earlier.
 deadline final-report-period: 6.months after PlanConfirmed() counted_by frbp9006 cite ?("E.D. Okla. LBR 3022-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 3022-1: the plan proponent files the Final Report within
 /// thirty days after substantial consummation under § 1101(2), if earlier
 /// than six months after confirmation.
 deadline final-report-consummation-period: 30.days after PlanSubstantiallyConsummated() counted_by frbp9006 cite ?("E.D. Okla. LBR 3022-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 4001-1(E): responses to discovery requests on a motion
 /// for relief from stay are due in 14 days from service of the written
 /// requests.
 deadline stay-discovery-response-period: 14.days after StayDiscoveryServed() counted_by frbp9006 cite ?("E.D. Okla. LBR 4001-1(E), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 4002-1(C): within seven days of the filing of a § 521(f)
 /// request, the debtor redacts and files the tax returns as a secure event.
 deadline tax-return-filing-period: 7.days after TaxReturnRequestFiled() counted_by frbp9006 cite ?("E.D. Okla. LBR 4002-1(C), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 4004-1(A): within twenty-one days following the notice
 /// that all plan payments are paid, the debtor files a statement whether 11
 /// U.S.C. § 522(q) applies.
 deadline section-522q-statement-period: 21.days after PlanCompletionNoticeFiled() counted_by frbp9006 cite ?("E.D. Okla. LBR 4004-1(A), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 6004-1: objections to a proposed use, sale or lease
 /// outside the ordinary course must be filed and served not less than seven
 /// days before the date set for the proposed action.
 deadline sale-objection-period: 7.days before ProposedActionDate() counted_by frbp9006 cite ?("E.D. Okla. LBR 6004-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 7007-1(B): a brief in opposition, if filed, is filed
 /// within fourteen days after the filing of the original motion,
 /// application or objection.
 deadline adversary-opposition-brief-period: 14.days after AdversaryMotionFiled() counted_by frbp9006 cite ?("E.D. Okla. LBR 7007-1(B), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 7007-1(B): a reply brief, if filed, is filed within
 /// fourteen days after filing of the brief in opposition.
 deadline adversary-reply-brief-period: 14.days after OppositionBriefFiled() counted_by frbp9006 cite ?("E.D. Okla. LBR 7007-1(B), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 7016-1(A): fourteen days after the scheduling conference,
 /// counsel exchange preliminary witness and exhibit lists.
 deadline preliminary-lists-period: 14.days after SchedulingConference() counted_by frbp9006 cite ?("E.D. Okla. LBR 7016-1(A), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 7016-1(A): fourteen days prior to the pretrial
 /// conference, counsel exchange final witness and exhibit lists and copies
 /// of all exhibits (LBR 7016-1(B)).
 deadline final-lists-period: 14.days before PretrialConference() counted_by frbp9006 cite ?("E.D. Okla. LBR 7016-1(A), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 7016-1(B): seven days prior to trial, counsel provide two
 /// sets of exhibits to the judge.
 deadline judge-exhibits-period: 7.days before TrialDate() counted_by frbp9006 cite ?("E.D. Okla. LBR 7016-1(B), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 7016-1(C): seven days prior to the pretrial conference,
 /// counsel submit a pretrial order under LBR 9072-1; a motion to continue
 /// the pretrial conference is due by the same day (LBR 7016-1(F)).
 deadline pretrial-order-period: 7.days before PretrialConference() counted_by frbp9006 cite ?("E.D. Okla. LBR 7016-1(C), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 7056-1(B): a response brief to a motion for summary
 /// judgment is filed within fourteen days after the filing of the brief in
 /// support.
 deadline summary-judgment-response-period: 14.days after SummaryJudgmentBriefFiled() counted_by frbp9006 cite ?("E.D. Okla. LBR 7056-1(B), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 7056-1(C): the movant may file a reply brief addressing
 /// only new matters within fourteen days after the response brief was
 /// filed.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frbp9006 cite ?("E.D. Okla. LBR 7056-1(C), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 9006-1(C): applications for continuances of hearings are
 /// in writing and filed at least three days prior to the date set for the
 /// hearing.
 deadline continuance-application-period: 3.days before HearingDate() counted_by frbp9006 cite ?("E.D. Okla. LBR 9006-1(C), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 9013-1: the objection date certain the court sets on its
 /// website is fourteen days from entry of the motion on the docket,
 /// including three days for service by mail, unless a statute, rule or
 /// order prescribes otherwise.
 deadline motion-objection-period: 14.days after MotionDocketed() counted_by frbp9006 cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 9015-1(G): settlement or other disposition other than by
 /// trial is given to the clerk in writing not less than three days prior to
 /// the jury trial setting, or jury costs may be assessed.
 deadline jury-settlement-notice-period: 3.days before JuryTrialSetting() counted_by frbp9006 cite ?("E.D. Okla. LBR 9015-1(G), undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 9017-1: unless otherwise ordered, seven days prior to an
 /// evidentiary hearing each counsel exchanges and files witness lists and
 /// exhibit lists (LBR 9017-2(A)).
 deadline witness-exhibit-list-period: 7.days before EvidentiaryHearing() counted_by frbp9006 cite ?("E.D. Okla. LBR 9017-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 9019-1: once a compromise is approved, the parties file
 /// the appropriate pleadings in the related adversary proceeding within
 /// fourteen days from its entry in the bankruptcy case.
 deadline settlement-pleadings-period: 14.days after CompromiseApproved() counted_by frbp9006 cite ?("E.D. Okla. LBR 9019-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-
 /// E.D. Okla. LBR 9019-2: a governmental entity unable to send a
 /// representative with full authority delivers (not files) its motion for
 /// leave to the settlement judge not later than eleven days prior to the
@@ -252,8 +223,7 @@ deadline limited-authority-motion-period: 11.days before SettlementConference() 
 
 start motion-filed
 
-state motion-filed: "Motion filed with notice of opportunity for hearing" by applicant cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-{
+state motion-filed: "Motion filed with notice of opportunity for hearing" by applicant cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified") {
   note "The motion is filed with Local Form 20A, its objection date a date certain taken from the court's website, 14 days from docket entry including three days for mail service (LBR 9013-1); the value is the CURRENCY UNCONFIRMED text. The motion's FRBP periods are lit/frbp's."
   edge-motion-filed-opposed "Objection filed" -> opposed {
     authority cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
@@ -264,17 +234,21 @@ state motion-filed: "Motion filed with notice of opportunity for hearing" by app
   }
 }
 
-state opposed: "Objection filed; hearing held" by opponent cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-{
+state opposed: "Objection filed; hearing held" by opponent cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified") {
   note "If an objection is filed the matter is heard on the date the notice states (LBR 9013-1); its current form is unverified."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified") }
+  edge-opposed-ruling "Hearing held" -> ruling {
+    authority cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
+  }
 }
 
-decision ruling: "Motion decided" by court cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
-{
+decision ruling: "Motion decided" by court cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified") {
   note "The court decides the motion; absent objection it may grant the relief without hearing (LBR 9013-1)."
-  edge-ruling-granted "Granted" -> decided { authority cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified") }
-  edge-ruling-denied "Denied" -> decided { authority cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified") }
+  edge-ruling-granted "Granted" -> decided {
+    authority cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
+  }
+  edge-ruling-denied "Denied" -> decided {
+    authority cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
+  }
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite ?("E.D. Okla. LBR 1001-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")

@@ -7,61 +7,65 @@ import sc-state-rules.{ JudgmentEntered, NoticeOfAppealFiled }
 
 start commenced
 
-state commenced: "Bill in equity filed" by applicant cite ?("S.C. Ch. R., not vendored")
-{
+state commenced: "Bill in equity filed" by applicant cite ?("S.C. Ch. R., not vendored") {
   note "Historical court: the Court of Chancery (Court of Equity) of South Carolina. No vendored text states its rules, its creation or the date its jurisdiction passed to the circuit court, so the filing period, fees and pleading form are holes. Today the South Carolina Rules of Civil Procedure govern all civil suits in South Carolina courts 'whether cognizable as cases at law or in equity' (S.C. R. Civ. P. 1), and equity matters such as foreclosures and partitions may be referred to the county master-in-equity (S.C. R. Civ. P. 53(a), (b)); that practice is lit/sc-circuit-civil. The earlier outline named no leading decision."
-  edge-commenced-served "Process served" -> pleadings { authority cite ?("S.C. Ch. R., not vendored") }
+  edge-commenced-served "Process served" -> pleadings {
+    authority cite ?("S.C. Ch. R., not vendored")
+  }
 }
 
-chance pleadings: "Answer, plea or demurrer" by court cite ?("S.C. Ch. R., not vendored")
-{
+chance pleadings: "Answer, plea or demurrer" by court cite ?("S.C. Ch. R., not vendored") {
   note "The response period and the grounds for dismissal are holes: no Court of Chancery rule is vendored."
-  edge-pleadings-dismissed "Dismissed on the pleadings" -> dismissed p ? { authority cite ?("S.C. Ch. R., not vendored") }
-  edge-pleadings-answered "Answered; case proceeds" -> proof p ? { authority cite ?("S.C. Ch. R., not vendored") }
-  edge-pleadings-settled "Settled or withdrawn" -> settled p ? { }
+  edge-pleadings-dismissed "Dismissed on the pleadings" -> dismissed p ? {
+    authority cite ?("S.C. Ch. R., not vendored")
+  }
+  edge-pleadings-answered "Answered; case proceeds" -> proof p ? {
+    authority cite ?("S.C. Ch. R., not vendored")
+  }
+  edge-pleadings-settled "Settled or withdrawn" -> settled p ? {}
 }
 
-state proof: "Proof taken" by applicant cite ?("S.C. Ch. R., not vendored")
-{
+state proof: "Proof taken" by applicant cite ?("S.C. Ch. R., not vendored") {
   note "How testimony was taken (before a commissioner or the chancellor) and its limits are holes: no Court of Chancery rule is vendored."
-  edge-proof-hearing "Cause set for hearing" -> hearing { authority cite ?("S.C. Ch. R., not vendored") }
+  edge-proof-hearing "Cause set for hearing" -> hearing {
+    authority cite ?("S.C. Ch. R., not vendored")
+  }
 }
 
-state hearing: "Hearing before the chancellor" by court cite ?("S.C. Ch. R., not vendored")
-{
+state hearing: "Hearing before the chancellor" by court cite ?("S.C. Ch. R., not vendored") {
   note "Hearing procedure is a hole: no Court of Chancery rule is vendored."
   edge-hearing-decree "Decree rendered" -> decree { authority cite ?("S.C. Ch. R., not vendored") }
 }
 
-state decree: "Decree entered" by court cite ?("S.C. Ch. R., not vendored")
-{
+state decree: "Decree entered" by court cite ?("S.C. Ch. R., not vendored") {
   note "Entry of the decree and any rehearing period are holes: no Court of Chancery rule is vendored."
-  edge-decree-entered "Decree entered" -> post-decree { event JudgmentEntered() authority cite ?("S.C. Ch. R., not vendored") }
+  edge-decree-entered "Decree entered" -> post-decree {
+    event JudgmentEntered()
+    authority cite ?("S.C. Ch. R., not vendored")
+  }
 }
 
-decision post-decree: "Appeal?" by applicant cite ?("S.C. Ct. of Appeals in Equity, not vendored")
-{
+decision post-decree: "Appeal?" by applicant cite ?("S.C. Ct. of Appeals in Equity, not vendored") {
   note "The appeal period and the court that heard appeals from the chancellors are holes: no vendored text states them."
-  edge-post-appeal "Appeal taken" -> appeal-taken { event NoticeOfAppealFiled() authority cite ?("S.C. Ct. of Appeals in Equity, not vendored") }
-  edge-post-final "No appeal" -> final-no-appeal { }
+  edge-post-appeal "Appeal taken" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite ?("S.C. Ct. of Appeals in Equity, not vendored")
+  }
+  edge-post-final "No appeal" -> final-no-appeal {}
 }
 
-terminal dismissed: "Bill dismissed" outcome [loss, dismissal] cite ?("S.C. Ch. R., not vendored")
-{
+terminal dismissed: "Bill dismissed" outcome [loss, dismissal] cite ?("S.C. Ch. R., not vendored") {
   note "Whether the dismissal was with or without prejudice is a hole."
 }
 
-terminal settled: "Settled or withdrawn" outcome [settlement] cite ?("S.C. Ch. R., not vendored")
-{
+terminal settled: "Settled or withdrawn" outcome [settlement] cite ?("S.C. Ch. R., not vendored") {
   note "Settlement terms are outside this package."
 }
 
-terminal appeal-taken: "Appeal taken" outcome [final] cite ?("S.C. Ct. of Appeals in Equity, not vendored")
-{
+terminal appeal-taken: "Appeal taken" outcome [final] cite ?("S.C. Ct. of Appeals in Equity, not vendored") {
   note "The appellate court is not modeled: no vendored text states it."
 }
 
-terminal final-no-appeal: "Decree final without appeal" outcome [final] cite ?("S.C. Ch. R., not vendored")
-{
+terminal final-no-appeal: "Decree final without appeal" outcome [final] cite ?("S.C. Ch. R., not vendored") {
   note "Enforcement of the decree is outside this package."
 }

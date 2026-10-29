@@ -96,304 +96,240 @@ event AdversaryAnswerFiled()
 /// amendment and of the creditor's right to file a claim is transmitted
 /// within 14 days (the rules effective December 1, 2023).
 deadline amendment-notice-period: 14.days after ScheduleAmendmentFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 1009-1(c)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 1009-1(c), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline amendment-notice-period: 14.days after ScheduleAmendmentFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes amendment-notice-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 1009-1(c)"
-
 /// Bankr. W.D. Wash. LBR 1009-1(c): the certificate of service of that
 /// notice is filed within 7 days (the rules effective December 1, 2023).
 deadline amendment-notice-certificate-period: 7.days after AmendmentNoticeTransmitted() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 1009-1(c)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 1009-1(c), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline amendment-notice-certificate-period: 7.days after AmendmentNoticeTransmitted() counted_by frbp9006 effective [2026-12-01, ..) supersedes amendment-notice-certificate-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 1009-1(c)"
-
 /// Bankr. W.D. Wash. LBR 1017-1(c): a voluntary debtor files the list of
 /// creditors no later than 7 days from the filing of the petition, or the
 /// case may be dismissed (the rules effective December 1, 2023).
 deadline creditor-list-period: 7.days after PetitionFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 1017-1(c)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 1017-1(c), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline creditor-list-period: 7.days after PetitionFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes creditor-list-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 1017-1(c)"
-
 /// Bankr. W.D. Wash. LBR 2015-1(b)(1): a chapter 11 debtor in possession
 /// provides the United States Trustee its most recent federal income tax
 /// return within 14 days after the order for relief (the rules effective
 /// December 1, 2023).
 deadline dip-tax-return-period: 14.days after OrderForReliefEntered() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 2015-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 2015-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline dip-tax-return-period: 14.days after OrderForReliefEntered() counted_by frbp9006 effective [2026-12-01, ..) supersedes dip-tax-return-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 2015-1(b)"
-
 /// Bankr. W.D. Wash. LBR 2015-1(b)(2): the debtor in possession provides
 /// initial proof of insurance within 7 days after the order for relief (the
 /// rules effective December 1, 2023).
 deadline dip-insurance-period: 7.days after OrderForReliefEntered() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 2015-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 2015-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline dip-insurance-period: 7.days after OrderForReliefEntered() counted_by frbp9006 effective [2026-12-01, ..) supersedes dip-insurance-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 2015-1(b)"
-
 /// Bankr. W.D. Wash. LBR 2015-1(c): an individual debtor in possession
 /// files a projected budget for the six months after the petition within
 /// 14 days after the order for relief (the rules effective December 1,
 /// 2023). The amended rules of December 1, 2026 drop it.
 deadline dip-budget-period: 14.days after OrderForReliefEntered() counted_by frbp9006 effective [2023-12-01, 2026-12-01) repealed cite "Bankr. W.D. Wash. LBR 2015-1(c)"
-
 /// Bankr. W.D. Wash. LBR 2016-1(e)(2): chapter 13 attorneys' fees above
 /// the presumptive fee are requested by application not more than 21 days
 /// after the order of confirmation (the rules effective December 1, 2023).
 /// The amended rules of December 1, 2026 drop it.
 deadline excess-fee-application-period: 21.days after PlanConfirmed() counted_by frbp9006 effective [2023-12-01, 2026-12-01) repealed cite "Bankr. W.D. Wash. LBR 2016-1(e)"
-
 /// Bankr. W.D. Wash. LBR 2016-2: a bankruptcy petition preparer serves
 /// Official Form B119 and the disclosure of compensation on the United
 /// States Trustee within fourteen days after filing (the rules effective
 /// December 1, 2023).
 deadline preparer-disclosure-period: 14.days after PreparerDocumentFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 2016-2"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 2016-2, from December 1, 2026 (General
 /// Order 2026-6): the same period, carried into the amended rules.
 deadline preparer-disclosure-period: 14.days after PreparerDocumentFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes preparer-disclosure-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 2016-2"
-
 /// Bankr. W.D. Wash. LBR 3007-1(a): unless the court orders otherwise,
 /// objections to claims in a chapter 11 case are filed and served no later
 /// than 60 days after entry of the order confirming a plan (the rules
 /// effective December 1, 2023).
 deadline chapter-11-claim-objection-period: 60.days after PlanConfirmed() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3007-1(a)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3007-1(a), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline chapter-11-claim-objection-period: 60.days after PlanConfirmed() counted_by frbp9006 effective [2026-12-01, ..) supersedes chapter-11-claim-objection-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3007-1(a)"
-
 /// Bankr. W.D. Wash. LBR 3007-1(b): objections to claims in a chapter 13
 /// case are filed and served no later than 270 days from the petition date,
 /// unless good cause is shown (the rules effective December 1, 2023).
 deadline chapter-13-claim-objection-period: 270.days after PetitionFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3007-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3007-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline chapter-13-claim-objection-period: 270.days after PetitionFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes chapter-13-claim-objection-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3007-1(b)"
-
 /// Bankr. W.D. Wash. LBR 3015-1(c)(2): a chapter 13 plan filed after the
 /// petition is served on all creditors at least 14 days before the
 /// originally scheduled meeting of creditors (the rules effective December
 /// 1, 2023).
 deadline plan-service-period: 14.days before FirstMeetingDate() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3015-1(c)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3015-1(c), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline plan-service-period: 14.days before FirstMeetingDate() counted_by frbp9006 effective [2026-12-01, ..) supersedes plan-service-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3015-1(c)"
-
 /// Bankr. W.D. Wash. LBR 3015-1(d)(1): the debtor files a mandatory reply
 /// to an objection to confirmation no later than 7 days before the
 /// confirmation hearing (the rules effective December 1, 2023).
 deadline confirmation-reply-period: 7.days before ConfirmationHearing() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3015-1(d)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3015-1(d), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline confirmation-reply-period: 7.days before ConfirmationHearing() counted_by frbp9006 effective [2026-12-01, ..) supersedes confirmation-reply-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3015-1(d)"
-
 /// Bankr. W.D. Wash. LBR 3015-1(l): within 30 days of completion of all
 /// plan payments, chapter 13 debtors file their domestic support
 /// certifications (the rules effective December 1, 2023).
 deadline domestic-support-certification-period: 30.days after PlanPaymentsCompleted() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3015-1(l)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3015-1(l), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline domestic-support-certification-period: 30.days after PlanPaymentsCompleted() counted_by frbp9006 effective [2026-12-01, ..) supersedes domestic-support-certification-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3015-1(l)"
-
 /// Bankr. W.D. Wash. LBR 3017-1(a): unless the court orders otherwise,
 /// objections to a chapter 11 disclosure statement are filed and served not
 /// later than 7 days before the hearing (the rules effective December 1,
 /// 2023).
 deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3017-1(a)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3017-1(a), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frbp9006 effective [2026-12-01, ..) supersedes disclosure-statement-objection-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3017-1(a)"
-
 /// Bankr. W.D. Wash. LBR 3020-1(b): unless the court orders otherwise,
 /// objections to confirmation of a plan are filed and served at least 7
 /// days before the confirmation hearing (the rules effective December 1,
 /// 2023).
 deadline confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3020-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3020-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006 effective [2026-12-01, ..) supersedes confirmation-objection-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3020-1(b)"
-
 /// Bankr. W.D. Wash. LBR 5011-1(b): responses to a motion to withdraw the
 /// reference are filed and served no later than 14 days after its service
 /// (the rules effective December 1, 2023).
 deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 5011-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 5011-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frbp9006 effective [2026-12-01, ..) supersedes withdrawal-response-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 5011-1(b)"
-
 /// Bankr. W.D. Wash. LBR 5011-1(b): a reply, if any, is filed and served no
 /// later than 21 days after the filing of the motion (the rules effective
 /// December 1, 2023).
 deadline withdrawal-reply-period: 21.days after WithdrawalMotionFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 5011-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 5011-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline withdrawal-reply-period: 21.days after WithdrawalMotionFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes withdrawal-reply-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 5011-1(b)"
-
 /// Bankr. W.D. Wash. LBR 7004-1: the plaintiff files a certificate of
 /// service within 14 days after service of a summons and complaint is
 /// effected (the rules effective December 1, 2023).
 deadline summons-certificate-period: 14.days after SummonsServed() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 7004-1"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 7004-1, from December 1, 2026 (General
 /// Order 2026-6): the same period, carried into the amended rules.
 deadline summons-certificate-period: 14.days after SummonsServed() counted_by frbp9006 effective [2026-12-01, ..) supersedes summons-certificate-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7004-1"
-
 /// Bankr. W.D. Wash. LBR 7012-1(b): not later than 14 days after the notice
 /// of removal is filed, each other party that has filed a pleading in the
 /// removed matter files a Notice Regarding Final Adjudication and Consent
 /// (the rules effective December 1, 2023).
 deadline removal-adjudication-notice-period: 14.days after RemovalNoticeFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 7012-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 7012-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline removal-adjudication-notice-period: 14.days after RemovalNoticeFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes removal-adjudication-notice-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7012-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 7012-1(c): not later than 14 days
 /// after a proceeding is transferred from a district judge under Local
 /// Civil Rule 87(b), each party files a Notice Regarding Final Adjudication
 /// and Consent. New in the rules effective December 1, 2026 (General Order
 /// 2026-6).
 deadline referred-adjudication-notice-period: 14.days after ProceedingTransferred() counted_by frbp9006 effective [2026-12-01, ..) cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7012-1(c)"
-
 /// Bankr. W.D. Wash. LBR 7016-1(b)(1): the plaintiff's pretrial statement
 /// is filed no later than 21 days before the filing of the proposed
 /// pretrial order (the rules effective December 1, 2023).
 deadline plaintiff-pretrial-statement-period: 21.days before ProposedPretrialOrderFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 7016-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline plaintiff-pretrial-statement-period: 21.days before ProposedPretrialOrderFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes plaintiff-pretrial-statement-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b)"
-
 /// Bankr. W.D. Wash. LBR 7016-1(b)(2): the defendant's pretrial statement
 /// is filed not later than 14 days before the filing of the proposed
 /// pretrial order (the rules effective December 1, 2023).
 deadline defendant-pretrial-statement-period: 14.days before ProposedPretrialOrderFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 7016-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline defendant-pretrial-statement-period: 14.days before ProposedPretrialOrderFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes defendant-pretrial-statement-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b)"
-
 /// Bankr. W.D. Wash. LBR 7016-1(b)(3): the conference of attorneys is held
 /// not later than 7 days before the filing of the proposed pretrial order
 /// (the rules effective December 1, 2023).
 deadline pretrial-conference-of-attorneys-period: 7.days before ProposedPretrialOrderFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 7016-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline pretrial-conference-of-attorneys-period: 7.days before ProposedPretrialOrderFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes pretrial-conference-of-attorneys-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b)"
-
 /// Bankr. W.D. Wash. LBR 7016-1(b)(4): the proposed pretrial order is filed
 /// no later than 7 days before the scheduled trial date (the rules
 /// effective December 1, 2023).
 deadline proposed-pretrial-order-period: 7.days before TrialDate() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 7016-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline proposed-pretrial-order-period: 7.days before TrialDate() counted_by frbp9006 effective [2026-12-01, ..) supersedes proposed-pretrial-order-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b)"
-
 /// Bankr. W.D. Wash. LBR 9013-1(d): objections to claims are filed and
 /// served at least 30 days before the hearing (the rules effective December
 /// 1, 2023).
 deadline claim-objection-notice-period: 30.days before MotionHearing() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9013-1(d)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline claim-objection-notice-period: 30.days before MotionHearing() counted_by frbp9006 effective [2026-12-01, ..) supersedes claim-objection-notice-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d)"
-
 /// Bankr. W.D. Wash. LBR 9013-1(d): motions for summary judgment and lien
 /// avoidance are filed and served at least 28 days before the hearing (the
 /// rules effective December 1, 2023).
 deadline summary-judgment-notice-period: 28.days before MotionHearing() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9013-1(d)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline summary-judgment-notice-period: 28.days before MotionHearing() counted_by frbp9006 effective [2026-12-01, ..) supersedes summary-judgment-notice-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d)"
-
 /// Bankr. W.D. Wash. LBR 9013-1(d): all other motions and notices are filed
 /// and served at least 21 days before the hearing unless a longer period
 /// applies (the rules effective December 1, 2023).
 deadline motion-notice-period: 21.days before MotionHearing() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9013-1(d)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline motion-notice-period: 21.days before MotionHearing() counted_by frbp9006 effective [2026-12-01, ..) supersedes motion-notice-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d)"
-
 /// Bankr. W.D. Wash. LBR 9013-1(d)(5)(A): unless the court orders
 /// otherwise, a party opposing a motion files and serves responsive papers
 /// not later than 7 days before the hearing (the rules effective December
 /// 1, 2023).
 deadline motion-response-period: 7.days before MotionHearing() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9013-1(d)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline motion-response-period: 7.days before MotionHearing() counted_by frbp9006 effective [2026-12-01, ..) supersedes motion-response-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d)"
-
 /// Bankr. W.D. Wash. LBR 9013-1(h): motions for reconsideration are filed
 /// and served within 14 days after entry of the judgment or order (the
 /// rules effective December 1, 2023).
 deadline reconsideration-period: 14.days after OrderEntered() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9013-1(h)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(h), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline reconsideration-period: 14.days after OrderEntered() counted_by frbp9006 effective [2026-12-01, ..) supersedes reconsideration-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(h)"
-
 /// Bankr. W.D. Wash. LBR 9013-1(i): a party opposing entry of a proposed
 /// order files and serves an objection not later than 3 days before the
 /// date set for its presentation (the rules effective December 1, 2023).
 deadline presentation-objection-period: 3.days before OrderPresentation() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9013-1(i)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(i), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline presentation-objection-period: 3.days before OrderPresentation() counted_by frbp9006 effective [2026-12-01, ..) supersedes presentation-objection-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(i)"
-
 /// Bankr. W.D. Wash. LBR 9027-1(b): any motion to remand is served and
 /// filed within 30 days of the notice of removal (the rules effective
 /// December 1, 2023).
 deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9027-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9027-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes remand-motion-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9027-1(b)"
-
 /// Bankr. W.D. Wash. LBR 9027-1(b): unless a motion to remand is filed,
 /// parties who have not answered do so within 21 days of the notice of
 /// removal (the rules effective December 1, 2023).
 deadline removed-answer-period: 21.days after RemovalNoticeFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9027-1(b)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9027-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline removed-answer-period: 21.days after RemovalNoticeFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes removed-answer-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9027-1(b)"
-
 /// Bankr. W.D. Wash. LBR 9027-1(d): other parties may supplement the
 /// removing party's report within 14 days of its filing (the rules
 /// effective December 1, 2023).
 deadline removal-report-supplement-period: 14.days after RemovalReportFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9027-1(d)"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9027-1(d), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline removal-report-supplement-period: 14.days after RemovalReportFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes removal-report-supplement-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9027-1(d)"
-
 /// Bankr. W.D. Wash. LBR 9040-3: unless otherwise ordered, no later than 28
 /// days after an answer or other response to the complaint is filed,
 /// counsel and client file a Mediation Certification (the rules effective
 /// December 1, 2023).
 deadline mediation-certification-period: 28.days after AdversaryAnswerFiled() counted_by frbp9006 effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9040-3"
-
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9040-3, from December 1, 2026 (General
 /// Order 2026-6): the same period, carried into the amended rules.
 deadline mediation-certification-period: 28.days after AdversaryAnswerFiled() counted_by frbp9006 effective [2026-12-01, ..) supersedes mediation-certification-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9040-3"

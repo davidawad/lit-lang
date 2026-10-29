@@ -112,7 +112,8 @@ decision sj-motion: "Summary disposition under MCR 2.116(C)(10) decided" by cour
 state trial: "Trial" by court cite "MCR 2.508(A)"
 {
   note "The right of trial by jury declared by the constitution is preserved (MCR 2.508(A)). In an action tried without a jury the defendant may move for dismissal after the plaintiff's evidence (MCR 2.504(B)(2))."
-  edge-trial-result "Verdict or decision; judgment entered" -> post-trial { event JudgmentEntered()
+  edge-trial-result "Verdict or decision; judgment entered" -> post-trial {
+    event JudgmentEntered()
     authority cite "MCR 2.602(B)"
   }
 }

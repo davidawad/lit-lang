@@ -12,8 +12,7 @@ import tx-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered }
 // leading decision was named; none is kept.
 start appeal
 
-state appeal: "Appeal of the Commission's sanction filed" by applicant cite ?("Tex. Gov't Code § 33.034 (not vendored)")
-{
+state appeal: "Appeal of the Commission's sanction filed" by applicant cite ?("Tex. Gov't Code § 33.034 (not vendored)") {
   note "The period to appeal, its form and the record are stated in text that is not vendored; they stay holes."
   edge-appeal-hearing "Charging document filed; set for hearing" -> hearing {
     event ActionCommenced()
@@ -21,8 +20,7 @@ state appeal: "Appeal of the Commission's sanction filed" by applicant cite ?("T
   }
 }
 
-decision hearing: "Special court of review decides" by court cite ?("Tex. Gov't Code § 33.034 (not vendored)")
-{
+decision hearing: "Special court of review decides" by court cite ?("Tex. Gov't Code § 33.034 (not vendored)") {
   note "The procedure, burden and standard, and the decisions the court may render, are stated in text that is not vendored; they stay holes."
   edge-hearing-dismissed "Sanction dismissed" -> sanction-dismissed {
     event DecisionFiled()
@@ -34,12 +32,10 @@ decision hearing: "Special court of review decides" by court cite ?("Tex. Gov't 
   }
 }
 
-terminal sanction-dismissed: "Sanction dismissed" outcome [win] cite ?("Tex. Gov't Code § 33.034 (not vendored)")
-{
+terminal sanction-dismissed: "Sanction dismissed" outcome [win] cite ?("Tex. Gov't Code § 33.034 (not vendored)") {
   note "Costs and confidentiality are stated in text that is not vendored."
 }
 
-terminal sanction-final: "Sanction stands" outcome [loss] cite ?("Tex. Gov't Code § 33.034 (not vendored)")
-{
+terminal sanction-final: "Sanction stands" outcome [loss] cite ?("Tex. Gov't Code § 33.034 (not vendored)") {
   note "Whether the decision is final or reviewable is stated in text that is not vendored."
 }

@@ -105,45 +105,36 @@ event ConstitutionalCertificationServed()
 /// to Practice or Pro Se Status, the Statement of Interested Parties and
 /// the Statement Regarding Oral Argument.
 deadline combined-statements-period: 14.days after AppealDocketingNoticed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8003-2"
-
 /// 10th Cir. BAP L.R. 8003-3(b): the appeal may be dismissed without
 /// further notice if, within 14 days after filing the notice of appeal, a
 /// party fails to pay the required fee or file a timely motion to waive it.
 deadline fee-payment-period: 14.days after NoticeOfAppealFiled() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8003-3(b)"
-
 /// 10th Cir. BAP L.R. 8003-3(b): on an interlocutory appeal, the same 14
 /// days run from entry of the order granting leave to appeal.
 deadline fee-payment-leave-period: 14.days after LeaveToAppealGranted() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8003-3(b)"
-
 /// 10th Cir. BAP L.R. 8003-3(b)(3): the required fee is paid within 14 days
 /// after entry of an order denying the appellant's motion to waive it.
 deadline fee-after-waiver-denial-period: 14.days after FeeWaiverDenied() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8003-3(b)(3)"
-
 /// 10th Cir. BAP L.R. 8004-2: the movant may file a reply to a response to
 /// a motion for leave to appeal within 7 days after service of the
 /// response, addressing only matters raised in the response.
 deadline leave-reply-period: 7.days after LeaveResponseServed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8004-2"
-
 /// 10th Cir. BAP L.R. 8013-2: notwithstanding FRBP 8013(a)(3), a response
 /// to a motion to intervene is filed within 14 days after the motion is
 /// served.
 deadline intervention-response-period: 14.days after InterventionMotionServed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8013-2"
-
 /// 10th Cir. BAP L.R. 8013-2: a reply on a motion to intervene is filed
 /// within 7 days after the response is served.
 deadline intervention-reply-period: 7.days after InterventionResponseServed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8013-2"
-
 /// 10th Cir. BAP L.R. 8019-1(c): within 14 days after the notice of oral
 /// argument is docketed, each party who has filed a brief files a statement
 /// of who will appear at argument for it.
 deadline argument-appearance-period: 14.days after ArgumentNoticeDocketed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8019-1(c)"
-
 /// 10th Cir. BAP L.R. 8026-7(a): within 14 days after the date of the
 /// notice that the appeal has been docketed, a party questioning the
 /// constitutionality of an Act of Congress or a state statute, where the
 /// government is not a party, files a written notice.
 deadline constitutional-notice-period: 14.days after AppealDocketingNoticed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8026-7(a)"
-
 /// 10th Cir. BAP L.R. 8026-7(c): an attorney general may appear in the
 /// appeal within 30 days after the date the BAP clerk serves its
 /// certification.

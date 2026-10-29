@@ -1,7 +1,7 @@
 module ded-criminal-local-rules.local-rules
 
 import core.authority.{ CaseOrder }
-import core.frcrimp45.{ frcrimp45 }
+import core.frcrimp45.{ frcrimp45-delaware }
 import frcrimp.deadlines.{ SentencingScheduled, TrialClockEvent }
 
 // The District of Delaware's own criminal periods, from its Time Limits
@@ -80,7 +80,7 @@ event PrisonerCharged()
 /// this District, the unsealing of a sealed indictment or information, or
 /// the defendant's first appearance before a judicial officer of this
 /// District. Time excludable under Plan § 10 is excluded (§ 10(a)).
-deadline arraignment-period: 10.days after TrialClockEvent() counted_by frcrimp45 cite "D. Del. Crim. Plan § 4(a)"
+deadline arraignment-period: 10.days after TrialClockEvent() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 4(a)"
 {
   forum frcrimp
 }
@@ -93,7 +93,7 @@ deadline arraignment-period: 10.days after TrialClockEvent() counted_by frcrimp4
 /// wiretap disclosure demands are filed on or before the tenth day
 /// following arraignment; an untimely motion or request is waived unless
 /// the Court grants relief (§ 5(b)).
-deadline pretrial-motions: 10.days after Arraigned() counted_by frcrimp45 delegable {
+deadline pretrial-motions: 10.days after Arraigned() counted_by frcrimp45-delaware delegable {
   to CaseOrder
   op set
 } cite "D. Del. Crim. Plan § 5(a)"
@@ -107,7 +107,7 @@ deadline pretrial-motions: 10.days after Arraigned() counted_by frcrimp45 delega
 /// files a copy with the Clerk on or before the tenth day following
 /// arraignment, unless the Court orders otherwise at arraignment; the
 /// Court may for cause allow late filing.
-deadline mental-condition-notice: 10.days after Arraigned() counted_by frcrimp45 delegable {
+deadline mental-condition-notice: 10.days after Arraigned() counted_by frcrimp45-delaware delegable {
   to CaseOrder
   op set
 } cite "D. Del. Crim. Plan § 5(c)"
@@ -119,7 +119,7 @@ deadline mental-condition-notice: 10.days after Arraigned() counted_by frcrimp45
 /// later than thirty days after the proceeding's conclusion, unless the
 /// Court finds a longer continuance in the interest of justice under 18
 /// U.S.C. § 3161(h).
-deadline post-hearing-submissions: 30.days after MotionProceedingConcluded() counted_by frcrimp45 delegable {
+deadline post-hearing-submissions: 30.days after MotionProceedingConcluded() counted_by frcrimp45-delaware delegable {
   to CaseOrder
   op set
 } cite "D. Del. Crim. Plan § 5(d)"
@@ -132,7 +132,7 @@ deadline post-hearing-submissions: 30.days after MotionProceedingConcluded() cou
 /// motion to reschedule the trial within five days of the order setting
 /// trial; the Court may consider a later motion in the interest of
 /// justice.
-deadline reschedule-motion: 5.days after TrialSettingOrdered() counted_by frcrimp45 cite "D. Del. Crim. Plan § 6(g)"
+deadline reschedule-motion: 5.days after TrialSettingOrdered() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 6(g)"
 {
   forum frcrimp
 }
@@ -140,7 +140,7 @@ deadline reschedule-motion: 5.days after TrialSettingOrdered() counted_by frcrim
 /// D. Del. Crim. Plan § 10(d)(3), (f)(3): when a continuance runs to a date
 /// not certain, a party informs the Court within five days of learning
 /// that the circumstances that justify it no longer exist.
-deadline continuance-grounds-notice: 5.days after ContinuanceGroundsEnded() counted_by frcrimp45 cite "D. Del. Crim. Plan § 10(d)"
+deadline continuance-grounds-notice: 5.days after ContinuanceGroundsEnded() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 10(d)"
 {
   forum frcrimp
 }
@@ -149,7 +149,7 @@ deadline continuance-grounds-notice: 5.days after ContinuanceGroundsEnded() coun
 /// of filing the indictment or information against a person known to be
 /// serving a term of imprisonment, seeks to obtain the prisoner's presence
 /// for trial or causes a detainer to be filed (18 U.S.C. § 3161(j)).
-deadline prisoner-presence: 20.days after PrisonerCharged() counted_by frcrimp45 cite "D. Del. Crim. Plan § 13"
+deadline prisoner-presence: 20.days after PrisonerCharged() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 13"
 {
   forum frcrimp
 }
@@ -157,7 +157,7 @@ deadline prisoner-presence: 20.days after PrisonerCharged() counted_by frcrimp45
 /// D. Del. Crim. Plan § 8(b)(5): no later than twenty calendar days before
 /// the sentencing hearing, the probation officer submits the final draft
 /// of the presentence report to the parties.
-deadline final-draft-psr: 20.days before SentencingScheduled() counted_by frcrimp45 cite "D. Del. Crim. Plan § 8(b)"
+deadline final-draft-psr: 20.days before SentencingScheduled() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 8(b)"
 {
   forum frcrimp
 }
@@ -168,7 +168,7 @@ deadline final-draft-psr: 20.days before SentencingScheduled() counted_by frcrim
 /// claim is filed directly with the Court (under seal only with prior
 /// approval); a party that believes an objection to the presentence report
 /// needs a hearing notifies the Court in writing by the same day.
-deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by frcrimp45 cite "D. Del. Crim. Plan § 8(b)"
+deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 8(b)"
 {
   forum frcrimp
 }
@@ -176,7 +176,7 @@ deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by 
 /// D. Del. Crim. Plan § 8(b)(7): no later than eight days before the
 /// sentencing hearing, the opposing party files any response to a
 /// sentencing memorandum.
-deadline sentencing-memorandum-response: 8.days before SentencingScheduled() counted_by frcrimp45 cite "D. Del. Crim. Plan § 8(b)"
+deadline sentencing-memorandum-response: 8.days before SentencingScheduled() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 8(b)"
 {
   forum frcrimp
 }

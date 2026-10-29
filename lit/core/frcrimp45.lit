@@ -1,7 +1,68 @@
 module core.frcrimp45
 
-import core.calendar.{ us-federal-holidays }
+import core.calendar.{ delaware-holidays, us-federal-holidays }
 import core.time.{ Served, Scheduled, ServiceMethod }
+
+/// FRCrimP 45 as amended by the 2009 time-computation amendments (adopted
+/// March 26, 2009, effective December 1, 2009), the text the 2011 edition
+/// of 18 U.S.C. App. prints: 45(a) is the count of the 2023 version below,
+/// and 45(c) adds 3 days after service "in the manner provided under
+/// Federal Rule of Civil Procedure 5(b)(2)(C), (D), (E), or (F)": mailing,
+/// leaving it with the clerk, electronic means (E) and other means
+/// consented to. Earlier versions (the credits list 1966 through 2008) are
+/// not vendored and stay undeclared.
+counting frcrimp45 effective [2009-12-01, 2016-12-01) known_at 2009-03-26 cite "FRCrimP (2011 ed.) 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (2011 ed.) 45(c)"
+  holidays us-federal-holidays
+  forums [frcrimp]
+  allow_hours
+}
+
+/// The 2016 amendment (adopted April 28, 2016, effective December 1, 2016)
+/// removes electronic service from 45(c): the 3 days follow service under
+/// Civil Rule "5(b)(2)(C) (mailing), (D) (leaving with the clerk), or (F)
+/// (other means consented to)" only (2017 ed.). The 2018 amendment
+/// (effective December 1, 2018) re-points 45(c) at the criminal rules' own
+/// service rule, "Rule 49(a)(4)(C), (D), and (E)" (2019 ed.): the same
+/// three methods (mailing, leaving with the clerk, other consented
+/// nonelectronic means), so the count is unchanged and one version covers
+/// both texts.
+counting frcrimp45 effective [2016-12-01, 2023-12-01) known_at 2016-04-28 supersedes frcrimp45@2009-12-01 cite "FRCrimP (2017 ed.) 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (2017 ed.) 45(c)"
+  holidays us-federal-holidays
+  forums [frcrimp]
+  allow_hours
+}
 
 /// FRCrimP 45 as amended to December 1, 2023 (the vendored edition, as
 /// amended to December 1, 2024, prints that as its last amendment): every
@@ -15,11 +76,14 @@ import core.time.{ Served, Scheduled, ServiceMethod }
 /// clerk, and other nonelectronic means consented to in writing; service
 /// by the court's electronic-filing system or other consented electronic
 /// means (49(a)(3)) and personal delivery (49(a)(4)(A)-(B)) add nothing.
-/// Earlier versions (the amendment credits list 2002 through 2018) are not
-/// vendored and stay undeclared, as do 45(a)(6)(B)'s declared holidays and
-/// (C)'s state holidays: no declaration or state calendar is vendored. Rule
-/// 45 is silent on periods stated in months or years, so none is counted.
-counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCrimP 45(a)"
+/// The 2023 amendment adds Juneteenth National Independence Day to
+/// 45(a)(6)(A)'s list; `us-federal-holidays` has closed it since June 17,
+/// 2021, when Congress declared it a holiday (45(a)(6)(B)), so the count is
+/// that of the 2016 version above. 45(a)(6)(B)'s other declared holidays
+/// stay undeclared (no declaration is vendored), and (C)'s state holidays
+/// are a district's own count (`frcrimp45-delaware` below). Rule 45 is
+/// silent on periods stated in months or years, so none is counted.
+counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 supersedes frcrimp45@2016-12-01 cite "FRCrimP 45(a)"
 {
   exclude_trigger_day
   include_last_day
@@ -37,6 +101,86 @@ counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCrimP 
     ExpressForeign: unrecognized
   } cite "FRCrimP 45(c)"
   holidays us-federal-holidays
+  forums [frcrimp]
+  allow_hours
+}
+
+/// FRCrimP 45 in the District of Delaware: each version of `frcrimp45`
+/// with Delaware's legal holidays, which 45(a)(6)(C) ("for periods that are
+/// measured after an event, any other day declared a holiday by the state
+/// where the district court is located", in every text from 2009) makes
+/// legal holidays of a forward-counted period only. A D. Del. criminal
+/// package names it as its `counting` rule; core's `frcrimp45` stays the
+/// federal-only count of every other district. Only the Delaware days the
+/// federal calendar lacks close here. It is in force from May 2, 2011, when
+/// core's `delaware-holidays` is, and counts no period before.
+counting frcrimp45-delaware effective [2011-05-02, 2016-12-01) known_at 2009-03-26 cite "FRCrimP (2011 ed.) 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (2011 ed.) 45(c)"
+  holidays us-federal-holidays
+  forward_holidays delaware-holidays cite "FRCrimP 45(a)(6)(C)"
+  forums [frcrimp]
+  allow_hours
+}
+
+/// The 2016 and 2018 texts (2017 and 2019 eds.), as `frcrimp45@2016-12-01`.
+counting frcrimp45-delaware effective [2016-12-01, 2023-12-01) known_at 2016-04-28 supersedes frcrimp45-delaware@2011-05-02 cite "FRCrimP (2017 ed.) 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (2017 ed.) 45(c)"
+  holidays us-federal-holidays
+  forward_holidays delaware-holidays cite "FRCrimP 45(a)(6)(C)"
+  forums [frcrimp]
+  allow_hours
+}
+
+/// The 2023 text, as `frcrimp45@2023-12-01`.
+counting frcrimp45-delaware effective [2023-12-01, ..) known_at 2023-04-24 supersedes frcrimp45-delaware@2016-12-01 cite "FRCrimP 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP 45(c)"
+  holidays us-federal-holidays
+  forward_holidays delaware-holidays cite "FRCrimP 45(a)(6)(C)"
   forums [frcrimp]
   allow_hours
 }

@@ -515,6 +515,31 @@ Entries live in the forum's own
 - Original: `original/usc-28-app-2017-time/001-nt-pkg-USCODE-2017-title28-html-USCODE-2017-title28-app-federalru-dup1-rule6.html` as served (sha256 43524cf8ac34d6e27356597cf5307a61b5fb0e6fd3516addc1fd7f12d5a9a740); extraction sha256 5d927c0a1b91b1a30a949a272c164ea6826cfebf6eac917da9a676732b22844d. Served at https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-dup1-rule6.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 - Original: `original/usc-28-app-2017-time/002-ontent-pkg-USCODE-2017-title28-html-USCODE-2017-title28-app-federalru-rule26.html` as served (sha256 6702848ddfeb87f0b06830920aa5ee4d71dd76249c5b0187cc50055a0b214c93); extraction sha256 5d927c0a1b91b1a30a949a272c164ea6826cfebf6eac917da9a676732b22844d. Served at https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-rule26.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 
+### `usc-18-app-frcrimp45-history.txt` — FRCrimP 45 as printed in the 2011, 2017 and 2019 editions of 18 U.S.C. App.
+
+- The texts `lit/core`'s earlier versions of `frcrimp45` and
+  `frcrimp45-delaware` took effect with: `## FRCrimP (2011 ed.) Rule 45`
+  (as amended December 1, 2009), `## FRCrimP (2017 ed.) Rule 45` (as
+  amended December 1, 2016) and `## FRCrimP (2019 ed.) Rule 45` (as amended
+  December 1, 2018), each the last amendment its credits list; each rule's
+  text, amendment credits and Advisory Committee Notes. Not canonical refs,
+  as in `usc-28-app-time-history.txt`.
+- Fetched 2026-10-29 (lg-3v3h) from `www.govinfo.gov`'s official United
+  States Code (GPO), granules
+  `USCODE-2011-title18-app-federalru-dup1-rule45.htm` (sha256
+  `e285f79511fc5b1064a9c3be9fe90b9b45f487e82a04153c0c31c8d6794e76a0`),
+  `USCODE-2017-title18-app-federalru-rule45.htm`
+  (`99fe62cff33a5fd5d13aa15c7d223257cdf5cbce745d0177646bc3c79623152f`) and
+  `USCODE-2019-title18-app-federalru-rule45.htm`
+  (`8b85a04e52e9f71d437d375dce67b8717054f7d782a0c23e24fe266f27847284`).
+  Everything from the page's section head to its end, one line per
+  paragraph, comments and tags stripped, entities decoded, runs of spaces
+  collapsed.
+- sha256 (this file): `b9f4740b04e7a2ccceeafcf89b53f62430b923a1e27cfacd71f56f87ca241210`
+- Original: `original/usc-18-app-frcrimp45-history/2011-USCODE-2011-title18-app-federalru-dup1-rule45.html` as served (sha256 e285f79511fc5b1064a9c3be9fe90b9b45f487e82a04153c0c31c8d6794e76a0); extraction sha256 b9f4740b04e7a2ccceeafcf89b53f62430b923a1e27cfacd71f56f87ca241210. Served at https://www.govinfo.gov/content/pkg/USCODE-2011-title18/html/USCODE-2011-title18-app-federalru-dup1-rule45.htm; fetched with curl, retrieved 2026-10-29.
+- Original: `original/usc-18-app-frcrimp45-history/2017-USCODE-2017-title18-app-federalru-rule45.html` as served (sha256 99fe62cff33a5fd5d13aa15c7d223257cdf5cbce745d0177646bc3c79623152f); extraction sha256 b9f4740b04e7a2ccceeafcf89b53f62430b923a1e27cfacd71f56f87ca241210. Served at https://www.govinfo.gov/content/pkg/USCODE-2017-title18/html/USCODE-2017-title18-app-federalru-rule45.htm; fetched with curl, retrieved 2026-10-29.
+- Original: `original/usc-18-app-frcrimp45-history/2019-USCODE-2019-title18-app-federalru-rule45.html` as served (sha256 8b85a04e52e9f71d437d375dce67b8717054f7d782a0c23e24fe266f27847284); extraction sha256 b9f4740b04e7a2ccceeafcf89b53f62430b923a1e27cfacd71f56f87ca241210. Served at https://www.govinfo.gov/content/pkg/USCODE-2019-title18/html/USCODE-2019-title18-app-federalru-rule45.htm; fetched with curl, retrieved 2026-10-29.
+
 ### `usc-28-app-1997-time.txt` — FRAP 26 as printed in the 1997 edition of 28 U.S.C. App.
 
 - The text `lit/core`'s 1996 version of `frap26` took effect with (as

@@ -1,6 +1,6 @@
 module bankr-dc-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.frbp9006.{ frbp9006-district-of-columbia }
 
 import frbp.events.{
   BankruptcyOrderEntered,
@@ -175,244 +175,297 @@ event MatterConcluded()
 /// LBR 1002-1(a): if a petition is signed by neither the petitioner nor
 /// an attorney, a signed document must be filed within 3 days or the
 /// petition may be dismissed.
-deadline unsigned-petition-cure-period: 3.days after UnsignedPetitionNoticeServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 1002-1(a)"
+deadline unsigned-petition-cure-period: 3.days after UnsignedPetitionNoticeServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 1002-1(a)"
+
 /// LBR 1006-1(c)(1): the filing fee deficiency is cured by the close of
 /// business on the next day after the notice to cure is given.
-deadline filing-fee-cure-period: 1.days after FilingFeeNoticeServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 1006-1(c)"
+deadline filing-fee-cure-period: 1.days after FilingFeeNoticeServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 1006-1(c)"
+
 /// LBR 1007-1(e)(1): the debtor files the missing credit counseling
 /// statement, statement of social security number or List of Creditors not
 /// later than 3 days after the Clerk's notice, or responds and attends a
 /// hearing on why the case should not be dismissed.
-deadline petition-documents-cure-period: 3.days after PetitionDocumentsNoticeServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 1007-1(e)"
+deadline petition-documents-cure-period: 3.days after PetitionDocumentsNoticeServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 1007-1(e)"
+
 /// LBR 1007-1(d)(1): a party objecting to the Clerk's automatic extension
 /// of time to file lists, schedules and statements has 7 days from entry
 /// of the order to file objections and schedule a hearing. The extension
 /// runs to the shorter of 14 additional days or 7 days before the initial
 /// meeting of creditors, on a motion filed within 14 days after the
 /// petition date.
-deadline schedule-extension-objection-period: 7.days after ScheduleExtensionOrderEntered() counted_by frbp9006 cite "Bankr. D.D.C. LBR 1007-1(d)"
+deadline schedule-extension-objection-period: 7.days after ScheduleExtensionOrderEntered() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 1007-1(d)"
+
 /// LBR 1007-1(d)(2): on a motion to extend the time to file lists,
 /// schedules and statements to a date less than 7 days before the initial
 /// meeting of creditors, written objections are filed within 7 days after
 /// service of the motion.
-deadline schedule-extension-motion-objection-period: 7.days after ScheduleExtensionMotionServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 1007-1(d)"
+deadline schedule-extension-motion-objection-period: 7.days after ScheduleExtensionMotionServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 1007-1(d)"
+
 /// LBR 1007-1(c): payment advices (or a declaration that none was
 /// received) for the 60 days before the petition are provided to the
 /// trustee and any creditor who timely requests them at least 7 days
 /// before the date of the meeting of creditors.
-deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. D.D.C. LBR 1007-1(c)"
+deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 1007-1(c)"
+
 /// LBR 1015-1: a joint petition is jointly administered unless the
 /// trustee or another interested party objects within 14 days after the
 /// conclusion of the § 341(a) meeting and gives notice under LBR 9013-1.
-deadline joint-administration-objection-period: 14.days after MeetingOfCreditorsConcluded() counted_by frbp9006 cite "Bankr. D.D.C. LBR 1015-1"
+deadline joint-administration-objection-period: 14.days after MeetingOfCreditorsConcluded() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 1015-1"
+
 /// LBR 2003-1(a): within 3 days of receiving the new date and time of an
 /// agreed rescheduled meeting of creditors, the party obtaining the
 /// continuance serves written notice on all creditors and parties in
 /// interest and files a certificate of service.
-deadline rescheduled-meeting-notice-period: 3.days after RescheduledMeetingDateReceived() counted_by frbp9006 cite "Bankr. D.D.C. LBR 2003-1(a)"
+deadline rescheduled-meeting-notice-period: 3.days after RescheduledMeetingDateReceived() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 2003-1(a)"
+
 /// LBR 2014-1(a): an application to employ a professional is timely if
 /// filed within 30 days of the later of the petition date and the date the
 /// professional commences rendering services; absent extraordinary
 /// circumstances, nunc pro tunc applications will not be considered.
-deadline employment-application-period: 30.days after ProfessionalEngagementStarted() counted_by frbp9006 cite "Bankr. D.D.C. LBR 2014-1(a)"
+deadline employment-application-period: 30.days after ProfessionalEngagementStarted() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 2014-1(a)"
+
 /// LBR 2014-1(c): absent objections within 14 days of the filing of an
 /// application to employ, the Court may grant it without further notice or
 /// hearing.
-deadline employment-objection-period: 14.days after EmploymentApplicationFiled() counted_by frbp9006 cite "Bankr. D.D.C. LBR 2014-1(c)"
+deadline employment-objection-period: 14.days after EmploymentApplicationFiled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 2014-1(c)"
+
 /// LBR 2016-1(c): in a case converted to chapter 7, all final applications
 /// of professionals for fees and expenses incurred before conversion are
 /// filed within 90 days after the date of the order converting the case.
-deadline converted-final-fee-application-period: 90.days after ConversionToChapter7Ordered() counted_by frbp9006 cite "Bankr. D.D.C. LBR 2016-1(c)"
+deadline converted-final-fee-application-period: 90.days after ConversionToChapter7Ordered() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 2016-1(c)"
+
 /// LBR 2016-2(b): a chapter 13 debtor's attorney who elects to file fee
 /// applications files the initial application no later than 60 days after
 /// entry of the first order confirming a plan, unless the Court orders
 /// otherwise.
-deadline chapter13-initial-fee-application-period: 60.days after FirstConfirmationOrderEntered() counted_by frbp9006 cite "Bankr. D.D.C. LBR 2016-2(b)"
+deadline chapter13-initial-fee-application-period: 60.days after FirstConfirmationOrderEntered() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 2016-2(b)"
+
 /// LBR 2016-2(d): on dismissal of a chapter 13 case with no plan
 /// confirmed, the debtor's attorney or other professional moves within 21
 /// days after the dismissal order becomes final for a determination
 /// whether its fees are an administrative expense under 11 U.S.C.
 /// § 503(b).
-deadline unconfirmed-dismissal-fee-motion-period: 21.days after UnconfirmedDismissalFinal() counted_by frbp9006 cite "Bankr. D.D.C. LBR 2016-2(d)"
+deadline unconfirmed-dismissal-fee-motion-period: 21.days after UnconfirmedDismissalFinal() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 2016-2(d)"
+
 /// LBR 2016-3(a): if the debtor does not file Official Forms B2800 and
 /// B119, the bankruptcy petition preparer signs and files them within 14
 /// days after the petition date.
-deadline petition-preparer-forms-period: 14.days after PetitionFiled() counted_by frbp9006 cite "Bankr. D.D.C. LBR 2016-3(a)"
+deadline petition-preparer-forms-period: 14.days after PetitionFiled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 2016-3(a)"
+
 /// LBR 2091-1(a): the notice of a motion for leave to withdraw as attorney
 /// provides a 7-day response period.
-deadline withdrawal-response-period: 7.days after WithdrawalMotionServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 2091-1(a)"
+deadline withdrawal-response-period: 7.days after WithdrawalMotionServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 2091-1(a)"
+
 /// LBR 3003-1(a)(1): in a chapter 11 case, unless the Court orders a
 /// different date, the last date to file a claim other than a governmental
 /// unit's is 90 days after the first date set for the meeting of
 /// creditors. The governmental unit's 180 days (3003-1(a)(2)) is 11
 /// U.S.C. § 502(b)(9)'s, not declared here.
-deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3003-1(a)"
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3003-1(a)"
+
 /// LBR 3003-1(a)(3): in a subchapter V case, a proof of claim other than a
 /// governmental unit's is timely if filed no later than 70 days after
 /// entry of the order for relief, unless the Court fixes a different date.
-deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3003-1(a)"
+deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3003-1(a)"
+
 /// LBR 3003-1(b)(1): in a chapter 11 case the debtor serves creditors
 /// whose claims are scheduled as disputed, contingent or unliquidated with
 /// notice of that fact within 14 days after the latest of the conversion,
 /// the schedules of liabilities and the amendment adding the creditor.
-deadline disputed-claim-notice-period: 14.days after DisputedClaimScheduled() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3003-1(b)"
+deadline disputed-claim-notice-period: 14.days after DisputedClaimScheduled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3003-1(b)"
+
 /// LBR 3007-1(c): a creditor served with a claim objection and a notice of
 /// opportunity to request a hearing files and serves a response within 30
 /// days of service; otherwise the Court may treat the objection as
 /// conceded. LBR 9013-1(d)(4) states the 30 days from the filing of the
 /// objection.
-deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3007-1(c)"
+deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3007-1(c)"
+
 /// LBR 3007-1(c): when the claim objection is accompanied by a notice of
 /// hearing, the creditor's response is due 7 days before the hearing.
-deadline claim-objection-hearing-response-period: 7.days before ClaimObjectionHearing() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3007-1(c)"
+deadline claim-objection-hearing-response-period: 7.days before ClaimObjectionHearing() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3007-1(c)"
+
 /// LBR 3014-1: in a subchapter V case in which 11 U.S.C. § 1125 does not
 /// apply, a class of secured creditors elects under § 1111(b)(2) no later
 /// than 14 days after the plan is filed, or as the Court directs.
-deadline section-1111b-election-period: 14.days after SubchapterVPlanFiled() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3014-1"
+deadline section-1111b-election-period: 14.days after SubchapterVPlanFiled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3014-1"
+
 /// LBR 3015-1(c)(1): a party objecting to the Clerk's automatic extension
 /// of time to file a chapter 13 plan has 7 days from entry of the order to
 /// file objections and schedule a hearing.
-deadline plan-extension-objection-period: 7.days after PlanExtensionOrderEntered() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3015-1(c)"
+deadline plan-extension-objection-period: 7.days after PlanExtensionOrderEntered() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3015-1(c)"
+
 /// LBR 3015-1(c)(2): on a motion to extend the time to file a chapter 13
 /// plan beyond the automatic extension, written objections are filed
 /// within 7 days after service of the motion.
-deadline plan-extension-motion-objection-period: 7.days after PlanExtensionMotionServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3015-1(c)"
+deadline plan-extension-motion-objection-period: 7.days after PlanExtensionMotionServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3015-1(c)"
+
 /// LBR 3015-3(a)(1): an objection to confirmation of a chapter 13 plan, or
 /// to an included motion to value, avoid a lien or assume or reject, is
 /// filed no later than 7 days before the confirmation hearing (likewise
 /// 3015-2(a)(3) and (b) for amended and modified plans).
-deadline confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3015-3(a)"
+deadline confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3015-3(a)"
+
 /// LBR 3015-3(f)(1): no later than 14 days before the confirmation
 /// hearing, the debtor serves on the chapter 13 trustee and files an
 /// affidavit of all 11 U.S.C. § 1326(a)(1) pre-confirmation payments.
-deadline adequate-protection-affidavit-period: 14.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3015-3(f)"
+deadline adequate-protection-affidavit-period: 14.days before ConfirmationHearing() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3015-3(f)"
+
 /// LBR 3015-3(f)(2): objections to the accuracy of the adequate
 /// protection affidavit are filed no later than 7 days after its filing
 /// and service; otherwise the Court may presume it accurate.
-deadline adequate-protection-objection-period: 7.days after AdequateProtectionAffidavitServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3015-3(f)"
+deadline adequate-protection-objection-period: 7.days after AdequateProtectionAffidavitServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3015-3(f)"
+
 /// LBR 3015-3(d): when confirmation is denied in a case with no confirmed
 /// plan, the Clerk issues an order dismissing the case unless within 21
 /// days after denial the debtor files a new plan, converts or moves to
 /// convert, moves for reconsideration or appeals, or the Court otherwise
 /// orders.
-deadline post-denial-plan-period: 21.days after ConfirmationDenied() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3015-3(d)"
+deadline post-denial-plan-period: 21.days after ConfirmationDenied() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3015-3(d)"
+
 /// LBR 3022-1(a): in a subchapter V case, unless the Court extends it, the
 /// debtor's attorney files a motion for final decree on or before 30 days
 /// after the later of the discharge and the disposition of all adversary
 /// proceedings and contested matters.
-deadline subchapter-v-final-decree-period: 30.days after SubchapterVCaseAdministered() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3022-1(a)"
+deadline subchapter-v-final-decree-period: 30.days after SubchapterVCaseAdministered() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3022-1(a)"
+
 /// LBR 3022-1(b)(1): in any other chapter 11 case of a non-individual
 /// debtor, unless the Court extends it, the debtor's attorney files a
 /// certificate of substantial consummation and a motion for final decree
 /// on or before 30 days after the later of confirmation and the
 /// disposition of all adversary proceedings, contested matters and claim
 /// objections.
-deadline chapter11-final-decree-period: 30.days after Chapter11CaseAdministered() counted_by frbp9006 cite "Bankr. D.D.C. LBR 3022-1(b)"
+deadline chapter11-final-decree-period: 30.days after Chapter11CaseAdministered() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3022-1(b)"
+
 /// LBR 4001-1(g): when a stay-relief motion rests on missed post-petition
 /// payments, the movant files and serves a payment history at least 7
 /// days before the hearing.
-deadline stay-relief-payment-history-period: 7.days before StayReliefHearing() counted_by frbp9006 cite "Bankr. D.D.C. LBR 4001-1(g)"
+deadline stay-relief-payment-history-period: 7.days before StayReliefHearing() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 4001-1(g)"
+
 /// LBR 4003-2: a lien avoidance motion gives no less than 21 days' notice
 /// of the time to object; if no response is filed within 21 days after
 /// service, relief may be granted without a hearing.
-deadline lien-avoidance-response-period: 21.days after LienAvoidanceMotionServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 4003-2"
+deadline lien-avoidance-response-period: 21.days after LienAvoidanceMotionServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 4003-2"
+
 /// LBR 4004-1(a)(1), (3): the chapter 13 or chapter 12 debtor files the
 /// certification of compliance with 11 U.S.C. § 1328 (or § 1228) within 60
 /// days of the trustee's notice of completion of plan payments; otherwise
 /// the case may be closed without a discharge.
-deadline discharge-certification-period: 60.days after PlanCompletionNoticeFiled() counted_by frbp9006 cite "Bankr. D.D.C. LBR 4004-1(a)"
+deadline discharge-certification-period: 60.days after PlanCompletionNoticeFiled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 4004-1(a)"
+
 /// LBR 4004-1(a)(2): creditors and parties in interest have 30 days from
 /// the Court's notice to dispute the trustee's report of completion or the
 /// debtor's certification and request a hearing; with no request, the
 /// Court may grant the discharge without further notice or hearing.
-deadline discharge-dispute-period: 30.days after DischargeNoticeSent() counted_by frbp9006 cite "Bankr. D.D.C. LBR 4004-1(a)"
+deadline discharge-dispute-period: 30.days after DischargeNoticeSent() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 4004-1(a)"
+
 /// LBR 6004-1(d): unless the Court orders otherwise, the FRBP 6004(f)(1)
 /// report of sale is filed and served no later than 21 days after a sale
 /// outside the ordinary course of business.
-deadline report-of-sale-period: 21.days after SaleClosed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 6004-1(d)"
+deadline report-of-sale-period: 21.days after SaleClosed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 6004-1(d)"
+
 /// LBR 6007-1(a): within 14 days after the meeting of creditors, a party
 /// objecting to the trustee's announced abandonment of estate property
 /// obtains a hearing date, transmits notice of the hearing and files it
 /// with proof of service.
-deadline abandonment-objection-period: 14.days after MeetingOfCreditorsConcluded() counted_by frbp9006 cite "Bankr. D.D.C. LBR 6007-1(a)"
+deadline abandonment-objection-period: 14.days after MeetingOfCreditorsConcluded() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 6007-1(a)"
+
 /// LBR 7026-1(e)(3): a response to a motion to compel, for a protective
 /// order or to compel an examination is filed within 14 days after service
 /// of the motion, unless the Court orders otherwise. LBR 9014-1(a) applies
 /// it in contested matters.
-deadline discovery-motion-response-period: 14.days after DiscoveryMotionServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 7026-1(e)"
+deadline discovery-motion-response-period: 14.days after DiscoveryMotionServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 7026-1(e)"
+
 /// LBR 7030-1(a): service of a notice of deposition 7 days before the
 /// deposition is "reasonable notice" under FRCP 30(b); the Court may
 /// enlarge or shorten it.
-deadline deposition-notice-period: 7.days before DepositionDate() counted_by frbp9006 cite "Bankr. D.D.C. LBR 7030-1(a)"
+deadline deposition-notice-period: 7.days before DepositionDate() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 7030-1(a)"
+
 /// LBR 7041-1: a complaint objecting to discharge is dismissed at the
 /// plaintiff's request only by motion served on all creditors, parties in
 /// interest and the United States Trustee, providing 21 days' opportunity
 /// to object.
-deadline discharge-complaint-dismissal-objection-period: 21.days after DischargeComplaintDismissalMotionServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 7041-1"
+deadline discharge-complaint-dismissal-objection-period: 21.days after DischargeComplaintDismissalMotionServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 7041-1"
+
 /// LBR 7054-1: a party entitled to costs in an adversary proceeding files
 /// a bill of costs within 21 days after entry of the judgment, order or
 /// decree (in contested matters too, LBR 9014-1(a)).
-deadline bill-of-costs-period: 21.days after BankruptcyOrderEntered() counted_by frbp9006 cite "Bankr. D.D.C. LBR 7054-1"
+deadline bill-of-costs-period: 21.days after BankruptcyOrderEntered() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 7054-1"
+
 /// LBR 7054-2: unless a statute or the Court fixes a longer period, a
 /// prevailing party's motion for attorney's fees and nontaxable expenses
 /// is filed within 21 days after entry of the judgment or order.
-deadline fee-motion-period: 21.days after BankruptcyOrderEntered() counted_by frbp9006 cite "Bankr. D.D.C. LBR 7054-2"
+deadline fee-motion-period: 21.days after BankruptcyOrderEntered() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 7054-2"
+
 /// LBR 7055-1(c): a motion for default judgment against a party who has
 /// appeared is served at least 7 days before the hearing.
-deadline default-judgment-service-period: 7.days before DefaultJudgmentHearing() counted_by frbp9006 cite "Bankr. D.D.C. LBR 7055-1(c)"
+deadline default-judgment-service-period: 7.days before DefaultJudgmentHearing() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 7055-1(c)"
+
 /// LBR 7055-1(d): on the granting of a motion to vacate an entry of
 /// default or a default judgment, the movant has 14 days to answer or
 /// otherwise respond to the complaint.
-deadline post-vacatur-answer-period: 14.days after DefaultVacated() counted_by frbp9006 cite "Bankr. D.D.C. LBR 7055-1(d)"
+deadline post-vacatur-answer-period: 14.days after DefaultVacated() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 7055-1(d)"
+
 /// LBR 9011-2(c): a paper filed for an entity that is not a natural person
 /// and not signed by an attorney permitted to appear may be stricken
 /// unless the deficiency is cured within 14 days of the mailing or
 /// delivery of the notice of deficiency.
-deadline unsigned-entity-paper-cure-period: 14.days after UnsignedEntityPaperNoticeSent() counted_by frbp9006 cite "Bankr. D.D.C. LBR 9011-2(c)"
+deadline unsigned-entity-paper-cure-period: 14.days after UnsignedEntityPaperNoticeSent() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9011-2(c)"
+
 /// LBR 9013-1(d)(1): when no hearing has been set, the opposing party may
 /// file a response within 14 days of the notice of opportunity to object,
 /// but not thereafter without leave, unless FRBP 2002(a) requires longer
 /// notice for the matter.
-deadline motion-response-period: 14.days after OpportunityToObjectNoticeServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 9013-1(d)"
+deadline motion-response-period: 14.days after OpportunityToObjectNoticeServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9013-1(d)"
+
 /// LBR 9013-1(d)(1): the movant may file a reply within 7 days after the
 /// filing of the response.
-deadline motion-reply-period: 7.days after MotionResponseFiled() counted_by frbp9006 cite "Bankr. D.D.C. LBR 9013-1(d)"
+deadline motion-reply-period: 7.days after MotionResponseFiled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9013-1(d)"
+
 /// LBR 9013-1(d)(2): when a hearing has been set on at least 21 days'
 /// notice, the opposing party may file a response no later than 7 days
 /// before the hearing.
-deadline hearing-response-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. D.D.C. LBR 9013-1(d)"
+deadline hearing-response-period: 7.days before MotionHearing() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9013-1(d)"
+
 /// LBR 9013-1(b)(2): an optional memorandum of facts and law is filed and
 /// served, with proof of service, no later than 7 days before the hearing,
 /// unless the Court orders otherwise.
-deadline supporting-memorandum-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. D.D.C. LBR 9013-1(b)"
+deadline supporting-memorandum-period: 7.days before MotionHearing() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9013-1(b)"
+
 /// LBR 9013-1(f): a certificate of service not filed with the paper is
 /// filed within 7 days of the service date (LBR 2002-1(e): within 7 days
 /// after completion of service); for expedited relief it is filed before
 /// the hearing.
-deadline certificate-of-service-period: 7.days after PaperServed() counted_by frbp9006 cite "Bankr. D.D.C. LBR 9013-1(f)"
+deadline certificate-of-service-period: 7.days after PaperServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9013-1(f)"
+
 /// LBR 9016-1(a): a request for a Clerk-issued subpoena for a witness at a
 /// hearing or trial is filed no later than 14 days before the appearance
 /// date; a later one may issue, but no continuance is granted if the
 /// witness fails to appear.
-deadline subpoena-request-period: 14.days before WitnessAppearanceDate() counted_by frbp9006 cite "Bankr. D.D.C. LBR 9016-1(a)"
+deadline subpoena-request-period: 14.days before WitnessAppearanceDate() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9016-1(a)"
+
 /// LBR 9027-1(b): a motion for remand is filed with the Clerk of the
 /// Bankruptcy Court no later than 30 days after the notice of removal is
 /// filed.
-deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frbp9006 cite "Bankr. D.D.C. LBR 9027-1(b)"
+deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9027-1(b)"
+
 /// LBR 9037-1: a Notice of Intent to Request Redaction is filed within 7
 /// days from the filing of a transcript.
-deadline redaction-intent-period: 7.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. D.D.C. LBR 9037-1"
+deadline redaction-intent-period: 7.days after TranscriptFiled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9037-1"
+
 /// LBR 9037-1: a Request for Redaction of Transcript is filed within 21
 /// days from the filing of the transcript.
-deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. D.D.C. LBR 9037-1"
+deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9037-1"
+
 /// LBR 9037-1: the redacted transcript is due 31 days from the filing date
 /// of the transcript; the transcript is restricted for 90 days.
-deadline redacted-transcript-period: 31.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. D.D.C. LBR 9037-1"
+deadline redacted-transcript-period: 31.days after TranscriptFiled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9037-1"
+
 /// LBR 9072-1(e): unless the Court specifies otherwise, the prevailing
 /// party files a proposed order within 14 days after the conclusion of the
 /// trial, hearing or other disposition; otherwise the Court may issue a
 /// Notice of Failure to Prosecute.
-deadline proposed-order-period: 14.days after MatterConcluded() counted_by frbp9006 cite "Bankr. D.D.C. LBR 9072-1(e)"
+deadline proposed-order-period: 14.days after MatterConcluded() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9072-1(e)"
 
 start motion-filed
 

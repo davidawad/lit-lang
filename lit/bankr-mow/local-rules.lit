@@ -1,6 +1,6 @@
 module bankr-mow-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.frbp9006.{ frbp9006-missouri }
 import frbp.events.{ OrderForReliefEntered, PetitionFiled }
 
 // The Bankr. W.D. Mo. court's own periods, counted under FRBP 9006(a): the
@@ -159,193 +159,240 @@ event ShowCauseOrdered()
 /// W.D. Mo. Bankr. L.R. 1002-2(B): no later than seven days after the
 /// petition, a subchapter V debtor tenders the deposit to the Subchapter V
 /// Trustee.
-deadline subchapter-v-deposit-period: 7.days after PetitionFiled() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 1002-2(B)"
+deadline subchapter-v-deposit-period: 7.days after PetitionFiled() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 1002-2(B)"
+
 /// W.D. Mo. Bankr. L.R. 1007-1(F): if the mailing matrix is missing
 /// documents or in an incorrect format, a new verified matrix is submitted
 /// within two days from the filing of the case, or the case may be
 /// dismissed.
-deadline matrix-correction-period: 2.days after MatrixDeficient() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 1007-1(F)"
+deadline matrix-correction-period: 2.days after MatrixDeficient() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 1007-1(F)"
+
 /// W.D. Mo. Bankr. L.R. Appendix 1-6: if not included with the petition,
 /// the List of Creditors is filed within 2 days of case opening, or the case
 /// may be dismissed.
-deadline creditor-list-period: 2.days after PetitionFiled() counted_by frbp9006 effective [2026-10-01, ..) unknown_before 2026-10-01 cite "W.D. Mo. Bankr. L.R. Appendix 1-6"
+deadline creditor-list-period: 2.days after PetitionFiled() counted_by frbp9006-missouri effective [2026-10-01, ..) unknown_before 2026-10-01 cite "W.D. Mo. Bankr. L.R. Appendix 1-6"
+
 /// W.D. Mo. Bankr. L.R. Appendix 1-6: if not included, Form B121 (or the
 /// Declaration re electronic filing) is filed within 7 days of case
 /// opening.
-deadline initial-declaration-period: 7.days after PetitionFiled() counted_by frbp9006 effective [2026-10-01, ..) unknown_before 2026-10-01 cite "W.D. Mo. Bankr. L.R. Appendix 1-6"
+deadline initial-declaration-period: 7.days after PetitionFiled() counted_by frbp9006-missouri effective [2026-10-01, ..) unknown_before 2026-10-01 cite "W.D. Mo. Bankr. L.R. Appendix 1-6"
+
 /// W.D. Mo. Bankr. L.R. 1009-1(B): if the claims deadline has passed or
 /// will pass within 30 days, added creditors without knowledge of the case
 /// have 30 days after service of the notice to file claims.
-deadline added-creditor-claim-period: 30.days after AmendmentNoticeServed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 1009-1(B)"
+deadline added-creditor-claim-period: 30.days after AmendmentNoticeServed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 1009-1(B)"
+
 /// W.D. Mo. Bankr. L.R. 1009-1(B): likewise they have 30 days after service
 /// of the notice to file § 523 and § 727 complaints.
-deadline added-creditor-complaint-period: 30.days after AmendmentNoticeServed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 1009-1(B)"
+deadline added-creditor-complaint-period: 30.days after AmendmentNoticeServed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 1009-1(B)"
+
 /// W.D. Mo. Bankr. L.R. 1015-1: spouses' estates are jointly administered
 /// unless the trustee or another party objects within 14 days after the
 /// conclusion of the first meeting of creditors.
-deadline joint-administration-objection-period: 14.days after FirstMeetingConcluded() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 1015-1"
+deadline joint-administration-objection-period: 14.days after FirstMeetingConcluded() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 1015-1"
+
 /// W.D. Mo. Bankr. L.R. 1016-1: the debtor's attorney of record files a
 /// suggestion of death within 30 days of learning of the debtor's death.
-deadline suggestion-of-death-period: 30.days after DeathLearned() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 1016-1"
+deadline suggestion-of-death-period: 30.days after DeathLearned() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 1016-1"
+
 /// W.D. Mo. Bankr. L.R. 1017-1(E): if the meeting of creditors was already
 /// held, the proof of claim deadline in a reinstated case is set sixty days
 /// from the date of reinstatement.
-deadline reinstated-claim-period: 60.days after CaseReinstated() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 1017-1(E)"
+deadline reinstated-claim-period: 60.days after CaseReinstated() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 1017-1(E)"
+
 /// W.D. Mo. Bankr. L.R. 1017-1(E): the motion to vacate a dismissal and
 /// reinstate is served with a notice that recipients have 21 days to
 /// object.
-deadline reinstatement-objection-period: 21.days after ReinstatementMotionServed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 1017-1(E)"
+deadline reinstatement-objection-period: 21.days after ReinstatementMotionServed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 1017-1(E)"
+
 /// W.D. Mo. Bankr. L.R. 1019-1: in a case converted to chapter 7, the debtor
 /// files verified schedules and a statement of financial affairs correct as
 /// of conversion not later than fourteen days after the order of
 /// conversion.
-deadline conversion-schedules-period: 14.days after ConversionOrdered() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 1019-1"
+deadline conversion-schedules-period: 14.days after ConversionOrdered() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 1019-1"
+
 /// W.D. Mo. Bankr. L.R. 2004-1(B): an objection to an examination under
 /// notice is filed within 7 days.
-deadline exam-objection-period: 7.days after ExamNoticeServed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 2004-1(B)"
+deadline exam-objection-period: 7.days after ExamNoticeServed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 2004-1(B)"
+
 /// W.D. Mo. Bankr. L.R. 2016-2(F): a chapter 13 debtor's attorney's
 /// post-confirmation flat-fee motion is served with 21 days after filing to
 /// object.
-deadline post-confirmation-fee-objection-period: 21.days after PostConfirmationFeeMotionFiled() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 2016-2(F)"
+deadline post-confirmation-fee-objection-period: 21.days after PostConfirmationFeeMotionFiled() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 2016-2(F)"
+
 /// W.D. Mo. Bankr. L.R. 2016-2(G): on dismissal before confirmation, the
 /// debtor's attorney obtains payment from funds the trustee received only
 /// by an order on a motion filed within 14 days of the dismissal.
-deadline dismissal-fee-motion-period: 14.days after PreConfirmationDismissal() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 2016-2(G)"
+deadline dismissal-fee-motion-period: 14.days after PreConfirmationDismissal() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 2016-2(G)"
+
 /// W.D. Mo. Bankr. L.R. 3002-1(E): a claim arising from the rejection of a
 /// lease or an avoidance action is filed by the later of the claims bar date
 /// and thirty days after the order or judgment becomes final.
-deadline rejection-claim-period: 30.days after RejectionOrderFinal() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3002-1(E)"
+deadline rejection-claim-period: 30.days after RejectionOrderFinal() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3002-1(E)"
+
 /// W.D. Mo. Bankr. L.R. 3011-1(B): unless the plan provides otherwise, the
 /// disbursing agent under a chapter 11 liquidating plan pays into the Court
 /// Registry funds left unclaimed 120 calendar days after the final
 /// distribution.
-deadline liquidating-plan-unclaimed-funds-period: 120.days after PlanFinalDistribution() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3011-1(B)"
+deadline liquidating-plan-unclaimed-funds-period: 120.days after PlanFinalDistribution() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3011-1(B)"
+
 /// W.D. Mo. Bankr. L.R. 3016-1: unless the Code or an order requires
 /// otherwise, a chapter 11 debtor (other than under subchapter V) files a
 /// plan and disclosure statement within 120 days after the petition, and
 /// moves to extend before the 120 days expire.
-deadline chapter11-plan-period: 120.days after PetitionFiled() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3016-1"
+deadline chapter11-plan-period: 120.days after PetitionFiled() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3016-1"
+
 /// W.D. Mo. Bankr. L.R. 3082-1(B): objections to a home mortgage
 /// modification motion are due 7 days after it is filed; without a response
 /// the court enters an order granting it.
-deadline modification-objection-period: 7.days after ModificationMotionFiled() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3082-1(B)"
+deadline modification-objection-period: 7.days after ModificationMotionFiled() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3082-1(B)"
+
 /// W.D. Mo. Bankr. L.R. 3082-1(C): absent an order to the contrary, the
 /// debtor has 60 days from the final trial modification payment to finalize
 /// the home mortgage modification.
-deadline modification-finalization-period: 60.days after FinalTrialPaymentMade() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3082-1(C)"
+deadline modification-finalization-period: 60.days after FinalTrialPaymentMade() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3082-1(C)"
+
 /// W.D. Mo. Bankr. L.R. 3083-1(B): the debtor files a certificate of service
 /// of a chapter 13 plan or amended plan within three days after it is filed;
 /// otherwise the plan is not considered for confirmation.
-deadline plan-service-certificate-period: 3.days after Chapter13PlanFiled() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3083-1(B)"
+deadline plan-service-certificate-period: 3.days after Chapter13PlanFiled() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3083-1(B)"
+
 /// W.D. Mo. Bankr. L.R. 3083-1(D): unless otherwise noticed, objections to
 /// confirmation of a chapter 13 plan are filed within 21 days after the
 /// conclusion of the § 341 meeting.
-deadline confirmation-objection-period: 21.days after MeetingConcluded() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3083-1(D)"
+deadline confirmation-objection-period: 21.days after MeetingConcluded() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3083-1(D)"
+
 /// W.D. Mo. Bankr. L.R. 3083-1(E): objections to an amended plan are filed
 /// on or before 21 days after it is filed and served.
-deadline amended-plan-objection-period: 21.days after Chapter13PlanFiled() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3083-1(E)"
+deadline amended-plan-objection-period: 21.days after Chapter13PlanFiled() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3083-1(E)"
+
 /// W.D. Mo. Bankr. L.R. 3085-1: the trustee distributes on the claims notice
 /// unless, within 30 days, the debtor or a creditor files and serves an
 /// objection to a claim listed in it.
-deadline trustee-claims-notice-objection-period: 30.days after TrusteeClaimsNoticeServed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3085-1"
+deadline trustee-claims-notice-objection-period: 30.days after TrusteeClaimsNoticeServed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3085-1"
+
 /// W.D. Mo. Bankr. L.R. 3094-1(A): a party contending the payee record
 /// misstates the mortgage amount due files an objection within 30 days of
 /// the initial date of confirmation.
-deadline payee-record-objection-period: 30.days after PlanConfirmed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3094-1(A)"
+deadline payee-record-objection-period: 30.days after PlanConfirmed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3094-1(A)"
+
 /// W.D. Mo. Bankr. L.R. 3096-1(A)-(B): where a response to a motion to
 /// dismiss recites an amended plan (and motion to suspend), the motion is
 /// denied on condition the amended plan is filed within 21 days.
-deadline conditional-amended-plan-period: 21.days after ConditionalDenialEntered() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3096-1(A)"
+deadline conditional-amended-plan-period: 21.days after ConditionalDenialEntered() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3096-1(A)"
+
 /// W.D. Mo. Bankr. L.R. 3096-1(D): where a response to a motion to deny
 /// confirmation recites an amended plan, the court denies confirmation and
 /// grants the debtor 21 days to file it.
-deadline denied-confirmation-amended-plan-period: 21.days after ConfirmationDenied() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3096-1(D)"
+deadline denied-confirmation-amended-plan-period: 21.days after ConfirmationDenied() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3096-1(D)"
+
 /// W.D. Mo. Bankr. L.R. 3097-1(B): objections to a personal property tax
 /// waiver motion are due 5 days after it is filed and served on the County
 /// Collector.
-deadline tax-waiver-objection-period: 5.days after TaxWaiverMotionServed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 3097-1(B)"
+deadline tax-waiver-objection-period: 5.days after TaxWaiverMotionServed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 3097-1(B)"
+
 /// W.D. Mo. Bankr. L.R. 4001-1(H): the debtor files and serves on all
 /// creditors a Notice of Intent to Enter into Loan Service Agreement at
 /// least 21 days before entering into it.
-deadline loan-service-notice-period: 21.days before LoanServiceAgreementDate() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 4001-1(H)"
+deadline loan-service-notice-period: 21.days before LoanServiceAgreementDate() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 4001-1(H)"
+
 /// W.D. Mo. Bankr. L.R. 4001-1(I): a movant alleging default under a
 /// conditional order granting stay relief gives the debtor 10 days written
 /// notice to cure before submitting a final order.
-deadline conditional-order-cure-period: 10.days after ConditionalOrderDefaultNoticed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 4001-1(I)"
+deadline conditional-order-cure-period: 10.days after ConditionalOrderDefaultNoticed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 4001-1(I)"
+
 /// W.D. Mo. Bankr. L.R. 4001-2(D): unless otherwise ordered, an objection to
 /// a motion to extend or impose the automatic stay is filed within 14 days
 /// after its service.
-deadline stay-extension-objection-period: 14.days after StayExtensionMotionServed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 4001-2(D)"
+deadline stay-extension-objection-period: 14.days after StayExtensionMotionServed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 4001-2(D)"
+
 /// W.D. Mo. Bankr. L.R. 4001-3(B): in chapter 7 and 13 cases the stay is
 /// modified 45 days after the order for relief to let the IRS offset
 /// prepetition tax debts, unless the debtor or a party in interest objects
 /// within the 45-day period and requests a hearing.
-deadline irs-setoff-objection-period: 45.days after OrderForReliefEntered() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 4001-3(B)"
+deadline irs-setoff-objection-period: 45.days after OrderForReliefEntered() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 4001-3(B)"
+
 /// W.D. Mo. Bankr. L.R. 4002-1(A): within 14 days after the trustee requests
 /// information at the § 341 meeting or in writing, the debtor serves the
 /// information or files and serves an objection.
-deadline trustee-request-response-period: 14.days after TrusteeInformationRequested() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 4002-1(A)"
+deadline trustee-request-response-period: 14.days after TrusteeInformationRequested() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 4002-1(A)"
+
 /// W.D. Mo. Bankr. L.R. 4002-1(C): a secured creditor's request to inspect
 /// collateral in preparation for a hearing is granted within five days of
 /// the request.
-deadline collateral-inspection-period: 5.days after InspectionRequested() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 4002-1(C)"
+deadline collateral-inspection-period: 5.days after InspectionRequested() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 4002-1(C)"
+
 /// W.D. Mo. Bankr. L.R. 4004-2: a hearing on a motion to extend the time for
 /// a discharge or dischargeability complaint is held if the debtor objects
 /// or requests a hearing within 21 days after its service.
-deadline extension-motion-objection-period: 21.days after ExtensionMotionServed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 4004-2"
+deadline extension-motion-objection-period: 21.days after ExtensionMotionServed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 4004-2"
+
 /// W.D. Mo. Bankr. L.R. 4004-6(C): if no motion for entry of a chapter 12
 /// discharge is filed within 60 days after the plan payments are completed,
 /// the case may be closed without a discharge.
-deadline chapter12-discharge-motion-period: 60.days after PlanPaymentsCompleted() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 4004-6(C)"
+deadline chapter12-discharge-motion-period: 60.days after PlanPaymentsCompleted() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 4004-6(C)"
+
 /// W.D. Mo. Bankr. L.R. 5007-1(B): attorneys and pro se parties who
 /// attended the hearing have 7 days to file a Notice of Intent to Request
 /// Redaction.
-deadline redaction-intent-period: 7.days after TranscriptFiled() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 5007-1(B)"
+deadline redaction-intent-period: 7.days after TranscriptFiled() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 5007-1(B)"
+
 /// W.D. Mo. Bankr. L.R. 5007-1(C): a party that filed the notice serves its
 /// Request for Redaction on the transcriber within 21 calendar days from
 /// the filing of the transcript.
-deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 5007-1(C)"
+deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 5007-1(C)"
+
 /// W.D. Mo. Bankr. L.R. 5009-1(B): creditors and parties in interest have 21
 /// days after service of the Summary and Notice of Proposed Distribution to
 /// object to a chapter 7 trustee's final report.
-deadline final-report-objection-period: 21.days after DistributionNoticeServed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 5009-1(B)"
+deadline final-report-objection-period: 21.days after DistributionNoticeServed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 5009-1(B)"
+
 /// W.D. Mo. Bankr. L.R. 5010-1(D): on a motion to reopen to add a creditor,
 /// the notice tells the affected creditor it must object within 30 days
 /// after service, after which the case is reclosed.
-deadline reopen-creditor-objection-period: 30.days after ReopenCreditorNoticeServed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 5010-1(D)"
+deadline reopen-creditor-objection-period: 30.days after ReopenCreditorNoticeServed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 5010-1(D)"
+
 /// W.D. Mo. Bankr. L.R. 5010-1(F): within 30 days after the order reopening
 /// a case to add a creditor, a creditor objecting to its addition or to the
 /// dischargeability of its debt files its objection or complaint.
-deadline reopened-creditor-complaint-period: 30.days after ReopenOrdered() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 5010-1(F)"
+deadline reopened-creditor-complaint-period: 30.days after ReopenOrdered() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 5010-1(F)"
+
 /// W.D. Mo. Bankr. L.R. 5010-1(D): on a motion to reopen a case closed
 /// without a discharge for want of the financial management course, all
 /// creditors are served and given 21 days to object (LR 4004-3, 4004-4,
 /// 4004-6).
-deadline reopen-for-discharge-objection-period: 21.days after ReopenForDischargeServed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 5010-1(D)"
+deadline reopen-for-discharge-objection-period: 21.days after ReopenForDischargeServed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 5010-1(D)"
+
 /// W.D. Mo. Bankr. L.R. 6004-1(B): within 14 days after a sale, the trustee
 /// files a report of sale.
-deadline report-of-sale-period: 14.days after SaleMade() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 6004-1(B)"
+deadline report-of-sale-period: 14.days after SaleMade() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 6004-1(B)"
+
 /// W.D. Mo. Bankr. L.R. 7026-1(A): unless otherwise ordered, discovery in an
 /// adversary proceeding is completed 14 days prior to trial.
-deadline discovery-completion-period: 14.days before TrialScheduled() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 7026-1(A)"
+deadline discovery-completion-period: 14.days before TrialScheduled() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 7026-1(A)"
+
 /// W.D. Mo. Bankr. L.R. 9013-1(C): unless the rules or an order provide
 /// otherwise, the respondent files its response, memorandum and supporting
 /// documents within 21 days after service of the motion.
-deadline motion-response-period: 21.days after MotionServed() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 9013-1(C)"
+deadline motion-response-period: 21.days after MotionServed() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 9013-1(C)"
+
 /// W.D. Mo. Bankr. L.R. 9013-1(H)(4): suggestions in opposition to a motion
 /// for summary judgment are filed within 21 days of its filing.
-deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionFiled() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 9013-1(H)"
+deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionFiled() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 9013-1(H)"
+
 /// W.D. Mo. Bankr. L.R. 9013-1(H)(4): a reply, if any, is filed within 14
 /// days of the filing of the suggestions in opposition.
-deadline summary-judgment-reply-period: 14.days after OppositionFiled() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 9013-1(H)"
+deadline summary-judgment-reply-period: 14.days after OppositionFiled() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 9013-1(H)"
+
 /// W.D. Mo. Bankr. L.R. 11002-1: a pro se case submitted electronically
 /// through eSR opens only when the required signed documents are received
 /// within 14 days of the electronic submission.
-deadline signed-documents-period: 14.days after ElectronicSubmissionMade() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 11002-1"
+deadline signed-documents-period: 14.days after ElectronicSubmissionMade() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 11002-1"
+
 /// W.D. Mo. Bankr. L.R. 11002-1(G): on an order to show cause the pro se
 /// debtor remedies deficient initial filings within 14 days (two days for a
 /// mailing matrix), or the case may be dismissed (also LR 17004-1).
-deadline pro-se-deficiency-cure-period: 14.days after ShowCauseOrdered() counted_by frbp9006 cite "W.D. Mo. Bankr. L.R. 11002-1(G)"
+deadline pro-se-deficiency-cure-period: 14.days after ShowCauseOrdered() counted_by frbp9006-missouri cite "W.D. Mo. Bankr. L.R. 11002-1(G)"
 
 start motion-filed
 

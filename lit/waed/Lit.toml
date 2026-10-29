@@ -20,7 +20,10 @@ in_force = "2025-11-17"
 known_at = "2026-10-28"
 unknown_before = "2025-11-17"
 jurisdiction = "United States District Court, E.D. Washington"
-counting = "frcp6"
+# FRCP 6(a)(6)(C): Washington's holidays close a forward-counted period, here and in
+# the FRCP periods this package recounts (core's `frcp6-washington`).
+counting = "frcp6-washington"
+recounts = ["frcp-civil-procedure"]
 
 [package.roles]
 applicant = "self"

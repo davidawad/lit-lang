@@ -1,6 +1,6 @@
 module wvnd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frcp6.{ frcp6-west-virginia }
 
 // The Northern District of West Virginia's own civil periods and limits,
 // computed under FRCP 6 (LR Gen P 5.09). Rules that state no period this
@@ -117,14 +117,14 @@ event BillOfCostsServed()
 /// service under Fed. R. Civ. P. 4(d)(1) mails the notice and request, and
 /// files the original, within 14 days of filing the complaint; otherwise
 /// service is made by other means unless the court orders otherwise.
-deadline waiver-request-period: 14.days after ComplaintFiled() counted_by frcp6 cite "N.D. W. Va. LR Civ P 4.01"
+deadline waiver-request-period: 14.days after ComplaintFiled() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 4.01"
 {
   forum frcp
 }
 
 /// LR Civ P 4.01: the plaintiff files the executed waiver of service within
 /// seven days of its return.
-deadline waiver-filing-period: 7.days after WaiverReturned() counted_by frcp6 cite "N.D. W. Va. LR Civ P 4.01"
+deadline waiver-filing-period: 7.days after WaiverReturned() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 4.01"
 {
   forum frcp
 }
@@ -132,14 +132,14 @@ deadline waiver-filing-period: 7.days after WaiverReturned() counted_by frcp6 ci
 /// LR Civ P 7.02(b)(1): a response to a motion other than for summary
 /// judgment is filed and served within 14 days from service of the motion.
 /// The judicial officer may modify the time (LR Civ P 7.02(b)(4)).
-deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "N.D. W. Va. LR Civ P 7.02(b)"
+deadline response-period: 14.days after MotionServed() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 7.02(b)"
 {
   forum frcp
 }
 
 /// LR Civ P 7.02(b)(1): a response to a motion for summary judgment is
 /// filed and served within 21 days from service of the motion.
-deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "N.D. W. Va. LR Civ P 7.02(b)"
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 7.02(b)"
 {
   forum frcp
 }
@@ -147,7 +147,7 @@ deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionSe
 /// LR Civ P 7.02(b)(2): a reply, except to a response to a motion for
 /// summary judgment, is filed and served within seven days from service of
 /// the response. No surreply without leave (LR Civ P 7.02(b)(3)).
-deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "N.D. W. Va. LR Civ P 7.02(b)"
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 7.02(b)"
 {
   forum frcp
 }
@@ -155,7 +155,7 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "N.D.
 /// LR Civ P 7.02(b)(2): a reply to a response to a motion for summary
 /// judgment is filed and served within 14 days from service of the
 /// response.
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "N.D. W. Va. LR Civ P 7.02(b)"
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 7.02(b)"
 {
   forum frcp
 }
@@ -163,7 +163,7 @@ deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseSer
 /// LR Civ P 9.02(b): within 60 days after service of the complaint in a 42
 /// U.S.C. § 405(g) review, the defendant files an answer and a complete
 /// copy of the administrative record.
-deadline social-security-answer-period: 60.days after SocialSecurityComplaintServed() counted_by frcp6 cite "N.D. W. Va. LR Civ P 9.02(b)"
+deadline social-security-answer-period: 60.days after SocialSecurityComplaintServed() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 9.02(b)"
 {
   forum frcp
 }
@@ -171,14 +171,14 @@ deadline social-security-answer-period: 60.days after SocialSecurityComplaintSer
 /// LR Civ P 9.02(c): within 30 days after the answer and the administrative
 /// record are filed, the plaintiff files a motion for summary judgment and
 /// supporting memorandum.
-deadline social-security-motion-period: 30.days after SocialSecurityAnswerFiled() counted_by frcp6 cite "N.D. W. Va. LR Civ P 9.02(c)"
+deadline social-security-motion-period: 30.days after SocialSecurityAnswerFiled() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 9.02(c)"
 {
   forum frcp
 }
 
 /// LR Civ P 9.02(d): within 30 days after the plaintiff's motion and
 /// memorandum are filed, the defendant files a memorandum in opposition.
-deadline social-security-opposition-period: 30.days after SocialSecurityMotionFiled() counted_by frcp6 cite "N.D. W. Va. LR Civ P 9.02(d)"
+deadline social-security-opposition-period: 30.days after SocialSecurityMotionFiled() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 9.02(d)"
 {
   forum frcp
 }
@@ -186,14 +186,14 @@ deadline social-security-opposition-period: 30.days after SocialSecurityMotionFi
 /// LR Civ P 16.01(b): at least 21 days before the date set for the
 /// scheduling conference, the parties meet to discuss and report on all
 /// Fed. R. Civ. P. 16 and 26(f) matters.
-deadline parties-meeting-period: 21.days before SchedulingConference() counted_by frcp6 cite "N.D. W. Va. LR Civ P 16.01(b)"
+deadline parties-meeting-period: 21.days before SchedulingConference() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 16.01(b)"
 {
   forum frcp
 }
 
 /// LR Civ P 16.01(c): the parties jointly file a written report of their
 /// meeting no later than 14 days after it.
-deadline meeting-report-period: 14.days after PartiesMeeting() counted_by frcp6 cite "N.D. W. Va. LR Civ P 16.01(c)"
+deadline meeting-report-period: 14.days after PartiesMeeting() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 16.01(c)"
 {
   forum frcp
 }
@@ -201,7 +201,7 @@ deadline meeting-report-period: 14.days after PartiesMeeting() counted_by frcp6 
 /// LR Civ P 16.02(b): where the judicial officer requires counsel to confer
 /// before a case management conference, their statement is filed no later
 /// than seven days before the conference.
-deadline case-management-statement-period: 7.days before CaseManagementConference() counted_by frcp6 cite "N.D. W. Va. LR Civ P 16.02(b)"
+deadline case-management-statement-period: 7.days before CaseManagementConference() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 16.02(b)"
 {
   forum frcp
 }
@@ -209,7 +209,7 @@ deadline case-management-statement-period: 7.days before CaseManagementConferenc
 /// LR Civ P 16.04(a): unless the trial judge orders otherwise, counsel and
 /// unrepresented parties meet to negotiate settlement no later than 21 days
 /// before the final pretrial conference.
-deadline pretrial-meeting-period: 21.days before FinalPretrialConference() counted_by frcp6 cite "N.D. W. Va. LR Civ P 16.04(a)"
+deadline pretrial-meeting-period: 21.days before FinalPretrialConference() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 16.04(a)"
 {
   forum frcp
 }
@@ -217,7 +217,7 @@ deadline pretrial-meeting-period: 21.days before FinalPretrialConference() count
 /// LR Civ P 16.04(b): unless the trial judge orders otherwise, the proposed
 /// pretrial order is filed no later than seven days before the final
 /// pretrial conference.
-deadline proposed-pretrial-order-period: 7.days before FinalPretrialConference() counted_by frcp6 cite "N.D. W. Va. LR Civ P 16.04(b)"
+deadline proposed-pretrial-order-period: 7.days before FinalPretrialConference() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 16.04(b)"
 {
   forum frcp
 }
@@ -225,7 +225,7 @@ deadline proposed-pretrial-order-period: 7.days before FinalPretrialConference()
 /// LR Civ P 26.01(a): unless ordered or stipulated otherwise, the Fed. R.
 /// Civ. P. 26(a)(1) disclosures are made no later than 14 days after the
 /// Fed. R. Civ. P. 26(f) meeting.
-deadline initial-disclosures-period: 14.days after PartiesMeeting() counted_by frcp6 cite "N.D. W. Va. LR Civ P 26.01(a)"
+deadline initial-disclosures-period: 14.days after PartiesMeeting() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 26.01(a)"
 {
   forum frcp
 }
@@ -233,7 +233,7 @@ deadline initial-disclosures-period: 14.days after PartiesMeeting() counted_by f
 /// LR Civ P 26.01(b)(1): the Fed. R. Civ. P. 26(a)(2)(A)-(C) expert
 /// disclosures are made at least 90 days before the date set for trial or
 /// for the case to be ready for trial.
-deadline expert-disclosure-period: 90.days before TrialDate() counted_by frcp6 cite "N.D. W. Va. LR Civ P 26.01(b)"
+deadline expert-disclosure-period: 90.days before TrialDate() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 26.01(b)"
 {
   forum frcp
 }
@@ -241,7 +241,7 @@ deadline expert-disclosure-period: 90.days before TrialDate() counted_by frcp6 c
 /// LR Civ P 26.01(b)(2): evidence intended solely to contradict or rebut
 /// another party's Fed. R. Civ. P. 26(a)(2)(B) or (C) disclosure is
 /// disclosed no later than 30 days after that disclosure.
-deadline rebuttal-expert-disclosure-period: 30.days after ExpertDisclosureMade() counted_by frcp6 cite "N.D. W. Va. LR Civ P 26.01(b)"
+deadline rebuttal-expert-disclosure-period: 30.days after ExpertDisclosureMade() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 26.01(b)"
 {
   forum frcp
 }
@@ -249,7 +249,7 @@ deadline rebuttal-expert-disclosure-period: 30.days after ExpertDisclosureMade()
 /// LR Civ P 33.01(c): interrogatories ordered answered over objection are
 /// answered within 14 days of the order, unless the court directs or the
 /// parties stipulate otherwise.
-deadline interrogatory-answers-period: 14.days after InterrogatoryAnswersOrdered() counted_by frcp6 cite "N.D. W. Va. LR Civ P 33.01(c)"
+deadline interrogatory-answers-period: 14.days after InterrogatoryAnswersOrdered() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 33.01(c)"
 {
   forum frcp
 }
@@ -257,7 +257,7 @@ deadline interrogatory-answers-period: 14.days after InterrogatoryAnswersOrdered
 /// LR Civ P 34.01(c): document requests ordered answered over objection are
 /// answered within 21 days of the order, unless the court directs or the
 /// parties stipulate otherwise.
-deadline document-answers-period: 21.days after DocumentAnswersOrdered() counted_by frcp6 cite "N.D. W. Va. LR Civ P 34.01(c)"
+deadline document-answers-period: 21.days after DocumentAnswersOrdered() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 34.01(c)"
 {
   forum frcp
 }
@@ -266,7 +266,7 @@ deadline document-answers-period: 21.days after DocumentAnswersOrdered() counted
 /// objection, the matter is deemed admitted unless the party served with it
 /// serves a denial or a statement why it cannot admit or deny within 14
 /// days of the order.
-deadline admission-statement-period: 14.days after AdmissionRequestHeldProper() counted_by frcp6 cite "N.D. W. Va. LR Civ P 36.01(b)"
+deadline admission-statement-period: 14.days after AdmissionRequestHeldProper() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 36.01(b)"
 {
   forum frcp
 }
@@ -275,28 +275,28 @@ deadline admission-statement-period: 14.days after AdmissionRequestHeldProper() 
 /// discovery, is waived if it is not filed within 30 days after the
 /// response or disclosure sought was due, unless the delay was caused by
 /// excusable neglect or the opposing party's conduct.
-deadline motion-to-compel-period: 30.days after DiscoveryResponseDue() counted_by frcp6 cite "N.D. W. Va. LR Civ P 37.02(b)"
+deadline motion-to-compel-period: 30.days after DiscoveryResponseDue() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 37.02(b)"
 {
   forum frcp
 }
 
 /// LR Civ P 47.01(b): a proposed juror questionnaire is submitted for the
 /// judicial officer's approval at least 60 days before the trial date.
-deadline juror-questionnaire-period: 60.days before TrialDate() counted_by frcp6 cite "N.D. W. Va. LR Civ P 47.01(b)"
+deadline juror-questionnaire-period: 60.days before TrialDate() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 47.01(b)"
 {
   forum frcp
 }
 
 /// LR Civ P 54.01: the prevailing party files a bill of costs on Form AO
 /// 133 within 30 days after entry of the final judgment.
-deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6 cite "N.D. W. Va. LR Civ P 54.01"
+deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 54.01"
 {
   forum frcp
 }
 
 /// LR Civ P 54.01: the adverse party files specific objections to the bill
 /// of costs within 14 days of its service.
-deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "N.D. W. Va. LR Civ P 54.01"
+deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6-west-virginia cite "N.D. W. Va. LR Civ P 54.01"
 {
   forum frcp
 }

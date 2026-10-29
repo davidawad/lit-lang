@@ -18,7 +18,10 @@ in_force = "2025-11-01"
 known_at = "2026-10-27"
 unknown_before = "2025-11-01"
 jurisdiction = "United States District Court, M.D. Florida"
-counting = "frcp6"
+# FRCP 6(a)(6)(C): Florida's holidays close a forward-counted period, here and in
+# the FRCP periods this package recounts (core's `frcp6-florida`).
+counting = "frcp6-florida"
+recounts = ["frcp-civil-procedure"]
 
 [package.roles]
 applicant = "self"

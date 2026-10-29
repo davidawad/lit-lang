@@ -1556,10 +1556,14 @@ Counting rule `c` defines (FRCP 6(a) vocabulary):
    declaration closes a forum is a legal question its rule answers, so
    both need the `cite` (L3009 without), and a declared calendar lists
    only `once(date)` days with no observance (L3009 otherwise). `lit/core`
-   declares one state calendar, `delaware-holidays` (1 Del. C. § 501(a)),
-   read as `forward_holidays` by `frcp6-delaware`, the District of
-   Delaware's FRCP 6 (6(a)(6)(C)); every other district's `frcp6` closes on
-   the federal days only. It declares no FRCP 6(a)(6)(B) or FRAP
+   declares a state calendar for each state whose holiday text is vendored
+   (`delaware-holidays`, 1 Del. C. § 501(a); West Virginia, the District of
+   Columbia, the Virgin Islands, Missouri, South Carolina, Virginia,
+   Washington and Florida), read as `forward_holidays` by that state's
+   `frcp6-<state>` (6(a)(6)(C)) and `frbp9006-<state>` (FRBP 9006(a)(6)(C)),
+   which its district and bankruptcy packages name as their `counting` rule
+   and `recounts` the national rules under; every other district's `frcp6`
+   closes on the federal days only. It declares no FRCP 6(a)(6)(B) or FRAP
    26(a)(6)(B) day: whether an executive order closing executive departments
    "declares a holiday" for a court is a question no vendored source
    answers, so none is asserted (the earlier date). Its one declared

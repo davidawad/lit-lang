@@ -1,6 +1,6 @@
 module bankr-vae-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.frbp9006.{ frbp9006-virginia }
 import frbp.events.{ FirstMeetingDate, PetitionFiled }
 
 // The Bankr. E.D. Va. court's own periods, computed under FRBP 9006(a),
@@ -161,210 +161,265 @@ event AppealTimeExpired()
 /// LBR 1007-1(H)(2): when the list of creditors is not filed with the
 /// voluntary petition, the clerk's notice requires it within 3 days after
 /// the petition or a show-cause hearing.
-deadline creditor-list-period: 3.days after PetitionFiled() counted_by frbp9006 cite "E.D. Va. LBR 1007-1(H)(2)"
+deadline creditor-list-period: 3.days after PetitionFiled() counted_by frbp9006-virginia cite "E.D. Va. LBR 1007-1(H)(2)"
+
 /// LBR 1007-1(H)(2): the statement of social security number not submitted
 /// with the petition is due within 3 days after the petition.
-deadline ssn-statement-period: 3.days after PetitionFiled() counted_by frbp9006 cite "E.D. Va. LBR 1007-1(H)(2)"
+deadline ssn-statement-period: 3.days after PetitionFiled() counted_by frbp9006-virginia cite "E.D. Va. LBR 1007-1(H)(2)"
+
 /// LBR 1007-1(I)(2): an individual debtor's statement of compliance with
 /// the credit counseling requirement not filed with the petition is due
 /// within 3 days after the petition.
-deadline credit-counseling-statement-period: 3.days after PetitionFiled() counted_by frbp9006 cite "E.D. Va. LBR 1007-1(I)(2)"
+deadline credit-counseling-statement-period: 3.days after PetitionFiled() counted_by frbp9006-virginia cite "E.D. Va. LBR 1007-1(I)(2)"
+
 /// LBR 1007-1(H)(3): payment advices for the 60 days before the petition
 /// are provided to the trustee and any timely requesting creditor at least
 /// 7 days before the meeting of creditors.
-deadline payment-advices-period: 7.days before MeetingOfCreditorsDate() counted_by frbp9006 cite "E.D. Va. LBR 1007-1(H)(3)"
+deadline payment-advices-period: 7.days before MeetingOfCreditorsDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 1007-1(H)(3)"
+
 /// LBR 1015-1: a joint case is jointly administered unless the trustee or a
 /// party in interest objects within 14 days after the meeting of creditors
 /// and notices a hearing.
-deadline joint-administration-objection-period: 14.days after MeetingConcluded() counted_by frbp9006 cite "E.D. Va. LBR 1015-1"
+deadline joint-administration-objection-period: 14.days after MeetingConcluded() counted_by frbp9006-virginia cite "E.D. Va. LBR 1015-1"
+
 /// LBR 2003-1(C): within 7 days of obtaining a new date for a rescheduled
 /// meeting of creditors, the debtor's attorney or pro se debtor serves
 /// written notice of it and files proof of service.
-deadline rescheduled-meeting-notice-period: 7.days after RescheduledMeetingObtained() counted_by frbp9006 cite "E.D. Va. LBR 2003-1(C)"
+deadline rescheduled-meeting-notice-period: 7.days after RescheduledMeetingObtained() counted_by frbp9006-virginia cite "E.D. Va. LBR 2003-1(C)"
+
 /// LBR 2004-1(B): parties have 7 days from service to object to a motion
 /// for a Rule 2004 examination.
-deadline examination-objection-period: 7.days after ExaminationMotionServed() counted_by frbp9006 cite "E.D. Va. LBR 2004-1(B)"
+deadline examination-objection-period: 7.days after ExaminationMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 2004-1(B)"
+
 /// LBR 2014-1: objections to employment of a professional in a chapter 11
 /// case are filed and served within 14 days from service of the motion.
-deadline employment-objection-period: 14.days after EmploymentMotionServed() counted_by frbp9006 cite "E.D. Va. LBR 2014-1"
+deadline employment-objection-period: 14.days after EmploymentMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 2014-1"
+
 /// LBR 2015-(a)-1(C): in a chapter 11 case with a confirmed plan, the final
 /// report, or an interim report explaining why the case cannot be closed,
 /// is filed and served on the United States trustee within 6 months after
 /// the confirmation order.
-deadline chapter11-final-report-period: 6.months after Chapter11PlanConfirmed() counted_by frbp9006 cite "E.D. Va. LBR 2015-(a)-1(C)"
+deadline chapter11-final-report-period: 6.months after Chapter11PlanConfirmed() counted_by frbp9006-virginia cite "E.D. Va. LBR 2015-(a)-1(C)"
+
 /// LBR 2016-1(C)(3)(a)(v): when the court suspends the no-look fee rule as
 /// to a debtor's attorney, the attorney may request a hearing within 14
 /// days of the ruling.
-deadline fee-suspension-hearing-period: 14.days after FeeRuleSuspended() counted_by frbp9006 cite "E.D. Va. LBR 2016-1(C)(3)(a)(v)"
+deadline fee-suspension-hearing-period: 14.days after FeeRuleSuspended() counted_by frbp9006-virginia cite "E.D. Va. LBR 2016-1(C)(3)(a)(v)"
+
 /// LBR 3002.1-1(A): in a chapter 13 case paying a claim secured by the
 /// principal residence, the debtor certifies within 30 days of completing
 /// plan payments whether all payments on the debt were made.
-deadline mortgage-payment-certification-period: 30.days after PlanPaymentsCompleted() counted_by frbp9006 cite "E.D. Va. LBR 3002.1-1(A)"
+deadline mortgage-payment-certification-period: 30.days after PlanPaymentsCompleted() counted_by frbp9006-virginia cite "E.D. Va. LBR 3002.1-1(A)"
+
 /// LBR 3002.1-1(B)(1): a represented debtor files and sets for hearing the
 /// FRBP 3002.1(g)(4) motion within 45 days after the creditor's response,
 /// or the court may consider reducing the attorney's fee.
-deadline final-cure-motion-period: 45.days after CureResponseFiled() counted_by frbp9006 cite "E.D. Va. LBR 3002.1-1(B)(1)"
+deadline final-cure-motion-period: 45.days after CureResponseFiled() counted_by frbp9006-virginia cite "E.D. Va. LBR 3002.1-1(B)(1)"
+
 /// LBR 3003-1(A): the last date for claims other than a governmental unit's
 /// in a chapter 11 case is 90 days after the date first scheduled for the
 /// meeting of creditors.
-deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "E.D. Va. LBR 3003-1(A)"
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 3003-1(A)"
+
 /// LBR 3003-1(B): the chapter 11 debtor serves each creditor whose claim is
 /// scheduled as disputed, contingent or unliquidated within 14 days after
 /// the later of the conversion, the schedules or the amendment adding it.
-deadline disputed-claim-notice-period: 14.days after DisputedClaimTrigger() counted_by frbp9006 cite "E.D. Va. LBR 3003-1(B)"
+deadline disputed-claim-notice-period: 14.days after DisputedClaimTrigger() counted_by frbp9006-virginia cite "E.D. Va. LBR 3003-1(B)"
+
 /// LBR 3003-1(B): the debtor files a certification of that service within 7
 /// days after the notice is served.
-deadline disputed-claim-certification-period: 7.days after DisputedClaimNoticeServed() counted_by frbp9006 cite "E.D. Va. LBR 3003-1(B)"
+deadline disputed-claim-certification-period: 7.days after DisputedClaimNoticeServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 3003-1(B)"
+
 /// LBR 3007-1(D): a creditor may file and serve a response to an objection
 /// to its claim within 30 days of service; otherwise the court may treat
 /// the objection as conceded.
-deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006 cite "E.D. Va. LBR 3007-1(D)"
+deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 3007-1(D)"
+
 /// LBR 3011-1(K): deficiencies in an application for unclaimed funds not
 /// cured within 14 days after the notice of deficiency result in the
 /// application being stricken.
-deadline unclaimed-funds-cure-period: 14.days after UnclaimedFundsDeficiencyNotice() counted_by frbp9006 cite "E.D. Va. LBR 3011-1(K)"
+deadline unclaimed-funds-cure-period: 14.days after UnclaimedFundsDeficiencyNotice() counted_by frbp9006-virginia cite "E.D. Va. LBR 3011-1(K)"
+
 /// LBR 3015-2(H): unless the court previously confirmed a plan, the clerk
 /// dismisses the chapter 13 case unless within 21 days after denial of
 /// confirmation the debtor files a new modified plan, converts, or seeks
 /// reconsideration or appeal.
-deadline post-denial-plan-period: 21.days after ConfirmationDenied() counted_by frbp9006 cite "E.D. Va. LBR 3015-2(H)"
+deadline post-denial-plan-period: 21.days after ConfirmationDenied() counted_by frbp9006-virginia cite "E.D. Va. LBR 3015-2(H)"
+
 /// LBR 3016-1(B): objections to a chapter 11 disclosure statement are filed
 /// not later than 7 days before the hearing on it.
-deadline disclosure-statement-objection-period: 7.days before DisclosureHearingDate() counted_by frbp9006 cite "E.D. Va. LBR 3016-1(B)"
+deadline disclosure-statement-objection-period: 7.days before DisclosureHearingDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 3016-1(B)"
+
 /// LBR 3016-1(E): an objection to confirmation of a chapter 11 plan is
 /// filed not later than 7 days before the initial confirmation hearing and
 /// served on the United States trustee and FRBP 3020(b)(1) parties.
-deadline chapter11-confirmation-objection-period: 7.days before Chapter11ConfirmationHearingDate() counted_by frbp9006 cite "E.D. Va. LBR 3016-1(E)"
+deadline chapter11-confirmation-objection-period: 7.days before Chapter11ConfirmationHearingDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 3016-1(E)"
+
 /// LBR 3070-1(B)(2): if no objection to the trustee's notice of proposed
 /// distribution is filed within 14 days, the trustee may proceed.
-deadline trustee-distribution-objection-period: 14.days after DistributionNoticeFiled() counted_by frbp9006 cite "E.D. Va. LBR 3070-1(B)(2)"
+deadline trustee-distribution-objection-period: 14.days after DistributionNoticeFiled() counted_by frbp9006-virginia cite "E.D. Va. LBR 3070-1(B)(2)"
+
 /// LBR 4001(a)-1(C): a party opposing a motion for relief from stay files
 /// and serves a written response within 14 days from service, or the court
 /// may treat the motion as conceded.
-deadline stay-relief-response-period: 14.days after StayReliefMotionServed() counted_by frbp9006 cite "E.D. Va. LBR 4001(a)-1(C)"
+deadline stay-relief-response-period: 14.days after StayReliefMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 4001(a)-1(C)"
+
 /// LBR 4003-2: if no response to a lien-avoidance motion is filed within 21
 /// days after service, relief may be granted without a hearing.
-deadline lien-avoidance-response-period: 21.days after LienAvoidanceMotionServed() counted_by frbp9006 cite "E.D. Va. LBR 4003-2"
+deadline lien-avoidance-response-period: 21.days after LienAvoidanceMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 4003-2"
+
 /// LBR 4008-1(A): the clerk gives each discharged debtor written notice of
 /// the debtor's rights under § 524(d) within 14 days after the discharge.
-deadline reaffirmation-rights-notice-period: 14.days after DischargeGranted() counted_by frbp9006 cite "E.D. Va. LBR 4008-1(A)"
+deadline reaffirmation-rights-notice-period: 14.days after DischargeGranted() counted_by frbp9006-virginia cite "E.D. Va. LBR 4008-1(A)"
+
 /// LBR 4008-2(A): a chapter 13 debtor files the certificate of course
 /// completion within 45 days of the mailing of the Notice Concerning
 /// Issuance of Discharge, or the case may close without a discharge.
-deadline course-certificate-period: 45.days after DischargeNoticeMailed() counted_by frbp9006 cite "E.D. Va. LBR 4008-2(A)"
+deadline course-certificate-period: 45.days after DischargeNoticeMailed() counted_by frbp9006-virginia cite "E.D. Va. LBR 4008-2(A)"
+
 /// LBR 4008-2(B): on completing plan payments, the debtor complies within
 /// 14 days with the trustee's requirements for information needed for the §
 /// 1302(d) notices.
-deadline trustee-cooperation-period: 14.days after PlanPaymentsCompleted() counted_by frbp9006 cite "E.D. Va. LBR 4008-2(B)"
+deadline trustee-cooperation-period: 14.days after PlanPaymentsCompleted() counted_by frbp9006-virginia cite "E.D. Va. LBR 4008-2(B)"
+
 /// LBR 4008-2(B): a trustee who finds the debtor has not timely provided
 /// that information files a certification of non-compliance within 30 days
 /// of completion of plan payments.
-deadline trustee-noncompliance-certification-period: 30.days after PlanPaymentsCompleted() counted_by frbp9006 cite "E.D. Va. LBR 4008-2(B)"
+deadline trustee-noncompliance-certification-period: 30.days after PlanPaymentsCompleted() counted_by frbp9006-virginia cite "E.D. Va. LBR 4008-2(B)"
+
 /// LBR 5005-1(G): a filing that receives a Notice of Deficient Filing is
 /// stricken unless the deficiency is cured within 14 days; for a petition
 /// or notice of conversion, a show-cause hearing follows.
-deadline deficient-filing-cure-period: 14.days after DeficiencyNoticeIssued() counted_by frbp9006 cite "E.D. Va. LBR 5005-1(G)"
+deadline deficient-filing-cure-period: 14.days after DeficiencyNoticeIssued() counted_by frbp9006-virginia cite "E.D. Va. LBR 5005-1(G)"
+
 /// LBR 9010-1: a paper filed for an entity and not signed by counsel
 /// permitted to appear is stricken unless the deficiency is cured within 14
 /// days of the notice.
-deadline unsigned-entity-filing-cure-period: 14.days after DeficiencyNoticeIssued() counted_by frbp9006 cite "E.D. Va. LBR 9010-1"
+deadline unsigned-entity-filing-cure-period: 14.days after DeficiencyNoticeIssued() counted_by frbp9006-virginia cite "E.D. Va. LBR 9010-1"
+
 /// LBR 5011-1(C): any other party may serve and file a designation of
 /// additional portions of the record within 14 days after service of the
 /// movant's designation.
-deadline additional-record-designation-period: 14.days after RecordDesignationServed() counted_by frbp9006 cite "E.D. Va. LBR 5011-1(C)"
+deadline additional-record-designation-period: 14.days after RecordDesignationServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 5011-1(C)"
+
 /// LBR 5011-1(D): opposing parties file and serve written responses to a
 /// motion to withdraw the reference within 14 days after being served.
-deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frbp9006 cite "E.D. Va. LBR 5011-1(D)"
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 5011-1(D)"
+
 /// LBR 5011-1(D): the moving party may serve and file a reply within 14
 /// days after service of a response.
-deadline withdrawal-reply-period: 14.days after WithdrawalResponseServed() counted_by frbp9006 cite "E.D. Va. LBR 5011-1(D)"
+deadline withdrawal-reply-period: 14.days after WithdrawalResponseServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 5011-1(D)"
+
 /// LBR 6004-2(C): an objection to a sale noticed generally at the meeting
 /// of creditors (estate under $2,500) is filed and served not later than 14
 /// days after the meeting.
-deadline general-sale-objection-period: 14.days after MeetingOfCreditorsDate() counted_by frbp9006 cite "E.D. Va. LBR 6004-2(C)"
+deadline general-sale-objection-period: 14.days after MeetingOfCreditorsDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 6004-2(C)"
+
 /// LBR 6004-2(D): the trustee or debtor in possession files a report of a
 /// sale outside the ordinary course within 30 days after the sale.
-deadline sale-report-period: 30.days after SaleCompleted() counted_by frbp9006 cite "E.D. Va. LBR 6004-2(D)"
+deadline sale-report-period: 30.days after SaleCompleted() counted_by frbp9006-virginia cite "E.D. Va. LBR 6004-2(D)"
+
 /// LBR 6007-1(A): a party objecting to abandonment noticed at the meeting
 /// of creditors selects a hearing date and files notice of the hearing with
 /// proof of service within 14 days after the meeting.
-deadline abandonment-objection-period: 14.days after MeetingOfCreditorsDate() counted_by frbp9006 cite "E.D. Va. LBR 6007-1(A)"
+deadline abandonment-objection-period: 14.days after MeetingOfCreditorsDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 6007-1(A)"
+
 /// LBR 7026-1(B): an objection to discovery is served within 14 days after
 /// service of the request, unless the court orders otherwise.
-deadline discovery-objection-period: 14.days after DiscoveryRequestServed() counted_by frbp9006 cite "E.D. Va. LBR 7026-1(B)"
+deadline discovery-objection-period: 14.days after DiscoveryRequestServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 7026-1(B)"
+
 /// LBR 7026-1(E): replies to discovery motions, and responses to all other
 /// discovery motions, are filed within 14 days after service of the motion
 /// and memorandum.
-deadline discovery-motion-reply-period: 14.days after DiscoveryMotionServed() counted_by frbp9006 cite "E.D. Va. LBR 7026-1(E)"
+deadline discovery-motion-reply-period: 14.days after DiscoveryMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 7026-1(E)"
+
 /// LBR 7026-1(F): discovery the court requires on a discovery motion is
 /// completed within 14 days after entry of its order, unless otherwise
 /// ordered.
-deadline discovery-compliance-period: 14.days after DiscoveryOrderEntered() counted_by frbp9006 cite "E.D. Va. LBR 7026-1(F)"
+deadline discovery-compliance-period: 14.days after DiscoveryOrderEntered() counted_by frbp9006-virginia cite "E.D. Va. LBR 7026-1(F)"
+
 /// LBR 7026-1(L)(2)(a): in an adversary proceeding the plaintiff makes the
 /// FRBP 7026 expert disclosures not later than 60 days before the date set
 /// for completion of discovery.
-deadline plaintiff-expert-disclosure-period: 60.days before DiscoveryCompletionDate() counted_by frbp9006 cite "E.D. Va. LBR 7026-1(L)(2)(a)"
+deadline plaintiff-expert-disclosure-period: 60.days before DiscoveryCompletionDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 7026-1(L)(2)(a)"
+
 /// LBR 7026-1(L)(2)(a): the defendant makes its disclosures 30 days before
 /// that date.
-deadline defendant-expert-disclosure-period: 30.days before DiscoveryCompletionDate() counted_by frbp9006 cite "E.D. Va. LBR 7026-1(L)(2)(a)"
+deadline defendant-expert-disclosure-period: 30.days before DiscoveryCompletionDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 7026-1(L)(2)(a)"
+
 /// LBR 7026-1(L)(2)(a): the plaintiff discloses solely contradictory or
 /// rebuttal evidence within 14 days after the defendant's disclosure.
-deadline rebuttal-expert-disclosure-period: 14.days after DefendantExpertDisclosure() counted_by frbp9006 cite "E.D. Va. LBR 7026-1(L)(2)(a)"
+deadline rebuttal-expert-disclosure-period: 14.days after DefendantExpertDisclosure() counted_by frbp9006-virginia cite "E.D. Va. LBR 7026-1(L)(2)(a)"
+
 /// LBR 7026-1(L)(4): answers to interrogatories clarifying an expert's
 /// written report are due 14 days after service, unless otherwise ordered.
-deadline expert-interrogatory-answer-period: 14.days after ExpertInterrogatoriesServed() counted_by frbp9006 cite "E.D. Va. LBR 7026-1(L)(4)"
+deadline expert-interrogatory-answer-period: 14.days after ExpertInterrogatoriesServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 7026-1(L)(4)"
+
 /// LBR 7041-1: at least 14 days' written notice of a hearing on the
 /// proposed voluntary dismissal of a complaint objecting to discharge is
 /// given to the United States trustee, the trustee and parties requesting
 /// notice.
-deadline discharge-dismissal-notice-period: 14.days before DischargeDismissalHearingDate() counted_by frbp9006 cite "E.D. Va. LBR 7041-1"
+deadline discharge-dismissal-notice-period: 14.days before DischargeDismissalHearingDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 7041-1"
+
 /// LBR 7055-1(B): the party in default may object to a motion for default
 /// judgment within 14 days after its service, plus any time FRBP 9006 adds.
-deadline default-judgment-objection-period: 14.days after DefaultJudgmentMotionServed() counted_by frbp9006 cite "E.D. Va. LBR 7055-1(B)"
+deadline default-judgment-objection-period: 14.days after DefaultJudgmentMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 7055-1(B)"
+
 /// LBR 7056-1(A): if not otherwise ordered, a motion for summary judgment
 /// may be filed until 30 days before the initial evidentiary hearing on the
 /// issue.
-deadline summary-judgment-motion-period: 30.days before EvidentiaryHearingDate() counted_by frbp9006 cite "E.D. Va. LBR 7056-1(A)"
+deadline summary-judgment-motion-period: 30.days before EvidentiaryHearingDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 7056-1(A)"
+
 /// LBR 9013-1(H): the movant files and serves notice of a hearing date the
 /// court issues within 7 days of its issuance, or the hearing is not
 /// convened.
-deadline hearing-notice-period: 7.days after HearingDateIssued() counted_by frbp9006 cite "E.D. Va. LBR 9013-1(H)"
+deadline hearing-notice-period: 7.days after HearingDateIssued() counted_by frbp9006-virginia cite "E.D. Va. LBR 9013-1(H)"
+
 /// LBR 7056-1(D): if not otherwise ordered, a response in opposition to
 /// summary judgment is filed not later than 14 days after service of the
 /// motion.
-deadline summary-judgment-response-period: 14.days after SummaryJudgmentMotionServed() counted_by frbp9006 cite "E.D. Va. LBR 7056-1(D)"
+deadline summary-judgment-response-period: 14.days after SummaryJudgmentMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 7056-1(D)"
+
 /// LBR 7056-1(F): objections to the admissibility of material cited for or
 /// against a fact are filed no later than 3 days before the hearing.
-deadline admissibility-objection-period: 3.days before SummaryJudgmentHearingDate() counted_by frbp9006 cite "E.D. Va. LBR 7056-1(F)"
+deadline admissibility-objection-period: 3.days before SummaryJudgmentHearingDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 7056-1(F)"
+
 /// LBR 7056-1(G): if not otherwise ordered, a reply brief may be filed no
 /// later than 7 days after service of the response.
-deadline summary-judgment-reply-period: 7.days after SummaryJudgmentResponseServed() counted_by frbp9006 cite "E.D. Va. LBR 7056-1(G)"
+deadline summary-judgment-reply-period: 7.days after SummaryJudgmentResponseServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 7056-1(G)"
+
 /// LBR 9013-1(G)(3): the movant sets a response deadline of at least 21
 /// days after service, unless the FRBP, these rules or an order specifies
 /// another period.
-deadline motion-response-period: 21.days after MotionServed() counted_by frbp9006 cite "E.D. Va. LBR 9013-1(G)(3)"
+deadline motion-response-period: 21.days after MotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 9013-1(G)(3)"
+
 /// LBR 9013-1(G)(3)(c): the movant may file a rebuttal memorandum within 7
 /// days after the opposing memorandum is filed.
-deadline rebuttal-memorandum-period: 7.days after OppositionMemorandumFiled() counted_by frbp9006 cite "E.D. Va. LBR 9013-1(G)(3)(c)"
+deadline rebuttal-memorandum-period: 7.days after OppositionMemorandumFiled() counted_by frbp9006-virginia cite "E.D. Va. LBR 9013-1(G)(3)(c)"
+
 /// LBR 9013-1(G)(4): for a matter needing no hearing, the movant serves and
 /// submits a proposed order within 14 days after the time for a response
 /// expires.
-deadline negative-notice-order-period: 14.days after ResponseTimeExpired() counted_by frbp9006 cite "E.D. Va. LBR 9013-1(G)(4)"
+deadline negative-notice-order-period: 14.days after ResponseTimeExpired() counted_by frbp9006-virginia cite "E.D. Va. LBR 9013-1(G)(4)"
+
 /// LBR 9016-1(F): requests for subpoenas for witnesses at hearings or
 /// trials are filed not later than 14 days before the appearance date; a
 /// later subpoena may issue, but no continuance follows the witness's
 /// absence.
-deadline subpoena-request-period: 14.days before WitnessAppearanceDate() counted_by frbp9006 cite "E.D. Va. LBR 9016-1(F)"
+deadline subpoena-request-period: 14.days before WitnessAppearanceDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 9016-1(F)"
+
 /// LBR 9019-1(B)(2): parties have 14 days from service to object to a
 /// motion requesting mediation.
-deadline mediation-objection-period: 14.days after MediationMotionServed() counted_by frbp9006 cite "E.D. Va. LBR 9019-1(B)(2)"
+deadline mediation-objection-period: 14.days after MediationMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 9019-1(B)(2)"
+
 /// LBR 9022-1(G): unless the court specifies otherwise, the prevailing
 /// party files a proposed order within 14 days after the conclusion of the
 /// trial, hearing or other disposition.
-deadline proposed-order-period: 14.days after MatterDisposed() counted_by frbp9006 cite "E.D. Va. LBR 9022-1(G)"
+deadline proposed-order-period: 14.days after MatterDisposed() counted_by frbp9006-virginia cite "E.D. Va. LBR 9022-1(G)"
+
 /// LBR 9070-1(E): exhibits and trial materials are withdrawn within 30 days
 /// after the judgment and the time for appeal or rehearing pass.
-deadline exhibit-withdrawal-period: 30.days after AppealTimeExpired() counted_by frbp9006 cite "E.D. Va. LBR 9070-1(E)"
+deadline exhibit-withdrawal-period: 30.days after AppealTimeExpired() counted_by frbp9006-virginia cite "E.D. Va. LBR 9070-1(E)"
 
 start motion-filed
 

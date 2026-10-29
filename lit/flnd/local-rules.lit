@@ -1,6 +1,6 @@
 module flnd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frcp6.{ frcp6-florida }
 
 // The Northern District's own periods. A motion memorandum must not
 // exceed 8,000 words, a reply memorandum 3200 words, a notice of
@@ -45,47 +45,47 @@ event ClerkTaxedCosts()
 /// service, without a 3-day extension for electronic service. The court
 /// may grant a motion by default if no required memorandum is filed (Local
 /// Rule 7.1(H)).
-deadline opposition-memorandum-period: 14.days after MotionServed() counted_by frcp6 cite "N.D. Fla. Loc. R. 7.1(E)"
+deadline opposition-memorandum-period: 14.days after MotionServed() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 7.1(E)"
 /// Local Rule 7.2(A): the removing party files a copy of each paper filed
 /// or served in the state court at removal if feasible, and in any event
 /// within 14 days after removal.
-deadline state-court-papers-period: 14.days after CaseRemoved() counted_by frcp6 cite "N.D. Fla. Loc. R. 7.2(A)"
+deadline state-court-papers-period: 14.days after CaseRemoved() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 7.2(A)"
 /// Local Rule 7.2(B): for a motion pending in state court at removal, the
 /// supporting memorandum is due 14 days after removal.
-deadline removed-motion-memorandum-period: 14.days after CaseRemoved() counted_by frcp6 cite "N.D. Fla. Loc. R. 7.2(B)"
+deadline removed-motion-memorandum-period: 14.days after CaseRemoved() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 7.2(B)"
 /// Local Rule 7.2(B): the opposing memorandum is due 14 days after the
 /// later of the removal or the filing of the supporting memorandum; this
 /// period runs from the supporting memorandum.
-deadline removed-motion-opposition-period: 14.days after RemovedMotionMemorandumFiled() counted_by frcp6 cite "N.D. Fla. Loc. R. 7.2(B)"
+deadline removed-motion-opposition-period: 14.days after RemovedMotionMemorandumFiled() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 7.2(B)"
 /// Local Rule 56.1(C): an opposing party files its memorandum within 21
 /// days, without a 3-day extension for electronic service of the motion.
-deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "N.D. Fla. Loc. R. 56.1(C)"
+deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 56.1(C)"
 /// Local Rule 56.1(D): a reply memorandum is due 7 days after the opposing
 /// memorandum is filed, without a 3-day extension for electronic service.
-deadline summary-judgment-reply-period: 7.days after SummaryJudgmentOppositionFiled() counted_by frcp6 cite "N.D. Fla. Loc. R. 56.1(D)"
+deadline summary-judgment-reply-period: 7.days after SummaryJudgmentOppositionFiled() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 56.1(D)"
 /// Local Rule 54.1(B): a motion to determine entitlement to fees is due 14
 /// days after entry of the judgment or, with no judgment, after the case is
 /// closed; an appeal does not extend it unless the court so orders.
-deadline fee-entitlement-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Fla. Loc. R. 54.1(B)"
+deadline fee-entitlement-motion-period: 14.days after JudgmentEntered() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 54.1(B)"
 /// Local Rule 54.1(E): once entitlement is determined, the party files its
 /// time and independent-attorney declarations within 30 days.
-deadline fee-amount-filing-period: 30.days after FeeEntitlementDetermined() counted_by frcp6 cite "N.D. Fla. Loc. R. 54.1(E)"
+deadline fee-amount-filing-period: 30.days after FeeEntitlementDetermined() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 54.1(E)"
 /// Local Rule 54.1(F): an opposing memorandum on the fee amount is due
 /// within 30 days after the motion is served.
-deadline fee-amount-opposition-period: 30.days after FeeAmountMotionServed() counted_by frcp6 cite "N.D. Fla. Loc. R. 54.1(F)"
+deadline fee-amount-opposition-period: 30.days after FeeAmountMotionServed() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 54.1(F)"
 /// Local Rule 54.1(G): after the attorneys confer again, the parties file
 /// a notice of any agreement 14 days after the opposing memorandum was
 /// filed.
-deadline fee-conference-notice-period: 14.days after FeeAmountOppositionFiled() counted_by frcp6 cite "N.D. Fla. Loc. R. 54.1(G)"
+deadline fee-conference-notice-period: 14.days after FeeAmountOppositionFiled() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 54.1(G)"
 /// Local Rule 54.2(A): the bill of costs is due 14 days after entry of the
 /// judgment or, with no judgment, after the case is closed.
-deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Fla. Loc. R. 54.2(A)"
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 54.2(A)"
 /// Local Rule 54.2(A): any other party may file a memorandum in opposition
 /// within 14 days after the bill of costs is filed.
-deadline cost-opposition-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "N.D. Fla. Loc. R. 54.2(A)"
+deadline cost-opposition-period: 14.days after BillOfCostsFiled() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 54.2(A)"
 /// Local Rule 54.2(C): the court may review the clerk's action on a motion
 /// filed within 7 days after it.
-deadline cost-review-period: 7.days after ClerkTaxedCosts() counted_by frcp6 cite "N.D. Fla. Loc. R. 54.2(C)"
+deadline cost-review-period: 7.days after ClerkTaxedCosts() counted_by frcp6-florida cite "N.D. Fla. Loc. R. 54.2(C)"
 
 test "an opposing memorandum is due 14 days after service" cite "N.D. Fla. Loc. R. 7.1(E)"
 {

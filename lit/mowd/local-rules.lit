@@ -1,6 +1,6 @@
 module mowd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frcp6.{ frcp6-missouri }
 
 // The Western District of Missouri's own periods under its Local Civil
 // Rules, computed under FRCP 6(a), which governs "any local rule". Rules
@@ -100,21 +100,21 @@ event IfpFeeNotified()
 
 /// W.D. Mo. L.R. 7.0(c)(2): within 14 days after a motion is filed, each
 /// party opposing it files opposing suggestions.
-deadline opposing-suggestions-period: 14.days after MotionFiled() counted_by frcp6 cite "W.D. Mo. L.R. 7.0(c)"
+deadline opposing-suggestions-period: 14.days after MotionFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 7.0(c)"
 {
   forum frcp
 }
 
 /// W.D. Mo. L.R. 7.0(c)(2): for a summary judgment motion a party instead
 /// has 21 days to file its opposing suggestions.
-deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionFiled() counted_by frcp6 cite "W.D. Mo. L.R. 7.0(c)"
+deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 7.0(c)"
 {
   forum frcp
 }
 
 /// W.D. Mo. L.R. 7.0(c)(3): within 14 days after the opposing suggestions
 /// are filed, the moving party may file reply suggestions.
-deadline reply-suggestions-period: 14.days after OpposingSuggestionsFiled() counted_by frcp6 cite "W.D. Mo. L.R. 7.0(c)"
+deadline reply-suggestions-period: 14.days after OpposingSuggestionsFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 7.0(c)"
 {
   forum frcp
 }
@@ -122,7 +122,7 @@ deadline reply-suggestions-period: 14.days after OpposingSuggestionsFiled() coun
 /// W.D. Mo. L.R. 7.1(c): if the information in a certificate of interest
 /// changes before the time to appeal from final judgment expires, the
 /// party files an amended certificate within 7 days after the change.
-deadline amended-certificate-period: 7.days after InterestInformationChanged() counted_by frcp6 cite "W.D. Mo. L.R. 7.1(c)"
+deadline amended-certificate-period: 7.days after InterestInformationChanged() counted_by frcp6-missouri cite "W.D. Mo. L.R. 7.1(c)"
 {
   forum frcp
 }
@@ -130,28 +130,28 @@ deadline amended-certificate-period: 7.days after InterestInformationChanged() c
 /// W.D. Mo. L.R. 9.1(b): within 90 days after notice of a Social Security
 /// action, the defendant serves an answer, which may be limited to a
 /// certified copy of the administrative record.
-deadline social-security-answer-period: 90.days after SocialSecurityNotice() counted_by frcp6 cite "W.D. Mo. L.R. 9.1(b)"
+deadline social-security-answer-period: 90.days after SocialSecurityNotice() counted_by frcp6-missouri cite "W.D. Mo. L.R. 9.1(b)"
 {
   forum frcp
 }
 
 /// W.D. Mo. L.R. 9.1(d)(1): the plaintiff files and serves its brief within
 /// 40 days after the certified copy of the administrative record is filed.
-deadline social-security-brief-period: 40.days after AdministrativeRecordFiled() counted_by frcp6 cite "W.D. Mo. L.R. 9.1(d)"
+deadline social-security-brief-period: 40.days after AdministrativeRecordFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 9.1(d)"
 {
   forum frcp
 }
 
 /// W.D. Mo. L.R. 9.1(d)(2): the Commissioner files a brief and serves it
 /// within 40 days after service of the plaintiff's brief.
-deadline commissioner-brief-period: 40.days after SocialSecurityBriefServed() counted_by frcp6 cite "W.D. Mo. L.R. 9.1(d)"
+deadline commissioner-brief-period: 40.days after SocialSecurityBriefServed() counted_by frcp6-missouri cite "W.D. Mo. L.R. 9.1(d)"
 {
   forum frcp
 }
 
 /// W.D. Mo. L.R. 9.1(d)(3): the plaintiff may file and serve a reply brief
 /// within 21 days after service of the Commissioner's brief.
-deadline social-security-reply-period: 21.days after CommissionerBriefServed() counted_by frcp6 cite "W.D. Mo. L.R. 9.1(d)"
+deadline social-security-reply-period: 21.days after CommissionerBriefServed() counted_by frcp6-missouri cite "W.D. Mo. L.R. 9.1(d)"
 {
   forum frcp
 }
@@ -160,7 +160,7 @@ deadline social-security-reply-period: 21.days after CommissionerBriefServed() c
 /// any reply suggestions within 14 days after the respondent's opposing
 /// suggestions are served; absent a timely reply and good cause, the court
 /// deems admitted all facts well pleaded in the opposing suggestions.
-deadline habeas-reply-period: 14.days after HabeasOppositionServed() counted_by frcp6 cite "W.D. Mo. L.R. 9.2(h)"
+deadline habeas-reply-period: 14.days after HabeasOppositionServed() counted_by frcp6-missouri cite "W.D. Mo. L.R. 9.2(h)"
 {
   forum frcp
 }
@@ -168,14 +168,14 @@ deadline habeas-reply-period: 14.days after HabeasOppositionServed() counted_by 
 /// W.D. Mo. L.R. 15.1(b): when the court grants leave to amend, the moving
 /// party files and serves the pleading within 7 days after the grant, or as
 /// the court directs.
-deadline amended-pleading-period: 7.days after LeaveToAmendGranted() counted_by frcp6 cite "W.D. Mo. L.R. 15.1(b)"
+deadline amended-pleading-period: 7.days after LeaveToAmendGranted() counted_by frcp6-missouri cite "W.D. Mo. L.R. 15.1(b)"
 {
   forum frcp
 }
 
 /// W.D. Mo. L.R. 16.1(b): the parties file a proposed scheduling order
 /// within 14 days after holding the FRCP 26(f) conference.
-deadline proposed-scheduling-order-period: 14.days after DiscoveryConferenceHeld() counted_by frcp6 cite "W.D. Mo. L.R. 16.1(b)"
+deadline proposed-scheduling-order-period: 14.days after DiscoveryConferenceHeld() counted_by frcp6-missouri cite "W.D. Mo. L.R. 16.1(b)"
 {
   forum frcp
 }
@@ -184,7 +184,7 @@ deadline proposed-scheduling-order-period: 14.days after DiscoveryConferenceHeld
 /// that will record it by non-stenographic means files the method and the
 /// technician's name, address and employer no later than 3 days before the
 /// date designated in the original notice.
-deadline recording-notice-period: 3.days before DepositionDate() counted_by frcp6 cite "W.D. Mo. L.R. 30.1"
+deadline recording-notice-period: 3.days before DepositionDate() counted_by frcp6-missouri cite "W.D. Mo. L.R. 30.1"
 {
   forum frcp
 }
@@ -192,7 +192,7 @@ deadline recording-notice-period: 3.days before DepositionDate() counted_by frcp
 /// W.D. Mo. L.R. 47.1(c): a party wanting additional peremptory challenges
 /// files a motion at least 30 days before the date of the trial setting; a
 /// late motion waives the request.
-deadline peremptory-challenge-motion-period: 30.days before TrialSetting() counted_by frcp6 cite "W.D. Mo. L.R. 47.1(c)"
+deadline peremptory-challenge-motion-period: 30.days before TrialSetting() counted_by frcp6-missouri cite "W.D. Mo. L.R. 47.1(c)"
 {
   forum frcp
 }
@@ -200,7 +200,7 @@ deadline peremptory-challenge-motion-period: 30.days before TrialSetting() count
 /// W.D. Mo. L.R. 54.1(a)(1): a party seeking costs files a verified bill of
 /// costs no later than 21 days after entry of final judgment under FRCP
 /// 58.
-deadline bill-of-costs-period: 21.days after FinalJudgmentEntered() counted_by frcp6 cite "W.D. Mo. L.R. 54.1(a)"
+deadline bill-of-costs-period: 21.days after FinalJudgmentEntered() counted_by frcp6-missouri cite "W.D. Mo. L.R. 54.1(a)"
 {
   forum frcp
 }
@@ -209,14 +209,14 @@ deadline bill-of-costs-period: 21.days after FinalJudgmentEntered() counted_by f
 /// filed, each objecting party files suggestions stating specific
 /// objections; absent a timely objection the Clerk taxes costs as claimed
 /// (L.R. 54.1(a)(2)).
-deadline cost-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "W.D. Mo. L.R. 54.1(a)"
+deadline cost-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 54.1(a)"
 {
   forum frcp
 }
 
 /// W.D. Mo. L.R. 54.1(a)(1): within 14 days after objections are filed,
 /// the party seeking costs may file reply suggestions.
-deadline cost-reply-period: 14.days after CostObjectionsFiled() counted_by frcp6 cite "W.D. Mo. L.R. 54.1(a)"
+deadline cost-reply-period: 14.days after CostObjectionsFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 54.1(a)"
 {
   forum frcp
 }
@@ -224,14 +224,14 @@ deadline cost-reply-period: 14.days after CostObjectionsFiled() counted_by frcp6
 /// W.D. Mo. L.R. 54.1(b): the Clerk taxes FRAP 39(e) costs if a bill of
 /// costs or amended bill is filed within 21 days after the Court of
 /// Appeals issues the mandate.
-deadline appeal-costs-period: 21.days after MandateIssued() counted_by frcp6 cite "W.D. Mo. L.R. 54.1(b)"
+deadline appeal-costs-period: 21.days after MandateIssued() counted_by frcp6-missouri cite "W.D. Mo. L.R. 54.1(b)"
 {
   forum frcp
 }
 
 /// W.D. Mo. L.R. 55.1(a)(1): written notice of the intention to move for
 /// entry of default is given at least 14 days before the motion is filed.
-deadline default-notice-period: 14.days before DefaultMotionFiled() counted_by frcp6 cite "W.D. Mo. L.R. 55.1(a)"
+deadline default-notice-period: 14.days before DefaultMotionFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 55.1(a)"
 {
   forum frcp
 }
@@ -239,7 +239,7 @@ deadline default-notice-period: 14.days before DefaultMotionFiled() counted_by f
 /// W.D. Mo. L.R. 58.2: when the court so orders, the prevailing party
 /// prepares, serves and files a draft of the judgment or order within 7
 /// days after the decision is announced.
-deadline draft-judgment-period: 7.days after DecisionAnnounced() counted_by frcp6 cite "W.D. Mo. L.R. 58.2"
+deadline draft-judgment-period: 7.days after DecisionAnnounced() counted_by frcp6-missouri cite "W.D. Mo. L.R. 58.2"
 {
   forum frcp
 }
@@ -247,7 +247,7 @@ deadline draft-judgment-period: 7.days after DecisionAnnounced() counted_by frcp
 /// W.D. Mo. L.R. 58.2: within 7 days after receiving the draft, any party
 /// may file a statement of approval or disapproval of its form, with its
 /// objections and a substitute draft if it disapproves.
-deadline draft-judgment-response-period: 7.days after DraftJudgmentReceived() counted_by frcp6 cite "W.D. Mo. L.R. 58.2"
+deadline draft-judgment-response-period: 7.days after DraftJudgmentReceived() counted_by frcp6-missouri cite "W.D. Mo. L.R. 58.2"
 {
   forum frcp
 }
@@ -255,7 +255,7 @@ deadline draft-judgment-response-period: 7.days after DraftJudgmentReceived() co
 /// W.D. Mo. L.R. 66.1(b): unless the court orders otherwise, a receiver or
 /// similar officer files the inventories of the estate as soon as
 /// practicable, but not later than 30 days after taking possession.
-deadline receiver-inventory-period: 30.days after ReceiverPossession() counted_by frcp6 cite "W.D. Mo. L.R. 66.1(b)"
+deadline receiver-inventory-period: 30.days after ReceiverPossession() counted_by frcp6-missouri cite "W.D. Mo. L.R. 66.1(b)"
 {
   forum frcp
 }
@@ -264,7 +264,7 @@ deadline receiver-inventory-period: 30.days after ReceiverPossession() counted_b
 /// than 14 days after a verdict is rendered or a judgment entered, the
 /// offering attorney withdraws any exhibits in the Clerk's custody and
 /// gives the Clerk a receipt.
-deadline exhibit-withdrawal-period: 14.days after VerdictOrJudgment() counted_by frcp6 cite "W.D. Mo. L.R. 79.2(a)"
+deadline exhibit-withdrawal-period: 14.days after VerdictOrJudgment() counted_by frcp6-missouri cite "W.D. Mo. L.R. 79.2(a)"
 {
   forum frcp
 }
@@ -272,7 +272,7 @@ deadline exhibit-withdrawal-period: 14.days after VerdictOrJudgment() counted_by
 /// W.D. Mo. L.R. 80.1(a)(2): within 7 days after a transcript is filed,
 /// each party wishing to redact personal data identifiers under FRCP 5.2
 /// files a Notice of Intent to Redact.
-deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp6 cite "W.D. Mo. L.R. 80.1(a)"
+deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 80.1(a)"
 {
   forum frcp
 }
@@ -280,7 +280,7 @@ deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp
 /// W.D. Mo. L.R. 80.1(a)(3): within 21 days after the transcript is filed,
 /// a party that filed a Notice of Intent to Redact files a statement of
 /// the page and line numbers of the identifiers.
-deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by frcp6 cite "W.D. Mo. L.R. 80.1(a)"
+deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 80.1(a)"
 {
   forum frcp
 }
@@ -288,7 +288,7 @@ deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by 
 /// W.D. Mo. L.R. 83.5(f)(2): an attorney not a member of the court's bar
 /// who enters a limited initial appearance complies with L.R. 83.5(f)(3)
 /// within 14 days after entering it, or may be removed from the case.
-deadline admission-compliance-period: 14.days after LimitedAppearanceEntered() counted_by frcp6 cite "W.D. Mo. L.R. 83.5(f)"
+deadline admission-compliance-period: 14.days after LimitedAppearanceEntered() counted_by frcp6-missouri cite "W.D. Mo. L.R. 83.5(f)"
 {
   forum frcp
 }
@@ -296,7 +296,7 @@ deadline admission-compliance-period: 14.days after LimitedAppearanceEntered() c
 /// W.D. Mo. L.R. 83.7(e): any party may file written objections to a fee
 /// imposed on a person who sought leave to proceed in forma pauperis
 /// within 21 days after being notified of the fee.
-deadline ifp-fee-objection-period: 21.days after IfpFeeNotified() counted_by frcp6 cite "W.D. Mo. L.R. 83.7(e)"
+deadline ifp-fee-objection-period: 21.days after IfpFeeNotified() counted_by frcp6-missouri cite "W.D. Mo. L.R. 83.7(e)"
 {
   forum frcp
 }

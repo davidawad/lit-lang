@@ -1,7 +1,7 @@
 module dcd-local-rules.local-rules
 
 import core.authority.{ CaseOrder }
-import core.frcp6.{ frcp6 }
+import core.frcp6.{ frcp6-district-of-columbia }
 import frcp.periods.{ ComplaintFiled, JudgmentEntered }
 
 // The District of Columbia district court's own civil periods, counted
@@ -97,7 +97,7 @@ event MagistrateRecommendationServed()
 /// D.D.C. LCvR 5.1(c)(1): notice of a change in the address or telephone
 /// number of an attorney or of a party not represented by an attorney is
 /// filed within 14 days of the change.
-deadline address-change-notice: 14.days after AddressChanged() counted_by frcp6 cite "D.D.C. LCvR 5.1(c)"
+deadline address-change-notice: 14.days after AddressChanged() counted_by frcp6-district-of-columbia cite "D.D.C. LCvR 5.1(c)"
 {
   forum frcp
 }
@@ -106,7 +106,7 @@ deadline address-change-notice: 14.days after AddressChanged() counted_by frcp6 
 /// case sought to be maintained as a class action, unless the Court
 /// extends the period, the plaintiff moves for certification under FRCP
 /// 23(c)(1).
-deadline class-certification-motion: 90.days after ComplaintFiled() counted_by frcp6 delegable {
+deadline class-certification-motion: 90.days after ComplaintFiled() counted_by frcp6-district-of-columbia delegable {
   to CaseOrder
   op set
 } cite "D.D.C. LCvR 23.1(b)"
@@ -119,7 +119,7 @@ deadline class-certification-motion: 90.days after ComplaintFiled() counted_by f
 /// memorandum of points and authorities in opposition; if none is filed in
 /// time, the Court may treat the motion as conceded. LCvR 72.2(b) and
 /// 72.3(b) apply it to oppositions to objections.
-deadline opposition-period: 14.days after MotionServed() counted_by frcp6 delegable {
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6-district-of-columbia delegable {
   to CaseOrder
   op set
 } cite "D.D.C. LCvR 7(b)"
@@ -129,7 +129,7 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcp6 delega
 
 /// D.D.C. LCvR 7(d): within seven days after service of the memorandum in
 /// opposition, the moving party may serve and file a reply memorandum.
-deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "D.D.C. LCvR 7(d)"
+deadline reply-period: 7.days after OppositionServed() counted_by frcp6-district-of-columbia cite "D.D.C. LCvR 7(d)"
 {
   forum frcp
 }
@@ -137,7 +137,7 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "D.
 /// D.D.C. LCvR 7(g): on the granting of a motion to vacate an entry of
 /// default or a default judgment, the movant has 14 days to answer or
 /// otherwise respond to the complaint.
-deadline vacated-default-response: 14.days after DefaultVacated() counted_by frcp6 cite "D.D.C. LCvR 7(g)"
+deadline vacated-default-response: 14.days after DefaultVacated() counted_by frcp6-district-of-columbia cite "D.D.C. LCvR 7(g)"
 {
   forum frcp
 }
@@ -146,7 +146,7 @@ deadline vacated-default-response: 14.days after DefaultVacated() counted_by frc
 /// a certified list of the contents of the administrative record within 30
 /// days following service of the answer (or with a dispositive motion, if
 /// that comes first; see the module note).
-deadline administrative-record-list: 30.days after AgencyReviewAnswerServed() counted_by frcp6 delegable {
+deadline administrative-record-list: 30.days after AgencyReviewAnswerServed() counted_by frcp6-district-of-columbia delegable {
   to CaseOrder
   op set
 } cite "D.D.C. LCvR 7(n)"
@@ -157,7 +157,7 @@ deadline administrative-record-list: 30.days after AgencyReviewAnswerServed() co
 /// D.D.C. LCvR 7(n)(2): the joint appendix of the cited portions of the
 /// administrative record is filed within 14 days following the final
 /// memorandum on the motion.
-deadline administrative-record-appendix: 14.days after FinalDispositiveMemorandumFiled() counted_by frcp6 cite "D.D.C. LCvR 7(n)"
+deadline administrative-record-appendix: 14.days after FinalDispositiveMemorandumFiled() counted_by frcp6-district-of-columbia cite "D.D.C. LCvR 7(n)"
 {
   forum frcp
 }
@@ -165,7 +165,7 @@ deadline administrative-record-appendix: 14.days after FinalDispositiveMemorandu
 /// D.D.C. LCvR 7(o)(2): any party may oppose a motion for leave to file an
 /// amicus brief within 14 days after service of the motion or as the Court
 /// orders.
-deadline amicus-motion-opposition: 14.days after AmicusMotionServed() counted_by frcp6 delegable {
+deadline amicus-motion-opposition: 14.days after AmicusMotionServed() counted_by frcp6-district-of-columbia delegable {
   to CaseOrder
   op set
 } cite "D.D.C. LCvR 7(o)"
@@ -175,7 +175,7 @@ deadline amicus-motion-opposition: 14.days after AmicusMotionServed() counted_by
 
 /// D.D.C. LCvR 16.5(a)(2): not less than 14 days before the final Pretrial
 /// Conference, each party files and serves a Pretrial Statement.
-deadline pretrial-statement: 14.days before FinalPretrialConference() counted_by frcp6 cite "D.D.C. LCvR 16.5(a)"
+deadline pretrial-statement: 14.days before FinalPretrialConference() counted_by frcp6-district-of-columbia cite "D.D.C. LCvR 16.5(a)"
 {
   forum frcp
 }
@@ -183,7 +183,7 @@ deadline pretrial-statement: 14.days before FinalPretrialConference() counted_by
 /// D.D.C. LCvR 30.1: service of a notice of deposition seven days before
 /// the deposition is "reasonable notice" under FRCP 30(b); the Court may
 /// enlarge or shorten the time for good cause.
-deadline deposition-notice: 7.days before Deposition() counted_by frcp6 delegable {
+deadline deposition-notice: 7.days before Deposition() counted_by frcp6-district-of-columbia delegable {
   to CaseOrder
   op set
 } cite "D.D.C. LCvR 30.1"
@@ -193,7 +193,7 @@ deadline deposition-notice: 7.days before Deposition() counted_by frcp6 delegabl
 
 /// D.D.C. LCvR 30.1: for a deposition more than 50 miles from the District
 /// of Columbia, reasonable notice is 14 days.
-deadline distant-deposition-notice: 14.days before DistantDeposition() counted_by frcp6 delegable {
+deadline distant-deposition-notice: 14.days before DistantDeposition() counted_by frcp6-district-of-columbia delegable {
   to CaseOrder
   op set
 } cite "D.D.C. LCvR 30.1"
@@ -204,7 +204,7 @@ deadline distant-deposition-notice: 14.days before DistantDeposition() counted_b
 /// D.D.C. LCvR 65.1(c): the opposition to an application for a preliminary
 /// injunction is served and filed within seven days after service of the
 /// application, with all affidavits the defendant relies on.
-deadline preliminary-injunction-opposition: 7.days after PreliminaryInjunctionApplicationServed() counted_by frcp6 cite "D.D.C. LCvR 65.1(c)"
+deadline preliminary-injunction-opposition: 7.days after PreliminaryInjunctionApplicationServed() counted_by frcp6-district-of-columbia cite "D.D.C. LCvR 65.1(c)"
 {
   forum frcp
 }
@@ -213,7 +213,7 @@ deadline preliminary-injunction-opposition: 7.days after PreliminaryInjunctionAp
 /// of judgment terminating the case as to the party seeking costs, unless
 /// the Court extends the time; a cost omitted from it is not allowed,
 /// except post-judgment costs.
-deadline bill-of-costs: 21.days after JudgmentEntered() counted_by frcp6 delegable {
+deadline bill-of-costs: 21.days after JudgmentEntered() counted_by frcp6-district-of-columbia delegable {
   to CaseOrder
   op set
 } cite "D.D.C. LCvR 54.1(a)"
@@ -224,7 +224,7 @@ deadline bill-of-costs: 21.days after JudgmentEntered() counted_by frcp6 delegab
 /// D.D.C. LCvR 54.1(b): a party from whom costs are sought may oppose the
 /// bill within 14 days after service of the bill; if no objection is filed,
 /// the Clerk taxes the permitted costs.
-deadline bill-of-costs-opposition: 14.days after BillOfCostsServed() counted_by frcp6 cite "D.D.C. LCvR 54.1(b)"
+deadline bill-of-costs-opposition: 14.days after BillOfCostsServed() counted_by frcp6-district-of-columbia cite "D.D.C. LCvR 54.1(b)"
 {
   forum frcp
 }
@@ -233,7 +233,7 @@ deadline bill-of-costs-opposition: 14.days after BillOfCostsServed() counted_by 
 /// on a referred pretrial motion or matter are filed within 14 days after
 /// service of the order, unless the magistrate judge or the district judge
 /// prescribes a different time.
-deadline magistrate-ruling-objection: 14.days after MagistrateRulingServed() counted_by frcp6 delegable {
+deadline magistrate-ruling-objection: 14.days after MagistrateRulingServed() counted_by frcp6-district-of-columbia delegable {
   to CaseOrder
   op set
 } cite "D.D.C. LCvR 72.2(b)"
@@ -244,7 +244,7 @@ deadline magistrate-ruling-objection: 14.days after MagistrateRulingServed() cou
 /// D.D.C. LCvR 72.3(b): written objections to a magistrate judge's proposed
 /// findings and recommendations are filed within 14 days after service of
 /// a copy.
-deadline magistrate-recommendation-objection: 14.days after MagistrateRecommendationServed() counted_by frcp6 cite "D.D.C. LCvR 72.3(b)"
+deadline magistrate-recommendation-objection: 14.days after MagistrateRecommendationServed() counted_by frcp6-district-of-columbia cite "D.D.C. LCvR 72.3(b)"
 {
   forum frcp
 }

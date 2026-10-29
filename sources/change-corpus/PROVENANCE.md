@@ -31,9 +31,10 @@ government publication or a court opinion; no client material.
   lists.
 - Method: compiled by hand from the downloaded opinions; one entry per
   ruling with its source URL, `retrieved_at` and the sha256 of every
-  stored file.
+  stored file. Edited by hand since: Foman's `notes` updated by lg-2j7e
+  (2026-10-29) to point at the change-frcp-1948-appeal layer.
 
-- sha256: `a69830f0847cccc2ad385a4b96f74620bf0b7ed4a13bcefa25e12ba17d316c00`.
+- sha256: `18d5cee92b309860d02a87e82c5ed03afa3d7b63a9f917ce9f76f520192de0b1`.
 
 ## Rules: FRCP 6 / FRAP 26 version history (`rules/`)
 

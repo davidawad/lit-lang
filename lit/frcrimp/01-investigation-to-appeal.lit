@@ -452,7 +452,7 @@ terminal speedy-trial-dismissal: "Dismissed — Speedy Trial Act Violation" outc
 state rule16-discovery: "Rule 16 Discovery Exchange" by applicant effective [2023-12-01, ..) known_at 2023-04-24 cite "Fed. R. Crim. P. 16(a)"
 {
   group discovery-group
-  note "Government must disclose the defendant's statements, prior record, documents/objects, and expert reports — only upon the defendant's request. Reciprocal defense discovery is triggered once the defendant requests. Distinct from Brady/Giglio, which apply regardless of request."
+  note "Government must disclose the defendant's statements, prior record, documents/objects, and expert reports — only upon the defendant's request. Reciprocal defense discovery is triggered once the defendant requests. Distinct from Brady/Giglio: Brady itself reached evidence suppressed after a defense request (373 U.S. at 87), but the duty to disclose material favorable evidence applies even without a defense request (United States v. Agurs, 427 U.S. 97, 107 (1976); Strickler v. Greene, 527 U.S. 263, 280 (1999))."
   edge-rule16-discovery-brady-giglio-disclosure "Disclose Brady/Giglio material" -> brady-giglio-disclosure {
     authority cite ?("Brady v. Maryland, 373 U.S. 83 (1963); Giglio v. United States, 405 U.S. 150 (1972)")
     effort 8.hours

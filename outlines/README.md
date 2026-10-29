@@ -25,8 +25,9 @@ The layout mirrors formbook's `courts/<circuit>/<jurisdiction>/`.
     outlines/federal-circuit/<court>/, outlines/national/<court>/, outlines/military/<court>/,
     outlines/supreme-court-of-the-united-states/          one package per court
 
-Each directory holds `Lit.toml` plus `outline.lit`. Copy
-`outlines/eighth-circuit/minnesota/state-trial-court/` as the template.
+Each directory holds `Lit.toml` plus `outline.lit`. No outline remains to
+copy: `lit/mn-district` shows the promoted form of the Minnesota trial-court
+outline the layout was modelled on.
 
 A state court package (`state-<court>`) depends on its state's base library
 (`state-rules`, or `lit/<st>-rules` once the state has promoted packages),
@@ -40,8 +41,8 @@ its package (lg-u561.5).
 A bankruptcy-court outline differs: it depends on `lit/frbp` (and `lit/core`),
 imports the FRBP periods from it with their cites bound to the vendored FRBP
 text, and declares only the court's local bankruptcy rule layer as `?(...)`
-cites and holes. It carries a `Lit.lock` (`litigate lock DIR`). Copy
-`outlines/third-circuit/new-jersey/bankruptcy-district/` as the template.
+cites and holes. It carries a `Lit.lock` (`litigate lock DIR`). No
+bankruptcy outline remains to copy: `lit/bankr-nj` shows the promoted form.
 
 A federal criminal outline (`federal-<district>-criminal`) differs the same
 way: it depends on `lit/frcrimp`, imports the FRCrimP, Speedy Trial Act and

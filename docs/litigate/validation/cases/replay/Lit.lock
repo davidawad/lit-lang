@@ -1,6 +1,21 @@
 version = 2
 
 [[package]]
+name = "change-bowles-v-russell"
+version = "1.0.0"
+dependencies = [
+    "change-thompson-v-ins 1.0.0",
+    "core 1.0.0",
+]
+
+[[package]]
+name = "change-thompson-v-ins"
+version = "1.0.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
 name = "change-validation"
 version = "1.0.0"
 dependencies = [
@@ -11,12 +26,14 @@ dependencies = [
 name = "change-validation-replay"
 version = "1.0.0"
 language = 1
-source = "sha256:15387d2ccedc0a2d28562da0004ab42704f39d4fc2e6a3ea15adf1f878c1a9f0"
-semantic = "sha256:2f3d206203458331a7d47efeccf49470835a6bd500787a02f0937ae3a5441553"
+source = "sha256:a0c839ce789e1f24261154813a69c792208336259e499c61cc2a745297a03bd7"
+semantic = "sha256:225d2639abe71841c6e83af5e6dc74ebd3202aebc9ab9aced343426b5c5009de"
 texts = [
     "frap sources/frap.txt sha256:b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172",
 ]
 dependencies = [
+    "change-bowles-v-russell 1.0.0",
+    "change-thompson-v-ins 1.0.0",
     "change-validation 1.0.0",
     "core 1.0.0",
 ]

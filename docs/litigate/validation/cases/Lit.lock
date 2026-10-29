@@ -1,6 +1,21 @@
 version = 2
 
 [[package]]
+name = "change-bowles-v-russell"
+version = "1.0.0"
+dependencies = [
+    "change-thompson-v-ins 1.0.0",
+    "core 1.0.0",
+]
+
+[[package]]
+name = "change-thompson-v-ins"
+version = "1.0.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
 name = "change-validation"
 version = "1.0.0"
 dependencies = [
@@ -19,6 +34,8 @@ dependencies = [
 name = "change-validation-replay"
 version = "1.0.0"
 dependencies = [
+    "change-bowles-v-russell 1.0.0",
+    "change-thompson-v-ins 1.0.0",
     "change-validation 1.0.0",
     "core 1.0.0",
 ]

@@ -323,9 +323,16 @@ coverage:
     cargo run -q -p litigate-cli -- --format human coverage > /dev/null
 
 # --- litigate authoring language -------------------------------------------
-# Strict check of the stdlib and matters. `just lit-check lit/examples` checks
-# one package.
+# Check of the stdlib and matters under the default `dev` profile (SPEC §9.3,
+# ruling 2026-10-27): fails on real errors only; holes (L5002) and deadlines
+# without an inline test (L9001) stay warnings in MVP mode, whose tests and
+# unvendored source texts belong to the QA pass (lg-xx4y). `just lit-check
+# lit/examples` checks one package.
 lit-check *ARGS='lit cases':
+    cargo run -q -p litigate-cli -- --format human check {{ARGS}}
+
+# The release bar: the same sources under `--profile strict`.
+lit-check-strict *ARGS='lit cases':
     cargo run -q -p litigate-cli -- --format human check --profile strict {{ARGS}}
 
 # The generated files (DESIGN §11.4, SPEC §9.4): every pack, links.json,
@@ -339,8 +346,7 @@ lit_build_args := "crates/litgraph-packs/build.args"
 # Where `lit-sync` writes the build for inspection (and `litigate diff`).
 lit_build_dir := "target/lit-build"
 
-# Regenerate every committed Lit.lock (and create one for a new lit/
-# package) and the engine's shared clock library
+# Regenerate every committed Lit.lock and the engine's shared clock library
 # (crates/litigate-engine/clock/litigate-core.json: lit/core lowered, the one
 # generated file committed, since the engine cannot run the compiler), then
 # build packs/, packs/links.json, generated packs/clock/ fragments,

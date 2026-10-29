@@ -53,7 +53,7 @@ sets are `calibration` declarations in `lit/`, and runnable requests are
 ```bash
 cargo install --path crates/litigate-cli   # binary: litigate (or `cargo run -q -p litigate-cli --`)
 litigate describe                           # the language + CLI contract as JSON — start here
-litigate check lit/frcp                     # typecheck + verify one package (--profile strict for the gate)
+litigate check lit/frcp                     # typecheck + verify one package (--profile strict for the release bar)
 litigate check lit cases                    # everything; diagnostics carry stable codes + fixes
 litigate test lit/frcp                      # inline `test` blocks (deadline arithmetic etc.)
 litigate test --impact origin/main          # what a branch moves: every tests/expect deadline, verdict

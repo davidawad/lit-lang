@@ -7,10 +7,20 @@ import core.frcrimp45.{ frcrimp45 }
 // rule"). The Local Rules and their Appendices apply in all civil and
 // criminal proceedings (SDIL-LR 1.1(b)). The court's criminal rules are
 // Appendix A, which the vendored document lists by title only. Appendix A
-// is vendored apart (sources/ilsd/ilsd-appendix-a-criminal.txt) but not
-// yet encoded: every period it sets is a hole (the trial-date
-// cross-reference "SDIL-LR Appendix A, Cr50.1" in SDIL-LR 16.1(e) is not
-// followed here).
+// is vendored apart (sources/ilsd/ilsd-appendix-a-criminal-sectioned.txt)
+// and its two stated periods are encoded below: the response to
+// presentence report objections (Cr32.1(b)(1)) and the United States
+// Attorney's show cause on a search warrant access request (Cr41.1(a)(2)).
+// Its other rules state no period from an event: a defense subpoena
+// request describes the information sought (Cr17.1); defense counsel
+// responds "as promptly as possible" to a presentence interview notice
+// (Cr32.1(a)); search warrant cases are unsealed six months after sealing,
+// but no clerk action follows without a request, and a further period of
+// inaccessibility is set by a judicial officer up to six months (Cr41.1(a)
+// (1), (3)); counsel files a notice of appeal or a declination within the
+// time for an appeal, FRAP 4(b)'s period in lit/frcrimp (Cr44.1(a)(1));
+// and trial dates follow the Speedy Trial Plan (Cr50.1), which is not
+// vendored.
 //
 // Conditions that are not deadlines from an event stay in notes: criminal
 // motions are filed in accordance with orders entered at or after
@@ -30,7 +40,6 @@ import core.frcrimp45.{ frcrimp45 }
 // The earlier S.D. Ill. criminal outline's FRCrimP flow and its decisions
 // are FRCrimP, Speedy Trial Act or constitutional authority and belong to
 // lit/frcrimp; they are removed here: no reporter text is vendored.
-
 /// A final decision is rendered and no appeal is taken from it (SDIL-LR
 /// 79.1(b)(1)).
 event FinalDecisionUnappealed()
@@ -53,6 +62,34 @@ deadline exhibit-removal: 90.days after FinalDecisionUnappealed() counted_by frc
 /// available for the record under Seventh Circuit Rule 10 (SDIL-LR
 /// 79.1(c)).
 deadline exhibit-removal-after-mandate: 90.days after AppellateMandateFiled() counted_by frcrimp45 cite "SDIL-LR 79.1(b)"
+{
+  forum frcrimp
+}
+
+/// Objections to the presentence investigation report are received by a
+/// party (SDIL-LR Appendix A, Cr32.1(b)(1); FRCrimP 32(f)).
+event PresentenceObjectionsReceived()
+/// On a request for access to a search warrant case, the Clerk's Office
+/// issues a notice directing the United States Attorney to show cause why
+/// the case should remain inaccessible (SDIL-LR Appendix A, Cr41.1(a)(2)).
+event SearchWarrantShowCauseNoticeIssued()
+
+/// SDIL-LR Appendix A, Cr32.1(b)(1): objections to the presentence report
+/// are filed under FRCrimP 32 (its 14-day period stays with lit/frcrimp);
+/// every response to the objections is filed and served on the opposing
+/// party and the Probation Office within 7 days of receipt of the
+/// objections unless the Court directs otherwise.
+deadline presentence-objection-response: 7.days after PresentenceObjectionsReceived() counted_by frcrimp45 cite "SDIL-LR Appendix A, Cr32.1(b)(1)"
+{
+  forum frcrimp
+}
+
+/// SDIL-LR Appendix A, Cr41.1(a)(2): the United States Attorney shows
+/// cause, within 14 days of the Clerk's notice, why the search warrant case
+/// or a portion of it should remain inaccessible; a judicial officer then
+/// decides whether good cause supports a further period of no more than
+/// six months.
+deadline search-warrant-show-cause: 14.days after SearchWarrantShowCauseNoticeIssued() counted_by frcrimp45 cite "SDIL-LR Appendix A, Cr41.1(a)(2)"
 {
   forum frcrimp
 }

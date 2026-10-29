@@ -8,9 +8,9 @@
 # (effective September 22, 2025; sources/ilsd) apply in all civil and
 # criminal proceedings (SDIL-LR 1.1(b)), but the court's criminal rules
 # are its Appendix A, which the vendored document lists by title only;
-# Appendix A is vendored apart (sources/ilsd/ilsd-appendix-a-criminal.txt)
-# but not yet encoded, so every criminal-rule period (Cr 50.1 and the
-# others) is a hole until it is. So are the
+# Appendix A is vendored apart (sources/ilsd/ilsd-appendix-a-criminal.txt,
+# sectioned for citation) and its stated periods (Cr32.1(b)(1),
+# Cr41.1(a)(2)) are encoded. The holes are the
 # court's Plan for Prompt Disposition of Criminal Cases (18 U.S.C. § 3165;
 # SDIL-LR 16.1(e)) and its Standard Order for Pretrial Discovery and
 # Inspection (SDIL-LR 26.1(e)). in_force is the edition's effective date;
@@ -26,7 +26,7 @@ family = "district-criminal"
 authority = "LocalRule"
 kind = "local-rule"
 title = "U.S. District Court for the Southern District of Illinois: Local Rules in Criminal Cases"
-description = "The U.S. District Court for the Southern District of Illinois's local rules for criminal cases as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp), as far as the vendored text states: the removal of trial exhibits after the final decision or the appellate mandate. The court's criminal rules (Appendix A) are vendored but not yet encoded and are holes."
+description = "The U.S. District Court for the Southern District of Illinois's local rules for criminal cases as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp), as far as the vendored text states: the removal of trial exhibits after the final decision or the appellate mandate, and from the criminal rules (Appendix A) the response to presentence report objections and the United States Attorney's show cause on a request for access to a search warrant case."
 in_force = "2025-09-22"
 known_at = "2026-10-28"
 unknown_before = "2025-09-22"
@@ -57,3 +57,13 @@ sha256 = "dd223d2b5056467544ae7450e0b0d45641727071dd894e831c18b49443397d3b"
 as_of = "2025-09-22"
 cite_prefixes = ["SDIL-LR"]
 section_heading = "Rule {n}"
+
+[sources.ilsd-crr]
+title = "Local Rules, United States District Court, Southern District of Illinois, Appendix A: Criminal Rules (with the Local Rules effective September 22, 2025)"
+url = "https://www.ilsd.uscourts.gov/sites/ilsd/files/Appendix-A.pdf"
+path = "sources/ilsd/ilsd-appendix-a-criminal-sectioned.txt"
+path_sha256 = "d6335f1fb976f892eeb87cb1f68a83a4f43ce415038d836d833f5a711abe52d6"
+sha256 = "3b0e062952e9af37a5275aa40be1df9101bccfb6037d3e89a7ca1182a600e2dc"
+as_of = "2025-09-22"
+cite_prefixes = ["SDIL-LR Appendix A, Cr"]
+section_heading = "Cr{n}"

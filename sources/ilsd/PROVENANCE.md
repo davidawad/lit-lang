@@ -18,7 +18,7 @@
 - Edition: as the extract, revised Local Rules effective September 22, 2025.
 - Sectioned sha256 2f93faac3661abe55136b45631a7d3ec496e0142942d8bff0dcf52295793f4bb (the `path_sha256` pinned by `lit/ilsd/Lit.toml`).
 
-- Note (lg-gddt.18): the vendored extract does not hold the criminal rules. It ends at page 65 with the list of appendix titles (`APPENDIX A: CRIMINAL RULES` at extract line 2819 is a title only; the extract has 2836 lines, so the "from extract line 2883" pointer above does not resolve). Appendices A to G are separate documents on the court site; Appendix A is now vendored as `ilsd/ilsd-appendix-a-criminal.txt` (lg-ru4k), and Appendices B to G are not vendored. `lit/ilsd-criminal` encodes only the periods the main Local Rules state for criminal proceedings (SDIL-LR 1.1(b)); the Appendix A rules stay holes there until they are encoded from that file.
+- Note (lg-gddt.18): the vendored extract does not hold the criminal rules. It ends at page 65 with the list of appendix titles (`APPENDIX A: CRIMINAL RULES` at extract line 2819 is a title only; the extract has 2836 lines, so the "from extract line 2883" pointer above does not resolve). Appendices A to G are separate documents on the court site; Appendix A is now vendored as `ilsd/ilsd-appendix-a-criminal.txt` (lg-ru4k), and Appendices B to G are not vendored. `lit/ilsd-criminal` encodes only the periods the main Local Rules state for criminal proceedings (SDIL-LR 1.1(b)); the Appendix A periods are encoded there from its sectioned form, `ilsd/ilsd-appendix-a-criminal-sectioned.txt` (lg-68if).
 
 ### `ilsd/ilsd-appendix-a-criminal.txt` — S.D. Illinois Local Rules, Appendix A: Criminal Rules
 
@@ -27,3 +27,10 @@
 - Retrieved 2026-10-29 in the agent pod (lg-ru4k) with plain curl (its default User-Agent, no browser headers); extracted with `pdftotext -layout` (poppler 25.03.0), unedited. Raw extract, not yet sectioned into `## <ref>` form.
 - Extract sha256 4d1208236f12fa47e7f95ec67abcb524b1ad44f61e45f75854265c5b14227340.
 - Original: `ilsd/original/ilsd-appendix-a-criminal.pdf` as served (sha256 3b0e062952e9af37a5275aa40be1df9101bccfb6037d3e89a7ca1182a600e2dc).
+
+### `ilsd/ilsd-appendix-a-criminal-sectioned.txt` — S.D. Illinois Local Rules, Appendix A: Criminal Rules, sectioned
+
+- Derived in the pod (lg-68if) from `ilsd/ilsd-appendix-a-criminal.txt` (extract sha256 4d1208236f12fa47e7f95ec67abcb524b1ad44f61e45f75854265c5b14227340); nothing fetched. One `## Cr<n>` line is inserted before each rule's own heading line (`Cr17.1`, `Cr32.1`, `Cr41.1`, `Cr44.1`, `Cr50.1`). Rule text was not edited: deleting the marker lines (`sed '/^## Cr/d'`) restores the extract byte for byte.
+- Upstream: https://www.ilsd.uscourts.gov/sites/ilsd/files/Appendix-A.pdf, retrieved 2026-10-29, as recorded on the `ilsd/ilsd-appendix-a-criminal.txt` entry this file is derived from.
+- Edition: as the extract, the Appendix A of the Local Rules and Appendices effective September 22, 2025.
+- Sectioned sha256 d6335f1fb976f892eeb87cb1f68a83a4f43ce415038d836d833f5a711abe52d6 (the `path_sha256` pinned by `lit/ilsd-criminal/Lit.toml`).

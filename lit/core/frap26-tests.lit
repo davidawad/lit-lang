@@ -4,9 +4,9 @@ import core.frap26.{ frap26 }
 import core.time.{ Served, Scheduled, ServiceMethod }
 
 // Fixture periods for testing `frap26`. Known answers reproduce
-// crates/litgraph/tests/clock_*.rs and every `frap26` deadline in
-// tests/cases/*.json (each named for its case), counted under the FRAP 26
-// version in force on the trigger date. Fixtures cite nothing: they are
+// crates/litigate-engine/tests/clock_*.rs and every `frap26` deadline in
+// the expect tests under tests/expect/ (each named for its case), counted
+// under the FRAP 26 version in force on the trigger date. Fixtures cite nothing: they are
 // periods for the tests, not rules in force, and each test cites the rule
 // it checks.
 deadline frap26-1-day: 1.days after Served() counted_by frap26 { forum frap }

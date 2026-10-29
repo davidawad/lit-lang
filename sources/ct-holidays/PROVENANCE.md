@@ -1,0 +1,9 @@
+# Legal-holiday statute provenance (ct-holidays)
+
+### `ct-holidays/ct-legal-holidays.txt` — Conn. Gen. Stat. § 1-4 (Connecticut days designated as legal holidays)
+
+- Source: https://www.cga.ct.gov/current/pub/chap_002.htm (official Connecticut General Assembly site; General Statutes, Title 1, Chapter 2, Legal Holidays and Standard of Time; the chapter page is the original, § 1-4 kept; §§ 1-5 and 1-6 are listed in its table of contents but not on the page).
+- Edition: the page states 'Readers should refer to the 2026 Supplement, revised to January 1, 2026, for updated versions of statutes amended'; the served response carried Last-Modified Mon, 16 Mar 2026 17:39:20 GMT; the section history ends P.A. 22-128, § 1. The section has the Saturday-to-Friday observance rule; annotations are kept as served.
+- Retrieved 2026-10-29 on carbon (lg-br7q); plain curl with the identifying UA could not verify the server's TLS certificate chain (unable to get local issuer certificate), so the page was read once with BrowserOS neo, an in-page fetch of the same URL with credentials included (no forged headers or user agent), after reading https://www.cga.ct.gov/robots.txt in the same tab (robots.txt for `*` disallows /cgi-bin/, /asp/cgabillstatus/, /asp/menu/, /html/ and other asset paths, not /current/pub/; no Crawl-delay); the body text was saved as returned and the tab closed; terms not separately fetched; tags stripped, entities decoded, whitespace collapsed (html2txt2.py); the text of the cited section(s) is kept under `## <cite>` headings; otherwise unedited. A first request for chap_001.htm (Chapter 1, which does not hold § 1-4) was also made and discarded.
+- Extract sha256 0eab4d86aa53053dfacca15b3f8540d1c46ebba50ac4ae0c82e09acc3ca8cd30.
+- Original: `ct-holidays/original/ct-chap-002.htm` as served (sha256 7373aacd7aba1b3fb46288a85a07c716f95aa6f12860286d3966145f8bb2199d). Served at https://www.cga.ct.gov/current/pub/chap_002.htm.

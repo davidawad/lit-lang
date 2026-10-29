@@ -183,16 +183,16 @@ terminal notice-of-appeal-untimely: "DISMISSED — Untimely Notice of Appeal (Ju
   payoff 0.usd
 }
 
-chance deficient-notice-of-appeal: "Notice of Appeal Contents Deficient" by examiner discretion cite "FRAP (2009 ed.) 3(c)(1), (4)-(5); Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992); Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988)"
+chance deficient-notice-of-appeal: "Notice of Appeal Contents Deficient" by examiner discretion cite "FRAP (2009 ed.) 3(c)(1), (4)-(5); Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992)"
 {
   group notice-group
-  note "Courts apply liberal construction to informal notices where the intent to appeal is objectively clear (Foman/Smith line). However, naming the wrong party, wrong judgment, or wrong court may be jurisdictionally fatal and incurable, even if intent is clear (Torres)."
+  note "Courts apply liberal construction to informal notices where the intent to appeal is objectively clear (Foman/Smith line). FRAP 3(c)(4) (renumbered 3(c)(7) in 2021) forbids dismissal for informality of form or title, or for failure to name a party whose intent to appeal is otherwise clear from the notice; the 1993 amendment that added it superseded Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988), which had held a failure to name a party jurisdictionally fatal. The Rule 3(c)(1) requirements remain jurisdictional (Smith v. Barry), so a notice that leaves unclear who appeals, or from what, may still be dismissed and is not cured after the appeal period runs."
   edge-deficient-notice-of-appeal-docketed-in-court-of-appeals "Court excuses the technical defect" -> docketed-in-court-of-appeals p 0.75 {
     authority cite "Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992); FRAP (2009 ed.) 3(e)"
     valence good
   }
   edge-deficient-notice-of-appeal-notice-of-appeal-untimely "Defect held jurisdictional, uncurable" -> notice-of-appeal-untimely p 0.25 {
-    authority cite "Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988); FRAP (2009 ed.) 3(c)"
+    authority cite "FRAP (2009 ed.) 3(c)(1); Smith v. Barry, 502 U.S. 244, 248 (1992)"
     valence bad
   }
 }

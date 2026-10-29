@@ -601,6 +601,48 @@ example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep
 cite = "28 U.S.C. § 46(c); FRAP 40(c)"
 example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep551205/usrep551205.pdf"
 
+# The bankruptcy appellate panels a circuit council has established (28
+# U.S.C. § 158(b)(1)), each a forum `bap` and its circuit's number: `bap1`,
+# `bap6`, `bap8`, `bap9`, `bap10`. The FRBP Part VIII rules are the base
+# (lit/frbp's forum); a panel's local rules (FRBP 8026(a)(1)(A)) and its
+# orders are packages at its forum. Its decisions are reviewed by its
+# circuit's court of appeals (28 U.S.C. § 158(d)(1)), whose precedent binds
+# it; FRBP 9038's emergency is the bankruptcy courts', not the panels'.
+[family.bankruptcy-appellate]
+title = "Bankruptcy appellate panel (FRBP Part VIII and BAP rules)"
+precedent = ["scotus", "@circuit"]
+circuits = ["ca1", "ca6", "ca8", "ca9", "ca10"]
+
+[family.bankruptcy-appellate.class.base]
+cite = "28 U.S.C. §§ 158(b), 2075; FRBP Part VIII"
+example = "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf"
+
+[family.bankruptcy-appellate.class.amendment]
+cite = "28 U.S.C. § 2075; FRBP 8026(a)(1)(A), (C) for a local rule's amendment"
+
+[family.bankruptcy-appellate.class.local-rule]
+cite = "FRBP 8026(a)(1)(A): a circuit council that has authorized a BAP may make and amend its local rules; 28 U.S.C. § 2071"
+example = "https://www.bap1.uscourts.gov/sites/bap1/files/BAP%20Local%20Rules.pdf"
+
+[family.bankruptcy-appellate.class.general-order]
+cite = "FRBP 8026(b): a judge may regulate practice consistent with federal law, the FRBP and the local rules; 1st Cir. BAP Amended General Order No. 2 (Dec. 16, 2024)"
+example = "https://www.bap1.uscourts.gov/sites/bap1/files/GeneralOrder2_0.pdf"
+
+[family.bankruptcy-appellate.class.standing-order]
+cite = "FRBP 8026(b)"
+
+[family.bankruptcy-appellate.class.case-order]
+cite = "FRBP 8013, 8028; FRBP 9006(b)"
+
+[family.bankruptcy-appellate.class.guidance]
+cite = "Committee Notes, published with the rules but not prescribed under 28 U.S.C. § 2075"
+
+[family.bankruptcy-appellate.class.precedent]
+cite = "28 U.S.C. § 158(d)(1); Hutto v. Davis, 454 U.S. 370 (1982)"
+
+[family.bankruptcy-appellate.class.overruling]
+cite = "28 U.S.C. § 158(d)(1): the court of appeals; Rodriguez de Quijas v. Shearson/American Express, Inc., 490 U.S. 477, 484 (1989)"
+
 [family.federal-circuit]
 title = "Court of Appeals for the Federal Circuit"
 precedent = ["scotus", "cafc", "ccpa", "ct-cl"]

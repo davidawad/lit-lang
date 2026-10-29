@@ -319,6 +319,14 @@ general and standing orders under FRBP 9029(c), case orders under FRBP
 9006(b), an emergency declaration of at most 90 days under FRBP
 9038(b)(1)(C), and the precedent of the Supreme Court and the circuit.
 
+The `bankruptcy-appellate` family (the panels `bap1`, `bap6`, `bap8`,
+`bap9` and `bap10`, 28 U.S.C. § 158(b)) is over FRBP Part VIII:
+local-rule under FRBP 8026(a)(1)(A), general and standing orders under
+FRBP 8026(b), case orders under FRBP 8013 and 8028, no emergency
+declaration (FRBP 9038 is the bankruptcy courts'), and the precedent of
+the Supreme Court and the circuit whose court of appeals reviews the
+panel (28 U.S.C. § 158(d)(1)).
+
 Counting is per forum, never one FRCP 6 function: FRCP 6, FRCrimP 45,
 FRAP 26, RCFC 6, 37 C.F.R. § 1.7 (PTAB, via § 42.1(a)), § 2.196 (TTAB)
 and 19 C.F.R. § 201.14 (ITC) are distinct counting rules of `lit/core`,

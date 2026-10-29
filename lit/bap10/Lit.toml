@@ -13,18 +13,17 @@
 # L.R. 8026-8(a)), the FRCP 6(a) method (core's frcp6), with Colorado's
 # holidays closing a forward-counted period (L.R. 8026-8(b); FRBP
 # 9006(a)(6)(C); `bap10-9006`), which also counts lit/frbp's periods in an
-# appeal before the panel (`recounts`). Like lit/bap8 and lit/bap9 it is a
-# base package, not a `kind = "local-rule"` layer: its forum `bap10` is in
-# none of lit/core's forum families (the bankruptcy family holds the
-# bankruptcy courts, not the appellate panels), so a layer there would be
-# L2011.
+# appeal before the panel (`recounts`). It is a `kind = "local-rule"` layer
+# in lit/core's `bankruptcy-appellate` family (FRBP 8026(a)(1)(A)).
 [package]
 name = "tenth-circuit-bankruptcy-appellate-panel"
 version = "0.1.0"
 language = 1
 pack_id = "tenth-circuit-bankruptcy-appellate-panel"
 forum = "bap10"
-authority = "FederalRule"
+family = "bankruptcy-appellate"
+authority = "LocalRule"
+kind = "local-rule"
 title = "Tenth Circuit Bankruptcy Appellate Panel Procedure"
 description = "Appeals before the Bankruptcy Appellate Panel of the Tenth Circuit under the current Federal Rules of Bankruptcy Procedure (lit/frbp) and the panel's local rules: the combined statements, fees, the motion for leave and its reply, district court election, the appendix as the record, intervention, oral argument, constitutional-question notice, dismissal for failure to prosecute and reinstatement, disposition and mandate, rehearing and further review in the Tenth Circuit."
 in_force = "2026-01-01"
@@ -33,6 +32,12 @@ unknown_before = "2026-01-01"
 jurisdiction = "Bankruptcy Appellate Panel of the Tenth Circuit"
 counting = "bap10-9006"
 recounts = ["frbp-bankruptcy-procedure"]
+
+[package.instrument]
+source = "bap10-rules"
+issuer = "Bankruptcy Appellate Panel of the Tenth Circuit"
+date = "2026-01-01"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

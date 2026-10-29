@@ -12,18 +12,17 @@
 # from the FRBP December 1, 2025 edition it composes with, a lower bound: a
 # query before then is a hole in the corpus. Each period is counted under
 # FRBP 9006(a) (core's frbp9006; L.R. 8024-1(b) takes its legal holidays
-# from FRBP 9006(a)). Like lit/bap6, lit/bap8, lit/bap9 and lit/bap10 it is
-# a base package with no `family`, not a `kind = "local-rule"` layer: its
-# forum `bap1` is in none of lit/core's forum families (the bankruptcy
-# family holds the bankruptcy courts, not the appellate panels), so a layer
-# there would be L2011.
+# from FRBP 9006(a)). It is a `kind = "local-rule"` layer in lit/core's
+# `bankruptcy-appellate` family (FRBP 8026(a)(1)(A)).
 [package]
 name = "first-circuit-bankruptcy-appellate-panel"
 version = "0.1.0"
 language = 1
 pack_id = "first-circuit-bankruptcy-appellate-panel"
 forum = "bap1"
-authority = "FederalRule"
+family = "bankruptcy-appellate"
+authority = "LocalRule"
+kind = "local-rule"
 title = "First Circuit Bankruptcy Appellate Panel Procedure"
 description = "Appeals before the Bankruptcy Appellate Panel for the First Circuit under the current Federal Rules of Bankruptcy Procedure (lit/frbp) and the panel's local rules: the filing fee, district court election and its waiver, indicative rulings, the record, clerk orders on procedural motions and their reconsideration, summary disposition, briefing, oral argument, dismissal for failure to prosecute and reinstatement, rehearing and further review in the First Circuit."
 in_force = "2025-12-01"
@@ -31,6 +30,12 @@ known_at = "2026-10-28"
 unknown_before = "2025-12-01"
 jurisdiction = "United States Bankruptcy Appellate Panel for the First Circuit (28 U.S.C. § 158(b))"
 counting = "frbp9006"
+
+[package.instrument]
+source = "bap1-rules"
+issuer = "United States Bankruptcy Appellate Panel for the First Circuit"
+date = "2014-12-01"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

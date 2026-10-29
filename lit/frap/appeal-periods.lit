@@ -19,24 +19,26 @@ import frap.events.{ AppealExtensionMoved, EnteredBelow, NoticeOfAppealFiled }
 // other(applicant)`), each such party's own, so `later_of` absorbs that
 // party's own open notice period (an absorbed instance must share its
 // bearer or be unbound).
-/// FRAP 4(a)(1) and 4(a)(3) before the 2009 amendments, as the 2008
-/// edition of 28 U.S.C. App. prints them: the same 30, 60 and 14 days and
-/// the same FRAP 4(a)(5) grant, except that no extension "may exceed 30
+/// FRAP 4(a)(1) and 4(a)(3) before the 2009 amendments, as the 2002
+/// edition of 28 U.S.C. App. prints them (the text as amended December 1,
+/// 2002; the 2008 edition prints the same 4(a)(1), (3) and (5)): the same
+/// 30, 60 and 14 days and the same FRAP 4(a)(5) grant, except that no extension "may exceed 30
 /// days after the prescribed time or 10 days after the date when the order
 /// granting the motion is entered, whichever is later" (4(a)(5)(C)). In
 /// force from December 1, 2002, when 4(a)(5)(A)(ii) took the text that
 /// edition prints: before it most circuits read good cause as reaching
 /// only a motion made before expiry (2002 Committee Note), so earlier law
-/// is not declared. The 2005 amendment touched only 4(a)(6). FRAP 26(a)(2)
-/// then left weekends and legal holidays out of a period under 11 days, so
-/// the order's 10 days ran past 10 calendar days; a bound counts calendar
+/// is not declared. The 2005 amendment touched only 4(a)(6), so the
+/// version runs to the 2009 amendments. FRAP 26(a)(2) then left weekends
+/// and legal holidays out of a period under 11 days, so the order's 10
+/// days ran past 10 calendar days; a bound counts calendar
 /// days, so this one is never later than the rule's: an extension it
 /// allows the rule allowed, and one to a later day inside the FRAP
 /// 26(a)(2) count is refused (UNVERIFIED for those days, the direction
 /// that never accepts an untimely notice).
-rule duty civil-notice-of-appeal effective [2002-12-01, 2009-12-01) known_at 2002-04-29 cite "FRAP (2008 ed.) 4(a)(1)"
+rule duty civil-notice-of-appeal effective [2002-12-01, 2009-12-01) known_at 2002-04-29 cite "FRAP (2002 ed.) 4(a)(1)"
 {
-  deadline notice-civil-period: 30.days after EnteredBelow() counted_by frap26 cite "FRAP (2008 ed.) 4(a)(1)(A)"
+  deadline notice-civil-period: 30.days after EnteredBelow() counted_by frap26 cite "FRAP (2002 ed.) 4(a)(1)(A)"
   {
     bearer applicant
     trigger latest
@@ -50,7 +52,7 @@ rule duty civil-notice-of-appeal effective [2002-12-01, 2009-12-01) known_at 200
     }
     lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP (2008 ed.) 26(b)(1)"
   }
-  deadline notice-us-party-period: 60.days after EnteredBelow() counted_by frap26 cite "FRAP (2008 ed.) 4(a)(1)(B)"
+  deadline notice-us-party-period: 60.days after EnteredBelow() counted_by frap26 cite "FRAP (2002 ed.) 4(a)(1)(B)"
   {
     bearer applicant
     extend {
@@ -65,11 +67,11 @@ rule duty civil-notice-of-appeal effective [2002-12-01, 2009-12-01) known_at 200
   }
 }
 
-/// The pre-2009 FRAP 4(a)(3) (2008 edition): the same "whichever period
+/// The pre-2009 FRAP 4(a)(3) (2002 edition): the same "whichever period
 /// ends later" and the pre-2009 FRAP 4(a)(5) grant above.
-rule duty cross-appeal effective [2002-12-01, 2009-12-01) known_at 2002-04-29 cite "FRAP (2008 ed.) 4(a)(3)"
+rule duty cross-appeal effective [2002-12-01, 2009-12-01) known_at 2002-04-29 cite "FRAP (2002 ed.) 4(a)(3)"
 {
-  deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "FRAP (2008 ed.) 4(a)(3)"
+  deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "FRAP (2002 ed.) 4(a)(3)"
   {
     bearer other(applicant)
     trigger later_of(notice-civil-period)
@@ -106,7 +108,7 @@ rule duty cross-appeal effective [2002-12-01, 2009-12-01) known_at 2002-04-29 ci
 /// which kept 30-day and longer periods unchanged (FRAP 26, 2009 Committee
 /// Note) and lengthened 4(a)(5)(C)'s 10 days to 14 (2011 edition of 28
 /// U.S.C. App., 2009 Committee Note).
-rule duty civil-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-26 supersedes civil-notice-of-appeal@2002-12-01 cite "FRAP 4(a)(1)"
+rule duty civil-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-26 supersedes civil-notice-of-appeal@2002-12-01 cite "FRAP (2009 ed.) 4(a)(1)"
 {
   deadline notice-civil-period: 30.days after EnteredBelow() counted_by frap26 cite "28 U.S.C. § 2107(a)"
   {
@@ -155,9 +157,9 @@ rule duty civil-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-26 
 /// 4(a)(5)(A)) reaches a cross-appeal notice (and 4(a)(5)(B) names
 /// 4(a)(3)), so the period carries the notice of appeal's FRAP 4(a)(5)
 /// grant and FRAP 26(b)(1) lock and, like it, delegates nothing.
-rule duty cross-appeal effective [2009-12-01, ..) known_at 2009-03-26 supersedes cross-appeal@2002-12-01 cite "FRAP 4(a)(3)"
+rule duty cross-appeal effective [2009-12-01, ..) known_at 2009-03-26 supersedes cross-appeal@2002-12-01 cite "FRAP (2009 ed.) 4(a)(3)"
 {
-  deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "FRAP 4(a)(3)"
+  deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "FRAP (2009 ed.) 4(a)(3)"
   {
     bearer other(applicant)
     trigger later_of(notice-civil-period)

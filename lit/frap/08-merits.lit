@@ -10,7 +10,7 @@ terminal affirmed: "AFFIRMED" by applicant outcome [loss, affirmed] cite "FRAP 3
   valence good
   payoff 0.usd
   edge-affirmed-rehearing-window "Losing party weighs rehearing" -> rehearing-window {
-    authority cite "FRAP 40(a)(1)"
+    authority cite "FRAP (2009 ed.) 40(a)(1)"
     effort 3.hours
     within rehearing-period {
       extendable true
@@ -29,7 +29,7 @@ terminal reversed: "REVERSED" by applicant outcome [win, reversed] cite "FRAP 36
   valence good
   payoff 1_000_000.usd
   edge-reversed-rehearing-window "Losing party weighs rehearing" -> rehearing-window {
-    authority cite "FRAP 40(a)(1)"
+    authority cite "FRAP (2009 ed.) 40(a)(1)"
     effort 3.hours
     within rehearing-period {
       extendable true
@@ -48,7 +48,7 @@ terminal reversed-and-remanded: "REVERSED AND REMANDED" by applicant outcome [wi
   valence good
   payoff 600_000.usd
   edge-reversed-and-remanded-rehearing-window "Losing party weighs rehearing" -> rehearing-window {
-    authority cite "FRAP 40(a)(1)"
+    authority cite "FRAP (2009 ed.) 40(a)(1)"
     effort 3.hours
     within rehearing-period {
       extendable true
@@ -67,7 +67,7 @@ terminal vacated-and-remanded: "VACATED AND REMANDED" by applicant outcome [rema
   valence good
   payoff 400_000.usd
   edge-vacated-and-remanded-rehearing-window "Losing party weighs rehearing" -> rehearing-window {
-    authority cite "FRAP 40(a)(1)"
+    authority cite "FRAP (2009 ed.) 40(a)(1)"
     effort 3.hours
     within rehearing-period {
       extendable true
@@ -86,7 +86,7 @@ terminal affirmed-in-part-reversed-in-part: "AFFIRMED IN PART, REVERSED IN PART"
   valence caution
   payoff 250_000.usd
   edge-affirmed-in-part-reversed-in-part-rehearing-window "Either party weighs rehearing" -> rehearing-window {
-    authority cite "FRAP 40(a)(1)"
+    authority cite "FRAP (2009 ed.) 40(a)(1)"
     effort 3.hours
     within rehearing-period {
       extendable true

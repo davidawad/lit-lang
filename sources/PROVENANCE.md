@@ -508,22 +508,6 @@ Entries live in the forum's own
 - Original: `original/usc-28-app-2017-time/001-nt-pkg-USCODE-2017-title28-html-USCODE-2017-title28-app-federalru-dup1-rule6.html` as served (sha256 43524cf8ac34d6e27356597cf5307a61b5fb0e6fd3516addc1fd7f12d5a9a740); extraction sha256 5d927c0a1b91b1a30a949a272c164ea6826cfebf6eac917da9a676732b22844d. Served at https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-dup1-rule6.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 - Original: `original/usc-28-app-2017-time/002-ontent-pkg-USCODE-2017-title28-html-USCODE-2017-title28-app-federalru-rule26.html` as served (sha256 6702848ddfeb87f0b06830920aa5ee4d71dd76249c5b0187cc50055a0b214c93); extraction sha256 5d927c0a1b91b1a30a949a272c164ea6826cfebf6eac917da9a676732b22844d. Served at https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-rule26.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 
-### `usc-28-app-frap31-2017.txt` — FRAP 31 as printed in the 2017 edition of 28 U.S.C. App.
-
-- The text `lit/frap`'s 2009 version of `serve-and-file-briefs` took effect
-  with (as amended December 1, 2009, the last amendment its credits list;
-  next amended December 1, 2018, when the reply brief's 14 days became
-  21): `## FRAP (2017 ed.) Rule 31`, the rule's text, amendment credits and
-  Committee Notes. Not a canonical ref, as in `usc-28-app-time-history.txt`.
-- Fetched 2026-10-29 from `www.govinfo.gov`'s official United States Code
-  (GPO), 2017 Edition (current through January 12, 2018), granule
-  `USCODE-2017-title28-app-federalru-rule31.htm` (sha256
-  `32eebdd57dc8e6bd803a00efa3f9377d062ebea6d2e10a529c217e404c7e81e7`).
-  Everything from the page's section head to its end, one line per
-  paragraph, tags stripped, entities decoded, runs of spaces collapsed.
-- sha256 (this file): `cd6ac48ad0d5d451964d2f91f8b13177394bcd1413c0b56e061ab490d1007876`
-- Original: `original/usc-28-app-frap31-2017/001-USCODE-2017-title28-app-federalru-rule31.html` as served (sha256 32eebdd57dc8e6bd803a00efa3f9377d062ebea6d2e10a529c217e404c7e81e7); extraction sha256 cd6ac48ad0d5d451964d2f91f8b13177394bcd1413c0b56e061ab490d1007876. Served at https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-rule31.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
-
 ### `usc-28-app-1997-time.txt` — FRAP 26 as printed in the 1997 edition of 28 U.S.C. App.
 
 - The text `lit/core`'s 1996 version of `frap26` took effect with (as
@@ -760,6 +744,46 @@ Entries live in the forum's own
 - sha256 (this file): `c246fa771851ef008653521977a993531d589881d85354e9c9f949f9c1b1a284`
 - Original: `original/usc-28-app-frap4-history/001-content-pkg-USCODE-2008-title28-html-USCODE-2008-title28-app-federalru-rule4.html` as served (sha256 9f1f9ca13c2e78bc28572e9abd1347434673846f35663fcec5c203a5d79593eb); extraction sha256 c246fa771851ef008653521977a993531d589881d85354e9c9f949f9c1b1a284. Served at https://www.govinfo.gov/content/pkg/USCODE-2008-title28/html/USCODE-2008-title28-app-federalru-rule4.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 - Original: `original/usc-28-app-frap4-history/002-content-pkg-USCODE-2011-title28-html-USCODE-2011-title28-app-federalru-rule4.html` as served (sha256 2a42d46c84b552edcf5385cfe73f41686a8ed0071bfe2c59f9ca101ac74234cb); extraction sha256 c246fa771851ef008653521977a993531d589881d85354e9c9f949f9c1b1a284. Served at https://www.govinfo.gov/content/pkg/USCODE-2011-title28/html/USCODE-2011-title28-app-federalru-rule4.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
+
+### `usc-28-app-frap-editions.txt` — FRAP Rules 3-5, 8, 11, 27, 28, 28.1, 31, 32, 35 and 39-42 as printed in the 2009 edition of 28 U.S.C. App., FRAP 4 in the 2002 edition and FRAP 32 in the 2017 edition
+
+- The texts `lit/frap`'s dated versions took effect with, so that each
+  version cites the text in force on its first day (SPEC §4.3) rather than
+  the Dec. 1, 2025 print: `## FRAP (2009 ed.) Rule N` for the rules the
+  package's December 1, 2009 versions cite that were amended after that
+  date (each as amended through December 1, 2009; the edition is current
+  through February 1, 2010, and no rule's credits list an amendment after
+  2009), `## FRAP (2002 ed.) Rule 4` (as amended December 1, 2002, the
+  earlier appeal periods' start; current through January 6, 2003) and
+  `## FRAP (2017 ed.) Rule 32` (as amended December 1, 2016, the
+  type-volume limits' start; current through January 12, 2018). Each is
+  the rule's text, amendment credits and Committee Notes. The headings are
+  deliberately not canonical refs, as in `usc-28-app-time-history.txt`.
+- Fetched 2026-10-29 from `www.govinfo.gov`'s official United States Code
+  (GPO), 2002, 2009 and 2017 Editions, one granule per rule
+  (`USCODE-<year>-title28-app-federalru-rule<N>.htm`, listed below).
+  Everything from the page's section head to its end, one line per
+  paragraph, tags and comments stripped, entities decoded, runs of spaces
+  collapsed (the extraction of `usc-28-app-2002-time.txt`, which it
+  reproduces byte for byte from that file's original).
+- sha256 (this file): `007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244`
+- Original: `original/usc-28-app-frap-editions/001-USCODE-2002-title28-app-federalru-rule4.htm` as served (sha256 287560f61c1ba978c0d1e82aff31ad1a879786164e1fd89e6288034dd66364b4); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2002-title28/html/USCODE-2002-title28-app-federalru-rule4.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/002-USCODE-2009-title28-app-federalru-rule3.htm` as served (sha256 5bb85ad4439fd5a860913ddbdf0935c9913f2e45d63af0a7bfe7c3e0784f0d57); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule3.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/003-USCODE-2009-title28-app-federalru-rule4.htm` as served (sha256 2ae3f9788f5f16be860e01a2bd1d256212b7f22731762554c3547290e9daa296); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule4.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/004-USCODE-2009-title28-app-federalru-rule5.htm` as served (sha256 0943d8a12177d8634fe0048c0c39b972eb33c77a38524c4ca2e82e5932f7f2d7); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule5.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/005-USCODE-2009-title28-app-federalru-rule8.htm` as served (sha256 3cb8c619b15486e2248f1775da9e9f8f52131ca4c5fed106188ce7483b220f83); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule8.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/006-USCODE-2009-title28-app-federalru-rule11.htm` as served (sha256 412a2e0a2546d848bf9b5dea347d3d16862a959ba03826e64e893d18c4243a41); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule11.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/007-USCODE-2009-title28-app-federalru-rule27.htm` as served (sha256 1469f963b72caaddd9e8fe4df9c7e035cd9ea440423980c3769f7766034ed6fe); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule27.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/008-USCODE-2009-title28-app-federalru-rule28.htm` as served (sha256 90a324906931db0f4d29fe2889beb53e4b3e9082ae0f7b68097f3b468ed2fa2b); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule28.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/009-USCODE-2009-title28-app-federalru-rule28.1.htm` as served (sha256 c0d767a51f019d0b39e2b38102b05484e7152f127453adfdf59c8c1f8daad75d); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule28.1.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/010-USCODE-2009-title28-app-federalru-rule31.htm` as served (sha256 ee0e6c84cb4b4db04bb5d22dc7602a19a169b42f2ca39f673deaf302820a12e5); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule31.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/011-USCODE-2009-title28-app-federalru-rule32.htm` as served (sha256 90199aabf6bc8de52662cb22591a1ae529aa32ee4dd39f62db95793ad0bad185); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule32.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/012-USCODE-2009-title28-app-federalru-rule35.htm` as served (sha256 62220ded24adcf6787c40cc52f611504645b80a2bf18b1f82ddc98fbc5977e90); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule35.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/013-USCODE-2009-title28-app-federalru-rule39.htm` as served (sha256 6146f1ba3708dad3e5c018d8ca74067bc9742e135c8a45872736cdd891bb4794); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule39.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/014-USCODE-2009-title28-app-federalru-rule40.htm` as served (sha256 0eaf4305b86641aca7fa3a67049e00447e7a53313885ad31289b42c9a919d68e); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule40.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/015-USCODE-2009-title28-app-federalru-rule41.htm` as served (sha256 625453dd3ada87085106af2c7510ababbb12ce961ef34d69834aafddcbeed730); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule41.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/016-USCODE-2009-title28-app-federalru-rule42.htm` as served (sha256 5fea139172277bc2541782baa71187cb48fb182686d9a3128396429c92c23f20); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule42.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/usc-28-app-frap-editions/017-USCODE-2017-title28-app-federalru-rule32.htm` as served (sha256 5800c13420f58e6041300e285ba7e090603a6719d2bf9ddd110ccc16c4c132ee); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-rule32.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
 
 ### `rcfc-appendices.txt` — RCFC Appendices A and C (every paragraph), H (¶¶ 1-3) and J (Patent Rules 1-24)
 

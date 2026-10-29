@@ -40,22 +40,23 @@ state submitted-on-briefs: "Submitted on the Briefs" by office cite "FRAP 34(a)(
   }
 }
 
-decision standard-of-review-fork: "Which Standard of Review Governs?" by examiner cite "FRAP 28(a)(10)"
+decision standard-of-review-fork: "Which Standard of Review Governs?" by examiner cite "FRAP (2009 ed.) 28(a)(9)(B)"
 {
   group argument-group
   note "The single most outcome-determinative procedural fork — identical facts and panel composition yield opposite affirm/reverse outcomes depending on whether the ruling implicates questions of law, discretion, or fact. Standard selection is rarely contestable once the issue category is fixed."
   edge-standard-of-review-fork-de-novo-review "Issue is a question of law" -> de-novo-review {
-    authority cite ?("Pure questions of law (statutory construction, constitutional interpretation, legal standards for admissibility)")
+    authority cite "Pierce v. Underwood, 487 U.S. 552, 558 (1988)"
   }
   edge-standard-of-review-fork-abuse-of-discretion-review "Issue is a discretionary ruling" -> abuse-of-discretion-review {
-    authority cite ?("Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)")
+    authority cite "Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)"
   }
   edge-standard-of-review-fork-clear-error-review "Issue is a factual finding" -> clear-error-review {
-    authority cite ?("FRCP 52(a)(6); Anderson v. Bessemer City")
+    authority cite "FRCP 52(a)(6); Anderson v. City of Bessemer City, 470 U.S. 564 (1985)"
   }
 }
 
-chance de-novo-review: "De Novo Review (Questions of Law)" by office discretion cite ?("Pure questions of law standard; see Salve Regina College v. Russell, 499 U.S. 225 (1991) (de novo review of state-law determinations); First Options of Chicago, Inc. v. Kaplan, 514 U.S. 938, 948 (1995); Ornelas v. United States, 517 U.S. 690 (1996) for mixed questions") {
+chance de-novo-review: "De Novo Review (Questions of Law)" by office discretion cite "Salve Regina College v. Russell, 499 U.S. 225 (1991); First Options of Chicago, Inc. v. Kaplan, 514 U.S. 938, 948 (1995); Ornelas v. United States, 517 U.S. 690 (1996)"
+{
   group argument-group
   note "No deference to the district court's legal conclusions — decided fresh. Includes summary judgment grants, dismissals, statutory interpretation. Highest reversal rate of the three standards. (The blueprint's garbled cite, Salve Regina Dockery Co. v. Russell, is Salve Regina College v. Russell, 499 U.S. 225 (1991), cited above.)"
   edge-de-novo-review-affirmed "Panel affirms de novo" -> affirmed p 0.45
@@ -65,7 +66,8 @@ chance de-novo-review: "De Novo Review (Questions of Law)" by office discretion 
   edge-de-novo-review-affirmed-in-part-reversed-in-part "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05
 }
 
-chance abuse-of-discretion-review: "Abuse-of-Discretion Review (Discretionary Rulings)" by office discretion cite ?("Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)") {
+chance abuse-of-discretion-review: "Abuse-of-Discretion Review (Discretionary Rulings)" by office discretion cite "Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)"
+{
   group argument-group
   note "Governs evidentiary rulings, discovery orders, sanctions, case management. Reversed only for wrong legal standard, clearly erroneous facts, or a decision no reasonable judge could reach."
   edge-abuse-of-discretion-review-affirmed "No abuse found — panel affirms" -> affirmed p 0.7
@@ -74,7 +76,8 @@ chance abuse-of-discretion-review: "Abuse-of-Discretion Review (Discretionary Ru
   edge-abuse-of-discretion-review-affirmed-in-part-reversed-in-part "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05
 }
 
-chance clear-error-review: "Clear-Error Review (Factual Findings)" by office discretion cite ?("FRCP 52(a)(6); Anderson v. City of Bessemer City, 470 U.S. 564 (1985)") {
+chance clear-error-review: "Clear-Error Review (Factual Findings)" by office discretion cite "FRCP 52(a)(6); Anderson v. City of Bessemer City, 470 U.S. 564 (1985)"
+{
   group argument-group
   note "Most deferential standard — reversal requires a 'definite and firm conviction that a mistake has been committed,' even if the panel would have decided differently. Especially deferential to credibility findings."
   edge-clear-error-review-affirmed "No clear error — panel affirms" -> affirmed p 0.75

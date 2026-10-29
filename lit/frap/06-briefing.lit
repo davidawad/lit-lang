@@ -7,7 +7,7 @@ import frap.events.{ RecordFiled, ServedPaper }
 import frap.filing.{ PrincipalBriefFiled }
 import frap.{ briefing-group }
 
-/// FRAP 31(a)(1) as the 2009 amendments left it (2017 edition of 28
+/// FRAP 31(a)(1) as the 2009 amendments left it (2009 edition of 28
 /// U.S.C. App.): the appellant's brief is due 40 days after the record is
 /// filed, the appellee's 30 days after the appellant's brief is served,
 /// and a reply "within 14 days after service of the appellee's brief" (the
@@ -18,20 +18,20 @@ import frap.{ briefing-group }
 /// (FRAP 31(a)(2)), and may extend it for good cause (FRAP 26(b)), so each
 /// period delegates to `LocalRule` and `CaseOrder`. The two served briefs
 /// gain FRAP 26(c)'s 3 days after mail, carrier or prison-mail service.
-rule duty serve-and-file-briefs effective [2009-12-01, 2018-12-01) known_at 2009-03-26 cite "FRAP (2017 ed.) 31(a)"
+rule duty serve-and-file-briefs effective [2009-12-01, 2018-12-01) known_at 2009-03-26 cite "FRAP (2009 ed.) 31(a)"
 {
   deadline appellant-brief-period: 40.days after RecordFiled() counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
-  } cite "FRAP (2017 ed.) 31(a)(1)"
+  } cite "FRAP (2009 ed.) 31(a)(1)"
   deadline appellee-brief-period: 30.days after ServedPaper(AppellantBrief) counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
-  } cite "FRAP (2017 ed.) 31(a)(1)"
+  } cite "FRAP (2009 ed.) 31(a)(1)"
   deadline reply-brief-period: 14.days after ServedPaper(AppelleeBrief) counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
-  } cite "FRAP (2017 ed.) 31(a)(1)"
+  } cite "FRAP (2009 ed.) 31(a)(1)"
 }
 
 /// FRAP 31(a)(1) as amended December 1, 2018 (Apr. 26, 2018 order): the
@@ -91,12 +91,12 @@ test "a 21st day on Labor Day rolls to Tuesday" cite "FRAP 26(a)(6)(A)"
   expect deadline(reply-brief-period) == 2025-09-02
 }
 
-decision appellant-brief-window: "Appellant's Opening Brief Due" by applicant cite "FRAP 31(a)(1)"
+decision appellant-brief-window: "Appellant's Opening Brief Due" by applicant cite "FRAP (2009 ed.) 31(a)(1)"
 {
   group briefing-group
   note "The 40-day deadline runs from the date the record is filed with the court, not from the notice of appeal. Appellant must track the actual record closure date to avoid confusion; missing this self-inflicted trap is a leading cause of appellate dismissal. FRAP 28(a) sets required contents; FRAP 32(a)(7) caps the brief at 13,000 words (or 30 pages if monospaced)."
   edge-appellant-brief-window-appellant-brief-filed "File opening brief" -> appellant-brief-filed {
-    authority cite "FRAP 31(a)(1)"
+    authority cite "FRAP (2009 ed.) 31(a)(1)"
     effort 100.hours
     event PrincipalBriefFiled()
     within appellant-brief-period {
@@ -108,19 +108,19 @@ decision appellant-brief-window: "Appellant's Opening Brief Due" by applicant ci
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
   edge-appellant-brief-window-appeal-dismissed-no-brief "Fail to file opening brief" -> appeal-dismissed-no-brief {
-    authority cite "FRAP 31(c)"
+    authority cite "FRAP (2009 ed.) 31(c)"
     effort 0.hours
     valence bad
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
 }
 
-state appellant-brief-filed: "Opening Brief Filed" by applicant cite "FRAP 28(a); FRAP 32(a)(7)"
+state appellant-brief-filed: "Opening Brief Filed" by applicant cite "FRAP (2009 ed.) 28(a); FRAP (2009 ed.) 32(a)(7)"
 {
   group briefing-group
   note "The opening brief frames the issues, selects the standard of review, and defines the factual universe for appellate review. The appellant is bound by these choices; the reply brief cannot resurrect abandoned arguments, and new theories in reply are waived. The 13,000-word cap forces ruthless economy in issue-spotting."
   edge-appellant-brief-filed-appellee-brief-filed "Appellee files response brief" -> appellee-brief-filed {
-    authority cite "FRAP 31(a)(1); FRAP 28(b)"
+    authority cite "FRAP (2009 ed.) 31(a)(1); FRAP (2009 ed.) 28(b)"
     effort 90.hours
     event PrincipalBriefFiled()
     within appellee-brief-period {
@@ -133,7 +133,7 @@ state appellant-brief-filed: "Opening Brief Filed" by applicant cite "FRAP 28(a)
   }
 }
 
-terminal appeal-dismissed-no-brief: "DISMISSED — Failure to Prosecute (No Opening Brief)" outcome [loss, procedural-default, waiver-trap] cite "FRAP 31(c)"
+terminal appeal-dismissed-no-brief: "DISMISSED — Failure to Prosecute (No Opening Brief)" outcome [loss, procedural-default, waiver-trap] cite "FRAP (2009 ed.) 31(c)"
 {
   group briefing-group
   note "Dismissal for 'want of prosecution' when the appellant fails to file timely is discretionary with the court but nearly automatic on appellee motion. This is a conduct-based sanction, not a jurisdictional defect, and is extremely difficult to revive post-dismissal because it reflects lack of diligence, not legal error. PLACEHOLDER PAYOFF: $0, override per matter."
@@ -141,12 +141,12 @@ terminal appeal-dismissed-no-brief: "DISMISSED — Failure to Prosecute (No Open
   payoff 0.usd
 }
 
-state appellee-brief-filed: "Appellee's Response Brief Filed" by applicant cite "FRAP 31(a)(1); FRAP 28(b)"
+state appellee-brief-filed: "Appellee's Response Brief Filed" by applicant cite "FRAP (2009 ed.) 31(a)(1); FRAP (2009 ed.) 28(b)"
 {
   group briefing-group
   note "The appellee enjoys asymmetric freedom: it may defend the judgment on any ground in the record without admitting any fact or standard the appellant proposed, and may attack the appellant's statement of the case or standard of review without conceding issue-framing. The 30-day period runs from service of the opening brief and can be extended for good cause."
   edge-appellee-brief-filed-reply-brief-filed "File reply brief" -> reply-brief-filed {
-    authority cite "FRAP 31(a)(1); FRAP 28(c)"
+    authority cite "FRAP (2009 ed.) 31(a)(1); FRAP (2009 ed.) 28(c)"
     effort 40.hours
     within reply-brief-period {
       extendable true
@@ -157,22 +157,22 @@ state appellee-brief-filed: "Appellee's Response Brief Filed" by applicant cite 
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
   edge-appellee-brief-filed-briefing-complete "Waive reply brief" -> briefing-complete {
-    authority cite "FRAP 28(c)"
+    authority cite "FRAP (2009 ed.) 28(c)"
     effort 1.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
 }
 
-state reply-brief-filed: "Appellant's Reply Brief Filed" by office cite "FRAP 31(a)(1); FRAP 28(c)"
+state reply-brief-filed: "Appellant's Reply Brief Filed" by office cite "FRAP (2009 ed.) 31(a)(1); FRAP (2009 ed.) 28(c)"
 {
   group briefing-group
   note "The reply brief is optional — failure to file waives no substantive right, but filing one that strays beyond the appellee's response opens waiver traps. The 6,500-word cap is non-negotiable; new arguments, new authorities, and arguments not fairly responsive to the response brief are all waived."
   edge-reply-brief-filed-briefing-complete "Briefing closes" -> briefing-complete {
-    authority cite "FRAP 31"
+    authority cite "FRAP (2009 ed.) 31"
   }
 }
 
-state briefing-complete: "Briefing Closed" by office cite "FRAP 31"
+state briefing-complete: "Briefing Closed" by office cite "FRAP (2009 ed.) 31"
 {
   group briefing-group
   note "Once all briefs are filed or the reply deadline expires, the written record closes and is fixed. No supplemental briefs are permitted absent extraordinary circumstances (e.g., intervening Supreme Court authority). The panel's decision is now constrained to the four corners of the briefs and the certified record on appeal."

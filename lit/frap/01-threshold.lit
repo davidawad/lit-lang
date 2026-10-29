@@ -30,12 +30,12 @@ decision appealability-fork: "Is the Order a Final Judgment?" by office cite "28
   }
 }
 
-state final-judgment-entered: "Final Judgment" by office cite "28 U.S.C. § 1291; Fed. R. App. P. 4(a)(1)(A)"
+state final-judgment-entered: "Final Judgment" by office cite "28 U.S.C. § 1291; FRAP (2009 ed.) 4(a)(1)(A)"
 {
   group threshold-group
   note "A true final judgment ends the district court's power over the case on the merits and triggers the 30-day appeal clock. The judgment must resolve the entire controversy between the parties. Partial judgments, conditional orders, and orders that reserve jurisdiction (e.g., to tax costs or award attorney fees) may fail the finality test and block immediate appeal."
   edge-final-judgment-entered-appeal-clock-open "Final judgment starts appeal clock" -> appeal-clock-open {
-    authority cite "Fed. R. App. P. 4(a)(1)(A)"
+    authority cite "FRAP (2009 ed.) 4(a)(1)(A)"
     within notice-civil-period {
       extendable true
       extension_authority "Fed. R. App. P. 4(a)(5)"
@@ -56,7 +56,8 @@ state interlocutory-order-issued: "Interlocutory Order" by applicant cite "28 U.
   }
 }
 
-decision interlocutory-review-fork: "Interlocutory Review Door Available?" by applicant cite ?("28 U.S.C. §§ 1292(a)-(b); Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)") {
+decision interlocutory-review-fork: "Interlocutory Review Door Available?" by applicant cite "28 U.S.C. §§ 1292(a)-(b); Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)"
+{
   group threshold-group
   note "Three doors strictly govern interlocutory review: first, § 1292(a)(1) injunction/receivership orders (as of right); second, the collateral order doctrine (Cohen test requiring three conjunctive factors); third, § 1292(b) permissive certification (requires district court consent and substantial ground for difference of opinion). Missing all three means no appeal — litigation continues until final judgment."
   interlocutory-injunction-order "Injunction order — appeal as of right" -> immediately-appealable-interlocutory {
@@ -71,7 +72,7 @@ decision interlocutory-review-fork: "Interlocutory Review Door Available?" by ap
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
   interlocutory-collateral-order "Order meets collateral order doctrine" -> immediately-appealable-interlocutory {
-    authority cite ?("Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)")
+    authority cite "Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)"
     effort 10.hours
     within notice-civil-period {
       extendable true
@@ -82,7 +83,7 @@ decision interlocutory-review-fork: "Interlocutory Review Door Available?" by ap
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
   interlocutory-1292b-certified "Certify for interlocutory appeal" -> immediately-appealable-interlocutory {
-    authority cite "28 U.S.C. § 1292(b); Fed. R. App. P. 5(a)-(b)"
+    authority cite "28 U.S.C. § 1292(b); FRAP (2009 ed.) 5(a)-(b)"
     effort 20.hours
     within permission-petition-period {
       extendable false
@@ -97,12 +98,12 @@ decision interlocutory-review-fork: "Interlocutory Review Door Available?" by ap
   }
 }
 
-state immediately-appealable-interlocutory: "Interlocutory Order Ripe for Appeal" by office cite "28 U.S.C. §§ 1292(a)(1), 1292(b); Fed. R. App. P. 5"
+state immediately-appealable-interlocutory: "Interlocutory Order Ripe for Appeal" by office cite "28 U.S.C. §§ 1292(a)(1), 1292(b); FRAP (2009 ed.) 5"
 {
   group threshold-group
   note "Whichever door got you here, the downstream notice-of-appeal mechanics are identical to a final-judgment appeal. The narrow jurisdictional gate is passed; the 30-day notice-of-appeal deadline and standard briefing rules now apply."
   edge-immediately-appealable-interlocutory-appeal-clock-open "Interlocutory order ripe for appeal" -> appeal-clock-open {
-    authority cite "Fed. R. App. P. 4(a)(1)(A)"
+    authority cite "FRAP (2009 ed.) 4(a)(1)(A)"
   }
 }
 
@@ -120,9 +121,9 @@ terminal interlocutory-review-unavailable: "No Appellate Jurisdiction — Await 
 /// 1292(b) is vendored in sources/usc-cfr-prosecution-fragments.txt). No
 /// court may extend the time to file a petition for permission to appeal
 /// (FRAP 26(b)(1)), so the period delegates to no one.
-rule duty permission-to-appeal effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 5(a)(2)"
+rule duty permission-to-appeal effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP (2009 ed.) 5(a)(2)"
 {
-  deadline permission-petition-period: 10.days after EnteredBelow(CertifiedOrder) counted_by frap26 cite "FRAP 5(a)(2)"
+  deadline permission-petition-period: 10.days after EnteredBelow(CertifiedOrder) counted_by frap26 cite "FRAP (2009 ed.) 5(a)(2)"
   {
     lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
   }

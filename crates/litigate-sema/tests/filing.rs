@@ -88,21 +88,21 @@ fn frap_32_a_7_is_three_alternative_bounds_and_a_type_volume_certificate() {
             (
                 Measure::Pages,
                 Authored::Known(30),
-                Some("FRAP 32(a)(7)(A)")
+                Some("FRAP (2017 ed.) 32(a)(7)(A)")
             ),
             (
                 Measure::Words,
                 Authored::Known(13_000),
-                Some("FRAP 32(a)(7)(B)(i)")
+                Some("FRAP (2017 ed.) 32(a)(7)(B)(i)")
             ),
             (
                 Measure::Lines,
                 Authored::Known(1_300),
-                Some("FRAP 32(a)(7)(B)(i)")
+                Some("FRAP (2017 ed.) 32(a)(7)(B)(i)")
             ),
         ]
     );
-    assert_eq!(brief.meta.cite.as_deref(), Some("FRAP 32(a)(7)"));
+    assert_eq!(brief.meta.cite.as_deref(), Some("FRAP (2017 ed.) 32(a)(7)"));
     assert_eq!(brief.meta.effective.from, "2016-12-01");
     assert_eq!(
         brief.meta.effective.unknown_before.as_deref(),
@@ -115,18 +115,12 @@ fn frap_32_a_7_is_three_alternative_bounds_and_a_type_volume_certificate() {
     };
     assert_eq!(cert.kind, "compliance");
     assert_eq!(cert.measures, [Measure::Words, Measure::Lines]);
-    assert_eq!(cert.cite.as_deref(), Some("FRAP 32(g)(1)"));
-    // FRAP 32(f): nine parts named, and its catch-all is a hole.
+    assert_eq!(cert.cite.as_deref(), Some("FRAP (2017 ed.) 32(g)(1)"));
+    // FRAP 32(f): nine parts named; its catch-all adds none, so no hole.
     let excludes = brief.excludes.as_ref().expect("FRAP 32(f)");
-    assert_eq!(excludes.cite.as_deref(), Some("FRAP 32(f)"));
-    assert_eq!(excludes.items.len(), 10);
-    assert!(excludes.open());
-    assert_eq!(
-        excludes.items.last(),
-        Some(&Authored::Hole(Some(
-            "any item specifically excluded by these rules or by local rule".to_owned()
-        )))
-    );
+    assert_eq!(excludes.cite.as_deref(), Some("FRAP (2017 ed.) 32(f)"));
+    assert_eq!(excludes.items.len(), 9);
+    assert!(!excludes.open());
     assert!(brief.ecf.is_empty());
     assert_eq!(
         event(&frap, "PrincipalBriefFiled").paper.as_deref(),
@@ -142,10 +136,9 @@ fn frap_32_a_7_is_three_alternative_bounds_and_a_type_volume_certificate() {
     let pages = counts(Some(20_000), Some(25), None);
     assert_eq!(brief.length(&pages), Some(Verdict::Within));
     assert_eq!(brief.requires(cert, &pages), Some(false));
-    // Over every bound, but FRAP 32(f)'s open catch-all could exclude
-    // more: unknown, never over.
+    // Over every bound, and FRAP 32(f) names every excluded part: over.
     let over = counts(Some(13_001), Some(31), Some(1_301));
-    assert_eq!(brief.length(&over), Some(Verdict::Unknown));
+    assert_eq!(brief.length(&over), Some(Verdict::Over));
     assert_eq!(brief.requires(cert, &over), None);
     // Nothing counted decides nothing.
     assert_eq!(brief.length(&Counts::default()), Some(Verdict::Unknown));

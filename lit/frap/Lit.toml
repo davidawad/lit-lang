@@ -116,14 +116,120 @@ as_of = "2005-12-01"
 cite_prefixes = ["FRAP (2008 ed.)"]
 section_heading = "FRAP (2008 ed.) Rule {n}"
 
-[sources.frap31-2017]
-title = "Federal Rules of Appellate Procedure, Rule 31, 28 U.S.C. App. (2017 ed.): the text as amended through Dec. 1, 2009"
-url = "https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-rule31.htm"
-path = "sources/usc-28-app-frap31-2017.txt"
-path_sha256 = "cd6ac48ad0d5d451964d2f91f8b13177394bcd1413c0b56e061ab490d1007876"
+# The texts the package's dated versions took effect with, from the annual
+# editions of 28 U.S.C. App. (sources/PROVENANCE.md): a version citing the
+# text it took effect with needs no amendment history. The 2009 edition
+# (current through Feb. 1, 2010) prints the FRAP as amended Dec. 1, 2009,
+# the package's start; none of its rules was next amended before Dec. 1,
+# 2010. The 2002 edition prints FRAP 4 as amended Dec. 1, 2002 (the
+# earlier appeal periods' start); the 2017 edition prints FRAP 32 as
+# amended Dec. 1, 2016 (the type-volume limits' start).
+[sources.frap-2009]
+title = "Federal Rules of Appellate Procedure, 28 U.S.C. App. (2009 ed.): Rules 3-5, 8, 11, 27, 28, 28.1, 31, 32, 35, 39-42 as amended through Dec. 1, 2009"
+url = "https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule4.htm"
+path = "sources/usc-28-app-frap-editions.txt"
+path_sha256 = "007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244"
 as_of = "2009-12-01"
+cite_prefixes = ["FRAP (2009 ed.)"]
+section_heading = "FRAP (2009 ed.) Rule {n}"
+
+[sources.frap4-2002]
+title = "Federal Rules of Appellate Procedure, Rule 4, 28 U.S.C. App. (2002 ed.): the text as amended through Dec. 1, 2002"
+url = "https://www.govinfo.gov/content/pkg/USCODE-2002-title28/html/USCODE-2002-title28-app-federalru-rule4.htm"
+path = "sources/usc-28-app-frap-editions.txt"
+path_sha256 = "007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244"
+as_of = "2002-12-01"
+cite_prefixes = ["FRAP (2002 ed.)"]
+section_heading = "FRAP (2002 ed.) Rule {n}"
+
+[sources.frap32-2017]
+title = "Federal Rules of Appellate Procedure, Rule 32, 28 U.S.C. App. (2017 ed.): the text as amended through Dec. 1, 2016"
+url = "https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-rule32.htm"
+path = "sources/usc-28-app-frap-editions.txt"
+path_sha256 = "007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244"
+as_of = "2016-12-01"
 cite_prefixes = ["FRAP (2017 ed.)"]
 section_heading = "FRAP (2017 ed.) Rule {n}"
+
+# Supreme Court opinions the graph cites for the doctrine a rule leaves to
+# case law (finality's collateral-order exception, the jurisdictional
+# appeal period, a notice's contents, the standards of review). A case
+# citation is outside the cite grammar, so no prefix binds it and the
+# check leaves it as written; these record the opinion each names. Not
+# vendored: `url` is the Library of Congress scan of the United States
+# Reports, `sha256` that PDF as retrieved 2026-10-29, `as_of` the
+# decision date.
+[sources.cohen]
+title = "Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep337/usrep337541/usrep337541.pdf"
+sha256 = "ee94a2e8467d6c102f601a7d8bbcf72e728a7cd5b0c188e7fa9fb5c4c50c79de"
+as_of = "1949-06-20"
+
+[sources.bowles]
+title = "Bowles v. Russell, 551 U.S. 205 (2007)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep551205/usrep551205.pdf"
+sha256 = "df18655341205aa13e7a5b715138e048f6239e5b562846e5986723990348400e"
+as_of = "2007-06-14"
+
+[sources.foman]
+title = "Foman v. Davis, 371 U.S. 178 (1962)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep371/usrep371178/usrep371178.pdf"
+sha256 = "d976fc690b710a2a3fdcd2ff8d9cd9ae5f5261e57f1e0de2169dcee518103e20"
+as_of = "1962-12-03"
+
+[sources.smith-v-barry]
+title = "Smith v. Barry, 502 U.S. 244 (1992)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep502/usrep502244/usrep502244.pdf"
+sha256 = "d1b73d9af8a2edd63e3ea235ae6895f9923ea599f3bc690f0900bb91a1d9fcce"
+as_of = "1992-01-14"
+
+[sources.torres]
+title = "Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep487/usrep487312/usrep487312.pdf"
+sha256 = "c6bb52f061a72a0b399b309999e8ec2012101e4c30410381583833dbe0f3fa37"
+as_of = "1988-06-24"
+
+[sources.american-railway-express]
+title = "United States v. American Railway Express Co., 265 U.S. 425 (1924)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep265/usrep265425/usrep265425.pdf"
+sha256 = "a3f6127864e91974117ea49ec423c84c2f1382e8526ec2b952755a9a1e7bfd25"
+as_of = "1924-06-02"
+
+[sources.pierce-v-underwood]
+title = "Pierce v. Underwood, 487 U.S. 552 (1988)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep487/usrep487552/usrep487552.pdf"
+sha256 = "8405239d223d91d5ac2075aca36c1d12049cf8279092388d1f66b9d5c35dd94c"
+as_of = "1988-06-27"
+
+[sources.salve-regina]
+title = "Salve Regina College v. Russell, 499 U.S. 225 (1991)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep499/usrep499225/usrep499225.pdf"
+sha256 = "cd53ce3615370eaba547514374687e96a425689c02f8620f7b79fd9f54bf2ab7"
+as_of = "1991-03-20"
+
+[sources.first-options]
+title = "First Options of Chicago, Inc. v. Kaplan, 514 U.S. 938 (1995)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep514/usrep514938/usrep514938.pdf"
+sha256 = "ee4959b3a9e12becf97d7b9a8ff71b9c066ad9a23d212c0a0e8d616962dd65e6"
+as_of = "1995-05-22"
+
+[sources.ornelas]
+title = "Ornelas v. United States, 517 U.S. 690 (1996)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep517/usrep517690/usrep517690.pdf"
+sha256 = "a5a588524dab0d032d3b7a5198ac518f86ff7b0991e6835ee03f77bd930a5187"
+as_of = "1996-05-28"
+
+[sources.cooter-gell]
+title = "Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep496/usrep496384/usrep496384.pdf"
+sha256 = "e7affb18e622d105aec84602918ddc24fbe281b912127c1e30a212659c57dd72"
+as_of = "1990-06-11"
+
+[sources.anderson-bessemer]
+title = "Anderson v. City of Bessemer City, 470 U.S. 564 (1985)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep470/usrep470564/usrep470564.pdf"
+sha256 = "15b2bdec8bb8a1c5590c300b1081a87f224c1e0fa6878f3ed274fcd08ad8a54d"
+as_of = "1985-03-19"
 
 [[cite_syntax.rules]]
 prefixes = ["FRAP", "Fed. R. App. P.", "Fed R App P", "F.R.A.P."]

@@ -183,5 +183,5 @@ fn a_filing_limit_lowers_into_the_packs_filing_limits() {
     assert_eq!(result["id"], "frap-appellate-procedure::principal-brief");
     assert_eq!(result["kind"], "limit");
     assert_eq!(result["lowered"], json!(["/filingLimits/0"]));
-    assert_eq!(result["source"]["text"], json!("FRAP 32(a)(7)"));
+    assert_eq!(result["source"]["text"], json!("FRAP (2017 ed.) 32(a)(7)"));
 }

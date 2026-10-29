@@ -640,16 +640,16 @@ Excluded     = Ident | Hole ;
 The grammar accepts a `Ref` where `Ident` is written above (so a layer
 written `limit local::brief` still parses); sema requires the plain
 identifier (L2007). From `lit/frap/filing.lit`, against the vendored FRAP
-text (`sources/frap.txt`):
+text (`sources/usc-28-app-frap-editions.txt`, the 2017 edition's FRAP 32):
 
 ```lit
 limit principal-brief delegable { to [LocalRule, CaseOrder], op set } {
-  pages <= 30 cite "FRAP 32(a)(7)(A)"
-  words <= 13_000 cite "FRAP 32(a)(7)(B)(i)"
-  lines <= 1_300 cite "FRAP 32(a)(7)(B)(i)"
-  requires certificate compliance for [words, lines] cite "FRAP 32(g)(1)"
-  excludes [cover-page, disclosure-statement, table-of-contents, table-of-citations, statement-regarding-oral-argument, addendum, certificate-of-counsel, signature-block, proof-of-service] cite "FRAP 32(f)"
-} effective [2016-12-01, ..) unknown_before 2016-12-01 cite "FRAP 32(a)(7)"
+  pages <= 30 cite "FRAP (2017 ed.) 32(a)(7)(A)"
+  words <= 13_000 cite "FRAP (2017 ed.) 32(a)(7)(B)(i)"
+  lines <= 1_300 cite "FRAP (2017 ed.) 32(a)(7)(B)(i)"
+  requires certificate compliance for [words, lines] cite "FRAP (2017 ed.) 32(g)(1)"
+  excludes [cover-page, disclosure-statement, table-of-contents, table-of-citations, statement-regarding-oral-argument, addendum, certificates-of-counsel, signature-block, proof-of-service] cite "FRAP (2017 ed.) 32(f)"
+} effective [2016-12-01, ..) unknown_before 2016-12-01 cite "FRAP (2017 ed.) 32(a)(7)"
 
 event PrincipalBriefFiled() paper principal-brief
 ```

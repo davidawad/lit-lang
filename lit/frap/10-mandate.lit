@@ -12,12 +12,12 @@ import frap.{ mandate-group }
 /// court may shorten or extend the time by order", so the period delegates
 /// to `CaseOrder`. It binds the clerk, not a party: the pack models it as
 /// the window the mandate edges wait out.
-rule duty issue-mandate effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 41(b)"
+rule duty issue-mandate effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP (2009 ed.) 41(b)"
 {
   deadline mandate-period: 7.days after RehearingClosed() counted_by frap26 delegable {
     to CaseOrder
     op set
-  } cite "FRAP 41(b)"
+  } cite "FRAP (2009 ed.) 41(b)"
 }
 
 test "the mandate issues 7 days after the rehearing time expires" cite "FRAP 41(b)"
@@ -41,18 +41,19 @@ test "a 7th day on Independence Day rolls to Monday" cite "FRAP 26(a)(6)(A)"
 /// mandate (FRAP 39(e)(3)(C)). A served bill gains FRAP 26(c)'s 3 days
 /// after mail, carrier or prison-mail service.
 ///
-/// Before December 1, 2025 the periods were FRAP 39(d)(1) and (d)(2),
-/// unchanged in length since the 2009 time-computation amendments. That
-/// text is not vendored, so that version's cite is a hole carrying it.
-rule duty tax-appellate-costs effective [2009-12-01, 2025-12-01) known_at 2009-03-26 cite ?("FRAP 39(d) before the December 2025 amendment (text not vendored)") {
+/// Before December 1, 2025 the periods were FRAP 39(d)(1) and (d)(2), as
+/// the 2009 time-computation amendments set them (2009 edition of 28
+/// U.S.C. App.).
+rule duty tax-appellate-costs effective [2009-12-01, 2025-12-01) known_at 2009-03-26 cite "FRAP (2009 ed.) 39(d)"
+{
   deadline bill-of-costs-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 delegable {
     to CaseOrder
     op set
-  } cite ?("FRAP 39(d)(1) before the December 2025 amendment (text not vendored)")
+  } cite "FRAP (2009 ed.) 39(d)(1)"
   deadline cost-objection-period: 14.days after ServedPaper(BillOfCosts) counted_by frap26 delegable {
     to CaseOrder
     op set
-  } cite ?("FRAP 39(d)(2) before the December 2025 amendment (text not vendored)")
+  } cite "FRAP (2009 ed.) 39(d)(2)"
 }
 
 /// The December 1, 2025 amendment (Supreme Court order of April 23, 2025)
@@ -89,12 +90,12 @@ test "a bill served by mail gains 3 days for objections" cite "FRAP 26(c)"
   expect deadline(cost-objection-period) == 2025-04-03
 }
 
-state mandate-issued: "Mandate Issues" by office cite "Fed. R. App. P. 41(a)–(b)"
+state mandate-issued: "Mandate Issues" by office cite "FRAP (2009 ed.) 41(a)–(b)"
 {
   group mandate-group
   note "The mandate is the formal order returning jurisdiction to the district court — distinct from the opinion and critical for enforcing the judgment. It issues automatically 7 days after either expiration of the rehearing period or denial of a timely rehearing petition. The mandate, not the opinion, is what actually binds the district court."
   edge-mandate-issued-cert-petition-window "Judgment final — cert clock runs" -> cert-petition-window {
-    authority cite "Fed. R. App. P. 41(b); Sup. Ct. R. 13.3"
+    authority cite "FRAP (2009 ed.) 41(b); Sup. Ct. R. 13.3"
     within cert-period {
       extendable true
       extension_authority "Sup. Ct. R. 13.6"
@@ -103,18 +104,18 @@ state mandate-issued: "Mandate Issues" by office cite "Fed. R. App. P. 41(a)–(
     duration { min 13.5.days, mode 45.days, max 90.days }
   }
   edge-mandate-issued-mandate-stayed-pending-cert "Move to stay mandate for cert" -> mandate-stayed-pending-cert by applicant {
-    authority cite "Fed. R. App. P. 41(d)(1)"
+    authority cite "FRAP (2009 ed.) 41(d)(1)"
     effort 8.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
 }
 
-state mandate-stayed-pending-cert: "Mandate Stayed Pending Certiorari" by examiner cite "Fed. R. App. P. 41(d)(1)–(2)"
+state mandate-stayed-pending-cert: "Mandate Stayed Pending Certiorari" by examiner cite "FRAP (2009 ed.) 41(d)(1)–(2)"
 {
   group mandate-group
   note "On motion, the court of appeals may stay its mandate pending a cert petition — otherwise the district court could enforce the judgment while the Supreme Court is still deciding whether to take the case. The stay is discretionary and requires a showing of likelihood of cert grant plus irreparable harm."
   edge-mandate-stayed-pending-cert-cert-petition-window "Stay granted — cert proceeds" -> cert-petition-window {
-    authority cite "Fed. R. App. P. 41(d)(2)"
+    authority cite "FRAP (2009 ed.) 41(d)(2)"
     within cert-period {
       extendable true
       extension_authority "Sup. Ct. R. 13.6"

@@ -18,12 +18,12 @@ import core.authority.{ CaseOrder, LocalRule }
 /// (`unknown_before`) rather than this one. FRAP 32(e) lets a local rule
 /// or an order in a particular case accept a longer brief.
 limit principal-brief delegable { to [LocalRule, CaseOrder], op set } {
-  pages <= 30 cite "FRAP 32(a)(7)(A)"
-  words <= 13_000 cite "FRAP 32(a)(7)(B)(i)"
-  lines <= 1_300 cite "FRAP 32(a)(7)(B)(i)"
-  requires certificate compliance for [words, lines] cite "FRAP 32(g)(1)"
-  excludes [cover-page, disclosure-statement, table-of-contents, table-of-citations, statement-regarding-oral-argument, addendum, certificate-of-counsel, signature-block, proof-of-service] cite "FRAP 32(f)"
-} effective [2016-12-01, ..) unknown_before 2016-12-01 cite "FRAP 32(a)(7)"
+  pages <= 30 cite "FRAP (2017 ed.) 32(a)(7)(A)"
+  words <= 13_000 cite "FRAP (2017 ed.) 32(a)(7)(B)(i)"
+  lines <= 1_300 cite "FRAP (2017 ed.) 32(a)(7)(B)(i)"
+  requires certificate compliance for [words, lines] cite "FRAP (2017 ed.) 32(g)(1)"
+  excludes [cover-page, disclosure-statement, table-of-contents, table-of-citations, statement-regarding-oral-argument, addendum, certificates-of-counsel, signature-block, proof-of-service] cite "FRAP (2017 ed.) 32(f)"
+} effective [2016-12-01, ..) unknown_before 2016-12-01 cite "FRAP (2017 ed.) 32(a)(7)"
 
 /// An appellant's or appellee's principal brief filed with the circuit
 /// clerk (FRAP 31(a)(1)).

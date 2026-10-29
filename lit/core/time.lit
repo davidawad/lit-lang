@@ -5,7 +5,8 @@ type CalendarPeriod = Days<CalendarDays>
 /// A period counted in court days: weekends and the counting rule's
 /// holidays are skipped.
 type CourtPeriod = Days<CourtDays>
-/// A period counted in business days (no engine lowering in language 1).
+/// A period counted in business days: weekends and the counting rule's
+/// holidays are skipped, counted like a court period.
 type BusinessPeriod = Days<BusinessDays>
 /// A period stated in hours (FRCP 6(a)(2)).
 type HourPeriod = Hours

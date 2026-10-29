@@ -504,6 +504,24 @@ Entries live in the forum's own
 - Original: `original/usc-28-app-2017-time/001-nt-pkg-USCODE-2017-title28-html-USCODE-2017-title28-app-federalru-dup1-rule6.html` as served (sha256 43524cf8ac34d6e27356597cf5307a61b5fb0e6fd3516addc1fd7f12d5a9a740); extraction sha256 5d927c0a1b91b1a30a949a272c164ea6826cfebf6eac917da9a676732b22844d. Served at https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-dup1-rule6.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 - Original: `original/usc-28-app-2017-time/002-ontent-pkg-USCODE-2017-title28-html-USCODE-2017-title28-app-federalru-rule26.html` as served (sha256 6702848ddfeb87f0b06830920aa5ee4d71dd76249c5b0187cc50055a0b214c93); extraction sha256 5d927c0a1b91b1a30a949a272c164ea6826cfebf6eac917da9a676732b22844d. Served at https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-rule26.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 
+### `usc-28-app-1997-time.txt` — FRAP 26 as printed in the 1997 edition of 28 U.S.C. App.
+
+- The text `lit/core`'s 1996 version of `frap26` took effect with (as
+  amended December 1, 1996, the last amendment its credits list; next
+  amended December 1, 1998): `## FRAP (1997 ed.) Rule 26`, the rule's text,
+  amendment credits and Advisory Committee Notes. Not a canonical ref, as in
+  `usc-28-app-time-history.txt`.
+- Fetched 2026-10-29 from `www.govinfo.gov`'s official United States Code
+  (GPO), 1997 Edition, granule
+  `USCODE-1997-title28-app-federalru-rule26.htm` (sha256
+  `a0cd0764bc78a848b77ff9067604fd7fe4e70795978a6fa2a0dcd9f24329ca67`).
+  Everything from the page's section head to its end, one line per
+  paragraph, tags and comments stripped, entities decoded, runs of spaces
+  collapsed (the same extraction reproduces `usc-28-app-2002-time.txt`
+  byte for byte).
+- sha256 (this file): `4915165f4a157fdd8c4c5bae85519368f9d6ed00591f11815b8b1fcf320c5553`
+- Original: `original/usc-28-app-1997-time/001-ontent-pkg-USCODE-1997-title28-html-USCODE-1997-title28-app-federalru-rule26.html` as served (sha256 a0cd0764bc78a848b77ff9067604fd7fe4e70795978a6fa2a0dcd9f24329ca67); extraction sha256 4915165f4a157fdd8c4c5bae85519368f9d6ed00591f11815b8b1fcf320c5553. Served at https://www.govinfo.gov/content/pkg/USCODE-1997-title28/html/USCODE-1997-title28-app-federalru-rule26.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+
 ### `usc-28-app-2002-time.txt` — FRAP 26 as printed in the 2002 edition of 28 U.S.C. App.
 
 - The text `lit/core`'s 2002 version of `frap26` took effect with (as

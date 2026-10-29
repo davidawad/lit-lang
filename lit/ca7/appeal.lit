@@ -17,8 +17,7 @@ import frap.events.{ NoticeOfAppealFiled }
 // trigger and cites the circuit rule alone. The leading decisions on
 // appellate jurisdiction and the notice deadline (Catlin v. United States,
 // Bowles v. Russell) are lit/frap's. The counsel-names notice due five
-// business days before argument (7th Cir. R. 34(a)) is not declared: the
-// language counts no business days.
+// business days before argument (7th Cir. R. 34(a)) is declared below.
 /// The appeal is docketed in the court of appeals (7th Cir. R. 3(b), 12(a),
 /// 26.1(c), 31(a)).
 event AppealDocketed()
@@ -113,6 +112,15 @@ deadline argument-scheduling-request-period: 7.days after AppelleeBriefFiled() c
 /// Unless good cause is shown, a motion to waive, postpone or present
 /// argument remotely is filed no later than 14 days before the argument.
 deadline argument-motion-period: 14.days before ArgumentHeard() counted_by frap26 cite "7th Cir. R. 34(e)"
+/// 7th Cir. R. 34(a): counsel names for oral argument are submitted at
+/// least five business days before argument.
+deadline counsel-names-period: 5.business_days before ArgumentHeard() counted_by frap26 cite "7th Cir. R. 34(a)"
+
+test "counsel names are due five business days before argument" cite "7th Cir. R. 34(a)"
+{
+  given ArgumentHeard() on 2027-03-10
+  expect deadline(counsel-names-period) == 2027-03-03
+}
 /// A supervising attorney's motion for argument by a law student is filed
 /// at least 14 days before the argument.
 deadline law-student-argument-motion-period: 14.days before ArgumentHeard() counted_by frap26 cite "7th Cir. R. 34(h)"

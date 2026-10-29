@@ -17,7 +17,7 @@ import frcrimp.deadlines.{ SentencingScheduled }
 // date; the courtesy copy within 24 hours of filing (LCrR 47.1(b)(iii)), an
 // hours period `core.frcrimp45` does not count; the juror information and
 // paper copies due three business days before trial or a hearing (LCrR
-// 24.1, 49.1), a business-day period FRCrimP 45(a) does not define; the
+// 24.1, 49.1); the
 // fourteen days a writ of habeas corpus ad prosequendum or testificandum
 // should allow "every effort" (LCrR 57.2(d)), which is no deadline; and the
 // one-year retention of original signatures (LCrR 49.10(e)(viii)).
@@ -63,6 +63,9 @@ event NondispositiveMotionServed() paper nondispositive-brief
 /// An electronically filed document bearing a non-filing signatory's or a
 /// party's signature is served (LCrR 49.10(e)(viii)).
 event SignedDocumentServed()
+/// The court sets a trial or hearing date for which juror information and
+/// paper copies must be delivered (W.D. Mich. LCrR 24.1, 49.1).
+event TrialOrHearingScheduled()
 
 /// LCrR 17.1: unless otherwise ordered, a subpoena to be served by the
 /// United States Marshals Service allows a minimum of fourteen days before
@@ -108,6 +111,16 @@ deadline nondispositive-response-period: 14.days after NondispositiveMotionServe
 /// authenticity of a signature on an electronically filed document files
 /// an objection within fourteen days after service of the document.
 deadline signature-objection-period: 14.days after SignedDocumentServed() counted_by frcrimp45 cite "W.D. Mich. LCrR 49.10(e)"
+
+/// LCrR 24.1 and 49.1: juror information and paper copies are due at least
+/// three business days before trial or a hearing.
+deadline juror-information-copy-period: 3.business_days before TrialOrHearingScheduled() counted_by frcrimp45 cite "W.D. Mich. LCrR 24.1; W.D. Mich. LCrR 49.1"
+
+test "juror information is due three business days before trial" cite "W.D. Mich. LCrR 24.1"
+{
+  given TrialOrHearingScheduled() on 2027-03-10
+  expect deadline(juror-information-copy-period) == 2027-03-05
+}
 
 test "marshal subpoena lead time: 14 days before the trigger" cite "W.D. Mich. LCrR 17.1"
 {

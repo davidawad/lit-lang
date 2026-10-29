@@ -19,16 +19,16 @@ import frbp.events.{ FirstMeetingDate, PetitionFiled }
 // (schedules and the time limits LBR 1007-4(b)-(c) repeats from FRBP
 // 1007(c), claims, the chapter 13 plan, discharge, dischargeability,
 // exemptions, the adversary answer, appeals) are lit/frbp's and are not
-// declared again. Stated in the rules but not declared: the Business Day
-// and clock-time periods (objections to an extension motion three Business
-// Days after filing, LBR 9006-1(a); service of first day motions within 24
-// hours and of an expedited cash collateral order within 24 hours,
-// 9013-1(b), 4001-2; the ballot summary two Business Days before
-// confirmation, 3018-1; adjournment requests three Business Days before a
-// hearing, 5071-1; a reply brief three Business Days before the hearing,
-// 9014-1(f); trial exhibits three Business Days before trial, 7016-1;
-// hearing-notice follow-ups three Business Days after a § 362(l) or (m)
-// objection, 4001-4(c)-(d)); the later-of period for jury trial consent (14
+// declared again. The business-day periods are declared below: objections
+// to an extension motion three Business Days after filing (LBR 9006-1(a));
+// the ballot summary two Business Days before confirmation (3018-1);
+// adjournment requests three Business Days before a hearing (5071-1); reply
+// briefs three Business Days before a hearing (9014-1(f)); trial exhibits
+// three Business Days before trial (7016-1); and hearing-notice follow-ups
+// three Business Days after a § 362(l) or (m) objection (4001-4(c)-(d)).
+// Clock-time periods include service of first day motions within 24
+// hours and of an expedited cash collateral order within 24 hours
+// (9013-1(b), 4001-2); the later-of period for jury trial consent (14
 // days after the later of the jury demand and the answer deadline,
 // 9015-1(a)); recurring periods (the special service list every 14 days for
 // the first 56 days and every 28 days after, 2002-1(d); interim fee
@@ -189,6 +189,17 @@ event MotionReplyBriefFiled() paper motion-reply-brief
 /// The brief in support of a motion for reconsideration is filed (LBR
 /// 9024-1(a)(4)).
 event ReconsiderationBriefFiled() paper reconsideration-brief
+/// A motion to extend a time set by a rule or order is filed (E.D. Mich.
+/// LBR 9006-1(a)).
+event ExtensionMotionFiled()
+/// The court sets a hearing on a contested matter (E.D. Mich. LBR 5071-1,
+/// 9014-1(f)).
+event ContestedMatterHearingScheduled()
+/// A debtor files an objection relating to a request to extend the stay
+/// under 11 U.S.C. § 362(l) or (m) (E.D. Mich. LBR 4001-4(c), (d)).
+event StayExtensionObjectionFiled()
+/// The court sets a trial date (E.D. Mich. LBR 7016-1).
+event TrialScheduled()
 
 /// LBR 1007-1(a): if the debtor neither timely files the initial documents
 /// nor timely moves to extend, the voluntary petition may be dismissed
@@ -401,3 +412,52 @@ deadline proposed-order-objection-period: 7.days after ProposedOrderNoticed() co
 /// LBR 9024-1(a)(1): a motion for reconsideration of an order or judgment
 /// as erroneous in fact or law is due 14 days after its entry.
 deadline reconsideration-period: 14.days after OrderEntered() counted_by frbp9006 cite "E.D. Mich. LBR 9024-1(a)"
+/// LBR 9006-1(a): an objection to a motion to extend a deadline is filed
+/// within three business days after the motion is filed.
+deadline extension-motion-objection-period: 3.business_days after ExtensionMotionFiled() counted_by frbp9006 cite "E.D. Mich. LBR 9006-1(a)"
+/// LBR 3018-1: the ballot summary is filed at least two business days
+/// before the confirmation hearing.
+deadline ballot-summary-period: 2.business_days before CombinedConfirmationHearingScheduled() counted_by frbp9006 cite "E.D. Mich. LBR 3018-1"
+/// LBR 5071-1: a request to adjourn a hearing is filed at least three
+/// business days before the hearing.
+deadline hearing-adjournment-request-period: 3.business_days before ContestedMatterHearingScheduled() counted_by frbp9006 cite "E.D. Mich. LBR 5071-1"
+/// LBR 9014-1(f): a reply brief is filed at least three business days
+/// before the hearing.
+deadline motion-reply-brief-period: 3.business_days before ContestedMatterHearingScheduled() counted_by frbp9006 cite "E.D. Mich. LBR 9014-1(f)"
+/// LBR 7016-1: trial exhibits are exchanged at least three business days
+/// before trial.
+deadline trial-exhibit-period: 3.business_days before TrialScheduled() counted_by frbp9006 cite "E.D. Mich. LBR 7016-1"
+/// LBR 4001-4(c)-(d): follow-up notice is served within three business days
+/// after the debtor's stay-extension objection.
+deadline stay-objection-follow-up-period: 3.business_days after StayExtensionObjectionFiled() counted_by frbp9006 cite "E.D. Mich. LBR 4001-4"
+
+test "an extension motion objection period counts business days" cite "E.D. Mich. LBR 9006-1(a)"
+{
+  given ExtensionMotionFiled() on 2027-03-01
+  expect deadline(extension-motion-objection-period) == 2027-03-04
+}
+test "the ballot summary is due two business days before confirmation" cite "E.D. Mich. LBR 3018-1"
+{
+  given CombinedConfirmationHearingScheduled() on 2027-03-10
+  expect deadline(ballot-summary-period) == 2027-03-08
+}
+test "a hearing adjournment request is due three business days before the hearing" cite "E.D. Mich. LBR 5071-1"
+{
+  given ContestedMatterHearingScheduled() on 2027-03-10
+  expect deadline(hearing-adjournment-request-period) == 2027-03-05
+}
+test "a reply brief is due three business days before the hearing" cite "E.D. Mich. LBR 9014-1(f)"
+{
+  given ContestedMatterHearingScheduled() on 2027-03-10
+  expect deadline(motion-reply-brief-period) == 2027-03-05
+}
+test "trial exhibits are due three business days before trial" cite "E.D. Mich. LBR 7016-1"
+{
+  given TrialScheduled() on 2027-03-10
+  expect deadline(trial-exhibit-period) == 2027-03-05
+}
+test "stay objection follow-up notice is due in three business days" cite "E.D. Mich. LBR 4001-4"
+{
+  given StayExtensionObjectionFiled() on 2027-03-01
+  expect deadline(stay-objection-follow-up-period) == 2027-03-04
+}

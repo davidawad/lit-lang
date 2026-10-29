@@ -14,12 +14,13 @@ import frbp.events.{ PetitionFiled }
 // 2002-1(D) ties to the FRBP 2002(a) and (b) notice periods. Stated in the
 // rules but not declared: the general Notice of Opportunity for Hearing,
 // whose response time the movant calculates from the statute, rule or order
-// (LBR 9013-1(G)), save the rule-specific periods below; periods counted in
-// business days or hours (the ballot summary three business days before
-// confirmation, LBR 3018-1; the final pretrial order five business days
-// before trial, LBR 7016-1(D); three business days' deposition notice, LBR
-// 7030-1; proposed orders ten business days after a ruling, LBR 9013-1(L);
-// continuances 24 hours before a hearing, LBR 9006-1(B), 9013-1(F)); the
+// (LBR 9013-1(G)), save the rule-specific periods below; the ballot summary
+// three business days before confirmation (LBR 3018-1), final pretrial
+// order five business days before trial (LBR 7016-1(D)), deposition notice
+// three business days before the deposition (LBR 7030-1), and proposed
+// orders ten business days after a ruling (LBR 9013-1(L)) are declared
+// below; the clock-time period for continuances 24 hours before a hearing
+// (LBR 9006-1(B), 9013-1(F)); the
 // clerk's and the court's own periods (ten days' notice of a fee show-cause
 // hearing, LBR 1006-1(D); the chapter 12 monthly report by the 15th, LBR
 // 2015-1(D); 60-day exhibit retrieval and transcript periods, LBR 5003-1;
@@ -152,6 +153,14 @@ event InitialResponseDeadline()
 /// A motion to approve a compromise or settlement is filed with its notice
 /// (W.D. Okla. LBR 9019-1).
 event CompromiseMotionFiled()
+/// The court schedules a confirmation hearing (W.D. Okla. LBR 3018-1).
+event ConfirmationHearingScheduled()
+/// The court schedules a trial (W.D. Okla. LBR 7016-1(D)).
+event TrialScheduled()
+/// A deposition is scheduled (W.D. Okla. LBR 7030-1).
+event DepositionScheduled()
+/// The court announces or enters a ruling (W.D. Okla. LBR 9013-1(L)).
+event RulingEntered()
 
 /// W.D. Okla. LBR 1006-1(F): a written application for a refund of an
 /// overpaid filing fee is submitted within thirty days of the overpayment.
@@ -334,6 +343,39 @@ deadline evidence-notice-period: 7.days after InitialResponseDeadline() counted_
 /// service, to file a written response to a motion to approve a compromise
 /// or settlement.
 deadline compromise-response-period: 21.days after CompromiseMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 9019-1"
+/// LBR 3018-1: the ballot summary is filed at least three business days
+/// before the confirmation hearing.
+deadline ballot-summary-period: 3.business_days before ConfirmationHearingScheduled() counted_by frbp9006 cite "W.D. Okla. LBR 3018-1"
+/// LBR 7016-1(D): the final pretrial order is submitted at least five
+/// business days before trial.
+deadline final-pretrial-order-period: 5.business_days before TrialScheduled() counted_by frbp9006 cite "W.D. Okla. LBR 7016-1(D)"
+/// LBR 7030-1: deposition notice is served at least three business days
+/// before the deposition.
+deadline deposition-notice-period: 3.business_days before DepositionScheduled() counted_by frbp9006 cite "W.D. Okla. LBR 7030-1"
+/// LBR 9013-1(L): a proposed order is submitted within ten business days
+/// after the court's ruling.
+deadline proposed-order-after-ruling-period: 10.business_days after RulingEntered() counted_by frbp9006 cite "W.D. Okla. LBR 9013-1(L)"
+
+test "a proposed order after hearing is due in ten business days" cite "W.D. Okla. LBR 9013-1(L)"
+{
+  given RulingEntered() on 2027-03-01
+  expect deadline(proposed-order-after-ruling-period) == 2027-03-15
+}
+test "the ballot summary is due three business days before confirmation" cite "W.D. Okla. LBR 3018-1"
+{
+  given ConfirmationHearingScheduled() on 2027-03-10
+  expect deadline(ballot-summary-period) == 2027-03-05
+}
+test "the final pretrial order is due five business days before trial" cite "W.D. Okla. LBR 7016-1(D)"
+{
+  given TrialScheduled() on 2027-03-10
+  expect deadline(final-pretrial-order-period) == 2027-03-03
+}
+test "deposition notice is due three business days before deposition" cite "W.D. Okla. LBR 7030-1"
+{
+  given DepositionScheduled() on 2027-03-10
+  expect deadline(deposition-notice-period) == 2027-03-05
+}
 
 start motion-filed
 

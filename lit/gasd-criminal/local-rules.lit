@@ -10,8 +10,7 @@ import core.frcrimp45.{ frcrimp45 }
 // pages, so it stays in this note. Failing to respond in time may result
 // in the motion being granted without further notice (12(c)). Witness and
 // exhibit lists are due at least three business days before a motion
-// hearing (12(i)); business days have no engine lowering, so that period
-// is a hole kept here. A response to a motion to continue is due within
+// hearing (12(i)). A response to a motion to continue is due within
 // seven days, or sooner if the deadline, hearing or trial is earlier
 // (12(j)). Discovery otherwise follows FRCrimP 16 and 26.2, Brady, Agurs,
 // Giglio and the Jencks Act (16A). Objections to the draft presentence
@@ -61,6 +60,8 @@ event Sentenced()
 event JointRepresentationMotionFiled()
 /// The Court denies a motion to seal (S.D. Ga. LR Crim. 49.1(d)).
 event SealingDenied()
+/// The court schedules a hearing on a pretrial motion (S.D. Ga. LR Crim. 12(i)).
+event MotionHearingScheduled()
 
 /// S.D. Ga. LR Crim. 12(a)(1): every pretrial motion described in FRCrimP
 /// 12(b)(3) is filed within fourteen days from arraignment.
@@ -80,8 +81,19 @@ deadline pretrial-motion-response-period: 14.days after MotionDeadlinePassed() c
 /// filed within seven days of its filing, or as soon as possible if the
 /// motion asks for relief sooner.
 deadline other-motion-response-period: 7.days after PretrialMotionFiled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 12(a)"
+
+/// S.D. Ga. LR Crim. 12(i): witness and exhibit lists are filed at least
+/// three business days before the hearing on a motion.
+deadline motion-witness-exhibit-list-period: 3.business_days before MotionHearingScheduled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 12(i)"
+
 {
   forum frcrimp
+}
+
+test "motion witness lists are due three business days before the hearing" cite "S.D. Ga. LR Crim. 12(i)"
+{
+  given MotionHearingScheduled() on 2027-03-10
+  expect deadline(motion-witness-exhibit-list-period) == 2027-03-05
 }
 
 /// S.D. Ga. LR Crim. 16B(a): within fourteen days of arraignment, or

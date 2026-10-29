@@ -15,10 +15,10 @@ import frbp.events.{ FirstMeetingDate }
 // 9023-1, FRBP 9023), and a motion to withdraw the reference in an adversary
 // proceeding by the time to answer (BLR 5011-2(b)).
 //
-// Stated in the rules but not declared: the business-day periods (service on
-// newly scheduled creditors within three Business Days, BLR 2002-1; the
-// Report of Balloting at least three Business Days before the confirmation
-// hearing, BLR 3018-1(c)); the clock-time periods (an ex parte stay-relief
+// Stated in the rules but not declared: the business-day periods are
+// declared below (service on newly scheduled creditors within three
+// Business Days, BLR 2002-1; the Report of Balloting at least three
+// Business Days before the confirmation hearing, BLR 3018-1(c)); the clock-time periods (an ex parte stay-relief
 // order's 72 hours to surrender an uninsured vehicle, BLR 4001-1(b)(2)(C)-(D);
 // requests to charge by 9:30 a.m. on the trial date, BLR 7016-3(22)); the
 // clerk's own act (submitting a withdrawal motion to the judge 14 days after
@@ -104,6 +104,11 @@ event ExhibitCustodyEnded()
 /// An action or proceeding with pending, unbriefed motions is removed to the
 /// bankruptcy court (BLR 9027-1).
 event ProceedingRemoved()
+/// A creditor is added to the case mailing matrix after the initial notice
+/// (N.D. Ga. BLR 2002-1).
+event CreditorNewlyScheduled()
+/// The court schedules a confirmation hearing (N.D. Ga. BLR 3018-1(c)).
+event ConfirmationHearingScheduled()
 
 /// N.D. Ga. BLR 7007-1(e): absent prior permission, a brief in support of or
 /// in response to a motion under BLR 7007-1 (or BLR 9013-1) is limited to 25
@@ -228,6 +233,23 @@ deadline exhibit-retrieval-period: 30.days after ExhibitCustodyEnded() counted_b
 /// yet briefed, the moving party serves a memorandum in support within 14
 /// days after removal; opponents respond under BLR 7007-1(c).
 deadline removed-motion-memorandum-period: 14.days after ProceedingRemoved() counted_by frbp9006 cite "N.D. Ga. BLR 9027-1"
+/// BLR 2002-1: notice is served on a newly scheduled creditor within three
+/// business days after the creditor is added to the mailing matrix.
+deadline newly-scheduled-creditor-notice-period: 3.business_days after CreditorNewlyScheduled() counted_by frbp9006 cite "N.D. Ga. BLR 2002-1"
+/// BLR 3018-1(c): the Report of Balloting is filed at least three business
+/// days before the confirmation hearing.
+deadline ballot-report-period: 3.business_days before ConfirmationHearingScheduled() counted_by frbp9006 cite "N.D. Ga. BLR 3018-1(c)"
+
+test "the ballot report is due three business days before confirmation" cite "N.D. Ga. BLR 3018-1(c)"
+{
+  given ConfirmationHearingScheduled() on 2027-03-10
+  expect deadline(ballot-report-period) == 2027-03-05
+}
+test "notice to a newly scheduled creditor is served in three business days" cite "N.D. Ga. BLR 2002-1"
+{
+  given CreditorNewlyScheduled() on 2027-03-01
+  expect deadline(newly-scheduled-creditor-notice-period) == 2027-03-04
+}
 
 start motion-served
 

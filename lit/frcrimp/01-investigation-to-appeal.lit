@@ -99,7 +99,7 @@ state indictment-returned: "Indictment Returned (True Bill)" by office delegable
 }
 
 /// imported
-terminal no-bill: "No Bill — Grand Jury Declines to Indict" by applicant outcome [win, dismissal] cite ?("Fed. R. Crim. P. 6(f); Blockburger v. United States, 284 U.S. 299 (1932)") effective [2023-01-05, ..) known_at 2023-01-05 {
+terminal no-bill: "No Bill — Grand Jury Declines to Indict" by applicant outcome [win, dismissal] cite ?("Fed. R. Crim. P. 6(f); United States v. Thompson, 251 U.S. 407 (1920)") effective [2023-01-05, ..) known_at 2023-01-05 {
   group investigation-group
   note "Double jeopardy does not attach at the grand jury stage, so the government may re-present the same charges to a different grand jury. Jeopardy attaches only when the trial jury is sworn (or the first witness is sworn in a bench trial). PLACEHOLDER PAYOFF: $1,000,000, override per matter, treating this playthrough's dispositive outcome as a full win even though double jeopardy has not yet attached and the government could theoretically re-present (not modeled as a loop back in this playthrough's payoff)."
   valence good

@@ -27,5 +27,6 @@
 ### `fed-didaho/didaho-local-criminal-rules-packet-2026-10-27-sectioned.txt` — D. Idaho Local Criminal Rules packet (printed October 27, 2026), sectioned
 
 - Derived in the pod (lg-gddt.22) from `fed-didaho/didaho-local-criminal-rules-packet-2026-10-27.txt` (extract sha256 783f17646824794fabb7d301c86eed5dd92fcd0d5be5532bded8611c75ae152b); nothing fetched. One marker line `## Loc. Crim. R. <n>` is inserted before each rule's own heading line `District Local Rule Crim <n> (Criminal)` (each led by a form feed; Loc. Crim. R. 1.1 through 59.1, 16 rules, matching the packet's list); the list and announcement carry no markers. Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Source: as the extract `fed-didaho/didaho-local-criminal-rules-packet-2026-10-27.txt`, https://www.id.uscourts.gov/content_fetcher/print_pdf_packet.cfml?Court_Unit=District&Content_Type=Rule&Content_Sub_Type=Criminal; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract; the packet's announcement page reads "Revised and adopted August 17, 2026".
 - Sectioned sha256 ac21449f118fd0715f141064db150c3f22380e28c1896f156747f198ce171fb3 (the `path_sha256` pinned by `lit/idd-criminal/Lit.toml`).

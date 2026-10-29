@@ -31,5 +31,6 @@
 ### `ok-state-civil/ok-district-court-rules-1-to-29-partial-sectioned.txt` — Rules for District Courts of Oklahoma, Rules 1-29 (PARTIAL), sectioned
 
 - Derived in the pod (lg-f3q8.88) from `ok-state-civil/ok-district-court-rules-1-to-29-partial.txt` (extract sha256 cdf62b6c161b5173331ce7c0dc1388e46d3da4810132003fcc53f133c3019b1c); nothing fetched. One marker line `## Rule <n>` is inserted before each section document's own heading line `===== § Rule <n>. <Title> =====`, where `<n>` is the rule's number as the extract writes it (`1` through `29`, with `2.1`, `4.1`, `8.1`, `8.2` and `8.3`; 34 sections). The extract's header block carries no marker. Rule text was not edited: deleting the marker lines (each `## Rule ` line with its newline) restores the extract byte for byte.
+- Source: as the extract `ok-state-civil/ok-district-court-rules-1-to-29-partial.txt`, https://www.oscn.net/applications/oscn/index.asp?ftdb=STOKRUCPDC&level=1; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, PARTIAL (Rules 1-29), CURRENCY UNCONFIRMED; Rules 30 onward are not in it.
 - Sectioned sha256 6ee334c48b68fef8973c715a3afab827347243fa5a1e3449ba9690ab9e121727 (the `path_sha256` pinned by `lit/ok-district/Lit.toml`).

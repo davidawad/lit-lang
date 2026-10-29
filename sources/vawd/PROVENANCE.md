@@ -19,5 +19,6 @@
 ### `vawd/vawd-local-criminal-rules-sectioned.txt` — W.D. Va. Local Rules (revised October 25, 2025), criminal rules sectioned
 
 - Derived in the pod (lg-gddt.12) from `vawd/vawd-local-rules.txt` (extract sha256 0cfd1a6b7269d123f79fb9dfa757f09380c07795f76e89cd09cd75efdfe41fe0); nothing fetched. One `## Criminal Rule <n>` line is inserted before each Title III rule's own heading line in the body (`Rule 12.`, `Rule 32.`, `Rule 58.`, `Rule 59.`, from extract line 1716 on): 4 markers. The table of contents and Titles I and II are unmarked (they are sectioned separately in `vawd/vawd-local-rules-sectioned.txt`). Rule text was not edited: deleting the marker lines (`sed '/^## Criminal Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `vawd/vawd-local-rules.txt`, https://www.vawd.uscourts.gov/sites/Public/assets/File/court/local_rules.pdf; Retrieved 2026-10-27 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, August 2013 (revised October 25, 2025).
 - Sectioned sha256 fb1d7cccf8ce212f27f39bf8be49730d2b81d5a7bd945d988776c493c37e5081 (the `path_sha256` pinned by `lit/vawd-criminal/Lit.toml`).

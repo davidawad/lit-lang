@@ -26,5 +26,6 @@
 ### `fed-edwash/edwash-local-criminal-rules-2015-02-20-sectioned.txt` — E.D. Wash. Local Criminal Rules (effective February 20, 2015), sectioned
 
 - Derived in the pod (lg-gddt.22) from `fed-edwash/edwash-local-criminal-rules-2015-02-20.txt` (extract sha256 66063b8bc957c37a4732495370b9df2676fcf16711c34d38764e33ae20a857f6); nothing fetched. One marker line `## LCrR <n>` is inserted before each rule's own body heading line `LCrR <n>` (indented or centered, alone on its line, from extract line 82; LCrR 1 through 61, 74 rules including reserved ones, matching the table of rules); the table carries no markers. Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Source: as the extract `fed-edwash/edwash-local-criminal-rules-2015-02-20.txt`, https://www.waed.uscourts.gov/sites/cst/waed/files/local-rules/LocalCriminalRules.pdf; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, effective February 20, 2015 (LCrR 57(b)). OLD EDITION presented by the court as current.
 - Sectioned sha256 aaa4633f837117f9920bdb1ca5c967c0d15757b2c5ca066bfd8bb2f7043ed1b0 (the `path_sha256` pinned by `lit/waed-criminal/Lit.toml`).

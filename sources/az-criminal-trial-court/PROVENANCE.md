@@ -378,5 +378,6 @@
 ### `az-criminal-trial-court/az-rules-of-criminal-procedure-westlaw-sectioned.txt` — Arizona Rules of Criminal Procedure (Westlaw, current through October 1, 2026), sectioned
 
 - Derived in the pod (lg-gddt.22) from `az-criminal-trial-court/az-rules-of-criminal-procedure-westlaw.txt` (extract sha256 465a87545e4b4cdd9915c13dea20e2b3be8c9b65d4f8831075cf81012f914a97); nothing fetched. One marker line `## Rule <n>` is inserted right after each rule page's own `## Rule <n>. <title>` heading (283 rule pages, Rule 1.1 through Rule 41 Forms, including the pages headed `## Rule. 2.7.` and `## Rule. 41.`); the front matter, Refs & Annos pages and Forms pages are unmarked. Deleting the marker lines (`sed -E '/^## Rule [0-9.]+$/d'`) restores the extract. Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Source: as the extract `az-criminal-trial-court/az-rules-of-criminal-procedure-westlaw.txt`, https://govt.westlaw.com/azrules/Index; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract ("Court Rules are current with amendments received and effective through October 1, 2026").
 - Sectioned sha256 3fbf730558c30a80448b530812f443fe91895e72ed2ba61aa73b6965ec28a2a7 (the `path_sha256` pinned by `lit/az-criminal-trial-court/Lit.toml`).

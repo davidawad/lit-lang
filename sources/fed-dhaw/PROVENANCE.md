@@ -26,5 +26,6 @@
 ### `fed-dhaw/dhaw-criminal-local-rules-2023-01-01-sectioned.txt` — D. Haw. Criminal Local Rules (effective January 1, 2023), sectioned
 
 - Derived in the pod (lg-gddt.22) from `fed-dhaw/dhaw-criminal-local-rules-2023-01-01.txt` (extract sha256 a70eb14678c7c85bd294523f6a7d7aa950f6e4e37b82e3521359aaca8aa8825a); nothing fetched. One marker line `## CrimLR <n>` is inserted before each rule's own body heading line `CrimLR<n>. <Title>` (CrimLR 2.1 through 85.1, 57 rules; CrimLR 85.1's heading has no period after the number); the table of contents carries no markers. Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Source: as the extract `fed-dhaw/dhaw-criminal-local-rules-2023-01-01.txt`, https://www.hid.uscourts.gov/docs/localrules/USDC%20HID%20Criminal%20Local%20Rules%20Final%2012.16.2022.pdf; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, effective January 1, 2023.
 - Sectioned sha256 3edc553a908be81301db8f8ce3cd479423cbf3d75916345ffc8644af85caf031 (the `path_sha256` pinned by `lit/hid-criminal/Lit.toml`).

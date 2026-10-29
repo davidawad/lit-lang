@@ -20,11 +20,13 @@
 ### `ed-okla/edokla-local-criminal-rules-2016-07-05-sectioned.txt` — E.D. Okla. Local Criminal Rules, sectioned
 
 - Derived in the pod (lg-gddt.24, completed lg-v02y) from `ed-okla/edokla-local-criminal-rules-2016-07-05.txt` (extract sha256 72b9408f0d8cff92198f622a5ecbece522e557242004b448ed4f5ff9a6c071bc); nothing fetched. In the body (after the table of contents), one marker line `## LCrR <n>` is inserted before each rule's own heading line `LOCAL CRIMINAL RULE <n> - <TITLE>` (LCrR 1.1 through 58.1, 18 rules). LCrR 58.1 and the end of LCrR 57.2(C) come from the OCR page 23 of the extract (OCR, verify numbers; see above). Rule text was not edited: deleting the marker lines (each `## LCrR ` line with its newline) restores the extract byte for byte.
+- Source: as the extract `ed-okla/edokla-local-criminal-rules-2016-07-05.txt`, https://www.oked.uscourts.gov/sites/oked/files/Local_Criminal_Rules.pdf; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, "Effective Date: July 5, 2016".
 - Sectioned sha256 28f8b1d0fa31a11fe7eee89420c0574157b7ad75c0bdc926a1d404b1edd0fa04 (the `path_sha256` pinned by `lit/oked-criminal/Lit.toml`).
 
 ### `ed-okla/ed-okla-local-civil-rules-2016-sectioned.txt` — E.D. Okla. Local Civil Rules, sectioned
 
 - Derived in the pod (lg-f3q8.88) from `ed-okla/ed-okla-local-civil-rules-2016.txt` (extract sha256 f5291f852443cc56f7888e77a293905559206289165e6157ad1d2105aefb2f64); nothing fetched. In the body (after the table of contents), one marker line `## <n>` is inserted before each rule's own heading line `<n> <Title>.`, where `<n>` is the rule's designation as written (`LCvR 1.1` through `LCvR 84.1`, 63 rules). The table of contents carries no markers (LCvR 84.1's section runs to the end of the file, appendices included). Rule text was not edited: deleting the marker lines (each `## LCvR ` line with its newline) restores the extract byte for byte.
+- Source: as the extract `ed-okla/ed-okla-local-civil-rules-2016.txt`, https://www.oked.uscourts.gov/sites/oked/files/Local_Civil_Rules.pdf; Retrieved 2026-10-27 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, Local Civil Rules "Effective Date July 5, 2016".
 - Sectioned sha256 bd4a1a6c32e665030862ed11c51837474b78ba3835ca024b34975a2408c25c96 (the `path_sha256` pinned by `lit/oked/Lit.toml`).

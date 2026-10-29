@@ -24,5 +24,6 @@
 ### `nv-criminal-trial-court/nv-nrs-title-14-criminal-procedure-sectioned.txt` — Nevada Revised Statutes Title 14 (2025 edition, rev. 4/15/2026), sectioned
 
 - Derived in the pod (lg-gddt.22) from `nv-criminal-trial-court/nv-nrs-title-14-criminal-procedure.txt` (extract sha256 d7eb199692fe74f024e60ef0797727e9e4d3942299d3e7a90a77c738ce6f0bf7); nothing fetched. One marker line `## NRS <n>` is inserted before each section's own body heading line (the line opening, after the extract's run of U+FFFD indent characters, with `NRS <n> <catchline>`; 858 sections across chapters 169 to 179, NRS 171.077 twice, as the page carries it); the chapter tables of contents and the page `## NRS Chapter <n>` lines are unchanged and carry no new markers. Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Source: as the extract `nv-criminal-trial-court/nv-nrs-title-14-criminal-procedure.txt`, https://www.leg.state.nv.us/NRS/; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, each page headed "[Rev. 4/15/2026 ... --2025]".
 - Sectioned sha256 5216ad8ec9565c72c74611e195ee57ce426546c2b35e7a17799c69e4d29c5252 (the `path_sha256` pinned by `lit/nv-criminal-trial-court/Lit.toml`).

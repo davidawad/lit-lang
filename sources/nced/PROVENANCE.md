@@ -26,5 +26,6 @@
 ### `nced/nced-local-criminal-rules-2023-05-sectioned.txt` — E.D.N.C. Local Criminal Rules (May 2023), sectioned
 
 - Derived in the pod (lg-gddt.12) from `nced/nced-local-criminal-rules-2023-05.txt` (extract sha256 0f1a3f457d9faaeda6bc02fbe3878da6a9008404c6d46dcea166755fb099b0b7); nothing fetched. One `## Local Criminal Rule <n>` line is inserted right before each rule's own body heading line `Rule <n>  <title>` (from extract line 330 on): 88 markers, Rule 1.1 through Rule 100.2. The table of contents and the in-body cross-references are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Local Criminal Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `nced/nced-local-criminal-rules-2023-05.txt`, https://www.nced.uscourts.gov/pdfs/Local%20Criminal%20Rules%202023.pdf; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, the Local Criminal Rules of Practice and Procedure, May 2023.
 - Sectioned sha256 d42904459ea530131e7bf92536261d78ef08c358b586bbbc2fbcf7c087159c14 (the `path_sha256` pinned by `lit/nced-criminal/Lit.toml`).

@@ -27,5 +27,6 @@
 ### `ca-criminal-trial-court/ca-rules-of-court-title-4-criminal-sectioned.txt` — California Rules of Court, Title 4 (Criminal Rules), sectioned
 
 - Derived in the pod (lg-gddt.22) from `ca-criminal-trial-court/ca-rules-of-court-title-4-criminal.txt` (extract sha256 099579728f93ba89972bf815ab13e26485d66b50b2fbbebf86a6a3a0ec6acc39); nothing fetched. One marker line `## Cal. Rules of Court, rule <n>` is inserted before each rule's own body heading line `Rule 4.<n>. <Title>` at the left margin (99 rules, rule 4.1 through 4.700); the indented contents lines of each division carry no markers. Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Source: as the extract `ca-criminal-trial-court/ca-rules-of-court-title-4-criminal.txt`, https://courts.ca.gov/system/files?file=file/roc-title-4.pdf; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract; CURRENCY UNCONFIRMED stands. `lit/ca-criminal-trial-court` cites it for structure only and takes no value from it.
 - Sectioned sha256 dba7a1f830790c37fab4276a7d8e390d72ecf6e8568409a8a04bde7bfd30c5a3 (the `path_sha256` pinned by `lit/ca-criminal-trial-court/Lit.toml`).

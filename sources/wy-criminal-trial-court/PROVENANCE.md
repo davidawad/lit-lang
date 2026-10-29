@@ -12,5 +12,6 @@
 ### `wy-criminal-trial-court/wy-rules-of-criminal-procedure-sectioned.txt` — W.R.Cr.P., sectioned
 
 - Derived in the pod (lg-gddt.24) from `wy-criminal-trial-court/wy-rules-of-criminal-procedure.txt` (extract sha256 36046bd974f85b1d2c905bf3d9a5fff0ced19ac55befe99d977db1f594f7cfd2); nothing fetched. One `## W.R.Cr.P. <n>` line is inserted before each rule's own heading line `Rule <n>. <Title>` (W.R.Cr.P. 1 through 61, 82 rules including the decimal rules); three body lines that merely begin with a wrapped `Rule <n>.` reference (extract lines 2221, 2445 and 3672) carry no marker. The bond schedule and forms after Rule 61 fall in Rule 61's section. Rule text was not edited: deleting the marker lines (each `## W.R.Cr.P. ` line with its newline) restores the extract byte for byte.
+- Source: as the extract `wy-criminal-trial-court/wy-rules-of-criminal-procedure.txt`, https://www.wyocourts.gov/app/uploads/2026/06/WRCrP-with-bond-schedule.pdf; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract; CURRENCY UNCONFIRMED.
 - Sectioned sha256 903752441cc027c945523d8789e1f8152d92196264aaa0d24961f084ea3976af (the `path_sha256` pinned by `lit/wy-criminal-trial-court/Lit.toml`).

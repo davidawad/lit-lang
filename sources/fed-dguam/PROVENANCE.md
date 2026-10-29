@@ -35,5 +35,6 @@
 ### `fed-dguam/guam-criminal-local-rules-2020-06-24-sectioned.txt` — D. Guam Criminal Local Rules (effective June 24, 2020), sectioned
 
 - Derived in the pod (lg-gddt.22) from `fed-dguam/guam-criminal-local-rules-2020-06-24.txt` (extract sha256 5b60cc27cd83a049b2b1fe42994899367d64176dc476a9ff46253a3602c532e2); nothing fetched. One marker line `## CRLR <n>` is inserted before each rule's own heading line `CRLR <n> <Title>` (some led by a form feed; CRLR 1 through 59, 23 rules). Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Source: as the extract `fed-dguam/guam-criminal-local-rules-2020-06-24.txt`, https://www.gud.uscourts.gov/sites/gud/files/crim_rules_final_2020624%20%281%29.pdf; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, effective June 24, 2020.
 - Sectioned sha256 a0d77161409962ca732bb89b0a5278e20b723fd8ca71c3d409a62282c92166e9 (the `path_sha256` pinned by `lit/gud-criminal/Lit.toml`).

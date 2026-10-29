@@ -26,5 +26,6 @@
 ### `scd/scd-local-criminal-rules-2019-07-17-sectioned.txt` — D.S.C. Local Criminal Rules (revisions through July 17, 2019), sectioned
 
 - Derived in the pod (lg-gddt.12) from `scd/scd-local-criminal-rules-2019-07-17.txt` (extract sha256 b7ea78cd12a7859d55c3b23640a9eb959e3efdbdc28d6c457b78226d5f65535e); nothing fetched. One `## Local Crim. Rule <n>` line is inserted right before each rule's own body line `<n>: <title>` (some indented or after a form feed; from extract line 99 on): 45 markers, 1.01 through 58.01, the Rule 57 parts numbered as printed (`57.VI.02`). The table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Local Crim. Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `scd/scd-local-criminal-rules-2019-07-17.txt`, https://www.scd.uscourts.gov/Rules/Criminal%20Rules%20-%20Current.pdf; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, revisions through July 17, 2019, republished November 23, 2020 (OLD EDITION, presented by the court as current).
 - Sectioned sha256 be2caffffa73574aa24a4914f3dd752fa83a157ab272d10bfd77ed1de1303b13 (the `path_sha256` pinned by `lit/scd-criminal/Lit.toml`).

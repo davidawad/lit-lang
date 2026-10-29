@@ -27,5 +27,6 @@
 
 ### `kyed/kyed-joint-local-civil-rules-sectioned.txt` — E.D. and W.D. Ky. Joint Local Civil Rules (August 2026), sectioned
 - Derived in the pod (lg-f3q8.91) from `kyed/kyed-joint-local-civil-rules.txt` (extract sha256 8f0a980379167512682342755ac946da441141b4df4cf195406343945ca92a04); nothing fetched. One `## LR <n>` line is inserted right after each rule's own body heading line `LR <n> <title>` (51 markers, LR 1.1 through LR 86.1, LR 7.1.1 and LR 65.1.1 among them; the table of contents is unmarked, and LR 86.1's section runs through the index to the end of the file). Rule text was not edited: deleting the marker lines (`sed '/^## LR /d'`) restores the extract byte for byte.
+- Source: as the extract `kyed/kyed-joint-local-civil-rules.txt`, https://www.kyed.uscourts.gov/sites/kyed/files/KY_Amended_Civil_Rules_August_2026.pdf; Retrieved 2026-10-27 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, the Joint Local Rules of Civil Practice served as "KY_Amended_Civil_Rules_August_2026"; the document states no effective date (LR 86.1: amendments take effect on each Joint General Order, none vendored).
 - Sectioned sha256 57d7a49d9a6bc2a6538632417ed1d42b36ccd97bca95654c1752bc5bf967b91a (the `path_sha256` pinned by `lit/kyed/Lit.toml`).

@@ -19,5 +19,6 @@
 ### `d-colo/d-colo-local-rules-criminal-sectioned.txt` — D. Colo. Local Rules of Practice, criminal rules sectioned
 
 - Derived in the pod (lg-gddt.24) from `d-colo/d-colo-local-rules-2025.txt` (extract sha256 1cdfa66a1c54140cf9683fe26f77a6253d327379e4984b37ba3bffdf80ab6e38); nothing fetched. In Section II - Criminal Rules, one marker line `## D.C.COLO.LCrR <n>` is inserted before each rule's own body heading line `D.C.COLO.LCrR <n>` (D.C.COLO.LCrR 1.1 through 58.1, 25 rules, matching the criminal table of contents at extract line 164). The table of contents and the civil, patent, AP and attorney rules carry no markers (LCrR 58.1's section runs to the end of the file). Rule text was not edited: deleting the marker lines (`sed '/^## D\.C\.COLO\.LCrR /d'`) restores the extract byte for byte.
+- Source: as the extract `d-colo/d-colo-local-rules-2025.txt`, http://www.cod.uscourts.gov/Portals/0/Documents/LocalRules/2025_Final_Local_Rules.pdf; Retrieved 2026-10-27 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, "Effective December 1, 2025".
 - Sectioned sha256 c96bbca0c25694afda4b305217170deed75e758f450ac60c5b3b18ccc315bb32 (the `path_sha256` pinned by `lit/cod-criminal/Lit.toml`).

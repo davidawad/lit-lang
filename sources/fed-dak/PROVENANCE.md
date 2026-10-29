@@ -26,5 +26,6 @@
 ### `fed-dak/dak-local-criminal-rules-2025-10-15-sectioned.txt` — D. Alaska Local Criminal Rules (effective October 15, 2025), sectioned
 
 - Derived in the pod (lg-gddt.22) from `fed-dak/dak-local-criminal-rules-2025-10-15.txt` (extract sha256 2dc784b33cd13751d9027158501d6f631ffc0cdd8deae47b8d0b27bccad66dfe); nothing fetched. One marker line `## L.Crim.R. <n>` is inserted before each rule's own body heading line `Local Criminal Rule <n> <Title>` (some led by a form feed; L.Crim.R. 1.1 through 59.1, 25 rules, matching the table of contents). The summary of amendments and the table of contents carry no markers. Every other line is the extract unchanged, so deleting the marker lines (`sed '/^## L.Crim.R. /d'`) gives back the extract byte for byte.
+- Source: as the extract `fed-dak/dak-local-criminal-rules-2025-10-15.txt`, https://www.akd.uscourts.gov/sites/akd/files/local_rules/Local_Criminal_Rules_10-2025_0.pdf; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, 2025 Revised Edition effective October 15, 2025.
 - Sectioned sha256 602e11209821a43c38590b4fad2d1b28b87ef0d9e817d22e33df0e3e3d1061d4 (the `path_sha256` pinned by `lit/akd-criminal/Lit.toml`).

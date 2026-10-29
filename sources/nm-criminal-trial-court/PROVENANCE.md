@@ -12,5 +12,6 @@
 ### `nm-criminal-trial-court/nm-nmra-rule-set-5-2025-sectioned.txt` — NMRA Rule Set 5, sectioned
 
 - Derived in the pod (lg-gddt.24) from `nm-criminal-trial-court/nm-nmra-rule-set-5-criminal-procedure-district-courts-2025.txt` (extract sha256 0051655525aa33012484b0144fe893ad3471447016181c2e8c6614de53eec171); nothing fetched. One `## NMRA <n>` line is inserted before each rule's own heading line `<n>. <Title>` (`NMRA 5-101` through `NMRA 5-903`, 109 rules, including the decimal rules such as 5-103.1 and 5-614.1). Rule text was not edited: deleting the marker lines (each `## NMRA 5-` line with its newline) restores the extract byte for byte.
+- Source: as the extract `nm-criminal-trial-court/nm-nmra-rule-set-5-criminal-procedure-district-courts-2025.txt`, https://nmonesource.com/nmos/nmra-unanno/en/18475/1/document.do; Retrieved 2026-10-28 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, NMRA Unannotated Rule Set 5, 2025 edition as of December 31, 2025.
 - Sectioned sha256 51c947d8634168ede5254af5497b498994dd84768a6a3685bb92a3df1017f773 (the `path_sha256` pinned by `lit/nm-criminal-trial-court/Lit.toml`).

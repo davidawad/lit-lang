@@ -10,5 +10,6 @@
 ### `or-circuit/orcp-sectioned.txt` — Oregon Rules of Civil Procedure (2025), sectioned
 
 - Derived in the pod (lg-f3q8.47) from `or-circuit/orcp.txt` (extract sha256 8ad32b2f17d7546ef2170df5012882d7cc023777768ea690930d9f4d93801d94); nothing fetched. Past the table of contents, one bare `## ORCP <n>` line is inserted before each `RULE <n>` (or `RULES <n>`) heading line (81 markers), and within each rule one bare `## ORCP <n> <L>` line before the line opening each lettered section `<L>` (a line that is the letter alone, the letter and a capitalized word, or `<L>(1)`, after a blank line, letters ascending; 353 markers), so Oregon-style pinpoints such as `ORCP 7 C(2)` resolve. Rule text was not edited: deleting the marker lines (`sed -E '/^## ORCP [0-9]+( [A-Z])?$/d'`) restores the extract byte for byte.
+- Source: as the extract `or-circuit/orcp.txt`, https://www.oregonlegislature.gov/bills_laws/SiteAssets/ORCP.html; Retrieved 2026-10-27 with the extract (this file was derived from it in the pod, not fetched itself).
 - Edition: as the extract, "Oregon Rules of Civil Procedure (2025)".
 - Sectioned sha256 047ba8dd8ccdf7b9a82deaef68bb90df6d51d927b9f43f7b709d824acc1f881e (the `path_sha256` pinned by `lit/or-circuit/Lit.toml`).

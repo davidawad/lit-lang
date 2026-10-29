@@ -471,7 +471,7 @@ This contract is designed for an agent that knows nothing at the start.
   is small by default (`--limit`).
 - **`litigate import pack.json`** turns legacy pack JSON into `.lit` source.
   It is the migration accelerator and stays as an on-ramp.
-- **MCP.** litgraph-mcp gains `litigate_check`, `litigate_build`,
+- **MCP.** `litigate mcp` serves `litigate_check`, `litigate_build`,
   `litigate_where`, `litigate_explain` and `litigate_describe`.
 - **Determinism.** No timestamps or absolute paths in outputs. `Lit.lock`
   pins content hashes.

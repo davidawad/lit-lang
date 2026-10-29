@@ -40,24 +40,24 @@ L1a, L1b and L3 are the litigate authoring language
 `crates/litigate-syntax` parses, `litigate-sema` resolves and type-checks,
 `litigate-verify` discharges obligations (temporal, precedence, coverage,
 cites), `litigate-lower` lowers to the engine's JSON, and `litigate-cli`
-(`litigate`), `litigate-lsp` and `litgraph-mcp`'s `litigate_*` tools are thin
+(`litigate`), `litigate-lsp` and `litigate mcp`'s `litigate_*` tools are thin
 front ends over one library. The engine (L2 and up) reads only the lowered
 JSON and is unchanged by the language. **The packs, `links.json`,
 generated clock fragments and named scenarios are build outputs, never
 committed**: `crates/litgraph-packs` runs `litigate build` over `lit/` and
-`cases/` in its build script and embeds the result (`litgraph` cannot: the
+`cases/` in its build script and embeds the result (`litigate-engine` cannot: the
 compiler depends on it). Edit `lit/` or `cases/` and commit the source and
 its `Lit.lock`; `just lit-sync` writes the build to `target/lit-build/`.
 SPEC §9.4 lists exactly which files are generated and from what.
 
-The binaries hand `litgraph-packs`' embedded files to `Catalog::embedded`,
+The `litigate` binary hands `litgraph-packs`' embedded files to `Catalog::embedded`,
 so a released binary needs no `packs/` directory alongside it.
 
 - **L0 → L1a**: every cite in a `.lit` rule must resolve to a span of the
   vendored L0 text (a hole otherwise, an error under `--profile strict`), and
   every `cite`/`authority` in a generated pack traces to a `sources` entry
   (sha256 + as-of). A pack is a claim about the law; sources make it
-  checkable. `litgraph lint`'s `unverifiable-cite` diagnostic checks this
+  checkable. `litigate lint`'s `unverifiable-cite` diagnostic checks this
   mechanically: it normalizes the cite, resolves it against the vendored
   L0 text a `sources[].path` points at, and (if `note` quotes a phrase)
   fuzzy-matches the quote within that span — see `crates/litigate-engine/src/cite/`
@@ -89,16 +89,17 @@ so a released binary needs no `packs/` directory alongside it.
 ## Design commitments (why an agent can trust and steer it)
 
 1. **One door.** Every capability is `{"op": …}` in one request envelope.
-   The CLI, the library, and the MCP server (`litgraph-mcp`) are thin
-   wrappers over `api::handle`. `describe` is the complete, machine-readable
-   manual:
+   The CLI (`litigate`), the library, and the MCP server (`litigate mcp`)
+   are thin wrappers over `api::handle`. `describe` is the complete,
+   machine-readable manual:
    ops, scenario fields, built-in metrics with their source expressions,
-   variables, functions, parameters and defaults. `litgraph schema
-   <request|response|scenario|pack|links>` gives the JSON Schema (draft
-   2020-12) for any document kind — machine-checkable before you even run
-   anything; `litgraph validate <file|->` (or the `validate` op) resolves a
-   pack, `links.json`, scenario, or request without running an analysis,
-   reporting parse errors, unresolved references, and lint diagnostics.
+   variables, functions, parameters and defaults. The schema bundle
+   (`cargo run -q -p litgraph-schema-bundle`) gives the JSON Schema (draft
+   2020-12) for every document kind — machine-checkable before you even run
+   anything; the `validate` op (`litigate run TARGET --op
+   '{"op":"validate"}'`) resolves a pack, links, scenario, or request
+   without running an analysis, reporting parse errors, unresolved
+   references, and lint diagnostics.
 2. **No silent guesses.** Every inferred number (heuristic payoff, filled
    probability, deadline-as-duration, ignored interrupt at a mixed node,
    renormalized distribution, dead end) becomes a structured warning with a
@@ -151,7 +152,7 @@ or, on failure, `{"ok": false, "api_version": 1, "op": "...", "error":
 {"code", "message", "hint"}, "elapsed_ms": ...}`. `api_version` is the
 request/response *contract* version (currently `1`), bumped only when the
 shape of the envelope itself changes in a breaking way — separate from
-`litgraph`'s own semver release version (`provenance.engine`). `warnings`
+the engine's own semver release version (`provenance.engine`). `warnings`
 is always grouped by code (`{code, count, example, at}`, `at` capped at
 eight locations) rather than one entry per occurrence, so a graph with
 hundreds of unauthored edges doesn't drown the response.
@@ -162,9 +163,10 @@ document is invalid; `1` usage or I/O error (bad flags, unreadable file)
 before a request was even attempted.
 
 Every document kind in the contract — `Request`, `Response`, `Scenario`,
-`Pack`, `LinkFile` — has a generated JSON Schema (draft 2020-12) via
-`litgraph schema <kind>`, so a client can validate shapes without
-hand-maintaining a parallel schema. `litgraph validate` runs that parse
+`Pack`, `LinkFile` — has a generated JSON Schema (draft 2020-12) in
+the schema bundle (`cargo run -q -p litgraph-schema-bundle`), so a client
+can validate shapes without hand-maintaining a parallel schema. The
+`validate` op runs that parse
 plus, for packs and requests, the semantic checks (unresolved node/edge
 refs, bad expressions) that only show up once the document is resolved
 against a compiled graph — the same checks `api::handle` runs, without
@@ -221,17 +223,16 @@ knows flags exist. See `docs/PACK_SCHEMA.md#state-flags`.
 
 ## MCP server
 
-`litgraph-mcp` ([`crates/litgraph-mcp`](../crates/litgraph-mcp)) is a
-stdio MCP server: every op is an MCP tool (input schema sliced out of the
-engine's own JSON Schema for `Op`, so a tool's shape can't drift from what
-`api::handle` actually accepts), plus a generic `litgraph` tool that takes
-a raw request verbatim. Packs, `links.json`, the named scenario library,
-and the manual are MCP resources under `litgraph://…` URIs
-(`litgraph://packs/<id>`, `litgraph://links`, `litgraph://scenarios`,
-`litgraph://scenarios/<id>`, `litgraph://describe`). The `litigate_check`,
-`litigate_build`, `litigate_where`, `litigate_explain` and `litigate_describe`
-tools run the authoring toolchain through the `litigate_cli` library and
-return the `litigate` envelope unchanged. See the README's "MCP server"
+`litigate mcp` ([`crates/litigate-cli/src/mcp`](../crates/litigate-cli/src/mcp))
+is a stdio MCP server: every engine op is an MCP tool run on a compiled
+`.case` matter or package, as `litigate run TARGET --op …` runs it. Packs,
+links, the named scenario library, and the manual are MCP resources under
+`litigate://…` URIs (`litigate://packs/<id>`, `litigate://links`,
+`litigate://scenarios`, `litigate://scenarios/<id>`,
+`litigate://describe`). The `litigate_describe`, `litigate_check`,
+`litigate_build`, `litigate_where`, `litigate_timeline`, `litigate_actions`
+and `litigate_explain` tools run the authoring toolchain and return the
+`litigate` envelope unchanged. See the README's "MCP server"
 section for client setup (Claude Code, Claude Desktop, generic clients).
 
 ## Deadline clock

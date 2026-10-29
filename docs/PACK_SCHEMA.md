@@ -39,7 +39,7 @@ construct lowers to each field below.
 | `startNodeId` | node id | where walks and default analyses begin |
 | `groups` | `[{id,label}]` | visual/hierarchical clustering |
 | `roles` | object | **v2** actor → role mapping, see below |
-| `sources` | `[{id,title,url?,path?,sha256?,asOf?}]` | **v2** primary sources the pack was authored from. `cite`/`authority` strings should be traceable to one of these. `path` is **repo-relative only** (e.g. a sibling pack file) — never a local/absolute filesystem path; cite the official `url` for everything else. `litgraph lint` errors (`local-source-path`) on an absolute `path` |
+| `sources` | `[{id,title,url?,path?,sha256?,asOf?}]` | **v2** primary sources the pack was authored from. `cite`/`authority` strings should be traceable to one of these. `path` is **repo-relative only** (e.g. a sibling pack file) — never a local/absolute filesystem path; cite the official `url` for everything else. `litigate lint` errors (`local-source-path`) on an absolute `path` |
 | `citeSyntax` | object | **v3** the citation syntax this pack's `cite`/`authority` strings use: rule-body prefixes and pack-private shorthands, see [Citation syntax](#citation-syntax-v3). The engine itself recognizes only U.S.C., C.F.R. and case citations |
 | `nodes`, `edges` | arrays | Array order of `nodes` is not observable: the engine visits nodes in canonical (qualified id) order, whatever order packs are listed in, and a node's out-edges in this pack's `edges` order, then its `links.json` links by id |
 | `filingLimits` | array | **v5, optional** each paper kind's filing requirements in force at the build dates, as a litigate `limit` lowers them (`docs/litigate/SPEC.md` §3.7): `{id, cite?, bounds?: [{measure: words\|pages\|lines, max?, cite?}], certificates?: [{kind, for?: [measure], cite?}], excludes?: {items: [part], cite?}, ecf?: [{code?, cite?}]}`. Bounds are alternatives (a paper within any one is within the limit); `lines` counts monospaced lines; a certificate with `for` is required only of a paper relying on those bounds. A value the sources do not settle is absent and listed in `lowered.holes` (`/filingLimits/i/bounds/j/max`, `/filingLimits/i/excludes/open/n`, `/filingLimits/i/ecf/j/code`); a cite written as a hole holds its reason and is listed at that cite (`/filingLimits/i/cite`, `/filingLimits/i/bounds/j/cite`). Data for checking a filed paper; no analysis reads it |
@@ -149,7 +149,7 @@ scenario says so.
 **Tag the node** `"tags": ["fact"]` and **author a prior** — a labeled
 estimate or sourced base rate — as the `probability` on every one of its
 out-edges, same as any chance node, with the basis in each edge's `note`
-(e.g. "estimate: counsel screens for this before filing"). `litgraph lint`
+(e.g. "estimate: counsel screens for this before filing"). `litigate lint`
 flags a `fact`-tagged node whose out-edges aren't all authored
 (`fact-no-prior`) — the whole point of tagging it is that a real prior,
 not a 50/50 default, should be there.
@@ -176,7 +176,7 @@ existing algorithm, lint check and scenario field keeps working unchanged.
 The pack schema also admits a **mixed** fact node (an applicant choice
 alongside the fact-driven edges): `scenario.facts` forces the right edge
 exactly as for a pure-chance fact node (it's the same
-`scenario.probabilities` override underneath), and `litgraph lint`'s
+`scenario.probabilities` override underneath), and `litigate lint`'s
 `fact-no-prior` check and the `fact-unset` response warning both look at
 just the non-applicant (interrupt) edges, so a mixed fact node needs the
 same full authored prior on those and gets the same `fact-unset`
@@ -229,8 +229,9 @@ to parse or validate, or redefines an id already loaded, is skipped and
 listed in `load_errors`, as is a rule naming an unknown calendar. A
 calendar a fragment restates unchanged is no redefinition: each fragment
 whose rules close on a shared calendar carries it. Every
-object is strict (`deny_unknown_fields`). `litgraph validate` detects the
-kind `clock`; `litgraph schema clock` prints its JSON Schema.
+object is strict (`deny_unknown_fields`). The engine's `api::validate`
+detects the kind `clock`; the schema bundle (`cargo run -q -p
+litgraph-schema-bundle`) carries its JSON Schema.
 
 ### `HolidayCalendar`
 
@@ -439,7 +440,7 @@ edge (`same_choice`), and counts the copies it never reaches
 **Conditional chance draws.** A chance node's out-edges may carry
 `requires`/`forbids` too, so an earlier choice changes the odds at a node
 every option reaches: each product-graph copy keeps only the edges its
-flag-set enables, and those are its distribution. `litgraph lint`'s
+flag-set enables, and those are its distribution. `litigate lint`'s
 `probability-sum` checks the sum once per context (each set of the node's
 gating flags, up to 12; a context enabling no edge is skipped) and names
 the context that fails.
@@ -460,7 +461,7 @@ detour that would otherwise re-zero it (`panel-affirmed`/`panel-reversed`/
 `rehearing-granted-to-decision` since a fresh disposition replaces the one
 being reheard).
 
-**A reachability note.** Reachability lint (`litgraph lint`'s `unreachable`
+**A reachability note.** Reachability lint (`litigate lint`'s `unreachable`
 diagnostic) checks per *base id*, not per exact compiled copy: a node that's
 only ever reached with a flag set (nothing reaches its empty-flag copy in
 practice) is not flagged as unreachable as long as *some* compiled copy of
@@ -583,27 +584,27 @@ compile time, same as everything else.
 Generated from `cases/*.case` (see the note at the top). A **named scenario** is a matter profile: a human summary/notes, the packs it
 needs, its sourced facts, and the engine scenario itself (rates, stakes,
 perspective, masks, payoffs, probabilities, policy, modeling modes — the same
-`scenario` object a request carries; `litgraph schema scenario` gives its
-full shape). It is embedded into the binary the same way packs are
+`scenario` object a request carries; the schema bundle's `scenario` gives
+its full shape). It is embedded into the binary the same way packs are
 (`crates/litigate-engine/build.rs`); no environment variable overrides it.
 
 | field | type | notes |
 |---|---|---|
 | `id` | string | name a request references (`"scenario": "<id>"`); by convention matches the file stem |
-| `summary` | string | one line; `litgraph describe`'s `scenario_library` lists every scenario by this |
+| `summary` | string | one line; `litigate describe`'s `scenario_library` lists every scenario by this |
 | `notes` | string | facts, the basis for every rate/stake/probability (sourced vs illustrative), and any modeling judgment calls |
 | `packs` | string[] | pack refs this scenario needs. A request naming this scenario with no `packs` of its own uses these; an explicit request `packs` always wins |
 | `sources` | `[{title,url?,as_of?}]` | sourced facts backing this scenario's numbers |
-| `scenario` | object | the engine scenario (`litgraph schema scenario`) |
+| `scenario` | object | the engine scenario (the schema bundle's `scenario`) |
 | `schema_version` | `1` or `2` | absent is `1`; `2` adds the three fields below, and is what the compiler emits |
 | `parties` | `[{id,actor,entity_type}]` | **v2** the matter's parties and the pack actor each plays |
 | `events` | `[{date,docket?,action,relation,party,authority?}]` | **v2** the docket in docket order (by date, then `docket` number, never source order): `action` is the typed event as written (`Served(complaint, Mail)`), `relation` `by` or `on` the `party`. Replay already turned them into `scenario.start` and `scenario.remove_edges`; the engine reads them as record only |
 | `lowered` | object | **v2** [`lowered` header](#the-lowered-header): the world the matter was replayed in (`asOf`/`knownAt` are the case's) and its holes (an `unvalued` stake, a source `as_of ?(..)`) |
 
-`litgraph schema named-scenario` gives the full JSON Schema; `litgraph
-validate target/lit-build/scenarios/your-scenario.json` (or `--kind named-scenario`) resolves
-it against the current packs the same way a request is validated, reporting
-unresolved node/edge refs and expression errors.
+The schema bundle's `named-scenario` gives the full JSON Schema; `litigate
+run cases/your-case.case --op '{"op":"validate"}'` resolves the matter's
+scenario against the current packs the same way a request is validated,
+reporting unresolved node/edge refs and expression errors.
 
 ### Referencing a scenario from a request
 
@@ -628,14 +629,14 @@ onto a named `--scenario` via `extends` automatically.
 These rules hold for what the JSON says; since the flip you enforce them in
 the `lit/` source, where `litigate check` turns most of them into
 diagnostics (an unresolved cite is a hole, an error under `--profile
-strict`; an unknown field does not parse), and `litgraph lint` runs on the
+strict`; an unknown field does not parse), and `litigate lint` runs on the
 generated packs.
 
 1. Every `cite` / `authority` must be checkable against a `sources` entry or a
    public citation. No invented rule numbers. A `sources[].path` must be
    repo-relative (or omitted) — never a local filesystem path; cite the
    official `url` instead. If `path` points at a vendored L0 text file
-   under `sources/` (see `sources/PROVENANCE.md`), `litgraph lint`
+   under `sources/` (see `sources/PROVENANCE.md`), `litigate lint`
    verifies the cite mechanically — normalizing the surface form ("FRCP
    12(b)(6)", "Fed. R. Civ. P. 12(b)(6)", "28 U.S.C. § 1498(a)", "37
    C.F.R. § 42.108", "RCFC 56", ... all resolve the same way; rule bodies
@@ -654,6 +655,5 @@ generated packs.
 5. Parsing is strict: an unknown field anywhere in a pack, edge, source, or
    instance is a hard error (not a silently-ignored typo). Before opening
    a PR: `just lit-check` (or `litigate check lit/your-forum`), `just
-   lit-sync`, then `litgraph validate target/lit-build/packs/your-pack.json` (or `--kind
-   pack` to force detection) and `litgraph lint --packs your-pack` on the
-   regenerated file.
+   lit-sync`, then `litigate lint lit/your-forum` on the regenerated
+   pack.

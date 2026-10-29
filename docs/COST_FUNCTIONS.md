@@ -21,7 +21,7 @@ below marked *expression* works today without recompiling.
 | named library | — | — | `scenario.metrics`, `scenario.utilities` (shadow built-ins) |
 | parameters | — | all expressions | `scenario.params` (any name; sweepable) |
 
-Variables and functions available inside each: `litgraph describe`
+Variables and functions available inside each: `litigate describe`
 (`edge_variables`, `edge_functions`, `terminal_variables`, `math_functions`).
 Test any expression with `{"op":"metric","spec":"..."}` before using it.
 
@@ -139,7 +139,7 @@ set.
 
 A terminal (utility) expression can read three variables describing the path
 that reached it, in addition to the ordinary terminal variables (`payoff`,
-`node.<attr>`, params, ...; see `litgraph describe`'s `terminal_variables`):
+`node.<attr>`, params, ...; see `litigate describe`'s `terminal_variables`):
 
 | variable | meaning |
 |---|---|

@@ -113,12 +113,13 @@ checks: it fetches the zip for the system with `pkgs.fetchurl` (URL and
 digest copied from `build.rs`'s `ASSETS`, so bump both together) and sets
 `LITIGATE_SMT_Z3_ARCHIVE` in `commonArgs`.
 
-**Docker.** The image builds `litgraph-cli` and `litgraph-mcp` only, and
-neither depends on this crate. `cargo chef cook` swaps every build script
-for `fn main() {}`, so it compiles `ureq`/`ring`/`zip` (ring needs only
-the image's gcc) but never downloads or links Z3. The runtime image does
-not contain Z3. Checked locally with `cargo chef prepare` +
-`cargo chef cook --release` on the workspace.
+**Docker.** The image builds `litigate-cli` (the `litigate` binary),
+which depends on this crate through `litigate-sema`. `cargo chef cook`
+swaps every build script for `fn main() {}`, so the cached dependency
+layer compiles `ureq`/`ring`/`zip` (ring needs only the image's gcc) but
+never downloads Z3; the real `cargo build` then runs `build.rs`, which
+fetches the pinned archive and links it statically into `litigate`. The
+runtime image ships no separate Z3 library.
 
 **wasm.** Not built for `wasm32-unknown-unknown`: Z3 is a native C++
 library and `litgraph-wasm` does not depend on this crate.

@@ -3,15 +3,119 @@ module core.frcrimp45
 import core.calendar.{ delaware-holidays, us-federal-holidays }
 import core.time.{ Served, Scheduled, ServiceMethod }
 
+/// FRCrimP 45 from the 1985 amendments (effective August 1, 1985) as the
+/// 1996 edition of 18 U.S.C. App. prints it (as amended August 1, 1987; the
+/// 1987 Advisory Committee Note calls those amendments "technical. No
+/// substantive change is intended"): exclude the day of the act or event,
+/// include the last day unless it is a Saturday, Sunday or legal holiday,
+/// or, for a filing, a day the clerk's office is inaccessible, and in a
+/// period "less than 11 days" exclude intermediate Saturdays, Sundays and
+/// legal holidays (45(a); the 1985 Advisory Committee Note extends that
+/// exclusion from periods of less than 7 days). 45(e) adds 3 days after
+/// service by mail only, "added to the prescribed period": whether before
+/// or after the period is counted was contested until the 2007 amendment
+/// (see the 2007 version below), and the engine has the 2007 order (SPEC
+/// §5.3 step 5); UNVERIFIED for this version and the 2002 one, as for
+/// `frcp6` before 2005. Personal delivery and leaving a copy with the clerk
+/// add nothing; consented electronic and other means came to criminal
+/// cases (through Rule 49(b)) with Civil Rule 5(b)(2)(D) in 2001 and stay
+/// unrecognized here. Earlier versions (the credits list 1966 through
+/// 1982) are not vendored and stay undeclared. 45(a)'s state holidays are
+/// a district's own count, as in every later version. Rule 45 is silent
+/// on periods stated in months or years and on hours.
+counting frcrimp45 effective [1985-08-01, 2002-12-01) known_at 1985-04-29 cite "FRCrimP (1996 ed.) 45(a)" historical
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  short_period { below: 11.days, count: business_days }
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 3.days
+    Clerk: 0.days
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (1996 ed.) 45(e)"
+  holidays us-federal-holidays
+  forums [frcrimp]
+}
+
+/// The 2002 restyling (adopted April 29, 2002, effective December 1, 2002),
+/// as the 2002 edition prints it: 45(a) keeps the count, and 45(c) adds 3
+/// days after service "in the manner provided under Federal Rule of Civil
+/// Procedure 5(b)(2)(B), (C), or (D)": mailing, leaving it with the clerk,
+/// and other means consented to, electronic means included (2002 Committee
+/// Note). The days are still "added to the period", in the contested
+/// order (see the 1985 version). The 2005 amendment (effective December 1,
+/// 2005) changes only 45(b)(2) (2005 Committee Note), so this version runs
+/// to the 2007 one.
+counting frcrimp45 effective [2002-12-01, 2007-12-01) known_at 2002-04-29 supersedes frcrimp45@1985-08-01 cite "FRCrimP (2002 ed.) 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  short_period { below: 11.days, count: business_days }
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (2002 ed.) 45(c)"
+  holidays us-federal-holidays
+  forums [frcrimp]
+}
+
+/// The 2007 amendment (adopted April 30, 2007, effective December 1, 2007):
+/// the 3 days "are added after the period would otherwise expire under
+/// subdivision (a)", the order the pipeline uses (2007 Committee Note,
+/// paralleling Civil Rule 6(e)). The 2008 amendment (effective December 1,
+/// 2008) renumbers 45(c)'s cross-reference to the restyled Civil Rule
+/// 5(b)(2)(C), (D), (E), or (F), "No substantive change is intended" (2008
+/// Committee Note): the same four methods, so one version covers both
+/// texts. The 2008 edition prints the 2008 text, a later text, cited for
+/// 2007-2008 on purpose.
+counting frcrimp45 effective [2007-12-01, 2009-12-01) known_at 2007-04-30 supersedes frcrimp45@2002-12-01 cite "FRCrimP (2008 ed.) 45(a)" historical
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  short_period { below: 11.days, count: business_days }
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (2008 ed.) 45(c)"
+  holidays us-federal-holidays
+  forums [frcrimp]
+}
+
 /// FRCrimP 45 as amended by the 2009 time-computation amendments (adopted
 /// March 26, 2009, effective December 1, 2009), the text the 2011 edition
 /// of 18 U.S.C. App. prints: 45(a) is the count of the 2023 version below,
 /// and 45(c) adds 3 days after service "in the manner provided under
 /// Federal Rule of Civil Procedure 5(b)(2)(C), (D), (E), or (F)": mailing,
 /// leaving it with the clerk, electronic means (E) and other means
-/// consented to. Earlier versions (the credits list 1966 through 2008) are
-/// not vendored and stay undeclared.
-counting frcrimp45 effective [2009-12-01, 2016-12-01) known_at 2009-03-26 cite "FRCrimP (2011 ed.) 45(a)"
+/// consented to. Every day now counts: the short-period exclusion of the
+/// versions above is gone.
+counting frcrimp45 effective [2009-12-01, 2016-12-01) known_at 2009-03-26 supersedes frcrimp45@2007-12-01 cite "FRCrimP (2011 ed.) 45(a)"
 {
   exclude_trigger_day
   include_last_day

@@ -1,14 +1,18 @@
-# Leave to appeal to the New York Court of Appeals from a civil order of
-# the Appellate Division, sought from the Court of Appeals itself on
-# refusal by the Appellate Division or by direct application, under the
-# CPLR sections vendored in sources/ny-appellate-division-court-of-appeals
-# (CPLR 5513 and 5602, the most recent revision the NY Senate Open
-# Legislation site showed on 2026-10-27). Periods are stated in notes, not
-# counted (General Construction Law §§ 20, 25-a and CPLR 2103 are not
-# vendored). The Court of Appeals' own rules (22 NYCRR Part 500) and
-# appeals as of right (CPLR 5601) are not vendored: the leave papers, the
-# merits briefing and argument are not modeled. Leave sought from the
-# Appellate Division is lit/ny-appellate-division's.
+# Civil appeals by permission in the New York Court of Appeals: the
+# motion for leave made in the Court of Appeals itself, on refusal by the
+# Appellate Division or by direct application, under the CPLR sections
+# vendored in sources/ny-appellate-division-court-of-appeals (CPLR 5513
+# and 5602, the most recent revision the NY Senate Open Legislation site
+# showed on 2026-10-27), and, once leave is granted, the appeal under the
+# Court's Rules of Practice (22 NYCRR Part 500, vendored in
+# sources/ny-court-of-appeals from LII's copy of 2026-10-29): preliminary
+# appeal statement, jurisdictional inquiry or alternative (letter) review,
+# normal-course briefing, argument, decision and reargument. Periods are
+# stated in notes, not counted (General Construction Law §§ 20, 25-a and
+# CPLR 2103 are not vendored). Appeals as of right (CPLR 5601), criminal
+# leave applications (500.20), certified questions (500.27) and the
+# primary election session (500.26) are not modeled. Leave sought from
+# the Appellate Division is lit/ny-appellate-division's.
 [package]
 name = "ny-court-of-appeals-civil"
 version = "0.1.0"
@@ -17,12 +21,12 @@ pack_id = "ny-court-of-appeals-civil"
 forum = "ny-court-of-appeals"
 authority = "StateRule"
 jurisdiction_id = "new-york"
-title = "New York Court of Appeals, leave to appeal in civil cases"
-description = "A motion in the Court of Appeals for permission to appeal from a civil order of the Appellate Division under CPLR 5602 and the time for it under CPLR 5513(b) and (c), as far as the vendored text states. The merits of the appeal are not modeled: 22 NYCRR Part 500 is not vendored."
+title = "New York Court of Appeals, civil appeals by permission"
+description = "A motion in the Court of Appeals for permission to appeal from a civil order of the Appellate Division under CPLR 5602, the time for it under CPLR 5513(b) and (c) and its papers under 22 NYCRR 500.21 and 500.22, and, on a grant, the appeal under 22 NYCRR Part 500 through decision and reargument."
 in_force = "2026-10-27"
-known_at = "2026-10-28"
+known_at = "2026-10-29"
 unknown_before = "2026-10-27"
-jurisdiction = "New York Court of Appeals (leave to appeal, civil)"
+jurisdiction = "New York Court of Appeals (civil appeals by permission)"
 
 [package.roles]
 applicant = "self"
@@ -42,3 +46,12 @@ path_sha256 = "cb29e2ce7130b0fa976664171631f52fd1a44b49008a9ac17c0ab9146039446d"
 as_of = "2026-10-27"
 cite_prefixes = ["CPLR"]
 section_heading = "CPLR {n}"
+
+[sources.ny-ctapp-rules]
+title = "Rules of Practice of the Court of Appeals, 22 NYCRR Part 500 (LII copy as shown 2026-10-29; latest amendment eff. March 5, 2025)"
+url = "https://www.law.cornell.edu/regulations/new-york/title-22/subtitle-B/chapter-I/subchapter-A/part-500"
+path = "sources/ny-court-of-appeals/nycrr-part-500.txt"
+path_sha256 = "e9f1d7917cbf599008b3bd5af675deb9767da3e7e9cbb15af38af84fad2f5bc0"
+as_of = "2025-03-05"
+cite_prefixes = ["22 NYCRR"]
+section_heading = "22 NYCRR {n}"

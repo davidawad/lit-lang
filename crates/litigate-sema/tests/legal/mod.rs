@@ -43,6 +43,22 @@ pub fn pkg(
     }
 }
 
+/// The `reach` and holdings a precedent's `[package.instrument]` names
+/// (docs/litigate/CHANGE.md §2.8): the forum families of `reach`, and one
+/// pinned holding for each rule element of `edits`.
+pub fn holdings(reach: &[&str], edits: &[&str]) -> String {
+    let families: Vec<String> = reach.iter().map(|f| format!("\"{f}\"")).collect();
+    let mut out = format!("reach = [{}]\n", families.join(", "));
+    for (page, element) in edits.iter().enumerate() {
+        let _ = write!(
+            out,
+            "\n[[package.instrument.holdings]]\nholding = \"Held\"\npin = \"1 F.4th at {}\"\nedits = \"{element}\"\n",
+            page + 1
+        );
+    }
+    out
+}
+
 /// Shared declarations for single-package cases (lines 1-12; start `s`).
 pub const PRELUDE: &str = "module main
 start s

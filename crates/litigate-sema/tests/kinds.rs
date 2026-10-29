@@ -7,7 +7,7 @@
 //! a world modality) are L1004.
 mod legal;
 
-use legal::{pkg, render, workspace, CORE};
+use legal::{holdings, pkg, render, workspace, CORE};
 use litigate_base::{FileId, LineIndex};
 use litigate_sema::hir::{Effect, Kind, Row, Scope};
 use litigate_sema::pkg::load::LoadedPackage;
@@ -78,6 +78,13 @@ state l: \"L\"
     );
     p.manifest.push_str(INSTRUMENT);
     p.manifest.push_str(extra);
+    if kind == "precedent" {
+        // Undesignated: it binds nowhere.
+        p.manifest.push_str(&holdings(
+            &[],
+            &["fed::answer-period", "fed::open", "fed::c6", "fed::cal"],
+        ));
+    }
     p
 }
 

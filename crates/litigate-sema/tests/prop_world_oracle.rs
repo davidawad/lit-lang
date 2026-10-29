@@ -13,10 +13,11 @@
 //! Rust generate-and-test so the gate needs no solver.
 mod legal;
 
-use legal::{pkg, workspace, CORE};
+use legal::{holdings, pkg, workspace, CORE};
 use litigate_base::Profile;
 use litigate_sema::change::world::{check_world, WorldCheck};
 use litigate_sema::pkg::load::LoadedPackage;
+use litigate_sema::pkg::manifest::parse_manifest;
 use litigate_sema::{LitDatabase, Workspace};
 use std::collections::BTreeSet;
 use std::fmt::Write as _;
@@ -352,6 +353,15 @@ fn package(i: &Instrument) -> LoadedPackage {
     }
     if !i.authoritative {
         p.manifest.push_str("authoritative = false\n");
+    }
+    if i.class == Class::Precedent {
+        // Its declared reach is the compiler's, from the matrix: the
+        // oracle never reads it.
+        let families =
+            parse_manifest(&core().manifest).map_or_else(|_| Vec::new(), |p| p.manifest.families);
+        let reach = litigate_sema::change::reach(&families, i.court, i.designated);
+        p.manifest
+            .push_str(&holdings(&reach, &["fed::answer-period", "fed::open"]));
     }
     p
 }

@@ -10,7 +10,7 @@
 //! synthetic layer where only actual law is admitted (L1014).
 mod legal;
 
-use legal::{pkg, render, workspace, CORE};
+use legal::{holdings, pkg, render, workspace, CORE};
 use litigate_base::{FileId, LineIndex, Profile};
 use litigate_sema::change::choice;
 use litigate_sema::change::world::{check_world, parse_world, Modality, WorldCheck};
@@ -163,7 +163,28 @@ state l: \"L\"
         p.manifest,
         "\n[sources.order]\npath = \"sources/order.txt\"\n\n[package.instrument]\nsource = \"order\"\nissuer = \"Demo\"\ndate = \"2020-01-01\"\n{extra}"
     );
+    if kind == "precedent" {
+        p.manifest.push_str(&held(extra));
+    }
     p
+}
+
+/// The `reach` a precedent with instrument keys `extra` binds in, computed
+/// from its court and designation over [`FAMILIES`], and a holding for
+/// each `fed` element a test layer edits.
+fn held(extra: &str) -> String {
+    let families =
+        parse_manifest(&core().manifest).map_or_else(|_| Vec::new(), |p| p.manifest.families);
+    let court = extra
+        .lines()
+        .find_map(|l| l.strip_prefix("court = \"")?.strip_suffix('"'));
+    let reach = court.map_or_else(Vec::new, |c| {
+        litigate_sema::change::reach(&families, c, extra.contains("designated = "))
+    });
+    holdings(
+        &reach,
+        &["fed::answer-period", "fed::open", "fed::c6", "fed::cal"],
+    )
 }
 
 /// The diagnostics but lints of a workspace of `core`, `fed` and `layers`,
@@ -1060,7 +1081,7 @@ fn a_combination_with_an_error_is_reported_in_its_own_world() {
 #[test]
 fn an_overruled_precedent_is_in_force_until_the_overruling() {
     let ca1 = precedent("ca1-rule", "ca1", true, INTERPRETS);
-    let en_banc = layer(
+    let mut en_banc = layer(
         "en-banc",
         "overruling",
         "civil",
@@ -1068,6 +1089,9 @@ fn an_overruled_precedent_is_in_force_until_the_overruling() {
         "court = \"ca1\"\noverrules = [\"ca1-rule\"]\n",
         "",
     );
+    en_banc.manifest = en_banc
+        .manifest
+        .replace("date = \"2020-01-01\"", "date = \"2020-06-01\"");
     let at = |circuit: &str| format!("family = \"civil\"\ncircuit = \"{circuit}\"");
     let packs = [ca1, en_banc];
     let overruled = world(
@@ -1080,19 +1104,20 @@ fn an_overruled_precedent_is_in_force_until_the_overruling() {
         .iter()
         .find(|l| l.name == "ca1-rule")
         .unwrap();
-    // Overruled from the overruling's date (2020-01-01), for every case
-    // still open then; a matter judged earlier, or at a `known_at`
-    // before it, still has it.
+    // In force from its designation (2020-02-01); overruled from the
+    // overruling's date (2020-06-01), for every case still open then; a
+    // matter judged earlier, or at a `known_at` before it, still has it.
     let got: Vec<bool> = [
-        ("2019-12-31", None),
-        ("2020-01-01", None),
-        ("2021-01-01", Some("2019-06-01")),
-        ("2021-01-01", Some("2020-06-01")),
+        ("2020-01-31", None),
+        ("2020-05-31", None),
+        ("2020-06-01", None),
+        ("2021-01-01", Some("2020-03-01")),
+        ("2021-01-01", Some("2020-07-01")),
     ]
     .iter()
     .map(|(as_of, known_at)| rule.in_force_at(as_of, *known_at))
     .collect();
-    assert_eq!(got, [true, false, true, false]);
+    assert_eq!(got, [false, true, false, true, false]);
     // A precedent that does not bind at the location is never in force.
     let sister = world(&packs, &located("\"ca1-rule\"", &at("ca2")), Profile::Dev);
     assert!(!sister.layers[0].in_force_at("2019-12-31", None));

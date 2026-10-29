@@ -1,6 +1,5 @@
 ---
 source: crates/litigate-sema/tests/cov_build_clock.rs
-assertion_line: 202
 expression: deadlines
 ---
 [
@@ -18,6 +17,7 @@ expression: deadlines
                     retracted: None,
                     unknown_before: None,
                     commenced: None,
+                    repealed: false,
                 },
                 authority: "FederalRule",
                 relations: [],
@@ -100,6 +100,7 @@ expression: deadlines
             waive: None,
             designated: None,
             characterization: None,
+            derived: [],
         },
     ),
 ]

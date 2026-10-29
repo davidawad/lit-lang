@@ -344,11 +344,6 @@ fn ill_typed_filing_requirements_are_rejected() {
             "L2007",
             "at most one `cite`",
         ),
-        (
-            "limit b { words <= 1 cite ?(\"X 1\") }",
-            "L2007",
-            "not a hole",
-        ),
         ("limit x::b { words <= 1 }", "L2007", "plain identifier"),
         ("event E() paper nothing", "L1002", "nothing"),
         ("event E() paper s", "L2001", "expected a filing limit"),

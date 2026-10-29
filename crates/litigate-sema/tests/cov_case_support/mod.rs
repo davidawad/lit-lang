@@ -307,7 +307,8 @@ pub fn run(text: &str, clock: &dyn Clock, profile: Profile) -> Vec<String> {
     outcome(&check(text, fixture(), Some(&lock), clock, profile))
 }
 
-/// A `Lit.lock` pinning `packages` as loaded.
+/// A `Lit.lock` pinning `packages` as loaded, by source digest only (no
+/// semantic digest: a row's content is its source digest).
 pub fn lock(packages: &[Package]) -> LockFile {
     LockFile::new(
         packages
@@ -316,6 +317,7 @@ pub fn lock(packages: &[Package]) -> LockFile {
                 name: p.manifest.name.clone(),
                 version: p.manifest.version.clone(),
                 source: format!("sha256:{}", p.digest),
+                semantic: litigate_sema::pkg::lock::UNCHECKED.to_owned(),
                 dependencies: Vec::new(),
                 language: 1,
                 ..Default::default()

@@ -111,29 +111,24 @@ state review-decided: "Further Review Decided" by court cite "28 U.S.C. § 1254"
 terminal dismissed-jurisdiction: "Dismissed: No Appellate Jurisdiction" outcome [loss, dismissal, jurisdictional] cite "28 U.S.C. § 1291"
 {
   note "Dismissal for lack of appellate jurisdiction."
-  payoff ?("case-specific utility is not supplied by procedural authority")
 }
 
 terminal dismissed-untimely: "Dismissed: Untimely Notice" outcome [loss, dismissal] cite "Fed. R. App. P. 4(a)(1)(A)"
 {
   note "Dismissal for untimely notice of appeal."
-  payoff ?("case-specific utility is not supplied by procedural authority")
 }
 
 terminal final-decision: "Final: Decision Stands" outcome [final] cite "Fed. R. App. P. 41"
 {
   note "Decision stands; mandate issued."
-  payoff ?("case-specific utility is not supplied by procedural authority")
 }
 
 terminal review-denied: "Further Review Denied" outcome [final] cite "28 U.S.C. § 1254"
 {
   note "Certiorari denied."
-  payoff ?("case-specific utility is not supplied by procedural authority")
 }
 
 terminal review-granted: "Further Review Granted" outcome [neutral] cite "28 U.S.C. § 1254"
 {
   note "Certiorari granted; merits not modeled."
-  payoff ?("case-specific utility is not supplied by procedural authority")
 }

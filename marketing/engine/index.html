@@ -140,10 +140,10 @@ body { min-height: 100vh; display: flex; flex-direction: column; align-items: ce
 .calside .rl { margin-top: 12px; color: #2A3340; }
 .calside .rl b { color: #C22A2A; }
 
-.chips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 14px; }
+.chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
 .chip { font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 18px; padding: 7px 10px; background: #F6F8FA;
   border-left: 4px solid #24466F; opacity: 0; color: #141A23; white-space: nowrap; }
-.chip.raw { border-left-color: #C22A2A; font-weight: 600; }
+.chip.lang { border-left-color: #C22A2A; font-weight: 600; }
 
 /* controls (outside the stage) */
 .ctl { width: 100%; max-width: 1280px; display: flex; align-items: center; gap: 12px; margin-top: 12px; }
@@ -206,7 +206,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; align-items: ce
       <div class="r"><span class="i">02</span><span class="d"><b>Request</b>packs + scenario + one op</span></div>
       <div class="r"><span class="i">03</span><span class="d"><b>Response</b>policy, warnings, provenance</span></div>
       <div class="r"><span class="i">04</span><span class="d"><b>Capabilities</b>forums, deadlines, tornado, flags, scenarios, calibration</span></div>
-      <div class="r"><span class="i">05</span><span class="d"><b>MCP</b>20 tools, 15 resources</span></div>
+      <div class="r"><span class="i">05</span><span class="d"><b>MCP</b>29 tools, 667 resources</span></div>
     </div>
     <div class="stamp pstamp" style="opacity:.9"><span class="a">"ok": true</span><span class="b">api_version 1</span></div>
   </section>
@@ -250,15 +250,15 @@ body { min-height: 100vh; display: flex; flex-direction: column; align-items: ce
 
   <section class="scene" id="s-mcp">
     <div class="cap"><div class="num">05</div><div class="ttl">MCP server</div>
-      <p>The same contract over stdio. Every op is its own tool, plus a raw <code>litgraph</code> tool; packs, scenarios and the manual are resources.</p>
-      <div class="facts"><b>20</b> tools &#xB7; <b>15</b> resources<br><span style="font-size:15px">from <code>tools/list</code> and <code>resources/list</code> on litgraph-mcp 0.2.1</span></div></div>
+      <p>The same contract over stdio. Every engine op is its own tool, run on a <code>.case</code> matter or a package, plus seven <code>litigate_*</code> tools that drive the language; packs, links, scenarios and the manual are resources.</p>
+      <div class="facts"><b>29</b> tools &#xB7; <b>667</b> resources<br><span style="font-size:15px">from <code>tools/list</code> and <code>resources/list</code> on <code>litigate mcp</code> 0.6.0</span></div></div>
     <div class="main"><div class="paper" id="c-mcp1"><div class="tab">agent config</div></div>
       <div class="chips" id="chips"></div>
       <div class="paper" id="c-mcp2" style="margin-top:34px"><div class="tab">json-rpc &#xB7; stdio</div></div>
       <div class="stamp" id="st-mcp" style="right:30px;bottom:30px"><span class="a">FILED</span><span class="b">same envelope</span></div></div>
   </section>
 
-  <div class="ftr"><span class="src">Every number on screen is real output of litgraph 0.2.1.</span><span class="nla">Not legal advice.</span></div>
+  <div class="ftr"><span class="src">Every number on screen is real output of litgraph 0.2.1, and of litigate 0.6.0 in the MCP scene.</span><span class="nla">Not legal advice.</span></div>
 </div>
 </div>
 <div class="ctl">
@@ -738,18 +738,19 @@ scene('s-montage', 22, CARDS.length * CD, el => {
 scene('s-mcp', 37, 5, el => {
   const B1 = block($('#c-mcp1'), ['$ claude mcp add litigate -- litigate mcp']);
   schedule(B1, .2, { cps: 36 });
-  const tools = ['describe', 'packs', 'lint', 'validate', 'graph', 'metric', 'explain', 'solve', 'chain', 'simulate', 'path', 'pareto', 'sweep', 'tornado', 'calibration', 'structure', 'deadlines', 'compare', 'batch', 'litgraph'];
+  const tools = ['describe', 'packs', 'lint', 'validate', 'graph', 'metric', 'explain', 'solve', 'chain', 'simulate', 'path', 'pareto', 'sweep', 'tornado', 'calibration', 'posterior', 'voi', 'structure', 'deadlines', 'settle', 'compare', 'batch', 'litigate_describe', 'litigate_check', 'litigate_build', 'litigate_where', 'litigate_timeline', 'litigate_actions', 'litigate_explain'];
   const chips = $('#chips');
-  const CH = tools.map(n => { const d = document.createElement('div'); d.className = 'chip' + (n === 'litgraph' ? ' raw' : ''); d.textContent = n; chips.appendChild(d); return d; });
+  const CH = tools.map(n => { const d = document.createElement('div'); d.className = 'chip' + (n.startsWith('litigate_') ? ' lang' : ''); d.textContent = n; chips.appendChild(d); return d; });
   const L2 = [
-    '\u2192 tools/call "deadlines" { "packs": ["frcp-civil-procedure"],',
+    '\u2192 tools/call "deadlines" {',
+    '    "target": "cases/requests/frcp-answer-deadline.case",',
     '    "trigger": "2026-11-05", "node": "service-completed" }',
-    '\u2190 { "ok": true, "api_version": 1, "op": "deadlines",',
-    '    \u2026 "due_date": "2026-11-27", "last_day_rolled": true, \u2026 }',
+    '\u2190 { "ok": true, "op": "deadlines", "result": { "ok": true,',
+    '    \u2026 "due_date": "2026-11-27", "last_day_rolled": true, \u2026 } }',
   ];
   const B2 = block($('#c-mcp2'), L2);
-  let t = 2.0; B2.sched = L2.map((s, i) => { const r = { a: t, b: t + (i < 2 ? s.length / 200 : 0), typed: i < 2 }; t += i < 2 ? s.length / 200 + .05 : .12; if (i === 1) t += .3; return r; });
-  const h = hl(B2, 3, 6); const st = $('#st-mcp');
+  let t = 2.0; B2.sched = L2.map((s, i) => { const r = { a: t, b: t + (i < 3 ? s.length / 200 : 0), typed: i < 3 }; t += i < 3 ? s.length / 200 + .05 : .12; if (i === 2) t += .3; return r; });
+  const h = hl(B2, 4, 6); const st = $('#st-mcp');
   return lt => {
     drawBlock(B1, lt); drawBlock(B2, lt);
     CH.forEach((c, i) => { const p = eo(seg(lt, 1.4 + i * .035, 1.6 + i * .035)); c.style.opacity = p; c.style.transform = `translateY(${(1 - p) * 10}px)`; });

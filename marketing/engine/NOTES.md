@@ -35,7 +35,8 @@ same scenes stacked; there's no horizontal scroll at 400 px.
 
 ## Real litgraph output used
 
-Built with `cargo build --release -p litgraph-cli -p litgraph-mcp` (v0.2.1).
+Built with `cargo build --release -p litgraph-cli` (v0.2.1); the MCP scene
+is from `litigate mcp`, built with `cargo build -p litigate-cli` (v0.6.0).
 The raw JSON is in `/work/artifacts/out/` of the run that made this; any
 of it can be regenerated with the commands below.
 
@@ -66,9 +67,11 @@ of it can be regenerated with the commands below.
   - institution-granted goes from 0.65 (pack) to 0.681 (`ptab-fy2024`, n=1087, 740/1,087 from the USPTO FY24 roundup)
   - the two denial edges fall to 0.1595 each (residual split, warned), 3.738 ms
   - The 0.65 comes from the same request without `calibration`.
-- **MCP:** `litgraph-mcp` over stdio
-  - `initialize`, `tools/list` (20 tools), `resources/list` (15)
-  - `tools/call deadlines` with the arguments above, same envelope as the CLI
+- **MCP:** `litigate mcp` over stdio, run from the repository root
+  - `initialize` → `serverInfo` `litigate` 0.6.0
+  - `tools/list`: 29 tools, the 22 engine ops plus `litigate_describe`, `litigate_check`, `litigate_build`, `litigate_where`, `litigate_timeline`, `litigate_actions`, `litigate_explain`
+  - `resources/list`: 667 (`litigate://describe`, `litigate://links`, `litigate://scenarios`, 634 `litigate://packs/*`, 30 `litigate://scenarios/*`)
+  - `tools/call deadlines {"target":"cases/requests/frcp-answer-deadline.case","trigger":"2026-11-05","node":"service-completed"}` → the `litigate` envelope with the engine response as `result`: due 2026-11-27, `last_day_rolled: true`, as on the CLI
 
 `elapsed_ms` values come from one run on the build box and will vary run to run.
 

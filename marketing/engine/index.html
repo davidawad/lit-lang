@@ -189,7 +189,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; align-items: ce
 }
 </style>
 
-<div id="frame" role="img" aria-label="litgraph motion piece: install, one JSON request, one JSON response with warnings and provenance, a montage of capabilities, the MCP server, and an end card.">
+<div id="frame" role="img" aria-label="litgraph motion piece: install, one matter file and op, one JSON response with warnings and provenance, a montage of capabilities, the MCP server, and an end card.">
 <div id="inner">
   <div class="hdr"><span>litgraph <b>&#xB7;</b> docket of one engine</span><span class="entry" id="entry">index &#xB7; 5 entries</span></div>
 
@@ -197,13 +197,13 @@ body { min-height: 100vh; display: flex; flex-direction: column; align-items: ce
   <section class="scene" id="s-poster">
     <div class="kick">For agents and engineers</div>
     <div class="wm">litgraph<i>.</i></div>
-    <div class="thesis">Litigation procedure as a stochastic game. <em>One JSON request in, one JSON answer out</em> &#x2014; warnings and provenance attached.</div>
+    <div class="thesis">Litigation procedure as a stochastic game. <em>One matter in, one JSON answer out</em> &#x2014; warnings and provenance attached.</div>
     <div class="inst paper"><div class="tab">install</div><div class="l"><span class="n">1</span><span class="t"><span class="pr">$</span> <span class="w">brew install davidawad/tap/litgraph</span></span></div></div>
-    <div class="meta"><b>github.com/davidawad/litgraph</b><br>GPL-3.0<span class="sep">/</span>v0.2.1<span class="sep">/</span>CLI &#xB7; MCP server &#xB7; WebAssembly<span class="sep">/</span>8 forum packs</div>
+    <div class="meta"><b>github.com/davidawad/litgraph</b><br>GPL-3.0<span class="sep">/</span>v0.6.0<span class="sep">/</span>litigate CLI &#xB7; MCP server &#xB7; WebAssembly<span class="sep">/</span>635 rule packages</div>
     <div class="idx">
       <div class="h"><span>#</span><span>Docket text</span></div>
-      <div class="r"><span class="i">01</span><span class="d"><b>Install</b>one binary, packs embedded</span></div>
-      <div class="r"><span class="i">02</span><span class="d"><b>Request</b>packs + scenario + one op</span></div>
+      <div class="r"><span class="i">01</span><span class="d"><b>Install</b>one binary, <code>litigate</code></span></div>
+      <div class="r"><span class="i">02</span><span class="d"><b>Request</b>a matter + one op</span></div>
       <div class="r"><span class="i">03</span><span class="d"><b>Response</b>policy, warnings, provenance</span></div>
       <div class="r"><span class="i">04</span><span class="d"><b>Capabilities</b>forums, deadlines, tornado, flags, scenarios, calibration</span></div>
       <div class="r"><span class="i">05</span><span class="d"><b>MCP</b>29 tools, 667 resources</span></div>
@@ -213,20 +213,20 @@ body { min-height: 100vh; display: flex; flex-direction: column; align-items: ce
 
   <section class="scene" id="s-install">
     <div class="cap"><div class="num">01</div><div class="ttl">Install</div>
-      <p>One binary. Forum packs, named scenarios and vendored rule text are compiled in &#x2014; nothing else to ship.</p>
-      <div class="facts"><b>8</b> packs &#xB7; <b>470</b> nodes &#xB7; <b>703</b> edges<br><b>18</b> cross-forum links<br><span style="font-size:15px">totals of <code>litgraph packs</code> and <code>links.json</code></span></div></div>
+      <p>One binary, <code>litigate</code>. It checks and compiles the rule packages and the matters that use them, then runs any engine op on the result.</p>
+      <div class="facts"><b>635</b> rule packages<br><b>20</b> cross-forum links<br><span style="font-size:15px">counted in <code>lit/</code> and <code>lit/links/links.lit</code></span></div></div>
     <div class="main"><div class="paper" id="c-install"><div class="tab">terminal</div></div>
-      <div class="stamp" id="st-install" style="right:30px;top:360px"><span class="a">FILED</span><span class="b">27.945 ms</span></div></div>
+      <div class="stamp" id="st-install" style="right:30px;top:360px"><span class="a">FILED</span><span class="b">7.047 ms</span></div></div>
   </section>
 
   <section class="scene" id="s-request">
     <div class="cap"><div class="num">02</div><div class="ttl">Request</div>
-      <p>One envelope in: which forums, this matter, one op. Parsing is strict &#x2014; a typo is an error naming the valid fields.</p>
+      <p>One matter file in: which forums, the facts of this matter, then one op on it. The matter is checked before anything runs.</p>
       <ul class="foc" id="f-request">
-        <li><b>packs</b>Court of Federal Claims + Federal Circuit</li>
-        <li><b>scenario</b>rates, stakes, counterfactual edges</li>
-        <li><b>op</b>explain &#x2014; one of 19 ops</li></ul></div>
-    <div class="main"><div class="paper" id="c-request"><div class="tab">stdin &#xB7; examples/cofc-explain-dispositive-fork.json</div></div></div>
+        <li><b>uses</b>Court of Federal Claims + Federal Circuit</li>
+        <li><b>matter</b>facts, rate, stakes</li>
+        <li><b>op</b>explain &#x2014; one of 22 ops</li></ul></div>
+    <div class="main"><div class="paper" id="c-request"><div class="tab">matter &#xB7; cases/requests/cofc-explain-dispositive-fork.case</div></div></div>
   </section>
 
   <section class="scene" id="s-response">
@@ -237,7 +237,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; align-items: ce
         <li><b>warnings</b>every fallback named and counted</li>
         <li><b>provenance</b>pack fingerprints, every modeling mode</li></ul></div>
     <div class="main"><div class="paper" id="c-response"><div class="tab">stdout &#xB7; abridged (&#x2026;)</div></div>
-      <div class="stamp" id="st-response" style="right:40px;top:40px"><span class="a">FILED</span><span class="b">13.293 ms</span></div></div>
+      <div class="stamp" id="st-response" style="right:40px;top:40px"><span class="a">FILED</span><span class="b">7.143 ms</span></div></div>
   </section>
 
   <section class="scene" id="s-montage">
@@ -258,7 +258,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; align-items: ce
       <div class="stamp" id="st-mcp" style="right:30px;bottom:30px"><span class="a">FILED</span><span class="b">same envelope</span></div></div>
   </section>
 
-  <div class="ftr"><span class="src">Every number on screen is real output of litgraph 0.2.1, and of litigate 0.6.0 in the MCP scene.</span><span class="nla">Not legal advice.</span></div>
+  <div class="ftr"><span class="src">Every number on screen is real output of litigate 0.6.0.</span><span class="nla">Not legal advice.</span></div>
 </div>
 </div>
 <div class="ctl">
@@ -363,73 +363,71 @@ function stamp(el, t, a) {
 }
 function focus(list, i) { [...list.children].forEach((li, j) => li.classList.toggle('act', j === i)); }
 
-/* ================= REAL litgraph 0.2.1 OUTPUT (see NOTES.md) ================= */
+/* ================= REAL litigate 0.6.0 OUTPUT (see NOTES.md) ================= */
 const INSTALL = [
   '$ brew install davidawad/tap/litgraph',
-  '$ litgraph --version',
-  'litgraph 0.2.1',
-  '$ litgraph packs',
-  '{ "ok": true, "api_version": 1, "op": "packs", "result": [',
-  '  { "id": "cafc", "nodes": 58, "edges": 71 },',
-  '  { "id": "cofc", "nodes": 68, "edges": 84 },',
-  '  { "id": "frap-appellate-procedure", "nodes": 59, \u2026 },',
-  '  { "id": "frcp-civil-procedure", "nodes": 66, \u2026 },',
-  '  { "id": "frcrimp-criminal-procedure", "nodes": 61, \u2026 },',
-  '  { "id": "itc-337", "nodes": 49, "edges": 73 },',
-  '  { "id": "mpep-prosecution", "nodes": 54, \u2026 },',
-  '  { "id": "ptab-patent-trial-appeal-board", \u2026 } ], \u2026 }',
+  '$ litigate --version',
+  'litigate 0.6.0 (commit 14e67db963031f6420d067458c4bebf11e1b45fa, clean)',
+  '$ litigate run cases/ptab-ipr-defense.case --op packs',
+  '{ "schema_version": 2, "ok": true, "op": "run", "result": {',
+  '  "ok": true, "api_version": 1, "op": "packs", "result": [',
+  '  { "id": "ptab-patent-trial-appeal-board", "nodes": 55,',
+  '    "edges": 88, "terminals": 12, \u2026 },',
+  '  { "id": "cafc", "nodes": 61, "edges": 75,',
+  '    "terminals": 20, \u2026 } ], \u2026 }, \u2026 }',
 ];
 const REQUEST = [
-  "$ litgraph q - <<'JSON'",
-  '{',
-  '  "packs": ["cofc", "cafc"],',
-  '  "scenario": {',
-  '    "params": { "rate": 850, "stakes": 12 },',
-  '    "remove_edges": [',
-  '      "cofc::e-limitations-barred",',
-  '      "cofc::e-1500-barred",',
-  '      "cofc::e-filingfork-protest",',
-  '      "cofc::e-casetype-general",',
-  '      "cofc::e-patentfork-nonpatent" ] },',
-  '  "op": { "op": "explain",',
-  '          "node": "cofc::patent-dispositive-motion-fork" }',
-  '}',
-  'JSON',
+  '$ cat cases/requests/cofc-explain-dispositive-fork.case',
+  'case cofc-explain-dispositive-fork',
+  'uses cofc ^0.1.0, cafc ^0.1.0',
+  'as_of 2026-09-28',
+  'perspective owner',
+  'events { elected-1 \u2026 elected-3: Elected(\u2026) by owner }',
+  'facts {',
+  '  limitations-check: e-limitations-timely',
+  '  section-1500-check: e-1500-clear',
+  '  cafc::remand-destination: cafc::remand-route-cofc }',
+  'analysis { params: { rate: 850.usd / 1.hours, stakes: 12 } }',
+  '$ litigate run cases/requests/cofc-explain-dispositive-fork.case \\',
+  '    --op \'{"op":"explain",',
+  '           "node":"cofc::patent-dispositive-motion-fork"}\'',
 ];
 const RESPONSE = [
-  '{',
-  '  "ok": true, "api_version": 1, "op": "explain",',
-  '  "result": {',
-  '    "node": {',
-  '      "id": "cofc::patent-dispositive-motion-fork",',
-  '      "label": "Dispositive Motion Filed Before Trial?",',
-  '      "cite": "RCFC 56", \u2026 },',
-  '    "who_decides": "you",',
-  '    "value": 2561247.961725,',
-  '    "options": [',
-  '      { "id": "cofc::e-dispositivefork-trial",',
-  '        "authority": "28 U.S.C. \u00A71498(a)",',
-  '        "chosen": true, "regret": 0.0, \u2026 },',
-  '      { "id": "cofc::e-dispositivefork-sj",',
-  '        "authority": "RCFC 56",',
-  '        "chosen": false, "regret": 15926.859596, \u2026 } ] },',
-  '  "warnings": [',
-  '    { "code": "compile", "count": 61, \u2026 },',
-  '    { "code": "fact-unset", "count": 2, \u2026 },',
-  '    { "code": "mixed-node", "count": 4, \u2026 },',
-  '    { "code": "probability-fill", "count": 267, \u2026 } ],',
-  '  "provenance": {',
-  '    "engine": "litgraph 0.2.1",',
-  '    "packs": [',
-  '      { "id": "cofc", "sources": 17,',
-  '        "fingerprint": "fnv1a64:67e772863ca46c68" },',
-  '      { "id": "cafc", "sources": 18,',
-  '        "fingerprint": "fnv1a64:87c86ec10b436caa" } ],',
-  '    "nodes": 734, "edges": 828,',
-  '    "modes": { "mixed": "nature-first",',
-  '      "prob_fill": "residual", "cost": "dollars", \u2026 } },',
-  '  "elapsed_ms": 13.293',
-  '}',
+  '{ "schema_version": 2, "ok": true, "op": "run",',
+  '  "result": { "ok": true, "api_version": 1, "op": "explain",',
+  '    "result": {',
+  '      "node": {',
+  '        "id": "cofc::patent-dispositive-motion-fork",',
+  '        "label": "Dispositive Motion Filed Before Trial?",',
+  '        "cite": "RCFC 56", \u2026 },',
+  '      "who_decides": "you",',
+  '      "value": 927576.157779,',
+  '      "options": [',
+  '        { "id": "cofc::e-dispositivefork-sj",',
+  '          "authority": "RCFC 56",',
+  '          "chosen": true, "regret": 0.0, \u2026 },',
+  '        { "id": "cofc::e-dispositivefork-trial",',
+  '          "authority": "28 U.S.C. \u00A71498(a)",',
+  '          "chosen": false, "regret": 55419.041863, \u2026 } ] },',
+  '    "warnings": [',
+  '      { "code": "authored-hole", "count": 1, \u2026 },',
+  '      { "code": "compile", "count": 69, \u2026 },',
+  '      { "code": "mixed-node", "count": 4, \u2026 },',
+  '      { "code": "payoff-not-authored", "count": 1, \u2026 },',
+  '      { "code": "probability-fill", "count": 307, \u2026 } ],',
+  '    "provenance": {',
+  '      "engine": "litgraph 0.6.0",',
+  '      "packs": [',
+  '        { "id": "cofc", "sources": 21,',
+  '          "fingerprint": "fnv1a64:952daeae3cee8de7" },',
+  '        { "id": "cafc", "sources": 24,',
+  '          "fingerprint": "fnv1a64:54fc31693f685e17" } ],',
+  '      "nodes": 865, "edges": 964,',
+  '      "modes": { "mixed": "nature-first",',
+  '        "prob_fill": "residual", "cost": "dollars", \u2026 } },',
+  '    "elapsed_ms": 7.143 },',
+  '  "diagnostics": [ { "code": "L9002", "severity": "warning", \u2026 }, \u2026 ],',
+  '  "provenance": { "compiler_version": "0.6.0", \u2026 }, \u2026 }',
 ];
 
 /* ---------- scene builders ---------- */
@@ -445,7 +443,7 @@ scene('s-poster', 42, 6, null);
 scene('s-install', 3, 5.5, el => {
   const B = block($('#c-install'), INSTALL);
   schedule(B, .25, { cps: 30 });
-  // after `litgraph packs`, rows stream in fast
+  // after `litigate run \u2026 --op packs`, rows stream in fast
   const i0 = 4; let t = B.sched[3].b + .15;
   for (let i = i0; i < INSTALL.length; i++) { B.sched[i] = { a: t, b: t, typed: false }; t += .09; }
   B.sched[2] = { a: B.sched[1].b + .12, b: 0, typed: false };
@@ -457,8 +455,8 @@ scene('s-request', 8.5, 5, el => {
   const B = block($('#c-request'), REQUEST);
   schedule(B, .2, { cps: 34 });
   let t = B.sched[0].b + .1;
-  for (let i = 1; i < REQUEST.length; i++) { const d = REQUEST[i].length / 220; B.sched[i] = { a: t, b: t + d, typed: true }; t += d + .02; }
-  const H = [[hl(B, 2), 2.6], [hl(B, 4), 3.1], [hl(B, 5), 3.1], [hl(B, 11), 3.6], [hl(B, 12), 3.6]];
+  for (let i = 1; i < REQUEST.length; i++) { const d = REQUEST[i].length / 280; B.sched[i] = { a: t, b: t + d, typed: true }; t += d + .02; }
+  const H = [[hl(B, 2), 2.6], [hl(B, 7), 3.1], [hl(B, 8), 3.1], [hl(B, 10), 3.1], [hl(B, 12), 3.6], [hl(B, 13), 3.6]];
   const F = $('#f-request');
   return lt => {
     drawBlock(B, lt);
@@ -472,9 +470,9 @@ scene('s-response', 13.5, 8.5, el => {
   const B = block($('#c-response'), RESPONSE, rows());
   let t = .15; B.sched = RESPONSE.map(() => { const r = { a: t, b: t, typed: false }; t += .055; return r; });
   const arrive = t;
-  const pol = [hl(B, 8), hl(B, 12, 8), hl(B, 15, 8)];
-  const war = [17, 18, 19, 20].map(i => hl(B, i));
-  const pro = [hl(B, 22), hl(B, 25, 8), hl(B, 27, 8), hl(B, 29), hl(B, 30, 6), hl(B, 31)];
+  const pol = [hl(B, 8), hl(B, 12), hl(B, 15)];
+  const war = [17, 18, 19, 20, 21].map(i => hl(B, i));
+  const pro = [hl(B, 23), hl(B, 26), hl(B, 28), hl(B, 29), hl(B, 30), hl(B, 31)];
   const F = $('#f-response'), st = $('#st-response');
   // camera: follow arrival, then frame each focus
   const N = RESPONSE.length;
@@ -503,28 +501,28 @@ scene('s-response', 13.5, 8.5, el => {
 const NS = 'http://www.w3.org/2000/svg';
 const fmt = n => Math.round(n).toLocaleString('en-US');
 const CARDS = [
-  { k: 'a', t: 'Compose forums', s: 'PTAB final written decision \u2192 Federal Circuit, linked by links.json', ms: '14.871 ms',
-    cmd: ["$ litgraph q '{\"packs\": [\"ptab-patent-trial-appeal-board\",", "    \"cafc\"], \"op\": {\"op\": \"graph\",", "    \"node\": \"federal-circuit-window\"}}'"],
+  { k: 'a', t: 'Compose forums', s: 'PTAB final written decision \u2192 Federal Circuit, linked by lit/links', ms: '8.732 ms',
+    cmd: ['$ litigate graph cases/ptab-ipr-defense.case \\', '    --arg node=federal-circuit-window'],
     frag: ['"id": "links::ptab-appeal-to-cafc",', '"to": "cafc@ptab::entry-ptab",', '"authority": "35 U.S.C. \u00A7\u00A7 141(c), 319; 37 C.F.R. \u00A7 90.3"'],
     vis: visCompose },
-  { k: 'b', t: 'Deadline math', s: 'FRCP 6 counting, legal holidays rolled \u2014 with every step shown', ms: '2.497 ms',
-    cmd: ["$ litgraph q '{\"packs\": [\"frcp-civil-procedure\"],", "    \"op\": {\"op\": \"deadlines\", \"trigger\": \"2026-11-05\",", "    \"node\": \"service-completed\"}}'"],
-    frag: ['"authority": "FRCP 12(a)(1)(A)(i)",', '"base_date": "2026-11-26", "due_date": "2026-11-27",', '"FRCP 6(a)(1)(C): last day fell on a Saturday, Sunday,', ' or legal holiday; roll forward -> 2026-11-27"'],
+  { k: 'b', t: 'Deadline math', s: 'FRCP 6 counting, legal holidays rolled \u2014 with every step shown', ms: '1.360 ms',
+    cmd: ['$ litigate deadlines cases/requests/frcp-answer-deadline.case \\', '    --arg trigger=2026-11-05 --arg node=service-completed'],
+    frag: ['"authority": "FRCP 12(a)(1)(A)(i)",', '"nominal_date": "2026-11-26", "due_date": "2026-11-27",', '"FRCP 6(a): the last day is a weekend or legal holiday;', ' roll forward -> 2026-11-27"'],
     vis: visDeadline },
-  { k: 'c', t: 'Sensitivity', s: 'Tornado: which inputs actually move the value \u2014 and which flip the policy', ms: '239.434 ms',
-    cmd: ['$ litgraph q - < examples/cofc-1498-tornado.json'],
-    frag: ['"base_value": 2747220.713689,', '{ "input": "p:cafc@cofc::panel-to-reversed",', '  "swing": 1050700.38\u2026, "policy_changes": true }'],
+  { k: 'c', t: 'Sensitivity', s: 'Tornado: which inputs actually move the value \u2014 and which flip the policy', ms: '252.745 ms',
+    cmd: ['$ litigate tornado cases/requests/cofc-1498-tornado.case \\', '    --arg \'params=["rate","stakes"]\''],
+    frag: ['"base_value": 1827748.310446,', '{ "input": "p:cafc@cofc::panel-to-reversed",', '  "swing": 873915.458\u2026, "policy_changes": true }'],
     vis: visTornado },
-  { k: 'd', t: 'State flags', s: 'Litigation has memory: IPR estoppel (35 U.S.C. \u00A7 315(e)) rides along as a flag', ms: '3.179 ms',
-    cmd: ["$ litgraph q '{\"packs\": [\"ptab-patent-trial-appeal-board\"],", "    \"links\": false, \"op\": {\"op\": \"graph\",", "    \"node\": \"post-fwd-options{ipr-estopped}\"}}'"],
+  { k: 'd', t: 'State flags', s: 'Litigation has memory: IPR estoppel (35 U.S.C. \u00A7 315(e)) rides along as a flag', ms: '1.315 ms',
+    cmd: ['$ litigate graph cases/requests/ptab-ipr-estoppel-flag.case \\', '    --arg \'node=post-fwd-options{ipr-estopped}\' --no-links'],
     frag: ['{ "code": "compile", "example": "state flags expanded', '  the graph: 104 additional node(s) for reachable', '  flag combinations" }'],
     vis: visFlags },
-  { k: 'e', t: 'Named scenario', s: '28 U.S.C. \u00A7 1498 patent case in the Court of Federal Claims, by name', ms: '0.583 ms',
-    cmd: ['$ litgraph chain --scenario cofc-1498-patent-case'],
-    frag: ['"expected": { "dollars": 252504.270313,', '  "elapsed": 302.224688, "hours": 387.905781 },', '"warnings": [{ "code": "fact-unset", "count": 2, \u2026 }, \u2026]'],
+  { k: 'e', t: 'Named scenario', s: '28 U.S.C. \u00A7 1498 patent case in the Court of Federal Claims, from its .case file', ms: '0.804 ms',
+    cmd: ['$ litigate chain cases/cofc-1498-patent-case.case'],
+    frag: ['"expected": { "dollars": 252504.270312,', '  "elapsed": 302.224687, "hours": 387.905781 },', '"warnings": [{ "code": "fact-unset", "count": 2, \u2026 }, \u2026]'],
     vis: visChain },
-  { k: 'f', t: 'Calibration', s: 'Teaching estimates replaced by published USPTO statistics, cited', ms: '3.738 ms',
-    cmd: ["$ litgraph q '{\"packs\": [\"ptab-patent-trial-appeal-board\"],", "    \"scenario\": {\"calibration\": [\"ptab-fy2024\"], \u2026},", "    \"op\": {\"op\": \"explain\", \"node\": \"institution-decision\"}}'"],
+  { k: 'f', t: 'Calibration', s: 'Teaching estimates replaced by published USPTO statistics, cited', ms: '1.646 ms',
+    cmd: ['$ litigate explain cases/requests/ptab-calibrated-institution.case \\', '    --arg node=institution-decision'],
     frag: ['{ "set": "ptab-fy2024", "value": 0.681, "n": 1087,', '  "sourceTitle": "PTAB Trial Statistics FY24 End of', '  Year Outcome Roundup \u2014 IPR, PGR", \u2026 }'],
     vis: visCalib },
 ];
@@ -545,14 +543,14 @@ function visCompose(v) {
     for (let i = 0; i < n; i++) dots.push(E(g, 'circle', { cx: x + 26 + (i % cols) * 21, cy: 112 + Math.floor(i / cols) * 21, r: 5.5, fill: '#24466F', opacity: 0 }));
     return dots;
   };
-  const A = box(0, 'PTAB', 'pack \u00B7 55 nodes \u00B7 89 edges', 55, 14);
-  const B = box(690, 'CAFC @ PTAB', 'instance \u00B7 58 nodes \u00B7 71 edges', 58, 14);
+  const A = box(0, 'PTAB', 'pack \u00B7 55 nodes \u00B7 88 edges', 55, 14);
+  const B = box(690, 'CAFC @ PTAB', 'instance \u00B7 61 nodes \u00B7 75 edges', 61, 14);
   const path = E(s, 'path', { d: 'M 336 160 C 470 160, 540 120, 684 120', fill: 'none', stroke: '#C22A2A', 'stroke-width': 4 });
   const head = E(s, 'path', { d: 'M 684 120 l -16 -9 l 0 18 z', fill: '#C22A2A', opacity: 0 });
   const L = path.getTotalLength ? 380 : 380; path.setAttribute('stroke-dasharray', L); path.setAttribute('stroke-dashoffset', L);
   const lab = E(s, 'text', { x: 512, y: 96, 'text-anchor': 'middle', 'font-size': 16, fill: '#C22A2A', 'font-weight': 600, opacity: 0 }, 'links::ptab-appeal-to-cafc');
   const lab2 = E(s, 'text', { x: 512, y: 200, 'text-anchor': 'middle', 'font-size': 15, fill: '#141A23', opacity: 0 }, 'federal-circuit-window \u2192 entry-ptab');
-  const lab3 = E(s, 'text', { x: 512, y: 226, 'text-anchor': 'middle', 'font-size': 15, fill: '#4A5563', opacity: 0 }, 'compiled: 978 nodes \u00B7 1,167 edges');
+  const lab3 = E(s, 'text', { x: 512, y: 226, 'text-anchor': 'middle', 'font-size': 15, fill: '#4A5563', opacity: 0 }, 'compiled: 1,108 nodes \u00B7 1,300 edges');
   return lt => {
     A.forEach((d, i) => d.setAttribute('opacity', seg(lt, .35 + i * .006, .5 + i * .006)));
     B.forEach((d, i) => d.setAttribute('opacity', seg(lt, 1.2 + i * .006, 1.35 + i * .006)));
@@ -589,14 +587,14 @@ function visDeadline(v) {
 
 function visTornado(v) {
   const s = svg(v, 1020, 262);
-  const base = 2747220.713689, lo = 1.75e6, hi = 3.75e6, X0 = 330, X1 = 1000;
+  const base = 1827748.310446, lo = 1.0e6, hi = 2.6e6, X0 = 330, X1 = 1000;
   const X = x => X0 + (x - lo) / (hi - lo) * (X1 - X0);
   const rows = [
-    ['param:stakes', 1876517.88, 3617068.51, false],
-    ['p:cafc@cofc::panel-to-reversed', 2216465.39, 3267165.77, true],
-    ['p:cofc::e-settlementfork-settles', 2541537.76, 2952903.67, false],
-    ['p:cafc@cofc-gov::panel-to-dismissed', 2615298.62, 3005081.71, false],
-    ['param:rate', 2927603.93, 2565768.70, false],
+    ['param:stakes', 1165704.53, 2489792.09, false],
+    ['p:cafc@cofc::panel-to-reversed', 1324664.76, 2198580.21, true],
+    ['p:cofc::e-settlementfork-settles', 1365205.93, 2197085.11, false],
+    ['param:rate', 2030156.06, 1625340.56, false],
+    ['p:cofc::e-prevailing-plaintiff', 2001122.69, 1678104.84, true],
   ];
   const G = rows.map(([name, a, b, flip], i) => {
     const y = 18 + i * 44;
@@ -608,9 +606,9 @@ function visTornado(v) {
     return { a, b, l, r, tag };
   });
   E(s, 'line', { x1: X(base), x2: X(base), y1: 8, y2: 240, stroke: '#141A23', 'stroke-width': 2 });
-  E(s, 'text', { x: X(base), y: 258, 'text-anchor': 'middle', 'font-size': 15, fill: '#141A23' }, 'base 2,747,221');
-  E(s, 'text', { x: X0, y: 258, 'font-size': 14, fill: '#6B7582' }, '1.75M');
-  E(s, 'text', { x: X1, y: 258, 'text-anchor': 'end', 'font-size': 14, fill: '#6B7582' }, '3.75M');
+  E(s, 'text', { x: X(base), y: 258, 'text-anchor': 'middle', 'font-size': 15, fill: '#141A23' }, 'base 1,827,748');
+  E(s, 'text', { x: X0, y: 258, 'font-size': 14, fill: '#6B7582' }, '1.0M');
+  E(s, 'text', { x: X1, y: 258, 'text-anchor': 'end', 'font-size': 14, fill: '#6B7582' }, '2.6M');
   return lt => G.forEach((g, i) => {
     const p = eo(seg(lt, .4 + i * .12, .85 + i * .12));
     const lo_ = Math.min(g.a, g.b), hi_ = Math.max(g.a, g.b);
@@ -661,7 +659,7 @@ function visChain(v) {
   const s = svg(v, 1020, 262);
   const A = [
     ['judgment-for-plaintiff', .217164, '#24466F'], ['judgment-for-government', .217164, '#6B7582'], ['settled-adr', .186141, '#5F7FA8'],
-    ['dismissed-lack-of-jurisdiction', .169219, '#8C96A1'], ['dismissed-failure-to-state', .112813, '#A9B2BC'],
+    ['dismissed-lack-of-jurisdiction', .169219, '#8C96A1'], ['dismissed-failure-to-state', .112812, '#A9B2BC'],
     ['dismissed-time-barred', .05, '#C9CFD6'], ['dismissed-1500-bar', .0475, '#C22A2A']];
   E(s, 'text', { x: 0, y: 18, 'font-size': 15, fill: '#4A5563' }, 'absorption under the optimal policy (p, cofc::\u2026)');
   let x = 0; const W = 1020;

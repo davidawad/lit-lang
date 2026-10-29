@@ -103,6 +103,7 @@ fn unit(unit: DayUnit) -> Option<String> {
         DayUnit::Week => "week",
         DayUnit::Month => "month",
         DayUnit::Year => "year",
+        DayUnit::Hour => "hour",
     };
     Some(name.to_owned())
 }

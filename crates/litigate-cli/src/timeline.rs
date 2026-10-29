@@ -156,6 +156,7 @@ fn deadline_label(d: &hir::Deadline) -> String {
         hir::DayUnit::Week => "week",
         hir::DayUnit::Month => "month",
         hir::DayUnit::Year => "year",
+        hir::DayUnit::Hour => "hour",
     };
     let plural = if d.amount == 1 { "" } else { "s" };
     let direction = match d.direction {

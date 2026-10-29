@@ -45,6 +45,11 @@ pub enum Unit {
     Month,
     /// Calendar years (twelve calendar months).
     Year,
+    /// Hours, counted by the rule's `hours` provision
+    /// (`clock::rule::Hours`) from 00:00 of the trigger date: a pack
+    /// trigger carries a date, not a time, and its first instant gives the
+    /// earliest due instant the trigger allows in either direction.
+    Hour,
 }
 
 /// Service methods that may add days to a period: a closed vocabulary, the

@@ -81,9 +81,10 @@ fn unit_of(d: &PackDeadline) -> Result<Unit> {
         Some("week") => Ok(Unit::Week),
         Some("month") => Ok(Unit::Month),
         Some("year") => Ok(Unit::Year),
+        Some("hour") => Ok(Unit::Hour),
         Some(other) => Err(Error::Invalid(format!(
             "deadline.unit {other:?}; expected \"calendar\", \"court\", \"business\", \"week\", \
-             \"month\" or \"year\""
+             \"month\", \"year\" or \"hour\""
         ))),
     }
 }

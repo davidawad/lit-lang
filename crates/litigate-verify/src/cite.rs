@@ -239,6 +239,7 @@ impl Measure {
             DayUnit::Week => Self::Week,
             DayUnit::Month => Self::Month,
             DayUnit::Year => Self::Year,
+            DayUnit::Hour => Self::Hour,
         }
     }
 

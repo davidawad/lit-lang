@@ -421,6 +421,9 @@ pub fn compute_due_date(
     clock: &Clock,
     cfg: &ClockConfig,
 ) -> Result<ComputedDeadline> {
+    if dl.unit == Unit::Hour {
+        return compute_hour_period(dl, clock, cfg);
+    }
     if let Some(min) = &clock.rule.min_length {
         if dl.days < min.days {
             return Err(Error::Invalid(min.message.clone()));
@@ -464,6 +467,103 @@ pub fn compute_due_date(
         service_days_added: run.applied.service,
         clerk_inaccessibility_applied: run.applied.clerk,
         steps: run.steps,
+    })
+}
+
+/// Compute the due date of an `N.hours` pack period from a date-only
+/// trigger under `clock`'s hours provision: the period runs from 00:00 of
+/// the trigger date, the earliest instant the trigger allows, so the due
+/// date is the earliest one any time of day on that date gives. A period
+/// counted before the trigger continues, if it ends on a closed day, to
+/// the same time on the open day before it (FRCP 6(a)(5), Fed. R. Crim. P.
+/// 45(a)(5): the "next day" is counted backward), and no inaccessibility
+/// extension lengthens it.
+///
+/// # Errors
+/// `Error::Invalid` if the rule has no hours provision, `days` (the hours)
+/// is negative, or a service method would add days to the period: added
+/// service days are counted only for day periods.
+fn compute_hour_period(
+    dl: &DayDeadline,
+    clock: &Clock,
+    cfg: &ClockConfig,
+) -> Result<ComputedDeadline> {
+    let adds = |m| {
+        clock.rule.steps.iter().any(|s| {
+            matches!(s, Step::Service { methods, .. }
+                if methods.iter().any(|e| e.method == m && e.days != 0))
+        })
+    };
+    if let Some(m) = dl.service_method.filter(|&m| adds(m)) {
+        return Err(Error::Invalid(format!(
+            "{}: service by {m:?} adds days, which are not counted for an hours period",
+            clock.rule.label
+        )));
+    }
+    let start = dl.trigger.epoch_day().saturating_mul(86400);
+    let forward = dl.direction == Direction::Forward;
+    let computed = if forward {
+        compute_hour_deadline(
+            &HourDeadline {
+                trigger_epoch_seconds: start,
+                hours: dl.days,
+            },
+            clock,
+            cfg,
+        )?
+    } else {
+        let Some(h) = &clock.rule.hours else {
+            return Err(Error::Invalid(format!(
+                "{} has no hours-based period provision in the fetched text",
+                clock.rule.label
+            )));
+        };
+        if dl.days < 0 {
+            return Err(Error::Invalid(format!(
+                "hours must be non-negative, got {}",
+                dl.days
+            )));
+        }
+        let due_instant = start - dl.days.saturating_mul(3600);
+        let due_day = Date::from_epoch_day(due_instant.div_euclid(86400));
+        let n = dl.days.to_string();
+        let mut steps = vec![fill(&h.text, &[("n", &n)])];
+        let final_day = clock
+            .closed(false, &cfg.additional_holidays)
+            .roll(due_day, Toward::Earlier)?;
+        if final_day != due_day {
+            let date = final_day.to_iso();
+            steps.push(fill(&h.roll_text, &[("n", &n), ("date", &date)]));
+        }
+        ComputedHourDeadline {
+            due_date: final_day.to_iso(),
+            due_datetime: {
+                let t = due_instant.rem_euclid(86400);
+                format!(
+                    "{final_day}T{:02}:{:02}:{:02}",
+                    t / 3600,
+                    (t / 60) % 60,
+                    t % 60
+                )
+            },
+            last_day_rolled: final_day != due_day,
+            clerk_inaccessibility_applied: false,
+            steps,
+        }
+    };
+    let signed = if forward { dl.days } else { -dl.days };
+    let nominal =
+        Date::from_epoch_day((start + signed.saturating_mul(3600)).div_euclid(86400)).to_iso();
+    Ok(ComputedDeadline {
+        rule_set: clock.rule.id.clone(),
+        anchor_date: dl.trigger.to_iso(),
+        nominal_date: nominal.clone(),
+        base_date: nominal,
+        due_date: computed.due_date,
+        last_day_rolled: computed.last_day_rolled,
+        service_days_added: false,
+        clerk_inaccessibility_applied: computed.clerk_inaccessibility_applied,
+        steps: computed.steps,
     })
 }
 

@@ -1524,7 +1524,12 @@ Counting rule `c` defines (FRCP 6(a) vocabulary):
    counted as if it added nothing. A rule with no `service_extension`
    recognizes no method. It applies only to forward counting (FRCP 6(d)).
 6. `allow_hours` permits `N.hours` deadlines (FRCP 6(a)(2)). Without it, an
-   hours deadline is L3009.
+   hours deadline is L3009. An hours deadline counts whole hours (`24.hours`;
+   a fraction is L2001) and lowers to `Deadline.unit` `hour`: a trigger
+   carries a date, not a time, so the period runs from 00:00 of the trigger
+   date, the earliest due time the trigger allows, and a period ending on a
+   closed day continues to the same time on the next open day, counted
+   backward for a period before the trigger (FRCP 6(a)(5)).
 7. A week is seven calendar days (step 3). Months and years (twelve months)
    are calendar months, counted from a `trigger_day` anchor to the
    corresponding day of the later month; when that month has no such day

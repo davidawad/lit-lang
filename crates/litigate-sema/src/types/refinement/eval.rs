@@ -155,6 +155,7 @@ pub const fn suffix(u: DayUnit) -> &'static str {
         DayUnit::Week => "weeks",
         DayUnit::Month => "months",
         DayUnit::Year => "years",
+        DayUnit::Hour => "hours",
     }
 }
 

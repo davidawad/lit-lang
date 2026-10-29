@@ -68,6 +68,10 @@ pub enum DayUnit {
     Month,
     /// Calendar years.
     Year,
+    /// Hours, counted from the trigger instant under the counting rule's
+    /// hours provision (FRCP 6(a)(2), Fed. R. Crim. P. 45(a)(2)). Only a deadline's
+    /// period carries it: an `N.hours` literal is `Type::Hours`.
+    Hour,
 }
 
 impl DayUnit {
@@ -81,6 +85,7 @@ impl DayUnit {
             Self::Week => "week",
             Self::Month => "month",
             Self::Year => "year",
+            Self::Hour => "hour",
         };
         format!("{n} {noun}{}", if n == 1 { "" } else { "s" })
     }

@@ -36,6 +36,7 @@ pub const fn unit_name(unit: DayUnit) -> &'static str {
         DayUnit::Week => "Weeks",
         DayUnit::Month => "Months",
         DayUnit::Year => "Years",
+        DayUnit::Hour => "Hours",
     }
 }
 

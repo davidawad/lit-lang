@@ -163,6 +163,7 @@ impl EngineClock {
                 hir::DayUnit::Week => Unit::Week,
                 hir::DayUnit::Month => Unit::Month,
                 hir::DayUnit::Year => Unit::Year,
+                hir::DayUnit::Hour => Unit::Hour,
             },
             service_method,
         };

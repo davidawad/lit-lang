@@ -56,6 +56,7 @@ fn unit(u: DayUnit) -> &'static str {
         DayUnit::Week => "Weeks",
         DayUnit::Month => "Months",
         DayUnit::Year => "Years",
+        DayUnit::Hour => "Hours",
     }
 }
 

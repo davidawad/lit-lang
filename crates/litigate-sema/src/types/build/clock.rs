@@ -6,8 +6,8 @@ use crate::db::parse::tree::{ArmItem, Atom, Expr, ExprKind, Field, Item, Name, R
 use crate::db::span::Report;
 use crate::hir::{
     Adoption, Anchor, Chain, CharacterKind, Counting, DayUnit, Deadline, Derivation, Designated,
-    Direction, DueEnd, EndOfMonth, RollOn, ServiceTime, ShortPeriod, Transition, TransitionArm,
-    Type, Value, SERVICE_METHODS,
+    Direction, DueEnd, EndOfMonth, Rational, RollOn, ServiceTime, ShortPeriod, Transition,
+    TransitionArm, Type, Value, SERVICE_METHODS,
 };
 use crate::resolve::sig::{clauses_of, TypeSig, ValueKind};
 use crate::resolve::suggest;
@@ -116,23 +116,11 @@ impl Cx<'_, '_> {
                 }
                 u64::try_from(n).ok().map(|n| (n, unit))
             }
-            Some(Value::Hours(_)) => {
+            Some(Value::Hours(h)) => {
                 let refused = lacks(self, |k| {
                     matches!(k, ValueKind::Counting { hours: true, .. })
                 });
-                let (code, message) = if refused {
-                    (
-                        C::InvalidCounting,
-                        "an hours deadline needs a counting rule with `allow_hours`",
-                    )
-                } else {
-                    (
-                        C::LoweringUnsupported,
-                        "hour deadlines have no HIR/litgraph representation in language version 1",
-                    )
-                };
-                self.report(Report::new(code, amount.range, message));
-                None
+                self.hours(h, amount, refused)
             }
             _ => {
                 self.report(Report::new(
@@ -180,6 +168,28 @@ impl Cx<'_, '_> {
             characterization,
             derived,
         })
+    }
+
+    /// The period of an `N.hours` deadline: whole hours, under a counting
+    /// rule whose signature carries `allow_hours` (L3009 when `refused`).
+    fn hours(&mut self, h: Rational, amount: &Expr, refused: bool) -> Option<(u64, DayUnit)> {
+        let whole = (h.denominator == 1)
+            .then(|| u64::try_from(h.numerator).ok())
+            .flatten();
+        if refused {
+            self.report(Report::new(
+                C::InvalidCounting,
+                amount.range,
+                "an hours deadline needs a counting rule with `allow_hours`",
+            ));
+        } else if whole.is_none() {
+            self.report(Report::new(
+                C::TypeMismatch,
+                amount.range,
+                "an hours deadline counts whole hours, such as `24.hours`",
+            ));
+        }
+        whole.map(|n| (n, DayUnit::Hour))
     }
 
     /// The terms of deadline `name`'s period (`derived N.unit cite "X"

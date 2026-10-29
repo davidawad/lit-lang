@@ -201,6 +201,7 @@ fn unit(u: hir::DayUnit) -> &'static str {
         hir::DayUnit::Week => "weeks",
         hir::DayUnit::Month => "months",
         hir::DayUnit::Year => "years",
+        hir::DayUnit::Hour => "hours",
     }
 }
 

@@ -15,13 +15,12 @@ import core.frcrimp45.{ frcrimp45 }
 // or 21 days after the latest scheduled arraignment date if arraignment
 // is waived (CR-12(b)), a "latest of" two periods from different events;
 // discovery for a release or detention hearing is due by the start of the
-// hearing (CR-16(b)(1)(A)). Two periods are counted in hours, which the
-// corpus's FRCrimP 45 counting rule does not allow: a detained material
-// witness is ordered released within 24 hours of the taking and the
-// certification, or waiver of certification, of the deposition, if that
-// comes before the 45-day deadline (CR-15B(c)(1)(A)), and discovery for a
-// pretrial hearing other than a release or detention hearing is due not
-// later than 48 hours before it (CR-16(b)(1)(B)). CR-32(b) sets its own
+// hearing (CR-16(b)(1)(A)). Two periods are counted in hours, under FRCrimP
+// 45(a)(2): the 24-hour release of a material witness after the
+// deposition (CR-15B(c)(1)(A)) and the 48-hour pretrial hearing discovery
+// (CR-16(b)(1)(B)). A trigger carries a date, not a time, so each is
+// counted from 00:00 of its date, the earliest due time any hour of that
+// day gives. CR-32(b) sets its own
 // presentence schedule only where the defendant and the government waive
 // the FRCrimP 32 time limits (the report given at least 24 days before sentencing, the review
 // certificate and written objections within 10 days after it is given,
@@ -57,6 +56,12 @@ event MaterialWitnessAppeared()
 /// A Disclosure Agreement Checklist showing that a party refuses to
 /// disclose information is filed (W.D. Tex. Local Rule CR-16(a)(3)).
 event RefusalChecklistFiled()
+/// A material witness's deposition is taken, and certified or its
+/// certification waived (W.D. Tex. Local Rule CR-15B(c)(1)(A)).
+event MaterialWitnessDepositionCertified()
+/// A pretrial hearing other than a pretrial release or detention hearing
+/// is held (W.D. Tex. Local Rule CR-16(b)(1)(B)).
+event PretrialHearing()
 /// The verdict, or the entry of a guilty plea (W.D. Tex. Local Rule
 /// CR-32(a)).
 event VerdictOrPlea()
@@ -101,6 +106,16 @@ deadline material-witness-release: 45.days after MaterialWitnessAppeared() count
   forum frcrimp
 }
 
+/// W.D. Tex. Local Rule CR-15B(c)(1)(A): the material witness is ordered
+/// released from the custody of the U.S. Marshals Service within 24 hours
+/// of the taking, and the certification or waiver of certification, of
+/// the witness's deposition, if that comes before the 45-day deadline of
+/// CR-15B(c)(1)(B).
+deadline material-witness-release-after-deposition: 24.hours after MaterialWitnessDepositionCertified() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-15B(c)"
+{
+  forum frcrimp
+}
+
 /// W.D. Tex. Local Rule CR-16(a)(3): if the Disclosure Agreement Checklist
 /// shows that a party refuses to disclose information, the other party may
 /// file motions about it within 14 days after the checklist is filed.
@@ -114,6 +129,18 @@ deadline undisclosed-information-motion: 14.days after RefusalChecklistFiled() c
 /// later than 14 days after arraignment or, if arraignment is waived,
 /// after the latest scheduled arraignment date.
 deadline trial-discovery: 14.days after ArraignmentOrScheduledDate() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CR-16(b)"
+{
+  forum frcrimp
+}
+
+/// W.D. Tex. Local Rule CR-16(b)(1)(B): unless the court orders or the
+/// parties agree otherwise in writing, discovery for a pretrial hearing
+/// other than a pretrial release or detention hearing is provided not
+/// later than 48 hours before the hearing.
+deadline pretrial-hearing-discovery: 48.hours before PretrialHearing() counted_by frcrimp45 delegable {
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CR-16(b)"

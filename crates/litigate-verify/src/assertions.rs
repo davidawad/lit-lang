@@ -409,6 +409,7 @@ fn engine_unit(unit: hir::DayUnit) -> Unit {
         hir::DayUnit::Week => Unit::Week,
         hir::DayUnit::Month => Unit::Month,
         hir::DayUnit::Year => Unit::Year,
+        hir::DayUnit::Hour => Unit::Hour,
     }
 }
 

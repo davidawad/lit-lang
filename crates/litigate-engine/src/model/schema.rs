@@ -38,7 +38,8 @@ pub struct Deadline {
     /// window.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub length: Option<f64>,
-    /// `calendar` (default) or `court` days, or `week`, `month`, `year`.
+    /// `calendar` (default) or `court` days, or `week`, `month`, `year`,
+    /// `hour`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub unit: Option<String>,
     /// (v5) The due date is the one the triggering notice or order
@@ -83,6 +84,7 @@ impl Deadline {
                     Some("week") => 7.0,
                     Some("month") => 146_097.0 / 4800.0,
                     Some("year") => 365.2425,
+                    Some("hour") => 1.0 / 24.0,
                     _ => 1.0,
                 },
         )

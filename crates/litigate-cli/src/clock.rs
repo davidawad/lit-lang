@@ -245,6 +245,7 @@ const fn engine_unit(d: &hir::Deadline) -> Unit {
         DayUnit::Week => Unit::Week,
         DayUnit::Month => Unit::Month,
         DayUnit::Year => Unit::Year,
+        DayUnit::Hour => Unit::Hour,
         DayUnit::Business => Unit::Business,
     }
 }

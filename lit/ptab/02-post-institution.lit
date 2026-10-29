@@ -4,7 +4,10 @@ import ptab.deadlines.{ patent-owner-response-period }
 import ptab.trial-to-appeal.{ patent-owner-response-window, settlement-decision }
 import ptab.{ post-institution-group }
 
-state scheduling-order-issued: "Scheduling Order Issued" cite "37 CFR 42.5(c); 35 U.S.C. 316(a)(11)"
+/// From the May 19, 2015 amendment of 37 C.F.R. § 42.51 (80 FR 28565),
+/// whose text the disclosures edge cites; earlier practice is not encoded
+/// (`unknown_before`).
+state scheduling-order-issued: "Scheduling Order Issued" effective [2015-05-19, ..) unknown_before 2015-05-19 cite "37 CFR 42.5(c); 35 U.S.C. 316(a)(11)"
 {
   group post-institution-group
   note "Sets Due Dates 1-7 (POR, MTA, reply, sur-reply, hearing) against the 1-year statutory FWD deadline, extendable to 18 months for good cause or joinder. Rule-set default times serve as a baseline but may be modified by Board order (37 CFR 42.5(c)(1))."
@@ -16,7 +19,10 @@ state scheduling-order-issued: "Scheduling Order Issued" cite "37 CFR 42.5(c); 3
   }
 }
 
-state mandatory-disclosures: "Mandatory Initial Disclosures Exchanged" cite "37 CFR 42.51(a)"
+/// From January 8, 2021 (85 FR 79120), as the patent owner response its
+/// edges reach (37 C.F.R. § 42.120); earlier practice is not encoded
+/// (`unknown_before`).
+state mandatory-disclosures: "Mandatory Initial Disclosures Exchanged" effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.51(a)"
 {
   group post-institution-group
   note "Routine discovery categories requiring no Board authorization: relied-upon exhibits, cross-examination scheduling for affidavits, and information inconsistent with a party's stated position. Anything beyond these narrow categories requires party agreement or a motion under 37 CFR 42.51(b)(2)."
@@ -42,7 +48,14 @@ state mandatory-disclosures: "Mandatory Initial Disclosures Exchanged" cite "37 
 /// grant/deny draw (0.3/0.7); its renew and settle moves carry none.
 /// The Board's ruling on the motion, not a party's choice. Either way the
 /// case reaches `patent-owner-response-window`, where settlement stays open.
-chance additional-discovery-motion: "Motion for Additional Discovery" by examiner discretion cite ?("37 CFR 42.51(b)(2); Garmin Ltd. v. Cuozzo Speed Tech. LLC, IPR2012-00001, Paper 26") {
+/// The Garmin factors (Garmin Int'l, Inc. v. Cuozzo Speed Techs. LLC,
+/// IPR2012-00001, Paper 26) read the statute's and the rule's "interests of
+/// justice"; the decision is not vendored, so the node cites those.
+/// From January 8, 2021 (85 FR 79120), as the patent owner response its
+/// edges reach (37 C.F.R. § 42.120); earlier practice is not encoded
+/// (`unknown_before`).
+chance additional-discovery-motion: "Motion for Additional Discovery" by examiner discretion effective [2021-01-08, ..) unknown_before 2021-01-08 cite "35 U.S.C. § 316(a)(5); 37 C.F.R. § 42.51(b)(2)"
+{
   group post-institution-group
   note "Beyond routine categories, discovery in IPR requires a showing that it serves 'the interests of justice,' applying the five-factor Garmin test (claim complexity, evidence availability, delay, burden/cost, non-moving party's position); PGR uses the more permissive 'good cause' standard. Each motion is fact-intensive and case-specific."
   edge-additional-discovery-motion-protective-order-ipr "Board grants additional discovery" -> protective-order-ipr p 0.3 {
@@ -59,7 +72,10 @@ chance additional-discovery-motion: "Motion for Additional Discovery" by examine
   }
 }
 
-state protective-order-ipr: "Protective Order Governs Discovery" by office cite "37 CFR 42.54(a)"
+/// From January 8, 2021 (85 FR 79120), as the patent owner response its
+/// edges reach (37 C.F.R. § 42.120); earlier practice is not encoded
+/// (`unknown_before`).
+state protective-order-ipr: "Protective Order Governs Discovery" by office effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.54(a)"
 {
   group post-institution-group
   note "Default protective order (Trial Practice Guide model order) governs confidential material exchanged in discovery unless the parties stipulate to or move for different terms; restricts disclosure to designated personnel and bars public filing without Board authorization."

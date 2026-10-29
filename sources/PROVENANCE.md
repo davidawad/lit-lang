@@ -1231,6 +1231,77 @@ Entries live in the forum's own
 - Original: `original/cfr-37-part42-versions/002-federalregister-api-v1-documents-cfr-37-42-rules.json` as served (sha256 ae43afb11a4af648b6e70d05ebae1dca509ea972049b967e28775f58aa203096); extraction sha256 86e68377fd571c93cfca6d320901fd82c7551a60d5249db7765dde071d37521b. Served at https://www.federalregister.gov/api/v1/documents.json?conditions%5Bcfr%5D%5Btitle%5D=37&conditions%5Bcfr%5D%5Bpart%5D=42&conditions%5Btype%5D%5B%5D=RULE&fields%5B%5D=citation&fields%5B%5D=start_page&fields%5B%5D=end_page&fields%5B%5D=effective_on&fields%5B%5D=publication_date&fields%5B%5D=title&fields%5B%5D=document_number&per_page=200&order=oldest; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-28.
 - Original: `original/cfr-37-part42-versions/003-api-versioner-v1-versions-title-37.json_part-42.json` as served (sha256 88cf068667e88c4ba285c1c169fe1a744c170d6425f2d68a48951e9f94210dac); extraction sha256 86e68377fd571c93cfca6d320901fd82c7551a60d5249db7765dde071d37521b. Served at https://www.ecfr.gov/api/versioner/v1/versions/title-37.json?part=42; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-28.
 
+### `cfr-37-part42-2025.txt` — 37 C.F.R. Part 42, revised as of July 1, 2025
+
+- The govinfo annual CFR edition of Title 37, vol. 1, Part 42 (2025-07-01
+  edition), the text `lit/ptab` binds as `cfr-42` (`as_of 2025-07-01`):
+  it holds the 2024 motion-to-amend rule (§ 42.121(e)-(f), 89 FR 76421)
+  and Director Review (§ 42.75, 89 FR 79744), which the 2024-07-01
+  edition in `cfr-37-part42.txt` predates. Extracted exactly as
+  `cfr-37-part42.txt` was (every `<SECTION>` one `## 37 C.F.R. § N` block
+  from its `<SECTNO>`/`<SUBJECT>`/`<P>`/`<FP>`/`<CITA>` children,
+  whitespace collapsed, tags stripped); the same script reproduces
+  `cfr-37-part42.txt` byte for byte from the 2024 edition.
+- sha256 (this file): `802de976aed8ea3f59996284cca73e41947e0c26da2c217e4318fc422c2b2395`
+- Original: `original/cfr-37-part42-versions/001-CFR-2025-title37-vol1-part42.xml` as served (sha256 77256147aecfeded3601dc9b424fa11979b08755beafb7e544cde110da7654ec, the same bytes, re-fetched 2026-10-29); extraction sha256 802de976aed8ea3f59996284cca73e41947e0c26da2c217e4318fc422c2b2395. Served at https://www.govinfo.gov/content/pkg/CFR-2025-title37-vol1/xml/CFR-2025-title37-vol1-part42.xml; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+
+### `cfr-37-part42-2012.txt` — 37 C.F.R. Part 42, subparts A-C, as promulgated (77 FR 48612 and 77 FR 48680, Aug. 14, 2012)
+
+- The text in force from September 16, 2012 of §§ 42.1-42.80 (subpart A,
+  77 FR 48669-48677, FR Doc. 2012-17900) and §§ 42.100-42.224 (subparts
+  B and C, 77 FR 48727-48732, FR Doc. 2012-17906), the regulatory text of
+  the two final rules, so a version in force before a section's first
+  amendment cites its own text (`37 C.F.R. (2012) § N`). One
+  `## 37 C.F.R. (2012) § N` block per section, then its heading line and
+  one line per paragraph: verbatim except for line joining, page markers
+  (`[[Page N]]`) and the rules' center headings dropped, `Sec.` printed as
+  `§`, the GPO text's doubled backtick and apostrophe quotes as curly
+  quotes, and its `--` as an em dash. Subparts D and E (covered business
+  method review, derivation) are left out.
+- sha256 (this file): `35a392617c2ff11a2f8417f5f5adad2242f02d4f5b32d3bb29b78f4af75cab6b`
+- Original: `original/cfr-37-part42-2012/001-FR-2012-17900.htm` as served (sha256 230a9429a1acfe78b073b0d75d9a2a08e8ecfa8eecfce3a22ab8f163e82aaae9); extraction sha256 35a392617c2ff11a2f8417f5f5adad2242f02d4f5b32d3bb29b78f4af75cab6b. Served at https://www.govinfo.gov/content/pkg/FR-2012-08-14/html/2012-17900.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/cfr-37-part42-2012/002-FR-2012-17906.htm` as served (sha256 6457ba68b18a9e1198e5129a3a630d1ee28754682e2a4b35838f22a171064a94); extraction sha256 35a392617c2ff11a2f8417f5f5adad2242f02d4f5b32d3bb29b78f4af75cab6b. Served at https://www.govinfo.gov/content/pkg/FR-2012-08-14/html/2012-17906.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+
+### `fr-uspto-part42-2015.txt` — Amendments to the PTAB trial rules (80 FR 28561, May 19, 2015)
+
+- Page 28561 (summary and effective date, May 19, 2015) and page 28565,
+  the amendatory text through § 42.71 (whose first sentence of paragraph
+  (d) it revises), as `## 80 FR <page>` sections each opening with a
+  bracketed line naming the issue, page and FR Doc. number. Verbatim
+  except for line joining, the `0` paragraph markers dropped, and the
+  same `§`, quote and dash substitutions as `cfr-37-part42-2012.txt`.
+- sha256 (this file): `d3855b455e8e96a1b7f8921090fcc9dbfb7830d2ca7cfec2f12e6cdae03d44cf`
+- Original: `original/fr-uspto-part42-2015/001-FR-2015-12117.htm` as served (sha256 66f2896687db94c75ce29d22f829f5b1174025d8d47ca1681fb1c98c87d8eae2); extraction sha256 d3855b455e8e96a1b7f8921090fcc9dbfb7830d2ca7cfec2f12e6cdae03d44cf. Served at https://www.govinfo.gov/content/pkg/FR-2015-05-19/html/2015-12117.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+
+### `fr-uspto-part42-2016.txt` — Amendments to the PTAB trial rules (81 FR 18750, Apr. 1, 2016) and correction (81 FR 24702, Apr. 27, 2016)
+
+- `## 81 FR 18750` (effective date, May 2, 2016), `## 81 FR 18765` (the
+  amendatory text on that page, including § 42.24 revised in full to word
+  counts) and `## 81 FR 24703` (the correction striking "grounds for
+  standing under § 42.104, § 42.204, or § 42.304," from § 42.24(a)(1)),
+  each opening with a bracketed line naming the issue, page and FR Doc.
+  number; the 18765 section opens mid-sentence where the page does.
+  Verbatim except for line joining, the `0` paragraph markers dropped, and
+  the same `§`, quote and dash substitutions as `cfr-37-part42-2012.txt`.
+- sha256 (this file): `92ac19c44ca15f2175f3a5145eec571075ce0977b8829e2cffb98b4cac6cb76a`
+- Original: `original/fr-uspto-part42-2016/001-FR-2016-07381.htm` as served (sha256 68424d8d6df786be06367f6009ecb9c3028967f6c8082990299f3d43e23460cc); extraction sha256 92ac19c44ca15f2175f3a5145eec571075ce0977b8829e2cffb98b4cac6cb76a. Served at https://www.govinfo.gov/content/pkg/FR-2016-04-01/html/2016-07381.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/fr-uspto-part42-2016/002-FR-2016-09814.htm` as served (sha256 9dd6ff8f85b99b6602e6409c6b8ca83c6c813edfd8c88c64cffd58d4771e09b5); extraction sha256 92ac19c44ca15f2175f3a5145eec571075ce0977b8829e2cffb98b4cac6cb76a. Served at https://www.govinfo.gov/content/pkg/FR-2016-04-27/html/2016-09814.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+
+### `ptab-tpg.txt` — PTAB Consolidated Trial Practice Guide (Nov. 2019, updated Oct. 2025), Appendix A-1
+
+- A `## PTAB Trial Practice Guide` section, the appendix list of the
+  guide's table of contents, then one `## PTAB Trial Practice Guide App.
+  A-1` section: the sample scheduling order's § A.7 (Motion to Amend), § B (Due Dates) and its Due
+  Date Appendix (pp. 53-60 of the PDF), the default times `lit/ptab`'s
+  reply and sur-reply periods cite. Extracted with `pdftotext -layout`;
+  lines joined into paragraphs, page numbers and the LEAP footnotes
+  dropped, and the Due Date Appendix table set one due date per line
+  (`DUE DATE N — papers — interval`) with its footnote 5 as `[note 5]`.
+  The guide carries no edition date of its own; `as_of 2025-10-01` is the
+  "oct2025" of its file name.
+- sha256 (this file): `026541d23fd0960fa0f2dd27d9f693de71aeeefb28b041076041b098c3c1ae19`
+- Original: `original/ptab-tpg/001-trial_practice_guide_nov2019_oct2025_web.pdf` as served (sha256 260c05b6def096819a9bf724438247b34fe839ba4d8351bb2339d6fa20c512b3); extraction sha256 026541d23fd0960fa0f2dd27d9f693de71aeeefb28b041076041b098c3c1ae19. Served at https://www.uspto.gov/sites/default/files/documents/trial_practice_guide_nov2019_oct2025_web.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+
 ### `scotus-rules.txt` — Rules of the Supreme Court of the United States 10, 13, 29 and 30 (adopted February 17, 2026, effective March 16, 2026)
 
 - The cert-petition period and its extension (Rule 13), service (Rule 29)

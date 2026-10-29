@@ -1,14 +1,12 @@
 module ptab.trial-to-appeal
 
 import ptab.deadlines.{
-  amendment-opposition-period,
   appeal-period,
   director-review-after-rehearing-period,
   director-review-period,
   patent-owner-response-period,
   petitioner-reply-period,
   rehearing-period,
-  revised-mta-period,
   sur-reply-period,
 }
 
@@ -29,7 +27,10 @@ import ptab.{
   trial-group,
 }
 
-decision patent-owner-response-window: "Patent Owner Response Window" cite "37 CFR 42.120"
+/// From January 8, 2021 (85 FR 79120): the sur-reply and the response
+/// rules whose text is cited; earlier trial practice is not encoded
+/// (`unknown_before`).
+decision patent-owner-response-window: "Patent Owner Response Window" effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.120"
 {
   group trial-group
   note "Patent owner's principal merits brief, due per the scheduling order (typically 3 months post-institution). Structural counterpart to mpep-prosecution's response cycle, except the responder is the patent owner defending validity."
@@ -51,7 +52,10 @@ decision patent-owner-response-window: "Patent Owner Response Window" cite "37 C
   }
 }
 
-state patent-owner-response-filed: "Patent Owner Response Filed" by applicant cite "37 CFR 42.120(a)-(b)"
+/// From January 8, 2021 (85 FR 79120): the sur-reply and the response
+/// rules whose text is cited; earlier trial practice is not encoded
+/// (`unknown_before`).
+state patent-owner-response-filed: "Patent Owner Response Filed" by applicant effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.120(a)-(b)"
 {
   group trial-group
   note "May include expert declarations, claim construction arguments, and objective indicia of nonobviousness. Arguments not raised here (or in prior motion practice) are waived — they cannot be resurrected in sur-reply or at the hearing, and waiver bars any estoppel defense on that theory."
@@ -62,7 +66,7 @@ state patent-owner-response-filed: "Patent Owner Response Filed" by applicant ci
     within petitioner-reply-period {
       extendable true
       extension_authority "37 CFR 42.103; scheduling order"
-      note "Missing the petitioner reply deadline (typically 60 days after the POR due date per the scheduling order) results in the reply not being entered or considered; the patent owner's arguments stand unrebutted."
+      note "Missing the petitioner reply deadline (3 months after the POR due date in the Trial Practice Guide's sample scheduling order) results in the reply not being entered or considered; the patent owner's arguments stand unrebutted."
     }
     duration { min 9.days, mode 30.days, max 60.days }
     note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
@@ -72,7 +76,10 @@ state patent-owner-response-filed: "Patent Owner Response Filed" by applicant ci
   }
 }
 
-state patent-owner-no-response: "No Patent Owner Response Filed" cite "37 CFR 42.120"
+/// From January 8, 2021 (85 FR 79120): the sur-reply and the response
+/// rules whose text is cited; earlier trial practice is not encoded
+/// (`unknown_before`).
+state patent-owner-no-response: "No Patent Owner Response Filed" effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.120"
 {
   group trial-group
   note "Rare but not automatically fatal — unlike ex parte prosecution there is no per-se sanction for silence, but the Board decides on the unrebutted petition record, crediting the petitioner's evidence unchallenged and usually resulting in a de facto loss for the patent owner."
@@ -84,7 +91,10 @@ state patent-owner-no-response: "No Patent Owner Response Filed" cite "37 CFR 42
   }
 }
 
-state petitioner-reply-brief: "Petitioner Reply Filed" cite "37 CFR 42.23(a)"
+/// From January 8, 2021 (85 FR 79120): the sur-reply and the response
+/// rules whose text is cited; earlier trial practice is not encoded
+/// (`unknown_before`).
+state petitioner-reply-brief: "Petitioner Reply Filed" effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.23(a)"
 {
   group trial-group
   note "Reply may only respond to arguments raised in the POR or the institution decision — new grounds, new prior-art combinations, or theories not foreshadowed in the petition risk being struck as an improper reply and not considered."
@@ -94,56 +104,62 @@ state petitioner-reply-brief: "Petitioner Reply Filed" cite "37 CFR 42.23(a)"
     within sur-reply-period {
       extendable true
       extension_authority "37 CFR 42.103; scheduling order"
-      note "Missing the sur-reply deadline (typically 30 days after the petitioner reply due date) forecloses the patent owner's final opportunity to respond on the record before oral hearing or FWD; the rebuttal record closes."
+      note "Missing the sur-reply deadline (6 weeks after the petitioner reply due date in the Trial Practice Guide's sample scheduling order) forecloses the patent owner's final opportunity to respond on the record before oral hearing or FWD; the rebuttal record closes."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
   }
 }
 
-state patent-owner-sur-reply: "Patent Owner Sur-Reply Filed" cite "37 CFR 42.23(b)"
+/// From January 8, 2021 (85 FR 79120): the sur-reply and the response
+/// rules whose text is cited; earlier trial practice is not encoded
+/// (`unknown_before`).
+state patent-owner-sur-reply: "Patent Owner Sur-Reply Filed" effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.23(b)"
 {
   group trial-group
   note "Purely responsive to the petitioner's reply — no new evidence permitted. Closes the merits briefing record ahead of any oral hearing; new arguments not responsive to the reply may be struck or given diminished weight."
   edge-patent-owner-sur-reply-motion-to-amend-decision "Briefing complete — assess amendment" -> motion-to-amend-decision {
-    authority cite "35 U.S.C. 316(d); 37 CFR 42.121"
+    authority cite "35 U.S.C. 316(d)"
   }
 }
 
-decision motion-to-amend-decision: "Motion to Amend Decision Point" cite "35 U.S.C. 316(d); 37 CFR 42.121"
+decision motion-to-amend-decision: "Motion to Amend Decision Point" cite "35 U.S.C. 316(d)"
 {
   group trial-group
   note "Patent owner may contingently move to cancel and/or substitute claims (contingent on the originals being found unpatentable) — the only mid-IPR avenue to narrow claims rather than lose them outright; no amendment by right exists at final written decision."
   edge-motion-to-amend-decision-mta-filed "File contingent motion to amend" -> mta-filed {
-    authority cite "35 U.S.C. 316(d); 37 CFR 42.121"
+    authority cite "35 U.S.C. 316(d)"
   }
   edge-motion-to-amend-decision-settlement-decision "No motion to amend — proceed" -> settlement-decision {
     authority cite "35 U.S.C. 317"
   }
 }
 
-state mta-filed: "Contingent Motion to Amend Filed" by examiner cite ?("37 CFR 42.121; Lectrosonics Inc. v. Zaxcom, Inc., IPR2018-01129, Paper 15 (PTAB June 4, 2019) (precedential)") {
+/// From October 18, 2024, when the motion-to-amend rule (89 FR 76421) made
+/// preliminary guidance and the revised motion part of 37 C.F.R. § 42.121;
+/// the 2019-2024 pilot program is not encoded (`unknown_before`).
+state mta-filed: "Contingent Motion to Amend Filed" by examiner effective [2024-10-18, ..) unknown_before 2024-10-18 cite "35 U.S.C. § 316(d); 37 C.F.R. § 42.121(a)"
+{
   group trial-group
   note "Must propose a reasonable number of substitute claims (presumptively one-to-one), supported by the original specification without new matter, responding to the unpatentability ground raised. Lectrosonics set the burden-shifting framework the current MTA Pilot Program builds on."
   edge-mta-filed-mta-preliminary-guidance "Board issues preliminary guidance" -> mta-preliminary-guidance {
     event PreliminaryGuidanceIssued()
-    authority cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019)")
+    authority cite "37 C.F.R. § 42.121(e)(1)"
   }
   edge-mta-filed-settlement-decision "Settle while amendment is pending" -> settlement-decision by either {
     authority cite "35 U.S.C. 317"
   }
 }
 
-state mta-preliminary-guidance: "Board Issues Preliminary Guidance" cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019), made permanent") {
+/// From October 18, 2024, when the motion-to-amend rule (89 FR 76421) made
+/// preliminary guidance and the revised motion part of 37 C.F.R. § 42.121;
+/// the 2019-2024 pilot program is not encoded (`unknown_before`).
+state mta-preliminary-guidance: "Board Issues Preliminary Guidance" effective [2024-10-18, ..) unknown_before 2024-10-18 cite "37 C.F.R. § 42.121(e)"
+{
   group trial-group
   note "Non-binding, non-appealable preliminary assessment of the substitute claims' likely patentability — lets the patent owner course-correct with a revised MTA before final briefing closes, a courtesy unique to MTA practice."
   edge-mta-preliminary-guidance-mta-revised-filed "File a revised motion to amend" -> mta-revised-filed {
     event RevisedMotionToAmendFiled()
-    authority cite ?("MTA Pilot Program")
-    within revised-mta-period {
-      extendable true
-      extension_authority "37 CFR 42.103"
-      note "Revised MTA deadline (typically 30 days after preliminary guidance) — missing this forecloses the second bite. The patent owner is locked into the original MTA or left with no MTA, and petitioner's opposition stands unchallenged."
-    }
+    authority cite "37 C.F.R. § 42.121(f)(1)"
     duration { min 4.5.days, mode 15.days, max 30.days }
   }
   edge-mta-preliminary-guidance-petitioner-opposition-mta "Proceed without revising" -> petitioner-opposition-mta {
@@ -154,24 +170,26 @@ state mta-preliminary-guidance: "Board Issues Preliminary Guidance" cite ?("MTA 
   }
 }
 
-state mta-revised-filed: "Revised Motion to Amend Filed" by applicant cite ?("MTA Pilot Program; 37 CFR 42.121(c)") {
+/// From October 18, 2024, when the motion-to-amend rule (89 FR 76421) made
+/// preliminary guidance and the revised motion part of 37 C.F.R. § 42.121;
+/// the 2019-2024 pilot program is not encoded (`unknown_before`).
+state mta-revised-filed: "Revised Motion to Amend Filed" by applicant effective [2024-10-18, ..) unknown_before 2024-10-18 cite "37 C.F.R. § 42.121(f)"
+{
   group trial-group
   note "Patent owner may file one revised MTA responding to the preliminary guidance and/or petitioner's opposition — a second bite unavailable in ordinary IPR motion practice, preventing unfair surprise."
   edge-mta-revised-filed-petitioner-opposition-mta "Petitioner opposes revised amendment" -> petitioner-opposition-mta {
     event AmendmentOppositionFiled()
     authority cite "37 CFR 42.121(c)"
     effort 40.hours
-    within amendment-opposition-period {
-      extendable true
-      extension_authority "37 CFR 42.103"
-      note "Petitioner opposition deadline (typically 30 days after the revised MTA due date per Board order) — missing this results in the opposition not being filed or considered; only the revised MTA will be assessed."
-    }
     duration { min 4.5.days, mode 15.days, max 30.days }
     note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
   }
 }
 
-state petitioner-opposition-mta: "Petitioner Opposes Motion to Amend" cite "37 CFR 42.121(c)"
+/// From October 18, 2024, when the motion-to-amend rule (89 FR 76421) made
+/// preliminary guidance and the revised motion part of 37 C.F.R. § 42.121;
+/// the 2019-2024 pilot program is not encoded (`unknown_before`).
+state petitioner-opposition-mta: "Petitioner Opposes Motion to Amend" effective [2024-10-18, ..) unknown_before 2024-10-18 cite "37 CFR 42.121(c)"
 {
   group trial-group
   note "Once the patent owner meets its threshold burden on form/written description, the burden shifts to petitioner to prove unpatentability of substitute claims by a preponderance of the evidence — a burden-shift unique to MTA practice."
@@ -195,7 +213,7 @@ decision settlement-decision: "Settlement Considered" cite "35 U.S.C. 317"
     authority cite "37 CFR 42.73(b)"
   }
   edge-settlement-decision-oral-hearing-request "No settlement — proceed to hearing" -> oral-hearing-request {
-    authority cite "37 CFR 42.70"
+    authority cite "35 U.S.C. § 316(a)(10)"
   }
 }
 
@@ -226,7 +244,10 @@ terminal adverse-judgment-terminal: "Adverse Judgment Entered — Claims Cancell
   payoff 900_000.usd
 }
 
-decision oral-hearing-request: "Oral Hearing Requested" cite "37 CFR 42.70(a)"
+/// From the May 2, 2016 amendment of 37 C.F.R. § 42.70 (81 FR 18750),
+/// whose text is cited; earlier hearing practice is not encoded
+/// (`unknown_before`).
+decision oral-hearing-request: "Oral Hearing Requested" effective [2016-05-02, ..) unknown_before 2016-05-02 cite "37 CFR 42.70(a)"
 {
   group hearing-group
   note "Either party may request oral argument; the Board may also order one sua sponte. Not requesting one waives it — cases are often decided entirely on the papers, and waiving means no opportunity for live advocacy or Board questions before the FWD."
@@ -240,7 +261,10 @@ decision oral-hearing-request: "Oral Hearing Requested" cite "37 CFR 42.70(a)"
   }
 }
 
-state oral-hearing-held: "Oral Hearing Held" by office cite "37 CFR 42.70(b)"
+/// From the May 2, 2016 amendment of 37 C.F.R. § 42.70 (81 FR 18750),
+/// whose text is cited; earlier hearing practice is not encoded
+/// (`unknown_before`).
+state oral-hearing-held: "Oral Hearing Held" by office effective [2016-05-02, ..) unknown_before 2016-05-02 cite "37 CFR 42.70(b)"
 {
   group hearing-group
   note "Argument only — no new evidence at hearing, no new documentary exhibits. Demonstratives must be served in advance and may not contain material outside the record; the Board typically probes weak spots in the written briefing."
@@ -279,7 +303,7 @@ terminal fwd-all-unpatentable: "FWD: All Claims Unpatentable" outcome [win, fwd]
   valence good
   payoff 1_000_000.usd
   edge-fwd-all-unpatentable-post-fwd-options "Patent owner considers post-FWD relief" -> post-fwd-options {
-    authority cite "37 CFR § 42.71(d)"
+    authority cite "35 U.S.C. § 319"
   }
 }
 
@@ -290,7 +314,7 @@ terminal fwd-all-confirmed: "FWD: All Claims Confirmed Patentable" outcome [loss
   valence good
   payoff 0.usd
   edge-fwd-all-confirmed-post-fwd-options "Petitioner considers post-FWD relief" -> post-fwd-options {
-    authority cite "37 CFR § 42.71(d)"
+    authority cite "35 U.S.C. § 319"
   }
 }
 
@@ -301,11 +325,14 @@ terminal fwd-mixed: "FWD: Mixed Result" outcome [mixed, fwd] cite "35 U.S.C. §�
   valence good
   payoff 400_000.usd
   edge-fwd-mixed-post-fwd-options "Either party considers post-FWD relief" -> post-fwd-options {
-    authority cite "37 CFR § 42.71(d)"
+    authority cite "35 U.S.C. § 319"
   }
 }
 
-decision post-fwd-options: "Post-FWD Options" cite "35 U.S.C. § 319; 37 CFR 42.71(d); 37 CFR 42.73(d)"
+/// From October 31, 2024, when Director Review became 37 C.F.R. § 42.75
+/// (89 FR 79744); the 2021-2024 interim process is not encoded
+/// (`unknown_before`).
+decision post-fwd-options: "Post-FWD Options" effective [2024-10-31, ..) unknown_before 2024-10-31 cite "35 U.S.C. § 319; 37 CFR 42.71(d); 37 C.F.R. § 42.75(c)"
 {
   group rehearing-director-group
   note "A dissatisfied party chooses among rehearing (same panel), Director review (post-Arthrex), or a direct Federal Circuit appeal — paths run on different clocks (30 days for rehearing/Director review, 63 days for appeal) from the same triggering FWD."
@@ -320,7 +347,7 @@ decision post-fwd-options: "Post-FWD Options" cite "35 U.S.C. § 319; 37 CFR 42.
   }
   edge-post-fwd-options-director-review-request-filed "Request Director review" -> director-review-request-filed {
     event DirectorReviewRequested()
-    authority cite "37 CFR 42.73(d)(1)"
+    authority cite "37 C.F.R. § 42.75(c)"
     within director-review-period {
       extendable false
       note "Missing the 30-day Director review request deadline forfeits the party's ability to petition for review, but the Director may still sua sponte initiate review. The Federal Circuit appeal window begins separately and is unaffected by missing this deadline."
@@ -332,7 +359,10 @@ decision post-fwd-options: "Post-FWD Options" cite "35 U.S.C. § 319; 37 CFR 42.
   }
 }
 
-state rehearing-request-filed: "Rehearing Request Filed" by examiner cite "37 CFR 42.71(d)"
+/// From January 8, 2021 (85 FR 79120): the sur-reply and the response
+/// rules whose text is cited; earlier trial practice is not encoded
+/// (`unknown_before`).
+state rehearing-request-filed: "Rehearing Request Filed" by examiner effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.71(d)"
 {
   group rehearing-director-group
   note "Must specifically identify matters the panel misapprehended or overlooked — no new arguments or evidence. Decided by the same panel that issued the FWD; the panel typically decides within 3-6 months, though no hard deadline governs the Board's own turnaround."
@@ -345,7 +375,8 @@ state rehearing-request-filed: "Rehearing Request Filed" by examiner cite "37 CF
 /// the deny/grant draw (0.9/0.1); escalation to the Director carries none.
 /// The panel's ruling, not a party's choice. A party's escalation to the
 /// Director after a denial leaves `rehearing-denied-affirmed`.
-chance rehearing-decision: "Panel Decides Rehearing Request" by examiner discretion cite "37 CFR 42.71(d)"
+/// From January 8, 2021, as `rehearing-request-filed`.
+chance rehearing-decision: "Panel Decides Rehearing Request" by examiner discretion effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.71(d)"
 {
   group rehearing-director-group
   note "Rehearing grant rate is exceptionally low (panels affirm their own prior reasoning in the large majority of requests). If granted, the panel may modify claim construction or validity findings, but this remains intra-panel review without external accountability."
@@ -357,7 +388,10 @@ chance rehearing-decision: "Panel Decides Rehearing Request" by examiner discret
   }
 }
 
-state rehearing-denied-affirmed: "Rehearing Denied — FWD Stands" cite "37 CFR 42.71(d); 35 U.S.C. § 319"
+/// From October 31, 2024, when Director Review became 37 C.F.R. § 42.75
+/// (89 FR 79744); the 2021-2024 interim process is not encoded
+/// (`unknown_before`).
+state rehearing-denied-affirmed: "Rehearing Denied — FWD Stands" effective [2024-10-31, ..) unknown_before 2024-10-31 cite "37 CFR 42.71(d); 35 U.S.C. § 319"
 {
   group rehearing-director-group
   note "Original FWD stands unchanged; the 63-day Federal Circuit clock runs from the rehearing decision, not the original FWD, when a timely rehearing request was filed."
@@ -366,7 +400,7 @@ state rehearing-denied-affirmed: "Rehearing Denied — FWD Stands" cite "37 CFR 
   }
   edge-rehearing-denied-affirmed-director-review-request-filed "Escalate denied rehearing to Director" -> director-review-request-filed {
     event DirectorReviewRequested()
-    authority cite "37 CFR 42.73(d)(1)"
+    authority cite "37 C.F.R. § 42.75(a)"
     within director-review-after-rehearing-period {
       extendable false
       note "After a rehearing denial, a party may escalate to Director review within 30 days of the rehearing decision. Missing this deadline forfeits Director review eligibility (though the Director may still sua sponte review)."
@@ -375,7 +409,8 @@ state rehearing-denied-affirmed: "Rehearing Denied — FWD Stands" cite "37 CFR 
   }
 }
 
-state rehearing-granted-modified: "Rehearing Granted — Decision Modified" cite "37 CFR 42.71(d)"
+/// From January 8, 2021, as `rehearing-request-filed`.
+state rehearing-granted-modified: "Rehearing Granted — Decision Modified" effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.71(d)"
 {
   group rehearing-director-group
   note "Panel modifies its own FWD, in whole or in part — uncommon but a genuinely different outcome is possible; the modified decision becomes the operative FWD for appeal purposes."
@@ -384,31 +419,40 @@ state rehearing-granted-modified: "Rehearing Granted — Decision Modified" cite
   }
 }
 
-state director-review-request-filed: "Director Review Requested" by examiner cite ?("35 U.S.C. § 6(c); 37 CFR 42.73(d)(1); Arthrex v. Smith & Nephew, 141 S. Ct. 1761 (2021)") {
+/// From October 31, 2024, when Director Review became 37 C.F.R. § 42.75
+/// (89 FR 79744); the 2021-2024 interim process is not encoded
+/// (`unknown_before`).
+state director-review-request-filed: "Director Review Requested" by examiner effective [2024-10-31, ..) unknown_before 2024-10-31 cite "37 C.F.R. § 42.75(a); 37 C.F.R. § 42.75(c)"
+{
   group rehearing-director-group
   note "Arthrex required some avenue for accountable review of APJ decisions; the Director personally reviews on request or sua sponte, available on institution decisions and final written decisions. Typically decided within 3-9 months, with no hard deadline prescribed."
   edge-director-review-request-filed-director-review-decision "Director reviews the decision" -> director-review-decision {
-    authority cite "37 CFR 42.73(d)(1)"
+    authority cite "37 C.F.R. § 42.75(e)(2)"
   }
 }
 
 /// Director review is discretionary; the pack authors the affirm, modify and
-/// remand draw (0.75/0.15/0.1).
-chance director-review-decision: "Director Decides Review Request" by examiner discretion cite ?("37 CFR 42.73(d)(1); USPTO Interim Director Review Process (June 29, 2021)") {
+/// remand draw (0.75/0.15/0.1). From October 31, 2024 (37 C.F.R. § 42.75,
+/// 89 FR 79744); the interim process before it is not encoded.
+chance director-review-decision: "Director Decides Review Request" by examiner discretion effective [2024-10-31, ..) unknown_before 2024-10-31 cite "37 C.F.R. § 42.75(e)(2)"
+{
   group rehearing-director-group
   note "Director's review is truly de novo — not bound by panel reasoning. The Director may affirm, reverse, modify (e.g., reinstate claims the panel invalidated), or remand any aspect of the panel's decision — genuine hierarchical review, unlike a panel reviewing its own work."
   edge-director-review-decision-director-review-affirmed "Director affirms the panel" -> director-review-affirmed p 0.75 {
-    authority cite "37 CFR 42.73(d)(1)"
+    authority cite "37 C.F.R. § 42.75(e)(2)"
   }
   edge-director-review-decision-director-review-modified "Director modifies the decision" -> director-review-modified p 0.15 {
-    authority cite "37 CFR 42.73(d)(1)"
+    authority cite "37 C.F.R. § 42.75(e)(2)"
   }
   edge-director-review-decision-patent-owner-response-window "Director remands for further proceedings" -> patent-owner-response-window p 0.1 {
-    authority cite "37 CFR 42.73(d)(1)"
+    authority cite "37 C.F.R. § 42.75(e)(2)"
   }
 }
 
-state director-review-affirmed: "Director Affirms" cite "37 CFR 42.73(d)(1)"
+/// From October 31, 2024, when Director Review became 37 C.F.R. § 42.75
+/// (89 FR 79744); the 2021-2024 interim process is not encoded
+/// (`unknown_before`).
+state director-review-affirmed: "Director Affirms" effective [2024-10-31, ..) unknown_before 2024-10-31 cite "37 C.F.R. § 42.75(e)(2), (3)"
 {
   group rehearing-director-group
   note "FWD stands as issued by the panel; the appeal clock runs from the Director's affirmance."
@@ -417,7 +461,10 @@ state director-review-affirmed: "Director Affirms" cite "37 CFR 42.73(d)(1)"
   }
 }
 
-state director-review-modified: "Director Modifies FWD" cite "37 CFR 42.73(d)(1)"
+/// From October 31, 2024, when Director Review became 37 C.F.R. § 42.75
+/// (89 FR 79744); the 2021-2024 interim process is not encoded
+/// (`unknown_before`).
+state director-review-modified: "Director Modifies FWD" effective [2024-10-31, ..) unknown_before 2024-10-31 cite "37 C.F.R. § 42.75(e)(2), (3)"
 {
   group rehearing-director-group
   note "Director changes the outcome on one or more claims — the most consequential post-FWD outcome, because it survives appellate review as the final agency action; parties then challenge it on the Federal Circuit record, not the panel's underlying reasoning."
@@ -467,7 +514,7 @@ state federal-circuit-notice-of-appeal: "Notice of Appeal Filed" by office cite 
   group appeal-group
   note "Federal Circuit has exclusive jurisdiction over PTAB appeals. The notice must identify the Board's final decision and the appealing party; failure to adequately name a party can waive appellability."
   edge-federal-circuit-notice-of-appeal-federal-circuit-review "Federal Circuit reviews the decision" -> federal-circuit-review {
-    authority cite ?("35 U.S.C. § 319; Federal Circuit Rule 4")
+    authority cite "35 U.S.C. § 319; 35 U.S.C. § 144"
     duration { min 240.days, mode 365.days, max 540.days }
     note "Duration: estimate. The Federal Circuit's own published median time from docketing to disposition is roughly a year across all appeal types; PTAB-appeal-specific data is not in the local corpus."
   }

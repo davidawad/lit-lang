@@ -9,10 +9,23 @@ import core.authority.{ CaseOrder }
 /// is a type-volume limit certifies its word count (§ 42.24(d)), and the
 /// Board may waive the count on motion (§ 42.24(a)(2)). Word counts
 /// replaced page limits effective May 2, 2016 (81 FR 18750 (Apr. 1,
-/// 2016)), whose text is not vendored, so a petition filed earlier has no
-/// encoded limit (`unknown_before`) rather than this one.
+/// 2016)); a petition filed earlier has no encoded limit (`unknown_before`)
+/// rather than this one.
+///
+/// This version is § 42.24 as the 2016 rule revised it (81 FR 18765), with
+/// the April 27, 2016 correction striking "grounds for standing" from the
+/// excluded parts (81 FR 24703), until the December 2020 amendment.
+limit ipr-petition delegable { to CaseOrder, op set } {
+  words <= 14_000 cite "81 FR 18765"
+  requires certificate word-count cite "81 FR 18765"
+  excludes [table-of-contents, table-of-authorities, mandatory-notices, certificate-of-service, word-count, appendix-of-exhibits, claim-listing] cite "81 FR 18765; 81 FR 24703"
+} effective [2016-05-02, 2021-01-08) unknown_before 2016-05-02 cite "81 FR 18765; 81 FR 24703"
+
+/// From January 8, 2021 (85 FR 79120 (Dec. 9, 2020)), which added the
+/// sur-reply limits to § 42.24(c) and left the petition's count and its
+/// exclusions as they were.
 limit ipr-petition delegable { to CaseOrder, op set } {
   words <= 14_000 cite "37 C.F.R. § 42.24(a)(1)(i)"
   requires certificate word-count cite "37 C.F.R. § 42.24(d)"
   excludes [table-of-contents, table-of-authorities, mandatory-notices, certificate-of-service, word-count, appendix-of-exhibits, claim-listing] cite "37 C.F.R. § 42.24(a)(1)"
-} effective [2016-05-02, ..) unknown_before 2016-05-02 cite "37 C.F.R. § 42.24"
+} effective [2021-01-08, ..) cite "37 C.F.R. § 42.24"

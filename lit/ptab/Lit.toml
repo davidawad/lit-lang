@@ -80,14 +80,41 @@ path_sha256 = "5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8"
 cite_prefixes = ["28 U.S.C."]
 section_heading = "28 U.S.C. § {n}"
 
+# The annual CFR edition revised as of July 1, 2025: the text with the 2024
+# motion-to-amend rule (89 FR 76421) and Director Review (§ 42.75, 89 FR
+# 79744). A cite on a version in force before that date is proved the text
+# then by `cfr-42-versions` (SPEC §4.3), else it cites the 2012 text below.
 [sources.cfr-42]
-title = "37 C.F.R. Part 42 (Trial Practice Before the Patent Trial and Appeal Board), current"
-url = "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-42"
-path = "sources/cfr-37-part42.txt"
-path_sha256 = "06786d129e12353754288989ddad0ef9866bb068eb0a7a35e25465b65276e4a1"
-as_of = "2026-08-26"
+title = "37 C.F.R. Part 42 (Trial Practice Before the Patent Trial and Appeal Board), revised as of July 1, 2025"
+url = "https://www.govinfo.gov/content/pkg/CFR-2025-title37-vol1/xml/CFR-2025-title37-vol1-part42.xml"
+path = "sources/cfr-37-part42-2025.txt"
+path_sha256 = "802de976aed8ea3f59996284cca73e41947e0c26da2c217e4318fc422c2b2395"
+as_of = "2025-07-01"
 cite_prefixes = ["37 C.F.R.", "37 CFR"]
 section_heading = "37 C.F.R. § {n}"
+
+# 37 C.F.R. Part 42 subparts A-C as promulgated (77 FR 48669-48677 and
+# 48727-48732, Aug. 14, 2012, effective Sept. 16, 2012): the text the
+# versions in force before a section's first amendment cite.
+[sources.cfr-42-2012]
+title = "37 C.F.R. Part 42, subparts A-C, as promulgated (77 FR 48612 and 77 FR 48680, Aug. 14, 2012)"
+url = "https://www.govinfo.gov/content/pkg/FR-2012-08-14/html/2012-17906.htm"
+path = "sources/cfr-37-part42-2012.txt"
+path_sha256 = "35a392617c2ff11a2f8417f5f5adad2242f02d4f5b32d3bb29b78f4af75cab6b"
+as_of = "2012-08-14"
+cite_prefixes = ["37 C.F.R. (2012)"]
+section_heading = "37 C.F.R. (2012) § {n}"
+
+# The May 19, 2015 amendments (effective on publication): § 42.71(d)'s
+# first sentence, the only change to § 42.71 before 2021.
+[sources.fr-80-28561]
+title = "Federal Register, vol. 80 (Amendments to the Rules of Practice for Trials Before the PTAB, May 19, 2015)"
+url = "https://www.govinfo.gov/content/pkg/FR-2015-05-19/html/2015-12117.htm"
+path = "sources/fr-uspto-part42-2015.txt"
+path_sha256 = "d3855b455e8e96a1b7f8921090fcc9dbfb7830d2ca7cfec2f12e6cdae03d44cf"
+as_of = "2015-05-19"
+cite_prefixes = ["80 FR"]
+section_heading = "80 FR {n}"
 
 # The eCFR versioner's version list of each 37 C.F.R. section cited: the
 # amendment history `cite-resolves` reads to prove a text dated after a
@@ -110,11 +137,29 @@ path = "sources/cfr-37-part42-versions.txt"
 path_sha256 = "86e68377fd571c93cfca6d320901fd82c7551a60d5249db7765dde071d37521b"
 as_of = "2026-10-28"
 
+# The April 1, 2016 amendments (effective May 2, 2016), with their April
+# 27 correction: § 42.24 as revised to word counts, in force until the
+# December 2020 amendment (85 FR 79120) took effect.
+[sources.fr-81-18750]
+title = "Federal Register, vol. 81 (Amendments to the Rules of Practice for Trials Before the PTAB, Apr. 1, 2016, and correction, Apr. 27, 2016)"
+url = "https://www.govinfo.gov/content/pkg/FR-2016-04-01/html/2016-07381.htm"
+path = "sources/fr-uspto-part42-2016.txt"
+path_sha256 = "92ac19c44ca15f2175f3a5145eec571075ce0977b8829e2cffb98b4cac6cb76a"
+as_of = "2016-04-27"
+cite_prefixes = ["81 FR"]
+section_heading = "81 FR {n}"
+
+# Appendix A-1, the sample scheduling order: the default times the Board's
+# scheduling order sets for the briefs no rule times.
 [sources.ptab-tpg]
-title = "PTAB Consolidated Trial Practice Guide (Nov. 2019, updated Oct. 2025)"
+title = "PTAB Consolidated Trial Practice Guide (Nov. 2019, updated Oct. 2025), App. A-1"
 url = "https://www.uspto.gov/sites/default/files/documents/trial_practice_guide_nov2019_oct2025_web.pdf"
 sha256 = "260c05b6def096819a9bf724438247b34fe839ba4d8351bb2339d6fa20c512b3"
+path = "sources/ptab-tpg.txt"
+path_sha256 = "026541d23fd0960fa0f2dd27d9f693de71aeeefb28b041076041b098c3c1ae19"
 as_of = "2025-10-01"
+cite_prefixes = ["PTAB Trial Practice Guide App."]
+section_heading = "PTAB Trial Practice Guide App. {n}"
 
 [sources.usc35-151-cite]
 title = "35 U.S.C. § 151 (Issue of patent)"

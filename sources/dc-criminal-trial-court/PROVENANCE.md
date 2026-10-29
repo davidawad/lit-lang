@@ -7,7 +7,7 @@
 - Extract sha256 e690ce58a0b8b05348e75db8f323a94498fe957d82938ff74a64b5ea541adbc8. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `dc-criminal-trial-court/original/dc-superior-court-rules-of-criminal-procedure.pdf` as served (sha256 983683a5f5518723d8097cb6da58677c103b26588ba592a9d1dd59607cf0b5b3); extraction sha256 e690ce58a0b8b05348e75db8f323a94498fe957d82938ff74a64b5ea541adbc8.
 
-- Note (lg-gddt): Criminal appeals: D.C. Court of Appeals Rules, covered by sources/dc-state-appellate/. The D.C. Code Title 23 (criminal procedure, incl. 23-102 speedy trial) is not vendored.
+- Note (lg-gddt): Criminal appeals: D.C. Court of Appeals Rules, covered by sources/dc-state-appellate/. The D.C. Code Title 23 (criminal procedure, incl. 23-102 speedy trial) is not vendored, except §§ 23-110 and 23-1322 (entry `dc-criminal-trial-court/dc-code-23-110-23-1322.txt`, lg-6vod).
 
 ### `dc-criminal-trial-court/dc-superior-court-rules-of-criminal-procedure-sectioned.txt` — D.C. Superior Court Rules of Criminal Procedure, sectioned
 
@@ -15,3 +15,13 @@
 - Upstream: https://www.dccourts.gov/sites/default/files/superior-rules/Superior%20Court%20Rules%20of%20Criminal%20Procedure.pdf, retrieved 2026-10-28, as recorded on the source extract entry this file is derived from.
 - Edition: as the extract; CURRENCY UNCONFIRMED stands. `lit/dc-criminal-trial-court` cites it for structure only and takes no value from it.
 - Sectioned sha256 f108105a55e505ee427ccbe5398aa9ab3b431391115b0c0ca2b94d6cefa10827 (the `path_sha256` pinned by `lit/dc-criminal-trial-court/Lit.toml`).
+
+### `dc-criminal-trial-court/dc-code-23-110-23-1322.txt` — D.C. Code §§ 23-110 (motion attacking sentence) and 23-1322 (detention prior to trial)
+
+- Source: https://code.dccouncil.gov/us/dc/council/code/sections/23-110 and https://code.dccouncil.gov/us/dc/council/code/sections/23-1322 (the Council of the District of Columbia's official online Code; 2 HTML pages, one GET each).
+- Edition: the sections as served on the retrieval date; each page ends with the section's own history line, but the pages state no 'current through' date, so CURRENCY UNCONFIRMED. § 23-1322 carries the site's note: "The amendments to this section by section 30(k) of D.C. Law 25-175 shall expire on December 31, 2026" (a dated layer to watch). TARGETED SET: only these two sections of Title 23. code.dccouncil.gov robots.txt read: `User-Agent: *` Allow / (Disallow /_*), `Content-signal: search=yes,ai-train=no` (this vendoring is not model training), named AI crawlers disallowed (this fetch used none of those agents); terms not read; tool: curl with the identifying User-Agent lit-lang-provenance/1.0 (angrybohr@proton.me), 1.2 s between requests (robots.txt was fetched in the same run, before the two pages).
+- Retrieved 2026-10-29 on carbon (lg-6vod; lg-f3q8 standing method); each page extracted with html2txt v2 (stdlib html.parser, text restricted to the element with id area__content), unedited, concatenated under one `## <heading>` per page.
+- Extract sha256 6b3320fc8dc71f9740db0c31e93608964b74b3208d70189a28fbeb0808130040. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `dc-criminal-trial-court/original/dc-code-sections/0001-23-110.html` as served (sha256 cf366bfa9172430ad5ebc2c3246c7765a99ac9a8b23cc0ce2a1170153ecba313). Served at https://code.dccouncil.gov/us/dc/council/code/sections/23-110.
+- Original: `dc-criminal-trial-court/original/dc-code-sections/0002-23-1322.html` as served (sha256 8cb5b173f472373b898fe32db80bd86bfcbe73c5a170858d412a03bff1b1e9dd). Served at https://code.dccouncil.gov/us/dc/council/code/sections/23-1322.
+- Extraction sha256 6b3320fc8dc71f9740db0c31e93608964b74b3208d70189a28fbeb0808130040.

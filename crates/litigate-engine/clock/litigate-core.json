@@ -279,7 +279,7 @@
       "holidays": [],
       "id": "district-state-holidays",
       "sourceUrl": "https://www.law.cornell.edu/rules/frcp",
-      "title": "Placeholder for the state holidays required by FRCP 6(a)(6)(C) and\nFRBP 9006(a)(6)(C). Each district needs its own list from the applicable\nstate's law or a court rule. No such state-law texts are vendored for\nthose districts, so this calendar deliberately has no dates; until a\nsource is added, a date that depends on a state holiday remains an\nearlier-date result (the missing source is the district's state-holiday\nstatute/rule). Delaware's are vendored: `delaware-holidays`, read by\ncore's `frcp6-delaware` and `frcrimp45-delaware` (the D. Del. counts)."
+      "title": "Placeholder for the state holidays required by FRCP 6(a)(6)(C),\nFRCrimP 45(a)(6)(C), and FRBP 9006(a)(6)(C). Each district needs its own\nlist from the applicable state's law or a court rule. No such state-law\ntexts are vendored for\nthose districts, so this calendar deliberately has no dates; until a\nsource is added, a date that depends on a state holiday remains an\nearlier-date result (the missing source is the district's state-holiday\nstatute/rule). Delaware's are vendored: `delaware-holidays`, read by\ncore's `frcp6-delaware` and `frcrimp45-delaware` (the D. Del. counts)."
     },
     {
       "cite": "1 Del. C. § 501(a)",
@@ -2420,6 +2420,9 @@
         "saturday",
         "sunday"
       ],
+      "forwardHolidays": [
+        "district-state-holidays"
+      ],
       "holidays": [
         "us-federal-holidays"
       ],
@@ -2955,12 +2958,12 @@
     "knownAt": "2026-10-22",
     "pins": [
       {
-        "digest": "sha256:c8a0874aea56ae65dd5196eb70a84a3a3f95309c71f0c8b2e8f8b3a1f5d5a2e1",
+        "digest": "sha256:2070bed1f1f3cefbb20846b0f4b75c199bafcbda5979823b41440adb0226463a",
         "name": "core",
         "version": "1.0.0"
       }
     ],
-    "worldDigest": "sha256:daa6d176f277794f97c8462fb31746c66b343f8832d7f95af07bc9f172c6f8d6"
+    "worldDigest": "sha256:87c8fe203ed6b311d6418c4f9b1d1110c0729d62c8f6014c7a8871aacce9ba38"
   },
   "schemaVersion": 4
 }

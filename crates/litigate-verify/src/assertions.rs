@@ -400,11 +400,12 @@ fn count<'a>(
         .map_err(|e| e.to_string())
 }
 
-/// The engine's unit for `unit` (business days count as court days).
+/// The engine's unit for `unit`.
 fn engine_unit(unit: hir::DayUnit) -> Unit {
     match unit {
         hir::DayUnit::Calendar => Unit::Calendar,
-        hir::DayUnit::Court | hir::DayUnit::Business => Unit::Court,
+        hir::DayUnit::Court => Unit::Court,
+        hir::DayUnit::Business => Unit::Business,
         hir::DayUnit::Week => Unit::Week,
         hir::DayUnit::Month => Unit::Month,
         hir::DayUnit::Year => Unit::Year,

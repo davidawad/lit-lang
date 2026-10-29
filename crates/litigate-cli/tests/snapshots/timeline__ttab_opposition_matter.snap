@@ -1,6 +1,5 @@
 ---
 source: crates/litigate-cli/tests/timeline.rs
-assertion_line: 331
 expression: t
 ---
 {
@@ -183,7 +182,7 @@ expression: t
       "kind": "deadline",
       "date": null,
       "due": "2026-10-14",
-      "label": "extended-period-120: 120 days after Published()",
+      "label": "extended-period-120: 90 days after deadline(opposition-period).nominal",
       "status": {
         "state": "lapsed",
         "reason": "past due at 2026-10-19 with no act"
@@ -191,9 +190,9 @@ expression: t
       "cite": "37 CFR 2.102(c)(3)",
       "source": {
         "file": "lit/ttab/ttab.lit",
-        "start": 8095,
-        "end": 8198,
-        "line": 170,
+        "start": 8260,
+        "end": 8386,
+        "line": 173,
         "column": 3
       },
       "layer": "base_rule",
@@ -217,9 +216,9 @@ expression: t
       "cite": "37 CFR 2.102(c)",
       "source": {
         "file": "lit/ttab/ttab.lit",
-        "start": 8201,
-        "end": 8297,
-        "line": 171,
+        "start": 8389,
+        "end": 8485,
+        "line": 174,
         "column": 3
       },
       "layer": "base_rule",
@@ -244,7 +243,7 @@ expression: t
       "source": {
         "file": "lit/ttab/01-pre.lit",
         "start": 2938,
-        "end": 4131,
+        "end": 4128,
         "line": 79,
         "column": 1
       },
@@ -269,9 +268,9 @@ expression: t
       "cite": "37 CFR 2.102(c)(3)",
       "source": {
         "file": "lit/ttab/01-pre.lit",
-        "start": 3437,
-        "end": 3687,
-        "line": 83,
+        "start": 3434,
+        "end": 3684,
+        "line": 84,
         "column": 3
       },
       "layer": "base_rule",
@@ -295,9 +294,9 @@ expression: t
       "cite": "37 CFR 2.101(c); 2.102(c)(3)",
       "source": {
         "file": "lit/ttab/01-pre.lit",
-        "start": 3690,
-        "end": 3926,
-        "line": 89,
+        "start": 3687,
+        "end": 3923,
+        "line": 90,
         "column": 3
       },
       "layer": "base_rule",
@@ -321,9 +320,9 @@ expression: t
       "cite": "37 CFR 2.68",
       "source": {
         "file": "lit/ttab/01-pre.lit",
-        "start": 3929,
-        "end": 4129,
-        "line": 95,
+        "start": 3926,
+        "end": 4126,
+        "line": 96,
         "column": 3
       },
       "layer": "base_rule",
@@ -417,7 +416,7 @@ expression: t
     {
       "code": "L9008",
       "severity": "note",
-      "message": "`37 CFR 2.102(c)(1)(ii)`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 89 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2025-01-18, 2026-10-19]",
+      "message": "`37 CFR 2.102(c)(1)(ii)`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 93 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2025-01-18, 2026-10-19]",
       "source": {
         "file": "cases/ttab-opposition-applicant-defense.case",
         "start": 1624,
@@ -429,7 +428,7 @@ expression: t
     {
       "code": "L9008",
       "severity": "note",
-      "message": "`37 CFR 2.102(c)`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 89 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2025-01-18, 2026-10-19]",
+      "message": "`37 CFR 2.102(c)`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 93 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2025-01-18, 2026-10-19]",
       "source": {
         "file": "cases/ttab-opposition-applicant-defense.case",
         "start": 1698,
@@ -441,19 +440,19 @@ expression: t
     {
       "code": "L9008",
       "severity": "note",
-      "message": "`37 CFR 2.102(c)(3)`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2017-01-14: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 89 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2017-01-14, 2026-10-19]",
+      "message": "`37 CFR 2.102(c)(3)`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2017-01-14: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 93 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2017-01-14, 2026-10-19]",
       "source": {
         "file": "lit/ttab/ttab.lit",
-        "start": 8095,
-        "end": 8198,
-        "line": 170,
+        "start": 8260,
+        "end": 8386,
+        "line": 173,
         "column": 3
       }
     },
     {
       "code": "L9008",
       "severity": "note",
-      "message": "`37 CFR 2.101(c)`: 37 C.F.R. § 2.101 (source `cfr2` as of 2026-10-19) is the text in force from 2017-01-14: `## versions 37 C.F.R. § 2.101` in `sources/ecfr-versions-title-37.txt` line 85 (sha256 e8585328ae91c0f60567a2375cf15e5cf64bb7d2f605253115d5c70dc7ca805a, read 2026-10-24) records version 2017-01-14 and no amendment in (2017-01-14, 2026-10-19]",
+      "message": "`37 CFR 2.101(c)`: 37 C.F.R. § 2.101 (source `cfr2` as of 2026-10-19) is the text in force from 2017-01-14: `## versions 37 C.F.R. § 2.101` in `sources/ecfr-versions-title-37.txt` line 89 (sha256 e8585328ae91c0f60567a2375cf15e5cf64bb7d2f605253115d5c70dc7ca805a, read 2026-10-24) records version 2017-01-14 and no amendment in (2017-01-14, 2026-10-19]",
       "source": {
         "file": "lit/ttab/ttab.lit",
         "start": 6779,
@@ -465,23 +464,23 @@ expression: t
     {
       "code": "L9008",
       "severity": "note",
-      "message": "`37 CFR 2.102(c)`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2017-01-14: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 89 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2017-01-14, 2026-10-19]",
+      "message": "`37 CFR 2.102(c)`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2017-01-14: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 93 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2017-01-14, 2026-10-19]",
       "source": {
         "file": "lit/ttab/ttab.lit",
-        "start": 8201,
-        "end": 8297,
-        "line": 171,
+        "start": 8389,
+        "end": 8485,
+        "line": 174,
         "column": 3
       }
     },
     {
       "code": "L9008",
       "severity": "note",
-      "message": "`37 CFR 2.102(c)(3); TBMP 207.03`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 89 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2025-01-18, 2026-10-19]",
+      "message": "`37 CFR 2.102(c)(3); TBMP 207.03`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 93 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2025-01-18, 2026-10-19]",
       "source": {
         "file": "lit/ttab/01-pre.lit",
         "start": 2938,
-        "end": 4131,
+        "end": 4128,
         "line": 79,
         "column": 1
       }
@@ -489,48 +488,48 @@ expression: t
     {
       "code": "L9008",
       "severity": "note",
-      "message": "`37 CFR 2.102(c)(3)`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 89 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2025-01-18, 2026-10-19]",
+      "message": "`37 CFR 2.102(c)(3)`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 93 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2025-01-18, 2026-10-19]",
       "source": {
         "file": "lit/ttab/01-pre.lit",
-        "start": 3437,
-        "end": 3687,
-        "line": 83,
+        "start": 3434,
+        "end": 3684,
+        "line": 84,
         "column": 3
       }
     },
     {
       "code": "L9008",
       "severity": "note",
-      "message": "`37 CFR 2.101(c); 2.102(c)(3)`: 37 C.F.R. § 2.101 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.101` in `sources/ecfr-versions-title-37.txt` line 85 (sha256 e8585328ae91c0f60567a2375cf15e5cf64bb7d2f605253115d5c70dc7ca805a, read 2026-10-24) records version 2017-01-14 and no amendment in (2025-01-18, 2026-10-19]",
+      "message": "`37 CFR 2.101(c); 2.102(c)(3)`: 37 C.F.R. § 2.101 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.101` in `sources/ecfr-versions-title-37.txt` line 89 (sha256 e8585328ae91c0f60567a2375cf15e5cf64bb7d2f605253115d5c70dc7ca805a, read 2026-10-24) records version 2017-01-14 and no amendment in (2025-01-18, 2026-10-19]",
       "source": {
         "file": "lit/ttab/01-pre.lit",
-        "start": 3690,
-        "end": 3926,
-        "line": 89,
+        "start": 3687,
+        "end": 3923,
+        "line": 90,
         "column": 3
       }
     },
     {
       "code": "L9008",
       "severity": "note",
-      "message": "`37 CFR 2.101(c); 2.102(c)(3)`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 89 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2025-01-18, 2026-10-19]",
+      "message": "`37 CFR 2.101(c); 2.102(c)(3)`: 37 C.F.R. § 2.102 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.102` in `sources/ecfr-versions-title-37.txt` line 93 (sha256 fbe23a9abfeb2729854cace22ca43e9178e677a4e4789655fec932dbab6f24eb, read 2026-10-24) records version 2017-01-14 and no amendment in (2025-01-18, 2026-10-19]",
       "source": {
         "file": "lit/ttab/01-pre.lit",
-        "start": 3690,
-        "end": 3926,
-        "line": 89,
+        "start": 3687,
+        "end": 3923,
+        "line": 90,
         "column": 3
       }
     },
     {
       "code": "L9008",
       "severity": "note",
-      "message": "`37 CFR 2.68`: 37 C.F.R. § 2.68 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.68` in `sources/ecfr-versions-title-37.txt` line 77 (sha256 1db5056069a15c26265cf29b993b91930902410f4507df6880d97bad4b873714, read 2026-10-24) records version 2017-01-01 and no amendment in (2025-01-18, 2026-10-19]",
+      "message": "`37 CFR 2.68`: 37 C.F.R. § 2.68 (source `cfr2` as of 2026-10-19) is the text in force from 2025-01-18: `## versions 37 C.F.R. § 2.68` in `sources/ecfr-versions-title-37.txt` line 81 (sha256 1db5056069a15c26265cf29b993b91930902410f4507df6880d97bad4b873714, read 2026-10-24) records version 2017-01-01 and no amendment in (2025-01-18, 2026-10-19]",
       "source": {
         "file": "lit/ttab/01-pre.lit",
-        "start": 3929,
-        "end": 4129,
-        "line": 95,
+        "start": 3926,
+        "end": 4126,
+        "line": 96,
         "column": 3
       }
     }

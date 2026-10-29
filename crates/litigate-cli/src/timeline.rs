@@ -147,7 +147,9 @@ fn event_key(all: &[&hir::Package], e: &hir::Event) -> String {
 
 /// A deadline declaration's display label (`answer-period: 30 days after
 /// InstitutionNoticed()`, or for a designated one `answer-period: the date
-/// InstitutionNoticed() designates, at least 30 days after it`).
+/// InstitutionNoticed() designates, at least 30 days after it`); a
+/// chained one names the period end it runs from (`90 days after
+/// deadline(opposition-period).nominal`).
 fn deadline_label(d: &hir::Deadline) -> String {
     let unit = match d.unit {
         hir::DayUnit::Calendar => "day",
@@ -163,7 +165,16 @@ fn deadline_label(d: &hir::Deadline) -> String {
         hir::Direction::Forward => "after",
         hir::Direction::Backward => "before",
     };
-    let trigger = hirx::event_text(&d.trigger);
+    let trigger = match &d.chain {
+        Some(c) => {
+            let end = match c.end {
+                hir::DueEnd::Nominal => "nominal",
+                hir::DueEnd::Adjusted => "adjusted",
+            };
+            format!("deadline({}).{end}", hirx::local(&c.deadline))
+        }
+        None => hirx::event_text(&d.trigger),
+    };
     if d.designated.is_some() {
         return format!(
             "{}: the date {trigger} designates, at least {} {unit}{plural} {direction} it",

@@ -231,8 +231,12 @@ Entries live in the forum's own
   tail-(e) under RCFC 56.1, RCFC 59(b)(2)-(f) under RCFC 58.1, the RCFC 59
   2002 note under RCFC 60); those lines were moved back under their own rule
   and the page numbers/running heads dropped, no wording changed.
-- sha256 (this file): `d0cad129cb4e7f441b8dff5fa36331cee2abea2c0946e274694781247b606704`
-- Original: `original/rcfc.pdf` as served (sha256 943733526f5391cad22562adf31411148fecfb03f01ae7bcf8bd6ec051a0c971); extraction sha256 2cd0ad815721d3234273142db6f8b32e5235d395c98273f94a51a2e8d2e81be9 (before the lg-nys9 re-ordering). Served at https://www.uscfc.uscourts.gov/sites/cfc/files/Rules%2010.08.26.pdf; same bytes as original/rcfc-appendices.pdf (fetched 2026-10-24), copied not refetched; retrieved 2026-10-27.
+  Hand re-ordered 2026-10-29 (lg-2px4), same method on printed pp. 83-86:
+  RCFC 60(b)(1)-(e) had landed under RCFC 61, RCFC 60's notes and RCFC 62(d)
+  tail-(h) under RCFC 62's 2019 note, RCFC 62's 2002 note under RCFC 62.1,
+  and RCFC 62's 2008/2010 notes under RCFC 63; each moved back under its own rule.
+- sha256 (this file): `0c802c719eac96f88be2e18e38f08a03563766e79feb858857a549d90a907556`
+- Original: `original/rcfc.pdf` as served (sha256 943733526f5391cad22562adf31411148fecfb03f01ae7bcf8bd6ec051a0c971); extraction sha256 2cd0ad815721d3234273142db6f8b32e5235d395c98273f94a51a2e8d2e81be9 (before the lg-nys9 and lg-2px4 re-orderings). Served at https://www.uscfc.uscourts.gov/sites/cfc/files/Rules%2010.08.26.pdf; same bytes as original/rcfc-appendices.pdf (fetched 2026-10-24), copied not refetched; retrieved 2026-10-27.
 
 ### `fedcir-rules.txt` — Federal Circuit Rules of Practice (55 numbered local rules)
 

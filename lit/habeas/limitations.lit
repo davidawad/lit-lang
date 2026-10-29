@@ -75,7 +75,21 @@ event ProposedFindingsServed(method: ServiceMethod)
 /// section's credits). 2254 Rule 3(c): "The time for filing a petition is
 /// governed by 28 U.S.C. § 2244(d)." The statute states no extension; the
 /// (d)(2) exclusion is not modeled (module note).
-deadline state-petition-limitation: 1.years after StateLimitationTrigger() counted_by frcp6 effective [1996-04-24, ..) known_at 1996-04-24 cite "28 U.S.C. § 2244(d)(1)"
+///
+/// This version runs to the December 1, 2009 amendment of 2254 Rule 12,
+/// the text vendored (as amended to Dec. 1, 2019) and in force since
+/// (`sources/habeas/rule12-amendment-history.txt`). The adopting rule's
+/// earlier text is not vendored, so the forum is not cited to it; FRCP
+/// 6(a) then reached "any applicable statute" by its own terms.
+deadline state-petition-limitation: 1.years after StateLimitationTrigger() counted_by frcp6 effective [1996-04-24, 2009-12-01) known_at 1996-04-24 cite "28 U.S.C. § 2244(d)(1)"
+{
+  forum frcp
+  trigger latest
+}
+
+/// § 2244(d)(1) from the December 1, 2009 amendment of 2254 Rule 12
+/// (issued March 26, 2009), whose text the forum cites: the same year.
+deadline state-petition-limitation: 1.years after StateLimitationTrigger() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 cite "28 U.S.C. § 2244(d)(1)"
 {
   forum frcp cite "2254 Rule 12"
     quote "are not inconsistent with any statutory provisions or these rules,"
@@ -88,7 +102,21 @@ deadline state-petition-limitation: 1.years after StateLimitationTrigger() count
 /// without change of words by Pub. L. 110-177, § 511, Jan. 7, 2008 (the
 /// section's notes), so one version covers both. 2255 Rule 3(c) still cites
 /// it as "§ 2255 para. 6". The statute states no extension.
-deadline federal-motion-limitation: 1.years after FederalLimitationTrigger() counted_by frcp6 effective [1996-04-24, ..) known_at 1996-04-24 cite "28 U.S.C. § 2255(f)"
+///
+/// This version runs to the December 1, 2004 amendment of 2255 Rule 12,
+/// the text vendored and in force since
+/// (`sources/habeas/rule12-amendment-history.txt`). The rule's earlier
+/// text is not vendored, so the forum is not cited to it; FRCP 6(a) then
+/// reached "any applicable statute" by its own terms.
+deadline federal-motion-limitation: 1.years after FederalLimitationTrigger() counted_by frcp6 effective [1996-04-24, 2004-12-01) known_at 1996-04-24 cite "28 U.S.C. § 2255(f)"
+{
+  forum frcp
+  trigger latest
+}
+
+/// § 2255(f) from the December 1, 2004 amendment of 2255 Rule 12 (issued
+/// April 26, 2004), whose text the forum cites: the same year.
+deadline federal-motion-limitation: 1.years after FederalLimitationTrigger() counted_by frcp6 effective [2004-12-01, ..) known_at 2004-04-26 cite "28 U.S.C. § 2255(f)"
 {
   forum frcp cite "2255 Rule 12"
     quote "with any statutory provisions or these rules, may be applied to a"

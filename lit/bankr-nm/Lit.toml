@@ -2,7 +2,9 @@
 # the District of New Mexico over lit/frbp (FRBP 9029(a); 28 U.S.C. §
 # 2075): it declares only the periods the Local Rules themselves state and
 # re-encodes no FRBP period. Each period is counted under FRBP 9006(a),
-# the FRCP 6(a) method (core's frbp9006). The rules are the version of
+# with New Mexico's holidays closing a forward-counted period (FRBP
+# 9006(a)(6)(C); `bankr-nm-9006`, the NMRA 1-006(A)(7) list), which also
+# counts lit/frbp's periods in a matter in this court (`recounts`). The rules are the version of
 # December 1, 2025 (sources/bankr-nm, the court's consolidated PDF of the
 # rules adopted November 15, 2014 as since amended); no amending order
 # after it is vendored, so there are no dated layers and the package runs
@@ -22,7 +24,8 @@ in_force = "2025-12-01"
 known_at = "2026-10-28"
 unknown_before = "2025-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of New Mexico"
-counting = "frbp9006"
+counting = "bankr-nm-9006"
+recounts = ["frbp-bankruptcy-procedure"]
 
 [package.instrument]
 source = "nmb-lbr"
@@ -50,3 +53,22 @@ sha256 = "e227d88dd8ad1ec87b11ddcaf473138bb4bb018e28d4cc4d6900af119beebfa3"
 as_of = "2025-12-01"
 cite_prefixes = ["NM LBR"]
 section_heading = "NM LBR {n}"
+
+[sources.nmra-1]
+title = "NMRA Rule Set 1, Rules of Civil Procedure for the District Courts (unannotated), as published on NMOneSource on October 27, 2026"
+url = "https://nmonesource.com/nmos/nmra-unanno/en/18468/1/document.do"
+path = "sources/nm-state-civil/nmra-rule-set-1-civil-2026-sectioned.txt"
+path_sha256 = "3a0c71824c0bb61518f0e471fa352f041992926938eecc55b51b382b23622851"
+sha256 = "59a97c6f3e896ba0850de08d39d2b33c2cfb71d3e829e9eec84572c2a532e5eb"
+as_of = "2026-10-27"
+cite_prefixes = ["NMRA 1-"]
+section_heading = "NMRA 1-{n}"
+
+[sources.frbp]
+title = "Federal Rules of Bankruptcy Procedure, December 1, 2025 edition"
+url = "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf"
+path = "sources/frbp.txt"
+path_sha256 = "0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8"
+as_of = "2025-12-01"
+cite_prefixes = ["FRBP"]
+section_heading = "FRBP {n}"

@@ -1,6 +1,77 @@
 module nmd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.calendar.{ us-federal-holidays }
+
+/// The New Mexico legal holiday NMRA 1-006(A)(7) lists that is not a
+/// § 6103(a) day: Presidents' Day, "traditionally observed on the day after
+/// Thanksgiving", the Friday after the fourth Thursday in November, listed
+/// here by year through 2050. Every other day on that list (New Year's,
+/// Martin Luther King Jr.'s Birthday, Memorial, Juneteenth, Independence,
+/// Labor, Indigenous Peoples (the second Monday in October), Veterans',
+/// Thanksgiving and Christmas Day) is a § 6103(a) day already in core's
+/// `us-federal-holidays`. Rule 1-006 was last amended effective December
+/// 31, 2024 (the vendored 2026 NMRA edition); "any other day observed as a
+/// holiday by the judiciary" (1-006(A)(7)(b)) is not modeled (the earlier
+/// date).
+calendar new-mexico-legal-holidays cite "NMRA 1-006(A)(7)"
+{
+  day-after-thanksgiving-2025: once(2025-11-28) effective [2024-12-31, ..)
+  day-after-thanksgiving-2026: once(2026-11-27) effective [2024-12-31, ..)
+  day-after-thanksgiving-2027: once(2027-11-26) effective [2024-12-31, ..)
+  day-after-thanksgiving-2028: once(2028-11-24) effective [2024-12-31, ..)
+  day-after-thanksgiving-2029: once(2029-11-23) effective [2024-12-31, ..)
+  day-after-thanksgiving-2030: once(2030-11-29) effective [2024-12-31, ..)
+  day-after-thanksgiving-2031: once(2031-11-28) effective [2024-12-31, ..)
+  day-after-thanksgiving-2032: once(2032-11-26) effective [2024-12-31, ..)
+  day-after-thanksgiving-2033: once(2033-11-25) effective [2024-12-31, ..)
+  day-after-thanksgiving-2034: once(2034-11-24) effective [2024-12-31, ..)
+  day-after-thanksgiving-2035: once(2035-11-23) effective [2024-12-31, ..)
+  day-after-thanksgiving-2036: once(2036-11-28) effective [2024-12-31, ..)
+  day-after-thanksgiving-2037: once(2037-11-27) effective [2024-12-31, ..)
+  day-after-thanksgiving-2038: once(2038-11-26) effective [2024-12-31, ..)
+  day-after-thanksgiving-2039: once(2039-11-25) effective [2024-12-31, ..)
+  day-after-thanksgiving-2040: once(2040-11-23) effective [2024-12-31, ..)
+  day-after-thanksgiving-2041: once(2041-11-29) effective [2024-12-31, ..)
+  day-after-thanksgiving-2042: once(2042-11-28) effective [2024-12-31, ..)
+  day-after-thanksgiving-2043: once(2043-11-27) effective [2024-12-31, ..)
+  day-after-thanksgiving-2044: once(2044-11-25) effective [2024-12-31, ..)
+  day-after-thanksgiving-2045: once(2045-11-24) effective [2024-12-31, ..)
+  day-after-thanksgiving-2046: once(2046-11-23) effective [2024-12-31, ..)
+  day-after-thanksgiving-2047: once(2047-11-29) effective [2024-12-31, ..)
+  day-after-thanksgiving-2048: once(2048-11-27) effective [2024-12-31, ..)
+  day-after-thanksgiving-2049: once(2049-11-26) effective [2024-12-31, ..)
+  day-after-thanksgiving-2050: once(2050-11-25) effective [2024-12-31, ..)
+}
+
+/// FRCP 6(a) (core's `frcp6@2023-12-01`) in the District of New Mexico: a day
+/// the state where the district court is located declares a holiday is a
+/// legal holiday for a period counted forward only ("for periods that are
+/// measured after an event", FRCP 6(a)(6)(C)). The package `recounts`
+/// lit/frcp, so in a matter in this court the FRCP periods are counted by
+/// this rule too, not by core's frcp6.
+counting nmd-6 effective [2020-10-01, ..) known_at 2020-10-01 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays new-mexico-legal-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
 
 // The District of New Mexico's own civil periods, computed under the
 // federal rules (D.N.M.LR-Civ. 7.4(a): the briefing periods "are computed
@@ -75,21 +146,21 @@ event NoticeOfRemovalFiled()
 /// D.N.M.LR-Civ. 7.4(a): a response is served and filed within fourteen
 /// calendar days after service of the motion; the period may be extended
 /// by agreement of all parties.
-deadline response-period: 14.days after MotionFiled() counted_by frcp6 cite "D.N.M.LR-Civ. 7.4(a)"
+deadline response-period: 14.days after MotionFiled() counted_by nmd-6 cite "D.N.M.LR-Civ. 7.4(a)"
 {
   forum frcp
 }
 
 /// D.N.M.LR-Civ. 7.4(a): a reply is served and filed within fourteen
 /// calendar days after service of the response.
-deadline reply-period: 14.days after ResponseFiled() counted_by frcp6 cite "D.N.M.LR-Civ. 7.4(a)"
+deadline reply-period: 14.days after ResponseFiled() counted_by nmd-6 cite "D.N.M.LR-Civ. 7.4(a)"
 {
   forum frcp
 }
 
 /// D.N.M.LR-Civ. 7.8(c): any response to a Notice of Supplemental
 /// Authorities is filed within seven days of the filing of the Notice.
-deadline supplemental-authorities-response-period: 7.days after SupplementalAuthoritiesNoticeFiled() counted_by frcp6 cite "D.N.M.LR-Civ. 7.8(c)"
+deadline supplemental-authorities-response-period: 7.days after SupplementalAuthoritiesNoticeFiled() counted_by nmd-6 cite "D.N.M.LR-Civ. 7.8(c)"
 {
   forum frcp
 }
@@ -97,7 +168,7 @@ deadline supplemental-authorities-response-period: 7.days after SupplementalAuth
 /// D.N.M.LR-Civ. 10.3(b): a paper filed without signature is stricken
 /// unless signed within fourteen days after the omission is called to the
 /// party's attention.
-deadline signature-cure-period: 14.days after SignatureOmissionNoticed() counted_by frcp6 cite "D.N.M.LR-Civ. 10.3(b)"
+deadline signature-cure-period: 14.days after SignatureOmissionNoticed() counted_by nmd-6 cite "D.N.M.LR-Civ. 10.3(b)"
 {
   forum frcp
 }
@@ -106,7 +177,7 @@ deadline signature-cure-period: 14.days after SignatureOmissionNoticed() counted
 /// cause for non-compliance, within forty-five days from the date of the
 /// Clerk's notice may result in striking or dismissal without prejudice
 /// under D.N.M.LR-Civ. 41.2.
-deadline deficiency-cure-period: 45.days after DeficiencyNoticed() counted_by frcp6 cite "D.N.M.LR-Civ. 10.3(c)"
+deadline deficiency-cure-period: 45.days after DeficiencyNoticed() counted_by nmd-6 cite "D.N.M.LR-Civ. 10.3(c)"
 {
   forum frcp
 }
@@ -114,7 +185,7 @@ deadline deficiency-cure-period: 45.days after DeficiencyNoticed() counted_by fr
 /// D.N.M.LR-Civ. 16.1: after the FRCP 26(f) conference the parties file
 /// the completed Joint Status Report at least seven days before the
 /// scheduling conference, or as ordered by the Court.
-deadline joint-status-report-period: 7.days before SchedulingConference() counted_by frcp6 cite "D.N.M.LR-Civ. 16.1"
+deadline joint-status-report-period: 7.days before SchedulingConference() counted_by nmd-6 cite "D.N.M.LR-Civ. 16.1"
 {
   forum frcp
 }
@@ -126,7 +197,7 @@ deadline joint-status-report-period: 7.days before SchedulingConference() counte
 /// be produced, of the production or inspection); failure to proceed in
 /// time is acceptance of the objection. The Court may change the period
 /// for good cause.
-deadline discovery-objection-motion-period: 21.days after DiscoveryObjectionServed() counted_by frcp6 cite "D.N.M.LR-Civ. 26.6"
+deadline discovery-objection-motion-period: 21.days after DiscoveryObjectionServed() counted_by nmd-6 cite "D.N.M.LR-Civ. 26.6"
 {
   forum frcp
 }
@@ -134,7 +205,7 @@ deadline discovery-objection-motion-period: 21.days after DiscoveryObjectionServ
 /// D.N.M.LR-Civ. 30.1: notice of a deposition under FRCP 30(b) is served
 /// at least fourteen days before the scheduled deposition, unless the
 /// parties agree or the Court orders a shorter time.
-deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6 cite "D.N.M.LR-Civ. 30.1"
+deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by nmd-6 cite "D.N.M.LR-Civ. 30.1"
 {
   forum frcp
 }
@@ -142,7 +213,7 @@ deadline deposition-notice-period: 14.days before DepositionScheduled() counted_
 /// D.N.M.LR-Civ. 41.1: a civil action in which no steps are taken for
 /// ninety days may be dismissed thirty days after the date of the Clerk's
 /// written notice, unless good cause is shown.
-deadline want-of-prosecution-period: 30.days after ProsecutionNoticeGiven() counted_by frcp6 cite "D.N.M.LR-Civ. 41.1"
+deadline want-of-prosecution-period: 30.days after ProsecutionNoticeGiven() counted_by nmd-6 cite "D.N.M.LR-Civ. 41.1"
 {
   forum frcp
 }
@@ -150,7 +221,7 @@ deadline want-of-prosecution-period: 30.days after ProsecutionNoticeGiven() coun
 /// D.N.M.LR-Civ. 54.1: a motion to tax costs is filed and served within
 /// thirty days of entry of judgment; failure to do so waives the claim to
 /// costs.
-deadline costs-motion-period: 30.days after JudgmentEntered() counted_by frcp6 cite "D.N.M.LR-Civ. 54.1"
+deadline costs-motion-period: 30.days after JudgmentEntered() counted_by nmd-6 cite "D.N.M.LR-Civ. 54.1"
 {
   forum frcp
 }
@@ -158,14 +229,14 @@ deadline costs-motion-period: 30.days after JudgmentEntered() counted_by frcp6 c
 /// D.N.M.LR-Civ. 54.5(a): a motion for attorney's fees not brought under
 /// 28 U.S.C. § 2412(d) is filed and served within thirty days after entry
 /// of judgment; failure to do so waives the claim to fees.
-deadline fee-motion-period: 30.days after JudgmentEntered() counted_by frcp6 cite "D.N.M.LR-Civ. 54.5(a)"
+deadline fee-motion-period: 30.days after JudgmentEntered() counted_by nmd-6 cite "D.N.M.LR-Civ. 54.5(a)"
 {
   forum frcp
 }
 
 /// D.N.M.LR-Civ. 58.2(a)(2): a prevailing party's proposed order or
 /// judgment is entered if not objected to within seven days of service.
-deadline proposed-order-objection-period: 7.days after ProposedOrderServed() counted_by frcp6 cite "D.N.M.LR-Civ. 58.2(a)"
+deadline proposed-order-objection-period: 7.days after ProposedOrderServed() counted_by nmd-6 cite "D.N.M.LR-Civ. 58.2(a)"
 {
   forum frcp
 }
@@ -173,7 +244,7 @@ deadline proposed-order-objection-period: 7.days after ProposedOrderServed() cou
 /// D.N.M.LR-Civ. 81.1(a): a party removing an action under 28 U.S.C.
 /// § 1446 files legible copies of the state-court records and proceedings
 /// within twenty-eight days after filing the notice of removal.
-deadline removal-record-period: 28.days after NoticeOfRemovalFiled() counted_by frcp6 cite "D.N.M.LR-Civ. 81.1(a)"
+deadline removal-record-period: 28.days after NoticeOfRemovalFiled() counted_by nmd-6 cite "D.N.M.LR-Civ. 81.1(a)"
 {
   forum frcp
 }

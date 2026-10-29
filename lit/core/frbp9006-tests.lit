@@ -1,0 +1,21 @@
+module core.frbp9006.tests
+
+import core.frbp9006.{ frbp9006 }
+import core.time.{ Served, ServiceMethod }
+
+// A fixture period for testing `frbp9006`: 14 days counted under FRBP 9006
+// from a `Served` event. It cites nothing: it is a period for the tests,
+// not a rule in force, and each test cites the rule it checks.
+deadline frbp9006-14-days: 14.days after Served() counted_by frbp9006 { forum frbp }
+
+test "a fourteen-day bankruptcy period excludes the trigger day" cite "FRBP 9006(a)(1)(A)"
+{
+  given Served(Personal) on 2026-07-01
+  expect deadline(frbp9006-14-days) == 2026-07-15
+}
+
+test "service by mail adds three days after the period" cite "FRBP 9006(f)"
+{
+  given Served(Mail) on 2026-07-20
+  expect deadline(frbp9006-14-days) == 2026-08-06
+}

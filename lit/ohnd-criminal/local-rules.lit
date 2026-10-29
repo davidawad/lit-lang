@@ -20,15 +20,19 @@ import frcrimp.deadlines.{ SentencingScheduled }
 // ask in writing for a confiscated electronic device (LCrR 53.1), the
 // attorney admission, status-change and discipline periods (LCrR 57.5,
 // 57.7) and the court reporters' transcript delivery periods (LCrR 57.20),
-// which no event of the criminal case models; and the violation report
+// which no event of the criminal case models. The violation report
 // disclosed "at least 48 hours prior to the Revocation Hearing" (LCrR
-// 32.1.1), an hours period `core.frcrimp45` does not count.
+// 32.1.1) is counted in hours under FRCrimP 45(a)(2); a trigger carries a
+// date, not a time, so it is counted from 00:00 of the hearing date.
 /// Objections to a magistrate judge's proposed findings, recommendations
 /// or report under LCrR 5.1(f) are served (LCrR 5.3(b)).
 event MagistrateObjectionsServed()
 /// A plea of guilty or nolo contendere, or a finding of guilt, is entered
 /// and the court orders a presentence report (LCrR 32.2(a)).
 event GuiltEnteredReportOrdered()
+/// A hearing on revoking or modifying supervised release or probation is
+/// held (LCrR 32.1.1; FRCrimP 32.1(b)(2)).
+event RevocationHearing()
 
 /// LCrR 5.3(b): any party may respond to another party's objections to a
 /// magistrate judge's report within fourteen days after being served with
@@ -52,3 +56,8 @@ deadline revised-psr-period: 2.weeks before SentencingScheduled() counted_by frc
 /// any information the court requires and any information they intend to
 /// rely on at sentencing, served on all parties and the probation officer.
 deadline sentencing-position-period: 1.weeks before SentencingScheduled() counted_by frcrimp45 cite "N.D. Ohio LCrR 32.2(c)"
+/// LCrR 32.1.1: at least 48 hours before the revocation hearing the
+/// probation officer discloses the violation report and any supplemental
+/// violation reports to the defendant, defense counsel and the United
+/// States Attorney.
+deadline violation-report-disclosure: 48.hours before RevocationHearing() counted_by frcrimp45 cite "N.D. Ohio LCrR 32.1.1"

@@ -1,15 +1,16 @@
 module cand-local-rules.local-rules
 
 import core.frcp6.{ frcp6 }
+import frcp.periods.{ JudgmentEntered }
 
 // The Northern District of California's own civil periods and limits,
 // computed under FRCP 6(a), which governs a period stated in a local rule.
 // Each period the Civil Local Rules tie to filing runs from filing, and
 // FRCP 6(d) does not extend it (N.D. Cal. Civil L.R. 7-2(a), 7-3(a), (c),
-// (d)(1)). Rules that state no period this layer can count stay out: the
-// noticed hearing date, which is a minimum (not less than 35 days after
-// the motion is filed, N.D. Cal. Civil L.R. 7-2(a)), not a deadline; the
-// joint case management statement, due by the date FRCP 26(f) sets (N.D.
+// (d)(1)). The noticed hearing date is a minimum, not less than 35 days
+// after the motion is filed (N.D. Cal. Civil L.R. 7-2(a)); read from the
+// hearing, it is the last day to file a motion noticed for that date.
+// Rules that state no period this layer can count stay out: the joint case management statement, due by the date FRCP 26(f) sets (N.D.
 // Cal. Civil L.R. 16-9(a); lit/frcp); the notice that a matter has been
 // under submission for more than 120 days, which a party may file but need
 // not (N.D. Cal. Civil L.R. 7-13); consent in a case initially assigned to
@@ -75,6 +76,9 @@ event HearingScheduled()
 /// A motion to enlarge or shorten time is filed (N.D. Cal. Civil L.R.
 /// 6-3(a)).
 event ChangeTimeMotionFiled() paper change-time-paper
+/// The hearing a motion notices on the assigned Judge's motion calendar
+/// (N.D. Cal. Civil L.R. 7-2(a), (b)(1)).
+event MotionHearingNoticed()
 /// A noticed motion is filed (N.D. Cal. Civil L.R. 7-2(a)).
 event MotionFiled() paper motion
 /// The opposition to a motion is filed (N.D. Cal. Civil L.R. 7-3(a)).
@@ -87,9 +91,6 @@ event ReplyFiled() paper reply-brief
 /// An Objection to Reply Evidence is filed (N.D. Cal. Civil L.R.
 /// 7-3(d)(1)).
 event ReplyEvidenceObjectionFiled() paper reply-evidence-objection
-/// The district court enters judgment (N.D. Cal. Civil L.R. 7-8(d),
-/// 54-1(a), 54-5(a)).
-event JudgmentEntered()
 /// A motion for administrative relief is filed (N.D. Cal. Civil L.R.
 /// 7-11(a)).
 event AdministrativeMotionFiled() paper administrative-paper
@@ -120,6 +121,12 @@ deadline change-time-request-period: 14.days before HearingScheduled() counted_b
 /// a motion to enlarge or shorten time is filed no later than 4 days after
 /// receiving the motion.
 deadline change-time-opposition-period: 4.days after ChangeTimeMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 6-3(b)"
+/// N.D. Cal. Civil L.R. 7-2(a): except as the assigned Judge or the Local
+/// Rules otherwise order or permit, and except for a motion made during a
+/// trial or hearing, a motion is noticed for hearing not less than 35 days
+/// after it is filed, so it is filed no later than 35 days before the
+/// noticed hearing. FRCP 6(d) does not extend the period.
+deadline motion-notice-period: 35.days before MotionHearingNoticed() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-2(a)"
 /// N.D. Cal. Civil L.R. 7-3(a): the opposition to a motion is filed and
 /// served not more than 14 days after the motion was filed. A party that
 /// does not oppose files a Statement of Nonopposition within the same time
@@ -155,8 +162,14 @@ deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 
 deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "N.D. Cal. Civil L.R. 54-2(a)"
 /// N.D. Cal. Civil L.R. 54-5(a): a motion for attorney's fees is served and
 /// filed within 14 days of entry of judgment by the district court unless
-/// the court orders otherwise on a stipulation or motion; an appeal does not
-/// extend the time.
+/// the court orders otherwise on a stipulation to enlarge time (Civil L.R.
+/// 6-2) or a motion (Civil L.R. 6-3); an appeal does not extend the time.
+/// The rule is layered on FRCP 54(d)(2)(B), whose 14 days its Commentary
+/// recites: it runs from lit/frcp's own `JudgmentEntered`, so the one entry
+/// of judgment opens both lit/frcp's `fee-motion-period` (FRCP 54(d)(2)(B))
+/// and this one on the same day, and adds only the local terms, the meet
+/// and confer before filing and the declarations Civil L.R. 54-5(b)
+/// requires, and that an appeal does not extend it.
 deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Cal. Civil L.R. 54-5(a)"
 /// N.D. Cal. Civil L.R. 72-2(d): if the district judge makes no order
 /// denying the motion or setting a briefing schedule within 14 days of its
@@ -177,3 +190,105 @@ deadline designating-statement-period: 7.days after OtherPartySealingMotionFiled
 /// N.D. Cal. Civil L.R. 79-5(f)(4): any response is filed no later than 4
 /// days after the Designating Party files its statement or declaration.
 deadline sealing-response-period: 4.days after DesignatingStatementFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 79-5(f)"
+
+// The character of a motion. Civil L.R. 7-11 covers "miscellaneous
+// administrative matters, not otherwise governed by a federal statute,
+// Federal Rule, local rule, or standing order"; any other motion is noticed
+// under Civil L.R. 7-2 and briefed under 7-3. When the movant files under
+// 7-11 a motion whose relief arguably needs a regular motion, the opposing
+// party does not know which clock runs until the court acts: 4 days (Civil
+// L.R. 7-11(b)), after which the motion is deemed submitted without a
+// hearing (Civil L.R. 7-11(c)), or 14 days (Civil L.R. 7-3(a)). Filing
+// within 4 days covers both; waiting stakes the opposition on the court
+// treating the motion as regular. The court's characterization is a chance
+// node; no vendored source states how often the court treats such a motion
+// as administrative, so its probabilities are holes for a matter's beliefs.
+// After the reply, Civil L.R. 7-3(d) admits only an Objection to Reply
+// Evidence, a Statement of Recent Decision, or a paper the court approved
+// in advance: those are the only moves out of `reply-filed`.
+start response-timing
+
+decision response-timing: "Respond to a motion filed under Civil L.R. 7-11 whose character is contestable" by applicant cite "N.D. Cal. Civil L.R. 7-11(b)"
+{
+  tags [entry]
+  note "The opposing party chooses whether to cover the shorter administrative clock or to brief on the regular one."
+  edge-response-timing-early "Oppose within 4 days, covering the administrative clock" -> early-opposition {
+    authority cite "N.D. Cal. Civil L.R. 7-11(b)"
+    within administrative-opposition-period
+    cost ?("the premium of briefing an opposition in 4 days rather than 14 is the matter's, not the rule's")
+  }
+  edge-response-timing-wait "Brief on the 14-day regular clock and accept the characterization risk" -> characterization {
+    authority cite "N.D. Cal. Civil L.R. 7-3(a)"
+  }
+}
+
+state early-opposition: "Opposition filed within the administrative period" by applicant cite "N.D. Cal. Civil L.R. 7-11(c)"
+{
+  note "Filed within 4 days, the opposition is timely on either characterization; an administrative motion is then deemed submitted the next day (Civil L.R. 7-11(c)), and a regular one proceeds to a reply under Civil L.R. 7-3(c)."
+  edge-early-opposition-submitted "Deemed submitted the day after the opposition is due" -> submitted {
+    authority cite "N.D. Cal. Civil L.R. 7-11(c)"
+  }
+}
+
+chance characterization: "Court characterizes the motion" by court discretion cite "N.D. Cal. Civil L.R. 7-1(a)"
+{
+  edge-characterization-administrative "Administrative motion: opposition in 4 days" -> deemed-submitted-unopposed p ?("no vendored source states how often the court treats a contested 7-11 motion as administrative") {
+    authority cite "N.D. Cal. Civil L.R. 7-11(b)"
+    within administrative-opposition-period
+  }
+  edge-characterization-regular "Regular motion: opposition in 14 days" -> regular-briefing p ?("no vendored source states how often the court treats a contested 7-11 motion as a regular motion") {
+    authority cite "N.D. Cal. Civil L.R. 7-3(a)"
+    within opposition-period
+  }
+}
+
+state deemed-submitted-unopposed: "Deemed submitted without the opposition" by court cite "N.D. Cal. Civil L.R. 7-11(c)"
+{
+  note "Unless otherwise ordered, the motion is deemed submitted for immediate determination without hearing the day after the 4-day opposition period runs (Civil L.R. 7-11(c)); an opposition planned on the 14-day clock comes too late."
+  edge-deemed-submitted-unopposed-decided "Court decides the motion" -> submitted {
+    authority cite "N.D. Cal. Civil L.R. 7-11(c)"
+  }
+}
+
+state regular-briefing: "Motion briefed as a regular motion" by applicant cite "N.D. Cal. Civil L.R. 7-3(a)"
+{
+  note "The opposition, or a Statement of Nonopposition, is due 14 days after the motion was filed (Civil L.R. 7-3(a), (b)); the reply 7 days after the opposition was due (Civil L.R. 7-3(c))."
+  edge-regular-briefing-replied "Opposition filed; movant replies" -> reply-filed {
+    authority cite "N.D. Cal. Civil L.R. 7-3(c)"
+    within reply-period
+  }
+  edge-regular-briefing-no-reply "Opposition filed; no reply" -> submitted {
+    authority cite "N.D. Cal. Civil L.R. 7-3(c)"
+  }
+}
+
+state reply-filed: "Reply filed: no further papers without prior Court approval" by applicant cite "N.D. Cal. Civil L.R. 7-3(d)"
+{
+  note "Once a reply is filed, no additional memoranda, papers or letters may be filed without prior Court approval, except an Objection to Reply Evidence (Civil L.R. 7-3(d)(1)) or a Statement of Recent Decision before the noticed hearing date (Civil L.R. 7-3(d)(2))."
+  edge-reply-filed-objection "Objection to Reply Evidence on new reply evidence" -> submitted {
+    authority cite "N.D. Cal. Civil L.R. 7-3(d)"
+    within reply-evidence-objection-period
+  }
+  edge-reply-filed-recent-decision "Statement of Recent Decision before the noticed hearing" -> submitted {
+    authority cite "N.D. Cal. Civil L.R. 7-3(d)"
+  }
+  edge-reply-filed-approved "Further paper filed with prior Court approval" -> submitted {
+    authority cite "N.D. Cal. Civil L.R. 7-3(d)"
+  }
+  edge-reply-filed-nothing "Nothing further filed" -> submitted {
+    authority cite "N.D. Cal. Civil L.R. 7-3(d)"
+  }
+}
+
+chance submitted: "Court rules on the motion" by court discretion cite "N.D. Cal. Civil L.R. 7-1(b)"
+{
+  edge-submitted-granted "Motion granted" -> motion-granted p ?("the merits of the motion are the matter's") {
+    authority cite "N.D. Cal. Civil L.R. 7-1(b)"
+  }
+  edge-submitted-denied "Motion denied" -> motion-denied p ?("the merits of the motion are the matter's") {
+    authority cite "N.D. Cal. Civil L.R. 7-1(b)"
+  }
+}
+
+terminal motion-granted: "Motion granted: the case continues under lit/frcp" outcome [procedural] cite "N.D. Cal. Civil L.R. 7-1(b)"
+terminal motion-denied: "Motion denied: the case continues under lit/frcp" outcome [procedural] cite "N.D. Cal. Civil L.R. 7-1(b)"

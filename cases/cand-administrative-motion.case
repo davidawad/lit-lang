@@ -1,0 +1,27 @@
+case cand-administrative-motion
+uses cand-local-rules ^0.1.0
+as_of 2026-11-04
+summary "N.D. Cal. civil action (illustrative, public rules only): the opposing party files a Motion for Administrative Relief under Civil L.R. 7-11 on 2026-11-02 seeking relief that arguably needs a regular noticed motion under Civil L.R. 7-2. Self, the responding party, chooses whether to oppose within the 4-day administrative period (Civil L.R. 7-11(b)) or on the 14-day regular clock (Civil L.R. 7-3(a)), against the chance that the court treats the motion as administrative and deems it submitted the day after the 4 days run (Civil L.R. 7-11(c))."
+notes "Synthetic matter built from the vendored Civil Local Rules effective October 2, 2026 (sources/fed-ndcal); no client material. The 4-day opposition falls on Friday 2026-11-06 and the 14-day one on Monday 2026-11-16 (FRCP 6(a)). The package leaves the characterization and ruling probabilities as holes; this matter's beliefs put an uninformed even prior on the characterization, illustrative only, not a measured frequency. Stakes are illustrative."
+perspective applicant
+
+parties {
+  applicant: applicant Corporation
+  opponent: opponent Corporation
+}
+
+events {
+  administrative-motion-filed-1: 2026-11-02 AdministrativeMotionFiled() by opponent
+}
+
+stakes { cand-local-rules::motion-granted: 0.usd, cand-local-rules::motion-denied: 100_000.usd }
+
+beliefs {
+  prior characterization: {
+    edge-characterization-administrative: 1
+    edge-characterization-regular: 1
+  }
+  prior submitted: { edge-submitted-granted: 1, edge-submitted-denied: 1 }
+}
+
+analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }

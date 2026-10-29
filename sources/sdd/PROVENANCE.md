@@ -14,10 +14,10 @@
 - Edition: as the extract, document dated 2/28/2025.
 - Sectioned sha256 3bfff7fb9b3f9e19f786c863e5971119bb06eeab9ffa41f569bfbd556a186575.
 
-### `sdd/sdd-criminal-local-rules-complete-set.txt` — D.S.D. Criminal Local Rules of Practice (complete set, undated)
+### `sdd/sdd-criminal-local-rules-complete-set.txt` — D.S.D. Criminal Local Rules of Practice (complete set, effective February 24, 2025)
 
 - Source: https://www.sdd.uscourts.gov/sites/sdd/files/Criminal%20Local%20Rules%20-%20final%2C%20approved.pdf (official site; 36 pages, sha256 c14f37a0684b4e6add374ae6a70be467f0919fe65b7caae848acdfcbf3a3c25e).
-- Edition: Criminal Local Rules of Practice, 'Complete Set' (final, approved) linked at https://www.sdd.uscourts.gov/LocalRulesCriminal; CURRENCY UNCONFIRMED: neither the PDF nor the page states an effective date. robots.txt of www.sdd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Edition: Criminal Local Rules of Practice, 'Complete Set' (final, approved) linked at https://www.sdd.uscourts.gov/LocalRulesCriminal; each page footer dates the document 2/28/2025, and the extract ends with Eighth Circuit Judicial Council order JCO 3440 (St. Louis, February 24, 2025), which certifies that the Council reviewed the amended civil and criminal local rules, took no action, and so made them effective as of the date of the order (28 U.S.C. § 2071(c)(1), Fed. R. Crim. P. 57(c)); the rules are therefore effective February 24, 2025. The court's page itself states no effective date. robots.txt of www.sdd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
 - Criminal forum (lg-gddt): sdd-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 b98938d2f72ee568905e6c9c31c6432d19cfc3eab11e58cbd75927faef635ae8. Raw extract, not yet sectioned into `## <ref>` form.

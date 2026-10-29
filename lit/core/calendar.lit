@@ -71,6 +71,13 @@ calendar us-federal-holidays cite "5 U.S.C. § 6103(a)" historical
   christmas-day: fixed(12, 25) effective [1971-02-11, ..) observed nearest_weekday
 }
 
+/// Before the 2016 time-computation amendments, the federal rules did not
+/// include state holidays in the definition of a legal holiday. Keep the
+/// shared calendar empty for historical deadline tests; FRCP 6(a)(6)(A)
+/// identifies the then-applicable federal holidays.
+calendar district-state-holidays effective [1963-07-01, 2016-12-01) cite "FRCP 6(a)(6)(A)" historical
+{}
+
 /// Placeholder for the state holidays required by FRCP 6(a)(6)(C) and
 /// FRBP 9006(a)(6)(C). Each district needs its own list from the applicable
 /// state's law or a court rule. No such state-law texts are vendored for
@@ -79,9 +86,8 @@ calendar us-federal-holidays cite "5 U.S.C. § 6103(a)" historical
 /// earlier-date result (the missing source is the district's state-holiday
 /// statute/rule). Delaware's are vendored: `delaware-holidays`, read by
 /// core's `frcp6-delaware` (the D. Del. count).
-calendar district-state-holidays cite "FRCP 6(a)(6)(C)"
-{
-}
+calendar district-state-holidays effective [2016-12-01, ..) cite "FRCP 6(a)(6)(C)" historical
+{}
 
 /// RCFC 6(a)(6)(A)'s legal holidays: the § 6103(a) days in force when the
 /// RCFC time-computation rules here are (2002 onward), plus Inauguration

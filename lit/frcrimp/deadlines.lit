@@ -52,10 +52,6 @@ enum AppealStart { JudgmentEntered, GovernmentNotice }
 /// of these events).
 event AppealClockEvent(start: AppealStart)
 
-/// Rule 5(a)(1)(A) sets no day count ("without unnecessary delay"); the
-/// three days are the legacy pack's practice window, kept as a hole.
-deadline rule5-appearance: 3.days after Arrested() counted_by frcrimp45 effective [2024-12-01, ..) cite ?("Fed. R. Crim. P. 5(a)(1)(A) sets no day count (3 days is the legacy pack's practice estimate)")
-
 /// 14 days after the initial appearance for a defendant in custody, set by
 /// the 2009 time-computation amendments (Rule 5.1 history note). A magistrate
 /// judge may extend it under 5.1(d).
@@ -88,8 +84,9 @@ deadline speedy-trial: 70.days after TrialClockEvent() counted_by frcrimp45 effe
 }
 
 /// 14 days from the later of verdict and discharge (2009 amendments, Rule 29
-/// history note). Rule 45(b)(1) lets the court extend it.
-deadline rule29-period: 14.days after VerdictOrDischarge() counted_by frcrimp45 effective [2009-12-01, ..) known_at 2009-03-26 delegable {
+/// history note). Rule 45(b)(1) lets the court extend it; Rule 45 was last
+/// amended December 1, 2023 (its history), so the period starts there.
+deadline rule29-period: 14.days after VerdictOrDischarge() counted_by frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 delegable {
   to CaseOrder
   op set
 } cite "FRCrimP 29(c)(1); FRCrimP 45(b)(1)"
@@ -99,10 +96,11 @@ deadline rule29-period: 14.days after VerdictOrDischarge() counted_by frcrimp45 
 
 /// 14 days from the verdict for grounds other than newly discovered
 /// evidence (2009 amendments, Rule 33 history note); extendable under Rule
-/// 45(b)(1). Rule 33(b)(1)'s three years for newly discovered evidence has
+/// 45(b)(1) (in force from Rule 45's December 1, 2023 amendment, as
+/// rule29-period). Rule 33(b)(1)'s three years for newly discovered evidence has
 /// no declaration: the language has no year unit, and a day count would
 /// misstate a leap year.
-deadline rule33-period: 14.days after VerdictOrDischarge(Verdict) counted_by frcrimp45 effective [2009-12-01, ..) known_at 2009-03-26 delegable {
+deadline rule33-period: 14.days after VerdictOrDischarge(Verdict) counted_by frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 delegable {
   to CaseOrder
   op set
 } cite "FRCrimP 33(b)(2); FRCrimP 45(b)(1)"
@@ -116,8 +114,9 @@ deadline psr-disclosure: 35.days before SentencingScheduled() counted_by frcrimp
 } cite "FRCrimP 32(e)(2); FRCrimP 32(b)(2)"
 
 /// 14 days after sentencing (2009 amendments, Rule 35 history note). Rule
-/// 45(b)(2) bars extending it, so nothing is delegated.
-deadline rule35-period: 14.days after SentenceImposed() counted_by frcrimp45 effective [2009-12-01, ..) known_at 2009-03-26 cite "FRCrimP 35(a); FRCrimP 45(b)(2)"
+/// 45(b)(2) bars extending it, so nothing is delegated. In force from Rule
+/// 45's December 1, 2023 amendment, as rule29-period.
+deadline rule35-period: 14.days after SentenceImposed() counted_by frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCrimP 35(a); FRCrimP 45(b)(2)"
 
 /// 14 days from the later of the judgment's entry and the government's
 /// notice. The district court may extend it up to 30 days under 4(b)(4),
@@ -135,18 +134,6 @@ deadline criminal-appeal: 14.days after AppealClockEvent() counted_by frap26 eff
   trigger latest
   extend { by court, discretion GoodCauseOrExcusableNeglect, max 30.days, after_expiry }
   lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
-}
-
-test "Rule 5 appearance window from arrest" cite "FRCrimP 5(a)(1)(A)"
-{
-  given Arrested() on 2025-03-03
-  expect deadline(rule5-appearance) == 2025-03-06
-}
-
-test "Rule 5 appearance window ending on Saturday rolls to Monday" cite "FRCrimP 45(a)(1)(C)"
-{
-  given Arrested() on 2025-07-02
-  expect deadline(rule5-appearance) == 2025-07-07
 }
 
 test "Rule 5.1 preliminary hearing, defendant in custody" cite "FRCrimP 5.1(c)"

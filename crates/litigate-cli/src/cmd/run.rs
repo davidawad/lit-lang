@@ -27,10 +27,17 @@ pub fn op_value(op: &str) -> Result<Map<String, Value>, Failure> {
     }
 }
 
-/// A `--arg` value: a number, `true`/`false`, JSON (`{...}`/`[...]`), or
-/// else the text itself.
+/// A `--arg` value: a number (an integer stays an integer, so `top=10`
+/// fills a `usize` field as the `"top":10` JSON does), `true`/`false`, JSON
+/// (`{...}`/`[...]`), or else the text itself.
 #[must_use]
 pub fn scalar(v: &str) -> Value {
+    if let Ok(n) = v.parse::<i64>() {
+        return json!(n);
+    }
+    if let Ok(n) = v.parse::<u64>() {
+        return json!(n);
+    }
     if let Ok(x) = v.parse::<f64>() {
         return json!(x);
     }
@@ -307,7 +314,7 @@ mod tests {
 
     #[test]
     fn scalars_are_typed_and_fall_back_to_text() {
-        assert_eq!(scalar("900"), json!(900.0));
+        assert_eq!(scalar("900"), json!(900));
         assert_eq!(scalar("true"), json!(true));
         assert_eq!(scalar("false"), json!(false));
         assert_eq!(scalar("[1,2]"), json!([1, 2]));

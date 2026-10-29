@@ -35,6 +35,8 @@ pub enum ValueKind {
         forums: BTreeSet<String>,
         /// Some version counts periods stated in hours (`allow_hours`).
         hours: bool,
+        /// Some version counts month and year periods (`end_of_month`).
+        end_of_month: bool,
     },
     /// Holiday calendar; `true` when it lists only declared days: every
     /// holiday a `once(date)` with no observance.
@@ -218,6 +220,7 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
                     .map(RefPath::display)
                     .collect(),
                 hours: clause(fields, "allow_hours").is_some(),
+                end_of_month: clause(fields, "end_of_month").is_some(),
             },
         ),
         ItemKind::Calendar(name, _, holidays) => (
@@ -351,15 +354,21 @@ fn collect(sig: &mut Signature, items: &[(&Item, Option<&Item>)], m: Option<&Man
                 {
                     existing.versions.push(from);
                     if let (
-                        ValueKind::Counting { forums, hours },
+                        ValueKind::Counting {
+                            forums,
+                            hours,
+                            end_of_month,
+                        },
                         ValueKind::Counting {
                             forums: more,
                             hours: more_hours,
+                            end_of_month: more_end_of_month,
                         },
                     ) = (&mut existing.kind, kind)
                     {
                         forums.extend(more);
                         *hours |= more_hours;
+                        *end_of_month |= more_end_of_month;
                     }
                 }
                 Some(_) => {}

@@ -37,7 +37,7 @@ use cx::Cx;
 use imports::{import_signatures, imports, pack_signatures};
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C, FileId, Span};
 use serde::Serialize;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 
 /// An explicit hole and its reason (SPEC §7 `holes`).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -277,8 +277,7 @@ struct Items {
 }
 
 /// What one top-level declaration's module needs to know: the module's
-/// imports, type aliases and counting rules, and whether it is a links
-/// module. Ranges are anchored, so it is backdated unless one of those
+/// imports and type aliases, and whether it is a links module. Ranges are anchored, so it is backdated unless one of those
 /// changes.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct ModuleContext {
@@ -286,8 +285,6 @@ pub struct ModuleContext {
     pub imports: Vec<Import>,
     /// Type aliases by name (the last of a name wins).
     pub aliases: BTreeMap<String, TypeRef>,
-    /// Counting rules by name (the first of a name) with their item keys.
-    pub countings: BTreeMap<String, BTreeSet<String>>,
     /// The module declares a `link` or an `instance` (`::` qualification).
     pub links: bool,
     /// The module declares a `calibration`, whose targets resolve against
@@ -306,11 +303,6 @@ pub fn module_context(tree: &ItemTree) -> ModuleContext {
         match &item.kind {
             ItemKind::TypeAlias(n, t) => {
                 cx.aliases.insert(n.text.clone(), t.clone());
-            }
-            ItemKind::Counting(n, _, fields) => {
-                cx.countings
-                    .entry(n.text.clone())
-                    .or_insert_with(|| fields.iter().map(|f| f.key.text.clone()).collect());
             }
             ItemKind::Link(_) | ItemKind::Instance(..) => cx.links = true,
             ItemKind::Calibration(..) => cx.calibration = true,
@@ -409,8 +401,6 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
         .iter()
         .map(|(n, t)| (n.clone(), t))
         .collect();
-    let local_counting =
-        |name: &str, key: &str| context.countings.get(name).map(|keys| keys.contains(key));
     let nested: &[Item] = match &top.kind {
         ItemKind::Rule(_, _, _, items) => items,
         _ => &[],
@@ -477,15 +467,7 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
                 ..
             } => cx
                 .deadline(
-                    item,
-                    rule,
-                    name,
-                    amount,
-                    direction,
-                    trigger,
-                    counted_by,
-                    opts,
-                    local_counting,
+                    item, rule, name, amount, direction, trigger, counted_by, opts,
                 )
                 .map(Declaration::Deadline),
             ItemKind::Counting(n, _, fields) => cx

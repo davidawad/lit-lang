@@ -80,18 +80,34 @@ impl Cx<'_, '_> {
         trigger: &Expr,
         counted_by: &RefPath,
         opts: &[Field],
-        local_counting: impl Fn(&str, &str) -> Option<bool>,
     ) -> Option<Deadline> {
         let meta = self.meta(name, None, item, rule);
         let counting = self.value_ref(counted_by, "counting rule", |k| {
             matches!(k, ValueKind::Counting { .. })
         });
+        // The rule's signature carries `allow_hours` and `end_of_month`,
+        // local or imported.
+        let lacks = |cx: &Self, key: fn(&ValueKind) -> bool| {
+            counting.is_some()
+                && cx
+                    .ck
+                    .scope
+                    .value(counted_by)
+                    .is_ok_and(|(_, found)| !key(&found.item.kind))
+        };
         let period = match self.ck.infer(amount).value {
             Some(Value::Days { amount: n, unit }) => {
-                let counted = counting
-                    .as_deref()
-                    .map(|c| local_counting(c, "end_of_month"));
-                if unit.is_monthly() && counted == Some(Some(false)) {
+                let refused = unit.is_monthly()
+                    && lacks(self, |k| {
+                        matches!(
+                            k,
+                            ValueKind::Counting {
+                                end_of_month: true,
+                                ..
+                            }
+                        )
+                    });
+                if refused {
                     self.report(Report::new(
                         C::InvalidCounting,
                         amount.range,
@@ -101,11 +117,9 @@ impl Cx<'_, '_> {
                 u64::try_from(n).ok().map(|n| (n, unit))
             }
             Some(Value::Hours(_)) => {
-                // The rule's signature carries `allow_hours`, local or imported.
-                let refused = counting.is_some()
-                    && self.ck.scope.value(counted_by).is_ok_and(|(_, found)| {
-                        matches!(found.item.kind, ValueKind::Counting { hours: false, .. })
-                    });
+                let refused = lacks(self, |k| {
+                    matches!(k, ValueKind::Counting { hours: true, .. })
+                });
                 let (code, message) = if refused {
                     (
                         C::InvalidCounting,

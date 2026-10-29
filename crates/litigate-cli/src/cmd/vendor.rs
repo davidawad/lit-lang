@@ -4,14 +4,15 @@
 //! moves checks again after an install (lg-70c6). Each package written is
 //! stamped with `.litigate-vendor`, the binary's commit; `check` and `test`
 //! report a vendored copy that differs and fails to check as L1015, naming
-//! both commits, instead of the raw schema errors.
+//! both commits, instead of the raw schema errors, or whose L0 text pins
+//! differ and so fail their cites (lg-bhb0), instead of the raw L1010s.
 use crate::out::{Failure, Outcome, Report};
 use crate::ws::Pkg;
 use litigate_base::{Diagnostic, DiagnosticCode, FileId, Span};
 use litigate_sema::pkg::load::is_l0;
 use litigate_sema::pkg::lock::digest;
 use serde_json::{json, Value};
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
@@ -38,6 +39,8 @@ struct Embedded {
     version: String,
     /// Its source digest ([`digest`]).
     digest: String,
+    /// Its L0 text pins ([`pins`]).
+    pins: BTreeMap<String, String>,
     /// `(package-relative path, contents)`.
     files: Vec<(&'static str, &'static str)>,
 }
@@ -66,6 +69,7 @@ fn embedded() -> &'static [Embedded] {
                     name,
                     version,
                     digest: source_digest(manifest, files.iter().copied()),
+                    pins: pins(manifest),
                     files,
                 })
             })
@@ -87,6 +91,24 @@ fn name_version(manifest: &str) -> Option<(String, String)> {
     Some((field("name")?, field("version").unwrap_or_default()))
 }
 
+/// `path -> path_sha256` of each `[sources.*]` binding of a manifest that
+/// is valid TOML and pins its text.
+fn pins(manifest: &str) -> BTreeMap<String, String> {
+    let Ok(table) = manifest.parse::<toml::Table>() else {
+        return BTreeMap::new();
+    };
+    table
+        .get("sources")
+        .and_then(toml::Value::as_table)
+        .into_iter()
+        .flat_map(|t| t.values())
+        .filter_map(|s| {
+            let field = |k: &str| s.get(k).and_then(toml::Value::as_str).map(str::to_owned);
+            Some((field("path")?, field("path_sha256")?))
+        })
+        .collect()
+}
+
 /// The source digest over the manifest and `.lit` files of `files`
 /// (`Lit.lock` and other files left out, as a relock changes them).
 fn source_digest<'a>(manifest: &str, files: impl Iterator<Item = (&'a str, &'a str)>) -> String {
@@ -102,6 +124,9 @@ struct Stale<'a> {
     name: String,
     /// The commit its stamp names, if `litigate vendor` wrote it.
     from: Option<String>,
+    /// The L0 texts it pins differently from the binary's copy (or that
+    /// only one of them pins), whose cites then fail as L1010.
+    texts: Vec<String>,
 }
 
 fn stale(pkg: &Pkg) -> Option<Stale<'_>> {
@@ -123,7 +148,20 @@ fn stale(pkg: &Pkg) -> Option<Stale<'_>> {
     let from = std::fs::read_to_string(Path::new(&pkg.root).join(STAMP))
         .ok()
         .and_then(|s| s.split_whitespace().next().map(str::to_owned));
-    Some(Stale { pkg, name, from })
+    let theirs = pins(manifest);
+    let texts = theirs
+        .iter()
+        .filter(|(path, sha)| ours.pins.get(*path) != Some(*sha))
+        .map(|(path, _)| path)
+        .chain(ours.pins.keys().filter(|path| !theirs.contains_key(*path)))
+        .cloned()
+        .collect();
+    Some(Stale {
+        pkg,
+        name,
+        from,
+        texts,
+    })
 }
 
 /// `root` with `.` and `dir/..` steps folded (a path dependency's root,
@@ -154,20 +192,32 @@ fn parent(root: &str) -> String {
 /// Reports each loaded stdlib package that differs from the binary's (a
 /// vendored copy from another commit) and fails to check as one L1015
 /// naming both commits and the `litigate vendor` that fixes it, in place
-/// of its raw L1004 errors (kept as notes). A differing package that checks
-/// clean is left alone: an older copy that still loads is not wrong.
+/// of its raw L1004 errors and, when its L0 text pins differ from the
+/// binary's, the L1010s on its own files those pins explain (all kept as
+/// notes). A differing package that checks clean is left alone: an older
+/// copy that still loads is not wrong.
 pub fn retarget(packages: &[Pkg], diagnostics: &mut Vec<Diagnostic>) {
     let error = |d: &Diagnostic| d.severity == litigate_base::Severity::Error;
     for s in packages.iter().filter_map(stale) {
         let own = &s.pkg.check.diagnostics;
-        if !own.iter().any(error) {
+        let in_pkg = |d: &Diagnostic| s.pkg.files.iter().any(|(f, _)| *f == d.span.file.0);
+        let explained = |d: &Diagnostic| {
+            (d.code == DiagnosticCode::InvalidManifest && own.contains(d))
+                || (d.code == DiagnosticCode::UnboundCite && !s.texts.is_empty() && in_pkg(d))
+        };
+        if !own.iter().any(error) && !diagnostics.iter().any(|d| error(d) && explained(d)) {
             continue;
         }
-        let raw: Vec<&Diagnostic> = own
-            .iter()
-            .filter(|d| d.code == DiagnosticCode::InvalidManifest)
-            .collect();
-        diagnostics.retain(|d| !(d.code == DiagnosticCode::InvalidManifest && raw.contains(&d)));
+        let mut raw: Vec<Diagnostic> = Vec::new();
+        diagnostics.retain(|d| {
+            if !explained(d) {
+                return true;
+            }
+            if !raw.contains(d) {
+                raw.push(d.clone());
+            }
+            false
+        });
         let from = s
             .from
             .as_deref()
@@ -193,6 +243,12 @@ pub fn retarget(packages: &[Pkg], diagnostics: &mut Vec<Diagnostic>) {
             "or install a litigate built from the commit the copy came from; \
              the package's errors follow from the mismatch",
         );
+        if !s.texts.is_empty() {
+            d = d.note(format!(
+                "its text pins (`path_sha256`) differ from the binary's for {}",
+                s.texts.join(", ")
+            ));
+        }
         for r in raw {
             d = d.note(format!("{}: {}", r.code.as_str(), r.message));
         }

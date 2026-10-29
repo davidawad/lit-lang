@@ -3700,7 +3700,7 @@ gets one row per condition when the conditions classify differently.
 | C98 | L2014 no value satisfies an alias's or an event's refinements (§3.5) | sema | b | QF_LIA/QF_LRA with finite enums (tier 3): unsat, with a minimal core. Done (lg-962.8). |
 | C99 | L2015 the SMT tier does not decide a refinement question (§3.5) | sema, verify | b | The hole of tier 3: the solver's deterministic budget, `i64` overflow building the query, or no solver (wasm); never a pass. Done (lg-962.8). |
 | C100 | L1004 a precedent without `reach` or a holding, a holding without a `pin` to the opinion page or an `edits` element; L2016 a precedent's edit of an element no holding names (dicta); L2017 a declared reach other than the computed one (§4.1, §5.7) | sema | a | `Instrument<Precedent>` carries `reach` and `holdings: NonEmpty<{pin, edits}>`; `edits(d) ⊆ {h.edits}` and `reach = {f : designated ∧ court ∈ precedent(f)[@circuit := any]}`, finite set equality. Done (lg-fg2h.1). |
-| C101 | L1015 a vendored stdlib package (`core`, `frcp`) differs from the one the binary ships and fails to check (§4.2) | cli | c | Compares the vendored package's source digest with the binary's embedded stdlib; `litigate vendor DIR` rewrites it. |
+| C101 | L1015 a vendored stdlib package (`core`, `frcp`) differs from the one the binary ships and fails to check (§4.2) | cli | c | Compares the vendored package's source digest and `[sources]` text pins (`path_sha256`) with the binary's embedded stdlib, folding the L1010s differing pins explain into the L1015; `litigate vendor DIR` rewrites it. |
 
 ### 13.4 SPEC rules with no code of their own
 

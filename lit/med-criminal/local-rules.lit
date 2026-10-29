@@ -49,7 +49,6 @@ import frcrimp.deadlines.{ VerdictOrDischarge }
 // Idaho) are FRCrimP, Speedy Trial Act or constitutional authority and
 // belong to lit/frcrimp; they are removed here: no reporter text is
 // vendored.
-
 /// A memorandum of law in support of or in opposition to a dispositive
 /// motion or a motion to suppress evidence: at most 20 pages except by
 /// prior leave of Court (D. Me. Local R. 147(d)).
@@ -59,21 +58,13 @@ limit dispositive-memorandum {
 
 /// A memorandum in support of or in opposition to any other motion: at
 /// most 10 pages (D. Me. Local R. 147(d)).
-limit motion-memorandum {
-  pages <= 10 cite "D. Me. Local R. 147(d)"
-} cite "D. Me. Local R. 147(d)"
-
+limit motion-memorandum { pages <= 10 cite "D. Me. Local R. 147(d)" } cite "D. Me. Local R. 147(d)"
 /// A reply memorandum: at most 7 pages, strictly confined to new matter
 /// raised in the objection (D. Me. Local R. 147(c)).
-limit reply-memorandum {
-  pages <= 7 cite "D. Me. Local R. 147(c)"
-} cite "D. Me. Local R. 147(c)"
-
+limit reply-memorandum { pages <= 7 cite "D. Me. Local R. 147(c)" } cite "D. Me. Local R. 147(c)"
 /// A trial brief: at most 20 pages except by prior leave of Court (D. Me.
 /// Local R. 157.2).
-limit trial-brief {
-  pages <= 20 cite "D. Me. Local R. 157.2"
-} cite "D. Me. Local R. 157.2"
+limit trial-brief { pages <= 20 cite "D. Me. Local R. 157.2" } cite "D. Me. Local R. 157.2"
 
 /// A motion, incorporating its memorandum of law, is filed (D. Me. Local
 /// R. 147(a)).

@@ -39,41 +39,23 @@ import frcrimp.deadlines.{ SentencingScheduled }
 // The earlier D.N.M. criminal outline's FRCrimP flow and its decisions are
 // FRCrimP, Speedy Trial Act or constitutional authority and belong to
 // lit/frcrimp; they are removed here: no reporter text is vendored.
-
 /// A motion, or a motion with its supporting brief: at most 27
 /// double-spaced pages combined (D.N.M.LR-Cr. 47.9).
-limit motion-brief {
-  pages <= 27 cite "D.N.M.LR-Cr. 47.9"
-} cite "D.N.M.LR-Cr. 47.9"
-
+limit motion-brief { pages <= 27 cite "D.N.M.LR-Cr. 47.9" } cite "D.N.M.LR-Cr. 47.9"
 /// A response brief: at most 24 double-spaced pages (D.N.M.LR-Cr. 47.9).
-limit response-brief {
-  pages <= 24 cite "D.N.M.LR-Cr. 47.9"
-} cite "D.N.M.LR-Cr. 47.9"
-
+limit response-brief { pages <= 24 cite "D.N.M.LR-Cr. 47.9" } cite "D.N.M.LR-Cr. 47.9"
 /// A reply brief: at most 12 double-spaced pages (D.N.M.LR-Cr. 47.9).
-limit reply-brief {
-  pages <= 12 cite "D.N.M.LR-Cr. 47.9"
-} cite "D.N.M.LR-Cr. 47.9"
-
+limit reply-brief { pages <= 12 cite "D.N.M.LR-Cr. 47.9" } cite "D.N.M.LR-Cr. 47.9"
 /// An appellant's brief on appeal from a magistrate judge's decision on a
 /// misdemeanor or petty offense: at most 20 double-spaced pages, exhibits
 /// at most 20 pages (D.N.M.LR-Cr. 58.2(d)).
-limit petty-appellant-brief {
-  pages <= 20 cite "D.N.M.LR-Cr. 58.2(d)"
-} cite "D.N.M.LR-Cr. 58.2(d)"
-
+limit petty-appellant-brief { pages <= 20 cite "D.N.M.LR-Cr. 58.2(d)" } cite "D.N.M.LR-Cr. 58.2(d)"
 /// The appellee's brief: at most 15 double-spaced pages (D.N.M.LR-Cr.
 /// 58.2(d)).
-limit petty-appellee-brief {
-  pages <= 15 cite "D.N.M.LR-Cr. 58.2(d)"
-} cite "D.N.M.LR-Cr. 58.2(d)"
-
+limit petty-appellee-brief { pages <= 15 cite "D.N.M.LR-Cr. 58.2(d)" } cite "D.N.M.LR-Cr. 58.2(d)"
 /// The reply brief: at most 10 double-spaced pages (D.N.M.LR-Cr.
 /// 58.2(d)).
-limit petty-reply-brief {
-  pages <= 10 cite "D.N.M.LR-Cr. 58.2(d)"
-} cite "D.N.M.LR-Cr. 58.2(d)"
+limit petty-reply-brief { pages <= 10 cite "D.N.M.LR-Cr. 58.2(d)" } cite "D.N.M.LR-Cr. 58.2(d)"
 
 /// Defense counsel receives a request to schedule the presentence report
 /// interview (D.N.M.LR-Cr. 32.A).

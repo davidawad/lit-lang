@@ -36,12 +36,9 @@ import frcrimp.deadlines.{ SentencingScheduled }
 // The earlier N.D. Okla. criminal outline's FRCrimP flow and its decisions
 // are FRCrimP, Speedy Trial Act or constitutional authority and belong to
 // lit/frcrimp; they are removed here: no reporter text is vendored.
-
 /// A brief: at most 25 pages without leave of Court (N.D. Okla.
 /// LCrR47-5(a)).
-limit brief {
-  pages <= 25 cite "N.D. Okla. LCrR47-5(a)"
-} cite "N.D. Okla. LCrR47-5(a)"
+limit brief { pages <= 25 cite "N.D. Okla. LCrR47-5(a)" } cite "N.D. Okla. LCrR47-5(a)"
 
 /// The date set for the pretrial conference (N.D. Okla. LCrR16-2).
 event PretrialConferenceScheduled()

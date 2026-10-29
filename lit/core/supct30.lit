@@ -3,8 +3,296 @@ module core.supct30
 import core.calendar.{ us-federal-holidays }
 import core.time.{ Served, ServiceMethod }
 
+/// Sup. Ct. R. 29.1 (Rules adopted April 14, 1980, effective June 30,
+/// 1980): the day of the act is excluded and the last day included
+/// "unless it is a Sunday or a federal legal holiday", when the period
+/// "runs until the end of the next day which is neither a Sunday nor a
+/// federal legal holiday". A Saturday last day stands. Rule 28.3 serves
+/// "personally or by mail" and Rule 29 adds nothing for either; a
+/// commercial carrier is no manner of service. UNVERIFIED: whether a
+/// holiday falling on a Saturday, observed on the Friday, is itself "a
+/// federal legal holiday" that rolls a Saturday last day; the calendar
+/// closes the day it observes.
+counting sup-ct-30 effective [1980-06-30, 1990-01-01) known_at 1980-04-14 cite "Sup. Ct. R. (1980) 29.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [sunday, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (1980) 28.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+/// Sup. Ct. R. 30.1 (Rules adopted December 5, 1989, effective January 1,
+/// 1990): Saturdays join Sundays, federal legal holidays ("See 5 U. S. C.
+/// § 6103") and days the Court building is closed by order. Rule 29.3
+/// serves "personally or by mail" and adds no time.
+counting sup-ct-30 effective [1990-01-01, 1995-10-02) known_at 1989-12-05 supersedes sup-ct-30@1980-06-30 cite "Sup. Ct. R. (1990) 30.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (1990) 29.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+/// The Rules adopted July 26, 1995, effective October 2, 1995: Rule 30.1
+/// takes the wording later editions keep ("federal legal holiday listed in
+/// 5 U. S. C. § 6103"); Rule 29.3 still serves "personally or by mail".
+counting sup-ct-30 effective [1995-10-02, 1997-05-01) known_at 1995-07-26 supersedes sup-ct-30@1990-01-01 cite "Sup. Ct. R. (1995) 30.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (1995) 29.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+/// The Rules adopted January 16, 1997, effective May 1, 1997, which
+/// re-adopt Rules 29.3 and 30.1 of 1995 word for word.
+counting sup-ct-30 effective [1997-05-01, 1999-05-03) known_at 1997-01-16 supersedes sup-ct-30@1995-10-02 cite "Sup. Ct. R. (1997) 30.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (1997) 29.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+/// The Rules adopted January 11, 1999, effective May 3, 1999, which
+/// re-adopt Rules 29.3 and 30.1 of 1995 word for word.
+counting sup-ct-30 effective [1999-05-03, 2003-05-01) known_at 1999-01-11 supersedes sup-ct-30@1997-05-01 cite "Sup. Ct. R. (1999) 30.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (1999) 29.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+/// The Rules adopted January 27, 2003, effective May 1, 2003: Rule 29.3
+/// adds service "by third-party commercial carrier for delivery within 3
+/// calendar days", which adds no time; Rule 30.1 is unchanged.
+counting sup-ct-30 effective [2003-05-01, 2005-05-02) known_at 2003-01-27 supersedes sup-ct-30@1999-05-03 cite "Sup. Ct. R. (2003) 30.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: 0.days
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (2003) 29.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+/// The Rules adopted March 14, 2005, effective May 2, 2005, which
+/// re-adopt Rules 29.3 and 30.1 of 2003 word for word.
+counting sup-ct-30 effective [2005-05-02, 2007-10-01) known_at 2005-03-14 supersedes sup-ct-30@2003-05-01 cite "Sup. Ct. R. (2005) 30.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: 0.days
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (2005) 29.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+/// The Rules adopted July 17, 2007, effective October 1, 2007, which
+/// re-adopt Rules 29.3 and 30.1 word for word.
+counting sup-ct-30 effective [2007-10-01, 2010-02-16) known_at 2007-07-17 supersedes sup-ct-30@2005-05-02 cite "Sup. Ct. R. (2007) 30.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: 0.days
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (2007) 29.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+/// The Rules adopted January 12, 2010, effective February 16, 2010, which
+/// re-adopt Rules 29.3 and 30.1 word for word.
+counting sup-ct-30 effective [2010-02-16, 2013-07-01) known_at 2010-01-12 supersedes sup-ct-30@2007-10-01 cite "Sup. Ct. R. (2010) 30.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: 0.days
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (2010) 29.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+/// The Rules adopted April 19, 2013, effective July 1, 2013: Rule 29.3
+/// adds an electronic copy, which is not service; Rule 30.1 is unchanged.
+counting sup-ct-30 effective [2013-07-01, 2017-11-13) known_at 2013-04-19 supersedes sup-ct-30@2010-02-16 cite "Sup. Ct. R. (2013) 30.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: 0.days
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (2013) 29.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+/// The Rules adopted September 27, 2017, effective November 13, 2017,
+/// which re-adopt Rules 29.3 and 30.1 word for word.
+counting sup-ct-30 effective [2017-11-13, 2019-07-01) known_at 2017-09-27 supersedes sup-ct-30@2013-07-01 cite "Sup. Ct. R. (2017) 30.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: 0.days
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (2017) 29.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+/// The Rules adopted April 18, 2019, effective July 1, 2019, which
+/// re-adopt Rules 29.3 and 30.1 word for word.
+counting sup-ct-30 effective [2019-07-01, 2023-01-01) known_at 2019-04-18 supersedes sup-ct-30@2017-11-13 cite "Sup. Ct. R. (2019) 30.1"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: 0.days
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "Sup. Ct. R. (2019) 29.3"
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
 /// Sup. Ct. R. 30.1 (Rules adopted December 5, 2022, effective January 1,
-/// 2023): computing "any period of time prescribed or allowed by these
+/// 2023), as in every edition since 1995: computing "any period of time prescribed or allowed by these
 /// Rules, by order of the Court, or by an applicable statute" (a cert
 /// petition's 90 days under 28 U.S.C. § 2101(c) and Rule 13.1), the
 /// trigger day is excluded and the last day included, "unless it is a
@@ -16,9 +304,8 @@ import core.time.{ Served, ServiceMethod }
 /// § 6103(a) holidays alone give the earlier date. No closure order is
 /// vendored, so none is declared. Service adds no time: Rule 29.3 serves
 /// "personally, by mail, or by third-party commercial carrier", and Rule 30
-/// adds nothing for any of them. Earlier editions of the Rules are not
-/// vendored and stay undeclared.
-counting sup-ct-30 effective [2023-01-01, 2026-03-16) known_at 2022-12-05 cite "Sup. Ct. R. (2023) 30.1"
+/// adds nothing for any of them.
+counting sup-ct-30 effective [2023-01-01, 2026-03-16) known_at 2022-12-05 supersedes sup-ct-30@2019-07-01 cite "Sup. Ct. R. (2023) 30.1"
 {
   exclude_trigger_day
   include_last_day

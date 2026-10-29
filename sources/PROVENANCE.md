@@ -1234,6 +1234,45 @@ Entries live in the forum's own
 - sha256 (this file): `c83977038d4c8be8e5d79f492e532c289ff112202db06f2784b994ca524f575b`
 - Original: `original/scotus-rules-2023.pdf` as served (sha256 05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db); extraction sha256 c83977038d4c8be8e5d79f492e532c289ff112202db06f2784b994ca524f575b. Served at https://www.supremecourt.gov/filingandrules/2023RulesoftheCourt.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 
+### `scotus-rules-1980-2019.txt` — Rules of the Supreme Court on service and computation of time, editions effective June 30, 1980, January 1, 1990, October 2, 1995, May 1, 1997, May 3, 1999, November 13, 2017 and July 1, 2019
+
+- The service, computation-of-time and effective-date paragraphs `lit/core`'s
+  earlier versions of `sup-ct-30` cite (lg-6n31): for 1980, Rules 28.3,
+  29.1 and 55; for 1990, Rules 29.3, 30.1 and 48; for 1995, 1997, 1999,
+  2017 and 2019, Rules 29.3, 30.1 and 48.1. Sections `## Sup. Ct. R.
+  (YYYY) N.P`, `YYYY` the edition's effective year (the 1990 edition was
+  adopted December 5, 1989), each restating its rule's heading as its first
+  line (the 1980 and 1990 editions print the heading in capitals on its own
+  line under `Rule N`; it is given as `Rule N. Title`), then the paragraph
+  on one line. The 2003-2013 editions are `change-scotus-rules-2003-cert-excerpt.txt`
+  and `change-scotus-rules-2005-2013-cert-excerpt.txt`.
+- Fetched 2026-10-29 from the Court's prior-rules page
+  (`www.supremecourt.gov/ctrules/scannedrules.aspx`). `pdftotext -layout`,
+  running headers, page numbers and print-job lines dropped, lines joined
+  into one line per paragraph, line-break and soft hyphens joined, the
+  "fi" ligature restored. The 1980-1999 editions are scans whose text layer
+  is OCR; its misreadings were corrected, and only these: 1980 "shaH"
+  (shall), "cowlsel" (counsel), "delivery." and "mailbox." (delivery, and
+  mailbox,), "party." (party,), "mail ," (mail,); 1990 ". 3." and the
+  space in "holidays ." dropped; 1995-1999 "AIty" (Any),
+  ".If" (If), "counselor to" (counsel or to), "e>.'tend" (extend),
+  "Saturd·ay" (Saturday), "May 3,1999" (May 3, 1999). The 1980 edition as
+  revised November 21, 1980 (`rules_1980r.pdf`, not vendored) reads Rules
+  28.3 and 29.1 alike. No other wording changed.
+- Rule 29.1 of 1980 rolls a last day off "a Sunday or a federal legal
+  holiday" only: a Saturday last day stands. Saturdays join from 1990.
+  Service by commercial carrier is not in Rule 29.3 until the 2003 edition;
+  the 2017 and 2019 paragraphs read word for word as the 2023 edition's
+  (`scotus-rules-2023.txt`).
+- sha256 (this file): `6a87d3305cc1eaf5944787e4d490bbe82608d1fe224ccc8baf595ca0d1dd6250`
+- Original: `original/scotus-rules-1980-2019/001-pdfs-rules-rules_1980.pdf` as served (sha256 8141ea65216989b123712e8dd2c6a3a5e0cf639cb98bfff124064d093d579c85); extraction sha256 6a87d3305cc1eaf5944787e4d490bbe82608d1fe224ccc8baf595ca0d1dd6250. Served at https://www.supremecourt.gov/pdfs/rules/rules_1980.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/scotus-rules-1980-2019/002-pdfs-rules-rules_1989.pdf` as served (sha256 c06c15a4d3256933932075adb30302f4395a015dac2263af98e77f6e5bc57ddb); extraction sha256 6a87d3305cc1eaf5944787e4d490bbe82608d1fe224ccc8baf595ca0d1dd6250. Served at https://www.supremecourt.gov/pdfs/rules/rules_1989.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/scotus-rules-1980-2019/003-pdfs-rules-rules_1995.pdf` as served (sha256 1030c2a292e54f0c3cc777c59d8914b48c3864c2ddc44db960f600812a871b33); extraction sha256 6a87d3305cc1eaf5944787e4d490bbe82608d1fe224ccc8baf595ca0d1dd6250. Served at https://www.supremecourt.gov/pdfs/rules/rules_1995.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/scotus-rules-1980-2019/004-pdfs-rules-rules_1997.pdf` as served (sha256 74f8a57ba0f50b18f853ed518a0e8b49afdb980c967abd08617a0cfa41cbb6e8); extraction sha256 6a87d3305cc1eaf5944787e4d490bbe82608d1fe224ccc8baf595ca0d1dd6250. Served at https://www.supremecourt.gov/pdfs/rules/rules_1997.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/scotus-rules-1980-2019/005-pdfs-rules-rules_1999.pdf` as served (sha256 c102ab44a2cefd7fda31c7e121f5ddcfb235f808233cec3741682ac316282066); extraction sha256 6a87d3305cc1eaf5944787e4d490bbe82608d1fe224ccc8baf595ca0d1dd6250. Served at https://www.supremecourt.gov/pdfs/rules/rules_1999.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/scotus-rules-1980-2019/006-filingandrules-2017RulesoftheCourt.pdf` as served (sha256 59ef6dc90b201c04ac5d5691dbedc459bc0689007e857ad8d01df7b49f70837e); extraction sha256 6a87d3305cc1eaf5944787e4d490bbe82608d1fe224ccc8baf595ca0d1dd6250. Served at https://www.supremecourt.gov/filingandrules/2017RulesoftheCourt.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+- Original: `original/scotus-rules-1980-2019/007-filingandrules-2019RulesoftheCourt.pdf` as served (sha256 6ab10a2eb3dbca0e4c592dff41a23d27d58f61efafa048c6de7540c6702f337f); extraction sha256 6a87d3305cc1eaf5944787e4d490bbe82608d1fe224ccc8baf595ca0d1dd6250. Served at https://www.supremecourt.gov/filingandrules/2019RulesoftheCourt.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+
 ### `usc-15-lanham.txt` — Lanham Act sections (12 sections of 15 U.S.C.)
 
 - Source: the USPTO compilation "US Trademark Law - Rules of Practice and

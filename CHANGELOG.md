@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Sup. Ct. R. 30 counts from June 30, 1980** (lg-6n31). `lit/core`'s
+  `sup-ct-30` declared only the 2023 and 2026 editions, so every
+  certiorari period before 2023 was `unknown`. It now has a version per
+  edition of the Rules of the Supreme Court since 1980 (1980, 1990, 1995,
+  1997, 1999, 2003, 2005, 2007, 2010, 2013, 2017, 2019), each citing its
+  edition's computation and service paragraphs: the new
+  `sources/scotus-rules-1980-2019.txt` (1980-1999, 2017, 2019, with the
+  Court's PDFs under `sources/original/scotus-rules-1980-2019/`) and the
+  vendored 2003 and 2005-2013 excerpts. Rule 29.1 of 1980 rolls only off
+  "a Sunday or a federal legal holiday", so the 1980 edition rolls on
+  `sunday` in place of `weekend` (a Saturday last day stands);
+  commercial-carrier service is unrecognized before 2003.
+  The 8 famous-case certiorari dates (1985-2022) are re-blessed with their
+  due dates.
+
 - **The famous cases are expect tests** (lg-wvlf.3). The ten
   `tests/cases/<slug>.json` walks (arthrex, blue-and-gold, celotex, ebay,
   hughes, iqbal, oil-states, sas, suprema, twombly) are
@@ -17,8 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   period's due date, status and cites, run by `litigate test
   tests/expect`. The periods are the new package `docs/litigate/famous`.
   The 18 appeal, rehearing and petition-for-review dates are the JSON's;
-  the 8 certiorari dates are `unknown`, since lit/core declares Sup. Ct.
-  R. 30 only from its 2023 edition. The JSON files, their story
+  the 8 certiorari dates count under the edition of the Rules of the
+  Supreme Court in force on their trigger (lg-6n31). The JSON files, their story
   snapshots and `famous_cases.rs` are deleted.
 
 - **A precedent layer names its holdings and binding reach; dicta cannot

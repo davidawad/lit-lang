@@ -1,0 +1,679 @@
+module core.states.tests
+
+import core.time.{ Served, ServiceMethod }
+import core.states.alabama.{ frbp9006-alabama, frcp6-alabama }
+import core.states.alaska.{ frbp9006-alaska, frcp6-alaska }
+import core.states.arizona.{ frbp9006-arizona, frcp6-arizona }
+import core.states.colorado.{ frbp9006-colorado, frcp6-colorado }
+import core.states.connecticut.{ frbp9006-connecticut, frcp6-connecticut }
+import core.states.delaware.{ frbp9006-delaware, frcp6-delaware, frcrimp45-delaware }
+import core.states.district-of-columbia.{ frbp9006-district-of-columbia, frcp6-district-of-columbia }
+import core.states.florida.{ frbp9006-florida, frcp6-florida }
+import core.states.guam.{ frbp9006-guam, frcp6-guam }
+import core.states.idaho.{ frbp9006-idaho, frcp6-idaho }
+import core.states.illinois.{ frbp9006-illinois, frcp6-illinois }
+import core.states.indiana.{ frbp9006-indiana, frcp6-indiana }
+import core.states.iowa.{ frbp9006-iowa, frcp6-iowa }
+import core.states.kansas.{ frbp9006-kansas, frcp6-kansas }
+import core.states.kentucky.{ frbp9006-kentucky, frcp6-kentucky }
+import core.states.louisiana.{ frbp9006-louisiana, frcp6-louisiana }
+import core.states.maine.{ frbp9006-maine, frcp6-maine }
+import core.states.maryland.{ frbp9006-maryland, frcp6-maryland }
+import core.states.massachusetts.{ frbp9006-massachusetts, frcp6-massachusetts }
+import core.states.michigan.{ frbp9006-michigan, frcp6-michigan }
+import core.states.minnesota.{ frbp9006-minnesota, frcp6-minnesota }
+import core.states.missouri.{ frbp9006-missouri, frcp6-missouri }
+import core.states.montana.{ frbp9006-montana, frcp6-montana }
+import core.states.nebraska.{ frbp9006-nebraska, frcp6-nebraska }
+import core.states.nevada.{ frbp9006-nevada, frcp6-nevada }
+import core.states.new-hampshire.{ frbp9006-new-hampshire, frcp6-new-hampshire }
+import core.states.new-jersey.{ frbp9006-new-jersey, frcp6-new-jersey }
+import core.states.new-mexico.{ frbp9006-new-mexico, frcp6-new-mexico }
+import core.states.new-york.{ frbp9006-new-york, frcp6-new-york }
+import core.states.north-carolina.{ frbp9006-north-carolina, frcp6-north-carolina }
+import core.states.north-dakota.{ frbp9006-north-dakota, frcp6-north-dakota }
+import core.states.northern-mariana-islands.{ frbp9006-northern-mariana-islands, frcp6-northern-mariana-islands }
+import core.states.oregon.{ frbp9006-oregon }
+import core.states.pennsylvania.{ frbp9006-pennsylvania, frcp6-pennsylvania }
+import core.states.puerto-rico.{ frbp9006-puerto-rico, frcp6-puerto-rico }
+import core.states.rhode-island.{ frbp9006-rhode-island, frcp6-rhode-island }
+import core.states.south-carolina.{ frbp9006-south-carolina, frcp6-south-carolina }
+import core.states.texas.{ frbp9006-texas, frcp6-texas }
+import core.states.utah.{ frbp9006-utah, frcp6-utah }
+import core.states.vermont.{ frbp9006-vermont, frcp6-vermont }
+import core.states.virginia.{ frbp9006-virginia, frcp6-virginia }
+import core.states.washington.{ frbp9006-washington, frcp6-washington }
+import core.states.west-virginia.{ frbp9006-west-virginia, frcp6-west-virginia }
+import core.states.wisconsin.{ frbp9006-wisconsin, frcp6-wisconsin }
+import core.states.wyoming.{ frbp9006-wyoming, frcp6-wyoming }
+
+deadline frbp9006-alabama-smoke: 1.days after Served() counted_by frbp9006-alabama { forum bankr-alm }
+deadline frbp9006-alaska-smoke: 1.days after Served() counted_by frbp9006-alaska { forum bankr-ak }
+deadline frbp9006-arizona-smoke: 1.days after Served() counted_by frbp9006-arizona { forum bankr-az }
+deadline frbp9006-colorado-smoke: 1.days after Served() counted_by frbp9006-colorado { forum bankr-co }
+deadline frbp9006-connecticut-smoke: 1.days after Served() counted_by frbp9006-connecticut { forum bankr-ct }
+deadline frbp9006-delaware-smoke: 1.days after Served() counted_by frbp9006-delaware { forum bankr-de }
+deadline frbp9006-district-of-columbia-smoke: 1.days after Served() counted_by frbp9006-district-of-columbia { forum bankr-dc }
+deadline frbp9006-florida-smoke: 1.days after Served() counted_by frbp9006-florida { forum bankr-flm }
+deadline frbp9006-guam-smoke: 1.days after Served() counted_by frbp9006-guam { forum bankr-gu }
+deadline frbp9006-idaho-smoke: 1.days after Served() counted_by frbp9006-idaho { forum bankr-id }
+deadline frbp9006-illinois-smoke: 1.days after Served() counted_by frbp9006-illinois { forum bankr-ilc }
+deadline frbp9006-indiana-smoke: 1.days after Served() counted_by frbp9006-indiana { forum bankr-inn }
+deadline frbp9006-iowa-smoke: 1.days after Served() counted_by frbp9006-iowa { forum bankr-ian }
+deadline frbp9006-kansas-smoke: 1.days after Served() counted_by frbp9006-kansas { forum bankr-ks }
+deadline frbp9006-kentucky-smoke: 1.days after Served() counted_by frbp9006-kentucky { forum bankr-kye }
+deadline frbp9006-louisiana-smoke: 1.days after Served() counted_by frbp9006-louisiana { forum bankr-lae }
+deadline frbp9006-maine-smoke: 1.days after Served() counted_by frbp9006-maine { forum bankr-me }
+deadline frbp9006-maryland-smoke: 1.days after Served() counted_by frbp9006-maryland { forum bankr-md }
+deadline frbp9006-massachusetts-smoke: 1.days after Served() counted_by frbp9006-massachusetts { forum bankr-ma }
+deadline frbp9006-michigan-smoke: 1.days after Served() counted_by frbp9006-michigan { forum bankr-mie }
+deadline frbp9006-minnesota-smoke: 1.days after Served() counted_by frbp9006-minnesota { forum bankr-mn }
+deadline frbp9006-missouri-smoke: 1.days after Served() counted_by frbp9006-missouri { forum bankr-moe }
+deadline frbp9006-montana-smoke: 1.days after Served() counted_by frbp9006-montana { forum bankr-mt }
+deadline frbp9006-nebraska-smoke: 1.days after Served() counted_by frbp9006-nebraska { forum bankr-ne }
+deadline frbp9006-nevada-smoke: 1.days after Served() counted_by frbp9006-nevada { forum bankr-nv }
+deadline frbp9006-new-hampshire-smoke: 1.days after Served() counted_by frbp9006-new-hampshire { forum bankr-nh }
+deadline frbp9006-new-jersey-smoke: 1.days after Served() counted_by frbp9006-new-jersey { forum bankr-nj }
+deadline frbp9006-new-mexico-smoke: 1.days after Served() counted_by frbp9006-new-mexico { forum bankr-nm }
+deadline frbp9006-new-york-smoke: 1.days after Served() counted_by frbp9006-new-york { forum bankr-nye }
+deadline frbp9006-north-carolina-smoke: 1.days after Served() counted_by frbp9006-north-carolina { forum bankr-nce }
+deadline frbp9006-north-dakota-smoke: 1.days after Served() counted_by frbp9006-north-dakota { forum bankr-nd }
+deadline frbp9006-northern-mariana-islands-smoke: 1.days after Served() counted_by frbp9006-northern-mariana-islands { forum bankr-mp }
+deadline frbp9006-oregon-smoke: 1.days after Served() counted_by frbp9006-oregon { forum bankr-or }
+deadline frbp9006-pennsylvania-smoke: 1.days after Served() counted_by frbp9006-pennsylvania { forum bankr-pae }
+deadline frbp9006-puerto-rico-smoke: 1.days after Served() counted_by frbp9006-puerto-rico { forum bankr-pr }
+deadline frbp9006-rhode-island-smoke: 1.days after Served() counted_by frbp9006-rhode-island { forum bankr-ri }
+deadline frbp9006-south-carolina-smoke: 1.days after Served() counted_by frbp9006-south-carolina { forum bankr-sc }
+deadline frbp9006-texas-smoke: 1.days after Served() counted_by frbp9006-texas { forum bankr-txe }
+deadline frbp9006-utah-smoke: 1.days after Served() counted_by frbp9006-utah { forum bankr-ut }
+deadline frbp9006-vermont-smoke: 1.days after Served() counted_by frbp9006-vermont { forum bankr-vt }
+deadline frbp9006-virginia-smoke: 1.days after Served() counted_by frbp9006-virginia { forum bankr-vae }
+deadline frbp9006-washington-smoke: 1.days after Served() counted_by frbp9006-washington { forum bankr-wae }
+deadline frbp9006-west-virginia-smoke: 1.days after Served() counted_by frbp9006-west-virginia { forum bankr-wvn }
+deadline frbp9006-wisconsin-smoke: 1.days after Served() counted_by frbp9006-wisconsin { forum bankr-wie }
+deadline frbp9006-wyoming-smoke: 1.days after Served() counted_by frbp9006-wyoming { forum bankr-wy }
+deadline frcp6-alabama-smoke: 1.days after Served() counted_by frcp6-alabama { forum frcp }
+deadline frcp6-alaska-smoke: 1.days after Served() counted_by frcp6-alaska { forum frcp }
+deadline frcp6-arizona-smoke: 1.days after Served() counted_by frcp6-arizona { forum frcp }
+deadline frcp6-colorado-smoke: 1.days after Served() counted_by frcp6-colorado { forum frcp }
+deadline frcp6-connecticut-smoke: 1.days after Served() counted_by frcp6-connecticut { forum frcp }
+deadline frcp6-delaware-smoke: 1.days after Served() counted_by frcp6-delaware { forum frcp }
+deadline frcp6-district-of-columbia-smoke: 1.days after Served() counted_by frcp6-district-of-columbia { forum frcp }
+deadline frcp6-florida-smoke: 1.days after Served() counted_by frcp6-florida { forum frcp }
+deadline frcp6-guam-smoke: 1.days after Served() counted_by frcp6-guam { forum frcp }
+deadline frcp6-idaho-smoke: 1.days after Served() counted_by frcp6-idaho { forum frcp }
+deadline frcp6-illinois-smoke: 1.days after Served() counted_by frcp6-illinois { forum frcp }
+deadline frcp6-indiana-smoke: 1.days after Served() counted_by frcp6-indiana { forum frcp }
+deadline frcp6-iowa-smoke: 1.days after Served() counted_by frcp6-iowa { forum frcp }
+deadline frcp6-kansas-smoke: 1.days after Served() counted_by frcp6-kansas { forum frcp }
+deadline frcp6-kentucky-smoke: 1.days after Served() counted_by frcp6-kentucky { forum frcp }
+deadline frcp6-louisiana-smoke: 1.days after Served() counted_by frcp6-louisiana { forum frcp }
+deadline frcp6-maine-smoke: 1.days after Served() counted_by frcp6-maine { forum frcp }
+deadline frcp6-maryland-smoke: 1.days after Served() counted_by frcp6-maryland { forum frcp }
+deadline frcp6-massachusetts-smoke: 1.days after Served() counted_by frcp6-massachusetts { forum frcp }
+deadline frcp6-michigan-smoke: 1.days after Served() counted_by frcp6-michigan { forum frcp }
+deadline frcp6-minnesota-smoke: 1.days after Served() counted_by frcp6-minnesota { forum frcp }
+deadline frcp6-missouri-smoke: 1.days after Served() counted_by frcp6-missouri { forum frcp }
+deadline frcp6-montana-smoke: 1.days after Served() counted_by frcp6-montana { forum frcp }
+deadline frcp6-nebraska-smoke: 1.days after Served() counted_by frcp6-nebraska { forum frcp }
+deadline frcp6-nevada-smoke: 1.days after Served() counted_by frcp6-nevada { forum frcp }
+deadline frcp6-new-hampshire-smoke: 1.days after Served() counted_by frcp6-new-hampshire { forum frcp }
+deadline frcp6-new-jersey-smoke: 1.days after Served() counted_by frcp6-new-jersey { forum frcp }
+deadline frcp6-new-mexico-smoke: 1.days after Served() counted_by frcp6-new-mexico { forum frcp }
+deadline frcp6-new-york-smoke: 1.days after Served() counted_by frcp6-new-york { forum frcp }
+deadline frcp6-north-carolina-smoke: 1.days after Served() counted_by frcp6-north-carolina { forum frcp }
+deadline frcp6-north-dakota-smoke: 1.days after Served() counted_by frcp6-north-dakota { forum frcp }
+deadline frcp6-northern-mariana-islands-smoke: 1.days after Served() counted_by frcp6-northern-mariana-islands { forum frcp }
+deadline frcp6-pennsylvania-smoke: 1.days after Served() counted_by frcp6-pennsylvania { forum frcp }
+deadline frcp6-puerto-rico-smoke: 1.days after Served() counted_by frcp6-puerto-rico { forum frcp }
+deadline frcp6-rhode-island-smoke: 1.days after Served() counted_by frcp6-rhode-island { forum frcp }
+deadline frcp6-south-carolina-smoke: 1.days after Served() counted_by frcp6-south-carolina { forum frcp }
+deadline frcp6-texas-smoke: 1.days after Served() counted_by frcp6-texas { forum frcp }
+deadline frcp6-utah-smoke: 1.days after Served() counted_by frcp6-utah { forum frcp }
+deadline frcp6-vermont-smoke: 1.days after Served() counted_by frcp6-vermont { forum frcp }
+deadline frcp6-virginia-smoke: 1.days after Served() counted_by frcp6-virginia { forum frcp }
+deadline frcp6-washington-smoke: 1.days after Served() counted_by frcp6-washington { forum frcp }
+deadline frcp6-west-virginia-smoke: 1.days after Served() counted_by frcp6-west-virginia { forum frcp }
+deadline frcp6-wisconsin-smoke: 1.days after Served() counted_by frcp6-wisconsin { forum frcp }
+deadline frcp6-wyoming-smoke: 1.days after Served() counted_by frcp6-wyoming { forum frcp }
+deadline frcrimp45-delaware-smoke: 1.days after Served() counted_by frcrimp45-delaware { forum frcrimp }
+
+test "frbp9006-alabama counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-alabama-smoke) == 2027-02-03
+}
+
+test "frbp9006-alaska counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-alaska-smoke) == 2027-02-03
+}
+
+test "frbp9006-arizona counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-arizona-smoke) == 2027-02-03
+}
+
+test "frbp9006-colorado counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-colorado-smoke) == 2027-02-03
+}
+
+test "frbp9006-connecticut counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-connecticut-smoke) == 2027-02-03
+}
+
+test "frbp9006-delaware counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-delaware-smoke) == 2027-02-03
+}
+
+test "frbp9006-district-of-columbia counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-district-of-columbia-smoke) == 2027-02-03
+}
+
+test "frbp9006-florida counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-florida-smoke) == 2027-02-03
+}
+
+test "frbp9006-guam counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-guam-smoke) == 2027-02-03
+}
+
+test "frbp9006-idaho counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-idaho-smoke) == 2027-02-03
+}
+
+test "frbp9006-illinois counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-illinois-smoke) == 2027-02-03
+}
+
+test "frbp9006-indiana counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-indiana-smoke) == 2027-02-03
+}
+
+test "frbp9006-iowa counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-iowa-smoke) == 2027-02-03
+}
+
+test "frbp9006-kansas counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-kansas-smoke) == 2027-02-03
+}
+
+test "frbp9006-kentucky counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-kentucky-smoke) == 2027-02-03
+}
+
+test "frbp9006-louisiana counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-louisiana-smoke) == 2027-02-03
+}
+
+test "frbp9006-maine counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-maine-smoke) == 2027-02-03
+}
+
+test "frbp9006-maryland counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-maryland-smoke) == 2027-02-03
+}
+
+test "frbp9006-massachusetts counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-massachusetts-smoke) == 2027-02-03
+}
+
+test "frbp9006-michigan counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-michigan-smoke) == 2027-02-03
+}
+
+test "frbp9006-minnesota counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-minnesota-smoke) == 2027-02-03
+}
+
+test "frbp9006-missouri counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-missouri-smoke) == 2027-02-03
+}
+
+test "frbp9006-montana counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-montana-smoke) == 2027-02-03
+}
+
+test "frbp9006-nebraska counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-nebraska-smoke) == 2027-02-03
+}
+
+test "frbp9006-nevada counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-nevada-smoke) == 2027-02-03
+}
+
+test "frbp9006-new-hampshire counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-new-hampshire-smoke) == 2027-02-03
+}
+
+test "frbp9006-new-jersey counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-new-jersey-smoke) == 2027-02-03
+}
+
+test "frbp9006-new-mexico counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-new-mexico-smoke) == 2027-02-03
+}
+
+test "frbp9006-new-york counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-new-york-smoke) == 2027-02-03
+}
+
+test "frbp9006-north-carolina counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-north-carolina-smoke) == 2027-02-03
+}
+
+test "frbp9006-north-dakota counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-north-dakota-smoke) == 2027-02-03
+}
+
+test "frbp9006-northern-mariana-islands counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-northern-mariana-islands-smoke) == 2027-02-03
+}
+
+test "frbp9006-oregon counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-oregon-smoke) == 2027-02-03
+}
+
+test "frbp9006-pennsylvania counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-pennsylvania-smoke) == 2027-02-03
+}
+
+test "frbp9006-puerto-rico counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-puerto-rico-smoke) == 2027-02-03
+}
+
+test "frbp9006-rhode-island counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-rhode-island-smoke) == 2027-02-03
+}
+
+test "frbp9006-south-carolina counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-south-carolina-smoke) == 2027-02-03
+}
+
+test "frbp9006-texas counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-texas-smoke) == 2027-02-03
+}
+
+test "frbp9006-utah counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-utah-smoke) == 2027-02-03
+}
+
+test "frbp9006-vermont counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-vermont-smoke) == 2027-02-03
+}
+
+test "frbp9006-virginia counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-virginia-smoke) == 2027-02-03
+}
+
+test "frbp9006-washington counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-washington-smoke) == 2027-02-03
+}
+
+test "frbp9006-west-virginia counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-west-virginia-smoke) == 2027-02-03
+}
+
+test "frbp9006-wisconsin counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-wisconsin-smoke) == 2027-02-03
+}
+
+test "frbp9006-wyoming counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-wyoming-smoke) == 2027-02-03
+}
+
+test "frcp6-alabama counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-alabama-smoke) == 2027-02-03
+}
+
+test "frcp6-alaska counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-alaska-smoke) == 2027-02-03
+}
+
+test "frcp6-arizona counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-arizona-smoke) == 2027-02-03
+}
+
+test "frcp6-colorado counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-colorado-smoke) == 2027-02-03
+}
+
+test "frcp6-connecticut counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-connecticut-smoke) == 2027-02-03
+}
+
+test "frcp6-delaware counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-delaware-smoke) == 2027-02-03
+}
+
+test "frcp6-district-of-columbia counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-district-of-columbia-smoke) == 2027-02-03
+}
+
+test "frcp6-florida counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-florida-smoke) == 2027-02-03
+}
+
+test "frcp6-guam counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-guam-smoke) == 2027-02-03
+}
+
+test "frcp6-idaho counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-idaho-smoke) == 2027-02-03
+}
+
+test "frcp6-illinois counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-illinois-smoke) == 2027-02-03
+}
+
+test "frcp6-indiana counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-indiana-smoke) == 2027-02-03
+}
+
+test "frcp6-iowa counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-iowa-smoke) == 2027-02-03
+}
+
+test "frcp6-kansas counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-kansas-smoke) == 2027-02-03
+}
+
+test "frcp6-kentucky counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-kentucky-smoke) == 2027-02-03
+}
+
+test "frcp6-louisiana counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-louisiana-smoke) == 2027-02-03
+}
+
+test "frcp6-maine counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-maine-smoke) == 2027-02-03
+}
+
+test "frcp6-maryland counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-maryland-smoke) == 2027-02-03
+}
+
+test "frcp6-massachusetts counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-massachusetts-smoke) == 2027-02-03
+}
+
+test "frcp6-michigan counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-michigan-smoke) == 2027-02-03
+}
+
+test "frcp6-minnesota counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-minnesota-smoke) == 2027-02-03
+}
+
+test "frcp6-missouri counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-missouri-smoke) == 2027-02-03
+}
+
+test "frcp6-montana counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-montana-smoke) == 2027-02-03
+}
+
+test "frcp6-nebraska counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-nebraska-smoke) == 2027-02-03
+}
+
+test "frcp6-nevada counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-nevada-smoke) == 2027-02-03
+}
+
+test "frcp6-new-hampshire counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-new-hampshire-smoke) == 2027-02-03
+}
+
+test "frcp6-new-jersey counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-new-jersey-smoke) == 2027-02-03
+}
+
+test "frcp6-new-mexico counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-new-mexico-smoke) == 2027-02-03
+}
+
+test "frcp6-new-york counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-new-york-smoke) == 2027-02-03
+}
+
+test "frcp6-north-carolina counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-north-carolina-smoke) == 2027-02-03
+}
+
+test "frcp6-north-dakota counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-north-dakota-smoke) == 2027-02-03
+}
+
+test "frcp6-northern-mariana-islands counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-northern-mariana-islands-smoke) == 2027-02-03
+}
+
+test "frcp6-pennsylvania counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-pennsylvania-smoke) == 2027-02-03
+}
+
+test "frcp6-puerto-rico counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-puerto-rico-smoke) == 2027-02-03
+}
+
+test "frcp6-rhode-island counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-rhode-island-smoke) == 2027-02-03
+}
+
+test "frcp6-south-carolina counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-south-carolina-smoke) == 2027-02-03
+}
+
+test "frcp6-texas counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-texas-smoke) == 2027-02-03
+}
+
+test "frcp6-utah counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-utah-smoke) == 2027-02-03
+}
+
+test "frcp6-vermont counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-vermont-smoke) == 2027-02-03
+}
+
+test "frcp6-virginia counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-virginia-smoke) == 2027-02-03
+}
+
+test "frcp6-washington counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-washington-smoke) == 2027-02-03
+}
+
+test "frcp6-west-virginia counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-west-virginia-smoke) == 2027-02-03
+}
+
+test "frcp6-wisconsin counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-wisconsin-smoke) == 2027-02-03
+}
+
+test "frcp6-wyoming counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcp6-wyoming-smoke) == 2027-02-03
+}
+
+test "frcrimp45-delaware counts a one-day period"
+{
+  given Served(Personal) on 2027-02-02
+  expect deadline(frcrimp45-delaware-smoke) == 2027-02-03
+}

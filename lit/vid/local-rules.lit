@@ -1,6 +1,6 @@
 module vid-local-rules.local-rules
 
-import core.frcp6.{ frcp6-virgin-islands }
+import core.frcp6.{ frcp6 }
 
 // The District Court of the Virgin Islands' own civil periods, computed
 // under the federal rules (FRCP 6(a) governs "any local rule"; LRCi 6.1(a)
@@ -114,7 +114,7 @@ event LevySatisfied()
 /// D.V.I. LRCi 3.1(b): if the outstanding civil cover sheet is not filed
 /// within three days of the Clerk's notice of the omission, the Court may
 /// dismiss the action.
-deadline cover-sheet-period: 3.days after CoverSheetOmissionNoticed() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 3.1(b)"
+deadline cover-sheet-period: 3.days after CoverSheetOmissionNoticed() counted_by frcp6 cite "D.V.I. LRCi 3.1(b)"
 {
   forum frcp
 }
@@ -122,7 +122,7 @@ deadline cover-sheet-period: 3.days after CoverSheetOmissionNoticed() counted_by
 /// D.V.I. LRCi 5.2(b)(1): a request by an individual whose counsel moves
 /// to withdraw to appear at the hearing by video or teleconference is made
 /// by motion at least three days before the hearing.
-deadline withdrawal-remote-appearance-period: 3.days before WithdrawalHearing() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 5.2(b)"
+deadline withdrawal-remote-appearance-period: 3.days before WithdrawalHearing() counted_by frcp6 cite "D.V.I. LRCi 5.2(b)"
 {
   forum frcp
 }
@@ -130,7 +130,7 @@ deadline withdrawal-remote-appearance-period: 3.days before WithdrawalHearing() 
 /// D.V.I. LRCi 6.1(b)(1)(ii) and 7.3(a): a motion for reconsideration is
 /// filed within 14 days after entry of the order or decision, unless the
 /// Court extends the time for good cause.
-deadline reconsideration-motion-period: 14.days after OrderEntered() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 6.1(b)"
+deadline reconsideration-motion-period: 14.days after OrderEntered() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
 {
   forum frcp
 }
@@ -138,7 +138,7 @@ deadline reconsideration-motion-period: 14.days after OrderEntered() counted_by 
 /// D.V.I. LRCi 6.1(b)(1)(iii): motions in limine are filed no later than
 /// 28 days before the day scheduled for jury selection, or as the Court
 /// directs.
-deadline limine-motion-period: 28.days before JurySelection() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 6.1(b)"
+deadline limine-motion-period: 28.days before JurySelection() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
 {
   forum frcp
 }
@@ -146,28 +146,28 @@ deadline limine-motion-period: 28.days before JurySelection() counted_by frcp6-v
 /// D.V.I. LRCi 6.1(b)(2): except as LRCi 6.1(b)(3) or an order provides, a
 /// response is filed within 14 days after service of a motion; the Court
 /// may shorten or extend the time.
-deadline response-period: 14.days after MotionServed() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 6.1(b)"
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
 {
   forum frcp
 }
 
 /// D.V.I. LRCi 6.1(b)(2): a reply, if any, is filed within seven days
 /// after service of the response.
-deadline reply-period: 7.days after ResponseServed() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 6.1(b)"
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
 {
   forum frcp
 }
 
 /// D.V.I. LRCi 6.1(b)(3)(i): a response to a Rule 12 motion is filed
 /// within 21 days of the filing of the motion.
-deadline rule12-response-period: 21.days after Rule12MotionFiled() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 6.1(b)"
+deadline rule12-response-period: 21.days after Rule12MotionFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
 {
   forum frcp
 }
 
 /// D.V.I. LRCi 6.1(b)(3)(i): a reply on a Rule 12 motion is filed within
 /// 14 days of the filing of the response.
-deadline rule12-reply-period: 14.days after Rule12ResponseFiled() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 6.1(b)"
+deadline rule12-reply-period: 14.days after Rule12ResponseFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
 {
   forum frcp
 }
@@ -175,49 +175,49 @@ deadline rule12-reply-period: 14.days after Rule12ResponseFiled() counted_by frc
 /// D.V.I. LRCi 6.1(b)(3)(ii): a response to a Rule 56 motion, with
 /// affidavits and supporting documents, may be filed within 21 days of the
 /// filing of the motion.
-deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionFiled() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 6.1(b)"
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
 {
   forum frcp
 }
 
 /// D.V.I. LRCi 6.1(b)(3)(ii): a reply on a Rule 56 motion is filed within
 /// 14 days of the filing of the response.
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 6.1(b)"
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
 {
   forum frcp
 }
 
 /// D.V.I. LRCi 6.1(b)(3)(iii): a response to a motion for reconsideration
 /// may be filed within 14 days after service of the motion.
-deadline reconsideration-response-period: 14.days after ReconsiderationMotionServed() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 6.1(b)"
+deadline reconsideration-response-period: 14.days after ReconsiderationMotionServed() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
 {
   forum frcp
 }
 
 /// D.V.I. LRCi 6.1(b)(3)(iii): a reply on a motion for reconsideration is
 /// filed within seven days of the filing of the response.
-deadline reconsideration-reply-period: 7.days after ReconsiderationResponseFiled() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 6.1(b)"
+deadline reconsideration-reply-period: 7.days after ReconsiderationResponseFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
 {
   forum frcp
 }
 
 /// D.V.I. LRCi 6.1(b)(3)(iv): a response to a motion in limine is filed
 /// within seven days of the filing of the motion.
-deadline limine-response-period: 7.days after LimineMotionFiled() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 6.1(b)"
+deadline limine-response-period: 7.days after LimineMotionFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
 {
   forum frcp
 }
 
 /// D.V.I. LRCi 6.1(b)(3)(iv): a reply on a motion in limine is filed
 /// within seven days of the filing of the response.
-deadline limine-reply-period: 7.days after LimineResponseFiled() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 6.1(b)"
+deadline limine-reply-period: 7.days after LimineResponseFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
 {
   forum frcp
 }
 
 /// D.V.I. LRCi 7.1(b)(1): leave to exceed the page or word limit is
 /// sought at least two days before the filing of the document.
-deadline oversize-leave-period: 2.days before OversizePaperFiled() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 7.1(b)"
+deadline oversize-leave-period: 2.days before OversizePaperFiled() counted_by frcp6 cite "D.V.I. LRCi 7.1(b)"
 {
   forum frcp
 }
@@ -226,7 +226,7 @@ deadline oversize-leave-period: 2.days before OversizePaperFiled() counted_by fr
 /// trial, or as the Court directs, each party files a trial brief and, in
 /// a jury case, requests to charge or, in a non-jury case, proposed
 /// findings of fact and conclusions of law.
-deadline trial-brief-period: 7.days before TrialDate() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 16.1(c)"
+deadline trial-brief-period: 7.days before TrialDate() counted_by frcp6 cite "D.V.I. LRCi 16.1(c)"
 {
   forum frcp
 }
@@ -234,14 +234,14 @@ deadline trial-brief-period: 7.days before TrialDate() counted_by frcp6-virgin-i
 /// D.V.I. LRCi 26.3(d)(1): unless the Court provides otherwise, a proposed
 /// bill for the expert's charges is provided to the party seeking
 /// discovery 20 days before the deposition.
-deadline expert-bill-period: 20.days before ExpertDeposition() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 26.3(d)"
+deadline expert-bill-period: 20.days before ExpertDeposition() counted_by frcp6 cite "D.V.I. LRCi 26.3(d)"
 {
   forum frcp
 }
 
 /// D.V.I. LRCi 30.1(a): "reasonable written notice" under FRCP 30(b)(1)
 /// is at least 14 days before the deposition of an individual.
-deadline individual-deposition-notice-period: 14.days before IndividualDeposition() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 30.1(a)"
+deadline individual-deposition-notice-period: 14.days before IndividualDeposition() counted_by frcp6 cite "D.V.I. LRCi 30.1(a)"
 {
   forum frcp
 }
@@ -249,7 +249,7 @@ deadline individual-deposition-notice-period: 14.days before IndividualDepositio
 /// D.V.I. LRCi 30.1(a): "reasonable written notice" under FRCP 30(b)(1)
 /// is at least 21 days before the deposition of an organization under FRCP
 /// 30(b)(6).
-deadline organization-deposition-notice-period: 21.days before OrganizationDeposition() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 30.1(a)"
+deadline organization-deposition-notice-period: 21.days before OrganizationDeposition() counted_by frcp6 cite "D.V.I. LRCi 30.1(a)"
 {
   forum frcp
 }
@@ -257,7 +257,7 @@ deadline organization-deposition-notice-period: 21.days before OrganizationDepos
 /// D.V.I. LRCi 30.1(b): the party taking an FRCP 30(b)(6) deposition
 /// initiates and conducts the conference on the matters for examination
 /// at least five days before service of the notice of deposition.
-deadline organization-deposition-conference-period: 5.days before OrganizationDepositionNoticeServed() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 30.1(b)"
+deadline organization-deposition-conference-period: 5.days before OrganizationDepositionNoticeServed() counted_by frcp6 cite "D.V.I. LRCi 30.1(b)"
 {
   forum frcp
 }
@@ -266,7 +266,7 @@ deadline organization-deposition-conference-period: 5.days before OrganizationDe
 /// the conference of counsel before a discovery motion is completed within
 /// 15 calendar days after the moving party serves its written request for
 /// the conference.
-deadline discovery-conference-period: 15.days after DiscoveryConferenceRequested() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 37.1(b)"
+deadline discovery-conference-period: 15.days after DiscoveryConferenceRequested() counted_by frcp6 cite "D.V.I. LRCi 37.1(b)"
 {
   forum frcp
 }
@@ -274,7 +274,7 @@ deadline discovery-conference-period: 15.days after DiscoveryConferenceRequested
 /// D.V.I. LRCi 39.1(d): the offering party claims its exhibits from the
 /// Clerk within thirty days of receipt of the Clerk's written request;
 /// unclaimed exhibits may be destroyed or otherwise disposed of.
-deadline exhibit-claim-period: 30.days after ExhibitClaimRequestReceived() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 39.1(d)"
+deadline exhibit-claim-period: 30.days after ExhibitClaimRequestReceived() counted_by frcp6 cite "D.V.I. LRCi 39.1(d)"
 {
   forum frcp
 }
@@ -282,7 +282,7 @@ deadline exhibit-claim-period: 30.days after ExhibitClaimRequestReceived() count
 /// D.V.I. LRCi 43.1: the parties submit the names and qualifications of
 /// qualified interpreters for approval at least six days before the
 /// interpreter's services are required.
-deadline interpreter-submission-period: 6.days before InterpreterNeeded() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 43.1"
+deadline interpreter-submission-period: 6.days before InterpreterNeeded() counted_by frcp6 cite "D.V.I. LRCi 43.1"
 {
   forum frcp
 }
@@ -290,14 +290,14 @@ deadline interpreter-submission-period: 6.days before InterpreterNeeded() counte
 /// D.V.I. LRCi 54.1(a): within 14 days after entry of a final judgment or
 /// a judgment allowing costs, the prevailing party serves and files a Bill
 /// of Costs.
-deadline bill-of-costs-period: 14.days after CostsJudgmentEntered() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 54.1(a)"
+deadline bill-of-costs-period: 14.days after CostsJudgmentEntered() counted_by frcp6 cite "D.V.I. LRCi 54.1(a)"
 {
   forum frcp
 }
 
 /// D.V.I. LRCi 69.1(d)(4): the judgment creditor moves to vacate a wage
 /// levy within 20 days after it has been satisfied.
-deadline levy-vacatur-period: 20.days after LevySatisfied() counted_by frcp6-virgin-islands cite "D.V.I. LRCi 69.1(d)"
+deadline levy-vacatur-period: 20.days after LevySatisfied() counted_by frcp6 cite "D.V.I. LRCi 69.1(d)"
 {
   forum frcp
 }

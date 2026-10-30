@@ -799,14 +799,15 @@ deadline chained-nourl: 1.days from deadline(nourl-base).nominal counted_by frcp
                 temporal::not_encoded("2009-12-01")
             )
         );
-        assert_eq!(
-            refusal(
-                &|d| d.unit = DayUnit::Business,
-                "answer-period",
-                "2025-03-03"
-            ),
-            "`answer-period` counts business days, which have no engine lowering"
-        );
+        // Business-day periods now lower through the shared clock library.
+        let business = due_on(
+            &package(&|d| d.unit = DayUnit::Business),
+            "answer-period",
+            "2025-03-03",
+            None,
+        )
+        .unwrap();
+        assert_eq!(business.computed.due_date, "2025-04-01");
         assert!(!refusal(&none, "answer-period", "2025-13-45").is_empty());
         assert!(!refusal(&|d| d.amount = u64::MAX, "answer-period", "2025-03-03").is_empty());
         assert!(refusal(

@@ -694,7 +694,7 @@ mod tests {
     }
 
     #[test]
-    fn a_deadline_the_engine_cannot_count_is_scheduled_unknown() {
+    fn a_business_day_deadline_is_counted_from_its_trigger() {
         let c = checked(
             "deadline in-business-days: 3.business_days from Served(complaint) counted_by frcp6",
             ACME,
@@ -713,7 +713,11 @@ mod tests {
                     Some("2025-03-26"),
                     false
                 ),
-                ("frcp-rule12-example::in-business-days", None, true),
+                (
+                    "frcp-rule12-example::in-business-days",
+                    Some("2025-03-10"),
+                    false
+                ),
             ]
         );
     }

@@ -1556,17 +1556,19 @@ Counting rule `c` defines (FRCP 6(a) vocabulary):
    declaration closes a forum is a legal question its rule answers, so
    both need the `cite` (L3009 without), and a declared calendar lists
    only `once(date)` days with no observance (L3009 otherwise). `lit/core`
-   declares a state calendar for each state whose holiday text is vendored
-   (`delaware-holidays`, 1 Del. C. § 501(a); West Virginia, the District of
-   Columbia, the Virgin Islands, Missouri, South Carolina, Virginia,
-   Washington, Florida, Montana, North Dakota, Iowa, New Jersey,
-   Pennsylvania, Alaska, Guam, the Northern Mariana Islands and Nevada,
-   and Kansas, Wyoming, Arizona, Idaho and Oregon, whose calendars are
-   empty because every state holiday there is a federal one), read as `forward_holidays` by that state's
-   `frcp6-<state>` (6(a)(6)(C)) and `frbp9006-<state>` (FRBP 9006(a)(6)(C)),
-   which its district and bankruptcy packages name as their `counting` rule
-   and `recounts` the national rules under; every other district's `frcp6`
-   closes on the federal days only. It declares no FRCP 6(a)(6)(B) or FRAP
+   declares one module per state, the District of Columbia or territory
+   whose holiday text is vendored, `lit/core/states/<state>.lit`
+   (`core.states.<state>`): its calendar `<state>-holidays`
+   (`delaware-holidays`, 1 Del. C. § 501(a); empty where every state
+   holiday is a federal one, as in Kansas or Minnesota), read as
+   `forward_holidays` by that module's `frcp6-<state>` (6(a)(6)(C)) and
+   `frbp9006-<state>` (FRBP 9006(a)(6)(C)), which the state's district and
+   bankruptcy packages import, name as their `counting` rule and `recounts`
+   the national rules under. Adding a state is adding its module and the
+   binding of its text in `lit/core/Lit.toml`; no shared calendar or rule
+   lists the states. Every district whose state has no module (README.md,
+   "Deferred: state sources") is counted by `frcp6`, closing on the federal
+   days only. It declares no FRCP 6(a)(6)(B) or FRAP
    26(a)(6)(B) day: whether an executive order closing executive departments
    "declares a holiday" for a court is a question no vendored source
    answers, so none is asserted (the earlier date). Its one declared

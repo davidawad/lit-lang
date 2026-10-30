@@ -243,6 +243,38 @@ pack gets an ordinary "not found" rather than every op going down. The vendored 
 `sources[].path` points into (see [`sources/PROVENANCE.md`](sources/PROVENANCE.md))
 is embedded the same way, overridable with `LITGRAPH_SOURCES=<dir>`.
 
+### Deferred: state sources
+
+FRCP 6(a)(6)(C) and FRBP 9006(a)(6)(C) make a state's holidays legal
+holidays of the federal courts in it for a period counted forward. Each
+state whose holiday text is vendored is one module,
+`lit/core/states/<state>.lit`, which its district and bankruptcy packages
+count by. These are holes: their holiday statute is not vendored (or its
+fetch is blocked), so their courts count by core's `frcp6` and `frbp9006`
+and close on the federal holidays only, and a last day on a state holiday
+there is the earlier date. Each is added by vendoring its source and adding
+its module.
+
+| state or territory | courts | missing source |
+|---|---|---|
+| Arkansas | `ared`, `arwd`, `bankr-are`, `bankr-arw` | Ark. Code Ann. § 1-5-101 |
+| California | `cacd`, `caed`, `cand`, `casd`, `bankr-cac`, `bankr-cae`, `bankr-can`, `bankr-cas` | Cal. Gov. Code §§ 6700-6701; Cal. Civ. Proc. Code § 135 |
+| Georgia | `gamd`, `gand`, `gasd`, `bankr-gam`, `bankr-gan`, `bankr-gas` | O.C.G.A. § 1-4-1 |
+| Hawaii | `hid` (`bankr-hi` counts by its own LBR 9006-1 list) | Haw. Rev. Stat. § 8-1 |
+| Mississippi | `msnd`, `mssd`, `bankr-msn`, `bankr-mss` | Miss. Code Ann. § 3-3-7 |
+| Ohio | `ohnd`, `ohsd`, `bankr-ohn`, `bankr-ohs` | Ohio Rev. Code § 1.14 |
+| Oklahoma | `oked`, `oknd`, `okwd`, `bankr-oke`, `bankr-okn`, `bankr-okw` | 25 O.S. § 82.1 |
+| South Dakota | `sdd`, `bankr-sd` | S.D. Codified Laws § 1-5-1 |
+| Tennessee | `tned`, `tnmd`, `tnwd`, `bankr-tne`, `bankr-tnm`, `bankr-tnw` | Tenn. Code Ann. § 15-1-101 |
+| Virgin Islands | `vid`, `bankr-vi` | 1 V.I.C. § 171 |
+
+The fetches are tracked in lg-ovyp (GitHub #23) and the blocked-source beads
+lg-3sut, lg-l6xh, lg-s97k, lg-set2, lg-sw6p, lg-s4ko, lg-okuc and lg-i5h2.
+The multi-state bankruptcy appellate panels (`bap1`, `bap6`, `bap8`,
+`bap9`) count by `frbp9006`, since a matter does not name the district an
+appeal comes from; `bap10` counts Colorado's holidays (its clerk sits in
+Denver).
+
 ## Scenario library
 
 Named matter profiles are JSON built from the `.case` matters in

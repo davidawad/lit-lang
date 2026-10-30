@@ -142,26 +142,32 @@ fn expressible(id: &str, direction: Direction, unit: Unit) -> bool {
     id != "itc210" || (direction == Direction::Forward && unit == Unit::Calendar)
 }
 
-/// `lit/core` checks clean in `dev` and in `strict`: no hole, so no
-/// jurisdiction package inherits one from it (lg-9iz0).
+/// The federal clock rules are strict-clean; state holiday texts without
+/// pinned amendment histories remain explicit strict holes.
 #[test]
-fn strict_check_of_lit_core_passes() {
+fn strict_check_of_lit_core_reports_only_unverified_state_sources() {
     let dev = litigate(&["check", "lit/core"]);
     assert_eq!(dev.code, 0, "{}", dev.stdout);
     let run = litigate(&["check", "--profile", "strict", "lit/core"]);
-    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    let diagnostics = run.json["diagnostics"].as_array().unwrap();
+    assert!(!diagnostics.is_empty());
+    assert!(diagnostics.iter().all(|d| d["code"] == "L5002"));
     let result = &run.json["result"];
     for f in result["obligations"].as_array().unwrap() {
         // A rule package has no events, so only case replay is skipped.
         let skipped = f["name"] == "case-replay" && f["status"] == "skipped";
-        assert!(f["status"] == "passed" || skipped, "{f}");
+        let source_holes = f["name"] == "holes" && f["status"] == "failed";
+        assert!(f["status"] == "passed" || skipped || source_holes, "{f}");
     }
     let core = &result["packages"][0];
     assert_eq!(core["name"], "core");
     assert_eq!(core["tests"]["failed"], 0);
     assert!(core["tests"]["passed"].as_u64().unwrap() >= 100, "{core}");
-    assert_eq!(core["holes"].as_u64(), Some(0), "{core}");
-    assert_eq!(run.json["diagnostics"], serde_json::json!([]));
+    assert_eq!(
+        core["holes"].as_u64(),
+        Some(u64::try_from(diagnostics.len()).unwrap())
+    );
 }
 
 /// How a version's cite of a text vendored after it took effect is proved
@@ -334,19 +340,49 @@ fn the_fragment_holds_every_rule_and_both_calendars() {
         .iter()
         .map(|r| r.id.as_str())
         .collect();
-    assert_eq!(
-        ids,
-        [
-            "frap26",
-            "frcp6",
-            "frcrimp45",
-            "itc210",
-            "rcfc6",
-            "sup-ct-30"
-        ]
-    );
+    for base in [
+        "frap26",
+        "frbp9006",
+        "frcp6",
+        "frcrimp45",
+        "itc210",
+        "rcfc6",
+        "sup-ct-30",
+    ] {
+        assert!(ids.contains(&base), "missing {base}");
+    }
+    let states = repo().join("lit/core/states");
+    for entry in std::fs::read_dir(states).unwrap() {
+        let path = entry.unwrap().path();
+        if path.extension().and_then(|e| e.to_str()) != Some("lit") {
+            continue;
+        }
+        let text = std::fs::read_to_string(path).unwrap();
+        for line in text.lines().filter(|line| line.starts_with("counting ")) {
+            let id = line.split_whitespace().nth(1).unwrap();
+            assert!(ids.contains(&id), "missing state counting rule {id}");
+        }
+    }
     let calendars: Vec<&str> = lowered().calendars.iter().map(|c| c.id.as_str()).collect();
-    assert_eq!(calendars, ["us-federal-holidays", "rcfc-legal-holidays"]);
+    for base in [
+        "us-federal-holidays",
+        "district-state-holidays",
+        "rcfc-legal-holidays",
+    ] {
+        assert!(calendars.contains(&base), "missing {base}");
+    }
+    let states = repo().join("lit/core/states");
+    for entry in std::fs::read_dir(states).unwrap() {
+        let path = entry.unwrap().path();
+        if path.extension().and_then(|e| e.to_str()) != Some("lit") {
+            continue;
+        }
+        let text = std::fs::read_to_string(path).unwrap();
+        for line in text.lines().filter(|line| line.starts_with("calendar ")) {
+            let id = line.split_whitespace().nth(1).unwrap();
+            assert!(calendars.contains(&id), "missing state calendar {id}");
+        }
+    }
 }
 
 #[test]

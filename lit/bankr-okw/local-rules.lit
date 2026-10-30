@@ -361,16 +361,19 @@ test "a proposed order after hearing is due in ten business days" cite "W.D. Okl
   given RulingEntered() on 2027-03-01
   expect deadline(proposed-order-after-ruling-period) == 2027-03-15
 }
+
 test "the ballot summary is due three business days before confirmation" cite "W.D. Okla. LBR 3018-1"
 {
   given ConfirmationHearingScheduled() on 2027-03-10
   expect deadline(ballot-summary-period) == 2027-03-05
 }
+
 test "the final pretrial order is due five business days before trial" cite "W.D. Okla. LBR 7016-1(D)"
 {
   given TrialScheduled() on 2027-03-10
   expect deadline(final-pretrial-order-period) == 2027-03-03
 }
+
 test "deposition notice is due three business days before deposition" cite "W.D. Okla. LBR 7030-1"
 {
   given DepositionScheduled() on 2027-03-10

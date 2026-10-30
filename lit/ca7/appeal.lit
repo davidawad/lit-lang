@@ -121,6 +121,7 @@ test "counsel names are due five business days before argument" cite "7th Cir. R
   given ArgumentHeard() on 2027-03-10
   expect deadline(counsel-names-period) == 2027-03-03
 }
+
 /// A supervising attorney's motion for argument by a law student is filed
 /// at least 14 days before the argument.
 deadline law-student-argument-motion-period: 14.days before ArgumentHeard() counted_by frap26 cite "7th Cir. R. 34(h)"

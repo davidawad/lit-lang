@@ -298,7 +298,10 @@ counting frcrimp45-delaware effective [2023-12-01, ..) known_at 2023-04-24 super
 // force, and each test cites the rule it checks.
 deadline frcrimp45-14-days: 14.days after Served() counted_by frcrimp45 { forum frcrimp }
 deadline frcrimp45-7-days-before: 7.days before Scheduled() counted_by frcrimp45 { forum frcrimp }
-deadline frcrimp45-delaware-1-day: 1.days after Served() counted_by frcrimp45-delaware { forum frcrimp }
+
+deadline frcrimp45-delaware-1-day: 1.days after Served() counted_by frcrimp45-delaware {
+  forum frcrimp
+}
 
 deadline frcrimp45-delaware-2-days: 2.days after Served() counted_by frcrimp45-delaware {
   forum frcrimp

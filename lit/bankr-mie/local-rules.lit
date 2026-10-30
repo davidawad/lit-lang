@@ -436,26 +436,31 @@ test "an extension motion objection period counts business days" cite "E.D. Mich
   given ExtensionMotionFiled() on 2027-03-01
   expect deadline(extension-motion-objection-period) == 2027-03-04
 }
+
 test "the ballot summary is due two business days before confirmation" cite "E.D. Mich. LBR 3018-1"
 {
   given CombinedConfirmationHearingScheduled() on 2027-03-10
   expect deadline(ballot-summary-period) == 2027-03-08
 }
+
 test "a hearing adjournment request is due three business days before the hearing" cite "E.D. Mich. LBR 5071-1"
 {
   given ContestedMatterHearingScheduled() on 2027-03-10
   expect deadline(hearing-adjournment-request-period) == 2027-03-05
 }
+
 test "a reply brief is due three business days before the hearing" cite "E.D. Mich. LBR 9014-1(f)"
 {
   given ContestedMatterHearingScheduled() on 2027-03-10
   expect deadline(motion-reply-brief-period) == 2027-03-05
 }
+
 test "trial exhibits are due three business days before trial" cite "E.D. Mich. LBR 7016-1"
 {
   given TrialScheduled() on 2027-03-10
   expect deadline(trial-exhibit-period) == 2027-03-05
 }
+
 test "stay objection follow-up notice is due in three business days" cite "E.D. Mich. LBR 4001-4"
 {
   given StayExtensionObjectionFiled() on 2027-03-01

@@ -108,16 +108,19 @@ test "the complex track plan is due two business days before conference" cite "D
   given InitialSchedulingConferenceScheduled() on 2027-03-10
   expect deadline(complex-track-plan-period) == 2027-03-08
 }
+
 test "the page-limit motion is due three business days before the memorandum" cite "D. Me. Local R. 7(d)(2)"
 {
   given MemorandumDue() on 2027-03-10
   expect deadline(page-limit-motion-period) == 2027-03-05
 }
+
 test "the pretrial memorandum is due five business days before conference" cite "D. Me. Local R. 16.5(b)"
 {
   given FinalPretrialConferenceScheduled() on 2027-03-10
   expect deadline(pretrial-memorandum-period) == 2027-03-03
 }
+
 /// Local Rule 7(c): the movant may file a reply memorandum, confined to
 /// new matter in the objection or response, no later than 14 days of its
 /// filing.

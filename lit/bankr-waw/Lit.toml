@@ -2,7 +2,7 @@
 # the Western District of Washington over lit/frbp (FRBP 9029(a); 28
 # U.S.C. § 2075): it declares only the periods the Local Rules themselves
 # state and re-encodes no FRBP period. Each period is counted under FRBP
-# 9006(a), the FRCP 6(a) method (core's frbp9006). The rules effective
+# 9006(a), the FRCP 6(a) method (core's frbp9006-washington). The rules effective
 # December 1, 2023 are the base; General Order 2026-6 (entered October 26,
 # 2026) adopts amended rules effective December 1, 2026, so each period is
 # a dated version over [2023-12-01, 2026-12-01) citing the 2023 text and
@@ -23,7 +23,10 @@ in_force = "2023-12-01"
 known_at = "2026-10-28"
 unknown_before = "2023-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the Western District of Washington"
-counting = "frbp9006"
+# FRBP 9006(a)(6)(C): Washington's holidays close a forward-counted period, here and in
+# the FRBP periods this package recounts (core's `frbp9006-washington`).
+counting = "frbp9006-washington"
+recounts = ["frbp-bankruptcy-procedure"]
 
 [package.instrument]
 source = "wawb-lbr"

@@ -17,10 +17,10 @@ import itc.events.{
 // version starts on February 3, 2025, the effective date of 90 FR 225
 // (Jan. 3, 2025), which applies only to investigations instituted after
 // it; § 210.5 and § 210.29 were last amended before (78 FR 23474, Apr. 19,
-// 2013, effective May 20, 2013), and the eCFR versioner proves their text
-// unchanged from that date. § 210.27, amended again effective Jan. 7,
-// 2026, is cited as the April 1, 2025 annual edition prints it, the text
-// its versions took effect with. 19 C.F.R. § 210.6(a) makes every Part 210
+// 2013, effective May 20, 2013). Every section is cited as the April 1,
+// 2025 annual edition prints it, and the eCFR versioner proves that text
+// unchanged since February 3, 2025 (§ 210.27 was amended again effective
+// Jan. 7, 2026, after that edition). 19 C.F.R. § 210.6(a) makes every Part 210
 // period yield to "the Commission, the administrative law judge, or this or
 // another section of this part", and § 201.14(b)(2) lets the person
 // conducting the investigation extend one for good cause: each one is
@@ -104,12 +104,12 @@ rule duty move-to-quash cite "cfr210.32.d.2"
 /// 19 C.F.R. § 210.27(e)(1)(ii): a privilege log within 10 days of making
 /// the claim. Delegation: § 210.6(a) and § 201.14(b)(2) (the section itself
 /// states none).
-rule duty log-privilege cite "19 CFR (2025) 210.27(e)(1)"
+rule duty log-privilege cite "cfr210.27.e.1"
 {
   deadline privilege-log-period: 10.days after PrivilegeClaimed() counted_by itc210 effective [2025-02-03, ..) delegable {
     to CaseOrder
     op set
-  } cite "19 CFR (2025) 210.27(e)(1)"
+  } cite "cfr210.27.e.1"
   {
     extendable true
     extension_authority "good cause"

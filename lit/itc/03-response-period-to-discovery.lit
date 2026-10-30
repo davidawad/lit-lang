@@ -41,7 +41,7 @@ state response-filed: "Response Filed" by office effective [2025-02-03, ..) cite
   group response-period-group
   note "Written response under oath addressing each allegation; for patent complaints, non-infringement claim charts and, if invalidity is asserted, its basis and prior art."
   edge-response-filed-discovery-open "Discovery is open (Federal Register publication triggers it — modeled here as concurrent with the response period, see instituted's note) (Rule 210.27(b))" -> discovery-open {
-    authority cite "19 CFR (2025) 210.27(b)"
+    authority cite "cfr210.27.b"
   }
 }
 
@@ -91,7 +91,7 @@ state default-relief-determination: "Default Relief Determination" by examiner e
   }
 }
 
-decision discovery-open: "Discovery Open" by applicant effective [2025-02-03, ..) cite "19 CFR (2025) 210.27(b)"
+decision discovery-open: "Discovery Open" by applicant effective [2025-02-03, ..) cite "cfr210.27.b"
 {
   group discovery-group
   note "Parties discover matters 'not privileged, that is proportional to the needs of the investigation' — broadly FRCP-26(b)(1)-shaped, but scoped to a 45-day-post-institution target date rather than a multi-year docket, with compressed 10-day response windows throughout. This hub node is a pure player node (every outgoing edge, including its self-loops, is an applicant choice) — the direct structural analog of mpep-prosecution.json's RCE-churn cycle: the SCC where time, money, and CBI risk accumulate before the case can graduate to prehearing."
@@ -154,7 +154,7 @@ decision discovery-open: "Discovery Open" by applicant effective [2025-02-03, ..
     action_id "take.deposition"
   }
   discovery-file-privilege-log "File Privilege Log for withheld material within 10 days (Rule 210.27(e))" -> discovery-open {
-    authority cite "19 CFR (2025) 210.27(e)"
+    authority cite "cfr210.27.e"
     effort 4.hours
     cost 300.usd
     within privilege-log-period {

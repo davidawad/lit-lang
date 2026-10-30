@@ -20,7 +20,10 @@ in_force = "2025-10-15"
 known_at = "2026-10-28"
 unknown_before = "2025-10-15"
 jurisdiction = "United States District Court, D. Alaska"
-counting = "frcp6"
+# FRCP 6(a)(6)(C): Alaska's holidays close a forward-counted period, here and in
+# the FRCP periods this package recounts (core's `frcp6-alaska`).
+counting = "frcp6-alaska"
+recounts = ["frcp-civil-procedure"]
 
 [package.roles]
 applicant = "self"

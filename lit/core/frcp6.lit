@@ -1,6 +1,6 @@
 module core.frcp6
 
-import core.calendar.{ delaware-holidays, district-of-columbia-holidays, district-state-holidays, florida-holidays, iowa-holidays, kansas-holidays, missouri-holidays, montana-holidays, new-jersey-holidays, north-dakota-holidays, pennsylvania-holidays, south-carolina-holidays, us-federal-holidays, virginia-holidays, washington-holidays, west-virginia-holidays, wyoming-holidays }
+import core.calendar.{ alaska-holidays, arizona-holidays, delaware-holidays, district-of-columbia-holidays, district-state-holidays, florida-holidays, guam-holidays, idaho-holidays, iowa-holidays, kansas-holidays, missouri-holidays, montana-holidays, nevada-holidays, new-jersey-holidays, north-dakota-holidays, northern-mariana-islands-holidays, pennsylvania-holidays, south-carolina-holidays, us-federal-holidays, virginia-holidays, washington-holidays, west-virginia-holidays, wyoming-holidays }
 
 /// FRCP 6(a) and 6(e) from the 1963 amendments (effective July 1, 1963):
 /// Saturdays join Sundays and legal holidays as days a period cannot end
@@ -707,6 +707,192 @@ counting frcp6-wyoming effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP
   } cite "FRCP 6(d)"
   holidays us-federal-holidays
   forward_holidays wyoming-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRCP 6 in the district courts of Alaska: the 2023 text
+/// (`frcp6@2023-12-01`) with core's `alaska-holidays`, which 6(a)(6)(C) ("any day
+/// declared a holiday by ... the state where the district court is
+/// located") makes legal holidays "for periods that are measured after an
+/// event" only. A district package there names it as its `counting` rule.
+/// A calendar day is closed only from the date its vendored text (AS 44.12.010)
+/// was retrieved; before it the count is `frcp6`'s.
+counting frcp6-alaska effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays alaska-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRCP 6 in the district courts of Arizona: the 2023 text
+/// (`frcp6@2023-12-01`) with core's `arizona-holidays`, which 6(a)(6)(C) ("any day
+/// declared a holiday by ... the state where the district court is
+/// located") makes legal holidays "for periods that are measured after an
+/// event" only. A district package there names it as its `counting` rule.
+/// A calendar day is closed only from the date its vendored text (A.R.S. § 1-301)
+/// was retrieved; before it the count is `frcp6`'s.
+counting frcp6-arizona effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays arizona-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRCP 6 in the district courts of Guam: the 2023 text
+/// (`frcp6@2023-12-01`) with core's `guam-holidays`, which 6(a)(6)(C) ("any day
+/// declared a holiday by ... the state where the district court is
+/// located") makes legal holidays "for periods that are measured after an
+/// event" only. A district package there names it as its `counting` rule.
+/// A calendar day is closed only from the date its vendored text (1 GCA § 1000)
+/// is dated; before it the count is `frcp6`'s.
+counting frcp6-guam effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays guam-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRCP 6 in the district courts of Idaho: the 2023 text
+/// (`frcp6@2023-12-01`) with core's `idaho-holidays`, which 6(a)(6)(C) ("any day
+/// declared a holiday by ... the state where the district court is
+/// located") makes legal holidays "for periods that are measured after an
+/// event" only. A district package there names it as its `counting` rule.
+/// A calendar day is closed only from the date its vendored text (Idaho Code § 73-108)
+/// was retrieved; before it the count is `frcp6`'s.
+counting frcp6-idaho effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays idaho-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRCP 6 in the district courts of the Northern Mariana Islands: the 2023 text
+/// (`frcp6@2023-12-01`) with core's `northern-mariana-islands-holidays`, which 6(a)(6)(C) ("any day
+/// declared a holiday by ... the state where the district court is
+/// located") makes legal holidays "for periods that are measured after an
+/// event" only. A district package there names it as its `counting` rule.
+/// A calendar day is closed only from the date its vendored text (1 CMC § 311)
+/// was retrieved; before it the count is `frcp6`'s.
+counting frcp6-northern-mariana-islands effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays northern-mariana-islands-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRCP 6 in the district courts of Nevada: the 2023 text
+/// (`frcp6@2023-12-01`) with core's `nevada-holidays`, which 6(a)(6)(C) ("any day
+/// declared a holiday by ... the state where the district court is
+/// located") makes legal holidays "for periods that are measured after an
+/// event" only. A district package there names it as its `counting` rule.
+/// A calendar day is closed only from the date its vendored text (NRS 236.015)
+/// is dated; before it the count is `frcp6`'s.
+counting frcp6-nevada effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays nevada-holidays cite "FRCP 6(a)(6)(C)"
   forums [frcp]
   allow_hours
   end_of_month clamp

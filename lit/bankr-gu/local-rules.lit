@@ -1,6 +1,6 @@
 module bankr-gu-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.frbp9006.{ frbp9006-guam }
 import frbp.events.{ FirstMeetingDate, PetitionFiled }
 
 // The Guam Bankruptcy Division's own periods, counted under FRBP 9006(a).
@@ -121,134 +121,134 @@ event MotionReplyFiled() paper reply-memorandum
 /// (or, in chapter 11, the United States Trustee) not later than 7 days
 /// before the date first set for the § 341 meeting, or 45 days after the
 /// petition, whichever is earlier.
-deadline payment-advices-meeting-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "D. Guam BKLR 1007-1(b)"
+deadline payment-advices-meeting-period: 7.days before FirstMeetingDate() counted_by frbp9006-guam cite "D. Guam BKLR 1007-1(b)"
 /// BKLR 1007-1(b)(2): the other leg of the earlier-of rule: 45 days after
 /// the date of the filing of the petition.
-deadline payment-advices-petition-period: 45.days after PetitionFiled() counted_by frbp9006 cite "D. Guam BKLR 1007-1(b)"
+deadline payment-advices-petition-period: 45.days after PetitionFiled() counted_by frbp9006-guam cite "D. Guam BKLR 1007-1(b)"
 /// BKLR 1017-1(a): the court may grant a chapter 7 debtor's motion to
 /// convert without further notice or hearing if no objection is filed
 /// within 14 days after the motion was filed.
-deadline conversion-objection-period: 14.days after ConversionMotionFiled() counted_by frbp9006 cite "D. Guam BKLR 1017-1(a)"
+deadline conversion-objection-period: 14.days after ConversionMotionFiled() counted_by frbp9006-guam cite "D. Guam BKLR 1017-1(a)"
 /// BKLR 1017-2(d)(2): a § 521(i)(2) motion is served with a notice
 /// requiring a response within fourteen days of service; absent a timely
 /// response the court may dismiss without further notice or hearing.
-deadline incomplete-filing-response-period: 14.days after IncompleteFilingDismissalMotionServed() counted_by frbp9006 cite "D. Guam BKLR 1017-2(d)"
+deadline incomplete-filing-response-period: 14.days after IncompleteFilingDismissalMotionServed() counted_by frbp9006-guam cite "D. Guam BKLR 1017-2(d)"
 /// BKLR 1074-1(b): an entity debtor files the designation of its
 /// responsible individual within 14 days after the petition is filed.
-deadline responsible-individual-period: 14.days after PetitionFiled() counted_by frbp9006 cite "D. Guam BKLR 1074-1(b)"
+deadline responsible-individual-period: 14.days after PetitionFiled() counted_by frbp9006-guam cite "D. Guam BKLR 1074-1(b)"
 /// BKLR 2016-1(d)(1)(A): a chapter 13 debtor's attorney whose
 /// post-confirmation fees do not exceed the guidelines files a
 /// supplemental disclosure no later than 14 days after payment or an
 /// agreement to pay the fees directly.
-deadline supplemental-fee-disclosure-period: 14.days after PostConfirmationFeePaid() counted_by frbp9006 cite "D. Guam BKLR 2016-1(d)"
+deadline supplemental-fee-disclosure-period: 14.days after PostConfirmationFeePaid() counted_by frbp9006-guam cite "D. Guam BKLR 2016-1(d)"
 /// BKLR 2083-1(e)(1): failure of the debtor to file, within 28 days after
 /// the trustee's feasibility motion is filed, a claim objection that would
 /// ensure feasibility or a motion to modify the plan may result in
 /// dismissal without further notice or hearing.
-deadline feasibility-cure-period: 28.days after FeasibilityDismissalMotionFiled() counted_by frbp9006 cite "D. Guam BKLR 2083-1(e)"
+deadline feasibility-cure-period: 28.days after FeasibilityDismissalMotionFiled() counted_by frbp9006-guam cite "D. Guam BKLR 2083-1(e)"
 /// BKLR 2083-1(e)(2): the trustee's motion to dismiss for failure to make
 /// a plan payment or other cause is filed and served no later than 21 days
 /// before the hearing date.
-deadline trustee-dismissal-motion-period: 21.days before TrusteeDismissalHearing() counted_by frbp9006 cite "D. Guam BKLR 2083-1(e)"
+deadline trustee-dismissal-motion-period: 21.days before TrusteeDismissalHearing() counted_by frbp9006-guam cite "D. Guam BKLR 2083-1(e)"
 /// BKLR 2083-1(f)(1): a chapter 13 debtor operating a business submits
 /// business reports to the trustee not later than 7 days before the
 /// meeting of creditors, if the trustee requests or two of the rule's
 /// conditions exist.
-deadline business-reports-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "D. Guam BKLR 2083-1(f)"
+deadline business-reports-period: 7.days before FirstMeetingDate() counted_by frbp9006-guam cite "D. Guam BKLR 2083-1(f)"
 /// BKLR 3003-1(a): unless otherwise ordered, a chapter 11 proof of claim
 /// or interest, other than a governmental unit's, is filed within 90 days
 /// after the first date set for the § 341(a) meeting.
-deadline chapter11-claims-bar-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "D. Guam BKLR 3003-1(a)"
+deadline chapter11-claims-bar-period: 90.days after FirstMeetingDate() counted_by frbp9006-guam cite "D. Guam BKLR 3003-1(a)"
 /// BKLR 3004-1(b): a creditor may file an amended proof of claim within 30
 /// days after service of the notice of a claim filed on its behalf.
-deadline amended-claim-period: 30.days after ClaimFiledOnBehalfNoticeServed() counted_by frbp9006 cite "D. Guam BKLR 3004-1(b)"
+deadline amended-claim-period: 30.days after ClaimFiledOnBehalfNoticeServed() counted_by frbp9006-guam cite "D. Guam BKLR 3004-1(b)"
 /// BKLR 3007-1(a): the claimant has 14 days from service of a claim
 /// objection to file and serve a response; otherwise the objection may be
 /// sustained without further notice or hearing.
-deadline claim-objection-response-period: 14.days after ClaimObjectionServed() counted_by frbp9006 cite "D. Guam BKLR 3007-1(a)"
+deadline claim-objection-response-period: 14.days after ClaimObjectionServed() counted_by frbp9006-guam cite "D. Guam BKLR 3007-1(a)"
 /// BKLR 3015-2(b)(1)(C), (b)(2): an objection or response to a motion to
 /// modify a confirmed chapter 13 plan is filed not later than 14 days
 /// before the hearing date.
-deadline plan-modification-objection-period: 14.days before PlanModificationHearing() counted_by frbp9006 cite "D. Guam BKLR 3015-2(b)"
+deadline plan-modification-objection-period: 14.days before PlanModificationHearing() counted_by frbp9006-guam cite "D. Guam BKLR 3015-2(b)"
 /// BKLR 3015-3(a): an objection to confirmation of a chapter 13 plan or a
 /// plan motion is filed 14 days before the confirmation hearing or
 /// continued confirmation hearing.
-deadline chapter13-confirmation-objection-period: 14.days before Chapter13ConfirmationHearing() counted_by frbp9006 cite "D. Guam BKLR 3015-3(a)"
+deadline chapter13-confirmation-objection-period: 14.days before Chapter13ConfirmationHearing() counted_by frbp9006-guam cite "D. Guam BKLR 3015-3(a)"
 /// BKLR 3015-3(d)(1): an order denying confirmation may provide that the
 /// case may be dismissed unless, within 14 days after its entry, the
 /// debtor files an amended plan and any plan motions or converts the case.
-deadline denied-confirmation-cure-period: 14.days after ConfirmationDenied() counted_by frbp9006 cite "D. Guam BKLR 3015-3(d)"
+deadline denied-confirmation-cure-period: 14.days after ConfirmationDenied() counted_by frbp9006-guam cite "D. Guam BKLR 3015-3(d)"
 /// BKLR 3017-1(c): unless otherwise ordered, an objection to approval of a
 /// disclosure statement is filed not later than 14 days before the
 /// hearing date.
-deadline disclosure-statement-objection-period: 14.days before DisclosureStatementHearing() counted_by frbp9006 cite "D. Guam BKLR 3017-1(c)"
+deadline disclosure-statement-objection-period: 14.days before DisclosureStatementHearing() counted_by frbp9006-guam cite "D. Guam BKLR 3017-1(c)"
 /// BKLR 3018-1(c): the plan proponent files the ballot tabulation report
 /// not later than 14 days before the confirmation hearing.
-deadline ballot-report-period: 14.days before Chapter11ConfirmationHearing() counted_by frbp9006 cite "D. Guam BKLR 3018-1(c)"
+deadline ballot-report-period: 14.days before Chapter11ConfirmationHearing() counted_by frbp9006-guam cite "D. Guam BKLR 3018-1(c)"
 /// BKLR 3020-1(b): unless the court otherwise orders, objections to
 /// confirmation of a chapter 11 plan are filed not later than 14 days
 /// prior to the confirmation hearing.
-deadline chapter11-confirmation-objection-period: 14.days before Chapter11ConfirmationHearing() counted_by frbp9006 cite "D. Guam BKLR 3020-1(b)"
+deadline chapter11-confirmation-objection-period: 14.days before Chapter11ConfirmationHearing() counted_by frbp9006-guam cite "D. Guam BKLR 3020-1(b)"
 /// BKLR 3022-1: if no objection is filed within 30 days after the
 /// application for a chapter 11 final decree is filed, the clerk may enter
 /// the final decree without further notice or hearing.
-deadline final-decree-objection-period: 30.days after FinalDecreeApplicationFiled() counted_by frbp9006 cite "D. Guam BKLR 3022-1"
+deadline final-decree-objection-period: 30.days after FinalDecreeApplicationFiled() counted_by frbp9006-guam cite "D. Guam BKLR 3022-1"
 /// BKLR 3070-2(h): to suspend distribution on a disputed claim, the debtor
 /// files and serves a claim objection not later than 28 days after the
 /// trustee's notice of filed claims and intent to make distributions is
 /// filed.
-deadline disputed-claim-objection-period: 28.days after DistributionNoticeFiled() counted_by frbp9006 cite "D. Guam BKLR 3070-2(h)"
+deadline disputed-claim-objection-period: 28.days after DistributionNoticeFiled() counted_by frbp9006-guam cite "D. Guam BKLR 3070-2(h)"
 /// BKLR 4001-1(d)(1): an opposition or other responsive statement to a
 /// stay relief motion is filed and served 14 days after filing of the
 /// motion.
-deadline stay-relief-opposition-period: 14.days after StayReliefMotionFiled() counted_by frbp9006 cite "D. Guam BKLR 4001-1(d)"
+deadline stay-relief-opposition-period: 14.days after StayReliefMotionFiled() counted_by frbp9006-guam cite "D. Guam BKLR 4001-1(d)"
 /// BKLR 4001-1(d)(2): the moving party's reply is filed and served 7 days
 /// after filing of the opposition.
-deadline stay-relief-reply-period: 7.days after StayReliefOppositionFiled() counted_by frbp9006 cite "D. Guam BKLR 4001-1(d)"
+deadline stay-relief-reply-period: 7.days after StayReliefOppositionFiled() counted_by frbp9006-guam cite "D. Guam BKLR 4001-1(d)"
 /// BKLR 4001-5(a)(3)(A): a party seeking to extend the stay under §
 /// 362(c)(3)(B) obtains a hearing date not later than 30 days after the
 /// petition is filed.
-deadline extend-stay-hearing-period: 30.days after PetitionFiled() counted_by frbp9006 cite "D. Guam BKLR 4001-5(a)"
+deadline extend-stay-hearing-period: 30.days after PetitionFiled() counted_by frbp9006-guam cite "D. Guam BKLR 4001-5(a)"
 /// BKLR 4001-5(a)(3)(A): a response to a motion to extend the stay is
 /// filed and served not less than 7 days before the hearing date.
-deadline extend-stay-response-period: 7.days before ExtendStayHearing() counted_by frbp9006 cite "D. Guam BKLR 4001-5(a)"
+deadline extend-stay-response-period: 7.days before ExtendStayHearing() counted_by frbp9006-guam cite "D. Guam BKLR 4001-5(a)"
 /// BKLR 4001-5(a)(3)(A): the moving party may reply not less than 3 days
 /// before the hearing date.
-deadline extend-stay-reply-period: 3.days before ExtendStayHearing() counted_by frbp9006 cite "D. Guam BKLR 4001-5(a)"
+deadline extend-stay-reply-period: 3.days before ExtendStayHearing() counted_by frbp9006-guam cite "D. Guam BKLR 4001-5(a)"
 /// BKLR 4001-5(a)(3)(A): a request to shorten time is not required if the
 /// motion to extend the stay is filed and served not less than 14 days
 /// before the hearing date.
-deadline extend-stay-motion-period: 14.days before ExtendStayHearing() counted_by frbp9006 cite "D. Guam BKLR 4001-5(a)"
+deadline extend-stay-motion-period: 14.days before ExtendStayHearing() counted_by frbp9006-guam cite "D. Guam BKLR 4001-5(a)"
 /// BKLR 4004-3(a)(1): an objection to an individual chapter 11 debtor's
 /// certification and the granting of a discharge is filed within 30 days
 /// after the certification and notice are filed.
-deadline chapter11-discharge-objection-period: 30.days after Chapter11DischargeCertificationFiled() counted_by frbp9006 cite "D. Guam BKLR 4004-3(a)"
+deadline chapter11-discharge-objection-period: 30.days after Chapter11DischargeCertificationFiled() counted_by frbp9006-guam cite "D. Guam BKLR 4004-3(a)"
 /// BKLR 4004-3(b)(1): an objection to a chapter 12 or 13 debtor's
 /// certification and the granting of a discharge is filed within 30 days
 /// after the date of the clerk's notice.
-deadline chapter13-discharge-objection-period: 30.days after DischargeObjectionNoticeDated() counted_by frbp9006 cite "D. Guam BKLR 4004-3(b)"
+deadline chapter13-discharge-objection-period: 30.days after DischargeObjectionNoticeDated() counted_by frbp9006-guam cite "D. Guam BKLR 4004-3(b)"
 /// BKLR 5005-1(c)(4): a party affected by the clerk's rejection of a
 /// document may move for judicial review within 7 days after the date of
 /// the rejection notice.
-deadline rejection-review-period: 7.days after FilingRejectionNotice() counted_by frbp9006 cite "D. Guam BKLR 5005-1(c)"
+deadline rejection-review-period: 7.days after FilingRejectionNotice() counted_by frbp9006-guam cite "D. Guam BKLR 5005-1(c)"
 /// BKLR 6004-1(e): an objection to the trustee's general notice of intent
 /// to sell estate property worth less than $2,500 is filed not later than
 /// 21 days after the notice is filed.
-deadline small-estate-sale-objection-period: 21.days after SmallEstateSaleNoticeFiled() counted_by frbp9006 cite "D. Guam BKLR 6004-1(e)"
+deadline small-estate-sale-objection-period: 21.days after SmallEstateSaleNoticeFiled() counted_by frbp9006-guam cite "D. Guam BKLR 6004-1(e)"
 /// BKLR 9013-1(c)(1): unless the court directs otherwise, a party filing a
 /// motion that must be set for hearing gives notice to all parties
 /// entitled to it not later than 28 days before the hearing.
-deadline motion-hearing-notice-period: 28.days before MotionHearing() counted_by frbp9006 cite "D. Guam BKLR 9013-1(c)"
+deadline motion-hearing-notice-period: 28.days before MotionHearing() counted_by frbp9006-guam cite "D. Guam BKLR 9013-1(c)"
 /// BKLR 9013-1(c)(2): all responses are filed and served on the moving
 /// party not less than 14 days before the hearing date.
-deadline motion-response-period: 14.days before MotionHearing() counted_by frbp9006 cite "D. Guam BKLR 9013-1(c)"
+deadline motion-response-period: 14.days before MotionHearing() counted_by frbp9006-guam cite "D. Guam BKLR 9013-1(c)"
 /// BKLR 9013-1(c)(2): the moving party may reply not less than 7 days
 /// before the hearing date.
-deadline motion-reply-period: 7.days before MotionHearing() counted_by frbp9006 cite "D. Guam BKLR 9013-1(c)"
+deadline motion-reply-period: 7.days before MotionHearing() counted_by frbp9006-guam cite "D. Guam BKLR 9013-1(c)"
 /// BKLR 9013-1(e)(4): for a motion requiring a hearing, the moving party
 /// serves notice on all parties entitled to it not later than 21 days
 /// before the hearing and files a certificate or affidavit of service.
-deadline hearing-notice-service-period: 21.days before MotionHearing() counted_by frbp9006 cite "D. Guam BKLR 9013-1(e)"
+deadline hearing-notice-service-period: 21.days before MotionHearing() counted_by frbp9006-guam cite "D. Guam BKLR 9013-1(e)"
 
 start motion-filed
 

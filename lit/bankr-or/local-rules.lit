@@ -1,6 +1,6 @@
 module bankr-or-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.frbp9006.{ frbp9006-oregon }
 import frbp.events.{ FirstMeetingDate, OrderForReliefEntered }
 
 // The Bankr. D. Or. court's own periods, counted under FRBP 9006(a). The
@@ -137,175 +137,175 @@ event RemovalNoticeFiled()
 /// Bankr. D. Or. LBR 1002-1(a)(1): an objection to a voluntary petition for
 /// the debtor's lack of authority is made by motion filed no later than 14
 /// days after the meeting of creditors is completed.
-deadline authority-objection-period: 14.days after FirstMeetingCompleted() counted_by frbp9006 cite "Bankr. D. Or. LBR 1002-1(a)"
+deadline authority-objection-period: 14.days after FirstMeetingCompleted() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 1002-1(a)"
 /// Bankr. D. Or. LBR 1002-1(a)(3): within 14 days after entry of the order
 /// to show cause, the debtor files the statement the rule requires.
-deadline attorney-in-fact-statement-period: 14.days after ShowCauseOrderEntered() counted_by frbp9006 cite "Bankr. D. Or. LBR 1002-1(a)"
+deadline attorney-in-fact-statement-period: 14.days after ShowCauseOrderEntered() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 1002-1(a)"
 /// Bankr. D. Or. LBR 1020-1: a motion under § 1102(a)(3) to dispense with a
 /// creditors' committee is filed no later than 14 days after the order for
 /// relief.
-deadline committee-dispensation-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. D. Or. LBR 1020-1"
+deadline committee-dispensation-period: 14.days after OrderForReliefEntered() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 1020-1"
 /// Bankr. D. Or. LBR 2004-1(b)(3): except for good cause or agreement, FRBP
 /// 2004 examinations or depositions are set no less than 14 days after the
 /// motion is filed.
-deadline examination-setting-period: 14.days after ExaminationMotionFiled() counted_by frbp9006 cite "Bankr. D. Or. LBR 2004-1(b)"
+deadline examination-setting-period: 14.days after ExaminationMotionFiled() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 2004-1(b)"
 /// Bankr. D. Or. LBR 2015-1(c): at least 35 days before requesting entry of
 /// a discharge, the chapter 12 or 13 trustee serves a notice of plan
 /// completion on the debtor and counsel.
-deadline plan-completion-notice-period: 35.days before DischargeRequestFiled() counted_by frbp9006 cite "Bankr. D. Or. LBR 2015-1(c)"
+deadline plan-completion-notice-period: 35.days before DischargeRequestFiled() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 2015-1(c)"
 /// Bankr. D. Or. LBR 2016-1(c): an application for compensation through
 /// plan confirmation is filed no later than 28 days after entry of the
 /// confirmation order.
-deadline confirmation-fee-application-period: 28.days after PlanConfirmed() counted_by frbp9006 cite "Bankr. D. Or. LBR 2016-1(c)"
+deadline confirmation-fee-application-period: 28.days after PlanConfirmed() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 2016-1(c)"
 /// Bankr. D. Or. LBR 2016-1(c): when notice is required and no objection is
 /// filed, the applicant lodges a proposed order no later than 28 days after
 /// service.
-deadline fee-no-objection-order-period: 28.days after FeeNoticeServed() counted_by frbp9006 cite "Bankr. D. Or. LBR 2016-1(c)"
+deadline fee-no-objection-order-period: 28.days after FeeNoticeServed() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 2016-1(c)"
 /// Bankr. D. Or. LBR 2016-1(d)(1): a chapter 13 debtor's attorney files an
 /// application for compensation on LBF 1214 no later than 28 days after
 /// service of the trustee's notice of plan completion.
-deadline completion-fee-application-period: 28.days after PlanCompletionNoticeServed() counted_by frbp9006 cite "Bankr. D. Or. LBR 2016-1(d)"
+deadline completion-fee-application-period: 28.days after PlanCompletionNoticeServed() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 2016-1(d)"
 /// Bankr. D. Or. LBR 2016-1(e): an attorney files any required amended LBF
 /// 1305, and any LBF 1306 itemization, no later than seven days before the
 /// final confirmation hearing.
-deadline amended-attorney-statement-period: 7.days before FinalConfirmationHearing() counted_by frbp9006 cite "Bankr. D. Or. LBR 2016-1(e)"
+deadline amended-attorney-statement-period: 7.days before FinalConfirmationHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 2016-1(e)"
 /// Bankr. D. Or. LBR 2016-1(e): if allowance of LBF 1307 compensation
 /// requires a plan modification, the debtor files a notice of
 /// postconfirmation amendment or a motion within 28 days after the
 /// allowance.
-deadline fee-plan-modification-period: 28.days after SupplementalFeesAllowed() counted_by frbp9006 cite "Bankr. D. Or. LBR 2016-1(e)"
+deadline fee-plan-modification-period: 28.days after SupplementalFeesAllowed() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 2016-1(e)"
 /// Bankr. D. Or. LBR 2016-1(i): a secured creditor gives a written
 /// itemization of expenses not in its proof of claim no later than 28 days
 /// after service of a request.
-deadline expense-itemization-period: 28.days after ExpenseRequestServed() counted_by frbp9006 cite "Bankr. D. Or. LBR 2016-1(i)"
+deadline expense-itemization-period: 28.days after ExpenseRequestServed() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 2016-1(i)"
 /// Bankr. D. Or. LBR 3001-1(c): to prevent distribution, an objection to an
 /// amended claim is filed no later than 14 days after the amended claim was
 /// filed.
-deadline amended-claim-objection-period: 14.days after AmendedClaimFiled() counted_by frbp9006 cite "Bankr. D. Or. LBR 3001-1(c)"
+deadline amended-claim-objection-period: 14.days after AmendedClaimFiled() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3001-1(c)"
 /// Bankr. D. Or. LBR 3015-1(b): no later than seven days after the meeting
 /// of creditors, the chapter 13 debtor files a proposed wage order or the
 /// alternative the rule allows.
-deadline wage-order-period: 7.days after FirstMeetingCompleted() counted_by frbp9006 cite "Bankr. D. Or. LBR 3015-1(b)"
+deadline wage-order-period: 7.days after FirstMeetingCompleted() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3015-1(b)"
 /// Bankr. D. Or. LBR 3015-2(b): a preconfirmation amended chapter 13 plan
 /// is filed at least 28 days before the pending confirmation hearing.
-deadline amended-plan-period: 28.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. D. Or. LBR 3015-2(b)"
+deadline amended-plan-period: 28.days before ConfirmationHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3015-2(b)"
 /// Bankr. D. Or. LBR 3015-3(b)(2): the debtor delivers a proposed
 /// confirmation order to the trustee no later than seven days before the
 /// confirmation hearing.
-deadline confirmation-order-delivery-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. D. Or. LBR 3015-3(b)"
+deadline confirmation-order-delivery-period: 7.days before ConfirmationHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3015-3(b)"
 /// Bankr. D. Or. LBR 3015-3(c)(1): a chapter 13 confirmation objection is
 /// filed and served within 14 days after the meeting of creditors
 /// concludes.
-deadline confirmation-objection-period: 14.days after FirstMeetingCompleted() counted_by frbp9006 cite "Bankr. D. Or. LBR 3015-3(c)"
+deadline confirmation-objection-period: 14.days after FirstMeetingCompleted() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3015-3(c)"
 /// Bankr. D. Or. LBR 3015-3(c)(2): if no objection is timely filed, the
 /// debtor submits the proposed confirmation order no later than 21 days
 /// after the meeting of creditors concludes.
-deadline unopposed-confirmation-order-period: 21.days after FirstMeetingCompleted() counted_by frbp9006 cite "Bankr. D. Or. LBR 3015-3(c)"
+deadline unopposed-confirmation-order-period: 21.days after FirstMeetingCompleted() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3015-3(c)"
 /// Bankr. D. Or. LBR 3015-3(c)(2): the trustee lodges an approved proposed
 /// order no later than seven days before the confirmation hearing.
-deadline trustee-lodging-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. D. Or. LBR 3015-3(c)"
+deadline trustee-lodging-period: 7.days before ConfirmationHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3015-3(c)"
 /// Bankr. D. Or. LBR 3017.1-1(a): no later than 14 days before filing the
 /// plan and any disclosure statement, a small business debtor serves them
 /// on the parties the rule lists.
-deadline small-business-service-period: 14.days before SmallBusinessPlanFiled() counted_by frbp9006 cite "Bankr. D. Or. LBR 3017.1-1(a)"
+deadline small-business-service-period: 14.days before SmallBusinessPlanFiled() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3017.1-1(a)"
 /// Bankr. D. Or. LBR 3017.1-1(a): no later than seven days after service,
 /// the parties served inform the debtor of any objection to the disclosure
 /// statement.
-deadline small-business-comment-period: 7.days after SmallBusinessPlanServed() counted_by frbp9006 cite "Bankr. D. Or. LBR 3017.1-1(a)"
+deadline small-business-comment-period: 7.days after SmallBusinessPlanServed() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3017.1-1(a)"
 /// Bankr. D. Or. LBR 3018-1(c): a claimant seeking temporary allowance of a
 /// disputed claim for voting files and serves a motion no later than 30
 /// days after service of the initial notice of the disclosure statement
 /// hearing.
-deadline temporary-allowance-period: 30.days after DisclosureHearingNoticeServed() counted_by frbp9006 cite "Bankr. D. Or. LBR 3018-1(c)"
+deadline temporary-allowance-period: 30.days after DisclosureHearingNoticeServed() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3018-1(c)"
 /// Bankr. D. Or. LBR 3020-1(b)(1)(B): the chapter 11 confirmation order
 /// requires payment of unpaid clerk's fees no later than 14 days after it
 /// is entered.
-deadline clerk-fees-payment-period: 14.days after ConfirmationOrderEntered() counted_by frbp9006 cite "Bankr. D. Or. LBR 3020-1(b)"
+deadline clerk-fees-payment-period: 14.days after ConfirmationOrderEntered() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3020-1(b)"
 /// Bankr. D. Or. LBR 3020-1(b)(1)(C): the chapter 11 confirmation order is
 /// lodged no later than seven days after the final confirmation hearing.
-deadline confirmation-order-lodging-period: 7.days after FinalChapterElevenConfirmationHearing() counted_by frbp9006 cite "Bankr. D. Or. LBR 3020-1(b)"
+deadline confirmation-order-lodging-period: 7.days after FinalChapterElevenConfirmationHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3020-1(b)"
 /// Bankr. D. Or. LBR 4001-1(e)(2): a motion to extend the stay under §
 /// 362(c)(3) is filed no later than seven days after the order for relief.
-deadline stay-extension-motion-period: 7.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. D. Or. LBR 4001-1(e)"
+deadline stay-extension-motion-period: 7.days after OrderForReliefEntered() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 4001-1(e)"
 /// Bankr. D. Or. LBR 4004-1(c): in a chapter 7 case, a motion to determine
 /// under § 727(a)(12) that a discharge should not be granted is filed no
 /// later than 60 days after the first date set for the meeting of
 /// creditors.
-deadline discharge-applicability-motion-period: 60.days after FirstMeetingDate() counted_by frbp9006 cite "Bankr. D. Or. LBR 4004-1(c)"
+deadline discharge-applicability-motion-period: 60.days after FirstMeetingDate() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 4004-1(c)"
 /// Bankr. D. Or. LBR 5005-4(b)(4): a specially admitted attorney registers
 /// as an ECF Participant no later than 14 days after the admission order,
 /// unless local counsel files.
-deadline ecf-registration-period: 14.days after SpecialAdmissionEntered() counted_by frbp9006 cite "Bankr. D. Or. LBR 5005-4(b)"
+deadline ecf-registration-period: 14.days after SpecialAdmissionEntered() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 5005-4(b)"
 /// Bankr. D. Or. LBR 5077-1(a)(2): no later than seven days after a
 /// transcript is filed, a party may file a notice of intent to request
 /// redaction.
-deadline redaction-intent-period: 7.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. D. Or. LBR 5077-1(a)"
+deadline redaction-intent-period: 7.days after TranscriptFiled() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 5077-1(a)"
 /// Bankr. D. Or. LBR 5077-1(a)(3): a party that filed a notice of intent
 /// submits its list of redactions no later than 21 days after the
 /// transcript was filed.
-deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. D. Or. LBR 5077-1(a)"
+deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 5077-1(a)"
 /// Bankr. D. Or. LBR 5077-1(a)(3): the redacted transcript is filed no
 /// later than 31 days after the original transcript was filed.
-deadline redacted-transcript-period: 31.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. D. Or. LBR 5077-1(a)"
+deadline redacted-transcript-period: 31.days after TranscriptFiled() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 5077-1(a)"
 /// Bankr. D. Or. LBR 5077-1(c): a party offering a transcript into
 /// evidence, other than for impeachment, produces it to opposing parties at
 /// least 14 days before the hearing.
-deadline transcript-evidence-period: 14.days before EvidentiaryHearing() counted_by frbp9006 cite "Bankr. D. Or. LBR 5077-1(c)"
+deadline transcript-evidence-period: 14.days before EvidentiaryHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 5077-1(c)"
 /// Bankr. D. Or. LBR 6004-1(b): the FRBP 6004(f)(1) statement is filed no
 /// later than 28 days after a sale of estate property.
-deadline sale-report-period: 28.days after SaleCompleted() counted_by frbp9006 cite "Bankr. D. Or. LBR 6004-1(b)"
+deadline sale-report-period: 28.days after SaleCompleted() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 6004-1(b)"
 /// Bankr. D. Or. LBR 6007-1(b): in a chapter 7 case the trustee may abandon
 /// the debtor's residence unless a creditor objects no later than seven
 /// days before the first date set for the meeting of creditors.
-deadline residence-abandonment-objection-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. D. Or. LBR 6007-1(b)"
+deadline residence-abandonment-objection-period: 7.days before FirstMeetingDate() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 6007-1(b)"
 /// Bankr. D. Or. LBR 7007-1(b): an opposition statement and supporting
 /// brief is filed and served no later than 14 days after the filing of a
 /// motion.
-deadline adversary-opposition-period: 14.days after AdversaryMotionFiled() counted_by frbp9006 cite "Bankr. D. Or. LBR 7007-1(b)"
+deadline adversary-opposition-period: 14.days after AdversaryMotionFiled() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 7007-1(b)"
 /// Bankr. D. Or. LBR 7007-1(b): a reply, allowed only on summary judgment
 /// or withdrawal of the reference, is filed and served no later than 14
 /// days after the opposition.
-deadline adversary-reply-period: 14.days after AdversaryOppositionFiled() counted_by frbp9006 cite "Bankr. D. Or. LBR 7007-1(b)"
+deadline adversary-reply-period: 14.days after AdversaryOppositionFiled() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 7007-1(b)"
 /// Bankr. D. Or. LBR 7016-1(c)(1): the plaintiff serves a proposed pretrial
 /// order at least 30 days before the deadline in the scheduling order.
-deadline proposed-pretrial-order-period: 30.days before PretrialOrderDeadline() counted_by frbp9006 cite "Bankr. D. Or. LBR 7016-1(c)"
+deadline proposed-pretrial-order-period: 30.days before PretrialOrderDeadline() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 7016-1(c)"
 /// Bankr. D. Or. LBR 7016-1(c)(2): within 14 days after service of the
 /// proposed pretrial order, each other party serves its objections,
 /// additions and changes.
-deadline pretrial-order-objection-period: 14.days after ProposedPretrialOrderServed() counted_by frbp9006 cite "Bankr. D. Or. LBR 7016-1(c)"
+deadline pretrial-order-objection-period: 14.days after ProposedPretrialOrderServed() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 7016-1(c)"
 /// Bankr. D. Or. LBR 7037-1(d): the party against whom an order to compel
 /// is entered complies within 14 days after its entry.
-deadline compel-compliance-period: 14.days after CompelOrderEntered() counted_by frbp9006 cite "Bankr. D. Or. LBR 7037-1(d)"
+deadline compel-compliance-period: 14.days after CompelOrderEntered() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 7037-1(d)"
 /// Bankr. D. Or. LBR 9010-1(b): an admitted attorney notifies the clerk and
 /// the chief judge within 14 days after a change of status the rule lists.
-deadline attorney-status-notice-period: 14.days after AttorneyStatusChanged() counted_by frbp9006 cite "Bankr. D. Or. LBR 9010-1(b)"
+deadline attorney-status-notice-period: 14.days after AttorneyStatusChanged() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9010-1(b)"
 /// Bankr. D. Or. LBR 9011-2(d): the supervising attorney files notice at
 /// least seven days before the first hearing or trial at which a law
 /// student appears.
-deadline student-appearance-notice-period: 7.days before StudentFirstHearing() counted_by frbp9006 cite "Bankr. D. Or. LBR 9011-2(d)"
+deadline student-appearance-notice-period: 7.days before StudentFirstHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9011-2(d)"
 /// Bankr. D. Or. LBR 9013-1(c)(2)(A): an objection to a motion is filed no
 /// later than 14 days after service of the motion, unless an FRBP specifies
 /// another notice period.
-deadline motion-objection-period: 14.days after MotionServed() counted_by frbp9006 cite "Bankr. D. Or. LBR 9013-1(c)"
+deadline motion-objection-period: 14.days after MotionServed() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9013-1(c)"
 /// Bankr. D. Or. LBR 9013-1(d): in a contested matter, FRCP 26(a)(2)
 /// disclosure is due 14 days before an evidentiary hearing.
-deadline expert-disclosure-period: 14.days before EvidentiaryHearing() counted_by frbp9006 cite "Bankr. D. Or. LBR 9013-1(d)"
+deadline expert-disclosure-period: 14.days before EvidentiaryHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9013-1(d)"
 /// Bankr. D. Or. LBR 9017-1(c)(2): a party notifies the court of its need
 /// for court equipment no later than 14 days before the hearing.
-deadline court-equipment-notice-period: 14.days before EvidentiaryHearing() counted_by frbp9006 cite "Bankr. D. Or. LBR 9017-1(c)"
+deadline court-equipment-notice-period: 14.days before EvidentiaryHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9017-1(c)"
 /// Bankr. D. Or. LBR 9021-1(d)(2): a cost bill is filed and served no later
 /// than 14 days after entry of the order or judgment.
-deadline cost-bill-period: 14.days after JudgmentEntered() counted_by frbp9006 cite "Bankr. D. Or. LBR 9021-1(d)"
+deadline cost-bill-period: 14.days after JudgmentEntered() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9021-1(d)"
 /// Bankr. D. Or. LBR 9021-1(d)(3)(A): an objection to a cost bill is filed
 /// and served no later than 14 days after the cost bill is served.
-deadline cost-objection-period: 14.days after CostBillServed() counted_by frbp9006 cite "Bankr. D. Or. LBR 9021-1(d)"
+deadline cost-objection-period: 14.days after CostBillServed() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9021-1(d)"
 /// Bankr. D. Or. LBR 9021-1(d)(3)(A): the party filing the cost bill may
 /// reply no later than seven days after service of an objection.
-deadline cost-reply-period: 7.days after CostObjectionServed() counted_by frbp9006 cite "Bankr. D. Or. LBR 9021-1(d)"
+deadline cost-reply-period: 7.days after CostObjectionServed() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9021-1(d)"
 /// Bankr. D. Or. LBR 9027-1(a): no later than seven days after filing a
 /// notice of removal, the removing party files evidence of compliance with
 /// FRBP 9027(b).
-deadline removal-notice-evidence-period: 7.days after RemovalNoticeFiled() counted_by frbp9006 cite "Bankr. D. Or. LBR 9027-1(a)"
+deadline removal-notice-evidence-period: 7.days after RemovalNoticeFiled() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9027-1(a)"
 
 start motion-filed
 

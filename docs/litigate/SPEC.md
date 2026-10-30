@@ -1560,8 +1560,9 @@ Counting rule `c` defines (FRCP 6(a) vocabulary):
    (`delaware-holidays`, 1 Del. C. § 501(a); West Virginia, the District of
    Columbia, the Virgin Islands, Missouri, South Carolina, Virginia,
    Washington, Florida, Montana, North Dakota, Iowa, New Jersey,
-   Pennsylvania, and Kansas and Wyoming, whose calendars are empty because
-   every state holiday there is a federal one), read as `forward_holidays` by that state's
+   Pennsylvania, Alaska, Guam, the Northern Mariana Islands and Nevada,
+   and Kansas, Wyoming, Arizona, Idaho and Oregon, whose calendars are
+   empty because every state holiday there is a federal one), read as `forward_holidays` by that state's
    `frcp6-<state>` (6(a)(6)(C)) and `frbp9006-<state>` (FRBP 9006(a)(6)(C)),
    which its district and bankruptcy packages name as their `counting` rule
    and `recounts` the national rules under; every other district's `frcp6`

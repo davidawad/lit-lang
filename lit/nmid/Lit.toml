@@ -20,7 +20,10 @@ in_force = "2017-11-01"
 known_at = "2026-10-28"
 unknown_before = "2017-11-01"
 jurisdiction = "District Court for the Northern Mariana Islands"
-counting = "frcp6"
+# FRCP 6(a)(6)(C): the Northern Mariana Islands' holidays close a forward-counted period, here and in
+# the FRCP periods this package recounts (core's `frcp6-northern-mariana-islands`).
+counting = "frcp6-northern-mariana-islands"
+recounts = ["frcp-civil-procedure"]
 
 [package.roles]
 applicant = "self"

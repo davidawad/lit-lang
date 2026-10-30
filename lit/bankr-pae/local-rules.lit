@@ -1,6 +1,6 @@
 module bankr-pae-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.frbp9006.{ frbp9006-pennsylvania }
 import frbp.events.{ NoticeOfAppealFiled, OrderForReliefEntered, PetitionFiled }
 
 // The Bankr. E.D. Pa. court's own periods and page limit, counted under FRBP
@@ -179,231 +179,231 @@ event SlmResolutionNoticeFiled()
 /// at an Expedited Hearing (other than a §§ 363 or 364 cash collateral or
 /// financing order) if a motion for reconsideration is filed within 14 days
 /// of its entry.
-deadline expedited-reconsideration-period: 14.days after ExpeditedOrderEntered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 1002-4(a)"
+deadline expedited-reconsideration-period: 14.days after ExpeditedOrderEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 1002-4(a)"
 /// L.B.R. 1007-1(a): the debtor notifies each creditor known to claim an
 /// interest in cash collateral of the filing of a voluntary petition within
 /// one day of its filing.
-deadline cash-collateral-notice-period: 1.days after PetitionFiled() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 1007-1(a)"
+deadline cash-collateral-notice-period: 1.days after PetitionFiled() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 1007-1(a)"
 /// L.B.R. 1007-1(a): in an involuntary case the debtor notifies each creditor
 /// known to claim an interest in cash collateral of the order for relief
 /// within one day of its entry.
-deadline involuntary-cash-collateral-notice-period: 1.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 1007-1(a)"
+deadline involuntary-cash-collateral-notice-period: 1.days after OrderForReliefEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 1007-1(a)"
 /// L.B.R. 1007-2(e): in an involuntary case the debtor files a Matrix List of
 /// Creditors within 14 days of the entry of the order for relief.
-deadline involuntary-matrix-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 1007-2(e)"
+deadline involuntary-matrix-period: 14.days after OrderForReliefEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 1007-2(e)"
 /// L.B.R. 1017-2(c): if the case is dismissed and the debtor's address
 /// differs from the docket's, the debtor advises the trustee within 14 days
 /// of the dismissal order of the address for any refund.
-deadline dismissal-address-period: 14.days after DismissalOrderEntered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 1017-2(c)"
+deadline dismissal-address-period: 14.days after DismissalOrderEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 1017-2(c)"
 /// L.B.R. 1019-1(b)(1): within 14 days after entry of an order converting a
 /// case to chapter 13, the debtor files a schedule of post-petition debts
 /// that arose after the petition but before the conversion.
-deadline chapter13-conversion-debts-period: 14.days after ConversionToChapter13Entered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 1019-1(b)"
+deadline chapter13-conversion-debts-period: 14.days after ConversionToChapter13Entered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 1019-1(b)"
 /// L.B.R. 1019-2: under FRBP 1019(e)(2) (whose 30 days run unless the court
 /// orders otherwise), the chapter 13 trustee files a final report and account
 /// within sixty days after conversion of the case.
-deadline converted-chapter13-final-report-period: 60.days after ConversionFromChapter13() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 1019-2"
+deadline converted-chapter13-final-report-period: 60.days after ConversionFromChapter13() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 1019-2"
 /// L.B.R. 2002-3(a): a chapter 11 debtor with more than 200 parties on its
 /// L.B.R. 1007-2(a) matrix files the application to retain a claims agent
 /// with its petition or within 7 days after it, unless the court orders
 /// otherwise.
-deadline claims-agent-application-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
+deadline claims-agent-application-period: 7.days after PetitionFiled() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
 /// L.B.R. 2002-3(a)(8): the debtor's counsel notifies the claims agent of an
 /// order dismissing or converting the case within seven days after its entry.
-deadline claims-agent-order-notice-period: 7.days after DismissOrConvertEntered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
+deadline claims-agent-order-notice-period: 7.days after DismissOrConvertEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
 /// L.B.R. 2002-3(a)(11): within 7 days after serving a document, the claims
 /// agent files a certificate of service referencing it and its docket number
 /// and each party served and the method of service.
-deadline claims-agent-service-certificate-period: 7.days after ClaimsAgentNoticeServed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
+deadline claims-agent-service-certificate-period: 7.days after ClaimsAgentNoticeServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
 /// L.B.R. 2002-3(a)(18): within 14 days after an order dismissing a case, the
 /// claims agent forwards the clerk an electronic version of all proofs of
 /// claim, uploads the creditor matrix and dockets a final claims register.
-deadline claims-agent-dismissal-register-period: 14.days after DismissalOrderEntered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
+deadline claims-agent-dismissal-register-period: 14.days after DismissalOrderEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
 /// L.B.R. 2002-3(a)(18): within 28 days after entry of a final decree, the
 /// claims agent forwards the proofs of claim, uploads the creditor matrix and
 /// dockets a final claims register.
-deadline claims-agent-decree-register-period: 28.days after FinalDecreeEntered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
+deadline claims-agent-decree-register-period: 28.days after FinalDecreeEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
 /// L.B.R. 2002-3(a)(19): within 14 days after the earlier of an order
 /// converting the case or terminating the claims agent's services, the claims
 /// agent forwards the proofs of claim, uploads the public creditor matrix,
 /// forwards its sealed portions and dockets a final claims register.
-deadline claims-agent-conversion-register-period: 14.days after ClaimsAgentEndOrderEntered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
+deadline claims-agent-conversion-register-period: 14.days after ClaimsAgentEndOrderEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
 /// L.B.R. 2002-3(c)(2): in a case with no claims agent, the debtor provides
 /// an updated creditor matrix within 14 days after entry of an order
 /// converting the case.
-deadline conversion-matrix-period: 14.days after ConversionOrderEntered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2002-3(c)"
+deadline conversion-matrix-period: 14.days after ConversionOrderEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2002-3(c)"
 /// L.B.R. 2002-3(c)(2): in a case with no claims agent, the debtor provides
 /// an updated creditor matrix within 28 days after entry of a final decree.
-deadline decree-matrix-period: 28.days after FinalDecreeEntered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2002-3(c)"
+deadline decree-matrix-period: 28.days after FinalDecreeEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2002-3(c)"
 /// L.B.R. 2004-1(b)(1): if the examinee agrees to the date, time, place and
 /// scope, the party seeking the examination files a notice of examination at
 /// least 7 days before it; no motion, subpoena or order is required.
-deadline agreed-examination-notice-period: 7.days before Examination() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2004-1(b)"
+deadline agreed-examination-notice-period: 7.days before Examination() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2004-1(b)"
 /// L.B.R. 2004-1(b)(2): the party seeking an examination and the examinee may
 /// file an executed consent order for approval at least 7 days before the
 /// scheduled examination.
-deadline examination-consent-order-period: 7.days before Examination() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2004-1(b)"
+deadline examination-consent-order-period: 7.days before Examination() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2004-1(b)"
 /// L.B.R. 2014-1(c): an objection to an application to employ a professional
 /// is filed within 7 days of service of the application.
-deadline employment-objection-period: 7.days after EmploymentApplicationServed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2014-1(c)"
+deadline employment-objection-period: 7.days after EmploymentApplicationServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2014-1(c)"
 /// L.B.R. 2016-1(b): an objection to an application for compensation or
 /// reimbursement of expenses is filed within 14 days of service of the
 /// application.
-deadline fee-application-objection-period: 14.days after FeeApplicationServed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2016-1(b)"
+deadline fee-application-objection-period: 14.days after FeeApplicationServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2016-1(b)"
 /// L.B.R. 2016-3(a)(4): an application for attorney fees to be paid through a
 /// chapter 13 plan is filed within six months of the plan confirmation date;
 /// otherwise the trustee may certify non-compliance and the court issues a
 /// 28-day order to show cause.
-deadline chapter13-initial-fee-application-period: 6.months after Chapter13ConfirmationEntered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2016-3(a)"
+deadline chapter13-initial-fee-application-period: 6.months after Chapter13ConfirmationEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2016-3(a)"
 /// L.B.R. 2016-3(b)(2): a supplemental application for counsel fees to be
 /// paid through the chapter 13 plan is filed within 30 days after entry of an
 /// order approving a modified plan.
-deadline chapter13-supplemental-fee-period: 30.days after ModifiedPlanApproved() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2016-3(b)"
+deadline chapter13-supplemental-fee-period: 30.days after ModifiedPlanApproved() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2016-3(b)"
 /// L.B.R. 2016-5(e): an objection to a request for Payment on Account is
 /// filed within 14 days of service of notice of the request.
-deadline payment-on-account-objection-period: 14.days after PaymentRequestNoticeServed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2016-5(e)"
+deadline payment-on-account-objection-period: 14.days after PaymentRequestNoticeServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2016-5(e)"
 /// L.B.R. 2016-5(k): a professional paid on account more than the final
 /// compensation awarded repays the excess to the debtor within 14 days of the
 /// order allowing final compensation, unless the court fixes another date.
-deadline payment-on-account-repayment-period: 14.days after FinalCompensationAllowed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 2016-5(k)"
+deadline payment-on-account-repayment-period: 14.days after FinalCompensationAllowed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2016-5(k)"
 /// L.B.R. 3007-1(d): unless the court orders otherwise, if the claimant does
 /// not notify the objector in writing at least 7 days before the hearing date
 /// of its intent to contest the objection, the objector is entitled on
 /// request to a continuance at the first listing.
-deadline claimant-contest-notice-period: 7.days before ClaimObjectionHearing() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 3007-1(d)"
+deadline claimant-contest-notice-period: 7.days before ClaimObjectionHearing() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 3007-1(d)"
 /// L.B.R. 3017-2: an objection to a motion to approve the disclosure
 /// statement or plan voting procedures is filed and served no later than 7
 /// days before the hearing on the disclosure statement.
-deadline disclosure-objection-period: 7.days before DisclosureStatementHearing() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 3017-2"
+deadline disclosure-objection-period: 7.days before DisclosureStatementHearing() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 3017-2"
 /// L.B.R. 3021-1(c): a post-confirmation distribution report is filed on or
 /// before the 20th day after the end of each calendar quarter.
-deadline distribution-report-period: 20.days after QuarterEnded() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 3021-1(c)"
+deadline distribution-report-period: 20.days after QuarterEnded() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 3021-1(c)"
 /// L.B.R. 4002-1(b): the debtor's interim authority to pay insiders'
 /// compensation terminates 21 days after the petition (or the order for
 /// relief in an involuntary case) unless the debtor files a compensation
 /// disclosure notice within the 21-day period.
-deadline insider-compensation-notice-period: 21.days after PetitionFiled() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 4002-1(b)"
+deadline insider-compensation-notice-period: 21.days after PetitionFiled() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 4002-1(b)"
 /// L.B.R. 4002-2(d): an objection to disclosed insider compensation, with a
 /// proposed order and notice of the hearing date, is served at least 21 days
 /// before the hearing.
-deadline insider-compensation-objection-service-period: 21.days before InsiderCompensationObjectionHearing() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 4002-2(d)"
+deadline insider-compensation-objection-service-period: 21.days before InsiderCompensationObjectionHearing() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 4002-2(d)"
 /// L.B.R. 4004-2(b)(2): an objection to a chapter 12 or 13 trustee's final
 /// report is filed within 30 days from the date of service of the clerk's
 /// notice.
-deadline trustee-final-report-objection-period: 30.days after FinalReportNoticeServed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 4004-2(b)"
+deadline trustee-final-report-objection-period: 30.days after FinalReportNoticeServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 4004-2(b)"
 /// L.B.R. 4004-3(c): after the debtor's certification regarding domestic
 /// support obligations and § 522(q), the clerk's notice requires any
 /// objection to a chapter 12 or 13 discharge to be filed within 14 days of
 /// its date; with none, the court enters the discharge (L.B.R. 4004-3(d)).
-deadline chapter13-discharge-objection-period: 14.days after DischargeNoticeIssued() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 4004-3(c)"
+deadline chapter13-discharge-objection-period: 14.days after DischargeNoticeIssued() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 4004-3(c)"
 /// L.B.R. 5003-2(b)(2): a sealed document is unsealed unless a party in
 /// interest objects within 60 days of service of the clerk's notice.
-deadline unsealing-objection-period: 60.days after UnsealingNoticeServed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 5003-2(b)"
+deadline unsealing-objection-period: 60.days after UnsealingNoticeServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 5003-2(b)"
 /// L.B.R. 5011-1(f): unless the district court directs otherwise, within 14
 /// days after service of a motion to withdraw the reference, an opposing
 /// party files with the district court and serves a brief in opposition.
-deadline withdrawal-opposition-period: 14.days after WithdrawalMotionServed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 5011-1(f)"
+deadline withdrawal-opposition-period: 14.days after WithdrawalMotionServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 5011-1(f)"
 /// L.B.R. 5070-2(b): if FRBP 9019 requires or a party requests judicial
 /// approval of a contested matter's resolution, the parties file a
 /// stipulation, motion or other document implementing it within 30 days of
 /// reporting it to the court.
-deadline contested-resolution-document-period: 30.days after ContestedMatterResolutionReported() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 5070-2(b)"
+deadline contested-resolution-document-period: 30.days after ContestedMatterResolutionReported() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 5070-2(b)"
 /// L.B.R. 6004-1(a): a response or objection to a motion to sell assets under
 /// § 363(b) or (f) (other than one under FRBP 6004(d)) is filed and served no
 /// later than 21 days after the motion is served.
-deadline sale-objection-period: 21.days after SaleMotionServed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 6004-1(a)"
+deadline sale-objection-period: 21.days after SaleMotionServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 6004-1(a)"
 /// L.B.R. 7005-1(b)(2): for a motion to dismiss under FRCP 12(b)(6), for
 /// judgment on the pleadings or for summary judgment in an adversary
 /// proceeding, the L.B.R. 9014-3(h) response period is 21 days.
-deadline dispositive-motion-response-period: 21.days after DispositiveMotionServed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 7005-1(b)"
+deadline dispositive-motion-response-period: 21.days after DispositiveMotionServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 7005-1(b)"
 /// L.B.R. 7041-1(b): if judicial approval of an adversary proceeding's
 /// resolution is required or requested, the parties file a stipulation,
 /// motion or other document implementing it within 30 days of reporting it to
 /// the court.
-deadline adversary-resolution-document-period: 30.days after AdversaryResolutionReported() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 7041-1(b)"
+deadline adversary-resolution-document-period: 30.days after AdversaryResolutionReported() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 7041-1(b)"
 /// L.B.R. 8003-2: if a notice of appeal is docketed in the district court
 /// without prepayment of the fee, the appellant pays the fee to the
 /// bankruptcy clerk within 14 days after docketing; failing that, the
 /// district court may dismiss the appeal.
-deadline appeal-fee-period: 14.days after AppealDocketed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 8003-2"
+deadline appeal-fee-period: 14.days after AppealDocketed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 8003-2"
 /// L.B.R. 8009-2(a)(1): the appellant deposits with the court reporter the
 /// estimated cost of the transcript within 14 days after filing the notice of
 /// appeal.
-deadline transcript-deposit-period: 14.days after NoticeOfAppealFiled() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 8009-2(a)"
+deadline transcript-deposit-period: 14.days after NoticeOfAppealFiled() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 8009-2(a)"
 /// L.B.R. 8009-2(a)(2): an appellant who cannot afford the transcript applies
 /// to the bankruptcy court within 14 days of filing the notice of appeal for
 /// a transcript at government expense under 28 U.S.C. § 753(f).
-deadline transcript-expense-application-period: 14.days after NoticeOfAppealFiled() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 8009-2(a)"
+deadline transcript-expense-application-period: 14.days after NoticeOfAppealFiled() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 8009-2(a)"
 /// L.B.R. 8009-2(a)(3): if the bankruptcy court denies the application, the
 /// appellant within 14 days of the order either deposits the transcript fees
 /// or applies to the district court.
-deadline transcript-after-denial-period: 14.days after TranscriptApplicationDenied() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 8009-2(a)"
+deadline transcript-after-denial-period: 14.days after TranscriptApplicationDenied() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 8009-2(a)"
 /// L.B.R. 8012-1(a): the corporate and other disclosure statements and list
 /// are filed not later than 30 days after the appeal is docketed in the
 /// district court.
-deadline appeal-disclosure-period: 30.days after AppealDocketed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 8012-1(a)"
+deadline appeal-disclosure-period: 30.days after AppealDocketed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 8012-1(a)"
 /// L.B.R. 8013-2(a): a motion to expedite an appeal under FRBP 8013(a) is
 /// filed within 14 days of the docketing of the appeal in the district court.
-deadline expedite-motion-period: 14.days after AppealDocketed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 8013-2(a)"
+deadline expedite-motion-period: 14.days after AppealDocketed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 8013-2(a)"
 /// L.B.R. 8013-2(a): if the basis to expedite arises after the 14-day period
 /// expires, a party may move to expedite within 7 days of the occurrence or
 /// event that is its basis.
-deadline late-expedite-motion-period: 7.days after ExpeditionGroundArose() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 8013-2(a)"
+deadline late-expedite-motion-period: 7.days after ExpeditionGroundArose() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 8013-2(a)"
 /// L.B.R. 8013-2(c)(1): unless the district court directs otherwise, any
 /// reply in support of a motion to expedite an appeal is filed within 3 days
 /// after service of the response.
-deadline expedite-reply-period: 3.days after ExpediteResponseServed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 8013-2(c)"
+deadline expedite-reply-period: 3.days after ExpediteResponseServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 8013-2(c)"
 /// L.B.R. 8018-1(b): a motion to extend the time to file a brief on appeal
 /// should be made at least 3 days in advance of the brief's due date.
-deadline brief-extension-motion-period: 3.days before BriefDue() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 8018-1(b)"
+deadline brief-extension-motion-period: 3.days before BriefDue() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 8018-1(b)"
 /// L.B.R. 9013-3(c): an objection to an application governed by L.B.R. 9013-3
 /// is filed and served no later than 7 days after the applicant serves it.
-deadline application-objection-period: 7.days after ApplicationServed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 9013-3(c)"
+deadline application-objection-period: 7.days after ApplicationServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 9013-3(c)"
 /// L.B.R. 9014-3(h): except as L.B.R. 9014-2 and 9014-3(i) provide, a
 /// response or objection to a motion is filed and served no later than 14
 /// days after the movant serves the motion.
-deadline motion-response-period: 14.days after MotionServed() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 9014-3(h)"
+deadline motion-response-period: 14.days after MotionServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 9014-3(h)"
 /// L.B.R. 9014-4(a): a person serving a document files a certificate of
 /// service promptly, and no later than the earlier of 3 days after filing the
 /// document or, if a hearing is scheduled, before the hearing.
-deadline service-certificate-period: 3.days after ServedDocumentFiled() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 9014-4(a)"
+deadline service-certificate-period: 3.days after ServedDocumentFiled() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 9014-4(a)"
 /// L.B.R. 9015-1: every other party files and serves its statement of consent
 /// to a jury trial by a bankruptcy judge within 14 days of the demanding
 /// party's timely statement.
-deadline jury-consent-period: 14.days after JuryConsentFiled() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 9015-1"
+deadline jury-consent-period: 14.days after JuryConsentFiled() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 9015-1"
 /// L.B.R. 9019-2(n)(2)(A): unless the mediator directs otherwise, not later
 /// than 3 days before the initial mediation conference each party provides
 /// the mediator a mediation memorandum of no more than 2 pages.
-deadline mediation-memorandum-period: 3.days before MediationConference() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 9019-2(n)"
+deadline mediation-memorandum-period: 3.days before MediationConference() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 9019-2(n)"
 /// L.B.R. 9019-2(n)(6): if the mediation results in an agreement, a motion
 /// for court approval is filed no later than 30 days after the conclusion of
 /// the mediation, or within such additional time as the court directs.
-deadline mediation-approval-motion-period: 30.days after MediationConcluded() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 9019-2(n)"
+deadline mediation-approval-motion-period: 30.days after MediationConcluded() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 9019-2(n)"
 /// L.B.R. 9019-3(i)(3): within 14 days of the conclusion of the SLM Program,
 /// the debtor files and serves a Notice of Resolution or a Notice of No
 /// Resolution.
-deadline slm-resolution-notice-period: 14.days after SlmProgramConcluded() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 9019-3(i)"
+deadline slm-resolution-notice-period: 14.days after SlmProgramConcluded() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 9019-3(i)"
 /// L.B.R. 9019-3(j)(1): no later than 21 days after entry of the SLM
 /// Commencement Order, the creditor or servicer registers on the portal.
-deadline slm-portal-registration-period: 21.days after SlmCommencementOrderEntered() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 9019-3(j)"
+deadline slm-portal-registration-period: 21.days after SlmCommencementOrderEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 9019-3(j)"
 /// L.B.R. 9019-3(j)(2): no later than 30 days after the debtor submits a
 /// completed Initial SLM Package, the creditor or servicer acknowledges its
 /// receipt on the portal.
-deadline slm-acknowledgement-period: 30.days after SlmPackageSubmitted() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 9019-3(j)"
+deadline slm-acknowledgement-period: 30.days after SlmPackageSubmitted() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 9019-3(j)"
 /// L.B.R. 9019-3(j)(3): within 30 days of receiving the Initial SLM Package,
 /// the creditor or servicer notifies the debtor if additional or corrected
 /// documentation is needed.
-deadline slm-documentation-request-period: 30.days after SlmPackageSubmitted() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 9019-3(j)"
+deadline slm-documentation-request-period: 30.days after SlmPackageSubmitted() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 9019-3(j)"
 /// L.B.R. 9019-3(k)(1): if the chapter 13 plan is not confirmed, within 30
 /// days of the Notice of Resolution the debtor files an amended plan
 /// providing for direct SLM Program payments, unless the plan already so
 /// provides.
-deadline slm-amended-plan-period: 30.days after SlmResolutionNoticeFiled() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 9019-3(k)"
+deadline slm-amended-plan-period: 30.days after SlmResolutionNoticeFiled() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 9019-3(k)"
 /// L.B.R. 9019-3(k)(2): if the confirmed plan pays the creditor's claim pro
 /// rata with other unsecured claims, the debtor moves within 30 days of the
 /// Notice of Resolution to modify it to classify the eligible loans
 /// separately.
-deadline slm-plan-modification-period: 30.days after SlmResolutionNoticeFiled() counted_by frbp9006 cite "Bankr. E.D. Pa. L.B.R. 9019-3(k)"
+deadline slm-plan-modification-period: 30.days after SlmResolutionNoticeFiled() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 9019-3(k)"
 
 start motion-filed
 

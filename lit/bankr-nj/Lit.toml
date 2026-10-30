@@ -27,7 +27,10 @@ in_force = "2026-08-01"
 known_at = "2026-10-28"
 unknown_before = "2026-08-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of New Jersey"
-counting = "frbp9006"
+# FRBP 9006(a)(6)(C): New Jersey's holidays close a forward-counted period, here and in
+# the FRBP periods this package recounts (core's `frbp9006-new-jersey`).
+counting = "frbp9006-new-jersey"
+recounts = ["frbp-bankruptcy-procedure"]
 
 [package.instrument]
 source = "bankr-nj-lbr"

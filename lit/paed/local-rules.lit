@@ -1,6 +1,6 @@
 module paed-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frcp6.{ frcp6-pennsylvania }
 
 // The Eastern District of Pennsylvania's own civil periods, computed under
 // FRCP 6(a), which governs a period stated in a local rule. Rules that
@@ -61,56 +61,56 @@ event MagistrateObjectionsServed()
 /// LR 4.1.3(c): the Commissioner, within sixty days of the Date of
 /// Service, files and serves a dispositive motion or the Certified
 /// Administrative Record, which is deemed an answer.
-deadline social-security-response-period: 60.days after SocialSecurityDateOfService() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 4.1.3(c)"
+deadline social-security-response-period: 60.days after SocialSecurityDateOfService() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 4.1.3(c)"
 /// LR 7.1(c): unless the court directs otherwise, a party opposing a
 /// motion serves a brief in opposition within fourteen days after service
 /// of the motion and supporting brief; a party intending to amend under
 /// FRCP 15 files a notice of intent within the same fourteen days.
-deadline opposition-period: 14.days after ContestedMotionServed() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 7.1(c)"
+deadline opposition-period: 14.days after ContestedMotionServed() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 7.1(c)"
 /// LR 7.1(e): within fourteen days after filing a post-trial motion, the
 /// movant orders the trial transcript or files a verified motion to be
 /// excused; otherwise the motion may be dismissed for lack of prosecution.
-deadline post-trial-transcript-period: 14.days after PostTrialMotionFiled() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 7.1(e)"
+deadline post-trial-transcript-period: 14.days after PostTrialMotionFiled() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 7.1(e)"
 /// LR 7.1(g): a motion for reconsideration or reargument, other than one
 /// governed by FRCP 59(e), is served and filed within fourteen days after
 /// entry of the order concerned.
-deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 7.1(g)"
+deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 7.1(g)"
 /// LR 14.1(a): leave to join a third party after the FRCP 14 period is
 /// ordinarily denied as untimely unless sought within ninety days after
 /// service of the moving party's answer.
-deadline third-party-joinder-period: 90.days after MovantAnswerServed() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 14.1(a)"
+deadline third-party-joinder-period: 90.days after MovantAnswerServed() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 14.1(a)"
 /// LR 41.1(a): an action noticed for dismissal after more than a year with
 /// no proceeding docketed is dismissed with prejudice unless a written
 /// application showing good cause is filed within thirty days from the
 /// date of the notice.
-deadline inactivity-application-period: 30.days after InactivityNoticeSent() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 41.1(a)"
+deadline inactivity-application-period: 30.days after InactivityNoticeSent() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 41.1(a)"
 /// LR 41.1(b): an order dismissing a settled action may be vacated,
 /// modified or stricken for good cause on an application served within
 /// ninety days of its entry, so far as consistent with FRCP 60(c).
-deadline settlement-dismissal-vacatur-period: 90.days after SettlementDismissalEntered() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 41.1(b)"
+deadline settlement-dismissal-vacatur-period: 90.days after SettlementDismissalEntered() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 41.1(b)"
 /// LR 53.2(7)(A): within thirty days after the arbitration award is
 /// entered on the docket, any party may demand a trial de novo.
-deadline trial-de-novo-demand-period: 30.days after ArbitrationAwardEntered() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 53.2"
+deadline trial-de-novo-demand-period: 30.days after ArbitrationAwardEntered() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 53.2"
 /// LR 54.1(a)(1), (3): a party requesting taxation of costs files its
 /// notice (form AO133) within seventy-five days of the entry of final
 /// judgment, unless the court orders otherwise; failure waives costs. The
 /// period after an appeal or post-judgment motion (LR 54.1(a)(1), (2))
 /// runs from a determination this layer does not model.
-deadline costs-notice-period: 75.days after FinalJudgmentEntered() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 54.1(a)"
+deadline costs-notice-period: 75.days after FinalJudgmentEntered() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 54.1(a)"
 /// LR 54.1(a)(4): objections to the bill of costs are filed with the Clerk
 /// within fourteen days of service of the notice of taxation of costs.
-deadline costs-objection-period: 14.days after CostsNoticeServed() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 54.1(a)"
+deadline costs-objection-period: 14.days after CostsNoticeServed() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 54.1(a)"
 /// LR 54.1(a)(7): a party appeals the Clerk's taxation of costs by motion
 /// to the court within seven days of the taxation, under FRCP 54(d)(1).
-deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 54.1(a)"
+deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 54.1(a)"
 /// LR 72.1(IV)(a): a party may object to a magistrate judge's order on a
 /// non-dispositive matter within fourteen days after its issuance, unless
 /// the magistrate judge or a judge prescribes a different time.
-deadline magistrate-order-objection-period: 14.days after MagistrateOrderIssued() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 72.1"
+deadline magistrate-order-objection-period: 14.days after MagistrateOrderIssued() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 72.1"
 /// LR 72.1(IV)(b): a party may object to a magistrate judge's proposed
 /// findings, recommendations or report within fourteen days after being
 /// served with it.
-deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 72.1"
+deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 72.1"
 /// LR 72.1(IV)(b): any party may respond to another party's objections
 /// within fourteen days after being served with them.
-deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6 cite "E.D. Pa. L. Civ. R. 72.1"
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 72.1"

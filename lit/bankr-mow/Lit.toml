@@ -2,7 +2,7 @@
 # District of Missouri, with their Appendix, over lit/frbp (FRBP 9029(a);
 # 28 U.S.C. § 2075): it declares only the periods the rules and the
 # Appendix state and re-encodes no FRBP period. Each period is counted
-# under FRBP 9006(a), the FRCP 6(a) method (core's frbp9006).
+# under FRBP 9006(a), the FRCP 6(a) method (core's frbp9006-missouri).
 #
 # Layers, in date order: the Local Rules adopted January 5, 2026 (the
 # cover's EFFECTIVE field is blank, so the adoption date opens the package;
@@ -31,7 +31,10 @@ in_force = "2026-01-05"
 known_at = "2026-10-28"
 unknown_before = "2026-01-05"
 jurisdiction = "U.S. Bankruptcy Court for the Western District of Missouri"
-counting = "frbp9006"
+# FRBP 9006(a)(6)(C): Missouri's holidays close a forward-counted period, here and in
+# the FRBP periods this package recounts (core's `frbp9006-missouri`).
+counting = "frbp9006-missouri"
+recounts = ["frbp-bankruptcy-procedure"]
 
 [package.instrument]
 source = "mowb-lbr"

@@ -89,9 +89,10 @@ calendar district-state-holidays effective [1963-07-01, 2016-12-01) cite "FRCP 6
 /// core's `frcp6-delaware` and `frcrimp45-delaware` (the D. Del. counts).
 /// Colorado, Hawaii, Utah and New Mexico districts declare their own sourced
 /// lists in their packages (`cod`, `bankr-co`, `bankr-hi`, `utd`, `bankr-ut`,
-/// `nmd`, `bankr-nm`). For state statutes not yet vendored, the known holes
-/// include California, Arkansas, Georgia, Mississippi, Ohio, Oklahoma and
-/// Tennessee (`lg-ovyp`, GitHub #23); the Virgin Islands uses its court rule.
+/// `nmd`, `bankr-nm`). The states and territories whose calendars still lack
+/// a vendored source are California, Arkansas, Georgia, Mississippi, Ohio,
+/// Oklahoma, Tennessee, and the Virgin Islands (`lg-ovyp`, GitHub #23); their
+/// districts keep this empty calendar until those sources are added.
 /// The Tenth Circuit BAP (`bap10`) counts Colorado holidays only because a
 /// matter does not identify its originating district.
 calendar district-state-holidays effective [2016-12-01, ..) cite "FRCP 6(a)(6)(C)" historical
@@ -345,7 +346,7 @@ calendar uspto-closures known_at 2026-01-01 cite "37 CFR 1.9(h)"
   closed-2025-12-26: once(2025-12-26) effective [2025-12-26, ..)
 }
 
-calendar west-virginia-holidays effective [2026-10-22, ..) cite "W. Va. Code § 2-2-1(a)"
+calendar west-virginia-holidays effective [2023-12-01, ..) cite "W. Va. Code § 2-2-1(a)"
 {
   west-virginia-day: fixed(6, 20) effective [2026-10-22, ..) observed nearest_weekday
   lincolns-day-2026: once(2026-11-27) effective [2026-10-22, ..)
@@ -565,7 +566,7 @@ calendar south-carolina-holidays effective [2009-06-02, ..) cite "S.C. Code § 5
   day-after-christmas: fixed(12, 26) effective [2009-06-02, ..) observed nearest_weekday
 }
 
-calendar virginia-holidays effective [2026-10-22, ..) cite "Va. Code § 2.2-3300"
+calendar virginia-holidays effective [2023-12-01, ..) cite "Va. Code § 2.2-3300"
 {
   election-day-2026: once(2026-11-03) effective [2026-10-22, ..)
   election-day-2027: once(2027-11-02) effective [2026-10-22, ..)
@@ -619,7 +620,7 @@ calendar virginia-holidays effective [2026-10-22, ..) cite "Va. Code § 2.2-3300
   day-after-thanksgiving-2050: once(2050-11-25) effective [2026-10-22, ..)
 }
 
-calendar washington-holidays effective [2026-10-22, ..) cite "RCW 1.16.050(1)"
+calendar washington-holidays effective [2023-12-01, ..) cite "RCW 1.16.050(1)"
 {
   native-american-heritage-day-2026: once(2026-11-27) effective [2026-10-22, ..)
   native-american-heritage-day-2027: once(2027-11-26) effective [2026-10-22, ..)
@@ -648,7 +649,7 @@ calendar washington-holidays effective [2026-10-22, ..) cite "RCW 1.16.050(1)"
   native-american-heritage-day-2050: once(2050-11-25) effective [2026-10-22, ..)
 }
 
-calendar florida-holidays effective [2026-10-22, ..) cite "Fla. Stat. § 683.01(1)"
+calendar florida-holidays effective [2023-12-01, ..) cite "Fla. Stat. § 683.01(1)"
 {
   mlk-birthday-january-15: fixed(1, 15) effective [2026-10-22, ..)
   mlk-birthday-january-15-observed-2034: once(2034-01-16) effective [2026-10-22, ..)

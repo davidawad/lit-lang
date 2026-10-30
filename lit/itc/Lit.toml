@@ -8,9 +8,9 @@
 # instituted subsequent to" its effective date, so a matter instituted
 # earlier has no version in force (L3007) rather than a wrong one; the
 # pre-2025 sections are not modeled. Each node and period carries the
-# effective date of the latest amendment in its cited section's source note
-# (19 C.F.R. §§ 210.5, 210.29: 78 FR 23474, effective May 20, 2013; every
-# other Part 210 section the pack cites: 90 FR 225) or, for 19 U.S.C.
+# effective date of 90 FR 225 (19 C.F.R. §§ 210.5 and 210.29, last amended
+# by 78 FR 23474, effective May 20, 2013, included: the pre-2025 law is
+# not modeled) or, for 19 U.S.C.
 # § 1337(b)-(j), Pub. L. 103-465, § 321(a), applicable from Jan. 1, 1995
 # (§ 322). Source notes are per section, so versions are too.
 #
@@ -97,3 +97,19 @@ url = "https://www.ecfr.gov/api/versioner/v1/versions/title-19.json"
 path = "sources/ecfr-versions-title-19.txt"
 path_sha256 = "f5772fc7e9852994796aa81a644ffa7be4c3f664a3543d5c6297c186c79e7b32"
 as_of = "2026-10-28"
+
+# 19 C.F.R. § 210.27 as the annual edition revised as of April 1, 2025
+# prints it: the text 90 FR 225 (effective Feb. 3, 2025) made, which the
+# section's versions from that date cite. `cfr-19-part210.txt` is the
+# 2024 edition's text. The file's `## versions 19 C.F.R. (2025) § 210.27`
+# block, the eCFR versioner list, proves no amendment between Feb. 3 and
+# April 1, 2025.
+[sources.cfr-210-2025]
+title = "19 C.F.R. § 210.27 (annual edition revised as of 2025-04-01)"
+url = "https://www.govinfo.gov/content/pkg/CFR-2025-title19-vol3/xml/CFR-2025-title19-vol3-part210.xml"
+path = "sources/cfr-19-part210-2025.txt"
+path_sha256 = "dae026e354fba9a150876b7fd992f5d189c2c956bdfda42ed59c8d4182b1d003"
+sha256 = "47b12ecaf5e33dcbd288df0e57039816a18316229f8955703435772e18d32388"
+as_of = "2025-04-01"
+cite_prefixes = ["19 CFR (2025)", "19 C.F.R. (2025)"]
+section_heading = "19 C.F.R. (2025) § {n}"

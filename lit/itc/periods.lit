@@ -14,10 +14,13 @@ import itc.events.{
 
 // The periods the pack's edges run `within`. Part 210 periods count under
 // 19 C.F.R. § 201.14 through § 210.6(a) (`itc210` in lit/core). Each
-// version starts on the effective date of the latest amendment in its
-// section's source note: 90 FR 225 (Jan. 3, 2025), effective Feb. 3, 2025,
-// for every section here but § 210.5 and § 210.29 (78 FR 23474, Apr. 19,
-// 2013, effective May 20, 2013). 19 C.F.R. § 210.6(a) makes every Part 210
+// version starts on February 3, 2025, the effective date of 90 FR 225
+// (Jan. 3, 2025), which applies only to investigations instituted after
+// it; § 210.5 and § 210.29 were last amended before (78 FR 23474, Apr. 19,
+// 2013, effective May 20, 2013), and the eCFR versioner proves their text
+// unchanged from that date. § 210.27, amended again effective Jan. 7,
+// 2026, is cited as the April 1, 2025 annual edition prints it, the text
+// its versions took effect with. 19 C.F.R. § 210.6(a) makes every Part 210
 // period yield to "the Commission, the administrative law judge, or this or
 // another section of this part", and § 201.14(b)(2) lets the person
 // conducting the investigation extend one for good cause: each one is
@@ -43,7 +46,7 @@ rule duty respond-to-complaint cite "cfr210.13.a"
 /// specified by the administrative law judge".
 rule duty answer-interrogatories cite "cfr210.29.b.2"
 {
-  deadline interrogatory-answer-period: 10.days after ServedPaper(Interrogatories) counted_by itc210 effective [2013-05-20, ..) delegable {
+  deadline interrogatory-answer-period: 10.days after ServedPaper(Interrogatories) counted_by itc210 effective [2025-02-03, ..) delegable {
     to CaseOrder
     op set
   } cite "cfr210.29.b.2"
@@ -101,12 +104,12 @@ rule duty move-to-quash cite "cfr210.32.d.2"
 /// 19 C.F.R. § 210.27(e)(1)(ii): a privilege log within 10 days of making
 /// the claim. Delegation: § 210.6(a) and § 201.14(b)(2) (the section itself
 /// states none).
-rule duty log-privilege cite "cfr210.27.e.1"
+rule duty log-privilege cite "19 CFR (2025) 210.27(e)(1)"
 {
   deadline privilege-log-period: 10.days after PrivilegeClaimed() counted_by itc210 effective [2025-02-03, ..) delegable {
     to CaseOrder
     op set
-  } cite "cfr210.27.e.1"
+  } cite "19 CFR (2025) 210.27(e)(1)"
   {
     extendable true
     extension_authority "good cause"
@@ -122,7 +125,7 @@ rule duty log-privilege cite "cfr210.27.e.1"
 /// administrative law judge's ground rules (§ 210.5(e)(1)) set in practice.
 rule duty file-public-version cite "cfr210.5.f"
 {
-  deadline public-version-period: 30.days after ConfidentialVersionFiled() counted_by itc210 effective [2013-05-20, ..) delegable {
+  deadline public-version-period: 30.days after ConfidentialVersionFiled() counted_by itc210 effective [2025-02-03, ..) delegable {
     to CaseOrder
     op set
   } cite "cfr210.5.f"

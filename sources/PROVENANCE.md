@@ -313,6 +313,25 @@ Entries live in the forum's own
 - sha256 (this file): `92d29ab6a95dc52eaaa5b4fa5b1d0991131546e01612bc83f8e365f40420c99e`
 - Original: `original/cfr-19-part210.xml` as served (sha256 f97b7e87df3d5a56bd1afba06ab4d5e2c172ab50d24f8bf9209fef00ae5a8c6e); extraction sha256 92d29ab6a95dc52eaaa5b4fa5b1d0991131546e01612bc83f8e365f40420c99e. Served at https://www.govinfo.gov/content/pkg/CFR-2024-title19-vol3/xml/CFR-2024-title19-vol3-part210.xml; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 
+### `cfr-19-part210-2025.txt` — 19 C.F.R. § 210.27 (annual edition revised as of 2025-04-01)
+
+- The text `lit/itc`'s § 210.27 versions took effect with: § 210.27 as
+  90 FR 225 (Jan. 3, 2025; effective Feb. 3, 2025) left it, source note
+  `[... 90 FR 243, Jan. 3, 2025]`. `cfr-19-part210.txt` is the 2024-04-01
+  edition and predates that rule: its (b), (e)(2)(ii) and (e)(5)(ii)(C)
+  read the earlier text. Heading `## 19 C.F.R. (2025) § 210.27` keeps it
+  apart from that file. The eCFR versioner records a further amendment
+  effective 2026-01-07, which this edition predates.
+- `## versions 19 C.F.R. (2025) § 210.27` is § 210.27's block from
+  `ecfr-versions-title-19.txt`, copied verbatim: it proves no amendment
+  between February 3 and April 1, 2025.
+- Fetched 2026-10-30 from `www.govinfo.gov`
+  (`CFR-2025-title19-vol3-part210.xml`), same `<SECTION>`/`<SUBJECT>`/`<P>`
+  parse as `cfr-19-part210.txt` (one paragraph per line, blank-line
+  separated, tags stripped, entities decoded); no wording changed.
+- sha256 (this file): `dae026e354fba9a150876b7fd992f5d189c2c956bdfda42ed59c8d4182b1d003`
+- Original: `original/cfr-19-part210-2025/CFR-2025-title19-vol3-part210.xml` as served (sha256 47b12ecaf5e33dcbd288df0e57039816a18316229f8955703435772e18d32388); extraction sha256 dae026e354fba9a150876b7fd992f5d189c2c956bdfda42ed59c8d4182b1d003. Served at https://www.govinfo.gov/content/pkg/CFR-2025-title19-vol3/xml/CFR-2025-title19-vol3-part210.xml; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-30.
+
 ### `cfr-37-part1.txt` — 37 C.F.R. Part 1 (Rules of Practice in Patent Cases, all 363 sections)
 
 - Fetched 2026-09-29 from `www.govinfo.gov` (`CFR-2024-title37-vol1-part1.xml`,
@@ -879,6 +898,33 @@ Entries live in the forum's own
 - Original: `original/usc-28-app-frap-editions/015-USCODE-2009-title28-app-federalru-rule41.htm` as served (sha256 625453dd3ada87085106af2c7510ababbb12ce961ef34d69834aafddcbeed730); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule41.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
 - Original: `original/usc-28-app-frap-editions/016-USCODE-2009-title28-app-federalru-rule42.htm` as served (sha256 5fea139172277bc2541782baa71187cb48fb182686d9a3128396429c92c23f20); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2009-title28/html/USCODE-2009-title28-app-federalru-rule42.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
 - Original: `original/usc-28-app-frap-editions/017-USCODE-2017-title28-app-federalru-rule32.htm` as served (sha256 5800c13420f58e6041300e285ba7e090603a6719d2bf9ddd110ccc16c4c132ee); extraction sha256 007a4635a31187bca31cfbaf45a83cb94770c4777536bfb875bd71312f769244. Served at https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-rule32.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-29.
+
+### `usc-28-app-frcp-editions.txt` — FRCP Rules 4, 12 and 15 as printed in the 2011 edition of 28 U.S.C. App., and Rule 4 in the 2015 edition
+
+- The texts `lit/frcp`'s dated period versions took effect with (SPEC
+  §4.3): `## FRCP (2011 ed.) Rule 4` (as amended December 1, 2007: the
+  120-day Rule 4(m)), `## FRCP (2011 ed.) Rule 12` and `## FRCP (2011 ed.)
+  Rule 15` (each as amended December 1, 2009, the last amendment its
+  credits list), and `## FRCP (2015 ed.) Rule 4` (as amended December 1,
+  2015: the 90-day Rule 4(m)). Each is the rule's text, amendment credits
+  and notes. The headings are deliberately not canonical refs, as in
+  `usc-28-app-time-history.txt`.
+- `## versions FRCP (2011 ed.) Rule 4` is Rule 4's `## versions Rule 4`
+  block from `rule-amendment-history.txt`, copied verbatim, so that the
+  2011 edition's Rule 4 (bound `as_of` 2009-12-01, the date of Rules 12
+  and 15) is proved the text in force from December 1, 2007.
+- Fetched 2026-10-30 from `www.govinfo.gov`'s official United States Code
+  (GPO), 2011 and 2015 Editions, one granule per rule
+  (`USCODE-<year>-title28-app-federalru-dup1-rule<N>.htm`, listed below),
+  with the extraction of `usc-28-app-frap-editions.txt` (everything from
+  the page's section head to its end, one line per paragraph, tags and
+  comments stripped, entities decoded, runs of spaces collapsed), checked
+  by reproducing that file's `## FRAP (2009 ed.) Rule 3` byte for byte.
+- sha256 (this file): `3933c72e8d683ca3ccb902c939b8fc228b0b2d9788822f4efd2a1ac345abf90d`
+- Original: `original/usc-28-app-frcp-editions/001-USCODE-2011-title28-app-federalru-dup1-rule4.htm` as served (sha256 3dfc4516721a266dcad493e9297788c2b955a67b8b433f85951c0108307590be); extraction sha256 3933c72e8d683ca3ccb902c939b8fc228b0b2d9788822f4efd2a1ac345abf90d. Served at https://www.govinfo.gov/content/pkg/USCODE-2011-title28/html/USCODE-2011-title28-app-federalru-dup1-rule4.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-30.
+- Original: `original/usc-28-app-frcp-editions/002-USCODE-2011-title28-app-federalru-dup1-rule12.htm` as served (sha256 6d3503887fe2f522e2e7964e2e49dd5e206ca0b575876e59f665b1aa557bad20); extraction sha256 3933c72e8d683ca3ccb902c939b8fc228b0b2d9788822f4efd2a1ac345abf90d. Served at https://www.govinfo.gov/content/pkg/USCODE-2011-title28/html/USCODE-2011-title28-app-federalru-dup1-rule12.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-30.
+- Original: `original/usc-28-app-frcp-editions/003-USCODE-2011-title28-app-federalru-dup1-rule15.htm` as served (sha256 a129e51ec3244e11482afab14b948c6025b39b7b5aad46548629169939b3d125); extraction sha256 3933c72e8d683ca3ccb902c939b8fc228b0b2d9788822f4efd2a1ac345abf90d. Served at https://www.govinfo.gov/content/pkg/USCODE-2011-title28/html/USCODE-2011-title28-app-federalru-dup1-rule15.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-30.
+- Original: `original/usc-28-app-frcp-editions/004-USCODE-2015-title28-app-federalru-dup1-rule4.htm` as served (sha256 3681e71dd37fc8e009525b40cb832525734440dbe6016febb4596362a467b745); extraction sha256 3933c72e8d683ca3ccb902c939b8fc228b0b2d9788822f4efd2a1ac345abf90d. Served at https://www.govinfo.gov/content/pkg/USCODE-2015-title28/html/USCODE-2015-title28-app-federalru-dup1-rule4.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-30.
 
 ### `rcfc-appendices.txt` — RCFC Appendices A and C (every paragraph), H (¶¶ 1-3) and J (Patent Rules 1-24)
 

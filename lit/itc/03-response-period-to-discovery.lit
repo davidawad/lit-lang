@@ -41,7 +41,7 @@ state response-filed: "Response Filed" by office effective [2025-02-03, ..) cite
   group response-period-group
   note "Written response under oath addressing each allegation; for patent complaints, non-infringement claim charts and, if invalidity is asserted, its basis and prior art."
   edge-response-filed-discovery-open "Discovery is open (Federal Register publication triggers it — modeled here as concurrent with the response period, see instituted's note) (Rule 210.27(b))" -> discovery-open {
-    authority cite "cfr210.27.b"
+    authority cite "19 CFR (2025) 210.27(b)"
   }
 }
 
@@ -91,7 +91,7 @@ state default-relief-determination: "Default Relief Determination" by examiner e
   }
 }
 
-decision discovery-open: "Discovery Open" by applicant effective [2025-02-03, ..) cite "cfr210.27.b"
+decision discovery-open: "Discovery Open" by applicant effective [2025-02-03, ..) cite "19 CFR (2025) 210.27(b)"
 {
   group discovery-group
   note "Parties discover matters 'not privileged, that is proportional to the needs of the investigation' — broadly FRCP-26(b)(1)-shaped, but scoped to a 45-day-post-institution target date rather than a multi-year docket, with compressed 10-day response windows throughout. This hub node is a pure player node (every outgoing edge, including its self-loops, is an applicant choice) — the direct structural analog of mpep-prosecution.json's RCE-churn cycle: the SCC where time, money, and CBI risk accumulate before the case can graduate to prehearing."
@@ -154,7 +154,7 @@ decision discovery-open: "Discovery Open" by applicant effective [2025-02-03, ..
     action_id "take.deposition"
   }
   discovery-file-privilege-log "File Privilege Log for withheld material within 10 days (Rule 210.27(e))" -> discovery-open {
-    authority cite "cfr210.27.e"
+    authority cite "19 CFR (2025) 210.27(e)"
     effort 4.hours
     cost 300.usd
     within privilege-log-period {
@@ -232,7 +232,7 @@ chance discovery-sanctions: "ALJ Rules on Discovery Sanctions" by examiner discr
   }
 }
 
-state cbi-designated: "Material Designated CBI" by applicant effective [2013-05-20, ..) cite "cfr210.5.disclosure"
+state cbi-designated: "Material Designated CBI" by applicant effective [2025-02-03, ..) cite "cfr210.5.disclosure"
 {
   group discovery-group
   note "Confidential business information is defined per 19 CFR 201.6(a),(c). Properly designated CBI cannot be disclosed without submitter consent except to persons granted access under a 210.34(a) protective order, Commission staff directly administering the investigation, U.S. officers conducting § 1337(j) review, or CBP officers administering an exclusion."
@@ -271,7 +271,7 @@ state protective-order-issued: "Protective Order Issued" by examiner effective [
 
 /// A draw, not a ruling or a party's choice: whether the filer redacted all
 /// confidential business information.
-chance public-version-filed: "Public (Redacted) Version Filed" by examiner effective [2013-05-20, ..) cite "cfr210.5.public-version"
+chance public-version-filed: "Public (Redacted) Version Filed" by examiner effective [2025-02-03, ..) cite "cfr210.5.public-version"
 {
   group discovery-group
   note "Properly-redacted acceptance authored at 0.92 / still-unredacted-CBI at 0.08 — APPROXIMATE, modeling the authoring-error case the pack's own flagRules target (file.public-version with params.unredactedCbiIncluded=true raises the violation flag below)."

@@ -87,19 +87,21 @@ instance cafc@cofc {
 /// the appellant) is the opponent, and payoffs become the plaintiff's under
 /// `stake - payoff`. The stake is the plaintiff's CoFC judgment, which the
 /// government's appeal puts at risk: a fact of the matter that no forum
-/// package can know, so it is a hole. The legacy pack wrote a $1M
-/// placeholder in its place. With the stake unknown, every terminal of the
-/// instance lowers unpriced, and the engine reports `payoff-not-authored`
-/// until the matter authors those payoffs. Same rehearing patches as
+/// package can know. It is the $1,000,000 PLACEHOLDER the cofc package
+/// authors for that judgment (`cofc::judgment-entered`,
+/// `cofc::judgment-for-plaintiff`), the frame lit/cafc's own placeholder
+/// payoffs use ($1,000,000 for a reversal), so the flipped payoffs are
+/// placeholders like every other terminal's. A matter overrides them by
+/// authoring the instance's terminal stakes. Same rehearing patches as
 /// `cafc@cofc`.
 instance cafc@cofc-gov {
   pack cafc
-  note "Federal Circuit as entered by the United States appealing a CoFC plaintiff win. Perspective flipped: the government (appellant) is the opponent; payoffs are the plaintiff's (stake − appellant payoff). The stake is the matter's own judgment amount and is left unknown here, so this instance's terminal payoffs are unauthored until the matter supplies them."
+  note "Federal Circuit as entered by the United States appealing a CoFC plaintiff win. Perspective flipped: the government (appellant) is the opponent; payoffs are the plaintiff's (stake − appellant payoff). PLACEHOLDER STAKE: $1,000,000, the cofc package's placeholder judgment; override per matter by authoring this instance's terminal stakes."
   remove_edges [origin-to-district-court, origin-to-ptab, origin-to-itc, remand-route-district-court, remand-route-ptab, remand-route-itc, origin-to-ttab, remand-route-ttab]
   probabilities { remand-route-cofc: 1 }
   roles { applicant: opponent, examiner: self }
   payoff_transform (stake - payoff)
-  stake ?("the plaintiff's CoFC judgment, which the United States' appeal puts at risk: a fact of the matter")
+  stake 1_000_000.usd
   patch rehearing-file {
     within rehearing-period-united-states-party {
       extendable false

@@ -25,7 +25,7 @@ state patent-jpsr-filed: "Joint Preliminary Status Report Filed (Patent Track)" 
   group patent-track-group
   note "Must be filed within 49 days after the answer, OR within 98 days after the answer if the United States has filed (and the court has granted) a RCFC 14 motion to notify interested third parties -- doubling the clock to accommodate contractor notice practice. Same JPSR mechanism as the general track (Appendix A ¶4), but PRCFC Rule 2 adds patent-specific topics to the early-meeting-of-counsel agenda: claim-construction scope/timing, hearing format, technology tutorials, reexamination status, and a good-faith damages-range estimate."
   e-patentjpsr-to-po "Parties negotiate and the court enters a patent protective order before technical discovery exchanges" -> patent-protective-order-entered {
-    authority cite ?("RCFC 26(c)(1); PRCFC Rule 19(b); Appendix of Forms Form 8A")
+    authority cite "RCFC 26(c)(1); PRCFC 19(b); Appendix of Forms, Form 8A"
   }
 }
 
@@ -71,7 +71,8 @@ state patent-early-meeting: "Early Meeting of Counsel (Patent-Specific Agenda)" 
   }
 }
 
-state patent-protective-order-entered: "Patent Protective Order Entered" by applicant cite ?("RCFC 26(c)(1); PRCFC Rule 19(b); Appendix of Forms Form 8A") {
+state patent-protective-order-entered: "Patent Protective Order Entered" by applicant cite "RCFC 26(c)(1); PRCFC 19(b); Appendix of Forms, Form 8A"
+{
   group patent-track-group
   note "The court's standard-form protective order for patent cases (Form 8A) governs confidential technical/financial discovery, including a 'Restricted -- Attorneys' Eyes Only' tier and Written Assurance obligations (Form 9A) for anyone granted access."
   e-po-to-infringement "Plaintiff serves Preliminary Disclosure of Infringement Contentions" -> patent-infringement-contentions {

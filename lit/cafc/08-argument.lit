@@ -1,6 +1,5 @@
 // Oral argument or submission on the briefs (FRAP 34(a); Fed. Cir. IOP #7,
-// #8). The Internal Operating Procedures are not vendored under sources/,
-// so their cites stay holes carrying the pack's text.
+// #8, vendored as sources/fedcir-iops.txt).
 module cafc.argument
 
 import cafc.decision-to-rehearing.{ panel-decision }
@@ -9,25 +8,28 @@ import cafc.{ argument-group }
 /// A tribunal-discretion draw: the panel may dispense with argument only on
 /// a unanimous FRAP 34(a)(2) finding. It stays a `decision` by `office`, as
 /// in the pack, because a `chance` node lowers to kind `state`. No
-/// Federal-Circuit-specific rate is published, so its draws are holes.
-chance oral-argument-fork: "Oral Argument or Submission Without Argument?" by office discretion cite ?("FRAP 34(a); Fed. Cir. IOP #7") {
+/// Federal-Circuit-specific rate is published, so its draws are the pack's
+/// teaching estimate.
+chance oral-argument-fork: "Oral Argument or Submission Without Argument?" by office discretion cite "FRAP 34(a); Fed. Cir. IOP #7"
+{
   group argument-group
-  note "Argument is allowed unless a three-judge panel unanimously finds the appeal frivolous, the dispositive issue authoritatively decided, or the briefs/record adequately present the case (FRAP 34(a)(2); IOP #7 ¶ 2). No CAFC-specific published argument/no-argument split was located (general cross-circuit AO data puts ~19-25% of all federal appeals at oral argument, not Federal-Circuit-specific) — probability intentionally left unauthored on both edges."
-  argument-granted "Panel grants oral argument" -> oral-argument-held p ?("no Federal-Circuit-specific argument rate") {
-    authority cite ?("FRAP 34(a)(1); Fed. Cir. IOP #7")
-    note "No CAFC-specific split published; probability intentionally unauthored."
+  note "Argument is allowed unless a three-judge panel unanimously finds the appeal frivolous, the dispositive issue authoritatively decided, or the briefs/record adequately present the case (FRAP 34(a)(2); IOP #7 ¶ 2). No CAFC-specific published argument/no-argument split was located (general cross-circuit AO data puts ~19-25% of all federal appeals at oral argument, not Federal-Circuit-specific) — the 0.6 / 0.4 split is the pack's teaching estimate, unsourced, for `litigate calibration` to rank."
+  argument-granted "Panel grants oral argument" -> oral-argument-held p 0.6 {
+    authority cite "FRAP 34(a)(1); Fed. Cir. IOP #7"
+    note "No CAFC-specific split published; teaching estimate, unsourced."
   }
-  argument-dispensed "Panel dispenses with argument" -> submitted-without-argument p ?("no Federal-Circuit-specific argument rate") {
+  argument-dispensed "Panel dispenses with argument" -> submitted-without-argument p 0.4 {
     authority cite "FRAP 34(a)(2); Fed. Cir. R. 34(a)"
-    note "No CAFC-specific split published; probability intentionally unauthored."
+    note "No CAFC-specific split published; teaching estimate, unsourced."
   }
 }
 
-state oral-argument-held: "Oral Argument Held" by office cite ?("FRAP 34(c)-(d); Fed. Cir. IOP #7") {
+state oral-argument-held: "Oral Argument Held" by office cite "FRAP 34(c)-(d); Fed. Cir. IOP #7"
+{
   group argument-group
   note "15 minutes per side is the court's normal allocation, up to 30 minutes normal maximum (IOP #7 ¶ 1)."
   argument-held-to-decision "Argument concludes — panel confers (IOP #8)" -> panel-decision {
-    authority cite ?("Fed. Cir. IOP #8")
+    authority cite "Fed. Cir. IOP #8"
   }
 }
 
@@ -35,6 +37,6 @@ state submitted-without-argument: "Submitted Without Oral Argument" by office ci
 {
   group argument-group
   submitted-to-decision "Panel confers on the papers (IOP #8)" -> panel-decision {
-    authority cite ?("Fed. Cir. IOP #8")
+    authority cite "Fed. Cir. IOP #8"
   }
 }

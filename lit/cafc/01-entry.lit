@@ -51,7 +51,7 @@ state entry-district-court: "District Court Patent Judgment Entered" by applican
     tags [appeal]
   }
   district-court-window-blown "Let the 30/60-day window lapse" -> window-blown-district-court {
-    authority cite ?("Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107; FRAP 4(a)")
+    authority cite "Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107; FRAP 4(a)"
   }
 }
 
@@ -114,7 +114,7 @@ state entry-cofc: "Court of Federal Claims Judgment Entered" by applicant cite "
     tags [appeal]
   }
   cofc-window-blown "Let the 60-day window lapse" -> window-blown-cofc {
-    authority cite ?("28 U.S.C. § 2522; Bowles v. Russell, 551 U.S. 205 (2007)")
+    authority cite "28 U.S.C. § 2522; Bowles v. Russell, 551 U.S. 205 (2007)"
   }
 }
 
@@ -262,7 +262,7 @@ rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
   deadline cofc-noa-period: 60.days after Entered(CofcJudgment) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 delegable {
     to CaseOrder
     op extend
-  } cite "28 U.S.C. § 2522; FRAP (2008 ed.) 4(a)(1)(B); FRAP (2008 ed.) 4(a)(5)(A)"
+  } cite "28 U.S.C. § 2522; FRAP (2002 ed.) 4(a)(1)(B); FRAP (2002 ed.) 4(a)(5)(A)"
   {
     forum frap
     extend {
@@ -278,7 +278,7 @@ rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
   deadline cofc-noa-period: 60.days after Entered(CofcJudgment) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes cofc-noa-period@2002-12-01 delegable {
     to CaseOrder
     op extend
-  } cite "28 U.S.C. § 2522; FRAP 4(a)(1)(B); FRAP 4(a)(5)(A)"
+  } cite "28 U.S.C. § 2522; FRAP (2009 ed.) 4(a)(1)(B); FRAP (2009 ed.) 4(a)(5)(A)"
   {
     forum frap cite "28 U.S.C. § 2522"
       quote "within the time and in the manner prescribed for appeals to United States courts of appeals from the United States district courts"

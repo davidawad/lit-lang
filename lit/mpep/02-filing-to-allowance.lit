@@ -781,7 +781,7 @@ terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effec
   valence good
   payoff 1_000_000.usd
   edge-patent-issued-maintenance-due "Maintenance fees become due (3.5 / 7.5 / 11.5 years)" -> maintenance-due {
-    authority cite ?("37 CFR 1.362; 35 U.S.C. 41(b): the vendored sources/usc-cfr-prosecution-fragments.txt excerpts 35 U.S.C. § 41 without its maintenance-fee subsection (b)")
+    authority cite "37 CFR 1.362"
     effort 0.2.hours
   }
   edge-patent-issued-patent-challenged "Third party challenges the issued patent (post-grant)" -> patent-challenged by office {
@@ -821,7 +821,7 @@ terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effec
   valence good
   payoff 1_000_000.usd
   edge-patent-issued-maintenance-due "Maintenance fees become due (3.5 / 7.5 / 11.5 years)" -> maintenance-due {
-    authority cite ?("37 CFR 1.362; 35 U.S.C. 41(b): the vendored sources/usc-cfr-prosecution-fragments.txt excerpts 35 U.S.C. § 41 without its maintenance-fee subsection (b)")
+    authority cite "37 CFR 1.362"
     effort 0.2.hours
   }
   edge-patent-issued-patent-challenged "Third party challenges the issued patent (post-grant)" -> patent-challenged by office {
@@ -854,7 +854,8 @@ terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effec
   }
 }
 
-state maintenance-due: "Maintenance Fees Required" by applicant effective [2024-01-31, 2025-01-19) cite ?("37 CFR 1.362; 35 U.S.C. 41(b): the vendored sources/usc-cfr-prosecution-fragments.txt excerpts 35 U.S.C. § 41 without its maintenance-fee subsection (b)") {
+state maintenance-due: "Maintenance Fees Required" by applicant effective [2024-01-31, 2025-01-19) cite "37 CFR 1.362"
+{
   group allowance-group
   note "Maintenance fees required at 3.5, 7.5, and 11.5 years after grant (37 CFR 1.362). A 6-month grace period with surcharge is available. Failure to pay within the grace period = expiration. Small and micro entities pay reduced fees."
   edge-maintenance-due-maintenance-due "Pay maintenance fee on time" -> maintenance-due {
@@ -865,13 +866,14 @@ state maintenance-due: "Maintenance Fees Required" by applicant effective [2024-
     note "3.5-year maintenance fee $2,000.00, undiscounted/large-entity, in force until 1/19/2025 (37 CFR 1.20(e)); the 7.5-year fee is $3,760.00 (1.20(f)) and the 11.5-year fee is $7,700.00 (1.20(g)) -- this edge's self-loop models only the recurring 3.5-year-tier default since the pack has no windowed-maintenance-cycle state."
   }
   edge-maintenance-due-patent-expired "Fail to pay maintenance fee — patent expires" -> patent-expired {
-    authority cite ?("37 CFR 1.362(f); 35 U.S.C. 41(b): the vendored sources/usc-cfr-prosecution-fragments.txt excerpts 35 U.S.C. § 41 without its maintenance-fee subsection (b)")
+    authority cite "37 CFR 1.362(g)"
     effort 0.hours
     valence bad
   }
 }
 
-state maintenance-due: "Maintenance Fees Required" by applicant effective [2025-01-19, ..) cite ?("37 CFR 1.362; 35 U.S.C. 41(b): the vendored sources/usc-cfr-prosecution-fragments.txt excerpts 35 U.S.C. § 41 without its maintenance-fee subsection (b)") {
+state maintenance-due: "Maintenance Fees Required" by applicant effective [2025-01-19, ..) cite "37 CFR 1.362"
+{
   group allowance-group
   note "Maintenance fees required at 3.5, 7.5, and 11.5 years after grant (37 CFR 1.362). A 6-month grace period with surcharge is available. Failure to pay within the grace period = expiration. Small and micro entities pay reduced fees."
   edge-maintenance-due-maintenance-due "Pay maintenance fee on time" -> maintenance-due {
@@ -882,7 +884,7 @@ state maintenance-due: "Maintenance Fees Required" by applicant effective [2025-
     note "3.5-year maintenance fee $2,150.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.20(e)); the 7.5-year fee is $4,040.00 (1.20(f)) and the 11.5-year fee is $8,280.00 (1.20(g)) -- this edge's self-loop models only the recurring 3.5-year-tier default since the pack has no windowed-maintenance-cycle state."
   }
   edge-maintenance-due-patent-expired "Fail to pay maintenance fee — patent expires" -> patent-expired {
-    authority cite ?("37 CFR 1.362(f); 35 U.S.C. 41(b): the vendored sources/usc-cfr-prosecution-fragments.txt excerpts 35 U.S.C. § 41 without its maintenance-fee subsection (b)")
+    authority cite "37 CFR 1.362(g)"
     effort 0.hours
     valence bad
   }
@@ -972,7 +974,8 @@ terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant ou
   }
 }
 
-terminal patent-expired: "Patent Expired" outcome [loss, expired, waiver-trap] effective [2024-01-31, ..) cite ?("37 CFR 1.362; 35 U.S.C. 41(b): the vendored sources/usc-cfr-prosecution-fragments.txt excerpts 35 U.S.C. § 41 without its maintenance-fee subsection (b)") {
+terminal patent-expired: "Patent Expired" outcome [loss, expired, waiver-trap] effective [2024-01-31, ..) cite "37 CFR 1.362(g)"
+{
   group allowance-group
   note "Patent expired for failure to pay maintenance fees after the 6-month grace period. Reinstatement is not available for expired patents (unlike abandoned applications). The invention enters the public domain. PLACEHOLDER PAYOFF: $0, override per matter. Premature expiration for a missed maintenance-fee payment, not the natural end of a full term."
   valence bad

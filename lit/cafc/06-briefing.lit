@@ -131,9 +131,16 @@ rule duty reply-brief cite "FRAP 31(a)(1)"
   deadline reply-brief-period: 14.days after BriefServed(Response) counted_by frap26 effective [2009-12-01, 2018-12-01) known_at 2009-03-26 delegable {
     to CaseOrder
     op set
-  } cite ?("the 2009 reply-brief text (14 days); not vendored, the corpus holds only the current rule")
+  } cite "FRAP (2009 ed.) 31(a)(1)"
 
-  deadline reply-brief-period: 21.days after BriefServed(Response) counted_by frap26 effective [2018-12-01, ..) known_at 2018-04-26 supersedes reply-brief-period@2009-12-01 delegable {
+  deadline reply-brief-period: 21.days after BriefServed(Response) counted_by frap26 effective [2018-12-01, 2025-12-01) known_at 2018-04-26 supersedes reply-brief-period@2009-12-01 delegable {
+    to CaseOrder
+    op set
+  } cite "FRAP 31(a)(1)"
+
+  /// From the December 1, 2025 edition of the Federal Circuit Rules, the
+  /// first version of Fed. Cir. R. 26 the vendored history records.
+  deadline reply-brief-period: 21.days after BriefServed(Response) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable {
     to CaseOrder
     op set
   } cite "FRAP 31(a)(1); Fed. Cir. R. 26(b)(1)"

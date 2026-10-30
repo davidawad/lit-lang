@@ -381,8 +381,11 @@ test "a cancellation answer is due on the date the notice designates" cite "37 C
 
 /// 37 C.F.R. § 2.120(a)(2): a 180-day discovery period, initial
 /// disclosures within its first thirty days. Both may be extended or
-/// modified "by order of the Board" (§ 2.120(a)(2)(iv)).
-rule duty discovery-schedule effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.120(a)(2)"
+/// modified "by order of the Board" (§ 2.120(a)(2)(iv)). The vendored text
+/// is the one in force from July 21, 2017, the eCFR's last version of
+/// § 2.120 (sources/ecfr-versions-title-37.txt); the January 14, 2017 text
+/// before it is not encoded (`unknown_before`).
+rule duty discovery-schedule effective [2017-07-21, ..) known_at 2017-07-21 unknown_before 2017-07-21 cite "37 CFR 2.120(a)(2)"
 {
   deadline disclosure-period: 30.days from DiscoveryOpened() counted_by ttab-2-196 delegable {
     to CaseOrder
@@ -432,15 +435,19 @@ event RebuttalTestimonyClosed()
 /// "calculated from the actual due date of the prior action or close of the
 /// period, not the adjusted date under 37 C.F.R. § 2.196" (TBMP § 112), so
 /// each runs from the nominal end of the one before, even when § 2.196
-/// moved that brief to the next business day. The text is the one in force
-/// from January 14, 2017 (81 FR 69984; sources/cfr-37-part2-history.txt),
-/// its paragraph (a)(1) unchanged then and since. Where § 2.128(a)(2)
+/// moved that brief to the next business day; the vendored TBMP § 112 is the
+/// June 2026 edition, so the versions before June 1, 2026 cite § 2.128(a)(1)
+/// alone. The text is the one in force from January 14, 2017 (81 FR 69984;
+/// sources/cfr-37-part2-history.txt), its paragraph (a)(1) unchanged then
+/// and since. Where § 2.128(a)(2)
 /// applies (a counterclaim, consolidated proceedings, more than two
 /// parties) the Board sets the dates instead, which these do not model;
 /// no extension power is declared.
 deadline plaintiff-brief-period: 60.days after RebuttalTestimonyClosed() counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.128(a)(1)"
-deadline defendant-brief-period: 30.days after deadline(plaintiff-brief-period).nominal counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.128(a)(1); TBMP § 112"
-deadline reply-brief-period: 15.days after deadline(defendant-brief-period).nominal counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.128(a)(1); TBMP § 112"
+deadline defendant-brief-period: 30.days after deadline(plaintiff-brief-period).nominal counted_by ttab-2-196 effective [2017-01-14, 2026-06-01) known_at 2016-10-07 cite "37 CFR 2.128(a)(1)"
+deadline defendant-brief-period: 30.days after deadline(plaintiff-brief-period).nominal counted_by ttab-2-196 effective [2026-06-01, ..) known_at 2026-06-01 cite "37 CFR 2.128(a)(1); TBMP § 112"
+deadline reply-brief-period: 15.days after deadline(defendant-brief-period).nominal counted_by ttab-2-196 effective [2017-01-14, 2026-06-01) known_at 2016-10-07 cite "37 CFR 2.128(a)(1)"
+deadline reply-brief-period: 15.days after deadline(defendant-brief-period).nominal counted_by ttab-2-196 effective [2026-06-01, ..) known_at 2026-06-01 cite "37 CFR 2.128(a)(1); TBMP § 112"
 
 test "a Sunday 30th day rolls the defendant's brief to Monday; the reply runs from the Sunday" cite "TBMP § 112"
 {
@@ -467,8 +474,11 @@ test "a Saturday 60th day: the plaintiff's brief rolls to Monday, and the defend
 /// upon a showing of good cause; or (ii) Requested after the expiration of
 /// the period ..., and upon a showing that the failure to act was the
 /// result of excusable neglect" (§ 2.145(e)(1)): both turn on when the
-/// request was made, and neither has a numeric ceiling.
-rule duty review-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.145(d)"
+/// request was made, and neither has a numeric ceiling. The vendored text
+/// is the one in force from March 29, 2024, the eCFR's last version of
+/// § 2.145 (sources/ecfr-versions-title-37.txt); the earlier texts are not
+/// encoded (`unknown_before`).
+rule duty review-time effective [2024-03-29, ..) known_at 2024-03-29 unknown_before 2024-03-29 cite "37 CFR 2.145(d)"
 {
   deadline civil-action-period: 63.days from FinalDecision() counted_by ttab-2-196 cite "37 CFR 2.145(d)(3)"
   {

@@ -19,7 +19,8 @@ terminal registration-restricted: "Restricted registration (ID narrowed by conse
   payoff -6_000.usd
 }
 
-terminal opposition-sustained: "Opposition sustained: application refused; no damages, no fees (37 CFR 2.127(f))" outcome [loss, sustained] cite ?("37 CFR 2.127(f); 37 CFR 2.136; B&B Hardware v. Hargis, 575 U.S. 138 (2015)") {
+terminal opposition-sustained: "Opposition sustained: application refused; no damages, no fees (37 CFR 2.127(f))" outcome [loss, sustained] cite "37 CFR 2.127(f); 37 CFR 2.136; B&B Hardware, Inc. v. Hargis Industries, Inc., 575 U.S. 138 (2015)"
+{
   group terminals
   note "Applicant payoff at placeholder inputs = -115,000 (rb=1, fx=-15000, sh=0); scenarios recompute it from params."
   attrs { fx: -15000, rb: 1, sfx: 0, sh: 0, sw: 1 }

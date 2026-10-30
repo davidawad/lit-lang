@@ -10,8 +10,10 @@ import core.frap26.{ frap26 }
 
 /// FRAP 4(a)(1)(A): 30 days after entry of the judgment; the district
 /// court may extend it under FRAP 4(a)(5)(A), a delegation to an order in
-/// the case. Two versions, each the text a vendored edition prints. Before
-/// the 2009 amendments (2008 edition of 28 U.S.C. App.) no extension "may
+/// the case. Two versions, each the text a vendored edition prints (the
+/// 2002 and 2009 editions of 28 U.S.C. App.; the 2005 amendment changed
+/// only 4(a)(6), as the 2008 edition shows). Before the 2009 amendments no
+/// extension "may
 /// exceed 30 days after the prescribed time or 10 days after the date when
 /// the order granting the motion is entered, whichever is later"
 /// (4(a)(5)(C)); FRAP 26(a)(2) then left weekends and legal holidays out of
@@ -28,7 +30,7 @@ rule duty district-court-notice-of-appeal cite "FRAP 4(a)(1)(A)"
   deadline district-court-noa-period: 30.days after Entered(Judgment) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 delegable {
     to CaseOrder
     op extend
-  } cite "FRAP (2008 ed.) 4(a)(1)(A); FRAP (2008 ed.) 4(a)(5)(A)"
+  } cite "FRAP (2002 ed.) 4(a)(1)(A); FRAP (2002 ed.) 4(a)(5)(A)"
   {
     extend {
       by court
@@ -43,7 +45,7 @@ rule duty district-court-notice-of-appeal cite "FRAP 4(a)(1)(A)"
   deadline district-court-noa-period: 30.days after Entered(Judgment) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes district-court-noa-period@2002-12-01 delegable {
     to CaseOrder
     op extend
-  } cite "FRAP 4(a)(1)(A); FRAP 4(a)(5)(A)"
+  } cite "FRAP (2009 ed.) 4(a)(1)(A); FRAP (2009 ed.) 4(a)(5)(A)"
   {
     extend {
       by court
@@ -70,12 +72,12 @@ rule duty district-court-notice-of-appeal cite "FRAP 4(a)(1)(A)"
 /// appeal" and 4(a)(5)(B) names 4(a)(3), so the period carries the trial
 /// court's 4(a)(5) grant and FRAP 26(b)(1)'s lock; no delegation to a case
 /// order is declared. As for `district-court-noa-period`, the version
-/// before December 1, 2009 is the 2008 edition's, whose 4(a)(5)(C) bound
+/// before December 1, 2009 is the 2002 edition's, whose 4(a)(5)(C) bound
 /// is 10 days after the order (counted here in calendar days, the earlier
 /// date), in force from December 1, 2002; earlier law is not declared.
 rule duty cross-appeal-notice cite "FRAP 4(a)(3)"
 {
-  deadline cross-appeal-period: 14.days after Filed(NoticeOfAppeal) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 cite "FRAP (2008 ed.) 4(a)(3)"
+  deadline cross-appeal-period: 14.days after Filed(NoticeOfAppeal) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 cite "FRAP (2002 ed.) 4(a)(3)"
   {
     trigger later_of(district-court-noa-period)
     extend {
@@ -88,7 +90,7 @@ rule duty cross-appeal-notice cite "FRAP 4(a)(3)"
     }
     lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP (2008 ed.) 26(b)(1)"
   }
-  deadline cross-appeal-period: 14.days after Filed(NoticeOfAppeal) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes cross-appeal-period@2002-12-01 cite "FRAP 4(a)(3)"
+  deadline cross-appeal-period: 14.days after Filed(NoticeOfAppeal) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes cross-appeal-period@2002-12-01 cite "FRAP (2009 ed.) 4(a)(3)"
   {
     trigger later_of(district-court-noa-period)
     extend {

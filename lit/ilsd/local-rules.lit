@@ -1,6 +1,6 @@
 module ilsd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.illinois.{ frcp6-illinois }
 
 // The Southern District of Illinois's own periods and page limits, computed
 // under the federal rules (FRCP 6(a) governs "any local rule"). Each
@@ -88,21 +88,21 @@ event AssignmentNoticeReceived()
 /// SDIL-LR 3.1: a petitioner or plaintiff in custody informs the clerk and
 /// each opposing party in writing of a transfer or other change in address
 /// not later than 14 days after it occurs; failure may result in dismissal.
-deadline custody-address-notice-period: 14.days after CustodyAddressChanged() counted_by frcp6 cite "SDIL-LR 3.1"
+deadline custody-address-notice-period: 14.days after CustodyAddressChanged() counted_by frcp6-illinois cite "SDIL-LR 3.1"
 {
   forum frcp
 }
 
 /// SDIL-LR 7.1(b)(1)(A): an adverse party has 30 days after service of a
 /// motion listed in SDIL-LR 7.1(b)(1) to file a response.
-deadline briefed-motion-response-period: 30.days after BriefedMotionServed() counted_by frcp6 cite "SDIL-LR 7.1(b)"
+deadline briefed-motion-response-period: 30.days after BriefedMotionServed() counted_by frcp6-illinois cite "SDIL-LR 7.1(b)"
 {
   forum frcp
 }
 
 /// SDIL-LR 7.1(b)(1)(B): reply briefs, if any, are filed within 14 days of
 /// the service of a response.
-deadline briefed-motion-reply-period: 14.days after BriefedMotionResponseServed() counted_by frcp6 cite "SDIL-LR 7.1(b)"
+deadline briefed-motion-reply-period: 14.days after BriefedMotionResponseServed() counted_by frcp6-illinois cite "SDIL-LR 7.1(b)"
 {
   forum frcp
 }
@@ -111,7 +111,7 @@ deadline briefed-motion-reply-period: 14.days after BriefedMotionResponseServed(
 /// pleadings and for summary judgment are filed no later than 100 days
 /// before the trial date or, with no trial date set, before the first day
 /// of the presumptive trial month.
-deadline dispositive-motion-cutoff: 100.days before TrialDate() counted_by frcp6 cite "SDIL-LR 7.1(b)"
+deadline dispositive-motion-cutoff: 100.days before TrialDate() counted_by frcp6-illinois cite "SDIL-LR 7.1(b)"
 {
   forum frcp
 }
@@ -119,14 +119,14 @@ deadline dispositive-motion-cutoff: 100.days before TrialDate() counted_by frcp6
 /// SDIL-LR 7.1(b)(2)(A): a party opposing a civil motion not listed in
 /// SDIL-LR 7.1(b)(1) has 14 days after service of the motion to file a
 /// written response.
-deadline other-motion-response-period: 14.days after OtherMotionServed() counted_by frcp6 cite "SDIL-LR 7.1(b)"
+deadline other-motion-response-period: 14.days after OtherMotionServed() counted_by frcp6-illinois cite "SDIL-LR 7.1(b)"
 {
   forum frcp
 }
 
 /// SDIL-LR 7.1(b)(2)(B): a reply, if any, is filed within 7 days of the
 /// service of the response.
-deadline other-motion-reply-period: 7.days after OtherMotionResponseServed() counted_by frcp6 cite "SDIL-LR 7.1(b)"
+deadline other-motion-reply-period: 7.days after OtherMotionResponseServed() counted_by frcp6-illinois cite "SDIL-LR 7.1(b)"
 {
   forum frcp
 }
@@ -134,7 +134,7 @@ deadline other-motion-reply-period: 7.days after OtherMotionResponseServed() cou
 /// SDIL-LR 16.2(a): the jointly prepared report of the FRCP 26(f)
 /// conference is submitted at least 7 days before the date of the
 /// scheduling conference.
-deadline joint-report-period: 7.days before SchedulingConferenceHeld() counted_by frcp6 cite "SDIL-LR 16.2(a)"
+deadline joint-report-period: 7.days before SchedulingConferenceHeld() counted_by frcp6-illinois cite "SDIL-LR 16.2(a)"
 {
   forum frcp
 }
@@ -143,7 +143,7 @@ deadline joint-report-period: 7.days before SchedulingConferenceHeld() counted_b
 /// conference in a class action, the parties submit their Joint Report and
 /// Proposed Scheduling and Discovery Order, or without agreement each its
 /// own proposed order and memorandum.
-deadline class-action-report-period: 7.days before SchedulingConferenceHeld() counted_by frcp6 cite "SDIL-LR 23.1(b)"
+deadline class-action-report-period: 7.days before SchedulingConferenceHeld() counted_by frcp6-illinois cite "SDIL-LR 23.1(b)"
 {
   forum frcp
 }
@@ -151,7 +151,7 @@ deadline class-action-report-period: 7.days before SchedulingConferenceHeld() co
 /// SDIL-LR 54.2(b): opposing counsel has 14 days from the date the clerk
 /// gives notice to file objections to costs; without objection the clerk
 /// taxes the appropriate costs.
-deadline costs-objection-period: 14.days after CostsNoticeGiven() counted_by frcp6 cite "SDIL-LR 54.2(b)"
+deadline costs-objection-period: 14.days after CostsNoticeGiven() counted_by frcp6-illinois cite "SDIL-LR 54.2(b)"
 {
   forum frcp
 }
@@ -159,7 +159,7 @@ deadline costs-objection-period: 14.days after CostsNoticeGiven() counted_by frc
 /// SDIL-LR 54.2(c): unless a federal statute separately authorizes
 /// otherwise, a request for costs is filed no later than 30 days after the
 /// entry of judgment; untimely requests are stricken.
-deadline costs-request-period: 30.days after JudgmentEntered() counted_by frcp6 cite "SDIL-LR 54.2(c)"
+deadline costs-request-period: 30.days after JudgmentEntered() counted_by frcp6-illinois cite "SDIL-LR 54.2(c)"
 {
   forum frcp
 }
@@ -167,7 +167,7 @@ deadline costs-request-period: 30.days after JudgmentEntered() counted_by frcp6 
 /// SDIL-LR 73.1(a): any party may appeal a magistrate judge's order under
 /// 28 U.S.C. § 636(b)(1)(A) within 14 days after its issuance, unless a
 /// magistrate or district judge prescribes a different time.
-deadline magistrate-order-appeal-period: 14.days after MagistrateOrderIssued() counted_by frcp6 cite "SDIL-LR 73.1(a)"
+deadline magistrate-order-appeal-period: 14.days after MagistrateOrderIssued() counted_by frcp6-illinois cite "SDIL-LR 73.1(a)"
 {
   forum frcp
 }
@@ -175,14 +175,14 @@ deadline magistrate-order-appeal-period: 14.days after MagistrateOrderIssued() c
 /// SDIL-LR 83.7: in a death penalty case within the rule, the petitioner or
 /// movant files legible copies of the listed documents within 10 days after
 /// filing the petition or motion.
-deadline capital-habeas-documents-period: 10.days after CapitalHabeasPetitionFiled() counted_by frcp6 cite "SDIL-LR 83.7"
+deadline capital-habeas-documents-period: 10.days after CapitalHabeasPetitionFiled() counted_by frcp6-illinois cite "SDIL-LR 83.7"
 {
   forum frcp
 }
 
 /// SDIL-LR 83.10(a): upon notice of the assignment, assigned counsel files
 /// an appearance within 14 days or as the court directs.
-deadline assigned-counsel-appearance-period: 14.days after AssignmentNoticeReceived() counted_by frcp6 cite "SDIL-LR 83.10(a)"
+deadline assigned-counsel-appearance-period: 14.days after AssignmentNoticeReceived() counted_by frcp6-illinois cite "SDIL-LR 83.10(a)"
 {
   forum frcp
 }

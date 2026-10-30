@@ -1,0 +1,108 @@
+module core.states.louisiana
+
+import core.calendar.{ us-federal-holidays }
+
+/// The statewide legal holidays of Louisiana (La. R.S. 1:55(A)(1)) that
+/// `us-federal-holidays` does not already close: the Battle of New Orleans
+/// (January 8), Good Friday, Huey P. Long Day (August 30) and All Saints' Day
+/// (November 1). § 1:55(A)(4) moves only January 1, July 4 and December 25,
+/// which the federal calendar already observes. Good Friday is listed with
+/// `once` from the date the vendored text was retrieved (October 29, 2026) to
+/// the end of 2050. Not modeled, each a last day on the earlier date: Mardi
+/// Gras, a holiday only where a parish or municipal governing authority
+/// declares it (§ 1:55(A)(3)); the days § 1:55(B) gives state employees and §
+/// 1:55(E) closes clerks' offices (among them general election day and the
+/// Friday after Thanksgiving), which are not (A)(1) legal holidays;
+/// Inauguration Day, the parish Saturdays and festival days, which are local;
+/// and the days the governor proclaims.
+calendar louisiana-holidays cite "La. R.S. 1:55"
+{
+  battle-of-new-orleans: fixed(1, 8) effective [2026-10-29, ..)
+  good-friday-2027: once(2027-03-26) effective [2026-10-29, ..)
+  good-friday-2028: once(2028-04-14) effective [2026-10-29, ..)
+  good-friday-2029: once(2029-03-30) effective [2026-10-29, ..)
+  good-friday-2030: once(2030-04-19) effective [2026-10-29, ..)
+  good-friday-2031: once(2031-04-11) effective [2026-10-29, ..)
+  good-friday-2032: once(2032-03-26) effective [2026-10-29, ..)
+  good-friday-2033: once(2033-04-15) effective [2026-10-29, ..)
+  good-friday-2034: once(2034-04-07) effective [2026-10-29, ..)
+  good-friday-2035: once(2035-03-23) effective [2026-10-29, ..)
+  good-friday-2036: once(2036-04-11) effective [2026-10-29, ..)
+  good-friday-2037: once(2037-04-03) effective [2026-10-29, ..)
+  good-friday-2038: once(2038-04-23) effective [2026-10-29, ..)
+  good-friday-2039: once(2039-04-08) effective [2026-10-29, ..)
+  good-friday-2040: once(2040-03-30) effective [2026-10-29, ..)
+  good-friday-2041: once(2041-04-19) effective [2026-10-29, ..)
+  good-friday-2042: once(2042-04-04) effective [2026-10-29, ..)
+  good-friday-2043: once(2043-03-27) effective [2026-10-29, ..)
+  good-friday-2044: once(2044-04-15) effective [2026-10-29, ..)
+  good-friday-2045: once(2045-04-07) effective [2026-10-29, ..)
+  good-friday-2046: once(2046-03-23) effective [2026-10-29, ..)
+  good-friday-2047: once(2047-04-12) effective [2026-10-29, ..)
+  good-friday-2048: once(2048-04-03) effective [2026-10-29, ..)
+  good-friday-2049: once(2049-04-16) effective [2026-10-29, ..)
+  good-friday-2050: once(2050-04-08) effective [2026-10-29, ..)
+  huey-p-long-day: fixed(8, 30) effective [2026-10-29, ..)
+  all-saints-day: fixed(11, 1) effective [2026-10-29, ..)
+}
+
+/// FRCP 6 in the district courts of Louisiana: the 2023 text
+/// (`frcp6@2023-12-01`) with `louisiana-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-louisiana effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays louisiana-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Louisiana:
+/// `louisiana-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-louisiana effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays louisiana-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-lae, bankr-lam, bankr-law]
+  allow_hours
+  end_of_month clamp
+}

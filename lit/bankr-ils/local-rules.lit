@@ -1,6 +1,6 @@
 module bankr-ils-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.states.illinois.{ frbp9006-illinois }
 import frbp.events.{ FirstMeetingDate }
 
 // The Bankr. S.D. Ill. court's own periods, counted under FRBP 9006(a).
@@ -117,137 +117,137 @@ event JuryDemandFiled()
 /// petitioning creditors have 14 days thereafter to file them or a motion to
 /// appoint a responsible party, or the court may dismiss the petition for
 /// lack of prosecution.
-deadline involuntary-creditor-schedules-period: 14.days after InvoluntarySchedulesDefaulted() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 1003"
+deadline involuntary-creditor-schedules-period: 14.days after InvoluntarySchedulesDefaulted() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 1003"
 /// LBR 1009(D)(3): in a large chapter 11 case with an authorized noticing
 /// agent, on conversion or within 7 days of any request from the court or
 /// another party, the debtor files and uploads an amended matrix.
-deadline amended-matrix-request-period: 7.days after MatrixRequested() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 1009(D)"
+deadline amended-matrix-request-period: 7.days after MatrixRequested() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 1009(D)"
 /// LBR 1007-2, 1007-2(A): the payment advices or other evidence of payment
 /// received within 60 days before the petition, or a verified statement that
 /// there were none, go to the trustee (or the United States Trustee) and to a
 /// creditor who timely requests them at least 7 days before the first
 /// scheduled § 341 meeting; they are not filed.
-deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 1007-2"
+deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 1007-2"
 /// LBR 1007-2: a creditor's request for copies of the payment advices is
 /// timely only if received at least 14 days before the first scheduled § 341
 /// meeting.
-deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 1007-2"
+deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 1007-2"
 /// LBR 1007-2(A): a debtor who believes a case dismissed on the trustee's
 /// request for failure to provide payment advices was dismissed in error
 /// files any motion to reinstate within 14 days of the entry of the dismissal
 /// order.
-deadline advices-reinstatement-motion-period: 14.days after AdvicesDismissalEntered() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 1007-2(A)"
+deadline advices-reinstatement-motion-period: 14.days after AdvicesDismissalEntered() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 1007-2(A)"
 /// LBR 1007-3: no later than 7 days before the § 341 meeting the debtor
 /// provides the trustee (or the United States Trustee) the most recently
 /// filed state tax return, or a verified statement that none exists and why;
 /// the federal return is FRBP 4002(b)(3)'s.
-deadline state-tax-return-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 1007-3"
+deadline state-tax-return-period: 7.days before FirstMeetingDate() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 1007-3"
 /// LBR 1017: no later than 7 days after a motion to reinstate a case
 /// dismissed for failure to make plan payments is filed, the trustee files a
 /// response consenting to or opposing reinstatement; on consent the case may
 /// be reinstated without hearing.
-deadline reinstatement-response-period: 7.days after ReinstatementMotionFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 1017"
+deadline reinstatement-response-period: 7.days after ReinstatementMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 1017"
 /// LBR 2004(D): a Rule 2004 motion's notice sets an objection, response or
 /// answer deadline of 7 days from its filing, and the hearing date if an
 /// objection is filed.
-deadline rule-2004-objection-period: 7.days after Rule2004MotionFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 2004(D)"
+deadline rule-2004-objection-period: 7.days after Rule2004MotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 2004(D)"
 /// LBR 2015-1, 6004-2(B): the chapter 7 trustee files a report of sale,
 /// stating the property sold, the buyer and the price, within 14 days of the
 /// sale; an auctioneer's report may be substituted.
-deadline trustee-sale-report-period: 14.days after TrusteeSaleHeld() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 2015-1"
+deadline trustee-sale-report-period: 14.days after TrusteeSaleHeld() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 2015-1"
 /// LBR 2015-2: in every dismissed case the trustee files a Report of Receipts
 /// and Disbursements, or of No Receipts and Disbursements, within 14 days of
 /// the dismissal.
-deadline dismissal-report-period: 14.days after Chapter7CaseDismissed() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 2015-2"
+deadline dismissal-report-period: 14.days after Chapter7CaseDismissed() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 2015-2"
 /// LBR 2016-2(B): a chapter 11 motion to establish interim compensation
 /// procedures is filed with a separate notice allowing 14 days from the date
 /// of filing to file objections.
-deadline interim-compensation-objection-period: 14.days after InterimCompensationMotionFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 2016-2(B)"
+deadline interim-compensation-objection-period: 14.days after InterimCompensationMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 2016-2(B)"
 /// LBR 2091(B): an order allowing an attorney to withdraw may be granted
 /// without hearing if no objection to the motion is filed within 7 days
 /// following its filing.
-deadline withdrawal-objection-period: 7.days after WithdrawalMotionFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 2091(B)"
+deadline withdrawal-objection-period: 7.days after WithdrawalMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 2091(B)"
 /// LBR 3003: unless otherwise ordered, in a chapter 11 case the bar date for
 /// a non-governmental creditor or equity security holder whose claim or
 /// interest is not scheduled, or is scheduled as disputed, contingent or
 /// unliquidated, is 90 days after the first date set for the § 341 meeting.
-deadline chapter11-claims-bar-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 3003"
+deadline chapter11-claims-bar-period: 90.days after FirstMeetingDate() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 3003"
 /// LBR 3018(C): all ballots are submitted to the plan proponent's attorney at
 /// least 7 days before the confirmation hearing.
-deadline ballot-submission-period: 7.days before Chapter11ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 3018(C)"
+deadline ballot-submission-period: 7.days before Chapter11ConfirmationHearing() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 3018(C)"
 /// LBR 3018(C): the balloting report and certification are filed at least 3
 /// days before the confirmation hearing and served on the United States
 /// Trustee, the Service List and the plan's objectors.
-deadline balloting-report-period: 3.days before Chapter11ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 3018(C)"
+deadline balloting-report-period: 3.days before Chapter11ConfirmationHearing() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 3018(C)"
 /// LBR 3022(C): a motion to close an individual chapter 11 case before plan
 /// payments are completed is accompanied by a notice giving all creditors 21
 /// days from its filing to object.
-deadline early-closing-objection-period: 21.days after EarlyClosingMotionFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 3022(C)"
+deadline early-closing-objection-period: 21.days after EarlyClosingMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 3022(C)"
 /// LBR 4001-2(E)(1), 9006-1: unless otherwise ordered, an opposition to a
 /// motion for relief from stay is filed and served on the movant and anyone
 /// known to claim an interest in the property not later than 14 days from the
 /// motion's filing; absent a timely objection the order is entered without a
 /// hearing (LBR 4001-2(F)).
-deadline stay-relief-opposition-period: 14.days after StayReliefMotionFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 4001-2(E)"
+deadline stay-relief-opposition-period: 14.days after StayReliefMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 4001-2(E)"
 /// LBR 4003(C): the notice of a motion to avoid a lien allows 21 days from
 /// the date of filing to file objections.
-deadline lien-avoidance-objection-period: 21.days after LienAvoidanceMotionFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 4003(C)"
+deadline lien-avoidance-objection-period: 21.days after LienAvoidanceMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 4003(C)"
 /// LBR 5011(A): absent leave, a motion to withdraw the reference is filed
 /// within 14 days of the filing of the first related pleading or response, or
 /// within 14 days of the pretrial order, whichever is later, or the request
 /// is waived (this limb and the next; the later governs).
-deadline reference-withdrawal-pleading-period: 14.days after FirstRelatedPleadingFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 5011(A)"
+deadline reference-withdrawal-pleading-period: 14.days after FirstRelatedPleadingFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 5011(A)"
 /// LBR 5011(A): the same motion, measured from the pretrial order, if any.
-deadline reference-withdrawal-pretrial-period: 14.days after PretrialOrderEntered() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 5011(A)"
+deadline reference-withdrawal-pretrial-period: 14.days after PretrialOrderEntered() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 5011(A)"
 /// LBR 5011(B): any other party may file and serve a response no later than
 /// 14 days after the motion to withdraw the reference is filed.
-deadline reference-withdrawal-response-period: 14.days after ReferenceWithdrawalMotionFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 5011(B)"
+deadline reference-withdrawal-response-period: 14.days after ReferenceWithdrawalMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 5011(B)"
 /// LBR 6004-2(D), (F): unless otherwise ordered, an employed auctioneer or
 /// liquidator remits all gross sale proceeds to the trustee within 14 days of
 /// the sale; proceeds of $50,000 or more not so remitted go to a segregated
 /// escrow account.
-deadline auction-proceeds-remittance-period: 14.days after TrusteeSaleHeld() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 6004-2(D)"
+deadline auction-proceeds-remittance-period: 14.days after TrusteeSaleHeld() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 6004-2(D)"
 /// LBR 6008(B): the notice of a motion for redemption allows 21 days from the
 /// date of filing to file objections.
-deadline redemption-objection-period: 21.days after RedemptionMotionFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 6008(B)"
+deadline redemption-objection-period: 21.days after RedemptionMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 6008(B)"
 /// LBR 7016(A): the parties to an adversary proceeding exchange all exhibits
 /// and supply paper copies to the court at least 14 days before trial.
-deadline exhibit-exchange-period: 14.days before AdversaryTrial() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 7016(A)"
+deadline exhibit-exchange-period: 14.days before AdversaryTrial() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7016(A)"
 /// LBR 7016(A): each party files at least 7 days before trial a written
 /// statement as to each exhibit indicating whether it objects and why.
-deadline exhibit-objection-statement-period: 7.days before AdversaryTrial() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 7016(A)"
+deadline exhibit-objection-statement-period: 7.days before AdversaryTrial() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7016(A)"
 /// LBR 7016(A): unless otherwise ordered, the parties exchange the names of
 /// all witnesses they intend to call at least 7 days before trial.
-deadline witness-exchange-period: 7.days before AdversaryTrial() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 7016(A)"
+deadline witness-exchange-period: 7.days before AdversaryTrial() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7016(A)"
 /// LBR 7016(C): unless a pretrial order directs otherwise, the parties submit
 /// proposed findings of fact, conclusions of law and briefs at least 14 days
 /// before trial.
-deadline pretrial-findings-period: 14.days before AdversaryTrial() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 7016(C)"
+deadline pretrial-findings-period: 14.days before AdversaryTrial() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7016(C)"
 /// LBR 7041-1: a pending adversary proceeding is dismissed 14 days after the
 /// dismissal of the underlying case unless a party, within the same period,
 /// requests otherwise by written motion.
-deadline adversary-retention-motion-period: 14.days after UnderlyingCaseDismissed() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 7041-1"
+deadline adversary-retention-motion-period: 14.days after UnderlyingCaseDismissed() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7041-1"
 /// LBR 7041-2(A), (B): a motion or stipulation to dismiss a § 727 complaint
 /// is filed with a notice giving all interested parties 21 days from its
 /// filing to object; unless the United States Trustee, the case trustee or
 /// another entity objects or seeks to intervene or be substituted within 21
 /// days, the court may dismiss without further notice or hearing.
-deadline discharge-dismissal-objection-period: 21.days after DischargeDismissalFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 7041-2(B)"
+deadline discharge-dismissal-objection-period: 21.days after DischargeDismissalFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7041-2(B)"
 /// LBR 7056(E): the response to a motion for summary judgment and its
 /// supporting memorandum are filed within 21 days from the date the motion is
 /// filed.
-deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 7056(E)"
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7056(E)"
 /// LBR 7056(F): the moving party may file a reply no later than 14 days after
 /// the response is filed; further replies need leave.
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 7056(F)"
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7056(F)"
 /// LBR 9013-5(E): each party opposing a motion files a responsive brief
 /// within 14 days after the movant's brief is filed; no further brief without
 /// leave.
-deadline responsive-brief-period: 14.days after MovantBriefFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 9013-5(E)"
+deadline responsive-brief-period: 14.days after MovantBriefFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 9013-5(E)"
 /// LBR 9015(C): unless the other parties file a consent within 30 days after
 /// a demand for jury trial is filed, the bankruptcy judge asks the district
 /// court to withdraw the reference.
-deadline jury-consent-period: 30.days after JuryDemandFiled() counted_by frbp9006 cite "Bankr. S.D. Ill. LBR 9015(C)"
+deadline jury-consent-period: 30.days after JuryDemandFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 9015(C)"
 
 start stay-relief-moved
 

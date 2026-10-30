@@ -1,6 +1,6 @@
 module bankr-txw-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.states.texas.{ frbp9006-texas }
 import frbp.events.{ CaseConverted, PetitionFiled }
 
 // The Bankr. W.D. Tex. court's own periods, counted under FRBP 9006(a).
@@ -193,226 +193,226 @@ event RemovalNoticeFiled()
 /// Bankr. W.D. Tex. L. Rule 1006-1: a debtor applying to pay the filing fee
 /// in installments pays at least 50% of the fee within 7 days of filing the
 /// petition, or the case may be dismissed without notice or hearing.
-deadline installment-first-payment-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 1006-1"
+deadline installment-first-payment-period: 7.days after PetitionFiled() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 1006-1"
 /// Bankr. W.D. Tex. L. Rule 1007-1(f): within thirty days of filing, a
 /// chapter 13 debtor provides the trustee a copy of each post-petition
 /// annual federal and applicable state income tax return until plan
 /// payments are completed.
-deadline annual-tax-return-period: 30.days after TaxReturnFiled() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 1007-1(f)"
+deadline annual-tax-return-period: 30.days after TaxReturnFiled() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 1007-1(f)"
 /// Bankr. W.D. Tex. L. Rule 1009-1(b): amended or late-filed schedules or
 /// statements are served within 3 days of filing on each newly scheduled,
 /// added or affected entity, with the case's notices and orders.
-deadline amended-schedule-service-period: 3.days after AmendedScheduleFiled() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 1009-1(b)"
+deadline amended-schedule-service-period: 3.days after AmendedScheduleFiled() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 1009-1(b)"
 /// Bankr. W.D. Tex. L. Rule 1009-1(d): objections to an amended schedule of
 /// exemptions are filed within 30 days from the date of service of the
 /// debtor's notice of the amendment.
-deadline amended-exemption-objection-period: 30.days after ExemptionAmendmentNoticeServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 1009-1(d)"
+deadline amended-exemption-objection-period: 30.days after ExemptionAmendmentNoticeServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 1009-1(d)"
 /// Bankr. W.D. Tex. L. Rule 1019-1: within 14 days after the effective date
 /// of conversion of a chapter 11, 12 or 13 case to chapter 7, the debtor
 /// files amended schedules reflecting changes since the order for relief,
 /// or a certificate that none are needed.
-deadline conversion-amended-schedule-period: 14.days after CaseConverted() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 1019-1"
+deadline conversion-amended-schedule-period: 14.days after CaseConverted() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 1019-1"
 /// Bankr. W.D. Tex. L. Rule 2004-1(b): unless the court orders otherwise,
 /// not less than 14 days' written notice of a proposed Rule 2004
 /// examination is given to the examinee and its counsel.
-deadline examination-notice-period: 14.days before ExaminationDate() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 2004-1(b)"
+deadline examination-notice-period: 14.days before ExaminationDate() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 2004-1(b)"
 /// Bankr. W.D. Tex. L. Rule 2004-1(b): if documents are requested under
 /// FRBP 9016, 30 days' written notice of the proposed examination is given.
-deadline examination-documents-notice-period: 30.days before ExaminationDate() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 2004-1(b)"
+deadline examination-documents-notice-period: 30.days before ExaminationDate() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 2004-1(b)"
 /// Bankr. W.D. Tex. L. Rule 2004-1(b), (d): the entity to be examined may
 /// object within 7 days after service of the notice, by a motion to quash
 /// heard on an expedited basis before the examination.
-deadline examination-objection-period: 7.days after ExaminationNoticeServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 2004-1(b)"
+deadline examination-objection-period: 7.days after ExaminationNoticeServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 2004-1(b)"
 /// Bankr. W.D. Tex. L. Rule 2014-1(b): where a chapter 7 trustee employs an
 /// accountant on a flat fee under one application, the order requires a
 /// notice of disbursement to be filed within 30 days of each payment.
-deadline accountant-disbursement-notice-period: 30.days after AccountantPaid() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 2014-1(b)"
+deadline accountant-disbursement-notice-period: 30.days after AccountantPaid() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 2014-1(b)"
 /// Bankr. W.D. Tex. L. Rule 2014-1(c): an application filed within 30 days
 /// after the professional commences services is deemed contemporaneous; a
 /// later one may be granted only for cause and is effective from its filing
 /// unless the court orders otherwise.
-deadline contemporaneous-employment-period: 30.days after ProfessionalCommencedServices() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 2014-1(c)"
+deadline contemporaneous-employment-period: 30.days after ProfessionalCommencedServices() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 2014-1(c)"
 /// Bankr. W.D. Tex. L. Rule 2014-1(d): a party in interest opposing an
 /// application to employ a professional may object within 21 days after
 /// service of the application summary; the objection is set for hearing
 /// even if the application was granted.
-deadline employment-objection-period: 21.days after EmploymentSummaryServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 2014-1(d)"
+deadline employment-objection-period: 21.days after EmploymentSummaryServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 2014-1(d)"
 /// Bankr. W.D. Tex. L. Rule 2015-1: in a chapter 11 case and an operating
 /// chapter 7 case, the Monthly Operating Report is filed on or before the
 /// 21st day of each month following the month reported, until a plan is
 /// confirmed or the case is converted or dismissed.
-deadline monthly-operating-report-period: 21.days after CalendarMonthEnded() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 2015-1"
+deadline monthly-operating-report-period: 21.days after CalendarMonthEnded() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 2015-1"
 /// Bankr. W.D. Tex. L. Rule 3007-1(d): an objection to a claim states that
 /// if the claimant does not file a written response within 30 days from the
 /// date of mailing, the court may disallow, reduce or modify the claim
 /// without a hearing.
-deadline claim-objection-response-period: 30.days after ClaimObjectionMailed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 3007-1(d)"
+deadline claim-objection-response-period: 30.days after ClaimObjectionMailed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 3007-1(d)"
 /// Bankr. W.D. Tex. L. Rule 3015-1(b): absent leave of court, an amended
 /// chapter 13 plan is filed and served at least 28 days before the
 /// confirmation hearing; de minimis amendments may be considered at the
 /// hearing.
-deadline amended-plan-service-period: 28.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 3015-1(b)"
+deadline amended-plan-service-period: 28.days before ConfirmationHearing() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 3015-1(b)"
 /// Bankr. W.D. Tex. L. Rule 3015-1(c): unless otherwise ordered, a creditor
 /// or party in interest other than the trustee files a written objection to
 /// the chapter 13 plan no later than 14 days before the confirmation
 /// hearing; failure to object is acceptance of the plan's treatment.
-deadline chapter-13-confirmation-objection-period: 14.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 3015-1(c)"
+deadline chapter-13-confirmation-objection-period: 14.days before ConfirmationHearing() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 3015-1(c)"
 /// Bankr. W.D. Tex. L. Rule 3015-1(e): not more than seven days but at
 /// least three days before the confirmation hearing, the debtor files the
 /// Declaration of the Debtor Concerning Confirmation Requirements (Appendix
 /// L-3015-1).
-deadline confirmation-declaration-period: 3.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 3015-1(e)"
+deadline confirmation-declaration-period: 3.days before ConfirmationHearing() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 3015-1(e)"
 /// Bankr. W.D. Tex. L. Rule 3015-1(i)(4): a mortgage creditor has 21 days
 /// from the filing of the trustee's Notice Deeming Mortgage Current to
 /// object; absent an objection the notice binds the creditor and the
 /// debtor.
-deadline mortgage-current-objection-period: 21.days after MortgageCurrentNoticeFiled() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 3015-1(i)"
+deadline mortgage-current-objection-period: 21.days after MortgageCurrentNoticeFiled() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 3015-1(i)"
 /// Bankr. W.D. Tex. L. Rule 3017-1: unless otherwise ordered, any objection
 /// to a chapter 11 disclosure statement is filed and served not less than 7
 /// days before the hearing on it.
-deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 3017-1"
+deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 3017-1"
 /// Bankr. W.D. Tex. L. Rule 3023-1(a): when a chapter 13 tax refund is
 /// turned over, the plan is deemed modified and the trustee files a Notice
 /// of Plan Modification within 21 days from receipt of the refund.
-deadline tax-refund-modification-notice-period: 21.days after TaxRefundReceivedByTrustee() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 3023-1(a)"
+deadline tax-refund-modification-notice-period: 21.days after TaxRefundReceivedByTrustee() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 3023-1(a)"
 /// Bankr. W.D. Tex. L. Rule 3023-1(b): a chapter 13 debtor rebutting the
 /// presumption that a tax refund is disposable income files a Notice to
 /// Retain, with 21-day negative notice, no later than 30 days of receipt of
 /// the refund.
-deadline tax-refund-retention-notice-period: 30.days after TaxRefundReceived() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 3023-1(b)"
+deadline tax-refund-retention-notice-period: 30.days after TaxRefundReceived() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 3023-1(b)"
 /// Bankr. W.D. Tex. L. Rule 4001-1(a)(2), (e)(3): on a motion for relief
 /// from stay or for adequate protection using 14-day negative notice (or a
 /// chapter 13 motion to incur debt so served), the relief may be granted
 /// without a hearing unless a response is filed within 14 days from the
 /// date of service.
-deadline stay-relief-response-period: 14.days after StayReliefMotionServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 4001-1(a)"
+deadline stay-relief-response-period: 14.days after StayReliefMotionServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 4001-1(a)"
 /// Bankr. W.D. Tex. L. Rule 4001-1(a)(4)(B): a respondent using affidavits
 /// files and serves them with its response or, if no response is required,
 /// within 14 days of the date of service of the motion.
-deadline stay-respondent-affidavit-period: 14.days after StayReliefMotionServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 4001-1(a)"
+deadline stay-respondent-affidavit-period: 14.days after StayReliefMotionServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 4001-1(a)"
 /// Bankr. W.D. Tex. L. Rule 4001-1(e)(5): after a one-time emergency loan
 /// of up to $1,000, the chapter 13 debtor files a notice of the loan amount
 /// and circumstances within thirty days of obtaining it.
-deadline emergency-loan-notice-period: 30.days after EmergencyLoanObtained() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 4001-1(e)"
+deadline emergency-loan-notice-period: 30.days after EmergencyLoanObtained() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 4001-1(e)"
 /// Bankr. W.D. Tex. L. Rule 4004-1(a): in a chapter 7 case, a motion to
 /// delay or postpone discharge under § 727(a)(12) is filed not later than
 /// 30 days before the deadline for a complaint objecting to discharge, with
 /// a motion to expedite.
-deadline discharge-delay-motion-period: 30.days before DischargeObjectionDeadline() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 4004-1(a)"
+deadline discharge-delay-motion-period: 30.days before DischargeObjectionDeadline() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 4004-1(a)"
 /// Bankr. W.D. Tex. L. Rule 4004-1(b): objections to an individual chapter
 /// 11 debtor's discharge, or requests to delay it under § 1141(d)(5)(C),
 /// are filed and served within 21 days after service of the debtor's
 /// statement.
-deadline chapter-11-discharge-objection-period: 21.days after DischargeStatementServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 4004-1(b)"
+deadline chapter-11-discharge-objection-period: 21.days after DischargeStatementServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 4004-1(b)"
 /// Bankr. W.D. Tex. L. Rule 4004-1(d)(2): unless not entitled to a
 /// discharge, the chapter 13 debtor files the Certification of Eligibility
 /// (Appendix L-4004-1) within 30 days after the trustee files the Notice of
 /// Plan Completion.
-deadline chapter-13-discharge-certification-period: 30.days after PlanCompletionNoticeFiled() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 4004-1(d)"
+deadline chapter-13-discharge-certification-period: 30.days after PlanCompletionNoticeFiled() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 4004-1(d)"
 /// Bankr. W.D. Tex. L. Rule 5011-1(c): any response or objection to a
 /// motion to withdraw the reference is filed within 14 days after the date
 /// of service.
-deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 5011-1(c)"
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 5011-1(c)"
 /// Bankr. W.D. Tex. L. Rule 7007-1(b)(2): a response to a dispositive
 /// motion in an adversary proceeding is filed not later than 21 days after
 /// service of the motion; otherwise the court may grant it without further
 /// notice (also L. Rule 7012-1).
-deadline dispositive-response-period: 21.days after DispositiveMotionServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7007-1(b)"
+deadline dispositive-response-period: 21.days after DispositiveMotionServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7007-1(b)"
 /// Bankr. W.D. Tex. L. Rule 7007-1(b)(2): a response to a non-dispositive
 /// motion is filed not later than 14 days after service of the motion,
 /// except as the court or the rules provide.
-deadline non-dispositive-response-period: 14.days after NonDispositiveMotionServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7007-1(b)"
+deadline non-dispositive-response-period: 14.days after NonDispositiveMotionServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7007-1(b)"
 /// Bankr. W.D. Tex. L. Rule 7007-1(c)(2): a reply in support of a motion is
 /// filed not later than 7 days after the filing of the response; the court
 /// need not wait for it.
-deadline adversary-reply-period: 7.days after AdversaryResponseFiled() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7007-1(c)"
+deadline adversary-reply-period: 7.days after AdversaryResponseFiled() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7007-1(c)"
 /// Bankr. W.D. Tex. L. Rule 7015-1(b): after an order allowing an
 /// amendment, the conforming amended or supplemental pleading is filed and
 /// served within 7 days after entry of the order.
-deadline amended-pleading-filing-period: 7.days after AmendmentOrderEntered() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7015-1(b)"
+deadline amended-pleading-filing-period: 7.days after AmendmentOrderEntered() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7015-1(b)"
 /// Bankr. W.D. Tex. L. Rule 7016-1(c): unless the court directs otherwise,
 /// a joint pretrial order is filed at least 7 days before trial docket
 /// call.
-deadline joint-pretrial-order-period: 7.days before TrialDocketCall() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7016-1(c)"
+deadline joint-pretrial-order-period: 7.days before TrialDocketCall() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7016-1(c)"
 /// Bankr. W.D. Tex. L. Rule 7016-1(c): counsel exchange proposed pretrial
 /// orders 14 days before docket call, unless they agree otherwise.
-deadline pretrial-order-exchange-period: 14.days before TrialDocketCall() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7016-1(c)"
+deadline pretrial-order-exchange-period: 14.days before TrialDocketCall() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7016-1(c)"
 /// Bankr. W.D. Tex. L. Rule 7016-1(c)(10): if counsel estimate trial at 5
 /// hours or more, a written request for a pretrial conference is filed
 /// within 30 days after the date of the initial scheduling order.
-deadline pretrial-conference-request-period: 30.days after SchedulingOrderEntered() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7016-1(c)"
+deadline pretrial-conference-request-period: 30.days after SchedulingOrderEntered() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7016-1(c)"
 /// Bankr. W.D. Tex. L. Rule 7016-1(d): each party files proposed findings
 /// of fact and conclusions of law at least 7 days before trial docket call.
-deadline proposed-findings-period: 7.days before TrialDocketCall() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7016-1(d)"
+deadline proposed-findings-period: 7.days before TrialDocketCall() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7016-1(d)"
 /// Bankr. W.D. Tex. L. Rule 7016-1(g)(2): tabbed and marked copies of
 /// exhibits are provided to each party not less than 5 days before trial.
-deadline trial-exhibits-period: 5.days before TrialDate() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7016-1(g)"
+deadline trial-exhibits-period: 5.days before TrialDate() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7016-1(g)"
 /// Bankr. W.D. Tex. L. Rule 7026-1(d): a party's production of a document
 /// authenticates it for use against that party unless, within 14 days after
 /// actual notice that it will be used (or as the court orders), the party
 /// objects to its authenticity.
-deadline authenticity-objection-period: 14.days after DocumentUseNoticed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7026-1(d)"
+deadline authenticity-objection-period: 14.days after DocumentUseNoticed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7026-1(d)"
 /// Bankr. W.D. Tex. L. Rule 7033-1(a): when interrogatory answers are
 /// served without the party's signature, the attorney's affidavit states
 /// that properly executed answers will be served within 21 days, which the
 /// court may extend.
-deadline signed-interrogatory-answers-period: 21.days after UnsignedInterrogatoryAnswersServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7033-1(a)"
+deadline signed-interrogatory-answers-period: 21.days after UnsignedInterrogatoryAnswersServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7033-1(a)"
 /// Bankr. W.D. Tex. L. Rule 7054-1(a)(2): an objection to a motion for
 /// attorney's fees is filed on or before 14 days after the motion is filed;
 /// without one the court may grant it as unopposed.
-deadline fee-motion-objection-period: 14.days after FeeMotionFiled() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7054-1(a)"
+deadline fee-motion-objection-period: 14.days after FeeMotionFiled() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7054-1(a)"
 /// Bankr. W.D. Tex. L. Rule 7054-1(b)(1): a party awarded costs files and
 /// serves a proposed bill of costs no later than 14 days after entry of
 /// judgment.
-deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7054-1(b)"
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7054-1(b)"
 /// Bankr. W.D. Tex. L. Rule 7054-1(b)(2): a party opposing a proposed bill
 /// of costs files an objection no later than 14 days after it is filed.
-deadline bill-of-costs-objection-period: 14.days after BillOfCostsFiled() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7054-1(b)"
+deadline bill-of-costs-objection-period: 14.days after BillOfCostsFiled() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7054-1(b)"
 /// Bankr. W.D. Tex. L. Rule 7055-1(a): a plaintiff seeking default files a
 /// Request for Clerk's Entry of Default within 30 days after the
 /// defendant's time to answer or otherwise defend expires, or the
 /// proceeding may be dismissed.
-deadline default-request-period: 30.days after AnswerTimeExpired() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7055-1(a)"
+deadline default-request-period: 30.days after AnswerTimeExpired() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7055-1(a)"
 /// Bankr. W.D. Tex. L. Rule 7055-1(b): within 30 days after the Clerk's
 /// entry of default, the plaintiff seeks a default judgment under FRCP
 /// 55(b), or the proceeding may be dismissed.
-deadline default-judgment-period: 30.days after DefaultEntered() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7055-1(b)"
+deadline default-judgment-period: 30.days after DefaultEntered() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7055-1(b)"
 /// Bankr. W.D. Tex. L. Rule 7056-1: responses and responsive affidavits to
 /// a motion for summary judgment are filed no later than 21 days after the
 /// date of service, unless the court extends or shortens the time.
-deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 7056-1"
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 7056-1"
 /// Bankr. W.D. Tex. L. Rule 9014-1(a): a pleading in a contested matter
 /// carrying the negative notice language may be granted without a hearing
 /// unless a response is filed within 21 days from the date of service (also
 /// the trustee's objection to a Notice to Retain, L. Rule 3023-1(b)).
-deadline negative-notice-response-period: 21.days after NegativeNoticeServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 9014-1(a)"
+deadline negative-notice-response-period: 21.days after NegativeNoticeServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 9014-1(a)"
 /// Bankr. W.D. Tex. L. Rule 9014-1(b)(2): any reply to a response in a
 /// contested matter is filed within 7 days after service of the response.
-deadline contested-reply-period: 7.days after ResponseServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 9014-1(b)"
+deadline contested-reply-period: 7.days after ResponseServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 9014-1(b)"
 /// Bankr. W.D. Tex. L. Rule 9014-1(e): the movant files a certificate of
 /// notice of an expedited hearing within 7 days of service, and in no event
 /// later than the hearing.
-deadline expedited-notice-certificate-period: 7.days after ExpeditedNoticeServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 9014-1(e)"
+deadline expedited-notice-certificate-period: 7.days after ExpeditedNoticeServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 9014-1(e)"
 /// Bankr. W.D. Tex. L. Rule 9014-1(f)(1): no continuance is granted except
 /// on a motion filed no later than 3 days before the scheduled hearing
 /// showing good cause; a later motion must state the emergency.
-deadline continuance-motion-period: 3.days before ContestedHearing() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 9014-1(f)"
+deadline continuance-motion-period: 3.days before ContestedHearing() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 9014-1(f)"
 /// Bankr. W.D. Tex. L. Rule 9014-1(f)(5): the moving party files a
 /// certificate reflecting the date of a reset hearing and service of notice
 /// of it within 7 days of that service.
-deadline reset-hearing-certificate-period: 7.days after ResetNoticeServed() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 9014-1(f)"
+deadline reset-hearing-certificate-period: 7.days after ResetNoticeServed() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 9014-1(f)"
 /// Bankr. W.D. Tex. L. Rule 9014-1(g)(3): except as the rules provide
 /// otherwise, witness and exhibit lists are exchanged 5 days in advance of
 /// a contested hearing.
-deadline hearing-witness-exhibit-lists-period: 5.days before ContestedHearing() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 9014-1(g)"
+deadline hearing-witness-exhibit-lists-period: 5.days before ContestedHearing() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 9014-1(g)"
 /// Bankr. W.D. Tex. L. Rule 9015-1(b)(2): within 14 days after the filing
 /// of a jury demand and the Statement Regarding Consent, each party files a
 /// Response Regarding Consent.
-deadline jury-consent-response-period: 14.days after JuryDemandFiled() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 9015-1(b)"
+deadline jury-consent-response-period: 14.days after JuryDemandFiled() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 9015-1(b)"
 /// Bankr. W.D. Tex. L. Rule 9027-1(c): unless the court orders otherwise, a
 /// motion for remand is filed no later than 30 days after the date of
 /// filing of the notice of removal.
-deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frbp9006 cite "Bankr. W.D. Tex. L. Rule 9027-1(c)"
+deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frbp9006-texas cite "Bankr. W.D. Tex. L. Rule 9027-1(c)"
 
 start motion-filed
 

@@ -1,0 +1,80 @@
+module core.states.colorado
+
+import core.calendar.{ us-federal-holidays }
+
+/// The Colorado legal holidays C.R.C.P. 6(a)(2) lists that are not § 6103(a)
+/// days: Frances Cabrini Day, the first Monday in October. Every other day
+/// on that list (New Year's, Martin Luther King, Washington-Lincoln,
+/// Memorial, Juneteenth, Independence, Labor, Veterans, Thanksgiving and
+/// Christmas Day) falls on a § 6103(a) day already in core's
+/// `us-federal-holidays`. C.R.C.P. 6(a)(2) restates the state's holiday
+/// statute, which is not vendored; the list is that of the 2023 edition,
+/// the vendored one, so it is a holiday here from that edition's date,
+/// July 20, 2023 (before it, the earlier date). Days the governor appoints,
+/// and the "any other day ... when the court is closed" clause, are not
+/// modeled (the earlier date).
+calendar colorado-holidays cite "C.R.C.P. 6(a)(2)"
+{
+  frances-cabrini-day: nth(1, monday, 10) effective [2023-07-20, ..)
+}
+
+/// FRCP 6 in the district courts of Colorado: the 2023 text
+/// (`frcp6@2023-12-01`) with `colorado-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-colorado effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays colorado-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Colorado:
+/// `colorado-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-colorado effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays colorado-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-co]
+  allow_hours
+  end_of_month clamp
+}

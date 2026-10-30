@@ -1,0 +1,69 @@
+module core.states.iowa
+
+import core.calendar.{ us-federal-holidays }
+
+calendar iowa-holidays cite "Iowa Code § 1C.1"
+{
+  lincolns-birthday: fixed(2, 12) effective [2026-10-22, ..)
+}
+
+/// FRCP 6 in the district courts of Iowa: the 2023 text
+/// (`frcp6@2023-12-01`) with `iowa-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-iowa effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays iowa-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Iowa:
+/// `iowa-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-iowa effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays iowa-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-ian, bankr-ias]
+  allow_hours
+  end_of_month clamp
+}

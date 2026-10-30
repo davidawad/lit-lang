@@ -1,6 +1,6 @@
 module wiwd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.wisconsin.{ frcp6-wisconsin }
 
 // The Western District of Wisconsin's own periods, computed under FRCP
 // 6(a), which governs a period stated in a local rule. The five Local
@@ -25,7 +25,7 @@ event DefendantsAppeared()
 /// which the plaintiff proceeds pro se, collection and United States
 /// mortgage foreclosure actions, Social Security appeals, and bankruptcy
 /// matters other than adversary proceedings are exempt (L.R. 3(D)).
-deadline adr-consideration-period: 30.days after DefendantsAppeared() counted_by frcp6 cite "W.D. Wis. L.R. 3"
+deadline adr-consideration-period: 30.days after DefendantsAppeared() counted_by frcp6-wisconsin cite "W.D. Wis. L.R. 3"
 
 test "adr consideration period: 30 days after the defendants appear" cite "W.D. Wis. L.R. 3"
 {

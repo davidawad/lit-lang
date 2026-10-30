@@ -1,0 +1,76 @@
+module core.states.idaho
+
+import core.calendar.{ us-federal-holidays }
+
+/// The holidays of Idaho (Idaho Code § 73-108) add no day `us-federal-holidays`
+/// does not already close: each enumerated day is a federal holiday on the
+/// same day, observed as § 6103(b)(1) observes it (the Friday before a
+/// Saturday holiday, the Monday after a Sunday one), and every Sunday is
+/// closed by `weekend`. The calendar is declared, empty, so the District of
+/// Idaho's counts (core's `frcp6-idaho` and `frbp9006-idaho`) name the state
+/// whose FRCP 6(a)(6)(C) and FRBP 9006(a)(6)(C) days they read. Not
+/// modeled: the days the President or the governor appoints for a public
+/// fast, thanksgiving or holiday, which no vendored source lists.
+calendar idaho-holidays cite "Idaho Code § 73-108"
+{}
+
+/// FRCP 6 in the district courts of Idaho: the 2023 text
+/// (`frcp6@2023-12-01`) with `idaho-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-idaho effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays idaho-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Idaho:
+/// `idaho-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-idaho effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays idaho-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-id]
+  allow_hours
+  end_of_month clamp
+}

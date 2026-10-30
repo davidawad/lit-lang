@@ -1,6 +1,6 @@
 module bankr-mie-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.states.michigan.{ frbp9006-michigan }
 import frbp.events.{ FirstMeetingDate, PetitionFiled }
 
 // The Bankr. E.D. Mich. court's own periods and page limits, counted under
@@ -205,231 +205,231 @@ event TrialScheduled()
 /// nor timely moves to extend, the voluntary petition may be dismissed
 /// without a hearing unless, within 21 days after the petition is filed, a
 /// party requests a hearing.
-deadline dismissal-hearing-request-period: 21.days after PetitionFiled() counted_by frbp9006 cite "E.D. Mich. LBR 1007-1(a)"
+deadline dismissal-hearing-request-period: 21.days after PetitionFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 1007-1(a)"
 /// LBR 1007-1(b): a debtor not represented by an attorney files the
 /// Declaration Under Penalty of Perjury for Debtor(s) Without An Attorney
 /// within 14 days after the petition is filed.
-deadline pro-se-declaration-period: 14.days after PetitionFiled() counted_by frbp9006 cite "E.D. Mich. LBR 1007-1(b)"
+deadline pro-se-declaration-period: 14.days after PetitionFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 1007-1(b)"
 /// LBR 1007-1(c)(1), (3): within 14 days after filing a chapter 13 petition
 /// or converting to chapter 13, the debtor submits the proposed initial
 /// payment order(s), or by then moves or stipulates to be excused for good
 /// cause.
-deadline payment-order-period: 14.days after Chapter13CaseStarted() counted_by frbp9006 cite "E.D. Mich. LBR 1007-1(c)"
+deadline payment-order-period: 14.days after Chapter13CaseStarted() counted_by frbp9006-michigan cite "E.D. Mich. LBR 1007-1(c)"
 /// LBR 1007-1(f): the § 521(a)(1)(B)(iv) payment advices are not filed but
 /// transmitted to the trustee at least seven days before the first date set
 /// for the meeting of creditors.
-deadline payment-advices-meeting-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "E.D. Mich. LBR 1007-1(f)"
+deadline payment-advices-meeting-period: 7.days before FirstMeetingDate() counted_by frbp9006-michigan cite "E.D. Mich. LBR 1007-1(f)"
 /// LBR 1007-1(f): and in any event not later than 45 days after the
 /// petition was filed.
-deadline payment-advices-outer-period: 45.days after PetitionFiled() counted_by frbp9006 cite "E.D. Mich. LBR 1007-1(f)"
+deadline payment-advices-outer-period: 45.days after PetitionFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 1007-1(f)"
 /// LBR 1007-3(a): the deadline to respond to a § 109(h)(3)(A) certification
 /// and motion is 14 days after service; with no timely response the
 /// certification is deemed satisfactory.
-deadline counseling-certification-response-period: 14.days after CounselingCertificationServed() counted_by frbp9006 cite "E.D. Mich. LBR 1007-3(a)"
+deadline counseling-certification-response-period: 14.days after CounselingCertificationServed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 1007-3(a)"
 /// LBR 1017-1(a): a primarily-consumer debtor converting from chapter 13 to
 /// chapter 7 files Official Form 122A-1 within 14 days after the notice of
 /// conversion or the conversion order.
-deadline converted-means-test-period: 14.days after ConvertedToChapter7() counted_by frbp9006 cite "E.D. Mich. LBR 1017-1(a)"
+deadline converted-means-test-period: 14.days after ConvertedToChapter7() counted_by frbp9006-michigan cite "E.D. Mich. LBR 1017-1(a)"
 /// LBR 1017-1(a): a dismissal for failure to file the statement is without
 /// prejudice to a motion to reinstate under LBR 9024-1(c) within 14 days
 /// after entry of the dismissal order.
-deadline converted-reinstatement-period: 14.days after StatementDismissalEntered() counted_by frbp9006 cite "E.D. Mich. LBR 1017-1(a)"
+deadline converted-reinstatement-period: 14.days after StatementDismissalEntered() counted_by frbp9006-michigan cite "E.D. Mich. LBR 1017-1(a)"
 /// LBR 1017-1(b): in a case converted from chapter 13, the chapter 13
 /// trustee files a final report within 45 days of all checks clearing.
-deadline converted-trustee-report-period: 45.days after ConvertedCaseChecksCleared() counted_by frbp9006 cite "E.D. Mich. LBR 1017-1(b)"
+deadline converted-trustee-report-period: 45.days after ConvertedCaseChecksCleared() counted_by frbp9006-michigan cite "E.D. Mich. LBR 1017-1(b)"
 /// LBR 1017-2: a movant seeking a hearing on a § 521(e)(2)(B) or (C) motion
 /// before the meeting of creditors files it no later than three days after
 /// the § 521(e)(2)(A)(i) deadline expires.
-deadline tax-return-dismissal-motion-period: 3.days after TaxReturnDeadlineExpired() counted_by frbp9006 cite "E.D. Mich. LBR 1017-2"
+deadline tax-return-dismissal-motion-period: 3.days after TaxReturnDeadlineExpired() counted_by frbp9006-michigan cite "E.D. Mich. LBR 1017-2"
 /// LBR 1074-1: a debtor that is not an individual files the attested
 /// resolution or other document authorizing the filing within 14 days after
 /// the petition.
-deadline entity-resolution-period: 14.days after PetitionFiled() counted_by frbp9006 cite "E.D. Mich. LBR 1074-1"
+deadline entity-resolution-period: 14.days after PetitionFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 1074-1"
 /// LBR 2003-1(a)(2): a creditor's objection to dismissal for the debtor's
 /// failure to appear at the meeting of creditors is due 14 days after the
 /// motion is filed.
-deadline nonappearance-objection-period: 14.days after NonappearanceDismissalMotionFiled() counted_by frbp9006 cite "E.D. Mich. LBR 2003-1(a)"
+deadline nonappearance-objection-period: 14.days after NonappearanceDismissalMotionFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 2003-1(a)"
 /// LBR 2003-1(b): the debtor's response to the motion to dismiss, with
 /// affidavits or declarations, is due 14 days after the motion is filed.
-deadline nonappearance-response-period: 14.days after NonappearanceDismissalMotionFiled() counted_by frbp9006 cite "E.D. Mich. LBR 2003-1(b)"
+deadline nonappearance-response-period: 14.days after NonappearanceDismissalMotionFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 2003-1(b)"
 /// LBR 2003-2(b): in a chapter 7 or 12 case or an individual chapter 11
 /// case, the debtor provides the listed documents to the trustee (in
 /// chapter 11, the U.S. Trustee) no later than seven days before the
 /// meeting of creditors.
-deadline meeting-documents-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "E.D. Mich. LBR 2003-2(b)"
+deadline meeting-documents-period: 7.days before FirstMeetingDate() counted_by frbp9006-michigan cite "E.D. Mich. LBR 2003-2(b)"
 /// LBR 2003-2(c): in a chapter 13 case, the debtor provides the listed
 /// documents to the trustee no later than 14 days before the meeting of
 /// creditors.
-deadline chapter13-meeting-documents-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "E.D. Mich. LBR 2003-2(c)"
+deadline chapter13-meeting-documents-period: 14.days before FirstMeetingDate() counted_by frbp9006-michigan cite "E.D. Mich. LBR 2003-2(c)"
 /// LBR 2003-4: a § 1102 committee serves notice of its appointment on the
 /// creditors it represents within 45 days after appointment.
-deadline committee-notice-period: 45.days after CommitteeAppointed() counted_by frbp9006 cite "E.D. Mich. LBR 2003-4"
+deadline committee-notice-period: 45.days after CommitteeAppointed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 2003-4"
 /// LBR 2015-2: a chapter 13 debtor engaged in business files a statement of
 /// income and expenses within 28 days of the close of each calendar
 /// quarter.
-deadline quarterly-statement-period: 28.days after QuarterClosed() counted_by frbp9006 cite "E.D. Mich. LBR 2015-2"
+deadline quarterly-statement-period: 28.days after QuarterClosed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 2015-2"
 /// LBR 2015-3(a): within 30 days after completion of plan payments, the
 /// chapter 13 trustee files and serves the notice of completion.
-deadline completion-notice-period: 30.days after PlanPaymentsCompleted() counted_by frbp9006 cite "E.D. Mich. LBR 2015-3(a)"
+deadline completion-notice-period: 30.days after PlanPaymentsCompleted() counted_by frbp9006-michigan cite "E.D. Mich. LBR 2015-3(a)"
 /// LBR 2015-3(a)(5), as vendored: an objection to the trustee's notice of
 /// completion is due 21 days after service of the notice.
-deadline completion-objection-period: 21.days after CompletionNoticeServed() counted_by frbp9006 effective [2018-12-10, 2025-11-24) cite "E.D. Mich. LBR 2015-3(a)"
+deadline completion-objection-period: 21.days after CompletionNoticeServed() counted_by frbp9006-michigan effective [2018-12-10, 2025-11-24) cite "E.D. Mich. LBR 2015-3(a)"
 /// LBR 2015-3(a)(5) as amended by AO 25-15 (November 24, 2025) for the
 /// December 1, 2025 FRBP 3002.1 amendments: the objection deadline remains
 /// 21 days after service of the notice, and a timely objection, FRBP
 /// 3002.1(g) statement or final-cure motion delays the discharge.
-deadline completion-objection-period: 21.days after CompletionNoticeServed() counted_by frbp9006 effective [2025-11-24, ..) supersedes completion-objection-period@2018-12-10 cite "E.D. Mich. LBR (AO 25-15) 2015-3"
+deadline completion-objection-period: 21.days after CompletionNoticeServed() counted_by frbp9006-michigan effective [2025-11-24, ..) supersedes completion-objection-period@2018-12-10 cite "E.D. Mich. LBR (AO 25-15) 2015-3"
 /// LBR 2015-3(d): within 120 days after filing the notice of completion,
 /// the chapter 13 trustee files and serves the final report and account.
-deadline chapter13-final-report-period: 120.days after CompletionNoticeFiled() counted_by frbp9006 cite "E.D. Mich. LBR 2015-3(d)"
+deadline chapter13-final-report-period: 120.days after CompletionNoticeFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 2015-3(d)"
 /// LBR 2015-3(d)(2): an objection to the chapter 13 trustee's final report
 /// and account is due 30 days after service of the final report.
-deadline final-report-objection-period: 30.days after TrusteeFinalReportServed() counted_by frbp9006 cite "E.D. Mich. LBR 2015-3(d)"
+deadline final-report-objection-period: 30.days after TrusteeFinalReportServed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 2015-3(d)"
 /// LBR 2016-2(b)(3): an objection to an interim monthly fee statement is
 /// due 14 days from its service; absent objection the debtor may pay 80% of
 /// fees and 100% of expenses.
-deadline interim-fee-objection-period: 14.days after InterimFeeStatementServed() counted_by frbp9006 cite "E.D. Mich. LBR 2016-2(b)"
+deadline interim-fee-objection-period: 14.days after InterimFeeStatementServed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 2016-2(b)"
 /// LBR 3001-2(a): a creditor whose § 1322(b)(5) or (b)(7) claim is not
 /// governed by FRBP 3002.1 files notice of a periodic payment change 21
 /// days before the adjustment takes effect.
-deadline payment-adjustment-notice-period: 21.days before PaymentAdjustmentEffective() counted_by frbp9006 cite "E.D. Mich. LBR 3001-2(a)"
+deadline payment-adjustment-notice-period: 21.days before PaymentAdjustmentEffective() counted_by frbp9006-michigan cite "E.D. Mich. LBR 3001-2(a)"
 /// LBR 3001-2(b): a party objecting to an LBR 3001-2(a) notice or an FRBP
 /// 3002.1(b) notice of mortgage payment change files a motion for a
 /// determination within 21 days after its service.
-deadline payment-change-motion-period: 21.days after PaymentChangeNoticeServed() counted_by frbp9006 cite "E.D. Mich. LBR 3001-2(b)"
+deadline payment-change-motion-period: 21.days after PaymentChangeNoticeServed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 3001-2(b)"
 /// LBR 3001-2(d): unless an objection is filed within 14 days of a Notice
 /// of Inability to Comply, the trustee effectuates the payment change it
 /// states.
-deadline inability-notice-objection-period: 14.days after InabilityNoticeFiled() counted_by frbp9006 cite "E.D. Mich. LBR 3001-2(d)"
+deadline inability-notice-objection-period: 14.days after InabilityNoticeFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 3001-2(d)"
 /// LBR 3003-1: in a chapter 11 case, unless the court orders otherwise, a
 /// proof of claim or interest or a § 503(b)(9) motion is due 90 days after
 /// the first date set for the meeting of creditors.
-deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "E.D. Mich. LBR 3003-1"
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006-michigan cite "E.D. Mich. LBR 3003-1"
 /// LBR 3007-1(b): a creditor's response to an objection to its claim is due
 /// seven days before the date set for the hearing on the objection.
-deadline claim-objection-response-period: 7.days before ClaimObjectionHearingScheduled() counted_by frbp9006 cite "E.D. Mich. LBR 3007-1(b)"
+deadline claim-objection-response-period: 7.days before ClaimObjectionHearingScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 3007-1(b)"
 /// LBR 3014-1: with a combined plan and disclosure statement, a § 1111(b)
 /// election is due seven days before the first scheduled confirmation
 /// hearing.
-deadline section-1111b-election-period: 7.days before CombinedConfirmationHearingScheduled() counted_by frbp9006 cite "E.D. Mich. LBR 3014-1"
+deadline section-1111b-election-period: 7.days before CombinedConfirmationHearingScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 3014-1"
 /// LBR 3015-2(c)(1): an objection to paying a § 1305(a) postpetition claim,
 /// or to the claim itself, is filed within 14 days of the debtor's notice
 /// or is waived.
-deadline postpetition-claim-objection-period: 14.days after PostpetitionClaimNoticeServed() counted_by frbp9006 cite "E.D. Mich. LBR 3015-2(c)"
+deadline postpetition-claim-objection-period: 14.days after PostpetitionClaimNoticeServed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 3015-2(c)"
 /// LBR 3015-3(a)(4): an objection to confirmation of a chapter 13 modified
 /// plan is due 28 days after service of the modified plan.
-deadline modified-plan-objection-period: 28.days after ModifiedPlanServed() counted_by frbp9006 cite "E.D. Mich. LBR 3015-3(a)"
+deadline modified-plan-objection-period: 28.days after ModifiedPlanServed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 3015-3(a)"
 /// LBR 3018-1: within seven days after the order approving the disclosure
 /// statement, the plan proponent serves the order, plan, disclosure
 /// statement and ballot.
-deadline solicitation-service-period: 7.days after DisclosureStatementApproved() counted_by frbp9006 cite "E.D. Mich. LBR 3018-1"
+deadline solicitation-service-period: 7.days after DisclosureStatementApproved() counted_by frbp9006-michigan cite "E.D. Mich. LBR 3018-1"
 /// LBR 3021-1(a): unless the court orders otherwise, within 14 days after
 /// confirmation in a Large Bankruptcy Case the plan proponent files a
 /// timetable for substantial consummation and the final decree.
-deadline consummation-timetable-period: 14.days after LargeCaseConfirmationEntered() counted_by frbp9006 cite "E.D. Mich. LBR 3021-1(a)"
+deadline consummation-timetable-period: 14.days after LargeCaseConfirmationEntered() counted_by frbp9006-michigan cite "E.D. Mich. LBR 3021-1(a)"
 /// LBR 4001-2: an expedited interim cash collateral or financing order
 /// entered without a hearing provides that an objection is due 14 days from
 /// its entry.
-deadline expedited-financing-objection-period: 14.days after ExpeditedFinancingOrderEntered() counted_by frbp9006 cite "E.D. Mich. LBR 4001-2"
+deadline expedited-financing-objection-period: 14.days after ExpeditedFinancingOrderEntered() counted_by frbp9006-michigan cite "E.D. Mich. LBR 4001-2"
 /// LBR 4001-2: an official committee may object within 14 days after it is
 /// served with the entered order.
-deadline committee-financing-objection-period: 14.days after CommitteeServedWithFinancingOrder() counted_by frbp9006 cite "E.D. Mich. LBR 4001-2"
+deadline committee-financing-objection-period: 14.days after CommitteeServedWithFinancingOrder() counted_by frbp9006-michigan cite "E.D. Mich. LBR 4001-2"
 /// LBR 4001-4(a): a motion to extend the stay under § 362(c)(3)(B), with
 /// its certificate of service, is filed and served within seven days after
 /// the petition is filed.
-deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frbp9006 cite "E.D. Mich. LBR 4001-4(a)"
+deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 4001-4(a)"
 /// LBR 4001-5(c): within 28 days after confirmation, a creditor that
 /// received pre-confirmation payments files an amended proof of claim
 /// showing their application.
-deadline preconfirmation-amended-claim-period: 28.days after Chapter13PlanConfirmed() counted_by frbp9006 cite "E.D. Mich. LBR 4001-5(c)"
+deadline preconfirmation-amended-claim-period: 28.days after Chapter13PlanConfirmed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 4001-5(c)"
 /// LBR 4004-1: within 28 days after the trustee files the notice of
 /// completion, the chapter 13 debtor files the Certification Regarding
 /// Domestic Support Obligations.
-deadline domestic-support-certification-period: 28.days after CompletionNoticeFiled() counted_by frbp9006 cite "E.D. Mich. LBR 4004-1"
+deadline domestic-support-certification-period: 28.days after CompletionNoticeFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 4004-1"
 /// LBR 5010-1(b): a debtor whose case is reopened to file a missing
 /// certification files it within 14 days after the reopening order, or the
 /// case is closed again.
-deadline reopened-missing-paper-period: 14.days after ReopeningOrderEntered() counted_by frbp9006 cite "E.D. Mich. LBR 5010-1(b)"
+deadline reopened-missing-paper-period: 14.days after ReopeningOrderEntered() counted_by frbp9006-michigan cite "E.D. Mich. LBR 5010-1(b)"
 /// LBR 6004-1(a): an objection to a noticed use, sale or lease of estate
 /// property is due 14 days from service of the notice, running with the
 /// 21-day notice of FRBP 2002(a)(2).
-deadline sale-notice-objection-period: 14.days after SaleNoticeServed() counted_by frbp9006 cite "E.D. Mich. LBR 6004-1(a)"
+deadline sale-notice-objection-period: 14.days after SaleNoticeServed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 6004-1(a)"
 /// LBR 7016-1: unless the court orders otherwise, the stipulation and
 /// proposed joint final pretrial order are due seven days before the final
 /// pretrial conference or, if none, the hearing or trial.
-deadline pretrial-order-period: 7.days before FinalPretrialConferenceScheduled() counted_by frbp9006 cite "E.D. Mich. LBR 7016-1"
+deadline pretrial-order-period: 7.days before FinalPretrialConferenceScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7016-1"
 /// LBR 7016-2(a): when the court orders mediation on its own initiative, a
 /// party may move under LBR 9014-1 objecting to mediation within seven
 /// days.
-deadline mediation-objection-period: 7.days after MediationOrderEntered() counted_by frbp9006 cite "E.D. Mich. LBR 7016-2(a)"
+deadline mediation-objection-period: 7.days after MediationOrderEntered() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7016-2(a)"
 /// LBR 7016-2(a)(3): mediation is completed within 14 days after entry of
 /// the mediation order or such other time as the order fixes.
-deadline mediation-completion-period: 14.days after MediationOrderEntered() counted_by frbp9006 cite "E.D. Mich. LBR 7016-2(a)"
+deadline mediation-completion-period: 14.days after MediationOrderEntered() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7016-2(a)"
 /// LBR 7016-2(a)(5): if necessary, the parties move for approval of a
 /// mediated settlement under FRBP 9019 within 14 days after the agreement
 /// is fully executed.
-deadline mediation-settlement-motion-period: 14.days after MediationAgreementExecuted() counted_by frbp9006 cite "E.D. Mich. LBR 7016-2(a)"
+deadline mediation-settlement-motion-period: 14.days after MediationAgreementExecuted() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7016-2(a)"
 /// LBR 7016-2(a)(7): within seven days after the mediation concludes, the
 /// mediator files a certification of compliance and of whether a settlement
 /// was achieved.
-deadline mediator-certification-period: 7.days after MediationConcluded() counted_by frbp9006 cite "E.D. Mich. LBR 7016-2(a)"
+deadline mediator-certification-period: 7.days after MediationConcluded() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7016-2(a)"
 /// LBR 7041-1: an objection to the dismissal of a § 727 action is due 14
 /// days after service of the joint statement of consideration.
-deadline discharge-dismissal-objection-period: 14.days after DismissalStatementServed() counted_by frbp9006 cite "E.D. Mich. LBR 7041-1"
+deadline discharge-dismissal-objection-period: 14.days after DismissalStatementServed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7041-1"
 /// LBR 7054-1(a): unless the court orders otherwise, a party awarded fees
 /// and nontaxable costs under FRBP 7054(b) files its application within 14
 /// days after the award.
-deadline fee-award-application-period: 14.days after FeeAwardEntered() counted_by frbp9006 cite "E.D. Mich. LBR 7054-1(a)"
+deadline fee-award-application-period: 14.days after FeeAwardEntered() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7054-1(a)"
 /// LBR 7054-1(b): a party opposing the fees and costs has 14 days from
 /// service of the application to object.
-deadline fee-award-objection-period: 14.days after FeeAwardApplicationServed() counted_by frbp9006 cite "E.D. Mich. LBR 7054-1(b)"
+deadline fee-award-objection-period: 14.days after FeeAwardApplicationServed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7054-1(b)"
 /// LBR 7055-1: the application for a default judgment and the proposed
 /// judgment are due 14 days after the clerk enters the default.
-deadline default-judgment-period: 14.days after DefaultEntered() counted_by frbp9006 cite "E.D. Mich. LBR 7055-1"
+deadline default-judgment-period: 14.days after DefaultEntered() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7055-1"
 /// LBR 9013-2(b)(4): debtor's counsel files and serves the list of matters
 /// for a fixed hearing date at least seven days before the hearing.
-deadline fixed-hearing-agenda-period: 7.days before FixedHearingDateScheduled() counted_by frbp9006 cite "E.D. Mich. LBR 9013-2(b)"
+deadline fixed-hearing-agenda-period: 7.days before FixedHearingDateScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 9013-2(b)"
 /// LBR 9014-1(b): except as the court or an applicable rule provides, the
 /// deadline to respond to a motion is 14 days after service.
-deadline motion-response-period: 14.days after MotionServed() counted_by frbp9006 cite "E.D. Mich. LBR 9014-1(b)"
+deadline motion-response-period: 14.days after MotionServed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 9014-1(b)"
 /// LBR 9014-1(b): for matters covered by FRBP 2002(a), the deadline to
 /// respond is 21 days after service.
-deadline notice-motion-response-period: 21.days after NoticeMotionServed() counted_by frbp9006 cite "E.D. Mich. LBR 9014-1(b)"
+deadline notice-motion-response-period: 21.days after NoticeMotionServed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 9014-1(b)"
 /// LBR 9015-1(b): in a removed proceeding with a timely jury demand, a
 /// party is deemed to consent to a jury trial before the bankruptcy judge
 /// unless it files a statement of non-consent within 28 days after removal.
-deadline removed-jury-consent-period: 28.days after CaseRemoved() counted_by frbp9006 cite "E.D. Mich. LBR 9015-1(b)"
+deadline removed-jury-consent-period: 28.days after CaseRemoved() counted_by frbp9006-michigan cite "E.D. Mich. LBR 9015-1(b)"
 /// LBR 9015-1(c): in a removed proceeding in which the state-law time for a
 /// jury demand has not expired, the jury demand is due 28 days after
 /// removal.
-deadline removed-jury-demand-period: 28.days after CaseRemoved() counted_by frbp9006 cite "E.D. Mich. LBR 9015-1(c)"
+deadline removed-jury-demand-period: 28.days after CaseRemoved() counted_by frbp9006-michigan cite "E.D. Mich. LBR 9015-1(c)"
 /// LBR 9019-1: attorneys who state a settlement on the record submit a
 /// proposed order within 14 days; failure is cause for dismissal.
-deadline settlement-order-period: 14.days after SettlementStatedOnRecord() counted_by frbp9006 cite "E.D. Mich. LBR 9019-1"
+deadline settlement-order-period: 14.days after SettlementStatedOnRecord() counted_by frbp9006-michigan cite "E.D. Mich. LBR 9019-1"
 /// LBR 9021-1(a)(4): written objections to a proposed order or judgment
 /// noticed for submission are due within seven days.
-deadline proposed-order-objection-period: 7.days after ProposedOrderNoticed() counted_by frbp9006 cite "E.D. Mich. LBR 9021-1(a)"
+deadline proposed-order-objection-period: 7.days after ProposedOrderNoticed() counted_by frbp9006-michigan cite "E.D. Mich. LBR 9021-1(a)"
 /// LBR 9024-1(a)(1): a motion for reconsideration of an order or judgment
 /// as erroneous in fact or law is due 14 days after its entry.
-deadline reconsideration-period: 14.days after OrderEntered() counted_by frbp9006 cite "E.D. Mich. LBR 9024-1(a)"
+deadline reconsideration-period: 14.days after OrderEntered() counted_by frbp9006-michigan cite "E.D. Mich. LBR 9024-1(a)"
 /// LBR 9006-1(a): an objection to a motion to extend a deadline is filed
 /// within three business days after the motion is filed.
-deadline extension-motion-objection-period: 3.business_days after ExtensionMotionFiled() counted_by frbp9006 cite "E.D. Mich. LBR 9006-1(a)"
+deadline extension-motion-objection-period: 3.business_days after ExtensionMotionFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 9006-1(a)"
 /// LBR 3018-1: the ballot summary is filed at least two business days
 /// before the confirmation hearing.
-deadline ballot-summary-period: 2.business_days before CombinedConfirmationHearingScheduled() counted_by frbp9006 cite "E.D. Mich. LBR 3018-1"
+deadline ballot-summary-period: 2.business_days before CombinedConfirmationHearingScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 3018-1"
 /// LBR 5071-1: a request to adjourn a hearing is filed at least three
 /// business days before the hearing.
-deadline hearing-adjournment-request-period: 3.business_days before ContestedMatterHearingScheduled() counted_by frbp9006 cite "E.D. Mich. LBR 5071-1"
+deadline hearing-adjournment-request-period: 3.business_days before ContestedMatterHearingScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 5071-1"
 /// LBR 9014-1(f): a reply brief is filed at least three business days
 /// before the hearing.
-deadline motion-reply-brief-period: 3.business_days before ContestedMatterHearingScheduled() counted_by frbp9006 cite "E.D. Mich. LBR 9014-1(f)"
+deadline motion-reply-brief-period: 3.business_days before ContestedMatterHearingScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 9014-1(f)"
 /// LBR 7016-1: trial exhibits are exchanged at least three business days
 /// before trial.
-deadline trial-exhibit-period: 3.business_days before TrialScheduled() counted_by frbp9006 cite "E.D. Mich. LBR 7016-1"
+deadline trial-exhibit-period: 3.business_days before TrialScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7016-1"
 /// LBR 4001-4(c)-(d): follow-up notice is served within three business days
 /// after the debtor's stay-extension objection.
-deadline stay-objection-follow-up-period: 3.business_days after StayExtensionObjectionFiled() counted_by frbp9006 cite "E.D. Mich. LBR 4001-4"
+deadline stay-objection-follow-up-period: 3.business_days after StayExtensionObjectionFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 4001-4"
 
 test "an extension motion objection period counts business days" cite "E.D. Mich. LBR 9006-1(a)"
 {

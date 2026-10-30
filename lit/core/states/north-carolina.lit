@@ -1,0 +1,149 @@
+module core.states.north-carolina
+
+import core.calendar.{ us-federal-holidays }
+
+/// The legal public holidays of North Carolina (N.C. Gen. Stat. § 103-4(a))
+/// that `us-federal-holidays` does not already close: Robert E. Lee's Birthday
+/// (January 19), Greek Independence Day (March 25), the anniversary of the
+/// Halifax Resolves (April 12), Confederate Memorial Day (May 10), the
+/// anniversary of the Mecklenburg Declaration (May 20), Good Friday, First
+/// Responders Day (September 11), Yom Kippur and the general election day of an
+/// even year. § 103-4(b) moves only a Sunday holiday, to the Monday following.
+/// Each `once` day is listed from the date the vendored text was retrieved
+/// (October 29, 2026) to the end of 2050; Yom Kippur's dates are computed from
+/// the Hebrew calendar.
+calendar north-carolina-holidays cite "N.C. Gen. Stat. § 103-4(a)"
+{
+  robert-e-lee-birthday: fixed(1, 19) effective [2026-10-29, ..) observed next_day
+  greek-independence-day: fixed(3, 25) effective [2026-10-29, ..) observed next_day
+  halifax-resolves-day: fixed(4, 12) effective [2026-10-29, ..) observed next_day
+  confederate-memorial-day: fixed(5, 10) effective [2026-10-29, ..) observed next_day
+  mecklenburg-declaration-day: fixed(5, 20) effective [2026-10-29, ..) observed next_day
+  first-responders-day: fixed(9, 11) effective [2026-10-29, ..) observed next_day
+  // § 103-4(a)(8).
+  good-friday-2027: once(2027-03-26) effective [2026-10-29, ..)
+  good-friday-2028: once(2028-04-14) effective [2026-10-29, ..)
+  good-friday-2029: once(2029-03-30) effective [2026-10-29, ..)
+  good-friday-2030: once(2030-04-19) effective [2026-10-29, ..)
+  good-friday-2031: once(2031-04-11) effective [2026-10-29, ..)
+  good-friday-2032: once(2032-03-26) effective [2026-10-29, ..)
+  good-friday-2033: once(2033-04-15) effective [2026-10-29, ..)
+  good-friday-2034: once(2034-04-07) effective [2026-10-29, ..)
+  good-friday-2035: once(2035-03-23) effective [2026-10-29, ..)
+  good-friday-2036: once(2036-04-11) effective [2026-10-29, ..)
+  good-friday-2037: once(2037-04-03) effective [2026-10-29, ..)
+  good-friday-2038: once(2038-04-23) effective [2026-10-29, ..)
+  good-friday-2039: once(2039-04-08) effective [2026-10-29, ..)
+  good-friday-2040: once(2040-03-30) effective [2026-10-29, ..)
+  good-friday-2041: once(2041-04-19) effective [2026-10-29, ..)
+  good-friday-2042: once(2042-04-04) effective [2026-10-29, ..)
+  good-friday-2043: once(2043-03-27) effective [2026-10-29, ..)
+  good-friday-2044: once(2044-04-15) effective [2026-10-29, ..)
+  good-friday-2045: once(2045-04-07) effective [2026-10-29, ..)
+  good-friday-2046: once(2046-03-23) effective [2026-10-29, ..)
+  good-friday-2047: once(2047-04-12) effective [2026-10-29, ..)
+  good-friday-2048: once(2048-04-03) effective [2026-10-29, ..)
+  good-friday-2049: once(2049-04-16) effective [2026-10-29, ..)
+  good-friday-2050: once(2050-04-08) effective [2026-10-29, ..)
+  // § 103-4(a)(11a): 10 Tishri, which never falls on a Sunday.
+  yom-kippur-2027: once(2027-10-11) effective [2026-10-29, ..)
+  yom-kippur-2028: once(2028-09-30) effective [2026-10-29, ..)
+  yom-kippur-2029: once(2029-09-19) effective [2026-10-29, ..)
+  yom-kippur-2030: once(2030-10-07) effective [2026-10-29, ..)
+  yom-kippur-2031: once(2031-09-27) effective [2026-10-29, ..)
+  yom-kippur-2032: once(2032-09-15) effective [2026-10-29, ..)
+  yom-kippur-2033: once(2033-10-03) effective [2026-10-29, ..)
+  yom-kippur-2034: once(2034-09-23) effective [2026-10-29, ..)
+  yom-kippur-2035: once(2035-10-13) effective [2026-10-29, ..)
+  yom-kippur-2036: once(2036-10-01) effective [2026-10-29, ..)
+  yom-kippur-2037: once(2037-09-19) effective [2026-10-29, ..)
+  yom-kippur-2038: once(2038-10-09) effective [2026-10-29, ..)
+  yom-kippur-2039: once(2039-09-28) effective [2026-10-29, ..)
+  yom-kippur-2040: once(2040-09-17) effective [2026-10-29, ..)
+  yom-kippur-2041: once(2041-10-05) effective [2026-10-29, ..)
+  yom-kippur-2042: once(2042-09-24) effective [2026-10-29, ..)
+  yom-kippur-2043: once(2043-10-14) effective [2026-10-29, ..)
+  yom-kippur-2044: once(2044-10-01) effective [2026-10-29, ..)
+  yom-kippur-2045: once(2045-09-21) effective [2026-10-29, ..)
+  yom-kippur-2046: once(2046-10-10) effective [2026-10-29, ..)
+  yom-kippur-2047: once(2047-09-30) effective [2026-10-29, ..)
+  yom-kippur-2048: once(2048-09-17) effective [2026-10-29, ..)
+  yom-kippur-2049: once(2049-10-06) effective [2026-10-29, ..)
+  yom-kippur-2050: once(2050-09-26) effective [2026-10-29, ..)
+  // § 103-4(a)(13): the Tuesday after the first Monday in November in years
+  // in which a general election is to be held (even years).
+  general-election-day-2026: once(2026-11-03) effective [2026-10-29, ..)
+  general-election-day-2028: once(2028-11-07) effective [2026-10-29, ..)
+  general-election-day-2030: once(2030-11-05) effective [2026-10-29, ..)
+  general-election-day-2032: once(2032-11-02) effective [2026-10-29, ..)
+  general-election-day-2034: once(2034-11-07) effective [2026-10-29, ..)
+  general-election-day-2036: once(2036-11-04) effective [2026-10-29, ..)
+  general-election-day-2038: once(2038-11-02) effective [2026-10-29, ..)
+  general-election-day-2040: once(2040-11-06) effective [2026-10-29, ..)
+  general-election-day-2042: once(2042-11-04) effective [2026-10-29, ..)
+  general-election-day-2044: once(2044-11-08) effective [2026-10-29, ..)
+  general-election-day-2046: once(2046-11-06) effective [2026-10-29, ..)
+  general-election-day-2048: once(2048-11-03) effective [2026-10-29, ..)
+  general-election-day-2050: once(2050-11-08) effective [2026-10-29, ..)
+}
+
+/// FRCP 6 in the district courts of North Carolina: the 2023 text
+/// (`frcp6@2023-12-01`) with `north-carolina-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-north-carolina effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays north-carolina-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of North Carolina:
+/// `north-carolina-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-north-carolina effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays north-carolina-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-nce, bankr-ncm, bankr-ncw]
+  allow_hours
+  end_of_month clamp
+}

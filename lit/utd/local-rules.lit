@@ -1,54 +1,6 @@
 module utd-local-rules.local-rules
 
-import core.calendar.{ us-federal-holidays }
-
-/// The Utah legal holidays URCP 6(a)(6) lists that are not § 6103(a) days:
-/// Pioneer Day (July 24) and Juneteenth National Freedom Day "as recognized
-/// by the Utah Legislature as the third Monday of June" (§ 6103(a)'s
-/// Juneteenth is June 19, already core's `us-federal-holidays`). Every other
-/// day on that list (New Year's, Martin Luther King, Washington and Lincoln,
-/// Memorial, Independence, Labor, Columbus, Veterans', Thanksgiving and
-/// Christmas Day) is a § 6103(a) day. URCP 6(a)(6) restates the state's
-/// holiday statute, which is not vendored; the vendored edition of Rule 6
-/// is effective May 1, 2024. Each is the day itself: the statute that may
-/// observe a weekend holiday on another day is not vendored, so that day
-/// is not a holiday here, and days the Governor or Legislature designates
-/// (URCP 6(a)(6)(M)) are not modeled (the earlier date).
-calendar utah-legal-holidays cite "URCP 6(a)(6)"
-{
-  pioneer-day: fixed(7, 24) effective [2024-05-01, ..)
-  utah-juneteenth: nth(3, monday, 6) effective [2024-05-01, ..)
-}
-
-/// FRCP 6(a) (core's `frcp6@2023-12-01`) in the District of Utah: a day
-/// the state where the district court is located declares a holiday is a
-/// legal holiday for a period counted forward only ("for periods that are
-/// measured after an event", FRCP 6(a)(6)(C)). The package `recounts`
-/// lit/frcp, so in a matter in this court the FRCP periods are counted by
-/// this rule too, not by core's frcp6.
-counting utd-6 effective [2025-12-01, ..) known_at 2025-12-01 cite "FRCP 6(a)"
-{
-  exclude_trigger_day
-  include_last_day
-  roll_forward_on [weekend, legal_holiday, inaccessible]
-  service_extension {
-    Personal: 0.days
-    Electronic: 0.days
-    Mail: 3.days
-    Clerk: 3.days
-    OtherConsented: 3.days
-    CommercialCarrier: unrecognized
-    PrisonMail: unrecognized
-    MailForeign: unrecognized
-    Express: unrecognized
-    ExpressForeign: unrecognized
-  } cite "FRCP 6(d)"
-  holidays us-federal-holidays
-  forward_holidays utah-legal-holidays cite "FRCP 6(a)(6)(C)"
-  forums [frcp]
-  allow_hours
-  end_of_month clamp
-}
+import core.states.utah.{ frcp6-utah }
 
 // The District of Utah's own civil periods and limits, computed under
 // FRCP 6(a), which governs a period stated in a local rule. Rules that
@@ -226,7 +178,7 @@ event ActionRemoved()
 /// DUCivR 3-1: the filing fee should be paid when the complaint or other
 /// case-initiating document is filed, except as DUCivR 3-2 provides; if it
 /// is not paid within 7 days, the Clerk closes the case.
-deadline filing-fee-period: 7.days after ComplaintFiled() counted_by utd-6 cite "DUCivR 3-1"
+deadline filing-fee-period: 7.days after ComplaintFiled() counted_by frcp6-utah cite "DUCivR 3-1"
 {
   forum frcp
 }
@@ -237,14 +189,14 @@ deadline filing-fee-period: 7.days after ComplaintFiled() counted_by utd-6 cite 
 /// time is ineffective without a court order (DUCivR 7-1(a)(5)), and the
 /// court may grant a motion not timely opposed without further notice
 /// (DUCivR 7-1).
-deadline pleading-response-period: 28.days after PleadingMotionServed() counted_by utd-6 cite "DUCivR 7-1(a)(4)"
+deadline pleading-response-period: 28.days after PleadingMotionServed() counted_by frcp6-utah cite "DUCivR 7-1(a)(4)"
 {
   forum frcp
 }
 
 /// DUCivR 7-1(a)(4)(A)(iv): a reply may be filed within 14 days after
 /// service of the response.
-deadline pleading-reply-period: 14.days after PleadingResponseServed() counted_by utd-6 cite "DUCivR 7-1(a)(4)"
+deadline pleading-reply-period: 14.days after PleadingResponseServed() counted_by frcp6-utah cite "DUCivR 7-1(a)(4)"
 {
   forum frcp
 }
@@ -254,42 +206,42 @@ deadline pleading-reply-period: 14.days after PleadingResponseServed() counted_b
 /// respond timely, the court may grant the motion without further notice
 /// if the movant has established that it is entitled to judgment as a
 /// matter of law (DUCivR 56-1).
-deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by utd-6 cite "DUCivR 7-1(a)(4)"
+deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6-utah cite "DUCivR 7-1(a)(4)"
 {
   forum frcp
 }
 
 /// DUCivR 7-1(a)(4)(B)(iv): a reply may be filed within 14 days after
 /// service of the response.
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by utd-6 cite "DUCivR 7-1(a)(4)"
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-utah cite "DUCivR 7-1(a)(4)"
 {
   forum frcp
 }
 
 /// DUCivR 7-1(a)(4)(C)(iii): a response to a motion under FRCP 65 is
 /// filed within 14 days after service of the motion.
-deadline injunction-response-period: 14.days after InjunctionMotionServed() counted_by utd-6 cite "DUCivR 7-1(a)(4)"
+deadline injunction-response-period: 14.days after InjunctionMotionServed() counted_by frcp6-utah cite "DUCivR 7-1(a)(4)"
 {
   forum frcp
 }
 
 /// DUCivR 7-1(a)(4)(C)(iv): a reply may be filed within 14 days after
 /// service of the response.
-deadline injunction-reply-period: 14.days after InjunctionResponseServed() counted_by utd-6 cite "DUCivR 7-1(a)(4)"
+deadline injunction-reply-period: 14.days after InjunctionResponseServed() counted_by frcp6-utah cite "DUCivR 7-1(a)(4)"
 {
   forum frcp
 }
 
 /// DUCivR 7-1(a)(4)(D)(ii): a response to any other motion is filed within
 /// 14 days after service of the motion.
-deadline response-period: 14.days after MotionServed() counted_by utd-6 cite "DUCivR 7-1(a)(4)"
+deadline response-period: 14.days after MotionServed() counted_by frcp6-utah cite "DUCivR 7-1(a)(4)"
 {
   forum frcp
 }
 
 /// DUCivR 7-1(a)(4)(D)(iii): a reply may be filed within 14 days after
 /// service of the response.
-deadline reply-period: 14.days after ResponseServed() counted_by utd-6 cite "DUCivR 7-1(a)(4)"
+deadline reply-period: 14.days after ResponseServed() counted_by frcp6-utah cite "DUCivR 7-1(a)(4)"
 {
   forum frcp
 }
@@ -297,7 +249,7 @@ deadline reply-period: 14.days after ResponseServed() counted_by utd-6 cite "DUC
 /// DUCivR 7-1(b)(3): if new evidence is offered in a reply, an evidentiary
 /// objection is filed within 7 days after service of the reply. A motion
 /// to strike evidence is improper (DUCivR 7-1(b)(1)).
-deadline evidentiary-objection-period: 7.days after ReplyWithNewEvidenceServed() counted_by utd-6 cite "DUCivR 7-1(b)"
+deadline evidentiary-objection-period: 7.days after ReplyWithNewEvidenceServed() counted_by frcp6-utah cite "DUCivR 7-1(b)"
 {
   forum frcp
 }
@@ -306,7 +258,7 @@ deadline evidentiary-objection-period: 7.days after ReplyWithNewEvidenceServed()
 /// a response to a Notice of Supplemental Authority within 7 days after
 /// service of the notice; the court may decide the motion without waiting
 /// for it.
-deadline supplemental-authority-response-period: 7.days after SupplementalAuthorityNoticeServed() counted_by utd-6 cite "DUCivR 7-1"
+deadline supplemental-authority-response-period: 7.days after SupplementalAuthorityNoticeServed() counted_by frcp6-utah cite "DUCivR 7-1"
 {
   forum frcp
 }
@@ -314,14 +266,14 @@ deadline supplemental-authority-response-period: 7.days after SupplementalAuthor
 /// DUCivR 7-6(b)(3): any party may file a response to a motion for leave
 /// to file an amicus memorandum, without responding to the substance of
 /// the proposed memorandum, within 7 days after service of the motion.
-deadline amicus-motion-response-period: 7.days after AmicusMotionServed() counted_by utd-6 cite "DUCivR 7-6(b)"
+deadline amicus-motion-response-period: 7.days after AmicusMotionServed() counted_by frcp6-utah cite "DUCivR 7-6(b)"
 {
   forum frcp
 }
 
 /// DUCivR 7-6(b)(4): a party granted leave files the amicus memorandum
 /// within 3 days of the order.
-deadline amicus-memorandum-filing-period: 3.days after AmicusLeaveGranted() counted_by utd-6 cite "DUCivR 7-6(b)"
+deadline amicus-memorandum-filing-period: 3.days after AmicusLeaveGranted() counted_by frcp6-utah cite "DUCivR 7-6(b)"
 {
   forum frcp
 }
@@ -330,7 +282,7 @@ deadline amicus-memorandum-filing-period: 3.days after AmicusLeaveGranted() coun
 /// motion for leave and memorandum no later than 14 days after the moving
 /// party files its motion. The court may modify the deadline for good
 /// cause and no unfair prejudice (DUCivR 7-6(e)(3)).
-deadline amicus-supporting-period: 14.days after SupportedMotionFiled() counted_by utd-6 cite "DUCivR 7-6(e)"
+deadline amicus-supporting-period: 14.days after SupportedMotionFiled() counted_by frcp6-utah cite "DUCivR 7-6(e)"
 {
   forum frcp
 }
@@ -338,7 +290,7 @@ deadline amicus-supporting-period: 14.days after SupportedMotionFiled() counted_
 /// DUCivR 7-6(e)(2): an amicus opposing the moving party files its motion
 /// for leave and memorandum no later than 7 days after the response to the
 /// motion is filed.
-deadline amicus-opposing-period: 7.days after OpposedResponseFiled() counted_by utd-6 cite "DUCivR 7-6(e)"
+deadline amicus-opposing-period: 7.days after OpposedResponseFiled() counted_by frcp6-utah cite "DUCivR 7-6(e)"
 {
   forum frcp
 }
@@ -348,7 +300,7 @@ deadline amicus-opposing-period: 7.days after OpposedResponseFiled() counted_by 
 /// 37-1(a)(2) was sent to opposing counsel, unless the court extends the
 /// time for good cause; failure to meet the deadline may result in
 /// automatic denial of the motion.
-deadline short-form-discovery-motion-period: 45.days after DiscoveryDisputeLetterSent() counted_by utd-6 cite "DUCivR 37-1(b)"
+deadline short-form-discovery-motion-period: 45.days after DiscoveryDisputeLetterSent() counted_by frcp6-utah cite "DUCivR 37-1(b)"
 {
   forum frcp
 }
@@ -356,14 +308,14 @@ deadline short-form-discovery-motion-period: 45.days after DiscoveryDisputeLette
 /// DUCivR 54-1(a)(2)(A)(i): unless a statute provides otherwise or the
 /// court extends it under FRCP 6(b), a motion for attorney's fees is filed
 /// and served within 14 days after entry of a final judgment.
-deadline fee-motion-period: 14.days after FinalJudgmentEntered() counted_by utd-6 cite "DUCivR 54-1(a)"
+deadline fee-motion-period: 14.days after FinalJudgmentEntered() counted_by frcp6-utah cite "DUCivR 54-1(a)"
 {
   forum frcp
 }
 
 /// DUCivR 54-1(a)(2)(A)(ii): or within 14 days after an appellate remand
 /// that modifies or imposes a fee award.
-deadline fee-motion-on-remand-period: 14.days after FeeAwardRemanded() counted_by utd-6 cite "DUCivR 54-1(a)"
+deadline fee-motion-on-remand-period: 14.days after FeeAwardRemanded() counted_by frcp6-utah cite "DUCivR 54-1(a)"
 {
   forum frcp
 }
@@ -371,21 +323,21 @@ deadline fee-motion-on-remand-period: 14.days after FeeAwardRemanded() counted_b
 /// DUCivR 54-1(b)(2)(A): within 14 days after the entry of final
 /// judgment, the party entitled to recover costs files a bill of costs on
 /// the court's form and a supporting memorandum.
-deadline bill-of-costs-period: 14.days after FinalJudgmentEntered() counted_by utd-6 cite "DUCivR 54-1(b)"
+deadline bill-of-costs-period: 14.days after FinalJudgmentEntered() counted_by frcp6-utah cite "DUCivR 54-1(b)"
 {
   forum frcp
 }
 
 /// DUCivR 54-1(b)(2)(C): an objection to the requested costs is filed
 /// within 14 days after service of the bill of costs.
-deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by utd-6 cite "DUCivR 54-1(b)"
+deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6-utah cite "DUCivR 54-1(b)"
 {
   forum frcp
 }
 
 /// DUCivR 54-1(b)(2)(D): within 14 days of service of the objection, the
 /// party requesting the costs may file a reply.
-deadline costs-reply-period: 14.days after CostsObjectionServed() counted_by utd-6 cite "DUCivR 54-1(b)"
+deadline costs-reply-period: 14.days after CostsObjectionServed() counted_by frcp6-utah cite "DUCivR 54-1(b)"
 {
   forum frcp
 }
@@ -393,7 +345,7 @@ deadline costs-reply-period: 14.days after CostsObjectionServed() counted_by utd
 /// DUCivR 54-1(b)(2)(E): a party seeks judicial review of the taxation of
 /// costs by a motion filed within 7 days of the clerk's entry of the bill
 /// of costs.
-deadline costs-review-period: 7.days after CostsTaxed() counted_by utd-6 cite "DUCivR 54-1(b)"
+deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6-utah cite "DUCivR 54-1(b)"
 {
   forum frcp
 }
@@ -402,7 +354,7 @@ deadline costs-review-period: 7.days after CostsTaxed() counted_by utd-6 cite "D
 /// to a magistrate judge's order within 14 days after it is filed, the
 /// non-objecting party emails a proposed order to chambers. A response is
 /// filed only if the district judge orders one (DUCivR 72-2(b)(1)).
-deadline magistrate-objection-proposed-order-period: 14.days after MagistrateObjectionFiled() counted_by utd-6 cite "DUCivR 72-2(b)"
+deadline magistrate-objection-proposed-order-period: 14.days after MagistrateObjectionFiled() counted_by frcp6-utah cite "DUCivR 72-2(b)"
 {
   forum frcp
 }
@@ -411,7 +363,7 @@ deadline magistrate-objection-proposed-order-period: 14.days after MagistrateObj
 /// Office sends it the Consent Form to return it to the Clerk's Office;
 /// the form is returned confidentially, never filed electronically
 /// (DUCivR 72-3(c)(3)(B)).
-deadline consent-form-period: 21.days after ConsentFormSent() counted_by utd-6 cite "DUCivR 72-3(c)"
+deadline consent-form-period: 21.days after ConsentFormSent() counted_by frcp6-utah cite "DUCivR 72-3(c)"
 {
   forum frcp
 }
@@ -422,7 +374,7 @@ deadline consent-form-period: 21.days after ConsentFormSent() counted_by utd-6 c
 /// within 21 days after removal. Pending state court motions are denied
 /// without prejudice on removal and state scheduling deadlines are
 /// vacated (DUCivR 81-1(c)(1)).
-deadline removal-amended-notice-period: 21.days after ActionRemoved() counted_by utd-6 cite "DUCivR 81-1(a)"
+deadline removal-amended-notice-period: 21.days after ActionRemoved() counted_by frcp6-utah cite "DUCivR 81-1(a)"
 {
   forum frcp
 }

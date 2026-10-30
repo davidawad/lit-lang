@@ -1,6 +1,6 @@
 module almd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.alabama.{ frcp6-alabama }
 
 // The Middle District of Alabama's own periods, computed under the federal
 // rules (FRCP 6(a) governs "any local rule"); any judge may suspend a
@@ -46,14 +46,14 @@ event FinalJudgmentEntered()
 /// LR 4.1(a): if service is effected by summons, the person effecting
 /// service makes proof of it to the court within seven days of the date
 /// service is effected.
-deadline proof-of-service-period: 7.days after ServiceEffected() counted_by frcp6 cite "M.D. Ala. LR 4.1(a)"
+deadline proof-of-service-period: 7.days after ServiceEffected() counted_by frcp6-alabama cite "M.D. Ala. LR 4.1(a)"
 {
   forum frcp
 }
 
 /// LR 4.1(b): if service is waived, the plaintiff files the waiver within
 /// seven days after the plaintiff receives it.
-deadline waiver-filing-period: 7.days after WaiverReceived() counted_by frcp6 cite "M.D. Ala. LR 4.1(b)"
+deadline waiver-filing-period: 7.days after WaiverReceived() counted_by frcp6-alabama cite "M.D. Ala. LR 4.1(b)"
 {
   forum frcp
 }
@@ -62,7 +62,7 @@ deadline waiver-filing-period: 7.days after WaiverReceived() counted_by frcp6 ci
 /// initial pleading or other court paper is impossible or impracticable,
 /// it is filed within seven days of the date of the original filing, or
 /// such other time as the court directs.
-deadline disclosure-statement-period: 7.days after InitialPaperFiled() counted_by frcp6 cite "M.D. Ala. LR 7.1(a)"
+deadline disclosure-statement-period: 7.days after InitialPaperFiled() counted_by frcp6-alabama cite "M.D. Ala. LR 7.1(a)"
 {
   forum frcp
 }
@@ -71,7 +71,7 @@ deadline disclosure-statement-period: 7.days after InitialPaperFiled() counted_b
 /// subpoenas or writs ad testificandum to be served by the U.S. Marshal
 /// Service should be filed not less than fourteen calendar days before the
 /// trial date or hearing.
-deadline marshal-subpoena-period: 14.days before TrialBegins() counted_by frcp6 cite "M.D. Ala. LR 45.1(a)(1)(A)"
+deadline marshal-subpoena-period: 14.days before TrialBegins() counted_by frcp6-alabama cite "M.D. Ala. LR 45.1(a)(1)(A)"
 {
   forum frcp
 }
@@ -80,7 +80,7 @@ deadline marshal-subpoena-period: 14.days before TrialBegins() counted_by frcp6 
 /// proceeding, an indigent party desiring a witness by subpoena or writ ad
 /// testificandum files a motion not later than twenty-one calendar days
 /// before the trial or hearing.
-deadline indigent-witness-motion-period: 21.days before TrialBegins() counted_by frcp6 cite "M.D. Ala. LR 45.1(b)(1)"
+deadline indigent-witness-motion-period: 21.days before TrialBegins() counted_by frcp6-alabama cite "M.D. Ala. LR 45.1(b)(1)"
 {
   forum frcp
 }
@@ -89,7 +89,7 @@ deadline indigent-witness-motion-period: 21.days before TrialBegins() counted_by
 /// under FRCP 54(d) are filed with the clerk within 35 days after entry of
 /// the final judgment from which an appeal may be taken; failure to file
 /// within this time is deemed a waiver.
-deadline costs-period: 35.days after FinalJudgmentEntered() counted_by frcp6 cite "M.D. Ala. LR 54.1(a)"
+deadline costs-period: 35.days after FinalJudgmentEntered() counted_by frcp6-alabama cite "M.D. Ala. LR 54.1(a)"
 {
   forum frcp
 }
@@ -97,7 +97,7 @@ deadline costs-period: 35.days after FinalJudgmentEntered() counted_by frcp6 cit
 /// LR 83.5(c): appointed counsel granted extraordinary expenses for an
 /// indigent civil plaintiff files the Claim Form for Reimbursement within
 /// 21 days from the date of final judgment.
-deadline expense-claim-period: 21.days after FinalJudgmentEntered() counted_by frcp6 cite "M.D. Ala. LR 83.5(c)"
+deadline expense-claim-period: 21.days after FinalJudgmentEntered() counted_by frcp6-alabama cite "M.D. Ala. LR 83.5(c)"
 {
   forum frcp
 }

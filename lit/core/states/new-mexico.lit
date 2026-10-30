@@ -1,0 +1,133 @@
+module core.states.new-mexico
+
+import core.calendar.{ us-federal-holidays }
+
+/// The New Mexico legal holiday NMRA 1-006(A)(7) lists that is not a
+/// § 6103(a) day: Presidents' Day, "traditionally observed on the day after
+/// Thanksgiving", the Friday after the fourth Thursday in November, listed
+/// here by year through 2050. Every other day on that list (New Year's,
+/// Martin Luther King Jr.'s Birthday, Memorial, Juneteenth, Independence,
+/// Labor, Indigenous Peoples (the second Monday in October), Veterans',
+/// Thanksgiving and Christmas Day) is a § 6103(a) day already in core's
+/// `us-federal-holidays`. Rule 1-006 was last amended effective December
+/// 31, 2024 (the vendored 2026 NMRA edition); "any other day observed as a
+/// holiday by the judiciary" (1-006(A)(7)(b)) is not modeled (the earlier
+/// date).
+calendar new-mexico-holidays cite "NMRA 1-006(A)(7)"
+{
+  day-after-thanksgiving-2025: once(2025-11-28) effective [2024-12-31, ..)
+  day-after-thanksgiving-2026: once(2026-11-27) effective [2024-12-31, ..)
+  day-after-thanksgiving-2027: once(2027-11-26) effective [2024-12-31, ..)
+  day-after-thanksgiving-2028: once(2028-11-24) effective [2024-12-31, ..)
+  day-after-thanksgiving-2029: once(2029-11-23) effective [2024-12-31, ..)
+  day-after-thanksgiving-2030: once(2030-11-29) effective [2024-12-31, ..)
+  day-after-thanksgiving-2031: once(2031-11-28) effective [2024-12-31, ..)
+  day-after-thanksgiving-2032: once(2032-11-26) effective [2024-12-31, ..)
+  day-after-thanksgiving-2033: once(2033-11-25) effective [2024-12-31, ..)
+  day-after-thanksgiving-2034: once(2034-11-24) effective [2024-12-31, ..)
+  day-after-thanksgiving-2035: once(2035-11-23) effective [2024-12-31, ..)
+  day-after-thanksgiving-2036: once(2036-11-28) effective [2024-12-31, ..)
+  day-after-thanksgiving-2037: once(2037-11-27) effective [2024-12-31, ..)
+  day-after-thanksgiving-2038: once(2038-11-26) effective [2024-12-31, ..)
+  day-after-thanksgiving-2039: once(2039-11-25) effective [2024-12-31, ..)
+  day-after-thanksgiving-2040: once(2040-11-23) effective [2024-12-31, ..)
+  day-after-thanksgiving-2041: once(2041-11-29) effective [2024-12-31, ..)
+  day-after-thanksgiving-2042: once(2042-11-28) effective [2024-12-31, ..)
+  day-after-thanksgiving-2043: once(2043-11-27) effective [2024-12-31, ..)
+  day-after-thanksgiving-2044: once(2044-11-25) effective [2024-12-31, ..)
+  day-after-thanksgiving-2045: once(2045-11-24) effective [2024-12-31, ..)
+  day-after-thanksgiving-2046: once(2046-11-23) effective [2024-12-31, ..)
+  day-after-thanksgiving-2047: once(2047-11-29) effective [2024-12-31, ..)
+  day-after-thanksgiving-2048: once(2048-11-27) effective [2024-12-31, ..)
+  day-after-thanksgiving-2049: once(2049-11-26) effective [2024-12-31, ..)
+  day-after-thanksgiving-2050: once(2050-11-25) effective [2024-12-31, ..)
+}
+
+/// FRCP 6 in the district courts of New Mexico before the 2023
+/// amendment: the 2016 text (`frcp6@2016-12-01`) with `new-mexico-holidays`, as
+/// below, so a District of New Mexico package in force earlier is counted by
+/// one rule throughout.
+counting frcp6-new-mexico effective [2016-12-01, 2023-12-01) known_at 2016-04-28 cite "FRCP (2017 ed.) 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP (2017 ed.) 6(d)"
+  holidays us-federal-holidays
+  forward_holidays new-mexico-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRCP 6 in the district courts of New Mexico: the 2023 text
+/// (`frcp6@2023-12-01`) with `new-mexico-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-new-mexico effective [2023-12-01, ..) known_at 2023-04-24 supersedes frcp6-new-mexico@2016-12-01 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays new-mexico-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of New Mexico:
+/// `new-mexico-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-new-mexico effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays new-mexico-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-nm]
+  allow_hours
+  end_of_month clamp
+}

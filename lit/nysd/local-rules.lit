@@ -1,6 +1,6 @@
 module nysd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.new-york.{ frcp6-new-york }
 
 // The Southern District of New York's own periods under the Joint Local
 // Rules, computed under the federal rules (Local Civ. R. 6.1(a), (b): "In
@@ -143,14 +143,14 @@ event PlanFirstAnswerFiled()
 /// Local Civ. R. 6.1(a): on a motion or application under FRCP 26 through
 /// 37 and 45(d)(3), opposing or response papers are served within seven
 /// days after service of the moving papers.
-deadline discovery-opposition-period: 7.days after DiscoveryMotionServed() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 6.1(a)"
+deadline discovery-opposition-period: 7.days after DiscoveryMotionServed() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 6.1(a)"
 {
   forum frcp
 }
 
 /// Local Civ. R. 6.1(a): reply papers on such a motion are served within
 /// two days after service of the answering papers.
-deadline discovery-reply-period: 2.days after DiscoveryOppositionServed() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 6.1(a)"
+deadline discovery-reply-period: 2.days after DiscoveryOppositionServed() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 6.1(a)"
 {
   forum frcp
 }
@@ -158,14 +158,14 @@ deadline discovery-reply-period: 2.days after DiscoveryOppositionServed() counte
 /// Local Civ. R. 6.1(b): on any other civil motion, petition or
 /// application (other than a habeas corpus petition), opposing or response
 /// papers are served within 14 days after service of the moving papers.
-deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 6.1(b)"
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 6.1(b)"
 {
   forum frcp
 }
 
 /// Local Civ. R. 6.1(b): reply papers are served within seven days after
 /// service of the answering papers.
-deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 6.1(b)"
+deadline reply-period: 7.days after OppositionServed() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 6.1(b)"
 {
   forum frcp
 }
@@ -175,7 +175,7 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "S.
 /// reconsideration is served within 14 days after the entry of the order
 /// challenged; answering and reply memoranda follow Local Civ. R. 6.1(a)
 /// or (b).
-deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 6.3"
+deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 6.3"
 {
   forum frcp
 }
@@ -183,7 +183,7 @@ deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 c
 /// Local Civ. R. 7.1.1: for FRCP 7.1(b)(2), "promptly" means within 14
 /// days; a supplemental disclosure statement is filed within 14 days of
 /// any change in the required information.
-deadline supplemental-disclosure-period: 14.days after DisclosureInformationChanged() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 7.1.1"
+deadline supplemental-disclosure-period: 14.days after DisclosureInformationChanged() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 7.1.1"
 {
   forum frcp
 }
@@ -192,7 +192,7 @@ deadline supplemental-disclosure-period: 14.days after DisclosureInformationChan
 /// party as one for summary judgment and the movant has not served the
 /// required notice, the movant serves and files the amended notice within
 /// 14 days of the ruling.
-deadline pro-se-notice-period: 14.days after ConversionRuled() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 12.1"
+deadline pro-se-notice-period: 14.days after ConversionRuled() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 12.1"
 {
   forum frcp
 }
@@ -200,7 +200,7 @@ deadline pro-se-notice-period: 14.days after ConversionRuled() counted_by frcp6 
 /// Local Civ. R. 15.1(b): unless the court orders otherwise, a represented
 /// moving party files the amended or supplemental pleading within seven
 /// days of the order granting the motion.
-deadline amended-pleading-period: 7.days after AmendmentGranted() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 15.1(b)"
+deadline amended-pleading-period: 7.days after AmendmentGranted() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 15.1(b)"
 {
   forum frcp
 }
@@ -209,7 +209,7 @@ deadline amended-pleading-period: 7.days after AmendmentGranted() counted_by frc
 /// requests for production are answered within 120 days of service of the
 /// complaint on any named defendant, unless the court orders otherwise for
 /// good cause or a dispositive motion is pending.
-deadline prisoner-discovery-period: 120.days after PrisonerComplaintServed() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 33.2(d)"
+deadline prisoner-discovery-period: 120.days after PrisonerComplaintServed() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 33.2(d)"
 {
   forum frcp
 }
@@ -218,7 +218,7 @@ deadline prisoner-discovery-period: 120.days after PrisonerComplaintServed() cou
 /// ordered otherwise, contention interrogatories may be served at the
 /// conclusion of other discovery and at least 30 days before the discovery
 /// cut-off date.
-deadline contention-interrogatory-period: 30.days before DiscoveryCutoff() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 33.3(c)"
+deadline contention-interrogatory-period: 30.days before DiscoveryCutoff() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 33.3(c)"
 {
   forum frcp
 }
@@ -226,14 +226,14 @@ deadline contention-interrogatory-period: 30.days before DiscoveryCutoff() count
 /// Local Civ. R. 39.1(b)(1): filed trial and hearing exhibits are removed
 /// within 90 days after a final decision is rendered, if no appeal is
 /// taken.
-deadline exhibit-removal-period: 90.days after FinalDecisionRendered() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 39.1(b)"
+deadline exhibit-removal-period: 90.days after FinalDecisionRendered() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 39.1(b)"
 {
   forum frcp
 }
 
 /// Local Civ. R. 39.1(b)(2): if an appeal has been taken, filed exhibits
 /// are removed within 30 days after the final disposition of the appeal.
-deadline exhibit-removal-appeal-period: 30.days after AppealDisposed() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 39.1(b)"
+deadline exhibit-removal-appeal-period: 30.days after AppealDisposed() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 39.1(b)"
 {
   forum frcp
 }
@@ -242,7 +242,7 @@ deadline exhibit-removal-appeal-period: 30.days after AppealDisposed() counted_b
 /// cause, a party seeking costs files a notice of taxation of costs within
 /// 30 days after the entry of final judgment; a party that does not is
 /// deemed to have waived costs.
-deadline taxation-notice-period: 30.days after FinalJudgmentEntered() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 54.1(a)"
+deadline taxation-notice-period: 30.days after FinalJudgmentEntered() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 54.1(a)"
 {
   forum frcp
 }
@@ -250,7 +250,7 @@ deadline taxation-notice-period: 30.days after FinalJudgmentEntered() counted_by
 /// Local Civ. R. 54.1(a): in the case of an appeal by any party, the
 /// notice of taxation of costs is filed within 30 days after the final
 /// disposition of the appeal.
-deadline taxation-notice-appeal-period: 30.days after AppealDisposed() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 54.1(a)"
+deadline taxation-notice-appeal-period: 30.days after AppealDisposed() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 54.1(a)"
 {
   forum frcp
 }
@@ -258,7 +258,7 @@ deadline taxation-notice-appeal-period: 30.days after AppealDisposed() counted_b
 /// Local Civ. R. 72.1(b)(1): a response to an objection to a magistrate
 /// judge's order on a nondispositive matter is served within 14 days after
 /// being served with the objection.
-deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 72.1(b)"
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 72.1(b)"
 {
   forum frcp
 }
@@ -266,7 +266,7 @@ deadline magistrate-objection-response-period: 14.days after MagistrateObjection
 /// Local Soc. Sec. R. 7.1: if a pro se plaintiff files no brief within the
 /// time set by Supplemental Social Security Rule 6, the Commissioner files
 /// and serves a brief within 30 days after the plaintiff's brief was due.
-deadline commissioner-pro-se-brief-period: 30.days after PlaintiffBriefDue() counted_by frcp6 cite "S.D.N.Y. Local Soc. Sec. R. 7.1"
+deadline commissioner-pro-se-brief-period: 30.days after PlaintiffBriefDue() counted_by frcp6-new-york cite "S.D.N.Y. Local Soc. Sec. R. 7.1"
 {
   forum frcp
 }
@@ -274,7 +274,7 @@ deadline commissioner-pro-se-brief-period: 30.days after PlaintiffBriefDue() cou
 /// Local Soc. Sec. R. 8.1: the pro se plaintiff's brief in opposition is
 /// filed and served within 14 days after service of the Commissioner's
 /// brief.
-deadline pro-se-opposition-period: 14.days after CommissionerBriefServed() counted_by frcp6 cite "S.D.N.Y. Local Soc. Sec. R. 8.1"
+deadline pro-se-opposition-period: 14.days after CommissionerBriefServed() counted_by frcp6-new-york cite "S.D.N.Y. Local Soc. Sec. R. 8.1"
 {
   forum frcp
 }
@@ -284,14 +284,14 @@ deadline pro-se-opposition-period: 14.days after CommissionerBriefServed() count
 /// defendant has 80 days from that service to answer; a motion to dismiss
 /// the entire complaint stays the plan's deadlines unless the court orders
 /// otherwise.
-deadline plan-answer-period: 80.days after PlanComplaintServedWithRelease() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 83.10(c)"
+deadline plan-answer-period: 80.days after PlanComplaintServedWithRelease() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 83.10(c)"
 {
   forum frcp
 }
 
 /// Local Civ. R. 83.10(d)(1): within 14 days after the first defendant
 /// answers, the parties confer under FRCP 26(f).
-deadline plan-conference-period: 14.days after PlanFirstAnswerFiled() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 83.10(d)"
+deadline plan-conference-period: 14.days after PlanFirstAnswerFiled() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 83.10(d)"
 {
   forum frcp
 }
@@ -299,14 +299,14 @@ deadline plan-conference-period: 14.days after PlanFirstAnswerFiled() counted_by
 /// Local Civ. R. 83.10(d)(1): an application to exempt the case from the
 /// plan is submitted no later than 21 days after the first defendant
 /// answers.
-deadline plan-exemption-period: 21.days after PlanFirstAnswerFiled() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 83.10(d)"
+deadline plan-exemption-period: 21.days after PlanFirstAnswerFiled() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 83.10(d)"
 {
   forum frcp
 }
 
 /// Local Civ. R. 83.10(d)(2): within 21 days after the first defendant
 /// answers, the parties exchange initial disclosures.
-deadline plan-disclosure-period: 21.days after PlanFirstAnswerFiled() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 83.10(d)"
+deadline plan-disclosure-period: 21.days after PlanFirstAnswerFiled() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 83.10(d)"
 {
   forum frcp
 }
@@ -314,7 +314,7 @@ deadline plan-disclosure-period: 21.days after PlanFirstAnswerFiled() counted_by
 /// Local Civ. R. 83.10(e): within 28 days after the first defendant
 /// answers, the parties complete production of the plan's limited
 /// discovery.
-deadline plan-discovery-period: 28.days after PlanFirstAnswerFiled() counted_by frcp6 cite "S.D.N.Y. Local Civ. R. 83.10(e)"
+deadline plan-discovery-period: 28.days after PlanFirstAnswerFiled() counted_by frcp6-new-york cite "S.D.N.Y. Local Civ. R. 83.10(e)"
 {
   forum frcp
 }

@@ -21,7 +21,10 @@ in_force = "2026-01-01"
 known_at = "2026-10-28"
 unknown_before = "2026-01-01"
 jurisdiction = "U.S. Bankruptcy Court for the Eastern District of Wisconsin"
-counting = "frbp9006"
+# FRBP 9006(a)(6)(C): the holidays of Wisconsin close a forward-counted period, here and in
+# the FRBP periods this package recounts (core's `frbp9006-wisconsin`).
+counting = "frbp9006-wisconsin"
+recounts = ["frbp-bankruptcy-procedure"]
 
 [package.instrument]
 source = "wieb-lr"

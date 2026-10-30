@@ -1,0 +1,82 @@
+module core.states.utah
+
+import core.calendar.{ us-federal-holidays }
+
+/// The Utah legal holidays URCP 6(a)(6) lists that are not § 6103(a) days:
+/// Pioneer Day (July 24) and Juneteenth National Freedom Day "as recognized
+/// by the Utah Legislature as the third Monday of June" (§ 6103(a)'s
+/// Juneteenth is June 19, already core's `us-federal-holidays`). Every other
+/// day on that list (New Year's, Martin Luther King, Washington and Lincoln,
+/// Memorial, Independence, Labor, Columbus, Veterans', Thanksgiving and
+/// Christmas Day) is a § 6103(a) day. URCP 6(a)(6) restates the state's
+/// holiday statute, which is not vendored; the vendored edition of Rule 6
+/// is effective May 1, 2024. Each is the day itself: the statute that may
+/// observe a weekend holiday on another day is not vendored, so that day
+/// is not a holiday here, and days the Governor or Legislature designates
+/// (URCP 6(a)(6)(M)) are not modeled (the earlier date).
+calendar utah-holidays cite "URCP 6(a)(6)"
+{
+  pioneer-day: fixed(7, 24) effective [2024-05-01, ..)
+  utah-juneteenth: nth(3, monday, 6) effective [2024-05-01, ..)
+}
+
+/// FRCP 6 in the district courts of Utah: the 2023 text
+/// (`frcp6@2023-12-01`) with `utah-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-utah effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays utah-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Utah:
+/// `utah-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-utah effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays utah-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-ut]
+  allow_hours
+  end_of_month clamp
+}

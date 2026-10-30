@@ -1,6 +1,6 @@
 module alsd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.alabama.{ frcp6-alabama }
 
 // The Southern District of Alabama's own periods and page limits,
 // computed under the federal rules (FRCP 6(a) governs "any local rule").
@@ -133,7 +133,7 @@ event SaleConfirmed()
 /// GenLR 5.2(d)(5): unless the court orders otherwise, other sealed
 /// documents are unsealed 120 days from the date of entry of the sealing
 /// order.
-deadline unsealing-period: 120.days after SealingOrderEntered() counted_by frcp6 cite "S.D. Ala. GenLR 5.2(d)(5)"
+deadline unsealing-period: 120.days after SealingOrderEntered() counted_by frcp6-alabama cite "S.D. Ala. GenLR 5.2(d)(5)"
 {
   forum frcp
 }
@@ -142,7 +142,7 @@ deadline unsealing-period: 120.days after SealingOrderEntered() counted_by frcp6
 /// judge jurisdiction, any other party may serve and file a response to an
 /// objection within fourteen days from the date of service of the
 /// objection, unless the court sets a different deadline.
-deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "S.D. Ala. GenLR 72(c)(2)"
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6-alabama cite "S.D. Ala. GenLR 72(c)(2)"
 {
   forum frcp
 }
@@ -150,7 +150,7 @@ deadline magistrate-objection-response-period: 14.days after MagistrateObjection
 /// GenLR 72(c)(3): unless the court orders otherwise, the objecting party
 /// may serve and file a reply within seven days from the date of service
 /// of the response.
-deadline magistrate-objection-reply-period: 7.days after MagistrateObjectionResponseServed() counted_by frcp6 cite "S.D. Ala. GenLR 72(c)(3)"
+deadline magistrate-objection-reply-period: 7.days after MagistrateObjectionResponseServed() counted_by frcp6-alabama cite "S.D. Ala. GenLR 72(c)(3)"
 {
   forum frcp
 }
@@ -158,28 +158,28 @@ deadline magistrate-objection-reply-period: 7.days after MagistrateObjectionResp
 /// GenLR 79(d): a party granted temporary withdrawal returns the court
 /// file, exhibit, document or transcript within seven days, unless the
 /// judge by order sets a different time.
-deadline file-return-period: 7.days after FileWithdrawn() counted_by frcp6 cite "S.D. Ala. GenLR 79(d)"
+deadline file-return-period: 7.days after FileWithdrawn() counted_by frcp6-alabama cite "S.D. Ala. GenLR 79(d)"
 {
   forum frcp
 }
 
 /// GenLR 79(f)(1): within fourteen days after a trial is concluded, the
 /// offering party withdraws all exhibits in the clerk's custody.
-deadline exhibit-withdrawal-period: 14.days after TrialConcluded() counted_by frcp6 cite "S.D. Ala. GenLR 79(f)(1)"
+deadline exhibit-withdrawal-period: 14.days after TrialConcluded() counted_by frcp6-alabama cite "S.D. Ala. GenLR 79(f)(1)"
 {
   forum frcp
 }
 
 /// GenLR 79(f)(1): within fourteen days after a case is concluded, the
 /// offering party withdraws all discovery material in the clerk's custody.
-deadline discovery-withdrawal-period: 14.days after CaseConcluded() counted_by frcp6 cite "S.D. Ala. GenLR 79(f)(1)"
+deadline discovery-withdrawal-period: 14.days after CaseConcluded() counted_by frcp6-alabama cite "S.D. Ala. GenLR 79(f)(1)"
 {
   forum frcp
 }
 
 /// GenLR 79(f)(2): exhibits and discovery material not withdrawn within
 /// sixty days after a case is concluded may be disposed of by the clerk.
-deadline exhibit-disposal-period: 60.days after CaseConcluded() counted_by frcp6 cite "S.D. Ala. GenLR 79(f)(2)"
+deadline exhibit-disposal-period: 60.days after CaseConcluded() counted_by frcp6-alabama cite "S.D. Ala. GenLR 79(f)(2)"
 {
   forum frcp
 }
@@ -187,7 +187,7 @@ deadline exhibit-disposal-period: 60.days after CaseConcluded() counted_by frcp6
 /// GenLR 79(f)(3)(A): a party retains exhibits and discovery material
 /// withdrawn from the clerk's custody for at least one year after the
 /// judgment is final.
-deadline exhibit-retention-period: 1.years after JudgmentFinal() counted_by frcp6 cite "S.D. Ala. GenLR 79(f)(3)(A)"
+deadline exhibit-retention-period: 1.years after JudgmentFinal() counted_by frcp6-alabama cite "S.D. Ala. GenLR 79(f)(3)(A)"
 {
   forum frcp
 }
@@ -195,14 +195,14 @@ deadline exhibit-retention-period: 1.years after JudgmentFinal() counted_by frcp
 /// CivLR 4(a)(1): unless the court orders otherwise, if service is
 /// completed by summons, the person making service files proof of it
 /// within seven days of the date of service.
-deadline proof-of-service-period: 7.days after ServiceCompleted() counted_by frcp6 cite "S.D. Ala. CivLR 4(a)(1)"
+deadline proof-of-service-period: 7.days after ServiceCompleted() counted_by frcp6-alabama cite "S.D. Ala. CivLR 4(a)(1)"
 {
   forum frcp
 }
 
 /// CivLR 4(a)(2): if service is waived, the plaintiff files the waiver
 /// within seven days after receipt of the waiver.
-deadline waiver-filing-period: 7.days after WaiverReceived() counted_by frcp6 cite "S.D. Ala. CivLR 4(a)(2)"
+deadline waiver-filing-period: 7.days after WaiverReceived() counted_by frcp6-alabama cite "S.D. Ala. CivLR 4(a)(2)"
 {
   forum frcp
 }
@@ -211,7 +211,7 @@ deadline waiver-filing-period: 7.days after WaiverReceived() counted_by frcp6 ci
 /// complaint the plaintiff has neither completed service by summons nor
 /// received a waiver, the plaintiff files a notice describing its efforts
 /// to complete service and their results.
-deadline service-attempt-notice-period: 45.days after ComplaintFiled() counted_by frcp6 cite "S.D. Ala. CivLR 4(a)(3)"
+deadline service-attempt-notice-period: 45.days after ComplaintFiled() counted_by frcp6-alabama cite "S.D. Ala. CivLR 4(a)(3)"
 {
   forum frcp
 }
@@ -219,7 +219,7 @@ deadline service-attempt-notice-period: 45.days after ComplaintFiled() counted_b
 /// CivLR 7(c): unless the court orders otherwise, the non-movant files
 /// any brief or paper in opposition to a motion, other than one under FRCP
 /// 56, within fourteen days of service of the motion.
-deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. Ala. CivLR 7(c)"
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 7(c)"
 {
   forum frcp
 }
@@ -227,7 +227,7 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "
 /// CivLR 7(d): unless the court orders otherwise, a reply in support of a
 /// motion, other than one under FRCP 56, is filed within seven days of
 /// service of the non-movant's response.
-deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "S.D. Ala. CivLR 7(d)"
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 7(d)"
 {
   forum frcp
 }
@@ -235,7 +235,7 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "S.D.
 /// CivLR 7.1(a): where filing the Disclosure Statement with the initial
 /// filing is impossible or impracticable, it is filed within seven days
 /// after the initial filing, or such other time as the court directs.
-deadline disclosure-statement-period: 7.days after InitialFilingMade() counted_by frcp6 cite "S.D. Ala. CivLR 7.1(a)"
+deadline disclosure-statement-period: 7.days after InitialFilingMade() counted_by frcp6-alabama cite "S.D. Ala. CivLR 7.1(a)"
 {
   forum frcp
 }
@@ -243,7 +243,7 @@ deadline disclosure-statement-period: 7.days after InitialFilingMade() counted_b
 /// CivLR 10(c): a party who commences a civil action under a pseudonym
 /// files and serves a motion for permission to proceed under it within
 /// twenty-one days of service of the complaint.
-deadline pseudonym-motion-period: 21.days after PseudonymousComplaintServed() counted_by frcp6 cite "S.D. Ala. CivLR 10(c)"
+deadline pseudonym-motion-period: 21.days after PseudonymousComplaintServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 10(c)"
 {
   forum frcp
 }
@@ -252,21 +252,21 @@ deadline pseudonym-motion-period: 21.days after PseudonymousComplaintServed() co
 /// appeared and was served with the proposed amended pleading serves its
 /// answer or other responsive pleading within fourteen days after the
 /// court grants the motion to amend.
-deadline amended-pleading-response-period: 14.days after AmendmentGranted() counted_by frcp6 cite "S.D. Ala. CivLR 15(c)"
+deadline amended-pleading-response-period: 14.days after AmendmentGranted() counted_by frcp6-alabama cite "S.D. Ala. CivLR 15(c)"
 {
   forum frcp
 }
 
 /// CivLR 16(c)(1): unless otherwise ordered, the parties file a joint
 /// pretrial document seven days before the final pretrial conference.
-deadline joint-pretrial-document-period: 7.days before FinalPretrialConference() counted_by frcp6 cite "S.D. Ala. CivLR 16(c)(1)"
+deadline joint-pretrial-document-period: 7.days before FinalPretrialConference() counted_by frcp6-alabama cite "S.D. Ala. CivLR 16(c)(1)"
 {
   forum frcp
 }
 
 /// CivLR 16(d)(4)(B): within thirty days of the case being referred to
 /// ENE, the neutral evaluator hosts the confidential evaluation meeting.
-deadline ene-session-period: 30.days after EneReferred() counted_by frcp6 cite "S.D. Ala. CivLR 16(d)(4)(B)"
+deadline ene-session-period: 30.days after EneReferred() counted_by frcp6-alabama cite "S.D. Ala. CivLR 16(d)(4)(B)"
 {
   forum frcp
 }
@@ -274,7 +274,7 @@ deadline ene-session-period: 30.days after EneReferred() counted_by frcp6 cite "
 /// CivLR 54(a)(1): no later than fourteen days after entry of judgment, a
 /// party seeking costs files a verified bill of costs. Absent court order,
 /// an appeal does not extend the deadline (CivLR 54(a)(2)).
-deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "S.D. Ala. CivLR 54(a)(1)"
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6-alabama cite "S.D. Ala. CivLR 54(a)(1)"
 {
   forum frcp
 }
@@ -282,28 +282,28 @@ deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 
 /// CivLR 54(a)(1): if a timely FRCP 50(b) or 59 motion is filed, the bill
 /// of costs is filed within fourteen days after entry of the order
 /// resolving the motion.
-deadline bill-of-costs-post-motion-period: 14.days after PostTrialMotionResolved() counted_by frcp6 cite "S.D. Ala. CivLR 54(a)(1)"
+deadline bill-of-costs-post-motion-period: 14.days after PostTrialMotionResolved() counted_by frcp6-alabama cite "S.D. Ala. CivLR 54(a)(1)"
 {
   forum frcp
 }
 
 /// CivLR 54(a)(3): a party opposing taxation of costs files its
 /// objections within fourteen days of service of the bill of costs.
-deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "S.D. Ala. CivLR 54(a)(3)"
+deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 54(a)(3)"
 {
   forum frcp
 }
 
 /// CivLR 54(a)(3): the party claiming costs serves any response within
 /// seven days of service of the objections.
-deadline costs-objection-response-period: 7.days after CostsObjectionsServed() counted_by frcp6 cite "S.D. Ala. CivLR 54(a)(3)"
+deadline costs-objection-response-period: 7.days after CostsObjectionsServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 54(a)(3)"
 {
   forum frcp
 }
 
 /// CivLR 54(b): a party may move for review of the clerk's taxation of
 /// costs no later than seven days after taxation.
-deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "S.D. Ala. CivLR 54(b)"
+deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 54(b)"
 {
   forum frcp
 }
@@ -311,14 +311,14 @@ deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "S
 /// CivLR 56(b): unless the court orders otherwise, the non-movant files
 /// any response in opposition to a summary judgment motion within
 /// twenty-eight days of service of the motion.
-deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "S.D. Ala. CivLR 56(b)"
+deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 56(b)"
 {
   forum frcp
 }
 
 /// CivLR 56(c): unless the court orders otherwise, any reply is filed
 /// within fourteen days of service of the non-movant's response.
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "S.D. Ala. CivLR 56(c)"
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 56(c)"
 {
   forum frcp
 }
@@ -327,7 +327,7 @@ deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseSer
 /// control of intangible property to show cause no later than fourteen
 /// days after service why it should not be delivered to the court; a
 /// judicial officer may lengthen or shorten the time.
-deadline intangible-show-cause-period: 14.days after IntangibleSummonsServed() counted_by frcp6 cite "S.D. Ala. CivLR 102(a)"
+deadline intangible-show-cause-period: 14.days after IntangibleSummonsServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 102(a)"
 {
   forum frcp
 }
@@ -335,7 +335,7 @@ deadline intangible-show-cause-period: 14.days after IntangibleSummonsServed() c
 /// CivLR 102(b): the Rule C(4) notice, published once a week for three
 /// consecutive weeks, begins not later than twenty-one days following
 /// seizure.
-deadline arrest-notice-period: 21.days after PropertySeized() counted_by frcp6 cite "S.D. Ala. CivLR 102(b)"
+deadline arrest-notice-period: 21.days after PropertySeized() counted_by frcp6-alabama cite "S.D. Ala. CivLR 102(b)"
 {
   forum frcp
 }
@@ -343,7 +343,7 @@ deadline arrest-notice-period: 21.days after PropertySeized() counted_by frcp6 c
 /// CivLR 104(g): a party ordered to post security for costs posts it
 /// within seven days after the order is entered; a party who fails to may
 /// not participate further except by order of court.
-deadline admiralty-security-period: 7.days after SecurityOrderEntered() counted_by frcp6 cite "S.D. Ala. CivLR 104(g)"
+deadline admiralty-security-period: 7.days after SecurityOrderEntered() counted_by frcp6-alabama cite "S.D. Ala. CivLR 104(g)"
 {
   forum frcp
 }
@@ -351,7 +351,7 @@ deadline admiralty-security-period: 7.days after SecurityOrderEntered() counted_
 /// CivLR 104(j): the Marshal may, on notice, petition for an order to
 /// release the vessel if additional sums are not advanced within seven
 /// days after the Marshal's request.
-deadline marshal-advance-period: 7.days after MarshalAdvanceRequested() counted_by frcp6 cite "S.D. Ala. CivLR 104(j)"
+deadline marshal-advance-period: 7.days after MarshalAdvanceRequested() counted_by frcp6-alabama cite "S.D. Ala. CivLR 104(j)"
 {
   forum frcp
 }
@@ -359,7 +359,7 @@ deadline marshal-advance-period: 7.days after MarshalAdvanceRequested() counted_
 /// CivLR 104(m)(1): unless otherwise ordered, the last publication of the
 /// notice of sale is not less than seven days immediately preceding the
 /// sale.
-deadline sale-notice-period: 7.days before SaleHeld() counted_by frcp6 cite "S.D. Ala. CivLR 104(m)(1)"
+deadline sale-notice-period: 7.days before SaleHeld() counted_by frcp6-alabama cite "S.D. Ala. CivLR 104(m)(1)"
 {
   forum frcp
 }
@@ -367,7 +367,7 @@ deadline sale-notice-period: 7.days before SaleHeld() counted_by frcp6 cite "S.D
 /// CivLR 104(m)(2)(C): if an objection to the sale is timely filed, the
 /// bidder is excused from paying the balance of the purchase price until
 /// five days after the sale is confirmed.
-deadline objected-sale-balance-period: 5.days after SaleConfirmed() counted_by frcp6 cite "S.D. Ala. CivLR 104(m)(2)(C)"
+deadline objected-sale-balance-period: 5.days after SaleConfirmed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 104(m)(2)(C)"
 {
   forum frcp
 }
@@ -375,7 +375,7 @@ deadline objected-sale-balance-period: 5.days after SaleConfirmed() counted_by f
 /// CivLR 104(m)(7): if no objection is timely filed, the sale is
 /// confirmed by order no sooner than five days and no later than seven
 /// days after the sale.
-deadline sale-confirmation-period: 7.days after SaleHeld() counted_by frcp6 cite "S.D. Ala. CivLR 104(m)(7)"
+deadline sale-confirmation-period: 7.days after SaleHeld() counted_by frcp6-alabama cite "S.D. Ala. CivLR 104(m)(7)"
 {
   forum frcp
 }

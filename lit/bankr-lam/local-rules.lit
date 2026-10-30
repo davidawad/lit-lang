@@ -1,6 +1,6 @@
 module bankr-lam-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.states.louisiana.{ frbp9006-louisiana }
 import frbp.events.{ PetitionFiled }
 
 // The Bankr. M.D. La. court's own periods, counted under FRBP 9006(a). The
@@ -94,92 +94,92 @@ event RemovalNoticeFiled()
 /// Bankr. M.D. La. LR 1008-1(b)(1): within seven days after filing the
 /// petition, the debtor files a signed Declaration Regarding Electronic
 /// Filing (Local Form 2) with an image of the debtor's original signature.
-deadline electronic-filing-declaration-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Bankr. M.D. La. LR 1008-1(b)"
+deadline electronic-filing-declaration-period: 7.days after PetitionFiled() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 1008-1(b)"
 /// Bankr. M.D. La. LR 1008-1(b)(2): within seven days after entry of an
 /// order substituting or enrolling new counsel for the debtor, the debtor
 /// files a new signed Declaration Regarding Electronic Filing.
-deadline new-counsel-declaration-period: 7.days after CounselSubstitutionOrdered() counted_by frbp9006 cite "Bankr. M.D. La. LR 1008-1(b)"
+deadline new-counsel-declaration-period: 7.days after CounselSubstitutionOrdered() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 1008-1(b)"
 /// Bankr. M.D. La. LR 1015-1(b): within seven days after entry of an order
 /// for joint administration or substantive consolidation, the party on
 /// whose motion it was granted files a consolidated mailing list complying
 /// with LR 1007-2.
-deadline consolidated-mailing-list-period: 7.days after JointAdministrationOrdered() counted_by frbp9006 cite "Bankr. M.D. La. LR 1015-1(b)"
+deadline consolidated-mailing-list-period: 7.days after JointAdministrationOrdered() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 1015-1(b)"
 /// Bankr. M.D. La. LR 1017-1(c)(1)(iv): a chapter 13 debtor opposing the
 /// trustee's motion to dismiss or convert who needs evidence of payment
 /// delivers the documents proving payment to the trustee no later than five
 /// days before the hearing.
-deadline payment-proof-delivery-period: 5.days before TrusteeDismissalHearing() counted_by frbp9006 cite "Bankr. M.D. La. LR 1017-1(c)"
+deadline payment-proof-delivery-period: 5.days before TrusteeDismissalHearing() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 1017-1(c)"
 /// Bankr. M.D. La. LR 2003-1(c)(2): a motion under FRBP 2020 for review of
 /// the United States Trustee's denial of a request to reschedule a meeting
 /// of creditors is filed no later than two days after the mover's receipt
 /// of notice of the denial.
-deadline meeting-denial-review-motion-period: 2.days after RescheduleDenialReceived() counted_by frbp9006 cite "Bankr. M.D. La. LR 2003-1(c)"
+deadline meeting-denial-review-motion-period: 2.days after RescheduleDenialReceived() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 2003-1(c)"
 /// Bankr. M.D. La. LR 2004-1(b)(1): a person objecting to a proposed FRBP
 /// 2004 examination moves for a protective order at least three days before
 /// the proposed examination, unless the motion for examination was filed
 /// fewer than three days before it.
-deadline examination-protective-order-period: 3.days before ProposedExaminationDate() counted_by frbp9006 cite "Bankr. M.D. La. LR 2004-1(b)"
+deadline examination-protective-order-period: 3.days before ProposedExaminationDate() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 2004-1(b)"
 /// Bankr. M.D. La. LR 2016-2(c)(4): failure to file debtor's counsel's
 /// procedures statement within fifteen days after filing the petition may
 /// be cause for reduced compensation or other sanctions.
-deadline procedures-statement-period: 15.days after PetitionFiled() counted_by frbp9006 cite "Bankr. M.D. La. LR 2016-2(c)"
+deadline procedures-statement-period: 15.days after PetitionFiled() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 2016-2(c)"
 /// Bankr. M.D. La. LR 3015-2(a): written objections to confirmation of a
 /// chapter 13 plan by parties other than the trustee are filed and served
 /// on the trustee, the debtor and debtor's counsel at least fifteen days
 /// before the scheduled confirmation hearing.
-deadline confirmation-objection-period: 15.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. M.D. La. LR 3015-2(a)"
+deadline confirmation-objection-period: 15.days before ConfirmationHearing() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 3015-2(a)"
 /// Bankr. M.D. La. LR 3015-3(d): the debtor files and serves on the chapter
 /// 13 trustee all amendments, schedules and other documents submitted in
 /// connection with confirmation no later than eight days before the
 /// scheduled confirmation hearing.
-deadline confirmation-documents-period: 8.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. M.D. La. LR 3015-3(d)"
+deadline confirmation-documents-period: 8.days before ConfirmationHearing() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 3015-3(d)"
 /// Bankr. M.D. La. LR 3015-4(a)(4), (5): a plan amended before confirmation
 /// is filed and served on the trustee and every affected party no later
 /// than eight days before the scheduled confirmation hearing; later only
 /// with trustee consent and prior leave.
-deadline amended-plan-period: 8.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. M.D. La. LR 3015-4(a)"
+deadline amended-plan-period: 8.days before ConfirmationHearing() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 3015-4(a)"
 /// Bankr. M.D. La. LR 3015-4(b)(4): objections to confirmation of a
 /// modified chapter 13 plan are filed and served no later than fifteen days
 /// before the scheduled hearing.
-deadline modified-plan-objection-period: 15.days before ModifiedPlanHearing() counted_by frbp9006 cite "Bankr. M.D. La. LR 3015-4(b)"
+deadline modified-plan-objection-period: 15.days before ModifiedPlanHearing() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 3015-4(b)"
 /// Bankr. M.D. La. LR 3015-4(b)(6): amendments to a modified plan are filed
 /// and served on the trustee and every affected party no later than eight
 /// days before the scheduled confirmation hearing.
-deadline modified-plan-amendment-period: 8.days before ModifiedPlanHearing() counted_by frbp9006 cite "Bankr. M.D. La. LR 3015-4(b)"
+deadline modified-plan-amendment-period: 8.days before ModifiedPlanHearing() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 3015-4(b)"
 /// Bankr. M.D. La. LR 3015-5(b): a party opposing a chapter 13 discharge
 /// files an objection within twenty-one days of the date the debtor files
 /// the motion for entry of discharge and certification; absent a timely
 /// objection the court discharges the debtor (c).
-deadline chapter-13-discharge-objection-period: 21.days after DischargeMotionFiled() counted_by frbp9006 cite "Bankr. M.D. La. LR 3015-5(b)"
+deadline chapter-13-discharge-objection-period: 21.days after DischargeMotionFiled() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 3015-5(b)"
 /// Bankr. M.D. La. LR 4002-2(a)(5): a chapter 11 debtor in possession
 /// (other than a small business or subchapter V debtor) files its monthly
 /// report on the prior month's operations on or before the fifteenth day of
 /// each month.
-deadline monthly-report-period: 15.days after CalendarMonthEnded() counted_by frbp9006 cite "Bankr. M.D. La. LR 4002-2(a)"
+deadline monthly-report-period: 15.days after CalendarMonthEnded() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 4002-2(a)"
 /// Bankr. M.D. La. LR 7004-1(b): the plaintiff files proof of service of
 /// the summons, notice of pretrial conference and complaint no later than
 /// seven days before the scheduling and preliminary pretrial conference.
-deadline summons-proof-of-service-period: 7.days before PretrialConference() counted_by frbp9006 cite "Bankr. M.D. La. LR 7004-1(b)"
+deadline summons-proof-of-service-period: 7.days before PretrialConference() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 7004-1(b)"
 /// Bankr. M.D. La. LR 9013-1(e)(3): within two days after the hearing, the
 /// prevailing party submits an order reflecting the ruling if it differs
 /// from the previously submitted order.
-deadline prevailing-party-order-period: 2.days after HearingHeld() counted_by frbp9006 cite "Bankr. M.D. La. LR 9013-1(e)"
+deadline prevailing-party-order-period: 2.days after HearingHeld() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 9013-1(e)"
 /// Bankr. M.D. La. LR 9013-3(a)(3), (b)(3): parties intending to introduce
 /// evidence at a motion-day hearing give notice to the court and all
 /// opposing parties no later than five days before the hearing.
-deadline evidence-notice-period: 5.days before MotionHearing() counted_by frbp9006 cite "Bankr. M.D. La. LR 9013-3(a)"
+deadline evidence-notice-period: 5.days before MotionHearing() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 9013-3(a)"
 /// Bankr. M.D. La. LR 9014-1(a)(1): a party opposing a motion files an
 /// objection not later than 11:59 p.m. on the eighth day before the hearing
 /// (and the notice of the motion so states, LR 9013-1(b)(2)(ii)); a late
 /// objection is deemed a waiver of opposition (a)(2).
-deadline motion-objection-period: 8.days before MotionHearing() counted_by frbp9006 cite "Bankr. M.D. La. LR 9014-1(a)"
+deadline motion-objection-period: 8.days before MotionHearing() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 9014-1(a)"
 
 /// Bankr. M.D. La. Standing Order 2025-1 (November 25, 2025):
 /// notwithstanding LR 9014-1(a)(1), for hearings on Mondays at 2:00 p.m.
 /// the deadline to file objections or responses is 11:59 p.m. on the prior
 /// Monday. The order states no day count: the prior Monday is derived, seven
 /// days before a Monday hearing.
-deadline monday-hearing-objection-period: 7.days before MondayAfternoonHearing() counted_by frbp9006 effective [2025-11-25, ..) cite "Bankr. M.D. La. LR (SO 2025-1) 9014-1"
+deadline monday-hearing-objection-period: 7.days before MondayAfternoonHearing() counted_by frbp9006-louisiana effective [2025-11-25, ..) cite "Bankr. M.D. La. LR (SO 2025-1) 9014-1"
 {
   derived 7.days cite "Bankr. M.D. La. LR (SO 2025-1) 9014-1"
     quote "on the prior Monday"
@@ -188,7 +188,7 @@ deadline monday-hearing-objection-period: 7.days before MondayAfternoonHearing()
 /// Bankr. M.D. La. LR 9027-1: within seven days of removal, the party
 /// filing the notice of removal files a complete copy of all records of the
 /// court from which the cause was removed that relate to it.
-deadline removal-record-period: 7.days after RemovalNoticeFiled() counted_by frbp9006 cite "Bankr. M.D. La. LR 9027-1"
+deadline removal-record-period: 7.days after RemovalNoticeFiled() counted_by frbp9006-louisiana cite "Bankr. M.D. La. LR 9027-1"
 
 test "a Monday afternoon hearing's objection deadline is the prior Monday" cite "Bankr. M.D. La. LR (SO 2025-1) 9014-1"
 {

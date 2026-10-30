@@ -1,6 +1,6 @@
 module ilcd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.illinois.{ frcp6-illinois }
 
 // The Central District of Illinois's own civil periods, computed under the
 // federal rules (FRCP 6(a) governs "any local rule"). Each period applies
@@ -86,7 +86,7 @@ event ExhibitRemovalNoticeGiven()
 /// Civ. LR 4.1: proof of the written notice of lawsuit and request for
 /// waiver of service is filed with the clerk within 7 days of the mailing
 /// of the notice.
-deadline waiver-notice-proof-period: 7.days after WaiverRequestMailed() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 4.1"
+deadline waiver-notice-proof-period: 7.days after WaiverRequestMailed() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 4.1"
 {
   forum frcp
 }
@@ -94,21 +94,21 @@ deadline waiver-notice-proof-period: 7.days after WaiverRequestMailed() counted_
 /// Civ. LR 5.2: an attorney or pro se party whose contact information
 /// changes after registering for electronic filing files notice of the
 /// change within 14 days and serves it on all other parties.
-deadline contact-change-notice-period: 14.days after ContactInformationChanged() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 5.2"
+deadline contact-change-notice-period: 14.days after ContactInformationChanged() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 5.2"
 {
   forum frcp
 }
 
 /// Civ. LR 5.11(C): a party files a Notice of Intent to Request Redaction
 /// within 7 days of the filing of the transcript.
-deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 5.11(C)"
+deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 5.11(C)"
 {
   forum frcp
 }
 
 /// Civ. LR 5.11(C): within 21 days from the filing of the transcript, the
 /// parties file under seal a Motion of Requested Redactions.
-deadline redaction-motion-period: 21.days after TranscriptFiled() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 5.11(C)"
+deadline redaction-motion-period: 21.days after TranscriptFiled() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 5.11(C)"
 {
   forum frcp
 }
@@ -116,7 +116,7 @@ deadline redaction-motion-period: 21.days after TranscriptFiled() counted_by frc
 /// Civ. LR 7.1(B)(2): a response to a motion is filed within 14 days after
 /// service of the motion and memorandum; without a timely response the
 /// judge presumes no opposition.
-deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 7.1(B)"
+deadline response-period: 14.days after MotionServed() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 7.1(B)"
 {
   forum frcp
 }
@@ -124,21 +124,21 @@ deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "C.
 /// Civ. LR 7.1(B)(3): a reply is permitted only with leave; the motion for
 /// leave, with the proposed reply attached, is filed within 7 days after
 /// service of the response.
-deadline reply-leave-period: 7.days after ResponseServed() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 7.1(B)"
+deadline reply-leave-period: 7.days after ResponseServed() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 7.1(B)"
 {
   forum frcp
 }
 
 /// Civ. LR 7.1(D)(2): within 21 days after service of a motion for summary
 /// judgment, any party opposing it files a response.
-deadline sj-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 7.1(D)"
+deadline sj-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 7.1(D)"
 {
   forum frcp
 }
 
 /// Civ. LR 7.1(D)(3): within 14 days after service of the response, the
 /// movant may file a reply.
-deadline sj-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 7.1(D)"
+deadline sj-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 7.1(D)"
 {
   forum frcp
 }
@@ -146,7 +146,7 @@ deadline sj-reply-period: 14.days after SummaryJudgmentResponseServed() counted_
 /// Civ. LR 8.2(6): the petitioner or movant files legible copies of the
 /// listed documents within 14 days after filing the petition or motion, or
 /// explains the omission.
-deadline habeas-documents-period: 14.days after HabeasPetitionFiled() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 8.2"
+deadline habeas-documents-period: 14.days after HabeasPetitionFiled() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 8.2"
 {
   forum frcp
 }
@@ -154,7 +154,7 @@ deadline habeas-documents-period: 14.days after HabeasPetitionFiled() counted_by
 /// Civ. LR 11.4(C): a party or non-filing signatory disputing the
 /// authenticity of an electronically filed document or its signatures files
 /// an objection within 14 days of receiving notice of the filing.
-deadline authenticity-objection-period: 14.days after FilingNoticeReceived() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 11.4(C)"
+deadline authenticity-objection-period: 14.days after FilingNoticeReceived() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 11.4(C)"
 {
   forum frcp
 }
@@ -162,7 +162,7 @@ deadline authenticity-objection-period: 14.days after FilingNoticeReceived() cou
 /// Civ. LR 16.1(E)(8): unless the presiding judge directs otherwise, trial
 /// briefs and motions in limine are submitted on or before 14 days prior to
 /// the scheduled start of trial.
-deadline trial-brief-period: 14.days before TrialBegins() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 16.1(E)"
+deadline trial-brief-period: 14.days before TrialBegins() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 16.1(E)"
 {
   forum frcp
 }
@@ -170,7 +170,7 @@ deadline trial-brief-period: 14.days before TrialBegins() counted_by frcp6 cite 
 /// Civ. LR 16.1(F): unless otherwise ordered, plaintiff's counsel submits
 /// the proposed final pretrial order to opposing counsel at least 7 days
 /// prior to the final pretrial conference.
-deadline pretrial-order-draft-period: 7.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 16.1(F)"
+deadline pretrial-order-draft-period: 7.days before FinalPretrialConferenceHeld() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 16.1(F)"
 {
   forum frcp
 }
@@ -179,7 +179,7 @@ deadline pretrial-order-draft-period: 7.days before FinalPretrialConferenceHeld(
 /// the State of Illinois or its officer, agent, department or employee
 /// files a responsive pleading within 60 days of service or of the date the
 /// waiver of service was sent.
-deadline state-defendant-answer-period: 60.days after StateDefendantServed() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 16.3(E)"
+deadline state-defendant-answer-period: 60.days after StateDefendantServed() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 16.3(E)"
 {
   forum frcp
 }
@@ -187,7 +187,7 @@ deadline state-defendant-answer-period: 60.days after StateDefendantServed() cou
 /// Civ. LR 16.3(H): in a prisoner or detainee case, responses to motions
 /// are filed within 14 days, or a timely motion for extension is filed
 /// within that time.
-deadline prisoner-motion-response-period: 14.days after PrisonerCaseMotionFiled() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 16.3(H)"
+deadline prisoner-motion-response-period: 14.days after PrisonerCaseMotionFiled() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 16.3(H)"
 {
   forum frcp
 }
@@ -195,7 +195,7 @@ deadline prisoner-motion-response-period: 14.days after PrisonerCaseMotionFiled(
 /// Civ. LR 16.3: in a prisoner or detainee case, the statements and lists
 /// of the final pretrial order are exchanged between the litigants, not
 /// filed, at least 30 days before the final pretrial conference.
-deadline prisoner-pretrial-exchange-period: 30.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 16.3"
+deadline prisoner-pretrial-exchange-period: 30.days before FinalPretrialConferenceHeld() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 16.3"
 {
   forum frcp
 }
@@ -203,14 +203,14 @@ deadline prisoner-pretrial-exchange-period: 30.days before FinalPretrialConferen
 /// Civ. LR 16.3: in a prisoner or detainee case, defendants' attorney files
 /// the proposed final pretrial order at least 14 days before the final
 /// pretrial conference.
-deadline prisoner-pretrial-order-period: 14.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 16.3"
+deadline prisoner-pretrial-order-period: 14.days before FinalPretrialConferenceHeld() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 16.3"
 {
   forum frcp
 }
 
 /// Civ. LR 16.4: the parties notify the ADR Administrator upon initiating
 /// private mediation and within 14 days after its conclusion.
-deadline private-mediation-notice-period: 14.days after PrivateMediationConcluded() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 16.4"
+deadline private-mediation-notice-period: 14.days after PrivateMediationConcluded() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 16.4"
 {
   forum frcp
 }
@@ -218,7 +218,7 @@ deadline private-mediation-notice-period: 14.days after PrivateMediationConclude
 /// Civ. LR 16.4: within 7 days prior to the first mediation meeting, the
 /// parties submit to the mediator a confidential memorandum of their legal
 /// and factual positions.
-deadline mediation-memorandum-period: 7.days before FirstMediationMeeting() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 16.4"
+deadline mediation-memorandum-period: 7.days before FirstMediationMeeting() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 16.4"
 {
   forum frcp
 }
@@ -228,21 +228,21 @@ deadline mediation-memorandum-period: 7.days before FirstMediationMeeting() coun
 /// reassigned district-wide unless a party objects within 14 days of
 /// assignment or reassignment because the remedy has no implications beyond
 /// the parties or a local judge should hear it.
-deadline assignment-objection-period: 14.days after CaseAssigned() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 40.1(E)"
+deadline assignment-objection-period: 14.days after CaseAssigned() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 40.1(E)"
 {
   forum frcp
 }
 
 /// Civ. LR 54.1(A): in all civil cases, requests for attorney's fees are
 /// filed no later than 14 days after entry of judgment.
-deadline fee-request-period: 14.days after JudgmentEntered() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 54.1(A)"
+deadline fee-request-period: 14.days after JudgmentEntered() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 54.1(A)"
 {
   forum frcp
 }
 
 /// Civ. LR 54.1(A): bills of costs are filed within 30 days after entry of
 /// judgment.
-deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 54.1(A)"
+deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 54.1(A)"
 {
   forum frcp
 }
@@ -250,7 +250,7 @@ deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 
 /// Civ. LR 72.2(A): a party opposing an appeal from a magistrate judge's
 /// non-dispositive order files its memorandum of law within 14 days after
 /// service of the appeal.
-deadline magistrate-appeal-opposition-period: 14.days after MagistrateAppealServed() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 72.2(A)"
+deadline magistrate-appeal-opposition-period: 14.days after MagistrateAppealServed() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 72.2(A)"
 {
   forum frcp
 }
@@ -258,7 +258,7 @@ deadline magistrate-appeal-opposition-period: 14.days after MagistrateAppealServ
 /// Civ. LR 79.1(B): exhibits in the clerk's custody are taken away by the
 /// party who offered them within 60 days after the case is decided unless
 /// an appeal is taken.
-deadline exhibit-removal-period: 60.days after CaseDecidedUnappealed() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 79.1(B)"
+deadline exhibit-removal-period: 60.days after CaseDecidedUnappealed() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 79.1(B)"
 {
   forum frcp
 }
@@ -266,14 +266,14 @@ deadline exhibit-removal-period: 60.days after CaseDecidedUnappealed() counted_b
 /// Civ. LR 79.1(B): where an appeal is taken, exhibits are taken away
 /// within 30 days after the filing of the reviewing court's mandate
 /// disposing of the case.
-deadline exhibit-removal-after-mandate-period: 30.days after MandateFiled() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 79.1(B)"
+deadline exhibit-removal-after-mandate-period: 30.days after MandateFiled() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 79.1(B)"
 {
   forum frcp
 }
 
 /// Civ. LR 79.1(C): exhibits not removed within 30 days after notice from
 /// the clerk may be sold or disposed of as the presiding judge directs.
-deadline exhibit-neglect-period: 30.days after ExhibitRemovalNoticeGiven() counted_by frcp6 cite "C.D. Ill. Civ. L.R. 79.1(C)"
+deadline exhibit-neglect-period: 30.days after ExhibitRemovalNoticeGiven() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 79.1(C)"
 {
   forum frcp
 }

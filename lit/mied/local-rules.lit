@@ -1,6 +1,6 @@
 module mied-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.michigan.{ frcp6-michigan }
 
 // The Eastern District of Michigan's own civil periods and limits, computed
 // under FRCP 6(a), which governs a period stated in a local rule (LR 58.1's
@@ -91,78 +91,78 @@ event AddedPartyAppearance()
 
 /// LR 7.1(e)(1)(A): a response to a motion other than one on the enlarged
 /// schedule is filed within 14 days after service of the motion.
-deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "E.D. Mich. LR 7.1(e)"
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6-michigan cite "E.D. Mich. LR 7.1(e)"
 /// LR 7.1(e)(2)(A): a response to a motion on the enlarged schedule is
 /// filed within 21 days following service of the motion.
-deadline enlarged-motion-response-period: 21.days after EnlargedMotionServed() counted_by frcp6 cite "E.D. Mich. LR 7.1(e)"
+deadline enlarged-motion-response-period: 21.days after EnlargedMotionServed() counted_by frcp6-michigan cite "E.D. Mich. LR 7.1(e)"
 /// LR 7.1(e)(1)(B): a reply brief, if filed, is filed within 7 days after
 /// service of the response.
-deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "E.D. Mich. LR 7.1(e)"
+deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6-michigan cite "E.D. Mich. LR 7.1(e)"
 /// LR 7.1(e)(2)(B): a reply brief supporting a motion on the enlarged
 /// schedule, if filed, is filed within 14 days after service of the
 /// response.
-deadline enlarged-motion-reply-period: 14.days after EnlargedResponseServed() counted_by frcp6 cite "E.D. Mich. LR 7.1(e)"
+deadline enlarged-motion-reply-period: 14.days after EnlargedResponseServed() counted_by frcp6-michigan cite "E.D. Mich. LR 7.1(e)"
 /// LR 7.1(e)(1)(B), (e)(2)(B): on either schedule a reply brief is filed
 /// at least 3 days before the motion hearing.
-deadline motion-reply-before-hearing: 3.days before MotionHearing() counted_by frcp6 cite "E.D. Mich. LR 7.1(e)"
+deadline motion-reply-before-hearing: 3.days before MotionHearing() counted_by frcp6-michigan cite "E.D. Mich. LR 7.1(e)"
 /// LR 7.1(h)(2): a motion for reconsideration of a non-final order is
 /// filed within 14 days after entry of the order; no response and no
 /// argument unless the court orders otherwise (LR 7.1(h)(3)). Final orders
 /// and judgments are reconsidered only under FRCP 59(e) or 60(b) (LR
 /// 7.1(h)(1)).
-deadline reconsideration-period: 14.days after NonFinalOrderEntered() counted_by frcp6 cite "E.D. Mich. LR 7.1(h)"
+deadline reconsideration-period: 14.days after NonFinalOrderEntered() counted_by frcp6-michigan cite "E.D. Mich. LR 7.1(h)"
 /// LR 16.4(e)(3): unless the mediator directs otherwise, each party
 /// provides the mediator a concise memorandum no later than seven
 /// calendar days before the mediation session.
-deadline mediation-memorandum-period: 7.days before MediationSession() counted_by frcp6 cite "E.D. Mich. LR 16.4(e)"
+deadline mediation-memorandum-period: 7.days before MediationSession() counted_by frcp6-michigan cite "E.D. Mich. LR 16.4(e)"
 /// LR 16.4(e)(7): if the case settles, the parties notify the court
 /// without delay and submit documents to conclude the case within 21 days
 /// of settlement.
-deadline mediation-closing-papers-period: 21.days after MediationSettlement() counted_by frcp6 cite "E.D. Mich. LR 16.4(e)"
+deadline mediation-closing-papers-period: 21.days after MediationSettlement() counted_by frcp6-michigan cite "E.D. Mich. LR 16.4(e)"
 /// LR 26.2(d): if the court orders discovery material filed, the party or
 /// person with custody files it within 14 days of service of the order.
-deadline discovery-filing-period: 14.days after DiscoveryFilingOrderServed() counted_by frcp6 cite "E.D. Mich. LR 26.2(d)"
+deadline discovery-filing-period: 14.days after DiscoveryFilingOrderServed() counted_by frcp6-michigan cite "E.D. Mich. LR 26.2(d)"
 /// LR 54.1: a party seeking costs files a bill of costs no later than 28
 /// days after the entry of judgment.
-deadline bill-of-costs-period: 28.days after JudgmentEntered() counted_by frcp6 cite "E.D. Mich. LR 54.1"
+deadline bill-of-costs-period: 28.days after JudgmentEntered() counted_by frcp6-michigan cite "E.D. Mich. LR 54.1"
 /// LR 54.1.2(a): a motion for attorneys' fees and related non-taxable
 /// expenses under FRCP 54(d)(2) is filed no later than 28 days after entry
 /// of judgment.
-deadline fee-motion-period: 28.days after JudgmentEntered() counted_by frcp6 cite "E.D. Mich. LR 54.1.2(a)"
+deadline fee-motion-period: 28.days after JudgmentEntered() counted_by frcp6-michigan cite "E.D. Mich. LR 54.1.2(a)"
 /// LR 54.1.2(b): within 14 days after the fee motion is filed, the party
 /// against whom the award is requested responds with any objections.
-deadline fee-motion-response-period: 14.days after FeeMotionFiled() counted_by frcp6 cite "E.D. Mich. LR 54.1.2(b)"
+deadline fee-motion-response-period: 14.days after FeeMotionFiled() counted_by frcp6-michigan cite "E.D. Mich. LR 54.1.2(b)"
 /// LR 54.2(a): an attorney seeking approval of fees under the Equal
 /// Access to Justice Act, 28 U.S.C. § 2412(d), files the motion within 30
 /// days of final judgment.
-deadline eaja-fee-motion-period: 30.days after SocialSecurityFinalJudgment() counted_by frcp6 cite "E.D. Mich. LR 54.2(a)"
+deadline eaja-fee-motion-period: 30.days after SocialSecurityFinalJudgment() counted_by frcp6-michigan cite "E.D. Mich. LR 54.2(a)"
 /// LR 58.1(c): within seven days after the court grants a judgment or
 /// order, or later if the court allows, a person seeking its entry may
 /// serve the proposed judgment or order with notice that it will be
 /// submitted for signing.
-deadline proposed-judgment-notice-period: 7.days after JudgmentOrOrderGranted() counted_by frcp6 cite "E.D. Mich. LR 58.1(c)"
+deadline proposed-judgment-notice-period: 7.days after JudgmentOrOrderGranted() counted_by frcp6-michigan cite "E.D. Mich. LR 58.1(c)"
 /// LR 58.1(c), (c)(1): written objections to the proposed judgment or
 /// order are filed within seven days after service of the notice, or the
 /// court signs it if it comports with its decision.
-deadline proposed-judgment-objection-period: 7.days after ProposedJudgmentNoticeServed() counted_by frcp6 cite "E.D. Mich. LR 58.1(c)"
+deadline proposed-judgment-objection-period: 7.days after ProposedJudgmentNoticeServed() counted_by frcp6-michigan cite "E.D. Mich. LR 58.1(c)"
 /// LR 58.1(c)(3): if objections are filed, the person who proposed the
 /// judgment or order notices it for settlement before the court within
 /// seven days after receiving notice of the objections.
-deadline proposed-judgment-settlement-period: 7.days after ProposedJudgmentObjectionsReceived() counted_by frcp6 cite "E.D. Mich. LR 58.1(c)"
+deadline proposed-judgment-settlement-period: 7.days after ProposedJudgmentObjectionsReceived() counted_by frcp6-michigan cite "E.D. Mich. LR 58.1(c)"
 /// LR 72.1(d)(3): a person may respond to objections to a magistrate
 /// judge's order or report within 14 days of service of the objections.
-deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6 cite "E.D. Mich. LR 72.1(d)"
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6-michigan cite "E.D. Mich. LR 72.1(d)"
 /// LR 72.1(d)(4): a reply brief is filed within 7 days of service of a
 /// response.
-deadline magistrate-objection-reply-period: 7.days after MagistrateObjectionResponseServed() counted_by frcp6 cite "E.D. Mich. LR 72.1(d)"
+deadline magistrate-objection-reply-period: 7.days after MagistrateObjectionResponseServed() counted_by frcp6-michigan cite "E.D. Mich. LR 72.1(d)"
 /// LR 73.1(c): consent to a magistrate judge's civil consent authority may
 /// be entered until 28 days before the scheduled trial unless the
 /// district judge orders otherwise.
-deadline magistrate-consent-cutoff: 28.days before ScheduledTrial() counted_by frcp6 cite "E.D. Mich. LR 73.1(c)"
+deadline magistrate-consent-cutoff: 28.days before ScheduledTrial() counted_by frcp6-michigan cite "E.D. Mich. LR 73.1(c)"
 /// LR 73.1(e): a party added after reference on consent who chooses to
 /// consent files the signed form within 28 days of appearance, or the case
 /// returns to the district judge.
-deadline added-party-consent-period: 28.days after AddedPartyAppearance() counted_by frcp6 cite "E.D. Mich. LR 73.1(e)"
+deadline added-party-consent-period: 28.days after AddedPartyAppearance() counted_by frcp6-michigan cite "E.D. Mich. LR 73.1(e)"
 
 test "motion response: 14 days after service of the motion" cite "E.D. Mich. LR 7.1(e)"
 {

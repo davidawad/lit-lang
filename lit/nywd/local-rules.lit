@@ -1,6 +1,6 @@
 module nywd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.new-york.{ frcp6-new-york }
 
 // The Western District of New York's own periods, computed under the
 // federal rules (FRCP 6(a) governs "any local rule"). The motion periods
@@ -122,7 +122,7 @@ event ExhibitRemovalNoticeGiven()
 /// is denied, it is deemed withdrawn without prejudice unless an unsealed
 /// (or unredacted) version is filed within 14 days of the entry of the
 /// order denying the motion.
-deadline unsealed-filing-period: 14.days after SealingDenied() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 5.3(g)"
+deadline unsealed-filing-period: 14.days after SealingDenied() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 5.3(g)"
 {
   forum frcp
 }
@@ -130,21 +130,21 @@ deadline unsealed-filing-period: 14.days after SealingDenied() counted_by frcp6 
 /// Loc. R. Civ. P. 5.5(f): the judgment in a Social Security action is
 /// final and not appealable 60 days after entry; unless stipulated, an
 /// EAJA petition may not be filed before then.
-deadline social-security-judgment-final-period: 60.days after SocialSecurityJudgmentEntered() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
+deadline social-security-judgment-final-period: 60.days after SocialSecurityJudgmentEntered() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
 {
   forum frcp
 }
 
 /// Loc. R. Civ. P. 5.5(f): the plaintiff files the EAJA petition under 28
 /// U.S.C. § 2412 within 30 days of final judgment.
-deadline eaja-petition-period: 30.days after SocialSecurityJudgmentFinal() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
+deadline eaja-petition-period: 30.days after SocialSecurityJudgmentFinal() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
 {
   forum frcp
 }
 
 /// Loc. R. Civ. P. 5.5(f): the defendant has 30 days to respond to the
 /// EAJA petition.
-deadline eaja-response-period: 30.days after EajaPetitionFiled() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
+deadline eaja-response-period: 30.days after EajaPetitionFiled() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
 {
   forum frcp
 }
@@ -154,7 +154,7 @@ deadline eaja-response-period: 30.days after EajaPetitionFiled() counted_by frcp
 /// petition itself follows FRCP 54(d)(2)(B) and a decision of the Second
 /// Circuit (5.5(g)(1)), whose text is not vendored; its period is not
 /// declared.
-deadline fee-petition-response-period: 30.days after FeePetitionServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 5.5(g)"
+deadline fee-petition-response-period: 30.days after FeePetitionServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 5.5(g)"
 {
   forum frcp
 }
@@ -162,7 +162,7 @@ deadline fee-petition-response-period: 30.days after FeePetitionServed() counted
 /// Loc. R. Civ. P. 7(a)(2)(C): a party seeking to exceed the page limit
 /// applies by letter at least 7 days before the date the memorandum must
 /// be filed.
-deadline page-extension-request-period: 7.days before MemorandumDue() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(a)"
+deadline page-extension-request-period: 7.days before MemorandumDue() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(a)"
 {
   forum frcp
 }
@@ -170,28 +170,28 @@ deadline page-extension-request-period: 7.days before MemorandumDue() counted_by
 /// Loc. R. Civ. P. 7(b)(2)(A): absent a scheduling order, the party
 /// opposing a summary judgment motion has 28 days after service of the
 /// motion to file and serve responding papers.
-deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
   forum frcp
 }
 
 /// Loc. R. Civ. P. 7(b)(2)(A): the moving party has 14 days after service
 /// of the responding papers to file and serve reply papers.
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
   forum frcp
 }
 
 /// Loc. R. Civ. P. 7(b)(2)(A): if the opposing party cross-moves, the
 /// moving party has 28 days after service of the cross-motion to respond.
-deadline cross-motion-response-period: 28.days after CrossMotionServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+deadline cross-motion-response-period: 28.days after CrossMotionServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
   forum frcp
 }
 
 /// Loc. R. Civ. P. 7(b)(2)(A): the cross-moving party has 14 days after
 /// service of the responding papers to reply.
-deadline cross-motion-reply-period: 14.days after CrossMotionResponseServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+deadline cross-motion-reply-period: 14.days after CrossMotionResponseServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
   forum frcp
 }
@@ -199,14 +199,14 @@ deadline cross-motion-reply-period: 14.days after CrossMotionResponseServed() co
 /// Loc. R. Civ. P. 7(b)(2)(B): on all other motions, absent a scheduling
 /// order, the opposing party has 14 days after service of the motion to
 /// file and serve responding papers.
-deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+deadline response-period: 14.days after MotionServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
   forum frcp
 }
 
 /// Loc. R. Civ. P. 7(b)(2)(B): the moving party has 7 days after service
 /// of the responding papers to file and serve reply papers.
-deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
   forum frcp
 }
@@ -214,21 +214,21 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "W.D.
 /// Loc. R. Civ. P. 15(c): unless the order sets a different deadline, the
 /// moving party files and serves the amended pleading on the existing
 /// parties within 14 days of entry of the order granting leave.
-deadline amended-pleading-period: 14.days after AmendmentGranted() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 15(c)"
+deadline amended-pleading-period: 14.days after AmendmentGranted() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 15(c)"
 {
   forum frcp
 }
 
 /// Loc. R. Civ. P. 16(c)(2): the plaintiff provides a written settlement
 /// demand at least 14 days before the first settlement conference.
-deadline settlement-demand-period: 14.days before SettlementConferenceHeld() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
+deadline settlement-demand-period: 14.days before SettlementConferenceHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
 {
   forum frcp
 }
 
 /// Loc. R. Civ. P. 16(c)(2): the defendant responds to the demand in
 /// writing at least 7 days before the conference.
-deadline settlement-response-period: 7.days before SettlementConferenceHeld() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
+deadline settlement-response-period: 7.days before SettlementConferenceHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
 {
   forum frcp
 }
@@ -236,7 +236,7 @@ deadline settlement-response-period: 7.days before SettlementConferenceHeld() co
 /// Loc. R. Civ. P. 16(e)(2): no later than 14 days before the final
 /// pretrial conference, or another date the Court sets, each party files
 /// and serves a pretrial statement.
-deadline pretrial-statement-period: 14.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 16(e)"
+deadline pretrial-statement-period: 14.days before FinalPretrialConferenceHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 16(e)"
 {
   forum frcp
 }
@@ -245,14 +245,14 @@ deadline pretrial-statement-period: 14.days before FinalPretrialConferenceHeld()
 /// cannot be described then, the information is furnished in writing
 /// within 14 days after the privilege is asserted, unless the Court orders
 /// otherwise.
-deadline deposition-privilege-log-period: 14.days after PrivilegeAssertedAtDeposition() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 26(d)"
+deadline deposition-privilege-log-period: 14.days after PrivilegeAssertedAtDeposition() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 26(d)"
 {
   forum frcp
 }
 
 /// Loc. R. Civ. P. 30(a): absent agreement or order, each deposition
 /// notice is served at least 21 days before the date set for examination.
-deadline deposition-notice-period: 21.days before DepositionHeld() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 30(a)"
+deadline deposition-notice-period: 21.days before DepositionHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 30(a)"
 {
   forum frcp
 }
@@ -260,7 +260,7 @@ deadline deposition-notice-period: 21.days before DepositionHeld() counted_by fr
 /// Loc. R. Civ. P. 30(b): a deposition at which documents are sought is
 /// scheduled to allow their production at least 7 calendar days before
 /// it.
-deadline deposition-documents-period: 7.days before DepositionHeld() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 30(b)"
+deadline deposition-documents-period: 7.days before DepositionHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 30(b)"
 {
   forum frcp
 }
@@ -268,7 +268,7 @@ deadline deposition-documents-period: 7.days before DepositionHeld() counted_by 
 /// Loc. R. Civ. P. 30(c)(4): unresolved objections in a video deposition
 /// are submitted by motion in limine no later than 7 days before trial or
 /// any earlier deadline the Court sets.
-deadline video-objection-motion-period: 7.days before TrialBegins() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 30(c)"
+deadline video-objection-motion-period: 7.days before TrialBegins() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 30(c)"
 {
   forum frcp
 }
@@ -276,28 +276,28 @@ deadline video-objection-motion-period: 7.days before TrialBegins() counted_by f
 /// Loc. R. Civ. P. 41(a): when a case is settled, the parties file a
 /// stipulation of dismissal or other appropriate document within 14 days;
 /// otherwise the Judge may dismiss the case as settled, on the merits.
-deadline stipulation-of-dismissal-period: 14.days after CaseSettled() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 41(a)"
+deadline stipulation-of-dismissal-period: 14.days after CaseSettled() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 41(a)"
 {
   forum frcp
 }
 
 /// Loc. R. Civ. P. 54(a): within 30 days after entry of final judgment, a
 /// party entitled to costs submits a verified Bill of Costs to the Clerk.
-deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 54(a)"
+deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 54(a)"
 {
   forum frcp
 }
 
 /// Loc. R. Civ. P. 54(b): the opposing party files any memorandum in
 /// opposition to costs within 21 days of service of the Bill of Costs.
-deadline cost-opposition-period: 21.days after BillOfCostsServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 54(b)"
+deadline cost-opposition-period: 21.days after BillOfCostsServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 54(b)"
 {
   forum frcp
 }
 
 /// Loc. R. Civ. P. 54(c): the prevailing party files any reply within 21
 /// days of service of the opposing memorandum.
-deadline cost-reply-period: 21.days after CostOppositionServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 54(c)"
+deadline cost-reply-period: 21.days after CostOppositionServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 54(c)"
 {
   forum frcp
 }
@@ -305,7 +305,7 @@ deadline cost-reply-period: 21.days after CostOppositionServed() counted_by frcp
 /// Loc. R. Civ. P. 72(b): a party seeking more time to object to a
 /// magistrate judge's recommended disposition moves for an extension
 /// within 14 days after being served with it.
-deadline objection-extension-period: 14.days after RecommendationServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 72(b)"
+deadline objection-extension-period: 14.days after RecommendationServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 72(b)"
 {
   forum frcp
 }
@@ -313,7 +313,7 @@ deadline objection-extension-period: 14.days after RecommendationServed() counte
 /// Loc. R. Civ. P. 79(c): a party that does not remove paper or physical
 /// exhibits within 30 days from the Clerk's notice may have them destroyed
 /// or otherwise disposed of.
-deadline exhibit-removal-period: 30.days after ExhibitRemovalNoticeGiven() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 79(c)"
+deadline exhibit-removal-period: 30.days after ExhibitRemovalNoticeGiven() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 79(c)"
 {
   forum frcp
 }

@@ -1,6 +1,6 @@
 module laed-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.louisiana.{ frcp6-louisiana }
 
 // The Eastern District of Louisiana's own civil periods, computed under
 // the federal rules (FRCP 6(a) governs "any local rule"). A contested
@@ -76,7 +76,7 @@ event TransferOrderEntered()
 /// the moving defendant files, within 14 days of removal, a list of all
 /// parties remaining in the action, copies of all pleadings filed in state
 /// court, and copies of the returns of service filed in state court.
-deadline removal-record-period: 14.days after NoticeOfRemovalFiled() counted_by frcp6 cite "E.D. La. LR 3.2"
+deadline removal-record-period: 14.days after NoticeOfRemovalFiled() counted_by frcp6-louisiana cite "E.D. La. LR 3.2"
 {
   forum frcp
 }
@@ -85,14 +85,14 @@ deadline removal-record-period: 14.days after NoticeOfRemovalFiled() counted_by 
 /// to Consider Whether Another Party's Material Should Be Sealed, the
 /// Designating Party files a statement or declaration supporting sealing;
 /// failing to do so may result in unsealing without further notice.
-deadline designating-party-statement-period: 7.days after OtherPartySealMotionFiled() counted_by frcp6 cite "E.D. La. LR 5.6(D)"
+deadline designating-party-statement-period: 7.days after OtherPartySealMotionFiled() counted_by frcp6-louisiana cite "E.D. La. LR 5.6(D)"
 {
   forum frcp
 }
 
 /// E.D. La. LR 5.6(D)(2)(c): any other party who wishes to respond to the
 /// motion does so no later than 14 days after the motion is filed.
-deadline other-party-seal-response-period: 14.days after OtherPartySealMotionFiled() counted_by frcp6 cite "E.D. La. LR 5.6(D)"
+deadline other-party-seal-response-period: 14.days after OtherPartySealMotionFiled() counted_by frcp6-louisiana cite "E.D. La. LR 5.6(D)"
 {
   forum frcp
 }
@@ -100,7 +100,7 @@ deadline other-party-seal-response-period: 14.days after OtherPartySealMotionFil
 /// E.D. La. LR 5.6(D)(3): if the court grants the motion to seal, the
 /// movant files a redacted version of the sealed document within 14 days
 /// of the order granting the motion.
-deadline redacted-version-period: 14.days after SealMotionGranted() counted_by frcp6 cite "E.D. La. LR 5.6(D)"
+deadline redacted-version-period: 14.days after SealMotionGranted() counted_by frcp6-louisiana cite "E.D. La. LR 5.6(D)"
 {
   forum frcp
 }
@@ -109,7 +109,7 @@ deadline redacted-version-period: 14.days after SealMotionGranted() counted_by f
 /// movant may file another motion to remove the documents from the record
 /// within seven days; if none is timely filed, the documents are filed as
 /// a public record.
-deadline seal-denial-removal-period: 7.days after SealMotionDenied() counted_by frcp6 cite "E.D. La. LR 5.6(G)"
+deadline seal-denial-removal-period: 7.days after SealMotionDenied() counted_by frcp6-louisiana cite "E.D. La. LR 5.6(G)"
 {
   forum frcp
 }
@@ -118,7 +118,7 @@ deadline seal-denial-removal-period: 7.days after SealMotionDenied() counted_by 
 /// submission date is given to opposing counsel at least fifteen days
 /// before the submission date, whatever FRCP 5(b) service method is used,
 /// and the motion is filed not later than the fifteenth day preceding it.
-deadline motion-notice-period: 15.days before SubmissionDate() counted_by frcp6 cite "E.D. La. LR 7.2"
+deadline motion-notice-period: 15.days before SubmissionDate() counted_by frcp6-louisiana cite "E.D. La. LR 7.2"
 {
   forum frcp
 }
@@ -126,14 +126,14 @@ deadline motion-notice-period: 15.days before SubmissionDate() counted_by frcp6 
 /// E.D. La. LR 7.5: each party opposing a motion files and serves a
 /// memorandum in opposition no later than eight days before the noticed
 /// submission date.
-deadline opposition-period: 8.days before SubmissionDate() counted_by frcp6 cite "E.D. La. LR 7.5"
+deadline opposition-period: 8.days before SubmissionDate() counted_by frcp6-louisiana cite "E.D. La. LR 7.5"
 {
   forum frcp
 }
 
 /// E.D. La. LR 7.5: the movant may file and serve a reply brief no later
 /// than 4:00 p.m., two working days before the noticed submission date.
-deadline reply-period: 2.court_days before SubmissionDate() counted_by frcp6 cite "E.D. La. LR 7.5"
+deadline reply-period: 2.court_days before SubmissionDate() counted_by frcp6-louisiana cite "E.D. La. LR 7.5"
 {
   forum frcp
 }
@@ -142,7 +142,7 @@ deadline reply-period: 2.court_days before SubmissionDate() counted_by frcp6 cit
 /// counsel jointly designate the documents in the master record needed for
 /// the separated case and file the designation within seven days of the
 /// deconsolidation order.
-deadline deconsolidation-designation-period: 7.days after DeconsolidationOrdered() counted_by frcp6 cite "E.D. La. LR 10.2"
+deadline deconsolidation-designation-period: 7.days after DeconsolidationOrdered() counted_by frcp6-louisiana cite "E.D. La. LR 10.2"
 {
   forum frcp
 }
@@ -150,7 +150,7 @@ deadline deconsolidation-designation-period: 7.days after DeconsolidationOrdered
 /// E.D. La. LR 26.2(A): except as otherwise ordered, the FRCP 26(f)
 /// conference is held no later than seven working days before the
 /// scheduled preliminary conference.
-deadline rule26f-conference-period: 7.court_days before PreliminaryConference() counted_by frcp6 cite "E.D. La. LR 26.2(A)"
+deadline rule26f-conference-period: 7.court_days before PreliminaryConference() counted_by frcp6-louisiana cite "E.D. La. LR 26.2(A)"
 {
   forum frcp
 }
@@ -159,7 +159,7 @@ deadline rule26f-conference-period: 7.court_days before PreliminaryConference() 
 /// that initial disclosures are not appropriate, the parties file a
 /// written discovery plan, including the nature of the objection, no later
 /// than three working days before the scheduled Rule 16(b) conference.
-deadline discovery-plan-report-period: 3.court_days before SchedulingConference() counted_by frcp6 cite "E.D. La. LR 26.2(B)"
+deadline discovery-plan-report-period: 3.court_days before SchedulingConference() counted_by frcp6-louisiana cite "E.D. La. LR 26.2(B)"
 {
   forum frcp
 }
@@ -168,7 +168,7 @@ deadline discovery-plan-report-period: 3.court_days before SchedulingConference(
 /// judgment, unless otherwise ordered, the party allowed costs serves and
 /// files a motion to tax costs with a certification that the items are
 /// correct and necessarily incurred.
-deadline costs-motion-period: 35.days after JudgmentEntryNoticed() counted_by frcp6 cite "E.D. La. LR 54.3"
+deadline costs-motion-period: 35.days after JudgmentEntryNoticed() counted_by frcp6-louisiana cite "E.D. La. LR 54.3"
 {
   forum frcp
 }
@@ -177,7 +177,7 @@ deadline costs-motion-period: 35.days after JudgmentEntryNoticed() counted_by fr
 /// written request with the motion or opposition, or within three days
 /// after receipt of the opposition memorandum; argument is held only if
 /// ordered.
-deadline oral-argument-request-period: 3.days after OppositionReceived() counted_by frcp6 cite "E.D. La. LR 78.1"
+deadline oral-argument-request-period: 3.days after OppositionReceived() counted_by frcp6-louisiana cite "E.D. La. LR 78.1"
 {
   forum frcp
 }
@@ -185,7 +185,7 @@ deadline oral-argument-request-period: 3.days after OppositionReceived() counted
 /// E.D. La. LR 79.3: exhibits in the clerk's custody are removed within
 /// 35 days of the final disposition of the case, or may be destroyed or
 /// otherwise disposed of by the clerk.
-deadline exhibit-removal-period: 35.days after FinalDisposition() counted_by frcp6 cite "E.D. La. LR 79.3"
+deadline exhibit-removal-period: 35.days after FinalDisposition() counted_by frcp6-louisiana cite "E.D. La. LR 79.3"
 {
   forum frcp
 }
@@ -194,7 +194,7 @@ deadline exhibit-removal-period: 35.days after FinalDisposition() counted_by frc
 /// transferring a case to a district court outside the Fifth Circuit
 /// (other than a JPML transfer order) is stayed for 21 days from its entry
 /// on the docket.
-deadline transfer-stay-period: 21.days after TransferOrderEntered() counted_by frcp6 cite "E.D. La. LR 83.5.1"
+deadline transfer-stay-period: 21.days after TransferOrderEntered() counted_by frcp6-louisiana cite "E.D. La. LR 83.5.1"
 {
   forum frcp
 }

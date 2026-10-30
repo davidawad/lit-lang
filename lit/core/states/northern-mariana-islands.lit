@@ -1,0 +1,86 @@
+module core.states.northern-mariana-islands
+
+import core.calendar.{ us-federal-holidays }
+
+/// The legal holidays of the Northern Mariana Islands (1 CMC § 311) that
+/// `us-federal-holidays` does not already close: Commonwealth Covenant Day,
+/// March 24; Citizenship Day, November 4; and Constitution Day, December 8,
+/// each celebrated on the Friday before a Saturday and the Monday after a
+/// Sunday (§ 313). FRCP 6(a)(6)(C) and FRBP 9006(a)(6)(C) make them legal
+/// holidays of the District of the Northern Mariana Islands for a period
+/// counted forward only (core's `frcp6-northern-mariana-islands` and
+/// `frbp9006-northern-mariana-islands`). The other § 311 days are federal
+/// holidays on the same days (Commonwealth Cultural Day is the second Monday
+/// in October, Columbus Day).
+///
+/// Each day is closed from the date the vendored text was retrieved
+/// (October 29, 2026; the PDFs carry no as-of date). Not modeled: Good
+/// Friday, whose date § 311 leaves "As Designated in the Annual Calendar",
+/// which is not vendored, so a last day on it stays the earlier date.
+calendar northern-mariana-islands-holidays cite "1 CMC § 311"
+{
+  commonwealth-covenant-day: fixed(3, 24) effective [2026-10-29, ..) observed nearest_weekday
+  citizenship-day: fixed(11, 4) effective [2026-10-29, ..) observed nearest_weekday
+  constitution-day: fixed(12, 8) effective [2026-10-29, ..) observed nearest_weekday
+}
+
+/// FRCP 6 in the district courts of the Northern Mariana Islands: the 2023 text
+/// (`frcp6@2023-12-01`) with `northern-mariana-islands-holidays` (FRCP 81(d)(1) reads "State" to include it), which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-northern-mariana-islands effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays northern-mariana-islands-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of the Northern Mariana Islands:
+/// `northern-mariana-islands-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-northern-mariana-islands effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays northern-mariana-islands-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-mp]
+  allow_hours
+  end_of_month clamp
+}

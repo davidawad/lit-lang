@@ -1,0 +1,81 @@
+module core.states.wyoming
+
+import core.calendar.{ us-federal-holidays }
+
+/// The legal holidays of Wyoming (Wyo. Stat. § 8-4-101) that
+/// `us-federal-holidays` does not already close: none. Each § 8-4-101(a)
+/// day is a 5 U.S.C. § 6103(a) holiday on the same day, and § 8-4-101(b)'s
+/// Monday after a Sunday New Year's Day, Independence Day, Veterans Day or
+/// Christmas Day is the federal observed day too. The Juneteenth holiday of
+/// § 8-4-107 falls on the third Saturday of June, closed by `weekend`, and
+/// § 8-4-107(c) says it does not affect judicial proceedings. The calendar
+/// is declared empty from the vendored text so that FRCP 6(a)(6)(C) and
+/// FRBP 9006(a)(6)(C) read a sourced Wyoming list (core's `frcp6-wyoming`
+/// and `frbp9006-wyoming`) rather than the unsourced
+/// `district-state-holidays`. Not modeled: a date the President appoints
+/// for national mourning, rejoicing or emergency that the Governor declares
+/// a holiday (§ 8-4-101(a)(xi)), which no vendored source lists (a last day
+/// on it stays the earlier date).
+calendar wyoming-holidays cite "Wyo. Stat. § 8-4-101"
+{}
+
+/// FRCP 6 in the district courts of Wyoming: the 2023 text
+/// (`frcp6@2023-12-01`) with `wyoming-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-wyoming effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays wyoming-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Wyoming:
+/// `wyoming-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-wyoming effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays wyoming-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-wy]
+  allow_hours
+  end_of_month clamp
+}

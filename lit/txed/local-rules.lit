@@ -1,7 +1,7 @@
 module txed-local-rules.local-rules
 
 import core.authority.{ CaseOrder }
-import core.frcp6.{ frcp6 }
+import core.states.texas.{ frcp6-texas }
 
 // The Eastern District of Texas's own civil periods and limits, counted
 // under FRCP 6. Service is deemed completed at the "entered on" time of
@@ -175,7 +175,7 @@ event FinalDisposition()
 /// of a petitioner challenging a sentence of death must be filed at least
 /// seven days before the scheduled execution date, or recite good cause
 /// for a late filing.
-deadline stay-of-execution-motion: 7.days before ExecutionScheduled() counted_by frcp6 cite "E.D. Tex. Local Rule CV-3(c)"
+deadline stay-of-execution-motion: 7.days before ExecutionScheduled() counted_by frcp6-texas cite "E.D. Tex. Local Rule CV-3(c)"
 {
   forum frcp
 }
@@ -184,7 +184,7 @@ deadline stay-of-execution-motion: 7.days before ExecutionScheduled() counted_by
 /// provides, a party filing a document under seal must publicly file a
 /// version with the confidential information redacted within seven days,
 /// unless the entire document is confidential information.
-deadline redacted-public-version: 7.days after SealedDocumentFiled() counted_by frcp6 cite "E.D. Tex. Local Rule CV-5(a)"
+deadline redacted-public-version: 7.days after SealedDocumentFiled() counted_by frcp6-texas cite "E.D. Tex. Local Rule CV-5(a)"
 {
   forum frcp
 }
@@ -195,7 +195,7 @@ deadline redacted-public-version: 7.days after SealedDocumentFiled() counted_by 
 /// redaction of personal data identifiers is necessary. The transcript is
 /// available only at the clerk's office for ninety days after filing
 /// (CV-5.2(b)(1)).
-deadline redaction-notice: 7.days after TranscriptFiled() counted_by frcp6 cite "E.D. Tex. Local Rule CV-5.2(b)"
+deadline redaction-notice: 7.days after TranscriptFiled() counted_by frcp6-texas cite "E.D. Tex. Local Rule CV-5.2(b)"
 {
   forum frcp
 }
@@ -204,7 +204,7 @@ deadline redaction-notice: 7.days after TranscriptFiled() counted_by frcp6 cite 
 /// to the court reporter or transcriber and files a statement of where the
 /// personal data identifiers appear within twenty-one days of the
 /// transcript's delivery to the clerk, or longer if the court orders.
-deadline redaction-statement: 21.days after TranscriptDelivered() counted_by frcp6 delegable {
+deadline redaction-statement: 21.days after TranscriptDelivered() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-5.2(b)"
@@ -216,7 +216,7 @@ deadline redaction-statement: 21.days after TranscriptDelivered() counted_by frc
 /// performs the requested redactions and files a redacted transcript
 /// within thirty-one days of the filing of the transcript, or longer if
 /// the court orders.
-deadline redacted-transcript: 31.days after TranscriptFiled() counted_by frcp6 delegable {
+deadline redacted-transcript: 31.days after TranscriptFiled() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-5.2(b)"
@@ -228,7 +228,7 @@ deadline redacted-transcript: 31.days after TranscriptFiled() counted_by frcp6 d
 /// days from the date the motion was served to file a response and any
 /// supporting documents, after which the court considers the motion
 /// submitted; any party may move to lengthen or shorten the period.
-deadline response-period: 14.days after MotionServed() counted_by frcp6 delegable {
+deadline response-period: 14.days after MotionServed() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-7(e)"
@@ -238,7 +238,7 @@ deadline response-period: 14.days after MotionServed() counted_by frcp6 delegabl
 
 /// E.D. Tex. Local Rule CV-7(e): twenty-one days for a summary judgment
 /// motion.
-deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 delegable {
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-7(e)"
@@ -250,7 +250,7 @@ deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionSe
 /// otherwise, the movant on an opposed motion may serve and file a reply
 /// brief within seven days from the date the response is served; the
 /// court need not wait for it before ruling.
-deadline reply-period: 7.days after ResponseServed() counted_by frcp6 delegable {
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-7(f)"
@@ -261,7 +261,7 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcp6 delegable 
 /// E.D. Tex. Local Rule CV-7(f): a sur-reply responding to issues raised
 /// in the reply may be served and filed within seven days from the date
 /// the reply is served; absent leave, no further submissions are allowed.
-deadline sur-reply-period: 7.days after ReplyServed() counted_by frcp6 delegable {
+deadline sur-reply-period: 7.days after ReplyServed() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-7(f)"
@@ -274,7 +274,7 @@ deadline sur-reply-period: 7.days after ReplyServed() counted_by frcp6 delegable
 /// served no later than fourteen days after the clerk enters the judgment
 /// on the docket; the proposed bill first goes to opposing counsel and the
 /// parties meet and confer (CV-54(b)).
-deadline bill-of-costs-period: 14.days after CostsJudgmentDocketed() counted_by frcp6 delegable {
+deadline bill-of-costs-period: 14.days after CostsJudgmentDocketed() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-54(a)"
@@ -286,7 +286,7 @@ deadline bill-of-costs-period: 14.days after CostsJudgmentDocketed() counted_by 
 /// objection to a magistrate judge's non-dispositive order within fourteen
 /// days after being served with a copy; the court need not await the
 /// response before ruling.
-deadline magistrate-objection-response: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "E.D. Tex. Local Rule CV-72(b)"
+deadline magistrate-objection-response: 14.days after MagistrateObjectionServed() counted_by frcp6-texas cite "E.D. Tex. Local Rule CV-72(b)"
 {
   forum frcp
 }
@@ -294,7 +294,7 @@ deadline magistrate-objection-response: 14.days after MagistrateObjectionServed(
 /// E.D. Tex. Local Rule CV-79(a)(4): the party offering an exhibit removes
 /// it within 30 days after final disposition of the case; an exhibit
 /// remaining longer may be disposed of by the clerk.
-deadline exhibit-removal: 30.days after FinalDisposition() counted_by frcp6 cite "E.D. Tex. Local Rule CV-79(a)"
+deadline exhibit-removal: 30.days after FinalDisposition() counted_by frcp6-texas cite "E.D. Tex. Local Rule CV-79(a)"
 {
   forum frcp
 }

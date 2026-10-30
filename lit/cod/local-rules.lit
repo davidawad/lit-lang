@@ -1,51 +1,6 @@
 module cod-local-rules.local-rules
 
-import core.calendar.{ us-federal-holidays }
-
-/// The Colorado legal holidays C.R.C.P. 6(a)(2) lists that are not § 6103(a)
-/// days: Frances Cabrini Day, the first Monday in October. Every other day
-/// on that list (New Year's, Martin Luther King, Washington-Lincoln,
-/// Memorial, Juneteenth, Independence, Labor, Veterans, Thanksgiving and
-/// Christmas Day) falls on a § 6103(a) day already in core's
-/// `us-federal-holidays`. C.R.C.P. 6(a)(2) restates the state's holiday
-/// statute, which is not vendored; the list is that of the 2023 edition,
-/// the vendored one, from December 1, 2025, the package's `in_force`.
-/// Days the governor appoints, and the "any other day ... when the court
-/// is closed" clause, are not modeled (the earlier date).
-calendar colorado-legal-holidays cite "C.R.C.P. 6(a)(2)"
-{
-  frances-cabrini-day: nth(1, monday, 10) effective [2025-12-01, ..)
-}
-
-/// FRCP 6(a) (core's `frcp6@2023-12-01`) in the District of Colorado: a day
-/// the state where the district court is located declares a holiday is a
-/// legal holiday for a period counted forward only ("for periods that are
-/// measured after an event", FRCP 6(a)(6)(C)). The package `recounts`
-/// lit/frcp, so in a matter in this court the FRCP periods are counted by
-/// this rule too, not by core's frcp6.
-counting cod-6 effective [2025-12-01, ..) known_at 2025-12-01 cite "FRCP 6(a)"
-{
-  exclude_trigger_day
-  include_last_day
-  roll_forward_on [weekend, legal_holiday, inaccessible]
-  service_extension {
-    Personal: 0.days
-    Electronic: 0.days
-    Mail: 3.days
-    Clerk: 3.days
-    OtherConsented: 3.days
-    CommercialCarrier: unrecognized
-    PrisonMail: unrecognized
-    MailForeign: unrecognized
-    Express: unrecognized
-    ExpressForeign: unrecognized
-  } cite "FRCP 6(d)"
-  holidays us-federal-holidays
-  forward_holidays colorado-legal-holidays cite "FRCP 6(a)(6)(C)"
-  forums [frcp]
-  allow_hours
-  end_of_month clamp
-}
+import core.states.colorado.{ frcp6-colorado }
 
 // The District of Colorado's own civil periods, computed under FRCP 6(a),
 // which governs a period stated in a local rule (D.C.COLO.LCivR 30.1 and
@@ -125,7 +80,7 @@ event BankruptcyRecommendationsMailed()
 /// D.C.COLO.LCivR 5.1(c): notice of a change of name, mailing address or
 /// telephone number of an unrepresented prisoner or party is filed not
 /// later than five days after the change.
-deadline contact-change-notice-period: 5.days after ContactInformationChanged() counted_by cod-6 cite "D.C.COLO.LCivR 5.1(c)"
+deadline contact-change-notice-period: 5.days after ContactInformationChanged() counted_by frcp6-colorado cite "D.C.COLO.LCivR 5.1(c)"
 {
   forum frcp
 }
@@ -134,7 +89,7 @@ deadline contact-change-notice-period: 5.days after ContactInformationChanged() 
 /// of service of a motion, or such lesser or greater time as the court may
 /// allow, to file a response. The date of service of an electronically
 /// filed motion is the date of electronic service (D.C.COLO.LCivR 5.1(d)).
-deadline motion-response-period: 21.days after MotionServed() counted_by cod-6 cite "D.C.COLO.LCivR 7.1(d)"
+deadline motion-response-period: 21.days after MotionServed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 7.1(d)"
 {
   forum frcp
 }
@@ -142,7 +97,7 @@ deadline motion-response-period: 21.days after MotionServed() counted_by cod-6 c
 /// D.C.COLO.LCivR 7.1(d): the moving party may file a reply no later than
 /// 14 days after the date of service of the response, or such lesser or
 /// greater time as the court may allow.
-deadline motion-reply-period: 14.days after ResponseServed() counted_by cod-6 cite "D.C.COLO.LCivR 7.1(d)"
+deadline motion-reply-period: 14.days after ResponseServed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 7.1(d)"
 {
   forum frcp
 }
@@ -150,7 +105,7 @@ deadline motion-reply-period: 14.days after ResponseServed() counted_by cod-6 ci
 /// D.C.COLO.LCivR 7.1(f): if the matter is set for hearing, any
 /// supplemental authority is filed no later than seven days before the
 /// hearing.
-deadline supplemental-authority-period: 7.days before MotionHearing() counted_by cod-6 cite "D.C.COLO.LCivR 7.1(f)"
+deadline supplemental-authority-period: 7.days before MotionHearing() counted_by frcp6-colorado cite "D.C.COLO.LCivR 7.1(f)"
 {
   forum frcp
 }
@@ -159,7 +114,7 @@ deadline supplemental-authority-period: 7.days before MotionHearing() counted_by
 /// accompanying motion to restrict keeps the restriction the filer chose
 /// for 14 days; if no motion to restrict is filed within that period, the
 /// restriction expires and the document is open to public inspection.
-deadline restriction-motion-period: 14.days after RestrictedDocumentFiled() counted_by cod-6 cite "D.C.COLO.LCivR 7.2(e)"
+deadline restriction-motion-period: 14.days after RestrictedDocumentFiled() counted_by frcp6-colorado cite "D.C.COLO.LCivR 7.2(e)"
 {
   forum frcp
 }
@@ -168,7 +123,7 @@ deadline restriction-motion-period: 14.days after RestrictedDocumentFiled() coun
 /// to amend or supplement a pleading is granted, the moving party files and
 /// serves the amended or supplemental pleading no later than 14 days after
 /// the filing of the order granting leave.
-deadline amended-pleading-period: 14.days after LeaveToAmendGranted() counted_by cod-6 cite "D.C.COLO.LCivR 15.1(b)"
+deadline amended-pleading-period: 14.days after LeaveToAmendGranted() counted_by frcp6-colorado cite "D.C.COLO.LCivR 15.1(b)"
 {
   forum frcp
 }
@@ -176,7 +131,7 @@ deadline amended-pleading-period: 14.days after LeaveToAmendGranted() counted_by
 /// D.C.COLO.LCivR 30.1: unless otherwise ordered, reasonable notice for
 /// taking a deposition is not less than 14 days, as computed under Fed. R.
 /// Civ. P. 6.
-deadline deposition-notice-period: 14.days before DepositionTaken() counted_by cod-6 cite "D.C.COLO.LCivR 30.1"
+deadline deposition-notice-period: 14.days before DepositionTaken() counted_by frcp6-colorado cite "D.C.COLO.LCivR 30.1"
 {
   forum frcp
 }
@@ -186,14 +141,14 @@ deadline deposition-notice-period: 14.days before DepositionTaken() counted_by c
 /// mandatory Consent/Non-Consent form no later than seven days before the
 /// scheduling conference, if any, or 45 days after the filing of the first
 /// response other than an answer, whichever is earlier.
-deadline direct-assignment-consent-period: 7.days before SchedulingConference() counted_by cod-6 cite "D.C.COLO.LCivR 40.1(c)"
+deadline direct-assignment-consent-period: 7.days before SchedulingConference() counted_by frcp6-colorado cite "D.C.COLO.LCivR 40.1(c)"
 {
   forum frcp
 }
 
 /// D.C.COLO.LCivR 40.1(c)(4): the 45-day alternative to the seven-day
 /// consent deadline; the earlier of the two governs.
-deadline direct-assignment-consent-outer-period: 45.days after FirstNonAnswerResponseFiled() counted_by cod-6 cite "D.C.COLO.LCivR 40.1(c)"
+deadline direct-assignment-consent-outer-period: 45.days after FirstNonAnswerResponseFiled() counted_by frcp6-colorado cite "D.C.COLO.LCivR 40.1(c)"
 {
   forum frcp
 }
@@ -201,7 +156,7 @@ deadline direct-assignment-consent-outer-period: 45.days after FirstNonAnswerRes
 /// D.C.COLO.LCivR 40.1(c)(7): if a party added after reference to a
 /// magistrate judge does not consent within 21 days from the date of the
 /// clerk's notice, the action is assigned to a district judge.
-deadline added-party-direct-consent-period: 21.days after AddedPartyNotified() counted_by cod-6 cite "D.C.COLO.LCivR 40.1(c)"
+deadline added-party-direct-consent-period: 21.days after AddedPartyNotified() counted_by frcp6-colorado cite "D.C.COLO.LCivR 40.1(c)"
 {
   forum frcp
 }
@@ -211,14 +166,14 @@ deadline added-party-direct-consent-period: 21.days after AddedPartyNotified() c
 /// no later than seven days before the scheduling conference, if any, or 45
 /// days after the filing of the first response other than an answer,
 /// whichever is earlier.
-deadline consent-jurisdiction-period: 7.days before SchedulingConference() counted_by cod-6 cite "D.C.COLO.LCivR 72.2(c)"
+deadline consent-jurisdiction-period: 7.days before SchedulingConference() counted_by frcp6-colorado cite "D.C.COLO.LCivR 72.2(c)"
 {
   forum frcp
 }
 
 /// D.C.COLO.LCivR 72.2(c): the 45-day alternative to the seven-day consent
 /// deadline; the earlier of the two governs.
-deadline consent-jurisdiction-outer-period: 45.days after FirstNonAnswerResponseFiled() counted_by cod-6 cite "D.C.COLO.LCivR 72.2(c)"
+deadline consent-jurisdiction-outer-period: 45.days after FirstNonAnswerResponseFiled() counted_by frcp6-colorado cite "D.C.COLO.LCivR 72.2(c)"
 {
   forum frcp
 }
@@ -226,7 +181,7 @@ deadline consent-jurisdiction-outer-period: 45.days after FirstNonAnswerResponse
 /// D.C.COLO.LCivR 72.2(e): if an added party does not file a consent
 /// within 21 days from the date of mailing of the clerk's notice, the
 /// action returns to the assigned district judge.
-deadline added-party-consent-period: 21.days after AddedPartyConsentNoticeMailed() counted_by cod-6 cite "D.C.COLO.LCivR 72.2(e)"
+deadline added-party-consent-period: 21.days after AddedPartyConsentNoticeMailed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 72.2(e)"
 {
   forum frcp
 }
@@ -234,14 +189,14 @@ deadline added-party-consent-period: 21.days after AddedPartyConsentNoticeMailed
 /// D.C.COLO.LCivR 45.1: except as D.C.COLO.LCivR 30.1 provides or the
 /// court orders, a subpoena is served no later than seven days before the
 /// date it specifies, calculated under Fed. R. Civ. P. 6(a)(1).
-deadline subpoena-service-period: 7.days before SubpoenaReturnDate() counted_by cod-6 cite "D.C.COLO.LCivR 45.1"
+deadline subpoena-service-period: 7.days before SubpoenaReturnDate() counted_by frcp6-colorado cite "D.C.COLO.LCivR 45.1"
 {
   forum frcp
 }
 
 /// D.C.COLO.LCivR 54.1: a bill of costs is filed on the court's form no
 /// later than 14 days after entry of the judgment or final order.
-deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by cod-6 cite "D.C.COLO.LCivR 54.1"
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6-colorado cite "D.C.COLO.LCivR 54.1"
 {
   forum frcp
 }
@@ -249,14 +204,14 @@ deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by cod-6 
 /// D.C.COLO.LCivR 56.1(a): unless otherwise ordered, a response to a
 /// motion for summary judgment is filed no later than 21 days after the
 /// date of service of the motion.
-deadline sj-response-period: 21.days after SummaryJudgmentMotionServed() counted_by cod-6 cite "D.C.COLO.LCivR 56.1(a)"
+deadline sj-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 56.1(a)"
 {
   forum frcp
 }
 
 /// D.C.COLO.LCivR 56.1(a): a reply may be filed no later than 14 days
 /// after the date of service of the response.
-deadline sj-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by cod-6 cite "D.C.COLO.LCivR 56.1(a)"
+deadline sj-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 56.1(a)"
 {
   forum frcp
 }
@@ -264,7 +219,7 @@ deadline sj-reply-period: 14.days after SummaryJudgmentResponseServed() counted_
 /// D.C.COLO.LCivR 79.1(b)(1): if no objection is filed within 14 days of
 /// the clerk's notice, the clerk may dispose of the conventionally
 /// submitted material or exhibit.
-deadline exhibit-disposal-objection-period: 14.days after ExhibitDisposalNoticed() counted_by cod-6 cite "D.C.COLO.LCivR 79.1(b)"
+deadline exhibit-disposal-objection-period: 14.days after ExhibitDisposalNoticed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 79.1(b)"
 {
   forum frcp
 }
@@ -273,7 +228,7 @@ deadline exhibit-disposal-objection-period: 14.days after ExhibitDisposalNoticed
 /// notice of removal, the removing party files a current docket sheet
 /// (register of actions) and separately files each pending motion,
 /// petition, and related response, reply and brief.
-deadline state-court-record-period: 14.days after RemovalNoticeFiled() counted_by cod-6 cite "D.C.COLO.LCivR 81.1(b)"
+deadline state-court-record-period: 14.days after RemovalNoticeFiled() counted_by frcp6-colorado cite "D.C.COLO.LCivR 81.1(b)"
 {
   forum frcp
 }
@@ -282,14 +237,14 @@ deadline state-court-record-period: 14.days after RemovalNoticeFiled() counted_b
 /// unrepresented party notifies the court of an accommodation required
 /// under the Americans with Disabilities Act no later than seven days
 /// before a hearing or trial.
-deadline ada-accommodation-period: 7.days before HearingOrTrial() counted_by cod-6 cite "D.C.COLO.LCivR 83.3"
+deadline ada-accommodation-period: 7.days before HearingOrTrial() counted_by frcp6-colorado cite "D.C.COLO.LCivR 83.3"
 {
   forum frcp
 }
 
 /// D.C.COLO.LCivR 83.3: a request for an American Sign Language
 /// interpreter is made no later than 30 days before the hearing or trial.
-deadline asl-interpreter-period: 30.days before HearingOrTrial() counted_by cod-6 cite "D.C.COLO.LCivR 83.3"
+deadline asl-interpreter-period: 30.days before HearingOrTrial() counted_by frcp6-colorado cite "D.C.COLO.LCivR 83.3"
 {
   forum frcp
 }
@@ -298,7 +253,7 @@ deadline asl-interpreter-period: 30.days before HearingOrTrial() counted_by cod-
 /// motion for withdrawal of the reference, a party may file in the
 /// bankruptcy court a response and a designation of any additional portion
 /// of the record.
-deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by cod-6 cite "D.C.COLO.LCivR 84.1(d)"
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 84.1(d)"
 {
   forum frcp
 }
@@ -307,7 +262,7 @@ deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() coun
 /// mailing of a bankruptcy judge's recommendations in a non-core proceeding
 /// (or such further time, not to exceed 30 days, as the bankruptcy judge
 /// may order) to file written objections.
-deadline bankruptcy-recommendation-objection-period: 14.days after BankruptcyRecommendationsMailed() counted_by cod-6 cite "D.C.COLO.LCivR 84.1(e)"
+deadline bankruptcy-recommendation-objection-period: 14.days after BankruptcyRecommendationsMailed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 84.1(e)"
 {
   forum frcp
 }

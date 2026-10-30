@@ -1,6 +1,7 @@
 module bap10.panel
 
 import core.calendar.{ us-federal-holidays }
+import core.states.colorado.{ colorado-holidays }
 
 import frbp.appeals.{
   appellant-brief-period,
@@ -13,18 +14,9 @@ import frbp.appeals.{
 
 import frbp.events.{ LeaveToAppealGranted, NoticeOfAppealFiled }
 
-/// The Colorado legal holiday not already in 5 U.S.C. § 6103(a): Frances
-/// Cabrini Day, the first Monday in October. Colorado's other Rule 6(a)(2)
-/// holidays coincide with federal holidays. C.R.C.P. 6(a)(2) is vendored in
-/// this package as the 2023 edition; gubernatorial holidays and any other
-/// day the court closes are not modeled (the earlier due date).
-calendar colorado-legal-holidays cite "C.R.C.P. 6(a)(2)"
-{
-  frances-cabrini-day: nth(1, monday, 10) effective [2026-01-01, ..)
-}
-
 /// FRBP 9006(a)(6)(C), as applied by 10th Cir. BAP L.R. 8026-8(b):
-/// Colorado's state holidays close periods measured forward from an event.
+/// Colorado's state holidays (core's `colorado-holidays`) close periods
+/// measured forward from an event.
 /// The BAP clerk's office is in Denver. The states of originating districts
 /// (Kansas, New Mexico, Oklahoma, Utah and Wyoming) are not modeled because
 /// the matter does not identify the originating district.
@@ -46,7 +38,7 @@ counting bap10-9006 effective [2026-01-01, ..) known_at 2026-01-01 cite "10th Ci
     ExpressForeign: unrecognized
   } cite "FRBP 9006(f)"
   holidays us-federal-holidays
-  forward_holidays colorado-legal-holidays cite "FRBP 9006(a)(6)(C)"
+  forward_holidays colorado-holidays cite "FRBP 9006(a)(6)(C)"
   forums [bap10]
   allow_hours
   end_of_month clamp

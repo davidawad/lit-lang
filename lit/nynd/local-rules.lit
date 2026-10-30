@@ -1,6 +1,6 @@
 module nynd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.new-york.{ frcp6-new-york }
 
 // The Northern District of New York's own periods, computed under the
 // federal rules (L.R. 6.1). The motion periods of L.R. 7.1 apply "unless
@@ -132,7 +132,7 @@ event BankruptcyReplyBriefFiled() paper bankruptcy-reply-brief
 /// complaint, which requires service of process on all defendants within
 /// 60 days of the filing; in no event is service completed after the time
 /// FRCP 4 specifies.
-deadline expedited-service-period: 60.days after ComplaintFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 4.1(b)"
+deadline expedited-service-period: 60.days after ComplaintFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 4.1(b)"
 {
   forum frcp
 }
@@ -140,7 +140,7 @@ deadline expedited-service-period: 60.days after ComplaintFiled() counted_by frc
 /// L.R. 4.1(d): a defendant within the United States whose waiver of
 /// service was properly requested has 60 days from the date the request
 /// was sent to answer or move to dismiss.
-deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp6 cite "N.D.N.Y. L.R. 4.1(d)"
+deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 4.1(d)"
 {
   forum frcp
 }
@@ -149,14 +149,14 @@ deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp
 /// notice, the defendant files a demand for a complaint within 14 days of
 /// filing the notice of removal, unless the Court excuses the requirement
 /// or extends the period.
-deadline complaint-demand-period: 14.days after SummonsWithNoticeRemoved() counted_by frcp6 cite "N.D.N.Y. L.R. 5.1(f)"
+deadline complaint-demand-period: 14.days after SummonsWithNoticeRemoved() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 5.1(f)"
 {
   forum frcp
 }
 
 /// L.R. 5.1(f): within 20 days of service of the demand, the plaintiff
 /// serves a complaint.
-deadline removed-complaint-period: 20.days after ComplaintDemandServed() counted_by frcp6 cite "N.D.N.Y. L.R. 5.1(f)"
+deadline removed-complaint-period: 20.days after ComplaintDemandServed() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 5.1(f)"
 {
   forum frcp
 }
@@ -165,7 +165,7 @@ deadline removed-complaint-period: 20.days after ComplaintDemandServed() counted
 /// a dispositive motion are filed and served no more than 21 days after
 /// service of the motion; a party not opposing, or a movant not pursuing,
 /// gives notice within the same 21 days (L.R. 7.1(a)(3)).
-deadline dispositive-opposition-period: 21.days after DispositiveMotionServed() counted_by frcp6 cite "N.D.N.Y. L.R. 7.1(a)"
+deadline dispositive-opposition-period: 21.days after DispositiveMotionServed() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 7.1(a)"
 {
   forum frcp
 }
@@ -173,7 +173,7 @@ deadline dispositive-opposition-period: 21.days after DispositiveMotionServed() 
 /// L.R. 7.1(a)(1): the moving party's reply papers, if any, are filed and
 /// served no more than 7 days after service of the response papers; a
 /// surreply is not permitted.
-deadline dispositive-reply-period: 7.days after DispositiveResponseServed() counted_by frcp6 cite "N.D.N.Y. L.R. 7.1(a)"
+deadline dispositive-reply-period: 7.days after DispositiveResponseServed() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 7.1(a)"
 {
   forum frcp
 }
@@ -181,7 +181,7 @@ deadline dispositive-reply-period: 7.days after DispositiveResponseServed() coun
 /// L.R. 7.1(a)(2): opposition papers to a non-dispositive motion are filed
 /// and served no more than 21 days after service of the motion; a reply
 /// needs the Court's prior permission.
-deadline nondispositive-opposition-period: 21.days after NonDispositiveMotionServed() counted_by frcp6 cite "N.D.N.Y. L.R. 7.1(a)"
+deadline nondispositive-opposition-period: 21.days after NonDispositiveMotionServed() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 7.1(a)"
 {
   forum frcp
 }
@@ -190,7 +190,7 @@ deadline nondispositive-opposition-period: 21.days after NonDispositiveMotionSer
 /// not more than 21 days after service of the original motion; the
 /// original movant's combined reply and opposition is filed and served
 /// not more than 7 days after service of the cross-motion.
-deadline cross-motion-reply-period: 7.days after CrossMotionServed() counted_by frcp6 cite "N.D.N.Y. L.R. 7.1(c)"
+deadline cross-motion-reply-period: 7.days after CrossMotionServed() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 7.1(c)"
 {
   forum frcp
 }
@@ -199,14 +199,14 @@ deadline cross-motion-reply-period: 7.days after CrossMotionServed() counted_by 
 /// 7 days after the principal brief of the party it supports (or, if it
 /// supports neither party, of the moving party) is filed, absent good
 /// cause.
-deadline amicus-period: 7.days after PrincipalBriefFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 7.2(c)"
+deadline amicus-period: 7.days after PrincipalBriefFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 7.2(c)"
 {
   forum frcp
 }
 
 /// L.R. 9.2: a party asserting a RICO claim files a RICO statement within
 /// 30 days of the filing of the pleading containing the claim.
-deadline rico-statement-period: 30.days after RicoPleadingFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 9.2"
+deadline rico-statement-period: 30.days after RicoPleadingFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 9.2"
 {
   forum frcp
 }
@@ -214,14 +214,14 @@ deadline rico-statement-period: 30.days after RicoPleadingFiled() counted_by frc
 /// L.R. 15.1(c): unless the Court orders otherwise, the moving party files
 /// and serves the original signed amended pleading within 14 days of the
 /// order granting leave.
-deadline amended-pleading-period: 14.days after AmendmentGranted() counted_by frcp6 cite "N.D.N.Y. L.R. 15.1(c)"
+deadline amended-pleading-period: 14.days after AmendmentGranted() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 15.1(c)"
 {
   forum frcp
 }
 
 /// L.R. 16.2: motions to compel discovery are filed and served no later
 /// than 14 days after the discovery cut-off.
-deadline motion-to-compel-period: 14.days after DiscoveryCutoff() counted_by frcp6 cite "N.D.N.Y. L.R. 16.2"
+deadline motion-to-compel-period: 14.days after DiscoveryCutoff() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 16.2"
 {
   forum frcp
 }
@@ -230,14 +230,14 @@ deadline motion-to-compel-period: 14.days after DiscoveryCutoff() counted_by frc
 /// settlement (within 90 days in an action involving a municipal
 /// defendant), the parties file a stipulation of dismissal; otherwise the
 /// judge may dismiss by reason of settlement under L.R. 68.1.
-deadline stipulation-of-dismissal-period: 30.days after SettlementNotified() counted_by frcp6 cite "N.D.N.Y. L.R. 41.3"
+deadline stipulation-of-dismissal-period: 30.days after SettlementNotified() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 41.3"
 {
   forum frcp
 }
 
 /// L.R. 41.3: in an action involving a municipal defendant, the
 /// stipulation of dismissal is filed within 90 days of the notification.
-deadline municipal-stipulation-of-dismissal-period: 90.days after SettlementNotified() counted_by frcp6 cite "N.D.N.Y. L.R. 41.3"
+deadline municipal-stipulation-of-dismissal-period: 90.days after SettlementNotified() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 41.3"
 {
   forum frcp
 }
@@ -246,21 +246,21 @@ deadline municipal-stipulation-of-dismissal-period: 90.days after SettlementNoti
 /// costs within 30 days after entry of judgment; post-trial motions do not
 /// extend the time absent good cause or an order, and a late bill waives
 /// the taxable costs.
-deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "N.D.N.Y. L.R. 54.1(a)"
+deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 54.1(a)"
 {
   forum frcp
 }
 
 /// L.R. 54.1(a): an opposing party may file objections to the bill of
 /// costs within 14 days of its filing date.
-deadline cost-objections-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 54.1(a)"
+deadline cost-objections-period: 14.days after BillOfCostsFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 54.1(a)"
 {
   forum frcp
 }
 
 /// L.R. 54.1(a): the prevailing party may reply to the objections within 7
 /// days of their filing.
-deadline cost-reply-period: 7.days after CostObjectionsFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 54.1(a)"
+deadline cost-reply-period: 7.days after CostObjectionsFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 54.1(a)"
 {
   forum frcp
 }
@@ -269,7 +269,7 @@ deadline cost-reply-period: 7.days after CostObjectionsFiled() counted_by frcp6 
 /// 59 and 60) provides otherwise, a motion for reconsideration or
 /// reargument is filed and served no later than 14 days after the entry of
 /// the challenged judgment, order or decree.
-deadline reconsideration-period: 14.days after ChallengedOrderEntered() counted_by frcp6 cite "N.D.N.Y. L.R. 60.1"
+deadline reconsideration-period: 14.days after ChallengedOrderEntered() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 60.1"
 {
   forum frcp
 }
@@ -278,21 +278,21 @@ deadline reconsideration-period: 14.days after ChallengedOrderEntered() counted_
 /// non-dispositive matter, its notice and the appellant's brief, is filed
 /// and served within 14 days after service of the order; there is no
 /// filing fee.
-deadline magistrate-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "N.D.N.Y. L.R. 72.1(b)"
+deadline magistrate-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 72.1(b)"
 {
   forum frcp
 }
 
 /// L.R. 72.1(b): opposition papers are due 14 days after the appellant's
 /// brief is filed.
-deadline magistrate-appeal-opposition-period: 14.days after MagistrateAppealBriefFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 72.1(b)"
+deadline magistrate-appeal-opposition-period: 14.days after MagistrateAppealBriefFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 72.1(b)"
 {
   forum frcp
 }
 
 /// L.R. 72.1(b): the appellant's reply brief is due 7 days after the
 /// appellee's brief is filed.
-deadline magistrate-appeal-reply-period: 7.days after MagistrateAppealOppositionFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 72.1(b)"
+deadline magistrate-appeal-reply-period: 7.days after MagistrateAppealOppositionFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 72.1(b)"
 {
   forum frcp
 }
@@ -300,7 +300,7 @@ deadline magistrate-appeal-reply-period: 7.days after MagistrateAppealOpposition
 /// L.R. 72.1(c): objections to a magistrate judge's report and
 /// recommendation are filed and served within 14 days after service of a
 /// copy of it.
-deadline recommendation-objection-period: 14.days after RecommendationServed() counted_by frcp6 cite "N.D.N.Y. L.R. 72.1(c)"
+deadline recommendation-objection-period: 14.days after RecommendationServed() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 72.1(c)"
 {
   forum frcp
 }
@@ -308,28 +308,28 @@ deadline recommendation-objection-period: 14.days after RecommendationServed() c
 /// L.R. 72.1(c): the opposing party may file and serve its response within
 /// 14 days after service of the objections; the objecting party may not
 /// reply.
-deadline recommendation-response-period: 14.days after ObjectionsServed() counted_by frcp6 cite "N.D.N.Y. L.R. 72.1(c)"
+deadline recommendation-response-period: 14.days after ObjectionsServed() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 72.1(c)"
 {
   forum frcp
 }
 
 /// L.R. 81.2(b): on a bankruptcy appeal, the appellant's brief is due 40
 /// days from the filing of the Court's scheduling notice.
-deadline bankruptcy-appellant-brief-period: 40.days after BankruptcySchedulingNoticeFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 81.2(b)"
+deadline bankruptcy-appellant-brief-period: 40.days after BankruptcySchedulingNoticeFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 81.2(b)"
 {
   forum frcp
 }
 
 /// L.R. 81.2(b): the appellee's brief is due 40 days from the filing of
 /// the appellant's brief.
-deadline bankruptcy-appellee-brief-period: 40.days after BankruptcyAppellantBriefFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 81.2(b)"
+deadline bankruptcy-appellee-brief-period: 40.days after BankruptcyAppellantBriefFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 81.2(b)"
 {
   forum frcp
 }
 
 /// L.R. 81.2(b): the appellant's reply brief is due 20 days from the
 /// filing of the appellee's brief.
-deadline bankruptcy-reply-brief-period: 20.days after BankruptcyAppelleeBriefFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 81.2(b)"
+deadline bankruptcy-reply-brief-period: 20.days after BankruptcyAppelleeBriefFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 81.2(b)"
 {
   forum frcp
 }

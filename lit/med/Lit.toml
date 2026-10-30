@@ -18,7 +18,10 @@ in_force = "2025-04-01"
 known_at = "2026-10-27"
 unknown_before = "2025-04-01"
 jurisdiction = "United States District Court, D. Maine"
-counting = "frcp6"
+# FRCP 6(a)(6)(C): the holidays of Maine close a forward-counted period, here and in
+# the FRCP periods this package recounts (core's `frcp6-maine`).
+counting = "frcp6-maine"
+recounts = ["frcp-civil-procedure"]
 
 [package.roles]
 applicant = "self"

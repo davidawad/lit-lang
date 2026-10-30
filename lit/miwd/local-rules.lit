@@ -1,6 +1,6 @@
 module miwd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.michigan.{ frcp6-michigan }
 
 // The Western District of Michigan's own civil periods and limits, computed
 // under FRCP 6(a), which governs a period stated in a local rule. Rules that
@@ -115,61 +115,61 @@ event MagistrateReportObjectionsServed() paper dispositive-brief
 /// LCivR 7.2(c): unless otherwise ordered, a party opposing a dispositive
 /// motion files its responsive brief within 28 days after service of the
 /// motion.
-deadline dispositive-response-period: 28.days after DispositiveMotionServed() counted_by frcp6 cite "W.D. Mich. LCivR 7.2(c)"
+deadline dispositive-response-period: 28.days after DispositiveMotionServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 7.2(c)"
 /// LCivR 7.2(c): the moving party may file a reply brief within 14 days
 /// after service of the response.
-deadline dispositive-reply-period: 14.days after DispositiveResponseServed() counted_by frcp6 cite "W.D. Mich. LCivR 7.2(c)"
+deadline dispositive-reply-period: 14.days after DispositiveResponseServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 7.2(c)"
 /// LCivR 7.3(c): unless otherwise ordered, a party opposing a
 /// nondispositive motion files its responsive brief within 14 days of
 /// service of the motion; reply briefs need leave of court.
-deadline nondispositive-response-period: 14.days after NondispositiveMotionServed() counted_by frcp6 cite "W.D. Mich. LCivR 7.3(c)"
+deadline nondispositive-response-period: 14.days after NondispositiveMotionServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 7.3(c)"
 /// LCivR 5.7(e)(viii): a non-filing signatory or party who disputes the
 /// authenticity of a signature on an electronically filed document files
 /// an objection within 14 days after service of the document.
-deadline signature-objection-period: 14.days after SignedDocumentServed() counted_by frcp6 cite "W.D. Mich. LCivR 5.7(e)"
+deadline signature-objection-period: 14.days after SignedDocumentServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 5.7(e)"
 /// LCivR 8.3: in a Social Security case the defendant has 60 days after
 /// notification of the commencement of the action to file and serve the
 /// certified administrative record, which is its answer, or to move
 /// against the complaint.
-deadline social-security-answer-period: 60.days after SocialSecurityCommencementNoticed() counted_by frcp6 cite "W.D. Mich. LCivR 8.3"
+deadline social-security-answer-period: 60.days after SocialSecurityCommencementNoticed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 8.3"
 /// LCivR 8.4(b): the Commissioner files and serves its brief within 30
 /// days after service of the plaintiff's brief.
-deadline social-security-commissioner-brief-period: 30.days after SocialSecurityPlaintiffBriefServed() counted_by frcp6 cite "W.D. Mich. LCivR 8.4(b)"
+deadline social-security-commissioner-brief-period: 30.days after SocialSecurityPlaintiffBriefServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 8.4(b)"
 /// LCivR 8.4(c): the plaintiff may file and serve a reply brief within 14
 /// days after service of the Commissioner's brief.
-deadline social-security-reply-period: 14.days after SocialSecurityCommissionerBriefServed() counted_by frcp6 cite "W.D. Mich. LCivR 8.4(c)"
+deadline social-security-reply-period: 14.days after SocialSecurityCommissionerBriefServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 8.4(c)"
 /// LCivR 45.1: unless otherwise ordered, a subpoena to be served by the
 /// United States Marshals Service allows a minimum of 14 days before the
 /// required appearance.
-deadline marshal-subpoena-period: 14.days before SubpoenaAppearance() counted_by frcp6 cite "W.D. Mich. LCivR 45.1"
+deadline marshal-subpoena-period: 14.days before SubpoenaAppearance() counted_by frcp6-michigan cite "W.D. Mich. LCivR 45.1"
 /// LCivR 54.1: if the parties cannot agree on costs, a bill of costs is
 /// filed with the clerk within 28 days from the entry of judgment.
-deadline bill-of-costs-period: 28.days after JudgmentEntered() counted_by frcp6 cite "W.D. Mich. LCivR 54.1"
+deadline bill-of-costs-period: 28.days after JudgmentEntered() counted_by frcp6-michigan cite "W.D. Mich. LCivR 54.1"
 /// LCivR 54.1: a party objecting to the taxation of costs files a motion
 /// to disallow within 14 days of service of the bill of costs on it.
-deadline costs-disallowance-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "W.D. Mich. LCivR 54.1"
+deadline costs-disallowance-period: 14.days after BillOfCostsServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 54.1"
 /// LCivR 54.2(b)(i): the attorney files a motion for approval of fees
 /// under 42 U.S.C. § 406(b)(1)(A) or § 1383(d)(2)(A) no later than 35 days
 /// after the date shown on the face of the notice of award.
-deadline social-security-fee-motion-period: 35.days after NoticeOfAward() counted_by frcp6 cite "W.D. Mich. LCivR 54.2(b)"
+deadline social-security-fee-motion-period: 35.days after NoticeOfAward() counted_by frcp6-michigan cite "W.D. Mich. LCivR 54.2(b)"
 /// LCivR 54.2(b)(iv): any response by the client or defendant is filed
 /// within 21 days after the fee motion is served; replies need leave.
-deadline social-security-fee-response-period: 21.days after SocialSecurityFeeMotionServed() counted_by frcp6 cite "W.D. Mich. LCivR 54.2(b)"
+deadline social-security-fee-response-period: 21.days after SocialSecurityFeeMotionServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 54.2(b)"
 /// LCivR 72.3(a): a party may appeal a magistrate judge's order
 /// determining a motion or matter within 14 days after service of the
 /// order, unless the magistrate judge or district judge prescribes a
 /// different time.
-deadline magistrate-order-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "W.D. Mich. LCivR 72.3(a)"
+deadline magistrate-order-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 72.3(a)"
 /// LCivR 72.3(a): any party may respond to another party's objections
 /// within 14 days of service.
-deadline magistrate-order-response-period: 14.days after MagistrateOrderObjectionsServed() counted_by frcp6 cite "W.D. Mich. LCivR 72.3(a)"
+deadline magistrate-order-response-period: 14.days after MagistrateOrderObjectionsServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 72.3(a)"
 /// LCivR 72.3(b): a party may object to a magistrate judge's proposed
 /// findings, recommendations or report within 14 days after being served
 /// with it, unless a different time is prescribed.
-deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "W.D. Mich. LCivR 72.3(b)"
+deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 72.3(b)"
 /// LCivR 72.3(b): any party may respond to another party's objections
 /// within 14 days after being served with them.
-deadline magistrate-report-response-period: 14.days after MagistrateReportObjectionsServed() counted_by frcp6 cite "W.D. Mich. LCivR 72.3(b)"
+deadline magistrate-report-response-period: 14.days after MagistrateReportObjectionsServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 72.3(b)"
 
 test "dispositive response: 28 days after service of the motion" cite "W.D. Mich. LCivR 7.2(c)"
 {

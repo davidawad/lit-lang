@@ -1,0 +1,44 @@
+module core.states.oregon
+
+import core.calendar.{ us-federal-holidays }
+
+/// The legal holidays of Oregon (ORS 187.010(1)) add no day
+/// `us-federal-holidays` does not already close: each enumerated day is a
+/// federal holiday on the same day, observed as § 6103(b)(1) observes it
+/// (ORS 187.010(2)), and every Sunday is closed by `weekend`. The calendar
+/// is declared, empty, so the District of Oregon's bankruptcy count (core's
+/// `frbp9006-oregon`) names the state whose FRBP 9006(a)(6)(C) days it
+/// reads. Not modeled: the days the Governor appoints (ORS 187.020), which
+/// no vendored source lists.
+calendar oregon-holidays cite "ORS 187.010(1)"
+{}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Oregon:
+/// `oregon-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-oregon effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays oregon-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-or]
+  allow_hours
+  end_of_month clamp
+}

@@ -1,7 +1,7 @@
 module txwd-local-rules.local-rules
 
 import core.authority.{ CaseOrder }
-import core.frcp6.{ frcp6 }
+import core.states.texas.{ frcp6-texas }
 
 // The Western District of Texas's own civil periods and limits, counted
 // under FRCP 6 (the court's own computing-time rule, CV-6, is deleted).
@@ -95,7 +95,7 @@ event TrialSetting()
 /// complete and executed Civil Cover Sheet completes and executes it not
 /// later than 7 days after the clerk informs it; otherwise the clerk
 /// advises the court. Unrepresented and confined filers are exempt.
-deadline cover-sheet-period: 7.days after CoverSheetDeficiencyNoticed() counted_by frcp6 cite "W.D. Tex. Local Rule CV-3(a)"
+deadline cover-sheet-period: 7.days after CoverSheetDeficiencyNoticed() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-3(a)"
 {
   forum frcp
 }
@@ -104,7 +104,7 @@ deadline cover-sheet-period: 7.days after CoverSheetDeficiencyNoticed() counted_
 /// management motion is filed not later than 7 days after the filing of
 /// the motion; without a timely response the court may grant the motion
 /// as unopposed.
-deadline discovery-response-period: 7.days after DiscoveryMotionFiled() counted_by frcp6 delegable {
+deadline discovery-response-period: 7.days after DiscoveryMotionFiled() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CV-7(d)"
@@ -115,7 +115,7 @@ deadline discovery-response-period: 7.days after DiscoveryMotionFiled() counted_
 /// W.D. Tex. Local Rule CV-7(d)(2): a response to any other motion is
 /// filed not later than 14 days after the filing of the motion, except as
 /// Rule CV-15 provides.
-deadline response-period: 14.days after MotionFiled() counted_by frcp6 delegable {
+deadline response-period: 14.days after MotionFiled() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CV-7(d)"
@@ -127,7 +127,7 @@ deadline response-period: 14.days after MotionFiled() counted_by frcp6 delegable
 /// not later than 7 days after the filing of the response; absent leave,
 /// no further submissions are allowed, and the court need not wait for the
 /// reply.
-deadline reply-period: 7.days after ResponseFiled() counted_by frcp6 delegable {
+deadline reply-period: 7.days after ResponseFiled() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CV-7(e)"
@@ -139,7 +139,7 @@ deadline reply-period: 7.days after ResponseFiled() counted_by frcp6 delegable {
 /// a party may respond to a first FRCP 12(b) motion by filing an amended
 /// pleading as a matter of course not later than 21 days after the filing
 /// of the motion.
-deadline amendment-as-of-course-period: 21.days after FirstRule12bMotionFiled() counted_by frcp6 cite "W.D. Tex. Local Rule CV-15(a)"
+deadline amendment-as-of-course-period: 21.days after FirstRule12bMotionFiled() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-15(a)"
 {
   forum frcp
 }
@@ -148,7 +148,7 @@ deadline amendment-as-of-course-period: 21.days after FirstRule12bMotionFiled() 
 /// appearance of any defendant, the parties, having first conferred under
 /// FRCP 26(f), submit a proposed scheduling order; the court sets the
 /// dates in its discretion.
-deadline proposed-scheduling-order-period: 60.days after DefendantAppeared() counted_by frcp6 delegable {
+deadline proposed-scheduling-order-period: 60.days after DefendantAppeared() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CV-16(c)"
@@ -160,7 +160,7 @@ deadline proposed-scheduling-order-period: 60.days after DefendantAppeared() cou
 /// motion relating to discovery is filed after the discovery deadline
 /// unless it is filed within 14 days after the deadline and pertains to
 /// conduct during the final 7 days of discovery.
-deadline late-discovery-motion-period: 14.days after DiscoveryDeadline() counted_by frcp6 cite "W.D. Tex. Local Rule CV-16(e)"
+deadline late-discovery-motion-period: 14.days after DiscoveryDeadline() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-16(e)"
 {
   forum frcp
 }
@@ -171,7 +171,7 @@ deadline late-discovery-motion-period: 14.days after DiscoveryDeadline() counted
 /// instructions or findings, motions in limine and trial estimate at least
 /// 14 days before the first of the scheduled dates for trial, jury
 /// selection, docket call or the final pretrial conference.
-deadline pretrial-disclosure-period: 14.days before FirstTrialSetting() counted_by frcp6 delegable {
+deadline pretrial-disclosure-period: 14.days before FirstTrialSetting() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CV-16(f)"
@@ -184,7 +184,7 @@ deadline pretrial-disclosure-period: 14.days before FirstTrialSetting() counted_
 /// exhibits and its responses to motions in limine; exhibit objections not
 /// disclosed, other than under Federal Rules of Evidence 402 and 403, are
 /// waived unless excused for good cause.
-deadline pretrial-objection-period: 7.days before FirstTrialSetting() counted_by frcp6 cite "W.D. Tex. Local Rule CV-16(g)"
+deadline pretrial-objection-period: 7.days before FirstTrialSetting() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-16(g)"
 {
   forum frcp
 }
@@ -194,7 +194,7 @@ deadline pretrial-objection-period: 7.days before FirstTrialSetting() counted_by
 /// document's authenticity within the time the court orders or Rule CV-16
 /// specifies, and otherwise within 14 days; without a timely objection,
 /// production authenticates the document for use against it.
-deadline authenticity-objection-period: 14.days after ProducedDocumentUseNoticed() counted_by frcp6 delegable {
+deadline authenticity-objection-period: 14.days after ProducedDocumentUseNoticed() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CV-26(d)"
@@ -205,7 +205,7 @@ deadline authenticity-objection-period: 14.days after ProducedDocumentUseNoticed
 /// W.D. Tex. Local Rule CV-33(a): properly executed interrogatory answers
 /// are served not later than 21 days after the attorney serves the
 /// unexecuted answers; the court may extend the time.
-deadline executed-answers-period: 21.days after UnexecutedAnswersServed() counted_by frcp6 delegable {
+deadline executed-answers-period: 21.days after UnexecutedAnswersServed() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CV-33(a)"
@@ -216,7 +216,7 @@ deadline executed-answers-period: 21.days after UnexecutedAnswersServed() counte
 /// W.D. Tex. Local Rule CV-54(a)(1): a party awarded costs files and serves
 /// a proposed bill of costs on Form AO 133 not later than 14 days after the
 /// entry of judgment.
-deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 delegable {
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CV-54(a)"
@@ -227,7 +227,7 @@ deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 
 /// W.D. Tex. Local Rule CV-54(a)(2): a party opposing the proposed bill of
 /// costs notifies the requesting party not later than 7 days after it is
 /// filed, and the parties confer.
-deadline bill-of-costs-opposition-period: 7.days after ProposedBillOfCostsFiled() counted_by frcp6 cite "W.D. Tex. Local Rule CV-54(a)"
+deadline bill-of-costs-opposition-period: 7.days after ProposedBillOfCostsFiled() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-54(a)"
 {
   forum frcp
 }
@@ -235,7 +235,7 @@ deadline bill-of-costs-opposition-period: 7.days after ProposedBillOfCostsFiled(
 /// W.D. Tex. Local Rule CV-54(a)(3): if a dispute remains, the joint or
 /// requesting party's motion on the bill of costs is filed not later than
 /// 21 days after the filing of the proposed bill.
-deadline bill-of-costs-motion-period: 21.days after ProposedBillOfCostsFiled() counted_by frcp6 cite "W.D. Tex. Local Rule CV-54(a)"
+deadline bill-of-costs-motion-period: 21.days after ProposedBillOfCostsFiled() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-54(a)"
 {
   forum frcp
 }
@@ -243,7 +243,7 @@ deadline bill-of-costs-motion-period: 21.days after ProposedBillOfCostsFiled() c
 /// W.D. Tex. Local Rule CV-54(a)(5): a party dissatisfied with the clerk's
 /// action may move for review not later than 7 days after the clerk has
 /// taxed costs.
-deadline cost-review-motion-period: 7.days after CostsTaxed() counted_by frcp6 cite "W.D. Tex. Local Rule CV-54(a)"
+deadline cost-review-motion-period: 7.days after CostsTaxed() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-54(a)"
 {
   forum frcp
 }
@@ -252,7 +252,7 @@ deadline cost-review-motion-period: 7.days after CostsTaxed() counted_by frcp6 c
 /// deposition removes it from the clerk's office within 60 days after the
 /// final disposition of the case, including appeal; one remaining longer
 /// may be destroyed or otherwise disposed of by the clerk.
-deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcp6 cite "W.D. Tex. Local Rule CV-79(a)"
+deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-79(a)"
 {
   forum frcp
 }
@@ -261,7 +261,7 @@ deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcp6 cite
 /// the parties agree on an ADR method, provider, compensation and
 /// completion date, and the ADR proceeding is completed not later than 60
 /// days before the date of the trial setting.
-deadline adr-completion-period: 60.days before TrialSetting() counted_by frcp6 delegable {
+deadline adr-completion-period: 60.days before TrialSetting() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CV-88(a)"

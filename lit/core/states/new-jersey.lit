@@ -1,0 +1,140 @@
+module core.states.new-jersey
+
+import core.calendar.{ us-federal-holidays }
+
+/// The legal holidays of New Jersey (N.J.S.A. 36:1-1(a), (c)) that
+/// `us-federal-holidays` does not already close: Good Friday, Juneteenth
+/// Day on the third Friday in June (the federal day is June 19) and the
+/// general election day, held in New Jersey every year on the Tuesday after
+/// the first Monday in November (N.J.S.A. 19:2-3, not vendored). FRCP
+/// 6(a)(6)(C) and FRBP 9006(a)(6)(C) make them legal holidays of the
+/// District of New Jersey for a period counted forward only (core's
+/// `frcp6-new-jersey` and `frbp9006-new-jersey`). The other § 36:1-1(a) days
+/// are federal holidays too, observed on the same days (36:1-1(b) moves a
+/// Sunday holiday to Monday, 36:1-1.2 a Saturday one to the Friday before);
+/// Saturdays (36:1-1.1) are closed by `weekend`.
+///
+/// Each day is closed from the date the vendored text is dated (the
+/// Legislature's bulk file of October 29, 2026) to the end of 2050. Not
+/// modeled: Lincoln's Birthday (February 12), which 36:1-1(d) takes out of
+/// State government business, so the courts of the State are open on it (a
+/// last day on it stays the earlier date); and the days of fasting, prayer
+/// or bank holidays the Governor or the President appoints, which no
+/// vendored source lists.
+calendar new-jersey-holidays cite "N.J.S.A. 36:1-1"
+{
+  // 36:1-1(a): Good Friday.
+  good-friday-2027: once(2027-03-26) effective [2026-10-29, ..)
+  good-friday-2028: once(2028-04-14) effective [2026-10-29, ..)
+  good-friday-2029: once(2029-03-30) effective [2026-10-29, ..)
+  good-friday-2030: once(2030-04-19) effective [2026-10-29, ..)
+  good-friday-2031: once(2031-04-11) effective [2026-10-29, ..)
+  good-friday-2032: once(2032-03-26) effective [2026-10-29, ..)
+  good-friday-2033: once(2033-04-15) effective [2026-10-29, ..)
+  good-friday-2034: once(2034-04-07) effective [2026-10-29, ..)
+  good-friday-2035: once(2035-03-23) effective [2026-10-29, ..)
+  good-friday-2036: once(2036-04-11) effective [2026-10-29, ..)
+  good-friday-2037: once(2037-04-03) effective [2026-10-29, ..)
+  good-friday-2038: once(2038-04-23) effective [2026-10-29, ..)
+  good-friday-2039: once(2039-04-08) effective [2026-10-29, ..)
+  good-friday-2040: once(2040-03-30) effective [2026-10-29, ..)
+  good-friday-2041: once(2041-04-19) effective [2026-10-29, ..)
+  good-friday-2042: once(2042-04-04) effective [2026-10-29, ..)
+  good-friday-2043: once(2043-03-27) effective [2026-10-29, ..)
+  good-friday-2044: once(2044-04-15) effective [2026-10-29, ..)
+  good-friday-2045: once(2045-04-07) effective [2026-10-29, ..)
+  good-friday-2046: once(2046-03-23) effective [2026-10-29, ..)
+  good-friday-2047: once(2047-04-12) effective [2026-10-29, ..)
+  good-friday-2048: once(2048-04-03) effective [2026-10-29, ..)
+  good-friday-2049: once(2049-04-16) effective [2026-10-29, ..)
+  good-friday-2050: once(2050-04-08) effective [2026-10-29, ..)
+  // 36:1-1(a): the third Friday in June, Juneteenth Day (2020, c.76).
+  juneteenth-day: nth(3, friday, 6) effective [2026-10-29, ..)
+  // 36:1-1(a): any general election day in this State.
+  general-election-day-2026: once(2026-11-03) effective [2026-10-29, ..)
+  general-election-day-2027: once(2027-11-02) effective [2026-10-29, ..)
+  general-election-day-2028: once(2028-11-07) effective [2026-10-29, ..)
+  general-election-day-2029: once(2029-11-06) effective [2026-10-29, ..)
+  general-election-day-2030: once(2030-11-05) effective [2026-10-29, ..)
+  general-election-day-2031: once(2031-11-04) effective [2026-10-29, ..)
+  general-election-day-2032: once(2032-11-02) effective [2026-10-29, ..)
+  general-election-day-2033: once(2033-11-08) effective [2026-10-29, ..)
+  general-election-day-2034: once(2034-11-07) effective [2026-10-29, ..)
+  general-election-day-2035: once(2035-11-06) effective [2026-10-29, ..)
+  general-election-day-2036: once(2036-11-04) effective [2026-10-29, ..)
+  general-election-day-2037: once(2037-11-03) effective [2026-10-29, ..)
+  general-election-day-2038: once(2038-11-02) effective [2026-10-29, ..)
+  general-election-day-2039: once(2039-11-08) effective [2026-10-29, ..)
+  general-election-day-2040: once(2040-11-06) effective [2026-10-29, ..)
+  general-election-day-2041: once(2041-11-05) effective [2026-10-29, ..)
+  general-election-day-2042: once(2042-11-04) effective [2026-10-29, ..)
+  general-election-day-2043: once(2043-11-03) effective [2026-10-29, ..)
+  general-election-day-2044: once(2044-11-08) effective [2026-10-29, ..)
+  general-election-day-2045: once(2045-11-07) effective [2026-10-29, ..)
+  general-election-day-2046: once(2046-11-06) effective [2026-10-29, ..)
+  general-election-day-2047: once(2047-11-05) effective [2026-10-29, ..)
+  general-election-day-2048: once(2048-11-03) effective [2026-10-29, ..)
+  general-election-day-2049: once(2049-11-02) effective [2026-10-29, ..)
+  general-election-day-2050: once(2050-11-08) effective [2026-10-29, ..)
+}
+
+/// FRCP 6 in the district courts of New Jersey: the 2023 text
+/// (`frcp6@2023-12-01`) with `new-jersey-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-new-jersey effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays new-jersey-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of New Jersey:
+/// `new-jersey-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-new-jersey effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays new-jersey-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-nj]
+  allow_hours
+  end_of_month clamp
+}

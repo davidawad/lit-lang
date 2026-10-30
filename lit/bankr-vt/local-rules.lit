@@ -1,6 +1,6 @@
 module bankr-vt-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.states.vermont.{ frbp9006-vermont }
 import frbp.events.{ OrderForReliefEntered, PetitionFiled }
 
 // The Bankr. D. Vt. court's own periods, counted under FRBP 9006(a). The
@@ -148,192 +148,192 @@ event RemovalNoticeFiled()
 /// LBR 1007-1(k): in an involuntary chapter 11 case, the debtor's business
 /// affidavit is filed within 14 days after the order for relief, unless the
 /// court orders otherwise.
-deadline involuntary-chapter11-affidavit-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "Vt. LBR 1007-1(k)"
+deadline involuntary-chapter11-affidavit-period: 14.days after OrderForReliefEntered() counted_by frbp9006-vermont cite "Vt. LBR 1007-1(k)"
 /// LBR 1007-1(l): the United States Trustee has 7 days to object to the
 /// debtor's application to waive or enlarge those requirements.
-deadline waiver-objection-period: 7.days after WaiverApplicationFiled() counted_by frbp9006 cite "Vt. LBR 1007-1(l)"
+deadline waiver-objection-period: 7.days after WaiverApplicationFiled() counted_by frbp9006-vermont cite "Vt. LBR 1007-1(l)"
 /// LBR 1015-1(b)(2): within 7 days of the order of joint administration,
 /// the party who obtained it files a consolidated master mailing list.
-deadline joint-administration-matrix-period: 7.days after JointAdministrationOrdered() counted_by frbp9006 cite "Vt. LBR 1015-1(b)"
+deadline joint-administration-matrix-period: 7.days after JointAdministrationOrdered() counted_by frbp9006-vermont cite "Vt. LBR 1015-1(b)"
 /// LBR 1015-1(c)(2): within 7 days of the order of substantive
 /// consolidation, likewise.
-deadline consolidation-matrix-period: 7.days after SubstantiveConsolidationOrdered() counted_by frbp9006 cite "Vt. LBR 1015-1(c)"
+deadline consolidation-matrix-period: 7.days after SubstantiveConsolidationOrdered() counted_by frbp9006-vermont cite "Vt. LBR 1015-1(c)"
 /// LBR 1015-1(d)(1)(B): in a chapter 12 or 13 case, a motion to terminate
 /// substantive consolidation is filed no later than 60 days after the last
 /// date for filing a proof of claim.
-deadline consolidation-termination-period: 60.days after ClaimsBarDate() counted_by frbp9006 cite "Vt. LBR 1015-1(d)"
+deadline consolidation-termination-period: 60.days after ClaimsBarDate() counted_by frbp9006-vermont cite "Vt. LBR 1015-1(d)"
 /// LBR 1015-1(d)(1)(B): a creditor who files a proof of claim has 60 days
 /// after the claim is timely filed to move to terminate the consolidation.
-deadline creditor-consolidation-termination-period: 60.days after ClaimTimelyFiled() counted_by frbp9006 cite "Vt. LBR 1015-1(d)"
+deadline creditor-consolidation-termination-period: 60.days after ClaimTimelyFiled() counted_by frbp9006-vermont cite "Vt. LBR 1015-1(d)"
 /// LBR 1017-1(a): a party to an adversary proceeding dismissed with the case
 /// may move to reinstate it within 30 days of the order dismissing the
 /// case.
-deadline adversary-reinstatement-period: 30.days after CaseDismissed() counted_by frbp9006 cite "Vt. LBR 1017-1(a)"
+deadline adversary-reinstatement-period: 30.days after CaseDismissed() counted_by frbp9006-vermont cite "Vt. LBR 1017-1(a)"
 /// LBR 1019-1(a): when a chapter 13 case is converted to chapter 7, the
 /// chapter 13 trustee files and transmits a final report and account not
 /// later than 60 days after conversion (FRBP 1019(b)(2)(B) states 30 days
 /// unless the court orders otherwise; the local rule states 60).
-deadline conversion-final-report-period: 60.days after Chapter13ConvertedToChapter7() counted_by frbp9006 cite "Vt. LBR 1019-1(a)"
+deadline conversion-final-report-period: 60.days after Chapter13ConvertedToChapter7() counted_by frbp9006-vermont cite "Vt. LBR 1019-1(a)"
 /// LBR 1019-1(c): an objection to the trustee's notice of proposed refund or
 /// disbursement is filed within 7 days.
-deadline refund-objection-period: 7.days after RefundNoticeServed() counted_by frbp9006 cite "Vt. LBR 1019-1(c)"
+deadline refund-objection-period: 7.days after RefundNoticeServed() counted_by frbp9006-vermont cite "Vt. LBR 1019-1(c)"
 /// LBR 2015-1(a): a chapter 12 debtor shows good cause to waive or modify
 /// the monthly operating reports within 21 days of the petition or
 /// conversion order.
-deadline chapter12-operating-report-waiver-period: 21.days after PetitionFiled() counted_by frbp9006 cite "Vt. LBR 2015-1(a)"
+deadline chapter12-operating-report-waiver-period: 21.days after PetitionFiled() counted_by frbp9006-vermont cite "Vt. LBR 2015-1(a)"
 /// LBR 2015-2(a): a chapter 13 business debtor, likewise within 21 days of
 /// the petition or conversion order.
-deadline chapter13-operating-report-waiver-period: 21.days after PetitionFiled() counted_by frbp9006 cite "Vt. LBR 2015-2(a)"
+deadline chapter13-operating-report-waiver-period: 21.days after PetitionFiled() counted_by frbp9006-vermont cite "Vt. LBR 2015-2(a)"
 /// LBR 2016-1(h)(4): an attorney retained through Legal Services Vermont
 /// files an application to limit the scope of services within 21 days of
 /// the petition.
-deadline limited-scope-application-period: 21.days after PetitionFiled() counted_by frbp9006 cite "Vt. LBR 2016-1(h)"
+deadline limited-scope-application-period: 21.days after PetitionFiled() counted_by frbp9006-vermont cite "Vt. LBR 2016-1(h)"
 /// LBR 2090-1(b)(1): a pro hac vice applicant files notice of a change in
 /// the facts underlying its statements within 14 days of the change.
-deadline admission-change-notice-period: 14.days after AdmissionFactChanged() counted_by frbp9006 cite "Vt. LBR 2090-1(b)"
+deadline admission-change-notice-period: 14.days after AdmissionFactChanged() counted_by frbp9006-vermont cite "Vt. LBR 2090-1(b)"
 /// LBR 3002.1-2(b)(1): within 14 days of the order overruling an objection
 /// to a payment change, the debtor moves to modify the plan to cure any
 /// post-petition default.
-deadline payment-change-modification-period: 14.days after PaymentChangeObjectionOverruled() counted_by frbp9006 cite "Vt. LBR 3002.1-2(b)"
+deadline payment-change-modification-period: 14.days after PaymentChangeObjectionOverruled() counted_by frbp9006-vermont cite "Vt. LBR 3002.1-2(b)"
 /// LBR 3007-1(c): objections to claims in a subchapter V case are filed and
 /// served no later than 30 days after the claims bar date, unless the court
 /// orders otherwise.
-deadline subchapter5-claim-objection-period: 30.days after ClaimsBarDate() counted_by frbp9006 cite "Vt. LBR 3007-1(c)"
+deadline subchapter5-claim-objection-period: 30.days after ClaimsBarDate() counted_by frbp9006-vermont cite "Vt. LBR 3007-1(c)"
 /// LBR 3014-1: in a subchapter V case, a class of secured creditors may
 /// make the § 1111(b) election not later than 30 days after the plan is
 /// filed, or another date the court orders (the date FRBP 3014(a)(2) leaves
 /// to the court).
-deadline subchapter5-1111b-election-period: 30.days after SubchapterVPlanFiled() counted_by frbp9006 cite "Vt. LBR 3014-1"
+deadline subchapter5-1111b-election-period: 30.days after SubchapterVPlanFiled() counted_by frbp9006-vermont cite "Vt. LBR 3014-1"
 /// LBR 3015-1(i): the debtor may file an amended plan with its supporting
 /// schedules no later than 7 days before the confirmation hearing.
-deadline amended-plan-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frbp9006 cite "Vt. LBR 3015-1(i)"
+deadline amended-plan-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 3015-1(i)"
 /// LBR 3015-6(c)(1): in a Conduit Mortgage Payment case, the debtor files a
 /// wage withholding authorization within 14 days of the filing date, unless
 /// waived.
-deadline wage-withholding-period: 14.days after PetitionFiled() counted_by frbp9006 cite "Vt. LBR 3015-6(c)"
+deadline wage-withholding-period: 14.days after PetitionFiled() counted_by frbp9006-vermont cite "Vt. LBR 3015-6(c)"
 /// LBR 3015-6(d)(1): the trustee disburses payments to the Mortgage
 /// Creditor within 30 days of its proof of claim.
-deadline conduit-disbursement-period: 30.days after MortgageProofOfClaimFiled() counted_by frbp9006 cite "Vt. LBR 3015-6(d)"
+deadline conduit-disbursement-period: 30.days after MortgageProofOfClaimFiled() counted_by frbp9006-vermont cite "Vt. LBR 3015-6(d)"
 /// LBR 3015-6(d)(5): the trustee files and serves a notice of delinquency
 /// within 14 days of the debtor's first plan payment default.
-deadline delinquency-notice-period: 14.days after PlanPaymentDefault() counted_by frbp9006 cite "Vt. LBR 3015-6(d)"
+deadline delinquency-notice-period: 14.days after PlanPaymentDefault() counted_by frbp9006-vermont cite "Vt. LBR 3015-6(d)"
 /// LBR 3015-6(d)(6): the trustee moves to dismiss if the debtor does not
 /// cure the default or move to modify the plan within 30 days of the
 /// notice.
-deadline delinquency-cure-period: 30.days after DelinquencyNoticeServed() counted_by frbp9006 cite "Vt. LBR 3015-6(d)"
+deadline delinquency-cure-period: 30.days after DelinquencyNoticeServed() counted_by frbp9006-vermont cite "Vt. LBR 3015-6(d)"
 /// LBR 3015-7(b): a motion or stipulation to postpone an initial
 /// confirmation hearing is filed at least 7 days before it.
-deadline confirmation-postponement-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frbp9006 cite "Vt. LBR 3015-7(b)"
+deadline confirmation-postponement-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 3015-7(b)"
 /// LBR 3020-1(b): a cram down motion under § 1129(b) or § 1191 is heard at
 /// confirmation if a request for hearing is filed and served at least 14
 /// days before.
-deadline cramdown-request-period: 14.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006 cite "Vt. LBR 3020-1(b)"
+deadline cramdown-request-period: 14.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 3020-1(b)"
 /// LBR 3022-1(b): the plan proponent files the report of substantial
 /// consummation within 180 days after the final order confirming the plan,
 /// unless the court enlarges the time within that period.
-deadline substantial-consummation-period: 180.days after PlanConfirmed() counted_by frbp9006 cite "Vt. LBR 3022-1(b)"
+deadline substantial-consummation-period: 180.days after PlanConfirmed() counted_by frbp9006-vermont cite "Vt. LBR 3022-1(b)"
 /// LBR 4001-1(i): unless the order or stipulation provides otherwise, the
 /// debtor has 7 days to rebut an affidavit of default under conditional
 /// relief from stay.
-deadline default-affidavit-rebuttal-period: 7.days after DefaultAffidavitFiled() counted_by frbp9006 cite "Vt. LBR 4001-1(i)"
+deadline default-affidavit-rebuttal-period: 7.days after DefaultAffidavitFiled() counted_by frbp9006-vermont cite "Vt. LBR 4001-1(i)"
 /// LBR 4001-2(a)(3): a debtor cures a deficiency in the Official Form 101A
 /// filing or rent payment within 7 days of the petition date.
-deadline rent-deficiency-cure-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Vt. LBR 4001-2(a)"
+deadline rent-deficiency-cure-period: 7.days after PetitionFiled() counted_by frbp9006-vermont cite "Vt. LBR 4001-2(a)"
 /// LBR 4001-2(b)(2): the lessor may consent or object within 7 days after
 /// service of the notice; silence is a waiver.
-deadline lessor-response-period: 7.days after LessorNoticeServed() counted_by frbp9006 cite "Vt. LBR 4001-2(b)"
+deadline lessor-response-period: 7.days after LessorNoticeServed() counted_by frbp9006-vermont cite "Vt. LBR 4001-2(b)"
 /// LBR 4001-3(a): a party seeking to continue the stay under § 362(c)(3)
 /// files the motion within 14 days of the petition.
-deadline stay-continuation-motion-period: 14.days after PetitionFiled() counted_by frbp9006 cite "Vt. LBR 4001-3(a)"
+deadline stay-continuation-motion-period: 14.days after PetitionFiled() counted_by frbp9006-vermont cite "Vt. LBR 4001-3(a)"
 /// LBR 4001-7(d)(1)(A): the parties may stipulate to a mediator within 7
 /// days of the creditor's participation in the case.
-deadline mediator-selection-period: 7.days after CreditorParticipation() counted_by frbp9006 cite "Vt. LBR 4001-7(d)"
+deadline mediator-selection-period: 7.days after CreditorParticipation() counted_by frbp9006-vermont cite "Vt. LBR 4001-7(d)"
 /// LBR 4001-7(d)(2)(C): mortgage mediation is complete within 120 days of
 /// the mediator's appointment, or the parties file a status report.
-deadline mediation-completion-period: 120.days after MediatorAppointed() counted_by frbp9006 cite "Vt. LBR 4001-7(d)"
+deadline mediation-completion-period: 120.days after MediatorAppointed() counted_by frbp9006-vermont cite "Vt. LBR 4001-7(d)"
 /// LBR 4001-7(d)(3)(B): a debtor who believes a modification was denied in
 /// bad faith may move to compel further mediation within 14 days of notice
 /// of the denial.
-deadline further-mediation-motion-period: 14.days after ModificationDenialNoticed() counted_by frbp9006 cite "Vt. LBR 4001-7(d)"
+deadline further-mediation-motion-period: 14.days after ModificationDenialNoticed() counted_by frbp9006-vermont cite "Vt. LBR 4001-7(d)"
 /// LBR 4001-7(f)(1): within 14 days of the final report of mediation, the
 /// moving party files the required motion or report.
-deadline post-mediation-filing-period: 14.days after MediationFinalReportFiled() counted_by frbp9006 cite "Vt. LBR 4001-7(f)"
+deadline post-mediation-filing-period: 14.days after MediationFinalReportFiled() counted_by frbp9006-vermont cite "Vt. LBR 4001-7(f)"
 /// LBR 4002-1(c)(2): in a chapter 7 case, the debtor provides the trustee
 /// the listed documents at least 7 days before the first scheduled meeting
 /// of creditors.
-deadline chapter7-meeting-documents-period: 7.days before FirstMeetingScheduled() counted_by frbp9006 cite "Vt. LBR 4002-1(c)"
+deadline chapter7-meeting-documents-period: 7.days before FirstMeetingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 4002-1(c)"
 /// LBR 4002-1(c)(3): in a chapter 13 case, likewise.
-deadline chapter13-meeting-documents-period: 7.days before FirstMeetingScheduled() counted_by frbp9006 cite "Vt. LBR 4002-1(c)"
+deadline chapter13-meeting-documents-period: 7.days before FirstMeetingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 4002-1(c)"
 /// LBR 4002-1(c)(6): an individual chapter 11 debtor provides the United
 /// States Trustee the same documents at least 7 days before the first
 /// scheduled meeting.
-deadline chapter11-meeting-documents-period: 7.days before FirstMeetingScheduled() counted_by frbp9006 cite "Vt. LBR 4002-1(c)"
+deadline chapter11-meeting-documents-period: 7.days before FirstMeetingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 4002-1(c)"
 /// LBR 4002-2(a)(3): a creditor's request for the debtor's tax return is
 /// filed and served no fewer than 14 days before the meeting of creditors.
-deadline tax-return-request-period: 14.days before FirstMeetingScheduled() counted_by frbp9006 cite "Vt. LBR 4002-2(a)"
+deadline tax-return-request-period: 14.days before FirstMeetingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 4002-2(a)"
 /// LBR 4002-2(b)(2): the debtor may object to the request at least 7 days
 /// before the meeting of creditors.
-deadline tax-return-request-objection-period: 7.days before FirstMeetingScheduled() counted_by frbp9006 cite "Vt. LBR 4002-2(b)"
+deadline tax-return-request-objection-period: 7.days before FirstMeetingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 4002-2(b)"
 /// LBR 4070-1: within 7 days of a request, the debtor presents proof of
 /// insurance to a creditor secured by a lien on the property.
-deadline insurance-proof-period: 7.days after InsuranceProofRequested() counted_by frbp9006 cite "Vt. LBR 4070-1"
+deadline insurance-proof-period: 7.days after InsuranceProofRequested() counted_by frbp9006-vermont cite "Vt. LBR 4070-1"
 /// LBR 6004-1(a)(3): a hearing to approve a proposed sale procedure is set
 /// at least 7 days before the proposed sale.
-deadline sale-procedure-hearing-period: 7.days before ProposedSaleDate() counted_by frbp9006 cite "Vt. LBR 6004-1(a)"
+deadline sale-procedure-hearing-period: 7.days before ProposedSaleDate() counted_by frbp9006-vermont cite "Vt. LBR 6004-1(a)"
 /// LBR 6004-1(a)(3): the movant sets a hearing to approve the sale within 7
 /// days of its completion.
-deadline sale-approval-hearing-period: 7.days after SaleCompleted() counted_by frbp9006 cite "Vt. LBR 6004-1(a)"
+deadline sale-approval-hearing-period: 7.days after SaleCompleted() counted_by frbp9006-vermont cite "Vt. LBR 6004-1(a)"
 /// LBR 6005-1(c): no later than 21 days after the sale, the auctioneer
 /// turns over or deposits the proceeds.
-deadline auction-proceeds-period: 21.days after AuctionDate() counted_by frbp9006 cite "Vt. LBR 6005-1(c)"
+deadline auction-proceeds-period: 21.days after AuctionDate() counted_by frbp9006-vermont cite "Vt. LBR 6005-1(c)"
 /// LBR 6005-1(d): the auctioneer files and serves its report within 90 days
 /// after the conclusion of the sale.
-deadline auction-report-period: 90.days after AuctionConcluded() counted_by frbp9006 cite "Vt. LBR 6005-1(d)"
+deadline auction-report-period: 90.days after AuctionConcluded() counted_by frbp9006-vermont cite "Vt. LBR 6005-1(d)"
 /// LBR 7016-1(d): the parties file a joint pre-trial statement at least 7
 /// days before trial.
-deadline pretrial-statement-period: 7.days before TrialScheduled() counted_by frbp9006 cite "Vt. LBR 7016-1(d)"
+deadline pretrial-statement-period: 7.days before TrialScheduled() counted_by frbp9006-vermont cite "Vt. LBR 7016-1(d)"
 /// LBR 7026-1(d): an FRBP 7037 objection to discovery is filed within 28
 /// days after service of the objectionable request, unless the court orders
 /// otherwise.
-deadline discovery-objection-period: 28.days after DiscoveryServed() counted_by frbp9006 cite "Vt. LBR 7026-1(d)"
+deadline discovery-objection-period: 28.days after DiscoveryServed() counted_by frbp9006-vermont cite "Vt. LBR 7026-1(d)"
 /// LBR 7026-1(g): responses to discovery motions are filed within 14 days
 /// after service.
-deadline discovery-motion-response-period: 14.days after DiscoveryMotionServed() counted_by frbp9006 cite "Vt. LBR 7026-1(g)"
+deadline discovery-motion-response-period: 14.days after DiscoveryMotionServed() counted_by frbp9006-vermont cite "Vt. LBR 7026-1(g)"
 /// LBR 7026-1(h): a party complies with a discovery ruling within 14 days,
 /// unless the order provides otherwise.
-deadline discovery-order-compliance-period: 14.days after DiscoveryOrderEntered() counted_by frbp9006 cite "Vt. LBR 7026-1(h)"
+deadline discovery-order-compliance-period: 14.days after DiscoveryOrderEntered() counted_by frbp9006-vermont cite "Vt. LBR 7026-1(h)"
 /// LBR 7056-1(a)(2): a party opposing summary judgment files its response
 /// no more than 21 days after the motion is served.
-deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006 cite "Vt. LBR 7056-1(a)"
+deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006-vermont cite "Vt. LBR 7056-1(a)"
 /// LBR 7056-1(a)(5): the movant may reply within 7 days of the response.
-deadline summary-judgment-reply-period: 7.days after SummaryJudgmentResponseFiled() counted_by frbp9006 cite "Vt. LBR 7056-1(a)"
+deadline summary-judgment-reply-period: 7.days after SummaryJudgmentResponseFiled() counted_by frbp9006-vermont cite "Vt. LBR 7056-1(a)"
 /// LBR 9013-2(c)(4): unless a longer period is required, a movant serves
 /// notice of the motion at least 14 days before the hearing.
-deadline motion-notice-period: 14.days before HearingScheduled() counted_by frbp9006 cite "Vt. LBR 9013-2(c)"
+deadline motion-notice-period: 14.days before HearingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 9013-2(c)"
 /// LBR 9013-4(c)(2): the response deadline on a motion set under the default
 /// procedure is no later than 7 days before the hearing.
-deadline default-response-period: 7.days before HearingScheduled() counted_by frbp9006 cite "Vt. LBR 9013-4(c)"
+deadline default-response-period: 7.days before HearingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 9013-4(c)"
 /// LBR 9013-5(b): a memorandum of law opposing a motion is filed within 14
 /// days after service of the motion, unless another time applies.
-deadline opposition-memorandum-period: 14.days after MotionServed() counted_by frbp9006 cite "Vt. LBR 9013-5(b)"
+deadline opposition-memorandum-period: 14.days after MotionServed() counted_by frbp9006-vermont cite "Vt. LBR 9013-5(b)"
 /// LBR 9013-5(b): a reply is filed within 7 days after service of the
 /// opposing memorandum (this period and the next; the earlier controls).
-deadline reply-memorandum-period: 7.days after OppositionMemorandumServed() counted_by frbp9006 cite "Vt. LBR 9013-5(b)"
+deadline reply-memorandum-period: 7.days after OppositionMemorandumServed() counted_by frbp9006-vermont cite "Vt. LBR 9013-5(b)"
 /// LBR 9013-5(b): and at least 3 days before the hearing.
-deadline reply-memorandum-hearing-period: 3.days before HearingScheduled() counted_by frbp9006 cite "Vt. LBR 9013-5(b)"
+deadline reply-memorandum-hearing-period: 3.days before HearingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 9013-5(b)"
 /// LBR 9014-1(a)(1): for a court-designated evidentiary hearing, each party
 /// files and serves its witness list at least 14 days before the hearing.
-deadline witness-list-period: 14.days before HearingScheduled() counted_by frbp9006 cite "Vt. LBR 9014-1(a)"
+deadline witness-list-period: 14.days before HearingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 9014-1(a)"
 /// LBR 9014-1(a)(2): a party requesting an evidentiary hearing files and
 /// serves the notice of evidentiary hearing at least 7 days before it.
-deadline evidentiary-hearing-notice-period: 7.days before HearingScheduled() counted_by frbp9006 cite "Vt. LBR 9014-1(a)"
+deadline evidentiary-hearing-notice-period: 7.days before HearingScheduled() counted_by frbp9006-vermont cite "Vt. LBR 9014-1(a)"
 /// LBR 9023-1: a response to a motion to reconsider, if any, is filed within
 /// 7 days of service of the motion.
-deadline reconsideration-response-period: 7.days after ReconsiderationMotionServed() counted_by frbp9006 cite "Vt. LBR 9023-1"
+deadline reconsideration-response-period: 7.days after ReconsiderationMotionServed() counted_by frbp9006-vermont cite "Vt. LBR 9023-1"
 /// LBR 9027-1(b): the removing party obtains and files certified copies of
 /// the records of the court from which the case was removed within 14 days
 /// after filing the notice of removal.
-deadline removal-records-period: 14.days after RemovalNoticeFiled() counted_by frbp9006 cite "Vt. LBR 9027-1(b)"
+deadline removal-records-period: 14.days after RemovalNoticeFiled() counted_by frbp9006-vermont cite "Vt. LBR 9027-1(b)"
 
 start motion-filed
 

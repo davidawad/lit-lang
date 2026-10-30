@@ -1,6 +1,6 @@
 module ncwd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.north-carolina.{ frcp6-north-carolina }
 
 // The Western District of North Carolina's own civil periods and limits,
 // computed under FRCP 6(a), which governs a period stated in a local rule.
@@ -72,7 +72,7 @@ event CostsTaxed()
 /// LCvR 4.3(b): the NCDPS has sixty days from the filing of a request for
 /// waiver of service to accept or refuse service on its current or former
 /// employee.
-deadline ncdps-waiver-response-period: 60.days after NcdpsWaiverRequestFiled() counted_by frcp6 cite "W.D.N.C. LCvR 4.3(b)"
+deadline ncdps-waiver-response-period: 60.days after NcdpsWaiverRequestFiled() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 4.3(b)"
 {
   forum frcp
 }
@@ -80,21 +80,21 @@ deadline ncdps-waiver-response-period: 60.days after NcdpsWaiverRequestFiled() c
 /// LCvR 4.3(c)(1): a defendant whose waiver of service has been filed has
 /// sixty days from the date the waiver is filed to answer or otherwise
 /// respond to the complaint.
-deadline ncdps-answer-period: 60.days after NcdpsWaiverFiled() counted_by frcp6 cite "W.D.N.C. LCvR 4.3(c)"
+deadline ncdps-answer-period: 60.days after NcdpsWaiverFiled() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 4.3(c)"
 {
   forum frcp
 }
 
 /// LCvR 7.1(e): responses to motions are filed within fourteen days of the
 /// date on which the motion is served.
-deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "W.D.N.C. LCvR 7.1(e)"
+deadline response-period: 14.days after MotionServed() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 7.1(e)"
 {
   forum frcp
 }
 
 /// LCvR 7.1(e): a reply, if any, is filed within seven days of the date on
 /// which the response is served, limited to matters newly raised in it.
-deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "W.D.N.C. LCvR 7.1(e)"
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 7.1(e)"
 {
   forum frcp
 }
@@ -102,7 +102,7 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "W.D.
 /// LCvR 7.2(g): the plaintiff may file one reply brief fourteen calendar
 /// days after the Commissioner submits its brief, limited to issues raised
 /// for the first time in it.
-deadline social-security-reply-period: 14.days after CommissionerBriefSubmitted() counted_by frcp6 cite "W.D.N.C. LCvR 7.2(g)"
+deadline social-security-reply-period: 14.days after CommissionerBriefSubmitted() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 7.2(g)"
 {
   forum frcp
 }
@@ -111,14 +111,14 @@ deadline social-security-reply-period: 14.days after CommissionerBriefSubmitted(
 /// the parties confer under FRCP 26(f) and conduct the Initial Attorney's
 /// Conference; the period is tolled during a pro se litigant's opt-in
 /// period (LCvR 16.4).
-deadline initial-attorneys-conference-period: 14.days after IssuesJoined() counted_by frcp6 cite "W.D.N.C. LCvR 16.1(a)"
+deadline initial-attorneys-conference-period: 14.days after IssuesJoined() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 16.1(a)"
 {
   forum frcp
 }
 
 /// LCvR 16.1(b): within seven days of the Initial Attorney's Conference the
 /// parties file its Certificate, with a proposed discovery plan.
-deadline iac-certificate-period: 7.days after InitialAttorneysConference() counted_by frcp6 cite "W.D.N.C. LCvR 16.1(b)"
+deadline iac-certificate-period: 7.days after InitialAttorneysConference() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 16.1(b)"
 {
   forum frcp
 }
@@ -127,14 +127,14 @@ deadline iac-certificate-period: 7.days after InitialAttorneysConference() count
 /// jurisdiction is filed with the Certificate of Initial Attorney's
 /// Conference or within seven days of the Court's ruling on a motion to
 /// stay.
-deadline consent-stipulation-period: 7.days after StayMotionRuled() counted_by frcp6 cite "W.D.N.C. LCvR 16.1(c)"
+deadline consent-stipulation-period: 7.days after StayMotionRuled() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 16.1(c)"
 {
   forum frcp
 }
 
 /// LCvR 16.4: a pro se litigant has fourteen days from receipt of the
 /// Opt-In Notice to opt into the Pro Se Settlement Assistance Program.
-deadline pro-se-opt-in-period: 14.days after OptInNoticeReceived() counted_by frcp6 cite "W.D.N.C. LCvR 16.4"
+deadline pro-se-opt-in-period: 14.days after OptInNoticeReceived() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 16.4"
 {
   forum frcp
 }
@@ -143,7 +143,7 @@ deadline pro-se-opt-in-period: 14.days after OptInNoticeReceived() counted_by fr
 /// served on all other parties at least three calendar days before the
 /// subpoena is served on the non-party, unless the parties agree or the
 /// Court orders otherwise.
-deadline subpoena-notice-period: 3.days before NonPartySubpoenaServed() counted_by frcp6 cite "W.D.N.C. LCvR 45.2"
+deadline subpoena-notice-period: 3.days before NonPartySubpoenaServed() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 45.2"
 {
   forum frcp
 }
@@ -152,7 +152,7 @@ deadline subpoena-notice-period: 3.days before NonPartySubpoenaServed() counted_
 /// thirty days after the time for appeal of a final judgment expires or the
 /// Clerk of Court receives the mandate or other order terminating the
 /// action on appeal; failure to file in time waives costs.
-deadline bill-of-costs-period: 30.days after CostsPeriodTriggered() counted_by frcp6 cite "W.D.N.C. LCvR 54.1(a)"
+deadline bill-of-costs-period: 30.days after CostsPeriodTriggered() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 54.1(a)"
 {
   forum frcp
 }
@@ -160,21 +160,21 @@ deadline bill-of-costs-period: 30.days after CostsPeriodTriggered() counted_by f
 /// LCvR 54.1(d): an adverse party may file an objection with a supporting
 /// brief within fourteen days after the electronic filing of the bill of
 /// costs.
-deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "W.D.N.C. LCvR 54.1(d)"
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 54.1(d)"
 {
   forum frcp
 }
 
 /// LCvR 54.1(d): within seven days after the objection, the prevailing
 /// party may file a response with brief.
-deadline costs-response-period: 7.days after CostsObjectionFiled() counted_by frcp6 cite "W.D.N.C. LCvR 54.1(d)"
+deadline costs-response-period: 7.days after CostsObjectionFiled() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 54.1(d)"
 {
   forum frcp
 }
 
 /// LCvR 54.1(e): a party may request review of the Clerk of Court's ruling
 /// by motion within seven days after entry of the Clerk of Court's order.
-deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "W.D.N.C. LCvR 54.1(e)"
+deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 54.1(e)"
 {
   forum frcp
 }

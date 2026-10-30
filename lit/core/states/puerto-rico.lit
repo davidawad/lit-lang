@@ -1,0 +1,84 @@
+module core.states.puerto-rico
+
+import core.calendar.{ us-federal-holidays }
+
+/// The holidays of Puerto Rico that `us-federal-holidays` does not already
+/// close and the vendored laws fix: Three Kings Day, January 6 (Ley Núm. 3 de
+/// 1931, 1 L.P.R.A. § 74), and the Abolition of Slavery Day (March 22),
+/// Constitution Day (July 25) and Puertorriqueñidad Day (November 19) of Ley
+/// Núm. 88 de 1969 § 1 (1 L.P.R.A. § 84). FRCP 81(d)(1) reads "State" to
+/// include Puerto Rico, so FRCP 6(a)(6)(C) and FRBP 9006(a)(6)(C) make them
+/// legal holidays of the District of Puerto Rico for a period counted forward
+/// only. Neither law moves a weekend holiday. Closed from the date of the
+/// vendored compilations (OGP revision of April 15, 2024). Not modeled: the
+/// holidays other laws fix (Good Friday among them), which are not vendored,
+/// and a day the Governor's annual proclamation moves to the nearest Monday or
+/// Friday (§ 84), so a last day on one is the earlier date.
+calendar puerto-rico-holidays cite "1 L.P.R.A. § 84"
+{
+  three-kings-day: fixed(1, 6) effective [2024-04-15, ..)
+  abolition-of-slavery-day: fixed(3, 22) effective [2024-04-15, ..)
+  constitution-day: fixed(7, 25) effective [2024-04-15, ..)
+  puertorriquenidad-day: fixed(11, 19) effective [2024-04-15, ..)
+}
+
+/// FRCP 6 in the district courts of Puerto Rico: the 2023 text
+/// (`frcp6@2023-12-01`) with `puerto-rico-holidays` (FRCP 81(d)(1) reads "State" to include it), which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-puerto-rico effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays puerto-rico-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Puerto Rico:
+/// `puerto-rico-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-puerto-rico effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays puerto-rico-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-pr]
+  allow_hours
+  end_of_month clamp
+}

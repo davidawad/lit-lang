@@ -1,6 +1,6 @@
 module bankr-iln-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.states.illinois.{ frbp9006-illinois }
 import frbp.events.{ PetitionFiled }
 
 // The Bankr. N.D. Ill. court's own periods, counted under FRBP 9006(a).
@@ -94,92 +94,92 @@ event OmnibusPresentment()
 /// in installments requires the debtor to pay fifty percent of the fee no
 /// later than 60 days after the petition date, in no more than four
 /// installments.
-deadline installment-first-half-period: 60.days after PetitionFiled() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 1006-1(D)"
+deadline installment-first-half-period: 60.days after PetitionFiled() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 1006-1(D)"
 /// LBR 1019-1: when one debtor in a joint case converts and the clerk divides
 /// the case, each debtor files all necessary amendments to the schedules and
 /// statement of financial affairs within 14 days after the division.
-deadline divided-case-amendments-period: 14.days after JointCaseDivided() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 1019-1"
+deadline divided-case-amendments-period: 14.days after JointCaseDivided() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 1019-1"
 /// LBR 3018-1(2): unless the court orders otherwise, the plan proponent files
 /// a ballot report on the court's form at least three days before the chapter
 /// 11 confirmation hearing; ballots are filed with the clerk (LBR 3018-1(1)).
-deadline ballot-report-period: 3.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 3018-1"
+deadline ballot-report-period: 3.days before ConfirmationHearing() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 3018-1"
 /// LBR 5005-1(E)(5): an unrepresented debtor's want of acceptable photo
 /// identification is cured within 14 days of the clerk's notice of
 /// deficiency, or the clerk moves to dismiss the case.
-deadline identity-deficiency-cure-period: 14.days after IdentityDeficiencyNoticed() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 5005-1(E)"
+deadline identity-deficiency-cure-period: 14.days after IdentityDeficiencyNoticed() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 5005-1(E)"
 /// LBR 7041-1(A), (B): no proceeding to deny or revoke a discharge is
 /// dismissed except on motion with 21 days' notice to the debtor, the United
 /// States Trustee, any trustee, all creditors and parties in interest; a
 /// party who would prosecute it seeks leave when the motion is presented. The
 /// court may shorten the notice for cause (LBR 7041-1(D)).
-deadline discharge-dismissal-notice-period: 21.days before DischargeDismissalPresentment() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 7041-1(A)"
+deadline discharge-dismissal-notice-period: 21.days before DischargeDismissalPresentment() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 7041-1(A)"
 /// LBR 7054-1(A): the prevailing party may file and serve a bill of costs
 /// within thirty days of the entry of a judgment allowing costs; otherwise
 /// costs under 28 U.S.C. § 1920, other than the clerk's, are waived. A motion
 /// filed before the time expires may extend it.
-deadline bill-of-costs-period: 30.days after CostsJudgmentEntered() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 7054-1(A)"
+deadline bill-of-costs-period: 30.days after CostsJudgmentEntered() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 7054-1(A)"
 /// LBR 9013-1(D): the notice of motion (Local Form G-3) is served at least 7
 /// days before the date of presentment; the motion is filed no later than the
 /// date it is served (LBR 9013-1(A)(2)).
-deadline motion-notice-period: 7.days before Presentment() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9013-1(D)"
+deadline motion-notice-period: 7.days before Presentment() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9013-1(D)"
 /// LBR 9013-1(E): a motion is presented no more than 30 days after it is
 /// filed, unless applicable law requires a longer notice period.
-deadline motion-presentment-period: 30.days after MotionFiled() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9013-1(E)"
+deadline motion-presentment-period: 30.days after MotionFiled() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9013-1(E)"
 /// LBR 9013-1(E): if applicable law requires a notice period longer than 30
 /// days, the date of presentment is no later than 7 days after the notice
 /// period expires.
-deadline long-notice-presentment-period: 7.days after NoticePeriodExpired() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9013-1(E)"
+deadline long-notice-presentment-period: 7.days after NoticePeriodExpired() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9013-1(E)"
 /// LBR 9013-1(K): if the court enters an order changing the proposed order in
 /// a way that affects a pro se party, the movant serves the pro se party a
 /// copy within three days of its entry and files a proof of service.
-deadline modified-order-service-period: 3.days after ModifiedOrderEntered() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9013-1(K)"
+deadline modified-order-service-period: 3.days after ModifiedOrderEntered() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9013-1(K)"
 /// LBR 9027-1: a party removing a claim or cause of action from a state court
 /// under 28 U.S.C. § 1452(a) files a complete copy of the state court record
 /// no later than 21 days after the notice of removal is filed.
-deadline removed-record-period: 21.days after RemovalNoticed() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9027-1"
+deadline removed-record-period: 21.days after RemovalNoticed() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9027-1"
 /// LBR 9029-4B(B)(4), (7): within 28 days after service of a statement of
 /// charges, the charged attorney submits to the chief judge an answer showing
 /// cause why the attorney should not be disciplined; unanswered allegations
 /// are admitted (LBR 9029-4B(B)(8)).
-deadline disciplinary-answer-period: 28.days after ChargesServed() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9029-4B(B)"
+deadline disciplinary-answer-period: 28.days after ChargesServed() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9029-4B(B)"
 /// LBR 9029-4B(B)(9), (E)(5): the United States Trustee appointed to
 /// investigate a complaint of misconduct or a petition for reinstatement may
 /// decline and notifies the chief judge of that decision within 30 days.
-deadline trustee-discipline-declination-period: 30.days after TrusteeDisciplineAppointed() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9029-4B(B)"
+deadline trustee-discipline-declination-period: 30.days after TrusteeDisciplineAppointed() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9029-4B(B)"
 /// LBR 9029-4C(B)(3), (4): a party the court has been asked to declare a
 /// restricted filer has the right to respond in writing within 30 days of the
 /// chief judge's notice.
-deadline restricted-filer-response-period: 30.days after RestrictionResponseNoticed() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9029-4C(B)"
+deadline restricted-filer-response-period: 30.days after RestrictionResponseNoticed() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9029-4C(B)"
 /// LBR 9070-1(B): exhibits deposited with the clerk are removed by the party
 /// responsible for them within ninety days after all appeals have been
 /// completed.
-deadline exhibit-removal-period: 90.days after AppealsCompleted() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9070-1(B)"
+deadline exhibit-removal-period: 90.days after AppealsCompleted() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9070-1(B)"
 /// LBR 9070-1(B): exhibits still not removed thirty days after the clerk's
 /// notice may be sold or disposed of as the court orders.
-deadline exhibit-removal-notice-period: 30.days after ExhibitRemovalNoticed() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9070-1(B)"
+deadline exhibit-removal-notice-period: 30.days after ExhibitRemovalNoticed() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9070-1(B)"
 /// LBR 9090-1(B)(2): a chapter 11 debtor whose case is not a Complex Chapter
 /// 11 Case by its size may file a Notice of Designation as a Complex Chapter
 /// 11 Case within 30 days of the petition date, explaining why the
 /// designation is warranted.
-deadline complex-designation-period: 30.days after PetitionFiled() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9090-1(B)"
+deadline complex-designation-period: 30.days after PetitionFiled() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9090-1(B)"
 /// LBR 9090-1(C): no later than 14 days after a Notice of Designation as a
 /// Complex Chapter 11 Case is filed, a party in interest may file an
 /// objection, noticed for presentment as a motion.
-deadline complex-designation-objection-period: 14.days after ComplexDesignationFiled() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9090-1(C)"
+deadline complex-designation-objection-period: 14.days after ComplexDesignationFiled() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9090-1(C)"
 /// LBR 9090-3(D)(1), (2): in a Complex Chapter 11 Case the notice of motion
 /// is filed and served at least 14 days before the omnibus hearing of
 /// presentment, unless the motion asks for shortened notice for cause;
 /// otherwise the motion is continued to the next omnibus hearing.
-deadline omnibus-notice-period: 14.days before OmnibusPresentment() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9090-3(D)"
+deadline omnibus-notice-period: 14.days before OmnibusPresentment() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9090-3(D)"
 /// LBR 9090-3(E)(1)(a): if a motion is noticed for presentment 21 days or
 /// more before the omnibus hearing, an opposing party may file a response no
 /// later than 7 days before it.
-deadline omnibus-response-period: 7.days before OmnibusPresentment() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9090-3(E)"
+deadline omnibus-response-period: 7.days before OmnibusPresentment() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9090-3(E)"
 /// LBR 9090-3(E)(1)(b): if a motion is noticed for presentment fewer than 21
 /// days before the omnibus hearing, an opposing party may file a response no
 /// later than 3 days before it; absent a response the movant may file a
 /// certification of no objection (LBR 9090-3(E)(2)).
-deadline omnibus-short-response-period: 3.days before OmnibusPresentment() counted_by frbp9006 cite "Bankr. N.D. Ill. LBR 9090-3(E)"
+deadline omnibus-short-response-period: 3.days before OmnibusPresentment() counted_by frbp9006-illinois cite "Bankr. N.D. Ill. LBR 9090-3(E)"
 
 start motion-noticed
 

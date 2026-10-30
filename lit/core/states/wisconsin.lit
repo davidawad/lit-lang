@@ -1,0 +1,103 @@
+module core.states.wisconsin
+
+import core.calendar.{ us-federal-holidays }
+
+/// The legal holidays of Wisconsin (Wis. Stat. § 995.20) that
+/// `us-federal-holidays` does not already close: the days of the partisan
+/// primary (the second Tuesday in August of an even year) and of the general
+/// election in November (the Tuesday after the first Monday of November of an
+/// even year), from Wis. Stat. § 5.02, which is not vendored. The section's
+/// other days are federal holidays observed no later. Each `once` day is listed
+/// from the date of the vendored edition (in effect October 1, 2026) to the end
+/// of 2050. Not modeled: Good Friday, of which only 11 a.m. to 3 p.m. is
+/// observed for worship, and the municipal-election holidays of a 1st class
+/// city, which are local (a last day on one is the earlier date).
+calendar wisconsin-holidays cite "Wis. Stat. § 995.20"
+{
+  partisan-primary-2028: once(2028-08-08) effective [2026-10-01, ..)
+  partisan-primary-2030: once(2030-08-13) effective [2026-10-01, ..)
+  partisan-primary-2032: once(2032-08-10) effective [2026-10-01, ..)
+  partisan-primary-2034: once(2034-08-08) effective [2026-10-01, ..)
+  partisan-primary-2036: once(2036-08-12) effective [2026-10-01, ..)
+  partisan-primary-2038: once(2038-08-10) effective [2026-10-01, ..)
+  partisan-primary-2040: once(2040-08-14) effective [2026-10-01, ..)
+  partisan-primary-2042: once(2042-08-12) effective [2026-10-01, ..)
+  partisan-primary-2044: once(2044-08-09) effective [2026-10-01, ..)
+  partisan-primary-2046: once(2046-08-14) effective [2026-10-01, ..)
+  partisan-primary-2048: once(2048-08-11) effective [2026-10-01, ..)
+  partisan-primary-2050: once(2050-08-09) effective [2026-10-01, ..)
+  general-election-2026: once(2026-11-03) effective [2026-10-01, ..)
+  general-election-2028: once(2028-11-07) effective [2026-10-01, ..)
+  general-election-2030: once(2030-11-05) effective [2026-10-01, ..)
+  general-election-2032: once(2032-11-02) effective [2026-10-01, ..)
+  general-election-2034: once(2034-11-07) effective [2026-10-01, ..)
+  general-election-2036: once(2036-11-04) effective [2026-10-01, ..)
+  general-election-2038: once(2038-11-02) effective [2026-10-01, ..)
+  general-election-2040: once(2040-11-06) effective [2026-10-01, ..)
+  general-election-2042: once(2042-11-04) effective [2026-10-01, ..)
+  general-election-2044: once(2044-11-08) effective [2026-10-01, ..)
+  general-election-2046: once(2046-11-06) effective [2026-10-01, ..)
+  general-election-2048: once(2048-11-03) effective [2026-10-01, ..)
+  general-election-2050: once(2050-11-08) effective [2026-10-01, ..)
+}
+
+/// FRCP 6 in the district courts of Wisconsin: the 2023 text
+/// (`frcp6@2023-12-01`) with `wisconsin-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-wisconsin effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays wisconsin-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Wisconsin:
+/// `wisconsin-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-wisconsin effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays wisconsin-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-wie, bankr-wiw]
+  allow_hours
+  end_of_month clamp
+}

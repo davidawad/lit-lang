@@ -1,0 +1,90 @@
+module core.states.guam
+
+import core.calendar.{ us-federal-holidays }
+
+/// The holidays of Guam (1 GCA § 1000(a)) that `us-federal-holidays` does not
+/// already close: Guam History and CHamoru Heritage Day, the first Monday in
+/// March; Liberation Day, July 21; All Souls' Day, November 2; and Our Lady
+/// of Camarin Day, December 8. § 1000(b) observes a Saturday or Sunday
+/// holiday as the Federal government does, the Friday before or the Monday
+/// after (5 U.S.C. § 6103(b)(1)). FRCP 6(a)(6)(C) and FRBP 9006(a)(6)(C)
+/// make them legal holidays of the District of Guam for a period counted
+/// forward only (core's `frcp6-guam` and `frbp9006-guam`). The other
+/// § 1000(a) days are federal holidays on the same days; Saturdays (§ 1002)
+/// are closed by `weekend`.
+///
+/// Each day is closed from the date the vendored text is dated (the
+/// Compiler of Laws' version of April 23, 2026). Not modeled: the
+/// non-permanent holidays I Maga'hågan Guåhan declares by Executive Order
+/// (§ 1000(c)), which no vendored source lists; a special or limited holiday
+/// keeps the courts open (§ 1003(b)).
+calendar guam-holidays cite "1 GCA § 1000(a)"
+{
+  // (a)(3): the first Monday in March.
+  guam-history-and-chamoru-heritage-day: nth(1, monday, 3) effective [2026-04-23, ..)
+  // (a)(6), (8), (11), each observed under (b).
+  liberation-day: fixed(7, 21) effective [2026-04-23, ..) observed nearest_weekday
+  all-souls-day: fixed(11, 2) effective [2026-04-23, ..) observed nearest_weekday
+  our-lady-of-camarin-day: fixed(12, 8) effective [2026-04-23, ..) observed nearest_weekday
+}
+
+/// FRCP 6 in the district courts of Guam: the 2023 text
+/// (`frcp6@2023-12-01`) with `guam-holidays` (FRCP 81(d)(1) reads "State" to include it), which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-guam effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays guam-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Guam:
+/// `guam-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-guam effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays guam-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-gu]
+  allow_hours
+  end_of_month clamp
+}

@@ -1,6 +1,6 @@
 module insd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.indiana.{ frcp6-indiana }
 
 // The Southern District of Indiana's own periods, computed under the
 // federal rules (FRCP 6(a) governs "any local rule"). The court may extend
@@ -150,7 +150,7 @@ event RecruitedFeeAgreementExecuted()
 /// S.D. Ind. L.R. 5-10(e): a party submits a copy of a faxed document that
 /// otherwise complies with the rule to replace the faxed copy within seven
 /// days after faxing it.
-deadline fax-replacement-period: 7.days after DocumentFaxed() counted_by frcp6 cite "S.D. Ind. L.R. 5-10(e)"
+deadline fax-replacement-period: 7.days after DocumentFaxed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 5-10(e)"
 {
   forum frcp
 }
@@ -159,7 +159,7 @@ deadline fax-replacement-period: 7.days after DocumentFaxed() counted_by frcp6 c
 /// service of the Motion to Maintain Document(s) under Seal, files a
 /// Statement Authorizing Unsealing, or a Brief in Support with a redacted
 /// public version; the court may rule summarily if it does not.
-deadline seal-designation-period: 14.days after SealMotionServed() counted_by frcp6 cite "S.D. Ind. L.R. 5-11(d)"
+deadline seal-designation-period: 14.days after SealMotionServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 5-11(d)"
 {
   forum frcp
 }
@@ -167,7 +167,7 @@ deadline seal-designation-period: 14.days after SealMotionServed() counted_by fr
 /// S.D. Ind. L.R. 5-11(f): any opposition to a Motion to Maintain
 /// Document(s) Under Seal is filed within 14 days of service of the Brief
 /// in Support; a member of the public may challenge a sealing at any time.
-deadline seal-opposition-period: 14.days after SealBriefServed() counted_by frcp6 cite "S.D. Ind. L.R. 5-11(f)"
+deadline seal-opposition-period: 14.days after SealBriefServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 5-11(f)"
 {
   forum frcp
 }
@@ -177,21 +177,21 @@ deadline seal-opposition-period: 14.days after SealBriefServed() counted_by frcp
 /// 56 days from the date of the court's scheduling order to file a brief in
 /// support of the complaint. Motions for extension are disfavored absent
 /// compelling circumstances.
-deadline social-security-opening-brief-period: 56.days after SocialSecuritySchedulingOrderEntered() counted_by frcp6 cite "S.D. Ind. L.R. 5-12(b)"
+deadline social-security-opening-brief-period: 56.days after SocialSecuritySchedulingOrderEntered() counted_by frcp6-indiana cite "S.D. Ind. L.R. 5-12(b)"
 {
   forum frcp
 }
 
 /// S.D. Ind. L.R. 5-12(b): the defendant has 56 days after service of the
 /// plaintiff's brief to file a response.
-deadline social-security-response-period: 56.days after SocialSecurityOpeningBriefServed() counted_by frcp6 cite "S.D. Ind. L.R. 5-12(b)"
+deadline social-security-response-period: 56.days after SocialSecurityOpeningBriefServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 5-12(b)"
 {
   forum frcp
 }
 
 /// S.D. Ind. L.R. 5-12(b): the plaintiff has 28 days after service of the
 /// response brief to file a reply.
-deadline social-security-reply-period: 28.days after SocialSecurityResponseServed() counted_by frcp6 cite "S.D. Ind. L.R. 5-12(b)"
+deadline social-security-reply-period: 28.days after SocialSecurityResponseServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 5-12(b)"
 {
   forum frcp
 }
@@ -202,7 +202,7 @@ deadline social-security-reply-period: 28.days after SocialSecurityResponseServe
 /// statute into question, whichever occurs later. The period below is the
 /// 21-day branch; a later case management plan tender moves the deadline
 /// to that day.
-deadline constitutional-challenge-notice-period: 21.days after ConstitutionalChallengeFiled() counted_by frcp6 cite "S.D. Ind. L.R. 5.1-1(a)"
+deadline constitutional-challenge-notice-period: 21.days after ConstitutionalChallengeFiled() counted_by frcp6-indiana cite "S.D. Ind. L.R. 5.1-1(a)"
 {
   forum frcp
 }
@@ -211,14 +211,14 @@ deadline constitutional-challenge-notice-period: 21.days after ConstitutionalCha
 /// under FRCP 12(b), (e) or (f) within 21 days after the motion is served,
 /// unless it is entitled to and first files an amended pleading as a
 /// matter of course under FRCP 15(a)(1).
-deadline rule12-response-period: 21.days after Rule12MotionServed() counted_by frcp6 cite "S.D. Ind. L.R. 7-1(c)(2)"
+deadline rule12-response-period: 21.days after Rule12MotionServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 7-1(c)(2)"
 {
   forum frcp
 }
 
 /// S.D. Ind. L.R. 7-1(c)(2): if a response to a motion to dismiss is filed,
 /// any reply is due within 7 days after service of the response.
-deadline rule12-reply-period: 7.days after Rule12ResponseServed() counted_by frcp6 cite "S.D. Ind. L.R. 7-1(c)(2)"
+deadline rule12-reply-period: 7.days after Rule12ResponseServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 7-1(c)(2)"
 {
   forum frcp
 }
@@ -226,14 +226,14 @@ deadline rule12-reply-period: 7.days after Rule12ResponseServed() counted_by frc
 /// S.D. Ind. L.R. 7-1(c)(3)(A): any response to another motion is due
 /// within 14 days after service of the motion; summary judgment motions
 /// follow L.R. 56-1 (L.R. 7-1(c)(1)).
-deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. Ind. L.R. 7-1(c)(3)"
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 7-1(c)(3)"
 {
   forum frcp
 }
 
 /// S.D. Ind. L.R. 7-1(c)(3)(B): any reply is due within 7 days after
 /// service of the response.
-deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "S.D. Ind. L.R. 7-1(c)(3)"
+deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 7-1(c)(3)"
 {
   forum frcp
 }
@@ -241,21 +241,21 @@ deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6 cit
 /// S.D. Ind. L.R. 10-1(c): the sealed Notice of intention to proceed under
 /// a pseudonym and the motion are served on each opposing party within 7
 /// days of that party's appearance.
-deadline pseudonym-service-period: 7.days after OpposingPartyAppeared() counted_by frcp6 cite "S.D. Ind. L.R. 10-1(c)"
+deadline pseudonym-service-period: 7.days after OpposingPartyAppeared() counted_by frcp6-indiana cite "S.D. Ind. L.R. 10-1(c)"
 {
   forum frcp
 }
 
 /// S.D. Ind. L.R. 10-1(d): any objection to the pseudonym motion is filed
 /// by the opposing party within 21 days of its appearance.
-deadline pseudonym-objection-period: 21.days after OpposingPartyAppeared() counted_by frcp6 cite "S.D. Ind. L.R. 10-1(d)"
+deadline pseudonym-objection-period: 21.days after OpposingPartyAppeared() counted_by frcp6-indiana cite "S.D. Ind. L.R. 10-1(d)"
 {
   forum frcp
 }
 
 /// S.D. Ind. L.R. 10-1(e): if the pseudonym motion is denied, the litigant
 /// has 14 days to file the complaint in his or her true name.
-deadline true-name-complaint-period: 14.days after PseudonymMotionDenied() counted_by frcp6 cite "S.D. Ind. L.R. 10-1(e)"
+deadline true-name-complaint-period: 14.days after PseudonymMotionDenied() counted_by frcp6-indiana cite "S.D. Ind. L.R. 10-1(e)"
 {
   forum frcp
 }
@@ -264,7 +264,7 @@ deadline true-name-complaint-period: 14.days after PseudonymMotionDenied() count
 /// 16-1(g), the parties confer, prepare and file a joint case management
 /// plan within 90 days after the case was filed in or removed to the
 /// court; the plaintiff initiates and coordinates (L.R. 16-1(d)).
-deadline case-management-plan-period: 90.days after CaseFiledOrRemoved() counted_by frcp6 cite "S.D. Ind. L.R. 16-1(c)"
+deadline case-management-plan-period: 90.days after CaseFiledOrRemoved() counted_by frcp6-indiana cite "S.D. Ind. L.R. 16-1(c)"
 {
   forum frcp
 }
@@ -273,14 +273,14 @@ deadline case-management-plan-period: 90.days after CaseFiledOrRemoved() counted
 /// remanded by the court of appeals for further proceedings, or
 /// transferred from another district, each party files a statement of
 /// position on what action the court should take.
-deadline remand-position-statement-period: 21.days after RemandOrTransferReceived() counted_by frcp6 cite "S.D. Ind. L.R. 16-2"
+deadline remand-position-statement-period: 21.days after RemandOrTransferReceived() counted_by frcp6-indiana cite "S.D. Ind. L.R. 16-2"
 {
   forum frcp
 }
 
 /// S.D. Ind. L.R. 30-1: unless agreed by counsel or otherwise ordered, no
 /// deposition is scheduled on less than 14 days notice.
-deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6 cite "S.D. Ind. L.R. 30-1"
+deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6-indiana cite "S.D. Ind. L.R. 30-1"
 {
   forum frcp
 }
@@ -290,7 +290,7 @@ deadline deposition-notice-period: 14.days before DepositionScheduled() counted_
 /// directs otherwise or, within 15 days after the mandate for a new trial
 /// is docketed, all parties request that the previously assigned judge
 /// retry it.
-deadline retrial-judge-request-period: 15.days after NewTrialMandateDocketed() counted_by frcp6 cite "S.D. Ind. L.R. 40-1(g)"
+deadline retrial-judge-request-period: 15.days after NewTrialMandateDocketed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 40-1(g)"
 {
   forum frcp
 }
@@ -299,7 +299,7 @@ deadline retrial-judge-request-period: 15.days after NewTrialMandateDocketed() c
 /// is served on all other parties at least 7 days before it is served on a
 /// nonparty, unless the parties agree otherwise or the case management
 /// plan provides otherwise.
-deadline nonparty-subpoena-notice-period: 7.days before NonpartySubpoenaServed() counted_by frcp6 cite "S.D. Ind. L.R. 45-1"
+deadline nonparty-subpoena-notice-period: 7.days before NonpartySubpoenaServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 45-1"
 {
   forum frcp
 }
@@ -308,7 +308,7 @@ deadline nonparty-subpoena-notice-period: 7.days before NonpartySubpoenaServed()
 /// costs if they settle or otherwise dispose of the case before trial and
 /// the clerk's office is not notified at least 1 full business day before
 /// the trial is set to begin.
-deadline jury-cost-notice-period: 1.court_days before TrialBegins() counted_by frcp6 cite "S.D. Ind. L.R. 47-3(a)"
+deadline jury-cost-notice-period: 1.court_days before TrialBegins() counted_by frcp6-indiana cite "S.D. Ind. L.R. 47-3(a)"
 {
   forum frcp
 }
@@ -317,7 +317,7 @@ deadline jury-cost-notice-period: 1.court_days before TrialBegins() counted_by f
 /// unless it files and serves a bill of costs and a motion for fees within
 /// 14 days after final judgment is entered; the court may extend the
 /// deadline for good cause on a motion filed before it.
-deadline costs-and-fees-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "S.D. Ind. L.R. 54-1(a)"
+deadline costs-and-fees-period: 14.days after FinalJudgmentEntered() counted_by frcp6-indiana cite "S.D. Ind. L.R. 54-1(a)"
 {
   forum frcp
 }
@@ -325,14 +325,14 @@ deadline costs-and-fees-period: 14.days after FinalJudgmentEntered() counted_by 
 /// S.D. Ind. L.R. 56-1(b): a party opposing summary judgment, within 28
 /// days after the movant serves the motion, files and serves a response
 /// brief and any evidence it relies on not already in the record.
-deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "S.D. Ind. L.R. 56-1(b)"
+deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 56-1(b)"
 {
   forum frcp
 }
 
 /// S.D. Ind. L.R. 56-1(c): the movant may file a reply brief within 14
 /// days after a response is served.
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "S.D. Ind. L.R. 56-1(c)"
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 56-1(c)"
 {
   forum frcp
 }
@@ -341,7 +341,7 @@ deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseSer
 /// surreply only if the movant cites new evidence in the reply or objects
 /// to the admissibility of evidence cited in the response; it is filed
 /// within 7 days after the movant serves the reply.
-deadline summary-judgment-surreply-period: 7.days after SummaryJudgmentReplyServed() counted_by frcp6 cite "S.D. Ind. L.R. 56-1(d)"
+deadline summary-judgment-surreply-period: 7.days after SummaryJudgmentReplyServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 56-1(d)"
 {
   forum frcp
 }
@@ -350,7 +350,7 @@ deadline summary-judgment-surreply-period: 7.days after SummaryJudgmentReplyServ
 /// estate, the court-appointed officer files an inventory and appraisal of
 /// the estate's property and assets and, on a separate schedule, an
 /// inventory of those held by others.
-deadline receiver-inventory-period: 28.days after EstatePossessionTaken() counted_by frcp6 cite "S.D. Ind. L.R. 66-1(b)"
+deadline receiver-inventory-period: 28.days after EstatePossessionTaken() counted_by frcp6-indiana cite "S.D. Ind. L.R. 66-1(b)"
 {
   forum frcp
 }
@@ -358,7 +358,7 @@ deadline receiver-inventory-period: 28.days after EstatePossessionTaken() counte
 /// S.D. Ind. L.R. 66-1(b)(2): within 28 days after the inventory is filed,
 /// and every three months after that, the officer files a report of its
 /// acts and an accounting. The period below is the first report.
-deadline receiver-first-report-period: 28.days after EstateInventoryFiled() counted_by frcp6 cite "S.D. Ind. L.R. 66-1(b)"
+deadline receiver-first-report-period: 28.days after EstateInventoryFiled() counted_by frcp6-indiana cite "S.D. Ind. L.R. 66-1(b)"
 {
   forum frcp
 }
@@ -366,7 +366,7 @@ deadline receiver-first-report-period: 28.days after EstateInventoryFiled() coun
 /// S.D. Ind. L.R. 79-1(b)(1): if the case is not appealed, the party that
 /// offered items into evidence claims them from the clerk within 90 days
 /// after the case is disposed of as to all issues.
-deadline exhibit-claim-period: 90.days after CaseDisposedWithoutAppeal() counted_by frcp6 cite "S.D. Ind. L.R. 79-1(b)"
+deadline exhibit-claim-period: 90.days after CaseDisposedWithoutAppeal() counted_by frcp6-indiana cite "S.D. Ind. L.R. 79-1(b)"
 {
   forum frcp
 }
@@ -375,7 +375,7 @@ deadline exhibit-claim-period: 90.days after CaseDisposedWithoutAppeal() counted
 /// claims its items within 28 days after the mandate of the reviewing
 /// court is filed in the clerk's office and the case is disposed of as to
 /// all issues, unless otherwise ordered.
-deadline exhibit-claim-after-appeal-period: 28.days after MandateFiled() counted_by frcp6 cite "S.D. Ind. L.R. 79-1(b)"
+deadline exhibit-claim-after-appeal-period: 28.days after MandateFiled() counted_by frcp6-indiana cite "S.D. Ind. L.R. 79-1(b)"
 {
   forum frcp
 }
@@ -384,7 +384,7 @@ deadline exhibit-claim-after-appeal-period: 28.days after MandateFiled() counted
 /// subject to FRCP 5.2, the attorneys of record file a Notice of Intent to
 /// Request Redaction within 7 days from the date the transcript was filed;
 /// without one the court assumes no redaction is necessary.
-deadline redaction-intent-notice-period: 7.days after TranscriptFiled() counted_by frcp6 cite "S.D. Ind. L.R. 80-2(a)"
+deadline redaction-intent-notice-period: 7.days after TranscriptFiled() counted_by frcp6-indiana cite "S.D. Ind. L.R. 80-2(a)"
 {
   forum frcp
 }
@@ -392,7 +392,7 @@ deadline redaction-intent-notice-period: 7.days after TranscriptFiled() counted_
 /// S.D. Ind. L.R. 80-2(a)(3): if redaction of personal data identifiers is
 /// required, the attorneys of record file a Redaction Statement within 21
 /// days from the date the transcript was filed.
-deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by frcp6 cite "S.D. Ind. L.R. 80-2(a)"
+deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by frcp6-indiana cite "S.D. Ind. L.R. 80-2(a)"
 {
   forum frcp
 }
@@ -400,7 +400,7 @@ deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by 
 /// S.D. Ind. L.R. 80-2(b): a party seeking redaction of information beyond
 /// the personal data identifiers files a Motion to Redact Transcript within
 /// 21 days from the date the transcript was filed.
-deadline redaction-motion-period: 21.days after TranscriptFiled() counted_by frcp6 cite "S.D. Ind. L.R. 80-2(b)"
+deadline redaction-motion-period: 21.days after TranscriptFiled() counted_by frcp6-indiana cite "S.D. Ind. L.R. 80-2(b)"
 {
   forum frcp
 }
@@ -409,7 +409,7 @@ deadline redaction-motion-period: 21.days after TranscriptFiled() counted_by frc
 /// removal based in whole or part on diversity, every plaintiff who has not
 /// moved to remand files a statement responding to the notice's
 /// allegations of citizenship and amount in controversy.
-deadline removal-response-period: 30.days after RemovalNoticeFiled() counted_by frcp6 cite "S.D. Ind. L.R. 81-1(b)"
+deadline removal-response-period: 30.days after RemovalNoticeFiled() counted_by frcp6-indiana cite "S.D. Ind. L.R. 81-1(b)"
 {
   forum frcp
 }
@@ -417,7 +417,7 @@ deadline removal-response-period: 30.days after RemovalNoticeFiled() counted_by 
 /// S.D. Ind. L.R. 81-2(b): a non-removing party files any objection to the
 /// completeness of the State Court Record, and supplements it, within 7
 /// days of service of the notice of removal and record.
-deadline state-court-record-objection-period: 7.days after StateCourtRecordServed() counted_by frcp6 cite "S.D. Ind. L.R. 81-2(b)"
+deadline state-court-record-objection-period: 7.days after StateCourtRecordServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 81-2(b)"
 {
   forum frcp
 }
@@ -426,7 +426,7 @@ deadline state-court-record-objection-period: 7.days after StateCourtRecordServe
 /// court at removal and who wants the District Court to rule on it refiles
 /// the motion, with any responses, within seven (7) days of its
 /// appearance.
-deadline pending-motion-refiling-period: 7.days after MovantAppeared() counted_by frcp6 cite "S.D. Ind. L.R. 81-2(e)"
+deadline pending-motion-refiling-period: 7.days after MovantAppeared() counted_by frcp6-indiana cite "S.D. Ind. L.R. 81-2(e)"
 {
   forum frcp
 }
@@ -435,7 +435,7 @@ deadline pending-motion-refiling-period: 7.days after MovantAppeared() counted_b
 /// practice before the court either complies with its admission policy
 /// (L.R. 83-5, 83-6) or withdraws the appearance within 21 days after the
 /// case is removed or transferred to the court.
-deadline removal-admission-period: 21.days after CaseRemovedOrTransferred() counted_by frcp6 cite "S.D. Ind. L.R. 83-7(a)"
+deadline removal-admission-period: 21.days after CaseRemovedOrTransferred() counted_by frcp6-indiana cite "S.D. Ind. L.R. 83-7(a)"
 {
   forum frcp
 }
@@ -444,7 +444,7 @@ deadline removal-admission-period: 21.days after CaseRemovedOrTransferred() coun
 /// withdrawal date and contains evidence that the attorney gave the client
 /// written notice of the intent to withdraw at least 7 days before that
 /// date.
-deadline withdrawal-notice-period: 7.days before WithdrawalDate() counted_by frcp6 cite "S.D. Ind. L.R. 83-7(b)"
+deadline withdrawal-notice-period: 7.days before WithdrawalDate() counted_by frcp6-indiana cite "S.D. Ind. L.R. 83-7(b)"
 {
   forum frcp
 }
@@ -452,7 +452,7 @@ deadline withdrawal-notice-period: 7.days before WithdrawalDate() counted_by frc
 /// S.D. Ind. L.R. 87: if recruited counsel and the litigant enter into a
 /// fee agreement providing for fees, counsel files a Notice of Fee
 /// Agreement, which may be ex parte, within 28 days after it is executed.
-deadline recruited-fee-agreement-notice-period: 28.days after RecruitedFeeAgreementExecuted() counted_by frcp6 cite "S.D. Ind. L.R. 87"
+deadline recruited-fee-agreement-notice-period: 28.days after RecruitedFeeAgreementExecuted() counted_by frcp6-indiana cite "S.D. Ind. L.R. 87"
 {
   forum frcp
 }

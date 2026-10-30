@@ -1,6 +1,6 @@
 module ncmd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.north-carolina.{ frcp6-north-carolina }
 
 // The Middle District of North Carolina's own civil periods and limits,
 // computed under FRCP 6(a), which governs a period stated in a local rule.
@@ -94,7 +94,7 @@ event JudgmentEntered()
 /// LR 5.4(b)(1)b.: if a motion to seal is filed and no LR 5.5 Report has
 /// been filed, the parties meet and confer and file the report within 10
 /// days of the filing of the motion to seal.
-deadline sealing-report-period: 10.days after SealMotionFiled() counted_by frcp6 cite "M.D.N.C. LR 5.4(b)"
+deadline sealing-report-period: 10.days after SealMotionFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 5.4(b)"
 {
   forum frcp
 }
@@ -102,14 +102,14 @@ deadline sealing-report-period: 10.days after SealMotionFiled() counted_by frcp6
 /// LR 5.4(c)(4)b.: when the filing party is not the party claiming
 /// confidentiality, the party claiming it files a response with the LR
 /// 5.4(c)(3) materials within 14 days of the motion to seal.
-deadline sealing-response-period: 14.days after SealMotionFiled() counted_by frcp6 cite "M.D.N.C. LR 5.4(c)"
+deadline sealing-response-period: 14.days after SealMotionFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 5.4(c)"
 {
   forum frcp
 }
 
 /// LR 5.4(c)(5): a party opposing sealing files its objection within 14
 /// days of the filing of the LR 5.4(c)(3) supporting materials.
-deadline sealing-objection-period: 14.days after SealSupportFiled() counted_by frcp6 cite "M.D.N.C. LR 5.4(c)"
+deadline sealing-objection-period: 14.days after SealSupportFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 5.4(c)"
 {
   forum frcp
 }
@@ -117,7 +117,7 @@ deadline sealing-objection-period: 14.days after SealSupportFiled() counted_by f
 /// LR 7.3(f): a respondent opposing a motion files a response brief within
 /// 21 days after service of the motion (30 for summary judgment, 14 for a
 /// discovery motion); the Court may shorten the time for good cause.
-deadline response-period: 21.days after MotionServed() counted_by frcp6 cite "M.D.N.C. LR 7.3(f)"
+deadline response-period: 21.days after MotionServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 7.3(f)"
 {
   forum frcp
 }
@@ -125,7 +125,7 @@ deadline response-period: 21.days after MotionServed() counted_by frcp6 cite "M.
 /// LR 7.3(g): in a PSLRA case, briefs responding to a motion to serve as
 /// lead plaintiff are filed within seven calendar days of the filing of the
 /// motion; no reply briefs are permitted.
-deadline lead-plaintiff-response-period: 7.days after LeadPlaintiffMotionFiled() counted_by frcp6 cite "M.D.N.C. LR 7.3(g)"
+deadline lead-plaintiff-response-period: 7.days after LeadPlaintiffMotionFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 7.3(g)"
 {
   forum frcp
 }
@@ -133,7 +133,7 @@ deadline lead-plaintiff-response-period: 7.days after LeadPlaintiffMotionFiled()
 /// LR 7.3(h): a reply brief, limited to matters newly raised in the
 /// response, may be filed within 14 days after service of the response (7
 /// days on a discovery motion).
-deadline reply-period: 14.days after ResponseServed() counted_by frcp6 cite "M.D.N.C. LR 7.3(h)"
+deadline reply-period: 14.days after ResponseServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 7.3(h)"
 {
   forum frcp
 }
@@ -142,21 +142,21 @@ deadline reply-period: 14.days after ResponseServed() counted_by frcp6 cite "M.D
 /// the plaintiff does not notify the Court and opposing parties of a
 /// current address within sixty-three days thereafter, the Court may
 /// dismiss the action without prejudice for failure to prosecute.
-deadline pro-se-address-period: 63.days after ProSeMailReturned() counted_by frcp6 cite "M.D.N.C. LR 11.1(b)"
+deadline pro-se-address-period: 63.days after ProSeMailReturned() counted_by frcp6-north-carolina cite "M.D.N.C. LR 11.1(b)"
 {
   forum frcp
 }
 
 /// LR 16.1(b): the parties hold their FRCP 26(f) meeting at least 14 days
 /// before the scheduled initial pretrial conference.
-deadline rule-26f-meeting-period: 14.days before InitialPretrialConference() counted_by frcp6 cite "M.D.N.C. LR 16.1(b)"
+deadline rule-26f-meeting-period: 14.days before InitialPretrialConference() counted_by frcp6-north-carolina cite "M.D.N.C. LR 16.1(b)"
 {
   forum frcp
 }
 
 /// LR 16.1(b): the joint (LR 16.2) or separate (LR 16.3) Rule 26(f) Reports
 /// are filed within 10 days of the Rule 26(f) meeting.
-deadline rule-26f-report-period: 10.days after RuleTwentySixFMeeting() counted_by frcp6 cite "M.D.N.C. LR 16.1(b)"
+deadline rule-26f-report-period: 10.days after RuleTwentySixFMeeting() counted_by frcp6-north-carolina cite "M.D.N.C. LR 16.1(b)"
 {
   forum frcp
 }
@@ -164,7 +164,7 @@ deadline rule-26f-report-period: 10.days after RuleTwentySixFMeeting() counted_b
 /// LR 16.1(b): a party claiming damages for medical or psychological
 /// injury provides an executed HIPAA-compliant release for each provider
 /// within 14 days after the Rule 26(f) conference.
-deadline medical-release-period: 14.days after RuleTwentySixFMeeting() counted_by frcp6 cite "M.D.N.C. LR 16.1(b)"
+deadline medical-release-period: 14.days after RuleTwentySixFMeeting() counted_by frcp6-north-carolina cite "M.D.N.C. LR 16.1(b)"
 {
   forum frcp
 }
@@ -173,21 +173,21 @@ deadline medical-release-period: 14.days after RuleTwentySixFMeeting() counted_b
 /// unless extended by court order, the plaintiff files a separate motion
 /// for a determination under FRCP 23(c)(1) whether the case may be
 /// maintained as a class action.
-deadline class-determination-period: 90.days after InitialPretrialOrderEntered() counted_by frcp6 cite "M.D.N.C. LR 23.1(b)"
+deadline class-determination-period: 90.days after InitialPretrialOrderEntered() counted_by frcp6-north-carolina cite "M.D.N.C. LR 23.1(b)"
 {
   forum frcp
 }
 
 /// LR 26.2(d): a response to a motion for entry of a protective order is
 /// due within 14 days after service of the motion.
-deadline protective-order-response-period: 14.days after ProtectiveOrderMotionServed() counted_by frcp6 cite "M.D.N.C. LR 26.2(d)"
+deadline protective-order-response-period: 14.days after ProtectiveOrderMotionServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 26.2(d)"
 {
   forum frcp
 }
 
 /// LR 37.1(c): a response to a discovery-related motion is filed within 14
 /// days after service of the motion.
-deadline discovery-response-period: 14.days after DiscoveryMotionServed() counted_by frcp6 cite "M.D.N.C. LR 37.1(c)"
+deadline discovery-response-period: 14.days after DiscoveryMotionServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 37.1(c)"
 {
   forum frcp
 }
@@ -195,7 +195,7 @@ deadline discovery-response-period: 14.days after DiscoveryMotionServed() counte
 /// LR 26.2(d), 37.1(c): a reply to a response on a protective-order or
 /// discovery-related motion is filed within 7 days after service of the
 /// response.
-deadline discovery-reply-period: 7.days after DiscoveryResponseServed() counted_by frcp6 cite "M.D.N.C. LR 37.1(c)"
+deadline discovery-reply-period: 7.days after DiscoveryResponseServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 37.1(c)"
 {
   forum frcp
 }
@@ -203,21 +203,21 @@ deadline discovery-reply-period: 7.days after DiscoveryResponseServed() counted_
 /// LR 40.1(c)(2)-(4): no later than 21 days before trial each party files a
 /// trial brief, with proposed findings and conclusions in a non-jury case
 /// or proposed jury instructions in a jury case.
-deadline trial-brief-period: 21.days before TrialDate() counted_by frcp6 cite "M.D.N.C. LR 40.1(c)"
+deadline trial-brief-period: 21.days before TrialDate() counted_by frcp6-north-carolina cite "M.D.N.C. LR 40.1(c)"
 {
   forum frcp
 }
 
 /// LR 40.1(d): a motion to seal trial testimony or exhibits, or to close
 /// the courtroom, is filed at least 7 days before trial.
-deadline trial-seal-motion-period: 7.days before TrialDate() counted_by frcp6 cite "M.D.N.C. LR 40.1(d)"
+deadline trial-seal-motion-period: 7.days before TrialDate() counted_by frcp6-north-carolina cite "M.D.N.C. LR 40.1(d)"
 {
   forum frcp
 }
 
 /// LR 40.1(d): any other party may file a response at least 3 days before
 /// the scheduled trial date; no reply briefs are allowed.
-deadline trial-seal-response-period: 3.days before TrialDate() counted_by frcp6 cite "M.D.N.C. LR 40.1(d)"
+deadline trial-seal-response-period: 3.days before TrialDate() counted_by frcp6-north-carolina cite "M.D.N.C. LR 40.1(d)"
 {
   forum frcp
 }
@@ -227,7 +227,7 @@ deadline trial-seal-response-period: 3.days before TrialDate() counted_by frcp6 
 /// expires, or after the clerk receives the mandate or other final decision
 /// terminating the action on appeal, or as the Court directs; failure to
 /// file in time waives costs.
-deadline bill-of-costs-period: 30.days after CostsPeriodTriggered() counted_by frcp6 cite "M.D.N.C. LR 54.1(a)"
+deadline bill-of-costs-period: 30.days after CostsPeriodTriggered() counted_by frcp6-north-carolina cite "M.D.N.C. LR 54.1(a)"
 {
   forum frcp
 }
@@ -235,21 +235,21 @@ deadline bill-of-costs-period: 30.days after CostsPeriodTriggered() counted_by f
 /// LR 54.1(b)(1): an adverse party objects by a motion for disallowance
 /// with a supporting brief within fourteen days after the bill of costs is
 /// filed.
-deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "M.D.N.C. LR 54.1(b)"
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 54.1(b)"
 {
   forum frcp
 }
 
 /// LR 54.1(b)(1): within seven days after the objection, the prevailing
 /// party may file a response; no reply is permitted.
-deadline costs-response-period: 7.days after CostsObjectionFiled() counted_by frcp6 cite "M.D.N.C. LR 54.1(b)"
+deadline costs-response-period: 7.days after CostsObjectionFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 54.1(b)"
 {
   forum frcp
 }
 
 /// LR 54.1(b)(2): a party may request review of the clerk's ruling by
 /// motion within seven days after the clerk's action.
-deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "M.D.N.C. LR 54.1(b)"
+deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 54.1(b)"
 {
   forum frcp
 }
@@ -259,7 +259,7 @@ deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "M
 /// files the statement of consultation, the motion and its supporting
 /// materials; the 14-day deadline of FRCP 54(d)(2)(B)(i) is modified to 21
 /// days.
-deadline fee-motion-period: 21.days after JudgmentEntered() counted_by frcp6 cite "M.D.N.C. LR 54.2"
+deadline fee-motion-period: 21.days after JudgmentEntered() counted_by frcp6-north-carolina cite "M.D.N.C. LR 54.2"
 {
   forum frcp
 }
@@ -267,7 +267,7 @@ deadline fee-motion-period: 21.days after JudgmentEntered() counted_by frcp6 cit
 /// LR 56.1(a): a party intending to file a motion for summary judgment or
 /// another dispositive motion files and serves notice of that intention
 /// within 14 days following the close of the discovery period.
-deadline dispositive-notice-period: 14.days after DiscoveryClosed() counted_by frcp6 cite "M.D.N.C. LR 56.1(a)"
+deadline dispositive-notice-period: 14.days after DiscoveryClosed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 56.1(a)"
 {
   forum frcp
 }
@@ -275,7 +275,7 @@ deadline dispositive-notice-period: 14.days after DiscoveryClosed() counted_by f
 /// LR 56.1(b): all dispositive motions and supporting briefs are filed and
 /// served within 30 days following the close of the discovery period,
 /// subject to any LR 5.5 Order.
-deadline dispositive-motion-period: 30.days after DiscoveryClosed() counted_by frcp6 cite "M.D.N.C. LR 56.1(b)"
+deadline dispositive-motion-period: 30.days after DiscoveryClosed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 56.1(b)"
 {
   forum frcp
 }
@@ -283,7 +283,7 @@ deadline dispositive-motion-period: 30.days after DiscoveryClosed() counted_by f
 /// LR 7.3(f), 56.1(d)-(e): the response brief to a summary judgment motion
 /// is filed within 30 days after service of the motion and brief; failing
 /// to respond may lead the Court to treat the motion as uncontested.
-deadline summary-judgment-response-period: 30.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "M.D.N.C. LR 56.1(d)"
+deadline summary-judgment-response-period: 30.days after SummaryJudgmentMotionServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 56.1(d)"
 {
   forum frcp
 }

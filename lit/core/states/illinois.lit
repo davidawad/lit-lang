@@ -1,0 +1,81 @@
+module core.states.illinois
+
+import core.calendar.{ us-federal-holidays }
+
+/// The holidays Illinois fixes by statute (5 ILCS 70/1.11 excludes from a
+/// period's last day "a holiday as defined or fixed in any statute"; the State
+/// Commemorative Dates Act, 5 ILCS 490, fixes them) that `us-federal-holidays`
+/// does not already close: Lincoln's Birthday (§ 60, February 12, the following
+/// Monday when it falls on a Sunday) and the Casimir Pulaski holiday (§ 15, the
+/// first Monday in March). The Act's other holidays are federal holidays
+/// observed no later. Closed from the date of the latest Act the vendored text
+/// cites (P.A. 103-279, effective January 1, 2024). Not modeled: the Act's
+/// commemorative days, which are not holidays, and election days, which no
+/// vendored Illinois statute makes a holiday (a last day on one is the earlier
+/// date).
+calendar illinois-holidays cite "5 ILCS 490/60"
+{
+  lincolns-birthday: fixed(2, 12) effective [2024-01-01, ..) observed next_day
+  casimir-pulaski-day: nth(1, monday, 3) effective [2024-01-01, ..)
+}
+
+/// FRCP 6 in the district courts of Illinois: the 2023 text
+/// (`frcp6@2023-12-01`) with `illinois-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-illinois effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays illinois-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Illinois:
+/// `illinois-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-illinois effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays illinois-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-ilc, bankr-iln, bankr-ils]
+  allow_hours
+  end_of_month clamp
+}

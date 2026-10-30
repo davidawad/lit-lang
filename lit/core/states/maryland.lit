@@ -1,0 +1,148 @@
+module core.states.maryland
+
+import core.calendar.{ us-federal-holidays }
+
+/// The legal holidays of Maryland (Md. Code, Gen. Provis. § 1-111(a)) that
+/// `us-federal-holidays` does not already close: Lincoln's birthday (February
+/// 12), Maryland Day (March 25), Good Friday, Defenders' Day (September 12),
+/// American Indian Heritage Day (the Friday after Thanksgiving) and each
+/// statewide general election day (the Tuesday after the first Monday in
+/// November of an even year). § 1-111(b) moves only a Sunday holiday, to the
+/// next Monday. The section's Martin Luther King, Jr., Memorial and Columbus
+/// Days are the days Congress designates, and its other days are federal
+/// holidays. Each `once` day is listed from the date the vendored text was
+/// retrieved (October 29, 2026) to the end of 2050. Not modeled: a day the
+/// President or the Governor designates for general cessation of business (§
+/// 1-111(a)(18)), which no vendored source lists.
+calendar maryland-holidays cite "Md. Code, Gen. Provis. § 1-111(a)"
+{
+  lincolns-birthday: fixed(2, 12) effective [2026-10-29, ..) observed next_day
+  maryland-day: fixed(3, 25) effective [2026-10-29, ..) observed next_day
+  defenders-day: fixed(9, 12) effective [2026-10-29, ..) observed next_day
+  // § 1-111(a)(6).
+  good-friday-2027: once(2027-03-26) effective [2026-10-29, ..)
+  good-friday-2028: once(2028-04-14) effective [2026-10-29, ..)
+  good-friday-2029: once(2029-03-30) effective [2026-10-29, ..)
+  good-friday-2030: once(2030-04-19) effective [2026-10-29, ..)
+  good-friday-2031: once(2031-04-11) effective [2026-10-29, ..)
+  good-friday-2032: once(2032-03-26) effective [2026-10-29, ..)
+  good-friday-2033: once(2033-04-15) effective [2026-10-29, ..)
+  good-friday-2034: once(2034-04-07) effective [2026-10-29, ..)
+  good-friday-2035: once(2035-03-23) effective [2026-10-29, ..)
+  good-friday-2036: once(2036-04-11) effective [2026-10-29, ..)
+  good-friday-2037: once(2037-04-03) effective [2026-10-29, ..)
+  good-friday-2038: once(2038-04-23) effective [2026-10-29, ..)
+  good-friday-2039: once(2039-04-08) effective [2026-10-29, ..)
+  good-friday-2040: once(2040-03-30) effective [2026-10-29, ..)
+  good-friday-2041: once(2041-04-19) effective [2026-10-29, ..)
+  good-friday-2042: once(2042-04-04) effective [2026-10-29, ..)
+  good-friday-2043: once(2043-03-27) effective [2026-10-29, ..)
+  good-friday-2044: once(2044-04-15) effective [2026-10-29, ..)
+  good-friday-2045: once(2045-04-07) effective [2026-10-29, ..)
+  good-friday-2046: once(2046-03-23) effective [2026-10-29, ..)
+  good-friday-2047: once(2047-04-12) effective [2026-10-29, ..)
+  good-friday-2048: once(2048-04-03) effective [2026-10-29, ..)
+  good-friday-2049: once(2049-04-16) effective [2026-10-29, ..)
+  good-friday-2050: once(2050-04-08) effective [2026-10-29, ..)
+  // § 1-111(a)(15): the Friday after Thanksgiving Day.
+  american-indian-heritage-day-2026: once(2026-11-27) effective [2026-10-29, ..)
+  american-indian-heritage-day-2027: once(2027-11-26) effective [2026-10-29, ..)
+  american-indian-heritage-day-2028: once(2028-11-24) effective [2026-10-29, ..)
+  american-indian-heritage-day-2029: once(2029-11-23) effective [2026-10-29, ..)
+  american-indian-heritage-day-2030: once(2030-11-29) effective [2026-10-29, ..)
+  american-indian-heritage-day-2031: once(2031-11-28) effective [2026-10-29, ..)
+  american-indian-heritage-day-2032: once(2032-11-26) effective [2026-10-29, ..)
+  american-indian-heritage-day-2033: once(2033-11-25) effective [2026-10-29, ..)
+  american-indian-heritage-day-2034: once(2034-11-24) effective [2026-10-29, ..)
+  american-indian-heritage-day-2035: once(2035-11-23) effective [2026-10-29, ..)
+  american-indian-heritage-day-2036: once(2036-11-28) effective [2026-10-29, ..)
+  american-indian-heritage-day-2037: once(2037-11-27) effective [2026-10-29, ..)
+  american-indian-heritage-day-2038: once(2038-11-26) effective [2026-10-29, ..)
+  american-indian-heritage-day-2039: once(2039-11-25) effective [2026-10-29, ..)
+  american-indian-heritage-day-2040: once(2040-11-23) effective [2026-10-29, ..)
+  american-indian-heritage-day-2041: once(2041-11-29) effective [2026-10-29, ..)
+  american-indian-heritage-day-2042: once(2042-11-28) effective [2026-10-29, ..)
+  american-indian-heritage-day-2043: once(2043-11-27) effective [2026-10-29, ..)
+  american-indian-heritage-day-2044: once(2044-11-25) effective [2026-10-29, ..)
+  american-indian-heritage-day-2045: once(2045-11-24) effective [2026-10-29, ..)
+  american-indian-heritage-day-2046: once(2046-11-23) effective [2026-10-29, ..)
+  american-indian-heritage-day-2047: once(2047-11-29) effective [2026-10-29, ..)
+  american-indian-heritage-day-2048: once(2048-11-27) effective [2026-10-29, ..)
+  american-indian-heritage-day-2049: once(2049-11-26) effective [2026-10-29, ..)
+  american-indian-heritage-day-2050: once(2050-11-25) effective [2026-10-29, ..)
+  // § 1-111(a)(17): each statewide general election day.
+  general-election-day-2026: once(2026-11-03) effective [2026-10-29, ..)
+  general-election-day-2028: once(2028-11-07) effective [2026-10-29, ..)
+  general-election-day-2030: once(2030-11-05) effective [2026-10-29, ..)
+  general-election-day-2032: once(2032-11-02) effective [2026-10-29, ..)
+  general-election-day-2034: once(2034-11-07) effective [2026-10-29, ..)
+  general-election-day-2036: once(2036-11-04) effective [2026-10-29, ..)
+  general-election-day-2038: once(2038-11-02) effective [2026-10-29, ..)
+  general-election-day-2040: once(2040-11-06) effective [2026-10-29, ..)
+  general-election-day-2042: once(2042-11-04) effective [2026-10-29, ..)
+  general-election-day-2044: once(2044-11-08) effective [2026-10-29, ..)
+  general-election-day-2046: once(2046-11-06) effective [2026-10-29, ..)
+  general-election-day-2048: once(2048-11-03) effective [2026-10-29, ..)
+  general-election-day-2050: once(2050-11-08) effective [2026-10-29, ..)
+}
+
+/// FRCP 6 in the district courts of Maryland: the 2023 text
+/// (`frcp6@2023-12-01`) with `maryland-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-maryland effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays maryland-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Maryland:
+/// `maryland-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-maryland effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays maryland-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-md]
+  allow_hours
+  end_of_month clamp
+}

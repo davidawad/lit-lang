@@ -1,7 +1,7 @@
 module txsd-local-rules.local-rules
 
 import core.authority.{ CaseOrder }
-import core.frcp6.{ frcp6 }
+import core.states.texas.{ frcp6-texas }
 
 // The Southern District of Texas's own civil periods, counted under FRCP
 // 6. The court may, on its own motion or on application, shorten or extend
@@ -54,7 +54,7 @@ event ReturnedExhibitsNoticed()
 /// days from filing without notice from the clerk and without appearance
 /// by counsel, and a response must be filed by the submission day; failure
 /// to respond is taken as a representation of no opposition.
-deadline response-period: 21.days after OpposedMotionFiled() counted_by frcp6 delegable {
+deadline response-period: 21.days after OpposedMotionFiled() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "S.D. Tex. LR 7.3"
@@ -65,7 +65,7 @@ deadline response-period: 21.days after OpposedMotionFiled() counted_by frcp6 de
 /// S.D. Tex. LR 7.4(E): unless the presiding judge directs otherwise, the
 /// movant may file a reply brief within 7 days from the date the response
 /// is filed.
-deadline reply-period: 7.days after ResponseFiled() counted_by frcp6 delegable {
+deadline reply-period: 7.days after ResponseFiled() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "S.D. Tex. LR 7.4"
@@ -76,7 +76,7 @@ deadline reply-period: 7.days after ResponseFiled() counted_by frcp6 delegable {
 /// S.D. Tex. LR 16.4(E): a party opposing the ADR referral, method or
 /// appointed provider files written objections, with its reasons, within
 /// ten days of entry of the order for ADR.
-deadline adr-objection-period: 10.days after AdrOrderEntered() counted_by frcp6 cite "S.D. Tex. LR 16.4"
+deadline adr-objection-period: 10.days after AdrOrderEntered() counted_by frcp6-texas cite "S.D. Tex. LR 16.4"
 {
   forum frcp
 }
@@ -85,7 +85,7 @@ deadline adr-objection-period: 10.days after AdrOrderEntered() counted_by frcp6 
 /// proceeding, the parties jointly file a memorandum stating what the rule
 /// lists, including whether the case settled and the provider's fees; it
 /// does not apply to non-binding arbitration under 28 U.S.C. § 654.
-deadline adr-report-period: 14.days after AdrCompleted() counted_by frcp6 cite "S.D. Tex. LR 16.4"
+deadline adr-report-period: 14.days after AdrCompleted() counted_by frcp6-texas cite "S.D. Tex. LR 16.4"
 {
   forum frcp
 }
@@ -94,7 +94,7 @@ deadline adr-report-period: 14.days after AdrCompleted() counted_by frcp6 cite "
 /// notifies the offering party in writing within 7 days after the exhibit
 /// is listed and made available; failure to object in writing before trial
 /// concedes authenticity.
-deadline authentication-objection-period: 7.days after ExhibitListed() counted_by frcp6 cite "S.D. Tex. LR 44.1"
+deadline authentication-objection-period: 7.days after ExhibitListed() counted_by frcp6-texas cite "S.D. Tex. LR 44.1"
 {
   forum frcp
 }
@@ -102,7 +102,7 @@ deadline authentication-objection-period: 7.days after ExhibitListed() counted_b
 /// S.D. Tex. LR 46: objections to the admissibility of exhibits are made at
 /// least 7 days before trial, in writing, with copies of the disputed
 /// exhibit and authority.
-deadline admissibility-objection-period: 7.days before TrialDate() counted_by frcp6 cite "S.D. Tex. LR 46"
+deadline admissibility-objection-period: 7.days before TrialDate() counted_by frcp6-texas cite "S.D. Tex. LR 46"
 {
   forum frcp
 }
@@ -110,14 +110,14 @@ deadline admissibility-objection-period: 7.days before TrialDate() counted_by fr
 /// S.D. Tex. LR 54.2: a bill of costs, with any application for attorney's
 /// fees taxable as costs, is filed within 14 days of the entry of a final
 /// judgment.
-deadline bill-of-costs-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "S.D. Tex. LR 54.2"
+deadline bill-of-costs-period: 14.days after FinalJudgmentEntered() counted_by frcp6-texas cite "S.D. Tex. LR 54.2"
 {
   forum frcp
 }
 
 /// S.D. Tex. LR 54.2: objections to the bill, the attorney's fees or both
 /// are filed within 7 days of the bill's filing.
-deadline bill-of-costs-objection-period: 7.days after BillOfCostsFiled() counted_by frcp6 cite "S.D. Tex. LR 54.2"
+deadline bill-of-costs-objection-period: 7.days after BillOfCostsFiled() counted_by frcp6-texas cite "S.D. Tex. LR 54.2"
 {
   forum frcp
 }
@@ -125,7 +125,7 @@ deadline bill-of-costs-objection-period: 7.days after BillOfCostsFiled() counted
 /// S.D. Tex. LR 79.2(A): exhibits not easily stored in a file folder are
 /// withdrawn within 7 days after the completion of the trial, and reduced
 /// reproductions or photographs substituted.
-deadline oversized-exhibit-withdrawal: 7.days after TrialCompleted() counted_by frcp6 cite "S.D. Tex. LR 79.2"
+deadline oversized-exhibit-withdrawal: 7.days after TrialCompleted() counted_by frcp6-texas cite "S.D. Tex. LR 79.2"
 {
   forum frcp
 }
@@ -134,7 +134,7 @@ deadline oversized-exhibit-withdrawal: 7.days after TrialCompleted() counted_by 
 /// its exhibits within thirty days after disposition of the case; exhibits
 /// not removed are disposed of by the clerk at the offering party's
 /// expense.
-deadline exhibit-removal: 30.days after DispositionWithoutAppeal() counted_by frcp6 cite "S.D. Tex. LR 79.2"
+deadline exhibit-removal: 30.days after DispositionWithoutAppeal() counted_by frcp6-texas cite "S.D. Tex. LR 79.2"
 {
   forum frcp
 }
@@ -142,7 +142,7 @@ deadline exhibit-removal: 30.days after DispositionWithoutAppeal() counted_by fr
 /// S.D. Tex. LR 79.2(B): when there is an appeal, exhibits returned by the
 /// court of appeals are removed by the offering party within 14 days after
 /// written notice from the clerk.
-deadline returned-exhibit-removal: 14.days after ReturnedExhibitsNoticed() counted_by frcp6 cite "S.D. Tex. LR 79.2"
+deadline returned-exhibit-removal: 14.days after ReturnedExhibitsNoticed() counted_by frcp6-texas cite "S.D. Tex. LR 79.2"
 {
   forum frcp
 }

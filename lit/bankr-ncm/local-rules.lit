@@ -1,6 +1,6 @@
 module bankr-ncm-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.states.north-carolina.{ frbp9006-north-carolina }
 import frbp.events.{ FirstMeetingDate, OrderForReliefEntered }
 
 // The Bankr. M.D.N.C. court's own periods and length limits, computed under
@@ -120,128 +120,128 @@ limit handwritten-summary-judgment-reply {
 /// LBR 1007-1(a): a business entity debtor files the signed resolution of
 /// its governing body authorizing the petition within 14 days after the
 /// petition.
-deadline entity-resolution-period: 14.days after EntityPetitionFiled() counted_by frbp9006 cite "M.D.N.C. LBR 1007-1(a)"
+deadline entity-resolution-period: 14.days after EntityPetitionFiled() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 1007-1(a)"
 /// LBR 1007-1(d)(2): on timely written request a chapter 7, 11 or 12 debtor
 /// provides copies of payment advices at least 7 days before the date first
 /// set for the meeting of creditors.
-deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "M.D.N.C. LBR 1007-1(d)(2)"
+deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 1007-1(d)(2)"
 /// LBR 1007-1(d)(2): to be timely, the request must be received at least 14
 /// days before the date first set for the meeting of creditors.
-deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "M.D.N.C. LBR 1007-1(d)(2)"
+deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 1007-1(d)(2)"
 /// LBR 1007-1(d)(4): a chapter 13 debtor provides copies of payment advices
 /// for examination within 7 days after a written request, unless the court
 /// orders otherwise.
-deadline chapter13-payment-advices-period: 7.days after PaymentAdviceRequested() counted_by frbp9006 cite "M.D.N.C. LBR 1007-1(d)(4)"
+deadline chapter13-payment-advices-period: 7.days after PaymentAdviceRequested() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 1007-1(d)(4)"
 /// LBR 1015-1: the estates of spouses on a joint petition are deemed
 /// consolidated unless the court orders otherwise on a motion filed within
 /// 14 days after the meeting of creditors concludes.
-deadline joint-deconsolidation-motion-period: 14.days after MeetingConcluded() counted_by frbp9006 cite "M.D.N.C. LBR 1015-1"
+deadline joint-deconsolidation-motion-period: 14.days after MeetingConcluded() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 1015-1"
 /// LBR 1019-1(a)(2): an objection or motion on the distribution of funds
 /// the chapter 13 trustee holds is filed within 10 days after the case is
 /// converted.
-deadline conversion-funds-objection-period: 10.days after Chapter13ConvertedTo7() counted_by frbp9006 cite "M.D.N.C. LBR 1019-1(a)(2)"
+deadline conversion-funds-objection-period: 10.days after Chapter13ConvertedTo7() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 1019-1(a)(2)"
 /// LBR 3003-1(a): in a chapter 11 case other than under subchapter V, non-
 /// governmental units file proofs of claim within 90 days after the date
 /// first set for the meeting of creditors, unless the court orders
 /// otherwise first.
-deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "M.D.N.C. LBR 3003-1(a)"
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 3003-1(a)"
 /// LBR 3003-1(b): in a subchapter V case, non-governmental units file
 /// proofs of claim within 70 days after the order for relief, unless the
 /// court orders otherwise first.
-deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "M.D.N.C. LBR 3003-1(b)"
+deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 3003-1(b)"
 /// LBR 3003-1(c): a chapter 11 debtor notifies each creditor whose claim is
 /// scheduled as contingent, disputed or unliquidated within 14 days after
 /// the schedules, the addition or the amendment.
-deadline disputed-claim-notice-period: 14.days after Chapter11SchedulesFiled() counted_by frbp9006 cite "M.D.N.C. LBR 3003-1(c)"
+deadline disputed-claim-notice-period: 14.days after Chapter11SchedulesFiled() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 3003-1(c)"
 /// LBR 3011-1(d): an objection to an application for unclaimed funds is
 /// filed and served within 21 days after the application is served;
 /// otherwise the court may decide it without a hearing.
-deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsApplicationServed() counted_by frbp9006 cite "M.D.N.C. LBR 3011-1(d)"
+deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsApplicationServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 3011-1(d)"
 /// LBR 3014-1: in a subchapter V case in which § 1125 does not apply, a
 /// class of secured creditors may elect § 1111(b)(2) within 14 days after
 /// service of the first plan, or a later time the court fixes.
-deadline subchapter-v-election-period: 14.days after FirstPlanServed() counted_by frbp9006 cite "M.D.N.C. LBR 3014-1"
+deadline subchapter-v-election-period: 14.days after FirstPlanServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 3014-1"
 /// LBR 4001-1(c)(3): a proposed stay-relief order states that the creditor
 /// has 120 days from its entry to file a deficiency claim for personal
 /// property, unless extended by motion filed before it expires.
-deadline personal-property-deficiency-claim-period: 120.days after StayReliefOrderEntered() counted_by frbp9006 cite "M.D.N.C. LBR 4001-1(c)(3)"
+deadline personal-property-deficiency-claim-period: 120.days after StayReliefOrderEntered() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 4001-1(c)(3)"
 /// LBR 4001-1(c)(3): the order states 180 days from its entry for a
 /// deficiency claim for real property.
-deadline real-property-deficiency-claim-period: 180.days after StayReliefOrderEntered() counted_by frbp9006 cite "M.D.N.C. LBR 4001-1(c)(3)"
+deadline real-property-deficiency-claim-period: 180.days after StayReliefOrderEntered() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 4001-1(c)(3)"
 /// LBR 4001-1(c)(4): in chapter 7 and 13 cases, after disposing of the
 /// property the movant explains any surplus to the trustee, the debtor's
 /// attorney and the debtor within 14 days.
-deadline surplus-explanation-period: 14.days after StayPropertyDisposed() counted_by frbp9006 cite "M.D.N.C. LBR 4001-1(c)(4)"
+deadline surplus-explanation-period: 14.days after StayPropertyDisposed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 4001-1(c)(4)"
 /// LBR 4001-1(c)(4): the movant sends any surplus to the trustee within 60
 /// days, pending further order.
-deadline surplus-payment-period: 60.days after StayPropertyDisposed() counted_by frbp9006 cite "M.D.N.C. LBR 4001-1(c)(4)"
+deadline surplus-payment-period: 60.days after StayPropertyDisposed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 4001-1(c)(4)"
 /// LBR 5011-1(b): within 14 days after service of the movant's designation
 /// of the record, any other party may designate additional portions for the
 /// district court.
-deadline additional-record-designation-period: 14.days after RecordDesignationServed() counted_by frbp9006 cite "M.D.N.C. LBR 5011-1(b)"
+deadline additional-record-designation-period: 14.days after RecordDesignationServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 5011-1(b)"
 /// LBR 5011-1(c): parties opposing a motion to withdraw the reference file
 /// and serve written responses within 14 days after its service.
-deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frbp9006 cite "M.D.N.C. LBR 5011-1(c)"
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 5011-1(c)"
 /// LBR 5011-1(c): the movant may file and serve a reply within 14 days
 /// after service of a response.
-deadline withdrawal-reply-period: 14.days after WithdrawalResponseServed() counted_by frbp9006 cite "M.D.N.C. LBR 5011-1(c)"
+deadline withdrawal-reply-period: 14.days after WithdrawalResponseServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 5011-1(c)"
 /// LBR 5020-1(b): a corporate party serving on a creditors' committee files
 /// its corporate disclosure statement within 14 days after being appointed.
-deadline committee-disclosure-period: 14.days after CommitteeAppointment() counted_by frbp9006 cite "M.D.N.C. LBR 5020-1(b)"
+deadline committee-disclosure-period: 14.days after CommitteeAppointment() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 5020-1(b)"
 /// LBR 7007-1(b): a party in interest may respond to a written motion in an
 /// adversary proceeding within 21 days after its service; a brief in
 /// opposition is due by the earlier of that day or 7 business days before
 /// any hearing (LBR 7007-1(c)(1)).
-deadline adversary-motion-response-period: 21.days after AdversaryMotionServed() counted_by frbp9006 cite "M.D.N.C. LBR 7007-1(b)"
+deadline adversary-motion-response-period: 21.days after AdversaryMotionServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 7007-1(b)"
 /// LBR 7055-1(a): a party shows good cause in writing why an inactive
 /// adversary proceeding should not be dismissed within 30 days after the
 /// date of the clerk's notice.
-deadline prosecution-cause-period: 30.days after ProsecutionNoticeSent() counted_by frbp9006 cite "M.D.N.C. LBR 7055-1(a)"
+deadline prosecution-cause-period: 30.days after ProsecutionNoticeSent() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 7055-1(a)"
 /// LBR 7056-1(c): a party opposing summary judgment files and serves its
 /// brief and Statement of Disputed Material Facts within 21 days after
 /// service of the motion.
-deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006 cite "M.D.N.C. LBR 7056-1(c)"
+deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 7056-1(c)"
 /// LBR 7056-1(d): a brief in reply may be filed and served within 14 days
 /// after service of the brief in opposition.
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frbp9006 cite "M.D.N.C. LBR 7056-1(d)"
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 7056-1(d)"
 /// LBR 9013-1(d): absent a date in the clerk's notice, a party in interest
 /// may respond to a motion within the earlier of 14 days after its service
 /// or 3 business days before the hearing.
-deadline motion-response-period: 14.days after MotionServed() counted_by frbp9006 cite "M.D.N.C. LBR 9013-1(d)"
+deadline motion-response-period: 14.days after MotionServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9013-1(d)"
 /// LBR 9013-1(e): an optional brief in opposition to a motion is filed and
 /// served within the earlier of 21 days after its service or 7 business
 /// days before any hearing.
-deadline motion-opposition-brief-period: 21.days after MotionServed() counted_by frbp9006 cite "M.D.N.C. LBR 9013-1(e)"
+deadline motion-opposition-brief-period: 21.days after MotionServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9013-1(e)"
 /// LBR 9015-1: a party that does not consent to final orders by the court
 /// has 30 days from the first scheduling order to move to determine whether
 /// the court may enter them, or its right to a jury trial is waived.
-deadline final-order-motion-period: 30.days after SchedulingOrderEntered() counted_by frbp9006 cite "M.D.N.C. LBR 9015-1"
+deadline final-order-motion-period: 30.days after SchedulingOrderEntered() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9015-1"
 /// LBR 9019-2(a)(2): within 14 days after an order requiring a mediated
 /// settlement conference, any party may move to dispense with it.
-deadline mediation-dispense-motion-period: 14.days after MediationOrderEntered() counted_by frbp9006 cite "M.D.N.C. LBR 9019-2(a)(2)"
+deadline mediation-dispense-motion-period: 14.days after MediationOrderEntered() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9019-2(a)(2)"
 /// LBR 9019-2(a)(2): any party may respond within 14 days after service of
 /// the motion to dispense.
-deadline mediation-dispense-response-period: 14.days after MediationDispenseMotionServed() counted_by frbp9006 cite "M.D.N.C. LBR 9019-2(a)(2)"
+deadline mediation-dispense-response-period: 14.days after MediationDispenseMotionServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9019-2(a)(2)"
 /// LBR 9019-2(a)(3): within 14 days after the order, any party may move, by
 /// consent, to use another dispute resolution procedure instead.
-deadline other-procedure-motion-period: 14.days after MediationOrderEntered() counted_by frbp9006 cite "M.D.N.C. LBR 9019-2(a)(3)"
+deadline other-procedure-motion-period: 14.days after MediationOrderEntered() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9019-2(a)(3)"
 /// LBR 9019-2(b)(1): the parties may select a mediator by filing a
 /// Designation of Mediator within 21 days after the order, or such other
 /// time as the court directs.
-deadline mediator-designation-period: 21.days after MediationOrderEntered() counted_by frbp9006 cite "M.D.N.C. LBR 9019-2(b)(1)"
+deadline mediator-designation-period: 21.days after MediationOrderEntered() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9019-2(b)(1)"
 /// LBR 9019-2(d): on agreement the parties provide the mediator a formal,
 /// executed written agreement within 7 days of the settlement.
-deadline mediated-agreement-period: 7.days after MediatedSettlementReached() counted_by frbp9006 cite "M.D.N.C. LBR 9019-2(d)"
+deadline mediated-agreement-period: 7.days after MediatedSettlementReached() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9019-2(d)"
 /// LBR 9019-2(f)(2)(C): the mediator submits a Report of Mediator within 14
 /// days after a conference concludes without agreement.
-deadline mediator-report-period: 14.days after MediationConcluded() counted_by frbp9006 cite "M.D.N.C. LBR 9019-2(f)(2)(C)"
+deadline mediator-report-period: 14.days after MediationConcluded() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9019-2(f)(2)(C)"
 /// LBR 9072-1(a)(1): when no objection is filed by the objection deadline
 /// set with a tentative hearing, the movant submits a proposed order within
 /// 5 days after the deadline passes.
-deadline unopposed-proposed-order-period: 5.days after ObjectionDeadlinePassed() counted_by frbp9006 cite "M.D.N.C. LBR 9072-1(a)(1)"
+deadline unopposed-proposed-order-period: 5.days after ObjectionDeadlinePassed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9072-1(a)(1)"
 /// LBR 9072-1(a)(2): the party that prevails at a hearing submits a
 /// proposed order conforming to the oral ruling within 10 days after it.
-deadline hearing-proposed-order-period: 10.days after OralRulingGiven() counted_by frbp9006 cite "M.D.N.C. LBR 9072-1(a)(2)"
+deadline hearing-proposed-order-period: 10.days after OralRulingGiven() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9072-1(a)(2)"
 
 start motion-filed
 

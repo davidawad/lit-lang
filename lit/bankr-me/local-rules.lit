@@ -1,6 +1,6 @@
 module bankr-me-local-rules.local-rules
 
-import core.frbp9006.{ frbp9006 }
+import core.states.maine.{ frbp9006-maine }
 import frbp.events.{ FirstMeetingDate, PetitionFiled }
 
 // The District of Maine Bankruptcy Court's own periods, computed under
@@ -74,71 +74,71 @@ event MotionReplyFiled() paper motion-reply
 /// Local Rule 1002-1(b): a debtor that is not an individual or a
 /// governmental unit files a statement identifying each affiliate and
 /// insider with the petition or within 14 days thereafter.
-deadline affiliates-statement-period: 14.days after PetitionFiled() counted_by frbp9006 cite "D. Me. LBR 1002-1(b)"
+deadline affiliates-statement-period: 14.days after PetitionFiled() counted_by frbp9006-maine cite "D. Me. LBR 1002-1(b)"
 /// Local Rule 1007-1(c)(2): an individual debtor whose case is converted
 /// to Chapter 11 files Official Form 122B, or to Chapter 13 Official Form
 /// 122C-1 (and 122C-2 if applicable), within 14 days of the order
 /// converting the case.
-deadline converted-means-test-period: 14.days after ConversionOrderEntered() counted_by frbp9006 cite "D. Me. LBR 1007-1(c)"
+deadline converted-means-test-period: 14.days after ConversionOrderEntered() counted_by frbp9006-maine cite "D. Me. LBR 1007-1(c)"
 /// Local Rule 1019-1(b): on conversion to Chapter 7 of a case in which the
 /// debtor operated a business, the debtor in possession files the
 /// schedule of business assets not later than 14 days after conversion.
-deadline dip-business-assets-period: 14.days after ConvertedToChapter7() counted_by frbp9006 cite "D. Me. LBR 1019-1(b)"
+deadline dip-business-assets-period: 14.days after ConvertedToChapter7() counted_by frbp9006-maine cite "D. Me. LBR 1019-1(b)"
 /// Local Rule 1019-1(b): a trustee serving at the time of conversion files
 /// the schedule not later than 30 days after conversion.
-deadline trustee-business-assets-period: 30.days after ConvertedToChapter7() counted_by frbp9006 cite "D. Me. LBR 1019-1(b)"
+deadline trustee-business-assets-period: 30.days after ConvertedToChapter7() counted_by frbp9006-maine cite "D. Me. LBR 1019-1(b)"
 /// Local Rule 2004-1(b): absent exigent circumstances, a motion for a
 /// protective order against a Rule 2004 examination is filed within 14
 /// days of service of the examination order or before the examination is
 /// convened, whichever is earlier.
-deadline examination-protective-order-period: 14.days after ExaminationOrderServed() counted_by frbp9006 cite "D. Me. LBR 2004-1(b)"
+deadline examination-protective-order-period: 14.days after ExaminationOrderServed() counted_by frbp9006-maine cite "D. Me. LBR 2004-1(b)"
 /// Local Rule 3002-1: when a Chapter 7, 12 or 13 debtor amends a schedule
 /// to add a creditor, the added creditor may file a proof of claim within
 /// 90 days after the debtor served it with notice of the amendment.
-deadline added-creditor-claim-period: 90.days after AmendmentNoticeServed() counted_by frbp9006 cite "D. Me. LBR 3002-1"
+deadline added-creditor-claim-period: 90.days after AmendmentNoticeServed() counted_by frbp9006-maine cite "D. Me. LBR 3002-1"
 /// Local Rule 3003-1: in a Chapter 9 or Chapter 11 case, the time for
 /// filing a proof of claim or interest is 90 days from the first date set
 /// for the meeting of creditors.
-deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "D. Me. LBR 3003-1"
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006-maine cite "D. Me. LBR 3003-1"
 /// Local Rule 3003-1: a creditor served with notice that its claim is
 /// disputed, contingent or unliquidated, or that the schedules were
 /// amended so that it now objects to the claim, files a proof of claim no
 /// later than 90 days from that service.
-deadline disputed-claim-period: 90.days after DisputedClaimNoticeServed() counted_by frbp9006 cite "D. Me. LBR 3003-1"
+deadline disputed-claim-period: 90.days after DisputedClaimNoticeServed() counted_by frbp9006-maine cite "D. Me. LBR 3003-1"
 /// Local Rule 3007-1(a): in a Chapter 13 case, an objection to a claim
 /// under § 502(b) of the Code is filed within 30 days after the deadline
 /// for filing the claim.
-deadline chapter13-claim-objection-period: 30.days after ClaimDeadlinePassed() counted_by frbp9006 cite "D. Me. LBR 3007-1(a)"
+deadline chapter13-claim-objection-period: 30.days after ClaimDeadlinePassed() counted_by frbp9006-maine cite "D. Me. LBR 3007-1(a)"
 /// Local Rule 3007-1(a): an objection to a claim under § 1305 of the Code
 /// is filed within 30 days after the claim is filed.
-deadline postpetition-claim-objection-period: 30.days after PostpetitionClaimFiled() counted_by frbp9006 cite "D. Me. LBR 3007-1(a)"
+deadline postpetition-claim-objection-period: 30.days after PostpetitionClaimFiled() counted_by frbp9006-maine cite "D. Me. LBR 3007-1(a)"
 /// Local Rule 3016-2: the action § 1106(a)(5) of the Code requires of a
 /// Chapter 11 trustee is completed within 30 days of the trustee's
 /// appointment.
-deadline trustee-plan-action-period: 30.days after TrusteeAppointed() counted_by frbp9006 cite "D. Me. LBR 3016-2"
+deadline trustee-plan-action-period: 30.days after TrusteeAppointed() counted_by frbp9006-maine cite "D. Me. LBR 3016-2"
 /// Local Rule 3017-1(f): within 7 days after mailing the plan and
 /// disclosure statement, the debtor files a certificate of service with
 /// copies of each document mailed.
-deadline plan-mailing-certificate-period: 7.days after PlanPackageMailed() counted_by frbp9006 cite "D. Me. LBR 3017-1(f)"
+deadline plan-mailing-certificate-period: 7.days after PlanPackageMailed() counted_by frbp9006-maine cite "D. Me. LBR 3017-1(f)"
 /// Local Rule 9013-2(b)(1): a motion to continue a scheduled hearing
 /// without the consent of all interested parties is filed no fewer than
 /// three days before the hearing, unless good cause is shown.
-deadline continuance-motion-period: 3.days before HearingScheduled() counted_by frbp9006 cite "D. Me. LBR 9013-2(b)"
+deadline continuance-motion-period: 3.days before HearingScheduled() counted_by frbp9006-maine cite "D. Me. LBR 9013-2(b)"
 /// Local Rule 9013-3: an order on a motion filed for relief without a
 /// hearing becomes final in 14 days unless an interested party sooner
 /// objects.
-deadline without-hearing-objection-period: 14.days after WithoutHearingOrderEntered() counted_by frbp9006 cite "D. Me. LBR 9013-3"
+deadline without-hearing-objection-period: 14.days after WithoutHearingOrderEntered() counted_by frbp9006-maine cite "D. Me. LBR 9013-3"
 /// Local Rule 9019-1(b): the parties notify the court in writing within
 /// 21 days of the compromise or settlement of an adversary proceeding.
-deadline adversary-settlement-notice-period: 21.days after AdversarySettled() counted_by frbp9006 cite "D. Me. LBR 9019-1(b)"
+deadline adversary-settlement-notice-period: 21.days after AdversarySettled() counted_by frbp9006-maine cite "D. Me. LBR 9019-1(b)"
 /// Local Rule 9027-1: within 7 days after filing a notice of removal, the
 /// removing party serves it on all parties to the removed claim and files
 /// a certified copy of the removed action's docket sheet.
-deadline removal-service-period: 7.days after RemovalNoticeFiled() counted_by frbp9006 cite "D. Me. LBR 9027-1"
+deadline removal-service-period: 7.days after RemovalNoticeFiled() counted_by frbp9006-maine cite "D. Me. LBR 9027-1"
 /// Local Rule 9027-1: within 14 days of filing the notice of removal, the
 /// removing party files copies of all filings from the removed action with
 /// a written representation that they are true and accurate.
-deadline removal-filings-period: 14.days after RemovalNoticeFiled() counted_by frbp9006 cite "D. Me. LBR 9027-1"
+deadline removal-filings-period: 14.days after RemovalNoticeFiled() counted_by frbp9006-maine cite "D. Me. LBR 9027-1"
 
 start motion-filed
 

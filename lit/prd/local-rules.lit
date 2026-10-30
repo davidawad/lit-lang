@@ -1,6 +1,6 @@
 module prd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.puerto-rico.{ frcp6-puerto-rico }
 
 // The District of Puerto Rico's own civil periods and limits, computed under
 // FRCP 6(a), which governs a period stated in a local rule. Rules that state
@@ -108,7 +108,7 @@ event MediationStatementSubmitted()
 /// corrected within 30 days from the notice of defective filing, or the case
 /// is submitted for final disposition; the statute of limitations is tolled
 /// during that period.
-deadline form-correction-period: 30.days after DefectiveFilingNoticed() counted_by frcp6 cite "D.P.R. L. Civ. R. 3(c)"
+deadline form-correction-period: 30.days after DefectiveFilingNoticed() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 3(c)"
 {
   forum frcp
 }
@@ -116,7 +116,7 @@ deadline form-correction-period: 30.days after DefectiveFilingNoticed() counted_
 /// L.Civ.R. 3A(c)(4)(b): when court appearances conflict, counsel notify
 /// each judge in writing not later than seven days after receipt of the
 /// notice giving rise to the conflict.
-deadline calendar-conflict-notice-period: 7.days after ConflictNoticeReceived() counted_by frcp6 cite "D.P.R. L. Civ. R. 3A(c)"
+deadline calendar-conflict-notice-period: 7.days after ConflictNoticeReceived() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 3A(c)"
 {
   forum frcp
 }
@@ -125,7 +125,7 @@ deadline calendar-conflict-notice-period: 7.days after ConflictNoticeReceived() 
 /// within 14 days after service of a motion, it is deemed to have waived
 /// any objection. Summary judgment practice follows the same period unless
 /// the court orders otherwise (L.Civ.R. 56(a)).
-deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "D.P.R. L. Civ. R. 7(b)"
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 7(b)"
 {
   forum frcp
 }
@@ -133,7 +133,7 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "
 /// L.Civ.R. 7(c): with prior leave of court, the movant may file a reply
 /// within seven days of service of the objection, confined to new matters
 /// raised in it.
-deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "D.P.R. L. Civ. R. 7(c)"
+deadline reply-period: 7.days after OppositionServed() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 7(c)"
 {
   forum frcp
 }
@@ -142,7 +142,7 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "D.
 /// Act, 28 U.S.C. § 2412, files its request within 30 days after the
 /// judgment remanding the case to the Commissioner becomes final; a late
 /// request is denied absent good cause (L.Civ.R. 9(b)(3)).
-deadline eaja-fee-request-period: 30.days after RemandJudgmentFinal() counted_by frcp6 cite "D.P.R. L. Civ. R. 9(b)"
+deadline eaja-fee-request-period: 30.days after RemandJudgmentFinal() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 9(b)"
 {
   forum frcp
 }
@@ -150,14 +150,14 @@ deadline eaja-fee-request-period: 30.days after RemandJudgmentFinal() counted_by
 /// L.Civ.R. 9(b)(2): a party seeking fees under 42 U.S.C. § 406(b) files
 /// its request within 14 days after counsel's receipt of the latest Notice
 /// of Award.
-deadline social-security-fee-request-period: 14.days after NoticeOfAwardReceived() counted_by frcp6 cite "D.P.R. L. Civ. R. 9(b)"
+deadline social-security-fee-request-period: 14.days after NoticeOfAwardReceived() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 9(b)"
 {
   forum frcp
 }
 
 /// L.Civ.R. 9(b)(2): the Commissioner responds to a 42 U.S.C. § 406(b) fee
 /// request within 30 days after receiving it.
-deadline social-security-fee-response-period: 30.days after SocialSecurityFeeRequestReceived() counted_by frcp6 cite "D.P.R. L. Civ. R. 9(b)"
+deadline social-security-fee-response-period: 30.days after SocialSecurityFeeRequestReceived() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 9(b)"
 {
   forum frcp
 }
@@ -165,21 +165,21 @@ deadline social-security-fee-response-period: 30.days after SocialSecurityFeeReq
 /// L.Civ.R. 16(c): at least 14 days before the pretrial conference, at
 /// plaintiff's counsel's initiative, counsel for each party meet to prepare
 /// the proposed Pretrial Order.
-deadline pretrial-meeting-period: 14.days before PretrialConference() counted_by frcp6 cite "D.P.R. L. Civ. R. 16(c)"
+deadline pretrial-meeting-period: 14.days before PretrialConference() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 16(c)"
 {
   forum frcp
 }
 
 /// L.Civ.R. 16(c): the proposed Pretrial Order is filed at least seven days
 /// before the pretrial conference.
-deadline proposed-pretrial-order-period: 7.days before PretrialConference() counted_by frcp6 cite "D.P.R. L. Civ. R. 16(c)"
+deadline proposed-pretrial-order-period: 7.days before PretrialConference() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 16(c)"
 {
   forum frcp
 }
 
 /// L.Civ.R. 16(e): unless otherwise ordered, an objection to the final
 /// Pretrial Order is made within 14 days after court approval.
-deadline pretrial-order-objection-period: 14.days after PretrialOrderApproved() counted_by frcp6 cite "D.P.R. L. Civ. R. 16(e)"
+deadline pretrial-order-objection-period: 14.days after PretrialOrderApproved() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 16(e)"
 {
   forum frcp
 }
@@ -187,14 +187,14 @@ deadline pretrial-order-objection-period: 14.days after PretrialOrderApproved() 
 /// L.Civ.R. 51: each party files proposed jury instructions and voir dire
 /// questions at least seven days before trial commences, unless the court
 /// orders otherwise.
-deadline jury-instructions-period: 7.days before TrialCommences() counted_by frcp6 cite "D.P.R. L. Civ. R. 51"
+deadline jury-instructions-period: 7.days before TrialCommences() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 51"
 {
   forum frcp
 }
 
 /// L.Civ.R. 54(a): bills of costs, with supporting memoranda, are filed
 /// within 14 days of the entry of judgment.
-deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D.P.R. L. Civ. R. 54(a)"
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 54(a)"
 {
   forum frcp
 }
@@ -202,14 +202,14 @@ deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 
 /// L.Civ.R. 54(a): unless the opposing party files a written objection with
 /// a memorandum of law within 14 days after the bill of costs is filed, it
 /// waives objection and the clerk taxes the costs properly claimed.
-deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "D.P.R. L. Civ. R. 54(a)"
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 54(a)"
 {
   forum frcp
 }
 
 /// L.Civ.R. 54(a): where an appeal is pending, the court may deny costs
 /// without prejudice to refiling within 14 days after the mandate issues.
-deadline costs-refiling-period: 14.days after MandateIssued() counted_by frcp6 cite "D.P.R. L. Civ. R. 54(a)"
+deadline costs-refiling-period: 14.days after MandateIssued() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 54(a)"
 {
   forum frcp
 }
@@ -217,7 +217,7 @@ deadline costs-refiling-period: 14.days after MandateIssued() counted_by frcp6 c
 /// L.Civ.R. 54(b): in a case with contracted fees, or in which no notice of
 /// appeal has been filed, the application for attorneys' fees is filed
 /// within 14 days of the expiration of the time for a timely appeal.
-deadline fee-application-period: 14.days after AppealTimeExpired() counted_by frcp6 cite "D.P.R. L. Civ. R. 54(b)"
+deadline fee-application-period: 14.days after AppealTimeExpired() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 54(b)"
 {
   forum frcp
 }
@@ -225,7 +225,7 @@ deadline fee-application-period: 14.days after AppealTimeExpired() counted_by fr
 /// L.Civ.R. 54(b): in all other cases the application for fees is filed
 /// within 14 days after the mandate issues; an application filed before the
 /// final disposition of an appeal has no effect.
-deadline post-mandate-fee-application-period: 14.days after MandateIssued() counted_by frcp6 cite "D.P.R. L. Civ. R. 54(b)"
+deadline post-mandate-fee-application-period: 14.days after MandateIssued() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 54(b)"
 {
   forum frcp
 }
@@ -234,7 +234,7 @@ deadline post-mandate-fee-application-period: 14.days after MandateIssued() coun
 /// non-dispositive pretrial matter within 14 days after being served with
 /// the order, unless the magistrate judge or a district judge prescribes a
 /// different time.
-deadline magistrate-order-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "D.P.R. L. Civ. R. 72(c)"
+deadline magistrate-order-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 72(c)"
 {
   forum frcp
 }
@@ -242,7 +242,7 @@ deadline magistrate-order-appeal-period: 14.days after MagistrateOrderServed() c
 /// L.Civ.R. 72(d): a party objects to a magistrate judge's report of
 /// proposed findings and recommendations within 14 days after being served
 /// with a copy.
-deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "D.P.R. L. Civ. R. 72(d)"
+deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 72(d)"
 {
   forum frcp
 }
@@ -251,7 +251,7 @@ deadline magistrate-report-objection-period: 14.days after MagistrateReportServe
 /// selected, and file a written agreement with the mediator, within 14 days
 /// of the court's notice of referral to mediation; otherwise the court
 /// selects one (L.Civ.R. 83J(c)(4)(B)).
-deadline mediator-selection-period: 14.days after MediationReferralNoticed() counted_by frcp6 cite "D.P.R. L. Civ. R. 83J(c)"
+deadline mediator-selection-period: 14.days after MediationReferralNoticed() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 83J(c)"
 {
   forum frcp
 }
@@ -259,7 +259,7 @@ deadline mediator-selection-period: 14.days after MediationReferralNoticed() cou
 /// L.Civ.R. 83J(c)(7)(A)-(B): a party raises a mediator's conflict of
 /// interest or misconduct with the court in writing within 14 days of
 /// learning of it, or the objection is waived.
-deadline mediator-objection-period: 14.days after MediatorConcernLearned() counted_by frcp6 cite "D.P.R. L. Civ. R. 83J(c)"
+deadline mediator-objection-period: 14.days after MediatorConcernLearned() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 83J(c)"
 {
   forum frcp
 }
@@ -267,7 +267,7 @@ deadline mediator-objection-period: 14.days after MediatorConcernLearned() count
 /// L.Civ.R. 83J(d): a party objects for good cause to court-ordered
 /// mediation by a written request for reconsideration within 14 days after
 /// the mediation order issues.
-deadline mediation-reconsideration-period: 14.days after MediationOrderIssued() counted_by frcp6 cite "D.P.R. L. Civ. R. 83J(d)"
+deadline mediation-reconsideration-period: 14.days after MediationOrderIssued() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 83J(d)"
 {
   forum frcp
 }
@@ -275,7 +275,7 @@ deadline mediation-reconsideration-period: 14.days after MediationOrderIssued() 
 /// L.Civ.R. 83J(e)(2): at least seven days before the first mediation
 /// session, the parties submit their pleadings, motions and Mediation
 /// Statement to the mediator.
-deadline mediation-submission-period: 7.days before FirstMediationSession() counted_by frcp6 cite "D.P.R. L. Civ. R. 83J(e)"
+deadline mediation-submission-period: 7.days before FirstMediationSession() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 83J(e)"
 {
   forum frcp
 }
@@ -283,7 +283,7 @@ deadline mediation-submission-period: 7.days before FirstMediationSession() coun
 /// L.Civ.R. 83K(d)(2): the parties to a bankruptcy appeal heard by this
 /// court notify the bankruptcy court of the judgment concluding the appeal
 /// within 30 days of its entry.
-deadline bankruptcy-appeal-judgment-notice-period: 30.days after BankruptcyAppealJudgmentEntered() counted_by frcp6 cite "D.P.R. L. Civ. R. 83K(d)"
+deadline bankruptcy-appeal-judgment-notice-period: 30.days after BankruptcyAppealJudgmentEntered() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 83K(d)"
 {
   forum frcp
 }

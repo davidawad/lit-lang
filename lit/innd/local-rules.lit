@@ -1,6 +1,6 @@
 module innd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.indiana.{ frcp6-indiana }
 
 // The Northern District of Indiana's own periods, computed under the
 // federal rules (FRCP 6(a) governs "any local rule"). The court may
@@ -114,7 +114,7 @@ event ProposedFindingsServed()
 /// required, or 21 days after filing the paper questioning the statute's
 /// constitutionality. The period below is the 21-day branch; a later
 /// case-management plan tender moves the deadline to that day.
-deadline constitutional-question-notice-period: 21.days after ConstitutionalChallengeFiled() counted_by frcp6 cite "N.D. Ind. L.R. 5.1-1(a)"
+deadline constitutional-question-notice-period: 21.days after ConstitutionalChallengeFiled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 5.1-1(a)"
 {
   forum frcp
 }
@@ -123,14 +123,14 @@ deadline constitutional-question-notice-period: 21.days after ConstitutionalChal
 /// motion under FRCP 12 within 21 days after the motion is served, unless
 /// it is entitled to and first files an amended pleading as a matter of
 /// course under FRCP 15(a)(1).
-deadline rule12-response-period: 21.days after Rule12MotionServed() counted_by frcp6 cite "N.D. Ind. L.R. 7-1(d)(2)"
+deadline rule12-response-period: 21.days after Rule12MotionServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-1(d)(2)"
 {
   forum frcp
 }
 
 /// N.D. Ind. L.R. 7-1(d)(2)(B): the moving party files any reply brief
 /// within 7 days after the response brief is served.
-deadline rule12-reply-period: 7.days after Rule12ResponseServed() counted_by frcp6 cite "N.D. Ind. L.R. 7-1(d)(2)"
+deadline rule12-reply-period: 7.days after Rule12ResponseServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-1(d)(2)"
 {
   forum frcp
 }
@@ -140,14 +140,14 @@ deadline rule12-reply-period: 7.days after Rule12ResponseServed() counted_by frc
 /// motions follow L.R. 56-1(b) and (c) (L.R. 7-1(d)(1)). The court may
 /// rule summarily if no response is filed before the deadline (L.R.
 /// 7-1(d)(5)).
-deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "N.D. Ind. L.R. 7-1(d)(3)"
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-1(d)(3)"
 {
   forum frcp
 }
 
 /// N.D. Ind. L.R. 7-1(d)(3)(B): the moving party files any reply brief
 /// within 7 days after the response brief is served.
-deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "N.D. Ind. L.R. 7-1(d)(3)"
+deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-1(d)(3)"
 {
   forum frcp
 }
@@ -155,21 +155,21 @@ deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6 cit
 /// N.D. Ind. L.R. 7-3(b): a person challenging an agency determination on
 /// entitlement to Social Security benefits files an opening brief within
 /// 42 days after the administrative record is filed.
-deadline social-security-opening-brief-period: 42.days after AdministrativeRecordFiled() counted_by frcp6 cite "N.D. Ind. L.R. 7-3(b)"
+deadline social-security-opening-brief-period: 42.days after AdministrativeRecordFiled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-3(b)"
 {
   forum frcp
 }
 
 /// N.D. Ind. L.R. 7-3(c): any response brief is filed within 42 days after
 /// the opening brief.
-deadline social-security-response-period: 42.days after SocialSecurityOpeningBriefFiled() counted_by frcp6 cite "N.D. Ind. L.R. 7-3(c)"
+deadline social-security-response-period: 42.days after SocialSecurityOpeningBriefFiled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-3(c)"
 {
   forum frcp
 }
 
 /// N.D. Ind. L.R. 7-3(d): any reply brief is filed within 14 days after the
 /// response brief.
-deadline social-security-reply-period: 14.days after SocialSecurityResponseFiled() counted_by frcp6 cite "N.D. Ind. L.R. 7-3(d)"
+deadline social-security-reply-period: 14.days after SocialSecurityResponseFiled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-3(d)"
 {
   forum frcp
 }
@@ -177,7 +177,7 @@ deadline social-security-reply-period: 14.days after SocialSecurityResponseFiled
 /// N.D. Ind. L.R. 30-1(b): attorneys schedule depositions with at least 14
 /// days' notice, unless opposing counsel agrees to shorter notice or the
 /// court orders otherwise.
-deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6 cite "N.D. Ind. L.R. 30-1(b)"
+deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 30-1(b)"
 {
   forum frcp
 }
@@ -187,7 +187,7 @@ deadline deposition-notice-period: 14.days before DepositionScheduled() counted_
 /// directs otherwise or, within 14 days after the mandate for a new trial
 /// is docketed, all parties file a request that the previously assigned
 /// judge retry it.
-deadline retrial-judge-request-period: 14.days after NewTrialMandateDocketed() counted_by frcp6 cite "N.D. Ind. L.R. 40-1(g)"
+deadline retrial-judge-request-period: 14.days after NewTrialMandateDocketed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 40-1(g)"
 {
   forum frcp
 }
@@ -195,7 +195,7 @@ deadline retrial-judge-request-period: 14.days after NewTrialMandateDocketed() c
 /// N.D. Ind. L.R. 47-3(b): the court may not assess juror costs if, at
 /// least one full business day before the trial is set to begin, the clerk
 /// is notified of the circumstances causing delay.
-deadline jury-cost-notice-period: 1.court_days before TrialBegins() counted_by frcp6 cite "N.D. Ind. L.R. 47-3(b)"
+deadline jury-cost-notice-period: 1.court_days before TrialBegins() counted_by frcp6-indiana cite "N.D. Ind. L.R. 47-3(b)"
 {
   forum frcp
 }
@@ -204,7 +204,7 @@ deadline jury-cost-notice-period: 1.court_days before TrialBegins() counted_by f
 /// completed AO Form 133 within 14 days after final judgment is entered.
 /// The court may extend the 14 days for good cause if the party moves
 /// before the original deadline (L.R. 54-1(b)).
-deadline cost-bill-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "N.D. Ind. L.R. 54-1(a)"
+deadline cost-bill-period: 14.days after FinalJudgmentEntered() counted_by frcp6-indiana cite "N.D. Ind. L.R. 54-1(a)"
 {
   forum frcp
 }
@@ -212,7 +212,7 @@ deadline cost-bill-period: 14.days after FinalJudgmentEntered() counted_by frcp6
 /// N.D. Ind. L.R. 56-1(b): a party opposing summary judgment, within 28
 /// days after the moving party served the motion, separately files a
 /// response brief and a Response to Statement of Material Facts.
-deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "N.D. Ind. L.R. 56-1(b)"
+deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 56-1(b)"
 {
   forum frcp
 }
@@ -221,7 +221,7 @@ deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionSe
 /// response is served, separately file a reply brief and a Reply to
 /// Statement of Additional Material Facts; additional briefs need leave of
 /// court (L.R. 56-1(d)).
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "N.D. Ind. L.R. 56-1(c)"
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 56-1(c)"
 {
   forum frcp
 }
@@ -231,7 +231,7 @@ deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseSer
 /// the estate's property and assets and, on a separate schedule, an
 /// inventory of those held by others. The court may alter the deadline
 /// (L.R. 66-1(e)).
-deadline receiver-inventory-period: 28.days after EstatePossessionTaken() counted_by frcp6 cite "N.D. Ind. L.R. 66-1(b)"
+deadline receiver-inventory-period: 28.days after EstatePossessionTaken() counted_by frcp6-indiana cite "N.D. Ind. L.R. 66-1(b)"
 {
   forum frcp
 }
@@ -239,7 +239,7 @@ deadline receiver-inventory-period: 28.days after EstatePossessionTaken() counte
 /// N.D. Ind. L.R. 66-1(b)(2): within 28 days after the inventory is filed,
 /// and every three months after that, the officer files a report of its
 /// acts and an accounting. The period below is the first report.
-deadline receiver-first-report-period: 28.days after EstateInventoryFiled() counted_by frcp6 cite "N.D. Ind. L.R. 66-1(b)"
+deadline receiver-first-report-period: 28.days after EstateInventoryFiled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 66-1(b)"
 {
   forum frcp
 }
@@ -247,7 +247,7 @@ deadline receiver-first-report-period: 28.days after EstateInventoryFiled() coun
 /// N.D. Ind. L.R. 83-6.8(b): the disciplined attorney shows cause within
 /// 30 days after the order is served why the court should not impose
 /// identical discipline (other than a fine).
-deadline identical-discipline-show-cause-period: 30.days after IdenticalDisciplineOrderServed() counted_by frcp6 cite "N.D. Ind. L.R. 83-6.8(b)"
+deadline identical-discipline-show-cause-period: 30.days after IdenticalDisciplineOrderServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 83-6.8(b)"
 {
   forum frcp
 }
@@ -255,7 +255,7 @@ deadline identical-discipline-show-cause-period: 30.days after IdenticalDiscipli
 /// N.D. Ind. L.R. 83-7(c): an attorney who accepts a request to represent
 /// an indigent party enters an appearance for the party within 14 days
 /// after accepting the request.
-deadline appointed-appearance-period: 14.days after AppointmentAccepted() counted_by frcp6 cite "N.D. Ind. L.R. 83-7(c)"
+deadline appointed-appearance-period: 14.days after AppointmentAccepted() counted_by frcp6-indiana cite "N.D. Ind. L.R. 83-7(c)"
 {
   forum frcp
 }
@@ -263,7 +263,7 @@ deadline appointed-appearance-period: 14.days after AppointmentAccepted() counte
 /// N.D. Ind. L.R. 83-7(e)(1): appointed counsel may seek reimbursement of
 /// reasonable expenses by petition filed before they are incurred or
 /// within 90 days after they were incurred.
-deadline appointed-expense-petition-period: 90.days after AppointmentExpenseIncurred() counted_by frcp6 cite "N.D. Ind. L.R. 83-7(e)"
+deadline appointed-expense-petition-period: 90.days after AppointmentExpenseIncurred() counted_by frcp6-indiana cite "N.D. Ind. L.R. 83-7(e)"
 {
   forum frcp
 }
@@ -271,7 +271,7 @@ deadline appointed-expense-petition-period: 90.days after AppointmentExpenseIncu
 /// N.D. Ind. L.R. 83-8(b): attorneys who are not bar members comply with
 /// the court's admission policy (L.R. 83-5) within 21 days of removal or
 /// transfer.
-deadline removal-admission-period: 21.days after CaseRemovedOrTransferred() counted_by frcp6 cite "N.D. Ind. L.R. 83-8(b)"
+deadline removal-admission-period: 21.days after CaseRemovedOrTransferred() counted_by frcp6-indiana cite "N.D. Ind. L.R. 83-8(b)"
 {
   forum frcp
 }
@@ -280,7 +280,7 @@ deadline removal-admission-period: 21.days after CaseRemovedOrTransferred() coun
 /// party, a motion to withdraw an appearance includes evidence that the
 /// attorney gave the party written notice of the intent to withdraw at
 /// least seven days before filing the motion.
-deadline withdrawal-notice-period: 7.days before WithdrawalMotionFiled() counted_by frcp6 cite "N.D. Ind. L.R. 83-8(c)"
+deadline withdrawal-notice-period: 7.days before WithdrawalMotionFiled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 83-8(c)"
 {
   forum frcp
 }
@@ -289,7 +289,7 @@ deadline withdrawal-notice-period: 7.days before WithdrawalMotionFiled() counted
 /// bankruptcy judge's proposed findings and conclusions, any party may file
 /// objections with the bankruptcy clerk; the district judge reviews de
 /// novo the matters timely and specifically objected to.
-deadline proposed-findings-objection-period: 14.days after ProposedFindingsServed() counted_by frcp6 cite "N.D. Ind. L.R. 200-1(a)"
+deadline proposed-findings-objection-period: 14.days after ProposedFindingsServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 200-1(a)"
 {
   forum frcp
 }

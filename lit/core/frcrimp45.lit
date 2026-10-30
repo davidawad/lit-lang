@@ -1,6 +1,7 @@
 module core.frcrimp45
 
-import core.calendar.{ delaware-holidays, district-state-holidays, us-federal-holidays }
+import core.calendar.{ district-state-holidays, us-federal-holidays }
+import core.states.delaware.{ frcrimp45-delaware }
 import core.time.{ Served, Scheduled, ServiceMethod }
 
 /// FRCrimP 45 from the 1985 amendments (effective August 1, 1985) as the
@@ -189,7 +190,8 @@ counting frcrimp45 effective [2016-12-01, 2023-12-01) known_at 2016-04-28 supers
 /// stay undeclared (no declaration is vendored). For forward-counted
 /// periods, (C)'s state holidays use the district-state calendar; its dates
 /// remain unavailable where the state's holiday law is not vendored. D. Del.
-/// has a sourced calendar below. Rule 45 is silent on periods stated in
+/// has a sourced count, `frcrimp45-delaware` (lit/core/states/delaware.lit).
+/// Rule 45 is silent on periods stated in
 /// months or years, so none is counted.
 counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 supersedes frcrimp45@2016-12-01 cite "FRCrimP 45(a)"
 {
@@ -210,86 +212,6 @@ counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 supersedes frc
   } cite "FRCrimP 45(c)"
   holidays us-federal-holidays
   forward_holidays district-state-holidays cite "FRCrimP 45(a)(6)(C)"
-  forums [frcrimp]
-  allow_hours
-}
-
-/// FRCrimP 45 in the District of Delaware: each version of `frcrimp45`
-/// with Delaware's legal holidays, which 45(a)(6)(C) ("for periods that are
-/// measured after an event, any other day declared a holiday by the state
-/// where the district court is located", in every text from 2009) makes
-/// legal holidays of a forward-counted period only. A D. Del. criminal
-/// package names it as its `counting` rule; core's `frcrimp45` stays the
-/// federal-only count of every other district. Only the Delaware days the
-/// federal calendar lacks close here. It is in force from May 2, 2011, when
-/// core's `delaware-holidays` is, and counts no period before.
-counting frcrimp45-delaware effective [2011-05-02, 2016-12-01) known_at 2009-03-26 cite "FRCrimP (2011 ed.) 45(a)"
-{
-  exclude_trigger_day
-  include_last_day
-  roll_forward_on [weekend, legal_holiday, inaccessible]
-  service_extension {
-    Personal: 0.days
-    Electronic: 3.days
-    Mail: 3.days
-    Clerk: 3.days
-    OtherConsented: 3.days
-    CommercialCarrier: unrecognized
-    PrisonMail: unrecognized
-    MailForeign: unrecognized
-    Express: unrecognized
-    ExpressForeign: unrecognized
-  } cite "FRCrimP (2011 ed.) 45(c)"
-  holidays us-federal-holidays
-  forward_holidays delaware-holidays cite "FRCrimP 45(a)(6)(C)"
-  forums [frcrimp]
-  allow_hours
-}
-
-/// The 2016 and 2018 texts (2017 and 2019 eds.), as `frcrimp45@2016-12-01`.
-counting frcrimp45-delaware effective [2016-12-01, 2023-12-01) known_at 2016-04-28 supersedes frcrimp45-delaware@2011-05-02 cite "FRCrimP (2017 ed.) 45(a)"
-{
-  exclude_trigger_day
-  include_last_day
-  roll_forward_on [weekend, legal_holiday, inaccessible]
-  service_extension {
-    Personal: 0.days
-    Electronic: 0.days
-    Mail: 3.days
-    Clerk: 3.days
-    OtherConsented: 3.days
-    CommercialCarrier: unrecognized
-    PrisonMail: unrecognized
-    MailForeign: unrecognized
-    Express: unrecognized
-    ExpressForeign: unrecognized
-  } cite "FRCrimP (2017 ed.) 45(c)"
-  holidays us-federal-holidays
-  forward_holidays delaware-holidays cite "FRCrimP 45(a)(6)(C)"
-  forums [frcrimp]
-  allow_hours
-}
-
-/// The 2023 text, as `frcrimp45@2023-12-01`.
-counting frcrimp45-delaware effective [2023-12-01, ..) known_at 2023-04-24 supersedes frcrimp45-delaware@2016-12-01 cite "FRCrimP 45(a)"
-{
-  exclude_trigger_day
-  include_last_day
-  roll_forward_on [weekend, legal_holiday, inaccessible]
-  service_extension {
-    Personal: 0.days
-    Electronic: 0.days
-    Mail: 3.days
-    Clerk: 3.days
-    OtherConsented: 3.days
-    CommercialCarrier: unrecognized
-    PrisonMail: unrecognized
-    MailForeign: unrecognized
-    Express: unrecognized
-    ExpressForeign: unrecognized
-  } cite "FRCrimP 45(c)"
-  holidays us-federal-holidays
-  forward_holidays delaware-holidays cite "FRCrimP 45(a)(6)(C)"
   forums [frcrimp]
   allow_hours
 }

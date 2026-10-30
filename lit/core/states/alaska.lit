@@ -1,0 +1,87 @@
+module core.states.alaska
+
+import core.calendar.{ us-federal-holidays }
+
+/// The legal holidays of Alaska (AS 44.12.010(a)) that `us-federal-holidays`
+/// does not already close: Seward's Day, the last Monday of March, and Alaska
+/// Day, October 18. FRCP 6(a)(6)(C) and FRBP 9006(a)(6)(C) make them legal
+/// holidays of the District of Alaska for a period counted forward only
+/// (core's `frcp6-alaska` and `frbp9006-alaska`). The other (a) days are
+/// federal holidays on the same days; every Sunday ((a)(13)) is closed by
+/// `weekend`.
+///
+/// Each day is closed from the date the vendored text was retrieved
+/// (October 29, 2026; the served section carries no as-of date). Not
+/// modeled: a weekday observance of an Alaska Day on a Saturday or Sunday,
+/// which the section does not state (AS 01.10.080 is not vendored), so a
+/// last day on such a Friday or Monday stays the earlier date; and the days
+/// the President or the governor designates by proclamation ((a)(14)), which
+/// no vendored source lists.
+calendar alaska-holidays cite "AS 44.12.010(a)"
+{
+  // (a)(4): the last Monday of March.
+  sewards-day: last(monday, 3) effective [2026-10-29, ..)
+  // (a)(9): the 18th of October.
+  alaska-day: fixed(10, 18) effective [2026-10-29, ..)
+}
+
+/// FRCP 6 in the district courts of Alaska: the 2023 text
+/// (`frcp6@2023-12-01`) with `alaska-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-alaska effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays alaska-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Alaska:
+/// `alaska-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-alaska effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays alaska-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-ak]
+  allow_hours
+  end_of_month clamp
+}

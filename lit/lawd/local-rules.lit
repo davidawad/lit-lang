@@ -1,6 +1,6 @@
 module lawd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.louisiana.{ frcp6-louisiana }
 
 // The Western District of Louisiana's own civil periods, computed under
 // the federal rules (FRCP 6(a) governs "any local rule"). The motion
@@ -62,7 +62,7 @@ event FinalDisposition()
 /// authenticity of an electronically filed document with several
 /// signatures, or of the signatures, files an objection within 14 days
 /// from service of the document.
-deadline signature-objection-period: 14.days after MultiSignatureDocumentServed() counted_by frcp6 cite "W.D. La. LR 5.7.08"
+deadline signature-objection-period: 14.days after MultiSignatureDocumentServed() counted_by frcp6-louisiana cite "W.D. La. LR 5.7.08"
 {
   forum frcp
 }
@@ -70,14 +70,14 @@ deadline signature-objection-period: 14.days after MultiSignatureDocumentServed(
 /// W.D. La. LR 7.4: if no Notice of Motion Setting issues and the judge
 /// orders no briefing instructions, a memorandum in opposition may be
 /// filed within 14 days after the motion is filed.
-deadline opposition-period: 14.days after MotionFiled() counted_by frcp6 cite "W.D. La. LR 7.4"
+deadline opposition-period: 14.days after MotionFiled() counted_by frcp6-louisiana cite "W.D. La. LR 7.4"
 {
   forum frcp
 }
 
 /// W.D. La. LR 7.4: under the same default rule, a reply memorandum may
 /// be filed within seven days after the opposition is filed.
-deadline reply-period: 7.days after OppositionFiled() counted_by frcp6 cite "W.D. La. LR 7.4"
+deadline reply-period: 7.days after OppositionFiled() counted_by frcp6-louisiana cite "W.D. La. LR 7.4"
 {
   forum frcp
 }
@@ -86,7 +86,7 @@ deadline reply-period: 7.days after OppositionFiled() counted_by frcp6 cite "W.D
 /// discovery (and before the initial Rule 26(f) conference), counsel
 /// discuss with their clients and opposing counsel the appropriateness and
 /// timing of alternative dispute resolution.
-deadline adr-conference-period: 60.days after DiscoveryCloseDeadline() counted_by frcp6 cite "W.D. La. LR 16.3.1"
+deadline adr-conference-period: 60.days after DiscoveryCloseDeadline() counted_by frcp6-louisiana cite "W.D. La. LR 16.3.1"
 {
   forum frcp
 }
@@ -94,7 +94,7 @@ deadline adr-conference-period: 60.days after DiscoveryCloseDeadline() counted_b
 /// W.D. La. LR 41.3: before a dismissal for failure to prosecute, the
 /// plaintiff has 30 calendar days from mailing of the notice to file
 /// evidence of good cause; with no response in time the clerk may dismiss.
-deadline prosecution-good-cause-period: 30.days after ProsecutionNoticeMailed() counted_by frcp6 cite "W.D. La. LR 41.3"
+deadline prosecution-good-cause-period: 30.days after ProsecutionNoticeMailed() counted_by frcp6-louisiana cite "W.D. La. LR 41.3"
 {
   forum frcp
 }
@@ -102,7 +102,7 @@ deadline prosecution-good-cause-period: 30.days after ProsecutionNoticeMailed() 
 /// W.D. La. LR 41.3: a dismissal for failure to prosecute is without
 /// prejudice, and the order allows reinstatement within 30 days for good
 /// cause shown.
-deadline reinstatement-period: 30.days after ProsecutionDismissalOrdered() counted_by frcp6 cite "W.D. La. LR 41.3"
+deadline reinstatement-period: 30.days after ProsecutionDismissalOrdered() counted_by frcp6-louisiana cite "W.D. La. LR 41.3"
 {
   forum frcp
 }
@@ -111,7 +111,7 @@ deadline reinstatement-period: 30.days after ProsecutionDismissalOrdered() count
 /// separate proposed jury instructions are filed, with a copy to the
 /// trial judge, at least seven days in advance of the date on which the
 /// jury trial is scheduled.
-deadline jury-instructions-period: 7.days before JuryTrialScheduled() counted_by frcp6 cite "W.D. La. LR 51.1"
+deadline jury-instructions-period: 7.days before JuryTrialScheduled() counted_by frcp6-louisiana cite "W.D. La. LR 51.1"
 {
   forum frcp
 }
@@ -120,7 +120,7 @@ deadline jury-instructions-period: 7.days before JuryTrialScheduled() counted_by
 /// judgment, unless otherwise ordered, the prevailing party serves and
 /// files a Bill of Costs with a supporting memorandum; without the
 /// memorandum the clerk may deny costs.
-deadline bill-of-costs-period: 30.days after JudgmentEntryNoticed() counted_by frcp6 cite "W.D. La. LR 54.3"
+deadline bill-of-costs-period: 30.days after JudgmentEntryNoticed() counted_by frcp6-louisiana cite "W.D. La. LR 54.3"
 {
   forum frcp
 }
@@ -128,7 +128,7 @@ deadline bill-of-costs-period: 30.days after JudgmentEntryNoticed() counted_by f
 /// W.D. La. LR 55.1: a judgment of default is not entered until 14
 /// calendar days after entry of default; this is the earliest date, not a
 /// last day.
-deadline default-judgment-waiting-period: 14.days after DefaultEntered() counted_by frcp6 cite "W.D. La. LR 55.1"
+deadline default-judgment-waiting-period: 14.days after DefaultEntered() counted_by frcp6-louisiana cite "W.D. La. LR 55.1"
 {
   forum frcp
 }
@@ -136,7 +136,7 @@ deadline default-judgment-waiting-period: 14.days after DefaultEntered() counted
 /// W.D. La. LR 79.3: exhibits in civil cases in the clerk's custody are
 /// removed within 30 days of the final disposition of the case, or may be
 /// destroyed or otherwise disposed of by the clerk.
-deadline exhibit-removal-period: 30.days after FinalDisposition() counted_by frcp6 cite "W.D. La. LR 79.3"
+deadline exhibit-removal-period: 30.days after FinalDisposition() counted_by frcp6-louisiana cite "W.D. La. LR 79.3"
 {
   forum frcp
 }

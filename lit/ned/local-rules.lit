@@ -1,6 +1,6 @@
 module ned-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.states.nebraska.{ frcp6-nebraska }
 
 // The District of Nebraska's own periods, computed under the federal rules
 // (NECivR 6.1(a): FRCP 6 applies to any period these rules state). Rules
@@ -116,7 +116,7 @@ event ObjectionsServed() paper brief
 /// brief are filed and served. Failure to file it is not a confession of
 /// the motion but precludes contesting the movant's statement of facts
 /// (NECivR 7.1(b)(1)(C)).
-deadline dispositive-opposition-period: 21.days after DispositiveMotionServed() counted_by frcp6 cite "NECivR 7.1(b)(1)(B)"
+deadline dispositive-opposition-period: 21.days after DispositiveMotionServed() counted_by frcp6-nebraska cite "NECivR 7.1(b)(1)(B)"
 {
   forum frcp
 }
@@ -124,7 +124,7 @@ deadline dispositive-opposition-period: 21.days after DispositiveMotionServed() 
 /// NECivR 7.1(b)(1)(B): a brief opposing any other motion is filed and
 /// served within 14 days after the motion and supporting brief are filed
 /// and served.
-deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "NECivR 7.1(b)(1)(B)"
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6-nebraska cite "NECivR 7.1(b)(1)(B)"
 {
   forum frcp
 }
@@ -134,7 +134,7 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "
 /// opposing party files and serves the opposing brief. Further briefs need
 /// leave (NECivR 7.1(c)(3)); the motion is submitted when the reply time
 /// expires (NECivR 7.1(g)).
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6 cite "NECivR 7.1(c)(1)"
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6-nebraska cite "NECivR 7.1(c)(1)"
 {
   forum frcp
 }
@@ -142,7 +142,7 @@ deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionS
 /// NECivR 7.1(c)(1): a reply brief supporting any other motion is filed
 /// and served within 7 days after the opposing party files and serves the
 /// opposing brief.
-deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "NECivR 7.1(c)(1)"
+deadline reply-period: 7.days after OppositionServed() counted_by frcp6-nebraska cite "NECivR 7.1(c)(1)"
 {
   forum frcp
 }
@@ -150,7 +150,7 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "NE
 /// NECivR 11.1(a)(1)(B), (2)(B), (3)(B): a party challenging the
 /// authenticity of an electronically filed document or of a signature on
 /// it files an objection within 7 days of receiving the NEF.
-deadline signature-objection-period: 7.days after NefReceived() counted_by frcp6 cite "NECivR 11.1(a)(1)(B)"
+deadline signature-objection-period: 7.days after NefReceived() counted_by frcp6-nebraska cite "NECivR 11.1(a)(1)(B)"
 {
   forum frcp
 }
@@ -158,7 +158,7 @@ deadline signature-objection-period: 7.days after NefReceived() counted_by frcp6
 /// NECivR 12.1: when a party files a motion to dismiss, its time to answer
 /// all claims, including those the motion does not address, is suspended
 /// until 14 days after the court rules on the motion.
-deadline answer-after-ruling-period: 14.days after MotionToDismissRuled() counted_by frcp6 cite "NECivR 12.1"
+deadline answer-after-ruling-period: 14.days after MotionToDismissRuled() counted_by frcp6-nebraska cite "NECivR 12.1"
 {
   forum frcp
 }
@@ -167,7 +167,7 @@ deadline answer-after-ruling-period: 14.days after MotionToDismissRuled() counte
 /// submits unresolved objections in a motion in limine, with a transcript,
 /// no later than 7 days before trial or, alternatively, the date the
 /// pretrial order sets.
-deadline video-objections-period: 7.days before TrialBegins() counted_by frcp6 cite "NECivR 30.1(f)"
+deadline video-objections-period: 7.days before TrialBegins() counted_by frcp6-nebraska cite "NECivR 30.1(f)"
 {
   forum frcp
 }
@@ -176,14 +176,14 @@ deadline video-objections-period: 7.days before TrialBegins() counted_by frcp6 c
 /// seeking to use it delivers a copy of the edited video to opposing
 /// attorneys; their written objections are served at least 24 hours
 /// before it is shown.
-deadline edited-video-period: 7.days before VideoShown() counted_by frcp6 cite "NECivR 32.1(c)"
+deadline edited-video-period: 7.days before VideoShown() counted_by frcp6-nebraska cite "NECivR 32.1(c)"
 {
   forum frcp
 }
 
 /// NECivR 39.2(a): unless ordered otherwise, each party files a trial brief
 /// at least 7 days before the trial begins.
-deadline trial-brief-period: 7.days before TrialBegins() counted_by frcp6 cite "NECivR 39.2(a)"
+deadline trial-brief-period: 7.days before TrialBegins() counted_by frcp6-nebraska cite "NECivR 39.2(a)"
 {
   forum frcp
 }
@@ -191,7 +191,7 @@ deadline trial-brief-period: 7.days before TrialBegins() counted_by frcp6 cite "
 /// NECivR 40.1(b): the plaintiff in a removed action may file a written
 /// request for trial at Omaha, Lincoln or North Platte within 14 days
 /// after service of the notice of removal.
-deadline removed-place-of-trial-period: 14.days after RemovalNoticeServed() counted_by frcp6 cite "NECivR 40.1(b)"
+deadline removed-place-of-trial-period: 14.days after RemovalNoticeServed() counted_by frcp6-nebraska cite "NECivR 40.1(b)"
 {
   forum frcp
 }
@@ -199,7 +199,7 @@ deadline removed-place-of-trial-period: 14.days after RemovalNoticeServed() coun
 /// NECivR 40.1(b): a request for a place of trial different from the one
 /// first requested is filed as a motion, and any other party then has 14
 /// days to respond.
-deadline place-of-trial-response-period: 14.days after PlaceOfTrialMotionFiled() counted_by frcp6 cite "NECivR 40.1(b)"
+deadline place-of-trial-response-period: 14.days after PlaceOfTrialMotionFiled() counted_by frcp6-nebraska cite "NECivR 40.1(b)"
 {
   forum frcp
 }
@@ -207,7 +207,7 @@ deadline place-of-trial-response-period: 14.days after PlaceOfTrialMotionFiled()
 /// NECivR 40.1(d): responses to the trial judge's designation of a
 /// different place of trial are filed within 14 days of the designation
 /// unless the trial judge specifies a shorter time.
-deadline designation-response-period: 14.days after PlaceOfTrialDesignated() counted_by frcp6 cite "NECivR 40.1(d)"
+deadline designation-response-period: 14.days after PlaceOfTrialDesignated() counted_by frcp6-nebraska cite "NECivR 40.1(d)"
 {
   forum frcp
 }
@@ -216,7 +216,7 @@ deadline designation-response-period: 14.days after PlaceOfTrialDesignated() cou
 /// settlement, the attorneys file all documents necessary to terminate the
 /// action, unless the court directs otherwise by written order; otherwise
 /// the court may dismiss without further notice and without prejudice.
-deadline settlement-papers-period: 30.days after SettlementNotified() counted_by frcp6 cite "NECivR 41.1"
+deadline settlement-papers-period: 30.days after SettlementNotified() counted_by frcp6-nebraska cite "NECivR 41.1"
 {
   forum frcp
 }
@@ -224,7 +224,7 @@ deadline settlement-papers-period: 30.days after SettlementNotified() counted_by
 /// NECivR 41.1: after such a dismissal, the case may be reinstated within
 /// 30 days after the date of the order on a showing of good cause why the
 /// parties did not consummate the settlement.
-deadline reinstatement-period: 30.days after SettlementDismissalEntered() counted_by frcp6 cite "NECivR 41.1"
+deadline reinstatement-period: 30.days after SettlementDismissalEntered() counted_by frcp6-nebraska cite "NECivR 41.1"
 {
   forum frcp
 }
@@ -233,14 +233,14 @@ deadline reinstatement-period: 30.days after SettlementDismissalEntered() counte
 /// production or inspection, the adverse party has 7 days to serve written
 /// objections on the noticing party; no contested subpoena issues until
 /// the objections are resolved.
-deadline subpoena-objection-period: 7.days after SubpoenaNoticeReceived() counted_by frcp6 cite "NECivR 45.1(b)"
+deadline subpoena-objection-period: 7.days after SubpoenaNoticeReceived() counted_by frcp6-nebraska cite "NECivR 45.1(b)"
 {
   forum frcp
 }
 
 /// NECivR 51.1(a): unless ordered otherwise, each party files requested
 /// jury instructions 7 days before the first day of trial.
-deadline jury-instructions-period: 7.days before TrialBegins() counted_by frcp6 cite "NECivR 51.1(a)"
+deadline jury-instructions-period: 7.days before TrialBegins() counted_by frcp6-nebraska cite "NECivR 51.1(a)"
 {
   forum frcp
 }
@@ -248,7 +248,7 @@ deadline jury-instructions-period: 7.days before TrialBegins() counted_by frcp6 
 /// NECivR 51.1(b): objections to requested jury instructions, with
 /// supporting authority, are filed at least 3 days before the first day of
 /// trial.
-deadline instruction-objections-period: 3.days before TrialBegins() counted_by frcp6 cite "NECivR 51.1(b)"
+deadline instruction-objections-period: 3.days before TrialBegins() counted_by frcp6-nebraska cite "NECivR 51.1(b)"
 {
   forum frcp
 }
@@ -256,7 +256,7 @@ deadline instruction-objections-period: 3.days before TrialBegins() counted_by f
 /// NECivR 52.1: in a civil nonjury trial, parties should file their
 /// proposed findings of fact at least 7 days before the first day of
 /// trial.
-deadline proposed-findings-period: 7.days before TrialBegins() counted_by frcp6 cite "NECivR 52.1"
+deadline proposed-findings-period: 7.days before TrialBegins() counted_by frcp6-nebraska cite "NECivR 52.1"
 {
   forum frcp
 }
@@ -265,7 +265,7 @@ deadline proposed-findings-period: 7.days before TrialBegins() counted_by frcp6 
 /// bill of costs within 30 days after entry of judgment; post-trial
 /// motions do not extend the time, and a party who does not file within
 /// it waives taxable costs.
-deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "NECivR 54.1(b)"
+deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6-nebraska cite "NECivR 54.1(b)"
 {
   forum frcp
 }
@@ -273,7 +273,7 @@ deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 
 /// NECivR 56.1(b)(3): the opposing party's brief and response to the
 /// movant's statement of material facts may be filed within 21 days after
 /// service of the motion and supporting statement.
-deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "NECivR 56.1(b)(3)"
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-nebraska cite "NECivR 56.1(b)(3)"
 {
   forum frcp
 }
@@ -281,7 +281,7 @@ deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionSe
 /// NECivR 56.1(c): when the opposing party submits a statement of
 /// additional material facts, the movant serves and files its responses
 /// within 14 days after service of the opposing statement.
-deadline additional-facts-response-period: 14.days after AdditionalFactsServed() counted_by frcp6 cite "NECivR 56.1(c)"
+deadline additional-facts-response-period: 14.days after AdditionalFactsServed() counted_by frcp6-nebraska cite "NECivR 56.1(c)"
 {
   forum frcp
 }
@@ -289,7 +289,7 @@ deadline additional-facts-response-period: 14.days after AdditionalFactsServed()
 /// NECivR 72.2(a): a party objects to a magistrate judge's order or
 /// findings and recommendations within 14 days after being served with
 /// them, unless the order or recommendation states a different time.
-deadline magistrate-objections-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "NECivR 72.2(a)"
+deadline magistrate-objections-period: 14.days after MagistrateOrderServed() counted_by frcp6-nebraska cite "NECivR 72.2(a)"
 {
   forum frcp
 }
@@ -297,7 +297,7 @@ deadline magistrate-objections-period: 14.days after MagistrateOrderServed() cou
 /// NECivR 72.2(a): unless ordered otherwise, an opposing party may file an
 /// opposing brief within 14 days of being served with the statement of
 /// objections; the objecting party may not reply without leave.
-deadline magistrate-opposition-period: 14.days after ObjectionsServed() counted_by frcp6 cite "NECivR 72.2(a)"
+deadline magistrate-opposition-period: 14.days after ObjectionsServed() counted_by frcp6-nebraska cite "NECivR 72.2(a)"
 {
   forum frcp
 }
@@ -305,14 +305,14 @@ deadline magistrate-opposition-period: 14.days after ObjectionsServed() counted_
 /// NECivR 79.1(f)(1): within 14 days after a verdict is rendered, the
 /// offering attorney withdraws all exhibits in the clerk's custody and
 /// gives the clerk a receipt.
-deadline exhibit-withdrawal-verdict-period: 14.days after VerdictRendered() counted_by frcp6 cite "NECivR 79.1(f)(1)"
+deadline exhibit-withdrawal-verdict-period: 14.days after VerdictRendered() counted_by frcp6-nebraska cite "NECivR 79.1(f)(1)"
 {
   forum frcp
 }
 
 /// NECivR 79.1(f)(1): within 14 days after a judgment is entered, the
 /// offering attorney withdraws all exhibits in the clerk's custody.
-deadline exhibit-withdrawal-judgment-period: 14.days after JudgmentEntered() counted_by frcp6 cite "NECivR 79.1(f)(1)"
+deadline exhibit-withdrawal-judgment-period: 14.days after JudgmentEntered() counted_by frcp6-nebraska cite "NECivR 79.1(f)(1)"
 {
   forum frcp
 }

@@ -22,7 +22,10 @@ in_force = "2022-02-25"
 known_at = "2026-10-28"
 unknown_before = "2022-02-25"
 jurisdiction = "United States District Court, N.D. Indiana"
-counting = "frcp6"
+# FRCP 6(a)(6)(C): the holidays of Indiana close a forward-counted period, here and in
+# the FRCP periods this package recounts (core's `frcp6-indiana`).
+counting = "frcp6-indiana"
+recounts = ["frcp-civil-procedure"]
 
 [package.roles]
 applicant = "self"

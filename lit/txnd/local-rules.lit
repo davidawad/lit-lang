@@ -1,7 +1,7 @@
 module txnd-local-rules.local-rules
 
 import core.authority.{ CaseOrder }
-import core.frcp6.{ frcp6 }
+import core.states.texas.{ frcp6-texas }
 
 // The Northern District of Texas's own civil periods and limits, counted
 // under FRCP 6. Unless another local rule controls or the presiding judge
@@ -95,14 +95,14 @@ event RemovalNoticeFiled()
 /// N.D. Tex. LR 5.1(f): unless excused for cause, an attorney other than a
 /// prisoner pro se party registers as an ECF user within 14 days of the
 /// date the attorney appears in a case.
-deadline ecf-registration-period: 14.days after AttorneyAppeared() counted_by frcp6 cite "N.D. Tex. LR 5.1(f)"
+deadline ecf-registration-period: 14.days after AttorneyAppeared() counted_by frcp6-texas cite "N.D. Tex. LR 5.1(f)"
 {
   forum frcp
 }
 
 /// N.D. Tex. LR 7.1(e): a response and brief to an opposed motion are
 /// filed within 21 days from the date the motion is filed.
-deadline response-period: 21.days after OpposedMotionFiled() counted_by frcp6 delegable {
+deadline response-period: 21.days after OpposedMotionFiled() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "N.D. Tex. LR 7.1(e)"
@@ -113,7 +113,7 @@ deadline response-period: 21.days after OpposedMotionFiled() counted_by frcp6 de
 /// N.D. Tex. LR 7.1(f): unless the presiding judge directs otherwise, the
 /// movant may file a reply brief within 14 days from the date the response
 /// is filed.
-deadline reply-period: 14.days after ResponseFiled() counted_by frcp6 delegable {
+deadline reply-period: 14.days after ResponseFiled() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "N.D. Tex. LR 7.1(f)"
@@ -124,7 +124,7 @@ deadline reply-period: 14.days after ResponseFiled() counted_by frcp6 delegable 
 /// N.D. Tex. LR 16.4: unless the presiding judge directs otherwise, the
 /// pretrial order, prepared by all attorneys, is submitted at least 14 days
 /// before the scheduled date for trial.
-deadline pretrial-order-period: 14.days before TrialDate() counted_by frcp6 delegable {
+deadline pretrial-order-period: 14.days before TrialDate() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "N.D. Tex. LR 16.4"
@@ -136,7 +136,7 @@ deadline pretrial-order-period: 14.days before TrialDate() counted_by frcp6 dele
 /// or at such other time as the presiding judge orders, the plaintiff's
 /// attorney moves for certification, with a brief setting out what the
 /// rule lists.
-deadline class-certification-period: 90.days after ClassComplaintFiled() counted_by frcp6 delegable {
+deadline class-certification-period: 90.days after ClassComplaintFiled() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "N.D. Tex. LR 23.2"
@@ -147,14 +147,14 @@ deadline class-certification-period: 90.days after ClassComplaintFiled() counted
 /// N.D. Tex. LR 26.2(a): every exhibit a party intends to offer at trial,
 /// other than for impeachment, is marked and exchanged with opposing
 /// parties at least 14 days before the scheduled date for trial.
-deadline exhibit-exchange-period: 14.days before TrialDate() counted_by frcp6 cite "N.D. Tex. LR 26.2(a)"
+deadline exhibit-exchange-period: 14.days before TrialDate() counted_by frcp6-texas cite "N.D. Tex. LR 26.2(a)"
 {
   forum frcp
 }
 
 /// N.D. Tex. LR 26.2(b): at least 14 days before the scheduled trial date,
 /// the parties file and deliver separate lists of exhibits and witnesses.
-deadline exhibit-witness-list-period: 14.days before TrialDate() counted_by frcp6 cite "N.D. Tex. LR 26.2(b)"
+deadline exhibit-witness-list-period: 14.days before TrialDate() counted_by frcp6-texas cite "N.D. Tex. LR 26.2(b)"
 {
   forum frcp
 }
@@ -162,7 +162,7 @@ deadline exhibit-witness-list-period: 14.days before TrialDate() counted_by frcp
 /// N.D. Tex. LR 26.2(c): the portions of any depositions to be offered at
 /// trial are designated in lists delivered and filed at least 14 days
 /// before the scheduled trial date.
-deadline deposition-designation-period: 14.days before TrialDate() counted_by frcp6 cite "N.D. Tex. LR 26.2(c)"
+deadline deposition-designation-period: 14.days before TrialDate() counted_by frcp6-texas cite "N.D. Tex. LR 26.2(c)"
 {
   forum frcp
 }
@@ -170,7 +170,7 @@ deadline deposition-designation-period: 14.days before TrialDate() counted_by fr
 /// N.D. Tex. LR 52.1: unless the presiding judge directs otherwise, at
 /// least 14 days before trial in a nonjury case each party files and serves
 /// proposed findings of fact and conclusions of law.
-deadline proposed-findings-period: 14.days before TrialDate() counted_by frcp6 delegable {
+deadline proposed-findings-period: 14.days before TrialDate() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "N.D. Tex. LR 52.1"
@@ -181,7 +181,7 @@ deadline proposed-findings-period: 14.days before TrialDate() counted_by frcp6 d
 /// N.D. Tex. LR 53.1(b): a response brief to objections or a motion under
 /// FRCP 53(f)(2) is filed within 21 days from the date the objections or
 /// motion is filed.
-deadline master-response-period: 21.days after MasterObjectionsFiled() counted_by frcp6 cite "N.D. Tex. LR 53.1(b)"
+deadline master-response-period: 21.days after MasterObjectionsFiled() counted_by frcp6-texas cite "N.D. Tex. LR 53.1(b)"
 {
   forum frcp
 }
@@ -189,7 +189,7 @@ deadline master-response-period: 21.days after MasterObjectionsFiled() counted_b
 /// N.D. Tex. LR 53.1(c): unless the presiding judge directs otherwise, the
 /// objecting party may file a reply brief within 14 days from the date the
 /// response brief is filed.
-deadline master-reply-period: 14.days after MasterResponseFiled() counted_by frcp6 delegable {
+deadline master-reply-period: 14.days after MasterResponseFiled() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "N.D. Tex. LR 53.1(c)"
@@ -201,7 +201,7 @@ deadline master-reply-period: 14.days after MasterResponseFiled() counted_by frc
 /// otherwise, the bill of costs, in a form the clerk approves, is filed and
 /// served no later than 14 days after the clerk enters the judgment on the
 /// docket.
-deadline bill-of-costs-period: 14.days after CostsJudgmentDocketed() counted_by frcp6 delegable {
+deadline bill-of-costs-period: 14.days after CostsJudgmentDocketed() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "N.D. Tex. LR 54.1"
@@ -212,7 +212,7 @@ deadline bill-of-costs-period: 14.days after CostsJudgmentDocketed() counted_by 
 /// N.D. Tex. LR 56.2(a): unless the presiding judge directs otherwise, no
 /// summary judgment motion may be filed within 90 days of the trial
 /// setting.
-deadline summary-judgment-cutoff: 90.days before TrialDate() counted_by frcp6 delegable {
+deadline summary-judgment-cutoff: 90.days before TrialDate() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "N.D. Tex. LR 56.2(a)"
@@ -223,14 +223,14 @@ deadline summary-judgment-cutoff: 90.days before TrialDate() counted_by frcp6 de
 /// N.D. Tex. LR 62.2: unless all affected parties consent, an order
 /// transferring a case to a district court outside the Fifth Circuit is
 /// stayed for 21 days from the date it is entered on the docket.
-deadline transfer-stay-period: 21.days after TransferOrderEntered() counted_by frcp6 cite "N.D. Tex. LR 62.2"
+deadline transfer-stay-period: 21.days after TransferOrderEntered() counted_by frcp6-texas cite "N.D. Tex. LR 62.2"
 {
   forum frcp
 }
 
 /// N.D. Tex. LR 72.1(b): a response brief to objections under FRCP 72(a)
 /// is filed within 21 days from the date the objections are filed.
-deadline nondispositive-objection-response-period: 21.days after NondispositiveObjectionsFiled() counted_by frcp6 cite "N.D. Tex. LR 72.1(b)"
+deadline nondispositive-objection-response-period: 21.days after NondispositiveObjectionsFiled() counted_by frcp6-texas cite "N.D. Tex. LR 72.1(b)"
 {
   forum frcp
 }
@@ -238,7 +238,7 @@ deadline nondispositive-objection-response-period: 21.days after NondispositiveO
 /// N.D. Tex. LR 72.1(c), 72.2(c): unless the presiding judge directs
 /// otherwise, the objecting party may file a reply brief within 14 days
 /// from the date the response brief is filed.
-deadline magistrate-objection-reply-period: 14.days after MagistrateResponseFiled() counted_by frcp6 delegable {
+deadline magistrate-objection-reply-period: 14.days after MagistrateResponseFiled() counted_by frcp6-texas delegable {
   to CaseOrder
   op set
 } cite "N.D. Tex. LR 72.1(c)"
@@ -250,7 +250,7 @@ deadline magistrate-objection-reply-period: 14.days after MagistrateResponseFile
 /// from the clerk's office within 60 days after final disposition of the
 /// case, by the attorney who introduced it; one not removed may be
 /// destroyed or otherwise disposed of by the clerk.
-deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcp6 cite "N.D. Tex. LR 79.2(b)"
+deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcp6-texas cite "N.D. Tex. LR 79.2(b)"
 {
   forum frcp
 }
@@ -259,7 +259,7 @@ deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcp6 cite
 /// sealed document kept on paper is deemed unsealed 60 days after final
 /// disposition of the case; a party who wants it to stay sealed moves
 /// before the period expires.
-deadline keep-sealed-motion-period: 60.days after FinalDisposition() counted_by frcp6 cite "N.D. Tex. LR 79.4"
+deadline keep-sealed-motion-period: 60.days after FinalDisposition() counted_by frcp6-texas cite "N.D. Tex. LR 79.4"
 {
   forum frcp
 }
@@ -267,7 +267,7 @@ deadline keep-sealed-motion-period: 60.days after FinalDisposition() counted_by 
 /// N.D. Tex. LR 81.2: within 21 days after the notice of removal is filed,
 /// the plaintiff files a separately signed certificate of interested
 /// persons, or adopts another party's previously filed certificate.
-deadline removal-certificate-period: 21.days after RemovalNoticeFiled() counted_by frcp6 cite "N.D. Tex. LR 81.2"
+deadline removal-certificate-period: 21.days after RemovalNoticeFiled() counted_by frcp6-texas cite "N.D. Tex. LR 81.2"
 {
   forum frcp
 }

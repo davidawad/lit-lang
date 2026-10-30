@@ -1,0 +1,280 @@
+module core.states.delaware
+
+import core.calendar.{ us-federal-holidays }
+
+/// The legal holidays of Delaware (1 Del. C. § 501(a)) that `us-federal-holidays`
+/// does not already close: Good Friday, the Friday after Thanksgiving and the
+/// biennial General Election day. FRCP 6(a)(6)(C) and FRCrimP 45(a)(6)(C)
+/// make them legal holidays of the District of Delaware for a period counted
+/// forward only, so they are read as `forward_holidays` (core's
+/// `frcp6-delaware` and `frcrimp45-delaware`). The other § 501
+/// days are federal holidays too, observed on the same days (§ 501(b) moves a
+/// Saturday holiday to Friday and a Sunday one to Monday, as § 6103(b)(1)
+/// and Executive Order 11582 do; the three days here are never on a
+/// weekend); Saturdays (§ 501(a)(11)) are closed by `weekend`.
+///
+/// The engine has no Easter or "day after" rule, so each day is listed with
+/// `once`, from May 2, 2011 (the earliest date a D. Del. package needs: the
+/// criminal plan's 2011 amendment) to the end of 2050. The vendored text's
+/// credits list no act after 83 Del. Laws, c. 257, of the 2021-2022 General
+/// Assembly, which only numbered § 501(a)'s list and added Juneteenth; and
+/// none between 77 Del. Laws, c. 328 (2010) and 83 Del. Laws, c. 37 (2021),
+/// whose § 1 reprints § 501(a) as it then stood with all three days
+/// (sources/de-code/83-del-laws-c-37.txt). So the three days were
+/// holidays throughout the span. A day before or after it is not closed, so
+/// a last day on it is the earlier date, never a later one. The General
+/// Election is held on the federal election day of even years; the Title 15
+/// section fixing it is not vendored. Not modeled: Return Day (§ 501(a)(13)), a
+/// holiday in Sussex County only and only after noon; the 2 floating
+/// holidays of § 501(e), which are leave for State employees, not days; and
+/// days the Governor appoints, which no vendored source lists.
+calendar delaware-holidays effective [2011-05-02, ..) cite "1 Del. C. § 501(a)" historical
+{
+  // § 501(a)(3). Good Friday 2011 (April 22) precedes the span.
+  good-friday-2012: once(2012-04-06) effective [2011-05-02, ..)
+  good-friday-2013: once(2013-03-29) effective [2011-05-02, ..)
+  good-friday-2014: once(2014-04-18) effective [2011-05-02, ..)
+  good-friday-2015: once(2015-04-03) effective [2011-05-02, ..)
+  good-friday-2016: once(2016-03-25) effective [2011-05-02, ..)
+  good-friday-2017: once(2017-04-14) effective [2011-05-02, ..)
+  good-friday-2018: once(2018-03-30) effective [2011-05-02, ..)
+  good-friday-2019: once(2019-04-19) effective [2011-05-02, ..)
+  good-friday-2020: once(2020-04-10) effective [2011-05-02, ..)
+  good-friday-2021: once(2021-04-02) effective [2011-05-02, ..)
+  good-friday-2022: once(2022-04-15) effective [2011-05-02, ..)
+  good-friday-2023: once(2023-04-07) effective [2011-05-02, ..)
+  good-friday-2024: once(2024-03-29) effective [2011-05-02, ..)
+  good-friday-2025: once(2025-04-18) effective [2011-05-02, ..)
+  good-friday-2026: once(2026-04-03) effective [2011-05-02, ..)
+  good-friday-2027: once(2027-03-26) effective [2011-05-02, ..)
+  good-friday-2028: once(2028-04-14) effective [2011-05-02, ..)
+  good-friday-2029: once(2029-03-30) effective [2011-05-02, ..)
+  good-friday-2030: once(2030-04-19) effective [2011-05-02, ..)
+  good-friday-2031: once(2031-04-11) effective [2011-05-02, ..)
+  good-friday-2032: once(2032-03-26) effective [2011-05-02, ..)
+  good-friday-2033: once(2033-04-15) effective [2011-05-02, ..)
+  good-friday-2034: once(2034-04-07) effective [2011-05-02, ..)
+  good-friday-2035: once(2035-03-23) effective [2011-05-02, ..)
+  good-friday-2036: once(2036-04-11) effective [2011-05-02, ..)
+  good-friday-2037: once(2037-04-03) effective [2011-05-02, ..)
+  good-friday-2038: once(2038-04-23) effective [2011-05-02, ..)
+  good-friday-2039: once(2039-04-08) effective [2011-05-02, ..)
+  good-friday-2040: once(2040-03-30) effective [2011-05-02, ..)
+  good-friday-2041: once(2041-04-19) effective [2011-05-02, ..)
+  good-friday-2042: once(2042-04-04) effective [2011-05-02, ..)
+  good-friday-2043: once(2043-03-27) effective [2011-05-02, ..)
+  good-friday-2044: once(2044-04-15) effective [2011-05-02, ..)
+  good-friday-2045: once(2045-04-07) effective [2011-05-02, ..)
+  good-friday-2046: once(2046-03-23) effective [2011-05-02, ..)
+  good-friday-2047: once(2047-04-12) effective [2011-05-02, ..)
+  good-friday-2048: once(2048-04-03) effective [2011-05-02, ..)
+  good-friday-2049: once(2049-04-16) effective [2011-05-02, ..)
+  good-friday-2050: once(2050-04-08) effective [2011-05-02, ..)
+  // § 501(a)(9): the Friday after the fourth Thursday in November.
+  day-after-thanksgiving-2011: once(2011-11-25) effective [2011-05-02, ..)
+  day-after-thanksgiving-2012: once(2012-11-23) effective [2011-05-02, ..)
+  day-after-thanksgiving-2013: once(2013-11-29) effective [2011-05-02, ..)
+  day-after-thanksgiving-2014: once(2014-11-28) effective [2011-05-02, ..)
+  day-after-thanksgiving-2015: once(2015-11-27) effective [2011-05-02, ..)
+  day-after-thanksgiving-2016: once(2016-11-25) effective [2011-05-02, ..)
+  day-after-thanksgiving-2017: once(2017-11-24) effective [2011-05-02, ..)
+  day-after-thanksgiving-2018: once(2018-11-23) effective [2011-05-02, ..)
+  day-after-thanksgiving-2019: once(2019-11-29) effective [2011-05-02, ..)
+  day-after-thanksgiving-2020: once(2020-11-27) effective [2011-05-02, ..)
+  day-after-thanksgiving-2021: once(2021-11-26) effective [2011-05-02, ..)
+  day-after-thanksgiving-2022: once(2022-11-25) effective [2011-05-02, ..)
+  day-after-thanksgiving-2023: once(2023-11-24) effective [2011-05-02, ..)
+  day-after-thanksgiving-2024: once(2024-11-29) effective [2011-05-02, ..)
+  day-after-thanksgiving-2025: once(2025-11-28) effective [2011-05-02, ..)
+  day-after-thanksgiving-2026: once(2026-11-27) effective [2011-05-02, ..)
+  day-after-thanksgiving-2027: once(2027-11-26) effective [2011-05-02, ..)
+  day-after-thanksgiving-2028: once(2028-11-24) effective [2011-05-02, ..)
+  day-after-thanksgiving-2029: once(2029-11-23) effective [2011-05-02, ..)
+  day-after-thanksgiving-2030: once(2030-11-29) effective [2011-05-02, ..)
+  day-after-thanksgiving-2031: once(2031-11-28) effective [2011-05-02, ..)
+  day-after-thanksgiving-2032: once(2032-11-26) effective [2011-05-02, ..)
+  day-after-thanksgiving-2033: once(2033-11-25) effective [2011-05-02, ..)
+  day-after-thanksgiving-2034: once(2034-11-24) effective [2011-05-02, ..)
+  day-after-thanksgiving-2035: once(2035-11-23) effective [2011-05-02, ..)
+  day-after-thanksgiving-2036: once(2036-11-28) effective [2011-05-02, ..)
+  day-after-thanksgiving-2037: once(2037-11-27) effective [2011-05-02, ..)
+  day-after-thanksgiving-2038: once(2038-11-26) effective [2011-05-02, ..)
+  day-after-thanksgiving-2039: once(2039-11-25) effective [2011-05-02, ..)
+  day-after-thanksgiving-2040: once(2040-11-23) effective [2011-05-02, ..)
+  day-after-thanksgiving-2041: once(2041-11-29) effective [2011-05-02, ..)
+  day-after-thanksgiving-2042: once(2042-11-28) effective [2011-05-02, ..)
+  day-after-thanksgiving-2043: once(2043-11-27) effective [2011-05-02, ..)
+  day-after-thanksgiving-2044: once(2044-11-25) effective [2011-05-02, ..)
+  day-after-thanksgiving-2045: once(2045-11-24) effective [2011-05-02, ..)
+  day-after-thanksgiving-2046: once(2046-11-23) effective [2011-05-02, ..)
+  day-after-thanksgiving-2047: once(2047-11-29) effective [2011-05-02, ..)
+  day-after-thanksgiving-2048: once(2048-11-27) effective [2011-05-02, ..)
+  day-after-thanksgiving-2049: once(2049-11-26) effective [2011-05-02, ..)
+  day-after-thanksgiving-2050: once(2050-11-25) effective [2011-05-02, ..)
+  // § 501(a)(12): the Tuesday after the first Monday in November of an
+  // even year.
+  general-election-2012: once(2012-11-06) effective [2011-05-02, ..)
+  general-election-2014: once(2014-11-04) effective [2011-05-02, ..)
+  general-election-2016: once(2016-11-08) effective [2011-05-02, ..)
+  general-election-2018: once(2018-11-06) effective [2011-05-02, ..)
+  general-election-2020: once(2020-11-03) effective [2011-05-02, ..)
+  general-election-2022: once(2022-11-08) effective [2011-05-02, ..)
+  general-election-2024: once(2024-11-05) effective [2011-05-02, ..)
+  general-election-2026: once(2026-11-03) effective [2011-05-02, ..)
+  general-election-2028: once(2028-11-07) effective [2011-05-02, ..)
+  general-election-2030: once(2030-11-05) effective [2011-05-02, ..)
+  general-election-2032: once(2032-11-02) effective [2011-05-02, ..)
+  general-election-2034: once(2034-11-07) effective [2011-05-02, ..)
+  general-election-2036: once(2036-11-04) effective [2011-05-02, ..)
+  general-election-2038: once(2038-11-02) effective [2011-05-02, ..)
+  general-election-2040: once(2040-11-06) effective [2011-05-02, ..)
+  general-election-2042: once(2042-11-04) effective [2011-05-02, ..)
+  general-election-2044: once(2044-11-08) effective [2011-05-02, ..)
+  general-election-2046: once(2046-11-06) effective [2011-05-02, ..)
+  general-election-2048: once(2048-11-03) effective [2011-05-02, ..)
+  general-election-2050: once(2050-11-08) effective [2011-05-02, ..)
+}
+
+/// FRCP 6 in the District of Delaware: the 2023 text (`frcp6@2023-12-01`)
+/// with Delaware's legal holidays, which 6(a)(6)(C) ("any day declared a
+/// holiday by ... the state where the district court is located") makes
+/// legal holidays "for periods that are measured after an event" only. A
+/// D. Del. package names it as its `counting` rule; core's `frcp6` stays
+/// the federal-only count of every other district. Only the Delaware days
+/// the federal calendar lacks close here. It is in force with the 2023
+/// text, from December 1, 2023 (core's `delaware-holidays` closes days from
+/// May 2, 2011), and counts no period before: no D. Del. civil package is
+/// in force earlier.
+counting frcp6-delaware effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays delaware-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Delaware:
+/// `delaware-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-delaware effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays delaware-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-de]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRCrimP 45 in the District of Delaware: each version of `frcrimp45`
+/// with Delaware's legal holidays, which 45(a)(6)(C) ("for periods that are
+/// measured after an event, any other day declared a holiday by the state
+/// where the district court is located", in every text from 2009) makes
+/// legal holidays of a forward-counted period only. A D. Del. criminal
+/// package names it as its `counting` rule; core's `frcrimp45` stays the
+/// federal-only count of every other district. Only the Delaware days the
+/// federal calendar lacks close here. It is in force from May 2, 2011, when
+/// core's `delaware-holidays` is, and counts no period before.
+counting frcrimp45-delaware effective [2011-05-02, 2016-12-01) known_at 2009-03-26 cite "FRCrimP (2011 ed.) 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (2011 ed.) 45(c)"
+  holidays us-federal-holidays
+  forward_holidays delaware-holidays cite "FRCrimP 45(a)(6)(C)"
+  forums [frcrimp]
+  allow_hours
+}
+
+/// The 2016 and 2018 texts (2017 and 2019 eds.), as `frcrimp45@2016-12-01`.
+counting frcrimp45-delaware effective [2016-12-01, 2023-12-01) known_at 2016-04-28 supersedes frcrimp45-delaware@2011-05-02 cite "FRCrimP (2017 ed.) 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (2017 ed.) 45(c)"
+  holidays us-federal-holidays
+  forward_holidays delaware-holidays cite "FRCrimP 45(a)(6)(C)"
+  forums [frcrimp]
+  allow_hours
+}
+
+/// The 2023 text, as `frcrimp45@2023-12-01`.
+counting frcrimp45-delaware effective [2023-12-01, ..) known_at 2023-04-24 supersedes frcrimp45-delaware@2016-12-01 cite "FRCrimP 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP 45(c)"
+  holidays us-federal-holidays
+  forward_holidays delaware-holidays cite "FRCrimP 45(a)(6)(C)"
+  forums [frcrimp]
+  allow_hours
+}

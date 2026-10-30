@@ -1,0 +1,143 @@
+module core.states.pennsylvania
+
+import core.calendar.{ us-federal-holidays }
+
+/// The legal holidays of Pennsylvania (Act of May 31, 1893, P.L. 188, No.
+/// 138, § 1, as amended 1985), which 1 Pa.C.S. § 1908 omits from a period's
+/// last day, that `us-federal-holidays` does not already close: Good Friday,
+/// Flag Day (June 14) and Election Day, the first Tuesday after the first
+/// Monday of November of every year. FRCP 6(a)(6)(C) and FRBP 9006(a)(6)(C)
+/// make them legal holidays of the Pennsylvania districts for a period
+/// counted forward only (core's `frcp6-pennsylvania` and
+/// `frbp9006-pennsylvania`). Act 138 § 2(a) moves a Sunday Flag Day to the
+/// Monday after; it moves no Saturday holiday, and a Saturday is closed by
+/// `weekend`. The other § 1 days are federal holidays, observed on the same
+/// day or one `us-federal-holidays` already closes.
+///
+/// Each day is closed from the date the vendored text was retrieved
+/// (October 29, 2026; neither PDF carries an as-of date) to the end of 2050.
+/// Not modeled: February 12, which § 2(a) and (c) still name but § 1 no
+/// longer lists; the Saturday half holiday, closed whole by `weekend`; and
+/// the days of thanksgiving, prayer or bank holidays the Governor or the
+/// President appoints, which no vendored source lists.
+calendar pennsylvania-holidays cite "1 Pa.C.S. § 1908"
+{
+  // Act 138 § 1: Good Friday.
+  good-friday-2027: once(2027-03-26) effective [2026-10-29, ..)
+  good-friday-2028: once(2028-04-14) effective [2026-10-29, ..)
+  good-friday-2029: once(2029-03-30) effective [2026-10-29, ..)
+  good-friday-2030: once(2030-04-19) effective [2026-10-29, ..)
+  good-friday-2031: once(2031-04-11) effective [2026-10-29, ..)
+  good-friday-2032: once(2032-03-26) effective [2026-10-29, ..)
+  good-friday-2033: once(2033-04-15) effective [2026-10-29, ..)
+  good-friday-2034: once(2034-04-07) effective [2026-10-29, ..)
+  good-friday-2035: once(2035-03-23) effective [2026-10-29, ..)
+  good-friday-2036: once(2036-04-11) effective [2026-10-29, ..)
+  good-friday-2037: once(2037-04-03) effective [2026-10-29, ..)
+  good-friday-2038: once(2038-04-23) effective [2026-10-29, ..)
+  good-friday-2039: once(2039-04-08) effective [2026-10-29, ..)
+  good-friday-2040: once(2040-03-30) effective [2026-10-29, ..)
+  good-friday-2041: once(2041-04-19) effective [2026-10-29, ..)
+  good-friday-2042: once(2042-04-04) effective [2026-10-29, ..)
+  good-friday-2043: once(2043-03-27) effective [2026-10-29, ..)
+  good-friday-2044: once(2044-04-15) effective [2026-10-29, ..)
+  good-friday-2045: once(2045-04-07) effective [2026-10-29, ..)
+  good-friday-2046: once(2046-03-23) effective [2026-10-29, ..)
+  good-friday-2047: once(2047-04-12) effective [2026-10-29, ..)
+  good-friday-2048: once(2048-04-03) effective [2026-10-29, ..)
+  good-friday-2049: once(2049-04-16) effective [2026-10-29, ..)
+  good-friday-2050: once(2050-04-08) effective [2026-10-29, ..)
+  // Act 138 § 1: the fourteenth day of June, Flag Day; § 2(a): on a Sunday,
+  // the Monday after.
+  flag-day: fixed(6, 14) effective [2026-10-29, ..)
+  flag-day-observed-2037: once(2037-06-15) effective [2026-10-29, ..)
+  flag-day-observed-2043: once(2043-06-15) effective [2026-10-29, ..)
+  flag-day-observed-2048: once(2048-06-15) effective [2026-10-29, ..)
+  // Act 138 § 1: the first Tuesday after the first Monday of November.
+  election-day-2026: once(2026-11-03) effective [2026-10-29, ..)
+  election-day-2027: once(2027-11-02) effective [2026-10-29, ..)
+  election-day-2028: once(2028-11-07) effective [2026-10-29, ..)
+  election-day-2029: once(2029-11-06) effective [2026-10-29, ..)
+  election-day-2030: once(2030-11-05) effective [2026-10-29, ..)
+  election-day-2031: once(2031-11-04) effective [2026-10-29, ..)
+  election-day-2032: once(2032-11-02) effective [2026-10-29, ..)
+  election-day-2033: once(2033-11-08) effective [2026-10-29, ..)
+  election-day-2034: once(2034-11-07) effective [2026-10-29, ..)
+  election-day-2035: once(2035-11-06) effective [2026-10-29, ..)
+  election-day-2036: once(2036-11-04) effective [2026-10-29, ..)
+  election-day-2037: once(2037-11-03) effective [2026-10-29, ..)
+  election-day-2038: once(2038-11-02) effective [2026-10-29, ..)
+  election-day-2039: once(2039-11-08) effective [2026-10-29, ..)
+  election-day-2040: once(2040-11-06) effective [2026-10-29, ..)
+  election-day-2041: once(2041-11-05) effective [2026-10-29, ..)
+  election-day-2042: once(2042-11-04) effective [2026-10-29, ..)
+  election-day-2043: once(2043-11-03) effective [2026-10-29, ..)
+  election-day-2044: once(2044-11-08) effective [2026-10-29, ..)
+  election-day-2045: once(2045-11-07) effective [2026-10-29, ..)
+  election-day-2046: once(2046-11-06) effective [2026-10-29, ..)
+  election-day-2047: once(2047-11-05) effective [2026-10-29, ..)
+  election-day-2048: once(2048-11-03) effective [2026-10-29, ..)
+  election-day-2049: once(2049-11-02) effective [2026-10-29, ..)
+  election-day-2050: once(2050-11-08) effective [2026-10-29, ..)
+}
+
+/// FRCP 6 in the district courts of Pennsylvania: the 2023 text
+/// (`frcp6@2023-12-01`) with `pennsylvania-holidays`, which 6(a)(6)(C)
+/// ("any day declared a holiday by ... the state where the district court
+/// is located") makes legal holidays "for periods that are measured after
+/// an event" only. A district package there names it as its `counting`
+/// rule and `recounts` lit/frcp. A calendar day is closed only from the
+/// date its entry is in force; before it the count is `frcp6`'s.
+counting frcp6-pennsylvania effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays pennsylvania-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRBP 9006(a) (`frbp9006`) in the bankruptcy courts of Pennsylvania:
+/// `pennsylvania-holidays` are legal holidays for a period counted forward only (FRBP
+/// 9006(a)(6)(C), "any day declared a holiday by the state where the
+/// district court is located"). A bankruptcy package there names it as its
+/// `counting` rule and `recounts` lit/frbp. A calendar day is closed only
+/// from the date its entry is in force.
+counting frbp9006-pennsylvania effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays pennsylvania-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-pae, bankr-pam, bankr-paw]
+  allow_hours
+  end_of_month clamp
+}

@@ -1,76 +1,7 @@
 module bankr-nm-local-rules.local-rules
 
-import core.calendar.{ us-federal-holidays }
+import core.states.new-mexico.{ frbp9006-new-mexico }
 import frbp.events.{ FirstMeetingDate, PetitionFiled }
-
-/// The New Mexico legal holiday NMRA 1-006(A)(7) lists that is not a
-/// § 6103(a) day: Presidents' Day, "traditionally observed on the day after
-/// Thanksgiving", the Friday after the fourth Thursday in November, listed
-/// here by year through 2050. Every other day on that list (New Year's,
-/// Martin Luther King Jr.'s Birthday, Memorial, Juneteenth, Independence,
-/// Labor, Indigenous Peoples (the second Monday in October), Veterans',
-/// Thanksgiving and Christmas Day) is a § 6103(a) day already in core's
-/// `us-federal-holidays`. Rule 1-006 was last amended effective December
-/// 31, 2024 (the vendored 2026 NMRA edition); "any other day observed as a
-/// holiday by the judiciary" (1-006(A)(7)(b)) is not modeled (the earlier
-/// date).
-calendar new-mexico-legal-holidays cite "NMRA 1-006(A)(7)"
-{
-  day-after-thanksgiving-2026: once(2026-11-27) effective [2025-12-01, ..)
-  day-after-thanksgiving-2027: once(2027-11-26) effective [2025-12-01, ..)
-  day-after-thanksgiving-2028: once(2028-11-24) effective [2025-12-01, ..)
-  day-after-thanksgiving-2029: once(2029-11-23) effective [2025-12-01, ..)
-  day-after-thanksgiving-2030: once(2030-11-29) effective [2025-12-01, ..)
-  day-after-thanksgiving-2031: once(2031-11-28) effective [2025-12-01, ..)
-  day-after-thanksgiving-2032: once(2032-11-26) effective [2025-12-01, ..)
-  day-after-thanksgiving-2033: once(2033-11-25) effective [2025-12-01, ..)
-  day-after-thanksgiving-2034: once(2034-11-24) effective [2025-12-01, ..)
-  day-after-thanksgiving-2035: once(2035-11-23) effective [2025-12-01, ..)
-  day-after-thanksgiving-2036: once(2036-11-28) effective [2025-12-01, ..)
-  day-after-thanksgiving-2037: once(2037-11-27) effective [2025-12-01, ..)
-  day-after-thanksgiving-2038: once(2038-11-26) effective [2025-12-01, ..)
-  day-after-thanksgiving-2039: once(2039-11-25) effective [2025-12-01, ..)
-  day-after-thanksgiving-2040: once(2040-11-23) effective [2025-12-01, ..)
-  day-after-thanksgiving-2041: once(2041-11-29) effective [2025-12-01, ..)
-  day-after-thanksgiving-2042: once(2042-11-28) effective [2025-12-01, ..)
-  day-after-thanksgiving-2043: once(2043-11-27) effective [2025-12-01, ..)
-  day-after-thanksgiving-2044: once(2044-11-25) effective [2025-12-01, ..)
-  day-after-thanksgiving-2045: once(2045-11-24) effective [2025-12-01, ..)
-  day-after-thanksgiving-2046: once(2046-11-23) effective [2025-12-01, ..)
-  day-after-thanksgiving-2047: once(2047-11-29) effective [2025-12-01, ..)
-  day-after-thanksgiving-2048: once(2048-11-27) effective [2025-12-01, ..)
-  day-after-thanksgiving-2049: once(2049-11-26) effective [2025-12-01, ..)
-  day-after-thanksgiving-2050: once(2050-11-25) effective [2025-12-01, ..)
-}
-
-/// FRBP 9006(a) (core's `frbp9006`) in the District of New Mexico: FRBP
-/// 9006(a)(6)(C) makes a day the state declares a holiday a legal holiday
-/// for a period counted forward only ("for periods that are measured after
-/// an event"). The package `recounts` lit/frbp, so in a matter in this
-/// court the FRBP periods are counted by this rule too, not by core's
-/// frbp9006.
-counting bankr-nm-9006 effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
-{
-  exclude_trigger_day
-  include_last_day
-  roll_forward_on [weekend, legal_holiday, inaccessible]
-  service_extension {
-    Personal: 0.days
-    Electronic: 0.days
-    Mail: 3.days
-    Clerk: 3.days
-    OtherConsented: 3.days
-    CommercialCarrier: unrecognized
-    PrisonMail: unrecognized
-    MailForeign: unrecognized
-    Express: unrecognized
-    ExpressForeign: unrecognized
-  } cite "FRBP 9006(f)"
-  holidays us-federal-holidays
-  forward_holidays new-mexico-legal-holidays cite "FRBP 9006(a)(6)(C)"
-  allow_hours
-  end_of_month clamp
-}
 
 // The Bankr. D.N.M. court's own periods, counted under FRBP 9006(a). The
 // FRBP periods (schedules, the chapter 13 plan and statement of current
@@ -181,194 +112,194 @@ event MatterFinallyDisposed()
 /// them to the trustee, and to any creditor that asked in writing at least
 /// 14 days before, at least fourteen days before the first date set for the
 /// meeting of creditors.
-deadline payment-advices-period: 14.days before FirstMeetingDate() counted_by bankr-nm-9006 cite "NM LBR 1007-1"
+deadline payment-advices-period: 14.days before FirstMeetingDate() counted_by frbp9006-new-mexico cite "NM LBR 1007-1"
 
 /// NM LBR 1007-1: the debtor provides payment advices to the United States
 /// trustee not later than ten days after service of its written request.
-deadline ust-payment-advices-period: 10.days after UstAdviceRequestServed() counted_by bankr-nm-9006 cite "NM LBR 1007-1"
+deadline ust-payment-advices-period: 10.days after UstAdviceRequestServed() counted_by frbp9006-new-mexico cite "NM LBR 1007-1"
 
 /// NM LBR 1007-2: within two days after filing and mailing a late statement
 /// of social security number, the debtor files a certificate of compliance.
-deadline ssn-certificate-period: 2.days after SsnStatementFiled() counted_by bankr-nm-9006 cite "NM LBR 1007-2"
+deadline ssn-certificate-period: 2.days after SsnStatementFiled() counted_by frbp9006-new-mexico cite "NM LBR 1007-2"
 
 /// NM LBR 1017-1: the movant files with a § 1112(b) motion, and serves
 /// within two days thereafter, a notice of the scheduling conference, final
 /// hearing and objection deadline.
-deadline conversion-notice-service-period: 2.days after ConversionMotionFiled() counted_by bankr-nm-9006 cite "NM LBR 1017-1"
+deadline conversion-notice-service-period: 2.days after ConversionMotionFiled() counted_by frbp9006-new-mexico cite "NM LBR 1017-1"
 
 /// NM LBR 1017-1: the objection deadline to a motion to convert or dismiss
 /// a chapter 11 case is ten days from the date of service of the notice (as
 /// for a motion under §§ 362(c)(4)(A)(ii) or 362(j), NM LBR 4001-2).
-deadline conversion-objection-period: 10.days after NoticeServed() counted_by bankr-nm-9006 cite "NM LBR 1017-1"
+deadline conversion-objection-period: 10.days after NoticeServed() counted_by frbp9006-new-mexico cite "NM LBR 1017-1"
 
 /// NM LBR 1017-2: a chapter 13 debtor's motion to dismiss under § 1307(b)
 /// requires notice to all electronic notice recipients with a minimum
 /// five-day deadline to object.
-deadline voluntary-dismissal-objection-period: 5.days after VoluntaryDismissalNoticed() counted_by bankr-nm-9006 cite "NM LBR 1017-2"
+deadline voluntary-dismissal-objection-period: 5.days after VoluntaryDismissalNoticed() counted_by frbp9006-new-mexico cite "NM LBR 1017-2"
 
 /// NM LBR 2003-1: requests to reschedule a § 341 meeting are made to the
 /// United States trustee (chapter 11) or the trustee (chapters 7, 12 and
 /// 13) at least seven days before the scheduled meeting.
-deadline meeting-reschedule-request-period: 7.days before MeetingDate() counted_by bankr-nm-9006 cite "NM LBR 2003-1"
+deadline meeting-reschedule-request-period: 7.days before MeetingDate() counted_by frbp9006-new-mexico cite "NM LBR 2003-1"
 
 /// NM LBR 2004-1(a): unless otherwise ordered, an order for a Rule 2004
 /// examination is served at least seven days before the scheduled
 /// examination.
-deadline examination-order-service-period: 7.days before ExaminationDate() counted_by bankr-nm-9006 cite "NM LBR 2004-1(a)"
+deadline examination-order-service-period: 7.days before ExaminationDate() counted_by frbp9006-new-mexico cite "NM LBR 2004-1(a)"
 
 /// NM LBR 2016-1(b): substituted debtor's counsel files a Rule 2016
 /// statement within fourteen days of the date representation commenced.
-deadline substituted-counsel-disclosure-period: 14.days after RepresentationCommenced() counted_by bankr-nm-9006 cite "NM LBR 2016-1(b)"
+deadline substituted-counsel-disclosure-period: 14.days after RepresentationCommenced() counted_by frbp9006-new-mexico cite "NM LBR 2016-1(b)"
 
 /// NM LBR 2016-1(d): each subchapter V trustee fee application is filed and
 /// noticed within twenty-eight days after the application period, or the
 /// debtor's authority to make interim payments is suspended.
-deadline subchapter-v-fee-application-period: 28.days after ApplicationPeriodEnded() counted_by bankr-nm-9006 cite "NM LBR 2016-1(d)"
+deadline subchapter-v-fee-application-period: 28.days after ApplicationPeriodEnded() counted_by frbp9006-new-mexico cite "NM LBR 2016-1(d)"
 
 /// NM LBR 3007-1: unless extended or shortened by the court, the time to
 /// respond to a claim objection is thirty days from service of the
 /// objection and notice.
-deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by bankr-nm-9006 cite "NM LBR 3007-1"
+deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006-new-mexico cite "NM LBR 3007-1"
 
 /// NM LBR 3015-2(c): the trustee and the United States trustee have an
 /// automatic extension of time to object to confirmation of a chapter 13
 /// plan until fourteen days after conclusion of the meeting of creditors.
-deadline trustee-plan-objection-period: 14.days after MeetingConcluded() counted_by bankr-nm-9006 cite "NM LBR 3015-2(c)"
+deadline trustee-plan-objection-period: 14.days after MeetingConcluded() counted_by frbp9006-new-mexico cite "NM LBR 3015-2(c)"
 
 /// NM LBR 3015-2(e): the debtor who serves the plan and notice of objection
 /// deadline and confirmation hearing files a certificate of service within
 /// three days thereafter.
-deadline plan-service-certificate-period: 3.days after PlanServed() counted_by bankr-nm-9006 cite "NM LBR 3015-2(e)"
+deadline plan-service-certificate-period: 3.days after PlanServed() counted_by frbp9006-new-mexico cite "NM LBR 3015-2(e)"
 
 /// NM LBR 3015-3(d): a notice under FRBP 3002.1(b) filed and served more
 /// than 21 days before the new payment's effective date is deemed allowed
 /// if no objection is filed within twenty-one days after its service.
-deadline payment-change-objection-period: 21.days after PaymentChangeNoticeServed() counted_by bankr-nm-9006 cite "NM LBR 3015-3(d)"
+deadline payment-change-objection-period: 21.days after PaymentChangeNoticeServed() counted_by frbp9006-new-mexico cite "NM LBR 3015-3(d)"
 
 /// NM LBR 3015-3(e): at least forty-five days before any name or address
 /// change, the mortgagee sends the trustee notice on Official Form
 /// B2100A/B.
-deadline mortgagee-address-notice-period: 45.days before MortgageeAddressChange() counted_by bankr-nm-9006 cite "NM LBR 3015-3(e)"
+deadline mortgagee-address-notice-period: 45.days before MortgageeAddressChange() counted_by frbp9006-new-mexico cite "NM LBR 3015-3(e)"
 
 /// NM LBR 3015-3(e): if a confirmed plan is modified to require conduit
 /// payments, the mortgagee files a supplemental proof of claim within
 /// twenty-one days after court approval of the modification.
-deadline conduit-supplemental-claim-period: 21.days after ConduitModificationApproved() counted_by bankr-nm-9006 cite "NM LBR 3015-3(e)"
+deadline conduit-supplemental-claim-period: 21.days after ConduitModificationApproved() counted_by frbp9006-new-mexico cite "NM LBR 3015-3(e)"
 
 /// NM LBR 3015-6(b): if the trustee approves an application to incur
 /// non-mortgage consumer debt, the debtor files a notice of the approval
 /// within ten days thereafter.
-deadline new-debt-notice-period: 10.days after NewDebtApproved() counted_by bankr-nm-9006 cite "NM LBR 3015-6(b)"
+deadline new-debt-notice-period: 10.days after NewDebtApproved() counted_by frbp9006-new-mexico cite "NM LBR 3015-6(b)"
 
 /// NM LBR 4001-1(b): a motion to continue or impose the stay is filed
 /// within seven days of the petition date; untimely motions may be denied.
-deadline stay-continuation-motion-period: 7.days after PetitionFiled() counted_by bankr-nm-9006 cite "NM LBR 4001-1(b)"
+deadline stay-continuation-motion-period: 7.days after PetitionFiled() counted_by frbp9006-new-mexico cite "NM LBR 4001-1(b)"
 
 /// NM LBR 4001-1(c): unless the court orders otherwise, the deadline to
 /// object to a motion to continue or impose the stay is ten days from
 /// service of the motion and notice.
-deadline stay-continuation-objection-period: 10.days after StayMotionServed() counted_by bankr-nm-9006 cite "NM LBR 4001-1(c)"
+deadline stay-continuation-objection-period: 10.days after StayMotionServed() counted_by frbp9006-new-mexico cite "NM LBR 4001-1(c)"
 
 /// NM LBR 4002-1: within fourteen days after service of a trustee's written
 /// request under § 521(a)(3) or (4), the debtor provides the information or
 /// files a written objection.
-deadline trustee-information-period: 14.days after TrusteeRequestServed() counted_by bankr-nm-9006 cite "NM LBR 4002-1"
+deadline trustee-information-period: 14.days after TrusteeRequestServed() counted_by frbp9006-new-mexico cite "NM LBR 4002-1"
 
 /// NM LBR 4002-2: in a chapter 12 or 13 case the debtor provides the
 /// trustee income, tax and insurance documents, or a statement that none
 /// exist, at least seven days before the first date set for the meeting of
 /// creditors.
-deadline trustee-documents-period: 7.days before FirstMeetingDate() counted_by bankr-nm-9006 cite "NM LBR 4002-2"
+deadline trustee-documents-period: 7.days before FirstMeetingDate() counted_by frbp9006-new-mexico cite "NM LBR 4002-2"
 
 /// NM LBR 4002-4: when the debtor's address changes, the debtor files the
 /// statement required by FRBP 4002(a)(5) within fourteen days of the
 /// change.
-deadline address-change-period: 14.days after AddressChanged() counted_by bankr-nm-9006 cite "NM LBR 4002-4"
+deadline address-change-period: 14.days after AddressChanged() counted_by frbp9006-new-mexico cite "NM LBR 4002-4"
 
 /// NM LBR 5005-1: the filer of a paper document reviews its scanned image
 /// within fourteen days after filing; absent a correction request the image
 /// stands.
-deadline scanned-image-review-period: 14.days after PaperDocumentFiled() counted_by bankr-nm-9006 cite "NM LBR 5005-1"
+deadline scanned-image-review-period: 14.days after PaperDocumentFiled() counted_by frbp9006-new-mexico cite "NM LBR 5005-1"
 
 /// NM LBR 5011-2(a): in a bankruptcy case a motion to abstain is timely if
 /// filed within thirty days after the conclusion of the meeting of
 /// creditors.
-deadline abstention-case-period: 30.days after MeetingConcluded() counted_by bankr-nm-9006 cite "NM LBR 5011-2(a)"
+deadline abstention-case-period: 30.days after MeetingConcluded() counted_by frbp9006-new-mexico cite "NM LBR 5011-2(a)"
 
 /// NM LBR 5011-2(b): in a removed adversary proceeding a motion to abstain
 /// is timely if filed within twenty-one days after the notice of removal
 /// was filed.
-deadline abstention-removal-period: 21.days after RemovalNoticeFiled() counted_by bankr-nm-9006 cite "NM LBR 5011-2(b)"
+deadline abstention-removal-period: 21.days after RemovalNoticeFiled() counted_by frbp9006-new-mexico cite "NM LBR 5011-2(b)"
 
 /// NM LBR 5011-2(b): if a motion to abstain is denied, the deadline to
 /// answer in the adversary proceeding, or to object in the contested matter
 /// (NM LBR 5011-2(c)), is extended until fourteen days after entry of the
 /// denial order.
-deadline abstention-denied-answer-period: 14.days after AbstentionDenied() counted_by bankr-nm-9006 cite "NM LBR 5011-2(b)"
+deadline abstention-denied-answer-period: 14.days after AbstentionDenied() counted_by frbp9006-new-mexico cite "NM LBR 5011-2(b)"
 
 /// NM LBR 7007-1: responses to motions in adversary proceedings, other than
 /// for summary judgment, are due within twenty-one days after service.
-deadline adversary-response-period: 21.days after MotionServed() counted_by bankr-nm-9006 cite "NM LBR 7007-1"
+deadline adversary-response-period: 21.days after MotionServed() counted_by frbp9006-new-mexico cite "NM LBR 7007-1"
 
 /// NM LBR 7007-1: optional replies are due within fourteen days after
 /// service of the response.
-deadline adversary-reply-period: 14.days after ResponseServed() counted_by bankr-nm-9006 cite "NM LBR 7007-1"
+deadline adversary-reply-period: 14.days after ResponseServed() counted_by frbp9006-new-mexico cite "NM LBR 7007-1"
 
 /// NM LBR 7030-1(a): unless otherwise agreed or ordered, notices of
 /// deposition are served at least ten days before the scheduled deposition.
-deadline deposition-notice-period: 10.days before DepositionDate() counted_by bankr-nm-9006 cite "NM LBR 7030-1(a)"
+deadline deposition-notice-period: 10.days before DepositionDate() counted_by frbp9006-new-mexico cite "NM LBR 7030-1(a)"
 
 /// NM LBR 7030-1(b): a deponent's non-appearance may be sanctioned unless a
 /// motion for protective order and a notice of non-appearance are served at
 /// least three days before the scheduled deposition.
-deadline non-appearance-notice-period: 3.days before DepositionDate() counted_by bankr-nm-9006 cite "NM LBR 7030-1(b)"
+deadline non-appearance-notice-period: 3.days before DepositionDate() counted_by frbp9006-new-mexico cite "NM LBR 7030-1(b)"
 
 /// NM LBR 7054-1(a): within fourteen days after entry of a final judgment
 /// or order, a party may file and serve a motion to tax costs with a
 /// verified bill of costs.
-deadline costs-motion-period: 14.days after FinalJudgmentEntered() counted_by bankr-nm-9006 cite "NM LBR 7054-1(a)"
+deadline costs-motion-period: 14.days after FinalJudgmentEntered() counted_by frbp9006-new-mexico cite "NM LBR 7054-1(a)"
 
 /// NM LBR 7054-1(b): notice of a motion to tax costs gives adverse parties
 /// fourteen days to file and serve objections.
-deadline costs-objection-period: 14.days after CostsMotionNoticed() counted_by bankr-nm-9006 cite "NM LBR 7054-1(b)"
+deadline costs-objection-period: 14.days after CostsMotionNoticed() counted_by frbp9006-new-mexico cite "NM LBR 7054-1(b)"
 
 /// NM LBR 7054-1(c): a request for court review of the clerk's taxation of
 /// costs is filed within fourteen days after entry of the clerk's order.
-deadline costs-review-period: 14.days after CostsTaxed() counted_by bankr-nm-9006 cite "NM LBR 7054-1(c)"
+deadline costs-review-period: 14.days after CostsTaxed() counted_by frbp9006-new-mexico cite "NM LBR 7054-1(c)"
 
 /// NM LBR 7056-1(c): the deadline to respond to a summary judgment motion
 /// is twenty-one days after service; the optional reply is due fourteen
 /// days after service of the response.
-deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by bankr-nm-9006 cite "NM LBR 7056-1(c)"
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006-new-mexico cite "NM LBR 7056-1(c)"
 
 /// NM LBR 9010-2(c): the notice of a motion to withdraw without the
 /// client's consent specifies a 14-day objection deadline running from
 /// service of the motion and notice.
-deadline attorney-withdrawal-objection-period: 14.days after WithdrawalMotionServed() counted_by bankr-nm-9006 cite "NM LBR 9010-2(c)"
+deadline attorney-withdrawal-objection-period: 14.days after WithdrawalMotionServed() counted_by frbp9006-new-mexico cite "NM LBR 9010-2(c)"
 
 /// NM LBR 9010-2(e): if another attorney does not appear within twenty-one
 /// days from service of the clerk's notice, an individual proceeds pro se
 /// and a non-individual is deemed unrepresented.
-deadline new-appearance-period: 21.days after AttorneyGoneNoticeServed() counted_by bankr-nm-9006 cite "NM LBR 9010-2(e)"
+deadline new-appearance-period: 21.days after AttorneyGoneNoticeServed() counted_by frbp9006-new-mexico cite "NM LBR 9010-2(e)"
 
 /// NM LBR 9013-1(d): unless the rules provide otherwise or the court
 /// orders, the deadline to object to an opposed motion in a contested
 /// matter is twenty-one days from the date of service.
-deadline objection-deadline-period: 21.days after MotionServed() counted_by bankr-nm-9006 cite "NM LBR 9013-1(d)"
+deadline objection-deadline-period: 21.days after MotionServed() counted_by frbp9006-new-mexico cite "NM LBR 9013-1(d)"
 
 /// NM LBR 9013-1(d): the deadline to file an optional reply in a contested
 /// matter is fourteen days after service of the objection.
-deadline contested-reply-period: 14.days after ResponseServed() counted_by bankr-nm-9006 cite "NM LBR 9013-1(d)"
+deadline contested-reply-period: 14.days after ResponseServed() counted_by frbp9006-new-mexico cite "NM LBR 9013-1(d)"
 
 /// NM LBR 9013-2(c): in chapter 7 and 13, unless altered by court order,
 /// the objection deadline to a stay relief motion is twenty-one days from
 /// service of the notice.
-deadline stay-relief-objection-period: 21.days after NoticeServed() counted_by bankr-nm-9006 cite "NM LBR 9013-2(c)"
+deadline stay-relief-objection-period: 21.days after NoticeServed() counted_by frbp9006-new-mexico cite "NM LBR 9013-2(c)"
 
 /// NM LBR 9070-1: the parties have thirty days after the final disposition
 /// of each matter to retrieve exhibits submitted on it; exhibits not
 /// retrieved may be destroyed.
-deadline exhibit-retrieval-period: 30.days after MatterFinallyDisposed() counted_by bankr-nm-9006 cite "NM LBR 9070-1"
+deadline exhibit-retrieval-period: 30.days after MatterFinallyDisposed() counted_by frbp9006-new-mexico cite "NM LBR 9070-1"
 
 start motion-filed
 

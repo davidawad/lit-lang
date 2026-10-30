@@ -1,6 +1,6 @@
 module wyd-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frcp6.{ frcp6-wyoming }
 
 // The District of Wyoming's own civil periods, computed under the federal
 // rules (U.S.D.C.L.R. 6.1(a): time limits imposed by the Local Rules are
@@ -126,100 +126,100 @@ event AgencyResponseBriefServed()
 /// summons and complaint is filed within 10 days after it is effected or
 /// returned, and in any event no later than the time within which the
 /// party served must respond.
-deadline return-of-service-period: 10.days after ServiceEffected() counted_by frcp6 cite "U.S.D.C.L.R. 4.1(b)"
+deadline return-of-service-period: 10.days after ServiceEffected() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 4.1(b)"
 /// U.S.D.C.L.R. 7.1(b)(1)(B): each party opposing a non-dispositive
 /// motion has 14 days after its filing to file a written response; the
 /// Court may treat a failure to respond timely as a confession of the
 /// motion.
-deadline nondispositive-response-period: 14.days after NondispositiveMotionFiled() counted_by frcp6 cite "U.S.D.C.L.R. 7.1(b)(1)(B)"
+deadline nondispositive-response-period: 14.days after NondispositiveMotionFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 7.1(b)(1)(B)"
 /// U.S.D.C.L.R. 7.1(b)(1)(D): for a non-dispositive motion decided
 /// without a hearing, a reply brief may be filed within 7 days of the
 /// filing of the response brief.
-deadline nondispositive-reply-period: 7.days after NondispositiveResponseFiled() counted_by frcp6 cite "U.S.D.C.L.R. 7.1(b)(1)(D)"
+deadline nondispositive-reply-period: 7.days after NondispositiveResponseFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 7.1(b)(1)(D)"
 /// U.S.D.C.L.R. 7.1(b)(2)(A): each party opposing a dispositive motion
 /// has 14 days from its filing to file a written brief in opposition; a
 /// party that does not intend to oppose a motion not marked unopposed
 /// files a notice of non-opposition no later than the same deadline.
-deadline dispositive-response-period: 14.days after DispositiveMotionFiled() counted_by frcp6 cite "U.S.D.C.L.R. 7.1(b)(2)(A)"
+deadline dispositive-response-period: 14.days after DispositiveMotionFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 7.1(b)(2)(A)"
 /// U.S.D.C.L.R. 7.1(b)(2)(C): for a dispositive motion decided without a
 /// hearing, a reply brief may be filed within 7 days of the filing of the
 /// response brief.
-deadline dispositive-reply-period: 7.days after DispositiveResponseFiled() counted_by frcp6 cite "U.S.D.C.L.R. 7.1(b)(2)(C)"
+deadline dispositive-reply-period: 7.days after DispositiveResponseFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 7.1(b)(2)(C)"
 /// U.S.D.C.L.R. 30.1(a): unless the Court orders otherwise, reasonable
 /// notice of a deposition under FRCP 30(b)(1) is not less than 14 days,
 /// computed under FRCP 6.
-deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6 cite "U.S.D.C.L.R. 30.1(a)"
+deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 30.1(a)"
 /// U.S.D.C.L.R. 37.1(d): a motion under FRCP 26(c) directed to a
 /// deposition is filed and served as soon as practicable after receipt of
 /// the notice, and in no event less than 5 days before the scheduled
 /// deposition.
-deadline deposition-protective-motion-period: 5.days before DepositionScheduled() counted_by frcp6 cite "U.S.D.C.L.R. 37.1(d)"
+deadline deposition-protective-motion-period: 5.days before DepositionScheduled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 37.1(d)"
 /// U.S.D.C.L.R. 41.1(a): on notice that an action has settled, counsel
 /// file within 30 days, unless otherwise permitted or directed, the
 /// filings necessary to terminate it; otherwise the Court may set the
 /// action for trial.
-deadline settlement-papers-period: 30.days after SettlementNoticed() counted_by frcp6 cite "U.S.D.C.L.R. 41.1(a)"
+deadline settlement-papers-period: 30.days after SettlementNoticed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 41.1(a)"
 /// U.S.D.C.L.R. 41.1(b): after 90 days without action, the Clerk notifies
 /// the parties that the case may be dismissed for lack of prosecution 30
 /// days from the date of the notice; if no action is taken within 30 days
 /// after notice, the Court may enter the order of dismissal.
-deadline prosecution-notice-period: 30.days after ProsecutionNoticeGiven() counted_by frcp6 cite "U.S.D.C.L.R. 41.1(b)"
+deadline prosecution-notice-period: 30.days after ProsecutionNoticeGiven() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 41.1(b)"
 /// U.S.D.C.L.R. 54.2(a): within 14 days from entry of a final judgment
 /// for which costs are allowed, the prevailing party files a bill of
 /// costs (other than attorney's fees) on AO form 133.
-deadline bill-of-costs-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "U.S.D.C.L.R. 54.2(a)"
+deadline bill-of-costs-period: 14.days after FinalJudgmentEntered() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 54.2(a)"
 /// U.S.D.C.L.R. 54.2(b): if no objections are filed within 14 days after
 /// service of the bill of costs, the Clerk taxes the costs properly
 /// claimed.
-deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "U.S.D.C.L.R. 54.2(b)"
+deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 54.2(b)"
 /// U.S.D.C.L.R. 54.2(i): costs taxable under FRAP 39(e) are waived unless
 /// the party entitled to them files a bill of costs within 14 days of the
 /// issuance of the court of appeals' mandate.
-deadline appeal-costs-period: 14.days after MandateIssued() counted_by frcp6 cite "U.S.D.C.L.R. 54.2(i)"
+deadline appeal-costs-period: 14.days after MandateIssued() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 54.2(i)"
 /// U.S.D.C.L.R. 54.3(c), (e): if the parties cannot agree, the moving
 /// party files the statement of consultation with a motion for attorney's
 /// fees within 14 days of entry of the final judgment; failure to file
 /// timely is a waiver unless the Court grants relief for good cause.
-deadline fee-motion-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "U.S.D.C.L.R. 54.3(c)"
+deadline fee-motion-period: 14.days after FinalJudgmentEntered() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 54.3(c)"
 /// U.S.D.C.L.R. 54.3(d), (e): the opposing party files objections to the
 /// fee request within 14 days after the filing of the claim for
 /// attorney's fees.
-deadline fee-objection-period: 14.days after FeeClaimFiled() counted_by frcp6 cite "U.S.D.C.L.R. 54.3(d)"
+deadline fee-objection-period: 14.days after FeeClaimFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 54.3(d)"
 /// U.S.D.C.L.R. 73.1: in a civil case fully assigned to a magistrate
 /// judge, each party sends the Clerk's Office, within 14 days from the
 /// filing of an answer or other responsive filing, either a written
 /// consent under 28 U.S.C. § 636(c) or a written election to have the
 /// action reassigned to a district judge.
-deadline magistrate-consent-period: 14.days after ResponsiveFilingInAssignedCase() counted_by frcp6 cite "U.S.D.C.L.R. 73.1"
+deadline magistrate-consent-period: 14.days after ResponsiveFilingInAssignedCase() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 73.1"
 /// U.S.D.C.L.R. 74.1(a): a response to a request for reconsideration of
 /// a magistrate judge's non-dispositive order is filed within 14 days
 /// after service of the request.
-deadline reconsideration-response-period: 14.days after ReconsiderationRequestServed() counted_by frcp6 cite "U.S.D.C.L.R. 74.1(a)"
+deadline reconsideration-response-period: 14.days after ReconsiderationRequestServed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 74.1(a)"
 /// U.S.D.C.L.R. 81.1: within 14 days of entry of the Order on Removal,
 /// the removing party files a copy of the entire state court record and
 /// proceedings, including the docket sheet.
-deadline removal-record-period: 14.days after RemovalOrderEntered() counted_by frcp6 cite "U.S.D.C.L.R. 81.1"
+deadline removal-record-period: 14.days after RemovalOrderEntered() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 81.1"
 /// U.S.D.C.L.R. 84.2(b): a complaint accepted for filing signed only by
 /// an attorney not admitted to this Court is conditioned on association
 /// with local counsel within 14 days after the filing of the complaint.
-deadline local-counsel-period: 14.days after ComplaintFiledByNonadmittedAttorney() counted_by frcp6 cite "U.S.D.C.L.R. 84.2(b)"
+deadline local-counsel-period: 14.days after ComplaintFiledByNonadmittedAttorney() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 84.2(b)"
 /// U.S.D.C.L.R. 83.6(b)(2): unless a statute provides a different time or
 /// the Court orders otherwise, the agency files the record within 90 days
 /// of proper service of the complaint or petition for review (60 days in
 /// a Social Security case, not encoded separately).
-deadline agency-record-period: 90.days after AgencyPetitionServed() counted_by frcp6 cite "U.S.D.C.L.R. 83.6(b)(2)"
+deadline agency-record-period: 90.days after AgencyPetitionServed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 83.6(b)(2)"
 /// U.S.D.C.L.R. 83.6(b)(3): a request for completion of the record, or
 /// for consideration of extra-record evidence, is filed within 14 days
 /// after the record was filed.
-deadline agency-record-supplement-period: 14.days after AgencyRecordFiled() counted_by frcp6 cite "U.S.D.C.L.R. 83.6(b)(3)"
+deadline agency-record-supplement-period: 14.days after AgencyRecordFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 83.6(b)(3)"
 /// U.S.D.C.L.R. 83.6(c): unless otherwise ordered, the party seeking
 /// review serves and files an opening brief within 45 days after the
 /// record is filed (after a supplemental record is filed or the motion is
 /// denied, if a (b)(3) motion is filed).
-deadline agency-opening-brief-period: 45.days after AgencyRecordFiled() counted_by frcp6 cite "U.S.D.C.L.R. 83.6(c)"
+deadline agency-opening-brief-period: 45.days after AgencyRecordFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 83.6(c)"
 /// U.S.D.C.L.R. 83.6(c): the responding party serves and files a brief
 /// within 30 days after service of the opening brief.
-deadline agency-response-brief-period: 30.days after AgencyOpeningBriefServed() counted_by frcp6 cite "U.S.D.C.L.R. 83.6(c)"
+deadline agency-response-brief-period: 30.days after AgencyOpeningBriefServed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 83.6(c)"
 /// U.S.D.C.L.R. 83.6(c): the plaintiff or petitioner may serve and file
 /// a reply brief within 14 days after service of the responsive brief.
-deadline agency-reply-brief-period: 14.days after AgencyResponseBriefServed() counted_by frcp6 cite "U.S.D.C.L.R. 83.6(c)"
+deadline agency-reply-brief-period: 14.days after AgencyResponseBriefServed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 83.6(c)"

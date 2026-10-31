@@ -1,0 +1,15 @@
+# Major cofc matter case, using its authored default procedural rules.
+
+paths = []
+
+[[run]]
+world = "cofc.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["cofc"]
+deadlines = []
+
+[run.expect.w1.outcome]
+elected-1 = "untimed"
+elected-2 = "untimed"

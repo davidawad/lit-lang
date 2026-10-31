@@ -270,3 +270,213 @@ decision ruling: "Motion decided" by court cite "Bankr. E.D. La. LR 9013-1(F)"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. E.D. La. LR 1001-1"
+
+test "Deadline arithmetic: involuntary-mailing-matrix-period (14 days after)" cite "Bankr. E.D. La. LR 1007-2(A)"
+{
+  given OrderForReliefEntered() on 2027-04-06
+  expect deadline(involuntary-mailing-matrix-period) == 2027-04-20
+}
+
+test "Deadline arithmetic: added-creditor-notice-period (21 days before)" cite "Bankr. E.D. La. LR 1007-2(D)"
+{
+  given FirstMeetingDate() on 2027-04-06
+  expect deadline(added-creditor-notice-period) == 2027-03-16
+}
+
+test "Deadline arithmetic: added-creditor-extended-deadline-period (28 days after)" cite "Bankr. E.D. La. LR 1007-2(E)"
+{
+  given AddedCreditorOrderNoticed() on 2027-04-06
+  expect deadline(added-creditor-extended-deadline-period) == 2027-05-04
+}
+
+test "Deadline arithmetic: electronic-filing-declaration-period (7 days after)" cite "Bankr. E.D. La. LR 1008-1(A)"
+{
+  given PetitionFiled() on 2027-04-06
+  expect deadline(electronic-filing-declaration-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: meeting-denial-review-motion-period (7 days after)" cite "Bankr. E.D. La. LR 2003-1(B)"
+{
+  given RescheduleDenialReceived() on 2027-04-06
+  expect deadline(meeting-denial-review-motion-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: rescheduled-meeting-chapter-13-bar-period (90 days after)" cite "Bankr. E.D. La. LR 2003-1(B)"
+{
+  given RescheduledMeetingConcluded() on 2027-04-06
+  expect deadline(rescheduled-meeting-chapter-13-bar-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: rescheduled-meeting-discharge-objection-period (60 days after)" cite "Bankr. E.D. La. LR 2003-1(B)"
+{
+  given RescheduledMeetingConcluded() on 2027-04-06
+  expect deadline(rescheduled-meeting-discharge-objection-period) == 2027-06-07
+}
+
+test "Deadline arithmetic: rescheduled-meeting-dismissal-motion-period (60 days after)" cite "Bankr. E.D. La. LR 2003-1(B)"
+{
+  given RescheduledMeetingConcluded() on 2027-04-06
+  expect deadline(rescheduled-meeting-dismissal-motion-period) == 2027-06-07
+}
+
+test "Deadline arithmetic: rescheduled-meeting-exemption-objection-period (30 days after)" cite "Bankr. E.D. La. LR 2003-1(B)"
+{
+  given RescheduledMeetingConcluded() on 2027-04-06
+  expect deadline(rescheduled-meeting-exemption-objection-period) == 2027-05-06
+}
+
+test "Deadline arithmetic: examination-objection-period (7 days before)" cite "Bankr. E.D. La. LR 2004-1(B)"
+{
+  given ProposedExaminationDate() on 2027-04-06
+  expect deadline(examination-objection-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: chapter-13-plan-service-period (28 days before)" cite "Bankr. E.D. La. LR 3015-1(B)"
+{
+  given ConfirmationHearing() on 2027-04-06
+  expect deadline(chapter-13-plan-service-period) == 2027-03-09
+}
+
+test "Deadline arithmetic: chapter-13-plan-trustee-period (14 days before)" cite "Bankr. E.D. La. LR 3015-1(B)"
+{
+  given FirstMeetingDate() on 2027-04-06
+  expect deadline(chapter-13-plan-trustee-period) == 2027-03-23
+}
+
+test "Deadline arithmetic: chapter-11-objection-period (7 days before)" cite "Bankr. E.D. La. LR 3015-1(D)"
+{
+  given DisclosureOrConfirmationHearing() on 2027-04-06
+  expect deadline(chapter-11-objection-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: amended-plan-filing-period (7 days before)" cite "Bankr. E.D. La. LR 3015-2(A)"
+{
+  given ConfirmationHearing() on 2027-04-06
+  expect deadline(amended-plan-filing-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: amended-plan-certificate-period (7 days before)" cite "Bankr. E.D. La. LR 3015-2(A)"
+{
+  given ConfirmationHearing() on 2027-04-06
+  expect deadline(amended-plan-certificate-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: material-amendment-notice-period (28 days before)" cite "Bankr. E.D. La. LR 3015-2(A)"
+{
+  given ConfirmationHearing() on 2027-04-06
+  expect deadline(material-amendment-notice-period) == 2027-03-09
+}
+
+test "Deadline arithmetic: confirmation-affidavit-period (5 days before)" cite "Bankr. E.D. La. LR 3015-4(B)"
+{
+  given ConfirmationHearing() on 2027-04-06
+  expect deadline(confirmation-affidavit-period) == 2027-04-01
+}
+
+test "Deadline arithmetic: ballot-certification-period (3 days before)" cite "Bankr. E.D. La. LR 3018-1(A)"
+{
+  given ConfirmationHearing() on 2027-04-06
+  expect deadline(ballot-certification-period) == 2027-04-02
+}
+
+test "Deadline arithmetic: ballot-delivery-period (3 days before)" cite "Bankr. E.D. La. LR 3018-1(B)"
+{
+  given ConfirmationHearing() on 2027-04-06
+  expect deadline(ballot-delivery-period) == 2027-04-02
+}
+
+test "Deadline arithmetic: final-decree-motion-period (30 days after)" cite "Bankr. E.D. La. LR 3022-1(A)"
+{
+  given PlanObligationsCompleted() on 2027-04-06
+  expect deadline(final-decree-motion-period) == 2027-05-06
+}
+
+test "Deadline arithmetic: stay-extension-motion-period (7 days after)" cite "Bankr. E.D. La. LR 4001-2(A)"
+{
+  given PetitionFiled() on 2027-04-06
+  expect deadline(stay-extension-motion-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: tax-refund-turnover-period (7 days after)" cite "Bankr. E.D. La. LR 4002-1(A)"
+{
+  given TaxRefundReceived() on 2027-04-06
+  expect deadline(tax-refund-turnover-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: tax-refund-use-motion-period (21 days after)" cite "Bankr. E.D. La. LR 4002-1(A)"
+{
+  given TaxRefundReceivedByTrustee() on 2027-04-06
+  expect deadline(tax-refund-use-motion-period) == 2027-04-27
+}
+
+test "Deadline arithmetic: chapter-11-budget-period (7 days after)" cite "Bankr. E.D. La. LR 4002-1(C)"
+{
+  given PetitionFiled() on 2027-04-06
+  expect deadline(chapter-11-budget-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: chapter-11-budget-approval-period (30 days after)" cite "Bankr. E.D. La. LR 4002-1(C)"
+{
+  given PetitionFiled() on 2027-04-06
+  expect deadline(chapter-11-budget-approval-period) == 2027-05-06
+}
+
+test "Deadline arithmetic: chapter-11-budget-motion-period (37 days after)" cite "Bankr. E.D. La. LR 4002-1(C)"
+{
+  given PetitionFiled() on 2027-04-06
+  expect deadline(chapter-11-budget-motion-period) == 2027-05-13
+}
+
+test "Deadline arithmetic: pleading-extension-period (21 days after)" cite "Bankr. E.D. La. LR 7007-1"
+{
+  given PleadingOtherwiseDue() on 2027-04-06
+  expect deadline(pleading-extension-period) == 2027-04-27
+}
+
+test "Deadline arithmetic: trial-exhibits-submission-period (7 days after)" cite "Bankr. E.D. La. LR 7040-1(D)"
+{
+  given EvidentiaryHearingConcluded() on 2027-04-06
+  expect deadline(trial-exhibits-submission-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: costs-application-period (30 days after)" cite "Bankr. E.D. La. LR 7054-1"
+{
+  given JudgmentEntryNoticed() on 2027-04-06
+  expect deadline(costs-application-period) == 2027-05-06
+}
+
+test "Deadline arithmetic: default-request-period (14 days after)" cite "Bankr. E.D. La. LR 7055-1(A)"
+{
+  given AnswerDeadlinePassed() on 2027-04-06
+  expect deadline(default-request-period) == 2027-04-20
+}
+
+test "Deadline arithmetic: default-judgment-motion-period (14 days after)" cite "Bankr. E.D. La. LR 7055-1(B)"
+{
+  given DefaultEntered() on 2027-04-06
+  expect deadline(default-judgment-motion-period) == 2027-04-20
+}
+
+test "Deadline arithmetic: motion-objection-period (7 days before)" cite "Bankr. E.D. La. LR 9013-1(E)"
+{
+  given MotionHearing() on 2027-04-06
+  expect deadline(motion-objection-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: affidavit-evidence-period (7 days before)" cite "Bankr. E.D. La. LR 9013-1(G)"
+{
+  given MotionHearing() on 2027-04-06
+  expect deadline(affidavit-evidence-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: continuance-motion-period (7 days before)" cite "Bankr. E.D. La. LR 9014-1(A)"
+{
+  given MotionHearing() on 2027-04-06
+  expect deadline(continuance-motion-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: exhibit-retrieval-period (30 days after)" cite "Bankr. E.D. La. LR 9017-1(C)"
+{
+  given FinalDisposition() on 2027-04-06
+  expect deadline(exhibit-retrieval-period) == 2027-05-06
+}

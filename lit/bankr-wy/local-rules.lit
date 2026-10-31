@@ -279,3 +279,213 @@ decision ruling: "Motion decided" by court cite "Wyoming LBR 2002-1(B)"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Wyoming LBR 1001-1"
+
+test "Deadline arithmetic: added-creditor-notice-period (7 days after)" cite "Wyoming LBR 1009-1(C)"
+{
+  given CreditorAddedByAmendment() on 2026-03-03
+  expect deadline(added-creditor-notice-period) == 2026-03-10
+}
+
+test "Deadline arithmetic: conversion-fee-application-period (40 days after)" cite "Wyoming LBR 1019-1(B)"
+{
+  given CaseConverted() on 2026-03-03
+  expect deadline(conversion-fee-application-period) == 2026-04-13
+}
+
+test "Deadline arithmetic: notice-service-period (24 days before)" cite "Wyoming LBR 2002-1(B)"
+{
+  given NoticeDeadline() on 2026-03-03
+  expect deadline(notice-service-period) == 2026-02-06
+}
+
+test "Deadline arithmetic: objection-period (17 days after)" cite "Wyoming LBR 2002-1(B)"
+{
+  given MotionServed() on 2026-03-03
+  expect deadline(objection-period) == 2026-03-20
+}
+
+test "Deadline arithmetic: examination-order-period (14 days after)" cite "Wyoming LBR 2004-1"
+{
+  given ExaminationOrderServed() on 2026-03-03
+  expect deadline(examination-order-period) == 2026-03-17
+}
+
+test "Deadline arithmetic: trustee-tax-account-period (21 days after)" cite "Wyoming LBR 2015-3(A)"
+{
+  given TrusteeOperationAuthorized() on 2026-03-03
+  expect deadline(trustee-tax-account-period) == 2026-03-24
+}
+
+test "Deadline arithmetic: debtor-tax-account-period (21 days after)" cite "Wyoming LBR 2015-3(B)"
+{
+  given PetitionFiled() on 2026-03-03
+  expect deadline(debtor-tax-account-period) == 2026-03-24
+}
+
+test "Deadline arithmetic: tax-account-notice-period (7 days after)" cite "Wyoming LBR 2015-3(C)"
+{
+  given TaxAccountOpened() on 2026-03-03
+  expect deadline(tax-account-notice-period) == 2026-03-10
+}
+
+test "Deadline arithmetic: tax-deposit-verification-period (2 days after)" cite "Wyoming LBR 2015-3(C)"
+{
+  given TaxDepositMade() on 2026-03-03
+  expect deadline(tax-deposit-verification-period) == 2026-03-05
+}
+
+test "Deadline arithmetic: fee-application-objection-period (24 days after)" cite "Wyoming LBR 2016-1(B)"
+{
+  given FeeApplicationServed() on 2026-03-03
+  expect deadline(fee-application-objection-period) == 2026-03-27
+}
+
+test "Deadline arithmetic: chapter-13-fee-application-period (30 days after)" cite "Wyoming LBR 2016-1(C)"
+{
+  given PlanConfirmed() on 2026-03-03
+  expect deadline(chapter-13-fee-application-period) == 2026-04-02
+}
+
+test "Deadline arithmetic: emergency-debt-notice-period (14 days after)" cite "Wyoming LBR 2083-1(B)"
+{
+  given NewDebtIncurred() on 2026-03-03
+  expect deadline(emergency-debt-notice-period) == 2026-03-17
+}
+
+test "Deadline arithmetic: chapter-13-claim-objection-period (21 days after)" cite "Wyoming LBR 3007-1(B)"
+{
+  given NonGovernmentalBarDate() on 2026-03-03
+  expect deadline(chapter-13-claim-objection-period) == 2026-03-24
+}
+
+test "Deadline arithmetic: plan-withdrawal-vacate-period (4 days before)" cite "Wyoming LBR 3015-3(B)"
+{
+  given ConfirmationHearing() on 2026-03-03
+  expect deadline(plan-withdrawal-vacate-period) == 2026-02-27
+}
+
+test "Deadline arithmetic: withdrawn-plan-amendment-period (5 days after)" cite "Wyoming LBR 3015-3(B)"
+{
+  given PlanWithdrawn() on 2026-03-03
+  expect deadline(withdrawn-plan-amendment-period) == 2026-03-09
+}
+
+test "Deadline arithmetic: amended-plan-notice-period (31 days before)" cite "Wyoming LBR 3015-3(F)"
+{
+  given NoticeDeadline() on 2026-03-03
+  expect deadline(amended-plan-notice-period) == 2026-01-30
+}
+
+test "Deadline arithmetic: chapter-12-plan-objection-period (31 days after)" cite "Wyoming LBR 3015-4(C)"
+{
+  given ChapterTwelveNoticeServed() on 2026-03-03
+  expect deadline(chapter-12-plan-objection-period) == 2026-04-03
+}
+
+test "Deadline arithmetic: ballot-report-period (7 days before)" cite "Wyoming LBR 3020-1(A)"
+{
+  given ConfirmationHearing() on 2026-03-03
+  expect deadline(ballot-report-period) == 2026-02-24
+}
+
+test "Deadline arithmetic: final-decree-objection-period (21 days after)" cite "Wyoming LBR 3022-1(A)"
+{
+  given FinalReportFiled() on 2026-03-03
+  expect deadline(final-decree-objection-period) == 2026-03-24
+}
+
+test "Deadline arithmetic: final-fee-application-period (4 months after)" cite "Wyoming LBR 3022-1(D)"
+{
+  given ChapterElevenConfirmed() on 2026-03-03
+  expect deadline(final-fee-application-period) == 2026-07-06
+}
+
+test "Deadline arithmetic: stay-relief-objection-period (17 days after)" cite "Wyoming LBR 4001-1(A)"
+{
+  given StayReliefMotionFiled() on 2026-03-03
+  expect deadline(stay-relief-objection-period) == 2026-03-20
+}
+
+test "Deadline arithmetic: exemption-response-period (7 days before)" cite "Wyoming LBR 4003-1(B)"
+{
+  given ExemptionHearing() on 2026-03-03
+  expect deadline(exemption-response-period) == 2026-02-24
+}
+
+test "Deadline arithmetic: setoff-notice-period (40 days after)" cite "Wyoming LBR 6070-1(A)"
+{
+  given SetoffMade() on 2026-03-03
+  expect deadline(setoff-notice-period) == 2026-04-13
+}
+
+test "Deadline arithmetic: deposition-notice-period (14 days before)" cite "Wyoming LBR 7026-1(B)"
+{
+  given DepositionDate() on 2026-03-03
+  expect deadline(deposition-notice-period) == 2026-02-17
+}
+
+test "Deadline arithmetic: discovery-motion-period (7 days before)" cite "Wyoming LBR 7026-1(C)"
+{
+  given DepositionDate() on 2026-03-03
+  expect deadline(discovery-motion-period) == 2026-02-24
+}
+
+test "Deadline arithmetic: costs-certificate-period (21 days after)" cite "Wyoming LBR 7054-1"
+{
+  given FinalJudgmentEntered() on 2026-03-03
+  expect deadline(costs-certificate-period) == 2026-03-24
+}
+
+test "Deadline arithmetic: costs-objection-period (21 days after)" cite "Wyoming LBR 7054-1"
+{
+  given CostsCertificateServed() on 2026-03-03
+  expect deadline(costs-objection-period) == 2026-03-24
+}
+
+test "Deadline arithmetic: adversary-motion-response-period (14 days after)" cite "Wyoming LBR 9013-1(B)"
+{
+  given AdversaryMotionFiled() on 2026-03-03
+  expect deadline(adversary-motion-response-period) == 2026-03-17
+}
+
+test "Deadline arithmetic: memorandum-period (7 days before)" cite "Wyoming LBR 9013-2"
+{
+  given MotionHearing() on 2026-03-03
+  expect deadline(memorandum-period) == 2026-02-24
+}
+
+test "Deadline arithmetic: responsive-memorandum-period (14 days after)" cite "Wyoming LBR 9013-2"
+{
+  given MovantPleadingsServed() on 2026-03-03
+  expect deadline(responsive-memorandum-period) == 2026-03-17
+}
+
+test "Deadline arithmetic: certificate-of-service-period (7 days after)" cite "Wyoming LBR 9013-3"
+{
+  given DocumentServed() on 2026-03-03
+  expect deadline(certificate-of-service-period) == 2026-03-10
+}
+
+test "Deadline arithmetic: settlement-pleadings-period (14 days after)" cite "Wyoming LBR 9019-1(B)"
+{
+  given HearingVacated() on 2026-03-03
+  expect deadline(settlement-pleadings-period) == 2026-03-17
+}
+
+test "Deadline arithmetic: witness-exhibit-list-period (7 days before)" cite "Wyoming LBR 9070-1(A)"
+{
+  given MotionHearing() on 2026-03-03
+  expect deadline(witness-exhibit-list-period) == 2026-02-24
+}
+
+test "Deadline arithmetic: proposed-order-service-period (7 days before)" cite "Wyoming LBR 9072-1(B)"
+{
+  given ProposedOrderSubmitted() on 2026-03-03
+  expect deadline(proposed-order-service-period) == 2026-02-24
+}
+
+test "Deadline arithmetic: video-appearance-motion-period (10 days before)" cite "Wyoming LBR 9074-2(A)"
+{
+  given MotionHearing() on 2026-03-03
+  expect deadline(video-appearance-motion-period) == 2026-02-20
+}

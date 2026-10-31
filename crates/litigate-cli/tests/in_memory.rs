@@ -94,8 +94,21 @@ fn both(args: &[&str]) -> (LitigateRun, LitigateRun) {
 fn check_prints_what_the_binary_prints() {
     for args in [
         &["--format", "json", "check", "cases/examples/acme.case"][..],
-        &["--format", "json", "check", "lit/examples/Lit.toml", "lit/examples/rule12.lit"],
-        &["--format", "json", "check", "--lib", "lit/examples", "cases/examples"],
+        &[
+            "--format",
+            "json",
+            "check",
+            "lit/examples/Lit.toml",
+            "lit/examples/rule12.lit",
+        ],
+        &[
+            "--format",
+            "json",
+            "check",
+            "--lib",
+            "lit/examples",
+            "cases/examples",
+        ],
         &["--format", "json", "check", "lit/examples/missing"],
         &["--format", "json", "check", "lit/examples/Lit.lock"],
     ] {
@@ -183,10 +196,8 @@ fn request_ops_run_on_compiled_source_in_memory() {
             "rate=1",
         ],
     ] {
-        let (native, memory) = both_with(
-            example_files(),
-            &[&["--format", "json"][..], args].concat(),
-        );
+        let (native, memory) =
+            both_with(example_files(), &[&["--format", "json"][..], args].concat());
         assert_eq!(memory, native, "{args:?}");
         assert_eq!(native.code, 0, "{args:?}: {}", native.stdout);
     }

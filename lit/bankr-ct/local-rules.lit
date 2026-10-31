@@ -285,3 +285,165 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Bankruptcy Rules supplement the Federal Rules of Bankruptcy Procedure and incorporate the District Court's local rules where they say so (LBR 1001-1)."
 }
+
+test "amended-list-period: 7 days after" cite "Bankr. D. Conn. LBR 1009-1(a)"
+{
+  given ListAmended() on 2027-01-04
+  expect deadline(amended-list-period) == 2027-01-11
+}
+
+test "joint-administration-service-period: 7 days after" cite "Bankr. D. Conn. LBR 1015-1(b)"
+{
+  given JointAdministrationOrdered() on 2027-01-04
+  expect deadline(joint-administration-service-period) == 2027-01-11
+}
+
+test "death-notice-period: 30 days after" cite "Bankr. D. Conn. LBR 1016-1"
+{
+  given DeathOrIncompetencyLearned() on 2027-01-04
+  expect deadline(death-notice-period) == 2027-02-03
+}
+
+test "conversion-documents-period: 14 days after" cite "Bankr. D. Conn. LBR 1019-1"
+{
+  given CaseConverted() on 2027-01-04
+  expect deadline(conversion-documents-period) == 2027-01-19
+}
+
+test "rule-2004-agreement-objection-period: 7 days after" cite "Bankr. D. Conn. LBR 2004-1(b)"
+{
+  given Rule2004AgreementNoticed() on 2027-01-04
+  expect deadline(rule-2004-agreement-objection-period) == 2027-01-11
+}
+
+test "post-confirmation-report-period: 45 days after" cite "Bankr. D. Conn. LBR 2015-1"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(post-confirmation-report-period) == 2027-02-18
+}
+
+test "subchapter-v-deposit-period: 7 days after" cite "Bankr. D. Conn. LBR 2015-2(a)"
+{
+  given SubchapterVTrusteeAppointed() on 2027-01-04
+  expect deadline(subchapter-v-deposit-period) == 2027-01-11
+}
+
+test "committee-list-period: 5 days after" cite "Bankr. D. Conn. LBR 2021-1"
+{
+  given CommitteeAppointed() on 2027-01-04
+  expect deadline(committee-list-period) == 2027-01-11
+}
+
+test "disputed-claim-notice-period: 45 days before" cite "Bankr. D. Conn. LBR 3003-1"
+{
+  given ClaimsBarDate() on 2027-01-04
+  expect deadline(disputed-claim-notice-period) == 2026-11-20
+}
+
+test "disputed-claim-notice-hearing-period: 45 days before" cite "Bankr. D. Conn. LBR 3003-1"
+{
+  given InitialConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(disputed-claim-notice-hearing-period) == 2026-11-20
+}
+
+test "subchapter-v-1111b-election-period: 7 days after" cite "Bankr. D. Conn. LBR 3014-1"
+{
+  given SubchapterVPlanFiled() on 2027-01-04
+  expect deadline(subchapter-v-1111b-election-period) == 2027-01-11
+}
+
+test "chapter12-confirmation-objection-period: 7 days before" cite "Bankr. D. Conn. LBR 3015-1"
+{
+  given Chapter12ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(chapter12-confirmation-objection-period) == 2026-12-28
+}
+
+test "chapter13-confirmation-objection-period: 7 days before" cite "Bankr. D. Conn. LBR 3015-2(a)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(chapter13-confirmation-objection-period) == 2026-12-28
+}
+
+test "chapter11-confirmation-objection-period: 4 days before" cite "Bankr. D. Conn. LBR 3020-1"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(chapter11-confirmation-objection-period) == 2026-12-31
+}
+
+test "chapter7-trustee-documents-period: 7 days before" cite "Bankr. D. Conn. LBR 4002-1(a)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter7-trustee-documents-period) == 2026-12-28
+}
+
+test "chapter13-trustee-documents-period: 7 days before" cite "Bankr. D. Conn. LBR 4002-1(b)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter13-trustee-documents-period) == 2026-12-28
+}
+
+test "payment-advices-period: 7 days before" cite "Bankr. D. Conn. LBR 4002-1(c)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-period) == 2026-12-28
+}
+
+test "public-sale-advertising-period: 14 days before" cite "Bankr. D. Conn. LBR 6004-1(d)"
+{
+  given PublicSaleScheduled() on 2027-01-04
+  expect deadline(public-sale-advertising-period) == 2026-12-21
+}
+
+test "summons-service-certificate-period: 7 days after" cite "Bankr. D. Conn. LBR 7004-1(a)"
+{
+  given SummonsServed() on 2027-01-04
+  expect deadline(summons-service-certificate-period) == 2027-01-11
+}
+
+test "foreign-defendant-answer-period: 30 days after" cite "Bankr. D. Conn. LBR 7004-1(b)"
+{
+  given ForeignServiceMade() on 2027-01-04
+  expect deadline(foreign-defendant-answer-period) == 2027-02-03
+}
+
+test "adversary-motion-response-period: 21 days after" cite "Bankr. D. Conn. LBR 7007-1"
+{
+  given AdversaryMotionFiled() on 2027-01-04
+  expect deadline(adversary-motion-response-period) == 2027-01-25
+}
+
+test "excess-pages-motion-period: 7 days before" cite "Bankr. D. Conn. LBR 7007-2(a)"
+{
+  given BriefDue() on 2027-01-04
+  expect deadline(excess-pages-motion-period) == 2026-12-28
+}
+
+test "initial-pretrial-order-period: 7 days before" cite "Bankr. D. Conn. LBR 7016-1(a)"
+{
+  given PretrialConferenceScheduled() on 2027-01-04
+  expect deadline(initial-pretrial-order-period) == 2026-12-28
+}
+
+test "contested-matter-response-period: 14 days after" cite "Bankr. D. Conn. LBR 9014-1(d)"
+{
+  given ContestedMatterNoticed() on 2027-01-04
+  expect deadline(contested-matter-response-period) == 2027-01-19
+}
+
+test "initial-hearing-continuance-period: 7 days before" cite "Bankr. D. Conn. LBR 9014-1(j)"
+{
+  given InitialHearingScheduled() on 2027-01-04
+  expect deadline(initial-hearing-continuance-period) == 2026-12-28
+}
+
+test "removal-amended-pleading-period: 5 days after" cite "Bankr. D. Conn. LBR 9027-1(d)"
+{
+  given RemovalNoticed() on 2027-01-04
+  expect deadline(removal-amended-pleading-period) == 2027-01-11
+}
+
+test "address-change-notice-period: 7 days after" cite "Bankr. D. Conn. LBR 9083-5(b)"
+{
+  given MailingAddressChanged() on 2027-01-04
+  expect deadline(address-change-notice-period) == 2027-01-11
+}

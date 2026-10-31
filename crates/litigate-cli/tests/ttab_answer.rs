@@ -492,16 +492,17 @@ fn the_generated_pack_carries_the_designated_answer_window() {
     // Nothing under a deadline is a hole: the source states it all.
     let holes: Vec<&str> = pack["lowered"]["holes"]
         .as_array()
-        .unwrap()
-        .iter()
+        .into_iter()
+        .flatten()
         .filter_map(|h| h["pointer"].as_str())
         .filter(|p| p.contains("/deadline/"))
         .collect();
     assert_eq!(holes, Vec::<&str>::new());
-    // The engine reads the pack, and a deadline query reports the window
-    // as each matter's, not a date counted from the notice.
+    // The engine reads the pack's designated window; it has no counted
+    // duration, so matters supply the notice's designated date.
     let loaded = litigate_engine::model::Pack::from_json(&pack.to_string()).unwrap();
-    assert!(loaded.edges[answers[0]]
+    let answer_edge = &loaded.edges[answers[0]];
+    assert!(answer_edge
         .deadline
         .as_ref()
         .is_some_and(|d| d.days().is_none()));

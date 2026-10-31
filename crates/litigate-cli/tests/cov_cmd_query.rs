@@ -136,11 +136,11 @@ fn the_overrides_filter_keeps_declarations_related_to_the_id() {
 }
 
 #[test]
-fn holes_have_no_in_force_interval_to_filter_on() {
+fn a_package_without_holes_returns_none_with_or_without_in_force_filter() {
     let dir = scratch("query-holes");
     support_cmds::copy_dir(&support_cmds::repo().join("lit/examples"), &dir.join("ex"));
     let run = litigate_in(&dir, &["query", "holes", "--path", "ex"]);
-    assert_eq!(run.json["result"]["total"], 3, "{}", run.stdout);
+    assert_eq!(run.json["result"]["total"], 0, "{}", run.stdout);
     let dated = litigate_in(
         &dir,
         &[

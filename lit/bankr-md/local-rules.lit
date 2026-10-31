@@ -293,3 +293,243 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Bankruptcy Rules govern cases and proceedings in the court and with the court's active administrative orders apply to all cases pending in the court, supplementing the FRBP (LBR 1001-1(b))."
 }
+
+test "Deadline arithmetic: deficiency-cure-period (14 days after)" cite "D. Md. LBR 1002-1(b)"
+{
+  given DeficiencyNoticeIssued() on 2027-01-04
+  expect deadline(deficiency-cure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: installment-first-period (30 days after)" cite "D. Md. LBR 1006-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(installment-first-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: installment-second-period (60 days after)" cite "D. Md. LBR 1006-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(installment-second-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: installment-final-period (90 days after)" cite "D. Md. LBR 1006-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(installment-final-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: payment-advices-period (7 days before)" cite "D. Md. LBR 1007-4"
+{
+  given MeetingOfCreditorsDate() on 2027-01-04
+  expect deadline(payment-advices-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: payment-advices-request-period (14 days before)" cite "D. Md. LBR 1007-4"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-request-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: amendment-notice-period (14 days after)" cite "D. Md. LBR 1009-1(d)"
+{
+  given ScheduleAmendmentFiled() on 2027-01-04
+  expect deadline(amendment-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: amendment-notice-certificate-period (7 days after)" cite "D. Md. LBR 1009-1(d)"
+{
+  given AmendmentNoticeServed() on 2027-01-04
+  expect deadline(amendment-notice-certificate-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: preparer-forms-period (14 days after)" cite "D. Md. LBR 2016-2(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(preparer-forms-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: insider-compensation-statement-period (21 days after)" cite "D. Md. LBR 2015-1"
+{
+  given Chapter11PetitionFiled() on 2027-01-04
+  expect deadline(insider-compensation-statement-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: real-property-deficiency-claim-period (180 days after)" cite "D. Md. LBR 3002-1(b)"
+{
+  given StayReliefOrSurrender() on 2027-01-04
+  expect deadline(real-property-deficiency-claim-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: personal-property-deficiency-claim-period (60 days after)" cite "D. Md. LBR 3002-1(b)"
+{
+  given StayReliefOrSurrender() on 2027-01-04
+  expect deadline(personal-property-deficiency-claim-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: chapter11-claim-period (90 days after)" cite "D. Md. LBR 3003-1"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: subchapter-v-claim-period (70 days after)" cite "D. Md. LBR 3003-1"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(subchapter-v-claim-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: claim-objection-response-period (30 days after)" cite "D. Md. LBR 3007-1(a)"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: exemption-objection-opposition-period (28 days after)" cite "D. Md. LBR 4003-1"
+{
+  given ExemptionObjectionServed() on 2027-01-04
+  expect deadline(exemption-objection-opposition-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: chapter13-confirmation-objection-period (7 days before)" cite "D. Md. LBR 3015-2(b)"
+{
+  given ConfirmationHearingDate() on 2027-01-04
+  expect deadline(chapter13-confirmation-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: pre-confirmation-certificate-period (7 days before)" cite "D. Md. LBR 3015-2(c)"
+{
+  given ConfirmationHearingDate() on 2027-01-04
+  expect deadline(pre-confirmation-certificate-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: adequate-protection-affidavit-period (14 days before)" cite "D. Md. LBR 3015-3(a)"
+{
+  given ConfirmationHearingDate() on 2027-01-04
+  expect deadline(adequate-protection-affidavit-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: adequate-protection-objection-period (7 days after)" cite "D. Md. LBR 3015-3(b)"
+{
+  given AdequateProtectionAffidavitServed() on 2027-01-04
+  expect deadline(adequate-protection-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: ballot-tally-period (7 days before)" cite "D. Md. LBR 3018-1"
+{
+  given Chapter11ConfirmationHearingDate() on 2027-01-04
+  expect deadline(ballot-tally-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: substantial-consummation-notice-period (14 days after)" cite "D. Md. LBR 3022-1(a)(1)"
+{
+  given SubchapterVPlanConsummated() on 2027-01-04
+  expect deadline(substantial-consummation-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: effective-date-notice-period (14 days after)" cite "D. Md. LBR 3022-1(b)(1)"
+{
+  given Chapter11PlanEffective() on 2027-01-04
+  expect deadline(effective-date-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discharge-affidavit-period (90 days after)" cite "D. Md. LBR 4004-1"
+{
+  given PlanCompletionNoticeFiled() on 2027-01-04
+  expect deadline(discharge-affidavit-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: sale-report-period (7 days after)" cite "D. Md. LBR 6004-5"
+{
+  given SaleConsummated() on 2027-01-04
+  expect deadline(sale-report-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: bill-of-costs-period (21 days after)" cite "D. Md. LBR 7054-1"
+{
+  given AdversaryJudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: attorney-fees-motion-period (21 days after)" cite "D. Md. LBR 7054-2"
+{
+  given AdversaryJudgmentEntered() on 2027-01-04
+  expect deadline(attorney-fees-motion-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: prosecution-cause-period (30 days after)" cite "D. Md. LBR 7055-1"
+{
+  given ProsecutionNoticeSent() on 2027-01-04
+  expect deadline(prosecution-cause-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: motion-service-period (21 days before)" cite "D. Md. LBR 9006-1(a)"
+{
+  given MotionHearingDate() on 2027-01-04
+  expect deadline(motion-service-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: motion-response-period (14 days after)" cite "D. Md. LBR 9006-1(a)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(motion-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter13-dismissal-response-period (21 days after)" cite "D. Md. LBR 9006-1(b)"
+{
+  given Chapter13DismissalMotionServed() on 2027-01-04
+  expect deadline(chapter13-dismissal-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: withdrawal-client-notice-period (7 days before)" cite "D. Md. LBR 9010-4(a)"
+{
+  given WithdrawalMotionFiled() on 2027-01-04
+  expect deadline(withdrawal-client-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: substitute-counsel-period (21 days after)" cite "D. Md. LBR 9010-4(b)"
+{
+  given WithdrawalMotionFiled() on 2027-01-04
+  expect deadline(substitute-counsel-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: conflicting-engagement-motion-period (7 days before)" cite "D. Md. LBR 9013-7(c)"
+{
+  given HearingDate() on 2027-01-04
+  expect deadline(conflicting-engagement-motion-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: rescheduled-meeting-notice-period (7 days before)" cite "D. Md. LBR 9013-7(d)"
+{
+  given RescheduledMeetingDate() on 2027-01-04
+  expect deadline(rescheduled-meeting-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: removal-docket-period (14 days after)" cite "D. Md. LBR 9027-2(c)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removal-docket-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: redaction-intent-period (14 days after)" cite "D. Md. LBR 9037-1(b)"
+{
+  given TranscriptReviewNoticeServed() on 2027-01-04
+  expect deadline(redaction-intent-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: redaction-request-period (21 days after)" cite "D. Md. LBR 9037-1(b)"
+{
+  given TranscriptReviewNoticeServed() on 2027-01-04
+  expect deadline(redaction-request-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: redacted-transcript-period (31 days after)" cite "D. Md. LBR 9037-1(b)"
+{
+  given TranscriptReviewNoticeServed() on 2027-01-04
+  expect deadline(redacted-transcript-period) == 2027-02-04
+}
+
+test "Deadline arithmetic: first-progress-report-period (6 months after)" cite "D. Md. LBR 3022-1(b)(2)"
+{
+  given Chapter11PlanConfirmed() on 2027-01-04
+  expect deadline(first-progress-report-period) == 2027-07-06
+}

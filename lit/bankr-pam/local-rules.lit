@@ -372,3 +372,267 @@ terminal concluded: "Mortgage modification mediation concluded: the case continu
 {
   note "The Local Bankruptcy Rules and Forms govern practice and procedure before the court (L.B.R. 1001-1(a))."
 }
+
+test "Deadline arithmetic: unsigned-petition-cure-period (7 days after)" cite "Bankr. M.D. Pa. L.B.R. 1002-1(a)"
+{
+  given UnsignedPetitionFiled() on 2027-01-04
+  expect deadline(unsigned-petition-cure-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: fee-deficiency-period (7 days after)" cite "Bankr. M.D. Pa. L.B.R. 1006-1(b)"
+{
+  given FeeDeficiencyNoticed() on 2027-01-04
+  expect deadline(fee-deficiency-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: schedules-extension-motion-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 1007-1(a)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(schedules-extension-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: schedules-extension-objection-period (7 days after)" cite "Bankr. M.D. Pa. L.B.R. 1007-1(b)"
+{
+  given ExtensionMotionServed() on 2027-01-04
+  expect deadline(schedules-extension-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: joint-administration-objection-period (21 days after)" cite "Bankr. M.D. Pa. L.B.R. 1015-1(a)"
+{
+  given JointAdministrationNoticeServed() on 2027-01-04
+  expect deadline(joint-administration-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: consolidation-objection-period (21 days after)" cite "Bankr. M.D. Pa. L.B.R. 1015-1(b)"
+{
+  given ConsolidationNoticeServed() on 2027-01-04
+  expect deadline(consolidation-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: severance-objection-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 1015-1(c)"
+{
+  given SeveranceMotionServed() on 2027-01-04
+  expect deadline(severance-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: converted-chapter13-final-report-period (60 days after)" cite "Bankr. M.D. Pa. L.B.R. 1019-1"
+{
+  given ConversionFromChapter13() on 2027-01-04
+  expect deadline(converted-chapter13-final-report-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: notice-certificate-period (7 days after)" cite "Bankr. M.D. Pa. L.B.R. 2002-1(g)"
+{
+  given NoticeServed() on 2027-01-04
+  expect deadline(notice-certificate-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: examination-objection-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 2004-1"
+{
+  given ExaminationMotionServed() on 2027-01-04
+  expect deadline(examination-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: ust-employment-objection-period (7 days after)" cite "Bankr. M.D. Pa. L.B.R. 2014-1(c)"
+{
+  given LateEmploymentApplicationServed() on 2027-01-04
+  expect deadline(ust-employment-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: early-ust-employment-objection-period (21 days after)" cite "Bankr. M.D. Pa. L.B.R. 2014-1(c)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(early-ust-employment-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: chapter13-fee-request-period (7 days before)" cite "Bankr. M.D. Pa. L.B.R. 2016-2(d)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(chapter13-fee-request-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: claim-objection-hearing-request-period (30 days after)" cite "Bankr. M.D. Pa. L.B.R. 3007-1(c)"
+{
+  given ClaimObjectionNoticeServed() on 2027-01-04
+  expect deadline(claim-objection-hearing-request-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: pro-se-amended-plan-service-period (5 days after)" cite "Bankr. M.D. Pa. L.B.R. 3015-2(d)"
+{
+  given ProSeAmendedPlanFiled() on 2027-01-04
+  expect deadline(pro-se-amended-plan-service-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: pro-se-modification-service-period (5 days after)" cite "Bankr. M.D. Pa. L.B.R. 3015-2(g)"
+{
+  given ProSeModificationMotionFiled() on 2027-01-04
+  expect deadline(pro-se-modification-service-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: ballot-report-period (7 days before)" cite "Bankr. M.D. Pa. L.B.R. 3018-1"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(ballot-report-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: individual-chapter11-dso-period (7 days before)" cite "Bankr. M.D. Pa. L.B.R. 3020-1"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(individual-chapter11-dso-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: stay-extension-motion-period (7 days after)" cite "Bankr. M.D. Pa. L.B.R. 4001-5(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-extension-motion-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: withdrawal-objection-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 5011-1(d)"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(withdrawal-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: recommendation-objection-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 5011-1(e)"
+{
+  given RecommendationServed() on 2027-01-04
+  expect deadline(recommendation-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: adversary-motion-response-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 7007-1(b)"
+{
+  given AdversaryMotionServed() on 2027-01-04
+  expect deadline(adversary-motion-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediation-memorandum-period (7 days before)" cite "Bankr. M.D. Pa. L.B.R. 9019-2(h)"
+{
+  given MediationConference() on 2027-01-04
+  expect deadline(mediation-memorandum-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: participation-response-period (21 days after)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(b)"
+{
+  given ParticipationMotionFiled() on 2027-01-04
+  expect deadline(participation-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: portal-registration-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+{
+  given ParticipationOrderEntered() on 2027-01-04
+  expect deadline(portal-registration-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: portal-application-period (30 days after)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+{
+  given PortalRegistered() on 2027-01-04
+  expect deadline(portal-application-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: portal-contact-designation-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+{
+  given LossMitigationApplicationSubmitted() on 2027-01-04
+  expect deadline(portal-contact-designation-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: requested-documents-period (21 days after)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+{
+  given DocumentsRequested() on 2027-01-04
+  expect deadline(requested-documents-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: servicing-substitution-period (14 days before)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+{
+  given ServicingTransfer() on 2027-01-04
+  expect deadline(servicing-substitution-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: substituted-contact-period (30 days after)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+{
+  given ServicingTransferred() on 2027-01-04
+  expect deadline(substituted-contact-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: loss-mitigation-package-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(d)"
+{
+  given ParticipationOrderEntered() on 2027-01-04
+  expect deadline(loss-mitigation-package-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: off-portal-documents-period (30 days after)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(d)"
+{
+  given ParticipationOrderEntered() on 2027-01-04
+  expect deadline(off-portal-documents-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: mmm-memorandum-period (7 days before)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(f)"
+{
+  given MmmMediationSession() on 2027-01-04
+  expect deadline(mmm-memorandum-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: modification-mailing-certificate-period (7 days after)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(j)"
+{
+  given ModificationNoticeGiven() on 2027-01-04
+  expect deadline(modification-mailing-certificate-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: modification-objection-period (21 days after)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(j)"
+{
+  given ModificationNoticeGiven() on 2027-01-04
+  expect deadline(modification-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: mmm-amended-plan-period (21 days after)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(j)"
+{
+  given MmmProgramUnsuccessful() on 2027-01-04
+  expect deadline(mmm-amended-plan-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: mmm-status-report-period (120 days after)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(j)"
+{
+  given ParticipationOrderEntered() on 2027-01-04
+  expect deadline(mmm-status-report-period) == 2027-05-04
+}
+
+test "Deadline arithmetic: post-trial-documents-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 9023-2(b)"
+{
+  given PostTrialMotionFiled() on 2027-01-04
+  expect deadline(post-trial-documents-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: post-trial-brief-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 9023-2(d)"
+{
+  given PostTrialMotionFiled() on 2027-01-04
+  expect deadline(post-trial-brief-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: post-trial-response-brief-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 9023-2(e)"
+{
+  given PostTrialBriefServed() on 2027-01-04
+  expect deadline(post-trial-response-brief-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: paper-exhibits-period (3 days before)" cite "Bankr. M.D. Pa. L.B.R. 9070-1(a)"
+{
+  given TrialOrHearing() on 2027-01-04
+  expect deadline(paper-exhibits-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: electronic-exhibits-period (3 days before)" cite "Bankr. M.D. Pa. L.B.R. 9070-1(b)"
+{
+  given TrialOrHearing() on 2027-01-04
+  expect deadline(electronic-exhibits-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: exhibit-retrieval-period (14 days after)" cite "Bankr. M.D. Pa. L.B.R. 9070-2"
+{
+  given FinalJudgmentEntered() on 2027-01-04
+  expect deadline(exhibit-retrieval-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: remote-testimony-request-period (7 days before)" cite "Bankr. M.D. Pa. L.B.R. 9074-1(b)"
+{
+  given TrialOrHearing() on 2027-01-04
+  expect deadline(remote-testimony-request-period) == 2026-12-28
+}

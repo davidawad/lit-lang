@@ -285,3 +285,207 @@ decision ruling: "Motion decided" by court cite "D. Guam BKLR 9013-1(c)"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "D. Guam BKLR 1001-1"
+
+test "Deadline arithmetic: payment-advices-meeting-period (7 days before)" cite "D. Guam BKLR 1007-1(b)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-meeting-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: payment-advices-petition-period (45 days after)" cite "D. Guam BKLR 1007-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(payment-advices-petition-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: conversion-objection-period (14 days after)" cite "D. Guam BKLR 1017-1(a)"
+{
+  given ConversionMotionFiled() on 2027-01-04
+  expect deadline(conversion-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: incomplete-filing-response-period (14 days after)" cite "D. Guam BKLR 1017-2(d)"
+{
+  given IncompleteFilingDismissalMotionServed() on 2027-01-04
+  expect deadline(incomplete-filing-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: responsible-individual-period (14 days after)" cite "D. Guam BKLR 1074-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(responsible-individual-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: supplemental-fee-disclosure-period (14 days after)" cite "D. Guam BKLR 2016-1(d)"
+{
+  given PostConfirmationFeePaid() on 2027-01-04
+  expect deadline(supplemental-fee-disclosure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: feasibility-cure-period (28 days after)" cite "D. Guam BKLR 2083-1(e)"
+{
+  given FeasibilityDismissalMotionFiled() on 2027-01-04
+  expect deadline(feasibility-cure-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: trustee-dismissal-motion-period (21 days before)" cite "D. Guam BKLR 2083-1(e)"
+{
+  given TrusteeDismissalHearing() on 2027-01-04
+  expect deadline(trustee-dismissal-motion-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: business-reports-period (7 days before)" cite "D. Guam BKLR 2083-1(f)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(business-reports-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: chapter11-claims-bar-period (90 days after)" cite "D. Guam BKLR 3003-1(a)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-claims-bar-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: amended-claim-period (30 days after)" cite "D. Guam BKLR 3004-1(b)"
+{
+  given ClaimFiledOnBehalfNoticeServed() on 2027-01-04
+  expect deadline(amended-claim-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: claim-objection-response-period (14 days after)" cite "D. Guam BKLR 3007-1(a)"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: plan-modification-objection-period (14 days before)" cite "D. Guam BKLR 3015-2(b)"
+{
+  given PlanModificationHearing() on 2027-01-04
+  expect deadline(plan-modification-objection-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: chapter13-confirmation-objection-period (14 days before)" cite "D. Guam BKLR 3015-3(a)"
+{
+  given Chapter13ConfirmationHearing() on 2027-01-04
+  expect deadline(chapter13-confirmation-objection-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: denied-confirmation-cure-period (14 days after)" cite "D. Guam BKLR 3015-3(d)"
+{
+  given ConfirmationDenied() on 2027-01-04
+  expect deadline(denied-confirmation-cure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: disclosure-statement-objection-period (14 days before)" cite "D. Guam BKLR 3017-1(c)"
+{
+  given DisclosureStatementHearing() on 2027-01-04
+  expect deadline(disclosure-statement-objection-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: ballot-report-period (14 days before)" cite "D. Guam BKLR 3018-1(c)"
+{
+  given Chapter11ConfirmationHearing() on 2027-01-04
+  expect deadline(ballot-report-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: chapter11-confirmation-objection-period (14 days before)" cite "D. Guam BKLR 3020-1(b)"
+{
+  given Chapter11ConfirmationHearing() on 2027-01-04
+  expect deadline(chapter11-confirmation-objection-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: final-decree-objection-period (30 days after)" cite "D. Guam BKLR 3022-1"
+{
+  given FinalDecreeApplicationFiled() on 2027-01-04
+  expect deadline(final-decree-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: disputed-claim-objection-period (28 days after)" cite "D. Guam BKLR 3070-2(h)"
+{
+  given DistributionNoticeFiled() on 2027-01-04
+  expect deadline(disputed-claim-objection-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: stay-relief-opposition-period (14 days after)" cite "D. Guam BKLR 4001-1(d)"
+{
+  given StayReliefMotionFiled() on 2027-01-04
+  expect deadline(stay-relief-opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-relief-reply-period (7 days after)" cite "D. Guam BKLR 4001-1(d)"
+{
+  given StayReliefOppositionFiled() on 2027-01-04
+  expect deadline(stay-relief-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: extend-stay-hearing-period (30 days after)" cite "D. Guam BKLR 4001-5(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(extend-stay-hearing-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: extend-stay-response-period (7 days before)" cite "D. Guam BKLR 4001-5(a)"
+{
+  given ExtendStayHearing() on 2027-01-04
+  expect deadline(extend-stay-response-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: extend-stay-reply-period (3 days before)" cite "D. Guam BKLR 4001-5(a)"
+{
+  given ExtendStayHearing() on 2027-01-04
+  expect deadline(extend-stay-reply-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: extend-stay-motion-period (14 days before)" cite "D. Guam BKLR 4001-5(a)"
+{
+  given ExtendStayHearing() on 2027-01-04
+  expect deadline(extend-stay-motion-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: chapter11-discharge-objection-period (30 days after)" cite "D. Guam BKLR 4004-3(a)"
+{
+  given Chapter11DischargeCertificationFiled() on 2027-01-04
+  expect deadline(chapter11-discharge-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter13-discharge-objection-period (30 days after)" cite "D. Guam BKLR 4004-3(b)"
+{
+  given DischargeObjectionNoticeDated() on 2027-01-04
+  expect deadline(chapter13-discharge-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: rejection-review-period (7 days after)" cite "D. Guam BKLR 5005-1(c)"
+{
+  given FilingRejectionNotice() on 2027-01-04
+  expect deadline(rejection-review-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: small-estate-sale-objection-period (21 days after)" cite "D. Guam BKLR 6004-1(e)"
+{
+  given SmallEstateSaleNoticeFiled() on 2027-01-04
+  expect deadline(small-estate-sale-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: motion-hearing-notice-period (28 days before)" cite "D. Guam BKLR 9013-1(c)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-hearing-notice-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: motion-response-period (14 days before)" cite "D. Guam BKLR 9013-1(c)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-response-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: motion-reply-period (7 days before)" cite "D. Guam BKLR 9013-1(c)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-reply-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: hearing-notice-service-period (21 days before)" cite "D. Guam BKLR 9013-1(e)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(hearing-notice-service-period) == 2026-12-14
+}

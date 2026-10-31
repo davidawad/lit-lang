@@ -564,6 +564,7 @@ run() {
   stage typos typos
   stage provenance provenance "$base"
   stage self-test bash -c "'$self' self-test && '$(dirname "$self")/cov-gate' self-test"
+  stage strict-ratchet-test scripts/qa/strict-ratchet-test.sh
   stage lit-sync-check just lit-sync-check
   if grep -q '^lit/' <<<"$files"; then
     stage strict-ratchet scripts/qa/strict-ratchet.sh "$base" "$files"

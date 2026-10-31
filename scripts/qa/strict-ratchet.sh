@@ -32,13 +32,14 @@ if [[ ${#packages[@]} -eq 0 ]]; then
   exit 0
 fi
 
-tmpbase=$(mktemp)
-trap 'rm -f "$tmpbase"' EXIT
+counts=$(mktemp)
+trap 'rm -f "$counts"' EXIT
 
 # The CLI executable is needed by every strict check. Build it once for this
 # invocation, then reuse it for all changed packages.
 cargo build -q -p litigate-cli
 
+: > "$counts"
 status=0
 for package in "${!packages[@]}"; do
   dir="lit/$package"
@@ -87,41 +88,10 @@ PY
     continue
   fi
   rm -f "$output" "$output.err"
-  current=${row#*$'\t'}
-  baseline_count=$(awk -F '\t' -v p="$package" 'NR>1 && $1==p {print $2; found=1} END {if (!found) print ""}' "$baseline")
-  if [[ -z $baseline_count ]]; then
-    if (( current > 0 )); then
-      echo "strict-ratchet: $package is missing from baseline with $current in-scope error(s)" >&2
-      status=1
-    else
-      printf '%s\t0\n' "$package" >> "$tmpbase"
-      echo "strict-ratchet: $package is new and strict-clean; add baseline row"
-    fi
-  elif (( current > baseline_count )); then
-    echo "strict-ratchet: $package increased from $baseline_count to $current in-scope error(s)" >&2
-    status=1
-  elif (( current < baseline_count )); then
-    printf '%s\t%s\n' "$package" "$current" >> "$tmpbase"
-    echo "strict-ratchet: $package improved from $baseline_count to $current; commit the updated baseline row"
-  else
-    echo "strict-ratchet: $package unchanged at $current in-scope error(s)"
-  fi
+  printf '%s\n' "$row" >> "$counts"
 done
 
-if [[ -s $tmpbase ]]; then
-  python3 - "$baseline" "$tmpbase" <<'PY'
-import pathlib, sys
-baseline, updates = map(pathlib.Path, sys.argv[1:])
-rows = {}
-for line in baseline.read_text().splitlines()[1:]:
-    if line:
-        package, count = line.split("\t")
-        rows[package] = count
-for line in updates.read_text().splitlines():
-    package, count = line.split("\t")
-    rows[package] = count
-baseline.write_text("package\tin_scope_errors\n" + "".join(f"{p}\t{rows[p]}\n" for p in sorted(rows)))
-PY
+if [[ $status -ne 0 ]]; then
+  exit "$status"
 fi
-
-exit "$status"
+scripts/qa/strict-ratchet-compare.sh --baseline "$baseline" --counts "$counts" --update

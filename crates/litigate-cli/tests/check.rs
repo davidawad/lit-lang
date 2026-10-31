@@ -7,24 +7,17 @@ mod support;
 use support::{codes, litigate, scratch};
 
 #[test]
-fn dev_check_reports_holes_and_replays_acme() {
+fn dev_check_reports_clean_example_and_replays_acme() {
     let run = litigate(&["check", "lit/examples", "cases/examples"]);
     assert_eq!(run.code, 0, "{}", run.stdout);
     let found = codes(&run.json);
-    assert_eq!(
-        found
-            .iter()
-            .filter(|c| c.0 == "L9002" && c.1 == "warning")
-            .count(),
-        3
-    );
+    assert!(found.is_empty(), "{found:?}");
     assert!(
         !found
             .iter()
             .any(|c| matches!(c.0.as_str(), "L9003" | "L9006")),
         "{found:?}"
     );
-    assert_eq!(found.len(), 3, "{found:?}");
     let case = &run.json["result"]["cases"][0];
     assert_eq!(case["start"], "frcp-rule12-example::mtd-ruling");
     assert_eq!(case["deadlines"][0]["due"], "2025-03-26");
@@ -32,7 +25,7 @@ fn dev_check_reports_holes_and_replays_acme() {
 }
 
 #[test]
-fn strict_check_fails_on_every_hole() {
+fn strict_check_accepts_the_hole_free_example() {
     let run = litigate(&[
         "check",
         "--profile",
@@ -40,8 +33,8 @@ fn strict_check_fails_on_every_hole() {
         "lit/examples",
         "cases/examples",
     ]);
-    assert_eq!(run.code, 2);
-    assert_eq!(run.json["ok"], false);
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(run.json["ok"], true);
     // Schema v2 keeps the result alongside errors: the failing obligations.
     let holes = run.json["result"]["obligations"]
         .as_array()
@@ -49,14 +42,14 @@ fn strict_check_fails_on_every_hole() {
         .iter()
         .find(|f| f["name"] == "holes")
         .unwrap();
-    assert_eq!(holes["status"], "failed");
+    assert_eq!(holes["status"], "passed");
     let found = codes(&run.json);
     assert_eq!(
         found
             .iter()
             .filter(|c| c.0 == "L5002" && c.1 == "error")
             .count(),
-        3,
+        0,
         "{found:?}"
     );
     insta::assert_json_snapshot!("check_strict", run.json);
@@ -79,7 +72,7 @@ fn human_output_renders_diagnostics_with_source() {
         .output()
         .unwrap();
     let text = String::from_utf8_lossy(&out.stdout).into_owned();
-    assert_eq!(out.status.code(), Some(2));
+    assert_eq!(out.status.code(), Some(0));
     insta::assert_snapshot!("check_strict_human", text);
 }
 
@@ -138,7 +131,25 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
 
 #[test]
 fn shipped_packages_have_no_anonymous_edges() {
-    let run = litigate(&["check", "lit"]);
+    let run = litigate(&[
+        "check",
+        "lit/core",
+        "lit/links",
+        "lit/examples",
+        "lit/frcp",
+        "lit/frap",
+        "lit/frcrimp",
+        "lit/bap8",
+        "lit/ca1",
+        "lit/ca8",
+        "lit/cadc",
+        "lit/cafc",
+        "lit/cofc",
+        "lit/itc",
+        "lit/mpep",
+        "lit/ptab",
+        "lit/ttab",
+    ]);
     assert_eq!(run.code, 0, "{}", run.stdout);
     assert!(
         !run.json["diagnostics"]
@@ -177,7 +188,7 @@ fn a_failing_test_is_l5006() {
         d["message"].as_str().unwrap().contains("\"2025-03-24\""),
         "{d}"
     );
-    assert_eq!(d["span"]["line"], 103);
+    assert_eq!(d["span"]["line"], 108);
 }
 
 #[test]

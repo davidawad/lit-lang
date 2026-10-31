@@ -282,3 +282,171 @@ terminal decided: "Motion decided: the proceeding continues under lit/frbp" outc
 {
   note "The Rules supplement the District Court's Local Rules, the FRBP and the FRCP and are construed consistently with them (BLR 1001-3); in adversary proceedings and contested matters they govern over inconsistent District Court Local Rules (BLR 7001-1)."
 }
+
+test "examination-notice-period: 7 days before" cite "N.D. Ga. BLR 2004-1(b)"
+{
+  given ExaminationDate() on 2027-01-04
+  expect deadline(examination-notice-period) == 2026-12-28
+}
+
+test "case-withdrawal-motion-period: 30 days after" cite "N.D. Ga. BLR 5011-2(a)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(case-withdrawal-motion-period) == 2027-02-03
+}
+
+test "contested-withdrawal-motion-period: 14 days after" cite "N.D. Ga. BLR 5011-2(c)"
+{
+  given ContestedMatterServed() on 2027-01-04
+  expect deadline(contested-withdrawal-motion-period) == 2027-01-19
+}
+
+test "withdrawal-reference-response-period: 14 days after" cite "N.D. Ga. BLR 5011-4"
+{
+  given WithdrawalReferenceMotionServed() on 2027-01-04
+  expect deadline(withdrawal-reference-response-period) == 2027-01-19
+}
+
+test "withdrawal-reference-reply-period: 14 days after" cite "N.D. Ga. BLR 5011-4"
+{
+  given WithdrawalReferenceResponseServed() on 2027-01-04
+  expect deadline(withdrawal-reference-reply-period) == 2027-01-19
+}
+
+test "conflict-notice-period: 7 days before" cite "N.D. Ga. BLR 5071-4(b)"
+{
+  given ConflictDate() on 2027-01-04
+  expect deadline(conflict-notice-period) == 2026-12-28
+}
+
+test "abandonment-writing-period: 14 days after" cite "N.D. Ga. BLR 6007-1(b)"
+{
+  given AbandonmentMeetingHeld() on 2027-01-04
+  expect deadline(abandonment-writing-period) == 2027-01-19
+}
+
+test "redemption-response-period: 21 days after" cite "N.D. Ga. BLR 6008-1(b)"
+{
+  given RedemptionMotionServed() on 2027-01-04
+  expect deadline(redemption-response-period) == 2027-01-25
+}
+
+test "motion-response-period: 14 days after" cite "N.D. Ga. BLR 7007-1(c)"
+{
+  given AdversaryMotionServed() on 2027-01-04
+  expect deadline(motion-response-period) == 2027-01-19
+}
+
+test "summary-judgment-response-period: 21 days after" cite "N.D. Ga. BLR 7007-1(c)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-01-25
+}
+
+test "motion-reply-period: 14 days after" cite "N.D. Ga. BLR 7007-1(d)"
+{
+  given MotionResponseServed() on 2027-01-04
+  expect deadline(motion-reply-period) == 2027-01-19
+}
+
+test "rule26f-conference-period: 21 days after" cite "N.D. Ga. BLR 7016-1(a)"
+{
+  given FirstDefendantAppearance() on 2027-01-04
+  expect deadline(rule26f-conference-period) == 2027-01-25
+}
+
+test "rule26f-report-period: 14 days after" cite "N.D. Ga. BLR 7016-1(a)"
+{
+  given Rule26fConference() on 2027-01-04
+  expect deadline(rule26f-report-period) == 2027-01-19
+}
+
+test "joinder-amendment-period: 30 days after" cite "N.D. Ga. BLR 7016-1(b)"
+{
+  given DiscoveryCommenced() on 2027-01-04
+  expect deadline(joinder-amendment-period) == 2027-02-03
+}
+
+test "discovery-period: 90 days after" cite "N.D. Ga. BLR 7016-1(b)"
+{
+  given DiscoveryCommenced() on 2027-01-04
+  expect deadline(discovery-period) == 2027-04-05
+}
+
+test "pretrial-order-period: 30 days after" cite "N.D. Ga. BLR 7016-2(a)"
+{
+  given DiscoveryClosed() on 2027-01-04
+  expect deadline(pretrial-order-period) == 2027-02-03
+}
+
+test "witness-withdrawal-notice-period: 14 days before" cite "N.D. Ga. BLR 7016-2(b)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(witness-withdrawal-notice-period) == 2026-12-21
+}
+
+test "expert-designation-period: 30 days before" cite "N.D. Ga. BLR 7026-2(c)"
+{
+  given DiscoveryClosed() on 2027-01-04
+  expect deadline(expert-designation-period) == 2026-12-04
+}
+
+test "compel-response-period: 14 days after" cite "N.D. Ga. BLR 7037-1(c)"
+{
+  given CompelMotionServed() on 2027-01-04
+  expect deadline(compel-response-period) == 2027-01-19
+}
+
+test "resolved-matter-papers-period: 30 days after" cite "N.D. Ga. BLR 7041-1(a)"
+{
+  given ResolvedMatterHearingDate() on 2027-01-04
+  expect deadline(resolved-matter-papers-period) == 2027-02-03
+}
+
+test "summary-judgment-motion-period: 28 days after" cite "N.D. Ga. BLR 7056-1(b)"
+{
+  given DiscoveryClosed() on 2027-01-04
+  expect deadline(summary-judgment-motion-period) == 2027-02-01
+}
+
+test "certificate-of-service-period: 3 days after" cite "N.D. Ga. BLR 9007-2(b)"
+{
+  given NoticeServed() on 2027-01-04
+  expect deadline(certificate-of-service-period) == 2027-01-07
+}
+
+test "client-withdrawal-objection-period: 14 days after" cite "N.D. Ga. BLR 9010-5(b)"
+{
+  given WithdrawalNoticeServed() on 2027-01-04
+  expect deadline(client-withdrawal-objection-period) == 2027-01-19
+}
+
+test "withdrawal-motion-objection-period: 14 days after" cite "N.D. Ga. BLR 9010-5(b)"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(withdrawal-motion-objection-period) == 2027-01-19
+}
+
+test "proposed-order-period: 7 days after" cite "N.D. Ga. BLR 9013-2(a)"
+{
+  given RulingPronounced() on 2027-01-04
+  expect deadline(proposed-order-period) == 2027-01-11
+}
+
+test "jury-consent-period: 30 days after" cite "N.D. Ga. BLR 9015-2"
+{
+  given JuryConsentNoticed() on 2027-01-04
+  expect deadline(jury-consent-period) == 2027-02-03
+}
+
+test "exhibit-retrieval-period: 30 days after" cite "N.D. Ga. BLR 9017-1(b)"
+{
+  given ExhibitCustodyEnded() on 2027-01-04
+  expect deadline(exhibit-retrieval-period) == 2027-02-03
+}
+
+test "removed-motion-memorandum-period: 14 days after" cite "N.D. Ga. BLR 9027-1"
+{
+  given ProceedingRemoved() on 2027-01-04
+  expect deadline(removed-motion-memorandum-period) == 2027-01-19
+}

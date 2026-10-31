@@ -319,3 +319,207 @@ decision ruling: "Motion decided" by court cite "Bankr. N.D. Tex. L.B.R. 9007-1(
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. N.D. Tex. L.B.R. 1001-1"
+
+test "Deadline arithmetic: involuntary-mailing-list-period (7 days after)" cite "Bankr. N.D. Tex. L.B.R. 1007-1(a)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(involuntary-mailing-list-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: means-test-exclusion-statement-period (14 days after)" cite "Bankr. N.D. Tex. L.B.R. 1007-1(c)"
+{
+  given MeansTestExclusionExpired() on 2027-01-04
+  expect deadline(means-test-exclusion-statement-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: exemption-amendment-notice-period (2 days after)" cite "Bankr. N.D. Tex. L.B.R. 1009-1(c)"
+{
+  given ExemptionScheduleAmended() on 2027-01-04
+  expect deadline(exemption-amendment-notice-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: income-schedules-notice-period (2 days after)" cite "Bankr. N.D. Tex. L.B.R. 1009-1(d)"
+{
+  given IncomeSchedulesAmended() on 2027-01-04
+  expect deadline(income-schedules-notice-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: chapter-7-conversion-schedule-period (14 days after)" cite "Bankr. N.D. Tex. L.B.R. 1019-1(a)"
+{
+  given ConversionToChapterSevenOrdered() on 2027-01-04
+  expect deadline(chapter-7-conversion-schedule-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: chapter-12-13-conversion-service-period (14 days after)" cite "Bankr. N.D. Tex. L.B.R. 1019-1(b)"
+{
+  given ConversionToChapterTwelveOrThirteenOrdered() on 2027-01-04
+  expect deadline(chapter-12-13-conversion-service-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: contemporaneous-employment-period (30 days after)" cite "Bankr. N.D. Tex. L.B.R. 2014-1(b)"
+{
+  given ProfessionalCommencedServices() on 2027-01-04
+  expect deadline(contemporaneous-employment-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: retainer-distribution-objection-period (14 days after)" cite "Bankr. N.D. Tex. L.B.R. 2016-1(b)"
+{
+  given RetainerDistributionMailed() on 2027-01-04
+  expect deadline(retainer-distribution-objection-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: local-counsel-designation-period (14 days after)" cite "Bankr. N.D. Tex. L.B.R. 2090-4(a)"
+{
+  given LocalCounselLeaveDenied() on 2027-01-04
+  expect deadline(local-counsel-designation-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: chapter-11-claims-bar-period (90 days after)" cite "Bankr. N.D. Tex. L.B.R. 3003-1"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter-11-claims-bar-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: omnibus-objection-reply-period (3 days before)" cite "Bankr. N.D. Tex. L.B.R. 3007-2(a)"
+{
+  given ClaimObjectionHearing() on 2027-01-04
+  expect deadline(omnibus-objection-reply-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: omnibus-reset-chart-period (2 days before)" cite "Bankr. N.D. Tex. L.B.R. 3007-2(b)"
+{
+  given ResetClaimObjectionHearing() on 2027-01-04
+  expect deadline(omnibus-reset-chart-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: estimation-procedures-period (4 days before)" cite "Bankr. N.D. Tex. L.B.R. 3007-3(c)"
+{
+  given EstimationHearing() on 2027-01-04
+  expect deadline(estimation-procedures-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: estimation-response-period (4 days before)" cite "Bankr. N.D. Tex. L.B.R. 3007-3(d)"
+{
+  given EstimationHearing() on 2027-01-04
+  expect deadline(estimation-response-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: chapter-13-confirmation-objection-period (7 days before)" cite "Bankr. N.D. Tex. L.B.R. 3015-3"
+{
+  given ChapterThirteenConfirmationConference() on 2027-01-04
+  expect deadline(chapter-13-confirmation-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: chapter-12-confirmation-objection-period (7 days before)" cite "Bankr. N.D. Tex. L.B.R. 3015-4(a)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(chapter-12-confirmation-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: conditional-approval-objection-period (14 days after)" cite "Bankr. N.D. Tex. L.B.R. 3017-3(a)"
+{
+  given ConditionalApprovalMotionServed() on 2027-01-04
+  expect deadline(conditional-approval-objection-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: ballot-certification-period (1 days before)" cite "Bankr. N.D. Tex. L.B.R. 3018-1"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(ballot-certification-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: chapter-11-confirmation-objection-period (4 days before)" cite "Bankr. N.D. Tex. L.B.R. 3020-1"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(chapter-11-confirmation-objection-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: stay-relief-response-period (14 days after)" cite "Bankr. N.D. Tex. L.B.R. 4001-1(b)"
+{
+  given StayReliefMotionServed() on 2027-01-04
+  expect deadline(stay-relief-response-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: stay-discovery-response-period (14 days after)" cite "Bankr. N.D. Tex. L.B.R. 4001-1(c)"
+{
+  given StayDiscoveryServed() on 2027-01-04
+  expect deadline(stay-discovery-response-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: stay-movant-affidavit-period (7 days before)" cite "Bankr. N.D. Tex. L.B.R. 4001-1(e)"
+{
+  given StayPreliminaryHearing() on 2027-01-04
+  expect deadline(stay-movant-affidavit-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: stay-respondent-affidavit-period (2 days before)" cite "Bankr. N.D. Tex. L.B.R. 4001-1(e)"
+{
+  given StayPreliminaryHearing() on 2027-01-04
+  expect deadline(stay-respondent-affidavit-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: residence-affidavit-period (7 days after)" cite "Bankr. N.D. Tex. L.B.R. 4001-1(e)"
+{
+  given ResidenceStayMotionFiled() on 2027-01-04
+  expect deadline(residence-affidavit-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: stay-continuation-proof-of-service-period (2 days after)" cite "Bankr. N.D. Tex. L.B.R. 4001-1(f)"
+{
+  given StayContinuationMotionServed() on 2027-01-04
+  expect deadline(stay-continuation-proof-of-service-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: adversary-motion-response-period (21 days after)" cite "Bankr. N.D. Tex. L.B.R. 7007-1(e)"
+{
+  given AdversaryMotionFiled() on 2027-01-04
+  expect deadline(adversary-motion-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: joint-pretrial-order-period (7 days before)" cite "Bankr. N.D. Tex. L.B.R. 7016-1(a)"
+{
+  given TrialDocketCall() on 2027-01-04
+  expect deadline(joint-pretrial-order-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: proposed-findings-period (7 days before)" cite "Bankr. N.D. Tex. L.B.R. 7016-1(b)"
+{
+  given TrialDocketCall() on 2027-01-04
+  expect deadline(proposed-findings-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: negative-notice-response-period (21 days after)" cite "Bankr. N.D. Tex. L.B.R. 9007-1(c)"
+{
+  given NegativeNoticeServed() on 2027-01-04
+  expect deadline(negative-notice-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: credit-or-waiver-response-period (14 days after)" cite "Bankr. N.D. Tex. L.B.R. 9007-1(c)"
+{
+  given CreditOrWaiverNoticeServed() on 2027-01-04
+  expect deadline(credit-or-waiver-response-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: claim-objection-response-period (30 days after)" cite "Bankr. N.D. Tex. L.B.R. 9007-1(c)"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: sale-objection-period (4 days before)" cite "Bankr. N.D. Tex. L.B.R. 9007-1(c)"
+{
+  given SaleHearing() on 2027-01-04
+  expect deadline(sale-objection-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: hearing-exhibits-exchange-period (3 days before)" cite "Bankr. N.D. Tex. L.B.R. 9014-1(c)"
+{
+  given ContestedHearing() on 2027-01-04
+  expect deadline(hearing-exhibits-exchange-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: exhibit-removal-period (60 days after)" cite "Bankr. N.D. Tex. L.B.R. 9070-1"
+{
+  given FinalDisposition() on 2027-01-04
+  expect deadline(exhibit-removal-period) == 2027-03-05
+}

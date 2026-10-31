@@ -41,6 +41,18 @@ ned = "ned"
 # GRAP: Guam Rules of Appellate Procedure (lit/gu-supreme, lit/gu-superior).
 GRAP = "GRAP"
 grap = "grap"
+# Decree pro confesso (lit/ms-chancery-courts/chancery.lit).
+confesso = "confesso"
+# Trial informations (lit/ia-criminal-trial-court/criminal.lit and lit/nywd-criminal/local-rules.lit).
+informations = "informations"
+# Spanish "Informe" (lit/pr-primera-instancia-civil/civil.lit).
+Informe = "Informe"
+# Leary case name (docs/litigate/expect-corpus.md).
+Leary = "Leary"
+# du Pont case name (docs/litigate/expect-corpus.md).
+Pont = "Pont"
+# Regulation Identifier Number (sources/PROVENANCE.md).
+RIN = "RIN"
 
 [default.extend-identifiers]
 # Short graph-algorithm locals (node a/b, node n/d).
@@ -52,6 +64,8 @@ tpos = "tpos"
 
 [files]
 extend-exclude = [
+    "sources/PROVENANCE.md",  # quotes OCR errors and source spellings verbatim
+    "sources/**/PROVENANCE.md",  # same for per-source provenance records
     "packs/*.json",  # legal-procedure JSON packs -- case names, citations
     "tests/fixtures/",  # verbatim copies of upstream packs
     "marketing/*/index.html",  # animation scripts with short locals (tje, tpos)

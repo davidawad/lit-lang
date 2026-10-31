@@ -223,3 +223,117 @@ decision ruling: "Motion decided" by court cite "Bankr. M.D. La. LR 9014-2"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. M.D. La. LR 9029-1"
+
+test "Deadline arithmetic: electronic-filing-declaration-period (7 days after)" cite "Bankr. M.D. La. LR 1008-1(b)"
+{
+  given PetitionFiled() on 2027-04-06
+  expect deadline(electronic-filing-declaration-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: new-counsel-declaration-period (7 days after)" cite "Bankr. M.D. La. LR 1008-1(b)"
+{
+  given CounselSubstitutionOrdered() on 2027-04-06
+  expect deadline(new-counsel-declaration-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: consolidated-mailing-list-period (7 days after)" cite "Bankr. M.D. La. LR 1015-1(b)"
+{
+  given JointAdministrationOrdered() on 2027-04-06
+  expect deadline(consolidated-mailing-list-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: payment-proof-delivery-period (5 days before)" cite "Bankr. M.D. La. LR 1017-1(c)"
+{
+  given TrusteeDismissalHearing() on 2027-04-06
+  expect deadline(payment-proof-delivery-period) == 2027-04-01
+}
+
+test "Deadline arithmetic: meeting-denial-review-motion-period (2 days after)" cite "Bankr. M.D. La. LR 2003-1(c)"
+{
+  given RescheduleDenialReceived() on 2027-04-06
+  expect deadline(meeting-denial-review-motion-period) == 2027-04-08
+}
+
+test "Deadline arithmetic: examination-protective-order-period (3 days before)" cite "Bankr. M.D. La. LR 2004-1(b)"
+{
+  given ProposedExaminationDate() on 2027-04-06
+  expect deadline(examination-protective-order-period) == 2027-04-02
+}
+
+test "Deadline arithmetic: procedures-statement-period (15 days after)" cite "Bankr. M.D. La. LR 2016-2(c)"
+{
+  given PetitionFiled() on 2027-04-06
+  expect deadline(procedures-statement-period) == 2027-04-21
+}
+
+test "Deadline arithmetic: confirmation-objection-period (15 days before)" cite "Bankr. M.D. La. LR 3015-2(a)"
+{
+  given ConfirmationHearing() on 2027-04-06
+  expect deadline(confirmation-objection-period) == 2027-03-22
+}
+
+test "Deadline arithmetic: confirmation-documents-period (8 days before)" cite "Bankr. M.D. La. LR 3015-3(d)"
+{
+  given ConfirmationHearing() on 2027-04-06
+  expect deadline(confirmation-documents-period) == 2027-03-29
+}
+
+test "Deadline arithmetic: amended-plan-period (8 days before)" cite "Bankr. M.D. La. LR 3015-4(a)"
+{
+  given ConfirmationHearing() on 2027-04-06
+  expect deadline(amended-plan-period) == 2027-03-29
+}
+
+test "Deadline arithmetic: modified-plan-objection-period (15 days before)" cite "Bankr. M.D. La. LR 3015-4(b)"
+{
+  given ModifiedPlanHearing() on 2027-04-06
+  expect deadline(modified-plan-objection-period) == 2027-03-22
+}
+
+test "Deadline arithmetic: modified-plan-amendment-period (8 days before)" cite "Bankr. M.D. La. LR 3015-4(b)"
+{
+  given ModifiedPlanHearing() on 2027-04-06
+  expect deadline(modified-plan-amendment-period) == 2027-03-29
+}
+
+test "Deadline arithmetic: chapter-13-discharge-objection-period (21 days after)" cite "Bankr. M.D. La. LR 3015-5(b)"
+{
+  given DischargeMotionFiled() on 2027-04-06
+  expect deadline(chapter-13-discharge-objection-period) == 2027-04-27
+}
+
+test "Deadline arithmetic: monthly-report-period (15 days after)" cite "Bankr. M.D. La. LR 4002-2(a)"
+{
+  given CalendarMonthEnded() on 2027-04-06
+  expect deadline(monthly-report-period) == 2027-04-21
+}
+
+test "Deadline arithmetic: summons-proof-of-service-period (7 days before)" cite "Bankr. M.D. La. LR 7004-1(b)"
+{
+  given PretrialConference() on 2027-04-06
+  expect deadline(summons-proof-of-service-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: prevailing-party-order-period (2 days after)" cite "Bankr. M.D. La. LR 9013-1(e)"
+{
+  given HearingHeld() on 2027-04-06
+  expect deadline(prevailing-party-order-period) == 2027-04-08
+}
+
+test "Deadline arithmetic: evidence-notice-period (5 days before)" cite "Bankr. M.D. La. LR 9013-3(a)"
+{
+  given MotionHearing() on 2027-04-06
+  expect deadline(evidence-notice-period) == 2027-04-01
+}
+
+test "Deadline arithmetic: motion-objection-period (8 days before)" cite "Bankr. M.D. La. LR 9014-1(a)"
+{
+  given MotionHearing() on 2027-04-06
+  expect deadline(motion-objection-period) == 2027-03-29
+}
+
+test "Deadline arithmetic: removal-record-period (7 days after)" cite "Bankr. M.D. La. LR 9027-1"
+{
+  given RemovalNoticeFiled() on 2027-04-06
+  expect deadline(removal-record-period) == 2027-04-13
+}

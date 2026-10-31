@@ -241,3 +241,141 @@ decision ruling: "Motion decided" by court cite "Bankr. W.D. La. LBR 9007-1(a)"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. W.D. La. LBR 1001-1"
+
+test "Deadline arithmetic: amended-schedule-service-period (3 days after)" cite "Bankr. W.D. La. LBR 1009-1(b)"
+{
+  given AmendedScheduleFiled() on 2027-01-04
+  expect deadline(amended-schedule-service-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: exemption-amendment-notice-period (3 days after)" cite "Bankr. W.D. La. LBR 1009-1(c)"
+{
+  given ExemptionScheduleAmended() on 2027-01-04
+  expect deadline(exemption-amendment-notice-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: notice-of-death-period (60 days after)" cite "Bankr. W.D. La. LBR 1016-1(a)"
+{
+  given DebtorDied() on 2027-01-04
+  expect deadline(notice-of-death-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: show-cause-objection-period (7 days before)" cite "Bankr. W.D. La. LBR 1017-1(b)"
+{
+  given ShowCauseHearing() on 2027-01-04
+  expect deadline(show-cause-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: missed-meeting-reschedule-period (21 days after)" cite "Bankr. W.D. La. LBR 1017-1(b)"
+{
+  given MissedCreditorsMeeting() on 2027-01-04
+  expect deadline(missed-meeting-reschedule-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: examination-notice-period (14 days before)" cite "Bankr. W.D. La. LBR 2004-1(b)"
+{
+  given ExaminationDate() on 2027-01-04
+  expect deadline(examination-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: contemporaneous-employment-period (30 days after)" cite "Bankr. W.D. La. LBR 2014-1(b)"
+{
+  given ProfessionalCommencedWork() on 2027-01-04
+  expect deadline(contemporaneous-employment-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: monthly-operating-report-period (20 days after)" cite "Bankr. W.D. La. LBR 2015-1"
+{
+  given CalendarMonthEnded() on 2027-01-04
+  expect deadline(monthly-operating-report-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: claim-objection-response-period (7 days before)" cite "Bankr. W.D. La. LBR 3007-1(b)"
+{
+  given ClaimObjectionHearing() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: unclaimed-funds-objection-period (21 days after)" cite "Bankr. W.D. La. LBR 3011-1(d)"
+{
+  given UnclaimedFundsApplicationServed() on 2027-01-04
+  expect deadline(unclaimed-funds-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: chapter-12-13-confirmation-objection-period (14 days before)" cite "Bankr. W.D. La. LBR 3015-1(c)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(chapter-12-13-confirmation-objection-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: plan-modification-objection-period (14 days before)" cite "Bankr. W.D. La. LBR 3015-1(e)"
+{
+  given PlanModificationHearing() on 2027-01-04
+  expect deadline(plan-modification-objection-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: chapter-11-confirmation-objection-period (7 days before)" cite "Bankr. W.D. La. LBR 3020-1(a)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(chapter-11-confirmation-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: stay-relief-response-period (17 days after)" cite "Bankr. W.D. La. LBR 4001-1(h)"
+{
+  given StayReliefMotionMailed() on 2027-01-04
+  expect deadline(stay-relief-response-period) == 2027-01-21
+}
+
+test "Deadline arithmetic: discharge-certification-period (30 days after)" cite "Bankr. W.D. La. LBR 5009-1(b)"
+{
+  given PlanCompletionNoticed() on 2027-01-04
+  expect deadline(discharge-certification-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: unopposed-order-upload-period (7 days before)" cite "Bankr. W.D. La. LBR 7007-1(c)"
+{
+  given ProposedHearingDate() on 2027-01-04
+  expect deadline(unopposed-order-upload-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: adversary-motion-response-period (7 days before)" cite "Bankr. W.D. La. LBR 7007-1(e)"
+{
+  given ProposedHearingDate() on 2027-01-04
+  expect deadline(adversary-motion-response-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: joint-pretrial-order-period (7 days before)" cite "Bankr. W.D. La. LBR 7016-1(a)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(joint-pretrial-order-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: proposed-findings-period (7 days before)" cite "Bankr. W.D. La. LBR 7016-1(b)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(proposed-findings-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (7 days before)" cite "Bankr. W.D. La. LBR 7056-1(d)"
+{
+  given SummaryJudgmentHearing() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: motion-filing-period (21 days before)" cite "Bankr. W.D. La. LBR 9013-1(g)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-filing-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: motion-response-period (7 days before)" cite "Bankr. W.D. La. LBR 9013-1(i)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-response-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: exhibit-removal-period (60 days after)" cite "Bankr. W.D. La. LBR 9070-1(b)"
+{
+  given FinalDisposition() on 2027-01-04
+  expect deadline(exhibit-removal-period) == 2027-03-05
+}

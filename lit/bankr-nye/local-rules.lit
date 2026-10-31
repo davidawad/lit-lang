@@ -255,6 +255,7 @@ deadline exhibit-removal-period: 30.days after RecordReturned() counted_by frbp9
 /// such other time as the court directs.
 deadline proposed-order-period: 14.days after OrderDirected() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 9072-1(a)"
 
+
 start motion-filed
 
 state motion-filed: "Motion served and filed" by applicant cite "E.D.N.Y. LBR 9006-1(a)"
@@ -284,4 +285,238 @@ decision ruling: "Motion decided" by court cite "E.D.N.Y. LBR 9072-1"
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "E.D.N.Y. LBR 1001-1"
 {
   note "The Local Bankruptcy Rules apply insofar as they are not inconsistent with the Bankruptcy Code and the Bankruptcy Rules, and are cited as E.D.N.Y. LBR (LBR 1001-1(b)); an order in a specific case controls over them."
+}
+
+test "photo-identification-period arithmetic" cite "E.D.N.Y. LBR 1002-1(d)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(photo-identification-period) == 2027-01-19
+}
+
+test "involuntary-chapter11-affidavit-period arithmetic" cite "E.D.N.Y. LBR 1007-4(b)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(involuntary-chapter11-affidavit-period) == 2027-01-19
+}
+
+test "involuntary-disclosure-statement-period arithmetic" cite "E.D.N.Y. LBR 1073-3(b)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(involuntary-disclosure-statement-period) == 2027-01-19
+}
+
+test "presentment-objection-period arithmetic" cite "E.D.N.Y. LBR 2002-1(e)"
+{
+  given PresentmentDate() on 2027-02-01
+  expect deadline(presentment-objection-period) == 2027-01-25
+}
+
+test "chapter13-meeting-disclosures-period arithmetic" cite "E.D.N.Y. LBR 2003-1(a)"
+{
+  given FirstMeetingDate() on 2027-02-01
+  expect deadline(chapter13-meeting-disclosures-period) == 2027-01-25
+}
+
+test "chapter13-confirmation-disclosures-period arithmetic" cite "E.D.N.Y. LBR 2003-1(b)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(chapter13-confirmation-disclosures-period) == 2027-01-25
+}
+
+test "final-compensation-application-period arithmetic" cite "E.D.N.Y. LBR 2016-2"
+{
+  given FinalAccountHearingScheduled() on 2027-02-01
+  expect deadline(final-compensation-application-period) == 2027-01-11
+}
+
+test "final-compensation-objection-period arithmetic" cite "E.D.N.Y. LBR 2016-2"
+{
+  given FinalAccountHearingScheduled() on 2027-02-01
+  expect deadline(final-compensation-objection-period) == 2027-01-25
+}
+
+test "retainer-exclusion-period arithmetic" cite "E.D.N.Y. LBR 2090-2"
+{
+  given SummonsServed() on 2027-01-04
+  expect deadline(retainer-exclusion-period) == 2027-01-19
+}
+
+test "amended-schedule-claim-period arithmetic" cite "E.D.N.Y. LBR 3007-2"
+{
+  given ScheduleAmendmentEffective() on 2027-01-04
+  expect deadline(amended-schedule-claim-period) == 2027-02-03
+}
+
+test "chapter13-plan-service-period arithmetic" cite "E.D.N.Y. LBR 3015-1(b)"
+{
+  given Chapter13PlanFiled() on 2027-01-04
+  expect deadline(chapter13-plan-service-period) == 2027-01-11
+}
+
+test "attorney-fee-notice-period arithmetic" cite "E.D.N.Y. LBR 3015-1(c)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(attorney-fee-notice-period) == 2027-01-15
+}
+
+test "chapter13-modification-service-period arithmetic" cite "E.D.N.Y. LBR 3015-2(a)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(chapter13-modification-service-period) == 2027-01-15
+}
+
+test "ballot-summary-period arithmetic" cite "E.D.N.Y. LBR 3018-1(a)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(ballot-summary-period) == 2027-01-25
+}
+
+test "vote-certification-period arithmetic" cite "E.D.N.Y. LBR 3018-1(b)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(vote-certification-period) == 2027-01-25
+}
+
+test "ineffective-election-notice-period arithmetic" cite "E.D.N.Y. LBR 3018-1(c)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(ineffective-election-notice-period) == 2027-01-25
+}
+
+test "chapter11-confirmation-objection-period arithmetic" cite "E.D.N.Y. LBR 3020-1(a)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(chapter11-confirmation-objection-period) == 2027-01-25
+}
+
+test "consummation-timetable-period arithmetic" cite "E.D.N.Y. LBR 3021(a)"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(consummation-timetable-period) == 2027-01-19
+}
+
+test "final-decree-application-period arithmetic" cite "E.D.N.Y. LBR 3022-1"
+{
+  given EstateFullyAdministered() on 2027-01-04
+  expect deadline(final-decree-application-period) == 2027-01-19
+}
+
+test "final-decree-outside-period arithmetic" cite "E.D.N.Y. LBR 3022-1"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(final-decree-outside-period) == 2028-07-05
+}
+
+test "lessor-election-period arithmetic" cite "E.D.N.Y. LBR 4001-4(b)"
+{
+  given CureComplianceNoticed() on 2027-01-04
+  expect deadline(lessor-election-period) == 2027-01-19
+}
+
+test "exemption-amendment-proof-period arithmetic" cite "E.D.N.Y. LBR 4003-1(a)"
+{
+  given ExemptionAmendmentServed() on 2027-01-04
+  expect deadline(exemption-amendment-proof-period) == 2027-01-11
+}
+
+test "added-creditor-exemption-objection-period arithmetic" cite "E.D.N.Y. LBR 4003-1(b)"
+{
+  given CreditorAddedToSchedulesServed() on 2027-01-04
+  expect deadline(added-creditor-exemption-objection-period) == 2027-02-03
+}
+
+test "small-sale-notice-period arithmetic" cite "E.D.N.Y. LBR 6004-1(b)"
+{
+  given SmallSaleDate() on 2027-02-01
+  expect deadline(small-sale-notice-period) == 2027-01-25
+}
+
+test "auction-proceeds-period arithmetic" cite "E.D.N.Y. LBR 6004-1(e)"
+{
+  given AuctionProceedsReceived() on 2027-01-04
+  expect deadline(auction-proceeds-period) == 2027-01-11
+}
+
+test "auction-report-period arithmetic" cite "E.D.N.Y. LBR 6004-1(f)"
+{
+  given AuctionConcluded() on 2027-01-04
+  expect deadline(auction-report-period) == 2027-01-25
+}
+
+test "auction-supplemental-report-period arithmetic" cite "E.D.N.Y. LBR 6004-1(f)"
+{
+  given AllAuctionProceedsReceived() on 2027-01-04
+  expect deadline(auction-supplemental-report-period) == 2027-01-19
+}
+
+test "contention-interrogatory-period arithmetic" cite "E.D.N.Y. LBR 7033-1(c)"
+{
+  given DiscoveryCutoff() on 2027-02-01
+  expect deadline(contention-interrogatory-period) == 2026-12-31
+}
+
+test "records-inspection-period arithmetic" cite "E.D.N.Y. LBR 7033-1(f)"
+{
+  given InterrogatoryAnswersServed() on 2027-01-04
+  expect deadline(records-inspection-period) == 2027-01-19
+}
+
+test "remand-motion-period arithmetic" cite "E.D.N.Y. LBR 8024-1"
+{
+  given Remanded() on 2027-01-04
+  expect deadline(remand-motion-period) == 2027-01-25
+}
+
+test "motion-service-period arithmetic" cite "E.D.N.Y. LBR 9006-1(a)"
+{
+  given HearingScheduled() on 2027-02-01
+  expect deadline(motion-service-period) == 2027-01-15
+}
+
+test "answering-papers-period arithmetic" cite "E.D.N.Y. LBR 9006-1(a)"
+{
+  given HearingScheduled() on 2027-02-01
+  expect deadline(answering-papers-period) == 2027-01-25
+}
+
+test "reply-papers-period arithmetic" cite "E.D.N.Y. LBR 9006-1(a)"
+{
+  given HearingScheduled() on 2027-02-01
+  expect deadline(reply-papers-period) == 2027-01-29
+}
+
+test "mediator-selection-period arithmetic" cite "E.D.N.Y. LBR 9019-1(b)"
+{
+  given MediationOrdered() on 2027-01-04
+  expect deadline(mediator-selection-period) == 2027-01-11
+}
+
+test "mediation-order-submission-period arithmetic" cite "E.D.N.Y. LBR 9019-1(b)"
+{
+  given MediatorSelected() on 2027-01-04
+  expect deadline(mediation-order-submission-period) == 2027-01-11
+}
+
+test "initial-mediation-conference-period arithmetic" cite "E.D.N.Y. LBR 9019-1(c)"
+{
+  given MediationOrderEntered() on 2027-01-04
+  expect deadline(initial-mediation-conference-period) == 2027-02-03
+}
+
+test "redacted-filing-period arithmetic" cite "E.D.N.Y. LBR 9037-1(e)"
+{
+  given RedactionGranted() on 2027-01-04
+  expect deadline(redacted-filing-period) == 2027-01-25
+}
+
+test "exhibit-removal-period arithmetic" cite "E.D.N.Y. LBR 9070-1(b)"
+{
+  given RecordReturned() on 2027-01-04
+  expect deadline(exhibit-removal-period) == 2027-02-03
+}
+
+test "proposed-order-period arithmetic" cite "E.D.N.Y. LBR 9072-1(a)"
+{
+  given OrderDirected() on 2027-01-04
+  expect deadline(proposed-order-period) == 2027-01-19
 }

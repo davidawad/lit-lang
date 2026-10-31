@@ -80,8 +80,9 @@ decision respond: "Answer or move under Rule 12" by Defendant cite "FRCP 12(a)(1
 chance mtd-ruling: "Ruling on the motion to dismiss" by Court discretion cite "FRCP 12(b)(6)"
 {
   group motions
-  granted "Motion granted" -> dismissed p ?("no calibration yet")
-  denied "Motion denied" -> answered p ?
+  granted "Motion granted" -> dismissed p 1/2
+  denied "Motion denied" -> answered p 1/2
+  note "Illustrative example assumption only: equal odds, not calibrated."
 }
 
 state answered: "Answer filed" {
@@ -94,7 +95,11 @@ state default-risk: "Failure to respond" {
   edge-default-risk-judgment-entered "Default entered" -> judgment-entered
 }
 
-terminal judgment-entered: "Judgment entered" outcome [judgment, loss] { group outcomes, payoff ? }
+terminal judgment-entered: "Judgment entered" outcome [judgment, loss] {
+  group outcomes
+  payoff 0.usd
+}
+
 terminal dismissed: "Action dismissed" outcome [judgment, win] { group outcomes, payoff 0.usd }
 
 test "answer due 21 days after personal service" cite "FRCP 12(a)(1)(A)(i)"

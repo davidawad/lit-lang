@@ -252,3 +252,183 @@ decision ruling: "Motion decided" by court cite ?("E.D. Okla. LBR 9013-1, undate
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite ?("E.D. Okla. LBR 1001-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
+
+test "Deadline arithmetic: amended-pro-se-disclosure-period (7 days after)" cite "E.D. Okla. LBR 1007-1"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(amended-pro-se-disclosure-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: committee-ownership-statement-period (14 days after)" cite "E.D. Okla. LBR 2003-2"
+{
+  given CommitteeAppointed() on 2027-01-04
+  expect deadline(committee-ownership-statement-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: added-creditor-mailing-certificate-period (2 days after)" cite "E.D. Okla. LBR 3003-1"
+{
+  given BarDateNoticeServed() on 2027-01-04
+  expect deadline(added-creditor-mailing-certificate-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: amended-plan-mailing-period (28 days before)" cite "E.D. Okla. LBR 3015-2"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(amended-plan-mailing-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: chapter-12-notice-mailing-period (7 days after)" cite "E.D. Okla. LBR 3015-5"
+{
+  given ConfirmationHearingNoticed() on 2027-01-04
+  expect deadline(chapter-12-notice-mailing-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: notice-mailing-proof-period (2 days after)" cite "E.D. Okla. LBR 3015-5"
+{
+  given NoticeMailed() on 2027-01-04
+  expect deadline(notice-mailing-proof-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: chapter-12-13-plan-objection-period (7 days before)" cite "E.D. Okla. LBR 3015-6"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(chapter-12-13-plan-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: disclosure-statement-mailing-period (3 days after)" cite "E.D. Okla. LBR 3016-1(A)"
+{
+  given DisclosureStatementFiled() on 2027-01-04
+  expect deadline(disclosure-statement-mailing-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: chapter-11-confirmation-mailing-period (3 days after)" cite "E.D. Okla. LBR 3020-1(B)"
+{
+  given ConfirmationHearingNoticed() on 2027-01-04
+  expect deadline(chapter-11-confirmation-mailing-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: chapter-11-confirmation-objection-period (14 days before)" cite "E.D. Okla. LBR 3020-1(C)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(chapter-11-confirmation-objection-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: final-report-period (6 months after)" cite "E.D. Okla. LBR 3022-1"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(final-report-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: final-report-consummation-period (30 days after)" cite "E.D. Okla. LBR 3022-1"
+{
+  given PlanSubstantiallyConsummated() on 2027-01-04
+  expect deadline(final-report-consummation-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: stay-discovery-response-period (14 days after)" cite "E.D. Okla. LBR 4001-1(E)"
+{
+  given StayDiscoveryServed() on 2027-01-04
+  expect deadline(stay-discovery-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: tax-return-filing-period (7 days after)" cite "E.D. Okla. LBR 4002-1(C)"
+{
+  given TaxReturnRequestFiled() on 2027-01-04
+  expect deadline(tax-return-filing-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: section-522q-statement-period (21 days after)" cite "E.D. Okla. LBR 4004-1(A)"
+{
+  given PlanCompletionNoticeFiled() on 2027-01-04
+  expect deadline(section-522q-statement-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: sale-objection-period (7 days before)" cite "E.D. Okla. LBR 6004-1"
+{
+  given ProposedActionDate() on 2027-01-04
+  expect deadline(sale-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: adversary-opposition-brief-period (14 days after)" cite "E.D. Okla. LBR 7007-1(B)"
+{
+  given AdversaryMotionFiled() on 2027-01-04
+  expect deadline(adversary-opposition-brief-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: adversary-reply-brief-period (14 days after)" cite "E.D. Okla. LBR 7007-1(B)"
+{
+  given OppositionBriefFiled() on 2027-01-04
+  expect deadline(adversary-reply-brief-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: preliminary-lists-period (14 days after)" cite "E.D. Okla. LBR 7016-1(A)"
+{
+  given SchedulingConference() on 2027-01-04
+  expect deadline(preliminary-lists-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: final-lists-period (14 days before)" cite "E.D. Okla. LBR 7016-1(A)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(final-lists-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: judge-exhibits-period (7 days before)" cite "E.D. Okla. LBR 7016-1(B)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(judge-exhibits-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: pretrial-order-period (7 days before)" cite "E.D. Okla. LBR 7016-1(C)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(pretrial-order-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (14 days after)" cite "E.D. Okla. LBR 7056-1(B)"
+{
+  given SummaryJudgmentBriefFiled() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "E.D. Okla. LBR 7056-1(C)"
+{
+  given SummaryJudgmentResponseFiled() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: continuance-application-period (3 days before)" cite "E.D. Okla. LBR 9006-1(C)"
+{
+  given HearingDate() on 2027-01-04
+  expect deadline(continuance-application-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: motion-objection-period (14 days after)" cite "E.D. Okla. LBR 9013-1"
+{
+  given MotionDocketed() on 2027-01-04
+  expect deadline(motion-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: jury-settlement-notice-period (3 days before)" cite "E.D. Okla. LBR 9015-1(G)"
+{
+  given JuryTrialSetting() on 2027-01-04
+  expect deadline(jury-settlement-notice-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: witness-exhibit-list-period (7 days before)" cite "E.D. Okla. LBR 9017-1"
+{
+  given EvidentiaryHearing() on 2027-01-04
+  expect deadline(witness-exhibit-list-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: settlement-pleadings-period (14 days after)" cite "E.D. Okla. LBR 9019-1"
+{
+  given CompromiseApproved() on 2027-01-04
+  expect deadline(settlement-pleadings-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: limited-authority-motion-period (11 days before)" cite "E.D. Okla. LBR 9019-2"
+{
+  given SettlementConference() on 2027-01-04
+  expect deadline(limited-authority-motion-period) == 2026-12-24
+}

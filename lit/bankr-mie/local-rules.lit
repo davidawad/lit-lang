@@ -466,3 +466,339 @@ test "stay objection follow-up notice is due in three business days" cite "E.D. 
   given StayExtensionObjectionFiled() on 2027-03-01
   expect deadline(stay-objection-follow-up-period) == 2027-03-04
 }
+
+test "dismissal-hearing-request-period is due after 21 days" cite "E.D. Mich. LBR 1007-1(a)"
+{
+  given PetitionFiled() on 2027-03-01
+  expect deadline(dismissal-hearing-request-period) == 2027-03-22
+}
+
+test "pro-se-declaration-period is due after 14 days" cite "E.D. Mich. LBR 1007-1(b)"
+{
+  given PetitionFiled() on 2027-03-01
+  expect deadline(pro-se-declaration-period) == 2027-03-15
+}
+
+test "payment-order-period is due after 14 days" cite "E.D. Mich. LBR 1007-1(c)"
+{
+  given Chapter13CaseStarted() on 2027-03-01
+  expect deadline(payment-order-period) == 2027-03-15
+}
+
+test "payment-advices-meeting-period is due after 7 days" cite "E.D. Mich. LBR 1007-1(f)"
+{
+  given FirstMeetingDate() on 2027-03-11
+  expect deadline(payment-advices-meeting-period) == 2027-03-04
+}
+
+test "payment-advices-outer-period is due after 45 days" cite "E.D. Mich. LBR 1007-1(f)"
+{
+  given PetitionFiled() on 2027-03-01
+  expect deadline(payment-advices-outer-period) == 2027-04-15
+}
+
+test "counseling-certification-response-period is due after 14 days" cite "E.D. Mich. LBR 1007-3(a)"
+{
+  given CounselingCertificationServed() on 2027-03-01
+  expect deadline(counseling-certification-response-period) == 2027-03-15
+}
+
+test "converted-means-test-period is due after 14 days" cite "E.D. Mich. LBR 1017-1(a)"
+{
+  given ConvertedToChapter7() on 2027-03-01
+  expect deadline(converted-means-test-period) == 2027-03-15
+}
+
+test "converted-reinstatement-period is due after 14 days" cite "E.D. Mich. LBR 1017-1(a)"
+{
+  given StatementDismissalEntered() on 2027-03-01
+  expect deadline(converted-reinstatement-period) == 2027-03-15
+}
+
+test "converted-trustee-report-period is due after 45 days" cite "E.D. Mich. LBR 1017-1(b)"
+{
+  given ConvertedCaseChecksCleared() on 2027-03-01
+  expect deadline(converted-trustee-report-period) == 2027-04-15
+}
+
+test "tax-return-dismissal-motion-period is due after 3 days" cite "E.D. Mich. LBR 1017-2"
+{
+  given TaxReturnDeadlineExpired() on 2027-03-01
+  expect deadline(tax-return-dismissal-motion-period) == 2027-03-04
+}
+
+test "entity-resolution-period is due after 14 days" cite "E.D. Mich. LBR 1074-1"
+{
+  given PetitionFiled() on 2027-03-01
+  expect deadline(entity-resolution-period) == 2027-03-15
+}
+
+test "nonappearance-objection-period is due after 14 days" cite "E.D. Mich. LBR 2003-1(a)"
+{
+  given NonappearanceDismissalMotionFiled() on 2027-03-01
+  expect deadline(nonappearance-objection-period) == 2027-03-15
+}
+
+test "nonappearance-response-period is due after 14 days" cite "E.D. Mich. LBR 2003-1(b)"
+{
+  given NonappearanceDismissalMotionFiled() on 2027-03-01
+  expect deadline(nonappearance-response-period) == 2027-03-15
+}
+
+test "meeting-documents-period is due after 7 days" cite "E.D. Mich. LBR 2003-2(b)"
+{
+  given FirstMeetingDate() on 2027-03-11
+  expect deadline(meeting-documents-period) == 2027-03-04
+}
+
+test "chapter13-meeting-documents-period is due after 14 days" cite "E.D. Mich. LBR 2003-2(c)"
+{
+  given FirstMeetingDate() on 2027-03-11
+  expect deadline(chapter13-meeting-documents-period) == 2027-02-25
+}
+
+test "committee-notice-period is due after 45 days" cite "E.D. Mich. LBR 2003-4"
+{
+  given CommitteeAppointed() on 2027-03-01
+  expect deadline(committee-notice-period) == 2027-04-15
+}
+
+test "quarterly-statement-period is due after 28 days" cite "E.D. Mich. LBR 2015-2"
+{
+  given QuarterClosed() on 2027-03-01
+  expect deadline(quarterly-statement-period) == 2027-03-29
+}
+
+test "completion-notice-period is due after 30 days" cite "E.D. Mich. LBR 2015-3(a)"
+{
+  given PlanPaymentsCompleted() on 2027-03-01
+  expect deadline(completion-notice-period) == 2027-03-31
+}
+
+test "completion-objection-period is due after 21 days" cite "E.D. Mich. LBR 2015-3(a)"
+{
+  given CompletionNoticeServed() on 2027-03-01
+  expect deadline(completion-objection-period) == 2027-03-22
+}
+
+test "chapter13-final-report-period is due after 120 days" cite "E.D. Mich. LBR 2015-3(d)"
+{
+  given CompletionNoticeFiled() on 2027-03-01
+  expect deadline(chapter13-final-report-period) == 2027-06-29
+}
+
+test "final-report-objection-period is due after 30 days" cite "E.D. Mich. LBR 2015-3(d)"
+{
+  given TrusteeFinalReportServed() on 2027-03-01
+  expect deadline(final-report-objection-period) == 2027-03-31
+}
+
+test "interim-fee-objection-period is due after 14 days" cite "E.D. Mich. LBR 2016-2(b)"
+{
+  given InterimFeeStatementServed() on 2027-03-01
+  expect deadline(interim-fee-objection-period) == 2027-03-15
+}
+
+test "payment-adjustment-notice-period is due after 21 days" cite "E.D. Mich. LBR 3001-2(a)"
+{
+  given PaymentAdjustmentEffective() on 2027-03-11
+  expect deadline(payment-adjustment-notice-period) == 2027-02-18
+}
+
+test "payment-change-motion-period is due after 21 days" cite "E.D. Mich. LBR 3001-2(b)"
+{
+  given PaymentChangeNoticeServed() on 2027-03-01
+  expect deadline(payment-change-motion-period) == 2027-03-22
+}
+
+test "inability-notice-objection-period is due after 14 days" cite "E.D. Mich. LBR 3001-2(d)"
+{
+  given InabilityNoticeFiled() on 2027-03-01
+  expect deadline(inability-notice-objection-period) == 2027-03-15
+}
+
+test "chapter11-claim-period is due after 90 days" cite "E.D. Mich. LBR 3003-1"
+{
+  given FirstMeetingDate() on 2027-03-01
+  expect deadline(chapter11-claim-period) == 2027-06-01
+}
+
+test "claim-objection-response-period is due after 7 days" cite "E.D. Mich. LBR 3007-1(b)"
+{
+  given ClaimObjectionHearingScheduled() on 2027-03-11
+  expect deadline(claim-objection-response-period) == 2027-03-04
+}
+
+test "section-1111b-election-period is due after 7 days" cite "E.D. Mich. LBR 3014-1"
+{
+  given CombinedConfirmationHearingScheduled() on 2027-03-11
+  expect deadline(section-1111b-election-period) == 2027-03-04
+}
+
+test "postpetition-claim-objection-period is due after 14 days" cite "E.D. Mich. LBR 3015-2(c)"
+{
+  given PostpetitionClaimNoticeServed() on 2027-03-01
+  expect deadline(postpetition-claim-objection-period) == 2027-03-15
+}
+
+test "modified-plan-objection-period is due after 28 days" cite "E.D. Mich. LBR 3015-3(a)"
+{
+  given ModifiedPlanServed() on 2027-03-01
+  expect deadline(modified-plan-objection-period) == 2027-03-29
+}
+
+test "solicitation-service-period is due after 7 days" cite "E.D. Mich. LBR 3018-1"
+{
+  given DisclosureStatementApproved() on 2027-03-01
+  expect deadline(solicitation-service-period) == 2027-03-08
+}
+
+test "consummation-timetable-period is due after 14 days" cite "E.D. Mich. LBR 3021-1(a)"
+{
+  given LargeCaseConfirmationEntered() on 2027-03-01
+  expect deadline(consummation-timetable-period) == 2027-03-15
+}
+
+test "expedited-financing-objection-period is due after 14 days" cite "E.D. Mich. LBR 4001-2"
+{
+  given ExpeditedFinancingOrderEntered() on 2027-03-01
+  expect deadline(expedited-financing-objection-period) == 2027-03-15
+}
+
+test "committee-financing-objection-period is due after 14 days" cite "E.D. Mich. LBR 4001-2"
+{
+  given CommitteeServedWithFinancingOrder() on 2027-03-01
+  expect deadline(committee-financing-objection-period) == 2027-03-15
+}
+
+test "stay-extension-motion-period is due after 7 days" cite "E.D. Mich. LBR 4001-4(a)"
+{
+  given PetitionFiled() on 2027-03-01
+  expect deadline(stay-extension-motion-period) == 2027-03-08
+}
+
+test "preconfirmation-amended-claim-period is due after 28 days" cite "E.D. Mich. LBR 4001-5(c)"
+{
+  given Chapter13PlanConfirmed() on 2027-03-01
+  expect deadline(preconfirmation-amended-claim-period) == 2027-03-29
+}
+
+test "domestic-support-certification-period is due after 28 days" cite "E.D. Mich. LBR 4004-1"
+{
+  given CompletionNoticeFiled() on 2027-03-01
+  expect deadline(domestic-support-certification-period) == 2027-03-29
+}
+
+test "reopened-missing-paper-period is due after 14 days" cite "E.D. Mich. LBR 5010-1(b)"
+{
+  given ReopeningOrderEntered() on 2027-03-01
+  expect deadline(reopened-missing-paper-period) == 2027-03-15
+}
+
+test "sale-notice-objection-period is due after 14 days" cite "E.D. Mich. LBR 6004-1(a)"
+{
+  given SaleNoticeServed() on 2027-03-01
+  expect deadline(sale-notice-objection-period) == 2027-03-15
+}
+
+test "pretrial-order-period is due after 7 days" cite "E.D. Mich. LBR 7016-1"
+{
+  given FinalPretrialConferenceScheduled() on 2027-03-11
+  expect deadline(pretrial-order-period) == 2027-03-04
+}
+
+test "mediation-objection-period is due after 7 days" cite "E.D. Mich. LBR 7016-2(a)"
+{
+  given MediationOrderEntered() on 2027-03-01
+  expect deadline(mediation-objection-period) == 2027-03-08
+}
+
+test "mediation-completion-period is due after 14 days" cite "E.D. Mich. LBR 7016-2(a)"
+{
+  given MediationOrderEntered() on 2027-03-01
+  expect deadline(mediation-completion-period) == 2027-03-15
+}
+
+test "mediation-settlement-motion-period is due after 14 days" cite "E.D. Mich. LBR 7016-2(a)"
+{
+  given MediationAgreementExecuted() on 2027-03-01
+  expect deadline(mediation-settlement-motion-period) == 2027-03-15
+}
+
+test "mediator-certification-period is due after 7 days" cite "E.D. Mich. LBR 7016-2(a)"
+{
+  given MediationConcluded() on 2027-03-01
+  expect deadline(mediator-certification-period) == 2027-03-08
+}
+
+test "discharge-dismissal-objection-period is due after 14 days" cite "E.D. Mich. LBR 7041-1"
+{
+  given DismissalStatementServed() on 2027-03-01
+  expect deadline(discharge-dismissal-objection-period) == 2027-03-15
+}
+
+test "fee-award-application-period is due after 14 days" cite "E.D. Mich. LBR 7054-1(a)"
+{
+  given FeeAwardEntered() on 2027-03-01
+  expect deadline(fee-award-application-period) == 2027-03-15
+}
+
+test "fee-award-objection-period is due after 14 days" cite "E.D. Mich. LBR 7054-1(b)"
+{
+  given FeeAwardApplicationServed() on 2027-03-01
+  expect deadline(fee-award-objection-period) == 2027-03-15
+}
+
+test "default-judgment-period is due after 14 days" cite "E.D. Mich. LBR 7055-1"
+{
+  given DefaultEntered() on 2027-03-01
+  expect deadline(default-judgment-period) == 2027-03-15
+}
+
+test "fixed-hearing-agenda-period is due after 7 days" cite "E.D. Mich. LBR 9013-2(b)"
+{
+  given FixedHearingDateScheduled() on 2027-03-11
+  expect deadline(fixed-hearing-agenda-period) == 2027-03-04
+}
+
+test "motion-response-period is due after 14 days" cite "E.D. Mich. LBR 9014-1(b)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(motion-response-period) == 2027-03-15
+}
+
+test "notice-motion-response-period is due after 21 days" cite "E.D. Mich. LBR 9014-1(b)"
+{
+  given NoticeMotionServed() on 2027-03-01
+  expect deadline(notice-motion-response-period) == 2027-03-22
+}
+
+test "removed-jury-consent-period is due after 28 days" cite "E.D. Mich. LBR 9015-1(b)"
+{
+  given CaseRemoved() on 2027-03-01
+  expect deadline(removed-jury-consent-period) == 2027-03-29
+}
+
+test "removed-jury-demand-period is due after 28 days" cite "E.D. Mich. LBR 9015-1(c)"
+{
+  given CaseRemoved() on 2027-03-01
+  expect deadline(removed-jury-demand-period) == 2027-03-29
+}
+
+test "settlement-order-period is due after 14 days" cite "E.D. Mich. LBR 9019-1"
+{
+  given SettlementStatedOnRecord() on 2027-03-01
+  expect deadline(settlement-order-period) == 2027-03-15
+}
+
+test "proposed-order-objection-period is due after 7 days" cite "E.D. Mich. LBR 9021-1(a)"
+{
+  given ProposedOrderNoticed() on 2027-03-01
+  expect deadline(proposed-order-objection-period) == 2027-03-08
+}
+
+test "reconsideration-period is due after 14 days" cite "E.D. Mich. LBR 9024-1(a)"
+{
+  given OrderEntered() on 2027-03-01
+  expect deadline(reconsideration-period) == 2027-03-15
+}

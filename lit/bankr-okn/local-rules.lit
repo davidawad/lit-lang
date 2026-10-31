@@ -259,3 +259,171 @@ decision ruling: "Motion decided" by court cite "N.D. Okla. LBR 9013-1(B)"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "N.D. Okla. LBR 1001-1"
+
+test "Deadline arithmetic: conversion-support-information-period (30 days after)" cite "N.D. Okla. LBR 1017-1(C)"
+{
+  given CaseConverted() on 2027-01-04
+  expect deadline(conversion-support-information-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter-7-conversion-support-information-period (30 days after)" cite "N.D. Okla. LBR 1019-1(B)"
+{
+  given CaseConverted() on 2027-01-04
+  expect deadline(chapter-7-conversion-support-information-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: committee-ownership-statement-period (7 days after)" cite "N.D. Okla. LBR 2003-2"
+{
+  given CommitteeAppointed() on 2027-01-04
+  expect deadline(committee-ownership-statement-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: business-report-period (14 days after)" cite "N.D. Okla. LBR 2015-2(A)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(business-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: claim-objection-response-period (33 days after)" cite "N.D. Okla. LBR 3007-1(B)"
+{
+  given ClaimObjectionFiled() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: unclaimed-funds-objection-period (14 days after)" cite "N.D. Okla. LBR 3011-1"
+{
+  given UnclaimedFundsApplicationFiled() on 2027-01-04
+  expect deadline(unclaimed-funds-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: ballot-tabulation-period (5 days before)" cite "N.D. Okla. LBR 3018-1"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(ballot-tabulation-period) == 2026-12-30
+}
+
+test "Deadline arithmetic: codebtor-stay-response-period (14 days after)" cite "N.D. Okla. LBR 4001-1(D)"
+{
+  given CodebtorMotionFiled() on 2027-01-04
+  expect deadline(codebtor-stay-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-discovery-response-period (12 days after)" cite "N.D. Okla. LBR 4001-1(E)"
+{
+  given StayDiscoveryServed() on 2027-01-04
+  expect deadline(stay-discovery-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-continuation-motion-period (7 days after)" cite "N.D. Okla. LBR 4001-1(H)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-continuation-motion-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: tax-return-filing-period (7 days after)" cite "N.D. Okla. LBR 4002-1(C)"
+{
+  given TaxReturnRequestFiled() on 2027-01-04
+  expect deadline(tax-return-filing-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: discharge-statement-objection-period (14 days after)" cite "N.D. Okla. LBR 4004-1(A)"
+{
+  given DischargeStatementFiled() on 2027-01-04
+  expect deadline(discharge-statement-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: sale-objection-period (7 days before)" cite "N.D. Okla. LBR 6004-1(A)"
+{
+  given ProposedActionDate() on 2027-01-04
+  expect deadline(sale-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: free-and-clear-objection-period (7 days before)" cite "N.D. Okla. LBR 6004-1(B)"
+{
+  given SaleHearing() on 2027-01-04
+  expect deadline(free-and-clear-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: free-and-clear-service-period (3 days after)" cite "N.D. Okla. LBR 6004-1(B)"
+{
+  given SaleMotionFiled() on 2027-01-04
+  expect deadline(free-and-clear-service-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: abandonment-objection-period (14 days after)" cite "N.D. Okla. LBR 6007-1(C)"
+{
+  given AbandonmentNoticeFiled() on 2027-01-04
+  expect deadline(abandonment-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: redemption-objection-period (14 days after)" cite "N.D. Okla. LBR 6008-1"
+{
+  given RedemptionMotionFiled() on 2027-01-04
+  expect deadline(redemption-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: adversary-opposition-brief-period (14 days after)" cite "N.D. Okla. LBR 7007-1(A)"
+{
+  given AdversaryMotionFiled() on 2027-01-04
+  expect deadline(adversary-opposition-brief-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: adversary-reply-brief-period (14 days after)" cite "N.D. Okla. LBR 7007-1(A)"
+{
+  given OppositionBriefFiled() on 2027-01-04
+  expect deadline(adversary-reply-brief-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: pretrial-continuance-period (7 days before)" cite "N.D. Okla. LBR 7016-1(B)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(pretrial-continuance-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: discharge-dismissal-response-period (14 days after)" cite "N.D. Okla. LBR 7041-1(B)"
+{
+  given DismissalMotionFiled() on 2027-01-04
+  expect deadline(discharge-dismissal-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (21 days after)" cite "N.D. Okla. LBR 7056-1(B)"
+{
+  given SummaryJudgmentBriefFiled() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "N.D. Okla. LBR 7056-1(C)"
+{
+  given SummaryJudgmentResponseFiled() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: motion-response-period (14 days after)" cite "N.D. Okla. LBR 9013-1(B)"
+{
+  given MotionFiled() on 2027-01-04
+  expect deadline(motion-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: motion-service-period (2 days after)" cite "N.D. Okla. LBR 9013-1(G)"
+{
+  given MotionFiled() on 2027-01-04
+  expect deadline(motion-service-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: motion-service-certificate-period (7 days after)" cite "N.D. Okla. LBR 9013-1(G)"
+{
+  given MotionFiled() on 2027-01-04
+  expect deadline(motion-service-certificate-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: jury-consent-period (14 days after)" cite "N.D. Okla. LBR 9015-1(A)"
+{
+  given JuryDemandDeadline() on 2027-01-04
+  expect deadline(jury-consent-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: limited-authority-motion-period (14 days before)" cite "N.D. Okla. LBR 9019-2(H)"
+{
+  given SettlementConference() on 2027-01-04
+  expect deadline(limited-authority-motion-period) == 2026-12-21
+}

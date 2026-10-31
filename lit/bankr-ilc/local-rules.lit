@@ -75,3 +75,15 @@ terminal continues: "Discharge proceeding continues under lit/frbp" outcome [pro
 {
   note "The Local Rules supplement the Bankruptcy Rules and the incorporated Federal Rules of Civil Procedure and are subordinate to them (LBR 1001-2(A))."
 }
+
+test "Deadline arithmetic: payment-advices-period (7 days before)" cite "Bankr. C.D. Ill. LBR 1007-1(C)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: discharge-dismissal-objection-period (21 days after)" cite "Bankr. C.D. Ill. LBR 7041-1(B)"
+{
+  given DischargeDismissalMotionServed() on 2027-01-04
+  expect deadline(discharge-dismissal-objection-period) == 2027-01-25
+}

@@ -61,3 +61,13 @@ decision decree-ruling: "Final decree" by court cite ?("S.D. Ga. LBR 2015-1(b), 
 terminal closed: "Chapter 11 case administered: the case continues or closes under lit/frbp" outcome [procedural] cite ?("S.D. Ga. LBR 9029-1, May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
   note "The court may by General Order regulate its practice consistently with the rules and the District Court Local Rules (LBR 9029-1); where the rules conflict with the FRBP or are silent, the FRBP govern (Uniformity of Practice)."
 }
+
+test "confirmation report is due thirty days after confirmation" cite ?("S.D. Ga. LBR 2015-1(a), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(confirmation-report-period) == 2027-02-03
+}
+
+test "final decree application is due 180 days after confirmation" cite ?("S.D. Ga. LBR 2015-1(b), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(final-decree-application-period) == 2027-07-06
+}

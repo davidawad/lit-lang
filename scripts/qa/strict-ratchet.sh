@@ -3,7 +3,7 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/../.."
-baseline=${STRICT_RATCHET_BASELINE:-docs/qa/strict-baseline.tsv}
+baseline=docs/qa/strict-baseline.tsv
 
 usage() {
   echo "usage: scripts/qa/strict-ratchet.sh <merge-base> <changed-files>" >&2

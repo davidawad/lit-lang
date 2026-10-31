@@ -247,3 +247,189 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Nebraska Rules of Bankruptcy Procedure apply in all bankruptcy cases in the district (Rule 1001-1(A))."
 }
+
+test "Deadline arithmetic: joint-estates-objection-period (14 days after)" cite "Neb. R. Bankr. P. 1015-1(A)"
+{
+  given FirstMeetingConcluded() on 2027-01-04
+  expect deadline(joint-estates-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: exam-production-response-period (14 days after)" cite "Neb. R. Bankr. P. 2004-1"
+{
+  given ExamNoticeServed() on 2027-01-04
+  expect deadline(exam-production-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: professional-fee-notice-period (14 days before)" cite "Neb. R. Bankr. P. 2016-1(A)"
+{
+  given TrusteeFinalReportFiled() on 2027-01-04
+  expect deadline(professional-fee-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: chapter9-service-certificate-period (7 days before)" cite "Neb. R. Bankr. P. 2080-1(A)"
+{
+  given Chapter9ResistanceDeadline() on 2027-01-04
+  expect deadline(chapter9-service-certificate-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: chapter9-creditor-list-period (14 days after)" cite "Neb. R. Bankr. P. 2080-1(B)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter9-creditor-list-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter9-plan-period (90 days after)" cite "Neb. R. Bankr. P. 2080-1(C)"
+{
+  given CommitteeAppointed() on 2027-01-04
+  expect deadline(chapter9-plan-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: chapter9-publication-period (14 days before)" cite "Neb. R. Bankr. P. 2080-1(D)"
+{
+  given Chapter9ResistanceDeadline() on 2027-01-04
+  expect deadline(chapter9-publication-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: chapter9-publication-proof-period (14 days after)" cite "Neb. R. Bankr. P. 2080-1(D)"
+{
+  given LastPublication() on 2027-01-04
+  expect deadline(chapter9-publication-proof-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter9-resistance-period (45 days after)" cite "Neb. R. Bankr. P. 2080-1(E)"
+{
+  given Chapter9NoticeServed() on 2027-01-04
+  expect deadline(chapter9-resistance-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: real-property-deficiency-claim-period (180 days after)" cite "Neb. R. Bankr. P. 3002-1(C)"
+{
+  given CollateralReleased() on 2027-01-04
+  expect deadline(real-property-deficiency-claim-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: personal-property-deficiency-claim-period (90 days after)" cite "Neb. R. Bankr. P. 3002-1(C)"
+{
+  given CollateralReleased() on 2027-01-04
+  expect deadline(personal-property-deficiency-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: chapter13-claim-objection-period (30 days after)" cite "Neb. R. Bankr. P. 3007-1(B)"
+{
+  given TrusteeClaimsNoticeFiled() on 2027-01-04
+  expect deadline(chapter13-claim-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: attorney-employment-objection-period (14 days after)" cite "Neb. R. Bankr. P. 3015-2(B)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(attorney-employment-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: plan-resistance-period (14 days after)" cite "Neb. R. Bankr. P. 3015-2(E)"
+{
+  given FirstMeetingConcluded() on 2027-01-04
+  expect deadline(plan-resistance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: extended-plan-filing-period (14 days before)" cite "Neb. R. Bankr. P. 3015-2(F)"
+{
+  given MeetingOfCreditorsScheduled() on 2027-01-04
+  expect deadline(extended-plan-filing-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: limited-modification-response-period (14 days after)" cite "Neb. R. Bankr. P. 3015-2(G)"
+{
+  given ModificationObjectionDeadline() on 2027-01-04
+  expect deadline(limited-modification-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter13-discharge-certification-period (14 days after)" cite "Neb. R. Bankr. P. 3015-2(H)"
+{
+  given FinalPaymentCertified() on 2027-01-04
+  expect deadline(chapter13-discharge-certification-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: confirmation-certification-period (7 days before)" cite "Neb. R. Bankr. P. 3015-3(A)"
+{
+  given ConfirmationObjectionDeadline() on 2027-01-04
+  expect deadline(confirmation-certification-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: confirmation-objection-response-period (14 days after)" cite "Neb. R. Bankr. P. 3015-3(B)"
+{
+  given ConfirmationObjectionDeadline() on 2027-01-04
+  expect deadline(confirmation-objection-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter12-confirmation-trial-request-period (30 days after)" cite "Neb. R. Bankr. P. 3015-3(C)"
+{
+  given ObjectionResponseDeadline() on 2027-01-04
+  expect deadline(chapter12-confirmation-trial-request-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter13-confirmation-trial-request-period (70 days after)" cite "Neb. R. Bankr. P. 3015-3(C)"
+{
+  given ObjectionResponseDeadline() on 2027-01-04
+  expect deadline(chapter13-confirmation-trial-request-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: payment-default-cure-period (21 days after)" cite "Neb. R. Bankr. P. 3015-4"
+{
+  given DefaultNoticeFiled() on 2027-01-04
+  expect deadline(payment-default-cure-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: trustee-deposit-period (5 days after)" cite "Neb. R. Bankr. P. 3020-1(A)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(trustee-deposit-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: stay-relief-service-certificate-period (5 days before)" cite "Neb. R. Bankr. P. 4001-1(B)"
+{
+  given StayReliefHearing() on 2027-01-04
+  expect deadline(stay-relief-service-certificate-period) == 2026-12-30
+}
+
+test "Deadline arithmetic: adversary-opposing-brief-period (14 days after)" cite "Neb. R. Bankr. P. 7007-1(C)"
+{
+  given AdversaryMotionFiled() on 2027-01-04
+  expect deadline(adversary-opposing-brief-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: dispositive-opposing-brief-period (21 days after)" cite "Neb. R. Bankr. P. 7007-1(C)"
+{
+  given DispositiveMotionFiled() on 2027-01-04
+  expect deadline(dispositive-opposing-brief-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: adversary-reply-brief-period (7 days after)" cite "Neb. R. Bankr. P. 7007-1(D)"
+{
+  given OpposingBriefFiled() on 2027-01-04
+  expect deadline(adversary-reply-brief-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: replacement-vehicle-resistance-period (10 days after)" cite "Neb. R. Bankr. P. 9006-1(B)"
+{
+  given ReplacementVehicleMotionFiled() on 2027-01-04
+  expect deadline(replacement-vehicle-resistance-period) == 2027-01-14
+}
+
+test "Deadline arithmetic: motion-resistance-period (21 days after)" cite "Neb. R. Bankr. P. 9013-1(B)"
+{
+  given MotionFiled() on 2027-01-04
+  expect deadline(motion-resistance-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: evidentiary-hearing-request-period (7 days before)" cite "Neb. R. Bankr. P. 9014-1"
+{
+  given ContestedHearingScheduled() on 2027-01-04
+  expect deadline(evidentiary-hearing-request-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: dismissed-case-fee-application-period (7 days after)" cite "Neb. R. Bankr. P. 2016-1(D); Neb. R. Bankr. P. Appendix B C.3"
+{
+  given CaseDismissedBeforeConfirmation() on 2027-01-04
+  expect deadline(dismissed-case-fee-application-period) == 2027-01-11
+}

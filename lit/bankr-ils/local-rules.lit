@@ -282,3 +282,201 @@ terminal decided: "Motion decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Rules apply to all cases and proceedings in the court except where the court finds them not feasible; an order in a specific case controls over them (LBR 1001(B))."
 }
+
+test "Deadline arithmetic: involuntary-creditor-schedules-period (14 days after)" cite "Bankr. S.D. Ill. LBR 1003"
+{
+  given InvoluntarySchedulesDefaulted() on 2027-01-04
+  expect deadline(involuntary-creditor-schedules-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: amended-matrix-request-period (7 days after)" cite "Bankr. S.D. Ill. LBR 1009(D)"
+{
+  given MatrixRequested() on 2027-01-04
+  expect deadline(amended-matrix-request-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: payment-advices-period (7 days before)" cite "Bankr. S.D. Ill. LBR 1007-2"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: payment-advices-request-period (14 days before)" cite "Bankr. S.D. Ill. LBR 1007-2"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-request-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: advices-reinstatement-motion-period (14 days after)" cite "Bankr. S.D. Ill. LBR 1007-2(A)"
+{
+  given AdvicesDismissalEntered() on 2027-01-04
+  expect deadline(advices-reinstatement-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: state-tax-return-period (7 days before)" cite "Bankr. S.D. Ill. LBR 1007-3"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(state-tax-return-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: reinstatement-response-period (7 days after)" cite "Bankr. S.D. Ill. LBR 1017"
+{
+  given ReinstatementMotionFiled() on 2027-01-04
+  expect deadline(reinstatement-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: rule-2004-objection-period (7 days after)" cite "Bankr. S.D. Ill. LBR 2004(D)"
+{
+  given Rule2004MotionFiled() on 2027-01-04
+  expect deadline(rule-2004-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: trustee-sale-report-period (14 days after)" cite "Bankr. S.D. Ill. LBR 2015-1"
+{
+  given TrusteeSaleHeld() on 2027-01-04
+  expect deadline(trustee-sale-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: dismissal-report-period (14 days after)" cite "Bankr. S.D. Ill. LBR 2015-2"
+{
+  given Chapter7CaseDismissed() on 2027-01-04
+  expect deadline(dismissal-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: interim-compensation-objection-period (14 days after)" cite "Bankr. S.D. Ill. LBR 2016-2(B)"
+{
+  given InterimCompensationMotionFiled() on 2027-01-04
+  expect deadline(interim-compensation-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: withdrawal-objection-period (7 days after)" cite "Bankr. S.D. Ill. LBR 2091(B)"
+{
+  given WithdrawalMotionFiled() on 2027-01-04
+  expect deadline(withdrawal-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: chapter11-claims-bar-period (90 days after)" cite "Bankr. S.D. Ill. LBR 3003"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-claims-bar-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: ballot-submission-period (7 days before)" cite "Bankr. S.D. Ill. LBR 3018(C)"
+{
+  given Chapter11ConfirmationHearing() on 2027-01-04
+  expect deadline(ballot-submission-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: balloting-report-period (3 days before)" cite "Bankr. S.D. Ill. LBR 3018(C)"
+{
+  given Chapter11ConfirmationHearing() on 2027-01-04
+  expect deadline(balloting-report-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: early-closing-objection-period (21 days after)" cite "Bankr. S.D. Ill. LBR 3022(C)"
+{
+  given EarlyClosingMotionFiled() on 2027-01-04
+  expect deadline(early-closing-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: stay-relief-opposition-period (14 days after)" cite "Bankr. S.D. Ill. LBR 4001-2(E)"
+{
+  given StayReliefMotionFiled() on 2027-01-04
+  expect deadline(stay-relief-opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: lien-avoidance-objection-period (21 days after)" cite "Bankr. S.D. Ill. LBR 4003(C)"
+{
+  given LienAvoidanceMotionFiled() on 2027-01-04
+  expect deadline(lien-avoidance-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: reference-withdrawal-pleading-period (14 days after)" cite "Bankr. S.D. Ill. LBR 5011(A)"
+{
+  given FirstRelatedPleadingFiled() on 2027-01-04
+  expect deadline(reference-withdrawal-pleading-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reference-withdrawal-pretrial-period (14 days after)" cite "Bankr. S.D. Ill. LBR 5011(A)"
+{
+  given PretrialOrderEntered() on 2027-01-04
+  expect deadline(reference-withdrawal-pretrial-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reference-withdrawal-response-period (14 days after)" cite "Bankr. S.D. Ill. LBR 5011(B)"
+{
+  given ReferenceWithdrawalMotionFiled() on 2027-01-04
+  expect deadline(reference-withdrawal-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: auction-proceeds-remittance-period (14 days after)" cite "Bankr. S.D. Ill. LBR 6004-2(D)"
+{
+  given TrusteeSaleHeld() on 2027-01-04
+  expect deadline(auction-proceeds-remittance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: redemption-objection-period (21 days after)" cite "Bankr. S.D. Ill. LBR 6008(B)"
+{
+  given RedemptionMotionFiled() on 2027-01-04
+  expect deadline(redemption-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: exhibit-exchange-period (14 days before)" cite "Bankr. S.D. Ill. LBR 7016(A)"
+{
+  given AdversaryTrial() on 2027-01-04
+  expect deadline(exhibit-exchange-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: exhibit-objection-statement-period (7 days before)" cite "Bankr. S.D. Ill. LBR 7016(A)"
+{
+  given AdversaryTrial() on 2027-01-04
+  expect deadline(exhibit-objection-statement-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: witness-exchange-period (7 days before)" cite "Bankr. S.D. Ill. LBR 7016(A)"
+{
+  given AdversaryTrial() on 2027-01-04
+  expect deadline(witness-exchange-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: pretrial-findings-period (14 days before)" cite "Bankr. S.D. Ill. LBR 7016(C)"
+{
+  given AdversaryTrial() on 2027-01-04
+  expect deadline(pretrial-findings-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: adversary-retention-motion-period (14 days after)" cite "Bankr. S.D. Ill. LBR 7041-1"
+{
+  given UnderlyingCaseDismissed() on 2027-01-04
+  expect deadline(adversary-retention-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discharge-dismissal-objection-period (21 days after)" cite "Bankr. S.D. Ill. LBR 7041-2(B)"
+{
+  given DischargeDismissalFiled() on 2027-01-04
+  expect deadline(discharge-dismissal-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (21 days after)" cite "Bankr. S.D. Ill. LBR 7056(E)"
+{
+  given SummaryJudgmentMotionFiled() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "Bankr. S.D. Ill. LBR 7056(F)"
+{
+  given SummaryJudgmentResponseFiled() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: responsive-brief-period (14 days after)" cite "Bankr. S.D. Ill. LBR 9013-5(E)"
+{
+  given MovantBriefFiled() on 2027-01-04
+  expect deadline(responsive-brief-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: jury-consent-period (30 days after)" cite "Bankr. S.D. Ill. LBR 9015(C)"
+{
+  given JuryDemandFiled() on 2027-01-04
+  expect deadline(jury-consent-period) == 2027-02-03
+}

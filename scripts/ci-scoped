@@ -81,6 +81,15 @@ build_inputs='{
 # `litigate check`, as a full scope does.
 ts_triggers='^(crates/litigate-wasm/|crates/litigate-cli/|packages/litigate-ts/)'
 
+# Content-only edits can use the installed compiler from the last green
+# build. Any path outside these authoring/data trees uses the normal gate.
+data_only_triggers='^(lit/|outlines/|sources/|tests/expect/)'
+
+data_only() {
+  local files="$1"
+  [ -n "$files" ] && ! grep -qvE "$data_only_triggers" <<<"$files"
+}
+
 # changed paths on stdin, scope label -> 0 when `just ts-test` runs.
 ts_scoped() {
   [ "$1" = full ] || grep -qE "$ts_triggers"
@@ -559,6 +568,13 @@ run() {
   esac
   echo "ci-scoped: scope: base $(git rev-parse --short "$base"), $(grep -c . <<<"$files" || true) changed file(s): $label"
 
+  if data_only "$files"; then
+    local rc=0
+    run_data_only "$base" "$files" "$target" || rc=$?
+    rm -f "$meta"
+    return "$rc"
+  fi
+
   # Global, always.
   stage fmt-check cargo fmt --all -- --check
   stage typos typos
@@ -627,6 +643,37 @@ run() {
     echo "CI_SCOPED: fail scope=$label (failed: ${failed[*]})"
     return 1
   fi
+}
+
+# Fast gate for rule/data authoring. All checks use the image's prebuilt
+# litigate; this path never invokes cargo.
+run_data_only() {
+  local base="$1" files="$2" target="$3" bin pkg dir source_file manifest
+  local -a checks=() locks=() expect_dirs=()
+  bin="${LITIGATE_BIN:-$(command -v litigate || true)}"
+  if [ -z "$bin" ] || [ ! -x "$bin" ]; then
+    echo "ci-scoped: data-only: no prebuilt litigate (set LITIGATE_BIN or put litigate on PATH)" >&2
+    return 1
+  fi
+  mapfile -t checks < <({
+    sed -nE 's#^(lit/[^/]+)/.*#\1#p' <<<"$files"
+    while IFS= read -r source_file; do
+      [[ "$source_file" == sources/* ]] || continue
+      while IFS= read -r manifest; do dirname "$manifest"; done < <(rg -l -F "path = \"$source_file\"" lit --glob Lit.toml || true)
+    done <<<"$files"
+  } | sort -u | while read -r dir; do [ -f "$dir/Lit.toml" ] && echo "$dir"; done)
+  mapfile -t locks < <(printf '%s\n' "${checks[@]}" | while read -r dir; do [ -f "$dir/Lit.lock" ] && echo "$dir"; done)
+  mapfile -t expect_dirs < <(sed -nE 's#^(tests/expect/[^/]+)/.*#\1#p' <<<"$files" | sort -u)
+  stage data-typos typos
+  stage data-provenance provenance "$base"
+  for pkg in "${checks[@]}"; do
+    stage "check-${pkg#lit/}" "$bin" check "$pkg"
+    stage "test-${pkg#lit/}" "$bin" test "$pkg"
+  done
+  if [ "${#expect_dirs[@]}" -gt 0 ]; then stage data-expect "$bin" test "${expect_dirs[@]}"; fi
+  for pkg in "${locks[@]}"; do stage "lock-${pkg#lit/}" "$bin" lock --root "$pkg"; done
+  [ "${#failed[@]}" -eq 0 ] || { echo "ci-scoped: data-only: FAIL (failed: ${failed[*]})"; return 1; }
+  echo "ci-scoped: data-only: pass (prebuilt=$bin packages=${#checks[@]} expect=${#expect_dirs[@]} locks=${#locks[@]})"
 }
 
 # --- nightly -----------------------------------------------------------------
@@ -731,6 +778,20 @@ self_test() {
   expect "cli litgraph-packs litigate-engine" "tests/ snapshots are the engine's" tests/golden/x.json
   expect "none" "a nested Cargo.lock is not the root one" docs/Cargo.lock
   expect "full" "a mixed change with a trigger is full" docs/a.md justfile
+
+  local data_result
+  data_result=yes
+  data_only $'lit/ca8/rules.lit\nlit/ca8/Lit.lock' || data_result=no
+  if [ "$data_result" != yes ]; then
+    echo "ci-scoped self-test: data-only: lit/ca8 must select fast path" >&2
+    failures=$((failures + 1))
+  fi
+  data_result=no
+  data_only $'lit/ca8/rules.lit\ncrates/litigate-engine/src/lib.rs' && data_result=yes
+  if [ "$data_result" != no ]; then
+    echo "ci-scoped self-test: data-only: crate changes must select full path" >&2
+    failures=$((failures + 1))
+  fi
 
   ts_expect() {
     local want="$1" desc="$2" label="$3" got=no

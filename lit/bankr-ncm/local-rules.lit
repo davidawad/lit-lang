@@ -273,3 +273,173 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The FRBP and these rules govern practice and procedure in all bankruptcy cases and adversary proceedings in the district; the rules supplement the FRBP (LBR 1001-1(b))."
 }
+
+test "Deadline arithmetic: entity-resolution-period (14 days after)" cite "M.D.N.C. LBR 1007-1(a)" {
+  given EntityPetitionFiled() on 2027-04-05
+  expect deadline(entity-resolution-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: payment-advices-period (7 days before)" cite "M.D.N.C. LBR 1007-1(d)(2)" {
+  given FirstMeetingDate() on 2027-04-05
+  expect deadline(payment-advices-period) == 2027-03-29
+}
+
+test "Deadline arithmetic: payment-advices-request-period (14 days before)" cite "M.D.N.C. LBR 1007-1(d)(2)" {
+  given FirstMeetingDate() on 2027-04-05
+  expect deadline(payment-advices-request-period) == 2027-03-22
+}
+
+test "Deadline arithmetic: chapter13-payment-advices-period (7 days after)" cite "M.D.N.C. LBR 1007-1(d)(4)" {
+  given PaymentAdviceRequested() on 2027-04-05
+  expect deadline(chapter13-payment-advices-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: joint-deconsolidation-motion-period (14 days after)" cite "M.D.N.C. LBR 1015-1" {
+  given MeetingConcluded() on 2027-04-05
+  expect deadline(joint-deconsolidation-motion-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: conversion-funds-objection-period (10 days after)" cite "M.D.N.C. LBR 1019-1(a)(2)" {
+  given Chapter13ConvertedTo7() on 2027-04-05
+  expect deadline(conversion-funds-objection-period) == 2027-04-15
+}
+
+test "Deadline arithmetic: chapter11-claim-period (90 days after)" cite "M.D.N.C. LBR 3003-1(a)" {
+  given FirstMeetingDate() on 2027-04-05
+  expect deadline(chapter11-claim-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: subchapter-v-claim-period (70 days after)" cite "M.D.N.C. LBR 3003-1(b)" {
+  given OrderForReliefEntered() on 2027-04-05
+  expect deadline(subchapter-v-claim-period) == 2027-06-14
+}
+
+test "Deadline arithmetic: disputed-claim-notice-period (14 days after)" cite "M.D.N.C. LBR 3003-1(c)" {
+  given Chapter11SchedulesFiled() on 2027-04-05
+  expect deadline(disputed-claim-notice-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: unclaimed-funds-objection-period (21 days after)" cite "M.D.N.C. LBR 3011-1(d)" {
+  given UnclaimedFundsApplicationServed() on 2027-04-05
+  expect deadline(unclaimed-funds-objection-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: subchapter-v-election-period (14 days after)" cite "M.D.N.C. LBR 3014-1" {
+  given FirstPlanServed() on 2027-04-05
+  expect deadline(subchapter-v-election-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: personal-property-deficiency-claim-period (120 days after)" cite "M.D.N.C. LBR 4001-1(c)(3)" {
+  given StayReliefOrderEntered() on 2027-04-05
+  expect deadline(personal-property-deficiency-claim-period) == 2027-08-03
+}
+
+test "Deadline arithmetic: real-property-deficiency-claim-period (180 days after)" cite "M.D.N.C. LBR 4001-1(c)(3)" {
+  given StayReliefOrderEntered() on 2027-04-05
+  expect deadline(real-property-deficiency-claim-period) == 2027-10-04
+}
+
+test "Deadline arithmetic: surplus-explanation-period (14 days after)" cite "M.D.N.C. LBR 4001-1(c)(4)" {
+  given StayPropertyDisposed() on 2027-04-05
+  expect deadline(surplus-explanation-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: surplus-payment-period (60 days after)" cite "M.D.N.C. LBR 4001-1(c)(4)" {
+  given StayPropertyDisposed() on 2027-04-05
+  expect deadline(surplus-payment-period) == 2027-06-04
+}
+
+test "Deadline arithmetic: additional-record-designation-period (14 days after)" cite "M.D.N.C. LBR 5011-1(b)" {
+  given RecordDesignationServed() on 2027-04-05
+  expect deadline(additional-record-designation-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: withdrawal-response-period (14 days after)" cite "M.D.N.C. LBR 5011-1(c)" {
+  given WithdrawalMotionServed() on 2027-04-05
+  expect deadline(withdrawal-response-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: withdrawal-reply-period (14 days after)" cite "M.D.N.C. LBR 5011-1(c)" {
+  given WithdrawalResponseServed() on 2027-04-05
+  expect deadline(withdrawal-reply-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: committee-disclosure-period (14 days after)" cite "M.D.N.C. LBR 5020-1(b)" {
+  given CommitteeAppointment() on 2027-04-05
+  expect deadline(committee-disclosure-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: adversary-motion-response-period (21 days after)" cite "M.D.N.C. LBR 7007-1(b)" {
+  given AdversaryMotionServed() on 2027-04-05
+  expect deadline(adversary-motion-response-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: prosecution-cause-period (30 days after)" cite "M.D.N.C. LBR 7055-1(a)" {
+  given ProsecutionNoticeSent() on 2027-04-05
+  expect deadline(prosecution-cause-period) == 2027-05-05
+}
+
+test "Deadline arithmetic: summary-judgment-opposition-period (21 days after)" cite "M.D.N.C. LBR 7056-1(c)" {
+  given SummaryJudgmentMotionServed() on 2027-04-05
+  expect deadline(summary-judgment-opposition-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "M.D.N.C. LBR 7056-1(d)" {
+  given SummaryJudgmentOppositionServed() on 2027-04-05
+  expect deadline(summary-judgment-reply-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: motion-response-period (14 days after)" cite "M.D.N.C. LBR 9013-1(d)" {
+  given MotionServed() on 2027-04-05
+  expect deadline(motion-response-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: motion-opposition-brief-period (21 days after)" cite "M.D.N.C. LBR 9013-1(e)" {
+  given MotionServed() on 2027-04-05
+  expect deadline(motion-opposition-brief-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: final-order-motion-period (30 days after)" cite "M.D.N.C. LBR 9015-1" {
+  given SchedulingOrderEntered() on 2027-04-05
+  expect deadline(final-order-motion-period) == 2027-05-05
+}
+
+test "Deadline arithmetic: mediation-dispense-motion-period (14 days after)" cite "M.D.N.C. LBR 9019-2(a)(2)" {
+  given MediationOrderEntered() on 2027-04-05
+  expect deadline(mediation-dispense-motion-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: mediation-dispense-response-period (14 days after)" cite "M.D.N.C. LBR 9019-2(a)(2)" {
+  given MediationDispenseMotionServed() on 2027-04-05
+  expect deadline(mediation-dispense-response-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: other-procedure-motion-period (14 days after)" cite "M.D.N.C. LBR 9019-2(a)(3)" {
+  given MediationOrderEntered() on 2027-04-05
+  expect deadline(other-procedure-motion-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: mediator-designation-period (21 days after)" cite "M.D.N.C. LBR 9019-2(b)(1)" {
+  given MediationOrderEntered() on 2027-04-05
+  expect deadline(mediator-designation-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: mediated-agreement-period (7 days after)" cite "M.D.N.C. LBR 9019-2(d)" {
+  given MediatedSettlementReached() on 2027-04-05
+  expect deadline(mediated-agreement-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: mediator-report-period (14 days after)" cite "M.D.N.C. LBR 9019-2(f)(2)(C)" {
+  given MediationConcluded() on 2027-04-05
+  expect deadline(mediator-report-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: unopposed-proposed-order-period (5 days after)" cite "M.D.N.C. LBR 9072-1(a)(1)" {
+  given ObjectionDeadlinePassed() on 2027-04-05
+  expect deadline(unopposed-proposed-order-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: hearing-proposed-order-period (10 days after)" cite "M.D.N.C. LBR 9072-1(a)(2)" {
+  given OralRulingGiven() on 2027-04-05
+  expect deadline(hearing-proposed-order-period) == 2027-04-15
+}

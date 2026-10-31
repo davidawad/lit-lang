@@ -177,3 +177,123 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The LBRs govern practice before the court; where they conflict with the District Court's rules or the Bankruptcy Rules, the latter govern (LBR 9029-1(a))."
 }
+
+test "Deadline arithmetic: first-installment-period (14 days after)" cite "Bankr. D.N.H. LBR 1006-1"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(first-installment-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: death-dismissal-motion-period (14 days after)" cite "Bankr. D.N.H. LBR 1016-1"
+{
+  given DeathStatementFiled() on 2027-01-04
+  expect deadline(death-dismissal-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: preparer-fee-motion-period (14 days after)" cite "Bankr. D.N.H. LBR 2016-4(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(preparer-fee-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: proof-of-value-period (7 days before)" cite "Bankr. D.N.H. LBR 2083-2"
+{
+  given MeetingOfCreditorsHeld() on 2027-01-04
+  expect deadline(proof-of-value-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: pro-hac-vice-filing-access-period (14 days after)" cite "Bankr. D.N.H. LBR 2090-1(b)"
+{
+  given ProHacViceAdmitted() on 2027-01-04
+  expect deadline(pro-hac-vice-filing-access-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: residential-valuation-motion-period (30 days after)" cite "Bankr. D.N.H. LBR 3012-1(c)"
+{
+  given MeetingOfCreditorsConcluded() on 2027-01-04
+  expect deadline(residential-valuation-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: collateral-valuation-motion-period (30 days after)" cite "Bankr. D.N.H. LBR 3012-2(d)"
+{
+  given MeetingOfCreditorsConcluded() on 2027-01-04
+  expect deadline(collateral-valuation-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: confirmation-objection-period (14 days before)" cite "Bankr. D.N.H. LBR 3015-3(a)"
+{
+  given ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(confirmation-objection-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: trustee-recommendation-period (7 days before)" cite "Bankr. D.N.H. AO 3015-4(a)"
+{
+  given ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(trustee-recommendation-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: modification-objection-period (14 days before)" cite "Bankr. D.N.H. LBR 3015-5(b)"
+{
+  given ModificationHearingScheduled() on 2027-01-04
+  expect deadline(modification-objection-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: disclosure-statement-objection-period (7 days before)" cite "Bankr. D.N.H. LBR 3017-1"
+{
+  given DisclosureStatementHearingScheduled() on 2027-01-04
+  expect deadline(disclosure-statement-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: final-decree-motion-period (120 days after)" cite "Bankr. D.N.H. LBR 3022-1"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(final-decree-motion-period) == 2027-05-04
+}
+
+test "Deadline arithmetic: subchapter-v-final-decree-motion-period (120 days after)" cite "Bankr. D.N.H. LBR 3022-1"
+{
+  given SubchapterVPlanPaymentsCompleted() on 2027-01-04
+  expect deadline(subchapter-v-final-decree-motion-period) == 2027-05-04
+}
+
+test "Deadline arithmetic: lien-avoidance-service-period (21 days before)" cite "Bankr. D.N.H. LBR 4003-2(c)"
+{
+  given LienAvoidanceHearingScheduled() on 2027-01-04
+  expect deadline(lien-avoidance-service-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: pretrial-confer-period (7 days before)" cite "Bankr. D.N.H. LBR 7016-1(a)"
+{
+  given PretrialConferenceScheduled() on 2027-01-04
+  expect deadline(pretrial-confer-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: motion-service-period (14 days before)" cite "Bankr. D.N.H. LBR 9013-1(d)"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(motion-service-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: objection-period (7 days before)" cite "Bankr. D.N.H. LBR 9013-1(g)"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: proposed-order-period (7 days after)" cite "Bankr. D.N.H. LBR 9013-1(f)"
+{
+  given HearingHeld() on 2027-01-04
+  expect deadline(proposed-order-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: exhibit-return-period (30 days after)" cite "Bankr. D.N.H. LBR 9070-1"
+{
+  given ProceedingConcluded() on 2027-01-04
+  expect deadline(exhibit-return-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: plan-completion-certification-period (60 days after)" cite "Bankr. D.N.H. AO 3015-4(b)"
+{
+  given LastPlanPaymentMade() on 2027-01-04
+  expect deadline(plan-completion-certification-period) == 2027-03-05
+}

@@ -295,3 +295,201 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Bankruptcy Rules govern practice in the court (Rule 1001-1)."
 }
+
+test "Deadline arithmetic: extension-objection-period (7 days after)" cite "Bankr. D.S.D. R. 1007-1"
+{
+  given ExtensionMotionFiled() on 2027-01-04
+  expect deadline(extension-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: transfer-objection-period (14 days after)" cite "Bankr. D.S.D. R. 1014-1"
+{
+  given TransferMotionServed() on 2027-01-04
+  expect deadline(transfer-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: venue-objection-period (14 days after)" cite "Bankr. D.S.D. R. 1014-2"
+{
+  given VenueMotionServed() on 2027-01-04
+  expect deadline(venue-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: consolidation-objection-period (21 days after)" cite "Bankr. D.S.D. R. 1015-1(b)"
+{
+  given ConsolidationMotionServed() on 2027-01-04
+  expect deadline(consolidation-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: joint-administration-objection-period (21 days after)" cite "Bankr. D.S.D. R. 1015-1(c)"
+{
+  given JointAdministrationMotionServed() on 2027-01-04
+  expect deadline(joint-administration-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: counseling-waiver-objection-period (7 days after)" cite "Bankr. D.S.D. R. 1016-2"
+{
+  given CounselingWaiverMotionServed() on 2027-01-04
+  expect deadline(counseling-waiver-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: court-notice-period (7 days after)" cite "Bankr. D.S.D. R. 2072-1"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(court-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: plan-objection-period (21 days after)" cite "Bankr. D.S.D. R. 2002-1(c)"
+{
+  given PlanServed() on 2027-01-04
+  expect deadline(plan-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: meeting-conclusion-statement-period (7 days after)" cite "Bankr. D.S.D. R. 2003-1(d)"
+{
+  given MeetingConcluded() on 2027-01-04
+  expect deadline(meeting-conclusion-statement-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: employment-comment-period (7 days after)" cite "Bankr. D.S.D. R. 2014-1(c)"
+{
+  given EmploymentApplicationFiled() on 2027-01-04
+  expect deadline(employment-comment-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: post-confirmation-fee-application-period (30 days after)" cite "Bankr. D.S.D. R. 2016-2(b)"
+{
+  given Chapter12Or13PlanConfirmed() on 2027-01-04
+  expect deadline(post-confirmation-fee-application-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter11-claim-period (30 days after)" cite "Bankr. D.S.D. R. 3003-1"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-claim-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: unclaimed-funds-objection-period (24 days after)" cite "Bankr. D.S.D. R. 3011-2(e)"
+{
+  given UnclaimedFundsOrderServed() on 2027-01-04
+  expect deadline(unclaimed-funds-objection-period) == 2027-01-28
+}
+
+test "Deadline arithmetic: chapter12-plan-extension-objection-period (7 days after)" cite "Bankr. D.S.D. R. 3015-1A(c)"
+{
+  given PlanExtensionMotionFiled() on 2027-01-04
+  expect deadline(chapter12-plan-extension-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: exclusivity-objection-period (7 days after)" cite "Bankr. D.S.D. R. 3016-3"
+{
+  given ExclusivityMotionServed() on 2027-01-04
+  expect deadline(exclusivity-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: ballot-tabulation-period (2 days before)" cite "Bankr. D.S.D. R. 3018-1(c)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(ballot-tabulation-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: post-confirmation-modification-objection-period (21 days after)" cite "Bankr. D.S.D. R. 3019-2(c)"
+{
+  given PostConfirmationModificationServed() on 2027-01-04
+  expect deadline(post-confirmation-modification-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: final-decree-motion-period (30 days after)" cite "Bankr. D.S.D. R. 3022-1(a)"
+{
+  given SubstantialConsummation() on 2027-01-04
+  expect deadline(final-decree-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter11-discharge-request-period (45 days after)" cite "Bankr. D.S.D. R. 3022-1(b)"
+{
+  given PlanPaymentsCompleted() on 2027-01-04
+  expect deadline(chapter11-discharge-request-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: completion-notice-period (30 days after)" cite "Bankr. D.S.D. R. 3072-1A(a)"
+{
+  given PlanPaymentsCompleted() on 2027-01-04
+  expect deadline(completion-notice-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: discharge-certification-period (30 days after)" cite "Bankr. D.S.D. R. 3072-1A(a)"
+{
+  given CompletionNoticeFiled() on 2027-01-04
+  expect deadline(discharge-certification-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: hardship-discharge-objection-period (14 days after)" cite "Bankr. D.S.D. R. 3072-1A(b)"
+{
+  given HardshipDischargeNoticeServed() on 2027-01-04
+  expect deadline(hardship-discharge-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-motion-objection-period (14 days after)" cite "Bankr. D.S.D. R. 4001-1"
+{
+  given StayMotionServed() on 2027-01-04
+  expect deadline(stay-motion-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: codebtor-stay-objection-period (14 days after)" cite "Bankr. D.S.D. R. 4001-4"
+{
+  given CodebtorStayMotionServed() on 2027-01-04
+  expect deadline(codebtor-stay-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: exemption-objection-response-period (14 days after)" cite "Bankr. D.S.D. R. 4003-1(a)"
+{
+  given ExemptionObjectionServed() on 2027-01-04
+  expect deadline(exemption-objection-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: lien-avoidance-objection-period (14 days after)" cite "Bankr. D.S.D. R. 4003-2(a)"
+{
+  given LienAvoidanceMotionServed() on 2027-01-04
+  expect deadline(lien-avoidance-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discharge-extension-objection-period (7 days after)" cite "Bankr. D.S.D. R. 4004-1"
+{
+  given DischargeExtensionMotionServed() on 2027-01-04
+  expect deadline(discharge-extension-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: discharge-objection-motion-response-period (21 days after)" cite "Bankr. D.S.D. R. 4004-2"
+{
+  given DischargeObjectionMotionServed() on 2027-01-04
+  expect deadline(discharge-objection-motion-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: dischargeability-extension-objection-period (7 days after)" cite "Bankr. D.S.D. R. 4007-1"
+{
+  given DischargeabilityExtensionMotionServed() on 2027-01-04
+  expect deadline(dischargeability-extension-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: redaction-intent-period (7 days after)" cite "Bankr. D.S.D. R. 5077-1"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-intent-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: redaction-request-period (21 days after)" cite "Bankr. D.S.D. R. 5077-1"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-request-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: dismissal-fees-period (14 days after)" cite "Bankr. D.S.D. R. 5080-1(b)"
+{
+  given CaseDismissed() on 2027-01-04
+  expect deadline(dismissal-fees-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: proposed-document-objection-period (7 days after)" cite "Bankr. D.S.D. R. 9072-1"
+{
+  given ProposedDocumentServed() on 2027-01-04
+  expect deadline(proposed-document-objection-period) == 2027-01-11
+}

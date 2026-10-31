@@ -571,3 +571,363 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Rules govern insofar as they are not inconsistent with the Code and the FRBP (Local Rule 1001-1(b)); they govern cases and proceedings filed after February 1, 2025 and those then pending unless the court finds them infeasible or unjust (Local Rule 1001-1(e)-(f))."
 }
+
+test "chapter11-schedules-period: 28 days after" cite "Del. Bankr. L.R. 1007-1(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter11-schedules-period) == 2027-02-01
+}
+
+test "amendment-notice-period: 14 days after" cite "Del. Bankr. L.R. 1009-2"
+{
+  given ScheduleAmendmentFiled() on 2027-01-04
+  expect deadline(amendment-notice-period) == 2027-01-19
+}
+
+test "amendment-certificate-period: 7 days after" cite "Del. Bankr. L.R. 1009-2"
+{
+  given AmendmentNoticeServed() on 2027-01-04
+  expect deadline(amendment-certificate-period) == 2027-01-11
+}
+
+test "claims-agent-motion-period: 7 days after" cite "Del. Bankr. L.R. 2002-1(e)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(claims-agent-motion-period) == 2027-01-11
+}
+
+test "claims-agent-service-certificate-period: 7 days after" cite "Del. Bankr. L.R. 2002-1(e)(ii)"
+{
+  given ClaimsAgentNoticeServed() on 2027-01-04
+  expect deadline(claims-agent-service-certificate-period) == 2027-01-11
+}
+
+test "claims-agent-dismissal-register-period: 14 days after" cite "Del. Bankr. L.R. 2002-1(e)(ix)"
+{
+  given DismissalOrderEntered() on 2027-01-04
+  expect deadline(claims-agent-dismissal-register-period) == 2027-01-19
+}
+
+test "claims-agent-decree-register-period: 28 days after" cite "Del. Bankr. L.R. 2002-1(e)(ix)"
+{
+  given FinalDecreeEntered() on 2027-01-04
+  expect deadline(claims-agent-decree-register-period) == 2027-02-01
+}
+
+test "claims-agent-conversion-register-period: 14 days after" cite "Del. Bankr. L.R. 2002-1(e)(x)"
+{
+  given ClaimsAgentEndOrderEntered() on 2027-01-04
+  expect deadline(claims-agent-conversion-register-period) == 2027-01-19
+}
+
+test "conversion-matrix-period: 14 days after" cite "Del. Bankr. L.R. 2002-1(f)(ii)"
+{
+  given ConversionOrderEntered() on 2027-01-04
+  expect deadline(conversion-matrix-period) == 2027-01-19
+}
+
+test "decree-matrix-period: 28 days after" cite "Del. Bankr. L.R. 2002-1(f)(ii)"
+{
+  given FinalDecreeEntered() on 2027-01-04
+  expect deadline(decree-matrix-period) == 2027-02-01
+}
+
+test "examination-notice-objection-period: 7 days after" cite "Del. Bankr. L.R. 2004-1(b)(iii)"
+{
+  given ExaminationNoticeServed() on 2027-01-04
+  expect deadline(examination-notice-objection-period) == 2027-01-11
+}
+
+test "final-fee-notice-period: 14 days after" cite "Del. Bankr. L.R. 2016-1(i)"
+{
+  given FinalFeeOrderEntered() on 2027-01-04
+  expect deadline(final-fee-notice-period) == 2027-01-19
+}
+
+test "subchapter-v-bar-period: 60 days after" cite "Del. Bankr. L.R. 3001-1(c)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(subchapter-v-bar-period) == 2027-03-05
+}
+
+test "claim-submission-notice-period: 14 days before" cite "Del. Bankr. L.R. 3007-1(d)(vi)"
+{
+  given ClaimObjectionHearing() on 2027-01-04
+  expect deadline(claim-submission-notice-period) == 2026-12-21
+}
+
+test "chapter12-amended-plan-period: 7 days before" cite "Del. Bankr. L.R. 3015-1(d)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(chapter12-amended-plan-period) == 2026-12-28
+}
+
+test "chapter13-amended-plan-period: 7 days before" cite "Del. Bankr. L.R. 3023-1(d)(i)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(chapter13-amended-plan-period) == 2026-12-28
+}
+
+test "subchapter-v-status-report-period: 14 days before" cite "Del. Bankr. L.R. 3016-2(a)"
+{
+  given InitialStatusConference() on 2027-01-04
+  expect deadline(subchapter-v-status-report-period) == 2026-12-21
+}
+
+test "plan-supplement-period: 7 days before" cite "Del. Bankr. L.R. 3016-3"
+{
+  given SolicitationDeadline() on 2027-01-04
+  expect deadline(plan-supplement-period) == 2026-12-28
+}
+
+test "disclosure-hearing-notice-period: 35 days before" cite "Del. Bankr. L.R. 3017-1(a)"
+{
+  given DisclosureStatementHearing() on 2027-01-04
+  expect deadline(disclosure-hearing-notice-period) == 2026-11-30
+}
+
+test "disclosure-objection-notice-period: 28 days before" cite "Del. Bankr. L.R. 3017-1(a)"
+{
+  given DisclosureObjectionDeadline() on 2027-01-04
+  expect deadline(disclosure-objection-notice-period) == 2026-12-07
+}
+
+test "voting-procedures-motion-period: 21 days before" cite "Del. Bankr. L.R. 3017-1(b)"
+{
+  given DisclosureStatementHearing() on 2027-01-04
+  expect deadline(voting-procedures-motion-period) == 2026-12-14
+}
+
+test "combined-hearing-objection-period: 14 days after" cite "Del. Bankr. L.R. 3017-2(b)(ii)"
+{
+  given CombinedHearingMotionServed() on 2027-01-04
+  expect deadline(combined-hearing-objection-period) == 2027-01-19
+}
+
+test "final-decree-service-period: 21 days before" cite "Del. Bankr. L.R. 3022-1(a)(i)"
+{
+  given FinalDecreeHearing() on 2027-01-04
+  expect deadline(final-decree-service-period) == 2026-12-14
+}
+
+test "final-report-period: 14 days before" cite "Del. Bankr. L.R. 3022-1(a)(ii)"
+{
+  given FinalDecreeHearing() on 2027-01-04
+  expect deadline(final-report-period) == 2026-12-21
+}
+
+test "completion-certification-period: 21 days after" cite "Del. Bankr. L.R. 3023-1(c)(ii)(N)"
+{
+  given FinalCureNoticeServed() on 2027-01-04
+  expect deadline(completion-certification-period) == 2027-01-25
+}
+
+test "cure-response-evidence-period: 21 days after" cite "Del. Bankr. L.R. 3023-1(c)(ii)(N)"
+{
+  given CureResponseFiled() on 2027-01-04
+  expect deadline(cure-response-evidence-period) == 2027-01-25
+}
+
+test "stay-relief-response-period: 7 days before" cite "Del. Bankr. L.R. 4001-1(c)(ii)"
+{
+  given StayReliefHearing() on 2027-01-04
+  expect deadline(stay-relief-response-period) == 2026-12-28
+}
+
+test "final-account-fee-motion-period: 21 days before" cite "Del. Bankr. L.R. 5009-1(a)"
+{
+  given FinalAccountHearing() on 2027-01-04
+  expect deadline(final-account-fee-motion-period) == 2026-12-14
+}
+
+test "chapter15-closing-objection-period: 30 days after" cite "Del. Bankr. L.R. 5009-2(b)"
+{
+  given ClosingMotionServed() on 2027-01-04
+  expect deadline(chapter15-closing-objection-period) == 2027-02-03
+}
+
+test "reopen-service-period: 21 days before" cite "Del. Bankr. L.R. 5010-1(a)"
+{
+  given ReopenHearing() on 2027-01-04
+  expect deadline(reopen-service-period) == 2026-12-14
+}
+
+test "sale-procedures-motion-period: 21 days before" cite "Del. Bankr. L.R. 6004-1(c)"
+{
+  given SaleProceduresHearing() on 2027-01-04
+  expect deadline(sale-procedures-motion-period) == 2026-12-14
+}
+
+test "summons-certificate-period: 7 days after" cite "Del. Bankr. L.R. 7004-1"
+{
+  given SummonsServed() on 2027-01-04
+  expect deadline(summons-certificate-period) == 2027-01-11
+}
+
+test "answering-brief-period: 14 days after" cite "Del. Bankr. L.R. 7007-1(a)(ii)"
+{
+  given OpeningBriefServed() on 2027-01-04
+  expect deadline(answering-brief-period) == 2027-01-19
+}
+
+test "reply-brief-period: 7 days after" cite "Del. Bankr. L.R. 7007-1(a)(iii)"
+{
+  given AnsweringBriefServed() on 2027-01-04
+  expect deadline(reply-brief-period) == 2027-01-11
+}
+
+test "oral-argument-application-period: 3 days after" cite "Del. Bankr. L.R. 7007-3"
+{
+  given ReplyBriefServed() on 2027-01-04
+  expect deadline(oral-argument-application-period) == 2027-01-07
+}
+
+test "briefing-completion-notice-period: 7 days after" cite "Del. Bankr. L.R. 7007-4"
+{
+  given BriefingConcluded() on 2027-01-04
+  expect deadline(briefing-completion-notice-period) == 2027-01-11
+}
+
+test "scheduling-conference-meet-period: 7 days before" cite "Del. Bankr. L.R. 7016-1(a)"
+{
+  given SchedulingConference() on 2027-01-04
+  expect deadline(scheduling-conference-meet-period) == 2026-12-28
+}
+
+test "plaintiff-scheduling-order-period: 3 days before" cite "Del. Bankr. L.R. 7016-1(d)"
+{
+  given SchedulingConference() on 2027-01-04
+  expect deadline(plaintiff-scheduling-order-period) == 2026-12-31
+}
+
+test "other-party-scheduling-order-period: 1 days before" cite "Del. Bankr. L.R. 7016-1(d)"
+{
+  given SchedulingConference() on 2027-01-04
+  expect deadline(other-party-scheduling-order-period) == 2026-12-31
+}
+
+test "pretrial-conference-notice-period: 14 days before" cite "Del. Bankr. L.R. 7016-2(a)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(pretrial-conference-notice-period) == 2026-12-21
+}
+
+test "pretrial-order-period: 7 days before" cite "Del. Bankr. L.R. 7016-2(d)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(pretrial-order-period) == 2026-12-28
+}
+
+test "discovery-motion-notice-period: 7 days before" cite "Del. Bankr. L.R. 7026-1(b)"
+{
+  given DiscoveryMotionHearing() on 2027-01-04
+  expect deadline(discovery-motion-notice-period) == 2026-12-28
+}
+
+test "deposition-notice-period: 7 days before" cite "Del. Bankr. L.R. 7030-1(b)"
+{
+  given Deposition() on 2027-01-04
+  expect deadline(deposition-notice-period) == 2026-12-28
+}
+
+test "committee-appeal-notice-period: 21 days after" cite "Del. Bankr. L.R. 8003-1(c)"
+{
+  given NoticeOfAppealServed() on 2027-01-04
+  expect deadline(committee-appeal-notice-period) == 2027-01-25
+}
+
+test "appeal-disposition-notice-period: 3 days after" cite "Del. Bankr. L.R. 8024-1"
+{
+  given AppealDisposed() on 2027-01-04
+  expect deadline(appeal-disposition-notice-period) == 2027-01-07
+}
+
+test "motion-service-period: 14 days before" cite "Del. Bankr. L.R. 9006-1(c)(i)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-service-period) == 2026-12-21
+}
+
+test "motion-objection-period: 7 days before" cite "Del. Bankr. L.R. 9006-1(c)(ii)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-objection-period) == 2026-12-28
+}
+
+test "delaware-counsel-period: 28 days after" cite "Del. Bankr. L.R. 9010-1(d)"
+{
+  given FirstPaperFiled() on 2027-01-04
+  expect deadline(delaware-counsel-period) == 2027-02-01
+}
+
+test "withdrawal-service-period: 14 days before" cite "Del. Bankr. L.R. 9010-2(b)"
+{
+  given WithdrawalHearing() on 2027-01-04
+  expect deadline(withdrawal-service-period) == 2026-12-21
+}
+
+test "first-day-reconsideration-period: 28 days after" cite "Del. Bankr. L.R. 9013-1(m)(v)"
+{
+  given FirstDayOrderEntered() on 2027-01-04
+  expect deadline(first-day-reconsideration-period) == 2027-02-01
+}
+
+test "appeal-exhibit-removal-period: 28 days after" cite "Del. Bankr. L.R. 9018-1(c)"
+{
+  given AppealRecordReturned() on 2027-01-04
+  expect deadline(appeal-exhibit-removal-period) == 2027-02-01
+}
+
+test "exhibit-notice-removal-period: 28 days after" cite "Del. Bankr. L.R. 9018-1(c)"
+{
+  given ExhibitRemovalNotified() on 2027-01-04
+  expect deadline(exhibit-notice-removal-period) == 2027-02-01
+}
+
+test "mediator-declination-period: 14 days after" cite "Del. Bankr. L.R. 9019-2(e)(ii)"
+{
+  given MediatorAppointmentNoticed() on 2027-01-04
+  expect deadline(mediator-declination-period) == 2027-01-19
+}
+
+test "arbitration-de-novo-period: 30 days after" cite "Del. Bankr. L.R. 9019-4(f)(i)"
+{
+  given ArbitrationAwardFiled() on 2027-01-04
+  expect deadline(arbitration-de-novo-period) == 2027-02-03
+}
+
+test "mediation-submission-period: 7 days before" cite "Del. Bankr. L.R. 9019-5(c)(iii)"
+{
+  given MediationConference() on 2027-01-04
+  expect deadline(mediation-submission-period) == 2026-12-28
+}
+
+test "mediation-settlement-filing-period: 28 days after" cite "Del. Bankr. L.R. 9019-5(f)(i)"
+{
+  given MediationSettlement() on 2027-01-04
+  expect deadline(mediation-settlement-filing-period) == 2027-02-01
+}
+
+test "mediation-dismissal-period: 60 days after" cite "Del. Bankr. L.R. 9019-5(f)(i)"
+{
+  given SettlementNoticed() on 2027-01-04
+  expect deadline(mediation-dismissal-period) == 2027-03-05
+}
+
+test "avoidance-mediation-opt-in-period: 28 days after" cite "Del. Bankr. L.R. 9019-5(j)"
+{
+  given AvoidanceResponseDue() on 2027-01-04
+  expect deadline(avoidance-mediation-opt-in-period) == 2027-02-01
+}
+
+test "avoidance-mediator-stipulation-period: 7 days after" cite "Del. Bankr. L.R. 9019-5(j)"
+{
+  given MediationCertificateFiled() on 2027-01-04
+  expect deadline(avoidance-mediator-stipulation-period) == 2027-01-11
+}
+
+test "adr-notice-certificate-period: 7 days after" cite "Del. Bankr. L.R. 9019-7"
+{
+  given AdrNoticeServed() on 2027-01-04
+  expect deadline(adr-notice-certificate-period) == 2027-01-11
+}

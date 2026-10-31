@@ -336,3 +336,231 @@ terminal decided: "Request decided: the case continues under lit/frbp" outcome [
 {
   note "The Local Rules apply to all cases and proceedings pending on or commenced after January 1, 2026; the District Court's local rules apply only where these rules or an order make them applicable (LBR 1001-1). The court may waive or modify any of them in the interest of justice (LBR 9029-2)."
 }
+
+test "Deadline arithmetic: chapter7-trustee-documents-period (7 days before)" cite "Bankr. E.D. Wis. LBR 1007-2(a)"
+{
+  given FirstMeetingDate() on 2026-01-05
+  expect deadline(chapter7-trustee-documents-period) == 2025-12-29
+}
+
+test "Deadline arithmetic: chapter13-trustee-documents-period (7 days before)" cite "Bankr. E.D. Wis. LBR 1007-2(b)"
+{
+  given FirstMeetingDate() on 2026-01-05
+  expect deadline(chapter13-trustee-documents-period) == 2025-12-29
+}
+
+test "Deadline arithmetic: death-declaration-hearing-period (14 days after)" cite "Bankr. E.D. Wis. LBR 1016-1(c)"
+{
+  given DeathDeclarationServed() on 2026-01-05
+  expect deadline(death-declaration-hearing-period) == 2026-01-20
+}
+
+test "Deadline arithmetic: rule-2004-protective-objection-period (7 days after)" cite "Bankr. E.D. Wis. LBR 2004-1(d)"
+{
+  given ProtectiveMotionFiled() on 2026-01-05
+  expect deadline(rule-2004-protective-objection-period) == 2026-01-12
+}
+
+test "Deadline arithmetic: employment-objection-period (14 days after)" cite "Bankr. E.D. Wis. LBR 2014-1(c)"
+{
+  given EmploymentApplicationServed() on 2026-01-05
+  expect deadline(employment-objection-period) == 2026-01-20
+}
+
+test "Deadline arithmetic: fee-disallowance-hearing-period (14 days after)" cite "Bankr. E.D. Wis. LBR 2016-1(b)"
+{
+  given FeeDisallowanceOrdered() on 2026-01-05
+  expect deadline(fee-disallowance-hearing-period) == 2026-01-20
+}
+
+test "Deadline arithmetic: fee-proposed-order-period (14 days after)" cite "Bankr. E.D. Wis. LBR 2016-1(e)"
+{
+  given FeeObjectionPeriodEnded() on 2026-01-05
+  expect deadline(fee-proposed-order-period) == 2026-01-20
+}
+
+test "Deadline arithmetic: supplemental-claim-order-period (70 days after)" cite "Bankr. E.D. Wis. LBR 3002-1(b)"
+{
+  given SupplementalClaimOrdered() on 2026-01-05
+  expect deadline(supplemental-claim-order-period) == 2026-03-16
+}
+
+test "Deadline arithmetic: supplemental-claim-stipulation-period (70 days after)" cite "Bankr. E.D. Wis. LBR 3002-1(b)"
+{
+  given SupplementalClaimStipulated() on 2026-01-05
+  expect deadline(supplemental-claim-stipulation-period) == 2026-03-16
+}
+
+test "Deadline arithmetic: claim-objection-response-period (30 days after)" cite "Bankr. E.D. Wis. LBR 3007-1(c)"
+{
+  given ClaimObjectionNoticeServed() on 2026-01-05
+  expect deadline(claim-objection-response-period) == 2026-02-04
+}
+
+test "Deadline arithmetic: chapter13-confirmation-objection-meeting-period (28 days after)" cite "Bankr. E.D. Wis. LBR 3015-1(d)"
+{
+  given MeetingConcluded() on 2026-01-05
+  expect deadline(chapter13-confirmation-objection-meeting-period) == 2026-02-02
+}
+
+test "Deadline arithmetic: chapter13-confirmation-objection-modification-period (21 days after)" cite "Bankr. E.D. Wis. LBR 3015-1(d)"
+{
+  given PreconfirmationModificationFiled() on 2026-01-05
+  expect deadline(chapter13-confirmation-objection-modification-period) == 2026-01-26
+}
+
+test "Deadline arithmetic: confirmed-plan-modification-objection-period (21 days after)" cite "Bankr. E.D. Wis. LBR 3015-1(e)"
+{
+  given ConfirmedPlanModificationServed() on 2026-01-05
+  expect deadline(confirmed-plan-modification-objection-period) == 2026-01-26
+}
+
+test "Deadline arithmetic: closing-motion-objection-period (28 days after)" cite "Bankr. E.D. Wis. LBR 3022-1(b)"
+{
+  given ClosingMotionServed() on 2026-01-05
+  expect deadline(closing-motion-objection-period) == 2026-02-02
+}
+
+test "Deadline arithmetic: subchapter-v-final-report-period (60 days after)" cite "Bankr. E.D. Wis. LBR 3022-2(c)"
+{
+  given FinalDistributionMade() on 2026-01-05
+  expect deadline(subchapter-v-final-report-period) == 2026-03-06
+}
+
+test "Deadline arithmetic: direct-adequate-protection-notice-period (28 days after)" cite "Bankr. E.D. Wis. LBR 4001-1(b)"
+{
+  given DirectAdequateProtectionPaid() on 2026-01-05
+  expect deadline(direct-adequate-protection-notice-period) == 2026-02-02
+}
+
+test "Deadline arithmetic: stay-relief-objection-period (14 days after)" cite "Bankr. E.D. Wis. LBR 4001-2(a)"
+{
+  given StayReliefNoticeServed() on 2026-01-05
+  expect deadline(stay-relief-objection-period) == 2026-01-20
+}
+
+test "Deadline arithmetic: homestead-form-period (7 days before)" cite "Bankr. E.D. Wis. LBR 4004-1(a)"
+{
+  given DischargeObjectionDeadline() on 2026-01-05
+  expect deadline(homestead-form-period) == 2025-12-29
+}
+
+test "Deadline arithmetic: plan-payments-certification-period (30 days after)" cite "Bankr. E.D. Wis. LBR 4004-1(a)"
+{
+  given FinalPlanPaymentMade() on 2026-01-05
+  expect deadline(plan-payments-certification-period) == 2026-02-04
+}
+
+test "Deadline arithmetic: chapter12-discharge-form-period (60 days after)" cite "Bankr. E.D. Wis. LBR 4004-1(a)"
+{
+  given PaymentsCertificationFiled() on 2026-01-05
+  expect deadline(chapter12-discharge-form-period) == 2026-03-06
+}
+
+test "Deadline arithmetic: chapter13-discharge-form-period (60 days after)" cite "Bankr. E.D. Wis. LBR 4004-1(a)"
+{
+  given PaymentsCertificationFiled() on 2026-01-05
+  expect deadline(chapter13-discharge-form-period) == 2026-03-06
+}
+
+test "Deadline arithmetic: plan-discharge-objection-period (28 days after)" cite "Bankr. E.D. Wis. LBR 4004-2(b)"
+{
+  given PlanDischargeMotionServed() on 2026-01-05
+  expect deadline(plan-discharge-objection-period) == 2026-02-02
+}
+
+test "Deadline arithmetic: reference-withdrawal-objection-period (21 days after)" cite "Bankr. E.D. Wis. LBR 5011-1(b)"
+{
+  given ReferenceWithdrawalMotionServed() on 2026-01-05
+  expect deadline(reference-withdrawal-objection-period) == 2026-01-26
+}
+
+test "Deadline arithmetic: reference-withdrawal-joinder-period (14 days after)" cite "Bankr. E.D. Wis. LBR 5011-1(b)"
+{
+  given ReferenceWithdrawalMotionServed() on 2026-01-05
+  expect deadline(reference-withdrawal-joinder-period) == 2026-01-20
+}
+
+test "Deadline arithmetic: reference-withdrawal-reply-period (7 days after)" cite "Bankr. E.D. Wis. LBR 5011-1(b)"
+{
+  given ReferenceWithdrawalObjectionServed() on 2026-01-05
+  expect deadline(reference-withdrawal-reply-period) == 2026-01-12
+}
+
+test "Deadline arithmetic: discharge-dismissal-objection-period (21 days after)" cite "Bankr. E.D. Wis. LBR 7041-1(c)"
+{
+  given DischargeDismissalMotionServed() on 2026-01-05
+  expect deadline(discharge-dismissal-objection-period) == 2026-01-26
+}
+
+test "Deadline arithmetic: summary-judgment-discovery-period (30 days after)" cite "Bankr. E.D. Wis. LBR 7056-1(b)"
+{
+  given DiscoveryClosed() on 2026-01-05
+  expect deadline(summary-judgment-discovery-period) == 2026-02-04
+}
+
+test "Deadline arithmetic: summary-judgment-hearing-period (60 days before)" cite "Bankr. E.D. Wis. LBR 7056-1(b)"
+{
+  given InitialEvidentiaryHearing() on 2026-01-05
+  expect deadline(summary-judgment-hearing-period) == 2025-11-06
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (28 days after)" cite "Bankr. E.D. Wis. LBR 7056-1(c)"
+{
+  given SummaryJudgmentMotionFiled() on 2026-01-05
+  expect deadline(summary-judgment-response-period) == 2026-02-02
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "Bankr. E.D. Wis. LBR 7056-1(c)"
+{
+  given SummaryJudgmentResponseFiled() on 2026-01-05
+  expect deadline(summary-judgment-reply-period) == 2026-01-20
+}
+
+test "Deadline arithmetic: expedited-service-proof-period (1 days after)" cite "Bankr. E.D. Wis. LBR 9006-1(c)"
+{
+  given ExpeditingMotionGranted() on 2026-01-05
+  expect deadline(expedited-service-proof-period) == 2026-01-06
+}
+
+test "Deadline arithmetic: stay-continuation-objection-period (14 days after)" cite "Bankr. E.D. Wis. LBR 9013-3(b)"
+{
+  given StayContinuationNoticeServed() on 2026-01-05
+  expect deadline(stay-continuation-objection-period) == 2026-01-20
+}
+
+test "Deadline arithmetic: stay-continuation-hearing-notice-period (17 days before)" cite "Bankr. E.D. Wis. LBR 9013-3(d)"
+{
+  given StayContinuationHearing() on 2026-01-05
+  expect deadline(stay-continuation-hearing-notice-period) == 2025-12-19
+}
+
+test "Deadline arithmetic: chapter11-conversion-objection-period (21 days after)" cite "Bankr. E.D. Wis. LBR 9013-4(b)"
+{
+  given ConversionMotionNoticeServed() on 2026-01-05
+  expect deadline(chapter11-conversion-objection-period) == 2026-01-26
+}
+
+test "Deadline arithmetic: motion-objection-period (14 days after)" cite "Bankr. E.D. Wis. LBR 9014-1(a)"
+{
+  given MotionNoticeServed() on 2026-01-05
+  expect deadline(motion-objection-period) == 2026-01-20
+}
+
+test "Deadline arithmetic: unopposed-proposed-order-period (7 days after)" cite "Bankr. E.D. Wis. LBR 9014-2(a)"
+{
+  given ObjectionPeriodExpired() on 2026-01-05
+  expect deadline(unopposed-proposed-order-period) == 2026-01-12
+}
+
+test "Deadline arithmetic: adjudicated-proposed-order-period (7 days after)" cite "Bankr. E.D. Wis. LBR 9014-2(b)"
+{
+  given MotionAdjudicated() on 2026-01-05
+  expect deadline(adjudicated-proposed-order-period) == 2026-01-12
+}
+
+test "Deadline arithmetic: trustee-settlement-order-period (7 days after)" cite "Bankr. E.D. Wis. LBR 9014-2(c)"
+{
+  given SettlementNoticeFiled() on 2026-01-05
+  expect deadline(trustee-settlement-order-period) == 2026-01-12
+}

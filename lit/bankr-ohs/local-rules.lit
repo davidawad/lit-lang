@@ -285,3 +285,243 @@ deadline post-hearing-order-period: 7.days after HearingOrTrialHeld() counted_by
 /// court of a resolution before hearing or trial, the party seeking relief
 /// submits a proposed order conforming to it.
 deadline agreed-order-period: 7.days after ResolutionReported() counted_by frbp9006 cite "S.D. Ohio LBR 9072-1(g)"
+
+test "Deadline arithmetic: photo-id-period (14 days after)" cite "S.D. Ohio LBR 1002-1"
+{
+  given PetitionWithoutIdFiled() on 2027-01-04
+  expect deadline(photo-id-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: involuntary-mailing-list-period (7 days after)" cite "S.D. Ohio LBR 1007-2(a)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(involuntary-mailing-list-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: reopened-amendment-period (14 days after)" cite "S.D. Ohio LBR 1009-1(b)"
+{
+  given ReopeningOrderEntered() on 2027-01-04
+  expect deadline(reopened-amendment-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: responsible-person-period (14 days after)" cite "S.D. Ohio LBR 1074-1(d)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(responsible-person-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: final-report-objection-period (30 days after)" cite "S.D. Ohio LBR 2002-1(d)"
+{
+  given FinalReportSummaryServed() on 2027-01-04
+  expect deadline(final-report-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: reschedule-response-period (7 days after)" cite "S.D. Ohio LBR 2003-1(b)"
+{
+  given RescheduleMotionServed() on 2027-01-04
+  expect deadline(reschedule-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: dismissed-case-fee-period (21 days after)" cite "S.D. Ohio LBR 2016-1(b)"
+{
+  given Chapter13DismissalEntered() on 2027-01-04
+  expect deadline(dismissed-case-fee-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: discontinued-representation-fee-period (21 days after)" cite "S.D. Ohio LBR 2016-1(b)"
+{
+  given RepresentationDiscontinued() on 2027-01-04
+  expect deadline(discontinued-representation-fee-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: committee-report-period (7 days after)" cite "S.D. Ohio LBR 2071-1"
+{
+  given CommitteeFirstMeeting() on 2027-01-04
+  expect deadline(committee-report-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: show-cause-period (30 days after)" cite "S.D. Ohio LBR 2090-2"
+{
+  given ShowCauseOrderServed() on 2027-01-04
+  expect deadline(show-cause-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: interim-discipline-objection-period (14 days after)" cite "S.D. Ohio LBR 2090-2(d)"
+{
+  given InterimDisciplineOrderEntered() on 2027-01-04
+  expect deadline(interim-discipline-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: attorney-withdrawal-period (21 days before)" cite "S.D. Ohio LBR 2091-1(c)"
+{
+  given TrialOrHearingScheduled() on 2027-01-04
+  expect deadline(attorney-withdrawal-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: claim-objection-response-period (30 days after)" cite "S.D. Ohio LBR 3007-1(c)"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: valuation-objection-period (14 days after)" cite "S.D. Ohio LBR 3012-1(b)"
+{
+  given MeetingConcluded() on 2027-01-04
+  expect deadline(valuation-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: appraisal-service-period (14 days after)" cite "S.D. Ohio LBR 3012-1(c)"
+{
+  given MeetingConcluded() on 2027-01-04
+  expect deadline(appraisal-service-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: modification-objection-period (21 days after)" cite "S.D. Ohio LBR 3015-2(c)"
+{
+  given PlanModificationMotionServed() on 2027-01-04
+  expect deadline(modification-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: confirmation-objection-period (14 days after)" cite "S.D. Ohio LBR 3015-3(a)"
+{
+  given MeetingConcluded() on 2027-01-04
+  expect deadline(confirmation-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: enlargement-objection-period (21 days after)" cite "S.D. Ohio LBR 3016-1(b)"
+{
+  given ExclusivityEnlargementServed() on 2027-01-04
+  expect deadline(enlargement-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: confirmation-witness-list-period (7 days before)" cite "S.D. Ohio LBR 3020-1"
+{
+  given ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(confirmation-witness-list-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: preliminary-stay-hearing-period (7 days after)" cite "S.D. Ohio LBR 4001-1(a)"
+{
+  given StayHearingOrderEntered() on 2027-01-04
+  expect deadline(preliminary-stay-hearing-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: payment-advices-meeting-period (7 days before)" cite "S.D. Ohio LBR 4002-1(b)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-meeting-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: payment-advices-outer-period (45 days after)" cite "S.D. Ohio LBR 4002-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(payment-advices-outer-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: discharge-certification-period (21 days after)" cite "S.D. Ohio LBR 4002-1(d)"
+{
+  given FinalPaymentCertified() on 2027-01-04
+  expect deadline(discharge-certification-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: trustee-request-period (21 days after)" cite "S.D. Ohio LBR 4002-1(f)"
+{
+  given TrusteeRequestServed() on 2027-01-04
+  expect deadline(trustee-request-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: withdrawal-response-period (14 days after)" cite "S.D. Ohio LBR 5011-1(b)"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(withdrawal-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: withdrawal-reply-period (7 days after)" cite "S.D. Ohio LBR 5011-1(c)"
+{
+  given WithdrawalResponseServed() on 2027-01-04
+  expect deadline(withdrawal-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: sale-objection-period (21 days after)" cite "S.D. Ohio LBR 6004-1(a)"
+{
+  given SaleNoticeServed() on 2027-01-04
+  expect deadline(sale-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: sale-report-period (21 days after)" cite "S.D. Ohio LBR 6004-1(a)"
+{
+  given SaleCompleted() on 2027-01-04
+  expect deadline(sale-report-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: abandonment-objection-period (14 days after)" cite "S.D. Ohio LBR 6007-1(a)"
+{
+  given AbandonmentNoticeServed() on 2027-01-04
+  expect deadline(abandonment-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: abandonment-request-response-period (14 days after)" cite "S.D. Ohio LBR 6007-1(c)"
+{
+  given AbandonmentRequestReceived() on 2027-01-04
+  expect deadline(abandonment-request-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: pretrial-statement-period (30 days after)" cite "S.D. Ohio LBR 7016-1(a)"
+{
+  given PretrialOrderEntered() on 2027-01-04
+  expect deadline(pretrial-statement-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: discovery-opposition-period (7 days after)" cite "S.D. Ohio LBR 7026-1"
+{
+  given DiscoveryMotionFiled() on 2027-01-04
+  expect deadline(discovery-opposition-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: discovery-reply-period (7 days after)" cite "S.D. Ohio LBR 7026-1"
+{
+  given DiscoveryOppositionFiled() on 2027-01-04
+  expect deadline(discovery-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: pro-se-address-period (14 days after)" cite "S.D. Ohio LBR 9011-2(a)"
+{
+  given ProSeAddressChanged() on 2027-01-04
+  expect deadline(pro-se-address-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: motion-response-period (21 days after)" cite "S.D. Ohio LBR 9013-1(b)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(motion-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: motion-reply-period (7 days after)" cite "S.D. Ohio LBR 9013-1(c)"
+{
+  given ResponseServed() on 2027-01-04
+  expect deadline(motion-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: trustee-records-challenge-period (7 days before)" cite "S.D. Ohio LBR 9070-1"
+{
+  given TrusteeRecordsHearingScheduled() on 2027-01-04
+  expect deadline(trustee-records-challenge-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: unopposed-order-period (7 days after)" cite "S.D. Ohio LBR 9072-1(e)"
+{
+  given ResponseTimeExpired() on 2027-01-04
+  expect deadline(unopposed-order-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: post-hearing-order-period (7 days after)" cite "S.D. Ohio LBR 9072-1(f)"
+{
+  given HearingOrTrialHeld() on 2027-01-04
+  expect deadline(post-hearing-order-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: agreed-order-period (7 days after)" cite "S.D. Ohio LBR 9072-1(g)"
+{
+  given ResolutionReported() on 2027-01-04
+  expect deadline(agreed-order-period) == 2027-01-11
+}

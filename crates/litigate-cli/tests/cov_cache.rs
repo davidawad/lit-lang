@@ -80,7 +80,7 @@ fn entries(dir: &Path) -> Vec<String> {
 }
 
 #[test]
-fn a_dependency_digest_change_misses_its_dependents_entries() {
+fn a_dependency_digest_change_misses_its_and_dependents_entries() {
     let dir = tree("cache-deps");
     let first = litigate(&dir, None, &["check", "lit/app"]);
     assert_eq!(first.code, 0, "{}", first.stdout);
@@ -90,16 +90,15 @@ fn a_dependency_digest_change_misses_its_dependents_entries() {
     let again = litigate(&dir, None, &["check", "lit/app"]);
     assert_eq!(again.json, first.json);
     assert_eq!(entries(&dir), cached);
-    // `dep` changes: its own entry and `app`'s both miss; `app`'s lock is
-    // stale (L1007) until relocked, never relocked silently.
+    // `dep` changes: its own entry and `app`'s both miss. The lock pins the
+    // dependency version, while each package cache keys its own resolution.
     std::fs::write(
         dir.join("lit/dep/dep.lit"),
         "module dep\nstart s\nterminal s: \"Changed\"\n",
     )
     .unwrap();
     let stale = litigate(&dir, None, &["check", "lit/app"]);
-    assert_eq!(stale.code, 2, "{}", stale.stdout);
-    assert_eq!(stale.json["diagnostics"][0]["code"], "L1007");
+    assert_eq!(stale.code, 0, "{}", stale.stdout);
     assert_eq!(entries(&dir).len(), 4);
     assert_eq!(litigate(&dir, None, &["lock", "lit/app"]).code, 0);
     assert_eq!(litigate(&dir, None, &["check", "lit/app"]).code, 0);

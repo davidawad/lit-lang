@@ -204,3 +204,73 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Bankruptcy Local Rules apply to all cases and proceedings in the court (L.R. 1001-1(B))."
 }
+
+test "Deadline arithmetic: omitted-creditor-claim-period (30 days after)" cite "D.N.D. Bankr. L.R. 1009-1(B)" {
+  given AmendmentNoticeServed() on 2027-04-05
+  expect deadline(omitted-creditor-claim-period) == 2027-05-05
+}
+
+test "Deadline arithmetic: omitted-creditor-complaint-period (30 days after)" cite "D.N.D. Bankr. L.R. 1009-1(B)" {
+  given AmendmentNoticeServed() on 2027-04-05
+  expect deadline(omitted-creditor-complaint-period) == 2027-05-05
+}
+
+test "Deadline arithmetic: joint-administration-objection-period (14 days after)" cite "D.N.D. Bankr. L.R. 1015-1" {
+  given FirstMeetingConcluded() on 2027-04-05
+  expect deadline(joint-administration-objection-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: default-notice-period (14 days after)" cite "D.N.D. Bankr. L.R. 2002-1(B)" {
+  given RequestServed() on 2027-04-05
+  expect deadline(default-notice-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: chapter11-claim-period (70 days after)" cite "D.N.D. Bankr. L.R. 3003-1" {
+  given OrderForReliefEntered() on 2027-04-05
+  expect deadline(chapter11-claim-period) == 2027-06-14
+}
+
+test "Deadline arithmetic: unclaimed-funds-objection-period (14 days after)" cite "D.N.D. Bankr. L.R. 3011-1(C)" {
+  given UnclaimedFundsMotionServed() on 2027-04-05
+  expect deadline(unclaimed-funds-objection-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: reopened-relief-notice-period (14 days after)" cite "D.N.D. Bankr. L.R. 5010-1" {
+  given ReopenedReliefRequestServed() on 2027-04-05
+  expect deadline(reopened-relief-notice-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: dispositive-response-period (21 days after)" cite "D.N.D. Bankr. L.R. 7007-1(A)" {
+  given DispositiveMemorandumServed() on 2027-04-05
+  expect deadline(dispositive-response-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: dispositive-reply-period (14 days after)" cite "D.N.D. Bankr. L.R. 7007-1(A)" {
+  given DispositiveResponseServed() on 2027-04-05
+  expect deadline(dispositive-reply-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: nondispositive-response-period (14 days after)" cite "D.N.D. Bankr. L.R. 7007-1(B)" {
+  given NondispositiveMemorandumServed() on 2027-04-05
+  expect deadline(nondispositive-response-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: nondispositive-reply-period (7 days after)" cite "D.N.D. Bankr. L.R. 7007-1(B)" {
+  given NondispositiveResponseServed() on 2027-04-05
+  expect deadline(nondispositive-reply-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: adversary-settlement-notice-period (21 days after)" cite "D.N.D. Bankr. L.R. 7007-1(G)" {
+  given AdversarySettlementMotionServed() on 2027-04-05
+  expect deadline(adversary-settlement-notice-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: motion-response-period (14 days after)" cite "D.N.D. Bankr. L.R. 9013-1(A)" {
+  given RequestServed() on 2027-04-05
+  expect deadline(motion-response-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: pleadings-motion-objection-period (21 days after)" cite "D.N.D. Bankr. L.R. 9014-1(D)" {
+  given PleadingsMotionServed() on 2027-04-05
+  expect deadline(pleadings-motion-objection-period) == 2027-04-26
+}

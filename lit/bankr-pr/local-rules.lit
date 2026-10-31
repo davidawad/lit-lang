@@ -461,3 +461,399 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Bankruptcy Rules govern cases before the court (P.R. LBR 1001-1; its text is the CURRENCY UNCONFIRMED complete list)."
 }
+
+test "Deadline arithmetic: ex-parte-review-period (14 days after)" cite "P.R. LBR (GO 18-02) 9013-1(b)"
+{
+  given ExParteOrderServed() on 2027-01-04
+  expect deadline(ex-parte-review-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: response-period (14 days after)" cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: compromise-response-period (21 days after)" cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  given CompromiseMotionServed() on 2027-01-04
+  expect deadline(compromise-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: sale-response-period (21 days after)" cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  given SaleNoticeServed() on 2027-01-04
+  expect deadline(sale-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: plan-modification-response-period (21 days after)" cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  given PlanModificationMotionServed() on 2027-01-04
+  expect deadline(plan-modification-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: dismissal-response-period (30 days after)" cite "P.R. LBR (GO 18-02) 9013-1(c)"
+{
+  given DismissalMotionServed() on 2027-01-04
+  expect deadline(dismissal-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: trustee-minutes-period (1 days before)" cite "P.R. LBR (GO 18-01) 3015-3(d)"
+{
+  given ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(trustee-minutes-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: objection-response-period (1 days before)" cite "P.R. LBR (GO 18-01) 3015-3(d)"
+{
+  given ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(objection-response-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: confirmation-denial-cure-period (14 days after)" cite "P.R. LBR (GO 18-01) 3015-3(g)"
+{
+  given ConfirmationDenied() on 2027-01-04
+  expect deadline(confirmation-denial-cure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: confirmation-fee-application-period (14 days after)" cite "P.R. LBR (GO 18-01) 3015-3(h)"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(confirmation-fee-application-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: support-obligation-certification-period (14 days after)" cite "P.R. LBR (GO 18-01) 3015-3(k)"
+{
+  given CloseWithoutDischargeNoticeIssued() on 2027-01-04
+  expect deadline(support-obligation-certification-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediation-report-period (14 days after)" cite "P.R. LBR (GO 26-01) 9019-1(c)"
+{
+  given MediationConcluded() on 2027-01-04
+  expect deadline(mediation-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediator-disclosure-period (14 days after)" cite "P.R. LBR (GO 26-01) 9019-1(f)"
+{
+  given MediatorAppointed() on 2027-01-04
+  expect deadline(mediator-disclosure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: installment-period (30 days after)" cite "P.R. LBR 1006-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(installment-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: two-day-documents-period (2 days after)" cite "P.R. LBR 1007-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(two-day-documents-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: payment-advices-period (7 days before)" cite "P.R. LBR 1007-1(e), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given MeetingOfCreditorsScheduled() on 2027-01-04
+  expect deadline(payment-advices-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: payment-advices-request-period (14 days before)" cite "P.R. LBR 1007-1(e), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-request-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: disputed-creditor-notice-period (14 days after)" cite "P.R. LBR 1007-1(f), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given Chapter11SchedulesFiled() on 2027-01-04
+  expect deadline(disputed-creditor-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: added-disputed-creditor-notice-period (14 days after)" cite "P.R. LBR 1007-1(f), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given DisputedCreditorAdded() on 2027-01-04
+  expect deadline(added-disputed-creditor-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: disputed-creditor-certificate-period (14 days after)" cite "P.R. LBR 1007-1(f), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given DisputedCreditorNoticeServed() on 2027-01-04
+  expect deadline(disputed-creditor-certificate-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: added-creditor-claim-period (90 days after)" cite "P.R. LBR 1009-1, 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given AddedCreditorNoticeServed() on 2027-01-04
+  expect deadline(added-creditor-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: added-creditor-objection-period (60 days after)" cite "P.R. LBR 1009-1, 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given AddedCreditorNoticeServed() on 2027-01-04
+  expect deadline(added-creditor-objection-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: consolidated-schedules-period (14 days after)" cite "P.R. LBR 1015-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given ConsolidationGranted() on 2027-01-04
+  expect deadline(consolidated-schedules-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: dismissal-hearing-request-period (14 days after)" cite "P.R. LBR 1017-2(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given DismissalNoticeServed() on 2027-01-04
+  expect deadline(dismissal-hearing-request-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: meeting-report-period (3 days after)" cite "P.R. LBR 2003-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given MeetingOfCreditorsHeld() on 2027-01-04
+  expect deadline(meeting-report-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: no-distribution-report-period (14 days after)" cite "P.R. LBR 2003-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given MeetingOfCreditorsConcluded() on 2027-01-04
+  expect deadline(no-distribution-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: examination-notice-period (14 days before)" cite "P.R. LBR 2004-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given ExaminationScheduled() on 2027-01-04
+  expect deadline(examination-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: examination-objection-period (14 days after)" cite "P.R. LBR 2004-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given ExaminationMotionServed() on 2027-01-04
+  expect deadline(examination-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: retroactive-employment-period (14 days after)" cite "P.R. LBR 2014-1(e), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given ProfessionalEngagementBegan() on 2027-01-04
+  expect deadline(retroactive-employment-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: small-fee-application-objection-period (21 days after)" cite "P.R. LBR 2016-1(f), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given FeeApplicationNoticed() on 2027-01-04
+  expect deadline(small-fee-application-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: administrative-fee-motion-period (21 days after)" cite "P.R. LBR 2016-1(f), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given UnconfirmedDismissalFinal() on 2027-01-04
+  expect deadline(administrative-fee-motion-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: chapter11-claim-period (90 days after)" cite "P.R. LBR 3003-1, 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: claim-objection-response-period (30 days after)" cite "P.R. LBR 3007-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: trustee-report-period (60 days after)" cite "P.R. LBR 3016-1, 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given TrusteeAppointed() on 2027-01-04
+  expect deadline(trustee-report-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: section-1129-statement-period (7 days before)" cite "P.R. LBR 3018-2(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(section-1129-statement-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: ballot-tally-period (2 days before)" cite "P.R. LBR 3018-2(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(ballot-tally-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: final-decree-motion-period (90 days after)" cite "P.R. LBR 3022-1(b), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given ConfirmationOrderFinal() on 2027-01-04
+  expect deadline(final-decree-motion-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: final-decree-objection-period (21 days after)" cite "P.R. LBR 3022-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given FinalDecreeApplicationFiled() on 2027-01-04
+  expect deadline(final-decree-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: stay-relief-service-period (3 days after)" cite "P.R. LBR 4001-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given StayReliefNoticeIssued() on 2027-01-04
+  expect deadline(stay-relief-service-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: stay-relief-certificate-period (7 days after)" cite "P.R. LBR 4001-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given StayReliefNoticeServed() on 2027-01-04
+  expect deadline(stay-relief-certificate-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: stay-relief-answer-period (14 days after)" cite "P.R. LBR 4001-1(e), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given StayReliefNoticeServed() on 2027-01-04
+  expect deadline(stay-relief-answer-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-relief-documents-period (3 days before)" cite "P.R. LBR 4001-1(g), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given StayReliefHearingScheduled() on 2027-01-04
+  expect deadline(stay-relief-documents-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: stay-continuation-motion-period (3 days after)" cite "P.R. LBR 4001-5(b), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-continuation-motion-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: stay-imposition-motion-period (30 days after)" cite "P.R. LBR 4001-5(b), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-imposition-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: stay-motion-service-period (3 days after)" cite "P.R. LBR 4001-5(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given StayMotionFiled() on 2027-01-04
+  expect deadline(stay-motion-service-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: stay-motion-opposition-period (14 days after)" cite "P.R. LBR 4001-5(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given StayMotionServed() on 2027-01-04
+  expect deadline(stay-motion-opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: debtor-representative-period (14 days after)" cite "P.R. LBR 4002-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(debtor-representative-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: lien-avoidance-response-period (21 days after)" cite "P.R. LBR 4003-2(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given LienAvoidanceMotionServed() on 2027-01-04
+  expect deadline(lien-avoidance-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: electronic-service-certificate-period (2 days after)" cite "P.R. LBR 5005-4(h), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given ElectronicFilingNoticeReceived() on 2027-01-04
+  expect deadline(electronic-service-certificate-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: reopen-objection-period (21 days after)" cite "P.R. LBR 5010-1, 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given ReopenMotionServed() on 2027-01-04
+  expect deadline(reopen-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: continuance-request-period (7 days before)" cite "P.R. LBR 5071-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(continuance-request-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: sale-objection-period (7 days before)" cite "P.R. LBR 6004-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given ProposedSaleDate() on 2027-01-04
+  expect deadline(sale-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: sale-report-period (30 days after)" cite "P.R. LBR 6004-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given SaleClosed() on 2027-01-04
+  expect deadline(sale-report-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: scheduling-continuance-motion-period (7 days before)" cite "P.R. LBR 7016-1(b), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given ScheduledDate() on 2027-01-04
+  expect deadline(scheduling-continuance-motion-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: joint-pretrial-report-period (7 days before)" cite "P.R. LBR 7016-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given FinalPretrialConferenceScheduled() on 2027-01-04
+  expect deadline(joint-pretrial-report-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: pretrial-report-portion-period (2 days after)" cite "P.R. LBR 7016-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given PretrialReportDraftServed() on 2027-01-04
+  expect deadline(pretrial-report-portion-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: evidentiary-hearing-confer-period (10 days before)" cite "P.R. LBR 7016-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given EvidentiaryHearingScheduled() on 2027-01-04
+  expect deadline(evidentiary-hearing-confer-period) == 2026-12-24
+}
+
+test "Deadline arithmetic: reinstatement-motion-period (14 days after)" cite "P.R. LBR 7026-1, 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given DismissedForNoncompliance() on 2027-01-04
+  expect deadline(reinstatement-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: inactivity-motion-period (30 days after)" cite "P.R. LBR 7055-2(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given InactivityOrderEntered() on 2027-01-04
+  expect deadline(inactivity-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: local-counsel-appearance-period (7 days before)" cite "P.R. LBR 9010-1(b), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given ContestedHearingScheduled() on 2027-01-04
+  expect deadline(local-counsel-appearance-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: jury-consent-period (30 days after)" cite "P.R. LBR 9015-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given LastResponsivePleadingDue() on 2027-01-04
+  expect deadline(jury-consent-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: removal-papers-period (14 days after)" cite "P.R. LBR 9027-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removal-papers-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: transcript-redaction-notice-period (7 days after)" cite "P.R. LBR 9037-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(transcript-redaction-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: transcript-redaction-statement-period (21 days after)" cite "P.R. LBR 9037-1(c), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(transcript-redaction-statement-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: exhibit-withdrawal-period (30 days after)" cite "P.R. LBR 9070-1(d), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given AppealPeriodEnded() on 2027-01-04
+  expect deadline(exhibit-withdrawal-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: telephone-request-period (3 days before)" cite "P.R. LBR 9074-1(a), 2013 complete list: CURRENCY UNCONFIRMED against later general orders (GO 19-01 not vendored); the value is the vendored text, unverified"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(telephone-request-period) == 2026-12-31
+}

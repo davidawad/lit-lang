@@ -216,3 +216,177 @@ deadline mediation-report-period: 7.days after MediationConferenceConcluded() co
 /// one from the movant's list and gives notice within 7 days after
 /// receiving it, or the movant may select.
 deadline mediator-selection-period: 7.days after MediatorListReceived() counted_by frbp9006 cite "E.D. Tenn. LBR 9019-2(l)"
+
+test "Deadline arithmetic: involuntary-address-list-period (14 days after)" cite "E.D. Tenn. LBR 1007-2(a)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(involuntary-address-list-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: converted-debtor-filings-period (14 days after)" cite "E.D. Tenn. LBR 1019-1(a)"
+{
+  given Chapter13ConvertedToChapter7() on 2027-01-04
+  expect deadline(converted-debtor-filings-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: converted-trustee-duties-period (30 days after)" cite "E.D. Tenn. LBR 1019-1(b)"
+{
+  given Chapter13ConvertedToChapter7() on 2027-01-04
+  expect deadline(converted-trustee-duties-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: converted-filing-fee-period (45 days after)" cite "E.D. Tenn. LBR 1019-1(c)"
+{
+  given Chapter13ConvertedToChapter7() on 2027-01-04
+  expect deadline(converted-filing-fee-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: dismissal-fee-objection-period (14 days after)" cite "E.D. Tenn. LBR 2016-1"
+{
+  given DismissalOrConversionEntered() on 2027-01-04
+  expect deadline(dismissal-fee-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: retainer-refund-disclosure-period (30 days after)" cite "E.D. Tenn. LBR 2016-1"
+{
+  given DismissalOrConversionEntered() on 2027-01-04
+  expect deadline(retainer-refund-disclosure-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: substitute-counsel-disclosure-period (14 days after)" cite "E.D. Tenn. LBR 2091-1"
+{
+  given SubstitutionOrderEntered() on 2027-01-04
+  expect deadline(substitute-counsel-disclosure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: perfection-cure-period (21 days after)" cite "E.D. Tenn. LBR 3001-1"
+{
+  given PerfectionNoticeSent() on 2027-01-04
+  expect deadline(perfection-cure-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: rejection-claim-period (60 days after)" cite "E.D. Tenn. LBR 3002-1(a)"
+{
+  given RejectingPlanConfirmed() on 2027-01-04
+  expect deadline(rejection-claim-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: surrender-deficiency-period (120 days after)" cite "E.D. Tenn. LBR 3002-1(b)"
+{
+  given SurrenderPlanConfirmed() on 2027-01-04
+  expect deadline(surrender-deficiency-period) == 2027-05-04
+}
+
+test "Deadline arithmetic: chapter11-claim-period (120 days after)" cite "E.D. Tenn. LBR 3003-1(a)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(chapter11-claim-period) == 2027-05-04
+}
+
+test "Deadline arithmetic: subchapter-v-claim-period (70 days after)" cite "E.D. Tenn. LBR 3003-1(c)"
+{
+  given SubchapterVReliefOrdered() on 2027-01-04
+  expect deadline(subchapter-v-claim-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: domestic-support-certification-period (30 days after)" cite "E.D. Tenn. LBR 4002-1"
+{
+  given PlanCompletionCertified() on 2027-01-04
+  expect deadline(domestic-support-certification-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: redaction-notice-period (7 days after)" cite "E.D. Tenn. LBR 5077-1(d)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: redaction-request-period (21 days after)" cite "E.D. Tenn. LBR 5077-1(d)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-request-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: sale-report-period (14 days after)" cite "E.D. Tenn. LBR 6004-1(c)"
+{
+  given SaleClosed() on 2027-01-04
+  expect deadline(sale-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: adversary-response-period (21 days after)" cite "E.D. Tenn. LBR 7007-1(a)"
+{
+  given AdversaryMotionFiled() on 2027-01-04
+  expect deadline(adversary-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: adversary-reply-period (5 days after)" cite "E.D. Tenn. LBR 7007-1(a)"
+{
+  given AdversaryResponseFiled() on 2027-01-04
+  expect deadline(adversary-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: additional-facts-response-period (14 days after)" cite "E.D. Tenn. LBR 7056-1(c)"
+{
+  given AdditionalFactsServed() on 2027-01-04
+  expect deadline(additional-facts-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: ex-parte-reconsideration-period (14 days after)" cite "E.D. Tenn. LBR 9013-1(g)"
+{
+  given ExParteOrderEntered() on 2027-01-04
+  expect deadline(ex-parte-reconsideration-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: passive-notice-objection-period (21 days after)" cite "E.D. Tenn. LBR 9013-1(h)"
+{
+  given PassiveNoticeMotionFiled() on 2027-01-04
+  expect deadline(passive-notice-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: passive-claim-objection-period (30 days after)" cite "E.D. Tenn. LBR 9013-1(h)"
+{
+  given PassiveClaimObjectionFiled() on 2027-01-04
+  expect deadline(passive-claim-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: passive-stay-objection-period (14 days after)" cite "E.D. Tenn. LBR 9013-1(h)"
+{
+  given PassiveStayMotionFiled() on 2027-01-04
+  expect deadline(passive-stay-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: passive-abandonment-objection-period (14 days after)" cite "E.D. Tenn. LBR 9013-1(h)"
+{
+  given PassiveAbandonmentFiled() on 2027-01-04
+  expect deadline(passive-abandonment-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: passive-small-matter-objection-period (7 days after)" cite "E.D. Tenn. LBR 9013-1(h)"
+{
+  given PassiveSmallFeeFiled() on 2027-01-04
+  expect deadline(passive-small-matter-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: passive-mortgage-motion-objection-period (28 days after)" cite "E.D. Tenn. LBR (GO 2025-01) 9013-1(h)"
+{
+  given PassiveMortgageMotionFiled() on 2027-01-04
+  expect deadline(passive-mortgage-motion-objection-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: post-hearing-response-period (14 days after)" cite "E.D. Tenn. LBR 9013-1(i)"
+{
+  given PostHearingMotionFiled() on 2027-01-04
+  expect deadline(post-hearing-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediation-report-period (7 days after)" cite "E.D. Tenn. LBR 9019-2(k)"
+{
+  given MediationConferenceConcluded() on 2027-01-04
+  expect deadline(mediation-report-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: mediator-selection-period (7 days after)" cite "E.D. Tenn. LBR 9019-2(l)"
+{
+  given MediatorListReceived() on 2027-01-04
+  expect deadline(mediator-selection-period) == 2027-01-11
+}

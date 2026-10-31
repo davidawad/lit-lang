@@ -363,3 +363,345 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Vermont Local Bankruptcy Rules govern procedure as a supplement to the Bankruptcy Rules and Official Forms (LBR 1001-1(b))."
 }
+
+test "Deadline arithmetic: involuntary-chapter11-affidavit-period (14 days after)" cite "Vt. LBR 1007-1(k)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(involuntary-chapter11-affidavit-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: waiver-objection-period (7 days after)" cite "Vt. LBR 1007-1(l)"
+{
+  given WaiverApplicationFiled() on 2027-01-04
+  expect deadline(waiver-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: joint-administration-matrix-period (7 days after)" cite "Vt. LBR 1015-1(b)"
+{
+  given JointAdministrationOrdered() on 2027-01-04
+  expect deadline(joint-administration-matrix-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: consolidation-matrix-period (7 days after)" cite "Vt. LBR 1015-1(c)"
+{
+  given SubstantiveConsolidationOrdered() on 2027-01-04
+  expect deadline(consolidation-matrix-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: consolidation-termination-period (60 days after)" cite "Vt. LBR 1015-1(d)"
+{
+  given ClaimsBarDate() on 2027-01-04
+  expect deadline(consolidation-termination-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: creditor-consolidation-termination-period (60 days after)" cite "Vt. LBR 1015-1(d)"
+{
+  given ClaimTimelyFiled() on 2027-01-04
+  expect deadline(creditor-consolidation-termination-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: adversary-reinstatement-period (30 days after)" cite "Vt. LBR 1017-1(a)"
+{
+  given CaseDismissed() on 2027-01-04
+  expect deadline(adversary-reinstatement-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: conversion-final-report-period (60 days after)" cite "Vt. LBR 1019-1(a)"
+{
+  given Chapter13ConvertedToChapter7() on 2027-01-04
+  expect deadline(conversion-final-report-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: refund-objection-period (7 days after)" cite "Vt. LBR 1019-1(c)"
+{
+  given RefundNoticeServed() on 2027-01-04
+  expect deadline(refund-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: chapter12-operating-report-waiver-period (21 days after)" cite "Vt. LBR 2015-1(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter12-operating-report-waiver-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: chapter13-operating-report-waiver-period (21 days after)" cite "Vt. LBR 2015-2(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter13-operating-report-waiver-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: limited-scope-application-period (21 days after)" cite "Vt. LBR 2016-1(h)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(limited-scope-application-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: admission-change-notice-period (14 days after)" cite "Vt. LBR 2090-1(b)"
+{
+  given AdmissionFactChanged() on 2027-01-04
+  expect deadline(admission-change-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: payment-change-modification-period (14 days after)" cite "Vt. LBR 3002.1-2(b)"
+{
+  given PaymentChangeObjectionOverruled() on 2027-01-04
+  expect deadline(payment-change-modification-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: subchapter5-claim-objection-period (30 days after)" cite "Vt. LBR 3007-1(c)"
+{
+  given ClaimsBarDate() on 2027-01-04
+  expect deadline(subchapter5-claim-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: subchapter5-1111b-election-period (30 days after)" cite "Vt. LBR 3014-1"
+{
+  given SubchapterVPlanFiled() on 2027-01-04
+  expect deadline(subchapter5-1111b-election-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: amended-plan-period (7 days before)" cite "Vt. LBR 3015-1(i)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(amended-plan-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: wage-withholding-period (14 days after)" cite "Vt. LBR 3015-6(c)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(wage-withholding-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: conduit-disbursement-period (30 days after)" cite "Vt. LBR 3015-6(d)"
+{
+  given MortgageProofOfClaimFiled() on 2027-01-04
+  expect deadline(conduit-disbursement-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: delinquency-notice-period (14 days after)" cite "Vt. LBR 3015-6(d)"
+{
+  given PlanPaymentDefault() on 2027-01-04
+  expect deadline(delinquency-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: delinquency-cure-period (30 days after)" cite "Vt. LBR 3015-6(d)"
+{
+  given DelinquencyNoticeServed() on 2027-01-04
+  expect deadline(delinquency-cure-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: confirmation-postponement-period (7 days before)" cite "Vt. LBR 3015-7(b)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(confirmation-postponement-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: cramdown-request-period (14 days before)" cite "Vt. LBR 3020-1(b)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(cramdown-request-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: substantial-consummation-period (180 days after)" cite "Vt. LBR 3022-1(b)"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(substantial-consummation-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: default-affidavit-rebuttal-period (7 days after)" cite "Vt. LBR 4001-1(i)"
+{
+  given DefaultAffidavitFiled() on 2027-01-04
+  expect deadline(default-affidavit-rebuttal-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: rent-deficiency-cure-period (7 days after)" cite "Vt. LBR 4001-2(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(rent-deficiency-cure-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: lessor-response-period (7 days after)" cite "Vt. LBR 4001-2(b)"
+{
+  given LessorNoticeServed() on 2027-01-04
+  expect deadline(lessor-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: stay-continuation-motion-period (14 days after)" cite "Vt. LBR 4001-3(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-continuation-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediator-selection-period (7 days after)" cite "Vt. LBR 4001-7(d)"
+{
+  given CreditorParticipation() on 2027-01-04
+  expect deadline(mediator-selection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: mediation-completion-period (120 days after)" cite "Vt. LBR 4001-7(d)"
+{
+  given MediatorAppointed() on 2027-01-04
+  expect deadline(mediation-completion-period) == 2027-05-04
+}
+
+test "Deadline arithmetic: further-mediation-motion-period (14 days after)" cite "Vt. LBR 4001-7(d)"
+{
+  given ModificationDenialNoticed() on 2027-01-04
+  expect deadline(further-mediation-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: post-mediation-filing-period (14 days after)" cite "Vt. LBR 4001-7(f)"
+{
+  given MediationFinalReportFiled() on 2027-01-04
+  expect deadline(post-mediation-filing-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter7-meeting-documents-period (7 days before)" cite "Vt. LBR 4002-1(c)"
+{
+  given FirstMeetingScheduled() on 2027-01-04
+  expect deadline(chapter7-meeting-documents-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: chapter13-meeting-documents-period (7 days before)" cite "Vt. LBR 4002-1(c)"
+{
+  given FirstMeetingScheduled() on 2027-01-04
+  expect deadline(chapter13-meeting-documents-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: chapter11-meeting-documents-period (7 days before)" cite "Vt. LBR 4002-1(c)"
+{
+  given FirstMeetingScheduled() on 2027-01-04
+  expect deadline(chapter11-meeting-documents-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: tax-return-request-period (14 days before)" cite "Vt. LBR 4002-2(a)"
+{
+  given FirstMeetingScheduled() on 2027-01-04
+  expect deadline(tax-return-request-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: tax-return-request-objection-period (7 days before)" cite "Vt. LBR 4002-2(b)"
+{
+  given FirstMeetingScheduled() on 2027-01-04
+  expect deadline(tax-return-request-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: insurance-proof-period (7 days after)" cite "Vt. LBR 4070-1"
+{
+  given InsuranceProofRequested() on 2027-01-04
+  expect deadline(insurance-proof-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: sale-procedure-hearing-period (7 days before)" cite "Vt. LBR 6004-1(a)"
+{
+  given ProposedSaleDate() on 2027-01-04
+  expect deadline(sale-procedure-hearing-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: sale-approval-hearing-period (7 days after)" cite "Vt. LBR 6004-1(a)"
+{
+  given SaleCompleted() on 2027-01-04
+  expect deadline(sale-approval-hearing-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: auction-proceeds-period (21 days after)" cite "Vt. LBR 6005-1(c)"
+{
+  given AuctionDate() on 2027-01-04
+  expect deadline(auction-proceeds-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: auction-report-period (90 days after)" cite "Vt. LBR 6005-1(d)"
+{
+  given AuctionConcluded() on 2027-01-04
+  expect deadline(auction-report-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: pretrial-statement-period (7 days before)" cite "Vt. LBR 7016-1(d)"
+{
+  given TrialScheduled() on 2027-01-04
+  expect deadline(pretrial-statement-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: discovery-objection-period (28 days after)" cite "Vt. LBR 7026-1(d)"
+{
+  given DiscoveryServed() on 2027-01-04
+  expect deadline(discovery-objection-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: discovery-motion-response-period (14 days after)" cite "Vt. LBR 7026-1(g)"
+{
+  given DiscoveryMotionServed() on 2027-01-04
+  expect deadline(discovery-motion-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discovery-order-compliance-period (14 days after)" cite "Vt. LBR 7026-1(h)"
+{
+  given DiscoveryOrderEntered() on 2027-01-04
+  expect deadline(discovery-order-compliance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: summary-judgment-opposition-period (21 days after)" cite "Vt. LBR 7056-1(a)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-opposition-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (7 days after)" cite "Vt. LBR 7056-1(a)"
+{
+  given SummaryJudgmentResponseFiled() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: motion-notice-period (14 days before)" cite "Vt. LBR 9013-2(c)"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(motion-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: default-response-period (7 days before)" cite "Vt. LBR 9013-4(c)"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(default-response-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: opposition-memorandum-period (14 days after)" cite "Vt. LBR 9013-5(b)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(opposition-memorandum-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reply-memorandum-period (7 days after)" cite "Vt. LBR 9013-5(b)"
+{
+  given OppositionMemorandumServed() on 2027-01-04
+  expect deadline(reply-memorandum-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: reply-memorandum-hearing-period (3 days before)" cite "Vt. LBR 9013-5(b)"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(reply-memorandum-hearing-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: witness-list-period (14 days before)" cite "Vt. LBR 9014-1(a)"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(witness-list-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: evidentiary-hearing-notice-period (7 days before)" cite "Vt. LBR 9014-1(a)"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(evidentiary-hearing-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: reconsideration-response-period (7 days after)" cite "Vt. LBR 9023-1"
+{
+  given ReconsiderationMotionServed() on 2027-01-04
+  expect deadline(reconsideration-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: removal-records-period (14 days after)" cite "Vt. LBR 9027-1(b)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removal-records-period) == 2027-01-19
+}

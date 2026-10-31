@@ -83,7 +83,7 @@ ts_triggers='^(crates/litigate-wasm/|crates/litigate-cli/|packages/litigate-ts/)
 
 # Content-only edits can use the installed compiler from the last green
 # build. Any path outside these authoring/data trees uses the normal gate.
-data_only_triggers='^(lit/|outlines/|sources/|tests/expect/)'
+data_only_triggers='^(lit/|outlines/|sources/|tests/expect/|docs/qa/strict-baseline\.tsv$)'
 
 data_only() {
   local files="$1"
@@ -652,9 +652,16 @@ run_data_only() {
   local -a checks=() locks=() expect_dirs=()
   bin="${LITIGATE_BIN:-$(command -v litigate || true)}"
   if [ -z "$bin" ] || [ ! -x "$bin" ]; then
-    echo "ci-scoped: data-only: no prebuilt litigate (set LITIGATE_BIN or put litigate on PATH)" >&2
-    return 1
+    # Pod quality jobs may start without the image-provided binary. Build it
+    # once here, then share the exact executable with checks and the ratchet.
+    stage data-only-compiler cargo build -q -p litigate-cli || return 1
+    bin="$(cargo metadata --format-version 1 --no-deps | jq -r .target_directory)/debug/litigate"
+    if [ ! -x "$bin" ]; then
+      echo "ci-scoped: data-only: compiler build produced no executable at $bin" >&2
+      return 1
+    fi
   fi
+  export LITIGATE_BIN="$bin"
   mapfile -t checks < <({
     sed -nE 's#^(lit/[^/]+)/.*#\1#p' <<<"$files"
     while IFS= read -r source_file; do
@@ -673,6 +680,11 @@ run_data_only() {
     stage "check-${pkg#lit/}" "$bin" check "$pkg"
     stage "test-${pkg#lit/}" "$bin" test "$pkg"
   done
+  if grep -q '^lit/' <<<"$files"; then
+    stage strict-ratchet scripts/qa/strict-ratchet.sh "$base" "$files"
+  else
+    skip strict-ratchet "no lit package changed"
+  fi
   if [ "${#expect_dirs[@]}" -gt 0 ]; then stage data-expect "$bin" test "${expect_dirs[@]}"; fi
   for pkg in "${locks[@]}"; do stage "lock-${pkg#lit/}" "$bin" lock --root "$pkg"; done
   [ "${#failed[@]}" -eq 0 ] || { echo "ci-scoped: data-only: FAIL (failed: ${failed[*]})"; return 1; }
@@ -793,6 +805,22 @@ self_test() {
   data_only $'lit/ca8/rules.lit\ncrates/litigate-engine/src/lib.rs' && data_result=yes
   if [ "$data_result" != no ]; then
     echo "ci-scoped self-test: data-only: crate changes must select full path" >&2
+    failures=$((failures + 1))
+  fi
+  data_result=no
+  data_only $'lit/ca8/rules.lit\ndocs/qa/strict-baseline.tsv' && data_result=yes
+  if [ "$data_result" != yes ]; then
+    echo "ci-scoped self-test: data-only: lit/ plus strict baseline must select fast path" >&2
+    failures=$((failures + 1))
+  fi
+  data_result=yes
+  data_only $'lit/ca8/rules.lit\ndocs/qa/other.md' || data_result=no
+  if [ "$data_result" != no ]; then
+    echo "ci-scoped self-test: data-only: other docs must select full path" >&2
+    failures=$((failures + 1))
+  fi
+  if ! grep -Fq 'stage strict-ratchet scripts/qa/strict-ratchet.sh "$base" "$files"' "$self"; then
+    echo "ci-scoped self-test: data-only stage list must include strict-ratchet" >&2
     failures=$((failures + 1))
   fi
   # The data fast path must pass only the branch's files to typos. Keep the

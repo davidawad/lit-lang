@@ -27,6 +27,10 @@ if [[ ${packages[core]+yes} ]]; then
   for package in "${core_packages[@]}"; do packages["$package"]=1; done
 fi
 
+for package in "${!packages[@]}"; do
+  [[ -d "lit/$package" ]] || unset "packages[$package]"
+done
+
 if [[ ${#packages[@]} -eq 0 ]]; then
   echo "strict-ratchet: no changed lit packages"
   exit 0
@@ -35,9 +39,17 @@ fi
 counts=$(mktemp)
 trap 'rm -f "$counts"' EXIT
 
-# The CLI executable is needed by every strict check. Build it once for this
-# invocation, then reuse it for all changed packages.
-cargo build -q -p litigate-cli
+# Use the compiler already prepared by the quality job when available. A
+# standalone invocation still builds once if neither supported source exists.
+bin="${LITIGATE_BIN:-$(command -v litigate || true)}"
+if [[ -z $bin || ! -x $bin ]]; then
+  cargo build -q -p litigate-cli
+  bin="$(cargo metadata --format-version 1 --no-deps | jq -r .target_directory)/debug/litigate"
+fi
+if [[ ! -x $bin ]]; then
+  echo "strict-ratchet: no executable litigate at $bin" >&2
+  exit 1
+fi
 
 printf 'package\tin_scope_errors\n' > "$counts"
 status=0
@@ -47,7 +59,7 @@ for package in "${!packages[@]}"; do
     continue
   fi
   output=$(mktemp)
-  if timeout 120 target/debug/litigate check --profile strict --format json "$dir" >"$output" 2>"$output.err"; then
+  if timeout 120 "$bin" check --profile strict --format json "$dir" >"$output" 2>"$output.err"; then
     rc=0
   else
     rc=$?

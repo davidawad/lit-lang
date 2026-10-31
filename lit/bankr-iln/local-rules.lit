@@ -214,3 +214,129 @@ terminal decided: "Motion decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Bankruptcy Rules, promulgated under FRCP 83 and FRBP 9029, govern all bankruptcy cases and proceedings as defined in 28 U.S.C. § 157 (LBR 1000-2(A)); the District Court Local Rules apply only as they or these rules provide (LBR 1000-2(C))."
 }
+
+test "Deadline arithmetic: installment-first-half-period (60 days after)" cite "Bankr. N.D. Ill. LBR 1006-1(D)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(installment-first-half-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: divided-case-amendments-period (14 days after)" cite "Bankr. N.D. Ill. LBR 1019-1"
+{
+  given JointCaseDivided() on 2027-01-04
+  expect deadline(divided-case-amendments-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: ballot-report-period (3 days before)" cite "Bankr. N.D. Ill. LBR 3018-1"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(ballot-report-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: identity-deficiency-cure-period (14 days after)" cite "Bankr. N.D. Ill. LBR 5005-1(E)"
+{
+  given IdentityDeficiencyNoticed() on 2027-01-04
+  expect deadline(identity-deficiency-cure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discharge-dismissal-notice-period (21 days before)" cite "Bankr. N.D. Ill. LBR 7041-1(A)"
+{
+  given DischargeDismissalPresentment() on 2027-01-04
+  expect deadline(discharge-dismissal-notice-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: bill-of-costs-period (30 days after)" cite "Bankr. N.D. Ill. LBR 7054-1(A)"
+{
+  given CostsJudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: motion-notice-period (7 days before)" cite "Bankr. N.D. Ill. LBR 9013-1(D)"
+{
+  given Presentment() on 2027-01-04
+  expect deadline(motion-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: motion-presentment-period (30 days after)" cite "Bankr. N.D. Ill. LBR 9013-1(E)"
+{
+  given MotionFiled() on 2027-01-04
+  expect deadline(motion-presentment-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: long-notice-presentment-period (7 days after)" cite "Bankr. N.D. Ill. LBR 9013-1(E)"
+{
+  given NoticePeriodExpired() on 2027-01-04
+  expect deadline(long-notice-presentment-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: modified-order-service-period (3 days after)" cite "Bankr. N.D. Ill. LBR 9013-1(K)"
+{
+  given ModifiedOrderEntered() on 2027-01-04
+  expect deadline(modified-order-service-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: removed-record-period (21 days after)" cite "Bankr. N.D. Ill. LBR 9027-1"
+{
+  given RemovalNoticed() on 2027-01-04
+  expect deadline(removed-record-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: disciplinary-answer-period (28 days after)" cite "Bankr. N.D. Ill. LBR 9029-4B(B)"
+{
+  given ChargesServed() on 2027-01-04
+  expect deadline(disciplinary-answer-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: trustee-discipline-declination-period (30 days after)" cite "Bankr. N.D. Ill. LBR 9029-4B(B)"
+{
+  given TrusteeDisciplineAppointed() on 2027-01-04
+  expect deadline(trustee-discipline-declination-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: restricted-filer-response-period (30 days after)" cite "Bankr. N.D. Ill. LBR 9029-4C(B)"
+{
+  given RestrictionResponseNoticed() on 2027-01-04
+  expect deadline(restricted-filer-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: exhibit-removal-period (90 days after)" cite "Bankr. N.D. Ill. LBR 9070-1(B)"
+{
+  given AppealsCompleted() on 2027-01-04
+  expect deadline(exhibit-removal-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: exhibit-removal-notice-period (30 days after)" cite "Bankr. N.D. Ill. LBR 9070-1(B)"
+{
+  given ExhibitRemovalNoticed() on 2027-01-04
+  expect deadline(exhibit-removal-notice-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: complex-designation-period (30 days after)" cite "Bankr. N.D. Ill. LBR 9090-1(B)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(complex-designation-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: complex-designation-objection-period (14 days after)" cite "Bankr. N.D. Ill. LBR 9090-1(C)"
+{
+  given ComplexDesignationFiled() on 2027-01-04
+  expect deadline(complex-designation-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: omnibus-notice-period (14 days before)" cite "Bankr. N.D. Ill. LBR 9090-3(D)"
+{
+  given OmnibusPresentment() on 2027-01-04
+  expect deadline(omnibus-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: omnibus-response-period (7 days before)" cite "Bankr. N.D. Ill. LBR 9090-3(E)"
+{
+  given OmnibusPresentment() on 2027-01-04
+  expect deadline(omnibus-response-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: omnibus-short-response-period (3 days before)" cite "Bankr. N.D. Ill. LBR 9090-3(E)"
+{
+  given OmnibusPresentment() on 2027-01-04
+  expect deadline(omnibus-short-response-period) == 2026-12-31
+}

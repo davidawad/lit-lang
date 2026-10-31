@@ -565,6 +565,11 @@ run() {
   stage provenance provenance "$base"
   stage self-test bash -c "'$self' self-test && '$(dirname "$self")/cov-gate' self-test"
   stage lit-sync-check just lit-sync-check
+  if grep -q '^lit/' <<<"$files"; then
+    stage strict-ratchet scripts/qa/strict-ratchet.sh "$base" "$files"
+  else
+    skip strict-ratchet "no lit package changed"
+  fi
   if grep -q '^editors/tree-sitter-litigate/' <<<"$files"; then
     stage tree-sitter-test just tree-sitter-test
   else

@@ -126,3 +126,76 @@ decision ruling: "Motion decided" by court cite ?("W.D.N.Y. LBR 9013-1(B), May 1
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite ?("W.D.N.Y. LBR 1001-1, May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
   note "The Local Rules of Bankruptcy Procedure govern all cases pending or filed in the district under title 11 (the adoption order and LBR 1001-1; the CURRENCY UNCONFIRMED 1997 text)."
 }
+
+
+test "consolidated-matrix-period: 10 days after" cite "W.D.N.Y. LBR 1015-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given JointAdministrationOrdered() on 2027-03-01
+  expect deadline(consolidated-matrix-period) == 2027-03-11
+}
+
+test "fee-application-period: 25 days before" cite "W.D.N.Y. LBR 2016-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given FeeApplicationCalendar() on 2027-03-01
+  expect deadline(fee-application-period) == 2027-02-04
+}
+
+test "debtor-attorney-fee-application-period: 15 days after" cite "W.D.N.Y. LBR 2016-2(A), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given FinalReportNoticeMailed() on 2027-03-01
+  expect deadline(debtor-attorney-fee-application-period) == 2027-03-16
+}
+
+test "successor-attorney-statement-period: 10 days after" cite "W.D.N.Y. LBR 2091-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given SubstitutionNoticed() on 2027-03-01
+  expect deadline(successor-attorney-statement-period) == 2027-03-11
+}
+
+test "sale-hearing-demand-period: 20 days after" cite "W.D.N.Y. LBR 6004-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given SaleStatementNoticed() on 2027-03-01
+  expect deadline(sale-hearing-demand-period) == 2027-03-22
+}
+
+test "abandonment-hearing-demand-period: 20 days after" cite "W.D.N.Y. LBR 6007-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given AbandonmentStatementNoticed() on 2027-03-01
+  expect deadline(abandonment-hearing-demand-period) == 2027-03-22
+}
+
+test "estimated-tax-claim-objection-period: 30 days after" cite "W.D.N.Y. LBR 6070-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given EstimatedTaxClaimServed() on 2027-03-01
+  expect deadline(estimated-tax-claim-objection-period) == 2027-03-31
+}
+
+test "unserved-tax-claim-objection-period: 30 days after" cite "W.D.N.Y. LBR 6070-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given GovernmentalClaimPeriodClosed() on 2027-03-01
+  expect deadline(unserved-tax-claim-objection-period) == 2027-03-31
+}
+
+test "default-request-period: 60 days after" cite "W.D.N.Y. LBR 7055-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given AnswerDeadline() on 2027-03-01
+  expect deadline(default-request-period) == 2027-04-30
+}
+
+test "motion-service-period: 5 days before" cite "W.D.N.Y. LBR 9013-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given ReturnDate() on 2027-03-01
+  expect deadline(motion-service-period) == 2027-02-24
+}
+
+test "final-report-objection-period: 15 days after" cite "W.D.N.Y. LBR 9014-1(A), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given FinalReportSummarySent() on 2027-03-01
+  expect deadline(final-report-objection-period) == 2027-03-16
+}
+
+test "settlement-filing-period: 30 days after" cite "W.D.N.Y. LBR 9071-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given AdversarySettled() on 2027-03-01
+  expect deadline(settlement-filing-period) == 2027-03-31
+}

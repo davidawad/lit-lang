@@ -1,0 +1,37 @@
+# Major ttab matter case, using its authored default procedural rules.
+
+paths = []
+
+[[run]]
+world = "ttab.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["ttab-trademark-trial-and-appeal-board"]
+
+[run.expect.w1.outcome]
+extension-requested-1 = "untimed"
+
+[[run.expect.w1.deadlines]]
+deadline = "ttab-trademark-trial-and-appeal-board::extended-period-120"
+trigger = "2026-06-16"
+due = "2026-10-14"
+status = "lapsed"
+cite = "37 CFR 2.102(c)(3)"
+counted_by = "37 C.F.R. § 2.196"
+
+[[run.expect.w1.deadlines]]
+deadline = "ttab-trademark-trial-and-appeal-board::opposition-period"
+trigger = "2026-06-16"
+due = "2026-07-16"
+status = "lapsed"
+cite = "-"
+counted_by = "37 C.F.R. § 2.196"
+
+[[run.expect.w1.deadlines]]
+deadline = "ttab-trademark-trial-and-appeal-board::outer-limit-180"
+trigger = "2026-06-16"
+due = "2026-12-14"
+status = "open"
+cite = "37 CFR 2.102(c)"
+counted_by = "37 C.F.R. § 2.196"

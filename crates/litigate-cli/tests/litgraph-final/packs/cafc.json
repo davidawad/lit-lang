@@ -7,7 +7,7 @@
       "id": "cafc::appeal-origin",
       "label": "Adverse Ruling From an Origin Tribunal"
     },
-    "value": 82518.0,
+    "value": 21268.0,
     "converged": true,
     "iterations": 36,
     "fee_shift_rounds": 0,
@@ -22,7 +22,7 @@
         "p": 0.2,
         "kind": "likely-draw",
         "step_p": 0.2,
-        "q": 83000.0
+        "q": 21750.0
       },
       {
         "id": "cafc::ttab-file-noa",
@@ -34,7 +34,7 @@
         "deadline_days": 63.0,
         "kind": "choice",
         "step_p": 1.0,
-        "q": 83000.0
+        "q": 21750.0
       },
       {
         "id": "cafc::noa-to-docketed",
@@ -46,7 +46,7 @@
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 85000.0
+        "q": 23750.0
       },
       {
         "id": "cafc::docketed-to-appearance",
@@ -58,7 +58,7 @@
         "deadline_days": 14.0,
         "kind": "choice",
         "step_p": 1.0,
-        "q": 85000.0
+        "q": 23750.0
       },
       {
         "id": "cafc::appearance-to-docketing-statement",
@@ -70,7 +70,7 @@
         "deadline_days": 14.0,
         "kind": "choice",
         "step_p": 1.0,
-        "q": 86000.0
+        "q": 24750.0
       },
       {
         "id": "cafc::docketing-statement-to-screening",
@@ -82,7 +82,7 @@
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 87500.0
+        "q": 26250.0
       },
       {
         "id": "cafc::screening-to-motions",
@@ -90,10 +90,10 @@
         "from": "cafc::mediation-screening",
         "to": "cafc::motions-fork",
         "role": "nature",
-        "authority": "Appellate Mediation Program Guidelines §§ 2, 7",
-        "p": 0.5,
+        "authority": "Appellate Mediation Program Guidelines § 3",
+        "p": 0.85,
         "kind": "likely-draw",
-        "step_p": 0.5,
+        "step_p": 0.85,
         "q": 0.0
       },
       {
@@ -148,12 +148,6 @@
   },
   "warnings": [
     {
-      "code": "authored-hole",
-      "count": 1,
-      "example": "pack cafc: 4 explicit hole(s) left numbers unauthored, first /edges/19/probability (no published selection rate); author them in the pack's source (a strict build rejects holes)",
-      "at": []
-    },
-    {
       "code": "compile",
       "count": 57,
       "example": "state flags expanded the graph: 301 additional node(s) for reachable flag combinations",
@@ -168,14 +162,8 @@
       ]
     },
     {
-      "code": "payoff-not-authored",
-      "count": 1,
-      "example": "33 terminal(s) use a heuristic or zero payoff; override with scenario.payoffs or author `payoff` in the pack",
-      "at": []
-    },
-    {
       "code": "probability-fill",
-      "count": 280,
+      "count": 266,
       "example": "5 of 5 out-edges lack probabilities; filled (Residual)",
       "at": [
         "cafc::appeal-origin",

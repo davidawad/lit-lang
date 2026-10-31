@@ -268,7 +268,7 @@ fn the_shared_clock_library_is_lit_core_lowered_and_sync_builds_under_dev() {
 
 /// `(from, to, known_at)` of each version `litigate where` reports for `id`.
 fn versions(id: &str) -> Vec<(String, String, String)> {
-    let run = litigate(&["where", id]);
+    let run = litigate(&["where", "--path", "lit/frcp", id]);
     assert_eq!(run.code, 0, "{}", run.stdout);
     let field = |v: &Value| v.as_str().unwrap_or("..").to_owned();
     let mut out: Vec<_> = run.json["result"]["versions"]

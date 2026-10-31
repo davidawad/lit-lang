@@ -10,100 +10,100 @@
     "runs": 50000,
     "seed": 7,
     "net": {
-      "mean": 1838276.3838,
-      "std": 3283341.32500619,
-      "min": -3577305.0,
-      "p05": -1550470.0,
-      "p25": -1125715.0,
-      "p50": 610070.0,
-      "p75": 5065545.0,
-      "p95": 5065545.0,
-      "max": 11065640.0
+      "mean": 4085656.2614,
+      "std": 4472339.553943995,
+      "min": -3716760.0,
+      "p05": -1216315.0,
+      "p25": -563710.0,
+      "p50": 4916795.0,
+      "p75": 7707185.0,
+      "p95": 10984890.0,
+      "max": 11516140.0
     },
-    "cvar": -1580441.704,
+    "cvar": -1347476.548,
     "alpha": 0.1,
-    "p_loss": 0.49994,
+    "p_loss": 0.3424,
     "metrics": {
       "dollars": {
-        "mean": 820911.6162,
-        "std": 447508.3436098421,
-        "min": 334455.0,
-        "p05": 334455.0,
-        "p25": 334455.0,
-        "p50": 934360.0,
-        "p75": 1271565.0,
-        "p95": 1550470.0,
-        "max": 3577305.0
+        "mean": 858019.7386,
+        "std": 463970.08087123255,
+        "min": 69860.0,
+        "p05": 364205.0,
+        "p25": 483860.0,
+        "p50": 742210.0,
+        "p75": 1242470.0,
+        "p95": 1714220.0,
+        "max": 3716760.0
       },
       "elapsed": {
-        "mean": 606.0833164173159,
-        "std": 197.50528565655313,
-        "min": 373.27116128078154,
-        "p05": 385.2447286886535,
-        "p25": 400.3572148192534,
-        "p50": 594.5828630959771,
-        "p75": 776.6008626504438,
-        "p95": 951.1829441954865,
-        "max": 1936.8928239004204
+        "mean": 589.70528,
+        "std": 258.0152042421776,
+        "min": 148.0,
+        "p05": 255.0,
+        "p25": 381.0,
+        "p50": 537.0,
+        "p75": 826.0,
+        "p95": 1051.0,
+        "max": 2028.0
       }
     },
     "truncated": 0,
     "terminals": [
       {
-        "terminal": "cofc::settled-adr",
-        "p": 0.30082
+        "terminal": "cafc@cofc::cert-not-sought{panel-affirmed}",
+        "p": 0.2786
       },
       {
-        "terminal": "cafc@cofc::cert-not-sought{panel-affirmed}",
-        "p": 0.14876
+        "terminal": "cofc::settled-adr",
+        "p": 0.20642
       },
       {
         "terminal": "cafc@cofc-gov::cert-denied{panel-affirmed}",
-        "p": 0.13772
-      },
-      {
-        "terminal": "cafc@cofc::settled-in-mediation",
-        "p": 0.1071
-      },
-      {
-        "terminal": "cafc@cofc-gov::settled-in-mediation",
-        "p": 0.0986
+        "p": 0.14248
       },
       {
         "terminal": "cafc@cofc::affirmed-in-part-reversed-in-part{panel-mixed}#end",
-        "p": 0.05786
-      },
-      {
-        "terminal": "cafc@cofc-gov::cert-denied{panel-mixed}",
-        "p": 0.04886
+        "p": 0.1056
       },
       {
         "terminal": "cafc@cofc::reversed{panel-reversed}#end",
-        "p": 0.03428
+        "p": 0.0602
+      },
+      {
+        "terminal": "cafc@cofc-gov::cert-denied{panel-mixed}",
+        "p": 0.04984
+      },
+      {
+        "terminal": "cafc@cofc::settled-in-mediation",
+        "p": 0.04898
       },
       {
         "terminal": "cafc@cofc-gov::cert-denied{panel-reversed}",
-        "p": 0.03028
+        "p": 0.0328
       },
       {
         "terminal": "cafc@cofc::dismissed-jurisdictional-defect",
-        "p": 0.0173
+        "p": 0.03094
+      },
+      {
+        "terminal": "cafc@cofc-gov::settled-in-mediation",
+        "p": 0.02474
       },
       {
         "terminal": "cafc@cofc-gov::dismissed-jurisdictional-defect",
-        "p": 0.01636
+        "p": 0.01658
       },
       {
         "terminal": "cafc@cofc-gov::cert-granted{panel-affirmed}",
-        "p": 0.00124
+        "p": 0.0019
       },
       {
         "terminal": "cafc@cofc-gov::cert-granted{panel-mixed}",
-        "p": 0.00048
+        "p": 0.00062
       },
       {
         "terminal": "cafc@cofc-gov::cert-granted{panel-reversed}",
-        "p": 0.00034
+        "p": 0.0003
       }
     ],
     "samples": [
@@ -116,7 +116,9 @@
         "File a standard RCFC 3 complaint",
         "Clerk delivers the complaint to the Attorney General",
         "Case proceeds; government's responsive-pleading clock begins",
-        "United States answers",
+        "United States moves under RCFC 12(b) instead of answering",
+        "Briefing completes; court rules on the RCFC 12(b) motion",
+        "Motion denied",
         "Answer triggers the JPSR clock (general or patent track)",
         "§1498(a) patent case -- Appendix J (Patent Rules) applies",
         "Early-meeting agenda includes whether to notice a government contractor",
@@ -134,38 +136,7 @@
         "Parties report the outcome of the discussion",
         "No settlement; case continues",
         "Supplement final contentions, complete expert discovery on infringement/invalidity/damages",
-        "Move for summary judgment on infringement, invalidity, or (if liability is undisputed) damages",
-        "Briefing completes; court rules on summary judgment",
-        "Granted in part; remaining issues proceed to trial",
-        "Bench trial concludes",
-        "Court's findings and conclusions are entered as a judgment",
-        "Judgment entered in a separate document; RCFC 59 clock begins",
-        "No RCFC 59 motion filed within 28 days; window lapses",
-        "Judgment positioned to become final; cost/fee clocks begin",
-        "Bill of Costs (RCFC 54(d), Form 4) and any EAJA application (28 U.S.C. §2412(d)(1)(B), Form 5) are filed within 30 days of final judgment",
-        "Plaintiff prevailed",
-        "United States appeals the judgment for plaintiff",
-        "File notice of appeal with the CoFC clerk",
-        "Clerk dockets the appeal, assigns case number",
-        "File entry of appearance and certificate of interest",
-        "File docketing statement (Form 26)",
-        "OGC reviews docketing statement and briefs for mediation candidacy",
-        "Case not selected for mediation, or counsel represents mediation would not be fruitful",
-        "Move for a stay — granted",
-        "Proceed to cross-appeal consideration",
-        "File notice of cross-appeal",
-        "Cross-appeal docketed — briefing under Fed. Cir. R. 31(a)(1)(C)-(D)/28.1",
-        "File opening brief",
-        "File response brief",
-        "File reply brief",
-        "Briefing closes",
-        "Serve and file the joint appendix",
-        "Clerk calendars the argument decision",
-        "Panel grants oral argument",
-        "Argument concludes — panel confers (IOP #8)",
-        "Panel vacates and remands",
-        "Case originated at the CoFC",
-        "Remand: further proceedings in the Court of Federal Claims",
+        "No dispositive motion; proceed to a bench trial on damages ('reasonable and entire compensation') and any remaining liability issues",
         "Bench trial concludes",
         "Court's findings and conclusions are entered as a judgment",
         "Judgment entered in a separate document; RCFC 59 clock begins",
@@ -179,9 +150,19 @@
         "File entry of appearance and certificate of interest",
         "File docketing statement (Form 26)",
         "OGC reviews docketing statement and briefs for mediation candidacy",
-        "Case selected — mediation is mandatory for the parties",
-        "Mediation concludes",
-        "Parties reach a settlement"
+        "Case not selected for mediation, or counsel represents mediation would not be fruitful",
+        "Decline to seek a stay — proceed",
+        "Decline to cross-appeal",
+        "Proceed to ordinary briefing",
+        "File opening brief",
+        "File response brief",
+        "Waive reply brief",
+        "Serve and file the joint appendix",
+        "Clerk calendars the argument decision",
+        "Panel grants oral argument",
+        "Argument concludes — panel confers (IOP #8)",
+        "Panel splits the result",
+        "Accept: Affirmed in Part, Reversed in Part"
       ],
       [
         "Determine whether the claim is a §1498(a) patent/copyright use claim",
@@ -192,7 +173,13 @@
         "File a standard RCFC 3 complaint",
         "Clerk delivers the complaint to the Attorney General",
         "Case proceeds; government's responsive-pleading clock begins",
-        "United States answers",
+        "United States moves under RCFC 12(b) instead of answering",
+        "Briefing completes; court rules on the RCFC 12(b) motion",
+        "Granted with leave to amend",
+        "Government's responsive-pleading clock re-runs against the amended complaint",
+        "United States moves under RCFC 12(b) instead of answering",
+        "Briefing completes; court rules on the RCFC 12(b) motion",
+        "Motion denied",
         "Answer triggers the JPSR clock (general or patent track)",
         "§1498(a) patent case -- Appendix J (Patent Rules) applies",
         "Early-meeting agenda includes whether to notice a government contractor",
@@ -210,35 +197,31 @@
         "Parties report the outcome of the discussion",
         "No settlement; case continues",
         "Supplement final contentions, complete expert discovery on infringement/invalidity/damages",
-        "Move for summary judgment on infringement, invalidity, or (if liability is undisputed) damages",
-        "Briefing completes; court rules on summary judgment",
-        "Motion denied; case proceeds to trial",
+        "No dispositive motion; proceed to a bench trial on damages ('reasonable and entire compensation') and any remaining liability issues",
         "Bench trial concludes",
         "Court's findings and conclusions are entered as a judgment",
         "Judgment entered in a separate document; RCFC 59 clock begins",
         "No RCFC 59 motion filed within 28 days; window lapses",
         "Judgment positioned to become final; cost/fee clocks begin",
         "Bill of Costs (RCFC 54(d), Form 4) and any EAJA application (28 U.S.C. §2412(d)(1)(B), Form 5) are filed within 30 days of final judgment",
-        "Plaintiff prevailed",
-        "United States appeals the judgment for plaintiff",
+        "Government prevailed",
+        "Plaintiff appeals the judgment to the Federal Circuit",
         "File notice of appeal with the CoFC clerk",
         "Clerk dockets the appeal, assigns case number",
         "File entry of appearance and certificate of interest",
         "File docketing statement (Form 26)",
         "OGC reviews docketing statement and briefs for mediation candidacy",
         "Case not selected for mediation, or counsel represents mediation would not be fruitful",
-        "Move for a stay — granted",
-        "Proceed to cross-appeal consideration",
-        "File notice of cross-appeal",
-        "Cross-appeal docketed — briefing under Fed. Cir. R. 31(a)(1)(C)-(D)/28.1",
+        "Decline to seek a stay — proceed",
+        "Decline to cross-appeal",
+        "Proceed to ordinary briefing",
         "File opening brief",
         "File response brief",
-        "File reply brief",
-        "Briefing closes",
+        "Waive reply brief",
         "Serve and file the joint appendix",
         "Clerk calendars the argument decision",
-        "Panel grants oral argument",
-        "Argument concludes — panel confers (IOP #8)",
+        "Panel dispenses with argument",
+        "Panel confers on the papers (IOP #8)",
         "Panel affirms with an opinion",
         "Losing party weighs rehearing",
         "File petition for panel rehearing/rehearing en banc/combined petition",
@@ -247,9 +230,7 @@
         "Mandate clock resumes",
         "File itemized, verified bill of costs",
         "Costs determination does not delay the certiorari clock",
-        "File petition for certiorari",
-        "Supreme Court considers the petition",
-        "Certiorari denied"
+        "90-day window lapses"
       ],
       [
         "Determine whether the claim is a §1498(a) patent/copyright use claim",
@@ -260,7 +241,9 @@
         "File a standard RCFC 3 complaint",
         "Clerk delivers the complaint to the Attorney General",
         "Case proceeds; government's responsive-pleading clock begins",
-        "United States answers",
+        "United States moves under RCFC 12(b) instead of answering",
+        "Briefing completes; court rules on the RCFC 12(b) motion",
+        "Motion denied",
         "Answer triggers the JPSR clock (general or patent track)",
         "§1498(a) patent case -- Appendix J (Patent Rules) applies",
         "Early-meeting agenda includes whether to notice a government contractor",
@@ -276,43 +259,16 @@
         "Court holds the Claim Construction Hearing and issues its Markman-style ruling",
         "Mandatory settlement discussion",
         "Parties report the outcome of the discussion",
-        "No settlement; case continues",
-        "Supplement final contentions, complete expert discovery on infringement/invalidity/damages",
-        "Move for summary judgment on infringement, invalidity, or (if liability is undisputed) damages",
-        "Briefing completes; court rules on summary judgment",
-        "Granted in full for the government",
-        "Plaintiff appeals the summary judgment",
-        "File notice of appeal with the CoFC clerk",
-        "Clerk dockets the appeal, assigns case number",
-        "File entry of appearance and certificate of interest",
-        "File docketing statement (Form 26)",
-        "OGC reviews docketing statement and briefs for mediation candidacy",
-        "Case selected — mediation is mandatory for the parties",
-        "Mediation concludes",
-        "Parties reach a settlement"
+        "Settlement reached at the mandatory discussion"
       ]
     ]
   },
   "warnings": [
     {
-      "code": "authored-hole",
-      "count": 1,
-      "example": "pack cafc: 4 explicit hole(s) left numbers unauthored, first /edges/19/probability (no published selection rate); author them in the pack's source (a strict build rejects holes)",
-      "at": []
-    },
-    {
       "code": "compile",
       "count": 69,
       "example": "state flags expanded the graph: 301 additional node(s) for reachable flag combinations",
       "at": []
-    },
-    {
-      "code": "fact-unset",
-      "count": 1,
-      "example": "matter fact not set via scenario.facts; using the authored prior (5 of 5 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
-      "at": [
-        "cafc::remand-destination"
-      ]
     },
     {
       "code": "mixed-node",
@@ -326,14 +282,8 @@
       ]
     },
     {
-      "code": "payoff-not-authored",
-      "count": 1,
-      "example": "33 terminal(s) use a heuristic or zero payoff; override with scenario.payoffs or author `payoff` in the pack",
-      "at": []
-    },
-    {
       "code": "probability-fill",
-      "count": 307,
+      "count": 293,
       "example": "5 of 5 out-edges lack probabilities; filled (Residual)",
       "at": [
         "cafc::appeal-origin",

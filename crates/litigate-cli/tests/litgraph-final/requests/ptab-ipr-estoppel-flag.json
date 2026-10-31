@@ -85,7 +85,7 @@
         "from": "ptab-patent-trial-appeal-board::fwd-all-unpatentable{ipr-estopped}",
         "to": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
         "role": "nature",
-        "authority": "37 CFR § 42.71(d)",
+        "authority": "35 U.S.C. § 319",
         "p": 0.5,
         "active": true,
         "hours": 0.0,
@@ -97,7 +97,7 @@
         "from": "ptab-patent-trial-appeal-board::fwd-all-confirmed{ipr-estopped}",
         "to": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
         "role": "nature",
-        "authority": "37 CFR § 42.71(d)",
+        "authority": "35 U.S.C. § 319",
         "p": 0.5,
         "active": true,
         "hours": 0.0,
@@ -109,7 +109,7 @@
         "from": "ptab-patent-trial-appeal-board::fwd-mixed{ipr-estopped}",
         "to": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
         "role": "nature",
-        "authority": "37 CFR § 42.71(d)",
+        "authority": "35 U.S.C. § 319",
         "p": 0.5,
         "active": true,
         "hours": 0.0,
@@ -134,7 +134,7 @@
         "from": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
         "to": "ptab-patent-trial-appeal-board::director-review-request-filed{ipr-estopped}",
         "role": "nature",
-        "authority": "37 CFR 42.73(d)(1)",
+        "authority": "37 C.F.R. § 42.75(c)",
         "deadline_days": 30.0,
         "p": 0.333333,
         "active": true,
@@ -156,12 +156,6 @@
     ]
   },
   "warnings": [
-    {
-      "code": "authored-hole",
-      "count": 1,
-      "example": "pack ptab-patent-trial-appeal-board: 4 explicit hole(s) left numbers unauthored, first /edges/10/probability (no published defect-notice rate); author them in the pack's source (a strict build rejects holes)",
-      "at": []
-    },
     {
       "code": "compile",
       "count": 17,
@@ -191,7 +185,7 @@
     },
     {
       "code": "probability-fill",
-      "count": 105,
+      "count": 101,
       "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
       "at": [
         "ptab-patent-trial-appeal-board::adverse-judgment-request",

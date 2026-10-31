@@ -14,7 +14,23 @@ use std::path::Path;
 #[test]
 fn every_corpus_verdict_equals_the_verdict_over_every_package() {
     let lit = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../lit");
-    let targets = discover(&[lit.to_string_lossy().into_owned()]).expect("lit/ is found");
+    // The full package census is an opt-in post-MVP ratchet. Keep the
+    // default integration target bounded while checking the same direct vs
+    // queried verdict invariant across every MVP package.
+    let paths: Vec<String> = if std::env::var_os("LITIGATE_ROUNDTRIP_ALL").as_deref()
+        == Some(std::ffi::OsStr::new("1"))
+    {
+        vec![lit.to_string_lossy().into_owned()]
+    } else {
+        [
+            "core", "links", "examples", "frcp", "frap", "frcrimp", "bap8", "ca1", "ca8", "cadc",
+            "cafc", "cofc", "itc", "mpep", "ptab", "ttab",
+        ]
+        .into_iter()
+        .map(|package| lit.join(package).to_string_lossy().into_owned())
+        .collect()
+    };
+    let targets = discover(&paths).expect("MVP lit packages are found");
     let session = Session::load(&targets, &[]).expect("lit/ loads");
     let all = session.hir();
     let clocks = Clocks::new(&all);

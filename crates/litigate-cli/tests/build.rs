@@ -196,20 +196,27 @@ fn explain_value_traces_a_deadline_to_its_rule_and_source() {
 
 #[test]
 fn where_resolves_declarations_cites_and_codes() {
-    let decl = litigate(&["where", "frcp-rule12-example::answer-period"]);
+    // Search the fixture package directly; the default library includes the
+    // full repository and makes this focused lookup needlessly expensive.
+    let decl = litigate(&[
+        "where",
+        "--path",
+        "lit/examples",
+        "frcp-rule12-example::answer-period",
+    ]);
     assert_eq!(decl.code, 0, "{}", decl.stdout);
     insta::assert_json_snapshot!("where_answer_period", decl.json["result"]);
-    let cite = litigate(&["where", "FRCP 12(b)"]);
+    let cite = litigate(&["where", "--path", "lit/examples", "FRCP 12(b)"]);
     assert_eq!(cite.json["result"]["kind"], "cite");
     assert_eq!(
         cite.json["result"]["cited_by"][0]["id"],
         "frcp-rule12-example::mtd-ruling"
     );
     assert_eq!(
-        litigate(&["where", "L5002"]).json["result"]["kind"],
+        litigate(&["where", "--path", "lit/examples", "L5002"]).json["result"]["kind"],
         "diagnostic"
     );
-    let edge = litigate(&["where", "move-dismiss"]);
+    let edge = litigate(&["where", "--path", "lit/examples", "move-dismiss"]);
     assert_eq!(edge.json["result"]["kind"], "edge");
     assert_eq!(edge.json["result"]["lowered"][0], "/edges/3");
 }

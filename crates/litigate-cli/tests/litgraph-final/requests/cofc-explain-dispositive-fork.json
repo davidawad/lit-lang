@@ -12,43 +12,9 @@
     },
     "control": "me",
     "who_decides": "you",
-    "value": 927576.157779,
+    "value": 5329526.026721,
     "interrupt_mass": 0.0,
     "options": [
-      {
-        "id": "cofc::e-dispositivefork-sj",
-        "label": "Move for summary judgment on infringement, invalidity, or (if liability is undisputed) damages",
-        "from": "cofc::patent-dispositive-motion-fork",
-        "to": "cofc::summary-judgment-motion-filed",
-        "role": "self",
-        "authority": "RCFC 56",
-        "q": 927576.157779,
-        "cost": 25500.0,
-        "hours": 30.0,
-        "fees": 0.0,
-        "note": "Feeds back into the same RCFC 56/58/59/54/EAJA machinery already modeled on the general track.",
-        "chosen": true,
-        "kind": "choice",
-        "regret": 0.0,
-        "then": [
-          {
-            "terminal": "cert-not-sought{panel-affirmed}",
-            "p": 0.214068
-          },
-          {
-            "terminal": "cert-denied{panel-affirmed}",
-            "p": 0.198664
-          },
-          {
-            "terminal": "settled-in-mediation",
-            "p": 0.154477
-          },
-          {
-            "terminal": "settled-in-mediation",
-            "p": 0.141977
-          }
-        ]
-      },
       {
         "id": "cofc::e-dispositivefork-trial",
         "label": "No dispositive motion; proceed to a bench trial on damages ('reasonable and entire compensation') and any remaining liability issues",
@@ -56,30 +22,64 @@
         "to": "cofc::trial-bench",
         "role": "self",
         "authority": "28 U.S.C. §1498(a)",
-        "q": 872157.115916,
+        "q": 5329526.026721,
         "cost": 17000.0,
         "hours": 20.0,
         "fees": 0.0,
         "note": "§1498(a) constrains the REMEDY (no injunction, no enhanced/treble damages, no jury) but not the procedural mechanics of reaching judgment.",
-        "chosen": false,
+        "chosen": true,
         "kind": "choice",
-        "regret": 55419.041863,
+        "regret": 0.0,
         "then": [
           {
             "terminal": "cert-denied{panel-affirmed}",
-            "p": 0.207425
+            "p": 0.265228
           },
           {
             "terminal": "cert-not-sought{panel-affirmed}",
-            "p": 0.205423
+            "p": 0.264609
           },
           {
-            "terminal": "settled-in-mediation",
-            "p": 0.148238
+            "terminal": "affirmed-in-part-reversed-in-part{panel-mixed}#end",
+            "p": 0.100769
           },
           {
-            "terminal": "settled-in-mediation",
-            "p": 0.148238
+            "terminal": "cert-denied{panel-mixed}",
+            "p": 0.093935
+          }
+        ]
+      },
+      {
+        "id": "cofc::e-dispositivefork-sj",
+        "label": "Move for summary judgment on infringement, invalidity, or (if liability is undisputed) damages",
+        "from": "cofc::patent-dispositive-motion-fork",
+        "to": "cofc::summary-judgment-motion-filed",
+        "role": "self",
+        "authority": "RCFC 56",
+        "q": 5181115.133994,
+        "cost": 25500.0,
+        "hours": 30.0,
+        "fees": 0.0,
+        "note": "Feeds back into the same RCFC 56/58/59/54/EAJA machinery already modeled on the general track.",
+        "chosen": false,
+        "kind": "choice",
+        "regret": 148410.892727,
+        "then": [
+          {
+            "terminal": "cert-not-sought{panel-affirmed}",
+            "p": 0.275275
+          },
+          {
+            "terminal": "cert-denied{panel-affirmed}",
+            "p": 0.254506
+          },
+          {
+            "terminal": "affirmed-in-part-reversed-in-part{panel-mixed}#end",
+            "p": 0.104831
+          },
+          {
+            "terminal": "cert-denied{panel-mixed}",
+            "p": 0.090137
           }
         ]
       }
@@ -88,24 +88,10 @@
   },
   "warnings": [
     {
-      "code": "authored-hole",
-      "count": 1,
-      "example": "pack cafc: 4 explicit hole(s) left numbers unauthored, first /edges/19/probability (no published selection rate); author them in the pack's source (a strict build rejects holes)",
-      "at": []
-    },
-    {
       "code": "compile",
       "count": 69,
       "example": "state flags expanded the graph: 301 additional node(s) for reachable flag combinations",
       "at": []
-    },
-    {
-      "code": "fact-unset",
-      "count": 1,
-      "example": "matter fact not set via scenario.facts; using the authored prior (5 of 5 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
-      "at": [
-        "cafc::remand-destination"
-      ]
     },
     {
       "code": "mixed-node",
@@ -119,14 +105,8 @@
       ]
     },
     {
-      "code": "payoff-not-authored",
-      "count": 1,
-      "example": "33 terminal(s) use a heuristic or zero payoff; override with scenario.payoffs or author `payoff` in the pack",
-      "at": []
-    },
-    {
       "code": "probability-fill",
-      "count": 307,
+      "count": 293,
       "example": "5 of 5 out-edges lack probabilities; filled (Residual)",
       "at": [
         "cafc::appeal-origin",

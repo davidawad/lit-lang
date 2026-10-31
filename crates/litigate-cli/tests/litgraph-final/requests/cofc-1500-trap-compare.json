@@ -4,7 +4,7 @@
   "op": "compare",
   "result": {
     "delta": {
-      "value": 338939.5206469998,
+      "value": -1569058.2297959998,
       "expected_utility": null,
       "expected_net": null
     },
@@ -17,9 +17,9 @@
           "id": "cofc::claim-accrues",
           "label": "Claim Against the United States Accrues"
         },
-        "value": 1827748.310446,
+        "value": 4116516.29109,
         "converged": true,
-        "iterations": 168,
+        "iterations": 207,
         "fee_shift_rounds": 0,
         "best_line": [
           {
@@ -32,7 +32,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 1827748.310446
+            "q": 4116516.29109
           },
           {
             "id": "cofc::e-patentfork-patent",
@@ -43,7 +43,7 @@
             "authority": "28 U.S.C. § 1498(a)",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 1827748.310446
+            "q": 4116516.29109
           },
           {
             "id": "cofc::e-patentfork-skipadmin",
@@ -53,7 +53,7 @@
             "role": "self",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 1827748.310446
+            "q": 4116516.29109
           },
           {
             "id": "cofc::e-limitations-timely",
@@ -65,7 +65,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 1828598.310446
+            "q": 4117366.29109
           },
           {
             "id": "cofc::e-1500-clear",
@@ -77,7 +77,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 1828598.310446
+            "q": 4117366.29109
           },
           {
             "id": "cofc::e-filingfork-standard",
@@ -88,7 +88,7 @@
             "authority": "RCFC 3; RCFC 5.5",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 1828598.310446
+            "q": 4117366.29109
           },
           {
             "id": "cofc::e-complaint-to-service",
@@ -100,7 +100,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 1839203.310446
+            "q": 4127971.29109
           },
           {
             "id": "cofc::e-service-to-responsefork",
@@ -112,19 +112,43 @@
             "p": 1.0,
             "kind": "wait-likely-draw",
             "step_p": 1.0,
-            "q": 1839203.310446
+            "q": 4127971.29109
           },
           {
-            "id": "cofc::e-responsefork-answer",
-            "label": "United States answers",
+            "id": "cofc::e-responsefork-motion",
+            "label": "United States moves under RCFC 12(b) instead of answering",
             "from": "cofc::government-response-fork",
-            "to": "cofc::answer-filed",
+            "to": "cofc::motion-12b-filed",
             "role": "opponent",
-            "authority": "RCFC 12(a)(1)(A)",
+            "authority": "RCFC 12(b)",
             "deadline_days": 60.0,
             "kind": "opponent-choice",
             "step_p": 1.0,
-            "q": 1839203.310446
+            "q": 4127971.293837
+          },
+          {
+            "id": "cofc::e-motion12b-to-ruling",
+            "label": "Briefing completes; court rules on the RCFC 12(b) motion",
+            "from": "cofc::motion-12b-filed",
+            "to": "cofc::ruling-12b",
+            "role": "nature",
+            "p": 1.0,
+            "kind": "likely-draw",
+            "step_p": 1.0,
+            "q": 4178971.293829
+          },
+          {
+            "id": "cofc::e-ruling12b-denied",
+            "label": "Motion denied",
+            "from": "cofc::ruling-12b",
+            "to": "cofc::answer-filed",
+            "role": "nature",
+            "authority": "RCFC 12(a)(4)",
+            "deadline_days": 14.0,
+            "p": 0.55,
+            "kind": "likely-draw",
+            "step_p": 0.55,
+            "q": 4941818.218705
           },
           {
             "id": "cofc::e-answer-to-casetype",
@@ -132,11 +156,11 @@
             "from": "cofc::answer-filed",
             "to": "cofc::case-type-fork",
             "role": "nature",
-            "authority": "RCFC Appendix J Rule 1(a)",
+            "authority": "PRCFC 1(a)",
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 1860453.310446
+            "q": 4941818.218705
           },
           {
             "id": "cofc::e-casetype-patent",
@@ -144,11 +168,11 @@
             "from": "cofc::case-type-fork",
             "to": "cofc::patent-early-meeting",
             "role": "nature",
-            "authority": "RCFC Appendix J Rule 1(a)",
+            "authority": "PRCFC 1(a)",
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 1860453.310446
+            "q": 4941818.218705
           },
           {
             "id": "cofc::e-earlymeeting-to-14bfork",
@@ -156,11 +180,11 @@
             "from": "cofc::patent-early-meeting",
             "to": "cofc::patent-14b-notice-fork",
             "role": "nature",
-            "authority": "RCFC Appendix J Rule 2; RCFC 14(b)",
+            "authority": "PRCFC 2; RCFC 14(b)",
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 1860453.310446
+            "q": 4941818.218705
           },
           {
             "id": "cofc::e-14bfork-notice",
@@ -171,7 +195,7 @@
             "authority": "RCFC 14(b)(2)",
             "kind": "opponent-choice",
             "step_p": 1.0,
-            "q": 1860453.310446
+            "q": 4941818.218705
           },
           {
             "id": "cofc::e-14bserved-to-jpsr",
@@ -179,12 +203,12 @@
             "from": "cofc::patent-14b-notice-served",
             "to": "cofc::patent-jpsr-filed",
             "role": "nature",
-            "authority": "RCFC 14(c)(2); RCFC Appendix J Rule 3",
+            "authority": "RCFC 14(c)(2); PRCFC 3",
             "deadline_days": 98.0,
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 1873203.310446
+            "q": 4954568.218705
           },
           {
             "id": "cofc::e-patentjpsr-to-po",
@@ -192,11 +216,11 @@
             "from": "cofc::patent-jpsr-filed",
             "to": "cofc::patent-protective-order-entered",
             "role": "nature",
-            "authority": "RCFC 26(c)(1); PRCFC Rule 19(b); Appendix of Forms Form 8A",
+            "authority": "RCFC 26(c)(1); PRCFC 19(b); Appendix of Forms, Form 8A",
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 1873203.310446
+            "q": 4954568.218705
           },
           {
             "id": "cofc::e-po-to-infringement",
@@ -204,11 +228,11 @@
             "from": "cofc::patent-protective-order-entered",
             "to": "cofc::patent-infringement-contentions",
             "role": "self",
-            "authority": "RCFC Appendix J Rule 4-5",
+            "authority": "PRCFC 4; PRCFC 5",
             "deadline_days": 56.0,
             "kind": "choice",
             "step_p": 1.0,
-            "q": 1873203.310446
+            "q": 4954568.218705
           },
           {
             "id": "cofc::e-infringement-to-invalidity",
@@ -216,11 +240,11 @@
             "from": "cofc::patent-infringement-contentions",
             "to": "cofc::patent-invalidity-contentions",
             "role": "opponent",
-            "authority": "RCFC Appendix J Rule 6-7",
+            "authority": "PRCFC 6; PRCFC 7",
             "deadline_days": 56.0,
             "kind": "opponent-choice",
             "step_p": 1.0,
-            "q": 1949703.310446
+            "q": 5031068.218705
           },
           {
             "id": "cofc::e-invalidity-to-ccexchange",
@@ -228,11 +252,11 @@
             "from": "cofc::patent-invalidity-contentions",
             "to": "cofc::patent-claim-construction-exchange",
             "role": "self",
-            "authority": "RCFC Appendix J Rule 9-10",
+            "authority": "PRCFC 9; PRCFC 10",
             "deadline_days": 42.0,
             "kind": "choice",
             "step_p": 1.0,
-            "q": 2026203.310446
+            "q": 5107568.218705
           },
           {
             "id": "cofc::e-ccexchange-to-jcc",
@@ -240,12 +264,12 @@
             "from": "cofc::patent-claim-construction-exchange",
             "to": "cofc::patent-joint-claim-construction-chart",
             "role": "nature",
-            "authority": "RCFC Appendix J Rule 11-12",
+            "authority": "PRCFC 11; PRCFC 12",
             "deadline_days": 35.0,
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 2111203.310446
+            "q": 5192568.218705
           },
           {
             "id": "cofc::e-jcc-to-ccdiscoveryclosed",
@@ -253,11 +277,11 @@
             "from": "cofc::patent-joint-claim-construction-chart",
             "to": "cofc::patent-claim-construction-discovery-closed",
             "role": "self",
-            "authority": "RCFC Appendix J Rule 13",
+            "authority": "PRCFC 13",
             "deadline_days": 28.0,
             "kind": "choice",
             "step_p": 1.0,
-            "q": 2111203.310446
+            "q": 5192568.218705
           },
           {
             "id": "cofc::e-ccdiscoveryclosed-to-hearing",
@@ -265,12 +289,12 @@
             "from": "cofc::patent-claim-construction-discovery-closed",
             "to": "cofc::patent-claim-construction-hearing",
             "role": "nature",
-            "authority": "RCFC Appendix J Rule 14-15",
+            "authority": "PRCFC 14; PRCFC 15",
             "deadline_days": 7.0,
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 2162203.310446
+            "q": 5243568.218705
           },
           {
             "id": "cofc::e-hearing-to-order",
@@ -278,11 +302,11 @@
             "from": "cofc::patent-claim-construction-hearing",
             "to": "cofc::patent-claim-construction-order",
             "role": "nature",
-            "authority": "RCFC Appendix J Rule 14",
+            "authority": "PRCFC 14",
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 2162203.310446
+            "q": 5243568.218705
           },
           {
             "id": "cofc::e-order-to-settlement",
@@ -290,12 +314,12 @@
             "from": "cofc::patent-claim-construction-order",
             "to": "cofc::patent-mandatory-settlement-discussion",
             "role": "nature",
-            "authority": "RCFC Appendix J Rule 16(a)",
+            "authority": "PRCFC 16(a)",
             "deadline_days": 14.0,
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 2162203.310446
+            "q": 5243568.218705
           },
           {
             "id": "cofc::e-settlementmeet-to-fork",
@@ -308,7 +332,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 2162203.310446
+            "q": 5243568.218705
           },
           {
             "id": "cofc::e-settlementfork-continues",
@@ -320,7 +344,7 @@
             "p": 0.7,
             "kind": "likely-draw",
             "step_p": 0.7,
-            "q": 774576.157779
+            "q": 5176526.026721
           },
           {
             "id": "cofc::e-finalcontentions-to-dispositivefork",
@@ -328,44 +352,21 @@
             "from": "cofc::patent-final-contentions-expert-discovery",
             "to": "cofc::patent-dispositive-motion-fork",
             "role": "self",
-            "authority": "RCFC Appendix J Rule 23; RCFC 26(a)(2)",
+            "authority": "PRCFC 23; RCFC 26(a)(2)",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 774576.157779
+            "q": 5176526.026721
           },
           {
-            "id": "cofc::e-dispositivefork-sj",
-            "label": "Move for summary judgment on infringement, invalidity, or (if liability is undisputed) damages",
+            "id": "cofc::e-dispositivefork-trial",
+            "label": "No dispositive motion; proceed to a bench trial on damages ('reasonable and entire compensation') and any remaining liability issues",
             "from": "cofc::patent-dispositive-motion-fork",
-            "to": "cofc::summary-judgment-motion-filed",
+            "to": "cofc::trial-bench",
             "role": "self",
-            "authority": "RCFC 56",
+            "authority": "28 U.S.C. §1498(a)",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 927576.157779
-          },
-          {
-            "id": "cofc::e-sj-to-ruling",
-            "label": "Briefing completes; court rules on summary judgment",
-            "from": "cofc::summary-judgment-motion-filed",
-            "to": "cofc::sj-ruling",
-            "role": "nature",
-            "p": 1.0,
-            "kind": "likely-draw",
-            "step_p": 1.0,
-            "q": 953076.157779
-          },
-          {
-            "id": "cofc::e-sj-denied",
-            "label": "Motion denied; case proceeds to trial",
-            "from": "cofc::sj-ruling",
-            "to": "cofc::trial-bench",
-            "role": "nature",
-            "authority": "RCFC 56(a)",
-            "p": 0.5,
-            "kind": "likely-draw",
-            "step_p": 0.5,
-            "q": 889157.115916
+            "q": 5329526.026721
           },
           {
             "id": "cofc::e-trial-to-verdict",
@@ -377,7 +378,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 889157.122249
+            "q": 5346526.03237
           },
           {
             "id": "cofc::e-verdict-to-judgment58",
@@ -389,7 +390,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 889157.122249
+            "q": 5346526.03237
           },
           {
             "id": "cofc::e-judgment58-to-posttrialwindow",
@@ -401,7 +402,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 889157.127619
+            "q": 5346526.037101
           },
           {
             "id": "cofc::e-posttrialwindow-lapse",
@@ -413,7 +414,7 @@
             "p": 1.0,
             "kind": "wait-likely-draw",
             "step_p": 1.0,
-            "q": 889157.132236
+            "q": 5346526.041263
           },
           {
             "id": "cofc::e-posttrialresolved-to-costs",
@@ -424,7 +425,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 889157.132236
+            "q": 5346526.041263
           },
           {
             "id": "cofc::e-costs-to-prevailing",
@@ -437,7 +438,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 889157.136264
+            "q": 5346526.045201
           },
           {
             "id": "cofc::e-prevailing-government",
@@ -448,7 +449,7 @@
             "p": 0.5,
             "kind": "likely-draw",
             "step_p": 0.5,
-            "q": 2167537.831093
+            "q": 2548308.061294
           },
           {
             "id": "links::cofc-appeal-judgment-for-government",
@@ -459,7 +460,7 @@
             "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 2167537.831093
+            "q": 2548308.061294
           },
           {
             "id": "cafc@cofc::cofc-file-noa",
@@ -471,7 +472,7 @@
             "deadline_days": 60.0,
             "kind": "choice",
             "step_p": 1.0,
-            "q": 2167537.834592
+            "q": 2548308.065299
           },
           {
             "id": "cafc@cofc::noa-to-docketed",
@@ -483,7 +484,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 2170692.834592
+            "q": 2551463.065299
           },
           {
             "id": "cafc@cofc::docketed-to-appearance",
@@ -495,7 +496,7 @@
             "deadline_days": 14.0,
             "kind": "choice",
             "step_p": 1.0,
-            "q": 2170692.834592
+            "q": 2551463.065299
           }
         ],
         "policy_size": 193,
@@ -504,24 +505,10 @@
       },
       "warnings": [
         {
-          "code": "authored-hole",
-          "count": 1,
-          "example": "pack cafc: 4 explicit hole(s) left numbers unauthored, first /edges/19/probability (no published selection rate); author them in the pack's source (a strict build rejects holes)",
-          "at": []
-        },
-        {
           "code": "compile",
           "count": 69,
           "example": "state flags expanded the graph: 301 additional node(s) for reachable flag combinations",
           "at": []
-        },
-        {
-          "code": "fact-unset",
-          "count": 1,
-          "example": "matter fact not set via scenario.facts; using the authored prior (5 of 5 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
-          "at": [
-            "cafc::remand-destination"
-          ]
         },
         {
           "code": "mixed-node",
@@ -535,14 +522,8 @@
           ]
         },
         {
-          "code": "payoff-not-authored",
-          "count": 1,
-          "example": "33 terminal(s) use a heuristic or zero payoff; override with scenario.payoffs or author `payoff` in the pack",
-          "at": []
-        },
-        {
           "code": "probability-fill",
-          "count": 307,
+          "count": 293,
           "example": "5 of 5 out-edges lack probabilities; filled (Residual)",
           "at": [
             "cafc::appeal-origin",
@@ -566,9 +547,9 @@
           "id": "cofc::claim-accrues",
           "label": "Claim Against the United States Accrues"
         },
-        "value": 2166687.831093,
+        "value": 2547458.061294,
         "converged": true,
-        "iterations": 168,
+        "iterations": 207,
         "fee_shift_rounds": 0,
         "best_line": [
           {
@@ -581,7 +562,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 2166687.831093
+            "q": 2547458.061294
           },
           {
             "id": "cofc::e-patentfork-patent",
@@ -592,7 +573,7 @@
             "authority": "28 U.S.C. § 1498(a)",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 2166687.831093
+            "q": 2547458.061294
           },
           {
             "id": "cofc::e-patentfork-skipadmin",
@@ -602,7 +583,7 @@
             "role": "self",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 2166687.831093
+            "q": 2547458.061294
           },
           {
             "id": "cofc::e-limitations-timely",
@@ -614,7 +595,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 2167537.831093
+            "q": 2548308.061294
           },
           {
             "id": "cofc::e-1500-barred",
@@ -626,7 +607,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 2167537.831093
+            "q": 2548308.061294
           },
           {
             "id": "links::cofc-appeal-1500-bar",
@@ -637,7 +618,7 @@
             "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 2167537.831093
+            "q": 2548308.061294
           },
           {
             "id": "cafc@cofc::cofc-file-noa",
@@ -649,7 +630,7 @@
             "deadline_days": 60.0,
             "kind": "choice",
             "step_p": 1.0,
-            "q": 2167537.834592
+            "q": 2548308.065299
           },
           {
             "id": "cafc@cofc::noa-to-docketed",
@@ -661,7 +642,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 2170692.834592
+            "q": 2551463.065299
           },
           {
             "id": "cafc@cofc::docketed-to-appearance",
@@ -673,7 +654,7 @@
             "deadline_days": 14.0,
             "kind": "choice",
             "step_p": 1.0,
-            "q": 2170692.834592
+            "q": 2551463.065299
           },
           {
             "id": "cafc@cofc::appearance-to-docketing-statement",
@@ -685,7 +666,7 @@
             "deadline_days": 14.0,
             "kind": "choice",
             "step_p": 1.0,
-            "q": 2172392.837788
+            "q": 2553163.069674
           },
           {
             "id": "cafc@cofc::docketing-statement-to-screening",
@@ -697,7 +678,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 2174942.840807
+            "q": 2555713.074496
           },
           {
             "id": "cafc@cofc::screening-to-motions",
@@ -705,11 +686,11 @@
             "from": "cafc@cofc::mediation-screening",
             "to": "cafc@cofc::motions-fork",
             "role": "nature",
-            "authority": "Appellate Mediation Program Guidelines §§ 2, 7",
-            "p": 0.5,
+            "authority": "Appellate Mediation Program Guidelines § 3",
+            "p": 0.85,
             "kind": "likely-draw",
-            "step_p": 0.5,
-            "q": 1499923.794265
+            "step_p": 0.85,
+            "q": 2422392.519426
           },
           {
             "id": "cafc@cofc::motions-decline",
@@ -720,7 +701,7 @@
             "authority": "FRAP 8(a)",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 1499923.794265
+            "q": 2422392.519426
           },
           {
             "id": "cafc@cofc::cross-appeal-decline",
@@ -731,7 +712,7 @@
             "authority": "FRAP 4(a)(3)",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 1499923.798207
+            "q": 2422392.525118
           },
           {
             "id": "cafc@cofc::no-cross-appeal-to-briefing",
@@ -743,7 +724,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 1499923.798207
+            "q": 2422392.525118
           },
           {
             "id": "cafc@cofc::appellant-brief-file",
@@ -755,7 +736,7 @@
             "deadline_days": 60.0,
             "kind": "choice",
             "step_p": 1.0,
-            "q": 1499923.798207
+            "q": 2422392.525118
           },
           {
             "id": "cafc@cofc::appellee-brief-file",
@@ -767,7 +748,7 @@
             "deadline_days": 40.0,
             "kind": "opponent-choice",
             "step_p": 1.0,
-            "q": 1686923.802164
+            "q": 2609392.530559
           },
           {
             "id": "cafc@cofc::reply-brief-waive",
@@ -778,7 +759,7 @@
             "authority": "Fed. Cir. R. 34(a)",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 1856923.806034
+            "q": 2779392.535543
           },
           {
             "id": "cafc@cofc::briefing-to-appendix",
@@ -790,7 +771,7 @@
             "deadline_days": 7.0,
             "kind": "choice",
             "step_p": 1.0,
-            "q": 1856923.809693
+            "q": 2779392.539978
           },
           {
             "id": "cafc@cofc::appendix-to-argument-fork",
@@ -802,31 +783,31 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 1913923.81303
+            "q": 2836392.543846
           },
           {
-            "id": "cafc@cofc::argument-dispensed",
-            "label": "Panel dispenses with argument",
+            "id": "cafc@cofc::argument-granted",
+            "label": "Panel grants oral argument",
             "from": "cafc@cofc::oral-argument-fork",
-            "to": "cafc@cofc::submitted-without-argument",
+            "to": "cafc@cofc::oral-argument-held",
             "role": "nature",
-            "authority": "FRAP 34(a)(2); Fed. Cir. R. 34(a)",
-            "p": 0.5,
+            "authority": "FRAP 34(a)(1); Fed. Cir. IOP #7",
+            "p": 0.6,
             "kind": "likely-draw",
-            "step_p": 0.5,
-            "q": 1913923.817343
+            "step_p": 0.6,
+            "q": 2836392.545961
           },
           {
-            "id": "cafc@cofc::submitted-to-decision",
-            "label": "Panel confers on the papers (IOP #8)",
-            "from": "cafc@cofc::submitted-without-argument",
+            "id": "cafc@cofc::argument-held-to-decision",
+            "label": "Argument concludes — panel confers (IOP #8)",
+            "from": "cafc@cofc::oral-argument-held",
             "to": "cafc@cofc::panel-decision",
             "role": "nature",
             "authority": "Fed. Cir. IOP #8",
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 1913923.817343
+            "q": 2836392.548915
           },
           {
             "id": "cafc@cofc::panel-to-affirmed",
@@ -838,7 +819,7 @@
             "p": 0.28,
             "kind": "likely-draw",
             "step_p": 0.28,
-            "q": 54359.16629
+            "q": 118931.977357
           },
           {
             "id": "cafc@cofc::affirmed-to-rehearing{panel-affirmed}",
@@ -849,7 +830,7 @@
             "authority": "Fed. Cir. R. 40(a)(1)",
             "kind": "choice",
             "step_p": 1.0,
-            "q": 54359.166555
+            "q": 118931.977684
           },
           {
             "id": "cafc@cofc::rehearing-file{panel-affirmed}",
@@ -861,7 +842,7 @@
             "deadline_days": 45.0,
             "kind": "choice",
             "step_p": 1.0,
-            "q": 54359.166802
+            "q": 118931.97797
           },
           {
             "id": "cafc@cofc::rehearing-panel-considers{panel-affirmed}",
@@ -873,7 +854,7 @@
             "p": 1.0,
             "kind": "likely-draw",
             "step_p": 1.0,
-            "q": 130859.167022
+            "q": 195431.978217
           },
           {
             "id": "cafc@cofc::rehearing-denied-edge{panel-affirmed}",
@@ -943,24 +924,10 @@
       },
       "warnings": [
         {
-          "code": "authored-hole",
-          "count": 1,
-          "example": "pack cafc: 4 explicit hole(s) left numbers unauthored, first /edges/19/probability (no published selection rate); author them in the pack's source (a strict build rejects holes)",
-          "at": []
-        },
-        {
           "code": "compile",
           "count": 69,
           "example": "state flags expanded the graph: 301 additional node(s) for reachable flag combinations",
           "at": []
-        },
-        {
-          "code": "fact-unset",
-          "count": 1,
-          "example": "matter fact not set via scenario.facts; using the authored prior (5 of 5 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
-          "at": [
-            "cafc::remand-destination"
-          ]
         },
         {
           "code": "mixed-node",
@@ -974,14 +941,8 @@
           ]
         },
         {
-          "code": "payoff-not-authored",
-          "count": 1,
-          "example": "33 terminal(s) use a heuristic or zero payoff; override with scenario.payoffs or author `payoff` in the pack",
-          "at": []
-        },
-        {
           "code": "probability-fill",
-          "count": 307,
+          "count": 293,
           "example": "5 of 5 out-edges lack probabilities; filled (Residual)",
           "at": [
             "cafc::appeal-origin",

@@ -307,6 +307,282 @@ deadline cost-reply-period: 7.days after CostObjectionServed() counted_by frbp90
 /// FRBP 9027(b).
 deadline removal-notice-evidence-period: 7.days after RemovalNoticeFiled() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9027-1(a)"
 
+test "deadline arithmetic: authority-objection-period" cite "Bankr. D. Or. LBR 1002-1(a)"
+{
+  given FirstMeetingCompleted() on 2027-01-04
+  expect deadline(authority-objection-period) == 2027-01-19
+}
+
+test "deadline arithmetic: attorney-in-fact-statement-period" cite "Bankr. D. Or. LBR 1002-1(a)"
+{
+  given ShowCauseOrderEntered() on 2027-01-04
+  expect deadline(attorney-in-fact-statement-period) == 2027-01-19
+}
+
+test "deadline arithmetic: committee-dispensation-period" cite "Bankr. D. Or. LBR 1020-1"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(committee-dispensation-period) == 2027-01-19
+}
+
+test "deadline arithmetic: examination-setting-period" cite "Bankr. D. Or. LBR 2004-1(b)"
+{
+  given ExaminationMotionFiled() on 2027-01-04
+  expect deadline(examination-setting-period) == 2027-01-19
+}
+
+test "deadline arithmetic: plan-completion-notice-period" cite "Bankr. D. Or. LBR 2015-1(c)"
+{
+  given DischargeRequestFiled() on 2027-01-04
+  expect deadline(plan-completion-notice-period) == 2026-11-30
+}
+
+test "deadline arithmetic: confirmation-fee-application-period" cite "Bankr. D. Or. LBR 2016-1(c)"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(confirmation-fee-application-period) == 2027-02-01
+}
+
+test "deadline arithmetic: fee-no-objection-order-period" cite "Bankr. D. Or. LBR 2016-1(c)"
+{
+  given FeeNoticeServed() on 2027-01-04
+  expect deadline(fee-no-objection-order-period) == 2027-02-01
+}
+
+test "deadline arithmetic: completion-fee-application-period" cite "Bankr. D. Or. LBR 2016-1(d)"
+{
+  given PlanCompletionNoticeServed() on 2027-01-04
+  expect deadline(completion-fee-application-period) == 2027-02-01
+}
+
+test "deadline arithmetic: amended-attorney-statement-period" cite "Bankr. D. Or. LBR 2016-1(e)"
+{
+  given FinalConfirmationHearing() on 2027-01-04
+  expect deadline(amended-attorney-statement-period) == 2026-12-28
+}
+
+test "deadline arithmetic: fee-plan-modification-period" cite "Bankr. D. Or. LBR 2016-1(e)"
+{
+  given SupplementalFeesAllowed() on 2027-01-04
+  expect deadline(fee-plan-modification-period) == 2027-02-01
+}
+
+test "deadline arithmetic: expense-itemization-period" cite "Bankr. D. Or. LBR 2016-1(i)"
+{
+  given ExpenseRequestServed() on 2027-01-04
+  expect deadline(expense-itemization-period) == 2027-02-01
+}
+
+test "deadline arithmetic: amended-claim-objection-period" cite "Bankr. D. Or. LBR 3001-1(c)"
+{
+  given AmendedClaimFiled() on 2027-01-04
+  expect deadline(amended-claim-objection-period) == 2027-01-19
+}
+
+test "deadline arithmetic: wage-order-period" cite "Bankr. D. Or. LBR 3015-1(b)"
+{
+  given FirstMeetingCompleted() on 2027-01-04
+  expect deadline(wage-order-period) == 2027-01-11
+}
+
+test "deadline arithmetic: amended-plan-period" cite "Bankr. D. Or. LBR 3015-2(b)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(amended-plan-period) == 2026-12-07
+}
+
+test "deadline arithmetic: confirmation-order-delivery-period" cite "Bankr. D. Or. LBR 3015-3(b)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(confirmation-order-delivery-period) == 2026-12-28
+}
+
+test "deadline arithmetic: confirmation-objection-period" cite "Bankr. D. Or. LBR 3015-3(c)"
+{
+  given FirstMeetingCompleted() on 2027-01-04
+  expect deadline(confirmation-objection-period) == 2027-01-19
+}
+
+test "deadline arithmetic: unopposed-confirmation-order-period" cite "Bankr. D. Or. LBR 3015-3(c)"
+{
+  given FirstMeetingCompleted() on 2027-01-04
+  expect deadline(unopposed-confirmation-order-period) == 2027-01-25
+}
+
+test "deadline arithmetic: trustee-lodging-period" cite "Bankr. D. Or. LBR 3015-3(c)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(trustee-lodging-period) == 2026-12-28
+}
+
+test "deadline arithmetic: small-business-service-period" cite "Bankr. D. Or. LBR 3017.1-1(a)"
+{
+  given SmallBusinessPlanFiled() on 2027-01-04
+  expect deadline(small-business-service-period) == 2026-12-21
+}
+
+test "deadline arithmetic: small-business-comment-period" cite "Bankr. D. Or. LBR 3017.1-1(a)"
+{
+  given SmallBusinessPlanServed() on 2027-01-04
+  expect deadline(small-business-comment-period) == 2027-01-11
+}
+
+test "deadline arithmetic: temporary-allowance-period" cite "Bankr. D. Or. LBR 3018-1(c)"
+{
+  given DisclosureHearingNoticeServed() on 2027-01-04
+  expect deadline(temporary-allowance-period) == 2027-02-03
+}
+
+test "deadline arithmetic: clerk-fees-payment-period" cite "Bankr. D. Or. LBR 3020-1(b)"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(clerk-fees-payment-period) == 2027-01-19
+}
+
+test "deadline arithmetic: confirmation-order-lodging-period" cite "Bankr. D. Or. LBR 3020-1(b)"
+{
+  given FinalChapterElevenConfirmationHearing() on 2027-01-04
+  expect deadline(confirmation-order-lodging-period) == 2027-01-11
+}
+
+test "deadline arithmetic: stay-extension-motion-period" cite "Bankr. D. Or. LBR 4001-1(e)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(stay-extension-motion-period) == 2027-01-11
+}
+
+test "deadline arithmetic: discharge-applicability-motion-period" cite "Bankr. D. Or. LBR 4004-1(c)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(discharge-applicability-motion-period) == 2027-03-05
+}
+
+test "deadline arithmetic: ecf-registration-period" cite "Bankr. D. Or. LBR 5005-4(b)"
+{
+  given SpecialAdmissionEntered() on 2027-01-04
+  expect deadline(ecf-registration-period) == 2027-01-19
+}
+
+test "deadline arithmetic: redaction-intent-period" cite "Bankr. D. Or. LBR 5077-1(a)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-intent-period) == 2027-01-11
+}
+
+test "deadline arithmetic: redaction-request-period" cite "Bankr. D. Or. LBR 5077-1(a)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-request-period) == 2027-01-25
+}
+
+test "deadline arithmetic: redacted-transcript-period" cite "Bankr. D. Or. LBR 5077-1(a)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redacted-transcript-period) == 2027-02-04
+}
+
+test "deadline arithmetic: transcript-evidence-period" cite "Bankr. D. Or. LBR 5077-1(c)"
+{
+  given EvidentiaryHearing() on 2027-01-04
+  expect deadline(transcript-evidence-period) == 2026-12-21
+}
+
+test "deadline arithmetic: sale-report-period" cite "Bankr. D. Or. LBR 6004-1(b)"
+{
+  given SaleCompleted() on 2027-01-04
+  expect deadline(sale-report-period) == 2027-02-01
+}
+
+test "deadline arithmetic: residence-abandonment-objection-period" cite "Bankr. D. Or. LBR 6007-1(b)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(residence-abandonment-objection-period) == 2026-12-28
+}
+
+test "deadline arithmetic: adversary-opposition-period" cite "Bankr. D. Or. LBR 7007-1(b)"
+{
+  given AdversaryMotionFiled() on 2027-01-04
+  expect deadline(adversary-opposition-period) == 2027-01-19
+}
+
+test "deadline arithmetic: adversary-reply-period" cite "Bankr. D. Or. LBR 7007-1(b)"
+{
+  given AdversaryOppositionFiled() on 2027-01-04
+  expect deadline(adversary-reply-period) == 2027-01-19
+}
+
+test "deadline arithmetic: proposed-pretrial-order-period" cite "Bankr. D. Or. LBR 7016-1(c)"
+{
+  given PretrialOrderDeadline() on 2027-01-04
+  expect deadline(proposed-pretrial-order-period) == 2026-12-04
+}
+
+test "deadline arithmetic: pretrial-order-objection-period" cite "Bankr. D. Or. LBR 7016-1(c)"
+{
+  given ProposedPretrialOrderServed() on 2027-01-04
+  expect deadline(pretrial-order-objection-period) == 2027-01-19
+}
+
+test "deadline arithmetic: compel-compliance-period" cite "Bankr. D. Or. LBR 7037-1(d)"
+{
+  given CompelOrderEntered() on 2027-01-04
+  expect deadline(compel-compliance-period) == 2027-01-19
+}
+
+test "deadline arithmetic: attorney-status-notice-period" cite "Bankr. D. Or. LBR 9010-1(b)"
+{
+  given AttorneyStatusChanged() on 2027-01-04
+  expect deadline(attorney-status-notice-period) == 2027-01-19
+}
+
+test "deadline arithmetic: student-appearance-notice-period" cite "Bankr. D. Or. LBR 9011-2(d)"
+{
+  given StudentFirstHearing() on 2027-01-04
+  expect deadline(student-appearance-notice-period) == 2026-12-28
+}
+
+test "deadline arithmetic: motion-objection-period" cite "Bankr. D. Or. LBR 9013-1(c)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(motion-objection-period) == 2027-01-19
+}
+
+test "deadline arithmetic: expert-disclosure-period" cite "Bankr. D. Or. LBR 9013-1(d)"
+{
+  given EvidentiaryHearing() on 2027-01-04
+  expect deadline(expert-disclosure-period) == 2026-12-21
+}
+
+test "deadline arithmetic: court-equipment-notice-period" cite "Bankr. D. Or. LBR 9017-1(c)"
+{
+  given EvidentiaryHearing() on 2027-01-04
+  expect deadline(court-equipment-notice-period) == 2026-12-21
+}
+
+test "deadline arithmetic: cost-bill-period" cite "Bankr. D. Or. LBR 9021-1(d)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(cost-bill-period) == 2027-01-19
+}
+
+test "deadline arithmetic: cost-objection-period" cite "Bankr. D. Or. LBR 9021-1(d)"
+{
+  given CostBillServed() on 2027-01-04
+  expect deadline(cost-objection-period) == 2027-01-19
+}
+
+test "deadline arithmetic: cost-reply-period" cite "Bankr. D. Or. LBR 9021-1(d)"
+{
+  given CostObjectionServed() on 2027-01-04
+  expect deadline(cost-reply-period) == 2027-01-11
+}
+
+test "deadline arithmetic: removal-notice-evidence-period" cite "Bankr. D. Or. LBR 9027-1(a)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removal-notice-evidence-period) == 2027-01-11
+}
+
 start motion-filed
 
 state motion-filed: "Motion filed and served" by applicant cite "Bankr. D. Or. LBR 9013-1(c)"

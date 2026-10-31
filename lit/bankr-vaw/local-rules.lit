@@ -215,3 +215,142 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "These local rules govern practice and procedure in the court and clarify the FRBP's practice there (LBR 1001-1)."
 }
+
+
+test "Deadline arithmetic: consolidated-matrix-period" cite "W.D. Va. LBR 1015-1(A)"
+{
+  given ConsolidationOrderEntered() on 2027-01-04
+  expect deadline(consolidated-matrix-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: employment-objection-period" cite "W.D. Va. LBR 2014-1(C)"
+{
+  given EmploymentApplicationFiled() on 2027-01-04
+  expect deadline(employment-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter7-fee-application-period" cite "W.D. Va. LBR 2016-1"
+{
+  given FinalDistributionOrderEntered() on 2027-01-04
+  expect deadline(chapter7-fee-application-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: trustee-preliminary-review-period" cite "W.D. Va. LBR 3017-2(A)"
+{
+  given PlanDisclosureFiled() on 2027-01-04
+  expect deadline(trustee-preliminary-review-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: trustee-comment-period" cite "W.D. Va. LBR 3017-2(A)"
+{
+  given PlanDisclosureSubmitted() on 2027-01-04
+  expect deadline(trustee-comment-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: trustee-statement-period" cite "W.D. Va. LBR 3017-2(C)"
+{
+  given ConditionalApprovalMotionFiled() on 2027-01-04
+  expect deadline(trustee-statement-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: final-decree-notice-period" cite "W.D. Va. LBR 3022-1(B)"
+{
+  given FinalDecreeHearingDate() on 2027-01-04
+  expect deadline(final-decree-notice-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: final-decree-objection-period" cite "W.D. Va. LBR 3022-1(C)"
+{
+  given FinalDecreeHearingDate() on 2027-01-04
+  expect deadline(final-decree-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: payment-advices-period" cite "W.D. Va. LBR 4002-1(A)(2)"
+{
+  given MeetingOfCreditorsDate() on 2027-01-04
+  expect deadline(payment-advices-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: payment-advices-request-period" cite "W.D. Va. LBR 4002-1(A)(2)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-request-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: lessor-response-period" cite "W.D. Va. LBR 4002-3(C)"
+{
+  given LessorNoticeSent() on 2027-01-04
+  expect deadline(lessor-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discharge-certification-period" cite "W.D. Va. LBR 4004-1(A)"
+{
+  given PlanCompletionNoticeFiled() on 2027-01-04
+  expect deadline(discharge-certification-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: discharge-dispute-period" cite "W.D. Va. LBR 4004-1(B)"
+{
+  given DischargeDisputeNoticeSent() on 2027-01-04
+  expect deadline(discharge-dispute-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: signed-originals-period" cite "W.D. Va. LBR 5005-4"
+{
+  given OriginalsRequested() on 2027-01-04
+  expect deadline(signed-originals-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discharge-dismissal-notice-period" cite "W.D. Va. LBR 7041-1"
+{
+  given DischargeDismissalHearingDate() on 2027-01-04
+  expect deadline(discharge-dismissal-notice-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: record-copies-period" cite "W.D. Va. LBR 8006-1"
+{
+  given RecordDesignationFiled() on 2027-01-04
+  expect deadline(record-copies-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: record-transmittal-period" cite "W.D. Va. LBR 8007-1(B)"
+{
+  given NoticeOfAppealFiled() on 2027-01-04
+  expect deadline(record-transmittal-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: hearing-notice-period" cite "W.D. Va. LBR 9013-1(H)"
+{
+  given HearingDateGiven() on 2027-01-04
+  expect deadline(hearing-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: motion-response-period" cite "W.D. Va. LBR 9013-1(M)"
+{
+  given NoticedHearingDate() on 2027-01-04
+  expect deadline(motion-response-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: jury-consent-period" cite "W.D. Va. LBR 9015-1(B)"
+{
+  given JuryDemandMade() on 2027-01-04
+  expect deadline(jury-consent-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: jury-withdrawal-motion-period" cite "W.D. Va. LBR 9015-1(B)"
+{
+  given JuryConsentDeadlinePassed() on 2027-01-04
+  expect deadline(jury-withdrawal-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: exhibit-withdrawal-period" cite "W.D. Va. LBR 9070-1(B)"
+{
+  given AppealTimeExpired() on 2027-01-04
+  expect deadline(exhibit-withdrawal-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: proposed-order-period" cite "W.D. Va. LBR 9072-1(A)"
+{
+  given MatterDisposed() on 2027-01-04
+  expect deadline(proposed-order-period) == 2027-01-14
+}

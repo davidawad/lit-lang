@@ -521,3 +521,429 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The rules govern all cases and proceedings brought after they take effect on July 1, 2026 and those then pending in so far as just and practical (W.PA.LBR 1001-2(a), 1001-3); a presiding judge may modify a rule's applicability in a particular case (W.PA.LBR 1001-2(c))."
 }
+
+test "Deadline arithmetic: complex-case-prefiling-notice-period (3 days before)" cite "W.PA.LBR 1002-3"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(complex-case-prefiling-notice-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: claims-agent-order-notice-period (7 days after)" cite "W.PA.LBR 1002-8(c)"
+{
+  given DismissOrConvertEntered() on 2027-01-04
+  expect deadline(claims-agent-order-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: dismissal-fee-balance-period (14 days after)" cite "W.PA.LBR 1006-1(b)"
+{
+  given DismissOrConvertEntered() on 2027-01-04
+  expect deadline(dismissal-fee-balance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: other-income-report-period (14 days before)" cite "W.PA.LBR 1007-4(b)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(other-income-report-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: business-questionnaire-period (14 days before)" cite "W.PA.LBR 1007-4(c)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(business-questionnaire-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: certificate-of-service-period (7 days after)" cite "W.PA.LBR 2002-1(a)"
+{
+  given NoticeServed() on 2027-01-04
+  expect deadline(certificate-of-service-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: examination-notice-period (28 days before)" cite "W.PA.LBR 2004-1(c)"
+{
+  given Examination() on 2027-01-04
+  expect deadline(examination-notice-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: examination-objection-period (14 days after)" cite "W.PA.LBR 2004-1(c)"
+{
+  given ExaminationNoticeServed() on 2027-01-04
+  expect deadline(examination-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: unfiled-tax-returns-period (60 days after)" cite "W.PA.LBR 2015-1(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(unfiled-tax-returns-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: added-creditor-claim-period (30 days after)" cite "W.PA.LBR 3002-1(a)"
+{
+  given AmendmentNoticeSent() on 2027-01-04
+  expect deadline(added-creditor-claim-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: amended-claim-objection-period (90 days after)" cite "W.PA.LBR 3002-3(e)"
+{
+  given AmendedClaimServed() on 2027-01-04
+  expect deadline(amended-claim-objection-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: funds-on-reserve-notice-period (21 days after)" cite "W.PA.LBR 3002-3(g)"
+{
+  given FundsReserved() on 2027-01-04
+  expect deadline(funds-on-reserve-notice-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: payment-change-response-period (21 days after)" cite "W.PA.LBR 3002-4(b)"
+{
+  given PaymentChangeNoticeFiled() on 2027-01-04
+  expect deadline(payment-change-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: postpetition-fees-response-period (21 days after)" cite "W.PA.LBR 3002-5(b)"
+{
+  given PostpetitionFeesNoticeFiled() on 2027-01-04
+  expect deadline(postpetition-fees-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: chapter11-claim-period (90 days after)" cite "W.PA.LBR 3003-1"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: unclaimed-funds-objection-period (21 days after)" cite "W.PA.LBR 3011-1(d)"
+{
+  given UnclaimedFundsApplicationServed() on 2027-01-04
+  expect deadline(unclaimed-funds-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: chapter13-plan-objection-period (7 days before)" cite "W.PA.LBR 3015-3(a)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter13-plan-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: hearing-objection-period (14 days before)" cite "W.PA.LBR 3015-3(c)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(hearing-objection-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: amended-ballot-summary-period (2 days after)" cite "W.PA.LBR 3018-1(e)"
+{
+  given PlanHearing() on 2027-01-04
+  expect deadline(amended-ballot-summary-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: first-accounting-period (90 days after)" cite "W.PA.LBR 3021-1(b)"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(first-accounting-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: chapter13-claim-objection-period (90 days after)" cite "W.PA.LBR 3021-1(c)(2)"
+{
+  given ClaimsBarDate() on 2027-01-04
+  expect deadline(chapter13-claim-objection-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: late-claim-objection-period (90 days after)" cite "W.PA.LBR 3021-1(c)(2)"
+{
+  given LateClaimServed() on 2027-01-04
+  expect deadline(late-claim-objection-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: final-decree-motion-period (90 days after)" cite "W.PA.LBR 3022-1(a)"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(final-decree-motion-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: rent-deposit-period (3 days after)" cite "W.PA.LBR 4001-3(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(rent-deposit-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: proof-of-insurance-period (14 days after)" cite "W.PA.LBR 4002-2"
+{
+  given InitialPlanFiled() on 2027-01-04
+  expect deadline(proof-of-insurance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter11-discharge-motion-period (90 days after)" cite "W.PA.LBR 4004-4"
+{
+  given FinalPlanDistribution() on 2027-01-04
+  expect deadline(chapter11-discharge-motion-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: signature-declaration-period (14 days after)" cite "W.PA.LBR 5005-7(d)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(signature-declaration-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: ecf-fee-payment-period (4 days after)" cite "W.PA.LBR 5005-10(b)"
+{
+  given FeesIncurred() on 2027-01-04
+  expect deadline(ecf-fee-payment-period) == 2027-01-08
+}
+
+test "Deadline arithmetic: unredacted-copy-retrieval-period (14 days after)" cite "W.PA.LBR 5005-20(c)"
+{
+  given SealDenied() on 2027-01-04
+  expect deadline(unredacted-copy-retrieval-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: custodian-account-period (30 days after)" cite "W.PA.LBR 6002-1"
+{
+  given CustodianLearnedOfCase() on 2027-01-04
+  expect deadline(custodian-account-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: sale-publication-period (14 days before)" cite "W.PA.LBR 6004-1(c)"
+{
+  given SaleDate() on 2027-01-04
+  expect deadline(sale-publication-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: report-of-sale-period (7 days after)" cite "W.PA.LBR 6004-1(c)"
+{
+  given SaleConsummated() on 2027-01-04
+  expect deadline(report-of-sale-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: adversary-response-period (14 days after)" cite "W.PA.LBR 7008-1(d)"
+{
+  given AdversaryMotionServed() on 2027-01-04
+  expect deadline(adversary-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: adversary-brief-period (7 days before)" cite "W.PA.LBR 7008-1(e)"
+{
+  given AdversaryMotionHearing() on 2027-01-04
+  expect deadline(adversary-brief-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: trial-continuance-motion-period (7 days before)" cite "W.PA.LBR 7008-1(f)"
+{
+  given Trial() on 2027-01-04
+  expect deadline(trial-continuance-motion-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: transcript-order-notice-period (14 days after)" cite "W.PA.LBR 7008-2(b)"
+{
+  given FindingsObjectionFiled() on 2027-01-04
+  expect deadline(transcript-order-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: transcript-portion-motion-period (14 days after)" cite "W.PA.LBR 7008-2(c)"
+{
+  given FindingsObjectionFiled() on 2027-01-04
+  expect deadline(transcript-portion-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: transcript-after-order-period (7 days after)" cite "W.PA.LBR 7008-2(c)"
+{
+  given TranscriptOrderEntered() on 2027-01-04
+  expect deadline(transcript-after-order-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: third-party-documents-period (14 days after)" cite "W.PA.LBR 7014-1"
+{
+  given ThirdPartyAppeared() on 2027-01-04
+  expect deadline(third-party-documents-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: ediscovery-exchange-period (7 days before)" cite "W.PA.LBR 7026-1(c)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(ediscovery-exchange-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: preservation-outline-period (30 days after)" cite "W.PA.LBR 7026-1(g)"
+{
+  given DiscoveryCommenced() on 2027-01-04
+  expect deadline(preservation-outline-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: retention-compliance-period (7 days after)" cite "W.PA.LBR 7026-1(h)"
+{
+  given CustodiansIdentified() on 2027-01-04
+  expect deadline(retention-compliance-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: discovery-order-compliance-period (14 days after)" cite "W.PA.LBR 7037-1(e)"
+{
+  given DiscoveryOrderEntered() on 2027-01-04
+  expect deadline(discovery-order-compliance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: summary-judgment-opposition-period (30 days after)" cite "W.PA.LBR 7056-1(b)"
+{
+  given SummaryJudgmentServed() on 2027-01-04
+  expect deadline(summary-judgment-opposition-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "W.PA.LBR 7056-1(c)"
+{
+  given SummaryJudgmentOppositionServed() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: appellant-transcript-request-period (2 days after)" cite "W.PA.LBR 8006-1(b)"
+{
+  given RecordDesignationFiled() on 2027-01-04
+  expect deadline(appellant-transcript-request-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: appellee-transcript-request-period (2 days after)" cite "W.PA.LBR 8006-1(c)"
+{
+  given AppelleeDesignationFiled() on 2027-01-04
+  expect deadline(appellee-transcript-request-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: cross-appellant-transcript-request-period (2 days after)" cite "W.PA.LBR 8006-1(d)"
+{
+  given CrossAppealIssuesFiled() on 2027-01-04
+  expect deadline(cross-appellant-transcript-request-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: cross-appellee-transcript-request-period (2 days after)" cite "W.PA.LBR 8006-1(e)"
+{
+  given CrossAppelleeDesignationFiled() on 2027-01-04
+  expect deadline(cross-appellee-transcript-request-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: certificate-of-no-objection-period (3 days after)" cite "W.PA.LBR 9013-7(c)"
+{
+  given ResponseDeadlinePassed() on 2027-01-04
+  expect deadline(certificate-of-no-objection-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: contested-response-period (14 days after)" cite "W.PA.LBR 9014-1"
+{
+  given MotionFiled() on 2027-01-04
+  expect deadline(contested-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: jury-demand-period (14 days after)" cite "W.PA.LBR 9015-1(a)"
+{
+  given JuryTriggeringResponseFiled() on 2027-01-04
+  expect deadline(jury-demand-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: removed-jury-demand-period (30 days after)" cite "W.PA.LBR 9015-1(b)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removed-jury-demand-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: jury-consents-period (30 days after)" cite "W.PA.LBR 9015-1(c)"
+{
+  given JuryDemandFiled() on 2027-01-04
+  expect deadline(jury-consents-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: unserved-subpoena-return-period (14 days after)" cite "W.PA.LBR 9016-1(g)"
+{
+  given SubpoenaIssued() on 2027-01-04
+  expect deadline(unserved-subpoena-return-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediation-submission-period (7 days before)" cite "W.PA.LBR 9019-4(b)"
+{
+  given MediationConference() on 2027-01-04
+  expect deadline(mediation-submission-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: mediated-settlement-stipulation-period (7 days after)" cite "W.PA.LBR 9019-6(b)"
+{
+  given MediationEnded() on 2027-01-04
+  expect deadline(mediated-settlement-stipulation-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: loss-mitigation-motion-period (30 days after)" cite "W.PA.LBR 9020-2(a)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(loss-mitigation-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: loss-mitigation-objection-period (14 days after)" cite "W.PA.LBR 9020-2(d)"
+{
+  given LossMitigationMotionServed() on 2027-01-04
+  expect deadline(loss-mitigation-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: lmp-registration-period (14 days after)" cite "W.PA.LBR 9020-4(b)"
+{
+  given LossMitigationOrderEntered() on 2027-01-04
+  expect deadline(lmp-registration-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: lmp-contact-designation-period (14 days after)" cite "W.PA.LBR 9020-4(d)"
+{
+  given CoreLmpPackageSubmitted() on 2027-01-04
+  expect deadline(lmp-contact-designation-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: lmp-status-report-period (60 days after)" cite "W.PA.LBR 9020-4(e)"
+{
+  given LossMitigationOrderEntered() on 2027-01-04
+  expect deadline(lmp-status-report-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: lmp-final-report-period (7 days after)" cite "W.PA.LBR 9020-4(f)"
+{
+  given LmpPeriodConcluded() on 2027-01-04
+  expect deadline(lmp-final-report-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: trial-modification-order-period (14 days before)" cite "W.PA.LBR 9020-4(g)"
+{
+  given TrialModificationPaymentDue() on 2027-01-04
+  expect deadline(trial-modification-order-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: lmp-order-upload-period (7 days after)" cite "W.PA.LBR 9020-4(h)"
+{
+  given LmpOrderEntered() on 2027-01-04
+  expect deadline(lmp-order-upload-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: modified-plan-after-modification-period (14 days after)" cite "W.PA.LBR 9020-6(d)"
+{
+  given ModificationApproved() on 2027-01-04
+  expect deadline(modified-plan-after-modification-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: final-modification-offer-period (14 days after)" cite "W.PA.LBR 9020-6(g)"
+{
+  given LastInterimPaymentReceived() on 2027-01-04
+  expect deadline(final-modification-offer-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: transcript-redaction-notice-period (7 days after)" cite "W.PA.LBR 9037-1(b)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(transcript-redaction-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: transcript-redaction-request-period (21 days after)" cite "W.PA.LBR 9037-1(b)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(transcript-redaction-request-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: exhibit-removal-period (14 days after)" cite "W.PA.LBR 9070-1"
+{
+  given FinalDisposition() on 2027-01-04
+  expect deadline(exhibit-removal-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: sealed-document-retrieval-period (1 years after)" cite "W.PA.LBR 5005-20(b)"
+{
+  given CaseClosed() on 2027-01-04
+  expect deadline(sealed-document-retrieval-period) == 2028-01-04
+}

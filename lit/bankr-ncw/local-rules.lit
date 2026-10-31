@@ -257,172 +257,206 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
   note "The case continues under the FRBP periods of lit/frbp and these rules."
 }
 
-test "Deadline arithmetic: plan-papers-certificate-period (7 days after)" cite "W.D.N.C. LBR 2002-1(e)" {
+test "Deadline arithmetic: plan-papers-certificate-period (7 days after)" cite "W.D.N.C. LBR 2002-1(e)"
+{
   given Chapter11PlanPapersServed() on 2027-04-05
   expect deadline(plan-papers-certificate-period) == 2027-04-13
 }
 
-test "Deadline arithmetic: chapter13-plan-service-period (7 days after)" cite "W.D.N.C. LBR 2002-1(f)" {
+test "Deadline arithmetic: chapter13-plan-service-period (7 days after)" cite "W.D.N.C. LBR 2002-1(f)"
+{
   given Chapter13PlanFiled() on 2027-04-05
   expect deadline(chapter13-plan-service-period) == 2027-04-13
 }
 
-test "Deadline arithmetic: chapter13-confirmation-objection-period (14 days after)" cite "W.D.N.C. LBR 2002-3(b)" {
+test "Deadline arithmetic: chapter13-confirmation-objection-period (14 days after)" cite "W.D.N.C. LBR 2002-3(b)"
+{
   given MeetingConcluded() on 2027-04-05
   expect deadline(chapter13-confirmation-objection-period) == 2027-04-19
 }
 
-test "Deadline arithmetic: meeting-continuance-motion-period (7 days before)" cite "W.D.N.C. LBR 2003-1(b)" {
+test "Deadline arithmetic: meeting-continuance-motion-period (7 days before)" cite "W.D.N.C. LBR 2003-1(b)"
+{
   given ScheduledMeetingDate() on 2027-04-05
   expect deadline(meeting-continuance-motion-period) == 2027-03-29
 }
 
-test "Deadline arithmetic: attendance-waiver-motion-period (7 days after)" cite "W.D.N.C. LBR 2003-1(d)" {
+test "Deadline arithmetic: attendance-waiver-motion-period (7 days after)" cite "W.D.N.C. LBR 2003-1(d)"
+{
   given PetitionFiled() on 2027-04-05
   expect deadline(attendance-waiver-motion-period) == 2027-04-13
 }
 
-test "Deadline arithmetic: confirmation-fees-period (30 days after)" cite "W.D.N.C. LBR 2016-1(c)" {
+test "Deadline arithmetic: confirmation-fees-period (30 days after)" cite "W.D.N.C. LBR 2016-1(c)"
+{
   given ConfirmationMonthEnded() on 2027-04-05
   expect deadline(confirmation-fees-period) == 2027-05-05
 }
 
-test "Deadline arithmetic: substitute-counsel-base-fee-motion-period (30 days after)" cite "W.D.N.C. LBR 2016-2(c)(2)(B)" {
+test "Deadline arithmetic: substitute-counsel-base-fee-motion-period (30 days after)" cite "W.D.N.C. LBR 2016-2(c)(2)(B)"
+{
   given SubstituteCounselEntered() on 2027-04-05
   expect deadline(substitute-counsel-base-fee-motion-period) == 2027-05-05
 }
 
-test "Deadline arithmetic: excess-fee-application-period (30 days after)" cite "W.D.N.C. LBR 2016-2(e)(1)" {
+test "Deadline arithmetic: excess-fee-application-period (30 days after)" cite "W.D.N.C. LBR 2016-2(e)(1)"
+{
   given PetitionFiled() on 2027-04-05
   expect deadline(excess-fee-application-period) == 2027-05-05
 }
 
-test "Deadline arithmetic: hourly-fee-election-period (30 days after)" cite "W.D.N.C. LBR 2016-2(e)(2)" {
+test "Deadline arithmetic: hourly-fee-election-period (30 days after)" cite "W.D.N.C. LBR 2016-2(e)(2)"
+{
   given PetitionFiled() on 2027-04-05
   expect deadline(hourly-fee-election-period) == 2027-05-05
 }
 
-test "Deadline arithmetic: subchapter-v-claim-period (70 days after)" cite "W.D.N.C. LBR 3001-1(c)(1)" {
+test "Deadline arithmetic: subchapter-v-claim-period (70 days after)" cite "W.D.N.C. LBR 3001-1(c)(1)"
+{
   given OrderForReliefEntered() on 2027-04-05
   expect deadline(subchapter-v-claim-period) == 2027-06-14
 }
 
-test "Deadline arithmetic: chapter11-claim-period (90 days after)" cite "W.D.N.C. LBR 3001-1(c)(2)" {
+test "Deadline arithmetic: chapter11-claim-period (90 days after)" cite "W.D.N.C. LBR 3001-1(c)(2)"
+{
   given OrderForReliefEntered() on 2027-04-05
   expect deadline(chapter11-claim-period) == 2027-07-06
 }
 
-test "Deadline arithmetic: conduit-exception-motion-period (7 days after)" cite "W.D.N.C. LBR 3003-1(c)(1)" {
+test "Deadline arithmetic: conduit-exception-motion-period (7 days after)" cite "W.D.N.C. LBR 3003-1(c)(1)"
+{
   given PetitionFiled() on 2027-04-05
   expect deadline(conduit-exception-motion-period) == 2027-04-13
 }
 
-test "Deadline arithmetic: conduit-commencement-objection-period (14 days after)" cite "W.D.N.C. LBR 3003-1(e)(1)" {
+test "Deadline arithmetic: conduit-commencement-objection-period (14 days after)" cite "W.D.N.C. LBR 3003-1(e)(1)"
+{
   given ConfirmationOrderEntered() on 2027-04-05
   expect deadline(conduit-commencement-objection-period) == 2027-04-19
 }
 
-test "Deadline arithmetic: conduit-change-notice-period (21 days before)" cite "W.D.N.C. LBR 3003-1(e)(3)" {
+test "Deadline arithmetic: conduit-change-notice-period (21 days before)" cite "W.D.N.C. LBR 3003-1(e)(3)"
+{
   given ConduitChangeEffective() on 2027-04-05
   expect deadline(conduit-change-notice-period) == 2027-03-15
 }
 
-test "Deadline arithmetic: unclaimed-funds-service-period (14 days before)" cite "W.D.N.C. LBR 3011-1(c)" {
+test "Deadline arithmetic: unclaimed-funds-service-period (14 days before)" cite "W.D.N.C. LBR 3011-1(c)"
+{
   given UnclaimedFundsHearingDate() on 2027-04-05
   expect deadline(unclaimed-funds-service-period) == 2027-03-22
 }
 
-test "Deadline arithmetic: converted-funds-objection-period (28 days after)" cite "W.D.N.C. LBR 3015-2(b)" {
+test "Deadline arithmetic: converted-funds-objection-period (28 days after)" cite "W.D.N.C. LBR 3015-2(b)"
+{
   given ConvertedFundsNoticeFiled() on 2027-04-05
   expect deadline(converted-funds-objection-period) == 2027-05-03
 }
 
-test "Deadline arithmetic: debtor-payment-history-period (7 days before)" cite "W.D.N.C. LBR 4001-1(a)(7)" {
+test "Deadline arithmetic: debtor-payment-history-period (7 days before)" cite "W.D.N.C. LBR 4001-1(a)(7)"
+{
   given InitialStayHearingDate() on 2027-04-05
   expect deadline(debtor-payment-history-period) == 2027-03-29
 }
 
-test "Deadline arithmetic: personal-property-deficiency-claim-period (120 days after)" cite "W.D.N.C. LBR 4001-1(d)(4)" {
+test "Deadline arithmetic: personal-property-deficiency-claim-period (120 days after)" cite "W.D.N.C. LBR 4001-1(d)(4)"
+{
   given StayProtectionRemoved() on 2027-04-05
   expect deadline(personal-property-deficiency-claim-period) == 2027-08-03
 }
 
-test "Deadline arithmetic: real-property-deficiency-claim-period (180 days after)" cite "W.D.N.C. LBR 4001-1(d)(4)(A)" {
+test "Deadline arithmetic: real-property-deficiency-claim-period (180 days after)" cite "W.D.N.C. LBR 4001-1(d)(4)(A)"
+{
   given StayProtectionRemoved() on 2027-04-05
   expect deadline(real-property-deficiency-claim-period) == 2027-10-04
 }
 
-test "Deadline arithmetic: escrow-change-notice-period (30 days before)" cite "W.D.N.C. LBR 4001-1(e)(5)" {
+test "Deadline arithmetic: escrow-change-notice-period (30 days before)" cite "W.D.N.C. LBR 4001-1(e)(5)"
+{
   given PaymentChangeDue() on 2027-04-05
   expect deadline(escrow-change-notice-period) == 2027-03-05
 }
 
-test "Deadline arithmetic: advance-notice-period (30 days before)" cite "W.D.N.C. LBR 4001-1(e)(6)" {
+test "Deadline arithmetic: advance-notice-period (30 days before)" cite "W.D.N.C. LBR 4001-1(e)(6)"
+{
   given TaxInsuranceAdvance() on 2027-04-05
   expect deadline(advance-notice-period) == 2027-03-05
 }
 
-test "Deadline arithmetic: trustee-request-period (14 days after)" cite "W.D.N.C. LBR 4002-1(c)(1)" {
+test "Deadline arithmetic: trustee-request-period (14 days after)" cite "W.D.N.C. LBR 4002-1(c)(1)"
+{
   given TrusteeRequestMade() on 2027-04-05
   expect deadline(trustee-request-period) == 2027-04-19
 }
 
-test "Deadline arithmetic: exemption-amendment-period (14 days after)" cite "W.D.N.C. LBR 4003-1(b)" {
+test "Deadline arithmetic: exemption-amendment-period (14 days after)" cite "W.D.N.C. LBR 4003-1(b)"
+{
   given MeetingConcluded() on 2027-04-05
   expect deadline(exemption-amendment-period) == 2027-04-19
 }
 
-test "Deadline arithmetic: discharge-motion-period (60 days after)" cite "W.D.N.C. LBR 4004-1(b)" {
+test "Deadline arithmetic: discharge-motion-period (60 days after)" cite "W.D.N.C. LBR 4004-1(b)"
+{
   given TrusteeFinalReportFiled() on 2027-04-05
   expect deadline(discharge-motion-period) == 2027-06-04
 }
 
-test "Deadline arithmetic: final-order-objection-period (14 days before)" cite "W.D.N.C. LBR 7007-1(b)" {
+test "Deadline arithmetic: final-order-objection-period (14 days before)" cite "W.D.N.C. LBR 7007-1(b)"
+{
   given PretrialOrDispositiveHearingDate() on 2027-04-05
   expect deadline(final-order-objection-period) == 2027-03-22
 }
 
-test "Deadline arithmetic: adversary-service-prosecution-period (30 days after)" cite "W.D.N.C. LBR 7041-1(a)(1)" {
+test "Deadline arithmetic: adversary-service-prosecution-period (30 days after)" cite "W.D.N.C. LBR 7041-1(a)(1)"
+{
   given AdversaryComplaintFiled() on 2027-04-05
   expect deadline(adversary-service-prosecution-period) == 2027-05-05
 }
 
-test "Deadline arithmetic: default-prosecution-period (30 days after)" cite "W.D.N.C. LBR 7041-1(a)(2)" {
+test "Deadline arithmetic: default-prosecution-period (30 days after)" cite "W.D.N.C. LBR 7041-1(a)(2)"
+{
   given ResponsivePleadingTimeExpired() on 2027-04-05
   expect deadline(default-prosecution-period) == 2027-05-05
 }
 
-test "Deadline arithmetic: inactivity-prosecution-period (4 months after)" cite "W.D.N.C. LBR 7041-1(a)(3)" {
+test "Deadline arithmetic: inactivity-prosecution-period (4 months after)" cite "W.D.N.C. LBR 7041-1(a)(3)"
+{
   given LastAdversaryActivity() on 2027-04-05
   expect deadline(inactivity-prosecution-period) == 2027-08-05
 }
 
-test "Deadline arithmetic: special-setting-issues-period (1 weeks before)" cite "W.D.N.C. LBR 9013-1(d)" {
+test "Deadline arithmetic: special-setting-issues-period (1 weeks before)" cite "W.D.N.C. LBR 9013-1(d)"
+{
   given SpecialSettingDate() on 2027-04-05
   expect deadline(special-setting-issues-period) == 2027-03-29
 }
 
-test "Deadline arithmetic: no-protest-response-period (14 days after)" cite "W.D.N.C. LBR 9013-1(e)" {
+test "Deadline arithmetic: no-protest-response-period (14 days after)" cite "W.D.N.C. LBR 9013-1(e)"
+{
   given NoProtestNoticeServed() on 2027-04-05
   expect deadline(no-protest-response-period) == 2027-04-19
 }
 
-test "Deadline arithmetic: ex-parte-reconsideration-period (14 days after)" cite "W.D.N.C. LBR 9013-1(f)" {
+test "Deadline arithmetic: ex-parte-reconsideration-period (14 days after)" cite "W.D.N.C. LBR 9013-1(f)"
+{
   given ExParteEntryNoticeServed() on 2027-04-05
   expect deadline(ex-parte-reconsideration-period) == 2027-04-19
 }
 
-test "Deadline arithmetic: mediator-report-period (7 days after)" cite "W.D.N.C. LBR 9019-2(c)(3)" {
+test "Deadline arithmetic: mediator-report-period (7 days after)" cite "W.D.N.C. LBR 9019-2(c)(3)"
+{
   given MediationConcluded() on 2027-04-05
   expect deadline(mediator-report-period) == 2027-04-13
 }
 
-test "Deadline arithmetic: remote-meeting-arrangement-period (30 days before)" cite "W.D.N.C. LBR 9029-1(f)" {
+test "Deadline arithmetic: remote-meeting-arrangement-period (30 days before)" cite "W.D.N.C. LBR 9029-1(f)"
+{
   given ScheduledMeetingDate() on 2027-04-05
   expect deadline(remote-meeting-arrangement-period) == 2027-03-05
 }
 
-test "Deadline arithmetic: transcript-redaction-request-period (7 days after)" cite "W.D.N.C. LBR 9037-1(d)" {
+test "Deadline arithmetic: transcript-redaction-request-period (7 days after)" cite "W.D.N.C. LBR 9037-1(d)"
+{
   given TranscriptNoticeGiven() on 2027-04-05
   expect deadline(transcript-redaction-request-period) == 2027-04-13
 }

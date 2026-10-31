@@ -315,3 +315,232 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Bankruptcy Rules of the District Court of the Virgin Islands, Bankruptcy Division, as revised, take effect on February 1, 2026 (LBR 1001-3), as the court ordered on January 30, 2026."
 }
+
+
+test "Deadline arithmetic: certificate-of-service-period" cite "D.V.I. LBR 2002-1"
+{
+  given DocumentServed() on 2027-01-04
+  expect deadline(certificate-of-service-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: tax-return-period" cite "D.V.I. LBR 1007-3(B)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(tax-return-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: other-income-report-period" cite "D.V.I. LBR 1007-3(C)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(other-income-report-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: chapter13-income-proof-period" cite "D.V.I. LBR 1007-3(D)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter13-income-proof-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: domestic-support-disclosure-period" cite "D.V.I. LBR 1007-4(A)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(domestic-support-disclosure-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: examination-notice-period" cite "D.V.I. LBR 2004-1(D)"
+{
+  given Examination() on 2027-01-04
+  expect deadline(examination-notice-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: examination-objection-period" cite "D.V.I. LBR 2004-1(D)"
+{
+  given ExaminationMotionNoticeServed() on 2027-01-04
+  expect deadline(examination-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: delinquent-tax-returns-period" cite "D.V.I. LBR 2015-1(A)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(delinquent-tax-returns-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: business-questionnaire-period" cite "D.V.I. LBR 2015-1"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(business-questionnaire-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: insider-compensation-statement-period" cite "D.V.I. LBR 2016-3(B)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(insider-compensation-statement-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: added-creditor-claim-period" cite "D.V.I. LBR 3002-1(B)"
+{
+  given AmendmentNoticeSent() on 2027-01-04
+  expect deadline(added-creditor-claim-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: claim-transfer-objection-period" cite "D.V.I. LBR 3002-2(D)"
+{
+  given TransferNoticed() on 2027-01-04
+  expect deadline(claim-transfer-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: deficiency-notice-period" cite "D.V.I. LBR 3002-3(C)"
+{
+  given CollateralSurrendered() on 2027-01-04
+  expect deadline(deficiency-notice-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: amended-claim-objection-period" cite "D.V.I. LBR 3002-3(D)"
+{
+  given AmendedClaimServed() on 2027-01-04
+  expect deadline(amended-claim-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: chapter13-claim-objection-period" cite "D.V.I. LBR 3002-3(H)"
+{
+  given ClaimsBarDate() on 2027-01-04
+  expect deadline(chapter13-claim-objection-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: late-claim-objection-period" cite "D.V.I. LBR 3015-2(A)"
+{
+  given LateClaimServed() on 2027-01-04
+  expect deadline(late-claim-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: amended-ballot-summary-period" cite "D.V.I. LBR 3018-1(D)"
+{
+  given PlanHearing() on 2027-01-04
+  expect deadline(amended-ballot-summary-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: first-accounting-period" cite "D.V.I. LBR 3021-1(B)"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(first-accounting-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: final-decree-motion-period" cite "D.V.I. LBR 3022-1(A)"
+{
+  given PlanConsummated() on 2027-01-04
+  expect deadline(final-decree-motion-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: withdrawal-designation-period" cite "D.V.I. LBR 5011-1(D)"
+{
+  given CoreDecisionEntered() on 2027-01-04
+  expect deadline(withdrawal-designation-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: withdrawal-counter-designation-period" cite "D.V.I. LBR 5011-1(D)"
+{
+  given MovantDesignationFiled() on 2027-01-04
+  expect deadline(withdrawal-counter-designation-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: custodian-account-period" cite "D.V.I. LBR 6002-1"
+{
+  given CustodianLearnedOfCase() on 2027-01-04
+  expect deadline(custodian-account-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: sale-response-period" cite "D.V.I. LBR 6004-1(D)"
+{
+  given SaleMotionServed() on 2027-01-04
+  expect deadline(sale-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: sale-response-hearing-period" cite "D.V.I. LBR 6004-1(D)"
+{
+  given SaleHearing() on 2027-01-04
+  expect deadline(sale-response-hearing-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: chapter13-sale-objection-period" cite "D.V.I. LBR 6004-1(E)"
+{
+  given SaleMotionFiled() on 2027-01-04
+  expect deadline(chapter13-sale-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: sale-publication-period" cite "D.V.I. LBR 6004-1(F)"
+{
+  given AuctionOrSaleHearing() on 2027-01-04
+  expect deadline(sale-publication-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: report-of-sale-period" cite "D.V.I. LBR 6004-1(F)"
+{
+  given SaleConsummated() on 2027-01-04
+  expect deadline(report-of-sale-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: adversary-response-period" cite "D.V.I. LBR 7008-1(B)"
+{
+  given AdversaryMotionServed() on 2027-01-04
+  expect deadline(adversary-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: adversary-reply-period" cite "D.V.I. LBR 7008-1(B)"
+{
+  given AdversaryResponseServed() on 2027-01-04
+  expect deadline(adversary-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: trial-continuance-motion-period" cite "D.V.I. LBR 7008-1(D)"
+{
+  given Trial() on 2027-01-04
+  expect deadline(trial-continuance-motion-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: third-party-documents-period" cite "D.V.I. LBR 7014-1"
+{
+  given ThirdPartyAppeared() on 2027-01-04
+  expect deadline(third-party-documents-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: motion-response-period" cite "D.V.I. LBR 9006-1(B)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(motion-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: sur-reply-period" cite "D.V.I. LBR 9013-1(D)"
+{
+  given ResponseServed() on 2027-01-04
+  expect deadline(sur-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: jury-demand-period" cite "D.V.I. LBR 9015-1(A)"
+{
+  given JuryTriggeringResponseFiled() on 2027-01-04
+  expect deadline(jury-demand-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: jury-consents-period" cite "D.V.I. LBR 9015-1(C)"
+{
+  given JuryDemandFiled() on 2027-01-04
+  expect deadline(jury-consents-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: dispense-mediation-motion-period" cite "D.V.I. LBR 9019-2(C)"
+{
+  given MediationOrdered() on 2027-01-04
+  expect deadline(dispense-mediation-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediator-stipulation-period" cite "D.V.I. LBR 9019-2(E)"
+{
+  given MediationOrdered() on 2027-01-04
+  expect deadline(mediator-stipulation-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: exhibit-retrieval-period" cite "D.V.I. LBR 9070-1"
+{
+  given AppealTimeExpired() on 2027-01-04
+  expect deadline(exhibit-retrieval-period) == 2027-01-19
+}

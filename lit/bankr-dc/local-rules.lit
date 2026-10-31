@@ -510,3 +510,327 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Bankruptcy Rules apply to all cases pending in the Court; the District Court's bankruptcy rules (Appendix A) govern proceedings there (LBR 1001-1(a), 9029-3)."
 }
+
+test "unsigned-petition-cure-period: 3 days after" cite "Bankr. D.D.C. LBR 1002-1(a)"
+{
+  given UnsignedPetitionNoticeServed() on 2027-01-04
+  expect deadline(unsigned-petition-cure-period) == 2027-01-07
+}
+
+test "filing-fee-cure-period: 1 days after" cite "Bankr. D.D.C. LBR 1006-1(c)"
+{
+  given FilingFeeNoticeServed() on 2027-01-04
+  expect deadline(filing-fee-cure-period) == 2027-01-05
+}
+
+test "petition-documents-cure-period: 3 days after" cite "Bankr. D.D.C. LBR 1007-1(e)"
+{
+  given PetitionDocumentsNoticeServed() on 2027-01-04
+  expect deadline(petition-documents-cure-period) == 2027-01-07
+}
+
+test "schedule-extension-objection-period: 7 days after" cite "Bankr. D.D.C. LBR 1007-1(d)"
+{
+  given ScheduleExtensionOrderEntered() on 2027-01-04
+  expect deadline(schedule-extension-objection-period) == 2027-01-11
+}
+
+test "schedule-extension-motion-objection-period: 7 days after" cite "Bankr. D.D.C. LBR 1007-1(d)"
+{
+  given ScheduleExtensionMotionServed() on 2027-01-04
+  expect deadline(schedule-extension-motion-objection-period) == 2027-01-11
+}
+
+test "payment-advices-period: 7 days before" cite "Bankr. D.D.C. LBR 1007-1(c)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-period) == 2026-12-28
+}
+
+test "joint-administration-objection-period: 14 days after" cite "Bankr. D.D.C. LBR 1015-1"
+{
+  given MeetingOfCreditorsConcluded() on 2027-01-04
+  expect deadline(joint-administration-objection-period) == 2027-01-19
+}
+
+test "rescheduled-meeting-notice-period: 3 days after" cite "Bankr. D.D.C. LBR 2003-1(a)"
+{
+  given RescheduledMeetingDateReceived() on 2027-01-04
+  expect deadline(rescheduled-meeting-notice-period) == 2027-01-07
+}
+
+test "employment-application-period: 30 days after" cite "Bankr. D.D.C. LBR 2014-1(a)"
+{
+  given ProfessionalEngagementStarted() on 2027-01-04
+  expect deadline(employment-application-period) == 2027-02-03
+}
+
+test "employment-objection-period: 14 days after" cite "Bankr. D.D.C. LBR 2014-1(c)"
+{
+  given EmploymentApplicationFiled() on 2027-01-04
+  expect deadline(employment-objection-period) == 2027-01-19
+}
+
+test "converted-final-fee-application-period: 90 days after" cite "Bankr. D.D.C. LBR 2016-1(c)"
+{
+  given ConversionToChapter7Ordered() on 2027-01-04
+  expect deadline(converted-final-fee-application-period) == 2027-04-05
+}
+
+test "chapter13-initial-fee-application-period: 60 days after" cite "Bankr. D.D.C. LBR 2016-2(b)"
+{
+  given FirstConfirmationOrderEntered() on 2027-01-04
+  expect deadline(chapter13-initial-fee-application-period) == 2027-03-05
+}
+
+test "unconfirmed-dismissal-fee-motion-period: 21 days after" cite "Bankr. D.D.C. LBR 2016-2(d)"
+{
+  given UnconfirmedDismissalFinal() on 2027-01-04
+  expect deadline(unconfirmed-dismissal-fee-motion-period) == 2027-01-25
+}
+
+test "petition-preparer-forms-period: 14 days after" cite "Bankr. D.D.C. LBR 2016-3(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(petition-preparer-forms-period) == 2027-01-19
+}
+
+test "withdrawal-response-period: 7 days after" cite "Bankr. D.D.C. LBR 2091-1(a)"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(withdrawal-response-period) == 2027-01-11
+}
+
+test "chapter11-claim-period: 90 days after" cite "Bankr. D.D.C. LBR 3003-1(a)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-claim-period) == 2027-04-05
+}
+
+test "subchapter-v-claim-period: 70 days after" cite "Bankr. D.D.C. LBR 3003-1(a)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(subchapter-v-claim-period) == 2027-03-15
+}
+
+test "disputed-claim-notice-period: 14 days after" cite "Bankr. D.D.C. LBR 3003-1(b)"
+{
+  given DisputedClaimScheduled() on 2027-01-04
+  expect deadline(disputed-claim-notice-period) == 2027-01-19
+}
+
+test "claim-objection-response-period: 30 days after" cite "Bankr. D.D.C. LBR 3007-1(c)"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}
+
+test "claim-objection-hearing-response-period: 7 days before" cite "Bankr. D.D.C. LBR 3007-1(c)"
+{
+  given ClaimObjectionHearing() on 2027-01-04
+  expect deadline(claim-objection-hearing-response-period) == 2026-12-28
+}
+
+test "section-1111b-election-period: 14 days after" cite "Bankr. D.D.C. LBR 3014-1"
+{
+  given SubchapterVPlanFiled() on 2027-01-04
+  expect deadline(section-1111b-election-period) == 2027-01-19
+}
+
+test "plan-extension-objection-period: 7 days after" cite "Bankr. D.D.C. LBR 3015-1(c)"
+{
+  given PlanExtensionOrderEntered() on 2027-01-04
+  expect deadline(plan-extension-objection-period) == 2027-01-11
+}
+
+test "plan-extension-motion-objection-period: 7 days after" cite "Bankr. D.D.C. LBR 3015-1(c)"
+{
+  given PlanExtensionMotionServed() on 2027-01-04
+  expect deadline(plan-extension-motion-objection-period) == 2027-01-11
+}
+
+test "confirmation-objection-period: 7 days before" cite "Bankr. D.D.C. LBR 3015-3(a)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(confirmation-objection-period) == 2026-12-28
+}
+
+test "adequate-protection-affidavit-period: 14 days before" cite "Bankr. D.D.C. LBR 3015-3(f)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(adequate-protection-affidavit-period) == 2026-12-21
+}
+
+test "adequate-protection-objection-period: 7 days after" cite "Bankr. D.D.C. LBR 3015-3(f)"
+{
+  given AdequateProtectionAffidavitServed() on 2027-01-04
+  expect deadline(adequate-protection-objection-period) == 2027-01-11
+}
+
+test "post-denial-plan-period: 21 days after" cite "Bankr. D.D.C. LBR 3015-3(d)"
+{
+  given ConfirmationDenied() on 2027-01-04
+  expect deadline(post-denial-plan-period) == 2027-01-25
+}
+
+test "subchapter-v-final-decree-period: 30 days after" cite "Bankr. D.D.C. LBR 3022-1(a)"
+{
+  given SubchapterVCaseAdministered() on 2027-01-04
+  expect deadline(subchapter-v-final-decree-period) == 2027-02-03
+}
+
+test "chapter11-final-decree-period: 30 days after" cite "Bankr. D.D.C. LBR 3022-1(b)"
+{
+  given Chapter11CaseAdministered() on 2027-01-04
+  expect deadline(chapter11-final-decree-period) == 2027-02-03
+}
+
+test "stay-relief-payment-history-period: 7 days before" cite "Bankr. D.D.C. LBR 4001-1(g)"
+{
+  given StayReliefHearing() on 2027-01-04
+  expect deadline(stay-relief-payment-history-period) == 2026-12-28
+}
+
+test "lien-avoidance-response-period: 21 days after" cite "Bankr. D.D.C. LBR 4003-2"
+{
+  given LienAvoidanceMotionServed() on 2027-01-04
+  expect deadline(lien-avoidance-response-period) == 2027-01-25
+}
+
+test "discharge-certification-period: 60 days after" cite "Bankr. D.D.C. LBR 4004-1(a)"
+{
+  given PlanCompletionNoticeFiled() on 2027-01-04
+  expect deadline(discharge-certification-period) == 2027-03-05
+}
+
+test "discharge-dispute-period: 30 days after" cite "Bankr. D.D.C. LBR 4004-1(a)"
+{
+  given DischargeNoticeSent() on 2027-01-04
+  expect deadline(discharge-dispute-period) == 2027-02-03
+}
+
+test "report-of-sale-period: 21 days after" cite "Bankr. D.D.C. LBR 6004-1(d)"
+{
+  given SaleClosed() on 2027-01-04
+  expect deadline(report-of-sale-period) == 2027-01-25
+}
+
+test "abandonment-objection-period: 14 days after" cite "Bankr. D.D.C. LBR 6007-1(a)"
+{
+  given MeetingOfCreditorsConcluded() on 2027-01-04
+  expect deadline(abandonment-objection-period) == 2027-01-19
+}
+
+test "discovery-motion-response-period: 14 days after" cite "Bankr. D.D.C. LBR 7026-1(e)"
+{
+  given DiscoveryMotionServed() on 2027-01-04
+  expect deadline(discovery-motion-response-period) == 2027-01-19
+}
+
+test "deposition-notice-period: 7 days before" cite "Bankr. D.D.C. LBR 7030-1(a)"
+{
+  given DepositionDate() on 2027-01-04
+  expect deadline(deposition-notice-period) == 2026-12-28
+}
+
+test "discharge-complaint-dismissal-objection-period: 21 days after" cite "Bankr. D.D.C. LBR 7041-1"
+{
+  given DischargeComplaintDismissalMotionServed() on 2027-01-04
+  expect deadline(discharge-complaint-dismissal-objection-period) == 2027-01-25
+}
+
+test "bill-of-costs-period: 21 days after" cite "Bankr. D.D.C. LBR 7054-1"
+{
+  given BankruptcyOrderEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-01-25
+}
+
+test "fee-motion-period: 21 days after" cite "Bankr. D.D.C. LBR 7054-2"
+{
+  given BankruptcyOrderEntered() on 2027-01-04
+  expect deadline(fee-motion-period) == 2027-01-25
+}
+
+test "default-judgment-service-period: 7 days before" cite "Bankr. D.D.C. LBR 7055-1(c)"
+{
+  given DefaultJudgmentHearing() on 2027-01-04
+  expect deadline(default-judgment-service-period) == 2026-12-28
+}
+
+test "post-vacatur-answer-period: 14 days after" cite "Bankr. D.D.C. LBR 7055-1(d)"
+{
+  given DefaultVacated() on 2027-01-04
+  expect deadline(post-vacatur-answer-period) == 2027-01-19
+}
+
+test "unsigned-entity-paper-cure-period: 14 days after" cite "Bankr. D.D.C. LBR 9011-2(c)"
+{
+  given UnsignedEntityPaperNoticeSent() on 2027-01-04
+  expect deadline(unsigned-entity-paper-cure-period) == 2027-01-19
+}
+
+test "motion-response-period: 14 days after" cite "Bankr. D.D.C. LBR 9013-1(d)"
+{
+  given OpportunityToObjectNoticeServed() on 2027-01-04
+  expect deadline(motion-response-period) == 2027-01-19
+}
+
+test "motion-reply-period: 7 days after" cite "Bankr. D.D.C. LBR 9013-1(d)"
+{
+  given MotionResponseFiled() on 2027-01-04
+  expect deadline(motion-reply-period) == 2027-01-11
+}
+
+test "hearing-response-period: 7 days before" cite "Bankr. D.D.C. LBR 9013-1(d)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(hearing-response-period) == 2026-12-28
+}
+
+test "supporting-memorandum-period: 7 days before" cite "Bankr. D.D.C. LBR 9013-1(b)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(supporting-memorandum-period) == 2026-12-28
+}
+
+test "certificate-of-service-period: 7 days after" cite "Bankr. D.D.C. LBR 9013-1(f)"
+{
+  given PaperServed() on 2027-01-04
+  expect deadline(certificate-of-service-period) == 2027-01-11
+}
+
+test "subpoena-request-period: 14 days before" cite "Bankr. D.D.C. LBR 9016-1(a)"
+{
+  given WitnessAppearanceDate() on 2027-01-04
+  expect deadline(subpoena-request-period) == 2026-12-21
+}
+
+test "remand-motion-period: 30 days after" cite "Bankr. D.D.C. LBR 9027-1(b)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(remand-motion-period) == 2027-02-03
+}
+
+test "redaction-intent-period: 7 days after" cite "Bankr. D.D.C. LBR 9037-1"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-intent-period) == 2027-01-11
+}
+
+test "redaction-request-period: 21 days after" cite "Bankr. D.D.C. LBR 9037-1"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-request-period) == 2027-01-25
+}
+
+test "redacted-transcript-period: 31 days after" cite "Bankr. D.D.C. LBR 9037-1"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redacted-transcript-period) == 2027-02-04
+}
+
+test "proposed-order-period: 14 days after" cite "Bankr. D.D.C. LBR 9072-1(e)"
+{
+  given MatterConcluded() on 2027-01-04
+  expect deadline(proposed-order-period) == 2027-01-19
+}

@@ -448,3 +448,303 @@ decision ruling: "Motion decided" by court cite "Bankr. D. Haw. LBR 9013-1(c)"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. D. Haw. LBR 1001-1"
+
+test "Deadline arithmetic: amendment-declaration-period (7 days after)" cite "Bankr. D. Haw. LBR 1009-1(b)"
+{
+  given AmendmentsFiledElectronically() on 2027-01-04
+  expect deadline(amendment-declaration-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: conversion-objection-period (14 days after)" cite "Bankr. D. Haw. LBR 1017-1"
+{
+  given ConversionMotionFiled() on 2027-01-04
+  expect deadline(conversion-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: responsible-individual-period (14 days after)" cite "Bankr. D. Haw. LBR 1074-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(responsible-individual-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: expense-procedure-objection-period (28 days after)" cite "Bankr. D. Haw. LBR 2015-1(a)"
+{
+  given ClaimsNoticeDated() on 2027-01-04
+  expect deadline(expense-procedure-objection-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: administrative-expense-objection-period (14 days after)" cite "Bankr. D. Haw. LBR 2015-1(b)"
+{
+  given AdministrativeExpenseNoticeServed() on 2027-01-04
+  expect deadline(administrative-expense-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: subchapter-v-deposit-period (14 days after)" cite "Bankr. D. Haw. LBR 2015-2"
+{
+  given TrusteeAppointmentNoticeFiled() on 2027-01-04
+  expect deadline(subchapter-v-deposit-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: dismissal-hearing-notice-period (28 days before)" cite "Bankr. D. Haw. LBR 2083-1(e)"
+{
+  given DismissalHearing() on 2027-01-04
+  expect deadline(dismissal-hearing-notice-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: dismissal-meet-and-confer-period (7 days before)" cite "Bankr. D. Haw. LBR 2083-1(e)"
+{
+  given DismissalHearing() on 2027-01-04
+  expect deadline(dismissal-meet-and-confer-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: sale-hearing-notice-period (28 days before)" cite "Bankr. D. Haw. LBR 2083-2(c)"
+{
+  given SaleHearing() on 2027-01-04
+  expect deadline(sale-hearing-notice-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: sale-objection-period (7 days before)" cite "Bankr. D. Haw. LBR 2083-2(d)"
+{
+  given SaleHearing() on 2027-01-04
+  expect deadline(sale-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: sale-report-period (14 days after)" cite "Bankr. D. Haw. LBR 2083-2(f)"
+{
+  given SaleClosed() on 2027-01-04
+  expect deadline(sale-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: contact-change-notice-period (14 days after)" cite "Bankr. D. Haw. LBR 2091-1(c)"
+{
+  given AttorneyContactChanged() on 2027-01-04
+  expect deadline(contact-change-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter-11-claim-period (90 days after)" cite "Bankr. D. Haw. LBR 3003-1"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter-11-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: subchapter-v-claim-period (70 days after)" cite "Bankr. D. Haw. LBR 3003-1"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(subchapter-v-claim-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: amended-surrogate-claim-period (30 days after)" cite "Bankr. D. Haw. LBR 3004-1(b)"
+{
+  given SurrogateClaimNoticeServed() on 2027-01-04
+  expect deadline(amended-surrogate-claim-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: claim-objection-notice-period (30 days before)" cite "Bankr. D. Haw. LBR 3007-1(b)"
+{
+  given ClaimObjectionHearing() on 2027-01-04
+  expect deadline(claim-objection-notice-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: claim-objection-response-period (7 days before)" cite "Bankr. D. Haw. LBR 3007-1(c)"
+{
+  given ClaimObjectionHearing() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: plan-service-period (28 days before)" cite "Bankr. D. Haw. LBR 3015-1(g)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(plan-service-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: modification-objection-period (7 days before)" cite "Bankr. D. Haw. LBR 3015-2(b)"
+{
+  given ModificationHearing() on 2027-01-04
+  expect deadline(modification-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: denied-confirmation-action-period (14 days after)" cite "Bankr. D. Haw. LBR 3015-3(d)"
+{
+  given ConfirmationDenied() on 2027-01-04
+  expect deadline(denied-confirmation-action-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: disclosure-statement-objection-period (7 days before)" cite "Bankr. D. Haw. LBR 3017-1(c)"
+{
+  given DisclosureStatementHearing() on 2027-01-04
+  expect deadline(disclosure-statement-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: ballot-report-period (7 days before)" cite "Bankr. D. Haw. LBR 3018-1(c)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(ballot-report-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: confirmation-objection-period (7 days before)" cite "Bankr. D. Haw. LBR 3020-1(b)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(confirmation-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: final-decree-objection-period (30 days after)" cite "Bankr. D. Haw. LBR 3022-1"
+{
+  given FinalDecreeApplicationFiled() on 2027-01-04
+  expect deadline(final-decree-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: disputed-claim-objection-period (28 days after)" cite "Bankr. D. Haw. LBR 3070-2(g)"
+{
+  given ClaimsNoticeFiled() on 2027-01-04
+  expect deadline(disputed-claim-objection-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: post-dismissal-fee-application-period (14 days after)" cite "Bankr. D. Haw. LBR 3070-2(i)"
+{
+  given CaseDismissedOrConverted() on 2027-01-04
+  expect deadline(post-dismissal-fee-application-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-relief-opposition-period (14 days before)" cite "Bankr. D. Haw. LBR 4001-1(e)"
+{
+  given StayReliefHearing() on 2027-01-04
+  expect deadline(stay-relief-opposition-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: stay-relief-reply-period (7 days before)" cite "Bankr. D. Haw. LBR 4001-1(e)"
+{
+  given StayReliefHearing() on 2027-01-04
+  expect deadline(stay-relief-reply-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: rent-certification-objection-period (14 days after)" cite "Bankr. D. Haw. LBR 4001-4(c)"
+{
+  given RentCertificationNoticeServed() on 2027-01-04
+  expect deadline(rent-certification-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter-11-discharge-objection-period (30 days after)" cite "Bankr. D. Haw. LBR 4004-3(b)"
+{
+  given ChapterElevenDischargeNoticeFiled() on 2027-01-04
+  expect deadline(chapter-11-discharge-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter-13-discharge-objection-period (30 days after)" cite "Bankr. D. Haw. LBR 4004-3(c)"
+{
+  given DischargeCertificationNoticeDated() on 2027-01-04
+  expect deadline(chapter-13-discharge-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: rejection-review-period (7 days after)" cite "Bankr. D. Haw. LBR 5005-1(c)"
+{
+  given RejectionNoticeDated() on 2027-01-04
+  expect deadline(rejection-review-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: electronic-filing-declaration-period (7 days after)" cite "Bankr. D. Haw. LBR 5005-4(f)"
+{
+  given DocumentFiledElectronically() on 2027-01-04
+  expect deadline(electronic-filing-declaration-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: transcript-redaction-period (21 days after)" cite "Bankr. D. Haw. LBR 5077-1(f)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(transcript-redaction-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: redacted-transcript-period (14 days after)" cite "Bankr. D. Haw. LBR 5077-1(g)"
+{
+  given RedactionMotionGranted() on 2027-01-04
+  expect deadline(redacted-transcript-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: sale-procedure-objection-period (21 days after)" cite "Bankr. D. Haw. LBR 6004-1(d)"
+{
+  given ClaimNoticeFiled() on 2027-01-04
+  expect deadline(sale-procedure-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: scheduling-statement-period (7 days before)" cite "Bankr. D. Haw. LBR 7016-1(b)"
+{
+  given SchedulingConference() on 2027-01-04
+  expect deadline(scheduling-statement-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: discharge-dismissal-objection-period (14 days after)" cite "Bankr. D. Haw. LBR 7041-1(b)"
+{
+  given DischargeDismissalNoticeFiled() on 2027-01-04
+  expect deadline(discharge-dismissal-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: default-judgment-notice-period (28 days before)" cite "Bankr. D. Haw. LBR 7055-1(b)"
+{
+  given DefaultJudgmentHearing() on 2027-01-04
+  expect deadline(default-judgment-notice-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: summary-judgment-hearing-period (28 days before)" cite "Bankr. D. Haw. LBR 7056-1(j)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(summary-judgment-hearing-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: motion-notice-period (28 days before)" cite "Bankr. D. Haw. LBR 9013-1(c)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-notice-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: motion-response-period (14 days before)" cite "Bankr. D. Haw. LBR 9013-1(c)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-response-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: motion-reply-period (7 days before)" cite "Bankr. D. Haw. LBR 9013-1(c)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-reply-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: seal-objection-period (7 days after)" cite "Bankr. D. Haw. LBR 9018-1(c)"
+{
+  given SealMotionFiled() on 2027-01-04
+  expect deadline(seal-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: reconsideration-period (14 days after)" cite "Bankr. D. Haw. LBR 9024-1(a)"
+{
+  given InterlocutoryOrderEntered() on 2027-01-04
+  expect deadline(reconsideration-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: proposed-order-period (7 days after)" cite "Bankr. D. Haw. LBR 9072-1(d)"
+{
+  given RulingAnnounced() on 2027-01-04
+  expect deadline(proposed-order-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: form-of-order-objection-period (7 days after)" cite "Bankr. D. Haw. LBR 9072-1(d)"
+{
+  given OrderSubmissionNoticed() on 2027-01-04
+  expect deadline(form-of-order-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: remote-participation-request-period (28 days before)" cite "Bankr. D. Haw. LBR 9074-1(a)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(remote-participation-request-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: remote-participation-objection-period (7 days after)" cite "Bankr. D. Haw. LBR 9074-1(a)"
+{
+  given RemoteRequestFiled() on 2027-01-04
+  expect deadline(remote-participation-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: remote-video-motion-period (14 days before)" cite "Bankr. D. Haw. LBR 9074-1(b)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(remote-video-motion-period) == 2026-12-21
+}

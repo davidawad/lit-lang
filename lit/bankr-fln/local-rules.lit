@@ -440,3 +440,333 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Rules apply in all bankruptcy cases, contested matters and adversary proceedings to the extent not inconsistent with the FRCP and the FRBP (LBR 1001-1(B))."
 }
+
+test "division-transfer-period: 21 days after" cite "N.D. Fla. LBR 1014-1(D)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(division-transfer-period) == 2027-01-25
+}
+
+test "conversion-income-statement-period: 14 days after" cite "N.D. Fla. LBR 1019-1(B)"
+{
+  given ConvertedToChapter7() on 2027-01-04
+  expect deadline(conversion-income-statement-period) == 2027-01-20
+}
+
+test "negative-notice-objection-period: 21 days after" cite "N.D. Fla. LBR 2002-2(C)"
+{
+  given NegativeNoticeServed() on 2027-01-04
+  expect deadline(negative-notice-objection-period) == 2027-01-25
+}
+
+test "negative-notice-order-period: 14 days after" cite "N.D. Fla. LBR 2002-2(C)(2)"
+{
+  given ObjectionPeriodExpired() on 2027-01-04
+  expect deadline(negative-notice-order-period) == 2027-01-20
+}
+
+test "examination-production-period: 21 days after" cite "N.D. Fla. LBR 2004-1(C)"
+{
+  given ExaminationNoticeServed() on 2027-01-04
+  expect deadline(examination-production-period) == 2027-01-25
+}
+
+test "operating-report-period: 21 days after" cite "N.D. Fla. LBR 2015-1(C)"
+{
+  given MonthEnded() on 2027-01-04
+  expect deadline(operating-report-period) == 2027-01-25
+}
+
+test "ch12-cash-report-period: 21 days after" cite "N.D. Fla. LBR 2015-1(F)"
+{
+  given MonthEnded() on 2027-01-04
+  expect deadline(ch12-cash-report-period) == 2027-01-25
+}
+
+test "records-destruction-notice-period: 30 days before" cite "N.D. Fla. LBR 2015-3"
+{
+  given RecordsDestruction() on 2027-01-04
+  expect deadline(records-destruction-notice-period) == 2026-12-04
+}
+
+test "ch7-final-fee-application-period: 21 days after" cite "N.D. Fla. LBR 2016-1(A)(1)"
+{
+  given ReadyToCloseNotified() on 2027-01-04
+  expect deadline(ch7-final-fee-application-period) == 2027-01-25
+}
+
+test "superseded-case-fee-application-period: 90 days after" cite "N.D. Fla. LBR 2016-1(A)(1)"
+{
+  given ConvertedToChapter7() on 2027-01-04
+  expect deadline(superseded-case-fee-application-period) == 2027-04-05
+}
+
+test "ch11-fee-application-period: 21 days after" cite "N.D. Fla. LBR 2016-1(B)(1)"
+{
+  given ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(ch11-fee-application-period) == 2027-01-25
+}
+
+test "confirmation-order-submission-period: 21 days after" cite "N.D. Fla. LBR 2081-1(B)(1)"
+{
+  given PlanConfirmedAtHearing() on 2027-01-04
+  expect deadline(confirmation-order-submission-period) == 2027-01-25
+}
+
+test "class-instrument-period: 30 days after" cite "N.D. Fla. LBR 2081-1(B)(2)"
+{
+  given ClassObjectionsResolved() on 2027-01-04
+  expect deadline(class-instrument-period) == 2027-02-03
+}
+
+test "no-objection-instrument-period: 60 days after" cite "N.D. Fla. LBR 2081-1(B)(2)"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(no-objection-instrument-period) == 2027-03-05
+}
+
+test "ch12-operations-summary-period: 7 days before" cite "N.D. Fla. LBR 2082-1(A)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(ch12-operations-summary-period) == 2026-12-28
+}
+
+test "ch12-plan-analysis-period: 7 days before" cite "N.D. Fla. LBR 2082-1(A)"
+{
+  given Ch12ConfirmationHearing() on 2027-01-04
+  expect deadline(ch12-plan-analysis-period) == 2026-12-28
+}
+
+test "ch12-farm-tax-period: 60 days after" cite "N.D. Fla. LBR 2082-1(A)"
+{
+  given TaxYearEnded() on 2027-01-04
+  expect deadline(ch12-farm-tax-period) == 2027-03-05
+}
+
+test "ch13-business-statement-period: 21 days before" cite "N.D. Fla. LBR 2083-1(C)"
+{
+  given Ch13ConfirmationHearing() on 2027-01-04
+  expect deadline(ch13-business-statement-period) == 2026-12-14
+}
+
+test "claim-transfer-objection-period: 21 days after" cite "N.D. Fla. LBR 3001-1(D)"
+{
+  given ClaimTransferNoticed() on 2027-01-04
+  expect deadline(claim-transfer-objection-period) == 2027-01-25
+}
+
+test "surrender-personal-deficiency-period: 60 days after" cite "N.D. Fla. LBR 3002-1(A)"
+{
+  given Ch13SurrenderPlanConfirmed() on 2027-01-04
+  expect deadline(surrender-personal-deficiency-period) == 2027-03-05
+}
+
+test "surrender-real-deficiency-period: 90 days after" cite "N.D. Fla. LBR 3002-1(A)"
+{
+  given Ch13SurrenderPlanConfirmed() on 2027-01-04
+  expect deadline(surrender-real-deficiency-period) == 2027-04-05
+}
+
+test "stay-relief-personal-deficiency-period: 60 days after" cite "N.D. Fla. LBR 3002-1(B)"
+{
+  given StayTerminationOrdered() on 2027-01-04
+  expect deadline(stay-relief-personal-deficiency-period) == 2027-03-05
+}
+
+test "stay-relief-real-deficiency-period: 90 days after" cite "N.D. Fla. LBR 3002-1(B)"
+{
+  given StayTerminationOrdered() on 2027-01-04
+  expect deadline(stay-relief-real-deficiency-period) == 2027-04-05
+}
+
+test "ch13-claim-objection-period: 60 days after" cite "N.D. Fla. LBR 3007-1(E)"
+{
+  given Ch13ClaimsBarDate() on 2027-01-04
+  expect deadline(ch13-claim-objection-period) == 2027-03-05
+}
+
+test "ch11-valuation-motion-period: 7 days before" cite "N.D. Fla. LBR 3012-1(A)"
+{
+  given Ch11ConfirmationHearing() on 2027-01-04
+  expect deadline(ch11-valuation-motion-period) == 2026-12-28
+}
+
+test "valuation-notice-period: 7 days after" cite "N.D. Fla. LBR 3012-1(B)"
+{
+  given Ch12Or13PlanFiled() on 2027-01-04
+  expect deadline(valuation-notice-period) == 2027-01-11
+}
+
+test "valuation-challenge-period: 30 days after" cite "N.D. Fla. LBR 3012-1(B)"
+{
+  given ValuationNoticeServed() on 2027-01-04
+  expect deadline(valuation-challenge-period) == 2027-02-03
+}
+
+test "valuation-objection-period: 14 days after" cite "N.D. Fla. LBR 3012-1(C)"
+{
+  given ValuationMotionServed() on 2027-01-04
+  expect deadline(valuation-objection-period) == 2027-01-20
+}
+
+test "valuation-evidence-period: 7 days before" cite "N.D. Fla. LBR 3012-1(C)"
+{
+  given ValuationHearing() on 2027-01-04
+  expect deadline(valuation-evidence-period) == 2026-12-28
+}
+
+test "appraisal-objection-period: 2 days before" cite "N.D. Fla. LBR 3012-1(E)"
+{
+  given ValuationHearing() on 2027-01-04
+  expect deadline(appraisal-objection-period) == 2026-12-31
+}
+
+test "lien-strip-objection-period: 30 days after" cite "N.D. Fla. LBR 3012-2(A)"
+{
+  given LienStripMotionServed() on 2027-01-04
+  expect deadline(lien-strip-objection-period) == 2027-02-03
+}
+
+test "lien-strip-order-period: 14 days after" cite "N.D. Fla. LBR 3012-2(B)"
+{
+  given LienStripObjectionPeriodExpired() on 2027-01-04
+  expect deadline(lien-strip-order-period) == 2027-01-20
+}
+
+test "disclosure-statement-objection-period: 7 days before" cite "N.D. Fla. LBR 3017-1(C)"
+{
+  given DisclosureStatementHearing() on 2027-01-04
+  expect deadline(disclosure-statement-objection-period) == 2026-12-28
+}
+
+test "ballot-period: 7 days before" cite "N.D. Fla. LBR 3018-1(A)"
+{
+  given Ch11ConfirmationHearing() on 2027-01-04
+  expect deadline(ballot-period) == 2026-12-28
+}
+
+test "ballot-tabulation-period: 3 days before" cite "N.D. Fla. LBR 3018-1(A)"
+{
+  given Ch11ConfirmationHearing() on 2027-01-04
+  expect deadline(ballot-tabulation-period) == 2026-12-31
+}
+
+test "ch11-confirmation-objection-period: 7 days before" cite "N.D. Fla. LBR 3020-1(A)"
+{
+  given Ch11ConfirmationHearing() on 2027-01-04
+  expect deadline(ch11-confirmation-objection-period) == 2026-12-28
+}
+
+test "stay-relief-objection-period: 14 days after" cite "N.D. Fla. LBR 4001-1(C)"
+{
+  given PreliminaryHearingNoticed() on 2027-01-04
+  expect deadline(stay-relief-objection-period) == 2027-01-20
+}
+
+test "stay-hearing-exhibits-period: 5 days before" cite "N.D. Fla. LBR 4001-1(E)"
+{
+  given FinalStayHearing() on 2027-01-04
+  expect deadline(stay-hearing-exhibits-period) == 2026-12-30
+}
+
+test "stay-discovery-response-period: 21 days after" cite "N.D. Fla. LBR 4001-1(I)"
+{
+  given StayDiscoveryServed() on 2027-01-04
+  expect deadline(stay-discovery-response-period) == 2027-01-25
+}
+
+test "stay-extension-motion-period: 5 days after" cite "N.D. Fla. LBR 4001-3"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-extension-motion-period) == 2027-01-11
+}
+
+test "lien-avoidance-response-period: 21 days after" cite "N.D. Fla. LBR 4003-1(D)"
+{
+  given LienAvoidanceMotionServed() on 2027-01-04
+  expect deadline(lien-avoidance-response-period) == 2027-01-25
+}
+
+test "transcript-redaction-notice-period: 7 days after" cite "N.D. Fla. LBR 5007-1(C)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(transcript-redaction-notice-period) == 2027-01-11
+}
+
+test "transcript-redaction-request-period: 21 days after" cite "N.D. Fla. LBR 5007-1(C)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(transcript-redaction-request-period) == 2027-01-25
+}
+
+test "case-withdrawal-motion-period: 30 days after" cite "N.D. Fla. LBR 5011-1(A)(1)"
+{
+  given MeetingConcluded() on 2027-01-04
+  expect deadline(case-withdrawal-motion-period) == 2027-02-03
+}
+
+test "late-knowledge-withdrawal-period: 21 days after" cite "N.D. Fla. LBR 5011-1(A)(1)"
+{
+  given CaseKnowledgeAcquired() on 2027-01-04
+  expect deadline(late-knowledge-withdrawal-period) == 2027-01-25
+}
+
+test "withdrawal-response-period: 14 days after" cite "N.D. Fla. LBR 5011-1(A)(3)"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(withdrawal-response-period) == 2027-01-20
+}
+
+test "non-core-withdrawal-period: 21 days after" cite "N.D. Fla. LBR 5011-1(B)(1)"
+{
+  given NonCoreDetermined() on 2027-01-04
+  expect deadline(non-core-withdrawal-period) == 2027-01-25
+}
+
+test "abstention-request-period: 30 days after" cite "N.D. Fla. LBR 5011-1(C)(3)"
+{
+  given MeetingConcluded() on 2027-01-04
+  expect deadline(abstention-request-period) == 2027-02-03
+}
+
+test "core-determination-motion-period: 21 days after" cite "N.D. Fla. LBR 7008-1"
+{
+  given CoreIssuePleadingServed() on 2027-01-04
+  expect deadline(core-determination-motion-period) == 2027-01-25
+}
+
+test "motion-response-period: 14 days after" cite "N.D. Fla. LBR 9013-1(C)(1)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(motion-response-period) == 2027-01-20
+}
+
+test "lengthy-filing-copy-period: 7 days before" cite "N.D. Fla. LBR 9013-1(E)"
+{
+  given LengthyFilingHearing() on 2027-01-04
+  expect deadline(lengthy-filing-copy-period) == 2026-12-28
+}
+
+test "jury-consent-period: 21 days after" cite "N.D. Fla. LBR 9015-1(B)"
+{
+  given JuryDemandMade() on 2027-01-04
+  expect deadline(jury-consent-period) == 2027-01-25
+}
+
+test "exhibit-filing-period: 5 days before" cite "N.D. Fla. LBR 9070-1(C)"
+{
+  given EvidentiaryHearing() on 2027-01-04
+  expect deadline(exhibit-filing-period) == 2026-12-30
+}
+
+test "additional-exhibits-period: 7 days after" cite "N.D. Fla. LBR 9070-1(F)"
+{
+  given EvidentiaryHearingConcluded() on 2027-01-04
+  expect deadline(additional-exhibits-period) == 2027-01-11
+}
+
+test "exhibit-reclaim-period: 30 days after" cite "N.D. Fla. LBR 9070-1(I)"
+{
+  given ExhibitReclaimNoticed() on 2027-01-04
+  expect deadline(exhibit-reclaim-period) == 2027-02-03
+}

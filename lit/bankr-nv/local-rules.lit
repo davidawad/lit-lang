@@ -227,6 +227,198 @@ deadline jury-consent-period: 30.days before TrialFirstSet() counted_by frbp9006
 /// which any party may submit one.
 deadline proposed-order-period: 28.days after HearingConcluded() counted_by frbp9006-nevada cite "Bankr. D. Nev. LR 9021(a)"
 
+test "Deadline arithmetic: other-courts-notice-period (14 days after)" cite "Bankr. D. Nev. LR 1002(c)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(other-courts-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: involuntary-relief-order-period (7 days after)" cite "Bankr. D. Nev. LR 1013(b)"
+{
+  given InvoluntaryDefault() on 2027-01-04
+  expect deadline(involuntary-relief-order-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: combined-matrix-period (14 days after)" cite "Bankr. D. Nev. LR 1015(g)"
+{
+  given JointAdministrationOrdered() on 2027-01-04
+  expect deadline(combined-matrix-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: proof-of-service-period (7 days after)" cite "Bankr. D. Nev. LR 2002(a)"
+{
+  given PaperFiled() on 2027-01-04
+  expect deadline(proof-of-service-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: rejection-claim-period (90 days after)" cite "Bankr. D. Nev. LR 3002(b)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(rejection-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: chapter-11-claim-period (90 days after)" cite "Bankr. D. Nev. LR 3003(a)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter-11-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: subchapter-v-claim-period (70 days after)" cite "Bankr. D. Nev. LR 3003(b)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(subchapter-v-claim-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: chapter-11-claim-objection-period (60 days after)" cite "Bankr. D. Nev. LR 3007.1"
+{
+  given ChapterElevenConfirmed() on 2027-01-04
+  expect deadline(chapter-11-claim-objection-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: status-report-period (7 days before)" cite "Bankr. D. Nev. LR 3016"
+{
+  given StatusConferenceHearing() on 2027-01-04
+  expect deadline(status-report-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: confirmation-declaration-period (14 days before)" cite "Bankr. D. Nev. LR 3020"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(confirmation-declaration-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: distribution-objection-period (21 days after)" cite "Bankr. D. Nev. LR 3021"
+{
+  given DistributionNoticeDated() on 2027-01-04
+  expect deadline(distribution-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: distribution-hearing-period (21 days after)" cite "Bankr. D. Nev. LR 3021"
+{
+  given DistributionObjectionFiled() on 2027-01-04
+  expect deadline(distribution-hearing-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: stipulation-objection-period (14 days after)" cite "Bankr. D. Nev. LR 4001(c)"
+{
+  given StipulationNoticeServed() on 2027-01-04
+  expect deadline(stipulation-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: wage-deduction-period (14 days after)" cite "Bankr. D. Nev. LR 4002(e)"
+{
+  given WageOrderEntered() on 2027-01-04
+  expect deadline(wage-deduction-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: wage-order-request-period (28 days after)" cite "Bankr. D. Nev. LR 4002(e)"
+{
+  given TrusteeWageDirective() on 2027-01-04
+  expect deadline(wage-order-request-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: final-account-hearing-period (21 days after)" cite "Bankr. D. Nev. LR 4007(a)"
+{
+  given FinalAccountObjectionFiled() on 2027-01-04
+  expect deadline(final-account-hearing-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: certificate-of-compliance-period (30 days after)" cite "Bankr. D. Nev. LR 4007(a)"
+{
+  given CertificateNoticeReceived() on 2027-01-04
+  expect deadline(certificate-of-compliance-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: certificate-objection-period (21 days after)" cite "Bankr. D. Nev. LR 4007(a)"
+{
+  given CertificateServed() on 2027-01-04
+  expect deadline(certificate-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: hardship-certificate-objection-period (14 days after)" cite "Bankr. D. Nev. LR 4007(b)"
+{
+  given CertificateServed() on 2027-01-04
+  expect deadline(hardship-certificate-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: daily-transcript-notice-period (7 days before)" cite "Bankr. D. Nev. LR 5007"
+{
+  given TranscriptHearing() on 2027-01-04
+  expect deadline(daily-transcript-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: amended-pleading-period (14 days after)" cite "Bankr. D. Nev. LR 7015(b)"
+{
+  given AmendmentGranted() on 2027-01-04
+  expect deadline(amended-pleading-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: motion-in-limine-period (30 days before)" cite "Bankr. D. Nev. LR 7016(e)"
+{
+  given TrialStart() on 2027-01-04
+  expect deadline(motion-in-limine-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: summary-judgment-opposition-period (21 days after)" cite "Bankr. D. Nev. LR 7056(c)"
+{
+  given SummaryJudgmentServed() on 2027-01-04
+  expect deadline(summary-judgment-opposition-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "Bankr. D. Nev. LR 7056(d)"
+{
+  given SummaryJudgmentOppositionServed() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: hearing-notice-period (28 days before)" cite "Bankr. D. Nev. LR 9014(a)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(hearing-notice-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: motion-notice-filing-period (7 days after)" cite "Bankr. D. Nev. LR 9014(b)"
+{
+  given MotionFiled() on 2027-01-04
+  expect deadline(motion-notice-filing-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: motion-opposition-period (14 days before)" cite "Bankr. D. Nev. LR 9014(d)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-opposition-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: motion-reply-period (7 days before)" cite "Bankr. D. Nev. LR 9014(d)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-reply-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: negative-notice-objection-period (21 days after)" cite "Bankr. D. Nev. LR 9014.1(c)"
+{
+  given NegativeNoticeServed() on 2027-01-04
+  expect deadline(negative-notice-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: negative-notice-order-period (14 days after)" cite "Bankr. D. Nev. LR 9014.1(e)"
+{
+  given ObjectionPeriodExpired() on 2027-01-04
+  expect deadline(negative-notice-order-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: jury-consent-period (30 days before)" cite "Bankr. D. Nev. LR 9015(a)"
+{
+  given TrialFirstSet() on 2027-01-04
+  expect deadline(jury-consent-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: proposed-order-period (28 days after)" cite "Bankr. D. Nev. LR 9021(a)"
+{
+  given HearingConcluded() on 2027-01-04
+  expect deadline(proposed-order-period) == 2027-02-01
+}
+
 start motion-filed
 
 state motion-filed: "Motion served on negative notice" by applicant cite "Bankr. D. Nev. LR 9014.1(b)"

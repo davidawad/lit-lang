@@ -100,7 +100,7 @@ fn build_result_lists_outputs_and_hash() {
 }
 
 #[test]
-fn strict_build_writes_nothing() {
+fn strict_build_writes_a_fully_verified_package() {
     let out = scratch("build-strict");
     let run = litigate(&[
         "build",
@@ -110,8 +110,13 @@ fn strict_build_writes_nothing() {
         "--out",
         out.to_str().unwrap(),
     ]);
-    assert_eq!(run.code, 2);
-    assert!(tree(&out).is_empty());
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert!(!tree(&out).is_empty());
+    assert!(run.json["result"]["obligations"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|o| o["name"] == "holes" && o["status"] == "passed"));
 }
 
 #[test]
@@ -241,7 +246,7 @@ fn query_pages_and_filters() {
     assert_eq!(rest.json["result"]["matches"].as_array().unwrap().len(), 4);
     assert!(rest.json["result"]["next_cursor"].is_null());
     let holes = litigate(&["query", "--lib", "lit/examples", "holes"]);
-    assert_eq!(holes.json["result"]["total"], 3);
+    assert_eq!(holes.json["result"]["total"], 0);
     let cited = litigate(&["query", "--lib", "lit/examples", "cites", "--cite", "12(b)"]);
     assert_eq!(
         cited.json["result"]["matches"][0]["id"],

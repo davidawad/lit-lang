@@ -254,3 +254,165 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Rules supplement or, as permitted, modify the FRBP and are construed consistently with them (LBR 9029-1)."
 }
+
+test "extended-schedules-service-period: 5 days before" cite "M.D. Ga. LBR 1007-1(a)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(extended-schedules-service-period) == 2026-12-30
+}
+
+test "new-asset-amendment-period: 60 days after" cite "M.D. Ga. LBR 1009-1(b)"
+{
+  given NewAssetAcquired() on 2027-01-04
+  expect deadline(new-asset-amendment-period) == 2027-03-05
+}
+
+test "new-asset-modification-period: 90 days after" cite "M.D. Ga. LBR 1009-1(b)"
+{
+  given NewAssetAmendmentFiled() on 2027-01-04
+  expect deadline(new-asset-modification-period) == 2027-04-05
+}
+
+test "separation-filings-period: 14 days after" cite "M.D. Ga. LBR 1015-1(b)"
+{
+  given SeparationOrdered() on 2027-01-04
+  expect deadline(separation-filings-period) == 2027-01-19
+}
+
+test "missing-documents-period: 14 days after" cite "M.D. Ga. LBR 1017-2(f)"
+{
+  given MissingDocumentsNoticed() on 2027-01-04
+  expect deadline(missing-documents-period) == 2027-01-19
+}
+
+test "pending-motion-retention-period: 14 days after" cite "M.D. Ga. LBR 1017-2(h)"
+{
+  given DismissalOrderEntered() on 2027-01-04
+  expect deadline(pending-motion-retention-period) == 2027-01-19
+}
+
+test "conversion-amendment-period: 14 days after" cite "M.D. Ga. LBR 1019-1(d)"
+{
+  given ConversionEffective() on 2027-01-04
+  expect deadline(conversion-amendment-period) == 2027-01-19
+}
+
+test "contemporaneous-employment-period: 14 days after" cite "M.D. Ga. LBR 2014-1(c)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(contemporaneous-employment-period) == 2027-01-19
+}
+
+test "services-employment-period: 14 days after" cite "M.D. Ga. LBR 2014-1(c)"
+{
+  given ServicesCommenced() on 2027-01-04
+  expect deadline(services-employment-period) == 2027-01-19
+}
+
+test "late-creditor-claim-period: 60 days after" cite "M.D. Ga. LBR 3001-1(c)"
+{
+  given LateCreditorAmendmentFiled() on 2027-01-04
+  expect deadline(late-creditor-claim-period) == 2027-03-05
+}
+
+test "chapter11-claim-period: 90 days after" cite "M.D. Ga. LBR 3001-1(d)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-claim-period) == 2027-04-05
+}
+
+test "subchapter-v-claim-period: 70 days after" cite "M.D. Ga. LBR 3001-1(e)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(subchapter-v-claim-period) == 2027-03-15
+}
+
+test "valuation-expert-disclosure-period: 7 days before" cite "M.D. Ga. LBR 3012-1(b)"
+{
+  given ValuationHearing() on 2027-01-04
+  expect deadline(valuation-expert-disclosure-period) == 2026-12-28
+}
+
+test "consummation-report-period: 14 days after" cite "M.D. Ga. LBR 3022-1(a)"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(consummation-report-period) == 2027-01-19
+}
+
+test "records-production-period: 14 days after" cite "M.D. Ga. LBR 4002-1(b)"
+{
+  given RecordsRequested() on 2027-01-04
+  expect deadline(records-production-period) == 2027-01-19
+}
+
+test "garnishment-response-period: 14 days after" cite "M.D. Ga. LBR 4071-1(b)"
+{
+  given GarnishmentMotionServed() on 2027-01-04
+  expect deadline(garnishment-response-period) == 2027-01-19
+}
+
+test "exhibit-return-period: 14 days after" cite "M.D. Ga. LBR 5003-1"
+{
+  given ExhibitDestructionNoticed() on 2027-01-04
+  expect deadline(exhibit-return-period) == 2027-01-19
+}
+
+test "redaction-replacement-period: 14 days after" cite "M.D. Ga. LBR 5075-1(a)"
+{
+  given RedactionRequested() on 2027-01-04
+  expect deadline(redaction-replacement-period) == 2027-01-19
+}
+
+test "trustee-abandonment-objection-period: 14 days after" cite "M.D. Ga. LBR 6007-1(a)"
+{
+  given TrusteeAbandonmentMeeting() on 2027-01-04
+  expect deadline(trustee-abandonment-objection-period) == 2027-01-19
+}
+
+test "discharge-dismissal-objection-period: 21 days after" cite "M.D. Ga. LBR 7041-1"
+{
+  given DischargeDismissalMotionServed() on 2027-01-04
+  expect deadline(discharge-dismissal-objection-period) == 2027-01-25
+}
+
+test "bill-of-costs-period: 30 days after" cite "M.D. Ga. LBR 7054-1(b)"
+{
+  given CostsJudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-02-03
+}
+
+test "bill-of-costs-response-period: 21 days after" cite "M.D. Ga. LBR 7054-1(b)"
+{
+  given BillOfCostsServed() on 2027-01-04
+  expect deadline(bill-of-costs-response-period) == 2027-01-25
+}
+
+test "summary-judgment-response-period: 21 days after" cite "M.D. Ga. LBR 7056-1(b)"
+{
+  given SummaryJudgmentBriefServed() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-01-25
+}
+
+test "summary-judgment-reply-period: 14 days after" cite "M.D. Ga. LBR 7056-1(c)"
+{
+  given SummaryJudgmentResponseServed() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "page-extension-motion-period: 5 days before" cite "M.D. Ga. LBR 9013-1(d)"
+{
+  given PageLimitedFilingDue() on 2027-01-04
+  expect deadline(page-extension-motion-period) == 2026-12-30
+}
+
+test "service-certificate-cure-period: 14 days after" cite "M.D. Ga. LBR 9013-3(b)"
+{
+  given ServiceCertificateNoticed() on 2027-01-04
+  expect deadline(service-certificate-cure-period) == 2027-01-19
+}
+
+test "jury-consent-period: 30 days after" cite "M.D. Ga. LBR 9015-1(b)"
+{
+  given InitialPretrialConferenceConcluded() on 2027-01-04
+  expect deadline(jury-consent-period) == 2027-02-03
+}

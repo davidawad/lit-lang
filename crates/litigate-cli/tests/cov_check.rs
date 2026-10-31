@@ -68,7 +68,7 @@ fn a_matter_that_does_not_lower_fails_check() {
 }
 
 #[test]
-fn a_deadline_the_engine_cannot_count_is_scheduled_unknown() {
+fn a_business_day_deadline_is_scheduled_from_the_shared_clock() {
     let dir = example(
         "check-business",
         "deadline in-business-days: 3.business_days from Served(complaint) counted_by frcp6",
@@ -86,7 +86,7 @@ fn a_deadline_the_engine_cannot_count_is_scheduled_unknown() {
         deadlines,
         [
             ("frcp-rule12-example::answer-period", false),
-            ("frcp-rule12-example::in-business-days", true),
+            ("frcp-rule12-example::in-business-days", false),
         ]
     );
 }

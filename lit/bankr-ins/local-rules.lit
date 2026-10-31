@@ -575,3 +575,423 @@ terminal decided: "Motion decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Rules govern all bankruptcy cases and proceedings pending or commenced in the Southern District of Indiana (LBR B-9029-1(b)); in an individual case the court may suspend or modify any of them if the interests of justice so require (LBR B-9029-1(d))."
 }
+
+test "Deadline arithmetic: rent-deposit-period (1 days after)" cite "Bankr. S.D. Ind. LBR 1002-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(rent-deposit-period) == 2027-01-05
+}
+
+test "Deadline arithmetic: emergency-filing-items-period (7 days after)" cite "Bankr. S.D. Ind. LBR 1002-1(d)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(emergency-filing-items-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: ssn-statement-period (7 days after)" cite "Bankr. S.D. Ind. LBR 1017-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(ssn-statement-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: filing-fee-period (7 days after)" cite "Bankr. S.D. Ind. LBR 1017-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(filing-fee-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: creditor-information-period (7 days after)" cite "Bankr. S.D. Ind. LBR 1017-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(creditor-information-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: installment-remittance-period (14 days after)" cite "Bankr. S.D. Ind. LBR 1006-1(d)"
+{
+  given InstallmentFundsReceived() on 2027-01-04
+  expect deadline(installment-remittance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: first-extension-schedules-period (30 days after)" cite "Bankr. S.D. Ind. LBR 1007-1(c)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(first-extension-schedules-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: noticing-agent-motion-period (28 days after)" cite "Bankr. S.D. Ind. LBR 1007-2(a)"
+{
+  given LargeCaseScheduleFiled() on 2027-01-04
+  expect deadline(noticing-agent-motion-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: status-change-bar-period (45 days after)" cite "Bankr. S.D. Ind. LBR 1009-1(b)"
+{
+  given ClaimStatusChangeNoticed() on 2027-01-04
+  expect deadline(status-change-bar-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: dismissal-motion-response-period (14 days after)" cite "Bankr. S.D. Ind. LBR 1017-1(a)"
+{
+  given DismissalMotionServed() on 2027-01-04
+  expect deadline(dismissal-motion-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: conversion-admin-expense-period (21 days after)" cite "Bankr. S.D. Ind. LBR 1019-1(b)"
+{
+  given ConversionToChapter7() on 2027-01-04
+  expect deadline(conversion-admin-expense-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: conversion-wage-order-period (14 days after)" cite "Bankr. S.D. Ind. LBR 1019-1(d)"
+{
+  given ConversionToChapter7() on 2027-01-04
+  expect deadline(conversion-wage-order-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: final-report-objection-period (21 days after)" cite "Bankr. S.D. Ind. LBR 2002-1(g)"
+{
+  given FinalReportNoticeServed() on 2027-01-04
+  expect deadline(final-report-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: debtor-counsel-employment-period (14 days after)" cite "Bankr. S.D. Ind. LBR 2014-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(debtor-counsel-employment-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: employment-objection-period (21 days after)" cite "Bankr. S.D. Ind. LBR 2014-1(b)"
+{
+  given EmploymentNoticeServed() on 2027-01-04
+  expect deadline(employment-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: retention-notice-objection-period (14 days after)" cite "Bankr. S.D. Ind. LBR 2014-2"
+{
+  given RetentionNoticeFiled() on 2027-01-04
+  expect deadline(retention-notice-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: final-fee-application-period (14 days after)" cite "Bankr. S.D. Ind. LBR 2016-1(b)"
+{
+  given CaseClosingTriggered() on 2027-01-04
+  expect deadline(final-fee-application-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: first-interim-fee-application-period (180 days after)" cite "Bankr. S.D. Ind. LBR 2016-1(b)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(first-interim-fee-application-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: turnover-objection-period (21 days after)" cite "Bankr. S.D. Ind. LBR 2070-1(a)"
+{
+  given TurnoverNoticeServed() on 2027-01-04
+  expect deadline(turnover-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: payment-change-motion-period (1 days before)" cite "Bankr. S.D. Ind. LBR 3002.1-1(b)"
+{
+  given PaymentChangeEffective() on 2027-01-04
+  expect deadline(payment-change-motion-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: claim-withdrawal-objection-period (21 days after)" cite "Bankr. S.D. Ind. LBR 3006-1(b)"
+{
+  given ClaimWithdrawalNoticeServed() on 2027-01-04
+  expect deadline(claim-withdrawal-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: claim-objection-response-period (30 days after)" cite "Bankr. S.D. Ind. LBR 3007-1"
+{
+  given ClaimObjectionNoticeServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: plan-extension-motion-period (14 days after)" cite "Bankr. S.D. Ind. LBR 3015-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(plan-extension-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: conduit-resumption-notice-period (30 days before)" cite "Bankr. S.D. Ind. LBR 3015-1(e)"
+{
+  given DirectPaymentsResume() on 2027-01-04
+  expect deadline(conduit-resumption-notice-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: plan-package-distribution-period (7 days after)" cite "Bankr. S.D. Ind. LBR 3018-1(a)"
+{
+  given DisclosureStatementApproved() on 2027-01-04
+  expect deadline(plan-package-distribution-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: plan-package-service-certificate-period (14 days after)" cite "Bankr. S.D. Ind. LBR 3018-1(a)"
+{
+  given PlanPackageDistributed() on 2027-01-04
+  expect deadline(plan-package-service-certificate-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: balloting-report-period (3 days before)" cite "Bankr. S.D. Ind. LBR 3018-1(c)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(balloting-report-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: final-decree-objection-period (14 days after)" cite "Bankr. S.D. Ind. LBR 3022-1"
+{
+  given FinalDecreeNoticeServed() on 2027-01-04
+  expect deadline(final-decree-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: wage-order-submission-period (7 days after)" cite "Bankr. S.D. Ind. LBR 3070-1(b)"
+{
+  given WageOrderRequired() on 2027-01-04
+  expect deadline(wage-order-submission-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: wage-order-change-period (14 days after)" cite "Bankr. S.D. Ind. LBR 3070-1(d)"
+{
+  given WageOrderChangeEvent() on 2027-01-04
+  expect deadline(wage-order-change-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-relief-objection-period (14 days after)" cite "Bankr. S.D. Ind. LBR 4001-1(a)"
+{
+  given StayReliefNoticeServed() on 2027-01-04
+  expect deadline(stay-relief-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: incur-debt-objection-period (14 days after)" cite "Bankr. S.D. Ind. LBR 4001-3(c)"
+{
+  given IncurDebtMotionFiled() on 2027-01-04
+  expect deadline(incur-debt-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: lien-avoidance-objection-period (21 days after)" cite "Bankr. S.D. Ind. LBR 4003-2(b)"
+{
+  given LienAvoidanceNoticeServed() on 2027-01-04
+  expect deadline(lien-avoidance-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: discharge-motion-period (30 days after)" cite "Bankr. S.D. Ind. LBR 4004-1(b)"
+{
+  given PlanCompletionNoticed() on 2027-01-04
+  expect deadline(discharge-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: discharge-motion-objection-period (21 days after)" cite "Bankr. S.D. Ind. LBR 4004-1(c)"
+{
+  given DischargeMotionFiled() on 2027-01-04
+  expect deadline(discharge-motion-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: subchapter-v-discharge-motion-period (30 days after)" cite "Bankr. S.D. Ind. LBR 4004-2(b)"
+{
+  given SubVPaymentsCompletionNoticed() on 2027-01-04
+  expect deadline(subchapter-v-discharge-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: subchapter-v-discharge-objection-period (21 days after)" cite "Bankr. S.D. Ind. LBR 4004-2(b)"
+{
+  given SubVDischargeMotionFiled() on 2027-01-04
+  expect deadline(subchapter-v-discharge-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: record-designation-period (14 days after)" cite "Bankr. S.D. Ind. LBR 5011-1(d)"
+{
+  given RecordDesignationServed() on 2027-01-04
+  expect deadline(record-designation-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reference-withdrawal-response-period (14 days after)" cite "Bankr. S.D. Ind. LBR 5011-1(e)"
+{
+  given ReferenceWithdrawalMotionServed() on 2027-01-04
+  expect deadline(reference-withdrawal-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reference-withdrawal-reply-period (14 days after)" cite "Bankr. S.D. Ind. LBR 5011-1(e)"
+{
+  given ReferenceWithdrawalResponseServed() on 2027-01-04
+  expect deadline(reference-withdrawal-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: sale-objection-period (21 days after)" cite "Bankr. S.D. Ind. LBR 6004-2(d)"
+{
+  given SaleNoticeServed() on 2027-01-04
+  expect deadline(sale-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: sale-report-period (14 days after)" cite "Bankr. S.D. Ind. LBR 6004-2(e)"
+{
+  given SaleCompleted() on 2027-01-04
+  expect deadline(sale-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: failed-sale-report-period (14 days after)" cite "Bankr. S.D. Ind. LBR 6004-2(e)"
+{
+  given LastScheduledSaleDate() on 2027-01-04
+  expect deadline(failed-sale-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: auction-proceeds-remittance-period (14 days after)" cite "Bankr. S.D. Ind. LBR 6005-1(c)"
+{
+  given AuctionSaleHeld() on 2027-01-04
+  expect deadline(auction-proceeds-remittance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: executory-contract-objection-period (14 days after)" cite "Bankr. S.D. Ind. LBR 6006-1(a)"
+{
+  given ExecutoryContractNoticeServed() on 2027-01-04
+  expect deadline(executory-contract-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: abandonment-notice-request-period (1 days before)" cite "Bankr. S.D. Ind. LBR 6007-1(a)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(abandonment-notice-request-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: abandonment-objection-period (14 days after)" cite "Bankr. S.D. Ind. LBR 6007-1(b)"
+{
+  given AbandonmentNoticeServed() on 2027-01-04
+  expect deadline(abandonment-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: redemption-objection-period (21 days after)" cite "Bankr. S.D. Ind. LBR 6008-1"
+{
+  given RedemptionNoticeServed() on 2027-01-04
+  expect deadline(redemption-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: rule-12-response-period (21 days after)" cite "Bankr. S.D. Ind. LBR 7007-1(b)"
+{
+  given Rule12MotionServed() on 2027-01-04
+  expect deadline(rule-12-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: rule-12-reply-period (14 days after)" cite "Bankr. S.D. Ind. LBR 7007-1(b)"
+{
+  given Rule12ResponseServed() on 2027-01-04
+  expect deadline(rule-12-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: deposition-notice-period (14 days before)" cite "Bankr. S.D. Ind. LBR 7030-1(d)"
+{
+  given DepositionScheduled() on 2027-01-04
+  expect deadline(deposition-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: discharge-dismissal-objection-period (21 days after)" cite "Bankr. S.D. Ind. LBR 7041-2(b)"
+{
+  given DischargeDismissalServed() on 2027-01-04
+  expect deadline(discharge-dismissal-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (28 days after)" cite "Bankr. S.D. Ind. LBR 7056-1(b)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "Bankr. S.D. Ind. LBR 7056-1(c)"
+{
+  given SummaryJudgmentResponseServed() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: summary-judgment-surreply-period (7 days after)" cite "Bankr. S.D. Ind. LBR 7056-1(d)"
+{
+  given SummaryJudgmentReplyServed() on 2027-01-04
+  expect deadline(summary-judgment-surreply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: withdrawal-notice-period (7 days before)" cite "Bankr. S.D. Ind. LBR 9010-2(b)"
+{
+  given WithdrawalMotionFiled() on 2027-01-04
+  expect deadline(withdrawal-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: first-day-motion-period (2 days after)" cite "Bankr. S.D. Ind. LBR 9013-3(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(first-day-motion-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: removal-jury-demand-period (30 days after)" cite "Bankr. S.D. Ind. LBR 9015-1(b)"
+{
+  given RemovalNoticed() on 2027-01-04
+  expect deadline(removal-jury-demand-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: jury-consent-period (30 days after)" cite "Bankr. S.D. Ind. LBR 9015-1(c)"
+{
+  given JuryDemandFiled() on 2027-01-04
+  expect deadline(jury-consent-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: nonparty-subpoena-notice-period (7 days before)" cite "Bankr. S.D. Ind. LBR 9016-1"
+{
+  given NonpartySubpoenaServed() on 2027-01-04
+  expect deadline(nonparty-subpoena-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: seal-termination-objection-period (21 days after)" cite "Bankr. S.D. Ind. LBR 9018-1(b)"
+{
+  given SealTerminationNoticed() on 2027-01-04
+  expect deadline(seal-termination-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: settlement-objection-period (21 days after)" cite "Bankr. S.D. Ind. LBR 9019-1(a)"
+{
+  given SettlementNoticeServed() on 2027-01-04
+  expect deadline(settlement-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: mediator-selection-period (14 days after)" cite "Bankr. S.D. Ind. LBR 9019-2(e)"
+{
+  given MediationReferred() on 2027-01-04
+  expect deadline(mediator-selection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediator-strike-period (3 days after)" cite "Bankr. S.D. Ind. LBR 9019-2(e)"
+{
+  given MediatorCandidatesDesignated() on 2027-01-04
+  expect deadline(mediator-strike-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: mediator-striking-complete-period (7 days after)" cite "Bankr. S.D. Ind. LBR 9019-2(e)"
+{
+  given MediatorCandidatesDesignated() on 2027-01-04
+  expect deadline(mediator-striking-complete-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: mediator-affidavit-period (7 days after)" cite "Bankr. S.D. Ind. LBR 9019-2(e)"
+{
+  given MediatorSelected() on 2027-01-04
+  expect deadline(mediator-affidavit-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: mediation-report-period (7 days after)" cite "Bankr. S.D. Ind. LBR 9019-2(h)"
+{
+  given MediationConcluded() on 2027-01-04
+  expect deadline(mediation-report-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: remand-motion-period (30 days after)" cite "Bankr. S.D. Ind. LBR 9027-1(d)"
+{
+  given RemovalNoticed() on 2027-01-04
+  expect deadline(remand-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: exhibit-claim-period (90 days after)" cite "Bankr. S.D. Ind. LBR 9070-1(b)"
+{
+  given CaseDisposed() on 2027-01-04
+  expect deadline(exhibit-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: exhibit-claim-appeal-period (28 days after)" cite "Bankr. S.D. Ind. LBR 9070-1(b)"
+{
+  given MandateFiled() on 2027-01-04
+  expect deadline(exhibit-claim-appeal-period) == 2027-02-01
+}

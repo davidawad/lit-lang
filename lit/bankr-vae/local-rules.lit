@@ -451,3 +451,340 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Bankruptcy Rules govern practice and procedure before the court under FRBP 9029 (LBR 1001-1)."
 }
+
+
+test "Deadline arithmetic: creditor-list-period" cite "E.D. Va. LBR 1007-1(H)(2)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(creditor-list-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: ssn-statement-period" cite "E.D. Va. LBR 1007-1(H)(2)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(ssn-statement-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: credit-counseling-statement-period" cite "E.D. Va. LBR 1007-1(I)(2)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(credit-counseling-statement-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: payment-advices-period" cite "E.D. Va. LBR 1007-1(H)(3)"
+{
+  given MeetingOfCreditorsDate() on 2027-01-04
+  expect deadline(payment-advices-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: joint-administration-objection-period" cite "E.D. Va. LBR 1015-1"
+{
+  given MeetingConcluded() on 2027-01-04
+  expect deadline(joint-administration-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: rescheduled-meeting-notice-period" cite "E.D. Va. LBR 2003-1(C)"
+{
+  given RescheduledMeetingObtained() on 2027-01-04
+  expect deadline(rescheduled-meeting-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: examination-objection-period" cite "E.D. Va. LBR 2004-1(B)"
+{
+  given ExaminationMotionServed() on 2027-01-04
+  expect deadline(examination-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: employment-objection-period" cite "E.D. Va. LBR 2014-1"
+{
+  given EmploymentMotionServed() on 2027-01-04
+  expect deadline(employment-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter11-final-report-period" cite "E.D. Va. LBR 2015-(a)-1(C)"
+{
+  given Chapter11PlanConfirmed() on 2027-01-04
+  expect deadline(chapter11-final-report-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: fee-suspension-hearing-period" cite "E.D. Va. LBR 2016-1(C)(3)(a)(v)"
+{
+  given FeeRuleSuspended() on 2027-01-04
+  expect deadline(fee-suspension-hearing-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mortgage-payment-certification-period" cite "E.D. Va. LBR 3002.1-1(A)"
+{
+  given PlanPaymentsCompleted() on 2027-01-04
+  expect deadline(mortgage-payment-certification-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: final-cure-motion-period" cite "E.D. Va. LBR 3002.1-1(B)(1)"
+{
+  given CureResponseFiled() on 2027-01-04
+  expect deadline(final-cure-motion-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: chapter11-claim-period" cite "E.D. Va. LBR 3003-1(A)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: disputed-claim-notice-period" cite "E.D. Va. LBR 3003-1(B)"
+{
+  given DisputedClaimTrigger() on 2027-01-04
+  expect deadline(disputed-claim-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: disputed-claim-certification-period" cite "E.D. Va. LBR 3003-1(B)"
+{
+  given DisputedClaimNoticeServed() on 2027-01-04
+  expect deadline(disputed-claim-certification-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: claim-objection-response-period" cite "E.D. Va. LBR 3007-1(D)"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: unclaimed-funds-cure-period" cite "E.D. Va. LBR 3011-1(K)"
+{
+  given UnclaimedFundsDeficiencyNotice() on 2027-01-04
+  expect deadline(unclaimed-funds-cure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: post-denial-plan-period" cite "E.D. Va. LBR 3015-2(H)"
+{
+  given ConfirmationDenied() on 2027-01-04
+  expect deadline(post-denial-plan-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: disclosure-statement-objection-period" cite "E.D. Va. LBR 3016-1(B)"
+{
+  given DisclosureHearingDate() on 2027-01-04
+  expect deadline(disclosure-statement-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: chapter11-confirmation-objection-period" cite "E.D. Va. LBR 3016-1(E)"
+{
+  given Chapter11ConfirmationHearingDate() on 2027-01-04
+  expect deadline(chapter11-confirmation-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: trustee-distribution-objection-period" cite "E.D. Va. LBR 3070-1(B)(2)"
+{
+  given DistributionNoticeFiled() on 2027-01-04
+  expect deadline(trustee-distribution-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-relief-response-period" cite "E.D. Va. LBR 4001(a)-1(C)"
+{
+  given StayReliefMotionServed() on 2027-01-04
+  expect deadline(stay-relief-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: lien-avoidance-response-period" cite "E.D. Va. LBR 4003-2"
+{
+  given LienAvoidanceMotionServed() on 2027-01-04
+  expect deadline(lien-avoidance-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: reaffirmation-rights-notice-period" cite "E.D. Va. LBR 4008-1(A)"
+{
+  given DischargeGranted() on 2027-01-04
+  expect deadline(reaffirmation-rights-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: course-certificate-period" cite "E.D. Va. LBR 4008-2(A)"
+{
+  given DischargeNoticeMailed() on 2027-01-04
+  expect deadline(course-certificate-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: trustee-cooperation-period" cite "E.D. Va. LBR 4008-2(B)"
+{
+  given PlanPaymentsCompleted() on 2027-01-04
+  expect deadline(trustee-cooperation-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: trustee-noncompliance-certification-period" cite "E.D. Va. LBR 4008-2(B)"
+{
+  given PlanPaymentsCompleted() on 2027-01-04
+  expect deadline(trustee-noncompliance-certification-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: deficient-filing-cure-period" cite "E.D. Va. LBR 5005-1(G)"
+{
+  given DeficiencyNoticeIssued() on 2027-01-04
+  expect deadline(deficient-filing-cure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: unsigned-entity-filing-cure-period" cite "E.D. Va. LBR 9010-1"
+{
+  given DeficiencyNoticeIssued() on 2027-01-04
+  expect deadline(unsigned-entity-filing-cure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: additional-record-designation-period" cite "E.D. Va. LBR 5011-1(C)"
+{
+  given RecordDesignationServed() on 2027-01-04
+  expect deadline(additional-record-designation-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: withdrawal-response-period" cite "E.D. Va. LBR 5011-1(D)"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(withdrawal-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: withdrawal-reply-period" cite "E.D. Va. LBR 5011-1(D)"
+{
+  given WithdrawalResponseServed() on 2027-01-04
+  expect deadline(withdrawal-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: general-sale-objection-period" cite "E.D. Va. LBR 6004-2(C)"
+{
+  given MeetingOfCreditorsDate() on 2027-01-04
+  expect deadline(general-sale-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: sale-report-period" cite "E.D. Va. LBR 6004-2(D)"
+{
+  given SaleCompleted() on 2027-01-04
+  expect deadline(sale-report-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: abandonment-objection-period" cite "E.D. Va. LBR 6007-1(A)"
+{
+  given MeetingOfCreditorsDate() on 2027-01-04
+  expect deadline(abandonment-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discovery-objection-period" cite "E.D. Va. LBR 7026-1(B)"
+{
+  given DiscoveryRequestServed() on 2027-01-04
+  expect deadline(discovery-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discovery-motion-reply-period" cite "E.D. Va. LBR 7026-1(E)"
+{
+  given DiscoveryMotionServed() on 2027-01-04
+  expect deadline(discovery-motion-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discovery-compliance-period" cite "E.D. Va. LBR 7026-1(F)"
+{
+  given DiscoveryOrderEntered() on 2027-01-04
+  expect deadline(discovery-compliance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: plaintiff-expert-disclosure-period" cite "E.D. Va. LBR 7026-1(L)(2)(a)"
+{
+  given DiscoveryCompletionDate() on 2027-01-04
+  expect deadline(plaintiff-expert-disclosure-period) == 2026-11-05
+}
+
+test "Deadline arithmetic: defendant-expert-disclosure-period" cite "E.D. Va. LBR 7026-1(L)(2)(a)"
+{
+  given DiscoveryCompletionDate() on 2027-01-04
+  expect deadline(defendant-expert-disclosure-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: rebuttal-expert-disclosure-period" cite "E.D. Va. LBR 7026-1(L)(2)(a)"
+{
+  given DefendantExpertDisclosure() on 2027-01-04
+  expect deadline(rebuttal-expert-disclosure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: expert-interrogatory-answer-period" cite "E.D. Va. LBR 7026-1(L)(4)"
+{
+  given ExpertInterrogatoriesServed() on 2027-01-04
+  expect deadline(expert-interrogatory-answer-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discharge-dismissal-notice-period" cite "E.D. Va. LBR 7041-1"
+{
+  given DischargeDismissalHearingDate() on 2027-01-04
+  expect deadline(discharge-dismissal-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: default-judgment-objection-period" cite "E.D. Va. LBR 7055-1(B)"
+{
+  given DefaultJudgmentMotionServed() on 2027-01-04
+  expect deadline(default-judgment-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: summary-judgment-motion-period" cite "E.D. Va. LBR 7056-1(A)"
+{
+  given EvidentiaryHearingDate() on 2027-01-04
+  expect deadline(summary-judgment-motion-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: hearing-notice-period" cite "E.D. Va. LBR 9013-1(H)"
+{
+  given HearingDateIssued() on 2027-01-04
+  expect deadline(hearing-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: summary-judgment-response-period" cite "E.D. Va. LBR 7056-1(D)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: admissibility-objection-period" cite "E.D. Va. LBR 7056-1(F)"
+{
+  given SummaryJudgmentHearingDate() on 2027-01-04
+  expect deadline(admissibility-objection-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period" cite "E.D. Va. LBR 7056-1(G)"
+{
+  given SummaryJudgmentResponseServed() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: motion-response-period" cite "E.D. Va. LBR 9013-1(G)(3)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(motion-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: rebuttal-memorandum-period" cite "E.D. Va. LBR 9013-1(G)(3)(c)"
+{
+  given OppositionMemorandumFiled() on 2027-01-04
+  expect deadline(rebuttal-memorandum-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: negative-notice-order-period" cite "E.D. Va. LBR 9013-1(G)(4)"
+{
+  given ResponseTimeExpired() on 2027-01-04
+  expect deadline(negative-notice-order-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: subpoena-request-period" cite "E.D. Va. LBR 9016-1(F)"
+{
+  given WitnessAppearanceDate() on 2027-01-04
+  expect deadline(subpoena-request-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: mediation-objection-period" cite "E.D. Va. LBR 9019-1(B)(2)"
+{
+  given MediationMotionServed() on 2027-01-04
+  expect deadline(mediation-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: proposed-order-period" cite "E.D. Va. LBR 9022-1(G)"
+{
+  given MatterDisposed() on 2027-01-04
+  expect deadline(proposed-order-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: exhibit-withdrawal-period" cite "E.D. Va. LBR 9070-1(E)"
+{
+  given AppealTimeExpired() on 2027-01-04
+  expect deadline(exhibit-withdrawal-period) == 2027-02-03
+}

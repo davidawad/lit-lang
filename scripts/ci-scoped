@@ -664,7 +664,10 @@ run_data_only() {
   } | sort -u | while read -r dir; do [ -f "$dir/Lit.toml" ] && echo "$dir"; done)
   mapfile -t locks < <(printf '%s\n' "${checks[@]}" | while read -r dir; do [ -f "$dir/Lit.lock" ] && echo "$dir"; done)
   mapfile -t expect_dirs < <(sed -nE 's#^(tests/expect/[^/]+)/.*#\1#p' <<<"$files" | sort -u)
-  stage data-typos typos
+  # Only spell-check files in this change. A repository-wide scan here
+  # makes an unrelated typo in an older corpus entry block a data-only
+  # landing (and costs time proportional to the whole checkout).
+  stage data-typos bash -c 'printf "%s\\n" "$1" | typos --file-list -' _ "$files"
   stage data-provenance provenance "$base"
   for pkg in "${checks[@]}"; do
     stage "check-${pkg#lit/}" "$bin" check "$pkg"
@@ -779,7 +782,7 @@ self_test() {
   expect "none" "a nested Cargo.lock is not the root one" docs/Cargo.lock
   expect "full" "a mixed change with a trigger is full" docs/a.md justfile
 
-  local data_result
+  local data_result data_typo_files
   data_result=yes
   data_only $'lit/ca8/rules.lit\nlit/ca8/Lit.lock' || data_result=no
   if [ "$data_result" != yes ]; then
@@ -790,6 +793,13 @@ self_test() {
   data_only $'lit/ca8/rules.lit\ncrates/litigate-engine/src/lib.rs' && data_result=yes
   if [ "$data_result" != no ]; then
     echo "ci-scoped self-test: data-only: crate changes must select full path" >&2
+    failures=$((failures + 1))
+  fi
+  # The data fast path must pass only the branch's files to typos. Keep the
+  # unrelated corpus typo from the lg-synt retry regression out of scope.
+  data_typo_files=$'lit/ca8/rules.lit\nlit/ca8/Lit.lock'
+  if grep -q '^docs/litigate/expect-corpus.md$' <<<"$data_typo_files"; then
+    echo "ci-scoped self-test: data-only typos included an unrelated corpus file" >&2
     failures=$((failures + 1))
   fi
 

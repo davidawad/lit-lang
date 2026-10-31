@@ -288,3 +288,207 @@ decision ruling: "Motion decided" by court cite "D. Kan. LBR 9013.2"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "D. Kan. LBR 1001.1"
+
+test "Deadline arithmetic: bnc-correction-period (7 days after)" cite "D. Kan. LBR 2002.1"
+{
+  given UndeliveredNoticeNotified() on 2027-01-04
+  expect deadline(bnc-correction-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: examination-notice-period (14 days before)" cite "D. Kan. LBR 2004.1(b)"
+{
+  given ExaminationDate() on 2027-01-04
+  expect deadline(examination-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: priority-claim-amendment-period (14 days after)" cite "D. Kan. LBR 3001.1(c)"
+{
+  given FinalReportSummaryMailed() on 2027-01-04
+  expect deadline(priority-claim-amendment-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mortgage-default-letter-period (14 days before)" cite "D. Kan. LBR 3002.1.1(d)"
+{
+  given StayModificationStepTaken() on 2027-01-04
+  expect deadline(mortgage-default-letter-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: subchapter-v-claims-bar-period (70 days after)" cite "D. Kan. LBR 3003.1(a)"
+{
+  given SubchapterVCaseCommenced() on 2027-01-04
+  expect deadline(subchapter-v-claims-bar-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: subchapter-v-governmental-bar-period (180 days after)" cite "D. Kan. LBR 3003.1(a)"
+{
+  given SubchapterVCaseCommenced() on 2027-01-04
+  expect deadline(subchapter-v-governmental-bar-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: mortgage-checklist-period (14 days after)" cite "D. Kan. LBR 3015(b).2"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(mortgage-checklist-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: payee-change-notice-period (45 days before)" cite "D. Kan. LBR 3015(b).2"
+{
+  given PayeeChangeDate() on 2027-01-04
+  expect deadline(payee-change-notice-period) == 2026-11-20
+}
+
+test "Deadline arithmetic: conditional-order-default-response-period (14 days after)" cite "D. Kan. LBR 4001(a).1(f)"
+{
+  given DefaultNoticeServed() on 2027-01-04
+  expect deadline(conditional-order-default-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-extension-motion-period (7 days after)" cite "D. Kan. LBR 4001(a).3(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-extension-motion-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: stay-motion-objection-period (14 days after)" cite "D. Kan. LBR 4001(a).3(g)"
+{
+  given StayMotionServed() on 2027-01-04
+  expect deadline(stay-motion-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: filed-return-copy-period (7 days after)" cite "D. Kan. LBR 4002.1(b)"
+{
+  given TaxReturnFiled() on 2027-01-04
+  expect deadline(filed-return-copy-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: requested-return-period (28 days after)" cite "D. Kan. LBR 4002.1(b)"
+{
+  given TrusteeTaxReturnRequested() on 2027-01-04
+  expect deadline(requested-return-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: trustee-information-period (14 days after)" cite "D. Kan. LBR 4002.2(a)"
+{
+  given TrusteeInformationRequested() on 2027-01-04
+  expect deadline(trustee-information-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: subchapter-v-discharge-motion-period (14 days after)" cite "D. Kan. LBR 4004.1(b)"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(subchapter-v-discharge-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: abandonment-notice-period (60 days after)" cite "D. Kan. LBR 6007.1(a)"
+{
+  given MeetingConcluded() on 2027-01-04
+  expect deadline(abandonment-notice-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: abandonment-objection-period (75 days after)" cite "D. Kan. LBR 6007.1(a)"
+{
+  given MeetingConcluded() on 2027-01-04
+  expect deadline(abandonment-objection-period) == 2027-03-22
+}
+
+test "Deadline arithmetic: dismissal-response-period (21 days after)" cite "D. Kan. LBR 7012.1(b)"
+{
+  given DismissalMotionServed() on 2027-01-04
+  expect deadline(dismissal-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: dismissal-reply-period (14 days after)" cite "D. Kan. LBR 7012.1(b)"
+{
+  given DismissalResponseServed() on 2027-01-04
+  expect deadline(dismissal-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: deposition-notice-period (7 days before)" cite "D. Kan. LBR 7026.1(c)"
+{
+  given DepositionDate() on 2027-01-04
+  expect deadline(deposition-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: deposition-protective-motion-period (14 days after)" cite "D. Kan. LBR 7026.1(d)"
+{
+  given DepositionNoticeServed() on 2027-01-04
+  expect deadline(deposition-protective-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: trustee-intervention-period (14 days after)" cite "D. Kan. LBR 7041.1(b)"
+{
+  given DischargeDismissalNoticed() on 2027-01-04
+  expect deadline(trustee-intervention-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: bill-of-costs-period (28 days after)" cite "D. Kan. LBR 7054.1(a)"
+{
+  given AppealTimeExpired() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (21 days after)" cite "D. Kan. LBR 7056.1(f)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "D. Kan. LBR 7056.1(f)"
+{
+  given SummaryJudgmentResponseServed() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: hearing-order-period (14 days after)" cite "D. Kan. LBR 9004.1(c)"
+{
+  given HearingHeld() on 2027-01-04
+  expect deadline(hearing-order-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: default-order-period (14 days after)" cite "D. Kan. LBR 9004.1(c)"
+{
+  given ObjectionDeadlineExpired() on 2027-01-04
+  expect deadline(default-order-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: show-cause-response-period (14 days after)" cite "D. Kan. LBR 9011.3(a)"
+{
+  given ShowCauseOrderFiled() on 2027-01-04
+  expect deadline(show-cause-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: motion-filing-period (14 days before)" cite "D. Kan. LBR 9013.2(b)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-filing-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: mediator-report-period (45 days after)" cite "D. Kan. LBR 9019.2"
+{
+  given MediatorAppointed() on 2027-01-04
+  expect deadline(mediator-report-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: remand-motion-period (21 days after)" cite "D. Kan. LBR 9027.1(b)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(remand-motion-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: journal-entry-period (14 days after)" cite "D. Kan. LBR 9074.1(a)"
+{
+  given RulingAnnounced() on 2027-01-04
+  expect deadline(journal-entry-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: journal-entry-objection-period (14 days after)" cite "D. Kan. LBR 9074.1(b)"
+{
+  given JournalEntryServed() on 2027-01-04
+  expect deadline(journal-entry-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: final-decree-application-period (3 months after)" cite "D. Kan. LBR 3022.1(a)"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(final-decree-application-period) == 2027-04-05
+}

@@ -314,3 +314,219 @@ decision ruling: "Motion decided" by court cite "Miss. Bankr. L.R. 9013-1(e)"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Miss. Bankr. L.R. 1001-1"
+
+test "Deadline arithmetic: installment-denial-payment-period (14 days after)" cite "Miss. Bankr. L.R. 1006-1(b)"
+{
+  given InstallmentApplicationDenied() on 2027-04-05
+  expect deadline(installment-denial-payment-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: added-creditor-claim-period (70 days after)" cite "Miss. Bankr. L.R. 1009-1(a)"
+{
+  given AddedCreditorNoticeDated() on 2027-04-05
+  expect deadline(added-creditor-claim-period) == 2027-06-14
+}
+
+test "Deadline arithmetic: dismissal-order-objection-period (14 days after)" cite "Miss. Bankr. L.R. 1017-1(f)"
+{
+  given DismissalOrderEntered() on 2027-04-05
+  expect deadline(dismissal-order-objection-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: meeting-reschedule-request-period (7 days before)" cite "Miss. Bankr. L.R. 2003-1(a)"
+{
+  given CreditorsMeetingDate() on 2027-04-19
+  expect deadline(meeting-reschedule-request-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: appearance-waiver-motion-period (7 days before)" cite "Miss. Bankr. L.R. 2003-1(a)"
+{
+  given CreditorsMeetingDate() on 2027-04-19
+  expect deadline(appearance-waiver-motion-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: examination-notice-period (14 days before)" cite "Miss. Bankr. L.R. 2004-1(a)"
+{
+  given ExaminationDate() on 2027-04-19
+  expect deadline(examination-notice-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: chapter-12-operating-report-period (20 days after)" cite "Miss. Bankr. L.R. 2015-1(c)"
+{
+  given CalendarMonthEnded() on 2027-04-05
+  expect deadline(chapter-12-operating-report-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: chapter-11-claims-bar-period (120 days after)" cite "Miss. Bankr. L.R. 3003-1(c)"
+{
+  given OrderForReliefEntered() on 2027-04-05
+  expect deadline(chapter-11-claims-bar-period) == 2027-08-03
+}
+
+test "Deadline arithmetic: subchapter-v-claims-bar-period (70 days after)" cite "Miss. Bankr. L.R. 3003-1(c)"
+{
+  given OrderForReliefEntered() on 2027-04-05
+  expect deadline(subchapter-v-claims-bar-period) == 2027-06-14
+}
+
+test "Deadline arithmetic: schedule-amendment-notice-period (14 days after)" cite "Miss. Bankr. L.R. 3003-1(c)"
+{
+  given ScheduleAmendmentFiled() on 2027-04-05
+  expect deadline(schedule-amendment-notice-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: ballot-certification-period (3 days before)" cite "Miss. Bankr. L.R. 3018-1(f)"
+{
+  given ConfirmationHearing() on 2027-04-19
+  expect deadline(ballot-certification-period) == 2027-04-16
+}
+
+test "Deadline arithmetic: final-report-period (14 days before)" cite "Miss. Bankr. L.R. 3022-1(a)"
+{
+  given CaseClosingHearing() on 2027-04-19
+  expect deadline(final-report-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: stay-relief-agreed-order-period (14 days after)" cite "Miss. Bankr. L.R. 4001-1(a)"
+{
+  given StayReliefHearingDate() on 2027-04-05
+  expect deadline(stay-relief-agreed-order-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: stay-continuation-motion-period (7 days after)" cite "Miss. Bankr. L.R. 4001-1(e)"
+{
+  given PetitionFiled() on 2027-04-05
+  expect deadline(stay-continuation-motion-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: stay-continuation-service-period (2 days after)" cite "Miss. Bankr. L.R. 4001-1(e)"
+{
+  given StayContinuationMotionFiled() on 2027-04-05
+  expect deadline(stay-continuation-service-period) == 2027-04-07
+}
+
+test "Deadline arithmetic: stay-imposition-service-period (2 days after)" cite "Miss. Bankr. L.R. 4001-1(f)"
+{
+  given StayImpositionMotionFiled() on 2027-04-05
+  expect deadline(stay-imposition-service-period) == 2027-04-07
+}
+
+test "Deadline arithmetic: added-creditor-exemption-objection-period (30 days after)" cite "Miss. Bankr. L.R. 4003-1(b)"
+{
+  given AddedCreditorAmendmentServed() on 2027-04-05
+  expect deadline(added-creditor-exemption-objection-period) == 2027-05-05
+}
+
+test "Deadline arithmetic: added-creditor-discharge-objection-period (60 days after)" cite "Miss. Bankr. L.R. 4004-1(b)"
+{
+  given AddedCreditorAmendmentServed() on 2027-04-05
+  expect deadline(added-creditor-discharge-objection-period) == 2027-06-04
+}
+
+test "Deadline arithmetic: added-creditor-dischargeability-period (60 days after)" cite "Miss. Bankr. L.R. 4007-1(b)"
+{
+  given AddedCreditorAmendmentServed() on 2027-04-05
+  expect deadline(added-creditor-dischargeability-period) == 2027-06-04
+}
+
+test "Deadline arithmetic: paper-filing-challenge-period (14 days after)" cite "Miss. Bankr. L.R. 5005-1(a)"
+{
+  given PaperDocumentDocketed() on 2027-04-05
+  expect deadline(paper-filing-challenge-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: withdrawal-response-period (14 days after)" cite "Miss. Bankr. L.R. 5011-1(a)"
+{
+  given WithdrawalMotionServed() on 2027-04-05
+  expect deadline(withdrawal-response-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: amended-pleading-filing-period (7 days after)" cite "Miss. Bankr. L.R. 7015-1"
+{
+  given AmendmentLeaveGranted() on 2027-04-05
+  expect deadline(amended-pleading-filing-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: telephonic-conference-request-period (2 days before)" cite "Miss. Bankr. L.R. 7016-1(c)"
+{
+  given PretrialConference() on 2027-04-19
+  expect deadline(telephonic-conference-request-period) == 2027-04-16
+}
+
+test "Deadline arithmetic: business-records-production-period (14 days after)" cite "Miss. Bankr. L.R. 7033-1(b)"
+{
+  given InterrogatoryAnswersServed() on 2027-04-05
+  expect deadline(business-records-production-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: fee-motion-response-period (14 days after)" cite "Miss. Bankr. L.R. 7054-1(b)"
+{
+  given FeeMotionFiled() on 2027-04-05
+  expect deadline(fee-motion-response-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (21 days after)" cite "Miss. Bankr. L.R. 7056-1(3)"
+{
+  given SummaryJudgmentMotionServed() on 2027-04-05
+  expect deadline(summary-judgment-response-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "Miss. Bankr. L.R. 7056-1(3)"
+{
+  given SummaryJudgmentResponseServed() on 2027-04-05
+  expect deadline(summary-judgment-reply-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: committee-appeal-notice-request-period (21 days after)" cite "Miss. Bankr. L.R. 8003-1(c)"
+{
+  given NoticeOfAppealServed() on 2027-04-05
+  expect deadline(committee-appeal-notice-request-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: order-submission-period (14 days after)" cite "Miss. Bankr. L.R. 9013-1(e)"
+{
+  given HearingHeld() on 2027-04-05
+  expect deadline(order-submission-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: jury-withdrawal-motion-period (14 days after)" cite "Miss. Bankr. L.R. 9015-1(d)"
+{
+  given JuryDemandGranted() on 2027-04-05
+  expect deadline(jury-withdrawal-motion-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: exhibit-removal-period (60 days after)" cite "Miss. Bankr. L.R. 9017-1(a)"
+{
+  given FinalDisposition() on 2027-04-05
+  expect deadline(exhibit-removal-period) == 2027-06-04
+}
+
+test "Deadline arithmetic: mediation-referral-objection-period (14 days after)" cite "Miss. Bankr. L.R. 9019-1(f)"
+{
+  given MediationReferralOrdered() on 2027-04-05
+  expect deadline(mediation-referral-objection-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: mediation-scheduling-period (21 days after)" cite "Miss. Bankr. L.R. 9019-1(f)"
+{
+  given MediationReferralFinal() on 2027-04-05
+  expect deadline(mediation-scheduling-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: pre-mediation-objection-period (7 days before)" cite "Miss. Bankr. L.R. 9019-1(g)"
+{
+  given MediationDate() on 2027-04-19
+  expect deadline(pre-mediation-objection-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: mediation-report-period (14 days after)" cite "Miss. Bankr. L.R. 9019-1"
+{
+  given MediationCompleted() on 2027-04-05
+  expect deadline(mediation-report-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: neutral-payment-period (30 days after)" cite "Miss. Bankr. L.R. 9019-1"
+{
+  given NeutralStatementReceived() on 2027-04-05
+  expect deadline(neutral-payment-period) == 2027-05-05
+}

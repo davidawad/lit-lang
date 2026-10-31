@@ -388,3 +388,351 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Rules govern practice and procedure in the court and supplement the FRBP (LBR 1001-1)."
 }
+
+test "next friend order service period: 3 days after the trigger" cite "E.D.N.C. LBR 1002-1(b)"
+{
+  given NextFriendOrderEntered() on 2026-11-02
+  expect deadline(next-friend-order-service-period) == 2026-11-05
+}
+
+test "next friend certificate period: 7 days after the trigger" cite "E.D.N.C. LBR 1002-1(b)"
+{
+  given NextFriendOrderServed() on 2026-11-02
+  expect deadline(next-friend-certificate-period) == 2026-11-09
+}
+
+test "next friend declaration period: 30 days after the trigger" cite "E.D.N.C. LBR 1002-1(c)"
+{
+  given PetitionFiled() on 2026-11-02
+  expect deadline(next-friend-declaration-period) == 2026-12-02
+}
+
+test "installment denial fee period: 14 days after the trigger" cite "E.D.N.C. LBR 1006-1(a)"
+{
+  given InstallmentApplicationDenied() on 2026-11-02
+  expect deadline(installment-denial-fee-period) == 2026-11-16
+}
+
+test "final installment period: 14 days after the trigger" cite "E.D.N.C. LBR 1006-1(b)"
+{
+  given FirstMeetingDate() on 2026-11-02
+  expect deadline(final-installment-period) == 2026-11-16
+}
+
+test "intention certificate period: 7 days after the trigger" cite "E.D.N.C. LBR 1007-3"
+{
+  given StatementOfIntentionFiled() on 2026-11-02
+  expect deadline(intention-certificate-period) == 2026-11-09
+}
+
+test "conversion income forms period: 14 days after the trigger" cite "E.D.N.C. LBR 1019-1(a)"
+{
+  given ConversionOrderEntered() on 2026-11-02
+  expect deadline(conversion-income-forms-period) == 2026-11-16
+}
+
+test "conversion abuse statement period: 14 days after the trigger" cite "E.D.N.C. LBR 1019-1(b)"
+{
+  given ConversionMeetingDate() on 2026-11-02
+  expect deadline(conversion-abuse-statement-period) == 2026-11-16
+}
+
+test "conversion abuse motion period: 28 days after the trigger" cite "E.D.N.C. LBR 1019-1(b)"
+{
+  given AbuseStatementFiled() on 2026-11-02
+  expect deadline(conversion-abuse-motion-period) == 2026-11-30
+}
+
+test "added creditor certificate period: 7 days after the trigger" cite "E.D.N.C. LBR 2002-1(a)"
+{
+  given AddedCreditorNoticeServed() on 2026-11-02
+  expect deadline(added-creditor-certificate-period) == 2026-11-09
+}
+
+test "possession notice certificate period: 7 days after the trigger" cite "E.D.N.C. LBR 2015-2"
+{
+  given PossessionNoticeServed() on 2026-11-02
+  expect deadline(possession-notice-certificate-period) == 2026-11-09
+}
+
+test "postpetition disclosure period: 14 days after the trigger" cite "E.D.N.C. LBR 2016-1(e)(1)"
+{
+  given RepresentationBegan() on 2026-11-02
+  expect deadline(postpetition-disclosure-period) == 2026-11-16
+}
+
+test "discipline report period: 14 days after the trigger" cite "E.D.N.C. LBR 2090-2(c)"
+{
+  given DisciplineNotified() on 2026-11-02
+  expect deadline(discipline-report-period) == 2026-11-16
+}
+
+test "disputed claim notice period: 14 days after the trigger" cite "E.D.N.C. LBR 3002-1"
+{
+  given Chapter11SchedulesFiled() on 2026-11-02
+  expect deadline(disputed-claim-notice-period) == 2026-11-16
+}
+
+test "disputed claim certificate period: 7 days after the trigger" cite "E.D.N.C. LBR 3002-1"
+{
+  given DisputedClaimNoticeServed() on 2026-11-02
+  expect deadline(disputed-claim-certificate-period) == 2026-11-09
+}
+
+test "chapter11 claim period: 90 days after the trigger" cite "E.D.N.C. LBR 3003-1"
+{
+  given FirstMeetingDate() on 2026-11-02
+  expect deadline(chapter11-claim-period) == 2027-02-01
+}
+
+test "amended plan after objection period: 30 days after the trigger" cite "E.D.N.C. LBR 3015-3(c)(4)"
+{
+  given ConfirmationObjectionSustained() on 2026-11-02
+  expect deadline(amended-plan-after-objection-period) == 2026-12-02
+}
+
+test "settled amended plan period: 14 days after the trigger" cite "E.D.N.C. LBR 3015-3(c)(5)"
+{
+  given ConfirmationHearingDate() on 2026-11-02
+  expect deadline(settled-amended-plan-period) == 2026-11-16
+}
+
+test "dismissed case fee application period: 14 days after the trigger" cite "E.D.N.C. LBR 3070-1(b)(1)"
+{
+  given UnconfirmedDismissalEntered() on 2026-11-02
+  expect deadline(dismissed-case-fee-application-period) == 2026-11-16
+}
+
+test "dismissed case fee response period: 14 days after the trigger" cite "E.D.N.C. LBR 3070-1(b)(1)"
+{
+  given FeeApplicationServed() on 2026-11-02
+  expect deadline(dismissed-case-fee-response-period) == 2026-11-16
+}
+
+test "servicer change notice period: 21 days before the trigger" cite "E.D.N.C. LBR 3070-2(c)(2)"
+{
+  given ServicerChangeEffective() on 2026-11-30
+  expect deadline(servicer-change-notice-period) == 2026-11-09
+}
+
+test "stay continuation motion period: 5 days after the trigger" cite "E.D.N.C. LBR 4001-1(d)(1)"
+{
+  given PetitionFiled() on 2026-11-02
+  expect deadline(stay-continuation-motion-period) == 2026-11-09
+}
+
+test "trustee financial information period: 14 days after the trigger" cite "E.D.N.C. LBR 4002-1(a)(1)"
+{
+  given PetitionFiled() on 2026-11-02
+  expect deadline(trustee-financial-information-period) == 2026-11-16
+}
+
+test "trustee tax return period: 14 days after the trigger" cite "E.D.N.C. LBR 4002-1(a)(2)"
+{
+  given PetitionFiled() on 2026-11-02
+  expect deadline(trustee-tax-return-period) == 2026-11-16
+}
+
+test "administrator tax return period: 14 days after the trigger" cite "E.D.N.C. LBR 4002-1(b)(2)(A)"
+{
+  given PetitionFiled() on 2026-11-02
+  expect deadline(administrator-tax-return-period) == 2026-11-16
+}
+
+test "chapter11 account closure period: 10 days after the trigger" cite "E.D.N.C. LBR 4002-1(c)(3)(A)"
+{
+  given Chapter11PetitionOrConversion() on 2026-11-02
+  expect deadline(chapter11-account-closure-period) == 2026-11-12
+}
+
+test "chapter11 depository period: 10 days after the trigger" cite "E.D.N.C. LBR 4002-1(c)(3)(B)"
+{
+  given Chapter11PetitionOrConversion() on 2026-11-02
+  expect deadline(chapter11-depository-period) == 2026-11-12
+}
+
+test "chapter11 insurance period: 10 days after the trigger" cite "E.D.N.C. LBR 4002-1(c)(4)(D)"
+{
+  given Chapter11PetitionOrConversion() on 2026-11-02
+  expect deadline(chapter11-insurance-period) == 2026-11-12
+}
+
+test "chapter11 records period: 10 days after the trigger" cite "E.D.N.C. LBR 4002-1(c)(5)"
+{
+  given Chapter11PetitionOrConversion() on 2026-11-02
+  expect deadline(chapter11-records-period) == 2026-11-12
+}
+
+test "chapter11 inventory period: 10 days after the trigger" cite "E.D.N.C. LBR 4002-1(c)(6)"
+{
+  given Chapter11PetitionOrConversion() on 2026-11-02
+  expect deadline(chapter11-inventory-period) == 2026-11-12
+}
+
+test "chapter11 operating statement period: 10 days after the trigger" cite "E.D.N.C. LBR 4002-1(c)(7)"
+{
+  given Chapter11PetitionOrConversion() on 2026-11-02
+  expect deadline(chapter11-operating-statement-period) == 2026-11-12
+}
+
+test "chapter11 duty waiver period: 10 days after the trigger" cite "E.D.N.C. LBR 4002-1(c)(8)"
+{
+  given Chapter11PetitionOrConversion() on 2026-11-02
+  expect deadline(chapter11-duty-waiver-period) == 2026-11-12
+}
+
+test "chapter11 plan period: 120 days after the trigger" cite "E.D.N.C. LBR 4002-1(c)(9)"
+{
+  given Chapter11PetitionOrConversion() on 2026-11-02
+  expect deadline(chapter11-plan-period) == 2027-03-02
+}
+
+test "chapter12 first report period: 30 days after the trigger" cite "E.D.N.C. LBR 4002-1(e)(2)"
+{
+  given Chapter12MonthEnded() on 2026-11-02
+  expect deadline(chapter12-first-report-period) == 2026-12-02
+}
+
+test "chapter12 insurance proof period: 14 days after the trigger" cite "E.D.N.C. LBR 4002-1(e)(4)"
+{
+  given PetitionFiled() on 2026-11-02
+  expect deadline(chapter12-insurance-proof-period) == 2026-11-16
+}
+
+test "esr originals period: 14 days after the trigger" cite "E.D.N.C. LBR 5005-4(12)(c)"
+{
+  given EsrPapersSubmitted() on 2026-11-02
+  expect deadline(esr-originals-period) == 2026-11-16
+}
+
+test "adversary motion response period: 21 days after the trigger" cite "E.D.N.C. LBR 7007-1(b)"
+{
+  given AdversaryMotionServed() on 2026-11-02
+  expect deadline(adversary-motion-response-period) == 2026-11-23
+}
+
+test "adversary motion reply period: 14 days after the trigger" cite "E.D.N.C. LBR 7007-1(c)"
+{
+  given AdversaryResponseServed() on 2026-11-02
+  expect deadline(adversary-motion-reply-period) == 2026-11-16
+}
+
+test "preliminary pretrial report period: 7 days before the trigger" cite "E.D.N.C. LBR 7016-1(a)(3)"
+{
+  given PreliminaryPretrialConferenceDate() on 2026-11-16
+  expect deadline(preliminary-pretrial-report-period) == 2026-11-09
+}
+
+test "pretrial disclosures period: 28 days before the trigger" cite "E.D.N.C. LBR 7016-1(b)(2)(A)"
+{
+  given FinalPretrialConferenceDate() on 2026-12-07
+  expect deadline(pretrial-disclosures-period) == 2026-11-09
+}
+
+test "pretrial order conference period: 14 days before the trigger" cite "E.D.N.C. LBR 7016-1(b)(2)(B)"
+{
+  given FinalPretrialConferenceDate() on 2026-11-23
+  expect deadline(pretrial-order-conference-period) == 2026-11-09
+}
+
+test "pretrial order trial period: 14 days before the trigger" cite "E.D.N.C. LBR 7016-1(b)(2)(B)"
+{
+  given TrialDate() on 2026-11-23
+  expect deadline(pretrial-order-trial-period) == 2026-11-09
+}
+
+test "adversary service prosecution period: 30 days after the trigger" cite "E.D.N.C. LBR 7055-1(a)(1)"
+{
+  given AdversaryComplaintFiled() on 2026-11-02
+  expect deadline(adversary-service-prosecution-period) == 2026-12-02
+}
+
+test "default prosecution period: 30 days after the trigger" cite "E.D.N.C. LBR 7055-1(a)(2)"
+{
+  given ResponsivePleadingTimeExpired() on 2026-11-02
+  expect deadline(default-prosecution-period) == 2026-12-02
+}
+
+test "summary judgment opposition period: 21 days after the trigger" cite "E.D.N.C. LBR 7056-1(c)"
+{
+  given SummaryJudgmentMotionServed() on 2026-11-02
+  expect deadline(summary-judgment-opposition-period) == 2026-11-23
+}
+
+test "summary judgment facts reply period: 14 days after the trigger" cite "E.D.N.C. LBR 7056-1(d)"
+{
+  given AdditionalFactsServed() on 2026-11-02
+  expect deadline(summary-judgment-facts-reply-period) == 2026-11-16
+}
+
+test "motion response period: 14 days after the trigger" cite "E.D.N.C. LBR 9014-1(c)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(motion-response-period) == 2026-11-16
+}
+
+test "settlement motion period: 21 days after the trigger" cite "E.D.N.C. LBR 9019-1(b)"
+{
+  given SettlementNotified() on 2026-11-02
+  expect deadline(settlement-motion-period) == 2026-11-23
+}
+
+test "dispense mediation motion period: 14 days after the trigger" cite "E.D.N.C. LBR 9019-2(1)(c)"
+{
+  given MediationOrderEntered() on 2026-11-02
+  expect deadline(dispense-mediation-motion-period) == 2026-11-16
+}
+
+test "mediation motion objection period: 14 days after the trigger" cite "E.D.N.C. LBR 9019-2(1)(d)"
+{
+  given MediationMotionServed() on 2026-11-02
+  expect deadline(mediation-motion-objection-period) == 2026-11-16
+}
+
+test "mediator selection notice period: 14 days after the trigger" cite "E.D.N.C. LBR 9019-2(2)(a)"
+{
+  given MediationOrderEntered() on 2026-11-02
+  expect deadline(mediator-selection-notice-period) == 2026-11-16
+}
+
+test "mediator report period: 14 days after the trigger" cite "E.D.N.C. LBR 9019-2(6)(b)(5)"
+{
+  given MediationConcluded() on 2026-11-02
+  expect deadline(mediator-report-period) == 2026-11-16
+}
+
+test "mediator interim report period: 14 days after the trigger" cite "E.D.N.C. LBR 9019-2(6)(b)(5)(B)"
+{
+  given MediationSuspended() on 2026-11-02
+  expect deadline(mediator-interim-report-period) == 2026-11-16
+}
+
+test "order service certificate period: 3 days after the trigger" cite "E.D.N.C. LBR 9022-1"
+{
+  given SubmittedOrderServed() on 2026-11-02
+  expect deadline(order-service-certificate-period) == 2026-11-05
+}
+
+test "removal certificate period: 7 days after the trigger" cite "E.D.N.C. LBR 9027-1(b)(8)"
+{
+  given RemovalNoticeServed() on 2026-11-02
+  expect deadline(removal-certificate-period) == 2026-11-09
+}
+
+test "removal documents period: 30 days after the trigger" cite "E.D.N.C. LBR 9027-1(c)"
+{
+  given RemovalNoticeFiled() on 2026-11-02
+  expect deadline(removal-documents-period) == 2026-12-02
+}
+
+test "remand motion period: 30 days after the trigger" cite "E.D.N.C. LBR 9027-1(d)"
+{
+  given RemovalNoticeFiled() on 2026-11-02
+  expect deadline(remand-motion-period) == 2026-12-02
+}
+
+test "removed motion memorandum period: 14 days after the trigger" cite "E.D.N.C. LBR 9027-1(f)"
+{
+  given RemovalNoticeFiled() on 2026-11-02
+  expect deadline(removed-motion-memorandum-period) == 2026-11-16
+}

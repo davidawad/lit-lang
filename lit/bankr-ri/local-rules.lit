@@ -609,3 +609,453 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Bankruptcy Rules govern cases and proceedings in the court."
 }
+
+test "Deadline arithmetic: seven-day-documents-period (7 days after)" cite "R.I. LBR 1007-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(seven-day-documents-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: entity-counsel-period (7 days after)" cite "R.I. LBR 1002-1(d)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(entity-counsel-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: separate-entity-petition-period (7 days after)" cite "R.I. LBR 1002-1(d)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(separate-entity-petition-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: installment-period (30 days after)" cite "R.I. LBR 1006-1(d)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(installment-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: waiver-denied-installment-period (10 days after)" cite "R.I. LBR 1006-1(g)"
+{
+  given FeeWaiverDenied() on 2027-01-04
+  expect deadline(waiver-denied-installment-period) == 2027-01-14
+}
+
+test "Deadline arithmetic: converted-fee-period (14 days after)" cite "R.I. LBR 1006-1(h)"
+{
+  given ConvertedFromWaivedChapter7() on 2027-01-04
+  expect deadline(converted-fee-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: disputed-creditor-notice-period (14 days after)" cite "R.I. LBR 1007-1(e)"
+{
+  given Chapter11SchedulesFiled() on 2027-01-04
+  expect deadline(disputed-creditor-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: added-disputed-creditor-notice-period (14 days after)" cite "R.I. LBR 1007-1(e)"
+{
+  given DisputedCreditorAdded() on 2027-01-04
+  expect deadline(added-disputed-creditor-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: disputed-creditor-certificate-period (14 days after)" cite "R.I. LBR 1007-1(e)"
+{
+  given DisputedCreditorNoticeServed() on 2027-01-04
+  expect deadline(disputed-creditor-certificate-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: added-creditor-objection-period (60 days after)" cite "R.I. LBR 1009-1(c)"
+{
+  given AddedCreditorNoticeServed() on 2027-01-04
+  expect deadline(added-creditor-objection-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: compliance-hearing-request-period (7 days after)" cite "R.I. LBR 1017-2(b)"
+{
+  given ComplianceOrderServed() on 2027-01-04
+  expect deadline(compliance-hearing-request-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: examination-notice-period (14 days before)" cite "R.I. LBR 2004-1(b)"
+{
+  given ExaminationScheduled() on 2027-01-04
+  expect deadline(examination-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: examination-objection-period (14 days after)" cite "R.I. LBR 2004-1(b)"
+{
+  given ExaminationMotionServed() on 2027-01-04
+  expect deadline(examination-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: employment-application-period (30 days after)" cite "R.I. LBR 2014-1(c)"
+{
+  given ProfessionalEngagementBegan() on 2027-01-04
+  expect deadline(employment-application-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: inventory-period (30 days after)" cite "R.I. LBR 2015-3(a)"
+{
+  given InventoryPeriodStarted() on 2027-01-04
+  expect deadline(inventory-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: quarterly-statement-period (30 days after)" cite "R.I. LBR 2015-5(c)"
+{
+  given QuarterEnded() on 2027-01-04
+  expect deadline(quarterly-statement-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: business-insurance-period (7 days after)" cite "R.I. LBR 2015-5(d)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(business-insurance-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: creditor-final-fee-application-period (30 days after)" cite "R.I. LBR 2016-1(d)"
+{
+  given DischargeNoticeIssued() on 2027-01-04
+  expect deadline(creditor-final-fee-application-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: preparer-fee-application-period (21 days after)" cite "R.I. LBR 2017-1(a)"
+{
+  given FeeApplicationOrdered() on 2027-01-04
+  expect deadline(preparer-fee-application-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: chapter13-fee-application-period (60 days after)" cite "R.I. LBR 2017-1(a)"
+{
+  given MeetingOfCreditorsHeld() on 2027-01-04
+  expect deadline(chapter13-fee-application-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: chapter13-agreement-period (14 days after)" cite "R.I. LBR 2083-1"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter13-agreement-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: claim-supplement-period (120 days after)" cite "R.I. LBR 3002-1(d)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(claim-supplement-period) == 2027-05-05
+}
+
+test "Deadline arithmetic: chapter11-claim-period (60 days after)" cite "R.I. LBR 3003-1"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-claim-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: confirmed-claim-objection-period (60 days after)" cite "R.I. LBR 3007-1(a)"
+{
+  given Chapter13PlanConfirmed() on 2027-01-04
+  expect deadline(confirmed-claim-objection-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: chapter13-claim-objection-period (60 days after)" cite "R.I. LBR 3007-1(a)"
+{
+  given ClaimDeadlinePassed() on 2027-01-04
+  expect deadline(chapter13-claim-objection-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: late-claim-objection-period (60 days after)" cite "R.I. LBR 3007-1(a)"
+{
+  given LateClaimFiled() on 2027-01-04
+  expect deadline(late-claim-objection-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: claim-objection-response-period (14 days after)" cite "R.I. LBR 3007-1(b)"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: unclaimed-funds-objection-period (21 days after)" cite "R.I. LBR 3011-1(b)"
+{
+  given UnclaimedFundsPetitionServed() on 2027-01-04
+  expect deadline(unclaimed-funds-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: plan-service-certificate-period (14 days after)" cite "R.I. LBR 3015-1(b)"
+{
+  given PlanServed() on 2027-01-04
+  expect deadline(plan-service-certificate-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: confirmation-objection-period (7 days before)" cite "R.I. LBR 3015-3(b)"
+{
+  given ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(confirmation-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: supplemental-schedules-period (7 days before)" cite "R.I. LBR 3015-1(c)"
+{
+  given ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(supplemental-schedules-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: confirmed-plan-amendment-objection-period (21 days after)" cite "R.I. LBR 3015-2(b)"
+{
+  given PlanAmendmentMotionServed() on 2027-01-04
+  expect deadline(confirmed-plan-amendment-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: confirmation-denial-cure-period (14 days after)" cite "R.I. LBR 3015-3(e)"
+{
+  given ConfirmationDenied() on 2027-01-04
+  expect deadline(confirmation-denial-cure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: support-obligation-documentation-period (14 days after)" cite "R.I. LBR 3015-3(f)"
+{
+  given CloseWithoutDischargeNoticeIssued() on 2027-01-04
+  expect deadline(support-obligation-documentation-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: ballot-certification-period (7 days before)" cite "R.I. LBR 3018-1(b)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(ballot-certification-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: temporary-allowance-motion-period (14 days before)" cite "R.I. LBR 3018-2"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(temporary-allowance-motion-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: confirmation-documents-period (7 days before)" cite "R.I. LBR 3020-1(a)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(confirmation-documents-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: distribution-order-service-period (14 days before)" cite "R.I. LBR 3020-1(a)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(distribution-order-service-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: stay-relief-opposition-period (14 days after)" cite "R.I. LBR 4001-1(d)"
+{
+  given StayReliefMotionServed() on 2027-01-04
+  expect deadline(stay-relief-opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-pretrial-draft-period (7 days after)" cite "R.I. LBR 4001-1(i)"
+{
+  given PreliminaryHearingConcluded() on 2027-01-04
+  expect deadline(stay-pretrial-draft-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: cash-collateral-objection-period (7 days after)" cite "R.I. LBR 4001-2(c)"
+{
+  given CashCollateralMotionServed() on 2027-01-04
+  expect deadline(cash-collateral-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: borrowing-schedules-period (14 days after)" cite "R.I. LBR 4001-3(b)"
+{
+  given BorrowingAgreementExecuted() on 2027-01-04
+  expect deadline(borrowing-schedules-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: lessor-election-period (14 days after)" cite "R.I. LBR 4001-4(b)"
+{
+  given RentDepositNoticeSent() on 2027-01-04
+  expect deadline(lessor-election-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: address-designation-period (21 days after)" cite "R.I. LBR 4002-2"
+{
+  given AddressChangeNoticeSent() on 2027-01-04
+  expect deadline(address-designation-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: exemption-objection-response-period (14 days after)" cite "R.I. LBR 4003-1(b)"
+{
+  given ExemptionObjectionServed() on 2027-01-04
+  expect deadline(exemption-objection-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: corrected-document-period (14 days after)" cite "R.I. LBR 5005-5(a)"
+{
+  given DocumentTerminated() on 2027-01-04
+  expect deadline(corrected-document-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: drop-box-signature-period (14 days after)" cite "R.I. LBR 5005-6(a)"
+{
+  given DropBoxApplicationApproved() on 2027-01-04
+  expect deadline(drop-box-signature-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: interpreter-notice-period (11 days before)" cite "R.I. LBR 5007-1(c)"
+{
+  given ProceedingScheduled() on 2027-01-04
+  expect deadline(interpreter-notice-period) == 2026-12-24
+}
+
+test "Deadline arithmetic: jury-consent-period (30 days after)" cite "R.I. LBR 7008-1(b)"
+{
+  given LastResponsivePleadingDue() on 2027-01-04
+  expect deadline(jury-consent-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: adversary-pretrial-statement-period (21 days after)" cite "R.I. LBR 7016(b)"
+{
+  given DiscoveryClosed() on 2027-01-04
+  expect deadline(adversary-pretrial-statement-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: discovery-conference-period (21 days before)" cite "R.I. LBR 7026-1(b)"
+{
+  given SchedulingOrderDue() on 2027-01-04
+  expect deadline(discovery-conference-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: discovery-plan-period (14 days after)" cite "R.I. LBR 7026-1(c)"
+{
+  given PartiesConferred() on 2027-01-04
+  expect deadline(discovery-plan-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reinstatement-motion-period (14 days after)" cite "R.I. LBR 7026-1(d)"
+{
+  given DismissedForWantOfProsecution() on 2027-01-04
+  expect deadline(reinstatement-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: extended-discharge-deadline-period (7 days after)" cite "R.I. LBR 9006-1"
+{
+  given ExtensionMotionDetermined() on 2027-01-04
+  expect deadline(extended-discharge-deadline-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: expedited-response-period (7 days after)" cite "R.I. LBR 9013-2(d)"
+{
+  given ExpeditedMotionServed() on 2027-01-04
+  expect deadline(expedited-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: pretrial-statement-comments-period (2 days after)" cite "R.I. LBR 9014-1(c)"
+{
+  given PretrialStatementDraftServed() on 2027-01-04
+  expect deadline(pretrial-statement-comments-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: redacted-document-period (10 days after)" cite "R.I. LBR 9018-1(d)"
+{
+  given PartialSealOrderEntered() on 2027-01-04
+  expect deadline(redacted-document-period) == 2027-01-14
+}
+
+test "Deadline arithmetic: removal-papers-period (7 days after)" cite "R.I. LBR 9027-1(a)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removal-papers-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: exhibit-withdrawal-period (30 days after)" cite "R.I. LBR 9070-1(c)"
+{
+  given ExhibitRemovalNoticeIssued() on 2027-01-04
+  expect deadline(exhibit-withdrawal-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: proposed-order-period (7 days after)" cite "R.I. LBR 9072-1(a)"
+{
+  given HearingHeld() on 2027-01-04
+  expect deadline(proposed-order-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: order-form-objection-period (7 days after)" cite "R.I. LBR 9072-1(b)"
+{
+  given ProposedOrderServed() on 2027-01-04
+  expect deadline(order-form-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: response-period (14 days after)" cite "R.I. LBR 1005-1(d)"
+{
+  given PaperServed() on 2027-01-04
+  expect deadline(response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: compromise-response-period (21 days after)" cite "R.I. LBR 1005-1(d)"
+{
+  given CompromiseApplicationServed() on 2027-01-04
+  expect deadline(compromise-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: sale-response-period (21 days after)" cite "R.I. LBR 1005-1(d)"
+{
+  given SaleNoticeServed() on 2027-01-04
+  expect deadline(sale-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: secured-claim-response-period (21 days after)" cite "R.I. LBR 1005-1(d)"
+{
+  given SecuredClaimMotionServed() on 2027-01-04
+  expect deadline(secured-claim-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: abandonment-response-period (21 days after)" cite "R.I. LBR 1005-1(d)"
+{
+  given AbandonmentNoticeServed() on 2027-01-04
+  expect deadline(abandonment-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: compensation-response-period (21 days after)" cite "R.I. LBR 1005-1(d)"
+{
+  given CompensationApplicationServed() on 2027-01-04
+  expect deadline(compensation-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: reconsideration-response-period (7 days after)" cite "R.I. LBR 1005-1(d)"
+{
+  given ReconsiderationMotionServed() on 2027-01-04
+  expect deadline(reconsideration-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: codebtor-stay-response-period (20 days after)" cite "R.I. LBR 1005-1(d)"
+{
+  given CodebtorStayMotionServed() on 2027-01-04
+  expect deadline(codebtor-stay-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: late-document-refile-period (3 days after)" cite "R.I. LBR 1005-1(e)"
+{
+  given LateDocumentStricken() on 2027-01-04
+  expect deadline(late-document-refile-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: mortgage-claim-motion-response-period (28 days after)" cite "R.I. LBR (Dec. 2025) 1005-1(d)"
+{
+  given MortgageClaimMotionServed() on 2027-01-04
+  expect deadline(mortgage-claim-motion-response-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: filer-registration-period (21 days after)" cite "R.I. LBR 5005-4(c)"
+{
+  given FirstConventionalFiling() on 2027-01-04
+  expect deadline(filer-registration-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: electronic-fee-period (7 days after)" cite "R.I. LBR 5005-4(q)"
+{
+  given FeeBearingDocumentFiled() on 2027-01-04
+  expect deadline(electronic-fee-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: local-counsel-appearance-period (7 days before)" cite "R.I. LBR 9010-1(c)"
+{
+  given ContestedHearingScheduled() on 2027-01-04
+  expect deadline(local-counsel-appearance-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: final-report-period (6 months after)" cite "R.I. LBR 3022-1(a)"
+{
+  given Chapter11PlanConfirmed() on 2027-01-04
+  expect deadline(final-report-period) == 2027-07-06
+}

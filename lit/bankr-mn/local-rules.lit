@@ -120,6 +120,108 @@ deadline exhibit-removal-period: 14.days after ExhibitRemovalNoticed() counted_b
 /// or after August 1, 2025 ((c)).
 deadline claims-review-period: 21.days after ClaimsBarDateExpired() counted_by frbp9006-minnesota effective [2025-08-01, ..) known_at 2026-02-11 cite "D. Minn. Bankr. (Amended En Banc Order, Feb. 11, 2026) LR 1007-3-1"
 
+test "Deadline arithmetic: health-care-list-period (14 days after)" cite "D. Minn. Bankr. LR 1007-2(b)"
+{
+  given HealthCarePetitionFiled() on 2027-01-04
+  expect deadline(health-care-list-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: meeting-continuance-statement-period (7 days after)" cite "D. Minn. Bankr. LR 2003-1(b)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(meeting-continuance-statement-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: employment-report-period (7 days after)" cite "D. Minn. Bankr. LR 2014-1(b)"
+{
+  given EmploymentApplicationReceived() on 2027-01-04
+  expect deadline(employment-report-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: adversary-compensation-disclosure-period (14 days after)" cite "D. Minn. Bankr. LR 2016-2"
+{
+  given AdversaryEngagement() on 2027-01-04
+  expect deadline(adversary-compensation-disclosure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: solicitation-statement-period (7 days after)" cite "D. Minn. Bankr. LR 2019-1(a)"
+{
+  given PlanFiled() on 2027-01-04
+  expect deadline(solicitation-statement-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: chapter11-claim-period (90 days after)" cite "D. Minn. Bankr. LR 3003-1"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: subchapter-v-claim-period (70 days after)" cite "D. Minn. Bankr. LR 3003-1"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(subchapter-v-claim-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: chapter7-certification-period (14 days after)" cite "D. Minn. Bankr. LR 4004-1(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter7-certification-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: withdrawal-reference-response-period (14 days after)" cite "D. Minn. Bankr. LR 5011-1(a)"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(withdrawal-reference-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: retention-motion-response-period (21 days after)" cite "D. Minn. Bankr. LR 6007-1"
+{
+  given RetentionMotionFiled() on 2027-01-04
+  expect deadline(retention-motion-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: summary-judgment-motion-period (28 days before)" cite "D. Minn. Bankr. LR 7056-1(a)"
+{
+  given SummaryJudgmentHearing() on 2027-02-15
+  expect deadline(summary-judgment-motion-period) == 2027-01-15
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (14 days before)" cite "D. Minn. Bankr. LR 7056-1(b)"
+{
+  given SummaryJudgmentHearing() on 2027-02-15
+  expect deadline(summary-judgment-response-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (7 days before)" cite "D. Minn. Bankr. LR 7056-1(c)"
+{
+  given SummaryJudgmentHearing() on 2027-02-15
+  expect deadline(summary-judgment-reply-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: moving-documents-period (14 days before)" cite "D. Minn. Bankr. LR 9006-1(a)"
+{
+  given HearingScheduled() on 2027-02-15
+  expect deadline(moving-documents-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: responsive-documents-period (7 days before)" cite "D. Minn. Bankr. LR 9006-1(b)"
+{
+  given HearingScheduled() on 2027-02-15
+  expect deadline(responsive-documents-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: exhibit-removal-period (14 days after)" cite "D. Minn. Bankr. LR 9070-1"
+{
+  given ExhibitRemovalNoticed() on 2027-01-04
+  expect deadline(exhibit-removal-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: claims-review-period (21 days after)" cite "D. Minn. Bankr. (Amended En Banc Order, Feb. 11, 2026) LR 1007-3-1"
+{
+  given ClaimsBarDateExpired() on 2027-01-04
+  expect deadline(claims-review-period) == 2027-01-25
+}
+
 start motion-filed
 
 state motion-filed: "Moving documents filed, served and noticed" by applicant cite "D. Minn. Bankr. LR 9006-1(a)"

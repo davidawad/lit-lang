@@ -207,3 +207,165 @@ deadline complete-attachment-period: 7.days after CompleteAttachmentRequested() 
 /// the trustee files a report of no distribution and no objection is filed
 /// within 30 days from the report.
 deadline no-distribution-objection-period: 30.days after NoDistributionReportFiled() counted_by frbp9006-kentucky cite "W.D. Ky. L.B.R. 6007-1(a)"
+
+test "Deadline arithmetic: petition-execution-period (14 days after)" cite "W.D. Ky. L.B.R. 1002-1(a)"
+{
+  given PetitionExecuted() on 2027-04-06
+  expect deadline(petition-execution-period) == 2027-04-20
+}
+
+test "Deadline arithmetic: converted-postpetition-debts-period (14 days after)" cite "W.D. Ky. L.B.R. 1019(b)"
+{
+  given ConversionNoticed() on 2027-04-06
+  expect deadline(converted-postpetition-debts-period) == 2027-04-20
+}
+
+test "Deadline arithmetic: converted-chapter13-filings-period (14 days after)" cite "W.D. Ky. L.B.R. 1019(c)"
+{
+  given Chapter13ConversionNoticed() on 2027-04-06
+  expect deadline(converted-chapter13-filings-period) == 2027-04-20
+}
+
+test "Deadline arithmetic: deposit-conference-period (10 days after)" cite "W.D. Ky. L.B.R. 1094-1(b)"
+{
+  given SubchapterVTrusteeAppointed() on 2027-04-06
+  expect deadline(deposit-conference-period) == 2027-04-16
+}
+
+test "Deadline arithmetic: deposit-stipulation-objection-period (21 days after)" cite "W.D. Ky. L.B.R. 1094-1(b)"
+{
+  given DepositStipulationServed() on 2027-04-06
+  expect deadline(deposit-stipulation-objection-period) == 2027-04-27
+}
+
+test "Deadline arithmetic: deposit-motion-period (10 days after)" cite "W.D. Ky. L.B.R. 1094-1(b)"
+{
+  given SubchapterVTrusteeAppointed() on 2027-04-06
+  expect deadline(deposit-motion-period) == 2027-04-16
+}
+
+test "Deadline arithmetic: after-acquired-property-notice-period (30 days after)" cite "W.D. Ky. L.B.R. 1095-1(a)"
+{
+  given AfterAcquiredPropertyAcquired() on 2027-04-06
+  expect deadline(after-acquired-property-notice-period) == 2027-05-06
+}
+
+test "Deadline arithmetic: trustee-fee-notice-objection-period (14 days after)" cite "W.D. Ky. L.B.R. 1095-1(a)"
+{
+  given TrusteeFeeNoticeFiled() on 2027-04-06
+  expect deadline(trustee-fee-notice-objection-period) == 2027-04-20
+}
+
+test "Deadline arithmetic: substantial-consummation-notice-period (14 days after)" cite "W.D. Ky. L.B.R. 1095-1(b)"
+{
+  given SubstantialConsummation() on 2027-04-06
+  expect deadline(substantial-consummation-notice-period) == 2027-04-20
+}
+
+test "Deadline arithmetic: consensual-final-report-period (90 days after)" cite "W.D. Ky. L.B.R. 1095-1(c)"
+{
+  given SubstantialConsummationNoticeFiled() on 2027-04-06
+  expect deadline(consensual-final-report-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: consensual-final-decree-motion-period (30 days after)" cite "W.D. Ky. L.B.R. 1095-1(c)"
+{
+  given SubchapterVFinalReportFiled() on 2027-04-06
+  expect deadline(consensual-final-decree-motion-period) == 2027-05-06
+}
+
+test "Deadline arithmetic: nonconsensual-final-report-period (90 days after)" cite "W.D. Ky. L.B.R. 1095-1(d)"
+{
+  given PlanCompletionNoticeFiled() on 2027-04-06
+  expect deadline(nonconsensual-final-report-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: nonconsensual-discharge-motion-period (30 days after)" cite "W.D. Ky. L.B.R. 1095-1(d)"
+{
+  given SubchapterVFinalReportFiled() on 2027-04-06
+  expect deadline(nonconsensual-discharge-motion-period) == 2027-05-06
+}
+
+test "Deadline arithmetic: ombudsman-motion-period (21 days after)" cite "W.D. Ky. L.B.R. 2007-1"
+{
+  given HealthCareCaseCommenced() on 2027-04-06
+  expect deadline(ombudsman-motion-period) == 2027-04-27
+}
+
+test "Deadline arithmetic: final-decree-certification-period (60 days after)" cite "W.D. Ky. L.B.R. 2081-1(a)"
+{
+  given Chapter11ConfirmationOrderEntered() on 2027-04-06
+  expect deadline(final-decree-certification-period) == 2027-06-07
+}
+
+test "Deadline arithmetic: chapter12-discharge-certification-period (30 days after)" cite "W.D. Ky. L.B.R. 2082-1(a)"
+{
+  given Chapter12CompletionNoticeServed() on 2027-04-06
+  expect deadline(chapter12-discharge-certification-period) == 2027-05-06
+}
+
+test "Deadline arithmetic: chapter13-discharge-certification-period (30 days after)" cite "W.D. Ky. L.B.R. 2083-1(a)"
+{
+  given Chapter13CompletionNoticeServed() on 2027-04-06
+  expect deadline(chapter13-discharge-certification-period) == 2027-05-06
+}
+
+test "Deadline arithmetic: secured-priority-claim-period (7 days before)" cite "W.D. Ky. L.B.R. 3001-1(b)"
+{
+  given MeetingOfCreditorsHeld() on 2027-04-06
+  expect deadline(secured-priority-claim-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: deficiency-claim-period (180 days after)" cite "W.D. Ky. L.B.R. 3001-1(c)"
+{
+  given StayReliefGranted() on 2027-04-06
+  expect deadline(deficiency-claim-period) == 2027-10-04
+}
+
+test "Deadline arithmetic: deficiency-claim-objection-period (30 days after)" cite "W.D. Ky. L.B.R. 3001-1(c)"
+{
+  given DeficiencyClaimFiled() on 2027-04-06
+  expect deadline(deficiency-claim-objection-period) == 2027-05-06
+}
+
+test "Deadline arithmetic: supplemental-schedule-period (30 days after)" cite "W.D. Ky. L.B.R. 3001-1(c)"
+{
+  given DeficiencyClaimAllowed() on 2027-04-06
+  expect deadline(supplemental-schedule-period) == 2027-05-06
+}
+
+test "Deadline arithmetic: plan-payment-turnover-period (10 days after)" cite "W.D. Ky. L.B.R. 3070-1(b)"
+{
+  given Chapter13PlanConfirmed() on 2027-04-06
+  expect deadline(plan-payment-turnover-period) == 2027-04-16
+}
+
+test "Deadline arithmetic: chapter7-stay-response-period (14 days after)" cite "W.D. Ky. L.B.R. 4001-1(d)"
+{
+  given Chapter7StayMotionFiled() on 2027-04-06
+  expect deadline(chapter7-stay-response-period) == 2027-04-20
+}
+
+test "Deadline arithmetic: chapter13-stay-response-period (7 days before)" cite "W.D. Ky. L.B.R. 4001-1(e)"
+{
+  given Chapter13StayHearingScheduled() on 2027-04-06
+  expect deadline(chapter13-stay-response-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: insurance-proof-period (10 days after)" cite "W.D. Ky. L.B.R. 4070-1(a)"
+{
+  given InsuranceProofRequested() on 2027-04-06
+  expect deadline(insurance-proof-period) == 2027-04-16
+}
+
+test "Deadline arithmetic: complete-attachment-period (7 days after)" cite "W.D. Ky. L.B.R. 5005-1(e)"
+{
+  given CompleteAttachmentRequested() on 2027-04-06
+  expect deadline(complete-attachment-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: no-distribution-objection-period (30 days after)" cite "W.D. Ky. L.B.R. 6007-1(a)"
+{
+  given NoDistributionReportFiled() on 2027-04-06
+  expect deadline(no-distribution-objection-period) == 2027-05-06
+}

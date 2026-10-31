@@ -1,6 +1,6 @@
 //! `litigate calendar`: a matter's computed deadlines as iCalendar, on a
-//! real matter and on the coverage fixture (open and every deadline, an
-//! uncountable deadline left unscheduled, `--out`, and every failure).
+//! real matter and on the coverage fixture (open and every deadline,
+//! business-day counting, `--out`, and every failure).
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support_cmds;
@@ -11,7 +11,7 @@ use support_cmds::{copy_dir, errors, fixture, in_fixture, litigate_in, repo, scr
 
 /// A matter served with the complaint and the amended complaint, with a
 /// hearing set; it uses the fixture package plus a deadline counted in
-/// business days, which the engine cannot count.
+/// business days, computed by the shared clock.
 const MATTER: &str = r#"case cal-matter
 uses cov-example ^0.1.0
 as_of 2025-03-10
@@ -59,7 +59,7 @@ fn split(result: &Value) -> (Value, String) {
 }
 
 #[test]
-fn open_deadlines_are_events_and_an_uncountable_one_is_unscheduled() {
+fn open_deadlines_include_business_day_counting() {
     let dir = matter("calendar-open");
     let run = litigate_in(&dir, &["calendar", "cases/cal.case", "--remind", "3"]);
     assert_eq!(run.code, 0, "{}", run.stdout);
@@ -88,6 +88,7 @@ fn all_includes_deadlines_that_are_no_longer_open() {
         statuses,
         [
             ("cov-pack::brief-period", "lapsed"),
+            ("cov-pack::in-business-days", "open"),
             ("cov-pack::answer-period", "open"),
             ("cov-pack::amended-answer-period", "open"),
         ]

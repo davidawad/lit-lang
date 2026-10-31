@@ -1,6 +1,5 @@
 ---
 source: crates/litigate-cli/tests/cov_cmd_calendar.rs
-assertion_line: 68
 expression: ics
 ---
 BEGIN:VCALENDAR
@@ -9,6 +8,26 @@ PRODID:-//litgraph//litigate <version>//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:cal-matter
+BEGIN:VEVENT
+UID:83d33d887036b58931af15453f3219d6@litigate
+DTSTAMP:20250310T000000Z
+DTSTART;VALUE=DATE:20250310
+DTEND;VALUE=DATE:20250311
+SUMMARY:in-business-days due (cal-matter)
+DESCRIPTION:Deadline: cov-pack::in-business-days\nTrigger: Served(complaint
+ \, Personal) on 2025-03-05\nCounting: frcp6 (FRCP 6(a))\n- FRCP 6(a): excl
+ ude the trigger date 2025-03-05\n- FRCP 6(a): count 3 business day(s) forw
+ ard\, skipping weekends and holidays -> 2025-03-10\nStatus as of 2025-03-1
+ 0: open\nComputed by litigate from cases/cal.case\; the cited rule text go
+ verns.
+CATEGORIES:litigate,open
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-P3D
+DESCRIPTION:in-business-days due in 3 day(s)
+END:VALARM
+END:VEVENT
 BEGIN:VEVENT
 UID:1d1b1cdf7d704f8b2955d3b1fddd6222@litigate
 DTSTAMP:20250310T000000Z

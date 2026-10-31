@@ -318,3 +318,207 @@ decision ruling: "Motion decided" by court cite "D. Colo. L.B.R. 9013-1"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "D. Colo. L.B.R. 1001-1"
+
+test "meeting-continuance-request-period: 7 days before" cite "D. Colo. L.B.R. 2003-1"
+{
+  given MeetingDate() on 2027-01-04
+  expect deadline(meeting-continuance-request-period) == 2026-12-28
+}
+
+test "continued-meeting-notice-period: 7 days after" cite "D. Colo. L.B.R. 2003-1"
+{
+  given MeetingContinued() on 2027-01-04
+  expect deadline(continued-meeting-notice-period) == 2027-01-11
+}
+
+test "examination-order-service-period: 14 days before" cite "D. Colo. L.B.R. 2004-1"
+{
+  given ExaminationDate() on 2027-01-04
+  expect deadline(examination-order-service-period) == 2026-12-21
+}
+
+test "monthly-statement-period: 14 days after" cite "D. Colo. L.B.R. 2016-2"
+{
+  given BillingCycleEnded() on 2027-01-04
+  expect deadline(monthly-statement-period) == 2027-01-19
+}
+
+test "informal-objection-period: 14 days after" cite "D. Colo. L.B.R. 2016-2"
+{
+  given MonthlyStatementNoticed() on 2027-01-04
+  expect deadline(informal-objection-period) == 2027-01-19
+}
+
+test "chapter-13-fee-objection-period: 21 days after" cite "D. Colo. L.B.R. 2016-3"
+{
+  given FeeApplicationNoticeServed() on 2027-01-04
+  expect deadline(chapter-13-fee-objection-period) == 2027-01-25
+}
+
+test "lffa-application-period: 28 days after" cite "D. Colo. L.B.R. 2016-3"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(lffa-application-period) == 2027-02-01
+}
+
+test "chapter-11-dismissal-objection-period: 14 days after" cite "D. Colo. L.B.R. 2081-3"
+{
+  given DismissalMotionNoticed() on 2027-01-04
+  expect deadline(chapter-11-dismissal-objection-period) == 2027-01-19
+}
+
+test "plan-notice-certificate-period: 3 days after" cite "D. Colo. L.B.R. 2082-1"
+{
+  given PlanNoticeServed() on 2027-01-04
+  expect deadline(plan-notice-certificate-period) == 2027-01-07
+}
+
+test "chapter-12-confirmation-objection-period: 7 days before" cite "D. Colo. L.B.R. 2082-1"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(chapter-12-confirmation-objection-period) == 2026-12-28
+}
+
+test "chapter-13-plan-objection-period: 7 days after" cite "D. Colo. L.B.R. 3015-1"
+{
+  given MeetingDate() on 2027-01-04
+  expect deadline(chapter-13-plan-objection-period) == 2027-01-11
+}
+
+test "confirmation-verification-period: 7 days before" cite "D. Colo. L.B.R. 3015-1"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(confirmation-verification-period) == 2026-12-28
+}
+
+test "meet-and-confer-period: 10 days before" cite "D. Colo. L.B.R. 3015-1"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(meet-and-confer-period) == 2026-12-24
+}
+
+test "confirmation-status-report-period: 7 days before" cite "D. Colo. L.B.R. 3015-1"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(confirmation-status-report-period) == 2026-12-28
+}
+
+test "continued-dates-notice-period: 3 days after" cite "D. Colo. L.B.R. 3015-1"
+{
+  given ConfirmationContinued() on 2027-01-04
+  expect deadline(continued-dates-notice-period) == 2027-01-07
+}
+
+test "conditional-approval-service-certificate-period: 3 days after" cite "D. Colo. L.B.R. 3017.1-1 (Certificate of Service)"
+{
+  given SmallBusinessPackageServed() on 2027-01-04
+  expect deadline(conditional-approval-service-certificate-period) == 2027-01-07
+}
+
+test "combined-plan-service-certificate-period: 3 days after" cite "D. Colo. L.B.R. 3017-2"
+{
+  given SmallBusinessPackageServed() on 2027-01-04
+  expect deadline(combined-plan-service-certificate-period) == 2027-01-07
+}
+
+test "final-decree-objection-period: 30 days after" cite "D. Colo. L.B.R. 3022-1"
+{
+  given FinalReportFiled() on 2027-01-04
+  expect deadline(final-decree-objection-period) == 2027-02-03
+}
+
+test "stay-relief-objection-period: 7 days before" cite "D. Colo. L.B.R. 4001-1"
+{
+  given StayReliefHearing() on 2027-01-04
+  expect deadline(stay-relief-objection-period) == 2026-12-28
+}
+
+test "exemption-objection-response-period: 14 days after" cite "D. Colo. L.B.R. 4003-1"
+{
+  given ExemptionObjectionServed() on 2027-01-04
+  expect deadline(exemption-objection-response-period) == 2027-01-19
+}
+
+test "lien-avoidance-objection-period: 14 days after" cite "D. Colo. L.B.R. 4003-2"
+{
+  given LienAvoidanceMotionServed() on 2027-01-04
+  expect deadline(lien-avoidance-objection-period) == 2027-01-19
+}
+
+test "withdrawal-objection-period: 14 days after" cite "D. Colo. L.B.R. 5011-1"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(withdrawal-objection-period) == 2027-01-19
+}
+
+test "withdrawal-reply-period: 7 days after" cite "D. Colo. L.B.R. 5011-1"
+{
+  given WithdrawalObjectionServed() on 2027-01-04
+  expect deadline(withdrawal-reply-period) == 2027-01-11
+}
+
+test "adversary-response-period: 14 days after" cite "D. Colo. L.B.R. 7007-1"
+{
+  given AdversaryMotionServed() on 2027-01-04
+  expect deadline(adversary-response-period) == 2027-01-19
+}
+
+test "adversary-reply-period: 7 days after" cite "D. Colo. L.B.R. 7007-1"
+{
+  given AdversaryResponseFiled() on 2027-01-04
+  expect deadline(adversary-reply-period) == 2027-01-11
+}
+
+test "deposition-notice-period: 14 days before" cite "D. Colo. L.B.R. 7026-1"
+{
+  given DepositionDate() on 2027-01-04
+  expect deadline(deposition-notice-period) == 2026-12-21
+}
+
+test "discovery-dispute-report-period: 5 days before" cite "D. Colo. L.B.R. 7026-1"
+{
+  given DiscoveryHearing() on 2027-01-04
+  expect deadline(discovery-dispute-report-period) == 2026-12-30
+}
+
+test "summary-judgment-response-period: 14 days after" cite "D. Colo. L.B.R. 7056-1"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-01-19
+}
+
+test "notice-of-advisement-period: 3 days before" cite "D. Colo. L.B.R. 9010-1"
+{
+  given ObjectionDeadline() on 2027-01-04
+  expect deadline(notice-of-advisement-period) == 2026-12-31
+}
+
+test "attorney-withdrawal-objection-period: 7 days after" cite "D. Colo. L.B.R. 9010-4"
+{
+  given AttorneyWithdrawalNoticeFiled() on 2027-01-04
+  expect deadline(attorney-withdrawal-objection-period) == 2027-01-11
+}
+
+test "certificate-of-service-period: 3 days after" cite "D. Colo. L.B.R. 9013-1"
+{
+  given ServedDocumentFiled() on 2027-01-04
+  expect deadline(certificate-of-service-period) == 2027-01-07
+}
+
+test "presumptive-response-period: 14 days after" cite "D. Colo. L.B.R. 9013-1"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(presumptive-response-period) == 2027-01-19
+}
+
+test "ex-parte-reconsideration-period: 14 days after" cite "D. Colo. L.B.R. 9013-1"
+{
+  given ExParteOrderEntered() on 2027-01-04
+  expect deadline(ex-parte-reconsideration-period) == 2027-01-19
+}
+
+test "witness-exhibit-list-period: 5 days before" cite "D. Colo. L.B.R. 9070-1"
+{
+  given ContestedHearing() on 2027-01-04
+  expect deadline(witness-exhibit-list-period) == 2026-12-30
+}

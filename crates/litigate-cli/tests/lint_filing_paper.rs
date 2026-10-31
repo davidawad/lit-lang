@@ -177,7 +177,7 @@ fn over_the_word_bound_is_a_violation_with_its_cite_and_layer() {
         v["layer"],
         json!({
             "package": "ptab-patent-trial-appeal-board", "pack": "ptab-patent-trial-appeal-board",
-            "authority": "Regulation", "version": "ipr-petition@2016-05-02",
+            "authority": "Regulation", "version": "ipr-petition@2021-01-08",
             "provenance": ["ptab-patent-trial-appeal-board"],
         })
     );

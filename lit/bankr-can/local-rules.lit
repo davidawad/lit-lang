@@ -205,3 +205,141 @@ decision ruling: "Relief decided" by court cite "Bankr. N.D. Cal. B.L.R. 9014-1(
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. N.D. Cal. B.L.R. 1001-1"
+
+test "fund objection period: 14 days after" cite "Bankr. N.D. Cal. B.L.R. 2015-1(c)"
+{
+  given FundNoticeMailed() on 2027-01-04
+  expect deadline(fund-objection-period) == 2027-01-19
+}
+
+test "chapter 11 claim period: 90 days after" cite "Bankr. N.D. Cal. B.L.R. 3003-1"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter-11-claim-period) == 2027-04-05
+}
+
+test "claim objection request period: 30 days after" cite "Bankr. N.D. Cal. B.L.R. 3007-1(c)"
+{
+  given ClaimObjectionNoticeMailed() on 2027-01-04
+  expect deadline(claim-objection-request-period) == 2027-02-03
+}
+
+test "claim objection hearing notice period: 30 days before" cite "Bankr. N.D. Cal. B.L.R. 3007-1(c)"
+{
+  given ClaimObjectionHearing() on 2027-01-04
+  expect deadline(claim-objection-hearing-notice-period) == 2026-12-04
+}
+
+test "chapter 12 confirmation notice period: 35 days before" cite "Bankr. N.D. Cal. B.L.R. 3015-1(a)"
+{
+  given ChapterTwelveConfirmationHearing() on 2027-01-04
+  expect deadline(chapter-12-confirmation-notice-period) == 2026-11-30
+}
+
+test "chapter 12 confirmation objection period: 7 days before" cite "Bankr. N.D. Cal. B.L.R. 3015-1(a)"
+{
+  given ChapterTwelveConfirmationHearing() on 2027-01-04
+  expect deadline(chapter-12-confirmation-objection-period) == 2026-12-28
+}
+
+test "amended plan notice period: 21 days before" cite "Bankr. N.D. Cal. B.L.R. 3015-1(b)"
+{
+  given AmendedPlanHearing() on 2027-01-04
+  expect deadline(amended-plan-notice-period) == 2026-12-14
+}
+
+test "amended plan objection period: 14 days after" cite "Bankr. N.D. Cal. B.L.R. 3015-1(b)"
+{
+  given AmendedPlanServed() on 2027-01-04
+  expect deadline(amended-plan-objection-period) == 2027-01-19
+}
+
+test "disclosure statement notice period: 35 days before" cite "Bankr. N.D. Cal. B.L.R. 3017-1(a)"
+{
+  given DisclosureStatementHearing() on 2027-01-04
+  expect deadline(disclosure-statement-notice-period) == 2026-11-30
+}
+
+test "disclosure statement objection period: 7 days before" cite "Bankr. N.D. Cal. B.L.R. 3017-1(a)"
+{
+  given DisclosureStatementHearing() on 2027-01-04
+  expect deadline(disclosure-statement-objection-period) == 2026-12-28
+}
+
+test "final decree objection period: 14 days after" cite "Bankr. N.D. Cal. B.L.R. 3022-1(b)"
+{
+  given FinalDecreeNoticeServed() on 2027-01-04
+  expect deadline(final-decree-objection-period) == 2027-01-19
+}
+
+test "discharge delay request period: 21 days after" cite "Bankr. N.D. Cal. B.L.R. 4004-1(d)"
+{
+  given DischargeStatementServed() on 2027-01-04
+  expect deadline(discharge-delay-request-period) == 2027-01-25
+}
+
+test "adversary motion notice period: 28 days before" cite "Bankr. N.D. Cal. B.L.R. 7007-1(a)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(adversary-motion-notice-period) == 2026-12-07
+}
+
+test "adversary opposition period: 14 days before" cite "Bankr. N.D. Cal. B.L.R. 7007-1(b)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(adversary-opposition-period) == 2026-12-21
+}
+
+test "adversary reply period: 7 days before" cite "Bankr. N.D. Cal. B.L.R. 7007-1(e)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(adversary-reply-period) == 2026-12-28
+}
+
+test "opportunity objection period: 21 days after" cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"
+{
+  given OpportunityNoticeMailed() on 2027-01-04
+  expect deadline(opportunity-objection-period) == 2027-01-25
+}
+
+test "tentative hearing period: 14 days after" cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"
+{
+  given ObjectionDeadline() on 2027-01-04
+  expect deadline(tentative-hearing-period) == 2027-01-19
+}
+
+test "actual hearing notice period: 7 days before" cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"
+{
+  given TentativeHearing() on 2027-01-04
+  expect deadline(actual-hearing-notice-period) == 2026-12-28
+}
+
+test "named entity motion period: 28 days before" cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(named-entity-motion-period) == 2026-12-07
+}
+
+test "named entity opposition period: 14 days before" cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(named-entity-opposition-period) == 2026-12-21
+}
+
+test "named entity reply period: 7 days before" cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(named-entity-reply-period) == 2026-12-28
+}
+
+test "general relief motion period: 21 days before" cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(general-relief-motion-period) == 2026-12-14
+}
+
+test "general relief opposition period: 7 days before" cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(general-relief-opposition-period) == 2026-12-28
+}

@@ -201,3 +201,135 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "Parties comply with the federal statutes, the Federal Rules of Bankruptcy Procedure and the Local Rules (LBR 9011-2(a)), which are not construed inconsistently with the FRBP (preamble)."
 }
+
+test "filing declaration period" cite "M.D. Ala. LBR 1002-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(filing-declaration-period) == 2027-01-19
+}
+
+test "installment denial fee period: 14 days after" cite "M.D. Ala. LBR 1006-1(d)"
+{
+  given InstallmentApplicationDenied() on 2027-01-04
+  expect deadline(installment-denial-fee-period) == 2027-01-19
+}
+
+test "dismissal response period: 21 days after" cite "M.D. Ala. LBR 1017-2(b)"
+{
+  given DismissalMotionServed() on 2027-01-04
+  expect deadline(dismissal-response-period) == 2027-01-25
+}
+
+test "excused interrogatories period: 14 days after" cite "M.D. Ala. LBR 2003-1(b)(2)"
+{
+  given AppearanceExcusedOrder() on 2027-01-04
+  expect deadline(excused-interrogatories-period) == 2027-01-19
+}
+
+test "examination production period: 21 days after" cite "M.D. Ala. LBR 2004-1(c)"
+{
+  given ExaminationNoticeServed() on 2027-01-04
+  expect deadline(examination-production-period) == 2027-01-25
+}
+
+test "cross notice period: 14 days before" cite "M.D. Ala. LBR 2004-1(d)"
+{
+  given ExaminationDate() on 2027-01-04
+  expect deadline(cross-notice-period) == 2026-12-21
+}
+
+test "examination objection period: 7 days before" cite "M.D. Ala. LBR 2004-1(e)"
+{
+  given ExaminationDate() on 2027-01-04
+  expect deadline(examination-objection-period) == 2026-12-28
+}
+
+test "claim objection response period: 30 days after" cite "M.D. Ala. LBR 3007-1(c)(3)"
+{
+  given NegativeNoticeServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}
+
+test "claim objection declaration period: 7 days after" cite "M.D. Ala. LBR 3007-1(c)(6)"
+{
+  given DeclarationAndOrderDue() on 2027-01-04
+  expect deadline(claim-objection-declaration-period) == 2027-01-11
+}
+
+test "default cure period: 21 days after" cite "M.D. Ala. LBR 4001-2(c)"
+{
+  given DefaultNoticeMailed() on 2027-01-04
+  expect deadline(default-cure-period) == 2027-01-25
+}
+
+test "conditional denial claim period: 60 days after" cite "M.D. Ala. LBR 4001-2(f)"
+{
+  given ConditionalDenialEntered() on 2027-01-04
+  expect deadline(conditional-denial-claim-period) == 2027-03-05
+}
+
+test "stay extension motion period: 7 days after" cite "M.D. Ala. LBR 4001-3"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-extension-motion-period) == 2027-01-11
+}
+
+test "payment proof period: 14 days after" cite "M.D. Ala. LBR 4002-1(b)(2)"
+{
+  given PaymentProofRequested() on 2027-01-04
+  expect deadline(payment-proof-period) == 2027-01-19
+}
+
+test "discharge motion period: 30 days after" cite "M.D. Ala. LBR 4004-1(a)"
+{
+  given PlanCompletionNoticeFiled() on 2027-01-04
+  expect deadline(discharge-motion-period) == 2027-02-03
+}
+
+test "insurance proof period: 14 days after" cite "M.D. Ala. LBR 4070-1(c)"
+{
+  given InsuranceNoticeFiled() on 2027-01-04
+  expect deadline(insurance-proof-period) == 2027-01-19
+}
+
+test "insurance objection period: 7 days after" cite "M.D. Ala. LBR 4070-1(d)"
+{
+  given InsuranceNoticeFiled() on 2027-01-04
+  expect deadline(insurance-objection-period) == 2027-01-11
+}
+
+test "scheduling conference period: 7 days before" cite "M.D. Ala. LBR 7016-1"
+{
+  given SchedulingConference() on 2027-01-04
+  expect deadline(scheduling-conference-period) == 2026-12-28
+}
+
+test "negative notice response period: 21 days after" cite "M.D. Ala. LBR 9007-1(c)"
+{
+  given NegativeNoticeServed() on 2027-01-04
+  expect deadline(negative-notice-response-period) == 2027-01-25
+}
+
+test "negative notice declaration period: 7 days after" cite "M.D. Ala. LBR 9007-1(f)"
+{
+  given DeclarationAndOrderDue() on 2027-01-04
+  expect deadline(negative-notice-declaration-period) == 2027-01-11
+}
+
+test "removal proof period: 14 days after" cite "M.D. Ala. LBR 9027-1(b)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removal-proof-period) == 2027-01-19
+}
+
+test "exhibits period: 7 days before" cite "M.D. Ala. LBR 9070-1(b)"
+{
+  given TrialOrHearing() on 2027-01-04
+  expect deadline(exhibits-period) == 2026-12-28
+}
+
+test "exhibit reclaim period: 30 days after" cite "M.D. Ala. LBR 9070-1(e)"
+{
+  given MatterConcluded() on 2027-01-04
+  expect deadline(exhibit-reclaim-period) == 2027-02-03
+}

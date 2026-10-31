@@ -132,3 +132,57 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Rules govern practice and procedure in all cases and proceedings in the court; where neither they nor the Bankruptcy Rules provide, the court regulates its practice consistently with both (Rule 1001-1(c))."
 }
+
+test "prior fee payment period: 14 days after" cite "Bankr. N.D. Ala. R. 1006-1(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(prior-fee-payment-period) == 2027-01-19
+}
+
+test "first installment period: 30 days after" cite "Bankr. N.D. Ala. R. 1006-1(b)(1)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(first-installment-period) == 2027-02-03
+}
+
+test "claim objection order period: 45 days after" cite "Bankr. N.D. Ala. R. 3007-1(c)(5)"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-order-period) == 2027-02-18
+}
+
+test "confirmation objection period: 7 days before" cite "Bankr. N.D. Ala. R. 3015-2(a)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(confirmation-objection-period) == 2026-12-28
+}
+
+test "fact summary period: 14 days before" cite "Bankr. N.D. Ala. R. 4001-1(c)"
+{
+  given StayReliefHearing() on 2027-01-04
+  expect deadline(fact-summary-period) == 2026-12-21
+}
+
+test "conversion filings period: 14 days after" cite "Bankr. N.D. Ala. R. 4002-1"
+{
+  given ConvertedToChapter7() on 2027-01-04
+  expect deadline(conversion-filings-period) == 2027-01-19
+}
+
+test "lien avoidance objection period: 30 days after" cite "Bankr. N.D. Ala. R. 4003-2(c)"
+{
+  given LienAvoidanceMotionServed() on 2027-01-04
+  expect deadline(lien-avoidance-objection-period) == 2027-02-03
+}
+
+test "lien avoidance order period: 45 days after" cite "Bankr. N.D. Ala. R. 4003-2(e)"
+{
+  given LienAvoidanceMotionServed() on 2027-01-04
+  expect deadline(lien-avoidance-order-period) == 2027-02-18
+}
+
+test "exhibit withdrawal period: 30 days after" cite "Bankr. N.D. Ala. R. 9070-1"
+{
+  given FinalDisposition() on 2027-01-04
+  expect deadline(exhibit-withdrawal-period) == 2027-02-03
+}

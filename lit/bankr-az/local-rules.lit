@@ -328,3 +328,261 @@ decision ruling: "Motion decided" by court cite "Bankr. D. Ariz. LR 2002-2(b)"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. D. Ariz. LR 1001-1"
+
+test "filing fee period: 14 days after" cite "Bankr. D. Ariz. LR 1006-1(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(filing-fee-period) == 2027-01-19
+}
+
+test "miscellaneous fee period: 14 days after" cite "Bankr. D. Ariz. LR 1006-1(c)"
+{
+  given MiscellaneousProceedingFiled() on 2027-01-04
+  expect deadline(miscellaneous-fee-period) == 2027-01-19
+}
+
+test "master mailing list period: 7 days after" cite "Bankr. D. Ariz. LR 1007-1(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(master-mailing-list-period) == 2027-01-11
+}
+
+test "declaration period: 21 days after" cite "Bankr. D. Ariz. LR 1007-1(c)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(declaration-period) == 2027-01-25
+}
+
+test "extended declaration period: 7 days after" cite "Bankr. D. Ariz. LR 1007-1(c)"
+{
+  given ExtendedSchedulesFiled() on 2027-01-04
+  expect deadline(extended-declaration-period) == 2027-01-11
+}
+
+test "social security statement period: 7 days after" cite "Bankr. D. Ariz. LR 1007-1(d)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(social-security-statement-period) == 2027-01-11
+}
+
+test "unrepresented declaration period: 14 days after" cite "Bankr. D. Ariz. LR 1007-1(g)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(unrepresented-declaration-period) == 2027-01-19
+}
+
+test "negative notice response period: 21 days after" cite "Bankr. D. Ariz. LR 2002-2(b)"
+{
+  given BarDateNoticeServed() on 2027-01-04
+  expect deadline(negative-notice-response-period) == 2027-01-25
+}
+
+test "appearance waiver response period: 7 days after" cite "Bankr. D. Ariz. LR 2003-1(b)"
+{
+  given AppearanceWaiverMotionFiled() on 2027-01-04
+  expect deadline(appearance-waiver-response-period) == 2027-01-11
+}
+
+test "trustee questionnaire period: 14 days before" cite "Bankr. D. Ariz. LR 2003-2(b)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(trustee-questionnaire-period) == 2026-12-21
+}
+
+test "chapter 13 trustee forms period: 7 days after" cite "Bankr. D. Ariz. LR 2084-4(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter-13-trustee-forms-period) == 2027-01-11
+}
+
+test "conduit change notice period: 28 days after" cite "Bankr. D. Ariz. LR 2084-4(b)"
+{
+  given ConduitChangeNoticeReceived() on 2027-01-04
+  expect deadline(conduit-change-notice-period) == 2027-02-01
+}
+
+test "conduit change objection period: 28 days after" cite "Bankr. D. Ariz. LR 2084-4(b)"
+{
+  given ConduitChangeNoticeFiled() on 2027-01-04
+  expect deadline(conduit-change-objection-period) == 2027-02-01
+}
+
+test "real property claim period: 70 days after" cite "Bankr. D. Ariz. LR 2084-4(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(real-property-claim-period) == 2027-03-15
+}
+
+test "converted real property claim period: 70 days after" cite "Bankr. D. Ariz. LR 2084-4(b)"
+{
+  given CaseConverted() on 2027-01-04
+  expect deadline(converted-real-property-claim-period) == 2027-03-15
+}
+
+test "payment address notice period: 60 days before" cite "Bankr. D. Ariz. LR 2084-4(b)"
+{
+  given PaymentAddressChanged() on 2027-01-04
+  expect deadline(payment-address-notice-period) == 2026-11-05
+}
+
+test "plan dismissal cure period: 14 days after" cite "Bankr. D. Ariz. LR 2084-4(f)"
+{
+  given ProposedDismissalOrderServed() on 2027-01-04
+  expect deadline(plan-dismissal-cure-period) == 2027-01-19
+}
+
+test "reinstated objection period: 14 days after" cite "Bankr. D. Ariz. LR 2084-9(a)"
+{
+  given CaseReinstated() on 2027-01-04
+  expect deadline(reinstated-objection-period) == 2027-01-19
+}
+
+test "trustee recommendation period: 3 days before" cite "Bankr. D. Ariz. LR 2084-10(a)"
+{
+  given InitialConfirmationHearing() on 2027-01-04
+  expect deadline(trustee-recommendation-period) == 2026-12-31
+}
+
+test "modified plan recommendation period: 28 days after" cite "Bankr. D. Ariz. LR 2084-10(a)"
+{
+  given CreditorObjectionDeadline() on 2027-01-04
+  expect deadline(modified-plan-recommendation-period) == 2027-02-01
+}
+
+test "trustee recommendation compliance period: 30 days after" cite "Bankr. D. Ariz. LR 2084-10(b)"
+{
+  given TrusteeRecommendationFiled() on 2027-01-04
+  expect deadline(trustee-recommendation-compliance-period) == 2027-02-03
+}
+
+test "confirmation order lodging period: 45 days after" cite "Bankr. D. Ariz. LR 2084-13(e)"
+{
+  given ProposedConfirmationOrderReceived() on 2027-01-04
+  expect deadline(confirmation-order-lodging-period) == 2027-02-18
+}
+
+test "subchapter v claim period: 70 days after" cite "Bankr. D. Ariz. LR 3003-1(c)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(subchapter-v-claim-period) == 2027-03-15
+}
+
+test "claim objection response period: 21 days after" cite "Bankr. D. Ariz. LR 3007-1(b)"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-01-25
+}
+
+test "stay relief objection period: 14 days after" cite "Bankr. D. Ariz. LR 4001-1(c)"
+{
+  given StayReliefNoticeServed() on 2027-01-04
+  expect deadline(stay-relief-objection-period) == 2027-01-19
+}
+
+test "cash collateral objection period: 14 days after" cite "Bankr. D. Ariz. LR 4001-2(a)"
+{
+  given CashCollateralNoticeServed() on 2027-01-04
+  expect deadline(cash-collateral-objection-period) == 2027-01-19
+}
+
+test "lien avoidance objection period: 14 days after" cite "Bankr. D. Ariz. LR 4003-2(b)"
+{
+  given LienAvoidanceNoticeServed() on 2027-01-04
+  expect deadline(lien-avoidance-objection-period) == 2027-01-19
+}
+
+test "exhibit return period: 30 days after" cite "Bankr. D. Ariz. LR 5005-1(b)"
+{
+  given AppealConcluded() on 2027-01-04
+  expect deadline(exhibit-return-period) == 2027-02-03
+}
+
+test "converted document objection period: 14 days after" cite "Bankr. D. Ariz. LR 5005-4(g)"
+{
+  given PaperDocumentDocketed() on 2027-01-04
+  expect deadline(converted-document-objection-period) == 2027-01-19
+}
+
+test "sale report period: 21 days after" cite "Bankr. D. Ariz. LR 6004-1(d)"
+{
+  given SaleClosed() on 2027-01-04
+  expect deadline(sale-report-period) == 2027-01-25
+}
+
+test "executory contract objection period: 21 days after" cite "Bankr. D. Ariz. LR 6006-1(d)"
+{
+  given ExecutoryContractNoticeServed() on 2027-01-04
+  expect deadline(executory-contract-objection-period) == 2027-01-25
+}
+
+test "abandonment objection period: 14 days after" cite "Bankr. D. Ariz. LR 6007-1(d)"
+{
+  given AbandonmentNoticeServed() on 2027-01-04
+  expect deadline(abandonment-objection-period) == 2027-01-19
+}
+
+test "redemption objection period: 14 days after" cite "Bankr. D. Ariz. LR 6008-1(b)"
+{
+  given RedemptionNoticeServed() on 2027-01-04
+  expect deadline(redemption-objection-period) == 2027-01-19
+}
+
+test "pretrial statement period: 7 days before" cite "Bankr. D. Ariz. LR 7016-1(a)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(pretrial-statement-period) == 2026-12-28
+}
+
+test "pretrial draft period: 14 days before" cite "Bankr. D. Ariz. LR 7016-1(b)"
+{
+  given PretrialStatementDeadline() on 2027-01-04
+  expect deadline(pretrial-draft-period) == 2026-12-21
+}
+
+test "cost statement period: 14 days after" cite "Bankr. D. Ariz. LR 7054-1(a)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(cost-statement-period) == 2027-01-19
+}
+
+test "cost objection period: 14 days after" cite "Bankr. D. Ariz. LR 7054-1(b)"
+{
+  given CostStatementServed() on 2027-01-04
+  expect deadline(cost-objection-period) == 2027-01-19
+}
+
+test "motion response period: 14 days after" cite "Bankr. D. Ariz. LR 9013-1(c)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(motion-response-period) == 2027-01-19
+}
+
+test "motion reply period: 14 days after" cite "Bankr. D. Ariz. LR 9013-1(c)"
+{
+  given ResponseServed() on 2027-01-04
+  expect deadline(motion-reply-period) == 2027-01-19
+}
+
+test "summary judgment response period: 30 days after" cite "Bankr. D. Ariz. LR 9013-1(h)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-02-03
+}
+
+test "summary judgment reply period: 14 days after" cite "Bankr. D. Ariz. LR 9013-1(h)"
+{
+  given SummaryJudgmentResponseServed() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "default authority objection period: 14 days after" cite "Bankr. D. Ariz. LR 9022-1(e)"
+{
+  given DefaultJudgmentEntered() on 2027-01-04
+  expect deadline(default-authority-objection-period) == 2027-01-19
+}
+
+test "removal jury demand period: 14 days after" cite "Bankr. D. Ariz. LR 9027-1(e)"
+{
+  given RemovalNoticeServed() on 2027-01-04
+  expect deadline(removal-jury-demand-period) == 2027-01-19
+}

@@ -75,3 +75,15 @@ decision ruling: "Order entered or matter decided" by court cite ?("E.D. Ark. Ba
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite ?("E.D. Ark. Bankr. LR 1001-1, undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified") {
   note "All matters of procedure the local rules do not address are governed by the Federal Rules of Bankruptcy Procedure (LR 1001-1; the CURRENCY UNCONFIRMED text)."
 }
+
+test "proof of loss period: 91 days after" cite "E.D. Ark. Bankr. LR 2015-1 I.8, undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified"
+{
+  given InsuredLossOccurred() on 2027-01-04
+  expect deadline(proof-of-loss-period) == 2027-04-05
+}
+
+test "consent order objection period: 14 days after" cite "E.D. Ark. Bankr. LR 9019-1(c), undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified"
+{
+  given ConsentOrderForwarded() on 2027-01-04
+  expect deadline(consent-order-objection-period) == 2027-01-19
+}

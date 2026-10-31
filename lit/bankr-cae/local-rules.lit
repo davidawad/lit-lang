@@ -306,3 +306,291 @@ decision ruling: "Matter decided" by court cite "Bankr. E.D. Cal. LBR 9014-1(k)"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. E.D. Cal. LBR 1001-1"
+
+test "payment advices trustee period: 7 days before" cite "Bankr. E.D. Cal. LBR 1007-1(c)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-trustee-period) == 2026-12-28
+}
+
+test "payment advices demand period: 30 days after" cite "Bankr. E.D. Cal. LBR 1007-1(c)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-demand-period) == 2027-02-03
+}
+
+test "payment advices production period: 14 days after" cite "Bankr. E.D. Cal. LBR 1007-1(c)"
+{
+  given DemandForDocumentsMade() on 2027-01-04
+  expect deadline(payment-advices-production-period) == 2027-01-19
+}
+
+test "consolidation objection period: 45 days after" cite "Bankr. E.D. Cal. LBR 1015-1(c)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(consolidation-objection-period) == 2027-02-18
+}
+
+test "death notice period: 60 days after" cite "Bankr. E.D. Cal. LBR 1016-1(a)"
+{
+  given DebtorDied() on 2027-01-04
+  expect deadline(death-notice-period) == 2027-03-05
+}
+
+test "monthly report period: 21 days after" cite "Bankr. E.D. Cal. LBR 2015-1(c)"
+{
+  given MonthEnded() on 2027-01-04
+  expect deadline(monthly-report-period) == 2027-01-25
+}
+
+test "monthly report service period: 7 days after" cite "Bankr. E.D. Cal. LBR 2015-1(d)"
+{
+  given MonthlyReportFiled() on 2027-01-04
+  expect deadline(monthly-report-service-period) == 2027-01-11
+}
+
+test "retainer refund period: 14 days after" cite "Bankr. E.D. Cal. LBR 2016-1(c)"
+{
+  given CaseDismissedOrConverted() on 2027-01-04
+  expect deadline(retainer-refund-period) == 2027-01-19
+}
+
+test "appearance confirmation period: 7 days after" cite "Bankr. E.D. Cal. LBR 2017-1(b)"
+{
+  given AppearanceMadeInCourt() on 2027-01-04
+  expect deadline(appearance-confirmation-period) == 2027-01-11
+}
+
+test "injunction withdrawal period: 14 days after" cite "Bankr. E.D. Cal. LBR 2017-1(f)"
+{
+  given InjunctiveApplicationMade() on 2027-01-04
+  expect deadline(injunction-withdrawal-period) == 2027-01-19
+}
+
+test "chapter 11 claim period: 90 days after" cite "Bankr. E.D. Cal. LBR 3003-1"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter-11-claim-period) == 2027-04-05
+}
+
+test "subchapter v claim period: 70 days after" cite "Bankr. E.D. Cal. LBR 3003-2"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(subchapter-v-claim-period) == 2027-03-15
+}
+
+test "surrogate claim period: 60 days after" cite "Bankr. E.D. Cal. LBR 3004-1"
+{
+  given NoticeOfFiledClaimsServed() on 2027-01-04
+  expect deadline(surrogate-claim-period) == 2027-03-05
+}
+
+test "claim objection notice period: 44 days before" cite "Bankr. E.D. Cal. LBR 3007-1(b)"
+{
+  given ClaimObjectionHearing() on 2027-01-04
+  expect deadline(claim-objection-notice-period) == 2026-11-20
+}
+
+test "claim objection short notice period: 30 days before" cite "Bankr. E.D. Cal. LBR 3007-1(b)"
+{
+  given ClaimObjectionHearing() on 2027-01-04
+  expect deadline(claim-objection-short-notice-period) == 2026-12-04
+}
+
+test "claim objection opposition period: 14 days before" cite "Bankr. E.D. Cal. LBR 3007-1(b)"
+{
+  given ClaimObjectionHearing() on 2027-01-04
+  expect deadline(claim-objection-opposition-period) == 2026-12-21
+}
+
+test "claim objection reply period: 7 days before" cite "Bankr. E.D. Cal. LBR 3007-1(b)"
+{
+  given ClaimObjectionHearing() on 2027-01-04
+  expect deadline(claim-objection-reply-period) == 2026-12-28
+}
+
+test "filed claims objection period: 60 days after" cite "Bankr. E.D. Cal. LBR 3007-1(d)"
+{
+  given NoticeOfFiledClaimsServed() on 2027-01-04
+  expect deadline(filed-claims-objection-period) == 2027-03-05
+}
+
+test "filed claims modification period: 90 days after" cite "Bankr. E.D. Cal. LBR 3007-1(d)"
+{
+  given NoticeOfFiledClaimsServed() on 2027-01-04
+  expect deadline(filed-claims-modification-period) == 2027-04-05
+}
+
+test "domestic support checklist period: 14 days after" cite "Bankr. E.D. Cal. LBR 3015-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(domestic-support-checklist-period) == 2027-01-19
+}
+
+test "plan objection period: 7 days after" cite "Bankr. E.D. Cal. LBR 3015-1(c)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(plan-objection-period) == 2027-01-11
+}
+
+test "plan motion notice period: 35 days before" cite "Bankr. E.D. Cal. LBR 3015-1(d)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(plan-motion-notice-period) == 2026-11-30
+}
+
+test "unopposed confirmation order period: 14 days after" cite "Bankr. E.D. Cal. LBR 3015-1(e)"
+{
+  given ObjectionDeadlineExpired() on 2027-01-04
+  expect deadline(unopposed-confirmation-order-period) == 2027-01-19
+}
+
+test "overruled confirmation order period: 14 days after" cite "Bankr. E.D. Cal. LBR 3015-1(e)"
+{
+  given ObjectionHearingConcluded() on 2027-01-04
+  expect deadline(overruled-confirmation-order-period) == 2027-01-19
+}
+
+test "default hearing period: 28 days after" cite "Bankr. E.D. Cal. LBR 3015-1(g)"
+{
+  given DefaultNoticeMailed() on 2027-01-04
+  expect deadline(default-hearing-period) == 2027-02-01
+}
+
+test "default cure period: 30 days after" cite "Bankr. E.D. Cal. LBR 3015-1(g)"
+{
+  given DefaultNoticeMailed() on 2027-01-04
+  expect deadline(default-cure-period) == 2027-02-03
+}
+
+test "discharge certification period: 30 days after" cite "Bankr. E.D. Cal. LBR 5009-1(b)"
+{
+  given CompletedPaymentsNoticeDated() on 2027-01-04
+  expect deadline(discharge-certification-period) == 2027-02-03
+}
+
+test "discharge eligibility objection period: 14 days after" cite "Bankr. E.D. Cal. LBR 5009-1(d)"
+{
+  given DischargeIntentNoticeDated() on 2027-01-04
+  expect deadline(discharge-eligibility-objection-period) == 2027-01-19
+}
+
+test "parties conference period: 14 days before" cite "Bankr. E.D. Cal. LBR 7026-1"
+{
+  given SchedulingConference() on 2027-01-04
+  expect deadline(parties-conference-period) == 2026-12-21
+}
+
+test "discovery plan report period: 7 days after" cite "Bankr. E.D. Cal. LBR 7026-1"
+{
+  given PartiesConferenceHeld() on 2027-01-04
+  expect deadline(discovery-plan-report-period) == 2027-01-11
+}
+
+test "summary judgment motion period: 42 days before" cite "Bankr. E.D. Cal. LBR 7056-1(a)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(summary-judgment-motion-period) == 2026-11-23
+}
+
+test "summary judgment opposition period: 21 days before" cite "Bankr. E.D. Cal. LBR 7056-1(b)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(summary-judgment-opposition-period) == 2026-12-14
+}
+
+test "summary judgment reply period: 14 days before" cite "Bankr. E.D. Cal. LBR 7056-1(c)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2026-12-21
+}
+
+test "trial exhibits reclaim period: 60 days after" cite "Bankr. E.D. Cal. LBR 7090-1"
+{
+  given JudgmentFinal() on 2027-01-04
+  expect deadline(trial-exhibits-reclaim-period) == 2027-03-05
+}
+
+test "proof of service period: 3 days after" cite "Bankr. E.D. Cal. LBR 9014-1(e)"
+{
+  given DocumentsServed() on 2027-01-04
+  expect deadline(proof-of-service-period) == 2027-01-07
+}
+
+test "motion notice period: 28 days before" cite "Bankr. E.D. Cal. LBR 9014-1(f)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-notice-period) == 2026-12-07
+}
+
+test "motion short notice period: 14 days before" cite "Bankr. E.D. Cal. LBR 9014-1(f)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-short-notice-period) == 2026-12-21
+}
+
+test "motion opposition period: 14 days before" cite "Bankr. E.D. Cal. LBR 9014-1(f)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-opposition-period) == 2026-12-21
+}
+
+test "motion reply period: 7 days before" cite "Bankr. E.D. Cal. LBR 9014-1(f)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-reply-period) == 2026-12-28
+}
+
+test "pretrial disclosures period: 30 days before" cite "Bankr. E.D. Cal. LBR 9014-1(g)"
+{
+  given EvidentiaryHearing() on 2027-01-04
+  expect deadline(pretrial-disclosures-period) == 2026-12-04
+}
+
+test "pretrial disclosure objection period: 14 days after" cite "Bankr. E.D. Cal. LBR 9014-1(g)"
+{
+  given PretrialDisclosuresMade() on 2027-01-04
+  expect deadline(pretrial-disclosure-objection-period) == 2027-01-19
+}
+
+test "opportunity objection period: 14 days after" cite "Bankr. E.D. Cal. LBR 9014-1(k)"
+{
+  given OpportunityNoticeServed() on 2027-01-04
+  expect deadline(opportunity-objection-period) == 2027-01-19
+}
+
+test "plaintiff declarations period: 14 days before" cite "Bankr. E.D. Cal. LBR 9017-1(b)"
+{
+  given Trial() on 2027-01-04
+  expect deadline(plaintiff-declarations-period) == 2026-12-21
+}
+
+test "defendant declarations period: 7 days before" cite "Bankr. E.D. Cal. LBR 9017-1(b)"
+{
+  given Trial() on 2027-01-04
+  expect deadline(defendant-declarations-period) == 2026-12-28
+}
+
+test "redacted copy period: 30 days after" cite "Bankr. E.D. Cal. LBR 9037-1(b)"
+{
+  given RedactionOrderEntered() on 2027-01-04
+  expect deadline(redacted-copy-period) == 2027-02-03
+}
+
+test "redaction intent period: 7 days after" cite "Bankr. E.D. Cal. LBR 9037-1(h)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-intent-period) == 2027-01-11
+}
+
+test "redaction request period: 21 days after" cite "Bankr. E.D. Cal. LBR 9037-1(i)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-request-period) == 2027-01-25
+}
+
+test "redacted transcript period: 31 days after" cite "Bankr. E.D. Cal. LBR 9037-1(j)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redacted-transcript-period) == 2027-02-04
+}

@@ -156,3 +156,99 @@ decision ruling: "Matter decided" by court cite ?("S.D. Ala. LBR 9007-1(d), July
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite ?("S.D. Ala. LBR 9029-3(a), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {
   note "The Local Rules govern practice and procedure in all cases and proceedings in the court; in all cases they do not provide for, the court may regulate its practice consistently with them and the FRBP (LBR 9029-3(a), (c); the OCR text)."
 }
+
+test "payment advices period: 7 days before" cite "S.D. Ala. LBR 1007-1(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-period) == 2026-12-28
+}
+
+test "conversion final report period: 30 days after" cite "S.D. Ala. LBR 1019-1, July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given TrusteeChecksCleared() on 2027-01-04
+  expect deadline(conversion-final-report-period) == 2027-02-03
+}
+
+test "examination production period: 21 days after" cite "S.D. Ala. LBR 2004-1(c), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given ExaminationNoticeServed() on 2027-01-04
+  expect deadline(examination-production-period) == 2027-01-25
+}
+
+test "cross notice period: 14 days before" cite "S.D. Ala. LBR 2004-1(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given ExaminationDate() on 2027-01-04
+  expect deadline(cross-notice-period) == 2026-12-21
+}
+
+test "protective order period: 7 days before" cite "S.D. Ala. LBR 2004-1(e), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given ExaminationDate() on 2027-01-04
+  expect deadline(protective-order-period) == 2026-12-28
+}
+
+test "final plan summary period: 14 days after" cite "S.D. Ala. LBR 3015-2(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given ConfirmationRecommended() on 2027-01-04
+  expect deadline(final-plan-summary-period) == 2027-01-19
+}
+
+test "corrected plan summary period: 10 days after" cite "S.D. Ala. LBR 3015-2(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given CorrectionNoticeFiled() on 2027-01-04
+  expect deadline(corrected-plan-summary-period) == 2027-01-14
+}
+
+test "unsecured treatment objection period: 21 days after" cite "S.D. Ala. LBR 3015-2(e), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(unsecured-treatment-objection-period) == 2027-01-25
+}
+
+test "stay relief affidavit period: 7 days before" cite "S.D. Ala. LBR 4001-1(b), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given StayReliefHearing() on 2027-01-04
+  expect deadline(stay-relief-affidavit-period) == 2026-12-28
+}
+
+test "fact summary period: 7 days before" cite "S.D. Ala. LBR 4001-1(c), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given StayReliefHearing() on 2027-01-04
+  expect deadline(fact-summary-period) == 2026-12-28
+}
+
+test "conditional denial claim period: 60 days after" cite "S.D. Ala. LBR 4001-2(e), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given ConditionalDenialEntered() on 2027-01-04
+  expect deadline(conditional-denial-claim-period) == 2027-03-05
+}
+
+test "direct payment cure period: 20 days after" cite "S.D. Ala. LBR 4001-2(f), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given DirectPaymentDefaultMailed() on 2027-01-04
+  expect deadline(direct-payment-cure-period) == 2027-01-25
+}
+
+test "plan payment cure period: 15 days after" cite "S.D. Ala. LBR 4001-2(g), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given PlanPaymentDefaultMailed() on 2027-01-04
+  expect deadline(plan-payment-cure-period) == 2027-01-19
+}
+
+test "discharge motion period: 21 days after" cite "S.D. Ala. LBR 4004-1, July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given PlanCompletionNoticeFiled() on 2027-01-04
+  expect deadline(discharge-motion-period) == 2027-01-25
+}
+
+test "negative notice objection period: 21 days after" cite "S.D. Ala. LBR 9007-1(b), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given NegativeNoticeServed() on 2027-01-04
+  expect deadline(negative-notice-objection-period) == 2027-01-25
+}
+
+test "claim objection response period: 30 days after" cite "S.D. Ala. LBR 9007-1(b), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}

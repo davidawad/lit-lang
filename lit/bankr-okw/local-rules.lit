@@ -380,6 +380,276 @@ test "deposition notice is due three business days before deposition" cite "W.D.
   expect deadline(deposition-notice-period) == 2027-03-05
 }
 
+test "deadline arithmetic: fee-refund-period" cite "W.D. Okla. LBR 1006-1(F)"
+{
+  given FeeOverpaid() on 2027-01-04
+  expect deadline(fee-refund-period) == 2027-02-03
+}
+
+test "deadline arithmetic: deconsolidation-response-period" cite "W.D. Okla. LBR 1015-1(A)"
+{
+  given DeconsolidationMotionFiled() on 2027-01-04
+  expect deadline(deconsolidation-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: death-motion-response-period" cite "W.D. Okla. LBR 1016-1"
+{
+  given DeathMotionFiled() on 2027-01-04
+  expect deadline(death-motion-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: committee-ownership-statement-period" cite "W.D. Okla. LBR 2003-2"
+{
+  given CommitteeAppointed() on 2027-01-04
+  expect deadline(committee-ownership-statement-period) == 2027-01-11
+}
+
+test "deadline arithmetic: examination-response-period" cite "W.D. Okla. LBR 2004-1(A)"
+{
+  given ExaminationMotionFiled() on 2027-01-04
+  expect deadline(examination-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: employment-response-period" cite "W.D. Okla. LBR 2014-1"
+{
+  given EmploymentApplicationFiled() on 2027-01-04
+  expect deadline(employment-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: chapter-12-business-report-period" cite "W.D. Okla. LBR 2015-1(D)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter-12-business-report-period) == 2027-01-19
+}
+
+test "deadline arithmetic: fee-motion-response-period" cite "W.D. Okla. LBR 2016-1(C)"
+{
+  given FeeMotionFiled() on 2027-01-04
+  expect deadline(fee-motion-response-period) == 2027-01-25
+}
+
+test "deadline arithmetic: claim-objection-response-period" cite "W.D. Okla. LBR 3007-1(D)"
+{
+  given ClaimObjectionFiled() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: unclaimed-funds-objection-period" cite "W.D. Okla. LBR 3011-1"
+{
+  given UnclaimedFundsApplicationFiled() on 2027-01-04
+  expect deadline(unclaimed-funds-objection-period) == 2027-01-19
+}
+
+test "deadline arithmetic: valuation-response-period" cite "W.D. Okla. LBR 3012-1(A)"
+{
+  given ValuationMotionFiled() on 2027-01-04
+  expect deadline(valuation-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: stay-relief-response-period" cite "W.D. Okla. LBR 4001-1(H)"
+{
+  given StayReliefMotionFiled() on 2027-01-04
+  expect deadline(stay-relief-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: stay-continuation-motion-period" cite "W.D. Okla. LBR 4001-1(J)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-continuation-motion-period) == 2027-01-11
+}
+
+test "deadline arithmetic: stay-continuation-response-period" cite "W.D. Okla. LBR 4001-1(J)"
+{
+  given StayContinuationMotionFiled() on 2027-01-04
+  expect deadline(stay-continuation-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: stay-imposition-motion-period" cite "W.D. Okla. LBR 4001-1(K)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-imposition-motion-period) == 2027-02-03
+}
+
+test "deadline arithmetic: stay-imposition-response-period" cite "W.D. Okla. LBR 4001-1(K)"
+{
+  given StayImpositionMotionFiled() on 2027-01-04
+  expect deadline(stay-imposition-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: support-obligation-information-period" cite "W.D. Okla. LBR 4002-2"
+{
+  given SchedulesFiled() on 2027-01-04
+  expect deadline(support-obligation-information-period) == 2027-01-19
+}
+
+test "deadline arithmetic: exemption-objection-response-period" cite "W.D. Okla. LBR 4003-1(B)"
+{
+  given ExemptionObjectionFiled() on 2027-01-04
+  expect deadline(exemption-objection-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: lien-avoidance-response-period" cite "W.D. Okla. LBR 4003-1(D)"
+{
+  given LienAvoidanceMotionFiled() on 2027-01-04
+  expect deadline(lien-avoidance-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: reopening-response-period" cite "W.D. Okla. LBR 5010-1"
+{
+  given ReopeningMotionFiled() on 2027-01-04
+  expect deadline(reopening-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: withdrawal-response-period" cite "W.D. Okla. LBR 5011-1"
+{
+  given WithdrawalMotionFiled() on 2027-01-04
+  expect deadline(withdrawal-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: abstention-response-period" cite "W.D. Okla. LBR 5011-2"
+{
+  given AbstentionMotionFiled() on 2027-01-04
+  expect deadline(abstention-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: sale-objection-period" cite "W.D. Okla. LBR 6004-1(A)"
+{
+  given ProposedActionDate() on 2027-01-04
+  expect deadline(sale-objection-period) == 2026-12-28
+}
+
+test "deadline arithmetic: free-and-clear-objection-period" cite "W.D. Okla. LBR 6004-1(B)"
+{
+  given SaleMotionFiled() on 2027-01-04
+  expect deadline(free-and-clear-objection-period) == 2027-01-25
+}
+
+test "deadline arithmetic: free-and-clear-service-period" cite "W.D. Okla. LBR 6004-1(B)"
+{
+  given SaleMotionFiled() on 2027-01-04
+  expect deadline(free-and-clear-service-period) == 2027-01-07
+}
+
+test "deadline arithmetic: free-and-clear-certificate-period" cite "W.D. Okla. LBR 6004-1(B)"
+{
+  given SaleHearing() on 2027-01-04
+  expect deadline(free-and-clear-certificate-period) == 2026-12-28
+}
+
+test "deadline arithmetic: executory-contract-response-period" cite "W.D. Okla. LBR 6006-1"
+{
+  given ExecutoryContractMotionFiled() on 2027-01-04
+  expect deadline(executory-contract-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: abandonment-response-period" cite "W.D. Okla. LBR 6007-1(B)"
+{
+  given AbandonmentMotionFiled() on 2027-01-04
+  expect deadline(abandonment-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: redemption-response-period" cite "W.D. Okla. LBR 6008-1"
+{
+  given RedemptionMotionFiled() on 2027-01-04
+  expect deadline(redemption-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: bill-of-costs-period" cite "W.D. Okla. LBR 7054-1"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-01-19
+}
+
+test "deadline arithmetic: costs-objection-period" cite "W.D. Okla. LBR 7054-1"
+{
+  given BillOfCostsFiled() on 2027-01-04
+  expect deadline(costs-objection-period) == 2027-01-19
+}
+
+test "deadline arithmetic: default-judgment-response-period" cite "W.D. Okla. LBR 7055-1(C)"
+{
+  given DefaultJudgmentMotionFiled() on 2027-01-04
+  expect deadline(default-judgment-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: summary-judgment-response-period" cite "W.D. Okla. LBR 7056-1(C)"
+{
+  given SummaryJudgmentMotionFiled() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: summary-judgment-reply-period" cite "W.D. Okla. LBR 7056-1(D)"
+{
+  given SummaryJudgmentResponseFiled() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "deadline arithmetic: counsel-withdrawal-response-period" cite "W.D. Okla. LBR 9010-1(C)"
+{
+  given CounselWithdrawalMotionFiled() on 2027-01-04
+  expect deadline(counsel-withdrawal-response-period) == 2027-01-19
+}
+
+test "deadline arithmetic: reply-brief-period" cite "W.D. Okla. LBR 9013-1(C)"
+{
+  given ResponseFiled() on 2027-01-04
+  expect deadline(reply-brief-period) == 2027-01-11
+}
+
+test "deadline arithmetic: request-service-period" cite "W.D. Okla. LBR 9013-1(J)"
+{
+  given RequestForReliefFiled() on 2027-01-04
+  expect deadline(request-service-period) == 2027-01-06
+}
+
+test "deadline arithmetic: request-service-certificate-period" cite "W.D. Okla. LBR 9013-1(J)"
+{
+  given RequestForReliefFiled() on 2027-01-04
+  expect deadline(request-service-certificate-period) == 2027-01-07
+}
+
+test "deadline arithmetic: proposed-order-upload-period" cite "W.D. Okla. LBR 9013-1(L)"
+{
+  given ResponseDeadlinePassed() on 2027-01-04
+  expect deadline(proposed-order-upload-period) == 2027-02-03
+}
+
+test "deadline arithmetic: evidence-notice-period" cite "W.D. Okla. LBR 9014-1"
+{
+  given InitialResponseDeadline() on 2027-01-04
+  expect deadline(evidence-notice-period) == 2027-01-11
+}
+
+test "deadline arithmetic: compromise-response-period" cite "W.D. Okla. LBR 9019-1"
+{
+  given CompromiseMotionFiled() on 2027-01-04
+  expect deadline(compromise-response-period) == 2027-01-25
+}
+
+test "deadline arithmetic: ballot-summary-period" cite "W.D. Okla. LBR 3018-1"
+{
+  given ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(ballot-summary-period) == 2026-12-29
+}
+
+test "deadline arithmetic: final-pretrial-order-period" cite "W.D. Okla. LBR 7016-1(D)"
+{
+  given TrialScheduled() on 2027-01-04
+  expect deadline(final-pretrial-order-period) == 2026-12-24
+}
+
+test "deadline arithmetic: deposition-notice-period" cite "W.D. Okla. LBR 7030-1"
+{
+  given DepositionScheduled() on 2027-01-04
+  expect deadline(deposition-notice-period) == 2026-12-29
+}
+
+test "deadline arithmetic: proposed-order-after-ruling-period" cite "W.D. Okla. LBR 9013-1(L)"
+{
+  given RulingEntered() on 2027-01-04
+  expect deadline(proposed-order-after-ruling-period) == 2027-01-19
+}
+
 start motion-filed
 
 state motion-filed: "Request for relief filed with notice of opportunity for hearing" by applicant cite "W.D. Okla. LBR 9013-1(G)"

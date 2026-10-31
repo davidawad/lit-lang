@@ -325,3 +325,261 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Bankruptcy Rules govern procedure before the court and supplement the Code and the FRBP (LBR 1001-1(a)); the court may modify a rule's application in a particular case (LBR 1001-1(b))."
 }
+
+test "Deadline arithmetic: waiver-denied-installment-period (14 days after)" cite "D.N.J. LBR 1006-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(waiver-denied-installment-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: death-notice-period (30 days after)" cite "D.N.J. LBR 1016-1"
+{
+  given DebtorDeathLearned() on 2027-01-04
+  expect deadline(death-notice-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: subchapter-v-election-period (14 days after)" cite "D.N.J. LBR 1020-1(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(subchapter-v-election-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: involuntary-subchapter-v-election-period (14 days after)" cite "D.N.J. LBR 1020-1(a)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(involuntary-subchapter-v-election-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: late-employment-objection-period (7 days after)" cite "D.N.J. LBR 2014-1(b)(2)"
+{
+  given LateEmploymentApplicationFiled() on 2027-01-04
+  expect deadline(late-employment-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: auctioneer-compensation-notice-period (21 days before)" cite "D.N.J. LBR 2016-2"
+{
+  given AuctioneerCompensationPaid() on 2027-01-04
+  expect deadline(auctioneer-compensation-notice-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: monthly-fee-objection-period (14 days after)" cite "D.N.J. LBR 2016-3(c)"
+{
+  given MonthlyFeeStatementServed() on 2027-01-04
+  expect deadline(monthly-fee-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: final-compensation-period (90 days after)" cite "D.N.J. LBR 2016-4"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(final-compensation-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: chapter13-hourly-fee-period (7 days after)" cite "D.N.J. LBR 2016-5(c)"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(chapter13-hourly-fee-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: stay-payment-change-notice-period (30 days after)" cite "D.N.J. LBR 3002.1-1(b)"
+{
+  given StayBecameApplicable() on 2027-01-04
+  expect deadline(stay-payment-change-notice-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: stay-fees-notice-period (180 days after)" cite "D.N.J. LBR 3002.1-1(b)"
+{
+  given StayBecameApplicable() on 2027-01-04
+  expect deadline(stay-fees-notice-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: chapter11-claim-period (70 days after)" cite "D.N.J. LBR 3003-1(a)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(chapter11-claim-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: unclaimed-funds-objection-period (21 days after)" cite "D.N.J. LBR 3011-1(c)"
+{
+  given UnclaimedFundsApplicationFiled() on 2027-01-04
+  expect deadline(unclaimed-funds-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: ballot-return-period (7 days before)" cite "D.N.J. LBR 3018-1(a)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(ballot-return-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: balloting-certification-period (3 days before)" cite "D.N.J. LBR 3018-1(b)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(balloting-certification-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: distribution-report-period (14 days after)" cite "D.N.J. LBR 3021-1(d)"
+{
+  given DistributionMade() on 2027-01-04
+  expect deadline(distribution-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: unclaimed-distribution-return-period (180 days after)" cite "D.N.J. LBR 3021-1(e)"
+{
+  given DistributionMade() on 2027-01-04
+  expect deadline(unclaimed-distribution-return-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: subchapter-v-final-report-objection-period (30 days after)" cite "D.N.J. LBR 3022-1(b)"
+{
+  given SubchapterVFinalReportFiled() on 2027-01-04
+  expect deadline(subchapter-v-final-report-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter13-stay-opposition-period (7 days before)" cite "D.N.J. LBR 4001-1(b)"
+{
+  given StayMotionHearing() on 2027-01-04
+  expect deadline(chapter13-stay-opposition-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: default-certification-opposition-period (14 days after)" cite "D.N.J. LBR 4001-1(b)"
+{
+  given DefaultCertificationFiled() on 2027-01-04
+  expect deadline(default-certification-opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-status-objection-period (7 days after)" cite "D.N.J. LBR 4001-4(c)"
+{
+  given StayStatusMotionFiled() on 2027-01-04
+  expect deadline(stay-status-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: discharge-certification-period (30 days after)" cite "D.N.J. LBR 4002-1"
+{
+  given PlanPaymentsCompleted() on 2027-01-04
+  expect deadline(discharge-certification-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: adjournment-request-period (3 days before)" cite "D.N.J. LBR 5071-1(b)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(adjournment-request-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: auctioneer-report-period (14 days after)" cite "D.N.J. LBR 6004-3(d)"
+{
+  given BiddingConcluded() on 2027-01-04
+  expect deadline(auctioneer-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: liquidator-report-period (14 days after)" cite "D.N.J. LBR 6004-4(b)"
+{
+  given LiquidatorSaleConcluded() on 2027-01-04
+  expect deadline(liquidator-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: amend-pleadings-period (30 days after)" cite "D.N.J. LBR 7015-1(c)"
+{
+  given FactDiscoveryClosed() on 2027-01-04
+  expect deadline(amend-pleadings-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: joint-scheduling-order-period (3 days before)" cite "D.N.J. LBR 7016-1(b)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(joint-scheduling-order-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: initial-disclosures-period (7 days before)" cite "D.N.J. LBR 7016-1(c)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(initial-disclosures-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: revised-judgment-period (7 days after)" cite "D.N.J. LBR 7058-1(c)"
+{
+  given RulingIssued() on 2027-01-04
+  expect deadline(revised-judgment-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: revised-judgment-objection-period (7 days after)" cite "D.N.J. LBR 7058-1(d)"
+{
+  given RevisedJudgmentSubmitted() on 2027-01-04
+  expect deadline(revised-judgment-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: motion-filing-period (21 days before)" cite "D.N.J. LBR 9013-2(a)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-filing-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: motion-opposition-period (7 days before)" cite "D.N.J. LBR 9013-2(a)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-opposition-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: motion-reply-period (4 days before)" cite "D.N.J. LBR 9013-2(a)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-reply-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: proposed-order-objection-period (7 days after)" cite "D.N.J. LBR 9013-4(e)"
+{
+  given ProposedOrderSubmitted() on 2027-01-04
+  expect deadline(proposed-order-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: mediation-objection-notice-period (7 days before)" cite "D.N.J. LBR 9019-2(a)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(mediation-objection-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: overruled-mediation-order-period (14 days after)" cite "D.N.J. LBR 9019-2(b)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(overruled-mediation-order-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediation-commencement-period (60 days after)" cite "D.N.J. LBR 9019-2(e)"
+{
+  given MediationOrderEntered() on 2027-01-04
+  expect deadline(mediation-commencement-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: mediation-pretrial-submission-period (3 days before)" cite "D.N.J. LBR 9019-2(f)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(mediation-pretrial-submission-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: consent-order-objection-period (7 days after)" cite "D.N.J. LBR 9019-4(b)"
+{
+  given ConsentOrderApplicationFiled() on 2027-01-04
+  expect deadline(consent-order-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: removal-certification-period (7 days after)" cite "D.N.J. LBR 9027-1(b)"
+{
+  given RemovalNoticeServed() on 2027-01-04
+  expect deadline(removal-certification-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: removal-record-period (14 days after)" cite "D.N.J. LBR 9027-1(c)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removal-record-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: transcript-redaction-notice-period (7 days after)" cite "D.N.J. LBR 9037-1"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(transcript-redaction-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: transcript-redaction-list-period (21 days after)" cite "D.N.J. LBR 9037-1"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(transcript-redaction-list-period) == 2027-01-25
+}

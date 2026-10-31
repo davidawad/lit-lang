@@ -310,3 +310,57 @@ decision further-review: "Appeal to the First Circuit" by applicant cite "28 U.S
 
 terminal circuit-appeal: "Appeal to the court of appeals" outcome [appeal] cite "28 U.S.C. § 158(d)(1)"
 terminal final-appellate: "BAP judgment final" outcome [judgment] cite "FRBP 8024"
+
+test "Deadline arithmetic: fee-payment-period (14 days after)" cite "1st Cir. BAP L.R. 8003-1(c)(1)"
+{
+  given NoticeOfAppealFiled() on 2026-03-03
+  expect deadline(fee-payment-period) == 2026-03-17
+}
+
+test "Deadline arithmetic: fee-payment-leave-period (14 days after)" cite "1st Cir. BAP L.R. 8003-1(c)(1)"
+{
+  given LeaveToAppealGranted() on 2026-03-03
+  expect deadline(fee-payment-leave-period) == 2026-03-17
+}
+
+test "Deadline arithmetic: fee-after-waiver-denial-period (14 days after)" cite "1st Cir. BAP L.R. 8003-1(c)(2)"
+{
+  given FeeWaiverDenied() on 2026-03-03
+  expect deadline(fee-after-waiver-denial-period) == 2026-03-17
+}
+
+test "Deadline arithmetic: indicative-ruling-notice-period (7 days after)" cite "1st Cir. BAP L.R. 8008-1(a)"
+{
+  given IndicativeRulingIssued() on 2026-03-03
+  expect deadline(indicative-ruling-notice-period) == 2026-03-10
+}
+
+test "Deadline arithmetic: remand-report-period (7 days after)" cite "1st Cir. BAP L.R. 8008-1(b)"
+{
+  given RemandedMotionDecided() on 2026-03-03
+  expect deadline(remand-report-period) == 2026-03-10
+}
+
+test "Deadline arithmetic: clerk-order-reconsideration-period (14 days after)" cite "1st Cir. BAP L.R. 8013-1(a)(2)"
+{
+  given ClerkOrderEntryServed() on 2026-03-03
+  expect deadline(clerk-order-reconsideration-period) == 2026-03-17
+}
+
+test "Deadline arithmetic: reinstatement-period (14 days after)" cite "1st Cir. BAP L.R. 8020-1(b)(1)"
+{
+  given ProsecutionDismissalServed() on 2026-03-03
+  expect deadline(reinstatement-period) == 2026-03-17
+}
+
+test "Deadline arithmetic: sanctions-response-period (14 days after)" cite "1st Cir. BAP L.R. 8020-1(c)"
+{
+  given SanctionsMotionServed() on 2026-03-03
+  expect deadline(sanctions-response-period) == 2026-03-17
+}
+
+test "Deadline arithmetic: rehearing-response-period (7 days after)" cite "1st Cir. BAP L.R. 8022-1(a)"
+{
+  given RehearingMotionServed() on 2026-03-03
+  expect deadline(rehearing-response-period) == 2026-03-10
+}

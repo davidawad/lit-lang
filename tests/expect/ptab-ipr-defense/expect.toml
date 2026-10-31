@@ -1,0 +1,37 @@
+# Major ptab matter case, using its authored default procedural rules.
+
+paths = []
+
+[[run]]
+world = "ptab.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["ptab-patent-trial-appeal-board"]
+
+[run.expect.w1.outcome]
+ipr-petition-filed-1 = "timely"
+
+[[run.expect.w1.deadlines]]
+deadline = "ptab-patent-trial-appeal-board::pgr-filing-period"
+trigger = "2021-03-02"
+due = "2021-12-02"
+status = "lapsed"
+cite = "35 U.S.C. § 321(c)"
+counted_by = "37 CFR 1.7(a)"
+
+[[run.expect.w1.deadlines]]
+deadline = "ptab-patent-trial-appeal-board::ipr-time-bar"
+trigger = "2025-09-15"
+due = "2026-09-15"
+status = "discharged"
+cite = "35 U.S.C. § 315(b)"
+counted_by = "37 CFR 1.7(a)"
+
+[[run.expect.w1.deadlines]]
+deadline = "ptab-patent-trial-appeal-board::popr-period"
+trigger = "2026-06-18"
+due = "2026-09-18"
+status = "open"
+cite = "37 C.F.R. § 42.107(b); 37 C.F.R. § 42.207(b); 37 C.F.R. § 42.5(c)(1)"
+counted_by = "37 CFR 1.7(a)"

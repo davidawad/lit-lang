@@ -39,7 +39,7 @@ trap 'rm -f "$counts"' EXIT
 # invocation, then reuse it for all changed packages.
 cargo build -q -p litigate-cli
 
-: > "$counts"
+printf 'package\tin_scope_errors\n' > "$counts"
 status=0
 for package in "${!packages[@]}"; do
   dir="lit/$package"

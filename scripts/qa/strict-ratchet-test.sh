@@ -30,4 +30,7 @@ printf 'package\tin_scope_errors\nnewpkg\t3\n' > "$tmp/new-dirty.tsv"
 check_status 1 "$compare" --baseline "$tmp/baseline.tsv" --counts "$tmp/new-dirty.tsv"
 
 check_status 0 scripts/qa/strict-ratchet.sh "$(git rev-parse HEAD)" ''
+# Exercise the changed-package path with a package absent from this checkout.
+# It emits no package rows, but the comparator still requires the TSV header.
+check_status 0 scripts/qa/strict-ratchet.sh "$(git rev-parse HEAD)" $'lit/__strict_ratchet_test_missing__/package.lit'
 echo 'strict-ratchet-test: pass'

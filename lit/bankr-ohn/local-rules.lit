@@ -63,3 +63,46 @@ deadline exhibit-index-period: 7.days before FinalPretrialScheduled() counted_by
 /// days after final judgment or final judgment on appeal; the Clerk
 /// disposes of exhibits not removed.
 deadline exhibit-removal-period: 60.days after FinalJudgmentEntered() counted_by frbp9006 cite "N.D. Ohio LBR 9070-1(b)"
+
+
+test "preparer-fee-motion-period: 14 days after" cite "N.D. Ohio LBR 2016-2(c)"
+{
+  given PetitionFiled() on 2027-03-01
+  expect deadline(preparer-fee-motion-period) == 2027-03-15
+}
+
+test "attorney-withdrawal-period: 21 days before" cite "N.D. Ohio LBR 2091-1(c)"
+{
+  given TrialOrHearingScheduled() on 2027-03-01
+  expect deadline(attorney-withdrawal-period) == 2027-02-08
+}
+
+test "discovery-dispute-period: 14 days after" cite "N.D. Ohio LBR 7026-1"
+{
+  given DiscoveryCutoff() on 2027-03-01
+  expect deadline(discovery-dispute-period) == 2027-03-15
+}
+
+test "motion-response-period: 14 days after" cite "N.D. Ohio LBR 9013-1(b)"
+{
+  given MotionServed() on 2027-03-01
+  expect deadline(motion-response-period) == 2027-03-15
+}
+
+test "motion-reply-period: 7 days after" cite "N.D. Ohio LBR 9013-1(c)"
+{
+  given ResponseServed() on 2027-03-01
+  expect deadline(motion-reply-period) == 2027-03-08
+}
+
+test "exhibit-index-period: 7 days before" cite "N.D. Ohio LBR 9070-1(a)"
+{
+  given FinalPretrialScheduled() on 2027-03-01
+  expect deadline(exhibit-index-period) == 2027-02-22
+}
+
+test "exhibit-removal-period: 60 days after" cite "N.D. Ohio LBR 9070-1(b)"
+{
+  given FinalJudgmentEntered() on 2027-03-01
+  expect deadline(exhibit-removal-period) == 2027-04-30
+}

@@ -586,10 +586,10 @@ fn the_director_extends_the_ttab_civil_action_period() {
             "ttab-trademark-trial-and-appeal-board::"
         };
         let events = [
-            format!("2025-09-02 {q}FinalDecision() on applicant"),
-            format!("2025-11-03 {q}CivilActionExtensionRequested() by applicant"),
+            format!("2026-06-01 docket 1 {q}FinalDecision() on applicant"),
+            format!("2026-06-01 docket 2 {q}CivilActionExtensionRequested() by applicant"),
             format!(
-                "2025-11-10 {q}CivilActionPeriodExtended(2025-12-10) by {by} cite \"37 CFR 2.145(e)(1)(i)\""
+                "2026-06-01 docket 3 {q}CivilActionPeriodExtended(2026-09-10) by {by} cite \"37 CFR 2.145(e)(1)(i)\""
             ),
         ];
         matter(
@@ -615,9 +615,9 @@ fn the_director_extends_the_ttab_civil_action_period() {
             "ttab-trademark-trial-and-appeal-board::civil-action-period"
         ),
         [(
-            "2025-12-10".to_owned(),
+            "2026-09-10".to_owned(),
             "GoodCause".to_owned(),
-            "2025-11-03".to_owned()
+            "2026-06-01".to_owned()
         )]
     );
     let court = run(
@@ -891,7 +891,7 @@ fn the_director_not_the_court_extends_the_federal_circuit_ptab_window() {
 /// are judged alike, neither allowed nor denied (28 U.S.C. § 2101(c)'s own
 /// terms, a Justice, good cause and 60 days, stay on the grant).
 #[test]
-fn an_unvendored_cert_extension_is_unknown_on_timing_before_or_after_expiry() {
+fn an_unvendored_cert_extension_does_not_reach_an_expired_period() {
     // A 2022-06-01 judgment's 90 days would end 2022-08-30.
     for applied in ["2022-08-01", "2022-09-10"] {
         let run = matter(
@@ -909,7 +909,7 @@ fn an_unvendored_cert_extension_is_unknown_on_timing_before_or_after_expiry() {
         assert_eq!(run.code, 2, "{}", run.stdout);
         assert_eq!(
             effects(&run).1,
-            ["cannot count `frap-appellate-procedure::cert-period` to judge `CertPeriodExtended(2022-10-20)`"],
+            ["`frap-appellate-procedure::cert-period` expired on 2022-08-30, before `CertPeriodExtended(2022-10-20)` on 2022-09-12; the capability does not reach an expired period (no `after_expiry`)"],
             "{applied}"
         );
         assert!(extended(&run, "frap-appellate-procedure::cert-period").is_empty());

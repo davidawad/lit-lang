@@ -1,0 +1,16 @@
+# Generic FRCP civil matter run against the Rule 59 timing validation world.
+
+paths = ["docs/litigate/change"]
+
+[[run]]
+world = "ca3.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frcp-2009-amendment",
+    "change-deadline-frcp-base",
+]
+deadlines = []
+
+[run.expect.w1.outcome]

@@ -514,3 +514,381 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The rules are promulgated under FRBP 9029 and apply to all cases under title 11 and civil proceedings in the court (Local Rule 1001-1(a)); they supplement the Bankruptcy Code and the FRBP (Local Rule 1001-1(b))."
 }
+
+test "payment-advices-period: 7 days before" cite "Bankr. M.D. Fla. Local Rule 1007-1(c)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-period) == 2026-12-28
+}
+
+test "payment-advices-request-period: 14 days before" cite "Bankr. M.D. Fla. Local Rule 1007-1(c)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-request-period) == 2026-12-21
+}
+
+test "order-service-period: 3 days after" cite "Bankr. M.D. Fla. Local Rule 2002-1(j)"
+{
+  given OrderOrNoticeEntered() on 2027-01-04
+  expect deadline(order-service-period) == 2027-01-07
+}
+
+test "negative-notice-response-period: 21 days after" cite "Bankr. M.D. Fla. Local Rule 2002-4(c)"
+{
+  given NegativeNoticeServed() on 2027-01-04
+  expect deadline(negative-notice-response-period) == 2027-01-25
+}
+
+test "examination-production-period: 21 days after" cite "Bankr. M.D. Fla. Local Rule 2004-1(c)"
+{
+  given ExaminationNoticeServed() on 2027-01-04
+  expect deadline(examination-production-period) == 2027-01-25
+}
+
+test "cross-notice-period: 14 days before" cite "Bankr. M.D. Fla. Local Rule 2004-1(d)"
+{
+  given ExaminationDate() on 2027-01-04
+  expect deadline(cross-notice-period) == 2026-12-21
+}
+
+test "records-destruction-notice-period: 30 days before" cite "Bankr. M.D. Fla. Local Rule 2015-3"
+{
+  given RecordsDestruction() on 2027-01-04
+  expect deadline(records-destruction-notice-period) == 2026-12-04
+}
+
+test "fee-application-objection-period: 21 days after" cite "Bankr. M.D. Fla. Local Rule 2016-1(c)"
+{
+  given FeeApplicationNoticeServed() on 2027-01-04
+  expect deadline(fee-application-objection-period) == 2027-01-25
+}
+
+test "converted-case-fee-application-period: 90 days after" cite "Bankr. M.D. Fla. Local Rule 2016-1(c)(1)"
+{
+  given ConversionOrderEntered() on 2027-01-04
+  expect deadline(converted-case-fee-application-period) == 2027-04-05
+}
+
+test "ch11-final-fee-application-period: 14 days before" cite "Bankr. M.D. Fla. Local Rule 2016-1(c)(2)"
+{
+  given Ch11ConfirmationHearing() on 2027-01-04
+  expect deadline(ch11-final-fee-application-period) == 2026-12-21
+}
+
+test "fee-estimate-supplement-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 2016-1(c)(2)"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(fee-estimate-supplement-period) == 2027-01-20
+}
+
+test "utility-order-objection-period: 30 days after" cite "Bankr. M.D. Fla. Local Rule 2081-1(g)(7)"
+{
+  given UtilityOrderEntered() on 2027-01-04
+  expect deadline(utility-order-objection-period) == 2027-02-03
+}
+
+test "suspension-relief-motion-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 2090-2(b)"
+{
+  given SuspensionOrderEntered() on 2027-01-04
+  expect deadline(suspension-relief-motion-period) == 2027-01-20
+}
+
+test "attorney-withdrawal-response-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 2091-2(a)"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(attorney-withdrawal-response-period) == 2027-01-20
+}
+
+test "reinstated-claim-period: 70 days after" cite "Bankr. M.D. Fla. Local Rule 3002-1(a)"
+{
+  given ReinstatementOrdered() on 2027-01-04
+  expect deadline(reinstated-claim-period) == 2027-03-15
+}
+
+test "ballot-tabulation-period: 2 days before" cite "Bankr. M.D. Fla. Local Rule 3018-1(d)"
+{
+  given Ch11ConfirmationHearing() on 2027-01-04
+  expect deadline(ballot-tabulation-period) == 2026-12-31
+}
+
+test "ch11-confirmation-objection-period: 7 days before" cite "Bankr. M.D. Fla. Local Rule 3020-1(b)"
+{
+  given Ch11ConfirmationHearing() on 2027-01-04
+  expect deadline(ch11-confirmation-objection-period) == 2026-12-28
+}
+
+test "confirmation-order-submission-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 3020-1(c)"
+{
+  given ConfirmationHearingHeld() on 2027-01-04
+  expect deadline(confirmation-order-submission-period) == 2027-01-20
+}
+
+test "distribution-schedule-period: 30 days after" cite "Bankr. M.D. Fla. Local Rule 3020-1(c)(1)"
+{
+  given ClassObjectionsResolved() on 2027-01-04
+  expect deadline(distribution-schedule-period) == 2027-02-03
+}
+
+test "confirmation-order-service-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 3020-1(c)(2)"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(confirmation-order-service-period) == 2027-01-20
+}
+
+test "effective-date-notice-period: 7 days after" cite "Bankr. M.D. Fla. Local Rule 3020-1(d)"
+{
+  given PlanEffective() on 2027-01-04
+  expect deadline(effective-date-notice-period) == 2027-01-11
+}
+
+test "post-confirmation-litigation-period: 60 days after" cite "Bankr. M.D. Fla. Local Rule 3020-1(e)"
+{
+  given ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(post-confirmation-litigation-period) == 2027-03-05
+}
+
+test "ch11-discharge-statement-period: 60 days after" cite "Bankr. M.D. Fla. Local Rule 3022-1(b)(2)"
+{
+  given PlanPaymentsCompleted() on 2027-01-04
+  expect deadline(ch11-discharge-statement-period) == 2027-03-05
+}
+
+test "ch11-discharge-statement-objection-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 3022-1(b)(2)"
+{
+  given DischargeStatementFiled() on 2027-01-04
+  expect deadline(ch11-discharge-statement-objection-period) == 2027-01-20
+}
+
+test "stay-extension-motion-period: 7 days after" cite "Bankr. M.D. Fla. Local Rule 4001-1(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-extension-motion-period) == 2027-01-11
+}
+
+test "stay-discovery-response-period: 21 days after" cite "Bankr. M.D. Fla. Local Rule 4001-1(c)(8)"
+{
+  given StayDiscoveryServed() on 2027-01-04
+  expect deadline(stay-discovery-response-period) == 2027-01-25
+}
+
+test "reinstated-discharge-objection-period: 60 days after" cite "Bankr. M.D. Fla. Local Rule 4004-2(a)"
+{
+  given MeetingRescheduled() on 2027-01-04
+  expect deadline(reinstated-discharge-objection-period) == 2027-03-05
+}
+
+test "reinstated-discharge-objection-order-period: 60 days after" cite "Bankr. M.D. Fla. Local Rule 4004-2(b)"
+{
+  given ReinstatementOrdered() on 2027-01-04
+  expect deadline(reinstated-discharge-objection-order-period) == 2027-03-05
+}
+
+test "reinstated-dischargeability-period: 60 days after" cite "Bankr. M.D. Fla. Local Rule 4007-1(a)"
+{
+  given MeetingRescheduled() on 2027-01-04
+  expect deadline(reinstated-dischargeability-period) == 2027-03-05
+}
+
+test "reinstated-dischargeability-order-period: 60 days after" cite "Bankr. M.D. Fla. Local Rule 4007-1(b)"
+{
+  given ReinstatementOrdered() on 2027-01-04
+  expect deadline(reinstated-dischargeability-order-period) == 2027-03-05
+}
+
+test "case-withdrawal-motion-period: 21 days after" cite "Bankr. M.D. Fla. Local Rule 5011-1(b)"
+{
+  given MeetingNoticeIssued() on 2027-01-04
+  expect deadline(case-withdrawal-motion-period) == 2027-01-25
+}
+
+test "late-knowledge-withdrawal-period: 21 days after" cite "Bankr. M.D. Fla. Local Rule 5011-1(b)"
+{
+  given CaseKnowledgeAcquired() on 2027-01-04
+  expect deadline(late-knowledge-withdrawal-period) == 2027-01-25
+}
+
+test "proceeding-withdrawal-motion-period: 30 days after" cite "Bankr. M.D. Fla. Local Rule 5011-1(c)"
+{
+  given InitialPleadingServed() on 2027-01-04
+  expect deadline(proceeding-withdrawal-motion-period) == 2027-02-03
+}
+
+test "united-states-withdrawal-motion-period: 35 days after" cite "Bankr. M.D. Fla. Local Rule 5011-1(c)"
+{
+  given InitialPleadingServed() on 2027-01-04
+  expect deadline(united-states-withdrawal-motion-period) == 2027-02-08
+}
+
+test "withdrawal-reference-response-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 5011-1(e)"
+{
+  given WithdrawalReferenceDocketed() on 2027-01-04
+  expect deadline(withdrawal-reference-response-period) == 2027-01-20
+}
+
+test "removed-proceeding-abstention-period: 21 days after" cite "Bankr. M.D. Fla. Local Rule 5011-2(b)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removed-proceeding-abstention-period) == 2027-01-25
+}
+
+test "transcript-redaction-notice-period: 7 days after" cite "Bankr. M.D. Fla. Local Rule 5077-1(d)"
+{
+  given TranscriptDocketed() on 2027-01-04
+  expect deadline(transcript-redaction-notice-period) == 2027-01-11
+}
+
+test "transcript-redaction-request-period: 21 days after" cite "Bankr. M.D. Fla. Local Rule 5077-1(f)"
+{
+  given TranscriptDocketed() on 2027-01-04
+  expect deadline(transcript-redaction-request-period) == 2027-01-25
+}
+
+test "sale-objection-period: 21 days after" cite "Bankr. M.D. Fla. Local Rule 6004-1(c)"
+{
+  given SaleReportServed() on 2027-01-04
+  expect deadline(sale-objection-period) == 2027-01-25
+}
+
+test "adversary-service-period: 28 days after" cite "Bankr. M.D. Fla. Local Rule 7001-1(c)"
+{
+  given ComplaintFiled() on 2027-01-04
+  expect deadline(adversary-service-period) == 2027-02-01
+}
+
+test "added-party-service-period: 7 days after" cite "Bankr. M.D. Fla. Local Rule 7001-1(c)"
+{
+  given PartyAdded() on 2027-01-04
+  expect deadline(added-party-service-period) == 2027-01-11
+}
+
+test "adversary-default-period: 60 days after" cite "Bankr. M.D. Fla. Local Rule 7001-1(f)"
+{
+  given ComplaintFiled() on 2027-01-04
+  expect deadline(adversary-default-period) == 2027-03-05
+}
+
+test "meeting-of-parties-period: 14 days before" cite "Bankr. M.D. Fla. Local Rule 7001-1(h)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(meeting-of-parties-period) == 2026-12-21
+}
+
+test "adversary-discovery-period: 7 days before" cite "Bankr. M.D. Fla. Local Rule 7001-1(j)(3)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(adversary-discovery-period) == 2026-12-28
+}
+
+test "adversary-motion-response-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 7001-1(k)(4)"
+{
+  given AdversaryMotionServed() on 2027-01-04
+  expect deadline(adversary-motion-response-period) == 2027-01-20
+}
+
+test "adversary-motion-reply-period: 7 days after" cite "Bankr. M.D. Fla. Local Rule 7001-1(k)(4)"
+{
+  given AdversaryResponseFiled() on 2027-01-04
+  expect deadline(adversary-motion-reply-period) == 2027-01-11
+}
+
+test "summary-judgment-motion-period: 60 days before" cite "Bankr. M.D. Fla. Local Rule 7001-1(k)(7)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(summary-judgment-motion-period) == 2026-11-05
+}
+
+test "witness-disclosure-period: 28 days before" cite "Bankr. M.D. Fla. Local Rule 7001-1(l)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(witness-disclosure-period) == 2026-12-07
+}
+
+test "deposition-use-objection-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 7001-1(l)"
+{
+  given WitnessDisclosureFiled() on 2027-01-04
+  expect deadline(deposition-use-objection-period) == 2027-01-20
+}
+
+test "undisputed-facts-stipulation-period: 7 days before" cite "Bankr. M.D. Fla. Local Rule 7001-1(m)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(undisputed-facts-stipulation-period) == 2026-12-28
+}
+
+test "adversary-exhibits-period: 7 days before" cite "Bankr. M.D. Fla. Local Rule 7001-1(n)(1)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(adversary-exhibits-period) == 2026-12-28
+}
+
+test "business-records-declaration-period: 28 days before" cite "Bankr. M.D. Fla. Local Rule 7001-1(n)(2)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(business-records-declaration-period) == 2026-12-07
+}
+
+test "exhibit-objection-period: 2 days before" cite "Bankr. M.D. Fla. Local Rule 7001-1(n)(3)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(exhibit-objection-period) == 2026-12-31
+}
+
+test "deposition-notice-period: 14 days before" cite "Bankr. M.D. Fla. Local Rule 7030-1(a)"
+{
+  given DepositionDate() on 2027-01-04
+  expect deadline(deposition-notice-period) == 2026-12-21
+}
+
+test "appeal-dismissal-review-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 8003-2"
+{
+  given AppealDismissalEntered() on 2027-01-04
+  expect deadline(appeal-dismissal-review-period) == 2027-01-20
+}
+
+test "motion-opposition-period: 7 days before" cite "Bankr. M.D. Fla. Local Rule 9013-1(c)(2)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(motion-opposition-period) == 2026-12-28
+}
+
+test "juror-interview-motion-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 9015-1(c)"
+{
+  given VerdictRendered() on 2027-01-04
+  expect deadline(juror-interview-motion-period) == 2027-01-20
+}
+
+test "settlement-reopening-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 9019-1(b)"
+{
+  given SettlementDismissalOrdered() on 2027-01-04
+  expect deadline(settlement-reopening-period) == 2027-01-20
+}
+
+test "mediator-payment-period: 30 days after" cite "Bankr. M.D. Fla. Local Rule 9019-2(h)"
+{
+  given MediatorInvoiced() on 2027-01-04
+  expect deadline(mediator-payment-period) == 2027-02-03
+}
+
+test "removal-papers-period: 7 days after" cite "Bankr. M.D. Fla. Local Rule 9027-1(b)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removal-papers-period) == 2027-01-11
+}
+
+test "removed-motion-opposition-period: 14 days after" cite "Bankr. M.D. Fla. Local Rule 9027-1(c)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removed-motion-opposition-period) == 2027-01-20
+}
+
+test "remand-motion-period: 30 days after" cite "Bankr. M.D. Fla. Local Rule 9027-1(d)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(remand-motion-period) == 2027-02-03
+}
+
+test "additional-exhibits-period: 7 days after" cite "Bankr. M.D. Fla. Local Rule 9070-1(c)"
+{
+  given TrialConcluded() on 2027-01-04
+  expect deadline(additional-exhibits-period) == 2027-01-11
+}

@@ -1,0 +1,17 @@
+case derrington-bey-dccir-1994
+uses change-deadline-frcp-base ^1.0.0
+as_of 1994-11-22
+summary "Derrington-Bey v. District of Columbia Department of Corrections, 39 F.3d 1224 (D.C. Cir. 1994): the order entered July 1, 1993 and the motion for reconsideration served July 19."
+notes "Public-record facts of derrington-bey-dccir-1994 (sources/change-corpus/rulings/MANIFEST.json). Run under worlds/district-civil-cadc.world (`litigate worlds`); the court held: untimely."
+perspective movant
+
+parties {
+  movant: movant Party
+}
+
+events {
+  entered: 1993-07-01 JudgmentEntered() on movant
+  filed: 1993-07-19 AlterAmendMoved() by movant
+}
+
+stakes { motion-filed: 0.usd, petition-filed: 0.usd, nothing-filed: 0.usd }

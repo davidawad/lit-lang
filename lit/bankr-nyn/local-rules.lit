@@ -324,3 +324,303 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Bankruptcy Rules supplement the Federal Rules of Bankruptcy Procedure and govern all proceedings in bankruptcy cases filed in the district (LBR 1001-1(b))."
 }
+
+test "supplemental-matrix-period arithmetic" cite "N.D.N.Y. LBR 1015-1(c)"
+{
+  given JointAdministrationOrdered() on 2027-01-04
+  expect deadline(supplemental-matrix-period) == 2027-01-11
+}
+
+test "conversion-small-business-filing-period arithmetic" cite "N.D.N.Y. LBR 1019-1(d)"
+{
+  given CaseConverted() on 2027-01-04
+  expect deadline(conversion-small-business-filing-period) == 2027-01-11
+}
+
+test "notice-certificate-period arithmetic" cite "N.D.N.Y. LBR 2002-1(d)"
+{
+  given NoticeServed() on 2027-01-04
+  expect deadline(notice-certificate-period) == 2027-01-11
+}
+
+test "notice-certificate-return-date-period arithmetic" cite "N.D.N.Y. LBR 2002-1(d)"
+{
+  given ReturnDate() on 2027-02-01
+  expect deadline(notice-certificate-return-date-period) == 2027-01-25
+}
+
+test "employment-response-period arithmetic" cite "N.D.N.Y. LBR 2014-1(b)"
+{
+  given EmploymentApplicationFiled() on 2027-01-04
+  expect deadline(employment-response-period) == 2027-01-25
+}
+
+test "tax-deposit-verification-period arithmetic" cite "N.D.N.Y. LBR 2015-1(c)"
+{
+  given TaxDepositMade() on 2027-01-04
+  expect deadline(tax-deposit-verification-period) == 2027-01-07
+}
+
+test "chapter11-affidavit-period arithmetic" cite "N.D.N.Y. LBR 2015-2(d)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter11-affidavit-period) == 2027-01-11
+}
+
+test "involuntary-chapter11-affidavit-period arithmetic" cite "N.D.N.Y. LBR 2015-2(d)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(involuntary-chapter11-affidavit-period) == 2027-01-11
+}
+
+test "chapter11-claim-objection-period arithmetic" cite "N.D.N.Y. LBR 3007-1(b)"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(chapter11-claim-objection-period) == 2027-01-19
+}
+
+test "chapter13-claim-objection-period arithmetic" cite "N.D.N.Y. LBR 3007-1(c)"
+{
+  given ClaimsNoticeServed() on 2027-01-04
+  expect deadline(chapter13-claim-objection-period) == 2027-02-18
+}
+
+test "amended-claim-objection-period arithmetic" cite "N.D.N.Y. LBR 3007-1(d)"
+{
+  given AmendedClaimNoticeServed() on 2027-01-04
+  expect deadline(amended-claim-objection-period) == 2027-02-18
+}
+
+test "appraisal-access-period arithmetic" cite "N.D.N.Y. LBR 3012-1"
+{
+  given AppraisalRequested() on 2027-01-04
+  expect deadline(appraisal-access-period) == 2027-01-19
+}
+
+test "plan-certificate-period arithmetic" cite "N.D.N.Y. LBR 3015-1(b)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(plan-certificate-period) == 2027-01-25
+}
+
+test "plan-compliance-certification-period arithmetic" cite "N.D.N.Y. LBR 3015-1(d)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(plan-compliance-certification-period) == 2027-01-15
+}
+
+test "tax-return-copy-period arithmetic" cite "N.D.N.Y. LBR 3015-1(e)"
+{
+  given TaxReturnFiled() on 2027-01-04
+  expect deadline(tax-return-copy-period) == 2027-01-19
+}
+
+test "preconfirmation-payment-period arithmetic" cite "N.D.N.Y. LBR 3015-1(f)"
+{
+  given SecuredProofOfClaimFiled() on 2027-01-04
+  expect deadline(preconfirmation-payment-period) == 2027-02-03
+}
+
+test "chapter13-confirmation-objection-period arithmetic" cite "N.D.N.Y. LBR 3015-2(a)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(chapter13-confirmation-objection-period) == 2027-01-25
+}
+
+test "confirmation-order-period arithmetic" cite "N.D.N.Y. LBR 3015-3(a)"
+{
+  given FinalConfirmationHearingHeld() on 2027-01-04
+  expect deadline(confirmation-order-period) == 2027-03-05
+}
+
+test "amended-plan-certificate-period arithmetic" cite "N.D.N.Y. LBR 3015-4(a)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(amended-plan-certificate-period) == 2027-01-25
+}
+
+test "amended-plan-objection-period arithmetic" cite "N.D.N.Y. LBR 3015-4(a)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(amended-plan-objection-period) == 2027-01-25
+}
+
+test "modification-certificate-period arithmetic" cite "N.D.N.Y. LBR 3015-4(b)"
+{
+  given ReturnDate() on 2027-02-01
+  expect deadline(modification-certificate-period) == 2027-01-25
+}
+
+test "ballot-certification-period arithmetic" cite "N.D.N.Y. LBR 3018-1(b)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(ballot-certification-period) == 2027-01-25
+}
+
+test "chapter11-confirmation-objection-period arithmetic" cite "N.D.N.Y. LBR 3020-1(a)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(chapter11-confirmation-objection-period) == 2027-01-25
+}
+
+test "cramdown-notice-period arithmetic" cite "N.D.N.Y. LBR 3020-1(c)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-02-01
+  expect deadline(cramdown-notice-period) == 2027-01-25
+}
+
+test "substantial-consummation-period arithmetic" cite "N.D.N.Y. LBR 3022-1(b)"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(substantial-consummation-period) == 2027-07-06
+}
+
+test "individual-consummation-period arithmetic" cite "N.D.N.Y. LBR 3022-1(b)"
+{
+  given PlanPaymentsCompleted() on 2027-01-04
+  expect deadline(individual-consummation-period) == 2027-02-03
+}
+
+test "final-decree-discharge-objection-period arithmetic" cite "N.D.N.Y. LBR 3022-1(c)"
+{
+  given FinalDecreeReturnDate() on 2027-02-01
+  expect deadline(final-decree-discharge-objection-period) == 2027-01-25
+}
+
+test "lessor-election-period arithmetic" cite "N.D.N.Y. LBR 4001-4(b)"
+{
+  given CureComplianceNoticed() on 2027-01-04
+  expect deadline(lessor-election-period) == 2027-01-19
+}
+
+test "lessor-objection-period arithmetic" cite "N.D.N.Y. LBR 4001-4(d)"
+{
+  given EvictionPaymentStatementServed() on 2027-01-04
+  expect deadline(lessor-objection-period) == 2027-01-19
+}
+
+test "discharge-certification-period arithmetic" cite "N.D.N.Y. LBR 4004-1(b)"
+{
+  given TrusteeFinalReportFiled() on 2027-01-04
+  expect deadline(discharge-certification-period) == 2027-02-03
+}
+
+test "discharge-hearing-objection-period arithmetic" cite "N.D.N.Y. LBR 4004-1(d)"
+{
+  given DischargeHearingScheduled() on 2027-02-01
+  expect deadline(discharge-hearing-objection-period) == 2027-01-25
+}
+
+test "hardship-discharge-motion-period arithmetic" cite "N.D.N.Y. LBR 4004-2(a)"
+{
+  given DischargeHearingScheduled() on 2027-02-01
+  expect deadline(hardship-discharge-motion-period) == 2027-01-11
+}
+
+test "withdrawal-response-period arithmetic" cite "N.D.N.Y. LBR 5011-1(c)"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(withdrawal-response-period) == 2027-01-19
+}
+
+test "appraisal-filing-period arithmetic" cite "N.D.N.Y. LBR 6004-1(a)"
+{
+  given ReturnDate() on 2027-02-01
+  expect deadline(appraisal-filing-period) == 2027-01-25
+}
+
+test "statement-of-sale-period arithmetic" cite "N.D.N.Y. LBR 6004-3(c)"
+{
+  given SaleClosed() on 2027-01-04
+  expect deadline(statement-of-sale-period) == 2027-01-11
+}
+
+test "auction-report-period arithmetic" cite "N.D.N.Y. LBR 6005-1(c)"
+{
+  given AuctionConcluded() on 2027-01-04
+  expect deadline(auction-report-period) == 2027-02-03
+}
+
+test "auction-proceeds-period arithmetic" cite "N.D.N.Y. LBR 6005-1(d)"
+{
+  given AuctionConcluded() on 2027-01-04
+  expect deadline(auction-proceeds-period) == 2027-01-19
+}
+
+test "exhibit-retrieval-period arithmetic" cite "N.D.N.Y. LBR 7040-1(b)"
+{
+  given AppealTimeExpired() on 2027-01-04
+  expect deadline(exhibit-retrieval-period) == 2027-02-03
+}
+
+test "default-judgment-period arithmetic" cite "N.D.N.Y. LBR 7055-1(a)"
+{
+  given DefaultEntitled() on 2027-01-04
+  expect deadline(default-judgment-period) == 2027-02-18
+}
+
+test "motion-certificate-period arithmetic" cite "N.D.N.Y. LBR 9013-1(c)"
+{
+  given ReturnDate() on 2027-02-01
+  expect deadline(motion-certificate-period) == 2027-01-25
+}
+
+test "motion-service-period arithmetic" cite "N.D.N.Y. LBR 9013-1(e)"
+{
+  given ReturnDate() on 2027-02-01
+  expect deadline(motion-service-period) == 2027-01-11
+}
+
+test "answering-papers-period arithmetic" cite "N.D.N.Y. LBR 9013-1(g)"
+{
+  given ReturnDate() on 2027-02-01
+  expect deadline(answering-papers-period) == 2027-01-25
+}
+
+test "oral-opposition-papers-period arithmetic" cite "N.D.N.Y. LBR 9013-1(g)"
+{
+  given OralOppositionAdjourned() on 2027-01-04
+  expect deadline(oral-opposition-papers-period) == 2027-01-11
+}
+
+test "default-motion-opposition-period arithmetic" cite "N.D.N.Y. LBR 9013-3(a)"
+{
+  given ReturnDate() on 2027-02-01
+  expect deadline(default-motion-opposition-period) == 2027-01-25
+}
+
+test "oral-order-submission-period arithmetic" cite "N.D.N.Y. LBR 9013-4(a)"
+{
+  given OralRuling() on 2027-01-04
+  expect deadline(oral-order-submission-period) == 2027-02-03
+}
+
+test "settled-order-service-period arithmetic" cite "N.D.N.Y. LBR 9013-4(c)"
+{
+  given SettlementHearingHeld() on 2027-01-04
+  expect deadline(settled-order-service-period) == 2027-01-19
+}
+
+test "counter-proposal-period arithmetic" cite "N.D.N.Y. LBR 9013-4(c)"
+{
+  given ProposedOrderServed() on 2027-01-04
+  expect deadline(counter-proposal-period) == 2027-01-11
+}
+
+test "jury-consent-period arithmetic" cite "N.D.N.Y. LBR 9015-1"
+{
+  given LastPleadingDate() on 2027-01-04
+  expect deadline(jury-consent-period) == 2027-01-25
+}
+
+test "transcript-redaction-notice-period arithmetic" cite "N.D.N.Y. LBR 9037-2(a)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(transcript-redaction-notice-period) == 2027-01-11
+}
+
+test "transcript-redaction-request-period arithmetic" cite "N.D.N.Y. LBR 9037-2(b)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(transcript-redaction-request-period) == 2027-01-25
+}

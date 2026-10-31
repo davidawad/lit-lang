@@ -596,3 +596,483 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The MLBR govern cases and proceedings before the court; in chapter 13 cases the Chapter 13 Rules of Appendix 1 prevail where they conflict (MLBR 3015-1; App. 1 Rule 13-1)."
 }
+
+test "Deadline arithmetic: fee-after-waiver-denial-period (7 days after)" cite "MLBR 1006-2(b)"
+{
+  given FeeWaiverDenied() on 2027-01-04
+  expect deadline(fee-after-waiver-denial-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: payment-advices-period (7 days before)" cite "MLBR 1007-1(c)"
+{
+  given MeetingOfCreditorsScheduled() on 2027-01-04
+  expect deadline(payment-advices-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: defective-petition-cure-period (7 days after)" cite "MLBR 1007-1(f)"
+{
+  given DefectiveFilingNoticeIssued() on 2027-01-04
+  expect deadline(defective-petition-cure-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: death-authority-certification-period (30 days after)" cite "MLBR 1016-1(c)"
+{
+  given DeathNoticeFiled() on 2027-01-04
+  expect deadline(death-authority-certification-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: proceeding-motion-period (45 days after)" cite "MLBR 1016-1(d)"
+{
+  given DeathNoticeFiled() on 2027-01-04
+  expect deadline(proceeding-motion-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: trustee-proceeding-motion-period (60 days after)" cite "MLBR 1016-1(d)"
+{
+  given DeathNoticeFiled() on 2027-01-04
+  expect deadline(trustee-proceeding-motion-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: dismissal-conference-period (14 days after)" cite "MLBR 1017-1(a)"
+{
+  given ConferenceRequested() on 2027-01-04
+  expect deadline(dismissal-conference-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter11-dismissal-opposition-period (14 days after)" cite "MLBR 1017-1(c)"
+{
+  given Chapter11DismissalMotionServed() on 2027-01-04
+  expect deadline(chapter11-dismissal-opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: address-change-notice-period (14 days after)" cite "MLBR 2002-4(a)"
+{
+  given AddressChanged() on 2027-01-04
+  expect deadline(address-change-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: pro-se-contact-change-period (14 days after)" cite "MLBR 9010-1(b)"
+{
+  given AddressChanged() on 2027-01-04
+  expect deadline(pro-se-contact-change-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: ombudsman-opposition-period (7 days after)" cite "MLBR 2007.2-1(d)"
+{
+  given OmbudsmanAppointmentServed() on 2027-01-04
+  expect deadline(ombudsman-opposition-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: retroactive-employment-period (14 days after)" cite "MLBR 2014-1(d)"
+{
+  given ProfessionalEngagementBegan() on 2027-01-04
+  expect deadline(retroactive-employment-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter11-administrative-expense-period (70 days after)" cite "MLBR 3002-1(a)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-administrative-expense-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: denied-administrative-expense-claim-period (30 days after)" cite "MLBR 3002-1(c)"
+{
+  given AdministrativeExpenseDenied() on 2027-01-04
+  expect deadline(denied-administrative-expense-claim-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: claim-objection-report-period (2 days before)" cite "MLBR 3007-1(d)"
+{
+  given ClaimObjectionHearingScheduled() on 2027-01-04
+  expect deadline(claim-objection-report-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: unclaimed-funds-period (150 days after)" cite "MLBR 3011-1(a)"
+{
+  given FinalDistributionMade() on 2027-01-04
+  expect deadline(unclaimed-funds-period) == 2027-06-03
+}
+
+test "Deadline arithmetic: final-decree-motion-period (60 days after)" cite "MLBR 3022-1(b)"
+{
+  given CaseFullyAdministered() on 2027-01-04
+  expect deadline(final-decree-motion-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: administration-report-period (75 days after)" cite "MLBR 3022-1(d)"
+{
+  given PlanConfirmed() on 2027-01-04
+  expect deadline(administration-report-period) == 2027-03-22
+}
+
+test "Deadline arithmetic: stay-relief-opposition-period (14 days after)" cite "MLBR 4001-1(a)"
+{
+  given StayReliefMotionServed() on 2027-01-04
+  expect deadline(stay-relief-opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-continuation-motion-period (14 days after)" cite "MLBR 4001-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-continuation-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: tax-return-request-period (14 days before)" cite "MLBR 4002-1(b)"
+{
+  given MeetingOfCreditorsScheduled() on 2027-01-04
+  expect deadline(tax-return-request-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: tax-return-request-objection-period (7 days before)" cite "MLBR 4002-1(b)"
+{
+  given MeetingOfCreditorsScheduled() on 2027-01-04
+  expect deadline(tax-return-request-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: tax-return-motion-objection-period (7 days after)" cite "MLBR 4002-1(c)"
+{
+  given TaxReturnMotionServed() on 2027-01-04
+  expect deadline(tax-return-motion-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: sale-certificate-period (7 days after)" cite "MLBR 6004-1(c)"
+{
+  given SaleNoticeServed() on 2027-01-04
+  expect deadline(sale-certificate-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: privacy-ombudsman-report-period (7 days after)" cite "MLBR 6004-1(f)"
+{
+  given PrivacyOmbudsmanAppointed() on 2027-01-04
+  expect deadline(privacy-ombudsman-report-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: abandonment-notice-request-period (14 days after)" cite "MLBR 6007-1(a)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(abandonment-notice-request-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: utility-objection-period (14 days after)" cite "MLBR 6012-1"
+{
+  given AdequateAssuranceTendered() on 2027-01-04
+  expect deadline(utility-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: ordered-answers-period (14 days after)" cite "MLBR 7033-1(b)"
+{
+  given AnswersOrdered() on 2027-01-04
+  expect deadline(ordered-answers-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: supplemental-answer-period (7 days after)" cite "MLBR 7033-1(c)"
+{
+  given AnswerFoundIncomplete() on 2027-01-04
+  expect deadline(supplemental-answer-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: admission-after-objection-period (14 days after)" cite "MLBR 7036-1(c)"
+{
+  given AdmissionRequestHeldProper() on 2027-01-04
+  expect deadline(admission-after-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discovery-conference-period (14 days after)" cite "MLBR 7037-1(a)"
+{
+  given DiscoveryConferenceRequested() on 2027-01-04
+  expect deadline(discovery-conference-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discovery-conference-response-period (7 days after)" cite "MLBR 7037-1(a)"
+{
+  given DiscoveryConferenceRequested() on 2027-01-04
+  expect deadline(discovery-conference-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: inactivity-response-period (30 days after)" cite "MLBR 7041-1(b)"
+{
+  given InactivityNoticeIssued() on 2027-01-04
+  expect deadline(inactivity-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: summary-judgment-opposition-period (21 days after)" cite "MLBR 7056-1(c)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-opposition-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: summary-judgment-cross-motion-period (21 days after)" cite "MLBR 7056-1(d)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-cross-motion-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: additional-facts-response-period (14 days after)" cite "MLBR 7056-1(e)"
+{
+  given AdditionalFactsServed() on 2027-01-04
+  expect deadline(additional-facts-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "MLBR 7056-1(f)"
+{
+  given SummaryJudgmentResponseServed() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: exhibit-authenticity-objection-period (14 days after)" cite "MLBR 7056-1(h)"
+{
+  given ExhibitFiled() on 2027-01-04
+  expect deadline(exhibit-authenticity-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: extended-discharge-deadline-period (7 days after)" cite "MLBR 9006-1"
+{
+  given ExtensionMotionDetermined() on 2027-01-04
+  expect deadline(extended-discharge-deadline-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: mediation-election-period (14 days after)" cite "MLBR 9010-2(c)"
+{
+  given MediationConcluded() on 2027-01-04
+  expect deadline(mediation-election-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: successor-appearance-period (21 days after)" cite "MLBR 9010-3(d)"
+{
+  given WithdrawalOrderEntered() on 2027-01-04
+  expect deadline(successor-appearance-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: response-period (14 days after)" cite "MLBR 9013-1(c)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: ex-parte-review-period (14 days after)" cite "MLBR 9013-1(g)"
+{
+  given ExParteOrderServed() on 2027-01-04
+  expect deadline(ex-parte-review-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reply-period (3 days before)" cite "MLBR 9013-1(i)"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(reply-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: jury-consent-period (14 days after)" cite "MLBR 9015-1(d)"
+{
+  given DiscoveryCompletionDate() on 2027-01-04
+  expect deadline(jury-consent-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: jury-consent-before-trial-period (30 days before)" cite "MLBR 9015-1(d)"
+{
+  given TrialScheduled() on 2027-01-04
+  expect deadline(jury-consent-before-trial-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: settlement-papers-period (7 days after)" cite "MLBR 9019-1(c)"
+{
+  given MatterSettled() on 2027-01-04
+  expect deadline(settlement-papers-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: settlement-certificate-period (7 days after)" cite "MLBR 9019-1(d)"
+{
+  given SettlementNoticeIssued() on 2027-01-04
+  expect deadline(settlement-certificate-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: exhibit-removal-period (30 days after)" cite "MLBR 9070-1"
+{
+  given ExhibitRemovalNoticeIssued() on 2027-01-04
+  expect deadline(exhibit-removal-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter13-insurance-documents-period (14 days after)" cite "MLBR App. 1 Rule 13-2(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter13-insurance-documents-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: business-insurance-period (7 days after)" cite "MLBR App. 1 Rule 13-2(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(business-insurance-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: profit-and-loss-period (14 days after)" cite "MLBR App. 1 Rule 13-2(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(profit-and-loss-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: quarterly-statement-period (30 days after)" cite "MLBR App. 1 Rule 13-2(a)"
+{
+  given QuarterEnded() on 2027-01-04
+  expect deadline(quarterly-statement-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: fee-application-objection-period (21 days after)" cite "MLBR App. 1 Rule 13-7(h)"
+{
+  given FeeApplicationServed() on 2027-01-04
+  expect deadline(fee-application-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: confirmation-objection-period (30 days after)" cite "MLBR App. 1 Rule 13-8(a)"
+{
+  given MeetingOfCreditorsHeld() on 2027-01-04
+  expect deadline(confirmation-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: amended-plan-objection-period (30 days after)" cite "MLBR App. 1 Rule 13-8(a)"
+{
+  given AmendedPlanServed() on 2027-01-04
+  expect deadline(amended-plan-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: confirmation-objection-response-period (14 days after)" cite "MLBR App. 1 Rule 13-8(c)"
+{
+  given ConfirmationObjectionServed() on 2027-01-04
+  expect deadline(confirmation-objection-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: confirmation-conference-certificate-period (21 days after)" cite "MLBR App. 1 Rule 13-8(e)"
+{
+  given ConfirmationObjectionResponseFiled() on 2027-01-04
+  expect deadline(confirmation-conference-certificate-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: plan-modification-objection-period (14 days after)" cite "MLBR App. 1 Rule 13-10(a)"
+{
+  given PlanModificationServed() on 2027-01-04
+  expect deadline(plan-modification-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: amended-plan-motion-objection-period (30 days after)" cite "MLBR App. 1 Rule 13-10(b)"
+{
+  given AmendedPlanCertificateFiled() on 2027-01-04
+  expect deadline(amended-plan-motion-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: confirmed-plan-amendment-objection-period (30 days after)" cite "MLBR App. 1 Rule 13-12(d)"
+{
+  given PlanAmendmentMotionServed() on 2027-01-04
+  expect deadline(confirmed-plan-amendment-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: amendment-hearing-notice-period (7 days before)" cite "MLBR App. 1 Rule 13-12(d)"
+{
+  given PlanAmendmentHearingScheduled() on 2027-01-04
+  expect deadline(amendment-hearing-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: amended-confirmation-order-period (21 days after)" cite "MLBR App. 1 Rule 13-12(e)"
+{
+  given PlanAmendmentAllowed() on 2027-01-04
+  expect deadline(amended-confirmation-order-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: surrogate-claim-period (30 days after)" cite "MLBR App. 1 Rule 13-13(b)"
+{
+  given ClaimDeadlinePassed() on 2027-01-04
+  expect deadline(surrogate-claim-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: amended-claim-certificate-period (7 days after)" cite "MLBR App. 1 Rule 13-13(b)"
+{
+  given AmendedClaimFiled() on 2027-01-04
+  expect deadline(amended-claim-certificate-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: trustee-unfiled-claim-period (10 days after)" cite "MLBR App. 1 Rule 13-13(b)"
+{
+  given SurrogateDeadlinePassed() on 2027-01-04
+  expect deadline(trustee-unfiled-claim-period) == 2027-01-14
+}
+
+test "Deadline arithmetic: claim-objection-response-period (30 days after)" cite "MLBR App. 1 Rule 13-13(e)"
+{
+  given ClaimObjectionFiled() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: claim-objection-conference-period (7 days after)" cite "MLBR App. 1 Rule 13-13(f)"
+{
+  given ClaimObjectionResponseFiled() on 2027-01-04
+  expect deadline(claim-objection-conference-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: chapter13-claim-objection-period (30 days after)" cite "MLBR App. 1 Rule 13-13(g)"
+{
+  given ClaimDeadlinePassed() on 2027-01-04
+  expect deadline(chapter13-claim-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: sale-status-report-period (45 days after)" cite "MLBR App. 1 Rule 13-14(c)"
+{
+  given PrivateSaleApproved() on 2027-01-04
+  expect deadline(sale-status-report-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: loan-modification-motion-period (45 days after)" cite "MLBR App. 1 Rule 13-15(c)"
+{
+  given ModificationAgreementReceived() on 2027-01-04
+  expect deadline(loan-modification-motion-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: modification-amendments-period (30 days after)" cite "MLBR App. 1 Rule 13-15(e)"
+{
+  given LoanModificationApproved() on 2027-01-04
+  expect deadline(modification-amendments-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: modification-claim-period (30 days after)" cite "MLBR App. 1 Rule 13-15(f)"
+{
+  given LoanModificationApproved() on 2027-01-04
+  expect deadline(modification-claim-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: stay-relief-conference-period (7 days before)" cite "MLBR App. 1 Rule 13-16-1(a)"
+{
+  given StayReliefMotionFiled() on 2027-01-04
+  expect deadline(stay-relief-conference-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: stay-stipulation-objection-period (14 days after)" cite "MLBR App. 1 Rule 13-16-2(b)"
+{
+  given StayReliefStipulationServed() on 2027-01-04
+  expect deadline(stay-stipulation-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: post-relief-amended-plan-period (30 days after)" cite "MLBR App. 1 Rule 13-16-3(c)"
+{
+  given StayReliefGranted() on 2027-01-04
+  expect deadline(post-relief-amended-plan-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter13-dismissal-response-period (21 days after)" cite "MLBR App. 1 Rule 13-17(a)"
+{
+  given Chapter13DismissalMotionServed() on 2027-01-04
+  expect deadline(chapter13-dismissal-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: confirmation-denial-cure-period (14 days after)" cite "MLBR App. 1 Rule 13-17(c)"
+{
+  given ConfirmationDenied() on 2027-01-04
+  expect deadline(confirmation-denial-cure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: converted-chapter13-documents-period (14 days after)" cite "MLBR App. 1 Rule 13-18"
+{
+  given CaseConverted() on 2027-01-04
+  expect deadline(converted-chapter13-documents-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discharge-motion-objection-period (14 days after)" cite "MLBR App. 1 Rule 13-22(b)"
+{
+  given DischargeMotionServed() on 2027-01-04
+  expect deadline(discharge-motion-objection-period) == 2027-01-19
+}

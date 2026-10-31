@@ -234,3 +234,189 @@ deadline order-service-certificate-period: 7.days after OrderEntered() counted_b
 /// not filed electronically beforehand is filed electronically within 3
 /// days after the hearing or trial.
 deadline admitted-exhibit-filing-period: 3.days after ExhibitHearingHeld() counted_by frbp9006-kentucky cite "KYEB LBR 9070-1(b)"
+
+test "Deadline arithmetic: payment-advices-period (14 days after)" cite "KYEB LBR 1007-1(c)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(payment-advices-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: corrected-ssn-certificate-period (7 days after)" cite "KYEB LBR 1009-1(d)"
+{
+  given CorrectedSsnStatementServed() on 2027-01-04
+  expect deadline(corrected-ssn-certificate-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: hearing-notice-period (14 days before)" cite "KYEB LBR 2002-1(a)"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(hearing-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: examination-objection-period (3 days after)" cite "KYEB LBR 2004-1"
+{
+  given ExaminationMotionFiled() on 2027-01-04
+  expect deadline(examination-objection-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: interim-distribution-review-period (14 days after)" cite "KYEB LBR 2015-1(c)"
+{
+  given InterimDistributionPackageSubmitted() on 2027-01-04
+  expect deadline(interim-distribution-review-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: interim-distribution-statement-period (14 days after)" cite "KYEB LBR 2015-1(c)"
+{
+  given InterimDistributionMotionFiled() on 2027-01-04
+  expect deadline(interim-distribution-statement-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: small-fee-notice-period (14 days after)" cite "KYEB LBR 2016-1(c)"
+{
+  given SmallFeeApplicationServed() on 2027-01-04
+  expect deadline(small-fee-notice-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: chapter13-fee-certification-period (14 days after)" cite "KYEB LBR 2016-2(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter13-fee-certification-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: dismissed-case-fee-application-period (14 days after)" cite "KYEB LBR 2016-2(f)"
+{
+  given PreConfirmationDismissalEntered() on 2027-01-04
+  expect deadline(dismissed-case-fee-application-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: later-counsel-disclosure-period (14 days after)" cite "KYEB LBR 2016-3"
+{
+  given RepresentationCommenced() on 2027-01-04
+  expect deadline(later-counsel-disclosure-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: discipline-notice-period (7 days after)" cite "KYEB LBR 2090-2"
+{
+  given BecameInvolvedInCase() on 2027-01-04
+  expect deadline(discipline-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: sanction-notice-period (7 days after)" cite "KYEB LBR 2090-2"
+{
+  given AttorneySanctioned() on 2027-01-04
+  expect deadline(sanction-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: modified-plan-objection-period (7 days after)" cite "KYEB LBR 3015-3(a)"
+{
+  given ModifiedPlanFiled() on 2027-01-04
+  expect deadline(modified-plan-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: adequate-protection-order-service-period (7 days after)" cite "KYEB LBR 3015-4(c)"
+{
+  given AdequateProtectionOrderEntered() on 2027-01-04
+  expect deadline(adequate-protection-order-service-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: disclosure-objection-period (7 days before)" cite "KYEB LBR 3017-1(b)"
+{
+  given DisclosureHearingScheduled() on 2027-01-04
+  expect deadline(disclosure-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: ballot-summary-period (5 days before)" cite "KYEB LBR 3018-2"
+{
+  given ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(ballot-summary-period) == 2026-12-30
+}
+
+test "Deadline arithmetic: confirmation-objection-period (7 days before)" cite "KYEB LBR 3020-1(b)"
+{
+  given ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(confirmation-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: ballot-period (7 days before)" cite "KYEB LBR 3020-1(c)"
+{
+  given ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(ballot-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: progress-report-period (45 days after)" cite "KYEB LBR 3071-1"
+{
+  given Chapter11ConfirmationOrderEntered() on 2027-01-04
+  expect deadline(progress-report-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: abandonment-objection-period (14 days after)" cite "KYEB LBR 4001-1(d)"
+{
+  given MeetingConcluded() on 2027-01-04
+  expect deadline(abandonment-objection-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: personal-property-amended-claim-period (90 days after)" cite "KYEB LBR 4001-1(f)"
+{
+  given PersonalPropertyStayTerminated() on 2027-01-04
+  expect deadline(personal-property-amended-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: real-property-amended-claim-period (210 days after)" cite "KYEB LBR 4001-1(f)"
+{
+  given RealPropertyStayTerminated() on 2027-01-04
+  expect deadline(real-property-amended-claim-period) == 2027-08-02
+}
+
+test "Deadline arithmetic: chapter11-discharge-response-period (14 days after)" cite "KYEB LBR 4004-3(b)"
+{
+  given Chapter11DischargeCertificationFiled() on 2027-01-04
+  expect deadline(chapter11-discharge-response-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: chapter12-discharge-certification-period (30 days after)" cite "KYEB LBR 4004-4(b)"
+{
+  given Chapter12CompletionNoticeServed() on 2027-01-04
+  expect deadline(chapter12-discharge-certification-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter12-discharge-response-period (14 days after)" cite "KYEB LBR 4004-4(c)"
+{
+  given Chapter12DischargeCertificationFiled() on 2027-01-04
+  expect deadline(chapter12-discharge-response-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: chapter13-discharge-certification-period (30 days after)" cite "KYEB LBR 4004-5(b)"
+{
+  given Chapter13CompletionNoticeServed() on 2027-01-04
+  expect deadline(chapter13-discharge-certification-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter13-discharge-response-period (14 days after)" cite "KYEB LBR 4004-5(c)"
+{
+  given Chapter13DischargeCertificationFiled() on 2027-01-04
+  expect deadline(chapter13-discharge-response-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: custodian-report-period (30 days after)" cite "KYEB LBR 6002-1"
+{
+  given CustodianPossessionTransferred() on 2027-01-04
+  expect deadline(custodian-report-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: hearing-response-period (3 days before)" cite "KYEB LBR 9014-1(b)"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(hearing-response-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: order-service-certificate-period (7 days after)" cite "KYEB LBR 9022-1(b)"
+{
+  given OrderEntered() on 2027-01-04
+  expect deadline(order-service-certificate-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: admitted-exhibit-filing-period (3 days after)" cite "KYEB LBR 9070-1(b)"
+{
+  given ExhibitHearingHeld() on 2027-01-04
+  expect deadline(admitted-exhibit-filing-period) == 2027-01-07
+}

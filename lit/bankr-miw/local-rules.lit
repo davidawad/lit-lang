@@ -293,3 +293,254 @@ deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frbp
 /// LBR 9037-1(b)(1): the Request for Redaction is submitted within 21 days
 /// of the transcript's filing.
 deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006-michigan cite "W.D. Mich. LBR 9037-1(b)"
+test "Deadline arithmetic: conversion-asset-report-period (7 days after)" cite "W.D. Mich. LBR 1007-2(d)"
+{
+  given InvoluntaryConversionOrdered() on 2027-01-04
+  expect deadline(conversion-asset-report-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: trustee-documents-period (7 days before)" cite "W.D. Mich. LBR 1007-2(e)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(trustee-documents-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: payment-advices-request-period (14 days before)" cite "W.D. Mich. LBR 1007-2(f)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(payment-advices-request-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: tax-information-request-period (14 days before)" cite "W.D. Mich. LBR 1007-2(g)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(tax-information-request-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: employment-objection-period (28 days after)" cite "W.D. Mich. LBR 2014(b)"
+{
+  given EmploymentApplicationEntered() on 2027-01-04
+  expect deadline(employment-objection-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: fee-agreement-period (21 days after)" cite "W.D. Mich. LBR 2016-1(d)"
+{
+  given Chapter12Or13PetitionFiled() on 2027-01-04
+  expect deadline(fee-agreement-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: chapter13-documents-period (14 days after)" cite "W.D. Mich. LBR 3015(b)"
+{
+  given Chapter12Or13PetitionFiled() on 2027-01-04
+  expect deadline(chapter13-documents-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: plan-amendment-objection-period (21 days after)" cite "W.D. Mich. LBR 3015(e)"
+{
+  given PlanAmendmentServed() on 2027-01-04
+  expect deadline(plan-amendment-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: financing-order-objection-period (14 days after)" cite "W.D. Mich. LBR 4001-2(c)"
+{
+  given FinancingOrderServed() on 2027-01-04
+  expect deadline(financing-order-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: committee-financing-objection-period (14 days after)" cite "W.D. Mich. LBR 4001-2(c)"
+{
+  given CommitteeFormed() on 2027-01-04
+  expect deadline(committee-financing-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: stay-extension-motion-period (7 days after)" cite "W.D. Mich. LBR 4001-5"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(stay-extension-motion-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: discharge-delay-review-period (21 days after)" cite "W.D. Mich. LBR 4004-1(c)"
+{
+  given ClerkDischargeDelayOrdered() on 2027-01-04
+  expect deadline(discharge-delay-review-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: clerk-action-review-period (14 days after)" cite "W.D. Mich. LBR 5005-2(d)"
+{
+  given ClerkRejectionServed() on 2027-01-04
+  expect deadline(clerk-action-review-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: missing-document-cure-period (14 days after)" cite "W.D. Mich. LBR 5005-2(f)"
+{
+  given DeficiencyNoticeServed() on 2027-01-04
+  expect deadline(missing-document-cure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: contested-withdrawal-period (14 days after)" cite "W.D. Mich. LBR 5011(b)"
+{
+  given ContestedMatterInitiated() on 2027-01-04
+  expect deadline(contested-withdrawal-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: late-withdrawal-period (14 days after)" cite "W.D. Mich. LBR 5011(b)"
+{
+  given WithdrawalGroundsRaised() on 2027-01-04
+  expect deadline(late-withdrawal-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: withdrawal-designation-period (14 days after)" cite "W.D. Mich. LBR 5011(d)"
+{
+  given WithdrawalDesignationServed() on 2027-01-04
+  expect deadline(withdrawal-designation-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: withdrawal-objection-period (14 days after)" cite "W.D. Mich. LBR 5011(e)"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(withdrawal-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: withdrawal-reply-period (14 days after)" cite "W.D. Mich. LBR 5011(e)"
+{
+  given WithdrawalObjectionServed() on 2027-01-04
+  expect deadline(withdrawal-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: closing-statement-period (14 days after)" cite "W.D. Mich. LBR 6004(b)"
+{
+  given Chapter13SaleClosed() on 2027-01-04
+  expect deadline(closing-statement-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: settlement-order-period (14 days after)" cite "W.D. Mich. LBR 7090"
+{
+  given SettlementNotified() on 2027-01-04
+  expect deadline(settlement-order-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: pro-hac-vice-fee-period (14 days after)" cite "W.D. Mich. LBR 9010-3(c)"
+{
+  given ProHacViceOrderEntered() on 2027-01-04
+  expect deadline(pro-hac-vice-fee-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: ssn-statement-period (14 days after)" cite "W.D. Mich. LBR 9011"
+{
+  given SsnNoticeIssued() on 2027-01-04
+  expect deadline(ssn-statement-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: notice-motion-response-period (14 days after)" cite "W.D. Mich. LBR 9013(c)"
+{
+  given NoticeMotionServed() on 2027-01-04
+  expect deadline(notice-motion-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: fee-notice-motion-response-period (21 days after)" cite "W.D. Mich. LBR 9013(c)"
+{
+  given FeeNoticeMotionServed() on 2027-01-04
+  expect deadline(fee-notice-motion-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: mortgage-motion-response-period (28 days after)" cite "W.D. Mich. LBR 9013(c)"
+{
+  given MortgageMotionServed() on 2027-01-04
+  expect deadline(mortgage-motion-response-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: claim-objection-response-period (30 days after)" cite "W.D. Mich. LBR 9013(c)"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: trustee-dismissal-response-period (30 days after)" cite "W.D. Mich. LBR 9013(d)"
+{
+  given TrusteeDismissalMotionServed() on 2027-01-04
+  expect deadline(trustee-dismissal-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: ust-dismissal-response-period (30 days after)" cite "W.D. Mich. LBR 9013(e)"
+{
+  given UstDismissalMotionServed() on 2027-01-04
+  expect deadline(ust-dismissal-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: contested-brief-period (7 days before)" cite "W.D. Mich. LBR 9013(f)"
+{
+  given ContestedHearingScheduled() on 2027-01-04
+  expect deadline(contested-brief-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: referral-objection-period (14 days after)" cite "W.D. Mich. LBR 9019-9(b)"
+{
+  given ReferralOrderEntered() on 2027-01-04
+  expect deadline(referral-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: neutral-selection-period (14 days after)" cite "W.D. Mich. LBR 9019-9(d)"
+{
+  given ReferralOrderEntered() on 2027-01-04
+  expect deadline(neutral-selection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: adr-conference-period (14 days before)" cite "W.D. Mich. LBR 9019-11(a)"
+{
+  given SchedulingConferenceSet() on 2027-01-04
+  expect deadline(adr-conference-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: mediation-notice-period (14 days after)" cite "W.D. Mich. LBR 9019-13(b)"
+{
+  given MediatorTelephoneConferenceHeld() on 2027-01-04
+  expect deadline(mediation-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediation-summary-period (7 days before)" cite "W.D. Mich. LBR 9019-13(c)"
+{
+  given MediationConferenceScheduled() on 2027-01-04
+  expect deadline(mediation-summary-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: mediator-report-period (14 days after)" cite "W.D. Mich. LBR 9019-17(b)"
+{
+  given MediationConferenceConcluded() on 2027-01-04
+  expect deadline(mediator-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediator-bill-period (30 days after)" cite "W.D. Mich. LBR 9019-19(c)"
+{
+  given MediatorBilled() on 2027-01-04
+  expect deadline(mediator-bill-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: case-evaluation-fee-period (14 days after)" cite "W.D. Mich. LBR 9019-22(a)"
+{
+  given EvaluatorsSelectionNoticed() on 2027-01-04
+  expect deadline(case-evaluation-fee-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: case-evaluation-acceptance-period (14 days after)" cite "W.D. Mich. LBR 9019-22(e)"
+{
+  given CaseEvaluationAwardServed() on 2027-01-04
+  expect deadline(case-evaluation-acceptance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: blue-ribbon-award-period (7 days after)" cite "W.D. Mich. LBR 9019-23(d)"
+{
+  given BlueRibbonHearingConcluded() on 2027-01-04
+  expect deadline(blue-ribbon-award-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: redaction-notice-period (7 days after)" cite "W.D. Mich. LBR 9037-1(b)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: redaction-request-period (21 days after)" cite "W.D. Mich. LBR 9037-1(b)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-request-period) == 2027-01-25
+}

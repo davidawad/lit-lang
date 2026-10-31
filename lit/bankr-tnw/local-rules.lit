@@ -147,3 +147,117 @@ deadline trustee-order-review-period: 7.days after TrusteeReceivedProposedOrder(
 /// TNWB LBR 9074-1(c): the approved proposed order on a bench ruling is
 /// presented to the court not more than 10 days after the ruling.
 deadline bench-ruling-order-period: 10.days after BenchRulingAnnounced() counted_by frbp9006 cite "TNWB LBR 9074-1(c)"
+
+test "Deadline arithmetic: chapter11-first-report-period (30 days after)" cite "TNWB LBR 2081-1(c)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter11-first-report-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: ballot-mailing-period (7 days after)" cite "TNWB LBR 2081-1(g)"
+{
+  given DisclosureStatementApproved() on 2027-01-04
+  expect deadline(ballot-mailing-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: ballot-tally-period (7 days before)" cite "TNWB LBR 2081-1(i)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(ballot-tally-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: confirmation-order-period (14 days after)" cite "TNWB LBR 2081-1(j)"
+{
+  given ConfirmationRuling() on 2027-01-04
+  expect deadline(confirmation-order-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter11-final-report-period (60 days after)" cite "TNWB LBR 2081-1(k)"
+{
+  given Chapter11PlanConfirmed() on 2027-01-04
+  expect deadline(chapter11-final-report-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: final-decree-motion-period (60 days after)" cite "TNWB LBR 2081-1(k)"
+{
+  given SubstantialConsummation() on 2027-01-04
+  expect deadline(final-decree-motion-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: chapter12-first-report-period (30 days after)" cite "TNWB LBR 2082-1(a)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter12-first-report-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter12-summary-period (7 days before)" cite "TNWB LBR 2082-1(b)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter12-summary-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: chapter12-insurance-period (14 days after)" cite "TNWB LBR 2082-1(c)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter12-insurance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter12-tax-return-period (14 days after)" cite "TNWB LBR 2082-1(d)"
+{
+  given Chapter12ReturnFiled() on 2027-01-04
+  expect deadline(chapter12-tax-return-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter13-first-report-period (30 days after)" cite "TNWB LBR 2083-1(a)(2)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(chapter13-first-report-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: chapter13-confirmation-objection-period (7 days before)" cite "TNWB LBR 2083-1(b)(2)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2027-01-04
+  expect deadline(chapter13-confirmation-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: unclaimed-funds-objection-period (21 days after)" cite "TNWB LBR 3011-1"
+{
+  given UnclaimedFundsApplicationServed() on 2027-01-04
+  expect deadline(unclaimed-funds-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: no-stay-objection-period (14 days after)" cite "TNWB LBR 4001-2"
+{
+  given NoStayMotionServed() on 2027-01-04
+  expect deadline(no-stay-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: cited-opinion-copy-period (7 days before)" cite "TNWB LBR 7016-1(b)"
+{
+  given AdversaryHearingScheduled() on 2027-01-04
+  expect deadline(cited-opinion-copy-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: settlement-finalization-period (30 days after)" cite "TNWB LBR 9019-1(d)"
+{
+  given AgreementInPrincipleReported() on 2027-01-04
+  expect deadline(settlement-finalization-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: exhibit-withdrawal-period (30 days after)" cite "TNWB LBR 9072-1"
+{
+  given ExhibitMatterDetermined() on 2027-01-04
+  expect deadline(exhibit-withdrawal-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: trustee-order-review-period (7 days after)" cite "TNWB LBR 9074-1(b)"
+{
+  given TrusteeReceivedProposedOrder() on 2027-01-04
+  expect deadline(trustee-order-review-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: bench-ruling-order-period (10 days after)" cite "TNWB LBR 9074-1(c)"
+{
+  given BenchRulingAnnounced() on 2027-01-04
+  expect deadline(bench-ruling-order-period) == 2027-01-14
+}

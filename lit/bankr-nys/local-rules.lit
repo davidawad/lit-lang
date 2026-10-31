@@ -255,3 +255,202 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Bankruptcy Rules apply to all cases in the district governed by the Bankruptcy Code (LBR 1001-1(b))."
 }
+
+
+test "involuntary-chapter11-affidavit-period: 14 days after" cite "S.D.N.Y. LBR 1007-2(c)"
+{
+  given OrderForReliefEntered() on 2027-03-01
+  expect deadline(involuntary-chapter11-affidavit-period) == 2027-03-15
+}
+
+test "health-care-conference-period: 14 days after" cite "S.D.N.Y. LBR 2007.2-1"
+{
+  given PetitionFiled() on 2027-03-01
+  expect deadline(health-care-conference-period) == 2027-03-15
+}
+
+test "final-compensation-application-period: 21 days before" cite "S.D.N.Y. LBR 2016-2"
+{
+  given FinalAccountHearingScheduled() on 2027-03-01
+  expect deadline(final-compensation-application-period) == 2027-02-08
+}
+
+test "final-compensation-objection-period: 2 days before" cite "S.D.N.Y. LBR 2016-2"
+{
+  given FinalAccountHearingScheduled() on 2027-03-01
+  expect deadline(final-compensation-objection-period) == 2027-02-26
+}
+
+test "vote-certification-period: 7 days before" cite "S.D.N.Y. LBR 3018-1(a)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-03-01
+  expect deadline(vote-certification-period) == 2027-02-22
+}
+
+test "ineffective-election-notice-period: 7 days before" cite "S.D.N.Y. LBR 3018-1(b)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-03-01
+  expect deadline(ineffective-election-notice-period) == 2027-02-22
+}
+
+test "chapter11-confirmation-objection-period: 7 days before" cite "S.D.N.Y. LBR 3020-1"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2027-03-01
+  expect deadline(chapter11-confirmation-objection-period) == 2027-02-22
+}
+
+test "consummation-timetable-period: 14 days after" cite "S.D.N.Y. LBR 3021-1(a)"
+{
+  given PlanConfirmed() on 2027-03-01
+  expect deadline(consummation-timetable-period) == 2027-03-15
+}
+
+test "closing-report-period: 14 days after" cite "S.D.N.Y. LBR 3022-1"
+{
+  given EstateFullyAdministered() on 2027-03-01
+  expect deadline(closing-report-period) == 2027-03-15
+}
+
+test "lessor-election-period: 14 days after" cite "S.D.N.Y. LBR 4001-1.1(b)"
+{
+  given CureComplianceNoticed() on 2027-03-01
+  expect deadline(lessor-election-period) == 2027-03-15
+}
+
+test "final-order-redline-period: 3 days before" cite "S.D.N.Y. LBR 4001-2(c)"
+{
+  given FinalOrderObjectionDeadline() on 2027-03-01
+  expect deadline(final-order-redline-period) == 2027-02-26
+}
+
+test "dismissal-request-objection-period: 7 days after" cite "S.D.N.Y. LBR 4002-1(b)"
+{
+  given DismissalRequestServed() on 2027-03-01
+  expect deadline(dismissal-request-objection-period) == 2027-03-08
+}
+
+test "added-creditor-exemption-objection-period: 30 days after" cite "S.D.N.Y. LBR 4003-1(b)"
+{
+  given CreditorAddedToSchedulesServed() on 2027-03-01
+  expect deadline(added-creditor-exemption-objection-period) == 2027-03-31
+}
+
+test "filing-fee-period: 4 days after" cite "S.D.N.Y. LBR 5005-3(b)"
+{
+  given FilingFeeIncurred() on 2027-03-01
+  expect deadline(filing-fee-period) == 2027-03-05
+}
+
+test "small-sale-notice-period: 7 days before" cite "S.D.N.Y. LBR 6004-1(a)"
+{
+  given SmallSaleDate() on 2027-03-01
+  expect deadline(small-sale-notice-period) == 2027-02-22
+}
+
+test "auction-proceeds-period: 14 days after" cite "S.D.N.Y. LBR 6004-1(e)"
+{
+  given AuctionProceedsReceived() on 2027-03-01
+  expect deadline(auction-proceeds-period) == 2027-03-15
+}
+
+test "auction-report-period: 21 days after" cite "S.D.N.Y. LBR 6004-1(f)"
+{
+  given AuctionConcluded() on 2027-03-01
+  expect deadline(auction-report-period) == 2027-03-22
+}
+
+test "auction-supplemental-report-period: 14 days after" cite "S.D.N.Y. LBR 6004-1(f)"
+{
+  given AllAuctionProceedsReceived() on 2027-03-01
+  expect deadline(auction-supplemental-report-period) == 2027-03-15
+}
+
+test "contention-interrogatory-period: 30 days before" cite "S.D.N.Y. LBR 7033-1(c)"
+{
+  given DiscoveryCutoff() on 2027-03-01
+  expect deadline(contention-interrogatory-period) == 2027-01-29
+}
+
+test "records-inspection-period: 14 days after" cite "S.D.N.Y. LBR 7033-1(f)"
+{
+  given InterrogatoryAnswersServed() on 2027-03-01
+  expect deadline(records-inspection-period) == 2027-03-15
+}
+
+test "discovery-motion-service-period: 7 days before" cite "S.D.N.Y. LBR 9006-1(a)"
+{
+  given ReturnDate() on 2027-03-01
+  expect deadline(discovery-motion-service-period) == 2027-02-22
+}
+
+test "discovery-answering-papers-period: 3 days before" cite "S.D.N.Y. LBR 9006-1(a)"
+{
+  given ReturnDate() on 2027-03-01
+  expect deadline(discovery-answering-papers-period) == 2027-02-26
+}
+
+test "motion-service-period: 14 days before" cite "S.D.N.Y. LBR 9006-1(c)"
+{
+  given ReturnDate() on 2027-03-01
+  expect deadline(motion-service-period) == 2027-02-12
+}
+
+test "answering-papers-period: 7 days before" cite "S.D.N.Y. LBR 9006-1(c)"
+{
+  given ReturnDate() on 2027-03-01
+  expect deadline(answering-papers-period) == 2027-02-22
+}
+
+test "reply-papers-period: 3 days before" cite "S.D.N.Y. LBR 9006-1(c)"
+{
+  given ReturnDate() on 2027-03-01
+  expect deadline(reply-papers-period) == 2027-02-26
+}
+
+test "papers-filing-period: 1 days after" cite "S.D.N.Y. LBR 9006-1(d)"
+{
+  given PapersServed() on 2027-03-01
+  expect deadline(papers-filing-period) == 2027-03-02
+}
+
+test "presentment-objection-period: 3 days before" cite "S.D.N.Y. LBR 9013-2(c)"
+{
+  given PresentmentDate() on 2027-03-01
+  expect deadline(presentment-objection-period) == 2027-02-26
+}
+
+test "jury-consent-period: 14 days after" cite "S.D.N.Y. LBR 9015-1"
+{
+  given LastPleadingServed() on 2027-03-01
+  expect deadline(jury-consent-period) == 2027-03-15
+}
+
+test "reargument-period: 14 days after" cite "S.D.N.Y. LBR 9023-1(a)"
+{
+  given MotionOrderEntered() on 2027-03-01
+  expect deadline(reargument-period) == 2027-03-15
+}
+
+test "redacted-filing-period: 21 days after" cite "S.D.N.Y. LBR 9037-1(e)"
+{
+  given RedactionGranted() on 2027-03-01
+  expect deadline(redacted-filing-period) == 2027-03-22
+}
+
+test "exhibit-removal-period: 30 days after" cite "S.D.N.Y. LBR 9072-1(b)"
+{
+  given RecordReturned() on 2027-03-01
+  expect deadline(exhibit-removal-period) == 2027-03-31
+}
+
+test "proposed-order-period: 14 days after" cite "S.D.N.Y. LBR 9074-1"
+{
+  given OrderDirected() on 2027-03-01
+  expect deadline(proposed-order-period) == 2027-03-15
+}
+
+test "proof-of-service-period: 3 days after" cite "S.D.N.Y. LBR 9078-1"
+{
+  given DocumentServed() on 2027-03-01
+  expect deadline(proof-of-service-period) == 2027-03-04
+}

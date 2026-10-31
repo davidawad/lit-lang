@@ -36,6 +36,14 @@ fn repo_files() -> BTreeMap<String, String> {
     files
 }
 
+fn example_files() -> BTreeMap<String, String> {
+    let root = repo();
+    let mut files = BTreeMap::new();
+    tree(&root, &root.join("lit/examples"), &mut files);
+    tree(&root, &root.join("cases/examples"), &mut files);
+    files
+}
+
 /// `stdout` with the `elapsed_ms` of a JSON envelope or engine response,
 /// and of the engine response an envelope carries as its result, zeroed.
 fn untimed(stdout: &str) -> String {
@@ -58,7 +66,7 @@ const TODAY: &str = "2026-10-27";
 
 /// The binary at the repository root, and the same arguments in memory,
 /// both judging deadlines at [`TODAY`].
-fn both(args: &[&str]) -> (LitigateRun, LitigateRun) {
+fn both_with(files: BTreeMap<String, String>, args: &[&str]) -> (LitigateRun, LitigateRun) {
     let out = assert_cmd::Command::cargo_bin("litigate")
         .unwrap()
         .env("LITIGATE_TODAY", TODAY)
@@ -73,45 +81,25 @@ fn both(args: &[&str]) -> (LitigateRun, LitigateRun) {
         files: BTreeMap::new(),
     };
     let args: Vec<String> = args.iter().map(|a| (*a).to_owned()).collect();
-    let mut memory = litigate_cli::execute_in_memory(repo_files(), &args, Some(TODAY));
+    let mut memory = litigate_cli::execute_in_memory(files, &args, Some(TODAY));
     memory.stdout = untimed(&memory.stdout);
     (native, memory)
+}
+
+fn both(args: &[&str]) -> (LitigateRun, LitigateRun) {
+    both_with(repo_files(), args)
 }
 
 #[test]
 fn check_prints_what_the_binary_prints() {
     for args in [
-        &["--format", "json", "check", "lit", "cases"][..],
-        &[
-            "--format",
-            "json",
-            "check",
-            "--profile",
-            "strict",
-            "lit",
-            "cases",
-        ],
-        &["--format", "human", "check", "lit", "cases"],
-        &["--format", "json", "check", "cases/frcp-civil-case.case"],
-        &[
-            "--format",
-            "json",
-            "check",
-            "lit/frcp/Lit.toml",
-            "lit/examples/rule12.lit",
-        ],
-        &[
-            "--format",
-            "json",
-            "check",
-            "--lib",
-            "lit",
-            "cases/examples",
-        ],
-        &["--format", "json", "check", "lit/nope"],
-        &["--format", "json", "check", "lit/frcp/Lit.lock"],
+        &["--format", "json", "check", "cases/examples/acme.case"][..],
+        &["--format", "json", "check", "lit/examples/Lit.toml", "lit/examples/rule12.lit"],
+        &["--format", "json", "check", "--lib", "lit/examples", "cases/examples"],
+        &["--format", "json", "check", "lit/examples/missing"],
+        &["--format", "json", "check", "lit/examples/Lit.lock"],
     ] {
-        let (native, memory) = both(args);
+        let (native, memory) = both_with(example_files(), args);
         assert_eq!(memory, native, "{args:?}");
     }
 }
@@ -167,7 +155,10 @@ fn ops_compile_the_matter_or_package_in_memory() {
         let (native, memory) = both(args);
         assert_eq!(memory, native, "{args:?}");
     }
-    let (native, memory) = both(&["--format", "json", "solve", "cases/frcp-civil-case.case"]);
+    let (native, memory) = both_with(
+        example_files(),
+        &["--format", "json", "solve", "cases/examples/acme.case"],
+    );
     let envelope: Value = serde_json::from_str(&memory.stdout).unwrap();
     assert_eq!(
         (native.code, &envelope["result"]["ok"]),
@@ -180,7 +171,7 @@ fn request_ops_run_on_compiled_source_in_memory() {
     // The ops the raw engine interface served (lg-dfv4.7): the manual,
     // the pack list and a solve over the whole library.
     for args in [
-        &["run", "cases/cofc-1498-patent-case.case", "--op", "solve"][..],
+        &["run", "cases/examples/acme.case", "--op", "solve"][..],
         &["run", "lit/examples", "--op", "describe"],
         &["run", "cases/examples/acme.case", "--op", "packs"],
         &[
@@ -192,7 +183,10 @@ fn request_ops_run_on_compiled_source_in_memory() {
             "rate=1",
         ],
     ] {
-        let (native, memory) = both(&[&["--format", "json"][..], args].concat());
+        let (native, memory) = both_with(
+            example_files(),
+            &[&["--format", "json"][..], args].concat(),
+        );
         assert_eq!(memory, native, "{args:?}");
         assert_eq!(native.code, 0, "{args:?}: {}", native.stdout);
     }

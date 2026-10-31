@@ -282,3 +282,219 @@ decision ruling: "Motion decided" by court cite "Bankr. S.D. Tex. BLR 9013-1(g)"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. S.D. Tex. BLR 1001-1"
+
+test "Deadline arithmetic: ssn-statement-period (7 days after)" cite "Bankr. S.D. Tex. BLR 1007-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(ssn-statement-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: creditor-amendment-service-period (2 days after)" cite "Bankr. S.D. Tex. BLR 1009-1(a)"
+{
+  given CreditorAmendmentFiled() on 2027-01-04
+  expect deadline(creditor-amendment-service-period) == 2027-01-06
+}
+
+test "Deadline arithmetic: trustee-dismissal-response-period (21 days after)" cite "Bankr. S.D. Tex. BLR 1017-2(b)"
+{
+  given TrusteeDismissalMotionServed() on 2027-01-04
+  expect deadline(trustee-dismissal-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: irs-transcript-period (7 days before)" cite "Bankr. S.D. Tex. BLR 1017-2(c)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(irs-transcript-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: tax-dismissal-motion-period (7 days after)" cite "Bankr. S.D. Tex. BLR 1017-2(c)"
+{
+  given CreditorsMeetingConcluded() on 2027-01-04
+  expect deadline(tax-dismissal-motion-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: tax-dismissal-response-period (21 days after)" cite "Bankr. S.D. Tex. BLR 1017-2(c)"
+{
+  given TaxDismissalMotionFiled() on 2027-01-04
+  expect deadline(tax-dismissal-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: conversion-supplemental-schedules-period (14 days after)" cite "Bankr. S.D. Tex. BLR 1019-1"
+{
+  given CaseConverted() on 2027-01-04
+  expect deadline(conversion-supplemental-schedules-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: examination-notice-period (14 days before)" cite "Bankr. S.D. Tex. BLR 2004-1(d)"
+{
+  given ExaminationDate() on 2027-01-04
+  expect deadline(examination-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: trustee-election-notice-period (7 days before)" cite "Bankr. S.D. Tex. BLR 2006-1"
+{
+  given CreditorsMeetingCommenced() on 2027-01-04
+  expect deadline(trustee-election-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: contemporaneous-employment-period (30 days after)" cite "Bankr. S.D. Tex. BLR 2014-1(b)"
+{
+  given ProfessionalCommencedServices() on 2027-01-04
+  expect deadline(contemporaneous-employment-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: retainer-distribution-period (21 days after)" cite "Bankr. S.D. Tex. BLR 2016-1(c)"
+{
+  given RetainerNoticeServed() on 2027-01-04
+  expect deadline(retainer-distribution-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: fixed-fee-agreement-period (21 days after)" cite "Bankr. S.D. Tex. BLR 2016-1(d)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(fixed-fee-agreement-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: chapter-11-claims-bar-period (90 days after)" cite "Bankr. S.D. Tex. BLR 3003-1(a)"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter-11-claims-bar-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: subchapter-v-claims-bar-period (70 days after)" cite "Bankr. S.D. Tex. BLR 3003-1(b)"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(subchapter-v-claims-bar-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: claim-objection-response-period (30 days after)" cite "Bankr. S.D. Tex. BLR 3007-1(b)"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: dismissal-administrative-expense-period (21 days after)" cite "Bankr. S.D. Tex. BLR 3010-1"
+{
+  given DismissalOrderEntered() on 2027-01-04
+  expect deadline(dismissal-administrative-expense-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: conditional-approval-objection-period (14 days after)" cite "Bankr. S.D. Tex. BLR 3016-2"
+{
+  given ConditionalApprovalMotionServed() on 2027-01-04
+  expect deadline(conditional-approval-objection-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: stay-relief-response-period (7 days before)" cite "Bankr. S.D. Tex. BLR 4001-1(a)"
+{
+  given StayReliefHearing() on 2027-01-04
+  expect deadline(stay-relief-response-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: stay-agreement-response-period (14 days after)" cite "Bankr. S.D. Tex. BLR 4001-1(b)"
+{
+  given StayAgreementMotionServed() on 2027-01-04
+  expect deadline(stay-agreement-response-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: vehicle-wage-order-period (14 days after)" cite "Bankr. S.D. Tex. BLR 4001-1(e)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(vehicle-wage-order-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: dismissal-counsel-fee-application-period (21 days after)" cite "Bankr. S.D. Tex. BLR 4001-1(e)"
+{
+  given DismissalOrderEntered() on 2027-01-04
+  expect deadline(dismissal-counsel-fee-application-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: dismissal-distribution-wait-period (14 days after)" cite "Bankr. S.D. Tex. BLR 4001-1(e)"
+{
+  given DismissalOrderEntered() on 2027-01-04
+  expect deadline(dismissal-distribution-wait-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: vehicle-protection-objection-period (30 days after)" cite "Bankr. S.D. Tex. BLR 4001-1(e)"
+{
+  given VehicleProtectionOrderEntered() on 2027-01-04
+  expect deadline(vehicle-protection-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: consumer-stay-response-period (7 days before)" cite "Bankr. S.D. Tex. BLR 4001-1(f)"
+{
+  given StayReliefHearing() on 2027-01-04
+  expect deadline(consumer-stay-response-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: plan-surrender-commencement-period (7 days after)" cite "Bankr. S.D. Tex. BLR 6007-1(c)"
+{
+  given PlanApprovalOrderEntered() on 2027-01-04
+  expect deadline(plan-surrender-commencement-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: notice-surrender-commencement-period (28 days after)" cite "Bankr. S.D. Tex. BLR 6007-1(d)"
+{
+  given SurrenderNoticeFiled() on 2027-01-04
+  expect deadline(notice-surrender-commencement-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: lien-dispute-vacate-period (14 days after)" cite "Bankr. S.D. Tex. BLR 6007-1(e)"
+{
+  given LienDisputeNoticeReceived() on 2027-01-04
+  expect deadline(lien-dispute-vacate-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: vehicle-delivery-period (14 days after)" cite "Bankr. S.D. Tex. BLR 6007-1(f)"
+{
+  given DeliveryNoticeFiled() on 2027-01-04
+  expect deadline(vehicle-delivery-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: vehicle-unavailable-notice-period (7 days after)" cite "Bankr. S.D. Tex. BLR 6007-1(f)"
+{
+  given DeliveryNoticeFiled() on 2027-01-04
+  expect deadline(vehicle-unavailable-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: plan-surrender-retrieval-period (28 days after)" cite "Bankr. S.D. Tex. BLR 6007-1(g)"
+{
+  given PlanApprovalOrderEntered() on 2027-01-04
+  expect deadline(plan-surrender-retrieval-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: notice-surrender-retrieval-period (28 days after)" cite "Bankr. S.D. Tex. BLR 6007-1(g)"
+{
+  given SurrenderNoticeFiled() on 2027-01-04
+  expect deadline(notice-surrender-retrieval-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: abandonment-objection-period (14 days after)" cite "Bankr. S.D. Tex. BLR 6007-2"
+{
+  given AbandonmentNoticeSent() on 2027-01-04
+  expect deadline(abandonment-objection-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: motion-response-period (21 days after)" cite "Bankr. S.D. Tex. BLR 9013-1(b)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(motion-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: pleading-service-period (1 days after)" cite "Bankr. S.D. Tex. BLR 9013-1(f)"
+{
+  given PleadingFiled() on 2027-01-04
+  expect deadline(pleading-service-period) == 2027-01-05
+}
+
+test "Deadline arithmetic: remote-witness-notice-period (7 days before)" cite "Bankr. S.D. Tex. BLR 9017-1(c)"
+{
+  given RemoteWitnessHearing() on 2027-01-04
+  expect deadline(remote-witness-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: remote-witness-objection-period (3 days after)" cite "Bankr. S.D. Tex. BLR 9017-1(c)"
+{
+  given RemoteWitnessNoticeFiled() on 2027-01-04
+  expect deadline(remote-witness-objection-period) == 2027-01-07
+}

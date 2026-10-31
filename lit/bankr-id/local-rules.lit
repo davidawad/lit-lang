@@ -271,3 +271,219 @@ decision ruling: "Motion decided" by court cite "Bankr. D. Idaho LBR 2002-2(d)"
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. D. Idaho LBR 1001-1"
+
+test "Deadline arithmetic: non-signing-debtor-service-period (14 days after)" cite "Bankr. D. Idaho LBR 1002-1(d)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(non-signing-debtor-service-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: voluntary-dismissal-objection-period (7 days after)" cite "Bankr. D. Idaho LBR 1017-1(b)"
+{
+  given VoluntaryDismissalMotionServed() on 2027-01-04
+  expect deadline(voluntary-dismissal-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: conversion-administrative-expense-period (90 days after)" cite "Bankr. D. Idaho LBR 1019-1(f)"
+{
+  given CaseConverted() on 2027-01-04
+  expect deadline(conversion-administrative-expense-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: negative-notice-period (14 days after)" cite "Bankr. D. Idaho LBR 2002-2(d)"
+{
+  given NegativeNoticeServed() on 2027-01-04
+  expect deadline(negative-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: hearing-objection-period (14 days before)" cite "Bankr. D. Idaho LBR 2002-2(e)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(hearing-objection-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: chapter-12-objection-period (7 days before)" cite "Bankr. D. Idaho LBR 2002-4(a)"
+{
+  given ChapterTwelveConfirmationHearing() on 2027-01-04
+  expect deadline(chapter-12-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: chapter-12-notice-period (28 days before)" cite "Bankr. D. Idaho LBR 2002-4(b)"
+{
+  given ChapterTwelveConfirmationHearing() on 2027-01-04
+  expect deadline(chapter-12-notice-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: amended-plan-notice-period (28 days before)" cite "Bankr. D. Idaho LBR 2002-5(a)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(amended-plan-notice-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: amended-plan-objection-period (7 days before)" cite "Bankr. D. Idaho LBR 2002-5(a)"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(amended-plan-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: expense-procedure-objection-period (14 days after)" cite "Bankr. D. Idaho LBR 2002-6"
+{
+  given ClaimsNoticeDated() on 2027-01-04
+  expect deadline(expense-procedure-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: meeting-continuance-request-period (14 days before)" cite "Bankr. D. Idaho LBR 2003-1(a)"
+{
+  given ScheduledMeeting() on 2027-01-04
+  expect deadline(meeting-continuance-request-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: missed-meeting-request-period (7 days after)" cite "Bankr. D. Idaho LBR 2003-1(a)"
+{
+  given ScheduledMeeting() on 2027-01-04
+  expect deadline(missed-meeting-request-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: continuance-notice-period (7 days before)" cite "Bankr. D. Idaho LBR 2003-1(b)"
+{
+  given ScheduledMeeting() on 2027-01-04
+  expect deadline(continuance-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: examination-objection-period (14 days after)" cite "Bankr. D. Idaho LBR 2004-1(b)"
+{
+  given ExaminationMotionServed() on 2027-01-04
+  expect deadline(examination-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: employment-objection-period (21 days after)" cite "Bankr. D. Idaho LBR 2014-1(c)"
+{
+  given EmploymentApplicationServed() on 2027-01-04
+  expect deadline(employment-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: dismissal-fee-application-period (14 days after)" cite "Bankr. D. Idaho LBR 2016-2(b)"
+{
+  given CaseDismissed() on 2027-01-04
+  expect deadline(dismissal-fee-application-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter-11-claim-period (70 days after)" cite "Bankr. D. Idaho LBR 3003-1"
+{
+  given OrderForReliefEntered() on 2027-01-04
+  expect deadline(chapter-11-claim-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: claim-objection-response-period (30 days after)" cite "Bankr. D. Idaho LBR 3007-1(b)"
+{
+  given ClaimObjectionServed() on 2027-01-04
+  expect deadline(claim-objection-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: claim-objection-hearing-period (21 days after)" cite "Bankr. D. Idaho LBR 3007-1(c)"
+{
+  given ClaimResponseServed() on 2027-01-04
+  expect deadline(claim-objection-hearing-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: claim-objection-exhibits-period (7 days before)" cite "Bankr. D. Idaho LBR 3007-1(d)"
+{
+  given ClaimObjectionHearing() on 2027-01-04
+  expect deadline(claim-objection-exhibits-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: unclaimed-funds-objection-period (28 days after)" cite "Bankr. D. Idaho LBR 3011-1(c)"
+{
+  given UnclaimedFundsApplicationServed() on 2027-01-04
+  expect deadline(unclaimed-funds-objection-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: subchapter-v-election-period (14 days before)" cite "Bankr. D. Idaho LBR 3014-1"
+{
+  given ConfirmationHearing() on 2027-01-04
+  expect deadline(subchapter-v-election-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: stay-relief-objection-period (17 days after)" cite "Bankr. D. Idaho LBR 4001-2(c)"
+{
+  given StayReliefMotionServed() on 2027-01-04
+  expect deadline(stay-relief-objection-period) == 2027-01-21
+}
+
+test "Deadline arithmetic: stay-relief-final-hearing-period (7 days before)" cite "Bankr. D. Idaho LBR 4001-2(e)"
+{
+  given StayReliefFinalHearing() on 2027-01-04
+  expect deadline(stay-relief-final-hearing-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: rent-deposit-consent-period (14 days after)" cite "Bankr. D. Idaho LBR 4001-4(b)"
+{
+  given RentDepositNoticeDated() on 2027-01-04
+  expect deadline(rent-deposit-consent-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: chapter-11-discharge-notice-period (21 days before)" cite "Bankr. D. Idaho LBR 4004-1(a)"
+{
+  given DischargeMotionHearing() on 2027-01-04
+  expect deadline(chapter-11-discharge-notice-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: chapter-11-discharge-objection-period (7 days before)" cite "Bankr. D. Idaho LBR 4004-1(a)"
+{
+  given DischargeMotionHearing() on 2027-01-04
+  expect deadline(chapter-11-discharge-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: discharge-statement-period (60 days after)" cite "Bankr. D. Idaho LBR 4004-1(b)"
+{
+  given PlanPaymentsCompleted() on 2027-01-04
+  expect deadline(discharge-statement-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: discharge-statement-objection-period (14 days after)" cite "Bankr. D. Idaho LBR 4004-1(b)"
+{
+  given DischargeStatementFiled() on 2027-01-04
+  expect deadline(discharge-statement-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: cost-bill-period (14 days after)" cite "Bankr. D. Idaho LBR 7054-1(a)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(cost-bill-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: cost-bill-objection-period (14 days after)" cite "Bankr. D. Idaho LBR 7054-1(a)"
+{
+  given CostBillServed() on 2027-01-04
+  expect deadline(cost-bill-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: summary-judgment-motion-period (28 days before)" cite "Bankr. D. Idaho LBR 7056-1(b)"
+{
+  given SummaryJudgmentHearing() on 2027-01-04
+  expect deadline(summary-judgment-motion-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: summary-judgment-opposition-period (14 days before)" cite "Bankr. D. Idaho LBR 7056-1(b)"
+{
+  given SummaryJudgmentHearing() on 2027-01-04
+  expect deadline(summary-judgment-opposition-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (7 days before)" cite "Bankr. D. Idaho LBR 7056-1(b)"
+{
+  given SummaryJudgmentHearing() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: witness-notice-period (7 days before)" cite "Bankr. D. Idaho LBR 9014-1"
+{
+  given ContestedMatterHearing() on 2027-01-04
+  expect deadline(witness-notice-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: jury-consent-period (14 days after)" cite "Bankr. D. Idaho LBR 9015-1(b)"
+{
+  given JuryDemandServed() on 2027-01-04
+  expect deadline(jury-consent-period) == 2027-01-19
+}

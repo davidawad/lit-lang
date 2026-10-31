@@ -172,3 +172,106 @@ terminal decided: "Matter decided: the case continues under lit/frbp" outcome [p
 {
   note "The Local Rules apply to all cases and proceedings arising in, under or related to cases pending under the Code in the court (Local Rule 1001-1)."
 }
+
+
+test "Deadline arithmetic: affiliates-statement-period (14 days after)" cite "D. Me. LBR 1002-1(b)"
+{
+  given PetitionFiled() on 2027-01-04
+  expect deadline(affiliates-statement-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: converted-means-test-period (14 days after)" cite "D. Me. LBR 1007-1(c)"
+{
+  given ConversionOrderEntered() on 2027-01-04
+  expect deadline(converted-means-test-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: dip-business-assets-period (14 days after)" cite "D. Me. LBR 1019-1(b)"
+{
+  given ConvertedToChapter7() on 2027-01-04
+  expect deadline(dip-business-assets-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: trustee-business-assets-period (30 days after)" cite "D. Me. LBR 1019-1(b)"
+{
+  given ConvertedToChapter7() on 2027-01-04
+  expect deadline(trustee-business-assets-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: examination-protective-order-period (14 days after)" cite "D. Me. LBR 2004-1(b)"
+{
+  given ExaminationOrderServed() on 2027-01-04
+  expect deadline(examination-protective-order-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: added-creditor-claim-period (90 days after)" cite "D. Me. LBR 3002-1"
+{
+  given AmendmentNoticeServed() on 2027-01-04
+  expect deadline(added-creditor-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: chapter11-claim-period (90 days after)" cite "D. Me. LBR 3003-1"
+{
+  given FirstMeetingDate() on 2027-01-04
+  expect deadline(chapter11-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: disputed-claim-period (90 days after)" cite "D. Me. LBR 3003-1"
+{
+  given DisputedClaimNoticeServed() on 2027-01-04
+  expect deadline(disputed-claim-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: chapter13-claim-objection-period (30 days after)" cite "D. Me. LBR 3007-1(a)"
+{
+  given ClaimDeadlinePassed() on 2027-01-04
+  expect deadline(chapter13-claim-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: postpetition-claim-objection-period (30 days after)" cite "D. Me. LBR 3007-1(a)"
+{
+  given PostpetitionClaimFiled() on 2027-01-04
+  expect deadline(postpetition-claim-objection-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: trustee-plan-action-period (30 days after)" cite "D. Me. LBR 3016-2"
+{
+  given TrusteeAppointed() on 2027-01-04
+  expect deadline(trustee-plan-action-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: plan-mailing-certificate-period (7 days after)" cite "D. Me. LBR 3017-1(f)"
+{
+  given PlanPackageMailed() on 2027-01-04
+  expect deadline(plan-mailing-certificate-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: continuance-motion-period (3 days before)" cite "D. Me. LBR 9013-2(b)"
+{
+  given HearingScheduled() on 2027-01-04
+  expect deadline(continuance-motion-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: without-hearing-objection-period (14 days after)" cite "D. Me. LBR 9013-3"
+{
+  given WithoutHearingOrderEntered() on 2027-01-04
+  expect deadline(without-hearing-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: adversary-settlement-notice-period (21 days after)" cite "D. Me. LBR 9019-1(b)"
+{
+  given AdversarySettled() on 2027-01-04
+  expect deadline(adversary-settlement-notice-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: removal-service-period (7 days after)" cite "D. Me. LBR 9027-1"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removal-service-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: removal-filings-period (14 days after)" cite "D. Me. LBR 9027-1"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removal-filings-period) == 2027-01-19
+}

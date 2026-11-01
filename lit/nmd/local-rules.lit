@@ -177,3 +177,81 @@ deadline removal-record-period: 28.days after NoticeOfRemovalFiled() counted_by 
 {
   forum frcp
 }
+
+test "Deadline arithmetic: response-period (14 days after)" cite "D.N.M.LR-Civ. 7.4(a)"
+{
+  given MotionFiled() on 2027-01-04
+  expect deadline(response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reply-period (14 days after)" cite "D.N.M.LR-Civ. 7.4(a)"
+{
+  given ResponseFiled() on 2027-01-04
+  expect deadline(reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: supplemental-authorities-response-period (7 days after)" cite "D.N.M.LR-Civ. 7.8(c)"
+{
+  given SupplementalAuthoritiesNoticeFiled() on 2027-01-04
+  expect deadline(supplemental-authorities-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: signature-cure-period (14 days after)" cite "D.N.M.LR-Civ. 10.3(b)"
+{
+  given SignatureOmissionNoticed() on 2027-01-04
+  expect deadline(signature-cure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: deficiency-cure-period (45 days after)" cite "D.N.M.LR-Civ. 10.3(c)"
+{
+  given DeficiencyNoticed() on 2027-01-04
+  expect deadline(deficiency-cure-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: joint-status-report-period (7 days before)" cite "D.N.M.LR-Civ. 16.1"
+{
+  given SchedulingConference() on 2027-01-04
+  expect deadline(joint-status-report-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: discovery-objection-motion-period (21 days after)" cite "D.N.M.LR-Civ. 26.6"
+{
+  given DiscoveryObjectionServed() on 2027-01-04
+  expect deadline(discovery-objection-motion-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: deposition-notice-period (14 days before)" cite "D.N.M.LR-Civ. 30.1"
+{
+  given DepositionScheduled() on 2027-01-04
+  expect deadline(deposition-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: want-of-prosecution-period (30 days after)" cite "D.N.M.LR-Civ. 41.1"
+{
+  given ProsecutionNoticeGiven() on 2027-01-04
+  expect deadline(want-of-prosecution-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: costs-motion-period (30 days after)" cite "D.N.M.LR-Civ. 54.1"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(costs-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: fee-motion-period (30 days after)" cite "D.N.M.LR-Civ. 54.5(a)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(fee-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: proposed-order-objection-period (7 days after)" cite "D.N.M.LR-Civ. 58.2(a)"
+{
+  given ProposedOrderServed() on 2027-01-04
+  expect deadline(proposed-order-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: removal-record-period (28 days after)" cite "D.N.M.LR-Civ. 81.1(a)"
+{
+  given NoticeOfRemovalFiled() on 2027-01-04
+  expect deadline(removal-record-period) == 2027-02-01
+}

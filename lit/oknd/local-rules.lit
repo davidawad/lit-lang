@@ -133,3 +133,93 @@ deadline withdrawal-motion-period: 14.days after CreditorsMeetingHeld() counted_
 /// are filed with the bankruptcy clerk within 14 days from service of the
 /// motion; replies only with leave of the bankruptcy court.
 deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "N.D. Okla. LCvR84-1"
+
+test "Deadline arithmetic: pauper-fee-period (21 days after)" cite "N.D. Okla. LCvR3-2(c)"
+{
+  given PauperMotionDenied() on 2027-02-01
+  expect deadline(pauper-fee-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: motion-response-period (21 days after)" cite "N.D. Okla. LCvR7-1(e)"
+{
+  given MotionFiled() on 2027-02-01
+  expect deadline(motion-response-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: discovery-response-period (14 days after)" cite "N.D. Okla. LCvR37-2(e)"
+{
+  given DiscoveryMotionFiled() on 2027-02-01
+  expect deadline(discovery-response-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: pretrial-order-period (7 days before)" cite "N.D. Okla. LCvR16-1"
+{
+  given PretrialConferenceSet() on 2027-02-01
+  expect deadline(pretrial-order-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: limited-authority-motion-period (14 days before)" cite "N.D. Okla. LCvR16-2"
+{
+  given SettlementConferenceSet() on 2027-02-01
+  expect deadline(limited-authority-motion-period) == 2027-01-15
+}
+
+test "Deadline arithmetic: pro-se-contact-period (14 days after)" cite "N.D. Okla. LCvR17-1(h)"
+{
+  given ProSeContactChanged() on 2027-02-01
+  expect deadline(pro-se-contact-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: bankruptcy-notice-period (7 days after)" cite "N.D. Okla. LCvR21-1"
+{
+  given PartyBankruptcyFiled() on 2027-02-01
+  expect deadline(bankruptcy-notice-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: deposition-subpoena-period (7 days before)" cite "N.D. Okla. LCvR30-1(a)"
+{
+  given DepositionScheduled() on 2027-02-01
+  expect deadline(deposition-subpoena-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: deposition-notice-period (7 days before)" cite "N.D. Okla. LCvR30-1(a)"
+{
+  given DepositionScheduled() on 2027-02-01
+  expect deadline(deposition-notice-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: pauper-subpoena-motion-period (21 days before)" cite "N.D. Okla. LCvR45-1(a)"
+{
+  given TrialOrHearingSet() on 2027-02-01
+  expect deadline(pauper-subpoena-motion-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "N.D. Okla. LCvR54-1(a)"
+{
+  given JudgmentEntered() on 2027-02-01
+  expect deadline(bill-of-costs-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: costs-objection-period (21 days after)" cite "N.D. Okla. LCvR54-1(b)"
+{
+  given BillOfCostsFiled() on 2027-02-01
+  expect deadline(costs-objection-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: removal-status-report-period (5 days after)" cite "N.D. Okla. LCvR81-2(c)"
+{
+  given RemovalNoticeFiled() on 2027-02-01
+  expect deadline(removal-status-report-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: withdrawal-motion-period (14 days after)" cite "N.D. Okla. LCvR84-1"
+{
+  given CreditorsMeetingHeld() on 2027-02-01
+  expect deadline(withdrawal-motion-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: withdrawal-response-period (14 days after)" cite "N.D. Okla. LCvR84-1"
+{
+  given WithdrawalMotionServed() on 2027-02-01
+  expect deadline(withdrawal-response-period) == 2027-02-16
+}

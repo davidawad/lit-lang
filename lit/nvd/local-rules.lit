@@ -405,3 +405,213 @@ deadline magistrate-objection-response-period: 14.days after MagistrateObjection
 {
   forum frcp
 }
+
+test "Deadline arithmetic: summary-judgment-response-period (21 days after)" cite "D. Nev. LR 7-2(b)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "D. Nev. LR 7-2(b)"
+{
+  given SummaryJudgmentResponseServed() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: response-period (14 days after)" cite "D. Nev. LR 7-2(b)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "D. Nev. LR 7-2(b)"
+{
+  given ResponseServed() on 2027-01-04
+  expect deadline(reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: proposed-order-disapproval-period (3 days after)" cite "D. Nev. LR 7-2(f)"
+{
+  given ProposedOrderServed() on 2027-01-04
+  expect deadline(proposed-order-disapproval-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: competing-proposed-order-period (3 days after)" cite "D. Nev. LR 7-2(f)"
+{
+  given ProposedOrderFilingNoticed() on 2027-01-04
+  expect deadline(competing-proposed-order-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: limine-motion-period (30 days before)" cite "D. Nev. LR 16-3(a)"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(limine-motion-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: limine-response-period (14 days after)" cite "D. Nev. LR 16-3(a)"
+{
+  given LimineMotionServed() on 2027-01-04
+  expect deadline(limine-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: evaluation-exemption-motion-period (7 days after)" cite "D. Nev. LR 16-6(c)"
+{
+  given EvaluationSessionOrderEntered() on 2027-01-04
+  expect deadline(evaluation-exemption-motion-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: evaluation-exemption-response-period (14 days after)" cite "D. Nev. LR 16-6(c)"
+{
+  given EvaluationExemptionMotionServed() on 2027-01-04
+  expect deadline(evaluation-exemption-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: evaluation-statement-period (7 days before)" cite "D. Nev. LR 16-6(f)"
+{
+  given EvaluationSessionHeld() on 2027-01-04
+  expect deadline(evaluation-statement-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: interpleader-conference-motion-period (30 days after)" cite "D. Nev. LR 22-1"
+{
+  given FirstDefendantAppeared() on 2027-01-04
+  expect deadline(interpleader-conference-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: discovery-conference-period (30 days after)" cite "D. Nev. LR 26-1(a)"
+{
+  given FirstDefendantAppeared() on 2027-01-04
+  expect deadline(discovery-conference-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: discovery-plan-period (14 days after)" cite "D. Nev. LR 26-1(a)"
+{
+  given RuleTwentySixFConferenceHeld() on 2027-01-04
+  expect deadline(discovery-plan-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: amendment-motion-period (90 days before)" cite "D. Nev. LR 26-1(b)"
+{
+  given DiscoveryCutoff() on 2027-01-04
+  expect deadline(amendment-motion-period) == 2026-10-06
+}
+
+test "Deadline arithmetic: expert-disclosure-period (60 days before)" cite "D. Nev. LR 26-1(b)"
+{
+  given DiscoveryCutoff() on 2027-01-04
+  expect deadline(expert-disclosure-period) == 2026-11-05
+}
+
+test "Deadline arithmetic: rebuttal-expert-disclosure-period (30 days after)" cite "D. Nev. LR 26-1(b)"
+{
+  given ExpertDisclosureMade() on 2027-01-04
+  expect deadline(rebuttal-expert-disclosure-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: dispositive-motion-period (30 days after)" cite "D. Nev. LR 26-1(b)"
+{
+  given DiscoveryCutoff() on 2027-01-04
+  expect deadline(dispositive-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: joint-pretrial-order-period (30 days after)" cite "D. Nev. LR 26-1(b)"
+{
+  given DispositiveMotionDeadline() on 2027-01-04
+  expect deadline(joint-pretrial-order-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: discovery-without-plan-period (180 days after)" cite "D. Nev. LR 26-2"
+{
+  given FirstDefendantAppeared() on 2027-01-04
+  expect deadline(discovery-without-plan-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: discovery-extension-request-period (21 days before)" cite "D. Nev. LR 26-3"
+{
+  given DiscoveryPlanDeadline() on 2027-01-04
+  expect deadline(discovery-extension-request-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: interpreter-notice-period (14 days before)" cite "D. Nev. LR 43-1"
+{
+  given InterpretedProceedingHeld() on 2027-01-04
+  expect deadline(interpreter-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: cost-bill-period (14 days after)" cite "D. Nev. LR 54-1(a)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(cost-bill-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: cost-objection-period (14 days after)" cite "D. Nev. LR 54-1(c)"
+{
+  given CostBillServed() on 2027-01-04
+  expect deadline(cost-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: cost-objection-response-period (7 days after)" cite "D. Nev. LR 54-1(c)"
+{
+  given CostObjectionServed() on 2027-01-04
+  expect deadline(cost-objection-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: retax-motion-period (7 days after)" cite "D. Nev. LR 54-12(a)"
+{
+  given CostsTaxationNoticed() on 2027-01-04
+  expect deadline(retax-motion-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: receiver-notice-period (14 days before)" cite "D. Nev. LR 66-2"
+{
+  given ReceiverHearingHeld() on 2027-01-04
+  expect deadline(receiver-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: receiver-report-period (60 days after)" cite "D. Nev. LR 66-4(b)"
+{
+  given PermanentReceiverAppointed() on 2027-01-04
+  expect deadline(receiver-report-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: receivership-hearing-notice-period (14 days before)" cite "D. Nev. LR 66-5"
+{
+  given ReceivershipHearingHeld() on 2027-01-04
+  expect deadline(receivership-hearing-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: exhibit-withdrawal-notice-period (21 days before)" cite "D. Nev. LR 79-1(d)"
+{
+  given ExhibitWithdrawn() on 2027-01-04
+  expect deadline(exhibit-withdrawal-notice-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: exhibit-claim-period (21 days after)" cite "D. Nev. LR 79-1(e)"
+{
+  given ExhibitClaimNoticed() on 2027-01-04
+  expect deadline(exhibit-claim-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: withdrawal-response-period (14 days after)" cite "D. Nev. LR IA 11-6(b)"
+{
+  given WithdrawalMotionFiled() on 2027-01-04
+  expect deadline(withdrawal-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-order-objection-period (14 days after)" cite "D. Nev. LR IB 3-1(a)"
+{
+  given MagistrateOrderServed() on 2027-01-04
+  expect deadline(magistrate-order-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-findings-objection-period (14 days after)" cite "D. Nev. LR IB 3-2(a)"
+{
+  given MagistrateFindingsServed() on 2027-01-04
+  expect deadline(magistrate-findings-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-objection-response-period (14 days after)" cite "D. Nev. LR IB 3-1(a)"
+{
+  given MagistrateObjectionServed() on 2027-01-04
+  expect deadline(magistrate-objection-response-period) == 2027-01-19
+}

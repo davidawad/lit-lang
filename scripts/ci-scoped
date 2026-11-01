@@ -164,6 +164,55 @@ scope() {
   rm -f "$meta"
 }
 
+# Return the matter folders to replay for this change. Rust-only engine/CLI
+# edits have no expect replay; clock/lowering changes get a fixed smoke set.
+expect_selection() {
+  local files="$1" f name dir
+  if grep -qE '^crates/litigate-engine/src/clock/|^crates/litigate-lower/' <<<"$files"; then
+    printf '%s\n' cofc-1498-patent-case ptab-ipr-defense ttab-opposition-applicant-defense \
+      frcp-civil-case bowles-v-russell ebay arthrex sas iqbal krupski-v-costa-crociere
+    return
+  fi
+  while IFS= read -r f; do
+    case "$f" in
+      tests/expect/*/*) printf '%s\n' "${f#tests/expect/}" | cut -d/ -f1 ;;
+      lit/*/*)
+        name="${f#lit/}"; name="${name%%/*}"
+        while IFS= read -r expect_file; do dirname "$expect_file" | sed 's#^tests/expect/##'; done \
+          < <(rg -l --fixed-strings "lit/$name" tests/expect --glob expect.toml || true)
+        ;;
+      cases/*)
+        name="${f#cases/}"; name="${name##*/}"; name="${name%.*}"
+        [ -d "tests/expect/$name" ] && printf '%s\n' "$name"
+        ;;
+    esac
+  done <<<"$files" | sort -u
+}
+
+run_expect_selection() {
+  local files="$1"; shift
+  local -a dirs=()
+  mapfile -t dirs < <(expect_selection "$files")
+  if [ "${#dirs[@]}" -eq 0 ]; then
+    skip expect "no expect matters selected for changed paths"
+  else
+    local -a paths=()
+    for d in "${dirs[@]}"; do paths+=("tests/expect/$d"); done
+    stage expect cargo run -q -p litigate-cli -- --format human test "${paths[@]}"
+  fi
+}
+
+# Doctests belong to packages whose own files changed, not reverse dependents.
+changed_doc_packages() {
+  jq -r --arg files "$2" '
+    ($files | split("\n") | map(select(length > 0))) as $changed
+    | .workspace_root as $root
+    | .packages[] | select(any(.targets[]; .doctest))
+    | (.manifest_path | ltrimstr($root + "/") | rtrimstr("/Cargo.toml")) as $dir
+    | select(any($changed[]; startswith($dir + "/"))) | .name
+  ' "$1"
+}
+
 # --- provenance --------------------------------------------------------------
 
 # The fetch-first rule (lg-f3q8, lg-t86b): a file added under sources/ is
@@ -545,7 +594,7 @@ skip() {
 }
 
 run() {
-  local base files scope_out label target
+  local base files scope_out label target dir
   warm_build
   base="$(base_of "${1:-}")"
   meta="$(metadata)"
@@ -598,9 +647,9 @@ run() {
   else
     skip ts-test "litigate-wasm, litigate-cli and packages/litigate-ts unchanged"
   fi
-  # The expect tests (lg-wvlf.1; SPEC §5.8, expect tests): a value that
-  # moved fails, and a due date moved by a day must fail.
-  stage expect scripts/expect-check
+  # Re-run only matters coupled to changed authored inputs; engine-only edits
+  # use no expect replay except for clock/lowering smoke changes.
+  run_expect_selection "$files"
   # The change impact report (lg-8fdj.3): every expect test under
   # tests/expect run at BASE and here, and each deadline, verdict and
   # expectation that moved, per forum, in the log for the reviewer. It
@@ -621,8 +670,11 @@ run() {
       mapfile -t pkgs < <(jq -r '.packages[].name' "$meta")
     fi
     stage test cargo nextest run --profile gate --no-tests=warn "${sel[@]}"
-    mapfile -t doc < <(jq -r --arg s "${pkgs[*]}" '($s | split(" ")) as $s
-      | .packages[] | select(.name as $n | $s | any(. == $n)) | select(any(.targets[]; .doctest)) | .name' "$meta")
+    if [ "$label" = full ]; then
+      mapfile -t doc < <(jq -r '.packages[] | select(any(.targets[]; .doctest)) | .name' "$meta")
+    else
+      mapfile -t doc < <(changed_doc_packages "$meta" "$files" | sort -u)
+    fi
     if [ "${#doc[@]}" -eq 0 ]; then
       skip doctest "no library in scope"
     else
@@ -791,6 +843,17 @@ self_test() {
   expect "none" "an empty diff runs global only"
   expect "cli litgraph-packs litigate-engine" "lit/ is a build input of the packs" lit/frcp/rules.lit
   expect "cli litgraph-packs litigate-engine" "tests/ snapshots are the engine's" tests/golden/x.json
+  local engine_expect clock_expect
+  engine_expect="$(expect_selection crates/litigate-engine/src/lib.rs)"
+  if [ -n "$engine_expect" ]; then
+    echo "ci-scoped self-test: engine-only change must select no expect replays, got [$engine_expect]" >&2
+    failures=$((failures + 1))
+  fi
+  clock_expect="$(expect_selection crates/litigate-engine/src/clock/rule.rs)"
+  if [ "$(wc -l <<<"$clock_expect")" -ne 10 ]; then
+    echo "ci-scoped self-test: clock change must select the 10 matter smoke set" >&2
+    failures=$((failures + 1))
+  fi
   expect "none" "a nested Cargo.lock is not the root one" docs/Cargo.lock
   expect "full" "a mixed change with a trigger is full" docs/a.md justfile
 
@@ -849,6 +912,12 @@ self_test() {
 
   # This workspace, against cargo's own reverse-dependency tree.
   cargo metadata --format-version 1 --no-deps > "$real"
+  local doc_engine
+  doc_engine="$(changed_doc_packages "$real" crates/litigate-engine/src/lib.rs)"
+  if [ "$doc_engine" != litigate-engine ]; then
+    echo "ci-scoped self-test: engine doctests must exclude reverse dependencies, got [$doc_engine]" >&2
+    failures=$((failures + 1))
+  fi
   real_case() {
     local crate="$1" want got
     want="$(cargo tree --workspace --invert "$crate" -e normal,build,dev --prefix none \

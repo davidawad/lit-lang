@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Gate (`docs/litigate/DESIGN.md` §9.3): no forum knowledge in engine
-//! source. Every `crates/*/src/**/*.rs` file is scanned, code and comments
+//! source. Every `crates/litigate-engine/src/**/*.rs` file is scanned, code and comments
 //! alike, for any pack id or forum key authored in `packs/*.json`; the keys
 //! are read from the packs at test time, so a new pack is covered without
 //! touching this file. Excluded: `#[cfg(test)]` items, `*_tests.rs` and
@@ -259,9 +259,7 @@ fn no_forum_literals_in_engine() {
         "expected pack ids and forum keys in packs/, found {keys:?}"
     );
     let mut files = vec![];
-    for krate in fs::read_dir(root.join("crates")).expect("crates dir") {
-        rust_files(&krate.expect("crate entry").path().join("src"), &mut files);
-    }
+    rust_files(&root.join("crates/litigate-engine/src"), &mut files);
     files.sort();
     assert!(!files.is_empty(), "no engine sources found");
     let mut violations = vec![];

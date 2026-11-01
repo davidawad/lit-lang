@@ -253,3 +253,103 @@ deadline magistrate-objection-response-period: 14.days after MagistrateObjection
 {
   forum frcp
 }
+
+test "Deadline arithmetic: filing-after-service-period (14 days after)" cite "D. Minn. LR 5.3" {
+  given PaperServed() on 2027-01-11
+  expect deadline(filing-after-service-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: extension-response-period (3 days after)" cite "D. Minn. LR 6.1(b)" {
+  given ExtensionMotionFiled() on 2027-01-11
+  expect deadline(extension-response-period) == 2027-01-14
+}
+
+test "Deadline arithmetic: nondispositive-motion-period (14 days before)" cite "D. Minn. LR 7.1(b)" {
+  given NondispositiveHearingHeld() on 2027-01-11
+  expect deadline(nondispositive-motion-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: nondispositive-response-period (7 days after)" cite "D. Minn. LR 7.1(b)" {
+  given NondispositiveMotionFiled() on 2027-01-11
+  expect deadline(nondispositive-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: dispositive-motion-period (42 days before)" cite "D. Minn. LR 7.1(c)" {
+  given DispositiveHearingHeld() on 2027-01-11
+  expect deadline(dispositive-motion-period) == 2026-11-30
+}
+
+test "Deadline arithmetic: dispositive-response-period (21 days after)" cite "D. Minn. LR 7.1(c)" {
+  given DispositiveMotionFiled() on 2027-01-11
+  expect deadline(dispositive-response-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: dispositive-reply-period (14 days after)" cite "D. Minn. LR 7.1(c)" {
+  given DispositiveResponseFiled() on 2027-01-11
+  expect deadline(dispositive-reply-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: rule26f-report-period (14 days after)" cite "D. Minn. LR 26.1(b)" {
+  given Rule26fConferenceHeld() on 2027-01-11
+  expect deadline(rule26f-report-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: pretrial-documents-period (14 days before)" cite "D. Minn. LR 39.1(b)" {
+  given TrialDate() on 2027-01-11
+  expect deadline(pretrial-documents-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: deposition-objections-period (7 days before)" cite "D. Minn. LR 39.1(b)" {
+  given TrialDate() on 2027-01-11
+  expect deadline(deposition-objections-period) == 2027-01-04
+}
+
+test "Deadline arithmetic: eaja-application-period (30 days after)" cite "D. Minn. LR 54.3(a)" {
+  given FinalJudgment() on 2027-01-11
+  expect deadline(eaja-application-period) == 2027-02-10
+}
+
+test "Deadline arithmetic: fee-response-period (14 days after)" cite "D. Minn. LR 54.3(b)" {
+  given FeeMotionServed() on 2027-01-11
+  expect deadline(fee-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: bill-of-costs-period (30 days after)" cite "D. Minn. LR 54.3(c)" {
+  given JudgmentEntered() on 2027-01-11
+  expect deadline(bill-of-costs-period) == 2027-02-10
+}
+
+test "Deadline arithmetic: cost-objections-period (14 days after)" cite "D. Minn. LR 54.3(c)" {
+  given BillOfCostsServed() on 2027-01-11
+  expect deadline(cost-objections-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: cost-objections-response-period (7 days after)" cite "D. Minn. LR 54.3(c)" {
+  given CostObjectionsServed() on 2027-01-11
+  expect deadline(cost-objections-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: cost-review-period (7 days after)" cite "D. Minn. LR 54.3(c)" {
+  given CostsTaxed() on 2027-01-11
+  expect deadline(cost-review-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: cost-review-response-period (7 days after)" cite "D. Minn. LR 54.3(c)" {
+  given CostReviewMotionServed() on 2027-01-11
+  expect deadline(cost-review-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: appeal-costs-period (14 days after)" cite "D. Minn. LR 54.3(d)" {
+  given MandateIssued() on 2027-01-11
+  expect deadline(appeal-costs-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: magistrate-objection-period (14 days after)" cite "D. Minn. LR 72.2(a)" {
+  given MagistrateRulingServed() on 2027-01-11
+  expect deadline(magistrate-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: magistrate-objection-response-period (14 days after)" cite "D. Minn. LR 72.2(a)" {
+  given MagistrateObjectionsServed() on 2027-01-11
+  expect deadline(magistrate-objection-response-period) == 2027-01-25
+}

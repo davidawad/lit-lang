@@ -11,10 +11,24 @@ import frcrimp.deadlines.{
   indictment-period,
   prelim-in-custody,
   prelim-released,
+  psr-disclosure,
   rule29-period,
   rule33-period,
   rule35-period,
   speedy-trial,
+}
+import frcrimp.deadlines.{
+  AppealClockEvent,
+  AppealStart,
+  Arrested,
+  InitialAppearance,
+  SentenceImposed,
+  SentencingScheduled,
+  TrialClockEvent,
+  TrialClockStart,
+  VerdictOrDischarge,
+  VerdictStep,
+  Custody,
 }
 
 start arrested
@@ -184,4 +198,58 @@ terminal judgment-final: "Conviction final" outcome [loss] cite "FRCrimP 32(k)(1
 {
   note "OUTLINE. Collateral review under 28 U.S.C. § 2255 (verify); payoff is a hole."
   payoff ?("matter-specific payoff not authored")
+}
+
+test "Deadline arithmetic: preliminary hearing in custody (14 days after)" cite "FRCrimP 5.1(c)"
+{
+  given InitialAppearance(InCustody) on 2027-01-07
+  expect deadline(prelim-in-custody) == 2027-01-21
+}
+
+test "Deadline arithmetic: preliminary hearing when released (21 days after)" cite "FRCrimP 5.1(c)"
+{
+  given InitialAppearance(Released) on 2027-01-07
+  expect deadline(prelim-released) == 2027-01-28
+}
+
+test "Deadline arithmetic: indictment (30 days after arrest)" cite "18 U.S.C. § 3161(b)"
+{
+  given Arrested() on 2027-01-07
+  expect deadline(indictment-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: trial (70 days after trial-clock event)" cite "18 U.S.C. § 3161(c)(1)"
+{
+  given TrialClockEvent(Indictment) on 2027-01-07
+  expect deadline(speedy-trial) == 2027-03-18
+}
+
+test "Deadline arithmetic: renewed acquittal motion (14 days after verdict)" cite "FRCrimP 29(c)(1)"
+{
+  given VerdictOrDischarge(Verdict) on 2027-01-07
+  expect deadline(rule29-period) == 2027-01-21
+}
+
+test "Deadline arithmetic: new-trial motion (14 days after verdict)" cite "FRCrimP 33(b)(2)"
+{
+  given VerdictOrDischarge(Verdict) on 2027-01-07
+  expect deadline(rule33-period) == 2027-01-21
+}
+
+test "Deadline arithmetic: sentence correction (14 days after sentence)" cite "FRCrimP 35(a)"
+{
+  given SentenceImposed() on 2027-01-07
+  expect deadline(rule35-period) == 2027-01-21
+}
+
+test "Deadline arithmetic: criminal appeal (14 days after judgment)" cite "FRAP 4(b)(1)(A)"
+{
+  given AppealClockEvent(JudgmentEntered) on 2027-01-07
+  expect deadline(criminal-appeal) == 2027-01-21
+}
+
+test "Deadline arithmetic: presentence report disclosure (35 days before sentencing)" cite "FRCrimP 32(e)(2)"
+{
+  given SentencingScheduled() on 2027-03-15
+  expect deadline(psr-disclosure) == 2027-02-08
 }

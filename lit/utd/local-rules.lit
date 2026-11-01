@@ -379,128 +379,152 @@ deadline removal-amended-notice-period: 21.days after ActionRemoved() counted_by
   forum frcp
 }
 
-
-test "Deadline arithmetic: filing-fee-period (7 days after)" cite "DUCivR 3-1" {
+test "Deadline arithmetic: filing-fee-period (7 days after)" cite "DUCivR 3-1"
+{
   given ComplaintFiled() on 2027-02-01
   expect deadline(filing-fee-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: pleading-response-period (28 days after)" cite "DUCivR 7-1(a)(4)" {
+test "Deadline arithmetic: pleading-response-period (28 days after)" cite "DUCivR 7-1(a)(4)"
+{
   given PleadingMotionServed() on 2027-02-01
   expect deadline(pleading-response-period) == 2027-03-01
 }
 
-test "Deadline arithmetic: pleading-reply-period (14 days after)" cite "DUCivR 7-1(a)(4)" {
+test "Deadline arithmetic: pleading-reply-period (14 days after)" cite "DUCivR 7-1(a)(4)"
+{
   given PleadingResponseServed() on 2027-02-01
   expect deadline(pleading-reply-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: summary-judgment-response-period (28 days after)" cite "DUCivR 7-1(a)(4)" {
+test "Deadline arithmetic: summary-judgment-response-period (28 days after)" cite "DUCivR 7-1(a)(4)"
+{
   given SummaryJudgmentMotionServed() on 2027-02-01
   expect deadline(summary-judgment-response-period) == 2027-03-01
 }
 
-test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "DUCivR 7-1(a)(4)" {
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "DUCivR 7-1(a)(4)"
+{
   given SummaryJudgmentResponseServed() on 2027-02-01
   expect deadline(summary-judgment-reply-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: injunction-response-period (14 days after)" cite "DUCivR 7-1(a)(4)" {
+test "Deadline arithmetic: injunction-response-period (14 days after)" cite "DUCivR 7-1(a)(4)"
+{
   given InjunctionMotionServed() on 2027-02-01
   expect deadline(injunction-response-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: injunction-reply-period (14 days after)" cite "DUCivR 7-1(a)(4)" {
+test "Deadline arithmetic: injunction-reply-period (14 days after)" cite "DUCivR 7-1(a)(4)"
+{
   given InjunctionResponseServed() on 2027-02-01
   expect deadline(injunction-reply-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: response-period (14 days after)" cite "DUCivR 7-1(a)(4)" {
+test "Deadline arithmetic: response-period (14 days after)" cite "DUCivR 7-1(a)(4)"
+{
   given MotionServed() on 2027-02-01
   expect deadline(response-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: reply-period (14 days after)" cite "DUCivR 7-1(a)(4)" {
+test "Deadline arithmetic: reply-period (14 days after)" cite "DUCivR 7-1(a)(4)"
+{
   given ResponseServed() on 2027-02-01
   expect deadline(reply-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: evidentiary-objection-period (7 days after)" cite "DUCivR 7-1(b)" {
+test "Deadline arithmetic: evidentiary-objection-period (7 days after)" cite "DUCivR 7-1(b)"
+{
   given ReplyWithNewEvidenceServed() on 2027-02-01
   expect deadline(evidentiary-objection-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: supplemental-authority-response-period (7 days after)" cite "DUCivR 7-1" {
+test "Deadline arithmetic: supplemental-authority-response-period (7 days after)" cite "DUCivR 7-1"
+{
   given SupplementalAuthorityNoticeServed() on 2027-02-01
   expect deadline(supplemental-authority-response-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: amicus-motion-response-period (7 days after)" cite "DUCivR 7-6(b)" {
+test "Deadline arithmetic: amicus-motion-response-period (7 days after)" cite "DUCivR 7-6(b)"
+{
   given AmicusMotionServed() on 2027-02-01
   expect deadline(amicus-motion-response-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: amicus-memorandum-filing-period (3 days after)" cite "DUCivR 7-6(b)" {
+test "Deadline arithmetic: amicus-memorandum-filing-period (3 days after)" cite "DUCivR 7-6(b)"
+{
   given AmicusLeaveGranted() on 2027-02-01
   expect deadline(amicus-memorandum-filing-period) == 2027-02-04
 }
 
-test "Deadline arithmetic: amicus-supporting-period (14 days after)" cite "DUCivR 7-6(e)" {
+test "Deadline arithmetic: amicus-supporting-period (14 days after)" cite "DUCivR 7-6(e)"
+{
   given SupportedMotionFiled() on 2027-02-01
   expect deadline(amicus-supporting-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: amicus-opposing-period (7 days after)" cite "DUCivR 7-6(e)" {
+test "Deadline arithmetic: amicus-opposing-period (7 days after)" cite "DUCivR 7-6(e)"
+{
   given OpposedResponseFiled() on 2027-02-01
   expect deadline(amicus-opposing-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: short-form-discovery-motion-period (45 days after)" cite "DUCivR 37-1(b)" {
+test "Deadline arithmetic: short-form-discovery-motion-period (45 days after)" cite "DUCivR 37-1(b)"
+{
   given DiscoveryDisputeLetterSent() on 2027-02-01
   expect deadline(short-form-discovery-motion-period) == 2027-03-18
 }
 
-test "Deadline arithmetic: fee-motion-period (14 days after)" cite "DUCivR 54-1(a)" {
+test "Deadline arithmetic: fee-motion-period (14 days after)" cite "DUCivR 54-1(a)"
+{
   given FinalJudgmentEntered() on 2027-02-01
   expect deadline(fee-motion-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: fee-motion-on-remand-period (14 days after)" cite "DUCivR 54-1(a)" {
+test "Deadline arithmetic: fee-motion-on-remand-period (14 days after)" cite "DUCivR 54-1(a)"
+{
   given FeeAwardRemanded() on 2027-02-01
   expect deadline(fee-motion-on-remand-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "DUCivR 54-1(b)" {
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "DUCivR 54-1(b)"
+{
   given FinalJudgmentEntered() on 2027-02-01
   expect deadline(bill-of-costs-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: costs-objection-period (14 days after)" cite "DUCivR 54-1(b)" {
+test "Deadline arithmetic: costs-objection-period (14 days after)" cite "DUCivR 54-1(b)"
+{
   given BillOfCostsServed() on 2027-02-01
   expect deadline(costs-objection-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: costs-reply-period (14 days after)" cite "DUCivR 54-1(b)" {
+test "Deadline arithmetic: costs-reply-period (14 days after)" cite "DUCivR 54-1(b)"
+{
   given CostsObjectionServed() on 2027-02-01
   expect deadline(costs-reply-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: costs-review-period (7 days after)" cite "DUCivR 54-1(b)" {
+test "Deadline arithmetic: costs-review-period (7 days after)" cite "DUCivR 54-1(b)"
+{
   given CostsTaxed() on 2027-02-01
   expect deadline(costs-review-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: magistrate-objection-proposed-order-period (14 days after)" cite "DUCivR 72-2(b)" {
+test "Deadline arithmetic: magistrate-objection-proposed-order-period (14 days after)" cite "DUCivR 72-2(b)"
+{
   given MagistrateObjectionFiled() on 2027-02-01
   expect deadline(magistrate-objection-proposed-order-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: consent-form-period (21 days after)" cite "DUCivR 72-3(c)" {
+test "Deadline arithmetic: consent-form-period (21 days after)" cite "DUCivR 72-3(c)"
+{
   given ConsentFormSent() on 2027-02-01
   expect deadline(consent-form-period) == 2027-02-22
 }
 
-test "Deadline arithmetic: removal-amended-notice-period (21 days after)" cite "DUCivR 81-1(a)" {
+test "Deadline arithmetic: removal-amended-notice-period (21 days after)" cite "DUCivR 81-1(a)"
+{
   given ActionRemoved() on 2027-02-01
   expect deadline(removal-amended-notice-period) == 2027-02-22
 }

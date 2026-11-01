@@ -147,58 +147,68 @@ deadline returned-exhibit-removal: 14.days after ReturnedExhibitsNoticed() count
   forum frcp
 }
 
-
-test "Deadline arithmetic: response-period (21 days after)" cite "S.D. Tex. LR 7.3" {
+test "Deadline arithmetic: response-period (21 days after)" cite "S.D. Tex. LR 7.3"
+{
   given OpposedMotionFiled() on 2027-02-01
   expect deadline(response-period) == 2027-02-22
 }
 
-test "Deadline arithmetic: reply-period (7 days after)" cite "S.D. Tex. LR 7.4" {
+test "Deadline arithmetic: reply-period (7 days after)" cite "S.D. Tex. LR 7.4"
+{
   given ResponseFiled() on 2027-02-01
   expect deadline(reply-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: adr-objection-period (10 days after)" cite "S.D. Tex. LR 16.4" {
+test "Deadline arithmetic: adr-objection-period (10 days after)" cite "S.D. Tex. LR 16.4"
+{
   given AdrOrderEntered() on 2027-02-01
   expect deadline(adr-objection-period) == 2027-02-11
 }
 
-test "Deadline arithmetic: adr-report-period (14 days after)" cite "S.D. Tex. LR 16.4" {
+test "Deadline arithmetic: adr-report-period (14 days after)" cite "S.D. Tex. LR 16.4"
+{
   given AdrCompleted() on 2027-02-01
   expect deadline(adr-report-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: authentication-objection-period (7 days after)" cite "S.D. Tex. LR 44.1" {
+test "Deadline arithmetic: authentication-objection-period (7 days after)" cite "S.D. Tex. LR 44.1"
+{
   given ExhibitListed() on 2027-02-01
   expect deadline(authentication-objection-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: admissibility-objection-period (7 days before)" cite "S.D. Tex. LR 46" {
+test "Deadline arithmetic: admissibility-objection-period (7 days before)" cite "S.D. Tex. LR 46"
+{
   given TrialDate() on 2027-02-01
   expect deadline(admissibility-objection-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "S.D. Tex. LR 54.2" {
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "S.D. Tex. LR 54.2"
+{
   given FinalJudgmentEntered() on 2027-02-01
   expect deadline(bill-of-costs-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: bill-of-costs-objection-period (7 days after)" cite "S.D. Tex. LR 54.2" {
+test "Deadline arithmetic: bill-of-costs-objection-period (7 days after)" cite "S.D. Tex. LR 54.2"
+{
   given BillOfCostsFiled() on 2027-02-01
   expect deadline(bill-of-costs-objection-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: oversized-exhibit-withdrawal (7 days after)" cite "S.D. Tex. LR 79.2" {
+test "Deadline arithmetic: oversized-exhibit-withdrawal (7 days after)" cite "S.D. Tex. LR 79.2"
+{
   given TrialCompleted() on 2027-02-01
   expect deadline(oversized-exhibit-withdrawal) == 2027-02-08
 }
 
-test "Deadline arithmetic: exhibit-removal (30 days after)" cite "S.D. Tex. LR 79.2" {
+test "Deadline arithmetic: exhibit-removal (30 days after)" cite "S.D. Tex. LR 79.2"
+{
   given DispositionWithoutAppeal() on 2027-02-01
   expect deadline(exhibit-removal) == 2027-03-03
 }
 
-test "Deadline arithmetic: returned-exhibit-removal (14 days after)" cite "S.D. Tex. LR 79.2" {
+test "Deadline arithmetic: returned-exhibit-removal (14 days after)" cite "S.D. Tex. LR 79.2"
+{
   given ReturnedExhibitsNoticed() on 2027-02-01
   expect deadline(returned-exhibit-removal) == 2027-02-16
 }

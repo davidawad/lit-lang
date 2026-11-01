@@ -269,88 +269,104 @@ deadline adr-completion-period: 60.days before TrialSetting() counted_by frcp6-t
   forum frcp
 }
 
-
-test "Deadline arithmetic: cover-sheet-period (7 days after)" cite "W.D. Tex. Local Rule CV-3(a)" {
+test "Deadline arithmetic: cover-sheet-period (7 days after)" cite "W.D. Tex. Local Rule CV-3(a)"
+{
   given CoverSheetDeficiencyNoticed() on 2027-02-01
   expect deadline(cover-sheet-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: discovery-response-period (7 days after)" cite "W.D. Tex. Local Rule CV-7(d)" {
+test "Deadline arithmetic: discovery-response-period (7 days after)" cite "W.D. Tex. Local Rule CV-7(d)"
+{
   given DiscoveryMotionFiled() on 2027-02-01
   expect deadline(discovery-response-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: response-period (14 days after)" cite "W.D. Tex. Local Rule CV-7(d)" {
+test "Deadline arithmetic: response-period (14 days after)" cite "W.D. Tex. Local Rule CV-7(d)"
+{
   given MotionFiled() on 2027-02-01
   expect deadline(response-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: reply-period (7 days after)" cite "W.D. Tex. Local Rule CV-7(e)" {
+test "Deadline arithmetic: reply-period (7 days after)" cite "W.D. Tex. Local Rule CV-7(e)"
+{
   given ResponseFiled() on 2027-02-01
   expect deadline(reply-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: amendment-as-of-course-period (21 days after)" cite "W.D. Tex. Local Rule CV-15(a)" {
+test "Deadline arithmetic: amendment-as-of-course-period (21 days after)" cite "W.D. Tex. Local Rule CV-15(a)"
+{
   given FirstRule12bMotionFiled() on 2027-02-01
   expect deadline(amendment-as-of-course-period) == 2027-02-22
 }
 
-test "Deadline arithmetic: proposed-scheduling-order-period (60 days after)" cite "W.D. Tex. Local Rule CV-16(c)" {
+test "Deadline arithmetic: proposed-scheduling-order-period (60 days after)" cite "W.D. Tex. Local Rule CV-16(c)"
+{
   given DefendantAppeared() on 2027-02-01
   expect deadline(proposed-scheduling-order-period) == 2027-04-02
 }
 
-test "Deadline arithmetic: late-discovery-motion-period (14 days after)" cite "W.D. Tex. Local Rule CV-16(e)" {
+test "Deadline arithmetic: late-discovery-motion-period (14 days after)" cite "W.D. Tex. Local Rule CV-16(e)"
+{
   given DiscoveryDeadline() on 2027-02-01
   expect deadline(late-discovery-motion-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: pretrial-disclosure-period (14 days before)" cite "W.D. Tex. Local Rule CV-16(f)" {
+test "Deadline arithmetic: pretrial-disclosure-period (14 days before)" cite "W.D. Tex. Local Rule CV-16(f)"
+{
   given FirstTrialSetting() on 2027-02-01
   expect deadline(pretrial-disclosure-period) == 2027-01-15
 }
 
-test "Deadline arithmetic: pretrial-objection-period (7 days before)" cite "W.D. Tex. Local Rule CV-16(g)" {
+test "Deadline arithmetic: pretrial-objection-period (7 days before)" cite "W.D. Tex. Local Rule CV-16(g)"
+{
   given FirstTrialSetting() on 2027-02-01
   expect deadline(pretrial-objection-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: authenticity-objection-period (14 days after)" cite "W.D. Tex. Local Rule CV-26(d)" {
+test "Deadline arithmetic: authenticity-objection-period (14 days after)" cite "W.D. Tex. Local Rule CV-26(d)"
+{
   given ProducedDocumentUseNoticed() on 2027-02-01
   expect deadline(authenticity-objection-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: executed-answers-period (21 days after)" cite "W.D. Tex. Local Rule CV-33(a)" {
+test "Deadline arithmetic: executed-answers-period (21 days after)" cite "W.D. Tex. Local Rule CV-33(a)"
+{
   given UnexecutedAnswersServed() on 2027-02-01
   expect deadline(executed-answers-period) == 2027-02-22
 }
 
-test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "W.D. Tex. Local Rule CV-54(a)" {
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "W.D. Tex. Local Rule CV-54(a)"
+{
   given JudgmentEntered() on 2027-02-01
   expect deadline(bill-of-costs-period) == 2027-02-16
 }
 
-test "Deadline arithmetic: bill-of-costs-opposition-period (7 days after)" cite "W.D. Tex. Local Rule CV-54(a)" {
+test "Deadline arithmetic: bill-of-costs-opposition-period (7 days after)" cite "W.D. Tex. Local Rule CV-54(a)"
+{
   given ProposedBillOfCostsFiled() on 2027-02-01
   expect deadline(bill-of-costs-opposition-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: bill-of-costs-motion-period (21 days after)" cite "W.D. Tex. Local Rule CV-54(a)" {
+test "Deadline arithmetic: bill-of-costs-motion-period (21 days after)" cite "W.D. Tex. Local Rule CV-54(a)"
+{
   given ProposedBillOfCostsFiled() on 2027-02-01
   expect deadline(bill-of-costs-motion-period) == 2027-02-22
 }
 
-test "Deadline arithmetic: cost-review-motion-period (7 days after)" cite "W.D. Tex. Local Rule CV-54(a)" {
+test "Deadline arithmetic: cost-review-motion-period (7 days after)" cite "W.D. Tex. Local Rule CV-54(a)"
+{
   given CostsTaxed() on 2027-02-01
   expect deadline(cost-review-motion-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: exhibit-removal (60 days after)" cite "W.D. Tex. Local Rule CV-79(a)" {
+test "Deadline arithmetic: exhibit-removal (60 days after)" cite "W.D. Tex. Local Rule CV-79(a)"
+{
   given FinalDisposition() on 2027-02-01
   expect deadline(exhibit-removal) == 2027-04-02
 }
 
-test "Deadline arithmetic: adr-completion-period (60 days before)" cite "W.D. Tex. Local Rule CV-88(a)" {
+test "Deadline arithmetic: adr-completion-period (60 days before)" cite "W.D. Tex. Local Rule CV-88(a)"
+{
   given TrialSetting() on 2027-02-01
   expect deadline(adr-completion-period) == 2026-12-03
 }

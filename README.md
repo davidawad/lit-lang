@@ -320,6 +320,7 @@ authored payoffs) is exactly the kind of contribution described in
 
 ## Docs
 
+- [Beta tester guide](docs/beta/BETA.md) — install, run a real matter, understand the modeled scope and its limitations.
 - [AGENTS.md](AGENTS.md) — operating manual for agents (and anyone) driving
   the engine: commands, response shape, rules, module layout.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — the model (`.lit` source →

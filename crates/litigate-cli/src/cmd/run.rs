@@ -7,7 +7,9 @@ use super::check::checked_targets;
 use crate::cli::OpFlags;
 use crate::out::{Failure, Outcome, Report};
 use litigate_base::Profile;
-use litigate_engine::api::{fingerprint, handle, Catalog, Request};
+use litigate_engine::api::{
+    fingerprint, handle, ApiError, Catalog, Request, Response, API_VERSION,
+};
 use litigate_engine::clock::ClockLibrary;
 use litigate_engine::scenario::NamedScenario;
 use litigate_lower::{Document, Options};
@@ -271,6 +273,40 @@ pub fn run(src: &dyn Source, target: &str, op: &str, flags: &OpFlags) -> Outcome
         packs,
     } = compile(src, &[target.to_owned()], links, &flags.library.lib)?;
     if report.has_errors() {
+        if target.ends_with(".case") {
+            let diagnostic = report
+                .diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.severity == litigate_base::Severity::Error);
+            if let Some(diagnostic) = diagnostic {
+                let file = diagnostic.span.file.0.clone();
+                let line = diagnostic.span.line;
+                let response = Response {
+                    ok: false,
+                    api_version: API_VERSION,
+                    op: op
+                        .get("op")
+                        .and_then(Value::as_str)
+                        .unwrap_or("unknown")
+                        .to_owned(),
+                    result: None,
+                    warnings: Vec::new(),
+                    provenance: None,
+                    error: Some(ApiError {
+                        code: "invalid".into(),
+                        message: diagnostic.message.clone(),
+                        hint: format!(
+                            "{file}:{line}: correct the .case syntax or semantics and try again"
+                        ),
+                    }),
+                    elapsed_ms: 0.0,
+                };
+                report.result = serde_json::to_value(response).unwrap_or(Value::Null);
+                report.diagnostics.clear();
+                report.failed = true;
+                return Ok(report);
+            }
+        }
         return Ok(report);
     }
     // A matter's scenario names its own packs.

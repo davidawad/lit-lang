@@ -407,3 +407,190 @@ deadline withdrawal-representation-period: 21.days after WithdrawalServiceProofF
 {
   forum frcp
 }
+
+
+test "Deadline arithmetic: service-status-report-period (30 days after)" cite "Dist. Idaho Loc. Civ. R. 4.1"
+{
+  given ComplaintFiled() on 2027-01-04
+  expect deadline(service-status-report-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: signature-objection-period (10 days after)" cite "Dist. Idaho Loc. Civ. R. 5.1(e)"
+{
+  given ElectronicFilingReceived() on 2027-01-04
+  expect deadline(signature-objection-period) == 2027-01-14
+}
+
+test "Deadline arithmetic: response-brief-period (21 days after)" cite "Dist. Idaho Loc. Civ. R. 7.1(c)"
+{
+  given MotionMemorandumServed() on 2027-01-04
+  expect deadline(response-brief-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: reply-brief-period (14 days after)" cite "Dist. Idaho Loc. Civ. R. 7.1(b)(3)"
+{
+  given ResponseMemorandumServed() on 2027-01-04
+  expect deadline(reply-brief-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: amended-pleading-period (10 days after)" cite "Dist. Idaho Loc. Civ. R. 15.1(b)"
+{
+  given AmendmentGranted() on 2027-01-04
+  expect deadline(amended-pleading-period) == 2027-01-14
+}
+
+test "Deadline arithmetic: litigation-plan-conference-period (21 days before)" cite "Dist. Idaho Loc. Civ. R. 16.1(a)"
+{
+  given SchedulingConferenceHeld() on 2027-01-04
+  expect deadline(litigation-plan-conference-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: adr-conference-period (5 days before)" cite "Dist. Idaho Loc. Civ. R. 16.4(c)"
+{
+  given SchedulingConferenceHeld() on 2027-01-04
+  expect deadline(adr-conference-period) == 2026-12-30
+}
+
+test "Deadline arithmetic: trial-submissions-period (30 days before)" cite "Dist. Idaho Loc. Civ. R. 16.3(a)"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(trial-submissions-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: trial-response-period (7 days after)" cite "Dist. Idaho Loc. Civ. R. 16.3(c)"
+{
+  given TrialMemorandumServed() on 2027-01-04
+  expect deadline(trial-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: voir-dire-request-period (7 days before)" cite "Dist. Idaho Loc. Civ. R. 47.1(a)"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(voir-dire-request-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: jury-instruction-period (14 days before)" cite "Dist. Idaho Loc. Civ. R. 51.1(a)"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(jury-instruction-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: jury-instruction-objection-period (1 days before)" cite "Dist. Idaho Loc. Civ. R. 51.1(b)"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(jury-instruction-objection-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: jury-settlement-notice-period (1 court_days before)" cite "Dist. Idaho Loc. Civ. R. 54.3"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(jury-settlement-notice-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: cost-bill-period (14 days after)" cite "Dist. Idaho Loc. Civ. R. 54.1(a)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(cost-bill-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: cost-objection-period (14 days after)" cite "Dist. Idaho Loc. Civ. R. 54.1(a)"
+{
+  given CostBillServed() on 2027-01-04
+  expect deadline(cost-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: retax-motion-period (7 days after)" cite "Dist. Idaho Loc. Civ. R. 54.1(c)"
+{
+  given CostsTaxed() on 2027-01-04
+  expect deadline(retax-motion-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: fee-response-period (21 days after)" cite "Dist. Idaho Loc. Civ. R. 54.2(c)"
+{
+  given FeeMotionReceived() on 2027-01-04
+  expect deadline(fee-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: fee-reply-period (14 days after)" cite "Dist. Idaho Loc. Civ. R. 54.2(d)"
+{
+  given FeeResponseReceived() on 2027-01-04
+  expect deadline(fee-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: social-security-fee-motion-period (30 days after)" cite "Dist. Idaho Loc. Civ. R. 54.4(a)"
+{
+  given LastNoticeOfAwardReceived() on 2027-01-04
+  expect deadline(social-security-fee-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: social-security-fee-response-period (21 days after)" cite "Dist. Idaho Loc. Civ. R. 54.4(c)"
+{
+  given SocialSecurityFeeMotionReceived() on 2027-01-04
+  expect deadline(social-security-fee-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: social-security-fee-reply-period (14 days after)" cite "Dist. Idaho Loc. Civ. R. 54.4(c)"
+{
+  given SocialSecurityFeeResponseFiled() on 2027-01-04
+  expect deadline(social-security-fee-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-order-objection-period (14 days after)" cite "Dist. Idaho Loc. Civ. R. 72.1(b)(1)"
+{
+  given MagistrateOrderServed() on 2027-01-04
+  expect deadline(magistrate-order-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-report-objection-period (14 days after)" cite "Dist. Idaho Loc. Civ. R. 72.1(b)(2)"
+{
+  given MagistrateReportServed() on 2027-01-04
+  expect deadline(magistrate-report-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-objection-response-period (14 days after)" cite "Dist. Idaho Loc. Civ. R. 72.1(b)"
+{
+  given MagistrateObjectionServed() on 2027-01-04
+  expect deadline(magistrate-objection-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: removed-motion-response-period (21 days after)" cite "Dist. Idaho Loc. Civ. R. 81.1(b)"
+{
+  given RemovalNoticeServed() on 2027-01-04
+  expect deadline(removed-motion-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: removed-motion-reply-period (14 days after)" cite "Dist. Idaho Loc. Civ. R. 81.1(b)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(removed-motion-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: conviction-report-period (14 days after)" cite "Dist. Idaho Loc. Civ. R. 83.5(b)(2)"
+{
+  given AttorneyConvicted() on 2027-01-04
+  expect deadline(conviction-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reciprocal-discipline-petition-period (30 days after)" cite "Dist. Idaho Loc. Civ. R. 83.5(b)(3)"
+{
+  given ReciprocalDisciplineOrderIssued() on 2027-01-04
+  expect deadline(reciprocal-discipline-petition-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: discipline-response-period (30 days after)" cite "Dist. Idaho Loc. Civ. R. 83.5(b)(4)"
+{
+  given DisciplineShowCauseIssued() on 2027-01-04
+  expect deadline(discipline-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: proposed-determination-reply-period (10 days after)" cite "Dist. Idaho Loc. Civ. R. 83.5(b)(4)"
+{
+  given ProposedDeterminationServed() on 2027-01-04
+  expect deadline(proposed-determination-reply-period) == 2027-01-14
+}
+
+test "Deadline arithmetic: withdrawal-representation-period (21 days after)" cite "Dist. Idaho Loc. Civ. R. 83.6(c)"
+{
+  given WithdrawalServiceProofFiled() on 2027-01-04
+  expect deadline(withdrawal-representation-period) == 2027-01-25
+}

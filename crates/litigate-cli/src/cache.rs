@@ -19,6 +19,66 @@ use std::sync::OnceLock;
 /// names another directory.
 pub const DEFAULT_DIR: &str = "target/litigate/verified";
 
+/// Disk cache for compiled package and matter outputs.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CompiledCache {
+    dir: PathBuf,
+}
+
+impl CompiledCache {
+    /// A compiled-output cache rooted at `dir`.
+    #[must_use]
+    #[cfg(test)]
+    pub(crate) fn in_dir(dir: PathBuf) -> Self {
+        Self { dir }
+    }
+
+    /// The compiled-output cache configured for this process.
+    #[must_use]
+    pub fn from_env() -> Option<Self> {
+        if std::env::var_os("LITIGATE_NO_CACHE").is_some() {
+            return None;
+        }
+        let dir = std::env::var_os("LITIGATE_CACHE_DIR")
+            .map(PathBuf::from)
+            .or_else(|| {
+                std::env::var_os("XDG_CACHE_HOME")
+                    .map(PathBuf::from)
+                    .map(|path| path.join("litigate"))
+                    .or_else(|| {
+                        std::env::var_os("HOME")
+                            .map(PathBuf::from)
+                            .map(|p| p.join(".cache/litigate"))
+                    })
+            })?;
+        Some(Self { dir })
+    }
+
+    fn path(&self, key: &str) -> PathBuf {
+        self.dir.join(format!("{key}.json"))
+    }
+
+    /// Reads a cached value. Invalid or unreadable entries are misses.
+    pub fn get<T: for<'de> Deserialize<'de>>(&self, key: &str) -> Option<T> {
+        std::fs::read(self.path(key))
+            .ok()
+            .and_then(|bytes| serde_json::from_slice(&bytes).ok())
+    }
+
+    /// Stores a value atomically on a best-effort basis.
+    pub fn put<T: Serialize>(&self, key: &str, value: &T) {
+        let path = self.path(key);
+        let Ok(bytes) = serde_json::to_vec(value) else {
+            return;
+        };
+        if std::fs::create_dir_all(&self.dir).is_err() {
+            return;
+        }
+        let tmp = path.with_extension(format!("{}.tmp", std::process::id()));
+        let _ = std::fs::write(&tmp, bytes).and_then(|()| std::fs::rename(&tmp, path));
+    }
+}
+
 /// A verification cache directory.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Cache {
@@ -109,7 +169,7 @@ fn compiler() -> &'static str {
 }
 
 /// The compiler identity of `version` built as `exe`.
-fn identity(version: &str, exe: Option<&[u8]>) -> String {
+pub(crate) fn identity(version: &str, exe: Option<&[u8]>) -> String {
     let digest = exe.map_or_else(
         || "unreadable".to_owned(),
         |bytes| {
@@ -244,5 +304,23 @@ mod tests {
         assert!(a.starts_with("1.0.0 sha256:"), "{a}");
         assert_eq!(identity("1.0.0", None), "1.0.0 unreadable");
         assert!(compiler().starts_with(concat!(env!("CARGO_PKG_VERSION"), " sha256:")));
+    }
+
+    #[test]
+    fn compiled_outputs_hit_and_miss_for_changed_keys() {
+        let dir = scratch("compiled");
+        let cache = CompiledCache::in_dir(dir.clone());
+        cache.put("source-a", &"compiled-a");
+        assert_eq!(
+            cache.get::<String>("source-a").as_deref(),
+            Some("compiled-a")
+        );
+        assert_eq!(cache.get::<String>("source-b"), None);
+        cache.put("compiler-b", &"compiled-b");
+        assert_eq!(
+            cache.get::<String>("compiler-b").as_deref(),
+            Some("compiled-b")
+        );
+        let _ = std::fs::remove_dir_all(dir);
     }
 }

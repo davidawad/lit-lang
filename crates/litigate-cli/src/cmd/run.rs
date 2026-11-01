@@ -17,6 +17,9 @@ use litigate_sema::pkg::source::Source;
 use serde_json::{json, Map, Value};
 use std::collections::BTreeSet;
 
+#[path = "run_cache.rs"]
+mod run_cache;
+
 /// The op object for `--op`: a JSON object, or an op name.
 ///
 /// # Errors
@@ -207,6 +210,33 @@ fn used_by(src: &dyn Source, cases: &[std::path::PathBuf]) -> BTreeSet<String> {
 /// # Errors
 /// Usage or I/O failures.
 pub(crate) fn compile(
+    src: &dyn Source,
+    paths: &[String],
+    links: bool,
+    lib: &[String],
+) -> Result<Compiled, Failure> {
+    let cache = src
+        .on_disk()
+        .then(crate::cache::CompiledCache::from_env)
+        .flatten();
+    let key = cache
+        .as_ref()
+        .and_then(|_| run_cache::key(src, paths, links, lib).ok());
+    if let (Some(cache), Some(key)) = (&cache, &key) {
+        if let Some(compiled) = run_cache::load(cache, key) {
+            return Ok(compiled);
+        }
+    }
+    let compiled = compile_uncached(src, paths, links, lib)?;
+    if !compiled.report.has_errors() {
+        if let (Some(cache), Some(key)) = (&cache, &key) {
+            run_cache::store(cache, key, &compiled);
+        }
+    }
+    Ok(compiled)
+}
+
+fn compile_uncached(
     src: &dyn Source,
     paths: &[String],
     links: bool,
@@ -423,7 +453,6 @@ fn is_case_target(target: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-
     #[test]
     fn matter_target_extension_is_case_insensitive() {
         assert!(is_case_target("matter.case"));

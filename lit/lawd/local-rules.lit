@@ -140,3 +140,63 @@ deadline exhibit-removal-period: 30.days after FinalDisposition() counted_by frc
 {
   forum frcp
 }
+
+test "Deadline arithmetic: signature-objection-period (14 days after)" cite "W.D. La. LR 5.7.08"
+{
+  given MultiSignatureDocumentServed() on 2027-01-04
+  expect deadline(signature-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: opposition-period (14 days after)" cite "W.D. La. LR 7.4"
+{
+  given MotionFiled() on 2027-01-04
+  expect deadline(opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "W.D. La. LR 7.4"
+{
+  given OppositionFiled() on 2027-01-04
+  expect deadline(reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: adr-conference-period (60 days after)" cite "W.D. La. LR 16.3.1"
+{
+  given DiscoveryCloseDeadline() on 2027-01-04
+  expect deadline(adr-conference-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: prosecution-good-cause-period (30 days after)" cite "W.D. La. LR 41.3"
+{
+  given ProsecutionNoticeMailed() on 2027-01-04
+  expect deadline(prosecution-good-cause-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: reinstatement-period (30 days after)" cite "W.D. La. LR 41.3"
+{
+  given ProsecutionDismissalOrdered() on 2027-01-04
+  expect deadline(reinstatement-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: jury-instructions-period (7 days before)" cite "W.D. La. LR 51.1"
+{
+  given JuryTrialScheduled() on 2027-01-04
+  expect deadline(jury-instructions-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: bill-of-costs-period (30 days after)" cite "W.D. La. LR 54.3"
+{
+  given JudgmentEntryNoticed() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: default-judgment-waiting-period (14 days after)" cite "W.D. La. LR 55.1"
+{
+  given DefaultEntered() on 2027-01-04
+  expect deadline(default-judgment-waiting-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: exhibit-removal-period (30 days after)" cite "W.D. La. LR 79.3"
+{
+  given FinalDisposition() on 2027-01-04
+  expect deadline(exhibit-removal-period) == 2027-02-03
+}

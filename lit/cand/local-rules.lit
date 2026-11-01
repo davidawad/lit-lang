@@ -292,3 +292,99 @@ chance submitted: "Court rules on the motion" by court discretion cite "N.D. Cal
 
 terminal motion-granted: "Motion granted: the case continues under lit/frcp" outcome [procedural] cite "N.D. Cal. Civil L.R. 7-1(b)"
 terminal motion-denied: "Motion denied: the case continues under lit/frcp" outcome [procedural] cite "N.D. Cal. Civil L.R. 7-1(b)"
+
+test "Deadline arithmetic: change-time-request-period (14 days before)" cite "N.D. Cal. Civil L.R. 6-1(b)"
+{
+  given HearingScheduled() on 2027-04-05
+  expect deadline(change-time-request-period) == 2027-03-22
+}
+
+test "Deadline arithmetic: change-time-opposition-period (4 days after)" cite "N.D. Cal. Civil L.R. 6-3(b)"
+{
+  given ChangeTimeMotionFiled() on 2027-04-05
+  expect deadline(change-time-opposition-period) == 2027-04-09
+}
+
+test "Deadline arithmetic: motion-notice-period (35 days before)" cite "N.D. Cal. Civil L.R. 7-2(a)"
+{
+  given MotionHearingNoticed() on 2027-04-05
+  expect deadline(motion-notice-period) == 2027-03-01
+}
+
+test "Deadline arithmetic: opposition-period (14 days after)" cite "N.D. Cal. Civil L.R. 7-3(a)"
+{
+  given MotionFiled() on 2027-04-05
+  expect deadline(opposition-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "N.D. Cal. Civil L.R. 7-3(c)"
+{
+  given OppositionDue() on 2027-04-05
+  expect deadline(reply-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: reply-evidence-objection-period (7 days after)" cite "N.D. Cal. Civil L.R. 7-3(d)"
+{
+  given ReplyFiled() on 2027-04-05
+  expect deadline(reply-evidence-objection-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: sanctions-motion-period (14 days after)" cite "N.D. Cal. Civil L.R. 7-8(d)"
+{
+  given JudgmentEntered() on 2027-04-05
+  expect deadline(sanctions-motion-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: administrative-opposition-period (4 days after)" cite "N.D. Cal. Civil L.R. 7-11(b)"
+{
+  given AdministrativeMotionFiled() on 2027-04-05
+  expect deadline(administrative-opposition-period) == 2027-04-09
+}
+
+test "Deadline arithmetic: discovery-motion-period (7 days after)" cite "N.D. Cal. Civil L.R. 37-3"
+{
+  given DiscoveryCutOff() on 2027-04-05
+  expect deadline(discovery-motion-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "N.D. Cal. Civil L.R. 54-1(a)"
+{
+  given JudgmentEntered() on 2027-04-05
+  expect deadline(bill-of-costs-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: costs-objection-period (14 days after)" cite "N.D. Cal. Civil L.R. 54-2(a)"
+{
+  given BillOfCostsServed() on 2027-04-05
+  expect deadline(costs-objection-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: fee-motion-period (14 days after)" cite "N.D. Cal. Civil L.R. 54-5(a)"
+{
+  given JudgmentEntered() on 2027-04-05
+  expect deadline(fee-motion-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: magistrate-relief-deemed-denied (14 days after)" cite "N.D. Cal. Civil L.R. 72-2(d)"
+{
+  given MagistrateReliefMotionFiled() on 2027-04-05
+  expect deadline(magistrate-relief-deemed-denied) == 2027-04-19
+}
+
+test "Deadline arithmetic: consent-period (7 days after)" cite "N.D. Cal. Civil L.R. 73-1(a)"
+{
+  given ConsentMotionFiled() on 2027-04-05
+  expect deadline(consent-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: designating-statement-period (7 days after)" cite "N.D. Cal. Civil L.R. 79-5(f)"
+{
+  given OtherPartySealingMotionFiled() on 2027-04-05
+  expect deadline(designating-statement-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: sealing-response-period (4 days after)" cite "N.D. Cal. Civil L.R. 79-5(f)"
+{
+  given DesignatingStatementFiled() on 2027-04-05
+  expect deadline(sealing-response-period) == 2027-04-09
+}

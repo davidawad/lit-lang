@@ -291,3 +291,153 @@ deadline social-security-fee-motion-period: 30.days after NoticeOfAwardSent() co
 {
   forum frcp
 }
+
+test "Deadline arithmetic: entity-new-counsel-period (30 days after)" cite "D. Md. Local Rule 101.2(b)"
+{
+  given EntityCounselWithdrawalMoved() on 2027-01-04
+  expect deadline(entity-new-counsel-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: removal-record-period (30 days after)" cite "D. Md. Local Rule 103.5(a)"
+{
+  given NoticeOfRemovalFiled() on 2027-01-04
+  expect deadline(removal-record-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: removed-motion-memorandum-period (14 days after)" cite "D. Md. Local Rule 103.5(b)"
+{
+  given RemovedWithMotionPending() on 2027-01-04
+  expect deadline(removed-motion-memorandum-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: removal-disclosure-period (7 days after)" cite "D. Md. Local Rule 103.5(c)"
+{
+  given NoticeOfRemovalFiled() on 2027-01-04
+  expect deadline(removal-disclosure-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: service-show-cause-period (90 days after)" cite "D. Md. Local Rule 103.8(a)"
+{
+  given AffirmativePleadingFiled() on 2027-01-04
+  expect deadline(service-show-cause-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: prosecution-show-cause-period (14 days after)" cite "D. Md. Local Rule 103.8(a)"
+{
+  given ProsecutionShowCauseOrdered() on 2027-01-04
+  expect deadline(prosecution-show-cause-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: motion-to-compel-period (30 days after)" cite "D. Md. Local Rule 104.8(a)"
+{
+  given DiscoveryResponseReceived() on 2027-01-04
+  expect deadline(motion-to-compel-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: compel-opposition-period (14 days after)" cite "D. Md. Local Rule 104.8(a)"
+{
+  given MotionToCompelServed() on 2027-01-04
+  expect deadline(compel-opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: compel-reply-period (14 days after)" cite "D. Md. Local Rule 104.8(a)"
+{
+  given CompelOppositionServed() on 2027-01-04
+  expect deadline(compel-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: opposition-period (14 days after)" cite "D. Md. Local Rule 105.2(a)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reply-period (14 days after)" cite "D. Md. Local Rule 105.2(a)"
+{
+  given OppositionServed() on 2027-01-04
+  expect deadline(reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reconsideration-period (14 days after)" cite "D. Md. Local Rule 105.10"
+{
+  given OrderEntered() on 2027-01-04
+  expect deadline(reconsideration-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: sealing-objection-period (14 days after)" cite "D. Md. Local Rule 105.11"
+{
+  given SealingMotionDocketed() on 2027-01-04
+  expect deadline(sealing-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: amicus-brief-period (7 days after)" cite "D. Md. Local Rule 105.12(e)"
+{
+  given PrincipalBriefFiled() on 2027-01-04
+  expect deadline(amicus-brief-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: pretrial-draft-period (14 days before)" cite "D. Md. Local Rule 106.3"
+{
+  given PretrialOrderDue() on 2027-01-04
+  expect deadline(pretrial-draft-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: pretrial-revisions-period (7 days before)" cite "D. Md. Local Rule 106.3"
+{
+  given PretrialOrderDue() on 2027-01-04
+  expect deadline(pretrial-revisions-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: pretrial-order-period (7 days before)" cite "D. Md. Local Rule 106.4(a)"
+{
+  given PretrialConferenceScheduled() on 2027-01-04
+  expect deadline(pretrial-order-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "D. Md. Local Rule 109.1(a)"
+{
+  given AppealTimeExpired() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: appeal-bill-of-costs-period (14 days after)" cite "D. Md. Local Rule 109.1(a)"
+{
+  given MandateIssued() on 2027-01-04
+  expect deadline(appeal-bill-of-costs-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: supreme-court-costs-period (14 days after)" cite "D. Md. Local Rule 109.1(a)"
+{
+  given SupremeCourtJudgmentEntered() on 2027-01-04
+  expect deadline(supreme-court-costs-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: fee-motion-period (14 days after)" cite "D. Md. Local Rule 109.2(a)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(fee-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: fee-memorandum-period (35 days after)" cite "D. Md. Local Rule 109.2(a)"
+{
+  given FeeMotionFiled() on 2027-01-04
+  expect deadline(fee-memorandum-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: appeal-fee-memorandum-period (14 days after)" cite "D. Md. Local Rule 109.2(a)"
+{
+  given MandateIssued() on 2027-01-04
+  expect deadline(appeal-fee-memorandum-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: fee-opposition-period (14 days after)" cite "D. Md. Local Rule 109.2(a)"
+{
+  given FeeMemorandumServed() on 2027-01-04
+  expect deadline(fee-opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: social-security-fee-motion-period (30 days after)" cite "D. Md. Local Rule 109.2(c)"
+{
+  given NoticeOfAwardSent() on 2027-01-04
+  expect deadline(social-security-fee-motion-period) == 2027-02-03
+}

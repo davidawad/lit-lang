@@ -301,3 +301,153 @@ deadline levy-vacatur-period: 20.days after LevySatisfied() counted_by frcp6 cit
 {
   forum frcp
 }
+
+test "Deadline arithmetic: cover-sheet-period (3 days after)" cite "D.V.I. LRCi 3.1(b)"
+{
+  given CoverSheetOmissionNoticed() on 2027-01-04
+  expect deadline(cover-sheet-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: withdrawal-remote-appearance-period (3 days before)" cite "D.V.I. LRCi 5.2(b)"
+{
+  given WithdrawalHearing() on 2027-01-04
+  expect deadline(withdrawal-remote-appearance-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: reconsideration-motion-period (14 days after)" cite "D.V.I. LRCi 6.1(b)"
+{
+  given OrderEntered() on 2027-01-04
+  expect deadline(reconsideration-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: limine-motion-period (28 days before)" cite "D.V.I. LRCi 6.1(b)"
+{
+  given JurySelection() on 2027-01-04
+  expect deadline(limine-motion-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: response-period (14 days after)" cite "D.V.I. LRCi 6.1(b)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "D.V.I. LRCi 6.1(b)"
+{
+  given ResponseServed() on 2027-01-04
+  expect deadline(reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: rule12-response-period (21 days after)" cite "D.V.I. LRCi 6.1(b)"
+{
+  given Rule12MotionFiled() on 2027-01-04
+  expect deadline(rule12-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: rule12-reply-period (14 days after)" cite "D.V.I. LRCi 6.1(b)"
+{
+  given Rule12ResponseFiled() on 2027-01-04
+  expect deadline(rule12-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (21 days after)" cite "D.V.I. LRCi 6.1(b)"
+{
+  given SummaryJudgmentMotionFiled() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "D.V.I. LRCi 6.1(b)"
+{
+  given SummaryJudgmentResponseFiled() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reconsideration-response-period (14 days after)" cite "D.V.I. LRCi 6.1(b)"
+{
+  given ReconsiderationMotionServed() on 2027-01-04
+  expect deadline(reconsideration-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reconsideration-reply-period (7 days after)" cite "D.V.I. LRCi 6.1(b)"
+{
+  given ReconsiderationResponseFiled() on 2027-01-04
+  expect deadline(reconsideration-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: limine-response-period (7 days after)" cite "D.V.I. LRCi 6.1(b)"
+{
+  given LimineMotionFiled() on 2027-01-04
+  expect deadline(limine-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: limine-reply-period (7 days after)" cite "D.V.I. LRCi 6.1(b)"
+{
+  given LimineResponseFiled() on 2027-01-04
+  expect deadline(limine-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: oversize-leave-period (2 days before)" cite "D.V.I. LRCi 7.1(b)"
+{
+  given OversizePaperFiled() on 2027-01-04
+  expect deadline(oversize-leave-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: trial-brief-period (7 days before)" cite "D.V.I. LRCi 16.1(c)"
+{
+  given TrialDate() on 2027-01-04
+  expect deadline(trial-brief-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: expert-bill-period (20 days before)" cite "D.V.I. LRCi 26.3(d)"
+{
+  given ExpertDeposition() on 2027-01-04
+  expect deadline(expert-bill-period) == 2026-12-15
+}
+
+test "Deadline arithmetic: individual-deposition-notice-period (14 days before)" cite "D.V.I. LRCi 30.1(a)"
+{
+  given IndividualDeposition() on 2027-01-04
+  expect deadline(individual-deposition-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: organization-deposition-notice-period (21 days before)" cite "D.V.I. LRCi 30.1(a)"
+{
+  given OrganizationDeposition() on 2027-01-04
+  expect deadline(organization-deposition-notice-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: organization-deposition-conference-period (5 days before)" cite "D.V.I. LRCi 30.1(b)"
+{
+  given OrganizationDepositionNoticeServed() on 2027-01-04
+  expect deadline(organization-deposition-conference-period) == 2026-12-30
+}
+
+test "Deadline arithmetic: discovery-conference-period (15 days after)" cite "D.V.I. LRCi 37.1(b)"
+{
+  given DiscoveryConferenceRequested() on 2027-01-04
+  expect deadline(discovery-conference-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: exhibit-claim-period (30 days after)" cite "D.V.I. LRCi 39.1(d)"
+{
+  given ExhibitClaimRequestReceived() on 2027-01-04
+  expect deadline(exhibit-claim-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: interpreter-submission-period (6 days before)" cite "D.V.I. LRCi 43.1"
+{
+  given InterpreterNeeded() on 2027-01-04
+  expect deadline(interpreter-submission-period) == 2026-12-29
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "D.V.I. LRCi 54.1(a)"
+{
+  given CostsJudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: levy-vacatur-period (20 days after)" cite "D.V.I. LRCi 69.1(d)"
+{
+  given LevySatisfied() on 2027-01-04
+  expect deadline(levy-vacatur-period) == 2027-01-25
+}

@@ -301,132 +301,158 @@ deadline ifp-fee-objection-period: 21.days after IfpFeeNotified() counted_by frc
   forum frcp
 }
 
-test "Deadline arithmetic: opposing-suggestions-period (14 days after)" cite "W.D. Mo. L.R. 7.0(c)" {
+test "Deadline arithmetic: opposing-suggestions-period (14 days after)" cite "W.D. Mo. L.R. 7.0(c)"
+{
   given MotionFiled() on 2027-01-11
   expect deadline(opposing-suggestions-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: summary-judgment-opposition-period (21 days after)" cite "W.D. Mo. L.R. 7.0(c)" {
+test "Deadline arithmetic: summary-judgment-opposition-period (21 days after)" cite "W.D. Mo. L.R. 7.0(c)"
+{
   given SummaryJudgmentMotionFiled() on 2027-01-11
   expect deadline(summary-judgment-opposition-period) == 2027-02-01
 }
 
-test "Deadline arithmetic: reply-suggestions-period (14 days after)" cite "W.D. Mo. L.R. 7.0(c)" {
+test "Deadline arithmetic: reply-suggestions-period (14 days after)" cite "W.D. Mo. L.R. 7.0(c)"
+{
   given OpposingSuggestionsFiled() on 2027-01-11
   expect deadline(reply-suggestions-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: amended-certificate-period (7 days after)" cite "W.D. Mo. L.R. 7.1(c)" {
+test "Deadline arithmetic: amended-certificate-period (7 days after)" cite "W.D. Mo. L.R. 7.1(c)"
+{
   given InterestInformationChanged() on 2027-01-11
   expect deadline(amended-certificate-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: social-security-answer-period (90 days after)" cite "W.D. Mo. L.R. 9.1(b)" {
+test "Deadline arithmetic: social-security-answer-period (90 days after)" cite "W.D. Mo. L.R. 9.1(b)"
+{
   given SocialSecurityNotice() on 2027-01-11
   expect deadline(social-security-answer-period) == 2027-04-12
 }
 
-test "Deadline arithmetic: social-security-brief-period (40 days after)" cite "W.D. Mo. L.R. 9.1(d)" {
+test "Deadline arithmetic: social-security-brief-period (40 days after)" cite "W.D. Mo. L.R. 9.1(d)"
+{
   given AdministrativeRecordFiled() on 2027-01-11
   expect deadline(social-security-brief-period) == 2027-02-22
 }
 
-test "Deadline arithmetic: commissioner-brief-period (40 days after)" cite "W.D. Mo. L.R. 9.1(d)" {
+test "Deadline arithmetic: commissioner-brief-period (40 days after)" cite "W.D. Mo. L.R. 9.1(d)"
+{
   given SocialSecurityBriefServed() on 2027-01-11
   expect deadline(commissioner-brief-period) == 2027-02-22
 }
 
-test "Deadline arithmetic: social-security-reply-period (21 days after)" cite "W.D. Mo. L.R. 9.1(d)" {
+test "Deadline arithmetic: social-security-reply-period (21 days after)" cite "W.D. Mo. L.R. 9.1(d)"
+{
   given CommissionerBriefServed() on 2027-01-11
   expect deadline(social-security-reply-period) == 2027-02-01
 }
 
-test "Deadline arithmetic: habeas-reply-period (14 days after)" cite "W.D. Mo. L.R. 9.2(h)" {
+test "Deadline arithmetic: habeas-reply-period (14 days after)" cite "W.D. Mo. L.R. 9.2(h)"
+{
   given HabeasOppositionServed() on 2027-01-11
   expect deadline(habeas-reply-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: amended-pleading-period (7 days after)" cite "W.D. Mo. L.R. 15.1(b)" {
+test "Deadline arithmetic: amended-pleading-period (7 days after)" cite "W.D. Mo. L.R. 15.1(b)"
+{
   given LeaveToAmendGranted() on 2027-01-11
   expect deadline(amended-pleading-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: proposed-scheduling-order-period (14 days after)" cite "W.D. Mo. L.R. 16.1(b)" {
+test "Deadline arithmetic: proposed-scheduling-order-period (14 days after)" cite "W.D. Mo. L.R. 16.1(b)"
+{
   given DiscoveryConferenceHeld() on 2027-01-11
   expect deadline(proposed-scheduling-order-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: recording-notice-period (3 days before)" cite "W.D. Mo. L.R. 30.1" {
+test "Deadline arithmetic: recording-notice-period (3 days before)" cite "W.D. Mo. L.R. 30.1"
+{
   given DepositionDate() on 2027-01-11
   expect deadline(recording-notice-period) == 2027-01-08
 }
 
-test "Deadline arithmetic: peremptory-challenge-motion-period (30 days before)" cite "W.D. Mo. L.R. 47.1(c)" {
+test "Deadline arithmetic: peremptory-challenge-motion-period (30 days before)" cite "W.D. Mo. L.R. 47.1(c)"
+{
   given TrialSetting() on 2027-01-11
   expect deadline(peremptory-challenge-motion-period) == 2026-12-11
 }
 
-test "Deadline arithmetic: bill-of-costs-period (21 days after)" cite "W.D. Mo. L.R. 54.1(a)" {
+test "Deadline arithmetic: bill-of-costs-period (21 days after)" cite "W.D. Mo. L.R. 54.1(a)"
+{
   given FinalJudgmentEntered() on 2027-01-11
   expect deadline(bill-of-costs-period) == 2027-02-01
 }
 
-test "Deadline arithmetic: cost-objection-period (14 days after)" cite "W.D. Mo. L.R. 54.1(a)" {
+test "Deadline arithmetic: cost-objection-period (14 days after)" cite "W.D. Mo. L.R. 54.1(a)"
+{
   given BillOfCostsFiled() on 2027-01-11
   expect deadline(cost-objection-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: cost-reply-period (14 days after)" cite "W.D. Mo. L.R. 54.1(a)" {
+test "Deadline arithmetic: cost-reply-period (14 days after)" cite "W.D. Mo. L.R. 54.1(a)"
+{
   given CostObjectionsFiled() on 2027-01-11
   expect deadline(cost-reply-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: appeal-costs-period (21 days after)" cite "W.D. Mo. L.R. 54.1(b)" {
+test "Deadline arithmetic: appeal-costs-period (21 days after)" cite "W.D. Mo. L.R. 54.1(b)"
+{
   given MandateIssued() on 2027-01-11
   expect deadline(appeal-costs-period) == 2027-02-01
 }
 
-test "Deadline arithmetic: default-notice-period (14 days before)" cite "W.D. Mo. L.R. 55.1(a)" {
+test "Deadline arithmetic: default-notice-period (14 days before)" cite "W.D. Mo. L.R. 55.1(a)"
+{
   given DefaultMotionFiled() on 2027-01-11
   expect deadline(default-notice-period) == 2026-12-28
 }
 
-test "Deadline arithmetic: draft-judgment-period (7 days after)" cite "W.D. Mo. L.R. 58.2" {
+test "Deadline arithmetic: draft-judgment-period (7 days after)" cite "W.D. Mo. L.R. 58.2"
+{
   given DecisionAnnounced() on 2027-01-11
   expect deadline(draft-judgment-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: draft-judgment-response-period (7 days after)" cite "W.D. Mo. L.R. 58.2" {
+test "Deadline arithmetic: draft-judgment-response-period (7 days after)" cite "W.D. Mo. L.R. 58.2"
+{
   given DraftJudgmentReceived() on 2027-01-11
   expect deadline(draft-judgment-response-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: receiver-inventory-period (30 days after)" cite "W.D. Mo. L.R. 66.1(b)" {
+test "Deadline arithmetic: receiver-inventory-period (30 days after)" cite "W.D. Mo. L.R. 66.1(b)"
+{
   given ReceiverPossession() on 2027-01-11
   expect deadline(receiver-inventory-period) == 2027-02-10
 }
 
-test "Deadline arithmetic: exhibit-withdrawal-period (14 days after)" cite "W.D. Mo. L.R. 79.2(a)" {
+test "Deadline arithmetic: exhibit-withdrawal-period (14 days after)" cite "W.D. Mo. L.R. 79.2(a)"
+{
   given VerdictOrJudgment() on 2027-01-11
   expect deadline(exhibit-withdrawal-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: redaction-notice-period (7 days after)" cite "W.D. Mo. L.R. 80.1(a)" {
+test "Deadline arithmetic: redaction-notice-period (7 days after)" cite "W.D. Mo. L.R. 80.1(a)"
+{
   given TranscriptFiled() on 2027-01-11
   expect deadline(redaction-notice-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: redaction-statement-period (21 days after)" cite "W.D. Mo. L.R. 80.1(a)" {
+test "Deadline arithmetic: redaction-statement-period (21 days after)" cite "W.D. Mo. L.R. 80.1(a)"
+{
   given TranscriptFiled() on 2027-01-11
   expect deadline(redaction-statement-period) == 2027-02-01
 }
 
-test "Deadline arithmetic: admission-compliance-period (14 days after)" cite "W.D. Mo. L.R. 83.5(f)" {
+test "Deadline arithmetic: admission-compliance-period (14 days after)" cite "W.D. Mo. L.R. 83.5(f)"
+{
   given LimitedAppearanceEntered() on 2027-01-11
   expect deadline(admission-compliance-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: ifp-fee-objection-period (21 days after)" cite "W.D. Mo. L.R. 83.7(e)" {
+test "Deadline arithmetic: ifp-fee-objection-period (21 days after)" cite "W.D. Mo. L.R. 83.7(e)"
+{
   given IfpFeeNotified() on 2027-01-11
   expect deadline(ifp-fee-objection-period) == 2027-02-01
 }

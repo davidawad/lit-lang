@@ -223,3 +223,141 @@ deadline agency-response-brief-period: 30.days after AgencyOpeningBriefServed() 
 /// U.S.D.C.L.R. 83.6(c): the plaintiff or petitioner may serve and file
 /// a reply brief within 14 days after service of the responsive brief.
 deadline agency-reply-brief-period: 14.days after AgencyResponseBriefServed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 83.6(c)"
+
+test "Deadline arithmetic: return-of-service-period (10 days after)" cite "U.S.D.C.L.R. 4.1(b)"
+{
+  given ServiceEffected() on 2027-02-02
+  expect deadline(return-of-service-period) == 2027-02-12
+}
+
+test "Deadline arithmetic: nondispositive-response-period (14 days after)" cite "U.S.D.C.L.R. 7.1(b)(1)(B)"
+{
+  given NondispositiveMotionFiled() on 2027-02-09
+  expect deadline(nondispositive-response-period) == 2027-02-23
+}
+
+test "Deadline arithmetic: nondispositive-reply-period (7 days after)" cite "U.S.D.C.L.R. 7.1(b)(1)(D)"
+{
+  given NondispositiveResponseFiled() on 2027-02-16
+  expect deadline(nondispositive-reply-period) == 2027-02-23
+}
+
+test "Deadline arithmetic: dispositive-response-period (14 days after)" cite "U.S.D.C.L.R. 7.1(b)(2)(A)"
+{
+  given DispositiveMotionFiled() on 2027-02-23
+  expect deadline(dispositive-response-period) == 2027-03-09
+}
+
+test "Deadline arithmetic: dispositive-reply-period (7 days after)" cite "U.S.D.C.L.R. 7.1(b)(2)(C)"
+{
+  given DispositiveResponseFiled() on 2027-03-02
+  expect deadline(dispositive-reply-period) == 2027-03-09
+}
+
+test "Deadline arithmetic: deposition-notice-period (14 days before)" cite "U.S.D.C.L.R. 30.1(a)"
+{
+  given DepositionScheduled() on 2027-03-09
+  expect deadline(deposition-notice-period) == 2027-02-23
+}
+
+test "Deadline arithmetic: deposition-protective-motion-period (5 days before)" cite "U.S.D.C.L.R. 37.1(d)"
+{
+  given DepositionScheduled() on 2027-03-16
+  expect deadline(deposition-protective-motion-period) == 2027-03-11
+}
+
+test "Deadline arithmetic: settlement-papers-period (30 days after)" cite "U.S.D.C.L.R. 41.1(a)"
+{
+  given SettlementNoticed() on 2027-03-23
+  expect deadline(settlement-papers-period) == 2027-04-22
+}
+
+test "Deadline arithmetic: prosecution-notice-period (30 days after)" cite "U.S.D.C.L.R. 41.1(b)"
+{
+  given ProsecutionNoticeGiven() on 2027-03-30
+  expect deadline(prosecution-notice-period) == 2027-04-29
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "U.S.D.C.L.R. 54.2(a)"
+{
+  given FinalJudgmentEntered() on 2027-04-06
+  expect deadline(bill-of-costs-period) == 2027-04-20
+}
+
+test "Deadline arithmetic: costs-objection-period (14 days after)" cite "U.S.D.C.L.R. 54.2(b)"
+{
+  given BillOfCostsServed() on 2027-04-13
+  expect deadline(costs-objection-period) == 2027-04-27
+}
+
+test "Deadline arithmetic: appeal-costs-period (14 days after)" cite "U.S.D.C.L.R. 54.2(i)"
+{
+  given MandateIssued() on 2027-04-20
+  expect deadline(appeal-costs-period) == 2027-05-04
+}
+
+test "Deadline arithmetic: fee-motion-period (14 days after)" cite "U.S.D.C.L.R. 54.3(c)"
+{
+  given FinalJudgmentEntered() on 2027-04-27
+  expect deadline(fee-motion-period) == 2027-05-11
+}
+
+test "Deadline arithmetic: fee-objection-period (14 days after)" cite "U.S.D.C.L.R. 54.3(d)"
+{
+  given FeeClaimFiled() on 2027-05-04
+  expect deadline(fee-objection-period) == 2027-05-18
+}
+
+test "Deadline arithmetic: magistrate-consent-period (14 days after)" cite "U.S.D.C.L.R. 73.1"
+{
+  given ResponsiveFilingInAssignedCase() on 2027-05-11
+  expect deadline(magistrate-consent-period) == 2027-05-25
+}
+
+test "Deadline arithmetic: reconsideration-response-period (14 days after)" cite "U.S.D.C.L.R. 74.1(a)"
+{
+  given ReconsiderationRequestServed() on 2027-05-18
+  expect deadline(reconsideration-response-period) == 2027-06-01
+}
+
+test "Deadline arithmetic: removal-record-period (14 days after)" cite "U.S.D.C.L.R. 81.1"
+{
+  given RemovalOrderEntered() on 2027-05-25
+  expect deadline(removal-record-period) == 2027-06-08
+}
+
+test "Deadline arithmetic: local-counsel-period (14 days after)" cite "U.S.D.C.L.R. 84.2(b)"
+{
+  given ComplaintFiledByNonadmittedAttorney() on 2027-06-01
+  expect deadline(local-counsel-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: agency-record-period (90 days after)" cite "U.S.D.C.L.R. 83.6(b)(2)"
+{
+  given AgencyPetitionServed() on 2027-06-08
+  expect deadline(agency-record-period) == 2027-09-07
+}
+
+test "Deadline arithmetic: agency-record-supplement-period (14 days after)" cite "U.S.D.C.L.R. 83.6(b)(3)"
+{
+  given AgencyRecordFiled() on 2027-06-15
+  expect deadline(agency-record-supplement-period) == 2027-06-29
+}
+
+test "Deadline arithmetic: agency-opening-brief-period (45 days after)" cite "U.S.D.C.L.R. 83.6(c)"
+{
+  given AgencyRecordFiled() on 2027-06-22
+  expect deadline(agency-opening-brief-period) == 2027-08-06
+}
+
+test "Deadline arithmetic: agency-response-brief-period (30 days after)" cite "U.S.D.C.L.R. 83.6(c)"
+{
+  given AgencyOpeningBriefServed() on 2027-06-29
+  expect deadline(agency-response-brief-period) == 2027-07-29
+}
+
+test "Deadline arithmetic: agency-reply-brief-period (14 days after)" cite "U.S.D.C.L.R. 83.6(c)"
+{
+  given AgencyResponseBriefServed() on 2027-07-06
+  expect deadline(agency-reply-brief-period) == 2027-07-20
+}

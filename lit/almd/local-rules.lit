@@ -101,3 +101,45 @@ deadline expense-claim-period: 21.days after FinalJudgmentEntered() counted_by f
 {
   forum frcp
 }
+
+test "Deadline arithmetic: proof-of-service-period (7 days after)" cite "M.D. Ala. LR 4.1(a)"
+{
+  given ServiceEffected() on 2027-01-04
+  expect deadline(proof-of-service-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: waiver-filing-period (7 days after)" cite "M.D. Ala. LR 4.1(b)"
+{
+  given WaiverReceived() on 2027-01-04
+  expect deadline(waiver-filing-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: disclosure-statement-period (7 days after)" cite "M.D. Ala. LR 7.1(a)"
+{
+  given InitialPaperFiled() on 2027-01-04
+  expect deadline(disclosure-statement-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: marshal-subpoena-period (14 days before)" cite "M.D. Ala. LR 45.1(a)(1)(A)"
+{
+  given TrialBegins() on 2027-06-15
+  expect deadline(marshal-subpoena-period) == 2027-06-01
+}
+
+test "Deadline arithmetic: indigent-witness-motion-period (21 days before)" cite "M.D. Ala. LR 45.1(b)(1)"
+{
+  given TrialBegins() on 2027-06-15
+  expect deadline(indigent-witness-motion-period) == 2027-05-25
+}
+
+test "Deadline arithmetic: costs-period (35 days after)" cite "M.D. Ala. LR 54.1(a)"
+{
+  given FinalJudgmentEntered() on 2027-01-04
+  expect deadline(costs-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: expense-claim-period (21 days after)" cite "M.D. Ala. LR 83.5(c)"
+{
+  given FinalJudgmentEntered() on 2027-01-04
+  expect deadline(expense-claim-period) == 2027-01-25
+}

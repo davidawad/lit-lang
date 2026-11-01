@@ -277,3 +277,154 @@ deadline exhibit-neglect-period: 30.days after ExhibitRemovalNoticeGiven() count
 {
   forum frcp
 }
+
+
+test "Deadline arithmetic: waiver-notice-proof-period (7 days after)" cite "C.D. Ill. Civ. L.R. 4.1"
+{
+  given WaiverRequestMailed() on 2027-01-04
+  expect deadline(waiver-notice-proof-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: contact-change-notice-period (14 days after)" cite "C.D. Ill. Civ. L.R. 5.2"
+{
+  given ContactInformationChanged() on 2027-01-04
+  expect deadline(contact-change-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: redaction-notice-period (7 days after)" cite "C.D. Ill. Civ. L.R. 5.11(C)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: redaction-motion-period (21 days after)" cite "C.D. Ill. Civ. L.R. 5.11(C)"
+{
+  given TranscriptFiled() on 2027-01-04
+  expect deadline(redaction-motion-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: response-period (14 days after)" cite "C.D. Ill. Civ. L.R. 7.1(B)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reply-leave-period (7 days after)" cite "C.D. Ill. Civ. L.R. 7.1(B)"
+{
+  given ResponseServed() on 2027-01-04
+  expect deadline(reply-leave-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: sj-response-period (21 days after)" cite "C.D. Ill. Civ. L.R. 7.1(D)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(sj-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: sj-reply-period (14 days after)" cite "C.D. Ill. Civ. L.R. 7.1(D)"
+{
+  given SummaryJudgmentResponseServed() on 2027-01-04
+  expect deadline(sj-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: habeas-documents-period (14 days after)" cite "C.D. Ill. Civ. L.R. 8.2"
+{
+  given HabeasPetitionFiled() on 2027-01-04
+  expect deadline(habeas-documents-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: authenticity-objection-period (14 days after)" cite "C.D. Ill. Civ. L.R. 11.4(C)"
+{
+  given FilingNoticeReceived() on 2027-01-04
+  expect deadline(authenticity-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: trial-brief-period (14 days before)" cite "C.D. Ill. Civ. L.R. 16.1(E)"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(trial-brief-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: pretrial-order-draft-period (7 days before)" cite "C.D. Ill. Civ. L.R. 16.1(F)"
+{
+  given FinalPretrialConferenceHeld() on 2027-01-04
+  expect deadline(pretrial-order-draft-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: state-defendant-answer-period (60 days after)" cite "C.D. Ill. Civ. L.R. 16.3(E)"
+{
+  given StateDefendantServed() on 2027-01-04
+  expect deadline(state-defendant-answer-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: prisoner-motion-response-period (14 days after)" cite "C.D. Ill. Civ. L.R. 16.3(H)"
+{
+  given PrisonerCaseMotionFiled() on 2027-01-04
+  expect deadline(prisoner-motion-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: prisoner-pretrial-exchange-period (30 days before)" cite "C.D. Ill. Civ. L.R. 16.3"
+{
+  given FinalPretrialConferenceHeld() on 2027-01-04
+  expect deadline(prisoner-pretrial-exchange-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: prisoner-pretrial-order-period (14 days before)" cite "C.D. Ill. Civ. L.R. 16.3"
+{
+  given FinalPretrialConferenceHeld() on 2027-01-04
+  expect deadline(prisoner-pretrial-order-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: private-mediation-notice-period (14 days after)" cite "C.D. Ill. Civ. L.R. 16.4"
+{
+  given PrivateMediationConcluded() on 2027-01-04
+  expect deadline(private-mediation-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediation-memorandum-period (7 days before)" cite "C.D. Ill. Civ. L.R. 16.4"
+{
+  given FirstMediationMeeting() on 2027-01-04
+  expect deadline(mediation-memorandum-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: assignment-objection-period (14 days after)" cite "C.D. Ill. Civ. L.R. 40.1(E)"
+{
+  given CaseAssigned() on 2027-01-04
+  expect deadline(assignment-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: fee-request-period (14 days after)" cite "C.D. Ill. Civ. L.R. 54.1(A)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(fee-request-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: bill-of-costs-period (30 days after)" cite "C.D. Ill. Civ. L.R. 54.1(A)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: magistrate-appeal-opposition-period (14 days after)" cite "C.D. Ill. Civ. L.R. 72.2(A)"
+{
+  given MagistrateAppealServed() on 2027-01-04
+  expect deadline(magistrate-appeal-opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: exhibit-removal-period (60 days after)" cite "C.D. Ill. Civ. L.R. 79.1(B)"
+{
+  given CaseDecidedUnappealed() on 2027-01-04
+  expect deadline(exhibit-removal-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: exhibit-removal-after-mandate-period (30 days after)" cite "C.D. Ill. Civ. L.R. 79.1(B)"
+{
+  given MandateFiled() on 2027-01-04
+  expect deadline(exhibit-removal-after-mandate-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: exhibit-neglect-period (30 days after)" cite "C.D. Ill. Civ. L.R. 79.1(C)"
+{
+  given ExhibitRemovalNoticeGiven() on 2027-01-04
+  expect deadline(exhibit-neglect-period) == 2027-02-03
+}

@@ -331,7 +331,7 @@ module.exports = {
     seq(field('key', 'note'), field('value', $.string)),
     seq(field('key', 'payoff_transform'), field('value', $.parenthesized_expression)),
     seq(field('key', 'remove_edges'), field('value', $.id_list)),
-    seq(field('key', 'probabilities'), field('value', $.instance_probability_map)),
+    seq(field('key', 'probabilities'), field('value', $.probability_map)),
     seq(field('key', 'roles'), field('value', $.role_map)),
     seq(field('key', 'stake'), field('value', choice($.signed_money, $.hole))),
     seq(field('key', 'patch'), field('edge', $.identifier), field('value', $.patch_fields)),
@@ -400,14 +400,6 @@ module.exports = {
   probability_map: $ => braced($.probability_entry),
 
   probability_entry: $ => seq(field('key', $.identifier), ':', field('value', $._prob_value)),
-
-  // The `.case` probability map is intentionally narrower (refs to numbers).
-  // Instances use the `.lit` value grammar, including fractions and holes.
-  instance_probability_map: $ => braced($.instance_probability_entry),
-
-  instance_probability_entry: $ => seq(
-    field('key', $.identifier), ':', field('value', $._prob_value),
-  ),
 
   role_map: $ => braced($.role_entry),
 

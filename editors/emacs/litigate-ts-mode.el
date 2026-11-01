@@ -175,8 +175,7 @@ is saved as it is, with the parse error in the echo area."
    '([(num_entry key: (identifier) @font-lock-property-name-face)
       (money_entry key: (identifier) @font-lock-property-name-face)
       (record_field key: (identifier) @font-lock-property-name-face)
-      (instance_probability_entry key: (identifier) @font-lock-property-name-face)
-      (probability_entry edge: (ref (identifier) @font-lock-property-name-face))
+      (probability_entry key: (identifier) @font-lock-property-name-face)
       (role_entry key: (identifier) @font-lock-property-name-face)
       (service_entry method: (identifier) @font-lock-constant-face)]
      (field_expression field: (identifier) @font-lock-property-use-face))

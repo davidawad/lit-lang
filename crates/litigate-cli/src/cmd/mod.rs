@@ -39,6 +39,7 @@ use litigate_sema::pkg::source::Source;
 #[allow(clippy::too_many_lines)]
 pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
     match command {
+        Command::Doctor => Ok(crate::out::Report::of(crate::doctor::doctor())),
         Command::Describe => Ok(crate::out::Report::of(crate::describe::describe())),
         Command::Lock { dir, locked, root } => lock::lock(dir.as_deref(), locked, root),
         Command::Vendor { dir } => vendor::vendor(dir.as_deref()),

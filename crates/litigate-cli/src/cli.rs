@@ -234,6 +234,8 @@ pub struct PaperFlags {
 /// The subcommands that print one envelope.
 #[derive(Debug, Subcommand)]
 pub enum Command {
+    /// Diagnose this installation and the current workspace.
+    Doctor,
     /// The whole language and CLI contract as JSON.
     Describe,
     /// Write (or with `--locked`, verify) a package's `Lit.lock`, or the one
@@ -676,6 +678,7 @@ impl Command {
     #[must_use]
     pub fn name(&self) -> &'static str {
         match self {
+            Self::Doctor => "doctor",
             Self::Describe => "describe",
             Self::Lock { .. } => "lock",
             Self::Vendor { .. } => "vendor",

@@ -248,3 +248,99 @@ deadline magistrate-recommendation-objection: 14.days after MagistrateRecommenda
 {
   forum frcp
 }
+
+test "Deadline arithmetic: address-change-notice (14 days after)" cite "D.D.C. LCvR 5.1(c)"
+{
+  given AddressChanged() on 2027-02-01
+  expect deadline(address-change-notice) == 2027-02-16
+}
+
+test "Deadline arithmetic: class-certification-motion (90 days after)" cite "D.D.C. LCvR 23.1(b)"
+{
+  given ComplaintFiled() on 2027-02-01
+  expect deadline(class-certification-motion) == 2027-05-03
+}
+
+test "Deadline arithmetic: opposition-period (14 days after)" cite "D.D.C. LCvR 7(b)"
+{
+  given MotionServed() on 2027-02-01
+  expect deadline(opposition-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "D.D.C. LCvR 7(d)"
+{
+  given OppositionServed() on 2027-02-01
+  expect deadline(reply-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: vacated-default-response (14 days after)" cite "D.D.C. LCvR 7(g)"
+{
+  given DefaultVacated() on 2027-02-01
+  expect deadline(vacated-default-response) == 2027-02-16
+}
+
+test "Deadline arithmetic: administrative-record-list (30 days after)" cite "D.D.C. LCvR 7(n)"
+{
+  given AgencyReviewAnswerServed() on 2027-02-01
+  expect deadline(administrative-record-list) == 2027-03-03
+}
+
+test "Deadline arithmetic: administrative-record-appendix (14 days after)" cite "D.D.C. LCvR 7(n)"
+{
+  given FinalDispositiveMemorandumFiled() on 2027-02-01
+  expect deadline(administrative-record-appendix) == 2027-02-16
+}
+
+test "Deadline arithmetic: amicus-motion-opposition (14 days after)" cite "D.D.C. LCvR 7(o)"
+{
+  given AmicusMotionServed() on 2027-02-01
+  expect deadline(amicus-motion-opposition) == 2027-02-16
+}
+
+test "Deadline arithmetic: pretrial-statement (14 days before)" cite "D.D.C. LCvR 16.5(a)"
+{
+  given FinalPretrialConference() on 2027-08-02
+  expect deadline(pretrial-statement) == 2027-07-19
+}
+
+test "Deadline arithmetic: deposition-notice (7 days before)" cite "D.D.C. LCvR 30.1"
+{
+  given Deposition() on 2027-08-02
+  expect deadline(deposition-notice) == 2027-07-26
+}
+
+test "Deadline arithmetic: distant-deposition-notice (14 days before)" cite "D.D.C. LCvR 30.1"
+{
+  given DistantDeposition() on 2027-08-02
+  expect deadline(distant-deposition-notice) == 2027-07-19
+}
+
+test "Deadline arithmetic: preliminary-injunction-opposition (7 days after)" cite "D.D.C. LCvR 65.1(c)"
+{
+  given PreliminaryInjunctionApplicationServed() on 2027-02-01
+  expect deadline(preliminary-injunction-opposition) == 2027-02-08
+}
+
+test "Deadline arithmetic: bill-of-costs (21 days after)" cite "D.D.C. LCvR 54.1(a)"
+{
+  given JudgmentEntered() on 2027-02-01
+  expect deadline(bill-of-costs) == 2027-02-22
+}
+
+test "Deadline arithmetic: bill-of-costs-opposition (14 days after)" cite "D.D.C. LCvR 54.1(b)"
+{
+  given BillOfCostsServed() on 2027-02-01
+  expect deadline(bill-of-costs-opposition) == 2027-02-16
+}
+
+test "Deadline arithmetic: magistrate-ruling-objection (14 days after)" cite "D.D.C. LCvR 72.2(b)"
+{
+  given MagistrateRulingServed() on 2027-02-01
+  expect deadline(magistrate-ruling-objection) == 2027-02-16
+}
+
+test "Deadline arithmetic: magistrate-recommendation-objection (14 days after)" cite "D.D.C. LCvR 72.3(b)"
+{
+  given MagistrateRecommendationServed() on 2027-02-01
+  expect deadline(magistrate-recommendation-objection) == 2027-02-16
+}

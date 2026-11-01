@@ -298,3 +298,75 @@ deadline exhibit-removal: 30.days after FinalDisposition() counted_by frcp6-texa
 {
   forum frcp
 }
+
+test "Deadline arithmetic: stay-of-execution-motion (7 days before)" cite "E.D. Tex. Local Rule CV-3(c)"
+{
+  given ExecutionScheduled() on 2026-10-29
+  expect deadline(stay-of-execution-motion) == 2026-10-22
+}
+
+test "Deadline arithmetic: redacted-public-version (7 days after)" cite "E.D. Tex. Local Rule CV-5(a)"
+{
+  given SealedDocumentFiled() on 2026-10-29
+  expect deadline(redacted-public-version) == 2026-11-05
+}
+
+test "Deadline arithmetic: redaction-notice (7 days after)" cite "E.D. Tex. Local Rule CV-5.2(b)"
+{
+  given TranscriptFiled() on 2026-10-29
+  expect deadline(redaction-notice) == 2026-11-05
+}
+
+test "Deadline arithmetic: redaction-statement (21 days after)" cite "E.D. Tex. Local Rule CV-5.2(b)"
+{
+  given TranscriptDelivered() on 2026-10-29
+  expect deadline(redaction-statement) == 2026-11-19
+}
+
+test "Deadline arithmetic: redacted-transcript (31 days after)" cite "E.D. Tex. Local Rule CV-5.2(b)"
+{
+  given TranscriptFiled() on 2026-10-29
+  expect deadline(redacted-transcript) == 2026-11-30
+}
+
+test "Deadline arithmetic: response-period (14 days after)" cite "E.D. Tex. Local Rule CV-7(e)"
+{
+  given MotionServed() on 2026-10-29
+  expect deadline(response-period) == 2026-11-12
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (21 days after)" cite "E.D. Tex. Local Rule CV-7(e)"
+{
+  given SummaryJudgmentMotionServed() on 2026-10-29
+  expect deadline(summary-judgment-response-period) == 2026-11-19
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "E.D. Tex. Local Rule CV-7(f)"
+{
+  given ResponseServed() on 2026-10-29
+  expect deadline(reply-period) == 2026-11-05
+}
+
+test "Deadline arithmetic: sur-reply-period (7 days after)" cite "E.D. Tex. Local Rule CV-7(f)"
+{
+  given ReplyServed() on 2026-10-29
+  expect deadline(sur-reply-period) == 2026-11-05
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "E.D. Tex. Local Rule CV-54(a)"
+{
+  given CostsJudgmentDocketed() on 2026-10-29
+  expect deadline(bill-of-costs-period) == 2026-11-12
+}
+
+test "Deadline arithmetic: magistrate-objection-response (14 days after)" cite "E.D. Tex. Local Rule CV-72(b)"
+{
+  given MagistrateObjectionServed() on 2026-10-29
+  expect deadline(magistrate-objection-response) == 2026-11-12
+}
+
+test "Deadline arithmetic: exhibit-removal (30 days after)" cite "E.D. Tex. Local Rule CV-79(a)"
+{
+  given FinalDisposition() on 2026-10-29
+  expect deadline(exhibit-removal) == 2026-11-30
+}

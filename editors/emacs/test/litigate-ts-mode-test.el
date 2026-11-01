@@ -131,6 +131,27 @@ Only patterns written as a bracketed list followed by @CAPTURE count."
     (should (equal (buffer-substring-no-properties (point-min) (point-max))
                    "module m\n\nstate answered: \"Answer filed\" {\n  group pleadings\n  _ \"Go\" -> done {\n    effort 1.hours\n  }\n}\n"))))
 
+(ert-deftest litigate-format-buffer-replaces-output-and-preserves-markers ()
+  (with-temp-buffer
+    (insert "source text")
+    (goto-char 8)
+    (let ((marker (copy-marker 5))
+          (output (generate-new-buffer " *litigate-test-output*"))
+          (litigate-format-command '("formatter")))
+      (unwind-protect
+          (progn
+            (cl-letf (((symbol-function 'call-process-region)
+                       (lambda (_start _end _program _delete destination _display &rest _args)
+                         (with-current-buffer (car destination)
+                           (insert "formatted text"))
+                         0)))
+              (let ((litigate-format-command '("formatter")))
+                (litigate-format-buffer)))
+            (should (equal (buffer-string) "formatted text"))
+            (should (= (point) 8)))
+        (kill-buffer output)
+        (set-marker marker nil)))))
+
 (ert-deftest litigate-ts-mode-faces ()
   (litigate-test--with-file (expand-file-name "lit/examples/rule12.lit" litigate-test--repo)
     (let ((treesit-font-lock-level 4))

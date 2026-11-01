@@ -120,3 +120,99 @@ deadline findings-objection-period: 14.days after FindingsAndRecommendationsServ
 /// E.D. Cal. L.R. 304(d): responses to objections are filed and served
 /// within fourteen (14) days after service of the objections.
 deadline objection-response-period: 14.days after ObjectionsServed() counted_by frcp6 cite "E.D. Cal. L.R. 304(d)"
+
+test "Deadline arithmetic: opposition-period (14 days after)" cite "E.D. Cal. L.R. 230(c)"
+{
+  given MotionFiled() on 2027-04-05
+  expect deadline(opposition-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: reply-period (10 days after)" cite "E.D. Cal. L.R. 230(d)"
+{
+  given OppositionFiled() on 2027-04-05
+  expect deadline(reply-period) == 2027-04-15
+}
+
+test "Deadline arithmetic: continuance-request-period (7 days before)" cite "E.D. Cal. L.R. 230(f)"
+{
+  given HearingDate() on 2027-04-05
+  expect deadline(continuance-request-period) == 2027-03-29
+}
+
+test "Deadline arithmetic: prisoner-action-opposition-period (21 days after)" cite "E.D. Cal. L.R. 230(l)"
+{
+  given PrisonerActionMotionServed() on 2027-04-05
+  expect deadline(prisoner-action-opposition-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: prisoner-action-reply-period (14 days after)" cite "E.D. Cal. L.R. 230(l)"
+{
+  given PrisonerActionOppositionFiled() on 2027-04-05
+  expect deadline(prisoner-action-reply-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: reply-evidence-objection-period (7 days after)" cite "E.D. Cal. L.R. 230(m)"
+{
+  given ReplyFiled() on 2027-04-05
+  expect deadline(reply-evidence-objection-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: plaintiff-pretrial-statement-period (14 days before)" cite "E.D. Cal. L.R. 281(a)"
+{
+  given FinalPretrialConference() on 2027-04-05
+  expect deadline(plaintiff-pretrial-statement-period) == 2027-03-22
+}
+
+test "Deadline arithmetic: pretrial-statement-period (7 days before)" cite "E.D. Cal. L.R. 281(a)"
+{
+  given FinalPretrialConference() on 2027-04-05
+  expect deadline(pretrial-statement-period) == 2027-03-29
+}
+
+test "Deadline arithmetic: cost-bill-period (14 days after)" cite "E.D. Cal. L.R. 292(b)"
+{
+  given JudgmentEntered() on 2027-04-05
+  expect deadline(cost-bill-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: cost-objection-period (7 days after)" cite "E.D. Cal. L.R. 292(c)"
+{
+  given CostBillServed() on 2027-04-05
+  expect deadline(cost-objection-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: cost-review-period (7 days after)" cite "E.D. Cal. L.R. 292(e)"
+{
+  given CostsTaxedNoticeServed() on 2027-04-05
+  expect deadline(cost-review-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: fee-motion-period (28 days after)" cite "E.D. Cal. L.R. 293(a)"
+{
+  given FinalJudgmentEntered() on 2027-04-05
+  expect deadline(fee-motion-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: magistrate-reconsideration-period (14 days after)" cite "E.D. Cal. L.R. 303(b)"
+{
+  given MagistrateRulingServed() on 2027-04-05
+  expect deadline(magistrate-reconsideration-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: reconsideration-opposition-period (7 days after)" cite "E.D. Cal. L.R. 303(d)"
+{
+  given ReconsiderationRequestServed() on 2027-04-05
+  expect deadline(reconsideration-opposition-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: findings-objection-period (14 days after)" cite "E.D. Cal. L.R. 304(b)"
+{
+  given FindingsAndRecommendationsServed() on 2027-04-05
+  expect deadline(findings-objection-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: objection-response-period (14 days after)" cite "E.D. Cal. L.R. 304(d)"
+{
+  given ObjectionsServed() on 2027-04-05
+  expect deadline(objection-response-period) == 2027-04-19
+}

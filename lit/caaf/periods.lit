@@ -218,3 +218,201 @@ deadline reconsideration-reply-period: 3.days after PaperFiled(ReconsiderationAn
 /// denying it, unless the Court orders otherwise.
 deadline mandate-period: 7.days after ReconsiderationPeriodExpired() counted_by caaf26 cite "CAAF R. 43A(a)"
 deadline mandate-after-denial-period: 7.days after ReconsiderationDenied() counted_by caaf26 cite "CAAF R. 43A(a)"
+
+test "Deadline arithmetic: petition-period (60 days after)" cite "CAAF R. 19(a)(1)"
+{
+  given CcaDecisionNoticed() on 2027-01-04
+  expect deadline(petition-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: supplement-period (21 days after)" cite "CAAF R. 19(a)(5)(B)"
+{
+  given PetitionDocketed() on 2027-01-04
+  expect deadline(supplement-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: supplement-leave-period (21 days after)" cite "CAAF R. 19(a)(5)(A)"
+{
+  given SupplementLeaveGranted() on 2027-01-04
+  expect deadline(supplement-leave-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: grostefon-period (28 days after)" cite "CAAF R. 19(a)(5)(C)"
+{
+  given SupplementFiled() on 2027-01-04
+  expect deadline(grostefon-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: art62-supplement-answer-period (14 days after)" cite "CAAF R. 21(c)(1)"
+{
+  given PaperFiled(Art62Supplement, Personal) on 2027-01-04
+  expect deadline(art62-supplement-answer-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: supplement-answer-period (21 days after)" cite "CAAF R. 21(c)(2)"
+{
+  given PaperFiled(Supplement, Personal) on 2027-01-04
+  expect deadline(supplement-answer-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: answer-letter-period (14 days after)" cite "CAAF R. 21(c)(2)"
+{
+  given PaperFiled(Supplement, Personal) on 2027-01-04
+  expect deadline(answer-letter-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: supplement-reply-period (7 days after)" cite "CAAF R. 21(c)"
+{
+  given PaperFiled(SupplementAnswer, Personal) on 2027-01-04
+  expect deadline(supplement-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: certificate-period (60 days after)" cite "CAAF R. 19(b)"
+{
+  given CcaDecisionIssued() on 2027-01-04
+  expect deadline(certificate-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: art62-answer-period (14 days after)" cite "CAAF R. 19(b)(1)"
+{
+  given PaperFiled(Art62Certificate, Personal) on 2027-01-04
+  expect deadline(art62-answer-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: art62-reply-period (7 days after)" cite "CAAF R. 19(b)(1)"
+{
+  given PaperFiled(Art62Answer, Personal) on 2027-01-04
+  expect deadline(art62-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: certified-brief-period (28 days after)" cite "CAAF R. 19(b)(3)"
+{
+  given CertificateDocketed() on 2027-01-04
+  expect deadline(certified-brief-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: certified-answer-period (28 days after)" cite "CAAF R. 19(b)(3)"
+{
+  given PaperFiled(CertifiedIssuesBrief, Personal) on 2027-01-04
+  expect deadline(certified-answer-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: certified-reply-period (14 days after)" cite "CAAF R. 19(b)(3)"
+{
+  given PaperFiled(CertifiedIssuesAnswer, Personal) on 2027-01-04
+  expect deadline(certified-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mandatory-record-period (35 days after)" cite "CAAF R. 19(c)"
+{
+  given CcaReconsiderationClosed() on 2027-01-04
+  expect deadline(mandatory-record-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: mandatory-brief-period (60 days after)" cite "CAAF R. 19(c)"
+{
+  given MandatoryCaseDocketed() on 2027-01-04
+  expect deadline(mandatory-brief-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: mandatory-answer-period (60 days after)" cite "CAAF R. 19(c)"
+{
+  given PaperFiled(MandatoryBrief, Personal) on 2027-01-04
+  expect deadline(mandatory-answer-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: mandatory-reply-period (21 days after)" cite "CAAF R. 19(c)"
+{
+  given PaperFiled(MandatoryAnswer, Personal) on 2027-01-04
+  expect deadline(mandatory-reply-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: writ-petition-period (21 days after)" cite "CAAF R. 19(d)"
+{
+  given WritActionLearned() on 2027-01-04
+  expect deadline(writ-petition-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: writ-appeal-period (21 days after)" cite "CAAF R. 19(e)"
+{
+  given CcaWritDecisionServed() on 2027-01-04
+  expect deadline(writ-appeal-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: writ-appeal-answer-period (14 days after)" cite "CAAF R. 19(e)"
+{
+  given PaperFiled(WritAppealPetition, Personal) on 2027-01-04
+  expect deadline(writ-appeal-answer-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: writ-appeal-reply-period (7 days after)" cite "CAAF R. 19(e)"
+{
+  given PaperFiled(WritAppealAnswer, Personal) on 2027-01-04
+  expect deadline(writ-appeal-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: new-trial-brief-period (28 days after)" cite "CAAF R. 19(f)"
+{
+  given NewTrialPetitionNoticed() on 2027-01-04
+  expect deadline(new-trial-brief-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: new-trial-answer-period (28 days after)" cite "CAAF R. 19(f)"
+{
+  given PaperFiled(NewTrialBrief, Personal) on 2027-01-04
+  expect deadline(new-trial-answer-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: new-trial-reply-period (14 days after)" cite "CAAF R. 19(f)"
+{
+  given PaperFiled(NewTrialAnswer, Personal) on 2027-01-04
+  expect deadline(new-trial-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: motion-answer-period (7 days after)" cite "CAAF R. 30(b)"
+{
+  given PaperFiled(Motion, Personal) on 2027-01-04
+  expect deadline(motion-answer-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: motion-reply-period (3 days after)" cite "CAAF R. 30(c)"
+{
+  given PaperFiled(MotionAnswer, Personal) on 2027-01-04
+  expect deadline(motion-reply-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: oral-motion-period (3 days after)" cite "CAAF R. 30(f)"
+{
+  given OralMotionPresented() on 2027-01-04
+  expect deadline(oral-motion-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: reconsideration-period (14 days after)" cite "CAAF R. 31(a)"
+{
+  given CourtActionIssued() on 2027-01-04
+  expect deadline(reconsideration-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reconsideration-answer-period (7 days after)" cite "CAAF R. 31(b)"
+{
+  given PaperFiled(ReconsiderationPetition, Personal) on 2027-01-04
+  expect deadline(reconsideration-answer-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: reconsideration-reply-period (3 days after)" cite "CAAF R. 31(c)"
+{
+  given PaperFiled(ReconsiderationAnswer, Personal) on 2027-01-04
+  expect deadline(reconsideration-reply-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: mandate-period (7 days after)" cite "CAAF R. 43A(a)"
+{
+  given ReconsiderationPeriodExpired() on 2027-01-04
+  expect deadline(mandate-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: mandate-after-denial-period (7 days after)" cite "CAAF R. 43A(a)"
+{
+  given ReconsiderationDenied() on 2027-01-04
+  expect deadline(mandate-after-denial-period) == 2027-01-11
+}

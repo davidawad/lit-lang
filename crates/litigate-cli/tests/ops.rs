@@ -40,6 +40,23 @@ fn an_op_runs_on_a_matter_with_set_params_composed_onto_it() {
 }
 
 #[test]
+fn an_unknown_set_param_returns_an_error_envelope_with_nearest_valid_param() {
+    let run = litigate(&["solve", "cases/frcp-civil-case.case", "--set", "raet=900"]);
+    assert_eq!(run.code, 2, "{}{}", run.stdout, run.stderr);
+    assert_eq!(run.json["ok"], true);
+    assert_eq!(run.json["result"]["ok"], false);
+    assert_eq!(run.json["result"]["error"]["code"], "unknown_param");
+    assert!(run.json["result"]["error"]["message"]
+        .as_str()
+        .unwrap()
+        .contains("raet"));
+    assert!(run.json["result"]["error"]["hint"]
+        .as_str()
+        .unwrap()
+        .contains("rate"));
+}
+
+#[test]
 fn an_op_runs_on_a_package_directory_or_one_of_its_files() {
     let dir = response(&litigate(&["chain", "lit/examples"]), "chain");
     let file = response(&litigate(&["chain", "lit/examples/rule12.lit"]), "chain");

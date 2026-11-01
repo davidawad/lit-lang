@@ -80,6 +80,31 @@ pub fn params(set: &[String]) -> Result<Map<String, Value>, Failure> {
         .collect()
 }
 
+/// Edit distance used to offer the closest authored parameter names.
+fn edit_distance(left: &str, right: &str) -> usize {
+    let mut row: Vec<usize> = (0..=right.chars().count()).collect();
+    for (i, a) in left.chars().enumerate() {
+        let mut diagonal = row[0];
+        row[0] = i + 1;
+        for (j, b) in right.chars().enumerate() {
+            let above = row[j + 1];
+            row[j + 1] = (row[j + 1] + 1)
+                .min(row[j] + 1)
+                .min(diagonal + usize::from(a != b));
+            diagonal = above;
+        }
+    }
+    *row.last().unwrap_or(&0)
+}
+
+/// Find the nearest authored scenario parameter names for an unknown key.
+fn nearest_params(key: &str, valid: impl Iterator<Item = String>) -> Vec<String> {
+    let mut valid: Vec<_> = valid.collect();
+    valid.sort_by_key(|candidate| (edit_distance(key, candidate), candidate.clone()));
+    valid.truncate(3);
+    valid
+}
+
 /// The embedded clock library with `fragment`'s rules and calendars replacing same-id entries.
 fn merged(mut lib: ClockLibrary, fragment: &ClockLibrary) -> ClockLibrary {
     lib.calendars
@@ -307,6 +332,49 @@ pub fn run(src: &dyn Source, target: &str, op: &str, flags: &OpFlags) -> Outcome
             }
         }
         return Ok(report);
+    }
+    if let Some(id) = scenarios.first() {
+        let valid = catalog
+            .scenarios()
+            .find(|scenario| scenario.id == *id)
+            .map(|scenario| {
+                scenario
+                    .scenario
+                    .params
+                    .keys()
+                    .cloned()
+                    .collect::<BTreeSet<_>>()
+            })
+            .unwrap_or_default();
+        if let Some(key) = params.keys().find(|key| !valid.contains(*key)) {
+            let suggestions = nearest_params(key, valid.into_iter());
+            let hint = if suggestions.is_empty() {
+                "The scenario declares no valid params.".to_owned()
+            } else {
+                format!("Valid scenario params: {}.", suggestions.join(", "))
+            };
+            let response = Response {
+                ok: false,
+                api_version: API_VERSION,
+                op: op
+                    .get("op")
+                    .and_then(Value::as_str)
+                    .unwrap_or("unknown")
+                    .to_owned(),
+                result: None,
+                warnings: Vec::new(),
+                provenance: None,
+                error: Some(ApiError {
+                    code: "unknown_param".into(),
+                    message: format!("unknown --set key `{key}`"),
+                    hint,
+                }),
+                elapsed_ms: 0.0,
+            };
+            report.failed = true;
+            report.result = serde_json::to_value(response).unwrap_or(Value::Null);
+            return Ok(report);
+        }
     }
     // A matter's scenario names its own packs.
     let (packs, scenario) = match (scenarios.first(), params.is_empty()) {

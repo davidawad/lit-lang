@@ -1,46 +1,29 @@
 # Beta CLI error UX matrix
 
-DECIDED: use the shared `litigate run TARGET --op ...` boundary for this matrix -- every named operation is dispatched through the same strict request parser and response envelope.
+DECIDED: keep probes at the public CLI boundary and record the actual exit code and output classification -- this reproduces the errors a user sees without bypassing CLI handling.
 
-This matrix records the CLI contract and the targeted validation performed in this run. Exit 1 means usage or I/O failed before an engine request; exit 2 means the request ran and failed. Errors before engine dispatch are CLI diagnostics, not engine `{ok:false, api_version, op, error:{code,message,hint}, elapsed_ms}` envelopes.
+## Probe contract
 
-## Operations
+`scripts/beta/error-probes.sh` enumerates the 22 engine operations and every `cases/**/*.case`, then probes missing targets, malformed matter syntax, an unknown `--set` key and an unknown node. A response envelope is classified as `ENVELOPE` only when stdout parses as JSON with `ok:false` and string `error.code`, `error.message` and `error.hint`. Panics and backtraces are `PANIC`; other output is recorded separately. `run` does not accept `--as-of`, so the harness exercises out-of-interval date selection through `litigate check --as-of 0001-01-01`.
 
-`describe` returns the embedded op catalog. The remaining operation names are the serialized `Op` variants in `crates/litigate-engine/src/api/op.rs`.
+## Measured rows
 
-| op | dispatch | missing target | malformed target | unknown `--set` | unknown node | out-of-interval date |
-|---|---|---|---|---|---|---|
-| describe | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | op-specific resolution | deadline validation |
-| packs | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | n/a | n/a |
-| lint | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | n/a | n/a |
-| validate | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | n/a | n/a |
-| graph | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | engine error envelope | n/a |
-| metric | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | n/a | n/a |
-| explain | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | engine error envelope | n/a |
-| solve | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | n/a | n/a |
-| chain | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | n/a | n/a |
-| simulate | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | n/a | n/a |
-| path | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | engine error envelope | n/a |
-| pareto | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | engine error envelope | n/a |
-| sweep | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | engine error envelope | n/a |
-| tornado | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | n/a | n/a |
-| calibration | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | n/a | n/a |
-| posterior | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | n/a | n/a |
-| voi | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | n/a | n/a |
-| structure | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | engine error envelope | n/a |
-| deadlines | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | engine error envelope | date validation |
-| settle | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | n/a | n/a |
-| compare | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | inner op dependent | n/a |
-| batch | shared `run` | CLI I/O diagnostic | compile diagnostic | scenario/engine validation | inner op dependent | n/a |
+Built with `cargo build -p litigate-cli` (exit 0). Ran `PROBE_SKIP_CASES=1 scripts/beta/error-probes.sh`, then interrupted it after the seven rows below; the full matrix did not finish. The script's normal mode remains the full probe requested by this bead. `OK` means the command returned success, not that the invalid input was correctly rejected.
 
-## Input probes
+| op | input | exit | observed result |
+|---|---|---:|---|
+| describe | missing file | 1 | CLI_DIAGNOSTIC |
+| describe | malformed `.case` | 2 | BARE_ERROR |
+| describe | unknown `--set definitely_unknown_beta_key=1` | 0 | OK (gap: key was accepted) |
+| describe | unknown node | 0 | OK (not applicable to `describe`; harness currently sends an unused node field) |
+| packs | missing file | 1 | CLI_DIAGNOSTIC |
+| packs | malformed `.case` | 2 | BARE_ERROR |
+| packs | unknown `--set definitely_unknown_beta_key=1` | 0 | OK (gap: key was accepted) |
 
-| probe | expected boundary/result | status |
-|---|---|---|
-| nonexistent target | exit 1; plain CLI I/O diagnostic | not run in this pass |
-| malformed `.case` syntax | exit 2; compiler diagnostic with source location | not run in this pass |
-| unknown `--set` key | strict scenario/engine validation error | not run in this pass |
-| unknown node id | operation error envelope with code, message, hint | not run in this pass |
-| date outside all effective intervals | date/effective interval validation error | not run in this pass |
+No `PANIC` or Rust backtrace appeared in the rows that ran. No result is recorded for other op/input combinations; they remain unprobed. The malformed matter rows did not satisfy the requested JSON error-envelope check.
 
-No panic rows were observed in the probe executed: `litigate run cases/cofc-1498-patent-case.case --op describe` returned a JSON response. The full cross-product and malformed-input probes remain TODO; this document is not evidence that those rows have passed.
+## Pre-existing failures
+
+The previous attempt reported a failing timeline test in the full `litigate-cli` suite. This run did not run that suite or a targeted test: no implementation fix was completed, and the probe run stopped before the failure could be rechecked.
+
+PARTIAL: complete and record all op/input rows, fix the envelope and unknown-key failures, and add/run one targeted regression test for each fix.

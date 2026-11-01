@@ -205,3 +205,141 @@ deadline trial-de-novo-demand-period: 30.days after ArbitrationAwardServed() cou
 /// its employees or agencies is a party, the demand for trial de novo is
 /// filed and served within 60 days.
 deadline united-states-trial-de-novo-demand-period: 60.days after ArbitrationAwardServed() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 201.1(h)"
+
+test "Deadline arithmetic: motion-papers-period (24 days before)" cite "D.N.J. L. Civ. R. 7.1(d)"
+{
+  given MotionDay() on 2027-06-01
+  expect deadline(motion-papers-period) == 2027-05-07
+}
+
+test "Deadline arithmetic: opposition-period (14 days before)" cite "D.N.J. L. Civ. R. 7.1(d)"
+{
+  given MotionDay() on 2027-06-01
+  expect deadline(opposition-period) == 2027-05-18
+}
+
+test "Deadline arithmetic: reply-period (7 days before)" cite "D.N.J. L. Civ. R. 7.1(d)"
+{
+  given MotionDay() on 2027-06-01
+  expect deadline(reply-period) == 2027-05-25
+}
+
+test "Deadline arithmetic: proposed-order-period (7 days after)" cite "D.N.J. L. Civ. R. 7.1(e)"
+{
+  given MotionRuled() on 2027-06-01
+  expect deadline(proposed-order-period) == 2027-06-08
+}
+
+test "Deadline arithmetic: reconsideration-period (14 days after)" cite "D.N.J. L. Civ. R. 7.1(i)"
+{
+  given OrderEntered() on 2027-06-01
+  expect deadline(reconsideration-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: litigation-funding-disclosure-period (30 days after)" cite "D.N.J. L. Civ. R. 7.1.1(a)"
+{
+  given InitialPleadingFiled() on 2027-06-01
+  expect deadline(litigation-funding-disclosure-period) == 2027-07-01
+}
+
+test "Deadline arithmetic: damages-statement-period (14 days after)" cite "D.N.J. L. Civ. R. 8.1"
+{
+  given DamagesRequestServed() on 2027-06-01
+  expect deadline(damages-statement-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: address-change-period (7 days after)" cite "D.N.J. L. Civ. R. 10.1(a)"
+{
+  given AddressChangeLearned() on 2027-06-01
+  expect deadline(address-change-period) == 2027-06-08
+}
+
+test "Deadline arithmetic: remaining-claims-response-period (14 days after)" cite "D.N.J. L. Civ. R. 12.2"
+{
+  given PartialDismissalOrderEntered() on 2027-06-01
+  expect deadline(remaining-claims-response-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: parties-meeting-period (21 days before)" cite "D.N.J. L. Civ. R. 26.1(b)"
+{
+  given InitialSchedulingConference() on 2027-06-01
+  expect deadline(parties-meeting-period) == 2027-05-11
+}
+
+test "Deadline arithmetic: discovery-plan-period (14 days after)" cite "D.N.J. L. Civ. R. 26.1(b)"
+{
+  given PartiesMeeting() on 2027-06-01
+  expect deadline(discovery-plan-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: initial-disclosures-period (14 days after)" cite "D.N.J. L. Civ. R. 26.1(b)"
+{
+  given PartiesMeeting() on 2027-06-01
+  expect deadline(initial-disclosures-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: settlement-dismissal-period (60 days after)" cite "D.N.J. L. Civ. R. 41.1(b)"
+{
+  given AdministrativeTerminationEntered() on 2027-06-01
+  expect deadline(settlement-dismissal-period) == 2027-08-02
+}
+
+test "Deadline arithmetic: bill-of-costs-period (30 days after)" cite "D.N.J. L. Civ. R. 54.1(a)"
+{
+  given CostsJudgmentEntered() on 2027-06-01
+  expect deadline(bill-of-costs-period) == 2027-07-01
+}
+
+test "Deadline arithmetic: costs-review-period (7 days after)" cite "D.N.J. L. Civ. R. 54.1(h)"
+{
+  given CostsTaxed() on 2027-06-01
+  expect deadline(costs-review-period) == 2027-06-08
+}
+
+test "Deadline arithmetic: fee-motion-period (30 days after)" cite "D.N.J. L. Civ. R. 54.2(a)"
+{
+  given FeeJudgmentEntered() on 2027-06-01
+  expect deadline(fee-motion-period) == 2027-07-01
+}
+
+test "Deadline arithmetic: proposed-judgment-period (7 days after)" cite "D.N.J. L. Civ. R. 58.1(b)"
+{
+  given JudgmentDetermined() on 2027-06-01
+  expect deadline(proposed-judgment-period) == 2027-06-08
+}
+
+test "Deadline arithmetic: proposed-judgment-objection-period (7 days after)" cite "D.N.J. L. Civ. R. 58.1(b)"
+{
+  given ProposedJudgmentReceived() on 2027-06-01
+  expect deadline(proposed-judgment-objection-period) == 2027-06-08
+}
+
+test "Deadline arithmetic: magistrate-order-appeal-period (14 days after)" cite "D.N.J. L. Civ. R. 72.1(c)"
+{
+  given MagistrateOrderServed() on 2027-06-01
+  expect deadline(magistrate-order-appeal-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: magistrate-report-objection-period (14 days after)" cite "D.N.J. L. Civ. R. 72.1(c)"
+{
+  given MagistrateReportServed() on 2027-06-01
+  expect deadline(magistrate-report-objection-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: magistrate-consent-period (21 days after)" cite "D.N.J. L. Civ. R. 73.1(d)"
+{
+  given FinalPretrialConference() on 2027-06-01
+  expect deadline(magistrate-consent-period) == 2027-06-22
+}
+
+test "Deadline arithmetic: trial-de-novo-demand-period (30 days after)" cite "D.N.J. L. Civ. R. 201.1(h)"
+{
+  given ArbitrationAwardServed() on 2027-06-01
+  expect deadline(trial-de-novo-demand-period) == 2027-07-01
+}
+
+test "Deadline arithmetic: united-states-trial-de-novo-demand-period (60 days after)" cite "D.N.J. L. Civ. R. 201.1(h)"
+{
+  given ArbitrationAwardServed() on 2027-06-01
+  expect deadline(united-states-trial-de-novo-demand-period) == 2027-08-02
+}

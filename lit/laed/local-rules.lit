@@ -198,3 +198,78 @@ deadline transfer-stay-period: 21.days after TransferOrderEntered() counted_by f
 {
   forum frcp
 }
+
+test "Deadline arithmetic: removal-record-period (14 days after)" cite "E.D. La. LR 3.2" {
+  given NoticeOfRemovalFiled() on 2027-01-04
+  expect deadline(removal-record-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: designating-party-statement-period (7 days after)" cite "E.D. La. LR 5.6(D)" {
+  given OtherPartySealMotionFiled() on 2027-01-04
+  expect deadline(designating-party-statement-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: other-party-seal-response-period (14 days after)" cite "E.D. La. LR 5.6(D)" {
+  given OtherPartySealMotionFiled() on 2027-01-04
+  expect deadline(other-party-seal-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: redacted-version-period (14 days after)" cite "E.D. La. LR 5.6(D)" {
+  given SealMotionGranted() on 2027-01-04
+  expect deadline(redacted-version-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: seal-denial-removal-period (7 days after)" cite "E.D. La. LR 5.6(G)" {
+  given SealMotionDenied() on 2027-01-04
+  expect deadline(seal-denial-removal-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: motion-notice-period (15 days before)" cite "E.D. La. LR 7.2" {
+  given SubmissionDate() on 2027-01-04
+  expect deadline(motion-notice-period) == 2026-12-18
+}
+
+test "Deadline arithmetic: opposition-period (8 days before)" cite "E.D. La. LR 7.5" {
+  given SubmissionDate() on 2027-01-04
+  expect deadline(opposition-period) == 2026-12-24
+}
+
+test "Deadline arithmetic: reply-period (2 court_days before)" cite "E.D. La. LR 7.5" {
+  given SubmissionDate() on 2027-01-04
+  expect deadline(reply-period) == 2026-12-30
+}
+
+test "Deadline arithmetic: deconsolidation-designation-period (7 days after)" cite "E.D. La. LR 10.2" {
+  given DeconsolidationOrdered() on 2027-01-04
+  expect deadline(deconsolidation-designation-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: rule26f-conference-period (7 court_days before)" cite "E.D. La. LR 26.2(A)" {
+  given PreliminaryConference() on 2027-01-04
+  expect deadline(rule26f-conference-period) == 2026-12-22
+}
+
+test "Deadline arithmetic: discovery-plan-report-period (3 court_days before)" cite "E.D. La. LR 26.2(B)" {
+  given SchedulingConference() on 2027-01-04
+  expect deadline(discovery-plan-report-period) == 2026-12-29
+}
+
+test "Deadline arithmetic: costs-motion-period (35 days after)" cite "E.D. La. LR 54.3" {
+  given JudgmentEntryNoticed() on 2027-01-04
+  expect deadline(costs-motion-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: oral-argument-request-period (3 days after)" cite "E.D. La. LR 78.1" {
+  given OppositionReceived() on 2027-01-04
+  expect deadline(oral-argument-request-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: exhibit-removal-period (35 days after)" cite "E.D. La. LR 79.3" {
+  given FinalDisposition() on 2027-01-04
+  expect deadline(exhibit-removal-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: transfer-stay-period (21 days after)" cite "E.D. La. LR 83.5.1" {
+  given TransferOrderEntered() on 2027-01-04
+  expect deadline(transfer-stay-period) == 2027-01-25
+}

@@ -105,3 +105,81 @@ deadline magistrate-report-objection-period: 14.days after MagistrateReportServe
 /// LCvR 72.C.2, 72.D.2: the opposing party may respond to the objections
 /// within fourteen days after the date of service.
 deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6-pennsylvania cite "W.D. Pa. LCvR 72"
+
+test "Deadline arithmetic: disclosure-statement-period (7 days after)" cite "W.D. Pa. LCvR 7.1"
+{
+  given DisclosureDeferredFilingMade() on 2027-01-04
+  expect deadline(disclosure-statement-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: rico-case-statement-period (14 days after)" cite "W.D. Pa. LCvR 7.1"
+{
+  given RicoComplaintFiled() on 2027-01-04
+  expect deadline(rico-case-statement-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: plaintiff-consent-form-period (21 days after)" cite "W.D. Pa. LCvR 10"
+{
+  given PrisonerCivilRightsCommenced() on 2027-01-04
+  expect deadline(plaintiff-consent-form-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: respondent-consent-form-period (21 days after)" cite "W.D. Pa. LCvR 10"
+{
+  given PrisonerCivilRightsRespondentAppeared() on 2027-01-04
+  expect deadline(respondent-consent-form-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: defendant-pretrial-statement-period (30 days after)" cite "W.D. Pa. LCvR 16.1"
+{
+  given PlaintiffPretrialStatementFiled() on 2027-01-04
+  expect deadline(defendant-pretrial-statement-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: third-party-pretrial-statement-period (30 days after)" cite "W.D. Pa. LCvR 16.1"
+{
+  given DefendantPretrialStatementFiled() on 2027-01-04
+  expect deadline(third-party-pretrial-statement-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: supplement-pretrial-statement-motion (7 days before)" cite "W.D. Pa. LCvR 16.1"
+{
+  given FinalPretrialConferenceHeld() on 2027-01-04
+  expect deadline(supplement-pretrial-statement-motion) == 2026-12-28
+}
+
+test "Deadline arithmetic: class-joint-report (7 days before)" cite "W.D. Pa. LCvR 23"
+{
+  given ClassPretrialConferenceHeld() on 2027-01-04
+  expect deadline(class-joint-report) == 2026-12-28
+}
+
+test "Deadline arithmetic: summary-judgment-opposition-period (30 days after)" cite "W.D. Pa. LCvR 56"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-opposition-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "W.D. Pa. LCvR 56"
+{
+  given SummaryJudgmentOppositionServed() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-order-objection-period (14 days after)" cite "W.D. Pa. LCvR 72"
+{
+  given MagistrateOrderServed() on 2027-01-04
+  expect deadline(magistrate-order-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-report-objection-period (14 days after)" cite "W.D. Pa. LCvR 72"
+{
+  given MagistrateReportServed() on 2027-01-04
+  expect deadline(magistrate-report-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-objection-response-period (14 days after)" cite "W.D. Pa. LCvR 72"
+{
+  given MagistrateObjectionsServed() on 2027-01-04
+  expect deadline(magistrate-objection-response-period) == 2027-01-19
+}

@@ -103,3 +103,63 @@ deadline social-security-fee-response-period: 30.days after SocialSecurityFeePet
 /// attorney of record may not withdraw within twenty-one days of trial or
 /// a hearing on any motion for judgment or dismissal.
 deadline withdrawal-cutoff: 21.days before TrialOrDispositiveHearingScheduled() counted_by frcp6-kentucky cite "W.D. Ky. LR 83.6"
+
+test "Deadline arithmetic: extension-response-period (7 days after)" cite "W.D. Ky. LR 7.1(b)" {
+  given ExtensionMotionServed() on 2027-01-04
+  expect deadline(extension-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: motion-response-period (21 days after)" cite "W.D. Ky. LR 7.1(c)" {
+  given MotionServed() on 2027-01-04
+  expect deadline(motion-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: motion-reply-period (14 days after)" cite "W.D. Ky. LR 7.1(c)" {
+  given ResponseServed() on 2027-01-04
+  expect deadline(motion-reply-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: state-record-period (30 days after)" cite "W.D. Ky. LR 81.1(a)" {
+  given NoticeOfRemovalFiled() on 2027-01-04
+  expect deadline(state-record-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: refiled-motion-period (14 days after)" cite "W.D. Ky. LR 81.1(b)" {
+  given ActionRemoved() on 2027-01-04
+  expect deadline(refiled-motion-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: marshal-subpoena-period (14 days before)" cite "W.D. Ky. LR 45.1" {
+  given SubpoenaComplianceDate() on 2027-01-04
+  expect deadline(marshal-subpoena-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: bill-of-costs-period (30 days after)" cite "W.D. Ky. LR 54.3" {
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: fee-motion-period (30 days after)" cite "W.D. Ky. LR 54.4" {
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(fee-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: magistrate-objection-period (14 days after)" cite "W.D. Ky. LR 72.2" {
+  given MagistrateOrderServed() on 2027-01-04
+  expect deadline(magistrate-objection-period) == 2027-01-20
+}
+
+test "Deadline arithmetic: social-security-fee-petition-period (30 days after)" cite "W.D. Ky. LR 83.11(a)" {
+  given NoticeOfAward() on 2027-01-04
+  expect deadline(social-security-fee-petition-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: social-security-fee-response-period (30 days after)" cite "W.D. Ky. LR 83.11(a)" {
+  given SocialSecurityFeePetitionFiled() on 2027-01-04
+  expect deadline(social-security-fee-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: withdrawal-cutoff (21 days before)" cite "W.D. Ky. LR 83.6" {
+  given TrialOrDispositiveHearingScheduled() on 2027-01-04
+  expect deadline(withdrawal-cutoff) == 2026-12-14
+}

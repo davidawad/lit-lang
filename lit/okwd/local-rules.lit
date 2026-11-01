@@ -205,3 +205,153 @@ deadline withdrawal-response-period: 14.days after WithdrawalMotionFiled() count
 /// W.D. Okla. LCvR81.4: replies are filed within 7 days of the filing of
 /// any response.
 deadline withdrawal-reply-period: 7.days after WithdrawalResponseFiled() counted_by frcp6 cite "W.D. Okla. LCvR81.4"
+
+test "Deadline arithmetic: pauper-fee-period (21 days after)" cite "W.D. Okla. LCvR3.3(e)"
+{
+  given PauperApplicationDenied() on 2027-02-01
+  expect deadline(pauper-fee-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: return-of-service-period (14 days after)" cite "W.D. Okla. LCvR4.2"
+{
+  given ServiceEffected() on 2027-02-01
+  expect deadline(return-of-service-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: transcript-redaction-period (21 days after)" cite "W.D. Okla. LCvR5.2.1(b)"
+{
+  given TranscriptFiled() on 2027-02-01
+  expect deadline(transcript-redaction-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: motion-response-period (21 days after)" cite "W.D. Okla. LCvR7.1(g)"
+{
+  given MotionFiled() on 2027-02-01
+  expect deadline(motion-response-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (21 days after)" cite "W.D. Okla. LCvR7.1(g)"
+{
+  given SummaryJudgmentMotionFiled() on 2027-02-01
+  expect deadline(summary-judgment-response-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "W.D. Okla. LCvR7.1(h)"
+{
+  given ResponseFiled() on 2027-02-01
+  expect deadline(reply-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: bankruptcy-appellant-brief-period (21 days after)" cite "W.D. Okla. LCvR7.2(a)"
+{
+  given BankruptcyRecordTransmitted() on 2027-02-01
+  expect deadline(bankruptcy-appellant-brief-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: bankruptcy-appellee-brief-period (21 days after)" cite "W.D. Okla. LCvR7.2(a)"
+{
+  given BankruptcyAppellantBriefServed() on 2027-02-01
+  expect deadline(bankruptcy-appellee-brief-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: bankruptcy-reply-brief-period (14 days after)" cite "W.D. Okla. LCvR7.2(a)"
+{
+  given BankruptcyAppelleeBriefServed() on 2027-02-01
+  expect deadline(bankruptcy-reply-brief-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: amended-pleading-period (7 days after)" cite "W.D. Okla. LCvR15.1"
+{
+  given LeaveToAmendGranted() on 2027-02-01
+  expect deadline(amended-pleading-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: joint-status-report-period (7 days before)" cite "W.D. Okla. LCvR16.1"
+{
+  given SchedulingConferenceSet() on 2027-02-01
+  expect deadline(joint-status-report-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: mediator-report-period (7 days after)" cite "W.D. Okla. LCvR16.3(e)"
+{
+  given MediationCompleted() on 2027-02-01
+  expect deadline(mediator-report-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: bankruptcy-notice-period (7 days after)" cite "W.D. Okla. LCvR21.1"
+{
+  given PartyBankruptcyFiled() on 2027-02-01
+  expect deadline(bankruptcy-notice-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: deposition-subpoena-period (14 days before)" cite "W.D. Okla. LCvR30.1(a)"
+{
+  given DepositionScheduled() on 2027-02-01
+  expect deadline(deposition-subpoena-period) == 2027-01-15
+}
+
+test "Deadline arithmetic: deposition-notice-period (14 days before)" cite "W.D. Okla. LCvR30.1(a)"
+{
+  given DepositionScheduled() on 2027-02-01
+  expect deadline(deposition-notice-period) == 2027-01-15
+}
+
+test "Deadline arithmetic: subpoena-notice-period (7 days before)" cite "W.D. Okla. LCvR45.1(a)"
+{
+  given NonpartySubpoenaServed() on 2027-02-01
+  expect deadline(subpoena-notice-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: subpoena-protective-motion-period (7 days after)" cite "W.D. Okla. LCvR45.1(b)"
+{
+  given SubpoenaNoticeFiled() on 2027-02-01
+  expect deadline(subpoena-protective-motion-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "W.D. Okla. LCvR54.1"
+{
+  given JudgmentEntered() on 2027-02-01
+  expect deadline(bill-of-costs-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: costs-objection-period (14 days after)" cite "W.D. Okla. LCvR54.1"
+{
+  given BillOfCostsFiled() on 2027-02-01
+  expect deadline(costs-objection-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: fee-objection-period (14 days after)" cite "W.D. Okla. LCvR54.2"
+{
+  given FeeMotionFiled() on 2027-02-01
+  expect deadline(fee-objection-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: removal-jury-demand-period (14 days after)" cite "W.D. Okla. LCvR81.1"
+{
+  given RemovalNoticeFiled() on 2027-02-01
+  expect deadline(removal-jury-demand-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: pending-motion-notice-period (30 days after)" cite "W.D. Okla. LCvR81.2(b)"
+{
+  given RemovalNoticeFiled() on 2027-02-01
+  expect deadline(pending-motion-notice-period) == 2027-03-03
+}
+
+test "Deadline arithmetic: withdrawal-motion-period (14 days after)" cite "W.D. Okla. LCvR81.4"
+{
+  given CreditorsMeetingConcluded() on 2027-02-01
+  expect deadline(withdrawal-motion-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: withdrawal-response-period (14 days after)" cite "W.D. Okla. LCvR81.4"
+{
+  given WithdrawalMotionFiled() on 2027-02-01
+  expect deadline(withdrawal-response-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: withdrawal-reply-period (7 days after)" cite "W.D. Okla. LCvR81.4"
+{
+  given WithdrawalResponseFiled() on 2027-02-01
+  expect deadline(withdrawal-reply-period) == 2027-02-08
+}

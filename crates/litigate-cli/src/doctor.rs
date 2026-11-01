@@ -35,7 +35,9 @@ fn workspace_root(mut path: PathBuf) -> PathBuf {
 
 fn files_with_extension(root: &Path, extension: &str) -> Vec<String> {
     fn visit(dir: &Path, extension: &str, found: &mut Vec<String>) {
-        let Ok(entries) = std::fs::read_dir(dir) else { return };
+        let Ok(entries) = std::fs::read_dir(dir) else {
+            return;
+        };
         for entry in entries.flatten() {
             let path = entry.path();
             if path.is_dir() {
@@ -52,7 +54,9 @@ fn files_with_extension(root: &Path, extension: &str) -> Vec<String> {
 }
 
 fn binary_on_path(name: &str) -> bool {
-    let Some(path) = env::var_os("PATH") else { return false };
+    let Some(path) = env::var_os("PATH") else {
+        return false;
+    };
     env::split_paths(&path).any(|dir| {
         let candidate = dir.join(name);
         candidate.is_file() || (cfg!(windows) && dir.join(format!("{name}.exe")).is_file())

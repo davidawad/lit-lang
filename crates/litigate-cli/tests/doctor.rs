@@ -12,8 +12,12 @@ fn doctor_reports_environment_and_workspace_in_standard_envelope() {
     let result = &response["result"];
     assert!(result["version"].is_string());
     assert!(result["platform"].is_string());
-    assert!(result["packs"].as_array().is_some_and(|items| !items.is_empty()));
-    assert!(result["cases"].as_array().is_some_and(|items| !items.is_empty()));
+    assert!(result["packs"]
+        .as_array()
+        .is_some_and(|items| !items.is_empty()));
+    assert!(result["cases"]
+        .as_array()
+        .is_some_and(|items| !items.is_empty()));
     assert!(result["binaries"]["litigate-lsp"].is_boolean());
     assert!(result["binaries"]["litigate"].is_boolean());
 }

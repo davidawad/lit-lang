@@ -72,7 +72,7 @@ for package in "${!packages[@]}"; do
     continue
   fi
   if ! row=$(python3 - "$output" "$package" "$rc" <<'PY'
-import json, sys
+import json, posixpath, sys
 path, package, rc = sys.argv[1:]
 try:
     result = json.load(open(path))
@@ -89,7 +89,8 @@ for diagnostic in diagnostics:
         continue
     span = diagnostic.get("span", {})
     file = span.get("file", "").replace("\\", "/")
-    if diagnostic.get("code") == "L5002" and ("lit/core/states/" in file or file.startswith("core/states/")):
+    normalized = posixpath.normpath(file)
+    if diagnostic.get("code") == "L5002" and ("lit/core/states/" in normalized or normalized.startswith("core/states/")):
         continue
     count += 1
 print(f"{package}\t{count}")

@@ -33,4 +33,20 @@ check_status 0 scripts/qa/strict-ratchet.sh "$(git rev-parse HEAD)" ''
 # Exercise the changed-package path with a package absent from this checkout.
 # It emits no package rows, but the comparator still requires the TSV header.
 check_status 0 scripts/qa/strict-ratchet.sh "$(git rev-parse HEAD)" $'lit/__strict_ratchet_test_missing__/package.lit'
+
+# Compiler diagnostics can name shared state files through a package-relative
+# path. Normalize dot segments before applying the shared-state exclusion.
+python3 - <<'PY'
+import posixpath
+
+paths = (
+    "lit/bankr-als/../core/states/alabama.lit",
+    "lit/core/states/alabama.lit",
+    "core/states/alabama.lit",
+)
+for path in paths:
+    normalized = posixpath.normpath(path)
+    assert ("lit/core/states/" in normalized or normalized.startswith("core/states/")), path
+assert "lit/core/states/" not in posixpath.normpath("lit/bankr-als/local.lit")
+PY
 echo 'strict-ratchet-test: pass'

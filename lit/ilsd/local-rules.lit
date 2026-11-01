@@ -186,3 +186,81 @@ deadline assigned-counsel-appearance-period: 14.days after AssignmentNoticeRecei
 {
   forum frcp
 }
+
+test "Deadline arithmetic: custody-address-notice-period (14 days after)" cite "SDIL-LR 3.1"
+{
+  given CustodyAddressChanged() on 2027-03-16
+  expect deadline(custody-address-notice-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: briefed-motion-response-period (30 days after)" cite "SDIL-LR 7.1(b)"
+{
+  given BriefedMotionServed() on 2027-03-16
+  expect deadline(briefed-motion-response-period) == 2027-04-15
+}
+
+test "Deadline arithmetic: briefed-motion-reply-period (14 days after)" cite "SDIL-LR 7.1(b)"
+{
+  given BriefedMotionResponseServed() on 2027-03-16
+  expect deadline(briefed-motion-reply-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: dispositive-motion-cutoff (100 days before)" cite "SDIL-LR 7.1(b)"
+{
+  given TrialDate() on 2027-03-16
+  expect deadline(dispositive-motion-cutoff) == 2026-12-04
+}
+
+test "Deadline arithmetic: other-motion-response-period (14 days after)" cite "SDIL-LR 7.1(b)"
+{
+  given OtherMotionServed() on 2027-03-16
+  expect deadline(other-motion-response-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: other-motion-reply-period (7 days after)" cite "SDIL-LR 7.1(b)"
+{
+  given OtherMotionResponseServed() on 2027-03-16
+  expect deadline(other-motion-reply-period) == 2027-03-23
+}
+
+test "Deadline arithmetic: joint-report-period (7 days before)" cite "SDIL-LR 16.2(a)"
+{
+  given SchedulingConferenceHeld() on 2027-03-16
+  expect deadline(joint-report-period) == 2027-03-09
+}
+
+test "Deadline arithmetic: class-action-report-period (7 days before)" cite "SDIL-LR 23.1(b)"
+{
+  given SchedulingConferenceHeld() on 2027-03-16
+  expect deadline(class-action-report-period) == 2027-03-09
+}
+
+test "Deadline arithmetic: costs-objection-period (14 days after)" cite "SDIL-LR 54.2(b)"
+{
+  given CostsNoticeGiven() on 2027-03-16
+  expect deadline(costs-objection-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: costs-request-period (30 days after)" cite "SDIL-LR 54.2(c)"
+{
+  given JudgmentEntered() on 2027-03-16
+  expect deadline(costs-request-period) == 2027-04-15
+}
+
+test "Deadline arithmetic: magistrate-order-appeal-period (14 days after)" cite "SDIL-LR 73.1(a)"
+{
+  given MagistrateOrderIssued() on 2027-03-16
+  expect deadline(magistrate-order-appeal-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: capital-habeas-documents-period (10 days after)" cite "SDIL-LR 83.7"
+{
+  given CapitalHabeasPetitionFiled() on 2027-03-16
+  expect deadline(capital-habeas-documents-period) == 2027-03-26
+}
+
+test "Deadline arithmetic: assigned-counsel-appearance-period (14 days after)" cite "SDIL-LR 83.10(a)"
+{
+  given AssignmentNoticeReceived() on 2027-03-16
+  expect deadline(assigned-counsel-appearance-period) == 2027-03-30
+}

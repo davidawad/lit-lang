@@ -310,3 +310,143 @@ deadline sealed-document-withdrawal-period: 90.days after ActionFinallyDetermine
 {
   forum frcp
 }
+
+
+
+test "Deadline arithmetic: service-proof-period (7 days after)" cite "D. Conn. L. Civ. R. 4(d)"
+{
+  given ServiceProofReceived() on 2027-01-04
+  expect deadline(service-proof-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: service-extension-motion-period (90 days after)" cite "D. Conn. L. Civ. R. 4(d)"
+{
+  given ComplaintFiled() on 2027-01-04
+  expect deadline(service-extension-motion-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: opposition-period (21 days after)" cite "D. Conn. L. Civ. R. 7(a)"
+{
+  given MotionFiled() on 2027-01-04
+  expect deadline(opposition-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: length-departure-motion-period (7 days before)" cite "D. Conn. L. Civ. R. 7(a)"
+{
+  given MemorandumDeadline() on 2027-01-04
+  expect deadline(length-departure-motion-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: extension-set-aside-period (7 days after)" cite "D. Conn. L. Civ. R. 7(b)"
+{
+  given ExtensionGranted() on 2027-01-04
+  expect deadline(extension-set-aside-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: extension-motion-period (3 court days before)" cite "D. Conn. L. Civ. R. 7(b)"
+{
+  given DeadlineToBeExtended() on 2027-01-04
+  expect deadline(extension-motion-period) == 2026-12-29
+}
+
+test "Deadline arithmetic: reconsideration-period (7 days after)" cite "D. Conn. L. Civ. R. 7(c)"
+{
+  given DecisionFiled() on 2027-01-04
+  expect deadline(reconsideration-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: reply-period (14 days after)" cite "D. Conn. L. Civ. R. 7(d)"
+{
+  given ResponsiveMemorandumFiled() on 2027-01-04
+  expect deadline(reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: fee-sanctions-motion-period (30 days after)" cite "D. Conn. L. Civ. R. 11"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(fee-sanctions-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: planning-conference-period (30 days after)" cite "D. Conn. L. Civ. R. 26(f)"
+{
+  given DefendantFirstAppears() on 2027-01-04
+  expect deadline(planning-conference-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: planning-report-period (14 days after)" cite "D. Conn. L. Civ. R. 26(f)"
+{
+  given PlanningConferenceHeld() on 2027-01-04
+  expect deadline(planning-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discovery-compliance-period (14 days after)" cite "D. Conn. L. Civ. R. 37(d)"
+{
+  given DiscoveryOrderFiled() on 2027-01-04
+  expect deadline(discovery-compliance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: dismissal-explanation-period (21 days after)" cite "D. Conn. L. Civ. R. 41(a)"
+{
+  given ProposedDismissalNoticed() on 2027-01-04
+  expect deadline(dismissal-explanation-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: reopen-motion-period (30 days after)" cite "D. Conn. L. Civ. R. 41(b)"
+{
+  given SettledCaseClosed() on 2027-01-04
+  expect deadline(reopen-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: cost-bill-period (14 days after)" cite "D. Conn. L. Civ. R. 54(a)"
+{
+  given JudgmentFinal() on 2027-01-04
+  expect deadline(cost-bill-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: cost-objection-period (14 days after)" cite "D. Conn. L. Civ. R. 54(b)"
+{
+  given CostBillFiled() on 2027-01-04
+  expect deadline(cost-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: cost-review-period (14 days after)" cite "D. Conn. L. Civ. R. 54(d)"
+{
+  given CostRulingEntered() on 2027-01-04
+  expect deadline(cost-review-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: cost-review-response-period (14 days after)" cite "D. Conn. L. Civ. R. 54(d)"
+{
+  given CostReviewApplicationFiled() on 2027-01-04
+  expect deadline(cost-review-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-objection-period (14 days after)" cite "D. Conn. L. Mag. R. 72.2(a)"
+{
+  given MagistrateRulingFiled() on 2027-01-04
+  expect deadline(magistrate-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: address-change-period (30 days after)" cite "D. Conn. L. Civ. R. 83.1(d)"
+{
+  given OfficeAddressChanged() on 2027-01-04
+  expect deadline(address-change-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: security-for-costs-period (30 days after)" cite "D. Conn. L. Civ. R. 83.3(a)"
+{
+  given SecurityOrderEntered() on 2027-01-04
+  expect deadline(security-for-costs-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: exhibit-return-period (90 days after)" cite "D. Conn. L. Civ. R. 83.6(d)"
+{
+  given ActionFinallyDetermined() on 2027-01-04
+  expect deadline(exhibit-return-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: sealed-document-withdrawal-period (90 days after)" cite "D. Conn. L. Civ. R. 5(e)"
+{
+  given ActionFinallyDetermined() on 2027-01-04
+  expect deadline(sealed-document-withdrawal-period) == 2027-04-05
+}

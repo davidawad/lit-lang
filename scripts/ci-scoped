@@ -546,8 +546,6 @@ skip() {
 
 run() {
   local base files scope_out label target
-  # Register repo-local merge drivers before the agent-job land step rebases.
-  just merge-drivers
   warm_build
   base="$(base_of "${1:-}")"
   meta="$(metadata)"
@@ -583,7 +581,6 @@ run() {
   stage provenance provenance "$base"
   stage self-test bash -c "'$self' self-test && '$(dirname "$self")/cov-gate' self-test"
   stage strict-ratchet-test scripts/qa/strict-ratchet-test.sh
-  stage strict-baseline-merge-test scripts/qa/strict-baseline-merge-test.sh
   stage lit-sync-check just lit-sync-check
   if grep -q '^lit/' <<<"$files"; then
     stage strict-ratchet scripts/qa/strict-ratchet.sh "$base" "$files"

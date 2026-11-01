@@ -223,3 +223,189 @@ deadline exhibit-claim-period: 14.days after ExhibitWithdrawalNoticeGiven() coun
 /// days after the time notice may first be given under CVLR 79(b) may be
 /// destroyed or otherwise disposed of by the clerk.
 deadline unclaimed-exhibit-period: 40.days after ExhibitWithdrawalAvailable() counted_by frcp6-guam cite "D. Guam CVLR 79(c)"
+
+test "Deadline arithmetic: opposition-period (21 days after)" cite "D. Guam CVLR 7(f)"
+{
+  given MotionFiled() on 2027-02-01
+  expect deadline(opposition-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: reply-period (14 days after)" cite "D. Guam CVLR 7(f)"
+{
+  given OppositionFiled() on 2027-02-01
+  expect deadline(reply-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: oral-argument-request-period (7 days after)" cite "D. Guam CVLR 7(i)"
+{
+  given ReplyDueDatePassed() on 2027-02-01
+  expect deadline(oral-argument-request-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: hearing-witness-list-period (7 days before)" cite "D. Guam CVLR 7(k)"
+{
+  given EvidentiaryHearingHeld() on 2027-08-02
+  expect deadline(hearing-witness-list-period) == 2027-07-26
+}
+
+test "Deadline arithmetic: hearing-exhibit-list-period (7 days before)" cite "D. Guam CVLR 7(k)"
+{
+  given EvidentiaryHearingHeld() on 2027-08-02
+  expect deadline(hearing-exhibit-list-period) == 2027-07-26
+}
+
+test "Deadline arithmetic: reconsideration-period (14 days after)" cite "D. Guam CVLR 7(p)"
+{
+  given RulingFiled() on 2027-02-01
+  expect deadline(reconsideration-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: pro-se-notice-period (14 days after)" cite "D. Guam CVLR 12"
+{
+  given ConvertedToSummaryJudgment() on 2027-02-01
+  expect deadline(pro-se-notice-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: scheduling-notice-period (40 days after)" cite "D. Guam CVLR 16-1(b)"
+{
+  given ComplaintFiled() on 2027-02-01
+  expect deadline(scheduling-notice-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: planning-report-period (75 days after)" cite "D. Guam CVLR 26(f)"
+{
+  given ComplaintFiled() on 2027-02-01
+  expect deadline(planning-report-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: planning-conference-period (21 days before)" cite "D. Guam CVLR 26(f)"
+{
+  given SchedulingConferenceHeld() on 2027-08-02
+  expect deadline(planning-conference-period) == 2027-07-12
+}
+
+test "Deadline arithmetic: final-pretrial-conference-period (7 days before)" cite "D. Guam CVLR 16-1(c)"
+{
+  given TrialBegins() on 2027-08-02
+  expect deadline(final-pretrial-conference-period) == 2027-07-26
+}
+
+test "Deadline arithmetic: disclosure-objection-response-period (7 days after)" cite "D. Guam CVLR 16-1(d)"
+{
+  given PretrialDisclosureObjectionFiled() on 2027-02-01
+  expect deadline(disclosure-objection-response-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: trial-brief-period (30 days before)" cite "D. Guam CVLR 16-1(e)"
+{
+  given TrialBegins() on 2027-08-02
+  expect deadline(trial-brief-period) == 2027-07-02
+}
+
+test "Deadline arithmetic: witness-list-period (14 days before)" cite "D. Guam CVLR 16-1(f)"
+{
+  given TrialBegins() on 2027-08-02
+  expect deadline(witness-list-period) == 2027-07-19
+}
+
+test "Deadline arithmetic: discovery-designation-period (14 days before)" cite "D. Guam CVLR 16-1(f)"
+{
+  given TrialBegins() on 2027-08-02
+  expect deadline(discovery-designation-period) == 2027-07-19
+}
+
+test "Deadline arithmetic: exhibit-list-period (14 days before)" cite "D. Guam CVLR 16-1(f)"
+{
+  given TrialBegins() on 2027-08-02
+  expect deadline(exhibit-list-period) == 2027-07-19
+}
+
+test "Deadline arithmetic: pretrial-order-period (14 days before)" cite "D. Guam CVLR 16-1(g)"
+{
+  given TrialBegins() on 2027-08-02
+  expect deadline(pretrial-order-period) == 2027-07-19
+}
+
+test "Deadline arithmetic: jury-instructions-period (14 days before)" cite "D. Guam CVLR 16-1(h)"
+{
+  given TrialBegins() on 2027-08-02
+  expect deadline(jury-instructions-period) == 2027-07-19
+}
+
+test "Deadline arithmetic: waiver-meeting-period (30 days before)" cite "D. Guam CVLR 16-1(i)"
+{
+  given TrialBegins() on 2027-08-02
+  expect deadline(waiver-meeting-period) == 2027-07-02
+}
+
+test "Deadline arithmetic: waiver-filings-period (14 days before)" cite "D. Guam CVLR 16-1(i)"
+{
+  given TrialBegins() on 2027-08-02
+  expect deadline(waiver-filings-period) == 2027-07-19
+}
+
+test "Deadline arithmetic: mediator-report-period (5 days after)" cite "D. Guam CVLR 16-2(b)"
+{
+  given MediationConcluded() on 2027-02-01
+  expect deadline(mediator-report-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: bill-of-costs-period (30 days after)" cite "D. Guam CVLR 54(b)"
+{
+  given JudgmentEntered() on 2027-02-01
+  expect deadline(bill-of-costs-period) == 2027-03-03
+}
+
+test "Deadline arithmetic: costs-objection-period (14 days after)" cite "D. Guam CVLR 54(b)"
+{
+  given BillOfCostsFiled() on 2027-02-01
+  expect deadline(costs-objection-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: costs-review-period (7 days after)" cite "D. Guam CVLR 54(b)"
+{
+  given CostsTaxed() on 2027-02-01
+  expect deadline(costs-review-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: fee-response-period (14 days after)" cite "D. Guam CVLR 54(c)"
+{
+  given FeeConsultationStatementServed() on 2027-02-01
+  expect deadline(fee-response-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: fee-reply-period (7 days after)" cite "D. Guam CVLR 54(c)"
+{
+  given FeeResponseServed() on 2027-02-01
+  expect deadline(fee-reply-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: draft-judgment-period (7 days after)" cite "D. Guam CVLR 58-2(a)"
+{
+  given DecisionAnnounced() on 2027-02-01
+  expect deadline(draft-judgment-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: draft-objection-period (7 days after)" cite "D. Guam CVLR 58-2(a)"
+{
+  given DraftJudgmentServed() on 2027-02-01
+  expect deadline(draft-objection-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: added-party-consent-period (21 days after)" cite "D. Guam CVLR 73(b)"
+{
+  given AddedPartyAppeared() on 2027-02-01
+  expect deadline(added-party-consent-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: exhibit-claim-period (14 days after)" cite "D. Guam CVLR 79(b)"
+{
+  given ExhibitWithdrawalNoticeGiven() on 2027-02-01
+  expect deadline(exhibit-claim-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: unclaimed-exhibit-period (40 days after)" cite "D. Guam CVLR 79(c)"
+{
+  given ExhibitWithdrawalAvailable() on 2027-02-01
+  expect deadline(unclaimed-exhibit-period) == 2027-03-15
+}

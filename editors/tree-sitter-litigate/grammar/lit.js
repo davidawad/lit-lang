@@ -251,7 +251,8 @@ module.exports = {
   deadline_decl_opts: $ => braced(choice(
     $.deadline_opt,
     seq(field('key', 'interpretation'), field('value', $.string)),
-    seq(field('key', choice('bearer', 'designated')), field('value', $.identifier)),
+    seq(field('key', 'bearer'), field('value', choice($.identifier, $.call_expression))),
+    seq(field('key', 'designated'), field('value', $.identifier)),
     seq(field('key', 'trigger'), field('value', choice($.identifier, $.call_expression))),
     seq(field('key', choice('extend', 'waive')), field('value', $.capability)),
     seq(

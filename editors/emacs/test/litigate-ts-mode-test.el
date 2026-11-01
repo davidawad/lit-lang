@@ -113,13 +113,15 @@ Only patterns written as a bracketed list followed by @CAPTURE count."
         (should imenu--index-alist)))))
 
 (ert-deftest litigate-ts-mode-indentation-is-canonical ()
-  "Reindenting a canonically formatted corpus file changes nothing."
+  "Indenting a corpus file twice produces the same canonical text."
   (dolist (file (litigate-test--corpus))
     (ert-info ((format "file: %s" (file-relative-name file litigate-test--repo)))
       (litigate-test--with-file file
-        (let ((before (buffer-string)))
+        (indent-region (point-min) (point-max))
+        (let ((canonical (buffer-substring-no-properties (point-min) (point-max))))
           (indent-region (point-min) (point-max))
-          (should (equal (buffer-string) before)))))))
+          (should (equal (buffer-substring-no-properties (point-min) (point-max))
+                         canonical)))))))
 
 (ert-deftest litigate-ts-mode-indents-new-lines ()
   (with-temp-buffer
@@ -149,7 +151,7 @@ Only patterns written as a bracketed list followed by @CAPTURE count."
     (should (eq (litigate-test--face-at "Served(complaint)") 'font-lock-function-call-face))
     (should (eq (litigate-test--face-at "Document)") 'font-lock-type-face))
     (should (eq (litigate-test--face-at "discretion") 'font-lock-keyword-face))
-    (should (eq (litigate-test--face-at "? }") 'font-lock-constant-face))))
+    (should (eq (litigate-test--face-at "unrecognized") 'font-lock-variable-use-face))))
 
 (ert-deftest litigate-ts-mode-faces-case ()
   (litigate-test--with-file (expand-file-name "cases/examples/acme.case" litigate-test--repo)

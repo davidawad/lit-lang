@@ -137,14 +137,16 @@ module.exports = {
     seq(
       field('model', 'chance'),
       field('node', $.ref),
-      optional(seq(':', field('probabilities', $.probability_map))),
+      optional(seq(':', field('probabilities', $.case_probability_map))),
     ),
     seq(field('model', 'own_objective'), field('node', $.ref), ':', field('payoffs', $.payoff_map)),
   ),
 
-  probability_map: $ => braced($.probability_entry),
+  case_probability_map: $ => braced($.case_probability_entry),
 
-  probability_entry: $ => seq(field('edge', $.ref), ':', field('probability', $.number)),
+  case_probability_entry: $ => seq(
+    field('edge', $.ref), ':', field('probability', $.number),
+  ),
 
   payoff_map: $ => braced($.payoff_entry),
 

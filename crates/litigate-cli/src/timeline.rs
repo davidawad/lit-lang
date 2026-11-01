@@ -1766,7 +1766,7 @@ mod tests {
         with_matter("", ACME, |session, m| {
             let t = build(session, &m, m.case.as_ref().unwrap());
             assert_eq!(t["worlds"][1]["choice"]["kind"], "chance");
-            assert_eq!(t["worlds"][1]["choice"]["probability"], json!(null));
+            assert_eq!(t["worlds"][1]["choice"]["probability"], json!(0.5));
             assert_eq!(t["rows"][2]["status"]["state"], "met");
             assert_eq!(t["edges"][0]["kind"], "sequence");
         });

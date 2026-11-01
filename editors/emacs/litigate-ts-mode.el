@@ -172,12 +172,13 @@ is saved as it is, with the parse error in the echo area."
 
    :language 'litigate
    :feature 'property
-   '([(num_entry key: (identifier) @font-lock-property-name-face)
-      (money_entry key: (identifier) @font-lock-property-name-face)
-      (record_field key: (identifier) @font-lock-property-name-face)
-      (probability_entry key: (identifier) @font-lock-property-name-face)
-      (role_entry key: (identifier) @font-lock-property-name-face)
-      (service_entry method: (identifier) @font-lock-constant-face)]
+   '((num_entry key: (identifier) @font-lock-property-name-face)
+     (money_entry key: (identifier) @font-lock-property-name-face)
+     (record_field key: (identifier) @font-lock-property-name-face)
+     (probability_entry key: (identifier) @font-lock-property-name-face)
+     (case_probability_entry edge: (ref (identifier) @font-lock-property-name-face))
+     (role_entry key: (identifier) @font-lock-property-name-face)
+     (service_entry method: (identifier) @font-lock-constant-face)
      (field_expression field: (identifier) @font-lock-property-use-face))
 
    :language 'litigate
@@ -348,7 +349,7 @@ buffer that does not parse is left unchanged and the error is signalled."
                                  (list output errors) nil
                                  (cdr litigate-format-command))))))
             (unless (eql exit 0)
-              (user-error "litigate fmt: %s"
+              (user-error "Litigate fmt: %s"
                           (string-trim
                            (with-temp-buffer
                              (insert-file-contents errors)

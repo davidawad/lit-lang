@@ -237,8 +237,12 @@ fn observe(
         Value::Null => "-".to_owned(),
         other => other.to_string(),
     };
+    Ok(observed_worlds(&report.result["worlds"], &text))
+}
+
+fn observed_worlds(worlds: &Value, text: &dyn Fn(&Value) -> String) -> BTreeMap<String, Values> {
     let mut out = BTreeMap::new();
-    for w in report.result["worlds"].as_array().into_iter().flatten() {
+    for w in worlds.as_array().into_iter().flatten() {
         let mut label = text(&w["id"]);
         for (choice, option) in w["choices"].as_object().into_iter().flatten() {
             let _ = write!(label, " {choice}={}", text(option));
@@ -288,7 +292,7 @@ fn observe(
         };
         out.insert(label, values);
     }
-    Ok(out)
+    out
 }
 
 /// The values of one world as `(field, value)` rows.
@@ -376,44 +380,18 @@ pub fn run(src: &dyn Source, dir: &Path, lib: &[String], bless: bool) -> Result<
     let file = crate::ws::shown_in(src, &dir.join(FILE));
     let (text, mut expect) = read(src, dir)?;
     let case = case_in(src, dir)?;
-    let mut mismatches = Vec::new();
-    let none = String::from("-");
-    for run in &mut expect.runs {
-        let found = match observe(src, dir, &case, &expect.paths, run, lib) {
-            Ok(found) => found,
-            Err(Failure(message)) if !bless => {
-                mismatches.push(Mismatch {
-                    case: name.clone(),
-                    world: world_of(run, "-"),
-                    field: "error".to_owned(),
-                    expected: none.clone(),
-                    actual: message,
-                });
-                continue;
-            }
-            Err(Failure(message)) => {
-                return Err(Failure::new(format!("{file}: {}: {message}", run.world)))
-            }
-        };
-        let expected = world_rows(run, &run.expect);
-        let actual = world_rows(run, &found);
-        let keys: BTreeSet<&(String, String)> = expected.keys().chain(actual.keys()).collect();
-        for key in keys {
-            let (e, a) = (expected.get(key), actual.get(key));
-            if e != a {
-                mismatches.push(Mismatch {
-                    case: name.clone(),
-                    world: key.0.clone(),
-                    field: key.1.clone(),
-                    expected: e.unwrap_or(&none).clone(),
-                    actual: a.unwrap_or(&none).clone(),
-                });
-            }
-        }
-        if bless {
-            run.expect = found;
-        }
-    }
+    let mismatches = compare_runs(
+        RunContext {
+            src,
+            dir,
+            name: &name,
+            file: &file,
+            case: &case,
+            lib,
+            bless,
+        },
+        &mut expect,
+    )?;
     let blessed = bless && !mismatches.is_empty();
     if blessed {
         let body = toml::to_string_pretty(&expect).map_err(|e| Failure::new(e.to_string()))?;
@@ -461,4 +439,66 @@ pub fn run(src: &dyn Source, dir: &Path, lib: &[String], bless: bool) -> Result<
         mismatches,
     };
     Ok((result, diagnostics, (file, text)))
+}
+
+#[derive(Clone, Copy)]
+struct RunContext<'a> {
+    src: &'a dyn Source,
+    dir: &'a Path,
+    name: &'a str,
+    file: &'a str,
+    case: &'a Path,
+    lib: &'a [String],
+    bless: bool,
+}
+
+fn compare_runs(context: RunContext<'_>, expect: &mut Expect) -> Result<Vec<Mismatch>, Failure> {
+    let RunContext {
+        src,
+        dir,
+        name,
+        file,
+        case,
+        lib,
+        bless,
+    } = context;
+    let mut mismatches = Vec::new();
+    let none = String::from("-");
+    for run in &mut expect.runs {
+        let found = match observe(src, dir, case, &expect.paths, run, lib) {
+            Ok(found) => found,
+            Err(Failure(message)) if !bless => {
+                mismatches.push(Mismatch {
+                    case: name.to_owned(),
+                    world: world_of(run, "-"),
+                    field: "error".to_owned(),
+                    expected: none.clone(),
+                    actual: message,
+                });
+                continue;
+            }
+            Err(Failure(message)) => {
+                return Err(Failure::new(format!("{file}: {}: {message}", run.world)))
+            }
+        };
+        let expected = world_rows(run, &run.expect);
+        let actual = world_rows(run, &found);
+        let keys: BTreeSet<&(String, String)> = expected.keys().chain(actual.keys()).collect();
+        for key in keys {
+            let (e, a) = (expected.get(key), actual.get(key));
+            if e != a {
+                mismatches.push(Mismatch {
+                    case: name.to_owned(),
+                    world: key.0.clone(),
+                    field: key.1.clone(),
+                    expected: e.unwrap_or(&none).clone(),
+                    actual: a.unwrap_or(&none).clone(),
+                });
+            }
+        }
+        if bless {
+            run.expect = found;
+        }
+    }
+    Ok(mismatches)
 }

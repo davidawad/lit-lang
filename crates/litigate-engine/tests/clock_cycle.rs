@@ -25,7 +25,14 @@ fn every_shipped_rule_rolls_to_an_open_day_from_every_date() {
         assert!(!clock.is_closed(from.add_days(-1), &[]), "{}", rule.id);
         assert!(!clock.is_closed(from.add_days(longest), &[]), "{}", rule.id);
         assert!(
-            (0..longest).all(|i| clock.is_closed(from.add_days(i), &[])),
+            (0..longest).all(|i| {
+                let day = from.add_days(i);
+                // `closed_run` checks every calendar, including calendars
+                // that close days only for forward counting. `is_closed`
+                // intentionally excludes those; a forward roll treats them
+                // as closed too.
+                clock.is_closed(day, &[]) || clock.is_forward_holiday(day)
+            }),
             "{}",
             rule.id
         );

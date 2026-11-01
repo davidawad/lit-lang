@@ -39,6 +39,9 @@
 #       The scope computation on fixed synthetic workspaces, and on this
 #       one against `cargo tree --invert`; the provenance check on a
 #       fixture repo.
+#   scripts/ci-scoped check-quarantine [CONFIG [TODAY]]
+#       Fail on malformed or expired gate quarantine records; TODAY can be
+#       pinned by the self-test.
 #
 # Scope: a changed file belongs to the workspace package whose directory
 # holds it (the deepest one), or, outside every package, to the packages
@@ -589,6 +592,47 @@ stage() {
   fi
 }
 
+# The gate may temporarily omit only tests with a dated quarantine record in
+# nextest.toml. Nightly uses its own profile and still runs all of them.
+check_quarantine() {
+  local config="${1:-.config/nextest.toml}" today="${2:-$(date -u +%F)}"
+  local line bead expiry label count=0
+  local -A seen=()
+  while IFS= read -r line; do
+    if [[ "$line" =~ ^\#\ (lg-zmqc\.[0-9]+)\ expires=([0-9]{4}-[0-9]{2}-[0-9]{2})\ \|\ (.+)$ ]]; then
+      bead="${BASH_REMATCH[1]}"
+      expiry="${BASH_REMATCH[2]}"
+      label="${BASH_REMATCH[3]}"
+      if ! date -u -d "$expiry" +%F >/dev/null 2>&1 || [[ "$(date -u -d "$expiry" +%F)" != "$expiry" ]]; then
+        echo "ci-scoped: invalid quarantine expiry for $label ($expiry)" >&2
+        return 1
+      fi
+      if [[ "$expiry" < "$today" ]]; then
+        echo "ci-scoped: expired quarantine for $label ($bead expired $expiry; today $today)" >&2
+        return 1
+      fi
+      if [[ "$expiry" != 2026-11-08 && ! "$line" =~ reason=[^[:space:]].* ]]; then
+        echo "ci-scoped: renewed quarantine for $label must include reason= in its comment" >&2
+        return 1
+      fi
+      if [[ -n "${seen[$label]:-}" ]]; then
+        echo "ci-scoped: duplicate quarantine record for $label" >&2
+        return 1
+      fi
+      seen["$label"]=1
+      count=$((count + 1))
+    elif [[ "$line" == '# lg-zmqc.'* ]]; then
+      echo "ci-scoped: malformed quarantine record: $line" >&2
+      return 1
+    fi
+  done < "$config"
+  if [[ "$count" -eq 0 ]]; then
+    echo "ci-scoped: no quarantine records found in $config" >&2
+    return 1
+  fi
+  echo "QUARANTINED: $count"
+}
+
 skip() {
   echo "ci-scoped: $1: skip ($2)"
 }
@@ -629,6 +673,7 @@ run() {
   stage typos typos
   stage provenance provenance "$base"
   stage self-test bash -c "'$self' self-test && '$(dirname "$self")/cov-gate' self-test"
+  stage quarantine check_quarantine
   stage strict-ratchet-test scripts/qa/strict-ratchet-test.sh
   stage lit-sync-check just lit-sync-check
   if grep -q '^lit/' <<<"$files"; then
@@ -754,6 +799,7 @@ nightly() {
   logdir="$target/ci-nightly"
   rm -rf "$logdir"
   mkdir -p "$logdir"
+  check_quarantine
   sha="$(git rev-parse HEAD)"
   subject="$(git log -1 --format=%s HEAD)"
   stage test cargo nextest run --workspace --profile nightly
@@ -792,10 +838,16 @@ fake_metadata() {
 }
 
 self_test() {
-  local failures=0 meta real
+  local failures=0 meta real quarantine
   meta="$(mktemp)"
   real="$(mktemp)"
-  trap 'rm -f "$meta" "$real"' RETURN
+  quarantine="$(mktemp)"
+  trap 'rm -f "$meta" "$real" "$quarantine"' RETURN
+  printf '# lg-zmqc.999 expires=2026-10-31 | fixture::expired_test\n' > "$quarantine"
+  if check_quarantine "$quarantine" 2026-11-01 >/dev/null 2>&1; then
+    echo "ci-scoped self-test: an expired quarantine must fail" >&2
+    failures=$((failures + 1))
+  fi
   # base <- syntax <- sema <- cli; syntax <- ts-litigate <- ts-editors;
   # smt alone; packs <-> engine (a dev-dependency cycle), engine <- cli.
   fake_metadata \
@@ -838,6 +890,10 @@ self_test() {
   expect "full" ".cargo/ falls back to full" .cargo/config.toml
   expect "full" "nextest config falls back to full" .config/nextest.toml
   expect "full" "clippy config falls back to full" clippy.toml
+  if ! grep -Fq '(binary(in_memory) & test(=ops_compile_the_matter_or_package_in_memory))' .config/nextest.toml; then
+    echo "ci-scoped self-test: gate profile must defer the full-corpus in-memory compile sweep to nightly" >&2
+    failures=$((failures + 1))
+  fi
   expect "none" "a docs-only change runs global only" docs/litigate/SPEC.md README.md
   expect "none" "a non-crate change runs global only" scripts/cov-gate .github/workflows/ci.yml _typos.toml
   expect "none" "an empty diff runs global only"
@@ -1100,6 +1156,7 @@ case "$cmd" in
   scope) [ "$#" -le 1 ] || usage; scope "$@" ;;
   scope-of) [ "$#" -eq 1 ] || usage; scope_of "$1" ;;
   provenance) [ "$#" -le 1 ] || usage; provenance "$@" ;;
+  check-quarantine) [ "$#" -le 2 ] || usage; check_quarantine "$@" ;;
   self-test) [ "$#" -eq 0 ] || usage; self_test ;;
   *) usage ;;
 esac

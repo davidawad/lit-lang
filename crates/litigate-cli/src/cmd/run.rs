@@ -7,13 +7,16 @@ use super::check::checked_targets;
 use crate::cli::OpFlags;
 use crate::out::{Failure, Outcome, Report};
 use litigate_base::Profile;
-use litigate_engine::api::{fingerprint, handle, Catalog, Request};
+use litigate_engine::api::{
+    fingerprint, handle, ApiError, Catalog, Request, Response, API_VERSION,
+};
 use litigate_engine::clock::ClockLibrary;
 use litigate_engine::scenario::NamedScenario;
 use litigate_lower::{Document, Options};
 use litigate_sema::pkg::source::Source;
 use serde_json::{json, Map, Value};
 use std::collections::BTreeSet;
+use std::path::Path;
 
 /// The op object for `--op`: a JSON object, or an op name.
 ///
@@ -25,6 +28,12 @@ pub fn op_value(op: &str) -> Result<Map<String, Value>, Failure> {
     } else {
         Ok(Map::from_iter([("op".to_owned(), json!(op))]))
     }
+}
+
+fn is_case_target(target: &str) -> bool {
+    Path::new(target)
+        .extension()
+        .is_some_and(|ext| ext.eq_ignore_ascii_case("case"))
 }
 
 /// A `--arg` value: a number (an integer stays an integer, so `top=10`
@@ -271,6 +280,40 @@ pub fn run(src: &dyn Source, target: &str, op: &str, flags: &OpFlags) -> Outcome
         packs,
     } = compile(src, &[target.to_owned()], links, &flags.library.lib)?;
     if report.has_errors() {
+        if is_case_target(target) {
+            let diagnostic = report
+                .diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.severity == litigate_base::Severity::Error);
+            if let Some(diagnostic) = diagnostic {
+                let file = diagnostic.span.file.0.clone();
+                let line = diagnostic.span.line;
+                let response = Response {
+                    ok: false,
+                    api_version: API_VERSION,
+                    op: op
+                        .get("op")
+                        .and_then(Value::as_str)
+                        .unwrap_or("unknown")
+                        .to_owned(),
+                    result: None,
+                    warnings: Vec::new(),
+                    provenance: None,
+                    error: Some(ApiError {
+                        code: "invalid".into(),
+                        message: diagnostic.message.clone(),
+                        hint: format!(
+                            "{file}:{line}: correct the .case syntax or semantics and try again"
+                        ),
+                    }),
+                    elapsed_ms: 0.0,
+                };
+                report.result = serde_json::to_value(response).unwrap_or(Value::Null);
+                report.diagnostics.clear();
+                report.failed = true;
+                return Ok(report);
+            }
+        }
         return Ok(report);
     }
     // A matter's scenario names its own packs.
@@ -335,5 +378,12 @@ mod tests {
             text.as_deref(),
             Some("--set rate: `fast` is not a number (params are numeric)")
         );
+    }
+
+    #[test]
+    fn matter_target_extension_is_case_insensitive() {
+        assert!(is_case_target("matter.case"));
+        assert!(is_case_target("matter.CASE"));
+        assert!(!is_case_target("matter.json"));
     }
 }

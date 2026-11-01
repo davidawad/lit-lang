@@ -1132,6 +1132,47 @@
     }
   },
   {
+    "type": "case_probability_entry",
+    "named": true,
+    "fields": {
+      "edge": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ref",
+            "named": true
+          }
+        ]
+      },
+      "probability": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "number",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "case_probability_map",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "case_probability_entry",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "case_start_decl",
     "named": true,
     "fields": {
@@ -4085,7 +4126,7 @@
         "required": false,
         "types": [
           {
-            "type": "probability_map",
+            "type": "case_probability_map",
             "named": true
           }
         ]
@@ -4417,22 +4458,34 @@
     "type": "probability_entry",
     "named": true,
     "fields": {
-      "edge": {
+      "key": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "ref",
+            "type": "identifier",
             "named": true
           }
         ]
       },
-      "probability": {
+      "value": {
         "multiple": false,
         "required": true,
         "types": [
           {
+            "type": "fraction",
+            "named": true
+          },
+          {
+            "type": "hole",
+            "named": true
+          },
+          {
             "type": "number",
+            "named": true
+          },
+          {
+            "type": "parenthesized_expression",
             "named": true
           }
         ]

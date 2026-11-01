@@ -9,6 +9,12 @@ mod support;
 use std::{collections::BTreeMap, path::Path};
 use support::repo;
 
+fn is_case_target(target: &str) -> bool {
+    Path::new(target)
+        .extension()
+        .is_some_and(|extension| extension.eq_ignore_ascii_case("case"))
+}
+
 /// The MVP package directories (or every package when requested) and every
 /// `.case` under `cases/`, repository-relative.
 fn targets() -> Vec<String> {
@@ -104,38 +110,14 @@ fn compiled_catalog(targets: &[String]) -> litigate_engine::api::Catalog {
     // Add the packages each matter uses, alongside the 16 MVP packages.
     // This makes every matter resolvable without compiling the full post-MVP
     // package census on every default run.
-    let mut build_targets: std::collections::BTreeSet<String> = targets
-        .iter()
-        .filter(|t| !t.ends_with(".case"))
-        .cloned()
-        .collect();
-    for target in targets.iter().filter(|t| t.ends_with(".case")) {
-        let text = std::fs::read_to_string(root.join(target)).unwrap();
-        for line in text
-            .lines()
-            .filter(|line| line.trim_start().starts_with("uses "))
-        {
-            let id = line.split_whitespace().nth(1).unwrap();
-            let package = std::fs::read_dir(root.join("lit"))
-                .unwrap()
-                .map(|entry| entry.unwrap().path())
-                .find(|path| {
-                    path.join("Lit.toml").is_file()
-                        && std::fs::read_to_string(path.join("Lit.toml"))
-                            .is_ok_and(|manifest| manifest.contains(&format!("pack_id = \"{id}\"")))
-                })
-                .unwrap_or_else(|| panic!("{target} uses unknown package {id}"));
-            build_targets.insert(
-                package
-                    .strip_prefix(&root)
-                    .unwrap()
-                    .to_string_lossy()
-                    .into_owned(),
-            );
-        }
-    }
+    let build_targets = build_targets(&root, targets);
     args.extend(build_targets);
-    args.extend(targets.iter().filter(|t| t.ends_with(".case")).cloned());
+    args.extend(
+        targets
+            .iter()
+            .filter(|target| is_case_target(target))
+            .cloned(),
+    );
     args.extend(["--out".into(), "out".into()]);
     let build = litigate_cli::execute_in_memory(sources, &args, None);
     assert_eq!(build.code, 0, "{}{}", build.stdout, build.stderr);
@@ -173,6 +155,40 @@ fn compiled_catalog(targets: &[String]) -> litigate_engine::api::Catalog {
     catalog.with_scenarios_dir(&scenario_dir).unwrap()
 }
 
+fn build_targets(root: &Path, targets: &[String]) -> std::collections::BTreeSet<String> {
+    let mut build_targets: std::collections::BTreeSet<String> = targets
+        .iter()
+        .filter(|target| !is_case_target(target))
+        .cloned()
+        .collect();
+    for target in targets.iter().filter(|target| is_case_target(target)) {
+        let text = std::fs::read_to_string(root.join(target)).unwrap();
+        for line in text
+            .lines()
+            .filter(|line| line.trim_start().starts_with("uses "))
+        {
+            let id = line.split_whitespace().nth(1).unwrap();
+            let package = std::fs::read_dir(root.join("lit"))
+                .unwrap()
+                .map(|entry| entry.unwrap().path())
+                .find(|path| {
+                    path.join("Lit.toml").is_file()
+                        && std::fs::read_to_string(path.join("Lit.toml"))
+                            .is_ok_and(|manifest| manifest.contains(&format!("pack_id = \"{id}\"")))
+                })
+                .unwrap_or_else(|| panic!("{target} uses unknown package {id}"));
+            build_targets.insert(
+                package
+                    .strip_prefix(root)
+                    .unwrap()
+                    .to_string_lossy()
+                    .into_owned(),
+            );
+        }
+    }
+    build_targets
+}
+
 #[test]
 fn every_package_and_matter_compiles_and_solves() {
     let targets = targets();
@@ -185,7 +201,7 @@ fn every_package_and_matter_compiles_and_solves() {
     // Solve each target independently and drop the response before the next
     // one, preserving full target coverage without parallel result retention.
     for target in targets {
-        let request = if target.ends_with(".case") {
+        let request = if is_case_target(&target) {
             let case = std::fs::read_to_string(repo().join(&target)).unwrap();
             let scenario = case
                 .lines()
@@ -208,7 +224,7 @@ fn every_package_and_matter_compiles_and_solves() {
                 continue;
             }
             let dir = Path::new(&target);
-            let manifest = std::fs::read_to_string(repo().join(&dir).join("Lit.toml")).unwrap();
+            let manifest = std::fs::read_to_string(repo().join(dir).join("Lit.toml")).unwrap();
             let id = toml::from_str::<toml::Value>(&manifest).unwrap()["package"]["pack_id"]
                 .as_str()
                 .unwrap()

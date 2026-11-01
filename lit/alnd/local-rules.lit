@@ -72,3 +72,33 @@ deadline local-counsel-appearance-period: 10.days after ProHacViceApproved() cou
 {
   forum frcp
 }
+
+test "Deadline arithmetic: discovery-custody-period (30 days after)" cite "N.D. Ala. LR 5.3"
+{
+  given FinalDisposition() on 2027-01-04
+  expect deadline(discovery-custody-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: exhibit-withdrawal-period (30 days after)" cite "N.D. Ala. LR 5.4"
+{
+  given FinalDisposition() on 2027-01-04
+  expect deadline(exhibit-withdrawal-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: costs-period (21 days after)" cite "N.D. Ala. LR 54.1"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(costs-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: pro-hac-vice-period (10 days after)" cite "N.D. Ala. LR 83.1(b)(1)"
+{
+  given NonMemberAppeared() on 2027-01-04
+  expect deadline(pro-hac-vice-period) == 2027-01-14
+}
+
+test "Deadline arithmetic: local-counsel-appearance-period (10 days after)" cite "N.D. Ala. LR 83.1(b)(2)"
+{
+  given ProHacViceApproved() on 2027-01-04
+  expect deadline(local-counsel-appearance-period) == 2027-01-14
+}

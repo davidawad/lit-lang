@@ -77,10 +77,13 @@
            (file (expand-file-name "broken.case" dir)))
       (unwind-protect
           (progn
-            (write-region "case broken\nuses nope ^0.1.0\n" nil file)
+            (write-region (concat "case broken\nuses nope ^0.1.0\n"
+                                  "as_of 2026-01-01\n"
+                                  "summary \"broken fixture\"\n")
+                          nil file)
             (let ((err (should-error (litgraph-request-sync
                                       (litgraph-build-request "solve" file)))))
-              (should (string-match-p "L1006: package `nope' is not loaded\\|L0001"
+              (should (string-match-p "L1006: package `nope` is not loaded"
                                       (error-message-string err)))))
         (delete-directory dir t)))))
 

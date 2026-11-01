@@ -274,3 +274,225 @@ deadline remaining-party-disclosure-period: 30.days after NoticeOfRemovalServed(
 /// at least 7 days before the day scheduled for jury selection; otherwise
 /// juror costs may be assessed, except for good cause.
 deadline jury-cost-notice-period: 7.days before JurySelection() counted_by frcp6-iowa cite "N.D. Iowa LR 83B(b)"
+
+test "Deadline arithmetic: plaintiff-disclosure-period (21 days after)" cite "N.D. Iowa LR 7.1(a)"
+{
+  given ComplaintFiled() on 2027-01-04
+  expect deadline(plaintiff-disclosure-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: defendant-disclosure-period (30 days after)" cite "N.D. Iowa LR 7.1(b)"
+{
+  given ComplaintServed() on 2027-01-04
+  expect deadline(defendant-disclosure-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: resistance-period (14 days after)" cite "N.D. Iowa LR 7(e)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(resistance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reconsideration-period (7 days after)" cite "N.D. Iowa LR 7(e)"
+{
+  given OrderEnteredWithoutResistance() on 2027-01-04
+  expect deadline(reconsideration-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "N.D. Iowa LR 7(g)"
+{
+  given ResistanceServed() on 2027-01-04
+  expect deadline(reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: paper-copy-period (7 days after)" cite "N.D. Iowa LR 5A(g)(8)"
+{
+  given LongFilingFiled() on 2027-01-04
+  expect deadline(paper-copy-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: record-copy-period (7 days after)" cite "N.D. Iowa LR 5A(g)(9)"
+{
+  given AdministrativeRecordFiled() on 2027-01-04
+  expect deadline(record-copy-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: signature-objection-period (14 days after)" cite "N.D. Iowa LR 5A(i)"
+{
+  given NefReceived() on 2027-01-04
+  expect deadline(signature-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: scheduling-plan-period (90 days after)" cite "N.D. Iowa LR 16(a)"
+{
+  given ComplaintFiled() on 2027-01-04
+  expect deadline(scheduling-plan-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: removal-scheduling-plan-period (60 days after)" cite "N.D. Iowa LR 81(b)"
+{
+  given NoticeOfRemovalFiled() on 2027-01-04
+  expect deadline(removal-scheduling-plan-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: judicial-review-schedule-period (90 days after)" cite "N.D. Iowa LR 16(h)"
+{
+  given ComplaintFiled() on 2027-01-04
+  expect deadline(judicial-review-schedule-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: disclosure-objection-period (14 days after)" cite "N.D. Iowa LR 26(a)"
+{
+  given SchedulingPlanFiled() on 2027-01-04
+  expect deadline(disclosure-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: proposed-pretrial-order-period (3 days before)" cite "N.D. Iowa LR 16A(b)"
+{
+  given FinalPretrialConference() on 2027-01-04
+  expect deadline(proposed-pretrial-order-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: pretrial-disclosure-period (21 days before)" cite "N.D. Iowa LR 16A(c)"
+{
+  given FinalPretrialConference() on 2027-01-04
+  expect deadline(pretrial-disclosure-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: pretrial-filings-period (3 days before)" cite "N.D. Iowa LR 16A(d)"
+{
+  given FinalPretrialConference() on 2027-01-04
+  expect deadline(pretrial-filings-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: class-certification-period (180 days after)" cite "N.D. Iowa LR 23(a)"
+{
+  given ComplaintFiled() on 2027-01-04
+  expect deadline(class-certification-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: derivative-certification-period (180 days after)" cite "N.D. Iowa LR 23(b)"
+{
+  given ComplaintFiled() on 2027-01-04
+  expect deadline(derivative-certification-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: association-certification-period (180 days after)" cite "N.D. Iowa LR 23(c)"
+{
+  given ComplaintFiled() on 2027-01-04
+  expect deadline(association-certification-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: motion-to-compel-period (14 days after)" cite "N.D. Iowa LR 37(c)"
+{
+  given DiscoveryDeadline() on 2027-01-04
+  expect deadline(motion-to-compel-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: service-statement-period (97 days after)" cite "N.D. Iowa LR 41(a)(1)"
+{
+  given ComplaintFiled() on 2027-01-04
+  expect deadline(service-statement-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: default-judgment-motion-period (30 days after)" cite "N.D. Iowa LR 41(a)(3)"
+{
+  given DefaultEntered() on 2027-01-04
+  expect deadline(default-judgment-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: settlement-papers-period (30 days after)" cite "N.D. Iowa LR 41(b)"
+{
+  given SettlementAdvised() on 2027-01-04
+  expect deadline(settlement-papers-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: reinstatement-period (60 days after)" cite "N.D. Iowa LR 41(b)"
+{
+  given SettlementDismissalEntered() on 2027-01-04
+  expect deadline(reinstatement-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "N.D. Iowa LR 54(a)(1)(A)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: costs-resistance-period (14 days after)" cite "N.D. Iowa LR 54(a)(1)(C)"
+{
+  given CostFormServed() on 2027-01-04
+  expect deadline(costs-resistance-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: appeal-costs-period (21 days after)" cite "N.D. Iowa LR 54(a)(2)"
+{
+  given MandateIssued() on 2027-01-04
+  expect deadline(appeal-costs-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: social-security-fee-period (30 days after)" cite "N.D. Iowa LR 54A(b)"
+{
+  given SocialSecurityJudgmentEntered() on 2027-01-04
+  expect deadline(social-security-fee-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: agency-fee-petition-period (30 days after)" cite "N.D. Iowa LR 54A(c)"
+{
+  given AgencyFeeOrderEntered() on 2027-01-04
+  expect deadline(agency-fee-petition-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: agency-fee-answer-period (30 days after)" cite "N.D. Iowa LR 54A(c)"
+{
+  given FeePetitionServed() on 2027-01-04
+  expect deadline(agency-fee-answer-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: summary-judgment-resistance-period (21 days after)" cite "N.D. Iowa LR 56(b)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-resistance-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: rule-56d-motion-period (14 days after)" cite "N.D. Iowa LR 56(g)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(rule-56d-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (7 days after)" cite "N.D. Iowa LR 56(d)"
+{
+  given AdditionalFactsServed() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: magistrate-objection-period (14 days after)" cite "N.D. Iowa LR 72A"
+{
+  given MagistrateRulingServed() on 2027-01-04
+  expect deadline(magistrate-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-objection-response-period (14 days after)" cite "N.D. Iowa LR 72A"
+{
+  given ObjectionsServed() on 2027-01-04
+  expect deadline(magistrate-objection-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: removing-party-disclosure-period (21 days after)" cite "N.D. Iowa LR 81(c)"
+{
+  given NoticeOfRemovalFiled() on 2027-01-04
+  expect deadline(removing-party-disclosure-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: remaining-party-disclosure-period (30 days after)" cite "N.D. Iowa LR 81(d)"
+{
+  given NoticeOfRemovalServed() on 2027-01-04
+  expect deadline(remaining-party-disclosure-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: jury-cost-notice-period (7 days before)" cite "N.D. Iowa LR 83B(b)"
+{
+  given JurySelection() on 2027-01-04
+  expect deadline(jury-cost-notice-period) == 2026-12-28
+}

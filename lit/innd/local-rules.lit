@@ -293,3 +293,135 @@ deadline proposed-findings-objection-period: 14.days after ProposedFindingsServe
 {
   forum frcp
 }
+
+test "Deadline arithmetic: constitutional-question-notice-period (21 days after)" cite "N.D. Ind. L.R. 5.1-1(a)"
+{
+  given ConstitutionalChallengeFiled() on 2027-03-16
+  expect deadline(constitutional-question-notice-period) == 2027-04-06
+}
+
+test "Deadline arithmetic: rule12-response-period (21 days after)" cite "N.D. Ind. L.R. 7-1(d)(2)"
+{
+  given Rule12MotionServed() on 2027-03-16
+  expect deadline(rule12-response-period) == 2027-04-06
+}
+
+test "Deadline arithmetic: rule12-reply-period (7 days after)" cite "N.D. Ind. L.R. 7-1(d)(2)"
+{
+  given Rule12ResponseServed() on 2027-03-16
+  expect deadline(rule12-reply-period) == 2027-03-23
+}
+
+test "Deadline arithmetic: motion-response-period (14 days after)" cite "N.D. Ind. L.R. 7-1(d)(3)"
+{
+  given MotionServed() on 2027-03-16
+  expect deadline(motion-response-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: motion-reply-period (7 days after)" cite "N.D. Ind. L.R. 7-1(d)(3)"
+{
+  given ResponseServed() on 2027-03-16
+  expect deadline(motion-reply-period) == 2027-03-23
+}
+
+test "Deadline arithmetic: social-security-opening-brief-period (42 days after)" cite "N.D. Ind. L.R. 7-3(b)"
+{
+  given AdministrativeRecordFiled() on 2027-03-16
+  expect deadline(social-security-opening-brief-period) == 2027-04-27
+}
+
+test "Deadline arithmetic: social-security-response-period (42 days after)" cite "N.D. Ind. L.R. 7-3(c)"
+{
+  given SocialSecurityOpeningBriefFiled() on 2027-03-16
+  expect deadline(social-security-response-period) == 2027-04-27
+}
+
+test "Deadline arithmetic: social-security-reply-period (14 days after)" cite "N.D. Ind. L.R. 7-3(d)"
+{
+  given SocialSecurityResponseFiled() on 2027-03-16
+  expect deadline(social-security-reply-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: deposition-notice-period (14 days before)" cite "N.D. Ind. L.R. 30-1(b)"
+{
+  given DepositionScheduled() on 2027-03-16
+  expect deadline(deposition-notice-period) == 2027-03-02
+}
+
+test "Deadline arithmetic: retrial-judge-request-period (14 days after)" cite "N.D. Ind. L.R. 40-1(g)"
+{
+  given NewTrialMandateDocketed() on 2027-03-16
+  expect deadline(retrial-judge-request-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: jury-cost-notice-period (1 court days before)" cite "N.D. Ind. L.R. 47-3(b)"
+{
+  given TrialBegins() on 2027-03-16
+  expect deadline(jury-cost-notice-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: cost-bill-period (14 days after)" cite "N.D. Ind. L.R. 54-1(a)"
+{
+  given FinalJudgmentEntered() on 2027-03-16
+  expect deadline(cost-bill-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (28 days after)" cite "N.D. Ind. L.R. 56-1(b)"
+{
+  given SummaryJudgmentMotionServed() on 2027-03-16
+  expect deadline(summary-judgment-response-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "N.D. Ind. L.R. 56-1(c)"
+{
+  given SummaryJudgmentResponseServed() on 2027-03-16
+  expect deadline(summary-judgment-reply-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: receiver-inventory-period (28 days after)" cite "N.D. Ind. L.R. 66-1(b)"
+{
+  given EstatePossessionTaken() on 2027-03-16
+  expect deadline(receiver-inventory-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: receiver-first-report-period (28 days after)" cite "N.D. Ind. L.R. 66-1(b)"
+{
+  given EstateInventoryFiled() on 2027-03-16
+  expect deadline(receiver-first-report-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: identical-discipline-show-cause-period (30 days after)" cite "N.D. Ind. L.R. 83-6.8(b)"
+{
+  given IdenticalDisciplineOrderServed() on 2027-03-16
+  expect deadline(identical-discipline-show-cause-period) == 2027-04-15
+}
+
+test "Deadline arithmetic: appointed-appearance-period (14 days after)" cite "N.D. Ind. L.R. 83-7(c)"
+{
+  given AppointmentAccepted() on 2027-03-16
+  expect deadline(appointed-appearance-period) == 2027-03-30
+}
+
+test "Deadline arithmetic: appointed-expense-petition-period (90 days after)" cite "N.D. Ind. L.R. 83-7(e)"
+{
+  given AppointmentExpenseIncurred() on 2027-03-16
+  expect deadline(appointed-expense-petition-period) == 2027-06-14
+}
+
+test "Deadline arithmetic: removal-admission-period (21 days after)" cite "N.D. Ind. L.R. 83-8(b)"
+{
+  given CaseRemovedOrTransferred() on 2027-03-16
+  expect deadline(removal-admission-period) == 2027-04-06
+}
+
+test "Deadline arithmetic: withdrawal-notice-period (7 days before)" cite "N.D. Ind. L.R. 83-8(c)"
+{
+  given WithdrawalMotionFiled() on 2027-03-16
+  expect deadline(withdrawal-notice-period) == 2027-03-09
+}
+
+test "Deadline arithmetic: proposed-findings-objection-period (14 days after)" cite "N.D. Ind. L.R. 200-1(a)"
+{
+  given ProposedFindingsServed() on 2027-03-16
+  expect deadline(proposed-findings-objection-period) == 2027-03-30
+}

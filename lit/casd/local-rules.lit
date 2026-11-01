@@ -106,3 +106,88 @@ deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 
 /// S.D. Cal. CivLR 54.1(h)(1): a motion to retax is served and filed within
 /// seven (7) days after receipt of the clerk's notice of the taxation.
 deadline retax-motion-period: 7.days after CostsNoticeReceived() counted_by frcp6 cite "S.D. Cal. CivLR 54.1(h)"
+
+
+test "Deadline arithmetic: motion-filing-period (28 days before)" cite "S.D. Cal. CivLR 7.1(e)"
+{
+  given HearingDate() on 2027-01-04
+  expect deadline(motion-filing-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: opposition-period (14 days before)" cite "S.D. Cal. CivLR 7.1(e)"
+{
+  given HearingDate() on 2027-01-04
+  expect deadline(opposition-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: reply-period (7 days before)" cite "S.D. Cal. CivLR 7.1(e)"
+{
+  given HearingDate() on 2027-01-04
+  expect deadline(reply-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: social-security-plaintiff-brief-period (30 days after)" cite "S.D. Cal. CivLR 7.1(e)"
+{
+  given AdministrativeRecordFiled() on 2027-01-04
+  expect deadline(social-security-plaintiff-brief-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: social-security-opposition-period (30 days after)" cite "S.D. Cal. CivLR 7.1(e)"
+{
+  given SocialSecurityPlaintiffBriefServed() on 2027-01-04
+  expect deadline(social-security-opposition-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: social-security-reply-period (14 days after)" cite "S.D. Cal. CivLR 7.1(e)"
+{
+  given SocialSecurityOppositionServed() on 2027-01-04
+  expect deadline(social-security-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reconsideration-period (28 days after)" cite "S.D. Cal. CivLR 7.1(i)"
+{
+  given RulingEntered() on 2027-01-04
+  expect deadline(reconsideration-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: ene-conference-period (45 days after)" cite "S.D. Cal. CivLR 16.1(c)"
+{
+  given AnswerFiled() on 2027-01-04
+  expect deadline(ene-conference-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: contentions-memorandum-period (28 days before)" cite "S.D. Cal. CivLR 16.1(f)"
+{
+  given PretrialHearing() on 2027-01-04
+  expect deadline(contentions-memorandum-period) == 2026-12-07
+}
+
+test "Deadline arithmetic: counsel-meeting-period (21 days before)" cite "S.D. Cal. CivLR 16.1(f)"
+{
+  given PretrialHearing() on 2027-01-04
+  expect deadline(counsel-meeting-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: proposed-pretrial-order-period (14 days before)" cite "S.D. Cal. CivLR 16.1(f)"
+{
+  given PretrialHearing() on 2027-01-04
+  expect deadline(proposed-pretrial-order-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: pretrial-order-lodging-period (7 days before)" cite "S.D. Cal. CivLR 16.1(f)"
+{
+  given PretrialHearing() on 2027-01-04
+  expect deadline(pretrial-order-lodging-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "S.D. Cal. CivLR 54.1(a)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: retax-motion-period (7 days after)" cite "S.D. Cal. CivLR 54.1(h)"
+{
+  given CostsNoticeReceived() on 2027-01-04
+  expect deadline(retax-motion-period) == 2027-01-11
+}

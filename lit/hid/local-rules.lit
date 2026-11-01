@@ -581,3 +581,315 @@ deadline bankruptcy-appeal-order-review-period: 14.days after BankruptcyAppealOr
 {
   forum frcp
 }
+
+test "Deadline arithmetic: seal-opposition-period (7 days after)" cite "D. Haw. LR 5.2(c)"
+{
+  given SealMotionFiled() on 2027-01-04
+  expect deadline(seal-opposition-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: seal-denial-election-period (4 days after)" cite "D. Haw. LR 5.2(c)"
+{
+  given SealMotionDenied() on 2027-01-04
+  expect deadline(seal-denial-election-period) == 2027-01-08
+}
+
+test "Deadline arithmetic: seal-conforming-filing-period (4 days after)" cite "D. Haw. LR 5.2(c)"
+{
+  given SealOrderEntered() on 2027-01-04
+  expect deadline(seal-conforming-filing-period) == 2027-01-08
+}
+
+test "Deadline arithmetic: public-filing-opposition-period (7 days after)" cite "D. Haw. LR 5.2(d)"
+{
+  given PublicFilingMotionFiled() on 2027-01-04
+  expect deadline(public-filing-opposition-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: proof-of-service-period (1 days after)" cite "D. Haw. LR 5.6"
+{
+  given DocumentServed() on 2027-01-04
+  expect deadline(proof-of-service-period) == 2027-01-05
+}
+
+test "Deadline arithmetic: hearing-opposition-period (21 days before)" cite "D. Haw. LR 7.2"
+{
+  given MotionHearingHeld() on 2027-01-04
+  expect deadline(hearing-opposition-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: nonhearing-opposition-period (14 days after)" cite "D. Haw. LR 7.2"
+{
+  given NonHearingMotionServed() on 2027-01-04
+  expect deadline(nonhearing-opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: hearing-reply-period (14 days before)" cite "D. Haw. LR 7.2"
+{
+  given MotionHearingHeld() on 2027-01-04
+  expect deadline(hearing-reply-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: nonhearing-reply-period (14 days after)" cite "D. Haw. LR 7.2"
+{
+  given NonHearingOppositionServed() on 2027-01-04
+  expect deadline(nonhearing-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: counter-motion-hearing-reply-period (7 days before)" cite "D. Haw. LR 7.7"
+{
+  given MotionHearingHeld() on 2027-01-04
+  expect deadline(counter-motion-hearing-reply-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: counter-motion-nonhearing-reply-period (7 days after)" cite "D. Haw. LR 7.7"
+{
+  given CounterMotionOppositionServed() on 2027-01-04
+  expect deadline(counter-motion-nonhearing-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: substantive-joinder-period (3 days after)" cite "D. Haw. LR 7.7"
+{
+  given JoinedPaperFiled() on 2027-01-04
+  expect deadline(substantive-joinder-period) == 2027-01-07
+}
+
+test "Deadline arithmetic: prefiling-conference-period (7 days before)" cite "D. Haw. LR 7.8"
+{
+  given MotionFiled() on 2027-01-04
+  expect deadline(prefiling-conference-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: amended-pleading-period (14 days after)" cite "D. Haw. LR 10.4"
+{
+  given AmendmentGranted() on 2027-01-04
+  expect deadline(amended-pleading-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: scheduling-statement-period (7 days before)" cite "D. Haw. LR 16.2(b)"
+{
+  given SchedulingConferenceHeld() on 2027-01-04
+  expect deadline(scheduling-statement-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: settlement-statement-period (7 days before)" cite "D. Haw. LR 16.5(b)"
+{
+  given SettlementConferenceHeld() on 2027-01-04
+  expect deadline(settlement-statement-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: parties-report-period (14 days after)" cite "D. Haw. LR 26.1(b)"
+{
+  given PartiesConferenceHeld() on 2027-01-04
+  expect deadline(parties-report-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: supplemental-report-period (7 days after)" cite "D. Haw. LR 26.1(b)"
+{
+  given PlaintiffReportFiled() on 2027-01-04
+  expect deadline(supplemental-report-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: related-case-response-period (7 days after)" cite "D. Haw. LR 40.2"
+{
+  given RelatedCaseNoticeServed() on 2027-01-04
+  expect deadline(related-case-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: jury-instruction-exchange-period (21 days before)" cite "D. Haw. LR 51.1(e)"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(jury-instruction-exchange-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: jury-instruction-filing-period (14 days before)" cite "D. Haw. LR 51.1(g)"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(jury-instruction-filing-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: jury-instruction-objection-period (7 days before)" cite "D. Haw. LR 51.1(g)"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(jury-instruction-objection-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: draft-findings-period (28 days after)" cite "D. Haw. LR 52.1"
+{
+  given BenchTrialConcluded() on 2027-01-04
+  expect deadline(draft-findings-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "D. Haw. LR 54.1(b)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: post-trial-bill-of-costs-period (14 days after)" cite "D. Haw. LR 54.1(b)"
+{
+  given PostTrialMotionDenied() on 2027-01-04
+  expect deadline(post-trial-bill-of-costs-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: remand-bill-of-costs-period (14 days after)" cite "D. Haw. LR 54.1(b)"
+{
+  given RemandOrderEntered() on 2027-01-04
+  expect deadline(remand-bill-of-costs-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: costs-objection-period (7 days after)" cite "D. Haw. LR 54.1(d)"
+{
+  given BillOfCostsServed() on 2027-01-04
+  expect deadline(costs-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: costs-review-motion-period (7 days after)" cite "D. Haw. LR 54.1(e)"
+{
+  given CostsTaxed() on 2027-01-04
+  expect deadline(costs-review-motion-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: fee-motion-period (49 days after)" cite "D. Haw. LR 54.2(b)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(fee-motion-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: fee-information-period (14 days after)" cite "D. Haw. LR 54.2(d)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(fee-information-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: fee-disclosure-period (14 days after)" cite "D. Haw. LR 54.2(d)"
+{
+  given FeeInformationReceived() on 2027-01-04
+  expect deadline(fee-disclosure-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: fee-objection-identification-period (7 days after)" cite "D. Haw. LR 54.2(d)"
+{
+  given FeeExchangeCompleted() on 2027-01-04
+  expect deadline(fee-objection-identification-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: fee-joint-statement-period (42 days after)" cite "D. Haw. LR 54.2(e)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(fee-joint-statement-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: fee-response-period (7 days after)" cite "D. Haw. LR 54.2(g)"
+{
+  given FeeMotionServed() on 2027-01-04
+  expect deadline(fee-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: fee-reply-period (7 days after)" cite "D. Haw. LR 54.2(g)"
+{
+  given FeeResponseServed() on 2027-01-04
+  expect deadline(fee-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: draft-judgment-period (7 days after)" cite "D. Haw. LR 58.2"
+{
+  given DecisionAnnounced() on 2027-01-04
+  expect deadline(draft-judgment-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: draft-judgment-objection-period (7 days after)" cite "D. Haw. LR 58.2"
+{
+  given DraftJudgmentServed() on 2027-01-04
+  expect deadline(draft-judgment-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: reconsideration-period (14 days after)" cite "D. Haw. LR 60.1"
+{
+  given InterlocutoryOrderIssued() on 2027-01-04
+  expect deadline(reconsideration-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: receiver-inventory-period (28 days after)" cite "D. Haw. LR 66.1(a)"
+{
+  given ReceiverTookPossession() on 2027-01-04
+  expect deadline(receiver-inventory-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: magistrate-objection-period (14 days after)" cite "D. Haw. LR 74.1(a)"
+{
+  given MagistrateOrderServed() on 2027-01-04
+  expect deadline(magistrate-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-objection-response-period (14 days after)" cite "D. Haw. LR 74.1(b)"
+{
+  given MagistrateObjectionServed() on 2027-01-04
+  expect deadline(magistrate-objection-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: attorney-status-notice-period (14 days after)" cite "D. Haw. LR 83.1(d)"
+{
+  given AttorneyStatusChanged() on 2027-01-04
+  expect deadline(attorney-status-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: address-change-notice-period (14 days after)" cite "D. Haw. LR 83.1(e)"
+{
+  given ContactInformationChanged() on 2027-01-04
+  expect deadline(address-change-notice-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: returned-mail-response-period (30 days after)" cite "D. Haw. LR 83.1(e)"
+{
+  given CourtMailReturned() on 2027-01-04
+  expect deadline(returned-mail-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: discipline-show-cause-period (14 days after)" cite "D. Haw. LR 83.4(b)"
+{
+  given DisciplineNoticeMailed() on 2027-01-04
+  expect deadline(discipline-show-cause-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediator-objection-period (7 days after)" cite "D. Haw. LR 88.1(l)"
+{
+  given MediatorIdentityLearned() on 2027-01-04
+  expect deadline(mediator-objection-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: section-2255-response-period (35 days after)" cite "D. Haw. LR 99.3(d)"
+{
+  given Section2255MotionServed() on 2027-01-04
+  expect deadline(section-2255-response-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: prisoner-exhaustion-motion-period (70 days after)" cite "D. Haw. LR 99.16.2"
+{
+  given PrisonerSchedulingOrderEntered() on 2027-01-04
+  expect deadline(prisoner-exhaustion-motion-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: bankruptcy-appeal-order-review-period (14 days after)" cite "D. Haw. LR 8005.1(b)"
+{
+  given BankruptcyAppealOrderEntered() on 2027-01-04
+  expect deadline(bankruptcy-appeal-order-review-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: jury-settlement-notice-period (1 court days before)" cite "D. Haw. LR 47.2"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(jury-settlement-notice-period) == 2026-12-31
+}
+
+test "Deadline arithmetic: receiver-first-report-period (1 months after)" cite "D. Haw. LR 66.1(b)"
+{
+  given ReceiverInventoryFiled() on 2027-01-04
+  expect deadline(receiver-first-report-period) == 2027-02-04
+}
+
+test "Deadline arithmetic: pro-se-other-service-period (3 court days after)" cite "D. Haw. LR 81.1(c)"
+{
+  given ServiceByOtherMeansNotified() on 2027-01-04
+  expect deadline(pro-se-other-service-period) == 2027-01-07
+}

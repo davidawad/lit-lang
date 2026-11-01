@@ -324,3 +324,177 @@ deadline costs-objection-response-period: 7.days after CostsObjectionsServed() c
 {
   forum frcp
 }
+
+test "Deadline arithmetic: waiver-request-period (14 days after)" cite "S.D. W. Va. LR Civ P 4.1"
+{
+  given ComplaintFiled() on 2027-02-02
+  expect deadline(waiver-request-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: waiver-filing-period (7 days after)" cite "S.D. W. Va. LR Civ P 4.1"
+{
+  given WaiverReturned() on 2027-02-09
+  expect deadline(waiver-filing-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: response-period (14 days after)" cite "S.D. W. Va. LR Civ P 7.1(a)"
+{
+  given MotionServed() on 2027-02-16
+  expect deadline(response-period) == 2027-03-02
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "S.D. W. Va. LR Civ P 7.1(a)"
+{
+  given ResponseServed() on 2027-02-23
+  expect deadline(reply-period) == 2027-03-02
+}
+
+test "Deadline arithmetic: consent-form-period (21 days after)" cite "S.D. W. Va. LR Civ P 9.1(b)"
+{
+  given ConsentFormProvided() on 2027-03-02
+  expect deadline(consent-form-period) == 2027-03-23
+}
+
+test "Deadline arithmetic: commissioner-response-period (60 days after)" cite "S.D. W. Va. LR Civ P 9.3(a)"
+{
+  given SocialSecurityComplaintServed() on 2027-03-09
+  expect deadline(commissioner-response-period) == 2027-05-10
+}
+
+test "Deadline arithmetic: plaintiff-brief-period (30 days after)" cite "S.D. W. Va. LR Civ P 9.4(a)"
+{
+  given TranscriptServed() on 2027-03-16
+  expect deadline(plaintiff-brief-period) == 2027-04-15
+}
+
+test "Deadline arithmetic: commissioner-brief-period (30 days after)" cite "S.D. W. Va. LR Civ P 9.4(a)"
+{
+  given PlaintiffBriefServed() on 2027-03-23
+  expect deadline(commissioner-brief-period) == 2027-04-22
+}
+
+test "Deadline arithmetic: social-security-reply-period (14 days after)" cite "S.D. W. Va. LR Civ P 9.4(a)"
+{
+  given CommissionerBriefServed() on 2027-03-30
+  expect deadline(social-security-reply-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: eaja-fee-motion-period (90 days after)" cite "S.D. W. Va. LR Civ P 9.6"
+{
+  given FinalJudgmentEntered() on 2027-04-06
+  expect deadline(eaja-fee-motion-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: parties-meeting-period (21 days before)" cite "S.D. W. Va. LR Civ P 16.1(b)"
+{
+  given SchedulingConference() on 2027-04-13
+  expect deadline(parties-meeting-period) == 2027-03-23
+}
+
+test "Deadline arithmetic: meeting-report-period (14 days before)" cite "S.D. W. Va. LR Civ P 16.1(c)"
+{
+  given SchedulingConference() on 2027-04-20
+  expect deadline(meeting-report-period) == 2027-04-06
+}
+
+test "Deadline arithmetic: case-management-statement-period (7 days before)" cite "S.D. W. Va. LR Civ P 16.2(b)"
+{
+  given CaseManagementConference() on 2027-04-27
+  expect deadline(case-management-statement-period) == 2027-04-20
+}
+
+test "Deadline arithmetic: pretrial-meeting-period (21 days before)" cite "S.D. W. Va. LR Civ P 16.7(a)"
+{
+  given FinalPretrialConference() on 2027-05-04
+  expect deadline(pretrial-meeting-period) == 2027-04-13
+}
+
+test "Deadline arithmetic: proposed-pretrial-order-period (7 days before)" cite "S.D. W. Va. LR Civ P 16.7(b)"
+{
+  given FinalPretrialConference() on 2027-05-11
+  expect deadline(proposed-pretrial-order-period) == 2027-05-04
+}
+
+test "Deadline arithmetic: initial-disclosures-period (30 days after)" cite "S.D. W. Va. LR Civ P 26.1(a)"
+{
+  given PartiesMeeting() on 2027-05-18
+  expect deadline(initial-disclosures-period) == 2027-06-17
+}
+
+test "Deadline arithmetic: burden-expert-disclosure-period (60 days before)" cite "S.D. W. Va. LR Civ P 26.1(b)"
+{
+  given DiscoveryCompletion() on 2027-05-25
+  expect deadline(burden-expert-disclosure-period) == 2027-03-26
+}
+
+test "Deadline arithmetic: responding-expert-disclosure-period (30 days before)" cite "S.D. W. Va. LR Civ P 26.1(b)"
+{
+  given DiscoveryCompletion() on 2027-06-01
+  expect deadline(responding-expert-disclosure-period) == 2027-04-30
+}
+
+test "Deadline arithmetic: rebuttal-expert-disclosure-period (14 days before)" cite "S.D. W. Va. LR Civ P 26.1(b)"
+{
+  given DiscoveryCompletion() on 2027-06-08
+  expect deadline(rebuttal-expert-disclosure-period) == 2027-05-25
+}
+
+test "Deadline arithmetic: interrogatory-answers-period (14 days after)" cite "S.D. W. Va. LR Civ P 33.1(c)"
+{
+  given InterrogatoryAnswersOrdered() on 2027-06-15
+  expect deadline(interrogatory-answers-period) == 2027-06-29
+}
+
+test "Deadline arithmetic: document-answers-period (14 days after)" cite "S.D. W. Va. LR Civ P 34.1(c)"
+{
+  given DocumentAnswersOrdered() on 2027-06-22
+  expect deadline(document-answers-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: admission-statement-period (14 days after)" cite "S.D. W. Va. LR Civ P 36.1(b)"
+{
+  given AdmissionRequestHeldProper() on 2027-06-29
+  expect deadline(admission-statement-period) == 2027-07-13
+}
+
+test "Deadline arithmetic: motion-to-compel-period (30 days after)" cite "S.D. W. Va. LR Civ P 37.1(c)"
+{
+  given DiscoveryResponseDue() on 2027-07-06
+  expect deadline(motion-to-compel-period) == 2027-08-05
+}
+
+test "Deadline arithmetic: retention-cause-period (30 days after)" cite "S.D. W. Va. LR Civ P 41.1"
+{
+  given DismissalNoticeGiven() on 2027-07-13
+  expect deadline(retention-cause-period) == 2027-08-12
+}
+
+test "Deadline arithmetic: jury-instructions-period (7 days before)" cite "S.D. W. Va. LR Civ P 51.1"
+{
+  given TrialDate() on 2027-07-20
+  expect deadline(jury-instructions-period) == 2027-07-13
+}
+
+test "Deadline arithmetic: proposed-findings-period (14 days before)" cite "S.D. W. Va. LR Civ P 52.1"
+{
+  given TrialDate() on 2027-07-27
+  expect deadline(proposed-findings-period) == 2027-07-13
+}
+
+test "Deadline arithmetic: bill-of-costs-period (30 days after)" cite "S.D. W. Va. LR Civ P 54.1"
+{
+  given FinalJudgmentEntered() on 2027-08-03
+  expect deadline(bill-of-costs-period) == 2027-09-02
+}
+
+test "Deadline arithmetic: costs-objection-period (14 days after)" cite "S.D. W. Va. LR Civ P 54.1"
+{
+  given BillOfCostsServed() on 2027-08-10
+  expect deadline(costs-objection-period) == 2027-08-24
+}
+
+test "Deadline arithmetic: costs-objection-response-period (7 days after)" cite "S.D. W. Va. LR Civ P 54.1"
+{
+  given CostsObjectionsServed() on 2027-08-17
+  expect deadline(costs-objection-response-period) == 2027-08-24
+}

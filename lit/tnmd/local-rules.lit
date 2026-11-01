@@ -250,3 +250,111 @@ deadline added-party-consent-period: 30.days after AdditionalPartyAppears() coun
 {
   forum frcp
 }
+
+test "Deadline arithmetic: response-period (14 days after)" cite "M.D. Tenn. L.R. 7.01(a)(3)"
+{
+  given MotionServed() on 2027-04-19
+  expect deadline(response-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "M.D. Tenn. L.R. 7.01(a)(4)"
+{
+  given ResponseServed() on 2027-04-19
+  expect deadline(reply-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: early-ruling-relief-period (14 days after)" cite "M.D. Tenn. L.R. 7.01(b)"
+{
+  given EarlyRulingServed() on 2027-04-19
+  expect deadline(early-ruling-relief-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (21 days after)" cite "M.D. Tenn. L.R. 56.01(d)"
+{
+  given SummaryJudgmentMotionServed() on 2027-04-19
+  expect deadline(summary-judgment-response-period) == 2027-05-10
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "M.D. Tenn. L.R. 56.01(f)"
+{
+  given SummaryJudgmentResponseServed() on 2027-04-19
+  expect deadline(summary-judgment-reply-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: deposition-designation-period (14 days before)" cite "M.D. Tenn. L.R. 39.01(c)"
+{
+  given TrialBegins() on 2027-04-19
+  expect deadline(deposition-designation-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: deposition-objection-period (7 days before)" cite "M.D. Tenn. L.R. 39.01(c)"
+{
+  given TrialBegins() on 2027-04-19
+  expect deadline(deposition-objection-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: supplementation-period (30 days before)" cite "M.D. Tenn. L.R. 39.01(e)"
+{
+  given TrialBegins() on 2027-04-19
+  expect deadline(supplementation-period) == 2027-03-19
+}
+
+test "Deadline arithmetic: trial-subpoena-period (14 days before)" cite "M.D. Tenn. L.R. 39.01(f)"
+{
+  given TrialBegins() on 2027-04-19
+  expect deadline(trial-subpoena-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: bill-of-costs-period (30 days after)" cite "M.D. Tenn. L.R. 54.01(a)"
+{
+  given JudgmentEntered() on 2027-04-19
+  expect deadline(bill-of-costs-period) == 2027-05-19
+}
+
+test "Deadline arithmetic: taxation-exceptions-period (14 days after)" cite "M.D. Tenn. L.R. 54.01(a)"
+{
+  given NoticeOfTaxationFiled() on 2027-04-19
+  expect deadline(taxation-exceptions-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: taxation-review-period (7 days after)" cite "M.D. Tenn. L.R. 54.01(a)"
+{
+  given TaxationOfCostsFiled() on 2027-04-19
+  expect deadline(taxation-review-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: fee-motion-period (30 days after)" cite "M.D. Tenn. L.R. 54.01(b)(1)"
+{
+  given JudgmentEntered() on 2027-04-19
+  expect deadline(fee-motion-period) == 2027-05-19
+}
+
+test "Deadline arithmetic: appellate-fee-motion-period (30 days after)" cite "M.D. Tenn. L.R. 54.01(b)(2)"
+{
+  given MandateEntered() on 2027-04-19
+  expect deadline(appellate-fee-motion-period) == 2027-05-19
+}
+
+test "Deadline arithmetic: fee-objections-period (14 days after)" cite "M.D. Tenn. L.R. 54.01(c)"
+{
+  given FeeMotionFiled() on 2027-04-19
+  expect deadline(fee-objections-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: review-response-period (14 days after)" cite "M.D. Tenn. L.R. 72.01(b)"
+{
+  given ReviewMotionServed() on 2027-04-19
+  expect deadline(review-response-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: review-transcript-period (14 days after)" cite "M.D. Tenn. L.R. 72.04"
+{
+  given ReviewMotionServed() on 2027-04-19
+  expect deadline(review-transcript-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: added-party-consent-period (30 days after)" cite "M.D. Tenn. L.R. 73.01(c)(1)"
+{
+  given AdditionalPartyAppears() on 2027-04-19
+  expect deadline(added-party-consent-period) == 2027-05-19
+}

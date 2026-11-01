@@ -114,3 +114,87 @@ deadline magistrate-report-objection-period: 14.days after MagistrateReportServe
 /// LR 72.1(IV)(b): any party may respond to another party's objections
 /// within fourteen days after being served with them.
 deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 72.1"
+
+test "Deadline arithmetic: social-security-response-period (60 days after)" cite "E.D. Pa. L. Civ. R. 4.1.3(c)"
+{
+  given SocialSecurityDateOfService() on 2027-02-01
+  expect deadline(social-security-response-period) == 2027-04-02
+}
+
+test "Deadline arithmetic: opposition-period (14 days after)" cite "E.D. Pa. L. Civ. R. 7.1(c)"
+{
+  given ContestedMotionServed() on 2027-02-01
+  expect deadline(opposition-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: post-trial-transcript-period (14 days after)" cite "E.D. Pa. L. Civ. R. 7.1(e)"
+{
+  given PostTrialMotionFiled() on 2027-02-01
+  expect deadline(post-trial-transcript-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: reconsideration-period (14 days after)" cite "E.D. Pa. L. Civ. R. 7.1(g)"
+{
+  given OrderEntered() on 2027-02-01
+  expect deadline(reconsideration-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: third-party-joinder-period (90 days after)" cite "E.D. Pa. L. Civ. R. 14.1(a)"
+{
+  given MovantAnswerServed() on 2027-02-01
+  expect deadline(third-party-joinder-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: inactivity-application-period (30 days after)" cite "E.D. Pa. L. Civ. R. 41.1(a)"
+{
+  given InactivityNoticeSent() on 2027-02-01
+  expect deadline(inactivity-application-period) == 2027-03-03
+}
+
+test "Deadline arithmetic: settlement-dismissal-vacatur-period (90 days after)" cite "E.D. Pa. L. Civ. R. 41.1(b)"
+{
+  given SettlementDismissalEntered() on 2027-02-01
+  expect deadline(settlement-dismissal-vacatur-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: trial-de-novo-demand-period (30 days after)" cite "E.D. Pa. L. Civ. R. 53.2"
+{
+  given ArbitrationAwardEntered() on 2027-02-01
+  expect deadline(trial-de-novo-demand-period) == 2027-03-03
+}
+
+test "Deadline arithmetic: costs-notice-period (75 days after)" cite "E.D. Pa. L. Civ. R. 54.1(a)"
+{
+  given FinalJudgmentEntered() on 2027-02-01
+  expect deadline(costs-notice-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: costs-objection-period (14 days after)" cite "E.D. Pa. L. Civ. R. 54.1(a)"
+{
+  given CostsNoticeServed() on 2027-02-01
+  expect deadline(costs-objection-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: costs-review-period (7 days after)" cite "E.D. Pa. L. Civ. R. 54.1(a)"
+{
+  given CostsTaxed() on 2027-02-01
+  expect deadline(costs-review-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: magistrate-order-objection-period (14 days after)" cite "E.D. Pa. L. Civ. R. 72.1"
+{
+  given MagistrateOrderIssued() on 2027-02-01
+  expect deadline(magistrate-order-objection-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: magistrate-report-objection-period (14 days after)" cite "E.D. Pa. L. Civ. R. 72.1"
+{
+  given MagistrateReportServed() on 2027-02-01
+  expect deadline(magistrate-report-objection-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: magistrate-objection-response-period (14 days after)" cite "E.D. Pa. L. Civ. R. 72.1"
+{
+  given MagistrateObjectionsServed() on 2027-02-01
+  expect deadline(magistrate-objection-response-period) == 2027-02-16
+}

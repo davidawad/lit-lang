@@ -222,3 +222,117 @@ deadline remand-transmittal-period: 14.days after RemandOrderDocketed() counted_
 {
   forum frcp
 }
+
+test "Deadline arithmetic: affiliate-supplement-period (30 days after)" cite "N.D. Ill. L.R. 3.2(f)"
+{
+  given AffiliateChangeLearned() on 2027-01-04
+  expect deadline(affiliate-supplement-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: ifp-fee-period (15 days after)" cite "N.D. Ill. L.R. 3.3(f)"
+{
+  given IfpDenialNotified() on 2027-01-04
+  expect deadline(ifp-fee-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: presentment-period (14 days after)" cite "N.D. Ill. L.R. 5.3(b)"
+{
+  given MotionDelivered() on 2027-01-04
+  expect deadline(presentment-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: pretrial-extension-request-period (14 days before)" cite "N.D. Ill. L.R. 16.1"
+{
+  given FinalPretrialConferenceHeld() on 2027-01-04
+  expect deadline(pretrial-extension-request-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: remand-stipulation-period (14 days after)" cite "N.D. Ill. L.R. 40.5(b)"
+{
+  given RemandMandateNoticeGiven() on 2027-01-04
+  expect deadline(remand-stipulation-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: bill-of-costs-period (30 days after)" cite "N.D. Ill. L.R. 54.1(a)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: fee-information-period (21 days after)" cite "N.D. Ill. L.R. 54.3(d)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(fee-information-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: fee-disclosure-period (21 days after)" cite "N.D. Ill. L.R. 54.3(d)"
+{
+  given FeeInformationReceived() on 2027-01-04
+  expect deadline(fee-disclosure-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: fee-objection-period (14 days after)" cite "N.D. Ill. L.R. 54.3(d)"
+{
+  given FeeExchangeCompleted() on 2027-01-04
+  expect deadline(fee-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: fee-joint-statement-period (70 days after)" cite "N.D. Ill. L.R. 54.3(e)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(fee-joint-statement-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: fee-motion-period (91 days after)" cite "N.D. Ill. L.R. 54.3(b)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(fee-motion-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: fee-instructions-motion-period (14 days after)" cite "N.D. Ill. L.R. 54.3(g)"
+{
+  given FeeMaterialsDueDatePassed() on 2027-01-04
+  expect deadline(fee-instructions-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: receiver-inventory-period (21 days after)" cite "N.D. Ill. L.R. 66.1(b)"
+{
+  given ReceiverAppointed() on 2027-01-04
+  expect deadline(receiver-inventory-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: magistrate-reassignment-objection-period (21 days after)" cite "N.D. Ill. L.R. 73.1(e)"
+{
+  given MagistrateReassigned() on 2027-01-04
+  expect deadline(magistrate-reassignment-objection-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: added-party-consent-period (30 days after)" cite "N.D. Ill. L.R. 73.1(f)"
+{
+  given AddedPartyAppeared() on 2027-01-04
+  expect deadline(added-party-consent-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: status-request-period (60 days after)" cite "N.D. Ill. L.R. 78.5"
+{
+  given MotionFullyBriefed() on 2027-01-04
+  expect deadline(status-request-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: exhibit-removal-period (90 days after)" cite "N.D. Ill. L.R. 79.1(c)"
+{
+  given FinalDecisionUnappealed() on 2027-01-04
+  expect deadline(exhibit-removal-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: exhibit-removal-after-mandate-period (30 days after)" cite "N.D. Ill. L.R. 79.1(c)"
+{
+  given MandateFiled() on 2027-01-04
+  expect deadline(exhibit-removal-after-mandate-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: remand-transmittal-period (14 days after)" cite "N.D. Ill. L.R. 81.2"
+{
+  given RemandOrderDocketed() on 2027-01-04
+  expect deadline(remand-transmittal-period) == 2027-01-19
+}

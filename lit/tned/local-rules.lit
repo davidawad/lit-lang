@@ -133,3 +133,63 @@ deadline magistrate-consent-period: 45.days after MagistrateAvailabilityNoticed(
 {
   forum frcp
 }
+
+test "Deadline arithmetic: answering-brief-period (14 days after)" cite "E.D. Tenn. L.R. 7.1(a)"
+{
+  given OpeningBriefServed() on 2027-04-19
+  expect deadline(answering-brief-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: dispositive-answering-brief-period (21 days after)" cite "E.D. Tenn. L.R. 7.1(a)"
+{
+  given DispositiveOpeningBriefServed() on 2027-04-19
+  expect deadline(dispositive-answering-brief-period) == 2027-05-10
+}
+
+test "Deadline arithmetic: reply-brief-period (7 days after)" cite "E.D. Tenn. L.R. 7.1(a)"
+{
+  given AnsweringBriefServed() on 2027-04-19
+  expect deadline(reply-brief-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: supplemental-response-period (7 days after)" cite "E.D. Tenn. L.R. 7.1(d)"
+{
+  given SupplementalBriefServed() on 2027-04-19
+  expect deadline(supplemental-response-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: proposed-findings-period (14 days before)" cite "E.D. Tenn. L.R. 52.1"
+{
+  given NonJuryTrialBegins() on 2027-04-19
+  expect deadline(proposed-findings-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: bill-of-costs-period (21 days after)" cite "E.D. Tenn. L.R. 54.1"
+{
+  given JudgmentEntered() on 2027-04-19
+  expect deadline(bill-of-costs-period) == 2027-05-10
+}
+
+test "Deadline arithmetic: cost-objections-period (21 days after)" cite "E.D. Tenn. L.R. 54.1"
+{
+  given BillOfCostsServed() on 2027-04-19
+  expect deadline(cost-objections-period) == 2027-05-10
+}
+
+test "Deadline arithmetic: cost-reply-period (14 days after)" cite "E.D. Tenn. L.R. 54.1"
+{
+  given CostObjectionsServed() on 2027-04-19
+  expect deadline(cost-reply-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: fee-motion-period (30 days after)" cite "E.D. Tenn. L.R. 54.2"
+{
+  given JudgmentEntered() on 2027-04-19
+  expect deadline(fee-motion-period) == 2027-05-19
+}
+
+test "Deadline arithmetic: magistrate-consent-period (45 days after)" cite "E.D. Tenn. L.R. 72.3(c)"
+{
+  given MagistrateAvailabilityNoticed() on 2027-04-19
+  expect deadline(magistrate-consent-period) == 2027-06-03
+}

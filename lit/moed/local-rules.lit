@@ -388,172 +388,206 @@ deadline sealing-denial-stay-period: 14.days after SealingDenied() counted_by fr
   forum frcp
 }
 
-test "Deadline arithmetic: supplemental-disclosure-period (7 days after)" cite "E.D. Mo. L.R. 2.09" {
+test "Deadline arithmetic: supplemental-disclosure-period (7 days after)" cite "E.D. Mo. L.R. 2.09"
+{
   given DisclosureInformationChanged() on 2027-01-11
   expect deadline(supplemental-disclosure-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: pro-se-subpoena-request-period (21 days before)" cite "E.D. Mo. L.R. 2.06(C)" {
+test "Deadline arithmetic: pro-se-subpoena-request-period (21 days before)" cite "E.D. Mo. L.R. 2.06(C)"
+{
   given TrialOrHearingDate() on 2027-01-11
   expect deadline(pro-se-subpoena-request-period) == 2026-12-21
 }
 
-test "Deadline arithmetic: pro-se-writ-application-period (21 days before)" cite "E.D. Mo. L.R. 2.06(C)" {
+test "Deadline arithmetic: pro-se-writ-application-period (21 days before)" cite "E.D. Mo. L.R. 2.06(C)"
+{
   given TrialOrHearingDate() on 2027-01-11
   expect deadline(pro-se-writ-application-period) == 2026-12-21
 }
 
-test "Deadline arithmetic: opposition-period (14 days after)" cite "E.D. Mo. L.R. 4.01(B)" {
+test "Deadline arithmetic: opposition-period (14 days after)" cite "E.D. Mo. L.R. 4.01(B)"
+{
   given MotionServed() on 2027-01-11
   expect deadline(opposition-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: extension-opposition-period (7 days after)" cite "E.D. Mo. L.R. 4.01(B)" {
+test "Deadline arithmetic: extension-opposition-period (7 days after)" cite "E.D. Mo. L.R. 4.01(B)"
+{
   given ExtensionMotionServed() on 2027-01-11
   expect deadline(extension-opposition-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: reply-period (10 days after)" cite "E.D. Mo. L.R. 4.01(C)" {
+test "Deadline arithmetic: reply-period (10 days after)" cite "E.D. Mo. L.R. 4.01(C)"
+{
   given OppositionServed() on 2027-01-11
   expect deadline(reply-period) == 2027-01-21
 }
 
-test "Deadline arithmetic: summary-judgment-opposition-period (21 days after)" cite "E.D. Mo. L.R. 4.01(F)" {
+test "Deadline arithmetic: summary-judgment-opposition-period (21 days after)" cite "E.D. Mo. L.R. 4.01(F)"
+{
   given SummaryJudgmentMotionServed() on 2027-01-11
   expect deadline(summary-judgment-opposition-period) == 2027-02-01
 }
 
-test "Deadline arithmetic: adr-participant-list-period (14 days before)" cite "E.D. Mo. L.R. 6.02" {
+test "Deadline arithmetic: adr-participant-list-period (14 days before)" cite "E.D. Mo. L.R. 6.02"
+{
   given AdrConference() on 2027-01-11
   expect deadline(adr-participant-list-period) == 2026-12-28
 }
 
-test "Deadline arithmetic: adr-attendance-contest-period (10 days before)" cite "E.D. Mo. L.R. 6.02" {
+test "Deadline arithmetic: adr-attendance-contest-period (10 days before)" cite "E.D. Mo. L.R. 6.02"
+{
   given AdrConference() on 2027-01-11
   expect deadline(adr-attendance-contest-period) == 2026-12-31
 }
 
-test "Deadline arithmetic: adr-government-authority-period (14 days before)" cite "E.D. Mo. L.R. 6.02" {
+test "Deadline arithmetic: adr-government-authority-period (14 days before)" cite "E.D. Mo. L.R. 6.02"
+{
   given AdrConference() on 2027-01-11
   expect deadline(adr-government-authority-period) == 2026-12-28
 }
 
-test "Deadline arithmetic: adr-memorandum-period (10 days before)" cite "E.D. Mo. L.R. 6.02" {
+test "Deadline arithmetic: adr-memorandum-period (10 days before)" cite "E.D. Mo. L.R. 6.02"
+{
   given AdrConference() on 2027-01-11
   expect deadline(adr-memorandum-period) == 2026-12-31
 }
 
-test "Deadline arithmetic: adr-settlement-filing-period (30 days after)" cite "E.D. Mo. L.R. 6.05" {
+test "Deadline arithmetic: adr-settlement-filing-period (30 days after)" cite "E.D. Mo. L.R. 6.05"
+{
   given LastAdrConference() on 2027-01-11
   expect deadline(adr-settlement-filing-period) == 2027-02-10
 }
 
-test "Deadline arithmetic: adr-litigation-plan-period (14 days after)" cite "E.D. Mo. L.R. 6.05" {
+test "Deadline arithmetic: adr-litigation-plan-period (14 days after)" cite "E.D. Mo. L.R. 6.05"
+{
   given LastAdrConference() on 2027-01-11
   expect deadline(adr-litigation-plan-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: exhibit-removal-period (30 days after)" cite "E.D. Mo. L.R. 7.02(C)" {
+test "Deadline arithmetic: exhibit-removal-period (30 days after)" cite "E.D. Mo. L.R. 7.02(C)"
+{
   given BenchTrialDecision() on 2027-01-11
   expect deadline(exhibit-removal-period) == 2027-02-10
 }
 
-test "Deadline arithmetic: fee-motion-period (21 days after)" cite "E.D. Mo. L.R. 8.02" {
+test "Deadline arithmetic: fee-motion-period (21 days after)" cite "E.D. Mo. L.R. 8.02"
+{
   given FinalJudgmentEntered() on 2027-01-11
   expect deadline(fee-motion-period) == 2027-02-01
 }
 
-test "Deadline arithmetic: fee-opposition-period (14 days after)" cite "E.D. Mo. L.R. 8.02" {
+test "Deadline arithmetic: fee-opposition-period (14 days after)" cite "E.D. Mo. L.R. 8.02"
+{
   given FeeMotionServed() on 2027-01-11
   expect deadline(fee-opposition-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: fee-reply-period (7 days after)" cite "E.D. Mo. L.R. 8.02" {
+test "Deadline arithmetic: fee-reply-period (7 days after)" cite "E.D. Mo. L.R. 8.02"
+{
   given FeeOppositionServed() on 2027-01-11
   expect deadline(fee-reply-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: bill-of-costs-period (21 days after)" cite "E.D. Mo. L.R. 8.03(A)" {
+test "Deadline arithmetic: bill-of-costs-period (21 days after)" cite "E.D. Mo. L.R. 8.03(A)"
+{
   given FinalJudgmentEntered() on 2027-01-11
   expect deadline(bill-of-costs-period) == 2027-02-01
 }
 
-test "Deadline arithmetic: cost-objection-period (14 days after)" cite "E.D. Mo. L.R. 8.03(A)" {
+test "Deadline arithmetic: cost-objection-period (14 days after)" cite "E.D. Mo. L.R. 8.03(A)"
+{
   given BillOfCostsServed() on 2027-01-11
   expect deadline(cost-objection-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: cost-reply-period (7 days after)" cite "E.D. Mo. L.R. 8.03(A)" {
+test "Deadline arithmetic: cost-reply-period (7 days after)" cite "E.D. Mo. L.R. 8.03(A)"
+{
   given CostObjectionServed() on 2027-01-11
   expect deadline(cost-reply-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: appeal-costs-period (21 days after)" cite "E.D. Mo. L.R. 8.03(B)" {
+test "Deadline arithmetic: appeal-costs-period (21 days after)" cite "E.D. Mo. L.R. 8.03(B)"
+{
   given MandateIssued() on 2027-01-11
   expect deadline(appeal-costs-period) == 2027-02-01
 }
 
-test "Deadline arithmetic: bankruptcy-consolidation-review-period (28 days after)" cite "E.D. Mo. L.R. 9.01(D)" {
+test "Deadline arithmetic: bankruptcy-consolidation-review-period (28 days after)" cite "E.D. Mo. L.R. 9.01(D)"
+{
   given BankruptcyCaseManagementOrder() on 2027-01-11
   expect deadline(bankruptcy-consolidation-review-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: bankruptcy-dismissal-motion-period (28 days after)" cite "E.D. Mo. L.R. 9.01(D)" {
+test "Deadline arithmetic: bankruptcy-dismissal-motion-period (28 days after)" cite "E.D. Mo. L.R. 9.01(D)"
+{
   given BankruptcyCaseManagementOrder() on 2027-01-11
   expect deadline(bankruptcy-dismissal-motion-period) == 2027-02-08
 }
 
-test "Deadline arithmetic: commissioner-answer-period (60 days after)" cite "E.D. Mo. L.R. 9.02" {
+test "Deadline arithmetic: commissioner-answer-period (60 days after)" cite "E.D. Mo. L.R. 9.02"
+{
   given SocialSecurityComplaintServed() on 2027-01-11
   expect deadline(commissioner-answer-period) == 2027-03-12
 }
 
-test "Deadline arithmetic: social-security-brief-period (30 days after)" cite "E.D. Mo. L.R. 9.02" {
+test "Deadline arithmetic: social-security-brief-period (30 days after)" cite "E.D. Mo. L.R. 9.02"
+{
   given CommissionerAnswerServed() on 2027-01-11
   expect deadline(social-security-brief-period) == 2027-02-10
 }
 
-test "Deadline arithmetic: commissioner-brief-period (30 days after)" cite "E.D. Mo. L.R. 9.02" {
+test "Deadline arithmetic: commissioner-brief-period (30 days after)" cite "E.D. Mo. L.R. 9.02"
+{
   given SocialSecurityBriefServed() on 2027-01-11
   expect deadline(commissioner-brief-period) == 2027-02-10
 }
 
-test "Deadline arithmetic: social-security-reply-period (14 days after)" cite "E.D. Mo. L.R. 9.02" {
+test "Deadline arithmetic: social-security-reply-period (14 days after)" cite "E.D. Mo. L.R. 9.02"
+{
   given CommissionerBriefServed() on 2027-01-11
   expect deadline(social-security-reply-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: condemnation-title-period (30 days after)" cite "E.D. Mo. L.R. 9.04" {
+test "Deadline arithmetic: condemnation-title-period (30 days after)" cite "E.D. Mo. L.R. 9.04"
+{
   given CondemnationComplaintFiled() on 2027-01-11
   expect deadline(condemnation-title-period) == 2027-02-10
 }
 
-test "Deadline arithmetic: sale-balance-period (7 days after)" cite "E.D. Mo. L.R. 10.03" {
+test "Deadline arithmetic: sale-balance-period (7 days after)" cite "E.D. Mo. L.R. 10.03"
+{
   given AdmiraltySaleHeld() on 2027-01-11
   expect deadline(sale-balance-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: sale-objection-period (7 days after)" cite "E.D. Mo. L.R. 10.03" {
+test "Deadline arithmetic: sale-objection-period (7 days after)" cite "E.D. Mo. L.R. 10.03"
+{
   given AdmiraltySaleHeld() on 2027-01-11
   expect deadline(sale-objection-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: sale-confirmation-order-period (14 days after)" cite "E.D. Mo. L.R. 10.03" {
+test "Deadline arithmetic: sale-confirmation-order-period (14 days after)" cite "E.D. Mo. L.R. 10.03"
+{
   given AdmiraltySaleHeld() on 2027-01-11
   expect deadline(sale-confirmation-order-period) == 2027-01-25
 }
 
-test "Deadline arithmetic: sealing-opposition-period (7 days after)" cite "E.D. Mo. L.R. 13.05(A)(4)(d)" {
+test "Deadline arithmetic: sealing-opposition-period (7 days after)" cite "E.D. Mo. L.R. 13.05(A)(4)(d)"
+{
   given SealingMotionFiled() on 2027-01-11
   expect deadline(sealing-opposition-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: sealing-reply-period (7 days after)" cite "E.D. Mo. L.R. 13.05(A)(4)(e)" {
+test "Deadline arithmetic: sealing-reply-period (7 days after)" cite "E.D. Mo. L.R. 13.05(A)(4)(e)"
+{
   given SealingOppositionFiled() on 2027-01-11
   expect deadline(sealing-reply-period) == 2027-01-19
 }
 
-test "Deadline arithmetic: sealing-denial-stay-period (14 days after)" cite "E.D. Mo. L.R. 13.05(A)(4)(g)" {
+test "Deadline arithmetic: sealing-denial-stay-period (14 days after)" cite "E.D. Mo. L.R. 13.05(A)(4)(g)"
+{
   given SealingDenied() on 2027-01-11
   expect deadline(sealing-denial-stay-period) == 2027-01-25
 }

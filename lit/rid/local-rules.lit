@@ -229,3 +229,123 @@ deadline state-court-record-period: 14.days after RemovalNoticeFiled() counted_b
 {
   forum frcp
 }
+
+test "Deadline arithmetic: proof-of-service-period (14 days after)" cite "D.R.I. LR Cv 5.1(a)"
+{
+  given SummonsServed() on 2027-04-19
+  expect deadline(proof-of-service-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: motion-response-period (14 days after)" cite "D.R.I. LR Cv 7(a)"
+{
+  given MotionServed() on 2027-04-19
+  expect deadline(motion-response-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: motion-reply-period (7 days after)" cite "D.R.I. LR Cv 7(a)"
+{
+  given ResponseServed() on 2027-04-19
+  expect deadline(motion-reply-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: statement-of-claims-period (7 days before)" cite "D.R.I. LR Cv 16(b)"
+{
+  given InitialSchedulingConference() on 2027-04-19
+  expect deadline(statement-of-claims-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: discovery-conference-period (14 days after)" cite "D.R.I. LR Cv 26(a)"
+{
+  given LastAnswerFiled() on 2027-04-19
+  expect deadline(discovery-conference-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: compelled-response-period (21 days after)" cite "D.R.I. LR Cv 37(b)"
+{
+  given CompelOrderEntered() on 2027-04-19
+  expect deadline(compelled-response-period) == 2027-05-10
+}
+
+test "Deadline arithmetic: recorded-conversations-period (14 days before)" cite "D.R.I. LR Cv 39(b)"
+{
+  given Empanelment() on 2027-04-19
+  expect deadline(recorded-conversations-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: recorded-conversations-objection-period (7 days after)" cite "D.R.I. LR Cv 39(b)"
+{
+  given TranscriptsFurnished() on 2027-04-19
+  expect deadline(recorded-conversations-objection-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: voir-dire-questions-period (5 days before)" cite "D.R.I. LR Cv 47(b)"
+{
+  given Empanelment() on 2027-04-19
+  expect deadline(voir-dire-questions-period) == 2027-04-14
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "D.R.I. LR Cv 54(a)"
+{
+  given JudgmentEntered() on 2027-04-19
+  expect deadline(bill-of-costs-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: costs-review-period (7 days after)" cite "D.R.I. LR Cv 54(d)"
+{
+  given CostsNotified() on 2027-04-19
+  expect deadline(costs-review-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: costs-review-response-period (7 days after)" cite "D.R.I. LR Cv 54(d)"
+{
+  given CostsReviewMotionFiled() on 2027-04-19
+  expect deadline(costs-review-response-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: costs-review-conference-period (14 days after)" cite "D.R.I. LR Cv 54(e)"
+{
+  given CostsReviewMotionFiled() on 2027-04-19
+  expect deadline(costs-review-conference-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: magistrate-order-objection-period (14 days after)" cite "D.R.I. LR Cv 72(c)"
+{
+  given MagistrateOrderServed() on 2027-04-19
+  expect deadline(magistrate-order-objection-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: magistrate-order-response-period (14 days after)" cite "D.R.I. LR Cv 72(c)"
+{
+  given MagistrateOrderObjectionServed() on 2027-04-19
+  expect deadline(magistrate-order-response-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: magistrate-order-reply-period (7 days after)" cite "D.R.I. LR Cv 72(c)"
+{
+  given MagistrateOrderResponseServed() on 2027-04-19
+  expect deadline(magistrate-order-reply-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: magistrate-report-objection-period (14 days after)" cite "D.R.I. LR Cv 72(d)"
+{
+  given MagistrateReportServed() on 2027-04-19
+  expect deadline(magistrate-report-objection-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: magistrate-report-response-period (14 days after)" cite "D.R.I. LR Cv 72(d)"
+{
+  given MagistrateReportObjectionServed() on 2027-04-19
+  expect deadline(magistrate-report-response-period) == 2027-05-03
+}
+
+test "Deadline arithmetic: magistrate-report-reply-period (7 days after)" cite "D.R.I. LR Cv 72(d)"
+{
+  given MagistrateReportResponseServed() on 2027-04-19
+  expect deadline(magistrate-report-reply-period) == 2027-04-26
+}
+
+test "Deadline arithmetic: state-court-record-period (14 days after)" cite "D.R.I. LR Cv 81(a)"
+{
+  given RemovalNoticeFiled() on 2027-04-19
+  expect deadline(state-court-record-period) == 2027-05-03
+}

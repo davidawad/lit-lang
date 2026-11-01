@@ -74,6 +74,11 @@ solve cases/<id>.case`), and `--set` overrides its params.
 `litigate` is the one command line: it compiles a matter (`.case`) or a
 rule package (`lit/<forum>`) and runs any engine op on the result.
 
+Run from a litgraph checkout with Rust installed. `cargo install` compiles
+and installs the `litigate` executable into Cargo's bin directory (normally
+`~/.cargo/bin`); make sure that directory is on `PATH`. The commands below
+use the installed executable and the source library in this checkout.
+
 ```bash
 cargo install --path crates/litigate-cli          # binary: litigate
 litigate solve cases/cofc-1498-patent-case.case   # value + best line
@@ -84,6 +89,10 @@ litigate deadlines lit/frcp --arg trigger=2025-01-06 --arg reachable=true  # a p
 litigate solve lit/links                          # a links package: the graph it composes
 litigate run cases/cofc-1498-patent-case.case --op '{"op":"simulate","runs":50000}'
 ```
+
+To replay these install steps in a clean Rust container (Docker required), run
+`./scripts/beta/install-smoke.sh` from any directory. It uses a fresh Cargo
+home and fails on the first unsuccessful command.
 
 Every op is a subcommand (`solve chain simulate path pareto sweep tornado
 calibration posterior voi structure deadlines settle compare graph metric
@@ -181,6 +190,12 @@ toolchain as a library and return its envelope `{ok, op, result,
 diagnostics, provenance, elapsed_ms}`, with paths relative to the server's
 working directory (start it in a litgraph checkout to work on `lit/` and
 `cases/`).
+
+The repository's [`.mcp.json`](.mcp.json) starts the installed `litigate`
+executable directly. Install it with the Quickstart command first. For local
+development before installing, run `cargo run -q --release -p litigate-cli -- mcp`
+from the repository root; MCP clients can use `command: "cargo"` and
+`args: ["run", "-q", "--release", "-p", "litigate-cli", "--", "mcp"]`.
 
 **Claude Code:**
 

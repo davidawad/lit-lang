@@ -379,3 +379,195 @@ deadline sale-confirmation-period: 7.days after SaleHeld() counted_by frcp6-alab
 {
   forum frcp
 }
+
+test "Deadline arithmetic: unsealing-period (120 days after)" cite "S.D. Ala. GenLR 5.2(d)(5)"
+{
+  given SealingOrderEntered() on 2027-01-04
+  expect deadline(unsealing-period) == 2027-05-04
+}
+
+test "Deadline arithmetic: magistrate-objection-response-period (14 days after)" cite "S.D. Ala. GenLR 72(c)(2)"
+{
+  given MagistrateObjectionServed() on 2027-01-04
+  expect deadline(magistrate-objection-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-objection-reply-period (7 days after)" cite "S.D. Ala. GenLR 72(c)(3)"
+{
+  given MagistrateObjectionResponseServed() on 2027-01-04
+  expect deadline(magistrate-objection-reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: file-return-period (7 days after)" cite "S.D. Ala. GenLR 79(d)"
+{
+  given FileWithdrawn() on 2027-01-04
+  expect deadline(file-return-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: exhibit-withdrawal-period (14 days after)" cite "S.D. Ala. GenLR 79(f)(1)"
+{
+  given TrialConcluded() on 2027-01-04
+  expect deadline(exhibit-withdrawal-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: discovery-withdrawal-period (14 days after)" cite "S.D. Ala. GenLR 79(f)(1)"
+{
+  given CaseConcluded() on 2027-01-04
+  expect deadline(discovery-withdrawal-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: exhibit-disposal-period (60 days after)" cite "S.D. Ala. GenLR 79(f)(2)"
+{
+  given CaseConcluded() on 2027-01-04
+  expect deadline(exhibit-disposal-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: exhibit-retention-period (1 years after)" cite "S.D. Ala. GenLR 79(f)(3)(A)"
+{
+  given JudgmentFinal() on 2027-01-04
+  expect deadline(exhibit-retention-period) == 2028-01-04
+}
+
+test "Deadline arithmetic: proof-of-service-period (7 days after)" cite "S.D. Ala. CivLR 4(a)(1)"
+{
+  given ServiceCompleted() on 2027-01-04
+  expect deadline(proof-of-service-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: waiver-filing-period (7 days after)" cite "S.D. Ala. CivLR 4(a)(2)"
+{
+  given WaiverReceived() on 2027-01-04
+  expect deadline(waiver-filing-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: service-attempt-notice-period (45 days after)" cite "S.D. Ala. CivLR 4(a)(3)"
+{
+  given ComplaintFiled() on 2027-01-04
+  expect deadline(service-attempt-notice-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: opposition-period (14 days after)" cite "S.D. Ala. CivLR 7(c)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "S.D. Ala. CivLR 7(d)"
+{
+  given ResponseServed() on 2027-01-04
+  expect deadline(reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: disclosure-statement-period (7 days after)" cite "S.D. Ala. CivLR 7.1(a)"
+{
+  given InitialFilingMade() on 2027-01-04
+  expect deadline(disclosure-statement-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: pseudonym-motion-period (21 days after)" cite "S.D. Ala. CivLR 10(c)"
+{
+  given PseudonymousComplaintServed() on 2027-01-04
+  expect deadline(pseudonym-motion-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: amended-pleading-response-period (14 days after)" cite "S.D. Ala. CivLR 15(c)"
+{
+  given AmendmentGranted() on 2027-01-04
+  expect deadline(amended-pleading-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: joint-pretrial-document-period (7 days before)" cite "S.D. Ala. CivLR 16(c)(1)"
+{
+  given FinalPretrialConference() on 2027-06-15
+  expect deadline(joint-pretrial-document-period) == 2027-06-08
+}
+
+test "Deadline arithmetic: ene-session-period (30 days after)" cite "S.D. Ala. CivLR 16(d)(4)(B)"
+{
+  given EneReferred() on 2027-01-04
+  expect deadline(ene-session-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "S.D. Ala. CivLR 54(a)(1)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: bill-of-costs-post-motion-period (14 days after)" cite "S.D. Ala. CivLR 54(a)(1)"
+{
+  given PostTrialMotionResolved() on 2027-01-04
+  expect deadline(bill-of-costs-post-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: costs-objection-period (14 days after)" cite "S.D. Ala. CivLR 54(a)(3)"
+{
+  given BillOfCostsServed() on 2027-01-04
+  expect deadline(costs-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: costs-objection-response-period (7 days after)" cite "S.D. Ala. CivLR 54(a)(3)"
+{
+  given CostsObjectionsServed() on 2027-01-04
+  expect deadline(costs-objection-response-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: costs-review-period (7 days after)" cite "S.D. Ala. CivLR 54(b)"
+{
+  given CostsTaxed() on 2027-01-04
+  expect deadline(costs-review-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: summary-judgment-response-period (28 days after)" cite "S.D. Ala. CivLR 56(b)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(summary-judgment-response-period) == 2027-02-01
+}
+
+test "Deadline arithmetic: summary-judgment-reply-period (14 days after)" cite "S.D. Ala. CivLR 56(c)"
+{
+  given SummaryJudgmentResponseServed() on 2027-01-04
+  expect deadline(summary-judgment-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: intangible-show-cause-period (14 days after)" cite "S.D. Ala. CivLR 102(a)"
+{
+  given IntangibleSummonsServed() on 2027-01-04
+  expect deadline(intangible-show-cause-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: arrest-notice-period (21 days after)" cite "S.D. Ala. CivLR 102(b)"
+{
+  given PropertySeized() on 2027-01-04
+  expect deadline(arrest-notice-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: admiralty-security-period (7 days after)" cite "S.D. Ala. CivLR 104(g)"
+{
+  given SecurityOrderEntered() on 2027-01-04
+  expect deadline(admiralty-security-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: marshal-advance-period (7 days after)" cite "S.D. Ala. CivLR 104(j)"
+{
+  given MarshalAdvanceRequested() on 2027-01-04
+  expect deadline(marshal-advance-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: sale-notice-period (7 days before)" cite "S.D. Ala. CivLR 104(m)(1)"
+{
+  given SaleHeld() on 2027-06-15
+  expect deadline(sale-notice-period) == 2027-06-08
+}
+
+test "Deadline arithmetic: objected-sale-balance-period (5 days after)" cite "S.D. Ala. CivLR 104(m)(2)(C)"
+{
+  given SaleConfirmed() on 2027-01-04
+  expect deadline(objected-sale-balance-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: sale-confirmation-period (7 days after)" cite "S.D. Ala. CivLR 104(m)(7)"
+{
+  given SaleHeld() on 2027-01-04
+  expect deadline(sale-confirmation-period) == 2027-01-11
+}

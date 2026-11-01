@@ -23,7 +23,17 @@ install:
     just merge-drivers
 
 # Register every git merge driver `.gitattributes` names in this clone.
-merge-drivers: tree-sitter-merge-driver
+merge-drivers: tree-sitter-merge-driver strict-baseline-merge-driver
+
+# Min-merge the strict-profile error baseline by package when parallel
+# ratchet edits overlap. Register in each clone before its land-time rebase.
+strict-baseline-merge-driver:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    git rev-parse --git-dir > /dev/null 2>&1 || exit 0
+    driver="$(git rev-parse --show-toplevel)/scripts/qa/strict-baseline-merge.sh"
+    git config merge.strict-baseline.name "strict baseline: minimum count per package"
+    git config merge.strict-baseline.driver "$driver %O %A %B"
 
 # Register the `tsgenerate` git merge driver `.gitattributes` names for the
 # generated tree-sitter parser (editors/tree-sitter-litigate/src) and the

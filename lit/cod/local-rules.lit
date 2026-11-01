@@ -266,3 +266,143 @@ deadline bankruptcy-recommendation-objection-period: 14.days after BankruptcyRec
 {
   forum frcp
 }
+
+
+
+test "Deadline arithmetic: contact-change-notice-period (5 days after)" cite "D.C.COLO.LCivR 5.1(c)"
+{
+  given ContactInformationChanged() on 2027-01-04
+  expect deadline(contact-change-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: motion-response-period (21 days after)" cite "D.C.COLO.LCivR 7.1(d)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(motion-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: motion-reply-period (14 days after)" cite "D.C.COLO.LCivR 7.1(d)"
+{
+  given ResponseServed() on 2027-01-04
+  expect deadline(motion-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: supplemental-authority-period (7 days before)" cite "D.C.COLO.LCivR 7.1(f)"
+{
+  given MotionHearing() on 2027-01-04
+  expect deadline(supplemental-authority-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: restriction-motion-period (14 days after)" cite "D.C.COLO.LCivR 7.2(e)"
+{
+  given RestrictedDocumentFiled() on 2027-01-04
+  expect deadline(restriction-motion-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: amended-pleading-period (14 days after)" cite "D.C.COLO.LCivR 15.1(b)"
+{
+  given LeaveToAmendGranted() on 2027-01-04
+  expect deadline(amended-pleading-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: deposition-notice-period (14 days before)" cite "D.C.COLO.LCivR 30.1"
+{
+  given DepositionTaken() on 2027-01-04
+  expect deadline(deposition-notice-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: direct-assignment-consent-period (7 days before)" cite "D.C.COLO.LCivR 40.1(c)"
+{
+  given SchedulingConference() on 2027-01-04
+  expect deadline(direct-assignment-consent-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: direct-assignment-consent-outer-period (45 days after)" cite "D.C.COLO.LCivR 40.1(c)"
+{
+  given FirstNonAnswerResponseFiled() on 2027-01-04
+  expect deadline(direct-assignment-consent-outer-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: added-party-direct-consent-period (21 days after)" cite "D.C.COLO.LCivR 40.1(c)"
+{
+  given AddedPartyNotified() on 2027-01-04
+  expect deadline(added-party-direct-consent-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: consent-jurisdiction-period (7 days before)" cite "D.C.COLO.LCivR 72.2(c)"
+{
+  given SchedulingConference() on 2027-01-04
+  expect deadline(consent-jurisdiction-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: consent-jurisdiction-outer-period (45 days after)" cite "D.C.COLO.LCivR 72.2(c)"
+{
+  given FirstNonAnswerResponseFiled() on 2027-01-04
+  expect deadline(consent-jurisdiction-outer-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: added-party-consent-period (21 days after)" cite "D.C.COLO.LCivR 72.2(e)"
+{
+  given AddedPartyConsentNoticeMailed() on 2027-01-04
+  expect deadline(added-party-consent-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: subpoena-service-period (7 days before)" cite "D.C.COLO.LCivR 45.1"
+{
+  given SubpoenaReturnDate() on 2027-01-04
+  expect deadline(subpoena-service-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "D.C.COLO.LCivR 54.1"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: sj-response-period (21 days after)" cite "D.C.COLO.LCivR 56.1(a)"
+{
+  given SummaryJudgmentMotionServed() on 2027-01-04
+  expect deadline(sj-response-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: sj-reply-period (14 days after)" cite "D.C.COLO.LCivR 56.1(a)"
+{
+  given SummaryJudgmentResponseServed() on 2027-01-04
+  expect deadline(sj-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: exhibit-disposal-objection-period (14 days after)" cite "D.C.COLO.LCivR 79.1(b)"
+{
+  given ExhibitDisposalNoticed() on 2027-01-04
+  expect deadline(exhibit-disposal-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: state-court-record-period (14 days after)" cite "D.C.COLO.LCivR 81.1(b)"
+{
+  given RemovalNoticeFiled() on 2027-01-04
+  expect deadline(state-court-record-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: ada-accommodation-period (7 days before)" cite "D.C.COLO.LCivR 83.3"
+{
+  given HearingOrTrial() on 2027-01-04
+  expect deadline(ada-accommodation-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: asl-interpreter-period (30 days before)" cite "D.C.COLO.LCivR 83.3"
+{
+  given HearingOrTrial() on 2027-01-04
+  expect deadline(asl-interpreter-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: withdrawal-response-period (14 days after)" cite "D.C.COLO.LCivR 84.1(d)"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(withdrawal-response-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: bankruptcy-recommendation-objection-period (14 days after)" cite "D.C.COLO.LCivR 84.1(e)"
+{
+  given BankruptcyRecommendationsMailed() on 2027-01-04
+  expect deadline(bankruptcy-recommendation-objection-period) == 2027-01-19
+}

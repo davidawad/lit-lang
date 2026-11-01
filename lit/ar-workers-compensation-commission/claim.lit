@@ -6,7 +6,9 @@ import ar-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeO
 // claimant's side. Ark. Code Ann. title 11, chapter 9 and the Commission's
 // rules are not vendored, so every cite is a hole naming the section the
 // outline pointed to, and no period, form, fee or standard of review is
-// stated. The outline named no decision.
+// stated. The outline named no decision. With no sourced period or counting
+// rule to encode, this package has no `deadline` or `counting` declaration
+// requiring an arithmetic test.
 start filed
 
 state filed: "Claim filed" by applicant cite ?("Ark. Code Ann. § 11-9-702: not vendored") {

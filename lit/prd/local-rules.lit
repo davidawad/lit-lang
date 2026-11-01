@@ -287,3 +287,141 @@ deadline bankruptcy-appeal-judgment-notice-period: 30.days after BankruptcyAppea
 {
   forum frcp
 }
+
+test "Deadline arithmetic: form-correction-period (30 days after)" cite "D.P.R. L. Civ. R. 3(c)"
+{
+  given DefectiveFilingNoticed() on 2027-01-04
+  expect deadline(form-correction-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: calendar-conflict-notice-period (7 days after)" cite "D.P.R. L. Civ. R. 3A(c)"
+{
+  given ConflictNoticeReceived() on 2027-01-04
+  expect deadline(calendar-conflict-notice-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: opposition-period (14 days after)" cite "D.P.R. L. Civ. R. 7(b)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "D.P.R. L. Civ. R. 7(c)"
+{
+  given OppositionServed() on 2027-01-04
+  expect deadline(reply-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: eaja-fee-request-period (30 days after)" cite "D.P.R. L. Civ. R. 9(b)"
+{
+  given RemandJudgmentFinal() on 2027-01-04
+  expect deadline(eaja-fee-request-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: social-security-fee-request-period (14 days after)" cite "D.P.R. L. Civ. R. 9(b)"
+{
+  given NoticeOfAwardReceived() on 2027-01-04
+  expect deadline(social-security-fee-request-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: social-security-fee-response-period (30 days after)" cite "D.P.R. L. Civ. R. 9(b)"
+{
+  given SocialSecurityFeeRequestReceived() on 2027-01-04
+  expect deadline(social-security-fee-response-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: pretrial-meeting-period (14 days before)" cite "D.P.R. L. Civ. R. 16(c)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(pretrial-meeting-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: proposed-pretrial-order-period (7 days before)" cite "D.P.R. L. Civ. R. 16(c)"
+{
+  given PretrialConference() on 2027-01-04
+  expect deadline(proposed-pretrial-order-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: pretrial-order-objection-period (14 days after)" cite "D.P.R. L. Civ. R. 16(e)"
+{
+  given PretrialOrderApproved() on 2027-01-04
+  expect deadline(pretrial-order-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: jury-instructions-period (7 days before)" cite "D.P.R. L. Civ. R. 51"
+{
+  given TrialCommences() on 2027-01-04
+  expect deadline(jury-instructions-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "D.P.R. L. Civ. R. 54(a)"
+{
+  given JudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: costs-objection-period (14 days after)" cite "D.P.R. L. Civ. R. 54(a)"
+{
+  given BillOfCostsFiled() on 2027-01-04
+  expect deadline(costs-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: costs-refiling-period (14 days after)" cite "D.P.R. L. Civ. R. 54(a)"
+{
+  given MandateIssued() on 2027-01-04
+  expect deadline(costs-refiling-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: fee-application-period (14 days after)" cite "D.P.R. L. Civ. R. 54(b)"
+{
+  given AppealTimeExpired() on 2027-01-04
+  expect deadline(fee-application-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: post-mandate-fee-application-period (14 days after)" cite "D.P.R. L. Civ. R. 54(b)"
+{
+  given MandateIssued() on 2027-01-04
+  expect deadline(post-mandate-fee-application-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-order-appeal-period (14 days after)" cite "D.P.R. L. Civ. R. 72(c)"
+{
+  given MagistrateOrderServed() on 2027-01-04
+  expect deadline(magistrate-order-appeal-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-report-objection-period (14 days after)" cite "D.P.R. L. Civ. R. 72(d)"
+{
+  given MagistrateReportServed() on 2027-01-04
+  expect deadline(magistrate-report-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediator-selection-period (14 days after)" cite "D.P.R. L. Civ. R. 83J(c)"
+{
+  given MediationReferralNoticed() on 2027-01-04
+  expect deadline(mediator-selection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediator-objection-period (14 days after)" cite "D.P.R. L. Civ. R. 83J(c)"
+{
+  given MediatorConcernLearned() on 2027-01-04
+  expect deadline(mediator-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediation-reconsideration-period (14 days after)" cite "D.P.R. L. Civ. R. 83J(d)"
+{
+  given MediationOrderIssued() on 2027-01-04
+  expect deadline(mediation-reconsideration-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: mediation-submission-period (7 days before)" cite "D.P.R. L. Civ. R. 83J(e)"
+{
+  given FirstMediationSession() on 2027-01-04
+  expect deadline(mediation-submission-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: bankruptcy-appeal-judgment-notice-period (30 days after)" cite "D.P.R. L. Civ. R. 83K(d)"
+{
+  given BankruptcyAppealJudgmentEntered() on 2027-01-04
+  expect deadline(bankruptcy-appeal-judgment-notice-period) == 2027-02-03
+}

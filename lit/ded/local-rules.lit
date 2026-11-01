@@ -270,3 +270,129 @@ deadline withdrawal-notice-period: 14.days before WithdrawalMotionPresented() co
 {
   forum frcp
 }
+
+test "Deadline arithmetic: arbitration-award-reply-period (7 days after)" cite "D. Del. LR 3.3(c)"
+{
+  given ArbitrationResponseServed() on 2027-02-01
+  expect deadline(arbitration-award-reply-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: mailing-affidavit-period (14 days after)" cite "D. Del. LR 4.1(b)"
+{
+  given ReturnReceiptReceived() on 2027-02-01
+  expect deadline(mailing-affidavit-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: motion-reply-period (7 days after)" cite "D. Del. LR 7.1.2(b)"
+{
+  given ResponseServed() on 2027-02-01
+  expect deadline(motion-reply-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: oral-argument-application-period (7 days after)" cite "D. Del. LR 7.1.4"
+{
+  given ReplyBriefServed() on 2027-02-01
+  expect deadline(oral-argument-application-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: reargument-period (14 days after)" cite "D. Del. LR 7.1.5(a)"
+{
+  given OpinionIssued() on 2027-02-01
+  expect deadline(reargument-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: reargument-answer-period (14 days after)" cite "D. Del. LR 7.1.5(a)"
+{
+  given ReargumentMotionFiled() on 2027-02-01
+  expect deadline(reargument-answer-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: damages-statement-period (14 days after)" cite "D. Del. LR 9.4(b)"
+{
+  given DamagesStatementRequested() on 2027-02-01
+  expect deadline(damages-statement-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: draft-pretrial-order-period (30 days before)" cite "D. Del. LR 16.3(d)(1)"
+{
+  given PretrialOrderDue() on 2027-08-02
+  expect deadline(draft-pretrial-order-period) == 2027-07-02
+}
+
+test "Deadline arithmetic: pretrial-order-response-period (14 days before)" cite "D. Del. LR 16.3(d)(2)"
+{
+  given PretrialOrderDue() on 2027-08-02
+  expect deadline(pretrial-order-response-period) == 2027-07-19
+}
+
+test "Deadline arithmetic: proposed-pretrial-order-period (7 days before)" cite "D. Del. LR 16.3(d)(4)"
+{
+  given PretrialConferenceHeld() on 2027-08-02
+  expect deadline(proposed-pretrial-order-period) == 2027-07-26
+}
+
+test "Deadline arithmetic: deposition-notice-period (10 days before)" cite "D. Del. LR 30.1"
+{
+  given DepositionTaken() on 2027-08-02
+  expect deadline(deposition-notice-period) == 2027-07-23
+}
+
+test "Deadline arithmetic: bill-of-costs-period (28 days after)" cite "D. Del. LR 54.1(a)(1)"
+{
+  given AppealTimeExpired() on 2027-02-01
+  expect deadline(bill-of-costs-period) == 2027-03-01
+}
+
+test "Deadline arithmetic: bill-of-costs-after-mandate-period (28 days after)" cite "D. Del. LR 54.1(a)(1)"
+{
+  given MandateIssued() on 2027-02-01
+  expect deadline(bill-of-costs-after-mandate-period) == 2027-03-01
+}
+
+test "Deadline arithmetic: costs-objection-period (14 days after)" cite "D. Del. LR 54.1(a)(3)"
+{
+  given BillOfCostsServed() on 2027-02-01
+  expect deadline(costs-objection-period) == 2027-02-16
+}
+
+test "Deadline arithmetic: costs-review-period (7 days after)" cite "D. Del. LR 54.1(d)"
+{
+  given CostsTaxedServed() on 2027-02-01
+  expect deadline(costs-review-period) == 2027-02-08
+}
+
+test "Deadline arithmetic: settlement-fees-period (21 days after)" cite "D. Del. LR 54.3(b)"
+{
+  given SettlementApproved() on 2027-02-01
+  expect deadline(settlement-fees-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: unapproved-settlement-fees-period (21 days after)" cite "D. Del. LR 54.3(b)"
+{
+  given SettlementExecuted() on 2027-02-01
+  expect deadline(unapproved-settlement-fees-period) == 2027-02-22
+}
+
+test "Deadline arithmetic: pending-matters-statement-period (45 days after)" cite "D. Del. LR 81.2"
+{
+  given TransferredOrRemovedCaseFiled() on 2027-02-01
+  expect deadline(pending-matters-statement-period) == 2027-03-18
+}
+
+test "Deadline arithmetic: delaware-counsel-period (30 days after)" cite "D. Del. LR 83.5(e)"
+{
+  given FirstPaperFiled() on 2027-02-01
+  expect deadline(delaware-counsel-period) == 2027-03-03
+}
+
+test "Deadline arithmetic: removed-case-delaware-counsel-period (30 days after)" cite "D. Del. LR 83.5(e)"
+{
+  given TransferredOrRemovedCaseFiled() on 2027-02-01
+  expect deadline(removed-case-delaware-counsel-period) == 2027-03-03
+}
+
+test "Deadline arithmetic: withdrawal-notice-period (14 days before)" cite "D. Del. LR 83.7"
+{
+  given WithdrawalMotionPresented() on 2027-08-02
+  expect deadline(withdrawal-notice-period) == 2027-07-19
+}

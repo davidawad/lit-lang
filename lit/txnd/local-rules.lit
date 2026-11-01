@@ -271,3 +271,117 @@ deadline removal-certificate-period: 21.days after RemovalNoticeFiled() counted_
 {
   forum frcp
 }
+
+test "Deadline arithmetic: ecf-registration-period (14 days after)" cite "N.D. Tex. LR 5.1(f)"
+{
+  given AttorneyAppeared() on 2026-10-29
+  expect deadline(ecf-registration-period) == 2026-11-12
+}
+
+test "Deadline arithmetic: response-period (21 days after)" cite "N.D. Tex. LR 7.1(e)"
+{
+  given OpposedMotionFiled() on 2026-10-29
+  expect deadline(response-period) == 2026-11-19
+}
+
+test "Deadline arithmetic: reply-period (14 days after)" cite "N.D. Tex. LR 7.1(f)"
+{
+  given ResponseFiled() on 2026-10-29
+  expect deadline(reply-period) == 2026-11-12
+}
+
+test "Deadline arithmetic: pretrial-order-period (14 days before)" cite "N.D. Tex. LR 16.4"
+{
+  given TrialDate() on 2026-10-29
+  expect deadline(pretrial-order-period) == 2026-10-15
+}
+
+test "Deadline arithmetic: class-certification-period (90 days after)" cite "N.D. Tex. LR 23.2"
+{
+  given ClassComplaintFiled() on 2026-10-29
+  expect deadline(class-certification-period) == 2027-01-27
+}
+
+test "Deadline arithmetic: exhibit-exchange-period (14 days before)" cite "N.D. Tex. LR 26.2(a)"
+{
+  given TrialDate() on 2026-10-29
+  expect deadline(exhibit-exchange-period) == 2026-10-15
+}
+
+test "Deadline arithmetic: exhibit-witness-list-period (14 days before)" cite "N.D. Tex. LR 26.2(b)"
+{
+  given TrialDate() on 2026-10-29
+  expect deadline(exhibit-witness-list-period) == 2026-10-15
+}
+
+test "Deadline arithmetic: deposition-designation-period (14 days before)" cite "N.D. Tex. LR 26.2(c)"
+{
+  given TrialDate() on 2026-10-29
+  expect deadline(deposition-designation-period) == 2026-10-15
+}
+
+test "Deadline arithmetic: proposed-findings-period (14 days before)" cite "N.D. Tex. LR 52.1"
+{
+  given TrialDate() on 2026-10-29
+  expect deadline(proposed-findings-period) == 2026-10-15
+}
+
+test "Deadline arithmetic: master-response-period (21 days after)" cite "N.D. Tex. LR 53.1(b)"
+{
+  given MasterObjectionsFiled() on 2026-10-29
+  expect deadline(master-response-period) == 2026-11-19
+}
+
+test "Deadline arithmetic: master-reply-period (14 days after)" cite "N.D. Tex. LR 53.1(c)"
+{
+  given MasterResponseFiled() on 2026-10-29
+  expect deadline(master-reply-period) == 2026-11-12
+}
+
+test "Deadline arithmetic: bill-of-costs-period (14 days after)" cite "N.D. Tex. LR 54.1"
+{
+  given CostsJudgmentDocketed() on 2026-10-29
+  expect deadline(bill-of-costs-period) == 2026-11-12
+}
+
+test "Deadline arithmetic: summary-judgment-cutoff (90 days before)" cite "N.D. Tex. LR 56.2(a)"
+{
+  given TrialDate() on 2026-10-29
+  expect deadline(summary-judgment-cutoff) == 2026-07-31
+}
+
+test "Deadline arithmetic: transfer-stay-period (21 days after)" cite "N.D. Tex. LR 62.2"
+{
+  given TransferOrderEntered() on 2026-10-29
+  expect deadline(transfer-stay-period) == 2026-11-19
+}
+
+test "Deadline arithmetic: nondispositive-objection-response-period (21 days after)" cite "N.D. Tex. LR 72.1(b)"
+{
+  given NondispositiveObjectionsFiled() on 2026-10-29
+  expect deadline(nondispositive-objection-response-period) == 2026-11-19
+}
+
+test "Deadline arithmetic: magistrate-objection-reply-period (14 days after)" cite "N.D. Tex. LR 72.1(c)"
+{
+  given MagistrateResponseFiled() on 2026-10-29
+  expect deadline(magistrate-objection-reply-period) == 2026-11-12
+}
+
+test "Deadline arithmetic: exhibit-removal (60 days after)" cite "N.D. Tex. LR 79.2(b)"
+{
+  given FinalDisposition() on 2026-10-29
+  expect deadline(exhibit-removal) == 2026-12-28
+}
+
+test "Deadline arithmetic: keep-sealed-motion-period (60 days after)" cite "N.D. Tex. LR 79.4"
+{
+  given FinalDisposition() on 2026-10-29
+  expect deadline(keep-sealed-motion-period) == 2026-12-28
+}
+
+test "Deadline arithmetic: removal-certificate-period (21 days after)" cite "N.D. Tex. LR 81.2"
+{
+  given RemovalNoticeFiled() on 2026-10-29
+  expect deadline(removal-certificate-period) == 2026-11-19
+}

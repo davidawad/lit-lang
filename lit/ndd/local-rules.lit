@@ -222,3 +222,117 @@ deadline fee-reply-united-states-period: 7.days after FeeResponseFiled() counted
 /// filing of an objection to a magistrate judge's non-dispositive order
 /// to serve and file a response; a reply is not permitted.
 deadline magistrate-objection-response-period: 7.days after MagistrateObjectionFiled() counted_by frcp6-north-dakota cite "D.N.D. Civ. L.R. 72.1(D)(2)"
+
+test "Deadline arithmetic: removal-division-objection-period (30 days after)" cite "D.N.D. Civ. L.R. 3.1(A)"
+{
+  given NoticeOfRemovalFiled() on 2027-06-01
+  expect deadline(removal-division-objection-period) == 2027-07-01
+}
+
+test "Deadline arithmetic: dispositive-response-period (28 days after)" cite "D.N.D. Civ. L.R. 7.1(A)(1)(a)"
+{
+  given DispositiveMemorandumFiled() on 2027-06-01
+  expect deadline(dispositive-response-period) == 2027-06-29
+}
+
+test "Deadline arithmetic: dispositive-reply-period (14 days after)" cite "D.N.D. Civ. L.R. 7.1(A)(1)(a)"
+{
+  given DispositiveResponseFiled() on 2027-06-01
+  expect deadline(dispositive-reply-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: response-period (14 days after)" cite "D.N.D. Civ. L.R. 7.1(A)(2)"
+{
+  given MemorandumFiled() on 2027-06-01
+  expect deadline(response-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: reply-period (7 days after)" cite "D.N.D. Civ. L.R. 7.1(A)(2)"
+{
+  given ResponseFiled() on 2027-06-01
+  expect deadline(reply-period) == 2027-06-08
+}
+
+test "Deadline arithmetic: amicus-brief-period (7 days after)" cite "D.N.D. Civ. L.R. 7.1(C)(2)"
+{
+  given SupportedPartyFiled() on 2027-06-01
+  expect deadline(amicus-brief-period) == 2027-06-08
+}
+
+test "Deadline arithmetic: disclosure-statement-period (14 days after)" cite "D.N.D. Civ. L.R. 7.1.1"
+{
+  given FirstFilingOrAppearance() on 2027-06-01
+  expect deadline(disclosure-statement-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: discovery-completion-period (30 days before)" cite "D.N.D. Civ. L.R. 26.1(A)"
+{
+  given TrialBegins() on 2027-06-01
+  expect deadline(discovery-completion-period) == 2027-04-30
+}
+
+test "Deadline arithmetic: settlement-papers-period (30 days after)" cite "D.N.D. Civ. L.R. 41.1"
+{
+  given SettlementAdvised() on 2027-06-01
+  expect deadline(settlement-papers-period) == 2027-07-01
+}
+
+test "Deadline arithmetic: settlement-papers-united-states-period (60 days after)" cite "D.N.D. Civ. L.R. 41.1"
+{
+  given SettlementAdvisedUnitedStatesParty() on 2027-06-01
+  expect deadline(settlement-papers-united-states-period) == 2027-08-02
+}
+
+test "Deadline arithmetic: reinstatement-motion-period (60 days after)" cite "D.N.D. Civ. L.R. 41.1"
+{
+  given SettledCaseDismissed() on 2027-06-01
+  expect deadline(reinstatement-motion-period) == 2027-08-02
+}
+
+test "Deadline arithmetic: jury-instructions-period (7 days before)" cite "D.N.D. Civ. L.R. 51.1(A)"
+{
+  given TrialBegins() on 2027-06-01
+  expect deadline(jury-instructions-period) == 2027-05-25
+}
+
+test "Deadline arithmetic: costs-motion-period (14 days after)" cite "D.N.D. Civ. L.R. 54.1(A)(1)"
+{
+  given JudgmentEntered() on 2027-06-01
+  expect deadline(costs-motion-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: costs-response-period (14 days after)" cite "D.N.D. Civ. L.R. 54.1(A)(1)"
+{
+  given CostsMotionFiled() on 2027-06-01
+  expect deadline(costs-response-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: costs-reply-period (7 days after)" cite "D.N.D. Civ. L.R. 54.1(A)(1)"
+{
+  given CostsResponseFiled() on 2027-06-01
+  expect deadline(costs-reply-period) == 2027-06-08
+}
+
+test "Deadline arithmetic: appeal-costs-period (14 days after)" cite "D.N.D. Civ. L.R. 54.1(A)(2)"
+{
+  given MandateIssued() on 2027-06-01
+  expect deadline(appeal-costs-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: fee-response-united-states-period (14 days after)" cite "D.N.D. Civ. L.R. 54.1(B)(2)"
+{
+  given FeeMotionAgainstUnitedStatesFiled() on 2027-06-01
+  expect deadline(fee-response-united-states-period) == 2027-06-15
+}
+
+test "Deadline arithmetic: fee-reply-united-states-period (7 days after)" cite "D.N.D. Civ. L.R. 54.1(B)(2)"
+{
+  given FeeResponseFiled() on 2027-06-01
+  expect deadline(fee-reply-united-states-period) == 2027-06-08
+}
+
+test "Deadline arithmetic: magistrate-objection-response-period (7 days after)" cite "D.N.D. Civ. L.R. 72.1(D)(2)"
+{
+  given MagistrateObjectionFiled() on 2027-06-01
+  expect deadline(magistrate-objection-response-period) == 2027-06-08
+}

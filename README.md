@@ -90,9 +90,10 @@ litigate solve lit/links                          # a links package: the graph i
 litigate run cases/cofc-1498-patent-case.case --op '{"op":"simulate","runs":50000}'
 ```
 
-To replay these install steps in a clean Rust container (Docker required), run
-`./scripts/beta/install-smoke.sh` from any directory. It uses a fresh Cargo
-home and fails on the first unsuccessful command.
+To replay these install steps on the current machine, run
+`./scripts/beta/install-smoke.sh` from any directory. It uses fresh temporary
+Cargo home and build directories, then removes them when it finishes. Pass
+`--docker` to run the same smoke check in a clean `rust:1-slim` container.
 
 Every op is a subcommand (`solve chain simulate path pareto sweep tornado
 calibration posterior voi structure deadlines settle compare graph metric

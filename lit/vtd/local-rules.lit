@@ -183,6 +183,13 @@ deadline supplemental-report-period: 60.days after EneSessionHeld() counted_by f
 /// L.R. 26(a)(1): the parties' Discovery Schedule provides for completion
 /// of discovery no later than 8 months after the last answer was filed.
 deadline discovery-completion-period: 8.months after LastAnswerFiled() counted_by frcp6-vermont cite "D. Vt. L.R. 26(a)(1)"
+
+test "Deadline arithmetic: discovery-completion-period (8 months after)" cite "D. Vt. L.R. 26(a)(1)"
+{
+  given LastAnswerFiled() on 2027-01-04
+  expect deadline(discovery-completion-period) == 2027-09-07
+}
+
 /// L.R. 26(a)(2): the Discovery Schedule is filed within the earlier of 75
 /// days after any defendant has been served with the complaint or 45 days
 /// after any defendant has appeared (with `discovery-schedule-appearance-period`;
@@ -212,3 +219,153 @@ deadline jury-instructions-period: 14.days before TrialBegins() counted_by frcp6
 /// proposed findings of fact and conclusions of law at least 14 days
 /// before the scheduled trial date.
 deadline proposed-findings-period: 14.days before TrialBegins() counted_by frcp6-vermont cite "D. Vt. L.R. 52"
+
+test "Deadline arithmetic: dispositive-opposition-period (30 days after)" cite "D. Vt. L.R. 7(a)(3)(A)"
+{
+  given DispositiveMotionServed() on 2027-01-04
+  expect deadline(dispositive-opposition-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: opposition-period (14 days after)" cite "D. Vt. L.R. 7(a)(3)(B)"
+{
+  given MotionServed() on 2027-01-04
+  expect deadline(opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reply-period (14 days after)" cite "D. Vt. L.R. 7(a)(5)(A)"
+{
+  given OppositionFiled() on 2027-01-04
+  expect deadline(reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reconsideration-period (14 days after)" cite "D. Vt. L.R. 7(c)"
+{
+  given OrderEntered() on 2027-01-04
+  expect deadline(reconsideration-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: commissioner-answer-period (60 days after)" cite "D. Vt. L.R. 9(a)(1)"
+{
+  given SocialSecurityNoticeGiven() on 2027-01-04
+  expect deadline(commissioner-answer-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: reversal-motion-period (30 days after)" cite "D. Vt. L.R. 9(a)(2)"
+{
+  given CommissionerAnswerFiled() on 2027-01-04
+  expect deadline(reversal-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: affirmance-motion-period (30 days after)" cite "D. Vt. L.R. 9(a)(3)"
+{
+  given ReversalMotionFiled() on 2027-01-04
+  expect deadline(affirmance-motion-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: social-security-reply-period (14 days after)" cite "D. Vt. L.R. 9(a)(4)"
+{
+  given AffirmanceMotionFiled() on 2027-01-04
+  expect deadline(social-security-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: social-security-sur-reply-period (14 days after)" cite "D. Vt. L.R. 9(a)(5)"
+{
+  given SocialSecurityReplyServed() on 2027-01-04
+  expect deadline(social-security-sur-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: record-transmission-period (30 days after)" cite "D. Vt. L.R. 9(b)(2)"
+{
+  given DesignationFiled() on 2027-01-04
+  expect deadline(record-transmission-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: withdrawal-opposition-period (14 days after)" cite "D. Vt. L.R. 9(d)(2)"
+{
+  given WithdrawalMotionServed() on 2027-01-04
+  expect deadline(withdrawal-opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: withdrawal-reply-period (14 days after)" cite "D. Vt. L.R. 9(d)(2)"
+{
+  given WithdrawalOppositionServed() on 2027-01-04
+  expect deadline(withdrawal-reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: evaluator-selection-period (14 days after)" cite "D. Vt. L.R. 16.1(e)(1)(B)"
+{
+  given EvaluatorListMailed() on 2027-01-04
+  expect deadline(evaluator-selection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: evaluator-conflict-period (7 days after)" cite "D. Vt. L.R. 16.1(e)(2)"
+{
+  given ConflictLearned() on 2027-01-04
+  expect deadline(evaluator-conflict-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: ene-excusal-period (21 days before)" cite "D. Vt. L.R. 16.1(g)(3)(B)"
+{
+  given EneSessionHeld() on 2027-01-04
+  expect deadline(ene-excusal-period) == 2026-12-14
+}
+
+test "Deadline arithmetic: evaluation-statement-period (14 days before)" cite "D. Vt. L.R. 16.1(h)(1)"
+{
+  given EneSessionHeld() on 2027-01-04
+  expect deadline(evaluation-statement-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: evaluator-report-period (21 days after)" cite "D. Vt. L.R. 16.1(j)(1)"
+{
+  given EneSessionHeld() on 2027-01-04
+  expect deadline(evaluator-report-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: supplemental-report-period (60 days after)" cite "D. Vt. L.R. 16.1(k)(1)(D)"
+{
+  given EneSessionHeld() on 2027-01-04
+  expect deadline(supplemental-report-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: discovery-schedule-service-period (75 days after)" cite "D. Vt. L.R. 26(a)(2)"
+{
+  given DefendantServed() on 2027-01-04
+  expect deadline(discovery-schedule-service-period) == 2027-03-22
+}
+
+test "Deadline arithmetic: discovery-schedule-appearance-period (45 days after)" cite "D. Vt. L.R. 26(a)(2)"
+{
+  given DefendantAppeared() on 2027-01-04
+  expect deadline(discovery-schedule-appearance-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: third-party-schedule-period (45 days after)" cite "D. Vt. L.R. 26(b)(1)"
+{
+  given ThirdPartyAppeared() on 2027-01-04
+  expect deadline(third-party-schedule-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: video-designation-period (30 days before)" cite "D. Vt. L.R. 26(d)"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(video-designation-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: subpoena-witness-list-period (30 days before)" cite "D. Vt. L.R. 45(a)"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(subpoena-witness-list-period) == 2026-12-04
+}
+
+test "Deadline arithmetic: jury-instructions-period (14 days before)" cite "D. Vt. L.R. 51(a)"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(jury-instructions-period) == 2026-12-21
+}
+
+test "Deadline arithmetic: proposed-findings-period (14 days before)" cite "D. Vt. L.R. 52"
+{
+  given TrialBegins() on 2027-01-04
+  expect deadline(proposed-findings-period) == 2026-12-21
+}

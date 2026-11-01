@@ -206,3 +206,159 @@ deadline social-security-defendant-brief-period: 30.days after SocialSecurityPla
 /// LR 83.40.6: the plaintiff may file and serve a reply within fourteen days
 /// of the filing of the defendant's brief.
 deadline social-security-reply-period: 14.days after SocialSecurityDefendantBriefFiled() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 83.40.6"
+
+test "Deadline arithmetic: supporting-brief-period (14 days after)" cite "M.D. Pa. L.R. 7.5"
+{
+  given MotionFiled() on 2027-01-04
+  expect deadline(supporting-brief-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: opposition-period (14 days after)" cite "M.D. Pa. L.R. 7.6"
+{
+  given SupportingBriefServed() on 2027-01-04
+  expect deadline(opposition-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: briefless-opposition-period (7 days after)" cite "M.D. Pa. L.R. 7.6"
+{
+  given BrieflessMotionServed() on 2027-01-04
+  expect deadline(briefless-opposition-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: summary-judgment-opposition-period (21 days after)" cite "M.D. Pa. L.R. 7.6"
+{
+  given SummaryJudgmentBriefServed() on 2027-01-04
+  expect deadline(summary-judgment-opposition-period) == 2027-01-25
+}
+
+test "Deadline arithmetic: reply-period (14 days after)" cite "M.D. Pa. L.R. 7.7"
+{
+  given OppositionBriefServed() on 2027-01-04
+  expect deadline(reply-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: reconsideration-period (14 days after)" cite "M.D. Pa. L.R. 7.10"
+{
+  given OrderEntered() on 2027-01-04
+  expect deadline(reconsideration-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: third-party-joinder-trial-period (3 months after)" cite "M.D. Pa. L.R. 14.1"
+{
+  given TrialSettingOrderEntered() on 2027-01-04
+  expect deadline(third-party-joinder-trial-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: third-party-joinder-answer-period (6 months after)" cite "M.D. Pa. L.R. 14.1"
+{
+  given MovantAnswerServed() on 2027-01-04
+  expect deadline(third-party-joinder-answer-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: amended-pleading-new-defendant-period (30 days after)" cite "M.D. Pa. L.R. 15.1(a)"
+{
+  given LeaveToAddDefendantGranted() on 2027-01-04
+  expect deadline(amended-pleading-new-defendant-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: case-management-conference-meeting (14 days before)" cite "M.D. Pa. L.R. 16.3(a)"
+{
+  given CaseManagementConferenceHeld() on 2027-01-04
+  expect deadline(case-management-conference-meeting) == 2026-12-21
+}
+
+test "Deadline arithmetic: case-management-statement (7 days before)" cite "M.D. Pa. L.R. 16.3(a)"
+{
+  given CaseManagementConferenceHeld() on 2027-01-04
+  expect deadline(case-management-statement) == 2026-12-28
+}
+
+test "Deadline arithmetic: final-pretrial-meeting (14 days before)" cite "M.D. Pa. L.R. 16.3(b)"
+{
+  given FinalPretrialConferenceHeld() on 2027-01-04
+  expect deadline(final-pretrial-meeting) == 2026-12-21
+}
+
+test "Deadline arithmetic: pretrial-memorandum (7 days before)" cite "M.D. Pa. L.R. 16.6"
+{
+  given FinalPretrialConferenceHeld() on 2027-01-04
+  expect deadline(pretrial-memorandum) == 2026-12-28
+}
+
+test "Deadline arithmetic: class-determination-motion-period (90 days after)" cite "M.D. Pa. L.R. 23.3"
+{
+  given ClassComplaintFiled() on 2027-01-04
+  expect deadline(class-determination-motion-period) == 2027-04-05
+}
+
+test "Deadline arithmetic: discovery-close-period (6 months after)" cite "M.D. Pa. L.R. 26.4"
+{
+  given LastPleadingFiled() on 2027-01-04
+  expect deadline(discovery-close-period) == 2027-07-06
+}
+
+test "Deadline arithmetic: bill-of-costs-period (30 days after)" cite "M.D. Pa. L.R. 54.3"
+{
+  given FinalJudgmentEntered() on 2027-01-04
+  expect deadline(bill-of-costs-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: costs-appeal-period (7 days after)" cite "M.D. Pa. L.R. 54.3"
+{
+  given CostsTaxed() on 2027-01-04
+  expect deadline(costs-appeal-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: magistrate-order-appeal-period (14 days after)" cite "M.D. Pa. L.R. 72.2"
+{
+  given MagistrateOrderIssued() on 2027-01-04
+  expect deadline(magistrate-order-appeal-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-response-brief-period (14 days after)" cite "M.D. Pa. L.R. 72.2"
+{
+  given MagistrateAppealBriefServed() on 2027-01-04
+  expect deadline(magistrate-response-brief-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: magistrate-reply-brief-period (7 days after)" cite "M.D. Pa. L.R. 72.2"
+{
+  given MagistrateResponseBriefServed() on 2027-01-04
+  expect deadline(magistrate-reply-brief-period) == 2027-01-11
+}
+
+test "Deadline arithmetic: magistrate-report-objection-period (14 days after)" cite "M.D. Pa. L.R. 72.3"
+{
+  given MagistrateReportServed() on 2027-01-04
+  expect deadline(magistrate-report-objection-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: social-security-service-period (14 days after)" cite "M.D. Pa. L.R. 83.40.2"
+{
+  given SocialSecurityComplaintFiled() on 2027-01-04
+  expect deadline(social-security-service-period) == 2027-01-19
+}
+
+test "Deadline arithmetic: social-security-answer-period (60 days after)" cite "M.D. Pa. L.R. 83.40.3"
+{
+  given SocialSecurityComplaintServed() on 2027-01-04
+  expect deadline(social-security-answer-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: social-security-plaintiff-brief-period (45 days after)" cite "M.D. Pa. L.R. 83.40.4"
+{
+  given SocialSecurityAnswerServed() on 2027-01-04
+  expect deadline(social-security-plaintiff-brief-period) == 2027-02-18
+}
+
+test "Deadline arithmetic: social-security-defendant-brief-period (30 days after)" cite "M.D. Pa. L.R. 83.40.5"
+{
+  given SocialSecurityPlaintiffBriefServed() on 2027-01-04
+  expect deadline(social-security-defendant-brief-period) == 2027-02-03
+}
+
+test "Deadline arithmetic: social-security-reply-period (14 days after)" cite "M.D. Pa. L.R. 83.40.6"
+{
+  given SocialSecurityDefendantBriefFiled() on 2027-01-04
+  expect deadline(social-security-reply-period) == 2027-01-19
+}

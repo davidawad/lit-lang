@@ -136,3 +136,117 @@ deadline other-costs-motion-period: 14.days after JudgmentEntered() counted_by f
 /// a written ruling, or of an oral ruling the magistrate judge indicates
 /// will not be followed by a written one.
 deadline magistrate-review-period: 14.days after MagistrateRulingServed() counted_by frcp6 cite "C.D. Cal. L.R. 72-2.1"
+
+test "Deadline arithmetic: notice-of-motion-period (28 days before)" cite "C.D. Cal. L.R. 6-1"
+{
+  given HearingDate() on 2027-04-05
+  expect deadline(notice-of-motion-period) == 2027-03-08
+}
+
+test "Deadline arithmetic: mailed-notice-of-motion-period (31 days before)" cite "C.D. Cal. L.R. 6-1"
+{
+  given HearingDate() on 2027-04-05
+  expect deadline(mailed-notice-of-motion-period) == 2027-03-05
+}
+
+test "Deadline arithmetic: pre-filing-conference-period (7 days before)" cite "C.D. Cal. L.R. 7-3"
+{
+  given MotionFiled() on 2027-04-05
+  expect deadline(pre-filing-conference-period) == 2027-03-29
+}
+
+test "Deadline arithmetic: opposition-period (21 days before)" cite "C.D. Cal. L.R. 7-9"
+{
+  given HearingDate() on 2027-04-05
+  expect deadline(opposition-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: new-trial-opposition-period (10 days after)" cite "C.D. Cal. L.R. 7-9"
+{
+  given NewTrialMotionServed() on 2027-04-05
+  expect deadline(new-trial-opposition-period) == 2027-04-15
+}
+
+test "Deadline arithmetic: reply-period (14 days before)" cite "C.D. Cal. L.R. 7-10"
+{
+  given HearingDate() on 2027-04-05
+  expect deadline(reply-period) == 2027-03-22
+}
+
+test "Deadline arithmetic: reconsideration-period (14 days after)" cite "C.D. Cal. L.R. 7-18"
+{
+  given OrderEntered() on 2027-04-05
+  expect deadline(reconsideration-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: pretrial-meeting-period (40 days before)" cite "C.D. Cal. L.R. 16-2"
+{
+  given FinalPretrialConference() on 2027-04-05
+  expect deadline(pretrial-meeting-period) == 2027-02-24
+}
+
+test "Deadline arithmetic: contentions-memorandum-period (21 days before)" cite "C.D. Cal. L.R. 16-4"
+{
+  given FinalPretrialConference() on 2027-04-05
+  expect deadline(contentions-memorandum-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: joint-exhibit-list-period (21 days before)" cite "C.D. Cal. L.R. 16-6.1"
+{
+  given FinalPretrialConference() on 2027-04-05
+  expect deadline(joint-exhibit-list-period) == 2027-03-15
+}
+
+test "Deadline arithmetic: joint-stipulation-portion-period (7 days after)" cite "C.D. Cal. L.R. 37-2.2"
+{
+  given JointStipulationPortionReceived() on 2027-04-05
+  expect deadline(joint-stipulation-portion-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: discovery-supplemental-memorandum-period (14 days before)" cite "C.D. Cal. L.R. 37-2.3"
+{
+  given HearingDate() on 2027-04-05
+  expect deadline(discovery-supplemental-memorandum-period) == 2027-03-22
+}
+
+test "Deadline arithmetic: costs-application-period (14 days after)" cite "C.D. Cal. L.R. 54-2.1"
+{
+  given JudgmentEntered() on 2027-04-05
+  expect deadline(costs-application-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: costs-objection-period (14 days after)" cite "C.D. Cal. L.R. 54-2.2"
+{
+  given CostsApplicationServed() on 2027-04-05
+  expect deadline(costs-objection-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: costs-response-period (3 days after)" cite "C.D. Cal. L.R. 54-2.3"
+{
+  given CostsObjectionServed() on 2027-04-05
+  expect deadline(costs-response-period) == 2027-04-08
+}
+
+test "Deadline arithmetic: retax-motion-period (7 days after)" cite "C.D. Cal. L.R. 54-2.5"
+{
+  given CostsTaxed() on 2027-04-05
+  expect deadline(retax-motion-period) == 2027-04-12
+}
+
+test "Deadline arithmetic: fee-motion-period (14 days after)" cite "C.D. Cal. L.R. 54-7"
+{
+  given JudgmentEntered() on 2027-04-05
+  expect deadline(fee-motion-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: other-costs-motion-period (14 days after)" cite "C.D. Cal. L.R. 54-8"
+{
+  given JudgmentEntered() on 2027-04-05
+  expect deadline(other-costs-motion-period) == 2027-04-19
+}
+
+test "Deadline arithmetic: magistrate-review-period (14 days after)" cite "C.D. Cal. L.R. 72-2.1"
+{
+  given MagistrateRulingServed() on 2027-04-05
+  expect deadline(magistrate-review-period) == 2027-04-19
+}

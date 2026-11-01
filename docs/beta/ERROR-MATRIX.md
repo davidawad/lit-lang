@@ -1,29 +1,49 @@
-# Beta CLI error UX matrix
+# CLI error-probe matrix
 
-DECIDED: keep probes at the public CLI boundary and record the actual exit code and output classification -- this reproduces the errors a user sees without bypassing CLI handling.
+**Status: partial.** The full default matrix did not finish in this agent job.
+The single script run reached only the `describe` operation and was stopped
+while probing `cases/requests/cofc-1498-risk-averse-sim.case`. The script
+covers every `.case` file plus missing-file, syntax-error, unknown-set,
+unknown-node, and the `check --as-of` boundary for each operation. Thus all
+rows below are observed results, but later `describe` inputs and every other
+operation/input pair remain unrun. This is not a complete matrix.
 
-## Probe contract
+Each probe has its own 20-second timeout. `124 / TIMEOUT` is an individual
+probe result, not a harness stop condition. The table preserves the captured
+TSV rows verbatim (columns: op, input, exit, classification).
 
-`scripts/beta/error-probes.sh` enumerates the 22 engine operations and every `cases/**/*.case`, then probes missing targets, malformed matter syntax, an unknown `--set` key and an unknown node. A response envelope is classified as `ENVELOPE` only when stdout parses as JSON with `ok:false` and string `error.code`, `error.message` and `error.hint`. Panics and backtraces are `PANIC`; other output is recorded separately. `run` does not accept `--as-of`, so the harness exercises out-of-interval date selection through `litigate check --as-of 0001-01-01`.
-
-## Measured rows
-
-Built with `cargo build -p litigate-cli` (exit 0). Ran `PROBE_SKIP_CASES=1 scripts/beta/error-probes.sh`, then interrupted it after the seven rows below; the full matrix did not finish. The script's normal mode remains the full probe requested by this bead. `OK` means the command returned success, not that the invalid input was correctly rejected.
-
-| op | input | exit | observed result |
+| op | input | exit | classification |
 |---|---|---:|---|
-| describe | missing file | 1 | CLI_DIAGNOSTIC |
-| describe | malformed `.case` | 2 | BARE_ERROR |
-| describe | unknown `--set definitely_unknown_beta_key=1` | 0 | OK (gap: key was accepted) |
-| describe | unknown node | 0 | OK (not applicable to `describe`; harness currently sends an unused node field) |
-| packs | missing file | 1 | CLI_DIAGNOSTIC |
-| packs | malformed `.case` | 2 | BARE_ERROR |
-| packs | unknown `--set definitely_unknown_beta_key=1` | 0 | OK (gap: key was accepted) |
+| describe | case:cases/cand-administrative-motion.case | 124 | TIMEOUT |
+| describe | case:cases/cofc-1498-patent-case.case | 124 | TIMEOUT |
+| describe | case:cases/cofc-bid-protest.case | 124 | TIMEOUT |
+| describe | case:cases/e2e-ttab-ok.case | 124 | TIMEOUT |
+| describe | case:cases/e2e-ttab-unknown.case | 0 | OK |
+| describe | case:cases/examples/acme.case | 0 | OK |
+| describe | case:cases/frcp-civil-case.case | 124 | TIMEOUT |
+| describe | case:cases/ptab-ipr-defense.case | 124 | TIMEOUT |
+| describe | case:cases/requests/cafc-cert-preserves-panel-outcome.case | 124 | TIMEOUT |
+| describe | case:cases/requests/calibration-gaps.case | 124 | TIMEOUT |
+| describe | case:cases/requests/cofc-1498-chain.case | 124 | TIMEOUT |
+| describe | case:cases/requests/cofc-1498-named-scenario.case | 124 | TIMEOUT |
+| describe | case:cases/requests/cofc-1498-risk-averse-sim.case | 124 | TIMEOUT |
 
-No `PANIC` or Rust backtrace appeared in the rows that ran. No result is recorded for other op/input combinations; they remain unprobed. The malformed matter rows did not satisfy the requested JSON error-envelope check.
+## Findings
 
-## Pre-existing failures
+- `describe` times out on multiple matter files under the matrix's 20-second
+  limit. Reproduce with:
 
-The previous attempt reported a failing timeline test in the full `litigate-cli` suite. This run did not run that suite or a targeted test: no implementation fix was completed, and the probe run stopped before the failure could be rechecked.
+  ```bash
+  timeout 20s target/debug/litigate run cases/cofc-1498-patent-case.case --op '{"op":"describe"}'
+  ```
 
-PARTIAL: complete and record all op/input rows, fix the envelope and unknown-key failures, and add/run one targeted regression test for each fix.
+## Run metadata
+
+The probe script was run once with its default full-case settings. The CLI
+binary was built with `CARGO_BUILD_JOBS=4 cargo build -p litigate-cli`. The
+matrix run was interrupted after repeated per-input timeouts; no code fixes or
+tests were run.
+
+DECIDED: Preserve the captured rows and mark this matrix incomplete -- the
+full serial run exceeds this job's execution window because most initial
+`describe` matter probes consume the full 20-second timeout.

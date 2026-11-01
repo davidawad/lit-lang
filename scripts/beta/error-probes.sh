@@ -17,8 +17,10 @@ probe() {
   esac
   local args=(run "$target" --op "$payload")
   if [[ -n $extra ]]; then args+=(--set "$extra"); fi
-  "$BIN" "${args[@]}" >"$TMP/out" 2>"$TMP/err"; rc=$?
-  if rg -qi 'panicked at|stack backtrace|backtrace:' "$TMP/out" "$TMP/err"; then
+  timeout 20s "$BIN" "${args[@]}" >"$TMP/out" 2>"$TMP/err"; rc=$?
+  if [[ $rc == 124 ]]; then
+    class=TIMEOUT
+  elif rg -qi 'panicked at|stack backtrace|backtrace:' "$TMP/out" "$TMP/err"; then
     class=PANIC
   elif jq -e '(.ok == false) and (.error.code|type == "string") and (.error.message|type == "string") and (.error.hint|type == "string")' "$TMP/out" >/dev/null 2>&1; then
     class=ENVELOPE
@@ -46,8 +48,9 @@ for op in "${OPS[@]}"; do
   # `run` has no --as-of option; the corresponding date-selection boundary
   # belongs to `check`, so test it once through that command after the op loop.
 done
-"$BIN" check "${CASES[0]}" --as-of 0001-01-01 >"$TMP/out" 2>"$TMP/err"; rc=$?
-if rg -qi 'panicked at|stack backtrace|backtrace:' "$TMP/out" "$TMP/err"; then class=PANIC
+timeout 20s "$BIN" check "${CASES[0]}" --as-of 0001-01-01 >"$TMP/out" 2>"$TMP/err"; rc=$?
+if [[ $rc == 124 ]]; then class=TIMEOUT
+elif rg -qi 'panicked at|stack backtrace|backtrace:' "$TMP/out" "$TMP/err"; then class=PANIC
 elif [[ $rc == 2 ]] && rg -qi 'date|interval|effective' "$TMP/out" "$TMP/err"; then class=CLI_DIAGNOSTIC
 else class=UNEXPECTED; fi
 printf 'check\tout-of-interval-date\t%s\t%s\n' "$rc" "$class"

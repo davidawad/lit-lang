@@ -105,6 +105,58 @@ fn nearest_params(key: &str, valid: impl Iterator<Item = String>) -> Vec<String>
     valid
 }
 
+/// Reject an unknown matter override while keeping built-in and authored params.
+fn unknown_param_response(
+    op: &Map<String, Value>,
+    id: &str,
+    catalog: &Catalog,
+    params: &Map<String, Value>,
+) -> Option<Response> {
+    let mut valid: BTreeSet<String> = litigate_engine::metrics::PARAMS
+        .iter()
+        .map(|(name, _, _)| (*name).to_owned())
+        .collect();
+    valid.extend(
+        catalog
+            .scenarios()
+            .find(|scenario| scenario.id == id)
+            .map(|scenario| {
+                scenario
+                    .scenario
+                    .params
+                    .keys()
+                    .cloned()
+                    .collect::<BTreeSet<_>>()
+            })
+            .unwrap_or_default(),
+    );
+    let key = params.keys().find(|key| !valid.contains(*key))?;
+    let suggestions = nearest_params(key, valid.into_iter());
+    let hint = if suggestions.is_empty() {
+        "The scenario declares no valid params.".to_owned()
+    } else {
+        format!("Valid scenario params: {}.", suggestions.join(", "))
+    };
+    Some(Response {
+        ok: false,
+        api_version: API_VERSION,
+        op: op
+            .get("op")
+            .and_then(Value::as_str)
+            .unwrap_or("unknown")
+            .to_owned(),
+        result: None,
+        warnings: Vec::new(),
+        provenance: None,
+        error: Some(ApiError {
+            code: "unknown_param".into(),
+            message: format!("unknown --set key `{key}`"),
+            hint,
+        }),
+        elapsed_ms: 0.0,
+    })
+}
+
 /// The embedded clock library with `fragment`'s rules and calendars replacing same-id entries.
 fn merged(mut lib: ClockLibrary, fragment: &ClockLibrary) -> ClockLibrary {
     lib.calendars
@@ -334,43 +386,7 @@ pub fn run(src: &dyn Source, target: &str, op: &str, flags: &OpFlags) -> Outcome
         return Ok(report);
     }
     if let Some(id) = scenarios.first() {
-        let valid = catalog
-            .scenarios()
-            .find(|scenario| scenario.id == *id)
-            .map(|scenario| {
-                scenario
-                    .scenario
-                    .params
-                    .keys()
-                    .cloned()
-                    .collect::<BTreeSet<_>>()
-            })
-            .unwrap_or_default();
-        if let Some(key) = params.keys().find(|key| !valid.contains(*key)) {
-            let suggestions = nearest_params(key, valid.into_iter());
-            let hint = if suggestions.is_empty() {
-                "The scenario declares no valid params.".to_owned()
-            } else {
-                format!("Valid scenario params: {}.", suggestions.join(", "))
-            };
-            let response = Response {
-                ok: false,
-                api_version: API_VERSION,
-                op: op
-                    .get("op")
-                    .and_then(Value::as_str)
-                    .unwrap_or("unknown")
-                    .to_owned(),
-                result: None,
-                warnings: Vec::new(),
-                provenance: None,
-                error: Some(ApiError {
-                    code: "unknown_param".into(),
-                    message: format!("unknown --set key `{key}`"),
-                    hint,
-                }),
-                elapsed_ms: 0.0,
-            };
+        if let Some(response) = unknown_param_response(&op, id, &catalog, &params) {
             report.failed = true;
             report.result = serde_json::to_value(response).unwrap_or(Value::Null);
             return Ok(report);

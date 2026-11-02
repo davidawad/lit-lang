@@ -35,9 +35,32 @@ register `litigate lsp --stdio`.
 | Helix | [`helix/`](helix) | generated `highlights.scm` | generated `indents.scm` | (none in Helix) | `textobjects.scm`, `locals.scm` | `languages.toml` |
 | Neovim 0.10+ | [`nvim/`](nvim) | `queries/` (symlinks to the canonical queries) | `indents.scm` through nvim-treesitter | `folds.scm` | `locals.scm` | `lsp/litigate.lua` (0.11+), lspconfig snippet |
 
-> **Status.** `litigate lsp` is the SPEC §9 command. Until the
-> `litigate-lsp` bead lands it, starting the server fails with "unrecognized
-> subcommand". Highlighting, indentation and navigation don't need it.
+## Install the compiler and language server
+
+Editor modes use the installed CLI, rather than a repository-local `cargo
+run`. Install both binaries from a checkout:
+
+```sh
+cargo install --path crates/litigate-cli
+cargo install --path crates/litigate-lsp
+litigate --help
+litigate lsp --stdio
+```
+
+The last command starts the stdio language server and waits for an editor
+client; run it from the project directory containing `lit/` and `cases/`.
+The CLI looks for `litigate-lsp` beside itself, then on `PATH`. Keep both
+installed binaries in the same cargo bin directory. If you installed only
+the server binary, clients can use `litigate-lsp --stdio` directly, but the
+editor configurations below use the `litigate lsp --stdio` launcher.
+
+For the mode source, clone this repository (or use its standalone editor
+package links above). No editor needs `cargo run` to start the LSP. The
+`litigate-editors` crate contains grammar build and query-generation tools;
+it is maintainer tooling rather than an editor mode. To build the grammar
+library for Emacs from a checkout, use the documented `cargo run -p
+litigate-editors --bin litigate-grammar` command. Helix and Neovim can build
+the checked-in grammar through their tree-sitter integrations.
 
 **Grammar ABI.** The committed parser (`tree-sitter-litigate/src/parser.c`)
 is tree-sitter ABI 15. Editors linked against libtree-sitter 0.25 or later
@@ -83,7 +106,7 @@ strict profile rejects.
    use `M-x treesit-install-language-grammar RET litigate` instead. The
    mode adds the source entry to `treesit-language-source-alist`.
 
-2. Load the mode:
+2. Load the mode (after installing `litigate` and `litigate-lsp` above):
 
    ```elisp
    (add-to-list 'load-path "/path/to/litgraph/editors/emacs")
@@ -109,10 +132,10 @@ strict profile rejects.
 
    A buffer with a parse error is still saved, unformatted.
 
-3. Check: open `lit/examples/rule12.lit`. `M-x imenu` lists nodes, rules,
-   deadlines, types, events and tests, and `C-M-a` and `C-M-e` move between
-   declarations. `treesit-font-lock-level` 4 enables all highlighting
-   (operators, brackets, plain identifiers).
+3. Check: open `lit/examples/rule12.lit` and a `.case` file. `M-x imenu`
+   lists nodes, rules, deadlines, types, events and tests, and `C-M-a` and
+   `C-M-e` move between declarations. `treesit-font-lock-level` 4 enables
+   all highlighting (operators, brackets, plain identifiers).
 
 4. The rest of the package. `editors/emacs` is one Emacs package, `litgraph`:
    besides `litigate-ts-mode` it holds the litgraph front end (the
@@ -146,7 +169,8 @@ integration tests against the debug `litigate` with `LITGRAPH_IT_REQUIRE=1`.
 
 ## Helix
 
-1. Merge [`helix/languages.toml`](helix/languages.toml) into
+1. Install `litigate` and `litigate-lsp` as above. Merge
+   [`helix/languages.toml`](helix/languages.toml) into
    `~/.config/helix/languages.toml`. It defines the `litigate` language for
    `.lit` and `.case`, with `//` comments, two-space indentation and
    `Lit.toml`/`Lit.lock` as roots, and formats on save through
@@ -170,8 +194,8 @@ integration tests against the debug `litigate` with `LITGRAPH_IT_REQUIRE=1`.
    ```
 
    It should report `Tree-sitter parser: ✓`, `Highlight queries: ✓`,
-   `Textobject queries: ✓` and `Indent queries: ✓`. The language server
-   shows `✘` until `litigate` is on `PATH`.
+   `Textobject queries: ✓` and `Indent queries: ✓`. Open both a `.lit` and
+   `.case` file; diagnostics appear after the language server starts.
 
 Helix's capture names differ from the common convention (for example
 `@constant.numeric` instead of `@number`, `@namespace` instead of `@module`).
@@ -194,7 +218,8 @@ Only the `hx` step skips (logged) when `hx` is missing.
 
 ## Neovim (0.10+)
 
-1. Put `editors/nvim` on the runtimepath. That loads `ftdetect/` (`.lit`,
+1. Install `litigate` and `litigate-lsp` as above. Put `editors/nvim` on
+   the runtimepath. That loads `ftdetect/` (`.lit`,
    `.case` → `litigate`), `ftplugin/`, `queries/litigate/`, `plugin/` and
    `lsp/`. With lazy.nvim:
 

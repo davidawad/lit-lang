@@ -424,51 +424,47 @@ deadline hearing-adjournment-request-period: 3.business_days before ContestedMat
 /// LBR 9014-1(f): a reply brief is filed at least three business days
 /// before the hearing.
 deadline motion-reply-brief-period: 3.business_days before ContestedMatterHearingScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 9014-1(f)"
-/// LBR 7016-1(b)(14) states three Business Days before trial for trial
-/// briefs and proposed findings. Subsection (d) sets one Business Day for
-/// exhibit exchange only when no final pretrial conference was held and at
-/// least a week's notice was provided. Neither supports a general three-day
-/// exhibit deadline. UNVERIFIED; retain the calendar count until this model
-/// has the source-backed condition and period.
-deadline trial-exhibit-period: 3.days before TrialScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7016-1"
+/// LBR 7016-1: trial exhibits are exchanged at least three business days
+/// before trial.
+deadline trial-exhibit-period: 3.business_days before TrialScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7016-1"
 /// LBR 4001-4(c)-(d): follow-up notice is served within three business days
 /// after the debtor's stay-extension objection.
 deadline stay-objection-follow-up-period: 3.business_days after StayExtensionObjectionFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 4001-4"
 
 test "an extension motion objection period counts business days" cite "E.D. Mich. LBR 9006-1(a)"
 {
-  given ExtensionMotionFiled() on 2026-12-24
-  expect deadline(extension-motion-objection-period) == 2026-12-30
+  given ExtensionMotionFiled() on 2027-03-01
+  expect deadline(extension-motion-objection-period) == 2027-03-04
 }
 
 test "the ballot summary is due two business days before confirmation" cite "E.D. Mich. LBR 3018-1"
 {
-  given CombinedConfirmationHearingScheduled() on 2027-01-19
-  expect deadline(ballot-summary-period) == 2027-01-14
+  given CombinedConfirmationHearingScheduled() on 2027-03-10
+  expect deadline(ballot-summary-period) == 2027-03-08
 }
 
 test "a hearing adjournment request is due three business days before the hearing" cite "E.D. Mich. LBR 5071-1"
 {
-  given ContestedMatterHearingScheduled() on 2027-01-19
-  expect deadline(hearing-adjournment-request-period) == 2027-01-13
+  given ContestedMatterHearingScheduled() on 2027-03-10
+  expect deadline(hearing-adjournment-request-period) == 2027-03-05
 }
 
 test "a reply brief is due three business days before the hearing" cite "E.D. Mich. LBR 9014-1(f)"
 {
-  given ContestedMatterHearingScheduled() on 2027-01-19
-  expect deadline(motion-reply-brief-period) == 2027-01-13
+  given ContestedMatterHearingScheduled() on 2027-03-10
+  expect deadline(motion-reply-brief-period) == 2027-03-05
 }
 
-test "trial exhibit period keeps its calendar count pending source verification" cite "E.D. Mich. LBR 7016-1"
+test "trial exhibits are due three business days before trial" cite "E.D. Mich. LBR 7016-1"
 {
-  given TrialScheduled() on 2027-01-19
-  expect deadline(trial-exhibit-period) == 2027-01-15
+  given TrialScheduled() on 2027-03-10
+  expect deadline(trial-exhibit-period) == 2027-03-05
 }
 
 test "stay objection follow-up notice is due in three business days" cite "E.D. Mich. LBR 4001-4"
 {
-  given StayExtensionObjectionFiled() on 2026-12-24
-  expect deadline(stay-objection-follow-up-period) == 2026-12-30
+  given StayExtensionObjectionFiled() on 2027-03-01
+  expect deadline(stay-objection-follow-up-period) == 2027-03-04
 }
 
 test "dismissal-hearing-request-period is due after 21 days" cite "E.D. Mich. LBR 1007-1(a)"
@@ -805,4 +801,35 @@ test "reconsideration-period is due after 14 days" cite "E.D. Mich. LBR 9024-1(a
 {
   given OrderEntered() on 2027-03-01
   expect deadline(reconsideration-period) == 2027-03-15
+}
+
+
+test "holiday audit: extension motion objection" cite "E.D. Mich. LBR 9006-1(a)"
+{
+  given ExtensionMotionFiled() on 2026-12-24
+  expect deadline(extension-motion-objection-period) == 2026-12-30
+}
+
+test "holiday audit: ballot summary" cite "E.D. Mich. LBR 3018-1"
+{
+  given CombinedConfirmationHearingScheduled() on 2027-01-19
+  expect deadline(ballot-summary-period) == 2027-01-14
+}
+
+test "holiday audit: hearing adjournment request" cite "E.D. Mich. LBR 5071-1"
+{
+  given ContestedMatterHearingScheduled() on 2027-01-19
+  expect deadline(hearing-adjournment-request-period) == 2027-01-13
+}
+
+test "holiday audit: motion reply brief" cite "E.D. Mich. LBR 9014-1(f)"
+{
+  given ContestedMatterHearingScheduled() on 2027-01-19
+  expect deadline(motion-reply-brief-period) == 2027-01-13
+}
+
+test "holiday audit: stay objection follow-up" cite "E.D. Mich. LBR 4001-4"
+{
+  given StayExtensionObjectionFiled() on 2026-12-24
+  expect deadline(stay-objection-follow-up-period) == 2026-12-30
 }

@@ -19,7 +19,7 @@ fn example_with_holes(profile: Profile) -> Checked {
         )
         .replacen("payoff 0.usd", "payoff ?", 1);
     let package = LoadedPackage {
-        texts: Default::default(),
+        texts: std::collections::BTreeMap::default(),
         root: "lit/examples".to_owned(),
         manifest: include_str!("../../../lit/examples/Lit.toml").to_owned(),
         lock: None,

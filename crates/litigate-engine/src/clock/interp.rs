@@ -296,18 +296,7 @@ impl Run<'_, '_> {
             Some(AnchorKind::AdjacentBusinessDay) => n - 1,
             _ => n,
         };
-        // An explicitly authored court/business-day deadline names its
-        // counting unit. It must not inherit a short-period exception (or
-        // other threshold) from the rule's ordinary day count. FRBP 9006,
-        // for example, keeps its calendar-day rule for ordinary deadlines
-        // while a court-authored N.court_days deadline still skips closed
-        // days.
-        let count = if matches!(self.dl.unit, Unit::Court | Unit::Business) {
-            CountUnit::Business
-        } else {
-            p.count
-        };
-        self.current = match count {
+        self.current = match p.count {
             CountUnit::Calendar => self.anchor.add_days(if self.forward { k } else { -k }),
             CountUnit::Business => self.closed().advance_business(self.anchor, k)?,
         };

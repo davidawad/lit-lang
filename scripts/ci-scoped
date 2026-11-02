@@ -20,8 +20,9 @@
 #       HEAD with origin/main.
 #   scripts/ci-scoped nightly
 #       The post-land sweep on HEAD: the whole workspace under the nextest
-#       `nightly` profile (every test, the sweeps included), every
-#       doctest and the per-crate coverage (`just cov-litigate`); then
+#       `nightly` profile (every test, the sweeps included), every expect
+#       matter, the full BASE-to-HEAD impact report, every doctest and the
+#       per-crate coverage (`just cov-litigate`); then
 #       `NIGHTLY: pass|fail commit=SHA`. A red files a P0 bead naming
 #       the commit (`br create`; NIGHTLY_NO_BEAD=1 only prints it).
 #   scripts/ci-scoped scope [BASE]
@@ -94,6 +95,26 @@ data_only() {
   [ -n "$files" ] && ! grep -qvE "$data_only_triggers" <<<"$files"
 }
 
+# A CLI implementation change does not invalidate its dependency crates'
+# tests. Run the CLI package itself; the shared wasm/CLI behavior is covered
+# by ts-test below. Dev-dependency cycles in the workspace metadata otherwise
+# pull most of the compiler into the reverse-dependency closure.
+cli_only() {
+  [ -n "$1" ] && ! grep -qvE '^crates/litigate-cli/' <<<"$1"
+}
+
+# Inputs whose semantics are checked by the corpus replay and impact stages.
+corpus_change() {
+  grep -qE '^(editors/tree-sitter-litigate/|crates/litigate-(syntax|engine|sema|lower)/|lit/|cases/|sources/|packs/)' <<<"$1"
+}
+
+scope_label() {
+  local files="$1" meta="$2" label
+  label="$(scope_of "$meta" <<<"$files")"
+  if cli_only "$files"; then label=litigate-cli; fi
+  printf '%s\n' "$label"
+}
+
 # changed paths on stdin, scope label -> 0 when `just ts-test` runs.
 ts_scoped() {
   [ "$1" = full ] || grep -qE "$ts_triggers"
@@ -164,7 +185,10 @@ scope() {
   local base meta
   base="$(base_of "${1:-}")"
   meta="$(metadata)"
-  changed_files "$base" | scope_of "$meta"
+  local files scope_out
+  files="$(changed_files "$base")"
+  scope_out="$(scope_label "$files" "$meta")"
+  printf '%s\n' "$scope_out"
   rm -f "$meta"
 }
 
@@ -658,7 +682,7 @@ run() {
   base="$(base_of "${1:-}")"
   meta="$(metadata)"
   files="$(changed_files "$base")"
-  scope_out="$(scope_of "$meta" <<<"$files")"
+  scope_out="$(scope_label "$files" "$meta")"
   target="$(jq -r .target_directory "$meta")"
   logdir="$target/ci-scoped"
   rm -rf "$logdir"
@@ -709,12 +733,16 @@ run() {
   fi
   # Re-run only matters coupled to changed authored inputs; engine-only edits
   # use no expect replay except for clock/lowering smoke changes.
-  run_expect_selection "$files"
+  if corpus_change "$files"; then
+    run_expect_selection "$files"
+  else
+    skip expect "no parser, engine, sema, lower or corpus inputs changed"
+  fi
   # The change impact report (lg-8fdj.3): every expect test under
   # tests/expect run at BASE and here, and each deadline, verdict and
   # expectation that moved, per forum, in the log for the reviewer. It
   # fails only when the report cannot be made, never on a change.
-  if grep -qE '^(lit/|cases/|docs/litigate/|tests/expect/|crates/litigate-)' <<<"$files"; then
+  if corpus_change "$files" || grep -qE '^(docs/litigate/|tests/expect/)' <<<"$files"; then
     stage impact cargo run -q -p litigate-cli -- --format human test --impact "$base"
     [[ " ${failed[*]} " == *" impact "* ]] || sed 's/^/  /' "$logdir/impact.log"
   else
@@ -805,10 +833,11 @@ run_data_only() {
 
 # --- nightly -----------------------------------------------------------------
 
-# The post-land sweep (lg-kuei) on HEAD; a red files a P0 bead naming the
-# commit and the stages that failed.
+# The post-land sweep (lg-kuei) on HEAD: every expect matter and its full
+# impact report, plus all nextest tests/doctests and coverage. A red files
+# a P0 bead naming the commit and the stages that failed.
 nightly() {
-  local target sha subject
+  local target sha subject base
   warm_build
   target="$(cargo metadata --format-version 1 --no-deps | jq -r .target_directory)"
   logdir="$target/ci-nightly"
@@ -817,6 +846,9 @@ nightly() {
   check_all_quarantine
   sha="$(git rev-parse HEAD)"
   subject="$(git log -1 --format=%s HEAD)"
+  base="$(git rev-parse --verify HEAD^ 2>/dev/null || git rev-parse --verify HEAD)"
+  stage expect cargo run -q -p litigate-cli -- --format human test tests/expect
+  stage impact cargo run -q -p litigate-cli -- --format human test --impact "$base"
   stage test cargo nextest run --workspace --profile nightly
   stage doctest cargo test --doc --workspace
   stage cov-litigate just cov-litigate
@@ -868,8 +900,13 @@ self_test() {
     echo "ci-scoped self-test: an expired ts quarantine must fail" >&2
     failures=$((failures + 1))
   fi
-  if ! check_quarantine "$ts_quarantine" 2026-11-01 >/dev/null 2>&1; then
-    echo "ci-scoped self-test: $ts_quarantine must be well formed" >&2
+  if grep -q '^# lg-zmqc\.' "$ts_quarantine"; then
+    if ! check_quarantine "$ts_quarantine" 2026-11-01 >/dev/null 2>&1; then
+      echo "ci-scoped self-test: $ts_quarantine must be well formed" >&2
+      failures=$((failures + 1))
+    fi
+  elif [ "$(grep -c '^# lg-zmqc\.' "$ts_quarantine" || true)" -ne 0 ]; then
+    echo "ci-scoped self-test: $ts_quarantine must have no malformed records" >&2
     failures=$((failures + 1))
   fi
   # base <- syntax <- sema <- cli; syntax <- ts-litigate <- ts-editors;
@@ -878,7 +915,7 @@ self_test() {
     "base:crates/base:" \
     "syntax:crates/syntax:crates/base" \
     "sema:crates/sema:crates/base,crates/syntax" \
-    "cli:crates/cli:crates/sema,crates/litigate-engine" \
+    "cli:crates/litigate-cli:crates/sema,crates/litigate-engine" \
     "smt:crates/smt:" \
     "base-ext:crates/base-ext:" \
     "litgraph-packs:crates/packs:crates/litigate-engine" \
@@ -905,8 +942,8 @@ self_test() {
   expect "base-ext" "a directory prefix is not the package" crates/base-ext/src/lib.rs
   expect "ts-editors" "a nested package owns its own files" editors/ts/editors/src/lib.rs
   expect "cli litgraph-packs litigate-engine" "a dependency cycle terminates" crates/packs/build.rs
-  expect "cli" "a dependent's change scopes to it alone, never its dependencies" crates/cli/src/main.rs
-  expect "cli smt" "two changed crates" crates/smt/src/lib.rs crates/cli/src/main.rs
+  expect "cli" "a dependent's change scopes to it alone, never its dependencies" crates/litigate-cli/src/main.rs
+  expect "cli smt" "two changed crates" crates/smt/src/lib.rs crates/litigate-cli/src/main.rs
   expect "full" "Cargo.lock falls back to full" crates/smt/src/lib.rs Cargo.lock
   expect "full" "the root manifest falls back to full" Cargo.toml
   expect "full" "the justfile falls back to full" justfile
@@ -914,6 +951,33 @@ self_test() {
   expect "full" ".cargo/ falls back to full" .cargo/config.toml
   expect "full" "nextest config falls back to full" .config/nextest.toml
   expect "full" "clippy config falls back to full" clippy.toml
+  if [ "$(cli_only crates/litigate-cli/src/main.rs && echo yes || echo no)" != yes ] ||
+    [ "$(scope_label crates/litigate-cli/src/main.rs "$meta")" != litigate-cli ]; then
+    echo "ci-scoped self-test: CLI-only changes must use the CLI package scope" >&2
+    failures=$((failures + 1))
+  fi
+  if ! cli_only $'crates/litigate-cli/src/main.rs\ncrates/litigate-cli/tests/cli.rs'; then
+    echo "ci-scoped self-test: CLI-only change set was not recognized" >&2
+    failures=$((failures + 1))
+  fi
+  if cli_only $'crates/litigate-cli/src/main.rs\ncrates/litigate-engine/src/lib.rs'; then
+    echo "ci-scoped self-test: mixed CLI and engine changes must not use CLI-only scope" >&2
+    failures=$((failures + 1))
+  fi
+  if ! ts_scoped litigate-cli <<<"crates/litigate-cli/src/main.rs" ||
+    ts_scoped litigate-sema <<<"crates/litigate-sema/src/lib.rs"; then
+    echo "ci-scoped self-test: CLI-only changes must run ts-test; sema changes must not" >&2
+    failures=$((failures + 1))
+  fi
+  if corpus_change editors/tree-sitter-litigate/src/parser.c &&
+    corpus_change crates/litigate-syntax/src/lib.rs && corpus_change lit/frcp/rules.lit; then :; else
+    echo "ci-scoped self-test: parser and corpus paths must select expect/impact" >&2
+    failures=$((failures + 1))
+  fi
+  if corpus_change crates/litigate-cli/src/main.rs; then
+    echo "ci-scoped self-test: CLI-only changes must skip expect/impact" >&2
+    failures=$((failures + 1))
+  fi
   if ! grep -Fq '(binary(in_memory) & test(=ops_compile_the_matter_or_package_in_memory))' .config/nextest.toml; then
     echo "ci-scoped self-test: gate profile must defer the full-corpus in-memory compile sweep to nightly" >&2
     failures=$((failures + 1))

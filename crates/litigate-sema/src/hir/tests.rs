@@ -35,6 +35,56 @@ fn meta(id: &str) -> Metadata {
     }
 }
 
+fn date_expr(value: &str) -> Expr {
+    Expr {
+        ty: Type::Date,
+        kind: ExprKind::Literal {
+            value: Value::Date(value.into()),
+        },
+        span: None,
+    }
+}
+
+fn noticed_expr(args: Vec<Expr>) -> Expr {
+    Expr {
+        ty: Type::Named("Noticed".into()),
+        kind: ExprKind::Call {
+            callee: "Noticed".into(),
+            args,
+        },
+        span: None,
+    }
+}
+
+fn designation_deadline() -> Deadline {
+    Deadline {
+        meta: Metadata {
+            cite: None,
+            ..meta("answer")
+        },
+        amount: 30,
+        unit: DayUnit::Calendar,
+        direction: Direction::Forward,
+        trigger: noticed_expr(Vec::new()),
+        chain: None,
+        counting: "c".into(),
+        forum: String::new(),
+        adoption: None,
+        extendable: None,
+        extension_authority: None,
+        note: None,
+        bearer: None,
+        bearer_other: false,
+        policy: TriggerPolicy::First,
+        linear: false,
+        extend: Vec::new(),
+        waive: None,
+        designated: None,
+        characterization: None,
+        derived: Vec::new(),
+    }
+}
+
 fn edge(id: Option<&str>, to: &str, p: Authored<Rational>) -> Edge {
     Edge {
         id: id.map(Into::into),
@@ -192,48 +242,8 @@ fn a_bound_past_the_calendar_has_no_date() {
 
 #[test]
 fn a_designation_reads_the_trigger_argument_or_nothing() {
-    let date = |d: &str| Expr {
-        ty: Type::Date,
-        kind: ExprKind::Literal {
-            value: Value::Date(d.into()),
-        },
-        span: None,
-    };
-    let noticed = |args: Vec<Expr>| Expr {
-        ty: Type::Named("Noticed".into()),
-        kind: ExprKind::Call {
-            callee: "Noticed".into(),
-            args,
-        },
-        span: None,
-    };
-    let mut d = Deadline {
-        meta: Metadata {
-            cite: None,
-            ..meta("answer")
-        },
-        amount: 30,
-        unit: DayUnit::Calendar,
-        direction: Direction::Forward,
-        trigger: noticed(Vec::new()),
-        chain: None,
-        counting: "c".into(),
-        forum: String::new(),
-        adoption: None,
-        extendable: None,
-        extension_authority: None,
-        note: None,
-        bearer: None,
-        bearer_other: false,
-        policy: TriggerPolicy::First,
-        linear: false,
-        extend: Vec::new(),
-        waive: None,
-        designated: None,
-        characterization: None,
-        derived: Vec::new(),
-    };
-    let on = noticed(vec![date("2025-02-03")]);
+    let mut d = designation_deadline();
+    let on = noticed_expr(vec![date_expr("2025-02-03")]);
     assert_eq!(d.designation("2025-01-02", &on), None);
     d.designated = Some(Designated {
         event: "Noticed".into(),
@@ -253,7 +263,7 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
         Some("`Noticed` on 2025-01-10 designates `answer` due 2025-02-03, earlier than the least time the rule allows, 30 calendar days from 2025-01-10 (2025-02-09)")
     );
     assert_eq!(
-        message(d.designation("2025-01-02", &date("2025-02-03"))).as_deref(),
+        message(d.designation("2025-01-02", &date_expr("2025-02-03"))).as_deref(),
         Some("notice due date not recorded: `the trigger` on 2025-01-02 designates the due date of `answer` (its `due`), and the matter records it as `?`; it is the notice's to set, never counted in its place")
     );
     assert_eq!(d.interpreted_shortfall("2025-01-10", &on), None);
@@ -273,7 +283,7 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
         Some("`Noticed` on 2025-01-10 designates `answer` due 2025-02-03, earlier than 30 calendar days from 2025-01-10 (2025-02-09); the date stands: the rule names no start for its least time, and measuring it from 2025-01-10 is an interpretation: no start named")
     );
     assert_eq!(d.interpreted_shortfall("2025-01-02", &on), None);
-    assert_eq!(d.interpreted_shortfall("2025-01-02", &date("x")), None);
+    assert_eq!(d.interpreted_shortfall("2025-01-02", &date_expr("x")), None);
 }
 
 #[test]

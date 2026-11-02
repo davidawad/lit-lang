@@ -73,17 +73,21 @@ pub struct Change {
 /// BASE is not a revision, git cannot be run, or the working directory is
 /// not the repository root.
 pub fn impact(head: &dyn Source, base: &str, lib: &[String]) -> Outcome {
-    let (sha, tree) = tree_at(base)?;
-    let mut report = compare(&tree, head, lib);
+    let (sha, base_tree) = tree_at(base)?;
+    let head_tree = snapshot(head)?;
+    let before = observe_parallel(&base_tree, lib)?;
+    let after = observe_parallel(&head_tree, lib)?;
+    let mut report = compare_observations(&before, &after);
     report.result["base"] = Value::String(sha);
     Ok(report)
 }
 
 /// The report of every expect test of `base` and `head`.
 #[must_use]
-pub fn compare(base: &dyn Source, head: &dyn Source, lib: &[String]) -> Report {
-    let before = observe(base, lib);
-    let after = observe(head, lib);
+fn compare_observations(
+    before: &BTreeMap<Test, BTreeMap<Row, String>>,
+    after: &BTreeMap<Test, BTreeMap<Row, String>>,
+) -> Report {
     let mut tests: Vec<&Test> = before.keys().chain(after.keys()).collect();
     tests.sort();
     tests.dedup();
@@ -129,9 +133,55 @@ pub fn compare(base: &dyn Source, head: &dyn Source, lib: &[String]) -> Report {
 
 /// The rows of every expect test in `src`, by test: a matter's own
 /// directory (`tests/expect/<case>/expect.toml`) is its own forum.
-fn observe(src: &dyn Source, lib: &[String]) -> BTreeMap<Test, BTreeMap<Row, String>> {
+/// Observe the corpus in four independent chunks. Each worker owns a cloned
+/// read-only tree, which bounds the impact stage's wall time without sharing
+/// the source's interior write cache between threads.
+fn observe_parallel(
+    src: &MemoryTree,
+    lib: &[String],
+) -> Result<BTreeMap<Test, BTreeMap<Row, String>>, Failure> {
+    const WORKERS: usize = 4;
+    let dirs = expect::dirs(src, Path::new(EXPECT_DIR));
+    let files = manifests(src);
+    let mut handles = Vec::with_capacity(WORKERS);
+    for worker in 0..WORKERS {
+        let dirs = dirs
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| i % WORKERS == worker)
+            .map(|(_, dir)| dir.clone())
+            .collect();
+        let files = files
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| i % WORKERS == worker)
+            .map(|(_, file)| file.clone())
+            .collect();
+        let tree = src.clone();
+        let lib = lib.to_vec();
+        handles.push(std::thread::spawn(move || {
+            observe_selected(&tree, &lib, dirs, files)
+        }));
+    }
+    let mut out = BTreeMap::new();
+    for handle in handles {
+        out.extend(
+            handle
+                .join()
+                .map_err(|_| Failure::new("impact worker panicked"))?,
+        );
+    }
+    Ok(out)
+}
+
+fn observe_selected(
+    src: &dyn Source,
+    lib: &[String],
+    dirs: Vec<PathBuf>,
+    files: Vec<(String, String, PathBuf)>,
+) -> BTreeMap<Test, BTreeMap<Row, String>> {
     let mut tests = BTreeMap::new();
-    for dir in expect::dirs(src, Path::new(EXPECT_DIR)) {
+    for dir in dirs {
         let name = expect::name_of(&dir);
         let rows = expect::observed(src, &dir, lib)
             .into_iter()
@@ -139,7 +189,7 @@ fn observe(src: &dyn Source, lib: &[String]) -> BTreeMap<Test, BTreeMap<Row, Str
             .collect();
         tests.insert((name.clone(), name), rows);
     }
-    for (forum, name, path) in manifests(src) {
+    for (forum, name, path) in files {
         let mut rows = BTreeMap::new();
         let mut put = |case: &str, world: &str, field: &str, value: String| {
             rows.insert((case.to_owned(), world.to_owned(), field.to_owned()), value);
@@ -496,6 +546,62 @@ fn tree_at(rev: &str) -> Result<(String, MemoryTree), Failure> {
     Ok((sha, MemoryTree::new(files)))
 }
 
+/// Snapshot only the files impact observes, plus the L0 texts pinned by
+/// those files' `Lit.lock`s. The CLI's disk source is otherwise not safe to
+/// share across the bounded observation workers.
+fn snapshot(src: &dyn Source) -> Result<MemoryTree, Failure> {
+    fn walk(
+        src: &dyn Source,
+        root: &Path,
+        dir: &Path,
+        files: &mut BTreeMap<String, String>,
+    ) -> Result<(), Failure> {
+        for path in src
+            .entries(dir)
+            .map_err(|e| Failure::new(format!("{}: {e}", dir.display())))?
+        {
+            let rel = path
+                .strip_prefix(root)
+                .unwrap_or(&path)
+                .to_string_lossy()
+                .trim_start_matches("./")
+                .to_owned();
+            if ["crates/", "sources/", "editors/", "target/"]
+                .iter()
+                .any(|skip| rel.starts_with(skip))
+                || rel
+                    .split('/')
+                    .any(|part| matches!(part, "node_modules" | ".git"))
+            {
+                continue;
+            }
+            if src.is_dir(&path) {
+                walk(src, root, &path, files)?;
+            } else if wanted(&rel) {
+                if let Ok(text) = src.read_to_string(&path) {
+                    files.insert(rel, text);
+                }
+            }
+        }
+        Ok(())
+    }
+
+    let root = src.root().map_err(|e| Failure::new(e.to_string()))?;
+    let mut files = BTreeMap::new();
+    walk(src, &root, &root, &mut files)?;
+    let texts: std::collections::BTreeSet<String> = files
+        .iter()
+        .filter(|(path, _)| path.ends_with("Lit.lock"))
+        .flat_map(|(_, lock)| pinned(lock).map(str::to_owned))
+        .collect();
+    for path in texts {
+        if let Ok(text) = src.read_to_string(Path::new(&path)) {
+            files.insert(path, text);
+        }
+    }
+    Ok(MemoryTree::new(files))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -516,6 +622,15 @@ mod tests {
         let lock =
             "texts = [\n    \"frap4 sources/frap4.txt sha256:c2\",\n]\nsource = \"sha256:0c\"\n";
         assert_eq!(pinned(lock).collect::<Vec<_>>(), ["sources/frap4.txt"]);
+    }
+
+    #[test]
+    fn parallel_observation_handles_an_empty_tree() {
+        let tree = MemoryTree::default();
+        assert_eq!(
+            observe_parallel(&tree, &[]).ok().map(|out| out.len()),
+            Some(0)
+        );
     }
 
     #[test]

@@ -113,7 +113,7 @@ impl Source for Disk {
 /// An in-memory file tree rooted at `/`: files by POSIX path, directories
 /// implied by them. Writes are collected apart from the tree (see
 /// [`MemoryTree::written`]) and never read back.
-#[derive(Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct MemoryTree {
     files: BTreeMap<String, String>,
     written: RefCell<BTreeMap<String, String>>,

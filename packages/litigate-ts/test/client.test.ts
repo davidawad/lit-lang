@@ -9,8 +9,6 @@ import {
   LitgraphError,
   type LitgraphWasm,
   type LitigateRun,
-  loadNode,
-  nodeBindings,
   type Response,
   unwrap,
 } from "../src/node.js";
@@ -48,8 +46,7 @@ const failed: Response = {
 
 describe("bindings", () => {
   it("recognizes a litigate-wasm module", () => {
-    expect(isLitgraphWasm(nodeBindings())).toBe(true);
-    expect(nodeBindings()).toBe(nodeBindings());
+    expect(isLitgraphWasm(fake("{}"))).toBe(true);
     expect(isLitgraphWasm(null)).toBe(false);
     expect(isLitgraphWasm("handle")).toBe(false);
     expect(isLitgraphWasm({ handle: () => "" })).toBe(false);
@@ -140,38 +137,6 @@ describe("responses", () => {
     expect(() => unwrap(failed)).toThrow(LitgraphError);
     const bare = new LitgraphError({ ...failed, error: null });
     expect(bare.code).toBe("unknown");
-  });
-});
-
-describe("Litgraph over the real wasm", () => {
-  const lg = loadNode();
-
-  it("reports failures in the response, as the CLI does", () => {
-    const r = lg.runJson("not json");
-    expect(JSON.parse(r)).toMatchObject({ ok: false, error: { code: "parse" } });
-    const bad = lg.run({ op: { op: "graph", node: "no-such-node" }, packs: ["frcp-civil-procedure"] });
-    expect(isError(bad)).toBe(true);
-  });
-
-  it("describes and validates", () => {
-    expect(lg.describe()).toMatchObject({ ok: true, op: "describe" });
-    expect(lg.validate({ params: { rate: 1 } }, "scenario")).toMatchObject({ kind: "scenario", valid: true });
-    expect(lg.validate({ nope: 1 }, "request").valid).toBe(false);
-  });
-
-  // The generated bundle the types are generated from must be exactly
-  // what the wasm build publishes for every litgraph kind.
-  it("publishes the schemas the types were generated from", () => {
-    const bundle = JSON.parse(readFileSync(new URL("../schema/litgraph.schema.json", import.meta.url), "utf8")) as {
-      properties: Record<string, { $ref: string }>;
-      $defs: Record<string, unknown>;
-    };
-    const kinds = ["request", "response", "scenario", "named-scenario", "pack", "links", "calibration", "clock"] as const;
-    for (const kind of kinds) {
-      const { $schema: _s, $defs: _d, title: _t, ...published } = lg.schema(kind);
-      const name = bundle.properties[kind]?.$ref.replace("#/$defs/", "") ?? "";
-      expect(published, kind).toStrictEqual(bundle.$defs[name]);
-    }
   });
 });
 

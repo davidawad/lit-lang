@@ -259,10 +259,13 @@ ts-build: wasm ts-gen
     cd {{ts_pkg}} && npm run --silent build
 
 # Unit, type-level, and golden tests (`litigate check`/`build`/`run`/ops
-# over lit/ and cases/ in memory against the native `litigate` CLI, built
-# here, and target/lit-build/ from `lit-sync`).
-ts-test: ts-build lit-sync
+# over lit/ and cases/ in memory against the native `litigate` CLI). They
+# need one generated FRCP pack fixture; the full Lit.lock regeneration and
+# corpus build remain in `lit-sync` and the gate, not this focused test.
+ts-test: ts-build
+    rm -rf target/lit-build
     cargo build -q -p litigate-cli
+    target/debug/litigate build lit/frcp --out target/lit-build > /dev/null
     cd {{ts_pkg}} && LITIGATE_BIN="$(cd ../.. && pwd)/target/debug/litigate" npm test
 
 # --- nix ---------------------------------------------------------------

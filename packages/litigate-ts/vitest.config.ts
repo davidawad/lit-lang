@@ -17,6 +17,9 @@ const gateSkip = (names: string[]) =>
 export default defineConfig({
   test: {
     include: ["test/**/*.test.ts"],
+    // Each real wasm instance can retain several GiB. Keep the browser/node
+    // parity files bounded so a small CI pod does not thrash or OOM.
+    maxWorkers: 2,
     testTimeout: 120_000,
     ...(process.env["LITIGATE_TS_GATE"] === "1" ? gateSkip(quarantined()) : {}),
     typecheck: {

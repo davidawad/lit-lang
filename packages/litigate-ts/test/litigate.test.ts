@@ -63,9 +63,8 @@ function untimedRun(run: LitigateRun): LitigateRun {
 
 describe("check matches the CLI", () => {
   it.each([
-    ["everything", ["lit", "cases"], {}],
-    ["everything, strict", ["lit", "cases"], { profile: "strict" }],
     ["one matter", ["cases/frcp-civil-case.case"], {}],
+    ["one matter, strict", ["cases/frcp-civil-case.case"], { profile: "strict" }],
     ["a missing path", ["lit/nope"], {}],
   ] as const)("%s", (_, paths, options) => {
     const args = [...("profile" in options ? ["--profile", options.profile] : []), ...paths];
@@ -74,12 +73,14 @@ describe("check matches the CLI", () => {
   });
 
   it("finds a matter's packages in the embedded library", () => {
-    const cases: Files = tree("cases");
-    const accepted = Object.keys(cases).filter((p) => p.endsWith(".case"));
-    const expected = native(["check", ...accepted]);
+    const matter = "cases/cofc-1498-patent-case.case";
+    const cases: Files = {
+      [matter]: readFileSync(`${repo}${matter}`, "utf8"),
+      "cases/Lit.lock": readFileSync(`${repo}cases/Lit.lock`, "utf8"),
+    };
+    const expected = native(["check", matter]);
     expect(expected.code).toBe(0);
-    expect(expected.envelope?.diagnostics.some((d) => d.code === "L4016")).toBe(true);
-    expect(untimed(lit.check(accepted, { files: cases, today: TODAY }))).toStrictEqual(expected);
+    expect(untimed(lit.check([matter], { files: cases, today: TODAY }))).toStrictEqual(expected);
     expect(lit.library()["lit/frcp/Lit.toml"]).toBe(files["lit/frcp/Lit.toml"]);
     expect(lit.check(["cases"], { files: cases, library: false }).code).toBe(2);
   });

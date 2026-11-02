@@ -345,15 +345,22 @@ pub fn observed_checked(
     src: &dyn Source,
     dir: &Path,
     lib: &[String],
-) -> (BTreeMap<(String, String), String>, bool) {
+) -> (BTreeMap<(String, String), String>, Vec<Mismatch>) {
     let mut out = BTreeMap::new();
-    let mut passed = true;
+    let mut mismatches = Vec::new();
     let error = |message: String| (("-".to_owned(), "error".to_owned()), message);
     let (expect, case) = match read(src, dir).and_then(|(_, e)| Ok((e, case_in(src, dir)?))) {
         Ok(found) => found,
         Err(Failure(message)) => {
-            out.extend([error(message)]);
-            return (out, false);
+            out.extend([error(message.clone())]);
+            mismatches.push(Mismatch {
+                case: name_of(dir),
+                world: "-".to_owned(),
+                field: "error".to_owned(),
+                expected: "-".to_owned(),
+                actual: message,
+            });
+            return (out, mismatches);
         }
     };
     for run in &expect.runs {
@@ -361,17 +368,36 @@ pub fn observed_checked(
             Ok(values) => {
                 let actual = world_rows(run, &values);
                 let expected = world_rows(run, &run.expect);
-                passed &= actual == expected;
+                let keys: BTreeSet<&(String, String)> =
+                    expected.keys().chain(actual.keys()).collect();
+                for key in keys {
+                    let (e, a) = (expected.get(key), actual.get(key));
+                    if e != a {
+                        mismatches.push(Mismatch {
+                            case: name_of(dir),
+                            world: key.0.clone(),
+                            field: key.1.clone(),
+                            expected: e.cloned().unwrap_or_else(|| "-".to_owned()),
+                            actual: a.cloned().unwrap_or_else(|| "-".to_owned()),
+                        });
+                    }
+                }
                 out.extend(actual);
             }
             Err(Failure(message)) => {
-                passed = false;
                 let world = world_of(run, "-");
-                out.insert((world, "error".to_owned()), message);
+                out.insert((world.clone(), "error".to_owned()), message.clone());
+                mismatches.push(Mismatch {
+                    case: name_of(dir),
+                    world,
+                    field: "error".to_owned(),
+                    expected: "-".to_owned(),
+                    actual: message,
+                });
             }
         }
     }
-    (out, passed)
+    (out, mismatches)
 }
 
 /// Runs the expect test in `dir` (on disk when `bless`, which records the

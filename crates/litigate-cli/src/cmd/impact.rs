@@ -88,12 +88,28 @@ pub fn impact(head: &dyn Source, base: &str, lib: &[String], check_head: bool) -
             .map_err(|_| Failure::new("impact HEAD observer panicked"))??;
         Ok::<_, Failure>((base, head))
     })?;
-    let (before, _) = before;
-    let (after, head_passed) = after;
+    let (before, _, _) = before;
+    let (after, head_mismatches, head_passed) = after;
     let mut report = compare_observations(&before, &after);
     report.result["base"] = Value::String(sha);
     if check_head && !head_passed {
         report.failed = true;
+        let lines = head_mismatches
+            .iter()
+            .map(|m| {
+                format!(
+                    "expect test {}: {} {}: expected {}, found {}",
+                    m.case, m.world, m.field, m.expected, m.actual
+                )
+            })
+            .collect::<Vec<_>>();
+        if let Some(text) = &mut report.text {
+            if !lines.is_empty() {
+                text.push('\n');
+                text.push_str(&lines.join("\n"));
+                text.push('\n');
+            }
+        }
     }
     Ok(report)
 }
@@ -155,7 +171,14 @@ fn compare_observations(
 fn observe_parallel(
     src: &MemoryTree,
     lib: &[String],
-) -> Result<(BTreeMap<Test, BTreeMap<Row, String>>, bool), Failure> {
+) -> Result<
+    (
+        BTreeMap<Test, BTreeMap<Row, String>>,
+        Vec<expect::Mismatch>,
+        bool,
+    ),
+    Failure,
+> {
     const WORKERS: usize = 4;
     let dirs = expect::dirs(src, Path::new(EXPECT_DIR));
     let files = manifests(src);
@@ -180,15 +203,17 @@ fn observe_parallel(
         }));
     }
     let mut out = BTreeMap::new();
+    let mut mismatches = Vec::new();
     let mut passed = true;
     for handle in handles {
-        let (tests, worker_passed) = handle
+        let (tests, worker_mismatches, worker_passed) = handle
             .join()
             .map_err(|_| Failure::new("impact worker panicked"))?;
         out.extend(tests);
+        mismatches.extend(worker_mismatches);
         passed &= worker_passed;
     }
-    Ok((out, passed))
+    Ok((out, mismatches, passed))
 }
 
 fn observe_selected(
@@ -196,13 +221,19 @@ fn observe_selected(
     lib: &[String],
     dirs: Vec<PathBuf>,
     files: Vec<(String, String, PathBuf)>,
-) -> (BTreeMap<Test, BTreeMap<Row, String>>, bool) {
+) -> (
+    BTreeMap<Test, BTreeMap<Row, String>>,
+    Vec<expect::Mismatch>,
+    bool,
+) {
     let mut tests = BTreeMap::new();
+    let mut mismatches = Vec::new();
     let mut passed = true;
     for dir in dirs {
         let name = expect::name_of(&dir);
-        let (observed, test_passed) = expect::observed_checked(src, &dir, lib);
-        passed &= test_passed;
+        let (observed, test_mismatches) = expect::observed_checked(src, &dir, lib);
+        passed &= test_mismatches.is_empty();
+        mismatches.extend(test_mismatches);
         let rows = observed
             .into_iter()
             .map(|((world, field), value)| ((name.clone(), world, field), value))
@@ -222,20 +253,12 @@ fn observe_selected(
             Ok(m) => run(src, &name, &m, lib, &mut put),
             Err(e) => Err(Failure::new(e)),
         };
-        if let Err(Failure(message)) = outcome {
+        if outcome.is_err() {
             passed = false;
-            put(&name, "-", "error", message);
         }
-        passed &= test_passed(&rows);
         tests.insert((forum, name), rows);
     }
-    (tests, passed)
-}
-
-fn test_passed(rows: &BTreeMap<Row, String>) -> bool {
-    !rows
-        .iter()
-        .any(|((_, _, field), value)| field == "error" || value.ends_with(" (fails)"))
+    (tests, mismatches, passed)
 }
 
 /// `(forum, test name, path)` of each `tests/expect/<forum>/<name>.toml`.
@@ -295,17 +318,9 @@ fn run(
             let targets = ws::discover_in(src, &paths)?;
             let session = Session::load_in(src, &targets, lib)?;
             let (results, diagnostics) = test::run(&session, None);
-            for diagnostic in diagnostics
+            let has_errors = diagnostics
                 .iter()
-                .filter(|d| d.severity == litigate_base::Severity::Error)
-            {
-                put(
-                    &format!("{package}"),
-                    "-",
-                    "error",
-                    format!("{} {}", diagnostic.code.as_str(), diagnostic.message),
-                );
-            }
+                .any(|d| d.severity == litigate_base::Severity::Error);
             for t in results {
                 let case = format!("{}::{}", t.package, t.name);
                 let mut seen: BTreeMap<&str, usize> = BTreeMap::new();
@@ -330,7 +345,11 @@ fn run(
                     put(&case, "-", &field, value);
                 }
             }
-            Ok(())
+            if has_errors {
+                Err(Failure::new("expect package has error diagnostics"))
+            } else {
+                Ok(())
+            }
         }
         _ => Err(Failure::new(
             "an expect test names `case` and `world`, or `package`",

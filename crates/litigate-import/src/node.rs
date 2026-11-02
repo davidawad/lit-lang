@@ -18,7 +18,7 @@ impl Spelling<'_> {
     /// A `cite ...` clause for free text: citation syntax when every
     /// citation in it parses under the pack's grammar, else a cite hole.
     pub(crate) fn cite(&self, raw: &str) -> String {
-        let refs = parse_cite_string(raw, &self.grammar);
+        let refs = parse_cite_string(&without_rule_edition(raw, &self.grammar), &self.grammar);
         let recognized = !refs.is_empty() && refs.iter().all(|r| r.heading().is_some());
         text::cite(raw, recognized)
     }
@@ -404,6 +404,80 @@ impl Spelling<'_> {
             parts.push(format!("max {}", days(max, "max")));
         }
         format!("duration {{ {} }}", parts.join(", "))
+    }
+}
+
+/// Remove a dated edition marker between a pack-declared rule prefix and
+/// its section while checking citation syntax. The original text remains
+/// the authored cite; edition labels identify the source version, not part
+/// of the rule body's citation grammar (for example, `FRAP (2017 ed.) 32`).
+fn without_rule_edition(raw: &str, grammar: &CiteGrammar<'_>) -> String {
+    let mut out = String::with_capacity(raw.len());
+    let mut cursor = 0;
+    while let Some(relative) = raw[cursor..].find(" (") {
+        let start = cursor + relative;
+        let edition = start + 2;
+        let Some(year_end) = edition.checked_add(4) else {
+            break;
+        };
+        let Some(year) = raw.get(edition..year_end) else {
+            break;
+        };
+        let suffix = " ed.)";
+        let end = year_end + suffix.len();
+        let Some(after) = raw.get(year_end..end) else {
+            out.push_str(&raw[cursor..]);
+            return out;
+        };
+        if year.bytes().all(|b| b.is_ascii_digit())
+            && after == suffix
+            && grammar.rule_prefix(raw[..start].trim_end()).is_some()
+        {
+            out.push_str(&raw[cursor..start]);
+            cursor = end;
+        } else {
+            out.push_str(&raw[cursor..start + 2]);
+            cursor = start + 2;
+        }
+    }
+    out.push_str(&raw[cursor..]);
+    out
+}
+
+#[cfg(test)]
+mod edition_tests {
+    use super::without_rule_edition;
+    use litigate_engine::cite::normalize::CiteGrammar;
+    use litigate_engine::model::{CiteRuleForm, CiteSyntax};
+
+    #[test]
+    fn strips_a_dated_edition_after_a_declared_rule_prefix() {
+        let syntax = CiteSyntax {
+            rules: vec![CiteRuleForm {
+                prefixes: vec!["FRAP".into()],
+                heading: "Rule {}".into(),
+                source: None,
+            }],
+            shorthands: vec![],
+        };
+        let grammar = CiteGrammar::new(&syntax);
+        assert_eq!(
+            without_rule_edition("FRAP (2017 ed.) 32(a)(7)(A)", &grammar),
+            "FRAP 32(a)(7)(A)"
+        );
+        assert_eq!(
+            without_rule_edition("FRAP (2017 ed.) 32; FRAP 4", &grammar),
+            "FRAP 32; FRAP 4"
+        );
+    }
+
+    #[test]
+    fn leaves_unmatched_parentheticals_alone() {
+        let grammar = CiteGrammar::default();
+        assert_eq!(
+            without_rule_edition("FRAP (2017 ed.) 32", &grammar),
+            "FRAP (2017 ed.) 32"
+        );
     }
 }
 

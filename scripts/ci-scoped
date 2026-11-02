@@ -541,6 +541,8 @@ failed=()
 logdir=""
 seconds=()
 gate_start=$SECONDS
+selected_stages=""
+plan_stages=0
 
 # A warm build (lg-kuei): compile through sccache when the pod has one and
 # no wrapper is set, so a gate does not compile the workspace cold. Its
@@ -565,6 +567,8 @@ gate_seconds() {
 stage() {
   local name="$1" log start rc=0
   shift
+  if [ "$plan_stages" -eq 1 ]; then echo "$name run"; return; fi
+  if [ -n "$selected_stages" ] && ! [[ ",$selected_stages," == *",$name,"* ]]; then return; fi
   log="$logdir/$name.log"
   start=$SECONDS
   "$@" > "$log" 2>&1 || rc=$?
@@ -634,20 +638,42 @@ check_all_quarantine() {
 }
 
 skip() {
+  if [ "$plan_stages" -eq 1 ]; then echo "$1 skip"; return; fi
+  if [ -n "$selected_stages" ] && ! [[ ",$selected_stages," == *",$1,"* ]]; then return; fi
   echo "ci-scoped: $1: skip ($2)"
 }
 
 run() {
-  local base files scope_out label target dir
+  local base="" files scope_out label target dir arg
+  selected_stages=""
+  while [ "$#" -gt 0 ]; do
+    if [ "$1" = --stages ]; then
+      [ "$#" -ge 2 ] || usage
+      selected_stages="$2"
+      shift 2
+    elif [ -z "$base" ]; then base="$1"; shift
+    else usage
+    fi
+  done
+  if [ -n "$selected_stages" ]; then
+    [[ "$selected_stages" =~ ^[a-zA-Z0-9_,.-]+$ ]] || { echo 'ci-scoped: invalid --stages list' >&2; return 2; }
+    [[ ",$selected_stages," != *",,"* ]] || { echo 'ci-scoped: empty stage name' >&2; return 2; }
+    local known='fmt-check typos workflow-command-lint workflow-command-lint-repo provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect impact clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
+    IFS=, read -r -a _requested <<< "$selected_stages"
+    for arg in "${_requested[@]}"; do
+      if ! grep -qw "$arg" <<<"$known" && [[ ! "$arg" =~ ^(check|test|lock)-[A-Za-z0-9_.-]+$ ]]; then
+        echo "ci-scoped: unknown stage: $arg" >&2; return 2
+      fi
+    done
+  fi
   warm_build
-  base="$(base_of "${1:-}")"
+  base="$(base_of "$base")"
   meta="$(metadata)"
   files="$(changed_files "$base")"
   scope_out="$(scope_label "$files" "$meta")"
   target="$(jq -r .target_directory "$meta")"
   logdir="$target/ci-scoped"
-  rm -rf "$logdir"
-  mkdir -p "$logdir"
+  if [ "$plan_stages" -eq 0 ]; then rm -rf "$logdir"; mkdir -p "$logdir"; fi
 
   local -a pkgs=() sel=() doc=()
   case "$scope_out" in
@@ -659,11 +685,24 @@ run() {
       for p in "${pkgs[@]}"; do sel+=(-p "$p"); done
       ;;
   esac
-  echo "ci-scoped: scope: base $(git rev-parse --short "$base"), $(grep -c . <<<"$files" || true) changed file(s): $label"
+  if [ "$plan_stages" -eq 0 ]; then
+    echo "ci-scoped: scope: base $(git rev-parse --short "$base"), $(grep -c . <<<"$files" || true) changed file(s): $label"
+  fi
 
   if data_only "$files"; then
     local rc=0
+    if [ "$plan_stages" -eq 1 ]; then
+      # Listing mode invokes the same lane with every stage intercepted by stage()/skip().
+      run_data_only "$base" "$files" "$target" || rc=$?
+      rm -f "$meta"
+      return "$rc"
+    fi
     run_data_only "$base" "$files" "$target" || rc=$?
+    if [ -n "$selected_stages" ]; then
+      gate_seconds "scope=$label" "$target"
+      if [ "$rc" -eq 0 ]; then echo "CI_SCOPED: pass scope=$label stages=$selected_stages";
+      else echo "CI_SCOPED: fail scope=$label stages=$selected_stages"; fi
+    fi
     rm -f "$meta"
     return "$rc"
   fi
@@ -712,7 +751,7 @@ run() {
   # fails only when the report cannot be made, never on a change.
   if corpus_change "$files"; then
     stage impact cargo run -q -p litigate-cli -- --format human test --impact "$base"
-    [[ " ${failed[*]} " == *" impact "* ]] || sed 's/^/  /' "$logdir/impact.log"
+    if [ "$plan_stages" -eq 0 ]; then [[ " ${failed[*]} " == *" impact "* ]] || sed 's/^/  /' "$logdir/impact.log"; fi
   else
     skip impact "no parser, engine, sema, lower or corpus input changed"
   fi
@@ -743,12 +782,12 @@ run() {
   stage audit cargo audit
   stage deny cargo deny check
   rm -f "$meta"
-  gate_seconds "scope=$label" "$target"
+  if [ "$plan_stages" -eq 0 ]; then gate_seconds "scope=$label" "$target"; fi
 
   if [ "${#failed[@]}" -eq 0 ]; then
-    echo "CI_SCOPED: pass scope=$label"
+    if [ "$plan_stages" -eq 0 ]; then echo "CI_SCOPED: pass scope=$label${selected_stages:+ stages=$selected_stages}"; fi
   else
-    echo "CI_SCOPED: fail scope=$label (failed: ${failed[*]})"
+    if [ "$plan_stages" -eq 0 ]; then echo "CI_SCOPED: fail scope=$label${selected_stages:+ stages=$selected_stages} (failed: ${failed[*]})"; fi
     return 1
   fi
 }
@@ -796,7 +835,7 @@ run_data_only() {
   if [ "${#expect_dirs[@]}" -gt 0 ]; then stage data-expect "$bin" test "${expect_dirs[@]}"; fi
   for pkg in "${locks[@]}"; do stage "lock-${pkg#lit/}" "$bin" lock --root "$pkg"; done
   [ "${#failed[@]}" -eq 0 ] || { echo "ci-scoped: data-only: FAIL (failed: ${failed[*]})"; return 1; }
-  echo "ci-scoped: data-only: pass (prebuilt=$bin packages=${#checks[@]} expect=${#expect_dirs[@]} locks=${#locks[@]})"
+  if [ "$plan_stages" -eq 0 ]; then echo "ci-scoped: data-only: pass (prebuilt=$bin packages=${#checks[@]} expect=${#expect_dirs[@]} locks=${#locks[@]})"; fi
 }
 
 # --- nightly -----------------------------------------------------------------
@@ -1067,6 +1106,35 @@ self_test() {
   echo "ci-scoped self-test: every scope as expected"
 }
 
+stage_names() {
+  local base="${1:-}" rc=0
+  plan_stages=1
+  run "$base" || rc=$?
+  plan_stages=0
+  return "$rc"
+}
+
+self_test_stages() {
+  local requested="${1:-}" stage_name
+  if [ "$requested" = stages ]; then
+    { sed -n '/^run() {/,/^}/p' "$self" | sed -nE 's/^[[:space:]]*stage[[:space:]]+"?([a-zA-Z0-9_.${}#-]+)"?.*/\1/p';
+      printf '%s\n' data-only-compiler data-typos data-provenance data-expect 'check-${pkg#lit/}' 'test-${pkg#lit/}' 'lock-${pkg#lit/}';
+    } | sort -u
+    return
+  fi
+  [ -n "$requested" ] || { self_test; return; }
+  local known='fmt-check typos workflow-command-lint workflow-command-lint-repo provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect impact clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
+  IFS=, read -r -a requested_list <<< "$requested"
+  for stage_name in "${requested_list[@]}"; do
+    if ! grep -qw "$stage_name" <<<"$known" && [[ ! "$stage_name" =~ ^(check|test|lock)-[A-Za-z0-9_.-]+$ ]]; then
+      echo "ci-scoped: unknown stage: $stage_name" >&2; return 2
+    fi
+  done
+  # The selected self-test stage set is currently the self-test suite itself.
+  # Validate its names first so automation can safely request a subset.
+  self_test
+}
+
 # The provenance check on a fixture repo: a base commit with records, then
 # per case a branch that adds files. Returns the number of wrong cases.
 provenance_self_test() {
@@ -1220,12 +1288,13 @@ provenance_self_test() {
 cmd="$1"
 shift
 case "$cmd" in
-  run) [ "$#" -le 1 ] || usage; run "$@" ;;
+  run) run "$@" ;;
   nightly) [ "$#" -eq 0 ] || usage; nightly ;;
   scope) [ "$#" -le 1 ] || usage; scope "$@" ;;
+  stages) [ "$#" -le 1 ] || usage; stage_names "$@" ;;
   scope-of) [ "$#" -eq 1 ] || usage; scope_of "$1" ;;
   provenance) [ "$#" -le 1 ] || usage; provenance "$@" ;;
   check-quarantine) [ "$#" -le 2 ] || usage; check_quarantine "$@" ;;
-  self-test) [ "$#" -eq 0 ] || usage; self_test ;;
+  self-test) [ "$#" -le 2 ] || usage; if [ "${1:-}" = --stages ]; then [ "$#" -eq 2 ] || usage; self_test_stages "$2"; elif [ "$#" -eq 1 ]; then self_test_stages "$1"; else self_test; fi ;;
   *) usage ;;
 esac

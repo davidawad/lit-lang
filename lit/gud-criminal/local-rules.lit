@@ -1,7 +1,7 @@
 module gud-criminal-local-rules.local-rules
 
 import core.authority.{ CaseOrder }
-import core.frcrimp45.{ frcrimp45 }
+import core.states.guam.{ frcrimp45-guam }
 import frcrimp.deadlines.{ SentencingScheduled }
 
 // The District Court of Guam's own criminal periods, counted under the
@@ -85,7 +85,7 @@ event AppelleeBriefServed() paper misdemeanor-appeal-brief
 /// D. Guam CRLR 4: no later than two business days after the court grants
 /// a request to issue a summons, the requesting agency submits a proposed
 /// summons on the AO 83 Form to the Clerk's Office.
-deadline proposed-summons: 2.business_days after SummonsRequestGranted() counted_by frcrimp45 cite "D. Guam CRLR 4"
+deadline proposed-summons: 2.business_days after SummonsRequestGranted() counted_by frcrimp45-guam cite "D. Guam CRLR 4"
 {
   forum frcrimp
 }
@@ -93,7 +93,7 @@ deadline proposed-summons: 2.business_days after SummonsRequestGranted() counted
 /// D. Guam CRLR 11(b): a party opposing objections to the magistrate
 /// judge's plea findings and recommendation files and serves a written
 /// response within seven (7) days thereafter.
-deadline plea-objection-response: 7.days after PleaObjectionsServed() counted_by frcrimp45 cite "D. Guam CRLR 11(b)"
+deadline plea-objection-response: 7.days after PleaObjectionsServed() counted_by frcrimp45-guam cite "D. Guam CRLR 11(b)"
 {
   forum frcrimp
 }
@@ -102,7 +102,7 @@ deadline plea-objection-response: 7.days after PleaObjectionsServed() counted_by
 /// judge, the written report and recommendation is filed within 30 days
 /// after the hearing or after all the briefing is completed, unless
 /// additional briefing or other circumstances warrant delay.
-deadline referred-motion-recommendation: 30.days after ReferredMotionSubmitted() counted_by frcrimp45 cite "D. Guam CRLR 12(e)"
+deadline referred-motion-recommendation: 30.days after ReferredMotionSubmitted() counted_by frcrimp45-guam cite "D. Guam CRLR 12(e)"
 {
   forum frcrimp
 }
@@ -110,7 +110,7 @@ deadline referred-motion-recommendation: 30.days after ReferredMotionSubmitted()
 /// D. Guam CRLR 12(f): any party in interest may respond to an appeal or
 /// objection within seven (7) days after being served with it; only the
 /// assigned district judge may alter the period.
-deadline magistrate-objection-response: 7.days after MagistrateObjectionServed() counted_by frcrimp45 delegable {
+deadline magistrate-objection-response: 7.days after MagistrateObjectionServed() counted_by frcrimp45-guam delegable {
   to CaseOrder
   op set
 } cite "D. Guam CRLR 12(f)"
@@ -122,7 +122,7 @@ deadline magistrate-objection-response: 7.days after MagistrateObjectionServed()
 /// provides or makes available its FRCrimP 16(a), Brady, identification,
 /// inspection, Rule 404(b), electronic surveillance and search warrant
 /// disclosures, or moves for an extension for good cause.
-deadline government-initial-disclosure: 7.days after Arraigned() counted_by frcrimp45 cite "D. Guam CRLR 16(b)"
+deadline government-initial-disclosure: 7.days after Arraigned() counted_by frcrimp45-guam cite "D. Guam CRLR 16(b)"
 {
   forum frcrimp
 }
@@ -130,7 +130,7 @@ deadline government-initial-disclosure: 7.days after Arraigned() counted_by frcr
 /// D. Guam CRLR 16(b)(2)(B), (C): no later than two weeks before the start
 /// of trial, the government discloses inducements to prospective witnesses
 /// (Giglio material) and the prior convictions of any testifying informant.
-deadline giglio-disclosure: 14.days before TrialScheduled() counted_by frcrimp45 cite "D. Guam CRLR 16(b)"
+deadline giglio-disclosure: 14.days before TrialScheduled() counted_by frcrimp45-guam cite "D. Guam CRLR 16(b)"
 {
   forum frcrimp
 }
@@ -138,14 +138,14 @@ deadline giglio-disclosure: 14.days before TrialScheduled() counted_by frcrimp45
 /// D. Guam CRLR 16(b)(3): a defendant who accepts FRCrimP 16(a) disclosure
 /// provides the FRCrimP 16(b) information within fourteen (14) days after
 /// the government complies with CRLR 16(b)(1).
-deadline defense-disclosure: 14.days after GovernmentDisclosuresMade() counted_by frcrimp45 cite "D. Guam CRLR 16(b)"
+deadline defense-disclosure: 14.days after GovernmentDisclosuresMade() counted_by frcrimp45-guam cite "D. Guam CRLR 16(b)"
 {
   forum frcrimp
 }
 
 /// D. Guam CRLR 24(a): no later than fourteen (14) days before trial, each
 /// party files and serves any suggested voir dire questions.
-deadline voir-dire-questions: 14.days before TrialScheduled() counted_by frcrimp45 cite "D. Guam CRLR 24(a)"
+deadline voir-dire-questions: 14.days before TrialScheduled() counted_by frcrimp45-guam cite "D. Guam CRLR 24(a)"
 {
   forum frcrimp
 }
@@ -153,14 +153,14 @@ deadline voir-dire-questions: 14.days before TrialScheduled() counted_by frcrimp
 /// D. Guam CRLR 30: no later than fourteen (14) days before trial, each
 /// party files and serves proposed written jury instructions with sources
 /// cited.
-deadline jury-instructions: 14.days before TrialScheduled() counted_by frcrimp45 cite "D. Guam CRLR 30"
+deadline jury-instructions: 14.days before TrialScheduled() counted_by frcrimp45-guam cite "D. Guam CRLR 30"
 {
   forum frcrimp
 }
 
 /// D. Guam CRLR 31: no later than fourteen (14) days before trial, each
 /// party files and serves a proposed verdict form.
-deadline verdict-form: 14.days before TrialScheduled() counted_by frcrimp45 cite "D. Guam CRLR 31"
+deadline verdict-form: 14.days before TrialScheduled() counted_by frcrimp45-guam cite "D. Guam CRLR 31"
 {
   forum frcrimp
 }
@@ -169,7 +169,7 @@ deadline verdict-form: 14.days before TrialScheduled() counted_by frcrimp45 cite
 /// days before sentencing the probation officer files under seal and serves
 /// a draft presentence report, unless the defendant waives this minimum
 /// period.
-deadline draft-psr: 45.days before SentencingScheduled() counted_by frcrimp45 delegable {
+deadline draft-psr: 45.days before SentencingScheduled() counted_by frcrimp45-guam delegable {
   to CaseOrder
   op set
 } cite "D. Guam CRLR 32(a)"
@@ -180,7 +180,7 @@ deadline draft-psr: 45.days before SentencingScheduled() counted_by frcrimp45 de
 /// D. Guam CRLR 32(a)(3): if an objection to the draft presentence report
 /// is filed, the opposing party files a reply within seven (7) days from
 /// its filing.
-deadline psr-objection-reply: 7.days after PsrObjectionFiled() counted_by frcrimp45 delegable {
+deadline psr-objection-reply: 7.days after PsrObjectionFiled() counted_by frcrimp45-guam delegable {
   to CaseOrder
   op set
 } cite "D. Guam CRLR 32(a)"
@@ -191,7 +191,7 @@ deadline psr-objection-reply: 7.days after PsrObjectionFiled() counted_by frcrim
 /// D. Guam CRLR 32(a)(5): within seven (7) days from the filing of replies
 /// to objections, the probation officer files under seal and serves the
 /// final presentence report with its addendum of unresolved objections.
-deadline final-psr: 7.days after PsrRepliesFiled() counted_by frcrimp45 delegable {
+deadline final-psr: 7.days after PsrRepliesFiled() counted_by frcrimp45-guam delegable {
   to CaseOrder
   op set
 } cite "D. Guam CRLR 32(a)"
@@ -202,7 +202,7 @@ deadline final-psr: 7.days after PsrRepliesFiled() counted_by frcrimp45 delegabl
 /// D. Guam CRLR 32(a)(6): within seven (7) days after receiving the final
 /// presentence report, each party files and serves a sentencing memorandum
 /// and any departure motion with its grounds.
-deadline sentencing-memorandum-after-final-psr: 7.days after FinalPsrReceived() counted_by frcrimp45 delegable {
+deadline sentencing-memorandum-after-final-psr: 7.days after FinalPsrReceived() counted_by frcrimp45-guam delegable {
   to CaseOrder
   op set
 } cite "D. Guam CRLR 32(a)"
@@ -212,7 +212,7 @@ deadline sentencing-memorandum-after-final-psr: 7.days after FinalPsrReceived() 
 
 /// D. Guam CRLR 32(a)(6): and in any event no later than ten (10) days
 /// before the sentencing hearing.
-deadline sentencing-memorandum: 10.days before SentencingScheduled() counted_by frcrimp45 delegable {
+deadline sentencing-memorandum: 10.days before SentencingScheduled() counted_by frcrimp45-guam delegable {
   to CaseOrder
   op set
 } cite "D. Guam CRLR 32(a)"
@@ -222,7 +222,7 @@ deadline sentencing-memorandum: 10.days before SentencingScheduled() counted_by 
 
 /// D. Guam CRLR 58(b)(2): within thirty (30) days after a transcript is
 /// ordered, the original and one copy are filed with the Clerk.
-deadline misdemeanor-appeal-transcript: 30.days after AppealTranscriptOrdered() counted_by frcrimp45 cite "D. Guam CRLR 58(b)"
+deadline misdemeanor-appeal-transcript: 30.days after AppealTranscriptOrdered() counted_by frcrimp45-guam cite "D. Guam CRLR 58(b)"
 {
   forum frcrimp
 }
@@ -230,7 +230,7 @@ deadline misdemeanor-appeal-transcript: 30.days after AppealTranscriptOrdered() 
 /// D. Guam CRLR 58(b)(4): the appellant serves and files a brief within
 /// twenty-one (21) days after the record on appeal is complete; the
 /// assigned district judge may alter the periods.
-deadline misdemeanor-appellant-brief: 21.days after AppealRecordComplete() counted_by frcrimp45 delegable {
+deadline misdemeanor-appellant-brief: 21.days after AppealRecordComplete() counted_by frcrimp45-guam delegable {
   to CaseOrder
   op set
 } cite "D. Guam CRLR 58(b)"
@@ -240,7 +240,7 @@ deadline misdemeanor-appellant-brief: 21.days after AppealRecordComplete() count
 
 /// D. Guam CRLR 58(b)(4): the appellee serves and files a responsive brief
 /// within twenty-one (21) days after service of the appellant's brief.
-deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counted_by frcrimp45 delegable {
+deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counted_by frcrimp45-guam delegable {
   to CaseOrder
   op set
 } cite "D. Guam CRLR 58(b)"
@@ -250,7 +250,7 @@ deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counte
 
 /// D. Guam CRLR 58(b)(4): the appellant may serve and file a reply brief
 /// within seven (7) days after service of the appellee's brief.
-deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45 delegable {
+deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45-guam delegable {
   to CaseOrder
   op set
 } cite "D. Guam CRLR 58(b)"
@@ -258,9 +258,9 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by 
   forum frcrimp
 }
 
-test "proposed summons: 2 business days after the trigger" cite "D. Guam CRLR 4"
+test "proposed summons skips Guam History and CHamoru Heritage Day" cite "1 GCA § 1000(a)(3)"
 {
-  given SummonsRequestGranted() on 2027-03-01
+  given SummonsRequestGranted() on 2027-02-26
   expect deadline(proposed-summons) == 2027-03-03
 }
 

@@ -1,6 +1,7 @@
 module core.states.guam
 
 import core.calendar.{ us-federal-holidays }
+import core.frcrimp45.{ frcrimp45 }
 
 /// The holidays of Guam (1 GCA § 1000(a)) that `us-federal-holidays` does not
 /// already close: Guam History and CHamoru Heritage Day, the first Monday in
@@ -85,6 +86,34 @@ counting frbp9006-guam effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP
   holidays us-federal-holidays
   forward_holidays guam-holidays cite "FRBP 9006(a)(6)(C)"
   forums [bankr-gu]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRCrimP 45 in the District of Guam: Guam's statutory holidays are legal
+/// holidays for periods counted forward only (45(a)(6)(C)). The calendar
+/// supplies only holidays not already closed by federal law, from the
+/// Compiler of Laws' April 23, 2026 edition of 1 GCA § 1000.
+counting frcrimp45-guam effective [2020-06-24, ..) known_at 2026-04-23 cite "FRCrimP 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP 45(c)"
+  holidays us-federal-holidays
+  forward_holidays guam-holidays cite "FRCrimP 45(a)(6)(C)"
+  forums [frcrimp]
   allow_hours
   end_of_month clamp
 }

@@ -36,7 +36,7 @@ fn engine_requests_run_over_the_compiled_embedded_sources() {
     assert_eq!(untimed(parse(&solved.stdout)["result"].clone()), untimed(r));
     let manual = parse(&describe());
     assert_eq!(manual["op"], json!("describe"));
-    assert_eq!(manual["result"]["packs_source"], json!("litigate"));
+    assert_eq!(manual["result"]["packs_source"], json!("embedded"));
     let library = &manual["result"]["scenario_library"];
     assert!(library.as_array().is_some_and(|s| !s.is_empty()));
     assert_eq!(parse(&handle("not json"))["ok"], json!(false));

@@ -6,6 +6,44 @@ use litigate_lower::Options;
 use litigate_verify::{check_package, Checked, Obligation, ObligationStatus};
 use std::path::Path;
 
+fn example_with_holes(profile: Profile) -> Checked {
+    use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
+    let source = include_str!("../../../lit/examples/rule12.lit")
+        .replace(
+            "granted \"Motion granted\" -> dismissed p 1/2",
+            "granted \"Motion granted\" -> dismissed p ?(\"no calibration yet\")",
+        )
+        .replace(
+            "denied \"Motion denied\" -> answered p 1/2",
+            "denied \"Motion denied\" -> answered p ?",
+        )
+        .replacen("payoff 0.usd", "payoff ?", 1);
+    let package = LoadedPackage {
+        texts: Default::default(),
+        root: "lit/examples".to_owned(),
+        manifest: include_str!("../../../lit/examples/Lit.toml").to_owned(),
+        lock: None,
+        files: vec![LoadedFile {
+            relative: "rule12.lit".to_owned(),
+            text: source,
+        }],
+    };
+    let mut db = litigate_sema::LitDatabase::default();
+    let ws = litigate_sema::db::inputs::create_workspace(&mut db, &[package]);
+    let checks = litigate_sema::check_workspace(&db, ws);
+    let packages: Vec<_> = checks.iter().filter_map(|c| c.package.as_ref()).collect();
+    let Some(check) = checks.first() else {
+        panic!("no package");
+    };
+    check_package(
+        check,
+        &packages,
+        SourceCorpus::embedded_ref(),
+        &Options::default(),
+        profile,
+    )
+}
+
 fn example(profile: Profile) -> Checked {
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
     let (db, ws) = litigate_sema::load(&root, &[root.join("lit/examples")], None)
@@ -25,7 +63,7 @@ fn example(profile: Profile) -> Checked {
 }
 
 #[test]
-fn dev_reports_the_three_holes_and_accepts() {
+fn dev_reports_no_holes_and_accepts() {
     let dev = example(Profile::Dev);
     assert!(dev.verification.is_accepted());
     let codes: Vec<&str> = dev
@@ -34,7 +72,7 @@ fn dev_reports_the_three_holes_and_accepts() {
         .iter()
         .map(|d| d.code.as_str())
         .collect();
-    assert_eq!(codes, ["L9002", "L9002", "L9002"]);
+    assert!(codes.is_empty());
     let tests = dev.verification.report.finding(Obligation::TestsPass);
     assert_eq!(
         tests.map(|f| (f.status, f.count)),
@@ -50,10 +88,44 @@ fn dev_reports_the_three_holes_and_accepts() {
 }
 
 #[test]
-fn strict_rejects_each_hole() {
+fn dev_reports_the_three_holes_and_accepts() {
+    let dev = example_with_holes(Profile::Dev);
+    assert!(dev.verification.is_accepted());
+    let codes: Vec<&str> = dev
+        .verification
+        .diagnostics
+        .iter()
+        .map(|d| d.code.as_str())
+        .collect();
+    assert_eq!(codes, ["L9002", "L9002", "L9002"]);
+    let reasons: Vec<&str> = dev
+        .verification
+        .diagnostics
+        .iter()
+        .map(|d| d.message.strip_prefix("hole: ").unwrap_or(&d.message))
+        .collect();
+    assert_eq!(reasons, ["no calibration yet", "no reason given", "no reason given"]);
+}
+
+#[test]
+fn strict_accepts_the_resolved_example() {
     let strict = example(Profile::Strict);
-    assert!(!strict.verification.is_accepted());
+    assert!(strict.verification.is_accepted());
     insta::assert_json_snapshot!(strict.verification.diagnostics);
+}
+
+#[test]
+fn strict_rejects_each_hole() {
+    let strict = example_with_holes(Profile::Strict);
+    assert!(!strict.verification.is_accepted());
+    let codes: Vec<&str> = strict
+        .verification
+        .diagnostics
+        .iter()
+        .map(|d| d.code.as_str())
+        .collect();
+    assert_eq!(codes, ["L5002", "L5002", "L5002"]);
+    assert_eq!(strict.verification.diagnostics.len(), 3);
 }
 
 #[test]

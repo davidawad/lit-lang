@@ -35,7 +35,7 @@ fn worked_example_lowers_cleanly() {
         [
             ("time-barred", 2, 1),
             ("respond", 3, 1),
-            ("mtd-ruling", 2, 1),
+            ("mtd-ruling", 2, 2),
             ("answered", 1, 1),
             ("default-risk", 1, 1),
             ("judgment-entered", 0, 2),

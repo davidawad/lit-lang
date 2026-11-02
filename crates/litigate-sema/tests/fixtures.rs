@@ -19,8 +19,7 @@ fn worked_example_checks_and_lowers_to_hir() -> std::io::Result<()> {
         .map(|d| (d.code, d.message.clone()))
         .collect();
     assert_eq!(codes, vec![]);
-    let reasons: Vec<Option<&str>> = check.holes.iter().map(|h| h.reason.as_deref()).collect();
-    assert_eq!(reasons, [Some("no calibration yet"), None, None]);
+    assert!(check.holes.is_empty());
     insta::assert_json_snapshot!("rule12_hir", check.package);
     Ok(())
 }

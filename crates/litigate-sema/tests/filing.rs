@@ -56,6 +56,15 @@ fn limit<'p>(p: &'p Package, id: &str) -> &'p Limit {
         .expect("the limit")
 }
 
+fn limit_from<'p>(p: &'p Package, id: &str, from: &str) -> &'p Limit {
+    declarations(p)
+        .find_map(|d| match d {
+            Declaration::Limit(l) if l.meta.id == id && l.meta.effective.from == from => Some(l),
+            _ => None,
+        })
+        .expect("the effective limit")
+}
+
 fn event<'p>(p: &'p Package, name: &str) -> &'p EventType {
     declarations(p)
         .find_map(|d| match d {
@@ -147,14 +156,14 @@ fn frap_32_a_7_is_three_alternative_bounds_and_a_type_volume_certificate() {
 #[test]
 fn cfr_42_24_limits_an_ipr_petition_to_14000_words() {
     let ptab = real("lit/ptab");
-    let petition = limit(&ptab, "ipr-petition");
+    let petition = limit_from(&ptab, "ipr-petition", "2021-01-08");
     let [bound] = petition.bounds.as_slice() else {
         panic!("one bound: {:?}", petition.bounds);
     };
     assert_eq!(bound.measure, Measure::Words);
     assert_eq!(bound.max, Authored::Known(14_000));
     assert_eq!(bound.cite.as_deref(), Some("37 C.F.R. § 42.24(a)(1)(i)"));
-    assert_eq!(petition.meta.effective.from, "2016-05-02");
+    assert_eq!(petition.meta.effective.from, "2021-01-08");
     assert_eq!(petition.meta.authority, "Regulation");
     let [cert] = petition.certificates.as_slice() else {
         panic!("one certificate: {:?}", petition.certificates);

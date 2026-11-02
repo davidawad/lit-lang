@@ -9,7 +9,7 @@ use case_support::{
 };
 use litigate_base::Profile;
 use litigate_lower::Lowerer;
-use litigate_sema::hir::Package;
+use litigate_sema::hir::{NodeKind, Package};
 use std::collections::BTreeMap;
 
 /// `acme.case` with `edits` applied (`(from, to)`, each must occur).
@@ -59,8 +59,42 @@ fn a_terminal_whose_pack_authors_a_payoff_needs_no_stake() {
         &edited(&[(stakes, "stakes { dismissed: 0.usd }")]),
         Profile::Dev,
     );
-    let codes: Vec<&str> = hole.diagnostics.iter().map(|d| d.code.as_str()).collect();
-    assert_eq!(codes, ["L4004"], "{:#?}", render(&hole.diagnostics));
+    // The example pack authors a payoff for `dismissed` too, so neither
+    // terminal needs a matter-specific stake.
+    assert!(hole.ok(), "{:#?}", render(&hole.diagnostics));
+
+    // Keep the missing-pack-payoff diagnostic pinned independently of the
+    // worked example, which now authors payoffs for both terminal outcomes.
+    let mut no_authored_payoff = examples().to_vec();
+    for module in &mut no_authored_payoff[0].modules {
+        for declaration in &mut module.declarations {
+            if let litigate_sema::hir::Declaration::Node(node) = declaration {
+                if node.meta.id.rsplit("::").next() == Some("dismissed") {
+                    if let NodeKind::Terminal { payoff, .. } = &mut node.kind {
+                        *payoff = None;
+                    }
+                }
+            }
+        }
+    }
+    let missing_stake = edited(&[(stakes, "stakes { judgment-entered: -2_000_000.usd }")]);
+    let lock = lock(&no_authored_payoff);
+    let missing = check_with(
+        &missing_stake,
+        &no_authored_payoff,
+        Some(&lock),
+        examples_clock(),
+        Profile::Dev,
+    );
+    assert_eq!(
+        missing
+            .diagnostics
+            .iter()
+            .map(|d| d.code.as_str())
+            .collect::<Vec<_>>(),
+        ["L4004"]
+    );
+    assert!(missing.diagnostics[0].message.contains("dismissed"));
 }
 
 /// A pack-authored payoff is a valued stake, not an `unvalued` one, so

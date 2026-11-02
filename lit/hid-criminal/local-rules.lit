@@ -9,10 +9,25 @@ deadline hawaii-kuhio-one-day: 1.days after TrialConferenceScheduled() counted_b
   forum frcrimp
 }
 
+deadline hawaii-kuhio-two-business-days: 2.business_days after TrialConferenceScheduled() counted_by frcrimp45-hawaii {
+  forum frcrimp
+}
+
 test "Kuhio Day is skipped in a forward criminal deadline" cite "HRS § 8-1" {
   given TrialConferenceScheduled() on 2027-03-25
   expect deadline(hawaii-kuhio-one-day).nominal == 2027-03-26
   expect deadline(hawaii-kuhio-one-day) == 2027-03-29
+  expect deadline(hawaii-kuhio-two-business-days) == 2027-03-30
+}
+
+// FRCrimP 45(a)(6)(C) applies state holidays only to forward counts.
+deadline hawaii-kuhio-one-business-day-back: 1.business_days before TrialConferenceScheduled() counted_by frcrimp45-hawaii {
+  forum frcrimp
+}
+
+test "Kuhio Day does not close a backward criminal deadline" cite "HRS § 8-1" {
+  given TrialConferenceScheduled() on 2027-03-29
+  expect deadline(hawaii-kuhio-one-business-day-back) == 2027-03-26
 }
 
 // The District of Hawaii's own criminal periods, counted under the
@@ -136,7 +151,7 @@ event UnscannableFilingNoticed()
 /// later than three (3) business days after the filing of the motion to
 /// continue (or by noon of the working day before a scheduled hearing, if
 /// earlier).
-deadline continuance-position: 3.business_days after MultiDefendantContinuanceMotionFiled() counted_by frcrimp45 cite "D. Haw. CrimLR 2.2"
+deadline continuance-position: 3.business_days after MultiDefendantContinuanceMotionFiled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 2.2"
 {
   forum frcrimp
 }
@@ -144,14 +159,14 @@ deadline continuance-position: 3.business_days after MultiDefendantContinuanceMo
 /// D. Haw. CrimLR 2.3(b): no less than one week before the trial
 /// conference, the parties meet and confer and file a Joint Trial
 /// Presentation Statement.
-deadline joint-trial-presentation-statement: 7.days before TrialConferenceScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 2.3(b)"
+deadline joint-trial-presentation-statement: 7.days before TrialConferenceScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 2.3(b)"
 {
   forum frcrimp
 }
 
 /// D. Haw. CrimLR 5.2(b)(2): any opposition to a motion to file under seal
 /// is due no later than seven (7) days after the filing of the motion.
-deadline sealing-opposition: 7.days after SealingMotionFiled() counted_by frcrimp45 cite "D. Haw. CrimLR 5.2(b)"
+deadline sealing-opposition: 7.days after SealingMotionFiled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 5.2(b)"
 {
   forum frcrimp
 }
@@ -159,7 +174,7 @@ deadline sealing-opposition: 7.days after SealingMotionFiled() counted_by frcrim
 /// D. Haw. CrimLR 5.2(b)(2): if the court denies the motion, the movant
 /// informs the court within four (4) days whether it withdraws the
 /// document or has it filed publicly; otherwise the document is returned.
-deadline sealing-denial-election: 4.days after SealingMotionDenied() counted_by frcrimp45 cite "D. Haw. CrimLR 5.2(b)"
+deadline sealing-denial-election: 4.days after SealingMotionDenied() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 5.2(b)"
 {
   forum frcrimp
 }
@@ -167,28 +182,28 @@ deadline sealing-denial-election: 4.days after SealingMotionDenied() counted_by 
 /// D. Haw. CrimLR 5.2(b)(3): within seven (7) days after a motion to file
 /// a matter publicly is filed, any party may oppose it and seek to have the
 /// matter sealed.
-deadline public-filing-opposition: 7.days after PublicFilingMotionFiled() counted_by frcrimp45 cite "D. Haw. CrimLR 5.2(b)"
+deadline public-filing-opposition: 7.days after PublicFilingMotionFiled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 5.2(b)"
 {
   forum frcrimp
 }
 
 /// D. Haw. CrimLR 5.3(b): a motion to seal a hearing is filed no later
 /// than five (5) days before the scheduled hearing.
-deadline hearing-sealing-motion: 5.days before HearingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 5.3(b)"
+deadline hearing-sealing-motion: 5.days before HearingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 5.3(b)"
 {
   forum frcrimp
 }
 
 /// D. Haw. CrimLR 5.3(b): no later than three (3) days after the filing of
 /// a motion to seal a hearing, any person may file an opposition.
-deadline hearing-sealing-opposition: 3.days after HearingSealingMotionFiled() counted_by frcrimp45 cite "D. Haw. CrimLR 5.3(b)"
+deadline hearing-sealing-opposition: 3.days after HearingSealingMotionFiled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 5.3(b)"
 {
   forum frcrimp
 }
 
 /// D. Haw. CrimLR 12.2(a)(1): a motion for leave to continue a motion or
 /// response deadline is filed at least one (1) day before the deadline.
-deadline deadline-continuance-motion: 1.days before MotionDeadline() counted_by frcrimp45 cite "D. Haw. CrimLR 12.2(a)"
+deadline deadline-continuance-motion: 1.days before MotionDeadline() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 12.2(a)"
 {
   forum frcrimp
 }
@@ -196,7 +211,7 @@ deadline deadline-continuance-motion: 1.days before MotionDeadline() counted_by 
 /// D. Haw. CrimLR 12.2(a)(1): unless authorized or directed by the court,
 /// no reply is filed; a motion for leave to file a reply is filed within
 /// two (2) days after the filing of the response.
-deadline reply-leave-motion: 2.days after ResponseFiled() counted_by frcrimp45 delegable {
+deadline reply-leave-motion: 2.days after ResponseFiled() counted_by frcrimp45-hawaii delegable {
   to CaseOrder
   op set
 } cite "D. Haw. CrimLR 12.2(a)"
@@ -207,7 +222,7 @@ deadline reply-leave-motion: 2.days after ResponseFiled() counted_by frcrimp45 d
 /// D. Haw. CrimLR 12.4: except with leave of court for good cause, a
 /// substantive joinder in a motion or opposition is filed and served within
 /// three (3) days of the filing of the motion or opposition joined.
-deadline joinder: 3.days after JoinableFilingMade() counted_by frcrimp45 cite "D. Haw. CrimLR 12.4"
+deadline joinder: 3.days after JoinableFilingMade() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 12.4"
 {
   forum frcrimp
 }
@@ -216,7 +231,7 @@ deadline joinder: 3.days after JoinableFilingMade() counted_by frcrimp45 cite "D
 /// CrimLR 16(a) describes files a notice to the government within five (5)
 /// days after arraignment, which relieves the government of those
 /// obligations.
-deadline discovery-declination: 5.days after Arraigned() counted_by frcrimp45 cite "D. Haw. CrimLR 16(b)"
+deadline discovery-declination: 5.days after Arraigned() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 16(b)"
 {
   forum frcrimp
 }
@@ -224,7 +239,7 @@ deadline discovery-declination: 5.days after Arraigned() counted_by frcrimp45 ci
 /// D. Haw. CrimLR 32.2(b)(4): not less than fourteen (14) days before the
 /// sentencing date, the final presentence report addressing any unresolved
 /// objections is submitted to the court and the parties under seal.
-deadline final-psr: 14.days before SentencingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(b)"
+deadline final-psr: 14.days before SentencingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(b)"
 {
   forum frcrimp
 }
@@ -232,7 +247,7 @@ deadline final-psr: 14.days before SentencingScheduled() counted_by frcrimp45 ci
 /// D. Haw. CrimLR 32.2(c): not less than fourteen (14) days before the
 /// sentencing date, the government may file a motion under USSG § 5K1.1 or
 /// 18 U.S.C. § 3553(e).
-deadline substantial-assistance-motion: 14.days before SentencingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(c)"
+deadline substantial-assistance-motion: 14.days before SentencingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(c)"
 {
   forum frcrimp
 }
@@ -240,7 +255,7 @@ deadline substantial-assistance-motion: 14.days before SentencingScheduled() cou
 /// D. Haw. CrimLR 32.2(d): not less than ten (10) days before the
 /// sentencing date, a party seeking an evidentiary hearing files a request
 /// with its witnesses, exhibits and expected duration.
-deadline evidentiary-hearing-request: 10.days before SentencingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(d)"
+deadline evidentiary-hearing-request: 10.days before SentencingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(d)"
 {
   forum frcrimp
 }
@@ -248,7 +263,7 @@ deadline evidentiary-hearing-request: 10.days before SentencingScheduled() count
 /// D. Haw. CrimLR 32.2(d): the opposing party responds, and files its own
 /// witness and exhibit lists if it would call witnesses, seven (7) days
 /// before the sentencing date.
-deadline evidentiary-hearing-response: 7.days before SentencingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(d)"
+deadline evidentiary-hearing-response: 7.days before SentencingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(d)"
 {
   forum frcrimp
 }
@@ -257,7 +272,7 @@ deadline evidentiary-hearing-response: 7.days before SentencingScheduled() count
 /// sentencing date, sentencing memoranda are filed by defense counsel
 /// responding to a government motion, any party seeking a variance, and any
 /// party responding to objections in the Sentencing Statements.
-deadline sentencing-memoranda: 5.days before SentencingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(e)"
+deadline sentencing-memoranda: 5.days before SentencingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(e)"
 {
   forum frcrimp
 }
@@ -266,7 +281,7 @@ deadline sentencing-memoranda: 5.days before SentencingScheduled() counted_by fr
 /// expedited sentencing is warranted, they file a Joint Request for
 /// Expedited Sentencing within one (1) business day of the entry of the
 /// guilty plea.
-deadline expedited-sentencing-request: 1.business_days after ExpeditedPleaEntered() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(h)"
+deadline expedited-sentencing-request: 1.business_days after ExpeditedPleaEntered() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(h)"
 {
   forum frcrimp
 }
@@ -274,14 +289,14 @@ deadline expedited-sentencing-request: 1.business_days after ExpeditedPleaEntere
 /// D. Haw. CrimLR 32.2(h): where expedited sentencing is granted, the draft
 /// presentence report is issued no later than thirty (30) days after the
 /// change of plea.
-deadline expedited-draft-psr: 30.days after ExpeditedSentencingGranted() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(h)"
+deadline expedited-draft-psr: 30.days after ExpeditedSentencingGranted() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(h)"
 {
   forum frcrimp
 }
 
 /// D. Haw. CrimLR 32.2(h): the parties file Sentencing Statements within
 /// three (3) days of receiving the expedited draft presentence report.
-deadline expedited-sentencing-statements: 3.days after ExpeditedDraftPsrReceived() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(h)"
+deadline expedited-sentencing-statements: 3.days after ExpeditedDraftPsrReceived() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(h)"
 {
   forum frcrimp
 }
@@ -289,14 +304,14 @@ deadline expedited-sentencing-statements: 3.days after ExpeditedDraftPsrReceived
 /// D. Haw. CrimLR 32.2(h): in an expedited sentencing the final
 /// presentence report is submitted no less than three (3) days before
 /// sentencing.
-deadline expedited-final-psr: 3.days before ExpeditedSentencingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(h)"
+deadline expedited-final-psr: 3.days before ExpeditedSentencingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(h)"
 {
   forum frcrimp
 }
 
 /// D. Haw. CrimLR 58.3(b): within thirty-five (35) days after a transcript
 /// has been ordered, the original and one copy are filed with the clerk.
-deadline misdemeanor-appeal-transcript: 35.days after AppealTranscriptOrdered() counted_by frcrimp45 cite "D. Haw. CrimLR 58.3(b)"
+deadline misdemeanor-appeal-transcript: 35.days after AppealTranscriptOrdered() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 58.3(b)"
 {
   forum frcrimp
 }
@@ -305,7 +320,7 @@ deadline misdemeanor-appeal-transcript: 35.days after AppealTranscriptOrdered() 
 /// appeal, the appellant serves and files a brief within twenty-one (21)
 /// days after the record on appeal is complete; the district judge may
 /// alter the periods.
-deadline misdemeanor-appellant-brief: 21.days after AppealRecordComplete() counted_by frcrimp45 delegable {
+deadline misdemeanor-appellant-brief: 21.days after AppealRecordComplete() counted_by frcrimp45-hawaii delegable {
   to CaseOrder
   op set
 } cite "D. Haw. CrimLR 58.3(e)"
@@ -316,7 +331,7 @@ deadline misdemeanor-appellant-brief: 21.days after AppealRecordComplete() count
 /// D. Haw. CrimLR 58.3(e): the appellee serves and files a responsive
 /// brief within twenty-one (21) days after service of the appellant's
 /// brief.
-deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counted_by frcrimp45 delegable {
+deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counted_by frcrimp45-hawaii delegable {
   to CaseOrder
   op set
 } cite "D. Haw. CrimLR 58.3(e)"
@@ -326,7 +341,7 @@ deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counte
 
 /// D. Haw. CrimLR 58.3(e): the appellant may serve and file a reply brief
 /// within seven (7) days after service of the appellee's brief.
-deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45 delegable {
+deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45-hawaii delegable {
   to CaseOrder
   op set
 } cite "D. Haw. CrimLR 58.3(e)"
@@ -337,7 +352,7 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by 
 /// D. Haw. CrimLR 59.1: objections to a proposed order requiring
 /// stipulation or approval as to form are e-mailed to chambers within one
 /// (1) day of receiving the prevailing party's draft.
-deadline proposed-order-objection: 1.days after ProposedOrderDraftReceived() counted_by frcrimp45 cite "D. Haw. CrimLR 59.1"
+deadline proposed-order-objection: 1.days after ProposedOrderDraftReceived() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 59.1"
 {
   forum frcrimp
 }
@@ -346,7 +361,7 @@ deadline proposed-order-objection: 1.days after ProposedOrderDraftReceived() cou
 /// error of law or fact is filed within fourteen (14) days of the court's
 /// order; reconsideration of a case-dispositive order follows FRCP 59 or
 /// 60.
-deadline reconsideration-manifest-error: 14.days after OrderEntered() counted_by frcrimp45 cite "D. Haw. CrimLR 60.1"
+deadline reconsideration-manifest-error: 14.days after OrderEntered() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 60.1"
 {
   forum frcrimp
 }
@@ -355,7 +370,7 @@ deadline reconsideration-manifest-error: 14.days after OrderEntered() counted_by
 /// expires, the clerk notifies the Criminal Chief of the United States
 /// Attorney's Office of the unsealing date; the government may move to
 /// extend the sealing order.
-deadline unsealing-notice: 60.days before SealingOrderExpires() counted_by frcrimp45 cite "D. Haw. CrimLR 79.2"
+deadline unsealing-notice: 60.days before SealingOrderExpires() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 79.2"
 {
   forum frcrimp
 }
@@ -363,7 +378,7 @@ deadline unsealing-notice: 60.days before SealingOrderExpires() counted_by frcri
 /// D. Haw. CrimLR 81.1(c)(3)(B): if a self-represented defendant's
 /// document cannot be scanned, the clerk notifies the litigant to serve it
 /// by other means within three (3) business days.
-deadline unscannable-filing-service: 3.business_days after UnscannableFilingNoticed() counted_by frcrimp45 cite "D. Haw. CrimLR 81.1(c)"
+deadline unscannable-filing-service: 3.business_days after UnscannableFilingNoticed() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 81.1(c)"
 {
   forum frcrimp
 }

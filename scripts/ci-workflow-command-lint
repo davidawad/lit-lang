@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+"""Check workflow shell commands against runner and job-installed tools."""
+import json
+import os
+import re
+import shlex
+import sys
+
+try:
+    import yaml
+except ImportError as error:
+    raise SystemExit("workflow command lint requires PyYAML") from error
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+with open(os.path.join(ROOT, ".github/runner-command-allowlist.json"), encoding="utf-8") as source:
+    ALLOW = json.load(source)
+ISSUES = []
+CONTROL = {"if", "then", "elif", "else", "fi", "for", "while", "do", "done", "case", "esac", "function", "!"}
+BUILTINS = {"[", "]]", ".", ":", "break", "cd", "command", "continue", "eval", "exec", "exit", "export", "local", "read", "return", "set", "shift", "source", "trap", "ulimit", "unset"}
+
+
+def commands(script):
+    result = []
+    heredoc = None
+    quote = None
+    for line in str(script).splitlines():
+        if heredoc:
+            if line.strip() == heredoc:
+                heredoc = None
+            continue
+        if quote:
+            if line.count(quote) % 2:
+                quote = None
+            continue
+        line = re.sub(r"(?:^|\s)#.*$", "", line)
+        marker = re.search(r"<<-?\s*['\"]?([A-Za-z_][A-Za-z0-9_]*)", line)
+        if marker:
+            heredoc = marker.group(1)
+        # Keep only shell command positions. This intentionally avoids parsing
+        # language snippets embedded in quoted `node -e` and heredoc bodies.
+        splitter = r"(?:^|[;&|]\s*|\bthen\s+|\belse\s+)([^;&|]+)" if not re.search(r"['\"]", line) else r"^([^;&|]+)"
+        for candidate in re.finditer(splitter, line):
+            chunk = candidate.group(1).strip()
+            if not chunk:
+                continue
+            if chunk.count('"') % 2:
+                quote = '"'
+            elif chunk.count("'") % 2:
+                quote = "'"
+            nested = [command for body in re.findall(r"\$\(([^()]*)\)", chunk) for command in commands(body)]
+            try:
+                words = shlex.split(chunk)
+            except ValueError:
+                words = chunk.split()
+            if not words:
+                continue
+            word = words[0]
+            if word in CONTROL or word in {"{", "}", "(", ")"} or re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", word):
+                words = words[1:]
+                if not words:
+                    continue
+                word = words[0]
+            result.append(word)
+            result.extend(nested)
+    return result
+
+
+def lint_script(text, path, allowed, depth, seen):
+    for token in commands(text):
+        name = token.split("=", 1)[-1] if re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", token) else token
+        name = name.split()[0].strip("\"'`$;,")
+        if not name or name.startswith(("-", ">", "<")) or name in BUILTINS or re.fullmatch(r"\d+\)?", name) or name.endswith("()"):
+            continue
+        if name.startswith("scripts/") and depth:
+            candidate = os.path.join(ROOT, name)
+            if os.path.isfile(candidate) and candidate not in seen:
+                seen.add(candidate)
+                with open(candidate, encoding="utf-8") as source:
+                    lint_script(source.read(), name, allowed, depth - 1, seen)
+            continue
+        if "/" in name or name in allowed:
+            continue
+        ISSUES.append(f"{path}: command {name!r} is not available on this runner")
+
+
+for workflow_path in sorted(os.path.join(ROOT, ".github/workflows", name) for name in os.listdir(os.path.join(ROOT, ".github/workflows")) if name.endswith(".yml")):
+    with open(workflow_path, encoding="utf-8") as source:
+        workflow = yaml.safe_load(source)
+    for job in (workflow.get("jobs") or {}).values():
+        runner = str(job.get("runs-on", ""))
+        if "${{ matrix.os }}" in runner:
+            runner = "ubuntu-latest"  # release matrix currently declares ubuntu and macOS
+        allowed = set(ALLOW.get(runner, ALLOW["default"]))
+        installed = set()
+        for step in job.get("steps", []):
+            if not isinstance(step, dict):
+                continue
+            action = str(step.get("uses", ""))
+            settings = step.get("with") or {}
+            if "rust-toolchain" in action:
+                installed.update({"cargo", "rustc", "rustup", "rustfmt", "clippy"})
+                installed.update(str(settings.get("components", "")).replace(",", " ").split())
+            elif "install-action" in action:
+                installed.update(item.split("@")[0] for item in str(settings.get("tool", "")).split(","))
+            elif "setup-node" in action:
+                installed.update({"node", "npm", "npx", "corepack"})
+            elif "install-nix-action" in action:
+                installed.add("nix")
+            script = step.get("run")
+            if script is None:
+                continue
+            script = re.sub(r"\$\{\{[^}]*\}\}", "placeholder", str(script))
+            for package in re.findall(r"apt-get\s+install[^\n]*", script):
+                installed.update(word for word in package.split() if re.fullmatch(r"[a-z0-9][a-z0-9+.-]*", word) and word not in {"apt-get", "install", "update", "sudo", "y"})
+            lint_script(script, os.path.basename(workflow_path), allowed | installed, 1, set())
+            installed.update(crate.replace("_", "-") for crate in re.findall(r"cargo\s+install\s+(?:[^\n]*?\s)?([A-Za-z0-9_-]+)", script))
+
+if ISSUES:
+    for issue in sorted(set(ISSUES)):
+        print(issue, file=sys.stderr)
+    raise SystemExit(1)
+print("workflow command lint: pass")

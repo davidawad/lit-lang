@@ -13,6 +13,8 @@ use std::path::Path;
 #[derive(Serialize, Deserialize)]
 struct Entry {
     files: Vec<(String, String)>,
+    pack_fingerprints: Vec<(String, String)>,
+    calibration_fingerprints: Vec<(String, String)>,
     scenarios: Vec<(String, String)>,
     report: Value,
     packs: Vec<String>,
@@ -78,6 +80,19 @@ fn encode(compiled: &Compiled) -> Option<Entry> {
     });
     Some(Entry {
         files,
+        pack_fingerprints: compiled
+            .catalog
+            .packs
+            .iter()
+            .map(|(name, _, fingerprint)| (name.clone(), fingerprint.clone()))
+            .collect(),
+        calibration_fingerprints: compiled
+            .catalog
+            .calibration
+            .sets
+            .iter()
+            .map(|(name, _, fingerprint)| (name.clone(), fingerprint.clone()))
+            .collect(),
         scenarios,
         report,
         packs: compiled.packs.clone(),
@@ -87,6 +102,24 @@ fn encode(compiled: &Compiled) -> Option<Entry> {
 
 fn restore(entry: Entry) -> Result<Compiled, Failure> {
     let mut catalog = Catalog::from_files("litigate".into(), entry.files).map_err(Failure::from)?;
+    for (name, _, fingerprint) in &mut catalog.packs {
+        if let Some((_, cached)) = entry
+            .pack_fingerprints
+            .iter()
+            .find(|(cached_name, _)| cached_name == name)
+        {
+            *fingerprint = cached.clone();
+        }
+    }
+    for (name, _, fingerprint) in &mut catalog.calibration.sets {
+        if let Some((_, cached)) = entry
+            .calibration_fingerprints
+            .iter()
+            .find(|(cached_name, _)| cached_name == name)
+        {
+            *fingerprint = cached.clone();
+        }
+    }
     let mut scenarios = Vec::new();
     for (name, text) in entry.scenarios {
         let scenario = NamedScenario::from_json(&text).map_err(Failure::from)?;

@@ -33,11 +33,6 @@ retries = 0
 test-threads = "num-cpus"
 # Gate quarantine: nightly still runs every test. No new tests enter quarantine without CoS OK.
 # lg-zmqc.28 expires=2026-11-08 | litigate-cli::corpus import_check_run_matches_litgraph
-# lg-zmqc.12 expires=2026-11-08 | litigate-cli::timeline a_cite_an_amendment_history_proves_names_it_as_the_evidence
-# lg-zmqc.12 expires=2026-11-08 | litigate-cli::timeline a_restarted_or_absorbed_period_names_the_row_replacing_it
-# lg-zmqc.12 expires=2026-11-08 | litigate-cli::timeline frcp_filed_fixture_forks_with_unknown_deadlines
-# lg-zmqc.12 expires=2026-11-08 | litigate-cli::timeline ttab_opposition_matter
-# lg-zmqc.12 expires=2026-11-08 | litigate-cli::timeline ttab_published_fixture_forks_with_unknown_deadlines
 # lg-zmqc.25 expires=2026-11-08 | litigate-editors::helix and_or_are_highlighted_as_keywords_only_in_guard_operations
 # lg-zmqc.25 expires=2026-11-08 | litigate-editors::helix every_helix_query_compiles_and_runs_over_the_corpus
 # lg-zmqc.28 expires=2026-11-08 | litigate-import::lower_roundtrip import_then_lower_is_semantically_equal
@@ -119,11 +114,6 @@ not (
       | (binary(in_memory) & test(=ops_compile_the_matter_or_package_in_memory))
     ))
   | (package(litigate-cli) & binary(corpus) & test(=import_check_run_matches_litgraph))
-  | (package(litigate-cli) & binary(timeline) & test(=a_cite_an_amendment_history_proves_names_it_as_the_evidence))
-  | (package(litigate-cli) & binary(timeline) & test(=a_restarted_or_absorbed_period_names_the_row_replacing_it))
-  | (package(litigate-cli) & binary(timeline) & test(=frcp_filed_fixture_forks_with_unknown_deadlines))
-  | (package(litigate-cli) & binary(timeline) & test(=ttab_opposition_matter))
-  | (package(litigate-cli) & binary(timeline) & test(=ttab_published_fixture_forks_with_unknown_deadlines))
   | (package(litigate-editors) & binary(helix) & test(=and_or_are_highlighted_as_keywords_only_in_guard_operations))
   | (package(litigate-editors) & binary(helix) & test(=every_helix_query_compiles_and_runs_over_the_corpus))
   | (package(litigate-import) & binary(lower_roundtrip) & test(=import_then_lower_is_semantically_equal))

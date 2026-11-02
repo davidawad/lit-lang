@@ -615,14 +615,14 @@ fn a_cite_an_amendment_history_proves_names_it_as_the_evidence() {
         .find(|d| d["code"] == "L9008")
         .unwrap();
     assert_eq!(note["severity"], "note");
-    // § 2.120 was amended effective 2017-07-21: the disclosure period's
-    // cite is a hole naming that amendment, and nothing proves it.
-    assert!(at_row(&t, "L9008", "disclosure-period:").is_empty());
-    let hole = at_row(&t, "L9002", "disclosure-period:");
+    // § 2.120 was amended effective 2017-07-21. The eCFR history now proves
+    // that the cited text is the version in force from that date.
+    let disclosure = at_row(&t, "L9008", "disclosure-period:");
+    assert_eq!(disclosure.len(), 1, "{disclosure:?}");
     assert!(
-        hole.iter()
-            .any(|h| h.contains("amended effective 2017-07-21 (version 2017-07-21")),
-        "{hole:?}"
+        disclosure[0].contains("is the text in force from 2017-07-21")
+            && disclosure[0].contains("records version 2017-07-21 and no amendment"),
+        "{disclosure:?}"
     );
 }
 

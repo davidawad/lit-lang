@@ -257,8 +257,9 @@ const BUILTINS: [(&str, &str); 15] = [
 /// What `run`, every engine op subcommand, and `explain` on a path return.
 const ENGINE_RESPONSE: &str = "the engine's response verbatim: {ok, api_version, op, result, warnings, provenance, elapsed_ms}; exit 2 when it is ok:false";
 
-const RESULTS: [(&str, &str); 24] = [
+const RESULTS: [(&str, &str); 25] = [
     ("describe", "this document"),
+    ("doctor", "{version, git_sha, platform, packs:[path], cases:[path], binaries:{litigate, litigate-lsp}}; git_sha is null when not built from a checkout"),
     (
         "lock",
         "{lockfile, changed, packages:[{name, version, digest}]} (matters: {lockfiles:[{lockfile, changed, cases, packages}]}); --root adds root, the Merkle root computed from the verified lock (null when stale)",

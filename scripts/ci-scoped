@@ -821,6 +821,9 @@ nightly() {
   stage ts-test just ts-test
   stage ts-test-full-corpus env LITIGATE_TS_NIGHTLY=1 npm --prefix packages/litigate-ts run test:nightly
   stage test cargo nextest run --workspace --profile nightly
+  # The LSP repository-root protocol contract checks every authored source;
+  # keep its multi-minute analysis in the full nightly profile.
+  stage lsp-repo-scope cargo nextest run --package litigate-lsp --test repository_scope --features nightly-repo-scope --profile nightly
   stage doctest cargo test --doc --workspace
   stage cov-litigate just cov-litigate
   gate_seconds nightly "$target"

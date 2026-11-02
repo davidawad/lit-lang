@@ -7,7 +7,7 @@
     clippy::expect_used
 )]
 
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 use tokio::io::{
@@ -127,6 +127,10 @@ impl Client {
     }
 
     async fn recv(&mut self) -> Value {
+        self.recv_timeout(Duration::from_mins(1)).await
+    }
+
+    async fn recv_timeout(&mut self, timeout: Duration) -> Value {
         let read = async {
             let mut length = 0;
             loop {
@@ -144,9 +148,9 @@ impl Client {
             self.r.read_exact(&mut body).await.unwrap();
             serde_json::from_slice(&body).unwrap()
         };
-        tokio::time::timeout(Duration::from_mins(1), read)
+        tokio::time::timeout(timeout, read)
             .await
-            .expect("the server answers within a minute")
+            .expect("the server answers before the protocol test timeout")
     }
 
     /// Sends a request and returns its `error` (panics on a result).
@@ -280,6 +284,22 @@ impl Client {
     /// The server's `litigate/status`.
     pub async fn status(&mut self) -> Value {
         self.request("litigate/status", Value::Null).await
+    }
+
+    /// The server's `litigate/status`, discarding notifications received
+    /// while a full workspace analysis finishes instead of retaining them.
+    pub async fn status_draining_notifications(&mut self) -> Value {
+        self.id += 1;
+        let id = self.id;
+        self.send(json!({"jsonrpc": "2.0", "id": id, "method": "litigate/status"}))
+            .await;
+        loop {
+            let message = self.recv_timeout(Duration::from_mins(15)).await;
+            if message.get("id") == Some(&json!(id)) && message.get("method").is_none() {
+                assert!(message.get("error").is_none(), "litigate/status: {message}");
+                return message["result"].clone();
+            }
+        }
     }
 }
 

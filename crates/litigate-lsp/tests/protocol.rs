@@ -8,8 +8,8 @@
 
 mod support;
 
-use serde_json::{json, Value};
-use support::{at, codes, read, uri, Client};
+use serde_json::{Value, json};
+use support::{Client, at, codes, read, uri};
 
 const LIT: &str = "lit/examples/rule12.lit";
 const CASE: &str = "cases/examples/acme.case";

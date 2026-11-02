@@ -5,6 +5,14 @@ edition.workspace = true
 license.workspace = true
 publish.workspace = true
 
+[features]
+nightly-repo-scope = []
+
+[[test]]
+name = "repository_scope"
+path = "tests/repository_scope.rs"
+required-features = ["nightly-repo-scope"]
+
 [dependencies]
 litigate-engine = { path = "../litigate-engine" }
 litigate-base = { path = "../litigate-base" }

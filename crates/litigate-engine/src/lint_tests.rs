@@ -3,6 +3,10 @@
 
 #![allow(clippy::unwrap_used)]
 use super::*;
+use crate::clock::{
+    calendar::{Holiday, HolidayDate},
+    ClockLibrary,
+};
 use crate::model::{CompileOptions, LinkFile, RawNode, Source};
 
 fn pack_with_cite(sources: Vec<Source>, cite: &str) -> Pack {
@@ -51,6 +55,60 @@ fn frcp_corpus() -> SourceCorpus {
         "sources/frcp-fixture.txt".to_string(),
         "## Rule 12\nDefenses and objections.\n".to_string(),
     )])
+}
+
+fn observance_clock(cite: Option<&str>) -> ClockLibrary {
+    ClockLibrary {
+        schema_version: 4,
+        calendars: vec![crate::clock::HolidayCalendar {
+            id: "test-holidays".into(),
+            title: "Test holidays".into(),
+            cite: cite.map(str::to_owned),
+            source_url: None,
+            holidays: vec![Holiday {
+                id: "observed-day".into(),
+                name: "Observed day".into(),
+                date: HolidayDate::Fixed { month: 1, day: 1 },
+                cycle: None,
+                observed: Observance::NextDay,
+                effective: None,
+                cite: None,
+            }],
+        }],
+        ..ClockLibrary::default()
+    }
+}
+
+#[test]
+fn non_default_calendar_observance_requires_a_cite() {
+    let mut diags = vec![];
+    let mut push = |severity, code, at: String, message: String| {
+        diags.push(Diagnostic {
+            severity,
+            code,
+            at,
+            message,
+        });
+    };
+    lint_clock_observances(&observance_clock(None), &mut push);
+    assert_eq!(diags.len(), 1);
+    assert_eq!(diags[0].code, "observance-uncited");
+    assert_eq!(diags[0].severity, "warn");
+}
+
+#[test]
+fn cited_non_default_calendar_observance_has_no_warning() {
+    let mut diags = vec![];
+    let mut push = |severity, code, at: String, message: String| {
+        diags.push(Diagnostic {
+            severity,
+            code,
+            at,
+            message,
+        });
+    };
+    lint_clock_observances(&observance_clock(Some("5 U.S.C. § 6103(a)")), &mut push);
+    assert!(diags.is_empty());
 }
 
 #[test]

@@ -303,7 +303,7 @@ fn dispatch(req: &Request, catalog: &Catalog, g: &Graph, packs: &[Pack], sc: &Sc
     match &req.op {
         Op::Describe => plain(Ok(describe(catalog))),
         Op::Lint => {
-            let diags = lint::lint(g, packs);
+            let diags = lint::lint_with_clock(g, packs, &catalog.clock);
             plain(Ok(json!({ "count": diags.len(), "diagnostics": diags })))
         }
         Op::Packs => plain(Ok(explore::packs_op(g, packs))),

@@ -5,7 +5,8 @@
 use serde::Serialize;
 use std::collections::{BTreeSet, HashMap, HashSet};
 
-use crate::cite::{CiteOutcome, SourceCorpus};
+use crate::cite::{CiteGrammar, CiteOutcome, SourceCorpus};
+use crate::clock::{calendar::Observance, ClockLibrary};
 use crate::model::{Graph, NodeKind, Pack, RawEdge};
 
 /// One content-quality finding: a warning about authored data, not a
@@ -33,6 +34,12 @@ type Push<'a> = dyn FnMut(&'static str, &'static str, String, String) + 'a;
 /// lookup that still fails is reported as a diagnostic rather than unwrapped.
 #[must_use]
 pub fn lint(g: &Graph, packs: &[Pack]) -> Vec<Diagnostic> {
+    lint_with_clock(g, packs, &ClockLibrary::embedded().0)
+}
+
+/// Runs content QA with the clock library loaded by the caller.
+#[must_use]
+pub fn lint_with_clock(g: &Graph, packs: &[Pack], clock: &ClockLibrary) -> Vec<Diagnostic> {
     let mut d = vec![];
     {
         let mut push = |severity, code, at: String, message: String| {
@@ -66,6 +73,7 @@ pub fn lint(g: &Graph, packs: &[Pack]) -> Vec<Diagnostic> {
                 ),
             }
         }
+        lint_clock_observances(clock, &mut push);
     }
     lint_reachability(g, &mut d);
     d.sort_by_key(|x| match x.severity {
@@ -74,6 +82,39 @@ pub fn lint(g: &Graph, packs: &[Pack]) -> Vec<Diagnostic> {
         _ => 2,
     });
     d
+}
+
+fn lint_clock_observances(clock: &ClockLibrary, push: &mut Push<'_>) {
+    let corpus = SourceCorpus::embedded();
+    for calendar in &clock.calendars {
+        let Some(holiday) = calendar
+            .holidays
+            .iter()
+            .find(|holiday| holiday.observed != Observance::Actual)
+        else {
+            continue;
+        };
+        let cited_and_resolves = calendar.cite.as_deref().is_some_and(|cite| {
+            crate::cite::parse_cite_string(cite, &CiteGrammar::new(&Default::default()))
+                .iter()
+                .any(|cite_ref| {
+                    cite_ref
+                        .heading()
+                        .is_some_and(|heading| !corpus.lookup_all(&heading).is_empty())
+                })
+        });
+        if !cited_and_resolves {
+            push(
+                "warn",
+                "observance-uncited",
+                format!("clock::{}", calendar.id),
+                format!(
+                    "calendar uses non-default observance `{:?}` (holiday `{}`) without a calendar-level cite resolvable to vendored text",
+                    holiday.observed, holiday.id
+                ),
+            );
+        }
+    }
 }
 
 fn lint_pack_sources(p: &Pack, push: &mut Push<'_>) {

@@ -25,9 +25,10 @@
 #       the commit (`br create`; NIGHTLY_NO_BEAD=1 only prints it).
 #   scripts/ci-scoped scope [BASE]
 #       The scope alone: `full`, `none`, or one package per line.
+#   scripts/ci-scoped scope-of <path>
+#       The package scope for one changed path, using current Cargo metadata.
 #   scripts/ci-scoped scope-of <metadata.json> < changed-files
-#       The scope of a list of changed paths (repo-relative, one per line)
-#       under a `cargo metadata --format-version 1 --no-deps` JSON.
+#       The scope of changed paths under supplied Cargo metadata.
 #   scripts/ci-scoped provenance [BASE]
 #       Every file added under sources/ since BASE has an entry in its
 #       forum's PROVENANCE.md (lg-t86b), no added or modified original
@@ -69,11 +70,11 @@ full_triggers='^(Cargo\.lock|Cargo\.toml|justfile|rust-toolchain(\.toml)?|clippy
 # crates/litigate-engine embeds packs/clock, calibration/ and sources/ and
 # its tests read tests/ (golden and story snapshots).
 build_inputs='{
-  "lit/": ["litgraph-packs", "litgraph-wasm", "litigate-wasm"],
-  "cases/": ["litgraph-packs", "litigate-wasm"],
+  "lit/": ["litgraph-packs", "litgraph-wasm", "litigate-wasm", "litigate-feed", "litigate-import", "litigate-lower", "litigate-cli", "litigate-syntax", "litigate-sema", "litigate-verify"],
+  "cases/": ["litgraph-packs", "litigate-wasm", "litigate-feed", "litigate-import", "litigate-lower", "litigate-cli"],
   "packs/": ["litgraph-packs", "litigate-engine"],
   "calibration/": ["litigate-engine"],
-  "sources/": ["litigate-engine"],
+  "sources/": ["litigate-engine", "litigate-feed", "litigate-import", "litigate-lower", "litigate-cli"],
   "tests/": ["litigate-engine"]
 }'
 
@@ -105,6 +106,14 @@ cli_only() {
 # stages. Keep this predicate shared by both stages and its self-test.
 corpus_change() {
   grep -qE '^(editors/tree-sitter-litigate/|crates/litigate-(syntax|engine|sema|lower)/|lit/|cases/|sources/|packs/|tests/expect/)' <<<"$1"
+}
+
+authoring_corpus_change() {
+  grep -qE '^(lit/|cases/|sources/)' <<<"$1"
+}
+
+lit_examples_change() {
+  grep -qE '^lit/examples/' <<<"$1"
 }
 
 scope_label() {
@@ -677,7 +686,7 @@ run() {
   if [ -n "$selected_stages" ]; then
     [[ "$selected_stages" =~ ^[a-zA-Z0-9_,.-]+$ ]] || { echo 'ci-scoped: invalid --stages list' >&2; return 2; }
     [[ ",$selected_stages," != *",,"* ]] || { echo 'ci-scoped: empty stage name' >&2; return 2; }
-    local known='fmt-check typos workflow-command-lint workflow-command-lint-repo provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect expect-impact impact clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
+    local known='fmt-check typos workflow-command-lint workflow-command-lint-repo provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect expect-impact impact corpus-consistency lit-examples clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
     IFS=, read -r -a _requested <<< "$selected_stages"
     for arg in "${_requested[@]}"; do
       if ! grep -qw "$arg" <<<"$known" && [[ ! "$arg" =~ ^(check|test|lock)-[A-Za-z0-9_.-]+$ ]]; then
@@ -769,6 +778,21 @@ run() {
     fi
   else
     skip expect-impact "no parser, engine, sema, lower or corpus inputs changed"
+  fi
+
+  if authoring_corpus_change "$files"; then
+    stage corpus-consistency env CARGO_BUILD_JOBS=4 cargo test \
+      -p litigate-feed --test inventory \
+      -p litigate-import --test roundtrip --test lower_roundtrip \
+      -p litigate-lower --test roundtrip --test golden \
+      -p litigate-cli --test corpus
+  else
+    skip corpus-consistency "no lit, cases or sources inputs changed"
+  fi
+  if lit_examples_change "$files"; then
+    stage lit-examples bash -c 'just tree-sitter-test && cargo test -p litigate-syntax && cargo test -p litigate-sema && cargo test -p litigate-verify --test example'
+  else
+    skip lit-examples "no lit/examples inputs changed"
   fi
 
   # Scoped.
@@ -1101,6 +1125,45 @@ self_test() {
   expect "none" "a docs-only change runs global only" docs/litigate/SPEC.md README.md
   expect "none" "a non-crate change runs global only" scripts/cov-gate .github/workflows/ci.yml _typos.toml
   expect "none" "an empty diff runs global only"
+  local corpus_scope examples_scope crate_test_scope crate_fixture_scope
+  cargo metadata --format-version 1 --no-deps > "$real"
+  corpus_scope="$(scope_of "$real" <<<"lit/core/Lit.toml")"
+  for pkg in litigate-feed litigate-import litigate-lower litigate-cli; do
+    if ! grep -Fxq "$pkg" <<<"$corpus_scope"; then
+      echo "ci-scoped self-test: lit/core/Lit.toml must scope corpus reader $pkg" >&2
+      failures=$((failures + 1))
+    fi
+  done
+  examples_scope="$(scope_of "$real" <<<"lit/examples/rule12.lit")"
+  for pkg in litigate-syntax litigate-sema litigate-verify; do
+    if ! grep -Fxq "$pkg" <<<"$examples_scope"; then
+      echo "ci-scoped self-test: lit/examples/rule12.lit must scope example reader $pkg" >&2
+      failures=$((failures + 1))
+    fi
+  done
+  crate_test_scope="$(scope_of "$real" <<<"crates/litigate-feed/tests/inventory.rs")"
+  if ! grep -Fxq litigate-feed <<<"$crate_test_scope"; then
+    echo "ci-scoped self-test: crate tests must scope their owning crate" >&2
+    failures=$((failures + 1))
+  fi
+  crate_fixture_scope="$(scope_of "$real" <<<"crates/litigate-feed/tests/fixtures/inventory.json")"
+  if ! grep -Fxq litigate-feed <<<"$crate_fixture_scope"; then
+    echo "ci-scoped self-test: crate fixtures must scope their owning crate" >&2
+    failures=$((failures + 1))
+  fi
+  if ! grep -Fq -- '-p litigate-feed --test inventory' "$self" ||
+    ! grep -Fq -- '-p litigate-import --test roundtrip --test lower_roundtrip' "$self" ||
+    ! grep -Fq -- '-p litigate-lower --test roundtrip --test golden' "$self" ||
+    ! grep -Fq -- '-p litigate-cli --test corpus' "$self"; then
+    echo "ci-scoped self-test: corpus-consistency must contain the complete corpus reader set" >&2
+    failures=$((failures + 1))
+  fi
+  if ! grep -Fq 'just tree-sitter-test && cargo test -p litigate-syntax' "$self" ||
+    ! grep -Fq 'cargo test -p litigate-sema' "$self" ||
+    ! grep -Fq 'cargo test -p litigate-verify --test example' "$self"; then
+    echo "ci-scoped self-test: lit/examples must run parser, sema and verify examples" >&2
+    failures=$((failures + 1))
+  fi
   expect "cli litgraph-packs litigate-engine" "lit/ is a build input of the packs" lit/frcp/rules.lit
   expect "cli litgraph-packs litigate-engine" "tests/ snapshots are the engine's" tests/golden/x.json
   expect "none" "a nested Cargo.lock is not the root one" docs/Cargo.lock
@@ -1208,7 +1271,7 @@ self_test_stages() {
     return
   fi
   [ -n "$requested" ] || { self_test; return; }
-  local known='fmt-check typos workflow-command-lint workflow-command-lint-repo provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect expect-impact impact clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
+  local known='fmt-check typos workflow-command-lint workflow-command-lint-repo provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect expect-impact impact corpus-consistency lit-examples clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
   IFS=, read -r -a requested_list <<< "$requested"
   for stage_name in "${requested_list[@]}"; do
     if ! grep -qw "$stage_name" <<<"$known" && [[ ! "$stage_name" =~ ^(check|test|lock)-[A-Za-z0-9_.-]+$ ]]; then
@@ -1377,7 +1440,16 @@ case "$cmd" in
   nightly) [ "$#" -eq 0 ] || usage; nightly ;;
   scope) [ "$#" -le 1 ] || usage; scope "$@" ;;
   stages) [ "$#" -le 1 ] || usage; stage_names "$@" ;;
-  scope-of) [ "$#" -eq 1 ] || usage; scope_of "$1" ;;
+  scope-of)
+    [ "$#" -eq 1 ] || usage
+    if [ -f "$1" ] && jq -e . "$1" >/dev/null 2>&1; then
+      scope_of "$1"
+    else
+      meta="$(metadata)"
+      printf '%s\n' "$1" | scope_of "$meta"
+      rm -f "$meta"
+    fi
+    ;;
   provenance) [ "$#" -le 1 ] || usage; provenance "$@" ;;
   check-quarantine) [ "$#" -le 2 ] || usage; check_quarantine "$@" ;;
   self-test) [ "$#" -le 2 ] || usage; if [ "${1:-}" = --stages ]; then [ "$#" -eq 2 ] || usage; self_test_stages "$2"; elif [ "$#" -eq 1 ]; then self_test_stages "$1"; else self_test; fi ;;

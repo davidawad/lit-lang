@@ -12,9 +12,9 @@
 #   scripts/ci-scoped run [BASE]
 #       Every stage, one line each, then `GATE_SECONDS total=N stage=N ...`
 #       (also appended to target/gate-seconds.log) and
-#       `CI_SCOPED: pass|fail scope=...`. The whole expect corpus and
-#       BASE-to-HEAD impact report run only for parser, engine, sema, lower,
-#       or corpus-input changes. BASE defaults to the merge-base of
+#       `CI_SCOPED: pass|fail scope=...`. The whole expect corpus is checked
+#       once alongside its BASE-to-HEAD impact report only for parser,
+#       engine, sema, lower, or corpus-input changes. BASE defaults to the merge-base of
 #       HEAD with origin/main.
 #   scripts/ci-scoped nightly
 #       The post-land sweep on HEAD: the whole workspace under the nextest
@@ -737,23 +737,14 @@ run() {
   else
     skip ts-test "litigate-wasm, litigate-cli and packages/litigate-ts unchanged"
   fi
-# Corpus-affecting changes run the complete expect suite. It is intentionally
-# absent from CLI-only and other narrow changes; the full run also happens in
-# nightly.
+  # One HEAD replay both enforces the recorded expectations and supplies
+  # the impact report. BASE remains informational; changes never fail the
+  # report. This avoids replaying the full HEAD corpus twice.
   if corpus_change "$files"; then
-    stage expect cargo run -q -p litigate-cli -- --format human test tests/expect
+    stage expect-impact cargo run -q -p litigate-cli -- --format human test --impact "$base" --check-head
+    [[ " ${failed[*]} " == *" expect-impact "* ]] || sed 's/^/  /' "$logdir/expect-impact.log"
   else
-    skip expect "no parser, engine, sema, lower or corpus inputs changed"
-  fi
-  # The change impact report (lg-8fdj.3): every expect test under
-  # tests/expect run at BASE and here, and each deadline, verdict and
-  # expectation that moved, per forum, in the log for the reviewer. It
-  # fails only when the report cannot be made, never on a change.
-  if corpus_change "$files"; then
-    stage impact cargo run -q -p litigate-cli -- --format human test --impact "$base"
-    if [ "$plan_stages" -eq 0 ]; then [[ " ${failed[*]} " == *" impact "* ]] || sed 's/^/  /' "$logdir/impact.log"; fi
-  else
-    skip impact "no parser, engine, sema, lower or corpus input changed"
+    skip expect-impact "no parser, engine, sema, lower or corpus inputs changed"
   fi
 
   # Scoped.
@@ -1001,6 +992,13 @@ self_test() {
   if ! corpus_change tests/expect/arthrex/expect.toml ||
     corpus_change docs/litigate/expect-corpus.md; then
     echo "ci-scoped self-test: expect tests are corpus inputs; docs are not" >&2
+    failures=$((failures + 1))
+  fi
+  local run_stages
+  run_stages="$(sed -n '/^run() {/,/^nightly() {/p' "$self")"
+  if ! grep -Fq 'stage expect-impact cargo run -q -p litigate-cli -- --format human test --impact "$base" --check-head' <<<"$run_stages" ||
+    grep -Eq 'stage (expect|impact) cargo run -q -p litigate-cli -- --format human test' <<<"$run_stages"; then
+    echo "ci-scoped self-test: corpus changes must check HEAD and report impact in one stage" >&2
     failures=$((failures + 1))
   fi
   if ! grep -Fq '(binary(in_memory) & test(=ops_compile_the_matter_or_package_in_memory))' .config/nextest.toml; then

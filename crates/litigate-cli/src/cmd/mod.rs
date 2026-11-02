@@ -78,14 +78,16 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
         ),
         Command::Test {
             impact: Some(base),
+            check_head,
             library,
             ..
-        } => impact::impact(src, &base, &library.lib),
+        } => impact::impact(src, &base, &library.lib, check_head),
         Command::Test {
             paths,
             filter,
             library,
             impact: None,
+            check_head: _,
             bless,
         } => test::test(&paths, filter.as_deref(), &library.lib, bless),
         Command::Coverage { root, check } => coverage::coverage(root.as_deref(), check),

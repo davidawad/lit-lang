@@ -305,7 +305,7 @@ pub enum Command {
     /// (`tests/expect/<case>/`, failing on a value that moved), or
     /// (`--impact BASE`) the expect tests of `tests/expect` at BASE and in
     /// the working tree, listing every deadline, verdict and expectation
-    /// that moved.
+    /// that moved. `--check-head` also fails on a HEAD expectation mismatch.
     Test {
         /// Package directories or files, or directories of expect tests.
         #[arg(required_unless_present = "impact", conflicts_with = "impact")]
@@ -317,6 +317,9 @@ pub enum Command {
         /// tree (run from the repository root).
         #[arg(long, value_name = "BASE")]
         impact: Option<String>,
+        /// Also fail if a HEAD expect test fails while building the report.
+        #[arg(long, requires = "impact")]
+        check_head: bool,
         /// Record the values each expect test (`tests/expect/<case>/`) finds
         /// in its `expect.toml`, in place of those it had; say why in the
         /// commit (SPEC §5.8, expect tests).

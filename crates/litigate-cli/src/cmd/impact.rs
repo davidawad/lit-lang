@@ -72,13 +72,29 @@ pub struct Change {
 /// # Errors
 /// BASE is not a revision, git cannot be run, or the working directory is
 /// not the repository root.
-pub fn impact(head: &dyn Source, base: &str, lib: &[String]) -> Outcome {
+pub fn impact(head: &dyn Source, base: &str, lib: &[String], check_head: bool) -> Outcome {
     let (sha, base_tree) = tree_at(base)?;
     let head_tree = snapshot(head)?;
-    let before = observe_parallel(&base_tree, lib)?;
-    let after = observe_parallel(&head_tree, lib)?;
+    // The snapshots are independent. Run their four-worker observations at
+    // once; this keeps the combined stage near the time of one corpus pass.
+    let (before, after) = std::thread::scope(|scope| {
+        let base = scope.spawn(move || observe_parallel(&base_tree, lib));
+        let head = scope.spawn(move || observe_parallel(&head_tree, lib));
+        let base = base
+            .join()
+            .map_err(|_| Failure::new("impact BASE observer panicked"))??;
+        let head = head
+            .join()
+            .map_err(|_| Failure::new("impact HEAD observer panicked"))??;
+        Ok::<_, Failure>((base, head))
+    })?;
+    let (before, _) = before;
+    let (after, head_passed) = after;
     let mut report = compare_observations(&before, &after);
     report.result["base"] = Value::String(sha);
+    if check_head && !head_passed {
+        report.failed = true;
+    }
     Ok(report)
 }
 
@@ -139,7 +155,7 @@ fn compare_observations(
 fn observe_parallel(
     src: &MemoryTree,
     lib: &[String],
-) -> Result<BTreeMap<Test, BTreeMap<Row, String>>, Failure> {
+) -> Result<(BTreeMap<Test, BTreeMap<Row, String>>, bool), Failure> {
     const WORKERS: usize = 4;
     let dirs = expect::dirs(src, Path::new(EXPECT_DIR));
     let files = manifests(src);
@@ -164,14 +180,15 @@ fn observe_parallel(
         }));
     }
     let mut out = BTreeMap::new();
+    let mut passed = true;
     for handle in handles {
-        out.extend(
-            handle
-                .join()
-                .map_err(|_| Failure::new("impact worker panicked"))?,
-        );
+        let (tests, worker_passed) = handle
+            .join()
+            .map_err(|_| Failure::new("impact worker panicked"))?;
+        out.extend(tests);
+        passed &= worker_passed;
     }
-    Ok(out)
+    Ok((out, passed))
 }
 
 fn observe_selected(
@@ -179,11 +196,14 @@ fn observe_selected(
     lib: &[String],
     dirs: Vec<PathBuf>,
     files: Vec<(String, String, PathBuf)>,
-) -> BTreeMap<Test, BTreeMap<Row, String>> {
+) -> (BTreeMap<Test, BTreeMap<Row, String>>, bool) {
     let mut tests = BTreeMap::new();
+    let mut passed = true;
     for dir in dirs {
         let name = expect::name_of(&dir);
-        let rows = expect::observed(src, &dir, lib)
+        let (observed, test_passed) = expect::observed_checked(src, &dir, lib);
+        passed &= test_passed;
+        let rows = observed
             .into_iter()
             .map(|((world, field), value)| ((name.clone(), world, field), value))
             .collect();
@@ -203,11 +223,19 @@ fn observe_selected(
             Err(e) => Err(Failure::new(e)),
         };
         if let Err(Failure(message)) = outcome {
+            passed = false;
             put(&name, "-", "error", message);
         }
+        passed &= test_passed(&rows);
         tests.insert((forum, name), rows);
     }
-    tests
+    (tests, passed)
+}
+
+fn test_passed(rows: &BTreeMap<Row, String>) -> bool {
+    !rows
+        .iter()
+        .any(|((_, _, field), value)| field == "error" || value.ends_with(" (fails)"))
 }
 
 /// `(forum, test name, path)` of each `tests/expect/<forum>/<name>.toml`.
@@ -266,7 +294,18 @@ fn run(
             paths.extend(m.paths.iter().cloned());
             let targets = ws::discover_in(src, &paths)?;
             let session = Session::load_in(src, &targets, lib)?;
-            let (results, _) = test::run(&session, None);
+            let (results, diagnostics) = test::run(&session, None);
+            for diagnostic in diagnostics
+                .iter()
+                .filter(|d| d.severity == litigate_base::Severity::Error)
+            {
+                put(
+                    &format!("{package}"),
+                    "-",
+                    "error",
+                    format!("{} {}", diagnostic.code.as_str(), diagnostic.message),
+                );
+            }
             for t in results {
                 let case = format!("{}::{}", t.package, t.name);
                 let mut seen: BTreeMap<&str, usize> = BTreeMap::new();
@@ -628,9 +667,25 @@ mod tests {
     fn parallel_observation_handles_an_empty_tree() {
         let tree = MemoryTree::default();
         assert_eq!(
-            observe_parallel(&tree, &[]).ok().map(|out| out.len()),
+            observe_parallel(&tree, &[]).ok().map(|(out, _)| out.len()),
             Some(0)
         );
+    }
+
+    #[test]
+    fn head_check_fails_on_expect_errors_and_inline_failures() {
+        let error = BTreeMap::from([(("case".into(), "-".into(), "error".into()), "bad".into())]);
+        let inline_failure = BTreeMap::from([(
+            ("package::test".into(), "-".into(), "assertion".into()),
+            "false (fails)".into(),
+        )]);
+        let passing = BTreeMap::from([(
+            ("case".into(), "w1".into(), "verdict".into()),
+            "clean".into(),
+        )]);
+        assert!(!test_passed(&error));
+        assert!(!test_passed(&inline_failure));
+        assert!(test_passed(&passing));
     }
 
     #[test]

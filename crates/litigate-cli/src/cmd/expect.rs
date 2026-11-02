@@ -341,30 +341,37 @@ fn world_rows(run: &Run, values: &BTreeMap<String, Values>) -> BTreeMap<(String,
 /// change impact report (`litigate test --impact`): a run that cannot be
 /// made is one `error` row.
 #[must_use]
-pub fn observed(
+pub fn observed_checked(
     src: &dyn Source,
     dir: &Path,
     lib: &[String],
-) -> BTreeMap<(String, String), String> {
+) -> (BTreeMap<(String, String), String>, bool) {
     let mut out = BTreeMap::new();
+    let mut passed = true;
     let error = |message: String| (("-".to_owned(), "error".to_owned()), message);
     let (expect, case) = match read(src, dir).and_then(|(_, e)| Ok((e, case_in(src, dir)?))) {
         Ok(found) => found,
         Err(Failure(message)) => {
             out.extend([error(message)]);
-            return out;
+            return (out, false);
         }
     };
     for run in &expect.runs {
         match observe(src, dir, &case, &expect.paths, run, lib) {
-            Ok(values) => out.extend(world_rows(run, &values)),
+            Ok(values) => {
+                let actual = world_rows(run, &values);
+                let expected = world_rows(run, &run.expect);
+                passed &= actual == expected;
+                out.extend(actual);
+            }
             Err(Failure(message)) => {
+                passed = false;
                 let world = world_of(run, "-");
                 out.insert((world, "error".to_owned()), message);
             }
         }
     }
-    out
+    (out, passed)
 }
 
 /// Runs the expect test in `dir` (on disk when `bless`, which records the

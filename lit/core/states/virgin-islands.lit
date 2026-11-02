@@ -1,0 +1,47 @@
+module core.states.virgin-islands
+
+import core.calendar.{ us-federal-holidays }
+
+/// The recurring fixed and weekday Virgin Islands legal holidays in 1 V.I.C.
+/// § 171(a) that the federal calendar does not already close. The code text
+/// is the 2019 U.S. Virgin Islands Code, so these dates are modeled from its
+/// 2019 edition. Not modeled: Easter-relative holidays (the calendar language
+/// has no Easter rule), Election Day (18 V.I.C. § 3), proclamation holidays,
+/// and optional Monday administrative leave after a Sunday holiday. The
+/// statutory dates, rather than discretionary administrative leave, are the
+/// dates counted as forward legal holidays.
+calendar virgin-islands-holidays cite "1 V.I.C. § 171(a)"
+{
+  three-kings-day: fixed(1, 6) effective [2019-01-01, ..)
+  transfer-day: fixed(3, 31) effective [2019-01-01, ..)
+  emancipation-day: fixed(7, 3) effective [2019-01-01, ..)
+  hamilton-jackson-day: fixed(11, 1) effective [2019-01-01, ..)
+  christmas-second-day: fixed(12, 26) effective [2019-01-01, ..)
+}
+
+/// FRCrimP 45's forward count for the District Court of the Virgin Islands.
+/// Rule 45(a)(6)(C) includes holidays declared by the state where the district
+/// court sits, so its local-rule deadlines use the territory's statutory list.
+counting frcrimp45-virgin-islands effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCrimP 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    Express: unrecognized
+    MailForeign: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP 45(c)"
+  holidays us-federal-holidays
+  forward_holidays virgin-islands-holidays cite "FRCrimP 45(a)(6)(C)"
+  forums [frcrimp]
+  allow_hours
+}
+

@@ -51,11 +51,23 @@ import core.states.texas.{ frbp9006-texas, frcp6-texas }
 import core.states.utah.{ frbp9006-utah, frcp6-utah }
 import core.states.vermont.{ frbp9006-vermont, frcp6-vermont }
 import core.states.virginia.{ frbp9006-virginia, frcp6-virginia }
+import core.states.virgin-islands.{ frcrimp45-virgin-islands }
 import core.states.washington.{ frbp9006-washington, frcp6-washington }
 import core.states.west-virginia.{ frbp9006-west-virginia, frcp6-west-virginia }
 import core.states.wisconsin.{ frbp9006-wisconsin, frcp6-wisconsin }
 import core.states.wyoming.{ frbp9006-wyoming, frcp6-wyoming }
 import core.time.{ Served, ServiceMethod }
+import core.frcrimp45.{ frcrimp45 }
+
+deadline virgin-islands-three-business-days: 3.business_days after Served() counted_by frcrimp45-virgin-islands { forum frcrimp }
+deadline federal-three-business-days: 3.business_days after Served() counted_by frcrimp45 { forum frcrimp }
+
+test "Three King's Day closes a forward criminal period in the Virgin Islands" cite "1 V.I.C. § 171(a)"
+{
+  given Served(Personal) on 2025-01-03
+  expect deadline(virgin-islands-three-business-days) == 2025-01-09
+  expect deadline(federal-three-business-days) == 2025-01-08
+}
 
 deadline frbp9006-alabama-smoke: 1.days after Served() counted_by frbp9006-alabama {
   forum bankr-alm

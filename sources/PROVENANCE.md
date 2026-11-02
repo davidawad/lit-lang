@@ -527,6 +527,16 @@ Entries live in the forum's own
 - sha256 (this file): `c1c9c35af37ca67e297aa61bd83e90d34ffed96045097fc97b99dfc342903dbf`
 - Original: `original/usc-5-6103.html` as served (sha256 0c3ef0793a5a8106354d3d3f3d4dc0e9aa9de7803325d01ca95048ff9c4cd806); extraction sha256 c1c9c35af37ca67e297aa61bd83e90d34ffed96045097fc97b99dfc342903dbf. Served at https://www.govinfo.gov/content/pkg/USCODE-2023-title5/html/USCODE-2023-title5-partIII-subpartE-chap61-subchapI-sec6103.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 
+### `vi-code/1-vi-code-171.txt` — 1 V.I.C. § 171 (legal holidays)
+
+- Text of 1 V.I.C. § 171 from the 2019 U.S. Virgin Islands Code, retrieved
+  2026-11-02 from Justia's public reproduction of the Code:
+  <https://law.justia.com/codes/virgin-islands/2019/title-1/chapter-11/171/>.
+  The holiday calendar is limited to recurring dates specified in subsection
+  (a); annual proclamation dates, election dates, and discretionary
+  administrative leave are not dated by this source.
+- sha256 (this file): `ff53f356dee26fcdda9d0114dddee0f78ea7cbfd2e86ed579a64f8348f5981f9`
+
 ### `cfr-19-part201.txt` — 19 C.F.R. §§ 201.14, 201.16 (USITC computation of time, service)
 
 - Fetched 2026-10-22 from `www.govinfo.gov`'s official annual CFR XML

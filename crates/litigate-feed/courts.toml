@@ -1,52 +1,1045 @@
 # The CourtListener court ids whose opinions the opinion feed polls, per
-# promoted package (a package under lit/ with a pack identity, by its
-# `[package].name`). Every such package is listed: `courts` are the ids of
-# the court whose procedure it models
-# (https://www.courtlistener.com/api/rest/v4/courts/), or `none` says why it
-# models no single court CourtListener publishes. A newly promoted package
-# fails `cargo test -p litigate-feed` until it is listed here.
+# promoted package (a package under lit/ with a pack identity). Packages
+# without a verified court id are explicitly excluded with a reason.
+
+[packages.acca]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.afcca]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ak-court-of-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ak-superior-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ak-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ak-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ak-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.al-court-of-criminal-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.al-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.al-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.al-appellate-courts-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.al-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.al-supreme-court-certiorari]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ar-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ar-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ar-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ar-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ar-workers-compensation-commission]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ar-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.as-high-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.as-high-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.as-high-court-appellate]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.as-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.az-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.az-superior-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.az-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.az-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.az-tax-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.bia]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-court-of-appeal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-court-of-appeal-fifth-district]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-court-of-appeal-first-district]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-court-of-appeal-fourth-district]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-court-of-appeal-second-district]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-court-of-appeal-sixth-district]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-court-of-appeal-third-district]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-superior-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-superior-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-superior-court-appellate-division]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-superior-court-san-diego-county]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ca-supreme-court]
+none = "CourtListener court id not verified; excluded from court polling"
 
 [packages.first-circuit-court-of-appeals]
-courts = ["ca1"]
+courts = ['ca1']
+
+[packages.tenth-circuit-court-of-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.eleventh-circuit-court-of-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.second-circuit-court-of-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fourth-circuit-court-of-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fifth-circuit-court-of-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.sixth-circuit-court-of-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.seventh-circuit-court-of-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
 
 [packages.ca8-court-of-appeals]
-courts = ["ca8"]
+courts = ['ca8']
+
+[packages.ninth-circuit-court-of-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.caaf]
+none = "CourtListener court id not verified; excluded from court polling"
 
 [packages.dc-circuit-court-of-appeals]
-courts = ["cadc"]
+courts = ['cadc']
 
 [packages.cafc]
-courts = ["cafc"]
+courts = ['cafc']
+
+[packages.cavc]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.cgcca]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.cit]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.cmcr]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.co-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.co-industrial-claim-appeals-office]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.co-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.co-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.co-district-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.co-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
 
 [packages.cofc]
-courts = ["uscfc"]
-
-[packages.eighth-circuit-bankruptcy-appellate-panel]
-courts = ["bap8"]
-
-[packages.frap-appellate-procedure]
-none = "national rules for every court of appeals: reached through the circuit packages and cites"
-
-[packages.frcp-civil-procedure]
-none = "national rules for every district court; no district court is modeled"
-
-[packages.frcrimp-criminal-procedure]
-none = "national rules for every district court; no district court is modeled"
-
-[packages.frcp-rule12-example]
-none = "a teaching example, not a court"
+courts = ['uscfc']
 
 [packages.core]
-none = "the shared library: no court"
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ct-appellate-supreme]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ct-compensation-review-board]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ct-superior-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ct-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ct-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.dc-superior-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.dc-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.dc-court-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.dc-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.de-court-of-chancery]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.de-court-on-the-judiciary]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.de-superior-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.de-family-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.de-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.de-superior-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.de-supreme-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.frcp-rule12-example]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fisc]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fiscr]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fl-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fl-district-court-of-appeal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fl-district-court-of-appeal-fifth]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fl-district-court-of-appeal-first]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fl-district-court-of-appeal-fourth]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fl-district-court-of-appeal-second]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fl-district-court-of-appeal-sixth]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fl-district-court-of-appeal-third]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fl-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fl-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.fl-supreme-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.frap-appellate-procedure]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.frbp-bankruptcy-procedure]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.frcp-civil-procedure]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.frcrimp-criminal-procedure]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ga-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ga-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ga-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ga-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ga-court-of-appeals-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.gu-superior-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.gu-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.gu-supreme-court-appellate]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.habeas-corpus]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.hi-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.hi-circuit-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.hi-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.hi-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.hi-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.hi-tax-appeal-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ia-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ia-district-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ia-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ia-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.id-court-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.id-district-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.id-district-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.id-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.id-supreme-appellate]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.il-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.il-circuit-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.il-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.il-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.illappct-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.in-trial-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.in-tax-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.in-trial-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.in-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ia-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
 
 [packages.itc-337]
-none = "the USITC is an agency; CourtListener publishes no ITC opinions"
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.jpml]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ks-court-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ks-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ks-district-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ks-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ks-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ky-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ky-court-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ky-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ky-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ky-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.la-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.la-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.la-district-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.la-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.la-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ma-appeals-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ma-appellate-tax-board]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ma-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ma-department-of-industrial-accidents]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ma-district-court-appellate-division]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ma-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ma-sjc]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ma-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.md-appellate-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.md-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.md-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.md-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.md-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.me-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.me-law-court-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.me-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mi-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mi-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mi-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mi-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mi-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mn-court-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mn-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mn-district-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mn-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mn-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mo-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mo-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mo-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mo-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mo-court-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mo-court-of-appeals-eastern-district-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mo-court-of-appeals-southern-district-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mo-court-of-appeals-western-district-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mp-superior-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mp-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mp-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
 
 [packages.mpep-prosecution]
-none = "USPTO examination is an agency proceeding; CourtListener publishes no USPTO decisions"
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ms-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ms-chancery-courts-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ms-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ms-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ms-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ms-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mt-district-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mt-district-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mt-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mt-supreme-court-civil-appeal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.mt-tax-appeal-board]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nc-appellate-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nc-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nc-industrial-commission]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nc-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nc-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nd-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nd-district-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nd-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nd-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ne-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ne-district-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ne-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ne-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nebctapp-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nh-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nh-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nh-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nh-supreme-court-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nj-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nj-superior-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nj-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nj-superior-law-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nj-supreme-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nj-tax-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nm-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nm-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nm-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nm-district-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nm-supreme-court-certiorari]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nmcca]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nv-court-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nv-district-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nv-district-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nv-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.nv-supreme-appellate]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ny-appellate-division-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ny-appellate-terms-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ny-commission-of-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ny-court-for-the-trial-of-impeachments]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ny-court-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ny-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ny-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ny-saratoga-chancery-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ny-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.oh-common-pleas-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.oh-court-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.oh-court-of-claims]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.oh-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.oh-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.oh-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ok-court-of-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ok-court-of-criminal-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ok-court-on-the-judiciary]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ok-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ok-district-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ok-judicial-ethics-advisory-panel]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ok-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ok-supreme-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.or-circuit-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.or-appellate]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.or-circuit-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.or-dor-local-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.or-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.or-tax-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.pa-commonwealth-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.pa-court-of-judicial-discipline]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.pa-common-pleas-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.pa-common-pleas-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.pa-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.pa-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.pa-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.pr-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.pr-primera-instancia-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.pr-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.pr-supreme-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.pr-tribunal-apelaciones]
+none = "CourtListener court id not verified; excluded from court polling"
 
 [packages.ptab-patent-trial-appeal-board]
-none = "the PTAB is an agency tribunal; CourtListener publishes no PTAB decisions"
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ri-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ri-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ri-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ri-supreme-court-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.sc-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.sc-court-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.sc-court-of-chancery]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.sc-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.sc-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.sc-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.supreme-court-of-the-united-states]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.sd-supreme-court-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.sd-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.sd-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tax-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tn-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tn-court-of-criminal-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tn-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tn-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tn-supreme-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tn-trial-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
 
 [packages.ttab-trademark-trial-and-appeal-board]
-none = "the TTAB is an agency tribunal; CourtListener publishes no TTAB decisions"
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tx-court-of-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tx-court-of-criminal-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tx-court-of-review-tribunal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tx-courts-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tx-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tx-district-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tx-district-court-travis-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tx-judicial-panel-on-multidistrict-litigation]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tx-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tx-special-court-of-review]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.tx-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ut-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ut-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ut-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ut-district-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.ut-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.va-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.va-court-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.va-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.va-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.va-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.vi-superior-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.vi-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.vi-supreme-court-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.vt-superior-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.vt-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.vt-supreme-court-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wa-court-of-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wa-superior-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wa-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wa-superior-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wa-supreme-court-review]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wawd-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wi-circuit-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wi-court-of-appeals-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wi-circuit-court-criminal]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wi-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wi-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wv-appellate-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wv-circuit-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wv-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wv-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wv-supreme-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wy-criminal-trial-court]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wy-district-court-civil]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wy-state-rules]
+none = "CourtListener court id not verified; excluded from court polling"
+
+[packages.wy-supreme-court-civil-appeals]
+none = "CourtListener court id not verified; excluded from court polling"
+

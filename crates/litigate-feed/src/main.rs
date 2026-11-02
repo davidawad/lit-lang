@@ -53,8 +53,6 @@ fn main() -> ExitCode {
 }
 
 fn run(args: &Args) -> Result<ExitCode, String> {
-    let inventory = Inventory::read(&args.repo)?;
-    let elements = build_elements(&args.repo, &inventory, &watched(&inventory))?;
     let since = args
         .since
         .clone()
@@ -62,6 +60,8 @@ fn run(args: &Args) -> Result<ExitCode, String> {
     if date::parse_days(&since).is_none() {
         return Err(format!("--since `{since}` is not YYYY-MM-DD"));
     }
+    let inventory = Inventory::read(&args.repo)?;
+    let elements = build_elements(&args.repo, &inventory, &watched(&inventory))?;
     let token = std::env::var("COURTLISTENER_API_TOKEN").ok();
     let mut client = Client::new(Ureq::new(token), &args.base_url)
         .min_interval(Duration::from_millis(args.min_interval_ms));

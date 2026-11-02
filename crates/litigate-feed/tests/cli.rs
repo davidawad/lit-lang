@@ -120,7 +120,7 @@ fn a_ca8_opinion_is_filed_with_its_candidate_elements_and_external_ref() {
     assert!(
         requests[0]
             .path
-            .contains("court=bap8+ca1+ca8+cadc+cafc+uscfc"),
+            .contains("court=ca1+ca8+cadc+cafc+uscfc"),
         "{}",
         requests[0].path
     );

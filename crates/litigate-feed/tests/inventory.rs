@@ -54,6 +54,8 @@ fn every_promoted_package_is_in_the_court_table() {
     let inventory = Inventory::read(&repo()).unwrap();
     assert_eq!(inventory.courts["ca8"], ["ca8-court-of-appeals"]);
     assert_eq!(inventory.courts["uscfc"], ["cofc"]);
+    assert!(inventory.package("acca").is_some());
+    assert!(inventory.package("frbp-bankruptcy-procedure").is_some());
     assert!(inventory.precedents.is_empty());
     let ca8 = inventory.package("ca8-court-of-appeals").unwrap();
     assert_eq!(ca8.dir, "lit/ca8");

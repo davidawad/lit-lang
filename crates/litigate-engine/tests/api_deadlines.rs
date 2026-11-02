@@ -313,6 +313,35 @@ fn explicit_court_and_business_days_override_the_counting_period_threshold() {
 }
 
 #[test]
+fn business_days_override_frbp_calendar_counting_across_christmas_weekend() {
+    let c = catalog(vec![pack(json!({
+        "schemaVersion": 3, "counting": "frbp9006", "id": "frbp-business-test",
+        "title": "FRBP business-day test", "startNodeId": "trigger",
+        "nodes": [
+            {"id": "trigger", "kind": "state", "label": "Trigger"},
+            {"id": "due", "kind": "state", "label": "Due"}
+        ],
+        "edges": [{
+            "id": "local-rule-period", "from": "trigger", "to": "due",
+            "label": "Three business days", "deadline": {"length": 3, "unit": "business"}
+        }]
+    }))]);
+    let resp = handle(
+        &deadlines_req(
+            &["frbp-business-test"],
+            D::new("2026-12-24").edge("local-rule-period").op(),
+        ),
+        &c,
+    );
+    assert!(resp.ok, "{resp:?}");
+    let deadline = &resp.result.unwrap()["deadlines"][0];
+    // FRBP 9006 ordinarily counts calendar days and rolls the Sunday
+    // endpoint to Monday; the explicit unit instead counts weekdays,
+    // skipping Christmas and the weekend.
+    assert_eq!(deadline["due_date"], json!("2026-12-30"));
+}
+
+#[test]
 fn counting_field_selects_the_rule_regardless_of_pack_id() {
     let c = catalog(vec![explicit_forum_pack()]);
     let resp = handle(

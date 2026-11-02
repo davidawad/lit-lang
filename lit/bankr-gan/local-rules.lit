@@ -242,14 +242,14 @@ deadline ballot-report-period: 3.business_days before ConfirmationHearingSchedul
 
 test "the ballot report is due three business days before confirmation" cite "N.D. Ga. BLR 3018-1(c)"
 {
-  given ConfirmationHearingScheduled() on 2027-03-10
-  expect deadline(ballot-report-period) == 2027-03-05
+  given ConfirmationHearingScheduled() on 2027-01-19
+  expect deadline(ballot-report-period) == 2027-01-13
 }
 
 test "notice to a newly scheduled creditor is served in three business days" cite "N.D. Ga. BLR 2002-1"
 {
-  given CreditorNewlyScheduled() on 2027-03-01
-  expect deadline(newly-scheduled-creditor-notice-period) == 2027-03-04
+  given CreditorNewlyScheduled() on 2026-12-24
+  expect deadline(newly-scheduled-creditor-notice-period) == 2026-12-30
 }
 
 test "Georgia's declared Good Friday moves BLR 2002-1's business-day deadline" cite "N.D. Ga. BLR 2002-1; O.C.G.A. § 1-4-1; FRBP 9006(a)(6)(C)"

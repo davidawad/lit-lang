@@ -136,7 +136,6 @@ Only patterns written as a bracketed list followed by @CAPTURE count."
     (insert "before old after")
     (goto-char 14)
     (let ((marker (copy-marker 13))
-          (output (generate-new-buffer " *litigate-test-output*"))
           (litigate-format-command '("formatter")))
       (unwind-protect
           (progn
@@ -150,7 +149,6 @@ Only patterns written as a bracketed list followed by @CAPTURE count."
             (should (equal (buffer-string) "before new after"))
             (should (= (point) 14))
             (should (= (marker-position marker) 13)))
-        (kill-buffer output)
         (set-marker marker nil)))))
 
 (ert-deftest litigate-ts-mode-faces ()

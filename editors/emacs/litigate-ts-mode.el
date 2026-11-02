@@ -363,7 +363,10 @@ buffer that does not parse is left unchanged and the error is signalled."
                   ;; `replace-buffer-contents' is obsolete as of Emacs 31;
                   ;; this replacement primitive preserves markers and point.
                   (let ((inhibit-read-only t))
-                    (replace-region-contents (point-min) (point-max) output))))))
+                    (replace-region-contents
+                     (point-min) (point-max)
+                     (lambda ()
+                       (with-current-buffer output (buffer-string)))))))))
         (kill-buffer output)
         (delete-file errors)))))
 

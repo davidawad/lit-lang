@@ -156,6 +156,15 @@ fn frap_32_a_7_is_three_alternative_bounds_and_a_type_volume_certificate() {
 #[test]
 fn cfr_42_24_limits_an_ipr_petition_to_14000_words() {
     let ptab = real("lit/ptab");
+    let historical = limit_from(&ptab, "ipr-petition", "2016-05-02");
+    let [historical_bound] = historical.bounds.as_slice() else {
+        panic!("one historical bound: {:?}", historical.bounds);
+    };
+    assert_eq!(historical_bound.measure, Measure::Words);
+    assert_eq!(historical_bound.max, Authored::Known(14_000));
+    assert_eq!(historical_bound.cite.as_deref(), Some("81 FR 18765"));
+    assert_eq!(historical.meta.effective.from, "2016-05-02");
+
     let petition = limit_from(&ptab, "ipr-petition", "2021-01-08");
     let [bound] = petition.bounds.as_slice() else {
         panic!("one bound: {:?}", petition.bounds);

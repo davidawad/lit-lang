@@ -36,6 +36,8 @@ fn engine_requests_run_over_the_compiled_embedded_sources() {
     assert_eq!(untimed(parse(&solved.stdout)["result"].clone()), untimed(r));
     let manual = parse(&describe());
     assert_eq!(manual["op"], json!("describe"));
+    // d05fc549 removed runtime pack-directory loading; wasm must describe the
+    // catalog compiled into the binary.
     assert_eq!(manual["result"]["packs_source"], json!("embedded"));
     let library = &manual["result"]["scenario_library"];
     assert!(library.as_array().is_some_and(|s| !s.is_empty()));

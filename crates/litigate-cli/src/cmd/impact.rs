@@ -48,6 +48,14 @@ type Test = (String, String);
 /// `(case, world, field)`: what one row of a test is about.
 type Row = (String, String, String);
 
+/// One parallel expect-corpus observation: rows, HEAD expectation mismatches,
+/// and whether the HEAD expect run passed.
+type Observation = (
+    BTreeMap<Test, BTreeMap<Row, String>>,
+    Vec<expect::Mismatch>,
+    bool,
+);
+
 /// One value that moved.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct Change {
@@ -93,25 +101,31 @@ pub fn impact(head: &dyn Source, base: &str, lib: &[String], check_head: bool) -
     let mut report = compare_observations(&before, &after);
     report.result["base"] = Value::String(sha);
     if check_head && !head_passed {
-        report.failed = true;
-        let lines = head_mismatches
-            .iter()
-            .map(|m| {
-                format!(
-                    "expect test {}: {} {}: expected {}, found {}",
-                    m.case, m.world, m.field, m.expected, m.actual
-                )
-            })
-            .collect::<Vec<_>>();
-        if let Some(text) = &mut report.text {
-            if !lines.is_empty() {
-                text.push('\n');
-                text.push_str(&lines.join("\n"));
-                text.push('\n');
-            }
-        }
+        append_head_mismatches(&mut report, &head_mismatches);
     }
     Ok(report)
+}
+
+/// Mark the merged stage failed for HEAD expect mismatches and retain their
+/// details after the impact table.
+fn append_head_mismatches(report: &mut Report, mismatches: &[expect::Mismatch]) {
+    report.failed = true;
+    let lines = mismatches
+        .iter()
+        .map(|m| {
+            format!(
+                "expect test {}: {} {}: expected {}, found {}",
+                m.case, m.world, m.field, m.expected, m.actual
+            )
+        })
+        .collect::<Vec<_>>();
+    if let Some(text) = &mut report.text {
+        if !lines.is_empty() {
+            text.push('\n');
+            text.push_str(&lines.join("\n"));
+            text.push('\n');
+        }
+    }
 }
 
 /// The report of every expect test of `base` and `head`.
@@ -168,17 +182,7 @@ fn compare_observations(
 /// Observe the corpus in four independent chunks. Each worker owns a cloned
 /// read-only tree, which bounds the impact stage's wall time without sharing
 /// the source's interior write cache between threads.
-fn observe_parallel(
-    src: &MemoryTree,
-    lib: &[String],
-) -> Result<
-    (
-        BTreeMap<Test, BTreeMap<Row, String>>,
-        Vec<expect::Mismatch>,
-        bool,
-    ),
-    Failure,
-> {
+fn observe_parallel(src: &MemoryTree, lib: &[String]) -> Result<Observation, Failure> {
     const WORKERS: usize = 4;
     let dirs = expect::dirs(src, Path::new(EXPECT_DIR));
     let files = manifests(src);
@@ -221,11 +225,7 @@ fn observe_selected(
     lib: &[String],
     dirs: Vec<PathBuf>,
     files: Vec<(String, String, PathBuf)>,
-) -> (
-    BTreeMap<Test, BTreeMap<Row, String>>,
-    Vec<expect::Mismatch>,
-    bool,
-) {
+) -> Observation {
     let mut tests = BTreeMap::new();
     let mut mismatches = Vec::new();
     let mut passed = true;
@@ -686,25 +686,49 @@ mod tests {
     fn parallel_observation_handles_an_empty_tree() {
         let tree = MemoryTree::default();
         assert_eq!(
-            observe_parallel(&tree, &[]).ok().map(|(out, _)| out.len()),
-            Some(0)
+            observe_parallel(&tree, &[])
+                .ok()
+                .map(|(out, mismatches, passed)| { (out.len(), mismatches.len(), passed) }),
+            Some((0, 0, true))
         );
     }
 
     #[test]
-    fn head_check_fails_on_expect_errors_and_inline_failures() {
-        let error = BTreeMap::from([(("case".into(), "-".into(), "error".into()), "bad".into())]);
-        let inline_failure = BTreeMap::from([(
-            ("package::test".into(), "-".into(), "assertion".into()),
-            "false (fails)".into(),
+    fn changed_inline_failure_rows_remain_report_data() {
+        let before = BTreeMap::from([(
+            ("forum".into(), "expect".into()),
+            BTreeMap::from([(
+                ("package::test".into(), "-".into(), "assertion".into()),
+                "false (fails)".into(),
+            )]),
         )]);
-        let passing = BTreeMap::from([(
-            ("case".into(), "w1".into(), "verdict".into()),
-            "clean".into(),
+        let after = BTreeMap::from([(
+            ("forum".into(), "expect".into()),
+            BTreeMap::from([(
+                ("package::test".into(), "-".into(), "assertion".into()),
+                "true".into(),
+            )]),
         )]);
-        assert!(!test_passed(&error));
-        assert!(!test_passed(&inline_failure));
-        assert!(test_passed(&passing));
+        let report = compare_observations(&before, &after);
+        assert!(!report.failed);
+        assert_eq!(report.result["changed"], 1);
+        assert_eq!(report.result["changes"][0]["before"], "false (fails)");
+        assert_eq!(report.result["changes"][0]["after"], "true");
+    }
+
+    #[test]
+    fn checked_head_expect_mismatch_fails_the_merged_stage() {
+        let mismatches = [expect::Mismatch {
+            case: "case".into(),
+            world: "w1".into(),
+            field: "verdict".into(),
+            expected: "clean".into(),
+            actual: "L4002".into(),
+        }];
+        let mut report = compare_observations(&BTreeMap::new(), &BTreeMap::new());
+        append_head_mismatches(&mut report, &mismatches);
+        assert!(report.failed);
+        assert!(report.text.unwrap().contains("expected clean, found L4002"));
     }
 
     #[test]

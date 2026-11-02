@@ -67,4 +67,12 @@ fn a_matter_that_fails_its_check_is_not_run() {
     assert_eq!(error["code"], "invalid");
     assert!(error["hint"].as_str().unwrap().contains("acme.case:27"));
     assert!(error["message"].as_str().unwrap().contains("frobnicate"));
+    let diagnostic = run.json["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|diagnostic| diagnostic["code"] == "L4007")
+        .unwrap();
+    assert_eq!(diagnostic["span"]["file"], "cases/examples/acme.case");
+    assert_eq!(diagnostic["span"]["line"], 27);
 }

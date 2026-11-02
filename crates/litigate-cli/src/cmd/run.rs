@@ -302,7 +302,6 @@ pub fn run(src: &dyn Source, target: &str, op: &str, flags: &OpFlags) -> Outcome
                     elapsed_ms: 0.0,
                 })
                 .unwrap_or(Value::Null);
-                report.diagnostics.clear();
                 report.failed = true;
                 return Ok(report);
             }

@@ -113,6 +113,7 @@ registry! {
     InvalidTransition = "L3008" => "A transition's arms are not total or select an unknown version",
     InvalidCounting = "L3009" => "A counting rule or calendar is inconsistent or references unknown data",
     NotEncoded = "L3010" => "No version is recorded for a date before the declaration's `unknown_before`: the law there is not encoded (a hole), not absent",
+    StateCountingRule = "L3011" => "A local deadline uses a bare national counting rule instead of the package's state variant",
     InvalidCaseEvent = "L4001" => "The event is out of order or is not a legal transition from the replayed posture",
     DeadlineMissed = "L4002" => "The event missed the due date of the obligation it discharges",
     InvalidCaseFact = "L4003" => "The fact is not a fact-tagged node or names an edge that is not its own",

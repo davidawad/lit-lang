@@ -43,6 +43,17 @@ pub fn pkg(
     }
 }
 
+/// A package whose deadline counting declaration is selected by its manifest.
+pub fn pkg_counting(name: &str, counting: &str, text: &str) -> LoadedPackage {
+    let mut package = pkg(name, "LocalRule", "2025-01-01", &[], &[("main.lit", text)]);
+    package.manifest = package.manifest.replacen(
+        "title = \"T\"",
+        &format!("title = \"T\"\ncounting = \"{counting}\""),
+        1,
+    );
+    package
+}
+
 /// The `reach` and holdings a precedent's `[package.instrument]` names
 /// (docs/litigate/CHANGE.md §2.8): the forum families of `reach`, and one
 /// pinned holding for each rule element of `edits`.

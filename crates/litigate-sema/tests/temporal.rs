@@ -13,6 +13,29 @@ fn v(decl: &str, clauses: &str) -> String {
 }
 
 #[test]
+fn state_counting_variant_is_required_for_local_deadlines() {
+    let source = "module main\nstart s\ncounting frbp9006 effective [2025-01-01, ..) cite \"FRBP 9006(a)\" { exclude_trigger_day, include_last_day, roll_forward_on [weekend], holidays cal, service_extension { Personal: 0.days, Electronic: 0.days, Mail: 0.days, Clerk: 0.days, OtherConsented: 0.days, CommercialCarrier: unrecognized, PrisonMail: unrecognized, MailForeign: unrecognized, Express: unrecognized, ExpressForeign: unrecognized }, allow_hours, end_of_month clamp }\ncounting frbp9006-georgia effective [2025-01-01, ..) cite \"FRBP 9006(a)\" { exclude_trigger_day, include_last_day, roll_forward_on [weekend], holidays cal, forward_holidays cal cite \"FRBP 9006(a)(6)(C)\", service_extension { Personal: 0.days, Electronic: 0.days, Mail: 0.days, Clerk: 0.days, OtherConsented: 0.days, CommercialCarrier: unrecognized, PrisonMail: unrecognized, MailForeign: unrecognized, Express: unrecognized, ExpressForeign: unrecognized }, allow_hours, end_of_month clamp }\ncalendar cal { new-year: fixed(1, 1) effective [1870-06-28, ..) }\nevent Served()\nstate s: \"S\" { _ \"go\" -> t }\nterminal t: \"T\"\ndeadline local: 30.days after Served() counted_by frbp9006\n";
+    let bad = legal::pkg_counting("demo", "frbp9006-georgia", source);
+    let (db, ws) = workspace(&[bad]);
+    let diagnostics = render(&db, ws);
+    assert!(
+        diagnostics
+            .iter()
+            .any(|d| d.contains("L3011") && d.contains("local")),
+        "{diagnostics:#?}"
+    );
+
+    let good_source = source.replace("counted_by frbp9006\n", "counted_by frbp9006-georgia\n");
+    let good = legal::pkg_counting("demo", "frbp9006-georgia", &good_source);
+    let (db, ws) = workspace(&[good]);
+    let diagnostics = render(&db, ws);
+    assert!(
+        !diagnostics.iter().any(|d| d.contains("L3011")),
+        "{diagnostics:#?}"
+    );
+}
+
+#[test]
 fn version_sets_are_disjoint_and_cover_their_lifetime() {
     let succession =
         v(P20, "effective [2009-12-01, 2016-12-01)") + &v(P21, "effective [2016-12-01, ..)");

@@ -32,6 +32,52 @@ pub fn check(world: &World<'_>, loc: &dyn Locate, pack: usize) -> Vec<Diagnostic
         out.extend(coverage(world, loc, key, &set, first));
         out.extend(succession(world, loc, key, &set));
     }
+    out.extend(state_counting_rule(world, loc, pack));
+    out
+}
+
+/// A package using a state counting variant must name it on its local
+/// deadlines. The variant carries the state's forward-only holidays.
+fn state_counting_rule(world: &World<'_>, loc: &dyn Locate, pack: usize) -> Vec<Diagnostic> {
+    let Some(selected) = world.packs[pack].counting.as_deref() else {
+        return Vec::new();
+    };
+    let variant = ["frbp9006", "frcp6", "frcrimp45"].iter().find(|base| {
+        selected
+            .strip_prefix(&format!("{base}-"))
+            .is_some_and(|s| !s.is_empty())
+    });
+    let Some(base) = variant else {
+        return Vec::new();
+    };
+    let has_forward_calendar = world.decls.iter().any(|d| {
+        d.pack == pack
+            && matches!(d.decl, crate::hir::Declaration::Counting(c)
+                if c.meta.id == selected && c.forward_calendar.is_some())
+    });
+    if !has_forward_calendar {
+        return Vec::new();
+    }
+    let mut out = Vec::new();
+    for d in world.decls.iter().filter(|d| d.pack == pack) {
+        let crate::hir::Declaration::Deadline(deadline) = d.decl else {
+            continue;
+        };
+        let target = world
+            .target(&world.packs[pack].pack, &deadline.counting)
+            .key;
+        if target.pack != world.packs[pack].pack || target.name != *base {
+            continue;
+        }
+        out.push(error(
+            C::StateCountingRule,
+            span_of(loc, d, "counted_by"),
+            format!(
+                "deadline `{}` counts by `{}`, but this package uses state variant `{selected}`",
+                deadline.meta.id, deadline.counting
+            ),
+        ).with_note(None, "use the package's state counting rule so its forward-only state holidays are applied"));
+    }
     out
 }
 

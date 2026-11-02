@@ -104,7 +104,10 @@ fn dev_reports_the_three_holes_and_accepts() {
         .iter()
         .map(|d| d.message.strip_prefix("hole: ").unwrap_or(&d.message))
         .collect();
-    assert_eq!(reasons, ["no calibration yet", "no reason given", "no reason given"]);
+    assert_eq!(
+        reasons,
+        ["no calibration yet", "no reason given", "no reason given"]
+    );
 }
 
 #[test]

@@ -94,21 +94,15 @@ pub(crate) fn edge(cx: &EdgeCx<'_, '_>, sink: &mut Sink, from: String, e: &hir::
 }
 
 /// `Deadline.unit`: absent for calendar days, `"court"` for court days,
-/// `"week"`, `"month"`, `"year"`; business days have no engine unit (L6001).
+/// `"business"` for business days, `"week"`, `"month"`, `"year"`.
 fn unit(sink: &mut Sink, unit: DayUnit, span: Option<&Span>) -> Result<Option<String>, ()> {
     match unit {
         DayUnit::Calendar => Ok(None),
         DayUnit::Court => Ok(Some("court".to_owned())),
+        DayUnit::Business => Ok(Some("business".to_owned())),
         DayUnit::Week => Ok(Some("week".to_owned())),
         DayUnit::Month => Ok(Some("month".to_owned())),
         DayUnit::Year => Ok(Some("year".to_owned())),
-        DayUnit::Business => {
-            sink.unsupported(
-                span,
-                "a business-day edge deadline has no litgraph unit (use court days)",
-            );
-            Err(())
-        }
         DayUnit::Hour => {
             sink.unsupported(
                 span,

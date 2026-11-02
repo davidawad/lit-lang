@@ -64,7 +64,7 @@ fn only(pkg: &hir::Package, code: C, needle: &str) {
 }
 
 #[test]
-fn restored_lowering_refusals_keep_their_exact_diagnostic() {
+fn business_day_edge_deadlines_lower_to_the_business_unit() {
     let mut business = example();
     node(&mut business, "respond").edges[2].deadline = Some(hir::EdgeDeadline {
         window: DeadlineWindow::Inline {
@@ -76,13 +76,13 @@ fn restored_lowering_refusals_keep_their_exact_diagnostic() {
         note: None,
         counting: None,
     });
-    assert_eq!(
-        codes(&business),
-        vec![(
-            C::LoweringUnsupported,
-            "a business-day edge deadline has no litgraph unit (use court days)".into()
-        )]
-    );
+    assert!(codes(&business).is_empty());
+    let pack = pack_of(&business);
+    assert!(pack.edges.iter().any(|edge| {
+        edge.deadline
+            .as_ref()
+            .is_some_and(|deadline| deadline.unit.as_deref() == Some("business"))
+    }));
 }
 
 #[test]
@@ -161,7 +161,7 @@ fn edge_values_without_a_lowering() {
         note: None,
         counting: None,
     });
-    only(&p, C::LoweringUnsupported, "business-day edge deadline");
+    assert!(codes(&p).is_empty());
 
     let mut p = example();
     node(&mut p, "respond").edges[2].cost = Some(Authored::Known(Money {
@@ -556,12 +556,12 @@ fn instances_are_checked_against_their_base_pack() {
         if let Declaration::Instance(i) = d {
             i.payoff_transform = Some(literal(hir::Value::Boolean(true)));
             if let Some(patch) = i.patch_edges.values_mut().next() {
-                // A patch lowers as an edge does: business days have no
-                // litgraph unit.
+                // A patch lowers as an edge does: hour windows require a
+                // counting rule and cannot be lowered here.
                 patch.deadline = Some(hir::EdgeDeadline {
                     window: hir::DeadlineWindow::Inline {
                         length: 45,
-                        unit: hir::DayUnit::Business,
+                        unit: hir::DayUnit::Hour,
                     },
                     extendable: None,
                     extension_authority: None,

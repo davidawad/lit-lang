@@ -14,9 +14,15 @@ calendars must be supported by their own cited authority.
 
 ## Business-day lowering and basis
 
-Keep the LW3 refusal for business-day periods and edge deadlines: they have no
-engine lowering and must not be silently counted as court days. Keep an
-explicit source `Hole` as `Hole` when a scenario prior replaces its
+CoS ruling B (dotfiles-b0, 2026-11-02) supersedes the earlier refusal. Cause
+commit `83ec7ab13` (lg-16u7) deliberately added engine `Unit::Business`:
+business-day periods count open days under the rule's calendar. The lowering
+maps business-day edge windows to the engine's `business` unit and business
+clock requests to `Unit::Business`; fixtures pin both the lowering and date
+arithmetic. `just lit-sync` must leave
+`crates/litigate-engine/clock/litigate-core.json` unchanged, preserving its 97
+business periods.
+
+Keep an explicit source `Hole` as `Hole` when a scenario prior replaces its
 probability; the scenario value does not repair a missing source probability.
-These are the restored expectations from the CoS ruling and have dedicated
-fixtures. They are outside the approved `next_day` change.
+The basis fixture pins that behavior.

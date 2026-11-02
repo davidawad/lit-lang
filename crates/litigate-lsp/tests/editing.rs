@@ -102,12 +102,14 @@ async fn a_burst_of_edits_is_checked_once() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 async fn a_newer_change_cancels_the_running_check() {
-    // The whole repository: the check `initialized` starts takes long
-    // enough that the document opened next arrives while it runs.
-    let mut c = Client::repo().await;
+    // A checked worked-example workspace keeps the protocol test bounded;
+    // opening its source supersedes the check started by `initialized`.
+    let root = support::examples_with_holes("editing-cancel");
+    let (mut c, _) = Client::start(&root, json!({})).await;
     let path = "lit/examples/rule12.lit";
-    c.open(path, &read(path)).await;
-    let ds = c.diagnostics(&support::uri(path)).await;
+    let module = std::fs::read_to_string(root.join(path)).unwrap();
+    c.open(path, &module).await;
+    let ds = c.diagnostics(&c.uri(path)).await;
     assert_eq!(codes(&ds), ["L9002", "L9002", "L9002"]);
     let status = c.status().await;
     assert_eq!(status["cancelled"], json!(1), "{status}");
@@ -121,8 +123,9 @@ async fn a_newer_change_cancels_the_running_check() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 async fn queued_refreshes_for_one_generation_share_the_completed_check() {
-    let mut c = Client::repo().await;
-    let uri = support::uri("lit/examples/rule12.lit");
+    let root = support::examples_with_holes("editing-queued");
+    let (mut c, _) = Client::start(&root, json!({})).await;
+    let uri = c.uri("lit/examples/rule12.lit");
     for _ in 0..3 {
         c.notify(
             "textDocument/didSave",

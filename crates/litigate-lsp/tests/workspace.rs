@@ -25,13 +25,15 @@ fn files(host: &mut Host) -> Vec<String> {
 
 #[test]
 fn without_a_client_root_the_root_holds_lit() {
-    let root = support::worked("ws-guess", &[]);
+    let module = support::three_holes(&support::read("lit/examples/rule12.lit"));
+    let root = support::worked("ws-guess", &[("lit/ex/rule12.lit", &module)]);
+    support::pin(&root, &mut support::host(&root));
     let mut host = Host::default();
     let module = root.join("lit/ex/rule12.lit");
     open(
         &mut host,
         &module,
-        &support::read("lit/examples/rule12.lit"),
+        &support::three_holes(&support::read("lit/examples/rule12.lit")),
     );
     let analysis = host.analyze();
     assert_eq!(analysis.root, root);
@@ -45,7 +47,12 @@ fn without_a_client_root_the_root_holds_lit() {
         .iter()
         .map(|d| d.code.as_str())
         .collect();
-    assert_eq!(codes, ["L9002", "L9002", "L9002"]);
+    assert_eq!(
+        codes,
+        ["L9002", "L9002", "L9002"],
+        "{:#?}",
+        analysis.checked.diagnostics
+    );
 }
 
 #[test]
@@ -112,17 +119,25 @@ fn the_analysis_reads_any_file_under_the_root() {
 #[test]
 fn packages_are_found_by_pack_id_or_name() {
     // `lit/core` is the package whose pack id is not its name.
-    let core: Vec<(String, String)> = std::fs::read_dir(support::repo().join("lit/core"))
-        .unwrap()
-        .map(|e| e.unwrap().path())
-        .map(|p| {
-            let name = p.file_name().unwrap().to_string_lossy().into_owned();
-            (
-                format!("lit/core/{name}"),
-                std::fs::read_to_string(p).unwrap(),
-            )
-        })
-        .collect();
+    fn files(root: &Path, dir: &Path, out: &mut Vec<(String, String)>) {
+        for entry in std::fs::read_dir(dir).unwrap() {
+            let path = entry.unwrap().path();
+            if path.is_dir() {
+                files(root, &path, out);
+            } else {
+                out.push((
+                    path.strip_prefix(root)
+                        .unwrap()
+                        .to_string_lossy()
+                        .into_owned(),
+                    std::fs::read_to_string(&path).unwrap(),
+                ));
+            }
+        }
+    }
+    let package = support::repo().join("lit/core");
+    let mut core = Vec::new();
+    files(&package, &package, &mut core);
     let files: Vec<(&str, &str)> = core.iter().map(|(p, t)| (p.as_str(), t.as_str())).collect();
     let mut host = support::host(&support::workspace("ws-core", &files));
     let a = host.analyze();

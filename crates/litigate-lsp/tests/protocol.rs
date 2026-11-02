@@ -45,72 +45,45 @@ async fn advertises_every_feature() {
 
 #[tokio::test]
 async fn publishes_the_check_diagnostics_of_the_worked_example() {
-    let mut c = Client::repo().await;
+    let root = support::examples_with_holes("protocol-publish");
+    let (mut c, _) = Client::start(&root, json!({})).await;
     // SPEC §12: under `dev`, L9002 for the three holes; both edges are named.
-    let ds = c.diagnostics(&uri(LIT)).await;
+    let ds = c.diagnostics(&c.uri(LIT)).await;
     assert_eq!(codes(&ds), ["L9002", "L9002", "L9002"]);
     insta::assert_json_snapshot!("worked_example_dev", shape(&ds));
     let status = c.status().await;
     assert_eq!(
         status["files"],
-        json!(sources(&["lit", "cases"])),
-        "the analysis is `litigate check lit cases`"
+        json!([
+            "cases/examples/acme.case",
+            "lit/examples/Lit.toml",
+            "lit/examples/rule12.lit"
+        ]),
+        "the analysis is the worked example workspace"
     );
-}
-
-/// Every `Lit.toml`, `.lit` and `.case` file under `roots`, repo-relative
-/// and sorted: what `litigate check` analyses (`lit/core` included).
-fn sources(roots: &[&str]) -> Vec<String> {
-    fn walk(dir: &std::path::Path, out: &mut Vec<std::path::PathBuf>) {
-        for entry in std::fs::read_dir(dir).unwrap() {
-            let path = entry.unwrap().path();
-            if path.is_dir() {
-                walk(&path, out);
-            } else {
-                out.push(path);
-            }
-        }
-    }
-    let repo = support::repo();
-    let mut files = Vec::new();
-    for root in roots {
-        walk(&repo.join(root), &mut files);
-    }
-    let mut out: Vec<String> = files
-        .iter()
-        .filter(|p| {
-            p.file_name().is_some_and(|n| n == "Lit.toml")
-                || p.extension().is_some_and(|e| e == "lit" || e == "case")
-        })
-        .map(|p| {
-            p.strip_prefix(&repo)
-                .unwrap()
-                .to_string_lossy()
-                .into_owned()
-        })
-        .collect();
-    out.sort();
-    out
 }
 
 #[tokio::test]
 async fn strict_profile_fails_each_hole() {
-    let (mut c, _) = Client::start(
-        &support::examples("protocol-strict", &[]),
-        json!({"profile": "strict"}),
-    )
-    .await;
+    let root = support::examples_with_holes("protocol-strict");
+    let (mut c, _) = Client::start(&root, json!({"profile": "strict"})).await;
     let ds = c.diagnostics(&c.uri(LIT)).await;
     let errors: Vec<&Value> = ds.iter().filter(|d| d["severity"] == 1).collect();
-    assert_eq!(codes(&ds).iter().filter(|c| *c == "L5002").count(), 3);
+    assert_eq!(
+        codes(&ds).iter().filter(|c| *c == "L5002").count(),
+        3,
+        "{ds:#?}"
+    );
     assert!(errors.len() >= 3);
 }
 
 #[tokio::test]
 async fn edits_recheck_incrementally_over_one_database() {
-    let mut c = Client::examples("protocol-edits", &[]).await;
-    let text = read(LIT);
-    assert_eq!(c.diagnostics(&c.uri(LIT)).await.len(), 3);
+    let root = support::examples_with_holes("protocol-edits");
+    let (mut c, _) = Client::start(&root, json!({})).await;
+    let text = std::fs::read_to_string(root.join(LIT)).unwrap();
+    let initial = c.diagnostics(&c.uri(LIT)).await;
+    assert_eq!(initial.len(), 3, "{initial:#?}");
     c.open(LIT, &text).await;
     // `p 1/10` -> `p 2/10`: the fact's distribution no longer sums to one.
     let range = json!({"start": at(&text, "1/10", 0, 0), "end": at(&text, "1/10", 0, 1)});

@@ -6,6 +6,7 @@
 use crate::analysis::Analysis;
 use crate::convert;
 use litigate_cli::matter::Scheduled;
+use litigate_sema::hir::{DayUnit, Declaration};
 use litigate_syntax::{parse, FileKind, SyntaxKind as K, SyntaxNode, TextSize};
 use std::fmt::Write as _;
 use tower_lsp::lsp_types::{
@@ -35,8 +36,13 @@ fn event_end(root: &SyntaxNode, date: &str, call: &str) -> Option<TextSize> {
 
 /// The label of one scheduled deadline, with what the clock did: the
 /// schedule's own versions and count, never a recount.
-fn label(s: &Scheduled) -> String {
+fn label(s: &Scheduled, business: bool) -> String {
     let (_, local) = s.deadline.split_once("::").unwrap_or(("", &s.deadline));
+    if business {
+        return format!(
+            "// {local} due unknown: `{local}` counts business days, which have no engine lowering"
+        );
+    }
     let Some(due) = &s.due else {
         // The reason's head ("notice due date not recorded"); the tooltip
         // has it whole.
@@ -57,7 +63,13 @@ fn label(s: &Scheduled) -> String {
 
 /// The hover of one scheduled deadline: its count, or why its due date
 /// is unknown.
-fn tooltip(s: &Scheduled) -> String {
+fn tooltip(s: &Scheduled, business: bool) -> String {
+    if business {
+        return format!(
+            "`{}` triggered by `{}` on {}: the due date is unknown: `{}` counts business days, which have no engine lowering",
+            s.deadline, s.trigger, s.trigger_date, s.deadline
+        );
+    }
     if let Some(why) = &s.unknown {
         return format!(
             "`{}` triggered by `{}` on {}: the due date is unknown: {why}",
@@ -78,6 +90,20 @@ fn tooltip(s: &Scheduled) -> String {
     )
 }
 
+/// Whether the scheduled deadline's period is in business days. The engine
+/// clock does not lower this unit for the LSP's legal due-date hint.
+fn business_days(analysis: &Analysis, deadline: &str) -> bool {
+    let (pack_id, local) = deadline.split_once("::").unwrap_or(("", deadline));
+    analysis
+        .hir_by_key(pack_id)
+        .into_iter()
+        .flat_map(|pkg| pkg.modules.iter())
+        .flat_map(|module| module.declarations.iter())
+        .any(|decl| {
+            matches!(decl, Declaration::Deadline(d) if d.meta.id == local && d.unit == DayUnit::Business)
+        })
+}
+
 /// Deadline hints for the matter at `file` within `range`.
 #[must_use]
 pub fn hints(analysis: &Analysis, file: &str, range: Range) -> Vec<InlayHint> {
@@ -90,14 +116,15 @@ pub fn hints(analysis: &Analysis, file: &str, range: Range) -> Vec<InlayHint> {
         .filter_map(|s| {
             let at = event_end(&root, &s.trigger_date, &s.trigger)?;
             let position = convert::position(&text, usize::from(at));
+            let business = business_days(analysis, &s.deadline);
             convert::touches(&range, position).then(|| InlayHint {
                 position,
-                label: InlayHintLabel::String(label(s)),
+                label: InlayHintLabel::String(label(s, business)),
                 kind: None::<InlayHintKind>,
                 text_edits: None,
                 tooltip: Some(InlayHintTooltip::MarkupContent(MarkupContent {
                     kind: MarkupKind::Markdown,
-                    value: tooltip(s),
+                    value: tooltip(s, business),
                 })),
                 padding_left: Some(true),
                 padding_right: None,

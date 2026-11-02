@@ -331,6 +331,48 @@ pub fn examples(name: &str, also: &[&str]) -> PathBuf {
     workspace(name, &files)
 }
 
+/// The worked example with three deliberate holes, pinning the resulting
+/// source so protocol tests can exercise dev and strict diagnostics without
+/// relying on holes in the current authored example.
+pub fn examples_with_holes(name: &str) -> PathBuf {
+    let root = examples(name, &[]);
+    let module_path = root.join("lit/examples/rule12.lit");
+    let module = std::fs::read_to_string(&module_path).unwrap();
+    let module = three_holes(&module);
+    std::fs::write(module_path, module).unwrap();
+
+    let mut host = host(&root);
+    let session = &host.analyze().checked.session;
+    std::fs::write(
+        root.join("cases/examples/Lit.lock"),
+        session.matter_lock(&session.cases).render(),
+    )
+    .unwrap();
+    let (_, analysis) = host.run(&|| false);
+    assert_eq!(
+        analysis
+            .diagnostics
+            .get("lit/examples/rule12.lit")
+            .map(|ds| ds.iter().map(|d| d.code.as_str()).collect::<Vec<_>>()),
+        Some(vec!["L9002", "L9002", "L9002"])
+    );
+    root
+}
+
+/// Add three explicit unknowns to the worked example's authored inputs.
+pub fn three_holes(module: &str) -> String {
+    module
+        .replace(
+            "granted \"Motion granted\" -> dismissed p 1/2",
+            "granted \"Motion granted\" -> dismissed p ?(\"no calibration yet\")",
+        )
+        .replace(
+            "denied \"Motion denied\" -> answered p 1/2",
+            "denied \"Motion denied\" -> answered p ?",
+        )
+        .replace("payoff 0.usd }", "payoff ? }")
+}
+
 /// The worked example (SPEC §12) as `lit/ex` and `cases/acme.case`, plus
 /// `extra` files.
 pub fn worked(name: &str, extra: &[(&str, &str)]) -> PathBuf {

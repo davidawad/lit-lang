@@ -33,8 +33,6 @@ retries = 0
 test-threads = "num-cpus"
 # Gate quarantine: nightly still runs every test. No new tests enter quarantine without CoS OK.
 # lg-zmqc.28 expires=2026-11-08 | litigate-cli::corpus import_check_run_matches_litgraph
-# lg-zmqc.25 expires=2026-11-08 | litigate-editors::helix and_or_are_highlighted_as_keywords_only_in_guard_operations
-# lg-zmqc.25 expires=2026-11-08 | litigate-editors::helix every_helix_query_compiles_and_runs_over_the_corpus
 # lg-zmqc.28 expires=2026-11-08 | litigate-import::lower_roundtrip import_then_lower_is_semantically_equal
 # lg-zmqc.28 expires=2026-11-08 | litigate-import::roundtrip every_output_parses_cleanly_and_is_canonical
 # lg-zmqc.28 expires=2026-11-08 | litigate-import::roundtrip every_pack_round_trips
@@ -84,8 +82,6 @@ not (
       | (binary(in_memory) & test(=ops_compile_the_matter_or_package_in_memory))
     ))
   | (package(litigate-cli) & binary(corpus) & test(=import_check_run_matches_litgraph))
-  | (package(litigate-editors) & binary(helix) & test(=and_or_are_highlighted_as_keywords_only_in_guard_operations))
-  | (package(litigate-editors) & binary(helix) & test(=every_helix_query_compiles_and_runs_over_the_corpus))
   | (package(litigate-import) & binary(lower_roundtrip) & test(=import_then_lower_is_semantically_equal))
   | (package(litigate-import) & binary(roundtrip) & test(=every_output_parses_cleanly_and_is_canonical))
   | (package(litigate-import) & binary(roundtrip) & test(=every_pack_round_trips))

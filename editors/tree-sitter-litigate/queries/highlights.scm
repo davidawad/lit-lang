@@ -136,6 +136,7 @@
   (money_entry key: (identifier) @property)
   (record_field key: (identifier) @property)
   (probability_entry key: (identifier) @property)
+  (case_probability_entry edge: (ref (identifier) @property))
   (role_entry key: (identifier) @property)
   (service_entry method: (identifier) @constant)
 ]

@@ -34,6 +34,7 @@
   (facts_block)
   (stakes_block)
   (beliefs_block)
+  (opponents_block)
   (count_map)
   (num_record)
   (money_record)

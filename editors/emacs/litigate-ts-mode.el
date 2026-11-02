@@ -233,7 +233,7 @@ is saved as it is, with the parse error in the echo area."
     "calendar_body" "transition_body" "test_body" "source_body"
     "limit_body" "exclusion_list"
     "parties_block" "events_block" "facts_block" "stakes_block"
-    "beliefs_block" "count_map" "num_record" "money_record"
+    "beliefs_block" "opponents_block" "count_map" "num_record" "money_record"
     "id_list" "import_list" "record_expression"
     "list_expression" "arguments" "match_expression")
   "Node types whose contents indent one level (`@indent.begin').")

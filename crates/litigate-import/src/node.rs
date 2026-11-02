@@ -475,7 +475,6 @@ fn plurality_actor<'a>(edges: &[(usize, &'a RawEdge)]) -> &'a str {
         .map_or("either", |(actor, _)| actor)
 }
 
-
 #[cfg(test)]
 mod edition_tests {
     use super::without_rule_edition;

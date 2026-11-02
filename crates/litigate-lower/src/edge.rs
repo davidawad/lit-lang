@@ -110,7 +110,10 @@ fn unit(sink: &mut Sink, unit: DayUnit, span: Option<&Span>) -> Result<Option<St
             Err(())
         }
         DayUnit::Hour => {
-            sink.unsupported(span, "hour deadlines are lowered only through counting rules");
+            sink.unsupported(
+                span,
+                "hour deadlines are lowered only through counting rules",
+            );
             Err(())
         }
     }

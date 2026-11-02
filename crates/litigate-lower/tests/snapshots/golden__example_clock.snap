@@ -1,6 +1,5 @@
 ---
 source: crates/litigate-lower/tests/golden.rs
-assertion_line: 40
 expression: render(clock).unwrap_or_default()
 ---
 {
@@ -106,6 +105,11 @@ expression: render(clock).unwrap_or_default()
               "count": "business",
               "text": "FRCP 6(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
               "unit": "court"
+            },
+            {
+              "count": "business",
+              "text": "FRCP 6(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "business"
             }
           ]
         },
@@ -175,12 +179,12 @@ expression: render(clock).unwrap_or_default()
     "knownAt": "2025-01-01",
     "pins": [
       {
-        "digest": "sha256:8e77c09e7d93d3e29e427a29dd359bebd7c8fcb03faa5e9aaf8088c07de24001",
+        "digest": "sha256:e9ae443b6514ddb36cb552380c1e2aa0c2d166be857b2a106db26018e7585bbd",
         "name": "frcp-rule12-example",
         "version": "0.1.0"
       }
     ],
-    "worldDigest": "sha256:5aaeba5d2c6c4e6f53c48675712a6af43c8b735187322e617c713abae45c385f"
+    "worldDigest": "sha256:413f3933ef7e00efd8b0a67f6c8ac572d3f57a9d7d5495ac01c3c1794abd438d"
   },
   "schemaVersion": 4
 }

@@ -67,7 +67,7 @@ fn only(pkg: &hir::Package, code: C, needle: &str) {
 fn clock_shapes_the_engine_cannot_run() {
     let mut p = example();
     counting(&mut p).roll_on = vec![RollOn::Weekend];
-    only(&p, C::LoweringUnsupported, "`weekend` and `legal_holiday`");
+    only(&p, C::LoweringUnsupported, "must list both `weekend`");
 
     let mut p = example();
     counting(&mut p).exclude_trigger_day = false;
@@ -103,7 +103,13 @@ fn clock_shapes_the_engine_cannot_run() {
             c.holidays[0].observed = Some(Observance::NextDay);
         }
     }
-    only(&p, C::LoweringUnsupported, "next_day");
+    let lowered = lower(&p, &Options::default())
+        .unwrap_or_else(|d| panic!("next-day observance lowers: {d:#?}"));
+    let (clock, _) = lowered.clock.unwrap_or_else(|| panic!("no clock fragment"));
+    assert_eq!(
+        clock.calendars[0].holidays[0].observed,
+        litigate_engine::clock::calendar::Observance::NextDay
+    );
 
     let mut p = example();
     p.manifest.counting = Some("rcfc6".into());
@@ -147,7 +153,17 @@ fn edge_values_without_a_lowering() {
         note: None,
         counting: None,
     });
-    only(&p, C::LoweringUnsupported, "business-day");
+    let lowered = lower(&p, &Options::default())
+        .unwrap_or_else(|d| panic!("business-day windows lower: {d:#?}"));
+    let Document::Pack(pack) = lowered.document else {
+        panic!("expected a pack")
+    };
+    assert!(pack.edges.iter().any(|edge| {
+        edge.deadline
+            .as_ref()
+            .and_then(|deadline| deadline.unit.as_deref())
+            == Some("business")
+    }));
 
     let mut p = example();
     node(&mut p, "respond").edges[2].cost = Some(Authored::Known(Money {
@@ -558,15 +574,21 @@ fn instances_are_checked_against_their_base_pack() {
         }
     }
     let refs: Vec<&hir::Package> = all.iter().collect();
-    let found: Vec<C> = Lowerer::new(&refs)
+    let found: Vec<_> = Lowerer::new(&refs)
         .package(&bad, &Options::default())
         .err()
         .unwrap_or_default()
         .iter()
-        .map(|d| d.code)
+        .map(|d| (d.code, d.message.clone()))
         .collect();
-    assert!(found.contains(&C::InvalidEngineExpression), "{found:?}");
-    assert!(found.contains(&C::LoweringUnsupported), "{found:?}");
+    assert!(
+        found.iter().any(|(c, _)| *c == C::InvalidEngineExpression),
+        "{found:?}"
+    );
+    assert!(
+        found.iter().all(|(c, _)| *c == C::InvalidEngineExpression),
+        "business-day instance patches lower; only the deliberately invalid transforms fail: {found:?}"
+    );
     // Without its base packs loaded, a patching instance cannot be checked.
     let alone = Lowerer::new(&[]).package(&bad, &Options::default());
     assert!(alone.is_err());

@@ -128,12 +128,10 @@ fn units_and_directions() {
     r.unit = DayUnit::Court;
     let court = clock.due(&r);
     assert_eq!(court.as_deref(), Ok("2025-03-10"));
-    // LW3: business days are refused here as in edge lowering and the CLI,
-    // never counted as court days.
+    // Business days use the shared clock's weekdays and holidays, distinct
+    // from court days where a court calendar may close additional dates.
     r.unit = DayUnit::Business;
-    assert!(clock
-        .due(&r)
-        .is_err_and(|e| e.contains("business days has no engine lowering")));
+    assert_eq!(clock.due(&r).as_deref(), Ok("2025-03-10"));
 }
 
 #[test]

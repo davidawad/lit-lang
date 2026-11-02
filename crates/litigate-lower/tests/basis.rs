@@ -115,9 +115,9 @@ fn scenario_basis(pkg: &hir::Package, case: &hir::Case) -> Vec<BasisLabel> {
 #[test]
 fn a_scenario_joins_every_number_it_rests_on() {
     let at = |basis| vec![label("/scenario", basis, None)];
-    // The worked example leaves holes: the motion's odds and a payoff.
+    // The worked example's unauthored estimates join to Estimate.
     let mut pkg = example();
-    assert_eq!(scenario_basis(&pkg, &acme()), at(Basis::Hole));
+    assert_eq!(scenario_basis(&pkg, &acme()), at(Basis::Estimate));
     // Filled, every unlabelled number is an estimate.
     let half = Authored::Known(Rational {
         numerator: 1,
@@ -211,9 +211,9 @@ fn a_cost_or_a_duration_alone_is_a_number_the_scenario_rests_on() {
         mode: Rational::integer(7),
         max: None,
     });
-    // The worked example's holes still make the join a hole.
+    // The worked example's unlabelled numbers still make the join Estimate.
     assert_eq!(
         scenario_basis(&pkg, &acme()),
-        vec![label("/scenario", Basis::Hole, None)]
+        vec![label("/scenario", Basis::Estimate, None)]
     );
 }

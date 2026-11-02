@@ -360,18 +360,10 @@ buffer that does not parse is left unchanged and the error is signalled."
                 (unless (and (= (buffer-size) (buffer-size output))
                              (zerop (compare-buffer-substrings
                                      source nil nil output nil nil)))
-                  ;; `replace-buffer-contents' is obsolete as of Emacs 31.
-                  ;; Preserve markers (including point and mark) while
-                  ;; replacing the contents with the formatter's output.
-                  (let ((inhibit-read-only t)
-                        (old-point (point))
-                        (old-mark (mark t)))
-                    (atomic-change-group
-                      (erase-buffer)
-                      (insert-buffer-substring output))
-                    (goto-char (min old-point (point-max)))
-                    (when old-mark
-                      (set-mark (min old-mark (point-max)))))))))
+                  ;; `replace-buffer-contents' is obsolete as of Emacs 31;
+                  ;; this replacement primitive preserves markers and point.
+                  (let ((inhibit-read-only t))
+                    (replace-region-contents (point-min) (point-max) output))))))
         (kill-buffer output)
         (delete-file errors)))))
 

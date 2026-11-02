@@ -133,9 +133,9 @@ Only patterns written as a bracketed list followed by @CAPTURE count."
 
 (ert-deftest litigate-format-buffer-replaces-output-and-preserves-markers ()
   (with-temp-buffer
-    (insert "source text")
-    (goto-char 8)
-    (let ((marker (copy-marker 5))
+    (insert "before old after")
+    (goto-char 14)
+    (let ((marker (copy-marker 13))
           (output (generate-new-buffer " *litigate-test-output*"))
           (litigate-format-command '("formatter")))
       (unwind-protect
@@ -143,12 +143,13 @@ Only patterns written as a bracketed list followed by @CAPTURE count."
             (cl-letf (((symbol-function 'call-process-region)
                        (lambda (_start _end _program _delete destination _display &rest _args)
                          (with-current-buffer (car destination)
-                           (insert "formatted text"))
+                           (insert "before new after"))
                          0)))
               (let ((litigate-format-command '("formatter")))
                 (litigate-format-buffer)))
-            (should (equal (buffer-string) "formatted text"))
-            (should (= (point) 8)))
+            (should (equal (buffer-string) "before new after"))
+            (should (= (point) 14))
+            (should (= (marker-position marker) 13)))
         (kill-buffer output)
         (set-marker marker nil)))))
 

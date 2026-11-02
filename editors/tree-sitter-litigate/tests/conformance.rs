@@ -129,7 +129,7 @@ fn worked_examples_have_the_expected_roots() {
 /// `Rule` opens a rule's index (SPEC §3.1).
 fn grammar_keywords() -> BTreeSet<String> {
     let language: tree_sitter::Language = tree_sitter_litigate::LANGUAGE.into();
-    let aliased = ["unit", "unvalued", "discretion"];
+    let aliased = ["unit", "unvalued", "discretion", "repealed"];
     (0..language.node_kind_count())
         .filter_map(|id| u16::try_from(id).ok())
         .filter(|&id| !language.node_kind_is_named(id) && language.node_kind_is_visible(id))

@@ -87,17 +87,10 @@ test-threads = "num-cpus"
 # lg-zmqc.30 expires=2026-11-08 | litigate-sema::cov_build_obligation obligation_options_and_effects_lower
 # lg-zmqc.30 expires=2026-11-08 | litigate-sema::filing cfr_42_24_limits_an_ipr_petition_to_14000_words
 # lg-zmqc.30 expires=2026-11-08 | litigate-sema::fixtures worked_example_checks_and_lowers_to_hir
-# lg-zmqc.29 expires=2026-11-08 | litigate-syntax::recovery_case a_second_case_header_is_skipped
-# lg-zmqc.29 expires=2026-11-08 | litigate-syntax::recovery_case version_requirements
-# lg-zmqc.29 expires=2026-11-08 | litigate-syntax::recovery_decls file_headers_and_simple_items
-# lg-zmqc.29 expires=2026-11-08 | litigate-syntax::snapshots cst_of_every_example
-# lg-zmqc.29 expires=2026-11-08 | litigate-syntax::snapshots diagnostics_of_broken_inputs
 # lg-zmqc.30 expires=2026-11-08 | litigate-verify::example dev_reports_the_three_holes_and_accepts
 # lg-zmqc.30 expires=2026-11-08 | litigate-verify::example strict_rejects_each_hole
 # lg-zmqc.30 expires=2026-11-08 | litigate-verify::example the_report_is_embedded_in_the_litigatable
 # lg-zmqc.30 expires=2026-11-08 | litigate-wasm tests::engine_requests_run_over_the_compiled_embedded_sources
-# lg-zmqc.29 expires=2026-11-08 | tree-sitter-litigate tests::every_query_compiles
-# lg-zmqc.29 expires=2026-11-08 | tree-sitter-litigate::conformance keywords_match_the_compiler
 default-filter = """
 not (
     (package(litgraph-packs) & binary(merge_safe))
@@ -168,17 +161,10 @@ not (
   | (package(litigate-sema) & binary(cov_build_obligation) & test(=obligation_options_and_effects_lower))
   | (package(litigate-sema) & binary(filing) & test(=cfr_42_24_limits_an_ipr_petition_to_14000_words))
   | (package(litigate-sema) & binary(fixtures) & test(=worked_example_checks_and_lowers_to_hir))
-  | (package(litigate-syntax) & binary(recovery_case) & test(=a_second_case_header_is_skipped))
-  | (package(litigate-syntax) & binary(recovery_case) & test(=version_requirements))
-  | (package(litigate-syntax) & binary(recovery_decls) & test(=file_headers_and_simple_items))
-  | (package(litigate-syntax) & binary(snapshots) & test(=cst_of_every_example))
-  | (package(litigate-syntax) & binary(snapshots) & test(=diagnostics_of_broken_inputs))
   | (package(litigate-verify) & binary(example) & test(=dev_reports_the_three_holes_and_accepts))
   | (package(litigate-verify) & binary(example) & test(=strict_rejects_each_hole))
   | (package(litigate-verify) & binary(example) & test(=the_report_is_embedded_in_the_litigatable))
   | (package(litigate-wasm) & test(=tests::engine_requests_run_over_the_compiled_embedded_sources))
-  | (package(tree-sitter-litigate) & test(=tests::every_query_compiles))
-  | (package(tree-sitter-litigate) & binary(conformance) & test(=keywords_match_the_compiler))
 )
 """
 

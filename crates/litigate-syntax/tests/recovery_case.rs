@@ -6,7 +6,7 @@ use support::diag::check_all;
 
 const ITEMS: &str = "one of `case`, `forum`, `governing_law`, `uses`, `as_of`, `known_at`, `summary`, `notes`, `source`, \
                      `start`, `perspective`, `parties`, `events`, `facts`, `stakes`, `beliefs`, \
-                     or `analysis`";
+                     `opponents`, or `analysis`";
 
 fn case(uses: &str, rest: &str) -> String {
     format!("case c\nuses p {uses}\nas_of 2025-01-01\nsummary \"s\"\n{rest}")

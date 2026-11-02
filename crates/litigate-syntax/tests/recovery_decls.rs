@@ -35,7 +35,7 @@ const FILE_HEADERS_AND_SIMPLE_ITEMS: Cases = &[
     (
         "module m\nlimit b\n",
         &["L0001 3:1-3:1 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, \
-           `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, \
+           `commenced`, `repealed`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, \
            `interprets`, `delegable`, `cite`, or `{`, found end of file"],
     ),
     (

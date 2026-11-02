@@ -1,3 +1,9 @@
-# Hawaii holidays
+# Legal-holiday statute provenance (hi-holidays)
 
-`hrs-8-1.txt` is the text of Hawai‘i Revised Statutes §§ 8-1 and 8-2 from the official 2017 Hawaii Revised Statutes, Chapter 8 PDF published by the Hawai‘i State Legislature: <https://data.capitol.hawaii.gov/sessions/session2017/HRS-Chapter-PDF%27s/HRS_0008.pdf>. Retrieved 2026-11-02. The § 8-1 amendment history ends with L 2001, c 65, § 1; § 8-2's history ends with L 1976, c 54, § 1. The legislature's 2025 compilation was also checked and § 8-1 retains this text.
+### `hi-holidays/hrs-8-1.txt` — HRS § 8-1 (Hawaii holidays designated)
+
+- Source: https://data.capitol.hawaii.gov/hrscurrent/Vol01_Ch0001-0042F/HRS0008/HRS_0008-0001.htm (official Hawaii State Legislature current statutes page).
+- Edition: the served section's amendment history ends L 2001, c 65, § 1.
+- Retrieved 2026-11-02 on carbon by PM. Tags stripped, entities decoded, whitespace collapsed; the text of § 8-1 is kept under `## HRS § 8-1`. The retained § 8-2 text is from the 2017 Hawaii Revised Statutes Chapter 8 PDF, under its own heading.
+- Extract sha256 0182bf1156deff0b3ca8e2aadbfb5bff624e56ee05c4e79340bb8f90bbf0cc56.
+- Original: `hi-holidays/original/hrs-8-1.htm` as served (sha256 35200fdd35e141184540e15f4f1b9177a1ae6b4cc55a8ce30b7402daf3d800bf). Served at https://data.capitol.hawaii.gov/hrscurrent/Vol01_Ch0001-0042F/HRS0008/HRS_0008-0001.htm.

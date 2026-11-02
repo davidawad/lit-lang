@@ -335,6 +335,7 @@ pub fn links(text: &str) -> Value {
                     "probabilities",
                     "roles",
                     "payoff_transform",
+                    "stake",
                 ] {
                     take(&mut f, key, key, &mut instance);
                 }

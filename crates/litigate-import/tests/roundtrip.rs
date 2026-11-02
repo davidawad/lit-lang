@@ -93,6 +93,21 @@ fn links_round_trip() {
 }
 
 #[test]
+fn instance_stake_is_read_back() {
+    let links = support::reader::links(
+        "module links\n\
+         instance cafc @ cofc-gov {\n\
+           pack cofc-gov\n\
+           stake 1000000.usd\n\
+         }\n",
+    );
+    assert_eq!(
+        links["instances"]["cafc@cofc-gov"]["stake"],
+        serde_json::json!(1_000_000.0)
+    );
+}
+
+#[test]
 fn every_scenario_round_trips() {
     let inputs = corpus();
     let files = import_ok(&inputs);

@@ -672,6 +672,7 @@ run() {
   stage fmt-check cargo fmt --all -- --check
   stage typos typos
   stage workflow-command-lint scripts/ci-workflow-command-lint-test
+  stage workflow-command-lint-repo python3 scripts/ci-workflow-command-lint
   stage provenance provenance "$base"
   stage self-test bash -c "'$self' self-test && '$(dirname "$self")/cov-gate' self-test"
   stage quarantine check_all_quarantine

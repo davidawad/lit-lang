@@ -19,4 +19,15 @@ if python3 "$tmp/scripts/ci-workflow-command-lint" 2>"$tmp/error"; then
   exit 1
 fi
 grep -q "command 'br' is not available" "$tmp/error"
+
+# Regression from the workflow/script pair that originally exposed nested
+# substitutions and shell control/test syntax. Assert exactly one diagnostic.
+cp "$root/.github/workflows/auto-release.yml" "$tmp/.github/workflows/"
+mkdir -p "$tmp/scripts/release"
+cp "$root/scripts/release/check-nightly-red.sh" "$tmp/scripts/release/"
+if python3 "$tmp/scripts/ci-workflow-command-lint" 2>"$tmp/error"; then
+  echo 'workflow command lint test: missing br unexpectedly passed' >&2
+  exit 1
+fi
+test "$(cat "$tmp/error")" = "fixture.yml: command 'br' is not available on this runner"
 echo 'workflow command lint test: pass'

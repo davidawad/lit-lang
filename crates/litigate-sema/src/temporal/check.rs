@@ -50,10 +50,11 @@ fn state_counting_rule(world: &World<'_>, loc: &dyn Locate, pack: usize) -> Vec<
     let Some(base) = variant else {
         return Vec::new();
     };
-    let has_forward_calendar = world.decls.iter().any(|d| {
-        d.pack == pack
+    let selected_key = world.target(&world.packs[pack].pack, selected).key;
+    let has_forward_calendar = world.decls.iter().enumerate().any(|(i, d)| {
+        world.key(i) == selected_key
             && matches!(d.decl, crate::hir::Declaration::Counting(c)
-                if c.meta.id == selected && c.forward_calendar.is_some())
+                if c.forward_calendar.is_some())
     });
     if !has_forward_calendar {
         return Vec::new();
@@ -66,7 +67,7 @@ fn state_counting_rule(world: &World<'_>, loc: &dyn Locate, pack: usize) -> Vec<
         let target = world
             .target(&world.packs[pack].pack, &deadline.counting)
             .key;
-        if target.pack != world.packs[pack].pack || target.name != *base {
+        if target.name != *base {
             continue;
         }
         out.push(error(

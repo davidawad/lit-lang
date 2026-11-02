@@ -36,6 +36,24 @@ fn state_counting_variant_is_required_for_local_deadlines() {
 }
 
 #[test]
+fn imported_core_state_counting_variant_checks_bare_imported_base() {
+    let state = "module core.states.georgia\ncounting frbp9006-georgia effective [2025-01-01, ..) { holidays state-cal, forward_holidays state-cal cite \"FRBP 9006(a)(6)(C)\" }\ncalendar state-cal { new-year: fixed(1, 1) effective [2025-01-01, ..) }\n";
+    let district = "module main\nimport core.frbp9006.{ frbp9006 }\nstart s\nevent Served()\nstate s: \"S\" { _ \"go\" -> t }\nterminal t: \"T\"\ndeadline local: 30.days after Served() counted_by frbp9006\n";
+    let mut bad = legal::pkg_counting("demo", "frbp9006-georgia", district);
+    bad.files.extend(legal::pkg("core", "LocalRule", "2025-01-01", &[], &[("states/georgia.lit", state), ("frbp9006.lit", "module core.frbp9006\ncounting frbp9006 effective [2025-01-01, ..) { holidays base-cal }\ncalendar base-cal { new-year: fixed(1, 1) effective [2025-01-01, ..) }\n")]).files);
+    let (db, ws) = workspace(&[bad]);
+    let diagnostics = render(&db, ws);
+    assert!(diagnostics.iter().any(|d| d.contains("L3011") && d.contains("local")), "{diagnostics:#?}");
+
+    let passing = district.replace("counted_by frbp9006", "counted_by frbp9006-georgia");
+    let mut good = legal::pkg_counting("demo", "frbp9006-georgia", &passing);
+    good.files.extend(legal::pkg("core", "LocalRule", "2025-01-01", &[], &[("states/georgia.lit", state), ("frbp9006.lit", "module core.frbp9006\ncounting frbp9006 effective [2025-01-01, ..) { holidays base-cal }\ncalendar base-cal { new-year: fixed(1, 1) effective [2025-01-01, ..) }\n")]).files);
+    let (db, ws) = workspace(&[good]);
+    let diagnostics = render(&db, ws);
+    assert!(!diagnostics.iter().any(|d| d.contains("L3011")), "{diagnostics:#?}");
+}
+
+#[test]
 fn version_sets_are_disjoint_and_cover_their_lifetime() {
     let succession =
         v(P20, "effective [2009-12-01, 2016-12-01)") + &v(P21, "effective [2016-12-01, ..)");

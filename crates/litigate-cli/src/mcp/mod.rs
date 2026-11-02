@@ -410,9 +410,17 @@ mod tests {
         let _ = std::fs::remove_file(&broken);
         assert_eq!(unchecked["result"]["isError"], json!(true), "{unchecked}");
         let envelope = &unchecked["result"]["structuredContent"];
-        assert_eq!(envelope["ok"], json!(true), "{unchecked}");
+        assert_eq!(envelope["ok"], json!(false), "{unchecked}");
         assert_eq!(envelope["result"]["ok"], json!(false), "{unchecked}");
         assert_eq!(envelope["result"]["op"], json!("chain"), "{unchecked}");
+        assert!(
+            envelope["diagnostics"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|diagnostic| diagnostic["code"] == "L0001"),
+            "{unchecked}"
+        );
         assert_eq!(
             envelope["result"]["error"]["code"],
             json!("invalid"),

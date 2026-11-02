@@ -21,6 +21,10 @@ def test_counts_and_flagged_summary_reconcile():
     flagged_rows = [line for line in authored.splitlines() if "| FLAG:" in line]
     assert len(summary_rows) == len(flagged_rows) == 17
     assert "UNVERIFIED" not in report
+    assert "none: not defined in searched source text" in report
+    assert "N.D. Ga. BLR 9001-1(f)" in report
+    assert "D. Nev. LCR 32-1(e)" in report
+    assert "audit incomplete" not in report
 
 
 def test_generation_is_reproducible():

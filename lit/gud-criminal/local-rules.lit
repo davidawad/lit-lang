@@ -258,6 +258,12 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by 
   forum frcrimp
 }
 
+test "proposed summons: 2 business days after the trigger" cite "D. Guam CRLR 4"
+{
+  given SummonsRequestGranted() on 2027-03-01
+  expect deadline(proposed-summons) == 2027-03-03
+}
+
 test "proposed summons skips Guam History and CHamoru Heritage Day" cite "1 GCA § 1000(a)(3)"
 {
   given SummonsRequestGranted() on 2027-02-26

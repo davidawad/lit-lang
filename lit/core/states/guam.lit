@@ -2,6 +2,7 @@ module core.states.guam
 
 import core.calendar.{ us-federal-holidays }
 import core.frcrimp45.{ frcrimp45 }
+import core.time.{ Served, Scheduled, ServiceMethod }
 
 /// The holidays of Guam (1 GCA § 1000(a)) that `us-federal-holidays` does not
 /// already close: Guam History and CHamoru Heritage Day, the first Monday in
@@ -94,14 +95,14 @@ counting frbp9006-guam effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP
 /// holidays for periods counted forward only (45(a)(6)(C)). The calendar
 /// supplies only holidays not already closed by federal law, from the
 /// Compiler of Laws' April 23, 2026 edition of 1 GCA § 1000.
-counting frcrimp45-guam effective [2020-06-24, ..) known_at 2026-04-23 cite "FRCrimP 45(a)"
+counting frcrimp45-guam effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCrimP 45(a)"
 {
   exclude_trigger_day
   include_last_day
   roll_forward_on [weekend, legal_holiday, inaccessible]
   service_extension {
     Personal: 0.days
-    Electronic: 3.days
+    Electronic: 0.days
     Mail: 3.days
     Clerk: 3.days
     OtherConsented: 3.days
@@ -116,4 +117,35 @@ counting frcrimp45-guam effective [2020-06-24, ..) known_at 2026-04-23 cite "FRC
   forums [frcrimp]
   allow_hours
   end_of_month clamp
+}
+
+deadline frcrimp45-guam-forward-holiday: 1.days after Served() counted_by frcrimp45-guam {
+  forum frcrimp
+}
+
+deadline frcrimp45-guam-backward-holiday: 1.days before Scheduled() counted_by frcrimp45-guam {
+  forum frcrimp
+}
+
+deadline frcrimp45-guam-electronic-service: 1.days after Served() counted_by frcrimp45-guam {
+  forum frcrimp
+}
+
+test "Guam Liberation Day closes a forward criminal period" cite "FRCrimP 45(a)(6)(C)"
+{
+  given Served(Personal) on 2027-07-20
+  expect deadline(frcrimp45-guam-forward-holiday).nominal == 2027-07-21
+  expect deadline(frcrimp45-guam-forward-holiday) == 2027-07-22
+}
+
+test "Guam Liberation Day does not interrupt a backward period" cite "FRCrimP 45(a)(5)"
+{
+  given Scheduled() on 2027-07-22
+  expect deadline(frcrimp45-guam-backward-holiday) == 2027-07-21
+}
+
+test "electronic service adds no days to a Guam criminal period" cite "FRCrimP 45(c)"
+{
+  given Served(Electronic) on 2027-07-20
+  expect deadline(frcrimp45-guam-electronic-service) == 2027-07-21
 }

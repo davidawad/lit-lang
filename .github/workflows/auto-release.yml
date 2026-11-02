@@ -49,6 +49,7 @@ jobs:
         if: steps.fresh.outputs.ok == 'true'
         run: |
           set -euo pipefail
+          scripts/release/check-nightly-red.sh
           next="$(scripts/release/next-version.sh)"
           if [ -z "$next" ]; then echo "no releasable commits since the last tag"; exit 0; fi
           scripts/release/prepare.sh "$next"

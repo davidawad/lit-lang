@@ -59,6 +59,7 @@ impl CompiledCache {
     }
 
     /// Reads a cached value. Invalid or unreadable entries are misses.
+    #[must_use]
     pub fn get<T: for<'de> Deserialize<'de>>(&self, key: &str) -> Option<T> {
         std::fs::read(self.path(key))
             .ok()

@@ -108,7 +108,7 @@ fn restore(entry: Entry) -> Result<Compiled, Failure> {
             .iter()
             .find(|(cached_name, _)| cached_name == name)
         {
-            *fingerprint = cached.clone();
+            fingerprint.clone_from(cached);
         }
     }
     for (name, _, fingerprint) in &mut catalog.calibration.sets {
@@ -117,7 +117,7 @@ fn restore(entry: Entry) -> Result<Compiled, Failure> {
             .iter()
             .find(|(cached_name, _)| cached_name == name)
         {
-            *fingerprint = cached.clone();
+            fingerprint.clone_from(cached);
         }
     }
     let mut scenarios = Vec::new();

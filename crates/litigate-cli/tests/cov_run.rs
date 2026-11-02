@@ -5,7 +5,7 @@
 #![allow(clippy::unwrap_used)]
 mod support;
 
-use support::{acme, example, litigate, litigate_in, located, scratch};
+use support::{acme, example, litigate, litigate_in, scratch};
 
 #[test]
 fn ops_that_are_not_json_or_not_engine_ops_are_usage_errors() {
@@ -63,18 +63,8 @@ fn a_matter_that_fails_its_check_is_not_run() {
     let dir = example("run-failing", "", Some(&case));
     let run = litigate_in(&dir, &["run", "cases/examples/acme.case", "--op", "chain"]);
     assert_eq!(run.code, 2, "{}", run.stdout);
-    assert!(run.json.get("result").is_none());
-    let errors: Vec<_> = located(&run.json)
-        .into_iter()
-        .filter(|d| d.1 == "error")
-        .collect();
-    assert_eq!(
-        errors,
-        [(
-            "L4007".to_owned(),
-            "error".to_owned(),
-            "cases/examples/acme.case".to_owned(),
-            27
-        )]
-    );
+    let error = &run.json["result"]["error"];
+    assert_eq!(error["code"], "invalid");
+    assert!(error["hint"].as_str().unwrap().contains("acme.case:27"));
+    assert!(error["message"].as_str().unwrap().contains("frobnicate"));
 }

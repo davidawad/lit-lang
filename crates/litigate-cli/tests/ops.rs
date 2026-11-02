@@ -6,7 +6,7 @@
 mod support;
 
 use serde_json::{json, Value};
-use support::{example, litigate, litigate_in, Run};
+use support::{example, litigate, litigate_in, scratch, Run};
 
 const ACME: &str = "cases/examples/acme.case";
 const RULING: &str = "frcp-rule12-example::mtd-ruling";
@@ -58,6 +58,25 @@ fn a_package_that_fails_its_check_is_not_run() {
     assert_eq!(run.code, 2, "{}{}", run.stdout, run.stderr);
     assert_eq!(run.json["ok"], false);
     assert!(run.json.get("result").is_none(), "{}", run.stdout);
+}
+
+#[test]
+fn malformed_case_op_returns_the_json_error_envelope() {
+    let dir = scratch("ops-malformed-case");
+    std::fs::write(dir.join("broken.case"), "case broken\n@\n").unwrap();
+    let run = litigate_in(&dir, &["solve", "broken.case"]);
+    assert_eq!(run.code, 2, "{}{}", run.stdout, run.stderr);
+    let response = &run.json["result"];
+    assert_eq!(response["ok"], false);
+    assert_eq!(response["api_version"], 1);
+    assert_eq!(response["op"], "solve");
+    assert_eq!(response["error"]["code"], "invalid");
+    assert!(response["error"]["hint"]
+        .as_str()
+        .unwrap()
+        .contains("broken.case:"));
+    assert!(response["error"]["message"].is_string());
+    assert!(response["elapsed_ms"].is_number());
 }
 
 #[test]

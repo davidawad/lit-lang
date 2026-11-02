@@ -41,7 +41,8 @@
 #       fixture repo.
 #   scripts/ci-scoped check-quarantine [CONFIG [TODAY]]
 #       Fail on malformed or expired gate quarantine records; TODAY can be
-#       pinned by the self-test.
+#       pinned by the self-test. The gate checks both quarantines
+#       (.config/nextest.toml and packages/litigate-ts/gate-quarantine.txt).
 #
 # Scope: a changed file belongs to the workspace package whose directory
 # holds it (the deepest one), or, outside every package, to the packages
@@ -633,6 +634,20 @@ check_quarantine() {
   echo "QUARANTINED: $count"
 }
 
+# Both gate quarantines: nextest (.config/nextest.toml, must hold records) and
+# vitest (packages/litigate-ts/gate-quarantine.txt, may be empty). TODAY as above.
+ts_quarantine=packages/litigate-ts/gate-quarantine.txt
+check_all_quarantine() {
+  local today="${1:-$(date -u +%F)}" rust ts="QUARANTINED: 0"
+  rust="$(check_quarantine .config/nextest.toml "$today")" || return 1
+  if grep -q '^# lg-zmqc\.' "$ts_quarantine"; then
+    ts="$(check_quarantine "$ts_quarantine" "$today")" || return 1
+  fi
+  rust="${rust#QUARANTINED: }"
+  ts="${ts#QUARANTINED: }"
+  echo "QUARANTINED: $((rust + ts)) (nextest $rust, ts $ts)"
+}
+
 skip() {
   echo "ci-scoped: $1: skip ($2)"
 }
@@ -673,7 +688,7 @@ run() {
   stage typos typos
   stage provenance provenance "$base"
   stage self-test bash -c "'$self' self-test && '$(dirname "$self")/cov-gate' self-test"
-  stage quarantine check_quarantine
+  stage quarantine check_all_quarantine
   stage strict-ratchet-test scripts/qa/strict-ratchet-test.sh
   stage lit-sync-check just lit-sync-check
   if grep -q '^lit/' <<<"$files"; then
@@ -688,7 +703,7 @@ run() {
   fi
   stage check cargo check --workspace --all-targets
   if ts_scoped "$label" <<<"$files"; then
-    stage ts-test just ts-test
+    stage ts-test env LITIGATE_TS_GATE=1 just ts-test
   else
     skip ts-test "litigate-wasm, litigate-cli and packages/litigate-ts unchanged"
   fi
@@ -799,7 +814,7 @@ nightly() {
   logdir="$target/ci-nightly"
   rm -rf "$logdir"
   mkdir -p "$logdir"
-  check_quarantine
+  check_all_quarantine
   sha="$(git rev-parse HEAD)"
   subject="$(git log -1 --format=%s HEAD)"
   stage test cargo nextest run --workspace --profile nightly
@@ -846,6 +861,15 @@ self_test() {
   printf '# lg-zmqc.999 expires=2026-10-31 | fixture::expired_test\n' > "$quarantine"
   if check_quarantine "$quarantine" 2026-11-01 >/dev/null 2>&1; then
     echo "ci-scoped self-test: an expired quarantine must fail" >&2
+    failures=$((failures + 1))
+  fi
+  printf '# lg-zmqc.999 expires=2026-10-31 | litigate-ts::fixture a > b\n' > "$quarantine"
+  if check_quarantine "$quarantine" 2026-11-01 >/dev/null 2>&1; then
+    echo "ci-scoped self-test: an expired ts quarantine must fail" >&2
+    failures=$((failures + 1))
+  fi
+  if ! check_quarantine "$ts_quarantine" 2026-11-01 >/dev/null 2>&1; then
+    echo "ci-scoped self-test: $ts_quarantine must be well formed" >&2
     failures=$((failures + 1))
   fi
   # base <- syntax <- sema <- cli; syntax <- ts-litigate <- ts-editors;

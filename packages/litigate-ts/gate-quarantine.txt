@@ -1,0 +1,12 @@
+# Gate-only quarantine for `just ts-test` (lg-zmqc.24, CoS ruling A, dotfiles-b0 mail #9912).
+# scripts/ci-scoped sets LITIGATE_TS_GATE=1 for its ts-test stage; vitest.config.ts then skips
+# each record below by its full test name. Plain `just ts-test` and `npm test` still run them.
+# scripts/ci-scoped check-quarantine validates these records like .config/nextest.toml and fails
+# the gate once one is past its expiry. A fix that lands removes its line.
+# No new tests enter this quarantine without CoS OK.
+# lg-zmqc.33 expires=2026-11-08 | litigate-ts::client Litgraph over the real wasm > reports failures in the response, as the CLI does
+# lg-zmqc.33 expires=2026-11-08 | litigate-ts::client Litgraph over the real wasm > describes and validates
+# lg-zmqc.33 expires=2026-11-08 | litigate-ts::litigate check matches the CLI > everything
+# lg-zmqc.33 expires=2026-11-08 | litigate-ts::litigate check matches the CLI > everything, strict
+# lg-zmqc.33 expires=2026-11-08 | litigate-ts::litigate check matches the CLI > finds a matter's packages in the embedded library
+# lg-zmqc.33 expires=2026-11-08 | litigate-ts::web loads the web build from bytes and agrees with the node build

@@ -7,7 +7,7 @@
     clippy::expect_used
 )]
 
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 use tokio::io::{

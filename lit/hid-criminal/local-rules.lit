@@ -2,7 +2,18 @@ module hid-criminal-local-rules.local-rules
 
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
+import core.states.hawaii.{ frcrimp45-hawaii }
 import frcrimp.deadlines.{ SentencingScheduled }
+
+deadline hawaii-kuhio-one-day: 1.days after TrialConferenceScheduled() counted_by frcrimp45-hawaii {
+  forum frcrimp
+}
+
+test "Kuhio Day is skipped in a forward criminal deadline" cite "HRS § 8-1" {
+  given TrialConferenceScheduled() on 2027-03-25
+  expect deadline(hawaii-kuhio-one-day).nominal == 2027-03-26
+  expect deadline(hawaii-kuhio-one-day) == 2027-03-29
+}
 
 // The District of Hawaii's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger

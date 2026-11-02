@@ -279,10 +279,13 @@ its module.
 | Hawaii | `hid` (`bankr-hi` counts by its own LBR 9006-1 list) | Haw. Rev. Stat. § 8-1 |
 | Mississippi | `msnd`, `mssd`, `bankr-msn`, `bankr-mss` | Miss. Code Ann. § 3-3-7 |
 | Ohio | `ohnd`, `ohsd`, `bankr-ohn`, `bankr-ohs` | Ohio Rev. Code § 1.14 |
-| Oklahoma | `oked`, `oknd`, `okwd`, `bankr-oke`, `bankr-okn`, `bankr-okw` | 25 O.S. § 82.1 |
 | South Dakota | `sdd`, `bankr-sd` | S.D. Codified Laws § 1-5-1 |
 | Tennessee | `tned`, `tnmd`, `tnwd`, `bankr-tne`, `bankr-tnm`, `bankr-tnw` | Tenn. Code Ann. § 15-1-101 |
 | Virgin Islands | `vid`, `bankr-vi` | 1 V.I.C. § 171 |
+
+Oklahoma's § 82.1 holiday text is now vendored in `lit/core/states/oklahoma.lit`,
+and `bankr-okw` counts by that calendar. The other Oklahoma federal district
+and bankruptcy forums still need wiring to the state calendar.
 
 The fetches are tracked in lg-ovyp (GitHub #23) and the blocked-source beads
 lg-3sut, lg-l6xh, lg-s97k, lg-set2, lg-sw6p, lg-s4ko, lg-okuc and lg-i5h2.

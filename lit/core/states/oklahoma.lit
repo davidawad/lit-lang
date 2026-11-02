@@ -1,0 +1,41 @@
+module core.states.oklahoma
+
+import core.calendar.{ us-federal-holidays }
+
+/// Oklahoma's recurring day after Thanksgiving (25 O.S.,
+/// § 82.1(A)), which is not a federal holiday. Other listed holidays
+/// duplicate the federal calendar. The Christmas-adjacent days and
+/// holidays proclaimed under § 82.1(B) depend on the Governor's annual
+/// Executive Order and are not listed without a vendored order. The
+/// statute's amendments date the recurring holiday from April 3, 1947.
+calendar oklahoma-holidays cite "25 O.S. § 82.1"
+{
+  day-after-thanksgiving: nth(4, friday, 11) effective [1947-04-03, ..)
+}
+
+/// FRBP 9006(a) in Oklahoma bankruptcy courts, with the state's declared
+/// holidays as required by 9006(a)(6)(C). The Western District local-rule
+/// package uses this rule for its own periods and recounts lit/frbp.
+counting frbp9006-oklahoma effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays oklahoma-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-okw]
+  allow_hours
+  end_of_month clamp
+}

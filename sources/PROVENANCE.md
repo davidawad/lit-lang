@@ -1848,3 +1848,17 @@ FRBP 8002. Neither decision supports a proposition needed by this outline.
 - Original: `original/ca1-first-circuit-rulebook-2026-06-01.pdf` as served (sha256 e126dc83b8a7ab1044273dc3fdc22cbc735cc6c81ce5793b345eb0e7bc7a6133); extraction sha256 9e99b6ae551dc12ddf322afe896c98d7fc4c651c49a209f0cf45f313403b477a.
 
 
+
+### `oklahoma/25-82-1.txt` — Okla. Stat. tit. 25, § 82.1 (holidays)
+
+- Extracted from the Oklahoma Senate's official 2022 Title 25 PDF, retrieved
+  2026-11-02 from `https://oksenate.gov/sites/default/files/2022-05/os25.pdf`.
+  Pages 12–13, § 82.1, were extracted with `pdftotext -layout`; the surrounding
+  sections and page furniture were dropped, typographic line breaks joined,
+  and the complete section including its amendment history retained.
+- The section dates its current holiday provisions through Laws 2012, c. 304,
+  § 96; the recurring day after Thanksgiving is in force from April 3, 1947.
+- sha256 (this file): `d6cb7141ad02d9d3e664c459c3ba9f7e8f535c592af438e6a9e0fa10e6be71c0`
+- Original: `oklahoma/original/oklahoma-title25.pdf` as served (sha256
+  `0203d2d54da512b9695a23b2ed19b09102faadc74cacac68e0da3e762200d90b`),
+  extraction sha256 as above.

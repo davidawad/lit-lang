@@ -1,6 +1,7 @@
 module bankr-okw-local-rules.local-rules
 
 import core.frbp9006.{ frbp9006 }
+import core.states.oklahoma.{ frbp9006-oklahoma }
 import frbp.events.{ PetitionFiled }
 
 // The Bankr. W.D. Okla. court's own periods, counted under FRBP 9006(a).
@@ -648,6 +649,12 @@ test "deadline arithmetic: proposed-order-after-ruling-period" cite "W.D. Okla. 
 {
   given RulingEntered() on 2027-01-04
   expect deadline(proposed-order-after-ruling-period) == 2027-01-19
+}
+
+test "Oklahoma day after Thanksgiving is skipped in a business-day period" cite "25 O.S. § 82.1"
+{
+  given RulingEntered() on 2027-11-15
+  expect deadline(proposed-order-after-ruling-period) == 2027-11-30
 }
 
 start motion-filed

@@ -43,6 +43,7 @@ import core.states.northern-mariana-islands.{
   frcp6-northern-mariana-islands,
 }
 
+import core.states.oklahoma.{ frbp9006-oklahoma }
 import core.states.oregon.{ frbp9006-oregon }
 import core.states.pennsylvania.{ frbp9006-pennsylvania, frcp6-pennsylvania }
 import core.states.puerto-rico.{ frbp9006-puerto-rico, frcp6-puerto-rico }
@@ -169,6 +170,10 @@ deadline frbp9006-montana-smoke: 1.days after Served() counted_by frbp9006-monta
 
 deadline frbp9006-nebraska-smoke: 1.days after Served() counted_by frbp9006-nebraska {
   forum bankr-ne
+}
+
+deadline frbp9006-oklahoma-smoke: 1.days after Served() counted_by frbp9006-oklahoma {
+  forum bankr-okw
 }
 
 deadline frbp9006-nevada-smoke: 1.days after Served() counted_by frbp9006-nevada { forum bankr-nv }
@@ -449,6 +454,11 @@ test "frbp9006-montana counts a one-day period" {
 test "frbp9006-nebraska counts a one-day period" {
   given Served(Personal) on 2027-02-02
   expect deadline(frbp9006-nebraska-smoke) == 2027-02-03
+}
+
+test "frbp9006-oklahoma counts a one-day period" {
+  given Served(Personal) on 2027-02-02
+  expect deadline(frbp9006-oklahoma-smoke) == 2027-02-03
 }
 
 test "frbp9006-nevada counts a one-day period" {

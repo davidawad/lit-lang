@@ -291,6 +291,28 @@ fn court_days_unit_is_computed_with_business_day_steps() {
 }
 
 #[test]
+fn explicit_court_and_business_days_override_the_counting_period_threshold() {
+    let mut p = serde_json::from_str::<serde_json::Value>(&frcp_pack().1).unwrap();
+    p["edges"].as_array_mut().unwrap().extend([
+        json!({"id": "long-court-respond", "from": "trigger", "to": "due", "label": "Long court-day period", "deadline": {"length": 11, "unit": "court"}}),
+        json!({"id": "long-business-respond", "from": "trigger", "to": "due", "label": "Long business-day period", "deadline": {"length": 11, "unit": "business"}}),
+    ]);
+    let c = catalog(vec![pack(p)]);
+
+    // Ordinary FRCP 6 reaches 2026-12-29; skipping weekends, Christmas, and
+    // New Year's Day reaches 2027-01-06.
+    for edge in ["long-court-respond", "long-business-respond"] {
+        let resp = handle(
+            &deadlines_req(&["frcp-test"], D::new("2026-12-18").edge(edge).op()),
+            &c,
+        );
+        assert!(resp.ok, "{resp:?}");
+        let deadline = &resp.result.unwrap()["deadlines"][0];
+        assert_eq!(deadline["due_date"], json!("2027-01-06"), "{edge}");
+    }
+}
+
+#[test]
 fn counting_field_selects_the_rule_regardless_of_pack_id() {
     let c = catalog(vec![explicit_forum_pack()]);
     let resp = handle(

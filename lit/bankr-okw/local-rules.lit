@@ -663,6 +663,18 @@ test "Oklahoma day after Thanksgiving does not affect a backward business-day pe
   expect deadline(ballot-summary-period) == 2027-11-23
 }
 
+test "Oklahoma 2030 day after Thanksgiving is skipped" cite "25 O.S. § 82.1"
+{
+  given RulingEntered() on 2030-11-15
+  expect deadline(proposed-order-after-ruling-period) == 2030-12-03
+}
+
+test "Oklahoma 2030 day before Thanksgiving does not affect backward period" cite "25 O.S. § 82.1"
+{
+  given ConfirmationHearingScheduled() on 2030-11-27
+  expect deadline(ballot-summary-period) == 2030-11-22
+}
+
 start motion-filed
 
 state motion-filed: "Request for relief filed with notice of opportunity for hearing" by applicant cite "W.D. Okla. LBR 9013-1(G)"

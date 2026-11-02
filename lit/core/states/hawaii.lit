@@ -1,6 +1,7 @@
 module core.states.hawaii
 
 import core.calendar.{ us-federal-holidays }
+import core.time.{ Scheduled, Served }
 
 /// Hawaii state holidays under HRS § 8-1 that are not already federal
 /// holidays, closed on their statutory date under § 8-2. The fixed and
@@ -65,4 +66,36 @@ counting frcrimp45-hawaii effective [2023-12-01, ..) known_at 2023-04-24 cite "F
   forward_holidays hawaii-holidays cite "FRCrimP 45(a)(6)(C)"
   forums [frcrimp]
   allow_hours
+}
+
+// Core-local pins keep the Hawaii counting rule exercised in strict checks.
+deadline hawaii-frcrimp45-kuhio-forward: 1.days after Served() counted_by frcrimp45-hawaii {
+  forum frcrimp
+}
+
+deadline hawaii-frcrimp45-kuhio-backward: 1.days before Scheduled() counted_by frcrimp45-hawaii {
+  forum frcrimp
+}
+
+deadline hawaii-frcrimp45-electronic: 0.days after Served() counted_by frcrimp45-hawaii {
+  forum frcrimp
+}
+
+test "a forward criminal period skips Prince Kuhio Day" cite "HRS § 8-1"
+{
+  given Served(Personal) on 2027-03-25
+  expect deadline(hawaii-frcrimp45-kuhio-forward).nominal == 2027-03-26
+  expect deadline(hawaii-frcrimp45-kuhio-forward) == 2027-03-29
+}
+
+test "a backward criminal period keeps its Hawaii holiday date" cite "HRS § 8-1"
+{
+  given Scheduled() on 2027-03-29
+  expect deadline(hawaii-frcrimp45-kuhio-backward) == 2027-03-26
+}
+
+test "electronic service adds zero days under the Hawaii rule" cite "FRCrimP 45(c)"
+{
+  given Served(Electronic) on 2027-03-25
+  expect deadline(hawaii-frcrimp45-electronic) == 2027-03-25
 }

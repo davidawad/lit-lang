@@ -118,6 +118,8 @@ fn a_scenario_joins_every_number_it_rests_on() {
     // The worked example contains explicit holes; a matter prior must not
     // make the source graph appear more complete than it is.
     let mut pkg = example();
+    node_mut(&mut pkg, "mtd-ruling").edges[0].probability =
+        Some(Authored::Hole(Some("not calibrated".into())));
     assert_eq!(scenario_basis(&pkg, &acme()), at(Basis::Hole));
     // Filled, every unlabelled number is an estimate.
     let half = Authored::Known(Rational {
@@ -204,6 +206,8 @@ fn a_scenario_joins_every_number_it_rests_on() {
 #[test]
 fn a_cost_or_a_duration_alone_is_a_number_the_scenario_rests_on() {
     let mut pkg = example();
+    node_mut(&mut pkg, "mtd-ruling").edges[0].probability =
+        Some(Authored::Hole(Some("not calibrated".into())));
     let respond = node_mut(&mut pkg, "respond");
     respond.edges[2].cost = Some(Authored::Known(usd(5)));
     respond.edges[1].hours = None;

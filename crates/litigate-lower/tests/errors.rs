@@ -7,7 +7,7 @@ use litigate_base::DiagnosticCode as C;
 use litigate_lower::{Document, Lowerer, Options};
 use litigate_sema::hir::{
     self, Anchor, Authored, DayUnit, DeadlineWindow, Declaration, Direction, Interval, Money,
-    Observance, RollOn, ServiceTime,
+    RollOn, ServiceTime,
 };
 use support::load_hir;
 
@@ -83,20 +83,6 @@ fn restored_lowering_refusals_keep_their_exact_diagnostic() {
             "a business-day edge deadline has no litgraph unit (use court days)".into()
         )]
     );
-
-    let mut next_day = example();
-    for declaration in decls(&mut next_day) {
-        if let Declaration::Calendar(calendar) = declaration {
-            calendar.holidays[0].observed = Some(Observance::NextDay);
-        }
-    }
-    assert_eq!(
-        codes(&next_day),
-        vec![(
-            C::LoweringUnsupported,
-            "holiday `new-year`: `observed next_day` has no engine observance (only `nearest_weekday`)".into()
-        )]
-    );
 }
 
 #[test]
@@ -132,14 +118,6 @@ fn clock_shapes_the_engine_cannot_run() {
     let mut p = example();
     counting(&mut p).meta.cite = Some("Local Rule 6".into());
     only(&p, C::LoweringUnsupported, "sourceUrl");
-
-    let mut p = example();
-    for d in decls(&mut p) {
-        if let Declaration::Calendar(c) = d {
-            c.holidays[0].observed = Some(Observance::NextDay);
-        }
-    }
-    only(&p, C::LoweringUnsupported, "observed next_day");
 
     let mut p = example();
     p.manifest.counting = Some("rcfc6".into());

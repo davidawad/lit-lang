@@ -50,6 +50,31 @@ fn an_invalid_engine_calendar_is_rejected() {
     insta::assert_snapshot!(lowering_errors(&p));
 }
 
+#[test]
+fn next_day_observance_moves_only_sunday_holidays_to_monday() {
+    for (date, expected) in [
+        ((2025, 3, 23), (2025, 3, 24)), // Sunday -> Monday
+        ((2025, 3, 22), (2025, 3, 22)), // Saturday stays put
+        ((2025, 3, 25), (2025, 3, 25)), // Weekday stays put
+    ] {
+        let mut p = example();
+        let holiday = &mut calendar_mut(&mut p).holidays[0];
+        holiday.date = HolidayDate::Fixed {
+            month: date.1,
+            day: date.2,
+        };
+        holiday.observed = Some(Observance::NextDay);
+
+        let lowered = lowered(&p);
+        let clock = clock_of(&lowered);
+        let calendar = &clock.calendars[0];
+        assert_eq!(
+            calendar.holidays[0].observed_in(date.0).unwrap().ymd(),
+            expected
+        );
+    }
+}
+
 /// Without `cite_prefixes`, a `[[cite_syntax.rules]]` prefix bound to the
 /// source supplies the rule's `sourceUrl`; an unbound rule is skipped.
 #[test]

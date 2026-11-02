@@ -68,16 +68,6 @@ test-threads = "num-cpus"
 # lg-zmqc.28 expires=2026-11-08 | litigate-lower::roundtrip import_then_lower_is_semantically_equal
 # lg-zmqc.28 expires=2026-11-08 | litigate-lower::roundtrip lowered_output_compiles_in_the_engine
 # lg-zmqc.28 expires=2026-11-08 | litigate-lower::roundtrip source_maps_locate_cites_in_l0
-# lg-zmqc.31 expires=2026-11-08 | litigate-lsp::diagnostics an_overlap_points_at_the_other_version_and_offers_a_reviewed_fix
-# lg-zmqc.31 expires=2026-11-08 | litigate-lsp::editing a_newer_change_cancels_the_running_check
-# lg-zmqc.31 expires=2026-11-08 | litigate-lsp::editing queued_refreshes_for_one_generation_share_the_completed_check
-# lg-zmqc.31 expires=2026-11-08 | litigate-lsp::hover declarations_show_their_type_line
-# lg-zmqc.31 expires=2026-11-08 | litigate-lsp::inlay a_deadline_with_an_unknown_due_date_says_so
-# lg-zmqc.31 expires=2026-11-08 | litigate-lsp::protocol edits_recheck_incrementally_over_one_database
-# lg-zmqc.31 expires=2026-11-08 | litigate-lsp::protocol publishes_the_check_diagnostics_of_the_worked_example
-# lg-zmqc.31 expires=2026-11-08 | litigate-lsp::protocol strict_profile_fails_each_hole
-# lg-zmqc.31 expires=2026-11-08 | litigate-lsp::workspace packages_are_found_by_pack_id_or_name
-# lg-zmqc.31 expires=2026-11-08 | litigate-lsp::workspace without_a_client_root_the_root_holds_lit
 default-filter = """
 not (
     (package(litgraph-packs) & binary(merge_safe))

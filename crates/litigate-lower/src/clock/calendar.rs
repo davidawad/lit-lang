@@ -1,6 +1,6 @@
 //! Calendar declarations as engine holiday calendars (SPEC §8.2).
 use crate::diag::Sink;
-use litigate_base::DiagnosticCode as C;
+use litigate_base::{DiagnosticCode as C, Span};
 use litigate_engine::clock::calendar::{
     Cycle, Effective, Holiday, HolidayDate as EngineDate, Observance as EngineObservance, Weekday,
 };
@@ -36,11 +36,21 @@ fn weekday(sink: &mut Sink, name: &str) -> Option<Weekday> {
 /// its first year; `once` is a fixed date effective for that day only
 /// (widened by a day each side when observance may move it: back under
 /// `nearest_weekday`, forward under both).
-fn holiday(sink: &mut Sink, h: &hir::Holiday) -> Option<Holiday> {
+fn holiday(sink: &mut Sink, h: &hir::Holiday, span: Option<&Span>) -> Option<Holiday> {
     let observed = match h.observed {
         None => EngineObservance::Actual,
         Some(Observance::NearestWeekday) => EngineObservance::NearestWeekday,
-        Some(Observance::NextDay) => EngineObservance::NextDay,
+        Some(Observance::NextDay) => {
+            sink.unsupported(
+                span,
+                format!(
+                    "holiday `{}`: `observed next_day` has no engine observance (only \
+                     `nearest_weekday`)",
+                    h.id
+                ),
+            );
+            return None;
+        }
     };
     let mut from = date(sink, &h.in_force.from)?;
     let mut until = match &h.in_force.to {
@@ -115,7 +125,11 @@ pub(super) fn holiday_calendar(
     cal: &hir::Calendar,
     m: &hir::Manifest,
 ) -> Option<HolidayCalendar> {
-    let holidays: Vec<Option<Holiday>> = cal.holidays.iter().map(|h| holiday(sink, h)).collect();
+    let holidays: Vec<Option<Holiday>> = cal
+        .holidays
+        .iter()
+        .map(|h| holiday(sink, h, cal.meta.span.as_ref()))
+        .collect();
     Some(HolidayCalendar {
         id: cal.meta.id.clone(),
         title: if cal.meta.label.is_empty() {

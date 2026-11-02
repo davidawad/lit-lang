@@ -115,9 +115,10 @@ fn scenario_basis(pkg: &hir::Package, case: &hir::Case) -> Vec<BasisLabel> {
 #[test]
 fn a_scenario_joins_every_number_it_rests_on() {
     let at = |basis| vec![label("/scenario", basis, None)];
-    // The worked example's unauthored estimates join to Estimate.
+    // The worked example contains explicit holes; a matter prior must not
+    // make the source graph appear more complete than it is.
     let mut pkg = example();
-    assert_eq!(scenario_basis(&pkg, &acme()), at(Basis::Estimate));
+    assert_eq!(scenario_basis(&pkg, &acme()), at(Basis::Hole));
     // Filled, every unlabelled number is an estimate.
     let half = Authored::Known(Rational {
         numerator: 1,
@@ -211,9 +212,9 @@ fn a_cost_or_a_duration_alone_is_a_number_the_scenario_rests_on() {
         mode: Rational::integer(7),
         max: None,
     });
-    // The worked example's unlabelled numbers still make the join Estimate.
+    // The worked example's explicit holes still make the join Hole.
     assert_eq!(
         scenario_basis(&pkg, &acme()),
-        vec![label("/scenario", Basis::Estimate, None)]
+        vec![label("/scenario", Basis::Hole, None)]
     );
 }

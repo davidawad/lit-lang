@@ -444,6 +444,38 @@ fn without_rule_edition(raw: &str, grammar: &CiteGrammar<'_>) -> String {
     out
 }
 
+/// A `state` whose every out-edge carries `p` and none loops back is
+/// written as the `chance` sugar (SPEC §5.1); it lowers to `state` again.
+fn is_chance(id: &str, edges: &[(usize, &RawEdge)]) -> bool {
+    !edges.is_empty()
+        && edges
+            .iter()
+            .all(|(_, edge)| edge.probability.is_some() && edge.to != id)
+}
+
+/// The actor most edges of a node carry (first seen wins a tie); written
+/// once as the node's `by` so edges repeat only the exceptions.
+fn plurality_actor<'a>(edges: &[(usize, &'a RawEdge)]) -> &'a str {
+    let mut counts: Vec<(&str, usize)> = Vec::new();
+    for (_, edge) in edges {
+        match counts.iter_mut().find(|(actor, _)| *actor == edge.actor) {
+            Some((_, count)) => *count += 1,
+            None => counts.push((edge.actor.as_str(), 1)),
+        }
+    }
+    counts
+        .iter()
+        .fold(
+            None,
+            |best: Option<(&str, usize)>, &(actor, count)| match best {
+                Some((_, top)) if top >= count => best,
+                _ => Some((actor, count)),
+            },
+        )
+        .map_or("either", |(actor, _)| actor)
+}
+
+
 #[cfg(test)]
 mod edition_tests {
     use super::without_rule_edition;
@@ -479,35 +511,4 @@ mod edition_tests {
             "FRAP (2017 ed.) 32"
         );
     }
-}
-
-/// A `state` whose every out-edge carries `p` and none loops back is
-/// written as the `chance` sugar (SPEC §5.1); it lowers to `state` again.
-fn is_chance(id: &str, edges: &[(usize, &RawEdge)]) -> bool {
-    !edges.is_empty()
-        && edges
-            .iter()
-            .all(|(_, edge)| edge.probability.is_some() && edge.to != id)
-}
-
-/// The actor most edges of a node carry (first seen wins a tie); written
-/// once as the node's `by` so edges repeat only the exceptions.
-fn plurality_actor<'a>(edges: &[(usize, &'a RawEdge)]) -> &'a str {
-    let mut counts: Vec<(&str, usize)> = Vec::new();
-    for (_, edge) in edges {
-        match counts.iter_mut().find(|(actor, _)| *actor == edge.actor) {
-            Some((_, count)) => *count += 1,
-            None => counts.push((edge.actor.as_str(), 1)),
-        }
-    }
-    counts
-        .iter()
-        .fold(
-            None,
-            |best: Option<(&str, usize)>, &(actor, count)| match best {
-                Some((_, top)) if top >= count => best,
-                _ => Some((actor, count)),
-            },
-        )
-        .map_or("either", |(actor, _)| actor)
 }

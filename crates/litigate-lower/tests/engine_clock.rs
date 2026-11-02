@@ -65,6 +65,19 @@ fn a_counting_version_that_does_not_lower_is_an_error() {
     insta::assert_snapshot!(render_diagnostics(&found));
 }
 
+#[test]
+fn business_day_request_is_refused_instead_of_counted_as_court_days() {
+    let p = example();
+    let clock = EngineClock::lowered(&Lowerer::new(&[&p]), &[&p])
+        .unwrap_or_else(|d| panic!("{}", render_diagnostics(&d)));
+    let mut r = request("frcp6", None);
+    r.unit = DayUnit::Business;
+    assert_eq!(
+        clock.due(&r),
+        Err("a period of business days has no engine lowering (count court days)".into())
+    );
+}
+
 /// A version recorded after the package's corpus date still has its
 /// fragment: whether a request names it is the selection's `known_at`
 /// answer (`temporal::select`), never the clock's.
@@ -128,10 +141,12 @@ fn units_and_directions() {
     r.unit = DayUnit::Court;
     let court = clock.due(&r);
     assert_eq!(court.as_deref(), Ok("2025-03-10"));
-    // Business days use the shared clock's weekdays and holidays, distinct
-    // from court days where a court calendar may close additional dates.
+    // LW3: business days have no engine lowering, and must not be counted as
+    // court days.
     r.unit = DayUnit::Business;
-    assert_eq!(clock.due(&r).as_deref(), Ok("2025-03-10"));
+    assert!(clock
+        .due(&r)
+        .is_err_and(|e| e.contains("business days has no engine lowering")));
 }
 
 #[test]

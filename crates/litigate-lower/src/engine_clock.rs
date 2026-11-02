@@ -159,7 +159,13 @@ impl EngineClock {
             unit: match r.unit {
                 hir::DayUnit::Calendar => Unit::Calendar,
                 hir::DayUnit::Court => Unit::Court,
-                hir::DayUnit::Business => Unit::Business,
+                // LW3: business days have no engine lowering; do not
+                // silently count them as court days.
+                hir::DayUnit::Business => {
+                    return Err("a period of business days has no engine lowering \
+                                (count court days)"
+                        .to_owned())
+                }
                 hir::DayUnit::Week => Unit::Week,
                 hir::DayUnit::Month => Unit::Month,
                 hir::DayUnit::Year => Unit::Year,

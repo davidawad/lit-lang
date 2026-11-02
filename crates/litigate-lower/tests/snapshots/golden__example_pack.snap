@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-lower/tests/golden.rs
+assertion_line: 30
 expression: text
 ---
 {
@@ -63,7 +64,6 @@ expression: text
       "from": "mtd-ruling",
       "id": "granted",
       "label": "Motion granted",
-      "probability": 0.5,
       "to": "dismissed"
     },
     {
@@ -71,7 +71,6 @@ expression: text
       "from": "mtd-ruling",
       "id": "denied",
       "label": "Motion denied",
-      "probability": 0.5,
       "to": "answered"
     },
     {
@@ -108,15 +107,27 @@ expression: text
   "jurisdiction": "United States district courts",
   "lowered": {
     "asOf": "2025-01-01",
+    "holes": [
+      {
+        "pointer": "/edges/5/probability",
+        "reason": "no calibration yet"
+      },
+      {
+        "pointer": "/edges/6/probability"
+      },
+      {
+        "pointer": "/nodes/5/payoff"
+      }
+    ],
     "knownAt": "2025-01-01",
     "pins": [
       {
-        "digest": "sha256:e9ae443b6514ddb36cb552380c1e2aa0c2d166be857b2a106db26018e7585bbd",
+        "digest": "sha256:8e77c09e7d93d3e29e427a29dd359bebd7c8fcb03faa5e9aaf8088c07de24001",
         "name": "frcp-rule12-example",
         "version": "0.1.0"
       }
     ],
-    "worldDigest": "sha256:413f3933ef7e00efd8b0a67f6c8ac572d3f57a9d7d5495ac01c3c1794abd438d"
+    "worldDigest": "sha256:5aaeba5d2c6c4e6f53c48675712a6af43c8b735187322e617c713abae45c385f"
   },
   "nodes": [
     {
@@ -140,8 +151,7 @@ expression: text
       "group": "motions",
       "id": "mtd-ruling",
       "kind": "state",
-      "label": "Ruling on the motion to dismiss",
-      "note": "Illustrative example assumption only: equal odds, not calibrated."
+      "label": "Ruling on the motion to dismiss"
     },
     {
       "group": "pleadings",
@@ -163,8 +173,7 @@ expression: text
       "outcome": [
         "judgment",
         "loss"
-      ],
-      "payoff": 0
+      ]
     },
     {
       "group": "outcomes",

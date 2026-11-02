@@ -55,7 +55,10 @@ fn of(numbers: bool, hole: bool, declared: Option<&hir::Basis>) -> Option<Basis>
 /// matter's prior (an estimate) instead of the authored one.
 pub(crate) fn edge(e: &hir::Edge, primed: bool) -> Option<Basis> {
     let p = e.probability.as_ref().filter(|_| !primed);
-    let hole = matches!(p, Some(Authored::Hole(_))) || matches!(e.cost, Some(Authored::Hole(_)));
+    // Matter priors replace pack probabilities for analysis, but an explicit
+    // source hole still limits the provenance of the graph.
+    let hole = matches!(e.probability, Some(Authored::Hole(_)))
+        || matches!(e.cost, Some(Authored::Hole(_)));
     let numbers = p.is_some()
         || e.cost.is_some()
         || e.hours.is_some()

@@ -8,6 +8,7 @@ import { readdirSync, readFileSync, rmSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { type Files, type LitigateEnvelope, type LitigateResult, type LitigateRun, loadNode } from "../src/node.js";
+import { type Profile } from "../src/litigate.js";
 
 const repo = fileURLToPath(new URL("../../../", import.meta.url));
 const bin = process.env["LITIGATE_BIN"] ?? `${repo}target/debug/litigate`;
@@ -61,26 +62,25 @@ function untimedRun(run: LitigateRun): LitigateRun {
   return { ...run, stdout: JSON.stringify({ ...out, elapsed_ms: 0 }) };
 }
 
+const checkMatchesCli = (paths: readonly string[], options: { profile?: Profile }) => {
+  const args = [...("profile" in options ? ["--profile", options.profile] : []), ...paths];
+  const expected = native(["check", ...args]);
+  expect(untimed(lit.check(paths, { ...options, files, today: TODAY }))).toStrictEqual(expected);
+};
+
 describe("check matches the CLI", () => {
-  it.each([
-    ["one matter", ["cases/frcp-civil-case.case"], {}],
-    ["one matter, strict", ["cases/frcp-civil-case.case"], { profile: "strict" }],
-    ["a missing path", ["lit/nope"], {}],
-  ] as const)("%s", (_, paths, options) => {
-    const args = [...("profile" in options ? ["--profile", options.profile] : []), ...paths];
-    const expected = native(["check", ...args]);
-    expect(untimed(lit.check(paths, { ...options, files, today: TODAY }))).toStrictEqual(expected);
-  });
+  it("everything", () => checkMatchesCli(["lit", "cases"], {}));
+  it("everything, strict", () => checkMatchesCli(["lit", "cases"], { profile: "strict" }));
+  it("one matter", () => checkMatchesCli(["cases/frcp-civil-case.case"], {}));
+  it("a missing path", () => checkMatchesCli(["lit/nope"], {}));
 
   it("finds a matter's packages in the embedded library", () => {
-    const matter = "cases/cofc-1498-patent-case.case";
-    const cases: Files = {
-      [matter]: readFileSync(`${repo}${matter}`, "utf8"),
-      "cases/Lit.lock": readFileSync(`${repo}cases/Lit.lock`, "utf8"),
-    };
-    const expected = native(["check", matter]);
+    const cases: Files = tree("cases");
+    const accepted = Object.keys(cases).filter((p) => p.endsWith(".case"));
+    const expected = native(["check", ...accepted]);
     expect(expected.code).toBe(0);
-    expect(untimed(lit.check([matter], { files: cases, today: TODAY }))).toStrictEqual(expected);
+    expect(expected.envelope?.diagnostics.some((d) => d.code === "L4016")).toBe(true);
+    expect(untimed(lit.check(accepted, { files: cases, today: TODAY }))).toStrictEqual(expected);
     expect(lit.library()["lit/frcp/Lit.toml"]).toBe(files["lit/frcp/Lit.toml"]);
     expect(lit.check(["cases"], { files: cases, library: false }).code).toBe(2);
   });

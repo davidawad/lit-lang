@@ -9,10 +9,15 @@ const quarantined = (): string[] =>
     .map((line) => /^# lg-zmqc\.\d+ expires=\S+ \| litigate-ts::\S+ (.+)$/.exec(line)?.[1])
     .filter((name): name is string => name !== undefined);
 
+const fullCorpusPattern = /(?:check matches the CLI > (?:everything|everything, strict)|finds a matter's packages in the embedded library)/;
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-const gateSkip = (names: string[]) =>
-  names.length === 0 ? {} : { testNamePattern: new RegExp(`^(?!(?:${names.map(escape).join("|")})$)`) };
+const testPattern = (names: string[]) => {
+  const excluded = names.map(escape);
+  if (process.env["LITIGATE_TS_NIGHTLY"] !== "1") excluded.push(`.*${fullCorpusPattern.source}.*`);
+  return excluded.length === 0 ? undefined : new RegExp(`^(?!(?:${excluded.join("|")})$)`);
+};
+const pattern = testPattern(process.env["LITIGATE_TS_GATE"] === "1" ? quarantined() : []);
 
 export default defineConfig({
   test: {
@@ -20,8 +25,8 @@ export default defineConfig({
     // Each real wasm instance can retain several GiB. Keep the browser/node
     // parity files bounded so a small CI pod does not thrash or OOM.
     maxWorkers: 2,
-    testTimeout: 120_000,
-    ...(process.env["LITIGATE_TS_GATE"] === "1" ? gateSkip(quarantined()) : {}),
+    testTimeout: process.env["LITIGATE_TS_NIGHTLY"] === "1" ? 600_000 : 120_000,
+    ...(pattern === undefined ? {} : { testNamePattern: pattern }),
     typecheck: {
       include: ["test/**/*.test-d.ts"],
       tsconfig: "./tsconfig.json",

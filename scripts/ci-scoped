@@ -849,6 +849,9 @@ nightly() {
   base="$(git rev-parse --verify HEAD^ 2>/dev/null || git rev-parse --verify HEAD)"
   stage expect cargo run -q -p litigate-cli -- --format human test tests/expect
   stage impact cargo run -q -p litigate-cli -- --format human test --impact "$base"
+  # The three full-corpus parity checks are a separate nightly Vitest project.
+  stage ts-test just ts-test
+  stage ts-test-full-corpus env LITIGATE_TS_NIGHTLY=1 npm --prefix packages/litigate-ts run test:nightly
   stage test cargo nextest run --workspace --profile nightly
   stage doctest cargo test --doc --workspace
   stage cov-litigate just cov-litigate

@@ -31,24 +31,23 @@ use wasm_bindgen::prelude::wasm_bindgen;
 
 include!(concat!(env!("OUT_DIR"), "/embedded_sources.rs"));
 
-/// The embedded `lit/` and `cases/` files.
-fn embedded() -> impl Iterator<Item = (String, String)> {
-    EMBEDDED_LIBRARY
-        .iter()
-        .chain(EMBEDDED_CASES)
-        .map(|(path, text)| ((*path).to_owned(), (*text).to_owned()))
-}
-
 /// The packs and named scenarios `files` compile to: its `lit/` packages
 /// and `cases/` matters.
+#[cfg(test)]
 fn compile(files: impl IntoIterator<Item = (String, String)>) -> Result<Catalog, Failure> {
     litigate_cli::library::compiled(&litigate_cli::memory_tree(files), &[], &[])
 }
 
 /// The embedded sources compiled, once.
 fn catalog() -> Result<&'static Catalog, &'static Failure> {
-    static CATALOG: OnceLock<Result<Catalog, Failure>> = OnceLock::new();
-    CATALOG.get_or_init(|| compile(embedded())).as_ref()
+    static CATALOG: OnceLock<Result<Catalog, String>> = OnceLock::new();
+    CATALOG
+        .get_or_init(|| litgraph_packs::catalog().map_err(|error| error.to_string()))
+        .as_ref()
+        .map_err(|message| {
+            static FAILURE: OnceLock<Failure> = OnceLock::new();
+            FAILURE.get_or_init(|| Failure(message.clone()))
+        })
 }
 
 fn error(code: &str, message: &str) -> String {

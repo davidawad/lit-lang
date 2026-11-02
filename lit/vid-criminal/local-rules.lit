@@ -72,7 +72,7 @@ event InterpretedAppearance()
 /// trial files a memorandum in opposition within seven days after service
 /// of the motion, unless the Court sets a shorter period; a party that
 /// files none is deemed not to oppose it (LRCr 12.5(c)(3)).
-deadline continuance-opposition: 7.days after ContinuanceMotionServed() counted_by frcrimp45 delegable {
+deadline continuance-opposition: 7.days after ContinuanceMotionServed() counted_by frcrimp45-virgin-islands delegable {
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 12.5(c)"
@@ -85,7 +85,7 @@ deadline continuance-opposition: 7.days after ContinuanceMotionServed() counted_
 /// a written response, agreeing or opposing with reasons, no later than
 /// seven days after the conference. The Court may extend it for good
 /// cause (LRCr 12.6(c)).
-deadline complex-designation-response: 7.days after DiscoveryConferenceCompleted() counted_by frcrimp45 delegable {
+deadline complex-designation-response: 7.days after DiscoveryConferenceCompleted() counted_by frcrimp45-virgin-islands delegable {
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 12.6(a); D.V.I. LRCr 12.6(c)"
@@ -97,7 +97,7 @@ deadline complex-designation-response: 7.days after DiscoveryConferenceCompleted
 /// a written motion no later than five days after the government's
 /// deadline to provide Rule 16 discovery. The Court may extend it for good
 /// cause, and the parties by agreement (LRCr 12.6(c)).
-deadline defendant-complex-designation: 5.days after GovernmentDiscoveryDue() counted_by frcrimp45 delegable {
+deadline defendant-complex-designation: 5.days after GovernmentDiscoveryDue() counted_by frcrimp45-virgin-islands delegable {
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 12.6(b); D.V.I. LRCr 12.6(c)"
@@ -109,7 +109,7 @@ deadline defendant-complex-designation: 5.days after GovernmentDiscoveryDue() co
 /// after the arraignment on the first information or indictment, counsel
 /// for the government and the defendant confer and try to agree on a
 /// timetable and procedures for Rule 16 disclosure.
-deadline initial-discovery-conference: 14.days after ArraignedOnFirstCharge() counted_by frcrimp45 delegable {
+deadline initial-discovery-conference: 14.days after ArraignedOnFirstCharge() counted_by frcrimp45-virgin-islands delegable {
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 16.1(a)"
@@ -121,7 +121,7 @@ deadline initial-discovery-conference: 14.days after ArraignedOnFirstCharge() co
 /// conference, the parties file a notice of proposed pretrial discovery
 /// timetable stating every agreed deadline; its deadlines bind the parties
 /// unless the Court modifies them (LRCr 16.1(a)(3)).
-deadline discovery-timetable-notice: 5.days after DiscoveryConferenceCompleted() counted_by frcrimp45 cite "D.V.I. LRCr 16.1(a)"
+deadline discovery-timetable-notice: 5.days after DiscoveryConferenceCompleted() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 16.1(a)"
 {
   forum frcrimp
 }
@@ -132,7 +132,7 @@ deadline discovery-timetable-notice: 5.days after DiscoveryConferenceCompleted()
 /// obligation on a written request within 28 days of a request made after
 /// arraignment, or 28 days after arraignment for a request made at or
 /// before it.
-deadline government-rule16: 28.days after GovernmentDiscoveryClock() counted_by frcrimp45 delegable {
+deadline government-rule16: 28.days after GovernmentDiscoveryClock() counted_by frcrimp45-virgin-islands delegable {
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 16.1(b)"
@@ -144,7 +144,7 @@ deadline government-rule16: 28.days after GovernmentDiscoveryClock() counted_by 
 /// Rule 16(b) obligation on the government's written request within the
 /// later of 14 days after the request or 14 days after the government's
 /// deadline under the corresponding subsection of Rule 16(a).
-deadline defendant-rule16: 14.days after DefendantDiscoveryClock() counted_by frcrimp45 delegable {
+deadline defendant-rule16: 14.days after DefendantDiscoveryClock() counted_by frcrimp45-virgin-islands delegable {
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 16.1(c)"
@@ -156,7 +156,7 @@ deadline defendant-rule16: 14.days after DefendantDiscoveryClock() counted_by fr
 /// to a new information or indictment in the same case unless the
 /// defendant files a notice limiting it within one day of the arraignment
 /// on the new charge.
-deadline superseding-request-limit: 1.days after ArraignedOnSupersedingCharge() counted_by frcrimp45 cite "D.V.I. LRCr 16.1(d)"
+deadline superseding-request-limit: 1.days after ArraignedOnSupersedingCharge() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 16.1(d)"
 {
   forum frcrimp
 }
@@ -165,7 +165,7 @@ deadline superseding-request-limit: 1.days after ArraignedOnSupersedingCharge() 
 /// party moves for complex-case designation, the government satisfies its
 /// Rule 16(a) obligation under a prior request no later than 14 days after
 /// arraignment on the new information or indictment.
-deadline superseding-government-rule16: 14.days after ArraignedOnSupersedingCharge() counted_by frcrimp45 delegable {
+deadline superseding-government-rule16: 14.days after ArraignedOnSupersedingCharge() counted_by frcrimp45-virgin-islands delegable {
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 16.1(d)"
@@ -176,7 +176,7 @@ deadline superseding-government-rule16: 14.days after ArraignedOnSupersedingChar
 /// D.V.I. LRCr 16.1(d)(2): the defendant satisfies a Rule 16(b) obligation
 /// under a prior request no later than 7 days after the government's
 /// deadline under the corresponding subsection of Rule 16(a).
-deadline superseding-defendant-rule16: 7.days after GovernmentDiscoveryDue() counted_by frcrimp45 delegable {
+deadline superseding-defendant-rule16: 7.days after GovernmentDiscoveryDue() counted_by frcrimp45-virgin-islands delegable {
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 16.1(d)"
@@ -187,14 +187,14 @@ deadline superseding-defendant-rule16: 7.days after GovernmentDiscoveryDue() cou
 /// D.V.I. LRCr 16.1(f)(2): a response to a motion to modify the time,
 /// place or manner of discovery is filed within three business days after
 /// service of the motion.
-deadline discovery-modification-response: 3.business_days after DiscoveryModificationMotionServed() counted_by frcrimp45 cite "D.V.I. LRCr 16.1(f)"
+deadline discovery-modification-response: 3.business_days after DiscoveryModificationMotionServed() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 16.1(f)"
 {
   forum frcrimp
 }
 
 /// D.V.I. LRCr 16.1(f)(2): a reply is filed within three business days
 /// after service of the response.
-deadline discovery-modification-reply: 3.business_days after DiscoveryModificationResponseServed() counted_by frcrimp45 cite "D.V.I. LRCr 16.1(f)"
+deadline discovery-modification-reply: 3.business_days after DiscoveryModificationResponseServed() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 16.1(f)"
 {
   forum frcrimp
 }
@@ -203,7 +203,7 @@ deadline discovery-modification-reply: 3.business_days after DiscoveryModificati
 /// a signed Joint Discovery Statement, describing the discovery exchanged
 /// and setting out all stipulations, no later than seven days before the
 /// commencement of every trial, or when the Court directs.
-deadline joint-discovery-statement: 7.days before TrialCommencement() counted_by frcrimp45 delegable {
+deadline joint-discovery-statement: 7.days before TrialCommencement() counted_by frcrimp45-virgin-islands delegable {
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 16.1(h)"
@@ -214,7 +214,7 @@ deadline joint-discovery-statement: 7.days before TrialCommencement() counted_by
 /// D.V.I. LRCr 28.1: except in preliminary proceedings, every request for
 /// interpreting services is made to the Court at least seven days before
 /// the interpreter's services are required.
-deadline interpreter-request: 7.days before InterpretedAppearance() counted_by frcrimp45 cite "D.V.I. LRCr 28.1"
+deadline interpreter-request: 7.days before InterpretedAppearance() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 28.1"
 {
   forum frcrimp
 }

@@ -61,12 +61,16 @@ import core.frcrimp45.{ frcrimp45 }
 
 deadline virgin-islands-three-business-days: 3.business_days after Served() counted_by frcrimp45-virgin-islands { forum frcrimp }
 deadline federal-three-business-days: 3.business_days after Served() counted_by frcrimp45 { forum frcrimp }
+deadline virgin-islands-three-business-days-backward: 3.business_days before Served() counted_by frcrimp45-virgin-islands { forum frcrimp }
+deadline federal-three-business-days-backward: 3.business_days before Served() counted_by frcrimp45 { forum frcrimp }
 
 test "Three King's Day closes a forward criminal period in the Virgin Islands" cite "1 V.I.C. § 171(a)"
 {
   given Served(Personal) on 2025-01-03
   expect deadline(virgin-islands-three-business-days) == 2025-01-09
   expect deadline(federal-three-business-days) == 2025-01-08
+  given Served(Personal) on 2025-01-09
+  expect deadline(virgin-islands-three-business-days-backward) == deadline(federal-three-business-days-backward)
 }
 
 deadline frbp9006-alabama-smoke: 1.days after Served() counted_by frbp9006-alabama {

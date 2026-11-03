@@ -11,8 +11,8 @@ expression: default_text
     │ 
     │ Note: a designated due date must allow at least the deadline's own period; correct the date as the notice gives it
 ────╯
-core: 41 holes; --verbose to show
-litigate check: failed (1 error(s), 41 warning(s))
+core: 42 holes; --verbose to show
+litigate check: failed (1 error(s), 42 warning(s))
 {
   "profile": "dev",
   "files": [
@@ -66,6 +66,7 @@ litigate check: failed (1 error(s), 41 warning(s))
     "lit/ttab/../core/states/north-carolina.lit",
     "lit/ttab/../core/states/north-dakota.lit",
     "lit/ttab/../core/states/northern-mariana-islands.lit",
+    "lit/ttab/../core/states/oklahoma.lit",
     "lit/ttab/../core/states/oregon.lit",
     "lit/ttab/../core/states/pennsylvania.lit",
     "lit/ttab/../core/states/puerto-rico.lit",
@@ -74,7 +75,6 @@ litigate check: failed (1 error(s), 41 warning(s))
     "lit/ttab/../core/states/texas.lit",
     "lit/ttab/../core/states/utah.lit",
     "lit/ttab/../core/states/vermont.lit",
-    "lit/ttab/../core/states/virgin-islands.lit",
     "lit/ttab/../core/states/virginia.lit",
     "lit/ttab/../core/states/washington.lit",
     "lit/ttab/../core/states/west-virginia.lit",
@@ -107,7 +107,7 @@ litigate check: failed (1 error(s), 41 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 746,
+        "checked": 743,
         "subjects": "declarations"
       }
     },
@@ -127,7 +127,7 @@ litigate check: failed (1 error(s), 41 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 386,
+        "checked": 382,
         "subjects": "version sets"
       }
     },
@@ -137,7 +137,7 @@ litigate check: failed (1 error(s), 41 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 386,
+        "checked": 382,
         "subjects": "version sets"
       }
     },
@@ -227,7 +227,7 @@ litigate check: failed (1 error(s), 41 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 270,
+        "checked": 271,
         "subjects": "inline tests"
       }
     },
@@ -246,7 +246,7 @@ litigate check: failed (1 error(s), 41 warning(s))
     {
       "name": "holes",
       "status": "warning",
-      "count": 41,
+      "count": 42,
       "examples": [
         "lit/ttab/../core/states/alabama.lit:15:1: L9002 hole: `Ala. Code § 1-3-8` is not proved the text in force from 1963-07-01: Ala. Code § 1-3-8 (source `ala-code-1-3` as of 2026-10-29): no source binding pins a `## versions Ala. Code § 1-3-8` amendment history",
         "lit/ttab/../core/states/alaska.lit:20:1: L9002 hole: `AS 44.12.010(a)` is not proved the text in force from 1963-07-01: AS 44.12.010 (source `as-44-12` as of 2026-10-29): no source binding pins a `## versions AS 44.12.010` amendment history",
@@ -258,7 +258,7 @@ litigate check: failed (1 error(s), 41 warning(s))
         "lit/ttab/../core/states/idaho.lit:14:1: L9002 hole: `Idaho Code § 73-108` is not proved the text in force from 1963-07-01: Idaho Code § 73-108 (source `idaho-code-73-108` as of 2026-10-29): no source binding pins a `## versions Idaho Code § 73-108` amendment history"
       ],
       "evidence": {
-        "checked": 41,
+        "checked": 42,
         "subjects": "holes"
       }
     },
@@ -268,7 +268,7 @@ litigate check: failed (1 error(s), 41 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 305,
+        "checked": 301,
         "subjects": "deadline and counting rules"
       }
     }
@@ -289,12 +289,12 @@ litigate check: failed (1 error(s), 41 warning(s))
     {
       "name": "core",
       "version": "1.0.0",
-      "digest": "sha256:19cf746bf8405fdc118ada842aa3fc8c2f78256c74001794c8e97254437752d7",
+      "digest": "sha256:aa30ac12d7b59c3bbe828c05ed1b1af25d0eca8e63bce383026cd460ae5f29dc",
       "root": "lit/ttab/../core",
       "requested": false,
-      "holes": 41,
+      "holes": 42,
       "tests": {
-        "passed": 240,
+        "passed": 241,
         "failed": 0
       }
     }

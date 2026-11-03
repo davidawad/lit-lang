@@ -48,13 +48,26 @@ type Test = (String, String);
 /// `(case, world, field)`: what one row of a test is about.
 type Row = (String, String, String);
 
-/// One parallel expect-corpus observation: rows, HEAD expectation mismatches,
-/// and whether the HEAD expect run passed.
-type Observation = (
-    BTreeMap<Test, BTreeMap<Row, String>>,
-    Vec<expect::Mismatch>,
-    bool,
-);
+/// Counts in the same units as inline test JSON: test blocks and individual
+/// expectations. Matter expect tests count as one test each.
+#[derive(Debug, Clone, Copy, Default, Serialize)]
+struct HeadCount {
+    tests: usize,
+    expectations: usize,
+}
+
+/// One parallel expect-corpus observation.
+struct Observation {
+    rows: BTreeMap<Test, BTreeMap<Row, String>>,
+    mismatches: Vec<expect::Mismatch>,
+    passed: bool,
+    by_forum: BTreeMap<String, HeadCount>,
+}
+
+struct TestObservation {
+    count: HeadCount,
+    passed: bool,
+}
 
 /// One value that moved.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -85,7 +98,7 @@ pub fn impact(head: &dyn Source, base: &str, lib: &[String], check_head: bool) -
     let head_tree = snapshot(head)?;
     // The snapshots are independent. Run their four-worker observations at
     // once; this keeps the combined stage near the time of one corpus pass.
-    let (before, after) = std::thread::scope(|scope| {
+    let (before, head) = std::thread::scope(|scope| {
         let base = scope.spawn(move || observe_parallel(&base_tree, lib));
         let head = scope.spawn(move || observe_parallel(&head_tree, lib));
         let base = base
@@ -96,12 +109,21 @@ pub fn impact(head: &dyn Source, base: &str, lib: &[String], check_head: bool) -
             .map_err(|_| Failure::new("impact HEAD observer panicked"))??;
         Ok::<_, Failure>((base, head))
     })?;
-    let (before, _, _) = before;
-    let (after, head_mismatches, head_passed) = after;
-    let mut report = compare_observations(&before, &after);
+    let mut report = compare_observations(&before.rows, &head.rows);
     report.result["base"] = Value::String(sha);
-    if check_head && !head_passed {
-        append_head_mismatches(&mut report, &head_mismatches);
+    if check_head {
+        let (tests, expectations) = head.by_forum.values().fold((0, 0), |(t, e), count| {
+            (t + count.tests, e + count.expectations)
+        });
+        report.result["head"] = json!({
+            "tests": tests,
+            "expectations": expectations,
+            "by_forum": head.by_forum,
+        });
+        eprintln!("check-head: {tests} tests, {expectations} expectations evaluated");
+        if !head.passed {
+            append_head_mismatches(&mut report, &head.mismatches);
+        }
     }
     Ok(report)
 }
@@ -209,15 +231,26 @@ fn observe_parallel(src: &MemoryTree, lib: &[String]) -> Result<Observation, Fai
     let mut out = BTreeMap::new();
     let mut mismatches = Vec::new();
     let mut passed = true;
+    let mut by_forum = BTreeMap::<String, HeadCount>::new();
     for handle in handles {
-        let (tests, worker_mismatches, worker_passed) = handle
+        let observation = handle
             .join()
             .map_err(|_| Failure::new("impact worker panicked"))?;
-        out.extend(tests);
-        mismatches.extend(worker_mismatches);
-        passed &= worker_passed;
+        out.extend(observation.rows);
+        mismatches.extend(observation.mismatches);
+        passed &= observation.passed;
+        for (forum, count) in observation.by_forum {
+            let total = by_forum.entry(forum).or_default();
+            total.tests += count.tests;
+            total.expectations += count.expectations;
+        }
     }
-    Ok((out, mismatches, passed))
+    Ok(Observation {
+        rows: out,
+        mismatches,
+        passed,
+        by_forum,
+    })
 }
 
 fn observe_selected(
@@ -229,9 +262,14 @@ fn observe_selected(
     let mut tests = BTreeMap::new();
     let mut mismatches = Vec::new();
     let mut passed = true;
+    let mut by_forum = BTreeMap::<String, HeadCount>::new();
     for dir in dirs {
         let name = expect::name_of(&dir);
         let (observed, test_mismatches) = expect::observed_checked(src, &dir, lib);
+        let forum = dir.parent().map(name_of).unwrap_or_default();
+        let count = by_forum.entry(forum).or_default();
+        count.tests += 1;
+        count.expectations += observed.len();
         passed &= test_mismatches.is_empty();
         mismatches.extend(test_mismatches);
         let rows = observed
@@ -253,12 +291,28 @@ fn observe_selected(
             Ok(m) => run(src, &name, &m, lib, &mut put),
             Err(e) => Err(Failure::new(e)),
         };
-        if outcome.is_err() {
+        let observed = outcome.unwrap_or_else(|_| {
             passed = false;
-        }
+            TestObservation {
+                count: HeadCount {
+                    tests: 1,
+                    expectations: 0,
+                },
+                passed: false,
+            }
+        });
+        passed &= observed.passed;
+        let count = by_forum.entry(forum.clone()).or_default();
+        count.tests += observed.count.tests;
+        count.expectations += observed.count.expectations;
         tests.insert((forum, name), rows);
     }
-    (tests, mismatches, passed)
+    Observation {
+        rows: tests,
+        mismatches,
+        passed,
+        by_forum,
+    }
 }
 
 /// `(forum, test name, path)` of each `tests/expect/<forum>/<name>.toml`.
@@ -296,7 +350,12 @@ fn run(
     m: &Manifest,
     lib: &[String],
     put: &mut dyn FnMut(&str, &str, &str, String),
-) -> Result<(), Failure> {
+) -> Result<TestObservation, Failure> {
+    let mut expectation_count = 0;
+    let mut counted_put = |case: &str, world: &str, field: &str, value: String| {
+        expectation_count += 1;
+        put(case, world, field, value);
+    };
     match (&m.case, &m.world, &m.package) {
         (Some(case), Some(world), None) => {
             let report = worlds::worlds(
@@ -309,8 +368,14 @@ fn run(
                     ..worlds::Args::default()
                 },
             )?;
-            world_rows(&report, name, put);
-            Ok(())
+            world_rows(&report, name, &mut counted_put);
+            Ok(TestObservation {
+                count: HeadCount {
+                    tests: 1,
+                    expectations: expectation_count,
+                },
+                passed: true,
+            })
         }
         (None, None, Some(package)) => {
             let mut paths = vec![package.clone()];
@@ -318,6 +383,8 @@ fn run(
             let targets = ws::discover_in(src, &paths)?;
             let session = Session::load_in(src, &targets, lib)?;
             let (results, diagnostics) = test::run(&session, None);
+            let tests = results.len();
+            let expectations = results.iter().map(|t| t.expectations.len()).sum();
             let has_errors = diagnostics
                 .iter()
                 .any(|d| d.severity == litigate_base::Severity::Error);
@@ -342,14 +409,16 @@ fn run(
                     } else {
                         format!("{value} (fails)")
                     };
-                    put(&case, "-", &field, value);
+                    counted_put(&case, "-", &field, value);
                 }
             }
-            if has_errors {
-                Err(Failure::new("expect package has error diagnostics"))
-            } else {
-                Ok(())
-            }
+            Ok(TestObservation {
+                count: HeadCount {
+                    tests,
+                    expectations,
+                },
+                passed: !has_errors,
+            })
         }
         _ => Err(Failure::new(
             "an expect test names `case` and `world`, or `package`",
@@ -686,9 +755,13 @@ mod tests {
     fn parallel_observation_handles_an_empty_tree() {
         let tree = MemoryTree::default();
         assert_eq!(
-            observe_parallel(&tree, &[])
-                .ok()
-                .map(|(out, mismatches, passed)| { (out.len(), mismatches.len(), passed) }),
+            observe_parallel(&tree, &[]).ok().map(|observation| {
+                (
+                    observation.rows.len(),
+                    observation.mismatches.len(),
+                    observation.passed,
+                )
+            }),
             Some((0, 0, true))
         );
     }

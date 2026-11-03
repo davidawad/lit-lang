@@ -212,6 +212,44 @@ fn a_layer_edit_lists_every_moved_deadline_verdict_and_expectation() {
 }
 
 #[test]
+fn check_head_counts_match_the_json_test_results() {
+    let dir = fixture("impact-head-counts");
+    for name in ["bass-5cir-2000", "benavides-dccir-1996"] {
+        std::fs::remove_file(dir.join(format!("tests/expect/frap/{name}.toml"))).unwrap();
+    }
+
+    let package = "docs/litigate/change/frap-base";
+    let expected = litigate_in(&dir, &["test", package]);
+    assert_eq!(expected.code, 0, "{}{}", expected.stdout, expected.stderr);
+    let tests = expected.json["result"]["tests"].as_array().unwrap();
+    let expectation_count: usize = tests
+        .iter()
+        .map(|test| test["expectations"].as_array().unwrap().len())
+        .sum();
+
+    let impact = litigate_in(&dir, &["test", "--impact", "HEAD", "--check-head"]);
+    assert_eq!(impact.code, 0, "{}{}", impact.stdout, impact.stderr);
+    assert_eq!(impact.json["result"]["head"]["tests"], tests.len());
+    assert_eq!(
+        impact.json["result"]["head"]["expectations"],
+        expectation_count
+    );
+    assert_eq!(
+        impact.json["result"]["head"]["by_forum"]["frap"]["tests"],
+        tests.len()
+    );
+    assert_eq!(
+        impact.json["result"]["head"]["by_forum"]["frap"]["expectations"],
+        expectation_count
+    );
+    assert!(impact.stderr.contains(&format!(
+        "check-head: {} tests, {} expectations evaluated",
+        tests.len(),
+        expectation_count
+    )));
+}
+
+#[test]
 fn a_base_that_is_not_a_revision_is_a_usage_error() {
     let dir = fixture("impact-usage");
     let run = litigate_in(&dir, &["test", "--impact", "no-such-rev"]);

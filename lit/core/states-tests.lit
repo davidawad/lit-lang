@@ -80,6 +80,10 @@ test "Three King's Day closes a forward criminal period in the Virgin Islands" c
   given Served(Personal) on 2026-01-05
   expect deadline(virgin-islands-three-business-days) == 2026-01-09
   expect deadline(federal-three-business-days) == 2026-01-08
+}
+
+test "Three King's Day does not affect a backward criminal period in the Virgin Islands" cite "1 V.I.C. § 171(a)"
+{
   given Served(Personal) on 2026-01-09
   expect deadline(virgin-islands-three-business-days-backward) == deadline(federal-three-business-days-backward)
   expect deadline(virgin-islands-three-business-days-backward) == 2026-01-06

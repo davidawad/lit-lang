@@ -39,7 +39,7 @@ fn worked_example_hole_reasons_survive_the_sema_check() {
         )
         .replacen("payoff 0.usd", "payoff ?", 1);
     let package = LoadedPackage {
-        texts: Default::default(),
+        texts: std::collections::BTreeMap::default(),
         root: "lit/examples".to_owned(),
         manifest: include_str!("../../../lit/examples/Lit.toml").to_owned(),
         lock: None,

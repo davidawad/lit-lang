@@ -1,6 +1,7 @@
 module core.states.oklahoma
 
 import core.calendar.{ us-federal-holidays }
+import core.time.{ Scheduled, Served }
 
 /// Oklahoma's day after Thanksgiving is a state legal holiday (25 O.S.
 /// § 82.1(A)). The statute's amendment history does not show when the day
@@ -65,4 +66,48 @@ counting frbp9006-oklahoma effective [2025-12-01, ..) known_at 2025-12-01 cite "
   forums [bankr-okw]
   allow_hours
   end_of_month clamp
+}
+
+// Core-local clock fixtures for the Oklahoma forward-only state holiday.
+deadline oklahoma-forward-personal: 1.days after Served(Personal) counted_by frbp9006-oklahoma {
+  forum bankr-okw
+}
+
+deadline oklahoma-backward: 1.days before Scheduled() counted_by frbp9006-oklahoma {
+  forum bankr-okw
+}
+
+deadline oklahoma-forward-electronic: 1.days after Served(Electronic) counted_by frbp9006-oklahoma {
+  forum bankr-okw
+}
+
+test "Oklahoma day after Thanksgiving closes a forward period" cite "FRBP 9006(a)(6)(C)"
+{
+  given Served(Personal) on 2030-11-28
+  expect deadline(oklahoma-forward-personal).nominal == 2030-11-29
+  expect deadline(oklahoma-forward-personal) == 2030-12-02
+}
+
+test "Oklahoma fourth Friday is not a state holiday" cite "FRBP 9006(a)(6)(C)"
+{
+  given Served(Personal) on 2030-11-21
+  expect deadline(oklahoma-forward-personal) == 2030-11-22
+}
+
+test "Oklahoma day after Thanksgiving closes a forward period in 2027" cite "FRBP 9006(a)(6)(C)"
+{
+  given Served(Personal) on 2027-11-25
+  expect deadline(oklahoma-forward-personal) == 2027-11-29
+}
+
+test "Oklahoma state holiday is ignored in a backward count" cite "FRBP 9006(a)(5)"
+{
+  given Scheduled() on 2030-11-30
+  expect deadline(oklahoma-backward) == 2030-11-29
+}
+
+test "electronic service starts the count on the next day" cite "FRBP 9006(a)(1)(A)"
+{
+  given Served(Electronic) on 2030-11-18
+  expect deadline(oklahoma-forward-electronic) == 2030-11-19
 }

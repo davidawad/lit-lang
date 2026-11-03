@@ -1,7 +1,7 @@
 module cit.periods
 
-import core.calendar.{ us-federal-holidays }
-import core.time.{ ServiceMethod }
+import core.calendar.{ uscit-national-day-2025, us-federal-holidays }
+import core.time.{ Served, ServiceMethod }
 
 // The periods the USCIT Rules state, each counted by USCIT R. 6(a) and each
 // in force from the vendored edition (as amended August 21, 2026): earlier
@@ -45,6 +45,7 @@ counting uscit6 effective [2026-08-21, ..) known_at 2026-08-21 cite "USCIT R. 6(
     ExpressForeign: unrecognized
   } cite "USCIT R. 6(d)"
   holidays us-federal-holidays
+  declared_holidays uscit-national-day-2025 cite "USCIT closure order, January 2, 2025"
   forums [cit]
   allow_hours
   end_of_month clamp

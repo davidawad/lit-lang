@@ -1,6 +1,7 @@
 module core.states.new-york
 
-import core.calendar.{ us-federal-holidays }
+import core.calendar.{ bankr-sdny-national-day-2025, sdny-national-day-2025, us-federal-holidays }
+import core.time.{ Scheduled, Served }
 
 /// The public holidays of New York (N.Y. Gen. Constr. Law § 24) that
 /// `us-federal-holidays` does not already close: Lincoln's birthday, February
@@ -100,4 +101,110 @@ counting frbp9006-new-york effective [2025-12-01, ..) known_at 2025-12-01 cite "
   forums [bankr-nye, bankr-nyn, bankr-nys, bankr-nyw]
   allow_hours
   end_of_month clamp
+}
+
+counting frcp6-new-york-sdny effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays new-york-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+  declared_holidays sdny-national-day-2025 cite "S.D.N.Y. Order M10-468"
+}
+
+counting frbp9006-new-york-sdny effective [2024-12-01, 2025-12-01) known_at 2024-04-02 cite "FRBP (2024 ed.) 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays new-york-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-nye, bankr-nyn, bankr-nys, bankr-nyw]
+  allow_hours
+  end_of_month clamp
+  declared_holidays bankr-sdny-national-day-2025 cite "Bankr. S.D.N.Y. General Order M-646"
+}
+
+counting frbp9006-new-york-sdny effective [2025-12-01, ..) known_at 2025-12-01 supersedes frbp9006-new-york-sdny@2024-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays new-york-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-nye, bankr-nyn, bankr-nys, bankr-nyw]
+  allow_hours
+  end_of_month clamp
+  declared_holidays bankr-sdny-national-day-2025 cite "Bankr. S.D.N.Y. General Order M-646"
+}
+
+deadline sdny-mourning-forward: 8.days after Served() counted_by frcp6-new-york-sdny { forum frcp }
+
+deadline sdny-mourning-backward: 8.days before Scheduled() counted_by frcp6-new-york-sdny {
+  forum frcp
+}
+
+test "S.D.N.Y. mourning date advances a forward deadline" cite "S.D.N.Y. Order M10-468"
+{
+  given Served(Personal) on 2025-01-01
+  expect deadline(sdny-mourning-forward).nominal == 2025-01-09
+  expect deadline(sdny-mourning-forward) == 2025-01-10
+}
+
+test "S.D.N.Y. mourning date retreats a backward deadline" cite "S.D.N.Y. Order M10-468"
+{
+  given Scheduled() on 2025-01-17
+  expect deadline(sdny-mourning-backward).nominal == 2025-01-09
+  expect deadline(sdny-mourning-backward) == 2025-01-08
+}
+
+deadline bankr-sdny-mourning-forward: 8.days after Served() counted_by frbp9006-new-york-sdny {
+  forum bankr-nys
+}
+
+test "Bankr. S.D.N.Y. mourning date advances a forward deadline" cite "Bankr. S.D.N.Y. General Order M-646"
+{
+  given Served(Personal) on 2025-01-01
+  expect deadline(bankr-sdny-mourning-forward).nominal == 2025-01-09
+  expect deadline(bankr-sdny-mourning-forward) == 2025-01-10
 }

@@ -1,6 +1,6 @@
 module core.rcfc6
 
-import core.calendar.{ rcfc-legal-holidays }
+import core.calendar.{ cofc-national-day-2025, rcfc-legal-holidays }
 import core.time.{ Served, Scheduled, ServiceMethod }
 
 /// RCFC 6 as revised and reissued May 1, 2002 "to conform to FRCP 6" (2002
@@ -118,11 +118,13 @@ counting rcfc6 effective [2024-07-29, ..) known_at 2024-07-29 supersedes rcfc6@2
   forums [cofc]
   allow_hours
   end_of_month clamp
+  declared_holidays cofc-national-day-2025 cite "CoFC General Order 2025-01"
 }
 
 // Fixtures cite nothing: they are periods for the tests, not rules in
 // force, and each test cites the rule it checks.
 deadline rcfc6-1-day: 1.days after Served() counted_by rcfc6 { forum cofc }
+deadline rcfc6-8-days: 8.days after Served() counted_by rcfc6 { forum cofc }
 deadline rcfc6-10-days: 10.days after Served() counted_by rcfc6 { forum cofc }
 deadline rcfc6-14-days: 14.days after Served() counted_by rcfc6 { forum cofc }
 deadline rcfc6-26-days: 26.days after Served() counted_by rcfc6 { forum cofc }
@@ -186,4 +188,11 @@ test "from January 11, 2010, ten days count every day" cite "RCFC 6(a)(1)(B)"
 {
   given Served(Personal) on 2010-01-15
   expect deadline(rcfc6-10-days) == 2010-01-25
+}
+
+test "CoFC mourning date advances a deadline" cite "CoFC General Order 2025-01"
+{
+  given Served(Personal) on 2025-01-01
+  expect deadline(rcfc6-8-days).nominal == 2025-01-09
+  expect deadline(rcfc6-8-days) == 2025-01-10
 }

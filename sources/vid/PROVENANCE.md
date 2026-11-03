@@ -29,3 +29,10 @@
 - Edition: as the extract, "Effective February 1, 2026".
 - Upstream: https://www.vid.uscourts.gov/sites/vid/files/local_rules/260130_Local%20Rules%20Criminal%20Procedure_effective%202.1.26%5BECF%2010-2%5D.pdf, retrieved 2026-10-28, as recorded on `vid/vid-local-criminal-rules-2026-02-01.txt` above; sectioning was done from the vendored extract.
 - Sectioned sha256 f1dcf6ab0c89821e7ebaf12dda2b1f46e5b6b1b1165936037f628e1c91339b60 (the `path_sha256` pinned by `lit/vid-criminal/Lit.toml`).
+
+### `vid/press-release-25-2024-national-day-of-mourning.txt` — D.V.I. closure notice
+
+- Source: https://www.vid.uscourts.gov/sites/vid/files/PressRelease%2025-2024%20Closure%20of%20DCVI.pdf (official court notice; served PDF sha256 cef94eede9d2473da2c877a50c06f69cb1cbcead7898d4eb237372e4d153946d). The notice was posted at https://www.vid.uscourts.gov/news/notice-district-court-virgin-islands-closure-national-day-mourning on December 31, 2024.
+- States that the District Court of the Virgin Islands will be closed January 9, 2025. D.V.I. Local Civil Rule 6.1(a), effective February 1, 2026, includes any day both divisions are closed in its FRCP 6 legal-holiday definition; this models the court-specific closure for civil deadlines.
+- Retrieved 2026-11-03. Method: `curl -L` from the official court URL; extracted with `pdftotext -layout` (unmodified).
+- Extraction sha256 5b4cb9c88a4389344b21e0de28ef73ac8531c6480f7a398d0b9b1ef6c059a715. Original: `vid/original/press-release-25-2024-national-day-of-mourning.pdf`.

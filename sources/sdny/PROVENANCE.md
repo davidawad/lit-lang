@@ -21,3 +21,10 @@
 - Derived in the pod (lg-f3q8.51) from `sdny/local-rules-joint-sdny-edny.txt` (extract sha256 e8d380e1439c011acf9154422ac44e93ab4b84456c5248b88254136ed47d30d8), which was retrieved 2026-10-27 from https://www.nysd.uscourts.gov/sites/default/files/local_rules/2026-01-02%20-%20EDNY%20and%20SDNY%20Joint%20Local%20Rules%20As%20Amended.pdf as recorded above; nothing fetched in the pod. Method: one `## Local Civil Rule <n>` line is inserted before each Local Civil Rule's own heading line in the rules body (Local Civil Rule 1.1 through 87.1, 71 rules, dotted numbers such as `1.4.1`, `7.1.1` and `65.1.1` kept; the withdrawn Local Civil Rule 6.4 "Computation of Time" heading is unmarked, so `## Local Civil Rule 6.4` is the in-force Motions in Limine rule), and one `## Local Social Security Rule <n>` line before each of the five Local Social Security Rules' headings (1.1, 4.1, 5.1, 7.1, 8.1). The contents, the admiralty, criminal and patent rules and the Appendix of Committee Notes are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Local /d'`) restores the extract byte for byte.
 - Edition: as the extract, effective January 2, 2026. Also the E.D.N.Y. local rules (lit/nyed).
 - Sectioned sha256 f12fd4d7c006ddd44ff015761aaaaaf13090db10db0afb4660c08f16f6812b98 (the `path_sha256` pinned by `lit/nysd/Lit.toml` and `lit/nyed/Lit.toml`).
+
+### `sdny/national-day-of-mourning-2025-01-02.txt` — S.D.N.Y. Order M10-468
+
+- Source: https://nysd.uscourts.gov/sites/default/files/2025-01/National%20Day%20of%20Mourning.pdf (official court order; served PDF sha256 d9616837915c8929f3c1a866406d1062933025a1d78ee4ea3a5f4a685fc5f4a7).
+- Dated January 2, 2025; closes the court January 9 and expressly treats that date as a legal holiday under FRCP 6 and FRCrimP 45.
+- Retrieved 2026-11-03. Method: `curl -L` from the official court URL; extracted with `pdftotext -layout` (unmodified).
+- Extraction sha256 b1f557d20f1aac91296b57a6f93d084681f2864a7bff947f83954ccb837919af. Original: `sdny/original/national-day-of-mourning-2025-01-02.pdf`.

@@ -13,3 +13,10 @@
 - Source: as the extract `bankr-nys/nys-local-rules-2024-09-30.txt`, https://www.nysb.uscourts.gov/sites/default/files/2024-09-30_Amended_LBRs_Final.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, effective September 30, 2024.
 - Sectioned sha256 682d326741397a6374e0e768376ffc942b4a2538e3d60b16063eb04b211504b2 (the `path_sha256` pinned by `lit/bankr-nys/Lit.toml` for source `nysb-lbr`).
+
+### `bankr-nys/general-order-m-646.txt` — Bankr. S.D.N.Y. General Order M-646
+
+- Source: https://www.nysb.uscourts.gov/sites/default/files/m646.pdf (official court order; served PDF sha256 009c1e174cf3cffc698d6608bff220ac204e761d35e5cb52bc19ecd8eb141a3c).
+- Dated January 6, 2025; closes the court January 9 and expressly treats that date as a legal holiday under FRBP 9006.
+- Retrieved 2026-11-03. Method: `curl -L` from the official court URL; extracted with `pdftotext -layout` (unmodified).
+- Extraction sha256 dfe739e57d65d9493cc0315175e04d8fee197ee2856d009a6edb7cba11c97a06. Original: `bankr-nys/original/general-order-m-646.pdf`.

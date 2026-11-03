@@ -7,3 +7,10 @@
 - Extract sha256 094c84ab0046945d6825a63b2385646ad8e2f601359b176c2b4ee59aade61223. Sectioned for cite resolution (lg-f3q8.16): a `## USCIT R. N` marker line was inserted before the heading of each rule's body text (112 rules, Rule 1 through Rule 89; the table of contents is unmarked, and the guidelines, forms and administrative orders after Rule 89 fall in its section). Rule text was not edited: deleting the marker lines (`sed '/^## USCIT R\. /d'`) restores the extract byte for byte.
 - Sectioned file sha256 c411c8e42d69f14c9c9aa7409ade836fd25727b3f4ffd47e211d72268f6e6f41 (the `path_sha256` pinned by `lit/cit/Lit.toml`).
 - Original: `cit/original/cit-rules-and-forms.pdf` as served (sha256 6ff22a48484b96c655f5738eae66ea0cfe92941a60e69dc845a41617c56a412a); extraction sha256 094c84ab0046945d6825a63b2385646ad8e2f601359b176c2b4ee59aade61223.
+
+### `cit/national-day-of-mourning-2025-01-02.txt` — USCIT closure order
+
+- Source: https://www.cit.uscourts.gov/sites/cit/files/20250102%20Court%20Closure%20Order%20-%20National%20Day%20of%20Mourning.pdf (official court order; served PDF sha256 44faf87b3f365d78661eeddb96f1ccc55225c583b96c739f09d879a93cde7496).
+- Dated January 2, 2025; closes the court January 9 and expressly treats that date as a legal holiday for computation under USCIT Rule 6.
+- Retrieved 2026-11-03. Method: `curl -L` from the official court URL; extracted with `pdftotext -layout` (unmodified).
+- Extraction sha256 f95535145e42c108e6cff2f51434c6493356de176fa5448719648731eda454a5. Original: `cit/original/national-day-of-mourning-2025-01-02.pdf`.

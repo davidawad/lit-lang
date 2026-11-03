@@ -1,6 +1,6 @@
 module core.frcrimp45
 
-import core.calendar.{ district-state-holidays, us-federal-holidays }
+import core.calendar.{ district-state-holidays, us-federal-holidays, sdny-national-day-2025 }
 import core.states.delaware.{ frcrimp45-delaware }
 import core.time.{ Served, Scheduled, ServiceMethod }
 
@@ -290,4 +290,156 @@ test "Delaware Good Friday rolls a criminal-rule deadline" cite "FRCrimP 45(a)(6
 {
   given Served(Personal) on 2024-03-27
   expect deadline(frcrimp45-delaware-2-days) == 2024-04-01
+}
+
+deadline sdny-criminal-mourning-forward: 8.days after Served() counted_by frcrimp45-sdny {
+  forum frcrimp
+}
+
+test "S.D.N.Y. mourning date advances a criminal deadline" cite "S.D.N.Y. Order M10-468"
+{
+  given Served(Personal) on 2025-01-01
+  expect deadline(sdny-criminal-mourning-forward).nominal == 2025-01-09
+  expect deadline(sdny-criminal-mourning-forward) == 2025-01-10
+}
+
+counting frcrimp45-sdny effective [1985-08-01, 2002-12-01) known_at 1985-04-29 cite "FRCrimP (1996 ed.) 45(a)" historical
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  short_period { below: 11.days, count: business_days }
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 3.days
+    Clerk: 0.days
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (1996 ed.) 45(e)"
+  holidays us-federal-holidays
+  forums [frcrimp]
+  declared_holidays sdny-national-day-2025 cite "S.D.N.Y. Order M10-468"
+}
+
+counting frcrimp45-sdny effective [2002-12-01, 2007-12-01) known_at 2002-04-29 supersedes frcrimp45-sdny@1985-08-01 cite "FRCrimP (2002 ed.) 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  short_period { below: 11.days, count: business_days }
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (2002 ed.) 45(c)"
+  holidays us-federal-holidays
+  forums [frcrimp]
+  declared_holidays sdny-national-day-2025 cite "S.D.N.Y. Order M10-468"
+}
+
+counting frcrimp45-sdny effective [2007-12-01, 2009-12-01) known_at 2007-04-30 supersedes frcrimp45-sdny@2002-12-01 cite "FRCrimP (2008 ed.) 45(a)" historical
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  short_period { below: 11.days, count: business_days }
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (2008 ed.) 45(c)"
+  holidays us-federal-holidays
+  forums [frcrimp]
+  declared_holidays sdny-national-day-2025 cite "S.D.N.Y. Order M10-468"
+}
+
+counting frcrimp45-sdny effective [2009-12-01, 2016-12-01) known_at 2009-03-26 supersedes frcrimp45-sdny@2007-12-01 cite "FRCrimP (2011 ed.) 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (2011 ed.) 45(c)"
+  holidays us-federal-holidays
+  forward_holidays district-state-holidays cite "FRCrimP 45(a)(6)(C)"
+  forums [frcrimp]
+  allow_hours
+  declared_holidays sdny-national-day-2025 cite "S.D.N.Y. Order M10-468"
+}
+
+counting frcrimp45-sdny effective [2016-12-01, 2023-12-01) known_at 2016-04-28 supersedes frcrimp45-sdny@2009-12-01 cite "FRCrimP (2017 ed.) 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP (2017 ed.) 45(c)"
+  holidays us-federal-holidays
+  forward_holidays district-state-holidays cite "FRCrimP 45(a)(6)(C)"
+  forums [frcrimp]
+  allow_hours
+  declared_holidays sdny-national-day-2025 cite "S.D.N.Y. Order M10-468"
+}
+
+counting frcrimp45-sdny effective [2023-12-01, ..) known_at 2023-04-24 supersedes frcrimp45-sdny@2016-12-01 cite "FRCrimP 45(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCrimP 45(c)"
+  holidays us-federal-holidays
+  forward_holidays district-state-holidays cite "FRCrimP 45(a)(6)(C)"
+  forums [frcrimp]
+  allow_hours
+  declared_holidays sdny-national-day-2025 cite "S.D.N.Y. Order M10-468"
 }

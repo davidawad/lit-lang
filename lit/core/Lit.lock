@@ -4,16 +4,18 @@ version = 2
 name = "core"
 version = "1.0.0"
 language = 1
-source = "sha256:14f1ebe139f583b9dc16b84478b9fcfd8b1688cf28b5805bd231d89a3eb58db4"
-semantic = "sha256:de4d53913a0140f0db43d64f74dcf617e98293ec29764eba06d3d3bddbb5ca69"
+source = "sha256:7d35d59f0244a235cd73d518e6583500bec6c2347a5d4fe8703bbfcd37a67d9f"
+semantic = "sha256:b40407fc244cad7cd4be456356d1979820337d0e85b9c3b7c88947aba38af0d1"
 texts = [
     "ala-code-1-3 sources/al-holidays/al-legal-holidays.txt sha256:445e763e4106d60c6d748b5a5f1cd1a148e6a600c52aeaf6d98246dd504c67e0",
     "ars-1-301 sources/az-holidays/az-legal-holidays.txt sha256:ea6e6e709914999bba6a0692ebb6761a67a4497588a549fc10607442f2bd836b",
     "as-44-12 sources/ak-holidays/ak-legal-holidays.txt sha256:b17ac4e16c8f5f5ffacf40cf01c1bc79ede0f19220b390cba486abd249aa436b",
+    "bankr-sdny-m646 sources/bankr-nys/general-order-m-646.txt sha256:dfe739e57d65d9493cc0315175e04d8fee197ee2856d009a6edb7cba11c97a06",
     "cfr-19-201 sources/cfr-19-part201.txt sha256:436ec5247f1328fe6d6e2c15bcefd8f627cc3fcd44f0a0c034c7884609015879",
     "cfr-19-210 sources/cfr-19-part210.txt sha256:92d29ab6a95dc52eaaa5b4fa5b1d0991131546e01612bc83f8e365f40420c99e",
     "cfr-37-1 sources/cfr-37-part1.txt sha256:e5765fec0e8c5f295d4f230ed9743b7972dbd41340693833abf990fe1918d1ec",
     "cmc-1-311 sources/mp-holidays/mp-legal-holidays.txt sha256:b346582f683eecaed8a2083d7ab9539a1038b0a681c427f635569edbf4ed78a8",
+    "cofc-go-2025-01 sources/cofc/general-order-2025-01.txt sha256:5602df1227ae91be62fc7264023dfc581b162855f0f66842afc95d95f25cb98a",
     "crcp sources/co-state-civil/co-crcp-sectioned.txt sha256:12b58d278bf2a00f3deebf83066c8168ef27f579bc5877bcb1fe03c88457d7e4",
     "ct-holidays sources/ct-holidays/ct-legal-holidays.txt sha256:0eab4d86aa53053dfacca15b3f8540d1c46ebba50ac4ae0c82e09acc3ca8cd30",
     "dc-code-28 sources/dc-code/dc-code-28-2701.txt sha256:2c2445d9741100ab9486bd57f0a442ad6379d81be2ff17a7b1234b43da8532b9",
@@ -30,6 +32,7 @@ texts = [
     "frap-2011 sources/usc-28-app-time-history.txt sha256:a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20",
     "frap-2017 sources/usc-28-app-2017-time.txt sha256:5d927c0a1b91b1a30a949a272c164ea6826cfebf6eac917da9a676732b22844d",
     "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
+    "frbp-2024 sources/frbp/frbp-2024-12-01.txt sha256:81c67883fcd2606b0f42ad9c2d1ef73b76819671eb39cd838c94f09a610eb470",
     "frcp sources/frcp.txt sha256:527fb9fbfe1665bdbdc5565ea5614b299e16b07b07edba803aae6eb5f957b990",
     "frcp-2008 sources/usc-28-app-time-history.txt sha256:a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20",
     "frcp-2011 sources/usc-28-app-time-history.txt sha256:a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20",
@@ -89,12 +92,15 @@ texts = [
     "scotus-2017 sources/scotus-rules-1980-2019.txt sha256:6a87d3305cc1eaf5944787e4d490bbe82608d1fe224ccc8baf595ca0d1dd6250",
     "scotus-2019 sources/scotus-rules-1980-2019.txt sha256:6a87d3305cc1eaf5944787e4d490bbe82608d1fe224ccc8baf595ca0d1dd6250",
     "scotus-2023 sources/scotus-rules-2023.txt sha256:c83977038d4c8be8e5d79f492e532c289ff112202db06f2784b994ca524f575b",
+    "sdny-mourning sources/sdny/national-day-of-mourning-2025-01-02.txt sha256:b1f557d20f1aac91296b57a6f93d084681f2864a7bff947f83954ccb837919af",
     "tx-gov-code-662 sources/tx-holidays/tx-legal-holidays.txt sha256:1295c180068634ba8d5f286210cc5435e8f1310038caa36b5405198b38afb5d4",
     "urcp sources/ut-state-civil/utah-urcp-all-rules-sectioned.txt sha256:7672ae2cf0b3f9f360c4d6df1c80bcf8a5566437102fea4d4700352b75144dc9",
     "usc-5 sources/usc-5-6103.txt sha256:c1c9c35af37ca67e297aa61bd83e90d34ffed96045097fc97b99dfc342903dbf",
+    "uscit-mourning sources/cit/national-day-of-mourning-2025-01-02.txt sha256:f95535145e42c108e6cff2f51434c6493356de176fa5448719648731eda454a5",
     "uspto-closures sources/uspto-closures.txt sha256:23ebcf53195a7a766c7a69fd417e2e936612435709b3f1f99a23a14e6224ae86",
     "va-code-2-2 sources/va-code/va-code-2-2-3300.txt sha256:efb1406f6e4ee6fa30043d280282e4b52087c5bd805e58b924bff2f12a731030",
     "vi-code-1 sources/vi-code/1-vi-code-171.txt sha256:ff53f356dee26fcdda9d0114dddee0f78ea7cbfd2e86ed579a64f8348f5981f9",
+    "vid-mourning sources/vid/press-release-25-2024-national-day-of-mourning.txt sha256:5b4cb9c88a4389344b21e0de28ef73ac8531c6480f7a398d0b9b1ef6c059a715",
     "vircp-2023 sources/vi-superior-civil/vircp-amendments-2023-09-01-sectioned.txt sha256:ead76ebf64f5880f2962f7f03638a28a89581799f85d029d650594efae8e1327",
     "vt-holidays sources/vt-holidays/vt-legal-holidays.txt sha256:2fe675e649758b8628c7f8d59e0c21dede226fc6549935bc97ee9b335eb126b6",
     "wi-holidays sources/wi-holidays/wi-legal-holidays.txt sha256:995e6e70e61a5c63690b3cfdb07a3479ff09451f308fda315990a1fb9379bfc6",

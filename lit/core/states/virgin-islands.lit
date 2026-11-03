@@ -67,19 +67,19 @@ deadline virgin-islands-fourteen-days-electronic: 14.days after Served(Electroni
 
 test "Virgin Islands Three King's Day closes only a forward business-day count" cite "1 V.I.C. § 171(a)"
 {
-  given Served(Personal) on 2025-01-03
-  expect deadline(virgin-islands-one-business-day) == 2025-01-07
+  given Served(Personal) on 2026-01-05
+  expect deadline(virgin-islands-one-business-day) == 2026-01-07
 }
 
 test "a backward criminal count across Three King's Day matches the federal rule" cite "FRCrimP 45(a)(5)"
 {
-  given Served(Personal) on 2025-01-07
+  given Served(Personal) on 2026-01-07
   expect deadline(virgin-islands-one-business-day-backward) == deadline(virgin-islands-one-business-day-backward-federal)
-  expect deadline(virgin-islands-one-business-day-backward) == 2025-01-06
+  expect deadline(virgin-islands-one-business-day-backward) == 2026-01-06
 }
 
 test "electronic service adds zero days under the Virgin Islands criminal rule" cite "FRCrimP 45(c)"
 {
-  given Served(Electronic) on 2025-01-03
-  expect deadline(virgin-islands-fourteen-days-electronic) == 2025-01-17
+  given Served(Electronic) on 2026-01-02
+  expect deadline(virgin-islands-fourteen-days-electronic) == 2026-01-16
 }

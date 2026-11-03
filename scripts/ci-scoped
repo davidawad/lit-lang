@@ -166,6 +166,10 @@ base_of() {
 # Every path changed since BASE: committed (BASE...HEAD, renames as a
 # delete and an add), plus uncommitted and untracked ones for a local run.
 changed_files() {
+  if [ "${CI_SCOPED_SELF_TEST_FILES+x}" = x ]; then
+    printf '%s\n' "$CI_SCOPED_SELF_TEST_FILES"
+    return
+  fi
   {
     git diff --name-only --no-renames "$1"...HEAD
     git diff --name-only --no-renames HEAD
@@ -658,7 +662,7 @@ run() {
   if [ -n "$selected_stages" ]; then
     [[ "$selected_stages" =~ ^[a-zA-Z0-9_,.-]+$ ]] || { echo 'ci-scoped: invalid --stages list' >&2; return 2; }
     [[ ",$selected_stages," != *",,"* ]] || { echo 'ci-scoped: empty stage name' >&2; return 2; }
-    local known='fmt-check typos workflow-command-lint workflow-command-lint-repo provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect impact clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
+    local known='fmt-check typos workflow-command-lint workflow-command-lint-repo provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect expect-impact impact clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
     IFS=, read -r -a _requested <<< "$selected_stages"
     for arg in "${_requested[@]}"; do
       if ! grep -qw "$arg" <<<"$known" && [[ ! "$arg" =~ ^(check|test|lock)-[A-Za-z0-9_.-]+$ ]]; then
@@ -689,7 +693,7 @@ run() {
     echo "ci-scoped: scope: base $(git rev-parse --short "$base"), $(grep -c . <<<"$files" || true) changed file(s): $label"
   fi
 
-  if data_only "$files"; then
+  if data_only "$files" && ! corpus_change "$files"; then
     local rc=0
     if [ "$plan_stages" -eq 1 ]; then
       # Listing mode invokes the same lane with every stage intercepted by stage()/skip().
@@ -742,7 +746,9 @@ run() {
   # report. This avoids replaying the full HEAD corpus twice.
   if corpus_change "$files"; then
     stage expect-impact cargo run -q -p litigate-cli -- --format human test --impact "$base" --check-head
-    [[ " ${failed[*]} " == *" expect-impact "* ]] || sed 's/^/  /' "$logdir/expect-impact.log"
+    if [ "$plan_stages" -eq 0 ]; then
+      [[ " ${failed[*]} " == *" expect-impact "* ]] || sed 's/^/  /' "$logdir/expect-impact.log"
+    fi
   else
     skip expect-impact "no parser, engine, sema, lower or corpus inputs changed"
   fi
@@ -981,7 +987,7 @@ self_test() {
     corpus_change lit/frcp/rules.lit && corpus_change cases/frcp-civil-case.case &&
     corpus_change sources/frcp/rule.txt && corpus_change packs/clock/frcp.json &&
     corpus_change tests/expect/arthrex/expect.toml; then :; else
-    echo "ci-scoped self-test: parser and corpus paths must select expect/impact" >&2
+    echo "ci-scoped self-test: parser and corpus paths must select expect-impact" >&2
     failures=$((failures + 1))
   fi
   if corpus_change crates/litigate-cli/src/main.rs ||
@@ -999,6 +1005,17 @@ self_test() {
   if ! grep -Fq 'stage expect-impact cargo run -q -p litigate-cli -- --format human test --impact "$base" --check-head' <<<"$run_stages" ||
     grep -Eq 'stage (expect|impact) cargo run -q -p litigate-cli -- --format human test' <<<"$run_stages"; then
     echo "ci-scoped self-test: corpus changes must check HEAD and report impact in one stage" >&2
+    failures=$((failures + 1))
+  fi
+  local planned_corpus_stages
+  planned_corpus_stages="$(CI_SCOPED_SELF_TEST_FILES=lit/frcp/rules.lit "$self" stages "$(git rev-parse HEAD)")" || {
+    echo "ci-scoped self-test: could not plan stages for a lit/ corpus change" >&2
+    failures=$((failures + 1))
+    planned_corpus_stages=""
+  }
+  if ! grep -Fxq 'expect-impact run' <<<"$planned_corpus_stages" ||
+    grep -Eq '^(expect|impact) run$' <<<"$planned_corpus_stages"; then
+    echo "ci-scoped self-test: a lit/ change must declare only expect-impact in stages output" >&2
     failures=$((failures + 1))
   fi
   if ! grep -Fq '(binary(in_memory) & test(=ops_compile_the_matter_or_package_in_memory))' .config/nextest.toml; then
@@ -1121,7 +1138,7 @@ self_test_stages() {
     return
   fi
   [ -n "$requested" ] || { self_test; return; }
-  local known='fmt-check typos workflow-command-lint workflow-command-lint-repo provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect impact clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
+  local known='fmt-check typos workflow-command-lint workflow-command-lint-repo provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect expect-impact impact clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
   IFS=, read -r -a requested_list <<< "$requested"
   for stage_name in "${requested_list[@]}"; do
     if ! grep -qw "$stage_name" <<<"$known" && [[ ! "$stage_name" =~ ^(check|test|lock)-[A-Za-z0-9_.-]+$ ]]; then

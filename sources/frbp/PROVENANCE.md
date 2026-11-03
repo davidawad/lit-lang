@@ -21,3 +21,9 @@
 - Edition states it contains the rules as amended to December 1, 2024. The rule's amendment credit records Rule 9006's April 2, 2024 amendment effective December 1, 2024.
 - Retrieved 2026-11-03. Method: `curl -L` from the official U.S. Courts URL; extracted with `pdftotext -layout` (unmodified).
 - Extraction sha256 81c67883fcd2606b0f42ad9c2d1ef73b76819671eb39cd838c94f09a610eb470. Original: `frbp/original/federal-rules-bankruptcy-procedure-2024-12-01.pdf`.
+
+### `frbp/frbp-9006-2024-12-01.txt` — Federal Rules of Bankruptcy Procedure Rule 9006 (December 1, 2024 edition)
+
+- Source: https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-bankruptcy-procedure-dec-1-2024_0.pdf (official U.S. Courts PDF; served sha256 `e78659c1dcf9ee050415d2f4916776f5f55989bde21d5c8fe025b5d14ad9acd3`).
+- Retrieved 2026-11-03. Method: `curl -L` from the official U.S. Courts URL; extracted with `pdftotext -layout`, retaining Rule 9006 only and adding the `## FRBP 9006` cite-resolution heading; no rule wording changed.
+- Rule 9006 extraction sha256 `a22fba19c93ad3a8191c9b78444c9e3ba10f7008d9c233e830c630e39078c7b0`; its original PDF is `frbp/original/federal-rules-bankruptcy-procedure-2024-12-01.pdf` (sha256 `e78659c1dcf9ee050415d2f4916776f5f55989bde21d5c8fe025b5d14ad9acd3`).

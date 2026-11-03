@@ -73,6 +73,10 @@ deadline hawaii-frcrimp45-kuhio-forward: 1.days after Served() counted_by frcrim
   forum frcrimp
 }
 
+deadline hawaii-frcrimp45-kuhio-two-business-days: 2.business_days after Served() counted_by frcrimp45-hawaii {
+  forum frcrimp
+}
+
 deadline hawaii-frcrimp45-kuhio-backward: 1.days before Scheduled() counted_by frcrimp45-hawaii {
   forum frcrimp
 }
@@ -86,6 +90,7 @@ test "a forward criminal period skips Prince Kuhio Day" cite "HRS § 8-1"
   given Served(Personal) on 2027-03-25
   expect deadline(hawaii-frcrimp45-kuhio-forward).nominal == 2027-03-26
   expect deadline(hawaii-frcrimp45-kuhio-forward) == 2027-03-29
+  expect deadline(hawaii-frcrimp45-kuhio-two-business-days) == 2027-03-30
 }
 
 test "a backward criminal period keeps its Hawaii holiday date" cite "HRS § 8-1"

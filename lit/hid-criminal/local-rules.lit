@@ -5,31 +5,6 @@ import core.frcrimp45.{ frcrimp45 }
 import core.states.hawaii.{ frcrimp45-hawaii }
 import frcrimp.deadlines.{ SentencingScheduled }
 
-deadline hawaii-kuhio-one-day: 1.days after TrialConferenceScheduled() counted_by frcrimp45-hawaii {
-  forum frcrimp
-}
-
-deadline hawaii-kuhio-two-business-days: 2.business_days after TrialConferenceScheduled() counted_by frcrimp45-hawaii {
-  forum frcrimp
-}
-
-test "Kuhio Day is skipped in a forward criminal deadline" cite "HRS § 8-1" {
-  given TrialConferenceScheduled() on 2027-03-25
-  expect deadline(hawaii-kuhio-one-day).nominal == 2027-03-26
-  expect deadline(hawaii-kuhio-one-day) == 2027-03-29
-  expect deadline(hawaii-kuhio-two-business-days) == 2027-03-30
-}
-
-// FRCrimP 45(a)(6)(C) applies state holidays only to forward counts.
-deadline hawaii-kuhio-one-business-day-back: 1.business_days before TrialConferenceScheduled() counted_by frcrimp45-hawaii {
-  forum frcrimp
-}
-
-test "Kuhio Day does not close a backward criminal deadline" cite "HRS § 8-1" {
-  given TrialConferenceScheduled() on 2027-03-29
-  expect deadline(hawaii-kuhio-one-business-day-back) == 2027-03-26
-}
-
 // The District of Hawaii's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method: FRCrimP 45(c)'s three added days follow the

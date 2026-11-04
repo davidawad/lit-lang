@@ -72,9 +72,8 @@ fn shipped(id: &str) -> Clock<'static> {
 
 /// Court closures ordered after the frozen `litgraph-final` clock was
 /// published. Apply these only when constructing the shipped-side baseline.
-const POST_FREEZE_CLOSURES: &[(&str, &str, &str)] = &[
-    ("rcfc6", "2025-01-09", "CoFC General Order 2025-01"),
-];
+const POST_FREEZE_CLOSURES: &[(&str, &str, &str)] =
+    &[("rcfc6", "2025-01-09", "CoFC General Order 2025-01")];
 
 fn ours(id: &str) -> Clock<'static> {
     lowered().clock(id).unwrap()
@@ -449,11 +448,7 @@ fn calendars_agree_with_the_shipped_holidays_from_1978() {
                     })
                     .map(|(_, date, _)| d(date)),
             );
-            assert_eq!(
-                ours(id).holidays_in(year),
-                expected,
-                "{id} {year}"
-            );
+            assert_eq!(ours(id).holidays_in(year), expected, "{id} {year}");
         }
     }
 }

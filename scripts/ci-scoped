@@ -627,14 +627,17 @@ check_quarantine() {
   echo "QUARANTINED: $count"
 }
 
-# Both gate quarantines: nextest (.config/nextest.toml, must hold records) and
+# Both gate quarantines: nextest (.config/nextest.toml, may be empty) and
 # vitest (packages/litigate-ts/gate-quarantine.txt, may be empty). TODAY as above.
 ts_quarantine=packages/litigate-ts/gate-quarantine.txt
 check_all_quarantine() {
-  local today="${1:-$(date -u +%F)}" rust ts="QUARANTINED: 0"
-  rust="$(check_quarantine .config/nextest.toml "$today")" || return 1
-  if grep -q '^# lg-zmqc\.' "$ts_quarantine"; then
-    ts="$(check_quarantine "$ts_quarantine" "$today")" || return 1
+  local today="${1:-$(date -u +%F)}" rust="QUARANTINED: 0" ts="QUARANTINED: 0"
+  local rust_config="${2:-.config/nextest.toml}" ts_config="${3:-$ts_quarantine}"
+  if grep -q '^# lg-zmqc\.' "$rust_config"; then
+    rust="$(check_quarantine "$rust_config" "$today")" || return 1
+  fi
+  if grep -q '^# lg-zmqc\.' "$ts_config"; then
+    ts="$(check_quarantine "$ts_config" "$today")" || return 1
   fi
   rust="${rust#QUARANTINED: }"
   ts="${ts#QUARANTINED: }"
@@ -895,11 +898,28 @@ fake_metadata() {
 }
 
 self_test() {
-  local failures=0 meta real quarantine
+  local failures=0 meta real quarantine empty_ts output
   meta="$(mktemp)"
   real="$(mktemp)"
   quarantine="$(mktemp)"
-  trap 'rm -f "$meta" "$real" "$quarantine"' RETURN
+  empty_ts="$(mktemp)"
+  trap 'rm -f "$meta" "$real" "$quarantine" "$empty_ts"' RETURN
+  : > "$empty_ts"
+  : > "$quarantine"
+  if ! output="$(check_all_quarantine 2026-11-01 "$quarantine" "$empty_ts")" ||
+    [[ "$output" != *"(nextest 0, ts 0)"* ]]; then
+    echo "ci-scoped self-test: empty quarantine configs must pass with nextest 0" >&2
+    failures=$((failures + 1))
+  fi
+  if check_quarantine "$quarantine" 2026-11-01 >/dev/null 2>&1; then
+    echo "ci-scoped self-test: a direct empty quarantine check must fail" >&2
+    failures=$((failures + 1))
+  fi
+  printf '# lg-zmqc.999 expires=not-a-date | fixture::malformed_test\n' > "$quarantine"
+  if check_quarantine "$quarantine" 2026-11-01 >/dev/null 2>&1; then
+    echo "ci-scoped self-test: a malformed quarantine must fail" >&2
+    failures=$((failures + 1))
+  fi
   printf '# lg-zmqc.999 expires=2026-10-31 | fixture::expired_test\n' > "$quarantine"
   if check_quarantine "$quarantine" 2026-11-01 >/dev/null 2>&1; then
     echo "ci-scoped self-test: an expired quarantine must fail" >&2

@@ -2,7 +2,7 @@
 
 Status: normative for compiler implementation. This document refines
 [`DESIGN.md`](DESIGN.md); where the two disagree, this file wins. Language
-version `1`, `Lit.lock` format `1`. Lowering targets litgraph pack schema
+version `1`, `Lit.lock` format `3`. Lowering targets litgraph pack schema
 v2, plus the additive v3 fields (`counting`, `citeSyntax`) and the engine's
 landed clock library (§8.2). The Rust
 contracts in §11 are the code form of this document. W1 beads implement
@@ -956,13 +956,14 @@ The *semantic digest* is SHA-256 of the package HIR as canonical JSON
 without any `span`: reformatting, comments and moving a declaration between files
 leave it unchanged, and any change to what the package means changes it.
 
-**`Lit.lock`** is deterministic TOML, format `version = 2`, then one
+**`Lit.lock`** is deterministic TOML, format `version = 3`, then one
 `[[package]]` table per package of the root's resolution, sorted by name
-then version, with `name`, `version`, `language`, `source` (the source
-digest, `sha256:<hex>`), `semantic` (the semantic digest, or `"unchecked"`
-for a package with errors), `texts` and `dependencies`, the last two
-sorted arrays of one entry per line. A row holds only its own package's
-digests. `texts` pins the vendored L0 texts: `"<source id> <path>
+then version. A checked package row has `name`, `version`, `language`,
+`modules`, `texts` and `dependencies`. `modules` is a sorted array with
+one `"<path> sha256:<source> sha256:<semantic>"` entry per module; the
+source digest covers that module file and the semantic digest covers its
+HIR and declared imports. A package with errors retains its package-wide
+source digest and `semantic = "unchecked"`. `texts` pins the vendored L0 texts: `"<source id> <path>
 sha256:<hex>"` for each `[sources.*]` binding whose `path` is under
 `sources/`, the digest of the file's bytes (`missing` in its place when
 the file is absent; a `path` elsewhere, a generated pack, is not pinned).
@@ -976,19 +977,21 @@ format 1, and a format 2 lock with a stored `digest`), or a missing one
 where a package with dependencies or a matter needs it, is L1007, never a
 silent relock. The L1007 of a lock in an older format names `litigate
 lock DIR` and carries a machine-applicable fix replacing the lock with
-what that command writes, so `litigate fix` upgrades it. A matter's pin records the locked `source` digest
-and selects the loaded package of the locked version.
+what that command writes, so `litigate fix` upgrades it. Format 2 remains
+readable for lock-format fixtures and is reported stale with an upgrade
+fix. A matter's pin records the locked `source` digest and selects the
+loaded package of the locked version.
 
 **Merkle root.** The Merkle digest of a row is computed on read, never
-stored: SHA-256, framed as above, over `litlock 2`, the name, version and
-language, the semantic digest (the source digest for an `unchecked`
+stored: SHA-256, framed as above, over `litlock 3`, the name, version and
+language, the sorted module digest entries (or package source digest for an `unchecked`
 package), the number of `texts` and each entry, then the number of
 `dependencies` and each entry with the Merkle digest of the row it names
 appended (an entry closing a cycle, in a package graph L1011 already
 rejects, is entered bare). A change to a package, to an L0 text it pins,
 or to anything it depends on therefore changes every Merkle digest above
 it. The lock's *Merkle root* is SHA-256, framed the same way, over `litlock
-root 2` then each row's `"name version"` and Merkle digest in that order.
+root 3` then each row's `"name version"` and Merkle digest in that order.
 `litigate lock --root DIR` verifies the lock as `--locked` does and adds
 `root` to its result (`null`, with L1007, when the lock is stale). A
 release records the root of every committed lock in its release notes and
@@ -3428,9 +3431,9 @@ beside the generated ones (a fragment both hand-authored and generated is a
 build failure). The shared clock library is `lit/core` lowered (lg-dfv4.2,
 replacing the hand-written `packs/clock/*.json` of ruling 2026-10-23): the
 engine cannot run the compiler that depends on it, so its copy,
-`crates/litigate-engine/clock/litigate-core.json` (`schemaVersion: 4`, with its
-`lowered` header), is the one generated file committed. `just lit-sync`
-rewrites it from `litigate build lit/core`, `lit-sync-check` fails while
+`crates/litigate-engine/clock/core/<module>.json` (`schemaVersion: 4`, with its
+`lowered` header), are the generated module fragments committed. `just lit-sync`
+rewrites the module fragments from `litigate build lit/core`, `lit-sync-check` fails while
 it is stale, and the build copies it beside the generated fragments; a
 forum package's own fragment (`clock/<pack id>.json`) never takes its
 name. It reproduces the former hand-written rules' due, base and anchor

@@ -68,7 +68,7 @@ fn worked_example_lock_matches_and_round_trips() -> std::io::Result<()> {
     let missing = litigate_sema::lock_diagnostics(&db, ws, pkg);
     assert!(missing.is_empty(), "{missing:#?}");
     let text = litigate_sema::render_lock(&db, ws, pkg);
-    assert!(text.starts_with("version = 2\n\n[[package]]\nname = \"frcp-rule12-example\"\nversion = \"0.1.0\"\nlanguage = 1\nsource = \"sha256:"));
+    assert!(text.starts_with("version = 3\n\n[[package]]\nname = \"frcp-rule12-example\"\nversion = \"0.1.0\"\nlanguage = 1\nmodules = ["));
     let expected = litigate_sema::pkg::lock::LockFile::parse(&text)
         .map_err(|r| std::io::Error::other(r.message))?;
     assert_eq!(

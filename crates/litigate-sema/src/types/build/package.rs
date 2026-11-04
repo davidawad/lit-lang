@@ -6,7 +6,7 @@ use crate::db::queries::{check_module, item_tree, manifest, signature, span_map}
 use crate::db::resolution::{resolution, Selected};
 use crate::db::span::{sort_diagnostics, to_span, Report, TextRange};
 use crate::hir;
-use crate::pkg::lock::{digest, semantic_digest, LockFile, LockedPackage, UNCHECKED};
+use crate::pkg::lock::{digest, LockFile, LockedPackage};
 use crate::resolve::sig::flatten;
 use litigate_base::{Diagnostic, DiagnosticCode as C, FileId, LineIndex};
 use std::collections::{BTreeMap, BTreeSet};
@@ -400,14 +400,41 @@ fn locked(
         return LockedPackage::path(name, version, dependencies);
     }
     let language = m.map_or(1, |m| m.language);
-    let source = format!("sha256:{}", package_digest(db, pkg));
-    let semantic = crate::db::queries::check_package(db, pkg)
-        .package
-        .as_ref()
-        .map_or_else(
-            || UNCHECKED.to_owned(),
-            |p| format!("sha256:{}", semantic_digest(p)),
-        );
+    let checked = crate::db::queries::check_package(db, pkg).package.clone();
+    let modules = checked.as_ref().map_or_else(Vec::new, |package| {
+        let files = pkg.files(db);
+        package
+            .modules
+            .iter()
+            .map(|module| {
+                let declaration = format!("module {}", module.name);
+                let found = files
+                    .iter()
+                    .find(|f| f.text(db).lines().any(|line| line.trim() == declaration));
+                let prefix = format!("{}.", module.package);
+                let stem = module
+                    .name
+                    .strip_prefix(&prefix)
+                    .unwrap_or(&module.name)
+                    .replace('.', "/");
+                let path = found.map_or_else(|| format!("{stem}.lit"), |f| f.relative(db).clone());
+                let source = found.map_or_else(
+                    || String::from("missing"),
+                    |f| {
+                        format!(
+                            "sha256:{}",
+                            digest("", [(path.as_str(), f.text(db).as_str())])
+                        )
+                    },
+                );
+                let value = serde_json::to_value(module).unwrap_or(serde_json::Value::Null);
+                let mut semantic = String::new();
+                crate::pkg::lock::canonical(&value, &["span"], &mut semantic);
+                let semantic = format!("sha256:{}", litigate_sema_hash(semantic.as_bytes()));
+                format!("{} {} {}", path, source, semantic)
+            })
+            .collect()
+    });
     let mut texts: Vec<String> = m
         .into_iter()
         .flat_map(|m| &m.sources)
@@ -426,9 +453,29 @@ fn locked(
         name,
         version,
         language,
-        source,
-        semantic,
+        source: if checked.is_none() {
+            format!("sha256:{}", package_digest(db, pkg))
+        } else {
+            String::new()
+        },
+        semantic: if checked.is_none() {
+            crate::pkg::lock::UNCHECKED.to_owned()
+        } else {
+            String::new()
+        },
+        modules,
         texts,
         dependencies,
     }
+}
+
+fn litigate_sema_hash(bytes: &[u8]) -> String {
+    use sha2::{Digest, Sha256};
+    Sha256::digest(bytes)
+        .iter()
+        .fold(String::new(), |mut out, byte| {
+            use std::fmt::Write as _;
+            let _ = write!(out, "{byte:02x}");
+            out
+        })
 }

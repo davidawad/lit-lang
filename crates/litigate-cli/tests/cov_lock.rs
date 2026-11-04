@@ -216,7 +216,7 @@ fn a_format_1_lock_is_upgraded_by_fix() {
         assert_eq!(stale.code, 2, "{}", stale.stdout);
         assert!(
             stale.stdout.contains(&format!(
-                "{lock}:1:1: L1007 Lit.lock format 1 is not supported (expected 2): run `litigate lock {target}`"
+                "{lock}:1:1: L1007 Lit.lock format 1 is not supported (expected 3): run `litigate lock {target}`"
             )),
             "{}",
             stale.stdout
@@ -232,7 +232,7 @@ fn a_format_1_lock_is_upgraded_by_fix() {
             assert_eq!(
                 d["message"],
                 format!(
-                    "Lit.lock format 1 is not supported (expected 2): run `litigate lock {target}` to upgrade it"
+                    "Lit.lock format 1 is not supported (expected 3): run `litigate lock {target}` to upgrade it"
                 )
             );
             let fix = &d["fixes"][0];

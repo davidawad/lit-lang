@@ -9,7 +9,7 @@ use std::collections::BTreeMap;
 use std::fmt::Write as _;
 
 /// The `Lit.lock` format this compiler reads and writes.
-pub const FORMAT: u32 = 2;
+pub const FORMAT: u32 = 3;
 
 /// SHA-256 over `parts`, each framed as `u64 BE length, bytes`; lowercase
 /// hex.
@@ -88,7 +88,7 @@ pub(crate) fn canonical(value: &Value, skip: &[&str], out: &mut String) {
     }
 }
 
-/// The Merkle digest of a lock row: SHA-256 over the format tag, `name`,
+/// The Merkle digest of a lock row: SHA-256 over the format 3 tag, `name`,
 /// `version`, `language`, `content` (the semantic digest, or the source
 /// digest of a package that does not check), the number of `texts` and
 /// each entry, then the number of `dependencies` and each entry (which
@@ -110,7 +110,7 @@ pub fn merkle(
         texts.len().to_string(),
         dependencies.len().to_string(),
     );
-    let head = ["litlock 2", name, version, &language, content];
+    let head = ["litlock 3", name, version, &language, content];
     format!(
         "sha256:{}",
         framed(
@@ -152,6 +152,9 @@ pub struct LockedPackage {
     /// [`UNCHECKED`] (empty for a path dependency).
     #[serde(default)]
     pub semantic: String,
+    /// Sorted per-module `path source semantic` digests in format 3.
+    #[serde(default)]
+    pub modules: Vec<String>,
     /// Sorted `"<source id> <path> sha256:<hex>"` entries, one per
     /// `[sources.*]` binding with a `path`: the vendored L0 text's bytes
     /// (`missing` in place of the digest when the file is absent).
@@ -184,7 +187,7 @@ impl LockedPackage {
     /// Whether the row pins a path dependency (it records no digests).
     #[must_use]
     pub fn is_path(&self) -> bool {
-        self.source.is_empty()
+        self.source.is_empty() && self.modules.is_empty()
     }
 
     /// `version`, then the content digest unless a path dependency.
@@ -228,6 +231,7 @@ impl LockFile {
         for p in &mut packages {
             p.dependencies.sort();
             p.texts.sort();
+            p.modules.sort();
         }
         packages.sort_by(|a, b| (&a.name, &a.version).cmp(&(&b.name, &b.version)));
         Self {
@@ -260,14 +264,27 @@ impl LockFile {
                 );
                 continue;
             }
+            if p.modules.is_empty() {
+                let _ = write!(
+                    out,
+                    "\n[[package]]\nname = {}\nversion = {}\nlanguage = {}\nsource = {}\nsemantic = {}\ntexts = [{}]\ndependencies = [{}]\n",
+                    quote(&p.name),
+                    quote(&p.version),
+                    p.language,
+                    quote(&p.source),
+                    quote(&p.semantic),
+                    list(&p.texts),
+                    list(&p.dependencies),
+                );
+                continue;
+            }
             let _ = write!(
                 out,
-                "\n[[package]]\nname = {}\nversion = {}\nlanguage = {}\nsource = {}\nsemantic = {}\ntexts = [{}]\ndependencies = [{}]\n",
+                "\n[[package]]\nname = {}\nversion = {}\nlanguage = {}\nmodules = [{}]\ntexts = [{}]\ndependencies = [{}]\n",
                 quote(&p.name),
                 quote(&p.version),
                 p.language,
-                quote(&p.source),
-                quote(&p.semantic),
+                list(&p.modules),
                 list(&p.texts),
                 list(&p.dependencies),
             );
@@ -281,7 +298,7 @@ impl LockFile {
     /// L1007 for unparseable text or an unknown format version.
     pub fn parse(text: &str) -> Result<Self, Report> {
         let version = Self::format(text)?;
-        if version != FORMAT {
+        if version != FORMAT && version != 2 {
             return Err(Report::new(
                 C::StaleLock,
                 TextRange::default(),
@@ -289,7 +306,10 @@ impl LockFile {
             )
             .note("regenerate it with `litigate lock`"));
         }
-        let lock: Self = toml::from_str(text).map_err(|e| invalid(&e))?;
+        let mut lock: Self = toml::from_str(text).map_err(|e| invalid(&e))?;
+        if version == 2 {
+            lock.version = 2;
+        }
         lock.pins()?;
         Ok(lock)
     }
@@ -328,11 +348,14 @@ impl LockFile {
                     p.name, p.version
                 ));
             }
-            let digests = [!p.semantic.is_empty(), p.language != 0];
+            let digests = [
+                !p.semantic.is_empty() || !p.modules.is_empty(),
+                p.language != 0,
+            ];
             let partial = if p.is_path() {
                 digests.contains(&true) || !p.texts.is_empty()
             } else {
-                digests.contains(&false)
+                digests.contains(&false) || (p.modules.is_empty() && p.semantic.is_empty())
             };
             if partial {
                 return fail(format!(
@@ -395,21 +418,19 @@ impl LockFile {
             }
         }
         path.pop();
-        let digest = merkle(
-            &p.name,
-            &p.version,
-            p.language,
-            p.content(),
-            &p.texts,
-            &deps,
-        );
+        let content = if p.modules.is_empty() {
+            p.content().to_owned()
+        } else {
+            p.modules.join("\n")
+        };
+        let digest = merkle(&p.name, &p.version, p.language, &content, &p.texts, &deps);
         if !cyclic || path.is_empty() {
             done.insert(key, digest.clone());
         }
         (digest, cyclic)
     }
 
-    /// The Merkle root: SHA-256 over the format tag and each row's
+    /// The Merkle root: SHA-256 over the format 3 tag and each row's
     /// [`LockFile::merkle`] digest in row order. Returns `sha256:<hex>`.
     #[must_use]
     pub fn root(&self) -> String {
@@ -417,7 +438,7 @@ impl LockFile {
         format!(
             "sha256:{}",
             framed(
-                std::iter::once("litlock root 2".as_bytes())
+                std::iter::once("litlock root 3".as_bytes())
                     .chain(rows.iter().flat_map(|(k, d)| [k.as_bytes(), d.as_bytes()]))
             )
         )
@@ -553,6 +574,7 @@ fn changed(was: &LockedPackage, now: &LockedPackage) -> String {
         ));
     }
     for (field, old, new) in [
+        ("modules", &was.modules, &now.modules),
         ("texts", &was.texts, &now.texts),
         ("dependencies", &was.dependencies, &now.dependencies),
     ] {
@@ -595,6 +617,7 @@ mod tests {
             language: 1,
             source: format!("sha256:{}", digest("m", [])),
             semantic: UNCHECKED.to_owned(),
+            modules: Vec::new(),
             texts: vec!["rules sources/rules.txt missing".to_owned()],
             dependencies: deps.iter().map(|d| (*d).to_owned()).collect(),
         }
@@ -606,6 +629,25 @@ mod tests {
         assert_eq!(a, digest("m", [("a.lit", "y"), ("b.lit", "x")]));
         assert_ne!(a, digest("m", [("a.lit", "yb.lit"), ("", "x")]));
         assert_eq!(a.len(), 64);
+    }
+
+    #[test]
+    fn format_three_renders_sorted_module_pins_one_per_line() {
+        let mut p = pkg("core", &[]);
+        p.source.clear();
+        p.semantic.clear();
+        p.modules = vec![
+            "states/hawaii.lit sha256:b sha256:d".into(),
+            "states/delaware.lit sha256:a sha256:c".into(),
+        ];
+        let text = LockFile::new(vec![p]).render();
+        assert!(text.starts_with("version = 3\n"));
+        let delaware = text.find("states/delaware.lit").unwrap();
+        let hawaii = text.find("states/hawaii.lit").unwrap();
+        assert!(delaware < hawaii);
+        assert_eq!(text.matches("states/").count(), 2);
+        assert!(!text.contains("\nsource ="));
+        assert!(!text.contains("\nsemantic ="));
     }
 
     #[test]
@@ -658,7 +700,7 @@ mod tests {
             ),
             (
                 "version = 1",
-                "Lit.lock format 1 is not supported (expected 2)",
+                "Lit.lock format 1 is not supported (expected 3)",
             ),
         ] {
             let report = verify(Some(text), &lock).err();
@@ -671,25 +713,33 @@ mod tests {
     }
 
     #[test]
+    fn format_two_locks_remain_readable_for_migration_fixtures() {
+        let text = "version = 2\n\n[[package]]\nname = \"core\"\nversion = \"1.0.0\"\nlanguage = 1\nsource = \"sha256:source\"\nsemantic = \"sha256:semantic\"\ntexts = []\ndependencies = []\n";
+        let parsed = LockFile::parse(text).unwrap();
+        assert_eq!(parsed.version, 2);
+        assert_eq!(parsed.packages[0].source, "sha256:source");
+    }
+
+    #[test]
     fn only_an_older_format_is_upgraded() {
         let v1 = "version = 1\n\n[[package]]\nname = \"core\"\n";
-        let report = upgrade(v1, "lit/core", || "version = 2\n".to_owned());
+        let report = upgrade(v1, "lit/core", || "version = 3\n".to_owned());
         assert_eq!(
             report,
             Some(
                 Report::new(
                     C::StaleLock,
                     TextRange::default(),
-                    "Lit.lock format 1 is not supported (expected 2): run `litigate lock lit/core` to upgrade it",
+                    "Lit.lock format 1 is not supported (expected 3): run `litigate lock lit/core` to upgrade it",
                 )
                 .fix(
                     TextRange::new(0, 39),
-                    "version = 2\n",
+                    "version = 3\n",
                     Applicability::MachineApplicable
                 )
             )
         );
-        for current in ["version = 2", "version = 3", "version = "] {
+        for current in ["version = 3", "version = "] {
             assert_eq!(upgrade(current, ".", String::new), None, "{current}");
         }
     }
@@ -902,7 +952,7 @@ mod tests {
     proptest! {
         #[test]
         fn prop_quoted_strings_parse_back(s in "\\PC{1,24}") {
-            let lock = LockFile::new(vec![LockedPackage { name: s.clone(), version: s.clone(), source: s.clone(), semantic: s.clone(), texts: vec![s.clone()], dependencies: Vec::new(), language: 1 }]);
+            let lock = LockFile::new(vec![LockedPackage { name: s.clone(), version: s.clone(), source: s.clone(), semantic: s.clone(), modules: Vec::new(), texts: vec![s.clone()], dependencies: Vec::new(), language: 1 }]);
             prop_assert_eq!(LockFile::parse(&lock.render()).ok(), Some(lock));
         }
     }

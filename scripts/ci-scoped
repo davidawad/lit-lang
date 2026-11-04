@@ -749,7 +749,10 @@ run() {
   # report. This avoids replaying the full HEAD corpus twice.
   if corpus_change "$files"; then
     stage expect-impact cargo run -q -p litigate-cli -- --format human test --impact "$base" --check-head
-    if [ "$plan_stages" -eq 0 ]; then
+    # The report only of a stage that ran: a --stages list without
+    # expect-impact leaves no log, and reading it failed a passing stage
+    # run with rc=2 (dot-8ixtpo).
+    if [ "$plan_stages" -eq 0 ] && [ -f "$logdir/expect-impact.log" ]; then
       [[ " ${failed[*]} " == *" expect-impact "* ]] || sed 's/^/  /' "$logdir/expect-impact.log"
     fi
   else
@@ -1025,6 +1028,10 @@ self_test() {
   if ! grep -Fq 'stage expect-impact cargo run -q -p litigate-cli -- --format human test --impact "$base" --check-head' <<<"$run_stages" ||
     grep -Eq 'stage (expect|impact) cargo run -q -p litigate-cli -- --format human test' <<<"$run_stages"; then
     echo "ci-scoped self-test: corpus changes must check HEAD and report impact in one stage" >&2
+    failures=$((failures + 1))
+  fi
+  if ! grep -Fq '[ "$plan_stages" -eq 0 ] && [ -f "$logdir/expect-impact.log" ]; then' <<<"$run_stages"; then
+    echo "ci-scoped self-test: the expect-impact report must read its log only when the stage ran" >&2
     failures=$((failures + 1))
   fi
   local planned_corpus_stages

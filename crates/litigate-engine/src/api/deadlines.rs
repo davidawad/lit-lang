@@ -4,7 +4,7 @@
 //! directly (like `packs`/`lint`) — a deadline is a structural fact about
 //! a forum's procedure, not a scenario-dependent quantity.
 
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 
 use super::Warn;
 use crate::clock::{

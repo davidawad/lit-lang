@@ -4,7 +4,7 @@
 //! directly (like `packs`/`lint`) — a deadline is a structural fact about
 //! a forum's procedure, not a scenario-dependent quantity.
 
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 use super::Warn;
 use crate::clock::{
@@ -167,6 +167,28 @@ fn compute_for_edge(g: &Graph, clock: &Clock, e: EdgeIx, ctx: &Ctx) -> Result<Va
     Ok(edge_result(g, e, d, clock, &computed))
 }
 
+fn schedule_warnings(clock: &Clock, due_date: &str, edge_id: &str) -> Vec<Warn> {
+    let Ok(due) = Date::parse_iso(due_date) else {
+        return vec![];
+    };
+    clock
+        .calendars
+        .iter()
+        .chain(&clock.forward_calendars)
+        .filter_map(|calendar| {
+            let last = calendar.last_one_time_year()?;
+            (due.ymd().0 > last).then(|| Warn {
+                code: "calendar-year-unmodeled".into(),
+                at: Some(edge_id.to_owned()),
+                message: format!(
+                    "holiday calendar {} has a dated one-time schedule modeled through {last}; computed deadline {due} is later",
+                    calendar.id
+                ),
+            })
+        })
+        .collect()
+}
+
 /// Every edge id reachable from `start` by following out-edges (`start`
 /// itself included as the walk's root, not as an edge).
 fn reachable_edges(g: &Graph, start: NodeIx) -> Vec<EdgeIx> {
@@ -225,9 +247,14 @@ pub(super) fn deadlines_op(
             }
         };
         let v = compute_for_edge(g, &clock, e, &ctx)?;
+        let warns = schedule_warnings(
+            &clock,
+            v["due_date"].as_str().unwrap_or_default(),
+            &g.edges[e].id,
+        );
         return Ok((
             json!({ "trigger": a.trigger, "count": 1, "deadlines": [v] }),
-            vec![],
+            warns,
         ));
     }
 
@@ -248,7 +275,14 @@ pub(super) fn deadlines_op(
             continue;
         }
         match clock_for_edge(g, lib, e).and_then(|clock| compute_for_edge(g, &clock, e, &ctx)) {
-            Ok(v) => out.push(v),
+            Ok(v) => {
+                warns.extend(schedule_warnings(
+                    &clock_for_edge(g, lib, e)?,
+                    v["due_date"].as_str().unwrap_or_default(),
+                    &g.edges[e].id,
+                ));
+                out.push(v);
+            }
             Err(err) => warns.push(Warn {
                 code: "deadline-uncomputable".into(),
                 at: Some(g.edges[e].id.clone()),

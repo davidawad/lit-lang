@@ -9,7 +9,7 @@
 
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
-use litigate_engine::api::{handle, Catalog, Op, Request};
+use litigate_engine::api::{Catalog, Op, Request, handle};
 use litigate_engine::model::Pack;
 use serde_json::json;
 
@@ -228,10 +228,11 @@ fn edge_mode_reports_unresolvable_counting_as_a_warning() {
     );
     assert!(resp.ok, "{resp:?}");
     assert_eq!(resp.result.unwrap()["count"], json!(0));
-    assert!(resp
-        .warnings
-        .iter()
-        .any(|w| w.code == "deadline-uncomputable"));
+    assert!(
+        resp.warnings
+            .iter()
+            .any(|w| w.code == "deadline-uncomputable")
+    );
 }
 
 #[test]
@@ -246,10 +247,11 @@ fn node_mode_skips_no_deadline_edges_and_reports_bad_length_as_a_warning() {
     // Two computable deadlines (calendar + court); "no-deadline" is skipped
     // outright and "bad-length" surfaces as a warning, not a result row.
     assert_eq!(r["count"], json!(2));
-    assert!(resp
-        .warnings
-        .iter()
-        .any(|w| w.code == "deadline-uncomputable"));
+    assert!(
+        resp.warnings
+            .iter()
+            .any(|w| w.code == "deadline-uncomputable")
+    );
 }
 
 #[test]
@@ -264,10 +266,11 @@ fn node_mode_unresolvable_rule_set_is_a_warning_not_an_error() {
     );
     assert!(resp.ok, "{resp:?}");
     assert_eq!(resp.result.unwrap()["count"], json!(0));
-    assert!(resp
-        .warnings
-        .iter()
-        .any(|w| w.code == "deadline-uncomputable"));
+    assert!(
+        resp.warnings
+            .iter()
+            .any(|w| w.code == "deadline-uncomputable")
+    );
 }
 
 #[test]
@@ -283,11 +286,13 @@ fn court_days_unit_is_computed_with_business_day_steps() {
     assert!(resp.ok, "{resp:?}");
     let d = &resp.result.unwrap()["deadlines"][0];
     assert_eq!(d["unit"], json!("court"));
-    assert!(d["steps"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .any(|s| s.as_str().unwrap().contains("court day(s)")));
+    assert!(
+        d["steps"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|s| s.as_str().unwrap().contains("court day(s)"))
+    );
 }
 
 #[test]
@@ -525,4 +530,41 @@ fn a_deadline_naming_its_own_counting_rule_is_counted_by_it() {
         resp.result.unwrap()["deadlines"][0]["rule_set"],
         json!("frap26")
     );
+}
+
+#[test]
+fn georgia_one_time_schedule_warns_only_after_its_last_year() {
+    let c = catalog(vec![pack(json!({
+        "schemaVersion": 3, "counting": "frbp9006-georgia", "id": "georgia-test",
+        "title": "Georgia clock test", "startNodeId": "trigger", "forum": "bankr-gan",
+        "nodes": [{"id": "trigger", "kind": "state", "label": "Trigger"},
+                  {"id": "due", "kind": "state", "label": "Due"}],
+        "edges": [{"id": "deadline", "from": "trigger", "to": "due", "label": "Deadline",
+                   "deadline": {"length": 1}}]
+    }))]);
+    for (trigger, expected_warning) in [("2026-01-01", false), ("2027-01-01", true)] {
+        let resp = handle(
+            &deadlines_req(&["georgia-test"], D::new(trigger).edge("deadline").op()),
+            &c,
+        );
+        assert!(resp.ok, "{resp:?}");
+        let warnings = resp
+            .warnings
+            .iter()
+            .filter(|w| w.code == "calendar-year-unmodeled")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            !warnings.is_empty(),
+            expected_warning,
+            "trigger {trigger}: {warnings:?}"
+        );
+        if let Some(warning) = warnings.first() {
+            assert!(
+                warning.example.contains("georgia-holidays"),
+                "{}",
+                warning.example
+            );
+            assert!(warning.example.contains("2026"), "{}", warning.example);
+        }
+    }
 }

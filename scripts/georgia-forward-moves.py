@@ -129,12 +129,23 @@ def main():
                         errors.append(f"{deadline} {trigger}: calendar-day nominal date changed")
                     if roll_delta and not any(old_nominal <= h < new_due for h in HOLIDAYS):
                         errors.append(f"{deadline} {trigger}: final-day roll changed {roll_delta} days without a Georgia holiday")
-                    # The movement is the nominal skip plus the change in
-                    # end-of-period roll. The latter can span a weekend or a
-                    # federal holiday after a Georgia closure (for example,
-                    # Good Friday 2026 rolls through Saturday/Sunday).
-                    if delta != (new_nominal - old_nominal).days + roll_delta:
-                        errors.append(f"{deadline} {trigger}: due shift does not equal nominal shift plus changed roll span")
+                    # Recompute the nominal date by enumerating Georgia
+                    # closures individually. This checks each row against
+                    # its own trigger and rule instead of asserting the
+                    # arithmetic identity used to describe the movement.
+                    if unit in ("business_days", "court_days"):
+                        encountered = [h for h in HOLIDAYS
+                                       if trigger < h <= new_nominal and h.weekday() < 5]
+                        expected_nominal = old_nominal + timedelta(days=len(encountered))
+                        if expected_nominal != new_nominal:
+                            errors.append(
+                                f"{deadline} {trigger}: recomputed {len(encountered)} weekday Georgia closures place nominal at {expected_nominal}, got {new_nominal}")
+                    elif new_nominal != old_nominal:
+                        errors.append(f"{deadline} {trigger}: calendar-day recomputation expected nominal {old_nominal}, got {new_nominal}")
+                    if roll_delta:
+                        rolled_closures = [h for h in HOLIDAYS if old_nominal <= h < new_due]
+                        if not rolled_closures:
+                            errors.append(f"{deadline} {trigger}: recomputed roll interval has no Georgia closure")
                     relevant = sorted(set(responsible))
                     holiday = "; ".join(f"{h.isoformat()} {HOLIDAYS[h]}" for h in relevant)
                     moved.append((deadline, cite, direction, trigger, old_due, new_due, holiday))

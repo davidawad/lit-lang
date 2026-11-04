@@ -61,6 +61,7 @@ fn holiday(sink: &mut Sink, h: &hir::Holiday) -> Option<Holiday> {
         None => None,
     };
     let mut cycle = None;
+    let mut one_time_year = None;
     let rule = match &h.date {
         HolidayDate::Fixed { month, day } => EngineDate::Fixed {
             month: u32::from(*month),
@@ -111,6 +112,7 @@ fn holiday(sink: &mut Sink, h: &hir::Holiday) -> Option<Holiday> {
         }
         HolidayDate::Once { date: on } => {
             let on = date(sink, on)?;
+            one_time_year = Some(on.ymd().0);
             (from, until) = one_time_holiday_window(observed, on, from, until);
             let (_, month, day) = on.ymd();
             EngineDate::Fixed { month, day }
@@ -127,6 +129,7 @@ fn holiday(sink: &mut Sink, h: &hir::Holiday) -> Option<Holiday> {
             until,
         }),
         cite: None,
+        one_time_year,
     })
 }
 

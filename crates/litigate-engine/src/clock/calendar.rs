@@ -177,6 +177,19 @@ pub struct Holiday {
     /// Authority creating the holiday or its effective date.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub cite: Option<String>,
+    /// Year of a one-time authored `once(date)` occurrence. Recurring
+    /// holiday rules leave this unset; consumers use it to identify the
+    /// end of a dated schedule.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub one_time_year: Option<i32>,
+}
+
+impl HolidayCalendar {
+    /// Last year represented by one-time entries, if this calendar has any.
+    #[must_use]
+    pub fn last_one_time_year(&self) -> Option<i32> {
+        self.holidays.iter().filter_map(|h| h.one_time_year).max()
+    }
 }
 
 impl Holiday {
@@ -329,6 +342,7 @@ mod tests {
             observed,
             effective: None,
             cite: None,
+            one_time_year: None,
         }
     }
 

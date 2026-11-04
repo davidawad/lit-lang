@@ -1,4 +1,4 @@
-//! State day-after-Thanksgiving calendars use explicit, mechanically checked dates.
+//! State day-after-Thanksgiving calendars use mechanically checked rules.
 use std::fs;
 use std::path::Path;
 
@@ -27,7 +27,7 @@ fn expected_day_after_thanksgiving(year: i32) -> String {
 }
 
 #[test]
-fn explicit_thanksgiving_dates_are_fourth_thursday_plus_one() {
+fn state_thanksgiving_calendars_use_fourth_thursday_plus_one() {
     let states = repo().join("lit/core/states");
     let mut found = std::collections::BTreeSet::new();
     for entry in fs::read_dir(states).unwrap() {
@@ -44,6 +44,14 @@ fn explicit_thanksgiving_dates_are_fourth_thursday_plus_one() {
                     "{}: {trimmed}",
                     path.display()
                 );
+            }
+            if trimmed.starts_with("day-after-thanksgiving:") {
+                assert!(
+                    trimmed.contains("offset(4, thursday, 11, 1)"),
+                    "{}: unexpected Thanksgiving rule: {trimmed}",
+                    path.display()
+                );
+                found.insert(path.file_stem().unwrap().to_string_lossy().to_string());
             }
             let Some(rest) = trimmed.strip_prefix("day-after-thanksgiving-") else {
                 continue;

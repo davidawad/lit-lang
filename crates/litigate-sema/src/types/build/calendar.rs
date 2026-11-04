@@ -16,7 +16,15 @@ const WEEKDAYS: [&str; 7] = [
     "sunday",
 ];
 
-const RULES: [&str; 5] = ["fixed", "nth", "last", "every", "once"];
+const RULES: [&str; 7] = [
+    "fixed",
+    "nth",
+    "last",
+    "every",
+    "once",
+    "offset",
+    "good_friday",
+];
 
 impl Cx<'_, '_> {
     /// An integer constant in `lo..=hi`, as `T` (which holds that range).
@@ -70,6 +78,8 @@ impl Cx<'_, '_> {
             "last" => &["weekday", "month"],
             "every" => &["years", "from_year", "month", "day"],
             "once" => &["date"],
+            "offset" => &["n", "weekday", "month", "days"],
+            "good_friday" => &[],
             _ => {
                 self.bad_counting(callee, &RULES);
                 return None;
@@ -112,6 +122,13 @@ impl Cx<'_, '_> {
                 month: self.small(&args[2], 1, 12, "month")?,
                 day: self.small(&args[3], 1, 31, "day")?,
             },
+            "offset" => HolidayDate::Offset {
+                n: self.small(&args[0], 1, 4, "n")?,
+                weekday: self.weekday(&args[1])?,
+                month: self.small(&args[2], 1, 12, "month")?,
+                days: self.small(&args[3], -31, 31, "days")?,
+            },
+            "good_friday" => HolidayDate::GoodFriday,
             _ => {
                 if let ExprKind::Date(d) = &args[0].kind {
                     HolidayDate::Once { date: d.clone() }

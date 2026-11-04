@@ -58,7 +58,7 @@ import core.states.washington.{ frbp9006-washington, frcp6-washington }
 import core.states.west-virginia.{ frbp9006-west-virginia, frcp6-west-virginia }
 import core.states.wisconsin.{ frbp9006-wisconsin, frcp6-wisconsin }
 import core.states.wyoming.{ frbp9006-wyoming, frcp6-wyoming }
-import core.time.{ Served, ServiceMethod }
+import core.time.{ Served, Scheduled, ServiceMethod }
 
 deadline virgin-islands-three-business-days: 3.business_days after Served() counted_by frcrimp45-virgin-islands {
   forum frcrimp
@@ -153,6 +153,14 @@ deadline frbp9006-massachusetts-smoke: 1.days after Served() counted_by frbp9006
 }
 
 deadline frbp9006-michigan-smoke: 1.days after Served() counted_by frbp9006-michigan {
+  forum bankr-mie
+}
+
+deadline frbp9006-michigan-2-court-days-before: 2.court_days before Scheduled() counted_by frbp9006-michigan {
+  forum bankr-mie
+}
+
+deadline frbp9006-michigan-3-calendar-days: 3.days before Scheduled() counted_by frbp9006-michigan {
   forum bankr-mie
 }
 
@@ -434,6 +442,18 @@ test "frbp9006-massachusetts counts a one-day period" {
 test "frbp9006-michigan counts a one-day period" {
   given Served(Personal) on 2027-02-02
   expect deadline(frbp9006-michigan-smoke) == 2027-02-03
+}
+
+test "a Michigan state holiday stays open in a backward bankruptcy court-day count (FRBP 9006(a)(6)(C): state holidays only for periods measured after an event)" cite "FRBP 9006(a)(6)(C)"
+{
+  given Scheduled() on 2027-02-17
+  expect deadline(frbp9006-michigan-2-court-days-before) == 2027-02-12
+}
+
+test "Michigan state holidays are not excluded from a backward bankruptcy calendar-day count" cite "FRBP 9006(a)(6)(C)"
+{
+  given Scheduled() on 2027-02-17
+  expect deadline(frbp9006-michigan-3-calendar-days) == 2027-02-12
 }
 
 test "frbp9006-minnesota counts a one-day period" {

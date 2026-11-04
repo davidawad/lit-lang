@@ -44,3 +44,17 @@
 - Source: as the extract, https://www.gasupreme.us/wp-content/uploads/2026/04/UNIFORM-SUPERIOR-COURT-RULES-2026_04_09.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, the file dated April 9, 2026.
 - Sectioned sha256 7d305220bba230bd421fb293066a2de2ca8de17beb3f7ddc2e3729fc71780842 (the `path_sha256` pinned by `lit/ga-criminal-trial-court/Lit.toml`).
+
+### `ga-state-civil/ocga-title-1-ch-4-holidays.txt` — O.C.G.A. § 1-4-1 (Georgia public and legal holidays)
+
+- Source: 2025 Code of Georgia, Title 1, Chapter 4, § 1-4-1, https://law.justia.com/codes/georgia/title-1/chapter-4/section-1-4-1/ (public statutory text; retrieved November 2, 2026).
+- The 2022 amendment is effective April 4, 2022. The statute makes federal holidays and separately Governor-designated days public and legal holidays; annual executive dates are not projected without a published schedule.
+
+### `ga-state-civil/ga-2026-state-holidays.txt` — Georgia 2026 state holiday schedule
+
+- Source: Georgia State Holidays 2026, https://georgia.gov/georgia-state-holidays-2026 (official state schedule).
+- Edition: 2026 schedule as served; the page lists all state-agency closures and the observed Washington's Birthday on December 24.
+- Retrieved: November 2, 2026.
+- Extract: normalized text extract of the schedule; sha256 `4d365d905e2c0a5e96b166d2311048ed90b770fe68c3a9f6aea7ba393f55e41b`.
+- Original: `ga-state-civil/original/georgia-state-holidays-2026.html`, as served; sha256 `7d7a50b093e50849062262a66f96c918ffd8f01177fb60394cb3ea2a1f59d0c0`.
+- The three dates not already closed by the federal holiday calendar are April 3, November 27 and December 24. They are represented as one-time calendar entries under O.C.G.A. § 1-4-1(a)(2), effective from April 4, 2022.

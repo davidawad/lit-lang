@@ -2,7 +2,7 @@
 //! Holiday calendars as data: the `HolidayCalendar` IR.
 //!
 //! A calendar is a list of holidays, each a date rule (a fixed month/day or
-//! the nth weekday of a month), an optional multi-year cycle, an
+//! the nth weekday of a month, a relative date), an optional multi-year cycle, an
 //! observed-day rule for weekend dates, and an effective interval. Nothing
 //! here names a forum or a statute: the shipped calendars are `lit/core`'s
 //! `calendar` declarations, lowered (see `docs/PACK_SCHEMA.md`), and a
@@ -17,6 +17,23 @@ use std::collections::BTreeSet;
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+
+fn easter_sunday(year: i32) -> Option<Date> {
+    let a = year.rem_euclid(19);
+    let b = year.div_euclid(100);
+    let c = year.rem_euclid(100);
+    let d = b / 4;
+    let e = b % 4;
+    let f = (b + 8) / 25;
+    let g = (b - f + 1) / 3;
+    let h = (19 * a + b - d - g + 15) % 30;
+    let i = c / 4;
+    let k = c % 4;
+    let l = (32 + 2 * e + 2 * i - h - k).rem_euclid(7);
+    let m = (a + 11 * h + 22 * l) / 451;
+    let n = h + l - 7 * m + 114;
+    Date::from_ymd(year, (n / 31) as u32, (n % 31 + 1) as u32).ok()
+}
 
 use super::date::{self, Date};
 use crate::error::{Error, Result};
@@ -78,6 +95,19 @@ pub enum HolidayDate {
         /// Occurrence: 1..=5, or -1..=-5 from the end.
         nth: i32,
     },
+    /// A weekday-relative date shifted by calendar days.
+    OffsetWeekday {
+        /// Month containing the anchor weekday.
+        month: u32,
+        /// Anchor weekday.
+        weekday: Weekday,
+        /// Occurrence in the month.
+        nth: i32,
+        /// Calendar-day displacement.
+        days: i32,
+    },
+    /// Good Friday, computed as two days before Gregorian Easter Sunday.
+    GoodFriday,
 }
 
 /// Which year a cyclic holiday recurs in: every `every` years counting from
@@ -172,6 +202,19 @@ impl Holiday {
                 }
                 d
             }
+            HolidayDate::OffsetWeekday {
+                month,
+                weekday,
+                nth,
+                days,
+            } => {
+                let d = Date::nth_weekday_of_month(year, *month, weekday.number(), *nth).ok()?;
+                if d.ymd().1 != *month {
+                    return None;
+                }
+                d.add_days(i64::from(*days))
+            }
+            HolidayDate::GoodFriday => easter_sunday(year)?.add_days(-2),
         };
         let d = match (self.observed, raw.weekday()) {
             (Observance::NearestWeekday, date::SATURDAY) => raw.add_days(-1),
@@ -199,6 +242,13 @@ impl Holiday {
                 }
                 (*month, None)
             }
+            HolidayDate::OffsetWeekday { month, nth, .. } => {
+                if *nth == 0 || !(-5..=5).contains(nth) {
+                    return bad(format!("nth {nth} must be 1..=5 or -1..=-5"));
+                }
+                (*month, None)
+            }
+            HolidayDate::GoodFriday => (4, None),
         };
         // 2000 is a leap year, so every real month/day pair parses.
         if Date::from_ymd(2000, month, day.unwrap_or(1)).is_err() {
@@ -344,6 +394,73 @@ mod tests {
         };
         assert_eq!(h.observed_in(2026), None);
         assert_eq!(h.observed_in(2016), Some(d("2016-02-29")));
+    }
+
+    #[test]
+    fn relative_holidays_match_thanksgiving_edge_years_and_good_friday() {
+        let thanksgiving = Holiday {
+            date: HolidayDate::OffsetWeekday {
+                month: 11,
+                weekday: Weekday::Thursday,
+                nth: 4,
+                days: 1,
+            },
+            ..fixed(1, 1, Observance::Actual)
+        };
+        assert_eq!(thanksgiving.observed_in(2024), Some(d("2024-11-29")));
+        assert_eq!(thanksgiving.observed_in(2030), Some(d("2030-11-29")));
+        let good_friday = Holiday {
+            date: HolidayDate::GoodFriday,
+            ..fixed(1, 1, Observance::Actual)
+        };
+        assert_eq!(good_friday.observed_in(2024), Some(d("2024-03-29")));
+        assert_eq!(good_friday.observed_in(2030), Some(d("2030-04-19")));
+    }
+
+    #[test]
+    fn migrated_delaware_and_oklahoma_dates_match_their_once_calendars() {
+        let thanksgiving = Holiday {
+            date: HolidayDate::OffsetWeekday {
+                month: 11,
+                weekday: Weekday::Thursday,
+                nth: 4,
+                days: 1,
+            },
+            ..fixed(1, 1, Observance::Actual)
+        };
+        let good_friday = Holiday {
+            date: HolidayDate::GoodFriday,
+            ..fixed(1, 1, Observance::Actual)
+        };
+
+        // The old `once()` entries listed these computed calendar dates one
+        // year at a time. Check every year they covered, including the two
+        // years where November 1 is Friday and the fourth Thursday is Nov 28.
+        for year in 2011..=2050 {
+            let expected_thanksgiving =
+                Date::nth_weekday_of_month(year, 11, Weekday::Thursday.number(), 4)
+                    .unwrap()
+                    .add_days(1);
+            assert_eq!(
+                thanksgiving.observed_in(year),
+                Some(expected_thanksgiving),
+                "Delaware Thanksgiving {year}"
+            );
+            if year >= 2022 {
+                assert_eq!(
+                    thanksgiving.observed_in(year),
+                    Some(expected_thanksgiving),
+                    "Oklahoma Thanksgiving {year}"
+                );
+            }
+            assert_eq!(
+                good_friday.observed_in(year),
+                Some(easter_sunday(year).unwrap().add_days(-2)),
+                "Delaware Good Friday {year}"
+            );
+        }
+        assert_eq!(thanksgiving.observed_in(2024), Some(d("2024-11-29")));
+        assert_eq!(thanksgiving.observed_in(2030), Some(d("2030-11-29")));
     }
 
     #[test]

@@ -897,6 +897,19 @@ pub enum HolidayDate {
         /// Month 1-12.
         month: u8,
     },
+    /// `offset(n, weekday, month, days)` shifts a weekday date by calendar days.
+    Offset {
+        /// Weekday occurrence, 1-4.
+        n: u8,
+        /// Anchor weekday.
+        weekday: String,
+        /// Anchor month, 1-12.
+        month: u8,
+        /// Calendar-day displacement.
+        days: i32,
+    },
+    /// Good Friday, two days before Gregorian Easter Sunday.
+    GoodFriday,
     /// `every(years, from_year, month, day)`: years `from_year + k*years`, k >= 0.
     Every {
         /// Period in years.

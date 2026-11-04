@@ -2902,6 +2902,8 @@ lowered rule reproduces their `due_date`, `base_date` and
 | `h: … effective [a, b)` | `Holiday {id: h, name: h, effective: {from: a, until: b}}` |
 | `fixed(m, d)` | `date: {fixed: {month, day}}` |
 | `nth(n, w, m)` / `last(w, m)` | `date: {nthWeekday: {month, weekday, nth}}`, `nth` = n / -1 |
+| `offset(n, w, m, d)` | the `nthWeekday` date shifted by `d` calendar days (positive or negative) |
+| `good_friday()` | two calendar days before Gregorian Easter Sunday |
 | `every(y, from, m, d)` | `fixed` plus `cycle: {every: y, anchorYear: from}`, effective from no earlier than January 1 of `from` |
 | `once(date)` | `fixed` on that month and day, effective `[date, date + 1)` (widened by a day each side under `nearest_weekday`, and forward by a day under `next_day`) |
 | `observed nearest_weekday` / `next_day` / none | `observed: "nearest-weekday"` / `"next-day"` / `"actual"` |

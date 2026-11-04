@@ -67,6 +67,18 @@ fn holiday(sink: &mut Sink, h: &hir::Holiday) -> Option<Holiday> {
             weekday: weekday(sink, w)?,
             nth: -1,
         },
+        HolidayDate::Offset {
+            n,
+            weekday: w,
+            month,
+            days,
+        } => EngineDate::OffsetWeekday {
+            month: u32::from(*month),
+            weekday: weekday(sink, w)?,
+            nth: i32::from(*n),
+            days: *days,
+        },
+        HolidayDate::GoodFriday => EngineDate::GoodFriday,
         HolidayDate::Every {
             years,
             from_year,

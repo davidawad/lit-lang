@@ -34,6 +34,14 @@ deadline frcp6-10-days-before-service: 10.days before Served() counted_by frcp6 
 deadline frcp6-14-days-before-service: 14.days before Served() counted_by frcp6 { forum frcp }
 deadline frcp6-delaware-1-day: 1.days after Served() counted_by frcp6-delaware { forum frcp }
 
+deadline frcp6-delaware-1-court-day-before: 1.court_days before Scheduled() counted_by frcp6-delaware {
+  forum frcp
+}
+
+deadline frcp6-delaware-3-calendar-days: 3.days before Scheduled() counted_by frcp6-delaware {
+  forum frcp
+}
+
 test "the trigger day is excluded" cite "FRCP 6(a)(1)(A)"
 {
   given Served(Personal) on 2026-01-06
@@ -45,6 +53,18 @@ test "a Delaware state holiday closes a forward period in the District of Delawa
   given Served(Personal) on 2027-03-25
   expect deadline(frcp6-delaware-1-day).nominal == 2027-03-26
   expect deadline(frcp6-delaware-1-day) == 2027-03-29
+}
+
+test "a Delaware state holiday stays open in a backward civil court-day count (FRCP 6(a)(6)(C): state holidays only for periods measured after an event)" cite "FRCP 6(a)(6)(C)"
+{
+  given Scheduled() on 2027-03-29
+  expect deadline(frcp6-delaware-1-court-day-before) == 2027-03-26
+}
+
+test "Delaware state holidays are not excluded from a backward civil calendar-day count" cite "FRCP 6(a)(6)(C)"
+{
+  given Scheduled() on 2027-03-29
+  expect deadline(frcp6-delaware-3-calendar-days) == 2027-03-26
 }
 
 test "every day counts, weekends included" cite "FRCP 6(a)(1)(B)"

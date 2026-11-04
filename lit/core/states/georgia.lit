@@ -1,0 +1,42 @@
+module core.states.georgia
+
+import core.calendar.{ us-federal-holidays }
+
+/// Georgia's additional declared holiday on the official 2026 state schedule
+/// (O.C.G.A. § 1-4-1(a)(2)): Good Friday, April 3; November 27; and
+/// December 24 (the observed Washington’s Birthday). The statute makes days
+/// proclaimed by the Governor public and legal holidays; annual dates are not
+/// projected without a published schedule. The federal holidays enumerated
+/// by § 1-4-1(a)(1) are already in `us-federal-holidays`.
+calendar georgia-holidays cite "O.C.G.A. § 1-4-1"
+{
+  good-friday-2026: once(2026-04-03) effective [2022-04-04, ..)
+  day-after-thanksgiving-2026: once(2026-11-27) effective [2022-04-04, ..)
+  washington-observed-2026: once(2026-12-24) effective [2022-04-04, ..)
+}
+
+/// FRBP 9006(a)(6)(C) includes a day declared a holiday by the state where
+/// the district court sits for a period measured after an event.
+counting frbp9006-georgia effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays georgia-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bankr-gan]
+  allow_hours
+  end_of_month clamp
+}

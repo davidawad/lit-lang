@@ -70,6 +70,12 @@ fn shipped(id: &str) -> Clock<'static> {
     hand().clock(id).unwrap()
 }
 
+/// Court closures ordered after the frozen `litgraph-final` clock was
+/// published. Apply these only when constructing the shipped-side baseline.
+const POST_FREEZE_CLOSURES: &[(&str, &str, &str)] = &[
+    ("rcfc6", "2025-01-09", "CoFC General Order 2025-01"),
+];
+
 fn ours(id: &str) -> Clock<'static> {
     lowered().clock(id).unwrap()
 }
@@ -127,7 +133,17 @@ fn both(
 }
 
 fn agree(id: &str, dl: &DayDeadline) -> Result<(), String> {
-    let (a, b) = both(id, dl, &ClockConfig::default());
+    let a = outcome(compute_due_date(dl, &ours(id), &ClockConfig::default()));
+    let closures: Vec<Date> = POST_FREEZE_CLOSURES
+        .iter()
+        .filter(|(closure_id, _, _)| *closure_id == id)
+        .map(|(_, date, _)| d(date))
+        .collect();
+    let frozen_cfg = ClockConfig {
+        additional_holidays: closures,
+        ..ClockConfig::default()
+    };
+    let b = outcome(compute_due_date(dl, &shipped(id), &frozen_cfg));
     match (&a, &b) {
         (Ok(x), Ok(y)) if x == y => Ok(()),
         (Err(_), Err(_)) => Ok(()),
@@ -424,9 +440,18 @@ fn every_trigger_date_agrees_with_the_shipped_rules() {
 fn calendars_agree_with_the_shipped_holidays_from_1978() {
     for (id, _) in RULES {
         for year in 1978..=2100 {
+            let mut expected = shipped(id).holidays_in(year);
+            expected.extend(
+                POST_FREEZE_CLOSURES
+                    .iter()
+                    .filter(|(closure_id, date, _)| {
+                        *closure_id == id && date[..4].parse::<i32>().unwrap() == year
+                    })
+                    .map(|(_, date, _)| d(date)),
+            );
             assert_eq!(
                 ours(id).holidays_in(year),
-                shipped(id).holidays_in(year),
+                expected,
                 "{id} {year}"
             );
         }

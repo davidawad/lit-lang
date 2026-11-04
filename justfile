@@ -303,11 +303,14 @@ expect:
 ci-scoped BASE='':
     scripts/ci-scoped run {{BASE}}
 
-# The post-land nightly on HEAD (lg-kuei): the whole workspace with every
-# sweep, every doctest and `cov-litigate`; a red files a P0 bead naming
-# the commit. Ends `NIGHTLY: pass|fail commit=SHA`.
-nightly:
-    scripts/ci-scoped nightly
+# Parallel post-land nightly jobs. Run these against the same commit; the
+# nightly-red reader requires both part-tagged verdicts to report green.
+# Rust budget 17000s (60% ceiling 10200s); TS budget 7000s (ceiling 4200s).
+nightly-rust:
+    scripts/ci-scoped nightly-rust
+
+nightly-ts:
+    scripts/ci-scoped nightly-ts
 
 # The scope computation's self-test (no build; `ci-scoped` runs it first).
 ci-scoped-test:

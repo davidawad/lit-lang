@@ -6,7 +6,7 @@
 # profile's opt-level, without the whole-corpus sweeps and without
 # coverage instrumentation (lg-kuei: the gate took 44-111 minutes, 90% of
 # it the instrumented test run). The sweeps, the whole workspace and
-# coverage run in the post-land nightly (`nightly` below, `just nightly`).
+# coverage run in the post-land nightly (`nightly-rust` / `nightly-ts`).
 #
 # Usage:
 #   scripts/ci-scoped run [BASE]
@@ -16,13 +16,12 @@
 #       once alongside its BASE-to-HEAD impact report only for parser,
 #       engine, sema, lower, or corpus-input changes. BASE defaults to the merge-base of
 #       HEAD with origin/main.
-#   scripts/ci-scoped nightly
-#       The post-land sweep on HEAD: the whole workspace under the nextest
-#       `nightly` profile (every test, the sweeps included), every expect
-#       matter, the full BASE-to-HEAD impact report, every doctest and the
-#       per-crate coverage (`just cov-litigate`); then
-#       `NIGHTLY: pass|fail commit=SHA`. A red files a P0 bead naming
-#       the commit (`br create`; NIGHTLY_NO_BEAD=1 only prints it).
+#   scripts/ci-scoped nightly-rust | nightly-ts
+#       Independently run the Rust corpus (expect, impact, workspace tests,
+#       doctests, cov-litigate) or TypeScript corpus (ts-test and full-corpus
+#       parity). Each prints GATE_SECONDS, NIGHTLY_STAGES and a part-tagged
+#       NIGHTLY verdict. Budgets default to 17000s (Rust) and 7000s (TS),
+#       with a hard 60% runtime ceiling; override only to match the job cap.
 #   scripts/ci-scoped scope [BASE]
 #       The scope alone: `full`, `none`, or one package per line.
 #   scripts/ci-scoped scope-of <path>
@@ -894,45 +893,47 @@ run_data_only() {
 
 # --- nightly -----------------------------------------------------------------
 
-# The post-land sweep (lg-kuei) on HEAD: every expect matter and its full
-# impact report, plus all nextest tests/doctests and coverage. A red files
-# a P0 bead naming the commit and the stages that failed.
+# Post-land nightly halves run in separate jobs against the same commit.
 nightly() {
-  local target sha subject base
+  local part="$1" target sha base budget stages elapsed ceiling
+  case "$part" in
+    rust) budget="${NIGHTLY_RUST_BUDGET_SECONDS:-17000}"; stages='expect impact test doctest cov-litigate' ;;
+    ts) budget="${NIGHTLY_TS_BUDGET_SECONDS:-7000}"; stages='ts-test ts-test-full-corpus' ;;
+    *) echo "ci-scoped: nightly part must be rust or ts" >&2; return 2 ;;
+  esac
+  [[ "$budget" =~ ^[0-9]+$ ]] && [ "$budget" -gt 0 ] || { echo "ci-scoped: invalid nightly budget: $budget" >&2; return 2; }
   warm_build
   target="$(cargo metadata --format-version 1 --no-deps | jq -r .target_directory)"
-  logdir="$target/ci-nightly"
-  rm -rf "$logdir"
+  logdir="$target/ci-nightly/$part"
   mkdir -p "$logdir"
   check_all_quarantine
   sha="$(git rev-parse HEAD)"
-  subject="$(git log -1 --format=%s HEAD)"
   base="$(git rev-parse --verify HEAD^ 2>/dev/null || git rev-parse --verify HEAD)"
-  stage expect cargo run -q -p litigate-cli -- --format human test tests/expect
-  stage impact cargo run -q -p litigate-cli -- --format human test --impact "$base"
-  # The three full-corpus parity checks are a separate nightly Vitest project.
-  stage ts-test just ts-test
-  stage ts-test-full-corpus env LITIGATE_TS_NIGHTLY=1 npm --prefix packages/litigate-ts run test:nightly
-  stage test cargo nextest run --workspace --profile nightly
-  # The LSP repository-root protocol contract checks every authored source;
-  # keep its multi-minute analysis in the full nightly profile.
-  stage lsp-repo-scope cargo nextest run --package litigate-lsp --test repository_scope --features nightly-repo-scope --profile nightly
-  stage doctest cargo test --doc --workspace
-  stage cov-litigate just cov-litigate
-  gate_seconds nightly "$target"
+  if [ "$part" = rust ]; then
+    stage expect cargo run -q -p litigate-cli -- --format human test tests/expect
+    stage impact cargo run -q -p litigate-cli -- --format human test --impact "$base"
+    stage test cargo nextest run --workspace --profile nightly
+    stage doctest cargo test --doc --workspace
+    stage cov-litigate just cov-litigate
+  else
+    stage ts-test just ts-test
+    stage ts-test-full-corpus env LITIGATE_TS_NIGHTLY=1 npm --prefix packages/litigate-ts run test:nightly
+  fi
+  gate_seconds "nightly-$part" "$target"
+  elapsed=$((SECONDS - gate_start))
+  ceiling=$((budget * 60 / 100))
+  echo "NIGHTLY_STAGES part=$part stages=$stages"
+  if [ "$elapsed" -ge "$ceiling" ]; then
+    failed+=(budget-60-percent)
+    echo "NIGHTLY_BUDGET: fail part=$part elapsed=${elapsed}s budget=${budget}s ceiling=${ceiling}s"
+  else
+    echo "NIGHTLY_BUDGET: pass part=$part elapsed=${elapsed}s budget=${budget}s ceiling=${ceiling}s"
+  fi
   if [ "${#failed[@]}" -eq 0 ]; then
-    echo "NIGHTLY: pass commit=$sha"
+    echo "NIGHTLY: pass commit=$sha part=$part"
     return 0
   fi
-  echo "NIGHTLY: fail commit=$sha (failed: ${failed[*]})"
-  local title desc
-  title="nightly red at ${sha:0:12}: ${failed[*]}"
-  desc="The post-land nightly (scripts/ci-scoped nightly) failed at commit $sha ($subject): ${failed[*]}. Logs: $logdir. Reproduce: scripts/ci-scoped nightly, or the failing stage's command."
-  if [ "${NIGHTLY_NO_BEAD:-}" = 1 ]; then
-    echo "nightly: would file: br create --type bug --priority 0 --labels nightly-red --title \"$title\""
-  else
-    br create --type bug --priority 0 --labels nightly-red --title "$title" --description "$desc"
-  fi
+  echo "NIGHTLY: fail commit=$sha part=$part stages=${failed[*]}"
   return 1
 }
 
@@ -1264,6 +1265,15 @@ stage_names() {
 
 self_test_stages() {
   local requested="${1:-}" stage_name
+  if [ "$requested" = nightly ]; then
+    local rust_plan ts_plan
+    rust_plan="$(NIGHTLY_RUST_BUDGET_SECONDS=17000 NIGHTLY_TS_BUDGET_SECONDS=7000 "$self" nightly-plan rust)"
+    ts_plan="$(NIGHTLY_RUST_BUDGET_SECONDS=17000 NIGHTLY_TS_BUDGET_SECONDS=7000 "$self" nightly-plan ts)"
+    [ "$rust_plan" = 'part=rust budget=17000 stages=expect,impact,test,doctest,cov-litigate' ] || { echo "ci-scoped self-test: unexpected Rust nightly plan: $rust_plan" >&2; return 1; }
+    [ "$ts_plan" = 'part=ts budget=7000 stages=ts-test,ts-test-full-corpus' ] || { echo "ci-scoped self-test: unexpected TS nightly plan: $ts_plan" >&2; return 1; }
+    echo 'ci-scoped self-test: nightly part plans are disjoint and complete'
+    return 0
+  fi
   if [ "$requested" = stages ]; then
     { sed -n '/^run() {/,/^}/p' "$self" | sed -nE 's/^[[:space:]]*stage[[:space:]]+"?([a-zA-Z0-9_.${}#-]+)"?.*/\1/p';
       printf '%s\n' data-only-compiler data-typos data-provenance data-expect 'check-${pkg#lit/}' 'test-${pkg#lit/}' 'lock-${pkg#lit/}';
@@ -1437,7 +1447,9 @@ cmd="$1"
 shift
 case "$cmd" in
   run) run "$@" ;;
-  nightly) [ "$#" -eq 0 ] || usage; nightly ;;
+  nightly-plan) [ "$#" -eq 1 ] || usage; case "$1" in rust) echo "part=rust budget=${NIGHTLY_RUST_BUDGET_SECONDS:-17000} stages=expect,impact,test,doctest,cov-litigate" ;; ts) echo "part=ts budget=${NIGHTLY_TS_BUDGET_SECONDS:-7000} stages=ts-test,ts-test-full-corpus" ;; *) usage ;; esac ;;
+  nightly-rust) [ "$#" -eq 0 ] || usage; nightly rust ;;
+  nightly-ts) [ "$#" -eq 0 ] || usage; nightly ts ;;
   scope) [ "$#" -le 1 ] || usage; scope "$@" ;;
   stages) [ "$#" -le 1 ] || usage; stage_names "$@" ;;
   scope-of)

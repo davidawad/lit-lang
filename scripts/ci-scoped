@@ -114,6 +114,18 @@ scope_label() {
   printf '%s\n' "$label"
 }
 
+# Test execution follows the changed package's transitive reverse dependencies.
+# A parser, engine, or corpus-input change can move any matter's behavior, so
+# those changes keep the complete workspace test set.
+test_scope() {
+  local files="$1" meta="$2"
+  if corpus_change "$files"; then
+    echo full
+  else
+    scope_of "$meta" <<<"$files"
+  fi
+}
+
 # changed paths on stdin, scope label -> 0 when `just ts-test` runs.
 ts_scoped() {
   [ "$1" = full ] || grep -qE "$ts_triggers"
@@ -651,7 +663,7 @@ skip() {
 }
 
 run() {
-  local base="" files scope_out label target dir arg
+  local base="" files scope_out label target dir arg test_scope
   selected_stages=""
   while [ "$#" -gt 0 ]; do
     if [ "$1" = --stages ]; then
@@ -764,10 +776,25 @@ run() {
     for s in clippy test doctest; do skip "$s" "no package in scope"; done
   else
     stage clippy cargo clippy "${sel[@]}" --all-targets -- -D warnings
+    # Nextest exercises the changed packages and their reverse dependents.
+    # Keep the gate's CLI-only build/clippy scope, but include every workspace
+    # test that depends on the CLI (including build/dev edges in metadata).
+    # Corpus-affecting changes retain the whole-workspace test set.
+    test_scope="$(test_scope "$files" "$meta")"
+    local -a testsel=()
+    case "$test_scope" in
+      full) testsel=(--workspace) ;;
+      none) ;;
+      *)
+        while IFS= read -r p; do
+          [ -n "$p" ] && testsel+=(-p "$p")
+        done <<<"$test_scope"
+        ;;
+    esac
     if [ "$label" = full ]; then
       mapfile -t pkgs < <(jq -r '.packages[].name' "$meta")
     fi
-    stage test cargo nextest run --profile gate --no-tests=warn "${sel[@]}"
+    stage test cargo nextest run --profile gate --no-tests=warn "${testsel[@]}"
     if [ "$label" = full ]; then
       mapfile -t doc < <(jq -r '.packages[] | select(any(.targets[]; .doctest)) | .name' "$meta")
     else
@@ -1023,6 +1050,17 @@ self_test() {
     echo "ci-scoped self-test: expect tests are corpus inputs; docs are not" >&2
     failures=$((failures + 1))
   fi
+  local cli_test_scope engine_test_scope
+  cli_test_scope="$(test_scope crates/litigate-cli/src/cli.rs "$meta")"
+  engine_test_scope="$(test_scope crates/litigate-engine/src/lib.rs "$meta")"
+  if [ "$cli_test_scope" != cli ]; then
+    echo "ci-scoped self-test: CLI-only changes must test its metadata reverse-dependency scope, got [$cli_test_scope]" >&2
+    failures=$((failures + 1))
+  fi
+  if [ "$engine_test_scope" != full ]; then
+    echo "ci-scoped self-test: engine changes must test the full workspace, got [$engine_test_scope]" >&2
+    failures=$((failures + 1))
+  fi
   local run_stages
   run_stages="$(sed -n '/^run() {/,/^nightly() {/p' "$self")"
   if ! grep -Fq 'stage expect-impact cargo run -q -p litigate-cli -- --format human test --impact "$base" --check-head' <<<"$run_stages" ||
@@ -1053,6 +1091,11 @@ self_test() {
   if ! grep -Fq 'stage check cargo check "${sel[@]}" --all-targets' "$self" ||
     grep -Fq "$unscoped_check" "$self"; then
     echo "ci-scoped self-test: build/check must use the changed package scope" >&2
+    failures=$((failures + 1))
+  fi
+  if ! grep -Fq 'stage test cargo nextest run --profile gate --no-tests=warn "${testsel[@]}"' "$self" ||
+    ! grep -Fq 'test_scope="$(test_scope "$files" "$meta")"' "$self"; then
+    echo "ci-scoped self-test: nextest must use the metadata reverse-dependency test scope" >&2
     failures=$((failures + 1))
   fi
   expect "none" "a docs-only change runs global only" docs/litigate/SPEC.md README.md

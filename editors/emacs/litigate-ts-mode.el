@@ -175,7 +175,7 @@ is saved as it is, with the parse error in the echo area."
    '((num_entry key: (identifier) @font-lock-property-name-face)
      (money_entry key: (identifier) @font-lock-property-name-face)
      (record_field key: (identifier) @font-lock-property-name-face)
-     (probability_entry key: (identifier) @font-lock-property-name-face)
+     (instance_probability_entry key: (identifier) @font-lock-property-name-face)
      (case_probability_entry edge: (ref (identifier) @font-lock-property-name-face))
      (role_entry key: (identifier) @font-lock-property-name-face)
      (service_entry method: (identifier) @font-lock-constant-face)
@@ -228,7 +228,8 @@ is saved as it is, with the parse error in the echo area."
   '("package_decl" "variant_list" "param_list" "node_body" "edge_fields" "patch_fields"
     "duration_range" "deadline_opts" "deadline_decl_opts" "capability"
     "delegation" "grant_body" "calibration_body" "calibration_source_body"
-    "calibrated_value_body" "instance_decl" "probability_map"
+    "calibrated_value_body" "instance_decl" "instance_probability_map"
+    "case_probability_map"
     "role_map" "rule_body" "counting_body" "service_map" "short_period"
     "calendar_body" "transition_body" "test_body" "source_body"
     "limit_body" "exclusion_list"

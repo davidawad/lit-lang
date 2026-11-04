@@ -138,7 +138,7 @@
   (num_entry key: (identifier) @variable.other.member)
   (money_entry key: (identifier) @variable.other.member)
   (record_field key: (identifier) @variable.other.member)
-  (probability_entry key: (identifier) @variable.other.member)
+  (instance_probability_entry key: (identifier) @variable.other.member)
   (case_probability_entry edge: (ref (identifier) @variable.other.member))
   (role_entry key: (identifier) @variable.other.member)
   (service_entry method: (identifier) @constant)

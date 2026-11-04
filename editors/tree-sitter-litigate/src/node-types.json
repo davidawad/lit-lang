@@ -3171,15 +3171,15 @@
             "named": true
           },
           {
+            "type": "instance_probability_map",
+            "named": true
+          },
+          {
             "type": "parenthesized_expression",
             "named": true
           },
           {
             "type": "patch_fields",
-            "named": true
-          },
-          {
-            "type": "probability_map",
             "named": true
           },
           {
@@ -3196,6 +3196,59 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "instance_probability_entry",
+    "named": true,
+    "fields": {
+      "key": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "fraction",
+            "named": true
+          },
+          {
+            "type": "hole",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "parenthesized_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "instance_probability_map",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "instance_probability_entry",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -4452,59 +4505,6 @@
           }
         ]
       }
-    }
-  },
-  {
-    "type": "probability_entry",
-    "named": true,
-    "fields": {
-      "key": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "fraction",
-            "named": true
-          },
-          {
-            "type": "hole",
-            "named": true
-          },
-          {
-            "type": "number",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "probability_map",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "probability_entry",
-          "named": true
-        }
-      ]
     }
   },
   {

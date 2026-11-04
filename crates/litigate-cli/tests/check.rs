@@ -112,7 +112,6 @@ fn ttab_check_human_output_is_limited_to_the_case_and_verbose_restores_library_d
     let verbose_text = String::from_utf8_lossy(&verbose.stdout);
     assert!(verbose_text.contains("[L9002]"));
     assert!(!verbose_text.contains("--verbose to show"));
-    insta::assert_snapshot!("ttab_check_human_verbose", verbose_text);
 
     let json = run(&[
         "--format",

@@ -11,8 +11,8 @@ expression: default_text
     │ 
     │ Note: a designated due date must allow at least the deadline's own period; correct the date as the notice gives it
 ────╯
-core: 1 warning, 43 holes; --verbose to show
-litigate check: failed (1 error(s), 44 warning(s))
+core: 43 holes; --verbose to show
+litigate check: failed (1 error(s), 43 warning(s))
 {
   "profile": "dev",
   "files": [
@@ -110,7 +110,7 @@ litigate check: failed (1 error(s), 44 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 781,
+        "checked": 783,
         "subjects": "declarations"
       }
     },
@@ -120,7 +120,7 @@ litigate check: failed (1 error(s), 44 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 585,
+        "checked": 586,
         "subjects": "cites"
       }
     },
@@ -130,7 +130,7 @@ litigate check: failed (1 error(s), 44 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 406,
+        "checked": 407,
         "subjects": "version sets"
       }
     },
@@ -140,7 +140,7 @@ litigate check: failed (1 error(s), 44 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 406,
+        "checked": 407,
         "subjects": "version sets"
       }
     },
@@ -230,7 +230,7 @@ litigate check: failed (1 error(s), 44 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 285,
+        "checked": 286,
         "subjects": "inline tests"
       }
     },
@@ -267,13 +267,11 @@ litigate check: failed (1 error(s), 44 warning(s))
     },
     {
       "name": "rule-without-test",
-      "status": "warning",
-      "count": 1,
-      "examples": [
-        "lit/ttab/../core/states/georgia.lit:20:1: L9001 counting rule `frbp9006-georgia` counts no tested deadline"
-      ],
+      "status": "passed",
+      "count": 0,
+      "examples": [],
       "evidence": {
-        "checked": 322,
+        "checked": 323,
         "subjects": "deadline and counting rules"
       }
     }
@@ -294,12 +292,12 @@ litigate check: failed (1 error(s), 44 warning(s))
     {
       "name": "core",
       "version": "1.0.0",
-      "digest": "sha256:f36d1aab82f206abe873338e5f0c0bd97a156615fc47061ad46d21f500ca6724",
+      "digest": "sha256:14f1ebe139f583b9dc16b84478b9fcfd8b1688cf28b5805bd231d89a3eb58db4",
       "root": "lit/ttab/../core",
       "requested": false,
       "holes": 43,
       "tests": {
-        "passed": 255,
+        "passed": 256,
         "failed": 0
       }
     }

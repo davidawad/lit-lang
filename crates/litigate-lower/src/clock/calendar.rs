@@ -31,6 +31,19 @@ fn weekday(sink: &mut Sink, name: &str) -> Option<Weekday> {
     parsed
 }
 
+fn one_time_holiday_window(
+    observed: EngineObservance,
+    on: Date,
+    from: Date,
+    until: Option<Date>,
+) -> (Date, Option<Date>) {
+    let back = i64::from(observed == EngineObservance::NearestWeekday);
+    let forward = i64::from(observed != EngineObservance::Actual);
+    let from = from.max(on.add_days(-back));
+    let end = on.add_days(1 + forward);
+    (from, Some(until.map_or(end, |u| u.min(end))))
+}
+
 /// One holiday: date rule, cycle, observance and effective window. `last`
 /// is the -1st weekday; `every` is a fixed date on a cycle, effective from
 /// its first year; `once` is a fixed date effective for that day only
@@ -98,11 +111,7 @@ fn holiday(sink: &mut Sink, h: &hir::Holiday) -> Option<Holiday> {
         }
         HolidayDate::Once { date: on } => {
             let on = date(sink, on)?;
-            let back = i64::from(observed == EngineObservance::NearestWeekday);
-            let forward = i64::from(observed != EngineObservance::Actual);
-            from = from.max(on.add_days(-back));
-            let end = on.add_days(1 + forward);
-            until = Some(until.map_or(end, |u| u.min(end)));
+            (from, until) = one_time_holiday_window(observed, on, from, until);
             let (_, month, day) = on.ymd();
             EngineDate::Fixed { month, day }
         }

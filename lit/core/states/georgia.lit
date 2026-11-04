@@ -46,7 +46,7 @@ deadline frbp9006-georgia-one-day: 1.days after Served() counted_by frbp9006-geo
   forum bankr-gan
 }
 
-test "Georgia state holiday follows the published 2026 federal schedule" cite "FRBP 9006(a)(6)(C)"
+test "Georgia's 2026 Good Friday closure rolls a forward bankruptcy deadline" cite "FRBP 9006(a)(6)(C)"
 {
   given Served(Personal) on 2026-04-02
   expect deadline(frbp9006-georgia-one-day) == 2026-04-06

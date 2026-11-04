@@ -77,7 +77,7 @@ fn human_output_renders_diagnostics_with_source() {
 }
 
 #[test]
-fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
+fn ttab_check_human_output_is_limited_to_the_case_and_verbose_restores_library_diagnostics() {
     let run = |args: &[&str]| {
         assert_cmd::Command::cargo_bin("litigate")
             .unwrap()
@@ -96,8 +96,8 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
     assert_eq!(default.status.code(), Some(2));
     let default_text = String::from_utf8_lossy(&default.stdout);
     assert!(default_text.contains("designates `answer-period` due 2026-11-05"));
-    assert!(default_text.contains("core: "));
-    assert!(default_text.contains("holes; --verbose to show"));
+    assert!(!default_text.contains("core: "));
+    assert!(!default_text.contains("holes; --verbose to show"));
     assert!(!default_text.contains("[L9003]"));
     insta::assert_snapshot!("ttab_check_human_default", default_text);
 

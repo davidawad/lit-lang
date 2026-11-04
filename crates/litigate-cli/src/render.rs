@@ -157,18 +157,6 @@ pub fn human_with_check(
             } else if matches!(d.severity, Severity::Error | Severity::Warning) {
                 visible.push(index);
             }
-        } else if let Some(name) = policy.package_by_file.get(file) {
-            let counts = grouped.entry(name.clone()).or_default();
-            if d.code.as_str() == "L9002" {
-                counts[4] += 1;
-            } else {
-                match d.severity {
-                    Severity::Error => counts[0] += 1,
-                    Severity::Warning => counts[1] += 1,
-                    Severity::Info => counts[2] += 1,
-                    Severity::Hint => counts[3] += 1,
-                }
-            }
         }
     }
     let mut out = String::new();
@@ -191,7 +179,12 @@ pub fn human_with_check(
         envelope
             .diagnostics
             .iter()
-            .filter(|d| d.severity == s)
+            .filter(|d| {
+                d.severity == s
+                    && check
+                        .filter(|policy| !policy.verbose)
+                        .map_or(true, |policy| policy.own_files.contains(&d.span.file.0))
+            })
             .count()
     };
     let _ = writeln!(
@@ -203,7 +196,15 @@ pub fn human_with_check(
         count(Severity::Warning)
     );
     if let Some(result) = &envelope.result {
-        out.push_str(&serde_json::to_string_pretty(result).unwrap_or_default());
+        let mut result = result.clone();
+        if envelope.op == "check" && check.is_some_and(|policy| !policy.verbose) {
+            if let Some(object) = result.as_object_mut() {
+                for key in ["files", "obligations", "packages"] {
+                    object.remove(key);
+                }
+            }
+        }
+        out.push_str(&serde_json::to_string_pretty(&result).unwrap_or_default());
         out.push('\n');
     }
     out
@@ -305,7 +306,7 @@ mod tests {
 
     #[test]
     #[allow(clippy::too_many_lines)]
-    fn check_human_output_filters_workspace_noise_and_groups_holes() {
+    fn check_human_output_keeps_case_findings_and_omits_library_findings() {
         let span = |file: &str| Span {
             file: file.into(),
             line: 1,
@@ -405,11 +406,8 @@ mod tests {
         let text = human_with_check(&envelope, &[], false, report.check_render.as_ref());
         assert!(text.contains("bad name"), "{text}");
         assert!(!text.contains("anonymous"), "{text}");
-        assert!(
-            text.contains("ttab: 1 error, 1 warning, 1 info, 1 hint, 1 holes; --verbose to show"),
-            "{text}"
-        );
-        assert!(text.contains("itc: 1 info; --verbose to show"), "{text}");
+        assert!(!text.contains("ttab:"), "{text}");
+        assert!(!text.contains("itc:"), "{text}");
         assert!(!text.contains("bad dependency name"), "{text}");
         assert!(!text.contains("dependency warning"), "{text}");
         assert!(!text.contains("dependency hint"), "{text}");

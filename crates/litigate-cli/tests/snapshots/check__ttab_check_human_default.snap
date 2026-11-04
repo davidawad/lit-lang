@@ -11,8 +11,8 @@ expression: default_text
     │ 
     │ Note: a designated due date must allow at least the deadline's own period; correct the date as the notice gives it
 ────╯
-core: 42 holes; --verbose to show
-litigate check: failed (1 error(s), 42 warning(s))
+core: 43 holes; --verbose to show
+litigate check: failed (1 error(s), 43 warning(s))
 {
   "profile": "dev",
   "files": [
@@ -43,6 +43,7 @@ litigate check: failed (1 error(s), 42 warning(s))
     "lit/ttab/../core/states/district-of-columbia.lit",
     "lit/ttab/../core/states/florida.lit",
     "lit/ttab/../core/states/guam.lit",
+    "lit/ttab/../core/states/hawaii.lit",
     "lit/ttab/../core/states/idaho.lit",
     "lit/ttab/../core/states/illinois.lit",
     "lit/ttab/../core/states/indiana.lit",
@@ -108,7 +109,7 @@ litigate check: failed (1 error(s), 42 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 758,
+        "checked": 767,
         "subjects": "declarations"
       }
     },
@@ -118,7 +119,7 @@ litigate check: failed (1 error(s), 42 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 572,
+        "checked": 577,
         "subjects": "cites"
       }
     },
@@ -128,7 +129,7 @@ litigate check: failed (1 error(s), 42 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 392,
+        "checked": 398,
         "subjects": "version sets"
       }
     },
@@ -138,7 +139,7 @@ litigate check: failed (1 error(s), 42 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 392,
+        "checked": 398,
         "subjects": "version sets"
       }
     },
@@ -228,7 +229,7 @@ litigate check: failed (1 error(s), 42 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 276,
+        "checked": 279,
         "subjects": "inline tests"
       }
     },
@@ -247,7 +248,7 @@ litigate check: failed (1 error(s), 42 warning(s))
     {
       "name": "holes",
       "status": "warning",
-      "count": 42,
+      "count": 43,
       "examples": [
         "lit/ttab/../core/states/alabama.lit:15:1: L9002 hole: `Ala. Code § 1-3-8` is not proved the text in force from 1963-07-01: Ala. Code § 1-3-8 (source `ala-code-1-3` as of 2026-10-29): no source binding pins a `## versions Ala. Code § 1-3-8` amendment history",
         "lit/ttab/../core/states/alaska.lit:20:1: L9002 hole: `AS 44.12.010(a)` is not proved the text in force from 1963-07-01: AS 44.12.010 (source `as-44-12` as of 2026-10-29): no source binding pins a `## versions AS 44.12.010` amendment history",
@@ -256,10 +257,10 @@ litigate check: failed (1 error(s), 42 warning(s))
         "lit/ttab/../core/states/connecticut.lit:14:1: L9002 hole: `Conn. Gen. Stat. § 1-4` is not proved the text in force from 1963-07-01: Conn. Gen. Stat. § 1-4 (source `ct-holidays` as of 2026-01-01): no source binding pins a `## versions Conn. Gen. Stat. § 1-4` amendment history",
         "lit/ttab/../core/states/florida.lit:5:1: L9002 hole: `Fla. Stat. § 683.01(1)` is not proved the text in force from 2023-12-01: Fla. Stat. § 683.01 (source `fla-stat-683` as of 2026-10-22): no source binding pins a `## versions Fla. Stat. § 683.01` amendment history",
         "lit/ttab/../core/states/guam.lit:23:1: L9002 hole: `1 GCA § 1000(a)` is not proved the text in force from 1963-07-01: 1 GCA § 1000 (source `gca-1-1000` as of 2026-04-23): no source binding pins a `## versions 1 GCA § 1000` amendment history",
-        "lit/ttab/../core/states/idaho.lit:14:1: L9002 hole: `Idaho Code § 73-108` is not proved the text in force from 1963-07-01: Idaho Code § 73-108 (source `idaho-code-73-108` as of 2026-10-29): no source binding pins a `## versions Idaho Code § 73-108` amendment history"
+        "lit/ttab/../core/states/hawaii.lit:11:1: L9002 hole: `HRS § 8-1` is not proved the text in force from 2023-01-01: HRS § 8-1 (source `hawaii-holidays` as of 2026-11-02): no source binding pins a `## versions HRS § 8-1` amendment history"
       ],
       "evidence": {
-        "checked": 42,
+        "checked": 43,
         "subjects": "holes"
       }
     },
@@ -269,7 +270,7 @@ litigate check: failed (1 error(s), 42 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 310,
+        "checked": 315,
         "subjects": "deadline and counting rules"
       }
     }
@@ -290,12 +291,12 @@ litigate check: failed (1 error(s), 42 warning(s))
     {
       "name": "core",
       "version": "1.0.0",
-      "digest": "sha256:25f029853a55caccc8acab7f1562d39ae02c5f2cad8b1d5a7c5ded63afb53e98",
+      "digest": "sha256:ce82c41e4bb44be39144a0d30f47c4d9cba08cab46e0470ee512c3f24b6dd850",
       "root": "lit/ttab/../core",
       "requested": false,
-      "holes": 42,
+      "holes": 43,
       "tests": {
-        "passed": 246,
+        "passed": 249,
         "failed": 0
       }
     }

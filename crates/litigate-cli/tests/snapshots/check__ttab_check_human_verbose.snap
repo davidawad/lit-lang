@@ -65,6 +65,7 @@ expression: verbose_text
     │ │       
     │ ╰─────── The source explicitly leaves this value unknown
 ────╯
+[L9001] Warning: counting rule `frbp9006-georgia` counts no tested deadline
 [L9002] Warning: hole: `1 GCA § 1000(a)` is not proved the text in force from 1963-07-01: 1 GCA § 1000 (source `gca-1-1000` as of 2026-04-23): no source binding pins a `## versions 1 GCA § 1000` amendment history
     ╭─[ lit/ttab/../core/states/guam.lit:23:10 ]
     │
@@ -285,7 +286,7 @@ expression: verbose_text
     │
  11 │ ╭─▶ calendar oklahoma-holidays cite "25 O.S. § 82.1"
     ┆ ┆   
- 43 │ ├─▶ 
+ 15 │ ├─▶ 
     │ │      
     │ ╰────── The source explicitly leaves this value unknown
 ────╯
@@ -396,7 +397,7 @@ expression: verbose_text
     │ │                                                                 
     │ ╰───────────────────────────────────────────────────────────────── The source explicitly leaves this value unknown
 ────╯
-litigate check: failed (1 error(s), 43 warning(s))
+litigate check: failed (1 error(s), 44 warning(s))
 {
   "profile": "dev",
   "files": [
@@ -426,6 +427,7 @@ litigate check: failed (1 error(s), 43 warning(s))
     "lit/ttab/../core/states/delaware.lit",
     "lit/ttab/../core/states/district-of-columbia.lit",
     "lit/ttab/../core/states/florida.lit",
+    "lit/ttab/../core/states/georgia.lit",
     "lit/ttab/../core/states/guam.lit",
     "lit/ttab/../core/states/hawaii.lit",
     "lit/ttab/../core/states/idaho.lit",
@@ -493,7 +495,7 @@ litigate check: failed (1 error(s), 43 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 767,
+        "checked": 781,
         "subjects": "declarations"
       }
     },
@@ -503,7 +505,7 @@ litigate check: failed (1 error(s), 43 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 577,
+        "checked": 585,
         "subjects": "cites"
       }
     },
@@ -513,7 +515,7 @@ litigate check: failed (1 error(s), 43 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 398,
+        "checked": 406,
         "subjects": "version sets"
       }
     },
@@ -523,7 +525,7 @@ litigate check: failed (1 error(s), 43 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 398,
+        "checked": 406,
         "subjects": "version sets"
       }
     },
@@ -613,7 +615,7 @@ litigate check: failed (1 error(s), 43 warning(s))
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 279,
+        "checked": 285,
         "subjects": "inline tests"
       }
     },
@@ -650,11 +652,13 @@ litigate check: failed (1 error(s), 43 warning(s))
     },
     {
       "name": "rule-without-test",
-      "status": "passed",
-      "count": 0,
-      "examples": [],
+      "status": "warning",
+      "count": 1,
+      "examples": [
+        "lit/ttab/../core/states/georgia.lit:20:1: L9001 counting rule `frbp9006-georgia` counts no tested deadline"
+      ],
       "evidence": {
-        "checked": 315,
+        "checked": 322,
         "subjects": "deadline and counting rules"
       }
     }
@@ -675,12 +679,12 @@ litigate check: failed (1 error(s), 43 warning(s))
     {
       "name": "core",
       "version": "1.0.0",
-      "digest": "sha256:ce82c41e4bb44be39144a0d30f47c4d9cba08cab46e0470ee512c3f24b6dd850",
+      "digest": "sha256:f36d1aab82f206abe873338e5f0c0bd97a156615fc47061ad46d21f500ca6724",
       "root": "lit/ttab/../core",
       "requested": false,
       "holes": 43,
       "tests": {
-        "passed": 249,
+        "passed": 255,
         "failed": 0
       }
     }

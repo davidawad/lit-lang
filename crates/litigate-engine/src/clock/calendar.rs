@@ -32,7 +32,7 @@ fn easter_sunday(year: i32) -> Option<Date> {
     let l = (32 + 2 * e + 2 * i - h - k).rem_euclid(7);
     let m = (a + 11 * h + 22 * l) / 451;
     let n = h + l - 7 * m + 114;
-    Date::from_ymd(year, (n / 31) as u32, (n % 31 + 1) as u32).ok()
+    Date::from_ymd(year, (n / 31).cast_unsigned(), (n % 31 + 1).cast_unsigned()).ok()
 }
 
 use super::date::{self, Date};
@@ -236,13 +236,8 @@ impl Holiday {
         };
         let (month, day) = match &self.date {
             HolidayDate::Fixed { month, day } => (*month, Some(*day)),
-            HolidayDate::NthWeekday { month, nth, .. } => {
-                if *nth == 0 || !(-5..=5).contains(nth) {
-                    return bad(format!("nth {nth} must be 1..=5 or -1..=-5"));
-                }
-                (*month, None)
-            }
-            HolidayDate::OffsetWeekday { month, nth, .. } => {
+            HolidayDate::NthWeekday { month, nth, .. }
+            | HolidayDate::OffsetWeekday { month, nth, .. } => {
                 if *nth == 0 || !(-5..=5).contains(nth) {
                     return bad(format!("nth {nth} must be 1..=5 or -1..=-5"));
                 }

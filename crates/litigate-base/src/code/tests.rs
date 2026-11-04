@@ -63,6 +63,7 @@ fn every_registered_code_exercises_its_stable_views() {
                     | DiagnosticCode::LateClaimProcessing
                     | DiagnosticCode::ConcurrentTracks
                     | DiagnosticCode::StaleAsOf
+                    | DiagnosticCode::RepeatedTestTrigger
             ) || (profile == Profile::Dev
                 && matches!(
                     code,

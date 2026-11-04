@@ -193,7 +193,11 @@ pub fn package_with_cache(
             (verification, lowering.ok(), tests, test_diagnostics)
         }
     };
-    own.extend(test_diagnostics);
+    own.extend(
+        test_diagnostics
+            .into_iter()
+            .filter(|diagnostic| diagnostic.code == C::RepeatedTestTrigger),
+    );
     let mut diagnostics: Vec<Diagnostic> = own
         .into_iter()
         .map(|mut d| {

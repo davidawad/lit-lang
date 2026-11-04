@@ -135,10 +135,11 @@ pub fn package_with_cache(
     if profile == Profile::Strict {
         own.extend(format(pkg));
     }
-    let (verification, lowered, tests) = match &pkg.check.package {
+    let (verification, lowered, tests, test_diagnostics) = match &pkg.check.package {
         None => (
             litigate_verify::verify_unchecked(&pkg.check, profile),
             None,
+            Vec::new(),
             Vec::new(),
         ),
         Some(hir) => {
@@ -187,11 +188,12 @@ pub fn package_with_cache(
                 }
                 None => verify(),
             };
-            let (tests, _) =
+            let (tests, test_diagnostics) =
                 inline_tests::run(clocks, hir, &pkg.files, None, options.known_at.as_deref());
-            (verification, lowering.ok(), tests)
+            (verification, lowering.ok(), tests, test_diagnostics)
         }
     };
+    own.extend(test_diagnostics);
     let mut diagnostics: Vec<Diagnostic> = own
         .into_iter()
         .map(|mut d| {

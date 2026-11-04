@@ -321,6 +321,7 @@ pub fn run(
             _ => None,
         })
         .map(|t| {
+            diagnostics.extend(repeated_trigger_warnings(pkg, t, sources));
             let mut cx = Cx {
                 clocks,
                 world: &world,
@@ -368,6 +369,110 @@ pub fn run(
         })
         .collect();
     (results, diagnostics)
+}
+
+/// Warn when an assertion reads a deadline anchored by repeated identical
+/// givens and the declaration leaves occurrence selection at its implicit
+/// `first` default. A deadline configured with `latest`, `each`, or
+/// `later_of` states its occurrence policy explicitly.
+fn repeated_trigger_warnings(
+    pkg: &hir::Package,
+    test: &hir::Test,
+    sources: &[(String, String)],
+) -> Vec<Diagnostic> {
+    let mut warnings = Vec::new();
+    for declaration in hirx::declarations(pkg) {
+        let Declaration::Deadline(deadline) = declaration else {
+            continue;
+        };
+        if !deadline.policy.is_first()
+            || explicitly_selects_first(deadline, sources)
+            || !test.expects.iter().any(|expect| {
+                expression_references_deadline(&expect.lhs, &deadline.meta.id)
+                    || expression_references_deadline(&expect.rhs, &deadline.meta.id)
+            })
+        {
+            continue;
+        }
+        let matching: Vec<_> = test
+            .givens
+            .iter()
+            .filter(|(event, _)| hirx::matches(&deadline.trigger, event))
+            .collect();
+        let repeated = matching.iter().enumerate().any(|(i, (event, _))| {
+            matching[..i]
+                .iter()
+                .any(|(previous, _)| hirx::event_text(previous) == hirx::event_text(event))
+        });
+        if repeated {
+            let at = deadline
+                .meta
+                .span
+                .clone()
+                .or_else(|| test.span.clone())
+                .unwrap_or_else(|| nowhere(pkg));
+            let mut warning = Diagnostic::error(
+                DiagnosticCode::RepeatedTestTrigger,
+                at,
+                format!(
+                    "test \"{}\" repeats a trigger for `{}`; its implicit `first` policy uses the earliest matching given",
+                    test.name, deadline.meta.id
+                ),
+            );
+            warning.severity = litigate_base::Severity::Warning;
+            warnings.push(warning);
+        }
+    }
+    warnings
+}
+
+fn explicitly_selects_first(deadline: &hir::Deadline, sources: &[(String, String)]) -> bool {
+    let Some(span) = &deadline.meta.span else {
+        return false;
+    };
+    let Some((_, source)) = sources.iter().find(|(path, _)| path == &span.file.0) else {
+        return false;
+    };
+    let marker = format!("deadline {}:", deadline.meta.id);
+    let Some(start) = source.find(&marker) else {
+        return false;
+    };
+    let declaration = &source[start..];
+    let end = declaration
+        .find("\n\ndeadline ")
+        .unwrap_or(declaration.len());
+    declaration[..end].contains("trigger first")
+}
+
+fn expression_references_deadline(expression: &Expr, id: &str) -> bool {
+    match &expression.kind {
+        ExprKind::Call { callee, args } => hirx::local(callee) == "deadline"
+            && args.iter().any(
+                |arg| matches!(&arg.kind, ExprKind::Ref { target } if hirx::local(target) == id),
+            )
+            || args
+                .iter()
+                .any(|arg| expression_references_deadline(arg, id)),
+        ExprKind::Unary { operand, .. } | ExprKind::Field { base: operand, .. } => {
+            expression_references_deadline(operand, id)
+        }
+        ExprKind::Binary { lhs, rhs, .. } => {
+            expression_references_deadline(lhs, id) || expression_references_deadline(rhs, id)
+        }
+        ExprKind::Record { fields } => fields
+            .iter()
+            .any(|(_, value)| expression_references_deadline(value, id)),
+        ExprKind::List { items } => items
+            .iter()
+            .any(|item| expression_references_deadline(item, id)),
+        ExprKind::Match { scrutinee, arms } => {
+            expression_references_deadline(scrutinee, id)
+                || arms
+                    .iter()
+                    .any(|(_, value)| expression_references_deadline(value, id))
+        }
+        ExprKind::Literal { .. } | ExprKind::Ref { .. } => false,
+    }
 }
 
 /// A span at the start of the package manifest, for span-less findings.

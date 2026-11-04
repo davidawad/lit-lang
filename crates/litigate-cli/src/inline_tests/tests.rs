@@ -1,6 +1,6 @@
 //! Unit tests of `test`-block evaluation over hand-built expressions.
 use super::*;
-use crate::testkit::hir_with;
+use crate::testkit::{hir_with, RULE12};
 use litigate_sema::hir::Type;
 use serde_json::json;
 
@@ -329,4 +329,79 @@ test \"selected\"
             Some("no event matches the trigger MovedToDismiss(complaint) of `moved`".to_owned())
         )]
     );
+}
+
+#[test]
+fn repeated_trigger_lint_only_targets_asserted_implicit_deadlines() {
+    let implicit = hir_with(
+        r#"
+test "repeated anchor" {
+  given Served(complaint, Personal) on 2025-03-03
+  given Served(complaint, Personal) on 2025-03-09
+  expect deadline(answer-period) == 2025-03-24
+}
+"#,
+    );
+    let clocks = Clocks::new(&[&implicit]);
+    let (_, diagnostics) = run(&clocks, &implicit, &[], Some("repeated anchor"), None);
+    assert_eq!(
+        diagnostics
+            .iter()
+            .filter(|d| d.code == DiagnosticCode::RepeatedTestTrigger)
+            .count(),
+        1
+    );
+
+    let explicit = hir_with(
+        r#"
+deadline latest-answer: 21.days from Served(complaint) counted_by frcp6 { trigger latest }
+test "latest anchor" {
+  given Served(complaint, Personal) on 2025-03-03
+  given Served(complaint, Personal) on 2025-03-09
+  expect deadline(latest-answer) == 2025-03-30
+}
+"#,
+    );
+    let clocks = Clocks::new(&[&explicit]);
+    let (_, diagnostics) = run(&clocks, &explicit, &[], Some("latest anchor"), None);
+    assert!(diagnostics
+        .iter()
+        .all(|d| d.code != DiagnosticCode::RepeatedTestTrigger));
+
+    let explicit_first_text = r#"
+deadline explicit-first: 21.days from Served(complaint) counted_by frcp6 { trigger first }
+test "explicit first anchor" {
+  given Served(complaint, Personal) on 2025-03-03
+  given Served(complaint, Personal) on 2025-03-09
+  expect deadline(explicit-first) == 2025-03-24
+}
+"#;
+    let explicit_first = hir_with(explicit_first_text);
+    let clocks = Clocks::new(&[&explicit_first]);
+    let source = format!("{RULE12}\n{explicit_first_text}");
+    let (_, diagnostics) = run(
+        &clocks,
+        &explicit_first,
+        &[("lit/examples/rule12.lit".to_owned(), source)],
+        Some("explicit first anchor"),
+        None,
+    );
+    assert!(diagnostics
+        .iter()
+        .all(|d| d.code != DiagnosticCode::RepeatedTestTrigger));
+
+    let unasserted = hir_with(
+        r#"
+test "unused repeated anchor" {
+  given Served(complaint, Personal) on 2025-03-03
+  given Served(complaint, Personal) on 2025-03-09
+  expect true == true
+}
+"#,
+    );
+    let clocks = Clocks::new(&[&unasserted]);
+    let (_, diagnostics) = run(&clocks, &unasserted, &[], Some("unused repeated"), None);
+    assert!(diagnostics
+        .iter()
+        .all(|d| d.code != DiagnosticCode::RepeatedTestTrigger));
 }

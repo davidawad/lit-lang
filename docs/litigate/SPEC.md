@@ -1310,6 +1310,15 @@ creates (design review 2026-10-23 §2.4, §2.7):
   than `e`'s (FRCP 15(a)(3), FRAP 4(a)(3)), and `litigate check` reports
   that date as its `floor` beside the counted `due`. `later_of` naming the
   deadline itself, or anything but one deadline, is L2007.
+
+  In an inline `test`, `deadline(d)` selects among repeated matching
+  `given` triggers using the deadline's occurrence policy: `first` (also
+  the default) uses the earliest matching given; every other policy uses
+  the latest. The test evaluator implements this selection in
+  [`crates/litigate-cli/src/inline_tests.rs`](../../crates/litigate-cli/src/inline_tests.rs#L117).
+  A test that asserts such a deadline while supplying the same trigger more
+  than once gets warning L9010 when it leaves the default `first` choice
+  implicit; write `trigger first` to make that choice explicit.
 - `extend { ... }` declares one extension grant; a deadline may declare
   several (FRCP 6(b)(1)'s (A) and (B) are two). Its bound is a sum, and
   a grant states exactly one (otherwise L2007):
@@ -3244,13 +3253,14 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9007 | former name | | |
 | L9008 | cite proved by its amendment history | | |
 | L9009 | precedent not binding at the world's location | | |
+| L9010 | repeated test trigger with implicit occurrence choice | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
 L4009, L4010, L4011, L4012, L4013, L4014, L4016, L3010 and L2015 is `error`.
 L9003, L9006, L9008 and L9009 are `info`. L4009, L4010, L4011, L4012,
-L4013, L4014, L4016, L9005 and L9007 are `warning`. L9001, L9002, L9004, L3010
-(a hole in the corpus) and L2015 (an undecided refinement, a hole) are
-`warning` in `dev` and `error` in `strict`.
+L4013, L4014, L4016, L9005, L9007 and L9010 are `warning`. L9001, L9002,
+L9004, L3010 (a hole in the corpus) and L2015 (an undecided refinement, a
+hole) are `warning` in `dev` and `error` in `strict`.
 
 ### 9.2 Shapes
 

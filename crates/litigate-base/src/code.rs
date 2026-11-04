@@ -153,6 +153,7 @@ registry! {
     FormerName = "L9007" => "A reference uses an id the declaration had before it was renamed (`formerly`)",
     CiteProvedByHistory = "L9008" => "A cite's vendored text, dated after its version took effect, is that version's text: the vendored amendment history records no amendment in between",
     PrecedentNotBinding = "L9009" => "A precedent layer does not bind at the world's location: it is persuasive there, and its binding effects are not in force",
+    RepeatedTestTrigger = "L9010" => "An inline test repeats a deadline trigger whose default occurrence choice is implicit",
 }
 
 /// What `explain` says of an [`DiagnosticCode::Unknown`] code.
@@ -230,7 +231,8 @@ impl DiagnosticCode {
                 | Self::FormerName
                 | Self::LateClaimProcessing
                 | Self::ConcurrentTracks
-                | Self::StaleAsOf,
+                | Self::StaleAsOf
+                | Self::RepeatedTestTrigger,
                 _,
             )
             | (

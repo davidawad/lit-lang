@@ -282,6 +282,30 @@
       "title": "Placeholder for the state holidays required by FRCP 6(a)(6)(C),\nFRCrimP 45(a)(6)(C), and FRBP 9006(a)(6)(C) where the state's holiday\ntext is not vendored: this calendar deliberately has no dates, so a date\nthat depends on such a holiday remains an earlier-date result (the\nmissing source is the district's state-holiday statute or rule).\n\nState holidays. Each state, the District of Columbia and each territory\nwhose holiday text is vendored is one module, lit/core/states/<state>.lit\n(`core.states.<state>`), holding only what is that state's: its calendar\n`<state>-holidays` (the days `us-federal-holidays` does not already\nclose, each in force from the date its vendored text is dated), and the\nrules that read it, `frcp6-<state>` (the 2023 FRCP 6(a) with the\ncalendar as `forward_holidays`) and `frbp9006-<state>` (the same for\nFRBP 9006(a), over that state's bankruptcy courts); Delaware adds\n`frcrimp45-delaware`. Its text is bound in lit/core/Lit.toml beside the\nothers. A district or bankruptcy package in the state imports its rule\nfrom that module, names it as its `counting` rule and `recounts` the\nnational package, so adding a state is adding its module and binding,\nnever editing this calendar or core's `frcp6` and `frbp9006`. Hawaii's\nbankruptcy court declares its own list from its local rule\n(`bankr-hi`). The states and territories whose holiday text is still not\nvendored are listed in README.md (\"Deferred: state sources\"); their\ndistricts keep this empty calendar until those sources are added. The\nTenth Circuit BAP (`bap10`) counts Colorado holidays only, because a\nmatter does not identify its originating district."
     },
     {
+      "cite": "S.D.N.Y. Order M10-468",
+      "holidays": [
+        {
+          "date": {
+            "fixed": {
+              "day": 9,
+              "month": 1
+            }
+          },
+          "effective": {
+            "from": "2025-01-09",
+            "until": "2025-01-10"
+          },
+          "id": "carter-mourning",
+          "name": "carter-mourning",
+          "observed": "actual",
+          "oneTimeYear": 2025
+        }
+      ],
+      "id": "sdny-national-day-2025",
+      "sourceUrl": "https://nysd.uscourts.gov/sites/default/files/2025-01/National%20Day%20of%20Mourning.pdf",
+      "title": "Court-ordered legal holidays on January 9, 2025. These calendars are\ndeliberately separate: a closure order governs only the named court."
+    },
+    {
       "cite": "RCFC 6(a)(6)(A)",
       "holidays": [
         {
@@ -466,6 +490,54 @@
       "id": "rcfc-legal-holidays",
       "sourceUrl": "https://www.uscfc.uscourts.gov/rules",
       "title": "RCFC 6(a)(6)(A)'s legal holidays: the § 6103(a) days in force when the\nRCFC time-computation rules here are (2002 onward), plus Inauguration\nDay, which FRCP 6(a)(6) does not name. § 6103(c) makes January 20 \"of\neach fourth year after 1965\" a holiday, as codified by Pub. L. 89-554\n(September 6, 1966; the uncodified Pub. L. 85-1 of 1957 preceded it). It\nstates only the Sunday shift; observing a Saturday Inauguration Day on\nthe Friday before, as § 6103(b)(1) does for every other holiday, is the\ninterpretive choice `packs/clock/SOURCES-NOTES.md` records. The cite is\ntoday's RCFC 6, whose Rules Committee Notes record its changes since\n2002 (Juneteenth added in 2022): a later text, cited for the whole\nhistory on purpose."
+    },
+    {
+      "cite": "CoFC General Order 2025-01",
+      "holidays": [
+        {
+          "date": {
+            "fixed": {
+              "day": 9,
+              "month": 1
+            }
+          },
+          "effective": {
+            "from": "2025-01-09",
+            "until": "2025-01-10"
+          },
+          "id": "carter-mourning",
+          "name": "carter-mourning",
+          "observed": "actual",
+          "oneTimeYear": 2025
+        }
+      ],
+      "id": "cofc-national-day-2025",
+      "sourceUrl": "https://www.uscfc.uscourts.gov/sites/cfc/files/general-orders/2025-01-02%20General%20Order%202025-01%20closing%20court%201-9-2025%20for%20funeral%20of%20Pres%20Carter.pdf",
+      "title": "cofc-national-day-2025"
+    },
+    {
+      "cite": "Bankr. S.D.N.Y. General Order M-646",
+      "holidays": [
+        {
+          "date": {
+            "fixed": {
+              "day": 9,
+              "month": 1
+            }
+          },
+          "effective": {
+            "from": "2025-01-09",
+            "until": "2025-01-10"
+          },
+          "id": "carter-mourning",
+          "name": "carter-mourning",
+          "observed": "actual",
+          "oneTimeYear": 2025
+        }
+      ],
+      "id": "bankr-sdny-national-day-2025",
+      "sourceUrl": "https://www.nysb.uscourts.gov/sites/default/files/m646.pdf",
+      "title": "bankr-sdny-national-day-2025"
     }
   ],
   "countingRules": [],
@@ -473,12 +545,12 @@
     "asOf": "2026-10-22",
     "pins": [
       {
-        "digest": "sha256:832c58d11d0decb8b9542a72b4666f4d2ad92bd7fca2618e382f018b329e2cbe",
+        "digest": "sha256:5b84616c1e3cc4a73ae053fe6fd8700f8dc4fba1395a3bfce8af83282ca19ac7",
         "name": "core.calendar",
         "version": "1.0.0"
       }
     ],
-    "worldDigest": "sha256:b9fdd665bb0f9ee2b2936986fc48d1a00e3d295d27369fbead6871bb322dfce6"
+    "worldDigest": "sha256:e14c7230726ec46e18899c92bbc8930096dd1b4c88bcd9055b254941e02c7ccb"
   },
   "schemaVersion": 4
 }

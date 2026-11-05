@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "nysd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:c76040fbdf9f5d508292be2675d548a6ae3d255b50e51593f654be7acf63641d"
-semantic = "sha256:f6ffea12a13fe0d5ff9ae595a40cfcde0f85b0bb5ccf0a61379d0a757c77874a"
+modules = [
+    "local-rules.lit sha256:06183c822a295e63512322e60a9f1edbc489f77a7ebf964a4d2ba4e90684df29 sha256:afcfa79e4fffd4571d7f7dbda67819c42a2893c6de9635171c1d85e35e947e59",
+]
 texts = [
     "sdny-lcivr sources/sdny/local-rules-joint-sdny-edny-sectioned.txt sha256:f12fd4d7c006ddd44ff015761aaaaaf13090db10db0afb4660c08f16f6812b98",
     "sdny-lssr sources/sdny/local-rules-joint-sdny-edny-sectioned.txt sha256:f12fd4d7c006ddd44ff015761aaaaaf13090db10db0afb4660c08f16f6812b98",

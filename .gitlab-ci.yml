@@ -1,0 +1,61 @@
+workflow:
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]/'
+    - when: never
+
+stages:
+  - binaries
+  - release
+
+variables:
+  CARGO_TERM_COLOR: always
+
+# macOS builds require a GitLab macOS runner; none is configured for this project.
+.linux-release:
+  stage: binaries
+  image: rust:1.97.1-bookworm
+  before_script:
+    - apt-get update
+    - apt-get install --yes --no-install-recommends build-essential musl-tools
+    - rustup target add "$TARGET"
+  script:
+    - cargo build --release --locked -p litigate-cli -p litigate-lsp --target "$TARGET"
+    - mkdir -p dist
+    - tar -C "target/$TARGET/release" -czf "dist/litigate-${CI_COMMIT_TAG}-${TARGET}.tar.gz" litigate litigate-lsp
+  artifacts:
+    paths:
+      - dist/*.tar.gz
+    expire_in: never
+
+linux-gnu:
+  extends: .linux-release
+  variables:
+    TARGET: x86_64-unknown-linux-gnu
+
+linux-musl:
+  extends: .linux-release
+  variables:
+    TARGET: x86_64-unknown-linux-musl
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/cli:v1.58.0
+  needs:
+    - job: linux-gnu
+      artifacts: true
+    - job: linux-musl
+      artifacts: true
+  script:
+    - echo "Publishing ${CI_COMMIT_TAG}"
+  release:
+    tag_name: "$CI_COMMIT_TAG"
+    name: "Litgraph $CI_COMMIT_TAG"
+    description: "Linux binaries for $CI_COMMIT_TAG. Download an archive below and extract litigate and litigate-lsp."
+    assets:
+      links:
+        - name: "x86_64-unknown-linux-gnu"
+          url: "$CI_PROJECT_URL/-/jobs/artifacts/$CI_COMMIT_TAG/raw/dist/litigate-$CI_COMMIT_TAG-x86_64-unknown-linux-gnu.tar.gz?job=linux-gnu"
+          link_type: package
+        - name: "x86_64-unknown-linux-musl"
+          url: "$CI_PROJECT_URL/-/jobs/artifacts/$CI_COMMIT_TAG/raw/dist/litigate-$CI_COMMIT_TAG-x86_64-unknown-linux-musl.tar.gz?job=linux-musl"
+          link_type: package

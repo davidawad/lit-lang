@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+"""Check that GitLab pipelines start only for version tags."""
+
+import sys
+
+import yaml
+
+
+EXPECTED = [
+    {"if": "$CI_COMMIT_TAG =~ /^v[0-9]/"},
+    {"when": "never"},
+]
+
+
+def main() -> int:
+    path = sys.argv[1] if len(sys.argv) == 2 else ".gitlab-ci.yml"
+    try:
+        with open(path, encoding="utf-8") as stream:
+            document = yaml.safe_load(stream)
+    except (OSError, yaml.YAMLError) as error:
+        print(f"cannot parse {path}: {error}", file=sys.stderr)
+        return 1
+
+    rules = document.get("workflow", {}).get("rules") if isinstance(document, dict) else None
+    if rules != EXPECTED:
+        print(f"workflow.rules must be exactly {EXPECTED!r}; got {rules!r}", file=sys.stderr)
+        return 1
+
+    print("workflow rules are tag-only")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

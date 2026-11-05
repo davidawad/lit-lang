@@ -37,12 +37,6 @@ not (
     (package(litgraph-packs) & binary(merge_safe))
   | (package(litigate-cli) & (
         test(=cmd::filing::round_trip::every_printed_move_is_accepted_back)
-      | (binary(cases_port) & test(/every_|reproduces_every|on_every/))
-      | (binary(change_files) & test(=every_ruling_replays_under_its_world))
-      | (binary(matters_check) & test(/^every_/))
-      | (binary(queries) & test(=every_corpus_verdict_equals_the_verdict_over_every_package))
-      | (binary(round_trip) & test(=every_package_and_matter_compiles_and_solves))
-      | (binary(printed_names) & test(=every_printed_move_is_accepted_back))
       | (binary(delegation_conversion) & test(=the_delegable_conversion_lowers_the_corpus_identically))
       | (binary(impact) & test(=a_layer_edit_lists_every_moved_deadline_verdict_and_expectation))
       | (binary(in_memory) & test(=ops_compile_the_matter_or_package_in_memory))
@@ -62,6 +56,19 @@ not (
   | (package(litigate-wasm) & test(=tests::engine_requests_run_over_the_compiled_embedded_sources))
 )
 """
+
+# Slow litigate-cli tests that sweep the complete corpus. CLI-only changes
+# omit this filter set; parser, engine, and corpus changes still run it.
+# Per-test seconds from the corrected 13-test nextest sweep: timeline 407.004;
+# change_files rulings 434.870 and layer/world 14.048; cases_port named-case
+# lowering 66.631 and execution 9.780; fix mutations 83.453; matters_check
+# fixture 115.562 and case corpus 151.546; round_trip package/matter 95.538;
+# roundtrip calibration 39.897 and package 39.964; queries 48.514;
+# printed_names 34.461. Wall time was 629s. The dispatch's JUnit finish log
+# is not present in this checkout.
+# Named filter set (nextest has no named-set config syntax; ci-scoped reads
+# this declaration and passes the expression with -E).
+# litigate_cli_corpus_sweeps = package(litigate-cli) & ((binary(timeline) & test(=keys_are_unique_in_every_world_view_of_every_case)) | (binary(cases_port) & test(/every_named_scenario/)) | (binary(change_files) & test(/every_layer_and_world_checks|every_ruling_replays_under_its_world/)) | (binary(matters_check) & test(/every_matter_under_cases_checks_ok_with_no_error|every_fixture_matter_checks_ok_with_no_error/)) | (binary(queries) & test(=every_corpus_verdict_equals_the_verdict_over_every_package)) | (binary(round_trip) & test(=every_package_and_matter_compiles_and_solves)) | (binary(roundtrip) & test(/every_package_compiles_and_solves_to_litgraph_final|every_calibration_set_lowers_to_litgraph_final/)) | (binary(printed_names) & test(=every_printed_move_is_accepted_back)) | (binary(fix) & test(=every_mutation_yields_an_envelope)))
 
 [profile.nightly]
 fail-fast = false

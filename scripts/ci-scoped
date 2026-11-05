@@ -53,6 +53,7 @@
 set -euo pipefail
 
 self="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+cli_corpus_sweeps="$(sed -n 's/^# litigate_cli_corpus_sweeps = //p' "$(dirname "$self")/../.config/nextest.toml")"
 
 usage() {
   sed -n '/^# Usage:/,/^#       fixture repo/p' "$self" | sed 's/^# \{0,1\}//' >&2
@@ -834,7 +835,7 @@ run() {
       # caches safely share results across test binaries and scratch roots.
       # Keep CI=false scoped to this crate's tests; corpus and full-workspace
       # runs retain their clean-verification behavior.
-      stage test env CI=false LITIGATE_CACHE="$target/litigate/verified" LITIGATE_CACHE_DIR="$target/litigate/compiled" cargo nextest run --profile gate --no-tests=warn "${testsel[@]}"
+      stage test env CI=false LITIGATE_CACHE="$target/litigate/verified" LITIGATE_CACHE_DIR="$target/litigate/compiled" cargo nextest run --profile gate --no-tests=warn -E "default() - ($cli_corpus_sweeps)" "${testsel[@]}"
     else
       stage test cargo nextest run --profile gate --no-tests=warn "${testsel[@]}"
     fi
@@ -1144,6 +1145,15 @@ self_test() {
   fi
   if ! grep -Fq '(binary(in_memory) & test(=ops_compile_the_matter_or_package_in_memory))' .config/nextest.toml; then
     echo "ci-scoped self-test: gate profile must defer the full-corpus in-memory compile sweep to nightly" >&2
+    failures=$((failures + 1))
+  fi
+  if ! grep -Fq -- '-E "default() - ($cli_corpus_sweeps)"' "$self" ||
+    [ -z "$cli_corpus_sweeps" ]; then
+    echo "ci-scoped self-test: CLI-only tests must omit the named corpus sweep set" >&2
+    failures=$((failures + 1))
+  fi
+  if ! grep -Fq 'stage test cargo nextest run --profile gate --no-tests=warn "${testsel[@]}"' "$self"; then
+    echo "ci-scoped self-test: non-CLI changes must retain the full gate test set" >&2
     failures=$((failures + 1))
   fi
   local unscoped_check='stage check cargo check --''workspace'

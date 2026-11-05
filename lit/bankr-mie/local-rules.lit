@@ -23,8 +23,9 @@ import frbp.events.{ FirstMeetingDate, PetitionFiled }
 // to an extension motion three Business Days after filing (LBR 9006-1(a));
 // the ballot summary two Business Days before confirmation (3018-1);
 // adjournment requests three Business Days before a hearing (5071-1); reply
-// briefs three Business Days before a hearing (9014-1(f)); trial exhibits
-// three Business Days before trial (7016-1); and hearing-notice follow-ups
+// briefs three Business Days before a hearing (9014-1(f)); trial briefs,
+// proposed findings, and jury instructions three Business Days before trial
+// (7016-1(b)(14)); and hearing-notice follow-ups
 // three Business Days after a § 362(l) or (m) objection (4001-4(c)-(d)).
 // Clock-time periods include service of first day motions within 24
 // hours and of an expedited cash collateral order within 24 hours
@@ -424,9 +425,15 @@ deadline hearing-adjournment-request-period: 3.business_days before ContestedMat
 /// LBR 9014-1(f): a reply brief is filed at least three business days
 /// before the hearing.
 deadline motion-reply-brief-period: 3.business_days before ContestedMatterHearingScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 9014-1(f)"
-/// LBR 7016-1: trial exhibits are exchanged at least three business days
-/// before trial.
-deadline trial-exhibit-period: 3.business_days before TrialScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7016-1"
+/// LBR 7016-1(b)(14): trial briefs, proposed findings and conclusions of
+/// law in a non-jury case, or requests for jury instructions in a jury case,
+/// are filed at least three Business Days before trial. LBR 7016-1(d)
+/// separately requires documentary exhibit marking and exchange at least
+/// one Business Day before trial or an evidentiary hearing, but only if
+/// there has been no final pretrial conference and counsel had at least a
+/// week's notice. This deadline models only the unconditional paragraph
+/// (b)(14) deadline; the conditional paragraph (d) rule is not modeled.
+deadline trial-exhibit-period: 3.business_days before TrialScheduled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 7016-1(b)(14)"
 /// LBR 4001-4(c)-(d): follow-up notice is served within three business days
 /// after the debtor's stay-extension objection.
 deadline stay-objection-follow-up-period: 3.business_days after StayExtensionObjectionFiled() counted_by frbp9006-michigan cite "E.D. Mich. LBR 4001-4"
@@ -455,7 +462,7 @@ test "a reply brief is due three business days before the hearing" cite "E.D. Mi
   expect deadline(motion-reply-brief-period) == 2027-03-05
 }
 
-test "trial exhibits are due three business days before trial" cite "E.D. Mich. LBR 7016-1"
+test "trial briefs and findings are due three business days before trial" cite "E.D. Mich. LBR 7016-1(b)(14)"
 {
   given TrialScheduled() on 2027-03-10
   expect deadline(trial-exhibit-period) == 2027-03-05

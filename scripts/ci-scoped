@@ -101,6 +101,12 @@ cli_only() {
   [ -n "$1" ] && ! grep -qvE '^crates/litigate-cli/' <<<"$1"
 }
 
+# CLI tests and their fixtures are consumed only by Cargo's test targets;
+# they are not inputs to litgraph-packs/build.rs or lit-sync.
+cli_tests_only() {
+  [ -n "$1" ] && ! grep -qvE '^crates/litigate-cli/tests/' <<<"$1"
+}
+
 # Inputs whose semantics are checked by the whole-corpus replay and impact
 # stages. Keep this predicate shared by both stages and its self-test.
 corpus_change() {
@@ -743,7 +749,11 @@ run() {
   stage self-test bash -c "'$self' self-test && '$(dirname "$self")/cov-gate' self-test"
   stage quarantine check_all_quarantine
   stage strict-ratchet-test scripts/qa/strict-ratchet-test.sh
-  stage lit-sync-check just lit-sync-check
+  if cli_tests_only "$files"; then
+    skip lit-sync-check "CLI tests and fixtures do not affect generated outputs"
+  else
+    stage lit-sync-check just lit-sync-check
+  fi
   if grep -q '^lit/' <<<"$files"; then
     stage strict-ratchet scripts/qa/strict-ratchet.sh "$base" "$files"
   else
@@ -817,7 +827,17 @@ run() {
     if [ "$label" = full ]; then
       mapfile -t pkgs < <(jq -r '.packages[].name' "$meta")
     fi
-    stage test cargo nextest run --profile gate --no-tests=warn "${testsel[@]}"
+    if cli_only "$files"; then
+      # CLI integration tests repeatedly compile identical packages from
+      # separate fixture roots. Their two content-addressed caches bind the
+      # compiler and the complete source/dependency digests, so target-local
+      # caches safely share results across test binaries and scratch roots.
+      # Keep CI=false scoped to this crate's tests; corpus and full-workspace
+      # runs retain their clean-verification behavior.
+      stage test env CI=false LITIGATE_CACHE="$target/litigate/verified" LITIGATE_CACHE_DIR="$target/litigate/compiled" cargo nextest run --profile gate --no-tests=warn "${testsel[@]}"
+    else
+      stage test cargo nextest run --profile gate --no-tests=warn "${testsel[@]}"
+    fi
     if [ "$label" = full ]; then
       mapfile -t doc < <(jq -r '.packages[] | select(any(.targets[]; .doctest)) | .name' "$meta")
     else
@@ -1041,6 +1061,12 @@ self_test() {
     echo "ci-scoped self-test: CLI-only changes must use the CLI package scope" >&2
     failures=$((failures + 1))
   fi
+  if ! cli_tests_only crates/litigate-cli/tests/core_stdlib.rs ||
+    cli_tests_only crates/litigate-cli/src/cmd/run.rs ||
+    cli_tests_only crates/litigate-cli/src/cmd/run.rs$'\n'crates/litigate-cli/tests/core_stdlib.rs; then
+    echo "ci-scoped self-test: only CLI test and fixture changes may skip lit-sync-check" >&2
+    failures=$((failures + 1))
+  fi
   if ! cli_only $'crates/litigate-cli/src/main.rs\ncrates/litigate-cli/tests/cli.rs'; then
     echo "ci-scoped self-test: CLI-only change set was not recognized" >&2
     failures=$((failures + 1))
@@ -1108,6 +1134,14 @@ self_test() {
     echo "ci-scoped self-test: a lit/ change must declare only expect-impact in stages output" >&2
     failures=$((failures + 1))
   fi
+  local planned_cli_test_stages planned_cli_source_stages
+  planned_cli_test_stages="$(CI_SCOPED_SELF_TEST_FILES=crates/litigate-cli/tests/core_stdlib.rs "$self" stages "$(git rev-parse HEAD)")" || planned_cli_test_stages=""
+  planned_cli_source_stages="$(CI_SCOPED_SELF_TEST_FILES=crates/litigate-cli/src/cmd/run.rs "$self" stages "$(git rev-parse HEAD)")" || planned_cli_source_stages=""
+  if ! grep -Fxq 'lit-sync-check skip' <<<"$planned_cli_test_stages" ||
+    ! grep -Fxq 'lit-sync-check run' <<<"$planned_cli_source_stages"; then
+    echo "ci-scoped self-test: CLI test-only edits skip lit-sync-check; CLI source edits retain it" >&2
+    failures=$((failures + 1))
+  fi
   if ! grep -Fq '(binary(in_memory) & test(=ops_compile_the_matter_or_package_in_memory))' .config/nextest.toml; then
     echo "ci-scoped self-test: gate profile must defer the full-corpus in-memory compile sweep to nightly" >&2
     failures=$((failures + 1))
@@ -1121,6 +1155,11 @@ self_test() {
   if ! grep -Fq 'stage test cargo nextest run --profile gate --no-tests=warn "${testsel[@]}"' "$self" ||
     ! grep -Fq 'test_scope="$(test_scope "$files" "$meta")"' "$self"; then
     echo "ci-scoped self-test: nextest must use the metadata reverse-dependency test scope" >&2
+    failures=$((failures + 1))
+  fi
+  if ! grep -Fq 'if cli_only "$files"; then' "$self" ||
+    ! grep -Fq 'stage test env CI=false LITIGATE_CACHE="$target/litigate/verified" LITIGATE_CACHE_DIR="$target/litigate/compiled" cargo nextest run --profile gate --no-tests=warn "${testsel[@]}"' "$self"; then
+    echo "ci-scoped self-test: CLI-only tests must share the content-addressed compile and verification caches" >&2
     failures=$((failures + 1))
   fi
   expect "none" "a docs-only change runs global only" docs/litigate/SPEC.md README.md

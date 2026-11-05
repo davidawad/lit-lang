@@ -155,39 +155,8 @@ pub fn package_with_cache(
                 packages: all,
                 options,
             };
-            let verify = || litigate_verify::verify_package(&input, corpus, profile);
-            let verification = match cache
-                .filter(|_| std::env::var_os("LITGRAPH_SOURCES").is_none())
-            {
-                // Keyed by the Merkle root of the package's resolution, so a
-                // change to any dependency's digest misses (SPEC §4.2), and
-                // by every package loaded beside it, which verification reads,
-                // each at the path its diagnostics name.
-                Some(cache) => {
-                    let root = expected_lock(db, ws, pkg.input).root();
-                    let mut loaded: Vec<String> = all
-                        .iter()
-                        .map(|p| format!("{} {} {}", p.manifest.name, p.manifest.version, p.digest))
-                        .collect();
-                    loaded.sort();
-                    let loaded = loaded.join("\n");
-                    let profile = format!("{profile:?}");
-                    let as_of = options.as_of.as_deref().unwrap_or_default();
-                    let known_at = options.known_at.as_deref().unwrap_or_default();
-                    let corpus_digest = corpus_digest(corpus);
-                    let key = [
-                        pkg.root.as_str(),
-                        &root,
-                        &loaded,
-                        &profile,
-                        as_of,
-                        known_at,
-                        &corpus_digest,
-                    ];
-                    cache.verified(&key, verify)
-                }
-                None => verify(),
-            };
+            let verification =
+                verify_cached(db, ws, pkg, all, options, profile, corpus, cache, &input);
             let (tests, test_diagnostics) =
                 inline_tests::run(clocks, hir, &pkg.files, None, options.known_at.as_deref());
             (verification, lowering.ok(), tests, test_diagnostics)
@@ -214,6 +183,49 @@ pub fn package_with_cache(
         verification,
         findings,
         lowered,
+    }
+}
+
+/// Verify through the optional cache, keyed by the package resolution and
+/// every loaded dependency that verification reads.
+#[allow(clippy::too_many_arguments)]
+fn verify_cached(
+    db: &dyn salsa::Database,
+    ws: Workspace,
+    pkg: &Pkg,
+    all: &[&hir::Package],
+    options: &Options,
+    profile: Profile,
+    corpus: &SourceCorpus,
+    cache: Option<&crate::cache::Cache>,
+    input: &PackageInput<'_>,
+) -> Verification {
+    let verify = || litigate_verify::verify_package(input, corpus, profile);
+    match cache.filter(|_| std::env::var_os("LITGRAPH_SOURCES").is_none()) {
+        Some(cache) => {
+            let root = expected_lock(db, ws, pkg.input).root();
+            let mut loaded: Vec<String> = all
+                .iter()
+                .map(|p| format!("{} {} {}", p.manifest.name, p.manifest.version, p.digest))
+                .collect();
+            loaded.sort();
+            let loaded = loaded.join("\n");
+            let profile = format!("{profile:?}");
+            let as_of = options.as_of.as_deref().unwrap_or_default();
+            let known_at = options.known_at.as_deref().unwrap_or_default();
+            let corpus_digest = corpus_digest(corpus);
+            let key = [
+                pkg.root.as_str(),
+                &root,
+                &loaded,
+                &profile,
+                as_of,
+                known_at,
+                &corpus_digest,
+            ];
+            cache.verified(&key, verify)
+        }
+        None => verify(),
     }
 }
 

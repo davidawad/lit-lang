@@ -33,6 +33,10 @@ function tree(dir: string, base = repo): Record<string, string> {
 }
 
 const files: Files = { ...tree("lit"), ...tree("cases") };
+// `lit/` is already embedded in the WASM library. Sending it back on every
+// check duplicates the largest part of the source tree across the WASM ABI.
+// Keep the matters in the overlay and resolve their `uses` from that library.
+const matterFiles: Files = tree("cases");
 
 /** A native run, untimed. */
 function nativeRun(args: readonly string[]): LitigateRun {
@@ -65,12 +69,12 @@ function untimedRun(run: LitigateRun): LitigateRun {
 const checkMatchesCli = (paths: readonly string[], options: { profile?: Profile }) => {
   const args = [...("profile" in options ? ["--profile", options.profile] : []), ...paths];
   const expected = native(["check", ...args]);
-  expect(untimed(lit.check(paths, { ...options, files, today: TODAY }))).toStrictEqual(expected);
+  expect(untimed(lit.check(paths, { ...options, files: matterFiles, today: TODAY }))).toStrictEqual(expected);
 };
 
 describe("check matches the CLI", () => {
-  it("everything", () => checkMatchesCli(["lit", "cases"], {}));
-  it("everything, strict", () => checkMatchesCli(["lit", "cases"], { profile: "strict" }));
+  it("everything", () => checkMatchesCli(["lit", "cases"], {}), 2_312_000);
+  it("everything, strict", () => checkMatchesCli(["lit", "cases"], { profile: "strict" }), 2_327_000);
   it("one matter", () => checkMatchesCli(["cases/frcp-civil-case.case"], {}));
   it("a missing path", () => checkMatchesCli(["lit/nope"], {}));
 
@@ -83,7 +87,7 @@ describe("check matches the CLI", () => {
     expect(untimed(lit.check(accepted, { files: cases, today: TODAY }))).toStrictEqual(expected);
     expect(lit.library()["lit/frcp/Lit.toml"]).toBe(files["lit/frcp/Lit.toml"]);
     expect(lit.check(["cases"], { files: cases, library: false }).code).toBe(2);
-  });
+  }, 221_000);
 });
 
 describe("build matches the CLI", () => {

@@ -1,0 +1,224 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  # auto-release.yml calls this after it tags a version (a tag pushed with
+  # GITHUB_TOKEN does not trigger the `push` event above).
+  workflow_call:
+    inputs:
+      tag:
+        description: The release tag, e.g. v1.2.3.
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  CARGO_TERM_COLOR: always
+  TAG: ${{ inputs.tag || github.ref_name }}
+
+jobs:
+  binaries:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+          - target: aarch64-apple-darwin
+            os: macos-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.TAG }}
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      # rust-toolchain.toml pins the channel, which overrides the action's
+      # toolchain, so add the cross target to the pinned one explicitly.
+      - run: rustup target add ${{ matrix.target }}
+
+      - name: install musl tools
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - run: cargo build --release --locked -p litigate-cli -p litigate-lsp --target ${{ matrix.target }}
+
+      - name: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          name="litgraph-${TAG}-${{ matrix.target }}"
+          mkdir -p "dist/$name"
+          cp "target/${{ matrix.target }}/release/litigate" "dist/$name/"
+          cp "target/${{ matrix.target }}/release/litigate-lsp" "dist/$name/"
+          cp README.md LICENSE "dist/$name/" 2>/dev/null || true
+          # The packs are build outputs of crates/litgraph-packs, not files.
+          built="$(find "target/${{ matrix.target }}/release/build" -path '*/litgraph-packs-*/out/packs' -type d | head -n 1)"
+          test -n "$built"
+          cp -r "$built" "dist/$name/packs"
+          # The Merkle root of every Lit.lock (SPEC §4.2), computed on read.
+          scripts/release/lit-roots.sh "target/${{ matrix.target }}/release/litigate" > "dist/$name/LITLOCK-ROOTS"
+          cp "dist/$name/LITLOCK-ROOTS" dist/LITLOCK-ROOTS
+          tar -C dist -czf "dist/$name.tar.gz" "$name"
+          ( cd dist && shasum -a 256 "$name.tar.gz" > "$name.tar.gz.sha256" )
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: litgraph-${{ matrix.target }}
+          path: |
+            dist/*.tar.gz
+            dist/*.tar.gz.sha256
+
+      - uses: actions/upload-artifact@v7
+        if: matrix.target == 'x86_64-unknown-linux-gnu'
+        with:
+          name: litlock-roots
+          path: dist/LITLOCK-ROOTS
+
+  wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.TAG }}
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-bindgen-cli@0.2.127
+      - run: cargo build --release --locked -p litigate-wasm --target wasm32-unknown-unknown
+      - name: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/wasm/web dist/wasm/node
+          wasm-bindgen --target web --out-dir dist/wasm/web target/wasm32-unknown-unknown/release/litigate_wasm.wasm
+          wasm-bindgen --target nodejs --out-dir dist/wasm/node target/wasm32-unknown-unknown/release/litigate_wasm.wasm
+          tar -C dist/wasm/web -czf dist/litigate-wasm-web.tar.gz .
+          tar -C dist/wasm/node -czf dist/litigate-wasm-node.tar.gz .
+          ( cd dist && shasum -a 256 litigate-wasm-web.tar.gz litigate-wasm-node.tar.gz > litigate-wasm.sha256 )
+      - uses: actions/upload-artifact@v7
+        with:
+          name: litigate-wasm
+          path: |
+            dist/litigate-wasm-web.tar.gz
+            dist/litigate-wasm-node.tar.gz
+            dist/litigate-wasm.sha256
+
+  github-release:
+    needs: [binaries, wasm]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+      # The release records the Merkle root of every Lit.lock (SPEC §4.2).
+      - name: lock roots for the release notes
+        run: |
+          set -euo pipefail
+          {
+            echo "## Lit.lock Merkle roots"
+            echo
+            echo '```'
+            cat dist/LITLOCK-ROOTS
+            echo '```'
+          } > notes.md
+      - uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ env.TAG }}
+          body_path: notes.md
+          files: |
+            dist/*.tar.gz
+            dist/*.tar.gz.sha256
+            dist/litigate-wasm.sha256
+            dist/LITLOCK-ROOTS
+          generate_release_notes: true
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.TAG }}
+
+      - uses: docker/setup-qemu-action@v4
+      - uses: docker/setup-buildx-action@v4
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/davidawad/litgraph
+          tags: |
+            type=semver,pattern={{version}},value=${{ env.TAG }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
+            type=raw,value=latest
+
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          # Only a hand-pushed tag may write the build cache (auto-release
+          # calls this with cache-mode: read).
+          cache-to: ${{ github.event_name == 'push' && 'type=gha,mode=max' || '' }}
+
+  # Point the Homebrew tap (github.com/davidawad/homebrew-tap) at this
+  # release. Needs the HOMEBREW_TAP_DEPLOY_KEY secret: the private half of a
+  # write deploy key on the tap repo.
+  homebrew:
+    needs: [github-release]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.TAG }}
+      - name: download checksums
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release download "$TAG" --repo "${{ github.repository }}" --pattern '*.tar.gz.sha256' --dir sums
+      - name: update the formula
+        env:
+          DEPLOY_KEY: ${{ secrets.HOMEBREW_TAP_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/tap_key
+          chmod 600 ~/.ssh/tap_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/tap_key -o IdentitiesOnly=yes"
+          git clone --depth 1 git@github.com:davidawad/homebrew-tap.git tap
+          scripts/release/homebrew-formula.sh "${TAG#v}" sums > tap/Formula/litgraph.rb
+          cd tap
+          if git diff --quiet; then echo "formula already at $TAG"; exit 0; fi
+          git config user.name "litgraph-release[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -qam "litgraph: update to ${TAG#v}"
+          git push origin main

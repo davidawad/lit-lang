@@ -259,9 +259,8 @@ impl DiagnosticCode {
             Self::PrecedenceCycle => "cycle",
             Self::NoVersionInForce => "no-winner",
             Self::InvalidTransition => "transition",
-            Self::InvalidCounting => "counting",
+            Self::InvalidCounting | Self::StateCountingRule => "counting",
             Self::NotEncoded => "not-encoded",
-            Self::StateCountingRule => "counting",
             _ => return None,
         })
     }

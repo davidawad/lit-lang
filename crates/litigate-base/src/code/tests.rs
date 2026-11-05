@@ -123,6 +123,14 @@ fn exactly_the_l3_codes_name_a_derivation_rule() {
         DiagnosticCode::decode("L3999").unwrap().derivation_rule(),
         None
     );
+    assert_eq!(
+        DiagnosticCode::InvalidCounting.derivation_rule(),
+        Some("counting")
+    );
+    assert_eq!(
+        DiagnosticCode::StateCountingRule.derivation_rule(),
+        Some("counting")
+    );
 }
 
 #[test]

@@ -3313,7 +3313,8 @@ unspecified`. Diagnostics are sorted by `(file, line, col, code)`.
   `no-capability` (missing delegation), L3006 `cycle` over each `declared`
   `prevails` edge. Every other L3xxx error carries the one-step derivation
   of its code's rule (`DiagnosticCode::derivation_rule`: `overlap`, `gap`,
-  `no-winner`, `transition`, `counting`) whose premises are its labels
+  `no-winner`, `transition`, `counting`; `counting` covers L3009 and L3011)
+  whose premises are its labels
   (`premise` steps).
 - `fingerprint` (set in envelopes) identifies a diagnostic across runs and
   across edits that only move lines: 16 hex digits of FNV-1a-64 over the

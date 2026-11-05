@@ -261,6 +261,7 @@ impl DiagnosticCode {
             Self::InvalidTransition => "transition",
             Self::InvalidCounting => "counting",
             Self::NotEncoded => "not-encoded",
+            Self::StateCountingRule => "counting",
             _ => return None,
         })
     }

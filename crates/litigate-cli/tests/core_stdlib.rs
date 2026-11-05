@@ -23,6 +23,12 @@ use proptest::prelude::*;
 use std::sync::OnceLock;
 use support::{litigate, repo};
 
+fn by_id<T>(items: &[T], id: impl Fn(&T) -> &str) -> Vec<&T> {
+    let mut items: Vec<_> = items.iter().collect();
+    items.sort_by(|a, b| id(a).cmp(id(b)));
+    items
+}
+
 /// The checked HIR of `lit/core`.
 fn core() -> &'static hir::Package {
     static CORE: OnceLock<hir::Package> = OnceLock::new();
@@ -342,11 +348,6 @@ fn the_engine_clock_library_is_lit_core_lowered() {
         serde_json::from_str(&litigate_lower::render(lowered()).unwrap()).unwrap();
     let (embedded, errors) = ClockLibrary::embedded();
     assert!(errors.is_empty(), "{errors:?}");
-    fn by_id<T>(items: &[T], id: impl Fn(&T) -> &str) -> Vec<&T> {
-        let mut items: Vec<_> = items.iter().collect();
-        items.sort_by(|a, b| id(a).cmp(id(b)));
-        items
-    }
     assert_eq!(
         by_id(&embedded.counting_rules, |x| &x.id),
         by_id(&fresh.counting_rules, |x| &x.id)

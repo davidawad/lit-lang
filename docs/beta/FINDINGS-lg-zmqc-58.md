@@ -1,30 +1,59 @@
-# Unresolved strict-profile holes in `lit/core`
+# Remaining strict-profile L5002 holes in `lit/core`
 
-Audit date: 2026-11-05. This records the remaining L5002 holes from the strict
-check described in `docs/beta/EPIC-AUDIT.md` (snapshot `f44da4dac`). No
-amendment history is inferred from the current text or its retrieval date.
+Audit date: 2026-11-05. The release CLI built successfully and `litigate check --profile strict lit/core` reported 43 L5002 holes. This inventory maps every diagnostic to its declaration and bound primary-text extract. No amendment history is inferred from current text or retrieval date.
 
-The 43 holes arise from state-law citations in `lit/core/states/*.lit`. The
-state packages cite current state legal-holiday statutes, but their source
-bindings pin only current text; the verifier requires a pinned, section-specific
-`## versions <heading>` amendment history to prove that text was in force on
-each declared effective date. The following sources were checked:
+## Search performed
 
-- `sources/*-holidays/PROVENANCE.md` and corresponding `*-legal-holidays.txt`
-  extracts, including each extract's cited section and the source page's
-  edition/amendment notes. These establish current text/source provenance but
-  generally do not establish a complete sequence of effective versions.
-- All tracked `sources/` paths matching `*versions*` or `*history*`. These
-  cover federal rules, CFR, and specialized statutes; none is a complete
-  section-by-section amendment history for the state statutes cited by these
-  calendars.
-- `lit/core/Lit.toml` state-holiday source bindings and `lit/core/states/*.lit`
-  effective dates, to identify the exact state citations and proof windows.
+- For each row, inspected the exact bound text extract named in `lit/core/Lit.toml` and its source provenance entry under `sources/`; the extracts provide current or specified-edition text, but do not contain a section-specific `## versions <heading>` history covering the diagnostic proof window.
+- Searched the tracked repository corpus for files named `*version*` or `*history*` under `sources/`. The dated history files found cover federal rules, CFR, and specialized federal rules; none provides the required state/territory section history listed below. The general rule history file was also checked where cited.
+- This is a record of repository sources actually inspected, not a claim that every legislature archive has been exhausted. No unsupported claim that an amendment did or did not occur is made.
 
-Where the official state legislature's session laws or official code history
-can be obtained, vendor the dated source and add a section-specific `## versions`
-block. Where no authoritative history can be located, retain that individual
-L5002 with the precise official and secondary public sources searched here and
-the result; do not assert that no amendment occurred based only on the present
-code text. This audit did not establish all 43 exact diagnostic-to-citation
-mappings, so it does not claim those holes are cleared.
+## Diagnostic inventory
+
+| # | Diagnostic location | Cited provision | Proof begins | Bound source | Sources tried and result |
+|---:|---|---|---|---|---|
+| 1 | `lit/core/states/alabama.lit:15` | Ala. Code § 1-3-8 | 1963-07-01 | `ala-code-1-3` → `sources/al-holidays/al-legal-holidays.txt` | `sources/al-holidays/al-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 2 | `lit/core/states/alaska.lit:20` | AS 44.12.010(a) | 1963-07-01 | `as-44-12` → `sources/ak-holidays/ak-legal-holidays.txt` | `sources/ak-holidays/ak-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 3 | `lit/core/states/arizona.lit:14` | A.R.S. § 1-301(A) | 1963-07-01 | `ars-1-301` → `sources/az-holidays/az-legal-holidays.txt` | `sources/az-holidays/az-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 4 | `lit/core/states/colorado.lit:16` | C.R.C.P. 6(a)(2) | 1963-07-01 | `crcp` → `sources/co-state-civil/co-crcp-sectioned.txt` | `sources/co-state-civil/co-crcp-sectioned.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. `sources/rule-amendment-history.txt` records Rule 6 changes, but the cited history identifies a 1966-07-01 effective amendment and does not establish the 1963-07-01 beginning of this proof window. |
+| 5 | `lit/core/states/connecticut.lit:14` | Conn. Gen. Stat. § 1-4 | 1963-07-01 | `ct-holidays` → `sources/ct-holidays/ct-legal-holidays.txt` | `sources/ct-holidays/ct-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 6 | `lit/core/states/florida.lit:5` | Fla. Stat. § 683.01(1) | 2023-12-01 | `fla-stat-683` → `sources/fl-stat/fla-stat-683-01.txt` | `sources/fl-stat/fla-stat-683-01.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 2023-12-01. |
+| 7 | `lit/core/states/guam.lit:23` | 1 GCA § 1000(a) | 1963-07-01 | `gca-1-1000` → `sources/gu-holidays/gu-legal-holidays.txt` | `sources/gu-holidays/gu-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 8 | `lit/core/states/hawaii.lit:11` | HRS § 8-1 | 2023-01-01 | `hawaii-holidays` → `sources/hi-holidays/hrs-8-1.txt` | `sources/hi-holidays/hrs-8-1.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 2023-01-01. |
+| 9 | `lit/core/states/idaho.lit:14` | Idaho Code § 73-108 | 1963-07-01 | `idaho-code-73-108` → `sources/id-holidays/id-legal-holidays.txt` | `sources/id-holidays/id-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 10 | `lit/core/states/illinois.lit:16` | 5 ILCS 490/60 | 1963-07-01 | `il-holidays` → `sources/il-holidays/il-legal-holidays.txt` | `sources/il-holidays/il-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 11 | `lit/core/states/indiana.lit:17` | IC 1-1-9-1 | 1963-07-01 | `in-holidays` → `sources/in-holidays/in-legal-holidays.txt` | `sources/in-holidays/in-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 12 | `lit/core/states/iowa.lit:5` | Iowa Code § 1C.1 | 1963-07-01 | `iowa-code-1c` → `sources/ia-code/iowa-code-1c-1.txt` | `sources/ia-code/iowa-code-1c-1.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 13 | `lit/core/states/kansas.lit:17` | K.S.A. 35-107 | 1963-07-01 | `ksa-35-107` → `sources/ks-holidays/ks-legal-holidays.txt` | `sources/ks-holidays/ks-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 14 | `lit/core/states/kentucky.lit:13` | KRS 2.110(1) | 1963-07-01 | `krs-2` → `sources/ky-holidays/ky-legal-holidays.txt` | `sources/ky-holidays/ky-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 15 | `lit/core/states/louisiana.lit:18` | La. R.S. 1:55 | 1963-07-01 | `la-rs-1-55` → `sources/la-holidays/la-legal-holidays.txt` | `sources/la-holidays/la-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 16 | `lit/core/states/maine.lit:12` | 4 M.R.S. § 1051 | 1963-07-01 | `me-rs-4` → `sources/me-holidays/me-legal-holidays.txt` | `sources/me-holidays/me-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 17 | `lit/core/states/maryland.lit:17` | Md. Code, Gen. Provis. § 1-111(a) | 1963-07-01 | `md-code-gp-1-111` → `sources/md-holidays/md-legal-holidays.txt` | `sources/md-holidays/md-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 18 | `lit/core/states/massachusetts.lit:14` | M.G.L. c. 4, § 7 | 1963-07-01 | `mgl-4` → `sources/ma-holidays/ma-legal-holidays.txt` | `sources/ma-holidays/ma-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 19 | `lit/core/states/michigan.lit:11` | MCL 435.101(1) | 1963-07-01 | `mcl-435` → `sources/mi-holidays/mi-legal-holidays.txt` | `sources/mi-holidays/mi-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 20 | `lit/core/states/minnesota.lit:17` | Minn. Stat. § 645.44, subd. 5 | 1963-07-01 | `mn-stat-645` → `sources/mn-holidays/mn-legal-holidays.txt` | `sources/mn-holidays/mn-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 21 | `lit/core/states/montana.lit:5` | MCA 1-1-216(1) | 1963-07-01 | `mca-1-1` → `sources/mt-mca/mca-1-1-216.txt` | `sources/mt-mca/mca-1-1-216.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 22 | `lit/core/states/nebraska.lit:15` | Neb. Rev. Stat. § 25-2221 | 1963-07-01 | `neb-rev-stat` → `sources/ne-holidays/ne-legal-holidays.txt` | `sources/ne-holidays/ne-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 23 | `lit/core/states/nevada.lit:18` | NRS 236.015(1) | 1963-07-01 | `nrs-236` → `sources/nv-holidays/nv-legal-holidays.txt` | `sources/nv-holidays/nv-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 24 | `lit/core/states/new-hampshire.lit:14` | RSA 288:1 | 1963-07-01 | `nh-rsa-288` → `sources/nh-holidays/nh-legal-holidays.txt` | `sources/nh-holidays/nh-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 25 | `lit/core/states/new-jersey.lit:24` | N.J.S.A. 36:1-1 | 1963-07-01 | `njsa-36-1` → `sources/nj-holidays/nj-legal-holidays.txt` | `sources/nj-holidays/nj-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 26 | `lit/core/states/new-mexico.lit:16` | NMRA 1-006(A)(7) | 1963-07-01 | `nmra-1` → `sources/nm-state-civil/nmra-rule-set-1-civil-2026-sectioned.txt` | `sources/nm-state-civil/nmra-rule-set-1-civil-2026-sectioned.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 27 | `lit/core/states/new-york.lit:15` | N.Y. Gen. Constr. Law § 24 | 1963-07-01 | `ny-holidays` → `sources/ny-holidays/ny-legal-holidays.txt` | `sources/ny-holidays/ny-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 28 | `lit/core/states/north-carolina.lit:15` | N.C. Gen. Stat. § 103-4(a) | 1963-07-01 | `nc-gen-stat-103-4` → `sources/nc-holidays/nc-legal-holidays.txt` | `sources/nc-holidays/nc-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 29 | `lit/core/states/north-dakota.lit:5` | N.D.C.C. 1-03-01 | 1963-07-01 | `ndcc-1-03` → `sources/nd-cent-code/ndcc-1-03-01-02.txt` | `sources/nd-cent-code/ndcc-1-03-01-02.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 30 | `lit/core/states/northern-mariana-islands.lit:20` | 1 CMC § 311 | 1963-07-01 | `cmc-1-311` → `sources/mp-holidays/mp-legal-holidays.txt` | `sources/mp-holidays/mp-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 31 | `lit/core/states/oklahoma.lit:11` | 25 O.S. § 82.1 | 1963-07-01 | `oklahoma-holidays` → `sources/oklahoma/25-82-1.txt` | `sources/oklahoma/25-82-1.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 32 | `lit/core/states/oregon.lit:13` | ORS 187.010(1) | 1963-07-01 | `ors-187` → `sources/or-holidays/or-legal-holidays.txt` | `sources/or-holidays/or-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 33 | `lit/core/states/pennsylvania.lit:23` | 1 Pa.C.S. § 1908 | 1963-07-01 | `pa-legal-holidays` → `sources/pa-holidays/pa-legal-holidays.txt` | `sources/pa-holidays/pa-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 34 | `lit/core/states/puerto-rico.lit:17` | 1 L.P.R.A. § 84 | 1963-07-01 | `pr-holidays` → `sources/pr-holidays/pr-legal-holidays.txt` | `sources/pr-holidays/pr-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 35 | `lit/core/states/rhode-island.lit:16` | R.I. Gen. Laws § 25-1-1 | 1963-07-01 | `ri-gl-25` → `sources/ri-holidays/ri-legal-holidays.txt` | `sources/ri-holidays/ri-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 36 | `lit/core/states/texas.lit:16` | Tex. Gov't Code § 662.021 | 1963-07-01 | `tx-gov-code-662` → `sources/tx-holidays/tx-legal-holidays.txt` | `sources/tx-holidays/tx-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 37 | `lit/core/states/utah.lit:17` | URCP 6(a)(6) | 1963-07-01 | `urcp` → `sources/ut-state-civil/utah-urcp-all-rules-sectioned.txt` | `sources/ut-state-civil/utah-urcp-all-rules-sectioned.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. No Utah Rule 6 section-specific version history was found in the tracked source history corpus. |
+| 38 | `lit/core/states/vermont.lit:12` | 1 V.S.A. § 371(a) | 1963-07-01 | `vt-holidays` → `sources/vt-holidays/vt-legal-holidays.txt` | `sources/vt-holidays/vt-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 39 | `lit/core/states/virginia.lit:5` | Va. Code § 2.2-3300 | 2023-12-01 | `va-code-2-2` → `sources/va-code/va-code-2-2-3300.txt` | `sources/va-code/va-code-2-2-3300.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 2023-12-01. |
+| 40 | `lit/core/states/washington.lit:5` | RCW 1.16.050(1) | 2023-12-01 | `rcw-1-16` → `sources/wa-rcw/rcw-1-16-050.txt` | `sources/wa-rcw/rcw-1-16-050.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 2023-12-01. |
+| 41 | `lit/core/states/west-virginia.lit:5` | W. Va. Code § 2-2-1(a) | 2023-12-01 | `wv-code` → `sources/wv-code/w-va-code-2-2-1-3-1-31-3-5-1.txt` | `sources/wv-code/w-va-code-2-2-1-3-1-31-3-5-1.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 2023-12-01. |
+| 42 | `lit/core/states/wisconsin.lit:15` | Wis. Stat. § 995.20 | 1963-07-01 | `wi-holidays` → `sources/wi-holidays/wi-legal-holidays.txt` | `sources/wi-holidays/wi-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+| 43 | `lit/core/states/wyoming.lit:19` | Wyo. Stat. § 8-4-101 | 1963-07-01 | `wy-stat-8-4` → `sources/wy-holidays/wy-legal-holidays.txt` | `sources/wy-holidays/wy-legal-holidays.txt` and its `sources/PROVENANCE.md` entry: text available, but no section-specific dated history proving the text at 1963-07-01. |
+
+The check also reports an unrelated L1007: this checkout has `lit/core/Lit.lock` format 2 while the built CLI expects format 3. The findings above concern all 43 L5002 diagnostics; the lock was not rewritten as part of this source-history task.

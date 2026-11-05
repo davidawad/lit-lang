@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-lower/tests/clock_lowering.rs
+assertion_line: 276
 expression: "render(&clock_of(&lowered).calendars[0]).unwrap_or_default()"
 ---
 {
@@ -52,7 +53,8 @@ expression: "render(&clock_of(&lowered).calendars[0]).unwrap_or_default()"
       },
       "id": "day-of-mourning",
       "name": "day-of-mourning",
-      "observed": "actual"
+      "observed": "actual",
+      "oneTimeYear": 2018
     },
     {
       "date": {
@@ -67,7 +69,8 @@ expression: "render(&clock_of(&lowered).calendars[0]).unwrap_or_default()"
       },
       "id": "observed-once",
       "name": "observed-once",
-      "observed": "nearest-weekday"
+      "observed": "nearest-weekday",
+      "oneTimeYear": 2019
     }
   ],
   "id": "federal-holidays",

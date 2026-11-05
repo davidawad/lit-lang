@@ -161,6 +161,12 @@ fn expressible(id: &str, direction: Direction, unit: Unit) -> bool {
 /// pinned amendment histories remain explicit strict holes.
 #[test]
 fn strict_check_of_lit_core_reports_only_unverified_state_sources() {
+    let lock = std::fs::read_to_string(repo().join("lit/core/Lit.lock")).unwrap();
+    assert_eq!(
+        litigate_sema::pkg::lock::LockFile::format(&lock).unwrap(),
+        litigate_sema::pkg::lock::FORMAT,
+        "the checked-in core lock must use the format written by this compiler"
+    );
     let dev = litigate(&["check", "lit/core"]);
     assert_eq!(dev.code, 0, "{}", dev.stdout);
     let run = litigate(&["check", "--profile", "strict", "lit/core"]);

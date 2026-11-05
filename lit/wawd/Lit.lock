@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "wawd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:26e95bfa793fece8aeea61b8e350f5d3bf9196a3156e34a983d34238c9196e8e"
-semantic = "sha256:e4deab4855c2044179f3eb776a8f95b1a2fcdb8cc597ce399da4ded5fa1d5eeb"
+modules = [
+    "local-rules.lit sha256:89a98b9e686297c3de19ae2829e3736399a62c7c6487b8b061cf54fb7f833371 sha256:189118bf486bb455b972eae84b8e397b36fde5a4d90de0949101543a79a7c080",
+]
 texts = [
     "wawd-lcr sources/fed-wdwash/wdwash-local-civil-rules-sectioned.txt sha256:6e36487f123d77750b4503501397b9ff436c3ee1667e22c19e1717f5523f9fc3",
 ]

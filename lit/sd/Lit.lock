@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "sd-supreme-court-civil-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:c26157455a30550cc11da3bcae46bc49cfb012eb7e3a6638ac5b6fdfeb963fec"
-semantic = "sha256:236c299f16fe74be724ad9ffb279565d94882b766bdd3704e771096e1bad2c6c"
+modules = [
+    "appeal.lit sha256:523b7b2448d8423b9911606d5ef33e76d48a7d0de13b198789be3b9577d509a0 sha256:4fed6bad605a6a45c7bb08bac701286b3ad7ed7fd6a011a20e5b728029b1de38",
+]
 texts = [
     "scotus sources/scotus-rules.txt sha256:899c67fce982d796557bb85b0456a59bab736cab0274f7e4e75c84105067d2fa",
     "sdcl-15-26a sources/sd/sdcl-15-26A-sections.txt sha256:def44fd3b4be7d28c9e529082bbcfe98f116cd88cc6331cb641d2fe99f679547",

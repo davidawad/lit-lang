@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "nhd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:1771a9e9e1ee851f75e9b7b4311c0ecc6a1d2c8280978cc5491cee54175f122a"
-semantic = "sha256:bdfec3eee5766e90a39f4f5915c834a22c3a983dc92fba2670f2fe1cb524a211"
+modules = [
+    "local-rules.lit sha256:9ba61f79ed4c02a8d12a870da808dfcae8272537cde081de09ad76b7c0110696 sha256:8bb986f30ea08a27656e65ca61f7e8d573c429268f61c6c9d5a4930898afcddf",
+]
 texts = [
     "dnh-lr sources/dnh/dnh-local-rules-sectioned.txt sha256:ca001157d492636c92d6d8ff4c7112664bef52554253ba1125c167a6ef1d6382",
 ]

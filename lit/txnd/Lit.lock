@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "txnd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:62261099acdaa82bf7f3bd5256c458d4443995a04f1b67bceeebb156314247b9"
-semantic = "sha256:a7c438290001feda2911c55a11c43933cae96f60db60bbb8a26b9768dc54a82b"
+modules = [
+    "local-rules.lit sha256:1d35aba8fcbef5370d6ca79fae4f29b7c8a0983e7824ca2d3ce5c3b52be6369c sha256:b0f0349fe2e0fc14fa353e8b74015e089886ad9e9ae214b7d07dcca7d8da06bd",
+]
 texts = [
     "txnd-lr sources/txnd/tx-nd-local-civil-rules-sectioned.txt sha256:02d1282a92209c098499f53867dfa6434370a1c46ef4235c890f9ec955baef06",
 ]

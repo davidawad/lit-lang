@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "seventh-circuit-court-of-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:8452a0ac2943bf9875d48efe770621112cf4c190fd176460e821ebe77c0a0848"
-semantic = "sha256:87ebe272d14eb7ffabe36496b3e3b0a252bb18253f8cc608520f12c304fe4fab"
+modules = [
+    "appeal.lit sha256:c3b3ee9ca30d3a0ef1808256048790c4c5ce9a4f8540c98dd1ecb0749cec00e1 sha256:f7a5528fc268a9d4c58e7f92d2cf65ad806ee98c873bdcac9cd799e5ee7568e8",
+]
 texts = [
     "ca7-rules sources/ca7/ca7-rules-and-ops-2025-12-01.txt sha256:a76f5b81181cc32652b766fe994675eb0dfc9ff6164a51215fae0d40fabc3fae",
     "frap sources/frap.txt sha256:b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172",

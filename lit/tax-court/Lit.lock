@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "tax-court"
 version = "0.1.0"
 language = 1
-source = "sha256:b9d41d260dba4cc91ce82dcd969aece509c48aaf4fd019a62baea1e9ef3e0b2c"
-semantic = "sha256:e0befa9d0a81b5d693bdad607d0b439089ba9054d323f46982b091945a9a7310"
+modules = [
+    "deficiency.lit sha256:38b8b181e588b3e5937e4fb217aa488d52e3267354663e3d68361103a2e9a6ca sha256:46e79cba270b6a6d2eea5f352d3f7539fe3943585a9bb254d66158925f07754d",
+]
 texts = [
     "tc-rules sources/tax-court/tax-court-rules-sectioned.txt sha256:6d2998bbbf3de127c53557ae53ddb5e4087720a35463d80b232ff181bb380f1a",
 ]

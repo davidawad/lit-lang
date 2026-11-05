@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "msnd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:a8ff2496c4ca802d63faae4da963dc4e31e6cbd7931bcdc01cf966abfebe34be"
-semantic = "sha256:315a7c1bcdf14e3c603c347812e8d698d4b5e08cd6103f37454e6d893d838f47"
+modules = [
+    "local-rules.lit sha256:dd2a1338a7174e3e40062c5b0d00fee5b6c6954bc3ea974da4264d65f5436d44 sha256:f7c87bf8081ef853bee91994402eb73cef9d008f84b9789ba229b3683fb4e03b",
+]
 texts = [
     "msnd-lucr sources/msnd/local-uniform-civil-rules-sectioned.txt sha256:12c17e9935fa4522baf28e69db7c9878420bd5fa902cd4ba7a526b889a88f330",
 ]

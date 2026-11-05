@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "hid-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:caea6fd3dc834ee6fa7dc09689b1c59be57e21b0478ac6c305833e3a8b695137"
-semantic = "sha256:ab4bb5be0597c36c472b670549580396afad1ddfe64f990baf203f361893a78b"
+modules = [
+    "local-rules.lit sha256:698c33eccbabbcbaa5b2e8e09b9c2ec67b41e45bfb907ffe9882dc83f1bce213 sha256:70f3b1b8548bc822b2ff61f9e3ba88d212fa9277ca54a85d582d734865ac0806",
+]
 texts = [
     "dhaw-crimlr sources/fed-dhaw/dhaw-criminal-local-rules-2023-01-01-sectioned.txt sha256:3edc553a908be81301db8f8ce3cd479423cbf3d75916345ffc8644af85caf031",
 ]

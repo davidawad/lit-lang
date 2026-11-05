@@ -1,0 +1,255 @@
+{
+  "calendars": [
+    {
+      "cite": "A.R.S. § 1-301(A)",
+      "holidays": [],
+      "id": "arizona-holidays",
+      "sourceUrl": "https://www.azleg.gov/ars/1/00301.htm",
+      "title": "The holidays of Arizona (A.R.S. § 1-301(A)) add no day `us-federal-holidays`\ndoes not already close: the weekday holidays are federal holidays on the\nsame days, observed as § 6103(b)(1) observes them (§ 1-301(B), (C)), and\nMothers' Day, Fathers' Day, American Family Day and the Sunday\nobservances of Native American Day, National Navajo Code Talkers Day and\nConstitution Commemoration Day (§ 1-301(A), (D)-(F)) are Sundays, closed\nby `weekend`. The calendar is declared, empty, so the District of\nArizona's counts (core's `frcp6-arizona` and `frbp9006-arizona`) name\nthe state whose FRCP 6(a)(6)(C) and FRBP 9006(a)(6)(C) days they read."
+    }
+  ],
+  "countingRules": [
+    {
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "forwardHolidays": [
+        "arizona-holidays"
+      ],
+      "holidays": [
+        "us-federal-holidays"
+      ],
+      "hours": {
+        "inaccessibleText": "FRCP 6(a): the clerk's office is inaccessible during the last hour; extend to the same time on {date}",
+        "rollText": "FRCP 6(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
+        "text": "FRCP 6(a): count every hour from the trigger; +{n} hour(s)"
+      },
+      "id": "frcp6-arizona",
+      "label": "FRCP 6(a)",
+      "months": {
+        "endOfMonth": "clamp",
+        "text": "FRCP 6(a): count {n} {unit} {after} the anchor to the corresponding day, else the last day of that month -> {date}"
+      },
+      "sourceUrl": "https://www.law.cornell.edu/rules/frcp",
+      "steps": [
+        {
+          "kind": "trigger",
+          "op": "anchor",
+          "text": "FRCP 6(a): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "count": "calendar",
+              "text": "FRCP 6(a): count {n} calendar day(s) {after} the anchor -> {date}",
+              "unit": "calendar"
+            },
+            {
+              "count": "business",
+              "text": "FRCP 6(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "court"
+            },
+            {
+              "count": "business",
+              "text": "FRCP 6(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "business"
+            }
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "backwardText": "FRCP 6(a): service extensions apply to forward periods only; ignored",
+          "methods": [
+            {
+              "days": 0,
+              "method": "personal"
+            },
+            {
+              "days": 0,
+              "method": "electronic"
+            },
+            {
+              "days": 3,
+              "method": "mail"
+            },
+            {
+              "days": 3,
+              "method": "clerk"
+            },
+            {
+              "days": 3,
+              "method": "other-consented"
+            }
+          ],
+          "op": "service",
+          "text": "FRCP 6(a): service by {method} adds {days} day(s) -> {date}",
+          "unrecognized": [
+            "commercial-carrier",
+            "prison-mail",
+            "mail-foreign",
+            "express",
+            "express-foreign"
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "ignoredText": "FRCP 6(a): no inaccessibility extension applies; ignored",
+          "op": "clerkInaccessible",
+          "text": "FRCP 6(a): the clerk's office is inaccessible on the last day; extend -> {date}"
+        }
+      ]
+    },
+    {
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "forwardHolidays": [
+        "arizona-holidays"
+      ],
+      "holidays": [
+        "us-federal-holidays"
+      ],
+      "hours": {
+        "inaccessibleText": "FRBP 9006(a): the clerk's office is inaccessible during the last hour; extend to the same time on {date}",
+        "rollText": "FRBP 9006(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
+        "text": "FRBP 9006(a): count every hour from the trigger; +{n} hour(s)"
+      },
+      "id": "frbp9006-arizona",
+      "label": "FRBP 9006(a)",
+      "months": {
+        "endOfMonth": "clamp",
+        "text": "FRBP 9006(a): count {n} {unit} {after} the anchor to the corresponding day, else the last day of that month -> {date}"
+      },
+      "sourceUrl": "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf",
+      "steps": [
+        {
+          "kind": "trigger",
+          "op": "anchor",
+          "text": "FRBP 9006(a): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "count": "calendar",
+              "text": "FRBP 9006(a): count {n} calendar day(s) {after} the anchor -> {date}",
+              "unit": "calendar"
+            },
+            {
+              "count": "business",
+              "text": "FRBP 9006(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "court"
+            },
+            {
+              "count": "business",
+              "text": "FRBP 9006(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "business"
+            }
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "backwardText": "FRBP 9006(a): service extensions apply to forward periods only; ignored",
+          "methods": [
+            {
+              "days": 0,
+              "method": "personal"
+            },
+            {
+              "days": 0,
+              "method": "electronic"
+            },
+            {
+              "days": 3,
+              "method": "mail"
+            },
+            {
+              "days": 3,
+              "method": "clerk"
+            },
+            {
+              "days": 3,
+              "method": "other-consented"
+            }
+          ],
+          "op": "service",
+          "text": "FRBP 9006(a): service by {method} adds {days} day(s) -> {date}",
+          "unrecognized": [
+            "commercial-carrier",
+            "prison-mail",
+            "mail-foreign",
+            "express",
+            "express-foreign"
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "ignoredText": "FRBP 9006(a): no inaccessibility extension applies; ignored",
+          "op": "clerkInaccessible",
+          "text": "FRBP 9006(a): the clerk's office is inaccessible on the last day; extend -> {date}"
+        }
+      ]
+    }
+  ],
+  "lowered": {
+    "asOf": "2026-10-22",
+    "pins": [
+      {
+        "digest": "sha256:6989c3f325ecd4f94aa41633cace80b808f3ab87614c846a7469b657d60ee3f2",
+        "name": "core.states.arizona",
+        "version": "1.0.0"
+      }
+    ],
+    "worldDigest": "sha256:f572d4dddf32437fe7181fa017876f4c25551917260f27c57827147cd37fb29e"
+  },
+  "schemaVersion": 4
+}

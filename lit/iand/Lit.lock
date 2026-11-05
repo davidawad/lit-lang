@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "iand-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:82041deb0243317cf5580b3de516fa26e0ab4988b9de87291078d07a682d60b8"
-semantic = "sha256:63f4918002229513cde7ffe28c89171befc14eedc939fc488e4cf55adcccae12"
+modules = [
+    "local-rules.lit sha256:dd78b6beb16ddffe4aea3e02e2ab6f20fd60a1385c86e72104c828af30855c31 sha256:f0c0299312ff0ecb9a1841294789a04d0b7cb012e275381be63119fbfa3c7d6a",
+]
 texts = [
     "iand-lr sources/iand/local-rules-civil-sectioned.txt sha256:2be9a39b0ef0b4e1b635f401708329d883069ab5612805dcd89b6ca4974095a0",
 ]

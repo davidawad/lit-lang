@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "nyed-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:3dc23ee5bfa50640036d19b0866b3e8fced86129e4b78d9ba96448e3f04173d9"
-semantic = "sha256:0c7325b7f3c9b6765f82860a642085759106da7c1b1c2b43e99f2f016ab778b3"
+modules = [
+    "local-rules.lit sha256:55c428550698c9d85326e35024dcfd54dfe2991ca76d77deb36670b995d01b8f sha256:97eecac8d2d35445901b1931dde432f7336cf3eefe55da74c11e79e52c1f1c08",
+]
 texts = [
     "sdny-edny-lcrr sources/sdny/local-rules-joint-sdny-edny-criminal-sectioned.txt sha256:6f1a7ac5c06034a7e203c3dfbd8898cfeaab5cc55bc5e06e61f0bb5d9a779628",
 ]

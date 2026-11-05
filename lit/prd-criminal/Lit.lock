@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "prd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:a054f6b6adfa4cd461ca02e0871a8e5948960f190fceccfeafa7fac49d7196b1"
-semantic = "sha256:39be233819c4d0b99164601f8cf6cb48d7fdcf78821c713a821157c7378fde4f"
+modules = [
+    "local-rules.lit sha256:f85a7fb0a8cd6e7baf50b22e035ce141592ba0705c0791bdf0beac3d6cd8c6e2 sha256:88a5d5c01f4c8f680d9d8e184250a20102e900019f2fd7545efabdef6659ef4b",
+]
 texts = [
     "dpr-lcrimr sources/dpr/dpr-local-criminal-rules-2024-10-16-sectioned.txt sha256:f6acb7ed2ce1fa4da7abaae1e6ac84a0337e245faae58690499bb419c8cf1b9f",
 ]

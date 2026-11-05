@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "mad-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:1222541882672c42e1b5030d2676bb0a0bb99e20d049cdfd52f1af07b74aa893"
-semantic = "sha256:aa758735b89c04e1fb765f8e6a69d8616cc12b1b635d56d779f0d576cb9c3c25"
+modules = [
+    "local-rules.lit sha256:c05318470b8ba1af8e25cc5d124d28af69586b717d0fa6ad5a6561b86985dd39 sha256:da0442ad7eb8944ee448e1b221e2c20a984d14fafec5d7cd867399165f26c7bd",
+]
 texts = [
     "dmass-lr sources/dmass/dmass-local-rules-sectioned.txt sha256:e0862acc529800fda4629e3067b1321f7edfec4585c778cb238e781bef47a8ba",
 ]

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "nmid-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:1ac02773dc82edf1f7fa2fade96d14e3f2c2a6f360e74065a4d1954eea3ceea0"
-semantic = "sha256:27c2ac66479df8f1fc1188a82fe65cc86d1f2eabdab370869b015a0222fd2ce2"
+modules = [
+    "local-rules.lit sha256:0e89544b8949d290ea58cb2567b917e2857982366b193e7de0bb31bd463a61ee sha256:7fecd3c8912269178f06129025caee109ca40ba9781ec51bc13b83a70b529dcd",
+]
 texts = [
     "dnmi-lr sources/fed-dnmi/dnmi-local-rules-sectioned.txt sha256:c40e5f1e8a92ca70a998430299de4caf85022655e471b77de48c0923b2f1f13a",
 ]

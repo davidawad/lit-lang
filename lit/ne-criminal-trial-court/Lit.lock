@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ne-criminal-trial-court"
 version = "0.1.0"
 language = 1
-source = "sha256:0f3d61f67e83764070813cdbd98c0527a53c112bae1c133534c50696a3e63538"
-semantic = "sha256:b7390aea3fabd9d880cec3eaef0037eb3be909637414f06572ee92cabeb06c0f"
+modules = [
+    "criminal.lit sha256:dc981d2ed343afd95f711fd2ce5ff86177e3034adb6ae42a1e7f554458dd93bf sha256:cc4ac558c06d24733655349db6b0362262dde785af10297cb54d0d0e264be8d4",
+]
 texts = [
     "neb-rev-stat sources/ne-district/ne-statutes-cited.txt sha256:ee8d4406776670b03de53049e86aba7991362cd6d20f6add41378ac1974c4e86",
     "neb-rev-stat-29-12 sources/ne-criminal-trial-court/ne-rev-stat-29-1201-to-29-1209-speedy-trial.txt sha256:91fcb806601e6d39b6cd1cde92dae909523967e7bc8f146b4705312c17c834da",

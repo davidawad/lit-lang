@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "ndd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:f22655dcd8c68410cadc79d9c8aebd309f56944aa508f7023686621f73c0d426"
-semantic = "sha256:b009011e7998ef61e896fb8416c7d331fca6f52f9db93571aae83f9ef3ce2f83"
+modules = [
+    "local-rules.lit sha256:ccdb79ac89585e4d197df45feb782c4c514544f1a901f6dcb4472e4c386121f9 sha256:4396b9c70996e91d34e996a64119573c28bd91b8119eb96af8c090e793ba4cfe",
+]
 texts = [
     "ndd-lr sources/ndd/local-rules-civil-sectioned.txt sha256:2611310f064b74eb36bc64db419c121daeae343be9d36e8e0b910ba607fa693d",
 ]

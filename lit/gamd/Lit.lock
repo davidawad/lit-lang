@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "gamd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:f758cc1404d6a6575a39a15d1a8f9ad49ea74e22f689842c0bae97a4f2c0d4d4"
-semantic = "sha256:b6bcac75c6e3db1ffa608585ab61df4b61437cc8856a4d8f374848e1b380dfe0"
+modules = [
+    "local-rules.lit sha256:ca4880859cd2f08845697ed29fa1868d31f61fe9ef1e42a50f279ae6996b949a sha256:deb0384618ac31c5fab4096f875e57eae07183de5ad81dda800d6325270c9403",
+]
 texts = [
     "gamd-lr sources/md-ga/mdga-local-rules-sectioned.txt sha256:bf31258f6359b4b9827bd9408addcb97f3c24e6de452a80322a5ba9d18db6976",
 ]

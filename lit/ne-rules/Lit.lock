@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ne-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:fc227aa047a6d3384c6b7188476d5c83c52714875f106d06dbb64233d911710a"
-semantic = "sha256:664b7c960f7847d1d389bdbe35fa69cad89122ec912dacb77223b39225f1e449"
+modules = [
+    "rules.lit sha256:6de64c8688c8c59c994f3b5b70a7cad416856a201414a240cea26e48a8140f0f sha256:6da733198ada8463995315f1021134b8878acbdbd356c76a6397aab3fea3f2f6",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

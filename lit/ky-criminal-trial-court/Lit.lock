@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ky-criminal-trial-court"
 version = "0.1.0"
 language = 1
-source = "sha256:4f6636711fabc2968368c61da91eead6fcc17f28d4cbc9a9e9c0a55889d9fc9b"
-semantic = "sha256:1f6d95c40129cf3819c7a18a541904bd3a38014b5e22f869a17edf17ac77d6e8"
+modules = [
+    "criminal.lit sha256:7a52502f1ae2635b05fc1d3ce741373286af08ebe2f8b4d3f3c417532961e71e sha256:7b03ad4c2cb8d1faaa0f2fc293c2e07b250efa892df3b087684f549575efa8f3",
+]
 texts = [
     "ky-rcr sources/ky-criminal-trial-court/ky-rules-of-criminal-procedure-westlaw-sectioned.txt sha256:05e5db9120ed1d7c28fcef10f405c97b6c03bcbbdf752692a7ba71f9db7d8e44",
 ]

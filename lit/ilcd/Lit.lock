@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "ilcd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:8cecb41b05d1c8b15290bd0b9fb2feff40a332a898e467d77ade7740aaf8ee51"
-semantic = "sha256:c8a003aa5bb5e205a5a9266626b55e051f9c16efa847cfc39faf65bd85d738cf"
+modules = [
+    "local-rules.lit sha256:3ef8fbbc9f67d46bdf0f0c1ca0df4c136a2075d87fe65a842cccdd9ea07325b7 sha256:53fc7ea973f39cc80c34f6c50e3864661ecbee56d8b29d54466e58172a1b09cb",
+]
 texts = [
     "ilcd-lr sources/ilcd/ilcd-local-rules-sectioned.txt sha256:2bdc7aa2fdba1320384af050e6ad4d271a1f466233eaa62537a912b68cfb7b26",
 ]

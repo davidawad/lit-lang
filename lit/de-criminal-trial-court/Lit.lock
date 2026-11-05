@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "de-superior-court-criminal"
 version = "0.1.0"
 language = 1
-source = "sha256:12ed0cc3cf5128de110e263dfd7d4f99d983075543873bb0eb6905413e6941c0"
-semantic = "sha256:7f0428bde1cc5f60094bfcc0fac402c2a9b081d2cf9744651eb6076e3bb4c73b"
+modules = [
+    "criminal.lit sha256:f3b370980711eff1ff8004fa3073d4315ffdebefd4c247cb272a05e3db7ba2f8 sha256:ac1544fa565658240cf8d29ba9305058b648990b1d7bfac17fc0fe519ca08783",
+]
 texts = [
     "de-scr-crim sources/de-criminal-trial-court/de-superior-court-criminal-rules-sectioned.txt sha256:9fe56d886e34be142af1b3ba1a2ed1154bb7f79a9964ef804d002c0a06277961",
     "de-supr sources/de-supreme-civil/rules-2026-02-sectioned.txt sha256:9f090e9a2450f3a591a66547027c2b3d4ce07e0041e2c5568d486346ed21518d",

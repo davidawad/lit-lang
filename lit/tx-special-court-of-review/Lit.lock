@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "tx-special-court-of-review"
 version = "0.1.0"
 language = 1
-source = "sha256:431d9aeda6e81a88c27134d4af63f9b7964f6d599297c33005ec13c89fd055a2"
-semantic = "sha256:54c3cb0a0c9eea0bed0122f104c57d3bb59a62dab52af8a20ad583b8968ab79e"
+modules = [
+    "proceeding.lit sha256:f2f1efda931467d77491d26d6a5aeba6bd235f31d1841358f590b59140fa7e7a sha256:7516209d6ca8ee0fd37f415e7bb9a211aed6ec421020d0b673535d981f25194a",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "wiwd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:07e63ae5357fe2a7b90e04e53c3d241ca0f11c6a7dc3dbc53da8079ea6a035e8"
-semantic = "sha256:46b84adad08f71edbdaeb296aba9a1a17e9a6530d1a7cd6ccee0840c95889150"
+modules = [
+    "local-rules.lit sha256:e185b6ace06f683d50af2eb836d13ca36e575da768bed023fa8c24e6212c0cae sha256:a2949ef65e1822de1e597d64bb68481efc3d7d3536aa17375540cf31959278e5",
+]
 texts = [
     "wiwd-lr sources/wiwd/wiwd-local-rules-sectioned.txt sha256:24fe18cfdc475ed00773efcc9543061a6fe318741140fe3839903184212f49f4",
 ]

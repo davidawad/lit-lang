@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "wv-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:ecba791ff06defb64aa9c89f395805eafdd610b34d3ef3b78659b58d12f8f95e"
-semantic = "sha256:84acc7dd278758882ab3ade8f0652239e1fe44659105a425c62a84371902538b"
+modules = [
+    "rules.lit sha256:aa5e353dca895e86a47945b1142a3f862bf8021f43a8c36499f706fceaa11500 sha256:b634782eba24840c8b64150ce56621e5cb60a2387e70e084ddf6468383e09b2b",
+]
 texts = [
     "wv-rap sources/wv-appellate-civil/wv-rules-of-appellate-procedure-sectioned.txt sha256:f84e006703f6dd8d74ec52c3684c0c4d845f6e2a452ab86a3251cbd1a0d44df9",
     "wv-rcp sources/wv-circuit-civil/wv-rules-of-civil-procedure-sectioned.txt sha256:796b579132bd760ffb977ae427fdb1b34bbfa34d85804a186f6750e9fd6d15f1",

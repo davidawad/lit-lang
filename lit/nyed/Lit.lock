@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "nyed-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:8368a57733f5c6333cb92c5d024dd0e1e5de89aa6a7f2e237d3651842165f1f7"
-semantic = "sha256:4e8fb9886953bb3dd912d37b307b8f6694c30471783077a410982457e720ae97"
+modules = [
+    "local-rules.lit sha256:06f9b8d382ba973c140995c5753288e31081848173b9b92af3099df61b3b6c81 sha256:0100b3234f5dc36c56e007444ead9e55492624d807f4cbb1732cdf2d36d1de28",
+]
 texts = [
     "nyed-lcivr sources/sdny/local-rules-joint-sdny-edny-sectioned.txt sha256:f12fd4d7c006ddd44ff015761aaaaaf13090db10db0afb4660c08f16f6812b98",
     "nyed-lssr sources/sdny/local-rules-joint-sdny-edny-sectioned.txt sha256:f12fd4d7c006ddd44ff015761aaaaaf13090db10db0afb4660c08f16f6812b98",

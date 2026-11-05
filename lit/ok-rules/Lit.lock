@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ok-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:5d8dddd17e4f9cb7aa1fda4792b4403aab733b36970fe25de28a6b71158f8d8b"
-semantic = "sha256:8448aada9724e53cb8d01a52486bbb5f4c01cd119bf6b3793b0c346fcca4a71f"
+modules = [
+    "rules.lit sha256:efdec749012ecea7b5dc5125869d9ff131fb0deed2f3d14332b9fd0769d4e035 sha256:ea7fc4b5a4cfa052de2770b14f26198c893b778dca1dea6056b9b4bc5deaa582",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

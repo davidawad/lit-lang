@@ -204,7 +204,7 @@ Deadline counting is data. The **clock library** holds holiday calendars
 and counting rules, shared by every pack. Its shared rules (`frap26`,
 `frcp6`, `frcrimp45`, `itc210`, `rcfc6`, `sup-ct-30`) and calendars are
 `lit/core`'s declarations, lowered (the engine's copy is
-`crates/litigate-engine/clock/litigate-core.json`, rewritten by `just lit-sync`;
+one `crates/litigate-engine/clock/core/<module>.json` per `lit/core` module, rewritten by `just lit-sync`;
 SPEC §9.4). A forum package's own counting rules and calendars are
 generated into the built `packs/clock/<pack file>.json` (today
 `mpep-prosecution.json`, 37 C.F.R. § 1.7, and

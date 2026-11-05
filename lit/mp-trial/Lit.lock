@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "mp-superior-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:8d030b33543d687f21f75c66ceacdfdc2fa14824eea1443e60aadaf179a7ddbc"
-semantic = "sha256:811722ca4168642b3943e25b92b8fd0e4c8ed72e58eec33b9a947c6dbb21b418"
+modules = [
+    "civil.lit sha256:332bf9c2c3441b4b7776de2ac8892e738b56ba6769a40cd8c592bb22d942045e sha256:3eb7fc5a3a8ca105cc19312932199fb5a6e9d978ab2d8184286812d9281ff4fd",
+]
 texts = [
     "mp-civ sources/mp-trial/nmi-rcp-sectioned.txt sha256:61165fb072592880ebd21303aa0fb06a48bde993ec235ca01ed4c2fd1adab424",
     "mp-sup sources/mp-supreme/nmi-supreme-court-rules-sectioned.txt sha256:a10aa4e3bf1020d81cdaa148172700a92cb2df9a6a00d380ceed6b3e5e2d2f46",

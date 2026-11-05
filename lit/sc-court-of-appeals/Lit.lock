@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "sc-court-of-appeals-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:958fd996f63d3d486b08bded523bef53c156f682edd6bc6d04a1b4ce0dbc6056"
-semantic = "sha256:70394a9e935af24129f8b16ded1f1914fd073e1991c233711b24f82ca59b6eef"
+modules = [
+    "appeal.lit sha256:3b19fab14a3dba7ea0ebbf429d7f3cf9e2fbcb83c378ea4bd96b0d1105efe5e5 sha256:17bfbe443cd0d78a72cb284de5cbb1ff81239deb8d57681c00071434bd02235d",
+]
 texts = [
     "scacr sources/sc-appellate-civil/scacr-rule-pages-2026-10-28-sectioned.txt sha256:7fd65d2c63a0f4333104a609033b534746a5161393dacd693a437ca4eafbb7da",
     "scrcp sources/sc-circuit-civil/scrcp-rule-pages-2026-10-28-sectioned.txt sha256:574cec1048ea5d046691dcf4c714ad4ccf7a9572db4dd1787556567caf82b0c5",

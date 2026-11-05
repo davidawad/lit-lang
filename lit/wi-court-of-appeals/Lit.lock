@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "wi-court-of-appeals-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:4816b4e900992c008d7f2c5fdb806f74e97c1b33977e02e23854221e173ea22e"
-semantic = "sha256:550ccd255d78b5bf2c8306f8f3fa45723c6fb315020fccace47e385b667e75f3"
+modules = [
+    "appeal.lit sha256:79102f2f8aeab72a4062a79037394ce0e89ebfcffb76fee2205d507e9b164672 sha256:6e8ff37de3a53fa3b2665580b3a0cc1616676ad317b7f2c87709950444d2b9db",
+]
 texts = [
     "wis-stat-808 sources/wisctapp/wis-stat-ch808-sectioned.txt sha256:67b34464aff35374d59d9ed0ffbfd997ab6c084b2494655ef052359eb7b7b4dd",
     "wis-stat-809 sources/wisctapp/wis-stat-ch809-sectioned.txt sha256:55eaa45120fd15038303810878dddae1289081531ce4a658a8f46d01a12feaad",

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "utd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:8532f8f326cb39f4242d210f7c5bdb5322c93c82baa606789b843c9a1b898295"
-semantic = "sha256:d4c731628387947fbde66bfa98cbb020090710a67abbafd99258926e026240c8"
+modules = [
+    "local-rules.lit sha256:d8222c35221114f13cb5f7678aa4a82f14e59957949993899b0be7780cec6637 sha256:6bd5a0f02cca831c8aa63068fbc421b8b30f8e43af71e6207c0425e48747ebbf",
+]
 texts = [
     "frcp sources/frcp.txt sha256:527fb9fbfe1665bdbdc5565ea5614b299e16b07b07edba803aae6eb5f957b990",
     "urcp sources/ut-state-civil/utah-urcp-all-rules-sectioned.txt sha256:7672ae2cf0b3f9f360c4d6df1c80bcf8a5566437102fea4d4700352b75144dc9",

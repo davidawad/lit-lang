@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "tnwd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:74e78de0f11dd8cf15219729e93a69778f56062e6351f729e5705090c72f3d0c"
-semantic = "sha256:8f809b8ed0740e175e5ab2ffbb36b6b352aa74de8e53a4e36290e8cc6f14ce22"
+modules = [
+    "local-rules.lit sha256:12d21f0bc84858da3c2475f23b96470a987c03b9f9f69a94a224c8d25b66e25f sha256:75b3feef8a4d59c021a6964d86a0b7368d3e070cdc97a14301bbeb50fa2d1d34",
+]
 texts = [
     "tnwd-lcrr sources/tnwd/tnwd-local-criminal-rules-sectioned.txt sha256:e634ec26e0ec4323a839d2370a53175695ffe089461184c2df366192db614cb7",
 ]

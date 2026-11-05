@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "idd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:15e2d6763e197776fb39693321996a0187cf168931d12beee0d5c63f9ce16140"
-semantic = "sha256:e2f6446beda2cc9ceb9322ac1bade79d52cff23d69a4f6186cde850983cbba7f"
+modules = [
+    "local-rules.lit sha256:1c12f910d144a8d96eb7d8aa9c889a2e66eafa8eab7687f6b137c2100cc8ef70 sha256:7086d3729fa7bdb01ba85543a004be7fdd9f405f9ab1bf5ebd1f2807b1b593c0",
+]
 texts = [
     "didaho-lcrimr sources/fed-didaho/didaho-local-criminal-rules-packet-2026-10-27-sectioned.txt sha256:ac21449f118fd0715f141064db150c3f22380e28c1896f156747f198ce171fb3",
 ]

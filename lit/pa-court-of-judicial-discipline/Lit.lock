@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "pa-court-of-judicial-discipline"
 version = "0.1.0"
 language = 1
-source = "sha256:ee2db480d7c99574cdf0f9ff480d8dfa93e2286a96610abcd0051a173c2d4a39"
-semantic = "sha256:d0f8307b8f8e316552d0a403772696926a9f844e103d0c742e35f3fcd15e5a60"
+modules = [
+    "discipline.lit sha256:44e8ad31ce54988886c2e52d1ce56232a5dc80f81f690fd0eaa7e7bbdf8fd886 sha256:6522d54844a430db42244f740d042881049d318f477fd27cbbc8da90d572e6a5",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

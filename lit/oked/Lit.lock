@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "oked-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:e9afcdd7485a45876985d4528f0df945318a628ace0f7fd9561c29d87748ef36"
-semantic = "sha256:0942bd508b0ac64faede591d8c9ad3ad97c39fbf239fe6cdebcd7199e6f398be"
+modules = [
+    "local-rules.lit sha256:3f0707e7a9b5974899861c480c5b2db46e29290eef40abca93f5b5798cf2bc3a sha256:9bf0e7118dc7f5e3827b4ac9518f04ae7d66ad7377b25832e789880e8c7564b6",
+]
 texts = [
     "oked-lcvr sources/ed-okla/ed-okla-local-civil-rules-2016-sectioned.txt sha256:bd4a1a6c32e665030862ed11c51837474b78ba3835ca024b34975a2408c25c96",
 ]

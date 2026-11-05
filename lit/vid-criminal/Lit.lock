@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "vid-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:93bfec8f6e327e0d243af56a0b9a3e6f7782d4249fb57d5bc1d17073d8b43628"
-semantic = "sha256:e5e04ec942a5c464d6136f6707d5f7acdbd2c83d863495555c426df9d73e4bda"
+modules = [
+    "local-rules.lit sha256:14822cf050908c060d26fd7171d06a23a1c76c1ec81ea5f08e0cfe2fe44ec534 sha256:95bb3ea670a2c9d6178bfb18960fee776f0363a95b8a01e9d62ae3dbe5369384",
+]
 texts = [
     "vid-lrcr sources/vid/vid-local-criminal-rules-2026-02-01-sectioned.txt sha256:f1dcf6ab0c89821e7ebaf12dda2b1f46e5b6b1b1165936037f628e1c91339b60",
 ]

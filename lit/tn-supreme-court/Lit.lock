@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "tn-supreme-court"
 version = "0.1.0"
 language = 1
-source = "sha256:8f6f1d614aec55c594bbb1029da1404297d4ffb2fdce12743f47a162b1fd1ee3"
-semantic = "sha256:414fdaa4cf1b0b91ca02008fc41896754921ab6e1b8d10286895ffe96569e42d"
+modules = [
+    "review.lit sha256:99cea519c654202271f9d6086b88b5717490274d9f8b053e6486f75bd510f6d7 sha256:23a8951e6ba607512f433d52c9c14d1b5641075722b1a89c59032c39fddf9c71",
+]
 texts = [
     "scotus sources/scotus-rules.txt sha256:899c67fce982d796557bb85b0456a59bab736cab0274f7e4e75c84105067d2fa",
     "tn-rap-cited sources/tn-appellate/tn-rap-cited.txt sha256:e200af46ea7e877b2e4f782d147c7534334b175009b4860470189b36b7a3895d",

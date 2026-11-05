@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "vaed-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:fa6a5302322b325329256ab441cb460ed175bdcb813af5b3b5a5a6630d2a99da"
-semantic = "sha256:5c17858e62f59b17fa952bf0e7ef9c84f23e43a5e3b8ebe93b14d6d1acf4fada"
+modules = [
+    "local-rules.lit sha256:0888711f7c79ad23818f91a2637907a836f3664ccd7252034f3f9e9469597292 sha256:80de159ba6392994e887b8878187266916fdfa26c637e9ff2c336b72a1181877",
+]
 texts = [
     "vaed-lr sources/vaed/vaed-local-rules-sectioned.txt sha256:3cd040ce347ecaff738f2a084443752f628dbe1a70b186113d16391e9ab11fcd",
 ]

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "nc-superior-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:911f6329a6108583e44cf9618204063fe3444f92c08a27038dd60e57df3757c4"
-semantic = "sha256:973a3f608ea5c8d753e2bdff744eb0a9ae81e1be58395b56425426a41c1b423b"
+modules = [
+    "civil.lit sha256:09bf68cf87d916ef37a44ae2b9e8f69aa248b38ddb49f65a27fecfdfb4f76c1c sha256:7531a026dd4df2154f445a2dfe56ae99cd754e40bb7aec815697936d3bdc0a51",
+]
 texts = [
     "ncrap sources/nc-appellate-civil/nc-rules-of-appellate-procedure-sectioned.txt sha256:faa02aa4899f95553e42bccb296ed5dc8d4a6ec35b5509f4e0eb535648614d69",
     "ncrcp sources/nc-superior-civil/nc-rules-of-civil-procedure-ch1a-sectioned.txt sha256:aef8620622f572b94dc6c132558bab3468f2f5fbd7012e958db8fc9349414452",

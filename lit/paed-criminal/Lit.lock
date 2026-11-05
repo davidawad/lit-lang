@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "paed-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:f4923de869286be4b8d74ad389b35b6343fd2cf966c9d304486b655a25a3d58d"
-semantic = "sha256:c3e528120ee402cbe98d915814fe1829b1fc44138a16b263c9de5b7d1eddc07c"
+modules = [
+    "local-rules.lit sha256:c435c64f41d897ca7e43d5cc7059f5125805d0291424037725fd75005ca24d6d sha256:3d06094d9d9165bfc791d4e353e317b94f9ee7f74bb943827107dd4e37836343",
+]
 texts = [
     "paed-lcrr sources/paed/paed-local-criminal-rules-2018-09-18-sectioned.txt sha256:408f2ad33a1ebc51a58dcc6610fec727aa7399997d92d3fb6800d00b943bfd35",
 ]

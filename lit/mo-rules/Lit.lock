@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "mo-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:3a104703088aeedf1038bf0236c0e21a4d34a7191f4b628f45f09db87c49ffd3"
-semantic = "sha256:1e8cfd999f88854b4c5417e1a93dc4aadb3c0adc353131af2bfc0dfd21d70f1b"
+modules = [
+    "rules.lit sha256:cff002335df0ef5a121171c218b9417bfd28d05ded39c3f6281b2a71a1b069f5 sha256:451d4ee4db8074ba5e1780fa417f088f77755b4006dd21b908c746b32120f627",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

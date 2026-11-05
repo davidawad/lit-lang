@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ctd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:03f0b91aaf801f3d5230717762d1d48411dd3bc75fda351223509d3b520e87df"
-semantic = "sha256:fef1047eb9ab08248e6a2e76a77d4e59c24a11295095e73c758889537a1d3d44"
+modules = [
+    "local-rules.lit sha256:80a0bdd0b5e73a0e759752dee334d13960607164f626ae09f568014489a7aa9d sha256:5a629f0a1e30d9a99928ac5777d69a97f3433e487af0265cdc0923003a5aa55e",
+]
 texts = [
     "ctd-lr sources/dct/local-rules-sectioned.txt sha256:4279c6f3f7e4ec4ae76e34a016745c3caa0fb0d7794367afcde6345fed708a7f",
 ]

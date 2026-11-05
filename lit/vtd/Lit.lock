@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "vtd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:7cb5d1ea7d7e15491248687a8875280f742bebfc78b4e5baa3e84c7104af7ae6"
-semantic = "sha256:38c30ebcd7c11ba15deb7982deb8e9f0ebb5c5002006a56df7fb155359241b0e"
+modules = [
+    "local-rules.lit sha256:2a9c0caa35ccdb70da2cb1fc98f4af24a11dc2723e21ab0116213507e087a2b7 sha256:17059a08041a2d21746919be3ccced360e721180e6f3d8cf74329a4d82a33779",
+]
 texts = [
     "vtd-lr sources/dvt/local-rules-civil-sectioned.txt sha256:b1e5dc3351b3b000ac8c3adc91725d483afcb0abd84262c2833cd8daeff90938",
 ]

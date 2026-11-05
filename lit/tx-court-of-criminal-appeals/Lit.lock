@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "tx-court-of-criminal-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:de89e4f91ae7b7931754fec4ef3b9007561438fc61d4721c6b095e26f11180af"
-semantic = "sha256:c27594c6144600507890f7b42be647f251157fa77a8dc01757200b57409f0b7d"
+modules = [
+    "review.lit sha256:f6120add5144ee96b38dcd43532e6a8bb876bfe5f41f315081fd5d5b987ef592 sha256:1235543f05d615e8fcb634a0323cc9d8709305447247cdc75b79861f0e3decfb",
+]
 texts = [
     "tx-ccp sources/tx-criminal-trial-court/tx-code-of-criminal-procedure-sectioned.txt sha256:423a47f1d8d791f7108bc8d3ba3770cdb7bdda206f58ac52a67dad30d4907c1a",
     "tx-trap sources/tx-appellate/tx-trap-sectioned.txt sha256:4c3fb9bd4d05d8822b740e4b2fdc0c36755d2c5ee425a383ce8f4e5cbf407861",

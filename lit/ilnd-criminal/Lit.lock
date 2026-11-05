@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "ilnd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:a6dd1ec3bd11d5d72f4efc40de82bbb50b8a8f5d9c2e517f628f895a92636602"
-semantic = "sha256:e1f3e932fc2e48c699c33a12853a57a33ddac418173394a87044c1ed3696e67b"
+modules = [
+    "local-rules.lit sha256:46850f26bb8b2c364a2d4b2b75518104c9f25dc43c8ac68b8064774d2489cb66 sha256:44f76a96527703a1ee79ca56756fce05155e5e8c08dc3d029bf1faa9f3bdf89e",
+]
 texts = [
     "ilnd-lcr sources/ilnd/ilnd-criminal-rules-sectioned.txt sha256:1ecb8867d41368aa3227f340bcf12569960af6ede9d8b838039d87f3b8d618a5",
 ]

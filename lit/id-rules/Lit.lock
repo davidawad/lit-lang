@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "id-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:1dc01110278bbad6cc80e0773d263c5b3d03bc599d8692778a72f774cad99150"
-semantic = "sha256:e49be3034d5373c862e432ebd2496a49043b1c210113b001b351227b26143747"
+modules = [
+    "rules.lit sha256:e1364c455557f5266c56af58e9c60b9a3f9d67dc465f7b7ee49fcaf2e8290de5 sha256:a4ec5ac7ddba895dcb0f8549e4e215dabd3a9f9cea2b781f9930a078cfbf82db",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

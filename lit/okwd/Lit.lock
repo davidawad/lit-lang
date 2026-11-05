@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "okwd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:4aa07c21a68e78dbbb0204cfaae8ba38151c7b4bfc403c7395163c9ab5d38071"
-semantic = "sha256:2dcec23ff55a275662f06b54a1256e8e01be19b9b205001f9756f273022fb35e"
+modules = [
+    "local-rules.lit sha256:89aae0678112e72f16df55a88b1c22565e2ede95e7763492cff8c568cd72ace6 sha256:63452fe17bc8fcfde3c082f020ffb755a966f1cccbae60dce30ba5ec934ad661",
+]
 texts = [
     "okwd-lcvr sources/wd-okla/wd-okla-local-rules-2026-civil-sectioned.txt sha256:7007fba8672c98fa3c5d1eb6b43f4daffc77103479df82cdec5970abe31f26fb",
 ]

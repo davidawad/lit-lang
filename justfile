@@ -346,15 +346,15 @@ lit-check-strict *ARGS='lit cases':
 # with the arguments in crates/litgraph-packs/build.args. They are build
 # outputs, never committed: crates/litgraph-packs builds and embeds them at
 # compile time, so parallel lit/ changes cannot conflict on them. Only the
-# Lit.lock files are committed (each row holds only its own package's
-# digests, so edits to different packages merge as plain text).
+# Lit.lock files and the module-split `lit/core` clock fragments are
+# committed; independent module rows and files merge without regeneration.
 lit_build_args := "crates/litgraph-packs/build.args"
 # Where `lit-sync` writes the build for inspection (and `litigate diff`).
 lit_build_dir := "target/lit-build"
 
 # Regenerate every committed Lit.lock and the engine's shared clock library
-# (crates/litigate-engine/clock/litigate-core.json: lit/core lowered, the one
-# generated file committed, since the engine cannot run the compiler), then
+# (crates/litigate-engine/clock/core/<module>.json: lit/core lowered, the one
+# module fragments committed, since the engine cannot run the compiler), then
 # build packs/, packs/links.json, generated packs/clock/ fragments,
 # packs/calibration/ sets and scenarios/ from lit/ and cases/ into
 # target/lit-build/ (the shared clock library copied beside them, as
@@ -375,8 +375,10 @@ lit-sync: merge-drivers editor-queries
       || "${lit[@]}" build "${args[@]}" --out "$out"
     find "$out" -name '*.map.json' -delete
     rm -rf "$out/litigatables"
-    cp -n crates/litigate-engine/clock/*.json "$out/packs/clock/"
-    echo "lit-sync: regenerated Lit.lock files and the shared clock library; built packs/ and scenarios/ into $out"
+    rm -f "$out/packs/clock/litigate-core.json"
+    mkdir -p "$out/packs/clock/core"
+    cp -R crates/litigate-engine/clock/core/. "$out/packs/clock/core/"
+    echo "lit-sync: regenerated Lit.lock files and per-module clock fragments; built packs/ and scenarios/ into $out"
 
 # CI gate: regenerate, then fail if a Lit.lock or the shared clock library
 # differs from (or is missing from) what is committed, or if a generated

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "gud-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:bce141257c61bd5a6c0585108c930c723a7352dedbca3813a243f8fefcc346b5"
-semantic = "sha256:c73b877738c65f1fa93f61ed871d8785484b850c175a676e3fb1c1d9908e34e2"
+modules = [
+    "local-rules.lit sha256:7e9e3b8d5d529e37dd0a9ea23c08ed3284ddcfb437d947f87a4f12b311d023fb sha256:5c98ddb03d596b62ee476ce7d530c0dbae0e3e8fde77dd4d39c63d0df42bc21c",
+]
 texts = [
     "gud-crlr sources/fed-dguam/guam-criminal-local-rules-2020-06-24-sectioned.txt sha256:a0d77161409962ca732bb89b0a5278e20b723fd8ca71c3d409a62282c92166e9",
 ]

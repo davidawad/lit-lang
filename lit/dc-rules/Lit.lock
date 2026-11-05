@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "dc-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:d455644755fe4dd63e87ce5bec5adb4d0fec605cb10fba650687b9cba60311c7"
-semantic = "sha256:88a9e70121e322c17dc725e0bd294bfe66da949d237289dcf34b4681abbf55e6"
+modules = [
+    "rules.lit sha256:7964b1c4983e13874fd09d71b336e0c3d42cbd6bbf23a990b0f36aae6ee12518 sha256:7cd78eda956b69a286b5c4cf03915eab9868b9615f1cd7db18fda1d0f927d7d5",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

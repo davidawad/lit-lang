@@ -1,0 +1,129 @@
+{
+  "calendars": [],
+  "countingRules": [
+    {
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "holidays": [
+        "rcfc-legal-holidays"
+      ],
+      "hours": {
+        "inaccessibleText": "RCFC 6(a): the clerk's office is inaccessible during the last hour; extend to the same time on {date}",
+        "rollText": "RCFC 6(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
+        "text": "RCFC 6(a): count every hour from the trigger; +{n} hour(s)"
+      },
+      "id": "rcfc6",
+      "label": "RCFC 6(a)",
+      "months": {
+        "endOfMonth": "clamp",
+        "text": "RCFC 6(a): count {n} {unit} {after} the anchor to the corresponding day, else the last day of that month -> {date}"
+      },
+      "sourceUrl": "https://www.uscfc.uscourts.gov/rules",
+      "steps": [
+        {
+          "kind": "trigger",
+          "op": "anchor",
+          "text": "RCFC 6(a): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "count": "calendar",
+              "text": "RCFC 6(a): count {n} calendar day(s) {after} the anchor -> {date}",
+              "unit": "calendar"
+            },
+            {
+              "count": "business",
+              "text": "RCFC 6(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "court"
+            },
+            {
+              "count": "business",
+              "text": "RCFC 6(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "business"
+            }
+          ]
+        },
+        {
+          "backward": {
+            "text": "RCFC 6(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "RCFC 6(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "backwardText": "RCFC 6(a): service extensions apply to forward periods only; ignored",
+          "methods": [
+            {
+              "days": 0,
+              "method": "personal"
+            },
+            {
+              "days": 0,
+              "method": "electronic"
+            },
+            {
+              "days": 3,
+              "method": "mail"
+            },
+            {
+              "days": 3,
+              "method": "clerk"
+            },
+            {
+              "days": 3,
+              "method": "other-consented"
+            }
+          ],
+          "op": "service",
+          "text": "RCFC 6(a): service by {method} adds {days} day(s) -> {date}",
+          "unrecognized": [
+            "commercial-carrier",
+            "prison-mail",
+            "mail-foreign",
+            "express",
+            "express-foreign"
+          ]
+        },
+        {
+          "backward": {
+            "text": "RCFC 6(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "RCFC 6(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "ignoredText": "RCFC 6(a): no inaccessibility extension applies; ignored",
+          "op": "clerkInaccessible",
+          "text": "RCFC 6(a): the clerk's office is inaccessible on the last day; extend -> {date}"
+        }
+      ]
+    }
+  ],
+  "lowered": {
+    "asOf": "2026-10-22",
+    "pins": [
+      {
+        "digest": "sha256:a6720e82c4d0726a5dab63ab48bd2e9fbff4488ab8730b1e3a725e18c24b7312",
+        "name": "core.rcfc6",
+        "version": "1.0.0"
+      }
+    ],
+    "worldDigest": "sha256:42c0abfed28c3dad8d2133e51d785e6033886ea76332e85d523debcd2ab1442a"
+  },
+  "schemaVersion": 4
+}

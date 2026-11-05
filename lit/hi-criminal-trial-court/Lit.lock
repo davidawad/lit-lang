@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "hi-circuit-court-criminal"
 version = "0.1.0"
 language = 1
-source = "sha256:57772dc8901e0c5631440f0b7adf6cd3b8c2c381ce12f8b93a7d910f5e043992"
-semantic = "sha256:477866651cf4a407086836640f0253e6a7d06761170febd9d5b1971bd1b560f8"
+modules = [
+    "criminal.lit sha256:e5cd867e675b75d591564a48561a28e11d842c5510a05f860aa3c69029d4258c sha256:52f4d4df0972c56781ae3cdd10eacfdc64647d06521fc0c5c7c9903147eefe42",
+]
 texts = [
     "hrap sources/hi-ica/hrap-2025-07-sectioned.txt sha256:7000b991d6425545d3f4580cff275fba242cf74152250e1e1ef2ae3bcd7ddb1b",
     "hrpp sources/hi-criminal-trial-court/hi-rules-of-penal-procedure-sectioned.txt sha256:76f2070718af4002062c4becb85a3b7b67b90c10385e515ac329857ca380fb59",

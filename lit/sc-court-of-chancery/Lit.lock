@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "sc-court-of-chancery"
 version = "0.1.0"
 language = 1
-source = "sha256:fd72f6014584c935d3ecf88aa4194a9d52777597c08fb941be4d2176b4e11c19"
-semantic = "sha256:f1fe565049a819b0fc193672e8060fb48a77df55ab4d4cb6b38e25f9bcc2f2be"
+modules = [
+    "chancery.lit sha256:58552e9a386103b5c5d51d3b9747678903f5ab9f1fb1e99eb45db170a0077cfc sha256:80d0defb7b14befabf234aba558562a18fb86a1d76f772a3095f085ee7d4668a",
+]
 texts = [
     "scrcp sources/sc-circuit-civil/scrcp-rule-pages-2026-10-28-sectioned.txt sha256:574cec1048ea5d046691dcf4c714ad4ccf7a9572db4dd1787556567caf82b0c5",
 ]

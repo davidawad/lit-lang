@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "in-trial-court-criminal"
 version = "0.1.0"
 language = 1
-source = "sha256:9f4b20ce63ab4846f0b1595e89cac02b8578124ef82a05ed3c2b946b03be3d3c"
-semantic = "sha256:5b5be5d9cab20dc1990435b318493df7d40747ee500d962d8e6a56654f528451"
+modules = [
+    "criminal.lit sha256:b33aba078959b4a4dfab259b727c432099bae580e8253f4b933a136b3740f98f sha256:4a77e3e9e8962aeb63a4be132844d0ee91a863d3339fe984113f02f8ae091ab5",
+]
 texts = [
     "in-appellate-rules sources/indctapp/in-appellate-rules-sectioned.txt sha256:2cf5535875cdf99f49b2f9f4754e75f420d21879303a03afb2c858fbdfa1856e",
     "in-crim-rules sources/in-criminal-trial-court/in-rules-of-criminal-procedure-sectioned.txt sha256:7db08ac4c67ad49564804a44f2ad60725cf0fe3eb6f3b8fa8a3b193081de8860",

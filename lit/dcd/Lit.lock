@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "dcd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:25aa058cc4668a5c7aeccf9dfb2c7e1422bf326bdc3525ce13825b7899024582"
-semantic = "sha256:f89c5a7c583ea9bd7f0efd2b6edb453f3c633417b05d77963362de65bf334586"
+modules = [
+    "local-rules.lit sha256:0980b1bad60df18f85ffa3fc70c5f89fcdbe961b53c815feba73a6d589187a45 sha256:5e22e420d71d1e21d327b6149f699e6891e5cee11a43b7a39cfb8f64f1a403e6",
+]
 texts = [
     "ddc-lcvr sources/ddc/ddc-local-rules-sectioned.txt sha256:bd37334f433bef462749c105d023e8c0038ac10bb45c30c3243bd4d1717e3db3",
 ]

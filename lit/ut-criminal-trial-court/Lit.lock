@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ut-criminal-trial-court"
 version = "0.1.0"
 language = 1
-source = "sha256:0fc0829d947cbae3f06326cd4aa8732fb424376a7699e24db07f9c21539086d0"
-semantic = "sha256:8cd2b0e1d9456fa54963f2f04fa04c5ae37132978f9904552757d80ef3edaa50"
+modules = [
+    "criminal.lit sha256:f23d58db222b31bb0542779eaf5ca3d2111dc78bdf3586f3c3c365c08279879a sha256:1d11c4b06b53742a2b892a57a1ee38865c7aa6b06322bd243355b30adae53885",
+]
 texts = [
     "urap sources/ut-state-appellate/utah-urap-all-rules-sectioned.txt sha256:d69fcfe874d6a0518319e08d04f4ec6e069f5727d56c3df994e57301ab2a5888",
     "urcrp sources/ut-criminal-trial-court/ut-urcrp-all-rules-sectioned.txt sha256:6882a0b1814cd68a1a0329e4d0f10e1c611f822a3cd0106cae5819d4f6723758",

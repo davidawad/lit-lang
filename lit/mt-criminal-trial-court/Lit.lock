@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "mt-district-court-criminal"
 version = "0.1.0"
 language = 1
-source = "sha256:c11d372303507bc688afffccc51a5266941f02b62ed1e1faec5f2f08978d8245"
-semantic = "sha256:6c82b632d1f7507a00a28b4b2f035d0c8c1f9c1ae4c19536448034b307a2334f"
+modules = [
+    "criminal.lit sha256:addf57010eda7ba0829d6014af5ccecaafe6c0fc5744537ac7bd1e50a88f1803 sha256:5174f6a0da6d17a9d41535928b51f313e79edc54e782204da5584fe817ffc60d",
+]
 texts = [
     "mt-app sources/mt-supreme/mrap-sectioned.txt sha256:8565e044af165525fbe7aa6f34d39bb48e12c22c22b681d36d356e8a1d31e217",
     "mt-mca-46-13 sources/mt-criminal-trial-court/mt-mca-title-46-chapter-13-pretrial-motions-sectioned.txt sha256:b3089fd922514a78048e18dc12190bb3e40ba9d8923ec674f32369e942b288e9",

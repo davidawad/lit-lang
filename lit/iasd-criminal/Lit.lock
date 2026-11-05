@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "iasd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:0c3476d48ef6e68a54ba17740753ce87a8fca4af40f89e5bb692ab2b83545a9e"
-semantic = "sha256:efccf6e0de4e657face82e5e7c3528198bdadc0158cdd9404aba24c5f735b303"
+modules = [
+    "local-rules.lit sha256:1b1a005c2b3bc7ec6693a97f142d3020865b7e1907e16749ac72f3030c18046f sha256:33d51f3799c1c2cf6cdf858c6ed1765c288c7771cdaa2dc62ce4ed6dc455ecb7",
+]
 texts = [
     "iasd-lcrr sources/iasd/local-rules-criminal-sectioned.txt sha256:c9eaf6c4e7df1bf0cd24faed9c6a000ede32a8896232152f4a6ed807749a51bb",
 ]

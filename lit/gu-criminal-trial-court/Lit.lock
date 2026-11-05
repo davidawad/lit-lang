@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "gu-superior-court-criminal"
 version = "0.1.0"
 language = 1
-source = "sha256:1fa50d7a8f45a2737e83bea14498c54e91455c049358e40969e54cf744040981"
-semantic = "sha256:dcc57ab1399080fc413f282bfad546bb9bf977316df4a48ed36975b06ff00520"
+modules = [
+    "criminal.lit sha256:1e01bd419b0cdda4a2e0e1544728e83e83ff03d329d5f0353d45a3b7de50a053 sha256:cbdcba08c6d31c5917eda93abbaf9d064ff83cd2d1ce9c7b8368990017faad6f",
+]
 texts = [
     "gu-crim-lr sources/gu-criminal-trial-court/gu-superior-court-criminal-procedure-rules-sectioned.txt sha256:46a317bbeb84c322f41f8015f30a913ef2f4156ba8adc231becbdd31e7ff0f20",
     "gu-gca-8 sources/gu-criminal-trial-court/gu-gca-title-8-criminal-procedure-sectioned.txt sha256:a353a59cb767b2c82ee43687380cbbdc92497c94ddba5ef9ffe48cd9733562ad",

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "ak-state-rules"
@@ -11,8 +11,9 @@ dependencies = [
 name = "ak-superior-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:1afee5ce723e24f19abdabd3830b73f0b98501847379af31c5165bcbfaf1cfce"
-semantic = "sha256:63199977bbe42857a7df745af97dd19120632f31cfef65c2c262649ae248c72c"
+modules = [
+    "civil.lit sha256:c76c525ae0e99e3f62f5742ea8e1f858c0be7b5ef2e34a467a36c17c0706a6ed sha256:4f86b6eea3f4bd2cf53dd8d5cba05a614a1a9411ae64ba9677a6f7e0b9a7145e",
+]
 texts = [
     "ak-app sources/ak-supreme/alaska-appellate-procedure-sectioned.txt sha256:98b14637ade4bd8b2ce42679338cf16575ff1be63cd074e2cfcfe7019bd31775",
     "ak-civ sources/ak-superior/alaska-civil-procedure-sectioned.txt sha256:10bdb43435fa80d4049dc39b8a5093891aeb5b4391cfffd5a69a960b3c248d30",

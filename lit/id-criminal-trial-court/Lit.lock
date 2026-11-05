@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "id-district-court-criminal"
 version = "0.1.0"
 language = 1
-source = "sha256:a132c26e82d6622d2bb1731e406e83391ea4dd3b41815030bda84669bd9d67ec"
-semantic = "sha256:a0607253f202a4425bfce510b98fd5cab9ee4a8eb5a13fffcf6b9755d1ce695a"
+modules = [
+    "criminal.lit sha256:407e00654612277148fcce37c1166cd750f395bfb8ea6544b9a84bb153fe8c07 sha256:bf434e9613420b31bea57883670976b4de7c4901a915ff5b349db9cb18871389",
+]
 texts = [
     "id-iar sources/id-supreme/iar-sectioned.txt sha256:b98cd1e96172263e1b994535e8b5a3250c13af10b95a0e2f5e6c52f55969f18e",
     "id-icr sources/id-criminal-trial-court/id-criminal-rules-sectioned.txt sha256:33abf1b9d996d928be260c3af57c94dfe9369250f7f70bd9af0dabadfc116c0a",

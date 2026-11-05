@@ -1,0 +1,140 @@
+{
+  "calendars": [
+    {
+      "cite": "ORS 187.010(1)",
+      "holidays": [],
+      "id": "oregon-holidays",
+      "sourceUrl": "https://www.oregonlegislature.gov/bills_laws/ors/ors187.html",
+      "title": "The legal holidays of Oregon (ORS 187.010(1)) add no day\n`us-federal-holidays` does not already close: each enumerated day is a\nfederal holiday on the same day, observed as § 6103(b)(1) observes it\n(ORS 187.010(2)), and every Sunday is closed by `weekend`. The calendar\nis declared, empty, so the District of Oregon's bankruptcy count (core's\n`frbp9006-oregon`) names the state whose FRBP 9006(a)(6)(C) days it\nreads. Not modeled: the days the Governor appoints (ORS 187.020), which\nno vendored source lists."
+    }
+  ],
+  "countingRules": [
+    {
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "forwardHolidays": [
+        "oregon-holidays"
+      ],
+      "holidays": [
+        "us-federal-holidays"
+      ],
+      "hours": {
+        "inaccessibleText": "FRBP 9006(a): the clerk's office is inaccessible during the last hour; extend to the same time on {date}",
+        "rollText": "FRBP 9006(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
+        "text": "FRBP 9006(a): count every hour from the trigger; +{n} hour(s)"
+      },
+      "id": "frbp9006-oregon",
+      "label": "FRBP 9006(a)",
+      "months": {
+        "endOfMonth": "clamp",
+        "text": "FRBP 9006(a): count {n} {unit} {after} the anchor to the corresponding day, else the last day of that month -> {date}"
+      },
+      "sourceUrl": "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf",
+      "steps": [
+        {
+          "kind": "trigger",
+          "op": "anchor",
+          "text": "FRBP 9006(a): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "count": "calendar",
+              "text": "FRBP 9006(a): count {n} calendar day(s) {after} the anchor -> {date}",
+              "unit": "calendar"
+            },
+            {
+              "count": "business",
+              "text": "FRBP 9006(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "court"
+            },
+            {
+              "count": "business",
+              "text": "FRBP 9006(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "business"
+            }
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "backwardText": "FRBP 9006(a): service extensions apply to forward periods only; ignored",
+          "methods": [
+            {
+              "days": 0,
+              "method": "personal"
+            },
+            {
+              "days": 0,
+              "method": "electronic"
+            },
+            {
+              "days": 3,
+              "method": "mail"
+            },
+            {
+              "days": 3,
+              "method": "clerk"
+            },
+            {
+              "days": 3,
+              "method": "other-consented"
+            }
+          ],
+          "op": "service",
+          "text": "FRBP 9006(a): service by {method} adds {days} day(s) -> {date}",
+          "unrecognized": [
+            "commercial-carrier",
+            "prison-mail",
+            "mail-foreign",
+            "express",
+            "express-foreign"
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "ignoredText": "FRBP 9006(a): no inaccessibility extension applies; ignored",
+          "op": "clerkInaccessible",
+          "text": "FRBP 9006(a): the clerk's office is inaccessible on the last day; extend -> {date}"
+        }
+      ]
+    }
+  ],
+  "lowered": {
+    "asOf": "2026-10-22",
+    "pins": [
+      {
+        "digest": "sha256:be650398849858a7fefa51ddd7b3c8db93d0fdb4cfd8429a33dad9393307da86",
+        "name": "core.states.oregon",
+        "version": "1.0.0"
+      }
+    ],
+    "worldDigest": "sha256:d040dbd9575834cef3cfa802ae4e6d391d9a7d1ecf3ec30e89b81b54bda5fa3f"
+  },
+  "schemaVersion": 4
+}

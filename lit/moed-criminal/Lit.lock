@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "moed-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:2c91f64aa2f40880469bf547a92ce4add2ba3904e136eff6dce5216a5e3f6eba"
-semantic = "sha256:0655c126fc5ef1b45744cabfb9b30a975fcd85cdcb7b73f1ccd5efc2cfb260c6"
+modules = [
+    "local-rules.lit sha256:ebe3aea7cffe6ba86d23adf161266a660ff555630569ae00c82eefda75a7dcd9 sha256:d7f81c40ef4acae55486a0002c8b9f9a7a9d7e92701c56d3191736cd6ca57ade",
+]
 texts = [
     "moed-lr sources/moed/local-rules-sectioned.txt sha256:10fa27fbd06ff35c764a88538b7038d18b8905881f8ccf015a63634f81683886",
 ]

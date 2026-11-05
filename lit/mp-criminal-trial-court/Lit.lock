@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "mp-superior-court-criminal"
 version = "0.1.0"
 language = 1
-source = "sha256:2160c8630d3b17e1ff4e006b05e77bb2380d341516f1659b1553735062390e27"
-semantic = "sha256:2d0b5a0981d319ba88cd8216d3ff65044fa4a0ebf8faf242c6745cd0e8870ba9"
+modules = [
+    "criminal.lit sha256:1d3b6c0eac41323a724e0091ebe6edb5196e9c09dc0157d2cc0f271545ba2fa9 sha256:72b2c101d066501cde9693c57b8a928d4b6c71cd37b704b6fb027a6b1cebcfb2",
+]
 texts = [
     "mp-crim sources/mp-criminal-trial-court/mp-commonwealth-rules-of-criminal-procedure-2017-05-03-sectioned.txt sha256:9899c4857aecc7a214d09c555c0830f9535c75d3b0c102856241a107463981a6",
     "mp-sup sources/mp-supreme/nmi-supreme-court-rules-sectioned.txt sha256:a10aa4e3bf1020d81cdaa148172700a92cb2df9a6a00d380ceed6b3e5e2d2f46",

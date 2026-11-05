@@ -1,0 +1,128 @@
+{
+  "calendars": [],
+  "countingRules": [
+    {
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "holidays": [
+        "us-federal-holidays"
+      ],
+      "id": "itc210",
+      "label": "19 C.F.R. § 201.14(a)",
+      "minLength": {
+        "days": 1,
+        "message": "19 C.F.R. § 201.14(a): a period must be at least 1 day"
+      },
+      "sourceUrl": "https://www.govinfo.gov/content/pkg/CFR-2024-title19-vol3/xml/CFR-2024-title19-vol3-part201.xml",
+      "steps": [
+        {
+          "kind": "adjacent-business-day",
+          "op": "anchor",
+          "text": "19 C.F.R. § 201.14(a): the first business day {after} {trigger} is day 1 -> {date}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "below": 7,
+              "count": "business",
+              "text": "19 C.F.R. § 201.14(a): a period shorter than 7 days counts {n} business day(s) {after} the anchor -> {date}",
+              "unit": "calendar"
+            },
+            {
+              "count": "calendar",
+              "text": "19 C.F.R. § 201.14(a): count {n} calendar day(s) {after} the anchor -> {date}",
+              "unit": "calendar"
+            },
+            {
+              "count": "business",
+              "text": "19 C.F.R. § 201.14(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "court"
+            },
+            {
+              "count": "business",
+              "text": "19 C.F.R. § 201.14(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "business"
+            }
+          ]
+        },
+        {
+          "backward": {
+            "text": "19 C.F.R. § 201.14(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "19 C.F.R. § 201.14(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "backwardText": "19 C.F.R. § 201.14(a): service extensions apply to forward periods only; ignored",
+          "methods": [
+            {
+              "days": 0,
+              "method": "personal"
+            },
+            {
+              "days": 0,
+              "method": "electronic"
+            },
+            {
+              "days": 3,
+              "method": "mail"
+            },
+            {
+              "days": 10,
+              "method": "mail-foreign"
+            },
+            {
+              "days": 1,
+              "method": "express"
+            },
+            {
+              "days": 5,
+              "method": "express-foreign"
+            }
+          ],
+          "op": "service",
+          "text": "19 C.F.R. § 201.14(a): service by {method} adds {days} day(s) -> {date}",
+          "unrecognized": [
+            "clerk",
+            "other-consented",
+            "commercial-carrier",
+            "prison-mail"
+          ]
+        },
+        {
+          "backward": {
+            "text": "19 C.F.R. § 201.14(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "19 C.F.R. § 201.14(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        }
+      ]
+    }
+  ],
+  "lowered": {
+    "asOf": "2026-10-22",
+    "pins": [
+      {
+        "digest": "sha256:9c1ec930ef07dc3958ac91971618cbb97caa6a13c4d24530b12b8a9f65e96144",
+        "name": "core.itc210",
+        "version": "1.0.0"
+      }
+    ],
+    "worldDigest": "sha256:f69ec3e2317f76e30460d7a5b8138ca383710811b2f852c353e34af89109d9de"
+  },
+  "schemaVersion": 4
+}

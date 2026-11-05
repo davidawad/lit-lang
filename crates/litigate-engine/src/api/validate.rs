@@ -332,8 +332,8 @@ mod tests {
     #[test]
     fn validates_clock_fragments_and_pack_counting_references() -> Result<()> {
         let c = Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)?;
-        let core = include_str!("../../clock/litigate-core.json");
-        let doc: Value = serde_json::from_str(core).map_err(|e| Error::Parse(e.to_string()))?;
+        let doc = serde_json::to_value(&ClockLibrary::embedded().0)
+            .map_err(|e| Error::Parse(e.to_string()))?;
         let v = validate(&doc, None, &c);
         assert!(v.kind == "clock" && v.valid, "{:?}", v.errors);
         let mut dangling = doc.clone();

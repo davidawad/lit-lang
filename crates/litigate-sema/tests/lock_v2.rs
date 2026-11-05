@@ -99,7 +99,7 @@ fn a_format_1_lock_carries_the_upgrade_as_a_fix() {
     let d = &diagnostics[0];
     assert_eq!(
         d.message,
-        "Lit.lock format 1 is not supported (expected 2): run `litigate lock pkgs/app` to upgrade it"
+        "Lit.lock format 1 is not supported (expected 3): run `litigate lock pkgs/app` to upgrade it"
     );
     assert_eq!(d.fixes.len(), 1);
     let fix = &d.fixes[0];

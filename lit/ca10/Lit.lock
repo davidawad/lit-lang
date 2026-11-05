@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "tenth-circuit-court-of-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:24f0564ca1dcb7bf3d9f6d168f87a30112413cfb3eb4b4dede119d7c5307602a"
-semantic = "sha256:45690e09e0a6f46a69de28382260d04c8146580da1a91835fc292f54b67cfb44"
+modules = [
+    "appeal.lit sha256:fdbbe9b74363dd56f0335021d0453ed195dab1761bec7ae8a10aa28ba3f52d97 sha256:9ad92de0c9eabed96812e32cd7da4adbe8efe1c3ad70443740b9b1cc2c980df5",
+]
 texts = [
     "ca10-rules sources/ca10/ca10-rules-2026.txt sha256:8e8a55b6873e547f519ca65a4f09cf5e5181efaf71838a8908ef0aebd065327a",
     "frap sources/frap.txt sha256:b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172",

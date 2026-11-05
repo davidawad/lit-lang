@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "nvd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:b7b9c1bf4ae132b665c77e2accd7c827d3a59fee6db8e8aeab6c1f28a15c3856"
-semantic = "sha256:67c474be9b988961c65a0104fb6bebf40f7219f966dad6c72c36360ed66d0e16"
+modules = [
+    "local-rules.lit sha256:7551ee8046c5689a83a9a6a664d8f35698620b1cca3f5892fc9c3e20af517976 sha256:ce9dcf13cfbcd0c7271bdf52e2deceb3cdc0d48f181d80c4c7150d815c7fb95b",
+]
 texts = [
     "nvd-lr sources/fed-dnev/dnev-local-rules-2020-04-17-sectioned.txt sha256:1f0f9aab6084f6c537612da46e869a18e018b047ff5136dbef92fbd712b78058",
     "nvd-lr-ia sources/fed-dnev/dnev-local-rules-2020-04-17-sectioned.txt sha256:1f0f9aab6084f6c537612da46e869a18e018b047ff5136dbef92fbd712b78058",

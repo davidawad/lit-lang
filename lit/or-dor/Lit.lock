@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "or-dor-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:62c3983a52d5c740c5c3bbb43187e06708487eca4255567e5775f9ab8b68b3d3"
-semantic = "sha256:746a441f79516fffcea54b08c63f8da25d01b47c9a045e6b84c2cc0e62a55168"
+modules = [
+    "civil.lit sha256:b6865d1107ea824fb7755308d2196d1baeaee562a81ca1572594e981df71c1fe sha256:74fbb8f0a9ddf3499a19b4b9f403731734b4cef92d9fb00ff2221e6eddb7ca17",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

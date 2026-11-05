@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "pamd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:fbe296c1ecd287775d95ded0356d3946f307452bc139974251d5d2858bb84e6e"
-semantic = "sha256:7d92dbc0bb73d485fae016ad621f19f5a703f133375f3237914d2e018e9b2a6f"
+modules = [
+    "local-rules.lit sha256:29f287fa258098feff49d663cf1b839b315fea30d8c8076b115e7b3f50ec27c1 sha256:1ce73b548a44cd15249b157e04bbddd11176bceb39b751f34257a752ec246277",
+]
 texts = [
     "pamd-lcrr sources/pamd/local-rules-2014-12-01-sectioned.txt sha256:c85ec6d3297d11f3ccfb6fbb76d453fe11c4786c04305577d1e62f02dbfb4d0a",
 ]

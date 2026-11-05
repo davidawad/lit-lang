@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "wy-supreme-court-civil-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:5f5926c712dc39f9afb688a55a0e792613075ee773a12738ebbc27cda871a161"
-semantic = "sha256:25e2c19fe579935a432df252d2a6c30ebaf904b89d96c7de8278af2bde6fa932"
+modules = [
+    "appeal.lit sha256:e4086d449433efb9bcd696624f8ef16b70f77a8fd9a6be01a0a29ac87b68108d sha256:a285ae8ea6ded2aa981d973475a02dc8a43cae91c2db1bc751ed812b78a42ea3",
+]
 texts = [
     "scotus sources/scotus-rules.txt sha256:899c67fce982d796557bb85b0456a59bab736cab0274f7e4e75c84105067d2fa",
     "wy-r-app-p sources/wy-state-appellate/wrap-sectioned.txt sha256:515a3474a1e5c02778cdc2a99fb7c78fee285cf2fd627532f1d25ce131f62a9a",

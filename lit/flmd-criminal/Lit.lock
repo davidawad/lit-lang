@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "flmd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:f95fb965a445fe7979248eeddbcfdfbedc689446715d6f21e6b5064354509a82"
-semantic = "sha256:e57dc507d24425e2267de713402aedfd26b1647c4f8461d6af1e1c0b9640cff3"
+modules = [
+    "local-rules.lit sha256:e572303ce9f65006460b9ef2cbdf41cc769f5a65e9b05e8980be5e41c0f8d960 sha256:64646238892a86fa8e641909438508e2d392eaf09c781d126820fb2d074a28ab",
+]
 texts = [
     "flmd-lr sources/md-fla/local-rules-sectioned.txt sha256:ffd9c96a2e3ffded589f9a3034557cc7f9f916762b8c043e92a2b3cbdae4c583",
 ]

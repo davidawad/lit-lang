@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "tnmd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:eda3fea82e4350c66b516dafd3bb98e153aecb904e71566959000266717c5d75"
-semantic = "sha256:ddec105b4ebf2191dce8314df8f94901c0b4bd2bb789d741c1e7f5f7c59fabce"
+modules = [
+    "local-rules.lit sha256:48bcc00798a0e5fc05d1710989cd5848e35a024dfb800f2b66ecb10c80aee168 sha256:05f28bcd4cd6fc6ecce4a260bf8accb3b1ab12166cf79b74f5238da377d2a9d3",
+]
 texts = [
     "tnmd-lcrr sources/tnmd/tnmd-local-criminal-rules-sectioned.txt sha256:a864f9c267fe7de976129b676c0fb0ea7cb4356175e12dedefd8e0c3062b85fc",
 ]

@@ -1,0 +1,109 @@
+{
+  "calendars": [],
+  "countingRules": [
+    {
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "holidays": [
+        "us-federal-holidays"
+      ],
+      "id": "sup-ct-30",
+      "label": "Sup. Ct. R. 30.1",
+      "sourceUrl": "https://www.supremecourt.gov/filingandrules/2026RulesoftheCourt_WEB.pdf",
+      "steps": [
+        {
+          "kind": "trigger",
+          "op": "anchor",
+          "text": "Sup. Ct. R. 30.1: exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "count": "calendar",
+              "text": "Sup. Ct. R. 30.1: count {n} calendar day(s) {after} the anchor -> {date}",
+              "unit": "calendar"
+            },
+            {
+              "count": "business",
+              "text": "Sup. Ct. R. 30.1: count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "court"
+            },
+            {
+              "count": "business",
+              "text": "Sup. Ct. R. 30.1: count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "business"
+            }
+          ]
+        },
+        {
+          "backward": {
+            "text": "Sup. Ct. R. 30.1: the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "Sup. Ct. R. 30.1: the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "backwardText": "Sup. Ct. R. 30.1: service extensions apply to forward periods only; ignored",
+          "methods": [
+            {
+              "days": 0,
+              "method": "personal"
+            },
+            {
+              "days": 0,
+              "method": "mail"
+            },
+            {
+              "days": 0,
+              "method": "commercial-carrier"
+            }
+          ],
+          "op": "service",
+          "text": "Sup. Ct. R. 30.1: service by {method} adds {days} day(s) -> {date}",
+          "unrecognized": [
+            "electronic",
+            "clerk",
+            "other-consented",
+            "prison-mail",
+            "mail-foreign",
+            "express",
+            "express-foreign"
+          ]
+        },
+        {
+          "backward": {
+            "text": "Sup. Ct. R. 30.1: the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "Sup. Ct. R. 30.1: the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        }
+      ]
+    }
+  ],
+  "lowered": {
+    "asOf": "2026-10-22",
+    "pins": [
+      {
+        "digest": "sha256:4549853fefe603b7e6f82297142e040a80662653a81126640ce992bf35b115bb",
+        "name": "core.supct30",
+        "version": "1.0.0"
+      }
+    ],
+    "worldDigest": "sha256:0fe4c539b2f3ff6d69f233ecfca957a6cfd54722ca04d45d7011e00116c9d9b2"
+  },
+  "schemaVersion": 4
+}

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "pr-criminal-trial-court"
 version = "0.1.0"
 language = 1
-source = "sha256:a2d44c71cda901af8487f03ebfdce4d235b02555f48e3948b5bb50319612fb45"
-semantic = "sha256:1eee8780e863c86ec2b4e2fd81b62acaf76f5dc939bcc73bf98e09ba328ca9b4"
+modules = [
+    "criminal.lit sha256:72b26e54f455d522c8dbd493a00ad23a1905d445f52944f81843704467059489 sha256:bed4662952a7c77f720bd9978c4429f26c636859aef473118fa2ae93358559b5",
+]
 texts = [
     "pr-r-p-crim sources/pr-criminal-trial-court/pr-reglas-de-procedimiento-criminal-1963-sectioned.txt sha256:8abe43617cafa139f6cdfc2a94499941c5d658cf60cdbb7bc1613c7d67350259",
     "pr-regl-ta sources/pr-tribunal-apelaciones/pr-reglamento-tribunal-apelaciones-sectioned.txt sha256:922270e4114d4ec335d784912470c8389fff7f9c3c2619ea9e61089b29f3930b",

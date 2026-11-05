@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "txed-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:c7d725db6a928d6cab6234df274eca1b40abd88dfb3e9b84bdd222d543fdbf9f"
-semantic = "sha256:025628b4f17faea146db1ab5468df847a6864ef35937b7d9db22e332c2535aca"
+modules = [
+    "local-rules.lit sha256:3134d1f33e8aff36a2dc08097e069f3279be7cbc1b624b76b3a9c0bc0fa81810 sha256:ce0e750d0f3c4da93d2c538c7fe093106b878d44f8f418c870a84bd500d9e410",
+]
 texts = [
     "txed-cr sources/txed/txed-local-rules-2026-02-09-sectioned.txt sha256:5939a12e1e72c7c68bd78a058b70e228d793dfcf4d939f0e83cf2cd7dcd602fc",
 ]

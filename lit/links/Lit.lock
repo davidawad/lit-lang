@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "cafc"
@@ -47,8 +47,10 @@ dependencies = [
 name = "links"
 version = "0.1.0"
 language = 1
-source = "sha256:7c6d214899bbcc72569419b6da26d7e47094e2f566899f5f31806baeac1f3ef8"
-semantic = "sha256:acb94df95294318736caa75354a3d94838ee7071d28a02104c9db99004087b9b"
+modules = [
+    "calibration-cafc-fy2024.lit sha256:8ea4a2711c8a5eba4d89ff696a16efefeeee617d6dacd2aa261fc074da65b44c sha256:5e103dca7213c5e69e27c6077432bee8774fe6a257f57d22fae4a3981cd26941",
+    "links.lit sha256:531e613ea9de6fdcfb0bb462c2486e980fa0aca144001fbe0c467e8869e09704 sha256:a0f8261e1492cb8d92de59165e0b4ce0ac8591688f002d36868e675fd841f918",
+]
 texts = []
 dependencies = [
     "cafc 0.1.0",

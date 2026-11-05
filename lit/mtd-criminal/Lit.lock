@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "mtd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:a19a177e97570c11fae871d0898490abf3bd25f17691a03c3d028f7e58f5681b"
-semantic = "sha256:cafb13a760c022799dd522aafa8ec2cc0def1aea30782b034a8968b3bd9092e4"
+modules = [
+    "local-rules.lit sha256:8d7c7890fac5ae02a79eb4219ea7cf35dda9254ed38bf649bd80e81226064cb0 sha256:b8a938f7ae3f4438f201b0f0fd26114d553346cd52c5252a8c75fc4048db151f",
+]
 texts = [
     "dmont-crlr sources/fed-dmont/dmont-local-rules-crim-sectioned.txt sha256:da2b2af6001750899c920779bcf320af98ff6381ead68491d89e6679e1cebb3b",
 ]

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "wy-criminal-trial-court"
 version = "0.1.0"
 language = 1
-source = "sha256:8fac5070a3c8406778464b4bdb2fe3020871b6fd55442f8c7057bdb99f9d9fcb"
-semantic = "sha256:ed7ee5766b05b2a62d41fbd3958db8bd4cb5511e09b22b7d4f86f1dcd6426352"
+modules = [
+    "criminal.lit sha256:640c27ba23ad5d833817d8da8e869c0dbdd0532a805bb9b2907c8311d3af14a3 sha256:20eb04c38093c1315b71fa6b7f5382f937573fb058a473e2f15d81db351df2bd",
+]
 texts = [
     "wrcrp sources/wy-criminal-trial-court/wy-rules-of-criminal-procedure-sectioned.txt sha256:903752441cc027c945523d8789e1f8152d92196264aaa0d24961f084ea3976af",
     "wy-r-app-p sources/wy-state-appellate/wrap-sectioned.txt sha256:515a3474a1e5c02778cdc2a99fb7c78fee285cf2fd627532f1d25ce131f62a9a",

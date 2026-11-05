@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,10 @@ dependencies = []
 name = "habeas-corpus"
 version = "0.1.0"
 language = 1
-source = "sha256:d215d5d1a7b69d0d4ccafac88d9bd66c5bfd56304b5592a60e6fc2a24d9e1c95"
-semantic = "sha256:b9ee69e915573d328e3eaee29b69a72e6fe20c6d375bc1aa778a4e6036682864"
+modules = [
+    "limitations.lit sha256:bf163c5c21a2446b190836dd404c4d2962994a4da540efe9e6da203499b67001 sha256:c0479182f951fc758e63bbb7cd0ec3c3c2cd61c4171339e4556e92d5b5be23ba",
+    "proceeding.lit sha256:772787a3527edbae373f3e6a7c41436e47b96ae1e3792bb91204f8218fb2dd0e sha256:b6e38f00c391654a1924a7fe5469f484c541a8a3621c4b703f411a531849e7e0",
+]
 texts = [
     "frap-rules sources/frap.txt sha256:b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172",
     "frap22-amendment-history sources/frap22-amendment-history.txt sha256:45dc79a4517f57b2bddd5c5a2d1829e2da57a4f3d4232847e2623b83fdc82bd2",

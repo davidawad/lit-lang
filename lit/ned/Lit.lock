@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "ned-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:4315189bd8dafc20b81347c5d4e56eebcb5457d03a4f9a414ab1180f8dd84ed1"
-semantic = "sha256:dede655ce42303ad8ae65fee301f668299c2cc35717adec7e2bd4295413cd9b0"
+modules = [
+    "local-rules.lit sha256:b0b1b251aa7e5e99b89341129d2e366ba6ca9434a0ef23f13ba58053ef9cbfb4 sha256:a7f18dfc981c0ee0856bfa7627978aee58f849aedbc8a329356c83ef91755836",
+]
 texts = [
     "necivr sources/d-neb/ne-civil-rules-sectioned.txt sha256:cb0d2937e9bb6fa2e7fd65709557d84da6a61dfac80246b104b060e1895fb2cd",
 ]

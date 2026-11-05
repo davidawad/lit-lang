@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "rid-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:079e9a9d3699d1af939e3bad959e6ccda6ca8cf361cde64627c7e422247a233f"
-semantic = "sha256:1db256dfae6b86afb58209ba4fbde4bbc8d4af96b4e4e830e57b852383c9c73d"
+modules = [
+    "local-rules.lit sha256:22861d87c82cf934aa6534b1312296133fb97ca671d01b14a3cf3523c8b6ce4e sha256:4d40f6e031502d1337b84ed2e226b9be20132172edf580f6baf6d9dc4d687c52",
+]
 texts = [
     "dri-lrcr sources/dri/dri-local-criminal-rules-sectioned.txt sha256:a0a615d278f9442bcf6deac6eeb503cbfa8b82a7850ad6c450ab7a1c550d3114",
 ]

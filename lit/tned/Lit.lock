@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "tned-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:40d2dd2e653811fa1e0c0581f85060591be5ba9eb692689e1deec82ab1275f79"
-semantic = "sha256:db0be7916fe0535493c79905297bd3b4213da0b6450bfbea8bd5db5650123251"
+modules = [
+    "local-rules.lit sha256:7bf8cab9d99bb535a2162dae7d58c9c40fd9831b8f665482414f8dc6465ec572 sha256:3a4474035154d6106f79476f2709079df03194d34e5198df3aa55612f1a3feb9",
+]
 texts = [
     "tned-lr sources/tned/tned-local-rules-sectioned.txt sha256:9b84efd66ff91cba7627f6a6e5644aaf8fccfd57c864d9b3ec296e4df3480ca9",
 ]

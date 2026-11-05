@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "fifth-circuit-court-of-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:de0a43134d2639603a8880b05398c4d6ec3a692c70f034240e2d72646210c149"
-semantic = "sha256:15ebeb77b2147a0a37fa14f26e929a0896ac223a80c2a2709bfc7da0f3dbf31b"
+modules = [
+    "appeal.lit sha256:f25ba7b4dfb805c561144f1a3bdfb67ef377872baf951beb8fcdbf5441959ba4 sha256:f239960fef9b8f7def49a1b53267f5d1012a5c165a1cd4d3c7bb4747412992da",
+]
 texts = [
     "ca5-rules sources/ca5/rules-and-iops.txt sha256:19e2c73c6404d44dfabeddf7c6302b8930c80b2134406e881c76e65203dd0e91",
     "frap sources/frap.txt sha256:b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172",

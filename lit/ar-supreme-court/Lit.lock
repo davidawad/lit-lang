@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "ar-state-rules"
@@ -11,8 +11,9 @@ dependencies = [
 name = "ar-supreme-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:5db7d3f29a618f23c8e8d9698786a504b361c235be6480f05235802ae512a4cd"
-semantic = "sha256:15e31458ee5c49ad0f0b59ef23202168350e45ee819220b2a2e3bb1bce7f0d38"
+modules = [
+    "review.lit sha256:7b6d59c6482b6bb20d980085003e7f3d6404e2baec67c47641c938762ffbdcd4 sha256:429f0ba0f68cd80b00e428998324c3c81c3236e90ffc4581e450149fbe5d77cd",
+]
 texts = [
     "ark-sup-ct-r sources/arkctapp/ar-supreme-court-rules-sectioned.txt sha256:12010c2bee197d0f5ecef0c430a1c8559819a85152d0396c83551562bfe639ca",
 ]

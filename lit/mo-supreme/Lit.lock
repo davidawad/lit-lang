@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "mo-supreme-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:ef212c4c161dc06cb743792a4cf1f1d2929b1180d7dcf5ca4cce57a5d4dc834e"
-semantic = "sha256:e8d79cd61f2b7fc1e91d78e6e3f8af7c1d02964a9f1e1ffe0d87c4741429eb5a"
+modules = [
+    "review.lit sha256:fd34c0d68aa7758bf54a59de11df64738720b25a1ec70cfc635bb4e1f8d35960 sha256:cbd80d4c3464e8d9cc39f6ed404610ac759b606598afccc420411e09b5c3c84c",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

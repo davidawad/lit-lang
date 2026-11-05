@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "tned-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:507926a4f77daac82c571f26d9fbe8cd138e950d176615f2f5d43c686e193a90"
-semantic = "sha256:ef720db96c2bb274b6f392cbf555bcaa3ef9614e762ec5491f23d81fa3515926"
+modules = [
+    "local-rules.lit sha256:c54e832b6d46d9dfe10cb29e9360e4104f2eb032dce2376a7ad4d02da08aa54c sha256:a3d0d06e72b993ebf2c8927b3477fd96ffcba3b7be15490bb5944cca4591369b",
+]
 texts = [
     "tned-lr sources/tned/tned-local-rules-sectioned.txt sha256:9b84efd66ff91cba7627f6a6e5644aaf8fccfd57c864d9b3ec296e4df3480ca9",
 ]

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "nc-criminal-trial-court"
 version = "0.1.0"
 language = 1
-source = "sha256:dcace60bd6d52a1e17d3e584cb46549243fa1d46c5492227957e6111e7cc2a2e"
-semantic = "sha256:9c92c2429449c034563dba00c68abc1da25575f50991ee81736ff3a821fb8aa8"
+modules = [
+    "criminal.lit sha256:7dbc5d1bbfd47941c0ae07b76435bbaedf319b48783553da08d56b0be70707eb sha256:3203a62469c59285e7755b64e1b055948b981479097f6b515bc2491202b48f2b",
+]
 texts = [
     "nc-gs-15a sources/nc-criminal-trial-court/nc-gs-chapter-15a-criminal-procedure-act.txt sha256:41735dd1bcfa8e634e8811358a5d65df608e1ef647be4238b7d53ff324d1e88b",
     "ncrap sources/nc-appellate-civil/nc-rules-of-appellate-procedure-sectioned.txt sha256:faa02aa4899f95553e42bccb296ed5dc8d4a6ec35b5509f4e0eb535648614d69",

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "insd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:1d5ca98cc31d5f8f912476f94da88eb205b43b4bde9857c1d2b5e1794a2637e1"
-semantic = "sha256:02ab16d45cf3d0a1af143d7b24ebe8f9d79cf8c513c67de7bff6d4b533321483"
+modules = [
+    "local-rules.lit sha256:a446dbd76384c62f6c93b018ae225b4dc7be54ac4da5c859166fc48bd7c3f488 sha256:49ffc9981cf38382ff99c83106672c7530795d3c5ce43b77f3394ba0417fe9f3",
+]
 texts = [
     "insd-lr sources/insd/insd-local-rules-sectioned.txt sha256:5b55f4232b25b5dc46297a538630dff9293de8512ca2950fba002b3460763287",
 ]

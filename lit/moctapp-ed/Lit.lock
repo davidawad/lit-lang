@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "mo-court-of-appeals-eastern-district-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:be616b242bfddd090c9d67b497a62097290af5dabf84c02784409fa9fb6d4cf4"
-semantic = "sha256:e5379bdb4d1f57a9cd5255dec72bdfedf24f7c4b60ac2949df3fe9270be2fe71"
+modules = [
+    "appeal.lit sha256:5ad55b5cd6cf193eef8f33df328b0bce8018315dc1b54f04f1bcf7e99768d448 sha256:85bb54eab556b3d8d6ec4df9266e3177b76b11a1b9edbb133e7ff8680e48a849",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "ar-state-rules"
@@ -11,8 +11,9 @@ dependencies = [
 name = "ar-workers-compensation-commission"
 version = "0.1.0"
 language = 1
-source = "sha256:2b80d19183f1670c9b3efa40a357887957dd16dfdd1f19d5dae2f233864828c2"
-semantic = "sha256:a03f7f8cefc557eb9e7bc62da721fbe30dab2e0d0225ede91291c64bec339729"
+modules = [
+    "claim.lit sha256:a2833fdc551711ac5353a8867026ba33eea321fa7cc9959c759ab475041196fe sha256:7a98ce596b16cbfc6235cea2ddfa749b1a9b5c59a17bd8800406845064d225c3",
+]
 texts = []
 dependencies = [
     "ar-state-rules 0.1.0",

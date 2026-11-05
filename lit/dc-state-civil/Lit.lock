@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "dc-superior-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:7de76cb01dea884d207ebb29904c23ea10f876048e5b0eaef48ca4c117825288"
-semantic = "sha256:c41c3f881d90f648e63844045f8fd94fc4d456fa9be9e05386bfb47866347ac2"
+modules = [
+    "civil.lit sha256:1e79a6ac6ac081be129ef2192ceec6de2ac8501ff4cb6045d3f336fd0469adb8 sha256:2739c3498eecca3d5019acd3b57d8cd3b8cae1d7f4ef1bbc1e7d8fc3ee552140",
+]
 texts = [
     "dc-app-r sources/dc-state-appellate/dcca-rules-sectioned.txt sha256:17ed6746cb9c0e76cf59794b5f203a6e03a85e16838865ecf46b46b98c5d6555",
     "dc-scr-civ sources/dc-state-civil/scr-civil-rules-sectioned.txt sha256:fe4d647085e65f0efa32cde713365878f10dd9d6d9e24a94ec504d28597f1096",

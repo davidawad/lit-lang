@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "ndd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:19dcbd9e6dc616c102cace13803d328f2c84ef5d778ff965d2dce491ef0c1af4"
-semantic = "sha256:fd4cc2b6351a50ddda968e7635eb23c372414f70c745c7fd4428be1522014ee3"
+modules = [
+    "local-rules.lit sha256:5c4fd47c365f2691b3f93300c0856417ca569a8ea62ee450f137228a1d08b23d sha256:5e6d36500d3dc2cd4d3f533c09f34acaa262323d5a9651f86b9d9e6dfb195a18",
+]
 texts = [
     "ndd-crim-lr sources/ndd/local-rules-criminal-sectioned.txt sha256:bd466dccade6554f1a1b4c0b9bed8d99a5894ac8bb91074bd00ee30130c2dc8f",
 ]

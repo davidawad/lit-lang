@@ -44,12 +44,8 @@ fn main() {
     embed(
         &mut src,
         "PACKS",
-        "`(file name, contents)` of every built pack, `links.json`, `clock/` fragment (generated and hand-authored) and `calibration/` set.",
-        &[
-            (&packs, ""),
-            (&packs.join("clock"), "clock/"),
-            (&packs.join("calibration"), "calibration/"),
-        ],
+        "`(file name, contents)` of every built pack, `links.json`, clock fragment and calibration set.",
+        &[(&packs, "")],
     );
     embed(
         &mut src,
@@ -103,6 +99,10 @@ fn lay_out(files: &BTreeMap<String, String>, clock: &Path, out_dir: &Path) {
         let Some(rel) = path.strip_prefix("out/") else {
             continue;
         };
+        if rel == Path::new("packs/clock/litigate-core.json") {
+            // `lit/core` is embedded from the module-split fragments below.
+            continue;
+        }
         let generated = rel.starts_with("packs/") || rel.starts_with("scenarios/");
         if generated && !rel.ends_with(".map.json") {
             write(&out_dir.join(rel), text);
@@ -110,9 +110,12 @@ fn lay_out(files: &BTreeMap<String, String>, clock: &Path, out_dir: &Path) {
     }
     println!("cargo:rerun-if-changed={}", clock.display());
     for path in json_files(clock) {
-        let target = packs
-            .join("clock")
-            .join(path.file_name().unwrap_or_default());
+        println!("cargo:rerun-if-changed={}", path.display());
+        let relative = path
+            .strip_prefix(clock)
+            .expect("clock file is under the library");
+        let target = packs.join("clock").join(relative);
+        mkdir(target.parent().expect("clock file has a parent"));
         assert!(
             !target.exists(),
             "{} is both in the shared clock library and a package's own fragment",
@@ -122,15 +125,18 @@ fn lay_out(files: &BTreeMap<String, String>, clock: &Path, out_dir: &Path) {
     }
 }
 
-/// `pub static <ident>: &[(&str, &str)]` over every `*.json` directly in
+/// `pub static <ident>: &[(&str, &str)]` over every `*.json` under
 /// each `(dir, key prefix)`, in key order.
 fn embed(src: &mut String, ident: &str, doc: &str, dirs: &[(&Path, &str)]) {
     let mut entries: Vec<(String, PathBuf)> = dirs
         .iter()
         .flat_map(|(dir, prefix)| {
             json_files(dir).into_iter().map(move |p| {
-                let name = p.file_name().and_then(|n| n.to_str()).unwrap_or_default();
-                (format!("{prefix}{name}"), p.clone())
+                let relative = p
+                    .strip_prefix(dir)
+                    .expect("json file is under its directory");
+                let relative = relative.to_string_lossy().replace('\\', "/");
+                (format!("{prefix}{relative}"), p.clone())
             })
         })
         .collect();
@@ -146,7 +152,7 @@ fn embed(src: &mut String, ident: &str, doc: &str, dirs: &[(&Path, &str)]) {
     src.push_str("];\n");
 }
 
-/// Every `*.json` file directly in `dir`, sorted.
+/// Every `*.json` file under `dir`, sorted.
 fn json_files(dir: &Path) -> Vec<PathBuf> {
     let read = std::fs::read_dir(dir).unwrap_or_else(|e| {
         panic!(
@@ -154,10 +160,15 @@ fn json_files(dir: &Path) -> Vec<PathBuf> {
             dir.display()
         )
     });
-    let mut files: Vec<PathBuf> = read
-        .filter_map(|e| e.ok().map(|e| e.path()))
-        .filter(|p| p.is_file() && p.extension().is_some_and(|x| x == "json"))
-        .collect();
+    let mut files = Vec::new();
+    for entry in read.filter_map(Result::ok) {
+        let path = entry.path();
+        if path.is_dir() {
+            files.extend(json_files(&path));
+        } else if path.extension().is_some_and(|x| x == "json") {
+            files.push(path);
+        }
+    }
     files.sort();
     files
 }

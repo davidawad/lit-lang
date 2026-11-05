@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "wi-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:322a294d926f1b2b00c4d19aaa478ae7c6daf8cca1607161f5f9fcd1086fade6"
-semantic = "sha256:a233217ba6432cdb3522aec23220dd523bc77e94fa6e40a7008332fad718c82e"
+modules = [
+    "rules.lit sha256:5bdfef34694701f1813abf389a027588a449d6e91469e18ff664ffa45fe4b39e sha256:a59450dd13456b60841c6a6966545cacfec186ceee0dc580edb36e84f1f3a1d8",
+]
 texts = [
     "wis-stat-808 sources/wisctapp/wis-stat-ch808-sectioned.txt sha256:67b34464aff35374d59d9ed0ffbfd997ab6c084b2494655ef052359eb7b7b4dd",
     "wis-stat-809 sources/wisctapp/wis-stat-ch809-sectioned.txt sha256:55eaa45120fd15038303810878dddae1289081531ce4a658a8f46d01a12feaad",

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "fourth-circuit-court-of-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:5d753a62c0e2b2bbebe449749fcfa7b9eae1176a851cc6e5fe96c41f01bec768"
-semantic = "sha256:cbbd53264e90472373075877f1fe59044321c041e628bb44f47007e4ca4ef81f"
+modules = [
+    "appeal.lit sha256:96295b7b369b3fba9d55431daa8fb7683736a5655cf9c3e9a3439d84bc4902c7 sha256:64c1ddaac729df34f214848105b53176ee38be3be0f5e2b02a9105a408815795",
+]
 texts = [
     "ca4-rules sources/ca4/ca4-local-rules-iops-2026-10-19.txt sha256:85183dba9fe43bd2760759b9e946ccee63cea00ae801ee40dfc4131829959130",
     "frap sources/frap.txt sha256:b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172",

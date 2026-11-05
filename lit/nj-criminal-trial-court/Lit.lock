@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "nj-superior-court-criminal"
 version = "0.1.0"
 language = 1
-source = "sha256:d94d39b200d02bad5d902b37deb031b2efc25ac84dd187bde2f2dd2df40e5d84"
-semantic = "sha256:ed890b905e5db7b391640bf1e324e04edabca0b9801b84e392a50d2819265e88"
+modules = [
+    "criminal.lit sha256:3447c5a471afa715934e999aa0c0b33b64a844d511cf7440d2e1742d592d6277 sha256:777aa0c2270dbc8c7089eb62b7358508df2b01c616321a3c4e8e4f62b4e21835",
+]
 texts = [
     "nj-crim sources/nj-criminal-trial-court/nj-court-rules-part-iii-criminal-practice-sectioned.txt sha256:149686ddd4e4de4c93fdc2e4adb3ef71460c4978d3bd4c5818bff9529ed4b071",
     "nj-rules sources/nj-appellate-civil/rules-of-court-cited-2026-09-01.txt sha256:46f0f8e357d3d84e1625181279e8ae7e5dbf8d564b0bf1726f39cf778530af1f",

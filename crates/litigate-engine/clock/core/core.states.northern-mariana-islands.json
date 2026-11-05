@@ -1,0 +1,298 @@
+{
+  "calendars": [
+    {
+      "cite": "1 CMC § 311",
+      "holidays": [
+        {
+          "date": {
+            "fixed": {
+              "day": 24,
+              "month": 3
+            }
+          },
+          "effective": {
+            "from": "2026-10-29"
+          },
+          "id": "commonwealth-covenant-day",
+          "name": "commonwealth-covenant-day",
+          "observed": "nearest-weekday"
+        },
+        {
+          "date": {
+            "fixed": {
+              "day": 4,
+              "month": 11
+            }
+          },
+          "effective": {
+            "from": "2026-10-29"
+          },
+          "id": "citizenship-day",
+          "name": "citizenship-day",
+          "observed": "nearest-weekday"
+        },
+        {
+          "date": {
+            "fixed": {
+              "day": 8,
+              "month": 12
+            }
+          },
+          "effective": {
+            "from": "2026-10-29"
+          },
+          "id": "constitution-day",
+          "name": "constitution-day",
+          "observed": "nearest-weekday"
+        }
+      ],
+      "id": "northern-mariana-islands-holidays",
+      "sourceUrl": "https://www.cnmilaw.org/pdf/cmc_section/T1/311.pdf",
+      "title": "The legal holidays of the Northern Mariana Islands (1 CMC § 311) that\n`us-federal-holidays` does not already close: Commonwealth Covenant Day,\nMarch 24; Citizenship Day, November 4; and Constitution Day, December 8,\neach celebrated on the Friday before a Saturday and the Monday after a\nSunday (§ 313). FRCP 6(a)(6)(C) and FRBP 9006(a)(6)(C) make them legal\nholidays of the District of the Northern Mariana Islands for a period\ncounted forward only (core's `frcp6-northern-mariana-islands` and\n`frbp9006-northern-mariana-islands`). The other § 311 days are federal\nholidays on the same days (Commonwealth Cultural Day is the second Monday\nin October, Columbus Day).\n\nEach day is closed from the date the vendored text was retrieved\n(October 29, 2026; the PDFs carry no as-of date). Not modeled: Good\nFriday, whose date § 311 leaves \"As Designated in the Annual Calendar\",\nwhich is not vendored, so a last day on it stays the earlier date."
+    }
+  ],
+  "countingRules": [
+    {
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "forwardHolidays": [
+        "northern-mariana-islands-holidays"
+      ],
+      "holidays": [
+        "us-federal-holidays"
+      ],
+      "hours": {
+        "inaccessibleText": "FRCP 6(a): the clerk's office is inaccessible during the last hour; extend to the same time on {date}",
+        "rollText": "FRCP 6(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
+        "text": "FRCP 6(a): count every hour from the trigger; +{n} hour(s)"
+      },
+      "id": "frcp6-northern-mariana-islands",
+      "label": "FRCP 6(a)",
+      "months": {
+        "endOfMonth": "clamp",
+        "text": "FRCP 6(a): count {n} {unit} {after} the anchor to the corresponding day, else the last day of that month -> {date}"
+      },
+      "sourceUrl": "https://www.law.cornell.edu/rules/frcp",
+      "steps": [
+        {
+          "kind": "trigger",
+          "op": "anchor",
+          "text": "FRCP 6(a): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "count": "calendar",
+              "text": "FRCP 6(a): count {n} calendar day(s) {after} the anchor -> {date}",
+              "unit": "calendar"
+            },
+            {
+              "count": "business",
+              "text": "FRCP 6(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "court"
+            },
+            {
+              "count": "business",
+              "text": "FRCP 6(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "business"
+            }
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "backwardText": "FRCP 6(a): service extensions apply to forward periods only; ignored",
+          "methods": [
+            {
+              "days": 0,
+              "method": "personal"
+            },
+            {
+              "days": 0,
+              "method": "electronic"
+            },
+            {
+              "days": 3,
+              "method": "mail"
+            },
+            {
+              "days": 3,
+              "method": "clerk"
+            },
+            {
+              "days": 3,
+              "method": "other-consented"
+            }
+          ],
+          "op": "service",
+          "text": "FRCP 6(a): service by {method} adds {days} day(s) -> {date}",
+          "unrecognized": [
+            "commercial-carrier",
+            "prison-mail",
+            "mail-foreign",
+            "express",
+            "express-foreign"
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "ignoredText": "FRCP 6(a): no inaccessibility extension applies; ignored",
+          "op": "clerkInaccessible",
+          "text": "FRCP 6(a): the clerk's office is inaccessible on the last day; extend -> {date}"
+        }
+      ]
+    },
+    {
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "forwardHolidays": [
+        "northern-mariana-islands-holidays"
+      ],
+      "holidays": [
+        "us-federal-holidays"
+      ],
+      "hours": {
+        "inaccessibleText": "FRBP 9006(a): the clerk's office is inaccessible during the last hour; extend to the same time on {date}",
+        "rollText": "FRBP 9006(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
+        "text": "FRBP 9006(a): count every hour from the trigger; +{n} hour(s)"
+      },
+      "id": "frbp9006-northern-mariana-islands",
+      "label": "FRBP 9006(a)",
+      "months": {
+        "endOfMonth": "clamp",
+        "text": "FRBP 9006(a): count {n} {unit} {after} the anchor to the corresponding day, else the last day of that month -> {date}"
+      },
+      "sourceUrl": "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf",
+      "steps": [
+        {
+          "kind": "trigger",
+          "op": "anchor",
+          "text": "FRBP 9006(a): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "count": "calendar",
+              "text": "FRBP 9006(a): count {n} calendar day(s) {after} the anchor -> {date}",
+              "unit": "calendar"
+            },
+            {
+              "count": "business",
+              "text": "FRBP 9006(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "court"
+            },
+            {
+              "count": "business",
+              "text": "FRBP 9006(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "business"
+            }
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "backwardText": "FRBP 9006(a): service extensions apply to forward periods only; ignored",
+          "methods": [
+            {
+              "days": 0,
+              "method": "personal"
+            },
+            {
+              "days": 0,
+              "method": "electronic"
+            },
+            {
+              "days": 3,
+              "method": "mail"
+            },
+            {
+              "days": 3,
+              "method": "clerk"
+            },
+            {
+              "days": 3,
+              "method": "other-consented"
+            }
+          ],
+          "op": "service",
+          "text": "FRBP 9006(a): service by {method} adds {days} day(s) -> {date}",
+          "unrecognized": [
+            "commercial-carrier",
+            "prison-mail",
+            "mail-foreign",
+            "express",
+            "express-foreign"
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "ignoredText": "FRBP 9006(a): no inaccessibility extension applies; ignored",
+          "op": "clerkInaccessible",
+          "text": "FRBP 9006(a): the clerk's office is inaccessible on the last day; extend -> {date}"
+        }
+      ]
+    }
+  ],
+  "lowered": {
+    "asOf": "2026-10-22",
+    "pins": [
+      {
+        "digest": "sha256:fb0d1d04514b7c7cb128b14ec0e9354f7d071632062ceef2a322eec54258e4fc",
+        "name": "core.states.northern-mariana-islands",
+        "version": "1.0.0"
+      }
+    ],
+    "worldDigest": "sha256:965fe86fab51403c8c71b35af67afb9cd82f429bec1490c4c641c74ca2ff2786"
+  },
+  "schemaVersion": 4
+}

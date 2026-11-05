@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "hid-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:5cc4f15ebaa4a6f7921f2c79923dd4b760de52c2a77af3b8baf2f044de965dd6"
-semantic = "sha256:d73bfbb61e768c7ecffd893237c0b698c18c4efa477de835aea7dd7103b958ce"
+modules = [
+    "local-rules.lit sha256:18a9e76820658b7fb89d47b1f8580017321647be918afa024f60d496f4f99133 sha256:79a9f5c94fa42e53e48e619ef1f8905a7905a74adba5eccc1769bfcdbab43bb0",
+]
 texts = [
     "hid-lr sources/fed-dhaw/dhaw-local-rules-sectioned.txt sha256:6fb5b0546e0094dae365ecdfdfa4fce3de96fd6b95c7bba9c22a4afa07d684f2",
 ]

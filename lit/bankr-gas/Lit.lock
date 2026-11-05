@@ -1,11 +1,12 @@
-version = 2
+version = 3
 
 [[package]]
 name = "bankr-gas-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:1d559253d272c78725b936633a3e356bf2af1c8f1228abf1886a10885dd14da1"
-semantic = "sha256:d3729823fc99c684cf5f9bfebaa081044f9c1481b989369650ca5d525df23656"
+modules = [
+    "local-rules.lit sha256:0a9e2bb5e367d2d5583af898c73f955f6d9dfd52d8e7c48cd57522268d6f284b sha256:ebad7dd842a91261f7df800a4d9cb6260269669c5a8686f3a615edf15e62c77e",
+]
 texts = [
     "gasb-lbr sources/bankr-gas/gasb-lbr.txt sha256:fe7ad8b2db5b12ef93968796268d9af554b0b0731794b834209920e635ab5241",
 ]

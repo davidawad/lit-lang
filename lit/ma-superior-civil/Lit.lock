@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "ma-superior-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:577f9b02f448b351b61e83aeda6fd5cd9f16b4582a733df702407b6d6c85fd31"
-semantic = "sha256:62472fd4065298ee59e2df47fe28d45495928690587f85755e0f9a14c7db5342"
+modules = [
+    "civil.lit sha256:f216639785311b37e1103e81d33c6f8ba386d2316ba5eb24e01ef3d61f3c7a79 sha256:108a834b6372e6a493a5eefdf637b374f4c5bee90e40987b4f2abe593b0e8e0c",
+]
 texts = [
     "mass-r-a-p sources/ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt sha256:1e933a8ddaecfe30dac949319d8f1f78f3a2ecc2a03e6815b10545072338eb5b",
     "mass-r-civ-p sources/ma-superior-civil/ma-rules-civil-procedure-sectioned.txt sha256:3368e76c097f4f8dd3560ba731b88d6f6ca00fb93824103f2555d140a1952a1d",

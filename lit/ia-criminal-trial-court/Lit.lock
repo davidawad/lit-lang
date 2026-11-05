@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ia-criminal-trial-court"
 version = "0.1.0"
 language = 1
-source = "sha256:34c715bda39937fbf31bbde0c6165a91f2d07b818f072d24c1867713afb84319"
-semantic = "sha256:d3e542545a4c671d15de7083ef27f51b123293cdd9ab240f0d7418be9bf3da23"
+modules = [
+    "criminal.lit sha256:5d3efe0fb017952622d88d8479f3cadec376be425db6aea83fc392388ff46fe7 sha256:96e62d8576170d4fb6e1bf48e94e311e676c7bb463e0b47d48b45f9320c58674",
+]
 texts = [
     "ia-r-app-p sources/iowactapp/iowa-rules-appellate-procedure-sectioned.txt sha256:a6cb0e7fcb06ccd217389445992200360cfe96182b201bea2d150cc13109326d",
     "ia-r-crim-p sources/ia-criminal-trial-court/ia-rules-criminal-procedure-sectioned.txt sha256:22f3efa6757d7dfcf0050bf958a668cb90d39c9dfcd8f5f6317b3a104ef1af77",

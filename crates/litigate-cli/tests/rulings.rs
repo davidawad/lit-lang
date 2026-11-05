@@ -195,15 +195,27 @@ fn json(path: &Path) -> Value {
     serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap()
 }
 
-/// `(file name, path)` of every `*.json` directly in `dir`, sorted.
+/// `(relative file name, path)` of every `*.json` under `dir`, sorted.
 fn json_files(dir: &Path) -> Vec<(String, PathBuf)> {
-    let mut files: Vec<_> = std::fs::read_dir(dir)
-        .unwrap()
-        .map(|e| e.unwrap().path())
-        .filter(|p| p.extension().is_some_and(|x| x == "json"))
-        .filter(|p| !p.to_string_lossy().ends_with(".map.json"))
-        .map(|p| (p.file_name().unwrap().to_string_lossy().into_owned(), p))
-        .collect();
+    fn collect(dir: &Path, root: &Path, files: &mut Vec<(String, PathBuf)>) {
+        for entry in std::fs::read_dir(dir).unwrap() {
+            let path = entry.unwrap().path();
+            if path.is_dir() {
+                collect(&path, root, files);
+            } else if path.extension().is_some_and(|x| x == "json")
+                && !path.to_string_lossy().ends_with(".map.json")
+            {
+                let name = path
+                    .strip_prefix(root)
+                    .unwrap()
+                    .to_string_lossy()
+                    .replace('\\', "/");
+                files.push((name, path));
+            }
+        }
+    }
+    let mut files = Vec::new();
+    collect(dir, dir, &mut files);
     files.sort();
     files
 }
@@ -240,10 +252,8 @@ fn the_shared_clock_library_is_lit_core_lowered_and_sync_builds_under_dev() {
     // generates only schema 4 fragments, under other names.
     assert!(json_files(&repo().join("packs/clock")).is_empty());
     let shared = json_files(&repo().join("crates/litigate-engine/clock"));
-    assert_eq!(
-        shared.iter().map(|(n, _)| n.as_str()).collect::<Vec<_>>(),
-        ["litigate-core.json"]
-    );
+    assert!(shared.len() >= 50, "{}", shared.len());
+    assert!(shared.iter().all(|(name, _)| name.starts_with("core/")));
     for (name, path) in &shared {
         let doc = json(path);
         assert_eq!(doc["schemaVersion"], 4, "{name}");

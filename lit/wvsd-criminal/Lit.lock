@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "wvsd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:fcb3e9a335c9f3380c52c340ddb216b97cda9dfbbb2b872b9db61a698167cc47"
-semantic = "sha256:6896381fa6f002f69d01beadc45d182b30ad02f6fa20873a13e920577ae5fce1"
+modules = [
+    "local-rules.lit sha256:afbe5795406e6e497742f713c6d0a8916222b80d1fc9fd16f0136e2f30d4fa74 sha256:323df21b11b085773a46400004c6271f3807956a2e58859ff3b8453a8003ed5b",
+]
 texts = [
     "wvsd-lrcrp sources/wvsd/wvsd-local-criminal-rules-sectioned.txt sha256:bfb1d1fd78084aa5fe60495874d71a993895993586dead8752c0b80114753089",
 ]

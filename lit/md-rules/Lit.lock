@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "md-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:2fa64dc87b7d900d87d35edbd063fa1bb66e1e9059f8fa3d887b3fc20a882d11"
-semantic = "sha256:8128cf1b700e4adb46b3b78dcd271a77d251bd7262bf91d27495d6536465c197"
+modules = [
+    "rules.lit sha256:60b1ca725a7df5904a9397328126a969be958586675f0de4cdbbbe2e3dbadbfe sha256:13019ba72fa5335ea565906d01082318f8f3028d581a25e48a15e4b634a35372",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

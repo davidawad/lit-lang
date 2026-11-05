@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ky-circuit-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:5d2bf6b6e061406b3536ddabf4b51e7ea0ece797dbe575a602d3f3f7fac4b501"
-semantic = "sha256:4edc498c792ef2b4273009065c5cc8fdd743935989cd02f710f0d575bc9b289f"
+modules = [
+    "civil.lit sha256:4aa639b4ec3ed0dfe2b3b6fa1c1e423ed4756af0a8315be43a1bb0ce32282c80 sha256:bf18c16b2aa81ea70e2a488ec5cb9f24e92cd0f4775b38bbf41269c7f4d58034",
+]
 texts = [
     "ky-cr sources/ky-circuit-court/ky-circuit-court-rules-westlaw-sectioned.txt sha256:27862fd3d406188b3bbf34eb801f336d575a0e4be7697e7bb204a099241a2d3a",
     "ky-rap sources/ky-appellate/ky-appellate-rules-westlaw-sectioned.txt sha256:6319e474853fdca1e971d6615f83eb48fa14eb69744b4db945539b39c343ec90",

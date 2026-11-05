@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "ncwd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:85ab185db3bd05f8db04d6e57f7d3571cad76157cb211cea2f3893759a81fb88"
-semantic = "sha256:ac279c86845f339a1ab2f0aafb696ecfeff53035e3804811bc5fc8fb48ff94f9"
+modules = [
+    "local-rules.lit sha256:b5aa99c4ec0f5da7fdb399f404125f26ff638c25b3a10833e389895013044a5a sha256:c340568a0ff27251090fe1b55a713374c77f76291dd7280132ff785573df9ee4",
+]
 texts = [
     "ncwd-lr sources/ncwd/ncwd-local-rules-sectioned.txt sha256:80c87289185d3dc06a74bd352fa7528fe4b2037024a9069b9ebeefd78679a711",
 ]

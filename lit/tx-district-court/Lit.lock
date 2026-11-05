@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "tx-district-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:27c6158b9835dde38be71def8600adc8656fdf1891b6e7d391bc08b1ca4b968e"
-semantic = "sha256:84809039223bbbea285037fb066277e29e13083d5670b693ad43618a7ed25051"
+modules = [
+    "civil.lit sha256:5fa089a8732c7146d26f4c56427db7caeb1645fad308f504fcc8d991ba6b16d8 sha256:db2f2eaa2a29611b1916d969d90a19cfed7e2ff55d882dc4053ff07548868a8a",
+]
 texts = [
     "tx-trap sources/tx-appellate/tx-trap-sectioned.txt sha256:4c3fb9bd4d05d8822b740e4b2fdc0c36755d2c5ee425a383ce8f4e5cbf407861",
     "tx-trcp sources/tx-district-court/tx-trcp-sectioned.txt sha256:1b10047990b61641bf4b89dd2b14a8724617f8d104236b83245e7449934d2d1a",

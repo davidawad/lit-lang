@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "de-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:c6d14318aaeb94a4fa9d779386ce2aa5c4d7df1649f41c12a1b649f34d3331d6"
-semantic = "sha256:476e074693f8bface0e222da85cfb341b0026e4bb9a170d8c475fa112c876980"
+modules = [
+    "rules.lit sha256:a5af66b920aad873791449c40646e2cbe182f035a4294f7d41eee77258119a05 sha256:d7555797a2204289a11dedd17d1f2624b9112ceca842128a704b5b05597a33a8",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

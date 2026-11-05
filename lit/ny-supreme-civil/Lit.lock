@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "ny-supreme-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:65a40259194752c59bdb076a7fb032b6a187618a25cd4446a22f43d73de0cce6"
-semantic = "sha256:e2ad0224e36609927a24b1d6b0b75b14124414d5dff07598ec69220e4a373787"
+modules = [
+    "civil.lit sha256:a79e42df61562cd633d88500241c8c0bb682bf6d57c3d54ed26e469674eb6978 sha256:c5838ac7a9d5d43b9c0e3da2bd5c9926f38fc039e0069891af7bad2177af9449",
+]
 texts = [
     "ny-cplr sources/ny-supreme-civil/cplr-cited.txt sha256:37637ac88309f1c2885180639c2f2167bfe306b125fa7ec22cb4d45b60b9a2b2",
 ]

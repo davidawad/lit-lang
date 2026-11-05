@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "mied-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:f12961d6ed1d534ba1895e9e72acbe893a7734be5d794b42c1067c2dcd8b12ae"
-semantic = "sha256:000e1d5a1593fa691eeb06a65fd04f5a97c6d5ffc99db791ec04922ab377ba75"
+modules = [
+    "local-rules.lit sha256:0bdadddeceff763c290a8c86b03a9438df5d6dca97408f30f1fe9d9986ed35af sha256:00af536dab30849e4626b22963600cfc7ed6bc6fcae7063d18ae5699570d6552",
+]
 texts = [
     "mied-lr sources/mied/mied-local-rules-civil-sectioned.txt sha256:be63479120e603ab8db781adcb3548256f799a4d984e4109eeaa3c36dbe0d4d9",
 ]

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "wv-supreme-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:d32383f3bba3a5f13f8ff652ac9ffa1d60133bd8d78cb17907b3882d34027951"
-semantic = "sha256:1f68d71cd1401c2d3fc68d7bc6856838cb7a26ec37dd7d1e239cd73ac4d97ce8"
+modules = [
+    "review.lit sha256:14bf8b2a9c21a858bfc72650a1f1153552adc910239447fe93e48fb33ce13efc sha256:ae2dae41ba81d9155b28a3c96da29d3c6fb08664fc05b66a7cf6fb8ca0bf0b35",
+]
 texts = [
     "wv-rap sources/wv-appellate-civil/wv-rules-of-appellate-procedure-sectioned.txt sha256:f84e006703f6dd8d74ec52c3684c0c4d845f6e2a452ab86a3251cbd1a0d44df9",
     "wv-rap-2026-rule5 sources/wv-appellate-civil/wv-rap-rule-5-amendment-order-2026-08-21-no-25-57-sectioned.txt sha256:802c789b3b6e3ba1657fff819c6ed0e194db98a8a041a904903c8422fbcd6889",

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "mdd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:713d4af458e1b6f8b12cb8c11fb9cd01bdda8995f5e6d469e02ad7f83738dd4c"
-semantic = "sha256:4f070add92a563d10d917cbfbcaac5b10150b7ecead18910e8c173e5ae429a26"
+modules = [
+    "local-rules.lit sha256:3d39665cf446299b10c13f5332ef3cb9d2641ac906ade02d9f2b00a790e0c117 sha256:890bcd3a4db121f60532592cf1ef195c9bdbd9a470274d276a22c9a6d4a28321",
+]
 texts = [
     "mdd-lr sources/mdd/mdd-local-rules-sectioned.txt sha256:287ac2420ed78aaff0f6d8b3d6c081393df5111e19f4180b88a054b951e286b4",
 ]

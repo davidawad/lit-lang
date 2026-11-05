@@ -1,11 +1,12 @@
-version = 2
+version = 3
 
 [[package]]
 name = "bankr-pr-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:7c99410d810f63908edf87604cc2324f7d5f8595e6dbda44db7ac044fe0a7644"
-semantic = "sha256:66093c6ffd4b7905aa7541b8966145bdf40cab7c3b03d7e2ae0628f06a503f3a"
+modules = [
+    "local-rules.lit sha256:141c27c8c2a54a3f247da60067e3a039f1032f0d6ffc19699f47e0d07d0a4017 sha256:def620ed879e4dc859d263323414df1f305fae79cd7d8fa0338619242ec154d0",
+]
 texts = [
     "prb-go-17-08 sources/bankr-pr/pr-go-17-08.txt sha256:b2eaca40bfb2409760ed9192faa4c070b809043d071e9e294f711d70de935998",
     "prb-go-18-01 sources/bankr-pr/pr-go-18-01-sectioned.txt sha256:0fba347dac2d3cb6f38507eaa381710cd88dc1c015a027e34ee3e766634982dc",

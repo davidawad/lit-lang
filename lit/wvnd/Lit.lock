@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "wvnd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:9535753109a0a2accb1b45a0de032c7d1e01a3df65bc5daffc8cdb84881b11a7"
-semantic = "sha256:b002c06a75630041b9d6f113729051a812b5fac88043d165e7be1b34260aba9b"
+modules = [
+    "local-rules.lit sha256:8d747f35770c26baf9da3ce26dfe714b7cc33d19055f0110fad25c2b1585065b sha256:1cbebe8bedd42eef03647bfce4cec96b44732afb9c1295799221eae01d2bbba0",
+]
 texts = [
     "wvnd-lr sources/wvnd/wvnd-local-rules-2018-03-sectioned.txt sha256:2ac98eb1735026721b26eb16aecdeef4cccd43ef801943ebb4b697180329fff5",
 ]

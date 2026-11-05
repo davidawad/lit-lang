@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "tx-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:5afdc92bb5c4efce6d9218dccda0fecb0e39a50da89378ee716e5c58e571e373"
-semantic = "sha256:916245eaa6c59c9012143efdcb7f19beb18405654e37cc3ddfb751cb7a4f36eb"
+modules = [
+    "rules.lit sha256:707b755c35003438061dff23fa097e46860207641bd35d57c8e46c1acac0f681 sha256:bfb630dbdce34476421ee2c9eb88339c50cc6c385e5ee835a9f061eefe821791",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

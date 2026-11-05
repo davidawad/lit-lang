@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "miwd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:8c8ee647fe413b806a2df01f00ec5f69abcf5aa0624c1b11817edd705ac4347f"
-semantic = "sha256:f7ee58a89ac81a0a855ce6ee0e834e4ecc13e415218ba616c9c932414e27eaa9"
+modules = [
+    "local-rules.lit sha256:82f6f942a9c980b173ab0381b4abf857e3281b14e76fbc8c1ac93a70dd2aadff sha256:081f2a7620e35628e39a5cd94ffa1ef905885be8eeca0286343a7a948de2c694",
+]
 texts = [
     "miwd-lcivr sources/miwd/miwd-local-civil-rules-sectioned.txt sha256:b009aa700a37360e9ed6e024bc3e273546ea34423dd5c7cbe3fd6ea745f5ff2a",
 ]

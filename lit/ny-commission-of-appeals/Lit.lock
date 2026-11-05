@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ny-commission-of-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:70655b2172291a778368357511d4fe003410c775cdd1e76c6e1ccf478688a412"
-semantic = "sha256:a2b9602005ea0acf5e1d95b3e90f4ccb56725483e18b9fc071e84b3757f13380"
+modules = [
+    "appeal.lit sha256:8154f33656f7f2c3c93f60f3c9500cc740ab620ba655832df2825e72a88edc16 sha256:79cdbcd3991424ee1c24b34dbc1365f2f25901362044e82fa1fefef66372af93",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

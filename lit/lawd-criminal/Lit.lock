@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "lawd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:b70105c1f2ba36e2fd071e6ae86634d67ccaaf5ad2a8af59a0acdd40f6bbc3db"
-semantic = "sha256:d8e1d29a16bc2bf445c10ce0d2521f1d3d3d44fdafe113b3b5dc70466830957d"
+modules = [
+    "local-rules.lit sha256:de1309e0db7455689b00f1aa243a0309e64918594b2afb45ea5546ac448ae823 sha256:d128493620c18faeace1b2b6567ec8ccc15487c0831aeca9e899682408e4b441",
+]
 texts = [
     "lawd-lcrr sources/lawd/lawd-local-rules-sectioned.txt sha256:98d5dc04a3b3f2956976bc5d7f877837c858c95afb11b2e4f733b611e47efa1a",
     "lawd-lr sources/lawd/lawd-local-rules-sectioned.txt sha256:98d5dc04a3b3f2956976bc5d7f877837c858c95afb11b2e4f733b611e47efa1a",

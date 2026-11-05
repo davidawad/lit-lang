@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "third-circuit-court-of-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:d5e14481f0967026f911d549c42a4115728ca8db75afc52b6f03989531f14219"
-semantic = "sha256:21752998ca99e75668ada170277d479fe6a626958d7de5f184c286041f1178eb"
+modules = [
+    "appeal.lit sha256:967a550e807778cc45961fdd1a399399b388d1040e59d8885e10c496eac60a77 sha256:51286bc99c05a24adb0c803ca5989b743e13e7de634ee5d6ed1fca914b5f16b9",
+]
 texts = [
     "ca3-iops sources/ca3/iops-2023-01-06.txt sha256:89d2b64f9653355500465df5b6ab68a81c9612d796e7a919cf64539bf0d613a2",
     "ca3-lar-26-2023 sources/ca3/lar-amendment-2023-07-01.txt sha256:5bbaa52f80528133987ddebc24de5aa9701da086300ac8a3124031c8a28f6c51",

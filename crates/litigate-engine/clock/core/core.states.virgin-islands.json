@@ -1,0 +1,207 @@
+{
+  "calendars": [
+    {
+      "cite": "1 V.I.C. § 171(a)",
+      "holidays": [
+        {
+          "date": {
+            "fixed": {
+              "day": 6,
+              "month": 1
+            }
+          },
+          "effective": {
+            "from": "2019-01-01"
+          },
+          "id": "three-kings-day",
+          "name": "three-kings-day",
+          "observed": "actual"
+        },
+        {
+          "date": {
+            "fixed": {
+              "day": 31,
+              "month": 3
+            }
+          },
+          "effective": {
+            "from": "2019-01-01"
+          },
+          "id": "transfer-day",
+          "name": "transfer-day",
+          "observed": "actual"
+        },
+        {
+          "date": {
+            "fixed": {
+              "day": 3,
+              "month": 7
+            }
+          },
+          "effective": {
+            "from": "2019-01-01"
+          },
+          "id": "emancipation-day",
+          "name": "emancipation-day",
+          "observed": "actual"
+        },
+        {
+          "date": {
+            "fixed": {
+              "day": 1,
+              "month": 11
+            }
+          },
+          "effective": {
+            "from": "2019-01-01"
+          },
+          "id": "hamilton-jackson-day",
+          "name": "hamilton-jackson-day",
+          "observed": "actual"
+        },
+        {
+          "date": {
+            "fixed": {
+              "day": 26,
+              "month": 12
+            }
+          },
+          "effective": {
+            "from": "2019-01-01"
+          },
+          "id": "christmas-second-day",
+          "name": "christmas-second-day",
+          "observed": "actual"
+        }
+      ],
+      "id": "virgin-islands-holidays",
+      "sourceUrl": "https://law.justia.com/codes/virgin-islands/2019/title-1/chapter-11/171/",
+      "title": "The recurring fixed and weekday Virgin Islands legal holidays in 1 V.I.C.\n§ 171(a) that the federal calendar does not already close. The code text\nis the 2019 U.S. Virgin Islands Code, so these dates are modeled from its\n2019 edition. Not modeled: Easter-relative holidays (the calendar language\nhas no Easter rule), Election Day (18 V.I.C. § 3), proclamation holidays,\nand optional Monday administrative leave after a Sunday holiday. The\nstatutory dates, rather than discretionary administrative leave, are the\ndates counted as forward legal holidays."
+    }
+  ],
+  "countingRules": [
+    {
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "forwardHolidays": [
+        "virgin-islands-holidays"
+      ],
+      "holidays": [
+        "us-federal-holidays"
+      ],
+      "hours": {
+        "inaccessibleText": "FRCrimP 45(a): the clerk's office is inaccessible during the last hour; extend to the same time on {date}",
+        "rollText": "FRCrimP 45(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
+        "text": "FRCrimP 45(a): count every hour from the trigger; +{n} hour(s)"
+      },
+      "id": "frcrimp45-virgin-islands",
+      "label": "FRCrimP 45(a)",
+      "sourceUrl": "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-criminal-procedure-dec-1-2024_0.pdf",
+      "steps": [
+        {
+          "kind": "trigger",
+          "op": "anchor",
+          "text": "FRCrimP 45(a): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "count": "calendar",
+              "text": "FRCrimP 45(a): count {n} calendar day(s) {after} the anchor -> {date}",
+              "unit": "calendar"
+            },
+            {
+              "count": "business",
+              "text": "FRCrimP 45(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "court"
+            },
+            {
+              "count": "business",
+              "text": "FRCrimP 45(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "business"
+            }
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRCrimP 45(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRCrimP 45(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "backwardText": "FRCrimP 45(a): service extensions apply to forward periods only; ignored",
+          "methods": [
+            {
+              "days": 0,
+              "method": "personal"
+            },
+            {
+              "days": 0,
+              "method": "electronic"
+            },
+            {
+              "days": 3,
+              "method": "mail"
+            },
+            {
+              "days": 3,
+              "method": "clerk"
+            },
+            {
+              "days": 3,
+              "method": "other-consented"
+            }
+          ],
+          "op": "service",
+          "text": "FRCrimP 45(a): service by {method} adds {days} day(s) -> {date}",
+          "unrecognized": [
+            "commercial-carrier",
+            "prison-mail",
+            "mail-foreign",
+            "express",
+            "express-foreign"
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRCrimP 45(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRCrimP 45(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "ignoredText": "FRCrimP 45(a): no inaccessibility extension applies; ignored",
+          "op": "clerkInaccessible",
+          "text": "FRCrimP 45(a): the clerk's office is inaccessible on the last day; extend -> {date}"
+        }
+      ]
+    }
+  ],
+  "lowered": {
+    "asOf": "2026-10-22",
+    "pins": [
+      {
+        "digest": "sha256:4cb62a9c2769a0a463561e9e89cf3fe60c86ba0bfe995164726b9f3a5c021759",
+        "name": "core.states.virgin-islands",
+        "version": "1.0.0"
+      }
+    ],
+    "worldDigest": "sha256:445558503208a7b5a69601b6a4e145677fecaa44f207df64d9ea04637fe3064a"
+  },
+  "schemaVersion": 4
+}

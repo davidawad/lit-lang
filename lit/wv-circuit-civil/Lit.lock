@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "wv-circuit-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:b9d7d41fb49a23d727c340ffea85b97fea44a128ac3d1029614e14dd13874269"
-semantic = "sha256:a99081968595ca3b7563fa4c46c9689a8208252453c35503c0a50d873c9a05e4"
+modules = [
+    "civil.lit sha256:07a07fd3ac45396249f920752d6ee897f73dece6ae11e2f66d0ef09a75d1e3d6 sha256:d87dfab8647b8223ce0991b3fd7d339b48dfbdfdc33e4e2283ee8098543dc6ef",
+]
 texts = [
     "wv-rcp sources/wv-circuit-civil/wv-rules-of-civil-procedure-sectioned.txt sha256:796b579132bd760ffb977ae427fdb1b34bbfa34d85804a186f6750e9fd6d15f1",
 ]

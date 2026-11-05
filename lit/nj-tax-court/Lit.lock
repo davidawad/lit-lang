@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "nj-tax-court"
 version = "0.1.0"
 language = 1
-source = "sha256:5cb248c09d5ffa7aec761c87d8e3b2fda851547826760cc3a297f990d295ceeb"
-semantic = "sha256:534d44a7c1f33c23040b78c8c2d57bfaa2f2c2c540f352b35db3733ef74511c0"
+modules = [
+    "tax.lit sha256:a0c83132cfd20a726de2c73eb368b8e73fcc37c20434f93f9f5e4fefcd367643 sha256:30d5d7f37b7cf549f053ee8569763bc2750bee1390a8c146310b734012829b48",
+]
 texts = [
     "nj-rules sources/nj-appellate-civil/rules-of-court-cited-2026-09-01.txt sha256:46f0f8e357d3d84e1625181279e8ae7e5dbf8d564b0bf1726f39cf778530af1f",
 ]

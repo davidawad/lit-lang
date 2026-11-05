@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "vt-superior-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:57263ee407e02cda07e7e02fbeb0800c7d01f312f987d0cbfc5ad7949063b305"
-semantic = "sha256:e6e760e1429849af7b3bd1c75eb6a2d79e8bacea56a7c452b735fe3e0e6302cb"
+modules = [
+    "civil.lit sha256:7565c60d38f2f97f65316d27b322c468b97b4984da5265f18c790818e7d49959 sha256:94e42492c6610f9df5b86179b9f5dc094e5373470323d18100840f1bbc38ee8c",
+]
 texts = [
     "vt-r-app-p sources/vt-supreme/vrap-sectioned.txt sha256:fb1c5b25a8a63cfa372f669dfbc78884b15a7fb681e3f081e553a7c120814b05",
     "vt-r-civ-p sources/vt-superior-civil/vrcp-sectioned.txt sha256:8583220322f0a9df87238db26261c190ade801d0ff4e6d0656b84fe20bb4c004",

@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Regenerates every committed Lit.lock (creating one for a new lit/
-# package) and the shared clock library
-# (crates/litigate-engine/clock/litigate-core.json) from the checked-in
+# package) and one shared clock fragment per `lit/core` module from the checked-in
 # lit/ sources (lg-wuzi). These are the files .gitattributes marks
 # linguist-generated: a land resolves a rebase conflict on one by taking
 # the target's copy and running this once after the rebase.
@@ -33,8 +32,9 @@ skip() {
 }
 
 if [ "${1:-}" = "--cargo" ]; then
-  lit=(cargo run -q -p litigate-cli -- --format human)
-  how="cargo run"
+  cargo build -q -p litigate-cli
+  lit=(target/debug/litigate --format human)
+  how="cargo build"
 else
   bin="${LITIGATE_BIN:-$(command -v litigate || true)}"
   [ -n "$bin" ] && [ -x "$bin" ] || skip no-prebuilt "(set LITIGATE_BIN or put litigate on PATH)"
@@ -69,5 +69,6 @@ done
 core="$(mktemp -d)"
 trap 'rm -rf "$core"' EXIT
 "${lit[@]}" build lit/core --out "$core" > /dev/null
-cp "$core/packs/clock/litigate-core.json" crates/litigate-engine/clock/litigate-core.json
+python3 scripts/split-core-clock.py "$core/packs/clock/litigate-core.json"
+rm -f crates/litigate-engine/clock/litigate-core.json
 echo "LIT_REGEN: regenerated $n Lit.lock files and the clock library with $how"

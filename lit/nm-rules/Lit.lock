@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "nm-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:8272d3d63bb6b71d9ef05074952b0915a32eb3c2afc5364efb5c2ca695adec2a"
-semantic = "sha256:6b4cbedcc516837a8454088109bc4f9f9f80fd5f66e94d8fa5600d9b9e6c8867"
+modules = [
+    "rules.lit sha256:6efc76bbcb6330c160531cacbd5b921e79a29ce6fb703bf3cc5ae0142cc18e9a sha256:95276079057830776501ae6913541f080eb2bee22b07a5842711077c8ef8c131",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

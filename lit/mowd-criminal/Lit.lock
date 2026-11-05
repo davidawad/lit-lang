@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "mowd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:d4f24fb780ce6f24b1fb35b5d196a29290fbabb8feb01f070701218f3d353734"
-semantic = "sha256:7e669e581e18c0327962a0f842a9120061af8de23d57a4e22187cb35db1ac43e"
+modules = [
+    "local-rules.lit sha256:bd587e1d50a13e43927d169afbdcdd01b3c6fd4c055207828c026979f7fb550e sha256:b664cbbaa862ac7fd1c4b2f21d7dab312cd8973c0c465113294e11698fc8c8be",
+]
 texts = [
     "mowd-lr sources/mowd/local-rules-sectioned.txt sha256:15fb1a9d0b6573ed350593a6765e760856defcf7958ed44733ec489b80662a4b",
 ]

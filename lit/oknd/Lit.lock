@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "oknd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:250107ef7e9609310ed8863ffad1f89d064c2fa51b38d7bf197020c8f3692a9b"
-semantic = "sha256:6742a2308f64583ef8c65874f7b7f74f50ec3fcf600e128b8dcab675bb6d6ebc"
+modules = [
+    "local-rules.lit sha256:b3048733c85585d2e7724d8d2f5c4d4538af41b4933d025fce2dd752244c548f sha256:82c85e643a5fe3a7b6299a155585fa88bd45ff55e4c0d7ec8784896a320d62c4",
+]
 texts = [
     "oknd-lcvr sources/nd-okla/nd-okla-local-rules-2026-civil-sectioned.txt sha256:79dfc08efc079799d595432f08e26973d9aa2f7edfeb3836855ec83917f941cd",
 ]

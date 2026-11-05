@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "ohsd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:87e4d00a0b3ce7744801127549ee47afefcec6d2211e22e047d9ee3ab24f66b5"
-semantic = "sha256:1ccdfd7561446fc43b52edb7549a1c824dfa8e671f86d188dc6e8349e61ed3e1"
+modules = [
+    "local-rules.lit sha256:0c2123fdc7cc22bd9cadb0b1128b070ede67724c9eaf8c57f013ec176acc9e12 sha256:c1f6eb80c17f581ee1f3077a2890fbd8dcc3ee9705256f066227137db1a1a0b6",
+]
 texts = [
     "ohsd-civil sources/ohsd/ohsd-local-rules-sectioned.txt sha256:a405583a3a8bc4312d0d697c948f1dcc0dc64f01847f4617208673316ed58732",
 ]

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "mi-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:9da992bec676cf324ad463e15ad1bff7ba9660dd2ae02cf35a255a0696be53ce"
-semantic = "sha256:108d444315d5d89ff73201884fe56832a405c8dc4bae9051d5a028108efb8eba"
+modules = [
+    "rules.lit sha256:5f8b831e7aa22fe2ffe6bb9bd407754c3b799045d933e9eb73ec8fefd4294146 sha256:114a3157e66f5259c3125c2cbafa5ea32fefe1ab31ed75f14c5e8928b76c2eea",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

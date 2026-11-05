@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "nced-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:3997670319ecc44978226463f0650eaf2b974f35e04a4df6300e5da5c4c27504"
-semantic = "sha256:7f8d83054610555f468841570fec4aeca8771b65c9f0b288264d50e06e817912"
+modules = [
+    "local-rules.lit sha256:fd7e4257364ec44435ff757e1fac5a9e4c7cd2c653614859a4b26e4be48882c9 sha256:702acfd83c7c31ea6d792cf09646a2690e18ad4d2c2099b4cbd60a4fba121ceb",
+]
 texts = [
     "nced-lr sources/nced/nced-local-civil-rules-sectioned.txt sha256:7ea7072dbbf52629c8a7f15c0692de2e9d002d8eb6530d783acdb0b20506ef98",
 ]

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "mssd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:1313025305ca8afa734d6b6e86b41237a5f492d5cc533f40baf44ebcdaf3b950"
-semantic = "sha256:dff21b47fbb7653374cac1fc5dcc95981386f7c437e1f631fdd71e6bd613f9f9"
+modules = [
+    "local-rules.lit sha256:816428e0851d764cb813948375bc95ee9ba2d00ffe1f8d88e664167b7b5336ee sha256:7aeef70be37e5caa78b35eaaac23a51a75eb1f3a02fd26222c72df056d445673",
+]
 texts = [
     "mssd-ulcrr sources/mssd/mssd-uniform-local-criminal-rules-2019-12-01-sectioned.txt sha256:38ad73d73a2af11f55f48ca1036ebe00d2a89b768909f7ba0adf1b9c1fd35ece",
 ]

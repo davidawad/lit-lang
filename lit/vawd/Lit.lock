@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "vawd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:42b40b29e4b0be384bce821d5534db916602485e76e8304b5bb37d0a3949d441"
-semantic = "sha256:514e7100c2dea48517e6e60429aa23424c11d03d705e90f74d5385453930c957"
+modules = [
+    "local-rules.lit sha256:235689390dd157637c8dec61594eb260d6a9835f160bdc25dac7a917faac7c55 sha256:732f33a12cfc683cc8c110d18d660562d38090c802bef95ab19b850dc8abeefc",
+]
 texts = [
     "vawd-civ sources/vawd/vawd-local-rules-sectioned.txt sha256:a97415133e7e9facfafb09ab53b48677b017ea3fe842af6d729159e8df9615bc",
     "vawd-gen sources/vawd/vawd-local-rules-sectioned.txt sha256:a97415133e7e9facfafb09ab53b48677b017ea3fe842af6d729159e8df9615bc",

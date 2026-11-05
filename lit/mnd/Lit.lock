@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "mnd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:566344d02faa9b02f383b68ba62fc71141bd64d4febf6773321d0b2e8620a2ce"
-semantic = "sha256:a71bb481b8f41ac45d5d0f5785d80f4c27edb54c7dca617cd5cd7728ad5c5c95"
+modules = [
+    "local-rules.lit sha256:e2890f5795cff85cf450e3ac703d24a58e8e6ce0d7c6603620a5cce8188aec67 sha256:ce396a6f3815e0e7718267d938f5ecc1a693b173567db972e72306fb3db95a1a",
+]
 texts = [
     "mnd-lr sources/mnd/local-rules-sectioned.txt sha256:55de9589101301bed6b7ee7835d50d4f628b1dc51f9ce2c3365e845bfa1b50cf",
 ]

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "vt-supreme-court-civil-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:3e9607c388eb2e45c9d343dd024b8a97e5137844e68c2ff64450f3ece4afda32"
-semantic = "sha256:91cf7bcee2ff4541c9dfed4bc2aea798465b9454d5da40d1ec92f5ab91d547a5"
+modules = [
+    "appeal.lit sha256:1c5f872d192f10e63f38e7ea97173776b591ec5184b442cc15a25a3122d28d6f sha256:c1abb69dbf19f3d2925c6f1e2901ac55837fbee6c356f41ea0e826353078e225",
+]
 texts = [
     "vt-r-app-p sources/vt-supreme/vrap-sectioned.txt sha256:fb1c5b25a8a63cfa372f669dfbc78884b15a7fb681e3f081e553a7c120814b05",
     "vt-r-civ-p sources/vt-superior-civil/vrcp-sectioned.txt sha256:8583220322f0a9df87238db26261c190ade801d0ff4e6d0656b84fe20bb4c004",

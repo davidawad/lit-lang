@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,11 @@ dependencies = []
 name = "eighth-circuit-bankruptcy-appellate-panel"
 version = "0.1.0"
 language = 1
-source = "sha256:a90b18eda971d08c56b7cdee0259273b910394137521c16e035f92053ebb3cbc"
-semantic = "sha256:7c98efba53b74c232c34ed4935e452e704a9ce8cc25ef68dd3f811e937e6c486"
+modules = [
+    "deadlines.lit sha256:895cfa96957104c702e12d65beb54d840c391ca6023439659258ea1892dceec3 sha256:6b8019ed309890116a2ff4cdaf4032000ec461e350523eabbbf31ee49a6c9a8f",
+    "events.lit sha256:8d6bfe9dac45e74a3f7022e44caa72642e7d27ebf7fd970df96f71c386b4fe54 sha256:d813271601ca81ea73c50248ce8a4fe883c0d5c2ac6569ec091f78f37360b1cd",
+    "outline.lit sha256:44c4d9b30a2a46193123b830c2b24e8d1127129ebe4e2668e6925ba445bb6426 sha256:0047cbbfee146eb96c2030b2e7b8672c5327ac472804100989cb44617f2d9df8",
+]
 texts = [
     "bap-iop sources/ca8-bap-iop.txt sha256:2fb5815bf87b25d8af30298fa0fa21e148d81ddc6992c305bd94716c68fb0485",
     "bap-local-rules sources/ca8-bap-local-rules.txt sha256:ccc1e2198d478e0b31cd6c4d700bd699eb7e4993f073b3b894cb2f0cf48108ca",

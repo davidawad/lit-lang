@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ct-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:aa934746f1ea26ac9f757a3b91c213ec435af01fe25fafc956a011cc0212c9de"
-semantic = "sha256:b33bce1c46a894d081b4a0e901ea7ad254a70219dfa851d126969d07c069f4f8"
+modules = [
+    "rules.lit sha256:bad80d5b13a74b3f38170482c6d3084f1cd1918efbb1aa7f3c4c15317bb590cb sha256:9b4b27a406c579317dd6314befb5e6a991a4088ed38e192d936707e96f03fa7e",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

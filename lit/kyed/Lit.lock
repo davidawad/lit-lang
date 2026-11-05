@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "kyed-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:670bce07b48d13b0aba9defb3db3cfc69d588e9456c7fac8642c1489d7597848"
-semantic = "sha256:91b1b7c30de1ae228d3cf974d17333214f7ad71fb1fa7562b155122e26640254"
+modules = [
+    "local-rules.lit sha256:fcf0feff9af25db8325289e70a6ac6a28f2cf8c4b0c48a79a2f20835204eef68 sha256:e5f6bf5edee337bcfad73377c70e28c92d716774c78957a10cc6ae42e0af18d5",
+]
 texts = [
     "kyed-lr sources/kyed/kyed-joint-local-civil-rules-sectioned.txt sha256:57d7a49d9a6bc2a6538632417ed1d42b36ccd97bca95654c1752bc5bf967b91a",
 ]

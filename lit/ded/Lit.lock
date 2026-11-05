@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ded-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:8a56cc2cb94720e4e509b67a254e8e2173048205faa7b535bcca0661e79cd95c"
-semantic = "sha256:412484a09044d645f288ff7e4b0af1722125990b3f1bf8b8e3ae8e1012a48cd2"
+modules = [
+    "local-rules.lit sha256:97b8bca304ccb62ba3036b587f64e0149cb84dfbca2275ca82a313b1a0a5f044 sha256:c4137c2496261b0b3faca6458e98bab85f09af6eb76285ec7b3e9777dc250090",
+]
 texts = [
     "ded-lr sources/d-del/local-rules-2026-09-01-sectioned.txt sha256:a8ac9b22563275310851fb21a4b43b82788a371e47869c64251ca6c1a837b967",
 ]

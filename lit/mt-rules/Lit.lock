@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "mt-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:efadd52f7106c429262c1bee03843e9e5139d57fddeb28e8f2a38f79b87e2d42"
-semantic = "sha256:fa61b36fca1071742bf15baaadcbc1b242db4008b19be8a36d5383f29221dc32"
+modules = [
+    "rules.lit sha256:7f3b8826d7cf304690f120e3f209d0b5556df99675fcdf1555333661f9cc6dae sha256:15c1c6e550312eaaf7d6cc4fec80ba8e53fdc85a0f02e34ac35fa7165847724c",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

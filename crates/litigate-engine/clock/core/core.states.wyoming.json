@@ -1,0 +1,255 @@
+{
+  "calendars": [
+    {
+      "cite": "Wyo. Stat. § 8-4-101",
+      "holidays": [],
+      "id": "wyoming-holidays",
+      "sourceUrl": "https://wyoleg.gov/statutes/compress/title08.pdf",
+      "title": "The legal holidays of Wyoming (Wyo. Stat. § 8-4-101) that\n`us-federal-holidays` does not already close: none. Each § 8-4-101(a)\nday is a 5 U.S.C. § 6103(a) holiday on the same day, and § 8-4-101(b)'s\nMonday after a Sunday New Year's Day, Independence Day, Veterans Day or\nChristmas Day is the federal observed day too. The Juneteenth holiday of\n§ 8-4-107 falls on the third Saturday of June, closed by `weekend`, and\n§ 8-4-107(c) says it does not affect judicial proceedings. The calendar\nis declared empty from the vendored text so that FRCP 6(a)(6)(C) and\nFRBP 9006(a)(6)(C) read a sourced Wyoming list (core's `frcp6-wyoming`\nand `frbp9006-wyoming`) rather than the unsourced\n`district-state-holidays`. Not modeled: a date the President appoints\nfor national mourning, rejoicing or emergency that the Governor declares\na holiday (§ 8-4-101(a)(xi)), which no vendored source lists (a last day\non it stays the earlier date)."
+    }
+  ],
+  "countingRules": [
+    {
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "forwardHolidays": [
+        "wyoming-holidays"
+      ],
+      "holidays": [
+        "us-federal-holidays"
+      ],
+      "hours": {
+        "inaccessibleText": "FRCP 6(a): the clerk's office is inaccessible during the last hour; extend to the same time on {date}",
+        "rollText": "FRCP 6(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
+        "text": "FRCP 6(a): count every hour from the trigger; +{n} hour(s)"
+      },
+      "id": "frcp6-wyoming",
+      "label": "FRCP 6(a)",
+      "months": {
+        "endOfMonth": "clamp",
+        "text": "FRCP 6(a): count {n} {unit} {after} the anchor to the corresponding day, else the last day of that month -> {date}"
+      },
+      "sourceUrl": "https://www.law.cornell.edu/rules/frcp",
+      "steps": [
+        {
+          "kind": "trigger",
+          "op": "anchor",
+          "text": "FRCP 6(a): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "count": "calendar",
+              "text": "FRCP 6(a): count {n} calendar day(s) {after} the anchor -> {date}",
+              "unit": "calendar"
+            },
+            {
+              "count": "business",
+              "text": "FRCP 6(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "court"
+            },
+            {
+              "count": "business",
+              "text": "FRCP 6(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "business"
+            }
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "backwardText": "FRCP 6(a): service extensions apply to forward periods only; ignored",
+          "methods": [
+            {
+              "days": 0,
+              "method": "personal"
+            },
+            {
+              "days": 0,
+              "method": "electronic"
+            },
+            {
+              "days": 3,
+              "method": "mail"
+            },
+            {
+              "days": 3,
+              "method": "clerk"
+            },
+            {
+              "days": 3,
+              "method": "other-consented"
+            }
+          ],
+          "op": "service",
+          "text": "FRCP 6(a): service by {method} adds {days} day(s) -> {date}",
+          "unrecognized": [
+            "commercial-carrier",
+            "prison-mail",
+            "mail-foreign",
+            "express",
+            "express-foreign"
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "ignoredText": "FRCP 6(a): no inaccessibility extension applies; ignored",
+          "op": "clerkInaccessible",
+          "text": "FRCP 6(a): the clerk's office is inaccessible on the last day; extend -> {date}"
+        }
+      ]
+    },
+    {
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "forwardHolidays": [
+        "wyoming-holidays"
+      ],
+      "holidays": [
+        "us-federal-holidays"
+      ],
+      "hours": {
+        "inaccessibleText": "FRBP 9006(a): the clerk's office is inaccessible during the last hour; extend to the same time on {date}",
+        "rollText": "FRBP 9006(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
+        "text": "FRBP 9006(a): count every hour from the trigger; +{n} hour(s)"
+      },
+      "id": "frbp9006-wyoming",
+      "label": "FRBP 9006(a)",
+      "months": {
+        "endOfMonth": "clamp",
+        "text": "FRBP 9006(a): count {n} {unit} {after} the anchor to the corresponding day, else the last day of that month -> {date}"
+      },
+      "sourceUrl": "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf",
+      "steps": [
+        {
+          "kind": "trigger",
+          "op": "anchor",
+          "text": "FRBP 9006(a): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "count": "calendar",
+              "text": "FRBP 9006(a): count {n} calendar day(s) {after} the anchor -> {date}",
+              "unit": "calendar"
+            },
+            {
+              "count": "business",
+              "text": "FRBP 9006(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "court"
+            },
+            {
+              "count": "business",
+              "text": "FRBP 9006(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
+              "unit": "business"
+            }
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "backwardText": "FRBP 9006(a): service extensions apply to forward periods only; ignored",
+          "methods": [
+            {
+              "days": 0,
+              "method": "personal"
+            },
+            {
+              "days": 0,
+              "method": "electronic"
+            },
+            {
+              "days": 3,
+              "method": "mail"
+            },
+            {
+              "days": 3,
+              "method": "clerk"
+            },
+            {
+              "days": 3,
+              "method": "other-consented"
+            }
+          ],
+          "op": "service",
+          "text": "FRBP 9006(a): service by {method} adds {days} day(s) -> {date}",
+          "unrecognized": [
+            "commercial-carrier",
+            "prison-mail",
+            "mail-foreign",
+            "express",
+            "express-foreign"
+          ]
+        },
+        {
+          "backward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+            "toward": "earlier"
+          },
+          "forward": {
+            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+            "toward": "later"
+          },
+          "op": "roll"
+        },
+        {
+          "ignoredText": "FRBP 9006(a): no inaccessibility extension applies; ignored",
+          "op": "clerkInaccessible",
+          "text": "FRBP 9006(a): the clerk's office is inaccessible on the last day; extend -> {date}"
+        }
+      ]
+    }
+  ],
+  "lowered": {
+    "asOf": "2026-10-22",
+    "pins": [
+      {
+        "digest": "sha256:f23145ba8636dc9601d916e0c534c8f393b40b2e86a807777709ed8515c64c21",
+        "name": "core.states.wyoming",
+        "version": "1.0.0"
+      }
+    ],
+    "worldDigest": "sha256:a0b9efa4ff1d51ed9eb1152bbf496fba4881afc623638fe46804b56cffc1d600"
+  },
+  "schemaVersion": 4
+}

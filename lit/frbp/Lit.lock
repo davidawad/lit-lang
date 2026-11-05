@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,12 @@ dependencies = []
 name = "frbp-bankruptcy-procedure"
 version = "0.1.0"
 language = 1
-source = "sha256:d3cc60954e31ccf0a6d85cffc04348dc18dc594813f970a8035393b2ef8fd26a"
-semantic = "sha256:d97090754aad91f5caa85304502f378ec71285fd98eefff919e54271f8fc9d5f"
+modules = [
+    "appeals.lit sha256:68cac66b5e3aa976d02a90735b858b569e342841d09e1a395693b75091786702 sha256:87d1945104d5be8385cf379ca4231eb8c0139835e4646d4ca1fdaeac8f3d8143",
+    "case.lit sha256:a6954420ad34afa45d4a6d1361fa6c21df21d4f2369439baf387f50427a3cb52 sha256:3a3f018d883dbcf9a41c50f4ffa962a19205cec3b14c334de6dd70a852047cfc",
+    "events.lit sha256:3d76beaae3fdb89ed9783c4b81bd9f73b0e3a120f947ccd7c89bcfc9fd8d0828 sha256:e681a95a15de0b6a9ce0b6aedcfc4f21fcfaa4436941300310fe3fded8aceef0",
+    "frbp.lit sha256:8d7d07f912adf2a68a34319dd0e2625d75111d91759c99fb43c90a5c8ae01525 sha256:24947db281721bb1791abc9e48b875d1339856706d612d5a3ff36e90e244250a",
+]
 texts = [
     "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
     "usc28-158 sources/usc-28-158.txt sha256:a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b",

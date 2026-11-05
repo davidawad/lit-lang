@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "ks-supreme-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:6b916b6b58ef7a7284753fa9bbb9400e38d83b0992e69c4e8edb38c74794f016"
-semantic = "sha256:607eb629fbefb33f5ee400429794fe97177ae4d717b3f348076a11559726bd71"
+modules = [
+    "review.lit sha256:13ebc325955acbb7b8e853a18391941f3165ce65dde81d8bbc4c68111f305002 sha256:54d24e485e8765212b27ff432fc4cd497b7bb14378c3964104de48f1b093deed",
+]
 texts = [
     "ks-sct-rules sources/ks-state-appellate/kansas-2026-rulebook-sectioned.txt sha256:847c087e907f9696356fd0f57fc545bd354df58b085e8183608d0b93a9592dc9",
     "ksa sources/ks-state-civil/ks-ksa-cited-sections.txt sha256:7674b42587ca255503d7b100fb801a1e910274fc5629fb0ea646354d6a613d87",

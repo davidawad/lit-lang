@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ny-court-for-the-trial-of-impeachments"
 version = "0.1.0"
 language = 1
-source = "sha256:dd6c143c4c11badac4a123869198c76ffbe584350d42131830114c386e08d68f"
-semantic = "sha256:b1b712009c4fdf07671a9fb7671a48a9bdeb6ce0e926851e29ae653c1b1aa6b9"
+modules = [
+    "trial.lit sha256:e614f7de61cc68021ef3808ba678f0cffaea4c581e13a6733ab986c40d22488f sha256:d28c0ad1cbdce35c7f21f74d33dd55ac3b11d4cf1e7f533188edfae27d649005",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

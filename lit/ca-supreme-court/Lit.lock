@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "ca-state-rules"
@@ -11,8 +11,9 @@ dependencies = [
 name = "ca-supreme-court"
 version = "0.1.0"
 language = 1
-source = "sha256:d9e6370d8dd4a10a06c556f6d38298014ca5036bb516923ce59ceb8692a7b607"
-semantic = "sha256:af695e5c6780930ba008747bf445c6685f979e93f32ce146e54d5701fde36aa4"
+modules = [
+    "review.lit sha256:6f5cb82c348db102d9a0ff311fe4ca1bacbe90ed6305b8f932bcc7011343bffa sha256:666dfc27c65c5f294acfe381d2d0593cc83b0e652065abf7e435cdffd65ad292",
+]
 texts = [
     "ccp sources/ca-superior/ccp-cited-chapters-sectioned.txt sha256:494bdb61129d96d2eee0776501204acb3bd5f1fd32641098efacd3558124e336",
     "crc-title8 sources/ca-court-of-appeal/cal-rules-of-court-title8-cited.txt sha256:616d23ce45fc69c4d0c6c6b2e5684681c36f8bfe5954e99ce40a766d0ed5e010",

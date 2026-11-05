@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "fl-criminal-trial-court"
 version = "0.1.0"
 language = 1
-source = "sha256:13742d2aeada71f48d065f643a35e75ea7f521e860386d53ae5a84f9c12df8c6"
-semantic = "sha256:7c36c90a43cf96a27f3439adbb8ce56d89cc1af609b2af012baa58e9ebb8ca10"
+modules = [
+    "criminal.lit sha256:e15e1455e35cf15fc6937a1183ef159b087acbdb1bee2b1cc30b9a7999fdb802 sha256:fecd02d0b77c6d0f8bde58b282fa9d98a65b9522ea63b58dbd82ed7bdc9808ee",
+]
 texts = [
     "fla-r-app-p sources/fl-state-appellate/fl-rules-appellate-procedure-2026-10-01-sectioned.txt sha256:529ece835412697830636b5054b02b830048cf561f1f99edc4298967df7369d4",
     "fla-r-crim-p sources/fl-criminal-trial-court/fl-rules-of-criminal-procedure-2026-10-01-sectioned.txt sha256:0bfe9f774dcd8e56e9bc17ef5adc1ac45d2d99c3ac89d2c5d601745832c0a300",

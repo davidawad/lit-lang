@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "gand-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:4a2b87ca72b55148c601af149e12936b82114f81678146cebb9222076df72f45"
-semantic = "sha256:f45b78cc1f299b2eaab29ac4cb2134c21e401b3e7770300d9412fa0312cba97e"
+modules = [
+    "local-rules.lit sha256:c6e8a0b2d3639a0fbf7a628c398048917cf37745798309ab860bb5b83da8f0c3 sha256:bcfb97050cb94e5de1d5281f093db06ef789a3f808d2ca2f7bb588bd0425d241",
+]
 texts = [
     "gand-lcrr sources/nd-ga/ndga-criminal-local-rules-2024-04-02-sectioned.txt sha256:ec91c1382ee1369aaed3c134e4f885d8592a3a900fefc4d7ce261440c849a0ae",
 ]

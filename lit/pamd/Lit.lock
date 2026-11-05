@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "pamd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:28189930397df7830c3845010a7eb0d43d5eab71825c12436eb59a2c9d6dfb00"
-semantic = "sha256:a7790cbf3fda28524b75e44849b8189881fec5bc2b8030a0320a050026ca29f3"
+modules = [
+    "local-rules.lit sha256:e68e338b4331365e9ec4a026bb45a2b9745cc84f71b4c74a44da2177504d356a sha256:f4957d0f644cdfdb625d3fd859ba0070bd33bd81366c2181fe4029befbea4b9f",
+]
 texts = [
     "pamd-lr sources/pamd/local-rules-2014-12-01-sectioned.txt sha256:c85ec6d3297d11f3ccfb6fbb76d453fe11c4786c04305577d1e62f02dbfb4d0a",
 ]

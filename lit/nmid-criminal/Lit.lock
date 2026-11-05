@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "nmid-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:b98d691d3473d9811f42b3f82e1c4b69787e0c52c0644ed12342cef7ee47c52c"
-semantic = "sha256:17ecc5f12082749e830c87db779e0927adc06833d7a600b8f19fd5cea65c02c3"
+modules = [
+    "local-rules.lit sha256:f94a6a1e69e3529bd8d1e4e4200c61bc87d5ec8e82ca48120a276ac60f9900f6 sha256:2e5b9ef0b3638ae1ca808d85fd407d22f4075ff306c086268f0913040d851785",
+]
 texts = [
     "dnmi-lcrr sources/fed-dnmi/dnmi-criminal-local-rules-2004-01-01-sectioned.txt sha256:2ef63a281046eb186e64712ccf2c56aafc25ee69cc63ace4c21a91b1357f907d",
 ]

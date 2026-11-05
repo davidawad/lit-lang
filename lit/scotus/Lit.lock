@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "supreme-court-of-the-united-states"
 version = "0.1.0"
 language = 1
-source = "sha256:5cf616c772b49e4fefffe379993c451f549f024a43f9d50f82996df54c4702a1"
-semantic = "sha256:ae94c7e7aa013a8cf5f18a8c130b53d1131eb7c1e575a288157ee7903f05a655"
+modules = [
+    "cert.lit sha256:6433d53c036b6b1357ea3de70e09801a7b2c4c8b58dd31e9f27ea34e7be90798 sha256:234c8274d2bca7802fd24320ebbae22963b568aa5c81e0f7b94943e950b8376d",
+]
 texts = [
     "scotus-rules sources/scotus/scotus-rules-2026-sectioned.txt sha256:88c34b071eb21c9c25ba6693dfe7a3213d8e8e57ff30db9715f3f63c15119853",
     "usc28 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",

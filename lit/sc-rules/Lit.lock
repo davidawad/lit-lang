@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "sc-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:9f71cd9f66a55ae2aadc23b6ef3d42021488c0f80044e3ceef690e99f5f05eca"
-semantic = "sha256:4e27ab63aff189c81f4129740714759fa8a26dc6e6e51fc330106bdfb7e8800c"
+modules = [
+    "rules.lit sha256:f219e62edb342cfb19c205223bd631fa5495760e19652a991eaead2e3e0a4c57 sha256:d8e820281af9caaa9e905d56d5061ff478b0865a2effaee71143de405af461e7",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

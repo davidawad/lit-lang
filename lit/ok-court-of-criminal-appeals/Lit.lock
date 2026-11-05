@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ok-court-of-criminal-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:0e0bf02c83ee800a678bd811104dbf90fed2329833e039597c1e73b0e9d38aae"
-semantic = "sha256:e597b3903178662a58cf8ab5d33a07694cb94228e304ccdbbf4a17055eeae9e1"
+modules = [
+    "appeal.lit sha256:70fb53cd5cef0590d6044dfea1d4c2a0951e948b5e9dd25f1769d3fa9675620e sha256:4ee0ba9c0855c893060a238fceaef2f1249a41ce502084d912c4f1b162c67290",
+]
 texts = [
     "occa-rules sources/ok-court-of-criminal-appeals/occa-rules-2026-10-28.txt sha256:1a31662e46ee236a0bb1b295ab12bf6322090e1229002aab2bcacfddba08577d",
     "scotus sources/scotus-rules.txt sha256:899c67fce982d796557bb85b0456a59bab736cab0274f7e4e75c84105067d2fa",

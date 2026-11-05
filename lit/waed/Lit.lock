@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "waed-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:e5a94e180dca11d8023e5bb75b61e3c1d232cd85c6461beeb717f28a32e96d42"
-semantic = "sha256:a5b4fc9507f08b63563c00e7e85340c92f43fca6958c5308ac6b3c756477efe5"
+modules = [
+    "local-rules.lit sha256:558ee6dc07a90e6d5fa57966ff183768404d635b50b2dc66bce09fc223c249c0 sha256:071288d6da9a1d851644f511d3d38d92af65a49046fefce9cb1eee32cdbaa382",
+]
 texts = [
     "waed-lcivr sources/fed-edwash/edwash-local-civil-rules-sectioned.txt sha256:6ca79396cb160e969bb8dd5bdbba675dd6b3b726a3205648555481b23f5ca095",
 ]

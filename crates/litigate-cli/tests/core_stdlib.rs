@@ -329,23 +329,15 @@ fn fixture_periods_cite_no_rule() {
     }
 }
 
-/// The engine embeds `lit/core` lowered as its shared clock library, the
-/// one generated file committed (the engine cannot run the compiler that
-/// depends on it); `just lit-sync` rewrites it.
+/// The engine embeds one `lit/core` clock fragment per declaring module.
 #[test]
 fn the_engine_clock_library_is_lit_core_lowered() {
-    let committed =
-        std::fs::read_to_string(repo().join("crates/litigate-engine/clock/litigate-core.json"))
-            .unwrap();
-    let fresh = litigate_lower::render(lowered()).unwrap();
-    assert!(
-        committed == fresh,
-        "crates/litigate-engine/clock/litigate-core.json is stale: run `just lit-sync`"
-    );
+    let fresh: ClockLibrary =
+        serde_json::from_str(&litigate_lower::render(lowered()).unwrap()).unwrap();
     let (embedded, errors) = ClockLibrary::embedded();
     assert!(errors.is_empty(), "{errors:?}");
-    assert_eq!(embedded.counting_rules, lowered().counting_rules);
-    assert_eq!(embedded.calendars, lowered().calendars);
+    assert_eq!(embedded.counting_rules, fresh.counting_rules);
+    assert_eq!(embedded.calendars, fresh.calendars);
 }
 
 #[test]

@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "oked-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:cbc8b82a12020ae4988b6e1ef337e13e6465785cc4627595b0ebbf45f3d0da96"
-semantic = "sha256:a8e460a1c14fd238a8da213097d55dbe02cb5951ba2361f651afd0d1aad04352"
+modules = [
+    "local-rules.lit sha256:580361bc47ad4ac391569b5dff24f0653d7fbe538eccb8b69f12bd0151de5471 sha256:1cb00e099a3eda7a2a6e2b30076fd8cc2a685c3e5e8f72b073dcfd59a36c83ff",
+]
 texts = [
     "oked-lcrr sources/ed-okla/edokla-local-criminal-rules-2016-07-05-sectioned.txt sha256:28f8b1d0fa31a11fe7eee89420c0574157b7ad75c0bdc926a1d404b1edd0fa04",
 ]

@@ -1,11 +1,12 @@
-version = 2
+version = 3
 
 [[package]]
 name = "bankr-mn-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:d9e88190758f69baeb3306704a6e6e2f9e34efbc5b85ce91285fc628ce05992f"
-semantic = "sha256:134d91d0a6062c39b2f61a748115f254c8d2c13a7fb4b146738a13ed8eaea62c"
+modules = [
+    "local-rules.lit sha256:1d8b287bef4f1ebe3c5f0e5465d3b34ef31c9858c3039de3159a2c254996fe97 sha256:f11c22eb99253d3f83c52e92631cd55940ade28b612b1c457b590c75c54e5c3e",
+]
 texts = [
     "mnb-en-banc-claims-review sources/bankr-mn/mnb-en-banc-order-claims-review-2026-02-11-sectioned.txt sha256:25946c9a75cd128ec52eb701308d93f9de0ff8d12f4f2cfecf8cfc674ba32870",
     "mnb-lbr sources/bankr-mn/mnb-lbr-2025-09-03-sectioned.txt sha256:1603cdec27b6a6ea932debe1af7bd9c4c3c61440bfda275eecae52d2565065de",

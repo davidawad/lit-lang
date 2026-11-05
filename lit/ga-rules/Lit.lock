@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ga-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:9b14c7b658bb23ba8f31e3de06a40221c72baee11e22eef0d43e8dafbaa6bdba"
-semantic = "sha256:35b1b92ff0b8bfe183acf37fd13b4d2c20629037525a5323ecc1247289ee6b29"
+modules = [
+    "rules.lit sha256:68143ffd1f0cf6711d4e5f9f3639aa534326a1519b89e2452abc1fc190196dc7 sha256:b9db945d97ddb9bcd4b90b2a63a26061e7aeec4f4c63e081d894b5dcc2cf6321",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

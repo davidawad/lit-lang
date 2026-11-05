@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "or-tax-court"
 version = "0.1.0"
 language = 1
-source = "sha256:5efd024bbe69b8f16c30eb1a92141b6c9acacefb7378012f805e3624ebced369"
-semantic = "sha256:7993c315364f3d66cc43ee412b5fd7cdb93a44be8eaaf71a484d7b7d5e773665"
+modules = [
+    "tax.lit sha256:cd798ba8938e5eb9133a81c0047304a7741e6c7700957196c2b78d078bca702c sha256:e279d1732c07afd5d9780bfd87d3910d67b19f31c16084e4e8d7e028319d8faf",
+]
 texts = [
     "orap sources/or-court-of-appeals/orap-sectioned.txt sha256:7699edb4c6eabf5749a33fc31ecd9df2b5d5869ecaee3149a29a7f9968ae849b",
 ]

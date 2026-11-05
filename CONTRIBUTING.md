@@ -143,8 +143,7 @@ When adding a new forum package or named matter, add its path to
 `crates/litgraph-packs/build.args` so the build includes it. `lit/core` and
 `lit/examples` are library and teaching packages and do not emit packs.
 The shared clock library is `lit/core` lowered: `just lit-sync` rewrites
-the engine's copy, `crates/litigate-engine/clock/litigate-core.json`, the one
-generated file committed (`lit-sync-check` fails while it is stale), and
+the engine's copy, `crates/litigate-engine/clock/core/<module>.json`, one module fragment per clock module (`lit-sync-check` fails while any fragment is stale), and
 the build refuses a package's own clock fragment of the same name. No JSON
 input lives under `packs/`; its `*-SOURCES-NOTES.md` files are prose.
 

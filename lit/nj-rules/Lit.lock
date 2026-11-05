@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "nj-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:1a8f9de7777616837d834354c2811d0d65f6154ff33fd6e94ab40a9d8d372d21"
-semantic = "sha256:cf167f9f1007ee1c3650ee813c2efb05966de21ec13c03d1dce8d29edfa5c582"
+modules = [
+    "rules.lit sha256:99b981a3d46ea268191cd3b14684056e2ea2e5359c7b5792401ba313dae40736 sha256:e57788f840b59093197df90bee47f9059b562cf732564978284a31157a52acd5",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

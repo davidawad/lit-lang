@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "med-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:0c0043bab68c505d8c2b39992d39e491b7be11f751d34b58de606bd0d7d377e4"
-semantic = "sha256:d8dd75d97c210052ffbeca435c6886f450bf365b10a4b850b16162dcb2f80b59"
+modules = [
+    "local-rules.lit sha256:590b213bdddda0c2b0bec0cf20bc25453d762a39a58411394acbfbc302fb5444 sha256:b04765f8f4fa5feae18d113ad7f781d4abe2eb92ae69706b794318dbaaf102e8",
+]
 texts = [
     "dme-lr sources/dme/local-rules-sectioned.txt sha256:82b0cb10a256f615971c8e76af39de5957a7be11dc2a302448ffede7efa5617b",
 ]

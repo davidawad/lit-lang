@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ny-court-of-appeals-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:630ccce902af4ac434b4abd350ff8744f3b4d80a5eff21c5485b1b10ee5c84d6"
-semantic = "sha256:d60433a22f1af6208dafe9c74fd80e1b31686f0affec1437adb558a14aa48fcb"
+modules = [
+    "appeal.lit sha256:939200d8ac3c0a44028cc4a45fc518e6dacacd98cdea8f00340e37e206e938d9 sha256:44f27c57fa0e7a7f2ceee4b12ac6842049eb5e529a623665dd9adde8c5336dc2",
+]
 texts = [
     "ny-cplr-appeals sources/ny-appellate-division-court-of-appeals/cplr-cited.txt sha256:cb29e2ce7130b0fa976664171631f52fd1a44b49008a9ac17c0ab9146039446d",
     "ny-ctapp-rules sources/ny-court-of-appeals/nycrr-part-500.txt sha256:e9f1d7917cbf599008b3bd5af675deb9767da3e7e9cbb15af38af84fad2f5bc0",

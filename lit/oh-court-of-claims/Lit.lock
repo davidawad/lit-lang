@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "oh-court-of-claims"
 version = "0.1.0"
 language = 1
-source = "sha256:4d5b6dfa24ba7abad4aa800581f95716006b2617eae3a10a134a89f338c8b58c"
-semantic = "sha256:e2ee7c12c8d908efe623374a1bee069de43f8bea6a71b475da2d4d1ac172459b"
+modules = [
+    "claims.lit sha256:d01e4265b7965eb7d02908de57e5ac3907592b8e8ecd8b792288cf39b357d9da sha256:63752a8e9c0f057819071aa041a1cfc969b68614a582417bd80d6522bced6d07",
+]
 texts = [
     "oh-app-r sources/oh-appellate/ohio-appellate-rules-sectioned.txt sha256:140f97309db187996c93d42dada5defa09fe1bfd4ef12c3fa521c08027f66034",
     "oh-civ-r sources/oh-common-pleas/ohio-civil-rules-sectioned.txt sha256:c160d248cef571563999330b31759050e39d8ee5da4b3542a95a4a73edb3c5a1",

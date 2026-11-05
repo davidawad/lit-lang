@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "tn-court-of-criminal-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:2885f5e80e7d7434225c8feb66eeabcdec40037e539c87a62b3a5f42f4e60d80"
-semantic = "sha256:caeed8830be599b5328aa5dc7c4601bbef6ed0ed3f31391b994103ecaabe7332"
+modules = [
+    "appeal.lit sha256:c89107a19e72ef67e86539b7dd0a83dfdaf97540b787d9d9c159d52735ecd499 sha256:bc3cc09054ce34d114b9ad9d88eb012f74d0539c6d6a0060056463a852360dae",
+]
 texts = [
     "tn-cca-r sources/tn-court-of-criminal-appeals/tn-cca-rules-2026-10-28-sectioned.txt sha256:7961c0732c562a5f5dae5358971a2d285430b9023792cb68cab097067e4a5018",
     "tn-rap-cited sources/tn-appellate/tn-rap-cited.txt sha256:e200af46ea7e877b2e4f782d147c7534334b175009b4860470189b36b7a3895d",

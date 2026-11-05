@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -9,8 +9,9 @@ dependencies = []
 name = "ny-state-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:d75c85979d770fbc43325b5c0ab685f66d52bb5385d49f5d6887e0b1a299b345"
-semantic = "sha256:a7aa19323cefbfabd8dc7cb5dcbb4d7c788a9aa430d4a4c53bcd104007f540e0"
+modules = [
+    "rules.lit sha256:80924ce1cf13956bc0fb7b4a77c9365621fa0f9c2087c2ec7a5d7b7f9224fb09 sha256:5fe1d99ff7656c910a2284e4205fb9eb91e0facc79695a17a1156ea3b941c8a9",
+]
 texts = []
 dependencies = [
     "core 1.0.0",

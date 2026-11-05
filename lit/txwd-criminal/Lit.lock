@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "txwd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:cca52ea492460b2ec5b92f45447ce56c9642e1bf755cdbd7850c6ea8cb7dbeaa"
-semantic = "sha256:119a80ff2bb411225b78e320cc69e0f8950623708c6a86696486d5198582d29b"
+modules = [
+    "local-rules.lit sha256:41740ee8fcf4c389c2e477504725d51596de45072db4e4b012e21f7dfbb1891f sha256:3e151f529fb9e704f912465b53146e0edfa57d6b8d81438153203d167b0c8b65",
+]
 texts = [
     "txwd-cr sources/txwd/tx-wd-local-rules-sectioned.txt sha256:779483d215e8dff84763bdb9bc9dd90205700f18340a960b635d1f885cc63fa6",
 ]

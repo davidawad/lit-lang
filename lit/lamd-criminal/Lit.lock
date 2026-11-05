@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "lamd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:bd5bf131074b02dc3575d93a08d0c389380312146cf5d492302bdabee40eb1a8"
-semantic = "sha256:f14c5016b0bbc832e3a96a06e4cdb1133b196de50cbbcbef389920cf7d6e2692"
+modules = [
+    "local-rules.lit sha256:28f6b8bb3b840ce1610c7d59049ea45d3c3486af17ef6bbb804d9146448ee062 sha256:8b83084c2d0d8ed92b2c97b06bb87c754a3f6788ba68328f36c7a84d15497676",
+]
 texts = [
     "lamd-lcrr sources/lamd/lamd-local-rules-sectioned.txt sha256:f61e7174a7c38e7e7e54bc2c4e1d247325437212482383b45249c217d7297954",
     "lamd-lr sources/lamd/lamd-local-rules-sectioned.txt sha256:f61e7174a7c38e7e7e54bc2c4e1d247325437212482383b45249c217d7297954",

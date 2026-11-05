@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "laed-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:408506fd0ca4da4c01b471f97bc5d890ec1c9ffd2862060486c87eb52ab1a69b"
-semantic = "sha256:ede6b04a06b2323e62fb099cda940dc188939eab6288e71ffba63359df5068f7"
+modules = [
+    "local-rules.lit sha256:0e279b7f1e93505ad151ffbe207855d62f359ff96e12c9153d5b162be6a7eba7 sha256:de6e3a13e3d8333ca8b1fb025654413028116b8d960ea230a8650c97183ada9e",
+]
 texts = [
     "laed-lcrr sources/laed/laed-local-criminal-rules-sectioned.txt sha256:c67c545aaed59922fefbcac215bbe9c8dbdb382842995c00ea1f58dd49c035c2",
 ]

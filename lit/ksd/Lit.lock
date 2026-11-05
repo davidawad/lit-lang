@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "ksd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:a68e09bf471151e9edd382b555b6391b4a2a53baf8096a5f45604e9cfa9fc593"
-semantic = "sha256:2c1dcd1ec03ba1cc7ef1fb06254d3bdd769a345d80e1e48e9c3f1e5a5575889c"
+modules = [
+    "local-rules.lit sha256:5372ef92421ffc19adff06ac2f5acf62cf2580c7c6425024671983ffff8b2dfd sha256:6be9a9b15a3101e44909a0cb8111141ccebbf3da1f800071a9fb06e9265e0758",
+]
 texts = [
     "ksd-rules sources/d-kan/d-kan-local-rules-2026-sectioned.txt sha256:aa997f61649e526629529161843e01d98c8691d08fce5efbb564616e30266c19",
 ]

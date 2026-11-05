@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "ilsd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:3f1ede44b90db861d198a98b01c97f55fc5101ea10d5a9b5053530cace02e929"
-semantic = "sha256:d8048f0c2e41e9e86792c97f2a318901e9d543f88aae7ec9a8684735454fbc7c"
+modules = [
+    "local-rules.lit sha256:c9464121d5195e6d301768be79f90b930c3a54e3662fc6ce3985720791f78a88 sha256:80485f7d7d8ee5ffdab408ce004f43a1feffbb2da52033a8a567d2571a3f1f8d",
+]
 texts = [
     "ilsd-lr sources/ilsd/ilsd-local-rules-sectioned.txt sha256:2f93faac3661abe55136b45631a7d3ec496e0142942d8bff0dcf52295793f4bb",
 ]

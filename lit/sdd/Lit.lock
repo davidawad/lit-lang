@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "sdd-civil-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:354127ab42c6c6b9bbe10521431e38df8b82aeed4d1ecac5948bcb25a3175e03"
-semantic = "sha256:5ca022ad54446704703beda9020f7d6134ca8c714c6c01e1927807c0d17c511f"
+modules = [
+    "local-rules.lit sha256:9ab0ac2cdaea33b87e909fdf917934efb432f3d8f368e23c5657d90d779b47ec sha256:6a0aa2c6b6d61367c050dc0dd6345a957e0140a9533237c08f03e7ac133e258d",
+]
 texts = [
     "sdd-civ-lr sources/sdd/civil-local-rules-sectioned.txt sha256:3bfff7fb9b3f9e19f786c863e5971119bb06eeab9ffa41f569bfbd556a186575",
 ]

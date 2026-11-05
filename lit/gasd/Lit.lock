@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "gasd-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:2e4bce9afd24bbc3d024b09b55ecda25e9f6ad8aecb8ee78bc07b743947aacfc"
-semantic = "sha256:bd7f5db45c4c2ff91db5f8c67a5c03a7fc429e7c8233b1342ec95cb23369641e"
+modules = [
+    "local-rules.lit sha256:56e6be28a4ede78a9ed30744d5f8088623655b98ebf1088e5d13e5994ed879d7 sha256:e8b68ce1e123a0675f55fa0ac77fd01e2fbcc1378640a1ff468eb09439f25fad",
+]
 texts = [
     "gasd-lr sources/sd-ga/sdga-local-rules-sectioned.txt sha256:6f5214a2bb86045dcae24edf5172748170dd920f2478c5c5f0240f4bd56c5f7b",
 ]

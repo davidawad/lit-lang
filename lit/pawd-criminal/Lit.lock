@@ -1,4 +1,4 @@
-version = 2
+version = 3
 
 [[package]]
 name = "core"
@@ -16,8 +16,9 @@ dependencies = [
 name = "pawd-criminal-local-rules"
 version = "0.1.0"
 language = 1
-source = "sha256:cbbced8c690054501742eb4d18eb5e37e5bd82c3fd851ee4980bf30771f14233"
-semantic = "sha256:67038f28d03673c746fc21c7161bd65e4be3fc618f202974b4e5713e321cb1bd"
+modules = [
+    "local-rules.lit sha256:efe23cbc5bc789a20c20c79915f36585d3e8790bd2917b56aed60677199da88f sha256:b7425a7173258e96817a1d38a96c1a7b24d09bfc9ea841ae64e0424ba0e4239a",
+]
 texts = [
     "pawd-lcrr sources/pawd/local-rules-2016-11-01-sectioned.txt sha256:4d7c3a18135d31b9eee7dd49cd15bbfcc9eae31a801b782ccdf5193d5cef444b",
 ]

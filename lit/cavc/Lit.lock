@@ -1,11 +1,13 @@
-version = 2
+version = 3
 
 [[package]]
 name = "cavc"
 version = "0.1.0"
 language = 1
-source = "sha256:6f4057082d8fa967f818f49b1041472a188f39e18dc483d6c5e7c7b9c4d52ccc"
-semantic = "sha256:29cc401feda8c11cf0190782d5cd81a64ced843bfe2b662bebac28eca0e35ac3"
+modules = [
+    "periods.lit sha256:f813e1be27a4508e58b477c9acb080d1bccef85968002f267404231ffa56bf35 sha256:c5750d1f26aed3253f96e408813772d1443418ad0fa3eeaeb29f7a4e6151758c",
+    "procedure.lit sha256:c69980b0d9b7bc4f266fccd9b130c5b5eca2986781b1eddc728ce96c44003009 sha256:cd7251f87c28b3f95abbfffe09ae3fc190026f2ab749c276d248f0767e872b73",
+]
 texts = [
     "cavc-rules sources/cavc/cavc-rules-of-practice-2026-10-01.txt sha256:6b897600cfc39df751e4131c4e48d75ca30000b528eafd593c8a9e645ee41478",
     "usc28 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",

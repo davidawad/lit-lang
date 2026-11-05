@@ -102,6 +102,24 @@ fn json_files(dir: &Path, prefix: &str) -> Result<Vec<(String, String)>> {
     Ok(files)
 }
 
+/// Every JSON file beneath `dir`, retaining its relative path in each key.
+/// Clock fragments may be split into nested module directories.
+fn nested_json_files(dir: &Path, prefix: &str) -> Result<Vec<(String, String)>> {
+    let mut files = json_files(dir, prefix)?;
+    let read = std::fs::read_dir(dir).map_err(|e| Error::Io(format!("{}: {e}", dir.display())))?;
+    for entry in read.filter_map(std::result::Result::ok) {
+        let path = entry.path();
+        if path.is_dir() {
+            let name = path
+                .file_name()
+                .map(|n| n.to_string_lossy().to_string())
+                .unwrap_or_default();
+            files.extend(nested_json_files(&path, &format!("{prefix}{name}/"))?);
+        }
+    }
+    Ok(files)
+}
+
 impl Catalog {
     /// Build a catalog from `(file name, JSON text)` pairs; `links.json` is
     /// the link file, `clock/*` the clock library and `calibration/*` the
@@ -273,7 +291,7 @@ impl Catalog {
         let mut files = json_files(dir, "")?;
         let clock = dir.join("clock");
         if clock.is_dir() {
-            files.extend(json_files(&clock, "clock/")?);
+            files.extend(nested_json_files(&clock, "clock/")?);
         }
         let calibration = dir.join("calibration");
         if calibration.is_dir() {

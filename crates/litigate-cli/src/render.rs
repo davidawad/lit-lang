@@ -183,7 +183,7 @@ pub fn human_with_check(
                 d.severity == s
                     && check
                         .filter(|policy| !policy.verbose)
-                        .map_or(true, |policy| policy.own_files.contains(&d.span.file.0))
+                        .is_none_or(|policy| policy.own_files.contains(&d.span.file.0))
             })
             .count()
     };

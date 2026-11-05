@@ -111,11 +111,14 @@ fn lay_out(files: &BTreeMap<String, String>, clock: &Path, out_dir: &Path) {
     println!("cargo:rerun-if-changed={}", clock.display());
     for path in json_files(clock) {
         println!("cargo:rerun-if-changed={}", path.display());
-        let relative = path
-            .strip_prefix(clock)
-            .expect("clock file is under the library");
+        let relative = path.strip_prefix(clock).unwrap_or_else(|_| {
+            panic!(
+                "{} is outside clock library {}",
+                path.display(),
+                clock.display()
+            )
+        });
         let target = packs.join("clock").join(relative);
-        mkdir(target.parent().expect("clock file has a parent"));
         assert!(
             !target.exists(),
             "{} is both in the shared clock library and a package's own fragment",
@@ -132,9 +135,13 @@ fn embed(src: &mut String, ident: &str, doc: &str, dirs: &[(&Path, &str)]) {
         .iter()
         .flat_map(|(dir, prefix)| {
             json_files(dir).into_iter().map(move |p| {
-                let relative = p
-                    .strip_prefix(dir)
-                    .expect("json file is under its directory");
+                let relative = p.strip_prefix(dir).unwrap_or_else(|_| {
+                    panic!(
+                        "{} is outside JSON directory {}",
+                        p.display(),
+                        dir.display()
+                    )
+                });
                 let relative = relative.to_string_lossy().replace('\\', "/");
                 (format!("{prefix}{relative}"), p.clone())
             })

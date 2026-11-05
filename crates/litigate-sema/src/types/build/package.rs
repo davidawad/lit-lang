@@ -431,7 +431,7 @@ fn locked(
                 let mut semantic = String::new();
                 crate::pkg::lock::canonical(&value, &["span"], &mut semantic);
                 let semantic = format!("sha256:{}", litigate_sema_hash(semantic.as_bytes()));
-                format!("{} {} {}", path, source, semantic)
+                format!("{path} {source} {semantic}")
             })
             .collect()
     });

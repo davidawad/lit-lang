@@ -282,29 +282,6 @@
       "title": "Placeholder for the state holidays required by FRCP 6(a)(6)(C),\nFRCrimP 45(a)(6)(C), and FRBP 9006(a)(6)(C) where the state's holiday\ntext is not vendored: this calendar deliberately has no dates, so a date\nthat depends on such a holiday remains an earlier-date result (the\nmissing source is the district's state-holiday statute or rule).\n\nState holidays. Each state, the District of Columbia and each territory\nwhose holiday text is vendored is one module, lit/core/states/<state>.lit\n(`core.states.<state>`), holding only what is that state's: its calendar\n`<state>-holidays` (the days `us-federal-holidays` does not already\nclose, each in force from the date its vendored text is dated), and the\nrules that read it, `frcp6-<state>` (the 2023 FRCP 6(a) with the\ncalendar as `forward_holidays`) and `frbp9006-<state>` (the same for\nFRBP 9006(a), over that state's bankruptcy courts); Delaware adds\n`frcrimp45-delaware`. Its text is bound in lit/core/Lit.toml beside the\nothers. A district or bankruptcy package in the state imports its rule\nfrom that module, names it as its `counting` rule and `recounts` the\nnational package, so adding a state is adding its module and binding,\nnever editing this calendar or core's `frcp6` and `frbp9006`. Hawaii's\nbankruptcy court declares its own list from its local rule\n(`bankr-hi`). The states and territories whose holiday text is still not\nvendored are listed in README.md (\"Deferred: state sources\"); their\ndistricts keep this empty calendar until those sources are added. The\nTenth Circuit BAP (`bap10`) counts Colorado holidays only, because a\nmatter does not identify its originating district."
     },
     {
-      "cite": "D.V.I. Press Release 25-2024",
-      "holidays": [
-        {
-          "date": {
-            "fixed": {
-              "day": 9,
-              "month": 1
-            }
-          },
-          "effective": {
-            "from": "2025-01-09",
-            "until": "2025-01-10"
-          },
-          "id": "carter-mourning",
-          "name": "carter-mourning",
-          "observed": "actual"
-        }
-      ],
-      "id": "vid-national-day-2025",
-      "sourceUrl": "https://www.vid.uscourts.gov/sites/vid/files/PressRelease%2025-2024%20Closure%20of%20DCVI.pdf",
-      "title": "vid-national-day-2025"
-    },
-    {
       "cite": "S.D.N.Y. Order M10-468",
       "holidays": [
         {
@@ -15371,122 +15348,6 @@
         "district-state-holidays"
       ],
       "holidays": [
-        "us-federal-holidays",
-        "vid-national-day-2025"
-      ],
-      "hours": {
-        "inaccessibleText": "FRCP 6(a): the clerk's office is inaccessible during the last hour; extend to the same time on {date}",
-        "rollText": "FRCP 6(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
-        "text": "FRCP 6(a): count every hour from the trigger; +{n} hour(s)"
-      },
-      "id": "frcp6-vid",
-      "label": "FRCP 6(a)",
-      "months": {
-        "endOfMonth": "clamp",
-        "text": "FRCP 6(a): count {n} {unit} {after} the anchor to the corresponding day, else the last day of that month -> {date}"
-      },
-      "sourceUrl": "https://www.law.cornell.edu/rules/frcp",
-      "steps": [
-        {
-          "kind": "trigger",
-          "op": "anchor",
-          "text": "FRCP 6(a): exclude the trigger date {trigger}"
-        },
-        {
-          "op": "count",
-          "periods": [
-            {
-              "count": "calendar",
-              "text": "FRCP 6(a): count {n} calendar day(s) {after} the anchor -> {date}",
-              "unit": "calendar"
-            },
-            {
-              "count": "business",
-              "text": "FRCP 6(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
-              "unit": "court"
-            },
-            {
-              "count": "business",
-              "text": "FRCP 6(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
-              "unit": "business"
-            }
-          ]
-        },
-        {
-          "backward": {
-            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}",
-            "toward": "earlier"
-          },
-          "forward": {
-            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}",
-            "toward": "later"
-          },
-          "op": "roll"
-        },
-        {
-          "op": "base"
-        },
-        {
-          "backwardText": "FRCP 6(a): service extensions apply to forward periods only; ignored",
-          "methods": [
-            {
-              "days": 0,
-              "method": "personal"
-            },
-            {
-              "days": 0,
-              "method": "electronic"
-            },
-            {
-              "days": 3,
-              "method": "mail"
-            },
-            {
-              "days": 3,
-              "method": "clerk"
-            },
-            {
-              "days": 3,
-              "method": "other-consented"
-            }
-          ],
-          "op": "service",
-          "text": "FRCP 6(a): service by {method} adds {days} day(s) -> {date}",
-          "unrecognized": [
-            "commercial-carrier",
-            "prison-mail",
-            "mail-foreign",
-            "express",
-            "express-foreign"
-          ]
-        },
-        {
-          "backward": {
-            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}",
-            "toward": "earlier"
-          },
-          "forward": {
-            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}",
-            "toward": "later"
-          },
-          "op": "roll"
-        },
-        {
-          "ignoredText": "FRCP 6(a): no inaccessibility extension applies; ignored",
-          "op": "clerkInaccessible",
-          "text": "FRCP 6(a): the clerk's office is inaccessible on the last day; extend -> {date}"
-        }
-      ]
-    },
-    {
-      "closedWeekdays": [
-        "saturday",
-        "sunday"
-      ],
-      "forwardHolidays": [
-        "district-state-holidays"
-      ],
-      "holidays": [
         "us-federal-holidays"
       ],
       "hours": {
@@ -27168,12 +27029,12 @@
     "knownAt": "2026-10-22",
     "pins": [
       {
-        "digest": "sha256:7d35d59f0244a235cd73d518e6583500bec6c2347a5d4fe8703bbfcd37a67d9f",
+        "digest": "sha256:e9a87894d443805cf4fe549f75074e646fd679af55247fc1a6447776c3d28323",
         "name": "core",
         "version": "1.0.0"
       }
     ],
-    "worldDigest": "sha256:fb0272a9f1641356c0f8816df423a28f726529441a2587d1d44465019949609f"
+    "worldDigest": "sha256:f8365d22729c32d4c49bc4ba05e05ee51f8007be7033d004397dbc0465552309"
   },
   "schemaVersion": 4
 }

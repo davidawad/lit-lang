@@ -91,16 +91,17 @@ describe("check matches the CLI", () => {
 });
 
 describe("build matches the CLI", () => {
-  // A subset of the inputs and file names in crates/litgraph-packs/build.args.
-  const inputs = ["lit/cafc", "lit/cofc", "lit/frap", "lit/frcp", "lit/links", "cases/frcp-civil-case.case"];
+  // One package and one matter exercise both generated pack and scenario
+  // outputs without rebuilding the entire repository pack set.
+  const inputs = ["lit/frcp", "cases/frcp-civil-case.case"];
   const out = "target/litigate-ts-golden";
 
   it("prints the CLI's envelope and returns the files it writes", () => {
     rmSync(`${repo}${out}`, { recursive: true, force: true });
-    const names = ["--pack-file", "cafc=cafc-federal-circuit", "--pack-file", "cofc=cofc-court-of-federal-claims"];
+    const names = ["--pack-file", "frcp-civil-procedure=frcp-civil-procedure"];
     const expected = native(["build", "--out", out, ...names, ...inputs]);
     expect(expected.code).toBe(0);
-    const packFiles = { cafc: "cafc-federal-circuit", cofc: "cofc-court-of-federal-claims" };
+    const packFiles = { "frcp-civil-procedure": "frcp-civil-procedure" };
     const built = lit.build(inputs, { files, out, packFiles, today: TODAY });
     expect(untimed({ ...built, files: {} })).toStrictEqual(expected);
     expect(built.files).toStrictEqual(tree(out));

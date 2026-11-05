@@ -246,7 +246,7 @@ counting frcp6 cite "FRCP 6(a)"
   anchor trigger_day
 }
 
-calendar federal cite "FRCP 6(a)(6)"
+calendar federal cite "FRCP 6(a)(6)" historical
 {
   new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday
   juneteenth: fixed(6, 19) effective [2021-06-17, ..) observed nearest_weekday

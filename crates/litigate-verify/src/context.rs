@@ -112,7 +112,18 @@ impl<'a> Context<'a> {
                 Declaration::Transition(t) => amended(package, packages, t),
                 _ => None,
             };
-            let window = amended.or(meta.map(|m| &m.effective));
+            // A calendar's cite only supports the holidays it declares. Its
+            // metadata may carry the package default start even when all
+            // entries begin much later, so use the earliest entry window as
+            // the cite's proof window.
+            let window = match d {
+                Declaration::Calendar(calendar) => calendar
+                    .holidays
+                    .iter()
+                    .min_by(|a, b| a.in_force.from.cmp(&b.in_force.from))
+                    .map(|holiday| &holiday.in_force),
+                _ => amended.or(meta.map(|m| &m.effective)),
+            };
             let own = meta.and_then(|m| {
                 Some((
                     m.cite.as_deref()?,

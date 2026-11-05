@@ -59,6 +59,15 @@ fn checked_with(decls: &str, rule8: Option<&[&str]>) -> Checked {
     verify_in(&[pkg], Profile::Strict, &corpus)
 }
 
+/// A calendar cite is proved from the first date any of its entries applies,
+/// not the package default effective date carried by its metadata.
+fn checked_calendar(entry_from: &str) -> Checked {
+    let calendar = format!(
+        "calendar dated-holidays cite \"FRCP 8(c)\" {{\n  closure: fixed(1, 1) effective [{entry_from}, ..)\n}}\n"
+    );
+    checked_with(&calendar, None)
+}
+
 /// The messages of `c`'s holes.
 fn holes(c: &Checked) -> Vec<String> {
     c.verification
@@ -138,6 +147,18 @@ fn a_historical_or_written_hole_cite_is_not_held_to_the_history() {
     // The written hole is the only hole.
     let c = checked("cite ?(\"FRCP 8(c)\")", None);
     assert_eq!(holes(&c), ["strict does not permit holes: FRCP 8(c)"]);
+}
+
+#[test]
+fn calendar_entry_start_on_source_date_needs_no_prior_history() {
+    proved(&checked_calendar(D));
+}
+
+#[test]
+fn calendar_entry_before_source_date_still_needs_history() {
+    let c = checked_calendar("2024-01-01");
+    assert_eq!(holes(&c).len(), 1, "{:?}", holes(&c));
+    assert!(holes(&c)[0].contains("not proved the text in force from 2024-01-01"));
 }
 
 /// A transition has no version clause: its cites speak from the version it

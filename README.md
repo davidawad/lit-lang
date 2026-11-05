@@ -137,12 +137,17 @@ docker run --rm ghcr.io/davidawad/litgraph describe
 
 ```
 
-Prebuilt binaries (Linux x86_64 glibc/musl, macOS arm64/x86_64) and the
-WebAssembly bundles are attached to each
-[GitHub Release](https://github.com/davidawad/litgraph/releases) -- each
-release tarball, the container image, and the nix flake carry the one
-`litigate` binary (`litigate mcp` is its MCP server). See [CONTRIBUTING.md](CONTRIBUTING.md) for
-building from source with nix/devenv.
+Prebuilt binaries are published on the
+[GitLab Releases page](https://gitlab.com/davidawad/lit-lang/-/releases): Linux
+x86_64 (glibc and musl), macOS arm64 and x86_64, and WebAssembly web and Node
+bundles. Each archive has an adjacent SHA-256 checksum file. The native
+archives include `litigate`, `litigate-lsp`, and the compiled packs, so the
+CLI runs without Rust or a separate packs directory. Conventional `feat`,
+`fix`, and `perf` commits on the default branch are version-tagged after CI
+passes; automatic tagging requires the protected GitLab CI variable
+`RELEASE_TAG_TOKEN` containing a personal access token with `write_repository`
+access. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for building from source with nix/devenv.
 
 ## Usage
 

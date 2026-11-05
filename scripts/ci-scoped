@@ -685,7 +685,7 @@ run() {
   if [ -n "$selected_stages" ]; then
     [[ "$selected_stages" =~ ^[a-zA-Z0-9_,.-]+$ ]] || { echo 'ci-scoped: invalid --stages list' >&2; return 2; }
     [[ ",$selected_stages," != *",,"* ]] || { echo 'ci-scoped: empty stage name' >&2; return 2; }
-    local known='fmt-check typos workflow-command-lint workflow-command-lint-repo provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect expect-impact impact corpus-consistency lit-examples clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
+    local known='fmt-check typos gitlab-ci-contract provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect expect-impact impact corpus-consistency lit-examples clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
     IFS=, read -r -a _requested <<< "$selected_stages"
     for arg in "${_requested[@]}"; do
       if ! grep -qw "$arg" <<<"$known" && [[ ! "$arg" =~ ^(check|test|lock)-[A-Za-z0-9_.-]+$ ]]; then
@@ -737,8 +737,7 @@ run() {
   # Global, always.
   stage fmt-check cargo fmt --all -- --check
   stage typos typos
-  stage workflow-command-lint scripts/ci-workflow-command-lint-test
-  stage workflow-command-lint-repo python3 scripts/ci-workflow-command-lint
+  stage gitlab-ci-contract python3 scripts/gitlab-ci-contract-test.py
   stage provenance provenance "$base"
   stage self-test bash -c "'$self' self-test && '$(dirname "$self")/cov-gate' self-test"
   stage quarantine check_all_quarantine
@@ -1124,7 +1123,7 @@ self_test() {
     failures=$((failures + 1))
   fi
   expect "none" "a docs-only change runs global only" docs/litigate/SPEC.md README.md
-  expect "none" "a non-crate change runs global only" scripts/cov-gate .github/workflows/ci.yml _typos.toml
+  expect "none" "a non-crate change runs global only" scripts/cov-gate .gitlab-ci.yml _typos.toml
   expect "none" "an empty diff runs global only"
   local corpus_scope examples_scope crate_test_scope crate_fixture_scope
   cargo metadata --format-version 1 --no-deps > "$real"
@@ -1281,7 +1280,7 @@ self_test_stages() {
     return
   fi
   [ -n "$requested" ] || { self_test; return; }
-  local known='fmt-check typos workflow-command-lint workflow-command-lint-repo provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect expect-impact impact corpus-consistency lit-examples clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
+  local known='fmt-check typos gitlab-ci-contract provenance self-test quarantine strict-ratchet-test lit-sync-check strict-ratchet tree-sitter-test check ts-test expect expect-impact impact corpus-consistency lit-examples clippy test doctest audit deny data-only-compiler data-typos data-provenance data-expect'
   IFS=, read -r -a requested_list <<< "$requested"
   for stage_name in "${requested_list[@]}"; do
     if ! grep -qw "$stage_name" <<<"$known" && [[ ! "$stage_name" =~ ^(check|test|lock)-[A-Za-z0-9_.-]+$ ]]; then

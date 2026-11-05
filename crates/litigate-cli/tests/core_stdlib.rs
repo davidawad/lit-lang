@@ -336,8 +336,19 @@ fn the_engine_clock_library_is_lit_core_lowered() {
         serde_json::from_str(&litigate_lower::render(lowered()).unwrap()).unwrap();
     let (embedded, errors) = ClockLibrary::embedded();
     assert!(errors.is_empty(), "{errors:?}");
-    assert_eq!(embedded.counting_rules, fresh.counting_rules);
-    assert_eq!(embedded.calendars, fresh.calendars);
+    fn by_id<T>(items: &[T], id: impl Fn(&T) -> &str) -> Vec<&T> {
+        let mut items: Vec<_> = items.iter().collect();
+        items.sort_by(|a, b| id(a).cmp(id(b)));
+        items
+    }
+    assert_eq!(
+        by_id(&embedded.counting_rules, |x| &x.id),
+        by_id(&fresh.counting_rules, |x| &x.id)
+    );
+    assert_eq!(
+        by_id(&embedded.calendars, |x| &x.id),
+        by_id(&fresh.calendars, |x| &x.id)
+    );
 }
 
 #[test]

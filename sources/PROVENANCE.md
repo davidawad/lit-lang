@@ -35,6 +35,43 @@ re-running the extraction described in its entry below and diffing the
 result — that is the "reproducible" bar, not a live network call at lint
 time.
 
+### `state-rule-amendment-history.txt` — state-law amendment histories used by `lit/core`
+
+- Hawaii HRS § 8-1: transcribed the final amendment credit from the official
+  Hawaii Legislature current statute page, which identifies L 2001, c 65,
+  § 1 as its latest amendment. The official 2001 Session Law Act 65 amends
+  § 8-1 and states an effective date of July 1, 2001 (approved April 26,
+  2001). Sources: <https://data.capitol.hawaii.gov/hrscurrent/Vol01_Ch0001-0042F/HRS0008/HRS_0008-0001.htm>
+  and <https://data.capitol.hawaii.gov/sessions/sessionlaws/Years/SLH2001/SLH2001_Act65.pdf>.
+  The introduced 2024 HB 1780 proposed changing § 8-1 but is not treated as
+  enacted law: <https://data.capitol.hawaii.gov/sessions/session2024/bills/HB1780_.pdf>.
+- NMRA 1-006: transcribed the amendment date and order date from the official
+  current Rule Set 1 text's history note and Supreme Court Order No.
+  S-1-RCR-2023-00046. The New Mexico Supreme Court's approved-amendments
+  index identifies the order and Rule 1-006 under “Three-Day Service and
+  Legal Holidays,” approved November 1, 2024, effective December 31, 2024.
+  The official amendment history also records Order No. 14-8300-016,
+  effective December 31, 2014. Sources:
+  <https://supremecourt.nmcourts.gov/wp-content/uploads/sites/2/2024/11/Rule-1-006-NMRA.pdf>,
+  <https://nmonesource.com/nmos/nmra-unanno/en/18468/1/document.do>,
+  <https://supremecourt.nmcourts.gov/rules-forms-files/approved-amendments-to-rules-and-forms/2024-approved-amendments-to-rules-and-forms/>
+  and <https://supremecourt.nmcourts.gov/wp-content/uploads/sites/2/2024/11/Order-No.-S-1-RCR-2023-00046.pdf>.
+- Utah URCP 6: transcribed the effective date from the Utah Supreme Court's
+  February 14, 2024 order adopting Rule 6 effective May 1, 2024. The Utah
+  Courts' Rule 6 page, printed November 5, 2026, continues to identify May
+  1, 2024 as the effective date; the official approved-amendments archive
+  provides the dated rule history. Sources:
+  <https://legacy.utcourts.gov/utc/rules-approved/2024/02/16/rules-of-civil-procedure-effective-may-1-2024/>,
+  <https://legacy.utcourts.gov/utc/rules-approved/wp-content/uploads/sites/4/2024/02/URCP-Rules-6-12-64-66-69A-69B-69C-and-83-effective-5-1-24-signed.pdf>,
+  <https://legacy.utcourts.gov/rules/view.php?rule=6&type=urcp> and
+  <https://legacy.utcourts.gov/utc/rules-approved/category/urcp006/>.
+- Retrieved/consulted 2026-11-06. The records are limited to the last
+  amendment establishing the versions cited by the declarations. Each
+  source's current text/archive was checked through the binding's `as_of`
+  date; no later amendment to these cited sections appears in those official
+  records. No date or amendment was inferred.
+- sha256 (this file): `34c6f1407e41941a3e749c37bb2db68ac94b94e35a6b9bc9ebc5e4cb53d3a8d2`
+
 ## D.C. Circuit Rules and Handbook
 
 ### `cadc-circuit-rules-2025-12-04.txt`

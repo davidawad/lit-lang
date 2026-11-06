@@ -163,10 +163,10 @@ fn expressible(id: &str, direction: Direction, unit: Unit) -> bool {
     id != "itc210" || (direction == Direction::Forward && unit == Unit::Calendar)
 }
 
-/// The federal clock rules are strict-clean; state holiday texts without
-/// pinned amendment histories remain explicit strict holes.
+/// The shared amendment history pins the effective state-law versions used
+/// by core, so strict checking must not leave source holes.
 #[test]
-fn strict_check_of_lit_core_reports_only_unverified_state_sources() {
+fn strict_check_of_lit_core_has_no_source_holes() {
     let lock = std::fs::read_to_string(repo().join("lit/core/Lit.lock")).unwrap();
     assert_eq!(
         litigate_sema::pkg::lock::LockFile::format(&lock).unwrap(),
@@ -176,25 +176,20 @@ fn strict_check_of_lit_core_reports_only_unverified_state_sources() {
     let dev = litigate(&["check", "lit/core"]);
     assert_eq!(dev.code, 0, "{}", dev.stdout);
     let run = litigate(&["check", "--profile", "strict", "lit/core"]);
-    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert_eq!(run.code, 0, "{}", run.stdout);
     let diagnostics = run.json["diagnostics"].as_array().unwrap();
-    assert!(!diagnostics.is_empty());
-    assert!(diagnostics.iter().all(|d| d["code"] == "L5002"));
+    assert!(diagnostics.is_empty(), "{diagnostics:#?}");
     let result = &run.json["result"];
     for f in result["obligations"].as_array().unwrap() {
         // A rule package has no events, so only case replay is skipped.
         let skipped = f["name"] == "case-replay" && f["status"] == "skipped";
-        let source_holes = f["name"] == "holes" && f["status"] == "failed";
-        assert!(f["status"] == "passed" || skipped || source_holes, "{f}");
+        assert!(f["status"] == "passed" || skipped, "{f}");
     }
     let core = &result["packages"][0];
     assert_eq!(core["name"], "core");
     assert_eq!(core["tests"]["failed"], 0);
     assert!(core["tests"]["passed"].as_u64().unwrap() >= 100, "{core}");
-    assert_eq!(
-        core["holes"].as_u64(),
-        Some(u64::try_from(diagnostics.len()).unwrap())
-    );
+    assert_eq!(core["holes"].as_u64(), Some(0));
 }
 
 /// How a version's cite of a text vendored after it took effect is proved

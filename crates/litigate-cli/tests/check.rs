@@ -77,7 +77,10 @@ fn human_output_renders_diagnostics_with_source() {
 }
 
 #[test]
-fn ttab_check_human_output_is_limited_to_the_case_and_verbose_restores_library_diagnostics() {
+fn ttab_check_human_output_is_limited_to_the_case_when_core_has_no_holes() {
+    let case = support::repo()
+        .join("crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case");
+    let case = case.to_string_lossy().into_owned();
     let run = |args: &[&str]| {
         assert_cmd::Command::cargo_bin("litigate")
             .unwrap()
@@ -87,12 +90,7 @@ fn ttab_check_human_output_is_limited_to_the_case_and_verbose_restores_library_d
             .output()
             .unwrap()
     };
-    let default = run(&[
-        "--format",
-        "human",
-        "check",
-        "crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case",
-    ]);
+    let default = run(&["--format", "human", "check", &case]);
     assert_eq!(default.status.code(), Some(2));
     let default_text = String::from_utf8_lossy(&default.stdout);
     assert!(default_text.contains("designates `answer-period` due 2026-11-05"));
@@ -101,31 +99,20 @@ fn ttab_check_human_output_is_limited_to_the_case_and_verbose_restores_library_d
     assert!(!default_text.contains("[L9003]"));
     insta::assert_snapshot!("ttab_check_human_default", default_text);
 
-    let verbose = run(&[
-        "--format",
-        "human",
-        "check",
-        "--verbose",
-        "crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case",
-    ]);
+    let verbose = run(&["--format", "human", "check", "--verbose", &case]);
     assert_eq!(verbose.status.code(), Some(2));
     let verbose_text = String::from_utf8_lossy(&verbose.stdout);
-    assert!(verbose_text.contains("[L9002]"));
+    assert!(!verbose_text.contains("[L5002]"));
     assert!(!verbose_text.contains("--verbose to show"));
 
-    let json = run(&[
-        "--format",
-        "json",
-        "check",
-        "crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case",
-    ]);
+    let json = run(&["--format", "json", "check", &case]);
     let document: serde_json::Value = serde_json::from_slice(&json.stdout).unwrap();
     assert!(!document["diagnostics"].as_array().unwrap().is_empty());
-    assert!(document["diagnostics"]
+    assert!(!document["diagnostics"]
         .as_array()
         .unwrap()
         .iter()
-        .any(|d| d["code"] == "L9002"));
+        .any(|d| d["code"] == "L5002"));
 }
 
 #[test]

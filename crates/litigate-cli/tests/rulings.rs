@@ -268,12 +268,11 @@ fn the_shared_clock_library_is_lit_core_lowered_and_sync_builds_under_dev() {
         assert!(doc.get("lowered").is_some(), "{name}");
     }
 
-    // Under `strict` the same sources do not build: their fail-closed
-    // holes are errors there, so a sync under `strict` would block on
-    // them or invite filling them in.
+    // Strict builds also succeed now that every cited source version has
+    // pinned amendment-history support.
     let (strict, _) = build("ruling-build-strict", &["--profile", "strict"]);
-    assert_eq!(strict.code, 2, "{}", strict.stderr);
-    assert!(errors(&strict).iter().any(|(code, _)| code == "L5002"));
+    assert_eq!(strict.code, 0, "{}", strict.stderr);
+    assert!(errors(&strict).is_empty(), "{:#?}", errors(&strict));
 }
 
 /// `(from, to, known_at)` of each version `litigate where` reports for `id`.

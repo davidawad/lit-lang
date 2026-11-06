@@ -1,0 +1,11 @@
+module library-diagnostic
+
+package library-diagnostic { forum fixture, authority FederalRule }
+
+start waiting
+
+decision waiting: "Resolve" by mover {
+  resolve "Resolve" -> done
+}
+
+terminal done: "Done" outcome [neutral] { payoff ?("fixture hole") }

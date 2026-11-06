@@ -116,6 +116,47 @@ fn ttab_check_human_output_is_limited_to_the_case_when_core_has_no_holes() {
 }
 
 #[test]
+fn verbose_check_restores_library_diagnostics() {
+    let fixture = support::repo().join("crates/litigate-cli/tests/fixtures/library-diagnostic");
+    let case = fixture.join("cases/matter.case");
+    let lib = fixture.join("lit");
+    let run = |format: &str, verbose: bool| {
+        let mut command = assert_cmd::Command::cargo_bin("litigate").unwrap();
+        command
+            .env("LITIGATE_TODAY", "2000-01-01")
+            .current_dir(support::repo())
+            .args(["--format", format, "check"]);
+        if verbose {
+            command.arg("--verbose");
+        }
+        command
+            .arg("--lib")
+            .arg(&lib)
+            .arg(&case)
+            .output()
+            .unwrap()
+    };
+
+    let default = run("human", false);
+    assert_eq!(default.status.code(), Some(0));
+    let default_text = String::from_utf8_lossy(&default.stdout);
+    assert!(!default_text.contains("[L9002]"), "{default_text}");
+
+    let verbose = run("human", true);
+    assert_eq!(verbose.status.code(), Some(0));
+    let verbose_text = String::from_utf8_lossy(&verbose.stdout);
+    assert!(verbose_text.contains("[L9002]"), "{verbose_text}");
+
+    let json = run("json", false);
+    let document: serde_json::Value = serde_json::from_slice(&json.stdout).unwrap();
+    assert!(document["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|d| d["code"] == "L9002"));
+}
+
+#[test]
 fn shipped_packages_have_no_anonymous_edges() {
     let run = litigate(&[
         "check",

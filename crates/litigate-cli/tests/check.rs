@@ -129,12 +129,7 @@ fn verbose_check_restores_library_diagnostics() {
         if verbose {
             command.arg("--verbose");
         }
-        command
-            .arg("--lib")
-            .arg(&lib)
-            .arg(&case)
-            .output()
-            .unwrap()
+        command.arg("--lib").arg(&lib).arg(&case).output().unwrap()
     };
 
     let default = run("human", false);

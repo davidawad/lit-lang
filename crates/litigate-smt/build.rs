@@ -212,7 +212,7 @@ fn compile_z3(build_dir: &Path) {
     let status = std::process::Command::new("cmake")
         .args(["--build"])
         .arg(build_dir.as_os_str())
-        .args(["--target", "z3", "--parallel", "4"])
+        .args(["--target", "libz3", "--parallel", "4"])
         .status()
         .unwrap_or_else(|e| fail(&format!("building Z3: {e}")));
     if !status.success() {

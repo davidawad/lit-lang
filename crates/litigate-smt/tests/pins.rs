@@ -129,3 +129,10 @@ fn musl_build_uses_a_pinned_z3_source_and_cross_compilers() {
     assert!(BUILD_RS.contains("CMAKE_C_COMPILER"));
     assert!(BUILD_RS.contains("CMAKE_CXX_COMPILER"));
 }
+
+#[test]
+fn musl_build_targets_static_library_and_copies_cmake_archive() {
+    assert!(BUILD_RS.contains(".args([\"--target\", \"libz3\", \"--parallel\", \"4\"])"));
+    assert!(BUILD_RS.contains("build_dir.join(\"libz3.a\")"));
+    assert!(BUILD_RS.contains("build_dir.join(\"src\").join(\"libz3.a\")"));
+}

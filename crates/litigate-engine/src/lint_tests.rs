@@ -73,6 +73,7 @@ fn observance_clock(cite: Option<&str>) -> ClockLibrary {
                 observed: Observance::NextDay,
                 effective: None,
                 cite: None,
+                one_time_year: None,
             }],
         }],
         ..ClockLibrary::default()

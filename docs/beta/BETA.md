@@ -127,4 +127,4 @@ Other known limitations are documented in the repository: there is no ongoing la
 
 ## Reporting a problem
 
-File an issue on [gitlab.com/davidawad/lit-lang](https://gitlab.com/davidawad/lit-lang) with `litigate --version` and the full JSON envelope (including warnings and provenance), plus the command and the relevant package or matter file. Do not include confidential client or case information. This repository snapshot does not contain a feedback issue template, so use that fallback format.
+File an issue on [gitlab.com/davidawad/lit-lang](https://gitlab.com/davidawad/lit-lang) with `litigate --version` and the full JSON envelope (including warnings and provenance), plus the command and the relevant package or matter file. GitLab requires an account and sign-in to submit an issue. Do not include confidential client or case information. This repository snapshot does not contain a feedback issue template, so use that fallback format.

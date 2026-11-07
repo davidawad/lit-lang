@@ -133,3 +133,7 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "cmake_tools.rs"]
+mod cmake_tools;

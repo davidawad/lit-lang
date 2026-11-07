@@ -18,6 +18,10 @@ use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};
 
+#[path = "src/cmake_tools.rs"]
+#[allow(dead_code)]
+mod cmake_tools;
+
 /// The pinned Z3 release. Keep in step with `PINNED_Z3_VERSION` in
 /// `src/z3_backend.rs` (a test checks the linked library reports it).
 const Z3_VERSION: &str = "5.1.0";
@@ -160,7 +164,8 @@ fn unpack_z3_source(out: &Path, archive: &Path) -> PathBuf {
 }
 
 fn configure_z3(source_dir: &Path, build_dir: &Path) {
-    let status = std::process::Command::new("cmake")
+    let mut command = std::process::Command::new("cmake");
+    command
         .arg("-S")
         .arg(source_dir)
         .arg("-B")
@@ -177,14 +182,6 @@ fn configure_z3(source_dir: &Path, build_dir: &Path) {
                 .or_else(|_| env::var("CXX_x86_64_unknown_linux_musl"))
                 .unwrap_or_else(|_| "c++".into())
         ))
-        .arg(format!(
-            "-DCMAKE_AR={}",
-            env::var("AR_x86_64_unknown_linux_musl").unwrap_or_else(|_| "ar".into())
-        ))
-        .arg(format!(
-            "-DCMAKE_RANLIB={}",
-            env::var("RANLIB_x86_64_unknown_linux_musl").unwrap_or_else(|_| "ranlib".into())
-        ))
         .args([
             "-DZ3_BUILD_LIBZ3_SHARED=OFF",
             "-DZ3_BUILD_EXECUTABLE=OFF",
@@ -194,11 +191,20 @@ fn configure_z3(source_dir: &Path, build_dir: &Path) {
             "-DZ3_BUILD_JAVA_BINDINGS=OFF",
             "-DZ3_BUILD_DOCUMENTATION=OFF",
             "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
-        ])
-        .status()
+        ]);
+    command.args(cmake_tools::cmake_tool_args(
+        env::var_os("AR_x86_64_unknown_linux_musl"),
+        env::var_os("RANLIB_x86_64_unknown_linux_musl"),
+    ));
+    let output = command
+        .output()
         .unwrap_or_else(|e| fail(&format!("running cmake for Z3: {e}")));
-    if !status.success() {
-        fail("configuring pinned Z3 for musl failed");
+    if !output.status.success() {
+        fail(&format!(
+            "configuring pinned Z3 for musl failed (exit {}); stderr tail:\n{}",
+            output.status,
+            cmake_tools::stderr_tail(&output.stderr, 40)
+        ));
     }
 }
 

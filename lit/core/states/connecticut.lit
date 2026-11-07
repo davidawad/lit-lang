@@ -17,12 +17,17 @@ calendar connecticut-holidays cite "Conn. Gen. Stat. § 1-4"
 }
 
 /// FRCP 6 in the district courts of Connecticut: the 2023 text
-/// (`frcp6@2023-12-01`) with `connecticut-holidays`, which 6(a)(6)(C)
-/// ("any day declared a holiday by ... the state where the district court
-/// is located") makes legal holidays "for periods that are measured after
-/// an event" only. A district package there names it as its `counting`
-/// rule and `recounts` lit/frcp. A calendar day is closed only from the
-/// date its entry is in force; before it the count is `frcp6`'s.
+/// (`frcp6@2023-12-01`) with `connecticut-holidays`. Rule 6(a)(6)(C)
+/// expressly includes any other day declared a holiday by the state where
+/// the district court is located, for periods measured after an event. D.
+/// Conn. L. Civ. R. 77(c)'s federal-only list designates the court's legal
+/// holidays and selects the federal observance when a holiday falls on
+/// different federal and state dates; it does not narrow Rule 6(a)(6)(C)'s
+/// express state-holiday category. Thus Lincoln Day remains closed in
+/// forward FRCP 6 counts, but not backward counts. A district package there
+/// names this as its `counting` rule and `recounts` lit/frcp. A calendar day
+/// is closed only from the date its entry is in force; before it the count
+/// is `frcp6`'s.
 counting frcp6-connecticut effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCP 6(a)"
 {
   exclude_trigger_day

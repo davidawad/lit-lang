@@ -284,12 +284,14 @@ deadline frcp6-guam-smoke: 1.days after Served() counted_by frcp6-guam { forum f
 deadline frcp6-idaho-smoke: 1.days after Served() counted_by frcp6-idaho { forum frcp }
 deadline frcp6-illinois-smoke: 1.days after Served() counted_by frcp6-illinois { forum frcp }
 deadline frcp6-indiana-smoke: 1.days after Served() counted_by frcp6-indiana { forum frcp }
+deadline frcp6-indiana-lincoln-saturday: 1.days after Served() counted_by frcp6-indiana { forum frcp }
 deadline frcp6-iowa-smoke: 1.days after Served() counted_by frcp6-iowa { forum frcp }
 deadline frcp6-kansas-smoke: 1.days after Served() counted_by frcp6-kansas { forum frcp }
 deadline frcp6-kentucky-smoke: 1.days after Served() counted_by frcp6-kentucky { forum frcp }
 deadline frcp6-louisiana-smoke: 1.days after Served() counted_by frcp6-louisiana { forum frcp }
 deadline frcp6-maine-smoke: 1.days after Served() counted_by frcp6-maine { forum frcp }
 deadline frcp6-maryland-smoke: 1.days after Served() counted_by frcp6-maryland { forum frcp }
+deadline frcp6-maryland-lincoln-saturday: 1.days after Served() counted_by frcp6-maryland { forum frcp }
 
 deadline frcp6-massachusetts-smoke: 1.days after Served() counted_by frcp6-massachusetts {
   forum frcp
@@ -667,6 +669,12 @@ test "frcp6-indiana counts a one-day period" {
   expect deadline(frcp6-indiana-smoke) == 2027-02-03
 }
 
+test "Indiana observes Lincoln's Saturday birthday on Friday" cite "IC 1-1-9-1" {
+  given Served(Personal) on 2033-02-10
+  expect deadline(frcp6-indiana-lincoln-saturday).nominal == 2033-02-11
+  expect deadline(frcp6-indiana-lincoln-saturday) == 2033-02-14
+}
+
 test "frcp6-iowa counts a one-day period" {
   given Served(Personal) on 2027-02-02
   expect deadline(frcp6-iowa-smoke) == 2027-02-03
@@ -695,6 +703,12 @@ test "frcp6-maine counts a one-day period" {
 test "frcp6-maryland counts a one-day period" {
   given Served(Personal) on 2027-02-02
   expect deadline(frcp6-maryland-smoke) == 2027-02-03
+}
+
+test "Maryland does not move a Saturday holiday" cite "Md. Code, Gen. Provis. § 1-111" {
+  given Served(Personal) on 2028-02-10
+  expect deadline(frcp6-maryland-lincoln-saturday).nominal == 2028-02-11
+  expect deadline(frcp6-maryland-lincoln-saturday) == 2028-02-11
 }
 
 test "frcp6-massachusetts counts a one-day period" {

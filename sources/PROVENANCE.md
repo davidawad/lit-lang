@@ -35,6 +35,12 @@ re-running the extraction described in its entry below and diffing the
 result — that is the "reproducible" bar, not a live network call at lint
 time.
 
+### `gu-holidays/gu-legal-holidays.txt` — 1 GCA §§ 1000-1004 (Guam holidays)
+
+- Official source: Guam Compiler of Laws, Judiciary of Guam, 1 GCA General Provisions, Chapter 10, <https://col.guamcourts.gov/sites/default/files/01gc010.pdf>.
+- Retrieved 2026-10-29. The official edition is dated COL 2026-04-23. Extracted with `pdftotext -layout`; §§ 1000-1004 are retained under numbered section headings. Section 1000(b) directs the government of Guam to follow federal practice when a listed holiday falls on Saturday or Sunday.
+- SHA-256: `cd416a53eab0a0e6f7e79a6c05dd65274f21e1a65df6398f82ee72f7c533ed1e`.
+
 ### `state-rule-amendment-history.txt` — state-law amendment histories used by `lit/core`
 
 - Hawaii HRS § 8-1: transcribed the final amendment credit from the official

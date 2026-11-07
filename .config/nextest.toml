@@ -31,29 +31,16 @@ path = "junit.xml"
 fail-fast = false
 retries = 0
 test-threads = "num-cpus"
-# Gate quarantine: nightly still runs every test. No new tests enter quarantine without CoS OK.
+# Gate quarantine: only tests measured above 120s remain here. No new tests
+# enter quarantine without CoS OK.
 default-filter = """
 not (
-    (package(litgraph-packs) & binary(merge_safe))
-  | (package(litigate-cli) & (
+    (package(litigate-cli) & (
         test(=cmd::filing::round_trip::every_printed_move_is_accepted_back)
       | (binary(delegation_conversion) & test(=the_delegable_conversion_lowers_the_corpus_identically))
       | (binary(impact) & test(=a_layer_edit_lists_every_moved_deadline_verdict_and_expectation))
       | (binary(in_memory) & test(=ops_compile_the_matter_or_package_in_memory))
     ))
-  | (package(litigate-sema) & test(=db::parse::tests::worked_example_lowers_cleanly))
-  | (package(litigate-sema) & binary(case) & test(=a_terminal_whose_pack_authors_a_payoff_needs_no_stake))
-  | (package(litigate-sema) & binary(case) & test(=example_replay_table))
-  | (package(litigate-sema) & binary(case) & test(=pins_must_match_the_lock))
-  | (package(litigate-sema) & binary(case) & test(=the_worked_example_replays_to_the_motion_ruling))
-  | (package(litigate-sema) & binary(cov_build_clock) & test(=deadlines_lower_direction_and_options))
-  | (package(litigate-sema) & binary(cov_build_obligation) & test(=obligation_options_and_effects_lower))
-  | (package(litigate-sema) & binary(filing) & test(=cfr_42_24_limits_an_ipr_petition_to_14000_words))
-  | (package(litigate-sema) & binary(fixtures) & test(=worked_example_checks_and_lowers_to_hir))
-  | (package(litigate-verify) & binary(example) & test(=dev_reports_the_three_holes_and_accepts))
-  | (package(litigate-verify) & binary(example) & test(=strict_rejects_each_hole))
-  | (package(litigate-verify) & binary(example) & test(=the_report_is_embedded_in_the_litigatable))
-  | (package(litigate-wasm) & test(=tests::engine_requests_run_over_the_compiled_embedded_sources))
 )
 """
 

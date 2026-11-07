@@ -1,7 +1,9 @@
 //! Fetches the pinned Z3 release and points the linker at its static
-//! `libz3.a`, so every build of this crate links the same solver.
+//! `libz3.a`, so every build of this crate links the same solver. For musl,
+//! build the same pinned Z3 release from source with the configured target
+//! C/C++ compilers; upstream binaries target glibc.
 //!
-//! `z3-sys` (default features) declares `#[link(name = "z3")]`; this
+//! `z3-sys` declares `#[link(name = "z3")]`; this
 //! script adds the release's `bin/` directory, which holds only the static
 //! archive we extract, to the link search path. The archive is checked
 //! against the SHA-256 pinned below before anything is extracted. Set
@@ -51,13 +53,29 @@ const ASSETS: &[(&str, &str, &str, &str)] = &[
 ];
 
 const ARCHIVE_ENV: &str = "LITIGATE_SMT_Z3_ARCHIVE";
+const SOURCE_ENV: &str = "LITIGATE_SMT_Z3_SOURCE";
+const Z3_SOURCE_SHA256: &str = "c433e1add0431c5edf1644bd9951c40588024d2d288f0e4215e5fcb6e3b4277d";
 
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rerun-if-env-changed={ARCHIVE_ENV}");
+    println!("cargo:rerun-if-env-changed={SOURCE_ENV}");
 
     let os = env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
     let arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap_or_default();
+    let target = env::var("TARGET").unwrap_or_default();
+    let musl = target.ends_with("-unknown-linux-musl");
+    if musl {
+        let out = PathBuf::from(env::var("OUT_DIR").unwrap_or_else(|_| fail("OUT_DIR unset")));
+        let lib_dir = out.join(format!("z3-{Z3_VERSION}-musl"));
+        let lib = lib_dir.join("libz3.a");
+        if !lib.exists() {
+            build_musl_z3(&out, &lib_dir, &lib);
+        }
+        println!("cargo:rustc-link-search=native={}", lib_dir.display());
+        println!("cargo:rustc-env=LITIGATE_SMT_Z3_ASSET=z3-{Z3_VERSION}-source-musl");
+        return;
+    }
     let Some(&(_, _, asset, sha256)) = ASSETS.iter().find(|a| a.0 == os && a.1 == arch) else {
         fail(&format!(
             "no pinned Z3 {Z3_VERSION} static release for target {arch}-{os}; supported: \
@@ -80,6 +98,110 @@ fn main() {
     }
     println!("cargo:rustc-link-search=native={}", lib_dir.display());
     println!("cargo:rustc-env=LITIGATE_SMT_Z3_ASSET={asset}");
+}
+
+/// Build the pinned Z3 source with the cross compilers selected by Cargo.
+fn build_musl_z3(out: &Path, lib_dir: &Path, lib: &Path) {
+    let source = env::var(SOURCE_ENV).unwrap_or_else(|_| {
+        format!("https://codeload.github.com/Z3Prover/z3/tar.gz/refs/tags/z3-{Z3_VERSION}")
+    });
+    let archive = out.join(format!("z3-{Z3_VERSION}-source.tar.gz"));
+    if source.starts_with("https://") {
+        let mut bytes = Vec::new();
+        ureq::get(&source)
+            .call()
+            .and_then(|r| {
+                r.into_body()
+                    .into_reader()
+                    .read_to_end(&mut bytes)
+                    .map_err(ureq::Error::from)
+            })
+            .unwrap_or_else(|e| fail(&format!("downloading Z3 source {source}: {e}")));
+        fs::write(&archive, bytes).unwrap_or_else(|e| fail(&format!("{}: {e}", archive.display())));
+    } else {
+        println!("cargo:rerun-if-changed={source}");
+        fs::copy(&source, &archive)
+            .unwrap_or_else(|e| fail(&format!("{SOURCE_ENV}={source}: {e}")));
+    }
+    let bytes = fs::read(&archive).unwrap_or_else(|e| fail(&format!("{}: {e}", archive.display())));
+    let digest = hex(&Sha256::digest(bytes));
+    if digest != Z3_SOURCE_SHA256 {
+        fail(&format!(
+            "Z3 {Z3_VERSION} source SHA-256 {digest} does not match pinned {Z3_SOURCE_SHA256}"
+        ));
+    }
+    let source_dir = out.join(format!("z3-{Z3_VERSION}-source"));
+    fs::create_dir_all(&source_dir)
+        .unwrap_or_else(|e| fail(&format!("{}: {e}", source_dir.display())));
+    let status = std::process::Command::new("tar")
+        .args(["-xzf"])
+        .arg(&archive)
+        .args(["--strip-components=1", "-C"])
+        .arg(&source_dir)
+        .status()
+        .unwrap_or_else(|e| fail(&format!("running tar to unpack Z3: {e}")));
+    if !status.success() {
+        fail("unpacking the pinned Z3 source failed");
+    }
+    let build_dir = out.join(format!("z3-{Z3_VERSION}-build"));
+    let status = std::process::Command::new("cmake")
+        .arg("-S")
+        .arg(&source_dir)
+        .arg("-B")
+        .arg(&build_dir)
+        .arg(format!(
+            "-DCMAKE_C_COMPILER={}",
+            env::var("CC")
+                .or_else(|_| env::var("CC_x86_64_unknown_linux_musl"))
+                .unwrap_or_else(|_| "cc".into())
+        ))
+        .arg(format!(
+            "-DCMAKE_CXX_COMPILER={}",
+            env::var("CXX")
+                .or_else(|_| env::var("CXX_x86_64_unknown_linux_musl"))
+                .unwrap_or_else(|_| "c++".into())
+        ))
+        .arg(format!(
+            "-DCMAKE_AR={}",
+            env::var("AR_x86_64_unknown_linux_musl").unwrap_or_else(|_| "ar".into())
+        ))
+        .arg(format!(
+            "-DCMAKE_RANLIB={}",
+            env::var("RANLIB_x86_64_unknown_linux_musl").unwrap_or_else(|_| "ranlib".into())
+        ))
+        .args([
+            "-DZ3_BUILD_LIBZ3_SHARED=OFF",
+            "-DZ3_BUILD_EXECUTABLE=OFF",
+            "-DZ3_BUILD_TEST_EXECUTABLES=OFF",
+            "-DZ3_BUILD_PYTHON_BINDINGS=OFF",
+            "-DZ3_BUILD_DOTNET_BINDINGS=OFF",
+            "-DZ3_BUILD_JAVA_BINDINGS=OFF",
+            "-DZ3_BUILD_DOCUMENTATION=OFF",
+            "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
+        ])
+        .status()
+        .unwrap_or_else(|e| fail(&format!("running cmake for Z3: {e}")));
+    if !status.success() {
+        fail("configuring pinned Z3 for musl failed");
+    }
+    let status = std::process::Command::new("cmake")
+        .args(["--build"])
+        .arg(&build_dir)
+        .args(["--target", "z3", "--parallel", "4"])
+        .status()
+        .unwrap_or_else(|e| fail(&format!("building Z3: {e}")));
+    if !status.success() {
+        fail("building pinned Z3 for musl failed");
+    }
+    fs::create_dir_all(lib_dir).unwrap_or_else(|e| fail(&format!("{}: {e}", lib_dir.display())));
+    let found = [
+        build_dir.join("libz3.a"),
+        build_dir.join("src").join("libz3.a"),
+    ]
+    .into_iter()
+    .find(|p| p.exists())
+    .unwrap_or_else(|| fail("Z3 build produced no libz3.a"));
+    fs::copy(found, lib).unwrap_or_else(|e| fail(&format!("{}: {e}", lib.display())));
 }
 
 /// The release zip: from `LITIGATE_SMT_Z3_ARCHIVE` if set, else GitHub.

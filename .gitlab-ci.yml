@@ -16,7 +16,7 @@ variables:
   image: rust:1.97.1-bookworm
   before_script:
     - apt-get update
-    - apt-get install --yes --no-install-recommends build-essential musl-tools
+    - apt-get install --yes --no-install-recommends build-essential
     - rustup target add "$TARGET"
   script:
     - cargo build --release --locked -p litigate-cli -p litigate-lsp --target "$TARGET"
@@ -34,8 +34,23 @@ linux-gnu:
 
 linux-musl:
   extends: .linux-release
+  image: rust:1.97.1-bookworm
+  services:
+    - name: docker:27.5.1-dind
+      command: ["--tls=false"]
+  before_script:
+    - apt-get update
+    - apt-get install --yes --no-install-recommends docker.io
   variables:
     TARGET: x86_64-unknown-linux-musl
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - mkdir -p dist target/x86_64-unknown-linux-musl/release
+    - docker run --rm -v "$CI_PROJECT_DIR:/workspace" -w /workspace rust:1.97.1-alpine3.22 sh -ec 'apk add --no-cache build-base cmake ninja python3; cargo build --release --locked -p litigate-cli -p litigate-lsp --target x86_64-unknown-linux-musl; target/x86_64-unknown-linux-musl/release/litigate --version; target/x86_64-unknown-linux-musl/release/litigate solve cases/frcp-civil-case.case'
+    - tar -C "target/$TARGET/release" -czf "dist/litigate-${CI_COMMIT_TAG}-${TARGET}.tar.gz" litigate litigate-lsp
+    - mkdir -p dist
+    - tar -C "target/$TARGET/release" -czf "dist/litigate-${CI_COMMIT_TAG}-${TARGET}.tar.gz" litigate litigate-lsp
 
 release:
   stage: release

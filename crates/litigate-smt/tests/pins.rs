@@ -121,3 +121,11 @@ fn a_drifted_flake_is_caught() {
         assert_ne!(build, flake_pin(&drifted), "{from} -> {to}");
     }
 }
+
+#[test]
+fn musl_build_uses_a_pinned_z3_source_and_cross_compilers() {
+    assert!(BUILD_RS.contains("const Z3_SOURCE_SHA256: &str = \"c433e1add0431c5edf1644bd9951c40588024d2d288f0e4215e5fcb6e3b4277d\""));
+    assert!(BUILD_RS.contains("-unknown-linux-musl"));
+    assert!(BUILD_RS.contains("CMAKE_C_COMPILER"));
+    assert!(BUILD_RS.contains("CMAKE_CXX_COMPILER"));
+}

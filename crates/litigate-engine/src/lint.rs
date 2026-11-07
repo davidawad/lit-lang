@@ -7,7 +7,7 @@ use std::collections::{BTreeSet, HashMap, HashSet};
 
 use crate::cite::{CiteGrammar, CiteOutcome, SourceCorpus};
 use crate::clock::{calendar::Observance, ClockLibrary};
-use crate::model::{Graph, NodeKind, Pack, RawEdge};
+use crate::model::{CiteSyntax, Graph, NodeKind, Pack, RawEdge};
 
 /// One content-quality finding: a warning about authored data, not a
 /// structural error (those fail compilation instead).
@@ -95,7 +95,7 @@ fn lint_clock_observances(clock: &ClockLibrary, push: &mut Push<'_>) {
             continue;
         };
         let cited_and_resolves = calendar.cite.as_deref().is_some_and(|cite| {
-            crate::cite::parse_cite_string(cite, &CiteGrammar::new(&Default::default()))
+            crate::cite::parse_cite_string(cite, &CiteGrammar::new(&CiteSyntax::default()))
                 .iter()
                 .any(|cite_ref| {
                     cite_ref

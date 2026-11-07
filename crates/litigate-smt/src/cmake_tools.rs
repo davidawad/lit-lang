@@ -1,4 +1,4 @@
-//! Helpers for passing optional target tools to CMake.
+//! Helpers for passing optional target tools to `CMake`.
 
 pub(crate) fn cmake_tool_args(
     ar: Option<std::ffi::OsString>,

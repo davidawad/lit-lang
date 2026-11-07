@@ -113,6 +113,29 @@ fn cited_non_default_calendar_observance_has_no_warning() {
 }
 
 #[test]
+fn cited_calendar_observance_resolves_exact_state_statute_heading() {
+    let corpus = SourceCorpus::from_files([(
+        "sources/nc-holidays/nc-legal-holidays.txt".to_string(),
+        "## N.C. Gen. Stat. § 103-4\nWeekend observance.\n".to_string(),
+    )]);
+    let mut diags = vec![];
+    let mut push = |severity, code, at: String, message| {
+        diags.push(Diagnostic {
+            severity,
+            code,
+            at,
+            message,
+        });
+    };
+    lint_clock_observances_with_corpus(
+        &observance_clock(Some("N.C. Gen. Stat. § 103-4")),
+        &corpus,
+        &mut push,
+    );
+    assert!(diags.is_empty());
+}
+
+#[test]
 fn reports_unverifiable_cite_with_reason() {
     let p = pack_with_cite(vec![source(Some("sources/frcp-fixture.txt"))], "FRCP 99");
     let mut diags = vec![];

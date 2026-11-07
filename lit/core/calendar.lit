@@ -112,13 +112,14 @@ calendar district-state-holidays effective [2016-12-01, ..) cite "FRCP 6(a)(6)(C
 /// Day, which FRCP 6(a)(6) does not name. § 6103(c) makes January 20 "of
 /// each fourth year after 1965" a holiday, as codified by Pub. L. 89-554
 /// (September 6, 1966; the uncodified Pub. L. 85-1 of 1957 preceded it). It
-/// states only the Sunday shift; observing a Saturday Inauguration Day on
-/// the Friday before, as § 6103(b)(1) does for every other holiday, is the
-/// interpretive choice `packs/clock/SOURCES-NOTES.md` records. The cite is
-/// today's RCFC 6, whose Rules Committee Notes record its changes since
-/// 2002 (Juneteenth added in 2022): a later text, cited for the whole
-/// history on purpose.
-calendar rcfc-legal-holidays cite "RCFC 6(a)(6)(A)" historical
+/// expressly observes a Sunday Inauguration Day on the Monday after; no
+/// official source states a Saturday observance rule. Keep the existing
+/// Friday-before Saturday handling as the earlier (never-late) date, an
+/// interpretive choice recorded in `packs/clock/SOURCES-NOTES.md`. The
+/// cites are today's RCFC 6, whose Rules Committee Notes record its changes
+/// since 2002 (Juneteenth added in 2022), and § 6103: later texts cited for
+/// the whole history on purpose.
+calendar rcfc-legal-holidays cite "RCFC 6; 5 U.S.C. § 6103" historical
 {
   new-years-day: fixed(1, 1) effective [1894-06-28, ..) observed nearest_weekday
   inauguration-day: every(4, 1965, 1, 20) effective [1966-09-06, ..) observed nearest_weekday

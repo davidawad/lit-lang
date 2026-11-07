@@ -86,6 +86,14 @@ pub fn lint_with_clock(g: &Graph, packs: &[Pack], clock: &ClockLibrary) -> Vec<D
 
 fn lint_clock_observances(clock: &ClockLibrary, push: &mut Push<'_>) {
     let corpus = SourceCorpus::embedded();
+    lint_clock_observances_with_corpus(clock, &corpus, push);
+}
+
+fn lint_clock_observances_with_corpus(
+    clock: &ClockLibrary,
+    corpus: &SourceCorpus,
+    push: &mut Push<'_>,
+) {
     for calendar in &clock.calendars {
         let Some(holiday) = calendar
             .holidays
@@ -101,6 +109,7 @@ fn lint_clock_observances(clock: &ClockLibrary, push: &mut Push<'_>) {
                     cite_ref
                         .heading()
                         .is_some_and(|heading| !corpus.lookup_all(&heading).is_empty())
+                        || !corpus.lookup_all(cite_ref.raw.trim()).is_empty()
                 })
         });
         if !cited_and_resolves {

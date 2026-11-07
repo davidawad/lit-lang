@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-07
+
+### Changed
+
+- Bump the workspace release version to 0.7.0 for the first beta binaries.
+
 ### Changed
 
 - **Sup. Ct. R. 30 counts from June 30, 1980** (lg-6n31). `lit/core`'s

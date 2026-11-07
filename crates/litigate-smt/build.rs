@@ -102,6 +102,15 @@ fn main() {
 
 /// Build the pinned Z3 source with the cross compilers selected by Cargo.
 fn build_musl_z3(out: &Path, lib_dir: &Path, lib: &Path) {
+    let archive = fetch_z3_source(out);
+    let source_dir = unpack_z3_source(out, &archive);
+    let build_dir = out.join(format!("z3-{Z3_VERSION}-build"));
+    configure_z3(&source_dir, &build_dir);
+    compile_z3(&build_dir);
+    install_z3_archive(&build_dir, lib_dir, lib);
+}
+
+fn fetch_z3_source(out: &Path) -> PathBuf {
     let source = env::var(SOURCE_ENV).unwrap_or_else(|_| {
         format!("https://codeload.github.com/Z3Prover/z3/tar.gz/refs/tags/z3-{Z3_VERSION}")
     });
@@ -130,25 +139,32 @@ fn build_musl_z3(out: &Path, lib_dir: &Path, lib: &Path) {
             "Z3 {Z3_VERSION} source SHA-256 {digest} does not match pinned {Z3_SOURCE_SHA256}"
         ));
     }
+    archive
+}
+
+fn unpack_z3_source(out: &Path, archive: &Path) -> PathBuf {
     let source_dir = out.join(format!("z3-{Z3_VERSION}-source"));
     fs::create_dir_all(&source_dir)
         .unwrap_or_else(|e| fail(&format!("{}: {e}", source_dir.display())));
     let status = std::process::Command::new("tar")
         .args(["-xzf"])
-        .arg(&archive)
+        .arg(archive)
         .args(["--strip-components=1", "-C"])
-        .arg(&source_dir)
+        .arg(source_dir.as_os_str())
         .status()
         .unwrap_or_else(|e| fail(&format!("running tar to unpack Z3: {e}")));
     if !status.success() {
         fail("unpacking the pinned Z3 source failed");
     }
-    let build_dir = out.join(format!("z3-{Z3_VERSION}-build"));
+    source_dir
+}
+
+fn configure_z3(source_dir: &Path, build_dir: &Path) {
     let status = std::process::Command::new("cmake")
         .arg("-S")
-        .arg(&source_dir)
+        .arg(source_dir)
         .arg("-B")
-        .arg(&build_dir)
+        .arg(build_dir.as_os_str())
         .arg(format!(
             "-DCMAKE_C_COMPILER={}",
             env::var("CC")
@@ -184,15 +200,21 @@ fn build_musl_z3(out: &Path, lib_dir: &Path, lib: &Path) {
     if !status.success() {
         fail("configuring pinned Z3 for musl failed");
     }
+}
+
+fn compile_z3(build_dir: &Path) {
     let status = std::process::Command::new("cmake")
         .args(["--build"])
-        .arg(&build_dir)
+        .arg(build_dir.as_os_str())
         .args(["--target", "z3", "--parallel", "4"])
         .status()
         .unwrap_or_else(|e| fail(&format!("building Z3: {e}")));
     if !status.success() {
         fail("building pinned Z3 for musl failed");
     }
+}
+
+fn install_z3_archive(build_dir: &Path, lib_dir: &Path, lib: &Path) {
     fs::create_dir_all(lib_dir).unwrap_or_else(|e| fail(&format!("{}: {e}", lib_dir.display())));
     let found = [
         build_dir.join("libz3.a"),

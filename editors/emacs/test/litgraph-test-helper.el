@@ -107,7 +107,7 @@ json' options."
          (if fixture
              (funcall callback 0 (litgraph-test-fixture fixture) "")
            (funcall callback 2 (litgraph-test-fixture "error") "")))))
-    (`("--version") (funcall callback 0 "litigate 0.7.0 (commit x, clean)\n" ""))
+    (`("--version") (funcall callback 0 "litigate 0.7.1 (commit x, clean)\n" ""))
     (`("timeline" . ,args)
      ;; Model clap's timeline parser: --format takes json|human, and only
      ;; the date, layer, and world options are accepted.  In particular,

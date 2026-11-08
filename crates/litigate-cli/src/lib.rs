@@ -44,7 +44,7 @@ pub mod ws;
 /// What `--version` prints after the program name: the package version,
 /// the git commit built from, and whether the tree was `clean` or `dirty`
 /// (`build.rs`; `unknown` outside a git checkout), e.g.
-/// `0.7.0 (commit 06a430f…, clean)`, since installs go by sha.
+/// `0.7.1 (commit 06a430f…, clean)`, since installs go by sha.
 pub const VERSION: &str = concat!(
     env!("CARGO_PKG_VERSION"),
     " (commit ",

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-11-08
+
+### Changed
+
+- Release 0.7.1 includes the repaired musl Z3 source build and static CMake
+  target (lg-zmqc.7.3-7.5), resolved and tested court-holiday observance
+  citations (lg-zmqc.72/.73), calendar-cite linting (lg-pxcut), the restored
+  fast CI gate tests (lg-zmqc.69), and the beta new-user walkthrough
+  (lg-zmqc.70).
+
 ## [0.7.0] - 2026-11-07
 
 ### Changed

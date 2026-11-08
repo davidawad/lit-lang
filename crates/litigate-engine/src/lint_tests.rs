@@ -136,6 +136,29 @@ fn cited_calendar_observance_resolves_exact_state_statute_heading() {
 }
 
 #[test]
+fn cited_maryland_calendar_observance_resolves_exact_statute_heading() {
+    let corpus = SourceCorpus::from_files([(
+        "sources/md-holidays/md-legal-holidays.txt".to_string(),
+        "## Md. Code, Gen. Provis. § 1-111\nWeekend observance.\n".to_string(),
+    )]);
+    let mut diags = vec![];
+    let mut push = |severity, code, at: String, message| {
+        diags.push(Diagnostic {
+            severity,
+            code,
+            at,
+            message,
+        });
+    };
+    lint_clock_observances_with_corpus(
+        &observance_clock(Some("Md. Code, Gen. Provis. § 1-111")),
+        &corpus,
+        &mut push,
+    );
+    assert!(diags.is_empty());
+}
+
+#[test]
 fn reports_unverifiable_cite_with_reason() {
     let p = pack_with_cite(vec![source(Some("sources/frcp-fixture.txt"))], "FRCP 99");
     let mut diags = vec![];

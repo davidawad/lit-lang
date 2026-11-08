@@ -103,14 +103,15 @@ fn lint_clock_observances_with_corpus(
             continue;
         };
         let cited_and_resolves = calendar.cite.as_deref().is_some_and(|cite| {
-            crate::cite::parse_cite_string(cite, &CiteGrammar::new(&CiteSyntax::default()))
-                .iter()
-                .any(|cite_ref| {
-                    cite_ref
-                        .heading()
-                        .is_some_and(|heading| !corpus.lookup_all(&heading).is_empty())
-                        || !corpus.lookup_all(cite_ref.raw.trim()).is_empty()
-                })
+            !corpus.lookup_all(cite.trim()).is_empty()
+                || crate::cite::parse_cite_string(cite, &CiteGrammar::new(&CiteSyntax::default()))
+                    .iter()
+                    .any(|cite_ref| {
+                        cite_ref
+                            .heading()
+                            .is_some_and(|heading| !corpus.lookup_all(&heading).is_empty())
+                            || !corpus.lookup_all(cite_ref.raw.trim()).is_empty()
+                    })
         });
         if !cited_and_resolves {
             push(

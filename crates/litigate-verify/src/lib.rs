@@ -16,7 +16,8 @@
 //!
 //! Profiles change severity and acceptance, never values: holes are L9002
 //! warnings in `dev` and L5002 errors in `strict`; L9001 is a warning in
-//! `dev` and an error in `strict`; every other failure is an error.
+//! `dev` and an error in `strict`; L9011 is a warning in both profiles.
+//! Other failures are errors.
 mod assertions;
 mod cite;
 mod context;

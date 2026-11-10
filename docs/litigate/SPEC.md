@@ -2746,10 +2746,10 @@ imported when one of its leading `///` lines is exactly `imported`; HIR
 records it as `Metadata.imported`, and the marker line is never the
 declaration's fallback label. The exemption covers the declaration's own
 `cite` and, for a node, its edges' `authority` texts. `strict` rejects every
-hole (L5002), every `cite-resolves` failure, every untested deadline or
-counting rule (L9001 as an error), every counting-insensitive deadline
-(L9011 as an error), `unvalued` stakes, and non-canonical
-formatting (L9004).
+hole (L5002), every `cite-resolves` failure, and every untested deadline or
+counting rule (L9001 as an error). It reports counting-insensitive deadlines
+with L9011 as a warning in both profiles. `unvalued` stakes and non-canonical
+formatting (L9004) are warnings.
 `litigate check --profile strict` passing on `lit/core` is the epic gate.
 
 ## 8. Lowering contract
@@ -3265,9 +3265,15 @@ Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
 L4009, L4010, L4011, L4012, L4013, L4014, L4016, L3010 and L2015 is `error`.
 L9003, L9006, L9008 and L9009 are `info`. L4009, L4010, L4011, L4012,
 L4013, L4014, L4016, L9005, L9007 and L9010 are `warning`. L9001, L9002,
-L9011,
 L9004, L3010 (a hole in the corpus) and L2015 (an undecided refinement, a
-hole) are `warning` in `dev` and `error` in `strict`.
+hole) are `warning` in `dev` and `error` in `strict`. L9011 is a `warning`
+in both `dev` and `strict` while the corpus tests are being updated; it
+reports when every comparable inline test for a direct-trigger calendar-day,
+court-day, business-day, or week deadline asserts the same date under plain
+calendar addition with no roll as under the declared counting rule. A test
+that asserts a date where counting changes the result, such as a rolled
+boundary, discharges this lint. Chained deadlines and hour, month, and year
+units are outside the comparison.
 
 ### 9.2 Shapes
 

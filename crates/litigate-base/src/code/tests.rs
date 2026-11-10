@@ -71,12 +71,12 @@ fn every_registered_code_exercises_its_stable_views() {
                 && matches!(
                     code,
                     DiagnosticCode::RuleWithoutTest
-                        | DiagnosticCode::CountingTestInsensitive
                         | DiagnosticCode::HolePresent
                         | DiagnosticCode::NonCanonicalFormat
                         | DiagnosticCode::NotEncoded
                         | DiagnosticCode::RefinementUndecided
                 ))
+                || code == DiagnosticCode::CountingTestInsensitive
             {
                 assert_eq!(severity, Severity::Warning);
             } else {

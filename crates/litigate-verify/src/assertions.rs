@@ -49,8 +49,10 @@ pub(crate) fn failures(cx: &Context<'_>, known_at: &str) -> Vec<Diagnostic> {
 }
 
 /// Deadlines whose inline assertions never distinguish their counted date
-/// from plain calendar addition. Only day periods with a direct event trigger
-/// are candidates; other clock units are not modeled by this comparison.
+/// from plain calendar addition. Hours and calendar-month/year periods are
+/// skipped because elapsed hours and calendar clamping have no plain-day
+/// addition equivalent. Chained deadlines are also skipped: their trigger is
+/// another computed deadline rather than a test-supplied event.
 pub(crate) fn counting_insensitive(
     cx: &Context<'_>,
     known_at: &str,
@@ -62,14 +64,14 @@ pub(crate) fn counting_insensitive(
             continue;
         };
         for expectation in &test.expects {
-            let (target, expected) = match (&expectation.lhs.kind, &expectation.rhs.kind) {
+            let (target, nominal, expected) = match (&expectation.lhs.kind, &expectation.rhs.kind) {
                 (
                     ExprKind::Call { callee, args },
                     ExprKind::Literal {
                         value: Value::Date(date),
                     },
                 ) if callee == "deadline" => match args.first().map(|a| &a.kind) {
-                    Some(ExprKind::Ref { target }) => (target, date),
+                    Some(ExprKind::Ref { target }) => (target, false, date),
                     _ => continue,
                 },
                 (
@@ -80,7 +82,11 @@ pub(crate) fn counting_insensitive(
                 ) => match &base.kind {
                     ExprKind::Call { callee, args } if callee == "deadline" => {
                         match args.first().map(|a| &a.kind) {
-                            Some(ExprKind::Ref { target }) => (target, date),
+                            Some(ExprKind::Ref { target }) => (
+                                target,
+                                matches!(&expectation.lhs.kind, ExprKind::Field { field, .. } if field == "nominal"),
+                                date,
+                            ),
                             _ => continue,
                         }
                     }
@@ -91,7 +97,15 @@ pub(crate) fn counting_insensitive(
             let Some(deadline) = cx.deadline_versions(target).first().copied() else {
                 continue;
             };
-            if deadline.unit != hir::DayUnit::Calendar || deadline.chain.is_some() {
+            if deadline.chain.is_some()
+                || !matches!(
+                    deadline.unit,
+                    hir::DayUnit::Calendar
+                        | hir::DayUnit::Court
+                        | hir::DayUnit::Business
+                        | hir::DayUnit::Week
+                )
+            {
                 continue;
             }
             let Some((given, date)) = test
@@ -101,7 +115,7 @@ pub(crate) fn counting_insensitive(
             else {
                 continue;
             };
-            let Ok(actual) = due(cx, &clocks, test, target, false) else {
+            let Ok(actual) = due(cx, &clocks, test, target, nominal) else {
                 continue;
             };
             let Ok(trigger) = clock::Date::parse_iso(date) else {
@@ -113,7 +127,12 @@ pub(crate) fn counting_insensitive(
             };
             let excluded_trigger = counting.map_or(true, |(_, rule)| rule.exclude_trigger_day);
             let amount = i64::try_from(deadline.amount).unwrap_or(i64::MAX);
-            let delta = amount.saturating_sub(i64::from(!excluded_trigger));
+            let amount_days = if deadline.unit == hir::DayUnit::Week {
+                amount.saturating_mul(7)
+            } else {
+                amount
+            };
+            let delta = amount_days.saturating_sub(i64::from(!excluded_trigger));
             let naive = trigger
                 .add_days(if deadline.direction == hir::Direction::Forward {
                     delta

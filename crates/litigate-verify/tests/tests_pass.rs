@@ -5,7 +5,7 @@ mod support;
 
 use litigate_base::Profile;
 use litigate_verify::{Obligation, ObligationStatus};
-use support::{edit, outcome, verify_one, with};
+use support::{edit, outcome, verify_one, with, BASE};
 
 const PERSONAL: &str = "given Served(complaint, Personal) on 2025-03-03\n  \
                         expect deadline(answer-period) == 2025-03-24";
@@ -43,6 +43,31 @@ tests_pass!(
     Passed,
     first_test(&format!("{SERVICES}2025-02-24"))
 );
+
+#[test]
+fn counting_insensitive_lint_fires_on_weekdays_and_clears_on_a_rolled_boundary() {
+    let weekday_only = BASE
+        .replace(
+            "test \"mail service adds three days\" cite \"FRCP 6(d)\"\n{\n  given Served(complaint, Mail) on 2025-03-03\n  expect deadline(answer-period) == 2025-03-27\n}\n",
+            "",
+        );
+    let checked = verify_one(&weekday_only, Profile::Strict);
+    assert!(checked
+        .verification
+        .diagnostics
+        .iter()
+        .any(|d| d.code.as_str() == "L9011"));
+
+    let boundary = format!(
+        "{weekday_only}\ntest \"answer due rolls Sunday\" cite \"FRCP 6(a)\"\n{{\n  given Served(complaint, Personal) on 2025-03-02\n  expect deadline(answer-period) == 2025-03-24\n}}"
+    );
+    let checked = verify_one(&boundary, Profile::Strict);
+    assert!(!checked
+        .verification
+        .diagnostics
+        .iter()
+        .any(|d| d.code.as_str() == "L9011"));
+}
 
 tests_pass!(
     the_latest_matching_given_triggers_a_latest_policy_deadline,

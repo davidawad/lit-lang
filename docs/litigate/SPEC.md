@@ -2755,11 +2755,24 @@ imported when one of its leading `///` lines is exactly `imported`; HIR
 records it as `Metadata.imported`, and the marker line is never the
 declaration's fallback label. The exemption covers the declaration's own
 `cite` and, for a node, its edges' `authority` texts. `strict` rejects every
-hole (L5002), every `cite-resolves` failure, and every untested deadline or
-counting rule (L9001 as an error). It reports counting-insensitive deadlines
-with L9011 as a warning in both profiles. `unvalued` stakes and non-canonical
-formatting (L9004) are warnings.
-`litigate check --profile strict` passing on `lit/core` is the epic gate.
+hole (L5002), every `cite-resolves` failure, every untested deadline or
+counting rule (L9001 as an error), `unvalued` stakes, and non-canonical
+formatting (L9004). L9011 is a warning in both profiles.
+For `litigate check P --profile strict`, every declaration in each named
+package is judged in full. A dependency package is judged only for
+declarations reachable from the named package's declarations, following
+resolved references transitively. Reachability includes imports actually
+used, declaration references (including a deadline's counting rule and a
+counting rule's calendars), type and event references, `recounts`, and
+layered packages selected by `Lit.toml`. An L5002 in a reachable dependency
+declaration remains an error attributed to the named package. Holes in
+unreachable declarations of a dependency do not fail the named package;
+they are summarized in one note per dependency package with the number of
+omitted holes. A package named on the command line is always judged in full,
+including when another named package depends on it. This scope is applied to
+the existing per-declaration verification results; it is not a separate
+workspace-wide verification pass. Thus `litigate check lit/core --profile
+strict` continues to judge all of core's declarations.
 
 ## 8. Lowering contract
 

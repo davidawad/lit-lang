@@ -12,6 +12,7 @@ use litigate_sema::change::world::{check_world, WorldCheck};
 use litigate_sema::pkg::source::{Disk, Source};
 use litigate_verify::{Finding, Obligation};
 use serde_json::{json, Value};
+use std::collections::{BTreeMap, BTreeSet};
 
 /// A completed check.
 pub struct Checked {
@@ -160,6 +161,9 @@ pub fn check_session_with(
         .chain(cases.iter().flat_map(|c| c.diagnostics.iter().cloned()))
         .chain(worlds.iter().flat_map(|w| w.diagnostics.iter().cloned()))
         .collect();
+    if profile == Profile::Strict {
+        dependency_holes(&session, &mut diagnostics);
+    }
     super::vendor::retarget(&session.packages, &mut diagnostics);
     let parts: Vec<&[Finding]> = verdicts
         .iter()
@@ -176,6 +180,187 @@ pub fn check_session_with(
         findings,
         profile,
         complete,
+    }
+}
+
+/// Keep strict-profile holes in dependency packages fatal only when a
+/// declaration is reachable from a package named by the user. HIR's
+/// resolved references are fully qualified strings; walking the serialized
+/// HIR fields includes references nested in expressions, rules, and package
+/// declarations without treating labels or prose as references.
+fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
+    use litigate_sema::hir::{Declaration as D, Package};
+
+    fn meta(d: &D) -> Option<&litigate_sema::hir::Metadata> {
+        match d {
+            D::Node(x) => Some(&x.meta),
+            D::Deadline(x) => Some(&x.meta),
+            D::Counting(x) => Some(&x.meta),
+            D::Calendar(x) => Some(&x.meta),
+            D::Rule(x) => Some(&x.meta),
+            D::Default(x) => Some(&x.meta),
+            D::Exception(x) => Some(&x.meta),
+            D::Transition(x) => Some(&x.meta),
+            D::TypeAlias(_) | D::Enum(_) | D::Event(_) | D::Test(_) => None,
+            D::Grant(x) => Some(&x.meta),
+            D::Limit(x) => Some(&x.meta),
+            D::Recharacterize(x) => Some(&x.meta),
+            D::Invalidate(x) => Some(&x.meta),
+            D::Calibration(x) => Some(&x.meta),
+            D::Authority(_) | D::Link(_) | D::Instance(_) => None,
+        }
+    }
+    fn declarations(p: &Package) -> Vec<&D> {
+        p.modules
+            .iter()
+            .flat_map(|m| m.declarations.iter())
+            .collect()
+    }
+    fn string_leaves(value: &serde_json::Value, out: &mut BTreeSet<String>) {
+        match value {
+            serde_json::Value::String(text) => {
+                out.insert(text.clone());
+            }
+            serde_json::Value::Array(items) => {
+                for item in items {
+                    string_leaves(item, out);
+                }
+            }
+            serde_json::Value::Object(fields) => {
+                for item in fields.values() {
+                    string_leaves(item, out);
+                }
+            }
+            _ => {}
+        }
+    }
+    let packages: BTreeMap<&str, &Package> = session
+        .packages
+        .iter()
+        .filter_map(|p| p.check.package.as_ref().map(|h| (p.name.as_str(), h)))
+        .collect();
+    let roots: Vec<&Package> = session
+        .packages
+        .iter()
+        .filter(|p| p.requested)
+        .filter_map(|p| p.check.package.as_ref())
+        .collect();
+    // Serialize each declaration once. The string-leaf index lets the
+    // transitive walk resolve a reference without rescanning the HIR.
+    let mut declaration_refs: BTreeMap<String, (String, BTreeSet<String>)> = BTreeMap::new();
+    let mut local_ids: BTreeMap<(String, String), String> = BTreeMap::new();
+    for (package_name, package) in &packages {
+        for declaration in declarations(package) {
+            let Some(m) = meta(declaration) else { continue };
+            let key = format!("{}::{}", package.manifest.pack_id, m.id);
+            let mut refs = BTreeSet::new();
+            if let Ok(value) = serde_json::to_value(declaration) {
+                string_leaves(&value, &mut refs);
+            }
+            local_ids.insert(((*package_name).to_owned(), m.id.clone()), key.clone());
+            declaration_refs.insert(key, ((*package_name).to_owned(), refs));
+        }
+    }
+    let mut reachable = BTreeSet::new();
+    for root in roots {
+        let mut pending = Vec::new();
+        for declaration in declarations(root) {
+            let Some(m) = meta(declaration) else { continue };
+            let key = format!("{}::{}", root.manifest.pack_id, m.id);
+            if let Some((_, refs)) = declaration_refs.get(&key) {
+                pending.extend(refs.iter().cloned().map(|reference| (root.manifest.name.clone(), reference)));
+            }
+        }
+        let mut configured_packages = vec![root];
+        configured_packages.extend(root.manifest.recounts.iter().filter_map(|name| {
+            packages
+                .values()
+                .find(|p| p.manifest.name == *name)
+                .copied()
+        }));
+        for configured in configured_packages {
+            let Some(counting) = configured.manifest.counting.as_deref() else {
+                continue;
+            };
+            for declaration in declarations(configured) {
+                let Some(m) = meta(declaration) else { continue };
+                let key = format!("{}::{}", configured.manifest.pack_id, m.id);
+                if m.id == counting || key == counting {
+                    reachable.insert(key);
+                    let key = format!("{}::{}", configured.manifest.pack_id, m.id);
+                    if let Some((_, refs)) = declaration_refs.get(&key) {
+                        pending.extend(refs.iter().cloned().map(|reference| (configured.manifest.name.clone(), reference)));
+                    }
+                }
+            }
+        }
+        let mut seen = BTreeSet::new();
+        while let Some((source_package, reference)) = pending.pop() {
+            let target = if declaration_refs.contains_key(&reference) {
+                Some(reference)
+            } else {
+                local_ids.get(&(source_package, reference)).cloned()
+            };
+            let Some(key) = target else { continue };
+            if !seen.insert(key.clone()) { continue; }
+            reachable.insert(key.clone());
+            if let Some((package, refs)) = declaration_refs.get(&key) {
+                pending.extend(refs.iter().cloned().map(|reference| (package.clone(), reference)));
+            }
+        }
+    }
+    let mut omitted: BTreeMap<String, Vec<usize>> = BTreeMap::new();
+    for (index, diagnostic) in diagnostics.iter_mut().enumerate() {
+        if diagnostic.code != DiagnosticCode::HoleInStrict {
+            continue;
+        }
+        let Some(owner) = session
+            .packages
+            .iter()
+            .find(|p| !p.requested && p.files.iter().any(|(f, _)| f == &diagnostic.span.file.0))
+        else {
+            continue;
+        };
+        let package = packages.get(owner.name.as_str());
+        let is_reachable = package.is_some_and(|p| {
+            declarations(p).into_iter().any(|d| {
+                let Some(m) = meta(d) else { return false };
+                let Some(s) = m.span.as_ref() else {
+                    return false;
+                };
+                s.file == diagnostic.span.file
+                    && (s.line < diagnostic.span.line
+                        || (s.line == diagnostic.span.line && s.col <= diagnostic.span.col))
+                    && (s.end_line > diagnostic.span.end_line
+                        || (s.end_line == diagnostic.span.end_line
+                            && s.end_col >= diagnostic.span.end_col))
+                    && reachable.contains(&format!("{}::{}", p.manifest.pack_id, m.id))
+            })
+        });
+        if !is_reachable {
+            omitted.entry(owner.name.clone()).or_default().push(index);
+        }
+    }
+    let mut removed = BTreeSet::new();
+    for (package, indexes) in omitted {
+        let count = indexes.len();
+        let Some((&first, rest)) = indexes.split_first() else {
+            continue;
+        };
+        diagnostics[first].severity = Severity::Info;
+        diagnostics[first].message = format!("unreachable dependency holes in `{package}`");
+        diagnostics[first].notes.push(Note {
+            message: format!("{count} holes in declarations unreachable from the requested package; omitted from its strict verdict"),
+        });
+        removed.extend(rest.iter().copied());
+    }
+    if !removed.is_empty() {
+        let old = std::mem::take(diagnostics);
+        *diagnostics = old
+            .into_iter()
+            .enumerate()
+            .filter_map(|(i, d)| (!removed.contains(&i)).then_some(d))
+            .collect();
     }
 }
 

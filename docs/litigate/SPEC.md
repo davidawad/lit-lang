@@ -2732,6 +2732,7 @@ undecided, which is an L5007 error.
 | `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4012 |
 | `holes` | lists every hole with reason and span | L9002 / L5002 |
 | `rule-without-test` | every deadline and counting rule is exercised by a `test` | L9001 |
+| `counting-test-insensitive` | every test of a calendar-day deadline has the same expected due date under plain calendar addition with no roll as under its declared counting rule | L9011 |
 
 A rule package's report skips `case-replay`; a matter's report checks
 `case-replay` (and counts its resolution errors against `well-typed`) and
@@ -2746,7 +2747,8 @@ records it as `Metadata.imported`, and the marker line is never the
 declaration's fallback label. The exemption covers the declaration's own
 `cite` and, for a node, its edges' `authority` texts. `strict` rejects every
 hole (L5002), every `cite-resolves` failure, every untested deadline or
-counting rule (L9001 as an error), `unvalued` stakes, and non-canonical
+counting rule (L9001 as an error), every counting-insensitive deadline
+(L9011 as an error), `unvalued` stakes, and non-canonical
 formatting (L9004).
 `litigate check --profile strict` passing on `lit/core` is the epic gate.
 
@@ -3257,11 +3259,13 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9008 | cite proved by its amendment history | | |
 | L9009 | precedent not binding at the world's location | | |
 | L9010 | repeated test trigger with implicit occurrence choice | | |
+| L9011 | counting test insensitive to the counting rule | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
 L4009, L4010, L4011, L4012, L4013, L4014, L4016, L3010 and L2015 is `error`.
 L9003, L9006, L9008 and L9009 are `info`. L4009, L4010, L4011, L4012,
 L4013, L4014, L4016, L9005, L9007 and L9010 are `warning`. L9001, L9002,
+L9011,
 L9004, L3010 (a hole in the corpus) and L2015 (an undecided refinement, a
 hole) are `warning` in `dev` and `error` in `strict`.
 

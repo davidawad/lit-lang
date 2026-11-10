@@ -48,6 +48,96 @@ pub(crate) fn failures(cx: &Context<'_>, known_at: &str) -> Vec<Diagnostic> {
         .collect()
 }
 
+/// Deadlines whose inline assertions never distinguish their counted date
+/// from plain calendar addition. Only day periods with a direct event trigger
+/// are candidates; other clock units are not modeled by this comparison.
+pub(crate) fn counting_insensitive(
+    cx: &Context<'_>,
+    known_at: &str,
+) -> std::collections::BTreeSet<String> {
+    let clocks = Clocks::new(cx, known_at);
+    let mut tested = BTreeMap::<String, bool>::new();
+    for declaration in cx.declarations() {
+        let Declaration::Test(test) = declaration else {
+            continue;
+        };
+        for expectation in &test.expects {
+            let (target, expected) = match (&expectation.lhs.kind, &expectation.rhs.kind) {
+                (
+                    ExprKind::Call { callee, args },
+                    ExprKind::Literal {
+                        value: Value::Date(date),
+                    },
+                ) if callee == "deadline" => match args.first().map(|a| &a.kind) {
+                    Some(ExprKind::Ref { target }) => (target, date),
+                    _ => continue,
+                },
+                (
+                    ExprKind::Field { base, .. },
+                    ExprKind::Literal {
+                        value: Value::Date(date),
+                    },
+                ) => match &base.kind {
+                    ExprKind::Call { callee, args } if callee == "deadline" => {
+                        match args.first().map(|a| &a.kind) {
+                            Some(ExprKind::Ref { target }) => (target, date),
+                            _ => continue,
+                        }
+                    }
+                    _ => continue,
+                },
+                _ => continue,
+            };
+            let Some(deadline) = cx.deadline_versions(target).first().copied() else {
+                continue;
+            };
+            if deadline.unit != hir::DayUnit::Calendar || deadline.chain.is_some() {
+                continue;
+            }
+            let Some((given, date)) = test
+                .givens
+                .iter()
+                .find(|(given, _)| matches(&deadline.trigger, given))
+            else {
+                continue;
+            };
+            let Ok(actual) = due(cx, &clocks, test, target, false) else {
+                continue;
+            };
+            let Ok(trigger) = clock::Date::parse_iso(date) else {
+                continue;
+            };
+            let (owner, _) = cx.owner(target);
+            let Ok(counting) = counting_of(&clocks, owner, deadline, date) else {
+                continue;
+            };
+            let excluded_trigger = counting.map_or(true, |(_, rule)| rule.exclude_trigger_day);
+            let amount = i64::try_from(deadline.amount).unwrap_or(i64::MAX);
+            let delta = amount.saturating_sub(i64::from(!excluded_trigger));
+            let naive = trigger
+                .add_days(if deadline.direction == hir::Direction::Forward {
+                    delta
+                } else {
+                    -delta
+                })
+                .to_iso();
+            let _ = given;
+            let entry = tested.entry(cx.local(target).to_owned()).or_insert(true);
+            if !is_counting_insensitive(&actual, &naive, expected) {
+                *entry = false;
+            }
+        }
+    }
+    tested
+        .into_iter()
+        .filter_map(|(id, insensitive)| insensitive.then_some(id))
+        .collect()
+}
+
+fn is_counting_insensitive(actual: &str, naive: &str, expected: &str) -> bool {
+    actual == naive && actual == expected
+}
+
 fn expectation(
     cx: &Context<'_>,
     clocks: &Clocks,
@@ -675,5 +765,19 @@ mod tests {
         assert_eq!(show(&call("has_event", &["E::x"]), &v), "has_event");
         assert_eq!(show(&call("has_event", &[]), &v), "has_event");
         assert_eq!(show(&variant("E::x"), &v), "true");
+    }
+
+    #[test]
+    fn plain_weekday_arithmetic_is_insensitive_but_a_rolled_boundary_is_not() {
+        assert!(is_counting_insensitive(
+            "2027-01-11",
+            "2027-01-11",
+            "2027-01-11"
+        ));
+        assert!(!is_counting_insensitive(
+            "2027-01-11",
+            "2027-01-09",
+            "2027-01-11"
+        ));
     }
 }

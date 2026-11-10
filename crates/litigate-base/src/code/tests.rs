@@ -8,6 +8,9 @@ fn code_registry_round_trips_and_explains() {
     assert_eq!(DiagnosticCode::parse(code.as_str()), Some(code));
     assert!(code.explain().contains("delegation"));
     assert_eq!(DiagnosticCode::parse("L3999"), None);
+    let code = DiagnosticCode::CountingTestInsensitive;
+    assert_eq!(code.as_str(), "L9011");
+    assert!(code.explain().contains("plain calendar addition"));
 }
 
 #[test]
@@ -68,6 +71,7 @@ fn every_registered_code_exercises_its_stable_views() {
                 && matches!(
                     code,
                     DiagnosticCode::RuleWithoutTest
+                        | DiagnosticCode::CountingTestInsensitive
                         | DiagnosticCode::HolePresent
                         | DiagnosticCode::NonCanonicalFormat
                         | DiagnosticCode::NotEncoded

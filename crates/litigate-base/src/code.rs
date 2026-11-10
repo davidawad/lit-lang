@@ -153,6 +153,7 @@ registry! {
     FormerName = "L9007" => "A reference uses an id the declaration had before it was renamed (`formerly`)",
     CiteProvedByHistory = "L9008" => "A cite's vendored text, dated after its version took effect, is that version's text: the vendored amendment history records no amendment in between",
     PrecedentNotBinding = "L9009" => "A precedent layer does not bind at the world's location: it is persuasive there, and its binding effects are not in force",
+    CountingTestInsensitive = "L9011" => "Every test of this deadline has the same expected date under plain calendar addition as under its counting rule",
     RepeatedTestTrigger = "L9010" => "An inline test repeats a deadline trigger whose default occurrence choice is implicit",
 }
 
@@ -237,6 +238,7 @@ impl DiagnosticCode {
             )
             | (
                 Self::RuleWithoutTest
+                | Self::CountingTestInsensitive
                 | Self::HolePresent
                 | Self::NonCanonicalFormat
                 | Self::NotEncoded

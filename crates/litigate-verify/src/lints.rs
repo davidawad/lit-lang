@@ -41,7 +41,7 @@ pub(crate) fn holes(holes: &[Hole], profile: Profile) -> Vec<Diagnostic> {
 }
 
 /// L9001 for every deadline and counting rule no test exercises.
-pub(crate) fn untested(cx: &Context<'_>) -> Vec<Diagnostic> {
+pub(crate) fn untested(cx: &Context<'_>, insensitive: &BTreeSet<String>) -> Vec<Diagnostic> {
     let tested = tested_deadlines(cx);
     let counted: BTreeSet<String> = cx
         .declarations()
@@ -56,12 +56,34 @@ pub(crate) fn untested(cx: &Context<'_>) -> Vec<Diagnostic> {
     cx.declarations()
         .filter_map(|d| match d {
             Declaration::Deadline(x) if !tested.contains(&x.meta.id) => Some(deadline(cx, x)),
+            Declaration::Deadline(x) if insensitive.contains(&x.meta.id) => {
+                Some(insensitive_deadline(cx, x))
+            }
             Declaration::Counting(c) if !counted.contains(&c.meta.id) => Some(counting(cx, c)),
             _ => None,
         })
         .filter(|(id, _)| seen.insert(id.clone()))
         .map(|(_, d)| d)
         .collect()
+}
+
+fn insensitive_deadline(cx: &Context<'_>, x: &hir::Deadline) -> (String, Diagnostic) {
+    let span = cx.span_or_manifest(x.meta.span.as_ref());
+    let id = &x.meta.id;
+    let d = emit(
+        C::CountingTestInsensitive,
+        cx.profile,
+        span.clone(),
+        format!("every test of deadline `{id}` has the same date under plain calendar addition as under counting rule `{}`", cx.local(&x.counting)),
+    );
+    let fix = format!("\n\ntest \"{id} counting rule boundary\" {{\n  given <trigger event> on <date chosen so the naive due date is closed>\n  expect deadline({id}) == <date computed by the counting rule>\n  cite \"<counting rule cite>\"\n}}\n");
+    let mut d = d;
+    d.fixes.push(Fix::single(
+        end_of(&span),
+        fix,
+        Applicability::HasPlaceholders,
+    ));
+    (format!("counting-insensitive:{id}"), d)
 }
 
 /// Local ids of deadlines some test evaluates with `deadline(d)`.

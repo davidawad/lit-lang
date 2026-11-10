@@ -201,7 +201,12 @@ pub fn verify_package(
     record(&mut b, O::WellTyped, typed);
     evidence::holes(&mut b, holes.len());
     record(&mut b, O::Holes, lints::holes(&holes, profile));
-    record(&mut b, O::RuleWithoutTest, lints::untested(&cx));
+    let insensitive = assertions::counting_insensitive(&cx, known_at);
+    record(
+        &mut b,
+        O::RuleWithoutTest,
+        lints::untested(&cx, &insensitive),
+    );
     b.skip(
         O::CaseReplay,
         "a rule package has no events; replay is checked per case",

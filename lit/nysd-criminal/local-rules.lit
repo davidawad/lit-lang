@@ -1,7 +1,7 @@
 module nysd-criminal-local-rules.local-rules
 
 import core.authority.{ CaseOrder }
-import core.frcrimp45.{ frcrimp45 }
+import core.frcrimp45.{ frcrimp45-sdny }
 
 // The Southern District of New York's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"; the
@@ -63,7 +63,7 @@ event ReconsiderationReplyFiled() paper reconsideration-reply
 /// Local Criminal Rule 12.4: for FRCrimP 12.4(b)(2), "promptly" means
 /// within 14 days: a supplemental disclosure statement is filed within 14
 /// days of any change in the information the statement requires.
-deadline supplemental-disclosure-statement: 14.days after DisclosureInformationChanged() counted_by frcrimp45 cite "S.D.N.Y. Local Crim. R. 12.4"
+deadline supplemental-disclosure-statement: 14.days after DisclosureInformationChanged() counted_by frcrimp45-sdny cite "S.D.N.Y. Local Crim. R. 12.4"
 {
   forum frcrimp
 }
@@ -71,7 +71,7 @@ deadline supplemental-disclosure-statement: 14.days after DisclosureInformationC
 /// Local Criminal Rule 16.2: unless the court orders otherwise, the
 /// government makes its FRCrimP 16(a)(1)(G) expert disclosures at least 60
 /// days before trial.
-deadline government-expert-disclosure: 60.days before TrialScheduled() counted_by frcrimp45 delegable {
+deadline government-expert-disclosure: 60.days before TrialScheduled() counted_by frcrimp45-sdny delegable {
   to CaseOrder
   op set
 } cite "S.D.N.Y. Local Crim. R. 16.2"
@@ -81,7 +81,7 @@ deadline government-expert-disclosure: 60.days before TrialScheduled() counted_b
 
 /// Local Criminal Rule 16.2: unless the court orders otherwise, the defense
 /// makes its expert disclosures at least 30 days before trial.
-deadline defense-expert-disclosure: 30.days before TrialScheduled() counted_by frcrimp45 delegable {
+deadline defense-expert-disclosure: 30.days before TrialScheduled() counted_by frcrimp45-sdny delegable {
   to CaseOrder
   op set
 } cite "S.D.N.Y. Local Crim. R. 16.2"
@@ -93,7 +93,7 @@ deadline defense-expert-disclosure: 30.days before TrialScheduled() counted_by f
 /// otherwise or the court orders otherwise in a judge's individual
 /// practices or in the case, opposing papers are filed within 14 days after
 /// service of the motion papers.
-deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 delegable {
+deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45-sdny delegable {
   to CaseOrder
   op set
 } cite "S.D.N.Y. Local Crim. R. 49.1(a)"
@@ -104,7 +104,7 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 de
 /// Local Criminal Rule 49.1(a)(2): reply papers are filed within seven days
 /// after service of the opposing papers, unless the court orders
 /// otherwise.
-deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 delegable {
+deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45-sdny delegable {
   to CaseOrder
   op set
 } cite "S.D.N.Y. Local Crim. R. 49.1(a)"
@@ -115,7 +115,7 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 dele
 /// Local Criminal Rule 49.1(b): a motion for reconsideration of an order
 /// determining a motion is filed within 14 days after the court's
 /// determination of the original motion.
-deadline reconsideration-period: 14.days after MotionDetermined() counted_by frcrimp45 cite "S.D.N.Y. Local Crim. R. 49.1(b)"
+deadline reconsideration-period: 14.days after MotionDetermined() counted_by frcrimp45-sdny cite "S.D.N.Y. Local Crim. R. 49.1(b)"
 {
   forum frcrimp
 }

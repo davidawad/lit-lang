@@ -205,7 +205,7 @@ deadline answer: 21.days from Served(complaint) counted_by oc effective [2012-01
 deadline other: 21.days from Noted() counted_by oc effective [2012-01-01, ..) unknown_before 2012-01-01
 state open: \"Open\" effective [2009-12-01, ..)
 {
-  answer \"Answer\" -> open by Defendant { event Answered(complaint), within answer }
+  answer \"Answer\" -> open by defendant { event Answered(complaint), within answer }
 }
 ";
     let packages = compile(&[package("old", &[], "", OLD)]);

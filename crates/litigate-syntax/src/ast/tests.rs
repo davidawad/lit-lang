@@ -64,7 +64,7 @@ fn name_is_first_identifier() {
     assert_eq!(decl, Some(Some("answer-due".to_string())));
 }
 
-const NODE: &str = "module m\n/// Is it barred?\n/// Second line.\nchance c: \"C\" by Court discretion cite \"FRCP 8(c)(1)\"\n{\n  tags [fact]\n  barred \"Barred\" -> done p 1/10\n  _ \"Timely\" -> next p ?(\"unknown\") { within d { extendable true }, cost -5.usd }\n}\n";
+const NODE: &str = "module m\n/// Is it barred?\n/// Second line.\nchance c: \"C\" by court discretion cite \"FRCP 8(c)(1)\"\n{\n  tags [fact]\n  barred \"Barred\" -> done p 1/10\n  _ \"Timely\" -> next p ?(\"unknown\") { within d { extendable true }, cost -5.usd }\n}\n";
 
 #[test]
 fn node_accessors_expose_every_part() {

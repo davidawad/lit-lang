@@ -40,7 +40,7 @@ decision consent: "Consent to a magistrate judge" by Plaintiff {{
   silence "Say nothing" -> ruling
 }}
 
-chance ruling: "Ruling on the Rule 60(b) motion" by Court {{
+chance ruling: "Ruling on the Rule 60(b) motion" by court {{
 {ruling}
 }}
 
@@ -121,9 +121,9 @@ decision consent: "Consent to a magistrate judge" by Plaintiff {
   silence "Say nothing" -> briefing
 }
 
-chance briefing: "Motion fully briefed" by Court { briefed "Briefed" -> assign p 1 }
+chance briefing: "Motion fully briefed" by court { briefed "Briefed" -> assign p 1 }
 
-chance assign: "Who decides the motion" by Court {
+chance assign: "Who decides the motion" by court {
   magistrate "Stays with the magistrate judge" -> conduct p 1 { forbids [declined] }
   reassigned "Reassigned to a district judge" -> district p 1 { requires [declined] }
 }
@@ -133,14 +133,14 @@ decision conduct: "Litigate before the magistrate judge" by Plaintiff {
   stand "Stand on the papers" -> magistrate
 }
 
-chance magistrate: "Magistrate judge rules" by Court {
+chance magistrate: "Magistrate judge rules" by court {
   final-win "Granted (final order)" -> won p 2/5 { requires [consented] }
   final-loss "Denied (final order)" -> lost p 3/5 { requires [consented] }
   void-win "Granted, open to vacatur" -> won p 1/10 { forbids [consented] }
   void-loss "Denied or vacated" -> lost p 9/10 { forbids [consented] }
 }
 
-chance district: "District judge rules" by Court {
+chance district: "District judge rules" by court {
   win "Granted" -> won p 7/10
   loss "Denied" -> lost p 3/10
 }

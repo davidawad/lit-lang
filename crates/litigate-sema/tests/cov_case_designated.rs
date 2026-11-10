@@ -49,7 +49,7 @@ rule duty counter-duty cite \"FRCP 12(a)\"
 
 state open: \"Open\"
 {
-  answer \"Answer\" -> done by Defendant { event Answered(), within answer }
+  answer \"Answer\" -> done by defendant { event Answered(), within answer }
 }
 
 terminal done: \"Done\" { payoff 0.usd }

@@ -48,7 +48,7 @@ grant emergency on [answer] effective [2020-03-15, 2020-06-13) {
 
 state open: \"Open\" known_at 2009-01-01
 {
-  answer \"Answer\" -> open by Defendant { event Answered(complaint), within answer }
+  answer \"Answer\" -> open by defendant { event Answered(complaint), within answer }
 }
 ";
 

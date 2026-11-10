@@ -34,7 +34,7 @@ decision dismissed: "Dismissed with leave to amend" by Plaintiff {{
   stand "Stand on the complaint and appeal" -> ruling {{ cost 600.usd{stand} }}
 }}
 
-chance ruling: "The claim survives" by Court {{
+chance ruling: "The claim survives" by court {{
   win "Survives" -> won p 1/2
   loss "Dismissed with prejudice" -> lost p 1/2
 }}

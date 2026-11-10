@@ -51,7 +51,7 @@ counting c6 {counting} {{ holidays cal }}
 calendar cal {{ new-year: fixed(1, 1) effective [1870-06-28, ..) }}
 deadline answer-period: 21.days from Served() counted_by c6 effective [2009-12-01, ..){clauses}
 state s: \"S\" by Plaintiff {{ serve \"Serve\" -> r {{ event Served(complaint) }} }}
-decision r: \"R\" by Defendant {{ answer \"Answer\" -> done {{ event Answered(complaint), within answer-period }} }}
+decision r: \"R\" by defendant {{ answer \"Answer\" -> done {{ event Answered(complaint), within answer-period }} }}
 terminal done: \"Done\" {{ payoff 0.usd }}
 "
     );
@@ -665,7 +665,7 @@ start s
 enum Document {{ complaint }}
 event Served(document: Document)
 state s: \"S\" by Plaintiff {{ serve \"Serve\" -> r {{ event Served(complaint) }} }}
-state r: \"R\" by Defendant {{ _ \"End\" -> done }}
+state r: \"R\" by defendant {{ _ \"End\" -> done }}
 terminal done: \"Done\" {{ payoff 0.usd }}
 {extra}
 "
@@ -688,7 +688,7 @@ fn claims_stage(name: &str) -> LoadedPackage {
         &["core", "fed"],
         &[(
             "rules.lit",
-            &format!("module {name}.rules\nimport fed.rules.{{r}}\nstart {name}-r\nstate {name}-r: \"R\" by Defendant override r\n"),
+            &format!("module {name}.rules\nimport fed.rules.{{r}}\nstart {name}-r\nstate {name}-r: \"R\" by defendant override r\n"),
         )],
     )
 }
@@ -699,7 +699,7 @@ fn replay_reports_unordered_and_displaced_stages() {
     // A stage another declaration displaces is not in force, as in lowering.
     let hir = compile(&[
         core(),
-        stages("state r2: \"R2\" by Defendant notwithstanding r { _ \"End\" -> done }"),
+        stages("state r2: \"R2\" by defendant notwithstanding r { _ \"End\" -> done }"),
     ]);
     let (out, _) = replay(&hir, "fed ^1.0.0", &events);
     assert!(
@@ -767,7 +767,7 @@ fn ambiguous_and_absent_targets_explain_themselves() {
 fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
     // FRAP 26(b)(1): the period delegates to a local rule, but its lock
     // forbids any extension beyond its own grant.
-    let locked = " delegable { to LocalRule, op set } { extend { by Court, max 30.days }, extend { never cite \"FRAP 26(b)(1)\" } }";
+    let locked = " delegable { to LocalRule, op set } { extend { by court, max 30.days }, extend { never cite \"FRAP 26(b)(1)\" } }";
     let local = |clauses: &str| {
         over(
             "local",
@@ -780,7 +780,7 @@ fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
             ),
         )
     };
-    let widening = local("{ extend { by Court, max 60.days } }");
+    let widening = local("{ extend { by court, max 60.days } }");
     let found = diagnostics(&[core(), fed(locked), widening.clone()]);
     assert_eq!(found.len(), 1, "{found:#?}");
     assert!(
@@ -812,7 +812,7 @@ fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
     assert_eq!(who(&hir), "fed::answer-period");
     // The locked version's own grant, or none, is no widening.
     for clauses in [
-        "{ extend { by Court, max 30.days } }",
+        "{ extend { by court, max 30.days } }",
         "{ extend { never cite \"L.R. 6.1\" } }",
         "",
     ] {
@@ -829,8 +829,8 @@ fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
         );
     }
     // Without a lock the same delegation may grant one.
-    let open = " delegable { to LocalRule, op set } { extend { by Court, max 30.days } }";
-    let widening = local("{ extend { by Court, max 60.days } }");
+    let open = " delegable { to LocalRule, op set } { extend { by court, max 30.days } }";
+    let widening = local("{ extend { by court, max 60.days } }");
     assert_eq!(
         who(&compile(&[core(), fed(open), widening])),
         "local::local-answer"
@@ -843,7 +843,7 @@ fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
             "amended",
             14,
             "Served()",
-            "override answer-period { extend { by Court, max 60.days } }",
+            "override answer-period { extend { by court, max 60.days } }",
         ),
     );
     assert_eq!(

@@ -46,13 +46,13 @@ deadline locked: 10.days from Entered() counted_by oc known_at 2009-01-01 { exte
 
 grant emergency on [locked, answer] effective [2020-03-15, 2020-06-13) known_at 2020-03-20 cite \"FRCP 87(c)(2)\" {
   unlock
-  extend { by Court, discretion GoodCause, to grant_order_entered + 30.days }
-  waive { by Court }
+  extend { by court, discretion GoodCause, to grant_order_entered + 30.days }
+  waive { by court }
 }
 
 state open: \"Open\" known_at 2009-01-01
 {
-  answer \"Answer\" -> open by Defendant { event Answered(complaint), within answer }
+  answer \"Answer\" -> open by defendant { event Answered(complaint), within answer }
   appeal \"Appeal\" -> open by Plaintiff { event Appealed(), within appeal }
   move \"Move\" -> open by Plaintiff { event Moved() }
 }

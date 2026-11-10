@@ -68,19 +68,19 @@ state dismissed: "Dismissed with prejudice by notice" cite "FRCP 41(a)(1)(A)(i)"
 
 state relief-pending: "Rule 60(b) motion pending" cite "FRCP 60(b)"
 {
-  appeared "Defendant appears specially to oppose" -> consent by Defendant {
+  appeared "Defendant appears specially to oppose" -> consent by defendant {
     event AppearedSpecially()
   }
 }
 
-decision consent: "Consent to a magistrate judge" by Defendant cite "FRCP 73(b)(1)"
+decision consent: "Consent to a magistrate judge" by defendant cite "FRCP 73(b)(1)"
 {
   consent "Consent" -> fee-step { cost 100.usd, sets [consented] }
   decline "Decline consent" -> fee-step { cost 100.usd, sets [declined] }
   silence "Say nothing" -> fee-step
 }
 
-decision fee-step: "Fee clock" by Defendant cite "FRCP 54(d)(2)(B)"
+decision fee-step: "Fee clock" by defendant cite "FRCP 54(d)(2)(B)"
 {
   protective "File the fee motion protectively" -> assign {
     event FeeMotionFiled()
@@ -91,13 +91,13 @@ decision fee-step: "Fee clock" by Defendant cite "FRCP 54(d)(2)(B)"
   nothing "Wait for a ruling on the Rule 60(b) motion" -> assign
 }
 
-chance assign: "Who decides the Rule 60(b) motion" by Court cite "FRCP 73(a)"
+chance assign: "Who decides the Rule 60(b) motion" by court cite "FRCP 73(a)"
 {
   magistrate "Stays with the magistrate judge" -> conduct p 1 { forbids [declined] }
   reassigned "Reassigned to a district judge" -> district p 1 { requires [declined] }
 }
 
-decision conduct: "Litigate before the magistrate judge" by Defendant cite "Roell v. Withrow, 538 U.S. 580 (2003)"
+decision conduct: "Litigate before the magistrate judge" by defendant cite "Roell v. Withrow, 538 U.S. 580 (2003)"
 {
   appear "Argue the motion without objecting, and litigate implied consent" -> magistrate {
     cost 2_000.usd
@@ -106,7 +106,7 @@ decision conduct: "Litigate before the magistrate judge" by Defendant cite "Roel
   stand "Stand on the papers" -> magistrate
 }
 
-chance magistrate: "Magistrate judge rules" by Court discretion cite "FRCP 73(a)"
+chance magistrate: "Magistrate judge rules" by court discretion cite "FRCP 73(a)"
 {
   final-denied "Denied (final order)" -> stands p 1/2 { requires [consented] }
   final-granted "Granted (final order)" -> reopened p 1/2 { requires [consented] }
@@ -114,13 +114,13 @@ chance magistrate: "Magistrate judge rules" by Court discretion cite "FRCP 73(a)
   void-granted "Granted, or a denial vacated" -> reopened p 7/10 { forbids [consented] }
 }
 
-chance district: "District judge rules" by Court discretion cite "FRCP 60(b)"
+chance district: "District judge rules" by court discretion cite "FRCP 60(b)"
 {
   denied "Denied" -> stands p 7/10
   granted "Granted" -> reopened p 3/10
 }
 
-chance stands: "The dismissal stands: is the fee motion timely?" by Court cite "FRCP 54(d)(2)(B)"
+chance stands: "The dismissal stands: is the fee motion timely?" by court cite "FRCP 54(d)(2)(B)"
 {
   preserved "Fee motion on file in time" -> fees-awarded p 1 { requires [fees-preserved] }
   ran "The notice started the clock; the 14 days ran" -> fees-forfeited p 1/2 {

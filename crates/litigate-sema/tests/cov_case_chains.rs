@@ -35,9 +35,9 @@ deadline orphan2: 1.days from deadline(orphan).nominal counted_by oc
 
 state open: \\\"Open\\\"
 {
-  oppose \\\"Oppose\\\" -> open by Defendant { event Opposed(), within after-nominal }
+  oppose \\\"Oppose\\\" -> open by defendant { event Opposed(), within after-nominal }
   reply \\\"Reply\\\" -> open by Plaintiff { event Replied(), within orphan }
-  rejoin \\\"Rejoin\\\" -> open by Defendant { event Rejoined(), within orphan2 }
+  rejoin \\\"Rejoin\\\" -> open by defendant { event Rejoined(), within orphan2 }
 }
 ";
 

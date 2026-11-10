@@ -37,7 +37,7 @@ deadline fresh: 30.days from Enacted() counted_by oc effective [2012-01-01, ..) 
 
 state open: \"Open\" effective [2000-01-01, ..)
 {
-  answer \"Answer\" -> done by Defendant { event Answered(), within answer }
+  answer \"Answer\" -> done by defendant { event Answered(), within answer }
 }
 
 terminal done: \"Done\" { payoff 0.usd }

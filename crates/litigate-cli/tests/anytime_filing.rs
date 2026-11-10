@@ -70,7 +70,7 @@ deadline fee-period: 14.days after DismissalEntered() counted_by days cite "FRCP
 
 state dismissed: "Dismissal entered" cite "FRCP 41(b)"
 {
-  enter "Enter dismissal" -> consent-decision by Court { event DismissalEntered() }
+  enter "Enter dismissal" -> consent-decision by court { event DismissalEntered() }
 }
 decision consent-decision: "Consent to a magistrate judge or decline" by Plaintiff cite "FRCP 73(b)(1)"
 {

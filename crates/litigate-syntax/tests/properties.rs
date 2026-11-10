@@ -335,7 +335,7 @@ fn apply_fixes(text: &str, errors: &[SyntaxError]) -> String {
 fn machine_applicable_fixes_repair_obvious_mistakes() {
     let cases = [
         "module m\nstate s: \"S\" {\n  go \"Go\" -> t\n\nstate t: \"T\"\n",
-        "module m\nchance c: \"C\" by Court FRCP 8(c)(1) {\n  a \"A\" -> c p 1\n}\n",
+        "module m\nchance c: \"C\" by court FRCP 8(c)(1) {\n  a \"A\" -> c p 1\n}\n",
         "module m\nchanse c: \"C\"\nstate s: \"S\" { grop g }\n",
         "module m\ncounting c effective [2020-01-01, ..] { allow_hours }\n",
         "module m\ntest \"t\" { expect f((1 + [2, {a: \"x",

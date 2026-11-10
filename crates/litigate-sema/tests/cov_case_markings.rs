@@ -25,22 +25,22 @@ event Noted()
 
 state pleading: \"Pleading\"
 {
-  motion \"Move to dismiss\" -> motion-pending by Defendant { event Moved(), spawn [discovery] }
+  motion \"Move to dismiss\" -> motion-pending by defendant { event Moved(), spawn [discovery] }
 }
 state motion-pending: \"Motion pending\"
 {
-  ruling \"Ruling\" -> ruled by Court { event Ruled() }
-  stay \"Stay the motion\" -> ruled by Court { event Stayed() }
+  ruling \"Ruling\" -> ruled by court { event Ruled() }
+  stay \"Stay the motion\" -> ruled by court { event Stayed() }
 }
 state discovery: \"Discovery\"
 {
-  close \"Close discovery\" -> discovery-closed by Court { event Closed() }
-  stay \"Stay discovery\" -> discovery-closed by Court { event Stayed() }
+  close \"Close discovery\" -> discovery-closed by court { event Closed() }
+  stay \"Stay discovery\" -> discovery-closed by court { event Stayed() }
 }
-state discovery-closed: \"Discovery closed\" { _ \"Wait\" -> discovery-closed by Court { event Noted() } }
+state discovery-closed: \"Discovery closed\" { _ \"Wait\" -> discovery-closed by court { event Noted() } }
 state ruled: \"Ruled\"
 {
-  trial \"Trial\" -> tried by Court { event Tried(), joins [discovery-closed] }
+  trial \"Trial\" -> tried by court { event Tried(), joins [discovery-closed] }
 }
 terminal tried: \"Tried\" { payoff 0.usd }
 ";

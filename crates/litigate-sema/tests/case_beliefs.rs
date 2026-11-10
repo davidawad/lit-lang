@@ -6,7 +6,7 @@ mod case_support;
 use case_support::{acme, check_example};
 use litigate_base::{DiagnosticCode as C, Profile};
 
-/// `acme.case` observing `respond` (a `decision by Defendant`) under
+/// `acme.case` observing `respond` (a `decision by defendant`) under
 /// `perspective`, with `parties` replaced when given.
 fn observing_respond(perspective: &str) -> String {
     let text = acme()

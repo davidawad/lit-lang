@@ -45,7 +45,7 @@ event Dup(x: Method, x: Method)\nevent Bad(x: Nope)",
 #[test]
 fn rule_kinds_lower() {
     let text = format!(
-        "{}rule liability l {{\n  terminal lost: \"Lost\"\n}}\nrule power p {{\n  decision m: \"Move?\" by Defendant {{ _ \"yes\" -> t }}\n}}\n",
+        "{}rule liability l {{\n  terminal lost: \"Lost\"\n}}\nrule power p {{\n  decision m: \"Move?\" by defendant {{ _ \"yes\" -> t }}\n}}\n",
         common::PRELUDE
     );
     let (db, ws) = workspace(&[package("demo", &[], &[("main.lit", &text)])]);

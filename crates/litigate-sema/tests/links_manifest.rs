@@ -30,7 +30,7 @@ fn base() -> LoadedPackage {
 
 #[test]
 fn links_package_without_pack_identity_checks_clean() {
-    let text = "module links\nlink up \"Up\": base::t -> base::s by Defendant\nlink odd \"Odd\": base::t -> base::s by Clerk\n";
+    let text = "module links\nlink up \"Up\": base::t -> base::s by defendant\nlink odd \"Odd\": base::t -> base::s by Clerk\n";
     let (db, ws) = workspace(&[links(text), base()]);
     assert_eq!(
         render(&db, ws),

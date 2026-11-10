@@ -52,13 +52,13 @@ event MovedToDismiss(document: Document)
 event DismissalGranted()
 event DismissalDenied()
 
-decision respond: "Answer or move under Rule 12" by Defendant cite "FRCP 12(a)(1)(A)(i)"
+decision respond: "Answer or move under Rule 12" by defendant cite "FRCP 12(a)(1)(A)(i)"
 {
   answer "File an answer" -> answered { event Answered(complaint) }
   move-dismiss "Move to dismiss under Rule 12(b)(6)" -> mtd-ruling { event MovedToDismiss(complaint) }
 }
 
-chance mtd-ruling: "Ruling on the motion to dismiss" by Court cite "FRCP 12(b)(6)"
+chance mtd-ruling: "Ruling on the motion to dismiss" by court cite "FRCP 12(b)(6)"
 {
   granted "Motion granted" -> dismissed p 1/2 { event DismissalGranted() }
   denied "Motion denied" -> answered p 1/2 { event DismissalDenied() }

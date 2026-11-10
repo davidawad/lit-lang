@@ -36,7 +36,7 @@ event Served(method: ServiceMethod)\n\n\
 state filed: \"Complaint filed\" by Plaintiff\n{\n  \
 personal \"Serve personally\" -> served { event Served(Personal) }\n  \
 mail \"Serve by mail\" -> served { event Served(ServiceMethod::Mail) }\n}\n\n\
-decision served: \"Answer or default\" by Defendant\n{\n  \
+decision served: \"Answer or default\" by defendant\n{\n  \
 answer \"File an answer\" -> answered\n  default \"Let it pass\" -> defaulted\n}\n\n\
 terminal answered: \"Answered\" outcome [judgment]\n\
 terminal defaulted: \"Default\" outcome [judgment, loss]\n";

@@ -145,7 +145,7 @@ fn information_sets_offer_one_choice() {
         "decision a: \"A\" by Plaintiff info filing { x \"File\" -> t, y \"Wait\" -> t }\n\
 decision b: \"B\" by Plaintiff info filing { y \"Wait\" -> t, x \"File\" -> t }\n\
 decision c: \"C\" by Plaintiff info filing { x \"File\" -> t }\n\
-decision d: \"D\" by Defendant info filing { x \"File\" -> t, y \"Wait\" -> t }\n\
+decision d: \"D\" by defendant info filing { x \"File\" -> t, y \"Wait\" -> t }\n\
 decision e: \"E\" by Plaintiff info other { x \"File\" -> t }\n\
 state f: \"F\" info filing { x \"File\" -> t }",
     );

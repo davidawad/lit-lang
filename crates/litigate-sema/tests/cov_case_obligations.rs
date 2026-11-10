@@ -56,17 +56,17 @@ rule duty answer-duty cite \"FRCP 12(a)\"
 {
   deadline answer: 10.days from Served(complaint) counted_by oc {
     bearer Defendant
-    extend { by Court, max 10.days }
-    waive { by Court }
+    extend { by court, max 10.days }
+    waive { by court }
   }
   deadline amended: 2.days from Served(amended) counted_by oc { bearer Defendant, trigger later_of(answer) }
   deadline late: 10.days from Served(motion) counted_by oc {
     trigger each
-    extend { by Court, max 30.days, after_expiry }
-    waive { by Court, after_expiry }
+    extend { by court, max 30.days, after_expiry }
+    waive { by court, after_expiry }
   }
   deadline stale: 10.days from Noticed() counted_by oc effective [2009-12-01, 2011-01-10) {
-    extend { by Court, max 10.days }
+    extend { by court, max 10.days }
   }
   deadline fresh: 10.days from Noticed() counted_by oc effective [2011-01-10, ..) supersedes stale
 }
@@ -74,40 +74,40 @@ rule duty answer-duty cite \"FRCP 12(a)\"
 deadline reply: 5.days from Noticed() counted_by oc { trigger latest }
 
 deadline post: 10.days from Entered() counted_by oc {
-  extend { by Court, discretion GoodCause }
-  extend { by Court, discretion ExcusableNeglect, after_expiry, on MovedPost() }
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion ExcusableNeglect, after_expiry, on MovedPost() }
   extend { by Plaintiff, max 3.days }
 }
 deadline locked: 10.days from Entered() counted_by oc { extend { never cite \"FRCP 6(b)(2)\" } }
 deadline motion-only: 10.days from Entered() counted_by oc {
-  extend { by Court, discretion ExcusableNeglect, after_expiry, on MovedMotion() }
+  extend { by court, discretion ExcusableNeglect, after_expiry, on MovedMotion() }
 }
 deadline appeal: 10.days from Entered() counted_by oc {
-  extend { by Court, discretion GoodCauseOrExcusableNeglect, to max(prescribed_due + 30.days, grant_order_entered + 14.days), after_expiry, on MovedAppeal(), within prescribed_due + 30.days }
+  extend { by court, discretion GoodCauseOrExcusableNeglect, to max(prescribed_due + 30.days, grant_order_entered + 14.days), after_expiry, on MovedAppeal(), within prescribed_due + 30.days }
   extend { never cite \"FRAP 26(b)(1)\" }
 }
 deadline requested: 10.days from Entered() counted_by oc {
-  extend { by Court, discretion GoodCause, on MovedRequest() }
+  extend { by court, discretion GoodCause, on MovedRequest() }
 }
 deadline interpreted: 10.days from Entered() counted_by oc {
-  extend { by Court, max 5.days, interpretation \"a bounded reading\" }
-  extend { by Court, discretion GoodCause, interpretation \"the rule reaches it only as read\" }
+  extend { by court, max 5.days, interpretation \"a bounded reading\" }
+  extend { by court, discretion GoodCause, interpretation \"the rule reaches it only as read\" }
 }
 deadline timed: 20.days from Entered() counted_by oc {
-  extend { by Court, discretion GoodCause, max 30.days, on MovedTimed(), within current_due - 10.days, unless DeniedTimed() }
-  extend { by Court, discretion ExtraordinaryCircumstances, max 30.days, on MovedTimed(), within current_due, unless DeniedTimed() }
+  extend { by court, discretion GoodCause, max 30.days, on MovedTimed(), within current_due - 10.days, unless DeniedTimed() }
+  extend { by court, discretion ExtraordinaryCircumstances, max 30.days, on MovedTimed(), within current_due, unless DeniedTimed() }
 }
 deadline capped: 10.days from Entered() counted_by oc {
-  extend { by Court, to min(prescribed_due + 5.days, (grant_order_entered + 2.days)) }
+  extend { by court, to min(prescribed_due + 5.days, (grant_order_entered + 2.days)) }
 }
 
 state open: \"Open\"
 {
-  answer \"Answer\" -> open by Defendant { event Answered(complaint), within answer }
-  answer-amended \"Answer the amendment\" -> open by Defendant { event Answered(amended), within amended }
-  answer-motion \"Answer the motion\" -> open by Defendant { event Answered(motion), within late }
+  answer \"Answer\" -> open by defendant { event Answered(complaint), within answer }
+  answer-amended \"Answer the amendment\" -> open by defendant { event Answered(amended), within amended }
+  answer-motion \"Answer the motion\" -> open by defendant { event Answered(motion), within late }
   reply \"Reply\" -> open by Plaintiff { event Replied(), within reply }
-  close \"Close\" -> done by Court { event Closed() }
+  close \"Close\" -> done by court { event Closed() }
 }
 
 terminal done: \"Done\" { payoff 0.usd }

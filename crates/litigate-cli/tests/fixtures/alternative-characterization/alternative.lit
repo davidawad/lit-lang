@@ -23,7 +23,7 @@ decision choose-filing: "Pay to file early or wait" by Plaintiff cite "N.D. Cal.
   wait "Wait and accept the characterization risk" -> characterization { effort 0.hours }
 }
 
-chance characterization: "Court characterizes the motion" by Court discretion cite "N.D. Cal. Civ. L.R. 7-11(b)"
+chance characterization: "Court characterizes the motion" by court discretion cite "N.D. Cal. Civ. L.R. 7-11(b)"
 {
   administrative "Administrative motion: opposition in four days" -> administrative-window p 1/2 {
     basis estimate

@@ -61,9 +61,9 @@ fn an_exact_match_advances_and_nothing_else_does() {
     let dir = matter("docket-advance", MATTER);
     let docket = json!({"count": 6, "results": [
         {"entry_number": 3, "date_filed": "2025-03-05", "description": "SUMMONS Returned Executed on widget"},
-        {"entry_number": 6, "date_filed": "2025-03-12", "description": "NOTICE of Appearance by Defendant"},
+        {"entry_number": 6, "date_filed": "2025-03-12", "description": "NOTICE of Appearance by defendant"},
         {"entry_number": 5, "date_filed": "2025-03-07", "description": "ANSWER to Complaint by widget; hearing held"},
-        {"entry_number": 4, "date_filed": "2025-03-07", "description": "ANSWER to Complaint by Defendant Widget Corp.",
+        {"entry_number": 4, "date_filed": "2025-03-07", "description": "ANSWER to Complaint by defendant Widget Corp.",
          "recap_documents": [{"document_number": "4", "is_available": false}]},
         {"entry_number": 8, "date_filed": "2025-03-15", "description": "ANSWER to Complaint by widget"},
         {"entry_number": 9, "date_filed": "2025-03-16", "description": "Hearing held"},

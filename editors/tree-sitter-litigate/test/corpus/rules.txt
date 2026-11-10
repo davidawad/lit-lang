@@ -361,11 +361,11 @@ module a
 deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {
   bearer Defendant
   trigger later_of(original)
-  extend { by Court, max 30.days, after_expiry }
-  extend { by Court, discretion GoodCause }
+  extend { by court, max 30.days, after_expiry }
+  extend { by court, discretion GoodCause }
   extend { by Board, discretion GoodCause, interpretation "i" }
   extend { never cite "FRCP 6(b)(2)" }
-  waive { by Court }
+  waive { by court }
   note "n"
 }
 
@@ -426,7 +426,7 @@ deadline answer-period: 21.days from Served(complaint) counted_by frcp6 effectiv
 }
 grant covid on [answer-period] effective [2020-03-15, 2020-06-13) cite "FRCP 87(c)(2)" {
   unlock
-  extend { by Court, discretion GoodCause, to grant_order_entered + 30.days }
+  extend { by court, discretion GoodCause, to grant_order_entered + 30.days }
   delegable { to [LocalRule, CaseOrder], op set, discretion GoodCause, on ExtensionMoved() }
 }
 

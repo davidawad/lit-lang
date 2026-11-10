@@ -31,7 +31,7 @@ deadline reply-period: 7.days after Opposed() counted_by days
 
 state pleading: \"Pleading\"
 {
-  move \"Move to dismiss\" -> answer-due by Defendant { event Moved() }
+  move \"Move to dismiss\" -> answer-due by defendant { event Moved() }
 }
 decision answer-due: \"Answer\" by Plaintiff
 {
@@ -41,11 +41,11 @@ decision opposition-due: \"Oppose\" by Plaintiff
 {
   oppose \"Oppose\" -> reply-due { event Opposed(), within opposition-period, anytime }
 }
-decision reply-due: \"Reply\" by Defendant
+decision reply-due: \"Reply\" by defendant
 {
   reply \"Reply\" -> ruling { event Replied(), within reply-period, anytime }
 }
-state ruling: \"Ruling\" { rule \"Rule\" -> ruled by Court { event Ruled() } }
+state ruling: \"Ruling\" { rule \"Rule\" -> ruled by court { event Ruled() } }
 terminal ruled: \"Ruled\" { payoff 0.usd }
 ";
 

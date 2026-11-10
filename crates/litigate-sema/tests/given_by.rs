@@ -18,11 +18,11 @@ event Locked(until: Date) extends locked to until
 event Bare(until: Date) extends bare to until
 event Moved()
 deadline p: 20.days from Served(complaint) counted_by c6 {
-  extend { by Court, discretion GoodCause }
-  extend { by Court, discretion ExcusableNeglect, after_expiry, on Moved() }
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion ExcusableNeglect, after_expiry, on Moved() }
 }
 deadline capped: 20.days from Served(complaint) counted_by c6 {
-  extend { by Court, max 10.days }
+  extend { by court, max 10.days }
 }
 deadline locked: 20.days from Served(complaint) counted_by c6 {
   extend { never cite \"FRCP 6(b)(2)\" }
@@ -98,7 +98,7 @@ fn refused(d: &str, givens: &str) -> String {
 #[test]
 fn a_given_records_its_actor_by_index() {
     let (pkg, diagnostics) = compiled(
-        "  given Moved() on 2025-03-04\n  given Extended(2025-04-30) by Court on 2025-03-10\n",
+        "  given Moved() on 2025-03-04\n  given Extended(2025-04-30) by court on 2025-03-10\n",
     );
     assert_eq!(diagnostics, Vec::<String>::new());
     let actors: Vec<(usize, String)> = test_of(&pkg.unwrap()).actors.clone().into_iter().collect();
@@ -116,7 +116,7 @@ fn an_undeclared_actor_is_l1009() {
 
 #[test]
 fn an_order_by_the_grant_holder_extends_the_period() {
-    let got = extend("p", "  given Extended(2025-04-30) by Court on 2025-03-10\n");
+    let got = extend("p", "  given Extended(2025-04-30) by court on 2025-03-10\n");
     assert_eq!(got, Ok(vec![(1, "2025-04-30".to_owned())]));
 }
 
@@ -142,12 +142,12 @@ fn an_order_by_another_actor_extends_nothing() {
 #[test]
 fn after_expiry_the_order_needs_the_motion() {
     assert_eq!(
-        refused("p", "  given Extended(2025-04-30) by Court on 2025-04-01\n"),
+        refused("p", "  given Extended(2025-04-30) by court on 2025-04-01\n"),
         "`Extended(2025-04-30)` requires a motion `Moved()` made after the period expired on 2025-03-24, and none precedes the order on 2025-04-01"
     );
     let got = extend(
         "p",
-        "  given Moved() on 2025-03-28\n  given Extended(2025-04-30) by Court on 2025-04-01\n",
+        "  given Moved() on 2025-03-28\n  given Extended(2025-04-30) by court on 2025-04-01\n",
     );
     assert_eq!(got, Ok(vec![(2, "2025-04-30".to_owned())]));
 }
@@ -157,7 +157,7 @@ fn a_motion_is_spent_by_the_extension_it_licenses() {
     assert_eq!(
         refused(
             "p",
-            "  given Moved() on 2025-03-28\n  given Extended(2025-04-15) by Court on 2025-04-01\n  given Extended(2025-05-15) by Court on 2025-04-20\n",
+            "  given Moved() on 2025-03-28\n  given Extended(2025-04-15) by court on 2025-04-01\n  given Extended(2025-05-15) by court on 2025-04-20\n",
         ),
         "`Extended(2025-05-15)` requires a motion `Moved()` made after the period expired on 2025-04-15 after the one made on 2025-03-28, spent by an earlier extension, and none precedes the order on 2025-04-20"
     );
@@ -166,11 +166,11 @@ fn a_motion_is_spent_by_the_extension_it_licenses() {
 #[test]
 fn an_order_is_held_to_the_bound_and_must_extend() {
     assert_eq!(
-        refused("capped", "  given Capped(2025-12-31) by Court on 2025-03-10\n"),
+        refused("capped", "  given Capped(2025-12-31) by court on 2025-03-10\n"),
         "an extension to 2025-12-31 exceeds the bound of `capped`: prescribed_due + 10.days = 2025-04-03 (prescribed_due 2025-03-24, grant_order_entered 2025-03-10)"
     );
     assert_eq!(
-        refused("p", "  given Extended(2025-03-20) by Court on 2025-03-10\n"),
+        refused("p", "  given Extended(2025-03-20) by court on 2025-03-10\n"),
         "an extension to 2025-03-20 does not extend `p`, already due 2025-03-24"
     );
 }
@@ -178,11 +178,11 @@ fn an_order_is_held_to_the_bound_and_must_extend() {
 #[test]
 fn a_locked_or_ungranted_period_is_not_extended() {
     assert_eq!(
-        refused("locked", "  given Locked(2025-04-30) by Court on 2025-03-10\n"),
+        refused("locked", "  given Locked(2025-04-30) by court on 2025-03-10\n"),
         "`Locked(2025-04-30)` cannot extend `locked`: the deadline may not be extended (`extend { never cite \"FRCP 6(b)(2)\" }`)"
     );
     assert_eq!(
-        refused("bare", "  given Bare(2025-04-30) by Court on 2025-03-10\n"),
+        refused("bare", "  given Bare(2025-04-30) by court on 2025-03-10\n"),
         "`Bare(2025-04-30)` cannot extend `bare`: the deadline grants no `extend` capability"
     );
 }
@@ -190,7 +190,7 @@ fn a_locked_or_ungranted_period_is_not_extended() {
 #[test]
 fn an_order_to_no_known_date_moves_nothing() {
     assert_eq!(
-        refused("p", "  given Extended(?) by Court on 2025-03-10\n"),
+        refused("p", "  given Extended(?) by court on 2025-03-10\n"),
         "`Extended(?)` extends `p` to no known date, which moves nothing"
     );
 }
@@ -200,7 +200,7 @@ fn only_later_orders_extending_the_period_count() {
     // `Capped` extends another deadline; `Moved` extends none.
     let got = extend(
         "p",
-        "  given Capped(2025-04-30) by Court on 2025-03-10\n  given Moved() on 2025-03-11\n",
+        "  given Capped(2025-04-30) by court on 2025-03-10\n  given Moved() on 2025-03-11\n",
     );
     assert_eq!(got, Ok(Vec::new()));
 }

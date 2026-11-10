@@ -41,14 +41,14 @@ state intake: \"Intake\" by Plaintiff
   file \"File\" -> check { event Filed() }
 }
 
-chance check: \"Timely?\" by Court effective [2009-12-01, 2010-01-01) delegable { to CaseOrder, op set }
+chance check: \"Timely?\" by court effective [2009-12-01, 2010-01-01) delegable { to CaseOrder, op set }
 {
   tags [fact]
   timely \"Timely\" -> won p 1/2 { when has_event(Moved()) && has_event(Filed()) }
   late \"Late\" -> lost p 1/2 { when !has_event(Moved()) && !has_event(Excused()) }
 }
 
-chance check: \"Timely?\" by Court effective [2010-01-01, ..) delegable { to CaseOrder, op set }
+chance check: \"Timely?\" by court effective [2010-01-01, ..) delegable { to CaseOrder, op set }
 {
   tags [fact]
   timely \"Timely\" -> won p 1/2 { when has_event(Moved()) }

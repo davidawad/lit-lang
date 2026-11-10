@@ -35,7 +35,7 @@ rule duty empty {
   state x: \"X\" { _ \"go\" -> t }
 }
 rule power allow {
-  decision m: \"Move?\" by Defendant { _ \"yes\" -> t }
+  decision m: \"Move?\" by defendant { _ \"yes\" -> t }
 }
 ";
 

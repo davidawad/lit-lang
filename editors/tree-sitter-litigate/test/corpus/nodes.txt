@@ -22,7 +22,7 @@ Node clauses
 ================================================================================
 
 module a
-chance mtd-ruling: "Ruling" by Court discretion effective [2009-12-01, ..) known_at 2024-01-01
+chance mtd-ruling: "Ruling" by court discretion effective [2009-12-01, ..) known_at 2024-01-01
   cite "FRCP 12(b)(6)"
 terminal t: "T" outcome [judgment, loss]
 
@@ -223,7 +223,7 @@ Information sets and fact guards
 
 module a
 decision file: "File?" by Party info filing-choice
-chance barred: "Barred?" by Court
+chance barred: "Barred?" by court
 {
   tags [fact]
   late "Late" -> out p 1/10 { when (date_of(Filed()) > deadline(bar)) }

@@ -86,6 +86,7 @@ registry! {
     InvalidWorld = "L1013" => "A world file is malformed, names a layer that is not loaded, or has a location its forum family does not have",
     NotActualLaw = "L1014" => "A counterfactual world is checked under the strict profile, or a non-authoritative layer is in an actual world",
     StaleVendoredStdlib = "L1015" => "A vendored copy of a stdlib package (core, frcp) is not the one the litigate binary ships and fails to check; `litigate vendor` rewrites it to match the binary",
+    UnknownActorDesignation = "L1016" => "An actor role is not a canonical designation declared by core.roles",
     TypeMismatch = "L2001" => "The expression type does not match the required type",
     InvalidOperation = "L2002" => "This operation is not permitted for the operand domain types",
     InvalidDistribution = "L2003" => "A distribution must cover every enum variant exactly once and sum to one",

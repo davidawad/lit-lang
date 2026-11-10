@@ -36,18 +36,18 @@ event ThirdPartyComplaintExtensionMoved()
 deadline removal-answer: 7.days after NoticeOfRemovalFiled() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 cite "FRCP 81(c)(2)(C)"
 {
   forum frcp
-  extend { by Court, discretion GoodCause }
-  extend { by Court, discretion GoodCause, on RemovalAnswerExtensionMoved() }
-  extend { by Court, discretion ExcusableNeglect, after_expiry, on RemovalAnswerExtensionMoved() }
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on RemovalAnswerExtensionMoved() }
+  extend { by court, discretion ExcusableNeglect, after_expiry, on RemovalAnswerExtensionMoved() }
 }
 
 deadline third-party-complaint: 14.days after AnswerServed() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 cite "FRCP 14(a)(1)"
 {
   forum frcp
-  extend { by Court, discretion GoodCause }
-  extend { by Court, discretion GoodCause, on ThirdPartyComplaintExtensionMoved() }
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on ThirdPartyComplaintExtensionMoved() }
   extend {
-    by Court
+    by court
     discretion ExcusableNeglect
     after_expiry
     on ThirdPartyComplaintExtensionMoved()

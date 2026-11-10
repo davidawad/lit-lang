@@ -68,7 +68,7 @@ fn words_split_names_and_stems_drop_inflection() {
 #[test]
 fn an_exact_match_is_supported() {
     assert_eq!(
-        verdict("ANSWER to Complaint by Defendant Widget Corp."),
+        verdict("ANSWER to Complaint by defendant Widget Corp."),
         Verdict::Supported("Answered(complaint)".to_owned(), "by", "widget".to_owned())
     );
     // The most specific variant present settles the argument.
@@ -126,7 +126,7 @@ fn an_open_argument_or_party_leaves_the_entry_incomplete() {
         )
     );
     assert_eq!(
-        verdict("Hearing on motion by Defendant"),
+        verdict("Hearing on motion by defendant"),
         Verdict::Supported("Hearing()".to_owned(), "by", "widget".to_owned())
     );
 }

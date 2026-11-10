@@ -19,7 +19,7 @@ expression: table
         "21:34 L1002 `frcp-rule12-example` declares no event `MovedToDismis`\n    note: events: Served, Answered, MovedToDismiss\n    fix @21:34-21:47 MaybeIncorrect: \"MovedToDismiss\"",
     ],
     "facts: not a fact node": [
-        "21:34 L4001 `MovedToDismiss(complaint)` is not a legal event at stage `frcp-rule12-example::time-barred` (Is the claim time-barred?)\n    note: legal events: none (no event moves this stage; it is decided by Court)\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: `frcp-rule12-example::time-barred` is a matter fact: resolve it with `facts { time-barred: <edge> }`\n    note: replay stops at the first illegal event",
+        "21:34 L4001 `MovedToDismiss(complaint)` is not a legal event at stage `frcp-rule12-example::time-barred` (Is the claim time-barred?)\n    note: legal events: none (no event moves this stage; it is decided by court)\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: `frcp-rule12-example::time-barred` is a matter fact: resolve it with `facts { time-barred: <edge> }`\n    note: replay stops at the first illegal event",
         "24:9 L4003 `frcp-rule12-example::mtd-ruling` is not a fact node in force on 2025-06-01\n    note: facts resolve nodes tagged `fact` (SPEC §5.1)",
     ],
     "facts: not the node's own edge": [
@@ -83,10 +83,10 @@ expression: table
         "21:23 L4002 `MovedToDismiss(complaint)` on 2025-07-01 missed deadline `answer-period`, due 2025-03-26\n    note @20:3: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2025-03-05 under `frcp6@2009-12-01`, service by personal\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
     ],
     "typestate: nothing moves a pending ruling": [
-        "22:14 L4001 `Answered(complaint)` is not a legal event at stage `frcp-rule12-example::mtd-ruling` (Ruling on the motion to dismiss)\n    note: legal events: none (no event moves this stage; it is decided by Court)\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
+        "22:14 L4001 `Answered(complaint)` is not a legal event at stage `frcp-rule12-example::mtd-ruling` (Ruling on the motion to dismiss)\n    note: legal events: none (no event moves this stage; it is decided by court)\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
     ],
     "typestate: the plaintiff cannot answer": [
-        "21:57 L4001 `Answered(complaint)` at stage `frcp-rule12-example::respond` is taken by Defendant, but `acme` plays Plaintiff",
+        "21:57 L4001 `Answered(complaint)` at stage `frcp-rule12-example::respond` is taken by defendant, but `acme` plays Plaintiff",
     ],
     "uses: requirement the lock does not satisfy": [
         "2:6 L1007 Lit.lock pins `frcp-rule12-example` 0.1.0, which does not satisfy `^0.2.0`\n    note: run `litigate lock`",

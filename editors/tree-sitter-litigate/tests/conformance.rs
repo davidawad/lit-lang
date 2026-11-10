@@ -340,7 +340,7 @@ const ITEMS: [&str; 12] = [
     "enum E { a, b }",
     "event Ev(x: E)",
     "authority A > B",
-    "state s: \"S\" by Court cite \"FRCP 1\"\n{ note \"n\", go \"Go\" -> t p 1/2 }",
+    "state s: \"S\" by court cite \"FRCP 1\"\n{ note \"n\", go \"Go\" -> t p 1/2 }",
     "decision d: \"D\" { p \"P\" -> t by X\n by \"B\" -> t { cost ? } }",
     "terminal t: \"T\" outcome [win] { payoff -1.usd }",
     "deadline dl: 21.days from Ev(a) counted_by c",

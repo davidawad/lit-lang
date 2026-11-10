@@ -39,14 +39,14 @@ const COURT: &str = "module court.answer\n\nimport core.time.{ Noticed }\n\nstar
 event Filed()\n\n\
 state filed: \"Complaint filed\" by Plaintiff\n{\n  \
 notice \"Notice\" -> noticed { event Noticed() }\n}\n\n\
-decision noticed: \"Answer or default\" by Defendant\n{\n  \
+decision noticed: \"Answer or default\" by defendant\n{\n  \
 answer \"File an answer\" -> answered { event Filed() }\n  default \"Let it pass\" -> defaulted\n}\n\n\
 terminal answered: \"Answered\" outcome [judgment]\n\
 terminal defaulted: \"Default\" outcome [judgment, loss]\n";
 
 const APPEALS: &str = "module appeals\n\nstart docketed\n\n\
 event Noticed()\nevent Filed()\nevent Briefed()\n\n\
-state docketed: \"Docketed\" by Court\n{\n  \
+state docketed: \"Docketed\" by court\n{\n  \
 brief \"Brief\" -> decided { event Briefed() }\n}\n\n\
 terminal decided: \"Decided\" outcome [judgment]\n";
 

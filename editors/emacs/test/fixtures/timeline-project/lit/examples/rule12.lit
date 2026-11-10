@@ -53,14 +53,14 @@ rule duty answer-duty cite "FRCP 12(a)(1)(A)(i)"
   deadline answer-period: 21.days from Served(complaint) counted_by frcp6
 }
 
-chance time-barred: "Is the claim time-barred?" by Court cite "FRCP 8(c)(1)"
+chance time-barred: "Is the claim time-barred?" by court cite "FRCP 8(c)(1)"
 {
   tags [fact]
   barred "Barred" -> dismissed p 1/10
   not-barred "Timely" -> respond p 9/10
 }
 
-decision respond: "Answer or move under Rule 12" by Defendant cite "FRCP 12(a)(1)(A)(i)"
+decision respond: "Answer or move under Rule 12" by defendant cite "FRCP 12(a)(1)(A)(i)"
 {
   group pleadings
   answer "File an answer" -> answered {
@@ -77,7 +77,7 @@ decision respond: "Answer or move under Rule 12" by Defendant cite "FRCP 12(a)(1
   default "Let the deadline pass" -> default-risk { sets [defaulted], valence bad }
 }
 
-chance mtd-ruling: "Ruling on the motion to dismiss" by Court discretion cite "FRCP 12(b)(6)"
+chance mtd-ruling: "Ruling on the motion to dismiss" by court discretion cite "FRCP 12(b)(6)"
 {
   group motions
   granted "Motion granted" -> dismissed p ?("no calibration yet")

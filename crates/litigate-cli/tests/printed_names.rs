@@ -48,7 +48,7 @@ rule duty local-answer-duty
 {
   deadline local-answer-period: 14.days from Served(complaint) counted_by frcp6
   {
-    extend { by Court, discretion GoodCause, on ExtensionMoved() }
+    extend { by court, discretion GoodCause, on ExtensionMoved() }
   }
 }
 
@@ -57,7 +57,7 @@ state filed: "Complaint filed" by Plaintiff
   serve "Serve the complaint" -> served { event Served(complaint, Personal) }
 }
 
-decision served: "Answer or let it pass" by Defendant
+decision served: "Answer or let it pass" by defendant
 {
   answer "File an answer" -> answered {
     event Answered(complaint)
@@ -96,7 +96,7 @@ enum Paper { brief }
 event Answered(paper: Paper)
 event ExtensionMoved()
 
-state open: "Open" by Court
+state open: "Open" by court
 {
   close "Close" -> closed { event Answered(brief) }
 }

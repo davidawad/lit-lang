@@ -39,7 +39,7 @@ state intake: \"Intake\" by Plaintiff
   file \"File\" -> check { event Filed() }
 }
 
-chance check: \"Timely?\" by Court delegable { to CaseOrder, op set }
+chance check: \"Timely?\" by court delegable { to CaseOrder, op set }
 {
   tags [fact]
   timely \"Timely\" -> heard p 1/2 { when has_event(Moved()) }
@@ -60,7 +60,7 @@ fn layer(patches: &str) -> String {
     format!(
         "module order
 import base.{{ Ordered, Moved, Struck, Excused, FederalRule, LocalRule, CaseOrder }}
-link enter \"Enter\": base::intake -> base@order::intake by Court {{ event Ordered() }}
+link enter \"Enter\": base::intake -> base@order::intake by court {{ event Ordered() }}
 instance base@order {{
   pack base
 {patches}

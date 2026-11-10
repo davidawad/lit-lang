@@ -249,7 +249,7 @@ fn the_provenance_record_names_the_operation_and_its_authority() {
 fn checks_over_hir_without_spans_locate_the_instance() {
     let base = "module base\nstart s\nauthority FederalRule > LocalRule\n\
                 event Moved()\nevent Struck()\n\
-                chance s: \"S\" by Court\n{\n  tags [fact]\n  \
+                chance s: \"S\" by court\n{\n  tags [fact]\n  \
                 y \"Y\" -> t p 1/3 { when has_event(Moved()) }\n  \
                 n \"N\" -> t p 1/3 { when !has_event(Moved()) && has_event(Struck()) }\n  \
                 m \"M\" -> t p 1/3 { when !has_event(Moved()) && !has_event(Struck()) }\n}\n\

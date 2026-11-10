@@ -51,7 +51,7 @@ decision motion: "Motion" by Plaintiff
   settle "Settle" -> settled { cost 10.usd }
   try "Try" -> tried { cost 300.usd }
 }
-chance discovery: "Discovery" by Court
+chance discovery: "Discovery" by court
 {
   sanction "Sanction" -> sanctioned p 1/4 { cost 50.usd }
   close "Close" -> closed p 3/4 { cost 50.usd }
@@ -79,12 +79,12 @@ decision motion: "Motion" by Plaintiff
   settle "Settle" -> settled-discovery { cost 10.usd }
   try "Try" -> tried-discovery { cost 300.usd }
 }
-chance settled-discovery: "Settled; discovery" by Court
+chance settled-discovery: "Settled; discovery" by court
 {
   settled-sanction "Sanction" -> settled-sanctioned p 1/4 { cost 50.usd }
   settled-close "Close" -> settled-closed p 3/4 { cost 50.usd }
 }
-chance tried-discovery: "Tried; discovery" by Court
+chance tried-discovery: "Tried; discovery" by court
 {
   tried-sanction "Sanction" -> tried-sanctioned p 1/4 { cost 50.usd }
   tried-close "Close" -> tried-closed p 3/4 { cost 50.usd }
@@ -109,13 +109,13 @@ decision filing: "File" by Plaintiff
 }
 state motion: "Motion pending"
 {
-  rule "Rule" -> ruled by Court { cost 60.usd, joins [discovery-closed] }
+  rule "Rule" -> ruled by court { cost 60.usd, joins [discovery-closed] }
 }
 state discovery: "Discovery"
 {
-  close "Close discovery" -> discovery-closed by Court { cost 40.usd }
+  close "Close discovery" -> discovery-closed by court { cost 40.usd }
 }
-state discovery-closed: "Discovery closed" { _ "Wait" -> discovery-closed by Court }
+state discovery-closed: "Discovery closed" { _ "Wait" -> discovery-closed by court }
 terminal ruled: "Ruled" { payoff 700.usd }
 "#;
 

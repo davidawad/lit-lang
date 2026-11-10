@@ -137,7 +137,7 @@ fn each_class_rejects_the_operations_outside_its_row() {
                 "case-order",
                 "CaseOrder",
                 "",
-                "deadline mine: 7.days from Served() counted_by c6 { extend { by Court, discretion GoodCause } }\ndeadline waivable: 7.days from Served() counted_by c6 { waive { by Court } }\ngrant g on [mine] effective [2020-01-01, 2020-02-01) cite \"Order\" { unlock }",
+                "deadline mine: 7.days from Served() counted_by c6 { extend { by court, discretion GoodCause } }\ndeadline waivable: 7.days from Served() counted_by c6 { waive { by court } }\ngrant g on [mine] effective [2020-01-01, 2020-02-01) cite \"Order\" { unlock }",
             ),
         ),
         // Replacing a declaration in time is an amendment's, not a layer's.
@@ -182,7 +182,7 @@ fn each_class_rejects_the_operations_outside_its_row() {
                 "guidance",
                 "CaseOrder",
                 "binds = [\"Court\"]\n",
-                "chance d: \"D\" by Court {\n  a \"A\" -> l p 1/2\n  b \"B\" -> l p 1/2\n}\nchance o: \"O\" by Defendant {\n  a \"A\" -> l p 1/2\n  b \"B\" -> l p 1/2\n}\ncounting mine { holidays cal }",
+                "chance d: \"D\" by court {\n  a \"A\" -> l p 1/2\n  b \"B\" -> l p 1/2\n}\nchance o: \"O\" by defendant {\n  a \"A\" -> l p 1/2\n  b \"B\" -> l p 1/2\n}\ncounting mine { holidays cal }",
             ),
         ),
         // Its own structure is every class's; reviving another package's

@@ -46,7 +46,7 @@ counting c7 {{ holidays cal }}
 calendar cal {{ new-year: fixed(1, 1) effective [1870-06-28, ..) }}
 deadline answer-period: 21.days from Served() counted_by c6 effective [2009-12-01, ..){clauses} {{ {opts} }}
 state s: \"S\" by Plaintiff {{ serve \"Serve\" -> r {{ event Served(complaint) }} }}
-decision r: \"R\" by Defendant {{ answer \"Answer\" -> done {{ event Answered(complaint), within answer-period }} }}
+decision r: \"R\" by defendant {{ answer \"Answer\" -> done {{ event Answered(complaint), within answer-period }} }}
 terminal done: \"Done\" {{ payoff 0.usd }}
 {extra}
 "
@@ -367,11 +367,11 @@ deadline f: 21.days from Served(complaint) counted_by c6 delegable { to CaseOrde
 fn a_jurisdictional_deadline_admits_no_waiver_unbounded_extension_or_delegation() {
     let out = check_body(
         "authority FederalRule > CaseOrder\n\
-deadline a: 30.days from Served(complaint) counted_by c6 { characterization jurisdictional cite \"28 U.S.C. § 2107(a)\", waive { by Court } }\n\
-deadline b: 30.days from Served(complaint) counted_by c6 { characterization jurisdictional, extend { by Court, discretion GoodCause } }\n\
+deadline a: 30.days from Served(complaint) counted_by c6 { characterization jurisdictional cite \"28 U.S.C. § 2107(a)\", waive { by court } }\n\
+deadline b: 30.days from Served(complaint) counted_by c6 { characterization jurisdictional, extend { by court, discretion GoodCause } }\n\
 deadline c: 30.days from Served(complaint) counted_by c6 delegable { to CaseOrder, op extend } { characterization jurisdictional }\n\
-deadline d: 30.days from Served(complaint) counted_by c6 { characterization jurisdictional, extend { by Court, max 30.days }, extend { never cite \"FRAP 26(b)(1)\" } }\n\
-deadline e: 30.days from Served(complaint) counted_by c6 { characterization claim_processing cite ?(\"Hamer, not vendored\"), waive { by Court }, extend { by Court, discretion GoodCause } }\n\
+deadline d: 30.days from Served(complaint) counted_by c6 { characterization jurisdictional, extend { by court, max 30.days }, extend { never cite \"FRAP 26(b)(1)\" } }\n\
+deadline e: 30.days from Served(complaint) counted_by c6 { characterization claim_processing cite ?(\"Hamer, not vendored\"), waive { by court }, extend { by court, discretion GoodCause } }\n\
 deadline f: 30.days from Served(complaint) counted_by c6 { characterization fuzzy }\n\
 deadline g: 30.days from Served(complaint) counted_by c6 { characterization jurisdictional cite \"1\" }\n\
 deadline h: 30.days from Served(complaint) counted_by c6 { characterization }",
@@ -397,12 +397,12 @@ grant missing on [nope] effective [2020-03-15, 2020-06-13) { unlock }",
         "authority FederalRule > LocalRule > CaseOrder\n\
 deadline a: 21.days from Served(complaint) counted_by c6 { extend { never cite \"FRCP 6(b)(2)\" } }\n\
 deadline j: 21.days from Served(complaint) counted_by c6 { characterization jurisdictional }\n\
-grant fine on [a] effective [2020-03-15, 2020-06-13) cite \"FRCP 87(c)(2)\" { unlock, extend { by Court, discretion GoodCause }, delegable { to CaseOrder, op extend }, delegable { to LocalRule, op set } }\n\
-grant locked-out on [a] effective [2020-03-15, 2020-06-13) { extend { by Court, max 30.days } }\n\
+grant fine on [a] effective [2020-03-15, 2020-06-13) cite \"FRCP 87(c)(2)\" { unlock, extend { by court, discretion GoodCause }, delegable { to CaseOrder, op extend }, delegable { to LocalRule, op set } }\n\
+grant locked-out on [a] effective [2020-03-15, 2020-06-13) { extend { by court, max 30.days } }\n\
 grant upward on [a] effective [2020-03-15, 2020-06-13) { delegable { to FederalRule, op set } }\n\
-grant forbidden on [j] effective [2020-03-15, 2020-06-13) { waive { by Court }, extend { by Court, discretion GoodCause }, delegable { to CaseOrder, op set } }\n\
-grant waiver-only on [j] effective [2020-03-15, 2020-06-13) { waive { by Court } }\n\
-grant bounded on [j] effective [2020-03-15, 2020-06-13) { extend { by Court, max 30.days } }\n\
+grant forbidden on [j] effective [2020-03-15, 2020-06-13) { waive { by court }, extend { by court, discretion GoodCause }, delegable { to CaseOrder, op set } }\n\
+grant waiver-only on [j] effective [2020-03-15, 2020-06-13) { waive { by court } }\n\
+grant bounded on [j] effective [2020-03-15, 2020-06-13) { extend { by court, max 30.days } }\n\
 grant before on [a] effective [2001-03-15, 2001-06-13) { delegable { to FederalRule, op set } }",
     );
     insta::assert_debug_snapshot!("grants_give_their_targets", world);
@@ -410,12 +410,12 @@ grant before on [a] effective [2001-03-15, 2001-06-13) { delegable { to FederalR
 
 #[test]
 fn an_emergency_grant_delegates_and_unlocks_only_inside_its_window() {
-    let locked = "extend { by Court, max 30.days }, extend { never cite \"FRAP 26(b)(1)\" }";
+    let locked = "extend { by court, max 30.days }, extend { never cite \"FRAP 26(b)(1)\" }";
     let grant = "grant emergency on [answer-period] effective [2020-03-15, 2020-06-13) cite \"FRCP 87(c)(2)\" { unlock, delegable { to LocalRule, op set } }\n";
     let claim = |window: &str| {
         local_with(
             &format!("30.days from Served() counted_by c6 effective {window}"),
-            "extend { by Court, max 60.days }",
+            "extend { by court, max 60.days }",
         )
     };
     let rows: &[(&str, &str, &str)] = &[
@@ -459,7 +459,7 @@ fn any_other_difference_replaces_the_value() {
         ("21.days before Served() counted_by c6", ""),
         ("21.days from Served() counted_by c6", "bearer Defendant"),
         ("21.days from Served() counted_by c6", "trigger latest"),
-        ("21.days from Served() counted_by c6", "waive { by Court }"),
+        ("21.days from Served() counted_by c6", "waive { by court }"),
     ];
     for (decl, opts) in rows {
         for (cap, governs) in [
@@ -696,7 +696,7 @@ fn a_named_lock_refuses_only_the_authorities_it_names() {
     // and may when the lock names only case orders.
     let claim = local_with(
         "30.days from Served() counted_by c6 effective [2012-01-01, ..)",
-        "extend { by Court, max 60.days }",
+        "extend { by court, max 60.days }",
     );
     let rows: BTreeMap<&str, Vec<String>> = [
         ("against the local rule", "[LocalRule, CaseOrder]"),
@@ -705,7 +705,7 @@ fn a_named_lock_refuses_only_the_authorities_it_names() {
     .into_iter()
     .map(|(name, against)| {
         let locked = format!(
-            "extend {{ by Court, max 30.days }}, lock against {against} cite \"FRAP 26(b)(1)\""
+            "extend {{ by court, max 30.days }}, lock against {against} cite \"FRAP 26(b)(1)\""
         );
         let fed = fed(" delegable { to LocalRule, op set }", &locked, "");
         (name, diagnostics(&[core(), fed, claim.clone()]))
@@ -725,7 +725,7 @@ fn an_emergency_grant_of_an_unnamed_authority_needs_no_unlock() {
         let body = format!(
             "authority FederalRule > LocalRule > CaseOrder\n\
 deadline a: 21.days from Served(complaint) counted_by c6 {{ lock against {against} cite \"FRCP 6(b)(2)\" }}\n\
-grant emergency on [a] effective [2020-03-15, 2020-06-13) cite \"FRCP 87(c)(2)\" {{ extend {{ by Court, max 30.days }} }}"
+grant emergency on [a] effective [2020-03-15, 2020-06-13) cite \"FRCP 87(c)(2)\" {{ extend {{ by court, max 30.days }} }}"
         );
         (name, check_body(&body))
     })

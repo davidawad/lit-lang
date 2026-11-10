@@ -55,13 +55,13 @@ transition time-2009-counting amends frcp6@2009-12-01 cite "FRCP 86(a)(2)(B)"
   otherwise -> frcp6@2009-12-01
 }
 
-state served: "Complaint served" by Defendant cite "FRCP 4"
+state served: "Complaint served" by defendant cite "FRCP 4"
 {
   _ "The 2009 amendments take effect while the action is pending" -> prior-rules
   _ "Proceed under the rules in force" -> respond
 }
 
-chance prior-rules: "Does the court keep the pre-2009 time rules?" by Court discretion cite "FRCP 86(a)(2)(B)"
+chance prior-rules: "Does the court keep the pre-2009 time rules?" by court discretion cite "FRCP 86(a)(2)(B)"
 {
   keep-prior "Applying the amendments would be infeasible or work an injustice" -> respond p ?("uncalibrated") {
     event OrderedPriorRules()
@@ -69,7 +69,7 @@ chance prior-rules: "Does the court keep the pre-2009 time rules?" by Court disc
   apply-new "The amendments govern the pending action" -> respond p ?("uncalibrated")
 }
 
-decision respond: "Answer or move under Rule 12" by Defendant cite "FRCP 12(a)(1)(A)(i)"
+decision respond: "Answer or move under Rule 12" by defendant cite "FRCP 12(a)(1)(A)(i)"
 {
   answer "File an answer" -> answered { event Answered(complaint), within answer-period }
   move-dismiss "Move to dismiss under Rule 12(b)(6)" -> mtd-ruling {
@@ -78,13 +78,13 @@ decision respond: "Answer or move under Rule 12" by Defendant cite "FRCP 12(a)(1
   }
 }
 
-chance mtd-ruling: "Ruling on the motion to dismiss" by Court discretion cite "FRCP 12(b)(6)"
+chance mtd-ruling: "Ruling on the motion to dismiss" by court discretion cite "FRCP 12(b)(6)"
 {
   granted "Motion granted" -> dismissed p ?("uncalibrated")
   denied "Motion denied" -> answer-after-denial p ?("uncalibrated") { event Denied(motion) }
 }
 
-decision answer-after-denial: "Answer after denial" by Defendant cite "FRCP 12(a)(4)(A)"
+decision answer-after-denial: "Answer after denial" by defendant cite "FRCP 12(a)(4)(A)"
 {
   answer "File an answer" -> answered { event Answered(complaint), within after-denial }
 }

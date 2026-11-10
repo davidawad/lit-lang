@@ -48,14 +48,14 @@ rule duty answer-duty cite "FRCP 12(a)(1)(A)(i)"
   deadline answer-period: 20.days from Served(complaint) counted_by frcp6
     effective [2007-12-01, 2009-12-01) known_at 2007-04-30 {
       bearer Defendant
-      extend { by Court, max 30.days }
-      waive { by Court }
+      extend { by court, max 30.days }
+      waive { by court }
     }
   deadline answer-period: 21.days from Served(complaint) counted_by frcp6
     effective [2009-12-01, ..) known_at 2009-03-26 supersedes answer-period@2007-12-01 {
       bearer Defendant
-      extend { by Court, max 30.days }
-      waive { by Court }
+      extend { by court, max 30.days }
+      waive { by court }
     }
 }
 
@@ -91,7 +91,7 @@ state awaiting-service: "Complaint filed" by Plaintiff cite "FRCP 4"
   serve "Serve the summons and complaint" -> respond { event Served(complaint) }
 }
 
-decision respond: "Answer or move under Rule 12" by Defendant cite "FRCP 12(a)(1)(A)(i)"
+decision respond: "Answer or move under Rule 12" by defendant cite "FRCP 12(a)(1)(A)(i)"
 {
   answer "File an answer" -> answered { event Answered(complaint), within answer-period }
   move-dismiss "Move to dismiss under Rule 12(b)(6)" -> mtd-ruling {
@@ -101,13 +101,13 @@ decision respond: "Answer or move under Rule 12" by Defendant cite "FRCP 12(a)(1
   default "Let the deadline pass" -> defaulted
 }
 
-chance mtd-ruling: "Ruling on the motion to dismiss" by Court discretion cite "FRCP 12(b)(6)"
+chance mtd-ruling: "Ruling on the motion to dismiss" by court discretion cite "FRCP 12(b)(6)"
 {
   granted "Motion granted" -> dismissed p ?("uncalibrated")
   denied "Motion denied" -> answer-after-denial p ?("uncalibrated") { event Denied(motion) }
 }
 
-decision answer-after-denial: "Answer after denial" by Defendant cite "FRCP 12(a)(4)(A)"
+decision answer-after-denial: "Answer after denial" by defendant cite "FRCP 12(a)(4)(A)"
 {
   answer "File an answer" -> answered { event Answered(complaint), within after-denial }
 }

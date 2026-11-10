@@ -1066,6 +1066,15 @@ Cargo.lock does, and `litigate lock` regenerates it.
   changes other packages' law and has no procedure of its own, and it
   lowers to a pack with no nodes and an empty `startNodeId`. Every actor used by `by`, and
   the implicit `either`, must be a key of `[package.roles]` (L1009).
+- **Typed actor designations.** The identifier after `by` is a canonical,
+  lowercase designation from `core.roles` (party or tribunal designations,
+  plus the core `either` and `opponent` designations). It must also be a key
+  in the owning package's `[package.roles]` table; that table continues to map
+  the designation to `self`, `opponent`, or `nature` for lowering. A spelling
+  that differs only by case is not an alias: it is L1016 and carries a
+  machine-applicable fix to the canonical spelling. A name that is not a
+  core designation, or a valid designation absent from the package, is L1016.
+  Links use the roles of the pack owning their `from` node.
 - Cites resolve through `cite_prefixes`: the longest matching prefix wins,
   and no match is L1010. The pinpoint's first number (`12` in
   `12(a)(1)(A)(i)`) is located in the binding's `path` file with

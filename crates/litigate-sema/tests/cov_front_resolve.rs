@@ -27,8 +27,8 @@ state bad: \"Bad\" { _ \"go\" -> dflt }\n";
 fn only_a_plain_fact_tag_makes_a_fact_node() {
     use litigate_sema::resolve::sig::ValueKind;
     let src = "module main\nstart a\n\
-chance a: \"A\" by Court { tags [other, base.fact], go \"Go\" -> b p 1 }\n\
-chance b: \"B\" by Court { tags [fact], go \"Go\" -> c p 1 }\n\
+chance a: \"A\" by court { tags [other, base.fact], go \"Go\" -> b p 1 }\n\
+chance b: \"B\" by court { tags [fact], go \"Go\" -> c p 1 }\n\
 terminal c: \"C\"\n";
     let (db, ws) = workspace(&[package("demo", &[], &[("main.lit", src)])]);
     let file = ws.packages(&db)[0].files(&db)[0];

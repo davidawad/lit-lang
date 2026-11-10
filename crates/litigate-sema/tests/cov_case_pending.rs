@@ -24,11 +24,11 @@ counting pc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays
 calendar pcal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
 deadline period: 10.days from Entered() counted_by pc {
-  extend { by Court, discretion GoodCause, on Moved(), unless Denied() }
-  extend { by Court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on Moved(), unless Denied() }
+  extend { by court, discretion GoodCause }
 }
 deadline plain: 10.days from Entered() counted_by pc {
-  extend { by Court, discretion GoodCause }
+  extend { by court, discretion GoodCause }
 }
 
 state open: \"Open\"

@@ -35,12 +35,12 @@ calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed neares
 
 deadline answer: 10.days from Served(Mail) counted_by oc {
   bearer Defendant
-  extend { by Court, max 30.days }
+  extend { by court, max 30.days }
 }
 
 state open: \"Open\"
 {
-  answer \"Answer\" -> done by Defendant { event Answered(), within answer }
+  answer \"Answer\" -> done by defendant { event Answered(), within answer }
   stipulate \"Stipulate\" -> open by Plaintiff { event Stipulated() }
   notice \"Notice\" -> open by Plaintiff { event Noticed() }
 }

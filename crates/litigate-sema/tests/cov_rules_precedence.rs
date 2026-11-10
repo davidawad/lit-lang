@@ -300,7 +300,7 @@ fn exceptions_references_authority_and_shapes_table() {
 #[test]
 fn rule_kinds_are_queryable() {
     let body = "rule duty answer {\n  deadline p: 21.days from Served(complaint) counted_by c6\n}\n\
-        rule power move {\n  decision m: \"Move?\" by Defendant { _ \"yes\" -> t }\n  deadline q: 1.days from Served(complaint) counted_by c6\n}\n\
+        rule power move {\n  decision m: \"Move?\" by defendant { _ \"yes\" -> t }\n  deadline q: 1.days from Served(complaint) counted_by c6\n}\n\
         deadline free: 1.days from Served(complaint) counted_by c6";
     let text = format!("{PRELUDE}{body}\n");
     let (db, ws) = workspace(&[pkg(

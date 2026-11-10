@@ -139,7 +139,7 @@ fn a_package_sema_rejects_has_no_cite_hover() {
     assert_eq!(value(a, MODULE, &broken, "FRCP 8(c)(1)", 1), None);
     // Names still hover, from the source alone.
     let node = value(a, MODULE, &broken, "chance time-barred", 8).unwrap();
-    assert_eq!(node, "```litigate\nchance time-barred: \"Is the claim time-barred?\" by Court cite \"FRCP 8(c)(1)\"\n```\n");
+    assert_eq!(node, "```litigate\nchance time-barred: \"Is the claim time-barred?\" by court cite \"FRCP 8(c)(1)\"\n```\n");
 }
 
 #[test]

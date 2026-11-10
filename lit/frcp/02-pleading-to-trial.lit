@@ -26,7 +26,7 @@ import frcp.{
   trial-group,
 }
 
-decision service-window: "Rule 4(m) Service Window" by applicant cite "FRCP 4(m)"
+decision service-window: "Rule 4(m) Service Window" by plaintiff cite "FRCP 4(m)"
 {
   group pleading-group
   note "Plaintiff has 90 days after filing to serve the summons and complaint. If service is not made within that window, the court -- on motion or on its own after notice -- must dismiss the action without prejudice against that defendant OR order that service be made within a specified time. If plaintiff shows good cause for the failure, the court MUST extend the time for an appropriate period; the 90 days is extendable on that showing but is not self-extending."
@@ -54,7 +54,7 @@ decision service-window: "Rule 4(m) Service Window" by applicant cite "FRCP 4(m)
   }
 }
 
-decision waiver-requested: "Waiver of Service Requested" by applicant cite "FRCP 4(d)(1)"
+decision waiver-requested: "Waiver of Service Requested" by plaintiff cite "FRCP 4(d)(1)"
 {
   group pleading-group
   note "Plaintiff may notify a defendant subject to service under Rule 4(e), (f), or (h) of the action and request a waiver, giving the defendant a reasonable time to return it -- at least 30 days after the request was sent, or at least 60 days if sent outside any U.S. judicial district. A defendant located in the U.S. who fails without good cause to waive must be charged the later costs of formal service and the fees of any motion required to collect them (Rule 4(d)(2)). Waiving service does NOT waive any defense or objection to personal jurisdiction or venue (Rule 4(d)(5))."
@@ -75,7 +75,7 @@ decision waiver-requested: "Waiver of Service Requested" by applicant cite "FRCP
   }
 }
 
-decision service-completed: "Service of Process Completed" by applicant cite "FRCP 4(c); 4(e); 4(h)"
+decision service-completed: "Service of Process Completed" by plaintiff cite "FRCP 4(c); 4(e); 4(h)"
 {
   group pleading-group
   note "Formal service accomplished under Rule 4(e) (individuals), 4(h) (corporations/associations), or 4(f) (foreign defendants). Service triggers both the defendant's responsive-pleading clock and, if the case is removable, the defendant's independent 30-day removal clock under 28 U.S.C. 1446(b)(1) -- these two clocks run in parallel, not in sequence."
@@ -110,7 +110,7 @@ terminal service-window-blown: "DISMISSED WITHOUT PREJUDICE -- No Timely Service
 
 /// Removal pays the district court's $405 civil filing fee, in force from
 /// December 1, 2023 (usdc-fee-schedule); the pack records no earlier amount.
-decision removal-window: "Removal Window (Defendant's Election)" by applicant effective [2023-12-01, ..) cite "28 U.S.C. 1441; 1446(b)(1)"
+decision removal-window: "Removal Window (Defendant's Election)" by defendant effective [2023-12-01, ..) cite "28 U.S.C. 1441; 1446(b)(1)"
 {
   group pleading-group
   note "A defendant sued in state court on a removable claim (federal question, or diversity absent an in-state defendant under the forum-defendant rule, 1441(b)(2)) has 30 days from formal service to remove -- not from informal receipt of a courtesy copy. Murphy Bros., Inc. v. Michetti Pipe Stringing, Inc., 526 U.S. 344 (1999): the clock runs from service, not notice. Where there are multiple defendants, all who have been served must join in or consent to removal (the 'rule of unanimity,' 1446(b)(2)(A))."
@@ -139,7 +139,7 @@ decision removal-window: "Removal Window (Defendant's Election)" by applicant ef
   }
 }
 
-decision removed-to-federal: "Case Removed to Federal Court" by applicant cite "28 U.S.C. 1441; 1446(a)"
+decision removed-to-federal: "Case Removed to Federal Court" by defendant cite "28 U.S.C. 1441; 1446(a)"
 {
   group pleading-group
   note "Notice of removal filed in the federal district embracing the state action, with a copy promptly filed in state court (which then loses jurisdiction to proceed further, 1446(d)). Under FRCP 81(c)(2), a defendant who has not yet answered when the case is removed has the longer of: the time remaining under state practice, 21 days after receipt of the initial pleading, or 7 days after the removal notice is filed."
@@ -166,7 +166,7 @@ decision removed-to-federal: "Case Removed to Federal Court" by applicant cite "
   }
 }
 
-chance remand-ruling: "Court Rules on Motion to Remand" by examiner discretion cite "28 U.S.C. 1447(c)"
+chance remand-ruling: "Court Rules on Motion to Remand" by court discretion cite "28 U.S.C. 1447(c)"
 {
   group pleading-group
   note "A motion to remand for a procedural defect in removal must be made within 30 days after the notice of removal; a motion to remand for lack of subject-matter jurisdiction may be made at any time before final judgment, and the court must remand sua sponte if it discovers the jurisdictional defect itself. Remand probability authored at 0.3 grant / 0.7 deny -- APPROXIMATE, not a live empirical figure; removal is upheld more often than not when the removing defendant has correctly diagnosed diversity or federal-question jurisdiction, but improvidently removed cases (missing an in-state defendant's forum-defendant bar, incomplete diversity) are a recurring plaintiff win."
@@ -191,7 +191,7 @@ terminal remand-ordered: "Remanded to State Court" outcome [neutral] cite "28 U.
   payoff 500_000.usd
 }
 
-decision rule12-response-window: "Rule 12 Response Window" by applicant cite "FRCP 12(a)(1)(A)(i)"
+decision rule12-response-window: "Rule 12 Response Window" by defendant cite "FRCP 12(a)(1)(A)(i)"
 {
   group pleading-group
   note "Defendant must serve an answer within 21 days after being served with the summons and complaint (Rule 12(a)(1)(A)(i)), the clock of the tracks that reach this node: formal service with no removal, or a defendant who declines to remove. A waiver of service, a removal and an amended pleading each run on their own clock and have their own response window (`waiver-response-window`, `removed-response-window`, `amended-response-window`); a denied Rule 12 motion reaches `answer-filed` directly on Rule 12(a)(4)(A)'s 14 days. Filing ANY Rule 12(b) motion before answering extends the responsive-pleading deadline to 14 days after the court rules."
@@ -239,7 +239,7 @@ decision rule12-response-window: "Rule 12 Response Window" by applicant cite "FR
   }
 }
 
-chance special-appearance-waiver-risk: "Waiver Risk After Special Appearance" by examiner discretion cite "FRCP 12(h)(1)"
+chance special-appearance-waiver-risk: "Waiver Risk After Special Appearance" by court discretion cite "FRCP 12(h)(1)"
 {
   group pleading-group
   note "Rule 12(h)(1) governs waiver when a defense is omitted from the required motion or pleading. Whether an appearance to oppose a motion waives a reserved defense can depend on the conduct and circumstances; the chance models that uncertain risk. The 5% prior is an approximate teaching estimate, not a docket-derived rate; estimate vintage 2026-10-26. Replace it with matter-specific evidence when available."
@@ -252,7 +252,7 @@ chance special-appearance-waiver-risk: "Waiver Risk After Special Appearance" by
   }
 }
 
-decision waiver-response-window: "Rule 12 Response Window (Service Waived)" by applicant cite "FRCP 12(a)(1)(A)(ii)"
+decision waiver-response-window: "Rule 12 Response Window (Service Waived)" by defendant cite "FRCP 12(a)(1)(A)(ii)"
 {
   group pleading-group
   note "A defendant who timely returned a Rule 4(d) waiver answers within 60 days after the request was sent (90 if it was sent outside every judicial district of the United States, which the pack does not branch on), Rule 12(a)(1)(A)(ii) -- longer than the 21-day clock after formal service, the incentive for waiving. A pre-answer Rule 12(b) motion runs on the same clock."
@@ -288,7 +288,7 @@ decision waiver-response-window: "Rule 12 Response Window (Service Waived)" by a
   }
 }
 
-decision removed-response-window: "Rule 12 Response Window (After Removal)" by applicant cite "FRCP 81(c)(2)(A)"
+decision removed-response-window: "Rule 12 Response Window (After Removal)" by defendant cite "FRCP 81(c)(2)(A)"
 {
   group pleading-group
   note "After removal, a defendant who has not answered answers within the longest of: 21 days after receiving the initial pleading, 21 days after service of the summons on an initial pleading on file, or 7 days after the notice of removal is filed (Rule 81(c)(2)); the pack models the first. A pre-answer Rule 12(b) motion runs on the same clock."
@@ -324,7 +324,7 @@ decision removed-response-window: "Rule 12 Response Window (After Removal)" by a
   }
 }
 
-decision amended-response-window: "Rule 12 Response Window (Amended Pleading)" by applicant cite "FRCP 15(a)(3)"
+decision amended-response-window: "Rule 12 Response Window (Amended Pleading)" by defendant cite "FRCP 15(a)(3)"
 {
   group pleading-group
   note "Unless the court orders otherwise, a response to an amended pleading is due within the time remaining to respond to the original pleading or within 14 days after service of the amended pleading, whichever is later (Rule 15(a)(3)); the pack models the 14 days. A Rule 12(b) motion against the amended pleading runs on the same clock."
@@ -360,7 +360,7 @@ decision amended-response-window: "Rule 12 Response Window (Amended Pleading)" b
   }
 }
 
-state answer-filed: "Answer Filed" by applicant cite "FRCP 8(b); 8(c); 12(a)(4)(A); 13"
+state answer-filed: "Answer Filed" by defendant cite "FRCP 8(b); 8(c); 12(a)(4)(A); 13"
 {
   group pleading-group
   note "The answer admits, denies, or states lack of knowledge as to each allegation (Rule 8(b)), affirmatively pleads any avoidance or affirmative defense such as statute of limitations, waiver, or accord and satisfaction (Rule 8(c)(1)) -- omitting one without later amendment forfeits it -- and may assert compulsory counterclaims arising from the same transaction or occurrence (Rule 13(a)) or permissive counterclaims (Rule 13(b)). Compulsory counterclaims not pleaded here are generally barred from later, separate litigation."
@@ -371,7 +371,7 @@ state answer-filed: "Answer Filed" by applicant cite "FRCP 8(b); 8(c); 12(a)(4)(
   }
 }
 
-state motion-to-dismiss-filed: "Rule 12(b) Motion Filed" by applicant cite "FRCP 12(b)"
+state motion-to-dismiss-filed: "Rule 12(b) Motion Filed" by defendant cite "FRCP 12(b)"
 {
   group pleading-group
   note "Seven enumerated defenses may be raised by motion instead of the answer: (1) lack of subject-matter jurisdiction, (2) lack of personal jurisdiction, (3) improper venue, (4) insufficient process, (5) insufficient service of process, (6) failure to state a claim, (7) failure to join a required party. THE OMNIBUS TRAP: Rule 12(g)(2) bars a second Rule 12 motion raising a defense that was available but omitted from the first; Rule 12(h)(1) then WAIVES defenses (2)-(5) if omitted from both the first motion and the answer. Defenses (6) and (7) survive through trial (Rule 12(h)(2)); lack of subject-matter jurisdiction (1) can never be waived (Rule 12(h)(3))."
@@ -383,7 +383,7 @@ state motion-to-dismiss-filed: "Rule 12(b) Motion Filed" by applicant cite "FRCP
   }
 }
 
-chance mtd-ruling: "Court Rules on Motion to Dismiss" by examiner discretion cite "FRCP 12(b)(6); 12(d)"
+chance mtd-ruling: "Court Rules on Motion to Dismiss" by court discretion cite "FRCP 12(b)(6); 12(d)"
 {
   group pleading-group
   note "Outcome distribution authored at 0.45 deny / 0.35 grant-with-leave / 0.20 grant-without-leave -- APPROXIMATE, not a live empirical figure; district courts deny more 12(b)(6) motions than they grant outright, and leave to amend is the norm rather than the exception on a first dismissal (Foman v. Davis, 371 U.S. 178 (1962): leave should be 'freely given'). If matters outside the pleadings are presented and not excluded, the motion converts to one for summary judgment under Rule 56 (Rule 12(d)) -- not separately modeled here."
@@ -404,7 +404,7 @@ chance mtd-ruling: "Court Rules on Motion to Dismiss" by examiner discretion cit
   }
 }
 
-terminal dismissed-with-prejudice: "DISMISSED WITH PREJUDICE" by applicant outcome [loss, dismissal, waiver-trap] cite "FRCP 12(b)(6); 41(b)"
+terminal dismissed-with-prejudice: "DISMISSED WITH PREJUDICE" by plaintiff outcome [loss, dismissal, waiver-trap] cite "FRCP 12(b)(6); 41(b)"
 {
   group pleading-group
   note "PERMADEATH. The complaint fails to state a claim and the court concludes amendment would be futile -- dismissal without leave to amend. Rule 41(b)'s final sentence extends beyond its own subdivision: unless the dismissal order states otherwise, 'any dismissal not under this rule -- except one for lack of jurisdiction, improper venue, or failure to join a party under Rule 19 -- operates as an adjudication on the merits,' which is what makes a with-prejudice 12(b)(6) dismissal claim-preclusive. PLACEHOLDER PAYOFF: $0, override per matter."
@@ -418,7 +418,7 @@ terminal dismissed-with-prejudice: "DISMISSED WITH PREJUDICE" by applicant outco
   }
 }
 
-decision default-entered: "Clerk's Entry of Default" by applicant cite "FRCP 55(a)"
+decision default-entered: "Clerk's Entry of Default" by defendant cite "FRCP 55(a)"
 {
   group pleading-group
   note "When a party against whom relief is sought has failed to plead or otherwise defend, and that failure is shown by affidavit or otherwise, the clerk MUST enter default. This is purely clerical and does not itself award judgment. A defaulted defendant may move to set aside the entry for good cause (Rule 55(c)) -- courts apply a lenient standard here, distinct from the stricter Rule 60(b) standard for setting aside a final default JUDGMENT."
@@ -428,7 +428,7 @@ decision default-entered: "Clerk's Entry of Default" by applicant cite "FRCP 55(
     cost 3_500.usd
     valence good
   }
-  edge-default-entered-default-judgment-entered "Clerk or court enters default judgment" -> default-judgment-entered by office {
+  edge-default-entered-default-judgment-entered "Clerk or court enters default judgment" -> default-judgment-entered by court {
     authority cite "FRCP 55(b)(1); 55(b)(2)"
   }
 }
@@ -441,7 +441,7 @@ terminal default-judgment-entered: "DEFAULT JUDGMENT ENTERED" outcome [win, defa
   payoff 900_000.usd
 }
 
-state voluntary-dismissal: "VOLUNTARY / STIPULATED DISMISSAL" by applicant cite "FRCP 41(a)"
+state voluntary-dismissal: "VOLUNTARY / STIPULATED DISMISSAL" by plaintiff cite "FRCP 41(a)"
 {
   group pleading-group
   note "Plaintiff may dismiss without a court order by filing a notice of dismissal before the opposing party serves either an answer or a summary-judgment motion (41(a)(1)(A)(i)), or by a stipulation signed by all parties who have appeared (41(a)(1)(A)(ii)) -- the common vehicle for a negotiated settlement. Otherwise dismissal requires a court order, typically on terms the court considers proper (41(a)(2)). A first 41(a)(1) dismissal is without prejudice unless the notice/stipulation states otherwise; a SECOND dismissal of the same claim operates as an adjudication on the merits (the 'two-dismissal rule,' 41(a)(1)(B)). Waetzig v. Halliburton Energy Services, Inc., 604 U.S. 305 (2025), holds a Rule 41(a) voluntary dismissal without prejudice is a final proceeding reachable by Rule 60(b)."
@@ -474,7 +474,7 @@ terminal voluntary-dismissal-final: "VOLUNTARY DISMISSAL LEFT IN PLACE" outcome 
   payoff 400_000.usd
 }
 
-decision rule60-dismissal-motion: "Rule 60(b) Motion After Rule 41(a)(1) Notice" by applicant cite "FRCP 60(b)"
+decision rule60-dismissal-motion: "Rule 60(b) Motion After Rule 41(a)(1) Notice" by plaintiff cite "FRCP 60(b)"
 {
   group pleading-group
   note "Waetzig holds that a Rule 41(a) voluntary dismissal without prejudice is a final proceeding within Rule 60(b), including a dismissal by notice. It decides availability of Rule 60(b), not entitlement to relief; Rule 60(b)'s grounds and time limits still govern. The court's discretionary ruling is not assigned a probability here."
@@ -500,7 +500,7 @@ state rule60-relief-granted: "Rule 60(b) Relief Granted" by court cite "FRCP 60(
   }
 }
 
-state rule60-relief-denied: "Rule 60(b) Relief Denied" by applicant cite "FRCP 60(b)"
+state rule60-relief-denied: "Rule 60(b) Relief Denied" by plaintiff cite "FRCP 60(b)"
 {
   group pleading-group
   note "Rule 60(b) relief denied. The ruling may be appealable under 28 U.S.C. § 1291; the notice period runs from entry of the order under FRAP 4(a), subject to jurisdictional and preservation limits."
@@ -523,7 +523,7 @@ terminal rule60-denial-final: "Rule 60(b) Denial Left in Place" outcome [loss, p
   payoff 0.usd
 }
 
-decision rule41d-refiling: "Refiling After Voluntary Dismissal" by applicant cite "FRCP 41(d)"
+decision rule41d-refiling: "Refiling After Voluntary Dismissal" by plaintiff cite "FRCP 41(d)"
 {
   group pleading-group
   note "If a plaintiff who previously dismissed an action in any court files an action based on or including the same claim against the same defendant, Rule 41(d) requires the court to order payment of all or part of the costs of the previous action and may stay the new action until payment. The order is discretionary as to amount and stay; no probability is assigned."
@@ -551,7 +551,7 @@ terminal refiling-proceeds: "Refiling Proceeds" outcome [refiling] cite "FRCP 41
   valence good
 }
 
-decision dismissal-fee-motion: "Post-Dismissal Fee Motion" by applicant cite "FRCP 54(d)(2)"
+decision dismissal-fee-motion: "Post-Dismissal Fee Motion" by plaintiff cite "FRCP 54(d)(2)"
 {
   group pleading-group
   note "Prevailing-party status depends on the fee-shifting statute and the legal effect of the dismissal. CRST holds a defendant need not win on the merits to prevail where the plaintiff's challenge is rebuffed. Cadkin holds, under the Copyright Act in the Ninth Circuit, a defendant is not a prevailing party when the plaintiff remains free to refile after voluntary dismissal without prejudice. These holdings do not make every voluntary dismissal a fee award; entitlement and amount remain statute- and case-specific."
@@ -579,7 +579,7 @@ terminal dismissal-fees-ineligible: "No Prevailing-Party Fee Eligibility" outcom
   valence bad
 }
 
-decision amendment-as-of-right-window: "Rule 15(a)(1) Amendment-as-of-Right Window" by applicant cite "FRCP 15(a)(1)(B)"
+decision amendment-as-of-right-window: "Rule 15(a)(1) Amendment-as-of-Right Window" by plaintiff cite "FRCP 15(a)(1)(B)"
 {
   group amendment-joinder-group
   note "A party may amend once as a matter of course no later than 21 days after service of a responsive pleading, or 21 days after service of a Rule 12(b), (e), or (f) motion, whichever is earlier -- the two triggers run independently and the earlier one controls. Miss both 21-day windows and Rule 15(a)(1) is exhausted; amendment thereafter requires the opposing party's written consent or the court's leave, which the court 'should freely give ... when justice so requires' (15(a)(2))."
@@ -606,7 +606,7 @@ decision amendment-as-of-right-window: "Rule 15(a)(1) Amendment-as-of-Right Wind
   }
 }
 
-state amended-complaint-filed: "Amended Complaint Filed" by office cite "FRCP 15(a); 15(c)(1)(C)"
+state amended-complaint-filed: "Amended Complaint Filed" by court cite "FRCP 15(a); 15(c)(1)(C)"
 {
   group amendment-joinder-group
   note "An amendment changing the party against whom a claim is asserted relates back to the original filing date only if it arises from the same conduct/transaction/occurrence AND, within the Rule 4(m) service period, the new party received notice avoiding prejudice and knew or should have known the action would have been brought against it but for a mistake concerning identity (Rule 15(c)(1)(C)). Krupski v. Costa Crociere S.p.A., 560 U.S. 538 (2010): relation-back turns on what the NEW PARTY knew or should have known, not on the diligence of the amending plaintiff."
@@ -622,7 +622,7 @@ state amended-complaint-filed: "Amended Complaint Filed" by office cite "FRCP 15
   }
 }
 
-state leave-to-amend-motion: "Motion for Leave to Amend Filed" by applicant cite "FRCP 15(a)(2)"
+state leave-to-amend-motion: "Motion for Leave to Amend Filed" by plaintiff cite "FRCP 15(a)(2)"
 {
   group amendment-joinder-group
   note "Outside the matter-of-course windows, amendment requires written consent or the court's leave. The 'freely give' standard is not automatic: undue delay, bad faith, repeated failure to cure deficiencies by prior amendment, undue prejudice to the opposing party, or futility of the amendment are all recognized grounds to deny leave (Foman v. Davis, 371 U.S. 178 (1962))."
@@ -633,7 +633,7 @@ state leave-to-amend-motion: "Motion for Leave to Amend Filed" by applicant cite
 }
 
 // The rule text commits this ruling to the court's discretion.
-chance leave-to-amend-ruling: "Court Rules on Leave to Amend" by examiner discretion cite "FRCP 15(a)(2)"
+chance leave-to-amend-ruling: "Court Rules on Leave to Amend" by court discretion cite "FRCP 15(a)(2)"
 {
   group amendment-joinder-group
   note "Outcome distribution authored at 0.75 granted / 0.25 denied -- APPROXIMATE; leave is granted in the substantial majority of contested motions given the 'freely give' standard, but is meaningfully more often denied late in the case (near a scheduling-order cutoff) or after repeated prior amendments."
@@ -646,7 +646,7 @@ chance leave-to-amend-ruling: "Court Rules on Leave to Amend" by examiner discre
   }
 }
 
-decision joinder-decision: "Joinder of Parties" by applicant cite "FRCP 19; 20; 24"
+decision joinder-decision: "Joinder of Parties" by plaintiff cite "FRCP 19; 20; 24"
 {
   group amendment-joinder-group
   note "Rule 19 requires joinder of a party whose absence would prevent complete relief, impair that party's ability to protect its interest, or expose an existing party to a substantial risk of multiple or inconsistent obligations -- if joinder is not feasible (e.g., destroys diversity), the court weighs Rule 19(b) factors to decide whether the action can proceed 'in equity and good conscience.' Rule 20 permits joinder of parties whose claims/defenses arise from the same transaction and share a common question. Rule 24 lets a nonparty intervene as of right (an unprotected interest relating to the property/transaction) or permissively (a common claim/defense and no undue delay/prejudice)."
@@ -668,7 +668,7 @@ decision joinder-decision: "Joinder of Parties" by applicant cite "FRCP 19; 20; 
   }
 }
 
-state parties-joined: "Additional Parties Joined" by office cite "FRCP 19; 20; 21; 24"
+state parties-joined: "Additional Parties Joined" by court cite "FRCP 19; 20; 21; 24"
 {
   group amendment-joinder-group
   note "Misjoinder of a party is never itself grounds to dismiss the action -- the court may add or drop a party, or sever any claim, on just terms at any time (Rule 21)."
@@ -677,7 +677,7 @@ state parties-joined: "Additional Parties Joined" by office cite "FRCP 19; 20; 2
   }
 }
 
-state rule26f-conference: "Rule 26(f) Conference" by applicant cite "FRCP 26(f); 26(d)(1)"
+state rule26f-conference: "Rule 26(f) Conference" by plaintiff cite "FRCP 26(f); 26(d)(1)"
 {
   group discovery-group
   note "THE DISCOVERY MORATORIUM: Rule 26(d)(1) bars seeking discovery 'from any source' before the parties confer under Rule 26(f), absent a Rule 26(a)(1)(B) exemption, stipulation, or court order -- no one has to wait for opposing counsel to propose the conference, since 26(f)(1) makes both sides' attorneys jointly responsible for arranging it. The conference must occur as soon as practicable, and in any event at least 21 days before a scheduling conference is held or a Rule 16(b) scheduling order is due."
@@ -693,7 +693,7 @@ state rule26f-conference: "Rule 26(f) Conference" by applicant cite "FRCP 26(f);
   }
 }
 
-state initial-disclosures: "Rule 26(a)(1) Initial Disclosures" by applicant cite "FRCP 26(a)(1)(A); 26(a)(1)(C)"
+state initial-disclosures: "Rule 26(a)(1) Initial Disclosures" by plaintiff cite "FRCP 26(a)(1)(A); 26(a)(1)(C)"
 {
   group discovery-group
   note "Without awaiting a discovery request, each party must disclose the individuals likely to have discoverable information the disclosing party may use, a copy or description of documents/ESI/tangible things it may use, a computation of each category of damages, and any applicable insurance agreement. Due at or within 14 days after the Rule 26(f) conference unless the parties stipulate or the court orders otherwise."
@@ -703,7 +703,7 @@ state initial-disclosures: "Rule 26(a)(1) Initial Disclosures" by applicant cite
   }
 }
 
-state scheduling-order-issued: "Rule 16(b) Scheduling Order" by office cite "FRCP 16(b)"
+state scheduling-order-issued: "Rule 16(b) Scheduling Order" by court cite "FRCP 16(b)"
 {
   group discovery-group
   note "The scheduling order must limit the time to join parties, amend pleadings, complete discovery, and file motions -- the deadlines governing the amendment-and-joinder branch above are typically already fixed by the time this order issues, not open-ended. A schedule may be modified only for good cause and with the judge's consent (16(b)(4)) -- 'good cause' focuses on the DILIGENCE of the party seeking the change, not merely on the absence of prejudice to the other side."
@@ -712,7 +712,7 @@ state scheduling-order-issued: "Rule 16(b) Scheduling Order" by office cite "FRC
   }
 }
 
-decision discovery-open: "Discovery Open" by applicant cite "FRCP 26(b)(1); 26(d)(1)"
+decision discovery-open: "Discovery Open" by plaintiff cite "FRCP 26(b)(1); 26(d)(1)"
 {
   group discovery-group
   note "Parties may discover any nonprivileged matter relevant to a claim or defense and PROPORTIONAL to the needs of the case, weighing the importance of the issues, the amount in controversy, the parties' relative access to information and resources, the importance of the discovery, and whether burden/expense outweighs likely benefit (Rule 26(b)(1)). This hub node is the pure player-choice cycle -- the direct structural analog of mpep-prosecution.json's RCE churn and itc-337.json's discovery-open SCC -- where time, fees, and sanction exposure accumulate before the case can graduate toward dispositive motions."
@@ -766,7 +766,7 @@ decision discovery-open: "Discovery Open" by applicant cite "FRCP 26(b)(1); 26(d
   }
 }
 
-decision meet-and-confer: "Meet-and-Confer on Discovery Dispute" by applicant cite "FRCP 37(a)(1)"
+decision meet-and-confer: "Meet-and-Confer on Discovery Dispute" by plaintiff cite "FRCP 37(a)(1)"
 {
   group discovery-group
   note "A motion to compel MUST include a certification that the movant has in good faith conferred or attempted to confer with the noncompliant party in an effort to obtain the discovery without court action. Skipping this step is itself a basis to deny the motion regardless of its merits."
@@ -781,7 +781,7 @@ decision meet-and-confer: "Meet-and-Confer on Discovery Dispute" by applicant ci
   }
 }
 
-chance motion-to-compel-ruling: "Court Rules on Motion to Compel" by examiner discretion cite "FRCP 37(a)(3); 37(a)(5)"
+chance motion-to-compel-ruling: "Court Rules on Motion to Compel" by court discretion cite "FRCP 37(a)(3); 37(a)(5)"
 {
   group discovery-group
   note "Outcome distribution authored at 0.65 granted / 0.20 granted-but-still-noncompliant / 0.15 denied -- APPROXIMATE. Fee-shifting is close to automatic on the two-way street Rule 37(a)(5) creates: if the motion is granted (or discovery is produced only after the motion was filed), the court MUST require the losing party to pay the movant's reasonable expenses including attorney's fees, unless the opposition was substantially justified; if denied, the same mandatory fee-shifting runs the other way against the movant."
@@ -796,7 +796,7 @@ chance motion-to-compel-ruling: "Court Rules on Motion to Compel" by examiner di
   }
 }
 
-state protective-order-motion: "Motion for Protective Order" by applicant cite "FRCP 26(c)"
+state protective-order-motion: "Motion for Protective Order" by plaintiff cite "FRCP 26(c)"
 {
   group discovery-group
   note "On a showing of good cause, the court may issue an order 'to protect a party or person from annoyance, embarrassment, oppression, or undue burden or expense' -- forbidding the discovery, limiting its scope, specifying terms, or designating confidentiality treatment for sensitive material."
@@ -807,7 +807,7 @@ state protective-order-motion: "Motion for Protective Order" by applicant cite "
 }
 
 // The rule text commits this ruling to the court's discretion.
-chance protective-order-ruling: "Court Rules on Protective-Order Motion" by examiner discretion cite "FRCP 26(c)"
+chance protective-order-ruling: "Court Rules on Protective-Order Motion" by court discretion cite "FRCP 26(c)"
 {
   group discovery-group
   note "Outcome distribution authored at 0.8 granted / 0.2 denied -- APPROXIMATE; courts routinely issue confidentiality protective orders on the good-cause showing a discovery dispute over sensitive business or personal information almost always makes, mirroring the near-automatic grant rate modeled for the analogous CBI protective-order fork in itc-337.json."
@@ -820,7 +820,7 @@ chance protective-order-ruling: "Court Rules on Protective-Order Motion" by exam
 }
 
 // The rule text commits this ruling to the court's discretion.
-chance rule37-sanctions-ruling: "Court Rules on Rule 37 Sanctions" by examiner discretion cite "FRCP 37(b)(2); 37(e)"
+chance rule37-sanctions-ruling: "Court Rules on Rule 37 Sanctions" by court discretion cite "FRCP 37(b)(2); 37(e)"
 {
   group discovery-group
   note "If a party disobeys a discovery order, the court may issue further just orders, including: directing that facts be taken as established, prohibiting the disobedient party from supporting or opposing designated claims/defenses, striking pleadings, staying proceedings, dismissing the action, or rendering a default judgment (37(b)(2)(A)). For lost electronically stored information, Rule 37(e)(2)'s severe measures (adverse-inference instruction, dismissal, default) require a finding of INTENT to deprive -- mere negligence supports only 37(e)(1)'s narrower 'no greater than necessary' curative measures. Case-dispositive sanction authored at 0.15 dismissal / 0.15 default -- APPROXIMATE but grounded: Certain Opaque Polymers (ITC Inv. No. 337-TA-883) is the paradigm case for this exact branch, where the Federal Circuit affirmed a case-dispositive default sanction for 'spoliation on a staggering scale.'"
@@ -868,14 +868,14 @@ decision discovery-closed: "Discovery Closed" cite "FRCP 16(b)(3)"
     effort 35.hours
     cost 15_000.usd
   }
-  edge-discovery-closed-final-pretrial-conference "No dispositive or Daubert motion -- proceed to final pretrial conference" -> final-pretrial-conference by applicant {
+  edge-discovery-closed-final-pretrial-conference "No dispositive or Daubert motion -- proceed to final pretrial conference" -> final-pretrial-conference by plaintiff {
     authority cite "FRCP 16(e)"
     effort 0.hours
     note "Hours: 0, a default/no-action transition with no billable work of its own."
   }
 }
 
-state summary-judgment-motion: "Motion for Summary Judgment Filed" by applicant cite "FRCP 56(a); 56(b)"
+state summary-judgment-motion: "Motion for Summary Judgment Filed" by plaintiff cite "FRCP 56(a); 56(b)"
 {
   group pretrial-motions-group
   note "The movant must show there is no genuine dispute as to any material fact and that it is entitled to judgment as a matter of law. A party may move for summary judgment on the whole case or on any claim, defense, or part of either. If the nonmovant shows by affidavit that it cannot present facts essential to justify its opposition, the court may defer or deny the motion, allow more discovery, or issue another appropriate order (Rule 56(d))."
@@ -893,7 +893,7 @@ state summary-judgment-motion: "Motion for Summary Judgment Filed" by applicant 
   }
 }
 
-state reply-evidence-filed: "New Evidence Submitted With Reply" by applicant cite "FRCP 56(c)(1); 56(c)(4)"
+state reply-evidence-filed: "New Evidence Submitted With Reply" by plaintiff cite "FRCP 56(c)(1); 56(c)(4)"
 {
   group pretrial-motions-group
   note "The nonmovant can seek leave to file a sur-reply addressing the new evidence or move to strike it. These are responses to preserve a fair opportunity to address material offered for the first time on reply; neither is automatically granted, and local rules and the scheduling order matter. The court may also decline to consider material that cannot be presented in an admissible form or give an opportunity to respond."
@@ -913,7 +913,7 @@ state reply-evidence-filed: "New Evidence Submitted With Reply" by applicant cit
   }
 }
 
-decision reply-evidence-ruling: "Court Resolves Reply-Evidence Request" by examiner cite "FRCP 56(c)(2); 56(c)(4)"
+decision reply-evidence-ruling: "Court Resolves Reply-Evidence Request" by court cite "FRCP 56(c)(2); 56(c)(4)"
 {
   group pretrial-motions-group
   note "The court may allow a focused sur-reply, strike or disregard the challenged material, or deny the request and proceed on the existing briefing. The request is discretionary and governed by the applicable local rules and case-specific orders."
@@ -922,7 +922,7 @@ decision reply-evidence-ruling: "Court Resolves Reply-Evidence Request" by exami
   edge-reply-evidence-ruling-request-denied "Deny further briefing or striking; decide on the submitted record" -> sj-ruling
 }
 
-state sj-briefing-complete: "Summary Judgment Briefing Complete" by office cite "FRCP 56(c)"
+state sj-briefing-complete: "Summary Judgment Briefing Complete" by court cite "FRCP 56(c)"
 {
   group pretrial-motions-group
   note "A party asserting a fact is genuinely disputed or undisputed must support it with citations to particular parts of the record, or show the cited materials do not establish an absence/presence of dispute. The court need consider only the cited materials, though it may consider other materials in the record (Rule 56(c)(3))."
@@ -931,7 +931,7 @@ state sj-briefing-complete: "Summary Judgment Briefing Complete" by office cite 
   }
 }
 
-chance sj-ruling: "Court Rules on Summary Judgment" by examiner discretion cite "FRCP 56(a)"
+chance sj-ruling: "Court Rules on Summary Judgment" by court discretion cite "FRCP 56(a)"
 {
   group pretrial-motions-group
   note "Outcome distribution authored at 0.25 granted-in-full / 0.20 granted-in-part / 0.55 denied -- APPROXIMATE; wholesale grants are the minority outcome because the standard requires viewing evidence and drawing all reasonable inferences in the nonmovant's favor (Anderson v. Liberty Lobby, Inc., 477 U.S. 242 (1986); Matsushita Elec. Indus. Co. v. Zenith Radio Corp., 475 U.S. 574 (1986)) -- a genuine factual dispute on any material element sends that claim to trial regardless of the movant's confidence."
@@ -947,7 +947,7 @@ chance sj-ruling: "Court Rules on Summary Judgment" by examiner discretion cite 
   }
 }
 
-terminal summary-judgment-granted: "SUMMARY JUDGMENT ENTERED" by applicant outcome [final] cite "FRCP 56(a)"
+terminal summary-judgment-granted: "SUMMARY JUDGMENT ENTERED" by plaintiff outcome [final] cite "FRCP 56(a)"
 {
   group pretrial-motions-group
   note "PERMADEATH for the losing party's claims/defenses on the merits (subject to appeal). No genuine dispute of material fact exists and the movant -- plaintiff or defendant -- is entitled to judgment as a matter of law on the full case. A grant of summary judgment is reviewed de novo on appeal, unlike a jury verdict's deferential review. PLACEHOLDER PAYOFF: $500,000 (stake midpoint), override per matter. This pack does not branch on which party a judgment favors -- `verdict-rendered`'s 'for plaintiff'/'for defendant' edges both lead to the same `final-judgment-entered` state, and every downstream terminal (summary judgment, appeal outcomes) tracks only the procedural posture from there, not who won. A single payoff here necessarily blends a possible plaintiff win with a possible plaintiff loss; override with scenario.payoffs once the matter's actual judgment is known."
@@ -961,7 +961,7 @@ terminal summary-judgment-granted: "SUMMARY JUDGMENT ENTERED" by applicant outco
   }
 }
 
-state partial-summary-judgment: "Partial Summary Judgment" by applicant cite "FRCP 56(a); 56(g)"
+state partial-summary-judgment: "Partial Summary Judgment" by plaintiff cite "FRCP 56(a); 56(g)"
 {
   group pretrial-motions-group
   note "Some claims or defenses are resolved as a matter of law; the remainder proceeds toward trial. If the court does not grant all requested relief, it may enter an order stating any material fact -- including an item of damages or other relief -- that is not genuinely in dispute, treating that fact as established for the rest of the case (Rule 56(g))."
@@ -972,7 +972,7 @@ state partial-summary-judgment: "Partial Summary Judgment" by applicant cite "FR
   }
 }
 
-state daubert-motion-filed: "Daubert / Rule 702 Motion Filed" by applicant cite "FRE 702; FRE 104(a)"
+state daubert-motion-filed: "Daubert / Rule 702 Motion Filed" by plaintiff cite "FRE 702; FRE 104(a)"
 {
   group pretrial-motions-group
   note "The proponent of expert testimony must show by a preponderance of the evidence (2023 amendment to FRE 702 made this explicit) that the witness's specialized knowledge will help the trier of fact, the testimony is based on sufficient facts/data, is the product of reliable principles/methods, and reflects a reliable application of those principles to the case's facts. The court decides this preliminary admissibility question itself under FRE 104(a), not the jury -- a pretrial gatekeeping motion, not a trial objection."
@@ -983,7 +983,7 @@ state daubert-motion-filed: "Daubert / Rule 702 Motion Filed" by applicant cite 
 }
 
 // The rule text commits this ruling to the court's discretion.
-chance daubert-ruling: "Court Rules on Daubert Motion" by examiner discretion cite "FRE 702"
+chance daubert-ruling: "Court Rules on Daubert Motion" by court discretion cite "FRE 702"
 {
   group pretrial-motions-group
   note "Outcome distribution authored at 0.6 admitted / 0.4 excluded-in-whole-or-part -- APPROXIMATE. Missing the scheduling-order's expert-motion cutoff forfeits a pretrial Daubert challenge entirely -- a mid-trial objection to qualified expert testimony is ordinarily too late and the jury has already heard the opinion, the trap this pack's frcp-fragment rulepack flags as fre/daubert-not-moved."
@@ -995,7 +995,7 @@ chance daubert-ruling: "Court Rules on Daubert Motion" by examiner discretion ci
   }
 }
 
-state motions-in-limine-filed: "Motions in Limine" by applicant cite "FRE 103(d)"
+state motions-in-limine-filed: "Motions in Limine" by plaintiff cite "FRE 103(d)"
 {
   group pretrial-motions-group
   note "Pretrial motions to admit or exclude specific categories of evidence before trial begins, avoiding prejudicial suggestion to the jury. A ruling on a motion in limine is often preliminary and non-definitive; under FRE 103(b), added by the 2000 amendment, a party need not renew an objection or offer of proof once the court rules definitively on the record; absent a definitive ruling, the losing party must RENEW its objection when the evidence is actually offered at trial to preserve the issue for appeal -- failing to renew forfeits appellate review of a non-definitive ruling. An in limine ruling remains subject to change as the case unfolds, and a criminal defendant who does not testify cannot obtain review of an in limine ruling allowing Rule 609 impeachment (Luce v. United States, 469 U.S. 38, 41-43 (1984))."
@@ -1007,7 +1007,7 @@ state motions-in-limine-filed: "Motions in Limine" by applicant cite "FRE 103(d)
   }
 }
 
-state final-pretrial-conference: "Final Pretrial Conference" by office cite "FRCP 16(e)"
+state final-pretrial-conference: "Final Pretrial Conference" by court cite "FRCP 16(e)"
 {
   group pretrial-motions-group
   note "The court holds a final pretrial conference to formulate a trial plan, including a plan for admitting evidence. The resulting pretrial order controls the course of the action thereafter and may be modified only to prevent manifest injustice."
@@ -1016,7 +1016,7 @@ state final-pretrial-conference: "Final Pretrial Conference" by office cite "FRC
   }
 }
 
-decision jury-demand-decision: "Jury Demand Window" by applicant cite "FRCP 38(b); 38(d)"
+decision jury-demand-decision: "Jury Demand Window" by plaintiff cite "FRCP 38(b); 38(d)"
 {
   group trial-group
   note "Any party may demand a jury trial by serving a written demand no later than 14 days after the last pleading directed to the triable issue is served. THE TRAP: a party waives a jury trial unless the demand is properly served AND filed (38(d)) -- this fires right after the answer, well before discovery closes, and is easy to let lapse while attention is on the merits. Only Rule 39(b) discretionary relief remains after a lapse, and courts are not required to grant it."
@@ -1040,7 +1040,7 @@ decision jury-demand-decision: "Jury Demand Window" by applicant cite "FRCP 38(b
   }
 }
 
-state trial-commences: "Trial Commences" by office cite "FRCP 43; 50(a)"
+state trial-commences: "Trial Commences" by court cite "FRCP 43; 50(a)"
 {
   group trial-group
   note "Witness testimony is taken in open court unless a federal statute, the Federal Rules of Evidence, or another FRCP provision provides otherwise. At the close of the evidence on an issue (or of all the evidence), any party may move for judgment as a matter of law under Rule 50(a) -- a Rule 50(a) motion made BEFORE the case is submitted to the jury is the mandatory prerequisite for later renewing the motion under Rule 50(b); skipping it forecloses post-trial JMOL entirely, though a Rule 59 new-trial motion remains available."
@@ -1049,7 +1049,7 @@ state trial-commences: "Trial Commences" by office cite "FRCP 43; 50(a)"
   }
 }
 
-chance verdict-rendered: "Verdict / Findings Rendered" by examiner discretion cite "FRCP 52(a); 58"
+chance verdict-rendered: "Verdict / Findings Rendered" by court discretion cite "FRCP 52(a); 58"
 {
   group trial-group
   note "For a bench trial, the court must find the facts specially and state its conclusions of law separately (Rule 52(a)(1)). For a jury trial, the jury returns its verdict. Either way, judgment must be set out in a separate document (Rule 58(a)) -- the FRAP 4 appeal clock and the Rule 50(b)/59 clocks both run from ENTRY of that judgment, with a 150-day backstop under FRAP 4(a)(7)(A)(ii) if no separate document is ever entered."

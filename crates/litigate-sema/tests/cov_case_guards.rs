@@ -36,7 +36,7 @@ state intake: \"Intake\" by Plaintiff
   old \"Old\" -> old { event Benched() }
 }
 
-chance check: \"Timely?\" by Court
+chance check: \"Timely?\" by court
 {
   tags [fact]
   timely \"Timely\" -> heard p 1/2 { when !has_event(Fixed()) && date_of(Filed()) <= deadline(bar) }
@@ -48,42 +48,42 @@ state heard: \"Heard\" by Plaintiff
   go \"Go\" -> won { event Noted() }
 }
 
-chance lt: \"Lt\" by Court
+chance lt: \"Lt\" by court
 {
   tags [fact]
   y \"Y\" -> le p 1/2 { when (date_of(Noted()) < 2010-03-01) }
   n \"N\" -> barred p 1/2 { when !(date_of(Noted()) < 2010-03-01) }
 }
 
-chance le: \"Le\" by Court
+chance le: \"Le\" by court
 {
   tags [fact]
   y \"Y\" -> gt p 1/2 { when (date_of(Noted()) <= 2010-02-01) }
   n \"N\" -> barred p 1/2 { when !(date_of(Noted()) <= 2010-02-01) }
 }
 
-chance gt: \"Gt\" by Court
+chance gt: \"Gt\" by court
 {
   tags [fact]
   y \"Y\" -> ge p 1/2 { when (date_of(Noted()) > 2010-01-01) }
   n \"N\" -> barred p 1/2 { when !(date_of(Noted()) > 2010-01-01) }
 }
 
-chance ge: \"Ge\" by Court
+chance ge: \"Ge\" by court
 {
   tags [fact]
   y \"Y\" -> ne p 1/2 { when (date_of(Noted()) >= 2010-02-01) }
   n \"N\" -> barred p 1/2 { when !(date_of(Noted()) >= 2010-02-01) }
 }
 
-chance ne: \"Ne\" by Court
+chance ne: \"Ne\" by court
 {
   tags [fact]
   y \"Y\" -> eq p 1/2 { when (date_of(Noted()) != 2010-01-01) }
   n \"N\" -> barred p 1/2 { when !(date_of(Noted()) != 2010-01-01) }
 }
 
-chance eq: \"Eq\" by Court
+chance eq: \"Eq\" by court
 {
   tags [fact]
   y \"Y\" -> tail p 1/2 { when (date_of(Noted()) == 2010-02-01) }
@@ -95,28 +95,28 @@ state tail: \"Tail\" by Plaintiff
   go \"Go\" -> won { event Filed() }
 }
 
-chance left: \"Left unknown\" by Court
+chance left: \"Left unknown\" by court
 {
   tags [fact]
   y \"Y\" -> right p 1/2 { when (date_of(Benched()) < 2010-03-01) }
   n \"N\" -> barred p 1/2 { when !(date_of(Benched()) < 2010-03-01) }
 }
 
-chance right: \"Right unknown\" by Court
+chance right: \"Right unknown\" by court
 {
   tags [fact]
   y \"Y\" -> won p 1/2 { when (2010-03-01 < deadline(never)) }
   n \"N\" -> barred p 1/2 { when !(2010-03-01 < deadline(never)) }
 }
 
-chance old: \"Old\" by Court effective [2009-12-01, 2011-01-01)
+chance old: \"Old\" by court effective [2009-12-01, 2011-01-01)
 {
   tags [fact]
   y \"Y\" -> won p 1/2 { when has_event(Benched()) }
   n \"N\" -> barred p 1/2 { when !has_event(Benched()) }
 }
 
-state retired: \"Retired\" by Court effective [2011-01-01, ..) supersedes old
+state retired: \"Retired\" by court effective [2011-01-01, ..) supersedes old
 {
   y \"Y\" -> won
 }

@@ -257,7 +257,7 @@ rule duty answer-duty cite "FRCP 12(a)"
   deadline answer-period: 21.days from Served(complaint) counted_by frcp6
 }
 
-state served: "Complaint served" by Defendant cite "FRCP 12(a)"
+state served: "Complaint served" by defendant cite "FRCP 12(a)"
 {
   answer "File an answer" -> answered { event Answered(complaint), within answer-period }
 }

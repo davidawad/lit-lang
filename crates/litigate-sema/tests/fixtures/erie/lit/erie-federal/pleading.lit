@@ -31,7 +31,7 @@ state service: "Serve process" by Plaintiff
   serve "Serve the summons and complaint" -> answer-due { event ProcessServed() }
 }
 
-decision answer-due: "Answer or default" by Defendant
+decision answer-due: "Answer or default" by defendant
 {
   answer "Answer" -> pleadings-closed { event AnswerServed(), within answer-period }
   default "Default" -> default-entered

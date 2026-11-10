@@ -21,7 +21,7 @@ fn with_params(params: &str) -> String {
     let lit = edit(
         "  deadline answer-period: 21.days from Served(complaint) counted_by frcp6\n",
         "  deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {\n    \
-         extend { by Court, to max(prescribed_due + 30.days, grant_order_entered + 14.days) }\n  }\n",
+         extend { by court, to max(prescribed_due + 30.days, grant_order_entered + 14.days) }\n  }\n",
     );
     lit.replace(
         "event Answered(document: Document)\n",

@@ -387,7 +387,7 @@ fn rule_kinds_have_their_shapes() {
     insta::assert_debug_snapshot!(table(&[
         ("1 duty with its deadline", &format!("rule duty answer {{\n  {deadline}\n}}")),
         ("2 duty without a deadline", "rule duty answer {\n  state x: \"X\" { _ \"go\" -> t }\n}"),
-        ("3 power granting a decision", "rule power move {\n  decision m: \"Move?\" by Defendant { _ \"yes\" -> t }\n}"),
+        ("3 power granting a decision", "rule power move {\n  decision m: \"Move?\" by defendant { _ \"yes\" -> t }\n}"),
         ("4 power without a decision", &format!("rule power move {{\n  {deadline}\n}}")),
         ("5 liability with consequences", "rule liability defaulted {\n  state dr: \"Default\" { _ \"entered\" -> t { sets [defaulted] } }\n}"),
         (

@@ -57,8 +57,8 @@ obligation!(
     Obligation::CiteResolves,
     one(BASE),
     one(&edit(
-        "by Defendant cite \"FRCP 12(a)\"",
-        "by Defendant cite \"FRCP 99(a)\""
+        "by defendant cite \"FRCP 12(a)\"",
+        "by defendant cite \"FRCP 99(a)\""
     ))
 );
 
@@ -67,8 +67,8 @@ obligation!(
     Obligation::CiteResolves,
     one(BASE),
     one(&edit(
-        "by Defendant cite \"FRCP 12(a)\"",
-        "by Defendant cite \"35 U.S.C. § 101\""
+        "by defendant cite \"FRCP 12(a)\"",
+        "by defendant cite \"35 U.S.C. § 101\""
     ))
 );
 
@@ -192,7 +192,7 @@ obligation!(
 
 fn chance(edges: &str) -> String {
     with(&format!(
-        "chance odds: \"Odds\" by Court {{ tags [entry]{edges} }}"
+        "chance odds: \"Odds\" by court {{ tags [entry]{edges} }}"
     ))
 }
 

@@ -61,6 +61,40 @@ fn out_of_order_events_are_fixed() {
 }
 
 #[test]
+fn actor_designations_are_typed_and_case_fixes_are_applied() {
+    let dir = workspace("actor-designation", OUT_OF_ORDER);
+    let module = dir.join("lit/examples/rule12.lit");
+    let source = std::fs::read_to_string(&module).unwrap();
+    std::fs::write(&module, source.replacen("by court", "by Court", 1)).unwrap();
+    let lock = litigate_in(&dir, &["lock", "lit/examples"]);
+    assert_eq!(lock.code, 0, "{}", lock.stdout);
+    let before = litigate_in(&dir, &["check", "lit/examples"]);
+    assert_eq!(before.code, 2, "{}", before.stdout);
+    assert!(codes(&before.json).iter().any(|(code, severity)| {
+        code == "L1016" && severity == "error"
+    }));
+    let fixed = litigate_in(&dir, &["fix", "lit/examples", "--code", "L1016"]);
+    assert_eq!(fixed.code, 0, "{}", fixed.stdout);
+    assert!(std::fs::read_to_string(&module).unwrap().contains("by court"));
+    let lock = litigate_in(&dir, &["lock", "lit/examples"]);
+    assert_eq!(lock.code, 0, "{}", lock.stdout);
+    let after = litigate_in(&dir, &["check", "lit/examples"]);
+    assert_eq!(after.code, 0, "{}", after.stdout);
+
+    let dir = workspace("undeclared-actor", OUT_OF_ORDER);
+    let module = dir.join("lit/examples/rule12.lit");
+    let source = std::fs::read_to_string(&module).unwrap();
+    std::fs::write(&module, source.replacen("by court", "by accused", 1)).unwrap();
+    let lock = litigate_in(&dir, &["lock", "lit/examples"]);
+    assert_eq!(lock.code, 0, "{}", lock.stdout);
+    let invalid = litigate_in(&dir, &["check", "lit/examples"]);
+    assert_eq!(invalid.code, 2, "{}", invalid.stdout);
+    assert!(codes(&invalid.json).iter().any(|(code, severity)| {
+        code == "L1016" && severity == "error"
+    }));
+}
+
+#[test]
 fn replay_errors_are_precise() {
     let late = OUT_OF_ORDER
         .replace(
@@ -100,7 +134,7 @@ fn replay_errors_are_precise() {
         error["message"]
             .as_str()
             .unwrap()
-            .contains("is taken by Defendant, but `acme` plays Plaintiff"),
+            .contains("is taken by defendant, but `acme` plays Plaintiff"),
         "{}",
         run.stdout
     );

@@ -89,7 +89,7 @@ event Benched(document: Document)
 counting ac cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays acal }
 calendar acal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
-deadline court-period: 5.court_days from Served(complaint) counted_by ac { waive { by Court } }
+deadline court-period: 5.court_days from Served(complaint) counted_by ac { waive { by court } }
 deadline business-period: 3.business_days from Filed(complaint) counted_by ac
 deadline remote-period: 10.days from Filed(complaint) counted_by bc
 deadline one-day: 1.days from Filed(complaint) counted_by ac
@@ -117,7 +117,7 @@ state intake: \"Intake\" by Plaintiff
   stage \"Stage\" -> staged { event Reopened(motion) }
 }
 
-decision respond: \"Respond\" by Defendant
+decision respond: \"Respond\" by defendant
 {
   answer \"Answer\" -> answered { event Answered(complaint), within court-period }
   late \"Late\" -> defaulted { event Twin(motion), within future-period }
@@ -133,27 +133,27 @@ state filed: \"Filed\"
   _ \"Withdraw\" -> defaulted { event Noted(motion) }
 }
 
-chance f1: \"F1\" by Court
+chance f1: \"F1\" by court
 {
   tags [fact]
   to-f2 \"To F2\" -> f2 p 1/2
   out \"Out\" -> answered p 1/2
 }
 
-chance f2: \"F2\" by Court
+chance f2: \"F2\" by court
 {
   tags [fact]
   to-f1 \"To F1\" -> f1 p 1/2
   out \"Out\" -> defaulted p 1/2
 }
 
-decision bench: \"Bench\" by Court
+decision bench: \"Bench\" by court
 {
   allow \"Grant\" -> answered
   deny \"Deny\" -> defaulted
 }
 
-decision lone: \"Lone\" by Court
+decision lone: \"Lone\" by court
 {
   only \"Only\" -> answered { event Benched(motion) }
 }
@@ -197,9 +197,9 @@ terminal g1: \"G1\" { payoff 0.usd }
 pub const DELTA: &str = "module delta
 import alpha.{ Noted, Benched, ac }
 deadline link-period: 3.days from Benched(motion) counted_by ac
-link hop \"Hop\": alpha::bench -> gamma::g0 by Court { event Noted(complaint) }
-link copy \"Copy\": alpha::lone -> alpha@copy::intake by Court { event Noted(complaint) }
-link wait \"Wait\": alpha::lone -> alpha::defaulted by Court { event Noted(motion), within link-period }
+link hop \"Hop\": alpha::bench -> gamma::g0 by court { event Noted(complaint) }
+link copy \"Copy\": alpha::lone -> alpha@copy::intake by court { event Noted(complaint) }
+link wait \"Wait\": alpha::lone -> alpha::defaulted by court { event Noted(motion), within link-period }
 instance alpha@copy { pack alpha }
 ";
 

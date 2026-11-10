@@ -70,12 +70,14 @@ fn actor_designations_are_typed_and_case_fixes_are_applied() {
     assert_eq!(lock.code, 0, "{}", lock.stdout);
     let before = litigate_in(&dir, &["check", "lit/examples"]);
     assert_eq!(before.code, 2, "{}", before.stdout);
-    assert!(codes(&before.json).iter().any(|(code, severity)| {
-        code == "L1016" && severity == "error"
-    }));
+    assert!(codes(&before.json)
+        .iter()
+        .any(|(code, severity)| { code == "L1016" && severity == "error" }));
     let fixed = litigate_in(&dir, &["fix", "lit/examples", "--code", "L1016"]);
     assert_eq!(fixed.code, 0, "{}", fixed.stdout);
-    assert!(std::fs::read_to_string(&module).unwrap().contains("by court"));
+    assert!(std::fs::read_to_string(&module)
+        .unwrap()
+        .contains("by court"));
     let lock = litigate_in(&dir, &["lock", "lit/examples"]);
     assert_eq!(lock.code, 0, "{}", lock.stdout);
     let after = litigate_in(&dir, &["check", "lit/examples"]);
@@ -89,9 +91,9 @@ fn actor_designations_are_typed_and_case_fixes_are_applied() {
     assert_eq!(lock.code, 0, "{}", lock.stdout);
     let invalid = litigate_in(&dir, &["check", "lit/examples"]);
     assert_eq!(invalid.code, 2, "{}", invalid.stdout);
-    assert!(codes(&invalid.json).iter().any(|(code, severity)| {
-        code == "L1016" && severity == "error"
-    }));
+    assert!(codes(&invalid.json)
+        .iter()
+        .any(|(code, severity)| { code == "L1016" && severity == "error" }));
 }
 
 #[test]

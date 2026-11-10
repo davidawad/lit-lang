@@ -259,15 +259,41 @@ impl Cx<'_, '_> {
         // neutral-party designation used by packages that do not resolve a
         // single litigant at that posture.
         const DESIGNATIONS: &[&str] = &[
-            "plaintiff", "defendant", "counterclaim-defendant",
-            "third-party-plaintiff", "third-party-defendant", "intervenor",
-            "petitioner", "respondent", "appellant", "appellee",
-            "cross-appellant", "movant", "nonmovant", "applicant",
-            "patent-owner", "opposer", "complainant", "prosecution",
-            "accused", "united-states", "district-court", "court-of-appeals",
-            "court-of-federal-claims", "supreme-court", "administrative-law-judge",
-            "commission", "board", "examiner", "office", "clerk", "court",
-            "justice", "director", "either", "opponent",
+            "plaintiff",
+            "defendant",
+            "counterclaim-defendant",
+            "third-party-plaintiff",
+            "third-party-defendant",
+            "intervenor",
+            "petitioner",
+            "respondent",
+            "appellant",
+            "appellee",
+            "cross-appellant",
+            "movant",
+            "nonmovant",
+            "applicant",
+            "patent-owner",
+            "opposer",
+            "complainant",
+            "prosecution",
+            "accused",
+            "united-states",
+            "district-court",
+            "court-of-appeals",
+            "court-of-federal-claims",
+            "supreme-court",
+            "administrative-law-judge",
+            "commission",
+            "board",
+            "examiner",
+            "office",
+            "clerk",
+            "court",
+            "justice",
+            "director",
+            "either",
+            "opponent",
         ];
         if r.is_simple() && !DESIGNATIONS.contains(&r.head.text.as_str()) {
             let suggestion = DESIGNATIONS
@@ -276,9 +302,15 @@ impl Cx<'_, '_> {
             let mut report = Report::new(
                 C::UnknownActorDesignation,
                 r.range,
-                format!("`{}` is not a canonical `core.roles` designation", r.display()),
+                format!(
+                    "`{}` is not a canonical `core.roles` designation",
+                    r.display()
+                ),
             )
-            .note(format!("canonical designations: {}", DESIGNATIONS.join(", ")));
+            .note(format!(
+                "canonical designations: {}",
+                DESIGNATIONS.join(", ")
+            ));
             if let Some(suggestion) = suggestion {
                 report = report.fix(r.range, *suggestion, Applicability::MachineApplicable);
             }

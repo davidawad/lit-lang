@@ -260,11 +260,11 @@ impl<'c> Citations<'c> {
         let (syntax, bound) = bindings(syntax, sources);
         let mut hashes = BTreeMap::new();
         let mut hash = |path: &String| -> Option<String> {
-            let text = corpus?.files.get(path)?;
+            let digest = corpus?.digest(path)?;
             Some(
                 hashes
                     .entry(path.clone())
-                    .or_insert_with(|| sha256_hex(text))
+                    .or_insert_with(|| digest.to_owned())
                     .clone(),
             )
         };

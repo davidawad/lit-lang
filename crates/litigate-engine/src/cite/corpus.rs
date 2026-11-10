@@ -4,10 +4,15 @@
 //! the same way `packs/*.json` is (`api::catalog`), or loaded from a
 //! directory for `LITGRAPH_SOURCES` overrides / tests.
 
+use sha2::{Digest, Sha256};
 use std::borrow::Cow;
 use std::collections::HashMap;
+use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
-use std::sync::OnceLock;
+use std::sync::{
+    atomic::{AtomicUsize, Ordering},
+    Arc, OnceLock,
+};
 
 use crate::error::{Error, Result};
 
@@ -37,6 +42,8 @@ pub struct SourceCorpus {
     /// (files are loaded in a stable, sorted order, so this is
     /// deterministic); [`SourceCorpus::lookup_all`] returns every match.
     index: HashMap<String, Vec<(String, Section)>>,
+    digests: Arc<HashMap<String, OnceLock<String>>>,
+    digest_computations: Arc<AtomicUsize>,
 }
 
 impl SourceCorpus {
@@ -57,7 +64,35 @@ impl SourceCorpus {
             }
             corpus.files.insert(path, text);
         }
+        corpus.digests = Arc::new(
+            corpus
+                .files
+                .keys()
+                .map(|path| (path.clone(), OnceLock::new()))
+                .collect(),
+        );
         corpus
+    }
+
+    /// SHA-256 of a corpus file, computed once and shared by corpus clones.
+    #[must_use]
+    pub fn digest(&self, path: &str) -> Option<&str> {
+        let text = self.files.get(path)?;
+        let digest = self.digests.get(path)?.get_or_init(|| {
+            self.digest_computations.fetch_add(1, Ordering::Relaxed);
+            Sha256::digest(text.as_bytes())
+                .iter()
+                .fold(String::with_capacity(64), |mut s, b| {
+                    let _ = write!(s, "{b:02x}");
+                    s
+                })
+        });
+        Some(digest)
+    }
+
+    #[cfg(test)]
+    fn digest_computations(&self) -> usize {
+        self.digest_computations.load(Ordering::Relaxed)
     }
 
     /// The corpus baked into this build (`sources/*.txt` at compile time;
@@ -371,5 +406,18 @@ Rule 13 — Counterclaim and Crossclaim
     #[test]
     fn load_reports_missing_directory() {
         assert!(SourceCorpus::load(Path::new("/does/not/exist/at/all")).is_err());
+    }
+
+    #[test]
+    fn corpus_file_digest_is_computed_once_across_clones() {
+        let corpus =
+            SourceCorpus::from_files([("sources/test.txt".to_owned(), "public text".to_owned())]);
+        let clone = corpus.clone();
+        let expected = format!("{:x}", Sha256::digest(b"public text"));
+        for _ in 0..4 {
+            assert_eq!(corpus.digest("sources/test.txt"), Some(expected.as_str()));
+            assert_eq!(clone.digest("sources/test.txt"), Some(expected.as_str()));
+        }
+        assert_eq!(corpus.digest_computations(), 1);
     }
 }

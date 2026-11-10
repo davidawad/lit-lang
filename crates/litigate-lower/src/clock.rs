@@ -41,6 +41,16 @@ pub(crate) fn fragment(
         })
         .collect();
     let first = rules.first()?;
+    let citations: std::collections::HashMap<usize, Citations<'_>> = build
+        .packages
+        .iter()
+        .map(|owner| {
+            (
+                std::ptr::from_ref(*owner) as usize,
+                Citations::of_package(owner, build.corpus),
+            )
+        })
+        .collect();
     let mut library = ClockLibrary {
         schema_version: litigate_engine::clock::library::CLOCK_SCHEMA_VERSION,
         calendars: Vec::new(),
@@ -51,7 +61,7 @@ pub(crate) fn fragment(
     for c in &rules {
         let (rule, calendars) = lowered(build, pkg, c, sink)?;
         entries.push(entry(
-            build,
+            &citations,
             pkg,
             &format!("/countingRules/{}", library.counting_rules.len()),
             &c.meta,
@@ -63,7 +73,7 @@ pub(crate) fn fragment(
                 // so every fragment carrying it carries the same calendar.
                 let owner = declaring(build, calendar).unwrap_or(pkg);
                 entries.push(entry(
-                    build,
+                    &citations,
                     owner,
                     &format!("/calendars/{}", library.calendars.len()),
                     &calendar.meta,
@@ -113,14 +123,19 @@ fn declaring<'p>(build: &Build<'_, 'p>, calendar: &hir::Calendar) -> Option<&'p 
 
 /// The source-map entry of one generated rule or calendar declared in
 /// `pkg`, its cite located through `pkg`'s sources.
-fn entry(build: &Build<'_, '_>, pkg: &hir::Package, pointer: &str, meta: &hir::Metadata) -> Entry {
-    let citations = Citations::of_package(pkg, build.corpus);
+fn entry(
+    citations: &std::collections::HashMap<usize, Citations<'_>>,
+    pkg: &hir::Package,
+    pointer: &str,
+    meta: &hir::Metadata,
+) -> Entry {
+    let citations = citations.get(&(std::ptr::from_ref(pkg) as usize));
     Entry {
         pointer: pointer.to_owned(),
         id: meta.id.clone(),
         span: meta.span.clone(),
         decl: Some(crate::select::Selection::versioned(meta)),
-        cite: citations.map_at(meta.cite.as_ref(), Some(&meta.effective.from)),
+        cite: citations.and_then(|c| c.map_at(meta.cite.as_ref(), Some(&meta.effective.from))),
     }
 }
 

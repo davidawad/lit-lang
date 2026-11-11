@@ -50,6 +50,12 @@ rule duty tax-appellate-costs effective [2009-12-01, 2025-12-01) known_at 2009-0
     to CaseOrder
     op set
   } cite "FRAP (2009 ed.) 39(d)(1)"
+
+test "Counting boundary: bill-of-costs-period (weekend)" cite "FRAP (2009 ed.) 39(d)(1)"
+{
+  given EnteredOnAppeal(Judgment) on 2009-12-05
+  expect deadline(bill-of-costs-period) == 2009-12-21
+}
   deadline cost-objection-period: 14.days after ServedPaper(BillOfCosts) counted_by frap26 delegable {
     to CaseOrder
     op set

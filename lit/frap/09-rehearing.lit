@@ -41,6 +41,12 @@ deadline rehearing-us-party-period: 45.days after EnteredOnAppeal(Judgment) coun
   op set
 } cite "FRAP 40(d)(1)"
 
+test "Counting boundary: rehearing-us-party-period (weekend)" cite "FRAP 40(d)(1)"
+{
+  given EnteredOnAppeal(Judgment) on 2024-12-04
+  expect deadline(rehearing-us-party-period) == 2025-01-21
+}
+
 test "a rehearing petition is due 14 days after entry of judgment" cite "FRAP 40(d)(1)"
 {
   given EnteredOnAppeal(Judgment) on 2025-12-17

@@ -104,11 +104,23 @@ deadline docketing-requirements-period: 14.days after NoticeOfAppealFiled() coun
   forum frap
 }
 
+test "Counting boundary: docketing-requirements-period (weekend)" cite "2d Cir. R. 12.1(a)"
+{
+  given NoticeOfAppealFiled() on 2024-12-07
+  expect deadline(docketing-requirements-period) == 2024-12-23
+}
+
 /// Every party files the Acknowledgment and Notice of Appearance Form
 /// within 14 days after receiving the clerk's docketing notice.
 deadline appearance-form-period: 14.days after DocketingNoticeReceived() counted_by frap26 cite "2d Cir. R. 12.3(a)"
 {
   forum frap
+}
+
+test "Counting boundary: appearance-form-period (weekend)" cite "2d Cir. R. 12.3(a)"
+{
+  given DocketingNoticeReceived() on 2024-12-07
+  expect deadline(appearance-form-period) == 2024-12-23
 }
 
 /// The appellant notifies the clerk in writing of the deadline it requests
@@ -118,12 +130,24 @@ deadline appellant-scheduling-request-period: 14.days after ReadyDate() counted_
   forum frap
 }
 
+test "Counting boundary: appellant-scheduling-request-period (weekend)" cite "2d Cir. R. 31.2(a)(1)(A)"
+{
+  given ReadyDate() on 2024-12-07
+  expect deadline(appellant-scheduling-request-period) == 2024-12-23
+}
+
 /// The deadline the appellant requests must be within 91 days after the
 /// ready date, unless a voluminous record or extreme hardship justifies a
 /// later one (2d Cir. R. 31.2(a)(1)(D)).
 deadline appellant-brief-latest-request-period: 91.days after ReadyDate() counted_by frap26 cite "2d Cir. R. 31.2(a)(1)(A)"
 {
   forum frap
+}
+
+test "Counting boundary: appellant-brief-latest-request-period (weekend)" cite "2d Cir. R. 31.2(a)(1)(A)"
+{
+  given ReadyDate() on 2024-12-07
+  expect deadline(appellant-brief-latest-request-period) == 2025-03-10
 }
 
 /// If the appellant submits no scheduling request, its brief is due 40
@@ -140,6 +164,12 @@ deadline appellee-scheduling-request-period: 14.days after LastAppellantBriefFil
   forum frap
 }
 
+test "Counting boundary: appellee-scheduling-request-period (weekend)" cite "2d Cir. R. 31.2(a)(1)(B)"
+{
+  given LastAppellantBriefFiled() on 2024-12-07
+  expect deadline(appellee-scheduling-request-period) == 2024-12-23
+}
+
 /// The deadline the appellee requests must be within 91 days after the
 /// last appellant's brief is filed, absent the showing of 2d Cir. R.
 /// 31.2(a)(1)(D).
@@ -148,11 +178,23 @@ deadline appellee-brief-latest-request-period: 91.days after LastAppellantBriefF
   forum frap
 }
 
+test "Counting boundary: appellee-brief-latest-request-period (weekend)" cite "2d Cir. R. 31.2(a)(1)(B)"
+{
+  given LastAppellantBriefFiled() on 2024-12-07
+  expect deadline(appellee-brief-latest-request-period) == 2025-03-10
+}
+
 /// If the appellee submits no scheduling request, its brief is due 30 days
 /// after the last appellant's brief is filed.
 deadline appellee-brief-default-period: 30.days after LastAppellantBriefFiled() counted_by frap26 cite "2d Cir. R. 31.2(a)(1)(B)"
 {
   forum frap
+}
+
+test "Counting boundary: appellee-brief-default-period (holiday)" cite "2d Cir. R. 31.2(a)(1)(B)"
+{
+  given LastAppellantBriefFiled() on 2024-12-02
+  expect deadline(appellee-brief-default-period) == 2025-01-02
 }
 
 /// In a cross-appeal, the appellant-cross-appellee notifies the clerk of
@@ -163,12 +205,24 @@ deadline cross-appeal-scheduling-request-period: 14.days after LastCrossAppellan
   forum frap
 }
 
+test "Counting boundary: cross-appeal-scheduling-request-period (weekend)" cite "2d Cir. R. 31.2(a)(1)(C)"
+{
+  given LastCrossAppellantBriefFiled() on 2024-12-07
+  expect deadline(cross-appeal-scheduling-request-period) == 2024-12-23
+}
+
 /// The deadline the appellant-cross-appellee requests must be within 60
 /// days after the last cross-appellant's brief is filed, absent the
 /// showing of 2d Cir. R. 31.2(a)(1)(D).
 deadline cross-appeal-brief-latest-request-period: 60.days after LastCrossAppellantBriefFiled() counted_by frap26 cite "2d Cir. R. 31.2(a)(1)(C)"
 {
   forum frap
+}
+
+test "Counting boundary: cross-appeal-brief-latest-request-period (weekend)" cite "2d Cir. R. 31.2(a)(1)(C)"
+{
+  given LastCrossAppellantBriefFiled() on 2024-12-03
+  expect deadline(cross-appeal-brief-latest-request-period) == 2025-02-03
 }
 
 /// If the appellant-cross-appellee submits no scheduling request, its
@@ -178,11 +232,23 @@ deadline cross-appeal-brief-default-period: 30.days after LastCrossAppellantBrie
   forum frap
 }
 
+test "Counting boundary: cross-appeal-brief-default-period (holiday)" cite "2d Cir. R. 31.2(a)(1)(C)"
+{
+  given LastCrossAppellantBriefFiled() on 2024-12-02
+  expect deadline(cross-appeal-brief-default-period) == 2025-01-02
+}
+
 /// A reply brief must be filed within 21 days after the last appellee's
 /// brief is filed, a trigger FRAP 31(a)(1) (service) does not have.
 deadline circuit-reply-brief-period: 21.days after LastAppelleeBriefFiled() counted_by frap26 cite "2d Cir. R. 31.2(a)(2)"
 {
   forum frap
+}
+
+test "Counting boundary: circuit-reply-brief-period (holiday)" cite "2d Cir. R. 31.2(a)(2)"
+{
+  given LastAppelleeBriefFiled() on 2024-12-04
+  expect deadline(circuit-reply-brief-period) == 2024-12-26
 }
 
 /// Each party files an Oral Argument Statement Form within 14 days after
@@ -192,6 +258,12 @@ deadline circuit-reply-brief-period: 21.days after LastAppelleeBriefFiled() coun
 deadline oral-argument-statement-period: 14.days after LastAppelleeBriefFiled() counted_by frap26 cite "2d Cir. R. 34.1(a)"
 {
   forum frap
+}
+
+test "Counting boundary: oral-argument-statement-period (weekend)" cite "2d Cir. R. 34.1(a)"
+{
+  given LastAppelleeBriefFiled() on 2024-12-07
+  expect deadline(oral-argument-statement-period) == 2024-12-23
 }
 
 /// On the Expedited Appeals Calendar, the appellant files its brief within
@@ -215,6 +287,12 @@ deadline xac-reply-brief-period: 14.days after XacLastAppelleeBriefFiled() count
   forum frap
 }
 
+test "Counting boundary: xac-reply-brief-period (weekend)" cite "2d Cir. R. 31.2(b)(3)(C)"
+{
+  given XacLastAppelleeBriefFiled() on 2024-12-07
+  expect deadline(xac-reply-brief-period) == 2024-12-23
+}
+
 /// A motion to file an oversized brief must be made at least 14 days
 /// before the brief is due; an untimely one is denied absent extraordinary
 /// circumstances.
@@ -230,6 +308,12 @@ deadline reconsideration-period: 14.days after MotionOrderEntered() counted_by f
   forum frap
 }
 
+test "Counting boundary: reconsideration-period (weekend)" cite "2d Cir. R. 27.1(g)"
+{
+  given MotionOrderEntered() on 2024-12-07
+  expect deadline(reconsideration-period) == 2024-12-23
+}
+
 /// A motion to reinstate an appeal dismissed for failure to timely file a
 /// brief is filed within 14 days of the dismissal order, the brief
 /// attached.
@@ -238,11 +322,23 @@ deadline reinstatement-motion-period: 14.days after BriefDefaultDismissalEntered
   forum frap
 }
 
+test "Counting boundary: reinstatement-motion-period (weekend)" cite "2d Cir. R. 27.1(i)"
+{
+  given BriefDefaultDismissalEntered() on 2024-12-07
+  expect deadline(reinstatement-motion-period) == 2024-12-23
+}
+
 /// In a direct criminal appeal, a petition for panel rehearing may be
 /// filed within 45 days after entry of judgment.
 deadline criminal-rehearing-period: 45.days after CriminalAppealJudgmentEntered() counted_by frap26 cite "2d Cir. R. 40.1(b)"
 {
   forum frap
+}
+
+test "Counting boundary: criminal-rehearing-period (weekend)" cite "2d Cir. R. 40.1(b)"
+{
+  given CriminalAppealJudgmentEntered() on 2024-12-04
+  expect deadline(criminal-rehearing-period) == 2025-01-21
 }
 
 test "the docketing requirements are due 14 days after the notice of appeal" cite "2d Cir. R. 12.1(a)"

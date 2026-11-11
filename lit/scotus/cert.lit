@@ -79,6 +79,12 @@ deadline conditional-cross-petition-period: 30.days after CaseDocketed() counted
   forum scotus
 }
 
+test "Counting boundary: conditional-cross-petition-period (weekend)" cite "Sup. Ct. R. 12.5"
+{
+  given CaseDocketed() on 2026-03-19
+  expect deadline(conditional-cross-petition-period) == 2026-04-20
+}
+
 /// A brief in opposition is due within 30 days after the case is placed on
 /// the docket, unless the Court or a Justice, or the Clerk under Rule
 /// 30.4, extends the time (Sup. Ct. R. 15.3).
@@ -87,12 +93,24 @@ deadline opposition-period: 30.days after CaseDocketed() counted_by sup-ct-30 ci
   forum scotus
 }
 
+test "Counting boundary: opposition-period (weekend)" cite "Sup. Ct. R. 15.3"
+{
+  given CaseDocketed() on 2026-03-19
+  expect deadline(opposition-period) == 2026-04-20
+}
+
 /// The petitioner's brief on the merits is due within 45 days of the order
 /// granting the writ (Sup. Ct. R. 25.1), extendable under Rule 30 (Sup.
 /// Ct. R. 25.5).
 deadline merits-brief-period: 45.days after CertGranted() counted_by sup-ct-30 cite "Sup. Ct. R. 25.1"
 {
   forum scotus
+}
+
+test "Counting boundary: merits-brief-period (weekend)" cite "Sup. Ct. R. 25.1"
+{
+  given CertGranted() on 2026-03-18
+  expect deadline(merits-brief-period) == 2026-05-04
 }
 
 /// The respondent's brief on the merits is due within 30 days after the
@@ -111,11 +129,23 @@ deadline reply-brief-period: 30.days after RespondentMeritsBriefFiled() counted_
   forum scotus
 }
 
+test "Counting boundary: reply-brief-period (weekend)" cite "Sup. Ct. R. 25.3"
+{
+  given RespondentMeritsBriefFiled() on 2026-03-19
+  expect deadline(reply-brief-period) == 2026-04-20
+}
+
 /// A motion for additional argument time is due no later than 7 days after
 /// the respondent's brief on the merits is filed (Sup. Ct. R. 28.3).
 deadline argument-time-motion-period: 7.days after RespondentMeritsBriefFiled() counted_by sup-ct-30 cite "Sup. Ct. R. 28.3"
 {
   forum scotus
+}
+
+test "Counting boundary: argument-time-motion-period (weekend)" cite "Sup. Ct. R. 28.3"
+{
+  given RespondentMeritsBriefFiled() on 2026-03-21
+  expect deadline(argument-time-motion-period) == 2026-03-30
 }
 
 /// A petition for rehearing of a judgment or decision on the merits is due
@@ -126,12 +156,24 @@ deadline rehearing-period: 25.days after MeritsJudgmentEntered() counted_by sup-
   forum scotus
 }
 
+test "Counting boundary: rehearing-period (weekend)" cite "Sup. Ct. R. 44.1"
+{
+  given MeritsJudgmentEntered() on 2026-03-17
+  expect deadline(rehearing-period) == 2026-04-13
+}
+
 /// A petition for rehearing of an order denying certiorari is due within
 /// 25 days after the date of the order; the time will not be extended
 /// (Sup. Ct. R. 44.2).
 deadline denial-rehearing-period: 25.days after CertDenied() counted_by sup-ct-30 cite "Sup. Ct. R. 44.2"
 {
   forum scotus
+}
+
+test "Counting boundary: denial-rehearing-period (weekend)" cite "Sup. Ct. R. 44.2"
+{
+  given CertDenied() on 2026-03-17
+  expect deadline(denial-rehearing-period) == 2026-04-13
 }
 
 test "a petition is due 90 days after entry of the judgment" cite "Sup. Ct. R. 13.1"

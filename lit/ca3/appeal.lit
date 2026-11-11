@@ -34,6 +34,12 @@ deadline panel-rehearing-answer-period: 14.days after PanelRehearingAnswerOrdere
   forum frap
 }
 
+test "Counting boundary: panel-rehearing-answer-period (weekend)" cite "3d Cir. I.O.P. 8.2"
+{
+  given PanelRehearingAnswerOrdered() on 2024-12-01
+  expect deadline(panel-rehearing-answer-period) == 2024-12-16
+}
+
 /// When four active judges vote for an answer, or there are four votes for
 /// an answer or rehearing with at least one for an answer, the authoring
 /// judge orders an answer to the petition for rehearing en banc within 14

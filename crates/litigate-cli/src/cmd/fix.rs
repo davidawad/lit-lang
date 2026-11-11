@@ -131,7 +131,28 @@ pub fn fix(args: &Args) -> Outcome {
         .into_iter()
         .chain(c.session.lock_sources())
         .collect();
-    let applied = apply(&sources, candidates);
+    let mut applied = apply(&sources, candidates);
+    // Generated L9011 tests are inserted at the declaration's source span.
+    // That span does not include neighboring trivia, so an insertion can
+    // otherwise leave the file non-canonical (especially before another
+    // declaration or after a cited declaration). Canonicalize each edited
+    // Lit file as part of applying this fix; the formatter preserves every
+    // token and only rewrites layout.
+    if applied
+        .fixes
+        .iter()
+        .any(|(code, _)| *code == DiagnosticCode::CountingTestInsensitive)
+    {
+        for (file, text) in &mut applied.texts {
+            if std::path::Path::new(file)
+                .extension()
+                .is_some_and(|extension| extension.eq_ignore_ascii_case("lit"))
+            {
+                *text = litigate_syntax::format(text, litigate_syntax::FileKind::Lit)
+                    .map_err(|error| Failure::new(format!("cannot format {file}: {error}")))?;
+            }
+        }
+    }
     let changed: Vec<(&String, &String)> = applied
         .texts
         .iter()

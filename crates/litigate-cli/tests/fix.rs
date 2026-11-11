@@ -28,6 +28,7 @@ stakes { judgment-entered: -2.usd, dismissed: 0.usd }
 fn workspace(name: &str, case: &str) -> std::path::PathBuf {
     let dir = scratch(name);
     copy_dir(&repo().join("lit"), &dir.join("lit"));
+    copy_dir(&repo().join("sources"), &dir.join("sources"));
     std::fs::create_dir_all(dir.join("cases")).unwrap();
     std::fs::write(dir.join("cases/m.case"), case).unwrap();
     let lock = litigate_in(&dir, &["lock", "cases"]);
@@ -100,22 +101,53 @@ fn actor_designations_are_typed_and_case_fixes_are_applied() {
 fn l9011_fix_runs_through_cli_and_is_idempotent() {
     let dir = workspace("l9011", OUT_OF_ORDER);
     let path = dir.join("lit/akd/local-rules.lit");
+    let formatted = litigate_in(&dir, &["fmt", "lit/akd/local-rules.lit"]);
+    assert_eq!(formatted.code, 0, "{}", formatted.stdout);
     let test = "test \"Counting boundary: signature-objection-period (weekend)\" cite \"D. Alaska L.Civ.R. 5.1(e)\"\n{\n  given DocumentServed() on 2025-10-18\n  expect deadline(signature-objection-period) == 2025-11-03\n}\n";
     let source = std::fs::read_to_string(&path).unwrap();
     assert!(source.contains(test));
     std::fs::write(&path, source.replacen(test, "", 1)).unwrap();
-    let lock = litigate_in(&dir, &["lock", "lit/akd"]);
-    assert_eq!(lock.code, 0, "{}", lock.stdout);
+    let formatted = litigate_in(&dir, &["fmt", "lit/akd/local-rules.lit"]);
+    assert_eq!(formatted.code, 0, "{}", formatted.stdout);
+    for package in ["lit/core", "lit/frcp", "lit/akd"] {
+        let lock = litigate_in(&dir, &["lock", package]);
+        assert_eq!(lock.code, 0, "{}", lock.stdout);
+    }
+    let canonical = litigate_in(&dir, &["fmt", "--check", "lit/akd/local-rules.lit"]);
+    assert_eq!(canonical.code, 0, "{}", canonical.stdout);
 
     let fixed = litigate_in(&dir, &["fix", "lit/akd/local-rules.lit", "--code", "L9011"]);
     assert_eq!(fixed.code, 0, "{}", fixed.stdout);
-    assert_eq!(
-        fixed.json["result"]["changed_files"][0],
-        "lit/akd/local-rules.lit"
-    );
+    assert!(fixed.json["result"]["changed_files"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|file| file == "lit/akd/local-rules.lit"));
     let after = std::fs::read_to_string(&path).unwrap();
     assert!(after.contains("Counting boundary: signature-objection-period"));
-    let tests = litigate_in(&dir, &["test", "lit/akd"]);
+    assert!(
+        after.contains("cite \"D. Alaska L.Civ.R. 5.1(e)\"\n{"),
+        "{after}"
+    );
+    let canonical = litigate_in(&dir, &["fmt", "--check", "lit/akd/local-rules.lit"]);
+    assert_eq!(canonical.code, 0, "{}", canonical.stdout);
+    for package in ["lit/core", "lit/frcp", "lit/akd"] {
+        let lock = litigate_in(&dir, &["lock", package]);
+        assert_eq!(lock.code, 0, "{}", lock.stdout);
+    }
+    let checked = litigate_in(&dir, &["check", "lit/akd/local-rules.lit"]);
+    assert_eq!(checked.code, 0, "{}", checked.stdout);
+    assert!(!checked.json["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|d| {
+            d["code"] == "L9011"
+                && d["message"]
+                    .as_str()
+                    .is_some_and(|message| message.contains("signature-objection-period"))
+        }));
+    let tests = litigate_in(&dir, &["test", "lit/akd/local-rules.lit"]);
     assert_eq!(tests.code, 0, "{}", tests.stdout);
 
     let second = litigate_in(&dir, &["fix", "lit/akd/local-rules.lit", "--code", "L9011"]);

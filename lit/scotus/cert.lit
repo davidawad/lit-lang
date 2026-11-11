@@ -146,6 +146,9 @@ test "Counting boundary: rehearing-period (weekend)" cite "Sup. Ct. R. 44.1"
 /// 25 days after the date of the order; the time will not be extended
 /// (Sup. Ct. R. 44.2).
 deadline denial-rehearing-period: 25.days after CertDenied() counted_by sup-ct-30 cite "Sup. Ct. R. 44.2"
+{
+  extend { never cite "Sup. Ct. R. 44.2" }
+}
 
 test "Counting boundary: denial-rehearing-period (weekend)" cite "Sup. Ct. R. 44.2"
 {

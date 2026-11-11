@@ -2740,8 +2740,7 @@ undecided, which is an L5007 error.
 | `tests-pass` | every `test` assertion holds | L5006 |
 | `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4012 |
 | `holes` | lists every hole with reason and span | L9002 / L5002 |
-| `rule-without-test` | every deadline and counting rule is exercised by a `test` | L9001 |
-| `counting-test-insensitive` | every test of a direct-trigger calendar-day, court-day, business-day, or week deadline has the same asserted nominal or adjusted date under plain calendar addition with no roll as under its declared counting rule; chained deadlines and hours, months, and years are outside this comparison | L9011 |
+| `rule-without-test` | every deadline and counting rule is exercised by a `test`; L9011 warns when a deadline's tests do not distinguish its counting rule from plain calendar addition | L9001 / L9011 |
 
 A rule package's report skips `case-replay`; a matter's report checks
 `case-replay` (and counts its resolution errors against `well-typed`) and

@@ -236,6 +236,26 @@ fn verify_pack(
     holes: &mut Vec<litigate_sema::types::build::Hole>,
 ) -> std::collections::BTreeSet<String> {
     let package = verification.input.package.manifest.name.as_str();
+    holes.extend(
+        pack.lowered
+            .as_ref()
+            .into_iter()
+            .flat_map(|lowered| lowered.holes.iter())
+            .filter(|hole| hole.pointer.ends_with("/deadline/extendable"))
+            .map(|hole| {
+                let source = map
+                    .entries
+                    .iter()
+                    .filter(|entry| hole.pointer.starts_with(&entry.pointer))
+                    .max_by_key(|entry| entry.pointer.len());
+                litigate_sema::Hole {
+                    span: source
+                        .and_then(|entry| entry.span.clone())
+                        .unwrap_or_else(|| cx.span_or_manifest(None)),
+                    reason: hole.reason.clone(),
+                }
+            }),
+    );
     let reached = timed(package, "graph-reached", || graph::reached(pack));
     evidence::graph(b, cx, reached.len());
     evidence::tests(b, cx);

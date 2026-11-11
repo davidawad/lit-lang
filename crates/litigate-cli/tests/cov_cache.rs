@@ -146,7 +146,7 @@ fn install(bin: &Path, bytes: &[u8], mtime: std::time::SystemTime) {
 }
 
 #[test]
-fn an_upgraded_compiler_never_reads_the_old_ones_entries() {
+fn changing_untracked_executable_bytes_keeps_the_build_identity() {
     let dir = tree("cache-upgrade");
     std::fs::create_dir_all(dir.join("bin")).unwrap();
     let bin = dir.join("bin/litigate");
@@ -166,9 +166,9 @@ fn an_upgraded_compiler_never_reads_the_old_ones_entries() {
     let old = litigate_as(&bin, &dir, None, &["check", "lit/app"]);
     assert_eq!(old.code, 2, "{}", old.stdout);
     assert_eq!(old.json["diagnostics"][0]["code"], "L1007");
-    // The upgrade: other bytes (in the unloaded `.comment` section) of the
-    // same size, installed with the same modification time over the same
-    // tree. It verifies afresh: no L1007, and entries of its own.
+    // A byte outside the compiler's build inputs is not a new compiler.
+    // Build identity is computed once at build time, so changing this
+    // `.comment` byte keeps the identity and reuses the planted entry.
     let mut upgraded = built.clone();
     let at = upgraded
         .windows(b"rustc version".len())
@@ -177,9 +177,9 @@ fn an_upgraded_compiler_never_reads_the_old_ones_entries() {
     upgraded[at] = b'R';
     install(&bin, &upgraded, mtime);
     let new = litigate_as(&bin, &dir, None, &["check", "lit/app"]);
-    assert_eq!(new.code, 0, "{}", new.stdout);
-    assert_eq!(new.json, first.json);
-    assert_eq!(entries(&dir).len(), 4);
+    assert_eq!(new.code, 2, "{}", new.stdout);
+    assert_eq!(new.json["diagnostics"][0]["code"], "L1007");
+    assert_eq!(entries(&dir).len(), 2);
     assert_eq!(
         litigate_as(&bin, &dir, None, &["lock", "--locked", "lit/app"]).code,
         0

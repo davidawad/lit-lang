@@ -1234,6 +1234,24 @@ compute the same values (before 1.0.0, `^` and `~` coincide).
   (§8.3), so an analysis never reads as better sourced than its inputs.
   `strict` accepts estimates because the output carries its label.
 
+#### Typed provenance on numbers (lg-pb1fe.7)
+
+The object-level `basis` above is legacy coarse provenance. New authored
+numbers carry provenance individually, on the same declaration and line as
+the number: `p 0.3 basis calibrated("frcp-docket", 2026-10-26)`;
+`payoff 500000.usd basis placeholder`; `duration 14.days basis estimate
+vintage 2026-10-26`; `cost 250.usd basis sourced("FRCP 4(d)(2)")`; and
+`effort 3.hours basis estimate vintage 2026-10-26`. The closed basis forms
+are `calibrated(<calibration-set-id>)`, `sourced(<cite>)`, `estimate`, and
+`placeholder`. `vintage <Date>` records the date of an estimate or
+placeholder; calibrated values take their vintage from the named calibration
+set. Sourced values are checked against the cited authority. A number may
+have only one basis and one vintage. `placeholder` and `estimate` without a
+vintage are warnings in both `dev` and `strict` profiles; they remain
+authored assumptions rather than holes. The engine's calibration and lint
+operations consume the lowered per-number labels, and `litigate query`
+lists every estimated and placeholder value by package.
+
 ### 5.2 Types, enums, events, match
 
 `type`, `enum`, and `event` declare closed nominal types. An event type

@@ -109,7 +109,10 @@ fn l9011_fix_runs_through_cli_and_is_idempotent() {
 
     let fixed = litigate_in(&dir, &["fix", "lit/akd/local-rules.lit", "--code", "L9011"]);
     assert_eq!(fixed.code, 0, "{}", fixed.stdout);
-    assert_eq!(fixed.json["result"]["changed_files"][0], "lit/akd/local-rules.lit");
+    assert_eq!(
+        fixed.json["result"]["changed_files"][0],
+        "lit/akd/local-rules.lit"
+    );
     let after = std::fs::read_to_string(&path).unwrap();
     assert!(after.contains("Counting boundary: signature-objection-period"));
     let tests = litigate_in(&dir, &["test", "lit/akd"]);

@@ -19,7 +19,7 @@
 //! matches `p`. An assertion this evaluator cannot compute fails: an
 //! unevaluated test is not a passing one.
 use crate::diag::{emit, note};
-use crate::{Context, same_expr};
+use crate::{same_expr, Context};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
 use litigate_engine::clock::{self, ClockConfig, ClockLibrary, DayDeadline, Unit};
 use litigate_lower::Lowerer;

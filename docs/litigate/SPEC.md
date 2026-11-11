@@ -1332,7 +1332,7 @@ creates (design review 2026-10-23 §2.4, §2.7):
 - `extend { ... }` declares one extension grant; a deadline may declare
   several (FRCP 6(b)(1)'s (A) and (B) are two). Its bound is a sum, and
   a grant states exactly one (otherwise L2007):
-  - `extend { by A, max N.days | to B [, discretion S] [, after_expiry]
+  - `extend { by A, max N.days | to B [, cite "X"] [, discretion S] [, after_expiry]
     [, on M() [, within W] [, unless D()]] }` (bounded): actor `A` may extend an
     instance to a date no later than date bound `B`. Without
     `after_expiry` the extension must come on or before the current due
@@ -1347,7 +1347,7 @@ creates (design review 2026-10-23 §2.4, §2.7):
              to max(prescribed_due + 30.days, grant_order_entered + 14.days),
              after_expiry, on AppealExtensionMoved(), within prescribed_due + 30.days }
     ```
-  - `extend { by A, discretion S [, after_expiry, on M()] }`
+  - `extend { by A, discretion S [, cite "X"] [, after_expiry, on M()] }`
     (discretionary): actor `A` may extend an instance to any later date.
     Its window is before expiry, on or before the current due date (FRCP
     6(b)(1)(A), "if the court acts ... before the original time or its

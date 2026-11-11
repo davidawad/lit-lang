@@ -316,6 +316,7 @@ fn a_typed_extension_grant_derives_edge_extension_fields() {
             x.meta.cite = Some("FRCP 12(a)(1)(A)(i)".into());
             x.extend.push(hir::Extension::Discretionary {
                 by: "court".into(),
+                cite: None,
                 standard: hir::CauseStandard::GoodCause,
                 window: hir::ExtensionWindow::BeforeExpiry,
                 motion: None,

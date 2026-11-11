@@ -207,6 +207,7 @@ impl Cx<'_, '_> {
         let by = self.by(f, &fields);
         let after_expiry = fields.contains_key("after_expiry");
         let interpretation = Self::string(fields.get("interpretation"));
+        let cite = fields.get("cite").and_then(|f| Self::string(Some(f)));
         let standard = match fields.get("discretion") {
             Some(d) => Some(self.standard(first_ref(Some(d))?)?),
             None => None,
@@ -230,6 +231,7 @@ impl Cx<'_, '_> {
         if let Some(bound) = bound {
             return Some(Extension::Bounded {
                 by: by?,
+                cite,
                 until: bound,
                 after_expiry,
                 standard,
@@ -260,6 +262,7 @@ impl Cx<'_, '_> {
         }
         Some(Extension::Discretionary {
             by: by?,
+            cite,
             standard,
             window,
             motion,

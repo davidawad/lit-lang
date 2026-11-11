@@ -409,6 +409,9 @@ pub enum Extension {
     Bounded {
         /// The actor that may extend.
         by: String,
+        /// The rule authorizing this extension, if cited.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        cite: Option<String>,
         /// The latest date an extension may reach.
         until: Bound,
         /// May be exercised after the instance's due date as well as before.
@@ -435,6 +438,9 @@ pub enum Extension {
     Discretionary {
         /// The actor that may extend.
         by: String,
+        /// The rule authorizing this extension, if cited.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        cite: Option<String>,
         /// The cause standard.
         standard: CauseStandard,
         /// When the grant may be exercised.

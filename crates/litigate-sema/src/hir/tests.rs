@@ -290,6 +290,7 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
 fn only_a_lock_binds_a_level_or_is_written_as_one() {
     let grant = Extension::Discretionary {
         by: "Court".into(),
+        cite: None,
         standard: CauseStandard::GoodCause,
         window: ExtensionWindow::BeforeExpiry,
         motion: None,

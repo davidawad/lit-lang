@@ -797,6 +797,7 @@ fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
             if let Declaration::Deadline(x) = d {
                 x.extend = vec![Extension::Bounded {
                     by: "Court".into(),
+                    cite: None,
                     until: Bound::Offset {
                         from: DateRef::PrescribedDue,
                         days: 60,

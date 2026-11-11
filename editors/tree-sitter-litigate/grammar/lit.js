@@ -288,6 +288,7 @@ module.exports = {
   )),
 
   capability: $ => braced(choice(
+    $.cite,
     seq(field('key', 'by'), field('value', $.identifier)),
     seq(field('key', 'max'), field('value', $.duration)),
     seq(field('key', 'to'), field('value', $._expression)),

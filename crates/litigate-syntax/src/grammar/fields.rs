@@ -103,6 +103,7 @@ pub(crate) const GRANT_FIELDS: &[Spec] = &[
 
 /// Fields of an `extend`/`waive` capability.
 pub(crate) const CAPABILITY_FIELDS: &[Spec] = &[
+    (KwCite, Some(cite)),
     (KwBy, Some(reference)),
     (KwMax, Some(duration)),
     (KwTo, Some(bound)),

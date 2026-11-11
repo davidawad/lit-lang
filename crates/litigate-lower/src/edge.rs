@@ -228,13 +228,12 @@ fn extendability(extensions: &[Extension], delegations: &[hir::Delegation]) -> O
 
 /// Extension authority comes from the typed grant, delegation or lock only.
 fn derived_extension_authority(d: &hir::Deadline) -> Option<String> {
-    extension_authority(&d.extend, &d.meta.delegations, d.meta.cite.as_deref())
+    extension_authority(&d.extend, &d.meta.delegations)
 }
 
 fn extension_authority(
     extensions: &[Extension],
     delegations: &[hir::Delegation],
-    cite: Option<&str>,
 ) -> Option<String> {
     match extendability(extensions, delegations) {
         None => return None,
@@ -260,16 +259,17 @@ fn extension_authority(
         })
         .filter_map(|grant| grant.cite.as_deref())
         .collect::<Vec<_>>();
-    if !delegated.is_empty() {
-        return Some(delegated.join("; "));
-    }
-    // `extend` grants have no separate cite field; the declaration cite is
-    // the authority for its grant. Without a grant cite, keep it unknown.
-    extensions
+    let granted = extensions
         .iter()
-        .any(|grant| grant.by().is_some())
-        .then(|| cite.map(str::to_owned))
-        .flatten()
+        .filter_map(|grant| match grant {
+            hir::Extension::Bounded { cite, .. } | hir::Extension::Discretionary { cite, .. } => {
+                cite.as_deref()
+            }
+            hir::Extension::NonExtendable { .. } => None,
+        })
+        .collect::<Vec<_>>();
+    let authorities = delegated.into_iter().chain(granted).collect::<Vec<_>>();
+    (!authorities.is_empty()).then(|| authorities.join("; "))
 }
 
 /// One `extend` grant as a pack extension bound.
@@ -282,6 +282,7 @@ fn extension(x: &Extension) -> ExtensionBound {
             standard,
             motion: m,
             interpretation,
+            ..
         } => ExtensionBound::Bounded {
             by: by.clone(),
             until: bound(until),
@@ -296,6 +297,7 @@ fn extension(x: &Extension) -> ExtensionBound {
             window,
             motion: m,
             interpretation,
+            ..
         } => ExtensionBound::Discretionary {
             by: by.clone(),
             standard: cause(*standard),
@@ -355,12 +357,21 @@ mod tests {
             delegation(hir::DelegatedOp::Extend),
         ];
         assert_eq!(
-            extension_authority(&[], &delegations, None).as_deref(),
+            extension_authority(&[], &delegations).as_deref(),
             Some("FRCP 6(b)")
         );
+        assert_eq!(extension_authority(&[], &[]).as_deref(), None);
+        let cited_grant = Extension::Discretionary {
+            by: "court".into(),
+            cite: Some("FRCP 6(b)(1)".into()),
+            standard: hir::CauseStandard::GoodCause,
+            window: hir::ExtensionWindow::BeforeExpiry,
+            motion: None,
+            interpretation: None,
+        };
         assert_eq!(
-            extension_authority(&[], &[], Some("period cite")).as_deref(),
-            None
+            extension_authority(&[cited_grant], &[]).as_deref(),
+            Some("FRCP 6(b)(1)")
         );
         let named_lock = Extension::NonExtendable {
             authority: "FRCP 6(b)(2)".to_owned(),

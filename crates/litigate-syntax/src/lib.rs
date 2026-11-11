@@ -46,3 +46,15 @@ pub use parse::{parse, parse_case, parse_lit, Edition, FileKind, Parse, SyntaxNo
 pub use rowan::{TextRange, TextSize};
 pub use syntax_kind::{LitLanguage, SyntaxKind};
 pub use vocab::{CASE_ITEM_KEYWORDS, LIT_ITEM_KEYWORDS};
+
+/// Canonical id for a named edge whose source omits its id. `ordinal` is its
+/// one-based position among all edges from `from` to `target`, in source
+/// order; parallel targets receive numbered ids.
+#[must_use]
+pub fn derived_edge_id(from: &str, target: &str, ordinal: usize, parallel: bool) -> String {
+    if parallel {
+        format!("edge-{from}-{target}-{ordinal}")
+    } else {
+        format!("edge-{from}-{target}")
+    }
+}

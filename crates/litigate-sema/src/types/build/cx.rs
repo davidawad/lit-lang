@@ -253,7 +253,6 @@ impl Cx<'_, '_> {
 
     /// Checks that `actor` is declared in `[package.roles]` (or `either`);
     /// a link's actor is declared by the pack its `from` node belongs to.
-    #[allow(clippy::too_many_lines)] // Validation and its diagnostics share role context.
     pub fn actor(&mut self, r: &RefPath) -> String {
         let canonical = self.canonical_actor(r);
         let link_actors = self.link_from.as_ref().map(|pack| {

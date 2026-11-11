@@ -8,6 +8,7 @@ use crate::resolve::suggest;
 use crate::temporal::condition;
 use crate::types::rational as q;
 use litigate_base::{Applicability, DiagnosticCode as C};
+use litigate_syntax::derived_edge_id;
 use std::collections::{BTreeMap, BTreeSet};
 
 type Fields<'f> = BTreeMap<&'f str, &'f Field>;
@@ -139,7 +140,6 @@ impl Cx<'_, '_> {
     }
 
     /// Builds one node.
-    #[allow(clippy::too_many_lines)] // Node fields, edge ids, and diagnostics share this context.
     pub fn node(&mut self, n: &NodeItem, item: &Item, rule: Option<&Item>) -> Node {
         let meta = self.meta(&n.name, Some(&n.label), item, rule);
         let clauses = self.once(&n.clauses);
@@ -171,49 +171,8 @@ impl Cx<'_, '_> {
             "terminal" => self.terminal(&clauses, &fields),
             _ => NodeKind::State,
         };
-        let mut targets = BTreeMap::<String, usize>::new();
-        for edge in &n.edges {
-            *targets.entry(edge.to.last().text.clone()).or_default() += 1;
-        }
-        let mut parallel = BTreeMap::<String, usize>::new();
-        let mut seen = BTreeMap::<String, String>::new();
-        let mut edges = Vec::new();
-        for original in &n.edges {
-            let target = original.to.last().text.clone();
-            let mut e = original.clone();
-            if e.name.is_none() && !e.anonymous {
-                let ordinal = parallel.entry(target.clone()).or_default();
-                *ordinal += 1;
-                let suffix = if targets[&target] > 1 {
-                    format!("-{ordinal}")
-                } else {
-                    String::new()
-                };
-                e.name = Some(Name {
-                    text: format!("edge-{}-{target}{suffix}", n.name.text),
-                    range: e.name_range,
-                });
-            }
-            if let Some(id) = &e.name {
-                if let Some(previous_target) = seen.insert(id.text.clone(), target.clone()) {
-                    self.report(Report::new(
-                        C::DuplicateName,
-                        id.range,
-                        format!(
-                            "edge id `{}` to `{}` duplicates the edge id to `{}` on node `{}`",
-                            id.text, target, previous_target, n.name.text
-                        ),
-                    ));
-                }
-            }
-            let draw = if chance {
-                Draw::Required
-            } else {
-                Draw::Forbidden
-            };
-            let fact = chance && tags.iter().any(|t| t == "fact");
-            edges.push(self.edge(&e, &n.name.text, actor.as_deref(), draw, fact));
-        }
+        let fact = chance && tags.iter().any(|t| t == "fact");
+        let edges = self.edges(n, actor.as_deref(), chance, fact);
         self.probability_sum(n, &edges, chance);
         self.disjoint_guards(n, &edges);
         Node {
@@ -234,6 +193,47 @@ impl Cx<'_, '_> {
             formerly: self.idents(fields.get("formerly")),
             holes: holes_of(n.clauses.iter().chain(&n.fields)),
         }
+    }
+
+    fn edges(&mut self, n: &NodeItem, actor: Option<&str>, chance: bool, fact: bool) -> Vec<Edge> {
+        let mut targets = BTreeMap::<String, usize>::new();
+        for edge in &n.edges {
+            *targets.entry(edge.to.last().text.clone()).or_default() += 1;
+        }
+        let mut parallel = BTreeMap::<String, usize>::new();
+        let mut seen = BTreeMap::<String, String>::new();
+        let mut edges = Vec::new();
+        for original in &n.edges {
+            let target = original.to.last().text.clone();
+            let ordinal = parallel.entry(target.clone()).or_default();
+            *ordinal += 1;
+            let mut e = original.clone();
+            if e.name.is_none() && !e.anonymous {
+                e.name = Some(Name {
+                    text: derived_edge_id(&n.name.text, &target, *ordinal, targets[&target] > 1),
+                    range: e.name_range,
+                });
+            }
+            if let Some(id) = &e.name {
+                if let Some(previous_target) = seen.insert(id.text.clone(), target.clone()) {
+                    self.report(Report::new(
+                        C::DuplicateName,
+                        id.range,
+                        format!(
+                            "edge id `{}` to `{}` duplicates the edge id to `{}` on node `{}`",
+                            id.text, target, previous_target, n.name.text
+                        ),
+                    ));
+                }
+            }
+            let draw = if chance {
+                Draw::Required
+            } else {
+                Draw::Forbidden
+            };
+            edges.push(self.edge(&e, &n.name.text, actor, draw, fact));
+        }
+        edges
     }
 
     /// The `when` guards of a fact node's edges are pairwise disjoint

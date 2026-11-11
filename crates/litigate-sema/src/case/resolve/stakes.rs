@@ -6,10 +6,19 @@ use litigate_base::DiagnosticCode as C;
 use litigate_syntax::{SyntaxKind as K, SyntaxNode};
 use std::collections::BTreeMap;
 
+#[derive(Default)]
+struct StakeEntries {
+    stakes: BTreeMap<String, Stake>,
+    fee_shifts: BTreeMap<String, Rational>,
+    explicit_stakes: std::collections::BTreeSet<String>,
+    explicit_fee_shifts: std::collections::BTreeSet<String>,
+}
+
+type OutcomeRow = (String, TextRange, SyntaxNode, Option<SyntaxNode>);
+
 impl R<'_, '_> {
     /// The `stakes` block: each terminal's stake, and the fee-shift
     /// fractions its entries give (`j: 1.usd fee_shift 0.5`).
-    #[allow(clippy::too_many_lines)] // Keep expansion and conflict checks together.
     pub(super) fn stakes(
         &mut self,
         block: &SyntaxNode,
@@ -17,6 +26,14 @@ impl R<'_, '_> {
         as_of: &str,
         known_at: Option<&str>,
     ) -> (BTreeMap<String, Stake>, BTreeMap<String, Rational>) {
+        self.record_stakes_end(block, text);
+        let mut entries = StakeEntries::default();
+        self.explicit_stakes(block, &mut entries);
+        self.outcome_stakes(block, as_of, known_at, &mut entries);
+        (entries.stakes, entries.fee_shifts)
+    }
+
+    fn record_stakes_end(&mut self, block: &SyntaxNode, text: &str) {
         if let Some(close) = child(block, K::RecordExpr)
             .and_then(|r| r.last_token())
             .filter(|t| t.kind() == K::RBrace)
@@ -43,14 +60,13 @@ impl R<'_, '_> {
             };
             self.spans.stakes_end = Some((self.s(insert), prefix, suffix));
         }
-        let mut stakes = BTreeMap::new();
-        let mut fee_shifts = BTreeMap::new();
-        let mut explicit_stakes = std::collections::BTreeSet::new();
-        let mut explicit_fee_shifts = std::collections::BTreeSet::new();
+    }
+
+    fn explicit_stakes(&mut self, block: &SyntaxNode, entries: &mut StakeEntries) {
         for (node, key, f) in self.entries(block) {
             if let Some(v) = child(&f, K::Field).and_then(|s| self.fee_shift(&s)) {
-                explicit_fee_shifts.insert(node.clone());
-                fee_shifts.insert(node.clone(), v);
+                entries.explicit_fee_shifts.insert(node.clone());
+                entries.fee_shifts.insert(node.clone(), v);
             }
             let Some(value) = field_value(&f) else {
                 self.spans.stakes.insert(node, self.s(key));
@@ -66,8 +82,8 @@ impl R<'_, '_> {
             };
             match stake {
                 Some(s) => {
-                    explicit_stakes.insert(node.clone());
-                    stakes.insert(node, s);
+                    entries.explicit_stakes.insert(node.clone());
+                    entries.stakes.insert(node, s);
                 }
                 None => self.out.push(Report::new(
                     C::TypeMismatch,
@@ -76,31 +92,19 @@ impl R<'_, '_> {
                 )),
             }
         }
+    }
 
-        let outcome_rows = child(block, K::RecordExpr)
-            .map(|record| {
-                children(&record, K::RecordField)
-                    .filter_map(|field| {
-                        let mut tokens = field
-                            .children_with_tokens()
-                            .filter_map(rowan::NodeOrToken::into_token);
-                        let outcome = tokens.find(|token| token.kind() == K::KwOutcome)?;
-                        let tag = tokens.find(|token| token.kind() == K::Ident)?;
-                        let value = field_value(&field);
-                        Some((
-                            tag.text().to_owned(),
-                            crate::db::parse::range(tag.text_range()),
-                            outcome.text_range(),
-                            field,
-                            value,
-                        ))
-                    })
-                    .collect::<Vec<_>>()
-            })
-            .unwrap_or_default();
+    fn outcome_stakes(
+        &mut self,
+        block: &SyntaxNode,
+        as_of: &str,
+        known_at: Option<&str>,
+        entries: &mut StakeEntries,
+    ) {
+        let outcome_rows = Self::outcome_rows(block);
         let mut outcome_stakes = BTreeMap::<String, (Stake, String, TextRange)>::new();
         let mut outcome_fees = BTreeMap::<String, (Rational, String, TextRange)>::new();
-        for (tag, tag_range, _, field, value) in outcome_rows {
+        for (tag, tag_range, field, value) in outcome_rows {
             let fee = child(&field, K::Field).and_then(|f| self.fee_shift(&f));
             let stake = value.as_ref().and_then(|value| {
                 let range = sig(value);
@@ -125,7 +129,7 @@ impl R<'_, '_> {
                     if let Some((previous, previous_tag, previous_range)) =
                         outcome_stakes.get(&terminal)
                     {
-                        if previous != value && !explicit_stakes.contains(&terminal) {
+                        if previous != value && !entries.explicit_stakes.contains(&terminal) {
                             self.out.push(
                                 Report::new(
                                     C::MissingStake,
@@ -147,7 +151,7 @@ impl R<'_, '_> {
                     if let Some((previous, previous_tag, previous_range)) =
                         outcome_fees.get(&terminal)
                     {
-                        if *previous != fee && !explicit_fee_shifts.contains(&terminal) {
+                        if *previous != fee && !entries.explicit_fee_shifts.contains(&terminal) {
                             self.out.push(
                                 Report::new(
                                     C::MissingStake,
@@ -167,17 +171,39 @@ impl R<'_, '_> {
             }
         }
         for (terminal, (stake, _, range)) in outcome_stakes {
-            if !explicit_stakes.contains(&terminal) {
-                stakes.insert(terminal.clone(), stake);
+            if !entries.explicit_stakes.contains(&terminal) {
+                entries.stakes.insert(terminal.clone(), stake);
                 self.spans.stakes.insert(terminal, self.s(range));
             }
         }
         for (terminal, (fee, _, _)) in outcome_fees {
-            if !explicit_fee_shifts.contains(&terminal) {
-                fee_shifts.insert(terminal, fee);
+            if !entries.explicit_fee_shifts.contains(&terminal) {
+                entries.fee_shifts.insert(terminal, fee);
             }
         }
-        (stakes, fee_shifts)
+    }
+
+    fn outcome_rows(block: &SyntaxNode) -> Vec<OutcomeRow> {
+        child(block, K::RecordExpr)
+            .map(|record| {
+                children(&record, K::RecordField)
+                    .filter_map(|field| {
+                        let mut tokens = field
+                            .children_with_tokens()
+                            .filter_map(rowan::NodeOrToken::into_token);
+                        tokens.find(|token| token.kind() == K::KwOutcome)?;
+                        let tag = tokens.find(|token| token.kind() == K::Ident)?;
+                        let value = field_value(&field);
+                        Some((
+                            tag.text().to_owned(),
+                            crate::db::parse::range(tag.text_range()),
+                            field,
+                            value,
+                        ))
+                    })
+                    .collect()
+            })
+            .unwrap_or_default()
     }
 
     /// Current terminal nodes tagged with the declared outcome.

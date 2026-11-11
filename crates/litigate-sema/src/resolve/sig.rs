@@ -10,6 +10,7 @@ use crate::db::queries::{item_tree, manifest, module_graph, signature};
 use crate::hir::{Manifest, Refinement, Type};
 use crate::resolve::scope::Scope;
 use crate::types::{expr::Checker, ty};
+use litigate_syntax::derived_edge_id;
 use std::collections::{BTreeMap, BTreeSet};
 
 /// What a value-namespace name denotes.
@@ -208,21 +209,21 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
                 .edges
                 .iter()
                 .filter_map(|edge| {
+                    let target = edge.to.last().text.clone();
+                    let ordinal = parallel.entry(target.clone()).or_default();
+                    *ordinal += 1;
                     if let Some(name) = &edge.name {
                         return Some(name.text.clone());
                     }
                     if edge.anonymous {
                         return None;
                     }
-                    let target = edge.to.last().text.clone();
-                    let ordinal = parallel.entry(target.clone()).or_default();
-                    *ordinal += 1;
-                    let suffix = if targets[&target] > 1 {
-                        format!("-{ordinal}")
-                    } else {
-                        String::new()
-                    };
-                    Some(format!("edge-{}-{target}{suffix}", n.name.text))
+                    Some(derived_edge_id(
+                        &n.name.text,
+                        &target,
+                        *ordinal,
+                        targets[&target] > 1,
+                    ))
                 })
                 .collect();
             let kind = ValueKind::Node {

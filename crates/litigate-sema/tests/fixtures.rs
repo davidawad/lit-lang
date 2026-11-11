@@ -114,6 +114,73 @@ fn omitted_edge_ids_lower_stably_and_disambiguate_parallel_targets() {
 }
 
 #[test]
+fn parallel_edge_ids_stay_stable_through_formatting_with_explicit_ids() {
+    use litigate_sema::hir::Declaration;
+    use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
+
+    let base = include_str!("../../../lit/examples/rule12.lit");
+    let cases = [
+        base.replace(
+            "barred \"Barred\" -> dismissed",
+            "edge-time-barred-dismissed-1 \"Barred\" -> dismissed",
+        )
+        .replace(
+            "not-barred \"Timely\" -> respond",
+            "\"Timely\" -> dismissed",
+        ),
+        base.replace(
+            "barred \"Barred\" -> dismissed",
+            "custom \"Barred\" -> dismissed",
+        )
+        .replace(
+            "not-barred \"Timely\" -> respond",
+            "\"Timely\" -> dismissed",
+        ),
+    ];
+    for source in cases {
+        let formatted = litigate_syntax::format(&source, litigate_syntax::FileKind::Lit).unwrap();
+        let lower = |text: String| {
+            let package = LoadedPackage {
+                texts: std::collections::BTreeMap::default(),
+                root: "lit/examples".to_owned(),
+                manifest: include_str!("../../../lit/examples/Lit.toml").to_owned(),
+                lock: None,
+                files: vec![LoadedFile {
+                    relative: "rule12.lit".to_owned(),
+                    text,
+                }],
+            };
+            let mut db = litigate_sema::LitDatabase::default();
+            let ws = litigate_sema::db::inputs::create_workspace(&mut db, &[package]);
+            let checks = litigate_sema::check_workspace(&db, ws);
+            assert!(
+                checks[0].diagnostics.is_empty(),
+                "{:#?}",
+                checks[0].diagnostics
+            );
+            checks[0]
+                .package
+                .as_ref()
+                .unwrap()
+                .modules
+                .iter()
+                .flat_map(|module| &module.declarations)
+                .find_map(|declaration| match declaration {
+                    Declaration::Node(node) if node.meta.id == "time-barred" => Some(
+                        node.edges
+                            .iter()
+                            .map(|edge| edge.id.clone())
+                            .collect::<Vec<_>>(),
+                    ),
+                    _ => None,
+                })
+                .unwrap()
+        };
+        assert_eq!(lower(source), lower(formatted));
+    }
+}
+
+#[test]
 fn anonymous_and_omitted_edge_ids_lower_differently() {
     use litigate_sema::hir::Declaration;
     use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};

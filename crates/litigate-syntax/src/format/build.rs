@@ -245,15 +245,11 @@ fn redundant_edge_id(node: &SyntaxNode) -> Option<rowan::TextRange> {
         .children()
         .filter(|edge| edge.kind() == EdgeDecl && target_of(edge).as_deref() == Some(&target))
         .collect();
-    let expected = if same_target.len() > 1 {
-        let ordinal = same_target
-            .iter()
-            .position(|edge| edge.text_range() == node.text_range())?
-            + 1;
-        format!("edge-{from}-{target}-{ordinal}")
-    } else {
-        format!("edge-{from}-{target}")
-    };
+    let ordinal = same_target
+        .iter()
+        .position(|edge| edge.text_range() == node.text_range())?
+        + 1;
+    let expected = crate::derived_edge_id(&from, &target, ordinal, same_target.len() > 1);
     (id.text() == expected).then_some(id.text_range())
 }
 

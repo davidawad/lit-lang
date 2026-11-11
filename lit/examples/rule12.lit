@@ -50,9 +50,8 @@ calendar federal-holidays cite "FRCP 6(a)(6)"
 
 rule duty answer-duty cite "FRCP 12(a)(1)(A)(i)"
 {
-  deadline answer-period: 21.days from Served(complaint) counted_by frcp6 cite "FRCP 6(b)(1)(A)"
-  {
-    extend { by court, discretion GoodCause }
+  deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {
+    extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)(A)" }
   }
 }
 

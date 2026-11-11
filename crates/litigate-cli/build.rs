@@ -70,7 +70,7 @@ fn fingerprint(root: &Path) -> String {
         "cases",
         "sources",
         "docs/litigate",
-        "editors/tree-sitter-litigate/src",
+        "editors/tree-sitter-litigate",
     ] {
         let dir = root.join(relative);
         println!("cargo:rerun-if-changed={}", dir.display());
@@ -95,7 +95,7 @@ fn hash_tree(root: &Path, dir: &Path, hash: &mut Sha256) {
     for path in entries {
         if path.is_dir() {
             let name = path.file_name().unwrap_or_default().to_string_lossy();
-            if !name.starts_with('.') && name != "target" {
+            if !name.starts_with('.') && name != "target" && name != "node_modules" {
                 hash_tree(root, &path, hash);
             }
         } else if path.is_file() {
@@ -120,7 +120,12 @@ fn hash_named(hash: &mut Sha256, name: &str, bytes: &[u8]) {
 
 fn hash_root_files(root: &Path, hash: &mut Sha256) {
     // Root build metadata and the pinned Rust toolchain are inputs too.
-    for relative in ["Cargo.toml", "Cargo.lock", "rust-toolchain.toml"] {
+    for relative in [
+        "Cargo.toml",
+        "Cargo.lock",
+        "rust-toolchain.toml",
+        ".cargo/config.toml",
+    ] {
         let path = root.join(relative);
         println!("cargo:rerun-if-changed={}", path.display());
         hash_file(root, &path, hash);

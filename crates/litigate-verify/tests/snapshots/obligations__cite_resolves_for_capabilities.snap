@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/obligations.rs
+assertion_line: 87
 expression: "pair(Obligation::CiteResolves, & one(&capability_cites(\"FRCP 6(b)\")), &\none(&capability_cites(\"FRCP 99(b)\")))"
 ---
 {
@@ -10,7 +11,7 @@ expression: "pair(Obligation::CiteResolves, & one(&capability_cites(\"FRCP 6(b)\
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 12,
+        "checked": 13,
         "subjects": "cites"
       }
     },
@@ -23,12 +24,12 @@ expression: "pair(Obligation::CiteResolves, & one(&capability_cites(\"FRCP 6(b)\
       "status": "failed",
       "count": 3,
       "examples": [
-        "pkgs/demo/main.lit:55:1: L1010 `FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
-        "pkgs/demo/main.lit:55:1: L1010 `FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
-        "pkgs/demo/main.lit:63:1: L1010 `FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading"
+        "pkgs/demo/main.lit:58:1: L1010 `FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
+        "pkgs/demo/main.lit:58:1: L1010 `FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
+        "pkgs/demo/main.lit:66:1: L1010 `FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading"
       ],
       "evidence": {
-        "checked": 12,
+        "checked": 13,
         "subjects": "cites"
       }
     },
@@ -39,9 +40,9 @@ expression: "pair(Obligation::CiteResolves, & one(&capability_cites(\"FRCP 6(b)\
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 55,
+          "line": 58,
           "col": 1,
-          "end_line": 58,
+          "end_line": 61,
           "end_col": 2
         },
         "message": "`FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
@@ -56,9 +57,9 @@ expression: "pair(Obligation::CiteResolves, & one(&capability_cites(\"FRCP 6(b)\
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 55,
+          "line": 58,
           "col": 1,
-          "end_line": 58,
+          "end_line": 61,
           "end_col": 2
         },
         "message": "`FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
@@ -73,9 +74,9 @@ expression: "pair(Obligation::CiteResolves, & one(&capability_cites(\"FRCP 6(b)\
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 63,
+          "line": 66,
           "col": 1,
-          "end_line": 63,
+          "end_line": 66,
           "end_col": 191
         },
         "message": "`FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",

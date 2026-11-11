@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/obligations.rs
+assertion_line: 230
 expression: "pair(Obligation::GraphReachable, &\none(&with(\"state island: \\\"Island\\\" { tags [entry], _ \\\"Go\\\" -> lone }\\n\\\n         terminal lone: \\\"Lone\\\" { payoff 0.usd }\")),\n&\none(&with(\"state island: \\\"Island\\\" { _ \\\"Go\\\" -> lone }\\n\\\n         terminal lone: \\\"Lone\\\" { payoff 0.usd }\")))"
 ---
 {
@@ -23,8 +24,8 @@ expression: "pair(Obligation::GraphReachable, &\none(&with(\"state island: \\\"I
       "status": "failed",
       "count": 2,
       "examples": [
-        "pkgs/demo/main.lit:55:1: L5003 `island` is not reachable from start `served` or any `entry` node",
-        "pkgs/demo/main.lit:56:1: L5003 `lone` is not reachable from start `served` or any `entry` node"
+        "pkgs/demo/main.lit:58:1: L5003 `island` is not reachable from start `served` or any `entry` node",
+        "pkgs/demo/main.lit:59:1: L5003 `lone` is not reachable from start `served` or any `entry` node"
       ],
       "evidence": {
         "checked": 4,
@@ -38,9 +39,9 @@ expression: "pair(Obligation::GraphReachable, &\none(&with(\"state island: \\\"I
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 55,
+          "line": 58,
           "col": 1,
-          "end_line": 55,
+          "end_line": 58,
           "end_col": 42
         },
         "message": "`island` is not reachable from start `served` or any `entry` node",
@@ -55,9 +56,9 @@ expression: "pair(Obligation::GraphReachable, &\none(&with(\"state island: \\\"I
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 56,
+          "line": 59,
           "col": 1,
-          "end_line": 56,
+          "end_line": 59,
           "end_col": 39
         },
         "message": "`lone` is not reachable from start `served` or any `entry` node",

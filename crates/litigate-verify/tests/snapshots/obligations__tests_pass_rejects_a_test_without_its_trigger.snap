@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/obligations.rs
+assertion_line: 283
 expression: "pair(Obligation::TestsPass, & one(BASE), &\none(&edit(\"given Served(complaint, Mail) on 2025-03-03\",\n\"given Answered(complaint) on 2025-03-03\")))"
 ---
 {
@@ -23,7 +24,7 @@ expression: "pair(Obligation::TestsPass, & one(BASE), &\none(&edit(\"given Serve
       "status": "failed",
       "count": 1,
       "examples": [
-        "pkgs/demo/main.lit:52:10: L5006 cannot evaluate the assertion: no `given` event matches the trigger of `answer-period`"
+        "pkgs/demo/main.lit:55:10: L5006 cannot evaluate the assertion: no `given` event matches the trigger of `answer-period`"
       ],
       "evidence": {
         "checked": 2,
@@ -37,9 +38,9 @@ expression: "pair(Obligation::TestsPass, & one(BASE), &\none(&edit(\"given Serve
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 52,
+          "line": 55,
           "col": 10,
-          "end_line": 52,
+          "end_line": 55,
           "end_col": 33
         },
         "message": "cannot evaluate the assertion: no `given` event matches the trigger of `answer-period`",
@@ -47,9 +48,9 @@ expression: "pair(Obligation::TestsPass, & one(BASE), &\none(&edit(\"given Serve
           {
             "span": {
               "file": "pkgs/demo/main.lit",
-              "line": 49,
+              "line": 52,
               "col": 1,
-              "end_line": 53,
+              "end_line": 56,
               "end_col": 2
             },
             "message": "in test \"mail service adds three days\""

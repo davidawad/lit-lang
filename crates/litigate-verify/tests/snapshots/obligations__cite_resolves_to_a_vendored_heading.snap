@@ -1,6 +1,7 @@
 ---
 source: crates/litigate-verify/tests/obligations.rs
-expression: "pair(Obligation::CiteResolves, & one(BASE), &\none(&edit(\"by defendant cite FRCP 12(a)\", \"by defendant cite FRCP 99(a)\")))"
+assertion_line: 55
+expression: "pair(Obligation::CiteResolves, & one(BASE), &\none(&edit(\"by defendant cite \\\"FRCP 12(a)\\\"\",\n\"by defendant cite \\\"FRCP 99(a)\\\"\")))"
 ---
 {
   "pass": {
@@ -10,7 +11,7 @@ expression: "pair(Obligation::CiteResolves, & one(BASE), &\none(&edit(\"by defen
       "count": 0,
       "examples": [],
       "evidence": {
-        "checked": 6,
+        "checked": 7,
         "subjects": "cites"
       }
     },
@@ -23,10 +24,10 @@ expression: "pair(Obligation::CiteResolves, & one(BASE), &\none(&edit(\"by defen
       "status": "failed",
       "count": 1,
       "examples": [
-        "pkgs/demo/main.lit:36:1: L1010 `FRCP 99(a)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading"
+        "pkgs/demo/main.lit:39:1: L1010 `FRCP 99(a)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading"
       ],
       "evidence": {
-        "checked": 6,
+        "checked": 7,
         "subjects": "cites"
       }
     },
@@ -37,9 +38,9 @@ expression: "pair(Obligation::CiteResolves, & one(BASE), &\none(&edit(\"by defen
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 36,
+          "line": 39,
           "col": 1,
-          "end_line": 39,
+          "end_line": 42,
           "end_col": 2
         },
         "message": "`FRCP 99(a)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",

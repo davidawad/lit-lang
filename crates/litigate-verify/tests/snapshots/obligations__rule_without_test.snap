@@ -1,6 +1,7 @@
 ---
 source: crates/litigate-verify/tests/obligations.rs
-expression: "pair(Obligation::RuleWithoutTest, & one(BASE), &\none(&with(\"rule duty reply-duty cite FRCP 12(a)\\n{\\n  deadline reply-period: 14.days from \\\n         Answered(complaint) counted_by frcp6\\n}\")))"
+assertion_line: 300
+expression: "pair(Obligation::RuleWithoutTest, & one(BASE), &\none(&with(\"rule duty reply-duty cite \\\"FRCP 12(a)\\\"\\n{\\n  deadline reply-period: 14.days from \\\n         Answered(complaint) counted_by frcp6\\n}\")))"
 ---
 {
   "pass": {
@@ -23,7 +24,7 @@ expression: "pair(Obligation::RuleWithoutTest, & one(BASE), &\none(&with(\"rule 
       "status": "failed",
       "count": 1,
       "examples": [
-        "pkgs/demo/main.lit:57:3: L9001 deadline `reply-period` has no test that evaluates `deadline(reply-period)`"
+        "pkgs/demo/main.lit:60:3: L9001 deadline `reply-period` has no test that evaluates `deadline(reply-period)`"
       ],
       "evidence": {
         "checked": 3,
@@ -37,9 +38,9 @@ expression: "pair(Obligation::RuleWithoutTest, & one(BASE), &\none(&with(\"rule 
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 57,
+          "line": 60,
           "col": 3,
-          "end_line": 57,
+          "end_line": 60,
           "end_col": 75
         },
         "message": "deadline `reply-period` has no test that evaluates `deadline(reply-period)`",
@@ -49,9 +50,9 @@ expression: "pair(Obligation::RuleWithoutTest, & one(BASE), &\none(&with(\"rule 
               {
                 "span": {
                   "file": "pkgs/demo/main.lit",
-                  "line": 57,
+                  "line": 60,
                   "col": 75,
-                  "end_line": 57,
+                  "end_line": 60,
                   "end_col": 75
                 },
                 "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}"

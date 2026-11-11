@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/obligations.rs
+assertion_line: 223
 expression: "pair(Obligation::GraphExits, &\none(&onward(\"state next: \\\"Next\\\" { _ \\\"Finish\\\" -> answered }\")), &\none(&onward(\"state next: \\\"Next\\\"\")))"
 ---
 {
@@ -23,7 +24,7 @@ expression: "pair(Obligation::GraphExits, &\none(&onward(\"state next: \\\"Next\
       "status": "failed",
       "count": 1,
       "examples": [
-        "pkgs/demo/main.lit:56:1: L5004 `next` is not a terminal and has no outgoing edge"
+        "pkgs/demo/main.lit:59:1: L5004 `next` is not a terminal and has no outgoing edge"
       ],
       "evidence": {
         "checked": 2,
@@ -37,9 +38,9 @@ expression: "pair(Obligation::GraphExits, &\none(&onward(\"state next: \\\"Next\
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 56,
+          "line": 59,
           "col": 1,
-          "end_line": 56,
+          "end_line": 59,
           "end_col": 19
         },
         "message": "`next` is not a terminal and has no outgoing edge",

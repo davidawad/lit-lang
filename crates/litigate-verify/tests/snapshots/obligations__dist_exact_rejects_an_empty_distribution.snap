@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/obligations.rs
+assertion_line: 210
 expression: "pair(Obligation::DistExact, & one(&chance(\", a \\\"A\\\" -> answered p 1\")), &\none(&chance(\"\")))"
 ---
 {
@@ -23,7 +24,7 @@ expression: "pair(Obligation::DistExact, & one(&chance(\", a \\\"A\\\" -> answer
       "status": "failed",
       "count": 1,
       "examples": [
-        "pkgs/demo/main.lit:55:1: L2003 chance node `odds` has no edges, so its probabilities sum to 0, not exactly 1"
+        "pkgs/demo/main.lit:58:1: L2003 chance node `odds` has no edges, so its probabilities sum to 0, not exactly 1"
       ],
       "evidence": {
         "checked": 1,
@@ -37,9 +38,9 @@ expression: "pair(Obligation::DistExact, & one(&chance(\", a \\\"A\\\" -> answer
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 55,
+          "line": 58,
           "col": 1,
-          "end_line": 55,
+          "end_line": 58,
           "end_col": 46
         },
         "message": "chance node `odds` has no edges, so its probabilities sum to 0, not exactly 1"

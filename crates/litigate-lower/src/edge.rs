@@ -427,7 +427,10 @@ mod tests {
             authority: "FRCP 6(b)(2)".to_owned(),
             against: vec!["CaseOrder".to_owned()],
         };
-        assert_eq!(extendability(std::slice::from_ref(&named_lock), &[]), Some(false));
+        assert_eq!(
+            extendability(std::slice::from_ref(&named_lock), &[]),
+            Some(false)
+        );
         assert_eq!(
             extension_authority(&[named_lock], &[]).as_deref(),
             Some("FRCP 6(b)(2)")

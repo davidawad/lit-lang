@@ -268,10 +268,31 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
             let Some(m) = meta(declaration) else { continue };
             let key = format!("{}::{}", root.manifest.pack_id, m.id);
             if let Some((_, refs)) = declaration_refs.get(&key) {
-                pending.extend(refs.iter().cloned().map(|reference| (root.manifest.name.clone(), reference)));
+                pending.extend(
+                    refs.iter()
+                        .cloned()
+                        .map(|reference| (root.manifest.name.clone(), reference)),
+                );
             }
         }
         let mut configured_packages = vec![root];
+        // A package's named counting rule often lives in a dependency (for
+        // example, frcp's `frcp6` lives in core). Seed that declaration in
+        // its owning package so its calendar references enter the closure.
+        if let Some(counting) = root.manifest.counting.as_deref() {
+            if let Some(owner) = packages.values().find(|package| {
+                declarations(package).into_iter().any(|declaration| {
+                    meta(declaration).is_some_and(|m| {
+                        m.id == counting
+                            || format!("{}::{}", package.manifest.pack_id, m.id) == counting
+                    })
+                })
+            }) {
+                if !std::ptr::eq(*owner, root) {
+                    configured_packages.push(owner);
+                }
+            }
+        }
         configured_packages.extend(root.manifest.recounts.iter().filter_map(|name| {
             packages
                 .values()
@@ -289,7 +310,11 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
                     reachable.insert(key);
                     let key = format!("{}::{}", configured.manifest.pack_id, m.id);
                     if let Some((_, refs)) = declaration_refs.get(&key) {
-                        pending.extend(refs.iter().cloned().map(|reference| (configured.manifest.name.clone(), reference)));
+                        pending.extend(
+                            refs.iter()
+                                .cloned()
+                                .map(|reference| (configured.manifest.name.clone(), reference)),
+                        );
                     }
                 }
             }
@@ -302,10 +327,16 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
                 local_ids.get(&(source_package, reference)).cloned()
             };
             let Some(key) = target else { continue };
-            if !seen.insert(key.clone()) { continue; }
+            if !seen.insert(key.clone()) {
+                continue;
+            }
             reachable.insert(key.clone());
             if let Some((package, refs)) = declaration_refs.get(&key) {
-                pending.extend(refs.iter().cloned().map(|reference| (package.clone(), reference)));
+                pending.extend(
+                    refs.iter()
+                        .cloned()
+                        .map(|reference| (package.clone(), reference)),
+                );
             }
         }
     }

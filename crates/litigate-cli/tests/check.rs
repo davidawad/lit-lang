@@ -56,6 +56,88 @@ fn strict_check_accepts_the_hole_free_example() {
 }
 
 #[test]
+fn strict_dependency_holes_follow_reachable_declarations() {
+    use std::path::Path;
+    fn setup(label: &str, file: &str, cite: &str, reason: &str) -> std::path::PathBuf {
+        let dir = support::scratch(label);
+        let packages = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../lit");
+        support::copy_dir(&packages.join("core"), &dir.join("lit/core"));
+        support::copy_dir(&packages.join("frcp"), &dir.join("lit/frcp"));
+        #[cfg(unix)]
+        std::os::unix::fs::symlink(support::repo().join("sources"), dir.join("sources")).unwrap();
+        #[cfg(not(unix))]
+        support::copy_dir(&support::repo().join("sources"), &dir.join("sources"));
+        let calendar = dir.join("lit/core").join(file);
+        let source = std::fs::read_to_string(&calendar).unwrap();
+        let suffix = if file == "calendar.lit" {
+            " historical"
+        } else {
+            ""
+        };
+        let from = format!("cite \"{cite}\"{suffix}");
+        let to = format!("cite ?(\"{reason}\")");
+        assert!(source.contains(&from));
+        std::fs::write(calendar, source.replacen(&from, &to, 1)).unwrap();
+        let formatted = support::litigate_in(&dir, &["fmt", "lit/core"]);
+        assert_eq!(formatted.code, 0, "{}", formatted.stdout);
+        for target in ["lit/core", "lit/frcp"] {
+            let lock = support::litigate_in(&dir, &["lock", target]);
+            assert_eq!(lock.code, 0, "{target}: {}", lock.stdout);
+        }
+        dir
+    }
+    let run = |dir: &Path| support::litigate_in(dir, &["check", "--profile", "strict", "lit/frcp"]);
+
+    // A state calendar hole is in core but outside FRCP's declaration graph.
+    let unused_dir = setup(
+        "strict-hole-unreachable",
+        "states/alabama.lit",
+        "Ala. Code § 1-3-8",
+        "unreachable fixture hole",
+    );
+    let unused = run(&unused_dir);
+    assert_eq!(unused.code, 0, "{:?}", unused.json["diagnostics"]);
+    let diagnostics = unused.json["diagnostics"].as_array().unwrap();
+    let note = diagnostics.iter().find(|d| d["code"] == "L5002").unwrap();
+    assert_eq!(note["severity"], "info");
+    assert!(note["notes"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|n| n["message"].as_str().unwrap().contains("1 holes")));
+
+    // The configured counting rule itself is reachable from FRCP.
+    let direct_dir = setup(
+        "strict-hole-direct",
+        "frcp6.lit",
+        "FRCP (2008 ed.) 6 (1963 Advisory Committee Note)",
+        "direct fixture hole",
+    );
+    let direct = run(&direct_dir);
+    assert_eq!(direct.code, 2, "{}", direct.stdout);
+    assert!(support::codes(&direct.json)
+        .iter()
+        .any(|(code, severity)| code == "L5002" && severity == "error"));
+
+    // A federal-holiday cite is reached through FRCP's deadline -> frcp6 -> calendar chain.
+    let reached_dir = setup(
+        "strict-hole-transitive",
+        "calendar.lit",
+        "5 U.S.C. § 6103(a)",
+        "reachable fixture hole",
+    );
+    let reached = run(&reached_dir);
+    assert_eq!(reached.code, 2, "{}", reached.stdout);
+    assert!(
+        support::codes(&reached.json)
+            .iter()
+            .any(|(code, severity)| code == "L5002" && severity == "error"),
+        "{}",
+        reached.stdout
+    );
+}
+
+#[test]
 fn human_output_renders_diagnostics_with_source() {
     let out = assert_cmd::Command::cargo_bin("litigate")
         .unwrap()

@@ -191,6 +191,103 @@ fn l9011_generates_fixes_for_forward_calendar_and_court_days() {
     }
 }
 
+#[test]
+fn l9011_anchor_starts_when_the_counting_rule_first_applies() {
+    let source = BASE
+        .replace(
+            "counting frcp6 cite \"FRCP 6(a)\"",
+            "counting frcp6 effective [2020-01-01, ..) cite \"FRCP 6(a)\"",
+        )
+        .replace(
+            "counted_by frcp6 cite \"FRCP 12(a)\"",
+            "counted_by frcp6 effective [2000-01-01, ..) cite \"FRCP 12(a)\"",
+        )
+        .replace(
+            "test \"mail service adds three days\" cite \"FRCP 6(d)\"\n{\n  given Served(complaint, Mail) on 2025-03-03\n  expect deadline(answer-period) == 2025-03-27\n}\n",
+            "",
+        );
+    let checked = verify_one(&source, Profile::Strict);
+    let diagnostic = checked
+        .verification
+        .diagnostics
+        .iter()
+        .find(|d| d.code.as_str() == "L9011")
+        .expect("L9011 with a delayed counting-rule version");
+    let fix = &diagnostic.fixes[0].edits[0].replacement;
+    let date = fix
+        .split(" on ")
+        .nth(1)
+        .and_then(|tail| tail.get(..10))
+        .expect("generated given date");
+    assert!(date >= "2020-01-01", "generated date {date} predates rule");
+    let mut applied = source;
+    applied.push_str(fix);
+    let checked = verify_one(&applied, Profile::Strict);
+    assert!(!checked
+        .verification
+        .diagnostics
+        .iter()
+        .any(|d| d.code.as_str() == "L9011"));
+    assert_eq!(
+        outcome(&checked, Obligation::TestsPass)
+            .finding
+            .map(|finding| finding.status),
+        Some(ObligationStatus::Passed)
+    );
+}
+
+#[test]
+fn l9011_generates_fixes_for_backward_calendar_and_court_days() {
+    for unit in ["days", "court_days"] {
+        let source = BASE
+            .replace(
+                "rule duty answer-duty cite \"FRCP 12(a)\"\n{\n  deadline answer-period: 21.days from Served(complaint) counted_by frcp6 cite \"FRCP 12(a)\"\n  {\n    extend { by court, discretion GoodCause }\n  }\n}",
+                &format!("deadline answer-period: 1.{unit} before Served(complaint) counted_by frcp6 cite \"FRCP 12(a)\""),
+            )
+            .replace("event Answered(complaint), within answer-period", "event Answered(complaint)")
+            .replace("Served(complaint, Personal) on 2025-03-03", "Served(complaint, Personal) on 2025-03-05")
+            .replace(
+                "== 2025-03-24",
+                "== 2025-03-04",
+            )
+            .replace(
+                "test \"mail service adds three days\" cite \"FRCP 6(d)\"\n{\n  given Served(complaint, Mail) on 2025-03-03\n  expect deadline(answer-period) == 2025-03-27\n}\n",
+                "",
+            );
+        let checked = verify_one(&source, Profile::Strict);
+        let diagnostic = checked
+            .verification
+            .diagnostics
+            .iter()
+            .find(|d| d.code.as_str() == "L9011")
+            .unwrap_or_else(|| {
+                panic!(
+                    "missing backward L9011 for {unit}: {:#?}",
+                    checked.verification.diagnostics
+                )
+            });
+        let fix = &diagnostic.fixes[0].edits[0].replacement;
+        let mut applied = source;
+        applied.push_str(fix);
+        let checked = verify_one(&applied, Profile::Strict);
+        assert!(
+            !checked
+                .verification
+                .diagnostics
+                .iter()
+                .any(|d| d.code.as_str() == "L9011"),
+            "{unit}"
+        );
+        assert_eq!(
+            outcome(&checked, Obligation::TestsPass)
+                .finding
+                .map(|finding| finding.status),
+            Some(ObligationStatus::Passed),
+            "{unit}"
+        );
+    }
+}
+
 tests_pass!(
     the_latest_matching_given_triggers_a_latest_policy_deadline,
     Passed,

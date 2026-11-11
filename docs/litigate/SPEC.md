@@ -1262,6 +1262,12 @@ matching trigger pattern `T` that created the obligation instance being
 judged (§5.6). `before` counts backward. Units are the `Days<U>` unit of the
 literal.
 
+L9011's counting-sensitivity check applies to both directions: a backward
+period can end on a closed day and roll earlier, so a test that only
+exercises an open-day end may fail to distinguish counting from plain
+calendar subtraction. Its generated test uses a trigger for which the
+backward counted end rolls and records that end as the expected date.
+
 A **chained period** runs from one end of another deadline's period instead
 of from an event: `T` is `deadline(e).nominal` (the last day as counted,
 before any roll or extension) or `deadline(e).adjusted` (after every roll

@@ -157,52 +157,12 @@ pub(crate) fn counting_boundary(
     else {
         return Ok(None);
     };
-    let candidates: Vec<&[Expr]> = cx
-        .declarations()
-        .filter_map(|d| match d {
-            Declaration::Test(test) => {
-                Some(
-                    test.givens
-                        .iter()
-                        .filter_map(|(given, _)| match &given.kind {
-                            ExprKind::Call {
-                                callee: given_callee,
-                                args,
-                            } if given_callee == callee
-                                && trigger_arguments_match(trigger_args, args) =>
-                            {
-                                Some(args.as_slice())
-                            }
-                            _ => None,
-                        }),
-                )
-            }
-            _ => None,
-        })
-        .flatten()
-        .collect();
     let owner = cx.owner(&deadline.meta.id).0;
     let clocks = Clocks::new(cx, &deadline.meta.effective.known_at);
-    let Some((pkg, counting)) =
-        counting_of(&clocks, owner, deadline, &deadline.meta.effective.from)?
-    else {
+    let (anchor, pkg, counting) = counting_anchor(&clocks, owner, deadline)?;
+    let Some(event) = boundary_event(cx, callee, trigger_args, counting) else {
         return Ok(None);
     };
-    let Some(args) = candidates.into_iter().find(|args| {
-        args.iter().all(|arg| test_arg(arg).is_some())
-            && service_method(Some(counting), args)
-                .map(|m| format!("{m:?}"))
-                .is_none_or(|m| !matches!(counting.service_extensions.get(&m), Some(hir::ServiceTime::Adds(n, _)) if *n > 0))
-    }) else { return Ok(None) };
-    let event = format!(
-        "{}({})",
-        callee.rsplit("::").next().unwrap_or(callee),
-        args.iter()
-            .map(test_arg)
-            .flatten()
-            .collect::<Vec<_>>()
-            .join(", ")
-    );
     let lib = clocks.get(pkg, counting)?;
     let rule_id = counting.meta.id.as_str();
     let rule = lib.clock(rule_id).map_err(|error| error.to_string())?;
@@ -214,7 +174,7 @@ pub(crate) fn counting_boundary(
         amount
     };
     let delta = delta.saturating_sub(i64::from(!counting.exclude_trigger_day));
-    let start = clock::Date::parse_iso(&deadline.meta.effective.from).map_err(|e| e.to_string())?;
+    let start = clock::Date::parse_iso(&anchor).map_err(|e| e.to_string())?;
     let end = deadline
         .meta
         .effective
@@ -223,6 +183,77 @@ pub(crate) fn counting_boundary(
         .map(clock::Date::parse_iso)
         .transpose()
         .map_err(|e| e.to_string())?;
+    let request = DayDeadline {
+        trigger: start,
+        days: amount,
+        direction: if deadline.direction == hir::Direction::Forward {
+            clock::Direction::Forward
+        } else {
+            clock::Direction::Backward
+        },
+        unit,
+        service_method: None,
+    };
+    Ok(find_counting_boundary(
+        deadline,
+        &rule,
+        &request,
+        (start, end),
+        delta,
+        &event,
+    ))
+}
+
+fn boundary_event(
+    cx: &Context<'_>,
+    callee: &str,
+    trigger_args: &[Expr],
+    counting: &hir::Counting,
+) -> Option<String> {
+    let args = cx
+        .declarations()
+        .filter_map(|d| match d {
+            Declaration::Test(test) => Some(test.givens.iter().filter_map(|(given, _)| {
+                match &given.kind {
+                    ExprKind::Call {
+                        callee: given_callee,
+                        args,
+                    } if given_callee == callee && trigger_arguments_match(trigger_args, args) => {
+                        Some(args.as_slice())
+                    }
+                    _ => None,
+                }
+            })),
+            _ => None,
+        })
+        .flatten()
+        .find(|args| {
+            args.iter().all(|arg| test_arg(arg).is_some())
+                && service_method(Some(counting), args)
+                    .map(|m| format!("{m:?}"))
+                    .is_none_or(|m| {
+                        !matches!(counting.service_extensions.get(&m), Some(hir::ServiceTime::Adds(n, _)) if *n > 0)
+                    })
+        })?;
+    Some(format!(
+        "{}({})",
+        callee.rsplit("::").next().unwrap_or(callee),
+        args.iter()
+            .filter_map(test_arg)
+            .collect::<Vec<_>>()
+            .join(", ")
+    ))
+}
+
+fn find_counting_boundary(
+    deadline: &hir::Deadline,
+    rule: &clock::Clock<'_>,
+    request: &DayDeadline,
+    window: (clock::Date, Option<clock::Date>),
+    delta: i64,
+    event: &str,
+) -> Option<(String, String)> {
+    let (start, end) = window;
     for offset in 0..=730 {
         let trigger = start.add_days(offset);
         if end.is_some_and(|end| trigger >= end) {
@@ -240,16 +271,9 @@ pub(crate) fn counting_boundary(
         }
         let request = DayDeadline {
             trigger,
-            days: amount,
-            direction: if deadline.direction == hir::Direction::Forward {
-                clock::Direction::Forward
-            } else {
-                clock::Direction::Backward
-            },
-            unit,
-            service_method: None,
+            ..request.clone()
         };
-        let Ok(computed) = clock::compute_due_date(&request, &rule, &ClockConfig::default()) else {
+        let Ok(computed) = clock::compute_due_date(&request, rule, &ClockConfig::default()) else {
             continue;
         };
         if computed.due_date == naive.to_iso() {
@@ -267,7 +291,7 @@ pub(crate) fn counting_boundary(
             .map(|c| format!(" cite {}", serde_json::to_string(c).unwrap_or_default()))
             .unwrap_or_default();
         let open = if cite.is_empty() { " {" } else { "\n{" };
-        return Ok(Some((
+        return Some((
             format!(
                 "\n\ntest {}{}{}\n  given {} on {}\n  expect deadline({}) == {}\n}}",
                 serde_json::to_string(&format!(
@@ -283,9 +307,62 @@ pub(crate) fn counting_boundary(
                 computed.due_date
             ),
             format!("naive {} rolls to {}", naive.to_iso(), computed.due_date),
-        )));
+        ));
     }
-    Ok(None)
+    None
+}
+
+/// The first day on which both the deadline and its counting rule are in
+/// force. A deadline can predate the first recorded version of its rule.
+fn counting_anchor<'a>(
+    clocks: &Clocks<'a>,
+    owner: &hir::Package,
+    deadline: &hir::Deadline,
+) -> Result<(String, &'a hir::Package, &'a hir::Counting), String> {
+    let key = clocks
+        .world
+        .target(&owner.manifest.pack_id, &deadline.counting)
+        .key;
+    let versions = clocks.world.versions(&key);
+    let deadline_start = &deadline.meta.effective.from;
+    let deadline_end = deadline.meta.effective.to.as_deref();
+    let mut candidates = std::collections::BTreeSet::from([deadline_start.clone()]);
+    for version in &versions.versions {
+        let start = version.in_force.from.clone().max(deadline_start.clone());
+        if deadline_end.is_none_or(|end| start.as_str() < end) {
+            candidates.insert(start);
+        }
+        if let Some(commenced) = &version.commenced {
+            let start = commenced.from.clone().max(deadline_start.clone());
+            if deadline_end.is_none_or(|end| start.as_str() < end) {
+                candidates.insert(start);
+            }
+        }
+    }
+    for anchor in candidates {
+        if deadline_end.is_some_and(|end| anchor.as_str() >= end) {
+            continue;
+        }
+        if let Ok(Some((pkg, counting))) = counting_of(clocks, owner, deadline, &anchor) {
+            return Ok((anchor, pkg, counting));
+        }
+    }
+    let first_rule = versions
+        .versions
+        .iter()
+        .filter(|version| version.held(Some(clocks.known_at)))
+        .map(|version| version.in_force.from.as_str())
+        .min();
+    if deadline_end.is_some_and(|end| first_rule.is_some_and(|first| end <= first)) {
+        return Err(format!(
+            "deadline ends before the first recorded version of counting rule `{}`",
+            deadline.counting
+        ));
+    }
+    Err(format!(
+        "no version of counting rule `{}` is in force during the deadline's effective window",
+        deadline.counting
+    ))
 }
 
 fn test_arg(arg: &Expr) -> Option<String> {

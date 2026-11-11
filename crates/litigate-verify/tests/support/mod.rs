@@ -267,13 +267,13 @@ state served: "Complaint served" by defendant cite "FRCP 12(a)"
 
 terminal answered: "Answer filed" outcome [answered] { payoff 0.usd }
 
-test "answer due 21 days after personal service"
+test "answer due 21 days after personal service" cite "FRCP 12(a)"
 {
   given Served(complaint, Personal) on 2025-03-03
   expect deadline(answer-period) == 2025-03-24
 }
 
-test "mail service adds three days"
+test "mail service adds three days" cite "FRCP 12(a)"
 {
   given Served(complaint, Mail) on 2025-03-03
   expect deadline(answer-period) == 2025-03-27

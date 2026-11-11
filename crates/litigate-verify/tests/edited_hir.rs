@@ -161,7 +161,7 @@ fn two_duties() -> String {
     with(
         "rule duty reply-duty cite \"FRCP 12(a)\"\n{\n  deadline reply-period: 3.days from \
          Served(complaint) counted_by frcp6 { extend { by court, discretion GoodCause } }\n}\n\
-         test \"reply\"\n{\n  given Served(complaint, Personal) on 2025-03-03\n  \
+         test \"reply\" cite \"FRCP 12(a)\"\n{\n  given Served(complaint, Personal) on 2025-03-03\n  \
          expect deadline(reply-period) == 2025-03-06\n}",
     )
     .replacen(

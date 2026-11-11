@@ -319,14 +319,17 @@ impl Measure {
         let mut out = vec![(n, self)];
         match self {
             Self::Day => {
-                out.push((n * 24, Self::Hour));
+                out.extend(n.checked_mul(24).map(|hours| (hours, Self::Hour)));
                 if n.is_multiple_of(7) {
                     out.push((n / 7, Self::Week));
                 }
             }
-            Self::Week => out.extend([(n * 7, Self::Day), (n * 168, Self::Hour)]),
+            Self::Week => {
+                out.extend(n.checked_mul(7).map(|days| (days, Self::Day)));
+                out.extend(n.checked_mul(168).map(|hours| (hours, Self::Hour)));
+            }
             Self::Month if n.is_multiple_of(12) => out.push((n / 12, Self::Year)),
-            Self::Year => out.push((n * 12, Self::Month)),
+            Self::Year => out.extend(n.checked_mul(12).map(|months| (months, Self::Month))),
             Self::Hour | Self::Month => {}
         }
         out
@@ -341,6 +344,18 @@ impl Measure {
             Self::Year => "year",
         };
         format!("{n} {noun}{}", if n == 1 { "" } else { "s" })
+    }
+}
+
+#[cfg(test)]
+mod measure_tests {
+    use super::Measure;
+
+    #[test]
+    fn equivalent_periods_skip_week_and_year_conversions_that_overflow() {
+        for unit in [Measure::Week, Measure::Year] {
+            assert_eq!(unit.equivalents(u64::MAX), [(u64::MAX, unit)]);
+        }
     }
 }
 

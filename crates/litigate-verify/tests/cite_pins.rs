@@ -37,7 +37,9 @@ fn an_unpinned_or_mismatched_file_is_unverified_text() {
     let base = BASE.to_owned();
     let unpinned = under(PIN, "", &base);
     let messages = unresolved(&unpinned);
-    assert_eq!(messages.len(), 5, "{messages:?}");
+    // BASE now cites the answer deadline as well as the duty, state, and
+    // two filing tests, so each contributes its own L1010 when unpinned.
+    assert_eq!(messages.len(), 7, "{messages:?}");
     assert!(
         messages[0].contains("source `frcp` pins no `path_sha256`"),
         "{messages:?}"
@@ -50,7 +52,7 @@ fn an_unpinned_or_mismatched_file_is_unverified_text() {
         &base,
     );
     let messages = unresolved(&mismatched);
-    assert_eq!(messages.len(), 5, "{messages:?}");
+    assert_eq!(messages.len(), 7, "{messages:?}");
     assert!(
         messages[0].contains("is not the text source `frcp` pins"),
         "{messages:?}"

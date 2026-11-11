@@ -342,6 +342,18 @@ Dropped prose for the FRAP notice periods and cert-period is retained verbatim i
 
 **DECIDED:** A baseline authority is restored only on a typed capability already present in the source; periods without one remain unchanged under lg-pb1fe.19. A typed declaration's own cite remains untouched.
 
+**Kept existing period cite:**
+
+| Period | Existing period cite left unchanged | Baseline reference recorded beside it |
+|---|---|---|
+| FRAP notice-civil-period | `28 U.S.C. § 2107(a)` | `FRAP 4(a)(5)` |
+| FRAP notice-us-party-period | `28 U.S.C. § 2107(b)` | `FRAP 4(a)(5)` |
+| FRAP cert-period | `28 U.S.C. § 2101(c)` | `28 U.S.C. § 2101(c)` |
+| FRCrimP criminal-appeal | `FRAP 4(b)(1)(A); FRAP 4(b)(4)` | `FRAP 4(b)(4)` |
+| PTAB appeal-period (2024 version) | `37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(1)` | `37 C.F.R. § 90.3(c)(1)` |
+| FRCP periods listed above | Existing rule-specific period cites (unchanged) | The general extension reference is attached to the existing `extend` capability as `FRCP 6(b)(1)` |
+
+
 **Authority not restored: no typed declaration (lg-pb1fe.19):** the source census identifies the untyped periods listed as `hole` in the first table above, including TTAB opposition-period and FRAP briefing/tolling periods. Their baseline claims are not converted into grants by this change. Some baseline references have no rule number (for example `court order`, `good cause`, `ALJ discretion`, or an ALJ-specified period); these reduce to nothing unless a cited rule is stated as the source of extension power, and must be reported with the remaining edge differences.
 
 | Untyped period | Baseline string(s) | Reduced reference |

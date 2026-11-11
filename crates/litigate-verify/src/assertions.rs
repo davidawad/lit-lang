@@ -245,7 +245,9 @@ pub(crate) fn counting_boundary(
         } else {
             -delta
         });
-        if !naive.is_weekend() && !rule.is_legal_holiday(naive, &[]) {
+        let legal_holiday = rule.is_legal_holiday(naive, &[])
+            || (deadline.direction == hir::Direction::Forward && rule.is_forward_holiday(naive));
+        if !naive.is_weekend() && !legal_holiday {
             continue;
         }
         let request = DayDeadline {

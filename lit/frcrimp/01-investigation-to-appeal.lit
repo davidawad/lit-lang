@@ -805,7 +805,7 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by accused delegable
   edge-notice-of-appeal-window-appeal-window-missed "Miss appeal deadline" -> appeal-window-missed {
     authority cite "Fed. R. App. P. 4(b); Eberhart v. United States, 546 U.S. 12 (2005)"
     effort 0.hours
-    deadline 14.days {
+    within criminal-appeal {
       note "A mandatory claim-processing rule: once the government objects to untimeliness, the court must dismiss and admits no equitable exception — the conviction becomes unreviewable on direct appeal; only § 2255 collateral relief survives. The government forfeits the objection if it does not raise it."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }

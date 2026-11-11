@@ -115,6 +115,8 @@ rule duty petition-correction-deadline cite "37 C.F.R. § 42.106(b)"
   deadline petition-correction-period: 1.months after IncompletePetitionNoticed() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2012-08-14 delegable {
     to CaseOrder
     op set
+
+    cite "37 C.F.R. § 42.5(c)(1)"
   } cite "37 C.F.R. § 42.106(b); 37 C.F.R. § 42.5(c)(1)"
 }
 
@@ -320,14 +322,20 @@ rule duty rehearing-deadline cite "37 C.F.R. (2012) § 42.71(d)(2)"
   deadline rehearing-period: 30.days after DecisionEntered(FinalWritten) counted_by uspto-1-7 effective [2012-09-16, 2015-05-19) known_at 2012-08-14 delegable {
     to CaseOrder
     op set
+
+    cite "37 C.F.R. (2012) § 42.5(c)(1)"
   } cite "37 C.F.R. (2012) § 42.71(d)(2)"
   deadline rehearing-period: 30.days after DecisionEntered(FinalWritten) counted_by uspto-1-7 effective [2015-05-19, 2021-01-08) known_at 2015-05-19 supersedes rehearing-period@2012-09-16 delegable {
     to CaseOrder
     op set
+
+    cite "37 C.F.R. (2012) § 42.5(c)(1)"
   } cite "37 C.F.R. (2012) § 42.71(d)(2); 80 FR 28565"
   deadline rehearing-period: 30.days after DecisionEntered(FinalWritten) counted_by uspto-1-7 effective [2021-01-08, ..) known_at 2020-12-09 supersedes rehearing-period@2015-05-19 delegable {
     to CaseOrder
     op set
+
+    cite "37 C.F.R. § 42.5(c)(1)"
   } cite "37 C.F.R. § 42.71(d)(2); 37 C.F.R. § 42.5(c)(1)"
 }
 
@@ -363,10 +371,14 @@ rule duty director-review-deadline effective [2024-10-31, ..) known_at 2024-10-0
   deadline director-review-period: 30.days after DecisionEntered(FinalWritten) counted_by uspto-1-7 effective [2024-10-31, ..) known_at 2024-10-01 delegable {
     to CaseOrder
     op set
+
+    cite "37 C.F.R. § 42.5(c)(1)"
   } cite "37 C.F.R. § 42.75(c)(1); 37 C.F.R. § 42.71(d)(2)"
   deadline director-review-after-rehearing-period: 30.days after DecisionEntered(Rehearing) counted_by uspto-1-7 effective [2024-10-31, ..) known_at 2024-10-01 delegable {
     to CaseOrder
     op set
+
+    cite "37 C.F.R. § 42.5(c)(1)"
   } cite "37 C.F.R. § 42.75(a); 37 C.F.R. § 42.75(c)(1); 37 C.F.R. § 42.71(d)(2)"
 }
 

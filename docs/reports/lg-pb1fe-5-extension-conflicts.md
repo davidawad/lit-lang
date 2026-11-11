@@ -552,3 +552,80 @@ This table compares every extension-authority pointer in the original `litigate 
 | TTAB | `answer-plain` | `"FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)"` | `"FRCP 6(b)(1)(A); 37 CFR 2.116(a)"` | rule 2: reduced/normalized named reference |
 | TTAB | `answer-s18` | `"FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)"` | `"FRCP 6(b)(1)(A); 37 CFR 2.116(a)"` | rule 2: reduced/normalized named reference |
 | TTAB | `edge-07-opposition-to-trial-notice-of-default-1` | `"FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)"` | `"FRCP 6(b)(1)(A); 37 CFR 2.116(a)"` | rule 2: reduced/normalized named reference |
+
+
+## lg-pb1fe.19 decisions
+
+DECIDED: Treat only the 68 changed package-edge pointers as decision rows; the six link-instance overlays are inherited copies and are not additional rule periods. Every line below cites the period rule read in the vendored text or records “rule silent.” The 19 false→true rows identify the typed grant and a short decisive quotation.
+
+Baseline targeted command: `target/release/litigate check lit/frcp lit/frap lit/frcrimp lit/cafc lit/cofc lit/itc lit/mpep lit/ptab lit/ttab --profile strict --format json`; **69 errors**, including **54 L5002**, **0 L9002**. After decisions and edits, the same command returned **60 errors**, including **45 L5002**, **0 L9002**. The remaining errors are the pre-existing strict holes and canonical-format diagnostics; no new error code appeared.
+Whole-corpus check: `target/release/litigate check lit cases --format json` exited 0 on clean-main baseline (0 errors) and on this tree (0 errors, 3,531 warnings; `ok: true`).
+
+- `/edges/docketed-to-appearance/deadline/extendable` — `false → null` — rule silent; read Fed. Cir. R. 47.3(b)(1); Fed. Cir. R. 47.4(b) (the cited section states the period but grants no extension or forbids none).
+- `/edges/rehearing-file/deadline/extendable` — `false → true` — extend by typed grant; cite Fed. Cir. R. 40(f)(1); “the time ... may be extended by order”.
+- `/edges/rehearing-time-expires/deadline/extendable` — `null → true` — extend by case order under Fed. Cir. R. 40(f)(1); FRAP 40(d)(1); “the time ... may be extended by order”.
+- `/edges/rehearing-denied-to-mandate/deadline/extendable` — `null → true` — extend by case order under FRAP 41(b); Fed. Cir. R. 41; “the court may shorten or extend the time by order”.
+- `/edges/e-protest-notice-to-complaint/deadline/extendable` — `false → null` — rule silent; read RCFC App. C 2; RCFC 3 (the cited section states the period but grants no extension or forbids none).
+- `/edges/e-ruling12b-denied/deadline/extendable` — `false → true` — extend by typed grant; cite RCFC 12(a)(4)(A); “Unless the court sets a different time”.
+- `/edges/e-order-to-settlement/deadline/extendable` — `false → null` — rule silent; read PRCFC 16(a) (the cited section states the period but grants no extension or forbids none).
+- `/edges/e-settlementmeet-to-fork/deadline/extendable` — `false → null` — rule silent; read PRCFC 17 (the cited section states the period but grants no extension or forbids none).
+- `/edges/e-posttrialwindow-motion/deadline/extendable` — `false → null` — rule silent; read RCFC 59(a)-(b), (e) (the cited section states the period but grants no extension or forbids none).
+- `/edges/e-costs-to-prevailing/deadline/extendable` — `false → null` — rule silent; read RCFC 54(d); 28 U.S.C. §2412(d)(1)(B) (the cited section states the period but grants no extension or forbids none).
+- `/edges/notice-of-appeal-civil/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 4(a)(5)(A); “may extend the time to file a notice of appeal”.
+- `/edges/notice-of-appeal-us-party/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 4(a)(5)(A); “may extend the time to file a notice of appeal”.
+- `/edges/notice-of-appeal-criminal/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 4(b)(4); “the district court may extend the time”.
+- `/edges/edge-appeal-clock-open-tolling-motion-filed/deadline/extendable` — `false → null` — locked against extension by FRCP 6(b)(2); “may not extend the time to act under Rule 50(b), 52(b), 59(b), (d), and (e)”.
+- `/edges/edge-tolling-motion-disposed-appeal-clock-open/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 4(a)(5)(A); “may extend the time to file a notice of appeal”.
+- `/edges/edge-transcript-order-fork-transcript-ordered/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 26(b)(1); “may extend any time prescribed by these rules for good cause”.
+- `/edges/no-transcript-certificate/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 26(b)(1); “may extend any time prescribed by these rules for good cause”.
+- `/edges/edge-rehearing-window-rehearing-petition-filed/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 40(d)(1); “unless the time is shortened or extended by order or local rule”.
+- `/edges/edge-rehearing-window-mandate-issued/deadline/extendable` — `null → true` — extend by case order under FRAP 40(d)(1); “unless the time is shortened or extended by order or local rule”.
+- `/edges/edge-rehearing-granted-amended-opinion-mandate-issued/deadline/extendable` — `null → true` — extend by case order under FRAP 41(b); “the court may shorten or extend the time by order”.
+- `/edges/edge-rehearing-en-banc-both-denied-mandate-issued/deadline/extendable` — `null → true` — extend by case order under FRAP 41(b); “the court may shorten or extend the time by order”.
+- `/edges/edge-removal-window-removed-to-federal/deadline/extendable` — `false → null` — rule silent; read 28 U.S.C. 1446(a); 1446(b)(1) (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-removed-to-federal-remand-ruling/deadline/extendable` — `false → null` — rule silent; read 28 U.S.C. 1447(c) (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-guilty-verdict-rule29-motion/deadline/extendable` — `false → true` — extend by typed grant; cite FRCrimP 45(b)(1); “may extend the time to file a motion under Rule 29”.
+- `/edges/edge-presentence-report-sentencing-hearing/deadline/extendable` — `true → null` — court may change a Rule 32 time limit for good cause under FRCrimP 32(b)(2); the edge is an inline backward deadline, not linked to the typed period; “the court may change any time limits prescribed in this rule”.
+- `/edges/edge-judgment-entered-rule35-motion/deadline/extendable` — `false → null` — locked against extension by FRCrimP 45(b)(2); “the court may not extend the time to take any action under Rule 35”.
+- `/edges/edge-notice-of-appeal-window-appeal-window-missed/deadline/extendable` — `true → null` — extend by court under FRAP 4(b)(4); edge now references the typed `criminal-appeal` period; “the district court may extend the time”.
+- `/edges/edge-prehearing-summary-determination-motion-filed/deadline/extendable` — `true → null` — ALJ may alter the motion window under 19 C.F.R. §§ 210.6(a), 210.18(a); inline deadline has no named typed period; “unless otherwise ordered by the administrative law judge”.
+- `/edges/edge-pre-filing-provisional-filed/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. 111(b); 37 CFR 1.53(c) (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-provisional-filed-nonprovisional-filed/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. 111(a); 35 U.S.C. 119(e); 37 CFR 1.53(b) (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-applicant-response-window-extension-taken/deadline/extendable` — `true → null` — extendable by applicant through fee-paid monthly extensions, 37 C.F.R. § 1.136(a); period `extension-month` itself has no month-bound grant form in the schema; “the time for reply ... may be extended”.
+- `/edges/edge-extension-taken-amendment-filed/deadline/extendable` — `true → null` — extendable by applicant under 37 C.F.R. § 1.136(a), within the six-month ceiling of 35 U.S.C. § 133; month-based grant cannot be encoded in the day-bound schema; “up to five months”.
+- `/edges/edge-extension-taken-extension-taken/deadline/extendable` — `false → null` — extendable by applicant under 37 C.F.R. § 1.136(a), within the six-month ceiling of 35 U.S.C. § 133; month-based grant cannot be encoded in the day-bound schema; “up to five months”.
+- `/edges/edge-notice-of-appeal-appeal-brief-filed/deadline/extendable` — `true → null` — extendable under 37 C.F.R. § 41.37(e) via § 1.136(a); five-month limit is month-based and cannot be encoded in the day-bound schema; “time periods set forth in this section are extendable”.
+- `/edges/edge-notice-of-appeal-appeal-dismissed/deadline/extendable` — `true → null` — extendable under 37 C.F.R. § 41.37(e) via § 1.136(a); five-month limit is month-based and cannot be encoded in the day-bound schema; “time periods set forth in this section are extendable”.
+- `/edges/edge-examiners-answer-ptab-decision/deadline/extendable` — `false → null` — rule silent; read 37 CFR 41.20(b)(4); 37 CFR 41.45; MPEP 1208.01 (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-ptab-affirmed-federal-circuit-appeal/deadline/extendable` — `false → null` — extendable by Director under 37 C.F.R. § 90.3(c)(1); “The Director ... may extend the time”.
+- `/edges/edge-ptab-affirmed-sec145-action/deadline/extendable` — `false → null` — extendable by Director under 37 C.F.R. § 90.3(c)(1); “The Director ... may extend the time”.
+- `/edges/edge-noa-received-issue-fee-paid/deadline/extendable` — `false → null` — locked against extension by 37 C.F.R. § 1.311(a); “This three-month period is not extendable”.
+- `/edges/reissue-broadening-filed/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. § 251(d); MPEP 1412 (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-patent-challenged-ipr-petition-filed/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. 311–314; 37 CFR 42.100 (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-patent-challenged-pgr-petition-filed/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. 321–324; 37 CFR 42.200 (the cited section states the period but grants no extension or forbids none).
+- `/edges/ipr-popr-filed/deadline/extendable` — `false → true` — extend by typed grant; cite 37 C.F.R. §§ 42.107(b), 42.5(c)(1); “may request an extension ... for good cause”.
+- `/edges/pgr-popr-filed/deadline/extendable` — `false → true` — extend by typed grant; cite 37 C.F.R. §§ 42.207(b), 42.5(c)(1); “may request an extension ... for good cause”.
+- `/edges/edge-patent-granted-pgr-petition-filed/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. § 321(c) (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-infringement-complaint-served-ipr-petition-filed/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. § 311; 35 U.S.C. § 315(b) (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-challenge-vehicle-decision-pgr-petition-filed/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. § 321(c) (the cited section states the period but grants no extension or forbids none).
+- `/edges/e-time-bar-barred/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. §315(b) (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-petition-defect-noticed-ipr-petition-filed/deadline/extendable` — `false → true` — extend by typed grant; cite 37 C.F.R. § 42.5(c)(1); “Times set by rule ... may be modified by order”.
+- `/edges/edge-popr-filed-institution-decision/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. § 314(b) (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-popr-waived-institution-decision/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. 314(b)(2), 37 CFR 42.107(b) (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-institution-denied-merits-challenge-vehicle-decision/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. § 314(a) (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-institution-denied-fintiv-challenge-vehicle-decision/deadline/extendable` — `false → null` — rule silent; read 35 U.S.C. § 314(a); 35 U.S.C. § 325(d) (the cited section states the period but grants no extension or forbids none).
+- `/edges/edge-post-fwd-options-rehearing-request-filed/deadline/extendable` — `false → true` — extend by typed grant; cite 37 C.F.R. § 42.5(c)(1); “Times set by rule ... may be modified by order”.
+- `/edges/edge-post-fwd-options-director-review-request-filed/deadline/extendable` — `false → true` — extend by typed grant; cite 37 C.F.R. § 42.5(c)(1); “Times set by rule ... may be modified by order”.
+- `/edges/edge-rehearing-denied-affirmed-director-review-request-filed/deadline/extendable` — `false → true` — extend by typed grant; cite 37 C.F.R. § 42.5(c)(1); “Times set by rule ... may be modified by order”.
+- `/edges/edge-federal-circuit-window-federal-circuit-notice-of-appeal/deadline/extendable` — `false → true` — extend by typed grant; cite 37 C.F.R. § 90.3(c)(1); “The Director ... may extend the time”.
+- `/edges/edge-federal-circuit-window-appeal-forfeited-unappealed/deadline/extendable` — `false → true` — extend by typed grant; cite 37 C.F.R. § 90.3(c)(1); “The Director ... may extend the time”.
+- `/edges/edge-01-pre-ext-first-30-1/deadline/extendable` — `true → null` — extendable by Board under 37 C.F.R. § 2.102(c)(1)(i); “a single request for an additional thirty days”.
+- `/edges/edge-01-pre-ext-first-90-1/deadline/extendable` — `true → null` — extendable by Board under 37 C.F.R. § 2.102(c)(2); “an additional sixty days for good cause”.
+- `/edges/edge-01-pre-opposition-filed-1/deadline/extendable` — `true → null` — extendable by Board under 37 C.F.R. § 2.102(c)(1); “a request to extend must be filed before those thirty days expire”.
+- `/edges/edge-01-pre-ext-second-60-1/deadline/extendable` — `true → null` — extendable by Board under 37 C.F.R. § 2.102(c)(3); “the applicant consents to the extension”.
+- `/edges/edge-03-pre-2-opposition-filed-1/deadline/extendable` — `true → null` — extendable by Board under 37 C.F.R. § 2.102(c)(3); “the applicant consents to the extension”.
+- `/edges/edge-04-standstill-2-opposition-filed-1/deadline/extendable` — `false → null` — locked at the 180-day outer limit by 37 C.F.R. § 2.102(c)(3); “in no case later than 180 days”.
+- `/edges/answer-plain/deadline/extendable` — `null → true` — extend by Board for good cause through FRCP 6(b)(1)(A), applied by 37 C.F.R. § 2.116(a); “wherever applicable and appropriate”.
+- `/edges/answer-s18/deadline/extendable` — `null → true` — extend by Board for good cause through FRCP 6(b)(1)(A), applied by 37 C.F.R. § 2.116(a); “wherever applicable and appropriate”.
+- `/edges/edge-07-opposition-to-trial-notice-of-default-1/deadline/extendable` — `null → true` — extend by Board for good cause through FRCP 6(b)(1)(A), applied by 37 C.F.R. § 2.116(a); “wherever applicable and appropriate”.
+- `/edges/edge-08-decision-district-outcome-1/deadline/extendable` — `false → true` — extend by typed grant; cite 37 C.F.R. § 2.145(e)(1); “The Director ... may extend the time”.

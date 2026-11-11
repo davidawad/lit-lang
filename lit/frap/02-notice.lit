@@ -45,6 +45,7 @@ rule duty tolling-motion effective [2009-12-01, ..) known_at 2009-03-26 cite "FR
   deadline tolling-motion-period: 28.days after EnteredBelow(FinalJudgment) counted_by frcp6 cite "FRCP 59(e)"
   {
     forum frcp
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRCP 6(b)(2)"
   }
 }
 

@@ -107,6 +107,8 @@ deadline speedy-trial: 70.days after TrialClockEvent() counted_by frcrimp45 effe
 deadline rule29-period: 14.days after VerdictOrDischarge() counted_by frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 delegable {
   to CaseOrder
   op set
+
+  cite "FRCrimP 45(b)(1)"
 } cite "FRCrimP 29(c)(1); FRCrimP 45(b)(1)"
 {
   trigger latest
@@ -137,12 +139,17 @@ test "Counting boundary: rule33-period (weekend)" cite "FRCrimP 33(b)(2); FRCrim
 deadline psr-disclosure: 35.days before SentencingScheduled() counted_by frcrimp45 effective [2011-12-01, ..) known_at 2011-04-26 delegable {
   to CaseOrder
   op set
+
+  cite "FRCrimP 32(b)(2)"
 } cite "FRCrimP 32(e)(2); FRCrimP 32(b)(2)"
 
 /// 14 days after sentencing (2009 amendments, Rule 35 history note). Rule
 /// 45(b)(2) bars extending it, so nothing is delegated. In force from Rule
 /// 45's December 1, 2023 amendment, as rule29-period.
 deadline rule35-period: 14.days after SentenceImposed() counted_by frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCrimP 35(a); FRCrimP 45(b)(2)"
+{
+  extend { never cite "FRCrimP 45(b)(2)" }
+}
 
 /// 14 days from the later of the judgment's entry and the government's
 /// notice. The district court may extend it up to 30 days under 4(b)(4),

@@ -137,7 +137,12 @@ event CivilActionPeriodExtended(until: Date) extends civil-action-period to unti
 /// days expire (§ 2.102(c)).
 rule duty opposition-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.101(c)"
 {
-  deadline opposition-period: 30.days from Published() counted_by ttab-2-196
+  deadline opposition-period: 30.days from Published() counted_by ttab-2-196 delegable {
+    to CaseOrder
+    op set
+
+    cite "37 CFR 2.102(c)(1)"
+  } cite "37 CFR 2.101(c)"
 }
 
 test "the opposition period runs 30 days from publication" cite "37 CFR 2.101(c)"
@@ -165,13 +170,31 @@ test "an opposition period ending on the December 24, 2025 closure rolls past Ch
 /// publication.
 rule duty extensions-of-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.102(c)"
 {
-  deadline first-extension-90: 90.days from OppositionPeriodExpired() counted_by ttab-2-196 cite "37 CFR 2.102(c)(1)(ii)"
-  deadline second-extension-60: 60.days from FirstExtensionExpired() counted_by ttab-2-196 cite "37 CFR 2.102(c)(2)"
+  deadline first-extension-90: 90.days from OppositionPeriodExpired() counted_by ttab-2-196 delegable {
+    to CaseOrder
+    op set
+
+    cite "37 CFR 2.102(c)(2)"
+  } cite "37 CFR 2.102(c)(1)(ii)"
+  deadline second-extension-60: 60.days from FirstExtensionExpired() counted_by ttab-2-196 delegable {
+    to CaseOrder
+    op set
+
+    cite "37 CFR 2.102(c)(3)"
+  } cite "37 CFR 2.102(c)(2)"
   /// The end of extensions "totaling ninety days" (§ 2.102(c)(3)), counted
   /// from the end of the thirty-day opposition period: day 120 from
   /// publication.
-  deadline extended-period-120: 90.days from deadline(opposition-period).nominal counted_by ttab-2-196 cite "37 CFR 2.102(c)(3)"
+  deadline extended-period-120: 90.days from deadline(opposition-period).nominal counted_by ttab-2-196 delegable {
+    to CaseOrder
+    op set
+
+    cite "37 CFR 2.102(c)(3)"
+  } cite "37 CFR 2.102(c)(3)"
   deadline outer-limit-180: 180.days from Published() counted_by ttab-2-196 cite "37 CFR 2.102(c)"
+  {
+    extend { never cite "37 CFR 2.102(c)(3)" }
+  }
 }
 
 test "a 90-day first extension runs from the end of the original period" cite "37 CFR 2.102(c)(1)(ii)"
@@ -487,12 +510,18 @@ rule duty review-time effective [2024-03-29, ..) known_at 2024-03-29 unknown_bef
 {
   deadline civil-action-period: 63.days from FinalDecision() counted_by ttab-2-196 cite "37 CFR 2.145(d)(3)"
   {
-    extend { by director, discretion GoodCause, on CivilActionExtensionRequested() }
+    extend {
+      by director
+      discretion GoodCause
+      on CivilActionExtensionRequested()
+      cite "37 CFR 2.145(e)(1)"
+    }
     extend {
       by director
       discretion ExcusableNeglect
       after_expiry
       on CivilActionExtensionRequested()
+      cite "37 CFR 2.145(e)(1)"
     }
   }
 }

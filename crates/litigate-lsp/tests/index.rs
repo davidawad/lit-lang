@@ -11,7 +11,7 @@ use litigate_syntax::TextSize;
 use proptest::prelude::*;
 use std::collections::BTreeMap;
 
-const MANIFEST: &str = "[package]\nname = \"p\"\nversion = \"0.1.0\"\nlanguage = 1\npack_id = \"p\"\nforum = \"f\"\nauthority = \"FederalRule\"\ntitle = \"P\"\nin_force = \"2020-01-01\"\nknown_at = \"2020-01-01\"\n\n[package.roles]\nPlaintiff = \"self\"\nCourt = \"nature\"\n";
+const MANIFEST: &str = "[package]\nname = \"p\"\nversion = \"0.1.0\"\nlanguage = 1\npack_id = \"p\"\nforum = \"f\"\nauthority = \"FederalRule\"\ntitle = \"P\"\nin_force = \"2020-01-01\"\nknown_at = \"2020-01-01\"\n\n[package.roles]\nplaintiff = \"self\"\ncourt = \"nature\"\n";
 
 fn index(modules: &[(&str, &str)], case: Option<&str>) -> (Index, BTreeMap<String, String>) {
     let loaded = LoadedPackage {
@@ -83,7 +83,7 @@ fn names_resolve_across_modules() {
 
 #[test]
 fn a_matter_sees_its_parties_and_used_packages() {
-    let case = "case m\nuses p ^0.1.0\nas_of 2025-01-01\n\nperspective acme\n\nparties {\n  acme: Plaintiff Corporation\n}\n";
+    let case = "case m\nuses p ^0.1.0\nas_of 2025-01-01\n\nperspective acme\n\nparties {\n  acme: plaintiff Corporation\n}\n";
     let (index, files) = index(&[("a.lit", A), ("b.lit", B)], Some(case));
     let text = &files["cases/m.case"];
     let party = target(&index, "cases/m.case", text, "acme\n\nparties").unwrap();
@@ -91,7 +91,7 @@ fn a_matter_sees_its_parties_and_used_packages() {
         (party.space.clone(), party.file.as_str()),
         (Space::Party, "cases/m.case")
     );
-    let role = target(&index, "cases/m.case", text, "Plaintiff").unwrap();
+    let role = target(&index, "cases/m.case", text, "plaintiff").unwrap();
     assert_eq!(
         (role.space.clone(), role.file.as_str()),
         (Space::Role, "lit/p/Lit.toml")

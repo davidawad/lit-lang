@@ -44,7 +44,7 @@ fn matter(name: &str, as_of: &str, events: &[&str]) -> PathBuf {
         format!(
             "case fee\nuses frcp-civil-procedure ^2024.12.0\nas_of {as_of}\nsummary \"s\"\n\
              start frcp-civil-procedure::final-judgment-entered\n\n\
-             parties {{\n  movant: applicant Corporation\n  judge: court Tribunal\n}}\n\n\
+             parties {{\n  movant: plaintiff Corporation\n  judge: court Tribunal\n}}\n\n\
              events {{\n  j-1: 2025-06-02 JudgmentEntered() by judge\n{events}}}\n\n\
              stakes {{ frcp-civil-procedure::appeal-window-blown: 0.usd }}\n"
         ),

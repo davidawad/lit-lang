@@ -277,7 +277,7 @@ async fn rename_edits_every_version_and_reference() {
     assert_eq!(found[MODULE].len(), 2, "both versions, not the variant");
 
     // A party of the matter, in the matter only.
-    let party = at(&case, "widget: Defendant", 0, 1);
+    let party = at(&case, "widget: defendant", 0, 1);
     let mut rename = position(&case_uri, party);
     rename["newName"] = json!("widgetco");
     let edit = c.request("textDocument/rename", rename).await;
@@ -357,7 +357,7 @@ async fn completion_offers_what_a_reference_can_name() {
         "Served",
         "Document",
         "complaint",
-        "Defendant",
+        "defendant",
         "events",
     ] {
         assert!(found.contains(&want.to_owned()), "{want}: {found:?}");

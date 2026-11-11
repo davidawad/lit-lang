@@ -20,8 +20,8 @@ summary "Calendar fixture: Widget is served; a hearing is set."
 perspective widget
 
 parties {
-  acme: Plaintiff Corporation
-  widget: Defendant Corporation
+  acme: plaintiff Corporation
+  widget: defendant Corporation
 }
 
 events {

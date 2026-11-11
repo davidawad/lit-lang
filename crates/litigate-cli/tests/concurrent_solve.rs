@@ -25,9 +25,9 @@ in_force = "2009-12-01"
 known_at = "2025-01-01"
 
 [package.roles]
-Plaintiff = "self"
-Defendant = "opponent"
-Court = "nature"
+plaintiff = "self"
+defendant = "opponent"
+court = "nature"
 "#
     )
 }
@@ -42,11 +42,11 @@ package tracks { forum frcp, authority FederalRule }
 
 start filing
 
-decision filing: "File" by Plaintiff
+decision filing: "File" by plaintiff
 {
   file "File the complaint" -> motion { cost 100.usd, spawn [discovery] }
 }
-decision motion: "Motion" by Plaintiff
+decision motion: "Motion" by plaintiff
 {
   settle "Settle" -> settled { cost 10.usd }
   try "Try" -> tried { cost 300.usd }
@@ -70,11 +70,11 @@ package product { forum frcp, authority FederalRule }
 
 start filing
 
-decision filing: "File" by Plaintiff
+decision filing: "File" by plaintiff
 {
   file "File the complaint" -> motion { cost 100.usd }
 }
-decision motion: "Motion" by Plaintiff
+decision motion: "Motion" by plaintiff
 {
   settle "Settle" -> settled-discovery { cost 10.usd }
   try "Try" -> tried-discovery { cost 300.usd }
@@ -103,7 +103,7 @@ package joined { forum frcp, authority FederalRule }
 
 start filing
 
-decision filing: "File" by Plaintiff
+decision filing: "File" by plaintiff
 {
   file "File the complaint" -> motion { cost 100.usd, spawn [discovery] }
 }

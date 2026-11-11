@@ -45,6 +45,9 @@ event FeeMotionFiled()
 
 /// The conservative reading of the fee clock: 14 days from the notice.
 deadline fee-motion-period: 14.days after DismissalNoticed(WithPrejudice) counted_by frcp6 cite "FRCP 54(d)(2)(B)"
+{
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)(A)" }
+}
 
 test "fee clock: 14 days after a notice filed 2026-09-01" cite "FRCP 54(d)(2)(B)"
 {
@@ -60,14 +63,14 @@ test "FRCP 6(a) rolls a Saturday fee-motion deadline to Monday" cite "FRCP 54(d)
 
 state pending: "Action pending; defendant unserved" cite "FRCP 4(m)"
 {
-  noticed "Plaintiff files a notice of dismissal" -> dismissed by Plaintiff {
+  noticed "Plaintiff files a notice of dismissal" -> dismissed by plaintiff {
     event DismissalNoticed(WithPrejudice)
   }
 }
 
 state dismissed: "Dismissed with prejudice by notice" cite "FRCP 41(a)(1)(A)(i)"
 {
-  moved "Plaintiff moves for relief from the dismissal" -> relief-pending by Plaintiff {
+  moved "Plaintiff moves for relief from the dismissal" -> relief-pending by plaintiff {
     event ReliefMoved()
   }
 }

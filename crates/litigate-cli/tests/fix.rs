@@ -12,8 +12,8 @@ as_of 2025-06-01
 summary \"x\"
 
 parties {
-  acme: Plaintiff Corporation
-  widget: Defendant Corporation
+  acme: plaintiff Corporation
+  widget: defendant Corporation
 }
 
 events {
@@ -195,7 +195,7 @@ fn replay_errors_are_precise() {
         error["message"]
             .as_str()
             .unwrap()
-            .contains("is taken by defendant, but `acme` plays Plaintiff"),
+            .contains("is taken by defendant, but `acme` plays plaintiff"),
         "{}",
         run.stdout
     );

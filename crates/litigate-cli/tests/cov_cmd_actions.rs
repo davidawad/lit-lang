@@ -21,8 +21,8 @@ summary "Action-set fixture: Widget is served."
 perspective widget
 
 parties {
-  acme: Plaintiff Corporation
-  widget: Defendant Corporation
+  acme: plaintiff Corporation
+  widget: defendant Corporation
 }
 
 events {
@@ -85,7 +85,7 @@ fn a_party_sees_only_its_legal_moves() {
     assert_eq!(run.code, 0, "{}", run.stdout);
     let r = &run.json["result"];
     assert_eq!(r["case"], json!("act-matter"));
-    assert_eq!(r["actor"], json!("Defendant"));
+    assert_eq!(r["actor"], json!("defendant"));
     assert_eq!(r["as_of"], json!("2025-03-10"));
     assert_eq!(r["marking"], json!(["cov-pack::respond"]));
     // `default` ("Let the deadline pass") takes no event: no filing makes it.
@@ -118,7 +118,7 @@ fn another_partys_move_is_absent_not_refused_late() {
     let dir = matter("actions-other-party");
     let run = actions(&dir, &["--party", "acme"]);
     assert_eq!(run.code, 0, "{}", run.stdout);
-    assert_eq!(run.json["result"]["actor"], json!("Plaintiff"));
+    assert_eq!(run.json["result"]["actor"], json!("plaintiff"));
     assert!(events(&run.json).is_empty(), "{}", run.stdout);
     // Filed anyway, replay refuses it: the set left it out.
     assert_eq!(

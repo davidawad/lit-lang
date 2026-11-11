@@ -29,7 +29,7 @@ package dismissal {{ forum frcp, authority FederalRule }}
 
 start dismissed
 
-decision dismissed: "Dismissed with leave to amend" by Plaintiff {{
+decision dismissed: "Dismissed with leave to amend" by plaintiff {{
   amend "File an amended complaint" -> ruling {{ cost 400.usd{amend} }}
   stand "Stand on the complaint and appeal" -> ruling {{ cost 600.usd{stand} }}
 }}
@@ -59,7 +59,7 @@ fn solve(name: &str, flagged: bool) -> serde_json::Value {
         "[package]\nname = \"dismissal\"\nversion = \"0.1.0\"\nlanguage = 1\npack_id = \"dismissal\"\n\
          forum = \"frcp\"\nauthority = \"FederalRule\"\ntitle = \"Dismissal\"\n\
          in_force = \"2009-12-01\"\nknown_at = \"2025-01-01\"\n\n\
-         [package.roles]\nPlaintiff = \"self\"\nCourt = \"nature\"\n",
+         [package.roles]\nplaintiff = \"self\"\ncourt = \"nature\"\n",
     )
     .unwrap();
     std::fs::write(pkg.join("main.lit"), package(flagged)).unwrap();

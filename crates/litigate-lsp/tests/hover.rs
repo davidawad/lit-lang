@@ -189,8 +189,8 @@ fn nothing_to_say_is_no_hover() {
     let manifest = support::read("lit/examples/Lit.toml");
     assert_eq!(value(a, "lit/ex/Lit.toml", &manifest, "version", 2), None);
     // A role of the package sema rejected: its key, without the actor line.
-    let role = value(a, "lit/ex/Lit.toml", &manifest, "Defendant", 2).unwrap();
-    assert_eq!(role, "```litigate\nDefendant\n```\n");
+    let role = value(a, "lit/ex/Lit.toml", &manifest, "defendant", 2).unwrap();
+    assert_eq!(role, "```litigate\ndefendant\n```\n");
 }
 
 #[test]

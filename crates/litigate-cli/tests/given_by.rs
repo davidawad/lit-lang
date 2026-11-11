@@ -22,7 +22,7 @@ test "a court order extends the answer period" cite "FRCP 6(b)(1)(A)" {
 
 test "after expiry the court extends on a motion" cite "FRCP 6(b)(1)(B)" {
   given ProcessServed() on 2025-03-06
-  given ExtensionMoved(AnswerPeriod) by applicant on 2025-04-01
+  given ExtensionMoved(AnswerPeriod) by plaintiff on 2025-04-01
   given AnswerPeriodExtended(2025-05-01) by court on 2025-04-04
   expect deadline(answer-period) == 2025-05-01
 }
@@ -35,7 +35,7 @@ test "an order given with no actor extends nothing" {
 
 test "an order by the applicant extends nothing" {
   given ProcessServed() on 2025-03-06
-  given AnswerPeriodExtended(2025-04-30) by applicant on 2025-03-20
+  given AnswerPeriodExtended(2025-04-30) by plaintiff on 2025-03-20
   expect deadline(answer-period) == 2025-04-30
 }
 "#;
@@ -58,7 +58,7 @@ fn workspace(name: &str) -> std::path::PathBuf {
 }
 
 const NO_ACTOR: &str = "only court may extend `answer-period`, but `AnswerPeriodExtended(2025-04-30)` on 2025-03-20 names no actor (`given ... by <actor> on <date>`)";
-const APPLICANT: &str = "only court may extend `answer-period`, but `AnswerPeriodExtended(2025-04-30)` on 2025-03-20 is by `applicant`";
+const APPLICANT: &str = "only court may extend `answer-period`, but `AnswerPeriodExtended(2025-04-30)` on 2025-03-20 is by `plaintiff`";
 
 #[test]
 fn litigate_test_extends_by_the_actor_given() {

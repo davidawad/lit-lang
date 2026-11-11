@@ -21,8 +21,8 @@ summary "Paper fixture: Widget is served."
 perspective widget
 
 parties {
-  acme: Plaintiff Corporation
-  widget: Defendant Corporation
+  acme: plaintiff Corporation
+  widget: defendant Corporation
 }
 
 events {

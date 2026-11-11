@@ -26,9 +26,9 @@ in_force = "2009-12-01"
 known_at = "2025-01-01"
 
 [package.roles]
-Plaintiff = "self"
-Defendant = "opponent"
-Court = "nature"
+plaintiff = "self"
+defendant = "opponent"
+court = "nature"
 
 [dependencies]
 frcp-rule12-example = { version = "^0.1.0", path = "../rule12" }
@@ -52,7 +52,7 @@ rule duty local-answer-duty
   }
 }
 
-state filed: "Complaint filed" by Plaintiff
+state filed: "Complaint filed" by plaintiff
 {
   serve "Serve the complaint" -> served { event Served(complaint, Personal) }
 }
@@ -83,9 +83,9 @@ in_force = "2009-12-01"
 known_at = "2025-01-01"
 
 [package.roles]
-Plaintiff = "self"
-Defendant = "opponent"
-Court = "nature"
+plaintiff = "self"
+defendant = "opponent"
+court = "nature"
 "#;
 
 const OTHER: &str = r#"module other.answer
@@ -109,7 +109,7 @@ terminal closed: "Closed" outcome [judgment] { payoff 0.usd }
 fn matter(uses: &str, served: &str) -> String {
     format!(
         "case printed\n{uses}as_of 2025-03-10\nsummary \"A served complaint under a local answer rule.\"\n\n\
-         parties {{\n  acme: Plaintiff Corporation\n  widget: Defendant Corporation\n}}\n\n\
+         parties {{\n  acme: plaintiff Corporation\n  widget: defendant Corporation\n}}\n\n\
          events {{\n  served-1: 2025-03-05 {served} on widget\n}}\n"
     )
 }

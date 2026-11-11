@@ -23,7 +23,7 @@ fn remand(name: &str, event: &str) -> (String, f64) {
         format!(
             "case remand\nuses cafc ^0.1.0\nas_of 2026-06-01\nsummary \"s\"\n\
              start cafc::remand-destination\n\n\
-             parties {{\n  appellant: applicant Corporation\n}}\n\n\
+             parties {{\n  appellant: appellant Corporation\n}}\n\n\
              events {{\n  {event}\n}}\n\n\
              stakes {{ cafc::remanded-to-cofc: 0.usd }}\n"
         ),

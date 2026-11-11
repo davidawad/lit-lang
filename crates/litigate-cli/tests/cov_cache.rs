@@ -12,7 +12,7 @@ use support::scratch;
 
 fn manifest(name: &str, deps: &[&str]) -> String {
     let mut text = format!(
-        "[package]\nname = \"{name}\"\nversion = \"1.0.0\"\nlanguage = 1\npack_id = \"{name}\"\nforum = \"demo\"\nauthority = \"FederalRule\"\ntitle = \"T\"\nin_force = \"2009-12-01\"\nknown_at = \"2025-01-01\"\n\n[package.roles]\nPlaintiff = \"self\"\nDefendant = \"opponent\"\nCourt = \"nature\"\n"
+        "[package]\nname = \"{name}\"\nversion = \"1.0.0\"\nlanguage = 1\npack_id = \"{name}\"\nforum = \"demo\"\nauthority = \"FederalRule\"\ntitle = \"T\"\nin_force = \"2009-12-01\"\nknown_at = \"2025-01-01\"\n\n[package.roles]\nplaintiff = \"self\"\ndefendant = \"opponent\"\ncourt = \"nature\"\n"
     );
     if !deps.is_empty() {
         text.push_str("\n[dependencies]\n");

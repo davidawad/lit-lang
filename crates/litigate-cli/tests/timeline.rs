@@ -278,6 +278,10 @@ fn fixtures(test: &str) -> PathBuf {
         &repo().join("crates/litigate-cli/tests/fixtures/timeline"),
         &dir.join("cases"),
     );
+    for pkg in ["core", "frcp", "frap", "ttab"] {
+        let lock = litigate_in(&dir, &["lock", &format!("lit/{pkg}")]);
+        assert_eq!(lock.code, 0, "{}", lock.stdout);
+    }
     let lock = litigate_in(&dir, &["lock", "cases"]);
     assert_eq!(lock.code, 0, "{}", lock.stdout);
     dir

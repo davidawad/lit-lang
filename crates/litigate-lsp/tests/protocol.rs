@@ -160,14 +160,14 @@ async fn hover_shows_kind_type_versions_and_cite() {
 const GOTO: [(&str, &str, u32, &str, &str); 12] = [
     (CASE, "time-barred: ", 1, LIT, "chance time-barred"),
     (CASE, "not-barred", 1, LIT, "not-barred \"Timely\""),
-    (CASE, "perspective widget", 13, CASE, "widget: Defendant"),
+    (CASE, "perspective widget", 13, CASE, "widget: defendant"),
     (CASE, "Served(", 1, LIT, "event Served"),
     (
         CASE,
-        "Plaintiff",
+        "plaintiff",
         1,
         "lit/examples/Lit.toml",
-        "Plaintiff = ",
+        "plaintiff = ",
     ),
     (CASE, "granted", 1, LIT, "granted \"Motion"),
     (

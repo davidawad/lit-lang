@@ -20,8 +20,8 @@ summary "Filing fixture: Widget is served."
 perspective widget
 
 parties {
-  acme: Plaintiff Corporation
-  widget: Defendant Corporation
+  acme: plaintiff Corporation
+  widget: defendant Corporation
 }
 
 events {
@@ -41,7 +41,7 @@ fn matter(name: &str) -> PathBuf {
     std::fs::write(
         &lit,
         format!(
-            "{text}\nrule duty borne-duty\n{{\n  deadline borne-period: 3.days from Served(complaint) counted_by frcp6 {{ bearer Defendant }}\n}}\n"
+            "{text}\nrule duty borne-duty\n{{\n  deadline borne-period: 3.days from Served(complaint) counted_by frcp6 {{ bearer defendant }}\n}}\n"
         ),
     )
     .unwrap();

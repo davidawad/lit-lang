@@ -20,7 +20,7 @@ fn check(name: &str, events: &[&str]) -> Run {
         name,
         &["frcp"],
         "frcp-civil-procedure ^2024.12.0",
-        "  plaintiff: applicant Corporation\n  judge: court Tribunal\n",
+        "  plaintiff: plaintiff Corporation\n  judge: court Tribunal\n",
         events,
         "frcp-civil-procedure::appeal-window-blown",
     )
@@ -420,7 +420,7 @@ fn only_the_court_extends() {
     assert_eq!(run.code, 2, "{}", run.stdout);
     assert_eq!(
         effects(&run).1,
-        ["only court may extend `frcp-civil-procedure::service-period`, but `plaintiff` is applicant"]
+        ["only court may extend `frcp-civil-procedure::service-period`, but `plaintiff` is plaintiff"]
     );
 }
 
@@ -624,7 +624,7 @@ fn the_director_extends_the_ttab_civil_action_period() {
         "ttab-2-145-e-court",
         &["frcp", "ttab"],
         "frcp-civil-procedure ^2024.12.0, ttab-trademark-trial-and-appeal-board ^0.1.0",
-        "  applicant: applicant Corporation\n  district: court Tribunal\n",
+        "  applicant: applicant Corporation\n  plaintiff: plaintiff Corporation\n  district: court Tribunal\n",
         "district",
     );
     assert_eq!(court.code, 2, "{}", court.stdout);
@@ -646,7 +646,7 @@ fn cert(name: &str, events: &[&str]) -> Run {
         name,
         &["frap"],
         "frap-appellate-procedure ^0.1.0",
-        "  appellant: applicant Corporation\n  justice: justice Tribunal\n  panel: court Tribunal\n",
+        "  appellant: appellant Corporation\n  justice: justice Tribunal\n  panel: court Tribunal\n",
         &events,
         "frap-appellate-procedure::cert-not-sought",
     )
@@ -782,7 +782,7 @@ fn a_late_federal_circuit_cert_application_needs_extraordinary_circumstances() {
         "fedcir-cert-30-2",
         &["cafc", "mpep", "ttab"],
         "cafc ^0.1.0",
-        "  appellant: applicant Corporation\n  justice: justice Tribunal\n  fedcir: court Tribunal\n",
+        "  appellant: appellant Corporation\n  justice: justice Tribunal\n  fedcir: court Tribunal\n",
         &[
             "2025-12-01 Entered(PanelJudgment) on appellant",
             "2026-02-25 CertExtensionApplied() by appellant",
@@ -811,7 +811,7 @@ fn the_federal_circuit_cross_appeal_runs_to_the_later_of_14_days_and_frap_4a1() 
         "fedcir-4a3-later",
         &["cafc", "mpep", "ttab"],
         "cafc ^0.1.0",
-        "  appellant: applicant Corporation\n  fedcir: court Tribunal\n",
+        "  appellant: appellant Corporation\n  fedcir: court Tribunal\n",
         &[
             "2026-03-02 Entered(Judgment) on appellant",
             "2026-03-05 Filed(NoticeOfAppeal) by appellant",
@@ -846,7 +846,7 @@ fn fedcir_ptab(name: &str, events: &[&str]) -> Run {
         name,
         &["cafc", "mpep", "ttab"],
         "cafc ^0.1.0",
-        "  appellant: applicant Corporation\n  director: director Agency\n  fedcir: court Tribunal\n",
+        "  appellant: appellant Corporation\n  director: director Agency\n  fedcir: court Tribunal\n",
         &events,
         "cafc::window-blown-ptab",
     )
@@ -898,7 +898,7 @@ fn an_unvendored_cert_extension_does_not_reach_an_expired_period() {
             &format!("cert-2101c-{applied}"),
             &["frap"],
             "frap-appellate-procedure ^0.1.0",
-            "  appellant: applicant Corporation\n  justice: justice Tribunal\n  panel: court Tribunal\n",
+            "  appellant: appellant Corporation\n  justice: justice Tribunal\n  panel: court Tribunal\n",
             &[
                 "2022-06-01 EnteredOnAppeal(Judgment) on appellant",
                 &format!("{applied} CertExtensionApplied() by appellant"),

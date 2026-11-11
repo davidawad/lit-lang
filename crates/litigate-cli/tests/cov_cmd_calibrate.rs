@@ -27,9 +27,9 @@ in_force = "2009-12-01"
 known_at = "2025-01-01"
 
 [package.roles]
-Plaintiff = "self"
-Defendant = "opponent"
-Court = "nature"
+plaintiff = "self"
+defendant = "opponent"
+court = "nature"
 
 [sources.frcp]
 title = "Federal Rules of Civil Procedure"
@@ -81,8 +81,8 @@ fn history(id: &str, n: u32, events: &str) -> String {
     };
     format!(
         "case {id}\nuses recap-example ^0.1.0\nas_of 2025-06-01\nsummary \"Synthetic docket history.\"\n\n\
-         {source}\n\nperspective acme\n\nparties {{\n  acme: Plaintiff Corporation\n  \
-         widget: Defendant Corporation\n}}\n\nevents {{\n{events}}}\n"
+         {source}\n\nperspective acme\n\nparties {{\n  acme: plaintiff Corporation\n  \
+         widget: defendant Corporation\n}}\n\nevents {{\n{events}}}\n"
     )
 }
 

@@ -31,6 +31,10 @@ fn check(name: &str, events: &[&str], order: bool) -> Run {
         copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
     }
     copy_dir(&repo().join("sources"), &dir.join("sources"));
+    for pkg in ["core", "ttab"] {
+        let lock = litigate_in(&dir, &["lock", &format!("lit/{pkg}")]);
+        assert_eq!(lock.code, 0, "{}", lock.stdout);
+    }
     let mut uses = format!("uses {TTAB} ^0.1.0");
     if order {
         copy_dir(
@@ -50,7 +54,7 @@ fn check(name: &str, events: &[&str], order: bool) -> Run {
         dir.join("cases/answer.case"),
         format!(
             "case answer\n{uses}\nas_of 2026-08-20\nsummary \"s\"\n\n\
-             parties {{\n  applicant: applicant Corporation\n  opposer: opposer Corporation\n  board: board Tribunal\n}}\n\n\
+             parties {{\n  applicant: respondent Corporation\n  opposer: opposer Corporation\n  board: board Tribunal\n}}\n\n\
              events {{\n{events}}}\n\nstakes {{ {TTAB}::judgment-2135: 0.usd }}\n"
         ),
     )
@@ -451,10 +455,8 @@ fn the_generated_pack_carries_the_designated_answer_window() {
             .collect::<Vec<_>>(),
         ["answered", "answered", "notice-of-default"]
     );
-    // The declaration's authority (FRCP 6(b)(1)(A) through 37 CFR
-    // 2.116(a), an interpretation) and its two grants are carried with the
-    // window, each grant naming the interpretation it rests on (lg-flu.45).
-    let authority = "FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)";
+    // The source cite now populates extensionAuthority directly (lg-pb1fe.22).
+    let authority = "FRCP 6(b)(1)(A); 37 CFR 2.116(a)";
     for &i in &answers {
         let d = &edges[i]["deadline"];
         assert_eq!(
@@ -465,7 +467,8 @@ fn the_generated_pack_carries_the_designated_answer_window() {
         );
         assert_eq!(
             (&d["length"], &d["extendable"]),
-            (&serde_json::Value::Null, &serde_json::Value::Null)
+            (&serde_json::Value::Null, &serde_json::json!(true)),
+            "the typed `delegable` grant is reflected in `extendable` (lg-pb1fe.22)"
         );
         assert_eq!(d["extensionAuthority"], authority);
         let grants = d["extensions"].as_array().unwrap();

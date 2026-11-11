@@ -25,9 +25,9 @@ in_force = "2009-12-01"
 known_at = "2025-01-01"
 
 [package.roles]
-Plaintiff = "self"
-Defendant = "opponent"
-Court = "nature"
+plaintiff = "self"
+defendant = "opponent"
+court = "nature"
 
 [sources.frcp]
 title = "Federal Rules of Civil Procedure"
@@ -71,16 +71,16 @@ state dismissed: "Dismissal entered" cite "FRCP 41(b)"
 {
   enter "Enter dismissal" -> consent-decision by court { event DismissalEntered(), spawn [opposition-due, fee-clock] }
 }
-decision consent-decision: "Consent to a magistrate judge or decline" by Plaintiff cite "FRCP 73(b)(1)"
+decision consent-decision: "Consent to a magistrate judge or decline" by plaintiff cite "FRCP 73(b)(1)"
 {
   consent "Consent" -> consented { event ConsentFiled(), within consent-period }
   decline "Decline" -> declined { event DeclinationFiled(), within consent-period }
 }
-decision opposition-due: "Oppose the motion" by Plaintiff cite "FRCP 7(b)"
+decision opposition-due: "Oppose the motion" by plaintiff cite "FRCP 7(b)"
 {
   oppose "File the opposition" -> opposed { event OppositionFiled(), within opposition-period }
 }
-decision fee-clock: "Move for fees" by Plaintiff cite "FRCP 54(d)(2)(B)"
+decision fee-clock: "Move for fees" by plaintiff cite "FRCP 54(d)(2)(B)"
 {
   fee "File the fee motion" -> fee-filed { event FeeMotionFiled(), within fee-period }
 }
@@ -101,7 +101,7 @@ fn matter(name: &str, events: &str) -> PathBuf {
         dir.join("cases/nd.case"),
         format!(
             "case nd\nuses nd-post-dismissal ^0.1.0\nas_of 2025-06-03\nsummary \"s\"\n\n\
-             parties {{\n  movant: Plaintiff Corporation\n  other: Defendant Corporation\n  judge: Court Tribunal\n}}\n\n\
+             parties {{\n  movant: plaintiff Corporation\n  other: defendant Corporation\n  judge: court Tribunal\n}}\n\n\
              events {{\n  d-1: 2025-06-02 DismissalEntered() by judge\n{events}}}\n"
         ),
     )

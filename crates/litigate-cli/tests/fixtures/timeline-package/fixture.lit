@@ -27,7 +27,7 @@ rule duty act-duty cite "Fixture 2"
 
 /// The mover may start the period, or act at once; acting is governed by
 /// the period that starting it opens.
-decision waiting: "Start the period, or act" by mover cite "Fixture 3"
+decision waiting: "Start the period, or act" by movant cite "Fixture 3"
 {
   start "Start the period" -> running { event Started() }
   act "Act" -> finished { event Acted(), within act-period }

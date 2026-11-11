@@ -444,7 +444,9 @@ fn a_failing_test_is_l5006() {
         d["message"].as_str().unwrap().contains("\"2025-03-24\""),
         "{d}"
     );
-    assert_eq!(d["span"]["line"], 108);
+    // The cited extension grant was expanded into a typed block in
+    // lg-pb1fe.20, moving this expectation's source line to 103.
+    assert_eq!(d["span"]["line"], 103);
 }
 
 #[test]

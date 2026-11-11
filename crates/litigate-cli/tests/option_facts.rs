@@ -34,7 +34,7 @@ package consent {{ forum frcp, authority FederalRule }}
 
 start consent
 
-decision consent: "Consent to a magistrate judge" by Plaintiff {{
+decision consent: "Consent to a magistrate judge" by plaintiff {{
   consent "Consent" -> ruling {{ sets [consented] }}
   decline "Decline" -> ruling {{ cost 500.usd, sets [declined] }}
   silence "Say nothing" -> ruling
@@ -70,7 +70,7 @@ fn solve_package(name: &str, main: &str) -> serde_json::Value {
         "[package]\nname = \"consent\"\nversion = \"0.1.0\"\nlanguage = 1\npack_id = \"consent\"\n\
          forum = \"frcp\"\nauthority = \"FederalRule\"\ntitle = \"Consent\"\n\
          in_force = \"2009-12-01\"\nknown_at = \"2025-01-01\"\n\n\
-         [package.roles]\nPlaintiff = \"self\"\nCourt = \"nature\"\n",
+         [package.roles]\nplaintiff = \"self\"\ncourt = \"nature\"\n",
     )
     .unwrap();
     std::fs::write(pkg.join("main.lit"), main).unwrap();
@@ -115,7 +115,7 @@ package consent { forum frcp, authority FederalRule }
 
 start consent
 
-decision consent: "Consent to a magistrate judge" by Plaintiff {
+decision consent: "Consent to a magistrate judge" by plaintiff {
   consent "Consent" -> briefing { cost 100.usd, sets [consented] }
   decline "Decline" -> briefing { cost 500.usd, sets [declined] }
   silence "Say nothing" -> briefing
@@ -128,7 +128,7 @@ chance assign: "Who decides the motion" by court {
   reassigned "Reassigned to a district judge" -> district p 1 { requires [declined] }
 }
 
-decision conduct: "Litigate before the magistrate judge" by Plaintiff {
+decision conduct: "Litigate before the magistrate judge" by plaintiff {
   appear "Appear and argue without objection" -> magistrate { cost 300.usd, sets [consented] }
   stand "Stand on the papers" -> magistrate
 }

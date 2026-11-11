@@ -94,7 +94,10 @@ fn link_only_modules_lower_in_file_order() {
 fn strip_extension_summaries(mut links: LinkFile) -> LinkFile {
     for instance in links.instances.values_mut() {
         for patch in instance.patch_edges.values_mut() {
-            if let Some(deadline) = patch.get_mut("deadline").and_then(serde_json::Value::as_object_mut) {
+            if let Some(deadline) = patch
+                .get_mut("deadline")
+                .and_then(serde_json::Value::as_object_mut)
+            {
                 deadline.remove("extendable");
                 deadline.remove("extensionAuthority");
             }

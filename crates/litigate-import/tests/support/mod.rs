@@ -468,7 +468,10 @@ pub fn without_edge_extension_summaries(mut value: Value) -> Value {
     }
     if let Some(instances) = value.get_mut("instances").and_then(Value::as_object_mut) {
         for instance in instances.values_mut() {
-            if let Some(patches) = instance.get_mut("patch_edges").and_then(Value::as_object_mut) {
+            if let Some(patches) = instance
+                .get_mut("patch_edges")
+                .and_then(Value::as_object_mut)
+            {
                 for patch in patches.values_mut().filter_map(Value::as_object_mut) {
                     strip_extension_summary(patch.get_mut("deadline"));
                 }

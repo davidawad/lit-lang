@@ -141,7 +141,7 @@ fn l9011_generates_fixes_for_forward_calendar_and_court_days() {
         "deadline answer-period: 1.days from Served(complaint) counted_by frcp6",
         "deadline answer-period: 1.court_days from Served(complaint) counted_by frcp6",
     ] {
-        let mut source = BASE
+        let source = BASE
             .replace(
                 "deadline answer-period: 21.days from Served(complaint) counted_by frcp6",
                 declaration,
@@ -150,7 +150,7 @@ fn l9011_generates_fixes_for_forward_calendar_and_court_days() {
                 "test \"mail service adds three days\" cite \"FRCP 6(d)\"\n{\n  given Served(complaint, Mail) on 2025-03-03\n  expect deadline(answer-period) == 2025-03-27\n}\n",
                 "",
             );
-        source = source
+        let source = source
             .replace("== 2025-03-24", "== 2025-03-04")
             .replace("== 2025-03-27", "== 2025-03-07");
         let checked = verify_one(&source, Profile::Strict);

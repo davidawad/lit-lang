@@ -1647,10 +1647,6 @@
           "type": "SEQ",
           "members": [
             {
-              "type": "STRING",
-              "value": "basis"
-            },
-            {
               "type": "CHOICE",
               "members": [
                 {
@@ -1658,64 +1654,73 @@
                   "members": [
                     {
                       "type": "STRING",
-                      "value": "calibrated"
+                      "value": "basis"
                     },
                     {
-                      "type": "STRING",
-                      "value": "("
-                    },
-                    {
-                      "type": "FIELD",
-                      "name": "calibration",
-                      "content": {
-                        "type": "SYMBOL",
-                        "name": "identifier"
-                      }
-                    },
-                    {
-                      "type": "STRING",
-                      "value": ")"
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SEQ",
+                          "members": [
+                            {
+                              "type": "STRING",
+                              "value": "calibrated"
+                            },
+                            {
+                              "type": "STRING",
+                              "value": "("
+                            },
+                            {
+                              "type": "FIELD",
+                              "name": "calibration",
+                              "content": {
+                                "type": "SYMBOL",
+                                "name": "identifier"
+                              }
+                            },
+                            {
+                              "type": "STRING",
+                              "value": ")"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "SEQ",
+                          "members": [
+                            {
+                              "type": "STRING",
+                              "value": "sourced"
+                            },
+                            {
+                              "type": "STRING",
+                              "value": "("
+                            },
+                            {
+                              "type": "FIELD",
+                              "name": "cite",
+                              "content": {
+                                "type": "SYMBOL",
+                                "name": "string"
+                              }
+                            },
+                            {
+                              "type": "STRING",
+                              "value": ")"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "STRING",
+                          "value": "estimate"
+                        },
+                        {
+                          "type": "STRING",
+                          "value": "placeholder"
+                        }
+                      ]
                     }
                   ]
                 },
-                {
-                  "type": "SEQ",
-                  "members": [
-                    {
-                      "type": "STRING",
-                      "value": "sourced"
-                    },
-                    {
-                      "type": "STRING",
-                      "value": "("
-                    },
-                    {
-                      "type": "FIELD",
-                      "name": "cite",
-                      "content": {
-                        "type": "SYMBOL",
-                        "name": "string"
-                      }
-                    },
-                    {
-                      "type": "STRING",
-                      "value": ")"
-                    }
-                  ]
-                },
-                {
-                  "type": "STRING",
-                  "value": "estimate"
-                },
-                {
-                  "type": "STRING",
-                  "value": "placeholder"
-                }
-              ]
-            },
-            {
-              "type": "CHOICE",
-              "members": [
                 {
                   "type": "SEQ",
                   "members": [
@@ -1732,27 +1737,104 @@
                       }
                     }
                   ]
-                },
-                {
-                  "type": "BLANK"
                 }
               ]
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "vintage"
             },
             {
-              "type": "FIELD",
-              "name": "date",
+              "type": "REPEAT",
               "content": {
-                "type": "SYMBOL",
-                "name": "date"
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": "basis"
+                      },
+                      {
+                        "type": "CHOICE",
+                        "members": [
+                          {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "STRING",
+                                "value": "calibrated"
+                              },
+                              {
+                                "type": "STRING",
+                                "value": "("
+                              },
+                              {
+                                "type": "FIELD",
+                                "name": "calibration",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "identifier"
+                                }
+                              },
+                              {
+                                "type": "STRING",
+                                "value": ")"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "STRING",
+                                "value": "sourced"
+                              },
+                              {
+                                "type": "STRING",
+                                "value": "("
+                              },
+                              {
+                                "type": "FIELD",
+                                "name": "cite",
+                                "content": {
+                                  "type": "SYMBOL",
+                                  "name": "string"
+                                }
+                              },
+                              {
+                                "type": "STRING",
+                                "value": ")"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "STRING",
+                            "value": "estimate"
+                          },
+                          {
+                            "type": "STRING",
+                            "value": "placeholder"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": "vintage"
+                      },
+                      {
+                        "type": "FIELD",
+                        "name": "date",
+                        "content": {
+                          "type": "SYMBOL",
+                          "name": "date"
+                        }
+                      }
+                    ]
+                  }
+                ]
               }
             }
           ]
@@ -9609,6 +9691,9 @@
     ],
     [
       "edge_field"
+    ],
+    [
+      "numeric_provenance"
     ]
   ],
   "precedences": [],

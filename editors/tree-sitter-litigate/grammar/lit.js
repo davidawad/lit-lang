@@ -193,12 +193,24 @@ module.exports = {
   probability: $ => seq('p', field('value', $._prob_value), optional($.numeric_provenance)),
 
   numeric_provenance: $ => choice(
-    seq('basis', choice(
-      seq('calibrated', '(', field('calibration', $.identifier), ')'),
-      seq('sourced', '(', field('cite', $.string), ')'),
-      'estimate', 'placeholder',
-    ), optional(seq('vintage', field('date', $.date)))),
-    seq('vintage', field('date', $.date)),
+    seq(
+      choice(
+        seq('basis', choice(
+          seq('calibrated', '(', field('calibration', $.identifier), ')'),
+          seq('sourced', '(', field('cite', $.string), ')'),
+          'estimate', 'placeholder',
+        )),
+        seq('vintage', field('date', $.date)),
+      ),
+      repeat(choice(
+        seq('basis', choice(
+          seq('calibrated', '(', field('calibration', $.identifier), ')'),
+          seq('sourced', '(', field('cite', $.string), ')'),
+          'estimate', 'placeholder',
+        )),
+        seq('vintage', field('date', $.date)),
+      )),
+    ),
   ),
 
   _prob_value: $ => choice($.fraction, $.number, $.hole, $.parenthesized_expression),

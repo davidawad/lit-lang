@@ -2,6 +2,8 @@ module cod-local-rules.local-rules
 
 import core.states.colorado.{ frcp6-colorado }
 
+forum frcp
+
 // The District of Colorado's own civil periods, computed under FRCP 6(a),
 // which governs a period stated in a local rule (D.C.COLO.LCivR 30.1 and
 // 45.1 say so in terms). Rules that state no period this layer can count
@@ -81,18 +83,11 @@ event BankruptcyRecommendationsMailed()
 /// telephone number of an unrepresented prisoner or party is filed not
 /// later than five days after the change.
 deadline contact-change-notice-period: 5.days after ContactInformationChanged() counted_by frcp6-colorado cite "D.C.COLO.LCivR 5.1(c)"
-{
-  forum frcp
-}
-
 /// D.C.COLO.LCivR 7.1(d): the responding party has 21 days after the date
 /// of service of a motion, or such lesser or greater time as the court may
 /// allow, to file a response. The date of service of an electronically
 /// filed motion is the date of electronic service (D.C.COLO.LCivR 5.1(d)).
 deadline motion-response-period: 21.days after MotionServed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 7.1(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: motion-response-period (holiday)" cite "D.C.COLO.LCivR 7.1(d)"
 {
@@ -104,17 +99,10 @@ test "Counting boundary: motion-response-period (holiday)" cite "D.C.COLO.LCivR 
 /// 14 days after the date of service of the response, or such lesser or
 /// greater time as the court may allow.
 deadline motion-reply-period: 14.days after ResponseServed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 7.1(d)"
-{
-  forum frcp
-}
-
 /// D.C.COLO.LCivR 7.1(f): if the matter is set for hearing, any
 /// supplemental authority is filed no later than seven days before the
 /// hearing.
 deadline supplemental-authority-period: 7.days before MotionHearing() counted_by frcp6-colorado cite "D.C.COLO.LCivR 7.1(f)"
-{
-  forum frcp
-}
 
 test "Counting boundary: supplemental-authority-period (holiday)" cite "D.C.COLO.LCivR 7.1(f)"
 {
@@ -127,26 +115,15 @@ test "Counting boundary: supplemental-authority-period (holiday)" cite "D.C.COLO
 /// for 14 days; if no motion to restrict is filed within that period, the
 /// restriction expires and the document is open to public inspection.
 deadline restriction-motion-period: 14.days after RestrictedDocumentFiled() counted_by frcp6-colorado cite "D.C.COLO.LCivR 7.2(e)"
-{
-  forum frcp
-}
-
 /// D.C.COLO.LCivR 15.1(b): unless otherwise ordered, if a motion for leave
 /// to amend or supplement a pleading is granted, the moving party files and
 /// serves the amended or supplemental pleading no later than 14 days after
 /// the filing of the order granting leave.
 deadline amended-pleading-period: 14.days after LeaveToAmendGranted() counted_by frcp6-colorado cite "D.C.COLO.LCivR 15.1(b)"
-{
-  forum frcp
-}
-
 /// D.C.COLO.LCivR 30.1: unless otherwise ordered, reasonable notice for
 /// taking a deposition is not less than 14 days, as computed under Fed. R.
 /// Civ. P. 6.
 deadline deposition-notice-period: 14.days before DepositionTaken() counted_by frcp6-colorado cite "D.C.COLO.LCivR 30.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: deposition-notice-period (weekend)" cite "D.C.COLO.LCivR 30.1"
 {
@@ -160,9 +137,6 @@ test "Counting boundary: deposition-notice-period (weekend)" cite "D.C.COLO.LCiv
 /// scheduling conference, if any, or 45 days after the filing of the first
 /// response other than an answer, whichever is earlier.
 deadline direct-assignment-consent-period: 7.days before SchedulingConference() counted_by frcp6-colorado cite "D.C.COLO.LCivR 40.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: direct-assignment-consent-period (holiday)" cite "D.C.COLO.LCivR 40.1(c)"
 {
@@ -173,9 +147,6 @@ test "Counting boundary: direct-assignment-consent-period (holiday)" cite "D.C.C
 /// D.C.COLO.LCivR 40.1(c)(4): the 45-day alternative to the seven-day
 /// consent deadline; the earlier of the two governs.
 deadline direct-assignment-consent-outer-period: 45.days after FirstNonAnswerResponseFiled() counted_by frcp6-colorado cite "D.C.COLO.LCivR 40.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: direct-assignment-consent-outer-period (weekend)" cite "D.C.COLO.LCivR 40.1(c)"
 {
@@ -187,9 +158,6 @@ test "Counting boundary: direct-assignment-consent-outer-period (weekend)" cite 
 /// magistrate judge does not consent within 21 days from the date of the
 /// clerk's notice, the action is assigned to a district judge.
 deadline added-party-direct-consent-period: 21.days after AddedPartyNotified() counted_by frcp6-colorado cite "D.C.COLO.LCivR 40.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: added-party-direct-consent-period (holiday)" cite "D.C.COLO.LCivR 40.1(c)"
 {
@@ -203,9 +171,6 @@ test "Counting boundary: added-party-direct-consent-period (holiday)" cite "D.C.
 /// days after the filing of the first response other than an answer,
 /// whichever is earlier.
 deadline consent-jurisdiction-period: 7.days before SchedulingConference() counted_by frcp6-colorado cite "D.C.COLO.LCivR 72.2(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: consent-jurisdiction-period (holiday)" cite "D.C.COLO.LCivR 72.2(c)"
 {
@@ -216,9 +181,6 @@ test "Counting boundary: consent-jurisdiction-period (holiday)" cite "D.C.COLO.L
 /// D.C.COLO.LCivR 72.2(c): the 45-day alternative to the seven-day consent
 /// deadline; the earlier of the two governs.
 deadline consent-jurisdiction-outer-period: 45.days after FirstNonAnswerResponseFiled() counted_by frcp6-colorado cite "D.C.COLO.LCivR 72.2(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: consent-jurisdiction-outer-period (weekend)" cite "D.C.COLO.LCivR 72.2(c)"
 {
@@ -230,9 +192,6 @@ test "Counting boundary: consent-jurisdiction-outer-period (weekend)" cite "D.C.
 /// within 21 days from the date of mailing of the clerk's notice, the
 /// action returns to the assigned district judge.
 deadline added-party-consent-period: 21.days after AddedPartyConsentNoticeMailed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 72.2(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: added-party-consent-period (holiday)" cite "D.C.COLO.LCivR 72.2(e)"
 {
@@ -244,9 +203,6 @@ test "Counting boundary: added-party-consent-period (holiday)" cite "D.C.COLO.LC
 /// court orders, a subpoena is served no later than seven days before the
 /// date it specifies, calculated under Fed. R. Civ. P. 6(a)(1).
 deadline subpoena-service-period: 7.days before SubpoenaReturnDate() counted_by frcp6-colorado cite "D.C.COLO.LCivR 45.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: subpoena-service-period (holiday)" cite "D.C.COLO.LCivR 45.1"
 {
@@ -257,17 +213,10 @@ test "Counting boundary: subpoena-service-period (holiday)" cite "D.C.COLO.LCivR
 /// D.C.COLO.LCivR 54.1: a bill of costs is filed on the court's form no
 /// later than 14 days after entry of the judgment or final order.
 deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6-colorado cite "D.C.COLO.LCivR 54.1"
-{
-  forum frcp
-}
-
 /// D.C.COLO.LCivR 56.1(a): unless otherwise ordered, a response to a
 /// motion for summary judgment is filed no later than 21 days after the
 /// date of service of the motion.
 deadline sj-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 56.1(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: sj-response-period (holiday)" cite "D.C.COLO.LCivR 56.1(a)"
 {
@@ -278,35 +227,20 @@ test "Counting boundary: sj-response-period (holiday)" cite "D.C.COLO.LCivR 56.1
 /// D.C.COLO.LCivR 56.1(a): a reply may be filed no later than 14 days
 /// after the date of service of the response.
 deadline sj-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 56.1(a)"
-{
-  forum frcp
-}
-
 /// D.C.COLO.LCivR 79.1(b)(1): if no objection is filed within 14 days of
 /// the clerk's notice, the clerk may dispose of the conventionally
 /// submitted material or exhibit.
 deadline exhibit-disposal-objection-period: 14.days after ExhibitDisposalNoticed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 79.1(b)"
-{
-  forum frcp
-}
-
 /// D.C.COLO.LCivR 81.1(b): no later than 14 days after the filing of the
 /// notice of removal, the removing party files a current docket sheet
 /// (register of actions) and separately files each pending motion,
 /// petition, and related response, reply and brief.
 deadline state-court-record-period: 14.days after RemovalNoticeFiled() counted_by frcp6-colorado cite "D.C.COLO.LCivR 81.1(b)"
-{
-  forum frcp
-}
-
 /// D.C.COLO.LCivR 83.3: unless otherwise ordered, counsel or an
 /// unrepresented party notifies the court of an accommodation required
 /// under the Americans with Disabilities Act no later than seven days
 /// before a hearing or trial.
 deadline ada-accommodation-period: 7.days before HearingOrTrial() counted_by frcp6-colorado cite "D.C.COLO.LCivR 83.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: ada-accommodation-period (holiday)" cite "D.C.COLO.LCivR 83.3"
 {
@@ -317,27 +251,16 @@ test "Counting boundary: ada-accommodation-period (holiday)" cite "D.C.COLO.LCiv
 /// D.C.COLO.LCivR 83.3: a request for an American Sign Language
 /// interpreter is made no later than 30 days before the hearing or trial.
 deadline asl-interpreter-period: 30.days before HearingOrTrial() counted_by frcp6-colorado cite "D.C.COLO.LCivR 83.3"
-{
-  forum frcp
-}
-
 /// D.C.COLO.LCivR 84.1(d)(2): no later than 14 days after service of a
 /// motion for withdrawal of the reference, a party may file in the
 /// bankruptcy court a response and a designation of any additional portion
 /// of the record.
 deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 84.1(d)"
-{
-  forum frcp
-}
-
 /// D.C.COLO.LCivR 84.1(e): the parties have 14 days after the date of
 /// mailing of a bankruptcy judge's recommendations in a non-core proceeding
 /// (or such further time, not to exceed 30 days, as the bankruptcy judge
 /// may order) to file written objections.
 deadline bankruptcy-recommendation-objection-period: 14.days after BankruptcyRecommendationsMailed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 84.1(e)"
-{
-  forum frcp
-}
 
 test "Deadline arithmetic: contact-change-notice-period (5 days after)" cite "D.C.COLO.LCivR 5.1(c)"
 {

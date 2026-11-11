@@ -2,6 +2,8 @@ module alnd-local-rules.local-rules
 
 import core.states.alabama.{ frcp6-alabama }
 
+forum frcp
+
 // The Northern District of Alabama's own periods, computed under the
 // federal rules (FRCP 6(a) governs "any local rule"). Rules that state no
 // period stay out: the civil cover sheet (LR 3.1), electronic filing and
@@ -37,41 +39,22 @@ event ProHacViceApproved()
 /// discovery materials acts as the court's custodian of them and
 /// preserves them until 30 days after final disposition of the case.
 deadline discovery-custody-period: 30.days after FinalDisposition() counted_by frcp6-alabama cite "N.D. Ala. LR 5.3"
-{
-  forum frcp
-}
-
 /// LR 5.4: except as a judge directs otherwise, exhibits received in
 /// evidence and not withdrawn within thirty days after final disposition
 /// may thereafter be destroyed or otherwise disposed of by the clerk.
 deadline exhibit-withdrawal-period: 30.days after FinalDisposition() counted_by frcp6-alabama cite "N.D. Ala. LR 5.4"
-{
-  forum frcp
-}
-
 /// LR 54.1: requests for taxation of costs other than attorneys' fees
 /// under FRCP 54(d) are filed with the clerk within 21 days after entry of
 /// judgment.
 deadline costs-period: 21.days after JudgmentEntered() counted_by frcp6-alabama cite "N.D. Ala. LR 54.1"
-{
-  forum frcp
-}
-
 /// LR 83.1(b)(1): an attorney who is not a member of the bar of this
 /// court and appears as counsel by filing any pleading or paper in a
 /// pending case applies to appear pro hac vice within ten days thereafter.
 deadline pro-hac-vice-period: 10.days after NonMemberAppeared() counted_by frcp6-alabama cite "N.D. Ala. LR 83.1(b)(1)"
-{
-  forum frcp
-}
-
 /// LR 83.1(b)(2): the designated local counsel files a notice of
 /// appearance within ten days of the approval of the pro hac vice
 /// application.
 deadline local-counsel-appearance-period: 10.days after ProHacViceApproved() counted_by frcp6-alabama cite "N.D. Ala. LR 83.1(b)(2)"
-{
-  forum frcp
-}
 
 test "Deadline arithmetic: discovery-custody-period (30 days after)" cite "N.D. Ala. LR 5.3"
 {

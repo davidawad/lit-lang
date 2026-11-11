@@ -3,6 +3,8 @@ module core.states.georgia
 import core.calendar.{ us-federal-holidays }
 import core.time.{ Served }
 
+forum bankr-gan
+
 /// Georgia's additional declared holiday on the official 2026 state schedule
 /// (O.C.G.A. § 1-4-1(a)(2)): Good Friday, April 3; November 27; and
 /// December 24 (the observed Washington’s Birthday). The statute makes days
@@ -42,9 +44,7 @@ counting frbp9006-georgia effective [2025-12-01, ..) known_at 2025-12-01 cite "F
   end_of_month clamp
 }
 
-deadline frbp9006-georgia-one-day: 1.days after Served() counted_by frbp9006-georgia {
-  forum bankr-gan
-}
+deadline frbp9006-georgia-one-day: 1.days after Served() counted_by frbp9006-georgia
 
 test "Georgia's 2026 Good Friday closure rolls a forward bankruptcy deadline" cite "FRBP 9006(a)(6)(C)"
 {

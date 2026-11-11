@@ -36,9 +36,7 @@ decision initial-appearance: "Release or detention" by court cite "8 GCA § 40.1
 decision probable-cause: "Preliminary examination or grand jury" by court cite "8 GCA § 45.50"
 {
   note "A felony and any related misdemeanor are prosecuted by indictment or, if indictment is waived or the defendant is held to answer after a preliminary hearing, by indictment or information; other offenses by complaint (8 GCA § 1.15). Unless waived, an information may not be filed until a preliminary examination is held and an order issued holding the defendant to answer (8 GCA § 1.17). The court fixes the date of the preliminary examination at the first appearance, within the period 8 GCA § 45.50(b) sets, which is not stated here (currency unconfirmed); the holding or discharge follows 8 GCA § 45.80. A grand jury indicts when the evidence gives reasonable cause to believe an indictable offense was committed by the defendant (8 GCA § 50.54(b))."
-  edge-probable-cause-charged "Held to answer or indicted" -> charged {
-    authority cite "8 GCA § 45.80"
-  }
+  "Held to answer or indicted" -> charged { authority cite "8 GCA § 45.80" }
   edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
     authority cite "8 GCA § 45.80"
   }
@@ -47,13 +45,13 @@ decision probable-cause: "Preliminary examination or grand jury" by court cite "
 state charged: "Indictment, information or complaint" by court cite "8 GCA § 1.15"
 {
   note "An indictment is a written accusation presented by the grand jury charging a felony or a felony and a related misdemeanor (8 GCA § 50.54(a)). The court must dismiss if an information is not filed or an indictment returned within the time 8 GCA §§ 45.45, 45.50 and 45.80 prescribe (8 GCA § 80.60(a)(1)); the periods are not stated here (currency unconfirmed)."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "8 GCA § 60.10" }
+  "Arraignment" -> arraignment { authority cite "8 GCA § 60.10" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "8 GCA § 60.10"
 {
   note "The defendant is arraigned promptly after the indictment, information or complaint is filed, in open court, by reading the charge or stating its substance and calling on the defendant to plead (8 GCA § 60.10). The pleas are not guilty, not guilty by reason of mental illness, disease or defect, guilty and nolo contendere, and a refusal to plead is entered as not guilty (8 GCA § 60.40). The trial-commencement periods of 8 GCA § 80.60(a)(2) and (3) run from arraignment; they are not stated here (currency unconfirmed)."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "8 GCA § 70.10" }
+  "Discovery" -> discovery { authority cite "8 GCA § 70.10" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "8 GCA § 65.15"
@@ -88,10 +86,8 @@ decision plea-decision: "Plea or trial" by accused cite "8 GCA § 60.40"
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
     authority cite "8 GCA § 60.70"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "8 GCA § 90.10" }
-  edge-plea-decision-dismissed "Prosecutor dismisses" -> dismissed {
-    authority cite "8 GCA § 80.70"
-  }
+  "Trial" -> trial { authority cite "8 GCA § 90.10" }
+  "Prosecutor dismisses" -> dismissed { authority cite "8 GCA § 80.70" }
 }
 
 decision trial: "Verdict" by court cite "8 GCA § 105.30"
@@ -116,9 +112,7 @@ decision post-trial: "Post-verdict motions" by court cite "8 GCA § 110.30"
 state sentencing: "Judgment and sentence" by court cite "8 GCA § 120.14"
 {
   note "On a judgment of guilty the court sets the time for sentencing within the period 8 GCA § 120.14 sets, which is not stated here (currency unconfirmed); counsel and the defendant may speak before sentence (8 GCA § 120.26), and the court advises of the right to appeal where required (8 GCA § 120.30). A sentence may be corrected or lowered within the times 8 GCA § 120.46 sets, not stated here (currency unconfirmed)."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "8 GCA § 120.18"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "8 GCA § 120.18" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "8 GCA § 130.40"

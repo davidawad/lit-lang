@@ -3,6 +3,8 @@ module nmid-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Northern Mariana Islands district court's own criminal period,
 // counted under the criminal rules (FRCrimP 45(a) governs "any local
 // rule"). No trigger carries a service method: FRCrimP 45(c)'s three added
@@ -26,9 +28,6 @@ deadline pretrial-motions: 14.days after PleaEntered() counted_by frcrimp45 dele
   to CaseOrder
   op set
 } cite "D.N.M.I. LCrR 12.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motions (weekend)" cite "D.N.M.I. LCrR 12.1"
 {

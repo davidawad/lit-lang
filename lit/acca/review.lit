@@ -20,9 +20,7 @@ state court-martial: "Army court-martial" by court cite "JRAP 5(b)"
   edge-court-martial-sentence "United States appeals the sentence under Article 56(d)" -> sentence-appeal {
     authority cite "JRAP 5(b)(6)"
   }
-  edge-court-martial-waived "Appellate review waived or withdrawn before docketing" -> waived {
-    authority cite "JRAP 5(c)"
-  }
+  "Appellate review waived or withdrawn before docketing" -> waived { authority cite "JRAP 5(c)" }
 }
 
 decision appeal-election: "Accused files a Notice of Appeal?" by appellant cite "JRAP 18(d)(2)"
@@ -34,16 +32,14 @@ decision appeal-election: "Accused files a Notice of Appeal?" by appellant cite 
   edge-appeal-election-none "No timely Notice of Appeal" -> no-appeal {
     authority cite "JRAP 18(d)(2)"
   }
-  edge-appeal-election-waived "Appellate review waived or withdrawn" -> waived {
-    authority cite "JRAP 5(c)"
-  }
+  "Appellate review waived or withdrawn" -> waived { authority cite "JRAP 5(c)" }
 }
 
 state docketed: "Record received and case docketed" by appellant cite "JRAP 18(d)"
 {
   note "On automatic review under Article 66(b)(3), UCMJ, the appellant's brief is due no later than 60 days after the Court has received the record of trial under Article 65(b), UCMJ, and docketed the case; on an appeal under Article 66(b)(1)(A), the government provides the Court a complete record, with a verbatim transcript, as soon as practicable after the Notice of Appeal, and the appellant's brief is due no later than 60 days thereafter. In both, the United States answers no later than 30 days after the appellant's brief and the appellant may reply no later than 7 days after the answer; on automatic review, if no brief is filed for the accused, the United States may file one within 30 days after the accused's time expires (JRAP 18(d)(1), (2)). Counsel may file assignments of error, each error set out separately, and Grostefon issues (United States v. Grostefon, 12 M.J. 431 (C.M.A. 1982), as JRAP 18(b) names it) comply with CCA rules (JRAP 18(a), (b)). Form, content and length of briefs are set by CCA rules (JRAP 17), not vendored for the Army Court (lg-okuc/#21). A suggestion for en banc consideration is due within 7 days after the answer or the reply (JRAP 27(b)). The Court may extend any time limit (JRAP 24). A waiver or withdrawal received after docketing is referred to the Court, which dismisses the appeal if it is valid (JRAP 16)."
   edge-docketed-submitted "Briefing complete" -> ccca-decision { authority cite "JRAP 18(d)" }
-  edge-docketed-withdrawn "Withdrawal found valid" -> withdrawn { authority cite "JRAP 16" }
+  "Withdrawal found valid" -> withdrawn { authority cite "JRAP 16" }
 }
 
 decision ccca-decision: "Court of Criminal Appeals decision" by court cite "JRAP 30"

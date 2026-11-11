@@ -20,10 +20,10 @@ state trial-result: "Court-martial findings and sentence" by court cite ?("10 U.
   edge-trial-result-judgment "Judgment entered" -> review-route {
     authority cite ?("10 U.S.C. § 860c")
   }
-  edge-trial-result-government-appeal "United States appeals a ruling under Article 62" -> government-appeal {
+  "United States appeals a ruling under Article 62" -> government-appeal {
     authority cite "NMCCA R. 20"
   }
-  edge-trial-result-sentence-appeal "United States appeals the sentence under Article 56(d)" -> sentence-appeal {
+  "United States appeals the sentence under Article 56(d)" -> sentence-appeal {
     authority cite "NMCCA R. 20"
   }
 }
@@ -115,9 +115,7 @@ state tjag-review: "Review by the Judge Advocate General" by court cite ?("10 U.
   edge-tjag-review-ordered "Judge Advocate General sends the case to the Court" -> docketed {
     authority cite "NMCCA R. 5"
   }
-  edge-tjag-review-application "Accused applies for review of the action" -> application {
-    authority cite "NMCCA R. 18"
-  }
+  "Accused applies for review of the action" -> application { authority cite "NMCCA R. 18" }
   edge-tjag-review-final "No further review" -> tjag-decided { authority cite ?("10 U.S.C. § 869") }
 }
 

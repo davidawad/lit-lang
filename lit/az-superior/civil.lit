@@ -72,7 +72,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "Ariz. R. Ci
 {
   note "The defenses of Rule 12(b)(1)-(7) may be asserted by motion made before pleading; a good faith consultation certificate under Rule 7.1(h) accompanies a motion under (b)(3) or (b)(6) (Ariz. R. Civ. P. 12(b), (j)). If matters outside the pleadings are presented on a 12(b)(6) or 12(c) motion and not excluded, it is treated as one for summary judgment under Rule 56 (Ariz. R. Civ. P. 12(d)). The outline asked for the leading Arizona pleading-standard decision; none is vendored, so none is named."
   edge-pleading-motion-granted "Granted" -> dismissed { authority cite "Ariz. R. Civ. P. 12(b)" }
-  edge-pleading-motion-amend "Leave to amend" -> amend { authority cite "Ariz. R. Civ. P. 15(a)" }
+  "Leave to amend" -> amend { authority cite "Ariz. R. Civ. P. 15(a)" }
   edge-pleading-motion-denied "Denied: answer within 10 days of notice" -> discovery {
     authority cite "Ariz. R. Civ. P. 12(a)"
   }
@@ -113,10 +113,8 @@ state discovery: "Disclosure, discovery and pretrial" by movant cite "Ariz. R. C
   edge-discovery-sj "Summary judgment motion" -> summary-judgment {
     authority cite "Ariz. R. Civ. P. 56(a)"
   }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Ariz. R. Civ. P. 38(a)" }
-  edge-discovery-settled "Voluntary dismissal" -> settled {
-    authority cite "Ariz. R. Civ. P. 41(a)"
-  }
+  "No dispositive motion" -> trial { authority cite "Ariz. R. Civ. P. 38(a)" }
+  "Voluntary dismissal" -> settled { authority cite "Ariz. R. Civ. P. 41(a)" }
 }
 
 decision summary-judgment: "Summary judgment decided" by court cite "Ariz. R. Civ. P. 56(a)"
@@ -134,7 +132,7 @@ state trial: "Trial by jury or by the court" by court cite "Ariz. R. Civ. P. 38(
   edge-trial-judgment "Verdict or decision" -> post-trial {
     authority cite "Ariz. R. Civ. P. 58(b)"
   }
-  edge-trial-settled "Settled before verdict" -> settled { authority cite "Ariz. R. Civ. P. 41(a)" }
+  "Settled before verdict" -> settled { authority cite "Ariz. R. Civ. P. 41(a)" }
 }
 
 decision post-trial: "Post-trial motions" by movant cite "Ariz. R. Civ. P. 59(b)"

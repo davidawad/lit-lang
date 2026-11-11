@@ -2,6 +2,8 @@ module ncmd-local-rules.local-rules
 
 import core.states.north-carolina.{ frcp6-north-carolina }
 
+forum frcp
+
 // The Middle District of North Carolina's own civil periods and limits,
 // computed under FRCP 6(a), which governs a period stated in a local rule.
 // Rules that state no period this layer can count stay out: the notice of
@@ -95,9 +97,6 @@ event JudgmentEntered()
 /// been filed, the parties meet and confer and file the report within 10
 /// days of the filing of the motion to seal.
 deadline sealing-report-period: 10.days after SealMotionFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 5.4(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: sealing-report-period (weekend)" cite "M.D.N.C. LR 5.4(b)"
 {
@@ -109,9 +108,6 @@ test "Counting boundary: sealing-report-period (weekend)" cite "M.D.N.C. LR 5.4(
 /// confidentiality, the party claiming it files a response with the LR
 /// 5.4(c)(3) materials within 14 days of the motion to seal.
 deadline sealing-response-period: 14.days after SealMotionFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 5.4(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: sealing-response-period (holiday)" cite "M.D.N.C. LR 5.4(c)"
 {
@@ -122,9 +118,6 @@ test "Counting boundary: sealing-response-period (holiday)" cite "M.D.N.C. LR 5.
 /// LR 5.4(c)(5): a party opposing sealing files its objection within 14
 /// days of the filing of the LR 5.4(c)(3) supporting materials.
 deadline sealing-objection-period: 14.days after SealSupportFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 5.4(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: sealing-objection-period (holiday)" cite "M.D.N.C. LR 5.4(c)"
 {
@@ -136,9 +129,6 @@ test "Counting boundary: sealing-objection-period (holiday)" cite "M.D.N.C. LR 5
 /// 21 days after service of the motion (30 for summary judgment, 14 for a
 /// discovery motion); the Court may shorten the time for good cause.
 deadline response-period: 21.days after MotionServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 7.3(f)"
-{
-  forum frcp
-}
 
 test "Counting boundary: response-period (weekend)" cite "M.D.N.C. LR 7.3(f)"
 {
@@ -150,9 +140,6 @@ test "Counting boundary: response-period (weekend)" cite "M.D.N.C. LR 7.3(f)"
 /// lead plaintiff are filed within seven calendar days of the filing of the
 /// motion; no reply briefs are permitted.
 deadline lead-plaintiff-response-period: 7.days after LeadPlaintiffMotionFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 7.3(g)"
-{
-  forum frcp
-}
 
 test "Counting boundary: lead-plaintiff-response-period (weekend)" cite "M.D.N.C. LR 7.3(g)"
 {
@@ -164,9 +151,6 @@ test "Counting boundary: lead-plaintiff-response-period (weekend)" cite "M.D.N.C
 /// response, may be filed within 14 days after service of the response (7
 /// days on a discovery motion).
 deadline reply-period: 14.days after ResponseServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 7.3(h)"
-{
-  forum frcp
-}
 
 test "Counting boundary: reply-period (holiday)" cite "M.D.N.C. LR 7.3(h)"
 {
@@ -179,9 +163,6 @@ test "Counting boundary: reply-period (holiday)" cite "M.D.N.C. LR 7.3(h)"
 /// current address within sixty-three days thereafter, the Court may
 /// dismiss the action without prejudice for failure to prosecute.
 deadline pro-se-address-period: 63.days after ProSeMailReturned() counted_by frcp6-north-carolina cite "M.D.N.C. LR 11.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: pro-se-address-period (weekend)" cite "M.D.N.C. LR 11.1(b)"
 {
@@ -192,9 +173,6 @@ test "Counting boundary: pro-se-address-period (weekend)" cite "M.D.N.C. LR 11.1
 /// LR 16.1(b): the parties hold their FRCP 26(f) meeting at least 14 days
 /// before the scheduled initial pretrial conference.
 deadline rule-26f-meeting-period: 14.days before InitialPretrialConference() counted_by frcp6-north-carolina cite "M.D.N.C. LR 16.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: rule-26f-meeting-period (weekend)" cite "M.D.N.C. LR 16.1(b)"
 {
@@ -205,9 +183,6 @@ test "Counting boundary: rule-26f-meeting-period (weekend)" cite "M.D.N.C. LR 16
 /// LR 16.1(b): the joint (LR 16.2) or separate (LR 16.3) Rule 26(f) Reports
 /// are filed within 10 days of the Rule 26(f) meeting.
 deadline rule-26f-report-period: 10.days after RuleTwentySixFMeeting() counted_by frcp6-north-carolina cite "M.D.N.C. LR 16.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: rule-26f-report-period (weekend)" cite "M.D.N.C. LR 16.1(b)"
 {
@@ -219,9 +194,6 @@ test "Counting boundary: rule-26f-report-period (weekend)" cite "M.D.N.C. LR 16.
 /// injury provides an executed HIPAA-compliant release for each provider
 /// within 14 days after the Rule 26(f) conference.
 deadline medical-release-period: 14.days after RuleTwentySixFMeeting() counted_by frcp6-north-carolina cite "M.D.N.C. LR 16.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: medical-release-period (holiday)" cite "M.D.N.C. LR 16.1(b)"
 {
@@ -234,16 +206,9 @@ test "Counting boundary: medical-release-period (holiday)" cite "M.D.N.C. LR 16.
 /// for a determination under FRCP 23(c)(1) whether the case may be
 /// maintained as a class action.
 deadline class-determination-period: 90.days after InitialPretrialOrderEntered() counted_by frcp6-north-carolina cite "M.D.N.C. LR 23.1(b)"
-{
-  forum frcp
-}
-
 /// LR 26.2(d): a response to a motion for entry of a protective order is
 /// due within 14 days after service of the motion.
 deadline protective-order-response-period: 14.days after ProtectiveOrderMotionServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 26.2(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: protective-order-response-period (holiday)" cite "M.D.N.C. LR 26.2(d)"
 {
@@ -254,9 +219,6 @@ test "Counting boundary: protective-order-response-period (holiday)" cite "M.D.N
 /// LR 37.1(c): a response to a discovery-related motion is filed within 14
 /// days after service of the motion.
 deadline discovery-response-period: 14.days after DiscoveryMotionServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 37.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: discovery-response-period (holiday)" cite "M.D.N.C. LR 37.1(c)"
 {
@@ -268,9 +230,6 @@ test "Counting boundary: discovery-response-period (holiday)" cite "M.D.N.C. LR 
 /// discovery-related motion is filed within 7 days after service of the
 /// response.
 deadline discovery-reply-period: 7.days after DiscoveryResponseServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 37.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: discovery-reply-period (weekend)" cite "M.D.N.C. LR 37.1(c)"
 {
@@ -282,9 +241,6 @@ test "Counting boundary: discovery-reply-period (weekend)" cite "M.D.N.C. LR 37.
 /// trial brief, with proposed findings and conclusions in a non-jury case
 /// or proposed jury instructions in a jury case.
 deadline trial-brief-period: 21.days before TrialDate() counted_by frcp6-north-carolina cite "M.D.N.C. LR 40.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: trial-brief-period (weekend)" cite "M.D.N.C. LR 40.1(c)"
 {
@@ -295,9 +251,6 @@ test "Counting boundary: trial-brief-period (weekend)" cite "M.D.N.C. LR 40.1(c)
 /// LR 40.1(d): a motion to seal trial testimony or exhibits, or to close
 /// the courtroom, is filed at least 7 days before trial.
 deadline trial-seal-motion-period: 7.days before TrialDate() counted_by frcp6-north-carolina cite "M.D.N.C. LR 40.1(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: trial-seal-motion-period (holiday)" cite "M.D.N.C. LR 40.1(d)"
 {
@@ -308,19 +261,12 @@ test "Counting boundary: trial-seal-motion-period (holiday)" cite "M.D.N.C. LR 4
 /// LR 40.1(d): any other party may file a response at least 3 days before
 /// the scheduled trial date; no reply briefs are allowed.
 deadline trial-seal-response-period: 3.days before TrialDate() counted_by frcp6-north-carolina cite "M.D.N.C. LR 40.1(d)"
-{
-  forum frcp
-}
-
 /// LR 54.1(a)(1), (3): a prevailing party files its bill of costs on form
 /// AO133 within 30 days after the time for appeal of a final judgment
 /// expires, or after the clerk receives the mandate or other final decision
 /// terminating the action on appeal, or as the Court directs; failure to
 /// file in time waives costs.
 deadline bill-of-costs-period: 30.days after CostsPeriodTriggered() counted_by frcp6-north-carolina cite "M.D.N.C. LR 54.1(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (holiday)" cite "M.D.N.C. LR 54.1(a)"
 {
@@ -332,9 +278,6 @@ test "Counting boundary: bill-of-costs-period (holiday)" cite "M.D.N.C. LR 54.1(
 /// with a supporting brief within fourteen days after the bill of costs is
 /// filed.
 deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 54.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: costs-objection-period (holiday)" cite "M.D.N.C. LR 54.1(b)"
 {
@@ -345,9 +288,6 @@ test "Counting boundary: costs-objection-period (holiday)" cite "M.D.N.C. LR 54.
 /// LR 54.1(b)(1): within seven days after the objection, the prevailing
 /// party may file a response; no reply is permitted.
 deadline costs-response-period: 7.days after CostsObjectionFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 54.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: costs-response-period (weekend)" cite "M.D.N.C. LR 54.1(b)"
 {
@@ -358,9 +298,6 @@ test "Counting boundary: costs-response-period (weekend)" cite "M.D.N.C. LR 54.1
 /// LR 54.1(b)(2): a party may request review of the clerk's ruling by
 /// motion within seven days after the clerk's action.
 deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 54.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: costs-review-period (weekend)" cite "M.D.N.C. LR 54.1(b)"
 {
@@ -374,9 +311,6 @@ test "Counting boundary: costs-review-period (weekend)" cite "M.D.N.C. LR 54.1(b
 /// materials; the 14-day deadline of FRCP 54(d)(2)(B)(i) is modified to 21
 /// days.
 deadline fee-motion-period: 21.days after JudgmentEntered() counted_by frcp6-north-carolina cite "M.D.N.C. LR 54.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-motion-period (weekend)" cite "M.D.N.C. LR 54.2"
 {
@@ -388,9 +322,6 @@ test "Counting boundary: fee-motion-period (weekend)" cite "M.D.N.C. LR 54.2"
 /// another dispositive motion files and serves notice of that intention
 /// within 14 days following the close of the discovery period.
 deadline dispositive-notice-period: 14.days after DiscoveryClosed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 56.1(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: dispositive-notice-period (holiday)" cite "M.D.N.C. LR 56.1(a)"
 {
@@ -402,9 +333,6 @@ test "Counting boundary: dispositive-notice-period (holiday)" cite "M.D.N.C. LR 
 /// served within 30 days following the close of the discovery period,
 /// subject to any LR 5.5 Order.
 deadline dispositive-motion-period: 30.days after DiscoveryClosed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 56.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: dispositive-motion-period (holiday)" cite "M.D.N.C. LR 56.1(b)"
 {
@@ -416,9 +344,6 @@ test "Counting boundary: dispositive-motion-period (holiday)" cite "M.D.N.C. LR 
 /// is filed within 30 days after service of the motion and brief; failing
 /// to respond may lead the Court to treat the motion as uncontested.
 deadline summary-judgment-response-period: 30.days after SummaryJudgmentMotionServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 56.1(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: summary-judgment-response-period (holiday)" cite "M.D.N.C. LR 56.1(d)"
 {

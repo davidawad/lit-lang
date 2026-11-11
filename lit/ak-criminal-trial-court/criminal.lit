@@ -38,9 +38,7 @@ decision initial-appearance: "Bail or release" by court cite "Alaska R. Crim. P.
 decision probable-cause: "Preliminary examination or grand jury" by court cite "Alaska R. Crim. P. 5.1"
 {
   note "In a felony case the defendant is entitled to a preliminary examination with counsel, at which the State presents its evidence first (Alaska R. Crim. P. 5.1(a), (b)); the time limits Rule 5 sets for holding it are not stated here (currency unconfirmed). A grand jury is governed by Rule 6."
-  edge-probable-cause-charged "Held to answer or indicted" -> charged {
-    authority cite "Alaska R. Crim. P. 7(a)"
-  }
+  "Held to answer or indicted" -> charged { authority cite "Alaska R. Crim. P. 7(a)" }
   edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
     authority cite "Alaska R. Crim. P. 5.1"
   }
@@ -49,13 +47,13 @@ decision probable-cause: "Preliminary examination or grand jury" by court cite "
 state charged: "Indictment or information" by court cite "Alaska R. Crim. P. 7(a)"
 {
   note "An offense punishable by imprisonment for a term exceeding one year is prosecuted by indictment unless indictment is waived, and any other offense by indictment or information (Alaska R. Crim. P. 7(a), (b))."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Alaska R. Crim. P. 10" }
+  "Arraignment" -> arraignment { authority cite "Alaska R. Crim. P. 10" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "Alaska R. Crim. P. 10"
 {
   note "A defendant may plead not guilty, guilty or nolo contendere, and a refusal to plead is entered as not guilty (Alaska R. Crim. P. 11(a)). Trial dates in the superior court are set under Rule 45, and a defendant must be tried within the speedy-trial limit Alaska R. Crim. P. 45(b) sets, measured from the event Rule 45(c) names and excluding the periods Rule 45(d) lists; the period is not stated here (currency unconfirmed)."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Alaska R. Crim. P. 16" }
+  "Discovery" -> discovery { authority cite "Alaska R. Crim. P. 16" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "Alaska R. Crim. P. 12"
@@ -92,10 +90,8 @@ decision plea-decision: "Plea or trial" by accused cite "Alaska R. Crim. P. 11"
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
     authority cite "Alaska R. Crim. P. 11(d)"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Alaska R. Crim. P. 23" }
-  edge-plea-decision-dismissed "Prosecutor files a dismissal" -> dismissed {
-    authority cite "Alaska R. Crim. P. 43(a)"
-  }
+  "Trial" -> trial { authority cite "Alaska R. Crim. P. 23" }
+  "Prosecutor files a dismissal" -> dismissed { authority cite "Alaska R. Crim. P. 43(a)" }
 }
 
 decision trial: "Verdict" by court cite "Alaska R. Crim. P. 31"
@@ -124,9 +120,7 @@ decision post-trial: "Post-trial motions" by court cite "Alaska R. Crim. P. 33"
 state sentencing: "Presentence report and sentencing" by court cite "Alaska R. Crim. P. 32"
 {
   note "Sentence is imposed without unreasonable delay, under Rules 32.1 to 32.6 in felony cases, and the judge explains on the record the reasons for the sentence (Alaska R. Crim. P. 32(a)); the presentence report periods of Rule 32.1 are not stated here (currency unconfirmed). The court may correct an illegal sentence at any time, and may modify or reduce a sentence within the period Rule 35(b) sets, not stated here (currency unconfirmed) (Alaska R. Crim. P. 35(a), (b))."
-  edge-sentencing-judgment "Sentence imposed; judgment distributed" -> judgment {
-    authority cite "Alaska R. Crim. P. 32.3"
-  }
+  "Sentence imposed; judgment distributed" -> judgment { authority cite "Alaska R. Crim. P. 32.3" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "Alaska R. Crim. P. 32.3"

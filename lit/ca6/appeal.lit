@@ -46,6 +46,7 @@ test "Counting boundary: state-habeas-transcript-period (weekend)" cite "6 Cir. 
   given StateHabeasNoticeFiled() on 2026-07-16
   expect deadline(state-habeas-transcript-period) == 2026-08-17
 }
+
 /// An appellee who needs other parts of the state court record transcribed
 /// provides them to the appellant within 30 days of the appellant's filing
 /// the transcript.
@@ -56,6 +57,7 @@ test "Counting boundary: state-habeas-appellee-transcript-period (weekend)" cite
   given StateHabeasTranscriptProvided() on 2026-07-16
   expect deadline(state-habeas-appellee-transcript-period) == 2026-08-17
 }
+
 /// In a death penalty case the appellee serves and files its brief within
 /// 60 days after the appellant's brief is served; the appellant's brief is
 /// due by the deadline the clerk sets (6 Cir. R. 31(c)(3)(A)).
@@ -66,6 +68,7 @@ test "Counting boundary: capital-appellee-brief-period (weekend)" cite "6 Cir. R
   given CapitalAppellantBriefServed() on 2026-07-14
   expect deadline(capital-appellee-brief-period) == 2026-09-14
 }
+
 /// In a death penalty case the appellant may serve and file a reply brief
 /// within 14 days after the appellee's brief is served.
 deadline capital-reply-brief-period: 14.days after CapitalAppelleeBriefServed() counted_by frap26 cite "6 Cir. R. 31(c)(3)(C)"
@@ -75,6 +78,7 @@ test "Counting boundary: capital-reply-brief-period (weekend)" cite "6 Cir. R. 3
   given CapitalAppelleeBriefServed() on 2026-07-18
   expect deadline(capital-reply-brief-period) == 2026-08-03
 }
+
 /// The death penalty reply is also due at least 7 days before argument,
 /// unless the court for good cause allows a later filing.
 deadline capital-reply-before-argument-period: 7.days before ArgumentHeard() counted_by frap26 cite "6 Cir. R. 31(c)(3)(C)"
@@ -84,6 +88,7 @@ test "Counting boundary: capital-reply-before-argument-period (weekend)" cite "6
   given ArgumentHeard() on 2026-07-18
   expect deadline(capital-reply-before-argument-period) == 2026-07-10
 }
+
 /// A motion for additional oral argument time (each side has 15 minutes
 /// unless the notice of argument provides otherwise, 6 Cir. R. 34(f)(1)) is
 /// filed within 14 days of submission of the last brief.
@@ -94,6 +99,7 @@ test "Counting boundary: argument-time-motion-period (weekend)" cite "6 Cir. R. 
   given LastBriefSubmitted() on 2026-07-18
   expect deadline(argument-time-motion-period) == 2026-08-03
 }
+
 /// The motion for additional argument time is filed not later than 7 days
 /// before the hearing.
 deadline argument-time-motion-before-hearing-period: 7.days before ArgumentHeard() counted_by frap26 cite "6 Cir. R. 34(f)(2)"
@@ -103,6 +109,7 @@ test "Counting boundary: argument-time-motion-before-hearing-period (weekend)" c
   given ArgumentHeard() on 2026-07-18
   expect deadline(argument-time-motion-before-hearing-period) == 2026-07-10
 }
+
 /// A motion to stay the mandate must be received in the clerk's office
 /// within 7 days after the time to file a petition for rehearing expires.
 deadline mandate-stay-motion-period: 7.days after RehearingClosed(TimeExpired) counted_by frap26 cite "6 Cir. R. 41(b)"
@@ -112,6 +119,7 @@ test "Counting boundary: mandate-stay-motion-period (weekend)" cite "6 Cir. R. 4
   given RehearingClosed(TimeExpired) on 2026-07-18
   expect deadline(mandate-stay-motion-period) == 2026-07-27
 }
+
 /// Or within seven days from entry of an order on a petition for
 /// rehearing.
 deadline mandate-stay-motion-after-rehearing-period: 7.days after RehearingOrderEntered() counted_by frap26 cite "6 Cir. R. 41(b)"
@@ -121,6 +129,7 @@ test "Counting boundary: mandate-stay-motion-after-rehearing-period (weekend)" c
   given RehearingOrderEntered() on 2026-07-18
   expect deadline(mandate-stay-motion-after-rehearing-period) == 2026-07-27
 }
+
 /// A party adversely affected by a clerk's order may move for
 /// reconsideration by a judge or judges within 14 days of service of
 /// notice of entry of the order.
@@ -255,7 +264,7 @@ decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 6 Cir. R. 40"
 {
   note "Granting rehearing en banc vacates the panel's opinion and judgment, stays the mandate and restores the case as a pending appeal (6 Cir. R. 40(d)). Only the original panel reviews a petition for panel rehearing alone (6 Cir. I.O.P. 40(a)(2))."
-  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+  "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
 state mandate: "Mandate Issued" by court cite "FRAP 41(b); 6 Cir. R. 41"

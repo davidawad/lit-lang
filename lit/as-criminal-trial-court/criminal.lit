@@ -37,9 +37,7 @@ decision initial-appearance: "Release or detention" by court cite "TCRCrP 46"
 decision probable-cause: "Preliminary examination" by court cite "TCRCrP 5.1"
 {
   note "A defendant charged with an offense other than a misdemeanor to be tried by the High Court is entitled to a preliminary examination unless waived (TCRCrP 5(c)); its timing is set by Rule 5 and not stated here (currency unconfirmed). On probable cause the district court judge holds the defendant to answer in the High Court, and the finding may rest on hearsay (TCRCrP 5.1(a))."
-  edge-probable-cause-charged "Held to answer in the High Court" -> charged {
-    authority cite "TCRCrP 5.1(a)"
-  }
+  "Held to answer in the High Court" -> charged { authority cite "TCRCrP 5.1(a)" }
   edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
     authority cite "TCRCrP 5.1"
   }
@@ -48,13 +46,13 @@ decision probable-cause: "Preliminary examination" by court cite "TCRCrP 5.1"
 state charged: "Information" by court cite "TCRCrP 7(a)"
 {
   note "All felony offenses are initiated in the High Court by the filing of an information (TCRCrP 7(a)); the Rules of Criminal Procedure state no grand jury procedure (Rule 6 is omitted)."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "TCRCrP 10" }
+  "Arraignment" -> arraignment { authority cite "TCRCrP 10" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "TCRCrP 10"
 {
   note "Arraignment is conducted in open court by reading the complaint or information or stating its substance and calling on the defendant to plead, after the defendant is given a copy (TCRCrP 10). A defendant may plead not guilty, guilty or, with the court's consent, nolo contendere, and a refusal to plead is entered as not guilty (TCRCrP 11(a), (b))."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "TCRCrP 16" }
+  "Discovery" -> discovery { authority cite "TCRCrP 16" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "TCRCrP 12"
@@ -87,10 +85,8 @@ decision plea-decision: "Plea or trial" by accused cite "TCRCrP 11"
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
     authority cite "TCRCrP 11"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "TCRCrP 23" }
-  edge-plea-decision-dismissed "Attorney General dismisses by leave of court" -> dismissed {
-    authority cite "TCRCrP 48(a)"
-  }
+  "Trial" -> trial { authority cite "TCRCrP 23" }
+  "Attorney General dismisses by leave of court" -> dismissed { authority cite "TCRCrP 48(a)" }
 }
 
 decision trial: "Verdict" by court cite "TCRCrP 31"
@@ -115,9 +111,7 @@ decision post-trial: "Post-trial motions" by court cite "TCRCrP 33"
 state sentencing: "Sentencing" by court cite "TCRCrP 32(a)"
 {
   note "Sentence is imposed without unreasonable delay, after counsel and the defendant are afforded an opportunity to speak (TCRCrP 32(a)(1)). The court may correct an illegal sentence at any time and reduce a sentence within the period Rule 35(b) sets, which is not stated here (currency unconfirmed) (TCRCrP 35)."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "TCRCrP 32"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "TCRCrP 32" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "TCRCrP 32"

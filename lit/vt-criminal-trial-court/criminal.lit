@@ -16,7 +16,7 @@ start arrested
 
 state arrested: "Arrest or citation" by prosecution cite ?("V.R.Cr.P. 3, 4 (arrest, citation and summons; not vendored; verify numbering)") {
   note "Arrest, citation and the time to bring an arrested person before a judicial officer are set by the Vermont Rules of Criminal Procedure, which are not vendored; the period is a hole."
-  edge-arrested-arraignment "Arraignment" -> arraignment {
+  "Arraignment" -> arraignment {
     authority cite ?("V.R.Cr.P. 5, 10 (appearance and arraignment; not vendored; verify numbering)")
   }
 }
@@ -46,7 +46,7 @@ state pretrial: "Plea of not guilty, discovery and pretrial motions" by accused 
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite ?("V.R.Cr.P. 12 (pretrial motions; not vendored; verify numbering)") {
   note "Dismissal for unnecessary delay or a speedy-trial violation, and whether it bars refiling, are holes until the V.R.Cr.P. are vendored."
-  edge-motions-ruling-dismissed "Charges dismissed" -> dismissed {
+  "Charges dismissed" -> dismissed {
     authority cite ?("V.R.Cr.P. 12, 48 (dismissal; not vendored; verify numbering)")
   }
   edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
@@ -59,10 +59,10 @@ decision plea-decision: "Plea or trial" by accused cite ?("V.R.Cr.P. 11 (pleas; 
   edge-plea-decision-plea "Plea of guilty or nolo contendere accepted" -> sentencing {
     authority cite ?("V.R.Cr.P. 11 (pleas; not vendored; verify numbering)")
   }
-  edge-plea-decision-trial "Trial" -> trial {
+  "Trial" -> trial {
     authority cite ?("V.R.Cr.P. 23 (trial by jury; not vendored; verify numbering)")
   }
-  edge-plea-decision-dismissed "Prosecutor dismisses" -> dismissed {
+  "Prosecutor dismisses" -> dismissed {
     authority cite ?("V.R.Cr.P. 48(a) (dismissal by the prosecutor; not vendored; verify numbering)")
   }
 }
@@ -91,7 +91,7 @@ decision post-trial: "Post-trial motions" by court cite "V.R.A.P. 4(b)"
 
 state sentencing: "Presentence investigation and sentencing" by court cite ?("V.R.Cr.P. 32 (sentence and judgment; not vendored; verify numbering)") {
   note "The presentence investigation, its disclosure and the sentencing hearing are governed by V.R.Cr.P. 32, which is not vendored; their periods are holes."
-  edge-sentencing-judgment "Sentence imposed; judgment entered in the criminal docket" -> judgment {
+  "Sentence imposed; judgment entered in the criminal docket" -> judgment {
     authority cite "V.R.A.P. 4(e)"
   }
 }

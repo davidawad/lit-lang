@@ -2,6 +2,8 @@ module innd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Northern District of Indiana's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"). The local
 // criminal rules govern all criminal cases, and the local civil rules
@@ -45,9 +47,6 @@ event TrialDateSet()
 /// the grand-jury number, the date of service and the return date (L. Cr.
 /// R. 6-1(d)(1)).
 deadline grand-jury-subpoena-challenge: 7.days before GrandJurySubpoenaReturnDate() counted_by frcrimp45 cite "N.D. Ind. L. Cr. R. 6-1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: grand-jury-subpoena-challenge (weekend)" cite "N.D. Ind. L. Cr. R. 6-1(d)"
 {
@@ -60,9 +59,6 @@ test "Counting boundary: grand-jury-subpoena-challenge (weekend)" cite "N.D. Ind
 /// copy of each exhibit and a statement of intent to authenticate it under
 /// Fed. R. Evid. 901 or to lay a Fed. R. Evid. 803(6) foundation.
 deadline authentication-notice: 30.days before TrialDateSet() counted_by frcrimp45 cite "N.D. Ind. L. Cr. R. 12-1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: authentication-notice (weekend)" cite "N.D. Ind. L. Cr. R. 12-1(a)"
 {
@@ -74,9 +70,6 @@ test "Counting boundary: authentication-notice (weekend)" cite "N.D. Ind. L. Cr.
 /// an objection to an exhibit's authenticity or foundation is waived
 /// unless an opposing party files it at least 14 days before trial.
 deadline authentication-objection: 14.days before TrialDateSet() counted_by frcrimp45 cite "N.D. Ind. L. Cr. R. 12-1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: authentication-objection (weekend)" cite "N.D. Ind. L. Cr. R. 12-1(b)"
 {

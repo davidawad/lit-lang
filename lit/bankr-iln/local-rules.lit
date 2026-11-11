@@ -197,7 +197,7 @@ state motion-noticed: "Motion filed and noticed for presentment" by movant cite 
 state objected: "Notice of objection filed" by opponent cite "Bankr. N.D. Ill. LBR 9013-1(F)"
 {
   note "The notice of objection need only say that the party objects; no reason need be given (LBR 9013-1(F)(1)). The court may set a briefing schedule (LBR 9014-1(A)); a memorandum, response or reply not filed when due is waived (LBR 9014-1(B))."
-  edge-objected-presentment "Motion called on the date of presentment" -> presentment {
+  "Motion called on the date of presentment" -> presentment {
     authority cite "Bankr. N.D. Ill. LBR 9013-1(F)"
   }
 }
@@ -205,9 +205,7 @@ state objected: "Notice of objection filed" by opponent cite "Bankr. N.D. Ill. L
 decision presentment: "Motion called at presentment" by court cite "Bankr. N.D. Ill. LBR 9013-1(E)"
 {
   note "Oral argument is in the court's discretion (LBR 9013-1(G)); a motion not presented at the time set may be denied (LBR 9013-1(I))."
-  edge-presentment-decided "Motion granted or denied" -> decided {
-    authority cite "Bankr. N.D. Ill. LBR 9013-1(G)"
-  }
+  "Motion granted or denied" -> decided { authority cite "Bankr. N.D. Ill. LBR 9013-1(G)" }
 }
 
 terminal decided: "Motion decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. N.D. Ill. LBR 1000-2(A)"

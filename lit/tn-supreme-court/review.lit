@@ -69,7 +69,7 @@ decision permission: "Permission to appeal granted or denied" by court cite "Ten
 state briefing: "Briefs" by petitioner cite "Tenn. R. App. P. 11(f)"
 {
   note "The appellant serves and files a brief within 30 days after permission is granted; an appellant who filed a brief with the application may file a supplemental brief in that time, or else files notice of its election not to, failing which the appellee's time runs from the 30th day after the grant. The appellee's brief is due within 30 days after the appellant's brief, supplemental brief or notice of election, and reply briefs within 14 days after the preceding brief; where permission is granted from the denial of a Rule 9 application, the appellant's brief is due within 30 days after the record is filed under Rule 9(e) (Tenn. R. App. P. 11(f)). Otherwise Rules 27-30 govern the briefs' content, filing and form (Tenn. R. App. P. 11(f)): principal briefs are limited to 15,000 words and reply and supplemental briefs to 5,000, with a certificate of the word count (Tenn. R. App. P. 30(e)). If an appellant's brief is late any appellee may move to dismiss, and if an appellee's is late the appellant may move to submit on the record and its brief; the other side may respond within 14 days (Tenn. R. App. P. 29(c))."
-  edge-briefing-argument "Briefs filed" -> argument { authority cite "Tenn. R. App. P. 35" }
+  "Briefs filed" -> argument { authority cite "Tenn. R. App. P. 35" }
 }
 
 decision argument: "Oral argument or submission on the briefs" by court cite "Tenn. R. App. P. 35"
@@ -101,9 +101,7 @@ decision post-decision-affirmed: "Rehearing sought?" by petitioner cite "Tenn. R
     event MandateIssued()
     authority cite "Tenn. R. App. P. 42(a)"
   }
-  edge-post-decision-affirmed-rehearing "Petition for rehearing" -> rehearing {
-    authority cite "Tenn. R. App. P. 39(b)"
-  }
+  "Petition for rehearing" -> rehearing { authority cite "Tenn. R. App. P. 39(b)" }
 }
 
 decision post-decision-reversed: "Opponent seeks rehearing?" by court cite "Tenn. R. App. P. 39"
@@ -113,9 +111,7 @@ decision post-decision-reversed: "Opponent seeks rehearing?" by court cite "Tenn
     event MandateIssued()
     authority cite "Tenn. R. App. P. 42(a)"
   }
-  edge-post-decision-reversed-rehearing "Petition for rehearing" -> rehearing {
-    authority cite "Tenn. R. App. P. 39(b)"
-  }
+  "Petition for rehearing" -> rehearing { authority cite "Tenn. R. App. P. 39(b)" }
 }
 
 decision rehearing: "Rehearing decided" by court cite "Tenn. R. App. P. 39(e)"

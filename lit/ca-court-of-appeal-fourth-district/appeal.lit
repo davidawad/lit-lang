@@ -49,7 +49,7 @@ terminal dismissed-jurisdiction: "Dismissed: no appealable judgment or order" ou
 state record-assembled: "Record on appeal" by appellant cite "Cal. Rules of Court, rule 8.120"
 {
   note "The normal record in a civil appeal is a record of the written documents (a clerk's transcript, an appendix, the original superior court file where a local rule permits, an agreed statement or a settled statement) and, if the appellant raises any issue requiring the oral proceedings, a reporter's transcript, agreed statement or settled statement; an administrative record admitted, refused or lodged below is included when an issue requires it (Cal. Rules of Court, rule 8.120(a), (b)). The designation deadlines are in rules 8.121-8.137, which are not vendored."
-  edge-record-assembled-briefing "Record filed" -> briefing {
+  "Record filed" -> briefing {
     event RecordFiled()
     authority cite "Cal. Rules of Court, rule 8.200(a)"
   }
@@ -58,9 +58,7 @@ state record-assembled: "Record on appeal" by appellant cite "Cal. Rules of Cour
 state briefing: "Briefing" by appellant cite "Cal. Rules of Court, rule 8.200(a)"
 {
   note "Each appellant serves and files an opening brief, each respondent a respondent's brief, and each appellant may file a reply brief; no other brief may be filed without the presiding justice's permission, and a party may join in or adopt another brief (Cal. Rules of Court, rule 8.200(a)). An application to file an amicus curiae brief is due within 14 days after the last appellant's reply brief is filed or could have been filed under rule 8.212, whichever is earlier (rule 8.200(c)(1)). The briefing schedule (rule 8.212) and brief length (rule 8.204) are not vendored."
-  edge-briefing-argument "Briefing complete" -> argument {
-    authority cite "Cal. Rules of Court, rule 8.256(d)"
-  }
+  "Briefing complete" -> argument { authority cite "Cal. Rules of Court, rule 8.256(d)" }
 }
 
 decision argument: "Oral argument or waiver; submission" by court cite "Cal. Rules of Court, rule 8.256(d)"

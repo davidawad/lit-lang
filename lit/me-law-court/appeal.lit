@@ -40,17 +40,13 @@ terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismi
 state record: "Appeal docketed; record filed" by court cite "M.R. App. P. 6(a)"
 {
   note "The trial court clerk transmits the notice and docket entries and the Clerk of the Law Court dockets the appeal (M.R. App. P. 3(a)). The appellant orders any transcript with the notice (M.R. App. P. 2A(d)) and makes satisfactory payment arrangements within 14 days after filing the notice and transcript order form (M.R. App. P. 5(b)). The trial court clerk transmits the record no earlier than 28 and no later than 35 days after the notice is filed, or, after a timely post-judgment motion filed in those 28 days, no later than 7 days after entry of the order on it (M.R. App. P. 6(a))."
-  edge-record-briefing "Record complete; briefing notice sent" -> briefing {
-    authority cite "M.R. App. P. 7(a)"
-  }
+  "Record complete; briefing notice sent" -> briefing { authority cite "M.R. App. P. 7(a)" }
 }
 
 state briefing: "Briefs filed" by movant cite "M.R. App. P. 7(b)"
 {
   note "In a Track B appeal (any civil appeal outside the Track A list of rule 7(b)(1)) the appellant's brief is due within 56 days after the record on appeal is complete, the appellee's within 105 days after it, and the reply within 21 days after the appellee's brief is filed; in a Track A appeal the periods are 28 days, 56 days and 14 days (M.R. App. P. 7(b)). Extensions are granted only on the grounds rule 7(b)(3) lists. Principal briefs are limited to the greater of 40 pages or 10,000 words and reply briefs to 15 pages or 4,500 words (M.R. App. P. 7A(f))."
-  edge-briefing-consideration "Briefing complete" -> consideration {
-    authority cite "M.R. App. P. 11"
-  }
+  "Briefing complete" -> consideration { authority cite "M.R. App. P. 11" }
   edge-briefing-unperfected "Brief not filed within the time prescribed" -> dismissed-prosecution {
     authority cite "M.R. App. P. 4(c)"
   }
@@ -64,7 +60,7 @@ terminal dismissed-prosecution: "Appeal dismissed for want of prosecution" outco
 state consideration: "Oral argument or submission on briefs" by court cite "M.R. App. P. 11"
 {
   note "Each side is allowed up to 15 minutes of argument, the appellant reserving up to 3 for rebuttal (M.R. App. P. 11(b)). When the Clerk gives notice that the case is set for consideration on briefs, a party may request oral argument within 7 days after the notice (M.R. App. P. 11(g)). No leading decision on the standard of review is named."
-  edge-consideration-decision "Submitted" -> decision { authority cite "M.R. App. P. 14(a)" }
+  "Submitted" -> decision { authority cite "M.R. App. P. 14(a)" }
 }
 
 decision decision: "Law Court decision" by court cite "M.R. App. P. 14(a)"

@@ -4,6 +4,8 @@ import core.calendar.{ us-federal-holidays }
 import core.frcrimp45.{ frcrimp45 }
 import core.time.{ Served }
 
+forum frcrimp
+
 /// The recurring fixed and weekday Virgin Islands legal holidays in 1 V.I.C.
 /// § 171(a) that the federal calendar does not already close. The code text
 /// is the 2019 U.S. Virgin Islands Code, so these dates are modeled from its
@@ -49,21 +51,10 @@ counting frcrimp45-virgin-islands effective [2023-12-01, ..) known_at 2023-04-24
 
 // Local fixtures exercise this rule in its own module so strict ratcheting
 // sees the state rule count actual deadlines. January 6 is a VI-only holiday.
-deadline virgin-islands-one-business-day: 1.business_days after Served() counted_by frcrimp45-virgin-islands {
-  forum frcrimp
-}
-
-deadline virgin-islands-one-business-day-backward: 1.business_days before Served() counted_by frcrimp45-virgin-islands {
-  forum frcrimp
-}
-
-deadline virgin-islands-one-business-day-backward-federal: 1.business_days before Served() counted_by frcrimp45 {
-  forum frcrimp
-}
-
-deadline virgin-islands-fourteen-days-electronic: 14.days after Served(Electronic) counted_by frcrimp45-virgin-islands {
-  forum frcrimp
-}
+deadline virgin-islands-one-business-day: 1.business_days after Served() counted_by frcrimp45-virgin-islands
+deadline virgin-islands-one-business-day-backward: 1.business_days before Served() counted_by frcrimp45-virgin-islands
+deadline virgin-islands-one-business-day-backward-federal: 1.business_days before Served() counted_by frcrimp45
+deadline virgin-islands-fourteen-days-electronic: 14.days after Served(Electronic) counted_by frcrimp45-virgin-islands
 
 test "Virgin Islands Three King's Day closes only a forward business-day count" cite "1 V.I.C. § 171(a)"
 {

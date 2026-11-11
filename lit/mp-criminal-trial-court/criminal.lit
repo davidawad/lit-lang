@@ -38,9 +38,7 @@ decision initial-appearance: "Release or detention" by court cite "Com. R. Crim.
 decision probable-cause: "Preliminary examination" by court cite "Com. R. Crim. P. 5.1"
 {
   note "A defendant substantially deprived of liberty is entitled to a preliminary examination unless waived, held within a reasonable time and in any event not later than ten (10) days after the initial appearance (Com. R. Crim. P. 5.1)."
-  edge-probable-cause-charged "Held to answer; information filed" -> charged {
-    authority cite "Com. R. Crim. P. 7(a)"
-  }
+  "Held to answer; information filed" -> charged { authority cite "Com. R. Crim. P. 7(a)" }
   edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
     authority cite "Com. R. Crim. P. 5.1"
   }
@@ -49,13 +47,13 @@ decision probable-cause: "Preliminary examination" by court cite "Com. R. Crim. 
 state charged: "Information" by court cite "Com. R. Crim. P. 7(a)"
 {
   note "All offenses except misdemeanors are prosecuted by information, which may be filed without leave of court (Com. R. Crim. P. 7(a)). A motion for a bill of particulars may be made before arraignment or within ten (10) days after it, or later with leave (Com. R. Crim. P. 7(f)). If there is unnecessary delay in filing an information against a defendant held to answer, or in bringing a defendant to trial, the court may dismiss the information or complaint (Com. R. Crim. P. 48(b))."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Com. R. Crim. P. 10" }
+  "Arraignment" -> arraignment { authority cite "Com. R. Crim. P. 10" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "Com. R. Crim. P. 10"
 {
   note "Arraignment is conducted in open court by reading the complaint or information or stating its substance and calling on the defendant to plead, after the defendant is given a copy (Com. R. Crim. P. 10). A defendant may plead not guilty, guilty or nolo contendere, and a refusal to plead is entered as not guilty (Com. R. Crim. P. 11(a))."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Com. R. Crim. P. 16" }
+  "Discovery" -> discovery { authority cite "Com. R. Crim. P. 16" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "Com. R. Crim. P. 12"
@@ -93,7 +91,7 @@ decision plea-decision: "Plea or trial" by accused cite "Com. R. Crim. P. 11"
   edge-plea-decision-abeyance "Plea held in abeyance in a problem-solving court" -> sentencing {
     authority cite "Com. R. Crim. P. 11-1"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Com. R. Crim. P. 23(a)" }
+  "Trial" -> trial { authority cite "Com. R. Crim. P. 23(a)" }
 }
 
 decision trial: "Verdict" by court cite "Com. R. Crim. P. 31"
@@ -122,9 +120,7 @@ decision post-trial: "Post-verdict motions" by court cite "Com. R. Crim. P. 33"
 state sentencing: "Sentencing" by court cite "Com. R. Crim. P. 32(a)"
 {
   note "Sentence is imposed without unreasonable delay, after the court confirms the defendant and counsel have read any presentence report and affords counsel, the defendant and the government an opportunity to speak (Com. R. Crim. P. 32(a)(1)). After sentence following a trial the court advises the defendant of the right to appeal, and the clerk files a notice of appeal on request (Com. R. Crim. P. 32(a)(2)). A sentence may be reduced within 120 days after it is imposed or probation revoked, or after the mandate or a final denial of review, and an illegal sentence corrected at any time (Com. R. Crim. P. 35)."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "Com. R. Crim. P. 32(b)"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "Com. R. Crim. P. 32(b)" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "Com. R. Crim. P. 32(b)"

@@ -190,6 +190,7 @@ test "Counting boundary: cash-collateral-notice-period (weekend)" cite "Bankr. E
   given PetitionFiled() on 2025-12-05
   expect deadline(cash-collateral-notice-period) == 2025-12-08
 }
+
 /// L.B.R. 1007-1(a): in an involuntary case the debtor notifies each creditor
 /// known to claim an interest in cash collateral of the order for relief
 /// within one day of its entry.
@@ -200,6 +201,7 @@ test "Counting boundary: involuntary-cash-collateral-notice-period (weekend)" ci
   given OrderForReliefEntered() on 2025-12-05
   expect deadline(involuntary-cash-collateral-notice-period) == 2025-12-08
 }
+
 /// L.B.R. 1007-2(e): in an involuntary case the debtor files a Matrix List of
 /// Creditors within 14 days of the entry of the order for relief.
 deadline involuntary-matrix-period: 14.days after OrderForReliefEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 1007-2(e)"
@@ -221,6 +223,7 @@ test "Counting boundary: converted-chapter13-final-report-period (weekend)" cite
   given ConversionFromChapter13() on 2025-12-02
   expect deadline(converted-chapter13-final-report-period) == 2026-02-02
 }
+
 /// L.B.R. 2002-3(a): a chapter 11 debtor with more than 200 parties on its
 /// L.B.R. 1007-2(a) matrix files the application to retain a claims agent
 /// with its petition or within 7 days after it, unless the court orders
@@ -232,6 +235,7 @@ test "Counting boundary: claims-agent-application-period (weekend)" cite "Bankr.
   given PetitionFiled() on 2025-12-06
   expect deadline(claims-agent-application-period) == 2025-12-15
 }
+
 /// L.B.R. 2002-3(a)(8): the debtor's counsel notifies the claims agent of an
 /// order dismissing or converting the case within seven days after its entry.
 deadline claims-agent-order-notice-period: 7.days after DismissOrConvertEntered() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
@@ -241,6 +245,7 @@ test "Counting boundary: claims-agent-order-notice-period (weekend)" cite "Bankr
   given DismissOrConvertEntered() on 2025-12-06
   expect deadline(claims-agent-order-notice-period) == 2025-12-15
 }
+
 /// L.B.R. 2002-3(a)(11): within 7 days after serving a document, the claims
 /// agent files a certificate of service referencing it and its docket number
 /// and each party served and the method of service.
@@ -251,6 +256,7 @@ test "Counting boundary: claims-agent-service-certificate-period (weekend)" cite
   given ClaimsAgentNoticeServed() on 2025-12-06
   expect deadline(claims-agent-service-certificate-period) == 2025-12-15
 }
+
 /// L.B.R. 2002-3(a)(18): within 14 days after an order dismissing a case, the
 /// claims agent forwards the clerk an electronic version of all proofs of
 /// claim, uploads the creditor matrix and dockets a final claims register.
@@ -265,6 +271,7 @@ test "Counting boundary: claims-agent-decree-register-period (holiday)" cite "Ba
   given FinalDecreeEntered() on 2025-12-04
   expect deadline(claims-agent-decree-register-period) == 2026-01-02
 }
+
 /// L.B.R. 2002-3(a)(19): within 14 days after the earlier of an order
 /// converting the case or terminating the claims agent's services, the claims
 /// agent forwards the proofs of claim, uploads the public creditor matrix,
@@ -283,6 +290,7 @@ test "Counting boundary: decree-matrix-period (holiday)" cite "Bankr. E.D. Pa. L
   given FinalDecreeEntered() on 2025-12-04
   expect deadline(decree-matrix-period) == 2026-01-02
 }
+
 /// L.B.R. 2004-1(b)(1): if the examinee agrees to the date, time, place and
 /// scope, the party seeking the examination files a notice of examination at
 /// least 7 days before it; no motion, subpoena or order is required.
@@ -293,6 +301,7 @@ test "Counting boundary: agreed-examination-notice-period (holiday)" cite "Bankr
   given Examination() on 2025-12-04
   expect deadline(agreed-examination-notice-period) == 2025-11-26
 }
+
 /// L.B.R. 2004-1(b)(2): the party seeking an examination and the examinee may
 /// file an executed consent order for approval at least 7 days before the
 /// scheduled examination.
@@ -303,6 +312,7 @@ test "Counting boundary: examination-consent-order-period (holiday)" cite "Bankr
   given Examination() on 2025-12-04
   expect deadline(examination-consent-order-period) == 2025-11-26
 }
+
 /// L.B.R. 2014-1(c): an objection to an application to employ a professional
 /// is filed within 7 days of service of the application.
 deadline employment-objection-period: 7.days after EmploymentApplicationServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2014-1(c)"
@@ -312,6 +322,7 @@ test "Counting boundary: employment-objection-period (weekend)" cite "Bankr. E.D
   given EmploymentApplicationServed() on 2025-12-06
   expect deadline(employment-objection-period) == 2025-12-15
 }
+
 /// L.B.R. 2016-1(b): an objection to an application for compensation or
 /// reimbursement of expenses is filed within 14 days of service of the
 /// application.
@@ -331,6 +342,7 @@ test "Counting boundary: chapter13-supplemental-fee-period (holiday)" cite "Bank
   given ModifiedPlanApproved() on 2025-12-02
   expect deadline(chapter13-supplemental-fee-period) == 2026-01-02
 }
+
 /// L.B.R. 2016-5(e): an objection to a request for Payment on Account is
 /// filed within 14 days of service of notice of the request.
 deadline payment-on-account-objection-period: 14.days after PaymentRequestNoticeServed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 2016-5(e)"
@@ -349,6 +361,7 @@ test "Counting boundary: claimant-contest-notice-period (holiday)" cite "Bankr. 
   given ClaimObjectionHearing() on 2025-12-04
   expect deadline(claimant-contest-notice-period) == 2025-11-26
 }
+
 /// L.B.R. 3017-2: an objection to a motion to approve the disclosure
 /// statement or plan voting procedures is filed and served no later than 7
 /// days before the hearing on the disclosure statement.
@@ -359,6 +372,7 @@ test "Counting boundary: disclosure-objection-period (holiday)" cite "Bankr. E.D
   given DisclosureStatementHearing() on 2025-12-04
   expect deadline(disclosure-objection-period) == 2025-11-26
 }
+
 /// L.B.R. 3021-1(c): a post-confirmation distribution report is filed on or
 /// before the 20th day after the end of each calendar quarter.
 deadline distribution-report-period: 20.days after QuarterEnded() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 3021-1(c)"
@@ -373,6 +387,7 @@ test "Counting boundary: insider-compensation-notice-period (holiday)" cite "Ban
   given PetitionFiled() on 2025-12-04
   expect deadline(insider-compensation-notice-period) == 2025-12-26
 }
+
 /// L.B.R. 4002-2(d): an objection to disclosed insider compensation, with a
 /// proposed order and notice of the hearing date, is served at least 21 days
 /// before the hearing.
@@ -383,6 +398,7 @@ test "Counting boundary: insider-compensation-objection-service-period (holiday)
   given InsiderCompensationObjectionHearing() on 2025-12-02
   expect deadline(insider-compensation-objection-service-period) == 2025-11-10
 }
+
 /// L.B.R. 4004-2(b)(2): an objection to a chapter 12 or 13 trustee's final
 /// report is filed within 30 days from the date of service of the clerk's
 /// notice.
@@ -393,6 +409,7 @@ test "Counting boundary: trustee-final-report-objection-period (holiday)" cite "
   given FinalReportNoticeServed() on 2025-12-02
   expect deadline(trustee-final-report-objection-period) == 2026-01-02
 }
+
 /// L.B.R. 4004-3(c): after the debtor's certification regarding domestic
 /// support obligations and § 522(q), the clerk's notice requires any
 /// objection to a chapter 12 or 13 discharge to be filed within 14 days of
@@ -407,6 +424,7 @@ test "Counting boundary: unsealing-objection-period (weekend)" cite "Bankr. E.D.
   given UnsealingNoticeServed() on 2025-12-02
   expect deadline(unsealing-objection-period) == 2026-02-02
 }
+
 /// L.B.R. 5011-1(f): unless the district court directs otherwise, within 14
 /// days after service of a motion to withdraw the reference, an opposing
 /// party files with the district court and serves a brief in opposition.
@@ -422,6 +440,7 @@ test "Counting boundary: contested-resolution-document-period (holiday)" cite "B
   given ContestedMatterResolutionReported() on 2025-12-02
   expect deadline(contested-resolution-document-period) == 2026-01-02
 }
+
 /// L.B.R. 6004-1(a): a response or objection to a motion to sell assets under
 /// § 363(b) or (f) (other than one under FRBP 6004(d)) is filed and served no
 /// later than 21 days after the motion is served.
@@ -432,6 +451,7 @@ test "Counting boundary: sale-objection-period (holiday)" cite "Bankr. E.D. Pa. 
   given SaleMotionServed() on 2025-12-04
   expect deadline(sale-objection-period) == 2025-12-26
 }
+
 /// L.B.R. 7005-1(b)(2): for a motion to dismiss under FRCP 12(b)(6), for
 /// judgment on the pleadings or for summary judgment in an adversary
 /// proceeding, the L.B.R. 9014-3(h) response period is 21 days.
@@ -442,6 +462,7 @@ test "Counting boundary: dispositive-motion-response-period (holiday)" cite "Ban
   given DispositiveMotionServed() on 2025-12-04
   expect deadline(dispositive-motion-response-period) == 2025-12-26
 }
+
 /// L.B.R. 7041-1(b): if judicial approval of an adversary proceeding's
 /// resolution is required or requested, the parties file a stipulation,
 /// motion or other document implementing it within 30 days of reporting it to
@@ -453,6 +474,7 @@ test "Counting boundary: adversary-resolution-document-period (holiday)" cite "B
   given AdversaryResolutionReported() on 2025-12-02
   expect deadline(adversary-resolution-document-period) == 2026-01-02
 }
+
 /// L.B.R. 8003-2: if a notice of appeal is docketed in the district court
 /// without prepayment of the fee, the appellant pays the fee to the
 /// bankruptcy clerk within 14 days after docketing; failing that, the
@@ -480,6 +502,7 @@ test "Counting boundary: appeal-disclosure-period (holiday)" cite "Bankr. E.D. P
   given AppealDocketed() on 2025-12-02
   expect deadline(appeal-disclosure-period) == 2026-01-02
 }
+
 /// L.B.R. 8013-2(a): a motion to expedite an appeal under FRBP 8013(a) is
 /// filed within 14 days of the docketing of the appeal in the district court.
 deadline expedite-motion-period: 14.days after AppealDocketed() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 8013-2(a)"
@@ -493,6 +516,7 @@ test "Counting boundary: late-expedite-motion-period (weekend)" cite "Bankr. E.D
   given ExpeditionGroundArose() on 2025-12-06
   expect deadline(late-expedite-motion-period) == 2025-12-15
 }
+
 /// L.B.R. 8013-2(c)(1): unless the district court directs otherwise, any
 /// reply in support of a motion to expedite an appeal is filed within 3 days
 /// after service of the response.
@@ -503,6 +527,7 @@ test "Counting boundary: expedite-reply-period (weekend)" cite "Bankr. E.D. Pa. 
   given ExpediteResponseServed() on 2025-12-03
   expect deadline(expedite-reply-period) == 2025-12-08
 }
+
 /// L.B.R. 8018-1(b): a motion to extend the time to file a brief on appeal
 /// should be made at least 3 days in advance of the brief's due date.
 deadline brief-extension-motion-period: 3.days before BriefDue() counted_by frbp9006-pennsylvania cite "Bankr. E.D. Pa. L.B.R. 8018-1(b)"
@@ -515,6 +540,7 @@ test "Counting boundary: application-objection-period (weekend)" cite "Bankr. E.
   given ApplicationServed() on 2025-12-06
   expect deadline(application-objection-period) == 2025-12-15
 }
+
 /// L.B.R. 9014-3(h): except as L.B.R. 9014-2 and 9014-3(i) provide, a
 /// response or objection to a motion is filed and served no later than 14
 /// days after the movant serves the motion.
@@ -529,6 +555,7 @@ test "Counting boundary: service-certificate-period (weekend)" cite "Bankr. E.D.
   given ServedDocumentFiled() on 2025-12-03
   expect deadline(service-certificate-period) == 2025-12-08
 }
+
 /// L.B.R. 9015-1: every other party files and serves its statement of consent
 /// to a jury trial by a bankruptcy judge within 14 days of the demanding
 /// party's timely statement.
@@ -547,6 +574,7 @@ test "Counting boundary: mediation-approval-motion-period (holiday)" cite "Bankr
   given MediationConcluded() on 2025-12-02
   expect deadline(mediation-approval-motion-period) == 2026-01-02
 }
+
 /// L.B.R. 9019-3(i)(3): within 14 days of the conclusion of the SLM Program,
 /// the debtor files and serves a Notice of Resolution or a Notice of No
 /// Resolution.
@@ -560,6 +588,7 @@ test "Counting boundary: slm-portal-registration-period (holiday)" cite "Bankr. 
   given SlmCommencementOrderEntered() on 2025-12-04
   expect deadline(slm-portal-registration-period) == 2025-12-26
 }
+
 /// L.B.R. 9019-3(j)(2): no later than 30 days after the debtor submits a
 /// completed Initial SLM Package, the creditor or servicer acknowledges its
 /// receipt on the portal.
@@ -570,6 +599,7 @@ test "Counting boundary: slm-acknowledgement-period (holiday)" cite "Bankr. E.D.
   given SlmPackageSubmitted() on 2025-12-02
   expect deadline(slm-acknowledgement-period) == 2026-01-02
 }
+
 /// L.B.R. 9019-3(j)(3): within 30 days of receiving the Initial SLM Package,
 /// the creditor or servicer notifies the debtor if additional or corrected
 /// documentation is needed.
@@ -580,6 +610,7 @@ test "Counting boundary: slm-documentation-request-period (holiday)" cite "Bankr
   given SlmPackageSubmitted() on 2025-12-02
   expect deadline(slm-documentation-request-period) == 2026-01-02
 }
+
 /// L.B.R. 9019-3(k)(1): if the chapter 13 plan is not confirmed, within 30
 /// days of the Notice of Resolution the debtor files an amended plan
 /// providing for direct SLM Program payments, unless the plan already so
@@ -591,6 +622,7 @@ test "Counting boundary: slm-amended-plan-period (holiday)" cite "Bankr. E.D. Pa
   given SlmResolutionNoticeFiled() on 2025-12-02
   expect deadline(slm-amended-plan-period) == 2026-01-02
 }
+
 /// L.B.R. 9019-3(k)(2): if the confirmed plan pays the creditor's claim pro
 /// rata with other unsecured claims, the debtor moves within 30 days of the
 /// Notice of Resolution to modify it to classify the eligible loans

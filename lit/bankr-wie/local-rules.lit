@@ -144,6 +144,7 @@ test "Counting boundary: chapter7-trustee-documents-period (holiday)" cite "Bank
   given FirstMeetingDate() on 2026-01-01
   expect deadline(chapter7-trustee-documents-period) == 2025-12-24
 }
+
 /// LBR 1007-2(b): in a chapter 12 or 13 case the debtor provides the trustee,
 /// no later than seven days before the first-scheduled meeting of creditors,
 /// the two most recent years' federal and state income tax returns, any
@@ -155,6 +156,7 @@ test "Counting boundary: chapter13-trustee-documents-period (holiday)" cite "Ban
   given FirstMeetingDate() on 2026-01-01
   expect deadline(chapter13-trustee-documents-period) == 2025-12-24
 }
+
 /// LBR 1016-1(c): a party who wants to be heard on a declaration of the
 /// debtor's death files a request for a hearing within 14 days of its
 /// service; absent objection the court may enter the LBR 1016-1(d) order.
@@ -170,6 +172,7 @@ test "Counting boundary: rule-2004-protective-objection-period (weekend)" cite "
   given ProtectiveMotionFiled() on 2026-01-03
   expect deadline(rule-2004-protective-objection-period) == 2026-01-12
 }
+
 /// LBR 2014-1(c)(2), (3): the applicant serves the United States trustee, the
 /// debtor and any committee with notice of a 14-day objection period on an
 /// application to employ a professional; the court may act before it expires
@@ -193,6 +196,7 @@ test "Counting boundary: supplemental-claim-order-period (weekend)" cite "Bankr.
   given SupplementalClaimOrdered() on 2026-01-03
   expect deadline(supplemental-claim-order-period) == 2026-03-16
 }
+
 /// LBR 3002-1(b)(2): a creditor authorized by stipulation files any
 /// supplemental proof of claim by the date the stipulation provides or, if
 /// none, no later than 70 days after the stipulation is filed.
@@ -203,6 +207,7 @@ test "Counting boundary: supplemental-claim-stipulation-period (weekend)" cite "
   given SupplementalClaimStipulated() on 2026-01-03
   expect deadline(supplemental-claim-stipulation-period) == 2026-03-16
 }
+
 /// LBR 3007-1(c), (e): the notice of a claim objection states that the court
 /// may grant relief without a hearing if the claimant does not file and serve
 /// a response within 30 days after service of the notice.
@@ -213,6 +218,7 @@ test "Counting boundary: claim-objection-response-period (weekend)" cite "Bankr.
   given ClaimObjectionNoticeServed() on 2026-01-01
   expect deadline(claim-objection-response-period) == 2026-02-02
 }
+
 /// LBR 3015-1(d): unless the court orders otherwise, the deadline to object
 /// to confirmation of a chapter 13 plan is the later of 28 days after the
 /// trustee concludes the meeting of creditors or 21 days after the filing of
@@ -224,6 +230,7 @@ test "Counting boundary: chapter13-confirmation-objection-meeting-period (weeken
   given MeetingConcluded() on 2026-01-03
   expect deadline(chapter13-confirmation-objection-meeting-period) == 2026-02-02
 }
+
 /// LBR 3015-1(d): the same objection deadline, measured from the filing of a
 /// § 1323 modification.
 deadline chapter13-confirmation-objection-modification-period: 21.days after PreconfirmationModificationFiled() counted_by frbp9006-wisconsin cite "Bankr. E.D. Wis. LBR 3015-1(d)"
@@ -233,6 +240,7 @@ test "Counting boundary: chapter13-confirmation-objection-modification-period (w
   given PreconfirmationModificationFiled() on 2026-01-03
   expect deadline(chapter13-confirmation-objection-modification-period) == 2026-01-26
 }
+
 /// LBR 3015-1(e)(2), (3): an objection to a motion to modify a confirmed
 /// chapter 13 plan is filed and served on the movant, the chapter 13 trustee
 /// and the United States trustee no later than 21 days after service of the
@@ -244,6 +252,7 @@ test "Counting boundary: confirmed-plan-modification-objection-period (weekend)"
   given ConfirmedPlanModificationServed() on 2026-01-03
   expect deadline(confirmed-plan-modification-objection-period) == 2026-01-26
 }
+
 /// LBR 3022-1(b), (c)(1), 3022-2(b)(1), (c)(1): a chapter 11 motion for a
 /// final decree or for interim closure, and a subchapter V final report or
 /// motion, is served with 28 days' notice of the deadline to object on all
@@ -255,6 +264,7 @@ test "Counting boundary: closing-motion-objection-period (weekend)" cite "Bankr.
   given ClosingMotionServed() on 2026-01-03
   expect deadline(closing-motion-objection-period) == 2026-02-02
 }
+
 /// LBR 3022-2(c)(1): in a subchapter V case with a plan confirmed under §
 /// 1191(b), no later than 60 days after the final distribution the debtor
 /// files a final report and account and a motion for final decree, and the
@@ -266,6 +276,7 @@ test "Counting boundary: subchapter-v-final-report-period (weekend)" cite "Bankr
   given FinalDistributionMade() on 2026-01-06
   expect deadline(subchapter-v-final-report-period) == 2026-03-09
 }
+
 /// LBR 4001-1(b)(2): the debtor files notice of every adequate protection
 /// payment made directly to a creditor no later than 28 days after making it.
 deadline direct-adequate-protection-notice-period: 28.days after DirectAdequateProtectionPaid() counted_by frbp9006-wisconsin cite "Bankr. E.D. Wis. LBR 4001-1(b)"
@@ -275,6 +286,7 @@ test "Counting boundary: direct-adequate-protection-notice-period (weekend)" cit
   given DirectAdequateProtectionPaid() on 2026-01-03
   expect deadline(direct-adequate-protection-notice-period) == 2026-02-02
 }
+
 /// LBR 4001-2(a): the notice of a motion for relief from the automatic stay
 /// or the § 1301(a) codebtor stay states that any objection must be filed no
 /// more than 14 days after its service; failure to so notice is cause to deny
@@ -290,6 +302,7 @@ test "Counting boundary: homestead-form-period (holiday)" cite "Bankr. E.D. Wis.
   given DischargeObjectionDeadline() on 2026-01-01
   expect deadline(homestead-form-period) == 2025-12-24
 }
+
 /// LBR 4004-1(a)(2)(A): no more than 30 days after the debtor's final plan
 /// payment to the trustee, the trustee files a certification that the debtor
 /// has made all required payments under the confirmed plan.
@@ -300,6 +313,7 @@ test "Counting boundary: plan-payments-certification-period (weekend)" cite "Ban
   given FinalPlanPaymentMade() on 2026-01-01
   expect deadline(plan-payments-certification-period) == 2026-02-02
 }
+
 /// LBR 4004-1(a)(2)(B): unless otherwise ordered, to receive a chapter 12
 /// discharge the debtor files Local Form 2830 within 60 days after the
 /// trustee files the certification of plan payments; if it is not timely
@@ -311,6 +325,7 @@ test "Counting boundary: chapter12-discharge-form-period (weekend)" cite "Bankr.
   given PaymentsCertificationFiled() on 2026-01-06
   expect deadline(chapter12-discharge-form-period) == 2026-03-09
 }
+
 /// LBR 4004-1(a)(2)(C): unless otherwise ordered, to receive a chapter 13
 /// discharge the debtor files Local Form 2831 within 60 days after the
 /// trustee files the certification of plan payments; if it is not timely
@@ -322,6 +337,7 @@ test "Counting boundary: chapter13-discharge-form-period (weekend)" cite "Bankr.
   given PaymentsCertificationFiled() on 2026-01-06
   expect deadline(chapter13-discharge-form-period) == 2026-03-09
 }
+
 /// LBR 4004-2(b)(2), (c)(2)(B): a motion for a discharge under § 1141(d)(5)
 /// or § 1192 is served with 28 days' notice of the deadline to object on all
 /// parties served with the plan.
@@ -332,6 +348,7 @@ test "Counting boundary: plan-discharge-objection-period (weekend)" cite "Bankr.
   given PlanDischargeMotionServed() on 2026-01-03
   expect deadline(plan-discharge-objection-period) == 2026-02-02
 }
+
 /// LBR 5011-1(b)(1): unless otherwise ordered, a party opposing a motion to
 /// withdraw the reference files and serves a combined objection and
 /// supporting memorandum no later than 21 days after service of the motion.
@@ -342,6 +359,7 @@ test "Counting boundary: reference-withdrawal-objection-period (weekend)" cite "
   given ReferenceWithdrawalMotionServed() on 2026-01-03
   expect deadline(reference-withdrawal-objection-period) == 2026-01-26
 }
+
 /// LBR 5011-1(b)(2): a party supporting the motion may file notice that it
 /// joins and a supplemental memorandum no later than 14 days after service of
 /// the motion.
@@ -355,6 +373,7 @@ test "Counting boundary: reference-withdrawal-reply-period (weekend)" cite "Bank
   given ReferenceWithdrawalObjectionServed() on 2026-01-03
   expect deadline(reference-withdrawal-reply-period) == 2026-01-12
 }
+
 /// LBR 7041-1(a), (c): a proceeding or motion to deny or revoke a discharge
 /// under §§ 727, 1141, 1144, 1228 or 1328 is dismissed only on motion with 21
 /// days' notice; the court may act without a hearing if no one objects or
@@ -368,6 +387,7 @@ test "Counting boundary: discharge-dismissal-objection-period (weekend)" cite "B
   given DischargeDismissalMotionServed() on 2026-01-03
   expect deadline(discharge-dismissal-objection-period) == 2026-01-26
 }
+
 /// LBR 7056-1(b): unless the court orders otherwise, a motion for summary
 /// judgment or other dispositive relief is filed before the earlier of 30
 /// days after the close of all discovery or 60 days before the initial date
@@ -380,6 +400,7 @@ test "Counting boundary: summary-judgment-discovery-period (weekend)" cite "Bank
   given DiscoveryClosed() on 2026-01-01
   expect deadline(summary-judgment-discovery-period) == 2026-02-02
 }
+
 /// LBR 7056-1(b): the same motion, measured back from the initial date set
 /// for an evidentiary hearing.
 deadline summary-judgment-hearing-period: 60.days before InitialEvidentiaryHearing() counted_by frbp9006-wisconsin cite "Bankr. E.D. Wis. LBR 7056-1(b)"
@@ -389,6 +410,7 @@ test "Counting boundary: summary-judgment-hearing-period (weekend)" cite "Bankr.
   given InitialEvidentiaryHearing() on 2026-01-01
   expect deadline(summary-judgment-hearing-period) == 2025-10-31
 }
+
 /// LBR 7056-1(c)(2): unless the court orders otherwise, a response to a
 /// motion for summary judgment is filed no later than 28 days after the
 /// motion is filed; LBR 7012-2 applies the same to motions under FRBP 7012.
@@ -399,6 +421,7 @@ test "Counting boundary: summary-judgment-response-period (weekend)" cite "Bankr
   given SummaryJudgmentMotionFiled() on 2026-01-03
   expect deadline(summary-judgment-response-period) == 2026-02-02
 }
+
 /// LBR 7056-1(c)(3): no reply is required, but one may be filed no later than
 /// 14 days after the response is filed.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frbp9006-wisconsin cite "Bankr. E.D. Wis. LBR 7056-1(c)"
@@ -413,6 +436,7 @@ test "Counting boundary: expedited-service-proof-period (weekend)" cite "Bankr. 
   given ExpeditingMotionGranted() on 2026-01-02
   expect deadline(expedited-service-proof-period) == 2026-01-05
 }
+
 /// LBR 9013-3(b): unless the court for cause orders otherwise, the notice of
 /// a motion to continue the stay under § 362(c)(3) or impose it under §
 /// 362(c)(4) provides 14 days to object and states the hearing date if a
@@ -427,6 +451,7 @@ test "Counting boundary: stay-continuation-hearing-notice-period (weekend)" cite
   given StayContinuationHearing() on 2026-01-06
   expect deadline(stay-continuation-hearing-notice-period) == 2025-12-19
 }
+
 /// LBR 9013-4(b)(1): unless the court orders otherwise, the notice of a §
 /// 1112(b) motion to convert or dismiss a chapter 11 case states that any
 /// objection must be filed not later than 21 days after its service; on a
@@ -438,6 +463,7 @@ test "Counting boundary: chapter11-conversion-objection-period (weekend)" cite "
   given ConversionMotionNoticeServed() on 2026-01-03
   expect deadline(chapter11-conversion-objection-period) == 2026-01-26
 }
+
 /// LBR 9014-1(a)(2)(A): the notice of a motion, application or intended
 /// action affords at least 14 days after its service to object, unless the
 /// court orders, or the Code, the FRBP or these rules require, a different
@@ -454,6 +480,7 @@ test "Counting boundary: unopposed-proposed-order-period (weekend)" cite "Bankr.
   given ObjectionPeriodExpired() on 2026-01-03
   expect deadline(unopposed-proposed-order-period) == 2026-01-12
 }
+
 /// LBR 9014-2(b): unless the court orders otherwise, the movant files a
 /// proposed order after adjudication at a hearing; if none is submitted
 /// within seven days, the court may act adversely, including by an order to
@@ -465,6 +492,7 @@ test "Counting boundary: adjudicated-proposed-order-period (weekend)" cite "Bank
   given MotionAdjudicated() on 2026-01-03
   expect deadline(adjudicated-proposed-order-period) == 2026-01-12
 }
+
 /// LBR 9014-2(c): a chapter 13 trustee who files a notice regarding
 /// settlement of a motion to dismiss or an objection to confirmation files a
 /// proposed order giving effect to the compromise no later than seven days
@@ -501,9 +529,7 @@ state objected: "Objection filed; hearing scheduled" by opponent cite "Bankr. E.
 decision preliminary-hearing: "Preliminary hearing" by court cite "Bankr. E.D. Wis. LBR 9014-1(c)"
 {
   note "If there are sufficient grounds, the court may rule at the preliminary hearing (LBR 9014-1(c)); the movant files a proposed order within seven days after adjudication (LBR 9014-2(b))."
-  edge-preliminary-hearing-decided "Motion granted or denied" -> decided {
-    authority cite "Bankr. E.D. Wis. LBR 9014-2(b)"
-  }
+  "Motion granted or denied" -> decided { authority cite "Bankr. E.D. Wis. LBR 9014-2(b)" }
 }
 
 terminal decided: "Request decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. E.D. Wis. LBR 1001-1"

@@ -127,6 +127,7 @@ test "Counting boundary: entity-resolution-period (weekend)" cite "M.D.N.C. LBR 
   given EntityPetitionFiled() on 2026-01-31
   expect deadline(entity-resolution-period) == 2026-02-17
 }
+
 /// LBR 1007-1(d)(2): on timely written request a chapter 7, 11 or 12 debtor
 /// provides copies of payment advices at least 7 days before the date first
 /// set for the meeting of creditors.
@@ -137,6 +138,7 @@ test "Counting boundary: payment-advices-period (weekend)" cite "M.D.N.C. LBR 10
   given FirstMeetingDate() on 2026-01-31
   expect deadline(payment-advices-period) == 2026-01-23
 }
+
 /// LBR 1007-1(d)(2): to be timely, the request must be received at least 14
 /// days before the date first set for the meeting of creditors.
 deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 1007-1(d)(2)"
@@ -146,6 +148,7 @@ test "Counting boundary: payment-advices-request-period (weekend)" cite "M.D.N.C
   given FirstMeetingDate() on 2026-01-31
   expect deadline(payment-advices-request-period) == 2026-01-16
 }
+
 /// LBR 1007-1(d)(4): a chapter 13 debtor provides copies of payment advices
 /// for examination within 7 days after a written request, unless the court
 /// orders otherwise.
@@ -160,6 +163,7 @@ test "Counting boundary: joint-deconsolidation-motion-period (weekend)" cite "M.
   given MeetingConcluded() on 2026-01-31
   expect deadline(joint-deconsolidation-motion-period) == 2026-02-17
 }
+
 /// LBR 1019-1(a)(2): an objection or motion on the distribution of funds
 /// the chapter 13 trustee holds is filed within 10 days after the case is
 /// converted.
@@ -170,6 +174,7 @@ test "Counting boundary: conversion-funds-objection-period (weekend)" cite "M.D.
   given Chapter13ConvertedTo7() on 2026-02-04
   expect deadline(conversion-funds-objection-period) == 2026-02-17
 }
+
 /// LBR 3003-1(a): in a chapter 11 case other than under subchapter V, non-
 /// governmental units file proofs of claim within 90 days after the date
 /// first set for the meeting of creditors, unless the court orders
@@ -185,6 +190,7 @@ test "Counting boundary: subchapter-v-claim-period (weekend)" cite "M.D.N.C. LBR
   given OrderForReliefEntered() on 2026-01-31
   expect deadline(subchapter-v-claim-period) == 2026-04-13
 }
+
 /// LBR 3003-1(c): a chapter 11 debtor notifies each creditor whose claim is
 /// scheduled as contingent, disputed or unliquidated within 14 days after
 /// the schedules, the addition or the amendment.
@@ -195,6 +201,7 @@ test "Counting boundary: disputed-claim-notice-period (weekend)" cite "M.D.N.C. 
   given Chapter11SchedulesFiled() on 2026-01-31
   expect deadline(disputed-claim-notice-period) == 2026-02-17
 }
+
 /// LBR 3011-1(d): an objection to an application for unclaimed funds is
 /// filed and served within 21 days after the application is served;
 /// otherwise the court may decide it without a hearing.
@@ -205,6 +212,7 @@ test "Counting boundary: unclaimed-funds-objection-period (weekend)" cite "M.D.N
   given UnclaimedFundsApplicationServed() on 2026-01-31
   expect deadline(unclaimed-funds-objection-period) == 2026-02-23
 }
+
 /// LBR 3014-1: in a subchapter V case in which § 1125 does not apply, a
 /// class of secured creditors may elect § 1111(b)(2) within 14 days after
 /// service of the first plan, or a later time the court fixes.
@@ -215,6 +223,7 @@ test "Counting boundary: subchapter-v-election-period (weekend)" cite "M.D.N.C. 
   given FirstPlanServed() on 2026-01-31
   expect deadline(subchapter-v-election-period) == 2026-02-17
 }
+
 /// LBR 4001-1(c)(3): a proposed stay-relief order states that the creditor
 /// has 120 days from its entry to file a deficiency claim for personal
 /// property, unless extended by motion filed before it expires.
@@ -225,6 +234,7 @@ test "Counting boundary: personal-property-deficiency-claim-period (weekend)" ci
   given StayReliefOrderEntered() on 2026-01-30
   expect deadline(personal-property-deficiency-claim-period) == 2026-06-01
 }
+
 /// LBR 4001-1(c)(3): the order states 180 days from its entry for a
 /// deficiency claim for real property.
 deadline real-property-deficiency-claim-period: 180.days after StayReliefOrderEntered() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 4001-1(c)(3)"
@@ -238,6 +248,7 @@ test "Counting boundary: surplus-explanation-period (weekend)" cite "M.D.N.C. LB
   given StayPropertyDisposed() on 2026-01-31
   expect deadline(surplus-explanation-period) == 2026-02-17
 }
+
 /// LBR 4001-1(c)(4): the movant sends any surplus to the trustee within 60
 /// days, pending further order.
 deadline surplus-payment-period: 60.days after StayPropertyDisposed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 4001-1(c)(4)"
@@ -247,6 +258,7 @@ test "Counting boundary: surplus-payment-period (weekend)" cite "M.D.N.C. LBR 40
   given StayPropertyDisposed() on 2026-02-03
   expect deadline(surplus-payment-period) == 2026-04-06
 }
+
 /// LBR 5011-1(b): within 14 days after service of the movant's designation
 /// of the record, any other party may designate additional portions for the
 /// district court.
@@ -257,6 +269,7 @@ test "Counting boundary: additional-record-designation-period (weekend)" cite "M
   given RecordDesignationServed() on 2026-01-31
   expect deadline(additional-record-designation-period) == 2026-02-17
 }
+
 /// LBR 5011-1(c): parties opposing a motion to withdraw the reference file
 /// and serve written responses within 14 days after its service.
 deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 5011-1(c)"
@@ -266,6 +279,7 @@ test "Counting boundary: withdrawal-response-period (weekend)" cite "M.D.N.C. LB
   given WithdrawalMotionServed() on 2026-01-31
   expect deadline(withdrawal-response-period) == 2026-02-17
 }
+
 /// LBR 5011-1(c): the movant may file and serve a reply within 14 days
 /// after service of a response.
 deadline withdrawal-reply-period: 14.days after WithdrawalResponseServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 5011-1(c)"
@@ -275,6 +289,7 @@ test "Counting boundary: withdrawal-reply-period (weekend)" cite "M.D.N.C. LBR 5
   given WithdrawalResponseServed() on 2026-01-31
   expect deadline(withdrawal-reply-period) == 2026-02-17
 }
+
 /// LBR 5020-1(b): a corporate party serving on a creditors' committee files
 /// its corporate disclosure statement within 14 days after being appointed.
 deadline committee-disclosure-period: 14.days after CommitteeAppointment() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 5020-1(b)"
@@ -284,6 +299,7 @@ test "Counting boundary: committee-disclosure-period (weekend)" cite "M.D.N.C. L
   given CommitteeAppointment() on 2026-01-31
   expect deadline(committee-disclosure-period) == 2026-02-17
 }
+
 /// LBR 7007-1(b): a party in interest may respond to a written motion in an
 /// adversary proceeding within 21 days after its service; a brief in
 /// opposition is due by the earlier of that day or 7 business days before
@@ -295,6 +311,7 @@ test "Counting boundary: adversary-motion-response-period (weekend)" cite "M.D.N
   given AdversaryMotionServed() on 2026-01-31
   expect deadline(adversary-motion-response-period) == 2026-02-23
 }
+
 /// LBR 7055-1(a): a party shows good cause in writing why an inactive
 /// adversary proceeding should not be dismissed within 30 days after the
 /// date of the clerk's notice.
@@ -305,6 +322,7 @@ test "Counting boundary: prosecution-cause-period (weekend)" cite "M.D.N.C. LBR 
   given ProsecutionNoticeSent() on 2026-01-30
   expect deadline(prosecution-cause-period) == 2026-03-02
 }
+
 /// LBR 7056-1(c): a party opposing summary judgment files and serves its
 /// brief and Statement of Disputed Material Facts within 21 days after
 /// service of the motion.
@@ -315,6 +333,7 @@ test "Counting boundary: summary-judgment-opposition-period (weekend)" cite "M.D
   given SummaryJudgmentMotionServed() on 2026-01-31
   expect deadline(summary-judgment-opposition-period) == 2026-02-23
 }
+
 /// LBR 7056-1(d): a brief in reply may be filed and served within 14 days
 /// after service of the brief in opposition.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 7056-1(d)"
@@ -324,6 +343,7 @@ test "Counting boundary: summary-judgment-reply-period (weekend)" cite "M.D.N.C.
   given SummaryJudgmentOppositionServed() on 2026-01-31
   expect deadline(summary-judgment-reply-period) == 2026-02-17
 }
+
 /// LBR 9013-1(d): absent a date in the clerk's notice, a party in interest
 /// may respond to a motion within the earlier of 14 days after its service
 /// or 3 business days before the hearing.
@@ -334,6 +354,7 @@ test "Counting boundary: motion-response-period (weekend)" cite "M.D.N.C. LBR 90
   given MotionServed() on 2026-01-31
   expect deadline(motion-response-period) == 2026-02-17
 }
+
 /// LBR 9013-1(e): an optional brief in opposition to a motion is filed and
 /// served within the earlier of 21 days after its service or 7 business
 /// days before any hearing.
@@ -344,6 +365,7 @@ test "Counting boundary: motion-opposition-brief-period (weekend)" cite "M.D.N.C
   given MotionServed() on 2026-01-31
   expect deadline(motion-opposition-brief-period) == 2026-02-23
 }
+
 /// LBR 9015-1: a party that does not consent to final orders by the court
 /// has 30 days from the first scheduling order to move to determine whether
 /// the court may enter them, or its right to a jury trial is waived.
@@ -354,6 +376,7 @@ test "Counting boundary: final-order-motion-period (weekend)" cite "M.D.N.C. LBR
   given SchedulingOrderEntered() on 2026-01-30
   expect deadline(final-order-motion-period) == 2026-03-02
 }
+
 /// LBR 9019-2(a)(2): within 14 days after an order requiring a mediated
 /// settlement conference, any party may move to dispense with it.
 deadline mediation-dispense-motion-period: 14.days after MediationOrderEntered() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9019-2(a)(2)"
@@ -363,6 +386,7 @@ test "Counting boundary: mediation-dispense-motion-period (weekend)" cite "M.D.N
   given MediationOrderEntered() on 2026-01-31
   expect deadline(mediation-dispense-motion-period) == 2026-02-17
 }
+
 /// LBR 9019-2(a)(2): any party may respond within 14 days after service of
 /// the motion to dispense.
 deadline mediation-dispense-response-period: 14.days after MediationDispenseMotionServed() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9019-2(a)(2)"
@@ -372,6 +396,7 @@ test "Counting boundary: mediation-dispense-response-period (weekend)" cite "M.D
   given MediationDispenseMotionServed() on 2026-01-31
   expect deadline(mediation-dispense-response-period) == 2026-02-17
 }
+
 /// LBR 9019-2(a)(3): within 14 days after the order, any party may move, by
 /// consent, to use another dispute resolution procedure instead.
 deadline other-procedure-motion-period: 14.days after MediationOrderEntered() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9019-2(a)(3)"
@@ -381,6 +406,7 @@ test "Counting boundary: other-procedure-motion-period (weekend)" cite "M.D.N.C.
   given MediationOrderEntered() on 2026-01-31
   expect deadline(other-procedure-motion-period) == 2026-02-17
 }
+
 /// LBR 9019-2(b)(1): the parties may select a mediator by filing a
 /// Designation of Mediator within 21 days after the order, or such other
 /// time as the court directs.
@@ -391,6 +417,7 @@ test "Counting boundary: mediator-designation-period (weekend)" cite "M.D.N.C. L
   given MediationOrderEntered() on 2026-01-31
   expect deadline(mediator-designation-period) == 2026-02-23
 }
+
 /// LBR 9019-2(d): on agreement the parties provide the mediator a formal,
 /// executed written agreement within 7 days of the settlement.
 deadline mediated-agreement-period: 7.days after MediatedSettlementReached() counted_by frbp9006-north-carolina cite "M.D.N.C. LBR 9019-2(d)"
@@ -403,6 +430,7 @@ test "Counting boundary: mediator-report-period (weekend)" cite "M.D.N.C. LBR 90
   given MediationConcluded() on 2026-01-31
   expect deadline(mediator-report-period) == 2026-02-17
 }
+
 /// LBR 9072-1(a)(1): when no objection is filed by the objection deadline
 /// set with a tentative hearing, the movant submits a proposed order within
 /// 5 days after the deadline passes.
@@ -422,9 +450,7 @@ start motion-filed
 state motion-filed: "Motion filed and served" by movant cite "M.D.N.C. LBR 9013-1(b)"
 {
   note "A written motion states its grounds and relief, is served on the parties it affects, and is filed with its supporting documents (LBR 9013-1(b)); the clerk sets the hearing and gives notice (LBR 9013-1(f), 9007-1). Responses are due by the date in the clerk's notice or within the earlier of 14 days after service or 3 business days before the hearing (LBR 9013-1(d)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-response "Response filed" -> response {
-    authority cite "M.D.N.C. LBR 9013-1(d)"
-  }
+  "Response filed" -> response { authority cite "M.D.N.C. LBR 9013-1(d)" }
   edge-motion-filed-unopposed "No timely objection; proposed order submitted" -> ruling {
     authority cite "M.D.N.C. LBR 9072-1(a)"
   }
@@ -433,7 +459,7 @@ state motion-filed: "Motion filed and served" by movant cite "M.D.N.C. LBR 9013-
 state response: "Response filed" by opponent cite "M.D.N.C. LBR 9013-1(d)"
 {
   note "A response must reasonably disclose the basis of the party's position and the issues contested, or the court may resolve the matter without a hearing (LBR 9013-1(d)); an optional opposing brief is limited as LBR 7007-1(c)(2) provides (LBR 9013-1(e))."
-  edge-response-ruling "Matter heard" -> ruling { authority cite "M.D.N.C. LBR 9013-1(f)" }
+  "Matter heard" -> ruling { authority cite "M.D.N.C. LBR 9013-1(f)" }
 }
 
 decision ruling: "Motion decided" by court cite "M.D.N.C. LBR 9013-1(f)"

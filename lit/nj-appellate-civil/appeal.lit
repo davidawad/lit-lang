@@ -38,7 +38,7 @@ start notice-filed
 state notice-filed: "Notice of appeal, transcript request and case information statement filed" by appellant cite "N.J. Ct. R. 2:5-1(a)"
 {
   note "Appeals lie to the Appellate Division as of right from final judgments of the Superior Court trial divisions, final judgments being those that finally resolve all issues as to all parties, and from the orders R. 2:2-3(b) lists (R. 2:2-3(a), (b)). An appeal from a final judgment is taken by filing with the court below and the appellate court, and serving on all other parties who appeared, a notice of appeal, a transcript request form (or a certification under R. 2:5-3(c)) and a case information statement (R. 2:5-1(a), (b)); a copy goes to the trial judge, whose failure to receive it does not defeat jurisdiction (R. 2:5-1(c)). In a civil action the notice designates the judgment or part appealed from, the judge below and the courts from and to which the appeal is taken (R. 2:5-1(f)). Within 30 days of receipt of the notice the trial judge may file an amplification of a prior statement or opinion, and if there is none files a written opinion within 15 days (R. 2:5-1(d)). The respondent files a case information statement within 15 days after service of the notice of appeal (R. 2:5-1(e)). The time to appeal is in R. 2:4-1, which is not vendored."
-  edge-notice-filed-record "Transcript or statement of proceedings prepared" -> record {
+  "Transcript or statement of proceedings prepared" -> record {
     event RecordFiled()
     authority cite "N.J. Ct. R. 2:5-3(e)"
   }
@@ -47,7 +47,7 @@ state notice-filed: "Notice of appeal, transcript request and case information s
 state record: "Transcript or statement of proceedings prepared" by court cite "N.J. Ct. R. 2:5-3(e)"
 {
   note "The appellant serves the transcript request no later than the filing and service of the notice of appeal (R. 2:5-1(g)). The transcript includes the entire proceedings below except openings, closings, voir dire and legal argument unless a question about them is raised (R. 2:5-3(b)); it may be abbreviated by written consent or by order on a motion filed no later than the notice of appeal, the request then served within 3 days after the order (R. 2:5-3(c)). Unless exempt, the appellant deposits the reporter's estimate or $500 for each day or fraction of trial or hearing (R. 2:5-3(d)). The reporter delivers the transcript to the Appellate Division transcript unit and notifies the parties (R. 2:5-3(e)). If no verbatim record was made, the appellant serves a statement of the proceedings within 14 days of filing the notice of appeal, the respondent may serve objections or amendments within 14 days after service, and the court below settles the statement within 14 days after they are filed (R. 2:5-3(f)). An appeal does not stay proceedings in a civil action; a stay may be ordered on motion, first to the court below before argument or submission, and a money judgment is stayed only on a supersedeas bond, other security or a cash deposit unless the court orders otherwise for good cause (R. 2:9-5(a), (b))."
-  edge-record-briefing "Briefs filed" -> briefing { authority cite "N.J. Ct. R. 2:6-2(a)" }
+  "Briefs filed" -> briefing { authority cite "N.J. Ct. R. 2:6-2(a)" }
 }
 
 state briefing: "Briefs filed" by appellant cite "N.J. Ct. R. 2:6-2(a)"
@@ -78,20 +78,14 @@ decision appellate-decision: "Appellate Division decides" by court cite "N.J. Ct
   edge-appellate-decision-affirmed-without-opinion "Affirmed without opinion" -> after-decision {
     authority cite "N.J. Ct. R. 2:11-3(e)"
   }
-  edge-appellate-decision-reversed "Reversed or modified" -> reversed {
-    authority cite "N.J. Ct. R. 2:11-3(b)"
-  }
+  "Reversed or modified" -> reversed { authority cite "N.J. Ct. R. 2:11-3(b)" }
 }
 
 decision after-decision: "Reconsideration, certification, or neither" by appellant cite "N.J. Ct. R. 2:12-3(a)"
 {
   note "Within ten days after entry of the judgment or order, unless enlarged by order, a party may move for reconsideration (R. 2:11-6(a)). To seek certification of a final judgment of the Appellate Division, the petitioner serves the notice of petition for certification on all affected parties and files it with the Clerk of the Supreme Court, with the fee, within 20 days after its entry (R. 2:12-3(a)); a notice of cross petition is served and filed within 10 days after the notice of petition (R. 2:12-3(b)). The petition itself is served and filed within 10 days after filing the notice of petition or 30 days after entry of the final judgment, whichever is later (R. 2:12-7(b))."
-  edge-after-decision-reconsideration "Motion for reconsideration" -> reconsideration {
-    authority cite "N.J. Ct. R. 2:11-6(a)"
-  }
-  edge-after-decision-certification "Notice of petition for certification" -> certification {
-    authority cite "N.J. Ct. R. 2:12-3(a)"
-  }
+  "Motion for reconsideration" -> reconsideration { authority cite "N.J. Ct. R. 2:11-6(a)" }
+  "Notice of petition for certification" -> certification { authority cite "N.J. Ct. R. 2:12-3(a)" }
   edge-after-decision-none "No further review" -> affirmed {
     authority cite "N.J. Ct. R. 2:11-3(b)"
   }

@@ -117,6 +117,7 @@ test "Counting boundary: complaint-after-summons-period (weekend)" cite "USCIT R
   given SummonsFiled() on 2026-08-21
   expect deadline(complaint-after-summons-period) == 2026-09-21
 }
+
 /// A defendant not served within 90 days after the complaint is filed is
 /// dismissed without prejudice or ordered served; good cause extends it.
 /// It does not apply to service in a foreign country.
@@ -127,6 +128,7 @@ test "Counting boundary: service-period (weekend)" cite "USCIT R. 4(l)"
   given ComplaintFiled() on 2026-08-23
   expect deadline(service-period) == 2026-11-23
 }
+
 /// The waiver request gives the defendant at least 30 days after it was
 /// sent (at least 60 days outside any judicial district) to return it.
 deadline waiver-return-period: 30.days after WaiverRequestSent(WithinDistrict) counted_by uscit6 cite "USCIT R. 4(c)(1)(F)"
@@ -136,6 +138,7 @@ test "Counting boundary: waiver-return-period (weekend)" cite "USCIT R. 4(c)(1)(
   given WaiverRequestSent(WithinDistrict) on 2026-08-21
   expect deadline(waiver-return-period) == 2026-09-21
 }
+
 deadline waiver-return-abroad-period: 60.days after WaiverRequestSent(Abroad) counted_by uscit6 cite "USCIT R. 4(c)(1)(F)"
 /// A defendant who timely returns a waiver answers 60 days after the
 /// request was sent, or 90 days when sent outside any judicial district.
@@ -153,6 +156,7 @@ test "Counting boundary: waiver-answer-abroad-period (weekend) [repeat 2]" cite 
   given WaiverRequestSent(Abroad) on 2026-08-23
   expect deadline(waiver-answer-abroad-period) == 2026-11-23
 }
+
 /// The United States answers within 60 days after service on the
 /// Attorney-in-Charge, International Trade Field Office; no answer is
 /// served in a § 1581(c) action (12(a)(1)(A)(i)).
@@ -169,6 +173,7 @@ test "Counting boundary: answer-period (weekend)" cite "USCIT R. 12(a)(1)(B)(i)"
   given ComplaintServed() on 2026-08-22
   expect deadline(answer-period) == 2026-09-14
 }
+
 /// After the court denies a Rule 12 motion or postpones its disposition
 /// until trial, the responsive pleading is due 14 days after notice.
 deadline answer-after-motion-period: 14.days after MotionDisposed() counted_by uscit6 cite "USCIT R. 12(a)(2)(A)"
@@ -178,6 +183,7 @@ test "Counting boundary: answer-after-motion-period (weekend)" cite "USCIT R. 12
   given MotionDisposed() on 2026-08-22
   expect deadline(answer-after-motion-period) == 2026-09-08
 }
+
 /// A response to a motion is served within 21 days after service of the
 /// motion; to a dispositive motion (7(g)), within 35 days; the movant
 /// replies to that response within 21 days.
@@ -195,6 +201,7 @@ test "Counting boundary: dispositive-response-period (weekend) [repeat 2]" cite 
   given ServedPaper(DispositiveMotion, Personal) on 2026-08-22
   expect deadline(dispositive-response-period) == 2026-09-28
 }
+
 deadline dispositive-reply-period: 21.days after ServedPaper(DispositiveResponse) counted_by uscit6 cite "USCIT R. 7(d)"
 
 test "Counting boundary: dispositive-reply-period (weekend)" cite "USCIT R. 7(d)"
@@ -208,6 +215,7 @@ test "Counting boundary: dispositive-reply-period (weekend) [repeat 2]" cite "US
   given ServedPaper(DispositiveResponse, Personal) on 2026-08-22
   expect deadline(dispositive-reply-period) == 2026-09-14
 }
+
 /// A motion for a statutory injunction against liquidation is filed within
 /// 30 days after service of the complaint.
 deadline statutory-injunction-period: 30.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 56.2(a)(4)(A)"
@@ -217,6 +225,7 @@ test "Counting boundary: statutory-injunction-period (weekend)" cite "USCIT R. 5
   given ComplaintServed() on 2026-08-21
   expect deadline(statutory-injunction-period) == 2026-09-21
 }
+
 /// In a § 1581(c) action the agency files the record within 40 days after
 /// service of the complaint on it.
 deadline agency-record-period: 40.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 73.2(a)"
@@ -229,6 +238,7 @@ test "Counting boundary: customs-documents-period (weekend)" cite "USCIT R. 73.1
   given SummonsFiled() on 2026-08-23
   expect deadline(customs-documents-period) == 2026-11-23
 }
+
 /// The Joint Status Report and proposed briefing schedule are due no later
 /// than 30 days after the record is filed.
 deadline joint-status-report-period: 30.days after AgencyRecordFiled() counted_by uscit6 cite "USCIT R. 56.2(a)(5)(A)"
@@ -238,6 +248,7 @@ test "Counting boundary: joint-status-report-period (weekend)" cite "USCIT R. 56
   given AgencyRecordFiled() on 2026-08-21
   expect deadline(joint-status-report-period) == 2026-09-21
 }
+
 /// Unless the scheduling order provides otherwise, the motion for judgment
 /// on the agency record is due 60 days after service of the scheduling
 /// order, responses 60 days after service of the movant's brief, and the
@@ -257,6 +268,7 @@ test "Counting boundary: agency-record-reply-period (weekend) [repeat 2]" cite "
   given ServedPaper(AgencyRecordResponse, Personal) on 2026-08-22
   expect deadline(agency-record-reply-period) == 2026-09-21
 }
+
 /// A motion for oral argument is due no later than 21 days after service of
 /// the reply brief.
 deadline agency-record-argument-period: 21.days after ServedPaper(AgencyRecordReply) counted_by uscit6 cite "USCIT R. 56.2(e)"
@@ -272,6 +284,7 @@ test "Counting boundary: agency-record-argument-period (weekend) [repeat 2]" cit
   given ServedPaper(AgencyRecordReply, Personal) on 2026-08-22
   expect deadline(agency-record-argument-period) == 2026-09-14
 }
+
 /// The plaintiffs file a single joint appendix within 14 days of the filing
 /// of the reply briefs.
 deadline joint-appendix-period: 14.days after ReplyBriefsFiled() counted_by uscit6 cite "USCIT R. 56.2(c)(3)"
@@ -281,6 +294,7 @@ test "Counting boundary: joint-appendix-period (weekend)" cite "USCIT R. 56.2(c)
   given ReplyBriefsFiled() on 2026-08-22
   expect deadline(joint-appendix-period) == 2026-09-08
 }
+
 /// A § 1581(c) plaintiff dismisses by notice only within 30 days after
 /// service of the complaint; later it needs a stipulation or an order.
 deadline voluntary-dismissal-notice-period: 30.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 56.2(g)"
@@ -290,6 +304,7 @@ test "Counting boundary: voluntary-dismissal-notice-period (weekend)" cite "USCI
   given ComplaintServed() on 2026-08-21
   expect deadline(voluntary-dismissal-notice-period) == 2026-09-21
 }
+
 /// Unless the remand order provides otherwise: the agency files the
 /// certified list within 14 days of filing its remand determination;
 /// opposing comments are due within 30 days after that filing; supporting
@@ -302,6 +317,7 @@ test "Counting boundary: remand-record-period (weekend)" cite "USCIT R. 56.2(h)(
   given RemandDeterminationFiled() on 2026-08-22
   expect deadline(remand-record-period) == 2026-09-08
 }
+
 deadline remand-opposition-period: 30.days after RemandDeterminationFiled() counted_by uscit6 cite "USCIT R. 56.2(h)(2)"
 
 test "Counting boundary: remand-opposition-period (weekend)" cite "USCIT R. 56.2(h)(2)"
@@ -309,6 +325,7 @@ test "Counting boundary: remand-opposition-period (weekend)" cite "USCIT R. 56.2
   given RemandDeterminationFiled() on 2026-08-21
   expect deadline(remand-opposition-period) == 2026-09-21
 }
+
 deadline remand-support-period: 30.days after RemandOppositionFiled() counted_by uscit6 cite "USCIT R. 56.2(h)(3)"
 
 test "Counting boundary: remand-support-period (weekend)" cite "USCIT R. 56.2(h)(3)"
@@ -316,6 +333,7 @@ test "Counting boundary: remand-support-period (weekend)" cite "USCIT R. 56.2(h)
   given RemandOppositionFiled() on 2026-08-21
   expect deadline(remand-support-period) == 2026-09-21
 }
+
 deadline remand-appendix-period: 14.days after RemandSupportFiled() counted_by uscit6 cite "USCIT R. 56.2(h)(4)"
 
 test "Counting boundary: remand-appendix-period (weekend)" cite "USCIT R. 56.2(h)(4)"
@@ -323,6 +341,7 @@ test "Counting boundary: remand-appendix-period (weekend)" cite "USCIT R. 56.2(h
   given RemandSupportFiled() on 2026-08-22
   expect deadline(remand-appendix-period) == 2026-09-08
 }
+
 /// Unless the court orders otherwise, a summary judgment motion may be
 /// filed until 30 days after the close of all discovery.
 deadline summary-judgment-period: 30.days after DiscoveryClosed() counted_by uscit6 cite "USCIT R. 56(b)"
@@ -332,6 +351,7 @@ test "Counting boundary: summary-judgment-period (weekend)" cite "USCIT R. 56(b)
   given DiscoveryClosed() on 2026-08-21
   expect deadline(summary-judgment-period) == 2026-09-21
 }
+
 /// A defaulted party that has appeared is served with written notice of
 /// the application at least 14 days before the hearing.
 deadline default-notice-period: 14.days before DefaultHearingSet() counted_by uscit6 cite "USCIT R. 55(b)"
@@ -341,6 +361,7 @@ test "Counting boundary: default-notice-period (weekend)" cite "USCIT R. 55(b)"
   given DefaultHearingSet() on 2026-08-22
   expect deadline(default-notice-period) == 2026-08-07
 }
+
 /// A judgment that needs a separate document is entered when it is set out
 /// in one or 150 days after its docket entry, whichever is earlier.
 deadline deemed-entry-period: 150.days after DocketEntryWithoutSeparateDocument() counted_by uscit6 cite "USCIT R. 58(c)(2)(B)"
@@ -391,6 +412,7 @@ test "Counting boundary: eaja-application-period (weekend)" cite "USCIT R. 54.1(
   given FinalJudgment() on 2026-08-21
   expect deadline(eaja-application-period) == 2026-09-21
 }
+
 deadline eaja-response-period: 30.days after ServedPaper(FeeApplication) counted_by uscit6 cite "USCIT R. 54.1(c)"
 
 test "Counting boundary: eaja-response-period (weekend)" cite "USCIT R. 54.1(c)"

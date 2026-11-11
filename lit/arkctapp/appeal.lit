@@ -68,9 +68,7 @@ start notice-filed
 state notice-filed: "Notice of appeal filed" by movant cite "Ark. R. App. P.–Civ. 3"
 {
   note "The appeal arrives from lit/ar-circuit. A notice of appeal is filed within 30 days from the entry of the judgment, decree or order appealed from, or of the Rule 54(b) certificate; a notice of cross-appeal within the later of 10 days after the notice of appeal is filed or 30 days from entry (Ark. R. App. P.–Civ. 4(a)). A timely motion under Ark. R. Civ. P. 50(b), 52(b) or 59(a), or another motion to vacate, alter or amend made no later than 10 days after entry, extends the time to 30 days from the order disposing of the last motion or from its deemed denial on the 30th day after filing (Ark. R. App. P.–Civ. 4(b)(1)); on a failure to receive notice of the judgment, the circuit court on motion filed within 180 days of entry extends the time by 14 days from its order (Ark. R. App. P.–Civ. 4(b)(3)). The filing fee is not stated in the vendored rules. All cases are filed in the Court of Appeals except those Ark. Sup. Ct. R. 1-2(a) assigns to the Supreme Court, and any case is subject to reassignment or transfer (Ark. Sup. Ct. R. 1-2(a)-(c)). No leading decision is named."
-  edge-notice-filed-appealability "Notice filed" -> appealability {
-    authority cite "Ark. R. App. P.–Civ. 2(a)"
-  }
+  "Notice filed" -> appealability { authority cite "Ark. R. App. P.–Civ. 2(a)" }
 }
 
 decision appealability: "Appellate jurisdiction check" by court cite "Ark. R. App. P.–Civ. 2(a)"
@@ -79,9 +77,7 @@ decision appealability: "Appellate jurisdiction check" by court cite "Ark. R. Ap
   edge-appealability-dismissed "Not an appealable order, or untimely" -> dismissed-jurisdiction {
     authority cite "Ark. R. App. P.–Civ. 2(a)"
   }
-  edge-appealability-record "Appealable order" -> record {
-    authority cite "Ark. R. App. P.–Civ. 5(a)"
-  }
+  "Appealable order" -> record { authority cite "Ark. R. App. P.–Civ. 5(a)" }
 }
 
 terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" outcome [loss, dismissal, jurisdictional] cite "Ark. R. App. P.–Civ. 2(a)"
@@ -92,7 +88,7 @@ terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" 
 state record: "Record lodged" by movant cite "Ark. R. App. P.–Civ. 5(a)"
 {
   note "The record on appeal is filed with the clerk of the Supreme Court and docketed within 90 days from the filing of the first notice of appeal, or within 30 days in an appeal from an interlocutory order under Rule 2(a)(6) or (7) (Ark. R. App. P.–Civ. 5(a)). When stenographically reported material is designated, the circuit court may extend the time by order entered before it expires, on the findings Rule 5(b)(1) lists, but in no event more than seven months from the filing of the first notice of appeal; beyond that, the appellant may petition the Supreme Court for a writ of certiorari under Ark. Sup. Ct. R. 3-5 (Ark. R. App. P.–Civ. 5(b)). Any party may docket the appeal on a partial record to move for dismissal or other intermediate relief (Ark. R. App. P.–Civ. 5(c))."
-  edge-record-briefing "Record lodged" -> briefing { authority cite "Ark. Sup. Ct. R. 4-4(b)" }
+  "Record lodged" -> briefing { authority cite "Ark. Sup. Ct. R. 4-4(b)" }
 }
 
 state briefing: "Briefing: appellant, appellee, reply" by movant cite "Ark. Sup. Ct. R. 4-4"
@@ -112,9 +108,7 @@ terminal dismissed-briefing: "Appeal dismissed for failure to file the appellant
 state argument: "Oral argument or submission on briefs" by court cite "Ark. Sup. Ct. R. 5-1"
 {
   note "The case is subject to call on the next Thursday (Supreme Court) or Wednesday (Court of Appeals) after the time for the last reply brief expires (Ark. Sup. Ct. R. 4-4(f)). A party requests oral argument by letter filed with its initial or reply brief; argument is allowed on request unless the appeal is frivolous, the dispositive issues have been decided authoritatively, or argument would not significantly aid the decision. Counsel who did not request argument and will not appear notify the clerk at least five days before; not more than 20 minutes is allowed each side without special leave (Ark. Sup. Ct. R. 5-1(a)-(c))."
-  edge-argument-disposition "Submitted for decision" -> disposition {
-    authority cite "Ark. Sup. Ct. R. 5-2"
-  }
+  "Submitted for decision" -> disposition { authority cite "Ark. Sup. Ct. R. 5-2" }
 }
 
 decision disposition: "Decision" by court cite "Ark. Sup. Ct. R. 5-2"

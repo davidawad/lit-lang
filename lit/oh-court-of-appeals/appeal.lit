@@ -47,13 +47,13 @@ state notice-filed: "Notice of appeal filed" by appellant cite "App.R. 3(A)"
 state record-filed: "Record filed" by court cite "App.R. 11(B)"
 {
   note "Upon receipt of the record, the clerk of the court of appeals files it and immediately gives notice to all parties of the date it was filed (App.R. 11(B)). The briefing periods run from the date the clerk mails that notice (App.R. 18(A))."
-  edge-record-filed-briefing "Briefing" -> briefing { authority cite "App.R. 18(A)" }
+  "Briefing" -> briefing { authority cite "App.R. 18(A)" }
 }
 
 state briefing: "Briefs filed" by appellant cite "App.R. 18(A)"
 {
   note "The appellant serves and files its brief within twenty days after the clerk mails the App.R. 11(B) notice, the appellee within twenty days after service of the appellant's brief, and the appellant may reply within ten days after service of the appellee's brief (App.R. 18(A)). On an accelerated calendar the periods are fifteen and fifteen days and no reply brief is filed unless ordered (App.R. 11.1(C)). Briefs are limited to 9,000 words, replies to 4,500 (App.R. 19(A)), and contain the assignments of error and argument App.R. 16(A) requires. A response to a motion may be filed within ten days after its service and a reply within seven days after service of the opposition (App.R. 15(A)). If the appellant fails to file its brief in time the court may dismiss the appeal; an appellee that fails to file is not heard at oral argument except by permission, and the court may accept the appellant's statement of the facts and issues (App.R. 18(C))."
-  edge-briefing-argument "Oral argument scheduled" -> argument { authority cite "App.R. 21(A)" }
+  "Oral argument scheduled" -> argument { authority cite "App.R. 21(A)" }
   edge-briefing-submitted "Submitted on the briefs" -> appellate-decision {
     authority cite "App.R. 12(A)"
   }
@@ -73,14 +73,10 @@ state argument: "Oral argument" by court cite "App.R. 21"
 decision appellate-decision: "Court of appeals determination" by court cite "App.R. 12(A)"
 {
   note "On an undismissed appeal the court of appeals reviews and affirms, modifies or reverses the judgment or final order, determines the appeal on the assignments of error in the briefs, the record and any oral argument, and decides each assignment of error not made moot, giving reasons in writing; it may disregard an assignment of error not identified in the record or not separately argued (App.R. 12(A)). Where the appellee is entitled to affirmance as a matter of law the court enters judgment accordingly; where the appellant is entitled to judgment as a matter of law it reverses and renders the judgment the trial court should have rendered, or remands with instructions (App.R. 12(B)). A judgment against the manifest weight of the evidence is reversed under App.R. 12(C), in a jury case only on the concurrence of all three judges. The judgment is effective only when entered by the clerk upon the journal (App.R. 22(A))."
-  edge-appellate-decision-affirmed "Affirmed" -> affirmed { authority cite "App.R. 12(B)" }
-  edge-appellate-decision-reversed "Reversed and rendered" -> reversed {
-    authority cite "App.R. 12(B)"
-  }
-  edge-appellate-decision-remanded "Reversed and remanded" -> remanded {
-    authority cite "App.R. 12(C)"
-  }
-  edge-appellate-decision-reconsideration "Application for reconsideration or en banc consideration" -> reconsideration {
+  "Affirmed" -> affirmed { authority cite "App.R. 12(B)" }
+  "Reversed and rendered" -> reversed { authority cite "App.R. 12(B)" }
+  "Reversed and remanded" -> remanded { authority cite "App.R. 12(C)" }
+  "Application for reconsideration or en banc consideration" -> reconsideration {
     authority cite "App.R. 26(A)"
   }
   edge-appellate-decision-supreme "Jurisdictional appeal to the Supreme Court of Ohio" -> supreme-appeal-filed {

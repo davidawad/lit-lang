@@ -58,9 +58,7 @@ state amended: "Amended pleading" by movant cite "N.J. Ct. R. 4:9-1"
   edge-amended-tested "Amended pleading met with a new motion to dismiss" -> dismissal-motion {
     authority cite "N.J. Ct. R. 4:6-2"
   }
-  edge-amended-answered "Amended pleading answered" -> answered {
-    authority cite "N.J. Ct. R. 4:9-1"
-  }
+  "Amended pleading answered" -> answered { authority cite "N.J. Ct. R. 4:9-1" }
 }
 
 terminal dismissed-pleading: "Dismissed on a motion under R. 4:6-2" outcome [loss, dismissal] cite "N.J. Ct. R. 4:6-2"
@@ -95,9 +93,7 @@ terminal default-won: "Default judgment for applicant" outcome [win] cite "N.J. 
 state answered: "Answer filed" by movant cite "N.J. Ct. R. 4:6-1(a)"
 {
   note "The party filing the responsive pleading certifies that it was served within the time allowed by R. 4:6 or the other rule it names (R. 4:6-1(d)). The answer includes any counterclaim (R. 4:6-1(a))."
-  edge-answered-discovery "Case proceeds to discovery" -> discovery {
-    authority cite "N.J. Ct. R. 4:10-2(a)"
-  }
+  "Case proceeds to discovery" -> discovery { authority cite "N.J. Ct. R. 4:10-2(a)" }
 }
 
 state discovery: "Discovery" by movant cite "N.J. Ct. R. 4:10-2(a)"
@@ -112,8 +108,8 @@ state discovery: "Discovery" by movant cite "N.J. Ct. R. 4:10-2(a)"
   edge-discovery-sj "Motion for summary judgment" -> summary-judgment {
     authority cite "N.J. Ct. R. 4:46-1"
   }
-  edge-discovery-trial "Case reaches trial" -> trial { authority cite "N.J. Ct. R. 4:24-1(c)" }
-  edge-discovery-settled "Settlement" -> settled { authority cite "N.J. Ct. R. 4:42-1(d)" }
+  "Case reaches trial" -> trial { authority cite "N.J. Ct. R. 4:24-1(c)" }
+  "Settlement" -> settled { authority cite "N.J. Ct. R. 4:42-1(d)" }
 }
 
 decision discovery-dismissal: "Dismissal or suppression for failure to make discovery" by court cite "N.J. Ct. R. 4:23-5(a)"
@@ -165,7 +161,7 @@ state trial: "Trial by jury or by the court" by court cite "N.J. Ct. R. 1:8-2(b)
   edge-trial-verdict "Verdict or decision" -> judgment-entered {
     authority cite "N.J. Ct. R. 1:8-2(c)"
   }
-  edge-trial-settled "Settlement during trial" -> settled { authority cite "N.J. Ct. R. 4:42-1(d)" }
+  "Settlement during trial" -> settled { authority cite "N.J. Ct. R. 4:42-1(d)" }
 }
 
 decision judgment-entered: "Judgment entered" by court cite "N.J. Ct. R. 4:42-1"

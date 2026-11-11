@@ -3,6 +3,8 @@ module pamd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Middle District of Pennsylvania's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method.
@@ -58,9 +60,6 @@ event ViolationNoticeIssued()
 /// the motion; a party that files none is deemed not to oppose it (LCrR
 /// 12.1(c)(3)).
 deadline continuance-opposition: 7.days after ContinuanceMotionServed() counted_by frcrimp45 cite "M.D. Pa. LCrR 12.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: continuance-opposition (weekend)" cite "M.D. Pa. LCrR 12.1(c)"
 {
@@ -76,9 +75,6 @@ deadline psr-disclosure-date: 56.days after GuiltyVerdictOrPlea() counted_by frc
   to CaseOrder
   op set
 } cite "M.D. Pa. LCrR 32.1(a); M.D. Pa. LCrR 32.1(j)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-disclosure-date (weekend)" cite "M.D. Pa. LCrR 32.1(a); M.D. Pa. LCrR 32.1(j)"
 {
@@ -94,9 +90,6 @@ deadline sentencing-date: 98.days after GuiltyVerdictOrPlea() counted_by frcrimp
   to CaseOrder
   op set
 } cite "M.D. Pa. LCrR 32.1(a); M.D. Pa. LCrR 32.1(j)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-date (weekend)" cite "M.D. Pa. LCrR 32.1(a); M.D. Pa. LCrR 32.1(j)"
 {
@@ -112,9 +105,6 @@ deadline offense-conduct-statement: 7.days after GuiltyVerdictOrPlea() counted_b
   to CaseOrder
   op set
 } cite "M.D. Pa. LCrR 32.1(c); M.D. Pa. LCrR 32.1(j)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: offense-conduct-statement (weekend)" cite "M.D. Pa. LCrR 32.1(c); M.D. Pa. LCrR 32.1(j)"
 {
@@ -130,9 +120,6 @@ deadline restitution-information: 28.days after GuiltyVerdictOrPlea() counted_by
   to CaseOrder
   op set
 } cite "M.D. Pa. LCrR 32.1(c); M.D. Pa. LCrR 32.1(j)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: restitution-information (holiday)" cite "M.D. Pa. LCrR 32.1(c); M.D. Pa. LCrR 32.1(j)"
 {
@@ -143,9 +130,6 @@ test "Counting boundary: restitution-information (holiday)" cite "M.D. Pa. LCrR 
 /// M.D. Pa. LCrR 58.1: the appellant serves and submits a brief within
 /// fourteen days of the date of filing of the appeal.
 deadline misdemeanor-appellant-brief: 14.days after MisdemeanorAppealFiled() counted_by frcrimp45 cite "M.D. Pa. LCrR 58.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellant-brief (weekend)" cite "M.D. Pa. LCrR 58.1"
 {
@@ -157,9 +141,6 @@ test "Counting boundary: misdemeanor-appellant-brief (weekend)" cite "M.D. Pa. L
 /// brief within fourteen days after receipt of a copy of the appellant's
 /// brief.
 deadline misdemeanor-appellee-brief: 14.days after AppellantBriefReceived() counted_by frcrimp45 cite "M.D. Pa. LCrR 58.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellee-brief (weekend)" cite "M.D. Pa. LCrR 58.1"
 {
@@ -170,9 +151,6 @@ test "Counting boundary: misdemeanor-appellee-brief (weekend)" cite "M.D. Pa. LC
 /// M.D. Pa. LCrR 58.1: the appellant may serve and submit a reply brief
 /// within seven days after receipt of the appellee's brief.
 deadline misdemeanor-reply-brief: 7.days after AppelleeBriefReceived() counted_by frcrimp45 cite "M.D. Pa. LCrR 58.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "M.D. Pa. LCrR 58.1"
 {
@@ -185,9 +163,6 @@ test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "M.D. Pa. LCrR 
 /// guilty and appear, to the Central Violations Bureau in no more than
 /// twenty-one days.
 deadline violation-notice-election: 21.days after ViolationNoticeIssued() counted_by frcrimp45 cite "M.D. Pa. LCrR 58.3(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: violation-notice-election (holiday)" cite "M.D. Pa. LCrR 58.3(b)"
 {

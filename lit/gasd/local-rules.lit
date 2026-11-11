@@ -2,6 +2,8 @@ module gasd-local-rules.local-rules
 
 import core.frcp6.{ frcp6 }
 
+forum frcp
+
 /// A motion is served (LR Civ. 7(b)).
 event MotionServed()
 /// A motion for summary judgment is served (LR Civ. 7(b), 56(b)).
@@ -30,16 +32,9 @@ event MandateFiled()
 /// exceed 6,500 words, a reply 2,500 words; handwritten filings 25 and 10
 /// pages (LR Civ. 7(e)).
 deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. Ga. LR Civ. 7(b)"
-{
-  forum frcp
-}
-
 /// LR Civ. 7(b), 56(b): responses to motions for summary judgment are filed
 /// within 21 days of service of the motion.
 deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "S.D. Ga. LR Civ. 56(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: summary-judgment-response-period (weekend)" cite "S.D. Ga. LR Civ. 56(b)"
 {
@@ -50,9 +45,6 @@ test "Counting boundary: summary-judgment-response-period (weekend)" cite "S.D. 
 /// LR Civ. 7(c), 56(c): a reply may be filed within 7 days of service of the
 /// response; any further brief needs leave of court (LR Civ. 7(d), 56(d)).
 deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "S.D. Ga. LR Civ. 7(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "S.D. Ga. LR Civ. 7(c)"
 {
@@ -64,9 +56,6 @@ test "Counting boundary: reply-period (weekend)" cite "S.D. Ga. LR Civ. 7(c)"
 /// unless the moving party files a notice of intent to appeal the denial
 /// within 14 days.
 deadline seal-appeal-notice-period: 14.days after SealDenied() counted_by frcp6 cite "S.D. Ga. LR Civ. 5.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: seal-appeal-notice-period (weekend)" cite "S.D. Ga. LR Civ. 5.2"
 {
@@ -77,9 +66,6 @@ test "Counting boundary: seal-appeal-notice-period (weekend)" cite "S.D. Ga. LR 
 /// LR Civ. 26(a)(2): the parties conduct the Rule 26(f) conference within
 /// 28 days from the date the first answer is filed.
 deadline planning-conference-period: 28.days after FirstAnswerFiled() counted_by frcp6 cite "S.D. Ga. LR Civ. 26(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: planning-conference-period (weekend)" cite "S.D. Ga. LR Civ. 26(a)"
 {
@@ -90,9 +76,6 @@ test "Counting boundary: planning-conference-period (weekend)" cite "S.D. Ga. LR
 /// LR Civ. 26(a)(2): in a removed case the conference is held within 28 days
 /// of removal whether or not an answer has been filed.
 deadline removed-planning-conference-period: 28.days after Removed() counted_by frcp6 cite "S.D. Ga. LR Civ. 26(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: removed-planning-conference-period (weekend)" cite "S.D. Ga. LR Civ. 26(a)"
 {
@@ -103,9 +86,6 @@ test "Counting boundary: removed-planning-conference-period (weekend)" cite "S.D
 /// LR Civ. 26(a)(3): the joint Rule 26(f) report is filed within 7 days of
 /// the conference.
 deadline planning-report-period: 7.days after RuleTwentySixFConferenceHeld() counted_by frcp6 cite "S.D. Ga. LR Civ. 26(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: planning-report-period (weekend)" cite "S.D. Ga. LR Civ. 26(a)"
 {
@@ -116,9 +96,6 @@ test "Counting boundary: planning-report-period (weekend)" cite "S.D. Ga. LR Civ
 /// LR Civ. 26(a)(4): initial disclosures under Rule 26(a)(1) are served
 /// within 14 days of the Rule 26(f) conference.
 deadline initial-disclosures-period: 14.days after RuleTwentySixFConferenceHeld() counted_by frcp6 cite "S.D. Ga. LR Civ. 26(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: initial-disclosures-period (weekend)" cite "S.D. Ga. LR Civ. 26(a)"
 {
@@ -129,9 +106,6 @@ test "Counting boundary: initial-disclosures-period (weekend)" cite "S.D. Ga. LR
 /// LR Civ. 23(b): a motion for class certification is filed within 90 days
 /// from the commencement of discovery.
 deadline class-certification-period: 90.days after DiscoveryCommenced() counted_by frcp6 cite "S.D. Ga. LR Civ. 23(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: class-certification-period (weekend)" cite "S.D. Ga. LR Civ. 23(b)"
 {
@@ -143,9 +117,6 @@ test "Counting boundary: class-certification-period (weekend)" cite "S.D. Ga. LR
 /// prevailing party within 14 days after entry of judgment or other final
 /// order from which an appeal may be taken.
 deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "S.D. Ga. LR Civ. 54(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "S.D. Ga. LR Civ. 54(a)"
 {
@@ -157,9 +128,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "S.D. Ga. LR Civ. 
 /// under Fed. R. App. P. 39 is filed within 14 days of the filing of the
 /// appellate court's mandate in this Court.
 deadline appeal-costs-period: 14.days after MandateFiled() counted_by frcp6 cite "S.D. Ga. LR Civ. 54(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: appeal-costs-period (weekend)" cite "S.D. Ga. LR Civ. 54(b)"
 {
@@ -172,10 +140,7 @@ start motion-served
 state motion-served: "Combined motion and brief served" by movant cite "S.D. Ga. LR Civ. 7(a)"
 {
   note "Motions and supporting briefs are filed as one combined document (LR Civ. 7(a)), specifying the statute, rule or principle at issue (LR Civ. 7(f)) and citing the record for every factual assertion (LR Civ. 7(g)). With the parties' consent the Clerk may extend the time to respond to a pleading or motion by up to 14 days (LR Civ. 6). A summary judgment motion attaches its exhibits and a separately numbered Statement of Undisputed Material Facts (LR Civ. 56(a)). Discovery is completed within 6 months of its commencement unless the Court orders otherwise (LR Civ. 26(c)); that period is not encoded. A judge may modify any deadline in the rules (LR Gen. 1A). The motion's own periods under the Federal Rules are lit/frcp's."
-  edge-motion-served-response "Response served" -> response {
-    authority cite "S.D. Ga. LR Civ. 7(b)"
-    within response-period
-  }
+  "Response served" -> response { authority cite "S.D. Ga. LR Civ. 7(b)", within response-period }
   edge-motion-served-unopposed "No timely response: no opposition" -> ruling {
     authority cite "S.D. Ga. LR Civ. 7(b)"
   }
@@ -183,7 +148,7 @@ state motion-served: "Combined motion and brief served" by movant cite "S.D. Ga.
 
 state response: "Response served" by opponent cite "S.D. Ga. LR Civ. 7(b)"
 {
-  edge-response-ruling "Reply served or time to reply elapsed" -> ruling {
+  "Reply served or time to reply elapsed" -> ruling {
     authority cite "S.D. Ga. LR Civ. 7(c)"
     within reply-period
   }

@@ -201,9 +201,7 @@ start motion-filed
 state motion-filed: "Motion filed and noticed for hearing" by movant cite "Bankr. M.D. La. LR 9013-1(b)"
 {
   note "A motion requiring a hearing is noticed for the first motion day at least 21 days after filing, with notice stating that objections are due eight days before the hearing (LR 9013-1(b), 9013-3(c)); a supporting memorandum is limited to fifteen pages (LR 9013-2). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Objection filed" -> opposed {
-    authority cite "Bankr. M.D. La. LR 9014-1(a)"
-  }
+  "Objection filed" -> opposed { authority cite "Bankr. M.D. La. LR 9014-1(a)" }
   edge-motion-filed-unopposed "No timely objection" -> ruling {
     authority cite "Bankr. M.D. La. LR 9014-1(a)"
   }
@@ -212,7 +210,7 @@ state motion-filed: "Motion filed and noticed for hearing" by movant cite "Bankr
 state opposed: "Objection filed; matter heard on motion day" by opponent cite "Bankr. M.D. La. LR 9014-1(a)"
 {
   note "The objection states its reasons and authorities and is served on all parties entitled to notice; failure to object timely is a waiver of opposition and consent to the relief (LR 9014-1(a)). From November 25, 2025, objections to a matter heard Monday at 2:00 p.m. are due at 11:59 p.m. the prior Monday (Standing Order 2025-1)."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. M.D. La. LR 9014-2" }
+  "Hearing held" -> ruling { authority cite "Bankr. M.D. La. LR 9014-2" }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. M.D. La. LR 9014-2"

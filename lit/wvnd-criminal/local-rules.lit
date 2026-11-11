@@ -2,6 +2,8 @@ module wvnd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Northern District of West Virginia's own criminal periods. Stated in
 // the rules but not declared: the 14 days to give the probation officer
 // objections to the presentence report (LR Cr P 32.01(d)), which restate
@@ -44,9 +46,6 @@ event PostTrialMotionFiled()
 /// arraignment, signed by the defendant, is submitted not later than four
 /// days before the arraignment.
 deadline arraignment-waiver-period: 4.days before Arraignment() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 10.01(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: arraignment-waiver-period (weekend)" cite "N.D. W. Va. LR Cr P 10.01(c)"
 {
@@ -57,9 +56,6 @@ test "Counting boundary: arraignment-waiver-period (weekend)" cite "N.D. W. Va. 
 /// LR Cr P 16.01(d): the government provides standard FRCrimP 16(a)
 /// discovery within seven days of the standard discovery request.
 deadline standard-discovery-period: 7.days after StandardDiscoveryRequested() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.01(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: standard-discovery-period (weekend)" cite "N.D. W. Va. LR Cr P 16.01(d)"
 {
@@ -70,9 +66,6 @@ test "Counting boundary: standard-discovery-period (weekend)" cite "N.D. W. Va. 
 /// LR Cr P 16.01(e): the defendant provides all reciprocal discovery within
 /// seven days of receiving the government's discovery.
 deadline reciprocal-discovery-period: 7.days after GovernmentDiscoveryReceived() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.01(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reciprocal-discovery-period (weekend)" cite "N.D. W. Va. LR Cr P 16.01(e)"
 {
@@ -84,9 +77,6 @@ test "Counting boundary: reciprocal-discovery-period (weekend)" cite "N.D. W. Va
 /// to develop a Proposed Complex Case Schedule not later than seven days
 /// after the designation.
 deadline complex-conference-period: 7.days after ComplexDesignation() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.01(h)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: complex-conference-period (weekend)" cite "N.D. W. Va. LR Cr P 16.01(h)"
 {
@@ -97,9 +87,6 @@ test "Counting boundary: complex-conference-period (weekend)" cite "N.D. W. Va. 
 /// LR Cr P 16.01(h)(3): the parties file the Proposed Complex Case
 /// Schedule no later than seven days after conferring.
 deadline complex-schedule-period: 7.days after ComplexConference() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.01(h)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: complex-schedule-period (weekend)" cite "N.D. W. Va. LR Cr P 16.01(h)"
 {
@@ -112,9 +99,6 @@ test "Counting boundary: complex-schedule-period (weekend)" cite "N.D. W. Va. LR
 /// days of the arraignment, or a later time the Court sets for pretrial
 /// motions.
 deadline additional-discovery-conference-period: 14.days after Arraignment() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.03"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: additional-discovery-conference-period (weekend)" cite "N.D. W. Va. LR Cr P 16.03"
 {
@@ -126,9 +110,6 @@ test "Counting boundary: additional-discovery-conference-period (weekend)" cite 
 /// discloses notice of Rule 404(b) evidence, Giglio material and Roviaro
 /// information.
 deadline impeachment-disclosure-period: 14.days before Trial() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.06"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: impeachment-disclosure-period (weekend)" cite "N.D. W. Va. LR Cr P 16.06"
 {
@@ -139,9 +120,6 @@ test "Counting boundary: impeachment-disclosure-period (weekend)" cite "N.D. W. 
 /// LR Cr P 16.07: no later than 14 days before trial, each party files and
 /// serves a list of probable witnesses.
 deadline witness-list-period: 14.days before Trial() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.07"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: witness-list-period (weekend)" cite "N.D. W. Va. LR Cr P 16.07"
 {
@@ -152,9 +130,6 @@ test "Counting boundary: witness-list-period (weekend)" cite "N.D. W. Va. LR Cr 
 /// LR Cr P 16.08: no later than 14 days before trial, each party files and
 /// serves a list of trial exhibits.
 deadline exhibit-list-period: 14.days before Trial() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.08"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-list-period (weekend)" cite "N.D. W. Va. LR Cr P 16.08"
 {
@@ -166,9 +141,6 @@ test "Counting boundary: exhibit-list-period (weekend)" cite "N.D. W. Va. LR Cr 
 /// defendant sought and the Court granted unless the defendant files,
 /// within five days of arraignment, a pleading refusing it.
 deadline disclosure-refusal-period: 5.days after Arraignment() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.12"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: disclosure-refusal-period (weekend)" cite "N.D. W. Va. LR Cr P 16.12"
 {
@@ -179,9 +151,6 @@ test "Counting boundary: disclosure-refusal-period (weekend)" cite "N.D. W. Va. 
 /// LR Cr P 24.01: motions in limine, jury instructions and voir dire are
 /// filed and served ten days before the pretrial conference.
 deadline limine-period: 10.days before PretrialConference() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 24.01"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: limine-period (holiday)" cite "N.D. W. Va. LR Cr P 24.01"
 {
@@ -192,9 +161,6 @@ test "Counting boundary: limine-period (holiday)" cite "N.D. W. Va. LR Cr P 24.0
 /// LR Cr P 24.01: responses are filed at least one day before the pretrial
 /// conference.
 deadline limine-response-period: 1.days before PretrialConference() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 24.01"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: limine-response-period (weekend)" cite "N.D. W. Va. LR Cr P 24.01"
 {
@@ -206,9 +172,6 @@ test "Counting boundary: limine-response-period (weekend)" cite "N.D. W. Va. LR 
 /// jury instructions and voir dire are filed and served seven days before
 /// trial.
 deadline limine-no-conference-period: 7.days before Trial() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 24.01"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: limine-no-conference-period (weekend)" cite "N.D. W. Va. LR Cr P 24.01"
 {
@@ -221,9 +184,6 @@ test "Counting boundary: limine-no-conference-period (weekend)" cite "N.D. W. Va
 /// after defense counsel receives the LR Cr P 16.01 materials; an extension
 /// is sought by written application within the same period.
 deadline pretrial-motion-period: 14.days after DiscoveryMaterialsReceived() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 47.01(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motion-period (weekend)" cite "N.D. W. Va. LR Cr P 47.01(a)"
 {
@@ -234,9 +194,6 @@ test "Counting boundary: pretrial-motion-period (weekend)" cite "N.D. W. Va. LR 
 /// LR Cr P 47.01(a): the opposing party files a response within seven days
 /// of service of a pretrial motion.
 deadline pretrial-response-period: 7.days after PretrialMotionServed() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 47.01(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-response-period (weekend)" cite "N.D. W. Va. LR Cr P 47.01(a)"
 {
@@ -248,9 +205,6 @@ test "Counting boundary: pretrial-response-period (weekend)" cite "N.D. W. Va. L
 /// party files a response within 14 days following the filing of a
 /// post-trial motion.
 deadline post-trial-response-period: 14.days after PostTrialMotionFiled() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 47.01(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: post-trial-response-period (weekend)" cite "N.D. W. Va. LR Cr P 47.01(b)"
 {

@@ -82,9 +82,7 @@ decision post-decision: "Rehearing or review sought?" by petitioner cite "Kan. S
 decision rehearing-order: "Rehearing or modification decided" by court cite "Kan. S. Ct. R. 7.05(c)"
 {
   note "A granted motion for rehearing suspends the effect of the original decision until the matter is decided on rehearing (Kan. S. Ct. R. 7.05(c)). While a timely motion is pending the Court of Appeals keeps jurisdiction and the Supreme Court takes no action on a petition for review; a petitioner seeking review of a modified decision files an amended petition no later than 30 days after the date of the modified decision (Kan. S. Ct. R. 8.03(b)(2))."
-  edge-rehearing-order-mandate "Decided: no further review" -> mandate {
-    authority cite "Kan. S. Ct. R. 7.03(b)"
-  }
+  "Decided: no further review" -> mandate { authority cite "Kan. S. Ct. R. 7.03(b)" }
   edge-rehearing-order-review "Petition for review" -> review-petitioned {
     event ReviewPetitionFiled()
     authority cite "Kan. S. Ct. R. 8.03(b)"

@@ -24,7 +24,7 @@ decision notice: "Notice of appeal to the Appellate Division within time?" by ap
 
 state record: "Record prepared" by court cite ?("Dist./Mun. Cts. R. A. D. A. 8: the rules are not vendored") {
   note "Record contents, the transcript and fees are holes."
-  edge-record-briefing "Record filed" -> briefing {
+  "Record filed" -> briefing {
     event RecordFiled()
     authority cite ?("Dist./Mun. Cts. R. A. D. A. 8: the rules are not vendored")
   }
@@ -32,14 +32,14 @@ state record: "Record prepared" by court cite ?("Dist./Mun. Cts. R. A. D. A. 8: 
 
 state briefing: "Briefs filed" by appellant cite ?("Dist./Mun. Cts. R. A. D. A. 19: the rules are not vendored") {
   note "Briefing periods, form and length are holes."
-  edge-briefing-argument "Argument or submission" -> argument {
+  "Argument or submission" -> argument {
     authority cite ?("Dist./Mun. Cts. R. A. D. A. 22: the rules are not vendored")
   }
 }
 
 state argument: "Argument or submission" by court cite ?("Dist./Mun. Cts. R. A. D. A. 22: the rules are not vendored") {
   note "Whether argument is heard and its length are holes."
-  edge-argument-decision "Decision issued" -> decision {
+  "Decision issued" -> decision {
     authority cite ?("G.L. c. 231, § 108: the General Laws are not vendored")
   }
 }

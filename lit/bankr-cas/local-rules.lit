@@ -139,6 +139,7 @@ test "Counting boundary: death-suggestion-period (weekend)" cite "Bankr. S.D. Ca
   given DebtorDied() on 2025-12-02
   expect deadline(death-suggestion-period) == 2026-02-02
 }
+
 /// Bankr. S.D. Cal. LBR 1017-3(a)(2): to avoid dismissal for lack of
 /// prosecution, the debtor moves for an extension of time or an excuse from
 /// performance within 14 days of service of the notice.
@@ -154,6 +155,7 @@ test "Counting boundary: conversion-property-schedule-period (weekend)" cite "Ba
   given CaseConverted() on 2025-12-06
   expect deadline(conversion-property-schedule-period) == 2025-12-15
 }
+
 /// Bankr. S.D. Cal. LBR 2002-1(b)(1): the notice of a motion under 11
 /// U.S.C. § 362(c)(3)(B) to extend the automatic stay is filed and served
 /// within 7 days after the petition date.
@@ -164,6 +166,7 @@ test "Counting boundary: stay-extension-notice-period (weekend)" cite "Bankr. S.
   given PetitionFiled() on 2025-12-06
   expect deadline(stay-extension-notice-period) == 2025-12-15
 }
+
 /// Bankr. S.D. Cal. LBR 2002-1(b)(3): the notice of a motion under 11
 /// U.S.C. § 362(c)(4)(B) to impose the automatic stay is served within 30
 /// days after the petition date.
@@ -174,6 +177,7 @@ test "Counting boundary: stay-imposition-notice-period (holiday)" cite "Bankr. S
   given PetitionFiled() on 2025-12-02
   expect deadline(stay-imposition-notice-period) == 2026-01-02
 }
+
 /// Bankr. S.D. Cal. LBR 2002-1(b)(2), (4): at least 14 days' notice is
 /// given of the hearing on a motion to extend or impose the automatic stay.
 deadline stay-motion-hearing-notice-period: 14.days before StayMotionHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 2002-1(b)"
@@ -183,6 +187,7 @@ test "Counting boundary: stay-motion-hearing-notice-period (weekend)" cite "Bank
   given StayMotionHearing() on 2025-12-06
   expect deadline(stay-motion-hearing-notice-period) == 2025-11-21
 }
+
 /// Bankr. S.D. Cal. LBR 2002-2(d): any opposition or response to a notice
 /// of intended action is filed and served not more than 14 days after its
 /// service, with a request and notice for hearing.
@@ -197,6 +202,7 @@ test "Counting boundary: examination-notice-period (holiday)" cite "Bankr. S.D. 
   given ExaminationDate() on 2025-12-02
   expect deadline(examination-notice-period) == 2025-11-10
 }
+
 /// Bankr. S.D. Cal. LBR 2014-1(a): chapter 11 debtors file an application
 /// to retain all professionals as of the outset of the case within 30 days
 /// from the petition date.
@@ -207,6 +213,7 @@ test "Counting boundary: chapter-11-employment-period (holiday)" cite "Bankr. S.
   given PetitionFiled() on 2025-12-02
   expect deadline(chapter-11-employment-period) == 2026-01-02
 }
+
 /// Bankr. S.D. Cal. LBR 2014-1(b): an application to employ a professional
 /// is filed within 30 days from the commencement of employment; otherwise a
 /// noticed motion is required.
@@ -217,6 +224,7 @@ test "Counting boundary: employment-application-period (holiday)" cite "Bankr. S
   given EmploymentCommenced() on 2025-12-02
   expect deadline(employment-application-period) == 2026-01-02
 }
+
 /// Bankr. S.D. Cal. LBR 3002-2(c): the creditor files a response to an
 /// objection to a notice of mortgage payment change within 14 days after
 /// its service.
@@ -231,6 +239,7 @@ test "Counting boundary: chapter-11-claim-period (weekend)" cite "Bankr. S.D. Ca
   given OrderForReliefEntered() on 2025-12-06
   expect deadline(chapter-11-claim-period) == 2026-02-17
 }
+
 /// Bankr. S.D. Cal. LBR 3013-1: a party objecting to the classification of
 /// its claim files and serves the objection within 30 days after service of
 /// the Notice of Classification.
@@ -241,6 +250,7 @@ test "Counting boundary: classification-objection-period (holiday)" cite "Bankr.
   given ClassificationNoticeServed() on 2025-12-02
   expect deadline(classification-objection-period) == 2026-01-02
 }
+
 /// Bankr. S.D. Cal. LBR 3015-5(a): objections to confirmation of an
 /// original chapter 13 plan are filed within 7 days after the filing of the
 /// Notice of Meeting of Creditors Held and Concluded.
@@ -251,6 +261,7 @@ test "Counting boundary: plan-objection-period (weekend)" cite "Bankr. S.D. Cal.
   given MeetingConcludedNoticeFiled() on 2025-12-06
   expect deadline(plan-objection-period) == 2025-12-15
 }
+
 /// Bankr. S.D. Cal. LBR 3015-5(c): any response to an objection to
 /// confirmation is filed within 14 days after service of the objection.
 deadline plan-objection-response-period: 14.days after PlanObjectionServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3015-5(c)"
@@ -263,6 +274,7 @@ test "Counting boundary: modification-objection-period (holiday)" cite "Bankr. S
   given ModificationServed() on 2025-12-04
   expect deadline(modification-objection-period) == 2026-01-02
 }
+
 /// Bankr. S.D. Cal. LBR 3015-6(b): a response to an objection to a post-
 /// confirmation modification is filed within 14 days of the objection's
 /// service.
@@ -276,6 +288,7 @@ test "Counting boundary: confirmation-status-report-period (holiday)" cite "Bank
   given ConfirmationHearing() on 2025-12-04
   expect deadline(confirmation-status-report-period) == 2025-11-26
 }
+
 /// Bankr. S.D. Cal. LBR 3015-8: the debtor prepares and uploads the
 /// confirmation order for the chapter 13 trustee's review within 14 days of
 /// the time the plan is first ready for confirmation.
@@ -289,6 +302,7 @@ test "Counting boundary: valuation-opposition-period (holiday)" cite "Bankr. S.D
   given ValuationMotionServed() on 2025-12-04
   expect deadline(valuation-opposition-period) == 2026-01-02
 }
+
 /// Bankr. S.D. Cal. LBR 3018-2: if ordered, the chapter 11 plan proponent
 /// files and serves completed ballots at least 7 days before the
 /// confirmation hearing.
@@ -299,6 +313,7 @@ test "Counting boundary: ballot-filing-period (holiday)" cite "Bankr. S.D. Cal. 
   given ConfirmationHearing() on 2025-12-04
   expect deadline(ballot-filing-period) == 2025-11-26
 }
+
 /// Bankr. S.D. Cal. LBR 3020-1: at least 21 days before the confirmation
 /// hearing, the plan proponent requests the case administrator's statement.
 deadline confirmation-statement-request-period: 21.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3020-1"
@@ -308,6 +323,7 @@ test "Counting boundary: confirmation-statement-request-period (holiday)" cite "
   given ConfirmationHearing() on 2025-12-02
   expect deadline(confirmation-statement-request-period) == 2025-11-10
 }
+
 /// Bankr. S.D. Cal. LBR 3020-2: at least 7 days before the confirmation
 /// hearing, the plan proponent files a schedule of estimated expenses.
 deadline estimated-expenses-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 3020-2"
@@ -317,6 +333,7 @@ test "Counting boundary: estimated-expenses-period (holiday)" cite "Bankr. S.D. 
   given ConfirmationHearing() on 2025-12-04
   expect deadline(estimated-expenses-period) == 2025-11-26
 }
+
 /// Bankr. S.D. Cal. LBR 3022-1: an application for a final decree is
 /// considered without a hearing unless within 14 days after service of the
 /// notice a party in interest files an objection.
@@ -331,6 +348,7 @@ test "Counting boundary: stay-relief-opposition-period (weekend)" cite "Bankr. S
   given StayReliefMotionServed() on 2025-12-02
   expect deadline(stay-relief-opposition-period) == 2025-12-15
 }
+
 /// Bankr. S.D. Cal. LBR 4002-1(b): the debtor submits copies of the listed
 /// books and records to the trustee at least 14 days before the date
 /// initially set for the § 341(a) meeting.
@@ -341,6 +359,7 @@ test "Counting boundary: books-and-records-period (weekend)" cite "Bankr. S.D. C
   given FirstMeetingDate() on 2025-12-06
   expect deadline(books-and-records-period) == 2025-11-21
 }
+
 /// Bankr. S.D. Cal. LBR 4002-2(c): an individual chapter 11 debtor files
 /// the LBR 4002-2(d) notice within 7 days of the petition date to pay
 /// salary and expenses for the first 45 days.
@@ -351,6 +370,7 @@ test "Counting boundary: individual-chapter-11-notice-period (weekend)" cite "Ba
   given PetitionFiled() on 2025-12-06
   expect deadline(individual-chapter-11-notice-period) == 2025-12-15
 }
+
 /// Bankr. S.D. Cal. LBR 4002-2(d)(5): an insider may receive compensation
 /// if no objection is received within 14 days after service of the notice.
 deadline insider-compensation-objection-period: 14.days after InsiderCompensationNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 4002-2(d)"
@@ -366,6 +386,7 @@ test "Counting boundary: withdrawal-reply-period (weekend)" cite "Bankr. S.D. Ca
   given WithdrawalResponseServed() on 2025-12-06
   expect deadline(withdrawal-reply-period) == 2025-12-15
 }
+
 /// Bankr. S.D. Cal. LBR 6004-3(b): the U.S. Trustee files notice of the
 /// appointment of a privacy ombudsman at least 14 days before the hearing.
 deadline ombudsman-appointment-period: 14.days before PiiSaleHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 6004-3(b)"
@@ -375,6 +396,7 @@ test "Counting boundary: ombudsman-appointment-period (weekend)" cite "Bankr. S.
   given PiiSaleHearing() on 2025-12-06
   expect deadline(ombudsman-appointment-period) == 2025-11-21
 }
+
 /// Bankr. S.D. Cal. LBR 6004-3(c): the privacy ombudsman files a report at
 /// least 7 days before the hearing.
 deadline ombudsman-report-period: 7.days before PiiSaleHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 6004-3(c)"
@@ -384,6 +406,7 @@ test "Counting boundary: ombudsman-report-period (holiday)" cite "Bankr. S.D. Ca
   given PiiSaleHearing() on 2025-12-04
   expect deadline(ombudsman-report-period) == 2025-11-26
 }
+
 /// Bankr. S.D. Cal. LBR 7016-1(c): no later than 7 days after the Early
 /// Conference, plaintiff's counsel files and serves the completed Local
 /// Form CSD 3018.
@@ -394,6 +417,7 @@ test "Counting boundary: early-conference-certificate-period (weekend)" cite "Ba
   given EarlyConferenceHeld() on 2025-12-06
   expect deadline(early-conference-certificate-period) == 2025-12-15
 }
+
 /// Bankr. S.D. Cal. LBR 7016-5(a): the parties convene at least 28 days
 /// before the final pretrial conference to draft stipulations.
 deadline pretrial-meeting-period: 28.days before FinalPretrialConference() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7016-5(a)"
@@ -403,6 +427,7 @@ test "Counting boundary: pretrial-meeting-period (weekend)" cite "Bankr. S.D. Ca
   given FinalPretrialConference() on 2025-12-06
   expect deadline(pretrial-meeting-period) == 2025-11-07
 }
+
 /// Bankr. S.D. Cal. LBR 7016-5(a): the plaintiff files the prepared
 /// pretrial order at least 7 days before the final pretrial conference.
 deadline pretrial-order-period: 7.days before FinalPretrialConference() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7016-5(a)"
@@ -412,6 +437,7 @@ test "Counting boundary: pretrial-order-period (holiday)" cite "Bankr. S.D. Cal.
   given FinalPretrialConference() on 2025-12-04
   expect deadline(pretrial-order-period) == 2025-11-26
 }
+
 /// Bankr. S.D. Cal. LBR 7016-5(c): each party exchanges exhibits at least
 /// 14 days before the final pretrial conference.
 deadline pretrial-exhibit-exchange-period: 14.days before FinalPretrialConference() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7016-5(c)"
@@ -421,6 +447,7 @@ test "Counting boundary: pretrial-exhibit-exchange-period (weekend)" cite "Bankr
   given FinalPretrialConference() on 2025-12-06
   expect deadline(pretrial-exhibit-exchange-period) == 2025-11-21
 }
+
 /// Bankr. S.D. Cal. LBR 7016-9: the parties serve and file trial briefs and
 /// designations at least 7 days before the start of trial.
 deadline trial-briefs-period: 7.days before Trial() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 7016-9"
@@ -430,6 +457,7 @@ test "Counting boundary: trial-briefs-period (holiday)" cite "Bankr. S.D. Cal. L
   given Trial() on 2025-12-04
   expect deadline(trial-briefs-period) == 2025-11-26
 }
+
 /// Bankr. S.D. Cal. LBR 7026-2: the parties meet on disputed discovery
 /// issues within 14 days of service of a letter or email requesting the
 /// meeting.
@@ -444,6 +472,7 @@ test "Counting boundary: adversary-continuation-period (holiday)" cite "Bankr. S
   given CaseDismissed() on 2025-12-04
   expect deadline(adversary-continuation-period) == 2025-12-26
 }
+
 /// Bankr. S.D. Cal. LBR 7054-2: within 14 days after a ruling, the
 /// prevailing party prepares and submits any final or proposed judgment or
 /// order.
@@ -458,6 +487,7 @@ test "Counting boundary: lodged-order-objection-period (weekend)" cite "Bankr. S
   given LodgmentNoticeServed() on 2025-12-06
   expect deadline(lodged-order-objection-period) == 2025-12-15
 }
+
 /// Bankr. S.D. Cal. LBR 9013-6(a)(1): a motion on which the movant requests
 /// a hearing is filed and served at least 28 days before the hearing date.
 deadline motion-notice-period: 28.days before MotionHearing() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 9013-6(a)"
@@ -467,6 +497,7 @@ test "Counting boundary: motion-notice-period (weekend)" cite "Bankr. S.D. Cal. 
   given MotionHearing() on 2025-12-06
   expect deadline(motion-notice-period) == 2025-11-07
 }
+
 /// Bankr. S.D. Cal. LBR 9013-6(a)(2): a motion to approve a disclosure
 /// statement or confirm a chapter 11 plan is filed and served no later than
 /// 42 days before the hearing date.
@@ -477,6 +508,7 @@ test "Counting boundary: plan-motion-notice-period (weekend)" cite "Bankr. S.D. 
   given MotionHearing() on 2025-12-06
   expect deadline(plan-motion-notice-period) == 2025-10-24
 }
+
 /// Bankr. S.D. Cal. LBR 9013-6(a)(3), (b): opposition to a motion is served
 /// no later than 14 days after service of the notice of motion.
 deadline motion-opposition-period: 14.days after MotionNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 9013-6(a)"
@@ -490,6 +522,7 @@ test "Counting boundary: plan-motion-opposition-period (holiday)" cite "Bankr. S
   given MotionNoticeServed() on 2025-12-04
   expect deadline(plan-motion-opposition-period) == 2026-01-02
 }
+
 /// Bankr. S.D. Cal. LBR 9034-1(d): the U.S. Trustee has 7 days from filing
 /// and service of a motion to extend the time for schedules to file a
 /// statement of position.
@@ -500,6 +533,7 @@ test "Counting boundary: ust-extension-position-period (weekend)" cite "Bankr. S
   given ExtensionMotionServed() on 2025-12-06
   expect deadline(ust-extension-position-period) == 2025-12-15
 }
+
 /// Bankr. S.D. Cal. LBR 9034-1(e): the U.S. Trustee has 14 days from filing
 /// and service of an application to employ a professional or for a final
 /// decree to file a statement of position.
@@ -510,7 +544,7 @@ start motion-filed
 state motion-filed: "Motion filed and served with notice of motion" by movant cite "Bankr. S.D. Cal. LBR 9013-6(a)"
 {
   note "Opposition is served no later than 14 days after service of the notice of motion (LBR 9013-6(a)(3), (b)); a motion set for hearing is served at least 28 days before it (LBR 9013-6(a)(1)). A notice of intended action follows LBR 2002-2. The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Opposition served" -> opposed {
+  "Opposition served" -> opposed {
     authority cite "Bankr. S.D. Cal. LBR 9013-6(a)"
     within motion-opposition-period
   }
@@ -522,7 +556,7 @@ state motion-filed: "Motion filed and served with notice of motion" by movant ci
 state opposed: "Opposition filed; reply and hearing" by opponent cite "Bankr. S.D. Cal. LBR 9013-6(c)"
 {
   note "Any reply is filed the earlier of 7 days after service of the opposition or 3 business days before the hearing (LBR 9013-6(c))."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. S.D. Cal. LBR 9013-4" }
+  "Hearing held" -> ruling { authority cite "Bankr. S.D. Cal. LBR 9013-4" }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. S.D. Cal. LBR 9013-10(a)"

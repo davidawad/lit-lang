@@ -61,6 +61,7 @@ test "Counting boundary: docketing-statement-period (weekend)" cite "4th Cir. R.
   given AppealDocketed() on 2026-10-24
   expect deadline(docketing-statement-period) == 2026-11-09
 }
+
 /// An opposing party informs the clerk in writing of errors in the
 /// docketing statement within 10 days of its service.
 deadline docketing-statement-correction-period: 10.days after DocketingStatementServed() counted_by frap26 cite "4th Cir. R. 3(b)"
@@ -70,6 +71,7 @@ test "Counting boundary: docketing-statement-correction-period (weekend)" cite "
   given DocketingStatementServed() on 2026-10-21
   expect deadline(docketing-statement-correction-period) == 2026-11-02
 }
+
 /// A party's disclosure statement is filed within 14 days of docketing of
 /// the appeal, unless earlier pleadings are submitted, in which case it is
 /// filed with them.
@@ -80,6 +82,7 @@ test "Counting boundary: disclosure-statement-period (weekend)" cite "4th Cir. R
   given AppealDocketed() on 2026-10-24
   expect deadline(disclosure-statement-period) == 2026-11-09
 }
+
 /// Each attorney of record files a written appearance within 14 days after
 /// the appeal is docketed.
 deadline appearance-period: 14.days after AppealDocketed() counted_by frap26 cite "4th Cir. R. 46(c)"
@@ -89,6 +92,7 @@ test "Counting boundary: appearance-period (weekend)" cite "4th Cir. R. 46(c)"
   given AppealDocketed() on 2026-10-24
   expect deadline(appearance-period) == 2026-11-09
 }
+
 /// A reporter who sees a problem with the transcript order returns the
 /// acknowledgment form within 7 days of receiving it, or within such
 /// further time as the court allows.
@@ -99,6 +103,7 @@ test "Counting boundary: transcript-problem-period (weekend)" cite "4th Cir. R. 
   given TranscriptAcknowledgmentReceived() on 2026-10-24
   expect deadline(transcript-problem-period) == 2026-11-02
 }
+
 /// The parties identify lead counsel for each side to the clerk in writing
 /// within 14 days of the consolidation order.
 deadline lead-counsel-period: 14.days after ConsolidationOrdered() counted_by frap26 cite "4th Cir. R. 12(b); 4th Cir. R. 28(a)"
@@ -108,6 +113,7 @@ test "Counting boundary: lead-counsel-period (weekend)" cite "4th Cir. R. 12(b);
   given ConsolidationOrdered() on 2026-10-24
   expect deadline(lead-counsel-period) == 2026-11-09
 }
+
 /// A party adversely affected by a clerk's order may request
 /// reconsideration by the court within 14 days after entry of the order.
 deadline clerk-order-reconsideration-period: 14.days after ClerkOrderEntered() counted_by frap26 cite "4th Cir. R. 27(b)"
@@ -117,6 +123,7 @@ test "Counting boundary: clerk-order-reconsideration-period (weekend)" cite "4th
   given ClerkOrderEntered() on 2026-10-24
   expect deadline(clerk-order-reconsideration-period) == 2026-11-09
 }
+
 /// A party objects in writing to an unnecessary appendix designation within
 /// 14 days of the designation, a condition of a later sanctions motion.
 deadline appendix-objection-period: 14.days after AppendixDesignated() counted_by frap26 cite "4th Cir. R. 30(a)"
@@ -126,6 +133,7 @@ test "Counting boundary: appendix-objection-period (weekend)" cite "4th Cir. R. 
   given AppendixDesignated() on 2026-10-24
   expect deadline(appendix-objection-period) == 2026-11-09
 }
+
 /// A motion for sanctions for unnecessary appendix designations is
 /// entertained only if filed within 14 days after entry of judgment.
 deadline appendix-sanctions-motion-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 cite "4th Cir. R. 30(a)"
@@ -135,6 +143,7 @@ test "Counting boundary: appendix-sanctions-motion-period (weekend)" cite "4th C
   given EnteredOnAppeal(Judgment) on 2026-10-24
   expect deadline(appendix-sanctions-motion-period) == 2026-11-09
 }
+
 /// In a criminal appeal the appellant serves and files its brief and
 /// appendix within thirty-five days after the briefing order is filed.
 deadline criminal-appellant-brief-period: 35.days after CriminalBriefingOrderFiled() counted_by frap26 cite "4th Cir. R. 31(a)"
@@ -147,6 +156,7 @@ test "Counting boundary: criminal-appellee-brief-period (holiday)" cite "4th Cir
   given CriminalAppellantBriefServed() on 2026-10-21
   expect deadline(criminal-appellee-brief-period) == 2026-11-12
 }
+
 /// The criminal appellant may serve and file a reply brief within ten days
 /// after service of the appellee's brief.
 deadline criminal-reply-brief-period: 10.days after CriminalAppelleeBriefServed() counted_by frap26 cite "4th Cir. R. 31(a)"
@@ -156,6 +166,7 @@ test "Counting boundary: criminal-reply-brief-period (weekend)" cite "4th Cir. R
   given CriminalAppelleeBriefServed() on 2026-10-21
   expect deadline(criminal-reply-brief-period) == 2026-11-02
 }
+
 /// A motion to file a brief longer than FRAP 32(a)(7) or 28.1(e)(2) allows
 /// is made at least 10 days prior to the brief's due date.
 deadline longer-brief-motion-period: 10.days before BriefDue() counted_by frap26 cite "4th Cir. R. 32(b)"
@@ -165,6 +176,7 @@ test "Counting boundary: longer-brief-motion-period (weekend)" cite "4th Cir. R.
   given BriefDue() on 2026-10-20
   expect deadline(longer-brief-motion-period) == 2026-10-09
 }
+
 /// The appellant files an informal brief within 21 days after service of
 /// the clerk's notice.
 deadline informal-brief-period: 21.days after InformalBriefNoticeServed() counted_by frap26 cite "4th Cir. R. 34(b)"
@@ -174,6 +186,7 @@ test "Counting boundary: informal-brief-period (holiday)" cite "4th Cir. R. 34(b
   given InformalBriefNoticeServed() on 2026-10-21
   expect deadline(informal-brief-period) == 2026-11-12
 }
+
 /// The appellee may file an informal response brief within 14 days after
 /// service of the appellant's informal brief.
 deadline informal-response-period: 14.days after InformalBriefServed() counted_by frap26 cite "4th Cir. R. 34(b)"
@@ -183,6 +196,7 @@ test "Counting boundary: informal-response-period (weekend)" cite "4th Cir. R. 3
   given InformalBriefServed() on 2026-10-24
   expect deadline(informal-response-period) == 2026-11-09
 }
+
 /// The appellant may file an informal reply brief within 10 days after
 /// service of the appellee's informal response brief.
 deadline informal-reply-period: 10.days after InformalResponseServed() counted_by frap26 cite "4th Cir. R. 34(b)"
@@ -192,6 +206,7 @@ test "Counting boundary: informal-reply-period (weekend)" cite "4th Cir. R. 34(b
   given InformalResponseServed() on 2026-10-21
   expect deadline(informal-reply-period) == 2026-11-02
 }
+
 /// A motion to submit the case on the briefs is filed upon completion of
 /// briefing or within 10 days of tentative notification of oral argument,
 /// whichever is earlier.
@@ -202,6 +217,7 @@ test "Counting boundary: submit-on-briefs-motion-period (weekend)" cite "4th Cir
   given ArgumentTentativelyNoticed() on 2026-10-21
   expect deadline(submit-on-briefs-motion-period) == 2026-11-02
 }
+
 /// A motion to seal argument is filed on the public docket at least five
 /// days before oral argument.
 deadline seal-argument-motion-period: 5.days before ArgumentHeard() counted_by frap26 cite "4th Cir. I.O.P. 34.3"
@@ -211,6 +227,7 @@ test "Counting boundary: seal-argument-motion-period (weekend)" cite "4th Cir. I
   given ArgumentHeard() on 2026-10-22
   expect deadline(seal-argument-motion-period) == 2026-10-16
 }
+
 /// The clerk may dismiss the appeal if the appellant fails to remedy a
 /// default within 15 days of notice that it will subject the appeal to
 /// dismissal.
@@ -359,9 +376,7 @@ decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)
 state docketed: "Appeal Docketed" by court cite "FRAP 12(a); 4th Cir. R. 3(b)"
 {
   note "Within 14 days of docketing, counsel files a docketing statement with any transcript order attached (4th Cir. R. 3(b)), each party its disclosure statement (4th Cir. R. 26.1(d)), and each attorney of record a written appearance (4th Cir. R. 46(c)); an opposing party reports errors in the docketing statement within 10 days of its service (4th Cir. R. 3(b)). Counseled civil and agency cases are reviewed by a circuit mediator after the docketing statements are filed; the conference does not toll the briefing time (4th Cir. R. 33)."
-  edge-docketed-record "Record and transcript" -> record {
-    authority cite "FRAP 10; 4th Cir. R. 10"
-  }
+  "Record and transcript" -> record { authority cite "FRAP 10; 4th Cir. R. 10" }
   edge-docketed-default "Docketing statement not filed and default not remedied" -> dismissed-prosecution {
     authority cite "4th Cir. R. 3(b); 4th Cir. R. 45"
   }
@@ -411,7 +426,7 @@ decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 4th Cir. R. 40"
 {
   note "The clerk holds every petition until the time for all of them has run (4th Cir. I.O.P. 40.1). Granting rehearing en banc vacates the panel judgment and opinion (4th Cir. R. 40(e)); granting panel rehearing vacates the original judgment and opinion and the original panel rehears the case (4th Cir. I.O.P. 40.2)."
-  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+  "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
 state mandate: "Mandate Issued" by court cite "FRAP 41(b); 4th Cir. R. 41"

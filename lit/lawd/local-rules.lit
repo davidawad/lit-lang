@@ -2,6 +2,8 @@ module lawd-local-rules.local-rules
 
 import core.states.louisiana.{ frcp6-louisiana }
 
+forum frcp
+
 // The Western District of Louisiana's own civil periods, computed under
 // the federal rules (FRCP 6(a) governs "any local rule"). The motion
 // briefing periods are the default rule only: for a contested motion the
@@ -63,24 +65,13 @@ event FinalDisposition()
 /// signatures, or of the signatures, files an objection within 14 days
 /// from service of the document.
 deadline signature-objection-period: 14.days after MultiSignatureDocumentServed() counted_by frcp6-louisiana cite "W.D. La. LR 5.7.08"
-{
-  forum frcp
-}
-
 /// W.D. La. LR 7.4: if no Notice of Motion Setting issues and the judge
 /// orders no briefing instructions, a memorandum in opposition may be
 /// filed within 14 days after the motion is filed.
 deadline opposition-period: 14.days after MotionFiled() counted_by frcp6-louisiana cite "W.D. La. LR 7.4"
-{
-  forum frcp
-}
-
 /// W.D. La. LR 7.4: under the same default rule, a reply memorandum may
 /// be filed within seven days after the opposition is filed.
 deadline reply-period: 7.days after OppositionFiled() counted_by frcp6-louisiana cite "W.D. La. LR 7.4"
-{
-  forum frcp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "W.D. La. LR 7.4"
 {
@@ -93,9 +84,6 @@ test "Counting boundary: reply-period (weekend)" cite "W.D. La. LR 7.4"
 /// discuss with their clients and opposing counsel the appropriateness and
 /// timing of alternative dispute resolution.
 deadline adr-conference-period: 60.days after DiscoveryCloseDeadline() counted_by frcp6-louisiana cite "W.D. La. LR 16.3.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: adr-conference-period (weekend)" cite "W.D. La. LR 16.3.1"
 {
@@ -107,9 +95,6 @@ test "Counting boundary: adr-conference-period (weekend)" cite "W.D. La. LR 16.3
 /// plaintiff has 30 calendar days from mailing of the notice to file
 /// evidence of good cause; with no response in time the clerk may dismiss.
 deadline prosecution-good-cause-period: 30.days after ProsecutionNoticeMailed() counted_by frcp6-louisiana cite "W.D. La. LR 41.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: prosecution-good-cause-period (weekend)" cite "W.D. La. LR 41.3"
 {
@@ -121,9 +106,6 @@ test "Counting boundary: prosecution-good-cause-period (weekend)" cite "W.D. La.
 /// prejudice, and the order allows reinstatement within 30 days for good
 /// cause shown.
 deadline reinstatement-period: 30.days after ProsecutionDismissalOrdered() counted_by frcp6-louisiana cite "W.D. La. LR 41.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: reinstatement-period (weekend)" cite "W.D. La. LR 41.3"
 {
@@ -136,9 +118,6 @@ test "Counting boundary: reinstatement-period (weekend)" cite "W.D. La. LR 41.3"
 /// trial judge, at least seven days in advance of the date on which the
 /// jury trial is scheduled.
 deadline jury-instructions-period: 7.days before JuryTrialScheduled() counted_by frcp6-louisiana cite "W.D. La. LR 51.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: jury-instructions-period (weekend)" cite "W.D. La. LR 51.1"
 {
@@ -151,9 +130,6 @@ test "Counting boundary: jury-instructions-period (weekend)" cite "W.D. La. LR 5
 /// files a Bill of Costs with a supporting memorandum; without the
 /// memorandum the clerk may deny costs.
 deadline bill-of-costs-period: 30.days after JudgmentEntryNoticed() counted_by frcp6-louisiana cite "W.D. La. LR 54.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "W.D. La. LR 54.3"
 {
@@ -165,17 +141,10 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "W.D. La. LR 54.3"
 /// calendar days after entry of default; this is the earliest date, not a
 /// last day.
 deadline default-judgment-waiting-period: 14.days after DefaultEntered() counted_by frcp6-louisiana cite "W.D. La. LR 55.1"
-{
-  forum frcp
-}
-
 /// W.D. La. LR 79.3: exhibits in civil cases in the clerk's custody are
 /// removed within 30 days of the final disposition of the case, or may be
 /// destroyed or otherwise disposed of by the clerk.
 deadline exhibit-removal-period: 30.days after FinalDisposition() counted_by frcp6-louisiana cite "W.D. La. LR 79.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: exhibit-removal-period (weekend)" cite "W.D. La. LR 79.3"
 {

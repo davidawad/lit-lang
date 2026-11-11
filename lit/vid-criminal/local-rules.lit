@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import core.states.virgin-islands.{ frcrimp45-virgin-islands }
 
+forum frcrimp
+
 // The District Court of the Virgin Islands' own criminal periods, counted
 // under the criminal rules (FRCrimP 45(a) governs "any local rule"). No
 // trigger carries a service method.
@@ -77,9 +79,6 @@ deadline continuance-opposition: 7.days after ContinuanceMotionServed() counted_
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 12.5(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: continuance-opposition (weekend)" cite "D.V.I. LRCr 12.5(c)"
 {
@@ -96,9 +95,6 @@ deadline complex-designation-response: 7.days after DiscoveryConferenceCompleted
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 12.6(a); D.V.I. LRCr 12.6(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: complex-designation-response (weekend)" cite "D.V.I. LRCr 12.6(a); D.V.I. LRCr 12.6(c)"
 {
@@ -114,9 +110,6 @@ deadline defendant-complex-designation: 5.days after GovernmentDiscoveryDue() co
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 12.6(b); D.V.I. LRCr 12.6(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defendant-complex-designation (weekend)" cite "D.V.I. LRCr 12.6(b); D.V.I. LRCr 12.6(c)"
 {
@@ -132,9 +125,6 @@ deadline initial-discovery-conference: 14.days after ArraignedOnFirstCharge() co
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 16.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: initial-discovery-conference (weekend)" cite "D.V.I. LRCr 16.1(a)"
 {
@@ -147,9 +137,6 @@ test "Counting boundary: initial-discovery-conference (weekend)" cite "D.V.I. LR
 /// timetable stating every agreed deadline; its deadlines bind the parties
 /// unless the Court modifies them (LRCr 16.1(a)(3)).
 deadline discovery-timetable-notice: 5.days after DiscoveryConferenceCompleted() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 16.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-timetable-notice (weekend)" cite "D.V.I. LRCr 16.1(a)"
 {
@@ -167,9 +154,6 @@ deadline government-rule16: 28.days after GovernmentDiscoveryClock() counted_by 
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 16.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-rule16 (weekend)" cite "D.V.I. LRCr 16.1(b)"
 {
@@ -185,9 +169,6 @@ deadline defendant-rule16: 14.days after DefendantDiscoveryClock() counted_by fr
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 16.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defendant-rule16 (weekend)" cite "D.V.I. LRCr 16.1(c)"
 {
@@ -200,9 +181,6 @@ test "Counting boundary: defendant-rule16 (weekend)" cite "D.V.I. LRCr 16.1(c)"
 /// defendant files a notice limiting it within one day of the arraignment
 /// on the new charge.
 deadline superseding-request-limit: 1.days after ArraignedOnSupersedingCharge() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 16.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: superseding-request-limit (weekend)" cite "D.V.I. LRCr 16.1(d)"
 {
@@ -218,9 +196,6 @@ deadline superseding-government-rule16: 14.days after ArraignedOnSupersedingChar
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 16.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: superseding-government-rule16 (weekend)" cite "D.V.I. LRCr 16.1(d)"
 {
@@ -235,9 +210,6 @@ deadline superseding-defendant-rule16: 7.days after GovernmentDiscoveryDue() cou
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 16.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: superseding-defendant-rule16 (weekend)" cite "D.V.I. LRCr 16.1(d)"
 {
@@ -249,9 +221,6 @@ test "Counting boundary: superseding-defendant-rule16 (weekend)" cite "D.V.I. LR
 /// place or manner of discovery is filed within three business days after
 /// service of the motion.
 deadline discovery-modification-response: 3.business_days after DiscoveryModificationMotionServed() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 16.1(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-modification-response (weekend)" cite "D.V.I. LRCr 16.1(f)"
 {
@@ -262,9 +231,6 @@ test "Counting boundary: discovery-modification-response (weekend)" cite "D.V.I.
 /// D.V.I. LRCr 16.1(f)(2): a reply is filed within three business days
 /// after service of the response.
 deadline discovery-modification-reply: 3.business_days after DiscoveryModificationResponseServed() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 16.1(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-modification-reply (weekend)" cite "D.V.I. LRCr 16.1(f)"
 {
@@ -280,9 +246,6 @@ deadline joint-discovery-statement: 7.days before TrialCommencement() counted_by
   to CaseOrder
   op set
 } cite "D.V.I. LRCr 16.1(h)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: joint-discovery-statement (weekend)" cite "D.V.I. LRCr 16.1(h)"
 {
@@ -294,9 +257,6 @@ test "Counting boundary: joint-discovery-statement (weekend)" cite "D.V.I. LRCr 
 /// interpreting services is made to the Court at least seven days before
 /// the interpreter's services are required.
 deadline interpreter-request: 7.days before InterpretedAppearance() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 28.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: interpreter-request (weekend)" cite "D.V.I. LRCr 28.1"
 {

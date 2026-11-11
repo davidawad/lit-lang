@@ -39,6 +39,7 @@ test "Counting boundary: appearance-form-period (holiday)" cite "5th Cir. R. 12"
   given NoticeOfAppealFiled() on 2025-12-02
   expect deadline(appearance-form-period) == 2026-01-02
 }
+
 /// Counsel and unrepresented parties review the record on appeal within
 /// 20 days of its dispatch from the clerk's office and report errors and
 /// omissions to both clerks.
@@ -55,6 +56,7 @@ test "Counting boundary: amicus-motion-period (weekend)" cite "5th Cir. R. 29.1"
   given PrincipalBriefFiled() on 2025-12-06
   expect deadline(amicus-motion-period) == 2025-12-15
 }
+
 /// The brief of an intervenor or amicus curiae is due 7 days after the
 /// principal brief of the party it supports.
 deadline amicus-brief-period: 7.days after PrincipalBriefFiled() counted_by frap26 cite "5th Cir. R. 31.2"
@@ -64,6 +66,7 @@ test "Counting boundary: amicus-brief-period (weekend)" cite "5th Cir. R. 31.2"
   given PrincipalBriefFiled() on 2025-12-06
   expect deadline(amicus-brief-period) == 2025-12-15
 }
+
 /// The clerk must receive a request to extend the time for a brief at
 /// least 7 days before the due date, unless the movant shows the grounds
 /// did not exist or could not have been known earlier.
@@ -77,6 +80,7 @@ test "Counting boundary: extra-length-motion-period (weekend)" cite "5th Cir. R.
   given BriefDue() on 2025-12-02
   expect deadline(extra-length-motion-period) == 2025-11-21
 }
+
 /// A brief or record excerpts returned as nonconforming may be resubmitted
 /// in a conforming format within an extension of 10 days.
 deadline resubmission-period: 10.days after BriefReturned() counted_by frap26 cite "5th Cir. R. 32.5"
@@ -86,6 +90,7 @@ test "Counting boundary: resubmission-period (weekend)" cite "5th Cir. R. 32.5"
   given BriefReturned() on 2025-12-03
   expect deadline(resubmission-period) == 2025-12-15
 }
+
 /// An appeal dismissed without prejudice on a stay of proceedings may be
 /// reinstated within 180 days from the date of dismissal.
 deadline reinstatement-period: 180.days after StayDismissal() counted_by frap26 cite "5th Cir. R. 42.4"
@@ -210,7 +215,7 @@ decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 state rehearing-order: "Rehearing Order" by court cite "FRAP 40"
 {
   note "Unless otherwise expressly provided, granting rehearing en banc vacates the panel opinion and judgment and stays the mandate (5th Cir. R. 41.3)."
-  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+  "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
 state mandate: "Mandate Issued" by court cite "FRAP 41(b)"

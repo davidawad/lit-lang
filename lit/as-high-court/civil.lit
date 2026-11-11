@@ -29,7 +29,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "T.C.R.C.P. 
 {
   note "The defenses of Rule 12(b)(1)-(7) may be made by motion, before pleading if a further pleading is permitted; if matters outside the pleading are presented on a 12(b)(6) motion and not excluded, it is treated as one for summary judgment under Rule 56 (T.C.R.C.P. 12(b)). Defenses of personal jurisdiction, venue, process and service are waived if omitted from a Rule 12 motion or from the responsive pleading; lack of subject-matter jurisdiction requires dismissal whenever it appears (T.C.R.C.P. 12(h)). A written motion and notice of its hearing are served not later than 10 days before the hearing (T.C.R.C.P. 6(d)). The earlier outline named no American Samoa pleading-standard decision."
   edge-pleading-motion-granted "Granted" -> dismissed { authority cite "T.C.R.C.P. 12(b)" }
-  edge-pleading-motion-amend "Leave to amend" -> amend { authority cite "T.C.R.C.P. 15(a)" }
+  "Leave to amend" -> amend { authority cite "T.C.R.C.P. 15(a)" }
   edge-pleading-motion-denied "Denied: answer within 10 days of notice" -> discovery {
     authority cite "T.C.R.C.P. 12(a)"
   }
@@ -68,8 +68,8 @@ state discovery: "Discovery and pretrial" by movant cite "T.C.R.C.P. 26(a)"
 {
   note "Parties may obtain discovery by depositions, interrogatories, production, examinations and requests for admission; unless the court orders otherwise the frequency of use is not limited (T.C.R.C.P. 26(a)). The court may in its discretion hold a pretrial conference and enter an order that controls the subsequent course of the action (T.C.R.C.P. 16). The vendored rules state no disclosure or discovery deadline."
   edge-discovery-sj "Summary judgment motion" -> summary-judgment { authority cite "T.C.R.C.P. 56" }
-  edge-discovery-trial "Placed on the trial calendar" -> trial { authority cite "T.C.R.C.P. 40" }
-  edge-discovery-settled "Stipulated dismissal" -> settled { authority cite "T.C.R.C.P. 41(a)" }
+  "Placed on the trial calendar" -> trial { authority cite "T.C.R.C.P. 40" }
+  "Stipulated dismissal" -> settled { authority cite "T.C.R.C.P. 41(a)" }
 }
 
 decision summary-judgment: "Summary judgment decided" by court cite "T.C.R.C.P. 56(c)"
@@ -89,15 +89,13 @@ state trial: "Trial by the court" by court cite "T.C.R.C.P. 52(a)"
     event JudgmentEntered()
     authority cite "T.C.R.C.P. 58"
   }
-  edge-trial-settled "Settled before decision" -> settled { authority cite "T.C.R.C.P. 41(a)" }
+  "Settled before decision" -> settled { authority cite "T.C.R.C.P. 41(a)" }
 }
 
 decision judgment-entered: "Judgment entered" by court cite "T.C.R.C.P. 58"
 {
   note "Every judgment is set forth on a separate document and is effective only when so set forth and entered; entry is not delayed for the taxing of costs (T.C.R.C.P. 58). Costs are allowed as of course to the prevailing party unless the court otherwise directs, taxed by the clerk on one day's notice and reviewed on motion served within 5 days thereafter (T.C.R.C.P. 54(d)). In a civil case appealable as of right, a motion for a new trial, required by 43.0802 A.S.C.A., is filed within 10 days after entry of the judgment (A.C.R. 4(a)); the statute is not vendored. A motion to alter or amend the judgment is served not later than 10 days after its entry (T.C.R.C.P. 59(e)), and the court may not extend the time for action under Rules 52(b), 59(b) and 60(b) (T.C.R.C.P. 6(b))."
-  edge-judgment-entered-new-trial "Motion for new trial within 10 days" -> new-trial {
-    authority cite "A.C.R. 4(a)"
-  }
+  "Motion for new trial within 10 days" -> new-trial { authority cite "A.C.R. 4(a)" }
   edge-judgment-entered-final "No motion" -> final-no-appeal { authority cite "T.C.R.C.P. 58" }
 }
 

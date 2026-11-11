@@ -8,7 +8,7 @@ start charges
 
 state charges: "Formal charges or articles filed" by court cite ?("N.Y. Const. art. VI, § 24: not vendored") {
   note "The court is composed of the President of the Senate, the senators and the judges of the Court of Appeals, and tries impeachments the Assembly votes (N.Y. Const. art. VI, § 24, not vendored; unverified here). Whether any review lies from its judgment is a hole. Proceedings in the Court for the Trial of Impeachments: who files, notice and the respondent's rights are holes. The applicant is the respondent. No leading decision is named."
-  edge-charges-answer "Respondent served" -> answer {
+  "Respondent served" -> answer {
     event ActionCommenced()
     authority cite ?("N.Y. Const. art. VI, § 24: not vendored")
   }
@@ -16,22 +16,20 @@ state charges: "Formal charges or articles filed" by court cite ?("N.Y. Const. a
 
 state answer: "Answer and pretrial" by movant cite ?("N.Y. Judiciary Law, impeachment trials: not vendored") {
   note "Answer period, discovery and interim suspension are holes."
-  edge-answer-hearing "Set for trial or hearing" -> hearing {
+  "Set for trial or hearing" -> hearing {
     authority cite ?("N.Y. Const. art. VI, § 24: not vendored")
   }
 }
 
 state hearing: "Trial or hearing" by court cite ?("N.Y. Const. art. VI, § 24: not vendored") {
   note "Burden and standard of proof are holes."
-  edge-hearing-decision "Decision issued" -> decision {
-    authority cite ?("N.Y. Const. art. VI, § 24: not vendored")
-  }
+  "Decision issued" -> decision { authority cite ?("N.Y. Const. art. VI, § 24: not vendored") }
 }
 
 chance decision: "Tribunal decides" by court cite ?("N.Y. Const. art. VI, § 24: not vendored") {
   note "Outcome probabilities are holes."
   edge-decision-dismissed "Charges dismissed" -> charges-dismissed p ? { event DecisionFiled() }
-  edge-decision-sanction "Sanction imposed" -> sanction p ? { event DecisionFiled() }
+  "Sanction imposed" -> sanction p ? { event DecisionFiled() }
 }
 
 decision sanction: "Review sought?" by movant cite ?("N.Y. Const. art. VI, § 24: not vendored") {

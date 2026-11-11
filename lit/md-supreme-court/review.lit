@@ -35,16 +35,13 @@ decision review-decision: "Petition granted or denied" by court cite "Md. Rule 8
 state record: "Record transmitted to the Supreme Court" by court cite "Md. Rule 8-412(b)"
 {
   note "On a grant directing issuance of the writ, the Clerk issues it to the lower court (Md. Rule 8-303(h)). The clerk having the record transmits it within 15 days after entry of a writ directed to the Appellate Court, or within sixty days after a writ directed to another lower court (Md. Rule 8-412(b)). On docketing the record the Clerk sends notice of the appellant's brief due date, no earlier than 40 days after the notice unless the Court orders otherwise (Md. Rule 8-412(c))."
-  edge-record-briefing "Record docketed" -> briefing {
-    event RecordFiled()
-    authority cite "Md. Rule 8-412(c)"
-  }
+  "Record docketed" -> briefing { event RecordFiled(), authority cite "Md. Rule 8-412(c)" }
 }
 
 state briefing: "Merits briefs filed" by petitioner cite "Md. Rule 8-502(a)"
 {
   note "The appellant's brief is filed by the date in the Clerk's Rule 8-412(c) notice; the appellee's within 30 days after the appellant's; a reply not later than the earlier of 20 days after the appellee's brief or ten days before the scheduled argument (Md. Rule 8-502(a)(1)-(3)). In the Supreme Court the time may be extended by joint stipulation if the principal briefs are filed at least 30 days, and any reply at least ten days, before argument, or by order (Md. Rule 8-502(b)(1)). Eight paper copies of each brief and record extract are filed (Md. Rule 8-502(c)(2)). Principal briefs are limited to 13,000 words and a reply to 6,500 in the Supreme Court (Md. Rule 8-503(d)(1), (3)); those limits are encoded in lit/md-appellate-civil."
-  edge-briefing-argument "Briefing complete" -> argument { authority cite "Md. Rule 8-522(a)" }
+  "Briefing complete" -> argument { authority cite "Md. Rule 8-522(a)" }
 }
 
 state argument: "Oral argument" by court cite "Md. Rule 8-522(a)"

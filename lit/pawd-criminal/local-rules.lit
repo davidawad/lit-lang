@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The Western District of Pennsylvania's own criminal periods, counted
 // under the criminal rules (FRCrimP 45(a) governs "any local rule"). No
 // trigger carries a service method. The LCrR 32 sentencing procedures
@@ -54,9 +56,6 @@ deadline pretrial-motions: 14.days after Arraigned() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "W.D. Pa. LCrR 12"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motions (weekend)" cite "W.D. Pa. LCrR 12"
 {
@@ -71,9 +70,6 @@ deadline motion-response: 14.days after MotionServed() counted_by frcrimp45 dele
   to CaseOrder
   op set
 } cite "W.D. Pa. LCrR 12"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-response (weekend)" cite "W.D. Pa. LCrR 12"
 {
@@ -88,9 +84,6 @@ deadline motion-reply: 14.days after ResponseServed() counted_by frcrimp45 deleg
   to CaseOrder
   op set
 } cite "W.D. Pa. LCrR 12"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-reply (weekend)" cite "W.D. Pa. LCrR 12"
 {
@@ -103,9 +96,6 @@ test "Counting boundary: motion-reply (weekend)" cite "W.D. Pa. LCrR 12"
 /// seven days of the defendant's request and files a receipt listing the
 /// categories and items provided.
 deadline rule16-disclosure: 7.days after DiscoveryRequested() counted_by frcrimp45 cite "W.D. Pa. LCrR 16"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: rule16-disclosure (holiday)" cite "W.D. Pa. LCrR 16"
 {
@@ -121,9 +111,6 @@ deadline tentative-psr-disclosure: 7.weeks before SentencingScheduled() counted_
   to CaseOrder
   op set
 } cite "W.D. Pa. LCrR 32"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: tentative-psr-disclosure (weekend)" cite "W.D. Pa. LCrR 32"
 {
@@ -140,9 +127,6 @@ deadline administrative-resolution: 2.weeks after TentativePsrDisclosed() counte
   to CaseOrder
   op set
 } cite "W.D. Pa. LCrR 32"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: administrative-resolution (weekend)" cite "W.D. Pa. LCrR 32"
 {
@@ -157,9 +141,6 @@ deadline psr-to-court: 5.weeks before SentencingScheduled() counted_by frcrimp45
   to CaseOrder
   op set
 } cite "W.D. Pa. LCrR 32"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-to-court (weekend)" cite "W.D. Pa. LCrR 32"
 {
@@ -176,9 +157,6 @@ deadline sentencing-position: 4.weeks before SentencingScheduled() counted_by fr
   to CaseOrder
   op set
 } cite "W.D. Pa. LCrR 32"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-position (weekend)" cite "W.D. Pa. LCrR 32"
 {
@@ -192,9 +170,6 @@ deadline sentencing-position-response: 3.weeks before SentencingScheduled() coun
   to CaseOrder
   op set
 } cite "W.D. Pa. LCrR 32"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-position-response (weekend)" cite "W.D. Pa. LCrR 32"
 {
@@ -209,9 +184,6 @@ deadline psr-addendum: 2.weeks before SentencingScheduled() counted_by frcrimp45
   to CaseOrder
   op set
 } cite "W.D. Pa. LCrR 32"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-addendum (weekend)" cite "W.D. Pa. LCrR 32"
 {
@@ -226,9 +198,6 @@ deadline supplemental-memorandum: 1.weeks before SentencingScheduled() counted_b
   to CaseOrder
   op set
 } cite "W.D. Pa. LCrR 32"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: supplemental-memorandum (weekend)" cite "W.D. Pa. LCrR 32"
 {
@@ -242,9 +211,6 @@ deadline supplemental-response: 3.days before SentencingScheduled() counted_by f
   to CaseOrder
   op set
 } cite "W.D. Pa. LCrR 32"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: supplemental-response (weekend)" cite "W.D. Pa. LCrR 32"
 {

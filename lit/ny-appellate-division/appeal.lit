@@ -42,7 +42,7 @@ terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismi
 state record: "Transcript settled; record prepared" by court cite "CPLR 5525(c)"
 {
   note "Where a stenographic record was made, the appellant, within the time for taking the appeal, requests the transcript from the reporter and deposits the fee (CPLR 5525(a)). Within 15 days after receiving the transcript the appellant serves proposed amendments and a copy on the respondent, who has 15 days after that service to propose amendments or objections; on at least four days' notice the transcript is submitted for settlement if the parties cannot agree (CPLR 5525(c)(1)). Where no stenographic record was made, the appellant serves a statement of the proceedings within 10 days after taking the appeal, and the respondent may object within 10 days after service (CPLR 5525(d)). The appellant perfects by the full record, appendix or agreed statement method or, where authorized, on the original record (22 NYCRR 1250.5(a)). On filing a record on a civil appeal the clerk's fee is $315, and $45 on each motion or cross motion other than one for leave to appeal as a poor person (22 NYCRR 1250.17(a))."
-  edge-record-briefing "Record and appellant's brief filed" -> briefing {
+  "Record and appellant's brief filed" -> briefing {
     event RecordFiled()
     authority cite "22 NYCRR 1250.9(a)"
   }
@@ -59,13 +59,13 @@ terminal dismissed-unperfected: "Appeal deemed dismissed for failure to perfect"
 state briefing: "Briefs filed" by appellant cite "22 NYCRR 1250.9(a)"
 {
   note "Unless the court has set a time, the appellant perfects within six months of the date of the notice of appeal or order granting leave by filing the record or appendix and its brief with proof of service (22 NYCRR 1250.9(a)); the parties may stipulate, or the appellant may apply by letter, to extend that time up to 60 days, then by letter up to 30 days more, and further only by motion (22 NYCRR 1250.9(b)). The respondent files within 30 days of service of the appellant's submissions, and the appellant's reply within 10 days of service of the respondent's, or in the First Department under the court's published terms calendar (22 NYCRR 1250.9(c), (d)). Answering briefs may be extended by stipulation or letter up to 30 days and reply briefs up to 10 days, no more than twice, and further only by motion (22 NYCRR 1250.9(g)). In a cross appeal the respondent-appellant's answering brief is due within 30 days after service of the first brief, the appellant-respondent's reply within 30 days after the answering brief, and the respondent-appellant's reply within 10 days after that, unless stipulated otherwise (22 NYCRR 1250.9(f)(1)). Absent leave, sur-reply briefs are not permitted (22 NYCRR 1250.8(e))."
-  edge-briefing-argument "Briefing complete" -> argument { authority cite "22 NYCRR 1250.15(c)" }
+  "Briefing complete" -> argument { authority cite "22 NYCRR 1250.15(c)" }
 }
 
 state argument: "Oral argument or submission" by court cite "22 NYCRR 1250.15(c)"
 {
   note "Oral argument is permitted unless proscribed by court rule or by the court in a particular cause; parties who file no brief may not argue (22 NYCRR 1250.15(c)(1)). Where argument is proscribed, leave is sought by letter or motion within 7 days of the filing of the respondent's brief (22 NYCRR 1250.15(c)(2)). Post-argument submissions need leave (22 NYCRR 1250.15(d)). The outline named no leading decision on the standard of review; none is kept."
-  edge-argument-decision "Submitted" -> decision { authority cite "CPLR 5522(a)" }
+  "Submitted" -> decision { authority cite "CPLR 5522(a)" }
 }
 
 decision decision: "Appellate Division decision" by court cite "CPLR 5522(a)"

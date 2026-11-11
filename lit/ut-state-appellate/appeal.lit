@@ -24,28 +24,25 @@ decision notice: "Notice of appeal within time?" by appellant cite "URAP 4(a)"
 state record: "Docketing statement, record and transcript" by court cite "URAP 11(a)"
 {
   note "Within 21 days after the notice of appeal is filed, the appellant files and serves the docketing statement; in a civil appeal failure to file it in time may result in dismissal (URAP 9(b), (f)). Within 21 days after filing the docketing statement, the appellant orders the transcript and serves a designation of the parts to be transcribed, or files a certificate that none is requested; the appellee may cross-designate within 14 days after service (URAP 11(c)(1), (3)). The transcript is completed and filed within 30 days after payment arrangements are made, and the trial court transmits the index and the paginated record within 20 days from the appellate court's request (URAP 12(a)(2), (b))."
-  edge-record-briefing "Record transmitted" -> briefing { authority cite "URAP 12(b)" }
+  "Record transmitted" -> briefing { authority cite "URAP 12(b)" }
 }
 
 state briefing: "Briefs filed" by appellant cite "URAP 26(a)"
 {
   note "The appellant files and serves its principal brief within 40 days after the date of the clerk's Rule 13 notice; the appellee's principal brief is due within 30 days after service of the appellant's, and any reply brief within 30 days after the appellee's (URAP 26(a)). Unless a brief complies with the page limit it must comply with the word limit: outside death-sentence cases a principal brief is limited to 30 pages or 14,000 words and a reply brief to 15 pages or 7,000 words; headings, footnotes and quotations count (URAP 24(g)). Stipulated extensions for any brief may not exceed 60 days in total (URAP 22(b)(3)). The Supreme Court may transfer a case to the Court of Appeals at any time before it is set for oral argument, except a case within its exclusive jurisdiction; after a notice of intent to transfer, a retention letter is filed within ten days (URAP 42(a), (c)(3))."
-  edge-briefing-argument "Briefing complete" -> argument { authority cite "URAP 26(a)" }
+  "Briefing complete" -> argument { authority cite "URAP 26(a)" }
 }
 
 state argument: "Oral argument or submission" by court cite "URAP 29(a)"
 {
   note "The clerk gives notice of oral argument not later than 28 days before the case is calendared (URAP 29(b)(1), (2)). In the Supreme Court the parties may jointly move to cancel argument not later than 14 days from the clerk's notice; in the Court of Appeals a party may waive argument by a written waiver filed within that time (URAP 29(b)(1)(A), (2)(A))."
-  edge-argument-decision "Case submitted" -> decision { authority cite "URAP 30(a)" }
+  "Case submitted" -> decision { authority cite "URAP 30(a)" }
 }
 
 state decision: "Decision issued" by court cite "URAP 30(a)"
 {
   note "The court may reverse, affirm, modify or otherwise dispose of the order or judgment appealed (URAP 30(a)); the reasons are stated in writing (URAP 30(d)), and the entry of the decision in the court's records constitutes entry of its judgment (URAP 30(f)). The outline named no leading decisions."
-  edge-decision-rehearing-decision "Decision entered" -> rehearing-decision {
-    event DecisionFiled()
-    authority cite "URAP 30(f)"
-  }
+  "Decision entered" -> rehearing-decision { event DecisionFiled(), authority cite "URAP 30(f)" }
 }
 
 decision rehearing-decision: "Rehearing sought?" by appellant cite "URAP 35(a)"
@@ -58,9 +55,7 @@ decision rehearing-decision: "Rehearing sought?" by appellant cite "URAP 35(a)"
 state rehearing-order: "Rehearing order" by court cite "URAP 35(a)"
 {
   note "No response is received unless the court requests one, due within 14 days after the order requesting it, and a petition is not granted without a request for a response (URAP 35(a)(4))."
-  edge-rehearing-order-further-review "Rehearing decided" -> further-review {
-    authority cite "URAP 35(a)"
-  }
+  "Rehearing decided" -> further-review { authority cite "URAP 35(a)" }
 }
 
 decision further-review: "Certiorari sought?" by petitioner cite "URAP 48(a)"

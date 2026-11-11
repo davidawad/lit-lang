@@ -62,24 +62,20 @@ decision plea-decision: "Plea or trial" by accused cite "Ala. R. Crim. P. 14.4"
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Ala. R. Crim. P. 14.4"
   }
-  edge-plea-decision-trial "Proceed to trial" -> trial { authority cite "Ala. R. Crim. P. 8.1" }
+  "Proceed to trial" -> trial { authority cite "Ala. R. Crim. P. 8.1" }
 }
 
 decision trial: "Trial and verdict" by court cite "Ala. R. Crim. P. 20.1"
 {
   note "A motion for judgment of acquittal on the defendant's motion stating the grounds (Ala. R. Crim. P. 20.1); its post-verdict renewal and the deemed-denial period are Ala. R. Crim. P. 20.3, a hole (currency unconfirmed)."
-  edge-trial-acquitted "Judgment of acquittal or not guilty" -> acquitted {
-    authority cite "Ala. R. Crim. P. 20.1"
-  }
+  "Judgment of acquittal or not guilty" -> acquitted { authority cite "Ala. R. Crim. P. 20.1" }
   edge-trial-guilty "Guilty: sentencing" -> sentencing { authority cite "Ala. R. Crim. P. 26.6" }
 }
 
 state sentencing: "Sentence imposed" by court cite "Ala. R. Crim. P. 26.6"
 {
   note "Imposition of sentence (Ala. R. Crim. P. 26.6)."
-  edge-sentencing-post-trial "Post-trial motions" -> post-trial {
-    authority cite "Ala. R. Crim. P. 24.1"
-  }
+  "Post-trial motions" -> post-trial { authority cite "Ala. R. Crim. P. 24.1" }
 }
 
 decision post-trial: "Motion for new trial or in arrest of judgment" by court cite "Ala. R. Crim. P. 24.1"

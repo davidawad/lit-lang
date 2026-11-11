@@ -137,6 +137,7 @@ test "Counting boundary: installment-denial-payment-period (weekend)" cite "Miss
   given InstallmentApplicationDenied() on 2026-03-01
   expect deadline(installment-denial-payment-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 1009-1(a)(1)(B)(iv)(a), 3002-1(c): in a chapter 7, 12
 /// or 13 case, a creditor added after the § 341 notice is told of its right
 /// to file a proof of claim within 70 days from the date of the notice.
@@ -147,6 +148,7 @@ test "Counting boundary: added-creditor-claim-period (weekend)" cite "Miss. Bank
   given AddedCreditorNoticeDated() on 2026-03-01
   expect deadline(added-creditor-claim-period) == 2026-05-11
 }
+
 /// Miss. Bankr. L.R. 1017-1(f)(2)(C): after an ex parte order granting a
 /// chapter 13 debtor's motion to dismiss, any party in interest may object
 /// to the motion within 14 days of entry of the order.
@@ -157,6 +159,7 @@ test "Counting boundary: dismissal-order-objection-period (weekend)" cite "Miss.
   given DismissalOrderEntered() on 2026-03-01
   expect deadline(dismissal-order-objection-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 2003-1(a)(5): a request to reschedule the § 341(a)
 /// meeting is submitted to the United States Trustee (or the delegated case
 /// trustee) at least seven days before the scheduled meeting, except in
@@ -168,6 +171,7 @@ test "Counting boundary: meeting-reschedule-request-period (weekend)" cite "Miss
   given CreditorsMeetingDate() on 2026-03-01
   expect deadline(meeting-reschedule-request-period) == 2026-02-20
 }
+
 /// Miss. Bankr. L.R. 2003-1(a)(6): a motion to waive the debtor's
 /// appearance at the § 341(a) meeting is filed at least seven days before
 /// the initial or any rescheduled meeting.
@@ -178,6 +182,7 @@ test "Counting boundary: appearance-waiver-motion-period (weekend)" cite "Miss. 
   given CreditorsMeetingDate() on 2026-03-01
   expect deadline(appearance-waiver-motion-period) == 2026-02-20
 }
+
 /// Miss. Bankr. L.R. 2004-1(a)(2): a consensual FRBP 2004 examination
 /// initiated by notice is filed and served no later than 14 days before the
 /// date set for the examination.
@@ -188,6 +193,7 @@ test "Counting boundary: examination-notice-period (weekend)" cite "Miss. Bankr.
   given ExaminationDate() on 2026-03-01
   expect deadline(examination-notice-period) == 2026-02-13
 }
+
 /// Miss. Bankr. L.R. 2015-1(c): in a chapter 12 case, the debtor in
 /// possession or trustee files the Monthly Operating Report on or before
 /// the 20th day of each month following the month reported, until a plan is
@@ -203,6 +209,7 @@ test "Counting boundary: chapter-11-claims-bar-period (holiday)" cite "Miss. Ban
   given OrderForReliefEntered() on 2026-03-05
   expect deadline(chapter-11-claims-bar-period) == 2026-07-06
 }
+
 /// Miss. Bankr. L.R. 3003-1(c)(3)(i): in a case under Subchapter V of
 /// chapter 11 the bar date is 70 days after the date of the order for
 /// relief, unless the court orders otherwise.
@@ -213,6 +220,7 @@ test "Counting boundary: subchapter-v-claims-bar-period (weekend)" cite "Miss. B
   given OrderForReliefEntered() on 2026-03-01
   expect deadline(subchapter-v-claims-bar-period) == 2026-05-11
 }
+
 /// Miss. Bankr. L.R. 3003-1(c)(3)(ii): when a chapter 11 debtor or trustee
 /// amends a scheduled debt after a bar date is set, notice of the amendment
 /// is served on the creditor within 14 days of its filing, with notice of
@@ -224,6 +232,7 @@ test "Counting boundary: schedule-amendment-notice-period (weekend)" cite "Miss.
   given ScheduleAmendmentFiled() on 2026-03-01
   expect deadline(schedule-amendment-notice-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 3018-1(f): at least three days before the chapter 11
 /// confirmation hearing, the plan proponent or its agent files the Ballot
 /// Summary and Certification, attaching the ballots unless the court orders
@@ -235,6 +244,7 @@ test "Counting boundary: ballot-certification-period (weekend)" cite "Miss. Bank
   given ConfirmationHearing() on 2026-03-03
   expect deadline(ballot-certification-period) == 2026-02-27
 }
+
 /// Miss. Bankr. L.R. 3022-1(a)(3): the debtor (or trustee) files a final
 /// report and account in the United States Trustee's form on or before
 /// fourteen days before the hearing on a motion to close the chapter 11
@@ -246,6 +256,7 @@ test "Counting boundary: final-report-period (weekend)" cite "Miss. Bankr. L.R. 
   given CaseClosingHearing() on 2026-03-01
   expect deadline(final-report-period) == 2026-02-13
 }
+
 /// Miss. Bankr. L.R. 4001-1(a)(1)(F)(i): when the moving creditor, the
 /// debtor and the trustee agree on stay relief, an agreed order they have
 /// signed is submitted no later than 14 days after the date scheduled for
@@ -257,6 +268,7 @@ test "Counting boundary: stay-relief-agreed-order-period (weekend)" cite "Miss. 
   given StayReliefHearingDate() on 2026-03-01
   expect deadline(stay-relief-agreed-order-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 4001-1(e)(1)(A): a motion to extend the automatic stay
 /// under § 362(c)(3)(B) is filed within 7 days after the date of the filing
 /// of the petition.
@@ -267,6 +279,7 @@ test "Counting boundary: stay-continuation-motion-period (weekend)" cite "Miss. 
   given PetitionFiled() on 2026-03-01
   expect deadline(stay-continuation-motion-period) == 2026-03-09
 }
+
 /// Miss. Bankr. L.R. 4001-1(e)(1)(C): the debtor serves the motion to
 /// continue the stay and its Declaration on all parties against whom
 /// continuation is sought within 2 days after filing them, and files a
@@ -278,6 +291,7 @@ test "Counting boundary: stay-continuation-service-period (weekend)" cite "Miss.
   given StayContinuationMotionFiled() on 2026-03-05
   expect deadline(stay-continuation-service-period) == 2026-03-09
 }
+
 /// Miss. Bankr. L.R. 4001-1(f)(1)(B): the debtor serves the motion to
 /// impose the stay and its Declaration on all parties against whom
 /// imposition is sought within 2 days after filing them, and files a
@@ -289,6 +303,7 @@ test "Counting boundary: stay-imposition-service-period (weekend)" cite "Miss. B
   given StayImpositionMotionFiled() on 2026-03-05
   expect deadline(stay-imposition-service-period) == 2026-03-09
 }
+
 /// Miss. Bankr. L.R. 4003-1(b): unless the court orders otherwise, a
 /// creditor added by an amendment filed and served fewer than 30 days
 /// before, or after, the FRBP 4003(b) deadline has 30 days from service of
@@ -300,6 +315,7 @@ test "Counting boundary: added-creditor-exemption-objection-period (weekend)" ci
   given AddedCreditorAmendmentServed() on 2026-03-05
   expect deadline(added-creditor-exemption-objection-period) == 2026-04-06
 }
+
 /// Miss. Bankr. L.R. 4004-1(b): unless the court orders otherwise, a
 /// creditor added by an amendment filed and served less than 60 days
 /// before, or after, the FRBP 4004(a) deadline has 60 days from service of
@@ -311,6 +327,7 @@ test "Counting boundary: added-creditor-discharge-objection-period (weekend)" ci
   given AddedCreditorAmendmentServed() on 2026-03-03
   expect deadline(added-creditor-discharge-objection-period) == 2026-05-04
 }
+
 /// Miss. Bankr. L.R. 4007-1(b): unless the court orders otherwise, for a
 /// creditor added by an amendment filed and served less than 60 days
 /// before, or after, the FRBP 4007 deadline, the deadline for a
@@ -323,6 +340,7 @@ test "Counting boundary: added-creditor-dischargeability-period (weekend)" cite 
   given AddedCreditorAmendmentServed() on 2026-03-03
   expect deadline(added-creditor-dischargeability-period) == 2026-05-04
 }
+
 /// Miss. Bankr. L.R. 5005-1(a)(3)(G): unless a challenge to the docketed
 /// image of a paper filing is communicated to the clerk within 14 days of
 /// docketing, the document as docketed is conclusively confirmed as the one
@@ -334,6 +352,7 @@ test "Counting boundary: paper-filing-challenge-period (weekend)" cite "Miss. Ba
   given PaperDocumentDocketed() on 2026-03-01
   expect deadline(paper-filing-challenge-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 5011-1(a)(4): any response or objection to a motion to
 /// withdraw the reference is filed within 14 days of the date of its
 /// service; the clerk then transmits the motion to the district court
@@ -345,6 +364,7 @@ test "Counting boundary: withdrawal-response-period (weekend)" cite "Miss. Bankr
   given WithdrawalMotionServed() on 2026-03-01
   expect deadline(withdrawal-response-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 7015-1: when leave to amend or supplement a pleading
 /// is granted, the movant files the amended or supplemental pleading as a
 /// separately docketed item within seven days from entry of the order.
@@ -355,6 +375,7 @@ test "Counting boundary: amended-pleading-filing-period (weekend)" cite "Miss. B
   given AmendmentLeaveGranted() on 2026-03-01
   expect deadline(amended-pleading-filing-period) == 2026-03-09
 }
+
 /// Miss. Bankr. L.R. 7016-1(c): for cause shown, a party may request at
 /// least 2 days before a scheduling or pre-trial conference that it be
 /// held, or that the party participate, by telephone.
@@ -370,6 +391,7 @@ test "Counting boundary: business-records-production-period (weekend)" cite "Mis
   given InterrogatoryAnswersServed() on 2026-03-01
   expect deadline(business-records-production-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 7054-1(b)(2)(E): a response opposing a motion for
 /// attorney's fees is filed no later than 14 days after the motion is filed
 /// and states the disputed charges with particularity.
@@ -380,6 +402,7 @@ test "Counting boundary: fee-motion-response-period (weekend)" cite "Miss. Bankr
   given FeeMotionFiled() on 2026-03-01
   expect deadline(fee-motion-response-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 7056-1(3)(B): the respondent files its response and
 /// memorandum brief within 21 days of service of the motion for summary
 /// judgment and its memorandum.
@@ -390,6 +413,7 @@ test "Counting boundary: summary-judgment-response-period (weekend)" cite "Miss.
   given SummaryJudgmentMotionServed() on 2026-03-01
   expect deadline(summary-judgment-response-period) == 2026-03-23
 }
+
 /// Miss. Bankr. L.R. 7056-1(3)(C): the movant may file a reply within 14
 /// days after the response is served.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frbp9006 cite "Miss. Bankr. L.R. 7056-1(3)"
@@ -399,6 +423,7 @@ test "Counting boundary: summary-judgment-reply-period (weekend)" cite "Miss. Ba
   given SummaryJudgmentResponseServed() on 2026-03-01
   expect deadline(summary-judgment-reply-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 8003-1(c)(5): an official committee that is not a
 /// party and wishes to be on an appeal's service list files a request for
 /// notice with the bankruptcy clerk within 21 days of service of the notice
@@ -410,6 +435,7 @@ test "Counting boundary: committee-appeal-notice-request-period (weekend)" cite 
   given NoticeOfAppealServed() on 2026-03-01
   expect deadline(committee-appeal-notice-request-period) == 2026-03-23
 }
+
 /// Miss. Bankr. L.R. 9013-1(e): after a hearing, the prevailing party
 /// submits an order or judgment consistent with the ruling within 14 days
 /// of the hearing or such other time as the court directs.
@@ -420,6 +446,7 @@ test "Counting boundary: order-submission-period (weekend)" cite "Miss. Bankr. L
   given HearingHeld() on 2026-03-01
   expect deadline(order-submission-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 9015-1(d): where a jury demand is granted and a party
 /// refuses consent to a bankruptcy court jury trial, any party may move the
 /// district court to withdraw the reference within 14 days of entry of the
@@ -431,6 +458,7 @@ test "Counting boundary: jury-withdrawal-motion-period (weekend)" cite "Miss. Ba
   given JuryDemandGranted() on 2026-03-01
   expect deadline(jury-withdrawal-motion-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 9017-1(a): absent a perfected appeal, exhibits are
 /// physically removed by the parties who filed them within sixty days from
 /// the final disposition of the case by the court, or may be destroyed.
@@ -441,6 +469,7 @@ test "Counting boundary: exhibit-removal-period (weekend)" cite "Miss. Bankr. L.
   given FinalDisposition() on 2026-03-03
   expect deadline(exhibit-removal-period) == 2026-05-04
 }
+
 /// Miss. Bankr. L.R. 9019-1(f)(1): within 14 days of entry of an order
 /// referring a case to mediation, a party may file a written objection to
 /// the referral.
@@ -451,6 +480,7 @@ test "Counting boundary: mediation-referral-objection-period (weekend)" cite "Mi
   given MediationReferralOrdered() on 2026-03-01
   expect deadline(mediation-referral-objection-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 9019-1(f)(5): the parties have 21 days from entry of
 /// the court's final referral order to schedule the mediation; failing
 /// that, the court assigns the mediator and the date.
@@ -461,6 +491,7 @@ test "Counting boundary: mediation-scheduling-period (weekend)" cite "Miss. Bank
   given MediationReferralFinal() on 2026-03-01
   expect deadline(mediation-scheduling-period) == 2026-03-23
 }
+
 /// Miss. Bankr. L.R. 9019-1(g)(1): objections to the mediator's pre-
 /// mediation documents are addressed to the mediator not less than 7 days
 /// before the scheduled mediation.
@@ -471,6 +502,7 @@ test "Counting boundary: pre-mediation-objection-period (weekend)" cite "Miss. B
   given MediationDate() on 2026-03-01
   expect deadline(pre-mediation-objection-period) == 2026-02-20
 }
+
 /// Miss. Bankr. L.R. 9019-1 (Neutral's Post-Mediation Report to Court):
 /// within 14 days of the completion of a mediation, the neutral advises the
 /// bankruptcy judge in writing whether the case was resolved.
@@ -481,6 +513,7 @@ test "Counting boundary: mediation-report-period (weekend)" cite "Miss. Bankr. L
   given MediationCompleted() on 2026-03-01
   expect deadline(mediation-report-period) == 2026-03-16
 }
+
 /// Miss. Bankr. L.R. 9019-1 (Payment of costs): the parties pay the neutral
 /// within 30 days from receipt of the neutral's statement.
 deadline neutral-payment-period: 30.days after NeutralStatementReceived() counted_by frbp9006 cite "Miss. Bankr. L.R. 9019-1"
@@ -496,9 +529,7 @@ start motion-filed
 state motion-filed: "Motion filed and served" by movant cite "Miss. Bankr. L.R. 9013-1(b)"
 {
   note "A motion is filed and served under L.R. 9013-1(b), with limited notice where the FRBP or the rules allow (L.R. 2002-1(m)). The response time is the one the notice sets under the FRBP; those periods are lit/frbp's."
-  edge-motion-filed-opposed "Written objection filed" -> opposed {
-    authority cite "Miss. Bankr. L.R. 9013-1(c)"
-  }
+  "Written objection filed" -> opposed { authority cite "Miss. Bankr. L.R. 9013-1(c)" }
   edge-motion-filed-unopposed "No timely response" -> ruling {
     authority cite "Miss. Bankr. L.R. 9013-1(d)"
   }
@@ -507,7 +538,7 @@ state motion-filed: "Motion filed and served" by movant cite "Miss. Bankr. L.R. 
 state opposed: "Objection filed; matter heard" by opponent cite "Miss. Bankr. L.R. 9013-1(c)"
 {
   note "Any objection to a motion, except one made in open court, is in writing and served under L.R. 9013-1(b)(1) (L.R. 9013-1(c))."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Miss. Bankr. L.R. 9013-1(e)" }
+  "Hearing held" -> ruling { authority cite "Miss. Bankr. L.R. 9013-1(e)" }
 }
 
 decision ruling: "Motion decided" by court cite "Miss. Bankr. L.R. 9013-1(e)"

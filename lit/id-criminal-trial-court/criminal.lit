@@ -37,7 +37,7 @@ decision initial-appearance: "Bail or release" by court cite "I.C.R. 46"
 decision probable-cause: "Preliminary hearing or grand jury" by court cite "I.C.R. 5.1"
 {
   note "Unless indicted by a grand jury, a defendant charged in a complaint with a felony is entitled to a preliminary hearing (I.C.R. 5.1(a)); the time within which it must be held is set by Rule 5.1 and not stated here (currency unconfirmed). The grand jury is governed by Rules 6 to 6.8."
-  edge-probable-cause-charged "Bound over or indicted" -> charged { authority cite "I.C.R. 5.1" }
+  "Bound over or indicted" -> charged { authority cite "I.C.R. 5.1" }
   edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
     authority cite "I.C.R. 5.1"
   }
@@ -46,15 +46,13 @@ decision probable-cause: "Preliminary hearing or grand jury" by court cite "I.C.
 state charged: "Indictment or information" by court cite "I.C.R. 7(a)"
 {
   note "All felony offenses must be prosecuted by indictment or information (I.C.R. 7(a)); the time for filing an information after the preliminary hearing is set by Rule 7 and not stated here (currency unconfirmed)."
-  edge-charged-arraignment "Arraignment in district court" -> arraignment {
-    authority cite "I.C.R. 10(a)"
-  }
+  "Arraignment in district court" -> arraignment { authority cite "I.C.R. 10(a)" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "I.C.R. 10(a)"
 {
   note "After an indictment or information is filed the defendant is arraigned on it by the court and must appear in person (I.C.R. 10(a)). A defendant may plead guilty or not guilty, and a refusal to plead is entered as not guilty (I.C.R. 11(a))."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "I.C.R. 16(a)" }
+  "Discovery" -> discovery { authority cite "I.C.R. 16(a)" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "I.C.R. 12"
@@ -85,7 +83,7 @@ decision plea-decision: "Plea or trial" by accused cite "I.C.R. 11"
 {
   note "A guilty plea is accepted under Rule 11. In felony cases issues of fact are tried by a jury unless the defendant waives a jury in writing in open court with the prosecutor's consent (I.C.R. 23(a)); the number of jurors Rule 23 sets is not stated here (currency unconfirmed)."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "I.C.R. 11" }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "I.C.R. 23(a)" }
+  "Trial" -> trial { authority cite "I.C.R. 23(a)" }
 }
 
 decision trial: "Verdict" by court cite "I.C.R. 31"
@@ -110,9 +108,7 @@ decision post-trial: "Post-trial motions" by court cite "I.C.R. 34"
 state sentencing: "Presentence investigation and sentencing" by court cite "I.C.R. 33"
 {
   note "The court may order a presentence investigation and report under the standards of Rule 32 (I.C.R. 32(a)). After a plea or verdict of guilty the court sets a time for pronouncing judgment and sentence (I.C.R. 33(a)(1)). The court may correct a sentence illegal on the face of the record at any time, and a sentence imposed in an illegal manner or a reduction within the period Rule 35(b) sets, which is not stated here (currency unconfirmed) (I.C.R. 35)."
-  edge-sentencing-judgment "Judgment and sentence entered" -> judgment {
-    authority cite "I.C.R. 33"
-  }
+  "Judgment and sentence entered" -> judgment { authority cite "I.C.R. 33" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "I.C.R. 33"

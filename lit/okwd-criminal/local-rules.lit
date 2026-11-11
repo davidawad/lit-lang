@@ -3,6 +3,8 @@ module okwd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Western District of Oklahoma's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method: FRCrimP 45(c)'s three added days follow the
@@ -70,9 +72,6 @@ event TranscriptFiled()
 /// the extent practicable at the change of plea hearing or no later than
 /// 14 days after it.
 deadline restitution-information: 14.days after ChangeOfPleaHearingHeld() counted_by frcrimp45 cite "W.D. Okla. LCrR11.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: restitution-information (weekend)" cite "W.D. Okla. LCrR11.2"
 {
@@ -88,9 +87,6 @@ deadline pretrial-motions: 21.days after NotGuiltyPleaEntered() counted_by frcri
   to CaseOrder
   op set
 } cite "W.D. Okla. LCrR12.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motions (weekend)" cite "W.D. Okla. LCrR12.1(a)"
 {
@@ -101,9 +97,6 @@ test "Counting boundary: pretrial-motions (weekend)" cite "W.D. Okla. LCrR12.1(a
 /// W.D. Okla. LCrR12.1(b): the opposing party files and serves a response
 /// within 9 days after the motion is filed.
 deadline pretrial-response: 9.days after PretrialMotionFiled() counted_by frcrimp45 cite "W.D. Okla. LCrR12.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-response (weekend)" cite "W.D. Okla. LCrR12.1(b)"
 {
@@ -115,9 +108,6 @@ test "Counting boundary: pretrial-response (weekend)" cite "W.D. Okla. LCrR12.1(
 /// 12.3 is given at the discovery conference or within 14 days from the
 /// date a plea of not guilty is entered.
 deadline notice-of-defenses: 14.days after NotGuiltyPleaEntered() counted_by frcrimp45 cite "W.D. Okla. LCrR12.3.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: notice-of-defenses (weekend)" cite "W.D. Okla. LCrR12.3.1"
 {
@@ -128,9 +118,6 @@ test "Counting boundary: notice-of-defenses (weekend)" cite "W.D. Okla. LCrR12.3
 /// W.D. Okla. LCrR16.1(a): counsel meet and confer at a discovery
 /// conference within 14 days after a plea of not guilty is entered.
 deadline discovery-conference: 14.days after NotGuiltyPleaEntered() counted_by frcrimp45 cite "W.D. Okla. LCrR16.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-conference (weekend)" cite "W.D. Okla. LCrR16.1(a)"
 {
@@ -142,9 +129,6 @@ test "Counting boundary: discovery-conference (weekend)" cite "W.D. Okla. LCrR16
 /// is completed, the parties file a joint statement memorializing it
 /// (Appendix V form).
 deadline discovery-joint-statement: 7.days after DiscoveryConferenceCompleted() counted_by frcrimp45 cite "W.D. Okla. LCrR16.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-joint-statement (weekend)" cite "W.D. Okla. LCrR16.1(b)"
 {
@@ -155,9 +139,6 @@ test "Counting boundary: discovery-joint-statement (weekend)" cite "W.D. Okla. L
 /// W.D. Okla. LCrR12.3: a motion in limine is filed and served at least 7
 /// days before the commencement of the scheduled trial docket.
 deadline motion-in-limine: 7.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR12.3"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-in-limine (weekend)" cite "W.D. Okla. LCrR12.3"
 {
@@ -168,9 +149,6 @@ test "Counting boundary: motion-in-limine (weekend)" cite "W.D. Okla. LCrR12.3"
 /// W.D. Okla. LCrR12.3: objections to a motion in limine are filed 4 days
 /// before the commencement of the scheduled trial docket.
 deadline motion-in-limine-objection: 4.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR12.3"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-in-limine-objection (weekend)" cite "W.D. Okla. LCrR12.3"
 {
@@ -185,9 +163,6 @@ deadline expert-disclosure: 14.days before TrialDocketScheduled() counted_by frc
   to CaseOrder
   op set
 } cite "W.D. Okla. LCrR16.4"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: expert-disclosure (weekend)" cite "W.D. Okla. LCrR16.4"
 {
@@ -198,9 +173,6 @@ test "Counting boundary: expert-disclosure (weekend)" cite "W.D. Okla. LCrR16.4"
 /// W.D. Okla. LCrR24.1: requested voir dire, if any, is filed and served
 /// at least 7 days before the commencement of the scheduled trial docket.
 deadline voir-dire-request: 7.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR24.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: voir-dire-request (weekend)" cite "W.D. Okla. LCrR24.1"
 {
@@ -211,9 +183,6 @@ test "Counting boundary: voir-dire-request (weekend)" cite "W.D. Okla. LCrR24.1"
 /// W.D. Okla. LCrR24.1: objections to requested voir dire are filed at
 /// least 4 days before the commencement of the scheduled trial docket.
 deadline voir-dire-objection: 4.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR24.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: voir-dire-objection (weekend)" cite "W.D. Okla. LCrR24.1"
 {
@@ -225,9 +194,6 @@ test "Counting boundary: voir-dire-objection (weekend)" cite "W.D. Okla. LCrR24.
 /// authority, are filed and served at least 7 days before the commencement
 /// of the scheduled trial docket, and submitted in Word format.
 deadline jury-instructions: 7.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR30.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: jury-instructions (weekend)" cite "W.D. Okla. LCrR30.1"
 {
@@ -239,9 +205,6 @@ test "Counting boundary: jury-instructions (weekend)" cite "W.D. Okla. LCrR30.1"
 /// filed at least 4 days before the commencement of the scheduled trial
 /// docket.
 deadline jury-instruction-objection: 4.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR30.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: jury-instruction-objection (weekend)" cite "W.D. Okla. LCrR30.1"
 {
@@ -253,9 +216,6 @@ test "Counting boundary: jury-instruction-objection (weekend)" cite "W.D. Okla. 
 /// within 14 days after receipt of the presentence report containing any
 /// final addendum or revisions.
 deadline sentencing-memoranda: 14.days after FinalPsrReceived() counted_by frcrimp45 cite "W.D. Okla. LCrR32.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-memoranda (weekend)" cite "W.D. Okla. LCrR32.2"
 {
@@ -266,9 +226,6 @@ test "Counting boundary: sentencing-memoranda (weekend)" cite "W.D. Okla. LCrR32
 /// W.D. Okla. LCrR32.2: any response to a sentencing memorandum or motion
 /// is filed within 14 days thereafter.
 deadline sentencing-response: 14.days after SentencingFilingMade() counted_by frcrimp45 cite "W.D. Okla. LCrR32.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-response (weekend)" cite "W.D. Okla. LCrR32.2"
 {
@@ -280,9 +237,6 @@ test "Counting boundary: sentencing-response (weekend)" cite "W.D. Okla. LCrR32.
 /// within 45 days after the case is dismissed or the defendant is
 /// sentenced.
 deadline cja-voucher: 45.days after CaseDismissedOrSentenced() counted_by frcrimp45 cite "W.D. Okla. LCrR44.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: cja-voucher (weekend)" cite "W.D. Okla. LCrR44.2"
 {
@@ -294,9 +248,6 @@ test "Counting boundary: cja-voucher (weekend)" cite "W.D. Okla. LCrR44.2"
 /// other than one under 28 U.S.C. § 2255, a response is filed within 21
 /// days after the motion is filed.
 deadline post-trial-response: 21.days after PostTrialMotionFiled() counted_by frcrimp45 cite "W.D. Okla. LCrR47.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: post-trial-response (weekend)" cite "W.D. Okla. LCrR47.1(b)"
 {
@@ -308,9 +259,6 @@ test "Counting boundary: post-trial-response (weekend)" cite "W.D. Okla. LCrR47.
 /// from an official transcript is filed, on the Appendix VII form, within
 /// 21 days of the filing of the transcript.
 deadline transcript-redaction-request: 21.days after TranscriptFiled() counted_by frcrimp45 cite "W.D. Okla. LCrR49.1.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: transcript-redaction-request (weekend)" cite "W.D. Okla. LCrR49.1.1(b)"
 {
@@ -325,9 +273,6 @@ deadline transcript-redaction-motion: 21.days after TranscriptFiled() counted_by
   to CaseOrder
   op set
 } cite "W.D. Okla. LCrR49.1.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: transcript-redaction-motion (weekend)" cite "W.D. Okla. LCrR49.1.1(c)"
 {

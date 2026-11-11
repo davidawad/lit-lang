@@ -35,9 +35,7 @@ decision initial-appearance: "Bail, release or detention" by court cite "Crim.R.
 decision probable-cause: "Preliminary hearing or indictment" by court cite "Crim.R. 5(B)"
 {
   note "In felony cases a defendant is entitled to a preliminary hearing unless waived in writing. If not waived, it is scheduled within a reasonable time, but no later than ten consecutive days following arrest or service of summons if the defendant is in custody and fifteen consecutive days if not; no hearing is held once the defendant is indicted. The limits may be extended with the defendant's consent on good cause, and otherwise only as required by law or on extraordinary circumstances (Crim.R. 5(B)(1))."
-  edge-probable-cause-charged "Bound over; indictment or information filed" -> charged {
-    authority cite "Crim.R. 7(A)"
-  }
+  "Bound over; indictment or information filed" -> charged { authority cite "Crim.R. 7(A)" }
   edge-probable-cause-none "No probable cause; discharged" -> dismissed {
     authority cite "Crim.R. 5(B)"
   }
@@ -46,13 +44,13 @@ decision probable-cause: "Preliminary hearing or indictment" by court cite "Crim
 state charged: "Indictment or information" by court cite "Crim.R. 7(A)"
 {
   note "A felony punishable by death or life imprisonment is prosecuted by indictment; any other felony by indictment unless the defendant, advised of the right, waives it in writing and in open court, and the offense may then be prosecuted by information (Crim.R. 7(A)). The speedy-trial periods run under R.C. 2945.71 to 2945.73, which are not vendored."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Crim.R. 10(A)" }
+  "Arraignment" -> arraignment { authority cite "Crim.R. 10(A)" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "Crim.R. 10(A)"
 {
   note "Arraignment is conducted in open court by reading the indictment, information or complaint, or stating its substance, and calling on the defendant to plead (Crim.R. 10(A)). A defendant demands discovery within twenty-one days after arraignment or seven days before trial, whichever is earlier, or at a reasonable later time the court permits; a motion to compel is made no later than seven days before trial, or three days after the opposing party provides discovery, whichever is later (Crim.R. 16(M)). A defendant who will offer alibi testimony, or evidence or argument of self-defense, defense of another or defense of a residence, gives written notice not less than thirty days before trial in a felony case and fourteen days in a misdemeanor case, or the court may exclude the evidence (Crim.R. 12.1, 12.2)."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Crim.R. 16(M)" }
+  "Discovery" -> discovery { authority cite "Crim.R. 16(M)" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "Crim.R. 12(D)"
@@ -85,7 +83,7 @@ decision plea-decision: "Plea or trial" by accused cite "Crim.R. 11(C)"
   edge-plea-decision-plea "Guilty or no contest plea accepted" -> sentencing {
     authority cite "Crim.R. 11(C)"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Crim.R. 23(A)" }
+  "Trial" -> trial { authority cite "Crim.R. 23(A)" }
 }
 
 decision trial: "Verdict" by court cite "Crim.R. 31"
@@ -111,9 +109,7 @@ decision post-trial: "Post-trial motions" by court cite "Crim.R. 33(B)"
 state sentencing: "Presentence investigation and sentence" by court cite "Crim.R. 32(A)"
 {
   note "Sentence is imposed without unnecessary delay, after counsel and the defendant are heard in mitigation and the prosecuting attorney and the victim are heard (Crim.R. 32(A)). In felony cases, unless the defendant and the prosecutor agree to waive it, the court orders a presentence investigation and report before imposing community control sanctions or granting probation (Crim.R. 32.2). After sentence in a serious offense that went to trial, the court advises the defendant of the right to appeal (Crim.R. 32(B))."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "Crim.R. 32(C)"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "Crim.R. 32(C)" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "Crim.R. 32(C)"

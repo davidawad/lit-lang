@@ -13,23 +13,15 @@ parties {
 }
 
 stakes {
-  frcp-civil-procedure::service-window-blown: 0.usd
-  frcp-civil-procedure::remand-ordered: 0.usd
-  frcp-civil-procedure::dismissed-with-prejudice: 0.usd
-  frcp-civil-procedure::default-judgment-entered: 500_000.usd
-  frcp-civil-procedure::voluntary-dismissal-final: 0.usd
-  frcp-civil-procedure::rule60-denial-final: 0.usd
-  frcp-civil-procedure::rule41d-costs-ordered: 0.usd
-  frcp-civil-procedure::refiling-proceeds: 0.usd
-  frcp-civil-procedure::dismissal-fees-eligible: 0.usd
-  frcp-civil-procedure::dismissal-fees-ineligible: 0.usd
-  frcp-civil-procedure::discovery-sanctions-dismissal: 0.usd
-  frcp-civil-procedure::discovery-sanctions-default: 500_000.usd
-  frcp-civil-procedure::summary-judgment-granted: 0.usd
-  frcp-civil-procedure::appeal-window-blown: 0.usd
-  frcp-civil-procedure::judgment-final-no-appeal: 0.usd
-  frcp-civil-procedure::judgment-affirmed: 0.usd
-  frcp-civil-procedure::judgment-reversed-remanded: 250_000.usd
+  outcome loss: 0.usd
+  outcome win: 500_000.usd
+  outcome neutral: 0.usd
+  outcome voluntary: 0.usd
+  outcome cost: 0.usd
+  outcome refiling: 0.usd
+  outcome fees: 0.usd
+  outcome final: 0.usd
+  outcome remand: 250_000.usd
 }
 
 analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }

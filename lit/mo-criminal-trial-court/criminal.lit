@@ -80,7 +80,7 @@ decision plea-decision: "Plea or trial" by accused cite ?("Missouri Supreme Cour
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), pleas and plea agreements, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
   }
-  edge-plea-decision-trial "Trial" -> trial {
+  "Trial" -> trial {
     authority cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), trial and verdict, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
   }
 }
@@ -108,7 +108,7 @@ decision post-trial: "Post-trial motions" by court cite ?("Missouri Supreme Cour
 }
 
 state sentencing: "Sentencing and judgment" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), sentencing and judgment, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)") {
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+  "Sentence imposed; judgment entered" -> judgment {
     authority cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), judgment, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
   }
 }

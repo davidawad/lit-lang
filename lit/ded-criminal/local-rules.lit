@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.states.delaware.{ frcrimp45-delaware }
 import frcrimp.deadlines.{ SentencingScheduled, TrialClockEvent }
 
+forum frcrimp
+
 // The District of Delaware's own criminal periods, from its Time Limits
 // and Procedures for Achieving Prompt Disposition of Criminal Cases (the
 // "Plan"), counted under the criminal rules (FRCrimP 45(a) governs "any
@@ -81,9 +83,6 @@ event PrisonerCharged()
 /// the defendant's first appearance before a judicial officer of this
 /// District. Time excludable under Plan § 10 is excluded (§ 10(a)).
 deadline arraignment-period: 10.days after TrialClockEvent() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 4(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: arraignment-period (weekend)" cite "D. Del. Crim. Plan § 4(a)"
 {
@@ -103,9 +102,6 @@ deadline pretrial-motions: 10.days after Arraigned() counted_by frcrimp45-delawa
   to CaseOrder
   op set
 } cite "D. Del. Crim. Plan § 5(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motions (weekend)" cite "D. Del. Crim. Plan § 5(a)"
 {
@@ -123,9 +119,6 @@ deadline mental-condition-notice: 10.days after Arraigned() counted_by frcrimp45
   to CaseOrder
   op set
 } cite "D. Del. Crim. Plan § 5(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: mental-condition-notice (weekend)" cite "D. Del. Crim. Plan § 5(c)"
 {
@@ -141,9 +134,6 @@ deadline post-hearing-submissions: 30.days after MotionProceedingConcluded() cou
   to CaseOrder
   op set
 } cite "D. Del. Crim. Plan § 5(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: post-hearing-submissions (weekend)" cite "D. Del. Crim. Plan § 5(d)"
 {
@@ -157,9 +147,6 @@ test "Counting boundary: post-hearing-submissions (weekend)" cite "D. Del. Crim.
 /// trial; the Court may consider a later motion in the interest of
 /// justice.
 deadline reschedule-motion: 5.days after TrialSettingOrdered() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 6(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reschedule-motion (weekend)" cite "D. Del. Crim. Plan § 6(g)"
 {
@@ -171,9 +158,6 @@ test "Counting boundary: reschedule-motion (weekend)" cite "D. Del. Crim. Plan �
 /// not certain, a party informs the Court within five days of learning
 /// that the circumstances that justify it no longer exist.
 deadline continuance-grounds-notice: 5.days after ContinuanceGroundsEnded() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 10(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: continuance-grounds-notice (weekend)" cite "D. Del. Crim. Plan § 10(d)"
 {
@@ -186,9 +170,6 @@ test "Counting boundary: continuance-grounds-notice (weekend)" cite "D. Del. Cri
 /// serving a term of imprisonment, seeks to obtain the prisoner's presence
 /// for trial or causes a detainer to be filed (18 U.S.C. § 3161(j)).
 deadline prisoner-presence: 20.days after PrisonerCharged() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 13"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: prisoner-presence (weekend)" cite "D. Del. Crim. Plan § 13"
 {
@@ -200,9 +181,6 @@ test "Counting boundary: prisoner-presence (weekend)" cite "D. Del. Crim. Plan �
 /// the sentencing hearing, the probation officer submits the final draft
 /// of the presentence report to the parties.
 deadline final-draft-psr: 20.days before SentencingScheduled() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 8(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: final-draft-psr (weekend)" cite "D. Del. Crim. Plan § 8(b)"
 {
@@ -217,9 +195,6 @@ test "Counting boundary: final-draft-psr (weekend)" cite "D. Del. Crim. Plan § 
 /// approval); a party that believes an objection to the presentence report
 /// needs a hearing notifies the Court in writing by the same day.
 deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 8(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-memorandum (weekend)" cite "D. Del. Crim. Plan § 8(b)"
 {
@@ -231,9 +206,6 @@ test "Counting boundary: sentencing-memorandum (weekend)" cite "D. Del. Crim. Pl
 /// sentencing hearing, the opposing party files any response to a
 /// sentencing memorandum.
 deadline sentencing-memorandum-response: 8.days before SentencingScheduled() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 8(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-memorandum-response (weekend)" cite "D. Del. Crim. Plan § 8(b)"
 {

@@ -3,6 +3,8 @@ module mtd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of Montana's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method: FRCrimP 45(c)'s three added days follow the
@@ -94,9 +96,6 @@ deadline impeachment-disclosure: 7.days before TrialScheduled() counted_by frcri
   to CaseOrder
   op set
 } cite "D. Mont. L.R. CR 16.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: impeachment-disclosure (holiday)" cite "D. Mont. L.R. CR 16.1(c)"
 {
@@ -112,9 +111,6 @@ deadline government-discovery: 14.days after Arraigned() counted_by frcrimp45 de
   to CaseOrder
   op set
 } cite "D. Mont. L.R. CR 16.1(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-discovery (weekend)" cite "D. Mont. L.R. CR 16.1(f)"
 {
@@ -126,9 +122,6 @@ test "Counting boundary: government-discovery (weekend)" cite "D. Mont. L.R. CR 
 /// reports are provided as soon as reasonably possible and no later than
 /// seven days before trial.
 deadline examination-report-disclosure: 7.days before TrialScheduled() counted_by frcrimp45 cite "D. Mont. L.R. CR 16.1(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: examination-report-disclosure (holiday)" cite "D. Mont. L.R. CR 16.1(f)"
 {
@@ -143,9 +136,6 @@ deadline defense-discovery: 21.days after DefenseDiscoveryRequested() counted_by
   to CaseOrder
   op set
 } cite "D. Mont. L.R. CR 16.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-discovery (holiday)" cite "D. Mont. L.R. CR 16.2"
 {
@@ -160,9 +150,6 @@ deadline expert-disclosure: 21.days before TrialScheduled() counted_by frcrimp45
   to CaseOrder
   op set
 } cite "D. Mont. L.R. CR 16.3"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: expert-disclosure (holiday)" cite "D. Mont. L.R. CR 16.3"
 {
@@ -174,9 +161,6 @@ test "Counting boundary: expert-disclosure (holiday)" cite "D. Mont. L.R. CR 16.
 /// the Marshals Service obtains the court's order no later than 21 days
 /// before the proceeding; a lesser time only on motion and good cause.
 deadline prisoner-production-order: 21.days before ProceedingScheduled() counted_by frcrimp45 cite "D. Mont. L.R. CR 17.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: prisoner-production-order (holiday)" cite "D. Mont. L.R. CR 17.1"
 {
@@ -188,9 +172,6 @@ test "Counting boundary: prisoner-production-order (holiday)" cite "D. Mont. L.R
 /// criminal summons or subpoena notifies the Marshal, with the necessary
 /// documentation, no later than 21 days before the desired date of service.
 deadline marshal-service-request: 21.days before DesiredServiceDate() counted_by frcrimp45 cite "D. Mont. L.R. CR 17.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: marshal-service-request (holiday)" cite "D. Mont. L.R. CR 17.2(a)"
 {
@@ -205,9 +186,6 @@ deadline voir-dire-questions: 1.court_days before TrialScheduled() counted_by fr
   to CaseOrder
   op set
 } cite "D. Mont. L.R. CR 24.1(a)"
-{
-  forum frcrimp
-}
 
 /// D. Mont. L.R. CR 24.2(b)(1): neither parties nor counsel may interview
 /// jurors unless, within 14 days after the verdict, a party files proposed
@@ -216,9 +194,6 @@ deadline juror-interview-request: 14.days after VerdictReturned() counted_by frc
   to CaseOrder
   op set
 } cite "D. Mont. L.R. CR 24.2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: juror-interview-request (weekend)" cite "D. Mont. L.R. CR 24.2(b)"
 {
@@ -229,9 +204,6 @@ test "Counting boundary: juror-interview-request (weekend)" cite "D. Mont. L.R. 
 /// D. Mont. L.R. CR 47.2(a): the response brief is filed 14 days after the
 /// motion and supporting brief.
 deadline motion-response: 14.days after MotionFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 47.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-response (weekend)" cite "D. Mont. L.R. CR 47.2(a)"
 {
@@ -242,9 +214,6 @@ test "Counting boundary: motion-response (weekend)" cite "D. Mont. L.R. CR 47.2(
 /// D. Mont. L.R. CR 47.2(a): the reply is filed 7 days after the response
 /// brief.
 deadline motion-reply: 7.days after ResponseFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 47.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-reply (weekend)" cite "D. Mont. L.R. CR 47.2(a)"
 {
@@ -256,9 +225,6 @@ test "Counting boundary: motion-reply (weekend)" cite "D. Mont. L.R. CR 47.2(a)"
 /// days after the notice of appeal is filed, on the clerk's scheduling
 /// order.
 deadline misdemeanor-transcript-order: 7.days after MisdemeanorAppealNoticed() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-transcript-order (weekend)" cite "D. Mont. L.R. CR 58.2(a)"
 {
@@ -269,9 +235,6 @@ test "Counting boundary: misdemeanor-transcript-order (weekend)" cite "D. Mont. 
 /// D. Mont. L.R. CR 58.2(a)(2): the official transcript is filed 21 days
 /// after the notice of appeal is filed.
 deadline misdemeanor-transcript-filing: 21.days after MisdemeanorAppealNoticed() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-transcript-filing (holiday)" cite "D. Mont. L.R. CR 58.2(a)"
 {
@@ -282,9 +245,6 @@ test "Counting boundary: misdemeanor-transcript-filing (holiday)" cite "D. Mont.
 /// D. Mont. L.R. CR 58.2(a)(3): the appellant's brief is filed within 14
 /// days after the official transcript is filed.
 deadline misdemeanor-appellant-brief: 14.days after AppealTranscriptFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellant-brief (weekend)" cite "D. Mont. L.R. CR 58.2(a)"
 {
@@ -295,9 +255,6 @@ test "Counting boundary: misdemeanor-appellant-brief (weekend)" cite "D. Mont. L
 /// D. Mont. L.R. CR 58.2(a)(4): the appellee's brief is filed within 14
 /// days after the appellant's brief is filed.
 deadline misdemeanor-appellee-brief: 14.days after AppellantBriefFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellee-brief (weekend)" cite "D. Mont. L.R. CR 58.2(a)"
 {
@@ -308,9 +265,6 @@ test "Counting boundary: misdemeanor-appellee-brief (weekend)" cite "D. Mont. L.
 /// D. Mont. L.R. CR 58.2(a)(5): the reply brief is filed seven days after
 /// the appellee's brief is filed.
 deadline misdemeanor-reply-brief: 7.days after AppelleeBriefFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "D. Mont. L.R. CR 58.2(a)"
 {

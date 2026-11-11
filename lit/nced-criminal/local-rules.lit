@@ -2,6 +2,8 @@ module nced-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Eastern District of North Carolina's own criminal periods. Stated in
 // the rules but not declared: sentencing set no earlier than 60 days after
 // the adjudication of guilt (Local Criminal Rule 32.2(a)), a floor on the
@@ -77,9 +79,6 @@ event AppelleeMemorandumServed()
 /// appearance bond supplies the clerk with the documents to cancel it within
 /// 21 days of the date the bond's conditions are satisfied.
 deadline deed-cancellation-period: 21.days after BondConditionsSatisfied() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 10.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: deed-cancellation-period (weekend)" cite "E.D.N.C. Local Criminal Rule 10.2"
 {
@@ -94,9 +93,6 @@ test "Counting boundary: deed-cancellation-period (weekend)" cite "E.D.N.C. Loca
 /// motion to compel discovery runs on the same clock (Local Criminal Rule
 /// 12.2).
 deadline pretrial-motion-period: 30.days after IndictmentOrAppearance() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 12.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motion-period (weekend)" cite "E.D.N.C. Local Criminal Rule 12.1"
 {
@@ -107,9 +103,6 @@ test "Counting boundary: pretrial-motion-period (weekend)" cite "E.D.N.C. Local 
 /// Local Criminal Rule 12.1: responses to pretrial motions are filed within
 /// 14 days after their service unless the court orders otherwise.
 deadline pretrial-response-period: 14.days after PretrialMotionServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 12.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-response-period (weekend)" cite "E.D.N.C. Local Criminal Rule 12.1"
 {
@@ -122,9 +115,6 @@ test "Counting boundary: pretrial-response-period (weekend)" cite "E.D.N.C. Loca
 /// attorney within 21 days after indictment or initial appearance,
 /// whichever is later, or another time the court orders.
 deadline discovery-conference-period: 21.days after IndictmentOrAppearance() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 16.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-conference-period (weekend)" cite "E.D.N.C. Local Criminal Rule 16.1(b)"
 {
@@ -137,9 +127,6 @@ test "Counting boundary: discovery-conference-period (weekend)" cite "E.D.N.C. L
 /// trial week; a subpoena delivered later and not served is no ground for a
 /// continuance.
 deadline subpoena-delivery-period: 7.days before TrialWeekMonday() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 17.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: subpoena-delivery-period (weekend)" cite "E.D.N.C. Local Criminal Rule 17.1"
 {
@@ -151,9 +138,6 @@ test "Counting boundary: subpoena-delivery-period (weekend)" cite "E.D.N.C. Loca
 /// executed, each party files its voir dire questions and requests for jury
 /// instructions 7 days before the first day of the trial session.
 deadline trial-submissions-period: 7.days before TrialSessionOpens() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 24.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: trial-submissions-period (weekend)" cite "E.D.N.C. Local Criminal Rule 24.1(a)"
 {
@@ -165,9 +149,6 @@ test "Counting boundary: trial-submissions-period (weekend)" cite "E.D.N.C. Loca
 /// themselves available for the presentence interview within 14 calendar
 /// days of the adjudication of guilt.
 deadline presentence-interview-period: 14.days after GuiltAdjudicated() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 32.2(k)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: presentence-interview-period (weekend)" cite "E.D.N.C. Local Criminal Rule 32.2(k)"
 {
@@ -181,9 +162,6 @@ test "Counting boundary: presentence-interview-period (weekend)" cite "E.D.N.C. 
 /// judicial officer in the district; later retention is no ground for a
 /// continuance absent due diligence.
 deadline retained-counsel-period: 14.days after FirstAppearance() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 44.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: retained-counsel-period (weekend)" cite "E.D.N.C. Local Criminal Rule 44.1(a)"
 {
@@ -195,9 +173,6 @@ test "Counting boundary: retained-counsel-period (weekend)" cite "E.D.N.C. Local
 /// days after its service unless the court orders, or the Federal Rules
 /// prescribe, otherwise.
 deadline response-period: 14.days after MotionServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 47.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "E.D.N.C. Local Criminal Rule 47.1(c)"
 {
@@ -209,9 +184,6 @@ test "Counting boundary: response-period (weekend)" cite "E.D.N.C. Local Crimina
 /// translated document, an opposing party or nonparty may object to the
 /// translation or file its own.
 deadline translation-objection-period: 14.days after TranslationFiled() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 47.3(k)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: translation-objection-period (weekend)" cite "E.D.N.C. Local Criminal Rule 47.3(k)"
 {
@@ -223,9 +195,6 @@ test "Counting boundary: translation-objection-period (weekend)" cite "E.D.N.C. 
 /// to a sua sponte reassignment is filed within 7 days after the notice is
 /// served or the reassignment made, or within the time the court sets.
 deadline related-case-response-period: 7.days after RelatedCaseNoticeServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 50.2(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: related-case-response-period (weekend)" cite "E.D.N.C. Local Criminal Rule 50.2(c)"
 {
@@ -238,9 +207,6 @@ test "Counting boundary: related-case-response-period (weekend)" cite "E.D.N.C. 
 /// document within 3 days after the order, or another period the court
 /// directs.
 deadline public-refiling-period: 3.days after SealDenied() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 55.2(b)(3)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: public-refiling-period (weekend)" cite "E.D.N.C. Local Criminal Rule 55.2(b)(3)"
 {
@@ -252,9 +218,6 @@ test "Counting boundary: public-refiling-period (weekend)" cite "E.D.N.C. Local 
 /// not scanned into CM/ECF on 14 days' notice; an objection filed in that
 /// period goes to the presiding judge.
 deadline sealed-disposal-objection-period: 14.days after SealedDisposalNoticed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 55.2(c)(1)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sealed-disposal-objection-period (weekend)" cite "E.D.N.C. Local Criminal Rule 55.2(c)(1)"
 {
@@ -265,9 +228,6 @@ test "Counting boundary: sealed-disposal-objection-period (weekend)" cite "E.D.N
 /// Local Criminal Rule 57.3: attorneys and unrepresented persons notify the
 /// court in writing within 14 days of a change of address.
 deadline address-change-period: 14.days after AddressChanged() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 57.3"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: address-change-period (weekend)" cite "E.D.N.C. Local Criminal Rule 57.3"
 {
@@ -279,9 +239,6 @@ test "Counting boundary: address-change-period (weekend)" cite "E.D.N.C. Local C
 /// courtroom technology files the technology staff's training certification
 /// no later than 7 days before the proceeding.
 deadline technology-certification-period: 7.days before TechnologyProceeding() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 57.6"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: technology-certification-period (weekend)" cite "E.D.N.C. Local Criminal Rule 57.6"
 {
@@ -293,9 +250,6 @@ test "Counting boundary: technology-certification-period (weekend)" cite "E.D.N.
 /// misdemeanor judgment, the appellant serves and files its memorandum of
 /// claimed errors within 21 days of the filing of the transcript.
 deadline appellant-memorandum-period: 21.days after AppealTranscriptFiled() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: appellant-memorandum-period (weekend)" cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
 {
@@ -307,9 +261,6 @@ test "Counting boundary: appellant-memorandum-period (weekend)" cite "E.D.N.C. L
 /// appellant's memorandum is due within 21 days of the filing of the notice
 /// of appeal.
 deadline appellant-memorandum-no-transcript-period: 21.days after NoTranscriptAppealNoticed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: appellant-memorandum-no-transcript-period (weekend)" cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
 {
@@ -320,9 +271,6 @@ test "Counting boundary: appellant-memorandum-no-transcript-period (weekend)" ci
 /// Local Criminal Rule 58.1(b)(4): the appellee serves and files its
 /// memorandum within 21 days of service of the appellant's.
 deadline appellee-memorandum-period: 21.days after AppellantMemorandumServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: appellee-memorandum-period (weekend)" cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
 {
@@ -334,9 +282,6 @@ test "Counting boundary: appellee-memorandum-period (weekend)" cite "E.D.N.C. Lo
 /// brief, limited to 10 pages, within 7 days of service of the appellee's
 /// brief.
 deadline appeal-reply-period: 7.days after AppelleeMemorandumServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: appeal-reply-period (weekend)" cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
 {

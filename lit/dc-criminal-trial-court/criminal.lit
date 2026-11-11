@@ -40,7 +40,7 @@ decision initial-appearance: "Release or detention" by court cite "D.C. Super. C
 decision probable-cause: "Preliminary hearing or indictment" by court cite "D.C. Super. Ct. R. Crim. P. 5.1(a)"
 {
   note "A defendant charged with a felony is entitled to a preliminary hearing unless the defendant waives it, is indicted, or the government files a felony information under Rule 7(b) or a misdemeanor information (D.C. Super. Ct. R. Crim. P. 5.1(a)). The hearing is held within the periods Rule 5.1(b) sets for a detained and for a released defendant, which the court may extend under Rule 5.1(c); the periods are not stated here (currency unconfirmed). Probable cause may rest on hearsay and the hearing is not for discovery (D.C. Super. Ct. R. Crim. P. 5.1(d)). A defendant held to await grand jury action is set free if the grand jury does not act within the time Rule 48(c)(1) sets, which the court may enlarge for good cause (Rule 48(c)(2)); the period is not stated here (currency unconfirmed)."
-  edge-probable-cause-charged "Probable cause found; indictment or information filed" -> charged {
+  "Probable cause found; indictment or information filed" -> charged {
     authority cite "D.C. Super. Ct. R. Crim. P. 5.1(d)"
   }
   edge-probable-cause-none "No probable cause; complaint dismissed and defendant discharged" -> dismissed {
@@ -51,17 +51,13 @@ decision probable-cause: "Preliminary hearing or indictment" by court cite "D.C.
 state charged: "Indictment or information" by court cite "D.C. Super. Ct. R. Crim. P. 7(a)"
 {
   note "An offense punishable by imprisonment for more than one year must be prosecuted by indictment unless the defendant waives indictment in open court; any other offense may be prosecuted by indictment or information, and an information may be filed without leave of court (D.C. Super. Ct. R. Crim. P. 7(a), (b)). The indictment or information is a plain, concise and definite written statement of the essential facts, signed by an attorney for the government (D.C. Super. Ct. R. Crim. P. 7(c)(1)). The grand jury is governed by Rule 6. A statutory speedy-trial clock (D.C. Code § 23-102) is not vendored."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "D.C. Super. Ct. R. Crim. P. 10(a)"
-  }
+  "Arraignment" -> arraignment { authority cite "D.C. Super. Ct. R. Crim. P. 10(a)" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "D.C. Super. Ct. R. Crim. P. 10(a)"
 {
   note "Arraignment is conducted in open court: the defendant is given a copy of the indictment or information, its substance is read or stated, and the defendant is asked to plead (D.C. Super. Ct. R. Crim. P. 10(a)); appearance may be waived in writing on an indictment or misdemeanor information, and arraignment by video teleconference requires the defendant's consent after an opportunity to consult counsel (D.C. Super. Ct. R. Crim. P. 10(b), (c)). A defendant who refuses to plead is entered as pleading not guilty (D.C. Super. Ct. R. Crim. P. 11(a)(4))."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "D.C. Super. Ct. R. Crim. P. 16(a)"
-  }
+  "Discovery" -> discovery { authority cite "D.C. Super. Ct. R. Crim. P. 16(a)" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "D.C. Super. Ct. R. Crim. P. 12(b)"
@@ -98,7 +94,7 @@ decision plea-decision: "Plea or trial" by accused cite "D.C. Super. Ct. R. Crim
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "D.C. Super. Ct. R. Crim. P. 11(b)"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "D.C. Super. Ct. R. Crim. P. 23(a)" }
+  "Trial" -> trial { authority cite "D.C. Super. Ct. R. Crim. P. 23(a)" }
   edge-plea-decision-nolle "Government dismisses or enters a nolle prosequi" -> dismissed {
     authority cite "D.C. Super. Ct. R. Crim. P. 48(a)"
   }
@@ -132,7 +128,7 @@ decision post-trial: "Post-trial motions" by court cite "D.C. Super. Ct. R. Crim
 state sentencing: "Presentence report and sentencing" by court cite "D.C. Super. Ct. R. Crim. P. 32(c)"
 {
   note "The time of sentencing and the presentence investigation, report and its disclosure are governed by Rule 32(a) and (b), whose periods are not stated here (currency unconfirmed). At sentencing the court verifies that the defendant and counsel have read the report, rules on disputed portions, gives defense counsel, the defendant, the government and any victim present an opportunity to speak, and pronounces sentence (D.C. Super. Ct. R. Crim. P. 32(c)). After a not-guilty plea and conviction, the court advises the defendant of the right to appeal, and the clerk files a notice of appeal on the defendant's request (D.C. Super. Ct. R. Crim. P. 32(d))."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+  "Sentence imposed; judgment entered" -> judgment {
     authority cite "D.C. Super. Ct. R. Crim. P. 32(f)"
   }
 }

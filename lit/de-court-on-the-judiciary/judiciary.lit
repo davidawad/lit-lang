@@ -26,16 +26,12 @@ state complaint: "Complaint filed and referred to a Panel" by court cite "Del. S
 
 state answer: "Answer and pretrial" by movant cite ?("Ct. on Jud. R.: not vendored") {
   note "The answer period, discovery and interim suspension are not stated: the Court on the Judiciary Rules are not vendored."
-  edge-answer-hearing "Set for hearing" -> hearing {
-    authority cite ?("Ct. on Jud. R.: not vendored")
-  }
+  "Set for hearing" -> hearing { authority cite ?("Ct. on Jud. R.: not vendored") }
 }
 
 state hearing: "Hearing" by court cite ?("Ct. on Jud. R.: not vendored") {
   note "The burden and standard of proof are not stated: the Court on the Judiciary Rules are not vendored."
-  edge-hearing-decision "Decision issued" -> decision {
-    authority cite ?("Del. Const. art. IV, § 37: not vendored")
-  }
+  "Decision issued" -> decision { authority cite ?("Del. Const. art. IV, § 37: not vendored") }
 }
 
 decision decision: "Court on the Judiciary decides" by court cite ?("Del. Const. art. IV, § 37: not vendored") {

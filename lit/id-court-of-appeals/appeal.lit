@@ -21,9 +21,7 @@ start assigned
 state assigned: "Assigned to the Court of Appeals" by court cite "I.A.R. 108(b)"
 {
   note "The Court of Appeals hears and decides every case the Supreme Court assigns to it; the Supreme Court does not assign original proceedings, capital sentences, Industrial Commission and Public Utilities Commission appeals, or review of Idaho State Bar and Judicial Council recommendatory orders (I.A.R. 108(a)). Cases involving existing legal principles are generally assigned; the Supreme Court ordinarily retains cases of substantial public interest, first impression, substantial constitutional interpretation, the validity of a statute or ordinance, or inconsistent decisions (I.A.R. 108(b)). In assigning a case the Supreme Court may order submission on the briefs, to which any party may file a written objection within 21 days of the order (I.A.R. 108(b))."
-  edge-assigned-argument "Case calendared in the Court of Appeals" -> argument {
-    authority cite "I.A.R. 108(b)"
-  }
+  "Case calendared in the Court of Appeals" -> argument { authority cite "I.A.R. 108(b)" }
   edge-assigned-revoked "Assignment revoked or case transferred to the Supreme Court" -> assignment-revoked {
     authority cite "I.A.R. 114"
   }
@@ -37,7 +35,7 @@ terminal assignment-revoked: "Assignment revoked: the Supreme Court decides" out
 decision argument: "Argument or submission on the briefs" by court cite "I.A.R. 109"
 {
   note "The Court of Appeals may in its discretion order an appeal submitted on the briefs; any party may file a written objection within 21 days of the date of the order, decided without oral argument (I.A.R. 109). Oral argument may be held by telephone conference call by stipulation of all parties and approval by the court, or on the court's order after argument was held or waived, following the format of I.A.R. 37 as far as practicable (I.A.R. 111)."
-  edge-argument-opinion "Argued or submitted" -> opinion { authority cite "I.A.R. 109" }
+  "Argued or submitted" -> opinion { authority cite "I.A.R. 109" }
 }
 
 decision opinion: "Court of Appeals opinion filed" by court cite "I.A.R. 112"

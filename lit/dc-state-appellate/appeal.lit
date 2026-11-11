@@ -81,10 +81,7 @@ decision rehearing-decision: "Rehearing sought?" by appellant cite "D.C. App. R.
 state rehearing-order: "Petition for rehearing decided" by court cite "D.C. App. R. 40"
 {
   note "If the petition is granted, the court may dispose of the case without further briefing or argument, order additional briefing or argument, or issue any other appropriate order (D.C. App. R. 40(e)). A timely petition stays the mandate until it is decided (D.C. App. R. 41(d)(1))."
-  edge-rehearing-order-mandate "Petition decided" -> mandate {
-    event MandateIssued()
-    authority cite "D.C. App. R. 41"
-  }
+  "Petition decided" -> mandate { event MandateIssued(), authority cite "D.C. App. R. 41" }
 }
 
 state mandate: "Mandate issued" by court cite "D.C. App. R. 41"

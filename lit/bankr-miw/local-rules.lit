@@ -146,6 +146,7 @@ test "Counting boundary: conversion-asset-report-period (weekend)" cite "W.D. Mi
   given InvoluntaryConversionOrdered() on 2026-10-11
   expect deadline(conversion-asset-report-period) == 2026-10-19
 }
+
 /// LBR 1007-2(e)(2): in an individual chapter 7, 12 or 13 case, the debtor
 /// submits to the trustee the tax returns, account statements, titles,
 /// deeds, insurance declarations, retirement statements, divorce papers and
@@ -158,6 +159,7 @@ test "Counting boundary: trustee-documents-period (weekend)" cite "W.D. Mich. LB
   given FirstMeetingDate() on 2026-10-11
   expect deadline(trustee-documents-period) == 2026-10-02
 }
+
 /// LBR 1007-2(f)(1): a creditor's request for payment advices is timely if
 /// filed and served no later than 14 days before the date first set for the
 /// meeting of creditors.
@@ -168,6 +170,7 @@ test "Counting boundary: payment-advices-request-period (weekend)" cite "W.D. Mi
   given FirstMeetingDate() on 2026-10-11
   expect deadline(payment-advices-request-period) == 2026-09-25
 }
+
 /// LBR 1007-2(g)(1): a creditor's § 521(e)(2)(A)(ii) request for pre-
 /// petition tax information is timely if filed and served no later than 14
 /// days before the date first set for the meeting of creditors.
@@ -178,6 +181,7 @@ test "Counting boundary: tax-information-request-period (weekend)" cite "W.D. Mi
   given FirstMeetingDate() on 2026-10-11
   expect deadline(tax-information-request-period) == 2026-09-25
 }
+
 /// LBR 2014(b)(1)-(2): the United States Trustee may object to an
 /// application to employ a professional within 28 days from its entry;
 /// absent objection the applicant may certify no response.
@@ -188,6 +192,7 @@ test "Counting boundary: employment-objection-period (weekend)" cite "W.D. Mich.
   given EmploymentApplicationEntered() on 2026-10-11
   expect deadline(employment-objection-period) == 2026-11-09
 }
+
 /// LBR 2016-1(d): in chapter 12 and 13, no more than 21 days after the
 /// petition a professional seeking compensation as an administrative
 /// expense files the executed fee agreement and serves the trustee and the
@@ -199,6 +204,7 @@ test "Counting boundary: fee-agreement-period (weekend)" cite "W.D. Mich. LBR 20
   given Chapter12Or13PetitionFiled() on 2026-10-11
   expect deadline(fee-agreement-period) == 2026-11-02
 }
+
 /// LBR 3015(b): a chapter 13 case filed without schedules, statements or a
 /// plan may be dismissed without further hearing unless the debtor files
 /// them, or moves to extend, within 14 days of the petition (or the case
@@ -214,6 +220,7 @@ test "Counting boundary: plan-amendment-objection-period (weekend)" cite "W.D. M
   given PlanAmendmentServed() on 2026-10-11
   expect deadline(plan-amendment-objection-period) == 2026-11-02
 }
+
 /// LBR 4001-2(c)(5)(A): an expedited cash collateral or credit order
 /// entered without a hearing provides that objections are due within 14
 /// days from its service.
@@ -230,6 +237,7 @@ test "Counting boundary: stay-extension-motion-period (weekend)" cite "W.D. Mich
   given PetitionFiled() on 2026-10-11
   expect deadline(stay-extension-motion-period) == 2026-10-19
 }
+
 /// LBR 4004-1(c): a party objecting to the Clerk's action on a motion to
 /// defer discharge may move for judicial review within 21 days after the
 /// Clerk's order is entered on the docket.
@@ -240,6 +248,7 @@ test "Counting boundary: discharge-delay-review-period (weekend)" cite "W.D. Mic
   given ClerkDischargeDelayOrdered() on 2026-10-11
   expect deadline(discharge-delay-review-period) == 2026-11-02
 }
+
 /// LBR 5005-2(d): an entity affected by a notice of rejection or an order
 /// striking a document may move for judicial review within 14 days of its
 /// service.
@@ -294,6 +303,7 @@ test "Counting boundary: fee-notice-motion-response-period (weekend)" cite "W.D.
   given FeeNoticeMotionServed() on 2026-10-11
   expect deadline(fee-notice-motion-response-period) == 2026-11-02
 }
+
 /// LBR 9013(c)(1)(A): 28 days from service for motions under FRBP 3002.1(f)
 /// and (g).
 deadline mortgage-motion-response-period: 28.days after MortgageMotionServed() counted_by frbp9006-michigan cite "W.D. Mich. LBR 9013(c)"
@@ -303,6 +313,7 @@ test "Counting boundary: mortgage-motion-response-period (weekend)" cite "W.D. M
   given MortgageMotionServed() on 2026-10-11
   expect deadline(mortgage-motion-response-period) == 2026-11-09
 }
+
 /// LBR 9013(c)(1)(A): 30 days from service for objections to claims.
 deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006-michigan cite "W.D. Mich. LBR 9013(c)"
 
@@ -311,6 +322,7 @@ test "Counting boundary: claim-objection-response-period (holiday)" cite "W.D. M
   given ClaimObjectionServed() on 2026-10-12
   expect deadline(claim-objection-response-period) == 2026-11-12
 }
+
 /// LBR 9013(d): the debtor files and serves on the chapter 13 trustee any
 /// response or request for hearing within 30 days of service of the
 /// trustee's motion to dismiss.
@@ -321,6 +333,7 @@ test "Counting boundary: trustee-dismissal-response-period (holiday)" cite "W.D.
   given TrusteeDismissalMotionServed() on 2026-10-12
   expect deadline(trustee-dismissal-response-period) == 2026-11-12
 }
+
 /// LBR 9013(e): the debtor files and serves on the United States Trustee
 /// any response or request for hearing within 30 days of service of a §
 /// 707(a) motion to dismiss for failure to file schedules and statements.
@@ -331,6 +344,7 @@ test "Counting boundary: ust-dismissal-response-period (holiday)" cite "W.D. Mic
   given UstDismissalMotionServed() on 2026-10-12
   expect deadline(ust-dismissal-response-period) == 2026-11-12
 }
+
 /// LBR 9013(f): absent good cause, a brief or response to a motion not
 /// filed under LBR 9013(c) is filed and served at least 7 days before the
 /// scheduled hearing.
@@ -341,6 +355,7 @@ test "Counting boundary: contested-brief-period (weekend)" cite "W.D. Mich. LBR 
   given ContestedHearingScheduled() on 2026-10-11
   expect deadline(contested-brief-period) == 2026-10-02
 }
+
 /// LBR 9019-9(b): a party objecting to referral to the ADR Program may file
 /// an objection within 14 days of the order of referral.
 deadline referral-objection-period: 14.days after ReferralOrderEntered() counted_by frbp9006-michigan cite "W.D. Mich. LBR 9019-9(b)"
@@ -358,6 +373,7 @@ test "Counting boundary: adr-conference-period (weekend)" cite "W.D. Mich. LBR 9
   given SchedulingConferenceSet() on 2026-10-11
   expect deadline(adr-conference-period) == 2026-09-25
 }
+
 /// LBR 9019-13(b): within 14 days of the telephone conference, the mediator
 /// gives notice of the time and place of the mediation.
 deadline mediation-notice-period: 14.days after MediatorTelephoneConferenceHeld() counted_by frbp9006-michigan cite "W.D. Mich. LBR 9019-13(b)"
@@ -371,6 +387,7 @@ test "Counting boundary: mediation-summary-period (weekend)" cite "W.D. Mich. LB
   given MediationConferenceScheduled() on 2026-10-11
   expect deadline(mediation-summary-period) == 2026-10-02
 }
+
 /// LBR 9019-17(b): within 14 days following the conclusion of a Mediation
 /// Conference, the mediator files and serves a report.
 deadline mediator-report-period: 14.days after MediationConferenceConcluded() counted_by frbp9006-michigan cite "W.D. Mich. LBR 9019-17(b)"
@@ -383,6 +400,7 @@ test "Counting boundary: mediator-bill-period (holiday)" cite "W.D. Mich. LBR 90
   given MediatorBilled() on 2026-10-12
   expect deadline(mediator-bill-period) == 2026-11-12
 }
+
 /// LBR 9019-22(a)(2): each party pays the $300 case evaluation fee within
 /// 14 days of the notice of selection of the case evaluators.
 deadline case-evaluation-fee-period: 14.days after EvaluatorsSelectionNoticed() counted_by frbp9006-michigan cite "W.D. Mich. LBR 9019-22(a)"
@@ -400,6 +418,7 @@ test "Counting boundary: blue-ribbon-award-period (weekend)" cite "W.D. Mich. LB
   given BlueRibbonHearingConcluded() on 2026-10-11
   expect deadline(blue-ribbon-award-period) == 2026-10-19
 }
+
 /// LBR 9037-1(b)(1): a person wishing to redact personal identifiers files
 /// a Notice of Intent to Request Redaction and serves the transcriber
 /// within 7 days after the transcript is filed.
@@ -410,6 +429,7 @@ test "Counting boundary: redaction-notice-period (weekend)" cite "W.D. Mich. LBR
   given TranscriptFiled() on 2026-10-11
   expect deadline(redaction-notice-period) == 2026-10-19
 }
+
 /// LBR 9037-1(b)(1): the Request for Redaction is submitted within 21 days
 /// of the transcript's filing.
 deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006-michigan cite "W.D. Mich. LBR 9037-1(b)"

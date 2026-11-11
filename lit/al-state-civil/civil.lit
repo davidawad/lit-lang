@@ -59,9 +59,7 @@ terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] 
 state case-management: "Scheduling and pretrial conferences" by court cite "Ala. R. Civ. P. 16(b)"
 {
   note "The court may enter a scheduling order limiting the time to join parties and amend the pleadings, to file and hear motions and to complete discovery; once issued, it is modified only by leave of court on good cause (Ala. R. Civ. P. 16(b)). When the court has not ordered a pretrial conference, any party may require one on written notice served in time for it to take place at least twenty-one days before the case is set for trial (Ala. R. Civ. P. 16(a))."
-  edge-case-management-discovery "Scheduling order entered" -> discovery {
-    authority cite "Ala. R. Civ. P. 26(b)"
-  }
+  "Scheduling order entered" -> discovery { authority cite "Ala. R. Civ. P. 26(b)" }
 }
 
 state discovery: "Discovery" by plaintiff cite "Ala. R. Civ. P. 26(b)"

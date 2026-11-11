@@ -239,6 +239,7 @@ test "Counting boundary: referred-adjudication-notice-period (weekend)" cite "Ba
   given ProceedingTransferred() on 2026-12-05
   expect deadline(referred-adjudication-notice-period) == 2026-12-21
 }
+
 /// Bankr. W.D. Wash. LBR 7016-1(b)(1): the plaintiff's pretrial statement
 /// is filed no later than 21 days before the filing of the proposed
 /// pretrial order (the rules effective December 1, 2023).
@@ -345,9 +346,7 @@ start motion-filed
 state motion-filed: "Motion filed and noted for hearing" by movant cite "Bankr. W.D. Wash. LBR 9013-1(d)"
 {
   note "A motion is filed and served at least 21 days before the hearing (28 for summary judgment and lien avoidance, 30 for claim objections), and a response is due 7 days before it (LBR 9013-1(d)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Response filed and served" -> opposed {
-    authority cite "Bankr. W.D. Wash. LBR 9013-1(d)"
-  }
+  "Response filed and served" -> opposed { authority cite "Bankr. W.D. Wash. LBR 9013-1(d)" }
   edge-motion-filed-unopposed "No timely response" -> ruling {
     authority cite "Bankr. W.D. Wash. LBR 9013-1(d)"
   }
@@ -356,7 +355,7 @@ state motion-filed: "Motion filed and noted for hearing" by movant cite "Bankr. 
 state opposed: "Response filed; hearing" by opponent cite "Bankr. W.D. Wash. LBR 9013-1(d)"
 {
   note "Any reply follows LBR 9013-1(d)."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. W.D. Wash. LBR 9013-1(d)" }
+  "Hearing held" -> ruling { authority cite "Bankr. W.D. Wash. LBR 9013-1(d)" }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. W.D. Wash. LBR 9013-1(i)"

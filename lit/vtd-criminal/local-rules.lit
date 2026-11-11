@@ -3,6 +3,8 @@ module vtd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of Vermont's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"). The criminal
 // Local Rules supplement the Federal Rules of Criminal Procedure, and the
@@ -49,9 +51,6 @@ deadline government-discovery: 14.days after Arraigned() counted_by frcrimp45 de
   to CaseOrder
   op set
 } cite "D. Vt. L. Cr. R. 16(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-discovery (weekend)" cite "D. Vt. L. Cr. R. 16(a)"
 {
@@ -63,9 +62,6 @@ test "Counting boundary: government-discovery (weekend)" cite "D. Vt. L. Cr. R. 
 /// 16(a)(1)(E)-(G) materials does so in writing within 5 days of
 /// arraignment; otherwise the reciprocal disclosure below is owed.
 deadline reciprocal-discovery-refusal: 5.days after Arraigned() counted_by frcrimp45 cite "D. Vt. L. Cr. R. 16(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reciprocal-discovery-refusal (weekend)" cite "D. Vt. L. Cr. R. 16(b)"
 {
@@ -78,9 +74,6 @@ test "Counting boundary: reciprocal-discovery-refusal (weekend)" cite "D. Vt. L.
 /// 16(b) material and the names, addresses and birth dates of its
 /// case-in-chief witnesses.
 deadline defense-discovery: 21.days after Arraigned() counted_by frcrimp45 cite "D. Vt. L. Cr. R. 16(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-discovery (weekend)" cite "D. Vt. L. Cr. R. 16(b)"
 {
@@ -91,9 +84,6 @@ test "Counting boundary: defense-discovery (weekend)" cite "D. Vt. L. Cr. R. 16(
 /// D. Vt. L. Cr. R. 16(c): within 21 days of arraignment, the defendant
 /// gives the written notices FRCrimP 12.1, 12.2 and 12.3 require.
 deadline defense-notices: 21.days after Arraigned() counted_by frcrimp45 cite "D. Vt. L. Cr. R. 16(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-notices (weekend)" cite "D. Vt. L. Cr. R. 16(c)"
 {
@@ -109,9 +99,6 @@ deadline government-pretrial-disclosure: 14.days before JurySelectionScheduled()
   to CaseOrder
   op set
 } cite "D. Vt. L. Cr. R. 16(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-pretrial-disclosure (weekend)" cite "D. Vt. L. Cr. R. 16(d)"
 {
@@ -126,9 +113,6 @@ test "Counting boundary: government-pretrial-disclosure (weekend)" cite "D. Vt. 
 /// make every effort to stipulate facts and admissibility (L. Cr. R.
 /// 16(h)(2)).
 deadline pretrial-filings: 3.days before TrialScheduled() counted_by frcrimp45 cite "D. Vt. L. Cr. R. 16(h)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-filings (weekend)" cite "D. Vt. L. Cr. R. 16(h)"
 {
@@ -144,9 +128,6 @@ deadline presentence-interview-availability: 10.days after ConvictionOrGuiltyPle
   to CaseOrder
   op set
 } cite "D. Vt. L. Cr. R. 32(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: presentence-interview-availability (weekend)" cite "D. Vt. L. Cr. R. 32(b)"
 {

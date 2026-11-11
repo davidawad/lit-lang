@@ -18,7 +18,7 @@ start route
 decision route: "How the case comes before the Supreme Court" by petitioner cite "Neb. Rev. Stat. § 24-1106"
 {
   note "A civil appeal goes to the Court of Appeals except in cases involving the constitutionality of a statute, which go to the Supreme Court (Neb. Rev. Stat. § 24-1106(1)); for the question to be involved it must be real and substantial, not merely colorable (State v. Nelson, 274 Neb. 304, 739 N.W.2d 199 (2007), annotated to § 24-1106). Any party to a case appealed to the Court of Appeals may petition the Supreme Court to bypass the Court of Appeals for direct review (§ 24-1106(2)). The Supreme Court may also remove a case from the Court of Appeals before final decision, on the Court of Appeals' recommendation or its own motion, for a § 24-1106(2) reason or to regulate the courts' caseloads (§ 24-1106(3)). An original action may be commenced only by leave of court (Neb. Ct. R. App. P. § 2-115(A)(1))."
-  edge-route-court-of-appeals "No petition: the appeal stays in the Court of Appeals" -> court-of-appeals {
+  "No petition: the appeal stays in the Court of Appeals" -> court-of-appeals {
     authority cite "Neb. Rev. Stat. § 24-1106(1)"
   }
   edge-route-bypass "Petition to bypass the Court of Appeals" -> bypass-decision {

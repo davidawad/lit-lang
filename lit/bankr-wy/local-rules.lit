@@ -256,10 +256,7 @@ start motion-filed
 state motion-filed: "Motion served with notice of opportunity to object" by movant cite "Wyoming LBR 2002-1(B)"
 {
   note "The notice (Official Form 20A) allows at least 17 days, including three for mailing, where the FRBP set no period, or the FRBP 2002(a) period with service 24 days before the deadline (LBR 2002-1(B)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Objection filed" -> opposed {
-    authority cite "Wyoming LBR 2002-1(B)"
-    within objection-period
-  }
+  "Objection filed" -> opposed { authority cite "Wyoming LBR 2002-1(B)", within objection-period }
   edge-motion-filed-unopposed "No objection; relief may be granted" -> ruling {
     authority cite "Wyoming LBR 2002-1(B)"
   }
@@ -268,7 +265,7 @@ state motion-filed: "Motion served with notice of opportunity to object" by mova
 state opposed: "Objection filed; hearing set" by opponent cite "Wyoming LBR 2002-1(B)"
 {
   note "A party proposing or opposing a motion who fails to appear at a scheduled hearing is deemed to waive the motion or consent to the relief (LBR 9013-1(B)); memoranda are due seven days before the hearing (LBR 9013-2)."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Wyoming LBR 9013-1(B)" }
+  "Hearing held" -> ruling { authority cite "Wyoming LBR 9013-1(B)" }
 }
 
 decision ruling: "Motion decided" by court cite "Wyoming LBR 2002-1(B)"

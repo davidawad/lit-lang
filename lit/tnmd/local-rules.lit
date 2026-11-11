@@ -2,6 +2,8 @@ module tnmd-local-rules.local-rules
 
 import core.frcp6.{ frcp6 }
 
+forum frcp
+
 // The Middle District of Tennessee's own civil periods, computed under the
 // federal rules (FRCP 6(a) governs "any local rule"). Page limitations
 // exclude the case caption, signature lines and certificate of service
@@ -109,9 +111,6 @@ event AdditionalPartyAppears()
 /// the motion, unless otherwise ordered; if no timely response is filed
 /// the motion is deemed unopposed.
 deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "M.D. Tenn. L.R. 7.01(a)(3)"
-{
-  forum frcp
-}
 
 test "Counting boundary: response-period (weekend)" cite "M.D. Tenn. L.R. 7.01(a)(3)"
 {
@@ -122,9 +121,6 @@ test "Counting boundary: response-period (weekend)" cite "M.D. Tenn. L.R. 7.01(a
 /// LR 7.01(a)(4): an optional reply memorandum may be filed within 7 days
 /// after service of the response.
 deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "M.D. Tenn. L.R. 7.01(a)(4)"
-{
-  forum frcp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "M.D. Tenn. L.R. 7.01(a)(4)"
 {
@@ -136,9 +132,6 @@ test "Counting boundary: reply-period (weekend)" cite "M.D. Tenn. L.R. 7.01(a)(4
 /// response, the affected party may move for relief from the ruling
 /// within 14 days after service of the order.
 deadline early-ruling-relief-period: 14.days after EarlyRulingServed() counted_by frcp6 cite "M.D. Tenn. L.R. 7.01(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: early-ruling-relief-period (weekend)" cite "M.D. Tenn. L.R. 7.01(b)"
 {
@@ -152,9 +145,6 @@ test "Counting boundary: early-ruling-relief-period (weekend)" cite "M.D. Tenn. 
 /// filing (LR 56.01(e)); facts not timely responded to are deemed
 /// undisputed (LR 56.01(g)).
 deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "M.D. Tenn. L.R. 56.01(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: summary-judgment-response-period (weekend)" cite "M.D. Tenn. L.R. 56.01(d)"
 {
@@ -165,9 +155,6 @@ test "Counting boundary: summary-judgment-response-period (weekend)" cite "M.D. 
 /// LR 56.01(f): unless otherwise ordered, the movant may file an optional
 /// reply within 14 days of service of the response.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "M.D. Tenn. L.R. 56.01(f)"
-{
-  forum frcp
-}
 
 test "Counting boundary: summary-judgment-reply-period (weekend)" cite "M.D. Tenn. L.R. 56.01(f)"
 {
@@ -180,9 +167,6 @@ test "Counting boundary: summary-judgment-reply-period (weekend)" cite "M.D. Ten
 /// be read or played at least 14 days prior to the trial date, unless the
 /// court directs otherwise.
 deadline deposition-designation-period: 14.days before TrialBegins() counted_by frcp6 cite "M.D. Tenn. L.R. 39.01(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: deposition-designation-period (weekend)" cite "M.D. Tenn. L.R. 39.01(c)"
 {
@@ -194,9 +178,6 @@ test "Counting boundary: deposition-designation-period (weekend)" cite "M.D. Ten
 /// filed, with any videos, no later than 7 days before trial or as the
 /// court orders.
 deadline deposition-objection-period: 7.days before TrialBegins() counted_by frcp6 cite "M.D. Tenn. L.R. 39.01(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: deposition-objection-period (weekend)" cite "M.D. Tenn. L.R. 39.01(c)"
 {
@@ -209,18 +190,11 @@ test "Counting boundary: deposition-objection-period (weekend)" cite "M.D. Tenn.
 /// trial; evidence not timely disclosed is precluded absent court
 /// approval.
 deadline supplementation-period: 30.days before TrialBegins() counted_by frcp6 cite "M.D. Tenn. L.R. 39.01(e)"
-{
-  forum frcp
-}
-
 /// LR 39.01(f): subpoenas for trial witnesses delivered to another for
 /// service are delivered, with any required funds, at least 14 days prior
 /// to the trial date; otherwise a continuance for a witness's absence is
 /// granted only on extenuating circumstances.
 deadline trial-subpoena-period: 14.days before TrialBegins() counted_by frcp6 cite "M.D. Tenn. L.R. 39.01(f)"
-{
-  forum frcp
-}
 
 test "Counting boundary: trial-subpoena-period (weekend)" cite "M.D. Tenn. L.R. 39.01(f)"
 {
@@ -232,9 +206,6 @@ test "Counting boundary: trial-subpoena-period (weekend)" cite "M.D. Tenn. L.R. 
 /// files a bill of costs with supporting documentation within 30 days
 /// from the entry of the judgment.
 deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "M.D. Tenn. L.R. 54.01(a)"
 {
@@ -245,9 +216,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "M.D. Tenn. L.R. 5
 /// LR 54.01(a): exceptions to the Clerk's proposed taxation are filed
 /// within 14 days from the filing of the Notice of Taxation.
 deadline taxation-exceptions-period: 14.days after NoticeOfTaxationFiled() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: taxation-exceptions-period (weekend)" cite "M.D. Tenn. L.R. 54.01(a)"
 {
@@ -258,9 +226,6 @@ test "Counting boundary: taxation-exceptions-period (weekend)" cite "M.D. Tenn. 
 /// LR 54.01(a): a motion for court review of the Clerk's taxation is
 /// filed within 7 days from the filing of the Taxation of Costs.
 deadline taxation-review-period: 7.days after TaxationOfCostsFiled() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: taxation-review-period (weekend)" cite "M.D. Tenn. L.R. 54.01(a)"
 {
@@ -272,9 +237,6 @@ test "Counting boundary: taxation-review-period (weekend)" cite "M.D. Tenn. L.R.
 /// for attorney's fees and related nontaxable expenses is filed within 30
 /// days from the entry of final judgment.
 deadline fee-motion-period: 30.days after JudgmentEntered() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(b)(1)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-motion-period (weekend)" cite "M.D. Tenn. L.R. 54.01(b)(1)"
 {
@@ -287,9 +249,6 @@ test "Counting boundary: fee-motion-period (weekend)" cite "M.D. Tenn. L.R. 54.0
 /// of the entry of the Sixth Circuit mandate (and, for Supreme Court
 /// litigation, within 30 days from its final decision).
 deadline appellate-fee-motion-period: 30.days after MandateEntered() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(b)(2)"
-{
-  forum frcp
-}
 
 test "Counting boundary: appellate-fee-motion-period (weekend)" cite "M.D. Tenn. L.R. 54.01(b)(2)"
 {
@@ -301,9 +260,6 @@ test "Counting boundary: appellate-fee-motion-period (weekend)" cite "M.D. Tenn.
 /// objections, with a memorandum, within 14 days of the filing of the
 /// motion; failure may be deemed no opposition.
 deadline fee-objections-period: 14.days after FeeMotionFiled() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-objections-period (weekend)" cite "M.D. Tenn. L.R. 54.01(c)"
 {
@@ -315,9 +271,6 @@ test "Counting boundary: fee-objections-period (weekend)" cite "M.D. Tenn. L.R. 
 /// judge's nondispositive order is filed within 14 days after service of
 /// the motion for review.
 deadline review-response-period: 14.days after ReviewMotionServed() counted_by frcp6 cite "M.D. Tenn. L.R. 72.01(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: review-response-period (weekend)" cite "M.D. Tenn. L.R. 72.01(b)"
 {
@@ -329,9 +282,6 @@ test "Counting boundary: review-response-period (weekend)" cite "M.D. Tenn. L.R.
 /// arranges transcription within 14 days from service of the motion for
 /// review on opposing counsel.
 deadline review-transcript-period: 14.days after ReviewMotionServed() counted_by frcp6 cite "M.D. Tenn. L.R. 72.04"
-{
-  forum frcp
-}
 
 test "Counting boundary: review-transcript-period (weekend)" cite "M.D. Tenn. L.R. 72.04"
 {
@@ -343,9 +293,6 @@ test "Counting boundary: review-transcript-period (weekend)" cite "M.D. Tenn. L.
 /// magistrate judge on consent, a new consent form, if all parties agree,
 /// is filed within 30 days after the additional party's appearance.
 deadline added-party-consent-period: 30.days after AdditionalPartyAppears() counted_by frcp6 cite "M.D. Tenn. L.R. 73.01(c)(1)"
-{
-  forum frcp
-}
 
 test "Counting boundary: added-party-consent-period (weekend)" cite "M.D. Tenn. L.R. 73.01(c)(1)"
 {

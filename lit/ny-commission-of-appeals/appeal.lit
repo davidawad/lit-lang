@@ -25,7 +25,7 @@ decision notice: "Notice of appeal within time?" by appellant cite ?("N.Y. Const
 
 state record: "Record or transcript prepared" by commission cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") {
   note "Record contents, transcript and fees are holes."
-  edge-record-briefing "Record filed" -> briefing {
+  "Record filed" -> briefing {
     event RecordFiled()
     authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
   }
@@ -33,14 +33,14 @@ state record: "Record or transcript prepared" by commission cite ?("N.Y. Const. 
 
 state briefing: "Briefs filed" by appellant cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") {
   note "Briefing periods, form and length are holes."
-  edge-briefing-argument "Argument or submission" -> argument {
+  "Argument or submission" -> argument {
     authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
   }
 }
 
 state argument: "Argument or submission" by court cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored") {
   note "Argument may be discretionary."
-  edge-argument-decision "Decision issued" -> decision {
+  "Decision issued" -> decision {
     authority cite ?("N.Y. Const. art. VI, § 5 (1869): not vendored")
   }
 }

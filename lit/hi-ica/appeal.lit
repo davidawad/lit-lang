@@ -61,7 +61,7 @@ terminal dismissed-jurisdiction: "Dismissed: no appealable judgment or order" ou
 state record: "Record and transcripts" by movant cite "Haw. R. App. P. 10"
 {
   note "The appellant requests the reporter's transcripts it deems necessary within 10 days after filing the notice of appeal; the reporter completes them within 45 days after the notice of appeal is filed, or notifies the parties of a new date, but within 60 days unless the appellate court extends the time (Haw. R. App. P. 10(b)). Unless otherwise provided, the clerk of the court appealed from assembles, certifies and electronically files the record on appeal within 60 days after the notice of appeal is filed (Haw. R. App. P. 11(b))."
-  edge-record-briefing "Record on appeal filed" -> briefing {
+  "Record on appeal filed" -> briefing {
     event RecordFiled()
     authority cite "Haw. R. App. P. 11(b)"
   }
@@ -70,7 +70,7 @@ state record: "Record and transcripts" by movant cite "Haw. R. App. P. 10"
 state briefing: "Briefing" by movant cite "Haw. R. App. P. 28"
 {
   note "The appellant files the opening brief within 40 days after the record on appeal is filed; the appellee files the answering brief within 40 days after service of the opening brief or docketing of the appeal, whichever is later; the appellant may file a reply within 14 days after service of the answering brief, or else files a notification that no reply will be filed before that time expires (Haw. R. App. P. 28(b)-(d)). An opening or answering brief may not exceed 35 pages and a reply 10 pages, except after leave granted (Haw. R. App. P. 28(a))."
-  edge-briefing-argument "Briefing complete" -> argument { authority cite "Haw. R. App. P. 28" }
+  "Briefing complete" -> argument { authority cite "Haw. R. App. P. 28" }
 }
 
 decision argument: "Oral argument or submission on the briefs" by court cite "Haw. R. App. P. 34(a)"
@@ -85,9 +85,7 @@ decision argument: "Oral argument or submission on the briefs" by court cite "Ha
 decision decision-issued: "Opinion or dispositional order" by court cite "Haw. R. App. P. 36"
 {
   note "After a final decision other than an order of dismissal, the court prepares the judgment on appeal; its filing is entry, and the appellate clerk serves it on each party and on the court appealed from (Haw. R. App. P. 36(a), (b)). A request for fees and costs is filed no later than 14 days after the time for a motion for reconsideration has expired or the motion has been decided; objections follow within 10 days after service and a reply within 7 days (Haw. R. App. P. 39(d)). Dispositions, their publication and citation are governed by Rule 35 as amended by the order of July 21, 2026, which states no period. The earlier outline named no decision on the standard of review."
-  edge-decision-issued-reconsideration "Motion for reconsideration" -> reconsideration {
-    authority cite "Haw. R. App. P. 40(a)"
-  }
+  "Motion for reconsideration" -> reconsideration { authority cite "Haw. R. App. P. 40(a)" }
   edge-decision-issued-judgment "No motion: judgment on appeal entered" -> judgment-entered {
     event MandateIssued()
     authority cite "Haw. R. App. P. 36(b)"
@@ -114,7 +112,7 @@ terminal reconsideration-granted: "Reconsideration granted: decision modified" o
 state judgment-entered: "Judgment on appeal entered" by court cite "Haw. R. App. P. 36(c)"
 {
   note "The Intermediate Court of Appeals' judgment is effective, if no application for a writ of certiorari is filed, on the thirty-first day after entry, or on expiration of an extension under Rule 40.1(a); if an application is filed, on entry of the supreme court's order dismissing or rejecting it, or of its judgment affirming in whole (Haw. R. App. P. 36(c)). A timely application stays finality of that judgment unless the supreme court orders otherwise (Haw. R. App. P. 41)."
-  edge-judgment-entered-certiorari "Application for a writ of certiorari" -> certiorari {
+  "Application for a writ of certiorari" -> certiorari {
     event ReviewPetitionFiled()
     authority cite "Haw. R. App. P. 40.1(a)"
   }

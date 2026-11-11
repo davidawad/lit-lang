@@ -84,7 +84,7 @@ decision plea-decision: "Plea or trial" by accused cite "Mass. R. Crim. P. 12(a)
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Mass. R. Crim. P. 12(c)"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Mass. R. Crim. P. 19(a)" }
+  "Trial" -> trial { authority cite "Mass. R. Crim. P. 19(a)" }
   edge-plea-decision-nolle "Prosecutor enters a nolle prosequi" -> dismissed {
     authority cite "Mass. R. Crim. P. 16(a)"
   }
@@ -118,9 +118,7 @@ decision post-trial: "Post-trial motions" by court cite "Mass. R. Crim. P. 25(b)
 state sentencing: "Presentence report and sentencing" by court cite "Mass. R. Crim. P. 28(b)"
 {
   note "After a verdict, finding or plea of guilty, a plea of nolo contendere or an admission to sufficient facts, the defendant has the right to be sentenced without unreasonable delay, and before sentence the court gives the defendant or counsel an opportunity to speak (Mass. R. Crim. P. 28(b)). The presentence report is made available to the prosecutor and defense counsel before the disposition, subject to the judge's exceptions in extraordinary cases (Mass. R. Crim. P. 28(d)). After a judgment of guilty the court advises the defendant of the right to appeal, and in the District Court the clerk files a notice of appeal on the defendant's request (Mass. R. Crim. P. 28(c))."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "Mass. R. Crim. P. 28(a)"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "Mass. R. Crim. P. 28(a)" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "Mass. R. Crim. P. 28(a)"

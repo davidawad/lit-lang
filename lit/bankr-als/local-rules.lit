@@ -73,6 +73,7 @@ test "Counting boundary: payment-advices-period (weekend)" cite "S.D. Ala. LBR 1
   given FirstMeetingDate() on 2026-07-04
   expect deadline(payment-advices-period) == 2026-06-26
 }
+
 /// LBR 1019-1: if a chapter 13 case is converted to chapter 7, the chapter
 /// 13 trustee files a final report and account within 30 days after all
 /// outstanding checks the trustee issued in the case have cleared.
@@ -83,6 +84,7 @@ test "Counting boundary: conversion-final-report-period (weekend)" cite "S.D. Al
   given TrusteeChecksCleared() on 2026-07-02
   expect deadline(conversion-final-report-period) == 2026-08-03
 }
+
 /// LBR 2004-1(c): attendance and production may not be required less than
 /// 21 days after service of the notice, and a request construed under FRBP
 /// 7034 has its time to respond shortened to 21 days.
@@ -93,6 +95,7 @@ test "Counting boundary: examination-production-period (weekend)" cite "S.D. Ala
   given ExaminationNoticeServed() on 2026-07-04
   expect deadline(examination-production-period) == 2026-07-27
 }
+
 /// LBR 2004-1(d): a party in interest who wishes to attend files and serves a
 /// cross-notice of examination at least 14 days in advance of it.
 deadline cross-notice-period: 14.days before ExaminationDate() counted_by frbp9006-alabama cite ?("S.D. Ala. LBR 2004-1(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
@@ -102,6 +105,7 @@ test "Counting boundary: cross-notice-period (holiday)" cite "S.D. Ala. LBR 2004
   given ExaminationDate() on 2026-07-03
   expect deadline(cross-notice-period) == 2026-06-18
 }
+
 /// LBR 2004-1(e): an interested party may file a motion for protective order,
 /// with a request for expedited hearing, at least 7 days before the date of
 /// the proposed examination or production.
@@ -112,6 +116,7 @@ test "Counting boundary: protective-order-period (weekend)" cite "S.D. Ala. LBR 
   given ExaminationDate() on 2026-07-04
   expect deadline(protective-order-period) == 2026-06-26
 }
+
 /// LBR 3015-2(d): within 14 days of the chapter 13 trustee's recommendation
 /// of confirmation, the debtor files a final plan summary on the court's form.
 deadline final-plan-summary-period: 14.days after ConfirmationRecommended() counted_by frbp9006-alabama cite ?("S.D. Ala. LBR 3015-2(d), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
@@ -125,6 +130,7 @@ test "Counting boundary: corrected-plan-summary-period (weekend)" cite "S.D. Ala
   given CorrectionNoticeFiled() on 2026-07-01
   expect deadline(corrected-plan-summary-period) == 2026-07-13
 }
+
 /// LBR 3015-2(e): the confirmation order's negative notice provision lets a
 /// creditor with an allowed unsecured claim object to the treatment of
 /// unsecured claims within 21 days of the order's entry.
@@ -135,6 +141,7 @@ test "Counting boundary: unsecured-treatment-objection-period (weekend)" cite "S
   given ConfirmationOrderEntered() on 2026-07-04
   expect deadline(unsecured-treatment-objection-period) == 2026-07-27
 }
+
 /// LBR 4001-1(b): all affidavits or other pleadings on a motion for relief
 /// from stay are filed and served on all adverse parties at least 7 days
 /// prior to the hearing.
@@ -145,6 +152,7 @@ test "Counting boundary: stay-relief-affidavit-period (weekend)" cite "S.D. Ala.
   given StayReliefHearing() on 2026-07-04
   expect deadline(stay-relief-affidavit-period) == 2026-06-26
 }
+
 /// LBR 4001-1(c): an attorney seeking foreclosure or repossession files the
 /// fact summary at least 7 days before the hearing on the motion.
 deadline fact-summary-period: 7.days before StayReliefHearing() counted_by frbp9006-alabama cite ?("S.D. Ala. LBR 4001-1(c), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}
@@ -154,6 +162,7 @@ test "Counting boundary: fact-summary-period (weekend)" cite "S.D. Ala. LBR 4001
   given StayReliefHearing() on 2026-07-04
   expect deadline(fact-summary-period) == 2026-06-26
 }
+
 /// LBR 4001-2(e): an amended or supplemental proof of claim for postpetition
 /// arrearage or fees authorized by a conditional denial order is filed within
 /// 60 days of the order's entry.
@@ -164,6 +173,7 @@ test "Counting boundary: conditional-denial-claim-period (weekend)" cite "S.D. A
   given ConditionalDenialEntered() on 2026-07-01
   expect deadline(conditional-denial-claim-period) == 2026-08-31
 }
+
 /// LBR 4001-2(f): when the denial is conditioned on direct payments to the
 /// creditor, the cure period after notice of default is at least 20 days
 /// from the date of mailing.
@@ -178,6 +188,7 @@ test "Counting boundary: plan-payment-cure-period (weekend)" cite "S.D. Ala. LBR
   given PlanPaymentDefaultMailed() on 2026-07-03
   expect deadline(plan-payment-cure-period) == 2026-07-20
 }
+
 /// LBR 4004-1: if the chapter 12 or 13 debtor's motion for discharge and
 /// certifications are not filed within 21 days after the trustee files the
 /// notice of completion, the court may close the case without a discharge.
@@ -188,6 +199,7 @@ test "Counting boundary: discharge-motion-period (weekend)" cite "S.D. Ala. LBR 
   given PlanCompletionNoticeFiled() on 2026-07-04
   expect deadline(discharge-motion-period) == 2026-07-27
 }
+
 /// LBR 9007-1(b)(3): the number of days placed in the negative notice legend
 /// for a written objection is 21 days from the date of service, except as
 /// (A) and (B) provide.
@@ -198,6 +210,7 @@ test "Counting boundary: negative-notice-objection-period (weekend)" cite "S.D. 
   given NegativeNoticeServed() on 2026-07-04
   expect deadline(negative-notice-objection-period) == 2026-07-27
 }
+
 /// LBR 9007-1(b)(3)(B): for an objection to a proof of claim under FRBP 3007
 /// on negative notice, the time to object is 30 days.
 deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006-alabama cite ?("S.D. Ala. LBR 9007-1(b), July 1, 2026 rules: OCR extract of an image scan, verify numbers; the value is the vendored OCR text, unverified") {}

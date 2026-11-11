@@ -49,17 +49,13 @@ terminal dismissed-jurisdiction: "Dismissed: no appealable judgment" outcome [lo
 state record: "Record and transcript" by petitioner cite "Alaska R. App. P. 210"
 {
   note "Any other party may designate additional parts of the electronic record to be transcribed within 10 days after service of the appellant's designation; preparation of the transcript, and receipt and page numbering of the record, are completed within 40 days after issuance of the opening notice (Alaska R. App. P. 210(b), (e)). The court then gives notice of the due date for the appellant's brief (Alaska R. App. P. 210(f))."
-  edge-record-briefing "Notice of the brief due date" -> briefing {
-    authority cite "Alaska R. App. P. 210(f)"
-  }
+  "Notice of the brief due date" -> briefing { authority cite "Alaska R. App. P. 210(f)" }
 }
 
 state briefing: "Briefing" by petitioner cite "Alaska R. App. P. 212(a)"
 {
   note "The appellant serves and files its brief within 30 days after the court's notice of the due date; the appellee within 30 days after service of the appellant's brief; within 20 days after service of the appellee's brief the appellant files a reply or a notice that none will be filed; separate briefs of multiple parties preparing excerpts get 10 more days (Alaska R. App. P. 212(a)(1)(A)). Principal briefs may not exceed 50 numbered pages and a reply 20 pages (Alaska R. App. P. 212(c)(4)). Routine extensions by notice may not exceed 30 days for the opening brief, 15 for the reply and 30 for the appellee (Alaska R. App. P. 503.5)."
-  edge-briefing-argument "Briefing complete" -> argument {
-    authority cite "Alaska R. App. P. 212(a)"
-  }
+  "Briefing complete" -> argument { authority cite "Alaska R. App. P. 212(a)" }
 }
 
 decision argument: "Oral argument or submission on the briefs" by court cite "Alaska R. App. P. 505(a)"
@@ -73,9 +69,7 @@ decision argument: "Oral argument or submission on the briefs" by court cite "Al
 decision decision-issued: "Opinion or order decides the appeal" by court cite "Alaska R. App. P. 507(a)"
 {
   note "The opinion, a summary disposition order under Rule 214, or an order dismissing the appeal is the appellate court's judgment; no mandate issues (Alaska R. App. P. 507(a)). The prevailing party serves and files a verified bill of costs within 10 days after notice of the opinion or order, objections follow within 7 days, and a motion for attorney's fees is filed within 10 days after that notice (Alaska R. App. P. 508)."
-  edge-decision-issued-rehearing "Petition for rehearing" -> rehearing {
-    authority cite "Alaska R. App. P. 506(b)"
-  }
+  "Petition for rehearing" -> rehearing { authority cite "Alaska R. App. P. 506(b)" }
   edge-decision-issued-final "No petition" -> jurisdiction-returned {
     authority cite "Alaska R. App. P. 507(c)"
   }

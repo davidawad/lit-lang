@@ -73,9 +73,7 @@ start notice-filed
 state notice-filed: "Notice of appeal filed" by movant cite "Ind. Appellate Rule 9(A)"
 {
   note "A party initiates an appeal by filing a Notice of Appeal with the Clerk within thirty (30) days after the entry of a Final Judgment is noted in the Chronological Case Summary; if any party files a timely motion to correct error, within thirty (30) days after the ruling on it is noted or thirty (30) days after it is deemed denied under Trial Rule 53.3, whichever occurs first (App. R. 9(A)(1)). Unless the Notice of Appeal is timely filed, the right to appeal is forfeited except as provided by P.C.R. 2 (App. R. 9(A)(5)). The appellant pays the Clerk the $250 filing fee when the Notice of Appeal is filed, unless the appeal is in forma pauperis or for a governmental unit (App. R. 9(E)). An appellee may cross-appeal without a Notice of Appeal by raising cross-appeal issues in its brief (App. R. 9(D)). The Notice of Appeal designates the portions of the Transcript needed (App. R. 9(F)(5))."
-  edge-notice-filed-appealability "Notice timely filed" -> appealability {
-    authority cite "Ind. Appellate Rule 9(A)"
-  }
+  "Notice timely filed" -> appealability { authority cite "Ind. Appellate Rule 9(A)" }
   edge-notice-filed-forfeited "Notice not timely filed" -> dismissed-jurisdiction {
     authority cite "Ind. Appellate Rule 9(A)"
   }
@@ -84,9 +82,7 @@ state notice-filed: "Notice of appeal filed" by movant cite "Ind. Appellate Rule
 decision appealability: "Final judgment or interlocutory appeal" by court cite "Ind. Appellate Rule 2(H)"
 {
   note "A judgment is final if it disposes of all claims as to all parties, if the trial court expressly determines in writing under Trial Rule 54(B) or 56(C) that there is no just reason for delay and directs entry of judgment, if it is deemed final under Trial Rule 60(C), if it rules on a timely motion to correct error, or if it is otherwise deemed final by law (App. R. 2(H)). The Court of Appeals has jurisdiction of appeals from final judgments of circuit, superior, probate and county courts except as Rule 4 provides, and of interlocutory appeals under Rule 14 (App. R. 5(A), (B)). Interlocutory appeals of right are taken by filing a Notice of Appeal within thirty (30) days after the order is noted in the Chronological Case Summary; a discretionary interlocutory appeal needs a motion to certify filed in the trial court within thirty (30) days after the order is noted, then a motion in the Court of Appeals within thirty (30) days after the certification is noted, and a Notice of Appeal within fifteen (15) days of the order accepting jurisdiction (App. R. 14(A), (B)). An appellee may move to dismiss an appeal at any time for any reason provided by law, including lack of jurisdiction (App. R. 36(B))."
-  edge-appealability-record "Appealable: record assembled" -> record {
-    authority cite "Ind. Appellate Rule 2(H)"
-  }
+  "Appealable: record assembled" -> record { authority cite "Ind. Appellate Rule 2(H)" }
   edge-appealability-dismissed "Not appealable: dismissed" -> dismissed-jurisdiction {
     authority cite "Ind. Appellate Rule 36(B)"
   }
@@ -100,7 +96,7 @@ terminal dismissed-jurisdiction: "Appeal dismissed or forfeited" outcome [loss, 
 state record: "Clerk's Record and Transcript" by court cite "Ind. Appellate Rule 10"
 {
   note "Within thirty (30) days of the filing of the Notice of Appeal, the trial court clerk assembles the Clerk's Record and, on or before that deadline, files and serves a Notice of Completion of Clerk's Record stating whether the Transcript is completed, not completed or not requested (App. R. 10(B), (C)). The Court Reporter has forty-five (45) days after the Notice of Appeal is filed to file the Transcript (App. R. 11(B)); if it is filed after the Notice of Completion of Clerk's Record, the clerk files and serves a Notice of Completion of Transcript within five (5) days after it is filed (App. R. 10(D))."
-  edge-record-briefing "Notice of completion served: briefing begins" -> briefing {
+  "Notice of completion served: briefing begins" -> briefing {
     authority cite "Ind. Appellate Rule 45(B)"
   }
 }
@@ -108,7 +104,7 @@ state record: "Clerk's Record and Transcript" by court cite "Ind. Appellate Rule
 state briefing: "Briefing: appellant, appellee, reply" by movant cite "Ind. Appellate Rule 45(B)"
 {
   note "The appellant's brief is filed no later than thirty (30) days after the Notice of Completion of Clerk's Record is served if it reports the Transcript complete or not requested, and otherwise after the Notice of Completion of Transcript is served; the three-day mail extension does not apply to it. The appellee's brief is filed no later than thirty (30) days after service of the appellant's brief; any reply brief no later than fifteen (15) days after service of the appellee's brief, or thirty (30) days if it also serves as the cross-appellee's brief; any cross-appellant's reply brief no later than fifteen (15) days after service of the appellant's reply brief (App. R. 45(B)). The appellant's failure to file its brief timely may subject the appeal to summary dismissal, and the appellee's may result in reversal on a showing of prima facie error (App. R. 45(D)). A motion to file an oversized brief is filed at least fifteen (15) days before the brief is due and states the words requested (App. R. 44(B))."
-  edge-briefing-argument "Briefs filed" -> argument { authority cite "Ind. Appellate Rule 45(B)" }
+  "Briefs filed" -> argument { authority cite "Ind. Appellate Rule 45(B)" }
   edge-briefing-dismissed "Appellant's brief not timely filed: dismissed" -> dismissed-jurisdiction {
     authority cite "Ind. Appellate Rule 45(D)"
   }
@@ -117,9 +113,7 @@ state briefing: "Briefing: appellant, appellee, reply" by movant cite "Ind. Appe
 state argument: "Oral argument or submission on the briefs" by court cite "Ind. Appellate Rule 52(A)"
 {
   note "The Court may, in its discretion, set oral argument on its own or a party's motion (App. R. 52(A)). A party's motion for oral argument is filed no later than seven days after any reply brief would be due under Rule 45(B) (App. R. 52(B)); counsel file an acknowledgment of the order setting argument no later than fifteen (15) days after service of the order (App. R. 52(C))."
-  edge-argument-disposition "Argued or submitted" -> disposition {
-    authority cite "Ind. Appellate Rule 52(A)"
-  }
+  "Argued or submitted" -> disposition { authority cite "Ind. Appellate Rule 52(A)" }
 }
 
 decision disposition: "Disposition" by court cite "Ind. Appellate Rule 66(C)"

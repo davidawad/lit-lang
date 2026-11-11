@@ -19,9 +19,7 @@ state complaint-filed: "Action commenced" by plaintiff cite "Pa.R.C.P. 1007"
   edge-complaint-filed-served "Complaint with notice to defend served" -> pleading-due {
     authority cite "Pa.R.C.P. 400(a)"
   }
-  edge-complaint-filed-discontinued "Plaintiff discontinues before trial" -> discontinued {
-    authority cite "Pa.R.C.P. 229(a)"
-  }
+  "Plaintiff discontinues before trial" -> discontinued { authority cite "Pa.R.C.P. 229(a)" }
 }
 
 decision pleading-due: "Answer, preliminary objections, or no pleading" by court cite "Pa.R.C.P. 1026(a)"
@@ -56,9 +54,7 @@ state amended: "Amended pleading" by plaintiff cite "Pa.R.C.P. 1033(a)"
   edge-amended-tested "Amended pleading met with new preliminary objections" -> preliminary-objections {
     authority cite "Pa.R.C.P. 1028(f)"
   }
-  edge-amended-answered "Amended pleading answered" -> answered {
-    authority cite "Pa.R.C.P. 1026(a)"
-  }
+  "Amended pleading answered" -> answered { authority cite "Pa.R.C.P. 1026(a)" }
 }
 
 terminal dismissed-pleading: "Dismissed on preliminary objections" outcome [loss, dismissal] cite "Pa.R.C.P. 1028(a)"
@@ -96,9 +92,7 @@ terminal default-won: "Default judgment for applicant" outcome [win] cite "Pa.R.
 state answered: "Pleadings closed" by plaintiff cite "Pa.R.C.P. 1029(b)"
 {
   note "A reply to new matter or a counterclaim endorsed with a notice to plead is due within twenty days after service (Pa.R.C.P. 1026(a)). A demand for a jury trial is filed and served not later than twenty days after service of the last permissible pleading, by endorsement on a pleading or a separate writing; otherwise the right is deemed waived (Pa.R.C.P. 1007.1(a)). After the relevant pleadings are closed, but within such time as not to unreasonably delay the trial, any party may move for judgment on the pleadings (Pa.R.C.P. 1034(a))."
-  edge-answered-discovery "Case proceeds to discovery" -> discovery {
-    authority cite "Pa.R.C.P. 4003.1(a)"
-  }
+  "Case proceeds to discovery" -> discovery { authority cite "Pa.R.C.P. 4003.1(a)" }
 }
 
 state discovery: "Discovery" by plaintiff cite "Pa.R.C.P. 4003.1(a)"
@@ -110,10 +104,8 @@ state discovery: "Discovery" by plaintiff cite "Pa.R.C.P. 4003.1(a)"
   edge-discovery-sj "Motion for summary judgment" -> summary-judgment {
     authority cite "Pa.R.C.P. 1035.2"
   }
-  edge-discovery-discontinued "Settled: discontinuance" -> discontinued {
-    authority cite "Pa.R.C.P. 229(a)"
-  }
-  edge-discovery-trial "Case reaches trial" -> trial { authority cite "Pa.R.C.P. 212.1(a)" }
+  "Settled: discontinuance" -> discontinued { authority cite "Pa.R.C.P. 229(a)" }
+  "Case reaches trial" -> trial { authority cite "Pa.R.C.P. 212.1(a)" }
 }
 
 decision discovery-dispute: "Discovery sanctions motion decided" by court cite "Pa.R.C.P. 4019(a)"

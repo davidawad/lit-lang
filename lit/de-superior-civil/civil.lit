@@ -42,9 +42,7 @@ terminal dismissed-unserved: "Dismissed for untimely service" outcome [loss, dis
 decision answer-due: "Answer, Rule 12(b) motion, or no response" by court cite "Del. Super. Ct. Civ. R. 12(a)"
 {
   note "A defendant serves an answer within 20 days after service of process, complaint and affidavit, if any, on that defendant, or within 20 days after appearance if it appears before service; a reply to a counterclaim is served within 20 days after service of the answer (Del. Super. Ct. Civ. R. 12(a)). If the complaint bears a Rule 3(b) notation in an action under 10 Del. C. § 3901, the defendant serves an affidavit of defense, or a motion that judgment be refused, by the time for the answer (Del. Super. Ct. Civ. R. 3(b), 12(a)). The defenses of lack of subject matter or personal jurisdiction, improper venue, insufficiency of process or of service, failure to state a claim and failure to join a party under Rule 19 may be made by motion before pleading (Del. Super. Ct. Civ. R. 12(b)). The answer states defenses and admits or denies the averments (Del. Super. Ct. Civ. R. 8(b)); affirmative defenses are pleaded affirmatively (Del. Super. Ct. Civ. R. 8(c))."
-  edge-answer-due-answered "Answer served" -> answered {
-    authority cite "Del. Super. Ct. Civ. R. 12(a)"
-  }
+  "Answer served" -> answered { authority cite "Del. Super. Ct. Civ. R. 12(a)" }
   edge-answer-due-motion "Rule 12(b) motion served" -> motion-pending {
     authority cite "Del. Super. Ct. Civ. R. 12(b)"
   }
@@ -73,9 +71,7 @@ state amended: "Amended pleading" by plaintiff cite "Del. Super. Ct. Civ. R. 15(
   edge-amended-motion "Amended pleading met with a new Rule 12(b) motion" -> motion-pending {
     authority cite "Del. Super. Ct. Civ. R. 12(b)"
   }
-  edge-amended-answered "Amended pleading answered" -> answered {
-    authority cite "Del. Super. Ct. Civ. R. 15(a)"
-  }
+  "Amended pleading answered" -> answered { authority cite "Del. Super. Ct. Civ. R. 15(a)" }
 }
 
 terminal dismissed-pleading: "Dismissed on a Rule 12(b) motion" outcome [loss, dismissal] cite "Del. Super. Ct. Civ. R. 12(b)"
@@ -102,9 +98,7 @@ terminal default-won: "Default judgment for applicant" outcome [win] cite "Del. 
 state answered: "Pleadings closed" by plaintiff cite "Del. Super. Ct. Civ. R. 8(b)"
 {
   note "Any party may demand a jury trial of an issue triable of right by serving a written demand at any time after commencement and not later than 10 days after service of the last pleading directed to the issue, which may be endorsed on a pleading (Del. Super. Ct. Civ. R. 38(b)); another party may demand jury trial of other issues within 10 days after service of a demand limited to some issues (Del. Super. Ct. Civ. R. 38(c)). Except in exempted actions the Court enters a scheduling order limiting the time to join parties and amend, to file and hear motions, to complete discovery and to engage in compulsory alternative dispute resolution (Del. Super. Ct. Civ. R. 16(b)); the actions subject to mandatory non-binding arbitration follow Rule 16.1, which is part of the vendored Rule 16 text."
-  edge-answered-discovery "Case proceeds to discovery" -> discovery {
-    authority cite "Del. Super. Ct. Civ. R. 26(a)"
-  }
+  "Case proceeds to discovery" -> discovery { authority cite "Del. Super. Ct. Civ. R. 26(a)" }
 }
 
 state discovery: "Discovery" by plaintiff cite "Del. Super. Ct. Civ. R. 26(a)"
@@ -119,9 +113,7 @@ state discovery: "Discovery" by plaintiff cite "Del. Super. Ct. Civ. R. 26(a)"
   edge-discovery-settled "Settled: stipulation of dismissal" -> dismissed-voluntary {
     authority cite "Del. Super. Ct. Civ. R. 41(a)"
   }
-  edge-discovery-trial "Case reaches trial" -> trial {
-    authority cite "Del. Super. Ct. Civ. R. 16(b)"
-  }
+  "Case reaches trial" -> trial { authority cite "Del. Super. Ct. Civ. R. 16(b)" }
 }
 
 decision discovery-dispute: "Discovery motion decided" by court cite "Del. Super. Ct. Civ. R. 37(a)"

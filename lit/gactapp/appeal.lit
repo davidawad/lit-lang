@@ -8,9 +8,7 @@ state docketed: "Appeal docketed" by court cite "Ga. Ct. App. R. 11"
   edge-docketed-transfer "Within another court's jurisdiction: transferred" -> transferred {
     authority cite "Ga. Ct. App. R. 11"
   }
-  edge-docketed-briefing "Docketed in this Court" -> briefing {
-    authority cite "Ga. Ct. App. R. 23"
-  }
+  "Docketed in this Court" -> briefing { authority cite "Ga. Ct. App. R. 23" }
 }
 
 terminal transferred: "Transferred by order to the court with jurisdiction" outcome [procedural] cite "Ga. Ct. App. R. 11"
@@ -21,10 +19,10 @@ terminal transferred: "Transferred by order to the court with jurisdiction" outc
 state briefing: "Briefing: appellant, appellee, reply" by movant cite "Ga. Ct. App. R. 23"
 {
   note "Appellant's brief and enumeration of errors are filed within 20 days after the appeal is docketed; failure may result in dismissal (Rule 23(a)). Appellee's brief should be filed within 40 days after docketing or 20 days after appellant's brief, whichever is later (Rule 23(b)). Appellant may reply within 20 days from the filing of appellee's brief (Rule 23(c)). A request for oral argument is filed as a motion within 20 days from docketing (Rule 28(a)(2)). Efiled briefs are limited to 8,400 words in civil cases, the reply to 4,200; paper briefs to 30 pages, the reply to 15 (Rule 24(f)). Extensions of time to file a brief are discretionary and by written order (Rule 16(b)). The periods are not encoded as deadlines: the Georgia rule for counting a period is not vendored."
-  edge-briefing-dismissed "Appellant's brief not filed in time: appeal dismissed" -> dismissed {
+  "Appellant's brief not filed in time: appeal dismissed" -> dismissed {
     authority cite "Ga. Ct. App. R. 23"
   }
-  edge-briefing-submission "Briefs filed" -> submission { authority cite "Ga. Ct. App. R. 24" }
+  "Briefs filed" -> submission { authority cite "Ga. Ct. App. R. 24" }
 }
 
 terminal dismissed: "Appeal dismissed" outcome [loss, dismissal] cite "Ga. Ct. App. R. 23"
@@ -35,9 +33,7 @@ terminal dismissed: "Appeal dismissed" outcome [loss, dismissal] cite "Ga. Ct. A
 state submission: "Oral argument or submission on the briefs" by court cite "Ga. Ct. App. R. 28"
 {
   note "Oral argument is never mandatory unless the Court orders it; a case is calendared for argument only if the Court grants a party's request (Rule 28(a)(1)). Cases docketed to a term must be decided before the expiration of the following term (Rule 12)."
-  edge-submission-decision "Submitted for decision" -> decision {
-    authority cite "Ga. Ct. App. R. 28"
-  }
+  "Submitted for decision" -> decision { authority cite "Ga. Ct. App. R. 28" }
 }
 
 decision decision: "Judgment" by court cite "Ga. Ct. App. R. 33"
@@ -52,24 +48,20 @@ decision decision: "Judgment" by court cite "Ga. Ct. App. R. 33"
 decision post-judgment: "Reconsideration, certiorari, or neither" by movant cite "Ga. Ct. App. R. 37"
 {
   note "A motion for reconsideration is filed within 10 days from the rendition of the judgment and must be received by 4:30 p.m.; it is limited to 4,200 words and no extension is granted except for providential cause (Rule 37(a), (b)). Notice of intention to petition the Supreme Court of Georgia for certiorari is filed with this Court's Clerk within 10 days after the judgment, or after the order on a motion for reconsideration (Rule 38(a)(1)); reconsideration is not a prerequisite."
-  edge-post-judgment-reconsideration "Motion for reconsideration" -> reconsideration {
-    authority cite "Ga. Ct. App. R. 37"
-  }
-  edge-post-judgment-certiorari "Notice of intention to petition for certiorari" -> certiorari {
+  "Motion for reconsideration" -> reconsideration { authority cite "Ga. Ct. App. R. 37" }
+  "Notice of intention to petition for certiorari" -> certiorari {
     authority cite "Ga. Ct. App. R. 38"
   }
-  edge-post-judgment-remittitur "Neither" -> remittitur { authority cite "Ga. Ct. App. R. 39" }
+  "Neither" -> remittitur { authority cite "Ga. Ct. App. R. 39" }
 }
 
 decision reconsideration: "Motion for reconsideration decided" by court cite "Ga. Ct. App. R. 37"
 {
   note "Reconsideration is granted only when the Court overlooked a material fact, a statute or a controlling decision requiring a different judgment, or misconstrued or misapplied the law (Rule 37(e)). No second motion is filed without the Court's permission, and a motion for that permission does not toll the 10 days for a certiorari notice (Rule 37(d)). Oral argument is not permitted (Rule 37(h))."
-  edge-reconsideration-certiorari "Denied: notice of intention to petition for certiorari" -> certiorari {
+  "Denied: notice of intention to petition for certiorari" -> certiorari {
     authority cite "Ga. Ct. App. R. 38"
   }
-  edge-reconsideration-remittitur "Decided: no certiorari" -> remittitur {
-    authority cite "Ga. Ct. App. R. 39"
-  }
+  "Decided: no certiorari" -> remittitur { authority cite "Ga. Ct. App. R. 39" }
 }
 
 terminal certiorari: "Certiorari sought: continue in the Supreme Court of Georgia" outcome [appeal] cite "Ga. Ct. App. R. 38"

@@ -2,6 +2,8 @@ module ded-local-rules.local-rules
 
 import core.states.delaware.{ frcp6-delaware }
 
+forum frcp
+
 // The District of Delaware's own civil periods and page limits, computed
 // under FRCP 6(a), which governs a period stated in a local rule (D. Del.
 // LR 7.1.2(b) says so for the motion schedule; LR 5.1(b) deems the Clerk's
@@ -94,9 +96,6 @@ event WithdrawalMotionPresented()
 /// LR 3.3(c): in a proceeding to confirm, vacate or modify an arbitration
 /// award, any reply is filed within 7 days of service of a response.
 deadline arbitration-award-reply-period: 7.days after ArbitrationResponseServed() counted_by frcp6-delaware cite "D. Del. LR 3.3(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: arbitration-award-reply-period (weekend)" cite "D. Del. LR 3.3(c)"
 {
@@ -109,17 +108,10 @@ test "Counting boundary: arbitration-award-reply-period (weekend)" cite "D. Del.
 /// notice is filed, with the return receipt, within 14 days of the
 /// plaintiff's receipt of the return receipt.
 deadline mailing-affidavit-period: 14.days after ReturnReceiptReceived() counted_by frcp6-delaware cite "D. Del. LR 4.1(b)"
-{
-  forum frcp
-}
-
 /// LR 7.1.2(b): unless otherwise ordered, the response to a motion is filed
 /// within 14 days after the motion is deemed served, calculated under FRCP
 /// 6(a) and the CM/ECF Procedures.
 deadline motion-response-period: 14.days after MotionServed() counted_by frcp6-delaware cite "D. Del. LR 7.1.2(b)"
-{
-  forum frcp
-}
 
 test "a District of Delaware motion deadline rolls past Good Friday" cite "D. Del. LR 7.1.2(b)"
 {
@@ -132,9 +124,6 @@ test "a District of Delaware motion deadline rolls past Good Friday" cite "D. De
 /// responsive papers are deemed served; no further papers without Court
 /// approval, except citations of subsequent authority.
 deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6-delaware cite "D. Del. LR 7.1.2(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: motion-reply-period (weekend)" cite "D. Del. LR 7.1.2(b)"
 {
@@ -145,9 +134,6 @@ test "Counting boundary: motion-reply-period (weekend)" cite "D. Del. LR 7.1.2(b
 /// LR 7.1.4: a written application for oral argument on a motion is made
 /// no later than 7 days after service of a reply brief.
 deadline oral-argument-application-period: 7.days after ReplyBriefServed() counted_by frcp6-delaware cite "D. Del. LR 7.1.4"
-{
-  forum frcp
-}
 
 test "Counting boundary: oral-argument-application-period (weekend)" cite "D. Del. LR 7.1.4"
 {
@@ -160,41 +146,22 @@ test "Counting boundary: oral-argument-application-period (weekend)" cite "D. De
 /// Reargument of a Magistrate Judge's FRCP 72 ruling is not permitted (LR
 /// 7.1.5(b)).
 deadline reargument-period: 14.days after OpinionIssued() counted_by frcp6-delaware cite "D. Del. LR 7.1.5(a)"
-{
-  forum frcp
-}
-
 /// LR 7.1.5(a): within 14 days after the filing of a motion for reargument
 /// the opposing party may file a brief answer to each ground; no reply
 /// unless the Court grants one.
 deadline reargument-answer-period: 14.days after ReargumentMotionFiled() counted_by frcp6-delaware cite "D. Del. LR 7.1.5(a)"
-{
-  forum frcp
-}
-
 /// LR 9.4(b): within 14 days after service of another party's written
 /// request, the party pleading unliquidated damages furnishes a written
 /// statement of the amount claimed, not filed unless the Court orders.
 deadline damages-statement-period: 14.days after DamagesStatementRequested() counted_by frcp6-delaware cite "D. Del. LR 9.4(b)"
-{
-  forum frcp
-}
-
 /// LR 16.3(d)(1): unless otherwise ordered or agreed and approved, the
 /// plaintiff provides a draft pretrial order to all other parties no less
 /// than 30 days before the pretrial order is to be filed.
 deadline draft-pretrial-order-period: 30.days before PretrialOrderDue() counted_by frcp6-delaware cite "D. Del. LR 16.3(d)(1)"
-{
-  forum frcp
-}
-
 /// LR 16.3(d)(2): no less than 14 days before the pretrial order is to be
 /// filed, all other parties provide their responses to the plaintiff's
 /// draft.
 deadline pretrial-order-response-period: 14.days before PretrialOrderDue() counted_by frcp6-delaware cite "D. Del. LR 16.3(d)(2)"
-{
-  forum frcp
-}
 
 test "Counting boundary: pretrial-order-response-period (weekend)" cite "D. Del. LR 16.3(d)(2)"
 {
@@ -206,9 +173,6 @@ test "Counting boundary: pretrial-order-response-period (weekend)" cite "D. Del.
 /// pretrial conference the plaintiff files an executed copy of the proposed
 /// pretrial order.
 deadline proposed-pretrial-order-period: 7.days before PretrialConferenceHeld() counted_by frcp6-delaware cite "D. Del. LR 16.3(d)(4)"
-{
-  forum frcp
-}
 
 test "Counting boundary: proposed-pretrial-order-period (weekend)" cite "D. Del. LR 16.3(d)(4)"
 {
@@ -219,9 +183,6 @@ test "Counting boundary: proposed-pretrial-order-period (weekend)" cite "D. Del.
 /// LR 30.1: unless ordered or agreed otherwise, reasonable notice of a
 /// deposition under FRCP 30(b)(1) or 30(b)(6) is not less than 10 days.
 deadline deposition-notice-period: 10.days before DepositionTaken() counted_by frcp6-delaware cite "D. Del. LR 30.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: deposition-notice-period (weekend)" cite "D. Del. LR 30.1"
 {
@@ -233,9 +194,6 @@ test "Counting boundary: deposition-notice-period (weekend)" cite "D. Del. LR 30
 /// files a bill of costs within 28 days after the time for appeal has
 /// expired, after first meeting and conferring; failure waives costs.
 deadline bill-of-costs-period: 28.days after AppealTimeExpired() counted_by frcp6-delaware cite "D. Del. LR 54.1(a)(1)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "D. Del. LR 54.1(a)(1)"
 {
@@ -246,9 +204,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "D. Del. LR 54.1(a
 /// LR 54.1(a)(1): after an appeal, the bill of costs is filed within 28
 /// days after the issuance of the appellate court's mandate.
 deadline bill-of-costs-after-mandate-period: 28.days after MandateIssued() counted_by frcp6-delaware cite "D. Del. LR 54.1(a)(1)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-after-mandate-period (weekend)" cite "D. Del. LR 54.1(a)(1)"
 {
@@ -260,16 +215,9 @@ test "Counting boundary: bill-of-costs-after-mandate-period (weekend)" cite "D. 
 /// other party may serve and file specific objections with detailed
 /// justification.
 deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6-delaware cite "D. Del. LR 54.1(a)(3)"
-{
-  forum frcp
-}
-
 /// LR 54.1(d): under FRCP 54(d), the opposing party may move for review of
 /// the Clerk's taxation of costs within 7 days of service.
 deadline costs-review-period: 7.days after CostsTaxedServed() counted_by frcp6-delaware cite "D. Del. LR 54.1(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: costs-review-period (weekend)" cite "D. Del. LR 54.1(d)"
 {
@@ -281,9 +229,6 @@ test "Counting boundary: costs-review-period (weekend)" cite "D. Del. LR 54.1(d)
 /// filed no later than 21 days after the Court approves the settlement,
 /// unless a statute or regulation provides a different period.
 deadline settlement-fees-period: 21.days after SettlementApproved() counted_by frcp6-delaware cite "D. Del. LR 54.3(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: settlement-fees-period (weekend)" cite "D. Del. LR 54.3(b)"
 {
@@ -295,9 +240,6 @@ test "Counting boundary: settlement-fees-period (weekend)" cite "D. Del. LR 54.3
 /// is filed no later than 21 days after the parties execute the settlement
 /// agreement.
 deadline unapproved-settlement-fees-period: 21.days after SettlementExecuted() counted_by frcp6-delaware cite "D. Del. LR 54.3(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: unapproved-settlement-fees-period (weekend)" cite "D. Del. LR 54.3(b)"
 {
@@ -309,9 +251,6 @@ test "Counting boundary: unapproved-settlement-fees-period (weekend)" cite "D. D
 /// with the Clerk, the parties submit a statement identifying all pending
 /// matters that require judicial action.
 deadline pending-matters-statement-period: 45.days after TransferredOrRemovedCaseFiled() counted_by frcp6-delaware cite "D. Del. LR 81.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: pending-matters-statement-period (weekend)" cite "D. Del. LR 81.2"
 {
@@ -323,9 +262,6 @@ test "Counting boundary: pending-matters-statement-period (weekend)" cite "D. De
 /// associate with, a member of the Bar of this Court within 30 days after
 /// the first paper filed on its behalf.
 deadline delaware-counsel-period: 30.days after FirstPaperFiled() counted_by frcp6-delaware cite "D. Del. LR 83.5(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: delaware-counsel-period (weekend)" cite "D. Del. LR 83.5(e)"
 {
@@ -336,9 +272,6 @@ test "Counting boundary: delaware-counsel-period (weekend)" cite "D. Del. LR 83.
 /// LR 83.5(e)(2): in a transferred or removed case, the same 30 days run
 /// from the filing of the case in this Court.
 deadline removed-case-delaware-counsel-period: 30.days after TransferredOrRemovedCaseFiled() counted_by frcp6-delaware cite "D. Del. LR 83.5(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: removed-case-delaware-counsel-period (weekend)" cite "D. Del. LR 83.5(e)"
 {
@@ -351,9 +284,6 @@ test "Counting boundary: removed-case-delaware-counsel-period (weekend)" cite "D
 /// served on the client by registered or certified mail at least 14 days
 /// before it is presented.
 deadline withdrawal-notice-period: 14.days before WithdrawalMotionPresented() counted_by frcp6-delaware cite "D. Del. LR 83.7"
-{
-  forum frcp
-}
 
 test "Counting boundary: withdrawal-notice-period (weekend)" cite "D. Del. LR 83.7"
 {

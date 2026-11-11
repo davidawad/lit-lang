@@ -38,9 +38,7 @@ decision pretrial: "Discovery, pretrial motions and speedy trial" by prosecution
   edge-pretrial-expired "Notice of expiration of speedy trial time" -> speedy-trial-hearing {
     authority cite "Fla. R. Crim. P. 3.191(o)"
   }
-  edge-pretrial-trial "Trial within the speedy trial period" -> trial {
-    authority cite "Fla. R. Crim. P. 3.191(c)"
-  }
+  "Trial within the speedy trial period" -> trial { authority cite "Fla. R. Crim. P. 3.191(c)" }
 }
 
 decision speedy-trial-hearing: "Speedy trial recapture" by court cite "Fla. R. Crim. P. 3.191(o)"
@@ -49,7 +47,7 @@ decision speedy-trial-hearing: "Speedy trial recapture" by court cite "Fla. R. C
   edge-speedy-trial-hearing-recaptured "Tried within the recapture period" -> trial {
     authority cite "Fla. R. Crim. P. 3.191(o)"
   }
-  edge-speedy-trial-hearing-discharged "Not tried within the recapture period: discharged" -> discharged {
+  "Not tried within the recapture period: discharged" -> discharged {
     authority cite "Fla. R. Crim. P. 3.191(o)"
   }
 }
@@ -60,17 +58,13 @@ decision plea-decision: "Plea or trial" by accused cite "Fla. R. Crim. P. 3.172(
   edge-plea-decision-plea "Plea accepted" -> sentencing {
     authority cite "Fla. R. Crim. P. 3.172(a)"
   }
-  edge-plea-decision-trial "Proceed to trial" -> trial {
-    authority cite "Fla. R. Crim. P. 3.191(c)"
-  }
+  "Proceed to trial" -> trial { authority cite "Fla. R. Crim. P. 3.191(c)" }
 }
 
 decision trial: "Trial and verdict" by court cite "Fla. R. Crim. P. 3.380(a)"
 {
   note "On insufficient evidence the court may, and on motion shall, enter a judgment of acquittal at the close of the state's evidence or of all the evidence (Fla. R. Crim. P. 3.380(a))."
-  edge-trial-acquitted "Judgment of acquittal or not guilty" -> acquitted {
-    authority cite "Fla. R. Crim. P. 3.380(a)"
-  }
+  "Judgment of acquittal or not guilty" -> acquitted { authority cite "Fla. R. Crim. P. 3.380(a)" }
   edge-trial-guilty "Guilty: post-trial motions" -> post-trial {
     authority cite "Fla. R. Crim. P. 3.590(a)"
   }

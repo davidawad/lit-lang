@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The District of Columbia district court's own criminal periods, counted
 // under the criminal rules (FRCrimP 45(a) governs "any local rule"). The
 // local criminal rules supplement the Federal Rules of Criminal Procedure
@@ -102,9 +104,6 @@ deadline initial-psr-disclosure: 28.days before SentencingScheduled() counted_by
   to CaseOrder
   op set
 } cite "D.D.C. LCrR 32.2(a); D.D.C. LCrR 32.2(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: initial-psr-disclosure (weekend)" cite "D.D.C. LCrR 32.2(a); D.D.C. LCrR 32.2(g)"
 {
@@ -120,9 +119,6 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 de
   to CaseOrder
   op set
 } cite "D.D.C. LCrR 47(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: opposition-period (weekend)" cite "D.D.C. LCrR 47(b)"
 {
@@ -133,9 +129,6 @@ test "Counting boundary: opposition-period (weekend)" cite "D.D.C. LCrR 47(b)"
 /// D.D.C. LCrR 47(d): within seven days after service of the memorandum in
 /// opposition, the moving party may serve and file a reply memorandum.
 deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 cite "D.D.C. LCrR 47(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "D.D.C. LCrR 47(d)"
 {
@@ -147,9 +140,6 @@ test "Counting boundary: reply-period (weekend)" cite "D.D.C. LCrR 47(d)"
 /// number of an attorney or of a party not represented by an attorney is
 /// filed within 14 days of the change.
 deadline address-change-notice: 14.days after AddressChanged() counted_by frcrimp45 cite "D.D.C. LCrR 49(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: address-change-notice (weekend)" cite "D.D.C. LCrR 49(f)"
 {
@@ -162,9 +152,6 @@ test "Counting boundary: address-change-notice (weekend)" cite "D.D.C. LCrR 49(f
 /// filed with the Clerk within 21 days after arraignment; the assigned
 /// judge decides it (LCrR 57.12(c)(3)).
 deadline related-case-objection: 21.days after ArraignedOnRelatedDesignation() counted_by frcrimp45 cite "D.D.C. LCrR 57.12(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: related-case-objection (weekend)" cite "D.D.C. LCrR 57.12(b)"
 {
@@ -178,9 +165,6 @@ test "Counting boundary: related-case-objection (weekend)" cite "D.D.C. LCrR 57.
 /// perfected, by the appellate courts. After an acquittal or mistrial the
 /// parties retake them immediately unless the Court orders otherwise.
 deadline exhibit-retake: 30.days after FinalDisposition() counted_by frcrimp45 cite "D.D.C. LCrR 56.2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-retake (weekend)" cite "D.D.C. LCrR 56.2(b)"
 {
@@ -192,9 +176,6 @@ test "Counting boundary: exhibit-retake (weekend)" cite "D.D.C. LCrR 56.2(b)"
 /// 30 days of the Clerk's notice may have them destroyed or otherwise
 /// disposed of by the Clerk.
 deadline exhibit-retake-after-notice: 30.days after ExhibitRetakeNoticed() counted_by frcrimp45 cite "D.D.C. LCrR 56.2(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-retake-after-notice (weekend)" cite "D.D.C. LCrR 56.2(d)"
 {
@@ -211,9 +192,6 @@ deadline magistrate-ruling-objection: 14.days after MagistrateRulingServed() cou
   to CaseOrder
   op set
 } cite "D.D.C. LCrR 59.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-ruling-objection (weekend)" cite "D.D.C. LCrR 59.1(b)"
 {
@@ -227,9 +205,6 @@ test "Counting boundary: magistrate-ruling-objection (weekend)" cite "D.D.C. LCr
 /// order adopting the report (Thomas v. Arn, 474 U.S. 140 (1985), as the
 /// rule's required notice quotes it).
 deadline magistrate-recommendation-objection: 14.days after MagistrateRecommendationServed() counted_by frcrimp45 cite "D.D.C. LCrR 59.2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-recommendation-objection (weekend)" cite "D.D.C. LCrR 59.2(b)"
 {
@@ -245,9 +220,6 @@ deadline unassigned-magistrate-review: 14.days after UnassignedMagistrateOrderSe
   to CaseOrder
   op set
 } cite "D.D.C. LCrR 59.3(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: unassigned-magistrate-review (weekend)" cite "D.D.C. LCrR 59.3(a)"
 {

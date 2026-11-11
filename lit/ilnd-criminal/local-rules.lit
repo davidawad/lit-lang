@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The Northern District of Illinois's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"). The local
 // criminal rules apply to criminal proceedings in the court, and the
@@ -97,9 +99,6 @@ deadline pretrial-motions: 21.days after Arraigned() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "N.D. Ill. LCR 12.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motions (holiday)" cite "N.D. Ill. LCR 12.1(a)"
 {
@@ -112,9 +111,6 @@ test "Counting boundary: pretrial-motions (holiday)" cite "N.D. Ill. LCR 12.1(a)
 /// on a timetable and procedures for Rule 16 disclosure, agents' notes,
 /// Rule 404(b) notice, a Santiago proffer and 18 U.S.C. § 3500 material.
 deadline discovery-conference: 7.days after Arraigned() counted_by frcrimp45 cite "N.D. Ill. LCR 16.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-conference (weekend)" cite "N.D. Ill. LCR 16.1(a)"
 {
@@ -127,9 +123,6 @@ test "Counting boundary: discovery-conference (weekend)" cite "N.D. Ill. LCR 16.
 /// assistant or by defendant's counsel, is served on opposing counsel and
 /// filed within 5 days of the discovery conference.
 deadline disclosure-declination: 5.days after DiscoveryConferenceHeld() counted_by frcrimp45 cite "N.D. Ill. LCR 16.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: disclosure-declination (weekend)" cite "N.D. Ill. LCR 16.1(b)"
 {
@@ -146,9 +139,6 @@ deadline additional-discovery-motion: 7.days after DiscoveryConferenceHeld() cou
   to CaseOrder
   op set
 } cite "N.D. Ill. LCR 12.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: additional-discovery-motion (weekend)" cite "N.D. Ill. LCR 12.1(b)"
 {
@@ -160,9 +150,6 @@ test "Counting boundary: additional-discovery-motion (weekend)" cite "N.D. Ill. 
 /// any, with the probation office within 14 days after the determination
 /// of guilt; failing to schedule it does not affect the other dates.
 deadline presentence-interview: 14.days after GuiltDetermined() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: presentence-interview (weekend)" cite "N.D. Ill. LCR 32.1(d)"
 {
@@ -175,9 +162,6 @@ test "Counting boundary: presentence-interview (weekend)" cite "N.D. Ill. LCR 32
 /// offense conduct to the probation officer and serves it on opposing
 /// counsel and any convicted co-defendant's attorney.
 deadline government-version: 14.days after GuiltDetermined() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-version (weekend)" cite "N.D. Ill. LCR 32.1(e)"
 {
@@ -189,9 +173,6 @@ test "Counting boundary: government-version (weekend)" cite "N.D. Ill. LCR 32.1(
 /// submission, each defendant's attorney submits a version of the offense
 /// conduct to the probation officer.
 deadline defendant-version: 7.days after GovernmentVersionSubmitted() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defendant-version (weekend)" cite "N.D. Ill. LCR 32.1(e)"
 {
@@ -203,9 +184,6 @@ test "Counting boundary: defendant-version (weekend)" cite "N.D. Ill. LCR 32.1(e
 /// versions, each co-defendant's attorney submits and serves that
 /// defendant's version as it relates to the defendants' respective roles.
 deadline codefendant-role-version: 7.days after CodefendantVersionsReceived() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: codefendant-role-version (weekend)" cite "N.D. Ill. LCR 32.1(e)"
 {
@@ -222,9 +200,6 @@ deadline defense-position-paper: 14.days before SentencingScheduled() counted_by
   to CaseOrder
   op set
 } cite "N.D. Ill. LCR 32.1(g); N.D. Ill. LCR 32.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-position-paper (weekend)" cite "N.D. Ill. LCR 32.1(g); N.D. Ill. LCR 32.1(c)"
 {
@@ -235,9 +210,6 @@ test "Counting boundary: defense-position-paper (weekend)" cite "N.D. Ill. LCR 3
 /// N.D. Ill. LCR 32.1(g): the Government has leave to respond 7 days after
 /// the defense position paper.
 deadline government-position-response: 7.days after DefensePositionPaperFiled() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-position-response (weekend)" cite "N.D. Ill. LCR 32.1(g)"
 {
@@ -249,9 +221,6 @@ test "Counting boundary: government-position-response (weekend)" cite "N.D. Ill.
 /// or delaying notice is filed no later than three days before the seal or
 /// delayed notice expires.
 deadline seal-extension-motion: 3.days before WarrantSealExpires() counted_by frcrimp45 cite "N.D. Ill. LCR 41(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: seal-extension-motion (weekend)" cite "N.D. Ill. LCR 41(e)"
 {
@@ -263,9 +232,6 @@ test "Counting boundary: seal-extension-motion (weekend)" cite "N.D. Ill. LCR 41
 /// warrant, is filed electronically within 60 days after the warrant's
 /// execution, under seal if the application and warrant are sealed.
 deadline warrant-return-filing: 60.days after WarrantExecuted() counted_by frcrimp45 cite "N.D. Ill. LCR 41(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: warrant-return-filing (holiday)" cite "N.D. Ill. LCR 41(f)"
 {
@@ -277,9 +243,6 @@ test "Counting boundary: warrant-return-filing (holiday)" cite "N.D. Ill. LCR 41
 /// representation, CJA counsel approved for interim payments submits a
 /// final voucher for the 20 percent withheld and the final interim period.
 deadline cja-final-voucher: 45.days after CjaRepresentationConcluded() counted_by frcrimp45 cite "N.D. Ill. LCR 44.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: cja-final-voucher (holiday)" cite "N.D. Ill. LCR 44.1"
 {
@@ -294,9 +257,6 @@ deadline answering-brief: 14.days after SupportingBriefReceived() counted_by frc
   to CaseOrder
   op set
 } cite "N.D. Ill. LCR 47.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: answering-brief (weekend)" cite "N.D. Ill. LCR 47.1(b)"
 {
@@ -311,9 +271,6 @@ deadline reply-brief: 7.days after AnsweringBriefReceived() counted_by frcrimp45
   to CaseOrder
   op set
 } cite "N.D. Ill. LCR 47.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-brief (weekend)" cite "N.D. Ill. LCR 47.1(b)"
 {

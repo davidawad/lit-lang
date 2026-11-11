@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The District of New Mexico's own criminal periods, counted under the
 // criminal rules: the motion periods are "computed in accordance with Rule
 // 45(a) thru (c)" (D.N.M.LR-Cr. 47.8(a)), and FRCrimP 45(a) governs "any
@@ -90,9 +92,6 @@ event PettyReplyBriefFiled() paper petty-reply-brief
 /// counsel who receives a request to schedule it must respond within seven
 /// days, or FRCrimP 32(e)(2)'s disclosure time limits are waived.
 deadline psr-interview-response: 7.days after PsrInterviewRequested() counted_by frcrimp45 cite "D.N.M.LR-Cr. 32.A"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-interview-response (weekend)" cite "D.N.M.LR-Cr. 32.A"
 {
@@ -107,9 +106,6 @@ deadline psr-objection-conferral: 14.days after InitialPsrFiled() counted_by frc
   to CaseOrder
   op set
 } cite "D.N.M.LR-Cr. 32.C(1); D.N.M.LR-Cr. 32.C(5)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-objection-conferral (weekend)" cite "D.N.M.LR-Cr. 32.C(1); D.N.M.LR-Cr. 32.C(5)"
 {
@@ -124,9 +120,6 @@ deadline unresolved-objection-or-departure: 14.days before SentencingScheduled()
   to CaseOrder
   op set
 } cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: unresolved-objection-or-departure (weekend)" cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
 {
@@ -140,9 +133,6 @@ deadline sentencing-objection-response: 7.days after SentencingObjectionFiled() 
   to CaseOrder
   op set
 } cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-objection-response (weekend)" cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
 {
@@ -156,9 +146,6 @@ deadline sentencing-objection-reply: 3.days after SentencingResponseFiled() coun
   to CaseOrder
   op set
 } cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-objection-reply (weekend)" cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
 {
@@ -173,9 +160,6 @@ deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by 
   to CaseOrder
   op set
 } cite "D.N.M.LR-Cr. 32.C(3); D.N.M.LR-Cr. 32.C(5)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-memorandum (weekend)" cite "D.N.M.LR-Cr. 32.C(3); D.N.M.LR-Cr. 32.C(5)"
 {
@@ -189,9 +173,6 @@ deadline response-period: 14.days after MotionServed() counted_by frcrimp45 dele
   to CaseOrder
   op extend
 } cite "D.N.M.LR-Cr. 47.8(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "D.N.M.LR-Cr. 47.8(a)"
 {
@@ -206,9 +187,6 @@ deadline reply-period: 14.days after ResponseServed() counted_by frcrimp45 deleg
   to CaseOrder
   op extend
 } cite "D.N.M.LR-Cr. 47.8(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "D.N.M.LR-Cr. 47.8(a)"
 {
@@ -219,9 +197,6 @@ test "Counting boundary: reply-period (weekend)" cite "D.N.M.LR-Cr. 47.8(a)"
 /// D.N.M.LR-Cr. 58.2(a): the appellant's brief is filed and served within
 /// 14 days after the filing of the notice of appeal.
 deadline petty-appellant-brief-period: 14.days after PettyAppealNoticed() counted_by frcrimp45 cite "D.N.M.LR-Cr. 58.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: petty-appellant-brief-period (weekend)" cite "D.N.M.LR-Cr. 58.2(a)"
 {
@@ -232,9 +207,6 @@ test "Counting boundary: petty-appellant-brief-period (weekend)" cite "D.N.M.LR-
 /// D.N.M.LR-Cr. 58.2(b): the appellee's brief is filed and served within
 /// 14 days of the filing and service of the appellant's brief.
 deadline petty-appellee-brief-period: 14.days after PettyAppellantBriefFiled() counted_by frcrimp45 cite "D.N.M.LR-Cr. 58.2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: petty-appellee-brief-period (weekend)" cite "D.N.M.LR-Cr. 58.2(b)"
 {
@@ -245,9 +217,6 @@ test "Counting boundary: petty-appellee-brief-period (weekend)" cite "D.N.M.LR-C
 /// D.N.M.LR-Cr. 58.2(c): the appellant may file and serve a reply brief
 /// within seven days after the filing and service of the appellee's brief.
 deadline petty-reply-brief-period: 7.days after PettyAppelleeBriefFiled() counted_by frcrimp45 cite "D.N.M.LR-Cr. 58.2(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: petty-reply-brief-period (weekend)" cite "D.N.M.LR-Cr. 58.2(c)"
 {

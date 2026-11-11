@@ -2,6 +2,8 @@ module mdd-local-rules.local-rules
 
 import core.states.maryland.{ frcp6-maryland }
 
+forum frcp
+
 // The District of Maryland's own periods. Stated in the rules but not
 // declared: the withdrawing lawyer's written notice to the client at least
 // seven days before the certificate (Local Rule 101.2(a), (b)); the
@@ -100,9 +102,6 @@ event NoticeOfAwardSent()
 /// affirmative claims, or direct it to show cause why a default should not
 /// be entered.
 deadline entity-new-counsel-period: 30.days after EntityCounselWithdrawalMoved() counted_by frcp6-maryland cite "D. Md. Local Rule 101.2(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: entity-new-counsel-period (holiday)" cite "D. Md. Local Rule 101.2(b)"
 {
@@ -115,9 +114,6 @@ test "Counting boundary: entity-new-counsel-period (holiday)" cite "D. Md. Local
 /// docket sheet), the removing party files every other document then on
 /// file in the state court, with counsel's certification.
 deadline removal-record-period: 30.days after NoticeOfRemovalFiled() counted_by frcp6-maryland cite "D. Md. Local Rule 103.5(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: removal-record-period (holiday)" cite "D. Md. Local Rule 103.5(a)"
 {
@@ -130,17 +126,10 @@ test "Counting boundary: removal-record-period (holiday)" cite "D. Md. Local Rul
 /// opposition already due is filed on its state-court due date or within 14
 /// days of removal, whichever is earlier.
 deadline removed-motion-memorandum-period: 14.days after RemovedWithMotionPending() counted_by frcp6-maryland cite "D. Md. Local Rule 103.5(b)"
-{
-  forum frcp
-}
-
 /// Local Rule 103.5(c): within seven days after the filing of a notice of
 /// removal, all parties make the disclosures of affiliations and financial
 /// interest that Local Rule 103.3 requires.
 deadline removal-disclosure-period: 7.days after NoticeOfRemovalFiled() counted_by frcp6-maryland cite "D. Md. Local Rule 103.5(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: removal-disclosure-period (weekend)" cite "D. Md. Local Rule 103.5(c)"
 {
@@ -153,26 +142,15 @@ test "Counting boundary: removal-disclosure-period (weekend)" cite "D. Md. Local
 /// order it to show cause why the claim should not be dismissed. Rule 4(m)'s
 /// own period is lit/frcp's.
 deadline service-show-cause-period: 90.days after AffirmativePleadingFiled() counted_by frcp6-maryland cite "D. Md. Local Rule 103.8(a)"
-{
-  forum frcp
-}
-
 /// Local Rule 103.8(a), (b): good cause is shown within 14 days of the
 /// entry of the show cause order, or another time the Court sets, or the
 /// claim or case is dismissed without prejudice. The order under 103.8(b)
 /// follows nine months without any filing in the action.
 deadline prosecution-show-cause-period: 14.days after ProsecutionShowCauseOrdered() counted_by frcp6-maryland cite "D. Md. Local Rule 103.8(a)"
-{
-  forum frcp
-}
-
 /// Local Rule 104.8(a): a party dissatisfied with a response to its
 /// interrogatories or requests for production serves a motion to compel
 /// within 30 days of receiving the response.
 deadline motion-to-compel-period: 30.days after DiscoveryResponseReceived() counted_by frcp6-maryland cite "D. Md. Local Rule 104.8(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: motion-to-compel-period (holiday)" cite "D. Md. Local Rule 104.8(a)"
 {
@@ -183,54 +161,27 @@ test "Counting boundary: motion-to-compel-period (holiday)" cite "D. Md. Local R
 /// Local Rule 104.8(a): the opposing party serves its memorandum in
 /// opposition within 14 days after the motion to compel.
 deadline compel-opposition-period: 14.days after MotionToCompelServed() counted_by frcp6-maryland cite "D. Md. Local Rule 104.8(a)"
-{
-  forum frcp
-}
-
 /// Local Rule 104.8(a): the moving party serves any reply within 14 days
 /// after the opposition.
 deadline compel-reply-period: 14.days after CompelOppositionServed() counted_by frcp6-maryland cite "D. Md. Local Rule 104.8(a)"
-{
-  forum frcp
-}
-
 /// Local Rule 105.2(a): unless the Court orders otherwise, a memorandum in
 /// opposition to a motion is filed within 14 days of service of the motion.
 deadline opposition-period: 14.days after MotionServed() counted_by frcp6-maryland cite "D. Md. Local Rule 105.2(a)"
-{
-  forum frcp
-}
-
 /// Local Rule 105.2(a): a reply memorandum is filed within 14 days after
 /// service of the opposition.
 deadline reply-period: 14.days after OppositionServed() counted_by frcp6-maryland cite "D. Md. Local Rule 105.2(a)"
-{
-  forum frcp
-}
-
 /// Local Rule 105.10: except as Fed. R. Civ. P. 50, 52, 59 or 60 provides, a
 /// motion to reconsider an order is filed no later than 14 days after its
 /// entry.
 deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6-maryland cite "D. Md. Local Rule 105.10"
-{
-  forum frcp
-}
-
 /// Local Rule 105.11: the Court will not rule on a motion to seal until at
 /// least 14 days after it is entered on the public docket, so that
 /// interested parties may object.
 deadline sealing-objection-period: 14.days after SealingMotionDocketed() counted_by frcp6-maryland cite "D. Md. Local Rule 105.11"
-{
-  forum frcp
-}
-
 /// Local Rule 105.12(e): an amicus's motion and proposed brief are filed no
 /// later than seven days after the principal brief of the party supported,
 /// or within seven days of the opening brief.
 deadline amicus-brief-period: 7.days after PrincipalBriefFiled() counted_by frcp6-maryland cite "D. Md. Local Rule 105.12(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: amicus-brief-period (weekend)" cite "D. Md. Local Rule 105.12(e)"
 {
@@ -242,9 +193,6 @@ test "Counting boundary: amicus-brief-period (weekend)" cite "D. Md. Local Rule 
 /// serves its draft pretrial order on opposing counsel 14 days before the
 /// pretrial order is due.
 deadline pretrial-draft-period: 14.days before PretrialOrderDue() counted_by frcp6-maryland cite "D. Md. Local Rule 106.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: pretrial-draft-period (weekend)" cite "D. Md. Local Rule 106.3"
 {
@@ -255,9 +203,6 @@ test "Counting boundary: pretrial-draft-period (weekend)" cite "D. Md. Local Rul
 /// Local Rule 106.3: opposing counsel serves proposed revisions and
 /// additions at least seven days before the order is due.
 deadline pretrial-revisions-period: 7.days before PretrialOrderDue() counted_by frcp6-maryland cite "D. Md. Local Rule 106.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: pretrial-revisions-period (holiday)" cite "D. Md. Local Rule 106.3"
 {
@@ -268,9 +213,6 @@ test "Counting boundary: pretrial-revisions-period (holiday)" cite "D. Md. Local
 /// Local Rule 106.4(a): unless the Court orders otherwise, the pretrial
 /// order is submitted seven days before the pretrial conference.
 deadline pretrial-order-period: 7.days before PretrialConferenceScheduled() counted_by frcp6-maryland cite "D. Md. Local Rule 106.4(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: pretrial-order-period (holiday)" cite "D. Md. Local Rule 106.4(a)"
 {
@@ -283,39 +225,20 @@ test "Counting boundary: pretrial-order-period (holiday)" cite "D. Md. Local Rul
 /// a waiver of costs. An objection is due within Local Rule 105.2's time
 /// (Local Rule 109.1(c)).
 deadline bill-of-costs-period: 14.days after AppealTimeExpired() counted_by frcp6-maryland cite "D. Md. Local Rule 109.1(a)"
-{
-  forum frcp
-}
-
 /// Local Rule 109.1(a): if a notice of appeal is filed, within 14 days of
 /// the issuance of the mandate by the Court of Appeals.
 deadline appeal-bill-of-costs-period: 14.days after MandateIssued() counted_by frcp6-maryland cite "D. Md. Local Rule 109.1(a)"
-{
-  forum frcp
-}
-
 /// Local Rule 109.1(a): a bill for additional costs on review by the
 /// Supreme Court taxable in this Court is filed within 14 days of the entry
 /// of the Supreme Court's judgment.
 deadline supreme-court-costs-period: 14.days after SupremeCourtJudgmentEntered() counted_by frcp6-maryland cite "D. Md. Local Rule 109.1(a)"
-{
-  forum frcp
-}
-
 /// Local Rule 109.2(a): unless a statute, Local Rule 109.2(c) or an order
 /// provides otherwise, a motion for attorneys' fees is filed within 14 days
 /// of the entry of judgment; non-compliance waives the claim.
 deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6-maryland cite "D. Md. Local Rule 109.2(a)"
-{
-  forum frcp
-}
-
 /// Local Rule 109.2(a): the supporting memorandum Local Rule 109.2(b)
 /// requires is filed within 35 days from the date the motion is filed.
 deadline fee-memorandum-period: 35.days after FeeMotionFiled() counted_by frcp6-maryland cite "D. Md. Local Rule 109.2(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-memorandum-period (weekend)" cite "D. Md. Local Rule 109.2(a)"
 {
@@ -327,24 +250,13 @@ test "Counting boundary: fee-memorandum-period (weekend)" cite "D. Md. Local Rul
 /// unless the Court orders otherwise, the memorandum is filed within 14
 /// days of the issuance of the mandate.
 deadline appeal-fee-memorandum-period: 14.days after MandateIssued() counted_by frcp6-maryland cite "D. Md. Local Rule 109.2(a)"
-{
-  forum frcp
-}
-
 /// Local Rule 109.2(a): an opposition to a fee motion is filed within 14
 /// days of service of the memorandum.
 deadline fee-opposition-period: 14.days after FeeMemorandumServed() counted_by frcp6-maryland cite "D. Md. Local Rule 109.2(a)"
-{
-  forum frcp
-}
-
 /// Local Rule 109.2(c): in a social security case the fee motion is filed
 /// within 30 days of the date of the Notice of Award letter, and may not
 /// seek fees for the administrative proceedings.
 deadline social-security-fee-motion-period: 30.days after NoticeOfAwardSent() counted_by frcp6-maryland cite "D. Md. Local Rule 109.2(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: social-security-fee-motion-period (holiday)" cite "D. Md. Local Rule 109.2(c)"
 {

@@ -38,6 +38,7 @@ test "Counting boundary: pretrial-attendance-request-period (weekend)" cite "E.D
   given PretrialConferenceScheduled() on 2026-04-11
   expect deadline(pretrial-attendance-request-period) == 2026-04-03
 }
+
 /// LR 72.4(c): on an appeal from a magistrate judge's judgment of
 /// conviction or sentence, the appealing party files an assignment of
 /// errors and a brief and argument within 14 days of the filing of the
@@ -49,6 +50,7 @@ test "Counting boundary: misdemeanor-appeal-brief-period (weekend)" cite "E.D. T
   given MisdemeanorAppealNoticeFiled() on 2026-04-11
   expect deadline(misdemeanor-appeal-brief-period) == 2026-04-27
 }
+
 /// LR 83.9(a): sentencing proceedings are scheduled no earlier than 65
 /// days following entry of a guilty plea or verdict; this is the earliest
 /// such date.
@@ -59,6 +61,7 @@ test "Counting boundary: earliest-sentencing-date (weekend)" cite "E.D. Tenn. L.
   given GuiltyPleaOrVerdict() on 2026-04-09
   expect deadline(earliest-sentencing-date) == 2026-06-15
 }
+
 /// LR 83.9(j): the government files every motion for a departure under 18
 /// U.S.C. § 3553(e) or USSG § 5K1.1, or for a sentence below a statutory
 /// mandatory minimum, at least 7 days before the sentencing hearing.
@@ -69,6 +72,7 @@ test "Counting boundary: government-departure-motion-period (weekend)" cite "E.D
   given SentencingScheduled() on 2026-04-11
   expect deadline(government-departure-motion-period) == 2026-04-03
 }
+
 /// LR 83.9(j): a defendant seeking a downward departure or variance
 /// notifies the court and the government in writing, with the grounds, at
 /// least 14 days before the sentencing hearing.
@@ -79,6 +83,7 @@ test "Counting boundary: defendant-departure-notice-period (weekend)" cite "E.D.
   given SentencingScheduled() on 2026-04-11
   expect deadline(defendant-departure-notice-period) == 2026-03-27
 }
+
 /// LR 83.9(j): all other sentencing motions and sentencing memoranda are
 /// filed at least 14 days before the sentencing hearing; failure to comply
 /// may result in denial of a departure or variance.

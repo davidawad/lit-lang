@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The District of Alaska's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"). The local
 // criminal rules supplement the Federal Rules of Criminal Procedure, the
@@ -112,9 +114,6 @@ event RecommendationObjectionsFiled()
 /// investigation interview to occur within 14 days following the proposed
 /// change of plea.
 deadline presentence-interview: 14.days after ChangeOfPleaProposed() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 11.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: presentence-interview (weekend)" cite "D. Alaska L.Crim.R. 11.1(b)"
 {
@@ -126,9 +125,6 @@ test "Counting boundary: presentence-interview (weekend)" cite "D. Alaska L.Crim
 /// exclusive of expert reports, are provided to the defense within 14
 /// calendar days after the arraignment.
 deadline rule16-discovery: 14.days after Arraigned() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 16.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: rule16-discovery (weekend)" cite "D. Alaska L.Crim.R. 16.1(a)"
 {
@@ -141,17 +137,10 @@ test "Counting boundary: rule16-discovery (weekend)" cite "D. Alaska L.Crim.R. 1
 /// later than 2 business days before the date the item is to be brought to
 /// the courtroom.
 deadline sensitive-exhibit-marshal-contact: 2.business_days before SensitiveExhibitScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 23.1(a)"
-{
-  forum frcrimp
-}
-
 /// D. Alaska L.Crim.R. 23.1(b): a party wishing to introduce blunt or
 /// edged weapons or similar items contacts the U.S. Marshal not later than
 /// 1 week before the date the item is to be brought to the courtroom.
 deadline weapon-exhibit-marshal-contact: 7.days before WeaponExhibitScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 23.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: weapon-exhibit-marshal-contact (weekend)" cite "D. Alaska L.Crim.R. 23.1(b)"
 {
@@ -162,9 +151,6 @@ test "Counting boundary: weapon-exhibit-marshal-contact (weekend)" cite "D. Alas
 /// D. Alaska L.Crim.R. 32.1(b): the draft presentence report is disclosed
 /// to counsel not less than 42 days before the sentencing date.
 deadline draft-psr-disclosure: 42.days before SentencingScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: draft-psr-disclosure (weekend)" cite "D. Alaska L.Crim.R. 32.1(b)"
 {
@@ -177,9 +163,6 @@ test "Counting boundary: draft-psr-disclosure (weekend)" cite "D. Alaska L.Crim.
 /// confidential sentencing recommendation is disclosed with it unless
 /// otherwise ordered (L.Crim.R. 32.1(d)).
 deadline final-psr-disclosure: 21.days before SentencingScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: final-psr-disclosure (weekend)" cite "D. Alaska L.Crim.R. 32.1(c)"
 {
@@ -192,9 +175,6 @@ test "Counting boundary: final-psr-disclosure (weekend)" cite "D. Alaska L.Crim.
 /// memorandum, with its sealed addendum (L.Crim.R. 32.1(f)); a motion for
 /// an evidentiary hearing is due with it (L.Crim.R. 32.1(h)).
 deadline sentencing-memorandum: 7.days before SentencingScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-memorandum (weekend)" cite "D. Alaska L.Crim.R. 32.1(e)"
 {
@@ -206,9 +186,6 @@ test "Counting boundary: sentencing-memorandum (weekend)" cite "D. Alaska L.Crim
 /// sentencing hearing, each party may reply to the opposing sentencing
 /// memorandum.
 deadline sentencing-reply: 3.days before SentencingScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-reply (weekend)" cite "D. Alaska L.Crim.R. 32.1(e)"
 {
@@ -221,9 +198,6 @@ test "Counting boundary: sentencing-reply (weekend)" cite "D. Alaska L.Crim.R. 3
 /// unnecessary delay, and in no case more than 7 days after the petition
 /// is filed, absent extenuating circumstances.
 deadline revocation-initial-appearance: 7.days after RevocationPetitionFiledInCustody() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: revocation-initial-appearance (weekend)" cite "D. Alaska L.Crim.R. 32.1.1(a)"
 {
@@ -236,9 +210,6 @@ test "Counting boundary: revocation-initial-appearance (weekend)" cite "D. Alask
 /// within 7 days of the date announced; without a timely objection the
 /// court may adopt it without further hearing (L.Crim.R. 32.1.1(c)(2)(B)).
 deadline revocation-recommendation-objection: 7.days after RevocationRecommendationAnnounced() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: revocation-recommendation-objection (weekend)" cite "D. Alaska L.Crim.R. 32.1.1(c)"
 {
@@ -253,9 +224,6 @@ deadline violation-recommendation-filing: 7.days before DispositionHearingSchedu
   to CaseOrder
   op set
 } cite "D. Alaska L.Crim.R. 32.1.1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: violation-recommendation-filing (weekend)" cite "D. Alaska L.Crim.R. 32.1.1(e)"
 {
@@ -271,17 +239,11 @@ deadline disposition-memorandum: 2.business_days before DispositionHearingSchedu
   to CaseOrder
   op set
 } cite "D. Alaska L.Crim.R. 32.1.1(e)"
-{
-  forum frcrimp
-}
 
 /// D. Alaska L.Crim.R. 32.1.2(e)(2)(D): any interested party may file and
 /// serve an opposition to the release or disclosure of a presentence
 /// report within 14 days of the date the motion is filed.
 deadline psr-disclosure-opposition: 14.days after PsrDisclosureMotionFiled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1.2(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-disclosure-opposition (weekend)" cite "D. Alaska L.Crim.R. 32.1.2(e)"
 {
@@ -295,17 +257,10 @@ test "Counting boundary: psr-disclosure-opposition (weekend)" cite "D. Alaska L.
 /// considered; the third-party custodian forms are served on the same
 /// timetable (L.Crim.R. 46.1(e)(3)).
 deadline release-services-request: 4.business_days before ReleaseServicesHearingScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 46.1(d)"
-{
-  forum frcrimp
-}
-
 /// D. Alaska L.Crim.R. 46.2: a request for non-custodial travel of a
 /// federal defendant or a defense witness is filed at least 10 days in
 /// advance of the intended travel, except on a showing of good cause.
 deadline travel-request: 10.days before IntendedTravel() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 46.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: travel-request (weekend)" cite "D. Alaska L.Crim.R. 46.2"
 {
@@ -319,9 +274,6 @@ deadline pretrial-opposition: 7.days after PretrialMotionFiled() counted_by frcr
   to CaseOrder
   op set
 } cite "D. Alaska L.Crim.R. 47.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-opposition (weekend)" cite "D. Alaska L.Crim.R. 47.1(c)"
 {
@@ -336,9 +288,6 @@ deadline post-conviction-opposition: 14.days after PostConvictionMotionFiled() c
   to CaseOrder
   op set
 } cite "D. Alaska L.Crim.R. 47.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: post-conviction-opposition (weekend)" cite "D. Alaska L.Crim.R. 47.1(c)"
 {
@@ -350,9 +299,6 @@ test "Counting boundary: post-conviction-opposition (weekend)" cite "D. Alaska L
 /// manifest error of law or fact is filed and served not later than 7
 /// days after the entry of the order.
 deadline reconsideration-manifest-error: 7.days after OrderEntered() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 47.1(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reconsideration-manifest-error (weekend)" cite "D. Alaska L.Crim.R. 47.1(g)"
 {
@@ -364,9 +310,6 @@ test "Counting boundary: reconsideration-manifest-error (weekend)" cite "D. Alas
 /// material facts or an intervening change in the law is filed and served
 /// within 14 days of the discovery or change in law.
 deadline reconsideration-new-facts: 14.days after NewFactsOrLawChange() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 47.1(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reconsideration-new-facts (weekend)" cite "D. Alaska L.Crim.R. 47.1(g)"
 {
@@ -382,9 +325,6 @@ deadline reconsideration-response: 7.days after ReconsiderationResponseRequested
   to CaseOrder
   op set
 } cite "D. Alaska L.Crim.R. 47.1(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reconsideration-response (weekend)" cite "D. Alaska L.Crim.R. 47.1(g)"
 {
@@ -399,9 +339,6 @@ deadline reconsideration-reply: 7.days after ReconsiderationReplyRequested() cou
   to CaseOrder
   op set
 } cite "D. Alaska L.Crim.R. 47.1(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reconsideration-reply (weekend)" cite "D. Alaska L.Crim.R. 47.1(g)"
 {
@@ -413,9 +350,6 @@ test "Counting boundary: reconsideration-reply (weekend)" cite "D. Alaska L.Crim
 /// camera is granted, the documents are filed through CM/ECF as an ex
 /// parte document within 7 days.
 deadline in-camera-filing: 7.days after InCameraReviewGranted() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 47.1(j)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: in-camera-filing (weekend)" cite "D. Alaska L.Crim.R. 47.1(j)"
 {
@@ -431,9 +365,6 @@ deadline recommendation-objection: 14.days after RecommendationIssued() counted_
   to CaseOrder
   op set
 } cite "D. Alaska L.Crim.R. 59.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: recommendation-objection (weekend)" cite "D. Alaska L.Crim.R. 59.1"
 {
@@ -447,9 +378,6 @@ deadline recommendation-objection-response: 7.days after RecommendationObjection
   to CaseOrder
   op set
 } cite "D. Alaska L.Crim.R. 59.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: recommendation-objection-response (weekend)" cite "D. Alaska L.Crim.R. 59.1"
 {

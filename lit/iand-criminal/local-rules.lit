@@ -2,6 +2,8 @@ module iand-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Northern District of Iowa's own criminal periods. FRCrimP 45(a)
 // computes a period "in any local rule" of a criminal case, so these
 // count under frcrimp45. The presiding judge may modify the Local Rules
@@ -73,9 +75,6 @@ event ObjectionsServed()
 /// period begins on the defendant's initial appearance on the charge in
 /// this district (LCrR 5(b)).
 deadline release-detention-review-period: 14.days after ReleaseOrDetentionOrderFiled() counted_by frcrimp45 cite "N.D. Iowa LCrR 5(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: release-detention-review-period (holiday)" cite "N.D. Iowa LCrR 5(a)"
 {
@@ -87,9 +86,6 @@ test "Counting boundary: release-detention-review-period (holiday)" cite "N.D. I
 /// arraignment under FRCrimP 10(b) files the written waiver at least 4
 /// days before the time scheduled for the arraignment.
 deadline arraignment-waiver-period: 4.days before ArraignmentScheduled() counted_by frcrimp45 cite "N.D. Iowa LCrR 10"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: arraignment-waiver-period (weekend)" cite "N.D. Iowa LCrR 10"
 {
@@ -106,9 +102,6 @@ test "Counting boundary: arraignment-waiver-period (weekend)" cite "N.D. Iowa LC
 /// The court may refuse an untimely motion absent good cause (LCrR
 /// 12(e)).
 deadline non-trial-motion-period: 28.days after FirstArraignment() counted_by frcrimp45 cite "N.D. Iowa LCrR 12(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: non-trial-motion-period (weekend)" cite "N.D. Iowa LCrR 12(a)"
 {
@@ -119,9 +112,6 @@ test "Counting boundary: non-trial-motion-period (weekend)" cite "N.D. Iowa LCrR
 /// N.D. Iowa LCrR 12(a): a motion relating to a notice or request is
 /// timely if filed within 7 days after service of the notice or request.
 deadline notice-motion-period: 7.days after NoticeOrRequestServed() counted_by frcrimp45 cite "N.D. Iowa LCrR 12(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: notice-motion-period (weekend)" cite "N.D. Iowa LCrR 12(a)"
 {
@@ -134,9 +124,6 @@ test "Counting boundary: notice-motion-period (weekend)" cite "N.D. Iowa LCrR 12
 /// party requests new deadlines and the court so orders (after a
 /// superseding indictment, the request is made at its arraignment).
 deadline new-deadlines-request-period: 7.days after ContinuanceOrderEntered() counted_by frcrimp45 cite "N.D. Iowa LCrR 12(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: new-deadlines-request-period (weekend)" cite "N.D. Iowa LCrR 12(b)"
 {
@@ -148,9 +135,6 @@ test "Counting boundary: new-deadlines-request-period (weekend)" cite "N.D. Iowa
 /// other trial-related motions are filed as soon as practicable, and at
 /// least 7 days before trial.
 deadline trial-motion-period: 7.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Iowa LCrR 12(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: trial-motion-period (weekend)" cite "N.D. Iowa LCrR 12(c)"
 {
@@ -163,9 +147,6 @@ test "Counting boundary: trial-motion-period (weekend)" cite "N.D. Iowa LCrR 12(
 /// to the Marshal's office at least 14 days before the hearing or trial;
 /// later service is not guaranteed.
 deadline marshal-delivery-in-district-period: 14.days before WitnessHearing(WithinDistrict) counted_by frcrimp45 cite "N.D. Iowa LCrR 17(a); N.D. Iowa LCrR 17(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: marshal-delivery-in-district-period (holiday)" cite "N.D. Iowa LCrR 17(a); N.D. Iowa LCrR 17(c)"
 {
@@ -176,9 +157,6 @@ test "Counting boundary: marshal-delivery-in-district-period (holiday)" cite "N.
 /// N.D. Iowa LCrR 17(a), (c): one to be served outside the district is
 /// delivered at least 21 days before the hearing or trial.
 deadline marshal-delivery-out-of-district-period: 21.days before WitnessHearing(OutsideDistrict) counted_by frcrimp45 cite "N.D. Iowa LCrR 17(a); N.D. Iowa LCrR 17(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: marshal-delivery-out-of-district-period (weekend)" cite "N.D. Iowa LCrR 17(a); N.D. Iowa LCrR 17(c)"
 {
@@ -196,9 +174,6 @@ test "Counting boundary: marshal-delivery-out-of-district-period (weekend) [repe
 /// additional peremptory challenges is made in writing at least 14 days
 /// before jury selection.
 deadline peremptory-request-period: 14.days before JurySelection() counted_by frcrimp45 cite "N.D. Iowa LCrR 24"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: peremptory-request-period (holiday)" cite "N.D. Iowa LCrR 24"
 {
@@ -209,9 +184,6 @@ test "Counting boundary: peremptory-request-period (holiday)" cite "N.D. Iowa LC
 /// N.D. Iowa LCrR 47: a resistance to a motion in a criminal case is
 /// filed within 7 days after the motion is served.
 deadline resistance-period: 7.days after MotionServed() counted_by frcrimp45 cite "N.D. Iowa LCrR 47"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: resistance-period (weekend)" cite "N.D. Iowa LCrR 47"
 {
@@ -222,9 +194,6 @@ test "Counting boundary: resistance-period (weekend)" cite "N.D. Iowa LCrR 47"
 /// N.D. Iowa LCrR 47: in any event, the resistance is filed at least 4
 /// days before the proceeding at which the motion will be heard.
 deadline resistance-before-hearing-period: 4.days before MotionHearing() counted_by frcrimp45 cite "N.D. Iowa LCrR 47"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: resistance-before-hearing-period (weekend)" cite "N.D. Iowa LCrR 47"
 {
@@ -236,9 +205,6 @@ test "Counting boundary: resistance-before-hearing-period (weekend)" cite "N.D. 
 /// order or report and recommendation is filed within 7 days after
 /// service of the objections.
 deadline objection-response-period: 7.days after ObjectionsServed() counted_by frcrimp45 cite "N.D. Iowa LCrR 59"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: objection-response-period (weekend)" cite "N.D. Iowa LCrR 59"
 {
@@ -249,9 +215,6 @@ test "Counting boundary: objection-response-period (weekend)" cite "N.D. Iowa LC
 /// N.D. Iowa LCrR 59: in any event, the objections are filed at least 14
 /// days before trial.
 deadline objection-before-trial-period: 14.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Iowa LCrR 59"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: objection-before-trial-period (holiday)" cite "N.D. Iowa LCrR 59"
 {
@@ -262,9 +225,6 @@ test "Counting boundary: objection-before-trial-period (holiday)" cite "N.D. Iow
 /// N.D. Iowa LCrR 59: and any response to them at least 7 days before
 /// trial.
 deadline objection-response-before-trial-period: 7.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Iowa LCrR 59"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: objection-response-before-trial-period (weekend)" cite "N.D. Iowa LCrR 59"
 {

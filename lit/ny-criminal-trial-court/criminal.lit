@@ -16,7 +16,7 @@ start arrested
 
 state arrested: "Arrest or appearance ticket" by prosecution cite ?("CPL arrest and appearance-ticket articles (not vendored; verify numbering)") {
   note "Arrest, the appearance ticket and the time to bring an arrested person to arraignment are set by CPL articles that are not vendored; the period is a hole. A criminal action commences with the filing of an accusatory instrument, the date from which the CPL 30.30 periods run (CPL 30.30(1)); the periods are not stated here (currency unconfirmed)."
-  edge-arrested-arraignment "Arraignment" -> arraignment {
+  "Arraignment" -> arraignment {
     authority cite ?("CPL arraignment provisions (not vendored; verify numbering)")
   }
 }
@@ -33,7 +33,7 @@ decision arraignment: "Arraignment and securing order" by court cite ?("CPL arra
 
 state charged: "Indictment or information" by court cite ?("CPL grand jury, indictment and information articles (not vendored; verify numbering)") {
   note "The grand jury and accusatory-instrument articles are not vendored; their periods are holes. The CPL 30.30 readiness clock runs from the commencement of the criminal action (CPL 30.30(1)), its periods by the grade of the top count; they are not stated here (currency unconfirmed)."
-  edge-charged-pretrial "Arraignment on the indictment; discovery and motions" -> pretrial {
+  "Arraignment on the indictment; discovery and motions" -> pretrial {
     authority cite ?("CPL arraignment on indictment and discovery articles (not vendored; verify numbering)")
   }
 }
@@ -68,9 +68,7 @@ decision plea-decision: "Plea or trial" by accused cite ?("CPL plea provisions (
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("CPL plea provisions (not vendored; verify numbering)")
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite ?("CPL trial provisions (not vendored; verify numbering)")
-  }
+  "Trial" -> trial { authority cite ?("CPL trial provisions (not vendored; verify numbering)") }
 }
 
 decision trial: "Verdict" by court cite ?("CPL verdict provisions (not vendored; verify numbering)") {
@@ -85,7 +83,7 @@ decision trial: "Verdict" by court cite ?("CPL verdict provisions (not vendored;
 
 state sentencing: "Presentence report and sentencing" by court cite ?("CPL sentencing articles (not vendored; verify numbering)") {
   note "The presentence report and its disclosure and the sentencing proceeding are governed by CPL articles that are not vendored; their periods are holes."
-  edge-sentencing-judgment "Sentence imposed; judgment" -> judgment { authority cite "CPL 450.10" }
+  "Sentence imposed; judgment" -> judgment { authority cite "CPL 450.10" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "CPL 450.10"

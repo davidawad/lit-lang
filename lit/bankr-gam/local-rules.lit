@@ -124,6 +124,7 @@ test "Counting boundary: extended-schedules-service-period (weekend)" cite "M.D.
   given FirstMeetingDate() on 2026-10-01
   expect deadline(extended-schedules-service-period) == 2026-09-25
 }
+
 /// M.D. Ga. LBR 1009-1(b): a chapter 13 debtor amends the schedules to
 /// disclose an asset or income over $10,000 acquired before the final plan
 /// payment within 60 days after the asset becomes the debtor's property or
@@ -135,6 +136,7 @@ test "Counting boundary: new-asset-amendment-period (weekend)" cite "M.D. Ga. LB
   given NewAssetAcquired() on 2026-10-06
   expect deadline(new-asset-amendment-period) == 2026-12-07
 }
+
 /// M.D. Ga. LBR 1009-1(b): the chapter 13 trustee has 90 days after the
 /// amendment is filed to file a plan modification or take other action.
 deadline new-asset-modification-period: 90.days after NewAssetAmendmentFiled() counted_by frbp9006 cite "M.D. Ga. LBR 1009-1(b)"
@@ -176,6 +178,7 @@ test "Counting boundary: late-creditor-claim-period (weekend)" cite "M.D. Ga. LB
   given LateCreditorAmendmentFiled() on 2026-10-06
   expect deadline(late-creditor-claim-period) == 2026-12-07
 }
+
 /// M.D. Ga. LBR 3001-1(d): in a chapter 11 case other than under subchapter
 /// V, the bar date for proofs of claim or interest is 90 days from the first
 /// scheduled § 341(a) meeting of creditors.
@@ -189,6 +192,7 @@ test "Counting boundary: subchapter-v-claim-period (weekend)" cite "M.D. Ga. LBR
   given OrderForReliefEntered() on 2026-10-03
   expect deadline(subchapter-v-claim-period) == 2026-12-14
 }
+
 /// M.D. Ga. LBR 3012-1(b): a party introducing expert valuation testimony
 /// serves the expert disclosure and any required reports so that they are
 /// received no later than seven days prior to the hearing or trial.
@@ -199,6 +203,7 @@ test "Counting boundary: valuation-expert-disclosure-period (weekend)" cite "M.D
   given ValuationHearing() on 2026-10-03
   expect deadline(valuation-expert-disclosure-period) == 2026-09-25
 }
+
 /// M.D. Ga. LBR 3022-1(a), 3022-2(a)(1): a non-individual chapter 11 debtor,
 /// or a subchapter V debtor under a consensual plan, files within 14 days of
 /// the entry of the confirmation order a report of the projected date for
@@ -233,6 +238,7 @@ test "Counting boundary: discharge-dismissal-objection-period (weekend)" cite "M
   given DischargeDismissalMotionServed() on 2026-10-03
   expect deadline(discharge-dismissal-objection-period) == 2026-10-26
 }
+
 /// M.D. Ga. LBR 7054-1(b): the prevailing party files a Bill of Costs within
 /// 30 days from the entry of the judgment that awarded the costs.
 deadline bill-of-costs-period: 30.days after CostsJudgmentEntered() counted_by frbp9006 cite "M.D. Ga. LBR 7054-1(b)"
@@ -242,6 +248,7 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "M.D. Ga. LBR 7054
   given CostsJudgmentEntered() on 2026-10-01
   expect deadline(bill-of-costs-period) == 2026-11-02
 }
+
 /// M.D. Ga. LBR 7054-1(b): opposing counsel has 21 days from service of the
 /// Bill of Costs to file a response.
 deadline bill-of-costs-response-period: 21.days after BillOfCostsServed() counted_by frbp9006 cite "M.D. Ga. LBR 7054-1(b)"
@@ -251,6 +258,7 @@ test "Counting boundary: bill-of-costs-response-period (weekend)" cite "M.D. Ga.
   given BillOfCostsServed() on 2026-10-03
   expect deadline(bill-of-costs-response-period) == 2026-10-26
 }
+
 /// M.D. Ga. LBR 7056-1(b): the response to a summary judgment motion, with
 /// its brief and statement of material facts in dispute, is filed and served
 /// within 21 days of service of the movant's brief and Statement of
@@ -262,6 +270,7 @@ test "Counting boundary: summary-judgment-response-period (weekend)" cite "M.D. 
   given SummaryJudgmentBriefServed() on 2026-10-03
   expect deadline(summary-judgment-response-period) == 2026-10-26
 }
+
 /// M.D. Ga. LBR 7056-1(c): the movant files and serves any reply within 14
 /// days after service of the response.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frbp9006 cite "M.D. Ga. LBR 7056-1(c)"
@@ -275,6 +284,7 @@ test "Counting boundary: page-extension-motion-period (weekend)" cite "M.D. Ga. 
   given PageLimitedFilingDue() on 2026-10-01
   expect deadline(page-extension-motion-period) == 2026-09-25
 }
+
 /// M.D. Ga. LBR 9013-3(b): a missing certificate of service is filed within
 /// 14 days from the clerk's notice, or relief requested, or the motion, brief
 /// or document is dismissed or stricken without further notice or hearing.

@@ -8,6 +8,8 @@ module links
 import cafc.{ Entered, Order }
 import core.frap26.{ frap26 }
 
+forum cafc
+
 /// FRAP 40(d)(1) gives 14 days to petition for rehearing, but 45 days in a
 /// civil case when the United States, a United States agency, or a federal
 /// officer is a party; Fed. Cir. R. 40(f)(1) lengthens the general period
@@ -25,9 +27,6 @@ import core.frap26.{ frap26 }
 rule duty rehearing-united-states-party cite "Fed. Cir. R. 40(f)(1)"
 {
   deadline rehearing-period-united-states-party: 45.days after Entered(PanelJudgment) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 cite "Fed. Cir. R. 40(f)(1); FRAP 40(d)(1)(A); FRAP 40(d)(1)(B)"
-  {
-    forum cafc
-  }
 }
 
 test "a rehearing petition is due 45 days after judgment when the United States is a party" cite "Fed. Cir. R. 40(f)(1)"

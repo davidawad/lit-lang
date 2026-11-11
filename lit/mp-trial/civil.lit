@@ -58,7 +58,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "NMI R. Civ.
 {
   note "A written motion made before judgment is filed and served no later than 30 days before the hearing unless it may be heard ex parte or a different period is fixed by rule or order; an opposition is filed and served not later than 9 days after service of the motion and a reply not later than 6 days after service of the opposition (NMI R. Civ. P. 6). The supporting or opposing memorandum may not exceed 25 pages and a reply 15 pages without prior permission; if the court decides to rule without a hearing it allows the parties 2 days to object and request one (NMI R. Civ. P. 7). The earlier outline named no Commonwealth pleading-standard decision."
   edge-pleading-motion-granted "Granted" -> dismissed { authority cite "NMI R. Civ. P. 12" }
-  edge-pleading-motion-amend "Leave to amend" -> amend { authority cite "NMI R. Civ. P. 15" }
+  "Leave to amend" -> amend { authority cite "NMI R. Civ. P. 15" }
   edge-pleading-motion-denied "Denied: answer within 14 days of notice" -> discovery {
     authority cite "NMI R. Civ. P. 12"
   }
@@ -99,8 +99,8 @@ state discovery: "Disclosure, discovery and pretrial" by movant cite "NMI R. Civ
   edge-discovery-sj "Summary judgment motion" -> summary-judgment {
     authority cite "NMI R. Civ. P. 56"
   }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "NMI R. Civ. P. 38" }
-  edge-discovery-settled "Voluntary dismissal" -> settled { authority cite "NMI R. Civ. P. 41" }
+  "No dispositive motion" -> trial { authority cite "NMI R. Civ. P. 38" }
+  "Voluntary dismissal" -> settled { authority cite "NMI R. Civ. P. 41" }
 }
 
 decision summary-judgment: "Summary judgment decided" by court cite "NMI R. Civ. P. 56"
@@ -114,7 +114,7 @@ state trial: "Trial by jury or by the court" by court cite "NMI R. Civ. P. 38"
 {
   note "Issues triable of right by a jury are so tried on a timely demand (NMI R. Civ. P. 38). In a nonjury trial, the prevailing party prepares draft findings of fact and conclusions of law within 10 days after the announcement of the decision unless the court orders otherwise (NMI R. Civ. P. 58)."
   edge-trial-judgment "Verdict or decision" -> post-trial { authority cite "NMI R. Civ. P. 58" }
-  edge-trial-settled "Settled before verdict" -> settled { authority cite "NMI R. Civ. P. 41" }
+  "Settled before verdict" -> settled { authority cite "NMI R. Civ. P. 41" }
 }
 
 decision post-trial: "Post-trial motions" by movant cite "NMI R. Civ. P. 59"

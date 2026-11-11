@@ -36,6 +36,7 @@ test "Counting boundary: response-brief-period (weekend)" cite "D.S.D. Civ. LR 7
   given MotionAndBriefServed() on 2025-03-01
   expect deadline(response-brief-period) == 2025-03-24
 }
+
 /// LR 7.1(B): the movant may file a reply brief within 14 calendar days
 /// after service of the responsive brief.
 deadline reply-brief-period: 14.days after ResponsiveBriefServed() counted_by frcp6 cite "D.S.D. Civ. LR 7.1(B)"
@@ -49,6 +50,7 @@ test "Counting boundary: amended-pleading-filing-period (weekend)" cite "D.S.D. 
   given AmendmentGranted() on 2025-03-01
   expect deadline(amended-pleading-filing-period) == 2025-03-10
 }
+
 /// LR 40.1(A): a party opposing a continuance files a response no later than
 /// 7 days after the motion is served.
 deadline continuance-response-period: 7.days after ContinuanceMotionServed() counted_by frcp6 cite "D.S.D. Civ. LR 40.1(A)"
@@ -58,6 +60,7 @@ test "Counting boundary: continuance-response-period (weekend)" cite "D.S.D. Civ
   given ContinuanceMotionServed() on 2025-03-01
   expect deadline(continuance-response-period) == 2025-03-10
 }
+
 /// LR 40.1(A): the movant may reply no later than 3 days after the
 /// response.
 deadline continuance-reply-period: 3.days after ContinuanceResponseFiled() counted_by frcp6 cite "D.S.D. Civ. LR 40.1(A)"
@@ -67,6 +70,7 @@ test "Counting boundary: continuance-reply-period (weekend)" cite "D.S.D. Civ. L
   given ContinuanceResponseFiled() on 2025-03-05
   expect deadline(continuance-reply-period) == 2025-03-10
 }
+
 /// LR 54.1(A): the prevailing party files and serves a verified bill of
 /// costs within 28 calendar days after entry of judgment or an order of
 /// dismissal.
@@ -77,6 +81,7 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "D.S.D. Civ. LR 54
   given JudgmentOrDismissalEntered() on 2025-03-01
   expect deadline(bill-of-costs-period) == 2025-03-31
 }
+
 /// LR 54.1(A): the party liable for costs may file exceptions within 14
 /// calendar days after the bill of costs is filed and served.
 deadline cost-exceptions-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "D.S.D. Civ. LR 54.1(A)"
@@ -86,6 +91,7 @@ test "Counting boundary: cost-exceptions-period (weekend)" cite "D.S.D. Civ. LR 
   given BillOfCostsFiled() on 2025-03-01
   expect deadline(cost-exceptions-period) == 2025-03-17
 }
+
 /// LR 54.1(A): either party may move for review of the clerk's taxation
 /// within 7 calendar days after the clerk taxes costs.
 deadline cost-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "D.S.D. Civ. LR 54.1(A)"
@@ -95,6 +101,7 @@ test "Counting boundary: cost-review-period (weekend)" cite "D.S.D. Civ. LR 54.1
   given CostsTaxed() on 2025-03-01
   expect deadline(cost-review-period) == 2025-03-10
 }
+
 /// LR 54.1(C): a motion for attorney's fees is filed no later than 28
 /// calendar days after entry of judgment, absent a showing of good cause.
 deadline fee-motion-period: 28.days after JudgmentOrDismissalEntered() counted_by frcp6 cite "D.S.D. Civ. LR 54.1(C)"
@@ -104,6 +111,7 @@ test "Counting boundary: fee-motion-period (weekend)" cite "D.S.D. Civ. LR 54.1(
   given JudgmentOrDismissalEntered() on 2025-03-01
   expect deadline(fee-motion-period) == 2025-03-31
 }
+
 /// LR 54.1(C): objections to an allowance of attorney's fees are filed
 /// within 21 calendar days after service on the party against whom the
 /// award is sought.
@@ -114,6 +122,7 @@ test "Counting boundary: fee-objection-period (weekend)" cite "D.S.D. Civ. LR 54
   given FeeMotionServed() on 2025-03-01
   expect deadline(fee-objection-period) == 2025-03-24
 }
+
 /// LR 54.1(C): the movant may file a reply brief within 14 calendar days
 /// after service of the responsive brief.
 deadline fee-reply-period: 14.days after FeeResponseServed() counted_by frcp6 cite "D.S.D. Civ. LR 54.1(C)"
@@ -201,18 +210,16 @@ start motion-served
 state motion-served: "Opposed motion and brief served" by movant cite "D.S.D. Civ. LR 7.1(B)"
 {
   note "An opposed motion raising a question of law is served and filed with a brief stating the movant's arguments, authorities and the Federal Rule of Civil Procedure relied on. Briefs are limited to 30 pages without prior approval (LR 7.1(B)(1)). A summary judgment motion carries the statement of material facts LR 56.1(A) requires; facts not controverted under LR 56.1(B) are deemed admitted (LR 56.1(D)). The motion's own periods under the Federal Rules are lit/frcp's."
-  edge-motion-served-response "Responsive brief served" -> response {
+  "Responsive brief served" -> response {
     authority cite "D.S.D. Civ. LR 7.1(B)"
     within response-brief-period
   }
-  edge-motion-served-ruling "No responsive brief" -> ruling {
-    authority cite "D.S.D. Civ. LR 7.1(B)"
-  }
+  "No responsive brief" -> ruling { authority cite "D.S.D. Civ. LR 7.1(B)" }
 }
 
 state response: "Responsive brief served" by opponent cite "D.S.D. Civ. LR 7.1(B)"
 {
-  edge-response-ruling "Reply filed or time to reply expired" -> ruling {
+  "Reply filed or time to reply expired" -> ruling {
     authority cite "D.S.D. Civ. LR 7.1(B)"
     within reply-brief-period
   }

@@ -37,7 +37,7 @@ decision initial-appearance: "Release or detention" by court cite "Del. Super. C
 decision probable-cause: "Preliminary examination or indictment" by court cite "Del. Super. Ct. Crim. R. 5.1"
 {
   note "If the evidence at the preliminary examination shows probable cause, the defendant is held to answer in Superior Court; the finding may rest on hearsay, the defendant may cross-examine and introduce evidence, and suppression motions go to the trial court under Rule 12 (Del. Super. Ct. Crim. R. 5.1(a)). Without probable cause the complaint is dismissed and the defendant discharged, which does not bar a later prosecution for the same offense (Del. Super. Ct. Crim. R. 5.1(b)). The grand jury is governed by Rule 6."
-  edge-probable-cause-charged "Held to answer; indictment or information filed" -> charged {
+  "Held to answer; indictment or information filed" -> charged {
     authority cite "Del. Super. Ct. Crim. R. 5.1(a)"
   }
   edge-probable-cause-none "No probable cause; complaint dismissed and defendant discharged" -> dismissed {
@@ -48,17 +48,13 @@ decision probable-cause: "Preliminary examination or indictment" by court cite "
 state charged: "Indictment or information" by court cite "Del. Super. Ct. Crim. R. 7(a)"
 {
   note "A capital offense is prosecuted by indictment; an offense within the Superior Court's exclusive jurisdiction is prosecuted by indictment or, if the defendant waives indictment in writing or in open court, by information; any other offense by indictment or information, which may be filed without leave of court (Del. Super. Ct. Crim. R. 7(a), (b)). The indictment or information is a plain, concise and definite written statement of the essential facts (Del. Super. Ct. Crim. R. 7(c)). The court may dismiss for unnecessary delay in presenting the charge to a grand jury or filing an information against a defendant held to answer (Del. Super. Ct. Crim. R. 48(b)), which states no period."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "Del. Super. Ct. Crim. R. 10(a)"
-  }
+  "Arraignment" -> arraignment { authority cite "Del. Super. Ct. Crim. R. 10(a)" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "Del. Super. Ct. Crim. R. 10"
 {
   note "Arraignment in open court consists of reading the indictment or information, or stating its substance, and calling on the defendant to plead, after giving the defendant a copy (Del. Super. Ct. Crim. R. 10(a)); an incarcerated defendant may be arraigned by closed-circuit television, and counsel may enter a written plea of not guilty in lieu of arraignment except on a charge of murder in the first degree (Del. Super. Ct. Crim. R. 10(b), (c)). A defendant who refuses to plead is entered as pleading not guilty (Del. Super. Ct. Crim. R. 11(a)(1))."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "Del. Super. Ct. Crim. R. 16"
-  }
+  "Discovery" -> discovery { authority cite "Del. Super. Ct. Crim. R. 16" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "Del. Super. Ct. Crim. R. 12(b)"
@@ -95,7 +91,7 @@ decision plea-decision: "Plea or trial" by accused cite "Del. Super. Ct. Crim. R
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Del. Super. Ct. Crim. R. 11(c)"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Del. Super. Ct. Crim. R. 23(a)" }
+  "Trial" -> trial { authority cite "Del. Super. Ct. Crim. R. 23(a)" }
   edge-plea-decision-nolle "Attorney General files a dismissal" -> dismissed {
     authority cite "Del. Super. Ct. Crim. R. 48(a)"
   }
@@ -129,9 +125,7 @@ decision post-trial: "Post-trial motions" by court cite "Del. Super. Ct. Crim. R
 state sentencing: "Presentence investigation and sentencing" by court cite "Del. Super. Ct. Crim. R. 32(a)"
 {
   note "Sentence is imposed without unnecessary delay, though the court may postpone it until a factor important to sentencing can be resolved; where there is a presentence investigation the court gives counsel the presentence officer's sentencing classifications and guideline range and lets both sides comment before sentence (Del. Super. Ct. Crim. R. 32(a)(1)). The presentence investigation and report are governed by Rule 32(c). A sentence may be corrected or reduced under Rule 35, within periods not stated here (currency unconfirmed)."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "Del. Super. Ct. Crim. R. 32"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "Del. Super. Ct. Crim. R. 32" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "Del. Super. Ct. Crim. R. 37"

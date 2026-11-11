@@ -55,7 +55,7 @@ decision acceptance: "Appeal accepted?" by court cite "N.H. Sup. Ct. R. 7"
   edge-acceptance-accepted "Mandatory appeal, or appeal accepted" -> scheduling {
     authority cite "N.H. Sup. Ct. R. 12-B"
   }
-  edge-acceptance-declined "Acceptance declined" -> declined { authority cite "N.H. Sup. Ct. R. 7" }
+  "Acceptance declined" -> declined { authority cite "N.H. Sup. Ct. R. 7" }
 }
 
 terminal declined: "Appeal declined" outcome [loss] cite "N.H. Sup. Ct. R. 7"
@@ -66,7 +66,7 @@ terminal declined: "Appeal declined" outcome [loss] cite "N.H. Sup. Ct. R. 7"
 state scheduling: "Scheduling order; record and transcript" by court cite "N.H. Sup. Ct. R. 12-B"
 {
   note "The clerk issues a scheduling order setting the dates for the record, the briefs and the appendices, and whether a transcript is prepared (N.H. Sup. Ct. R. 12-B(1)). The record reaches the court through the parties' appendices or a motion for transmittal filed by the brief date (N.H. Sup. Ct. R. 13(2)-(4)). The moving party pays the transcript deposit within 15 days from the date on the scheduling order's written notice (N.H. Sup. Ct. R. 15(2)). A case not timely docketed, whose record is not transmitted or whose entry fee is not paid is dismissed (N.H. Sup. Ct. R. 5(4))."
-  edge-scheduling-briefing "Scheduling order issued" -> briefing {
+  "Scheduling order issued" -> briefing {
     event RecordFiled()
     authority cite "N.H. Sup. Ct. R. 16"
   }
@@ -92,7 +92,7 @@ terminal dismissed-prosecution: "Appeal dismissed" outcome [loss, dismissal] cit
 state argument: "Oral argument or submission on briefs" by court cite "N.H. Sup. Ct. R. 18"
 {
   note "The court notifies the parties if oral argument is held; it is limited to 15 minutes a side unless more is granted for good cause shown in the brief (N.H. Sup. Ct. R. 18(1), (3)). A stipulation to submit on briefs is filed not later than ten days, and a motion to waive argument not later than twenty days, before the date scheduled for argument (N.H. Sup. Ct. R. 18(7))."
-  edge-argument-decision "Argued or submitted" -> decision { authority cite "N.H. Sup. Ct. R. 20" }
+  "Argued or submitted" -> decision { authority cite "N.H. Sup. Ct. R. 20" }
 }
 
 decision decision: "Supreme Court decision" by court cite "N.H. Sup. Ct. R. 20"

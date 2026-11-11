@@ -44,15 +44,13 @@ decision preliminary-hearing: "Preliminary hearing or indictment" by court cite 
 state charged: "Indictment" by court cite "MRCrP 14.1"
 {
   note "The grand jury is governed by Rule 13. The indictment's nature and contents, joinder, severance and amendment are governed by Rules 14.1 to 14.4; a defendant may waive indictment and proceed by information as Rule 14.5 provides; dismissal is governed by Rule 14.6."
-  edge-charged-arraignment "Indictment served; arraignment" -> arraignment {
-    authority cite "MRCrP 15.1"
-  }
+  "Indictment served; arraignment" -> arraignment { authority cite "MRCrP 15.1" }
 }
 
 state arraignment: "Arraignment and trial setting" by prosecution cite "MRCrP 15.1"
 {
   note "A copy of the indictment is served before arraignment, which unless waived is held within the period after service that MRCrP 15.1(a) sets; at arraignment the court reads the charge, takes the plea, ensures counsel, reviews bond and sets reasonable deadlines for filing and hearing all pretrial motions (MRCrP 15.1). Within the period after arraignment that MRCrP 9(a) sets, the court enters an order setting trial, which is set no later than the period MRCrP 9(a) sets after arraignment; criminal trials have priority over civil trials, and a continuance needs good cause shown by written order (MRCrP 9). The periods are not stated here (currency unconfirmed). The statutory speedy-trial rule, Miss. Code Ann. § 99-17-1, is not vendored."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "MRCrP 17.1" }
+  "Discovery" -> discovery { authority cite "MRCrP 17.1" }
 }
 
 state discovery: "Disclosure, discovery and pretrial motions" by prosecution cite "MRCrP 17.2"
@@ -80,7 +78,7 @@ decision plea-decision: "Plea or trial" by accused cite "MRCrP 15.3"
 {
   note "The entry of a plea of guilty or nolo contendere is governed by Rule 15.3; a defendant charged with a felony who wishes to plead guilty must plead personally (MRCrP 15.3(a)). Plea bargaining is governed by Rule 15.4. Trial by jury is governed by Rule 18.1, whose jury sizes and concurrence are not stated here (currency unconfirmed)."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "MRCrP 15.3" }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "MRCrP 18.1" }
+  "Trial" -> trial { authority cite "MRCrP 18.1" }
 }
 
 decision trial: "Verdict" by court cite "MRCrP 24.1"
@@ -95,9 +93,7 @@ decision trial: "Verdict" by court cite "MRCrP 24.1"
 state sentencing: "Presentence report and sentencing" by court cite "MRCrP 26.2"
 {
   note "On a determination of guilt the judgment is pronounced and entered together with the sentence; the court sets a sentencing date after receipt of any required presentence report, and sentence is imposed without unreasonable delay (MRCrP 26.2(b)). The presentence report and the sentencing hearing follow Rules 26.3 and 26.4; judgment and sentence are pronounced in open court and entered under Rules 26.5 and 26.8."
-  edge-sentencing-post-trial "Judgment of conviction entered" -> post-trial {
-    authority cite "MRCrP 26.8"
-  }
+  "Judgment of conviction entered" -> post-trial { authority cite "MRCrP 26.8" }
 }
 
 decision post-trial: "Post-trial motions" by court cite "MRCrP 25.1"

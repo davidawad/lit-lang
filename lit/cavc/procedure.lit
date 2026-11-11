@@ -88,15 +88,13 @@ decision briefing-path: "Briefs filed or joint motion for remand" by petitioner 
       note "The Secretary's brief, 60 days after service of the appellant's brief."
     }
   }
-  edge-briefing-path-dismissed "Voluntary dismissal or settlement" -> dismissed {
-    authority cite "CAVC R. 42"
-  }
+  "Voluntary dismissal or settlement" -> dismissed { authority cite "CAVC R. 42" }
 }
 
 state joint-remand: "Joint motion for remand" by court cite "CAVC R. 45(g)"
 {
   note "Unless the case is assigned to a Judge, the Clerk may act on a joint motion to remand (CAVC R. 45(g)(2)). Judgment is effective on the date of an order granting a joint motion to remand (CAVC R. 36(b)(1)(B)), and mandate generally is 60 days later unless a timely notice of appeal is filed, the parties waive further review in writing and ask for earlier mandate, or the Court directs otherwise (CAVC R. 41(c))."
-  edge-joint-remand-remanded "Court grants remand" -> remanded {
+  "Court grants remand" -> remanded {
     authority cite "CAVC R. 41(c)"
     within uncontested-mandate-period { note "Mandate generally 60 days after the order." }
   }
@@ -114,9 +112,7 @@ decision decision-path: "Oral argument, submission and decision" by court cite "
   edge-decision-path-remanded "Vacated and remanded" -> post-decision-motion {
     authority cite "CAVC R. 35(a)"
   }
-  edge-decision-path-dismissed "Dismissed for failure to act" -> dismissed {
-    authority cite "CAVC R. 38(b)"
-  }
+  "Dismissed for failure to act" -> dismissed { authority cite "CAVC R. 38(b)" }
 }
 
 decision post-decision-motion: "Motion under Rule 35 or none" by petitioner cite "CAVC R. 35"

@@ -172,6 +172,7 @@ test "Counting boundary: fee-refund-period (weekend)" cite "W.D. Okla. LBR 1006-
   given FeeOverpaid() on 2026-01-15
   expect deadline(fee-refund-period) == 2026-02-17
 }
+
 /// W.D. Okla. LBR 1015-1(A): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to deconsolidate a joint
@@ -192,6 +193,7 @@ test "Counting boundary: committee-ownership-statement-period (weekend)" cite "W
   given CommitteeAppointed() on 2026-01-17
   expect deadline(committee-ownership-statement-period) == 2026-01-26
 }
+
 /// W.D. Okla. LBR 2004-1(A): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion for leave to conduct a
@@ -217,6 +219,7 @@ test "Counting boundary: fee-motion-response-period (weekend)" cite "W.D. Okla. 
   given FeeMotionFiled() on 2026-01-17
   expect deadline(fee-motion-response-period) == 2026-02-09
 }
+
 /// W.D. Okla. LBR 3007-1(D): a response to a claim objection is filed and
 /// served within fourteen days after the objection is filed, a flat period
 /// regardless of the manner of service; absent one the objecting party
@@ -246,6 +249,7 @@ test "Counting boundary: stay-continuation-motion-period (weekend)" cite "W.D. O
   given PetitionFiled() on 2026-01-17
   expect deadline(stay-continuation-motion-period) == 2026-01-26
 }
+
 /// W.D. Okla. LBR 4001-1(J): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to continue the
@@ -261,6 +265,7 @@ test "Counting boundary: stay-imposition-motion-period (weekend)" cite "W.D. Okl
   given PetitionFiled() on 2026-01-15
   expect deadline(stay-imposition-motion-period) == 2026-02-17
 }
+
 /// W.D. Okla. LBR 4001-1(K): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to impose the automatic
@@ -302,6 +307,7 @@ test "Counting boundary: sale-objection-period (weekend)" cite "W.D. Okla. LBR 6
   given ProposedActionDate() on 2026-01-17
   expect deadline(sale-objection-period) == 2026-01-09
 }
+
 /// W.D. Okla. LBR 6004-1(B): objections to a motion to sell free and clear
 /// of liens under FRBP 6004(c) are filed and served not more than
 /// twenty-one days after the motion is filed, a flat period regardless of
@@ -313,6 +319,7 @@ test "Counting boundary: free-and-clear-objection-period (weekend)" cite "W.D. O
   given SaleMotionFiled() on 2026-01-17
   expect deadline(free-and-clear-objection-period) == 2026-02-09
 }
+
 /// W.D. Okla. LBR 6004-1(B): service of a motion to sell free and clear and
 /// its notice is accomplished within three days of their filing.
 deadline free-and-clear-service-period: 3.days after SaleMotionFiled() counted_by frbp9006-oklahoma cite "W.D. Okla. LBR 6004-1(B)"
@@ -322,6 +329,7 @@ test "Counting boundary: free-and-clear-service-period (weekend)" cite "W.D. Okl
   given SaleMotionFiled() on 2026-01-15
   expect deadline(free-and-clear-service-period) == 2026-01-20
 }
+
 /// W.D. Okla. LBR 6004-1(B): the certificate or affidavit of service of a
 /// motion to sell free and clear is filed no later than seven days prior to
 /// the hearing date.
@@ -332,6 +340,7 @@ test "Counting boundary: free-and-clear-certificate-period (weekend)" cite "W.D.
   given SaleHearing() on 2026-01-17
   expect deadline(free-and-clear-certificate-period) == 2026-01-09
 }
+
 /// W.D. Okla. LBR 6006-1: the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to assume, reject or
@@ -385,6 +394,7 @@ test "Counting boundary: request-service-period (weekend)" cite "W.D. Okla. LBR 
   given RequestForReliefFiled() on 2026-01-15
   expect deadline(request-service-period) == 2026-01-20
 }
+
 /// W.D. Okla. LBR 9013-1(J): the movant files a certificate or affidavit of
 /// service within three days after filing the request for relief, or the
 /// court may deny it without notice.
@@ -395,6 +405,7 @@ test "Counting boundary: request-service-certificate-period (weekend)" cite "W.D
   given RequestForReliefFiled() on 2026-01-15
   expect deadline(request-service-certificate-period) == 2026-01-20
 }
+
 /// W.D. Okla. LBR 9013-1(L): if no objection or response is filed by the
 /// deadline, a proposed order is uploaded within thirty days after the
 /// deadline expires; an order not uploaded within thirty days of the
@@ -406,6 +417,7 @@ test "Counting boundary: proposed-order-upload-period (weekend)" cite "W.D. Okla
   given ResponseDeadlinePassed() on 2026-01-15
   expect deadline(proposed-order-upload-period) == 2026-02-17
 }
+
 /// W.D. Okla. LBR 9014-1: unless otherwise ordered, a party wishing to
 /// present evidence at a contested-matter hearing files and serves its
 /// notice of exhibits, witnesses, testimony and time no later than seven
@@ -417,6 +429,7 @@ test "Counting boundary: evidence-notice-period (weekend)" cite "W.D. Okla. LBR 
   given InitialResponseDeadline() on 2026-01-17
   expect deadline(evidence-notice-period) == 2026-01-26
 }
+
 /// W.D. Okla. LBR 9019-1: the Notice of Opportunity for Hearing gives a
 /// flat 21 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to approve a compromise
@@ -428,6 +441,7 @@ test "Counting boundary: compromise-response-period (weekend)" cite "W.D. Okla. 
   given CompromiseMotionFiled() on 2026-01-17
   expect deadline(compromise-response-period) == 2026-02-09
 }
+
 /// LBR 3018-1: the ballot summary is filed at least three business days
 /// before the confirmation hearing.
 deadline ballot-summary-period: 3.business_days before ConfirmationHearingScheduled() counted_by frbp9006-oklahoma cite "W.D. Okla. LBR 3018-1"
@@ -764,7 +778,7 @@ start motion-filed
 state motion-filed: "Request for relief filed with notice of opportunity for hearing" by movant cite "W.D. Okla. LBR 9013-1(G)"
 {
   note "The title includes 'And Notice of Opportunity for Hearing'; the response time runs a flat number of days from the docket entry regardless of the manner of service, calculated by the movant from the statute, rule or order (LBR 9013-1(G)); a brief accompanies it (LBR 9013-1(C)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Response filed within the response period" -> opposed {
+  "Response filed within the response period" -> opposed {
     authority cite "W.D. Okla. LBR 9013-1(G)"
   }
   edge-motion-filed-unopposed "No response; relief deemed confessed" -> ruling {
@@ -775,7 +789,7 @@ state motion-filed: "Request for relief filed with notice of opportunity for hea
 state opposed: "Response filed; hearing if the court orders one" by opponent cite "W.D. Okla. LBR 9013-1(G)"
 {
   note "Hearings are not conducted routinely unless requested or required; a reply to a new matter may follow within five days (LBR 9013-1(C), (F)). A party presenting evidence files its notice seven days after the initial response deadline (LBR 9014-1)."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "W.D. Okla. LBR 9013-1(F)" }
+  "Hearing held" -> ruling { authority cite "W.D. Okla. LBR 9013-1(F)" }
 }
 
 decision ruling: "Motion decided" by court cite "W.D. Okla. LBR 9013-1(G)"

@@ -93,6 +93,7 @@ test "Counting boundary: trustee-business-assets-period (holiday)" cite "D. Me. 
   given ConvertedToChapter7() on 2025-12-02
   expect deadline(trustee-business-assets-period) == 2026-01-02
 }
+
 /// Local Rule 2004-1(b): absent exigent circumstances, a motion for a
 /// protective order against a Rule 2004 examination is filed within 14
 /// days of service of the examination order or before the examination is
@@ -121,6 +122,7 @@ test "Counting boundary: chapter13-claim-objection-period (holiday)" cite "D. Me
   given ClaimDeadlinePassed() on 2025-12-02
   expect deadline(chapter13-claim-objection-period) == 2026-01-02
 }
+
 /// Local Rule 3007-1(a): an objection to a claim under § 1305 of the Code
 /// is filed within 30 days after the claim is filed.
 deadline postpetition-claim-objection-period: 30.days after PostpetitionClaimFiled() counted_by frbp9006-maine cite "D. Me. LBR 3007-1(a)"
@@ -130,6 +132,7 @@ test "Counting boundary: postpetition-claim-objection-period (holiday)" cite "D.
   given PostpetitionClaimFiled() on 2025-12-02
   expect deadline(postpetition-claim-objection-period) == 2026-01-02
 }
+
 /// Local Rule 3016-2: the action § 1106(a)(5) of the Code requires of a
 /// Chapter 11 trustee is completed within 30 days of the trustee's
 /// appointment.
@@ -140,6 +143,7 @@ test "Counting boundary: trustee-plan-action-period (holiday)" cite "D. Me. LBR 
   given TrusteeAppointed() on 2025-12-02
   expect deadline(trustee-plan-action-period) == 2026-01-02
 }
+
 /// Local Rule 3017-1(f): within 7 days after mailing the plan and
 /// disclosure statement, the debtor files a certificate of service with
 /// copies of each document mailed.
@@ -150,6 +154,7 @@ test "Counting boundary: plan-mailing-certificate-period (weekend)" cite "D. Me.
   given PlanPackageMailed() on 2025-12-06
   expect deadline(plan-mailing-certificate-period) == 2025-12-15
 }
+
 /// Local Rule 9013-2(b)(1): a motion to continue a scheduled hearing
 /// without the consent of all interested parties is filed no fewer than
 /// three days before the hearing, unless good cause is shown.
@@ -167,6 +172,7 @@ test "Counting boundary: adversary-settlement-notice-period (holiday)" cite "D. 
   given AdversarySettled() on 2025-12-04
   expect deadline(adversary-settlement-notice-period) == 2025-12-26
 }
+
 /// Local Rule 9027-1: within 7 days after filing a notice of removal, the
 /// removing party serves it on all parties to the removed claim and files
 /// a certified copy of the removed action's docket sheet.
@@ -177,6 +183,7 @@ test "Counting boundary: removal-service-period (weekend)" cite "D. Me. LBR 9027
   given RemovalNoticeFiled() on 2025-12-06
   expect deadline(removal-service-period) == 2025-12-15
 }
+
 /// Local Rule 9027-1: within 14 days of filing the notice of removal, the
 /// removing party files copies of all filings from the removed action with
 /// a written representation that they are true and accurate.
@@ -187,7 +194,7 @@ start motion-filed
 state motion-filed: "Motion filed with notice of hearing" by movant cite "D. Me. LBR 9013-1(b)"
 {
   note "Each written motion carries a proposed order (Local Rule 9013-1(a)). The movant self-calendars a non-evidentiary hearing no less than 21 days after filing, with a response date no less than 14 days after filing and no less than 7 days before the hearing, and gives notice to all interested parties (Local Rule 9013-1(b)), unless the motion is one Local Rule 9013-3 lets be filed without a hearing or seeks emergency, expedited or ex parte relief (Local Rules 9013-4, 9013-5). In a contested matter Local Rule 9013-1 governs and the motion is served under FRBP 7004 without a summons (Local Rule 9014-1(a)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-response "Written response filed by the response date" -> response {
+  "Written response filed by the response date" -> response {
     authority cite "D. Me. LBR 9013-1(c)"
   }
   edge-motion-filed-unopposed "No response; matter heard" -> ruling {
@@ -198,7 +205,7 @@ state motion-filed: "Motion filed with notice of hearing" by movant cite "D. Me.
 state response: "Written response filed" by opponent cite "D. Me. LBR 9013-1(c)"
 {
   note "A response asserts the responding party's defenses and position and, where the motion states separately identified facts, admits or denies each under FRCP 8(b) (Local Rule 9013-1(c)). A reply of no more than five pages is permitted, due by noon Eastern Time two business days before the hearing (Local Rule 9013-1(d))."
-  edge-response-ruling "Reply filed or time to reply expired; hearing held" -> ruling {
+  "Reply filed or time to reply expired; hearing held" -> ruling {
     authority cite "D. Me. LBR 9013-1(d)"
   }
 }

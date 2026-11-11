@@ -48,7 +48,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "P.R. R. Civ
 {
   note "The defenses of lack of jurisdiction over the subject matter or the person, insufficiency of the summons or of its service, failure to state a claim that justifies relief, and failure to join an indispensable party may be raised by a duly grounded motion; if matters outside the pleading are presented on the failure-to-state-a-claim defense and not excluded, the motion is treated as one for summary judgment under Rule 36 (P.R. R. Civ. P. 10.2). The earlier outline named no leading decision on the pleading standard."
   edge-pleading-motion-granted "Granted" -> dismissed { authority cite "P.R. R. Civ. P. 10.2" }
-  edge-pleading-motion-amend "Leave to amend" -> amend { authority cite "P.R. R. Civ. P. 13.1" }
+  "Leave to amend" -> amend { authority cite "P.R. R. Civ. P. 13.1" }
   edge-pleading-motion-denied "Denied: answer within 10 days of notice" -> case-management {
     authority cite "P.R. R. Civ. P. 10.1"
   }
@@ -89,9 +89,7 @@ state case-management: "Case management and discovery" by plaintiff cite "P.R. R
   edge-case-management-sj "Summary judgment motion" -> summary-judgment {
     authority cite "P.R. R. Civ. P. 36.1"
   }
-  edge-case-management-pretrial "No dispositive motion" -> pretrial {
-    authority cite "P.R. R. Civ. P. 37.4"
-  }
+  "No dispositive motion" -> pretrial { authority cite "P.R. R. Civ. P. 37.4" }
   edge-case-management-inactive "No step taken for six months" -> inactivity {
     authority cite "P.R. R. Civ. P. 39.2(b)"
   }
@@ -127,9 +125,7 @@ state pretrial: "Pretrial report and conference" by plaintiff cite "P.R. R. Civ.
   edge-pretrial-trial "Tried to the court" -> judgment-entered {
     authority cite "P.R. R. Civ. P. 42.2"
   }
-  edge-pretrial-withdrawn "Voluntary dismissal" -> withdrawn {
-    authority cite "P.R. R. Civ. P. 39.1(a)"
-  }
+  "Voluntary dismissal" -> withdrawn { authority cite "P.R. R. Civ. P. 39.1(a)" }
 }
 
 terminal withdrawn: "Desistimiento" outcome [settlement] cite "P.R. R. Civ. P. 39.1(a)"

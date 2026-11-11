@@ -2,6 +2,8 @@ module vawd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Western District of Virginia's own criminal periods. Stated in the
 // rules but not declared: the presentence report deemed disclosed one day
 // after a verbal announcement that it is available or three days after a
@@ -28,9 +30,6 @@ event AppellantCaseComplete()
 /// district judge directs, the appellant files a statement of the grounds
 /// for the appeal and a supporting memorandum of law.
 deadline appeal-grounds-period: 14.days after MagistrateAppealNoticed() counted_by frcrimp45 cite "W.D. Va. Crim. R. 59(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: appeal-grounds-period (weekend)" cite "W.D. Va. Crim. R. 59(a)"
 {
@@ -42,9 +41,6 @@ test "Counting boundary: appeal-grounds-period (weekend)" cite "W.D. Va. Crim. R
 /// supporting memorandum is filed within 14 days of the filing of the
 /// transcript, or another period the district judge directs.
 deadline transcript-memorandum-period: 14.days after AppealTranscriptFiled() counted_by frcrimp45 cite "W.D. Va. Crim. R. 59(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: transcript-memorandum-period (weekend)" cite "W.D. Va. Crim. R. 59(a)"
 {
@@ -57,9 +53,6 @@ test "Counting boundary: transcript-memorandum-period (weekend)" cite "W.D. Va. 
 /// another period the district judge directs, to file a responsive
 /// memorandum.
 deadline appeal-response-period: 21.days after AppellantCaseComplete() counted_by frcrimp45 cite "W.D. Va. Crim. R. 59(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: appeal-response-period (weekend)" cite "W.D. Va. Crim. R. 59(b)"
 {

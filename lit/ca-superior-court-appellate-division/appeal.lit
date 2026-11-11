@@ -31,7 +31,7 @@ decision notice: "Notice of appeal within time?" by appellant cite "Cal. Code Ci
 
 state record: "Record on appeal prepared" by court cite ?("Cal. Rules of Court, rule 8.830, not vendored") {
   note "The record on appeal (the clerk's transcript or its substitutes, and the reporter's transcript or a statement on appeal), its preparation, its time and its fees are set by the appellate division rules, which are not vendored: they are holes."
-  edge-record-briefing "Record filed" -> briefing {
+  "Record filed" -> briefing {
     event RecordFiled()
     authority cite ?("Cal. Rules of Court, rule 8.830, not vendored")
   }
@@ -39,14 +39,14 @@ state record: "Record on appeal prepared" by court cite ?("Cal. Rules of Court, 
 
 state briefing: "Briefs filed" by appellant cite ?("Cal. Rules of Court, rule 8.882, not vendored") {
   note "The briefing periods, form and length are set by the appellate division rules (Cal. Rules of Court, from rule 8.882), which are not vendored: they are holes."
-  edge-briefing-argument "Argument or submission" -> argument {
+  "Argument or submission" -> argument {
     authority cite ?("Cal. Rules of Court, rule 8.885, not vendored")
   }
 }
 
 state argument: "Argument or submission" by court cite ?("Cal. Rules of Court, rule 8.885, not vendored") {
   note "Oral argument and submission of the cause are set by the appellate division rules (Cal. Rules of Court, from rule 8.885), which are not vendored: they are holes."
-  edge-argument-decision "Cause submitted" -> decision {
+  "Cause submitted" -> decision {
     authority cite ?("Cal. Rules of Court, rule 8.887, not vendored")
   }
 }

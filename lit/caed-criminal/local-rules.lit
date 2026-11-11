@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The Eastern District of California's own criminal periods, counted
 // under the criminal rules (FRCrimP 45(a) governs "any local rule"). No
 // trigger carries a service method: FRCrimP 45(c)'s three added days
@@ -84,17 +86,10 @@ event DefenseDiscoveryRequested()
 /// rescheduled, counsel notifies the staff court interpreter at least two
 /// court days before the scheduled hearing.
 deadline interpreter-cancellation-notice: 2.court_days before InterpretedHearingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 403(d)"
-{
-  forum frcrimp
-}
-
 /// E.D. Cal. L.R. 422(b): within fourteen (14) days after filing the
 /// notice of appeal, the appellant orders the official transcript or files
 /// a certificate that no transcript will be ordered.
 deadline misdemeanor-appeal-transcript: 14.days after MisdemeanorAppealNoticed() counted_by frcrimp45 cite "E.D. Cal. L.R. 422(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appeal-transcript (weekend)" cite "E.D. Cal. L.R. 422(b)"
 {
@@ -109,9 +104,6 @@ deadline misdemeanor-appellant-brief: 21.days after AppealTranscriptFiled() coun
   to CaseOrder
   op set
 } cite "E.D. Cal. L.R. 422(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellant-brief (weekend)" cite "E.D. Cal. L.R. 422(e)"
 {
@@ -126,9 +118,6 @@ deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counte
   to CaseOrder
   op set
 } cite "E.D. Cal. L.R. 422(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellee-brief (weekend)" cite "E.D. Cal. L.R. 422(e)"
 {
@@ -142,9 +131,6 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by 
   to CaseOrder
   op set
 } cite "E.D. Cal. L.R. 422(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "E.D. Cal. L.R. 422(e)"
 {
@@ -157,9 +143,6 @@ test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "E.D. Cal. L.R.
 /// the Magistrate Judge's notice of the defendant's election, the charge
 /// is dismissed with prejudice on motion of the Court or the defendant.
 deadline class-a-election-prosecution: 91.days after DistrictJudgeElectionNoticed() counted_by frcrimp45 cite "E.D. Cal. L.R. 423(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: class-a-election-prosecution (holiday)" cite "E.D. Cal. L.R. 423(c)"
 {
@@ -174,9 +157,6 @@ deadline bail-review-notice: 7.days before BailReviewHearingScheduled() counted_
   to CaseOrder
   op set
 } cite "E.D. Cal. L.R. 429(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: bail-review-notice (holiday)" cite "E.D. Cal. L.R. 429(a)"
 {
@@ -187,9 +167,6 @@ test "Counting boundary: bail-review-notice (holiday)" cite "E.D. Cal. L.R. 429(
 /// E.D. Cal. L.R. 429(c): any opposition is filed at least two days before
 /// the hearing date.
 deadline bail-review-opposition: 2.days before BailReviewHearingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 429(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: bail-review-opposition (weekend)" cite "E.D. Cal. L.R. 429(c)"
 {
@@ -205,9 +182,6 @@ deadline motion-notice: 14.days before MotionHearingScheduled() counted_by frcri
   to CaseOrder
   op set
 } cite "E.D. Cal. L.R. 430.1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-notice (weekend)" cite "E.D. Cal. L.R. 430.1(e)"
 {
@@ -223,9 +197,6 @@ deadline motion-opposition: 7.days after MotionFiled() counted_by frcrimp45 dele
   to CaseOrder
   op set
 } cite "E.D. Cal. L.R. 430.1(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-opposition (weekend)" cite "E.D. Cal. L.R. 430.1(f)"
 {
@@ -239,9 +210,6 @@ deadline motion-reply: 4.days after OppositionDue() counted_by frcrimp45 delegab
   to CaseOrder
   op set
 } cite "E.D. Cal. L.R. 430.1(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-reply (weekend)" cite "E.D. Cal. L.R. 430.1(f)"
 {
@@ -253,9 +221,6 @@ test "Counting boundary: motion-reply (weekend)" cite "E.D. Cal. L.R. 430.1(f)"
 /// Magistrate Judge is served and filed within fourteen (14) days after the
 /// date of the decision.
 deadline magistrate-decision-appeal: 14.days after MagistrateDecision() counted_by frcrimp45 cite "E.D. Cal. L.R. 430.1(j)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-decision-appeal (weekend)" cite "E.D. Cal. L.R. 430.1(j)"
 {
@@ -271,9 +236,6 @@ deadline government-initial-disclosure: 14.days after Arraigned() counted_by frc
   to CaseOrder
   op set
 } cite "E.D. Cal. L.R. 440(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-initial-disclosure (weekend)" cite "E.D. Cal. L.R. 440(a)"
 {
@@ -285,9 +247,6 @@ test "Counting boundary: government-initial-disclosure (weekend)" cite "E.D. Cal
 /// reports of examinations or tests at least seven (7) days before the
 /// trial confirmation or pretrial conference.
 deadline examination-report-disclosure: 7.days before TrialConfirmationScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 440(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: examination-report-disclosure (holiday)" cite "E.D. Cal. L.R. 440(b)"
 {
@@ -302,9 +261,6 @@ deadline defense-discovery: 21.days after DefenseDiscoveryRequested() counted_by
   to CaseOrder
   op set
 } cite "E.D. Cal. L.R. 440(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-discovery (weekend)" cite "E.D. Cal. L.R. 440(c)"
 {
@@ -317,9 +273,6 @@ test "Counting boundary: defense-discovery (weekend)" cite "E.D. Cal. L.R. 440(c
 /// deliver to the probation officer, and exchange, a written statement of
 /// all objections to the presentence report.
 deadline psr-informal-objections: 28.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 461(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-informal-objections (weekend)" cite "E.D. Cal. L.R. 461(b)"
 {
@@ -331,9 +284,6 @@ test "Counting boundary: psr-informal-objections (weekend)" cite "E.D. Cal. L.R.
 /// sentencing hearing, the probation officer submits the presentence
 /// report to the sentencing Judge and makes it available to counsel.
 deadline psr-submission: 21.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 461(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-submission (weekend)" cite "E.D. Cal. L.R. 461(c)"
 {
@@ -347,9 +297,6 @@ test "Counting boundary: psr-submission (weekend)" cite "E.D. Cal. L.R. 461(c)"
 /// objections first made under L.R. 461(b), or to new information, may be
 /// raised (L.R. 461(e)).
 deadline psr-formal-objections: 14.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 461(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-formal-objections (weekend)" cite "E.D. Cal. L.R. 461(d)"
 {

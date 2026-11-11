@@ -33,7 +33,7 @@ start notice-filed
 state notice-filed: "Notice of appeal filed" by appellant cite "ORAP 2.05"
 {
   note "The notice of appeal is served and filed within the time allowed by ORS 19.255 or other applicable statute, substantially in the form of Appendix 2.05; it designates the adverse parties, the parts of the proceedings to be transcribed and exhibits for the record, and the points relied on, and, if more than 30 days has elapsed after the date the judgment was entered, states why the appeal is nevertheless timely; if appellate jurisdiction is not free from doubt, it cites the statute or case law supporting it; it carries proof of service and a copy of the judgment appealed from (ORAP 2.05(4), (6)-(10), (12)). One filing fee is required for each appellant appearing separately, and a respondent's appearance fee for each respondent appearing separately; the amounts are statutory (ORS 21.010) and not stated in the rules (ORAP 2.15(2), (3)). A party not designated in the notice may appear by filing a notice of intent to participate within 21 days after the notice of appeal is filed (ORAP 2.25(3))."
-  edge-notice-filed-appealability "Appeal docketed" -> appealability { authority cite "ORAP 2.05" }
+  "Appeal docketed" -> appealability { authority cite "ORAP 2.05" }
 }
 
 decision appealability: "Appealability" by court cite "ORAP 2.35"
@@ -55,15 +55,13 @@ terminal dismissed-jurisdiction: "Dismissed: decision not appealable" outcome [l
 state record-prepared: "Trial court record and transcript" by appellant cite "ORAP 3.05"
 {
   note "The record on appeal is the trial court file and the parts of the exhibits and record of oral proceedings designated in the notices of appeal; the record of oral proceedings is a transcript unless the court waives it for an audio or video record on motion, and the parties may file an agreed narrative statement (ORAP 3.05(1), (2)). The transcript coordinator forwards the notice to the reporters or transcribers, and the party makes the financial arrangements for the transcript (ORAP 3.33(2)); the transcript is served and the certificate of preparation filed within the time of ORS 19.370 (ORAP 3.33(4)(c)), which is not vendored."
-  edge-record-prepared-briefing "Transcript settled, or none designated" -> briefing {
-    authority cite "ORAP 5.80(1)"
-  }
+  "Transcript settled, or none designated" -> briefing { authority cite "ORAP 5.80(1)" }
 }
 
 state briefing: "Briefing" by appellant cite "ORAP 5.80"
 {
   note "Unless a statute or the rules provide otherwise, the appellant's opening brief and excerpt of record are served and filed within 49 days after the trial court order settling the transcript, the filing of an agreed narrative statement, the transcript being deemed settled, an order waiving a transcript, or, if no transcript or narrative statement is designated, the filing of the notice of appeal (ORAP 5.80(1)). The respondent's answering brief is due within 49 days after the opening brief is filed (ORAP 5.80(2)); a reply brief, if any, within 21 days after the answering brief is filed (ORAP 5.80(3)). In the Court of Appeals an opening or answering brief may not exceed 10,000 words and a reply brief 3,300 words; a party without a word count is held to 35 and 10 pages (ORAP 5.05(1)(b)(ii), (1)(c)). A party's appendix may not exceed 25 pages (ORAP 5.05(1)(e))."
-  edge-briefing-argument "Briefing complete" -> argument { authority cite "ORAP 6.05" }
+  "Briefing complete" -> argument { authority cite "ORAP 6.05" }
 }
 
 decision argument: "Oral argument or submission on the briefs" by court cite "ORAP 6.05"
@@ -75,9 +73,7 @@ decision argument: "Oral argument or submission on the briefs" by court cite "OR
 decision decision-issued: "Court of Appeals decision" by court cite "ORAP 14.05"
 {
   note "A party seeking costs files a statement of costs and disbursements within 28 days after the date of the decision; a petition for review or reconsideration does not suspend that time; objections are filed within 14 days after service of the statement, and a reply within 14 days after service of the objections (ORAP 13.05(5)). The Administrator does not issue the appellate judgment for 35 days after a Court of Appeals decision, to allow time for a petition for review; if one is filed, the appellate judgment does not issue until it is resolved (ORAP 14.05(3)(a))."
-  edge-decision-issued-reconsideration "Petition for reconsideration" -> reconsideration {
-    authority cite "ORAP 6.25"
-  }
+  "Petition for reconsideration" -> reconsideration { authority cite "ORAP 6.25" }
   edge-decision-issued-review "Petition for Supreme Court review" -> further-review {
     authority cite "ORAP 9.05"
   }

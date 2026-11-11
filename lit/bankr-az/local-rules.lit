@@ -154,6 +154,7 @@ test "Counting boundary: master-mailing-list-period (weekend)" cite "Bankr. D. A
   given PetitionFiled() on 2026-06-06
   expect deadline(master-mailing-list-period) == 2026-06-15
 }
+
 /// Bankr. D. Ariz. LR 1007-1(c): the signed Local Form 1007-1 declaration
 /// is filed within 21 days after filing the petition, or the case is
 /// dismissed without further notice.
@@ -164,6 +165,7 @@ test "Counting boundary: declaration-period (weekend)" cite "Bankr. D. Ariz. LR 
   given PetitionFiled() on 2026-06-06
   expect deadline(declaration-period) == 2026-06-29
 }
+
 /// Bankr. D. Ariz. LR 1007-1(c): where the schedules and statements were
 /// filed on an extension, the declaration is filed no later than seven days
 /// after they are filed.
@@ -174,6 +176,7 @@ test "Counting boundary: extended-declaration-period (weekend)" cite "Bankr. D. 
   given ExtendedSchedulesFiled() on 2026-06-06
   expect deadline(extended-declaration-period) == 2026-06-15
 }
+
 /// Bankr. D. Ariz. LR 1007-1(d): an individual debtor's Statement of
 /// Social Security Number is submitted within seven days of the filing of
 /// the petition, or the petition may be dismissed.
@@ -184,6 +187,7 @@ test "Counting boundary: social-security-statement-period (weekend)" cite "Bankr
   given PetitionFiled() on 2026-06-06
   expect deadline(social-security-statement-period) == 2026-06-15
 }
+
 /// Bankr. D. Ariz. LR 1007-1(g): a debtor without an attorney files Local
 /// Form 1007-3 within 14 days after the petition is filed.
 deadline unrepresented-declaration-period: 14.days after PetitionFiled() counted_by frbp9006-arizona cite "Bankr. D. Ariz. LR 1007-1(g)"
@@ -197,6 +201,7 @@ test "Counting boundary: negative-notice-response-period (weekend)" cite "Bankr.
   given BarDateNoticeServed() on 2026-06-06
   expect deadline(negative-notice-response-period) == 2026-06-29
 }
+
 /// Bankr. D. Ariz. LR 2003-1(b): the case trustee and the United States
 /// Trustee have seven days to respond to a motion to waive the debtor's
 /// appearance at the meeting of creditors.
@@ -207,6 +212,7 @@ test "Counting boundary: appearance-waiver-response-period (weekend)" cite "Bank
   given AppearanceWaiverMotionFiled() on 2026-06-06
   expect deadline(appearance-waiver-response-period) == 2026-06-15
 }
+
 /// Bankr. D. Ariz. LR 2003-2(b): an individual chapter 7 debtor's
 /// questionnaire and documents are mailed to the trustee postmarked no
 /// later than 14 days before the date set for the § 341 meeting.
@@ -217,6 +223,7 @@ test "Counting boundary: trustee-questionnaire-period (weekend)" cite "Bankr. D.
   given FirstMeetingDate() on 2026-06-06
   expect deadline(trustee-questionnaire-period) == 2026-05-22
 }
+
 /// Bankr. D. Ariz. LR 2084-4(a): a chapter 13 debtor serves the Business
 /// Questionnaire and Authorization to Release Information on the trustee
 /// within seven days of the petition date.
@@ -227,6 +234,7 @@ test "Counting boundary: chapter-13-trustee-forms-period (weekend)" cite "Bankr.
   given PetitionFiled() on 2026-06-06
   expect deadline(chapter-13-trustee-forms-period) == 2026-06-15
 }
+
 /// Bankr. D. Ariz. LR 2084-4(b): within 28 days after receiving notice of a
 /// change in the monthly conduit payment, the trustee files notice of the
 /// change.
@@ -237,6 +245,7 @@ test "Counting boundary: conduit-change-notice-period (holiday)" cite "Bankr. D.
   given ConduitChangeNoticeReceived() on 2026-06-05
   expect deadline(conduit-change-notice-period) == 2026-07-06
 }
+
 /// Bankr. D. Ariz. LR 2084-4(b): a party in interest may object to the
 /// trustee's conduit-change notice within 28 days after the trustee files
 /// it.
@@ -247,6 +256,7 @@ test "Counting boundary: conduit-change-objection-period (holiday)" cite "Bankr.
   given ConduitChangeNoticeFiled() on 2026-06-05
   expect deadline(conduit-change-objection-period) == 2026-07-06
 }
+
 /// Bankr. D. Ariz. LR 2084-4(b): a real property creditor files its proof
 /// of claim with attachments within 70 days after the filing of the
 /// petition.
@@ -257,6 +267,7 @@ test "Counting boundary: real-property-claim-period (weekend)" cite "Bankr. D. A
   given PetitionFiled() on 2026-06-06
   expect deadline(real-property-claim-period) == 2026-08-17
 }
+
 /// Bankr. D. Ariz. LR 2084-4(b): on conversion, the real property
 /// creditor's proof of claim is due within 70 days after the conversion.
 deadline converted-real-property-claim-period: 70.days after CaseConverted() counted_by frbp9006-arizona cite "Bankr. D. Ariz. LR 2084-4(b)"
@@ -266,6 +277,7 @@ test "Counting boundary: converted-real-property-claim-period (weekend)" cite "B
   given CaseConverted() on 2026-06-06
   expect deadline(converted-real-property-claim-period) == 2026-08-17
 }
+
 /// Bankr. D. Ariz. LR 2084-4(b): at least 60 days before a change of the
 /// name or address where payments are made, the real property creditor
 /// files and serves notice of the change.
@@ -276,6 +288,7 @@ test "Counting boundary: payment-address-notice-period (weekend)" cite "Bankr. D
   given PaymentAddressChanged() on 2026-06-03
   expect deadline(payment-address-notice-period) == 2026-04-03
 }
+
 /// Bankr. D. Ariz. LR 2084-4(f): unless the deficiency is cured or a
 /// hearing requested within 14 days of service of the trustee's proposed
 /// dismissal order, the court may dismiss without further notice.
@@ -298,6 +311,7 @@ test "Counting boundary: modified-plan-recommendation-period (holiday)" cite "Ba
   given CreditorObjectionDeadline() on 2026-06-05
   expect deadline(modified-plan-recommendation-period) == 2026-07-06
 }
+
 /// Bankr. D. Ariz. LR 2084-10(b): within 30 days after the trustee files
 /// the recommendation or objection, the debtor complies with the trustee's
 /// requests or files an objection.
@@ -308,6 +322,7 @@ test "Counting boundary: trustee-recommendation-compliance-period (holiday)" cit
   given TrusteeRecommendationFiled() on 2026-06-03
   expect deadline(trustee-recommendation-compliance-period) == 2026-07-06
 }
+
 /// Bankr. D. Ariz. LR 2084-13(e): no later than 45 days after receiving a
 /// proposed confirmation order, the trustee approves and lodges it or files
 /// a notice of rejection.
@@ -318,6 +333,7 @@ test "Counting boundary: confirmation-order-lodging-period (weekend)" cite "Bank
   given ProposedConfirmationOrderReceived() on 2026-06-03
   expect deadline(confirmation-order-lodging-period) == 2026-07-20
 }
+
 /// Bankr. D. Ariz. LR 3003-1(c)(1): in a Subchapter V case, unless the
 /// court orders otherwise, a non-governmental creditor's proof of claim is
 /// timely if filed not later than 70 days after the order for relief.
@@ -328,6 +344,7 @@ test "Counting boundary: subchapter-v-claim-period (weekend)" cite "Bankr. D. Ar
   given OrderForReliefEntered() on 2026-06-06
   expect deadline(subchapter-v-claim-period) == 2026-08-17
 }
+
 /// Bankr. D. Ariz. LR 3007-1(b): the claimant has 21 days from service of
 /// a claim objection to file and serve a response.
 deadline claim-objection-response-period: 21.days after ClaimObjectionServed() counted_by frbp9006-arizona cite "Bankr. D. Ariz. LR 3007-1(b)"
@@ -337,6 +354,7 @@ test "Counting boundary: claim-objection-response-period (weekend)" cite "Bankr.
   given ClaimObjectionServed() on 2026-06-06
   expect deadline(claim-objection-response-period) == 2026-06-29
 }
+
 /// Bankr. D. Ariz. LR 4001-1(c): the notice of a stay relief motion or
 /// stipulation states that the court may approve it if no objection is
 /// filed and served within 14 days of service.
@@ -358,6 +376,7 @@ test "Counting boundary: exhibit-return-period (holiday)" cite "Bankr. D. Ariz. 
   given AppealConcluded() on 2026-06-03
   expect deadline(exhibit-return-period) == 2026-07-06
 }
+
 /// Bankr. D. Ariz. LR 5005-4(g): the filer of a paper document confirms the
 /// converted document or objects within 14 days of its entry.
 deadline converted-document-objection-period: 14.days after PaperDocumentDocketed() counted_by frbp9006-arizona cite "Bankr. D. Ariz. LR 5005-4(g)"
@@ -370,6 +389,7 @@ test "Counting boundary: sale-report-period (weekend)" cite "Bankr. D. Ariz. LR 
   given SaleClosed() on 2026-06-06
   expect deadline(sale-report-period) == 2026-06-29
 }
+
 /// Bankr. D. Ariz. LR 6006-1(d): the notice of an executory contract or
 /// lease motion states that it may be granted if no objection is served
 /// and filed within 21 days of service.
@@ -380,6 +400,7 @@ test "Counting boundary: executory-contract-objection-period (weekend)" cite "Ba
   given ExecutoryContractNoticeServed() on 2026-06-06
   expect deadline(executory-contract-objection-period) == 2026-06-29
 }
+
 /// Bankr. D. Ariz. LR 6007-1(d): objections to an abandonment are filed and
 /// served within 14 days of service of the notice, unless ordered
 /// otherwise.
@@ -397,6 +418,7 @@ test "Counting boundary: pretrial-statement-period (holiday)" cite "Bankr. D. Ar
   given TrialDate() on 2026-06-01
   expect deadline(pretrial-statement-period) == 2026-05-22
 }
+
 /// Bankr. D. Ariz. LR 7016-1(b): unless the parties agree otherwise, the
 /// plaintiff's or movant's counsel sends the initial draft pretrial
 /// statement no later than 14 days before the filing deadline.
@@ -407,6 +429,7 @@ test "Counting boundary: pretrial-draft-period (weekend)" cite "Bankr. D. Ariz. 
   given PretrialStatementDeadline() on 2026-06-06
   expect deadline(pretrial-draft-period) == 2026-05-22
 }
+
 /// Bankr. D. Ariz. LR 7054-1(a): unless ordered otherwise, a prevailing
 /// party files a verified cost statement within 14 days of entry of
 /// judgment.
@@ -432,6 +455,7 @@ test "Counting boundary: summary-judgment-response-period (holiday)" cite "Bankr
   given SummaryJudgmentMotionServed() on 2026-06-03
   expect deadline(summary-judgment-response-period) == 2026-07-06
 }
+
 /// Bankr. D. Ariz. LR 9013-1(h)(3): the summary judgment movant serves and
 /// files a reply within 14 days after service of the response.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frbp9006-arizona cite "Bankr. D. Ariz. LR 9013-1(h)"
@@ -449,7 +473,7 @@ start motion-filed
 state motion-filed: "Motion filed and served" by movant cite "Bankr. D. Ariz. LR 9013-1(a)"
 {
   note "A motion is answered within 14 days after service unless a rule or the notice sets otherwise (LR 9013-1(c)); matters listed in LR 9013-1(l) may proceed on 21-day bar date notice (LR 2002-2). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Response filed and served" -> opposed {
+  "Response filed and served" -> opposed {
     authority cite "Bankr. D. Ariz. LR 9013-1(c)"
     within motion-response-period
   }
@@ -461,7 +485,7 @@ state motion-filed: "Motion filed and served" by movant cite "Bankr. D. Ariz. LR
 state opposed: "Response filed; reply and hearing" by opponent cite "Bankr. D. Ariz. LR 9013-1(c)"
 {
   note "The movant may reply within 14 days after service of the response (LR 9013-1(c)); an initial hearing on a contested matter takes no live testimony (LR 9014-3)."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. D. Ariz. LR 9014-3" }
+  "Hearing held" -> ruling { authority cite "Bankr. D. Ariz. LR 9014-3" }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. D. Ariz. LR 2002-2(b)"

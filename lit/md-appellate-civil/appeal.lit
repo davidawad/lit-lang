@@ -59,22 +59,19 @@ decision notice: "Notice of appeal within 30 days after entry?" by appellant cit
 state record: "Transcript ordered and record transmitted" by court cite "Md. Rule 8-412(a)"
 {
   note "In a civil action subject to Rule 8-205(a), the appellant orders the transcript within ten days after the Rule 8-206(c) order to proceed (Md. Rule 8-411(b)(2)), and the clerk of the lower court transmits the record within sixty days after that order (Md. Rule 8-412(a)(2)); in an expedited appeal under Rule 8-207(a), within thirty days after the first notice of appeal (Md. Rule 8-412(a)(1)). On docketing the record, the Clerk sends notice of the appellant's brief due date, no earlier than 40 days after the notice unless the Court orders otherwise (Md. Rule 8-412(c)). The appeal may be dismissed if the record is not transmitted in time, unless the failure was caused by a judge, a clerk, the court reporter or the appellee (Md. Rule 8-602(c)(3))."
-  edge-record-briefing "Record docketed" -> briefing {
-    event RecordFiled()
-    authority cite "Md. Rule 8-412(c)"
-  }
+  "Record docketed" -> briefing { event RecordFiled(), authority cite "Md. Rule 8-412(c)" }
 }
 
 state briefing: "Briefs filed" by appellant cite "Md. Rule 8-502(a)"
 {
   note "The appellant's brief is filed by the date in the Clerk's Rule 8-412(c) notice; the appellee's within 30 days after the appellant's; a reply not later than the earlier of 20 days after the appellee's brief or ten days before the scheduled argument (Md. Rule 8-502(a)(1)-(3)). By joint stipulation the parties may extend a principal brief by no more than 30 days (Md. Rule 8-502(b)(2)(A)). The appellant files a record extract with its brief in every civil case (Md. Rule 8-501(a)). Principal briefs are limited to 9,100 words and a reply to 3,900 in the Appellate Court (Md. Rule 8-503(d)(1), (3)). An appeal may be dismissed when the appellant's brief or record extract is late (Md. Rule 8-602(c)(5)); a late appellee may not argue without permission (Md. Rule 8-502(d))."
-  edge-briefing-argument "Briefing complete" -> argument { authority cite "Md. Rule 8-522(a)" }
+  "Briefing complete" -> argument { authority cite "Md. Rule 8-522(a)" }
 }
 
 state argument: "Oral argument or consideration on brief" by court cite "Md. Rule 8-523(b)"
 {
   note "Oral argument is limited to 20 minutes a side in the Appellate Court and 30 in the Supreme Court; a request for more time is made no later than ten days after the appellee's brief is filed (Md. Rule 8-522(a)). A party may submit on brief by notice at least ten days before argument (Md. Rule 8-523(a)(1)). If the panel directs consideration on brief, a party may request argument within ten days after the later of the Clerk's notice or the appellee's brief (Md. Rule 8-523(b))."
-  edge-argument-decision "Case submitted" -> decision { authority cite "Md. Rule 8-604(a)" }
+  "Case submitted" -> decision { authority cite "Md. Rule 8-604(a)" }
 }
 
 state decision: "Appeal decided" by court cite "Md. Rule 8-604(a)"
@@ -92,9 +89,7 @@ decision post-decision: "Reconsideration, certiorari or mandate" by petitioner c
   edge-post-decision-reconsider "Reconsideration moved" -> reconsideration {
     authority cite "Md. Rule 8-605(a)"
   }
-  edge-post-decision-certiorari "Certiorari petition filed" -> certiorari {
-    authority cite "Md. Rule 8-302(a)"
-  }
+  "Certiorari petition filed" -> certiorari { authority cite "Md. Rule 8-302(a)" }
   edge-post-decision-mandate "No further review" -> mandate-issued {
     event MandateIssued()
     authority cite "Md. Rule 8-606(b)"

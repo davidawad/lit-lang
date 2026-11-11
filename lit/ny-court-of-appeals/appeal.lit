@@ -77,9 +77,7 @@ decision screening: "Jurisdictional inquiry, alternative review or normal course
   edge-screening-dismissed "Dismissed or transferred on the jurisdictional inquiry" -> dismissed-jurisdiction {
     authority cite "22 NYCRR 500.10(a)"
   }
-  edge-screening-alternative "Selected for the alternative procedure" -> alternative {
-    authority cite "22 NYCRR 500.11(a)"
-  }
+  "Selected for the alternative procedure" -> alternative { authority cite "22 NYCRR 500.11(a)" }
   edge-screening-normal "Normal course" -> briefing { authority cite "22 NYCRR 500.12(a)" }
 }
 
@@ -126,14 +124,8 @@ state argument: "Oral argument or submission" by court cite "22 NYCRR 500.18(a)"
 decision decision: "Court of Appeals decision" by court cite "CPLR 5522(a)"
 {
   note "A court to which an appeal is taken may reverse, affirm or modify, wholly or in part, the judgment or order before it (CPLR 5522(a)). The remittitur containing the court's adjudication is sent with the return papers to the clerk of the court of original instance or of the court to which the case is remitted, which issues any order to effect it, including an award of costs (22 NYCRR 500.19). A motion to reargue is served not later than 30 days after the appeal is decided, states the points claimed to have been overlooked or misapprehended, may not rest on new arguments except for extraordinary and compelling reasons, and is entertained only once per party (22 NYCRR 500.24(b), (c), (d), (e)); it is not modeled. The outline named no leading decision on the standard of review; none is kept."
-  edge-decision-affirmed "Affirmed" -> affirmed {
-    event DecisionFiled()
-    authority cite "CPLR 5522(a)"
-  }
-  edge-decision-reversed "Reversed or modified" -> reversed {
-    event DecisionFiled()
-    authority cite "CPLR 5522(a)"
-  }
+  "Affirmed" -> affirmed { event DecisionFiled(), authority cite "CPLR 5522(a)" }
+  "Reversed or modified" -> reversed { event DecisionFiled(), authority cite "CPLR 5522(a)" }
 }
 
 terminal affirmed: "Order affirmed" outcome [loss, judgment] cite "CPLR 5522(a)"

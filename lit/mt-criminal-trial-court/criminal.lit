@@ -33,7 +33,7 @@ decision initial-appearance: "Bail or release" by court cite ?("Mont. Code Ann. 
 
 decision probable-cause: "Leave to file an information, preliminary examination or grand jury" by court cite ?("Mont. Code Ann. Title 46, chapters 10 and 11 (preliminary examination; charging): not vendored") {
   note "Probable cause for a felony charge (leave to file an information, a preliminary examination or a grand jury indictment) is governed by Title 46, chapters 10 and 11, which are not vendored."
-  edge-probable-cause-charged "Information filed or indictment returned" -> charged {
+  "Information filed or indictment returned" -> charged {
     authority cite ?("Mont. Code Ann. Title 46, chapter 11: not vendored")
   }
   edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
@@ -43,16 +43,14 @@ decision probable-cause: "Leave to file an information, preliminary examination 
 
 state charged: "Information, indictment or complaint" by court cite ?("Mont. Code Ann. Title 46, chapter 11 (charging): not vendored") {
   note "The charging documents are governed by Title 46, chapter 11, which is not vendored. Charges and defendants may be tried together and relief from prejudicial joinder sought under MCA 46-13-210 and 46-13-211."
-  edge-charged-arraignment "Arraignment" -> arraignment {
+  "Arraignment" -> arraignment {
     authority cite ?("Mont. Code Ann. Title 46, chapter 12 (arraignment): not vendored")
   }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite ?("Mont. Code Ann. Title 46, chapter 12 (arraignment and pleas): not vendored") {
   note "Arraignment and pleas are governed by Title 46, chapter 12, which is not vendored. Within a reasonable time after a not guilty plea, and before trial within the period MCA 46-13-110(1) sets, the court holds an omnibus hearing; the period is not stated here (partial source)."
-  edge-arraignment-discovery "Discovery and the omnibus hearing" -> discovery {
-    authority cite "MCA 46-13-110"
-  }
+  "Discovery and the omnibus hearing" -> discovery { authority cite "MCA 46-13-110" }
 }
 
 state discovery: "Pretrial motions and the omnibus hearing" by prosecution cite "MCA 46-13-101"
@@ -84,9 +82,7 @@ decision plea-decision: "Plea or trial" by accused cite ?("Mont. Code Ann. Title
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("Mont. Code Ann. Title 46, chapter 12: not vendored")
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite ?("Mont. Code Ann. Title 46, chapter 16: not vendored")
-  }
+  "Trial" -> trial { authority cite ?("Mont. Code Ann. Title 46, chapter 16: not vendored") }
 }
 
 decision trial: "Verdict" by court cite ?("Mont. Code Ann. Title 46, chapter 16 (trial and verdict): not vendored") {
@@ -104,7 +100,7 @@ decision trial: "Verdict" by court cite ?("Mont. Code Ann. Title 46, chapter 16 
 
 state sentencing: "Sentencing and judgment" by court cite ?("Mont. Code Ann. Title 46, chapter 18 (sentencing and judgment): not vendored") {
   note "Sentencing and the written judgment (Title 46, chapter 18, including section 46-18-116) are not vendored."
-  edge-sentencing-judgment "Judgment entered" -> judgment { authority cite "M. R. App. P. 4(5)" }
+  "Judgment entered" -> judgment { authority cite "M. R. App. P. 4(5)" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "M. R. App. P. 4(5)"

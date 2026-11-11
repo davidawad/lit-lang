@@ -2,6 +2,8 @@ module nywd-local-rules.local-rules
 
 import core.states.new-york.{ frcp6-new-york }
 
+forum frcp
+
 // The Western District of New York's own periods, computed under the
 // federal rules (FRCP 6(a) governs "any local rule"). The motion periods
 // of Loc. R. Civ. P. 7(b)(2) apply only if the Court does not set
@@ -123,9 +125,6 @@ event ExhibitRemovalNoticeGiven()
 /// (or unredacted) version is filed within 14 days of the entry of the
 /// order denying the motion.
 deadline unsealed-filing-period: 14.days after SealingDenied() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 5.3(g)"
-{
-  forum frcp
-}
 
 test "Counting boundary: unsealed-filing-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 5.3(g)"
 {
@@ -137,16 +136,9 @@ test "Counting boundary: unsealed-filing-period (weekend)" cite "W.D.N.Y. Loc. R
 /// final and not appealable 60 days after entry; unless stipulated, an
 /// EAJA petition may not be filed before then.
 deadline social-security-judgment-final-period: 60.days after SocialSecurityJudgmentEntered() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
-{
-  forum frcp
-}
-
 /// Loc. R. Civ. P. 5.5(f): the plaintiff files the EAJA petition under 28
 /// U.S.C. § 2412 within 30 days of final judgment.
 deadline eaja-petition-period: 30.days after SocialSecurityJudgmentFinal() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
-{
-  forum frcp
-}
 
 test "Counting boundary: eaja-petition-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
 {
@@ -157,9 +149,6 @@ test "Counting boundary: eaja-petition-period (weekend)" cite "W.D.N.Y. Loc. R. 
 /// Loc. R. Civ. P. 5.5(f): the defendant has 30 days to respond to the
 /// EAJA petition.
 deadline eaja-response-period: 30.days after EajaPetitionFiled() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
-{
-  forum frcp
-}
 
 test "Counting boundary: eaja-response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
 {
@@ -173,9 +162,6 @@ test "Counting boundary: eaja-response-period (weekend)" cite "W.D.N.Y. Loc. R. 
 /// Circuit (5.5(g)(1)), whose text is not vendored; its period is not
 /// declared.
 deadline fee-petition-response-period: 30.days after FeePetitionServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 5.5(g)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-petition-response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 5.5(g)"
 {
@@ -187,9 +173,6 @@ test "Counting boundary: fee-petition-response-period (weekend)" cite "W.D.N.Y. 
 /// applies by letter at least 7 days before the date the memorandum must
 /// be filed.
 deadline page-extension-request-period: 7.days before MemorandumDue() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: page-extension-request-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(a)"
 {
@@ -201,9 +184,6 @@ test "Counting boundary: page-extension-request-period (weekend)" cite "W.D.N.Y.
 /// opposing a summary judgment motion has 28 days after service of the
 /// motion to file and serve responding papers.
 deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: summary-judgment-response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
@@ -214,9 +194,6 @@ test "Counting boundary: summary-judgment-response-period (weekend)" cite "W.D.N
 /// Loc. R. Civ. P. 7(b)(2)(A): the moving party has 14 days after service
 /// of the responding papers to file and serve reply papers.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: summary-judgment-reply-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
@@ -227,9 +204,6 @@ test "Counting boundary: summary-judgment-reply-period (weekend)" cite "W.D.N.Y.
 /// Loc. R. Civ. P. 7(b)(2)(A): if the opposing party cross-moves, the
 /// moving party has 28 days after service of the cross-motion to respond.
 deadline cross-motion-response-period: 28.days after CrossMotionServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: cross-motion-response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
@@ -240,9 +214,6 @@ test "Counting boundary: cross-motion-response-period (weekend)" cite "W.D.N.Y. 
 /// Loc. R. Civ. P. 7(b)(2)(A): the cross-moving party has 14 days after
 /// service of the responding papers to reply.
 deadline cross-motion-reply-period: 14.days after CrossMotionResponseServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: cross-motion-reply-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
@@ -254,9 +225,6 @@ test "Counting boundary: cross-motion-reply-period (weekend)" cite "W.D.N.Y. Loc
 /// order, the opposing party has 14 days after service of the motion to
 /// file and serve responding papers.
 deadline response-period: 14.days after MotionServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
@@ -267,9 +235,6 @@ test "Counting boundary: response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. 
 /// Loc. R. Civ. P. 7(b)(2)(B): the moving party has 7 days after service
 /// of the responding papers to file and serve reply papers.
 deadline reply-period: 7.days after ResponseServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
@@ -281,9 +246,6 @@ test "Counting boundary: reply-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 
 /// moving party files and serves the amended pleading on the existing
 /// parties within 14 days of entry of the order granting leave.
 deadline amended-pleading-period: 14.days after AmendmentGranted() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 15(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: amended-pleading-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 15(c)"
 {
@@ -294,9 +256,6 @@ test "Counting boundary: amended-pleading-period (weekend)" cite "W.D.N.Y. Loc. 
 /// Loc. R. Civ. P. 16(c)(2): the plaintiff provides a written settlement
 /// demand at least 14 days before the first settlement conference.
 deadline settlement-demand-period: 14.days before SettlementConferenceHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: settlement-demand-period (holiday)" cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
 {
@@ -307,9 +266,6 @@ test "Counting boundary: settlement-demand-period (holiday)" cite "W.D.N.Y. Loc.
 /// Loc. R. Civ. P. 16(c)(2): the defendant responds to the demand in
 /// writing at least 7 days before the conference.
 deadline settlement-response-period: 7.days before SettlementConferenceHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: settlement-response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
 {
@@ -321,9 +277,6 @@ test "Counting boundary: settlement-response-period (weekend)" cite "W.D.N.Y. Lo
 /// pretrial conference, or another date the Court sets, each party files
 /// and serves a pretrial statement.
 deadline pretrial-statement-period: 14.days before FinalPretrialConferenceHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 16(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: pretrial-statement-period (holiday)" cite "W.D.N.Y. Loc. R. Civ. P. 16(e)"
 {
@@ -336,9 +289,6 @@ test "Counting boundary: pretrial-statement-period (holiday)" cite "W.D.N.Y. Loc
 /// within 14 days after the privilege is asserted, unless the Court orders
 /// otherwise.
 deadline deposition-privilege-log-period: 14.days after PrivilegeAssertedAtDeposition() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 26(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: deposition-privilege-log-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 26(d)"
 {
@@ -349,9 +299,6 @@ test "Counting boundary: deposition-privilege-log-period (weekend)" cite "W.D.N.
 /// Loc. R. Civ. P. 30(a): absent agreement or order, each deposition
 /// notice is served at least 21 days before the date set for examination.
 deadline deposition-notice-period: 21.days before DepositionHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 30(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: deposition-notice-period (holiday)" cite "W.D.N.Y. Loc. R. Civ. P. 30(a)"
 {
@@ -363,9 +310,6 @@ test "Counting boundary: deposition-notice-period (holiday)" cite "W.D.N.Y. Loc.
 /// scheduled to allow their production at least 7 calendar days before
 /// it.
 deadline deposition-documents-period: 7.days before DepositionHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 30(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: deposition-documents-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 30(b)"
 {
@@ -377,9 +321,6 @@ test "Counting boundary: deposition-documents-period (weekend)" cite "W.D.N.Y. L
 /// are submitted by motion in limine no later than 7 days before trial or
 /// any earlier deadline the Court sets.
 deadline video-objection-motion-period: 7.days before TrialBegins() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 30(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: video-objection-motion-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 30(c)"
 {
@@ -391,9 +332,6 @@ test "Counting boundary: video-objection-motion-period (weekend)" cite "W.D.N.Y.
 /// stipulation of dismissal or other appropriate document within 14 days;
 /// otherwise the Judge may dismiss the case as settled, on the merits.
 deadline stipulation-of-dismissal-period: 14.days after CaseSettled() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 41(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: stipulation-of-dismissal-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 41(a)"
 {
@@ -404,9 +342,6 @@ test "Counting boundary: stipulation-of-dismissal-period (weekend)" cite "W.D.N.
 /// Loc. R. Civ. P. 54(a): within 30 days after entry of final judgment, a
 /// party entitled to costs submits a verified Bill of Costs to the Clerk.
 deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 54(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 54(a)"
 {
@@ -417,9 +352,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "W.D.N.Y. Loc. R. 
 /// Loc. R. Civ. P. 54(b): the opposing party files any memorandum in
 /// opposition to costs within 21 days of service of the Bill of Costs.
 deadline cost-opposition-period: 21.days after BillOfCostsServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 54(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: cost-opposition-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 54(b)"
 {
@@ -430,9 +362,6 @@ test "Counting boundary: cost-opposition-period (weekend)" cite "W.D.N.Y. Loc. R
 /// Loc. R. Civ. P. 54(c): the prevailing party files any reply within 21
 /// days of service of the opposing memorandum.
 deadline cost-reply-period: 21.days after CostOppositionServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 54(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: cost-reply-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 54(c)"
 {
@@ -444,9 +373,6 @@ test "Counting boundary: cost-reply-period (weekend)" cite "W.D.N.Y. Loc. R. Civ
 /// magistrate judge's recommended disposition moves for an extension
 /// within 14 days after being served with it.
 deadline objection-extension-period: 14.days after RecommendationServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 72(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: objection-extension-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 72(b)"
 {
@@ -458,9 +384,6 @@ test "Counting boundary: objection-extension-period (weekend)" cite "W.D.N.Y. Lo
 /// exhibits within 30 days from the Clerk's notice may have them destroyed
 /// or otherwise disposed of.
 deadline exhibit-removal-period: 30.days after ExhibitRemovalNoticeGiven() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 79(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: exhibit-removal-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 79(c)"
 {

@@ -58,7 +58,7 @@ state amended: "Amended pleading" by plaintiff cite "ORCP 23 A"
   edge-amended-tested "Amended pleading met with a new Rule 21 A motion" -> dismissal-motion {
     authority cite "ORCP 21 A"
   }
-  edge-amended-answered "Amended pleading answered" -> answered { authority cite "ORCP 15 C" }
+  "Amended pleading answered" -> answered { authority cite "ORCP 15 C" }
 }
 
 terminal dismissed-pleading: "Dismissed on a Rule 21 A motion" outcome [loss, dismissal] cite "ORCP 21 A(2)(c)"
@@ -96,7 +96,7 @@ terminal default-won: "Judgment by default for applicant" outcome [win] cite "OR
 state answered: "Answer filed" by plaintiff cite "ORCP 15 A"
 {
   note "The trial of all issues of fact is by jury unless the parties consent to trial without a jury by written stipulation filed with the court or oral stipulation in open court entered in the record, or the court finds that no right of jury trial exists on those issues (Rule 51 C). Issues of law are tried by the court (Rule 51 B)."
-  edge-answered-discovery "Case proceeds to discovery" -> discovery { authority cite "ORCP 36 A" }
+  "Case proceeds to discovery" -> discovery { authority cite "ORCP 36 A" }
 }
 
 state discovery: "Discovery" by plaintiff cite "ORCP 36 A"
@@ -106,7 +106,7 @@ state discovery: "Discovery" by plaintiff cite "ORCP 36 A"
     authority cite "ORCP 46 B(2)"
   }
   edge-discovery-sj "Motion for summary judgment" -> summary-judgment { authority cite "ORCP 47 C" }
-  edge-discovery-trial "Case reaches trial" -> trial { authority cite "ORCP 51 C" }
+  "Case reaches trial" -> trial { authority cite "ORCP 51 C" }
   edge-discovery-offer-accepted "Offer to allow judgment accepted" -> settled {
     authority cite "ORCP 54 E(2)"
   }
@@ -149,9 +149,7 @@ state trial: "Trial by jury or by the court" by court cite "ORCP 51 C"
 {
   note "In an action tried by the court without a jury, after the plaintiff has presented its evidence the defendant may move for a judgment of dismissal on the ground that the plaintiff has shown no right to relief (Rule 54 B(2)). A plaintiff may dismiss without order of court by filing and serving a notice of dismissal not less than 5 days before the day of trial if no counterclaim has been pleaded (Rule 54 A(1))."
   edge-trial-verdict "Verdict or decision" -> judgment-entered { authority cite "ORCP 67 C" }
-  edge-trial-settled "Settlement during trial: stipulation of dismissal" -> settled {
-    authority cite "ORCP 54 A(1)"
-  }
+  "Settlement during trial: stipulation of dismissal" -> settled { authority cite "ORCP 54 A(1)" }
 }
 
 decision judgment-entered: "Judgment entered" by court cite "ORCP 67 A"

@@ -75,9 +75,7 @@ state discovery: "Discovery" by plaintiff cite "Neb. Ct. R. Discov. § 6-326(a)"
   edge-discovery-settle "Settled or dismissed without prejudice" -> settled {
     authority cite "Neb. Rev. Stat. § 25-601"
   }
-  edge-discovery-trial "No dispositive motion" -> trial {
-    authority cite "Neb. Rev. Stat. § 25-1102"
-  }
+  "No dispositive motion" -> trial { authority cite "Neb. Rev. Stat. § 25-1102" }
 }
 
 terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "Neb. Ct. R. Discov. § 6-337(d)"

@@ -2,6 +2,8 @@ module mowd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Western District of Missouri's own periods in a criminal case: the
 // Local Criminal Rules' and those of the Local Civil Rules L.R. 99.0
 // applies to criminal proceedings. FRCrimP 45(a) computes a period "in
@@ -57,9 +59,6 @@ event PresentenceReportSubmitted()
 /// W.D. Mo. L.R. 7.0(c)(2), applied by L.R. 99.0: within 14 days after a
 /// motion is filed, each party opposing it files opposing suggestions.
 deadline opposing-suggestions-period: 14.days after MotionFiled() counted_by frcrimp45 cite "W.D. Mo. L.R. 7.0(c); W.D. Mo. L.R. 99.0"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: opposing-suggestions-period (weekend)" cite "W.D. Mo. L.R. 7.0(c); W.D. Mo. L.R. 99.0"
 {
@@ -71,9 +70,6 @@ test "Counting boundary: opposing-suggestions-period (weekend)" cite "W.D. Mo. L
 /// the opposing suggestions are filed, the moving party may file reply
 /// suggestions.
 deadline reply-suggestions-period: 14.days after OpposingSuggestionsFiled() counted_by frcrimp45 cite "W.D. Mo. L.R. 7.0(c); W.D. Mo. L.R. 99.0"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-suggestions-period (weekend)" cite "W.D. Mo. L.R. 7.0(c); W.D. Mo. L.R. 99.0"
 {
@@ -86,9 +82,6 @@ test "Counting boundary: reply-suggestions-period (weekend)" cite "W.D. Mo. L.R.
 /// recommendations or report within 14 days after being served with a
 /// copy.
 deadline objection-response-period: 14.days after ObjectionsServed() counted_by frcrimp45 cite "W.D. Mo. L.R. 74.1(b); W.D. Mo. L.R. 99.0"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: objection-response-period (weekend)" cite "W.D. Mo. L.R. 74.1(b); W.D. Mo. L.R. 99.0"
 {
@@ -101,9 +94,6 @@ test "Counting boundary: objection-response-period (weekend)" cite "W.D. Mo. L.R
 /// judgment entered, the offering attorney withdraws any exhibits in the
 /// Clerk's custody and gives the Clerk a receipt.
 deadline exhibit-withdrawal-period: 14.days after VerdictOrJudgment() counted_by frcrimp45 cite "W.D. Mo. L.R. 79.2(a); W.D. Mo. L.R. 99.0"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-withdrawal-period (weekend)" cite "W.D. Mo. L.R. 79.2(a); W.D. Mo. L.R. 99.0"
 {
@@ -115,9 +105,6 @@ test "Counting boundary: exhibit-withdrawal-period (weekend)" cite "W.D. Mo. L.R
 /// transcript is filed, each party wishing to redact personal data
 /// identifiers under FRCrimP 49.1 files a Notice of Intent to Redact.
 deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frcrimp45 cite "W.D. Mo. L.R. 80.1(a); W.D. Mo. L.R. 99.0"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: redaction-notice-period (weekend)" cite "W.D. Mo. L.R. 80.1(a); W.D. Mo. L.R. 99.0"
 {
@@ -129,9 +116,6 @@ test "Counting boundary: redaction-notice-period (weekend)" cite "W.D. Mo. L.R. 
 /// transcript is filed, a party that filed a Notice of Intent to Redact
 /// files a statement of the page and line numbers of the identifiers.
 deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by frcrimp45 cite "W.D. Mo. L.R. 80.1(a); W.D. Mo. L.R. 99.0"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: redaction-statement-period (weekend)" cite "W.D. Mo. L.R. 80.1(a); W.D. Mo. L.R. 99.0"
 {
@@ -144,9 +128,6 @@ test "Counting boundary: redaction-statement-period (weekend)" cite "W.D. Mo. L.
 /// written specific objection, which the court en banc (or a designated
 /// district judge) determines de novo.
 deadline surety-objection-period: 14.days after SuretyDisqualificationServed() counted_by frcrimp45 cite "W.D. Mo. L.R. 99.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: surety-objection-period (weekend)" cite "W.D. Mo. L.R. 99.1(d)"
 {
@@ -160,9 +141,6 @@ test "Counting boundary: surety-objection-period (weekend)" cite "W.D. Mo. L.R. 
 /// of any unresolved objection; at sentencing the court considers only
 /// objections raised under L.R. 99.8(e) absent good cause (L.R. 99.8(j)).
 deadline unresolved-objection-notice-period: 7.days after PresentenceReportSubmitted() counted_by frcrimp45 cite "W.D. Mo. L.R. 99.8(i)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: unresolved-objection-notice-period (weekend)" cite "W.D. Mo. L.R. 99.8(i)"
 {

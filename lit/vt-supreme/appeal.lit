@@ -39,13 +39,13 @@ terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismi
 state record: "Appeal docketed; record complete" by court cite "V.R.A.P. 12(b)"
 {
   note "Within 14 days after taking the appeal the appellant files a docketing statement (V.R.A.P. 3(e)), and within 14 days of filing the notice files a statement that no transcript is necessary or orders the transcript; failing to order one waives any issue that needs it (V.R.A.P. 10(b)(1)). The superior court clerk transmits the appeal within 14 days after the notice is filed (V.R.A.P. 11(b)(1)). The Supreme Court clerk dockets the appeal and, once each ordered transcript is complete or none is needed, notifies the parties that the record is complete; it is complete on the date that notification is docketed (V.R.A.P. 12(a), (b)). An appellee may move to dismiss if the appellant fails to order the transcript or pay any required entry fee (V.R.A.P. 12(d))."
-  edge-record-briefing "Record complete" -> briefing { authority cite "V.R.A.P. 31(a)" }
+  "Record complete" -> briefing { authority cite "V.R.A.P. 31(a)" }
 }
 
 state briefing: "Briefs filed" by petitioner cite "V.R.A.P. 31(a)"
 {
   note "The appellant serves and files a brief within 40 days after the record on appeal is complete, the appellee within 30 days after the appellant's brief is served, and the appellant may reply within 21 days after service of the appellee's brief (V.R.A.P. 31(a)). The parties may stipulate once to extend each brief, by up to 40 days for the appellant's principal brief, 30 days for the appellee's and 21 days for a reply (V.R.A.P. 26(c)). A principal brief may not exceed 9000 words and a reply brief 4500 words (V.R.A.P. 32(a)(4))."
-  edge-briefing-argument "Briefing complete" -> argument { authority cite "V.R.A.P. 34(a)" }
+  "Briefing complete" -> argument { authority cite "V.R.A.P. 34(a)" }
   edge-briefing-unperfected "Appellant's brief not filed in time" -> dismissed-prosecution {
     authority cite "V.R.A.P. 31(b)"
   }
@@ -59,7 +59,7 @@ terminal dismissed-prosecution: "Appeal dismissed for want of prosecution" outco
 state argument: "Oral argument or submission on the briefs" by court cite "V.R.A.P. 34(a)"
 {
   note "A case is ready for the calendar after the appellee's principal brief is filed or its time has expired, and is heard or considered on the briefs at the next available term; if no party requests oral argument by the date the clerk sets, it is considered on the briefs unless the Court orders otherwise (V.R.A.P. 34(a)). If all members not disqualified agree, the Court may set a case before a panel of three justices, which must decide it unanimously or direct reargument before the full Court (V.R.A.P. 33.1). No leading decision on the standard of review is named."
-  edge-argument-decision "Submitted" -> decision { authority cite "V.R.A.P. 36" }
+  "Submitted" -> decision { authority cite "V.R.A.P. 36" }
 }
 
 decision decision: "Supreme Court decision" by court cite "V.R.A.P. 36"

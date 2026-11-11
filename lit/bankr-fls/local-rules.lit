@@ -178,6 +178,7 @@ test "Counting boundary: ch13-amended-schedules-period (weekend)" cite "Bankr. S
   given Ch13ConfirmationHearing() on 2026-06-06
   expect deadline(ch13-amended-schedules-period) == 2026-05-22
 }
+
 /// Local Rule 1017-1(c)(2)(B)-(C): a chapter 13 debtor cures a plan payment
 /// delinquency by making all past-due payments, and any falling due
 /// meanwhile, within 45 days after service of the notice of delinquency, or
@@ -189,6 +190,7 @@ test "Counting boundary: delinquency-cure-period (weekend)" cite "Bankr. S.D. Fl
   given DelinquencyNoticeServed() on 2026-06-03
   expect deadline(delinquency-cure-period) == 2026-07-20
 }
+
 /// Local Rule 1017-1(f)(1): in a case dismissed before the date first set for
 /// the § 341 meeting and reinstated, the new deadline to move to dismiss or
 /// serve notice under FRBP 1017(e) is 60 days after the rescheduled meeting.
@@ -199,6 +201,7 @@ test "Counting boundary: reinstated-abuse-dismissal-period (weekend)" cite "Bank
   given MeetingRescheduled() on 2026-06-02
   expect deadline(reinstated-abuse-dismissal-period) == 2026-08-03
 }
+
 /// Local Rule 1017-1(f)(2): in a case dismissed after the date first set for
 /// the § 341 meeting and reinstated, the new FRBP 1017(e) deadline is 60 days
 /// after entry of the order reinstating the case.
@@ -209,6 +212,7 @@ test "Counting boundary: reinstated-abuse-dismissal-order-period (weekend)" cite
   given ReinstatementOrdered() on 2026-06-02
   expect deadline(reinstated-abuse-dismissal-order-period) == 2026-08-03
 }
+
 /// Local Rule 1019-1(b)(1): in a case converted from chapter 11, 12 or 13 to
 /// chapter 7, a request for an administrative expense or a § 348(d) claim is
 /// filed no later than 70 days after conversion.
@@ -219,6 +223,7 @@ test "Counting boundary: conversion-administrative-claim-period (weekend)" cite 
   given ConvertedToChapter7() on 2026-06-06
   expect deadline(conversion-administrative-claim-period) == 2026-08-17
 }
+
 /// Local Rule 2004-1(b)(1): unless agreed or ordered, the party noticing a
 /// Rule 2004 examination or requesting documents or ESI provides at least 14
 /// days' notice.
@@ -229,6 +234,7 @@ test "Counting boundary: examination-notice-period (weekend)" cite "Bankr. S.D. 
   given ExaminationDate() on 2026-06-06
   expect deadline(examination-notice-period) == 2026-05-22
 }
+
 /// Local Rule 2016-1(b)(2), (c)(1): unless the court orders otherwise, a
 /// final compensation application in a chapter 11 or 12 case is considered at
 /// the confirmation hearing and filed no later than 21 days before it.
@@ -239,6 +245,7 @@ test "Counting boundary: final-compensation-application-period (weekend)" cite "
   given Ch11ConfirmationHearing() on 2026-06-06
   expect deadline(final-compensation-application-period) == 2026-05-15
 }
+
 /// Local Rule 2016-1(d)(2): a pre-confirmation compensation application in a
 /// chapter 13 case, if required, is filed no later than 21 days before the
 /// confirmation hearing.
@@ -249,6 +256,7 @@ test "Counting boundary: ch13-compensation-application-period (weekend)" cite "B
   given Ch13ConfirmationHearing() on 2026-06-06
   expect deadline(ch13-compensation-application-period) == 2026-05-15
 }
+
 /// Local Rule 2016-1(d)(3): a post-confirmation request for additional
 /// compensation to a chapter 13 debtor's attorney is filed with the plan
 /// modification no later than 21 days before the hearing on the modified
@@ -260,6 +268,7 @@ test "Counting boundary: ch13-additional-compensation-period (weekend)" cite "Ba
   given ModificationHearing() on 2026-06-06
   expect deadline(ch13-additional-compensation-period) == 2026-05-15
 }
+
 /// Local Rule 2016-1(d)(4): if a chapter 13 case is dismissed or converted
 /// before confirmation and the debtor's attorney seeks more than the
 /// Guidelines permit, the attorney files a compensation application no later
@@ -276,6 +285,7 @@ test "Counting boundary: late-meeting-notice-claim-period (weekend)" cite "Bankr
   given MeetingNoticeServed() on 2026-06-06
   expect deadline(late-meeting-notice-claim-period) == 2026-08-17
 }
+
 /// Local Rule 3002-1(b)(2): in a chapter 7, 12 or 13 case dismissed before
 /// the claims deadline and then vacated, a proof of claim is timely if filed
 /// no later than 70 days after entry of the order vacating the dismissal.
@@ -286,6 +296,7 @@ test "Counting boundary: vacated-dismissal-claim-period (weekend)" cite "Bankr. 
   given DismissalVacated() on 2026-06-06
   expect deadline(vacated-dismissal-claim-period) == 2026-08-17
 }
+
 /// Local Rule 3002.1-1(b)(4): if Mortgage Modification Mediation does not
 /// modify the mortgage, the debtor has until 14 days after the mediator's
 /// final report to move under FRBP 3002.1(b)(4) on any payment change noticed
@@ -302,6 +313,7 @@ test "Counting boundary: ch11-claim-period (weekend)" cite "Bankr. S.D. Fla. Loc
   given OrderForReliefEntered() on 2026-06-06
   expect deadline(ch11-claim-period) == 2026-08-17
 }
+
 /// Local Rule 3003-1(b)(1): in a chapter 9 or 11 case where the parties were
 /// not given at least 21 days' notice of the § 341 meeting, a proof of claim
 /// is timely if filed no later than 70 days after timely service of that
@@ -313,6 +325,7 @@ test "Counting boundary: ch11-late-meeting-notice-claim-period (weekend)" cite "
   given MeetingNoticeServed() on 2026-06-06
   expect deadline(ch11-late-meeting-notice-claim-period) == 2026-08-17
 }
+
 /// Local Rule 3003-1(b)(2): in a chapter 9 or 11 case dismissed before the
 /// claims deadline and then vacated, a proof of claim is timely if filed no
 /// later than 70 days after entry of the order vacating the dismissal.
@@ -323,6 +336,7 @@ test "Counting boundary: ch11-vacated-dismissal-claim-period (weekend)" cite "Ba
   given DismissalVacated() on 2026-06-06
   expect deadline(ch11-vacated-dismissal-claim-period) == 2026-08-17
 }
+
 /// Local Rule 3007-1(d)(2): absent a timely response to an objection to claim
 /// served on negative notice, the objecting party uploads a proposed order no
 /// later than seven days after the negative notice period expires.
@@ -333,6 +347,7 @@ test "Counting boundary: claim-objection-order-period (weekend)" cite "Bankr. S.
   given NegativeNoticePeriodExpired() on 2026-06-06
   expect deadline(claim-objection-order-period) == 2026-06-15
 }
+
 /// Local Rule 3009-1(a): within 14 days after filing a Trustee's Final
 /// Report, a chapter 7 trustee files and serves the Notice of Trustee's Final
 /// Report and Applications for Compensation and the Trustee's Summary of
@@ -348,6 +363,7 @@ test "Counting boundary: final-report-objection-period (weekend)" cite "Bankr. S
   given FinalReportNoticeServed() on 2026-06-06
   expect deadline(final-report-objection-period) == 2026-06-29
 }
+
 /// Local Rule 3012-1(b)(1): a motion to determine the amount of a secured
 /// claim is filed and served at least 21 days before the hearing on it.
 deadline valuation-motion-period: 21.days before ValuationMotionHearing() counted_by frbp9006-florida cite "Bankr. S.D. Fla. Local Rule 3012-1(b)(1)"
@@ -357,6 +373,7 @@ test "Counting boundary: valuation-motion-period (weekend)" cite "Bankr. S.D. Fl
   given ValuationMotionHearing() on 2026-06-06
   expect deadline(valuation-motion-period) == 2026-05-15
 }
+
 /// Local Rule 3015-1(b): subject to (c)(2), an objection to confirmation of a
 /// chapter 13 plan is timely if filed at least 14 days before the
 /// confirmation hearing.
@@ -367,6 +384,7 @@ test "Counting boundary: ch13-confirmation-objection-period (weekend)" cite "Ban
   given Ch13ConfirmationHearing() on 2026-06-06
   expect deadline(ch13-confirmation-objection-period) == 2026-05-22
 }
+
 /// Local Rule 3015-1(c)(1): to be considered at a scheduled confirmation
 /// hearing, an amended chapter 13 plan is filed and served at least 14 days
 /// before the hearing.
@@ -377,6 +395,7 @@ test "Counting boundary: ch13-amended-plan-period (weekend)" cite "Bankr. S.D. F
   given Ch13ConfirmationHearing() on 2026-06-06
   expect deadline(ch13-amended-plan-period) == 2026-05-22
 }
+
 /// Local Rule 3015-1(d)(2): a chapter 13 debtor files the Debtor Certificate
 /// of Compliance and Request for Confirmation no later than 14 days before
 /// the confirmation hearing.
@@ -387,6 +406,7 @@ test "Counting boundary: ch13-confirmation-certificate-period (weekend)" cite "B
   given Ch13ConfirmationHearing() on 2026-06-06
   expect deadline(ch13-confirmation-certificate-period) == 2026-05-22
 }
+
 /// Local Rule 3017-1: an objection to a disclosure statement is timely if
 /// filed at least seven days before the hearing to consider its approval.
 deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frbp9006-florida cite "Bankr. S.D. Fla. Local Rule 3017-1"
@@ -396,6 +416,7 @@ test "Counting boundary: disclosure-statement-objection-period (holiday)" cite "
   given DisclosureStatementHearing() on 2026-06-01
   expect deadline(disclosure-statement-objection-period) == 2026-05-22
 }
+
 /// Local Rule 3022-1(a), (c): unless the plan or confirmation order provides
 /// otherwise, the Final Report and Motion for Entry of Final Decree of a non-
 /// individual chapter 11 debtor, or a subchapter V debtor under a consensual
@@ -407,6 +428,7 @@ test "Counting boundary: final-decree-motion-period (weekend)" cite "Bankr. S.D.
   given PlanEffective() on 2026-06-02
   expect deadline(final-decree-motion-period) == 2026-08-03
 }
+
 /// Local Rule 3022-1(b), (d): an individual chapter 11 debtor's final report
 /// and motion for final decree, with its confirmation certificate (by the
 /// earlier of this date or a § 1141(d)(5) motion), or a nonconsensual
@@ -419,6 +441,7 @@ test "Counting boundary: payments-final-decree-motion-period (weekend)" cite "Ba
   given PlanPaymentsCompleted() on 2026-06-02
   expect deadline(payments-final-decree-motion-period) == 2026-08-03
 }
+
 /// Local Rule 4002-2(a): no later than 21 days after the non-governmental
 /// claims bar date, a chapter 13 debtor's attorney reviews all filed claims
 /// to decide whether to object, amend an unconfirmed plan or move to modify a
@@ -430,6 +453,7 @@ test "Counting boundary: ch13-claims-review-period (weekend)" cite "Bankr. S.D. 
   given ClaimsBarDatePassed() on 2026-06-06
   expect deadline(ch13-claims-review-period) == 2026-06-29
 }
+
 /// Local Rule 4002-2(c): the trustee's notice of deficiency gives the
 /// debtor's attorney 21 days to comply with the claims review, or the case
 /// may be dismissed on the trustee's report.
@@ -440,6 +464,7 @@ test "Counting boundary: ch13-claims-review-cure-period (weekend)" cite "Bankr. 
   given ClaimsReviewDeficiencyServed() on 2026-06-06
   expect deadline(ch13-claims-review-cure-period) == 2026-06-29
 }
+
 /// Local Rule 4004-1(a)(1), (b): in a reinstated case dismissed before the
 /// date first set for the § 341 meeting, or one whose meeting was rescheduled
 /// for want of 21 days' notice, the deadline under FRBP 4004(a)(1) or (a)(3)
@@ -451,6 +476,7 @@ test "Counting boundary: reinstated-discharge-objection-period (weekend)" cite "
   given MeetingRescheduled() on 2026-06-02
   expect deadline(reinstated-discharge-objection-period) == 2026-08-03
 }
+
 /// Local Rule 4004-1(a)(2): in a case dismissed after the date first set for
 /// the § 341 meeting and reinstated, the new deadline to object to discharge
 /// is 60 days after entry of the order reinstating the case.
@@ -461,6 +487,7 @@ test "Counting boundary: reinstated-discharge-objection-order-period (weekend)" 
   given ReinstatementOrdered() on 2026-06-02
   expect deadline(reinstated-discharge-objection-order-period) == 2026-08-03
 }
+
 /// Local Rule 4004-2: no later than 30 days after the trustee files a final
 /// report, an individual chapter 12 debtor files and serves, on 21 days'
 /// negative notice, the certification regarding claimed exemptions and
@@ -472,6 +499,7 @@ test "Counting boundary: ch12-discharge-certification-period (holiday)" cite "Ba
   given TrusteeFinalReportFiled() on 2026-06-03
   expect deadline(ch12-discharge-certification-period) == 2026-07-06
 }
+
 /// Local Rule 4007-1(a)(1), (b): in a reinstated case dismissed before the
 /// date first set for the § 341 meeting, or one whose meeting was rescheduled
 /// for want of 21 days' notice, the deadline under FRBP 4007(c) for a §
@@ -483,6 +511,7 @@ test "Counting boundary: reinstated-dischargeability-period (weekend)" cite "Ban
   given MeetingRescheduled() on 2026-06-02
   expect deadline(reinstated-dischargeability-period) == 2026-08-03
 }
+
 /// Local Rule 4007-1(a)(2): in a case dismissed after the date first set for
 /// the § 341 meeting and reinstated, the new FRBP 4007(c) deadline is 60 days
 /// after entry of the order reinstating the case.
@@ -493,6 +522,7 @@ test "Counting boundary: reinstated-dischargeability-order-period (weekend)" cit
   given ReinstatementOrdered() on 2026-06-02
   expect deadline(reinstated-dischargeability-order-period) == 2026-08-03
 }
+
 /// Local Rule 5005-2(e)(1): a registered user filing a document with another
 /// person's electronic signature obtains the wet ink signature no later than
 /// 14 days after filing it.
@@ -509,6 +539,7 @@ test "Counting boundary: withdrawal-reference-reply-period (weekend)" cite "Bank
   given WithdrawalReferenceResponseFiled() on 2026-06-06
   expect deadline(withdrawal-reference-reply-period) == 2026-06-15
 }
+
 /// Local Rule 6004-1(b)(1)-(2): a proposed use, sale or lease outside the
 /// ordinary course noticed or moved on negative notice may be approved
 /// without a hearing if no objection is filed within 21 days from service.
@@ -519,6 +550,7 @@ test "Counting boundary: sale-objection-period (weekend)" cite "Bankr. S.D. Fla.
   given SaleNoticeServed() on 2026-06-06
   expect deadline(sale-objection-period) == 2026-06-29
 }
+
 /// Local Rule 6007-1(a): an objection to a chapter 7 trustee's abandonment at
 /// the § 341 meeting is filed no later than 14 days after the trustee's
 /// report of the property abandoned is filed.
@@ -534,6 +566,7 @@ test "Counting boundary: esi-clawback-notice-period (holiday)" cite "Bankr. S.D.
   given EsiProduced() on 2026-06-05
   expect deadline(esi-clawback-notice-period) == 2026-07-06
 }
+
 /// Local Rule 7030-1: unless agreed or ordered, 14 days is reasonable notice
 /// of a deposition under FRCP 30(b)(1); it applies in contested matters too
 /// (Local Rule 9014-1(a)(1)).
@@ -544,6 +577,7 @@ test "Counting boundary: deposition-notice-period (weekend)" cite "Bankr. S.D. F
   given DepositionDate() on 2026-06-06
   expect deadline(deposition-notice-period) == 2026-05-22
 }
+
 /// Local Rule 7054-1(a): a bill of costs under FRBP 7054(b)(1) is filed
 /// within 14 days after entry of a judgment specifically awarding costs.
 deadline bill-of-costs-period: 14.days after CostsJudgmentEntered() counted_by frbp9006-florida cite "Bankr. S.D. Fla. Local Rule 7054-1(a)"
@@ -561,6 +595,7 @@ test "Counting boundary: negative-notice-order-period (weekend)" cite "Bankr. S.
   given NegativeNoticePeriodExpired() on 2026-06-06
   expect deadline(negative-notice-order-period) == 2026-06-15
 }
+
 /// Local Rule 9013-3(b): a motion on 21 days' negative notice may be granted
 /// without further motion, notice or hearing if no written response or
 /// objection is filed and served within 21 days after its service.
@@ -571,6 +606,7 @@ test "Counting boundary: negative-notice-response-period (weekend)" cite "Bankr.
   given NegativeNoticeMotionServed() on 2026-06-06
   expect deadline(negative-notice-response-period) == 2026-06-29
 }
+
 /// Local Rule 9013-3(c): a stay relief motion on 14 days' negative notice may
 /// be granted without further motion, notice or hearing if no written
 /// response or objection is filed and served within 14 days after its
@@ -589,6 +625,7 @@ test "Counting boundary: ch11-hearing-objection-period (holiday)" cite "Bankr. S
   given Ch11NoticedHearing() on 2026-06-01
   expect deadline(ch11-hearing-objection-period) == 2026-05-22
 }
+
 /// Local Rule 9019-2(c)(2)(B)(i): parties unable to agree on a mediator or
 /// settlement judge within 14 days of being ordered to mediation or a
 /// judicial settlement conference file a notice, and the clerk selects a
@@ -603,6 +640,7 @@ test "Counting boundary: mediator-report-period (weekend)" cite "Bankr. S.D. Fla
   given MediationConcluded() on 2026-06-06
   expect deadline(mediator-report-period) == 2026-06-15
 }
+
 /// Local Rule 9021-2(a)(1), (3): a party directed at a hearing to submit a
 /// proposed order, or the proponent of relief resolved on the chapter 13
 /// consent calendar, submits it no later than seven days after the hearing,
@@ -614,6 +652,7 @@ test "Counting boundary: proposed-order-period (weekend)" cite "Bankr. S.D. Fla.
   given ProposedOrderDirected() on 2026-06-06
   expect deadline(proposed-order-period) == 2026-06-15
 }
+
 /// Local Rule 9021-2(a)(2): a proposed order setting a deadline or further
 /// hearing on less than 14 days' notice is submitted no later than three days
 /// after the hearing.
@@ -624,6 +663,7 @@ test "Counting boundary: short-notice-proposed-order-period (weekend)" cite "Ban
   given ShortNoticeOrderDirected() on 2026-06-03
   expect deadline(short-notice-proposed-order-period) == 2026-06-08
 }
+
 /// Local Rule 9027-1: except when based on lack of subject matter
 /// jurisdiction, a motion under 28 U.S.C. § 1452(b) to remand a removed claim
 /// or cause of action is made within 30 days after the notice of removal is
@@ -635,6 +675,7 @@ test "Counting boundary: remand-motion-period (holiday)" cite "Bankr. S.D. Fla. 
   given RemovalNoticeFiled() on 2026-06-03
   expect deadline(remand-motion-period) == 2026-07-06
 }
+
 /// Local Rule 9037-1: when the court grants a motion under FRBP 9037(h), the
 /// movant files the redacted document within seven days of entry of the
 /// order.
@@ -670,9 +711,7 @@ state responded: "Response filed; matter set for hearing" by opponent cite "Bank
 state order-uploaded: "Proposed order uploaded" by movant cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(4)"
 {
   note "The movant uploads the proposed order no later than seven days after the negative notice period expires (Local Rule 9013-3(a)(4)); its preamble recites service, the expired response time and the absence of a response (Local Rule 9013-3(b)(1)(B), (c)(1)(B))."
-  edge-order-uploaded-ruling "Order considered" -> ruling {
-    authority cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(1)"
-  }
+  "Order considered" -> ruling { authority cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(1)" }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(1)"

@@ -36,7 +36,7 @@ decision initial-appearance: "Release or detention" by court cite "URCrP 7"
 decision probable-cause: "Preliminary examination" by court cite "URCrP 7B"
 {
   note "At the preliminary examination the state bears the burden of proof; if the magistrate finds probable cause that the crime charged was committed and that the defendant committed it, the magistrate orders the defendant bound over for trial (URCrP 7B(a), (b)); otherwise the magistrate dismisses the information and discharges the defendant (URCrP 7B(c)). The court informs the defendant of the right to a preliminary hearing; if it is not waived, it is scheduled on request and held within the periods URCrP 7(e) sets for a defendant in custody and one not in custody, which are not stated here (currency unconfirmed); no preliminary hearing is held on an indictment (URCrP 7(e)(3))."
-  edge-probable-cause-charged "Bound over for trial" -> charged { authority cite "URCrP 7B(b)" }
+  "Bound over for trial" -> charged { authority cite "URCrP 7B(b)" }
   edge-probable-cause-none "No probable cause; discharged" -> dismissed {
     authority cite "URCrP 7B(c)"
   }
@@ -45,13 +45,13 @@ decision probable-cause: "Preliminary examination" by court cite "URCrP 7B"
 state charged: "Information or indictment in the district court" by court cite "URCrP 4"
 {
   note "On the return of an indictment or the receipt of the magistrate's records after a bind-over, the defendant is arraigned forthwith in the district court (URCrP 10(a)). The speedy-trial statute (Utah Code 77-29-1) is not vendored."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "URCrP 10(a)" }
+  "Arraignment" -> arraignment { authority cite "URCrP 10(a)" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "URCrP 10"
 {
   note "Arraignment is in open court (URCrP 10(a)); a defect in the proceedings before arraignment must be expressly objected to before a guilty plea or is waived (URCrP 10(c)). Upon arraignment a defendant, except for an infraction, is represented by counsel unless counsel is waived in open court (URCrP 11(a)). A defendant may plead not guilty, guilty, no contest with the court's consent, not guilty by reason of insanity, or guilty with a mental condition (URCrP 11(b), (c)); on a not-guilty plea the case is set for trial, with a preference for an early trial for a defendant unable to make bail (URCrP 11(d))."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "URCrP 16" }
+  "Discovery" -> discovery { authority cite "URCrP 16" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "URCrP 12"
@@ -82,7 +82,7 @@ decision plea-decision: "Plea or trial" by accused cite "URCrP 11"
   edge-plea-decision-plea "Guilty or no contest plea accepted" -> sentencing {
     authority cite "URCrP 11"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "URCrP 17" }
+  "Trial" -> trial { authority cite "URCrP 17" }
 }
 
 decision trial: "Verdict" by court cite "URCrP 21"

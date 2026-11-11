@@ -32,7 +32,7 @@ decision notice: "Notice of appeal within time?" by appellant cite ?("Tex. Const
 
 state record: "Record or transcript prepared" by court cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)") {
   note "The contents of the transcript and statement of facts, the time to file them and the fees are stated in rules that are not vendored; they stay holes."
-  edge-record-briefing "Record filed" -> briefing {
+  "Record filed" -> briefing {
     event RecordFiled()
     authority cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
   }
@@ -40,7 +40,7 @@ state record: "Record or transcript prepared" by court cite ?("Tex. R. Civ. P. (
 
 state briefing: "Briefs filed" by appellant cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)") {
   note "The briefing periods, form and length are stated in rules that are not vendored; they stay holes."
-  edge-briefing-submission "Argument or submission" -> submission {
+  "Argument or submission" -> submission {
     authority cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
   }
 }

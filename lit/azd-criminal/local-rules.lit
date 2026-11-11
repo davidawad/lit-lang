@@ -3,6 +3,8 @@ module azd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of Arizona's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method: FRCrimP 45(c)'s three added days follow the
@@ -62,9 +64,6 @@ event AppelleeMemorandumServed()
 /// schedule for discovery, motions and other pretrial case management
 /// issues; counsel confer before it (LRCrim 16.2(b)).
 deadline complex-case-status-conference: 21.days after ComplexCaseDeclared() counted_by frcrimp45 cite "D. Ariz. LRCrim 16.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: complex-case-status-conference (weekend)" cite "D. Ariz. LRCrim 16.2(a)"
 {
@@ -80,9 +79,6 @@ deadline case-in-chief-expert-disclosure: 45.days before FinalPretrialConference
   to CaseOrder
   op set
 } cite "D. Ariz. LRCrim 16.3(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: case-in-chief-expert-disclosure (weekend)" cite "D. Ariz. LRCrim 16.3(a)"
 {
@@ -97,9 +93,6 @@ deadline rebuttal-expert-disclosure: 14.days before FinalPretrialConferenceSched
   to CaseOrder
   op set
 } cite "D. Ariz. LRCrim 16.3(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: rebuttal-expert-disclosure (weekend)" cite "D. Ariz. LRCrim 16.3(a)"
 {
@@ -112,9 +105,6 @@ test "Counting boundary: rebuttal-expert-disclosure (weekend)" cite "D. Ariz. LR
 /// the order denying it, resubmit the document for filing in the public
 /// record; the lodged document is not filed.
 deadline sealing-resubmission: 5.days after SealingDenied() counted_by frcrimp45 cite "D. Ariz. LRCrim 49.4(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sealing-resubmission (weekend)" cite "D. Ariz. LRCrim 49.4(d)"
 {
@@ -130,9 +120,6 @@ deadline misdemeanor-appeal-opening-memorandum: 30.days after MisdemeanorAppealN
   to CaseOrder
   op set
 } cite "D. Ariz. LRCrim 58.2(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appeal-opening-memorandum (weekend)" cite "D. Ariz. LRCrim 58.2(c)"
 {
@@ -147,9 +134,6 @@ deadline misdemeanor-appeal-answering-memorandum: 21.days after AppellantMemoran
   to CaseOrder
   op set
 } cite "D. Ariz. LRCrim 58.2(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appeal-answering-memorandum (weekend)" cite "D. Ariz. LRCrim 58.2(d)"
 {
@@ -164,9 +148,6 @@ deadline misdemeanor-appeal-reply-memorandum: 14.days after AppelleeMemorandumSe
   to CaseOrder
   op set
 } cite "D. Ariz. LRCrim 58.2(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appeal-reply-memorandum (holiday)" cite "D. Ariz. LRCrim 58.2(e)"
 {

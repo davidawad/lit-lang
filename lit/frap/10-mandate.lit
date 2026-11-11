@@ -53,11 +53,11 @@ rule duty tax-appellate-costs effective [2009-12-01, 2025-12-01) known_at 2009-0
     op set
   } cite "FRAP (2009 ed.) 39(d)(1)"
 
-test "Counting boundary: bill-of-costs-period (weekend)" cite "FRAP (2009 ed.) 39(d)(1)"
-{
-  given EnteredOnAppeal(Judgment) on 2009-12-05
-  expect deadline(bill-of-costs-period) == 2009-12-21
-}
+  test "Counting boundary: bill-of-costs-period (weekend)" cite "FRAP (2009 ed.) 39(d)(1)"
+  {
+    given EnteredOnAppeal(Judgment) on 2009-12-05
+    expect deadline(bill-of-costs-period) == 2009-12-21
+  }
   deadline cost-objection-period: 14.days after ServedPaper(BillOfCosts) counted_by frap26 delegable {
     to CaseOrder
     op set
@@ -102,14 +102,14 @@ state mandate-issued: "Mandate Issues" by court cite "FRAP (2009 ed.) 41(a)–(b
 {
   group mandate-group
   note "The mandate is the formal order returning jurisdiction to the district court — distinct from the opinion and critical for enforcing the judgment. It issues automatically 7 days after either expiration of the rehearing period or denial of a timely rehearing petition. The mandate, not the opinion, is what actually binds the district court."
-  edge-mandate-issued-cert-petition-window "Judgment final — cert clock runs" -> cert-petition-window {
+  "Judgment final — cert clock runs" -> cert-petition-window {
     authority cite "FRAP (2009 ed.) 41(b); Sup. Ct. R. 13.3"
     within cert-period {
       note "The 90-day deadline is measured from the date the appellate opinion is filed/docketed. Missing this deadline forecloses any Supreme Court review; the judgment becomes final and enforceable. Extensions require filing before the deadline expires."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
   }
-  edge-mandate-issued-mandate-stayed-pending-cert "Move to stay mandate for cert" -> mandate-stayed-pending-cert by movant {
+  "Move to stay mandate for cert" -> mandate-stayed-pending-cert by movant {
     authority cite "FRAP (2009 ed.) 41(d)(1)"
     effort 8.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
@@ -120,7 +120,7 @@ state mandate-stayed-pending-cert: "Mandate Stayed Pending Certiorari" by court 
 {
   group mandate-group
   note "On motion, the court of appeals may stay its mandate pending a cert petition — otherwise the district court could enforce the judgment while the Supreme Court is still deciding whether to take the case. The stay is discretionary and requires a showing of likelihood of cert grant plus irreparable harm."
-  edge-mandate-stayed-pending-cert-cert-petition-window "Stay granted — cert proceeds" -> cert-petition-window {
+  "Stay granted — cert proceeds" -> cert-petition-window {
     authority cite "FRAP (2009 ed.) 41(d)(2)"
     within cert-period {
       note "If cert is denied or the 90-day window expires (whichever is earlier), the stay terminates automatically and the mandate issues to enforce the judgment."

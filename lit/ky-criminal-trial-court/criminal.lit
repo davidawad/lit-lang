@@ -29,9 +29,7 @@ decision initial-appearance: "Pretrial release or detention" by court cite "RCr 
 decision probable-cause: "Preliminary hearing or indictment" by court cite "RCr 3.10"
 {
   note "The defendant may waive the preliminary hearing. Otherwise it is held within a reasonable time but no later than 10 days following the initial appearance if the defendant is in custody and 20 days if not, and not at all if the defendant is indicted first; if it is not held in time, the defendant is discharged from custody and proceeded against on that charge by indictment only. Without the defendant's consent the limits may be extended only on extraordinary circumstances where delay is indispensable to the interests of justice (RCr 3.10(2)). On waiver or a finding of probable cause, the judge holds the defendant to answer in the circuit court (RCr 3.14(1)). A defendant held to answer without being indicted for longer than 60 days from the finding of probable cause is, on motion, discharged from custody or has bail exonerated (RCr 5.22(3))."
-  edge-probable-cause-charged "Held to answer; indictment or information filed" -> charged {
-    authority cite "RCr 6.02"
-  }
+  "Held to answer; indictment or information filed" -> charged { authority cite "RCr 6.02" }
   edge-probable-cause-none "Not indicted; charges dismissed or defendant discharged" -> dismissed {
     authority cite "RCr 5.22"
   }
@@ -40,13 +38,13 @@ decision probable-cause: "Preliminary hearing or indictment" by court cite "RCr 
 state charged: "Indictment or information" by court cite "RCr 6.02"
 {
   note "Offenses that Section 12 of the Kentucky Constitution requires to be prosecuted by indictment are so prosecuted unless the defendant waives indictment in writing to the circuit court, when they may be prosecuted by information (RCr 6.02(1)). Prosecutions proceed when the defendant appears unless postponed for cause, and trials of persons in custody are held as promptly as reasonably possible (RCr 9.02); the statutory speedy-trial periods are not vendored."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "RCr 8.02" }
+  "Arraignment" -> arraignment { authority cite "RCr 8.02" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "RCr 8.02"
 {
   note "Arraignment is conducted in open court by reading or stating the substance of the charge and calling on the defendant to plead (RCr 8.02). On the defense's written request the Commonwealth discloses the defendant's statements and permits inspection of the items RCr 7.24(1) lists; a request for relief in a case set for trial is made a reasonable time before the trial date (RCr 7.24(6))."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "RCr 7.24" }
+  "Discovery" -> discovery { authority cite "RCr 7.24" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "RCr 8.20"
@@ -77,7 +75,7 @@ decision plea-decision: "Plea or trial" by accused cite "RCr 8.08"
 {
   note "A defendant may plead not guilty, guilty or guilty but mentally ill; the court does not accept a plea of guilty or guilty but mentally ill without first determining that it is made voluntarily with understanding of the nature of the charge (RCr 8.08). Cases required to be tried by jury are so tried unless the defendant waives a jury in writing with the court's approval and the Commonwealth's consent (RCr 9.26(1))."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "RCr 8.08" }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "RCr 9.26" }
+  "Trial" -> trial { authority cite "RCr 9.26" }
 }
 
 decision trial: "Verdict" by court cite "RCr 9.82"
@@ -97,9 +95,7 @@ decision post-trial: "Post-trial motions" by court cite "RCr 10.02"
 state sentencing: "Presentence investigation and sentence" by court cite "RCr 11.02"
 {
   note "Sentence is imposed without unreasonable delay; before sentencing a defendant guilty of a felony the court has a presentence investigation conducted, considers the report and furnishes it to counsel (RCr 11.02(1)). After sentence in a case tried on a plea of not guilty, the court advises the defendant of the right to appeal and to appeal in forma pauperis (RCr 11.02(2))."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "RCr 11.04"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "RCr 11.04" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "RCr 11.04"

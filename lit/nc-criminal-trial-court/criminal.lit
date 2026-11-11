@@ -41,9 +41,7 @@ state charged: "Indictment returned" by court cite ?("G.S. 15A-952, CURRENCY UNC
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite ?("G.S. 15A-954, CURRENCY UNCONFIRMED") {
   note "A motion to suppress may be made at any time before trial, but if the State gives notice not later than 20 working days before trial of its intention to use a statement of the defendant or evidence from a warrantless search, the defendant may move to suppress it only within 10 working days after receiving the notice (G.S. 15A-976(a), (b)). The court on motion dismisses the charges on the grounds G.S. 15A-954(a) lists, among them a flagrant constitutional violation and the denial of a speedy trial required by the Constitutions. CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
-  edge-motions-ruling-dismissed "Charges dismissed" -> dismissed {
-    authority cite ?("G.S. 15A-954(a), CURRENCY UNCONFIRMED")
-  }
+  "Charges dismissed" -> dismissed { authority cite ?("G.S. 15A-954(a), CURRENCY UNCONFIRMED") }
   edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
     authority cite ?("G.S. 15A-954, CURRENCY UNCONFIRMED")
   }
@@ -54,9 +52,7 @@ decision plea-decision: "Plea or trial" by accused cite ?("G.S. 15A-1021, CURREN
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("G.S. 15A-1022, CURRENCY UNCONFIRMED")
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite ?("G.S. 15A-1201, CURRENCY UNCONFIRMED")
-  }
+  "Trial" -> trial { authority cite ?("G.S. 15A-1201, CURRENCY UNCONFIRMED") }
 }
 
 decision trial: "Verdict" by court cite ?("G.S. 15A-1237, CURRENCY UNCONFIRMED") {
@@ -74,9 +70,7 @@ state sentencing: "Sentencing and judgment" by court cite ?("G.S. 15A-1331, CURR
   edge-sentencing-mar "Motion for appropriate relief within 10 days" -> post-trial {
     authority cite ?("G.S. 15A-1414, CURRENCY UNCONFIRMED")
   }
-  edge-sentencing-judgment "Judgment entered" -> judgment {
-    authority cite ?("G.S. 15A-1331, CURRENCY UNCONFIRMED")
-  }
+  "Judgment entered" -> judgment { authority cite ?("G.S. 15A-1331, CURRENCY UNCONFIRMED") }
 }
 
 decision post-trial: "Motion for appropriate relief" by court cite ?("G.S. 15A-1414, CURRENCY UNCONFIRMED") {

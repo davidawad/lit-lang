@@ -121,6 +121,7 @@ test "Counting boundary: amended-schedule-service-period (weekend)" cite "Bankr.
   given AmendedScheduleFiled() on 2026-04-01
   expect deadline(amended-schedule-service-period) == 2026-04-06
 }
+
 /// Bankr. W.D. La. LBR 1009-1(c): within three days of amending the
 /// schedule of exemptions, the debtor serves notice of the amendment on all
 /// creditors and any trustee and files a certificate of service.
@@ -131,6 +132,7 @@ test "Counting boundary: exemption-amendment-notice-period (weekend)" cite "Bank
   given ExemptionScheduleAmended() on 2026-04-01
   expect deadline(exemption-amendment-notice-period) == 2026-04-06
 }
+
 /// Bankr. W.D. La. LBR 1016-1(a): in an open case, a Notice of Death of the
 /// debtor is filed within sixty days of the death by the deceased debtor's
 /// counsel or the person who intends to be appointed representative or
@@ -142,6 +144,7 @@ test "Counting boundary: notice-of-death-period (weekend)" cite "Bankr. W.D. La.
   given DebtorDied() on 2026-04-01
   expect deadline(notice-of-death-period) == 2026-06-01
 }
+
 /// Bankr. W.D. La. LBR 1017-1(b)(2): objections to the Clerk's order to
 /// show cause why a chapter 7 or 13 case should not be dismissed should be
 /// filed at least seven days before the hearing date; without a timely
@@ -153,6 +156,7 @@ test "Counting boundary: show-cause-objection-period (weekend)" cite "Bankr. W.D
   given ShowCauseHearing() on 2026-04-04
   expect deadline(show-cause-objection-period) == 2026-03-27
 }
+
 /// Bankr. W.D. La. LBR 1017-1(b)(3): the United States Trustee may seek ex
 /// parte dismissal if the debtor failed to attend the § 341 meeting and did
 /// not request that it be rescheduled within twenty-one days of the missed
@@ -164,6 +168,7 @@ test "Counting boundary: missed-meeting-reschedule-period (weekend)" cite "Bankr
   given MissedCreditorsMeeting() on 2026-04-04
   expect deadline(missed-meeting-reschedule-period) == 2026-04-27
 }
+
 /// Bankr. W.D. La. LBR 2004-1(b): a consensual FRBP 2004 examination
 /// initiated by notice is filed and served no later than fourteen days
 /// before the date set for the examination.
@@ -174,6 +179,7 @@ test "Counting boundary: examination-notice-period (weekend)" cite "Bankr. W.D. 
   given ExaminationDate() on 2026-04-04
   expect deadline(examination-notice-period) == 2026-03-20
 }
+
 /// Bankr. W.D. La. LBR 2014-1(b)(1): a motion to approve a professional's
 /// employment made within thirty days of the professional (other than
 /// special counsel) commencing work is deemed contemporaneous; a later
@@ -185,6 +191,7 @@ test "Counting boundary: contemporaneous-employment-period (weekend)" cite "Bank
   given ProfessionalCommencedWork() on 2026-04-02
   expect deadline(contemporaneous-employment-period) == 2026-05-04
 }
+
 /// Bankr. W.D. La. LBR 2015-1: in a chapter 11 case and an operating
 /// chapter 7 case, the Monthly Operating Report is filed on or before the
 /// 20th day of each month following the month reported, until a plan is
@@ -201,6 +208,7 @@ test "Counting boundary: claim-objection-response-period (weekend)" cite "Bankr.
   given ClaimObjectionHearing() on 2026-04-04
   expect deadline(claim-objection-response-period) == 2026-03-27
 }
+
 /// Bankr. W.D. La. LBR 3011-1(d)(1): parties served with an Application for
 /// Payment of Unclaimed Funds have twenty-one days thereafter to object;
 /// without an objection the court may consider it without a hearing.
@@ -211,6 +219,7 @@ test "Counting boundary: unclaimed-funds-objection-period (weekend)" cite "Bankr
   given UnclaimedFundsApplicationServed() on 2026-04-04
   expect deadline(unclaimed-funds-objection-period) == 2026-04-27
 }
+
 /// Bankr. W.D. La. LBR 3015-1(c)(1): written objections to chapter 12 or 13
 /// plan confirmation by parties other than the trustees are filed and
 /// served at least fourteen days before the scheduled confirmation hearing.
@@ -221,6 +230,7 @@ test "Counting boundary: chapter-12-13-confirmation-objection-period (weekend)" 
   given ConfirmationHearing() on 2026-04-04
   expect deadline(chapter-12-13-confirmation-objection-period) == 2026-03-20
 }
+
 /// Bankr. W.D. La. LBR 3015-1(e)(1): an objection to a proposed
 /// modification of a confirmed chapter 12 or 13 plan is filed at least
 /// fourteen days before the hearing date, which is held if, and only if, an
@@ -233,6 +243,7 @@ test "Counting boundary: plan-modification-objection-period (weekend)" cite "Ban
   given PlanModificationHearing() on 2026-04-04
   expect deadline(plan-modification-objection-period) == 2026-03-20
 }
+
 /// Bankr. W.D. La. LBR 3020-1(a): unless the court orders otherwise, an
 /// objection to confirmation of a chapter 11 plan is filed and served no
 /// later than seven days before the confirmation hearing.
@@ -243,6 +254,7 @@ test "Counting boundary: chapter-11-confirmation-objection-period (weekend)" cit
   given ConfirmationHearing() on 2026-04-04
   expect deadline(chapter-11-confirmation-objection-period) == 2026-03-27
 }
+
 /// Bankr. W.D. La. LBR 4001-1(h): a hearing on a motion to lift the stay is
 /// held if and only if a response is filed and mailed to movant's counsel
 /// at least seventeen days from the mailing date on the certificate of
@@ -254,6 +266,7 @@ test "Counting boundary: stay-relief-response-period (weekend)" cite "Bankr. W.D
   given StayReliefMotionMailed() on 2026-04-01
   expect deadline(stay-relief-response-period) == 2026-04-20
 }
+
 /// Bankr. W.D. La. LBR 5009-1(b): no later than thirty days after the date
 /// of the trustee's Notice of Plan Completion, a debtor eligible for a §
 /// 1328 discharge files the Statement Regarding Domestic Support
@@ -265,6 +278,7 @@ test "Counting boundary: discharge-certification-period (weekend)" cite "Bankr. 
   given PlanCompletionNoticed() on 2026-04-02
   expect deadline(discharge-certification-period) == 2026-05-04
 }
+
 /// Bankr. W.D. La. LBR 7007-1(c): when no objection has been timely filed,
 /// movant's counsel uploads a proposed order granting the motion within
 /// seven days before the proposed hearing date.
@@ -275,6 +289,7 @@ test "Counting boundary: unopposed-order-upload-period (weekend)" cite "Bankr. W
   given ProposedHearingDate() on 2026-04-04
   expect deadline(unopposed-order-upload-period) == 2026-03-27
 }
+
 /// Bankr. W.D. La. LBR 7007-1(e): absent a deadline set by the court or the
 /// notice of hearing, a response and brief to an opposed motion are filed
 /// not later than seven days before the proposed hearing date.
@@ -285,6 +300,7 @@ test "Counting boundary: adversary-motion-response-period (weekend)" cite "Bankr
   given ProposedHearingDate() on 2026-04-04
   expect deadline(adversary-motion-response-period) == 2026-03-27
 }
+
 /// Bankr. W.D. La. LBR 7016-1(a): unless the presiding judge directs
 /// otherwise, the joint pretrial order is uploaded at least seven days
 /// before trial.
@@ -295,6 +311,7 @@ test "Counting boundary: joint-pretrial-order-period (weekend)" cite "Bankr. W.D
   given TrialDate() on 2026-04-04
   expect deadline(joint-pretrial-order-period) == 2026-03-27
 }
+
 /// Bankr. W.D. La. LBR 7016-1(b): proposed findings of fact and conclusions
 /// of law are filed at least seven days before trial.
 deadline proposed-findings-period: 7.days before TrialDate() counted_by frbp9006-louisiana cite "Bankr. W.D. La. LBR 7016-1(b)"
@@ -304,6 +321,7 @@ test "Counting boundary: proposed-findings-period (weekend)" cite "Bankr. W.D. L
   given TrialDate() on 2026-04-04
   expect deadline(proposed-findings-period) == 2026-03-27
 }
+
 /// Bankr. W.D. La. LBR 7056-1(d): responses to a motion for summary
 /// judgment noticed with twenty-one-day "if and only if" language are filed
 /// not later than seven days before the scheduled hearing.
@@ -314,6 +332,7 @@ test "Counting boundary: summary-judgment-response-period (weekend)" cite "Bankr
   given SummaryJudgmentHearing() on 2026-04-04
   expect deadline(summary-judgment-response-period) == 2026-03-27
 }
+
 /// Bankr. W.D. La. LBR 9013-1(g): unless the FRBP, these rules, the
 /// Administrative Procedures or the court provide otherwise, a motion is
 /// filed and served at least twenty-one days before the hearing date set to
@@ -325,6 +344,7 @@ test "Counting boundary: motion-filing-period (weekend)" cite "Bankr. W.D. La. L
   given MotionHearing() on 2026-04-04
   expect deadline(motion-filing-period) == 2026-03-13
 }
+
 /// Bankr. W.D. La. LBR 9013-1(i): unless otherwise provided (LBR 3015-1(c),
 /// 9014-1(f)(2)), responsive pleadings and objections are served and filed
 /// so as to be received not later than seven days before the hearing date.
@@ -335,6 +355,7 @@ test "Counting boundary: motion-response-period (weekend)" cite "Bankr. W.D. La.
   given MotionHearing() on 2026-04-04
   expect deadline(motion-response-period) == 2026-03-27
 }
+
 /// Bankr. W.D. La. LBR 9070-1(b): exhibits in the Clerk's custody are
 /// removed within sixty days after final disposition of the case, by the
 /// attorney who introduced them, or may be destroyed.
@@ -351,9 +372,7 @@ start motion-filed
 state motion-filed: "Motion filed and served with notice of hearing" by movant cite "Bankr. W.D. La. LBR 9013-1(g)"
 {
   note "A motion is filed and served at least 21 days before the hearing set to consider it; the notice of hearing conforms to Official Form 420A and may use the \"if and only if\" procedure, under which the hearing is held only if a response is timely filed (LBR 9013-1(g), 9007-1). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Response or objection filed" -> opposed {
-    authority cite "Bankr. W.D. La. LBR 9013-1(i)"
-  }
+  "Response or objection filed" -> opposed { authority cite "Bankr. W.D. La. LBR 9013-1(i)" }
   edge-motion-filed-unopposed "No timely response" -> ruling {
     authority cite "Bankr. W.D. La. LBR 9007-1(a)"
   }
@@ -362,7 +381,7 @@ state motion-filed: "Motion filed and served with notice of hearing" by movant c
 state opposed: "Response filed; contested matter heard" by opponent cite "Bankr. W.D. La. LBR 9013-1(i)"
 {
   note "Responsive pleadings and objections are received not later than seven days before the hearing; exhibit and witness lists are filed at least one day before it (LBR 9013-1(i), 9014-1(c))."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. W.D. La. LBR 9014-1(d)" }
+  "Hearing held" -> ruling { authority cite "Bankr. W.D. La. LBR 9014-1(d)" }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. W.D. La. LBR 9007-1(a)"

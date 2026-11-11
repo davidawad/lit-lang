@@ -29,7 +29,7 @@ state commenced: "Appeal filed in the Tax Court" by plaintiff cite ?("ORS 305.28
 
 decision tax-decision: "Tax Court decision" by court cite ?("ORS 305.425; Tax Court Rules: not vendored") {
   note "Pleadings, discovery, summary judgment, trial and the entry of judgment in the Tax Court are holes (Tax Court Rules and ORS chapter 305 not vendored). A ruling of the Tax Court is a decision whose appealability the Supreme Court may determine summarily (ORAP 2.35(1), (2))."
-  edge-tax-decision-won "Decided for the taxpayer" -> won {
+  "Decided for the taxpayer" -> won {
     event JudgmentEntered()
     authority cite ?("Tax Court Rules: not vendored")
   }
@@ -37,9 +37,7 @@ decision tax-decision: "Tax Court decision" by court cite ?("ORS 305.425; Tax Co
     event JudgmentEntered()
     authority cite ?("Tax Court Rules: not vendored")
   }
-  edge-tax-decision-settled "Settled or withdrawn" -> settled {
-    authority cite ?("Tax Court Rules: not vendored")
-  }
+  "Settled or withdrawn" -> settled { authority cite ?("Tax Court Rules: not vendored") }
 }
 
 terminal won: "Decided for the taxpayer" outcome [win] cite ?("Tax Court Rules: not vendored") {
@@ -68,7 +66,7 @@ decision appealability: "Appealability" by court cite "ORAP 2.35"
   edge-appealability-dismissed "Not appealable: appeal dismissed" -> dismissed-jurisdiction {
     authority cite "ORAP 2.35(5)"
   }
-  edge-appealability-briefing "Appealable: briefing" -> briefing { authority cite "ORAP 5.80" }
+  "Appealable: briefing" -> briefing { authority cite "ORAP 5.80" }
 }
 
 terminal dismissed-jurisdiction: "Dismissed: decision not appealable" outcome [loss, dismissal] cite "ORAP 2.35(5)"

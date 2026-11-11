@@ -15,9 +15,7 @@ start arrested
 state arrested: "Arrest" by prosecution cite "Tex. Code Crim. Proc. art. 14.06"
 {
   note "The person making an arrest, or having custody of the person arrested, takes the person before a magistrate without unnecessary delay, but not later than 48 hours after the arrest (Tex. Code Crim. Proc. art. 14.06; art. 15.17). For a Class C misdemeanor other than public intoxication, a peace officer may issue a citation instead (Tex. Code Crim. Proc. art. 14.06)."
-  edge-arrested-magistrate "Taken before a magistrate" -> magistrate {
-    authority cite "Tex. Code Crim. Proc. art. 15.17"
-  }
+  "Taken before a magistrate" -> magistrate { authority cite "Tex. Code Crim. Proc. art. 15.17" }
 }
 
 decision magistrate: "Magistrate's warnings, counsel and bail" by court cite "Tex. Code Crim. Proc. art. 15.17"
@@ -34,10 +32,10 @@ decision magistrate: "Magistrate's warnings, counsel and bail" by court cite "Te
 decision probable-cause: "Examining trial or indictment" by court cite "Tex. Code Crim. Proc. art. 16.01"
 {
   note "An accused in a felony case has the right to an examining trial before indictment, in custody or on bail, at which the magistrate examines into the truth of the accusation and determines the amount or sufficiency of bail (Tex. Code Crim. Proc. art. 16.01). A felony is prosecuted on a grand jury's indictment (Tex. Code Crim. Proc. art. 1.05), unless a represented defendant waives indictment of a noncapital felony and is charged by information (Tex. Code Crim. Proc. art. 1.141). A defendant held in custody or on bail is discharged and the prosecution dismissed, unless the court orders otherwise for good cause shown by affidavit, if no indictment or information is presented by the last day of the next term of court after commitment or admission to bail or by the 180th day after it, whichever is later (Tex. Code Crim. Proc. art. 32.01)."
-  edge-probable-cause-charged "Indictment or information presented" -> charged {
+  "Indictment or information presented" -> charged {
     authority cite "Tex. Code Crim. Proc. art. 1.141"
   }
-  edge-probable-cause-dismissed "No timely indictment; prosecution dismissed" -> dismissed {
+  "No timely indictment; prosecution dismissed" -> dismissed {
     authority cite "Tex. Code Crim. Proc. art. 32.01"
   }
 }
@@ -45,15 +43,13 @@ decision probable-cause: "Examining trial or indictment" by court cite "Tex. Cod
 state charged: "Indictment or information" by court cite "Tex. Code Crim. Proc. art. 1.05"
 {
   note "The accused has the right to a speedy public trial by an impartial jury and to a copy of the accusation (Tex. Code Crim. Proc. art. 1.05). Insofar as practicable, a criminal trial takes preference over civil trials, and that of a jailed defendant over other criminal trials, with further priorities for child victims and defendants restored to competency (Tex. Code Crim. Proc. art. 32A.01). The vendored chapter 32A (Speedy Trial) holds only article 32A.01 and sets no period."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "Tex. Code Crim. Proc. art. 26.01"
-  }
+  "Arraignment" -> arraignment { authority cite "Tex. Code Crim. Proc. art. 26.01" }
 }
 
 state arraignment: "Arraignment" by prosecution cite "Tex. Code Crim. Proc. art. 26.02"
 {
   note "There is an arraignment in every felony case after indictment and in every misdemeanor case punishable by imprisonment (Tex. Code Crim. Proc. art. 26.01); it fixes the defendant's identity and hears the plea (Tex. Code Crim. Proc. art. 26.02). Counsel is appointed for an indigent defendant under the county's procedures (Tex. Code Crim. Proc. art. 26.04)."
-  edge-arraignment-discovery "Discovery and pretrial matters" -> discovery {
+  "Discovery and pretrial matters" -> discovery {
     authority cite "Tex. Code Crim. Proc. art. 39.14"
   }
 }
@@ -72,9 +68,7 @@ state discovery: "Discovery and the pretrial hearing" by prosecution cite "Tex. 
 decision motions-ruling: "Ruling on pretrial matters" by court cite "Tex. Code Crim. Proc. art. 28.01"
 {
   note "The court determines the pretrial matters at the hearing and its rulings become part of the trial record (Tex. Code Crim. Proc. art. 28.01). The state's attorney may dismiss a criminal action with the court's permission on a written statement of reasons (Tex. Code Crim. Proc. art. 32.02). The state may appeal an order dismissing an indictment, information or complaint, or granting a motion to suppress before jeopardy attaches on the prosecutor's certificate (Tex. Code Crim. Proc. art. 44.01), within 20 days after the order is entered (Tex. R. App. P. 26.2(b))."
-  edge-motions-ruling-dismissed "Charges dismissed" -> dismissed {
-    authority cite "Tex. Code Crim. Proc. art. 32.02"
-  }
+  "Charges dismissed" -> dismissed { authority cite "Tex. Code Crim. Proc. art. 32.02" }
   edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
     authority cite "Tex. Code Crim. Proc. art. 28.01"
   }
@@ -86,7 +80,7 @@ decision plea-decision: "Plea or trial" by accused cite "Tex. Code Crim. Proc. a
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
     authority cite "Tex. Code Crim. Proc. art. 26.13"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Tex. Code Crim. Proc. art. 1.05" }
+  "Trial" -> trial { authority cite "Tex. Code Crim. Proc. art. 1.05" }
 }
 
 decision trial: "Verdict on guilt" by court cite "Tex. Code Crim. Proc. art. 37.07"
@@ -103,7 +97,7 @@ decision trial: "Verdict on guilt" by court cite "Tex. Code Crim. Proc. art. 37.
 state sentencing: "Punishment and sentence" by court cite "Tex. Code Crim. Proc. art. 42.03"
 {
   note "Punishment is assessed after the verdict on guilt (Tex. Code Crim. Proc. art. 37.07); sentence is pronounced in the defendant's presence, and a victim or close relative may then make a statement (Tex. Code Crim. Proc. art. 42.03). The judgment is the written declaration of the court, signed by the trial judge and entered of record, showing conviction or acquittal (Tex. Code Crim. Proc. art. 42.01)."
-  edge-sentencing-post-trial "Sentence imposed or suspended in open court" -> post-trial {
+  "Sentence imposed or suspended in open court" -> post-trial {
     authority cite "Tex. Code Crim. Proc. art. 42.01"
   }
 }
@@ -112,9 +106,7 @@ decision post-trial: "Motion for new trial" by court cite "Tex. R. App. P. 21.4"
 {
   note "The defendant may file a motion for new trial no later than 30 days after the date the trial court imposes or suspends sentence in open court, and may amend it without leave within that time before any earlier motion is overruled (Tex. R. App. P. 21.4). The motion is presented to the trial court within 10 days of filing unless the court permits it to be presented and heard within 75 days from sentencing (Tex. R. App. P. 21.6). The court rules within 75 days after imposing or suspending sentence, a grant needs a written order, and a motion not timely ruled on is deemed denied (Tex. R. App. P. 21.8)."
   edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Tex. R. App. P. 21.8" }
-  edge-post-trial-judgment "No motion, or motion denied" -> judgment {
-    authority cite "Tex. R. App. P. 21.8"
-  }
+  "No motion, or motion denied" -> judgment { authority cite "Tex. R. App. P. 21.8" }
 }
 
 decision judgment: "Appeal" by accused cite "Tex. R. App. P. 26.2"

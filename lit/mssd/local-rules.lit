@@ -2,6 +2,8 @@ module mssd-local-rules.local-rules
 
 import core.frcp6.{ frcp6 }
 
+forum frcp
+
 /// The action is removed to this Court (L.U. Civ. R. 5(b)(1)).
 event Removed()
 /// The action is transferred to this District (L.U. Civ. R. 16(b)(2)).
@@ -56,9 +58,6 @@ event AddedPartyAppeared()
 /// L.U. Civ. R. 5(b)(1): a removing defendant files a copy of the entire
 /// state court record no later than 14 days from the date of removal.
 deadline state-record-period: 14.days after Removed() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 5(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: state-record-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 5(b)"
 {
@@ -70,9 +69,6 @@ test "Counting boundary: state-record-period (weekend)" cite "S.D. Miss. L.U. Ci
 /// conference, the parties file as separate docket items the unresolved
 /// state court motions they wish to advance.
 deadline state-motions-period: 14.days after CaseManagementConferenceHeld() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 5(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: state-motions-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 5(b)"
 {
@@ -87,16 +83,9 @@ test "Counting boundary: state-motions-period (weekend)" cite "S.D. Miss. L.U. C
 /// 7(b)(5)); a motion itself may not exceed four pages (L.U. Civ. R.
 /// 7(b)(2)(B)).
 deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 7(b)"
-{
-  forum frcp
-}
-
 /// L.U. Civ. R. 7(b)(4): a movant may file a rebuttal within seven days
 /// after service of the response and memorandum brief.
 deadline rebuttal-period: 7.days after ResponseServed() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 7(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: rebuttal-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 7(b)"
 {
@@ -109,9 +98,6 @@ test "Counting boundary: rebuttal-period (weekend)" cite "S.D. Miss. L.U. Civ. R
 /// party's expert are filed no later than 14 calendar days after the
 /// discovery deadline.
 deadline dispositive-motion-period: 14.days after DiscoveryDeadline() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 7(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: dispositive-motion-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 7(b)"
 {
@@ -123,9 +109,6 @@ test "Counting boundary: dispositive-motion-period (weekend)" cite "S.D. Miss. L
 /// challenging another party's expert, are filed no later than 21 calendar
 /// days before the pretrial conference.
 deadline limine-motion-period: 21.days before PretrialConference() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 7(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: limine-motion-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 7(b)"
 {
@@ -136,9 +119,6 @@ test "Counting boundary: limine-motion-period (weekend)" cite "S.D. Miss. L.U. C
 /// L.U. Civ. R. 7(b)(2)(E): responses to motions in limine are filed no
 /// later than 14 calendar days before the pretrial conference.
 deadline limine-response-period: 14.days before PretrialConference() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 7(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: limine-response-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 7(b)"
 {
@@ -150,9 +130,6 @@ test "Counting boundary: limine-response-period (weekend)" cite "S.D. Miss. L.U.
 /// quashing a deposition is not considered urgent or necessitous unless it
 /// is filed within seven days of the date of the notice of deposition.
 deadline deposition-protective-order-period: 7.days after DepositionNoticed() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 7(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: deposition-protective-order-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 7(b)"
 {
@@ -164,9 +141,6 @@ test "Counting boundary: deposition-protective-order-period (weekend)" cite "S.D
 /// movant files the amended pleading as a separately docketed item within
 /// seven days from entry of the order granting the motion.
 deadline amended-pleading-period: 7.days after LeaveToAmendGranted() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 15"
-{
-  forum frcp
-}
 
 test "Counting boundary: amended-pleading-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 15"
 {
@@ -177,9 +151,6 @@ test "Counting boundary: amended-pleading-period (weekend)" cite "S.D. Miss. L.U
 /// L.U. Civ. R. 16(b)(2): in a transferred action the parties hold the FRCP
 /// 26(f) conference, if not already held, within 14 days of the transfer.
 deadline transferred-conference-period: 14.days after Transferred() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 16(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: transferred-conference-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 16(b)"
 {
@@ -190,9 +161,6 @@ test "Counting boundary: transferred-conference-period (weekend)" cite "S.D. Mis
 /// L.U. Civ. R. 16(b)(1)(C), 16(b)(3)(D): within 14 days of the order
 /// lifting a stay the parties confer, and all other deadlines follow.
 deadline stay-lifted-conference-period: 14.days after StayLifted() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 16(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: stay-lifted-conference-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 16(b)"
 {
@@ -204,9 +172,6 @@ test "Counting boundary: stay-lifted-conference-period (weekend)" cite "S.D. Mis
 /// filed at least seven days before the case management conference, or the
 /// movant may be deemed to have waived the automatic stay.
 deadline jurisdiction-motion-period: 7.days before CaseManagementConference() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 16(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: jurisdiction-motion-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 16(b)"
 {
@@ -217,9 +182,6 @@ test "Counting boundary: jurisdiction-motion-period (weekend)" cite "S.D. Miss. 
 /// L.U. Civ. R. 16(c): the magistrate judge may require a proposed case
 /// management order no later than 14 days after the attorney conference.
 deadline proposed-case-management-order-period: 14.days after AttorneyConferenceHeld() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 16(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: proposed-case-management-order-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 16(c)"
 {
@@ -231,9 +193,6 @@ test "Counting boundary: proposed-case-management-order-period (weekend)" cite "
 /// objects, the FRCP 26(a) disclosures are made no later than 14 days after
 /// the attorney conference.
 deadline initial-disclosures-period: 14.days after AttorneyConferenceHeld() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 16(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: initial-disclosures-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 16(d)"
 {
@@ -244,9 +203,6 @@ test "Counting boundary: initial-disclosures-period (weekend)" cite "S.D. Miss. 
 /// L.U. Civ. R. 16(d), 26(a)(1)(A): in no event are the disclosures made
 /// later than seven days before the case management conference.
 deadline disclosures-outer-period: 7.days before CaseManagementConference() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 16(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: disclosures-outer-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 16(d)"
 {
@@ -258,9 +214,6 @@ test "Counting boundary: disclosures-outer-period (weekend)" cite "S.D. Miss. L.
 /// conference each party submits a confidential memorandum of no more than
 /// three pages.
 deadline settlement-memorandum-period: 7.days before SettlementConference() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 16(g)"
-{
-  forum frcp
-}
 
 test "Counting boundary: settlement-memorandum-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 16(g)"
 {
@@ -272,9 +225,6 @@ test "Counting boundary: settlement-memorandum-period (weekend)" cite "S.D. Miss
 /// dispensed with is made not later than 14 days before the scheduled
 /// conference.
 deadline pretrial-excusal-request-period: 14.days before PretrialConference() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 16(j)"
-{
-  forum frcp
-}
 
 test "Counting boundary: pretrial-excusal-request-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 16(j)"
 {
@@ -286,9 +236,6 @@ test "Counting boundary: pretrial-excusal-request-period (weekend)" cite "S.D. M
 /// made no later than 30 days before the discovery deadline or are deemed
 /// waived.
 deadline expert-disclosure-challenge-period: 30.days before DiscoveryDeadline() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 26(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: expert-disclosure-challenge-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 26(a)"
 {
@@ -299,9 +246,6 @@ test "Counting boundary: expert-disclosure-challenge-period (weekend)" cite "S.D
 /// L.U. Civ. R. 51(a): requests for jury instructions are submitted not
 /// later than 14 days before the date for which trial is set.
 deadline jury-instructions-period: 14.days before TrialDate() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 51(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: jury-instructions-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 51(a)"
 {
@@ -312,9 +256,6 @@ test "Counting boundary: jury-instructions-period (weekend)" cite "S.D. Miss. L.
 /// L.U. Civ. R. 54(c): the prevailing party to whom costs are awarded files
 /// the bill of costs not later than 30 days after entry of judgment.
 deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 54(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (holiday)" cite "S.D. Miss. L.U. Civ. R. 54(c)"
 {
@@ -326,9 +267,6 @@ test "Counting boundary: bill-of-costs-period (holiday)" cite "S.D. Miss. L.U. C
 /// perfected by serving and filing objections within 14 days after being
 /// served with the ruling.
 deadline ruling-objection-period: 14.days after MagistrateRulingServed() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 72(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: ruling-objection-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 72(a)"
 {
@@ -339,9 +277,6 @@ test "Counting boundary: ruling-objection-period (weekend)" cite "S.D. Miss. L.U
 /// L.U. Civ. R. 72(a)(1)(A): the opposing party responds, or gives notice
 /// that it will not, within 14 days of service of the objections.
 deadline ruling-objection-response-period: 14.days after RulingObjectionsServed() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 72(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: ruling-objection-response-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 72(a)"
 {
@@ -352,9 +287,6 @@ test "Counting boundary: ruling-objection-response-period (weekend)" cite "S.D. 
 /// L.U. Civ. R. 72(a)(3): each party has 14 days after service of a report
 /// and recommendation to serve and file written objections.
 deadline report-objection-period: 14.days after ReportServed() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 72(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: report-objection-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 72(a)"
 {
@@ -365,9 +297,6 @@ test "Counting boundary: report-objection-period (weekend)" cite "S.D. Miss. L.U
 /// L.U. Civ. R. 72(a)(3): within seven days of service of the objection the
 /// opposing party responds or gives notice that it will not.
 deadline report-objection-response-period: 7.days after ReportObjectionsServed() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 72(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: report-objection-response-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 72(a)"
 {
@@ -378,9 +307,6 @@ test "Counting boundary: report-objection-response-period (weekend)" cite "S.D. 
 /// L.U. Civ. R. 73(e): a party added after reference on consent that elects
 /// to consent files its consent within 21 days of its appearance.
 deadline added-party-consent-period: 21.days after AddedPartyAppeared() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 73(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: added-party-consent-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 73(e)"
 {
@@ -393,7 +319,7 @@ start motion-served
 state motion-served: "Motion and memorandum brief served" by movant cite "S.D. Miss. L.U. Civ. R. 7(b)"
 {
   note "Relief is sought by motion in the form L.U. Civ. R. 7(b) prescribes; the memorandum brief is filed as a separate docket item at the time the motion is served (L.U. Civ. R. 7(b)(2), (4)). Affirmative defenses are raised by separate motion (L.U. Civ. R. 7(b)(2)(A)). A non-dispositive motion states whether it is opposed (L.U. Civ. R. 7(b)(10)). Extensions are requested in writing from the judge who will decide the motion (L.U. Civ. R. 7(b)(4)). The motion's own periods under the Federal Rules are lit/frcp's."
-  edge-motion-served-response "Response served" -> response {
+  "Response served" -> response {
     authority cite "S.D. Miss. L.U. Civ. R. 7(b)"
     within response-period
   }
@@ -405,7 +331,7 @@ state motion-served: "Motion and memorandum brief served" by movant cite "S.D. M
 
 state response: "Response and memorandum brief served" by opponent cite "S.D. Miss. L.U. Civ. R. 7(b)"
 {
-  edge-response-ruling "Rebuttal served or time to rebut elapsed" -> ruling {
+  "Rebuttal served or time to rebut elapsed" -> ruling {
     authority cite "S.D. Miss. L.U. Civ. R. 7(b)"
     within rebuttal-period
   }

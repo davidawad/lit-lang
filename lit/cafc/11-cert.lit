@@ -5,6 +5,8 @@ module cafc.cert
 import cafc.{ Entered, Filed, Order, Paper, cert-group }
 import core.supct30.{ sup-ct-30 }
 
+forum scotus
+
 decision cert-petition-window: "Certiorari Petition Window" by movant cite "28 U.S.C. § 2101(c); Sup. Ct. R. 13.1, 13.3"
 {
   group cert-group
@@ -99,7 +101,6 @@ rule duty certiorari-petition cite "28 U.S.C. § 2101(c)"
 {
   deadline cert-period: 90.days after Entered(PanelJudgment) counted_by sup-ct-30 effective [1948-09-01, ..) known_at 1948-06-25 cite "28 U.S.C. § 2101(c)"
   {
-    forum scotus
     extend {
       by justice
       discretion GoodCause

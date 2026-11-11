@@ -119,6 +119,7 @@ test "Counting boundary: payment-advices-period (weekend)" cite "NM LBR 1007-1"
   given FirstMeetingDate() on 2025-12-06
   expect deadline(payment-advices-period) == 2025-11-21
 }
+
 /// NM LBR 1007-1: the debtor provides payment advices to the United States
 /// trustee not later than ten days after service of its written request.
 deadline ust-payment-advices-period: 10.days after UstAdviceRequestServed() counted_by frbp9006-new-mexico cite "NM LBR 1007-1"
@@ -128,6 +129,7 @@ test "Counting boundary: ust-payment-advices-period (weekend)" cite "NM LBR 1007
   given UstAdviceRequestServed() on 2025-12-03
   expect deadline(ust-payment-advices-period) == 2025-12-15
 }
+
 /// NM LBR 1007-2: within two days after filing and mailing a late statement
 /// of social security number, the debtor files a certificate of compliance.
 deadline ssn-certificate-period: 2.days after SsnStatementFiled() counted_by frbp9006-new-mexico cite "NM LBR 1007-2"
@@ -137,6 +139,7 @@ test "Counting boundary: ssn-certificate-period (weekend)" cite "NM LBR 1007-2"
   given SsnStatementFiled() on 2025-12-04
   expect deadline(ssn-certificate-period) == 2025-12-08
 }
+
 /// NM LBR 1017-1: the movant files with a § 1112(b) motion, and serves
 /// within two days thereafter, a notice of the scheduling conference, final
 /// hearing and objection deadline.
@@ -147,6 +150,7 @@ test "Counting boundary: conversion-notice-service-period (weekend)" cite "NM LB
   given ConversionMotionFiled() on 2025-12-04
   expect deadline(conversion-notice-service-period) == 2025-12-08
 }
+
 /// NM LBR 1017-1: the objection deadline to a motion to convert or dismiss
 /// a chapter 11 case is ten days from the date of service of the notice (as
 /// for a motion under §§ 362(c)(4)(A)(ii) or 362(j), NM LBR 4001-2).
@@ -157,6 +161,7 @@ test "Counting boundary: conversion-objection-period (weekend)" cite "NM LBR 101
   given NoticeServed() on 2025-12-03
   expect deadline(conversion-objection-period) == 2025-12-15
 }
+
 /// NM LBR 1017-2: a chapter 13 debtor's motion to dismiss under § 1307(b)
 /// requires notice to all electronic notice recipients with a minimum
 /// five-day deadline to object.
@@ -171,6 +176,7 @@ test "Counting boundary: meeting-reschedule-request-period (holiday)" cite "NM L
   given MeetingDate() on 2025-12-04
   expect deadline(meeting-reschedule-request-period) == 2025-11-26
 }
+
 /// NM LBR 2004-1(a): unless otherwise ordered, an order for a Rule 2004
 /// examination is served at least seven days before the scheduled
 /// examination.
@@ -181,6 +187,7 @@ test "Counting boundary: examination-order-service-period (holiday)" cite "NM LB
   given ExaminationDate() on 2025-12-04
   expect deadline(examination-order-service-period) == 2025-11-26
 }
+
 /// NM LBR 2016-1(b): substituted debtor's counsel files a Rule 2016
 /// statement within fourteen days of the date representation commenced.
 deadline substituted-counsel-disclosure-period: 14.days after RepresentationCommenced() counted_by frbp9006-new-mexico cite "NM LBR 2016-1(b)"
@@ -194,6 +201,7 @@ test "Counting boundary: subchapter-v-fee-application-period (holiday)" cite "NM
   given ApplicationPeriodEnded() on 2025-12-04
   expect deadline(subchapter-v-fee-application-period) == 2026-01-02
 }
+
 /// NM LBR 3007-1: unless extended or shortened by the court, the time to
 /// respond to a claim objection is thirty days from service of the
 /// objection and notice.
@@ -204,6 +212,7 @@ test "Counting boundary: claim-objection-response-period (holiday)" cite "NM LBR
   given ClaimObjectionServed() on 2025-12-02
   expect deadline(claim-objection-response-period) == 2026-01-02
 }
+
 /// NM LBR 3015-2(c): the trustee and the United States trustee have an
 /// automatic extension of time to object to confirmation of a chapter 13
 /// plan until fourteen days after conclusion of the meeting of creditors.
@@ -218,6 +227,7 @@ test "Counting boundary: plan-service-certificate-period (weekend)" cite "NM LBR
   given PlanServed() on 2025-12-03
   expect deadline(plan-service-certificate-period) == 2025-12-08
 }
+
 /// NM LBR 3015-3(d): a notice under FRBP 3002.1(b) filed and served more
 /// than 21 days before the new payment's effective date is deemed allowed
 /// if no objection is filed within twenty-one days after its service.
@@ -228,6 +238,7 @@ test "Counting boundary: payment-change-objection-period (holiday)" cite "NM LBR
   given PaymentChangeNoticeServed() on 2025-12-04
   expect deadline(payment-change-objection-period) == 2025-12-26
 }
+
 /// NM LBR 3015-3(e): at least forty-five days before any name or address
 /// change, the mortgagee sends the trustee notice on Official Form
 /// B2100A/B.
@@ -238,6 +249,7 @@ test "Counting boundary: mortgagee-address-notice-period (weekend)" cite "NM LBR
   given MortgageeAddressChange() on 2025-12-02
   expect deadline(mortgagee-address-notice-period) == 2025-10-17
 }
+
 /// NM LBR 3015-3(e): if a confirmed plan is modified to require conduit
 /// payments, the mortgagee files a supplemental proof of claim within
 /// twenty-one days after court approval of the modification.
@@ -248,6 +260,7 @@ test "Counting boundary: conduit-supplemental-claim-period (holiday)" cite "NM L
   given ConduitModificationApproved() on 2025-12-04
   expect deadline(conduit-supplemental-claim-period) == 2025-12-26
 }
+
 /// NM LBR 3015-6(b): if the trustee approves an application to incur
 /// non-mortgage consumer debt, the debtor files a notice of the approval
 /// within ten days thereafter.
@@ -258,6 +271,7 @@ test "Counting boundary: new-debt-notice-period (weekend)" cite "NM LBR 3015-6(b
   given NewDebtApproved() on 2025-12-03
   expect deadline(new-debt-notice-period) == 2025-12-15
 }
+
 /// NM LBR 4001-1(b): a motion to continue or impose the stay is filed
 /// within seven days of the petition date; untimely motions may be denied.
 deadline stay-continuation-motion-period: 7.days after PetitionFiled() counted_by frbp9006-new-mexico cite "NM LBR 4001-1(b)"
@@ -267,6 +281,7 @@ test "Counting boundary: stay-continuation-motion-period (weekend)" cite "NM LBR
   given PetitionFiled() on 2025-12-06
   expect deadline(stay-continuation-motion-period) == 2025-12-15
 }
+
 /// NM LBR 4001-1(c): unless the court orders otherwise, the deadline to
 /// object to a motion to continue or impose the stay is ten days from
 /// service of the motion and notice.
@@ -277,6 +292,7 @@ test "Counting boundary: stay-continuation-objection-period (weekend)" cite "NM 
   given StayMotionServed() on 2025-12-03
   expect deadline(stay-continuation-objection-period) == 2025-12-15
 }
+
 /// NM LBR 4002-1: within fourteen days after service of a trustee's written
 /// request under § 521(a)(3) or (4), the debtor provides the information or
 /// files a written objection.
@@ -292,6 +308,7 @@ test "Counting boundary: trustee-documents-period (holiday)" cite "NM LBR 4002-2
   given FirstMeetingDate() on 2025-12-04
   expect deadline(trustee-documents-period) == 2025-11-26
 }
+
 /// NM LBR 4002-4: when the debtor's address changes, the debtor files the
 /// statement required by FRBP 4002(a)(5) within fourteen days of the
 /// change.
@@ -310,6 +327,7 @@ test "Counting boundary: abstention-case-period (holiday)" cite "NM LBR 5011-2(a
   given MeetingConcluded() on 2025-12-02
   expect deadline(abstention-case-period) == 2026-01-02
 }
+
 /// NM LBR 5011-2(b): in a removed adversary proceeding a motion to abstain
 /// is timely if filed within twenty-one days after the notice of removal
 /// was filed.
@@ -320,6 +338,7 @@ test "Counting boundary: abstention-removal-period (holiday)" cite "NM LBR 5011-
   given RemovalNoticeFiled() on 2025-12-04
   expect deadline(abstention-removal-period) == 2025-12-26
 }
+
 /// NM LBR 5011-2(b): if a motion to abstain is denied, the deadline to
 /// answer in the adversary proceeding, or to object in the contested matter
 /// (NM LBR 5011-2(c)), is extended until fourteen days after entry of the
@@ -334,6 +353,7 @@ test "Counting boundary: adversary-response-period (holiday)" cite "NM LBR 7007-
   given MotionServed() on 2025-12-04
   expect deadline(adversary-response-period) == 2025-12-26
 }
+
 /// NM LBR 7007-1: optional replies are due within fourteen days after
 /// service of the response.
 deadline adversary-reply-period: 14.days after ResponseServed() counted_by frbp9006-new-mexico cite "NM LBR 7007-1"
@@ -364,6 +384,7 @@ test "Counting boundary: summary-judgment-response-period (holiday)" cite "NM LB
   given SummaryJudgmentMotionServed() on 2025-12-04
   expect deadline(summary-judgment-response-period) == 2025-12-26
 }
+
 /// NM LBR 9010-2(c): the notice of a motion to withdraw without the
 /// client's consent specifies a 14-day objection deadline running from
 /// service of the motion and notice.
@@ -378,6 +399,7 @@ test "Counting boundary: new-appearance-period (holiday)" cite "NM LBR 9010-2(e)
   given AttorneyGoneNoticeServed() on 2025-12-04
   expect deadline(new-appearance-period) == 2025-12-26
 }
+
 /// NM LBR 9013-1(d): unless the rules provide otherwise or the court
 /// orders, the deadline to object to an opposed motion in a contested
 /// matter is twenty-one days from the date of service.
@@ -388,6 +410,7 @@ test "Counting boundary: objection-deadline-period (holiday)" cite "NM LBR 9013-
   given MotionServed() on 2025-12-04
   expect deadline(objection-deadline-period) == 2025-12-26
 }
+
 /// NM LBR 9013-1(d): the deadline to file an optional reply in a contested
 /// matter is fourteen days after service of the objection.
 deadline contested-reply-period: 14.days after ResponseServed() counted_by frbp9006-new-mexico cite "NM LBR 9013-1(d)"
@@ -401,6 +424,7 @@ test "Counting boundary: stay-relief-objection-period (holiday)" cite "NM LBR 90
   given NoticeServed() on 2025-12-04
   expect deadline(stay-relief-objection-period) == 2025-12-26
 }
+
 /// NM LBR 9070-1: the parties have thirty days after the final disposition
 /// of each matter to retrieve exhibits submitted on it; exhibits not
 /// retrieved may be destroyed.
@@ -657,7 +681,7 @@ start motion-filed
 state motion-filed: "Motion filed and served with notice of the objection deadline" by movant cite "NM LBR 9013-1(d)"
 {
   note "For opposed motions and motions requiring notice, the movant files and serves a notice complying with NM LBR 9004-1; the objection deadline is 21 days from service unless a rule or order provides otherwise (NM LBR 9013-1(d)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Objection timely filed" -> opposed {
+  "Objection timely filed" -> opposed {
     authority cite "NM LBR 9013-1(d)"
     within objection-deadline-period
   }
@@ -669,7 +693,7 @@ state motion-filed: "Motion filed and served with notice of the objection deadli
 state opposed: "Objection filed; hearing requested" by opponent cite "NM LBR 9013-1(d)"
 {
   note "If an objection is timely filed, the movant contacts the courtroom deputy to request a hearing; an optional reply is due 14 days after service of the objection (NM LBR 9013-1(d), (f))."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "NM LBR 9013-1(f)" }
+  "Hearing held" -> ruling { authority cite "NM LBR 9013-1(f)" }
 }
 
 decision ruling: "Motion decided" by court cite "NM LBR 9013-1(d)"

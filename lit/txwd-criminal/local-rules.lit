@@ -3,6 +3,8 @@ module txwd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Western District of Texas's own criminal periods, computed under
 // FRCrimP 45 (Rule CR-45). No trigger carries a service method: FRCrimP
 // 45(c)'s three added days follow the manner of service, which is not
@@ -84,9 +86,6 @@ deadline defendant-pretrial-motions: 14.days after ArraignmentOrScheduledDate() 
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CR-12(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defendant-pretrial-motions (weekend)" cite "W.D. Tex. Local Rule CR-12(a)"
 {
@@ -98,9 +97,6 @@ test "Counting boundary: defendant-pretrial-motions (weekend)" cite "W.D. Tex. L
 /// of a detained material witness taken not later than 35 days after the
 /// witness first appeared before the officer.
 deadline material-witness-deposition: 35.days after MaterialWitnessAppeared() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-15B(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: material-witness-deposition (weekend)" cite "W.D. Tex. Local Rule CR-15B(b)"
 {
@@ -114,9 +110,6 @@ test "Counting boundary: material-witness-deposition (weekend)" cite "W.D. Tex. 
 /// CR-15B(c)(1)(A); the deposition cannot be continued past this deadline
 /// (CR-15B(b)(2)(B)).
 deadline material-witness-release: 45.days after MaterialWitnessAppeared() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-15B(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: material-witness-release (weekend)" cite "W.D. Tex. Local Rule CR-15B(c)"
 {
@@ -130,17 +123,10 @@ test "Counting boundary: material-witness-release (weekend)" cite "W.D. Tex. Loc
 /// the witness's deposition, if that comes before the 45-day deadline of
 /// CR-15B(c)(1)(B).
 deadline material-witness-release-after-deposition: 24.hours after MaterialWitnessDepositionCertified() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-15B(c)"
-{
-  forum frcrimp
-}
-
 /// W.D. Tex. Local Rule CR-16(a)(3): if the Disclosure Agreement Checklist
 /// shows that a party refuses to disclose information, the other party may
 /// file motions about it within 14 days after the checklist is filed.
 deadline undisclosed-information-motion: 14.days after RefusalChecklistFiled() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-16(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: undisclosed-information-motion (weekend)" cite "W.D. Tex. Local Rule CR-16(a)"
 {
@@ -156,9 +142,6 @@ deadline trial-discovery: 14.days after ArraignmentOrScheduledDate() counted_by 
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CR-16(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: trial-discovery (weekend)" cite "W.D. Tex. Local Rule CR-16(b)"
 {
@@ -174,9 +157,6 @@ deadline pretrial-hearing-discovery: 48.hours before PretrialHearing() counted_b
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CR-16(b)"
-{
-  forum frcrimp
-}
 
 /// W.D. Tex. Local Rule CR-32(a): except for good cause, the court should
 /// sentence the defendant within 60 days after the date of the verdict or
@@ -185,9 +165,6 @@ deadline sentencing-time: 60.days after VerdictOrPlea() counted_by frcrimp45 del
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CR-32(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-time (weekend)" cite "W.D. Tex. Local Rule CR-32(a)"
 {
@@ -200,9 +177,6 @@ test "Counting boundary: sentencing-time (weekend)" cite "W.D. Tex. Local Rule C
 /// witness's continued detention or release within 7 days of receiving
 /// the government's report.
 deadline detained-witness-recommendation: 7.days after DetainedWitnessReportReceived() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-46(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: detained-witness-recommendation (weekend)" cite "W.D. Tex. Local Rule CR-46(b)"
 {
@@ -214,9 +188,6 @@ test "Counting boundary: detained-witness-recommendation (weekend)" cite "W.D. T
 /// response with the clerk and serves it on all parties within 11 days of
 /// service of the motion.
 deadline response-period: 11.days after MotionServed() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-47(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "W.D. Tex. Local Rule CR-47(b)"
 {
@@ -229,9 +200,6 @@ test "Counting boundary: response-period (weekend)" cite "W.D. Tex. Local Rule C
 /// clerk; an exhibit not removed may be destroyed or otherwise disposed
 /// of.
 deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-55(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-removal (weekend)" cite "W.D. Tex. Local Rule CR-55(b)"
 {

@@ -42,7 +42,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "Guam R. Civ
 {
   note "The defenses of Rule 12(b)(1)-(7) may be made by motion, before pleading if a further pleading is permitted; if matters outside the pleadings are presented on a 12(b)(6) motion and not excluded, it is treated as one for summary judgment under Rule 56 (Guam R. Civ. P. 12(b)). The earlier outline named no Guam pleading-standard decision."
   edge-pleading-motion-granted "Granted" -> dismissed { authority cite "Guam R. Civ. P. 12(b)" }
-  edge-pleading-motion-amend "Leave to amend" -> amend { authority cite "Guam R. Civ. P. 15(a)" }
+  "Leave to amend" -> amend { authority cite "Guam R. Civ. P. 15(a)" }
   edge-pleading-motion-denied "Denied: answer within 10 days of notice" -> discovery {
     authority cite "Guam R. Civ. P. 12(a)"
   }
@@ -83,10 +83,8 @@ state discovery: "Disclosure, discovery and pretrial" by movant cite "Guam R. Ci
   edge-discovery-sj "Summary judgment motion" -> summary-judgment {
     authority cite "Guam R. Civ. P. 56"
   }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Guam R. Civ. P. 38" }
-  edge-discovery-settled "Stipulated dismissal" -> settled {
-    authority cite "Guam R. Civ. P. 41(a)"
-  }
+  "No dispositive motion" -> trial { authority cite "Guam R. Civ. P. 38" }
+  "Stipulated dismissal" -> settled { authority cite "Guam R. Civ. P. 41(a)" }
 }
 
 decision summary-judgment: "Summary judgment decided" by court cite "Guam R. Civ. P. 56(a)"
@@ -102,7 +100,7 @@ state trial: "Trial by jury or by the court" by court cite "Guam R. Civ. P. 38"
 {
   note "Issues triable of right by a jury are so tried on a timely written demand; another party may demand the remaining issues within 10 days after service of a demand limited to some (Guam R. Civ. P. 38(b), (c)). A party whose motion for judgment as a matter of law was not granted may renew it by a motion filed no later than 10 days after entry of judgment (Guam R. Civ. P. 50(b))."
   edge-trial-judgment "Verdict or decision" -> post-trial { authority cite "Guam R. Civ. P. 58" }
-  edge-trial-settled "Settled before verdict" -> settled { authority cite "Guam R. Civ. P. 41(a)" }
+  "Settled before verdict" -> settled { authority cite "Guam R. Civ. P. 41(a)" }
 }
 
 decision post-trial: "Post-trial motions" by movant cite "Guam R. Civ. P. 59"

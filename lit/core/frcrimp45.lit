@@ -4,6 +4,8 @@ import core.calendar.{ district-state-holidays, us-federal-holidays, sdny-nation
 import core.states.delaware.{ frcrimp45-delaware }
 import core.time.{ Served, Scheduled, ServiceMethod }
 
+forum frcrimp
+
 /// FRCrimP 45 from the 1985 amendments (effective August 1, 1985) as the
 /// 1996 edition of 18 U.S.C. App. prints it (as amended August 1, 1987; the
 /// 1987 Advisory Committee Note calls those amendments "technical. No
@@ -218,24 +220,12 @@ counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 supersedes frc
 
 // Fixtures cite nothing: they are periods for the tests, not rules in
 // force, and each test cites the rule it checks.
-deadline frcrimp45-14-days: 14.days after Served() counted_by frcrimp45 { forum frcrimp }
-deadline frcrimp45-7-days-before: 7.days before Scheduled() counted_by frcrimp45 { forum frcrimp }
-
-deadline frcrimp45-delaware-1-day: 1.days after Served() counted_by frcrimp45-delaware {
-  forum frcrimp
-}
-
-deadline frcrimp45-delaware-2-days: 2.days after Served() counted_by frcrimp45-delaware {
-  forum frcrimp
-}
-
-deadline frcrimp45-delaware-1-court-day-before: 1.court_days before Scheduled() counted_by frcrimp45-delaware {
-  forum frcrimp
-}
-
-deadline frcrimp45-delaware-3-calendar-days: 3.days before Scheduled() counted_by frcrimp45-delaware {
-  forum frcrimp
-}
+deadline frcrimp45-14-days: 14.days after Served() counted_by frcrimp45
+deadline frcrimp45-7-days-before: 7.days before Scheduled() counted_by frcrimp45
+deadline frcrimp45-delaware-1-day: 1.days after Served() counted_by frcrimp45-delaware
+deadline frcrimp45-delaware-2-days: 2.days after Served() counted_by frcrimp45-delaware
+deadline frcrimp45-delaware-1-court-day-before: 1.court_days before Scheduled() counted_by frcrimp45-delaware
+deadline frcrimp45-delaware-3-calendar-days: 3.days before Scheduled() counted_by frcrimp45-delaware
 
 test "fourteen days count every day" cite "FRCrimP 45(a)(1)(B)"
 {
@@ -292,9 +282,7 @@ test "Delaware Good Friday rolls a criminal-rule deadline" cite "FRCrimP 45(a)(6
   expect deadline(frcrimp45-delaware-2-days) == 2024-04-01
 }
 
-deadline sdny-criminal-mourning-forward: 8.days after Served() counted_by frcrimp45-sdny {
-  forum frcrimp
-}
+deadline sdny-criminal-mourning-forward: 8.days after Served() counted_by frcrimp45-sdny
 
 test "S.D.N.Y. mourning date advances a criminal deadline" cite "S.D.N.Y. Order M10-468"
 {

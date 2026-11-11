@@ -40,7 +40,7 @@ decision pretrial-release: "Pretrial release or denial" by court cite "725 ILCS 
 decision probable-cause: "Preliminary examination or indictment" by court cite "725 ILCS 5/109-3.1(b)"
 {
   note "A person charged with a felony receives either a preliminary examination under Section 109-3 or an indictment by grand jury under Section 111-2 within the periods Section 109-3.1(b) sets for a person in custody and for a person released pretrial, which are not stated here (currency unconfirmed). At the examination the judge holds the defendant to answer if there is probable cause to believe a felony was committed by the defendant, and otherwise discharges the defendant (725 ILCS 5/109-3(a), (b)). A felony may be prosecuted by information only after a preliminary hearing held or waived with probable cause found; other offenses may be prosecuted by indictment, information or complaint (725 ILCS 5/111-2(a), (b))."
-  edge-probable-cause-charged "Held to answer; information or indictment filed" -> charged {
+  "Held to answer; information or indictment filed" -> charged {
     authority cite "725 ILCS 5/111-2(a)"
   }
   edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
@@ -51,13 +51,13 @@ decision probable-cause: "Preliminary examination or indictment" by court cite "
 state charged: "Information or indictment" by court cite "725 ILCS 5/111-2"
 {
   note "All prosecutions of felonies are by information or indictment (725 ILCS 5/111-2(a)); the grand jury is governed by Article 112. The speedy-trial statute runs from custody for a person in custody and from the trial demand for a person on pretrial release or recognizance; its periods are set by 725 ILCS 5/103-5(a) and (b) and are not stated here (currency unconfirmed). Delay is agreed to by a defendant in custody unless the defendant objects by a written or oral demand for trial on the record (725 ILCS 5/103-5(a))."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "725 ILCS 5/113-1" }
+  "Arraignment" -> arraignment { authority cite "725 ILCS 5/113-1" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "725 ILCS 5/113-1"
 {
   note "Before trial the defendant is called into open court, informed of the charge and called upon to plead; on request the formal charge is read, and the arraignment is entered of record (725 ILCS 5/113-1). Discovery is governed by Supreme Court Rules 411 to 417: on defense counsel's written motion the State discloses the witnesses, statements and other material Rule 412(a) lists, and the defense discloses under Rule 413; the times Rule 415 regulates are not stated here (currency unconfirmed)."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Ill. S. Ct. R. 412(a)" }
+  "Discovery" -> discovery { authority cite "Ill. S. Ct. R. 412(a)" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "725 ILCS 5/114-1(a)"
@@ -92,7 +92,7 @@ decision plea-decision: "Plea or trial" by accused cite "Ill. S. Ct. R. 402(a)"
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Ill. S. Ct. R. 402(a)"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "725 ILCS 5/115-1" }
+  "Trial" -> trial { authority cite "725 ILCS 5/115-1" }
 }
 
 decision trial: "Verdict" by court cite "725 ILCS 5/115-1"
@@ -116,9 +116,7 @@ decision post-trial: "Post-trial motions" by court cite "725 ILCS 5/116-1"
 
 state sentencing: "Sentencing" by court cite ?("730 ILCS 5/5-4-1 (sentencing hearing; Unified Code of Corrections not vendored)") {
   note "Sentencing, the presentence report and the sentencing ranges are governed by the Unified Code of Corrections (730 ILCS 5/), which is not vendored. The sentencing order is prepared under Ill. S. Ct. R. 452. At sentence after a plea of not guilty the court advises the defendant of the right to appeal and to appointed counsel and a transcript (Ill. S. Ct. R. 605(a)); after a guilty plea, of the motion Rule 604(d) requires before an appeal (Ill. S. Ct. R. 605(b), (c))."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "Ill. S. Ct. R. 605(a)"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "Ill. S. Ct. R. 605(a)" }
 }
 
 decision judgment: "Judgment and appeal" by accused cite "Ill. S. Ct. R. 606(b)"

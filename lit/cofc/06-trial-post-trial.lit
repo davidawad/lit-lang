@@ -39,9 +39,7 @@ decision post-trial-motion-window: "File a RCFC 59 Motion?" by movant cite "RCFC
     authority cite "RCFC 59(a)-(b), (e)"
     effort 50.hours
     cost 0.usd
-    within post-judgment-motion-period {
-      note "No later than 28 days after entry of judgment."
-    }
+    within post-judgment-motion-period { note "No later than 28 days after entry of judgment." }
   }
   e-posttrialwindow-lapse "No RCFC 59 motion filed within 28 days; window lapses" -> post-trial-resolved by either {
     authority cite "RCFC 59(b)"
@@ -80,9 +78,7 @@ state costs-and-fees-window: "Bill of Costs & EAJA Fee Application Window" cite 
   note "TWO SEPARATE 30-day clocks running from 'final judgment' (defined at 28 U.S.C. §2412(d)(2)(G) as a judgment that is final and not appealable): (1) a prevailing party's Bill of Costs (Appendix of Forms Form 4) must be filed within 30 days of final judgment, with a 28-day response window and 14-day reply (RCFC 54(d)(1)(B)-(D)); (2) a prevailing, EAJA-eligible party (net worth under the statutory cap; the United States' position not 'substantially justified') must submit its EAJA fee application within 30 days of final judgment (28 U.S.C. §2412(d)(1)(B); Appendix of Forms Form 5). NOTE the timing subtlety this pack simplifies: §2412(d)(2)(G)'s 'final judgment' generally means the judgment is no longer appealable (i.e., the notice-of-appeal window has run, or any appeal is exhausted), so the EAJA clock in practice runs later than a bare 30-days-from-RCFC-58-judgment reading would suggest -- flagged here rather than separately modeled as a parallel appeal-exhaustion gate."
   e-costs-to-prevailing "Bill of Costs (RCFC 54(d), Form 4) and any EAJA application (28 U.S.C. §2412(d)(1)(B), Form 5) are filed within 30 days of final judgment" -> prevailing-party-fork {
     authority cite "RCFC 54(d); 28 U.S.C. §2412(d)(1)(B)"
-    within costs-period {
-      note "30 days after final judgment (28 U.S.C. §2412(d)(2)(G))."
-    }
+    within costs-period { note "30 days after final judgment (28 U.S.C. §2412(d)(2)(G))." }
     tags [fees]
   }
 }

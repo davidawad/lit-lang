@@ -2,6 +2,8 @@ module mnd-local-rules.local-rules
 
 import core.states.minnesota.{ frcp6-minnesota }
 
+forum frcp
+
 // The District of Minnesota's own civil periods, computed under the federal
 // rules (FRCP 6(a) governs "any local rule"). Each period applies "unless
 // the court orders otherwise" where the rule says so. Rules that state no
@@ -88,9 +90,6 @@ event MagistrateObjectionsServed() paper magistrate-objection
 /// LR 5.3: any paper FRCP 5(d)(1) requires to be filed is filed within 14
 /// days after service; this is the "reasonable time" under FRCP 5(d)(1).
 deadline filing-after-service-period: 14.days after PaperServed() counted_by frcp6-minnesota cite "D. Minn. LR 5.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: filing-after-service-period (weekend)" cite "D. Minn. LR 5.3"
 {
@@ -102,9 +101,6 @@ test "Counting boundary: filing-after-service-period (weekend)" cite "D. Minn. L
 /// so promptly, and in no event later than three days after the motion is
 /// filed; the court may rule before a response is filed.
 deadline extension-response-period: 3.days after ExtensionMotionFiled() counted_by frcp6-minnesota cite "D. Minn. LR 6.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: extension-response-period (weekend)" cite "D. Minn. LR 6.1(b)"
 {
@@ -119,9 +115,6 @@ test "Counting boundary: extension-response-period (weekend)" cite "D. Minn. LR 
 /// judge; no reply is filed without the court's prior permission (LR
 /// 7.1(b)(3)).
 deadline nondispositive-motion-period: 14.days before NondispositiveHearingHeld() counted_by frcp6-minnesota cite "D. Minn. LR 7.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: nondispositive-motion-period (weekend)" cite "D. Minn. LR 7.1(b)"
 {
@@ -133,10 +126,6 @@ test "Counting boundary: nondispositive-motion-period (weekend)" cite "D. Minn. 
 /// supporting documents are filed, the responding party files and serves
 /// its memorandum and any affidavits and exhibits.
 deadline nondispositive-response-period: 7.days after NondispositiveMotionFiled() counted_by frcp6-minnesota cite "D. Minn. LR 7.1(b)"
-{
-  forum frcp
-}
-
 /// LR 7.1(c)(1): at least 42 days before the hearing on a dispositive
 /// motion (or, with no hearing scheduled, as the courtroom deputy
 /// instructs), the movant files and serves its motion papers. Dispositive
@@ -144,9 +133,6 @@ deadline nondispositive-response-period: 7.days after NondispositiveMotionFiled(
 /// pleadings, dismissal, summary judgment, class certification and
 /// exclusion of experts (LR 7.1(c)(6)).
 deadline dispositive-motion-period: 42.days before DispositiveHearingHeld() counted_by frcp6-minnesota cite "D. Minn. LR 7.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: dispositive-motion-period (weekend)" cite "D. Minn. LR 7.1(c)"
 {
@@ -158,9 +144,6 @@ test "Counting boundary: dispositive-motion-period (weekend)" cite "D. Minn. LR 
 /// supporting documents are filed, the responding party files and serves
 /// its memorandum and any affidavits and exhibits.
 deadline dispositive-response-period: 21.days after DispositiveMotionFiled() counted_by frcp6-minnesota cite "D. Minn. LR 7.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: dispositive-response-period (holiday)" cite "D. Minn. LR 7.1(c)"
 {
@@ -173,9 +156,6 @@ test "Counting boundary: dispositive-response-period (holiday)" cite "D. Minn. L
 /// filed. A party may request a hearing by letter no sooner than 14 days
 /// after the reply or notice (LR 7.1(c)(5)(B)).
 deadline dispositive-reply-period: 14.days after DispositiveResponseFiled() counted_by frcp6-minnesota cite "D. Minn. LR 7.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: dispositive-reply-period (weekend)" cite "D. Minn. LR 7.1(c)"
 {
@@ -186,9 +166,6 @@ test "Counting boundary: dispositive-reply-period (weekend)" cite "D. Minn. LR 7
 /// LR 26.1(b)(1): within 14 days of the Rule 26(f) conference, the parties
 /// file a joint Rule 26(f) report and proposed scheduling order.
 deadline rule26f-report-period: 14.days after Rule26fConferenceHeld() counted_by frcp6-minnesota cite "D. Minn. LR 26.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: rule26f-report-period (weekend)" cite "D. Minn. LR 26.1(b)"
 {
@@ -205,9 +182,6 @@ test "Counting boundary: rule26f-report-period (weekend)" cite "D. Minn. LR 26.1
 /// judge notifies the parties of the trial calendar at least 21 days before
 /// the trial date (LR 39.1(a)).
 deadline pretrial-documents-period: 14.days before TrialDate() counted_by frcp6-minnesota cite "D. Minn. LR 39.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: pretrial-documents-period (weekend)" cite "D. Minn. LR 39.1(b)"
 {
@@ -219,9 +193,6 @@ test "Counting boundary: pretrial-documents-period (weekend)" cite "D. Minn. LR 
 /// objecting to designated deposition testimony files and serves a list of
 /// objections.
 deadline deposition-objections-period: 7.days before TrialDate() counted_by frcp6-minnesota cite "D. Minn. LR 39.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: deposition-objections-period (weekend)" cite "D. Minn. LR 39.1(b)"
 {
@@ -233,9 +204,6 @@ test "Counting boundary: deposition-objections-period (weekend)" cite "D. Minn. 
 /// Act is filed and served within 30 days of final judgment as 28 U.S.C.
 /// § 2412(d)(2)(G) defines it.
 deadline eaja-application-period: 30.days after FinalJudgment() counted_by frcp6-minnesota cite "D. Minn. LR 54.3(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: eaja-application-period (weekend)" cite "D. Minn. LR 54.3(a)"
 {
@@ -247,9 +215,6 @@ test "Counting boundary: eaja-application-period (weekend)" cite "D. Minn. LR 54
 /// within 14 days after being served with it; no reply brief unless the
 /// court orders otherwise.
 deadline fee-response-period: 14.days after FeeMotionServed() counted_by frcp6-minnesota cite "D. Minn. LR 54.3(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-response-period (weekend)" cite "D. Minn. LR 54.3(b)"
 {
@@ -261,9 +226,6 @@ test "Counting boundary: fee-response-period (weekend)" cite "D. Minn. LR 54.3(b
 /// seeking costs files and serves a verified bill of costs on the clerk's
 /// form.
 deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6-minnesota cite "D. Minn. LR 54.3(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "D. Minn. LR 54.3(c)"
 {
@@ -274,9 +236,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "D. Minn. LR 54.3(
 /// LR 54.3(c)(1)(B): within 14 days after being served with the bill of
 /// costs, the opposing party may file and serve objections.
 deadline cost-objections-period: 14.days after BillOfCostsServed() counted_by frcp6-minnesota cite "D. Minn. LR 54.3(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: cost-objections-period (weekend)" cite "D. Minn. LR 54.3(c)"
 {
@@ -287,32 +246,17 @@ test "Counting boundary: cost-objections-period (weekend)" cite "D. Minn. LR 54.
 /// LR 54.3(c)(1)(C): within 7 days after being served with objections, the
 /// party seeking costs may file and serve a response.
 deadline cost-objections-response-period: 7.days after CostObjectionsServed() counted_by frcp6-minnesota cite "D. Minn. LR 54.3(c)"
-{
-  forum frcp
-}
-
 /// LR 54.3(c)(3)(A): within 7 days after the clerk taxes costs, a party may
 /// move for review of the clerk's action.
 deadline cost-review-period: 7.days after CostsTaxed() counted_by frcp6-minnesota cite "D. Minn. LR 54.3(c)"
-{
-  forum frcp
-}
-
 /// LR 54.3(c)(3)(B): within 7 days after being served with the motion for
 /// review, a party may respond; no reply brief unless the court orders
 /// otherwise.
 deadline cost-review-response-period: 7.days after CostReviewMotionServed() counted_by frcp6-minnesota cite "D. Minn. LR 54.3(c)"
-{
-  forum frcp
-}
-
 /// LR 54.3(d)(2): a party seeking costs taxable under FRAP 39(f) files a
 /// verified bill of costs within 14 days after the court of appeals issues
 /// the mandate; LR 54.3(c) otherwise governs it.
 deadline appeal-costs-period: 14.days after MandateIssued() counted_by frcp6-minnesota cite "D. Minn. LR 54.3(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: appeal-costs-period (weekend)" cite "D. Minn. LR 54.3(d)"
 {
@@ -327,9 +271,6 @@ test "Counting boundary: appeal-costs-period (weekend)" cite "D. Minn. LR 54.3(d
 /// A defect in a nondispositive order not timely objected to may not be
 /// assigned as error (LR 72.2(a)(1)).
 deadline magistrate-objection-period: 14.days after MagistrateRulingServed() counted_by frcp6-minnesota cite "D. Minn. LR 72.2(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: magistrate-objection-period (weekend)" cite "D. Minn. LR 72.2(a)"
 {
@@ -340,9 +281,6 @@ test "Counting boundary: magistrate-objection-period (weekend)" cite "D. Minn. L
 /// LR 72.2(a)(2), (b)(2): a party may respond to another party's
 /// objections within 14 days after being served with a copy.
 deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6-minnesota cite "D. Minn. LR 72.2(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: magistrate-objection-response-period (weekend)" cite "D. Minn. LR 72.2(a)"
 {

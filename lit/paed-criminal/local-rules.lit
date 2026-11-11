@@ -3,6 +3,8 @@ module paed-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Eastern District of Pennsylvania's own criminal periods, counted
 // under the criminal rules (FRCrimP 45(a) governs "any local rule"). No
 // trigger carries a service method.
@@ -58,9 +60,6 @@ deadline pretrial-motions: 14.days after Arraigned() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "E.D. Pa. LCrR 12.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motions (weekend)" cite "E.D. Pa. LCrR 12.1"
 {
@@ -71,9 +70,6 @@ test "Counting boundary: pretrial-motions (weekend)" cite "E.D. Pa. LCrR 12.1"
 /// E.D. Pa. LCrR 12.1: within seven days after receipt of a motion, a party
 /// opposing it files and serves an answer and a memorandum in opposition.
 deadline motion-answer: 7.days after MotionReceived() counted_by frcrimp45 cite "E.D. Pa. LCrR 12.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-answer (weekend)" cite "E.D. Pa. LCrR 12.1"
 {
@@ -90,9 +86,6 @@ deadline discovery-conference: 7.days after Arraigned() counted_by frcrimp45 del
   to CaseOrder
   op set
 } cite "E.D. Pa. LCrR 16.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-conference (weekend)" cite "E.D. Pa. LCrR 16.1(a)"
 {

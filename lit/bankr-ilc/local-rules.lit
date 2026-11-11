@@ -58,10 +58,8 @@ state objected: "Objection or motion to intervene filed" by opponent cite "Bankr
 
 decision ruling: "Court rules on the motion to dismiss" by court cite "Bankr. C.D. Ill. LBR 7041-1(B)"
 {
-  edge-ruling-dismissed "Proceeding dismissed" -> dismissed {
-    authority cite "Bankr. C.D. Ill. LBR 7041-1(A)"
-  }
-  edge-ruling-continues "Dismissal denied; the proceeding continues" -> continues {
+  "Proceeding dismissed" -> dismissed { authority cite "Bankr. C.D. Ill. LBR 7041-1(A)" }
+  "Dismissal denied; the proceeding continues" -> continues {
     authority cite "Bankr. C.D. Ill. LBR 7041-1(B)"
   }
 }

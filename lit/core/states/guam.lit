@@ -4,6 +4,8 @@ import core.calendar.{ us-federal-holidays }
 import core.frcrimp45.{ frcrimp45 }
 import core.time.{ Served, Scheduled, ServiceMethod }
 
+forum frcrimp
+
 /// The holidays of Guam (1 GCA § 1000(a)) that `us-federal-holidays` does not
 /// already close: Guam History and CHamoru Heritage Day, the first Monday in
 /// March; Liberation Day, July 21; All Souls' Day, November 2; and Our Lady
@@ -119,17 +121,9 @@ counting frcrimp45-guam effective [2023-12-01, ..) known_at 2023-04-24 cite "FRC
   end_of_month clamp
 }
 
-deadline frcrimp45-guam-forward-holiday: 1.days after Served() counted_by frcrimp45-guam {
-  forum frcrimp
-}
-
-deadline frcrimp45-guam-backward-holiday: 1.days before Scheduled() counted_by frcrimp45-guam {
-  forum frcrimp
-}
-
-deadline frcrimp45-guam-electronic-service: 1.days after Served() counted_by frcrimp45-guam {
-  forum frcrimp
-}
+deadline frcrimp45-guam-forward-holiday: 1.days after Served() counted_by frcrimp45-guam
+deadline frcrimp45-guam-backward-holiday: 1.days before Scheduled() counted_by frcrimp45-guam
+deadline frcrimp45-guam-electronic-service: 1.days after Served() counted_by frcrimp45-guam
 
 test "Guam Liberation Day closes a forward criminal period" cite "FRCrimP 45(a)(6)(C)"
 {

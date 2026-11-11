@@ -23,18 +23,18 @@ state commenced: "Complaint or petition of appeal filed" by plaintiff cite ?("Ta
 
 chance pleadings: "Answer or motion to dismiss" by court cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:6-1") {
   note "The response period and dismissal grounds are in Part VIII, not vendored: holes."
-  edge-pleadings-dismissed "Dismissed on the pleadings" -> dismissed p ? {
+  "Dismissed on the pleadings" -> dismissed p ? {
     authority cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:6-1")
   }
   edge-pleadings-answered "Answered; case proceeds" -> discovery p ? {
     authority cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:6-1")
   }
-  edge-pleadings-settled "Settled or withdrawn" -> settled p ? {}
+  "Settled or withdrawn" -> settled p ? {}
 }
 
 state discovery: "Discovery and pretrial" by plaintiff cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:6-1") {
   note "Discovery scope, limits and scheduling in the Tax Court are in Part VIII, not vendored: holes."
-  edge-discovery-dispositive "Dispositive motion or trial setting" -> dispositive {
+  "Dispositive motion or trial setting" -> dispositive {
     authority cite ?("Application of R. 4:46 in the Tax Court (Part VIII), not vendored")
   }
 }
@@ -44,14 +44,14 @@ chance dispositive: "Summary disposition?" by court cite ?("Application of R. 4:
   edge-dispositive-granted "Decided without trial" -> judgment p ? {
     authority cite ?("Application of R. 4:46 in the Tax Court (Part VIII), not vendored")
   }
-  edge-dispositive-trial "Tried" -> trial p ? {
+  "Tried" -> trial p ? {
     authority cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:8-1")
   }
 }
 
 state trial: "Trial" by court cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:8-1") {
   note "Trial procedure in the Tax Court is in Part VIII, not vendored: a hole."
-  edge-trial-judgment "Decision rendered" -> judgment {
+  "Decision rendered" -> judgment {
     authority cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:9-1")
   }
 }

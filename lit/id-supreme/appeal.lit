@@ -32,7 +32,7 @@ start notice-filed
 state notice-filed: "Notice of appeal filed" by appellant cite "I.A.R. 14(a)"
 {
   note "An appeal as of right from the district court is taken only by physically filing a notice of appeal with the clerk of the district court within 42 days from the date of the clerk's filing stamp on the appealable judgment or order (I.A.R. 14(a)). A timely motion that could affect the findings, conclusions or judgment, other than an I.R.C.P. 60 motion or one regarding costs or attorney fees, terminates the time, which runs again from the filing stamp on the order deciding it (I.A.R. 14(a)). A cross-appeal is filed within the 42 days or within 21 days after the original notice of appeal is filed, whichever is later (I.A.R. 15(b)). The filing fee for an appeal in a civil case other than habeas corpus or post-conviction relief, and for a cross-appeal in one, is $94.00, collected by the district court clerk (I.A.R. 23(a), (b)). The appellant pays the estimated clerk's record fee on filing the notice or within three working days (I.A.R. 27(c))."
-  edge-notice-filed-appealability "Notice timely filed" -> appealability {
+  "Notice timely filed" -> appealability {
     event NoticeOfAppealFiled()
     authority cite "I.A.R. 14(a)"
   }
@@ -65,18 +65,13 @@ terminal dismissed-jurisdiction: "Dismissed for lack of an appealable order" out
 state record-assembled: "Record and transcript prepared and filed" by court cite "I.A.R. 29"
 {
   note "The district court clerk prepares the clerk's record and has it ready for service within 28 days of the filing of the notice of appeal (I.A.R. 27(d)). The reporter's transcript is due within 30 days of the reporter's notice from the Supreme Court if estimated under 100 pages, within 63 days if between 100 and 500 pages, and on the schedule the Court sets for a longer one (I.A.R. 24(e)). After settlement of the transcript and record, the district court clerk files the electronic copies with the Clerk of the Supreme Court within 7 days, and the Clerk notifies the parties of the filing date and when briefs are due (I.A.R. 29(b))."
-  edge-record-assembled-briefing "Record filed: briefing begins" -> briefing {
-    event RecordFiled()
-    authority cite "I.A.R. 29(b)"
-  }
+  "Record filed: briefing begins" -> briefing { event RecordFiled(), authority cite "I.A.R. 29(b)" }
 }
 
 state briefing: "Briefing" by petitioner cite "I.A.R. 34(c)"
 {
   note "The appellant's brief is filed within 35 days of the filing of the reporter's transcript and the clerk's record with the Supreme Court; the respondent's and cross-appellant's brief within 28 days after service of the appellant's brief; any cross-respondent's brief within 28 days after the cross-appellant's brief; any reply brief within 21 days after service of the respondent's brief (I.A.R. 34(c)). A motion to extend a brief's time is made no later than its due date, supported by affidavit; extensions are not favored (I.A.R. 34(d))."
-  edge-briefing-argument "Briefs filed: case assigned and calendared" -> argument {
-    authority cite "I.A.R. 108"
-  }
+  "Briefs filed: case assigned and calendared" -> argument { authority cite "I.A.R. 108" }
 }
 
 decision argument: "Assignment, argument or submission on the briefs" by court cite "I.A.R. 37(a)"

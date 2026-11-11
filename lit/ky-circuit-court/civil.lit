@@ -68,9 +68,7 @@ state default-application: "Application for default judgment" by plaintiff cite 
   edge-default-application-granted "Default judgment entered" -> default-judgment {
     authority cite "CR 55.01"
   }
-  edge-default-application-set-aside "Defendant moves to set the default aside" -> set-aside {
-    authority cite "CR 55.02"
-  }
+  "Defendant moves to set the default aside" -> set-aside { authority cite "CR 55.02" }
 }
 
 decision set-aside: "Set the default judgment aside?" by court cite "CR 55.02"
@@ -98,7 +96,7 @@ state discovery: "Discovery" by plaintiff cite "CR 26.02"
   edge-discovery-voluntary "Notice or stipulation of dismissal" -> voluntary-dismissal {
     authority cite "CR 41.01"
   }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "CR 38.02" }
+  "No dispositive motion" -> trial { authority cite "CR 38.02" }
 }
 
 terminal sanction-dismissal: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "CR 37.02(2)"
@@ -145,9 +143,7 @@ state trial: "Trial by jury or by the court" by court cite "CR 38.02"
 decision judgment-entered: "Judgment entered and its service noted" by court cite "CR 58"
 {
   note "A judgment or order is signed by the judge; the clerk forthwith notes it in the civil docket, and that notation is the entry, effective at the time of notation (CR 58(1)). Immediately upon entry of a judgment or final order the clerk serves notice of the entry by mail on every party not in default for failure to appear, and notes the service and its date in the docket; the date of that notation, or of an earlier filed waiver, is the date of entry for the running of the time for appeal under RAP 3 (CR 77.04(1), (2)). Where multiple claims or parties are involved, a judgment on fewer than all of them is final only on the court's determination, recited in it, that there is no just reason for delay and that it is final (CR 54.02(1)). Unless a statute or court rule provides a different time, the notice of appeal is filed with the circuit court clerk no later than 30 days from the date of notation of service; on excusable neglect based on a party's failure to learn of the entry, the trial court may extend the time by not more than 10 days (RAP 3(A), (D))."
-  edge-judgment-entered-post-trial "CR 50.02, 52.02 or 59 motion served" -> post-trial {
-    authority cite "CR 59.02"
-  }
+  "CR 50.02, 52.02 or 59 motion served" -> post-trial { authority cite "CR 59.02" }
   edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
     event NoticeOfAppealFiled()
     authority cite "RAP 2(A)"

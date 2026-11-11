@@ -3,6 +3,8 @@ module njd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of New Jersey's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method.
@@ -58,9 +60,6 @@ deadline rule12-motions: 30.days after PleaEntered() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "D.N.J. L.Cr.R. 12.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: rule12-motions (weekend)" cite "D.N.J. L.Cr.R. 12.1"
 {
@@ -76,9 +75,6 @@ deadline rule41-motions: 30.days after PleaEntered() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "D.N.J. L.Cr.R. 41.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: rule41-motions (weekend)" cite "D.N.J. L.Cr.R. 41.1"
 {
@@ -91,9 +87,6 @@ test "Counting boundary: rule41-motions (weekend)" cite "D.N.J. L.Cr.R. 41.1"
 /// a brief within 21 days of the filing of the notice of appeal; briefs
 /// conform to L.Civ.R. 7.2(b).
 deadline misdemeanor-appellant-brief: 21.days after MisdemeanorAppealNoticed() counted_by frcrimp45 cite "D.N.J. L.Cr.R. 58.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellant-brief (holiday)" cite "D.N.J. L.Cr.R. 58.1(d)"
 {
@@ -104,9 +97,6 @@ test "Counting boundary: misdemeanor-appellant-brief (holiday)" cite "D.N.J. L.C
 /// D.N.J. L.Cr.R. 58.1(d)(2): the appellee serves and submits a brief
 /// within 21 days after receipt of a copy of the appellant's brief.
 deadline misdemeanor-appellee-brief: 21.days after AppellantBriefReceived() counted_by frcrimp45 cite "D.N.J. L.Cr.R. 58.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellee-brief (holiday)" cite "D.N.J. L.Cr.R. 58.1(d)"
 {
@@ -117,9 +107,6 @@ test "Counting boundary: misdemeanor-appellee-brief (holiday)" cite "D.N.J. L.Cr
 /// D.N.J. L.Cr.R. 58.1(d)(2): the appellant may serve and submit a reply
 /// brief within seven days after receipt of the appellee's brief.
 deadline misdemeanor-reply-brief: 7.days after AppelleeBriefReceived() counted_by frcrimp45 cite "D.N.J. L.Cr.R. 58.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "D.N.J. L.Cr.R. 58.1(d)"
 {

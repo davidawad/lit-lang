@@ -39,9 +39,7 @@ decision initial-appearance: "Bail or release" by court cite "Cal. Rules of Cour
 
 decision probable-cause: "Preliminary examination or grand jury" by court cite ?("Penal Code preliminary examination statutes (Pen. Code § 859b et seq.): not vendored") {
   note "The preliminary examination and holding to answer, and grand jury indictment, are governed by Penal Code provisions that are not vendored. When a person has been held to answer and no information is filed within the period Penal Code section 1382(a)(1) and rule 4.110(1) set, the action is dismissed unless good cause is shown; the period is not stated here (currency unconfirmed)."
-  edge-probable-cause-charged "Held to answer or indicted" -> charged {
-    authority cite "Cal. Rules of Court, rule 4.110"
-  }
+  "Held to answer or indicted" -> charged { authority cite "Cal. Rules of Court, rule 4.110" }
   edge-probable-cause-none "Discharged" -> dismissed {
     authority cite ?("Penal Code § 871 (discharge on preliminary examination): not vendored")
   }
@@ -50,7 +48,7 @@ decision probable-cause: "Preliminary examination or grand jury" by court cite ?
 state charged: "Information or indictment" by court cite "Cal. Rules of Court, rule 4.110"
 {
   note "Rule 4.110 sets the time limits for proceedings on an information or indictment, including filing the information after the holding to answer and holding the arraignment; they are not stated here (currency unconfirmed)."
-  edge-charged-arraignment "Arraignment on the information or indictment" -> arraignment {
+  "Arraignment on the information or indictment" -> arraignment {
     authority cite "Cal. Rules of Court, rule 4.100"
   }
 }
@@ -58,9 +56,7 @@ state charged: "Information or indictment" by court cite "Cal. Rules of Court, r
 state arraignment: "Arraignment and plea of not guilty" by accused cite "Cal. Rules of Court, rule 4.100"
 {
   note "At the arraignment on the information or indictment, on a plea of not guilty, the court sets the dates for trial and for filing and serving motions, unless otherwise ordered for good cause (Cal. Rules of Court, rule 4.100). A felony defendant must be brought to trial within the period Penal Code section 1382(a)(2) sets after arraignment on the indictment or information, or after a mistrial, new-trial order or remittitur, unless good cause is shown or the defendant waives; the period is not stated here (currency unconfirmed)."
-  edge-arraignment-discovery "Discovery and motions" -> discovery {
-    authority cite "Cal. Rules of Court, rule 4.111"
-  }
+  "Discovery and motions" -> discovery { authority cite "Cal. Rules of Court, rule 4.111" }
 }
 
 state discovery: "Pretrial motions and continuances" by prosecution cite "Cal. Rules of Court, rule 4.111"
@@ -97,7 +93,7 @@ decision plea-decision: "Plea or trial" by accused cite "Cal. Rules of Court, ru
   edge-plea-decision-plea "Guilty or no-contest plea accepted" -> sentencing {
     authority cite ?("Penal Code § 1016 et seq. (pleas): not vendored")
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Cal. Rules of Court, rule 4.200" }
+  "Trial" -> trial { authority cite "Cal. Rules of Court, rule 4.200" }
 }
 
 decision trial: "Verdict" by court cite ?("Penal Code trial and verdict statutes: not vendored") {
@@ -116,7 +112,7 @@ decision trial: "Verdict" by court cite ?("Penal Code trial and verdict statutes
 state sentencing: "Sentencing" by court cite "Cal. Rules of Court, rule 4.433"
 {
   note "At the time set for sentencing the judge holds a hearing and determines the matters rule 4.433(a) lists (Cal. Rules of Court, rule 4.433). Statements in aggravation and mitigation are filed and served within the period rule 4.437(a) sets before sentencing, not stated here (currency unconfirmed). The determinate sentencing rules are adopted under Penal Code section 1170.3 (Cal. Rules of Court, rule 4.401)."
-  edge-sentencing-judgment "Sentence pronounced; judgment entered" -> judgment {
+  "Sentence pronounced; judgment entered" -> judgment {
     authority cite "Cal. Rules of Court, rule 4.433"
   }
 }

@@ -59,7 +59,7 @@ decision motion-ruling: "Motion to dismiss ruling" by court cite "Ind. Trial Rul
 state sched: "Pre-trial conference" by court cite "Ind. Trial Rule 16(A)"
 {
   note "In any action except criminal cases the court may in its discretion, and must on any party's motion, direct the attorneys to appear for a pre-trial conference to consider, among other things, simplifying the issues, amendments, admissions, a limit on expert witnesses, a discovery order, alternative dispute resolution and deadlines for dispositive motions (T.R. 16(A)). The clerks give at least thirty days' notice of the pre-trial conference unless the court directs otherwise (T.R. 16(B)(1)). Unless otherwise ordered, at least ten days before the conference the attorneys meet and confer to mark and exchange exhibits, stipulate facts and exchange witness lists (T.R. 16(C)); a list of facts or exhibits opposing counsel refuses to stipulate is furnished at least two days before it (T.R. 16(F))."
-  edge-sched-discovery "Discovery proceeds" -> discovery { authority cite "Ind. Trial Rule 26" }
+  "Discovery proceeds" -> discovery { authority cite "Ind. Trial Rule 26" }
 }
 
 state discovery: "Discovery" by movant cite "Ind. Trial Rule 26"
@@ -71,12 +71,8 @@ state discovery: "Discovery" by movant cite "Ind. Trial Rule 26"
   edge-discovery-sanction "Discovery sanction dismisses the action" -> dismissed-with-prejudice {
     authority cite "Ind. Trial Rule 37(B)"
   }
-  edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
-    authority cite "Ind. Trial Rule 41(A)"
-  }
-  edge-discovery-pretrial "No dispositive motion" -> pretrial {
-    authority cite "Ind. Trial Rule 16(A)"
-  }
+  "Settlement or voluntary dismissal" -> settled { authority cite "Ind. Trial Rule 41(A)" }
+  "No dispositive motion" -> pretrial { authority cite "Ind. Trial Rule 16(A)" }
 }
 
 decision sj-ruling: "Summary judgment ruling" by court cite "Ind. Trial Rule 56(C)"
@@ -94,10 +90,8 @@ decision sj-ruling: "Summary judgment ruling" by court cite "Ind. Trial Rule 56(
 state pretrial: "Pre-trial order and trial setting" by court cite "Ind. Trial Rule 16(A)"
 {
   note "At any time more than ten [10] days before the trial begins, a party defending against a claim may serve an offer of judgment; the adverse party accepts by serving written notice within ten [10] days after service of the offer, and an offeree whose judgment is not more favorable than an unaccepted offer pays the costs incurred after it was made (T.R. 68)."
-  edge-pretrial-trial "Trial set" -> trial { authority cite "Ind. Trial Rule 16(A)" }
-  edge-pretrial-settled "Offer of judgment accepted or settlement" -> settled {
-    authority cite "Ind. Trial Rule 68"
-  }
+  "Trial set" -> trial { authority cite "Ind. Trial Rule 16(A)" }
+  "Offer of judgment accepted or settlement" -> settled { authority cite "Ind. Trial Rule 68" }
 }
 
 state trial: "Trial (jury or bench)" by court cite "Ind. Trial Rule 39"

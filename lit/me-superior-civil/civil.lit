@@ -57,7 +57,7 @@ terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] 
 state scheduling: "Scheduling order" by court cite "M.R. Civ. P. 16(a)"
 {
   note "After the answer is filed in a Superior Court civil action (other than under Rule 80, 80B or 80C) the court enters a standard scheduling order setting deadlines for the conference of counsel, joinder, expert designations, the ADR conference Rule 16B requires, the close of discovery, motions and placement on the trial list; a party may move for a modified scheduling order within 30 days of its entry (M.R. Civ. P. 16(a)). A jury demand is filed and the jury fee paid as the scheduling order requires (M.R. Civ. P. 38(b))."
-  edge-scheduling-discovery "Order entered" -> discovery { authority cite "M.R. Civ. P. 26" }
+  "Order entered" -> discovery { authority cite "M.R. Civ. P. 26" }
 }
 
 state discovery: "Discovery" by plaintiff cite "M.R. Civ. P. 26"
@@ -66,7 +66,7 @@ state discovery: "Discovery" by plaintiff cite "M.R. Civ. P. 26"
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
     authority cite "M.R. Civ. P. 56(h)"
   }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "M.R. Civ. P. 16(b)" }
+  "No dispositive motion" -> trial { authority cite "M.R. Civ. P. 16(b)" }
   edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
     authority cite "M.R. Civ. P. 41(a)"
   }

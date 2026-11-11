@@ -67,9 +67,7 @@ terminal default-entered: "Default entered" outcome [loss] cite "Super. Ct. Civ.
 state case-management: "Scheduling conference and order" by court cite "Super. Ct. Civ. R. 16"
 {
   note "At the initial scheduling and settlement conference the judge ascertains the status of the case, explores settlement and alternative dispute resolution, and sets a time frame by scheduling order; counsel need not appear if a praecipe on Civil Action Form 113, signed by all attorneys, is filed no later than 7 calendar days before the conference consenting to a track I or track II order (Super. Ct. Civ. R. 16(b)). A party demands a jury by serving a written demand no later than 14 days after the last pleading directed to the issue is served and filing it; another party may demand a jury on other issues within 14 days after service of a demand limited to some issues; a party waives a jury unless its demand is properly served and filed (Super. Ct. Civ. R. 38(b)-(d))."
-  edge-case-management-discovery "Scheduling order entered" -> discovery {
-    authority cite "Super. Ct. Civ. R. 16"
-  }
+  "Scheduling order entered" -> discovery { authority cite "Super. Ct. Civ. R. 16" }
 }
 
 state discovery: "Discovery" by plaintiff cite "Super. Ct. Civ. R. 26"
@@ -78,7 +76,7 @@ state discovery: "Discovery" by plaintiff cite "Super. Ct. Civ. R. 26"
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
     authority cite "Super. Ct. Civ. R. 56"
   }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Super. Ct. Civ. R. 38" }
+  "No dispositive motion" -> trial { authority cite "Super. Ct. Civ. R. 38" }
   edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
     authority cite "Super. Ct. Civ. R. 41"
   }

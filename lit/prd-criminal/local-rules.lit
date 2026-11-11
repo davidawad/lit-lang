@@ -3,6 +3,8 @@ module prd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of Puerto Rico's own criminal periods, counted under the
 // criminal rules: the periods for motions, oppositions and replies, and
 // requests to extend them, are governed by FRCrimP 45 (D.P.R. L.Crim.R.
@@ -120,9 +122,6 @@ event DeathPenaltyEvaluationSubmitted()
 /// D.P.R. L.Crim.R. 116(b)(2): a discovery motion is filed within 14 days
 /// of receipt of the opposing party's reply to a discovery request.
 deadline discovery-motion: 14.days after DiscoveryReplyReceived() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 116(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-motion (weekend)" cite "D.P.R. L.Crim.R. 116(b)"
 {
@@ -133,9 +132,6 @@ test "Counting boundary: discovery-motion (weekend)" cite "D.P.R. L.Crim.R. 116(
 /// D.P.R. L.Crim.R. 116(b)(3): the opposing party files its response to a
 /// discovery motion within 14 days of receipt.
 deadline discovery-motion-response: 14.days after DiscoveryMotionReceived() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 116(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-motion-response (weekend)" cite "D.P.R. L.Crim.R. 116(b)"
 {
@@ -151,9 +147,6 @@ deadline law-enforcement-notes: 30.days after IndictmentFiled() counted_by frcri
   to CaseOrder
   op set
 } cite "D.P.R. L.Crim.R. 116B"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: law-enforcement-notes (weekend)" cite "D.P.R. L.Crim.R. 116B"
 {
@@ -165,9 +158,6 @@ test "Counting boundary: law-enforcement-notes (weekend)" cite "D.P.R. L.Crim.R.
 /// are removed within 30 days of the clerk's written notice, after which
 /// the court authorizes the clerk to destroy or dispose of them.
 deadline exhibit-removal: 30.days after ExhibitRemovalNoticed() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 123(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-removal (weekend)" cite "D.P.R. L.Crim.R. 123(e)"
 {
@@ -181,9 +171,6 @@ deadline special-voir-dire: 7.days before TrialScheduled() counted_by frcrimp45 
   to CaseOrder
   op set
 } cite "D.P.R. L.Crim.R. 124(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: special-voir-dire (weekend)" cite "D.P.R. L.Crim.R. 124(a)"
 {
@@ -198,9 +185,6 @@ deadline jury-instruction-requests: 7.days before ImpanelmentScheduled() counted
   to CaseOrder
   op set
 } cite "D.P.R. L.Crim.R. 130"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: jury-instruction-requests (weekend)" cite "D.P.R. L.Crim.R. 130"
 {
@@ -217,9 +201,6 @@ deadline government-version-of-facts: 21.days after GuiltEstablished() counted_b
   to CaseOrder
   op set
 } cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-version-of-facts (weekend)" cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
 {
@@ -233,9 +214,6 @@ deadline presentence-interview: 14.days after ChangeOfPleaHearing() counted_by f
   to CaseOrder
   op set
 } cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: presentence-interview (weekend)" cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
 {
@@ -250,9 +228,6 @@ deadline departure-motion: 14.days before SentencingHearingScheduled() counted_b
   to CaseOrder
   op set
 } cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: departure-motion (weekend)" cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
 {
@@ -265,9 +240,6 @@ test "Counting boundary: departure-motion (weekend)" cite "D.P.R. L.Crim.R. 132(
 /// days of the initial appearance; otherwise before the preliminary
 /// hearing.
 deadline revocation-disclosure: 14.days after RevocationInitialAppearance() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 132.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: revocation-disclosure (weekend)" cite "D.P.R. L.Crim.R. 132.1(a)"
 {
@@ -283,9 +255,6 @@ deadline cja-voucher: 45.days after CjaDisposition() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "D.P.R. L.Crim.R. 144(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: cja-voucher (weekend)" cite "D.P.R. L.Crim.R. 144(b)"
 {
@@ -297,9 +266,6 @@ test "Counting boundary: cja-voucher (weekend)" cite "D.P.R. L.Crim.R. 144(b)"
 /// the court allows counsel no more than 10 days to explain or support the
 /// reduced amounts.
 deadline cja-reduction-response: 10.days after CjaVoucherReduced() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 144(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: cja-reduction-response (weekend)" cite "D.P.R. L.Crim.R. 144(c)"
 {
@@ -312,9 +278,6 @@ test "Counting boundary: cja-reduction-response (weekend)" cite "D.P.R. L.Crim.R
 /// reasons why the death penalty should not be sought to the United States
 /// Attorney and the Attorney General within 90 days.
 deadline capital-mitigation-submission: 90.days after CapitalIndictment() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 144A(k)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: capital-mitigation-submission (weekend)" cite "D.P.R. L.Crim.R. 144A(k)"
 {
@@ -326,9 +289,6 @@ test "Counting boundary: capital-mitigation-submission (weekend)" cite "D.P.R. L
 /// government concludes its Death Penalty Evaluation form and prosecution
 /// memorandum to the Attorney General within the next 60 days.
 deadline death-penalty-evaluation: 60.days after CapitalMitigationPeriodElapsed() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 144A(k)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: death-penalty-evaluation (weekend)" cite "D.P.R. L.Crim.R. 144A(k)"
 {
@@ -341,9 +301,6 @@ test "Counting boundary: death-penalty-evaluation (weekend)" cite "D.P.R. L.Crim
 /// intent within 30 days after submitting the evaluation and memorandum to
 /// the Attorney General.
 deadline death-penalty-notice: 30.days after DeathPenaltyEvaluationSubmitted() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 144A(k)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: death-penalty-notice (weekend)" cite "D.P.R. L.Crim.R. 144A(k)"
 {
@@ -355,9 +312,6 @@ test "Counting boundary: death-penalty-notice (weekend)" cite "D.P.R. L.Crim.R. 
 /// opposition within 14 days after a motion's filing is deemed to have
 /// waived objection.
 deadline opposition-period: 14.days after MotionFiled() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 147(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: opposition-period (weekend)" cite "D.P.R. L.Crim.R. 147(b)"
 {
@@ -368,9 +322,6 @@ test "Counting boundary: opposition-period (weekend)" cite "D.P.R. L.Crim.R. 147
 /// D.P.R. L.Crim.R. 147(b): the same 14 days for a dispositive or
 /// suppression motion.
 deadline dispositive-opposition-period: 14.days after DispositiveMotionFiled() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 147(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: dispositive-opposition-period (weekend)" cite "D.P.R. L.Crim.R. 147(b)"
 {
@@ -381,9 +332,6 @@ test "Counting boundary: dispositive-opposition-period (weekend)" cite "D.P.R. L
 /// D.P.R. L.Crim.R. 147(c): with prior leave of court, the moving party may
 /// file a reply within 7 days of the service of an opposition.
 deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 147(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "D.P.R. L.Crim.R. 147(c)"
 {

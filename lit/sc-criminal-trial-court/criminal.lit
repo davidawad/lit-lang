@@ -13,7 +13,7 @@ start arrested
 
 state arrested: "Arrest and bond hearing" by prosecution cite ?("S.C. Code § 17-15-10, CURRENCY UNCONFIRMED") {
   note "A person charged with a noncapital offense is ordinarily released on personal recognizance unless the court finds that release would not reasonably assure appearance or that the person is an unreasonable danger (S.C. Code § 17-15-10); the court considers the matters S.C. Code § 17-15-30 lists in setting conditions. The SCRCrimP rules on arrest and the preliminary hearing are not vendored (holes). CURRENCY UNCONFIRMED."
-  edge-arrested-charged "Indictment" -> charged {
+  "Indictment" -> charged {
     authority cite ?("SCRCrimP, indictment and preliminary hearing (not vendored)")
   }
   edge-arrested-pti "Pretrial intervention" -> dismissed {
@@ -33,9 +33,7 @@ state charged: "Indicted; demand for trial" by prosecution cite ?("S.C. Code § 
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite ?("SCRCrimP, pretrial motions (not vendored)") {
   note "The SCRCrimP is not vendored, so the time for and the effect of pretrial motions are holes."
-  edge-motions-ruling-dismissed "Charges dismissed" -> dismissed {
-    authority cite ?("SCRCrimP, pretrial motions (not vendored)")
-  }
+  "Charges dismissed" -> dismissed { authority cite ?("SCRCrimP, pretrial motions (not vendored)") }
   edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
     authority cite ?("SCRCrimP, pretrial motions (not vendored)")
   }
@@ -46,9 +44,7 @@ decision plea-decision: "Plea or trial" by accused cite ?("SCRCrimP, pleas (not 
   edge-plea-decision-plea "Guilty plea accepted" -> judgment {
     authority cite ?("SCRCrimP, pleas (not vendored)")
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite ?("S.C. Code § 17-23-80, CURRENCY UNCONFIRMED")
-  }
+  "Trial" -> trial { authority cite ?("S.C. Code § 17-23-80, CURRENCY UNCONFIRMED") }
 }
 
 decision trial: "Verdict" by court cite ?("S.C. Code § 17-23-80, CURRENCY UNCONFIRMED") {

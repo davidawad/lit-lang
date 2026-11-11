@@ -3,6 +3,8 @@ module mad-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of Massachusetts's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method: FRCrimP 45(c)'s three added days follow the
@@ -81,9 +83,6 @@ deadline government-automatic-discovery: 28.days after Arraigned() counted_by fr
   to CaseOrder
   op set
 } cite "D. Mass. L.R. 116.1(c); D. Mass. L.R. 116.2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-automatic-discovery (weekend)" cite "D. Mass. L.R. 116.1(c); D. Mass. L.R. 116.2(b)"
 {
@@ -98,9 +97,6 @@ deadline defendant-automatic-discovery: 28.days after Arraigned() counted_by frc
   to CaseOrder
   op set
 } cite "D. Mass. L.R. 116.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defendant-automatic-discovery (weekend)" cite "D. Mass. L.R. 116.1(d)"
 {
@@ -116,9 +112,6 @@ deadline waiver-discovery-response: 28.days after DiscoveryRequestReceived() cou
   to CaseOrder
   op set
 } cite "D. Mass. L.R. 116.1(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: waiver-discovery-response (weekend)" cite "D. Mass. L.R. 116.1(g)"
 {
@@ -129,9 +122,6 @@ test "Counting boundary: waiver-discovery-response (weekend)" cite "D. Mass. L.R
 /// D. Mass. L.R. 116.3(a): within 14 days of the completion of automatic
 /// discovery, any party may request additional discovery by letter.
 deadline discovery-letter: 14.days after AutomaticDiscoveryCompleted() counted_by frcrimp45 cite "D. Mass. L.R. 116.3(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-letter (weekend)" cite "D. Mass. L.R. 116.3(a)"
 {
@@ -142,9 +132,6 @@ test "Counting boundary: discovery-letter (weekend)" cite "D. Mass. L.R. 116.3(a
 /// D. Mass. L.R. 116.3(a): the opposing party replies in writing to a
 /// discovery letter no later than 14 days after its receipt.
 deadline discovery-letter-reply: 14.days after DiscoveryRequestReceived() counted_by frcrimp45 cite "D. Mass. L.R. 116.3(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-letter-reply (weekend)" cite "D. Mass. L.R. 116.3(a)"
 {
@@ -156,9 +143,6 @@ test "Counting boundary: discovery-letter-reply (weekend)" cite "D. Mass. L.R. 1
 /// receipt of the written reply to the discovery letter, or of the passing
 /// of the period to reply.
 deadline discovery-motion: 14.days after DiscoveryReplyReceived() counted_by frcrimp45 cite "D. Mass. L.R. 116.3(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-motion (weekend)" cite "D. Mass. L.R. 116.3(g)"
 {
@@ -169,9 +153,6 @@ test "Counting boundary: discovery-motion (weekend)" cite "D. Mass. L.R. 116.3(g
 /// D. Mass. L.R. 116.3(i): the opposing party files its response to a
 /// discovery motion within 14 days of receipt.
 deadline discovery-motion-response: 14.days after DiscoveryMotionReceived() counted_by frcrimp45 cite "D. Mass. L.R. 116.3(i)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-motion-response (weekend)" cite "D. Mass. L.R. 116.3(i)"
 {
@@ -186,9 +167,6 @@ deadline status-joint-memorandum: 7.days before StatusConferenceScheduled() coun
   to CaseOrder
   op set
 } cite "D. Mass. L.R. 116.5(a); D. Mass. L.R. 116.5(b); D. Mass. L.R. 116.5(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: status-joint-memorandum (weekend)" cite "D. Mass. L.R. 116.5(a); D. Mass. L.R. 116.5(b); D. Mass. L.R. 116.5(c)"
 {
@@ -204,9 +182,6 @@ deadline initial-pretrial-conference: 14.days after FinalStatusReportReceived() 
   to CaseOrder
   op set
 } cite "D. Mass. L.R. 117.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: initial-pretrial-conference (weekend)" cite "D. Mass. L.R. 117.1(a)"
 {
@@ -223,9 +198,6 @@ deadline exculpatory-trial-disclosure: 21.days before TrialDateSet() counted_by 
   to CaseOrder
   op set
 } cite "D. Mass. L.R. 116.2(b); D. Mass. L.R. 117.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exculpatory-trial-disclosure (weekend)" cite "D. Mass. L.R. 116.2(b); D. Mass. L.R. 117.1(a)"
 {
@@ -241,9 +213,6 @@ deadline government-witness-exhibit-disclosure: 7.days before TrialDateSet() cou
   to CaseOrder
   op set
 } cite "D. Mass. L.R. 117.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-witness-exhibit-disclosure (weekend)" cite "D. Mass. L.R. 117.1(a)"
 {
@@ -258,9 +227,6 @@ deadline defendant-witness-exhibit-disclosure: 7.days before TrialDateSet() coun
   to CaseOrder
   op set
 } cite "D. Mass. L.R. 117.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defendant-witness-exhibit-disclosure (weekend)" cite "D. Mass. L.R. 117.1(a)"
 {

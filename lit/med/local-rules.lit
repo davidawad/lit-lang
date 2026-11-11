@@ -98,6 +98,7 @@ test "Counting boundary: objection-period (weekend)" cite "D. Me. Local R. 7(b)"
   given MotionFiled() on 2025-04-05
   expect deadline(objection-period) == 2025-04-28
 }
+
 /// Local Rule 7(d)(2): a motion to exceed the memorandum page limit is
 /// filed no later than three business days before the memorandum is due.
 deadline page-limit-motion-period: 3.business_days before MemorandumDue() counted_by frcp6-maine cite "D. Me. Local R. 7(d)(2)"
@@ -111,6 +112,7 @@ test "Counting boundary: complex-track-plan-period (weekend)" cite "D. Me. Local
   given InitialSchedulingConferenceScheduled() on 2025-04-01
   expect deadline(complex-track-plan-period) == 2025-03-28
 }
+
 /// Local Rule 16.5(b): each party files its pretrial memorandum no later
 /// than five business days before the final pretrial conference.
 deadline pretrial-memorandum-period: 5.business_days before FinalPretrialConferenceScheduled() counted_by frcp6-maine cite "D. Me. Local R. 16.5(b)"
@@ -143,6 +145,7 @@ test "Counting boundary: reply-period (weekend)" cite "D. Me. Local R. 7(c)"
   given ObjectionFiled() on 2025-04-05
   expect deadline(reply-period) == 2025-04-21
 }
+
 /// Local Rule 7(e): a party may request oral argument by the Court's form
 /// within 5 days of the filing of the reply.
 deadline oral-argument-request-period: 5.days after ReplyFiled() counted_by frcp6-maine cite "D. Me. Local R. 7(e)"
@@ -152,6 +155,7 @@ test "Counting boundary: oral-argument-request-period (weekend)" cite "D. Me. Lo
   given ReplyFiled() on 2025-04-01
   expect deadline(oral-argument-request-period) == 2025-04-07
 }
+
 /// Local Rule 7(f)(1): a motion to reconsider an interlocutory order is
 /// filed within 14 days from the date of the order, unless the movant
 /// shows cause for not filing within that time.
@@ -162,6 +166,7 @@ test "Counting boundary: reconsideration-period (weekend)" cite "D. Me. Local R.
   given InterlocutoryOrderEntered() on 2025-04-05
   expect deadline(reconsideration-period) == 2025-04-21
 }
+
 /// Local Rule 10(d)(2): a party commencing an action under a pseudonym
 /// files and serves a motion for permission to proceed under it within 21
 /// days of service of the complaint.
@@ -172,6 +177,7 @@ test "Counting boundary: pseudonym-motion-period (weekend)" cite "D. Me. Local R
   given PseudonymousComplaintServed() on 2025-04-05
   expect deadline(pseudonym-motion-period) == 2025-04-28
 }
+
 /// Local Rule 16.2(d): unless a party objects within 21 days of its filing
 /// (14 days in ERISA Track cases), the proposed scheduling order becomes
 /// the FRCP 16(b) scheduling order.
@@ -182,6 +188,7 @@ test "Counting boundary: scheduling-order-objection-period (weekend)" cite "D. M
   given ProposedSchedulingOrderFiled() on 2025-04-05
   expect deadline(scheduling-order-objection-period) == 2025-04-28
 }
+
 /// Local Rule 16.5(d)(1): unless otherwise ordered, objections to the
 /// final pretrial order are made within 14 days after the parties receive
 /// it.
@@ -192,6 +199,7 @@ test "Counting boundary: pretrial-order-objection-period (weekend)" cite "D. Me.
   given FinalPretrialOrderReceived() on 2025-04-05
   expect deadline(pretrial-order-objection-period) == 2025-04-21
 }
+
 /// Local Rule 41.1(a)(1): within 30 days of notifying the Clerk of a
 /// settlement, the parties file the papers terminating the action; if they
 /// do not, the Court dismisses it with prejudice but without costs.
@@ -202,6 +210,7 @@ test "Counting boundary: settlement-papers-period (weekend)" cite "D. Me. Local 
   given SettlementNoticeGiven() on 2025-04-03
   expect deadline(settlement-papers-period) == 2025-05-05
 }
+
 /// Local Rule 41.2(d): within 30 days after entry of the order approving a
 /// minor's settlement, the attorney or party paid the funds files the
 /// affidavit the rule describes.
@@ -212,6 +221,7 @@ test "Counting boundary: minor-settlement-affidavit-period (weekend)" cite "D. M
   given MinorSettlementApproved() on 2025-04-03
   expect deadline(minor-settlement-affidavit-period) == 2025-05-05
 }
+
 /// Local Rule 54.1(a): on a defending party's request the Clerk orders a
 /// prosecuting party not resident in Maine to provide $500 security for
 /// taxable costs within 21 days.
@@ -222,6 +232,7 @@ test "Counting boundary: security-for-costs-period (weekend)" cite "D. Me. Local
   given SecurityForCostsOrdered() on 2025-04-05
   expect deadline(security-for-costs-period) == 2025-04-28
 }
+
 /// Local Rule 54.2(a)(1): with no timely appeal, an application for
 /// attorneys' fees is filed within 30 days of the expiration of the time
 /// for filing an appeal.
@@ -232,6 +243,7 @@ test "Counting boundary: fee-application-period (weekend)" cite "D. Me. Local R.
   given AppealTimeExpired() on 2025-04-03
   expect deadline(fee-application-period) == 2025-05-05
 }
+
 /// Local Rule 54.2(a)(2): after an appeal, an application for attorneys'
 /// fees is filed within 30 days of the filing of the appellate mandate or
 /// order finally disposing of the appeal; one filed before then has no
@@ -243,6 +255,7 @@ test "Counting boundary: fee-application-after-appeal-period (weekend)" cite "D.
   given AppellateMandateFiled() on 2025-04-03
   expect deadline(fee-application-after-appeal-period) == 2025-05-05
 }
+
 /// Local Rule 54.3(b)(1): with no timely appeal, a bill of costs is filed
 /// within 30 days of the expiration of the time for filing an appeal.
 deadline bill-of-costs-period: 30.days after AppealTimeExpired() counted_by frcp6-maine cite "D. Me. Local R. 54.3(b)"
@@ -252,6 +265,7 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "D. Me. Local R. 5
   given AppealTimeExpired() on 2025-04-03
   expect deadline(bill-of-costs-period) == 2025-05-05
 }
+
 /// Local Rule 54.3(b)(2): after an appeal, a bill of costs is filed within
 /// 30 days of the filing of the appellate mandate or order finally
 /// disposing of the appeal.
@@ -262,6 +276,7 @@ test "Counting boundary: bill-of-costs-after-appeal-period (weekend)" cite "D. M
   given AppellateMandateFiled() on 2025-04-03
   expect deadline(bill-of-costs-after-appeal-period) == 2025-05-05
 }
+
 /// Local Rule 54.3(c): an objection to a bill of costs, with a supporting
 /// memorandum, is filed within 21 days after the bill; otherwise objection
 /// is waived and the Clerk may tax all properly claimed costs.
@@ -272,6 +287,7 @@ test "Counting boundary: bill-of-costs-objection-period (weekend)" cite "D. Me. 
   given BillOfCostsFiled() on 2025-04-05
   expect deadline(bill-of-costs-objection-period) == 2025-04-28
 }
+
 /// Local Rule 56(e)(2): a request to strike made in a reply statement of
 /// material facts may be answered by a response filed within 14 days.
 deadline strike-response-period: 14.days after StrikeRequestInReplyStatement() counted_by frcp6-maine cite "D. Me. Local R. 56(e)"
@@ -281,6 +297,7 @@ test "Counting boundary: strike-response-period (weekend)" cite "D. Me. Local R.
   given StrikeRequestInReplyStatement() on 2025-04-05
   expect deadline(strike-response-period) == 2025-04-21
 }
+
 /// Local Rule 56(h): in a Standard Track case (other than the FRCP
 /// 26(a)(1)(B) categories) a party intending to move for summary judgment
 /// files a joint motion with a proposed schedule or a notice of intent and
@@ -293,6 +310,7 @@ test "Counting boundary: sj-prefiling-period (weekend)" cite "D. Me. Local R. 56
   given DiscoveryClosed() on 2025-04-05
   expect deadline(sj-prefiling-period) == 2025-04-14
 }
+
 /// Local Rule 72(b): a response to an objection to a magistrate judge's
 /// nondispositive order is filed within 14 days of service of the
 /// objection; no reply is permitted.

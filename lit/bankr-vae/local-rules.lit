@@ -168,6 +168,7 @@ test "Counting boundary: creditor-list-period (weekend)" cite "E.D. Va. LBR 1007
   given PetitionFiled() on 2025-12-03
   expect deadline(creditor-list-period) == 2025-12-08
 }
+
 /// LBR 1007-1(H)(2): the statement of social security number not submitted
 /// with the petition is due within 3 days after the petition.
 deadline ssn-statement-period: 3.days after PetitionFiled() counted_by frbp9006-virginia cite "E.D. Va. LBR 1007-1(H)(2)"
@@ -177,6 +178,7 @@ test "Counting boundary: ssn-statement-period (weekend)" cite "E.D. Va. LBR 1007
   given PetitionFiled() on 2025-12-03
   expect deadline(ssn-statement-period) == 2025-12-08
 }
+
 /// LBR 1007-1(I)(2): an individual debtor's statement of compliance with
 /// the credit counseling requirement not filed with the petition is due
 /// within 3 days after the petition.
@@ -187,6 +189,7 @@ test "Counting boundary: credit-counseling-statement-period (weekend)" cite "E.D
   given PetitionFiled() on 2025-12-03
   expect deadline(credit-counseling-statement-period) == 2025-12-08
 }
+
 /// LBR 1007-1(H)(3): payment advices for the 60 days before the petition
 /// are provided to the trustee and any timely requesting creditor at least
 /// 7 days before the meeting of creditors.
@@ -197,6 +200,7 @@ test "Counting boundary: payment-advices-period (holiday)" cite "E.D. Va. LBR 10
   given MeetingOfCreditorsDate() on 2025-12-04
   expect deadline(payment-advices-period) == 2025-11-26
 }
+
 /// LBR 1015-1: a joint case is jointly administered unless the trustee or a
 /// party in interest objects within 14 days after the meeting of creditors
 /// and notices a hearing.
@@ -211,6 +215,7 @@ test "Counting boundary: rescheduled-meeting-notice-period (weekend)" cite "E.D.
   given RescheduledMeetingObtained() on 2025-12-06
   expect deadline(rescheduled-meeting-notice-period) == 2025-12-15
 }
+
 /// LBR 2004-1(B): parties have 7 days from service to object to a motion
 /// for a Rule 2004 examination.
 deadline examination-objection-period: 7.days after ExaminationMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 2004-1(B)"
@@ -220,6 +225,7 @@ test "Counting boundary: examination-objection-period (weekend)" cite "E.D. Va. 
   given ExaminationMotionServed() on 2025-12-06
   expect deadline(examination-objection-period) == 2025-12-15
 }
+
 /// LBR 2014-1: objections to employment of a professional in a chapter 11
 /// case are filed and served within 14 days from service of the motion.
 deadline employment-objection-period: 14.days after EmploymentMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 2014-1"
@@ -242,6 +248,7 @@ test "Counting boundary: mortgage-payment-certification-period (holiday)" cite "
   given PlanPaymentsCompleted() on 2025-12-02
   expect deadline(mortgage-payment-certification-period) == 2026-01-02
 }
+
 /// LBR 3002.1-1(B)(1): a represented debtor files and sets for hearing the
 /// FRBP 3002.1(g)(4) motion within 45 days after the creditor's response,
 /// or the court may consider reducing the attorney's fee.
@@ -252,6 +259,7 @@ test "Counting boundary: final-cure-motion-period (weekend)" cite "E.D. Va. LBR 
   given CureResponseFiled() on 2025-12-03
   expect deadline(final-cure-motion-period) == 2026-01-20
 }
+
 /// LBR 3003-1(A): the last date for claims other than a governmental unit's
 /// in a chapter 11 case is 90 days after the date first scheduled for the
 /// meeting of creditors.
@@ -269,6 +277,7 @@ test "Counting boundary: disputed-claim-certification-period (weekend)" cite "E.
   given DisputedClaimNoticeServed() on 2025-12-06
   expect deadline(disputed-claim-certification-period) == 2025-12-15
 }
+
 /// LBR 3007-1(D): a creditor may file and serve a response to an objection
 /// to its claim within 30 days of service; otherwise the court may treat
 /// the objection as conceded.
@@ -279,6 +288,7 @@ test "Counting boundary: claim-objection-response-period (holiday)" cite "E.D. V
   given ClaimObjectionServed() on 2025-12-02
   expect deadline(claim-objection-response-period) == 2026-01-02
 }
+
 /// LBR 3011-1(K): deficiencies in an application for unclaimed funds not
 /// cured within 14 days after the notice of deficiency result in the
 /// application being stricken.
@@ -294,6 +304,7 @@ test "Counting boundary: post-denial-plan-period (holiday)" cite "E.D. Va. LBR 3
   given ConfirmationDenied() on 2025-12-04
   expect deadline(post-denial-plan-period) == 2025-12-26
 }
+
 /// LBR 3016-1(B): objections to a chapter 11 disclosure statement are filed
 /// not later than 7 days before the hearing on it.
 deadline disclosure-statement-objection-period: 7.days before DisclosureHearingDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 3016-1(B)"
@@ -303,6 +314,7 @@ test "Counting boundary: disclosure-statement-objection-period (holiday)" cite "
   given DisclosureHearingDate() on 2025-12-04
   expect deadline(disclosure-statement-objection-period) == 2025-11-26
 }
+
 /// LBR 3016-1(E): an objection to confirmation of a chapter 11 plan is
 /// filed not later than 7 days before the initial confirmation hearing and
 /// served on the United States trustee and FRBP 3020(b)(1) parties.
@@ -313,6 +325,7 @@ test "Counting boundary: chapter11-confirmation-objection-period (holiday)" cite
   given Chapter11ConfirmationHearingDate() on 2025-12-04
   expect deadline(chapter11-confirmation-objection-period) == 2025-11-26
 }
+
 /// LBR 3070-1(B)(2): if no objection to the trustee's notice of proposed
 /// distribution is filed within 14 days, the trustee may proceed.
 deadline trustee-distribution-objection-period: 14.days after DistributionNoticeFiled() counted_by frbp9006-virginia cite "E.D. Va. LBR 3070-1(B)(2)"
@@ -329,6 +342,7 @@ test "Counting boundary: lien-avoidance-response-period (holiday)" cite "E.D. Va
   given LienAvoidanceMotionServed() on 2025-12-04
   expect deadline(lien-avoidance-response-period) == 2025-12-26
 }
+
 /// LBR 4008-1(A): the clerk gives each discharged debtor written notice of
 /// the debtor's rights under § 524(d) within 14 days after the discharge.
 deadline reaffirmation-rights-notice-period: 14.days after DischargeGranted() counted_by frbp9006-virginia cite "E.D. Va. LBR 4008-1(A)"
@@ -342,6 +356,7 @@ test "Counting boundary: course-certificate-period (weekend)" cite "E.D. Va. LBR
   given DischargeNoticeMailed() on 2025-12-03
   expect deadline(course-certificate-period) == 2026-01-20
 }
+
 /// LBR 4008-2(B): on completing plan payments, the debtor complies within
 /// 14 days with the trustee's requirements for information needed for the §
 /// 1302(d) notices.
@@ -356,6 +371,7 @@ test "Counting boundary: trustee-noncompliance-certification-period (holiday)" c
   given PlanPaymentsCompleted() on 2025-12-02
   expect deadline(trustee-noncompliance-certification-period) == 2026-01-02
 }
+
 /// LBR 5005-1(G): a filing that receives a Notice of Deficient Filing is
 /// stricken unless the deficiency is cured within 14 days; for a petition
 /// or notice of conversion, a show-cause hearing follows.
@@ -387,6 +403,7 @@ test "Counting boundary: sale-report-period (holiday)" cite "E.D. Va. LBR 6004-2
   given SaleCompleted() on 2025-12-02
   expect deadline(sale-report-period) == 2026-01-02
 }
+
 /// LBR 6007-1(A): a party objecting to abandonment noticed at the meeting
 /// of creditors selects a hearing date and files notice of the hearing with
 /// proof of service within 14 days after the meeting.
@@ -412,6 +429,7 @@ test "Counting boundary: plaintiff-expert-disclosure-period (weekend)" cite "E.D
   given DiscoveryCompletionDate() on 2025-12-03
   expect deadline(plaintiff-expert-disclosure-period) == 2025-10-03
 }
+
 /// LBR 7026-1(L)(2)(a): the defendant makes its disclosures 30 days before
 /// that date.
 deadline defendant-expert-disclosure-period: 30.days before DiscoveryCompletionDate() counted_by frbp9006-virginia cite "E.D. Va. LBR 7026-1(L)(2)(a)"
@@ -432,6 +450,7 @@ test "Counting boundary: discharge-dismissal-notice-period (weekend)" cite "E.D.
   given DischargeDismissalHearingDate() on 2025-12-06
   expect deadline(discharge-dismissal-notice-period) == 2025-11-21
 }
+
 /// LBR 7055-1(B): the party in default may object to a motion for default
 /// judgment within 14 days after its service, plus any time FRBP 9006 adds.
 deadline default-judgment-objection-period: 14.days after DefaultJudgmentMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 7055-1(B)"
@@ -449,6 +468,7 @@ test "Counting boundary: hearing-notice-period (weekend)" cite "E.D. Va. LBR 901
   given HearingDateIssued() on 2025-12-06
   expect deadline(hearing-notice-period) == 2025-12-15
 }
+
 /// LBR 7056-1(D): if not otherwise ordered, a response in opposition to
 /// summary judgment is filed not later than 14 days after service of the
 /// motion.
@@ -465,6 +485,7 @@ test "Counting boundary: summary-judgment-reply-period (weekend)" cite "E.D. Va.
   given SummaryJudgmentResponseServed() on 2025-12-06
   expect deadline(summary-judgment-reply-period) == 2025-12-15
 }
+
 /// LBR 9013-1(G)(3): the movant sets a response deadline of at least 21
 /// days after service, unless the FRBP, these rules or an order specifies
 /// another period.
@@ -475,6 +496,7 @@ test "Counting boundary: motion-response-period (holiday)" cite "E.D. Va. LBR 90
   given MotionServed() on 2025-12-04
   expect deadline(motion-response-period) == 2025-12-26
 }
+
 /// LBR 9013-1(G)(3)(c): the movant may file a rebuttal memorandum within 7
 /// days after the opposing memorandum is filed.
 deadline rebuttal-memorandum-period: 7.days after OppositionMemorandumFiled() counted_by frbp9006-virginia cite "E.D. Va. LBR 9013-1(G)(3)(c)"
@@ -484,6 +506,7 @@ test "Counting boundary: rebuttal-memorandum-period (weekend)" cite "E.D. Va. LB
   given OppositionMemorandumFiled() on 2025-12-06
   expect deadline(rebuttal-memorandum-period) == 2025-12-15
 }
+
 /// LBR 9013-1(G)(4): for a matter needing no hearing, the movant serves and
 /// submits a proposed order within 14 days after the time for a response
 /// expires.
@@ -499,6 +522,7 @@ test "Counting boundary: subpoena-request-period (weekend)" cite "E.D. Va. LBR 9
   given WitnessAppearanceDate() on 2025-12-06
   expect deadline(subpoena-request-period) == 2025-11-21
 }
+
 /// LBR 9019-1(B)(2): parties have 14 days from service to object to a
 /// motion requesting mediation.
 deadline mediation-objection-period: 14.days after MediationMotionServed() counted_by frbp9006-virginia cite "E.D. Va. LBR 9019-1(B)(2)"
@@ -521,7 +545,7 @@ start motion-filed
 state motion-filed: "Motion filed and served with its response deadline" by movant cite "E.D. Va. LBR 9013-1(G)"
 {
   note "A motion is in writing with a memorandum of points and authorities (LBR 9013-1(B), (F)) and gives a response deadline of at least 21 days after service unless another period applies (LBR 9013-1(G)(3)). Matters on the Negative Notice List need no hearing unless one is set (LBR 9013-1(H)(1)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-response "Response and memorandum in opposition filed" -> response {
+  "Response and memorandum in opposition filed" -> response {
     authority cite "E.D. Va. LBR 9013-1(G)"
   }
   edge-motion-filed-unopposed "No timely response; proposed order submitted" -> ruling {
@@ -532,7 +556,7 @@ state motion-filed: "Motion filed and served with its response deadline" by mova
 state response: "Response filed" by opponent cite "E.D. Va. LBR 9013-1(G)"
 {
   note "The movant may file a rebuttal memorandum within 7 days after the opposing memorandum (LBR 9013-1(G)(3)(c)); the hearing date is noticed within 7 days of its issuance (LBR 9013-1(H))."
-  edge-response-ruling "Matter heard" -> ruling { authority cite "E.D. Va. LBR 9013-1(H)" }
+  "Matter heard" -> ruling { authority cite "E.D. Va. LBR 9013-1(H)" }
 }
 
 decision ruling: "Motion decided" by court cite "E.D. Va. LBR 9013-1(H)"

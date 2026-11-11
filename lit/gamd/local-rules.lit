@@ -2,6 +2,8 @@ module gamd-local-rules.local-rules
 
 import core.frcp6.{ frcp6 }
 
+forum frcp
+
 /// A motion and its brief are served (L.R. 7.2).
 event MotionServed()
 /// The respondent's response, brief or affidavit is served (L.R. 7.3).
@@ -26,16 +28,9 @@ event BillOfCostsServed()
 /// in support of or in response to a motion are limited to 20 pages except
 /// on good cause and leave (L.R. 7.4).
 deadline response-period: 21.days after MotionServed() counted_by frcp6 cite "M.D. Ga. L.R. 7.2"
-{
-  forum frcp
-}
-
 /// L.R. 7.3: a reply is served within 14 days after service of the
 /// response. The movant's reply brief may not exceed 10 pages (L.R. 7.4).
 deadline reply-period: 14.days after ResponseServed() counted_by frcp6 cite "M.D. Ga. L.R. 7.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "M.D. Ga. L.R. 7.3"
 {
@@ -47,9 +42,6 @@ test "Counting boundary: reply-period (weekend)" cite "M.D. Ga. L.R. 7.3"
 /// file a surreply moves in writing for permission within 14 days of the
 /// filing of the brief to which reply is desired.
 deadline surreply-motion-period: 14.days after ReplyBriefFiled() counted_by frcp6 cite "M.D. Ga. L.R. 7.3.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: surreply-motion-period (weekend)" cite "M.D. Ga. L.R. 7.3.1"
 {
@@ -61,9 +53,6 @@ test "Counting boundary: surreply-motion-period (weekend)" cite "M.D. Ga. L.R. 7
 /// reconsideration is filed within 14 days after entry of the order. All
 /// briefs are limited to 5 pages, and there is no reply brief.
 deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 cite "M.D. Ga. L.R. 7.6"
-{
-  forum frcp
-}
 
 test "Counting boundary: reconsideration-period (weekend)" cite "M.D. Ga. L.R. 7.6"
 {
@@ -74,9 +63,6 @@ test "Counting boundary: reconsideration-period (weekend)" cite "M.D. Ga. L.R. 7
 /// L.R. 7.6: responses to a motion for reconsideration are filed not later
 /// than 14 days after service of the motion.
 deadline reconsideration-response-period: 14.days after ReconsiderationMotionServed() counted_by frcp6 cite "M.D. Ga. L.R. 7.6"
-{
-  forum frcp
-}
 
 test "Counting boundary: reconsideration-response-period (weekend)" cite "M.D. Ga. L.R. 7.6"
 {
@@ -88,9 +74,6 @@ test "Counting boundary: reconsideration-response-period (weekend)" cite "M.D. G
 /// briefing schedule files a written objection within 7 days after service
 /// of the motion.
 deadline excepted-motion-objection-period: 7.days after ExceptedMotionServed() counted_by frcp6 cite "M.D. Ga. L.R. 7.7"
-{
-  forum frcp
-}
 
 test "Counting boundary: excepted-motion-objection-period (weekend)" cite "M.D. Ga. L.R. 7.7"
 {
@@ -102,9 +85,6 @@ test "Counting boundary: excepted-motion-objection-period (weekend)" cite "M.D. 
 /// fees is filed within 14 days from the clerk's entry of judgment; a late
 /// motion is deemed a waiver of fees.
 deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "M.D. Ga. L.R. 54.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-motion-period (weekend)" cite "M.D. Ga. L.R. 54.1"
 {
@@ -115,9 +95,6 @@ test "Counting boundary: fee-motion-period (weekend)" cite "M.D. Ga. L.R. 54.1"
 /// L.R. 54.2.2: the prevailing party files a bill of costs within 30 days
 /// from the entry of the judgment that awarded the costs.
 deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "M.D. Ga. L.R. 54.2.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "M.D. Ga. L.R. 54.2.2"
 {
@@ -128,9 +105,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "M.D. Ga. L.R. 54.
 /// L.R. 54.2.2: opposing counsel has 21 days from service of the bill of
 /// costs to file a response.
 deadline bill-of-costs-response-period: 21.days after BillOfCostsServed() counted_by frcp6 cite "M.D. Ga. L.R. 54.2.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-response-period (weekend)" cite "M.D. Ga. L.R. 54.2.2"
 {
@@ -143,16 +117,13 @@ start motion-served
 state motion-served: "Motion and memorandum of law served" by movant cite "M.D. Ga. L.R. 7.1"
 {
   note "Unless the assigned judge prescribes otherwise, every civil motion is accompanied by a memorandum of law citing supporting authorities, and a motion alleging facts by a statement of fact (L.R. 7.1). Briefs are limited to 20 pages, the reply to 10; a motion to exceed the limit is filed no later than 5 days before the brief is due (L.R. 7.4). The clerk may extend the time for a brief once, by no more than 14 days (L.R. 6.2). A summary judgment movant attaches a separate numbered statement of material facts; facts not specifically controverted are deemed admitted (L.R. 56). Each period is computed under Fed. R. Civ. P. 6, three days added for service under Rule 6(d) (L.R. 6.3). The motion's own periods under the Federal Rules are lit/frcp's."
-  edge-motion-served-response "Response served" -> response {
-    authority cite "M.D. Ga. L.R. 7.2"
-    within response-period
-  }
-  edge-motion-served-ruling "No response" -> ruling { authority cite "M.D. Ga. L.R. 7.2" }
+  "Response served" -> response { authority cite "M.D. Ga. L.R. 7.2", within response-period }
+  "No response" -> ruling { authority cite "M.D. Ga. L.R. 7.2" }
 }
 
 state response: "Response served" by opponent cite "M.D. Ga. L.R. 7.2"
 {
-  edge-response-ruling "Reply served or time to reply expired" -> ruling {
+  "Reply served or time to reply expired" -> ruling {
     authority cite "M.D. Ga. L.R. 7.3"
     within reply-period
   }

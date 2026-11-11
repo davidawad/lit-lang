@@ -2,6 +2,8 @@ module msnd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Northern District of Mississippi's own criminal periods under the Uniform Local
 // Criminal Rules, counted under the criminal rules (FRCrimP 45(a) governs
 // "any local rule"). No trigger carries a service method: FRCrimP 45(c)'s
@@ -52,9 +54,6 @@ event RebuttalFiled() paper memorandum
 /// a motion for post-conviction relief, the court may grant the motion as
 /// unopposed if a party does neither in time.
 deadline response-period: 11.days after MotionFiled() counted_by frcrimp45 cite "U.L.Cr.R. 47(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "U.L.Cr.R. 47(C)"
 {
@@ -65,9 +64,6 @@ test "Counting boundary: response-period (weekend)" cite "U.L.Cr.R. 47(C)"
 /// U.L.Cr.R. 47(D): counsel who desires to file a rebuttal may do so
 /// within five calendar days after service of the response.
 deadline rebuttal-period: 5.days after ResponseServed() counted_by frcrimp45 cite "U.L.Cr.R. 47(D)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: rebuttal-period (weekend)" cite "U.L.Cr.R. 47(D)"
 {

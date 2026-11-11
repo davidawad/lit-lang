@@ -2,6 +2,8 @@ module laed-local-rules.local-rules
 
 import core.states.louisiana.{ frcp6-louisiana }
 
+forum frcp
+
 // The Eastern District of Louisiana's own civil periods, computed under
 // the federal rules (FRCP 6(a) governs "any local rule"). A contested
 // motion is noticed for a submission date: the noticed date is the date
@@ -77,18 +79,11 @@ event TransferOrderEntered()
 /// parties remaining in the action, copies of all pleadings filed in state
 /// court, and copies of the returns of service filed in state court.
 deadline removal-record-period: 14.days after NoticeOfRemovalFiled() counted_by frcp6-louisiana cite "E.D. La. LR 3.2"
-{
-  forum frcp
-}
-
 /// E.D. La. LR 5.6(D)(2)(b): within seven days of the filing of a Motion
 /// to Consider Whether Another Party's Material Should Be Sealed, the
 /// Designating Party files a statement or declaration supporting sealing;
 /// failing to do so may result in unsealing without further notice.
 deadline designating-party-statement-period: 7.days after OtherPartySealMotionFiled() counted_by frcp6-louisiana cite "E.D. La. LR 5.6(D)"
-{
-  forum frcp
-}
 
 test "Counting boundary: designating-party-statement-period (weekend)" cite "E.D. La. LR 5.6(D)"
 {
@@ -99,26 +94,15 @@ test "Counting boundary: designating-party-statement-period (weekend)" cite "E.D
 /// E.D. La. LR 5.6(D)(2)(c): any other party who wishes to respond to the
 /// motion does so no later than 14 days after the motion is filed.
 deadline other-party-seal-response-period: 14.days after OtherPartySealMotionFiled() counted_by frcp6-louisiana cite "E.D. La. LR 5.6(D)"
-{
-  forum frcp
-}
-
 /// E.D. La. LR 5.6(D)(3): if the court grants the motion to seal, the
 /// movant files a redacted version of the sealed document within 14 days
 /// of the order granting the motion.
 deadline redacted-version-period: 14.days after SealMotionGranted() counted_by frcp6-louisiana cite "E.D. La. LR 5.6(D)"
-{
-  forum frcp
-}
-
 /// E.D. La. LR 5.6(G): if the motion to file under seal is denied, the
 /// movant may file another motion to remove the documents from the record
 /// within seven days; if none is timely filed, the documents are filed as
 /// a public record.
 deadline seal-denial-removal-period: 7.days after SealMotionDenied() counted_by frcp6-louisiana cite "E.D. La. LR 5.6(G)"
-{
-  forum frcp
-}
 
 test "Counting boundary: seal-denial-removal-period (weekend)" cite "E.D. La. LR 5.6(G)"
 {
@@ -131,33 +115,18 @@ test "Counting boundary: seal-denial-removal-period (weekend)" cite "E.D. La. LR
 /// before the submission date, whatever FRCP 5(b) service method is used,
 /// and the motion is filed not later than the fifteenth day preceding it.
 deadline motion-notice-period: 15.days before SubmissionDate() counted_by frcp6-louisiana cite "E.D. La. LR 7.2"
-{
-  forum frcp
-}
-
 /// E.D. La. LR 7.5: each party opposing a motion files and serves a
 /// memorandum in opposition no later than eight days before the noticed
 /// submission date.
 deadline opposition-period: 8.days before SubmissionDate() counted_by frcp6-louisiana cite "E.D. La. LR 7.5"
-{
-  forum frcp
-}
-
 /// E.D. La. LR 7.5: the movant may file and serve a reply brief no later
 /// than 4:00 p.m., two working days before the noticed submission date.
 deadline reply-period: 2.court_days before SubmissionDate() counted_by frcp6-louisiana cite "E.D. La. LR 7.5"
-{
-  forum frcp
-}
-
 /// E.D. La. LR 10.2: if a case is ordered separated from a consolidation,
 /// counsel jointly designate the documents in the master record needed for
 /// the separated case and file the designation within seven days of the
 /// deconsolidation order.
 deadline deconsolidation-designation-period: 7.days after DeconsolidationOrdered() counted_by frcp6-louisiana cite "E.D. La. LR 10.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: deconsolidation-designation-period (weekend)" cite "E.D. La. LR 10.2"
 {
@@ -169,27 +138,16 @@ test "Counting boundary: deconsolidation-designation-period (weekend)" cite "E.D
 /// conference is held no later than seven working days before the
 /// scheduled preliminary conference.
 deadline rule26f-conference-period: 7.court_days before PreliminaryConference() counted_by frcp6-louisiana cite "E.D. La. LR 26.2(A)"
-{
-  forum frcp
-}
-
 /// E.D. La. LR 26.2(B): when a party objects at the FRCP 26(f) conference
 /// that initial disclosures are not appropriate, the parties file a
 /// written discovery plan, including the nature of the objection, no later
 /// than three working days before the scheduled Rule 16(b) conference.
 deadline discovery-plan-report-period: 3.court_days before SchedulingConference() counted_by frcp6-louisiana cite "E.D. La. LR 26.2(B)"
-{
-  forum frcp
-}
-
 /// E.D. La. LR 54.3: within 35 days of receiving notice of entry of
 /// judgment, unless otherwise ordered, the party allowed costs serves and
 /// files a motion to tax costs with a certification that the items are
 /// correct and necessarily incurred.
 deadline costs-motion-period: 35.days after JudgmentEntryNoticed() counted_by frcp6-louisiana cite "E.D. La. LR 54.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: costs-motion-period (weekend)" cite "E.D. La. LR 54.3"
 {
@@ -202,9 +160,6 @@ test "Counting boundary: costs-motion-period (weekend)" cite "E.D. La. LR 54.3"
 /// after receipt of the opposition memorandum; argument is held only if
 /// ordered.
 deadline oral-argument-request-period: 3.days after OppositionReceived() counted_by frcp6-louisiana cite "E.D. La. LR 78.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: oral-argument-request-period (weekend)" cite "E.D. La. LR 78.1"
 {
@@ -216,9 +171,6 @@ test "Counting boundary: oral-argument-request-period (weekend)" cite "E.D. La. 
 /// 35 days of the final disposition of the case, or may be destroyed or
 /// otherwise disposed of by the clerk.
 deadline exhibit-removal-period: 35.days after FinalDisposition() counted_by frcp6-louisiana cite "E.D. La. LR 79.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: exhibit-removal-period (weekend)" cite "E.D. La. LR 79.3"
 {
@@ -231,9 +183,6 @@ test "Counting boundary: exhibit-removal-period (weekend)" cite "E.D. La. LR 79.
 /// (other than a JPML transfer order) is stayed for 21 days from its entry
 /// on the docket.
 deadline transfer-stay-period: 21.days after TransferOrderEntered() counted_by frcp6-louisiana cite "E.D. La. LR 83.5.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: transfer-stay-period (weekend)" cite "E.D. La. LR 83.5.1"
 {

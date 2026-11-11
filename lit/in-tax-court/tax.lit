@@ -50,7 +50,7 @@ state commenced: "Original tax appeal filed" by plaintiff cite ?("Ind. Code ch. 
   edge-commenced-decision "Tried or submitted" -> tax-decision {
     authority cite ?("Ind. Tax Ct. R.: not vendored")
   }
-  edge-commenced-interlocutory "Interlocutory order: petition for review" -> interlocutory {
+  "Interlocutory order: petition for review" -> interlocutory {
     authority cite "Ind. Appellate Rule 63(H)"
   }
 }
@@ -65,7 +65,7 @@ decision interlocutory: "Interlocutory review" by court cite "Ind. Appellate Rul
 
 decision tax-decision: "Tax Court decision" by court cite ?("Ind. Tax Ct. R.: not vendored") {
   note "The Tax Court's standard and scope of review of the agency determination, and its trial procedure, are holes (Tax Court rules and Ind. Code ch. 33-26 not vendored). A judgment disposing of all claims as to all parties, or otherwise final under App. R. 2(H), is a Final Judgment the Supreme Court may review (App. R. 63(A))."
-  edge-tax-decision-won "Decided for the petitioner" -> won {
+  "Decided for the petitioner" -> won {
     event TaxCourtJudgmentEntered()
     authority cite "Ind. Appellate Rule 63(A)"
   }
@@ -83,7 +83,7 @@ terminal won: "Decided for the petitioner" outcome [win] cite "Ind. Appellate Ru
 decision post-judgment: "Rehearing, review or acceptance" by plaintiff cite "Ind. Appellate Rule 63(B)"
 {
   note "A party adversely affected by a Final Judgment or final disposition may file a Petition for Rehearing with the Tax Court, not a Motion to Correct Error, governed by Rule 54; it need not be filed to seek review, but when used, the ruling on it is the final decision from which one review may be sought (App. R. 63(B)). Rule 54(B) requires the Petition for Rehearing no later than thirty (30) days after the decision. The Notice of Intent to Petition for Review is filed with the Clerk under Rule 9 (except its filing fee) no later than thirty (30) days after the docket entry of the Final Judgment or final disposition, or, if a timely Petition for Rehearing was filed by any party, of its final disposition; Rule 25(C)'s three-day mail extension does not apply and no extension is granted (App. R. 63(C), (K))."
-  edge-post-judgment-rehearing "Petition for rehearing in the Tax Court" -> rehearing {
+  "Petition for rehearing in the Tax Court" -> rehearing {
     authority cite "Ind. Appellate Rule 63(B)"
   }
   edge-post-judgment-review "Notice of intent to petition for review" -> record {
@@ -131,9 +131,7 @@ decision review: "Review granted or denied" by court cite "Ind. Appellate Rule 6
 {
   note "The grant of review is a matter of judicial discretion; the principal considerations are a conflict with Tax Court, Court of Appeals or Supreme Court decisions, an important undecided question of law, precedent in need of reconsideration, a conflict with the Supreme Court of the United States or a federal court of appeals on a federal question, and a significant departure from accepted law or practice (App. R. 63(M)). An evenly divided Court denies review (App. R. 63(R)). After review is granted the Tax Court keeps jurisdiction over interim relief and stays, which the Supreme Court may review (App. R. 63(O))."
   edge-review-denied "Review denied" -> lost-final { authority cite "Ind. Appellate Rule 63(N)" }
-  edge-review-reversed "Granted: reversed" -> reversed {
-    authority cite "Ind. Appellate Rule 63(O)"
-  }
+  "Granted: reversed" -> reversed { authority cite "Ind. Appellate Rule 63(O)" }
   edge-review-affirmed "Granted: affirmed" -> lost-final {
     authority cite "Ind. Appellate Rule 63(O)"
   }

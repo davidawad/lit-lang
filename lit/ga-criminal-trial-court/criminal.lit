@@ -13,9 +13,7 @@ start charged
 
 state charged: "Indictment or accusation" by court cite ?("O.C.G.A. Title 17 (not vendored): arrest, commitment, bail and indictment") {
   note "Arrest, first appearance, commitment hearing, bail and the charge are O.C.G.A. Title 17's, which is not vendored; every period there is a hole."
-  edge-charged-arraignment "Arraignment set" -> arraignment {
-    authority cite "Ga. Unif. Super. Ct. R. 30.1"
-  }
+  "Arraignment set" -> arraignment { authority cite "Ga. Unif. Super. Ct. R. 30.1" }
 }
 
 state arraignment: "Arraignment" by court cite "Ga. Unif. Super. Ct. R. 30.2"
@@ -29,9 +27,7 @@ state arraignment: "Arraignment" by court cite "Ga. Unif. Super. Ct. R. 30.2"
 decision pretrial: "Motions, demurrers, special pleas and notices" by accused cite "Ga. Unif. Super. Ct. R. 31.1"
 {
   note "Motions, demurrers and special pleas are filed at or before the time set by law unless the judge extends it in writing before trial (Ga. Unif. Super. Ct. R. 31.1); the time set by law is O.C.G.A. Title 17's, a hole. Unless the law provides otherwise, the state's notice of child-victim hearsay, the defense's notice of insanity, mental illness or intellectual disability, and the defense's notice of the victim's specific acts of violence are given and filed at least 10 days before trial unless the judge shortens or lengthens the time (Ga. Unif. Super. Ct. R. 31.1, 31.5, 31.6(A)); the state's rebuttal notice to acts of violence within five days before trial (Ga. Unif. Super. Ct. R. 31.6(C)). Motions are generally heard at or after arraignment and before trial (Ga. Unif. Super. Ct. R. 31.2); the judge may hold a status conference before trial (Ga. Unif. Super. Ct. R. 31.7). The statutory speedy-trial demand and its discharge remedy (O.C.G.A. §§ 17-7-170, 17-7-171) are holes: the code is not vendored."
-  edge-pretrial-competency "Competency in question" -> competency {
-    authority cite "Ga. Unif. Super. Ct. R. 31.4"
-  }
+  "Competency in question" -> competency { authority cite "Ga. Unif. Super. Ct. R. 31.4" }
   edge-pretrial-sustained "Demurrer or special plea sustained" -> dismissed {
     authority cite "Ga. Unif. Super. Ct. R. 31.1"
   }
@@ -49,7 +45,7 @@ decision competency: "Mental competency to stand trial" by court cite "Ga. Unif.
   edge-competency-competent "Competent: case proceeds" -> plea-decision {
     authority cite "Ga. Unif. Super. Ct. R. 31.4"
   }
-  edge-competency-incompetent "Incompetent: committed for treatment" -> incompetent {
+  "Incompetent: committed for treatment" -> incompetent {
     authority cite "Ga. Unif. Super. Ct. R. 31.4"
   }
 }
@@ -60,15 +56,13 @@ decision plea-decision: "Plea or trial" by accused cite "Ga. Unif. Super. Ct. R.
   edge-plea-decision-plea "Plea accepted" -> sentenced {
     authority cite "Ga. Unif. Super. Ct. R. 33.7"
   }
-  edge-plea-decision-trial "Proceed to trial" -> trial {
-    authority cite "Ga. Unif. Super. Ct. R. 32.1"
-  }
+  "Proceed to trial" -> trial { authority cite "Ga. Unif. Super. Ct. R. 32.1" }
 }
 
 decision trial: "Trial and verdict" by court cite "Ga. Unif. Super. Ct. R. 32.1"
 {
   note "Indictments and special presentments are set for trial within a reasonable time after arraignment, with the trial calendar noticed to counsel, bondsman and defendant not less than 7 days before the trial date (Ga. Unif. Super. Ct. R. 32.1); only the judge removes a case from the calendar (Ga. Unif. Super. Ct. R. 32.2)."
-  edge-trial-acquitted "Not guilty" -> acquitted { authority cite "Ga. Unif. Super. Ct. R. 32.1" }
+  "Not guilty" -> acquitted { authority cite "Ga. Unif. Super. Ct. R. 32.1" }
   edge-trial-guilty "Guilty: sentence" -> sentenced {
     authority cite "Ga. Unif. Super. Ct. R. 35.2"
   }

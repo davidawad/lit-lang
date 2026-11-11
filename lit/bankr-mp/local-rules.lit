@@ -404,24 +404,20 @@ start motion-filed
 state motion-filed: "Motion filed and noticed for hearing" by movant cite "D.N.M.I. LBR 9013-1(c)"
 {
   note "LR 7.1 applies in bankruptcy proceedings unless the court or LBR 9013-1 provides otherwise (LBR 9013-1(a)). A filing requiring a hearing states the hearing date on its first page and the filing party gives notice not later than 34 days before the hearing (LBR 9013-1(c)(1)). The opposition and reply periods are the District Court's LR 7.1(c) (lit/nmid); the motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Response filed" -> opposed { authority cite "D.N.M.I. LBR 9013-1(c)" }
-  edge-motion-filed-unopposed "No timely response" -> unopposed {
-    authority cite "D.N.M.I. LBR 9013-1(c)"
-  }
+  "Response filed" -> opposed { authority cite "D.N.M.I. LBR 9013-1(c)" }
+  "No timely response" -> unopposed { authority cite "D.N.M.I. LBR 9013-1(c)" }
 }
 
 state opposed: "Response filed" by opponent cite "D.N.M.I. LBR 9013-1(c)"
 {
   note "Responses and replies are filed and served under LR 7.1 and the FRBP; no surreply or further briefing is permitted without leave, and the court may disregard an untimely memorandum (LBR 9013-1(c)(2)). A respondent may file a countermotion with its response on the same issues; its reply is due not later than 3 days before the hearing (LBR 9013-1(d))."
-  edge-opposed-ruling "Briefing closed" -> ruling { authority cite "D.N.M.I. LBR 9013-1(c)" }
+  "Briefing closed" -> ruling { authority cite "D.N.M.I. LBR 9013-1(c)" }
 }
 
 state unopposed: "No response: declaration and proposed order" by movant cite "D.N.M.I. LBR 9013-1(c)"
 {
   note "If no one files a timely response, the moving party may file a Declaration and Request for Entry of Order and submit a proposed order; the court may cancel the hearing and enter the order or direct that the hearing be held (LBR 9013-1(c)(3)). The court generally will not cancel the hearing on dispositive adversary motions, FRBP 4001(b) or (c) motions, most motions to convert or dismiss, and substantive chapter 11 motions (LBR 9013-1(c)(4))."
-  edge-unopposed-ruling "Proposed order submitted" -> ruling {
-    authority cite "D.N.M.I. LBR 9013-1(c)"
-  }
+  "Proposed order submitted" -> ruling { authority cite "D.N.M.I. LBR 9013-1(c)" }
 }
 
 decision ruling: "Motion decided" by court cite "D.N.M.I. LBR 9021-1"

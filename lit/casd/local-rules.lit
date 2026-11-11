@@ -62,6 +62,7 @@ test "Counting boundary: motion-filing-period (weekend)" cite "S.D. Cal. CivLR 7
   given HearingDate() on 2026-06-06
   expect deadline(motion-filing-period) == 2026-05-08
 }
+
 /// S.D. Cal. CivLR 7.1(e)(2): each opposing party files and serves its
 /// opposition, or a statement of non-opposition, not later than fourteen
 /// (14) calendar days before the noticed hearing; a failure to do so may be
@@ -73,6 +74,7 @@ test "Counting boundary: opposition-period (weekend)" cite "S.D. Cal. CivLR 7.1(
   given HearingDate() on 2026-06-06
   expect deadline(opposition-period) == 2026-05-22
 }
+
 /// S.D. Cal. CivLR 7.1(e)(3): any reply memorandum is filed and served not
 /// later than seven (7) days before the date for which the matter is
 /// noticed.
@@ -83,6 +85,7 @@ test "Counting boundary: reply-period (holiday)" cite "S.D. Cal. CivLR 7.1(e)"
   given HearingDate() on 2026-06-01
   expect deadline(reply-period) == 2026-05-22
 }
+
 /// S.D. Cal. CivLR 7.1(e)(6)(e)(1): unless the court orders otherwise, the
 /// plaintiff's merits brief in a Social Security case is due within 30 days
 /// of the filing of the administrative record.
@@ -93,6 +96,7 @@ test "Counting boundary: social-security-plaintiff-brief-period (holiday)" cite 
   given AdministrativeRecordFiled() on 2026-06-03
   expect deadline(social-security-plaintiff-brief-period) == 2026-07-06
 }
+
 /// S.D. Cal. CivLR 7.1(e)(6)(e)(2): the Social Security Administration's
 /// opposition is due 30 days after service of the plaintiff's brief.
 deadline social-security-opposition-period: 30.days after SocialSecurityPlaintiffBriefServed() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
@@ -102,6 +106,7 @@ test "Counting boundary: social-security-opposition-period (holiday)" cite "S.D.
   given SocialSecurityPlaintiffBriefServed() on 2026-06-03
   expect deadline(social-security-opposition-period) == 2026-07-06
 }
+
 /// S.D. Cal. CivLR 7.1(e)(6)(e)(3): the plaintiff's reply brief, if any, is
 /// due 14 days after service of the defendant's brief.
 deadline social-security-reply-period: 14.days after SocialSecurityOppositionServed() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
@@ -115,6 +120,7 @@ test "Counting boundary: reconsideration-period (holiday)" cite "S.D. Cal. CivLR
   given RulingEntered() on 2026-06-05
   expect deadline(reconsideration-period) == 2026-07-06
 }
+
 /// S.D. Cal. CivLR 16.1(c)(1): within forty-five (45) days of the filing of
 /// an answer, counsel and the parties appear before the assigned judge for
 /// an early neutral evaluation conference, with full settlement authority.
@@ -125,6 +131,7 @@ test "Counting boundary: ene-conference-period (weekend)" cite "S.D. Cal. CivLR 
   given AnswerFiled() on 2026-06-03
   expect deadline(ene-conference-period) == 2026-07-20
 }
+
 /// S.D. Cal. CivLR 16.1(f)(2)(a): unless the court specifies otherwise, each
 /// party serves and files its Memorandum of Contentions of Fact and Law no
 /// later than 5:00 p.m. twenty-eight (28) days before the pretrial hearing.
@@ -135,6 +142,7 @@ test "Counting boundary: contentions-memorandum-period (weekend)" cite "S.D. Cal
   given PretrialHearing() on 2026-06-06
   expect deadline(contentions-memorandum-period) == 2026-05-08
 }
+
 /// S.D. Cal. CivLR 16.1(f)(4)(a): the attorneys meet at least twenty-one
 /// (21) days before the pretrial hearing, after the memoranda are filed.
 deadline counsel-meeting-period: 21.days before PretrialHearing() counted_by frcp6 cite "S.D. Cal. CivLR 16.1(f)"
@@ -144,6 +152,7 @@ test "Counting boundary: counsel-meeting-period (weekend)" cite "S.D. Cal. CivLR
   given PretrialHearing() on 2026-06-06
   expect deadline(counsel-meeting-period) == 2026-05-15
 }
+
 /// S.D. Cal. CivLR 16.1(f)(6)(a): plaintiff's counsel provides opposing
 /// counsel the proposed pretrial order not less than fourteen (14) days
 /// before the pretrial hearing.
@@ -154,6 +163,7 @@ test "Counting boundary: proposed-pretrial-order-period (weekend)" cite "S.D. Ca
   given PretrialHearing() on 2026-06-06
   expect deadline(proposed-pretrial-order-period) == 2026-05-22
 }
+
 /// S.D. Cal. CivLR 16.1(f)(6)(b): the plaintiff lodges the Pretrial Order
 /// with the judge's chambers no later than seven (7) days before the
 /// pretrial hearing.
@@ -164,6 +174,7 @@ test "Counting boundary: pretrial-order-lodging-period (holiday)" cite "S.D. Cal
   given PretrialHearing() on 2026-06-01
   expect deadline(pretrial-order-lodging-period) == 2026-05-22
 }
+
 /// S.D. Cal. CivLR 54.1(a): within fourteen (14) days after entry of
 /// judgment, the party claiming costs files its bill of costs with a notice
 /// of the clerk's hearing; a motion under FRCP 59 or 60 does not extend the

@@ -58,9 +58,7 @@ decision charging: "Indictment, waiver or complaint" by court cite "M.R.U. Crim.
 state arraignment: "Arraignment and plea of not guilty" by accused cite "M.R.U. Crim. P. 10"
 {
   note "Arraignment is conducted in open court by reading the indictment, information or complaint, or stating its substance, and calling on the defendant to plead; a represented defendant charged with a Class D or E crime may plead in writing through counsel (M.R.U. Crim. P. 10). A defendant may plead not guilty, not criminally responsible by reason of insanity, guilty or, with the court's consent, nolo contendere (M.R.U. Crim. P. 11(a)(1))."
-  edge-arraignment-discovery "Automatic discovery" -> discovery {
-    authority cite "M.R.U. Crim. P. 16(a)"
-  }
+  "Automatic discovery" -> discovery { authority cite "M.R.U. Crim. P. 16(a)" }
 }
 
 state discovery: "Discovery, dispositional conference and pretrial motions" by prosecution cite "M.R.U. Crim. P. 16(b)"
@@ -97,10 +95,8 @@ decision plea-decision: "Plea or trial" by accused cite "M.R.U. Crim. P. 18(d)"
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "M.R.U. Crim. P. 11(b)"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "M.R.U. Crim. P. 23(a)" }
-  edge-plea-decision-dismissed "State files a dismissal" -> dismissed {
-    authority cite "M.R.U. Crim. P. 48(a)"
-  }
+  "Trial" -> trial { authority cite "M.R.U. Crim. P. 23(a)" }
+  "State files a dismissal" -> dismissed { authority cite "M.R.U. Crim. P. 48(a)" }
 }
 
 decision trial: "Verdict" by court cite "M.R.U. Crim. P. 31(a)"
@@ -129,9 +125,7 @@ decision post-trial: "Post-trial motions" by court cite "M.R.U. Crim. P. 33"
 state sentencing: "Presentence report and sentencing" by court cite "M.R.U. Crim. P. 32(a)"
 {
   note "Sentence is imposed without unreasonable delay (M.R.U. Crim. P. 32(a)(1)); before sentencing on a Class C or higher crime the defendant may make a statement (M.R.U. Crim. P. 32(a)(2)), and the court states its reasons for a sentence of one year or more (M.R.U. Crim. P. 32(a)(3)). The court may order a presentence investigation and report; where it has ordered a written report, sentence is not imposed until at least 48 hours after the report is filed with the clerk, so that the defendant and counsel may examine it (M.R.U. Crim. P. 32(c)). A motion to withdraw a guilty or nolo contendere plea may be made only before sentence is imposed (M.R.U. Crim. P. 32(d))."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "M.R.U. Crim. P. 32(b)"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "M.R.U. Crim. P. 32(b)" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "M.R.U. Crim. P. 32(b)"

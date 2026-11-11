@@ -64,6 +64,7 @@ test "Counting boundary: ifp-objection-period (weekend)" cite "W.D. Va. Gen. R. 
   given IfpDenialNoticed() on 2025-10-25
   expect deadline(ifp-objection-period) == 2025-11-10
 }
+
 /// General Rule 4(b)(4): a petition for approval of attorneys' fees under
 /// 42 U.S.C. § 406(b) is filed within 30 days of the date of the Notice of
 /// Award, with a copy of the Notice of Award.
@@ -74,6 +75,7 @@ test "Counting boundary: ss-fee-petition-period (holiday)" cite "W.D. Va. Gen. R
   given NoticeOfAwardIssued() on 2025-10-28
   expect deadline(ss-fee-petition-period) == 2025-11-28
 }
+
 /// General Rule 4(c)(1): unless changed by the presiding judge, on review
 /// under 42 U.S.C. § 405(g) the plaintiff files its brief within 30 days of
 /// service of a copy of the administrative record.
@@ -84,6 +86,7 @@ test "Counting boundary: ss-plaintiff-brief-period (holiday)" cite "W.D. Va. Gen
   given AdministrativeRecordServed() on 2025-10-28
   expect deadline(ss-plaintiff-brief-period) == 2025-11-28
 }
+
 /// General Rule 4(c)(3): a brief in response by the Commissioner is filed
 /// within 30 days after service of the plaintiff's brief.
 deadline ss-commissioner-brief-period: 30.days after SsPlaintiffBriefServed() counted_by frcp6-virginia cite "W.D. Va. Gen. R. 4(c)"
@@ -93,6 +96,7 @@ test "Counting boundary: ss-commissioner-brief-period (holiday)" cite "W.D. Va. 
   given SsPlaintiffBriefServed() on 2025-10-28
   expect deadline(ss-commissioner-brief-period) == 2025-11-28
 }
+
 /// General Rule 4(c)(4): a reply brief by the plaintiff is filed within 14
 /// days after service of the Commissioner's brief.
 deadline ss-reply-brief-period: 14.days after CommissionerBriefServed() counted_by frcp6-virginia cite "W.D. Va. Gen. R. 4(c)"
@@ -102,6 +106,7 @@ test "Counting boundary: ss-reply-brief-period (weekend)" cite "W.D. Va. Gen. R.
   given CommissionerBriefServed() on 2025-10-25
   expect deadline(ss-reply-brief-period) == 2025-11-10
 }
+
 /// General Rule 4(c)(5): the plaintiff files the grounds of any objection to
 /// the Commissioner's motion to remand within 14 days of its service, or the
 /// plaintiff is assumed to consent to remand.
@@ -112,6 +117,7 @@ test "Counting boundary: ss-remand-objection-period (weekend)" cite "W.D. Va. Ge
   given RemandMotionServed() on 2025-10-25
   expect deadline(ss-remand-objection-period) == 2025-11-10
 }
+
 /// General Rule 9(d)(5): unless the court orders otherwise, sealed documents
 /// not otherwise provided for are unsealed by the clerk 120 days from the
 /// date of entry of the sealing order, unless the sealing order provides
@@ -123,6 +129,7 @@ test "Counting boundary: unsealing-period (weekend)" cite "W.D. Va. Gen. R. 9(d)
   given SealingOrderEntered() on 2025-10-25
   expect deadline(unsealing-period) == 2026-02-23
 }
+
 /// General Rule 12: in a civil case in which no appeal is perfected, the
 /// parties remove exhibits of unusual bulk or weight and physical exhibits
 /// within 60 days from the date of final disposition of the case by the
@@ -139,6 +146,7 @@ test "Counting boundary: exhibit-removal-after-appeal-period (holiday)" cite "W.
   given AppellateDispositionReceived() on 2025-10-28
   expect deadline(exhibit-removal-after-appeal-period) == 2025-11-28
 }
+
 /// General Rule 12: if exhibits are not removed within the required time and
 /// the clerk notifies the parties, the clerk destroys exhibits the parties
 /// have not removed within 30 days from the date of that notice.
@@ -149,6 +157,7 @@ test "Counting boundary: exhibit-removal-notice-period (holiday)" cite "W.D. Va.
   given ExhibitNoticeGiven() on 2025-10-28
   expect deadline(exhibit-removal-notice-period) == 2025-11-28
 }
+
 /// Civil Rule 11(c)(1): unless otherwise directed by the court, the opposing
 /// party files a responsive brief and supporting documents within 14 days
 /// after service of the motion.
@@ -159,6 +168,7 @@ test "Counting boundary: response-brief-period (weekend)" cite "W.D. Va. Civ. R.
   given MotionServed() on 2025-10-25
   expect deadline(response-brief-period) == 2025-11-10
 }
+
 /// Civil Rule 11(c)(1): the moving party may file a rebuttal brief within 7
 /// days after service of the opposing party's brief (the rule's "reply
 /// brief"); no further briefs (including letter briefs) are submitted
@@ -170,6 +180,7 @@ test "Counting boundary: rebuttal-brief-period (weekend)" cite "W.D. Va. Civ. R.
   given ResponsiveBriefServed() on 2025-10-25
   expect deadline(rebuttal-brief-period) == 2025-11-03
 }
+
 /// Civil Rule 51: except as otherwise directed by the court, in a jury case
 /// any proposed instructions are filed at least 7 days before the scheduled
 /// trial date.
@@ -180,6 +191,7 @@ test "Counting boundary: jury-instructions-period (weekend)" cite "W.D. Va. Civ.
   given TrialCommenced() on 2025-10-25
   expect deadline(jury-instructions-period) == 2025-10-17
 }
+
 /// Civil Rule 54(a)(1): unless otherwise provided by statute, in Social
 /// Security cases, or as otherwise ordered, a motion for attorneys' fees is
 /// filed no later than 21 days after the entry of judgment.
@@ -190,6 +202,7 @@ test "Counting boundary: fee-motion-period (weekend)" cite "W.D. Va. Civ. R. 54(
   given JudgmentEntered() on 2025-10-25
   expect deadline(fee-motion-period) == 2025-11-17
 }
+
 /// Civil Rule 54(a)(1): any opposition to a motion for attorneys' fees is
 /// filed within 21 days of service of the motion.
 deadline fee-opposition-period: 21.days after FeeMotionServed() counted_by frcp6-virginia cite "W.D. Va. Civ. R. 54(a)"
@@ -199,6 +212,7 @@ test "Counting boundary: fee-opposition-period (weekend)" cite "W.D. Va. Civ. R.
   given FeeMotionServed() on 2025-10-25
   expect deadline(fee-opposition-period) == 2025-11-17
 }
+
 /// Civil Rule 54(a)(1): any reply is filed within 7 days of service of the
 /// opposition.
 deadline fee-reply-period: 7.days after FeeOppositionServed() counted_by frcp6-virginia cite "W.D. Va. Civ. R. 54(a)"

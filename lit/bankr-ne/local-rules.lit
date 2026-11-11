@@ -111,6 +111,7 @@ test "Counting boundary: professional-fee-notice-period (weekend)" cite "Neb. R.
   given TrusteeFinalReportFiled() on 2026-01-03
   expect deadline(professional-fee-notice-period) == 2025-12-19
 }
+
 /// Neb. R. Bankr. P. 2080-1(A): the chapter 9 debtor files a certificate of
 /// service of the clerk's notice at least 7 days before the last date to
 /// file a resistance to the petition.
@@ -121,6 +122,7 @@ test "Counting boundary: chapter9-service-certificate-period (holiday)" cite "Ne
   given Chapter9ResistanceDeadline() on 2026-01-01
   expect deadline(chapter9-service-certificate-period) == 2025-12-24
 }
+
 /// Neb. R. Bankr. P. 2080-1(B): the chapter 9 debtor files the list of
 /// creditors within 14 days of the petition date.
 deadline chapter9-creditor-list-period: 14.days after PetitionFiled() counted_by frbp9006-nebraska cite "Neb. R. Bankr. P. 2080-1(B)"
@@ -138,6 +140,7 @@ test "Counting boundary: chapter9-publication-period (weekend)" cite "Neb. R. Ba
   given Chapter9ResistanceDeadline() on 2026-01-03
   expect deadline(chapter9-publication-period) == 2025-12-19
 }
+
 /// Neb. R. Bankr. P. 2080-1(D): the debtor files proofs of publication no
 /// later than 14 days after the last publication.
 deadline chapter9-publication-proof-period: 14.days after LastPublication() counted_by frbp9006-nebraska cite "Neb. R. Bankr. P. 2080-1(D)"
@@ -150,6 +153,7 @@ test "Counting boundary: chapter9-resistance-period (weekend)" cite "Neb. R. Ban
   given Chapter9NoticeServed() on 2026-01-01
   expect deadline(chapter9-resistance-period) == 2026-02-17
 }
+
 /// Neb. R. Bankr. P. 3002-1(C): unless a confirmed plan provides otherwise,
 /// an amended proof of claim asserting an unsecured deficiency on real
 /// property is filed within 180 days after stay relief or surrender,
@@ -169,6 +173,7 @@ test "Counting boundary: chapter13-claim-objection-period (weekend)" cite "Neb. 
   given TrusteeClaimsNoticeFiled() on 2026-01-01
   expect deadline(chapter13-claim-objection-period) == 2026-02-02
 }
+
 /// Neb. R. Bankr. P. 3015-2(B): an attorney's filing of a chapter 13
 /// petition is an application for employment, approved without further
 /// order unless a party in interest objects within 14 days of the petition.
@@ -189,6 +194,7 @@ test "Counting boundary: extended-plan-filing-period (weekend)" cite "Neb. R. Ba
   given MeetingOfCreditorsScheduled() on 2026-01-03
   expect deadline(extended-plan-filing-period) == 2025-12-19
 }
+
 /// Neb. R. Bankr. P. 3015-2(G): if an objection to a limited motion to
 /// modify a confirmed plan is filed, the debtor files a response within 14
 /// days after the objection deadline, or the court may deny the motion.
@@ -208,6 +214,7 @@ test "Counting boundary: confirmation-certification-period (holiday)" cite "Neb.
   given ConfirmationObjectionDeadline() on 2026-01-01
   expect deadline(confirmation-certification-period) == 2025-12-24
 }
+
 /// Neb. R. Bankr. P. 3015-3(B): if an objection to confirmation is timely
 /// filed, the court may deny confirmation or dismiss unless the debtor
 /// responds within 14 days after the objection deadline.
@@ -222,6 +229,7 @@ test "Counting boundary: chapter12-confirmation-trial-request-period (weekend)" 
   given ObjectionResponseDeadline() on 2026-01-01
   expect deadline(chapter12-confirmation-trial-request-period) == 2026-02-02
 }
+
 /// Neb. R. Bankr. P. 3015-3(C): in a chapter 13 case the request for
 /// confirmation trial is filed within 70 days after the debtor's deadline
 /// to respond to a plan objection.
@@ -232,6 +240,7 @@ test "Counting boundary: chapter13-confirmation-trial-request-period (weekend)" 
   given ObjectionResponseDeadline() on 2026-01-03
   expect deadline(chapter13-confirmation-trial-request-period) == 2026-03-16
 }
+
 /// Neb. R. Bankr. P. 3015-4: a subchapter V, chapter 12 or chapter 13 case
 /// may be dismissed for a payment default the trustee's notice warns must be
 /// cured within 21 days.
@@ -242,6 +251,7 @@ test "Counting boundary: payment-default-cure-period (weekend)" cite "Neb. R. Ba
   given DefaultNoticeFiled() on 2026-01-03
   expect deadline(payment-default-cure-period) == 2026-01-26
 }
+
 /// Neb. R. Bankr. P. 3020-1(A); Appendix D: a subchapter V or chapter 12
 /// debtor pays the trustee an advance fee and expense deposit within 5 days
 /// after the petition is filed.
@@ -255,6 +265,7 @@ test "Counting boundary: stay-relief-service-certificate-period (weekend)" cite 
   given StayReliefHearing() on 2026-01-01
   expect deadline(stay-relief-service-certificate-period) == 2025-12-26
 }
+
 /// Neb. R. Bankr. P. 7007-1(C): instead of a resistance, the opposing party
 /// files a brief within 14 days after an adversary motion is filed.
 deadline adversary-opposing-brief-period: 14.days after AdversaryMotionFiled() counted_by frbp9006-nebraska cite "Neb. R. Bankr. P. 7007-1(C)"
@@ -268,6 +279,7 @@ test "Counting boundary: dispositive-opposing-brief-period (weekend)" cite "Neb.
   given DispositiveMotionFiled() on 2026-01-03
   expect deadline(dispositive-opposing-brief-period) == 2026-01-26
 }
+
 /// Neb. R. Bankr. P. 7007-1(D): a reply brief may be filed within 7 days
 /// after the opposing brief is filed.
 deadline adversary-reply-brief-period: 7.days after OpposingBriefFiled() counted_by frbp9006-nebraska cite "Neb. R. Bankr. P. 7007-1(D)"
@@ -277,6 +289,7 @@ test "Counting boundary: adversary-reply-brief-period (weekend)" cite "Neb. R. B
   given OpposingBriefFiled() on 2026-01-03
   expect deadline(adversary-reply-brief-period) == 2026-01-12
 }
+
 /// Neb. R. Bankr. P. 9006-1(B): after the non-governmental bar date, a
 /// debtor's motion to borrow to replace a motor vehicle may carry a
 /// shortened Rule 9013-1(B) resistance deadline of 10 days without leave.
@@ -287,6 +300,7 @@ test "Counting boundary: replacement-vehicle-resistance-period (weekend)" cite "
   given ReplacementVehicleMotionFiled() on 2026-01-01
   expect deadline(replacement-vehicle-resistance-period) == 2026-01-12
 }
+
 /// Neb. R. Bankr. P. 9013-1(B): the resistance deadline served with a motion
 /// is at least 21 days after the motion is filed, unless an FRBP provides
 /// otherwise (e.g., FRBP 4001(c)-(d), 2002(b)).
@@ -297,6 +311,7 @@ test "Counting boundary: motion-resistance-period (weekend)" cite "Neb. R. Bankr
   given MotionFiled() on 2026-01-03
   expect deadline(motion-resistance-period) == 2026-01-26
 }
+
 /// Neb. R. Bankr. P. 9014-1: hearings on contested matters are by
 /// affidavit; a party may request an evidentiary hearing by motion filed at
 /// least 7 days before the hearing.
@@ -307,6 +322,7 @@ test "Counting boundary: evidentiary-hearing-request-period (holiday)" cite "Neb
   given ContestedHearingScheduled() on 2026-01-01
   expect deadline(evidentiary-hearing-request-period) == 2025-12-24
 }
+
 /// Neb. R. Bankr. P. 2016-1(D), Appendix B C.3: chapter 13 fee requests are
 /// governed by Appendix B, under which, in a case dismissed before the
 /// initial plan is confirmed, the debtor's attorney files the fee

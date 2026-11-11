@@ -49,6 +49,7 @@ test "Counting boundary: motion-response-period (weekend)" cite "W.D. Tenn. LCrR
   given MotionReceived() on 2025-11-22
   expect deadline(motion-response-period) == 2025-12-08
 }
+
 /// LCrR 16.1(a): within 7 days after arraignment any attorney seeking
 /// discovery makes a specific written request to the United States
 /// Attorney, filed with the clerk.
@@ -59,6 +60,7 @@ test "Counting boundary: discovery-request-period (holiday)" cite "W.D. Tenn. LC
   given Arraigned() on 2025-11-20
   expect deadline(discovery-request-period) == 2025-11-28
 }
+
 /// LCrR 16.1(b): the United States Attorney responds in writing to the
 /// request for discovery within 14 days.
 deadline discovery-response-period: 14.days after DiscoveryRequestFiled() counted_by frcrimp45 cite "W.D. Tenn. LCrR 16.1(b)"
@@ -68,6 +70,7 @@ test "Counting boundary: discovery-response-period (weekend)" cite "W.D. Tenn. L
   given DiscoveryRequestFiled() on 2025-11-22
   expect deadline(discovery-response-period) == 2025-12-08
 }
+
 /// LCrR 16.1(c)(1): if the government requests reciprocal discovery and
 /// defense counsel has it, defense counsel responds in writing at least 14
 /// days before trial.
@@ -78,6 +81,7 @@ test "Counting boundary: reciprocal-discovery-period (weekend)" cite "W.D. Tenn.
   given TrialScheduled() on 2025-11-22
   expect deadline(reciprocal-discovery-period) == 2025-11-07
 }
+
 /// LCrR 16.1(c)(2), (3): a defendant who intends to call an expert witness
 /// at a pretrial hearing notifies the United States Attorney in writing at
 /// least 14 days before the hearing, with the expert's report or a summary.
@@ -88,6 +92,7 @@ test "Counting boundary: pretrial-expert-notice-period (weekend)" cite "W.D. Ten
   given PretrialHearingScheduled() on 2025-11-22
   expect deadline(pretrial-expert-notice-period) == 2025-11-07
 }
+
 /// LCrR 16.1(c)(2), (3): a defendant who intends to call an expert witness
 /// at trial notifies the United States Attorney in writing at least 28
 /// days before trial.
@@ -98,6 +103,7 @@ test "Counting boundary: trial-expert-notice-period (weekend)" cite "W.D. Tenn. 
   given TrialScheduled() on 2025-11-22
   expect deadline(trial-expert-notice-period) == 2025-10-24
 }
+
 /// LCrR 17.1(b): the scheduling conference is held not less than 45 days
 /// after arraignment, unless the local speedy trial act plan requires
 /// otherwise; this is the earliest such date.
@@ -108,6 +114,7 @@ test "Counting boundary: earliest-scheduling-conference (holiday)" cite "W.D. Te
   given Arraigned() on 2025-11-17
   expect deadline(earliest-scheduling-conference) == 2026-01-02
 }
+
 /// LCrR 32.1(a): the sentencing hearing is scheduled no earlier than 65
 /// days following the plea or verdict, unless good cause exists; this is
 /// the earliest such date.
@@ -118,6 +125,7 @@ test "Counting boundary: earliest-sentencing-date (weekend)" cite "W.D. Tenn. LC
   given GuiltyPleaOrVerdict() on 2025-11-20
   expect deadline(earliest-sentencing-date) == 2026-01-26
 }
+
 /// LCrR 32.1(a): and no later than 90 days following it, unless good
 /// cause exists to schedule it at a different time.
 deadline latest-sentencing-date: 90.days after GuiltyPleaOrVerdict() counted_by frcrimp45 cite "W.D. Tenn. LCrR 32.1(a)"
@@ -127,6 +135,7 @@ test "Counting boundary: latest-sentencing-date (weekend)" cite "W.D. Tenn. LCrR
   given GuiltyPleaOrVerdict() on 2025-11-17
   expect deadline(latest-sentencing-date) == 2026-02-17
 }
+
 /// LCrR 32.1(d): within 21 days after disclosure of the presentence report
 /// counsel for the defendant and the government each file a "Position of
 /// Parties with Respect to Sentencing Factors".

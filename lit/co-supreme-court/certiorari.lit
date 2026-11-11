@@ -68,9 +68,7 @@ decision rehearing-decision: "Rehearing sought?" by petitioner cite "Rule Change
 state rehearing-order: "Rehearing decided" by court cite "C.A.R. 40(a)"
 {
   note "If the petition is granted the court may make a final disposition without reargument, restore the case for reargument or resubmission, or issue any other order (C.A.R. 40(a))."
-  edge-rehearing-order-mandate "Rehearing decided" -> mandate {
-    authority cite "Rule Change 2024(11), C.A.R. 41(b)"
-  }
+  "Rehearing decided" -> mandate { authority cite "Rule Change 2024(11), C.A.R. 41(b)" }
 }
 
 state mandate: "Mandate issued" by court cite "Rule Change 2024(11), C.A.R. 41(b)"

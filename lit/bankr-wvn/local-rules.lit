@@ -114,9 +114,7 @@ start motion-filed
 state motion-filed: "Motion filed and served" by movant cite "N.D.W. Va. LBR 9013-1(a)"
 {
   note "A motion is filed with its supporting documentation and served with a certificate of service (LBR 9013-1(a)-(c)); a response is due within 21 days from its filing or 3 days before the hearing, whichever is earlier (LBR 9013-1(d)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-response "Response filed" -> response {
-    authority cite "N.D.W. Va. LBR 9013-1(d)"
-  }
+  "Response filed" -> response { authority cite "N.D.W. Va. LBR 9013-1(d)" }
   edge-motion-filed-unopposed "No timely response" -> ruling {
     authority cite "N.D.W. Va. LBR 9013-1(f)"
   }
@@ -125,7 +123,7 @@ state motion-filed: "Motion filed and served" by movant cite "N.D.W. Va. LBR 901
 state response: "Response filed" by opponent cite "N.D.W. Va. LBR 9013-1(e)"
 {
   note "A response states its grounds (LBR 9013-1(e)); a party appearing to object at a hearing set without objections files a written objection at least three days before it (LBR 9013-1(f)(2))."
-  edge-response-ruling "Matter heard" -> ruling { authority cite "N.D.W. Va. LBR 9013-1(f)" }
+  "Matter heard" -> ruling { authority cite "N.D.W. Va. LBR 9013-1(f)" }
 }
 
 decision ruling: "Motion decided" by court cite "N.D.W. Va. LBR 9013-1(f)"

@@ -170,6 +170,7 @@ test "Counting boundary: venue-change-motion-period (weekend)" cite "D. Mont. L.
   given FirstVenueDefeatingAppearance() on 2025-12-06
   expect deadline(venue-change-motion-period) == 2025-12-22
 }
+
 /// L.R. 3.3(a)(1): within seven days after filing a notice of removal, the
 /// removing party delivers a copy of it to the state court.
 deadline removal-notice-delivery-period: 7.days after RemovalNoticeFiled() counted_by frcp6-montana cite "D. Mont. L.R. 3.3(a)"
@@ -179,6 +180,7 @@ test "Counting boundary: removal-notice-delivery-period (weekend)" cite "D. Mont
   given RemovalNoticeFiled() on 2025-12-06
   expect deadline(removal-notice-delivery-period) == 2025-12-15
 }
+
 /// L.R. 3.3(a)(4): non-member counsel who appeared to seek an extension
 /// must become a member, or new counsel must appear, within seven days of
 /// that appearance.
@@ -189,6 +191,7 @@ test "Counting boundary: non-member-counsel-period (weekend)" cite "D. Mont. L.R
   given NonMemberCounselAppeared() on 2025-12-06
   expect deadline(non-member-counsel-period) == 2025-12-15
 }
+
 /// L.R. 4.4: a party requesting service of a subpoena by the U.S. Marshals
 /// Service gives the Marshal notice, with all documentation needed to
 /// effect service, no later than 30 days before the desired date of
@@ -210,6 +213,7 @@ test "Counting boundary: exhibit-filing-period (weekend)" cite "D. Mont. L.R. 5.
   given HearingOrTrialConcluded() on 2025-12-03
   expect deadline(exhibit-filing-period) == 2025-12-15
 }
+
 /// L.R. 5.1(b)(8): courtesy copies of exhibits are destroyed unless the
 /// filing party requests their return within ten days of the conclusion of
 /// the trial or hearing.
@@ -220,6 +224,7 @@ test "Counting boundary: courtesy-copy-return-period (weekend)" cite "D. Mont. L
   given HearingOrTrialConcluded() on 2025-12-03
   expect deadline(courtesy-copy-return-period) == 2025-12-15
 }
+
 /// L.R. 5.3(b): the court may dismiss a complaint without prejudice or
 /// strike an answer when a document it directed to an attorney or
 /// self-represented party is returned as not deliverable and the court
@@ -236,6 +241,7 @@ test "Counting boundary: dispositive-response-period (holiday)" cite "D. Mont. L
   given DispositiveMotionDocketed() on 2025-12-04
   expect deadline(dispositive-response-period) == 2025-12-26
 }
+
 /// L.R. 7.1(d)(1)(B)(ii): responses to all other motions are filed within
 /// 14 days after the motion was entered in the docket; except on a pro se
 /// motion for appointment of counsel, failure to respond may be deemed an
@@ -247,6 +253,7 @@ test "Counting boundary: response-period (weekend)" cite "D. Mont. L.R. 7.1(d)"
   given MotionDocketed() on 2025-12-06
   expect deadline(response-period) == 2025-12-22
 }
+
 /// L.R. 7.1(d)(1)(C): the moving party may file a reply within 14 days
 /// after the response was entered in the docket; no further briefing
 /// without leave (L.R. 7.1(d)(1)(D)).
@@ -257,6 +264,7 @@ test "Counting boundary: reply-period (weekend)" cite "D. Mont. L.R. 7.1(d)"
   given ResponseDocketed() on 2025-12-06
   expect deadline(reply-period) == 2025-12-22
 }
+
 /// L.R. 7.5(b)(3): parties may respond to a motion for leave to file an
 /// amicus brief within 14 days of its entry by the clerk; there is no
 /// further briefing.
@@ -267,6 +275,7 @@ test "Counting boundary: amicus-response-period (weekend)" cite "D. Mont. L.R. 7
   given AmicusMotionDocketed() on 2025-12-06
   expect deadline(amicus-response-period) == 2025-12-22
 }
+
 /// L.R. 16.2(b): each party's preliminary pretrial statement, the
 /// discovery plan and the statement of stipulated facts are filed no later
 /// than seven days before the preliminary pretrial conference.
@@ -277,6 +286,7 @@ test "Counting boundary: preliminary-pretrial-filings-period (holiday)" cite "D.
   given PreliminaryPretrialConferenceHeld() on 2025-12-04
   expect deadline(preliminary-pretrial-filings-period) == 2025-11-26
 }
+
 /// L.R. 26.1(a): except in cases exempt under FRCP 26(a)(1)(B), or unless
 /// otherwise directed, the parties confer at least 21 days before the
 /// preliminary pretrial conference.
@@ -287,6 +297,7 @@ test "Counting boundary: rule-26f-conference-period (holiday)" cite "D. Mont. L.
   given PreliminaryPretrialConferenceHeld() on 2025-12-02
   expect deadline(rule-26f-conference-period) == 2025-11-10
 }
+
 /// L.R. 16.4(a): at least 14 days before the proposed final pretrial order
 /// is due, the plaintiff convenes a conference of all counsel and
 /// self-represented parties to prepare it.
@@ -297,6 +308,7 @@ test "Counting boundary: final-pretrial-planning-period (weekend)" cite "D. Mont
   given FinalPretrialOrderDue() on 2025-12-06
   expect deadline(final-pretrial-planning-period) == 2025-11-21
 }
+
 /// L.R. 26.1(b): each party serves initial disclosures under FRCP
 /// 26(a)(1)(A) no more than 14 days after the Rule 26(f) conference;
 /// serving them at least seven days before the conference is encouraged,
@@ -308,6 +320,7 @@ test "Counting boundary: initial-disclosure-period (weekend)" cite "D. Mont. L.R
   given Rule26fConferenceHeld() on 2025-12-06
   expect deadline(initial-disclosure-period) == 2025-12-22
 }
+
 /// L.R. 48.1(b)(1): neither parties nor counsel may interview jurors unless,
 /// within 28 days after entry of judgment, a party files proposed written
 /// questions and an affidavit showing good cause.
@@ -318,6 +331,7 @@ test "Counting boundary: juror-interview-filing-period (holiday)" cite "D. Mont.
   given JudgmentEntered() on 2025-12-04
   expect deadline(juror-interview-filing-period) == 2026-01-02
 }
+
 /// L.R. 54.1(a): within 14 days after entry of a judgment allowing costs,
 /// the prevailing party may serve and file an application for taxation of
 /// costs on Form AO-133, limited to costs under 28 U.S.C. § 1920.
@@ -328,6 +342,7 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "D. Mont. L.R. 54.
   given CostsJudgmentEntered() on 2025-12-06
   expect deadline(bill-of-costs-period) == 2025-12-22
 }
+
 /// L.R. 54.1(b): the opposing party may object within 14 days after the
 /// application was filed; failure to object waives review of the clerk's
 /// action.
@@ -338,6 +353,7 @@ test "Counting boundary: costs-objection-period (weekend)" cite "D. Mont. L.R. 5
   given BillOfCostsFiled() on 2025-12-06
   expect deadline(costs-objection-period) == 2025-12-22
 }
+
 /// L.R. 58.1(c): objections to a proposed judgment the court ordered may be
 /// filed within seven days of its filing.
 deadline proposed-judgment-objection-period: 7.days after ProposedJudgmentFiled() counted_by frcp6-montana cite "D. Mont. L.R. 58.1(c)"
@@ -347,6 +363,7 @@ test "Counting boundary: proposed-judgment-objection-period (weekend)" cite "D. 
   given ProposedJudgmentFiled() on 2025-12-06
   expect deadline(proposed-judgment-objection-period) == 2025-12-15
 }
+
 /// L.R. 72.3(b): an objection is filed within 14 days of service of the
 /// magistrate judge's order or findings and recommendation.
 deadline magistrate-objection-period: 14.days after MagistrateRulingServed() counted_by frcp6-montana cite "D. Mont. L.R. 72.3(b)"
@@ -356,6 +373,7 @@ test "Counting boundary: magistrate-objection-period (weekend)" cite "D. Mont. L
   given MagistrateRulingServed() on 2025-12-06
   expect deadline(magistrate-objection-period) == 2025-12-22
 }
+
 /// L.R. 72.3(b): a response is filed within 14 days of service of the
 /// objection. A reply is not permitted.
 deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6-montana cite "D. Mont. L.R. 72.3(b)"
@@ -365,6 +383,7 @@ test "Counting boundary: magistrate-objection-response-period (weekend)" cite "D
   given MagistrateObjectionServed() on 2025-12-06
   expect deadline(magistrate-objection-response-period) == 2025-12-22
 }
+
 /// L.R. 73.1(d): parties have 14 days from service of the clerk's notice of
 /// assignment to file a notice of withholding of consent; a party whose
 /// form is not timely filed is deemed to consent to magistrate judge
@@ -376,6 +395,7 @@ test "Counting boundary: consent-withholding-period (weekend)" cite "D. Mont. L.
   given ConsentNoticeServed() on 2025-12-06
   expect deadline(consent-withholding-period) == 2025-12-22
 }
+
 /// L.R. 78.2(a)(1): unless the defendant moves to dismiss, the plaintiff's
 /// opening brief is filed within 60 days after the administrative record
 /// is filed; failure may result in summary dismissal.
@@ -389,6 +409,7 @@ test "Counting boundary: social-security-response-brief-period (holiday)" cite "
   given SocialSecurityOpeningBriefFiled() on 2025-12-02
   expect deadline(social-security-response-brief-period) == 2026-01-02
 }
+
 /// L.R. 78.2(a)(3): the plaintiff's reply brief, if any, is filed within 14
 /// days after the defendant's brief is filed.
 deadline social-security-reply-brief-period: 14.days after SocialSecurityResponseBriefFiled() counted_by frcp6-montana cite "D. Mont. L.R. 78.2(a)"
@@ -398,6 +419,7 @@ test "Counting boundary: social-security-reply-brief-period (weekend)" cite "D. 
   given SocialSecurityResponseBriefFiled() on 2025-12-06
   expect deadline(social-security-reply-brief-period) == 2025-12-22
 }
+
 /// L.R. 78.3(a)(1): objections to a bankruptcy judge's ruling subject to de
 /// novo review under 28 U.S.C. § 157 are filed within 14 days of the
 /// ruling.
@@ -408,6 +430,7 @@ test "Counting boundary: bankruptcy-objection-period (weekend)" cite "D. Mont. L
   given BankruptcyRulingEntered() on 2025-12-06
   expect deadline(bankruptcy-objection-period) == 2025-12-22
 }
+
 /// L.R. 78.3(a)(1): a response may be filed within 14 days of the
 /// objection's filing. A reply is not permitted.
 deadline bankruptcy-objection-response-period: 14.days after BankruptcyObjectionFiled() counted_by frcp6-montana cite "D. Mont. L.R. 78.3(a)"
@@ -417,6 +440,7 @@ test "Counting boundary: bankruptcy-objection-response-period (weekend)" cite "D
   given BankruptcyObjectionFiled() on 2025-12-06
   expect deadline(bankruptcy-objection-response-period) == 2025-12-22
 }
+
 /// L.R. 83.3(b)(2)(B)(i): without the client's written consent, a motion to
 /// withdraw is supported by an affidavit that a notice of intent to file it
 /// was personally served on the client at least 14 days before the motion

@@ -37,7 +37,7 @@ decision initial-appearance: "Counsel, bail, release or detention" by court cite
 
 decision probable-cause: "Preliminary hearing or grand jury" by court cite ?("Okla. Stat. tit. 22, preliminary hearing (not vendored)") {
   note "Whether a felony proceeds by information after a preliminary hearing or by indictment, and the periods to the hearing, are governed by Title 22 and are holes."
-  edge-probable-cause-charged "Bound over; information or indictment filed" -> charged {
+  "Bound over; information or indictment filed" -> charged {
     authority cite ?("Okla. Stat. tit. 22, indictment and information (not vendored)")
   }
   edge-probable-cause-none "No probable cause; discharged" -> dismissed {
@@ -47,16 +47,14 @@ decision probable-cause: "Preliminary hearing or grand jury" by court cite ?("Ok
 
 state charged: "Indictment or information" by court cite ?("Okla. Stat. tit. 22, indictment and information (not vendored)") {
   note "The statutory speedy-trial provision (Okla. Stat. tit. 22, § 812.1) is not vendored; its periods and exclusions are holes."
-  edge-charged-arraignment "Arraignment" -> arraignment {
+  "Arraignment" -> arraignment {
     authority cite ?("Okla. Stat. tit. 22, arraignment (not vendored)")
   }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite ?("Okla. Stat. tit. 22, arraignment (not vendored)") {
   note "Arraignment, pleas and discovery are governed by Title 22 (not vendored); their periods are holes."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite ?("Okla. Stat. tit. 22, discovery (not vendored)")
-  }
+  "Discovery" -> discovery { authority cite ?("Okla. Stat. tit. 22, discovery (not vendored)") }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)") {
@@ -91,9 +89,7 @@ decision plea-decision: "Plea or trial" by accused cite "Okla. Ct. Crim. App. R.
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
     authority cite "Okla. Ct. Crim. App. R. 4.1"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite ?("Okla. Stat. tit. 22, trial (not vendored)")
-  }
+  "Trial" -> trial { authority cite ?("Okla. Stat. tit. 22, trial (not vendored)") }
 }
 
 decision trial: "Verdict" by court cite ?("Okla. Stat. tit. 22, trial and verdict (not vendored)") {
@@ -109,9 +105,7 @@ decision trial: "Verdict" by court cite ?("Okla. Stat. tit. 22, trial and verdic
 state sentencing: "Judgment and Sentence pronounced" by court cite "Okla. Ct. Crim. App. R. 2.1(B)"
 {
   note "Sentencing is governed by Title 22 (not vendored). The Judgment and Sentence is in the form of OCCA Form 13.8 (Okla. Ct. Crim. App. R. 2.1(B)(4)), and the time to appeal runs from its pronouncement in open court (Okla. Ct. Crim. App. R. 1.4). A motion for new trial is not required to appeal (Okla. Ct. Crim. App. R. 2.1(B)(1)); a motion for new trial on newly discovered evidence is governed by Okla. Stat. tit. 22, §§ 952-953 (not vendored). If such a motion is filed within ten days of the Judgment and Sentence, the notice of intent to appeal is stayed, the trial court hears and rules on it within 30 days, and if it is denied the notice is due within ten days of the order (Okla. Ct. Crim. App. R. 2.1(A)(2))."
-  edge-sentencing-judgment "Judgment and Sentence imposed" -> judgment {
-    authority cite "Okla. Ct. Crim. App. R. 2.1(B)"
-  }
+  "Judgment and Sentence imposed" -> judgment { authority cite "Okla. Ct. Crim. App. R. 2.1(B)" }
 }
 
 decision judgment: "Notice of intent to appeal" by accused cite "Okla. Ct. Crim. App. R. 2.1(B)"

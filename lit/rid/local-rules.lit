@@ -2,6 +2,8 @@ module rid-local-rules.local-rules
 
 import core.states.rhode-island.{ frcp6-rhode-island }
 
+forum frcp
+
 // The District of Rhode Island's own civil periods, computed under FRCP
 // 6(a), which governs a period stated in a local rule. Rules that state no
 // period this layer can count stay out: the default-judgment certification
@@ -71,9 +73,6 @@ event RemovalNoticeFiled()
 /// LR Cv 5.1(a): unless service is waived, proof of service of a summons is
 /// filed within 14 days after service is made.
 deadline proof-of-service-period: 14.days after SummonsServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 5.1(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: proof-of-service-period (weekend)" cite "D.R.I. LR Cv 5.1(a)"
 {
@@ -86,9 +85,6 @@ test "Counting boundary: proof-of-service-period (weekend)" cite "D.R.I. LR Cv 5
 /// The same period governs objections to a motion for summary judgment
 /// (LR Cv 56(d)).
 deadline motion-response-period: 14.days after MotionServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 7(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: motion-response-period (weekend)" cite "D.R.I. LR Cv 7(a)"
 {
@@ -100,9 +96,6 @@ test "Counting boundary: motion-response-period (weekend)" cite "D.R.I. LR Cv 7(
 /// after service of the response; sur-replies only with prior leave (LR Cv
 /// 7(a)(5)).
 deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 7(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: motion-reply-period (weekend)" cite "D.R.I. LR Cv 7(a)"
 {
@@ -114,9 +107,6 @@ test "Counting boundary: motion-reply-period (weekend)" cite "D.R.I. LR Cv 7(a)"
 /// counsel for each party asserting a claim, counterclaim or cross claim
 /// files the statement of claims.
 deadline statement-of-claims-period: 7.days before InitialSchedulingConference() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 16(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: statement-of-claims-period (weekend)" cite "D.R.I. LR Cv 16(b)"
 {
@@ -130,9 +120,6 @@ test "Counting boundary: statement-of-claims-period (weekend)" cite "D.R.I. LR C
 /// of the entire case is filed in lieu of an answer, the conference may be
 /// deferred until not later than 14 days after the answer is later filed.
 deadline discovery-conference-period: 14.days after LastAnswerFiled() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 26(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: discovery-conference-period (weekend)" cite "D.R.I. LR Cv 26(a)"
 {
@@ -144,9 +131,6 @@ test "Counting boundary: discovery-conference-period (weekend)" cite "D.R.I. LR 
 /// response is provided within 21 days or such other time as the Court
 /// orders.
 deadline compelled-response-period: 21.days after CompelOrderEntered() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 37(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: compelled-response-period (weekend)" cite "D.R.I. LR Cv 37(b)"
 {
@@ -158,9 +142,6 @@ test "Counting boundary: compelled-response-period (weekend)" cite "D.R.I. LR Cv
 /// to offer a recorded conversation furnishes the Court and counsel a list
 /// of the recordings and a transcript of each.
 deadline recorded-conversations-period: 14.days before Empanelment() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 39(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: recorded-conversations-period (weekend)" cite "D.R.I. LR Cv 39(b)"
 {
@@ -172,9 +153,6 @@ test "Counting boundary: recorded-conversations-period (weekend)" cite "D.R.I. L
 /// such other period as the Court allows, a party disputing a recording or
 /// transcript files its objection.
 deadline recorded-conversations-objection-period: 7.days after TranscriptsFurnished() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 39(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: recorded-conversations-objection-period (weekend)" cite "D.R.I. LR Cv 39(b)"
 {
@@ -186,9 +164,6 @@ test "Counting boundary: recorded-conversations-objection-period (weekend)" cite
 /// counsel to submit them, are served and submitted at least 5 days before
 /// empanelment.
 deadline voir-dire-questions-period: 5.days before Empanelment() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 47(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: voir-dire-questions-period (weekend)" cite "D.R.I. LR Cv 47(b)"
 {
@@ -200,9 +175,6 @@ test "Counting boundary: voir-dire-questions-period (weekend)" cite "D.R.I. LR C
 /// costs files and serves a bill of costs; failure waives any claim for
 /// costs unless the Court otherwise orders for good cause shown.
 deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 54(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "D.R.I. LR Cv 54(a)"
 {
@@ -214,9 +186,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "D.R.I. LR Cv 54(a
 /// served and filed within 7 days after the Clerk's notification under LR
 /// Cv 54(c).
 deadline costs-review-period: 7.days after CostsNotified() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 54(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: costs-review-period (weekend)" cite "D.R.I. LR Cv 54(d)"
 {
@@ -227,9 +196,6 @@ test "Counting boundary: costs-review-period (weekend)" cite "D.R.I. LR Cv 54(d)
 /// LR Cv 54(d): within 7 days of the filing of the motion to review, a
 /// party objecting to it may file a response.
 deadline costs-review-response-period: 7.days after CostsReviewMotionFiled() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 54(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: costs-review-response-period (weekend)" cite "D.R.I. LR Cv 54(d)"
 {
@@ -241,9 +207,6 @@ test "Counting boundary: costs-review-response-period (weekend)" cite "D.R.I. LR
 /// is filed, all interested parties meet and confer to resolve it, at the
 /// moving party's initiative.
 deadline costs-review-conference-period: 14.days after CostsReviewMotionFiled() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 54(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: costs-review-conference-period (weekend)" cite "D.R.I. LR Cv 54(e)"
 {
@@ -257,9 +220,6 @@ test "Counting boundary: costs-review-conference-period (weekend)" cite "D.R.I. 
 /// hearing is ordered within the same period; failure waives review by
 /// the district judge and the right to appeal.
 deadline magistrate-order-objection-period: 14.days after MagistrateOrderServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 72(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: magistrate-order-objection-period (weekend)" cite "D.R.I. LR Cv 72(c)"
 {
@@ -270,9 +230,6 @@ test "Counting boundary: magistrate-order-objection-period (weekend)" cite "D.R.
 /// LR Cv 72(c)(3): a response to the objection is served and filed within
 /// 14 days after the objection is served.
 deadline magistrate-order-response-period: 14.days after MagistrateOrderObjectionServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 72(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: magistrate-order-response-period (weekend)" cite "D.R.I. LR Cv 72(c)"
 {
@@ -283,9 +240,6 @@ test "Counting boundary: magistrate-order-response-period (weekend)" cite "D.R.I
 /// LR Cv 72(c)(3): the objecting party may serve and file a reply within 7
 /// days after the response.
 deadline magistrate-order-reply-period: 7.days after MagistrateOrderResponseServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 72(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: magistrate-order-reply-period (weekend)" cite "D.R.I. LR Cv 72(c)"
 {
@@ -299,9 +253,6 @@ test "Counting boundary: magistrate-order-reply-period (weekend)" cite "D.R.I. L
 /// ordered within the same period; failure waives review by the district
 /// judge and the right to appeal.
 deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 72(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: magistrate-report-objection-period (weekend)" cite "D.R.I. LR Cv 72(d)"
 {
@@ -312,9 +263,6 @@ test "Counting boundary: magistrate-report-objection-period (weekend)" cite "D.R
 /// LR Cv 72(d)(3): a response to the objection is served and filed within
 /// 14 days after the objection is served.
 deadline magistrate-report-response-period: 14.days after MagistrateReportObjectionServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 72(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: magistrate-report-response-period (weekend)" cite "D.R.I. LR Cv 72(d)"
 {
@@ -325,9 +273,6 @@ test "Counting boundary: magistrate-report-response-period (weekend)" cite "D.R.
 /// LR Cv 72(d)(3): the objecting party may serve and file a reply within 7
 /// days after the response.
 deadline magistrate-report-reply-period: 7.days after MagistrateReportResponseServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 72(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: magistrate-report-reply-period (weekend)" cite "D.R.I. LR Cv 72(d)"
 {
@@ -340,9 +285,6 @@ test "Counting boundary: magistrate-report-reply-period (weekend)" cite "D.R.I. 
 /// clerk to assemble and electronically transmit a certified copy of the
 /// docket sheet and all documents filed in the removed case.
 deadline state-court-record-period: 14.days after RemovalNoticeFiled() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 81(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: state-court-record-period (weekend)" cite "D.R.I. LR Cv 81(a)"
 {

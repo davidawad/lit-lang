@@ -62,15 +62,13 @@ terminal dismissed-procedural: "Appeal dismissed for failure to file the brief" 
 decision argument: "Oral argument or decision without it" by court cite "N.C. R. App. P. 30"
 {
   note "Except on peremptory setting, no appeal is calendared for hearing less than thirty days after the appellant's brief is filed (N.C. R. App. P. 29(b)). Ordinarily thirty minutes are allowed all appellants and thirty minutes all appellees (N.C. R. App. P. 30(b)); the court may decide an appeal without oral argument (N.C. R. App. P. 30(f))."
-  edge-argument-decided "Opinion filed" -> decided { authority cite "N.C. R. App. P. 30" }
+  "Opinion filed" -> decided { authority cite "N.C. R. App. P. 30" }
 }
 
 state decided: "Opinion filed" by court cite "N.C. R. App. P. 32(b)"
 {
   note "Unless the court orders otherwise, its clerk enters judgment and issues the mandate twenty days after the written opinion is filed (N.C. R. App. P. 32(b)). A motion to publish an unpublished opinion is filed within ten days of the filing of the opinion, and any objection within five days after service of the motion (N.C. R. App. P. 30(e))."
-  edge-decided-rehearing "Petition for rehearing" -> rehearing {
-    authority cite "N.C. R. App. P. 31(a)"
-  }
+  "Petition for rehearing" -> rehearing { authority cite "N.C. R. App. P. 31(a)" }
   edge-decided-supreme "Appeal of right or petition for discretionary review" -> further-review {
     authority cite "N.C. R. App. P. 15(b)"
   }

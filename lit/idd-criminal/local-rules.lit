@@ -3,6 +3,8 @@ module idd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of Idaho's own criminal periods, counted under the criminal
 // rules (FRCrimP 45(a) governs "any local rule"). No trigger carries a
 // service method: FRCrimP 45(c)'s three added days follow the manner of
@@ -65,9 +67,6 @@ event MagistrateObjectionResponseFiled() paper magistrate-objection-response
 /// Dist. Idaho Loc. Crim. R. 58.2(b): within thirty (30) days after a
 /// transcript has been ordered, the transcript is filed with the Clerk.
 deadline misdemeanor-appeal-transcript: 30.days after AppealTranscriptOrdered() counted_by frcrimp45 cite "Dist. Idaho Loc. Crim. R. 58.2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appeal-transcript (weekend)" cite "Dist. Idaho Loc. Crim. R. 58.2(b)"
 {
@@ -82,9 +81,6 @@ deadline misdemeanor-appellant-brief: 21.days after MisdemeanorAppealHearingNoti
   to CaseOrder
   op set
 } cite "Dist. Idaho Loc. Crim. R. 58.2(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellant-brief (holiday)" cite "Dist. Idaho Loc. Crim. R. 58.2(e)"
 {
@@ -98,9 +94,6 @@ deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counte
   to CaseOrder
   op set
 } cite "Dist. Idaho Loc. Crim. R. 58.2(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellee-brief (holiday)" cite "Dist. Idaho Loc. Crim. R. 58.2(e)"
 {
@@ -114,9 +107,6 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by 
   to CaseOrder
   op set
 } cite "Dist. Idaho Loc. Crim. R. 58.2(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "Dist. Idaho Loc. Crim. R. 58.2(e)"
 {
@@ -131,9 +121,6 @@ deadline magistrate-objection-response-period: 14.days after MagistrateObjection
   to CaseOrder
   op set
 } cite "Dist. Idaho Loc. Crim. R. 59.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-objection-response-period (weekend)" cite "Dist. Idaho Loc. Crim. R. 59.1(b)"
 {

@@ -2,6 +2,8 @@ module flnd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Northern District's own criminal periods. Discovery runs through the
 // standard procedure of Local Rule 26.2 as "the sole means for the exchange
 // of discovery in criminal cases except in extraordinary circumstances"
@@ -58,9 +60,6 @@ event MisdemeanorAppelleeBriefServed()
 /// nonpayment is not good cause after the 7 days (and a motion to withdraw
 /// for nonpayment made later ordinarily will be denied, 11.1(H)(3)).
 deadline retained-counsel-withdrawal-period: 7.days after Arraigned() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 11.1(I)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: retained-counsel-withdrawal-period (weekend)" cite "N.D. Fla. Loc. R. 11.1(I)"
 {
@@ -73,9 +72,6 @@ test "Counting boundary: retained-counsel-withdrawal-period (weekend)" cite "N.D
 /// government's attorney in a good-faith attempt to obtain discoverable
 /// material.
 deadline defense-discovery-contact-period: 7.days after Arraigned() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-discovery-contact-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(B)"
 {
@@ -88,9 +84,6 @@ test "Counting boundary: defense-discovery-contact-period (weekend)" cite "N.D. 
 /// tangible objects, reports of examinations and tests, and expert
 /// summaries within 7 days after the request.
 deadline government-disclosure-period: 7.days after DefenseDisclosureRequested() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-disclosure-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(B)"
 {
@@ -103,9 +96,6 @@ test "Counting boundary: government-disclosure-period (weekend)" cite "N.D. Fla.
 /// Giglio material, testifying informants' convictions, identification
 /// procedures, vehicle inspection and latent prints.
 deadline brady-giglio-disclosure-period: 7.days after Arraigned() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(D)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: brady-giglio-disclosure-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(D)"
 {
@@ -117,9 +107,6 @@ test "Counting boundary: brady-giglio-disclosure-period (weekend)" cite "N.D. Fl
 /// within 3 days after complying with the defendant's request or receiving
 /// the defendant's FRCrimP 12.2 notice of expert testimony.
 deadline government-reciprocal-request-period: 3.days after DefenseRequestMet() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-reciprocal-request-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(C)"
 {
@@ -131,9 +118,6 @@ test "Counting boundary: government-reciprocal-request-period (weekend)" cite "N
 /// request, the defendant provides the documents and tangible objects it
 /// intends to introduce in its case-in-chief.
 deadline defense-documents-period: 7.days after GovernmentDisclosureRequested() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-documents-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(C)"
 {
@@ -144,9 +128,6 @@ test "Counting boundary: defense-documents-period (weekend)" cite "N.D. Fla. Loc
 /// N.D. Fla. Loc. R. 26.2(C)(3): within 14 days after the government's
 /// request, the defendant provides a written summary of expert testimony.
 deadline defense-expert-summary-period: 14.days after GovernmentDisclosureRequested() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-expert-summary-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(C)"
 {
@@ -158,9 +139,6 @@ test "Counting boundary: defense-expert-summary-period (weekend)" cite "N.D. Fla
 /// defendant provides the results or reports of examinations and tests it
 /// intends to introduce or that a defense witness prepared.
 deadline defense-reports-period: 30.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-reports-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(C)"
 {
@@ -173,9 +151,6 @@ test "Counting boundary: defense-reports-period (weekend)" cite "N.D. Fla. Loc. 
 /// in a capital case, punishment), gives written notice within 14 days
 /// after arraignment.
 deadline insanity-notice-period: 14.days after Arraigned() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(F)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: insanity-notice-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(F)"
 {
@@ -186,9 +161,6 @@ test "Counting boundary: insanity-notice-period (weekend)" cite "N.D. Fla. Loc. 
 /// N.D. Fla. Loc. R. 26.2(F)(3): a defendant relying on entrapment
 /// discloses it by written notice at least 14 days before trial.
 deadline entrapment-notice-period: 14.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(F)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: entrapment-notice-period (holiday)" cite "N.D. Fla. Loc. R. 26.2(F)"
 {
@@ -200,9 +172,6 @@ test "Counting boundary: entrapment-notice-period (holiday)" cite "N.D. Fla. Loc
 /// before the scheduled jury selection on discovery and stipulations; a
 /// joint written statement is filed before trial begins.
 deadline discovery-conference-period: 7.days before JurySelectionScheduled() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(G)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-conference-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(G)"
 {
@@ -213,9 +182,6 @@ test "Counting boundary: discovery-conference-period (weekend)" cite "N.D. Fla. 
 /// N.D. Fla. Loc. R. 88.1(G): a sentencing memorandum is due three days
 /// before the sentencing hearing.
 deadline sentencing-memorandum-period: 3.days before SentencingHearingScheduled() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 88.1(G)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-memorandum-period (weekend)" cite "N.D. Fla. Loc. R. 88.1(G)"
 {
@@ -227,9 +193,6 @@ test "Counting boundary: sentencing-memorandum-period (weekend)" cite "N.D. Fla.
 /// within 15 days of the transcript's filing, or with no transcript of the
 /// notice of appeal's filing.
 deadline misdemeanor-appellant-brief-period: 15.days after MisdemeanorAppealRecordReady() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 88.2(D)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellant-brief-period (weekend)" cite "N.D. Fla. Loc. R. 88.2(D)"
 {
@@ -240,9 +203,6 @@ test "Counting boundary: misdemeanor-appellant-brief-period (weekend)" cite "N.D
 /// N.D. Fla. Loc. R. 88.2(D): the appellee's brief within 15 days of
 /// service of the appellant's brief.
 deadline misdemeanor-appellee-brief-period: 15.days after MisdemeanorAppellantBriefServed() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 88.2(D)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellee-brief-period (weekend)" cite "N.D. Fla. Loc. R. 88.2(D)"
 {
@@ -253,9 +213,6 @@ test "Counting boundary: misdemeanor-appellee-brief-period (weekend)" cite "N.D.
 /// N.D. Fla. Loc. R. 88.2(D): an optional reply brief within 7 days of
 /// service of the appellee's brief.
 deadline misdemeanor-reply-brief-period: 7.days after MisdemeanorAppelleeBriefServed() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 88.2(D)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-reply-brief-period (weekend)" cite "N.D. Fla. Loc. R. 88.2(D)"
 {

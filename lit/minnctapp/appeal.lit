@@ -18,7 +18,7 @@ start notice-filed
 state notice-filed: "Notice of appeal filed and served" by movant cite "Minn. R. Civ. App. P. 103.01"
 {
   note "An appeal is made by filing a notice of appeal with the clerk of the appellate courts and serving it on the adverse parties within the appeal period, with proof of service and of filing with the trial court administrator, a copy of the judgment or order, the statement of the case and a filing fee of $550 (Minn. R. Civ. App. P. 103.01, subd. 1). Unless a statute provides otherwise, an appeal from a judgment is taken within 60 days after its entry, and from an appealable order within 60 days after service by any party of written notice of its filing; a timely motion under Minn. R. Civ. P. 50.02, 52.02 or 59, or under Rule 60 within the new-trial time, restarts the time from service of notice of filing of the order disposing of the last such motion, and a notice filed before then is premature and of no effect (Rule 104.01). Another party may file a notice of related appeal within 14 days after service of the first notice, or within the time otherwise prescribed, whichever ends later (Rule 104.01, subd. 4). The court may not extend the time to file the notice of appeal (Rule 126.02)."
-  edge-notice-filed-appealability "Notice filed" -> appealability {
+  "Notice filed" -> appealability {
     event NoticeOfAppealFiled()
     authority cite "Minn. R. Civ. App. P. 103.01"
   }
@@ -27,12 +27,10 @@ state notice-filed: "Notice of appeal filed and served" by movant cite "Minn. R.
 decision appealability: "Appellate jurisdiction check" by court cite "Minn. R. Civ. App. P. 103.03"
 {
   note "An appeal lies to the Court of Appeals from a final judgment or a partial judgment under Minn. R. Civ. P. 54.02; from orders granting, refusing or dissolving an injunction, vacating or sustaining an attachment, or denying a new trial; from an order that in effect determines the action and prevents a judgment; from a certified order denying a motion to dismiss for failure to state a claim or for summary judgment; and from other orders appealable by statute or decision (Minn. R. Civ. App. P. 103.03). A partial judgment under Rule 54.02 is appealable within 60 days only on an express determination that there is no just reason for delay (Rule 104.01, subd. 1). Discretionary review of other orders is by petition under Rule 105."
-  edge-appealability-dismissed-jurisdiction "Not appealable, or untimely" -> dismissed-jurisdiction {
+  "Not appealable, or untimely" -> dismissed-jurisdiction {
     authority cite "Minn. R. Civ. App. P. 104.01"
   }
-  edge-appealability-record "Appealable and timely" -> record {
-    authority cite "Minn. R. Civ. App. P. 103.03"
-  }
+  "Appealable and timely" -> record { authority cite "Minn. R. Civ. App. P. 103.03" }
 }
 
 terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" outcome [loss, dismissal] cite "Minn. R. Civ. App. P. 104.01"
@@ -43,18 +41,14 @@ terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" 
 state record: "Transcript ordered and record prepared" cite "Minn. R. Civ. App. P. 110.02"
 {
   note "Within 14 days after filing the notice of appeal, the appellant orders the transcript, files a notice of intent to proceed on a statement under Rule 110.03 or 110.04, or notifies the respondent that no transcript will be ordered; with a partial transcript, it files a description of the parts and a statement of the issues within the same 14 days, and the respondent orders other parts within 14 days of service of the description (Minn. R. Civ. App. P. 110.02, subd. 1). The transcript certificate is filed within 14 days of the order, with an estimated completion date not to exceed 60 days (Rule 110.02, subd. 2). The trial court administrator transmits the record within 7 days after the due date of the appellant's brief (Rule 111.01)."
-  edge-record-briefing "Transcript delivered" -> briefing {
-    authority cite "Minn. R. Civ. App. P. 131.01"
-  }
+  "Transcript delivered" -> briefing { authority cite "Minn. R. Civ. App. P. 131.01" }
 }
 
 state briefing: "Briefing: appellant, respondent, reply" cite "Minn. R. Civ. App. P. 131.01"
 {
   note "The appellant serves and files its brief and addendum within 30 days after delivery of the transcript, or, with no transcript or one obtained before the appeal, within 30 days after filing the notice of appeal; the respondent within 30 days after service of the appellant's brief; the appellant may reply within 14 days after service of the respondent's brief (Minn. R. Civ. App. P. 131.01, subds. 1-3). Principal briefs are limited to 45 pages, 14,000 words or 1,300 lines; reply briefs to 20 pages, 7,000 words or 650 lines (Rule 132.01, subd. 3). If the appellant fails to serve and file its brief, the respondent may move for affirmance or dismissal, and an appellant in default for 30 days without such a motion has its appeal dismissed without notice, subject to reinstatement (Rule 142.02); a respondent's default leaves the case to be decided on the merits (Rule 142.03)."
-  edge-briefing-argument "Briefs complete" -> argument {
-    authority cite "Minn. R. Civ. App. P. 131.01"
-  }
-  edge-briefing-dismissed-default "Appellant's brief not filed" -> dismissed-default {
+  "Briefs complete" -> argument { authority cite "Minn. R. Civ. App. P. 131.01" }
+  "Appellant's brief not filed" -> dismissed-default {
     authority cite "Minn. R. Civ. App. P. 142.02"
   }
 }
@@ -67,23 +61,21 @@ terminal dismissed-default: "Dismissed for the appellant's default" outcome [los
 state argument: "Oral argument or submission on the briefs" cite "Minn. R. Civ. App. P. 134.01"
 {
   note "Oral argument is allowed unless neither party requested it in the statement of the case, a party failed to file a timely brief, the parties waived it, a party is self-represented, or the court finds it unnecessary; a party may ask the court to reconsider a denial within 7 days after receiving notice of it (Minn. R. Civ. App. P. 134.01). Otherwise the appeal is deemed submitted on the briefs on a nonoral calendar (Rule 134.06)."
-  edge-argument-disposition "Submitted for decision" -> disposition {
-    authority cite "Minn. R. Civ. App. P. 134.06"
-  }
+  "Submitted for decision" -> disposition { authority cite "Minn. R. Civ. App. P. 134.06" }
 }
 
 decision disposition: "Court of Appeals decision" by court cite "Minn. R. Civ. App. P. 136.01"
 {
   note "The panel decides the form of the written opinion: precedential, nonprecedential or order opinion (Minn. R. Civ. App. P. 136.01, subd. 1). The clerk's transmittal of the opinion is notice of filing (Rule 136.01, subd. 2). No petition for rehearing is allowed in the Court of Appeals (Rule 140.01). Unless the parties stipulate to immediate entry, judgment is entered not less than 30 days after the decision is filed; a petition for review stays its entry (Rule 136.02)."
-  edge-disposition-affirmed-entered "Affirmed" -> affirmed-entered {
+  "Affirmed" -> affirmed-entered {
     event DecisionFiled()
     authority cite "Minn. R. Civ. App. P. 136.01"
   }
-  edge-disposition-reversed-entered "Reversed or vacated" -> reversed-entered {
+  "Reversed or vacated" -> reversed-entered {
     event DecisionFiled()
     authority cite "Minn. R. Civ. App. P. 136.01"
   }
-  edge-disposition-remanded-entered "Remanded" -> remanded-entered {
+  "Remanded" -> remanded-entered {
     event DecisionFiled()
     authority cite "Minn. R. Civ. App. P. 136.01"
   }
@@ -92,11 +84,11 @@ decision disposition: "Court of Appeals decision" by court cite "Minn. R. Civ. A
 decision affirmed-entered: "Affirmed: further review election" by movant cite "Minn. R. Civ. App. P. 117"
 {
   note "A party seeking review files a petition with proof of service and a $550 filing fee with the clerk of the appellate courts within 30 days of the filing of the Court of Appeals' decision (Minn. R. Civ. App. P. 117, subd. 1); a response is due within 21 days of service (subd. 4)."
-  edge-affirmed-entered-review-petitioned "Petition for review filed" -> review-petitioned {
+  "Petition for review filed" -> review-petitioned {
     event ReviewPetitionFiled()
     authority cite "Minn. R. Civ. App. P. 117"
   }
-  edge-affirmed-entered-affirmed-final "No petition for review" -> affirmed-final {
+  "No petition for review" -> affirmed-final {
     event MandateIssued()
     authority cite "Minn. R. Civ. App. P. 136.02"
   }
@@ -105,11 +97,11 @@ decision affirmed-entered: "Affirmed: further review election" by movant cite "M
 decision reversed-entered: "Reversed or vacated: further review election" by movant cite "Minn. R. Civ. App. P. 117"
 {
   note "Any party seeking review petitions within 30 days of the filing of the decision (Minn. R. Civ. App. P. 117, subd. 1). An appellant who prevailed ordinarily files no petition; the opposing party may, and the appellant may then seek conditional cross-review in its response (subd. 4)."
-  edge-reversed-entered-review-petitioned "Petition for review filed" -> review-petitioned {
+  "Petition for review filed" -> review-petitioned {
     event ReviewPetitionFiled()
     authority cite "Minn. R. Civ. App. P. 117"
   }
-  edge-reversed-entered-reversed-final "No petition for review" -> reversed-final {
+  "No petition for review" -> reversed-final {
     event MandateIssued()
     authority cite "Minn. R. Civ. App. P. 136.02"
   }
@@ -118,11 +110,11 @@ decision reversed-entered: "Reversed or vacated: further review election" by mov
 decision remanded-entered: "Remanded: further review election" by movant cite "Minn. R. Civ. App. P. 117"
 {
   note "Any party seeking review petitions within 30 days of the filing of the decision (Minn. R. Civ. App. P. 117, subd. 1)."
-  edge-remanded-entered-review-petitioned "Petition for review filed" -> review-petitioned {
+  "Petition for review filed" -> review-petitioned {
     event ReviewPetitionFiled()
     authority cite "Minn. R. Civ. App. P. 117"
   }
-  edge-remanded-entered-remanded-final "No petition for review" -> remanded-final {
+  "No petition for review" -> remanded-final {
     event MandateIssued()
     authority cite "Minn. R. Civ. App. P. 136.02"
   }

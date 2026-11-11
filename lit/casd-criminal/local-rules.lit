@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The Southern District of California's own criminal periods, counted
 // under the criminal rules (FRCrimP 45(a) governs "any local rule"). A
 // judge may waive any of the rules in the interest of justice (CrimLR
@@ -81,9 +83,6 @@ event AppelleeBriefServed()
 /// and recommendation on a guilty plea are filed within fourteen (14) days
 /// of their entry.
 deadline plea-recommendation-objection: 14.days after PleaRecommendationEntered() counted_by frcrimp45 cite "S.D. Cal. CrimLR 11.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: plea-recommendation-objection (holiday)" cite "S.D. Cal. CrimLR 11.1(d)"
 {
@@ -95,9 +94,6 @@ test "Counting boundary: plea-recommendation-objection (holiday)" cite "S.D. Cal
 /// provides a transcript of the Rule 11 allocution at least seven (7) days
 /// before the sentencing hearing.
 deadline allocution-transcript: 7.days before SentencingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 11.1(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: allocution-transcript (holiday)" cite "S.D. Cal. CrimLR 11.1(f)"
 {
@@ -110,9 +106,6 @@ test "Counting boundary: allocution-transcript (holiday)" cite "S.D. Cal. CrimLR
 /// agreed discovery timetable, the proposed expert disclosure timing and
 /// any disagreement.
 deadline discovery-timetable-report: 7.days before FirstMotionHearingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 16.1.a"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-timetable-report (holiday)" cite "S.D. Cal. CrimLR 16.1.a"
 {
@@ -123,9 +116,6 @@ test "Counting boundary: discovery-timetable-report (holiday)" cite "S.D. Cal. C
 /// S.D. Cal. CrimLR 32.1(a)(5): fourteen (14) days before the sentencing
 /// hearing, all objections to the presentence report are filed and served.
 deadline psr-objections: 14.days before SentencingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 32.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-objections (weekend)" cite "S.D. Cal. CrimLR 32.1(a)"
 {
@@ -137,9 +127,6 @@ test "Counting boundary: psr-objections (weekend)" cite "S.D. Cal. CrimLR 32.1(a
 /// thirty-five days before sentencing, the parties have seventeen (17)
 /// days after its actual filing to file and serve objections.
 deadline psr-objections-after-late-report: 17.days after LatePsrFiled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 32.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-objections-after-late-report (holiday)" cite "S.D. Cal. CrimLR 32.1(a)"
 {
@@ -154,9 +141,6 @@ deadline departure-motion: 14.days before SentencingScheduled() counted_by frcri
   to CaseOrder
   op set
 } cite "S.D. Cal. CrimLR 32.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: departure-motion (weekend)" cite "S.D. Cal. CrimLR 32.1(a)"
 {
@@ -170,9 +154,6 @@ test "Counting boundary: departure-motion (weekend)" cite "S.D. Cal. CrimLR 32.1
 /// served no less than seven (7) days before the sentencing hearing; if no
 /// opposition is filed, the departure motion is deemed unopposed.
 deadline sentencing-filings: 7.days before SentencingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 32.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-filings (holiday)" cite "S.D. Cal. CrimLR 32.1(a)"
 {
@@ -184,9 +165,6 @@ test "Counting boundary: sentencing-filings (holiday)" cite "S.D. Cal. CrimLR 32
 /// sentencing hearing, the Probation Department files and serves an
 /// addendum addressing all timely objections.
 deadline psr-addendum: 7.days before SentencingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 32.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-addendum (holiday)" cite "S.D. Cal. CrimLR 32.1(a)"
 {
@@ -202,9 +180,6 @@ deadline motion-filing: 14.days before MotionHearingScheduled() counted_by frcri
   to CaseOrder
   op set
 } cite "S.D. Cal. CrimLR 47.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-filing (weekend)" cite "S.D. Cal. CrimLR 47.1(b)"
 {
@@ -217,9 +192,6 @@ test "Counting boundary: motion-filing (weekend)" cite "S.D. Cal. CrimLR 47.1(b)
 /// days before the hearing; supporting declarations follow the same
 /// deadlines (CrimLR 47.1(g)(3)).
 deadline motion-opposition: 7.days before MotionHearingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 47.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-opposition (holiday)" cite "S.D. Cal. CrimLR 47.1(c)"
 {
@@ -232,9 +204,6 @@ test "Counting boundary: motion-opposition (holiday)" cite "S.D. Cal. CrimLR 47.
 /// whichever is later, a defendant may file an objection with a detailed
 /// statement of reasons.
 deadline related-case-objection: 7.days after RelatedCaseObjectionWindowOpens() counted_by frcrimp45 cite "S.D. Cal. CrimLR 57.2.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: related-case-objection (weekend)" cite "S.D. Cal. CrimLR 57.2.1(d)"
 {
@@ -245,9 +214,6 @@ test "Counting boundary: related-case-objection (weekend)" cite "S.D. Cal. CrimL
 /// S.D. Cal. CrimLR 57.2.1(d)(1): within seven (7) days of any objection,
 /// the United States Attorney may file and serve a reply.
 deadline related-case-reply: 7.days after RelatedCaseObjectionFiled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 57.2.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: related-case-reply (weekend)" cite "S.D. Cal. CrimLR 57.2.1(d)"
 {
@@ -259,9 +225,6 @@ test "Counting boundary: related-case-reply (weekend)" cite "S.D. Cal. CrimLR 57
 /// cases, the judge decides whether they are related within seven (7) days
 /// after the reply is due.
 deadline related-case-ruling: 7.days after RelatedCaseReplyDue() counted_by frcrimp45 cite "S.D. Cal. CrimLR 57.2.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: related-case-ruling (weekend)" cite "S.D. Cal. CrimLR 57.2.1(d)"
 {
@@ -273,9 +236,6 @@ test "Counting boundary: related-case-ruling (weekend)" cite "S.D. Cal. CrimLR 5
 /// has been ordered, the original and one copy are filed with the
 /// magistrate judge.
 deadline misdemeanor-appeal-transcript: 30.days after AppealTranscriptOrdered() counted_by frcrimp45 cite "S.D. Cal. CrimLR 58.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appeal-transcript (holiday)" cite "S.D. Cal. CrimLR 58.1(b)"
 {
@@ -290,9 +250,6 @@ deadline misdemeanor-appellant-brief: 21.days after MisdemeanorAppealHearingNoti
   to CaseOrder
   op set
 } cite "S.D. Cal. CrimLR 58.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellant-brief (weekend)" cite "S.D. Cal. CrimLR 58.1(b)"
 {
@@ -306,9 +263,6 @@ deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counte
   to CaseOrder
   op set
 } cite "S.D. Cal. CrimLR 58.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-appellee-brief (weekend)" cite "S.D. Cal. CrimLR 58.1(b)"
 {
@@ -322,9 +276,6 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by 
   to CaseOrder
   op set
 } cite "S.D. Cal. CrimLR 58.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "S.D. Cal. CrimLR 58.1(b)"
 {

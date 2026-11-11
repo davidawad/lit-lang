@@ -74,9 +74,7 @@ terminal dismissed-pleading: "Dismissed on motion" outcome [loss, dismissal] cit
 state case-management: "Scheduling and pretrial conference" by court cite "Okla. Dist. Ct. R. 5"
 {
   note "A pretrial docket is maintained for the trial of cases (Okla. Dist. Ct. R. 5(A)); at least 20 days' notice of the setting of a case for an initial pretrial conference is given (Okla. Dist. Ct. R. 5(B)). The court schedules the time to join parties, amend, complete discovery and file motions (Okla. Dist. Ct. R. 5(C)), and the pretrial order controls the trial and is modified only to prevent manifest injustice (Okla. Dist. Ct. R. 5(I)). A party who fails to appear at or prepare for a pretrial conference may suffer the sanctions Rule 5(J) lists, including default or dismissal (Okla. Dist. Ct. R. 5(J)). Discovery under 12 O.S. §§ 3224-3237 is not vendored (lg-l6xh, #16)."
-  edge-case-management-discovery "Scheduling order entered" -> discovery {
-    authority cite "Okla. Dist. Ct. R. 5(C)"
-  }
+  "Scheduling order entered" -> discovery { authority cite "Okla. Dist. Ct. R. 5(C)" }
 }
 
 state discovery: "Discovery" by plaintiff cite ?("12 O.S. § 3226") {
@@ -84,7 +82,7 @@ state discovery: "Discovery" by plaintiff cite ?("12 O.S. § 3226") {
   edge-discovery-sj "Summary judgment motion served" -> sj-motion {
     authority cite "Okla. Dist. Ct. R. 13(a)"
   }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Okla. Dist. Ct. R. 5(H)" }
+  "No dispositive motion" -> trial { authority cite "Okla. Dist. Ct. R. 5(H)" }
   edge-discovery-settle "Settled or dismissed" -> settled { authority cite ?("12 O.S. § 683") }
 }
 

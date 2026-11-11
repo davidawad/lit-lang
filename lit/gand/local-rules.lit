@@ -2,6 +2,8 @@ module gand-civil-local-rules.local-rules
 
 import core.frcp6.{ frcp6 }
 
+forum frcp
+
 /// The first defendant appears by answer or motion (LR 16.1, 16.2, 26.1(A)).
 /// In a removed case the periods run from the filing of the removed case in
 /// this Court (LR 16.2, 26.1(B)(4)).
@@ -39,9 +41,6 @@ event FeeMotionFiled()
 /// days after the beginning of discovery unless the filing party has prior
 /// permission of the Court to file later.
 deadline motion-filing-period: 30.days after DiscoveryBegan() counted_by frcp6 cite "N.D. Ga. LR 7.1(A)"
-{
-  forum frcp
-}
 
 test "Counting boundary: motion-filing-period (weekend)" cite "N.D. Ga. LR 7.1(A)"
 {
@@ -54,16 +53,9 @@ test "Counting boundary: motion-filing-period (weekend)" cite "N.D. Ga. LR 7.1(A
 /// opposition. Briefs in support of or in response to a motion are limited
 /// to 25 pages absent prior permission (LR 7.1(D)).
 deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "N.D. Ga. LR 7.1(B)"
-{
-  forum frcp
-}
-
 /// LR 7.1(B): the response to a motion for summary judgment is served 21
 /// days after service of the motion.
 deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "N.D. Ga. LR 7.1(B)"
-{
-  forum frcp
-}
 
 test "Counting boundary: summary-judgment-response-period (weekend)" cite "N.D. Ga. LR 7.1(B)"
 {
@@ -75,9 +67,6 @@ test "Counting boundary: summary-judgment-response-period (weekend)" cite "N.D. 
 /// later than 14 days after service of the response. A reply brief may not
 /// exceed 15 pages (LR 7.1(D)).
 deadline reply-period: 14.days after ResponseServed() counted_by frcp6 cite "N.D. Ga. LR 7.1(C)"
-{
-  forum frcp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "N.D. Ga. LR 7.1(C)"
 {
@@ -89,9 +78,6 @@ test "Counting boundary: reply-period (weekend)" cite "N.D. Ga. LR 7.1(C)"
 /// submitted, the movant serves a memorandum in support within 14 days after
 /// removal.
 deadline removed-motion-memorandum-period: 14.days after RemovedWithPendingMotions() counted_by frcp6 cite "N.D. Ga. LR 7.2(A)"
-{
-  forum frcp
-}
 
 test "Counting boundary: removed-motion-memorandum-period (weekend)" cite "N.D. Ga. LR 7.2(A)"
 {
@@ -102,9 +88,6 @@ test "Counting boundary: removed-motion-memorandum-period (weekend)" cite "N.D. 
 /// LR 7.2(E): a motion to reconsider an order or judgment is filed within 28
 /// days after its entry.
 deadline reconsideration-period: 28.days after OrderOrJudgmentEntered() counted_by frcp6 cite "N.D. Ga. LR 7.2(E)"
-{
-  forum frcp
-}
 
 test "Counting boundary: reconsideration-period (holiday)" cite "N.D. Ga. LR 7.2(E)"
 {
@@ -115,9 +98,6 @@ test "Counting boundary: reconsideration-period (holiday)" cite "N.D. Ga. LR 7.2
 /// LR 7.2(E): responses to a motion for reconsideration are filed not later
 /// than 14 days after service of the motion.
 deadline reconsideration-response-period: 14.days after ReconsiderationMotionServed() counted_by frcp6 cite "N.D. Ga. LR 7.2(E)"
-{
-  forum frcp
-}
 
 test "Counting boundary: reconsideration-response-period (weekend)" cite "N.D. Ga. LR 7.2(E)"
 {
@@ -129,9 +109,6 @@ test "Counting boundary: reconsideration-response-period (weekend)" cite "N.D. G
 /// attorney submits the written order to the district judge within 7 days
 /// from the date of an oral pronouncement.
 deadline oral-ruling-order-period: 7.days after OralOrderAnnounced() counted_by frcp6 cite "N.D. Ga. LR 7.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: oral-ruling-order-period (weekend)" cite "N.D. Ga. LR 7.3"
 {
@@ -142,9 +119,6 @@ test "Counting boundary: oral-ruling-order-period (weekend)" cite "N.D. Ga. LR 7
 /// LR 16.1: lead counsel confer in person (the Rule 26(f) conference) within
 /// sixteen days after the appearance of a defendant by answer or motion.
 deadline planning-conference-period: 16.days after DefendantAppeared() counted_by frcp6 cite "N.D. Ga. LR 16.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: planning-conference-period (weekend)" cite "N.D. Ga. LR 16.1"
 {
@@ -157,9 +131,6 @@ test "Counting boundary: planning-conference-period (weekend)" cite "N.D. Ga. LR
 /// motion, or within thirty days after a removed case is filed in this
 /// Court.
 deadline joint-preliminary-report-period: 30.days after DefendantAppeared() counted_by frcp6 cite "N.D. Ga. LR 16.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: joint-preliminary-report-period (weekend)" cite "N.D. Ga. LR 16.2"
 {
@@ -171,9 +142,6 @@ test "Counting boundary: joint-preliminary-report-period (weekend)" cite "N.D. G
 /// or within 30 days after the appearance of a defendant by answer or
 /// motion.
 deadline initial-disclosures-period: 30.days after DefendantAppeared() counted_by frcp6 cite "N.D. Ga. LR 26.1(A)"
-{
-  forum frcp
-}
 
 test "Counting boundary: initial-disclosures-period (weekend)" cite "N.D. Ga. LR 26.1(A)"
 {
@@ -186,9 +154,6 @@ test "Counting boundary: initial-disclosures-period (weekend)" cite "N.D. Ga. LR
 /// parties consent to begin earlier. Its length is the case's track: zero,
 /// four or eight months (Appendix F).
 deadline discovery-commencement-period: 30.days after DefendantAnswered() counted_by frcp6 cite "N.D. Ga. LR 26.2(A)"
-{
-  forum frcp
-}
 
 test "Counting boundary: discovery-commencement-period (weekend)" cite "N.D. Ga. LR 26.2(A)"
 {
@@ -202,9 +167,6 @@ test "Counting boundary: discovery-commencement-period (weekend)" cite "N.D. Ga.
 /// objection rests. This deadline is the 14-day branch; the close of
 /// discovery governs when it is later.
 deadline motion-to-compel-period: 14.days after DiscoveryResponseServed() counted_by frcp6 cite "N.D. Ga. LR 37.1(B)"
-{
-  forum frcp
-}
 
 test "Counting boundary: motion-to-compel-period (weekend)" cite "N.D. Ga. LR 37.1(B)"
 {
@@ -215,9 +177,6 @@ test "Counting boundary: motion-to-compel-period (weekend)" cite "N.D. Ga. LR 37
 /// LR 16.3: the post-discovery settlement conference of lead counsel is held
 /// no later than fourteen days after the close of discovery.
 deadline settlement-conference-period: 14.days after DiscoveryClosed() counted_by frcp6 cite "N.D. Ga. LR 16.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: settlement-conference-period (weekend)" cite "N.D. Ga. LR 16.3"
 {
@@ -229,9 +188,6 @@ test "Counting boundary: settlement-conference-period (weekend)" cite "N.D. Ga. 
 /// judgment is filed not later than thirty days after the close of
 /// discovery.
 deadline summary-judgment-filing-period: 30.days after DiscoveryClosed() counted_by frcp6 cite "N.D. Ga. LR 56.1(D)"
-{
-  forum frcp
-}
 
 test "Counting boundary: summary-judgment-filing-period (weekend)" cite "N.D. Ga. LR 56.1(D)"
 {
@@ -245,9 +201,6 @@ test "Counting boundary: summary-judgment-filing-period (weekend)" cite "N.D. Ga
 /// deadline runs from the close of discovery; a later summary judgment
 /// ruling starts the period anew, which this package does not model.
 deadline pretrial-order-period: 30.days after DiscoveryClosed() counted_by frcp6 cite "N.D. Ga. LR 16.4(A)"
-{
-  forum frcp
-}
 
 test "Counting boundary: pretrial-order-period (weekend)" cite "N.D. Ga. LR 16.4(A)"
 {
@@ -258,9 +211,6 @@ test "Counting boundary: pretrial-order-period (weekend)" cite "N.D. Ga. LR 16.4
 /// LR 54.1: the prevailing party files a bill of costs within thirty days
 /// after the entry of judgment; a late bill is not taxed.
 deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "N.D. Ga. LR 54.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "N.D. Ga. LR 54.1"
 {
@@ -272,9 +222,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "N.D. Ga. LR 54.1"
 /// prescribes) after filing a motion for attorney's fees, the movant files
 /// and serves a detailed specification and itemization of the award.
 deadline fee-itemization-period: 30.days after FeeMotionFiled() counted_by frcp6 cite "N.D. Ga. LR 54.2(A)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-itemization-period (weekend)" cite "N.D. Ga. LR 54.2(A)"
 {
@@ -287,10 +234,7 @@ start motion-served
 state motion-served: "Motion and memorandum of law served" by movant cite "N.D. Ga. LR 7.1(A)"
 {
   note "Every motion is accompanied by a memorandum of law citing supporting authority, with affidavits for facts relied on (LR 7.1(A)(1)). Briefs are limited to 25 pages, a reply to 15, absent prior permission (LR 7.1(D)). A summary judgment motion carries a separate numbered statement of material facts; the respondent's facts are deemed admitted unless refuted as LR 56.1(B)(2) requires. A Daubert objection to an expert is moved no later than the date the proposed pretrial order is submitted, or it is waived (LR 26.2(C), citing Daubert v. Merrell Dow Pharms., Inc., 509 U.S. 579 (1993)). The motion's own periods under the Federal Rules are lit/frcp's."
-  edge-motion-served-response "Response served" -> response {
-    authority cite "N.D. Ga. LR 7.1(B)"
-    within response-period
-  }
+  "Response served" -> response { authority cite "N.D. Ga. LR 7.1(B)", within response-period }
   edge-motion-served-unopposed "No response: the motion is unopposed" -> ruling {
     authority cite "N.D. Ga. LR 7.1(B)"
   }
@@ -298,7 +242,7 @@ state motion-served: "Motion and memorandum of law served" by movant cite "N.D. 
 
 state response: "Response served" by opponent cite "N.D. Ga. LR 7.1(B)"
 {
-  edge-response-ruling "Reply served or time to reply expired" -> ruling {
+  "Reply served or time to reply expired" -> ruling {
     authority cite "N.D. Ga. LR 7.1(C)"
     within reply-period
   }

@@ -36,9 +36,7 @@ decision initial-appearance: "Initial appearance" by court cite "Iowa R. Crim. P
 decision probable-cause: "Preliminary hearing, indictment or trial information" by court cite "Iowa R. Crim. P. 2.2(4)"
 {
   note "At the preliminary hearing the prosecution presents evidence, which the defendant may cross-examine and answer; on probable cause based on substantial evidence the magistrate holds the defendant to answer, and otherwise dismisses the complaint and discharges the defendant, which bars a later prosecution only for a serious misdemeanor (Iowa R. Crim. P. 2.2(4)). Unless good cause is shown, the prosecution is dismissed if an indictment is not found within 45 days after the initial appearance or its waiver (2.33(2)(a)); the rules on indictments apply to trial informations (2.5(5))."
-  edge-probable-cause-charged "Indictment or trial information filed" -> charged {
-    authority cite "Iowa R. Crim. P. 2.5(1)"
-  }
+  "Indictment or trial information filed" -> charged { authority cite "Iowa R. Crim. P. 2.5(1)" }
   edge-probable-cause-none "No probable cause; complaint dismissed" -> dismissed {
     authority cite "Iowa R. Crim. P. 2.2(4)"
   }
@@ -50,15 +48,13 @@ decision probable-cause: "Preliminary hearing, indictment or trial information" 
 state charged: "Indictment or trial information" by court cite "Iowa R. Crim. P. 2.5(1)"
 {
   note "Every indictable offense may be prosecuted by a trial information with minutes of testimony, filed at any time; a district judge (or a district associate judge with jurisdiction) approves and files it if the minutes, unexplained, would warrant a conviction, and otherwise the charge may go to the grand jury (Iowa R. Crim. P. 2.5(1), (4)). Arraignment is conducted as soon as practicable after the indictment is filed (2.8(1))."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Iowa R. Crim. P. 2.8(1)" }
+  "Arraignment" -> arraignment { authority cite "Iowa R. Crim. P. 2.8(1)" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "Iowa R. Crim. P. 2.8(1)"
 {
   note "The defendant receives the indictment and minutes, is informed of the right to counsel, and is called on to plead; formal arraignment may be waived by a written arraignment and plea of not guilty, whose filing date is the date of arraignment (Iowa R. Crim. P. 2.8(1)). Within 7 days after a plea of not guilty the court sets the trial date by written order; if the defendant waives speedy trial at arraignment, the court may hold a case management conference within 30 days to set the trial date and the motion and deposition deadlines (2.9). A motion for a bill of particulars may be made before or within 10 days after arraignment (2.11(7))."
-  edge-arraignment-pretrial "Pretrial proceedings" -> pretrial {
-    authority cite "Iowa R. Crim. P. 2.9"
-  }
+  "Pretrial proceedings" -> pretrial { authority cite "Iowa R. Crim. P. 2.9" }
 }
 
 state pretrial: "Discovery and pretrial motions" by prosecution cite "Iowa R. Crim. P. 2.11(6)"
@@ -95,7 +91,7 @@ decision plea-decision: "Plea or trial" by accused cite "Iowa R. Crim. P. 2.8(2)
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Iowa R. Crim. P. 2.8(2)"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Iowa R. Crim. P. 2.33(2)" }
+  "Trial" -> trial { authority cite "Iowa R. Crim. P. 2.33(2)" }
 }
 
 decision trial: "Verdict" by court cite "Iowa R. Crim. P. 2.22"
@@ -124,9 +120,7 @@ decision post-trial: "Motions after trial" by court cite "Iowa R. Crim. P. 2.24(
 state sentencing: "Pronouncing judgment" by court cite "Iowa R. Crim. P. 2.23(1)"
 {
   note "Upon a guilty plea or verdict the court fixes a date for pronouncing judgment within a reasonable time but not less than 15 days after the plea or verdict, unless the defendant consents to a shorter time (Iowa R. Crim. P. 2.23(1)(b)); on the defendant's request and the State's agreement, the court may sentence immediately if the defendant waives the motion in arrest of judgment, the presentence investigation and that time (2.8(2)(e))."
-  edge-sentencing-judgment "Sentence pronounced; judgment entered" -> judgment {
-    authority cite "Iowa R. Crim. P. 2.23(2)"
-  }
+  "Sentence pronounced; judgment entered" -> judgment { authority cite "Iowa R. Crim. P. 2.23(2)" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "Iowa R. App. P. 6.101(1)"

@@ -36,9 +36,7 @@ decision initial-appearance: "Release or detention" by court cite "Ariz. R. Crim
 decision probable-cause: "Preliminary hearing or grand jury" by court cite "Ariz. R. Crim. P. 5.1"
 {
   note "A defendant charged in a complaint with a felony has a right to a preliminary hearing, which must commence no later than 10 days after the initial appearance if the defendant is in custody, or 20 days if not; an in-custody defendant whose hearing did not commence within 10 days and was not continued must be released unless charged with a non-bailable offense, and the magistrate may continue the hearing beyond 20 days only on written findings of extraordinary circumstances (Ariz. R. Crim. P. 5.1(a)). At the close of the State's case the magistrate states whether probable cause exists (Ariz. R. Crim. P. 5.3(a)(3)). A motion for a new probable cause finding must be filed no later than 25 days after the preliminary hearing is completed, and after a remand the case is dismissed unless a new hearing commences within 15 days (Ariz. R. Crim. P. 5.5(b), (d)). A felony may instead be charged by grand jury indictment (Ariz. R. Crim. P. 12; 13.1(b))."
-  edge-probable-cause-charged "Held to answer or indicted" -> charged {
-    authority cite "Ariz. R. Crim. P. 5.3(a)"
-  }
+  "Held to answer or indicted" -> charged { authority cite "Ariz. R. Crim. P. 5.3(a)" }
   edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
     authority cite "Ariz. R. Crim. P. 5.3(a)"
   }
@@ -47,13 +45,13 @@ decision probable-cause: "Preliminary hearing or grand jury" by court cite "Ariz
 state charged: "Indictment or information" by court cite "Ariz. R. Crim. P. 13.1"
 {
   note "An indictment is a written charge endorsed as a true bill and presented by a grand jury; an information is a written charge signed and presented by the State (Ariz. R. Crim. P. 13.1(b), (c)). The arraignment is held no later than 10 days after the filing of the indictment, information or complaint for a defendant in custody, or 30 days for a defendant not in custody (Ariz. R. Crim. P. 14.2)."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Ariz. R. Crim. P. 14.2" }
+  "Arraignment" -> arraignment { authority cite "Ariz. R. Crim. P. 14.2" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "Ariz. R. Crim. P. 14.1"
 {
   note "At arraignment the defendant is formally advised of the charges and rights, counsel is assured, a plea is entered and a trial date or later court date is set (Ariz. R. Crim. P. 14.1). The Rule 8 trial clock runs from arraignment: trial must begin no later than 150 days after arraignment for a defendant in custody, 180 days for a defendant released under Rule 7, 270 days in a complex case, and 24 months after the notice of intent to seek death in a capital case (Ariz. R. Crim. P. 8.2(a)); a retrial after a mistrial or new-trial order must begin no later than 60 days after the order, and after an appellate reversal no later than 90 days after the mandate (Ariz. R. Crim. P. 8.2(c)). Periods listed in Rule 8.4 are excluded, and a party may move no later than 25 days after arraignment to suspend Rule 8 for extraordinary circumstances (Ariz. R. Crim. P. 8.1(e)). A trial may be continued only on a showing of extraordinary circumstances (Ariz. R. Crim. P. 8.5(b))."
-  edge-arraignment-discovery "Disclosure" -> discovery { authority cite "Ariz. R. Crim. P. 15.1" }
+  "Disclosure" -> discovery { authority cite "Ariz. R. Crim. P. 15.1" }
 }
 
 state discovery: "Disclosure and pretrial motions" by prosecution cite "Ariz. R. Crim. P. 15.1"
@@ -90,10 +88,8 @@ decision plea-decision: "Plea or trial" by accused cite "Ariz. R. Crim. P. 17.1"
   edge-plea-decision-plea "Guilty or no-contest plea accepted" -> sentencing {
     authority cite "Ariz. R. Crim. P. 17.4(d)"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Ariz. R. Crim. P. 18.1" }
-  edge-plea-decision-dismissed "State's dismissal granted" -> dismissed {
-    authority cite "Ariz. R. Crim. P. 16.4(a)"
-  }
+  "Trial" -> trial { authority cite "Ariz. R. Crim. P. 18.1" }
+  "State's dismissal granted" -> dismissed { authority cite "Ariz. R. Crim. P. 16.4(a)" }
 }
 
 decision trial: "Verdict" by court cite "Ariz. R. Crim. P. 19.1"
@@ -122,9 +118,7 @@ decision post-trial: "Post-verdict motions" by court cite "Ariz. R. Crim. P. 24.
 state sentencing: "Presentence report and sentencing" by court cite "Ariz. R. Crim. P. 26.3"
 {
   note "In superior court the court must pronounce sentence no less than 15 nor more than 30 days after the determination of guilt, unless the defendant asks to be sentenced earlier, and may reset the date for a presentencing hearing or good cause, but the new date should be no later than 60 days after the determination of guilt (Ariz. R. Crim. P. 26.3(a)(1)(B), (b)). After a trial conviction, a defendant whose absence prevents sentencing within 90 days after the determination of guilt loses the right to direct appellate review (Ariz. R. Crim. P. 26.3(a)(1)(C)). The presentence report is delivered to the judge and counsel at least two days before sentencing (Ariz. R. Crim. P. 26.4(c))."
-  edge-sentencing-judgment "Sentence pronounced; judgment entered" -> judgment {
-    authority cite "Ariz. R. Crim. P. 26.10"
-  }
+  "Sentence pronounced; judgment entered" -> judgment { authority cite "Ariz. R. Crim. P. 26.10" }
 }
 
 decision judgment: "Judgment and sentence" by prosecution cite "Ariz. R. Crim. P. 26.10"

@@ -2,6 +2,8 @@ module nmd-local-rules.local-rules
 
 import core.states.new-mexico.{ frcp6-new-mexico }
 
+forum frcp
+
 // The District of New Mexico's own civil periods, computed under the
 // federal rules (D.N.M.LR-Civ. 7.4(a): the briefing periods "are computed
 // in accordance with FED. R. CIV. P. 6(a) and (d)"; FRCP 6(a) governs
@@ -76,23 +78,12 @@ event NoticeOfRemovalFiled()
 /// calendar days after service of the motion; the period may be extended
 /// by agreement of all parties.
 deadline response-period: 14.days after MotionFiled() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 7.4(a)"
-{
-  forum frcp
-}
-
 /// D.N.M.LR-Civ. 7.4(a): a reply is served and filed within fourteen
 /// calendar days after service of the response.
 deadline reply-period: 14.days after ResponseFiled() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 7.4(a)"
-{
-  forum frcp
-}
-
 /// D.N.M.LR-Civ. 7.8(c): any response to a Notice of Supplemental
 /// Authorities is filed within seven days of the filing of the Notice.
 deadline supplemental-authorities-response-period: 7.days after SupplementalAuthoritiesNoticeFiled() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 7.8(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: supplemental-authorities-response-period (weekend)" cite "D.N.M.LR-Civ. 7.8(c)"
 {
@@ -104,18 +95,11 @@ test "Counting boundary: supplemental-authorities-response-period (weekend)" cit
 /// unless signed within fourteen days after the omission is called to the
 /// party's attention.
 deadline signature-cure-period: 14.days after SignatureOmissionNoticed() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 10.3(b)"
-{
-  forum frcp
-}
-
 /// D.N.M.LR-Civ. 10.3(c): failure to remedy a deficiency, or show good
 /// cause for non-compliance, within forty-five days from the date of the
 /// Clerk's notice may result in striking or dismissal without prejudice
 /// under D.N.M.LR-Civ. 41.2.
 deadline deficiency-cure-period: 45.days after DeficiencyNoticed() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 10.3(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: deficiency-cure-period (weekend)" cite "D.N.M.LR-Civ. 10.3(c)"
 {
@@ -127,9 +111,6 @@ test "Counting boundary: deficiency-cure-period (weekend)" cite "D.N.M.LR-Civ. 1
 /// the completed Joint Status Report at least seven days before the
 /// scheduling conference, or as ordered by the Court.
 deadline joint-status-report-period: 7.days before SchedulingConference() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 16.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: joint-status-report-period (weekend)" cite "D.N.M.LR-Civ. 16.1"
 {
@@ -145,9 +126,6 @@ test "Counting boundary: joint-status-report-period (weekend)" cite "D.N.M.LR-Ci
 /// time is acceptance of the objection. The Court may change the period
 /// for good cause.
 deadline discovery-objection-motion-period: 21.days after DiscoveryObjectionServed() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 26.6"
-{
-  forum frcp
-}
 
 test "Counting boundary: discovery-objection-motion-period (weekend)" cite "D.N.M.LR-Civ. 26.6"
 {
@@ -159,9 +137,6 @@ test "Counting boundary: discovery-objection-motion-period (weekend)" cite "D.N.
 /// at least fourteen days before the scheduled deposition, unless the
 /// parties agree or the Court orders a shorter time.
 deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 30.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: deposition-notice-period (weekend)" cite "D.N.M.LR-Civ. 30.1"
 {
@@ -173,9 +148,6 @@ test "Counting boundary: deposition-notice-period (weekend)" cite "D.N.M.LR-Civ.
 /// ninety days may be dismissed thirty days after the date of the Clerk's
 /// written notice, unless good cause is shown.
 deadline want-of-prosecution-period: 30.days after ProsecutionNoticeGiven() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 41.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: want-of-prosecution-period (weekend)" cite "D.N.M.LR-Civ. 41.1"
 {
@@ -187,9 +159,6 @@ test "Counting boundary: want-of-prosecution-period (weekend)" cite "D.N.M.LR-Ci
 /// thirty days of entry of judgment; failure to do so waives the claim to
 /// costs.
 deadline costs-motion-period: 30.days after JudgmentEntered() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 54.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: costs-motion-period (weekend)" cite "D.N.M.LR-Civ. 54.1"
 {
@@ -201,9 +170,6 @@ test "Counting boundary: costs-motion-period (weekend)" cite "D.N.M.LR-Civ. 54.1
 /// 28 U.S.C. § 2412(d) is filed and served within thirty days after entry
 /// of judgment; failure to do so waives the claim to fees.
 deadline fee-motion-period: 30.days after JudgmentEntered() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 54.5(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-motion-period (weekend)" cite "D.N.M.LR-Civ. 54.5(a)"
 {
@@ -214,9 +180,6 @@ test "Counting boundary: fee-motion-period (weekend)" cite "D.N.M.LR-Civ. 54.5(a
 /// D.N.M.LR-Civ. 58.2(a)(2): a prevailing party's proposed order or
 /// judgment is entered if not objected to within seven days of service.
 deadline proposed-order-objection-period: 7.days after ProposedOrderServed() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 58.2(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: proposed-order-objection-period (weekend)" cite "D.N.M.LR-Civ. 58.2(a)"
 {
@@ -228,9 +191,6 @@ test "Counting boundary: proposed-order-objection-period (weekend)" cite "D.N.M.
 /// § 1446 files legible copies of the state-court records and proceedings
 /// within twenty-eight days after filing the notice of removal.
 deadline removal-record-period: 28.days after NoticeOfRemovalFiled() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 81.1(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: removal-record-period (weekend)" cite "D.N.M.LR-Civ. 81.1(a)"
 {

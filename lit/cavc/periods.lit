@@ -171,6 +171,7 @@ test "Counting boundary: filing-fee-period (weekend)" cite "CAVC R. 3(f)"
   given NoticeOfAppealFiled() on 2026-10-03
   expect deadline(filing-fee-period) == 2026-10-19
 }
+
 /// The Secretary files and serves the copy of the Board decision not later
 /// than 30 days after the notice of docketing.
 deadline board-decision-copy-period: 30.days after DocketingNoticeIssued() counted_by cavc26 cite "CAVC R. 4(c)"
@@ -187,6 +188,7 @@ test "Counting boundary: redaction-challenge-period (weekend)" cite "CAVC R. 6(c
   given RedactedDocumentFiled() on 2026-10-02
   expect deadline(redaction-challenge-period) == 2026-10-19
 }
+
 /// The Secretary serves the record before the agency not later than 60
 /// days following the notice of docketing.
 deadline record-before-agency-period: 60.days after DocketingNoticeIssued() counted_by cavc26 cite "CAVC R. 10(a)"
@@ -196,6 +198,7 @@ test "Counting boundary: record-before-agency-period (weekend)" cite "CAVC R. 10
   given DocketingNoticeIssued() on 2026-10-06
   expect deadline(record-before-agency-period) == 2026-12-07
 }
+
 /// A motion disputing the record before the agency is filed within 14 days
 /// after it is served; a response within 7 days after the motion is served.
 deadline record-dispute-period: 14.days after ServedPaper(RecordBeforeAgency) counted_by cavc26 cite "CAVC R. 10(b)"
@@ -205,6 +208,7 @@ test "Counting boundary: record-dispute-period (weekend)" cite "CAVC R. 10(b)"
   given ServedPaper(RecordBeforeAgency, Electronic) on 2026-10-03
   expect deadline(record-dispute-period) == 2026-10-19
 }
+
 deadline record-dispute-response-period: 7.days after ServedPaper(RecordDisputeMotion) counted_by cavc26 cite "CAVC R. 10(b)"
 
 test "Counting boundary: record-dispute-response-period (weekend)" cite "CAVC R. 10(b)"
@@ -218,6 +222,7 @@ test "Counting boundary: record-dispute-response-period (weekend) [repeat 2]" ci
   given ServedPaper(RecordDisputeMotion, Personal) on 2026-10-03
   expect deadline(record-dispute-response-period) == 2026-10-13
 }
+
 /// A notice of intervention by right, or a motion for permission to
 /// intervene, is filed not later than 60 days after the notice of docketing.
 deadline intervention-period: 60.days after DocketingNoticeIssued() counted_by cavc26 cite "CAVC R. 15(a)"
@@ -227,6 +232,7 @@ test "Counting boundary: intervention-period (weekend)" cite "CAVC R. 15(a)"
   given DocketingNoticeIssued() on 2026-10-06
   expect deadline(intervention-period) == 2026-12-07
 }
+
 deadline permissive-intervention-period: 60.days after DocketingNoticeIssued() counted_by cavc26 cite "CAVC R. 15(b)"
 
 test "Counting boundary: permissive-intervention-period (weekend)" cite "CAVC R. 15(b)"
@@ -234,6 +240,7 @@ test "Counting boundary: permissive-intervention-period (weekend)" cite "CAVC R.
   given DocketingNoticeIssued() on 2026-10-06
   expect deadline(permissive-intervention-period) == 2026-12-07
 }
+
 /// A request for class certification in an appeal is filed within 45 days
 /// after the Secretary serves the record before the agency (or after a
 /// dispute over it is resolved, whichever is later); in a petition, within
@@ -255,6 +262,7 @@ test "Counting boundary: extension-opposition-period (weekend) [repeat 2]" cite 
   given ServedPaper(ExtensionMotion, Personal) on 2026-10-05
   expect deadline(extension-opposition-period) == 2026-10-13
 }
+
 /// A response or opposition to a motion is filed not later than 14 days
 /// after service of the motion, unless these Rules prescribe otherwise.
 deadline motion-response-period: 14.days after ServedPaper(Motion) counted_by cavc26 cite "CAVC R. 27(b)(1)"
@@ -272,6 +280,7 @@ test "Counting boundary: initial-panel-review-period (weekend)" cite "CAVC R. 27
   given ReplyBriefFiledOrDue() on 2026-10-03
   expect deadline(initial-panel-review-period) == 2026-10-19
 }
+
 deadline petition-panel-review-period: 7.days after PetitionAnswered() counted_by cavc26 cite "CAVC R. 27.1(b)(2)"
 
 test "Counting boundary: petition-panel-review-period (weekend)" cite "CAVC R. 27.1(b)(2)"
@@ -279,6 +288,7 @@ test "Counting boundary: petition-panel-review-period (weekend)" cite "CAVC R. 2
   given PetitionAnswered() on 2026-10-03
   expect deadline(petition-panel-review-period) == 2026-10-13
 }
+
 /// An intervenor's brief is filed not later than 30 days after the reply
 /// brief is filed or due.
 deadline intervenor-brief-period: 30.days after ReplyBriefFiledOrDue() counted_by cavc26 cite "CAVC R. 28(d)"
@@ -291,6 +301,7 @@ test "Counting boundary: record-of-proceedings-period (weekend)" cite "CAVC R. 2
   given ReplyBriefFiled() on 2026-10-03
   expect deadline(record-of-proceedings-period) == 2026-10-19
 }
+
 /// A motion disputing the record of proceedings is filed within 14 days
 /// after it is served; a response not later than 7 days after the motion
 /// is served.
@@ -307,6 +318,7 @@ test "Counting boundary: proceedings-dispute-period (weekend) [repeat 2]" cite "
   given ServedPaper(RecordOfProceedings, Personal) on 2026-10-03
   expect deadline(proceedings-dispute-period) == 2026-10-19
 }
+
 deadline proceedings-dispute-response-period: 7.days after ServedPaper(ProceedingsDisputeMotion) counted_by cavc26 cite "CAVC R. 28.1(b)"
 
 test "Counting boundary: proceedings-dispute-response-period (weekend)" cite "CAVC R. 28.1(b)"
@@ -320,6 +332,7 @@ test "Counting boundary: proceedings-dispute-response-period (weekend) [repeat 2
   given ServedPaper(ProceedingsDisputeMotion, Personal) on 2026-10-03
   expect deadline(proceedings-dispute-response-period) == 2026-10-13
 }
+
 /// An amicus curiae moves for leave not later than 7 days after the
 /// principal brief of the party it supports is filed.
 deadline amicus-period: 7.days after PrincipalBriefFiled() counted_by cavc26 cite "CAVC R. 29(c)"
@@ -329,6 +342,7 @@ test "Counting boundary: amicus-period (weekend)" cite "CAVC R. 29(c)"
   given PrincipalBriefFiled() on 2026-10-03
   expect deadline(amicus-period) == 2026-10-13
 }
+
 /// The appellant's brief is due not later than 60 days after the 14-day
 /// Rule 10(b) period expires, or 30 days after the Rule 33 staff
 /// conference is completed, whichever is later.
@@ -339,6 +353,7 @@ test "Counting boundary: appellant-brief-period (weekend)" cite "CAVC R. 31(a)(1
   given RecordDisputePeriodExpired() on 2026-10-06
   expect deadline(appellant-brief-period) == 2026-12-07
 }
+
 deadline appellant-brief-after-conference-period: 30.days after StaffConferenceCompleted() counted_by cavc26 cite "CAVC R. 31(a)(1)(B)"
 /// The Secretary's brief is due not later than 60 days after service of
 /// the appellant's brief; the reply not later than 14 days after service
@@ -356,6 +371,7 @@ test "Counting boundary: secretary-brief-period (weekend) [repeat 2]" cite "CAVC
   given ServedPaper(AppellantBrief, Personal) on 2026-10-06
   expect deadline(secretary-brief-period) == 2026-12-07
 }
+
 deadline reply-brief-period: 14.days after ServedPaper(SecretaryBrief) counted_by cavc26 cite "CAVC R. 31(a)(3)"
 
 test "Counting boundary: reply-brief-period (weekend)" cite "CAVC R. 31(a)(3)"
@@ -369,6 +385,7 @@ test "Counting boundary: reply-brief-period (weekend) [repeat 2]" cite "CAVC R. 
   given ServedPaper(SecretaryBrief, Personal) on 2026-10-03
   expect deadline(reply-brief-period) == 2026-10-19
 }
+
 /// The appellant submits the summary of issues no later than 14 days prior
 /// to a pre-briefing staff conference.
 deadline staff-conference-summary-period: 14.days before StaffConferenceSet() counted_by cavc26 cite "CAVC R. 33(b)(1)"
@@ -378,6 +395,7 @@ test "Counting boundary: staff-conference-summary-period (weekend)" cite "CAVC R
   given StaffConferenceSet() on 2026-10-03
   expect deadline(staff-conference-summary-period) == 2026-09-18
 }
+
 /// A motion for oral argument on the merits is filed no later than 14 days
 /// after the reply brief is due or filed; on a petition, no later than 7
 /// days after the answer.
@@ -388,6 +406,7 @@ test "Counting boundary: oral-argument-motion-period (weekend)" cite "CAVC R. 34
   given ReplyBriefFiledOrDue() on 2026-10-03
   expect deadline(oral-argument-motion-period) == 2026-10-19
 }
+
 deadline petition-oral-argument-period: 7.days after PetitionAnswered() counted_by cavc26 cite "CAVC R. 34(b)(1)"
 
 test "Counting boundary: petition-oral-argument-period (weekend)" cite "CAVC R. 34(b)(1)"
@@ -395,6 +414,7 @@ test "Counting boundary: petition-oral-argument-period (weekend)" cite "CAVC R. 
   given PetitionAnswered() on 2026-10-03
   expect deadline(petition-oral-argument-period) == 2026-10-13
 }
+
 /// A motion for reconsideration, panel decision or full Court review is
 /// filed not later than 21 days after the dispositive action, or 51 days if
 /// the movant is located outside the United States, Puerto Rico, or the
@@ -406,6 +426,7 @@ test "Counting boundary: reconsideration-period (weekend)" cite "CAVC R. 35(d)"
   given DispositiveAction(Domestic) on 2026-10-03
   expect deadline(reconsideration-period) == 2026-10-26
 }
+
 deadline reconsideration-abroad-period: 51.days after DispositiveAction(Abroad) counted_by cavc26 cite "CAVC R. 35(d)"
 /// Judgment begins the 60-day time period for appealing to the U.S. Court
 /// of Appeals for the Federal Circuit.
@@ -416,6 +437,7 @@ test "Counting boundary: federal-circuit-appeal-period (weekend)" cite "CAVC R. 
   given JudgmentEntered() on 2026-10-06
   expect deadline(federal-circuit-appeal-period) == 2026-12-07
 }
+
 /// Mandate generally is 60 days after judgment, unless a timely notice of
 /// appeal to the Federal Circuit is filed or the Court directs otherwise;
 /// after an uncontested disposition, 60 days after the Court's order.
@@ -426,6 +448,7 @@ test "Counting boundary: mandate-period (weekend)" cite "CAVC R. 41(b)"
   given JudgmentEntered() on 2026-10-06
   expect deadline(mandate-period) == 2026-12-07
 }
+
 deadline uncontested-mandate-period: 60.days after UncontestedDispositionOrdered() counted_by cavc26 cite "CAVC R. 41(c)"
 
 test "Counting boundary: uncontested-mandate-period (weekend)" cite "CAVC R. 41(c)"
@@ -458,6 +481,7 @@ test "Counting boundary: supplemental-application-period (weekend)" cite "CAVC R
   given FeeApplicationGranted() on 2026-10-04
   expect deadline(supplemental-application-period) == 2026-10-26
 }
+
 deadline supplemental-response-period: 20.days after SupplementalApplicationFiled() counted_by cavc26 cite "CAVC R. 39(b)(1)"
 
 test "Counting boundary: supplemental-response-period (weekend)" cite "CAVC R. 39(b)(1)"
@@ -465,6 +489,7 @@ test "Counting boundary: supplemental-response-period (weekend)" cite "CAVC R. 3
   given SupplementalApplicationFiled() on 2026-10-04
   expect deadline(supplemental-response-period) == 2026-10-26
 }
+
 deadline supplemental-reply-period: 10.days after ServedPaper(SupplementalFeeResponse) counted_by cavc26 cite "CAVC R. 39(b)(2)"
 /// A supplemental application for work on a Federal Circuit appeal is
 /// filed not later than 20 days after that court issues its mandate.

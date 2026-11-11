@@ -2,6 +2,8 @@ module hid-local-rules.local-rules
 
 import core.frcp6.{ frcp6 }
 
+forum frcp
+
 // The District of Hawaii's own periods, computed under the federal rules
 // (FRCP 6(a) governs "any local rule"; LR1.4(d): days are calendar days).
 // Most apply "unless otherwise ordered" where the rule says so. Rules that
@@ -170,9 +172,6 @@ event BankruptcyAppealOrderEntered()
 /// LR5.2(c): no later than 7 days after the filing of a motion to seal, any
 /// person may oppose it.
 deadline seal-opposition-period: 7.days after SealMotionFiled() counted_by frcp6 cite "D. Haw. LR 5.2(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: seal-opposition-period (weekend)" cite "D. Haw. LR 5.2(c)"
 {
@@ -185,9 +184,6 @@ test "Counting boundary: seal-opposition-period (weekend)" cite "D. Haw. LR 5.2(
 /// publicly; absent notice within 4 days the document is returned to the
 /// movant.
 deadline seal-denial-election-period: 4.days after SealMotionDenied() counted_by frcp6 cite "D. Haw. LR 5.2(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: seal-denial-election-period (weekend)" cite "D. Haw. LR 5.2(c)"
 {
@@ -198,9 +194,6 @@ test "Counting boundary: seal-denial-election-period (weekend)" cite "D. Haw. LR
 /// LR5.2(c): the movant, within 4 days of an order, files a version of the
 /// document consistent with the order.
 deadline seal-conforming-filing-period: 4.days after SealOrderEntered() counted_by frcp6 cite "D. Haw. LR 5.2(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: seal-conforming-filing-period (weekend)" cite "D. Haw. LR 5.2(c)"
 {
@@ -212,9 +205,6 @@ test "Counting boundary: seal-conforming-filing-period (weekend)" cite "D. Haw. 
 /// party designated confidential is filed, any party may oppose it and seek
 /// to have the matter sealed.
 deadline public-filing-opposition-period: 7.days after PublicFilingMotionFiled() counted_by frcp6 cite "D. Haw. LR 5.2(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: public-filing-opposition-period (weekend)" cite "D. Haw. LR 5.2(d)"
 {
@@ -225,9 +215,6 @@ test "Counting boundary: public-filing-opposition-period (weekend)" cite "D. Haw
 /// LR5.6: proof of service is filed or mailed for filing within 1 day of
 /// service, except where the FRCP prescribes a particular method of proof.
 deadline proof-of-service-period: 1.days after DocumentServed() counted_by frcp6 cite "D. Haw. LR 5.6"
-{
-  forum frcp
-}
 
 test "Counting boundary: proof-of-service-period (holiday)" cite "D. Haw. LR 5.6"
 {
@@ -240,9 +227,6 @@ test "Counting boundary: proof-of-service-period (holiday)" cite "D. Haw. LR 5.6
 /// the hearing. Summary judgment briefing follows the same schedule
 /// (LR56.1(a), (j)).
 deadline hearing-opposition-period: 21.days before MotionHearingHeld() counted_by frcp6 cite "D. Haw. LR 7.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: hearing-opposition-period (weekend)" cite "D. Haw. LR 7.2"
 {
@@ -254,17 +238,10 @@ test "Counting boundary: hearing-opposition-period (weekend)" cite "D. Haw. LR 7
 /// opposition or no position, is served and filed within 14 days after
 /// service of the motion.
 deadline nonhearing-opposition-period: 14.days after NonHearingMotionServed() counted_by frcp6 cite "D. Haw. LR 7.2"
-{
-  forum frcp
-}
-
 /// LR7.2: any reply in support of a motion set for hearing is served and
 /// filed at least 14 days before the hearing. An untimely opposition or
 /// reply may be disregarded or stricken.
 deadline hearing-reply-period: 14.days before MotionHearingHeld() counted_by frcp6 cite "D. Haw. LR 7.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: hearing-reply-period (weekend)" cite "D. Haw. LR 7.2"
 {
@@ -275,16 +252,9 @@ test "Counting boundary: hearing-reply-period (weekend)" cite "D. Haw. LR 7.2"
 /// LR7.2: any reply in support of a non-hearing motion is served and filed
 /// within 14 days after service of the opposition.
 deadline nonhearing-reply-period: 14.days after NonHearingOppositionServed() counted_by frcp6 cite "D. Haw. LR 7.2"
-{
-  forum frcp
-}
-
 /// LR7.7: the movant on a counter motion set for hearing files and serves
 /// any reply at least 7 days before the hearing.
 deadline counter-motion-hearing-reply-period: 7.days before MotionHearingHeld() counted_by frcp6 cite "D. Haw. LR 7.7"
-{
-  forum frcp
-}
 
 test "Counting boundary: counter-motion-hearing-reply-period (weekend)" cite "D. Haw. LR 7.7"
 {
@@ -296,9 +266,6 @@ test "Counting boundary: counter-motion-hearing-reply-period (weekend)" cite "D.
 /// reply within 7 days after service of the opposition to the counter
 /// motion.
 deadline counter-motion-nonhearing-reply-period: 7.days after CounterMotionOppositionServed() counted_by frcp6 cite "D. Haw. LR 7.7"
-{
-  forum frcp
-}
 
 test "Counting boundary: counter-motion-nonhearing-reply-period (weekend)" cite "D. Haw. LR 7.7"
 {
@@ -311,9 +278,6 @@ test "Counting boundary: counter-motion-nonhearing-reply-period (weekend)" cite 
 /// filing of the motion or opposition joined in. A joinder of simple
 /// agreement may be filed at any time.
 deadline substantive-joinder-period: 3.days after JoinedPaperFiled() counted_by frcp6 cite "D. Haw. LR 7.7"
-{
-  forum frcp
-}
 
 test "Counting boundary: substantive-joinder-period (weekend)" cite "D. Haw. LR 7.7"
 {
@@ -326,9 +290,6 @@ test "Counting boundary: substantive-joinder-period (weekend)" cite "D. Haw. LR 
 /// preliminary injunction applications, matters with a pro se party, and
 /// motions during trial are excepted.
 deadline prefiling-conference-period: 7.days before MotionFiled() counted_by frcp6 cite "D. Haw. LR 7.8"
-{
-  forum frcp
-}
 
 test "Counting boundary: prefiling-conference-period (weekend)" cite "D. Haw. LR 7.8"
 {
@@ -340,16 +301,9 @@ test "Counting boundary: prefiling-conference-period (weekend)" cite "D. Haw. LR
 /// formatting removed, and served within 14 days of the filing of the order
 /// granting leave, unless the court orders otherwise.
 deadline amended-pleading-period: 14.days after AmendmentGranted() counted_by frcp6 cite "D. Haw. LR 10.4"
-{
-  forum frcp
-}
-
 /// LR16.2(b): each party files and serves a Scheduling Conference Statement
 /// at least 7 days before the scheduling conference.
 deadline scheduling-statement-period: 7.days before SchedulingConferenceHeld() counted_by frcp6 cite "D. Haw. LR 16.2(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: scheduling-statement-period (weekend)" cite "D. Haw. LR 16.2(b)"
 {
@@ -361,9 +315,6 @@ test "Counting boundary: scheduling-statement-period (weekend)" cite "D. Haw. LR
 /// party delivers a Confidential Settlement Conference Statement directly
 /// to the settlement judge; it is not filed or served.
 deadline settlement-statement-period: 7.days before SettlementConferenceHeld() counted_by frcp6 cite "D. Haw. LR 16.5(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: settlement-statement-period (weekend)" cite "D. Haw. LR 16.5(b)"
 {
@@ -375,17 +326,10 @@ test "Counting boundary: settlement-statement-period (weekend)" cite "D. Haw. LR
 /// plaintiff files the FRCP 26(f) report within 14 days after the
 /// conference.
 deadline parties-report-period: 14.days after PartiesConferenceHeld() counted_by frcp6 cite "D. Haw. LR 26.1(b)"
-{
-  forum frcp
-}
-
 /// LR26.1(b): the defendant may file a supplemental report within 7 days if
 /// it objects to the plaintiff's report. The rule names no trigger; the
 /// period is read to run from the plaintiff's report to which it objects.
 deadline supplemental-report-period: 7.days after PlaintiffReportFiled() counted_by frcp6 cite "D. Haw. LR 26.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: supplemental-report-period (weekend)" cite "D. Haw. LR 26.1(b)"
 {
@@ -396,9 +340,6 @@ test "Counting boundary: supplemental-report-period (weekend)" cite "D. Haw. LR 
 /// LR40.2: a party receiving a Notice of Related Case responds within 7
 /// days of service, or its objections are waived.
 deadline related-case-response-period: 7.days after RelatedCaseNoticeServed() counted_by frcp6 cite "D. Haw. LR 40.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: related-case-response-period (weekend)" cite "D. Haw. LR 40.2"
 {
@@ -410,17 +351,10 @@ test "Counting boundary: related-case-response-period (weekend)" cite "D. Haw. L
 /// disposed of, counsel notify the court at least one full business day
 /// before trial is set to begin, or juror costs may be assessed.
 deadline jury-settlement-notice-period: 1.court_days before TrialBegins() counted_by frcp6 cite "D. Haw. LR 47.2"
-{
-  forum frcp
-}
-
 /// LR51.1(e): unless otherwise ordered, the parties serve their proposed
 /// jury instructions on each other at least 21 days before trial, then meet
 /// and confer.
 deadline jury-instruction-exchange-period: 21.days before TrialBegins() counted_by frcp6 cite "D. Haw. LR 51.1(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: jury-instruction-exchange-period (weekend)" cite "D. Haw. LR 51.1(e)"
 {
@@ -431,9 +365,6 @@ test "Counting boundary: jury-instruction-exchange-period (weekend)" cite "D. Ha
 /// LR51.1(g): the jointly agreed and separately proposed instructions are
 /// filed at least 14 days before trial.
 deadline jury-instruction-filing-period: 14.days before TrialBegins() counted_by frcp6 cite "D. Haw. LR 51.1(g)"
-{
-  forum frcp
-}
 
 test "Counting boundary: jury-instruction-filing-period (weekend)" cite "D. Haw. LR 51.1(g)"
 {
@@ -444,9 +375,6 @@ test "Counting boundary: jury-instruction-filing-period (weekend)" cite "D. Haw.
 /// LR51.1(g): each party files its written objections to the instructions
 /// the other party proposed at least 7 days before trial.
 deadline jury-instruction-objection-period: 7.days before TrialBegins() counted_by frcp6 cite "D. Haw. LR 51.1(g)"
-{
-  forum frcp
-}
 
 test "Counting boundary: jury-instruction-objection-period (weekend)" cite "D. Haw. LR 51.1(g)"
 {
@@ -458,9 +386,6 @@ test "Counting boundary: jury-instruction-objection-period (weekend)" cite "D. H
 /// an action tried without a jury the parties simultaneously file separate
 /// draft findings of fact and conclusions of law.
 deadline draft-findings-period: 28.days after BenchTrialConcluded() counted_by frcp6 cite "D. Haw. LR 52.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: draft-findings-period (weekend)" cite "D. Haw. LR 52.1"
 {
@@ -472,31 +397,16 @@ test "Counting boundary: draft-findings-period (weekend)" cite "D. Haw. LR 52.1"
 /// within 14 days after entry of judgment. Non-compliance with LR54.1 is
 /// deemed a waiver of costs (LR54.1(a)).
 deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D. Haw. LR 54.1(b)"
-{
-  forum frcp
-}
-
 /// LR54.1(b): a Bill of Costs is filed and served within 14 days after
 /// entry of an order denying a motion under FRCP 50(b), 52(b) or 59.
 deadline post-trial-bill-of-costs-period: 14.days after PostTrialMotionDenied() counted_by frcp6 cite "D. Haw. LR 54.1(b)"
-{
-  forum frcp
-}
-
 /// LR54.1(b): a Bill of Costs is filed and served within 14 days after
 /// entry of an order remanding a removed action to state court.
 deadline remand-bill-of-costs-period: 14.days after RemandOrderEntered() counted_by frcp6 cite "D. Haw. LR 54.1(b)"
-{
-  forum frcp
-}
-
 /// LR54.1(d): within 7 days after a Bill of Costs is served, the party
 /// against whom costs are claimed files and serves any specific objections;
 /// absent objections the clerk may tax all the requested costs.
 deadline costs-objection-period: 7.days after BillOfCostsServed() counted_by frcp6 cite "D. Haw. LR 54.1(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: costs-objection-period (weekend)" cite "D. Haw. LR 54.1(d)"
 {
@@ -508,9 +418,6 @@ test "Counting boundary: costs-objection-period (weekend)" cite "D. Haw. LR 54.1
 /// filed and served within 7 days after taxation by the clerk, under FRCP
 /// 54(d)(1).
 deadline costs-review-motion-period: 7.days after CostsTaxed() counted_by frcp6 cite "D. Haw. LR 54.1(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: costs-review-motion-period (weekend)" cite "D. Haw. LR 54.1(e)"
 {
@@ -525,9 +432,6 @@ test "Counting boundary: costs-review-motion-period (weekend)" cite "D. Haw. LR 
 /// order is not settled by the vendored text, so this period stands beside
 /// lit/frcp's, not over it.
 deadline fee-motion-period: 49.days after JudgmentEntered() counted_by frcp6 cite "D. Haw. LR 54.2(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-motion-period (weekend)" cite "D. Haw. LR 54.2(b)"
 {
@@ -539,25 +443,14 @@ test "Counting boundary: fee-motion-period (weekend)" cite "D. Haw. LR 54.2(b)"
 /// and expense evidence within 14 days after the judgment, unless the court
 /// sets a different schedule.
 deadline fee-information-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D. Haw. LR 54.2(d)"
-{
-  forum frcp
-}
-
 /// LR54.2(d)(5): if no agreement is reached, the respondent, within 14 days
 /// of receipt of that information, discloses the evidence it will use to
 /// oppose the requested hours, rates or expenses.
 deadline fee-disclosure-period: 14.days after FeeInformationReceived() counted_by frcp6 cite "D. Haw. LR 54.2(d)"
-{
-  forum frcp
-}
-
 /// LR54.2(d): 7 days after the exchange of information is completed and
 /// before the motion is filed, the parties identify the hours, rates and
 /// expenses that will and will not be objected to.
 deadline fee-objection-identification-period: 7.days after FeeExchangeCompleted() counted_by frcp6 cite "D. Haw. LR 54.2(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-objection-identification-period (weekend)" cite "D. Haw. LR 54.2(d)"
 {
@@ -569,17 +462,10 @@ test "Counting boundary: fee-objection-identification-period (weekend)" cite "D.
 /// entry of the judgment or settlement agreement on which the fee motion
 /// will be based, unless the court orders otherwise.
 deadline fee-joint-statement-period: 42.days after JudgmentEntered() counted_by frcp6 cite "D. Haw. LR 54.2(e)"
-{
-  forum frcp
-}
-
 /// LR54.2(g): unless otherwise ordered, any opposing party may file and
 /// serve a responsive memorandum within 7 days after service of the Fee
 /// Motion.
 deadline fee-response-period: 7.days after FeeMotionServed() counted_by frcp6 cite "D. Haw. LR 54.2(g)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-response-period (weekend)" cite "D. Haw. LR 54.2(g)"
 {
@@ -591,9 +477,6 @@ test "Counting boundary: fee-response-period (weekend)" cite "D. Haw. LR 54.2(g)
 /// days after service of the responsive memorandum; the motion is then
 /// decided without a hearing unless otherwise ordered.
 deadline fee-reply-period: 7.days after FeeResponseServed() counted_by frcp6 cite "D. Haw. LR 54.2(g)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-reply-period (weekend)" cite "D. Haw. LR 54.2(g)"
 {
@@ -606,9 +489,6 @@ test "Counting boundary: fee-reply-period (weekend)" cite "D. Haw. LR 54.2(g)"
 /// settlement and approval as to form, the prevailing party files and
 /// serves a draft.
 deadline draft-judgment-period: 7.days after DecisionAnnounced() counted_by frcp6 cite "D. Haw. LR 58.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: draft-judgment-period (weekend)" cite "D. Haw. LR 58.2"
 {
@@ -619,9 +499,6 @@ test "Counting boundary: draft-judgment-period (weekend)" cite "D. Haw. LR 58.2"
 /// LR58.2: a party receiving the proposed draft files and serves, within 7
 /// days, any objection and a substitute proposed draft.
 deadline draft-judgment-objection-period: 7.days after DraftJudgmentServed() counted_by frcp6 cite "D. Haw. LR 58.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: draft-judgment-objection-period (weekend)" cite "D. Haw. LR 58.2"
 {
@@ -634,16 +511,9 @@ test "Counting boundary: draft-judgment-objection-period (weekend)" cite "D. Haw
 /// days after the order is issued. Reconsideration of a case-dispositive
 /// order is governed by FRCP 59 or 60 (lit/frcp).
 deadline reconsideration-period: 14.days after InterlocutoryOrderIssued() counted_by frcp6 cite "D. Haw. LR 60.1"
-{
-  forum frcp
-}
-
 /// LR66.1(a): unless otherwise ordered, a receiver or similar officer files
 /// an inventory within 28 days after taking possession of the estate.
 deadline receiver-inventory-period: 28.days after ReceiverTookPossession() counted_by frcp6 cite "D. Haw. LR 66.1(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: receiver-inventory-period (weekend)" cite "D. Haw. LR 66.1(a)"
 {
@@ -656,33 +526,18 @@ test "Counting boundary: receiver-inventory-period (weekend)" cite "D. Haw. LR 6
 /// expenditures and transactions; later reports follow at three-month
 /// intervals (not encoded, a recurring period).
 deadline receiver-first-report-period: 1.months after ReceiverInventoryFiled() counted_by frcp6 cite "D. Haw. LR 66.1(b)"
-{
-  forum frcp
-}
-
 /// LR74.1(a): except where the parties consented under LR73.1, a party may
 /// object to a magistrate judge's non-dispositive order or findings and
 /// recommendations within 14 days after being served. A reconsideration
 /// motion tolls the time (LR74.1(d)).
 deadline magistrate-objection-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "D. Haw. LR 74.1(a)"
-{
-  forum frcp
-}
-
 /// LR74.1(b): any party may file and serve a response within 14 days after
 /// service of the objection; no reply without leave (LR74.1(c)).
 deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "D. Haw. LR 74.1(b)"
-{
-  forum frcp
-}
-
 /// LR81.1(c)(3)(B): when a self-represented litigant presents a document or
 /// item that cannot be scanned, the clerk notifies the litigant to serve it
 /// by other means within 3 business days.
 deadline pro-se-other-service-period: 3.court_days after ServiceByOtherMeansNotified() counted_by frcp6 cite "D. Haw. LR 81.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: pro-se-other-service-period (weekend)" cite "D. Haw. LR 81.1(c)"
 {
@@ -694,26 +549,15 @@ test "Counting boundary: pro-se-other-service-period (weekend)" cite "D. Haw. LR
 /// permission to practice in it, files notice of a change that might render
 /// the attorney ineligible within 14 days of the change.
 deadline attorney-status-notice-period: 14.days after AttorneyStatusChanged() counted_by frcp6 cite "D. Haw. LR 83.1(d)"
-{
-  forum frcp
-}
-
 /// LR83.1(e)(1): an attorney or self-represented litigant whose address or
 /// contact information changes while appearing in a pending case files and
 /// serves a Notice of Change of Address within 14 days.
 deadline address-change-notice-period: 14.days after ContactInformationChanged() counted_by frcp6 cite "D. Haw. LR 83.1(e)"
-{
-  forum frcp
-}
-
 /// LR83.1(e)(2): sanctions, including dismissal or judgment, may follow
 /// when a document the court directed to an attorney or self-represented
 /// litigant is returned as not deliverable and the court receives no
 /// written current address within 30 days of the return.
 deadline returned-mail-response-period: 30.days after CourtMailReturned() counted_by frcp6 cite "D. Haw. LR 83.1(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: returned-mail-response-period (weekend)" cite "D. Haw. LR 83.1(e)"
 {
@@ -726,17 +570,10 @@ test "Counting boundary: returned-mail-response-period (weekend)" cite "D. Haw. 
 /// cause within 14 days after the mailing of the notice why disbarment or
 /// suspension in this court should not occur.
 deadline discipline-show-cause-period: 14.days after DisciplineNoticeMailed() counted_by frcp6 cite "D. Haw. LR 83.4(b)"
-{
-  forum frcp
-}
-
 /// LR88.1(l): a party objecting to a mediator the court selected files an
 /// objection within 7 days after learning the mediator's identity, or
 /// within 7 days of learning the facts on which the objection rests.
 deadline mediator-objection-period: 7.days after MediatorIdentityLearned() counted_by frcp6 cite "D. Haw. LR 88.1(l)"
-{
-  forum frcp
-}
 
 test "Counting boundary: mediator-objection-period (weekend)" cite "D. Haw. LR 88.1(l)"
 {
@@ -748,9 +585,6 @@ test "Counting boundary: mediator-objection-period (weekend)" cite "D. Haw. LR 8
 /// sentence under 28 U.S.C. § 2255, the respondent files a response, unless
 /// otherwise ordered.
 deadline section-2255-response-period: 35.days after Section2255MotionServed() counted_by frcp6 cite "D. Haw. LR 99.3(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: section-2255-response-period (weekend)" cite "D. Haw. LR 99.3(d)"
 {
@@ -762,9 +596,6 @@ test "Counting boundary: section-2255-response-period (weekend)" cite "D. Haw. L
 /// exhaust prison administrative remedies under 42 U.S.C. § 1997e(a) is
 /// filed within 70 days after entry of the scheduling order.
 deadline prisoner-exhaustion-motion-period: 70.days after PrisonerSchedulingOrderEntered() counted_by frcp6 cite "D. Haw. LR 99.16.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: prisoner-exhaustion-motion-period (weekend)" cite "D. Haw. LR 99.16.2"
 {
@@ -776,9 +607,6 @@ test "Counting boundary: prisoner-exhaustion-motion-period (weekend)" cite "D. H
 /// by the district court on motion filed within 14 days after entry of the
 /// order.
 deadline bankruptcy-appeal-order-review-period: 14.days after BankruptcyAppealOrderEntered() counted_by frcp6 cite "D. Haw. LR 8005.1(b)"
-{
-  forum frcp
-}
 
 test "Deadline arithmetic: seal-opposition-period (7 days after)" cite "D. Haw. LR 5.2(c)"
 {

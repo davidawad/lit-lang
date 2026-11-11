@@ -72,9 +72,7 @@ decision rehearing-decision: "Rehearing sought within 15 days?" by appellant cit
 
 state rehearing-order: "Rehearing motion decided" by court cite "Fla. R. App. P. 9.330(a)"
 {
-  edge-rehearing-order-mandate "Motion decided" -> mandate {
-    authority cite "Fla. R. App. P. 9.340(b)"
-  }
+  "Motion decided" -> mandate { authority cite "Fla. R. App. P. 9.340(b)" }
 }
 
 state mandate: "Mandate issued" by court cite "Fla. R. App. P. 9.340(a)"

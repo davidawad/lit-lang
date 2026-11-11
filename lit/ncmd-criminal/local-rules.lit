@@ -2,6 +2,8 @@ module ncmd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Middle District of North Carolina's own criminal periods. Stated in
 // the rules but not declared: the time for pretrial motions and responses,
 // which the Court sets at arraignment (LCrR 12.1(a)); sentencing scheduled
@@ -38,9 +40,6 @@ event SealSupportFiled()
 /// suggested supervised-release conditions, is completed and disclosed not
 /// less than 45 calendar days before the scheduled sentencing.
 deadline draft-report-period: 45.days before SentencingScheduled() counted_by frcrimp45 cite "M.D.N.C. LCrR 32.2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: draft-report-period (weekend)" cite "M.D.N.C. LCrR 32.2(b)"
 {
@@ -53,9 +52,6 @@ test "Counting boundary: draft-report-period (weekend)" cite "M.D.N.C. LCrR 32.2
 /// "Position Paper Regarding Sentencing Factors" with a certificate of
 /// conference.
 deadline position-paper-period: 21.days after DraftReportDisclosed() counted_by frcrimp45 cite "M.D.N.C. LCrR 32.2(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: position-paper-period (weekend)" cite "M.D.N.C. LCrR 32.2(d)"
 {
@@ -67,9 +63,6 @@ test "Counting boundary: position-paper-period (weekend)" cite "M.D.N.C. LCrR 32
 /// report, the non-objecting party files a sealed response; a party's
 /// silence is reported and handled as no dispute.
 deadline position-response-period: 28.days after DraftReportDisclosed() counted_by frcrimp45 cite "M.D.N.C. LCrR 32.2(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: position-response-period (holiday)" cite "M.D.N.C. LCrR 32.2(d)"
 {
@@ -81,9 +74,6 @@ test "Counting boundary: position-response-period (holiday)" cite "M.D.N.C. LCrR
 /// party claiming confidentiality, the party claiming it files a response
 /// with the LR 5.4(c)(3) materials within 14 days of the motion to seal.
 deadline sealing-response-period: 14.days after SealMotionFiled() counted_by frcrimp45 cite "M.D.N.C. LR 5.4(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sealing-response-period (holiday)" cite "M.D.N.C. LR 5.4(c)"
 {
@@ -94,9 +84,6 @@ test "Counting boundary: sealing-response-period (holiday)" cite "M.D.N.C. LR 5.
 /// LR 5.4(c)(5), applied by LCrR 57.1: a party opposing sealing files its
 /// objection within 14 days of the filing of the supporting materials.
 deadline sealing-objection-period: 14.days after SealSupportFiled() counted_by frcrimp45 cite "M.D.N.C. LR 5.4(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sealing-objection-period (holiday)" cite "M.D.N.C. LR 5.4(c)"
 {

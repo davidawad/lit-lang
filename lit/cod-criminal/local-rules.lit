@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled, VerdictOrDischarge }
 
+forum frcrimp
+
 // The District of Colorado's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method: FRCrimP 45(c)'s three added days follow the
@@ -53,9 +55,6 @@ deadline disposition-notice: 14.days before TrialScheduled() counted_by frcrimp4
   to CaseOrder
   op set
 } cite "D.C.COLO.LCrR 11.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: disposition-notice (weekend)" cite "D.C.COLO.LCrR 11.1(a)"
 {
@@ -68,9 +67,6 @@ test "Counting boundary: disposition-notice (weekend)" cite "D.C.COLO.LCrR 11.1(
 /// arraignment, and directs counsel to obtain the pretrial-motion
 /// deadlines and a trial date from the assigned district judge.
 deadline discovery-conference-order: 14.days after Arraigned() counted_by frcrimp45 cite "D.C.COLO.LCrR 17.1.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-conference-order (weekend)" cite "D.C.COLO.LCrR 17.1.1"
 {
@@ -83,9 +79,6 @@ test "Counting boundary: discovery-conference-order (weekend)" cite "D.C.COLO.LC
 /// government files a sentencing statement analyzing the sentencing
 /// factors.
 deadline government-sentencing-statement: 30.days after VerdictOrDischarge(Verdict) counted_by frcrimp45 cite "D.C.COLO.LCrR 32.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-sentencing-statement (holiday)" cite "D.C.COLO.LCrR 32.1(a)"
 {
@@ -96,9 +89,6 @@ test "Counting boundary: government-sentencing-statement (holiday)" cite "D.C.CO
 /// D.C.COLO.LCrR 32.1(a)(2): no later than 14 days after the government
 /// files its sentencing statement, a defendant may file one.
 deadline defendant-sentencing-statement: 14.days after GovernmentSentencingStatementFiled() counted_by frcrimp45 cite "D.C.COLO.LCrR 32.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defendant-sentencing-statement (weekend)" cite "D.C.COLO.LCrR 32.1(a)"
 {
@@ -109,9 +99,6 @@ test "Counting boundary: defendant-sentencing-statement (weekend)" cite "D.C.COL
 /// D.C.COLO.LCrR 32.1(c): a motion for departure or variance is filed, as
 /// a separate motion, no later than 14 days before sentencing.
 deadline departure-variance-motion: 14.days before SentencingScheduled() counted_by frcrimp45 cite "D.C.COLO.LCrR 32.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: departure-variance-motion (weekend)" cite "D.C.COLO.LCrR 32.1(c)"
 {
@@ -122,9 +109,6 @@ test "Counting boundary: departure-variance-motion (weekend)" cite "D.C.COLO.LCr
 /// D.C.COLO.LCrR 32.1(c): a response to a motion for departure or
 /// variance may be filed no later than seven days before sentencing.
 deadline departure-variance-response: 7.days before SentencingScheduled() counted_by frcrimp45 cite "D.C.COLO.LCrR 32.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: departure-variance-response (holiday)" cite "D.C.COLO.LCrR 32.1(c)"
 {
@@ -140,9 +124,6 @@ deadline sentencing-documents-to-probation: 10.days before SentencingScheduled()
   to CaseOrder
   op set
 } cite "D.C.COLO.LCrR 32.1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-documents-to-probation (weekend)" cite "D.C.COLO.LCrR 32.1(e)"
 {
@@ -156,9 +137,6 @@ deadline sentencing-documents-filed: 7.days before SentencingScheduled() counted
   to CaseOrder
   op set
 } cite "D.C.COLO.LCrR 32.1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-documents-filed (holiday)" cite "D.C.COLO.LCrR 32.1(e)"
 {
@@ -170,9 +148,6 @@ test "Counting boundary: sentencing-documents-filed (holiday)" cite "D.C.COLO.LC
 /// telephone number of an unrepresented prisoner or party is filed not
 /// later than five days after the change.
 deadline unrepresented-contact-notice: 5.days after UnrepresentedContactChanged() counted_by frcrimp45 cite "D.C.COLO.LCrR 49.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: unrepresented-contact-notice (weekend)" cite "D.C.COLO.LCrR 49.1(c)"
 {
@@ -184,9 +159,6 @@ test "Counting boundary: unrepresented-contact-notice (weekend)" cite "D.C.COLO.
 /// the clerk's notice, the clerk may dispose of the conventionally
 /// submitted material or exhibit.
 deadline exhibit-disposal-objection: 14.days after ExhibitDisposalNoticed() counted_by frcrimp45 cite "D.C.COLO.LCrR 55.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-disposal-objection (weekend)" cite "D.C.COLO.LCrR 55.1(b)"
 {
@@ -202,9 +174,6 @@ deadline ada-accommodation-hearing: 7.days before HearingScheduled() counted_by 
   to CaseOrder
   op set
 } cite "D.C.COLO.LCrR 57.5"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: ada-accommodation-hearing (holiday)" cite "D.C.COLO.LCrR 57.5"
 {
@@ -217,9 +186,6 @@ deadline ada-accommodation-trial: 7.days before TrialScheduled() counted_by frcr
   to CaseOrder
   op set
 } cite "D.C.COLO.LCrR 57.5"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: ada-accommodation-trial (holiday)" cite "D.C.COLO.LCrR 57.5"
 {
@@ -233,9 +199,6 @@ deadline asl-interpreter-hearing: 30.days before HearingScheduled() counted_by f
   to CaseOrder
   op set
 } cite "D.C.COLO.LCrR 57.5"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: asl-interpreter-hearing (weekend)" cite "D.C.COLO.LCrR 57.5"
 {
@@ -248,9 +211,6 @@ deadline asl-interpreter-trial: 30.days before TrialScheduled() counted_by frcri
   to CaseOrder
   op set
 } cite "D.C.COLO.LCrR 57.5"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: asl-interpreter-trial (weekend)" cite "D.C.COLO.LCrR 57.5"
 {

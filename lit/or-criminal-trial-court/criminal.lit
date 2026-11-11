@@ -36,9 +36,7 @@ decision initial-appearance: "Release decision" by court cite "ORS 135.245"
 decision probable-cause: "Preliminary hearing or grand jury" by court cite "ORS 135.070"
 {
   note "A defendant charged by information with a felony is informed of the right to a preliminary hearing, which, if requested, is held as soon as practicable and in any event within five judicial days if the defendant is in custody or 30 days if not, extendable for good cause (ORS 135.070(2)). If the hearing shows probable cause the magistrate holds the defendant for further proceedings by written order; otherwise the information is dismissed and the defendant discharged (ORS 135.185; 135.175). A grand jury is a body of seven persons (ORS 132.010)."
-  edge-probable-cause-charged "Held for further proceedings or indicted" -> charged {
-    authority cite "ORS 135.185"
-  }
+  "Held for further proceedings or indicted" -> charged { authority cite "ORS 135.185" }
   edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
     authority cite "ORS 135.175"
   }
@@ -47,13 +45,13 @@ decision probable-cause: "Preliminary hearing or grand jury" by court cite "ORS 
 state charged: "Indictment or information" by court cite "ORS 135.030"
 {
   note "A defendant charged with a crime punishable as a felony appears in person at the arraignment, and a misdemeanor defendant in person or by counsel (ORS 135.030(1), (2)). The trial-commencement clock runs from the filing of the charging instrument: a trial whose most serious charge is a misdemeanor must commence within two years, and one whose most serious charge is a felony within three years (ORS 135.746(1)); the limits cease to apply to a defendant who fails to appear for trial, and a represented defendant who does not object within seven days of notice of a trial date outside the limit extends it to that date (ORS 135.746(2), (3)). The periods ORS 135.748 lists are excluded."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "ORS 135.030" }
+  "Arraignment" -> arraignment { authority cite "ORS 135.030" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "ORS 135.335"
 {
   note "The pleas are guilty, not guilty and, with the court's consent, no contest; with the consent of the court and the State a defendant may enter a conditional plea reserving in writing review of a specified pretrial motion (ORS 135.335)."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "ORS 135.805" }
+  "Discovery" -> discovery { authority cite "ORS 135.805" }
 }
 
 state discovery: "Discovery and the omnibus hearing" by prosecution cite "ORS 135.037"
@@ -86,7 +84,7 @@ decision plea-decision: "Plea or trial" by accused cite "ORS 135.405"
   edge-plea-decision-plea "Guilty or no-contest plea accepted" -> sentencing {
     authority cite "ORS 135.360"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "ORS 136.001" }
+  "Trial" -> trial { authority cite "ORS 136.001" }
 }
 
 decision trial: "Verdict" by court cite "ORS 136.450"
@@ -106,9 +104,7 @@ decision post-trial: "Post-verdict motions" by court cite "ORS 136.535"
 state sentencing: "Presentence report and sentencing" by court cite "ORS 137.020"
 {
   note "After a plea or verdict of guilty the court appoints a time for pronouncing judgment, at least two calendar days after the plea or verdict if the court remains in session; except for good cause, sentencing of a defendant held in custody may not be delayed more than 31 calendar days, or of a defendant not in custody more than 56 calendar days, after the plea or verdict (ORS 137.020(1), (2)). The presentence report and other written information the court considers are made available to the parties at least five judicial days before sentencing (ORS 137.079(1)). Felonies committed on or after November 1, 1989, are sentenced under the Oregon Criminal Justice Commission's rules (ORS 137.010(1))."
-  edge-sentencing-judgment "Sentence pronounced; judgment entered" -> judgment {
-    authority cite "ORS 137.020"
-  }
+  "Sentence pronounced; judgment entered" -> judgment { authority cite "ORS 137.020" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "ORS 138.035"

@@ -2,6 +2,8 @@ module supreme-court-of-the-united-states.cert
 
 import core.supct30.{ sup-ct-30 }
 
+forum scotus
+
 // Review on certiorari from the petitioner's (applicant's) side, under the
 // Rules adopted February 17, 2026, effective March 16, 2026. Periods are
 // counted by Sup. Ct. R. 30.1 (`core.supct30`): the day of the triggering
@@ -52,7 +54,7 @@ event CertDenied()
 deadline petition-period: 90.days after LowerCourtEntry() counted_by sup-ct-30 cite "Sup. Ct. R. 13.1"
 {
   trigger latest
-  forum scotus
+
   extend {
     by justice
     discretion GoodCause
@@ -75,9 +77,6 @@ deadline petition-period: 90.days after LowerCourtEntry() counted_by sup-ct-30 c
 /// after the case is placed on the docket; the time will not be extended
 /// (Sup. Ct. R. 12.5).
 deadline conditional-cross-petition-period: 30.days after CaseDocketed() counted_by sup-ct-30 cite "Sup. Ct. R. 12.5"
-{
-  forum scotus
-}
 
 test "Counting boundary: conditional-cross-petition-period (weekend)" cite "Sup. Ct. R. 12.5"
 {
@@ -89,9 +88,6 @@ test "Counting boundary: conditional-cross-petition-period (weekend)" cite "Sup.
 /// the docket, unless the Court or a Justice, or the Clerk under Rule
 /// 30.4, extends the time (Sup. Ct. R. 15.3).
 deadline opposition-period: 30.days after CaseDocketed() counted_by sup-ct-30 cite "Sup. Ct. R. 15.3"
-{
-  forum scotus
-}
 
 test "Counting boundary: opposition-period (weekend)" cite "Sup. Ct. R. 15.3"
 {
@@ -103,9 +99,6 @@ test "Counting boundary: opposition-period (weekend)" cite "Sup. Ct. R. 15.3"
 /// granting the writ (Sup. Ct. R. 25.1), extendable under Rule 30 (Sup.
 /// Ct. R. 25.5).
 deadline merits-brief-period: 45.days after CertGranted() counted_by sup-ct-30 cite "Sup. Ct. R. 25.1"
-{
-  forum scotus
-}
 
 test "Counting boundary: merits-brief-period (weekend)" cite "Sup. Ct. R. 25.1"
 {
@@ -116,18 +109,11 @@ test "Counting boundary: merits-brief-period (weekend)" cite "Sup. Ct. R. 25.1"
 /// The respondent's brief on the merits is due within 30 days after the
 /// petitioner's brief is filed (Sup. Ct. R. 25.2).
 deadline respondent-brief-period: 30.days after PetitionerMeritsBriefFiled() counted_by sup-ct-30 cite "Sup. Ct. R. 25.2"
-{
-  forum scotus
-}
-
 /// The petitioner's reply brief is due within 30 days after the
 /// respondent's brief is filed, and must also be received by the Clerk
 /// not later than 2 p.m. 10 days before oral argument (Sup. Ct. R. 25.3);
 /// the second limit is stated, not encoded.
 deadline reply-brief-period: 30.days after RespondentMeritsBriefFiled() counted_by sup-ct-30 cite "Sup. Ct. R. 25.3"
-{
-  forum scotus
-}
 
 test "Counting boundary: reply-brief-period (weekend)" cite "Sup. Ct. R. 25.3"
 {
@@ -138,9 +124,6 @@ test "Counting boundary: reply-brief-period (weekend)" cite "Sup. Ct. R. 25.3"
 /// A motion for additional argument time is due no later than 7 days after
 /// the respondent's brief on the merits is filed (Sup. Ct. R. 28.3).
 deadline argument-time-motion-period: 7.days after RespondentMeritsBriefFiled() counted_by sup-ct-30 cite "Sup. Ct. R. 28.3"
-{
-  forum scotus
-}
 
 test "Counting boundary: argument-time-motion-period (weekend)" cite "Sup. Ct. R. 28.3"
 {
@@ -152,9 +135,6 @@ test "Counting boundary: argument-time-motion-period (weekend)" cite "Sup. Ct. R
 /// within 25 days after its entry, unless the Court or a Justice shortens
 /// or extends the time (Sup. Ct. R. 44.1).
 deadline rehearing-period: 25.days after MeritsJudgmentEntered() counted_by sup-ct-30 cite "Sup. Ct. R. 44.1"
-{
-  forum scotus
-}
 
 test "Counting boundary: rehearing-period (weekend)" cite "Sup. Ct. R. 44.1"
 {
@@ -166,9 +146,6 @@ test "Counting boundary: rehearing-period (weekend)" cite "Sup. Ct. R. 44.1"
 /// 25 days after the date of the order; the time will not be extended
 /// (Sup. Ct. R. 44.2).
 deadline denial-rehearing-period: 25.days after CertDenied() counted_by sup-ct-30 cite "Sup. Ct. R. 44.2"
-{
-  forum scotus
-}
 
 test "Counting boundary: denial-rehearing-period (weekend)" cite "Sup. Ct. R. 44.2"
 {
@@ -300,17 +277,13 @@ decision response-decision: "Brief in opposition filed or waived" by respondent 
 state reply-brief: "Reply to the brief in opposition (optional)" by petitioner cite "Sup. Ct. R. 15.6"
 {
   note "The petitioner may file a reply addressed to new points raised in the brief in opposition, but distribution is not deferred pending its receipt (Sup. Ct. R. 15.6); it is limited to 3,000 words on the chart of Sup. Ct. R. 33.1(g)(iii), or 15 pages on 8 1/2- by 11-inch paper (Sup. Ct. R. 33.2). Any party may file a supplemental brief on new cases, legislation or other intervening matter while the petition is pending (Sup. Ct. R. 15.8)."
-  edge-reply-brief-distribution "Distribution after the waiting period" -> distribution {
-    authority cite "Sup. Ct. R. 15.5"
-  }
+  "Distribution after the waiting period" -> distribution { authority cite "Sup. Ct. R. 15.5" }
 }
 
 state distribution: "Petition distributed to the Court" by court cite "Sup. Ct. R. 15.5"
 {
   note "The Clerk distributes the petition on an express waiver of the brief in opposition or, if none is filed, when the time for it expires; after a timely brief in opposition, the Clerk distributes the papers no less than 14 days after it is filed unless the petitioner expressly waives the 14-day waiting period (Sup. Ct. R. 15.5). Distribution is deferred while a docketed cross-petition is not yet due for distribution (Sup. Ct. R. 15.7)."
-  edge-distribution-disposition "Considered by the Court" -> disposition {
-    authority cite "Sup. Ct. R. 16.1"
-  }
+  "Considered by the Court" -> disposition { authority cite "Sup. Ct. R. 16.1" }
 }
 
 decision disposition: "Order on the petition" by court cite "Sup. Ct. R. 16.1"
@@ -352,9 +325,7 @@ state respondent-merits-brief: "Respondent's brief on the merits" by respondent 
 state reply-merits-brief: "Petitioner's reply brief on the merits" by petitioner cite "Sup. Ct. R. 25.3"
 {
   note "The petitioner files 40 copies of any reply brief within 30 days after the respondent's brief is filed, and it must actually be received by the Clerk not later than 2 p.m. 10 days before the date of oral argument (Sup. Ct. R. 25.3). It is limited to 6,000 words on the chart of Sup. Ct. R. 33.1(g)(vii)."
-  edge-reply-merits-brief-argument "Case calendared and argued" -> argument {
-    authority cite "Sup. Ct. R. 27.1"
-  }
+  "Case calendared and argued" -> argument { authority cite "Sup. Ct. R. 27.1" }
 }
 
 state argument: "Oral argument" by court cite "Sup. Ct. R. 28.3"
@@ -371,9 +342,7 @@ decision merits-decision: "Opinion and judgment on the merits" by court cite "Su
   edge-merits-decision-affirmed "Judgment affirmed" -> rehearing-window {
     authority cite "Sup. Ct. R. 41"
   }
-  edge-merits-decision-reversed "Judgment reversed or vacated" -> reversed {
-    authority cite "Sup. Ct. R. 41"
-  }
+  "Judgment reversed or vacated" -> reversed { authority cite "Sup. Ct. R. 41" }
   edge-merits-decision-dismissed "Case dismissed by agreement or on the petitioner's motion" -> dismissed-merits {
     authority cite "Sup. Ct. R. 46.1"
   }

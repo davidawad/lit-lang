@@ -16,21 +16,17 @@ state commenced: "Complaint filed in the Tax Court" by plaintiff cite "Ariz. R. 
 decision pleadings: "Answer, motion to dismiss or dismissal by the plaintiff" by court cite "Ariz. R. Civ. P. 12(a)"
 {
   note "A defendant files and serves an answer within 20 days after service of the summons and complaint, unless another rule or statute specifies another time (Ariz. R. Civ. P. 12(a)(1)(A)); whether a tax statute does is a hole. A Rule 12(b) defense may be made by motion before pleading; if the motion is denied or deferred to trial, the responsive pleading is due within 10 days after notice of the court's action (Ariz. R. Civ. P. 12(a)(2), (b)). The plaintiff may dismiss by notice before an answer or summary judgment motion is served, or by order on a stipulation of all parties who have appeared (Ariz. R. Civ. P. 41(a)(1))."
-  edge-pleadings-dismissed "Dismissed on a Rule 12(b) motion" -> dismissed {
-    authority cite "Ariz. R. Civ. P. 12(b)"
-  }
+  "Dismissed on a Rule 12(b) motion" -> dismissed { authority cite "Ariz. R. Civ. P. 12(b)" }
   edge-pleadings-answered "Answered; the case proceeds" -> discovery {
     authority cite "Ariz. R. Civ. P. 12(a)"
   }
-  edge-pleadings-settled "Settled or voluntarily dismissed" -> settled {
-    authority cite "Ariz. R. Civ. P. 41(a)"
-  }
+  "Settled or voluntarily dismissed" -> settled { authority cite "Ariz. R. Civ. P. 41(a)" }
 }
 
 state discovery: "Disclosure and discovery" by plaintiff cite "Ariz. R. Civ. P. 26"
 {
   note "Discovery is governed by Civil Rules 26 to 37, with prompt disclosure under Rule 26.1 and tiered limits under Rule 26.2 (Ariz. R. Civ. P. 26, 26.1, 26.2); any Tax Court practice displacing them is not vendored and is a hole."
-  edge-discovery-dispositive "Summary judgment motion or trial setting" -> dispositive {
+  "Summary judgment motion or trial setting" -> dispositive {
     authority cite "Ariz. R. Civ. P. 56(b)"
   }
 }
@@ -41,15 +37,13 @@ decision dispositive: "Summary judgment?" by court cite "Ariz. R. Civ. P. 56(a)"
   edge-dispositive-granted "Granted: decided without trial" -> judgment {
     authority cite "Ariz. R. Civ. P. 56(a)"
   }
-  edge-dispositive-trial "Denied or not sought: tried" -> trial {
-    authority cite "Ariz. R. Civ. P. 56(a)"
-  }
+  "Denied or not sought: tried" -> trial { authority cite "Ariz. R. Civ. P. 56(a)" }
 }
 
 state trial: "Trial" by court cite "Ariz. R. Civ. P. 39"
 {
   note "Trial is by jury unless waived under Rule 38(b) or the court finds no right to a jury trial on some or all issues; on a waiver the court tries all issues (Ariz. R. Civ. P. 39(a), (b)). Whether a jury is available in the Tax Court is set by statute, which is not vendored, so it is a hole."
-  edge-trial-judgment "Decision rendered" -> judgment { authority cite "Ariz. R. Civ. P. 58(b)" }
+  "Decision rendered" -> judgment { authority cite "Ariz. R. Civ. P. 58(b)" }
 }
 
 state judgment: "Judgment entered" by court cite "Ariz. R. Civ. P. 58(b)"

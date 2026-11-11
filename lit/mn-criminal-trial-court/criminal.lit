@@ -40,9 +40,7 @@ decision first-appearance: "First appearance" by court cite "Minn. R. Crim. P. 5
 state second-appearance: "Second appearance (Rule 8) and arraignment" by court cite "Minn. R. Crim. P. 8.01"
 {
   note "At the Rule 8 hearing the court again advises the defendant of the charges and rights; the only plea the defendant may enter is guilty, and otherwise the arraignment is continued to the Omnibus Hearing (Minn. R. Crim. P. 8.01, 8.02, subd. 1). In a homicide to be presented to the grand jury, or an offense punishable by life imprisonment, no plea is taken, and presentation to the grand jury must commence within 14 days of the Rule 8 appearance (8.02, subd. 2). The Omnibus Hearing is scheduled for a date not later than 28 days after the Rule 8 appearance, extendable for good cause (8.04(c)); it must start within 42 days of the Rule 5 appearance if not combined with the Rule 8 hearing, or within 28 days if combined (11.01(a))."
-  edge-second-appearance-omnibus "No guilty plea; Omnibus Hearing" -> omnibus {
-    authority cite "Minn. R. Crim. P. 8.04"
-  }
+  "No guilty plea; Omnibus Hearing" -> omnibus { authority cite "Minn. R. Crim. P. 8.04" }
   edge-second-appearance-plea "Guilty plea at the Rule 8 hearing" -> sentencing {
     authority cite "Minn. R. Crim. P. 8.02"
   }
@@ -79,9 +77,7 @@ decision plea-decision: "Plea or trial" by accused cite "Minn. R. Crim. P. 11.09
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Minn. R. Crim. P. 11.09"
   }
-  edge-plea-decision-trial "Trial on demand within 60 days" -> trial {
-    authority cite "Minn. R. Crim. P. 11.09"
-  }
+  "Trial on demand within 60 days" -> trial { authority cite "Minn. R. Crim. P. 11.09" }
 }
 
 decision trial: "Verdict" by court cite "Minn. R. Crim. P. 26.03"
@@ -113,9 +109,7 @@ decision post-verdict: "Post-verdict motions" by court cite "Minn. R. Crim. P. 2
 state sentencing: "Sentencing" by court cite "Minn. R. Crim. P. 27.03"
 {
   note "Sentencing hearings are held as provided by law, with the presentence and departure procedures of Minn. R. Crim. P. 27.03."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "Minn. R. Crim. P. 27.03"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "Minn. R. Crim. P. 27.03" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "Minn. R. Crim. P. 28.02"

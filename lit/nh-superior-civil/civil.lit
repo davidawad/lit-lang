@@ -60,9 +60,7 @@ terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] 
 state scheduling: "Case structuring" by court cite "N.H. Super. Ct. R. 5(a)"
 {
   note "Within 20 days of the Answer date the parties confer on the trial date, discovery and expert deadlines, ADR and motion deadlines, with dispositive motions due not less than 120 days before trial and other pretrial motions not later than 14 days before trial, and file an agreed stipulation within those 20 days (N.H. Super. Ct. R. 5(a)-(b)). Without agreement a case structuring conference is held no later than 75 days after the Answer is filed (N.H. Super. Ct. R. 5(c))."
-  edge-scheduling-discovery "Case structuring order issued" -> discovery {
-    authority cite "N.H. Super. Ct. R. 5(d)"
-  }
+  "Case structuring order issued" -> discovery { authority cite "N.H. Super. Ct. R. 5(d)" }
 }
 
 state discovery: "Discovery" by plaintiff cite "N.H. Super. Ct. R. 21"
@@ -71,9 +69,7 @@ state discovery: "Discovery" by plaintiff cite "N.H. Super. Ct. R. 21"
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
     authority cite "N.H. Super. Ct. R. 12(g)"
   }
-  edge-discovery-trial "No dispositive motion" -> trial {
-    authority cite "N.H. Super. Ct. R. 35(a)"
-  }
+  "No dispositive motion" -> trial { authority cite "N.H. Super. Ct. R. 35(a)" }
   edge-discovery-settle "Case settled" -> settled { authority cite "N.H. Super. Ct. R. 39(a)" }
 }
 

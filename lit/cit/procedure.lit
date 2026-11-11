@@ -40,7 +40,7 @@ state summons-served: "Summons served by the clerk" by court cite "USCIT R. 4(a)
       note "30 days after the summons in a § 1581(c) section 516A(a)(2) or (3) action."
     }
   }
-  edge-summons-served-agency-record "Section 1581(c) action: complaint filed; no answer is served" -> agency-record {
+  "Section 1581(c) action: complaint filed; no answer is served" -> agency-record {
     authority cite "USCIT R. 12(a)(1)(A)"
     within complaint-after-summons-period { note "30 days after the summons." }
   }
@@ -93,25 +93,19 @@ decision rule12-ruling: "Ruling on the Rule 12 motion" by court cite "USCIT R. 1
 state pleadings-closed: "Pleadings closed; scheduling" by court cite "USCIT R. 16"
 {
   note "Postassignment conferences, scheduling and management under USCIT R. 16."
-  edge-pleadings-closed-discovery "Scheduling order entered" -> discovery {
-    authority cite "USCIT R. 16"
-  }
-  edge-pleadings-closed-settled "Dismissal by notice or stipulation" -> settled {
-    authority cite "USCIT R. 41(a)"
-  }
+  "Scheduling order entered" -> discovery { authority cite "USCIT R. 16" }
+  "Dismissal by notice or stipulation" -> settled { authority cite "USCIT R. 41(a)" }
 }
 
 state discovery: "Discovery" by movant cite "USCIT R. 26"
 {
   note "Disclosure and discovery under USCIT R. 26 through 37. A summary judgment motion may be filed, unless the court orders otherwise, at any time until 30 days after the close of all discovery (USCIT R. 56(b))."
-  edge-discovery-summary-judgment "Summary judgment motion" -> summary-judgment {
+  "Summary judgment motion" -> summary-judgment {
     authority cite "USCIT R. 56(b)"
     within summary-judgment-period { note "Until 30 days after the close of all discovery." }
   }
   edge-discovery-trial "Request for trial" -> trial-stage { authority cite "USCIT R. 40" }
-  edge-discovery-settled "Dismissal by stipulation or order" -> settled {
-    authority cite "USCIT R. 41(a)"
-  }
+  "Dismissal by stipulation or order" -> settled { authority cite "USCIT R. 41(a)" }
 }
 
 state agency-record: "Agency record filed; motion for judgment on the agency record" by movant cite "USCIT R. 56.2"
@@ -172,7 +166,7 @@ decision summary-judgment: "Motion for summary judgment" by court cite "USCIT R.
 state trial-stage: "Trial" by court cite "USCIT R. 39"
 {
   note "Trial on request under USCIT R. 40. In an action tried without a jury the court finds the facts specially and states its conclusions of law separately (USCIT R. 52(a))."
-  edge-trial-stage-findings "Trial completed" -> findings { authority cite "USCIT R. 52(a)" }
+  "Trial completed" -> findings { authority cite "USCIT R. 52(a)" }
 }
 
 state findings: "Findings of fact and conclusions of law" by court cite "USCIT R. 52(a)"

@@ -254,7 +254,7 @@ start stay-relief-moved
 state stay-relief-moved: "Motion for relief from stay filed with its notice" by movant cite "Bankr. S.D. Ill. LBR 4001-2(C)"
 {
   note "A motion for relief from stay is a separate pleading (LBR 4001-2) naming the debtor, the trustee and known interest holders and stating its grounds, the property's value and encumbrances (LBR 4001-2(A)), with a separate notice on the court's form and a certificate of service or it is stricken (LBR 4001-2(C), (D)). Objections are due 14 days from filing so the court can meet § 362(e) (LBR 9006-1)."
-  edge-stay-relief-moved-opposed "Opposition filed and served within 14 days" -> opposed {
+  "Opposition filed and served within 14 days" -> opposed {
     authority cite "Bankr. S.D. Ill. LBR 4001-2(E)"
   }
   edge-stay-relief-moved-unopposed "No timely objection; order entered without a hearing" -> decided {
@@ -265,17 +265,13 @@ state stay-relief-moved: "Motion for relief from stay filed with its notice" by 
 state opposed: "Opposition filed" by opponent cite "Bankr. S.D. Ill. LBR 4001-2(E)"
 {
   note "The opposition identifies the opposing party's interest in the property and its grounds and, if the debtor's, the property's value and the debtor's equity (LBR 4001-2(E)). The parties confer before the hearing (LBR 9013-1(D))."
-  edge-opposed-preliminary-hearing "Preliminary hearing" -> preliminary-hearing {
-    authority cite "Bankr. S.D. Ill. LBR 9013-5(C)"
-  }
+  "Preliminary hearing" -> preliminary-hearing { authority cite "Bankr. S.D. Ill. LBR 9013-5(C)" }
 }
 
 decision preliminary-hearing: "Preliminary hearing on stay relief" by court cite "Bankr. S.D. Ill. LBR 9013-5(C)"
 {
   note "At the preliminary hearing the court may order briefs before the trial date (LBR 9013-5(C)); in a chapter 13 case a motion without the payment history may be denied there (LBR 4001-2(B)(2)(b))."
-  edge-preliminary-hearing-decided "Motion granted or denied" -> decided {
-    authority cite "Bankr. S.D. Ill. LBR 9013-5(C)"
-  }
+  "Motion granted or denied" -> decided { authority cite "Bankr. S.D. Ill. LBR 9013-5(C)" }
 }
 
 terminal decided: "Motion decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. S.D. Ill. LBR 1001(B)"

@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The District of Utah's own criminal periods, counted under the criminal
 // rules (FRCrimP 45(a) governs "any local rule"). No trigger carries a
 // service method: FRCrimP 45(c)'s three added days follow the manner of
@@ -74,9 +76,6 @@ event PettyAppelleeBriefServed()
 /// probation office report received to the probation officer within 7
 /// days after the hearing where the report or document was considered.
 deadline report-return: 7.days after ReportHearingHeld() counted_by frcrimp45 cite "DUCrimR 5-1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: report-return (weekend)" cite "DUCrimR 5-1"
 {
@@ -87,9 +86,6 @@ test "Counting boundary: report-return (weekend)" cite "DUCrimR 5-1"
 /// DUCrimR 12-1(b): a response memorandum is filed within 14 days after
 /// service of the motion.
 deadline response-period: 14.days after MotionServed() counted_by frcrimp45 cite "DUCrimR 12-1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "DUCrimR 12-1(b)"
 {
@@ -101,9 +97,6 @@ test "Counting boundary: response-period (weekend)" cite "DUCrimR 12-1(b)"
 /// rebuttal, within 7 days after service of the memorandum opposing the
 /// motion.
 deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 cite "DUCrimR 12-1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "DUCrimR 12-1(c)"
 {
@@ -116,9 +109,6 @@ test "Counting boundary: reply-period (weekend)" cite "DUCrimR 12-1(c)"
 /// Supplemental Authority; the court may decide the motion without waiting
 /// for it.
 deadline supplemental-authority-response: 7.days after SupplementalAuthorityServed() counted_by frcrimp45 cite "DUCrimR 12-1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: supplemental-authority-response (weekend)" cite "DUCrimR 12-1(e)"
 {
@@ -133,9 +123,6 @@ deadline expert-disclosure: 30.days before FinalPretrialConferenceScheduled() co
   to CaseOrder
   op set
 } cite "DUCrimR 16-1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: expert-disclosure (weekend)" cite "DUCrimR 16-1(c)"
 {
@@ -148,9 +135,6 @@ test "Counting boundary: expert-disclosure (weekend)" cite "DUCrimR 16-1(c)"
 /// the notice; if none is filed, the movant files a certificate of
 /// compliance and asks the court to direct issuance.
 deadline victim-subpoena-objection: 14.days after VictimSubpoenaNoticeServed() counted_by frcrimp45 cite "DUCrimR 17-2(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: victim-subpoena-objection (weekend)" cite "DUCrimR 17-2(c)"
 {
@@ -161,9 +145,6 @@ test "Counting boundary: victim-subpoena-objection (weekend)" cite "DUCrimR 17-2
 /// DUCrimR 32-1(a)(3): within 7 days after notice of an objection, the
 /// parties and probation make reasonable efforts to resolve it.
 deadline psr-objection-resolution: 7.days after PsrObjectionNoticed() counted_by frcrimp45 cite "DUCrimR 32-1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-objection-resolution (weekend)" cite "DUCrimR 32-1(a)"
 {
@@ -175,9 +156,6 @@ test "Counting boundary: psr-objection-resolution (weekend)" cite "DUCrimR 32-1(
 /// file a sentencing memorandum or Position of Party with Respect to
 /// Sentencing Factors.
 deadline sentencing-memorandum: 7.days before SentencingScheduled() counted_by frcrimp45 cite "DUCrimR 32-1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-memorandum (holiday)" cite "DUCrimR 32-1(b)"
 {
@@ -192,9 +170,6 @@ deadline sentencing-documents-to-probation: 10.days before SentencingScheduled()
   to CaseOrder
   op set
 } cite "DUCrimR 32-1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-documents-to-probation (weekend)" cite "DUCrimR 32-1(b)"
 {
@@ -206,9 +181,6 @@ test "Counting boundary: sentencing-documents-to-probation (weekend)" cite "DUCr
 /// proposed order are presented to a magistrate judge at least 10 days
 /// before the seal expires.
 deadline seal-extension-motion: 10.days before SealExpires() counted_by frcrimp45 cite "DUCrimR 41-1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: seal-extension-motion (weekend)" cite "DUCrimR 41-1(b)"
 {
@@ -220,9 +192,6 @@ test "Counting boundary: seal-extension-motion (weekend)" cite "DUCrimR 41-1(b)"
 /// government gives the Clerk's Office a copy of the FRCrimP 41 document
 /// redacted as FRCrimP 49.1 requires.
 deadline warrant-redacted-copy: 10.days before SealExpires() counted_by frcrimp45 cite "DUCrimR 41-1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: warrant-redacted-copy (weekend)" cite "DUCrimR 41-1(c)"
 {
@@ -235,9 +204,6 @@ test "Counting boundary: warrant-redacted-copy (weekend)" cite "DUCrimR 41-1(c)"
 /// the FRCrimP 49.1 personal identifiers at least 10 days before the seal
 /// expires.
 deadline unsealed-redacted-copy: 10.days before SealExpires() counted_by frcrimp45 cite "DUCrimR 49.1-1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: unsealed-redacted-copy (weekend)" cite "DUCrimR 49.1-1(a)"
 {
@@ -249,9 +215,6 @@ test "Counting boundary: unsealed-redacted-copy (weekend)" cite "DUCrimR 49.1-1(
 /// original transcript has been filed, each party reviews its portions
 /// for personal identifiers.
 deadline transcript-review: 14.days after TranscriptFilingNoticed() counted_by frcrimp45 cite "DUCrimR 49.1-1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: transcript-review (weekend)" cite "DUCrimR 49.1-1(b)"
 {
@@ -263,9 +226,6 @@ test "Counting boundary: transcript-review (weekend)" cite "DUCrimR 49.1-1(b)"
 /// of Intent to Request Redaction within 21 days after receiving notice
 /// that the transcript has been filed.
 deadline redaction-intent-notice: 21.days after TranscriptFilingNoticed() counted_by frcrimp45 cite "DUCrimR 49.1-1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: redaction-intent-notice (holiday)" cite "DUCrimR 49.1-1(c)"
 {
@@ -276,9 +236,6 @@ test "Counting boundary: redaction-intent-notice (holiday)" cite "DUCrimR 49.1-1
 /// DUCrimR 49.1-1(c)(2): the Redaction Request, identifying page, line and
 /// redaction, is filed within 42 days after receiving that notice.
 deadline redaction-request: 42.days after TranscriptFilingNoticed() counted_by frcrimp45 cite "DUCrimR 49.1-1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: redaction-request (weekend)" cite "DUCrimR 49.1-1(c)"
 {
@@ -290,9 +247,6 @@ test "Counting boundary: redaction-request (weekend)" cite "DUCrimR 49.1-1(c)"
 /// misdemeanor or petty-offense case to a district judge files and serves
 /// a notice within 14 days after entry of the order.
 deadline petty-appeal-notice: 14.days after PettyOrderEntered() counted_by frcrimp45 cite "DUCrimR 58-2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: petty-appeal-notice (weekend)" cite "DUCrimR 58-2(a)"
 {
@@ -303,9 +257,6 @@ test "Counting boundary: petty-appeal-notice (weekend)" cite "DUCrimR 58-2(a)"
 /// DUCrimR 58-2(b)(1): the appellant's brief is filed and served within 14
 /// days after filing the notice of appeal.
 deadline petty-appellant-brief: 14.days after PettyAppealNoticed() counted_by frcrimp45 cite "DUCrimR 58-2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: petty-appellant-brief (weekend)" cite "DUCrimR 58-2(b)"
 {
@@ -316,9 +267,6 @@ test "Counting boundary: petty-appellant-brief (weekend)" cite "DUCrimR 58-2(b)"
 /// DUCrimR 58-2(b)(2): the appellee's brief is filed and served within 14
 /// days after service of the appellant's brief.
 deadline petty-appellee-brief: 14.days after PettyAppellantBriefServed() counted_by frcrimp45 cite "DUCrimR 58-2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: petty-appellee-brief (weekend)" cite "DUCrimR 58-2(b)"
 {
@@ -329,9 +277,6 @@ test "Counting boundary: petty-appellee-brief (weekend)" cite "DUCrimR 58-2(b)"
 /// DUCrimR 58-2(b)(3): the appellant may file and serve a reply brief
 /// within 7 days after service of the appellee's brief.
 deadline petty-reply-brief: 7.days after PettyAppelleeBriefServed() counted_by frcrimp45 cite "DUCrimR 58-2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: petty-reply-brief (weekend)" cite "DUCrimR 58-2(b)"
 {

@@ -37,9 +37,7 @@ decision initial-appearance: "Pretrial release or detention" by court cite "N.J.
 decision probable-cause: "Probable-cause hearing or indictment" by court cite "N.J. Ct. R. 3:4-3"
 {
   note "If the defendant does not waive a hearing as to probable cause and no indictment has been returned, a Superior Court judge hears the State's evidence within a reasonable time, with cross-examination; on probable cause the defendant is bound over to await final determination, otherwise discharged from custody (N.J. Ct. R. 3:4-3). An indictment is found only on the concurrence of the number of grand jurors R. 3:6-8 sets and is returned in open court; the grand jury is governed by R. 3:6."
-  edge-probable-cause-charged "Bound over; indictment returned" -> charged {
-    authority cite "N.J. Ct. R. 3:6-8"
-  }
+  "Bound over; indictment returned" -> charged { authority cite "N.J. Ct. R. 3:6-8" }
   edge-probable-cause-none "No probable cause; discharged" -> dismissed {
     authority cite "N.J. Ct. R. 3:4-3"
   }
@@ -48,13 +46,13 @@ decision probable-cause: "Probable-cause hearing or indictment" by court cite "N
 state charged: "Indictment or accusation" by court cite "N.J. Ct. R. 3:7-2"
 {
   note "Every crime is prosecuted by indictment unless the defendant, advised of the right, waives it in a signed writing, in which case the defendant may be tried on an accusation prepared by the prosecuting attorney (N.J. Ct. R. 3:7-2); the indictment or accusation is governed by R. 3:7-3. When an indictment is returned or unsealed, the prosecutor provides a copy with the available discovery, and any plea offer in writing (N.J. Ct. R. 3:9-1; 3:13-3)."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "N.J. Ct. R. 3:9-1" }
+  "Arraignment" -> arraignment { authority cite "N.J. Ct. R. 3:9-1" }
 }
 
 state arraignment: "Arraignment" by prosecution cite "N.J. Ct. R. 3:9-1"
 {
   note "The criminal division manager's office notifies the defendant in writing of the arraignment, which occurs within the period after the return or unsealing of the indictment that R. 3:9-1 sets, not stated here (currency unconfirmed); the rule also governs the meet-and-confer, the plea offer, the initial case disposition and status conferences, pretrial hearings and the pretrial conference (N.J. Ct. R. 3:9-1). Counsel's appearance is governed by R. 3:8-1."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "N.J. Ct. R. 3:13-3" }
+  "Discovery" -> discovery { authority cite "N.J. Ct. R. 3:13-3" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "N.J. Ct. R. 3:10-2"
@@ -89,7 +87,7 @@ decision plea-decision: "Plea or trial" by accused cite "N.J. Ct. R. 3:9-2"
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "N.J. Ct. R. 3:9-2"
   }
-  edge-plea-decision-trial "Trial" -> trial {
+  "Trial" -> trial {
     authority cite ?("New Jersey Rules of Court, Part I, Rule 1:8-1 (trial by jury and its waiver; not vendored)")
   }
   edge-plea-decision-nolle "Dismissal on the prosecutor's motion" -> dismissed {
@@ -123,9 +121,7 @@ decision post-trial: "Post-verdict motions" by court cite "N.J. Ct. R. 3:20-1"
 state sentencing: "Presentence procedure and sentencing" by court cite "N.J. Ct. R. 3:21-4"
 {
   note "The presentence procedure is governed by R. 3:21-2. Sentence is imposed without unreasonable delay; pending sentence the court may commit the defendant or continue or alter the conditions of release; sentence is imposed with the defendant present or after a written waiver, and the court first asks whether the defendant wishes to make a statement and present information in mitigation (N.J. Ct. R. 3:21-4). The judgment of conviction sets out the plea, verdict or findings, adjudication, sentence, the reasons for it and the credits, and is signed by the judge and entered by the clerk (N.J. Ct. R. 3:21-5). A sentence may be reduced or changed under R. 3:21-10."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "N.J. Ct. R. 3:21-5"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "N.J. Ct. R. 3:21-5" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "N.J. Ct. R. 3:21-5"

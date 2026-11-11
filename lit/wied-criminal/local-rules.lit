@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The Eastern District of Wisconsin's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"). The
 // Criminal Rules of Part C govern criminal and petty offense proceedings
@@ -66,9 +68,6 @@ deadline pretrial-motions: 20.days after ArraignedOnIndictment() counted_by frcr
   to CaseOrder
   op set
 } cite "E.D. Wis. Criminal L. R. 12(b); E.D. Wis. Criminal L. R. 58(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motions (weekend)" cite "E.D. Wis. Criminal L. R. 12(b); E.D. Wis. Criminal L. R. 58(a)"
 {
@@ -83,9 +82,6 @@ deadline pretrial-motion-response: 10.days after PretrialMotionDue() counted_by 
   to CaseOrder
   op set
 } cite "E.D. Wis. Criminal L. R. 12(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motion-response (weekend)" cite "E.D. Wis. Criminal L. R. 12(b)"
 {
@@ -99,9 +95,6 @@ deadline pretrial-motion-reply: 5.days after PretrialResponseDue() counted_by fr
   to CaseOrder
   op set
 } cite "E.D. Wis. Criminal L. R. 12(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motion-reply (weekend)" cite "E.D. Wis. Criminal L. R. 12(b)"
 {
@@ -113,9 +106,6 @@ test "Counting boundary: pretrial-motion-reply (weekend)" cite "E.D. Wis. Crimin
 /// opposing an evidentiary hearing, stating why it is unnecessary, within
 /// 3 days after the filing of the motion seeking one.
 deadline evidentiary-hearing-opposition: 3.days after EvidentiaryHearingMotionFiled() counted_by frcrimp45 cite "E.D. Wis. Criminal L. R. 12(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: evidentiary-hearing-opposition (weekend)" cite "E.D. Wis. Criminal L. R. 12(c)"
 {
@@ -127,9 +117,6 @@ test "Counting boundary: evidentiary-hearing-opposition (weekend)" cite "E.D. Wi
 /// criminal case as related is filed within 7 days of the filing of the
 /// motion.
 deadline reassignment-objection: 7.days after ReassignmentMotionFiled() counted_by frcrimp45 cite "E.D. Wis. Criminal L. R. 13(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reassignment-objection (weekend)" cite "E.D. Wis. Criminal L. R. 13(b)"
 {
@@ -142,9 +129,6 @@ test "Counting boundary: reassignment-objection (weekend)" cite "E.D. Wis. Crimi
 /// attorney for the government and defense counsel confer regarding
 /// discovery.
 deadline discovery-conference: 14.days after ArraignedOnIndictment() counted_by frcrimp45 cite "E.D. Wis. Criminal L. R. 16.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-conference (weekend)" cite "E.D. Wis. Criminal L. R. 16.1(a)"
 {
@@ -160,9 +144,6 @@ deadline expert-disclosure: 15.days before TrialCommences() counted_by frcrimp45
   to CaseOrder
   op set
 } cite "E.D. Wis. Criminal L. R. 16(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: expert-disclosure (weekend)" cite "E.D. Wis. Criminal L. R. 16(a)"
 {
@@ -175,9 +156,6 @@ test "Counting boundary: expert-disclosure (weekend)" cite "E.D. Wis. Criminal L
 /// (B) material as soon as reasonably practicable and not later than 15
 /// days before trial, absent good cause for later disclosure.
 deadline defense-reciprocal-disclosure: 15.days before TrialCommences() counted_by frcrimp45 cite "E.D. Wis. Criminal L. R. 16(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-reciprocal-disclosure (weekend)" cite "E.D. Wis. Criminal L. R. 16(a)"
 {
@@ -194,9 +172,6 @@ deadline psr-objections-on-waiver: 10.days before SentencingScheduled() counted_
   to CaseOrder
   op set
 } cite "E.D. Wis. Criminal L. R. 32(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-objections-on-waiver (weekend)" cite "E.D. Wis. Criminal L. R. 32(b)"
 {

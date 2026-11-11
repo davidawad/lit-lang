@@ -97,6 +97,7 @@ test "Counting boundary: seal-objection-period (weekend)" cite "E.D. Va. Loc. Ci
   given SealMotionFiled() on 2024-12-01
   expect deadline(seal-objection-period) == 2024-12-09
 }
+
 /// Local Civil Rule 7(E): unless otherwise ordered, a motion is deemed
 /// withdrawn if the movant does not set it for hearing (or arrange to submit
 /// it without a hearing) within thirty days after the date it is filed.
@@ -107,6 +108,7 @@ test "Counting boundary: motion-setting-period (holiday)" cite "E.D. Va. Loc. Ci
   given MotionFiled() on 2024-12-02
   expect deadline(motion-setting-period) == 2025-01-02
 }
+
 /// Local Civil Rule 7(F)(1): unless otherwise directed by the court, the
 /// opposing party files a response brief within fourteen calendar days after
 /// service; the period is not expanded by the mode of service,
@@ -118,6 +120,7 @@ test "Counting boundary: response-brief-period (weekend)" cite "E.D. Va. Loc. Ci
   given MotionServed() on 2024-12-01
   expect deadline(response-brief-period) == 2024-12-16
 }
+
 /// Local Civil Rule 7(F)(1): the moving party may file a reply brief within
 /// six calendar days after service of the opposing party's response brief;
 /// the period is not expanded by the mode of service, notwithstanding FRCP
@@ -145,6 +148,7 @@ test "Counting boundary: discovery-objection-period (weekend)" cite "E.D. Va. Lo
   given DiscoveryServed() on 2024-12-06
   expect deadline(discovery-objection-period) == 2024-12-23
 }
+
 /// Local Civil Rule 26(C): in a case removed or transferred to the court
 /// after discovery was served, an objection is served within fifteen days
 /// after the date of removal or transfer.
@@ -155,6 +159,7 @@ test "Counting boundary: removed-discovery-objection-period (weekend)" cite "E.D
   given RemovedOrTransferred() on 2024-12-06
   expect deadline(removed-discovery-objection-period) == 2024-12-23
 }
+
 /// Local Civil Rule 26(D)(2): absent a consent order or unless ordered
 /// otherwise, the FRCP 26(a)(2) disclosures are made first by the plaintiff
 /// not later than sixty days before the earlier of the date set for
@@ -166,6 +171,7 @@ test "Counting boundary: plaintiff-expert-disclosure-period (weekend)" cite "E.D
   given DiscoveryCompletionOrPretrialConference() on 2024-12-04
   expect deadline(plaintiff-expert-disclosure-period) == 2024-10-04
 }
+
 /// Local Civil Rule 26(D)(2): the defendant makes its FRCP 26(a)(2)
 /// disclosures thirty days after the plaintiff's.
 deadline defendant-expert-disclosure-period: 30.days after PlaintiffExpertDisclosureDue() counted_by frcp6-virginia cite "E.D. Va. Loc. Civ. R. 26(D)"
@@ -175,6 +181,7 @@ test "Counting boundary: defendant-expert-disclosure-period (holiday)" cite "E.D
   given PlaintiffExpertDisclosureDue() on 2024-12-02
   expect deadline(defendant-expert-disclosure-period) == 2025-01-02
 }
+
 /// Local Civil Rule 26(D)(2): the plaintiff discloses fifteen days after the
 /// defendant's disclosure any evidence that is solely contradictory or
 /// rebuttal evidence to it.
@@ -185,6 +192,7 @@ test "Counting boundary: rebuttal-expert-disclosure-period (weekend)" cite "E.D.
   given DefendantExpertDisclosureDue() on 2024-12-06
   expect deadline(rebuttal-expert-disclosure-period) == 2024-12-23
 }
+
 /// Local Civil Rule 26(D)(3): all parties complete all forms of expert
 /// disclosure and discovery not later than thirty days after the date on
 /// which the plaintiff is, or would be, required to disclose contradictory or
@@ -196,6 +204,7 @@ test "Counting boundary: expert-completion-period (holiday)" cite "E.D. Va. Loc.
   given RebuttalDisclosureDue() on 2024-12-02
   expect deadline(expert-completion-period) == 2025-01-02
 }
+
 /// Local Civil Rule 26(D)(4): answers to interrogatories directed at
 /// clarification of the written reports of expert witnesses disclosed under
 /// FRCP 26(a)(2) are due fifteen days after service.
@@ -206,6 +215,7 @@ test "Counting boundary: expert-interrogatory-answer-period (weekend)" cite "E.D
   given ExpertInterrogatoriesServed() on 2024-12-06
   expect deadline(expert-interrogatory-answer-period) == 2024-12-23
 }
+
 /// Local Civil Rule 30(H): as a general rule, eleven days in advance of the
 /// contemplated taking of a deposition in the continental United States is
 /// reasonable notice, varying with the complexity of the testimony and the
@@ -217,6 +227,7 @@ test "Counting boundary: deposition-notice-period (weekend)" cite "E.D. Va. Loc.
   given DepositionTaken() on 2024-12-04
   expect deadline(deposition-notice-period) == 2024-11-22
 }
+
 /// Local Civil Rule 37(C): after the court rules on a discovery motion, the
 /// answer, production, designation, inspection or examination it requires is
 /// completed within eleven days after entry of the order, unless otherwise
@@ -228,6 +239,7 @@ test "Counting boundary: discovery-order-compliance-period (weekend)" cite "E.D.
   given DiscoveryOrderEntered() on 2024-12-03
   expect deadline(discovery-order-compliance-period) == 2024-12-16
 }
+
 /// Local Civil Rule 38: when another party is added, the additional party
 /// may demand trial by jury at any time within twenty-one days after it is
 /// served with process or summons.
@@ -238,6 +250,7 @@ test "Counting boundary: added-party-jury-demand-period (weekend)" cite "E.D. Va
   given AddedPartyServed() on 2024-12-01
   expect deadline(added-party-jury-demand-period) == 2024-12-23
 }
+
 /// Local Civil Rule 45(E): except as otherwise ordered for good cause
 /// shown, subpoenas for attendance of witnesses at hearings or trials are
 /// served not later than fourteen days before the date of the hearing or
@@ -249,6 +262,7 @@ test "Counting boundary: trial-subpoena-service-period (weekend)" cite "E.D. Va.
   given HearingOrTrialHeld() on 2024-12-01
   expect deadline(trial-subpoena-service-period) == 2024-11-15
 }
+
 /// Local Civil Rule 45(F): except as otherwise ordered for good cause
 /// shown, subpoenas compelling attendance at a deposition are served not
 /// later than eleven days before the date of the deposition.
@@ -259,6 +273,7 @@ test "Counting boundary: deposition-subpoena-service-period (weekend)" cite "E.D
   given DepositionTaken() on 2024-12-04
   expect deadline(deposition-subpoena-service-period) == 2024-11-22
 }
+
 /// Local Civil Rule 47(B): a motion for more than the usual number of
 /// peremptory challenges is made at least twenty-one days before the date
 /// set for commencement of trial; untimely motions are not entertained.
@@ -269,6 +284,7 @@ test "Counting boundary: peremptory-challenge-motion-period (weekend)" cite "E.D
   given TrialCommenced() on 2024-12-01
   expect deadline(peremptory-challenge-motion-period) == 2024-11-08
 }
+
 /// Local Civil Rule 51: except as a pretrial or scheduling order provides
 /// otherwise, in a jury case the parties file proposed instructions and voir
 /// dire questions at least seven days before the scheduled trial date.
@@ -279,6 +295,7 @@ test "Counting boundary: jury-instructions-period (weekend)" cite "E.D. Va. Loc.
   given TrialCommenced() on 2024-12-01
   expect deadline(jury-instructions-period) == 2024-11-22
 }
+
 /// Local Civil Rule 54(D)(1): the party entitled to costs files a bill of
 /// costs as provided in 28 U.S.C. §§ 1920 and 1924 within fourteen days from
 /// the entry of judgment, unless the time is extended by order.
@@ -289,6 +306,7 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "E.D. Va. Loc. Civ
   given JudgmentEntered() on 2024-12-01
   expect deadline(bill-of-costs-period) == 2024-12-16
 }
+
 /// Local Civil Rule 54(D)(2): a party from whom costs are sought may file an
 /// opposition within fourteen calendar days after service of the bill of
 /// costs, not expanded by the mode of service, notwithstanding FRCP 6(d).
@@ -299,6 +317,7 @@ test "Counting boundary: costs-opposition-period (weekend)" cite "E.D. Va. Loc. 
   given BillOfCostsServed() on 2024-12-01
   expect deadline(costs-opposition-period) == 2024-12-16
 }
+
 /// Local Civil Rule 54(D)(2): within six calendar days after the opposition,
 /// the prevailing party may file responses to the objections, not expanded by
 /// the mode of service, notwithstanding FRCP 6(d).

@@ -22,9 +22,7 @@ decision appellate-referral: "Appellate review or its waiver" by petitioner cite
   edge-appellate-referral-briefs "Referred to the Court" -> defense-brief {
     authority cite "CMCR R. 15(c)(2)"
   }
-  edge-appellate-referral-waived "Review waived or withdrawn" -> waived {
-    authority cite "CMCR R. 14"
-  }
+  "Review waived or withdrawn" -> waived { authority cite "CMCR R. 14" }
 }
 
 state defense-brief: "Briefs on referral" by appellant cite "CMCR R. 15(c)(2)"

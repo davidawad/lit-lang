@@ -3,6 +3,8 @@ module nywd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Western District of New York's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"). Unless the
 // assigned District Judge orders otherwise, the motion procedures apply to
@@ -69,9 +71,6 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 de
   to CaseOrder
   op set
 } cite "W.D.N.Y. Loc. R. Crim. P. 12(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: opposition-period (weekend)" cite "W.D.N.Y. Loc. R. Crim. P. 12(b)"
 {
@@ -86,9 +85,6 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "W.D.N.Y. Loc. R. Crim. P. 12(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "W.D.N.Y. Loc. R. Crim. P. 12(b)"
 {
@@ -104,9 +100,6 @@ deadline video-deposition-objections: 7.days before TrialScheduled() counted_by 
   to CaseOrder
   op set
 } cite "W.D.N.Y. Loc. R. Crim. P. 15(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: video-deposition-objections (holiday)" cite "W.D.N.Y. Loc. R. Crim. P. 15(d)"
 {
@@ -118,9 +111,6 @@ test "Counting boundary: video-deposition-objections (holiday)" cite "W.D.N.Y. L
 /// or other physical exhibits within 30 days from the date of the Clerk's
 /// notice may have them destroyed or otherwise disposed of.
 deadline exhibit-removal: 30.days after ExhibitRemovalNoticed() counted_by frcrimp45 cite "W.D.N.Y. Loc. R. Crim. P. 26(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-removal (weekend)" cite "W.D.N.Y. Loc. R. Crim. P. 26(c)"
 {
@@ -132,9 +122,6 @@ test "Counting boundary: exhibit-removal (weekend)" cite "W.D.N.Y. Loc. R. Crim.
 /// with its inventory to the designated Magistrate Judge within 14 days
 /// after it is executed or the time for execution has expired.
 deadline search-warrant-return: 14.days after SearchWarrantExecuted() counted_by frcrimp45 cite "W.D.N.Y. Loc. R. Crim. P. 41(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: search-warrant-return (weekend)" cite "W.D.N.Y. Loc. R. Crim. P. 41(b)"
 {
@@ -146,9 +133,6 @@ test "Counting boundary: search-warrant-return (weekend)" cite "W.D.N.Y. Loc. R.
 /// to a magistrate judge's recommended disposition moves the District
 /// Judge for an extension within 14 days after being served with it.
 deadline objection-extension-motion: 14.days after RecommendedDispositionServed() counted_by frcrimp45 cite "W.D.N.Y. Loc. R. Crim. P. 59(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: objection-extension-motion (weekend)" cite "W.D.N.Y. Loc. R. Crim. P. 59(c)"
 {

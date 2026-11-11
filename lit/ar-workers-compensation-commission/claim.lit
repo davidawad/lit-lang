@@ -13,7 +13,7 @@ start filed
 
 state filed: "Claim filed" by movant cite ?("Ark. Code Ann. § 11-9-702: not vendored") {
   note "A claim for compensation is filed with the Commission. The filing period, form and fees are not stated: Ark. Code Ann. § 11-9-702 is not vendored."
-  edge-filed-hearing "Set for hearing" -> hearing {
+  "Set for hearing" -> hearing {
     event ActionCommenced()
     authority cite ?("Ark. Code Ann. § 11-9-705: not vendored")
   }
@@ -21,9 +21,7 @@ state filed: "Claim filed" by movant cite ?("Ark. Code Ann. § 11-9-702: not ven
 
 state hearing: "Hearing before an administrative law judge" by court cite ?("Ark. Code Ann. § 11-9-705: not vendored") {
   note "The claim is heard by an administrative law judge. Hearing procedure, evidence and the record are not stated: Ark. Code Ann. § 11-9-705 is not vendored."
-  edge-hearing-decision "Decision issued" -> decision {
-    authority cite ?("Ark. Code Ann. § 11-9-704: not vendored")
-  }
+  "Decision issued" -> decision { authority cite ?("Ark. Code Ann. § 11-9-704: not vendored") }
 }
 
 decision decision: "Administrative law judge decides" by court cite ?("Ark. Code Ann. § 11-9-704: not vendored") {

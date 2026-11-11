@@ -49,7 +49,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "Wis. Stat. 
   edge-pleading-motion-granted "Granted: claims dismissed" -> dismissed {
     authority cite "Wis. Stat. § 802.06(2)"
   }
-  edge-pleading-motion-amend "Pleading amended" -> amend { authority cite "Wis. Stat. § 802.09(1)" }
+  "Pleading amended" -> amend { authority cite "Wis. Stat. § 802.09(1)" }
   edge-pleading-motion-denied "Denied: answer within 10 days after notice" -> scheduling {
     authority cite "Wis. Stat. § 802.06(1)"
   }
@@ -87,7 +87,7 @@ terminal default-judgment: "Default judgment for applicant" outcome [win] cite "
 state scheduling: "Scheduling order" by court cite "Wis. Stat. § 802.10(3)"
 {
   note "Except in the categories exempted by § 802.10(1), the circuit court may enter a scheduling order on its own motion or a party's, after consulting the attorneys and any unrepresented party. It may address the time to join parties, amend pleadings, file motions and complete discovery; the time, not more than 30 days after entry of the order, to determine the mode of trial, including a jury demand and payment of the jury fee under § 814.61(4); expert witnesses; conference and trial dates; the timing of summary judgment; and settlement under § 802.12 (Wis. Stat. § 802.10(1), (3))."
-  edge-scheduling-discovery "Discovery opens" -> discovery { authority cite "Wis. Stat. § 804.01" }
+  "Discovery opens" -> discovery { authority cite "Wis. Stat. § 804.01" }
 }
 
 state discovery: "Discovery" by plaintiff cite "Wis. Stat. § 804.01"
@@ -99,10 +99,8 @@ state discovery: "Discovery" by plaintiff cite "Wis. Stat. § 804.01"
   edge-discovery-sanction "Discovery sanction dismisses the action" -> dismissed-sanction {
     authority cite "Wis. Stat. § 804.12(2)"
   }
-  edge-discovery-settled "Voluntary dismissal or stipulation" -> settled {
-    authority cite "Wis. Stat. § 805.04(1)"
-  }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Wis. Stat. § 802.10(3)" }
+  "Voluntary dismissal or stipulation" -> settled { authority cite "Wis. Stat. § 805.04(1)" }
+  "No dispositive motion" -> trial { authority cite "Wis. Stat. § 802.10(3)" }
 }
 
 terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "Wis. Stat. § 804.12(2)"
@@ -130,7 +128,7 @@ state trial: "Trial by jury or by the court" by court cite "Wis. Stat. § 805.01
     event JudgmentEntered()
     authority cite "Wis. Stat. § 805.17(3)"
   }
-  edge-trial-settled "Settled before verdict" -> settled { authority cite "Wis. Stat. § 805.04(1)" }
+  "Settled before verdict" -> settled { authority cite "Wis. Stat. § 805.04(1)" }
 }
 
 decision motions-after-verdict: "Motions after verdict" by court cite "Wis. Stat. § 805.16"

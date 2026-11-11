@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The District of Kansas's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"). The rules in
 // Part XV and the civil rules D. Kan. Rule CR1.1 lists govern every
@@ -59,9 +61,6 @@ deadline response-period: 14.days after MotionServed() counted_by frcrimp45 dele
   to CaseOrder
   op set
 } cite "D. Kan. Rule CR1.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "D. Kan. Rule CR1.2"
 {
@@ -75,9 +74,6 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "D. Kan. Rule CR1.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "D. Kan. Rule CR1.2"
 {
@@ -89,9 +85,6 @@ test "Counting boundary: reply-period (weekend)" cite "D. Kan. Rule CR1.2"
 /// authorities is made within 5 days, linked to it in CM/ECF and limited
 /// to 350 words.
 deadline supplemental-authority-response: 5.days after SupplementalAuthorityNoticed() counted_by frcrimp45 cite "D. Kan. Rule CR1.3(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: supplemental-authority-response (weekend)" cite "D. Kan. Rule CR1.3(c)"
 {
@@ -105,9 +98,6 @@ test "Counting boundary: supplemental-authority-response (weekend)" cite "D. Kan
 /// statements of their positions on the sentencing factors and unresolved
 /// facts.
 deadline sentencing-factors-statement: 5.days before SentencingScheduled() counted_by frcrimp45 cite "D. Kan. Rule CR32.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-factors-statement (weekend)" cite "D. Kan. Rule CR32.1(c)"
 {
@@ -122,9 +112,6 @@ deadline reconsideration-motion: 14.days after OrderServed() counted_by frcrimp4
   to CaseOrder
   op extend
 } cite "D. Kan. Rule 7.3"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reconsideration-motion (weekend)" cite "D. Kan. Rule 7.3"
 {
@@ -141,9 +128,6 @@ deadline magistrate-order-review: 14.days after MagistrateOrderEntered() counted
   to CaseOrder
   op extend
 } cite "D. Kan. Rule 72.1.4(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-order-review (weekend)" cite "D. Kan. Rule 72.1.4(e)"
 {

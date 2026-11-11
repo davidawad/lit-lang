@@ -71,6 +71,7 @@ test "Counting boundary: fee-payment-period (weekend)" cite "1st Cir. BAP L.R. 8
   given NoticeOfAppealFiled() on 2025-12-06
   expect deadline(fee-payment-period) == 2025-12-22
 }
+
 /// 1st Cir. BAP L.R. 8003-1(c)(1): on an appeal by leave, within 14 days
 /// after the order granting the motion for leave to appeal.
 deadline fee-payment-leave-period: 14.days after LeaveToAppealGranted() counted_by frbp9006 cite "1st Cir. BAP L.R. 8003-1(c)(1)"
@@ -80,6 +81,7 @@ test "Counting boundary: fee-payment-leave-period (weekend)" cite "1st Cir. BAP 
   given LeaveToAppealGranted() on 2025-12-06
   expect deadline(fee-payment-leave-period) == 2025-12-22
 }
+
 /// 1st Cir. BAP L.R. 8003-1(c)(2): the fee is paid within 14 days after
 /// entry of the order denying the waiver motion unless the bankruptcy court
 /// orders otherwise.
@@ -90,6 +92,7 @@ test "Counting boundary: fee-after-waiver-denial-period (weekend)" cite "1st Cir
   given FeeWaiverDenied() on 2025-12-06
   expect deadline(fee-after-waiver-denial-period) == 2025-12-22
 }
+
 /// 1st Cir. BAP L.R. 8008-1(a): within 7 days the movant moves in the BAP,
 /// notifying it of the indicative ruling and stating whether it seeks a
 /// remand with retained jurisdiction or dismissal of the appeal.
@@ -100,6 +103,7 @@ test "Counting boundary: indicative-ruling-notice-period (weekend)" cite "1st Ci
   given IndicativeRulingIssued() on 2025-12-06
   expect deadline(indicative-ruling-notice-period) == 2025-12-15
 }
+
 /// 1st Cir. BAP L.R. 8008-1(b): within 7 days after the bankruptcy court's
 /// order on the underlying motion, the movant reports its disposition and
 /// whether the appeal is moot or will proceed.
@@ -110,6 +114,7 @@ test "Counting boundary: remand-report-period (weekend)" cite "1st Cir. BAP L.R.
   given RemandedMotionDecided() on 2025-12-06
   expect deadline(remand-report-period) == 2025-12-15
 }
+
 /// 1st Cir. BAP L.R. 8013-1(a)(2): a motion to reconsider a clerk's order
 /// is filed within 14 days of service of notice of its entry.
 deadline clerk-order-reconsideration-period: 14.days after ClerkOrderEntryServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8013-1(a)(2)"
@@ -119,6 +124,7 @@ test "Counting boundary: clerk-order-reconsideration-period (weekend)" cite "1st
   given ClerkOrderEntryServed() on 2025-12-06
   expect deadline(clerk-order-reconsideration-period) == 2025-12-22
 }
+
 /// 1st Cir. BAP L.R. 8020-1(b)(1): the defaulting party moves to reinstate
 /// within 14 days of service of the dismissal order.
 deadline reinstatement-period: 14.days after ProsecutionDismissalServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8020-1(b)(1)"
@@ -128,6 +134,7 @@ test "Counting boundary: reinstatement-period (weekend)" cite "1st Cir. BAP L.R.
   given ProsecutionDismissalServed() on 2025-12-06
   expect deadline(reinstatement-period) == 2025-12-22
 }
+
 /// 1st Cir. BAP L.R. 8020-1(c): a party or attorney facing sanctions may
 /// respond within fourteen days of service of the motion or order to show
 /// cause.
@@ -138,6 +145,7 @@ test "Counting boundary: sanctions-response-period (weekend)" cite "1st Cir. BAP
   given SanctionsMotionServed() on 2025-12-06
   expect deadline(sanctions-response-period) == 2025-12-22
 }
+
 /// 1st Cir. BAP L.R. 8022-1(a): a response to a motion for rehearing may
 /// be filed within 7 days after its service.
 deadline rehearing-response-period: 7.days after RehearingMotionServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8022-1(a)"
@@ -157,9 +165,7 @@ state notice-filed: "Notice of appeal filed" by appellant cite "FRBP 8002(a)(1)"
     authority cite "FRBP 8002(a)(1)"
     within notice-period
   }
-  edge-notice-filed-untimely "Notice filed outside the period" -> untimely {
-    authority cite "FRBP 8002(d)"
-  }
+  "Notice filed outside the period" -> untimely { authority cite "FRBP 8002(d)" }
 }
 
 terminal untimely: "Notice of appeal untimely" outcome [loss] cite "FRBP 8002(a)(1)"
@@ -183,9 +189,7 @@ terminal dismissed-fee: "Dismissed for nonpayment of the fee" outcome [loss] cit
 decision appealability: "Appealable order and appeal route" by court cite "28 U.S.C. § 158(a)"
 {
   note "Appeals lie from final judgments, orders and decrees, from interlocutory orders under 11 U.S.C. § 1121(d), and with leave from other interlocutory orders (28 U.S.C. § 158(a)). All appeals are to the BAP unless a party elects the district court (1st Cir. BAP L.R. 8005-1(a)): the appellant in the notice of appeal, or waives the election (8005-1(b)(1)); an appellee by a statement substantially in the form of Official Form 17B filed with the BAP within 30 days from service of the notice, or waives it, and any filing other than a notice of appearance before the election waives the time remaining (8005-1(b)(2)). The BAP may transfer an appeal to the district court in the interests of justice (8005-1(c)). A request to certify a direct appeal is due within 60 days after entry (FRBP 8006(f)(1))."
-  edge-appealability-dismissed-jurisdiction "Not appealable" -> dismissed-jurisdiction {
-    authority cite "1st Cir. BAP L.R. 8013-1(c)(1)"
-  }
+  "Not appealable" -> dismissed-jurisdiction { authority cite "1st Cir. BAP L.R. 8013-1(c)(1)" }
   edge-appealability-record "BAP appeal proceeds" -> record {
     authority cite "1st Cir. BAP L.R. 8005-1(a)"
   }
@@ -225,7 +229,7 @@ terminal circuit-direct: "Direct appeal to the court of appeals" outcome [appeal
 state record: "Record designated and transmitted" by appellant cite "FRBP 8009"
 {
   note "The appellant designates the record and states the issues within 14 days after the notice of appeal becomes effective (FRBP 8009(a)(1)(B), lit/frbp). The BAP need not remedy a party's failure to designate an adequate record (1st Cir. BAP L.R. 8009-1(a)). If the record is incomplete after the FRBP 8009(a) deadlines, the bankruptcy clerk may transmit a Certificate of Readiness saying so and later a supplemental one (8010-1(a)). If the bankruptcy court issues an indicative ruling, the movant notifies the BAP within 7 days, and after a remand reports the disposition within 7 days of the bankruptcy court's order (8008-1)."
-  edge-record-briefing "Record docketed" -> briefing {
+  "Record docketed" -> briefing {
     authority cite "FRBP 8009(a)(1)(B)"
     within appellant-designation-period
   }
@@ -319,21 +323,14 @@ decision argument: "Argument or submission" by court cite "FRBP 8019"
 decision decision-issued: "Disposition" by court cite "FRBP 8024(a)"
 {
   note "The rule text supplies no merits outcome probabilities or payoffs."
-  edge-decision-issued-rehearing-window "Judgment entered" -> rehearing-window {
-    authority cite "FRBP 8024(a)"
-  }
+  "Judgment entered" -> rehearing-window { authority cite "FRBP 8024(a)" }
 }
 
 decision rehearing-window: "Rehearing" by appellant cite "FRBP 8022(a)(1)"
 {
   note "A motion for rehearing is due within 14 days after entry of the judgment on appeal (FRBP 8022(a)(1), lit/frbp); a response may be filed within 7 days after its service (1st Cir. BAP L.R. 8022-1(a))."
-  edge-rehearing-window-further-review "No motion" -> further-review {
-    authority cite "FRBP 8022(a)(1)"
-  }
-  edge-rehearing-window-rehearing-ruling "Motion filed" -> rehearing-ruling {
-    authority cite "FRBP 8022(a)(1)"
-    within rehearing-period
-  }
+  "No motion" -> further-review { authority cite "FRBP 8022(a)(1)" }
+  "Motion filed" -> rehearing-ruling { authority cite "FRBP 8022(a)(1)", within rehearing-period }
 }
 
 decision rehearing-ruling: "Rehearing decided" by court cite "FRBP 8022(a)(5)"
@@ -342,12 +339,8 @@ decision rehearing-ruling: "Rehearing decided" by court cite "FRBP 8022(a)(5)"
     authority cite "1st Cir. BAP L.R. 8022-1(a)"
     within rehearing-response-period
   }
-  edge-rehearing-ruling-further-review "Denied" -> further-review {
-    authority cite "FRAP 6(b)(2)(A)(i)"
-  }
-  edge-rehearing-ruling-rehearing-granted "Granted" -> rehearing-granted {
-    authority cite "FRBP 8022(a)(5)"
-  }
+  "Denied" -> further-review { authority cite "FRAP 6(b)(2)(A)(i)" }
+  "Granted" -> rehearing-granted { authority cite "FRBP 8022(a)(5)" }
 }
 
 terminal rehearing-granted: "Rehearing granted" outcome [appeal] cite "FRBP 8022(a)(5)"

@@ -42,9 +42,7 @@ decision initial-appearance: "Bail or detention" by court cite "R. P. Crim. Regl
 decision probable-cause: "Preliminary hearing (vista preliminar)" by court cite "R. P. Crim. Regla 23(a)"
 {
   note "A preliminary hearing is held where Regla 23(a) requires it (a felony charge), within the time it sets, which is not stated here (currency unconfirmed); the person may waive it after being summoned (R. P. Crim. Regla 23(b)), and the hearing begins with the prosecution's evidence (R. P. Crim. Regla 23(c)). If probable cause is found, the record goes to the Court of First Instance for the filing of the accusation (R. P. Crim. Regla 24(b)); if it is not, the effects are those of Regla 24(c)."
-  edge-probable-cause-charged "Probable cause found; accusation filed" -> charged {
-    authority cite "R. P. Crim. Regla 24(b)"
-  }
+  "Probable cause found; accusation filed" -> charged { authority cite "R. P. Crim. Regla 24(b)" }
   edge-probable-cause-none "No probable cause found" -> dismissed {
     authority cite "R. P. Crim. Regla 24(c)"
   }
@@ -53,15 +51,13 @@ decision probable-cause: "Preliminary hearing (vista preliminar)" by court cite 
 state charged: "Accusation (acusación)" by court cite "R. P. Crim. Regla 34"
 {
   note "The accusation and the complaint are defined by Regla 34 and their contents by Regla 35. The time within which the accusation must be filed and the defendant tried bears on a Regla 64(n) motion to dismiss, whose periods are not stated here (currency unconfirmed)."
-  edge-charged-arraignment "Arraignment (lectura de acusación)" -> arraignment {
-    authority cite "R. P. Crim. Regla 52"
-  }
+  "Arraignment (lectura de acusación)" -> arraignment { authority cite "R. P. Crim. Regla 52" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "R. P. Crim. Regla 52"
 {
   note "The accusation is read to the defendant as Reglas 52 to 58 provide, and the defendant answers it as Regla 61 provides; pleas (alegaciones) are governed by Regla 68 and following."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "R. P. Crim. Regla 95" }
+  "Discovery" -> discovery { authority cite "R. P. Crim. Regla 95" }
 }
 
 state discovery: "Discovery and motions to dismiss" by prosecution cite "R. P. Crim. Regla 63"
@@ -96,7 +92,7 @@ decision plea-decision: "Plea or trial" by accused cite "R. P. Crim. Regla 68"
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "R. P. Crim. Regla 68"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "R. P. Crim. Regla 111" }
+  "Trial" -> trial { authority cite "R. P. Crim. Regla 111" }
 }
 
 decision trial: "Verdict or judgment (fallo)" by court cite "R. P. Crim. Regla 145"
@@ -122,9 +118,7 @@ decision post-trial: "New-trial motion" by court cite "R. P. Crim. Regla 188"
 state sentencing: "Presentence report and sentence" by court cite "R. P. Crim. Regla 162"
 {
   note "Sentence is defined, and the time within which it is pronounced is set, by Regla 162 (not stated here, currency unconfirmed); the presentence report is governed by Regla 162.1, the warnings before sentence by Regla 166, and evidence of mitigating or aggravating circumstances by Regla 171 (whose amendment the compilation itself flags as uncertain)."
-  edge-sentencing-judgment "Sentence pronounced" -> judgment {
-    authority cite "R. P. Crim. Regla 162"
-  }
+  "Sentence pronounced" -> judgment { authority cite "R. P. Crim. Regla 162" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "R. P. Crim. Regla 193"

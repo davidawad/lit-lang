@@ -3,6 +3,8 @@ module txnd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Northern District of Texas's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method: FRCrimP 45(c)'s three added days follow the
@@ -68,9 +70,6 @@ event MagistrateObjectionsFiled() paper brief
 /// opposing parties and the court reporter separate lists of exhibits and
 /// witnesses.
 deadline exhibit-exchange: 14.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Tex. LCrR 16.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-exchange (weekend)" cite "N.D. Tex. LCrR 16.1"
 {
@@ -85,9 +84,6 @@ deadline proposed-findings: 14.days before TrialScheduled() counted_by frcrimp45
   to CaseOrder
   op set
 } cite "N.D. Tex. LCrR 23.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: proposed-findings (weekend)" cite "N.D. Tex. LCrR 23.1"
 {
@@ -102,9 +98,6 @@ deadline requested-jury-charge: 14.days before TrialScheduled() counted_by frcri
   to CaseOrder
   op set
 } cite "N.D. Tex. LCrR 30.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: requested-jury-charge (weekend)" cite "N.D. Tex. LCrR 30.1"
 {
@@ -119,9 +112,6 @@ deadline response-period: 14.days after OpposedMotionFiled() counted_by frcrimp4
   to CaseOrder
   op set
 } cite "N.D. Tex. LCrR 47.1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "N.D. Tex. LCrR 47.1(e)"
 {
@@ -133,9 +123,6 @@ test "Counting boundary: response-period (weekend)" cite "N.D. Tex. LCrR 47.1(e)
 /// than a prisoner pro se party registers as an ECF user within 14 days of
 /// the date the attorney appears in a case.
 deadline ecf-registration: 14.days after AttorneyAppeared() counted_by frcrimp45 cite "N.D. Tex. LCrR 49.2(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: ecf-registration (weekend)" cite "N.D. Tex. LCrR 49.2(g)"
 {
@@ -147,9 +134,6 @@ test "Counting boundary: ecf-registration (weekend)" cite "N.D. Tex. LCrR 49.2(g
 /// document signed by a criminal defendant by electronic means delivers an
 /// original, signed paper document to the clerk within 7 days.
 deadline paper-original: 7.days after SignedDocumentSubmitted() counted_by frcrimp45 cite "N.D. Tex. LCrR 49.6"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: paper-original (weekend)" cite "N.D. Tex. LCrR 49.6"
 {
@@ -162,9 +146,6 @@ test "Counting boundary: paper-original (weekend)" cite "N.D. Tex. LCrR 49.6"
 /// within 60 days after final disposition of the case; one not removed may
 /// be destroyed or otherwise disposed of by the clerk.
 deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcrimp45 cite "N.D. Tex. LCrR 55.2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-removal (weekend)" cite "N.D. Tex. LCrR 55.2(b)"
 {
@@ -180,9 +161,6 @@ deadline keep-sealed-motion: 60.days after FinalDisposition() counted_by frcrimp
   to CaseOrder
   op set
 } cite "N.D. Tex. LCrR 55.4"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: keep-sealed-motion (weekend)" cite "N.D. Tex. LCrR 55.4"
 {
@@ -194,9 +172,6 @@ test "Counting boundary: keep-sealed-motion (weekend)" cite "N.D. Tex. LCrR 55.4
 /// under FRCrimP 59(a) or 59(b)(2) complies with LCrR 47.2 and is filed
 /// within 14 days from the date the objections are filed.
 deadline magistrate-objection-response: 14.days after MagistrateObjectionsFiled() counted_by frcrimp45 cite "N.D. Tex. LCrR 59.1(b); N.D. Tex. LCrR 59.2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-objection-response (weekend)" cite "N.D. Tex. LCrR 59.1(b); N.D. Tex. LCrR 59.2(b)"
 {

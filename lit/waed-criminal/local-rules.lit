@@ -3,6 +3,8 @@ module waed-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Eastern District of Washington's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"). The rules
 // are subject to any order of the presiding judge in an individual case
@@ -63,9 +65,6 @@ event AppelleeBriefServed()
 /// and recommendation files and serves a written response within seven (7)
 /// days thereafter.
 deadline plea-objection-response: 7.days after PleaObjectionsServed() counted_by frcrimp45 cite "E.D. Wash. LCrR 11(i)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: plea-objection-response (weekend)" cite "E.D. Wash. LCrR 11(i)"
 {
@@ -78,9 +77,6 @@ test "Counting boundary: plea-objection-response (weekend)" cite "E.D. Wash. LCr
 /// interception, search warrant, warrantless seizure, identification and
 /// Brady disclosures.
 deadline government-disclosure: 14.days after Arraigned() counted_by frcrimp45 cite "E.D. Wash. LCrR 16(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-disclosure (weekend)" cite "E.D. Wash. LCrR 16(a)"
 {
@@ -92,9 +88,6 @@ test "Counting boundary: government-disclosure (weekend)" cite "E.D. Wash. LCrR 
 /// before trial, the government provides Henthorn information, its Rule
 /// 404(b) summary and its Rule 609 convictions list.
 deadline government-pretrial-disclosure: 28.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 16(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-pretrial-disclosure (weekend)" cite "E.D. Wash. LCrR 16(a)"
 {
@@ -105,9 +98,6 @@ test "Counting boundary: government-pretrial-disclosure (weekend)" cite "E.D. Wa
 /// E.D. Wash. LCrR 16(b): no later than fourteen (14) days before trial,
 /// the defense makes its Rule 16(b) case-in-chief material available.
 deadline defense-disclosure: 14.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 16(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-disclosure (weekend)" cite "E.D. Wash. LCrR 16(b)"
 {
@@ -120,9 +110,6 @@ test "Counting boundary: defense-disclosure (weekend)" cite "E.D. Wash. LCrR 16(
 /// mental-condition defense under FRCrimP 12.2 and of a public-authority
 /// defense under FRCrimP 12.3.
 deadline defense-notices: 21.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 16(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-notices (weekend)" cite "E.D. Wash. LCrR 16(b)"
 {
@@ -137,9 +124,6 @@ deadline trial-brief: 7.days before TrialScheduled() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "E.D. Wash. LCrR 23(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: trial-brief (weekend)" cite "E.D. Wash. LCrR 23(d)"
 {
@@ -150,9 +134,6 @@ test "Counting boundary: trial-brief (weekend)" cite "E.D. Wash. LCrR 23(d)"
 /// E.D. Wash. LCrR 24(a): each party files and serves any suggested voir
 /// dire questions no later than seven (7) days before trial.
 deadline voir-dire-questions: 7.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 24(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: voir-dire-questions (weekend)" cite "E.D. Wash. LCrR 24(a)"
 {
@@ -164,9 +145,6 @@ test "Counting boundary: voir-dire-questions (weekend)" cite "E.D. Wash. LCrR 24
 /// instructions no later than seven (7) days before trial; unanticipated
 /// instructions may be filed during trial.
 deadline jury-instructions: 7.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 30(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: jury-instructions (weekend)" cite "E.D. Wash. LCrR 30(a)"
 {
@@ -177,9 +155,6 @@ test "Counting boundary: jury-instructions (weekend)" cite "E.D. Wash. LCrR 30(a
 /// E.D. Wash. LCrR 58(g)(2)(E): the appellant's brief is filed and served
 /// within twenty-eight (28) days after the filing of the notice of appeal.
 deadline magistrate-appeal-appellant-brief: 28.days after MagistrateAppealNoticed() counted_by frcrimp45 cite "E.D. Wash. LCrR 58(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-appeal-appellant-brief (weekend)" cite "E.D. Wash. LCrR 58(g)"
 {
@@ -190,9 +165,6 @@ test "Counting boundary: magistrate-appeal-appellant-brief (weekend)" cite "E.D.
 /// E.D. Wash. LCrR 58(g)(2)(E): the appellee's responsive brief is filed
 /// and served within fourteen (14) days thereafter.
 deadline magistrate-appeal-appellee-brief: 14.days after AppellantBriefServed() counted_by frcrimp45 cite "E.D. Wash. LCrR 58(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-appeal-appellee-brief (weekend)" cite "E.D. Wash. LCrR 58(g)"
 {
@@ -203,9 +175,6 @@ test "Counting boundary: magistrate-appeal-appellee-brief (weekend)" cite "E.D. 
 /// E.D. Wash. LCrR 58(g)(2)(E): the appellant may file and serve a reply
 /// brief within seven (7) days thereafter.
 deadline magistrate-appeal-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45 cite "E.D. Wash. LCrR 58(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-appeal-reply-brief (weekend)" cite "E.D. Wash. LCrR 58(g)"
 {

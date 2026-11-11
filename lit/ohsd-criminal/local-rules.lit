@@ -37,6 +37,7 @@ test "Counting boundary: initial-report-disclosure-period (weekend)" cite "S.D. 
   given GuiltOrConsentEntered() on 2024-10-24
   expect deadline(initial-report-disclosure-period) == 2024-12-09
 }
+
 /// S.D. Ohio Crim. R. 32.1(c): within twenty-one days after disclosure of
 /// the initial report the parties communicate their objections to the
 /// probation officer and each other.
@@ -47,6 +48,7 @@ test "Counting boundary: report-objection-period (holiday)" cite "S.D. Ohio Crim
   given InitialReportDisclosed() on 2024-10-21
   expect deadline(report-objection-period) == 2024-11-12
 }
+
 /// S.D. Ohio Crim. R. 32.1(d): a conference a party seeks on an objection
 /// is held within thirty-one days following disclosure of the initial
 /// report.
@@ -57,6 +59,7 @@ test "Counting boundary: objection-conference-period (weekend)" cite "S.D. Ohio 
   given InitialReportDisclosed() on 2024-10-23
   expect deadline(objection-conference-period) == 2024-11-25
 }
+
 /// S.D. Ohio Crim. R. 32.1(d): unresolved objections are memorialized in
 /// writing by the objecting party and provided to the probation officer
 /// within seven days after the conference.
@@ -67,6 +70,7 @@ test "Counting boundary: unresolved-objection-period (weekend)" cite "S.D. Ohio 
   given ObjectionConferenceHeld() on 2024-10-26
   expect deadline(unresolved-objection-period) == 2024-11-04
 }
+
 /// S.D. Ohio Crim. R. 32.1(e): not later than forty-two days following
 /// disclosure of the initial report the probation officer files the final
 /// report, with its addendum of unresolved objections, and discloses it to
@@ -78,6 +82,7 @@ test "Counting boundary: final-report-period (weekend)" cite "S.D. Ohio Crim. R.
   given InitialReportDisclosed() on 2024-10-26
   expect deadline(final-report-period) == 2024-12-09
 }
+
 /// S.D. Ohio Crim. R. 32.1(h): the sentencing hearing is held not less than
 /// fourteen days after the court receives the final report; this is the
 /// earliest such date.
@@ -88,6 +93,7 @@ test "Counting boundary: earliest-sentencing-after-final-report (weekend)" cite 
   given FinalReportFiled() on 2024-10-26
   expect deadline(earliest-sentencing-after-final-report) == 2024-11-12
 }
+
 /// S.D. Ohio Crim. R. 32.1(h): and only once thirty-five days have passed
 /// since the filing of the initial report, unless the defendant waives the
 /// time requirement; this is the earliest such date.

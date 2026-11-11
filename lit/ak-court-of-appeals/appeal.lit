@@ -49,7 +49,7 @@ terminal dismissed-jurisdiction: "Dismissed: no appealable judgment" outcome [lo
 state record: "Record and transcript" by appellant cite "Alaska R. App. P. 210"
 {
   note "The record is the entire trial court file, the electronic record and designated transcripts (Alaska R. App. P. 210(a)). The appellant designates the parts to be transcribed with the notice of appeal; any other party may designate more within 10 days after service of that designation (Alaska R. App. P. 210(b)(1)(A)). The clerk of the appellate courts arranges a transcript prepared at public expense (Alaska R. App. P. 210(b)(2)); preparation is completed within 40 days after issuance of the opening notice (Alaska R. App. P. 210(b)(4)). The court then gives notice of the due date for the appellant's brief (Alaska R. App. P. 210(f))."
-  edge-record-briefing "Notice of the brief due date" -> briefing {
+  "Notice of the brief due date" -> briefing {
     event RecordFiled()
     authority cite "Alaska R. App. P. 210(f)"
   }
@@ -58,9 +58,7 @@ state record: "Record and transcript" by appellant cite "Alaska R. App. P. 210"
 state briefing: "Briefing" by appellant cite "Alaska R. App. P. 212(a)"
 {
   note "The appellant serves and files its brief within 30 days after the court's notice of the due date; the appellee within 30 days after service of the appellant's brief; within 20 days after service of the appellee's brief the appellant files a reply or a notice that none will be filed (Alaska R. App. P. 212(a)(1)(A)). Within ten days after the clerk returns a brief, seven bound copies are filed in an appeal before the court of appeals (Alaska R. App. P. 212(a)(2)(A)). Principal briefs may not exceed 50 numbered pages and a reply 20 pages (Alaska R. App. P. 212(c)(4))."
-  edge-briefing-argument "Briefing complete" -> argument {
-    authority cite "Alaska R. App. P. 212(a)"
-  }
+  "Briefing complete" -> argument { authority cite "Alaska R. App. P. 212(a)" }
 }
 
 decision argument: "Oral argument or submission on the briefs" by court cite "Alaska R. App. P. 505(a)"
@@ -74,7 +72,7 @@ decision argument: "Oral argument or submission on the briefs" by court cite "Al
 decision decision-issued: "Opinion or order decides the appeal" by court cite "Alaska R. App. P. 507(a)"
 {
   note "The opinion, a summary disposition order under Rule 214, or an order dismissing the appeal is the appellate court's judgment; no mandate issues (Alaska R. App. P. 507(a)). Outcome probabilities are not stated by the rules."
-  edge-decision-issued-rehearing "Petition for rehearing" -> rehearing {
+  "Petition for rehearing" -> rehearing {
     event DecisionFiled()
     authority cite "Alaska R. App. P. 506(b)"
   }

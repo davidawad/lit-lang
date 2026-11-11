@@ -2,6 +2,8 @@ module scd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of South Carolina's own criminal periods. Stated in the
 // rules but not declared: the alternative response deadline of one full
 // business day before the pretrial conference, whichever of the two is
@@ -30,9 +32,6 @@ event StateCustodyRequestNoticed()
 /// the motion, or one full business day before the pretrial conference if
 /// that is earlier, unless the court sets another deadline.
 deadline response-period: 14.days after MotionServed() counted_by frcrimp45 cite "D.S.C. Local Crim. Rule 12.05"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "D.S.C. Local Crim. Rule 12.05"
 {
@@ -46,9 +45,6 @@ test "Counting boundary: response-period (weekend)" cite "D.S.C. Local Crim. Rul
 /// otherwise; a subpoena delivered later and not served is no ground for a
 /// continuance.
 deadline subpoena-delivery-period: 14.days before TrialWeekMonday() counted_by frcrimp45 cite "D.S.C. Local Crim. Rule 17.01"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: subpoena-delivery-period (holiday)" cite "D.S.C. Local Crim. Rule 17.01"
 {
@@ -59,9 +55,6 @@ test "Counting boundary: subpoena-delivery-period (holiday)" cite "D.S.C. Local 
 /// Local Crim. Rule 26.04(A): proposed voir dire questions are submitted
 /// seven days before jury selection and served on opposing counsel.
 deadline voir-dire-period: 7.days before JurySelection() counted_by frcrimp45 cite "D.S.C. Local Crim. Rule 26.04(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: voir-dire-period (weekend)" cite "D.S.C. Local Crim. Rule 26.04(A)"
 {
@@ -73,9 +66,6 @@ test "Counting boundary: voir-dire-period (weekend)" cite "D.S.C. Local Crim. Ru
 /// seven days before trial begins; the defense's are held in camera until
 /// the testimony is concluded.
 deadline jury-instructions-period: 7.days before TrialBegins() counted_by frcrimp45 cite "D.S.C. Local Crim. Rule 26.04(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: jury-instructions-period (weekend)" cite "D.S.C. Local Crim. Rule 26.04(B)"
 {
@@ -87,9 +77,6 @@ test "Counting boundary: jury-instructions-period (weekend)" cite "D.S.C. Local 
 /// counsel each have seven days from the marshal's notice of a state's
 /// request for custody to consent or object; the period may be waived.
 deadline state-custody-objection-period: 7.days after StateCustodyRequestNoticed() counted_by frcrimp45 cite "D.S.C. Local Crim. Rule 57.VI.02(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: state-custody-objection-period (weekend)" cite "D.S.C. Local Crim. Rule 57.VI.02(B)"
 {

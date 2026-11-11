@@ -27,13 +27,8 @@ start notice-filed
 state notice-filed: "Notice of appeal filed" by appellant cite "NRAP 4(a)"
 {
   note "An appeal permitted by law from a district court is taken only by filing a notice of appeal with the district court clerk within the time allowed by Rule 4 (NRAP 3(a)(1)): in a civil case, no later than 30 days after written notice of entry of the judgment or order appealed from is served, unless a statute sets a different time (NRAP 4(a)(1)). If one party timely files, any other party may file a notice of appeal no later than 14 days after the first notice was served, or within the time otherwise prescribed, whichever ends later (NRAP 4(a)(3)). A timely motion under NRCP 50(b), 52(b) or 59, or under NRCP 60 filed no later than 28 days after service of written notice of entry, runs the time from service of written notice of entry of the order disposing of the last such motion (NRAP 4(a)(5)). On filing the notice, the appellant pays the district court clerk the Supreme Court filing fee, $250 for each notice of appeal, and any district court fees (NRAP 3(e)). A telephonic 14-day extension is not available for the notice of appeal (NRAP 26(b))."
-  edge-notice-filed-appealability "Timely notice" -> appealability {
-    event NoticeOfAppealFiled()
-    authority cite "NRAP 4(a)"
-  }
-  edge-notice-filed-dismissed-untimely "Late notice" -> dismissed-untimely {
-    authority cite "NRAP 3(a)"
-  }
+  "Timely notice" -> appealability { event NoticeOfAppealFiled(), authority cite "NRAP 4(a)" }
+  "Late notice" -> dismissed-untimely { authority cite "NRAP 3(a)" }
 }
 
 terminal dismissed-untimely: "Dismissed: no timely notice of appeal" outcome [loss, dismissal] cite "NRAP 3(a)"
@@ -60,13 +55,8 @@ terminal dismissed-jurisdiction: "Dismissed: no appealable determination" outcom
 state record-assembled: "Docketing statement, settlement program and record" by petitioner cite "NRAP 10"
 {
   note "Within 21 days after the appeal is docketed under Rule 12, the appellant files a docketing statement on the clerk's form; the respondent may file a single-page response within 7 days after service of it (NRAP 14(b), (f)). In the civil settlement conference program, each party submits a settlement statement, limited to 4,667 words, to the settlement judge within 14 days of the clerk's assignment notice, and the settlement judge holds an initial settlement conference within 120 days of assignment (NRAP 16). No later than 14 days from docketing, the appellant requests the necessary transcripts from the court reporter or recorder, or files a certificate that none will be requested (NRAP 9(a)); the reporter files the transcript within 30 days after the request form is served (NRAP 9(b))."
-  edge-record-assembled-briefing "Record and transcripts in place" -> briefing {
-    event RecordFiled()
-    authority cite "NRAP 10"
-  }
-  edge-record-assembled-settled "Settled in the settlement conference program" -> settled {
-    authority cite "NRAP 16"
-  }
+  "Record and transcripts in place" -> briefing { event RecordFiled(), authority cite "NRAP 10" }
+  "Settled in the settlement conference program" -> settled { authority cite "NRAP 16" }
 }
 
 terminal settled: "Settled on appeal" outcome [settlement] cite "NRAP 16"
@@ -77,7 +67,7 @@ terminal settled: "Settled on appeal" outcome [settlement] cite "NRAP 16"
 state briefing: "Briefing" by petitioner cite "NRAP 31(a)"
 {
   note "The appellant serves and files the opening brief no later than 120 days after the appeal is docketed; the respondent the answering brief no later than 30 days after the appellant's brief is served; the appellant the reply brief no later than 30 days after the respondent's brief is served (NRAP 31(a)(1)). A party that has not earlier moved to extend the time for a brief may obtain a single streamlined extension of up to 30 days (NRAP 31(b))."
-  edge-briefing-routing "Briefing complete" -> routing { authority cite "NRAP 17(d)" }
+  "Briefing complete" -> routing { authority cite "NRAP 17(d)" }
 }
 
 decision routing: "Retained by the Supreme Court or assigned to the Court of Appeals" by court cite "NRAP 17"

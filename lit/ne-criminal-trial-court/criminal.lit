@@ -60,7 +60,7 @@ decision plea-decision: "Plea or trial" by accused cite ?("Neb. Rev. Stat. ch. 2
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): pleas")
   }
-  edge-plea-decision-trial "Trial" -> trial {
+  "Trial" -> trial {
     authority cite ?("Neb. Rev. Stat. 29-1207, CURRENCY UNCONFIRMED (the Legislature's pages state no edition date); the value is the vendored text, unverified")
   }
 }
@@ -85,9 +85,7 @@ decision post-trial: "Motion for new trial" by court cite ?("Neb. Rev. Stat. ch.
 }
 
 state sentencing: "Sentencing and judgment" by court cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): sentencing") {
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "Neb. Rev. Stat. § 25-1912(1)"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "Neb. Rev. Stat. § 25-1912(1)" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "Neb. Rev. Stat. § 25-1912(1)"

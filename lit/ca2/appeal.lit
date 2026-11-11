@@ -4,6 +4,8 @@ import core.frap26.{ frap26 }
 import frap.events.{ NoticeOfAppealFiled }
 import frap.filing
 
+forum frap
+
 // The FRAP periods are lit/frap's: the notice-of-appeal periods of FRAP
 // 4(a)(1), the transcript-order period of FRAP 10(b)(1), the rehearing
 // periods of FRAP 40(d)(1), which 2d Cir. R. 40.1(e) and 40.2 adopt, and
@@ -100,9 +102,6 @@ event AppendixVolumeFiled() paper appendix-volume
 /// after filing the notice of appeal. (The same period runs from a FRAP 15
 /// petition or an order granting permission under FRAP 5, not modeled.)
 deadline docketing-requirements-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "2d Cir. R. 12.1(a)"
-{
-  forum frap
-}
 
 test "Counting boundary: docketing-requirements-period (weekend)" cite "2d Cir. R. 12.1(a)"
 {
@@ -113,9 +112,6 @@ test "Counting boundary: docketing-requirements-period (weekend)" cite "2d Cir. 
 /// Every party files the Acknowledgment and Notice of Appearance Form
 /// within 14 days after receiving the clerk's docketing notice.
 deadline appearance-form-period: 14.days after DocketingNoticeReceived() counted_by frap26 cite "2d Cir. R. 12.3(a)"
-{
-  forum frap
-}
 
 test "Counting boundary: appearance-form-period (weekend)" cite "2d Cir. R. 12.3(a)"
 {
@@ -126,9 +122,6 @@ test "Counting boundary: appearance-form-period (weekend)" cite "2d Cir. R. 12.3
 /// The appellant notifies the clerk in writing of the deadline it requests
 /// for its brief within 14 days after the ready date.
 deadline appellant-scheduling-request-period: 14.days after ReadyDate() counted_by frap26 cite "2d Cir. R. 31.2(a)(1)(A)"
-{
-  forum frap
-}
 
 test "Counting boundary: appellant-scheduling-request-period (weekend)" cite "2d Cir. R. 31.2(a)(1)(A)"
 {
@@ -140,9 +133,6 @@ test "Counting boundary: appellant-scheduling-request-period (weekend)" cite "2d
 /// ready date, unless a voluminous record or extreme hardship justifies a
 /// later one (2d Cir. R. 31.2(a)(1)(D)).
 deadline appellant-brief-latest-request-period: 91.days after ReadyDate() counted_by frap26 cite "2d Cir. R. 31.2(a)(1)(A)"
-{
-  forum frap
-}
 
 test "Counting boundary: appellant-brief-latest-request-period (weekend)" cite "2d Cir. R. 31.2(a)(1)(A)"
 {
@@ -153,16 +143,9 @@ test "Counting boundary: appellant-brief-latest-request-period (weekend)" cite "
 /// If the appellant submits no scheduling request, its brief is due 40
 /// days after the ready date.
 deadline appellant-brief-default-period: 40.days after ReadyDate() counted_by frap26 cite "2d Cir. R. 31.2(a)(1)(A)"
-{
-  forum frap
-}
-
 /// The appellee notifies the clerk in writing of the deadline it requests
 /// for its brief within 14 days after the last appellant's brief is filed.
 deadline appellee-scheduling-request-period: 14.days after LastAppellantBriefFiled() counted_by frap26 cite "2d Cir. R. 31.2(a)(1)(B)"
-{
-  forum frap
-}
 
 test "Counting boundary: appellee-scheduling-request-period (weekend)" cite "2d Cir. R. 31.2(a)(1)(B)"
 {
@@ -174,9 +157,6 @@ test "Counting boundary: appellee-scheduling-request-period (weekend)" cite "2d 
 /// last appellant's brief is filed, absent the showing of 2d Cir. R.
 /// 31.2(a)(1)(D).
 deadline appellee-brief-latest-request-period: 91.days after LastAppellantBriefFiled() counted_by frap26 cite "2d Cir. R. 31.2(a)(1)(B)"
-{
-  forum frap
-}
 
 test "Counting boundary: appellee-brief-latest-request-period (weekend)" cite "2d Cir. R. 31.2(a)(1)(B)"
 {
@@ -187,9 +167,6 @@ test "Counting boundary: appellee-brief-latest-request-period (weekend)" cite "2
 /// If the appellee submits no scheduling request, its brief is due 30 days
 /// after the last appellant's brief is filed.
 deadline appellee-brief-default-period: 30.days after LastAppellantBriefFiled() counted_by frap26 cite "2d Cir. R. 31.2(a)(1)(B)"
-{
-  forum frap
-}
 
 test "Counting boundary: appellee-brief-default-period (holiday)" cite "2d Cir. R. 31.2(a)(1)(B)"
 {
@@ -201,9 +178,6 @@ test "Counting boundary: appellee-brief-default-period (holiday)" cite "2d Cir. 
 /// the deadline it requests for its brief within 14 days after the last
 /// cross-appellant's brief is filed.
 deadline cross-appeal-scheduling-request-period: 14.days after LastCrossAppellantBriefFiled() counted_by frap26 cite "2d Cir. R. 31.2(a)(1)(C)"
-{
-  forum frap
-}
 
 test "Counting boundary: cross-appeal-scheduling-request-period (weekend)" cite "2d Cir. R. 31.2(a)(1)(C)"
 {
@@ -215,9 +189,6 @@ test "Counting boundary: cross-appeal-scheduling-request-period (weekend)" cite 
 /// days after the last cross-appellant's brief is filed, absent the
 /// showing of 2d Cir. R. 31.2(a)(1)(D).
 deadline cross-appeal-brief-latest-request-period: 60.days after LastCrossAppellantBriefFiled() counted_by frap26 cite "2d Cir. R. 31.2(a)(1)(C)"
-{
-  forum frap
-}
 
 test "Counting boundary: cross-appeal-brief-latest-request-period (weekend)" cite "2d Cir. R. 31.2(a)(1)(C)"
 {
@@ -228,9 +199,6 @@ test "Counting boundary: cross-appeal-brief-latest-request-period (weekend)" cit
 /// If the appellant-cross-appellee submits no scheduling request, its
 /// brief is due 30 days after the last cross-appellant's brief is filed.
 deadline cross-appeal-brief-default-period: 30.days after LastCrossAppellantBriefFiled() counted_by frap26 cite "2d Cir. R. 31.2(a)(1)(C)"
-{
-  forum frap
-}
 
 test "Counting boundary: cross-appeal-brief-default-period (holiday)" cite "2d Cir. R. 31.2(a)(1)(C)"
 {
@@ -241,9 +209,6 @@ test "Counting boundary: cross-appeal-brief-default-period (holiday)" cite "2d C
 /// A reply brief must be filed within 21 days after the last appellee's
 /// brief is filed, a trigger FRAP 31(a)(1) (service) does not have.
 deadline circuit-reply-brief-period: 21.days after LastAppelleeBriefFiled() counted_by frap26 cite "2d Cir. R. 31.2(a)(2)"
-{
-  forum frap
-}
 
 test "Counting boundary: circuit-reply-brief-period (holiday)" cite "2d Cir. R. 31.2(a)(2)"
 {
@@ -256,9 +221,6 @@ test "Counting boundary: circuit-reply-brief-period (holiday)" cite "2d Cir. R. 
 /// to seek argument. Not on the Non-Argument Calendar (2d Cir. R.
 /// 34.1(f)).
 deadline oral-argument-statement-period: 14.days after LastAppelleeBriefFiled() counted_by frap26 cite "2d Cir. R. 34.1(a)"
-{
-  forum frap
-}
 
 test "Counting boundary: oral-argument-statement-period (weekend)" cite "2d Cir. R. 34.1(a)"
 {
@@ -269,23 +231,12 @@ test "Counting boundary: oral-argument-statement-period (weekend)" cite "2d Cir.
 /// On the Expedited Appeals Calendar, the appellant files its brief within
 /// 35 days of the clerk's notice of placement.
 deadline xac-appellant-brief-period: 35.days after XacPlacementNotified() counted_by frap26 cite "2d Cir. R. 31.2(b)(3)(A)"
-{
-  forum frap
-}
-
 /// On the Expedited Appeals Calendar, the appellee files its brief within
 /// 35 days after the last appellant's brief is filed.
 deadline xac-appellee-brief-period: 35.days after XacLastAppellantBriefFiled() counted_by frap26 cite "2d Cir. R. 31.2(b)(3)(B)"
-{
-  forum frap
-}
-
 /// On the Expedited Appeals Calendar, the appellant may submit a reply
 /// brief within 14 days after the last appellee's brief is filed.
 deadline xac-reply-brief-period: 14.days after XacLastAppelleeBriefFiled() counted_by frap26 cite "2d Cir. R. 31.2(b)(3)(C)"
-{
-  forum frap
-}
 
 test "Counting boundary: xac-reply-brief-period (weekend)" cite "2d Cir. R. 31.2(b)(3)(C)"
 {
@@ -297,16 +248,9 @@ test "Counting boundary: xac-reply-brief-period (weekend)" cite "2d Cir. R. 31.2
 /// before the brief is due; an untimely one is denied absent extraordinary
 /// circumstances.
 deadline oversized-brief-motion-period: 14.days before BriefDue() counted_by frap26 cite "2d Cir. R. 27.1(e)(3)"
-{
-  forum frap
-}
-
 /// A motion for reconsideration of an order under FRAP 27(b) must be filed
 /// within 14 days after the date of the order.
 deadline reconsideration-period: 14.days after MotionOrderEntered() counted_by frap26 cite "2d Cir. R. 27.1(g)"
-{
-  forum frap
-}
 
 test "Counting boundary: reconsideration-period (weekend)" cite "2d Cir. R. 27.1(g)"
 {
@@ -318,9 +262,6 @@ test "Counting boundary: reconsideration-period (weekend)" cite "2d Cir. R. 27.1
 /// brief is filed within 14 days of the dismissal order, the brief
 /// attached.
 deadline reinstatement-motion-period: 14.days after BriefDefaultDismissalEntered() counted_by frap26 cite "2d Cir. R. 27.1(i)"
-{
-  forum frap
-}
 
 test "Counting boundary: reinstatement-motion-period (weekend)" cite "2d Cir. R. 27.1(i)"
 {
@@ -331,9 +272,6 @@ test "Counting boundary: reinstatement-motion-period (weekend)" cite "2d Cir. R.
 /// In a direct criminal appeal, a petition for panel rehearing may be
 /// filed within 45 days after entry of judgment.
 deadline criminal-rehearing-period: 45.days after CriminalAppealJudgmentEntered() counted_by frap26 cite "2d Cir. R. 40.1(b)"
-{
-  forum frap
-}
 
 test "Counting boundary: criminal-rehearing-period (weekend)" cite "2d Cir. R. 40.1(b)"
 {
@@ -482,9 +420,7 @@ decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)
 state docketing: "Appeal Docketed" by movant cite "2d Cir. R. 12.1"
 {
   note "Within 14 days after the notice of appeal, a counseled civil appellant files Form C (Civil Appeal Pre-Argument Statement) with its addenda and Form D (Civil Appeal Transcript Information Form), and pays the docketing fee fixed by the Judicial Conference under 28 U.S.C. § 1913 unless it seeks or has leave to proceed in forma pauperis (2d Cir. R. 12.1(a)-(c)). The fee amount is not stated in the vendored rules, so no cost is encoded. Every party files the Acknowledgment and Notice of Appearance Form within 14 days after receiving the docketing notice (2d Cir. R. 12.3(a)). Counseled civil appeals are referred to the Civil Appeals Mediation Program (2d Cir. R. 33.1)."
-  edge-docketing-record "Docketing requirements met" -> record {
-    authority cite "2d Cir. R. 12.1(a)"
-  }
+  "Docketing requirements met" -> record { authority cite "2d Cir. R. 12.1(a)" }
   edge-docketing-default "Docketing requirements not met" -> dismissed-prosecution {
     authority cite "2d Cir. R. 12.1(d)"
   }
@@ -532,7 +468,7 @@ decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 2d Cir. IOP 40.1"
 {
   note "Only an active judge, or a senior judge who sat on the panel, may request an en banc poll; only active judges vote (2d Cir. IOP 40.1(a)-(b))."
-  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+  "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
 state mandate: "Mandate Issued" by court cite "FRAP 41(b)"

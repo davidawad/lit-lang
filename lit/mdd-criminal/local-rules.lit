@@ -2,6 +2,8 @@ module mdd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of Maryland's own criminal periods. Local Rule 207.1 applies
 // Local Rule 105 to criminal proceedings except 105.2.c, 105.11 and 105.12,
 // so the opposition, reply and reconsideration periods of 105.2(a) and
@@ -38,9 +40,6 @@ event AppellantMemorandumFiled()
 /// memorandum in opposition to a motion is filed within 14 days of service
 /// of the motion.
 deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 cite "D. Md. Local Rule 105.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: opposition-period (weekend)" cite "D. Md. Local Rule 105.2(a)"
 {
@@ -52,9 +51,6 @@ test "Counting boundary: opposition-period (weekend)" cite "D. Md. Local Rule 10
 /// after service of the opposition. Surreply memoranda are not permitted
 /// unless the Court orders otherwise.
 deadline reply-period: 14.days after OppositionServed() counted_by frcrimp45 cite "D. Md. Local Rule 105.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "D. Md. Local Rule 105.2(a)"
 {
@@ -65,9 +61,6 @@ test "Counting boundary: reply-period (weekend)" cite "D. Md. Local Rule 105.2(a
 /// Local Rules 105.10, 207.1: a motion to reconsider an order is filed no
 /// later than 14 days after its entry.
 deadline reconsideration-period: 14.days after OrderEntered() counted_by frcrimp45 cite "D. Md. Local Rule 105.10"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reconsideration-period (weekend)" cite "D. Md. Local Rule 105.10"
 {
@@ -80,9 +73,6 @@ test "Counting boundary: reconsideration-period (weekend)" cite "D. Md. Local Ru
 /// sum forfeited in the registry; a surety who does not is barred from
 /// writing other bails in the Court until it complies.
 deadline surety-forfeiture-period: 14.days after BailForfeitureOrdered() counted_by frcrimp45 cite "D. Md. Local Rule 206.3(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: surety-forfeiture-period (weekend)" cite "D. Md. Local Rule 206.3(a)"
 {
@@ -95,9 +85,6 @@ test "Counting boundary: surety-forfeiture-period (weekend)" cite "D. Md. Local 
 /// the points of law, facts and authorities; the Court may dismiss the
 /// appeal if none is filed in time, and may extend the time for good cause.
 deadline magistrate-appeal-memorandum-period: 30.days after MagistrateAppealDocketed() counted_by frcrimp45 cite "D. Md. Local Rule 302.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-appeal-memorandum-period (holiday)" cite "D. Md. Local Rule 302.1"
 {
@@ -108,9 +95,6 @@ test "Counting boundary: magistrate-appeal-memorandum-period (holiday)" cite "D.
 /// Local Rule 302.1: the appellee files an answering memorandum within 30
 /// days after the appellant's.
 deadline magistrate-appeal-answer-period: 30.days after AppellantMemorandumFiled() counted_by frcrimp45 cite "D. Md. Local Rule 302.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-appeal-answer-period (holiday)" cite "D. Md. Local Rule 302.1"
 {

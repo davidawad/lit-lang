@@ -65,7 +65,7 @@ state amended: "Amended pleading" by plaintiff cite "I.R.C.P. 15(a)"
   edge-amended-tested "Amended pleading met with a new Rule 12(b) motion" -> dismissal-motion {
     authority cite "I.R.C.P. 12(b)"
   }
-  edge-amended-answered "Amended pleading answered" -> answered { authority cite "I.R.C.P. 15(a)" }
+  "Amended pleading answered" -> answered { authority cite "I.R.C.P. 15(a)" }
 }
 
 terminal dismissed-pleading: "Dismissed on a Rule 12(b) motion" outcome [loss, dismissal] cite "I.R.C.P. 12(b)"
@@ -103,7 +103,7 @@ terminal default-won: "Default judgment for applicant" outcome [win] cite "I.R.C
 state answered: "Answer served" by plaintiff cite "I.R.C.P. 12(a)"
 {
   note "On any issue triable of right by a jury, a party demands a jury trial by serving a written demand no later than 14 days after the last pleading directed to the issue is served, and filing it; a party waives a jury trial unless its demand is properly served and filed (Rule 38(b), (d))."
-  edge-answered-discovery "Case proceeds to discovery" -> discovery { authority cite "I.R.C.P. 26" }
+  "Case proceeds to discovery" -> discovery { authority cite "I.R.C.P. 26" }
 }
 
 state discovery: "Discovery" by plaintiff cite "I.R.C.P. 26"
@@ -115,10 +115,8 @@ state discovery: "Discovery" by plaintiff cite "I.R.C.P. 26"
   edge-discovery-sj "Motion for summary judgment" -> summary-judgment {
     authority cite "I.R.C.P. 56(a)"
   }
-  edge-discovery-trial "Case reaches trial" -> trial { authority cite "I.R.C.P. 16" }
-  edge-discovery-settled "Settlement: stipulation of dismissal" -> settled {
-    authority cite "I.R.C.P. 41(a)"
-  }
+  "Case reaches trial" -> trial { authority cite "I.R.C.P. 16" }
+  "Settlement: stipulation of dismissal" -> settled { authority cite "I.R.C.P. 41(a)" }
 }
 
 decision discovery-sanction: "Sanction for failure to obey a discovery order" by court cite "I.R.C.P. 37(b)"
@@ -160,7 +158,7 @@ state trial: "Trial by jury or by the court" by court cite "I.R.C.P. 39"
     event JudgmentEntered()
     authority cite "I.R.C.P. 58"
   }
-  edge-trial-settled "Settlement during trial" -> settled { authority cite "I.R.C.P. 41(a)" }
+  "Settlement during trial" -> settled { authority cite "I.R.C.P. 41(a)" }
 }
 
 decision judgment-entered: "Judgment entered" by court cite "I.R.C.P. 58"

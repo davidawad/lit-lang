@@ -182,6 +182,7 @@ test "Counting boundary: unsigned-petition-cure-period (weekend)" cite "Bankr. D
   given UnsignedPetitionNoticeServed() on 2026-02-04
   expect deadline(unsigned-petition-cure-period) == 2026-02-09
 }
+
 /// LBR 1006-1(c)(1): the filing fee deficiency is cured by the close of
 /// business on the next day after the notice to cure is given.
 deadline filing-fee-cure-period: 1.days after FilingFeeNoticeServed() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 1006-1(c)"
@@ -191,6 +192,7 @@ test "Counting boundary: filing-fee-cure-period (weekend)" cite "Bankr. D.D.C. L
   given FilingFeeNoticeServed() on 2026-02-06
   expect deadline(filing-fee-cure-period) == 2026-02-09
 }
+
 /// LBR 1007-1(e)(1): the debtor files the missing credit counseling
 /// statement, statement of social security number or List of Creditors not
 /// later than 3 days after the Clerk's notice, or responds and attends a
@@ -202,6 +204,7 @@ test "Counting boundary: petition-documents-cure-period (weekend)" cite "Bankr. 
   given PetitionDocumentsNoticeServed() on 2026-02-04
   expect deadline(petition-documents-cure-period) == 2026-02-09
 }
+
 /// LBR 1007-1(d)(1): a party objecting to the Clerk's automatic extension
 /// of time to file lists, schedules and statements has 7 days from entry
 /// of the order to file objections and schedule a hearing. The extension
@@ -215,6 +218,7 @@ test "Counting boundary: schedule-extension-objection-period (weekend)" cite "Ba
   given ScheduleExtensionOrderEntered() on 2026-02-01
   expect deadline(schedule-extension-objection-period) == 2026-02-09
 }
+
 /// LBR 1007-1(d)(2): on a motion to extend the time to file lists,
 /// schedules and statements to a date less than 7 days before the initial
 /// meeting of creditors, written objections are filed within 7 days after
@@ -226,6 +230,7 @@ test "Counting boundary: schedule-extension-motion-objection-period (weekend)" c
   given ScheduleExtensionMotionServed() on 2026-02-01
   expect deadline(schedule-extension-motion-objection-period) == 2026-02-09
 }
+
 /// LBR 1007-1(c): payment advices (or a declaration that none was
 /// received) for the 60 days before the petition are provided to the
 /// trustee and any creditor who timely requests them at least 7 days
@@ -237,6 +242,7 @@ test "Counting boundary: payment-advices-period (weekend)" cite "Bankr. D.D.C. L
   given FirstMeetingDate() on 2026-02-01
   expect deadline(payment-advices-period) == 2026-01-23
 }
+
 /// LBR 1015-1: a joint petition is jointly administered unless the
 /// trustee or another interested party objects within 14 days after the
 /// conclusion of the § 341(a) meeting and gives notice under LBR 9013-1.
@@ -252,6 +258,7 @@ test "Counting boundary: rescheduled-meeting-notice-period (weekend)" cite "Bank
   given RescheduledMeetingDateReceived() on 2026-02-04
   expect deadline(rescheduled-meeting-notice-period) == 2026-02-09
 }
+
 /// LBR 2014-1(a): an application to employ a professional is timely if
 /// filed within 30 days of the later of the petition date and the date the
 /// professional commences rendering services; absent extraordinary
@@ -263,6 +270,7 @@ test "Counting boundary: employment-application-period (weekend)" cite "Bankr. D
   given ProfessionalEngagementStarted() on 2026-02-05
   expect deadline(employment-application-period) == 2026-03-09
 }
+
 /// LBR 2014-1(c): absent objections within 14 days of the filing of an
 /// application to employ, the Court may grant it without further notice or
 /// hearing.
@@ -282,6 +290,7 @@ test "Counting boundary: chapter13-initial-fee-application-period (weekend)" cit
   given FirstConfirmationOrderEntered() on 2026-02-03
   expect deadline(chapter13-initial-fee-application-period) == 2026-04-06
 }
+
 /// LBR 2016-2(d): on dismissal of a chapter 13 case with no plan
 /// confirmed, the debtor's attorney or other professional moves within 21
 /// days after the dismissal order becomes final for a determination
@@ -294,6 +303,7 @@ test "Counting boundary: unconfirmed-dismissal-fee-motion-period (weekend)" cite
   given UnconfirmedDismissalFinal() on 2026-02-01
   expect deadline(unconfirmed-dismissal-fee-motion-period) == 2026-02-23
 }
+
 /// LBR 2016-3(a): if the debtor does not file Official Forms B2800 and
 /// B119, the bankruptcy petition preparer signs and files them within 14
 /// days after the petition date.
@@ -307,6 +317,7 @@ test "Counting boundary: withdrawal-response-period (weekend)" cite "Bankr. D.D.
   given WithdrawalMotionServed() on 2026-02-01
   expect deadline(withdrawal-response-period) == 2026-02-09
 }
+
 /// LBR 3003-1(a)(1): in a chapter 11 case, unless the Court orders a
 /// different date, the last date to file a claim other than a governmental
 /// unit's is 90 days after the first date set for the meeting of
@@ -323,6 +334,7 @@ test "Counting boundary: subchapter-v-claim-period (weekend)" cite "Bankr. D.D.C
   given OrderForReliefEntered() on 2026-02-01
   expect deadline(subchapter-v-claim-period) == 2026-04-13
 }
+
 /// LBR 3003-1(b)(1): in a chapter 11 case the debtor serves creditors
 /// whose claims are scheduled as disputed, contingent or unliquidated with
 /// notice of that fact within 14 days after the latest of the conversion,
@@ -340,6 +352,7 @@ test "Counting boundary: claim-objection-response-period (weekend)" cite "Bankr.
   given ClaimObjectionServed() on 2026-02-05
   expect deadline(claim-objection-response-period) == 2026-03-09
 }
+
 /// LBR 3007-1(c): when the claim objection is accompanied by a notice of
 /// hearing, the creditor's response is due 7 days before the hearing.
 deadline claim-objection-hearing-response-period: 7.days before ClaimObjectionHearing() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 3007-1(c)"
@@ -349,6 +362,7 @@ test "Counting boundary: claim-objection-hearing-response-period (weekend)" cite
   given ClaimObjectionHearing() on 2026-02-01
   expect deadline(claim-objection-hearing-response-period) == 2026-01-23
 }
+
 /// LBR 3014-1: in a subchapter V case in which 11 U.S.C. § 1125 does not
 /// apply, a class of secured creditors elects under § 1111(b)(2) no later
 /// than 14 days after the plan is filed, or as the Court directs.
@@ -363,6 +377,7 @@ test "Counting boundary: plan-extension-objection-period (weekend)" cite "Bankr.
   given PlanExtensionOrderEntered() on 2026-02-01
   expect deadline(plan-extension-objection-period) == 2026-02-09
 }
+
 /// LBR 3015-1(c)(2): on a motion to extend the time to file a chapter 13
 /// plan beyond the automatic extension, written objections are filed
 /// within 7 days after service of the motion.
@@ -373,6 +388,7 @@ test "Counting boundary: plan-extension-motion-objection-period (weekend)" cite 
   given PlanExtensionMotionServed() on 2026-02-01
   expect deadline(plan-extension-motion-objection-period) == 2026-02-09
 }
+
 /// LBR 3015-3(a)(1): an objection to confirmation of a chapter 13 plan, or
 /// to an included motion to value, avoid a lien or assume or reject, is
 /// filed no later than 7 days before the confirmation hearing (likewise
@@ -384,6 +400,7 @@ test "Counting boundary: confirmation-objection-period (weekend)" cite "Bankr. D
   given ConfirmationHearing() on 2026-02-01
   expect deadline(confirmation-objection-period) == 2026-01-23
 }
+
 /// LBR 3015-3(f)(1): no later than 14 days before the confirmation
 /// hearing, the debtor serves on the chapter 13 trustee and files an
 /// affidavit of all 11 U.S.C. § 1326(a)(1) pre-confirmation payments.
@@ -394,6 +411,7 @@ test "Counting boundary: adequate-protection-affidavit-period (weekend)" cite "B
   given ConfirmationHearing() on 2026-02-01
   expect deadline(adequate-protection-affidavit-period) == 2026-01-16
 }
+
 /// LBR 3015-3(f)(2): objections to the accuracy of the adequate
 /// protection affidavit are filed no later than 7 days after its filing
 /// and service; otherwise the Court may presume it accurate.
@@ -404,6 +422,7 @@ test "Counting boundary: adequate-protection-objection-period (weekend)" cite "B
   given AdequateProtectionAffidavitServed() on 2026-02-01
   expect deadline(adequate-protection-objection-period) == 2026-02-09
 }
+
 /// LBR 3015-3(d): when confirmation is denied in a case with no confirmed
 /// plan, the Clerk issues an order dismissing the case unless within 21
 /// days after denial the debtor files a new plan, converts or moves to
@@ -416,6 +435,7 @@ test "Counting boundary: post-denial-plan-period (weekend)" cite "Bankr. D.D.C. 
   given ConfirmationDenied() on 2026-02-01
   expect deadline(post-denial-plan-period) == 2026-02-23
 }
+
 /// LBR 3022-1(a): in a subchapter V case, unless the Court extends it, the
 /// debtor's attorney files a motion for final decree on or before 30 days
 /// after the later of the discharge and the disposition of all adversary
@@ -427,6 +447,7 @@ test "Counting boundary: subchapter-v-final-decree-period (weekend)" cite "Bankr
   given SubchapterVCaseAdministered() on 2026-02-05
   expect deadline(subchapter-v-final-decree-period) == 2026-03-09
 }
+
 /// LBR 3022-1(b)(1): in any other chapter 11 case of a non-individual
 /// debtor, unless the Court extends it, the debtor's attorney files a
 /// certificate of substantial consummation and a motion for final decree
@@ -440,6 +461,7 @@ test "Counting boundary: chapter11-final-decree-period (weekend)" cite "Bankr. D
   given Chapter11CaseAdministered() on 2026-02-05
   expect deadline(chapter11-final-decree-period) == 2026-03-09
 }
+
 /// LBR 4001-1(g): when a stay-relief motion rests on missed post-petition
 /// payments, the movant files and serves a payment history at least 7
 /// days before the hearing.
@@ -450,6 +472,7 @@ test "Counting boundary: stay-relief-payment-history-period (weekend)" cite "Ban
   given StayReliefHearing() on 2026-02-01
   expect deadline(stay-relief-payment-history-period) == 2026-01-23
 }
+
 /// LBR 4003-2: a lien avoidance motion gives no less than 21 days' notice
 /// of the time to object; if no response is filed within 21 days after
 /// service, relief may be granted without a hearing.
@@ -460,6 +483,7 @@ test "Counting boundary: lien-avoidance-response-period (weekend)" cite "Bankr. 
   given LienAvoidanceMotionServed() on 2026-02-01
   expect deadline(lien-avoidance-response-period) == 2026-02-23
 }
+
 /// LBR 4004-1(a)(1), (3): the chapter 13 or chapter 12 debtor files the
 /// certification of compliance with 11 U.S.C. § 1328 (or § 1228) within 60
 /// days of the trustee's notice of completion of plan payments; otherwise
@@ -471,6 +495,7 @@ test "Counting boundary: discharge-certification-period (weekend)" cite "Bankr. 
   given PlanCompletionNoticeFiled() on 2026-02-03
   expect deadline(discharge-certification-period) == 2026-04-06
 }
+
 /// LBR 4004-1(a)(2): creditors and parties in interest have 30 days from
 /// the Court's notice to dispute the trustee's report of completion or the
 /// debtor's certification and request a hearing; with no request, the
@@ -482,6 +507,7 @@ test "Counting boundary: discharge-dispute-period (weekend)" cite "Bankr. D.D.C.
   given DischargeNoticeSent() on 2026-02-05
   expect deadline(discharge-dispute-period) == 2026-03-09
 }
+
 /// LBR 6004-1(d): unless the Court orders otherwise, the FRBP 6004(f)(1)
 /// report of sale is filed and served no later than 21 days after a sale
 /// outside the ordinary course of business.
@@ -492,6 +518,7 @@ test "Counting boundary: report-of-sale-period (weekend)" cite "Bankr. D.D.C. LB
   given SaleClosed() on 2026-02-01
   expect deadline(report-of-sale-period) == 2026-02-23
 }
+
 /// LBR 6007-1(a): within 14 days after the meeting of creditors, a party
 /// objecting to the trustee's announced abandonment of estate property
 /// obtains a hearing date, transmits notice of the hearing and files it
@@ -512,6 +539,7 @@ test "Counting boundary: deposition-notice-period (weekend)" cite "Bankr. D.D.C.
   given DepositionDate() on 2026-02-01
   expect deadline(deposition-notice-period) == 2026-01-23
 }
+
 /// LBR 7041-1: a complaint objecting to discharge is dismissed at the
 /// plaintiff's request only by motion served on all creditors, parties in
 /// interest and the United States Trustee, providing 21 days' opportunity
@@ -523,6 +551,7 @@ test "Counting boundary: discharge-complaint-dismissal-objection-period (weekend
   given DischargeComplaintDismissalMotionServed() on 2026-02-01
   expect deadline(discharge-complaint-dismissal-objection-period) == 2026-02-23
 }
+
 /// LBR 7054-1: a party entitled to costs in an adversary proceeding files
 /// a bill of costs within 21 days after entry of the judgment, order or
 /// decree (in contested matters too, LBR 9014-1(a)).
@@ -533,6 +562,7 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "Bankr. D.D.C. LBR
   given BankruptcyOrderEntered() on 2026-02-01
   expect deadline(bill-of-costs-period) == 2026-02-23
 }
+
 /// LBR 7054-2: unless a statute or the Court fixes a longer period, a
 /// prevailing party's motion for attorney's fees and nontaxable expenses
 /// is filed within 21 days after entry of the judgment or order.
@@ -543,6 +573,7 @@ test "Counting boundary: fee-motion-period (weekend)" cite "Bankr. D.D.C. LBR 70
   given BankruptcyOrderEntered() on 2026-02-01
   expect deadline(fee-motion-period) == 2026-02-23
 }
+
 /// LBR 7055-1(c): a motion for default judgment against a party who has
 /// appeared is served at least 7 days before the hearing.
 deadline default-judgment-service-period: 7.days before DefaultJudgmentHearing() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 7055-1(c)"
@@ -552,6 +583,7 @@ test "Counting boundary: default-judgment-service-period (weekend)" cite "Bankr.
   given DefaultJudgmentHearing() on 2026-02-01
   expect deadline(default-judgment-service-period) == 2026-01-23
 }
+
 /// LBR 7055-1(d): on the granting of a motion to vacate an entry of
 /// default or a default judgment, the movant has 14 days to answer or
 /// otherwise respond to the complaint.
@@ -575,6 +607,7 @@ test "Counting boundary: motion-reply-period (weekend)" cite "Bankr. D.D.C. LBR 
   given MotionResponseFiled() on 2026-02-01
   expect deadline(motion-reply-period) == 2026-02-09
 }
+
 /// LBR 9013-1(d)(2): when a hearing has been set on at least 21 days'
 /// notice, the opposing party may file a response no later than 7 days
 /// before the hearing.
@@ -585,6 +618,7 @@ test "Counting boundary: hearing-response-period (weekend)" cite "Bankr. D.D.C. 
   given MotionHearing() on 2026-02-01
   expect deadline(hearing-response-period) == 2026-01-23
 }
+
 /// LBR 9013-1(b)(2): an optional memorandum of facts and law is filed and
 /// served, with proof of service, no later than 7 days before the hearing,
 /// unless the Court orders otherwise.
@@ -595,6 +629,7 @@ test "Counting boundary: supporting-memorandum-period (weekend)" cite "Bankr. D.
   given MotionHearing() on 2026-02-01
   expect deadline(supporting-memorandum-period) == 2026-01-23
 }
+
 /// LBR 9013-1(f): a certificate of service not filed with the paper is
 /// filed within 7 days of the service date (LBR 2002-1(e): within 7 days
 /// after completion of service); for expedited relief it is filed before
@@ -606,6 +641,7 @@ test "Counting boundary: certificate-of-service-period (weekend)" cite "Bankr. D
   given PaperServed() on 2026-02-01
   expect deadline(certificate-of-service-period) == 2026-02-09
 }
+
 /// LBR 9016-1(a): a request for a Clerk-issued subpoena for a witness at a
 /// hearing or trial is filed no later than 14 days before the appearance
 /// date; a later one may issue, but no continuance is granted if the
@@ -617,6 +653,7 @@ test "Counting boundary: subpoena-request-period (weekend)" cite "Bankr. D.D.C. 
   given WitnessAppearanceDate() on 2026-02-01
   expect deadline(subpoena-request-period) == 2026-01-16
 }
+
 /// LBR 9027-1(b): a motion for remand is filed with the Clerk of the
 /// Bankruptcy Court no later than 30 days after the notice of removal is
 /// filed.
@@ -627,6 +664,7 @@ test "Counting boundary: remand-motion-period (weekend)" cite "Bankr. D.D.C. LBR
   given RemovalNoticeFiled() on 2026-02-05
   expect deadline(remand-motion-period) == 2026-03-09
 }
+
 /// LBR 9037-1: a Notice of Intent to Request Redaction is filed within 7
 /// days from the filing of a transcript.
 deadline redaction-intent-period: 7.days after TranscriptFiled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9037-1"
@@ -636,6 +674,7 @@ test "Counting boundary: redaction-intent-period (weekend)" cite "Bankr. D.D.C. 
   given TranscriptFiled() on 2026-02-01
   expect deadline(redaction-intent-period) == 2026-02-09
 }
+
 /// LBR 9037-1: a Request for Redaction of Transcript is filed within 21
 /// days from the filing of the transcript.
 deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9037-1"
@@ -645,6 +684,7 @@ test "Counting boundary: redaction-request-period (weekend)" cite "Bankr. D.D.C.
   given TranscriptFiled() on 2026-02-01
   expect deadline(redaction-request-period) == 2026-02-23
 }
+
 /// LBR 9037-1: the redacted transcript is due 31 days from the filing date
 /// of the transcript; the transcript is restricted for 90 days.
 deadline redacted-transcript-period: 31.days after TranscriptFiled() counted_by frbp9006-district-of-columbia cite "Bankr. D.D.C. LBR 9037-1"
@@ -654,6 +694,7 @@ test "Counting boundary: redacted-transcript-period (weekend)" cite "Bankr. D.D.
   given TranscriptFiled() on 2026-02-04
   expect deadline(redacted-transcript-period) == 2026-03-09
 }
+
 /// LBR 9072-1(e): unless the Court specifies otherwise, the prevailing
 /// party files a proposed order within 14 days after the conclusion of the
 /// trial, hearing or other disposition; otherwise the Court may issue a
@@ -665,7 +706,7 @@ start motion-filed
 state motion-filed: "Motion filed with notice of opportunity to object" by movant cite "Bankr. D.D.C. LBR 9013-1(c)"
 {
   note "A written motion states its grounds and relief with particularity (LBR 9013-1(a)-(b)) and carries a conspicuous notice of the motion, objection deadline and hearing substantially in Official Form B 420A, unless filed with a motion to shorten time under LBR 9013-2 (LBR 9013-1(c)). A hearing date is taken from the Court's website or the Courtroom Deputy (LBR 5070-1(a)); a party may not set a hearing on less than 14 days' notice without an order under LBR 9013-2 (LBR 9013-1(d)(3)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-response "Response filed" -> response {
+  "Response filed" -> response {
     authority cite "Bankr. D.D.C. LBR 9013-1(d)"
     within motion-response-period
   }
@@ -677,7 +718,7 @@ state motion-filed: "Motion filed with notice of opportunity to object" by movan
 state response: "Response filed" by opponent cite "Bankr. D.D.C. LBR 9013-1(e)"
 {
   note "A response in opposition is in writing, states its grounds with particularity and is served on all parties affected and the United States Trustee (LBR 9013-1(e)(1))."
-  edge-response-ruling "Reply filed or time to reply expired" -> ruling {
+  "Reply filed or time to reply expired" -> ruling {
     authority cite "Bankr. D.D.C. LBR 9013-1(d)"
     within motion-reply-period
   }
@@ -693,7 +734,7 @@ decision ruling: "Motion decided" by court cite "Bankr. D.D.C. LBR 9013-1(e)"
 state proposed-order: "Prevailing party submits the proposed order" by movant cite "Bankr. D.D.C. LBR 9072-1(e)"
 {
   note "The proposed order stands alone, carries the endorsements and service list LBR 9072-1(a)-(c) require, and is filed within 14 days after the disposition (LBR 9072-1(e))."
-  edge-proposed-order-decided "Order filed" -> decided {
+  "Order filed" -> decided {
     authority cite "Bankr. D.D.C. LBR 9072-1(e)"
     within proposed-order-period
   }

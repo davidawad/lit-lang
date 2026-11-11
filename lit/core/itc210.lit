@@ -3,6 +3,8 @@ module core.itc210
 import core.calendar.{ us-federal-holidays }
 import core.time.{ Served, ServiceMethod }
 
+forum itc
+
 /// 19 C.F.R. § 201.14(a) as adopted by the USITC's 1976 rules of practice
 /// (41 FR 17710, published April 27, 1976, "to be effective May 27, 1976"):
 /// a period "shall begin with the first business day following" the
@@ -111,11 +113,11 @@ counting itc210 effective [2013-05-20, ..) known_at 2013-04-19 supersedes itc210
 
 // Fixtures cite nothing: they are periods for the tests, not rules in
 // force, and each test cites the rule it checks.
-deadline itc210-1-day: 1.days after Served() counted_by itc210 { forum itc }
-deadline itc210-3-days: 3.days after Served() counted_by itc210 { forum itc }
-deadline itc210-5-days: 5.days after Served() counted_by itc210 { forum itc }
-deadline itc210-12-days: 12.days after Served() counted_by itc210 { forum itc }
-deadline itc210-20-days: 20.days after Served() counted_by itc210 { forum itc }
+deadline itc210-1-day: 1.days after Served() counted_by itc210
+deadline itc210-3-days: 3.days after Served() counted_by itc210
+deadline itc210-5-days: 5.days after Served() counted_by itc210
+deadline itc210-12-days: 12.days after Served() counted_by itc210
+deadline itc210-20-days: 20.days after Served() counted_by itc210
 
 test "twenty days from a Monday" cite "19 C.F.R. § 201.14(a)"
 {

@@ -121,6 +121,7 @@ test "Counting boundary: installment-first-period (holiday)" cite "D. Md. LBR 10
   given PetitionFiled() on 2025-12-02
   expect deadline(installment-first-period) == 2026-01-02
 }
+
 /// LBR 1006-1(b): in chapter 7, 12 and 13 cases the third quarter of
 /// the fees is paid within 60 days after filing.
 deadline installment-second-period: 60.days after PetitionFiled() counted_by frbp9006-maryland cite "D. Md. LBR 1006-1(b)"
@@ -130,6 +131,7 @@ test "Counting boundary: installment-second-period (weekend)" cite "D. Md. LBR 1
   given PetitionFiled() on 2025-12-02
   expect deadline(installment-second-period) == 2026-02-02
 }
+
 /// LBR 1006-1(b): in chapter 7, 12 and 13 cases the last quarter of the
 /// fees is paid within 90 days after filing.
 deadline installment-final-period: 90.days after PetitionFiled() counted_by frbp9006-maryland cite "D. Md. LBR 1006-1(b)"
@@ -144,6 +146,7 @@ test "Counting boundary: payment-advices-period (holiday)" cite "D. Md. LBR 1007
   given MeetingOfCreditorsDate() on 2025-12-04
   expect deadline(payment-advices-period) == 2025-11-26
 }
+
 /// LBR 1007-4: a creditor's request for the payment advices is timely
 /// if the debtor receives it at least 14 days before the first date set
 /// for the meeting of creditors.
@@ -154,6 +157,7 @@ test "Counting boundary: payment-advices-request-period (weekend)" cite "D. Md. 
   given FirstMeetingDate() on 2025-12-06
   expect deadline(payment-advices-request-period) == 2025-11-21
 }
+
 /// LBR 1009-1(d): within 14 days of filing an amendment of chapter 9 or
 /// 11 schedules, the debtor or trustee transmits notice of it to the
 /// affected creditor.
@@ -167,6 +171,7 @@ test "Counting boundary: amendment-notice-certificate-period (weekend)" cite "D.
   given AmendmentNoticeServed() on 2025-12-06
   expect deadline(amendment-notice-certificate-period) == 2025-12-15
 }
+
 /// LBR 2016-2(a): if the debtor does not file them, the bankruptcy
 /// petition preparer signs and files Official Forms B2800 and B119
 /// within 14 days after the petition date.
@@ -181,6 +186,7 @@ test "Counting boundary: insider-compensation-statement-period (holiday)" cite "
   given Chapter11PetitionFiled() on 2025-12-04
   expect deadline(insider-compensation-statement-period) == 2025-12-26
 }
+
 /// LBR 3002-1(b): an amended proof of claim for an unsecured deficiency
 /// on real property is filed within 180 days after the stay-relief
 /// order or the surrender, whichever is earlier.
@@ -195,6 +201,7 @@ test "Counting boundary: personal-property-deficiency-claim-period (weekend)" ci
   given StayReliefOrSurrender() on 2025-12-02
   expect deadline(personal-property-deficiency-claim-period) == 2026-02-02
 }
+
 /// LBR 3003-1: in a chapter 11 case not under subchapter V, a proof of
 /// claim is timely if filed not later than 90 days after the first date
 /// set for the meeting of creditors, unless the Court fixes another
@@ -210,6 +217,7 @@ test "Counting boundary: subchapter-v-claim-period (weekend)" cite "D. Md. LBR 3
   given OrderForReliefEntered() on 2025-12-06
   expect deadline(subchapter-v-claim-period) == 2026-02-17
 }
+
 /// LBR 3007-1(a): the claimant may file and serve a response to a claim
 /// objection within 30 days after the date on the objection's
 /// certificate of service.
@@ -220,6 +228,7 @@ test "Counting boundary: claim-objection-response-period (holiday)" cite "D. Md.
   given ClaimObjectionServed() on 2025-12-02
   expect deadline(claim-objection-response-period) == 2026-01-02
 }
+
 /// LBR 4003-1: an opposition to an objection to claimed exemptions is
 /// filed and served within 28 days after the objection was served.
 deadline exemption-objection-opposition-period: 28.days after ExemptionObjectionServed() counted_by frbp9006-maryland cite "D. Md. LBR 4003-1"
@@ -229,6 +238,7 @@ test "Counting boundary: exemption-objection-opposition-period (holiday)" cite "
   given ExemptionObjectionServed() on 2025-12-04
   expect deadline(exemption-objection-opposition-period) == 2026-01-02
 }
+
 /// LBR 3015-2(b): objections to a chapter 13 plan are filed and served
 /// no later than 7 days before the confirmation hearing.
 deadline chapter13-confirmation-objection-period: 7.days before ConfirmationHearingDate() counted_by frbp9006-maryland cite "D. Md. LBR 3015-2(b)"
@@ -238,6 +248,7 @@ test "Counting boundary: chapter13-confirmation-objection-period (holiday)" cite
   given ConfirmationHearingDate() on 2025-12-04
   expect deadline(chapter13-confirmation-objection-period) == 2025-11-26
 }
+
 /// LBR 3015-2(c): the debtor files the Pre-Confirmation Certificate
 /// (Local Form O) within 7 days before the initial confirmation
 /// hearing, and an updated one before a continued hearing.
@@ -248,6 +259,7 @@ test "Counting boundary: pre-confirmation-certificate-period (holiday)" cite "D.
   given ConfirmationHearingDate() on 2025-12-04
   expect deadline(pre-confirmation-certificate-period) == 2025-11-26
 }
+
 /// LBR 3015-3(a): no later than 14 days before a confirmation hearing,
 /// the debtor serves and files the affidavit of pre-confirmation
 /// adequate-protection and lease payments.
@@ -258,6 +270,7 @@ test "Counting boundary: adequate-protection-affidavit-period (weekend)" cite "D
   given ConfirmationHearingDate() on 2025-12-06
   expect deadline(adequate-protection-affidavit-period) == 2025-11-21
 }
+
 /// LBR 3015-3(b): objections to the affidavit's accuracy are filed no
 /// later than 7 days after its filing and service.
 deadline adequate-protection-objection-period: 7.days after AdequateProtectionAffidavitServed() counted_by frbp9006-maryland cite "D. Md. LBR 3015-3(b)"
@@ -267,6 +280,7 @@ test "Counting boundary: adequate-protection-objection-period (weekend)" cite "D
   given AdequateProtectionAffidavitServed() on 2025-12-06
   expect deadline(adequate-protection-objection-period) == 2025-12-15
 }
+
 /// LBR 3018-1: the tally of ballots is filed no later than 7 days
 /// before the chapter 11 confirmation hearing.
 deadline ballot-tally-period: 7.days before Chapter11ConfirmationHearingDate() counted_by frbp9006-maryland cite "D. Md. LBR 3018-1"
@@ -276,6 +290,7 @@ test "Counting boundary: ballot-tally-period (holiday)" cite "D. Md. LBR 3018-1"
   given Chapter11ConfirmationHearingDate() on 2025-12-04
   expect deadline(ballot-tally-period) == 2025-11-26
 }
+
 /// LBR 3022-1(a)(1): within 14 days after a subchapter V plan is
 /// substantially consummated, the debtor or plan administrator files
 /// and serves notice of it under 11 U.S.C. § 1183(c)(2).
@@ -302,6 +317,7 @@ test "Counting boundary: sale-report-period (weekend)" cite "D. Md. LBR 6004-5"
   given SaleConsummated() on 2025-12-06
   expect deadline(sale-report-period) == 2025-12-15
 }
+
 /// LBR 7054-1: no costs beyond filing fees are allowed in an adversary
 /// proceeding unless the entitled party files a bill of costs within 21
 /// days after the judgment or order.
@@ -312,6 +328,7 @@ test "Counting boundary: bill-of-costs-period (holiday)" cite "D. Md. LBR 7054-1
   given AdversaryJudgmentEntered() on 2025-12-04
   expect deadline(bill-of-costs-period) == 2025-12-26
 }
+
 /// LBR 7054-2: unless a statute or the Court fixes a longer period, a
 /// prevailing party's motion for attorney's fees is filed within 21
 /// days after the judgment or order.
@@ -322,6 +339,7 @@ test "Counting boundary: attorney-fees-motion-period (holiday)" cite "D. Md. LBR
   given AdversaryJudgmentEntered() on 2025-12-04
   expect deadline(attorney-fees-motion-period) == 2025-12-26
 }
+
 /// LBR 7055-1: within 30 days after the Clerk's notice of inactivity,
 /// the plaintiff or movant shows good cause in writing why dismissal or
 /// denial should not be ordered.
@@ -332,6 +350,7 @@ test "Counting boundary: prosecution-cause-period (holiday)" cite "D. Md. LBR 70
   given ProsecutionNoticeSent() on 2025-12-02
   expect deadline(prosecution-cause-period) == 2026-01-02
 }
+
 /// LBR 9006-1(a): unless the Court or a rule provides otherwise, a
 /// motion is served at least 21 days before the hearing date.
 deadline motion-service-period: 21.days before MotionHearingDate() counted_by frbp9006-maryland cite "D. Md. LBR 9006-1(a)"
@@ -341,6 +360,7 @@ test "Counting boundary: motion-service-period (holiday)" cite "D. Md. LBR 9006-
   given MotionHearingDate() on 2025-12-02
   expect deadline(motion-service-period) == 2025-11-10
 }
+
 /// LBR 9006-1(a): absent a response deadline the movant set (no earlier
 /// than 14 days after service and no later than 7 days before the
 /// hearing), a response and memorandum in opposition are filed within
@@ -355,6 +375,7 @@ test "Counting boundary: chapter13-dismissal-response-period (holiday)" cite "D.
   given Chapter13DismissalMotionServed() on 2025-12-04
   expect deadline(chapter13-dismissal-response-period) == 2025-12-26
 }
+
 /// LBR 9010-4(a)(2)(B), (b)(2)(B): an attorney moving to withdraw
 /// certifies that written notice of the proposed withdrawal was served
 /// on the client at least 7 days before.
@@ -365,6 +386,7 @@ test "Counting boundary: withdrawal-client-notice-period (holiday)" cite "D. Md.
   given WithdrawalMotionFiled() on 2025-12-04
   expect deadline(withdrawal-client-notice-period) == 2025-11-26
 }
+
 /// LBR 9010-4(b)(2): if a new attorney has not appeared for a client
 /// other than an individual within 21 days after the motion to withdraw
 /// is filed, the Court may dismiss its claims or enter a default
@@ -376,6 +398,7 @@ test "Counting boundary: substitute-counsel-period (holiday)" cite "D. Md. LBR 9
   given WithdrawalMotionFiled() on 2025-12-04
   expect deadline(substitute-counsel-period) == 2025-12-26
 }
+
 /// LBR 9013-7(c): a motion to postpone a hearing or trial for a prior
 /// conflicting engagement is filed at least 7 days before the hearing
 /// date.
@@ -386,6 +409,7 @@ test "Counting boundary: conflicting-engagement-motion-period (holiday)" cite "D
   given HearingDate() on 2025-12-04
   expect deadline(conflicting-engagement-motion-period) == 2025-11-26
 }
+
 /// LBR 9013-7(d)(3)(C): the debtor's attorney, or the debtor, files and
 /// serves notice of the rescheduled meeting of creditors, with the
 /// consent motion, at least 7 days before it.
@@ -396,6 +420,7 @@ test "Counting boundary: rescheduled-meeting-notice-period (holiday)" cite "D. M
   given RescheduledMeetingDate() on 2025-12-04
   expect deadline(rescheduled-meeting-notice-period) == 2025-11-26
 }
+
 /// LBR 9027-2(c): not later than 14 days after filing the notice of
 /// removal, the removing party files a copy of the docket sheet and the
 /// papers from the removed action.
@@ -413,6 +438,7 @@ test "Counting boundary: redaction-request-period (holiday)" cite "D. Md. LBR 90
   given TranscriptReviewNoticeServed() on 2025-12-04
   expect deadline(redaction-request-period) == 2025-12-26
 }
+
 /// LBR 9037-1(b): the redacted transcript is due 31 days from the
 /// Notice of Requirement to Review Transcript.
 deadline redacted-transcript-period: 31.days after TranscriptReviewNoticeServed() counted_by frbp9006-maryland cite "D. Md. LBR 9037-1(b)"
@@ -428,7 +454,7 @@ start motion-filed
 state motion-filed: "Motion filed and served with its response deadline" by movant cite "D. Md. LBR 9006-1(a)"
 {
   note "Each motion is filed with a brief memorandum of fact and law or a statement that none will be filed (LBR 9013-2) and is served at least 21 days before the hearing, with a response deadline no earlier than 14 days after service and no later than 7 days before the hearing (LBR 9006-1(a)). A motion to dismiss a chapter 13 case gives 21 days (LBR 9006-1(b)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-response "Response and memorandum in opposition filed" -> response {
+  "Response and memorandum in opposition filed" -> response {
     authority cite "D. Md. LBR 9006-1(a)"
   }
   edge-motion-filed-unopposed "No timely response" -> ruling {
@@ -439,9 +465,7 @@ state motion-filed: "Motion filed and served with its response deadline" by mova
 state response: "Response filed" by opponent cite "D. Md. LBR 9006-1(a)"
 {
   note "The response deadline may be extended by agreement of the parties (LBR 9006-1(a)). When a party is served through CM/ECF, FRBP 9006(f)'s three added days do not apply to it (LBR 9006-1(c))."
-  edge-response-ruling "Matter heard or decided on the papers" -> ruling {
-    authority cite "D. Md. LBR 9013-1(b)"
-  }
+  "Matter heard or decided on the papers" -> ruling { authority cite "D. Md. LBR 9013-1(b)" }
 }
 
 decision ruling: "Motion decided" by court cite "D. Md. LBR 9013-1(b)"

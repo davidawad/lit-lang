@@ -29,7 +29,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "Haw. R. Civ
 {
   note "The defenses of Rule 12(b)(1)-(7) may be made by motion, before pleading if a further pleading is permitted; if matters outside the pleading are presented on a 12(b)(6) motion and not excluded, it is treated as one for summary judgment under Rule 56 (Haw. R. Civ. P. 12(b)). A written motion and notice of its hearing are served not less than 18 days before the hearing, and opposing affidavits not less than 8 days before it, unless the rules or the court fix another time (Haw. R. Civ. P. 6(d)). The earlier outline named no Hawai'i pleading-standard decision."
   edge-pleading-motion-granted "Granted" -> dismissed { authority cite "Haw. R. Civ. P. 12(b)" }
-  edge-pleading-motion-amend "Leave to amend" -> amend { authority cite "Haw. R. Civ. P. 15(a)" }
+  "Leave to amend" -> amend { authority cite "Haw. R. Civ. P. 15(a)" }
   edge-pleading-motion-denied "Denied: answer within 10 days of notice" -> discovery {
     authority cite "Haw. R. Civ. P. 12(a)"
   }
@@ -70,10 +70,8 @@ state discovery: "Disclosure, discovery and pretrial" by plaintiff cite "Haw. R.
   edge-discovery-sj "Summary judgment motion" -> summary-judgment {
     authority cite "Haw. R. Civ. P. 56"
   }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Haw. R. Civ. P. 38" }
-  edge-discovery-settled "Stipulated dismissal" -> settled {
-    authority cite "Haw. R. Civ. P. 41(a)"
-  }
+  "No dispositive motion" -> trial { authority cite "Haw. R. Civ. P. 38" }
+  "Stipulated dismissal" -> settled { authority cite "Haw. R. Civ. P. 41(a)" }
 }
 
 decision summary-judgment: "Summary judgment decided" by court cite "Haw. R. Civ. P. 56(c)"
@@ -89,7 +87,7 @@ state trial: "Trial by jury or by the court" by court cite "Haw. R. Civ. P. 38"
 {
   note "Issues triable of right by a jury are so tried on a timely written demand (Haw. R. Civ. P. 38(b)). A renewed motion for judgment as a matter of law is filed no later than 10 days after entry of judgment, and may join a motion for a new trial under Rule 59 (Haw. R. Civ. P. 50(b))."
   edge-trial-judgment "Verdict or decision" -> post-trial { authority cite "Haw. R. Civ. P. 58" }
-  edge-trial-settled "Settled before verdict" -> settled { authority cite "Haw. R. Civ. P. 41(a)" }
+  "Settled before verdict" -> settled { authority cite "Haw. R. Civ. P. 41(a)" }
 }
 
 decision post-trial: "Post-trial motions" by plaintiff cite "Haw. R. Civ. P. 59"

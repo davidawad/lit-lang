@@ -185,6 +185,7 @@ test "Counting boundary: signature-objection-period (weekend)" cite "D. Alaska L
   given DocumentServed() on 2025-10-18
   expect deadline(signature-objection-period) == 2025-11-03
 }
+
 /// L.Civ.R. 7.1(d)(1): any response to a notice of supplemental authority
 /// is filed and served within 7 days of the notice and is limited to 350
 /// words.
@@ -195,6 +196,7 @@ test "Counting boundary: supplemental-authority-response-period (weekend)" cite 
   given SupplementalAuthorityNoticeFiled() on 2025-10-18
   expect deadline(supplemental-authority-response-period) == 2025-10-27
 }
+
 /// L.Civ.R. 7.1(f): oral argument is discretionary; it is requested below
 /// the title of the motion or response, or by separate filing within 5 days
 /// of the last filing pertaining to the motion.
@@ -211,6 +213,7 @@ test "Counting boundary: deps-notice-period (weekend)" cite "D. Alaska L.Civ.R. 
   given DepsProceedingHeld() on 2025-10-18
   expect deadline(deps-notice-period) == 2025-10-10
 }
+
 /// L.Civ.R. 7.2(b)(1): unless otherwise ordered or provided by statute or
 /// rule, an opposition to a motion under FRCP 12(b), 12(c) or 56 is filed
 /// and served within 21 days of service of the motion.
@@ -221,6 +224,7 @@ test "Counting boundary: dispositive-opposition-period (weekend)" cite "D. Alask
   given DispositiveMotionServed() on 2025-10-18
   expect deadline(dispositive-opposition-period) == 2025-11-10
 }
+
 /// L.Civ.R. 7.2(b)(1): an opposition to any other motion is filed within 14
 /// days of service. Failure to respond to a non-dispositive motion subjects
 /// it to summary ruling and may be deemed an admission that it is well
@@ -232,6 +236,7 @@ test "Counting boundary: opposition-period (weekend)" cite "D. Alaska L.Civ.R. 7
   given MotionServed() on 2025-10-18
   expect deadline(opposition-period) == 2025-11-03
 }
+
 /// L.Civ.R. 7.2(b)(2): a reply on a motion under FRCP 12(b), 12(c) or 56,
 /// if filed, is filed and served within 14 days. The rule names no trigger
 /// for this reply; the 7-day reply for other motions in the same paragraph
@@ -244,6 +249,7 @@ test "Counting boundary: dispositive-reply-period (weekend)" cite "D. Alaska L.C
   given DispositiveOppositionServed() on 2025-10-18
   expect deadline(dispositive-reply-period) == 2025-11-03
 }
+
 /// L.Civ.R. 7.2(b)(2): a reply on any other motion, if filed, is filed
 /// within 7 days of service of the opposition. Replies are optional and
 /// limited to rebuttal (L.Civ.R. 7.1(c)).
@@ -254,6 +260,7 @@ test "Counting boundary: reply-period (weekend)" cite "D. Alaska L.Civ.R. 7.2(b)
   given OppositionServed() on 2025-10-18
   expect deadline(reply-period) == 2025-10-27
 }
+
 /// L.Civ.R. 7.3(g)(3): if in camera review is granted, the documents are
 /// filed via CM/ECF as an ex parte document within 7 days.
 deadline in-camera-filing-period: 7.days after InCameraReviewGranted() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 7.3(g)"
@@ -263,6 +270,7 @@ test "Counting boundary: in-camera-filing-period (weekend)" cite "D. Alaska L.Ci
   given InCameraReviewGranted() on 2025-10-18
   expect deadline(in-camera-filing-period) == 2025-10-27
 }
+
 /// L.Civ.R. 7.3(h)(2)(A): a motion for reconsideration for manifest error
 /// of law or fact is filed and served not later than 7 days after entry of
 /// the order. The rule does not apply to motions under FRCP 59 or 60
@@ -274,6 +282,7 @@ test "Counting boundary: reconsideration-error-period (weekend)" cite "D. Alaska
   given OrderEntered() on 2025-10-18
   expect deadline(reconsideration-error-period) == 2025-10-27
 }
+
 /// L.Civ.R. 7.3(h)(2)(B): a motion for reconsideration on new material
 /// facts or an intervening change in the law is filed and served within 14
 /// days of the discovery or change in law.
@@ -284,6 +293,7 @@ test "Counting boundary: reconsideration-new-ground-period (weekend)" cite "D. A
   given NewFactsOrLawChange() on 2025-10-18
   expect deadline(reconsideration-new-ground-period) == 2025-11-03
 }
+
 /// L.Civ.R. 7.3(h)(3): no response to a motion for reconsideration is filed
 /// unless the court requests one; unless otherwise ordered, it is filed
 /// within 7 days of entry of the order requesting it.
@@ -294,6 +304,7 @@ test "Counting boundary: reconsideration-response-period (weekend)" cite "D. Ala
   given ReconsiderationResponseRequested() on 2025-10-18
   expect deadline(reconsideration-response-period) == 2025-10-27
 }
+
 /// L.Civ.R. 7.3(h)(4): no reply is filed unless the court requests one;
 /// unless otherwise ordered, it is filed within 7 days of the order
 /// requesting it.
@@ -304,6 +315,7 @@ test "Counting boundary: reconsideration-reply-period (weekend)" cite "D. Alaska
   given ReconsiderationReplyRequested() on 2025-10-18
   expect deadline(reconsideration-reply-period) == 2025-10-27
 }
+
 /// L.Civ.R. 11.1(b)(1): an attorney who has appeared files and serves a
 /// notice of change of address, telephone number or e-mail address within
 /// 7 days of the change; L.Civ.R. 83.1(i) asks admitted attorneys to notify
@@ -315,6 +327,7 @@ test "Counting boundary: attorney-address-notice-period (weekend)" cite "D. Alas
   given AttorneyContactChanged() on 2025-10-18
   expect deadline(attorney-address-notice-period) == 2025-10-27
 }
+
 /// L.Civ.R. 11.1(b)(3): if mail served on a pro se plaintiff is returned
 /// undeliverable and no notice of change of address is filed within 14
 /// days of the service date, the court may dismiss for failure to
@@ -326,6 +339,7 @@ test "Counting boundary: pro-se-address-notice-period (weekend)" cite "D. Alaska
   given ProSeMailServedAndReturned() on 2025-10-18
   expect deadline(pro-se-address-notice-period) == 2025-11-03
 }
+
 /// L.Civ.R. 11.1(c)(4)(B): an attorney whose withdrawal would leave the
 /// party without counsel arranges a hearing and gives the client at least
 /// 21 days written notice of it, unless good cause is shown why no hearing
@@ -337,6 +351,7 @@ test "Counting boundary: withdrawal-hearing-notice-period (weekend)" cite "D. Al
   given WithdrawalHearingHeld() on 2025-10-18
   expect deadline(withdrawal-hearing-notice-period) == 2025-09-26
 }
+
 /// L.Civ.R. 15.1(b): unless otherwise ordered, the moving party files a
 /// complete, clean copy of the amended pleading within 7 days of the order
 /// granting the motion to amend.
@@ -347,6 +362,7 @@ test "Counting boundary: amended-pleading-filing-period (weekend)" cite "D. Alas
   given AmendmentGranted() on 2025-10-18
   expect deadline(amended-pleading-filing-period) == 2025-10-27
 }
+
 /// L.Civ.R. 16.1(c)(2): unless otherwise ordered, motions to amend
 /// pleadings or add parties are filed not later than 60 days after the
 /// Pretrial Scheduling Order is entered; after that, leave to modify the
@@ -364,6 +380,7 @@ test "Counting boundary: discovery-motion-period (weekend)" cite "D. Alaska L.Ci
   given DiscoveryClosed() on 2025-10-18
   expect deadline(discovery-motion-period) == 2025-11-03
 }
+
 /// L.Civ.R. 16.1(c)(8): motions to exclude expert testimony are filed not
 /// later than 30 days after the close of expert discovery.
 deadline expert-exclusion-motion-period: 30.days after ExpertDiscoveryClosed() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 16.1(c)"
@@ -373,6 +390,7 @@ test "Counting boundary: expert-exclusion-motion-period (weekend)" cite "D. Alas
   given ExpertDiscoveryClosed() on 2025-10-16
   expect deadline(expert-exclusion-motion-period) == 2025-11-17
 }
+
 /// L.Civ.R. 16.1(c)(9): dispositive motions are filed not later than 30
 /// days after the close of discovery.
 deadline dispositive-motion-period: 30.days after DiscoveryClosed() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 16.1(c)"
@@ -382,6 +400,7 @@ test "Counting boundary: dispositive-motion-period (weekend)" cite "D. Alaska L.
   given DiscoveryClosed() on 2025-10-16
   expect deadline(dispositive-motion-period) == 2025-11-17
 }
+
 /// L.Civ.R. 16.1(e): other parties have 14 days to respond to a Notice of
 /// Related Case.
 deadline related-case-response-period: 14.days after RelatedCaseNoticeFiled() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 16.1(e)"
@@ -391,6 +410,7 @@ test "Counting boundary: related-case-response-period (weekend)" cite "D. Alaska
   given RelatedCaseNoticeFiled() on 2025-10-18
   expect deadline(related-case-response-period) == 2025-11-03
 }
+
 /// L.Civ.R. 16.2(d)(3): if a judicial settlement conference results in a
 /// settlement, the parties file closing papers within 30 days from the
 /// filing of the settlement conference judge's report.
@@ -401,6 +421,7 @@ test "Counting boundary: settlement-closing-papers-period (weekend)" cite "D. Al
   given SettlementReportFiled() on 2025-10-16
   expect deadline(settlement-closing-papers-period) == 2025-11-17
 }
+
 /// L.Civ.R. 16.3(b)(1): in an APA or Social Security appeal, the agency
 /// serves and files the agency record not later than 60 days after its
 /// initial appearance.
@@ -414,6 +435,7 @@ test "Counting boundary: record-supplement-motion-period (weekend)" cite "D. Ala
   given AgencyRecordFiled() on 2025-10-18
   expect deadline(record-supplement-motion-period) == 2025-11-10
 }
+
 /// L.Civ.R. 16.3(b)(1)(B)(iii): for an agency record over 5000 pages, the
 /// parties file the appendix not later than 14 days after the final brief
 /// is filed.
@@ -424,6 +446,7 @@ test "Counting boundary: agency-appendix-period (weekend)" cite "D. Alaska L.Civ
   given AgencyFinalBriefFiled() on 2025-10-18
   expect deadline(agency-appendix-period) == 2025-11-03
 }
+
 /// L.Civ.R. 16.3(c)(1): the plaintiff's opening brief is filed not later
 /// than 30 days following the filing of the agency record or 30 days after
 /// the ruling on a motion to supplement it, whichever is later; failure to
@@ -436,6 +459,7 @@ test "Counting boundary: opening-brief-record-period (weekend)" cite "D. Alaska 
   given AgencyRecordFiled() on 2025-10-16
   expect deadline(opening-brief-record-period) == 2025-11-17
 }
+
 /// L.Civ.R. 16.3(c)(1): the opening brief period running from the ruling on
 /// a motion to supplement the agency record; the later of the two governs.
 deadline opening-brief-supplement-period: 30.days after SupplementRuling() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 16.3(c)"
@@ -445,6 +469,7 @@ test "Counting boundary: opening-brief-supplement-period (weekend)" cite "D. Ala
   given SupplementRuling() on 2025-10-16
   expect deadline(opening-brief-supplement-period) == 2025-11-17
 }
+
 /// L.Civ.R. 16.3(c)(2): the defendant's brief in opposition is filed not
 /// later than 30 days after the plaintiff files and serves the opening
 /// brief. One extension of up to 14 days is routinely granted for each
@@ -456,6 +481,7 @@ test "Counting boundary: agency-opposition-brief-period (weekend)" cite "D. Alas
   given AgencyOpeningBriefServed() on 2025-10-16
   expect deadline(agency-opposition-brief-period) == 2025-11-17
 }
+
 /// L.Civ.R. 16.3(c)(3): the plaintiff may file a reply not later than 14
 /// days after service of the defendant's brief; no further briefs without
 /// leave (L.Civ.R. 16.3(c)(4)).
@@ -466,6 +492,7 @@ test "Counting boundary: agency-reply-brief-period (weekend)" cite "D. Alaska L.
   given AgencyOppositionBriefServed() on 2025-10-18
   expect deadline(agency-reply-brief-period) == 2025-11-03
 }
+
 /// L.Civ.R. 39.2(a): unless otherwise ordered, each party files and serves
 /// a trial brief, of at most 25 pages, not less than 21 days before the
 /// scheduled trial date.
@@ -476,6 +503,7 @@ test "Counting boundary: trial-brief-period (weekend)" cite "D. Alaska L.Civ.R. 
   given TrialBegins() on 2025-10-18
   expect deadline(trial-brief-period) == 2025-09-26
 }
+
 /// L.Civ.R. 39.3(b)(1): at least 14 days before trial the parties exchange
 /// trial exhibits and lists and confer on stipulations.
 deadline exhibit-exchange-period: 14.days before TrialBegins() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 39.3(b)"
@@ -485,6 +513,7 @@ test "Counting boundary: exhibit-exchange-period (weekend)" cite "D. Alaska L.Ci
   given TrialBegins() on 2025-10-18
   expect deadline(exhibit-exchange-period) == 2025-10-03
 }
+
 /// L.Civ.R. 39.3(b)(2): at least 7 days before trial each party files its
 /// Civil Exhibit List identifying stipulations as to authenticity and
 /// admissibility.
@@ -495,6 +524,7 @@ test "Counting boundary: exhibit-list-period (weekend)" cite "D. Alaska L.Civ.R.
   given TrialBegins() on 2025-10-18
   expect deadline(exhibit-list-period) == 2025-10-10
 }
+
 /// L.Civ.R. 47.1: unless otherwise ordered, proposed questions for
 /// potential jurors are filed 7 days prior to trial.
 deadline voir-dire-questions-period: 7.days before TrialBegins() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 47.1"
@@ -504,6 +534,7 @@ test "Counting boundary: voir-dire-questions-period (weekend)" cite "D. Alaska L
   given TrialBegins() on 2025-10-18
   expect deadline(voir-dire-questions-period) == 2025-10-10
 }
+
 /// L.Civ.R. 51.1(a): unless otherwise ordered, no later than 21 days before
 /// trial the parties meet and confer on jury instructions.
 deadline jury-instruction-conference-period: 21.days before TrialBegins() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 51.1(a)"
@@ -513,6 +544,7 @@ test "Counting boundary: jury-instruction-conference-period (weekend)" cite "D. 
   given TrialBegins() on 2025-10-18
   expect deadline(jury-instruction-conference-period) == 2025-09-26
 }
+
 /// L.Civ.R. 51.1(b): unless otherwise ordered, the parties file proposed
 /// jury instructions no later than 14 days before trial.
 deadline jury-instructions-period: 14.days before TrialBegins() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 51.1(b)"
@@ -522,6 +554,7 @@ test "Counting boundary: jury-instructions-period (weekend)" cite "D. Alaska L.C
   given TrialBegins() on 2025-10-18
   expect deadline(jury-instructions-period) == 2025-10-03
 }
+
 /// L.Civ.R. 54.1(a): a bill of costs is filed and served no later than 14
 /// days after entry of judgment or an applicable order; otherwise claims
 /// for costs are waived.
@@ -532,6 +565,7 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "D. Alaska L.Civ.R
   given JudgmentEntered() on 2025-10-18
   expect deadline(bill-of-costs-period) == 2025-11-03
 }
+
 /// L.Civ.R. 54.1(c): objections to a bill of costs are filed and served
 /// within 7 days of its filing.
 deadline costs-objection-period: 7.days after BillOfCostsFiled() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 54.1(c)"
@@ -541,6 +575,7 @@ test "Counting boundary: costs-objection-period (weekend)" cite "D. Alaska L.Civ
   given BillOfCostsFiled() on 2025-10-18
   expect deadline(costs-objection-period) == 2025-10-27
 }
+
 /// L.Civ.R. 54.1(d): a party disagreeing with the Clerk's decision on costs
 /// moves for review by the court within 7 days of the decision.
 deadline costs-review-motion-period: 7.days after CostsTaxed() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 54.1(d)"
@@ -550,6 +585,7 @@ test "Counting boundary: costs-review-motion-period (weekend)" cite "D. Alaska L
   given CostsTaxed() on 2025-10-18
   expect deadline(costs-review-motion-period) == 2025-10-27
 }
+
 /// L.Civ.R. 58.1(c)(1): when prejudgment interest is sought, the prevailing
 /// party files and serves a computation of interest and its basis within 14
 /// days of the entry of judgment.
@@ -560,6 +596,7 @@ test "Counting boundary: interest-computation-period (weekend)" cite "D. Alaska 
   given JudgmentEntered() on 2025-10-18
   expect deadline(interest-computation-period) == 2025-11-03
 }
+
 /// L.Civ.R. 58.1(c)(2): a party disagreeing with the computation files an
 /// alternative computation within 7 days of its service.
 deadline alternative-interest-computation-period: 7.days after InterestComputationServed() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 58.1(c)"
@@ -569,6 +606,7 @@ test "Counting boundary: alternative-interest-computation-period (weekend)" cite
   given InterestComputationServed() on 2025-10-18
   expect deadline(alternative-interest-computation-period) == 2025-10-27
 }
+
 /// L.Civ.R. 58.2(a): on the judgment debtor's request, the judgment
 /// creditor files and serves an acknowledgment of satisfaction or partial
 /// satisfaction within 14 days of the request.
@@ -579,6 +617,7 @@ test "Counting boundary: satisfaction-acknowledgment-period (weekend)" cite "D. 
   given SatisfactionRequested() on 2025-10-18
   expect deadline(satisfaction-acknowledgment-period) == 2025-11-03
 }
+
 /// L.Civ.R. 73.1(c), (d): a party declines consent to a magistrate judge by
 /// signing and returning the Declination of Consent form within 14 calendar
 /// days from service of the Notice of Intent; failure to return it timely
@@ -590,6 +629,7 @@ test "Counting boundary: magistrate-declination-period (weekend)" cite "D. Alask
   given MagistrateNoticeServed() on 2025-10-18
   expect deadline(magistrate-declination-period) == 2025-11-03
 }
+
 /// L.Civ.R. 73.1(c): an incarcerated plaintiff proceeding pro se declines
 /// consent within 21 calendar days from service of the Notice.
 deadline pro-se-prisoner-magistrate-declination-period: 21.days after MagistrateNoticeServed() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 73.1(c)"
@@ -599,6 +639,7 @@ test "Counting boundary: pro-se-prisoner-magistrate-declination-period (weekend)
   given MagistrateNoticeServed() on 2025-10-18
   expect deadline(pro-se-prisoner-magistrate-declination-period) == 2025-11-10
 }
+
 /// L.Civ.R. 77.3(c): absent good cause, a request for remote public access
 /// is filed at least 14 days before the proceeding.
 deadline remote-access-request-period: 14.days before ProceedingHeld() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 77.3(c)"
@@ -608,6 +649,7 @@ test "Counting boundary: remote-access-request-period (weekend)" cite "D. Alaska
   given ProceedingHeld() on 2025-10-18
   expect deadline(remote-access-request-period) == 2025-10-03
 }
+
 /// L.Civ.R. 77.3(c): an objection to remote public access is filed at least
 /// 7 days before the proceeding.
 deadline remote-access-objection-period: 7.days before ProceedingHeld() counted_by frcp6-alaska cite "D. Alaska L.Civ.R. 77.3(c)"
@@ -617,6 +659,7 @@ test "Counting boundary: remote-access-objection-period (weekend)" cite "D. Alas
   given ProceedingHeld() on 2025-10-18
   expect deadline(remote-access-objection-period) == 2025-10-10
 }
+
 /// L.Civ.R. 80.1(a)(3): a request for a real-time court reporter and daily
 /// transcripts is filed not later than 30 days before the date set for the
 /// trial or hearing.

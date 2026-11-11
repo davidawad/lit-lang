@@ -7,7 +7,7 @@ start judgment-entered
 decision judgment-entered: "Judgment or order entered: appeal or permission sought?" by appellant cite "M.R.A.P. 3(a)"
 {
   note "An appeal permitted by law as of right is taken by filing a notice of appeal with the clerk of the trial court within the time allowed by M.R.A.P. 4 (M.R.A.P. 3(a)); which judgments are appealable as of right rests on statute, which is not vendored. The date of entry of judgment is the date it is entered in the general docket (M.R.A.P. 4, Comment). An interlocutory order may be appealed only by permission: a petition for permission to appeal is filed with the clerk of the Supreme Court within 21 days after entry of the order (M.R.A.P. 5(a)). Periods in this package are stated, not counted: computation is M.R.A.P. 26(a), and three days are added after service by mail (M.R.A.P. 26(c)). The outline named no leading decisions."
-  edge-judgment-entered-notice "Appeal as of right" -> notice { authority cite "M.R.A.P. 3(a)" }
+  "Appeal as of right" -> notice { authority cite "M.R.A.P. 3(a)" }
   edge-judgment-entered-interlocutory "Petition for permission to appeal an interlocutory order" -> interlocutory-petition {
     authority cite "M.R.A.P. 5(a)"
   }
@@ -35,10 +35,7 @@ decision notice: "Notice of appeal within time?" by appellant cite "M.R.A.P. 4(a
 state record: "Record designated, cost deposited and record filed" by appellant cite "M.R.A.P. 10(b)"
 {
   note "Within seven (7) days after filing the notice of appeal the appellant files and serves a written designation of the parts of the record necessary for the appeal (M.R.A.P. 10(b)(1)), with a statement of the issues unless the entire record is designated (M.R.A.P. 10(b)(4)); the appellee may designate more within 14 days after service (M.R.A.P. 10(b)(4)). Within seven (7) days after filing the notice the appellant also estimates and deposits the cost of preparing the record and files a certificate of compliance (M.R.A.P. 11(b)(1)). Where no transcript is available, a statement of the evidence is filed within 60 days after filing the notice of appeal (M.R.A.P. 10(c)). The clerk of the Supreme Court dockets the appeal on receipt of the notice and files the record on receipt, giving notice of the date of filing (M.R.A.P. 13)."
-  edge-record-assignment "Record filed" -> assignment {
-    event RecordFiled()
-    authority cite "M.R.A.P. 13(b)"
-  }
+  "Record filed" -> assignment { event RecordFiled(), authority cite "M.R.A.P. 13(b)" }
   edge-record-dismissed "Deficiency not corrected within 14 days of notice" -> dismissed-default {
     authority cite "M.R.A.P. 2(a)"
   }
@@ -58,22 +55,20 @@ decision assignment: "Retained by the Supreme Court or assigned to the Court of 
 state briefing: "Briefing" by appellant cite "M.R.A.P. 31(b)"
 {
   note "The appellant's brief is due within 40 days after the date on which the record is filed, the appellee's within 30 days after service of the appellant's brief, and any reply within 14 days after service of the appellee's brief; cross-appeal briefing follows M.R.A.P. 31(b). Except by permission, principal briefs may not exceed 50 pages and reply briefs 25 pages (M.R.A.P. 28(h)); the summary of the argument should seldom exceed two and never five pages (M.R.A.P. 28(a)(6)). Record excerpts accompany the brief (M.R.A.P. 30). A party wanting oral argument states ORAL ARGUMENT REQUESTED on the cover of its brief, the appellee on its principal brief and the appellant on its reply brief or by letter within the time for it (M.R.A.P. 34(b))."
-  edge-briefing-argument "Oral argument set" -> argument { authority cite "M.R.A.P. 34(a)" }
+  "Oral argument set" -> argument { authority cite "M.R.A.P. 34(a)" }
   edge-briefing-submitted "Submitted on the briefs" -> decision { authority cite "M.R.A.P. 34(b)" }
 }
 
 state argument: "Oral argument" by court cite "M.R.A.P. 34(a)"
 {
   note "Oral argument is allowed unless the court or panel unanimously agrees that the appeal is frivolous, the dispositive issue has been recently authoritatively decided, or argument would not significantly aid the decisional process (M.R.A.P. 34(a)). The clerk serves notice of argument at least 14 days before the date set (M.R.A.P. 34(c))."
-  edge-argument-decision "Argued" -> decision { authority cite "M.R.A.P. 34(a)" }
+  "Argued" -> decision { authority cite "M.R.A.P. 34(a)" }
 }
 
 state decision: "Decision handed down" by court cite "M.R.A.P. 35-A(a)"
 {
   note "The Supreme Court and the Court of Appeals publish their written opinions (M.R.A.P. 35-A(a), 35-B(a)). A motion for rehearing may be filed within 14 days after a decision on the merits; any other party may respond within seven days; except by permission it may not exceed twenty-five (25) pages (M.R.A.P. 40(a), (b)). A party seeking review of a Court of Appeals judgment must first move for rehearing in that court (M.R.A.P. 17(b))."
-  edge-decision-rehearing "Motion for rehearing filed" -> rehearing {
-    authority cite "M.R.A.P. 40(a)"
-  }
+  "Motion for rehearing filed" -> rehearing { authority cite "M.R.A.P. 40(a)" }
   edge-decision-final "No rehearing sought" -> final-decision { authority cite "M.R.A.P. 41(a)" }
 }
 
@@ -83,7 +78,7 @@ decision rehearing: "Rehearing decided; certiorari sought from a Court of Appeal
   edge-rehearing-final "No certiorari petition" -> final-decision {
     authority cite "M.R.A.P. 41(b)"
   }
-  edge-rehearing-certiorari "Petition for certiorari filed" -> certiorari {
+  "Petition for certiorari filed" -> certiorari {
     event ReviewPetitionFiled()
     authority cite "M.R.A.P. 17(b)"
   }

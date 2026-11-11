@@ -435,7 +435,7 @@ start motion-filed
 state motion-filed: "Motion filed with response-time notice" by movant cite "P.R. LBR (GO 18-02) 9013-1(c)"
 {
   note "A motion carries the notice of P.R. LBR 9013-1(c)(1): 14 days to respond after service (the excepted periods of 9013-1(c)(2)), unless it is one of the matters of 9013-1(c)(3) that need no response time; an urgent motion follows 9013-1(a) and an ex parte motion 9013-1(b). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-response "Objection or response filed" -> response {
+  "Objection or response filed" -> response {
     authority cite "P.R. LBR (GO 18-02) 9013-1(c)"
     within response-period
   }
@@ -447,7 +447,7 @@ state motion-filed: "Motion filed with response-time notice" by movant cite "P.R
 state response: "Objection or response filed" by opponent cite "P.R. LBR (GO 18-02) 9013-1(c)"
 {
   note "An opposition, reply or sur-reply needs no response-time language (P.R. LBR 9013-1(c)(3)(C))."
-  edge-response-ruling "Matter heard" -> ruling { authority cite "P.R. LBR (GO 18-02) 9013-1(c)" }
+  "Matter heard" -> ruling { authority cite "P.R. LBR (GO 18-02) 9013-1(c)" }
 }
 
 decision ruling: "Motion decided" by court cite "P.R. LBR (GO 18-02) 9013-1(c)"

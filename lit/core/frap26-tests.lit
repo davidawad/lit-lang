@@ -3,23 +3,25 @@ module core.frap26.tests
 import core.frap26.{ frap26 }
 import core.time.{ Served, Scheduled, ServiceMethod }
 
+forum frap
+
 // Fixture periods for testing `frap26`. Known answers reproduce
 // crates/litigate-engine/tests/clock_*.rs and every `frap26` deadline in
 // the expect tests under tests/expect/ (each named for its case), counted
 // under the FRAP 26 version in force on the trigger date. Fixtures cite nothing: they are
 // periods for the tests, not rules in force, and each test cites the rule
 // it checks.
-deadline frap26-1-day: 1.days after Served() counted_by frap26 { forum frap }
-deadline frap26-5-days: 5.days after Served() counted_by frap26 { forum frap }
-deadline frap26-10-days: 10.days after Served() counted_by frap26 { forum frap }
-deadline frap26-14-days: 14.days after Served() counted_by frap26 { forum frap }
-deadline frap26-26-days: 26.days after Served() counted_by frap26 { forum frap }
-deadline frap26-30-days: 30.days after Served() counted_by frap26 { forum frap }
-deadline frap26-45-days: 45.days after Served() counted_by frap26 { forum frap }
-deadline frap26-60-days: 60.days after Served() counted_by frap26 { forum frap }
-deadline frap26-63-days: 63.days after Served() counted_by frap26 { forum frap }
-deadline frap26-90-days: 90.days after Served() counted_by frap26 { forum frap }
-deadline frap26-2-days-before: 2.days before Scheduled() counted_by frap26 { forum frap }
+deadline frap26-1-day: 1.days after Served() counted_by frap26
+deadline frap26-5-days: 5.days after Served() counted_by frap26
+deadline frap26-10-days: 10.days after Served() counted_by frap26
+deadline frap26-14-days: 14.days after Served() counted_by frap26
+deadline frap26-26-days: 26.days after Served() counted_by frap26
+deadline frap26-30-days: 30.days after Served() counted_by frap26
+deadline frap26-45-days: 45.days after Served() counted_by frap26
+deadline frap26-60-days: 60.days after Served() counted_by frap26
+deadline frap26-63-days: 63.days after Served() counted_by frap26
+deadline frap26-90-days: 90.days after Served() counted_by frap26
+deadline frap26-2-days-before: 2.days before Scheduled() counted_by frap26
 
 test "a notice of appeal 30 days after entry of judgment" cite "FRAP 4(a)(1)(A)"
 {

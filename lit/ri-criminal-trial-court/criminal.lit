@@ -40,9 +40,7 @@ decision initial-appearance: "Bail or detention" by court cite "R.I. Super. R. C
 decision charged: "Indictment or information" by court cite "R.I. Super. R. Crim. P. 7(a)"
 {
   note "An offense punishable by life imprisonment is prosecuted by indictment; offenses above the thresholds Rule 7(a) sets may be prosecuted by indictment or by an information signed by the Attorney General; any other offense by complaint (R.I. Super. R. Crim. P. 7(a)); indictment or information may be waived as Rule 7(b) provides. The grand jury is governed by Rule 6, and notification that no information or indictment will be filed by Rule 6.1. A defendant charged by information may move to dismiss it under Rule 9.1, within a time not stated here (currency unconfirmed)."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "R.I. Super. R. Crim. P. 10"
-  }
+  "Arraignment" -> arraignment { authority cite "R.I. Super. R. Crim. P. 10" }
   edge-charged-not-filed "No information or indictment will be filed" -> dismissed {
     authority cite "R.I. Super. R. Crim. P. 6.1"
   }
@@ -54,9 +52,7 @@ decision charged: "Indictment or information" by court cite "R.I. Super. R. Crim
 state arraignment: "Arraignment and plea of not guilty" by accused cite "R.I. Super. R. Crim. P. 10"
 {
   note "Arraignment is conducted in open court, or in the court's discretion by two-way audio-video communication, by reading the indictment, information or complaint or stating its substance and calling on the defendant to plead (R.I. Super. R. Crim. P. 10). A defendant may plead not guilty, guilty or, with the court's consent, nolo contendere (R.I. Super. R. Crim. P. 11)."
-  edge-arraignment-discovery "Discovery" -> discovery {
-    authority cite "R.I. Super. R. Crim. P. 16(a)"
-  }
+  "Discovery" -> discovery { authority cite "R.I. Super. R. Crim. P. 16(a)" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "R.I. Super. R. Crim. P. 12(b)"
@@ -93,8 +89,8 @@ decision plea-decision: "Plea or trial" by accused cite "R.I. Super. R. Crim. P.
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "R.I. Super. R. Crim. P. 11"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "R.I. Super. R. Crim. P. 23(a)" }
-  edge-plea-decision-dismissed "State files a dismissal, or diversion completed" -> dismissed {
+  "Trial" -> trial { authority cite "R.I. Super. R. Crim. P. 23(a)" }
+  "State files a dismissal, or diversion completed" -> dismissed {
     authority cite "R.I. Super. R. Crim. P. 48"
   }
 }
@@ -127,7 +123,7 @@ decision post-trial: "Post-trial motions" by court cite "R.I. Super. R. Crim. P.
 state sentencing: "Presentence investigation and sentence" by court cite "R.I. Super. R. Crim. P. 32(a)"
 {
   note "Sentence is imposed without unreasonable delay; a delay is not unreasonable if the defendant has not moved for imposition of sentence (R.I. Super. R. Crim. P. 32(a)(1)). The presentence investigation and its disclosure are governed by Rule 32(c); a motion to withdraw a guilty or nolo contendere plea by Rule 32(d); probation and its revocation by Rule 32(e), (f)."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+  "Sentence imposed; judgment entered" -> judgment {
     authority cite "R.I. Super. R. Crim. P. 32(b)"
   }
 }

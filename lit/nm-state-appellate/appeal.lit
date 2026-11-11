@@ -24,44 +24,40 @@ decision notice: "Notice of appeal within time?" by appellant cite "NMRA 12-201(
 state docketing: "Docketing statement filed" by appellant cite "NMRA 12-208(B)"
 {
   note "Within thirty (30) days after filing the notice of appeal the appellant files a docketing statement in the Court of Appeals, or a statement of the issues in the Supreme Court, or within thirty (30) days after the notice becomes effective under NMRA 12-201(D)(4) (NMRA 12-208(B)); the docket fee accompanies it unless free process has been granted (NMRA 12-208(H)). No response to it is permitted (NMRA 12-208(I))."
-  edge-docketing-calendar "Docketed" -> calendar { authority cite "NMRA 12-210(B)" }
+  "Docketed" -> calendar { authority cite "NMRA 12-210(B)" }
 }
 
 decision calendar: "Calendar assignment" by court cite "NMRA 12-210(B)"
 {
   note "After the docketing statement is filed, the court assigns the case to the general, summary or legal calendar on the record proper and the docketing statement, and the clerk serves notice of the assignment (NMRA 12-210(B))."
   edge-calendar-general "General calendar" -> transcript { authority cite "NMRA 12-210(C)" }
-  edge-calendar-summary "Summary calendar" -> summary { authority cite "NMRA 12-210(D)" }
+  "Summary calendar" -> summary { authority cite "NMRA 12-210(D)" }
   edge-calendar-legal "Legal calendar" -> briefing { authority cite "NMRA 12-210(E)" }
 }
 
 state transcript: "Transcript designated and filed" by court cite "NMRA 12-211(C)"
 {
   note "Where proceedings were audio recorded, the district court clerk sends the recording within fifteen (15) days after receipt of the general calendar assignment, and the appellant files proof of satisfactory cost arrangements within five (5) days of its service (NMRA 12-211(B)). Otherwise the appellant designates the parts of the proceedings to transcribe, or files a notice that no transcript will be designated, within fifteen (15) days after service of the general calendar assignment (NMRA 12-211(C)(1)). Filing of the transcript or of the notice of nondesignation starts the briefing schedule (NMRA 12-210(C)(2))."
-  edge-transcript-briefing "Transcript filed or nondesignation noticed" -> briefing {
-    authority cite "NMRA 12-210(C)"
-  }
+  "Transcript filed or nondesignation noticed" -> briefing { authority cite "NMRA 12-210(C)" }
 }
 
 state summary: "Summary calendar: proposed disposition" by court cite "NMRA 12-210(D)"
 {
   note "No briefs or transcript are filed; the clerk serves a notice of proposed summary disposition, and the parties have twenty (20) days from its service to file a memorandum in opposition or support (NMRA 12-210(D)(1), (2)), whose body may not exceed thirty-five (35) pages, or eleven thousand (11,000) words or one thousand two hundred (1,200) monospaced lines, except by permission (NMRA 12-210(D)(3)). The court then reassigns the case to the general or legal calendar, issues another notice, or decides summarily; no oral argument is heard (NMRA 12-210(D)(4))."
-  edge-summary-decision "Decided summarily" -> decision { authority cite "NMRA 12-210(D)" }
-  edge-summary-briefing "Reassigned to the general or legal calendar" -> briefing {
-    authority cite "NMRA 12-210(D)"
-  }
+  "Decided summarily" -> decision { authority cite "NMRA 12-210(D)" }
+  "Reassigned to the general or legal calendar" -> briefing { authority cite "NMRA 12-210(D)" }
 }
 
 state briefing: "Briefing" by appellant cite "NMRA 12-318"
 {
   note "General calendar: brief in chief within forty-five (45) days after service of notice that all transcripts are filed (or after service of the notice of nondesignation), answer brief within forty-five (45) days after service of the brief in chief, reply within twenty (20) days after service of the answer brief (NMRA 12-210(C)(2)). Legal calendar: brief in chief within thirty (30) days of service of the calendar notice, answer brief within thirty (30) days, reply within twenty (20) days (NMRA 12-210(E)(2)). Except by permission, the body of a brief in chief or answer brief may not exceed thirty-five (35) pages and of a reply brief fifteen (15) pages (NMRA 12-318(F)(2)), unless it keeps within eleven thousand (11,000) words, or four thousand four hundred (4,400) for a reply (NMRA 12-318(F)(3)). Cross-appeal briefing periods are NMRA 12-318(I)."
-  edge-briefing-argument "Briefing complete" -> argument { authority cite "NMRA 12-319(A)" }
+  "Briefing complete" -> argument { authority cite "NMRA 12-319(A)" }
 }
 
 state argument: "Submission or oral argument" by court cite "NMRA 12-319(A)"
 {
   note "After briefing the case is submitted; the court may order oral argument at its discretion, and a party requests it on the cover or first page of its opening brief (NMRA 12-319(A), (B)). No oral argument is allowed on the legal calendar unless the Court of Appeals orders it (NMRA 12-210(E)(3))."
-  edge-argument-decision "Submitted" -> decision { authority cite "NMRA 12-402(A)" }
+  "Submitted" -> decision { authority cite "NMRA 12-402(A)" }
 }
 
 state decision: "Disposition entered" by court cite "NMRA 12-402(A)"

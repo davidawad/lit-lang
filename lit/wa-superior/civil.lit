@@ -52,16 +52,12 @@ terminal default-judgment: "Default judgment" outcome [loss] cite "CR 55(b)"
 state discovery: "Discovery" by movant cite "CR 26"
 {
   note "The court may hold a discovery conference on a party's motion; objections or additions to the matters the motion sets forth are served not later than 10 days after service of the motion, and the court then enters a discovery plan and schedule (CR 26(f)). Each party and attorney must participate in good faith in framing a proposed discovery plan."
-  edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
-    authority cite "CR 41(a)"
-  }
+  "Settlement or voluntary dismissal" -> settled { authority cite "CR 41(a)" }
   edge-discovery-want-of-prosecution "No action noted for trial within a year of joinder" -> dismissed-want-of-prosecution {
     authority cite "CR 41(b)"
   }
-  edge-discovery-summary-judgment "Dispositive motion" -> summary-judgment {
-    authority cite "CR 56(c)"
-  }
-  edge-discovery-trial "Case set for trial" -> trial { authority cite "CR 38(b)" }
+  "Dispositive motion" -> summary-judgment { authority cite "CR 56(c)" }
+  "Case set for trial" -> trial { authority cite "CR 38(b)" }
 }
 
 terminal dismissed-want-of-prosecution: "Dismissed for want of prosecution" outcome [loss, dismissal] cite "CR 41(b)"
@@ -80,7 +76,7 @@ decision trial: "Jury or bench trial" by court cite "CR 38(b)"
 {
   note "At or before the time the case is called to be set for trial, a party demands a jury by serving and filing a written demand and paying the jury fee; without a demand for 12, a jury of 6 tries the case with five concurring (CR 38(b)). If a demand specifies only some issues, any other party may demand a jury on other issues within 10 days after service of the demand (CR 38(c)); failure to serve, file and pay is a waiver (CR 38(d)). A case settled after assignment for trial is reported promptly, by telephone or in person if within 5 days before trial (CR 41(e))."
   edge-trial-verdict "Verdict or decision" -> post-trial { authority cite "CR 50(b)" }
-  edge-trial-settled "Settled before verdict" -> settled { authority cite "CR 41(e)" }
+  "Settled before verdict" -> settled { authority cite "CR 41(e)" }
 }
 
 decision post-trial: "Post-trial motions" by movant cite "CR 59(b)"

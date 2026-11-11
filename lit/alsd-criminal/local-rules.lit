@@ -2,6 +2,8 @@ module alsd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Southern District's own criminal periods. In a proceeding needing no
 // indictment, a period that runs from arraignment on an indictment runs
 // instead from the entry of a not-guilty plea on the trial docket (CrLR
@@ -52,9 +54,6 @@ event SentencingHearingScheduled()
 /// issue described in FRCrimP 12(b)(3) is filed within fourteen days after
 /// arraignment on an indictment.
 deadline pretrial-motion-period: 14.days after Arraigned() counted_by frcrimp45 cite "S.D. Ala. CrLR 12(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motion-period (weekend)" cite "S.D. Ala. CrLR 12(a)"
 {
@@ -65,9 +64,6 @@ test "Counting boundary: pretrial-motion-period (weekend)" cite "S.D. Ala. CrLR 
 /// S.D. Ala. CrLR 12(a)(3): absent a court order, the non-movant has seven
 /// days from service of the motion to file a response.
 deadline motion-response-period: 7.days after MotionServed() counted_by frcrimp45 cite "S.D. Ala. CrLR 12(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-response-period (weekend)" cite "S.D. Ala. CrLR 12(a)"
 {
@@ -78,9 +74,6 @@ test "Counting boundary: motion-response-period (weekend)" cite "S.D. Ala. CrLR 
 /// S.D. Ala. CrLR 12(a)(4): absent a court order, the movant has seven
 /// days from service of the response to file a reply.
 deadline motion-reply-period: 7.days after MotionResponseServed() counted_by frcrimp45 cite "S.D. Ala. CrLR 12(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-reply-period (weekend)" cite "S.D. Ala. CrLR 12(a)"
 {
@@ -92,9 +85,6 @@ test "Counting boundary: motion-reply-period (weekend)" cite "S.D. Ala. CrLR 12(
 /// evidentiary hearing within seven days after service of the motion
 /// seeking one.
 deadline evidentiary-hearing-response-period: 7.days after EvidentiaryHearingMotionServed() counted_by frcrimp45 cite "S.D. Ala. CrLR 12(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: evidentiary-hearing-response-period (weekend)" cite "S.D. Ala. CrLR 12(b)"
 {
@@ -106,9 +96,6 @@ test "Counting boundary: evidentiary-hearing-response-period (weekend)" cite "S.
 /// when required, within fourteen days after the indictment or information
 /// is filed.
 deadline government-disclosure-statement-period: 14.days after ChargeFiled() counted_by frcrimp45 cite "S.D. Ala. CrLR 12.4(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-disclosure-statement-period (weekend)" cite "S.D. Ala. CrLR 12.4(b)"
 {
@@ -120,9 +107,6 @@ test "Counting boundary: government-disclosure-statement-period (weekend)" cite 
 /// reassign related criminal cases is filed within seven days of the
 /// motion's filing.
 deadline related-case-objection-period: 7.days after RelatedCaseMotionFiled() counted_by frcrimp45 cite "S.D. Ala. CrLR 13(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: related-case-objection-period (weekend)" cite "S.D. Ala. CrLR 13(b)"
 {
@@ -134,9 +118,6 @@ test "Counting boundary: related-case-objection-period (weekend)" cite "S.D. Ala
 /// gives the defendant any additional information it provided to the
 /// Probation Office for the guideline calculation.
 deadline post-conviction-disclosure-period: 3.days after Convicted() counted_by frcrimp45 cite "S.D. Ala. CrLR 16(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: post-conviction-disclosure-period (weekend)" cite "S.D. Ala. CrLR 16(e)"
 {
@@ -151,9 +132,6 @@ test "Counting boundary: post-conviction-disclosure-period (weekend)" cite "S.D.
 /// unresolved, the report is accepted as accurate, though the court may
 /// allow a new objection for good cause (32(b)(7)).
 deadline sentencing-position-period: 14.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Ala. CrLR 32(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-position-period (weekend)" cite "S.D. Ala. CrLR 32(b)"
 {
@@ -164,9 +142,6 @@ test "Counting boundary: sentencing-position-period (weekend)" cite "S.D. Ala. C
 /// S.D. Ala. CrLR 32(b)(5): counsel confer no later than ten days before
 /// the sentencing hearing on its length and witnesses.
 deadline sentencing-conference-period: 10.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Ala. CrLR 32(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-conference-period (weekend)" cite "S.D. Ala. CrLR 32(b)"
 {
@@ -178,9 +153,6 @@ test "Counting boundary: sentencing-conference-period (weekend)" cite "S.D. Ala.
 /// thirty minutes files a notice of the witnesses and time needed no later
 /// than seven days before it.
 deadline sentencing-length-notice-period: 7.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Ala. CrLR 32(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-length-notice-period (weekend)" cite "S.D. Ala. CrLR 32(b)"
 {
@@ -192,9 +164,6 @@ test "Counting boundary: sentencing-length-notice-period (weekend)" cite "S.D. A
 /// presentence report, its addendum of unresolved disputes and its
 /// recommendation no later than seven days before the sentencing hearing.
 deadline presentence-addendum-period: 7.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Ala. CrLR 32(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: presentence-addendum-period (weekend)" cite "S.D. Ala. CrLR 32(b)"
 {
@@ -208,9 +177,6 @@ test "Counting boundary: presentence-addendum-period (weekend)" cite "S.D. Ala. 
 /// arrangements, counsel represents the defendant to the conclusion of the
 /// action; nonpayment is normally not good cause after that.
 deadline retained-counsel-withdrawal-period: 14.days after Arraigned() counted_by frcrimp45 cite "S.D. Ala. CrLR 44(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: retained-counsel-withdrawal-period (weekend)" cite "S.D. Ala. CrLR 44(a)"
 {

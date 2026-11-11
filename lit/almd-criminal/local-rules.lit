@@ -2,6 +2,8 @@ module almd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Middle District's own criminal periods. A defendant claiming
 // entrapment serves and files written notice within the time for pretrial
 // motions, or later as the Court directs; without it entrapment may not be
@@ -32,9 +34,6 @@ event RevocationHearingScheduled()
 /// on the government, fourteen days before the hearing; a late notice
 /// needs a motion for leave (57.1(3)).
 deadline drug-test-challenge-notice-period: 14.days before RevocationHearingScheduled() counted_by frcrimp45 cite "M.D. Ala. LCrR 57.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: drug-test-challenge-notice-period (weekend)" cite "M.D. Ala. LCrR 57.1"
 {
@@ -47,9 +46,6 @@ test "Counting boundary: drug-test-challenge-notice-period (weekend)" cite "M.D.
 /// with Fed. R. Crim. P. 45", each laboratory report, the chain-of-custody
 /// report and a laboratory employee's affidavit.
 deadline drug-test-materials-period: 7.days before RevocationHearingScheduled() counted_by frcrimp45 cite "M.D. Ala. LCrR 57.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: drug-test-materials-period (holiday)" cite "M.D. Ala. LCrR 57.1"
 {

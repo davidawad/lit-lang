@@ -2,6 +2,8 @@ module flsd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Southern District's own criminal periods. A criminal motion follows
 // Local Rule 7.1 except 7.1(a)(3) and 7.1(b), carries a certificate of
 // conferral, and a motion needing evidentiary support a concise statement
@@ -47,9 +49,6 @@ event PostTrialHearingScheduled()
 /// under the court's Speedy Trial Plan). Only the first report is counted
 /// here; each later one falls twenty-one days after the one before.
 deadline speedy-trial-report-period: 21.days after Arraigned() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.5"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: speedy-trial-report-period (holiday)" cite "S.D. Fla. L.R. 88.5"
 {
@@ -62,9 +61,6 @@ test "Counting boundary: speedy-trial-report-period (holiday)" cite "S.D. Fla. L
 /// the motion applies; a motion arising from a post-arraignment event
 /// within a reasonable time after the event.
 deadline criminal-motion-period: 28.days after Arraigned() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.9(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: criminal-motion-period (holiday)" cite "S.D. Fla. L.R. 88.9(c)"
 {
@@ -76,9 +72,6 @@ test "Counting boundary: criminal-motion-period (holiday)" cite "S.D. Fla. L.R. 
 /// not later than fourteen days after the arraignment, or at another time
 /// the court orders.
 deadline trial-discovery-period: 14.days after Arraigned() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.10(o)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: trial-discovery-period (weekend)" cite "S.D. Fla. L.R. 88.10(o)"
 {
@@ -90,9 +83,6 @@ test "Counting boundary: trial-discovery-period (weekend)" cite "S.D. Fla. L.R. 
 /// testimony is provided within fourteen days of the written request, but
 /// need not be provided earlier than fourteen days after the arraignment.
 deadline expert-summary-period: 14.days after ExpertSummaryRequested() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.10(o)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: expert-summary-period (weekend)" cite "S.D. Fla. L.R. 88.10(o)"
 {
@@ -106,9 +96,6 @@ test "Counting boundary: expert-summary-period (weekend)" cite "S.D. Fla. L.R. 8
 /// than twenty-one days before trial, but need not be made earlier than
 /// fourteen days after the arraignment.
 deadline expert-case-in-chief-disclosure-period: 21.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.10(o)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: expert-case-in-chief-disclosure-period (holiday)" cite "S.D. Fla. L.R. 88.10(o)"
 {
@@ -120,9 +107,6 @@ test "Counting boundary: expert-case-in-chief-disclosure-period (holiday)" cite 
 /// testimony offered to counter the other side's timely disclosed expert
 /// testimony is made no later than seven days before trial.
 deadline expert-rebuttal-disclosure-period: 7.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.10(o)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: expert-rebuttal-disclosure-period (holiday)" cite "S.D. Fla. L.R. 88.10(o)"
 {
@@ -134,9 +118,6 @@ test "Counting boundary: expert-rebuttal-disclosure-period (holiday)" cite "S.D.
 /// hearing, a sentencing hearing included, is made not later than seven
 /// days before the hearing (the presentence report follows 88.8).
 deadline post-trial-discovery-period: 7.days before PostTrialHearingScheduled() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.10(o)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: post-trial-discovery-period (holiday)" cite "S.D. Fla. L.R. 88.10(o)"
 {
@@ -148,9 +129,6 @@ test "Counting boundary: post-trial-discovery-period (holiday)" cite "S.D. Fla. 
 /// verdict, defense counsel and the probation officer arrange the initial
 /// presentence interview.
 deadline presentence-interview-period: 7.days after GuiltEntered() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.8(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: presentence-interview-period (weekend)" cite "S.D. Fla. L.R. 88.8(a)"
 {
@@ -162,9 +140,6 @@ test "Counting boundary: presentence-interview-period (weekend)" cite "S.D. Fla.
 /// the sentencing hearing on its anticipated length and the number of
 /// witnesses.
 deadline sentencing-conference-period: 7.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.8(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-conference-period (holiday)" cite "S.D. Fla. L.R. 88.8(b)"
 {
@@ -178,9 +153,6 @@ test "Counting boundary: sentencing-conference-period (holiday)" cite "S.D. Fla.
 /// before it; any notice for enhancement of sentence or request for
 /// departure is filed in the same period.
 deadline sentencing-notice-period: 5.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.8(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-notice-period (holiday)" cite "S.D. Fla. L.R. 88.8(b)"
 {

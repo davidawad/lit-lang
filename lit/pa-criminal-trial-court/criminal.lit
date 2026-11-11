@@ -34,7 +34,7 @@ decision initial-appearance: "Preliminary arraignment and bail" by court cite "P
 decision probable-cause: "Preliminary hearing or indicting grand jury" by court cite "Pa.R.Crim.P. 543"
 {
   note "At the preliminary hearing the defendant may be represented, cross-examine, call witnesses and testify (Pa.R.Crim.P. 542(C)). If the Commonwealth establishes a prima facie case the issuing authority holds the defendant for court, otherwise it discharges the defendant (Pa.R.Crim.P. 543(B)). On a showing of witness intimidation, the attorney for the Commonwealth may instead present the matter to an indicting grand jury without a preliminary hearing (Pa.R.Crim.P. 556.2)."
-  edge-probable-cause-charged "Held for court" -> charged { authority cite "Pa.R.Crim.P. 543(B)" }
+  "Held for court" -> charged { authority cite "Pa.R.Crim.P. 543(B)" }
   edge-probable-cause-none "No prima facie case; discharged" -> dismissed {
     authority cite "Pa.R.Crim.P. 543(B)"
   }
@@ -43,13 +43,13 @@ decision probable-cause: "Preliminary hearing or indicting grand jury" by court 
 state charged: "Information" by court cite "Pa.R.Crim.P. 560"
 {
   note "After the defendant is held for court or indicted, the attorney for the Commonwealth prepares an information and files it with the court of common pleas (Pa.R.Crim.P. 560(A)). Trial in a court case commences within 365 days from the filing of the written complaint, counting only delay caused by the Commonwealth's want of due diligence; a defendant entitled to bail is not held in pretrial incarceration more than 180 days from the complaint, counting all delay not caused by the defendant (Pa.R.Crim.P. 600(A)(2)(a), (B)(1), (C))."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Pa.R.Crim.P. 571(A)" }
+  "Arraignment" -> arraignment { authority cite "Pa.R.Crim.P. 571(A)" }
 }
 
 state arraignment: "Arraignment" by prosecution cite "Pa.R.Crim.P. 571"
 {
   note "Unless local rule provides otherwise or the court postpones it for cause, arraignment takes place no later than 10 days after the information is filed (Pa.R.Crim.P. 571(A)). The defendant is advised of the right to counsel, the charges, the right to file motions and their time limits, and the effect of failing to appear; appearance may be waived on the conditions of Pa.R.Crim.P. 571(D)."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Pa.R.Crim.P. 573" }
+  "Discovery" -> discovery { authority cite "Pa.R.Crim.P. 573" }
 }
 
 state discovery: "Discovery and the omnibus pretrial motion" by prosecution cite "Pa.R.Crim.P. 578"
@@ -82,7 +82,7 @@ decision plea-decision: "Plea or trial" by accused cite "Pa.R.Crim.P. 590"
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Pa.R.Crim.P. 590(A)"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Pa.R.Crim.P. 600(A)" }
+  "Trial" -> trial { authority cite "Pa.R.Crim.P. 600(A)" }
   edge-plea-decision-nolle "Nolle prosequi" -> dismissed { authority cite "Pa.R.Crim.P. 585(A)" }
 }
 

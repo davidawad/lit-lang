@@ -79,9 +79,7 @@ decision rehearing-decision: "Rehearing Sought?" by movant cite "Fed. R. App. P.
 state rehearing-order: "Rehearing Order" by court cite "Fed. R. App. P. 40"
 {
   note "Court order on rehearing or en banc petition."
-  edge-rehearing-order-mandate "Rehearing decided" -> mandate {
-    authority cite "Fed. R. App. P. 40"
-  }
+  "Rehearing decided" -> mandate { authority cite "Fed. R. App. P. 40" }
 }
 
 state mandate: "Mandate or Remittitur Issued" by court cite "Fed. R. App. P. 41"

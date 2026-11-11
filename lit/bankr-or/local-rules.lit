@@ -159,6 +159,7 @@ test "Counting boundary: plan-completion-notice-period (weekend)" cite "Bankr. D
   given DischargeRequestFiled() on 2025-12-06
   expect deadline(plan-completion-notice-period) == 2025-10-31
 }
+
 /// Bankr. D. Or. LBR 2016-1(c): an application for compensation through
 /// plan confirmation is filed no later than 28 days after entry of the
 /// confirmation order.
@@ -169,6 +170,7 @@ test "Counting boundary: confirmation-fee-application-period (holiday)" cite "Ba
   given PlanConfirmed() on 2025-12-04
   expect deadline(confirmation-fee-application-period) == 2026-01-02
 }
+
 /// Bankr. D. Or. LBR 2016-1(c): when notice is required and no objection is
 /// filed, the applicant lodges a proposed order no later than 28 days after
 /// service.
@@ -179,6 +181,7 @@ test "Counting boundary: fee-no-objection-order-period (holiday)" cite "Bankr. D
   given FeeNoticeServed() on 2025-12-04
   expect deadline(fee-no-objection-order-period) == 2026-01-02
 }
+
 /// Bankr. D. Or. LBR 2016-1(d)(1): a chapter 13 debtor's attorney files an
 /// application for compensation on LBF 1214 no later than 28 days after
 /// service of the trustee's notice of plan completion.
@@ -189,6 +192,7 @@ test "Counting boundary: completion-fee-application-period (holiday)" cite "Bank
   given PlanCompletionNoticeServed() on 2025-12-04
   expect deadline(completion-fee-application-period) == 2026-01-02
 }
+
 /// Bankr. D. Or. LBR 2016-1(e): an attorney files any required amended LBF
 /// 1305, and any LBF 1306 itemization, no later than seven days before the
 /// final confirmation hearing.
@@ -199,6 +203,7 @@ test "Counting boundary: amended-attorney-statement-period (holiday)" cite "Bank
   given FinalConfirmationHearing() on 2025-12-04
   expect deadline(amended-attorney-statement-period) == 2025-11-26
 }
+
 /// Bankr. D. Or. LBR 2016-1(e): if allowance of LBF 1307 compensation
 /// requires a plan modification, the debtor files a notice of
 /// postconfirmation amendment or a motion within 28 days after the
@@ -210,6 +215,7 @@ test "Counting boundary: fee-plan-modification-period (holiday)" cite "Bankr. D.
   given SupplementalFeesAllowed() on 2025-12-04
   expect deadline(fee-plan-modification-period) == 2026-01-02
 }
+
 /// Bankr. D. Or. LBR 2016-1(i): a secured creditor gives a written
 /// itemization of expenses not in its proof of claim no later than 28 days
 /// after service of a request.
@@ -220,6 +226,7 @@ test "Counting boundary: expense-itemization-period (holiday)" cite "Bankr. D. O
   given ExpenseRequestServed() on 2025-12-04
   expect deadline(expense-itemization-period) == 2026-01-02
 }
+
 /// Bankr. D. Or. LBR 3001-1(c): to prevent distribution, an objection to an
 /// amended claim is filed no later than 14 days after the amended claim was
 /// filed.
@@ -234,6 +241,7 @@ test "Counting boundary: wage-order-period (weekend)" cite "Bankr. D. Or. LBR 30
   given FirstMeetingCompleted() on 2025-12-06
   expect deadline(wage-order-period) == 2025-12-15
 }
+
 /// Bankr. D. Or. LBR 3015-2(b): a preconfirmation amended chapter 13 plan
 /// is filed at least 28 days before the pending confirmation hearing.
 deadline amended-plan-period: 28.days before ConfirmationHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3015-2(b)"
@@ -243,6 +251,7 @@ test "Counting boundary: amended-plan-period (weekend)" cite "Bankr. D. Or. LBR 
   given ConfirmationHearing() on 2025-12-06
   expect deadline(amended-plan-period) == 2025-11-07
 }
+
 /// Bankr. D. Or. LBR 3015-3(b)(2): the debtor delivers a proposed
 /// confirmation order to the trustee no later than seven days before the
 /// confirmation hearing.
@@ -253,6 +262,7 @@ test "Counting boundary: confirmation-order-delivery-period (holiday)" cite "Ban
   given ConfirmationHearing() on 2025-12-04
   expect deadline(confirmation-order-delivery-period) == 2025-11-26
 }
+
 /// Bankr. D. Or. LBR 3015-3(c)(1): a chapter 13 confirmation objection is
 /// filed and served within 14 days after the meeting of creditors
 /// concludes.
@@ -267,6 +277,7 @@ test "Counting boundary: unopposed-confirmation-order-period (holiday)" cite "Ba
   given FirstMeetingCompleted() on 2025-12-04
   expect deadline(unopposed-confirmation-order-period) == 2025-12-26
 }
+
 /// Bankr. D. Or. LBR 3015-3(c)(2): the trustee lodges an approved proposed
 /// order no later than seven days before the confirmation hearing.
 deadline trustee-lodging-period: 7.days before ConfirmationHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 3015-3(c)"
@@ -276,6 +287,7 @@ test "Counting boundary: trustee-lodging-period (holiday)" cite "Bankr. D. Or. L
   given ConfirmationHearing() on 2025-12-04
   expect deadline(trustee-lodging-period) == 2025-11-26
 }
+
 /// Bankr. D. Or. LBR 3017.1-1(a): no later than 14 days before filing the
 /// plan and any disclosure statement, a small business debtor serves them
 /// on the parties the rule lists.
@@ -286,6 +298,7 @@ test "Counting boundary: small-business-service-period (weekend)" cite "Bankr. D
   given SmallBusinessPlanFiled() on 2025-12-06
   expect deadline(small-business-service-period) == 2025-11-21
 }
+
 /// Bankr. D. Or. LBR 3017.1-1(a): no later than seven days after service,
 /// the parties served inform the debtor of any objection to the disclosure
 /// statement.
@@ -296,6 +309,7 @@ test "Counting boundary: small-business-comment-period (weekend)" cite "Bankr. D
   given SmallBusinessPlanServed() on 2025-12-06
   expect deadline(small-business-comment-period) == 2025-12-15
 }
+
 /// Bankr. D. Or. LBR 3018-1(c): a claimant seeking temporary allowance of a
 /// disputed claim for voting files and serves a motion no later than 30
 /// days after service of the initial notice of the disclosure statement
@@ -307,6 +321,7 @@ test "Counting boundary: temporary-allowance-period (holiday)" cite "Bankr. D. O
   given DisclosureHearingNoticeServed() on 2025-12-02
   expect deadline(temporary-allowance-period) == 2026-01-02
 }
+
 /// Bankr. D. Or. LBR 3020-1(b)(1)(B): the chapter 11 confirmation order
 /// requires payment of unpaid clerk's fees no later than 14 days after it
 /// is entered.
@@ -320,6 +335,7 @@ test "Counting boundary: confirmation-order-lodging-period (weekend)" cite "Bank
   given FinalChapterElevenConfirmationHearing() on 2025-12-06
   expect deadline(confirmation-order-lodging-period) == 2025-12-15
 }
+
 /// Bankr. D. Or. LBR 4001-1(e)(2): a motion to extend the stay under §
 /// 362(c)(3) is filed no later than seven days after the order for relief.
 deadline stay-extension-motion-period: 7.days after OrderForReliefEntered() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 4001-1(e)"
@@ -329,6 +345,7 @@ test "Counting boundary: stay-extension-motion-period (weekend)" cite "Bankr. D.
   given OrderForReliefEntered() on 2025-12-06
   expect deadline(stay-extension-motion-period) == 2025-12-15
 }
+
 /// Bankr. D. Or. LBR 4004-1(c): in a chapter 7 case, a motion to determine
 /// under § 727(a)(12) that a discharge should not be granted is filed no
 /// later than 60 days after the first date set for the meeting of
@@ -340,6 +357,7 @@ test "Counting boundary: discharge-applicability-motion-period (weekend)" cite "
   given FirstMeetingDate() on 2025-12-02
   expect deadline(discharge-applicability-motion-period) == 2026-02-02
 }
+
 /// Bankr. D. Or. LBR 5005-4(b)(4): a specially admitted attorney registers
 /// as an ECF Participant no later than 14 days after the admission order,
 /// unless local counsel files.
@@ -354,6 +372,7 @@ test "Counting boundary: redaction-intent-period (weekend)" cite "Bankr. D. Or. 
   given TranscriptFiled() on 2025-12-06
   expect deadline(redaction-intent-period) == 2025-12-15
 }
+
 /// Bankr. D. Or. LBR 5077-1(a)(3): a party that filed a notice of intent
 /// submits its list of redactions no later than 21 days after the
 /// transcript was filed.
@@ -364,6 +383,7 @@ test "Counting boundary: redaction-request-period (holiday)" cite "Bankr. D. Or.
   given TranscriptFiled() on 2025-12-04
   expect deadline(redaction-request-period) == 2025-12-26
 }
+
 /// Bankr. D. Or. LBR 5077-1(a)(3): the redacted transcript is filed no
 /// later than 31 days after the original transcript was filed.
 deadline redacted-transcript-period: 31.days after TranscriptFiled() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 5077-1(a)"
@@ -373,6 +393,7 @@ test "Counting boundary: redacted-transcript-period (holiday)" cite "Bankr. D. O
   given TranscriptFiled() on 2025-12-01
   expect deadline(redacted-transcript-period) == 2026-01-02
 }
+
 /// Bankr. D. Or. LBR 5077-1(c): a party offering a transcript into
 /// evidence, other than for impeachment, produces it to opposing parties at
 /// least 14 days before the hearing.
@@ -383,6 +404,7 @@ test "Counting boundary: transcript-evidence-period (weekend)" cite "Bankr. D. O
   given EvidentiaryHearing() on 2025-12-06
   expect deadline(transcript-evidence-period) == 2025-11-21
 }
+
 /// Bankr. D. Or. LBR 6004-1(b): the FRBP 6004(f)(1) statement is filed no
 /// later than 28 days after a sale of estate property.
 deadline sale-report-period: 28.days after SaleCompleted() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 6004-1(b)"
@@ -392,6 +414,7 @@ test "Counting boundary: sale-report-period (holiday)" cite "Bankr. D. Or. LBR 6
   given SaleCompleted() on 2025-12-04
   expect deadline(sale-report-period) == 2026-01-02
 }
+
 /// Bankr. D. Or. LBR 6007-1(b): in a chapter 7 case the trustee may abandon
 /// the debtor's residence unless a creditor objects no later than seven
 /// days before the first date set for the meeting of creditors.
@@ -402,6 +425,7 @@ test "Counting boundary: residence-abandonment-objection-period (holiday)" cite 
   given FirstMeetingDate() on 2025-12-04
   expect deadline(residence-abandonment-objection-period) == 2025-11-26
 }
+
 /// Bankr. D. Or. LBR 7007-1(b): an opposition statement and supporting
 /// brief is filed and served no later than 14 days after the filing of a
 /// motion.
@@ -433,6 +457,7 @@ test "Counting boundary: student-appearance-notice-period (holiday)" cite "Bankr
   given StudentFirstHearing() on 2025-12-04
   expect deadline(student-appearance-notice-period) == 2025-11-26
 }
+
 /// Bankr. D. Or. LBR 9013-1(c)(2)(A): an objection to a motion is filed no
 /// later than 14 days after service of the motion, unless an FRBP specifies
 /// another notice period.
@@ -446,6 +471,7 @@ test "Counting boundary: expert-disclosure-period (weekend)" cite "Bankr. D. Or.
   given EvidentiaryHearing() on 2025-12-06
   expect deadline(expert-disclosure-period) == 2025-11-21
 }
+
 /// Bankr. D. Or. LBR 9017-1(c)(2): a party notifies the court of its need
 /// for court equipment no later than 14 days before the hearing.
 deadline court-equipment-notice-period: 14.days before EvidentiaryHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9017-1(c)"
@@ -455,6 +481,7 @@ test "Counting boundary: court-equipment-notice-period (weekend)" cite "Bankr. D
   given EvidentiaryHearing() on 2025-12-06
   expect deadline(court-equipment-notice-period) == 2025-11-21
 }
+
 /// Bankr. D. Or. LBR 9021-1(d)(2): a cost bill is filed and served no later
 /// than 14 days after entry of the order or judgment.
 deadline cost-bill-period: 14.days after JudgmentEntered() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9021-1(d)"
@@ -470,6 +497,7 @@ test "Counting boundary: cost-reply-period (weekend)" cite "Bankr. D. Or. LBR 90
   given CostObjectionServed() on 2025-12-06
   expect deadline(cost-reply-period) == 2025-12-15
 }
+
 /// Bankr. D. Or. LBR 9027-1(a): no later than seven days after filing a
 /// notice of removal, the removing party files evidence of compliance with
 /// FRBP 9027(b).
@@ -762,7 +790,7 @@ start motion-filed
 state motion-filed: "Motion filed and served" by movant cite "Bankr. D. Or. LBR 9013-1(c)"
 {
   note "An objection is filed no later than 14 days after service of the motion unless an FRBP sets another notice period (LBR 9013-1(c)(2)(A)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Objection filed" -> opposed {
+  "Objection filed" -> opposed {
     authority cite "Bankr. D. Or. LBR 9013-1(c)"
     within motion-objection-period
   }
@@ -774,7 +802,7 @@ state motion-filed: "Motion filed and served" by movant cite "Bankr. D. Or. LBR 
 state opposed: "Objection filed; hearing" by opponent cite "Bankr. D. Or. LBR 9013-1(c)"
 {
   note "A reply in a chapter 9, 11 or 15 case is due three business days before the hearing (LBR 9013-1(c))."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. D. Or. LBR 9013-1(c)" }
+  "Hearing held" -> ruling { authority cite "Bankr. D. Or. LBR 9013-1(c)" }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. D. Or. LBR 9021-1(a)"

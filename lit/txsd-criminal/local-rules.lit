@@ -2,6 +2,8 @@ module txsd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Southern District of Texas's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method: FRCrimP 45(c)'s three added days follow the
@@ -63,9 +65,6 @@ event ReturnedExhibitsNoticed()
 /// determination of guilt, is followed by written notice to the probation
 /// office within 7 days.
 deadline interview-attendance-notice: 7.days after GuiltDetermined() counted_by frcrimp45 cite "S.D. Tex. Cr 32.3(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: interview-attendance-notice (weekend)" cite "S.D. Tex. Cr 32.3(A)"
 {
@@ -78,9 +77,6 @@ test "Counting boundary: interview-attendance-notice (weekend)" cite "S.D. Tex. 
 /// restated), the probation office submits the final report to the
 /// sentencing judge with an addendum of unresolved objections.
 deadline final-report: 14.days after ObjectionPeriodEnded() counted_by frcrimp45 cite "S.D. Tex. Cr 32.7(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: final-report (weekend)" cite "S.D. Tex. Cr 32.7(B)"
 {
@@ -93,9 +89,6 @@ test "Counting boundary: final-report (weekend)" cite "S.D. Tex. Cr 32.7(B)"
 /// is listed and made available; failure to object in writing before
 /// trial concedes authenticity.
 deadline authentication-notice: 7.days after ExhibitListed() counted_by frcrimp45 cite "S.D. Tex. Cr 55.2(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: authentication-notice (weekend)" cite "S.D. Tex. Cr 55.2(A)"
 {
@@ -107,9 +100,6 @@ test "Counting boundary: authentication-notice (weekend)" cite "S.D. Tex. Cr 55.
 /// made at least 7 days before trial by notifying the court in writing of
 /// the disputes, with copies of the disputed exhibits and authority.
 deadline exhibit-objections: 7.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Tex. Cr 55.2(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-objections (weekend)" cite "S.D. Tex. Cr 55.2(B)"
 {
@@ -121,9 +111,6 @@ test "Counting boundary: exhibit-objections (weekend)" cite "S.D. Tex. Cr 55.2(B
 /// withdrawn within 7 days after the completion of the trial, and reduced
 /// reproductions or photographs substituted.
 deadline oversized-exhibit-withdrawal: 7.days after TrialCompleted() counted_by frcrimp45 cite "S.D. Tex. Cr 55.2(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: oversized-exhibit-withdrawal (weekend)" cite "S.D. Tex. Cr 55.2(C)"
 {
@@ -136,9 +123,6 @@ test "Counting boundary: oversized-exhibit-withdrawal (weekend)" cite "S.D. Tex.
 /// exhibits not removed are disposed of by the clerk at the offering
 /// party's expense.
 deadline exhibit-removal: 30.days after DisposedWithoutAppeal() counted_by frcrimp45 cite "S.D. Tex. Cr 55.2(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-removal (weekend)" cite "S.D. Tex. Cr 55.2(C)"
 {
@@ -150,9 +134,6 @@ test "Counting boundary: exhibit-removal (weekend)" cite "S.D. Tex. Cr 55.2(C)"
 /// removes exhibits returned by the court of appeals within 14 days after
 /// the clerk's written notice.
 deadline returned-exhibit-removal: 14.days after ReturnedExhibitsNoticed() counted_by frcrimp45 cite "S.D. Tex. Cr 55.2(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: returned-exhibit-removal (weekend)" cite "S.D. Tex. Cr 55.2(C)"
 {

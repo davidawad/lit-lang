@@ -66,6 +66,7 @@ test "Counting boundary: opposition-period (weekend)" cite "E.D. Cal. L.R. 230(c
   given MotionFiled() on 2026-02-28
   expect deadline(opposition-period) == 2026-03-16
 }
+
 /// E.D. Cal. L.R. 230(d): the moving party may serve and file a reply no
 /// later than ten (10) days after the opposition was filed.
 deadline reply-period: 10.days after OppositionFiled() counted_by frcp6 cite "E.D. Cal. L.R. 230(d)"
@@ -75,6 +76,7 @@ test "Counting boundary: reply-period (weekend)" cite "E.D. Cal. L.R. 230(d)"
   given OppositionFiled() on 2026-02-25
   expect deadline(reply-period) == 2026-03-09
 }
+
 /// E.D. Cal. L.R. 230(f): a request to continue a hearing on the motion
 /// calendar is made at least seven (7) days before the scheduled hearing
 /// date; a continuance does not extend the time for opposition or reply
@@ -86,6 +88,7 @@ test "Counting boundary: continuance-request-period (holiday)" cite "E.D. Cal. L
   given HearingDate() on 2026-02-23
   expect deadline(continuance-request-period) == 2026-02-13
 }
+
 /// E.D. Cal. L.R. 230(l): in an action where one party is incarcerated and
 /// proceeding in propria persona, an opposition, or a statement of no
 /// opposition, is served and filed not more than twenty-one (21) days after
@@ -97,6 +100,7 @@ test "Counting boundary: prisoner-action-opposition-period (weekend)" cite "E.D.
   given PrisonerActionMotionServed() on 2026-02-28
   expect deadline(prisoner-action-opposition-period) == 2026-03-23
 }
+
 /// E.D. Cal. L.R. 230(l): in such an action the moving party may serve and
 /// file a reply not more than fourteen (14) days after the opposition has
 /// been filed; the motion is deemed submitted when that time expires.
@@ -107,6 +111,7 @@ test "Counting boundary: prisoner-action-reply-period (weekend)" cite "E.D. Cal.
   given PrisonerActionOppositionFiled() on 2026-02-28
   expect deadline(prisoner-action-reply-period) == 2026-03-16
 }
+
 /// E.D. Cal. L.R. 230(m)(1): if the reply submits new evidence, the
 /// opposing party may file and serve an Objection to Reply Evidence no later
 /// than seven (7) days after the reply is filed.
@@ -117,6 +122,7 @@ test "Counting boundary: reply-evidence-objection-period (weekend)" cite "E.D. C
   given ReplyFiled() on 2026-02-28
   expect deadline(reply-evidence-objection-period) == 2026-03-09
 }
+
 /// E.D. Cal. L.R. 281(a)(1): with separate statements, the plaintiff serves
 /// and files its pretrial statement not less than fourteen (14) days before
 /// the final pretrial conference.
@@ -127,6 +133,7 @@ test "Counting boundary: plaintiff-pretrial-statement-period (weekend)" cite "E.
   given FinalPretrialConference() on 2026-02-28
   expect deadline(plaintiff-pretrial-statement-period) == 2026-02-13
 }
+
 /// E.D. Cal. L.R. 281(a)(1), (2): every other party's separate pretrial
 /// statement, or a joint pretrial statement, is filed not less than seven
 /// (7) days before the final pretrial conference, as the pretrial order
@@ -138,6 +145,7 @@ test "Counting boundary: pretrial-statement-period (holiday)" cite "E.D. Cal. L.
   given FinalPretrialConference() on 2026-02-23
   expect deadline(pretrial-statement-period) == 2026-02-13
 }
+
 /// E.D. Cal. L.R. 292(b): the prevailing party may serve and file a bill of
 /// costs within fourteen (14) days after entry of the judgment or order
 /// under which costs may be claimed.
@@ -148,6 +156,7 @@ test "Counting boundary: cost-bill-period (weekend)" cite "E.D. Cal. L.R. 292(b)
   given JudgmentEntered() on 2026-02-28
   expect deadline(cost-bill-period) == 2026-03-16
 }
+
 /// E.D. Cal. L.R. 292(c): the party against whom costs are claimed may file
 /// specific objections within seven (7) days from the date of service.
 deadline cost-objection-period: 7.days after CostBillServed() counted_by frcp6 cite "E.D. Cal. L.R. 292(c)"
@@ -157,6 +166,7 @@ test "Counting boundary: cost-objection-period (weekend)" cite "E.D. Cal. L.R. 2
   given CostBillServed() on 2026-02-28
   expect deadline(cost-objection-period) == 2026-03-09
 }
+
 /// E.D. Cal. L.R. 292(e): the clerk's taxing of costs may be reviewed by the
 /// court on a motion filed and served within seven (7) days after notice of
 /// the taxing has been served.
@@ -167,6 +177,7 @@ test "Counting boundary: cost-review-period (weekend)" cite "E.D. Cal. L.R. 292(
   given CostsTaxedNoticeServed() on 2026-02-28
   expect deadline(cost-review-period) == 2026-03-09
 }
+
 /// E.D. Cal. L.R. 293(a): a motion for statutory attorneys' fees to a
 /// prevailing party is filed not later than twenty-eight (28) days after
 /// entry of final judgment, and is governed by E.D. Cal. L.R. 230.
@@ -177,6 +188,7 @@ test "Counting boundary: fee-motion-period (weekend)" cite "E.D. Cal. L.R. 293(a
   given FinalJudgmentEntered() on 2026-02-28
   expect deadline(fee-motion-period) == 2026-03-30
 }
+
 /// E.D. Cal. L.R. 303(b): a magistrate judge's ruling on a general pretrial
 /// matter is final unless reconsideration is sought within fourteen (14)
 /// days from service of the ruling, unless the magistrate judge or the
@@ -188,6 +200,7 @@ test "Counting boundary: magistrate-reconsideration-period (weekend)" cite "E.D.
   given MagistrateRulingServed() on 2026-02-28
   expect deadline(magistrate-reconsideration-period) == 2026-03-16
 }
+
 /// E.D. Cal. L.R. 303(d): opposition to a request for reconsideration is
 /// served and filed within seven (7) days after service of the request.
 deadline reconsideration-opposition-period: 7.days after ReconsiderationRequestServed() counted_by frcp6 cite "E.D. Cal. L.R. 303(d)"
@@ -197,6 +210,7 @@ test "Counting boundary: reconsideration-opposition-period (weekend)" cite "E.D.
   given ReconsiderationRequestServed() on 2026-02-28
   expect deadline(reconsideration-opposition-period) == 2026-03-09
 }
+
 /// E.D. Cal. L.R. 304(b): objections to a magistrate judge's proposed
 /// findings and recommendations are filed and served within fourteen (14)
 /// days after their service, unless the court prescribes a different time.
@@ -207,6 +221,7 @@ test "Counting boundary: findings-objection-period (weekend)" cite "E.D. Cal. L.
   given FindingsAndRecommendationsServed() on 2026-02-28
   expect deadline(findings-objection-period) == 2026-03-16
 }
+
 /// E.D. Cal. L.R. 304(d): responses to objections are filed and served
 /// within fourteen (14) days after service of the objections.
 deadline objection-response-period: 14.days after ObjectionsServed() counted_by frcp6 cite "E.D. Cal. L.R. 304(d)"

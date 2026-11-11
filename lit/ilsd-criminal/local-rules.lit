@@ -2,6 +2,8 @@ module ilsd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Southern District of Illinois's own periods in a criminal case,
 // counted under the criminal rules (FRCrimP 45(a) governs "any local
 // rule"). The Local Rules and their Appendices apply in all civil and
@@ -52,9 +54,6 @@ event AppellateMandateFiled()
 /// 90 days after a final decision is rendered if no appeal is taken,
 /// unless the presiding judge orders otherwise.
 deadline exhibit-removal: 90.days after FinalDecisionUnappealed() counted_by frcrimp45 cite "SDIL-LR 79.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-removal (weekend)" cite "SDIL-LR 79.1(b)"
 {
@@ -68,9 +67,6 @@ test "Counting boundary: exhibit-removal (weekend)" cite "SDIL-LR 79.1(b)"
 /// available for the record under Seventh Circuit Rule 10 (SDIL-LR
 /// 79.1(c)).
 deadline exhibit-removal-after-mandate: 90.days after AppellateMandateFiled() counted_by frcrimp45 cite "SDIL-LR 79.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-removal-after-mandate (weekend)" cite "SDIL-LR 79.1(b)"
 {
@@ -92,9 +88,6 @@ event SearchWarrantShowCauseNoticeIssued()
 /// party and the Probation Office within 7 days of receipt of the
 /// objections unless the Court directs otherwise.
 deadline presentence-objection-response: 7.days after PresentenceObjectionsReceived() counted_by frcrimp45 cite "SDIL-LR Appendix A, Cr32.1(b)(1)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: presentence-objection-response (weekend)" cite "SDIL-LR Appendix A, Cr32.1(b)(1)"
 {
@@ -108,9 +101,6 @@ test "Counting boundary: presentence-objection-response (weekend)" cite "SDIL-LR
 /// decides whether good cause supports a further period of no more than
 /// six months.
 deadline search-warrant-show-cause: 14.days after SearchWarrantShowCauseNoticeIssued() counted_by frcrimp45 cite "SDIL-LR Appendix A, Cr41.1(a)(2)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: search-warrant-show-cause (weekend)" cite "SDIL-LR Appendix A, Cr41.1(a)(2)"
 {

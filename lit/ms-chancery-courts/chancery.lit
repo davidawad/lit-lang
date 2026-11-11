@@ -78,10 +78,8 @@ state discovery: "Discovery" by plaintiff cite "M.R.C.P. 26(b)"
 {
   note "Parties may obtain discovery of any matter, not privileged, relevant to the issues raised by the claims or defenses of any party (M.R.C.P. 26(b)(1)). Where no action of record has been taken during the preceding twelve months, the clerk mails notice that the case will be dismissed for want of prosecution unless within thirty days action of record is taken or good cause is shown (M.R.C.P. 41(d)(1))."
   edge-discovery-sj "Summary judgment motion" -> sj-ruling { authority cite "M.R.C.P. 56(c)" }
-  edge-discovery-trial "Set for trial" -> trial { authority cite "M.R.C.P. 40(b)" }
-  edge-discovery-settled "Settled: dismissal by stipulation" -> settled {
-    authority cite "M.R.C.P. 41(a)"
-  }
+  "Set for trial" -> trial { authority cite "M.R.C.P. 40(b)" }
+  "Settled: dismissal by stipulation" -> settled { authority cite "M.R.C.P. 41(a)" }
   edge-discovery-inactive "No action of record for twelve months" -> inactivity-dismissal {
     authority cite "M.R.C.P. 41(d)"
   }

@@ -77,9 +77,7 @@ terminal default-judgment: "Default judgment for applicant" outcome [win, judgme
 state case-management: "Case management conference" by court cite "K.S.A. 60-216(b)"
 {
   note "The court must on any party's request, or may on its own, conduct a case management conference, scheduled as soon as possible and conducted within 45 days after the filing of an answer unless the court extends the time. At it the court considers issues, alternative dispute resolution, a discovery plan and schedule, electronically stored information, privilege agreements, completion of discovery within a definite number of days, deadlines for motions, joinder and amendment, and conference and trial dates (K.S.A. 60-216(b)(1)). If a conference is held, no depositions other than of the parties may be taken until after it, except by agreement, court order or as K.S.A. 60-230(a)(2)(B) provides; the restriction lapses if no conference is held within 45 days after the answer (K.S.A. 60-216(b)(2)). A motion for more time to complete discovery is filed before the original period expires, with a discovery plan (K.S.A. 60-216(b)(3)). The order after a conference controls the case unless modified; an order after the final pretrial conference may be modified only to prevent manifest injustice (K.S.A. 60-216(d), (e))."
-  edge-case-management-discovery "Discovery plan set" -> discovery {
-    authority cite "K.S.A. 60-226(a)"
-  }
+  "Discovery plan set" -> discovery { authority cite "K.S.A. 60-226(a)" }
 }
 
 state discovery: "Discovery" by plaintiff cite "K.S.A. 60-226(b)"
@@ -92,7 +90,7 @@ state discovery: "Discovery" by plaintiff cite "K.S.A. 60-226(b)"
   edge-discovery-prosecution "Failure to prosecute: dismissal" -> prosecution-dismissal {
     authority cite "K.S.A. 60-241(b)"
   }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "K.S.A. 60-238(b)" }
+  "No dispositive motion" -> trial { authority cite "K.S.A. 60-238(b)" }
 }
 
 terminal prosecution-dismissal: "Dismissed for failure to prosecute" outcome [loss, dismissal] cite "K.S.A. 60-241(b)"

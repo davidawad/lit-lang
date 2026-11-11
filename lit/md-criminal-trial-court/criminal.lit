@@ -35,7 +35,7 @@ decision initial-appearance: "Pretrial release or detention" by court cite "Md. 
 decision probable-cause: "Preliminary hearing or waiver" by court cite "Md. Rule 4-221"
 {
   note "A defendant charged with a felony outside the District Court's jurisdiction may request a preliminary hearing at or within ten days after the initial appearance; failure to request it in time waives it unless the court orders otherwise, and the State may request one within ten days after a waiver (Md. Rule 4-221(a)). The hearing is scheduled within 30 days after a timely request (Md. Rule 4-221(b)). Within 30 days after a finding of probable cause or a waiver, the State's Attorney acts under Md. Rule 4-221(f)."
-  edge-probable-cause-charged "Probable cause found or hearing waived; charged in circuit court" -> charged {
+  "Probable cause found or hearing waived; charged in circuit court" -> charged {
     authority cite "Md. Rule 4-221(f)"
   }
   edge-probable-cause-none "No probable cause; discharged" -> dismissed {
@@ -63,9 +63,7 @@ state pretrial: "Mandatory motions and discovery" by prosecution cite "Md. Rule 
 decision motions-ruling: "Ruling on mandatory motions" by court cite "Md. Rule 4-252(g)"
 {
   note "The court determines the motion before trial (Md. Rule 4-252(g)). Dismissal for violation of the trial-date rule turns on Code, Criminal Procedure Article, § 6-103, which is not vendored (a hole)."
-  edge-motions-ruling-dismissed "Charges dismissed" -> dismissed {
-    authority cite "Md. Rule 4-252(g)"
-  }
+  "Charges dismissed" -> dismissed { authority cite "Md. Rule 4-252(g)" }
   edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
     authority cite "Md. Rule 4-252(g)"
   }
@@ -75,9 +73,7 @@ decision plea-decision: "Plea or trial" by accused cite "Md. Rule 4-242"
 {
   note "The circuit court trial date is set within 30 days after the earlier of the appearance of counsel or the defendant's first appearance before the circuit court, and not later than 180 days after the earlier of those events; only the county administrative judge or a designee may change it, for good cause (Md. Rule 4-271(a)(1), cross-referencing Code, Criminal Procedure Article, § 6-103, and Jackson v. State, 485 Md. 1 (2023)). Pleas and plea agreements are governed by Md. Rules 4-242 and 4-243."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "Md. Rule 4-242" }
-  edge-plea-decision-trial "Trial within 180 days" -> trial {
-    authority cite "Md. Rule 4-271(a)(1)"
-  }
+  "Trial within 180 days" -> trial { authority cite "Md. Rule 4-271(a)(1)" }
 }
 
 decision trial: "Verdict" by court cite "Md. Rule 4-327"
@@ -101,9 +97,7 @@ decision post-trial: "Motion for new trial" by court cite "Md. Rule 4-331"
 state sentencing: "Presentence investigation and sentencing" by court cite "Md. Rule 4-342"
 {
   note "A presentence investigation and report are governed by Md. Rule 4-341 and the sentencing procedure by Md. Rule 4-342. On a motion filed within 90 days after a sentence is imposed, the court has revisory power over it (in the District Court only if no appeal is perfected or it is dismissed), for up to five years from the original sentence, extendable for good cause by 60 days (Md. Rule 4-345(e)(1), (2))."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "Md. Rule 4-342"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "Md. Rule 4-342" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "Md. Rule 8-202"

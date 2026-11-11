@@ -570,10 +570,7 @@ start motion-filed
 state motion-filed: "Motion filed and served" by movant cite "MLBR 9013-1(a)"
 {
   note "A request for an order is a written motion with numbered paragraphs stating its grounds with particularity, filed with the clerk with any supporting affidavits (MLBR 9013-1(a)-(b)) and served with a certificate of service; the movant serves the court's notice of hearing (MLBR 9013-3). The court may schedule a hearing or set an objection deadline (MLBR 9013-1(c)); a request for emergency or expedited determination is titled as such (MLBR 9013-1(f)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-response "Response filed" -> response {
-    authority cite "MLBR 9013-1(c)"
-    within response-period
-  }
+  "Response filed" -> response { authority cite "MLBR 9013-1(c)", within response-period }
   edge-motion-filed-unopposed "No timely objection; acted on without a hearing" -> decided {
     authority cite "MLBR 9013-1(d)"
   }
@@ -582,7 +579,7 @@ state motion-filed: "Motion filed and served" by movant cite "MLBR 9013-1(a)"
 state response: "Response filed" by opponent cite "MLBR 9013-1(h)"
 {
   note "An opposition admits or denies each allegation of the motion, states any affirmative defense and says specifically why the relief should not be granted (MLBR 9013-1(h)). A reply of no more than five pages is filed no later than 3 days before the hearing (MLBR 9013-1(i)). Unless the notice says otherwise, the initial hearing is preliminary and nonevidentiary (MLBR 9013-1(c))."
-  edge-response-ruling "Hearing held" -> ruling { authority cite "MLBR 9013-1(c)" }
+  "Hearing held" -> ruling { authority cite "MLBR 9013-1(c)" }
 }
 
 decision ruling: "Motion decided" by court cite "MLBR 9013-1(e)"

@@ -34,9 +34,7 @@ decision initial-appearance: "Release or detention" by court cite "NMRA 5-401"
 decision probable-cause: "Preliminary examination or grand jury" by court cite "NMRA 5-302"
 {
   note "A preliminary examination is held, with a disposition entered, within a reasonable time and no later than 10 days if the defendant is in custody or 60 days if not, counted from the latest of the first appearance and the other events Rule 5-302(A)(1) lists; on good cause the court may extend the limits by up to 60 days, and without the defendant's consent only on a record showing of exceptional circumstances (NMRA 5-302(A)). On a finding of no probable cause, the court dismisses those felony charges without prejudice and discharges the defendant (NMRA 5-302(D)(1)). A case may instead proceed by grand jury indictment (NMRA 5-302.2)."
-  edge-probable-cause-charged "Bound over; information or indictment filed" -> charged {
-    authority cite "NMRA 5-302(D)"
-  }
+  "Bound over; information or indictment filed" -> charged { authority cite "NMRA 5-302(D)" }
   edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
     authority cite "NMRA 5-302(D)"
   }
@@ -45,13 +43,13 @@ decision probable-cause: "Preliminary examination or grand jury" by court cite "
 state charged: "Indictment or information" by court cite "NMRA 5-201"
 {
   note "An information is a written statement signed by the district attorney containing the essential facts and the common name of the offense (NMRA 5-201(C)). The defendant is arraigned on the information or indictment within 15 days after its filing or the arrest, whichever is later (NMRA 5-303(A))."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "NMRA 5-303" }
+  "Arraignment" -> arraignment { authority cite "NMRA 5-303" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "NMRA 5-303"
 {
   note "Arraignment is on the information or indictment within 15 days after its filing or the arrest, whichever is later; the defendant may appear by two-way audio-visual communication as Rule 5-303(A) allows (NMRA 5-303(A)). The pleas are those Rule 5-304(A) allows. Disclosure by the state and by the defendant are governed by Rules 5-501 and 5-502."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "NMRA 5-501" }
+  "Discovery" -> discovery { authority cite "NMRA 5-501" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "NMRA 5-601"
@@ -84,7 +82,7 @@ decision plea-decision: "Plea or trial" by accused cite "NMRA 5-304"
 {
   note "A plea agreement that would eliminate the need for trial is submitted by a deadline the court sets, and no plea agreement may be entered later than five days before the scheduled date for jury selection or the start of a bench trial; the court sets a hearing within the plea deadline at which the defendant must be present (NMRA 5-304(E)). An untimely plea agreement is governed by Rule 5-304(F)."
   edge-plea-decision-plea "Plea accepted" -> sentencing { authority cite "NMRA 5-304(C)" }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "NMRA 5-605(A)" }
+  "Trial" -> trial { authority cite "NMRA 5-605(A)" }
 }
 
 decision trial: "Verdict" by court cite "NMRA 5-611(A)"
@@ -107,9 +105,7 @@ decision post-trial: "Post-verdict motions" by court cite "NMRA 5-614"
 state sentencing: "Judgment and sentence" by court cite "NMRA 5-701(A)"
 {
   note "If the defendant is found guilty and the court determines that sufficient evidence supports the verdict, a judgment of guilty is rendered; the judgment and sentence are rendered in open court and a written judgment and sentence is signed and filed (NMRA 5-701(A)). When imposing or deferring sentence after a trial on a not-guilty plea, the court advises the defendant of the right to appeal and to appeal at state expense if unable to pay (NMRA 5-702(A))."
-  edge-sentencing-judgment "Written judgment and sentence filed" -> judgment {
-    authority cite "NMRA 5-701(A)"
-  }
+  "Written judgment and sentence filed" -> judgment { authority cite "NMRA 5-701(A)" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "NMRA 5-702"

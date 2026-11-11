@@ -12,7 +12,7 @@ start request
 
 state request: "Request submitted" by movant cite ?("Okla. Code of Jud. Conduct") {
   note "A judge or judicial candidate asks the panel for an advisory opinion on judicial ethics; who may ask, the form and any response period are holes (lg-l6xh, #16)."
-  edge-request-decision "Submitted for decision" -> decision {
+  "Submitted for decision" -> decision {
     event ActionCommenced()
     authority cite ?("Okla. Code of Jud. Conduct")
   }
@@ -20,8 +20,8 @@ state request: "Request submitted" by movant cite ?("Okla. Code of Jud. Conduct"
 
 chance decision: "Panel decides" by court cite ?("Okla. Code of Jud. Conduct") {
   note "Outcome probabilities are holes."
-  edge-decision-granted "Opinion issued" -> granted p ? { event DecisionFiled() }
-  edge-decision-denied "Declined" -> denied p ? { event DecisionFiled() }
+  "Opinion issued" -> granted p ? { event DecisionFiled() }
+  "Declined" -> denied p ? { event DecisionFiled() }
 }
 
 terminal granted: "Opinion issued" outcome [win] cite ?("Okla. Code of Jud. Conduct") {

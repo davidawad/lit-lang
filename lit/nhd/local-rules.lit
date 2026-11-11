@@ -117,6 +117,7 @@ test "Counting boundary: objection-period (weekend)" cite "D.N.H. LR 7.1(b)"
   given MotionFiled() on 2025-12-06
   expect deadline(objection-period) == 2025-12-22
 }
+
 /// LR 7.1(b): an objection to a summary judgment motion is filed within 30
 /// days from the date the motion is filed.
 deadline summary-judgment-objection-period: 30.days after SummaryJudgmentMotionFiled() counted_by frcp6-new-hampshire cite "D.N.H. LR 7.1(b)"
@@ -126,6 +127,7 @@ test "Counting boundary: summary-judgment-objection-period (holiday)" cite "D.N.
   given SummaryJudgmentMotionFiled() on 2025-12-02
   expect deadline(summary-judgment-objection-period) == 2026-01-02
 }
+
 /// LR 7.1(e)(1): within 7 days of the filing of an objection to a
 /// dispositive motion, the movant may file a reply restricted to rebuttal
 /// of the objection's arguments. LR 7.1(e)(4): unless modified by order.
@@ -136,6 +138,7 @@ test "Counting boundary: dispositive-reply-period (weekend)" cite "D.N.H. LR 7.1
   given DispositiveObjectionFiled() on 2025-12-06
   expect deadline(dispositive-reply-period) == 2025-12-15
 }
+
 /// LR 7.1(e)(2): no reply on a nondispositive motion without prior leave;
 /// the motion for leave is filed within 7 days of the filing of the
 /// objection and attaches the proposed reply.
@@ -146,6 +149,7 @@ test "Counting boundary: nondispositive-reply-leave-period (weekend)" cite "D.N.
   given NondispositiveObjectionFiled() on 2025-12-06
   expect deadline(nondispositive-reply-leave-period) == 2025-12-15
 }
+
 /// LR 7.1(e)(3): if a reply has been filed, a surreply may be filed within
 /// 5 days of the date the reply was filed.
 deadline surreply-period: 5.days after ReplyFiled() counted_by frcp6-new-hampshire cite "D.N.H. LR 7.1(e)"
@@ -160,6 +164,7 @@ test "Counting boundary: removal-disclosure-statement-period (holiday)" cite "D.
   given NoticeOfRemovalFiled() on 2025-12-04
   expect deadline(removal-disclosure-statement-period) == 2025-12-26
 }
+
 /// LR 7.2(a): a motion to extend time based on a scheduling conflict is
 /// filed within 7 days of the date counsel learned, or reasonably should
 /// have learned, of the conflict.
@@ -170,6 +175,7 @@ test "Counting boundary: scheduling-conflict-extension-period (weekend)" cite "D
   given SchedulingConflictLearned() on 2025-12-06
   expect deadline(scheduling-conflict-extension-period) == 2025-12-15
 }
+
 /// LR 7.2(b): a motion to strike material offered in support of or in
 /// opposition to a motion is filed within 14 days of the filing of the
 /// motion or objection to which the material is attached.
@@ -180,6 +186,7 @@ test "Counting boundary: motion-to-strike-period (weekend)" cite "D.N.H. LR 7.2(
   given SupportingMaterialFiled() on 2025-12-06
   expect deadline(motion-to-strike-period) == 2025-12-22
 }
+
 /// LR 7.2(d): a motion to reconsider an interlocutory order is filed
 /// within 14 days from the date of the order unless the movant shows cause,
 /// such as newly available material evidence or an intervening change in
@@ -191,6 +198,7 @@ test "Counting boundary: reconsideration-period (weekend)" cite "D.N.H. LR 7.2(d
   given InterlocutoryOrderEntered() on 2025-12-06
   expect deadline(reconsideration-period) == 2025-12-22
 }
+
 /// LR 7.2(d): when a motion to reconsider a magistrate judge's ruling is
 /// directed to the magistrate judge, an objection under FRCP 72 or 28
 /// U.S.C. § 636(b)(1) is filed within 14 days after being served with the
@@ -202,6 +210,7 @@ test "Counting boundary: magistrate-reconsideration-objection-period (weekend)" 
   given MagistrateReconsiderationRulingServed() on 2025-12-06
   expect deadline(magistrate-reconsideration-objection-period) == 2025-12-22
 }
+
 /// LR 10.1(e): if the motion to proceed under a pseudonym is denied, the
 /// party has 14 days to file an amended complaint naming the party.
 deadline pseudonym-amended-complaint-period: 14.days after PseudonymMotionDenied() counted_by frcp6-new-hampshire cite "D.N.H. LR 10.1(e)"
@@ -211,6 +220,7 @@ test "Counting boundary: pseudonym-amended-complaint-period (weekend)" cite "D.N
   given PseudonymMotionDenied() on 2025-12-06
   expect deadline(pseudonym-amended-complaint-period) == 2025-12-22
 }
+
 /// LR 10.1(f): in a removal case where the plaintiff proceeded by
 /// pseudonym in state court, the Notice of Intention to Proceed by
 /// Pseudonym and the motion are due 21 days after the filing of the notice
@@ -222,6 +232,7 @@ test "Counting boundary: removed-pseudonym-motion-period (holiday)" cite "D.N.H.
   given NoticeOfRemovalFiled() on 2025-12-04
   expect deadline(removed-pseudonym-motion-period) == 2025-12-26
 }
+
 /// LR 10.1(f): an objection to that motion is filed 14 days after the
 /// filing of the motion.
 deadline removed-pseudonym-objection-period: 14.days after RemovedPseudonymMotionFiled() counted_by frcp6-new-hampshire cite "D.N.H. LR 10.1(f)"
@@ -231,6 +242,7 @@ test "Counting boundary: removed-pseudonym-objection-period (weekend)" cite "D.N
   given RemovedPseudonymMotionFiled() on 2025-12-06
   expect deadline(removed-pseudonym-objection-period) == 2025-12-22
 }
+
 /// LR 16.2(a)(4): page/line designations of depositions to be read into
 /// evidence are filed 10 days prior to trial.
 deadline deposition-designation-period: 10.days before TrialCommences() counted_by frcp6-new-hampshire cite "D.N.H. LR 16.2(a)"
@@ -240,6 +252,7 @@ test "Counting boundary: deposition-designation-period (weekend)" cite "D.N.H. L
   given TrialCommences() on 2025-12-02
   expect deadline(deposition-designation-period) == 2025-11-21
 }
+
 /// LR 16.2(a)(4): counter-designations are filed 5 days prior to trial.
 deadline deposition-counter-designation-period: 5.days before TrialCommences() counted_by frcp6-new-hampshire cite "D.N.H. LR 16.2(a)"
 
@@ -248,6 +261,7 @@ test "Counting boundary: deposition-counter-designation-period (holiday)" cite "
   given TrialCommences() on 2025-12-02
   expect deadline(deposition-counter-designation-period) == 2025-11-26
 }
+
 /// LR 16.2(a)(4): objections to deposition designations are filed 2 days
 /// prior to trial.
 deadline deposition-designation-objection-period: 2.days before TrialCommences() counted_by frcp6-new-hampshire cite "D.N.H. LR 16.2(a)"
@@ -262,6 +276,7 @@ test "Counting boundary: pretrial-statement-update-period (weekend)" cite "D.N.H
   given NewFinalPretrialConference() on 2025-12-02
   expect deadline(pretrial-statement-update-period) == 2025-11-21
 }
+
 /// LR 16.2(d): beyond the FRCP 26(a)(3) objections, objections to
 /// exhibits, motions in limine, proposed jury instructions and proposed
 /// findings and rulings are filed no later than 14 days after the filing of
@@ -273,6 +288,7 @@ test "Counting boundary: pretrial-objection-period (weekend)" cite "D.N.H. LR 16
   given FinalPretrialStatementsFiled() on 2025-12-06
   expect deadline(pretrial-objection-period) == 2025-12-22
 }
+
 /// LR 37.1(b): when the court rules on a discovery motion, the discovery
 /// or relief is provided within 14 days of the order unless the order
 /// specifies a different time.
@@ -283,6 +299,7 @@ test "Counting boundary: discovery-order-compliance-period (weekend)" cite "D.N.
   given DiscoveryOrderEntered() on 2025-12-06
   expect deadline(discovery-order-compliance-period) == 2025-12-22
 }
+
 /// LR 41.1: within 30 days after informing the clerk that the case has
 /// settled, the parties file a signed agreement for entry of judgment or a
 /// stipulation for dismissal; otherwise the court dismisses with prejudice.
@@ -293,6 +310,7 @@ test "Counting boundary: settlement-papers-period (holiday)" cite "D.N.H. LR 41.
   given SettlementReported() on 2025-12-02
   expect deadline(settlement-papers-period) == 2026-01-02
 }
+
 /// LR 45.2(a): a party proceeding in forma pauperis files its motion for
 /// a witness's attendance or production not later than 21 days before the
 /// trial, hearing or deposition.
@@ -307,6 +325,7 @@ test "Counting boundary: bill-of-costs-period (holiday)" cite "D.N.H. LR 54.1(a)
   given AppealTimeExpired() on 2025-12-04
   expect deadline(bill-of-costs-period) == 2025-12-26
 }
+
 /// LR 54.1(a): or within 21 days after the issuance of the mandate of the
 /// appellate court.
 deadline bill-of-costs-after-mandate-period: 21.days after MandateIssued() counted_by frcp6-new-hampshire cite "D.N.H. LR 54.1(a)"
@@ -316,6 +335,7 @@ test "Counting boundary: bill-of-costs-after-mandate-period (holiday)" cite "D.N
   given MandateIssued() on 2025-12-04
   expect deadline(bill-of-costs-after-mandate-period) == 2025-12-26
 }
+
 /// LR 54.1(c): within 14 days after the filing of a bill of costs, any
 /// other party may serve and file specific written objections.
 deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6-new-hampshire cite "D.N.H. LR 54.1(c)"
@@ -325,6 +345,7 @@ test "Counting boundary: costs-objection-period (weekend)" cite "D.N.H. LR 54.1(
   given BillOfCostsFiled() on 2025-12-06
   expect deadline(costs-objection-period) == 2025-12-22
 }
+
 /// LR 54.1(f): the clerk's taxation of costs is final unless modified on
 /// review by the court on motion filed within 7 days thereafter under FRCP
 /// 54(d)(1).
@@ -335,6 +356,7 @@ test "Counting boundary: costs-review-period (weekend)" cite "D.N.H. LR 54.1(f)"
   given CostsTaxed() on 2025-12-06
   expect deadline(costs-review-period) == 2025-12-15
 }
+
 /// LR 72.2: a party may respond to another party's objection to a
 /// magistrate judge's order on a nondispositive matter within 14 days
 /// after the filing of the objection.
@@ -345,6 +367,7 @@ test "Counting boundary: magistrate-objection-response-period (weekend)" cite "D
   given MagistrateOrderObjectionFiled() on 2025-12-06
   expect deadline(magistrate-objection-response-period) == 2025-12-22
 }
+
 /// LR 81.1(c): the removing party files a certified or attested copy of
 /// the state court record within 14 days of the filing of the notice of
 /// removal.

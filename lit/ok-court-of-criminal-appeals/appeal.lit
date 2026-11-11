@@ -62,9 +62,7 @@ terminal plea-withdrawn: "Plea withdrawn in the trial court" outcome [win] cite 
 state notice-filed: "Notice of intent to appeal and designation of record" by accused cite "Okla. Ct. Crim. App. R. 2.1(B)"
 {
   note "An appeal is commenced by trial counsel's filing in the trial court a written notice of intent to appeal and a designation of record within ten days from the date the Judgment and Sentence is imposed in open court; the filing is jurisdictional and failure to file in time waives the right to appeal. A certified copy is filed with the Clerk of the Court of Criminal Appeals within ten days after the notice is filed in the trial court (Okla. Ct. Crim. App. R. 2.1(B); 2.5(A)). A motion for a new trial is not required to commence an appeal (Okla. Ct. Crim. App. R. 2.1(B)(1)). The Clerk then issues a Certificate of Appeal with the due date for the petition in error and the record (Okla. Ct. Crim. App. R. 2.1(B))."
-  edge-notice-filed-perfection "Notice filed" -> perfection {
-    authority cite "Okla. Ct. Crim. App. R. 2.1(C)"
-  }
+  "Notice filed" -> perfection { authority cite "Okla. Ct. Crim. App. R. 2.1(C)" }
 }
 
 decision perfection: "Appeal perfected within 90 days?" by court cite "Okla. Ct. Crim. App. R. 1.4"
@@ -73,7 +71,7 @@ decision perfection: "Appeal perfected within 90 days?" by court cite "Okla. Ct.
   edge-perfection-dismissed "Not perfected in time; dismissed" -> review-dismissed {
     authority cite "Okla. Ct. Crim. App. R. 2.1(C)"
   }
-  edge-perfection-record "Perfected" -> record { authority cite "Okla. Ct. Crim. App. R. 2.3" }
+  "Perfected" -> record { authority cite "Okla. Ct. Crim. App. R. 2.3" }
 }
 
 terminal review-dismissed: "Appeal dismissed or review waived" outcome [loss, dismissal, jurisdictional] cite "Okla. Ct. Crim. App. R. 2.1(B)"
@@ -84,9 +82,7 @@ terminal review-dismissed: "Appeal dismissed or review waived" outcome [loss, di
 state record: "Record completed and transmitted" by court cite "Okla. Ct. Crim. App. R. 2.3"
 {
   note "The record is made ready for transmission so that the trial court clerk's notice of completion reaches the Clerk of this Court in time; the trial court clerk notifies the parties and, within 90 days in misdemeanor or regular felony cases from the Judgment and Sentence, the Clerk of this Court (Okla. Ct. Crim. App. R. 2.3(A), (B)). Within ten days after receiving that notification, the Clerk of this Court issues a notice to transmit the record (Okla. Ct. Crim. App. R. 2.3(C))."
-  edge-record-briefing "Notice to transmit filed" -> briefing {
-    authority cite "Okla. Ct. Crim. App. R. 3.4(B)"
-  }
+  "Notice to transmit filed" -> briefing { authority cite "Okla. Ct. Crim. App. R. 3.4(B)" }
 }
 
 state briefing: "Briefing" by prosecution cite "Okla. Ct. Crim. App. R. 3.4"
@@ -123,9 +119,7 @@ decision decision: "Decision" by court cite "Okla. Ct. Crim. App. R. 3.13(A)"
 decision after-decision: "Rehearing, mandate or certiorari" by prosecution cite "Okla. Ct. Crim. App. R. 3.14"
 {
   note "A petition for rehearing, filed by the attorney of record within 20 days from the filing of the opinion, lies only where a decisive question was overlooked or the decision conflicts with a statute or controlling decision not called to the Court's attention; if none is filed within 20 days the decision is final (Okla. Ct. Crim. App. R. 3.14(A), (B), (D)). After 20 days from the filing of the decision the Clerk issues the mandate to the trial court, and a timely petition for rehearing stays it (Okla. Ct. Crim. App. R. 3.15(A), (B)). A petition for certiorari to the Supreme Court of the United States is timely within 90 days after entry of the judgment of a state court of last resort (Sup. Ct. R. 13.1)."
-  edge-after-decision-rehearing "Petition for rehearing" -> rehearing {
-    authority cite "Okla. Ct. Crim. App. R. 3.14(A)"
-  }
+  "Petition for rehearing" -> rehearing { authority cite "Okla. Ct. Crim. App. R. 3.14(A)" }
   edge-after-decision-certiorari "Petition for a writ of certiorari" -> further-review {
     authority cite "Sup. Ct. R. 13.1"
   }

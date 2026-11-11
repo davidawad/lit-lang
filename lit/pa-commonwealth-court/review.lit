@@ -55,7 +55,7 @@ state notice-filed: "Notice of appeal filed" by movant cite "Pa.R.A.P. 902(a)"
 state briefing: "Briefs filed" by movant cite "Pa.R.A.P. 2185(a)"
 {
   note "The appellant or petitioner serves and files its brief within 40 days after the date on which the record is filed, unless the prothonotary fixes a later date under a deferred briefing schedule; the appellee or respondent within 30 days after service of that brief and the reproduced record; a reply brief within 14 days after service of the preceding brief, received at least three days before argument except for good cause (Pa.R.A.P. 2185(a)(1), (b)). The prothonotary may grant a first, unopposed extension of 30 days or less on written request; any other extension needs a formal application (Pa.R.A.P. 3714(c)). A principal brief is limited to 14,000 words and a reply brief to 7,000 (Pa.R.A.P. 2135(a)(1)). On review of a quasijudicial order only questions raised before the government unit are heard, except questions of the validity of a statute, of the government unit's subject-matter jurisdiction, or that could not by due diligence have been raised below (Pa.R.A.P. 1551(a))."
-  edge-briefing-argument "Briefs filed: case listed for argument or submitted" -> argument {
+  "Briefs filed: case listed for argument or submitted" -> argument {
     authority cite "Pa.R.A.P. 3714(a)"
   }
   edge-briefing-no-brief "Appellant's brief not filed in time: appellee moves to dismiss" -> appeal-dismissed {
@@ -78,22 +78,14 @@ decision appellate-decision: "Commonwealth Court decides" by court cite "Pa.R.A.
     event DecisionFiled()
     authority cite "Pa.R.A.P. 2542(a)"
   }
-  edge-appellate-decision-reversed "Reversed or set aside" -> reversed {
-    event DecisionFiled()
-    authority cite "Pa.R.A.P. 1561(a)"
-  }
-  edge-appellate-decision-remanded "Vacated and remanded" -> remanded {
-    event DecisionFiled()
-    authority cite "Pa.R.A.P. 1561(a)"
-  }
+  "Reversed or set aside" -> reversed { event DecisionFiled(), authority cite "Pa.R.A.P. 1561(a)" }
+  "Vacated and remanded" -> remanded { event DecisionFiled(), authority cite "Pa.R.A.P. 1561(a)" }
 }
 
 decision after-affirmance: "Reargument, allowance of appeal, or neither" by movant cite "Pa.R.A.P. 2542(a)"
 {
   note "An application for reargument is filed within 14 days after entry of the judgment or order (Pa.R.A.P. 2542(a)(1)); the court may allow reargument before the court en banc only for compelling and persuasive reasons (Pa.R.A.P. 3723). No application for reargument is permitted from a final order under the Election Code or the Local Government Unit Debt Act (Pa.R.A.P. 2543). A petition for allowance of appeal is filed with the Prothonotary of the Supreme Court within 30 days after entry of the order sought to be reviewed (ten days in Election Code and public-debt matters); if a timely application for reargument is filed, the time for all parties runs from the order denying reargument or the decision on reargument (Pa.R.A.P. 1113(a), (a)(1), (c))."
-  edge-after-affirmance-reargument "Application for reargument" -> reargument {
-    authority cite "Pa.R.A.P. 2542(a)"
-  }
+  "Application for reargument" -> reargument { authority cite "Pa.R.A.P. 2542(a)" }
   edge-after-affirmance-allowance "Petition for allowance of appeal" -> allowance-petitioned {
     event ReviewPetitionFiled()
     authority cite "Pa.R.A.P. 1113(a)"

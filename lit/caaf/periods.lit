@@ -150,6 +150,7 @@ test "Counting boundary: petition-period (weekend)" cite "CAAF R. 19(a)(1)"
   given CcaDecisionNoticed() on 2026-10-06
   expect deadline(petition-period) == 2026-12-07
 }
+
 /// On an appellant's own petition, the supplement is due no later than 21
 /// days after the Clerk's notice of docketing; on counsel's petition filed
 /// without it, within 21 days of the order granting leave.
@@ -160,6 +161,7 @@ test "Counting boundary: supplement-period (weekend)" cite "CAAF R. 19(a)(5)(B)"
   given PetitionDocketed() on 2026-10-03
   expect deadline(supplement-period) == 2026-10-26
 }
+
 deadline supplement-leave-period: 21.days after SupplementLeaveGranted() counted_by caaf26 cite "CAAF R. 19(a)(5)(A)"
 
 test "Counting boundary: supplement-leave-period (weekend)" cite "CAAF R. 19(a)(5)(A)"
@@ -167,6 +169,7 @@ test "Counting boundary: supplement-leave-period (weekend)" cite "CAAF R. 19(a)(
   given SupplementLeaveGranted() on 2026-10-03
   expect deadline(supplement-leave-period) == 2026-10-26
 }
+
 /// Grostefon issues not raised earlier may be presented by motion no later
 /// than 28 days after the supplement is filed.
 deadline grostefon-period: 28.days after SupplementFiled() counted_by caaf26 cite "CAAF R. 19(a)(5)(C)"
@@ -176,6 +179,7 @@ test "Counting boundary: grostefon-period (weekend)" cite "CAAF R. 19(a)(5)(C)"
   given SupplementFiled() on 2026-10-03
   expect deadline(grostefon-period) == 2026-11-02
 }
+
 /// The answer to the supplement is due 14 days after it in an Article 62
 /// appeal and 21 days after it in other appeals; an answer letter waiving a
 /// formal answer, 14 days. A reply, 7 days after the answer.
@@ -193,6 +197,7 @@ test "Counting boundary: supplement-answer-period (weekend) [repeat 2]" cite "CA
   given PaperFiled(Supplement, Personal) on 2026-10-03
   expect deadline(supplement-answer-period) == 2026-10-26
 }
+
 deadline answer-letter-period: 14.days after PaperFiled(Supplement) counted_by caaf26 cite "CAAF R. 21(c)(2)"
 deadline supplement-reply-period: 7.days after PaperFiled(SupplementAnswer) counted_by caaf26 cite "CAAF R. 21(c)"
 
@@ -207,6 +212,7 @@ test "Counting boundary: supplement-reply-period (weekend) [repeat 2]" cite "CAA
   given PaperFiled(SupplementAnswer, Personal) on 2026-10-03
   expect deadline(supplement-reply-period) == 2026-10-13
 }
+
 /// A Judge Advocate General's certificate for review is filed no later
 /// than 60 days after the date of the Court of Criminal Appeals' decision
 /// (in an Article 62 or extraordinary relief case, with the supporting
@@ -220,6 +226,7 @@ test "Counting boundary: certificate-period (weekend)" cite "CAAF R. 19(b)"
   given CcaDecisionIssued() on 2026-10-06
   expect deadline(certificate-period) == 2026-12-07
 }
+
 /// In an Article 62 or extraordinary relief certificate, the answer is due
 /// 14 days after the certificate and brief, and a reply 7 days after the
 /// answer.
@@ -237,6 +244,7 @@ test "Counting boundary: art62-reply-period (weekend) [repeat 2]" cite "CAAF R. 
   given PaperFiled(Art62Answer, Personal) on 2026-10-03
   expect deadline(art62-reply-period) == 2026-10-13
 }
+
 /// With only certified issues, the appellant's brief is due 28 days after
 /// the Clerk's notice of docketing, the answer 28 days after the brief, and
 /// a reply 14 days after the answer.
@@ -247,6 +255,7 @@ test "Counting boundary: certified-brief-period (weekend)" cite "CAAF R. 19(b)(3
   given CertificateDocketed() on 2026-10-03
   expect deadline(certified-brief-period) == 2026-11-02
 }
+
 deadline certified-answer-period: 28.days after PaperFiled(CertifiedIssuesBrief) counted_by caaf26 cite "CAAF R. 19(b)(3)"
 
 test "Counting boundary: certified-answer-period (weekend)" cite "CAAF R. 19(b)(3)"
@@ -260,6 +269,7 @@ test "Counting boundary: certified-answer-period (weekend) [repeat 2]" cite "CAA
   given PaperFiled(CertifiedIssuesBrief, Personal) on 2026-10-03
   expect deadline(certified-answer-period) == 2026-11-02
 }
+
 deadline certified-reply-period: 14.days after PaperFiled(CertifiedIssuesAnswer) counted_by caaf26 cite "CAAF R. 19(b)(3)"
 /// The Judge Advocate General files the record in a mandatory review case
 /// within 35 days of the close of reconsideration below; the appellant's
@@ -272,6 +282,7 @@ test "Counting boundary: mandatory-record-period (weekend)" cite "CAAF R. 19(c)"
   given CcaReconsiderationClosed() on 2026-10-03
   expect deadline(mandatory-record-period) == 2026-11-09
 }
+
 deadline mandatory-brief-period: 60.days after MandatoryCaseDocketed() counted_by caaf26 cite "CAAF R. 19(c)"
 
 test "Counting boundary: mandatory-brief-period (weekend)" cite "CAAF R. 19(c)"
@@ -279,6 +290,7 @@ test "Counting boundary: mandatory-brief-period (weekend)" cite "CAAF R. 19(c)"
   given MandatoryCaseDocketed() on 2026-10-06
   expect deadline(mandatory-brief-period) == 2026-12-07
 }
+
 deadline mandatory-answer-period: 60.days after PaperFiled(MandatoryBrief) counted_by caaf26 cite "CAAF R. 19(c)"
 
 test "Counting boundary: mandatory-answer-period (weekend)" cite "CAAF R. 19(c)"
@@ -292,6 +304,7 @@ test "Counting boundary: mandatory-answer-period (weekend) [repeat 2]" cite "CAA
   given PaperFiled(MandatoryBrief, Personal) on 2026-10-06
   expect deadline(mandatory-answer-period) == 2026-12-07
 }
+
 deadline mandatory-reply-period: 21.days after PaperFiled(MandatoryAnswer) counted_by caaf26 cite "CAAF R. 19(c)"
 
 test "Counting boundary: mandatory-reply-period (weekend)" cite "CAAF R. 19(c)"
@@ -305,6 +318,7 @@ test "Counting boundary: mandatory-reply-period (weekend) [repeat 2]" cite "CAAF
   given PaperFiled(MandatoryAnswer, Personal) on 2026-10-03
   expect deadline(mandatory-reply-period) == 2026-10-26
 }
+
 /// A petition for extraordinary relief is filed as soon as possible and no
 /// later than 21 days after the petitioner learns of the action; a petition
 /// for habeas corpus or coram nobis may be filed at any time.
@@ -315,6 +329,7 @@ test "Counting boundary: writ-petition-period (weekend)" cite "CAAF R. 19(d)"
   given WritActionLearned() on 2026-10-03
   expect deadline(writ-petition-period) == 2026-10-26
 }
+
 /// A writ-appeal petition is filed no later than 21 days after the Court of
 /// Criminal Appeals' decision is served on the appellant; the answer 14
 /// days after the petition, a reply 7 days after the answer.
@@ -325,6 +340,7 @@ test "Counting boundary: writ-appeal-period (weekend)" cite "CAAF R. 19(e)"
   given CcaWritDecisionServed() on 2026-10-03
   expect deadline(writ-appeal-period) == 2026-10-26
 }
+
 deadline writ-appeal-answer-period: 14.days after PaperFiled(WritAppealPetition) counted_by caaf26 cite "CAAF R. 19(e)"
 deadline writ-appeal-reply-period: 7.days after PaperFiled(WritAppealAnswer) counted_by caaf26 cite "CAAF R. 19(e)"
 
@@ -339,6 +355,7 @@ test "Counting boundary: writ-appeal-reply-period (weekend) [repeat 2]" cite "CA
   given PaperFiled(WritAppealAnswer, Personal) on 2026-10-03
   expect deadline(writ-appeal-reply-period) == 2026-10-13
 }
+
 /// A brief supporting a petition for new trial is due 28 days after the
 /// Clerk's notice that the petition was filed, the answer 28 days after the
 /// brief, a reply 14 days after the answer.
@@ -349,6 +366,7 @@ test "Counting boundary: new-trial-brief-period (weekend)" cite "CAAF R. 19(f)"
   given NewTrialPetitionNoticed() on 2026-10-03
   expect deadline(new-trial-brief-period) == 2026-11-02
 }
+
 deadline new-trial-answer-period: 28.days after PaperFiled(NewTrialBrief) counted_by caaf26 cite "CAAF R. 19(f)"
 
 test "Counting boundary: new-trial-answer-period (weekend)" cite "CAAF R. 19(f)"
@@ -362,6 +380,7 @@ test "Counting boundary: new-trial-answer-period (weekend) [repeat 2]" cite "CAA
   given PaperFiled(NewTrialBrief, Personal) on 2026-10-03
   expect deadline(new-trial-answer-period) == 2026-11-02
 }
+
 deadline new-trial-reply-period: 14.days after PaperFiled(NewTrialAnswer) counted_by caaf26 cite "CAAF R. 19(f)"
 /// An answer to a motion is due 7 days after the motion, a reply 3 days
 /// after the answer; an oral motion granted leave at a hearing is filed
@@ -379,6 +398,7 @@ test "Counting boundary: motion-answer-period (weekend) [repeat 2]" cite "CAAF R
   given PaperFiled(Motion, Personal) on 2026-10-03
   expect deadline(motion-answer-period) == 2026-10-13
 }
+
 deadline motion-reply-period: 3.days after PaperFiled(MotionAnswer) counted_by caaf26 cite "CAAF R. 30(c)"
 
 test "Counting boundary: motion-reply-period (weekend)" cite "CAAF R. 30(c)"
@@ -392,6 +412,7 @@ test "Counting boundary: motion-reply-period (weekend) [repeat 2]" cite "CAAF R.
   given PaperFiled(MotionAnswer, Personal) on 2026-10-01
   expect deadline(motion-reply-period) == 2026-10-06
 }
+
 deadline oral-motion-period: 3.days after OralMotionPresented() counted_by caaf26 cite "CAAF R. 30(f)"
 
 test "Counting boundary: oral-motion-period (weekend)" cite "CAAF R. 30(f)"
@@ -399,6 +420,7 @@ test "Counting boundary: oral-motion-period (weekend)" cite "CAAF R. 30(f)"
   given OralMotionPresented() on 2026-10-01
   expect deadline(oral-motion-period) == 2026-10-06
 }
+
 /// A petition for reconsideration is due 14 days after any order, decision
 /// or opinion; an answer 7 days after the petition, a reply 3 days after
 /// the answer.
@@ -416,6 +438,7 @@ test "Counting boundary: reconsideration-answer-period (weekend) [repeat 2]" cit
   given PaperFiled(ReconsiderationPetition, Personal) on 2026-10-03
   expect deadline(reconsideration-answer-period) == 2026-10-13
 }
+
 deadline reconsideration-reply-period: 3.days after PaperFiled(ReconsiderationAnswer) counted_by caaf26 cite "CAAF R. 31(c)"
 
 test "Counting boundary: reconsideration-reply-period (weekend)" cite "CAAF R. 31(c)"
@@ -429,6 +452,7 @@ test "Counting boundary: reconsideration-reply-period (weekend) [repeat 2]" cite
   given PaperFiled(ReconsiderationAnswer, Personal) on 2026-10-01
   expect deadline(reconsideration-reply-period) == 2026-10-06
 }
+
 /// The mandate issues 7 days after the time for a petition for
 /// reconsideration expires or, if one is denied, 7 days after the order
 /// denying it, unless the Court orders otherwise.
@@ -439,6 +463,7 @@ test "Counting boundary: mandate-period (weekend)" cite "CAAF R. 43A(a)"
   given ReconsiderationPeriodExpired() on 2026-10-03
   expect deadline(mandate-period) == 2026-10-13
 }
+
 deadline mandate-after-denial-period: 7.days after ReconsiderationDenied() counted_by caaf26 cite "CAAF R. 43A(a)"
 
 test "Counting boundary: mandate-after-denial-period (weekend)" cite "CAAF R. 43A(a)"

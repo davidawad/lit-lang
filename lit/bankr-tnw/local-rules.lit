@@ -82,6 +82,7 @@ test "Counting boundary: chapter11-first-report-period (weekend)" cite "TNWB LBR
   given PetitionFiled() on 2026-09-24
   expect deadline(chapter11-first-report-period) == 2026-10-26
 }
+
 /// TNWB LBR 2081-1(g): within 7 days after entry of the Order Approving
 /// Disclosure Statement, the plan proponent sends the ballot with the plan,
 /// disclosure statement and order.
@@ -92,6 +93,7 @@ test "Counting boundary: ballot-mailing-period (weekend)" cite "TNWB LBR 2081-1(
   given DisclosureStatementApproved() on 2026-09-26
   expect deadline(ballot-mailing-period) == 2026-10-05
 }
+
 /// TNWB LBR 2081-1(i): not less than 7 days before the original
 /// confirmation hearing, the plan proponent files and serves the tally of
 /// ballots (Local Form 019F).
@@ -102,6 +104,7 @@ test "Counting boundary: ballot-tally-period (weekend)" cite "TNWB LBR 2081-1(i)
   given Chapter11ConfirmationHearingScheduled() on 2026-09-26
   expect deadline(ballot-tally-period) == 2026-09-18
 }
+
 /// TNWB LBR 2081-1(j)(2): within 14 days of the court's ruling that the
 /// plan may be confirmed, the proponent prepares and presents the
 /// confirmation order.
@@ -116,6 +119,7 @@ test "Counting boundary: chapter11-final-report-period (holiday)" cite "TNWB LBR
   given Chapter11PlanConfirmed() on 2026-09-27
   expect deadline(chapter11-final-report-period) == 2026-11-27
 }
+
 /// TNWB LBR 2081-1(k)(2)(A): within 60 days after substantial consummation
 /// (or, for an individual debtor, completion of plan payments), the plan
 /// proponent files a Motion for Final Decree or a statement why it is
@@ -127,6 +131,7 @@ test "Counting boundary: final-decree-motion-period (holiday)" cite "TNWB LBR 20
   given SubstantialConsummation() on 2026-09-27
   expect deadline(final-decree-motion-period) == 2026-11-27
 }
+
 /// TNWB LBR 2082-1(a)(3): unless the court orders otherwise, the first
 /// chapter 12 monthly financial report is filed 30 days after the case is
 /// commenced.
@@ -137,6 +142,7 @@ test "Counting boundary: chapter12-first-report-period (weekend)" cite "TNWB LBR
   given PetitionFiled() on 2026-09-24
   expect deadline(chapter12-first-report-period) == 2026-10-26
 }
+
 /// TNWB LBR 2082-1(b): the completed summary is delivered to the chapter 12
 /// trustee and the United States Trustee at least 7 days before the first
 /// setting of the meeting of creditors.
@@ -147,6 +153,7 @@ test "Counting boundary: chapter12-summary-period (weekend)" cite "TNWB LBR 2082
   given FirstMeetingDate() on 2026-09-26
   expect deadline(chapter12-summary-period) == 2026-09-18
 }
+
 /// TNWB LBR 2082-1(c): within 14 days after commencement of the case, the
 /// chapter 12 debtor provides the trustee and the United States Trustee
 /// evidence of fire and extended coverage.
@@ -165,6 +172,7 @@ test "Counting boundary: chapter13-first-report-period (weekend)" cite "TNWB LBR
   given PetitionFiled() on 2026-09-24
   expect deadline(chapter13-first-report-period) == 2026-10-26
 }
+
 /// TNWB LBR 2083-1(b)(2): a written objection to confirmation of a chapter
 /// 13 plan is filed and served 7 days before the confirmation hearing, or
 /// may be deemed waived.
@@ -175,6 +183,7 @@ test "Counting boundary: chapter13-confirmation-objection-period (weekend)" cite
   given Chapter13ConfirmationHearingScheduled() on 2026-09-26
   expect deadline(chapter13-confirmation-objection-period) == 2026-09-18
 }
+
 /// TNWB LBR 3011-1: an objection to an Application for Payment of Unclaimed
 /// Funds is filed and served within 21 days after its filing and service;
 /// absent objection the court may order payment.
@@ -185,6 +194,7 @@ test "Counting boundary: unclaimed-funds-objection-period (weekend)" cite "TNWB 
   given UnclaimedFundsApplicationServed() on 2026-09-26
   expect deadline(unclaimed-funds-objection-period) == 2026-10-19
 }
+
 /// TNWB LBR 4001-2: an order that no stay is in effect may be signed
 /// without a hearing 14 days after service of the motion if no party in
 /// interest objects.
@@ -199,6 +209,7 @@ test "Counting boundary: cited-opinion-copy-period (weekend)" cite "TNWB LBR 701
   given AdversaryHearingScheduled() on 2026-09-26
   expect deadline(cited-opinion-copy-period) == 2026-09-18
 }
+
 /// TNWB LBR 9019-1(d): as soon as practicable but no later than 30 days
 /// after reporting an agreement in principle, the parties confirm to the
 /// mediator that the settlement is finalized, or the mediation conference
@@ -210,6 +221,7 @@ test "Counting boundary: settlement-finalization-period (weekend)" cite "TNWB LB
   given AgreementInPrincipleReported() on 2026-09-24
   expect deadline(settlement-finalization-period) == 2026-10-26
 }
+
 /// TNWB LBR 9072-1: after final determination of a contested matter or
 /// adversary proceeding, counsel have 30 days to withdraw exhibits.
 deadline exhibit-withdrawal-period: 30.days after ExhibitMatterDetermined() counted_by frbp9006 cite "TNWB LBR 9072-1"
@@ -219,6 +231,7 @@ test "Counting boundary: exhibit-withdrawal-period (weekend)" cite "TNWB LBR 907
   given ExhibitMatterDetermined() on 2026-09-24
   expect deadline(exhibit-withdrawal-period) == 2026-10-26
 }
+
 /// TNWB LBR 9074-1(b)(1)-(2): the chapter 12 or 13 trustee approves or
 /// disapproves a proposed order within 7 days after receipt.
 deadline trustee-order-review-period: 7.days after TrusteeReceivedProposedOrder() counted_by frbp9006 cite "TNWB LBR 9074-1(b)"
@@ -228,6 +241,7 @@ test "Counting boundary: trustee-order-review-period (weekend)" cite "TNWB LBR 9
   given TrusteeReceivedProposedOrder() on 2026-09-26
   expect deadline(trustee-order-review-period) == 2026-10-05
 }
+
 /// TNWB LBR 9074-1(c): the approved proposed order on a bench ruling is
 /// presented to the court not more than 10 days after the ruling.
 deadline bench-ruling-order-period: 10.days after BenchRulingAnnounced() counted_by frbp9006 cite "TNWB LBR 9074-1(c)"

@@ -49,7 +49,7 @@ decision plea-decision: "Plea or trial" by accused cite "Va. Sup. Ct. R. 3A:8"
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Va. Sup. Ct. R. 3A:8"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Va. Sup. Ct. R. 3A:15" }
+  "Trial" -> trial { authority cite "Va. Sup. Ct. R. 3A:15" }
 }
 
 decision trial: "Verdict" by court cite "Va. Sup. Ct. R. 3A:15"
@@ -67,9 +67,7 @@ state sentencing: "Sentence and final order" by court cite "Va. Sup. Ct. R. 1:1"
   edge-sentencing-set-aside "Motion to set aside the verdict" -> post-trial {
     authority cite "Va. Sup. Ct. R. 3A:15(b)"
   }
-  edge-sentencing-judgment "Final order entered" -> judgment {
-    authority cite "Va. Sup. Ct. R. 1:1(a)"
-  }
+  "Final order entered" -> judgment { authority cite "Va. Sup. Ct. R. 1:1(a)" }
 }
 
 decision post-trial: "Motion to set aside the verdict" by court cite "Va. Sup. Ct. R. 3A:15(b)"

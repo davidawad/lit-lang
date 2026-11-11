@@ -72,7 +72,7 @@ decision plea-decision: "Plea or trial" by accused cite ?("Ark. R. Crim. P. 24.3
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("Ark. R. Crim. P. 24.5, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified")
   }
-  edge-plea-decision-trial "Trial" -> trial {
+  "Trial" -> trial {
     authority cite ?("Ark. R. Crim. P. 28.1, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified")
   }
 }
@@ -89,7 +89,7 @@ decision trial: "Verdict" by court cite ?("Ark. R. Crim. P. 33.1, CURRENCY UNCON
 
 state sentencing: "Sentencing and entry of judgment" by court cite ?("Ark. R. Crim. P. 33.2, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified") {
   note "On a guilty verdict or finding, sentence may be pronounced and judgment entered at once, or postponed to a date certain not more than thirty days later; the defendant may demand immediate sentencing in writing, and at sentencing the judge advises the defendant of the right to appeal and the time for perfecting it and fixes or denies bond (Ark. R. Crim. P. 33.2). Unverified: CURRENCY UNCONFIRMED."
-  edge-sentencing-judgment "Sentence pronounced; judgment entered" -> judgment {
+  "Sentence pronounced; judgment entered" -> judgment {
     authority cite ?("Ark. R. Crim. P. 33.2, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified")
   }
 }

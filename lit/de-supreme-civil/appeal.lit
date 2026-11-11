@@ -59,7 +59,7 @@ state briefing: "Briefs served and filed" by petitioner cite "Del. Supr. Ct. R. 
 state argument: "Argument or submission on the briefs" by court cite "Del. Supr. Ct. R. 16(a)"
 {
   note "There is oral argument only in appeals the Court designates; otherwise cases are submitted for decision on the briefs (Del. Supr. Ct. R. 16(a)). On the filing of the reply brief, or the expiration of its due date, the case is at issue and ready for argument at the call of the Court (Del. Supr. Ct. R. 16(c)). Unless the Court orders otherwise each side has 20 minutes before a panel and 25 minutes before the Court en Banc, and an application for more time is presented not later than 30 days after the filing of the appellee's brief (Del. Supr. Ct. R. 16(f))."
-  edge-argument-decision "Court files its opinion or order" -> decision {
+  "Court files its opinion or order" -> decision {
     event DecisionFiled()
     authority cite "Del. Supr. Ct. R. 17(a)"
   }
@@ -69,10 +69,8 @@ decision decision: "Supreme Court decides" by court cite "Del. Supr. Ct. R. 17(a
 {
   note "All decisions finally determining or terminating a case are made by written opinion or order, filed with the Clerk and bearing the dates of submission and decision (Del. Supr. Ct. R. 17). A unanimous decision of a panel of 3 Justices is the decision of the Court, subject to rehearing en Banc (Del. Supr. Ct. R. 4(e))."
   edge-decision-affirmed "Affirmed" -> after-decision { authority cite "Del. Supr. Ct. R. 17(a)" }
-  edge-decision-reversed "Reversed" -> reversed { authority cite "Del. Supr. Ct. R. 19(a)" }
-  edge-decision-remanded "Remanded for further proceedings" -> remanded {
-    authority cite "Del. Supr. Ct. R. 19(c)"
-  }
+  "Reversed" -> reversed { authority cite "Del. Supr. Ct. R. 19(a)" }
+  "Remanded for further proceedings" -> remanded { authority cite "Del. Supr. Ct. R. 19(c)" }
 }
 
 decision after-decision: "Reargument, rehearing en Banc, or neither" by petitioner cite "Del. Supr. Ct. R. 18"

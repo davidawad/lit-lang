@@ -13,7 +13,7 @@ start filed
 
 state filed: "Claim filed with the Department" by movant cite ?("G.L. c. 152, § 10: the General Laws are not vendored") {
   note "A claim proceeds through conciliation, conference and hearing before an administrative judge. The filing period, form and fee are G.L. c. 152's, which is not vendored: they are holes."
-  edge-filed-hearing "Set for conference and hearing" -> hearing {
+  "Set for conference and hearing" -> hearing {
     event ActionCommenced()
     authority cite ?("G.L. c. 152, § 11: the General Laws are not vendored")
   }
@@ -21,7 +21,7 @@ state filed: "Claim filed with the Department" by movant cite ?("G.L. c. 152, §
 
 state hearing: "Hearing before an administrative judge; review by the reviewing board" by court cite ?("G.L. c. 152, § 11: the General Laws are not vendored") {
   note "Hearing procedure, evidence, the record and review by the reviewing board (G.L. c. 152, § 11C) are holes: the General Laws are not vendored."
-  edge-hearing-decision "Reviewing board decides" -> decision {
+  "Reviewing board decides" -> decision {
     authority cite ?("G.L. c. 152, § 11C: the General Laws are not vendored")
   }
 }

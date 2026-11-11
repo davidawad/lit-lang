@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The District of Nevada's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"; LCR 12-1(d)).
 // No trigger carries a service method: FRCrimP 45(c)'s three added days
@@ -90,9 +92,6 @@ event ExhibitClaimNoticed()
 /// before the date set, the defendant and counsel sign and submit a
 /// written waiver and the court accepts it.
 deadline arraignment-waiver: 7.days before ArraignmentScheduled() counted_by frcrimp45 cite "D. Nev. LCR 10-1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: arraignment-waiver (weekend)" cite "D. Nev. LCR 10-1"
 {
@@ -107,9 +106,6 @@ deadline pretrial-motions: 30.days after Arraigned() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "D. Nev. LCR 12-1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motions (weekend)" cite "D. Nev. LCR 12-1(a)"
 {
@@ -124,9 +120,6 @@ deadline pretrial-response: 14.days after PretrialMotionServed() counted_by frcr
   to CaseOrder
   op set
 } cite "D. Nev. LCR 12-1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-response (weekend)" cite "D. Nev. LCR 12-1(a)"
 {
@@ -140,9 +133,6 @@ deadline pretrial-reply: 7.days after PretrialResponseServed() counted_by frcrim
   to CaseOrder
   op set
 } cite "D. Nev. LCR 12-1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-reply (weekend)" cite "D. Nev. LCR 12-1(a)"
 {
@@ -154,9 +144,6 @@ test "Counting boundary: pretrial-reply (weekend)" cite "D. Nev. LCR 12-1(a)"
 /// a release or detention order is filed within 14 days of the filing of
 /// the motion; replies only with leave.
 deadline detention-review-response: 14.days after DetentionReviewMotionFiled() counted_by frcrimp45 cite "D. Nev. LCR 12-3"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: detention-review-response (weekend)" cite "D. Nev. LCR 12-3"
 {
@@ -168,9 +155,6 @@ test "Counting boundary: detention-review-response (weekend)" cite "D. Nev. LCR 
 /// and confer within seven days after the designation to develop a
 /// proposed complex-case schedule.
 deadline complex-case-conference: 7.days after ComplexCaseDesignated() counted_by frcrimp45 cite "D. Nev. LCR 16-1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: complex-case-conference (weekend)" cite "D. Nev. LCR 16-1(a)"
 {
@@ -181,9 +165,6 @@ test "Counting boundary: complex-case-conference (weekend)" cite "D. Nev. LCR 16
 /// D. Nev. LCR 16-1(a)(3): the parties file the proposed complex-case
 /// schedule within seven days after meeting and conferring.
 deadline complex-case-schedule: 7.days after ComplexCaseConferenceHeld() counted_by frcrimp45 cite "D. Nev. LCR 16-1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: complex-case-schedule (weekend)" cite "D. Nev. LCR 16-1(a)"
 {
@@ -198,9 +179,6 @@ deadline joint-discovery-agreement: 7.days after Arraigned() counted_by frcrimp4
   to CaseOrder
   op set
 } cite "D. Nev. LCR 16-1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: joint-discovery-agreement (weekend)" cite "D. Nev. LCR 16-1(b)"
 {
@@ -212,9 +190,6 @@ test "Counting boundary: joint-discovery-agreement (weekend)" cite "D. Nev. LCR 
 /// required by statute, rule or the Constitution available within seven
 /// days after filing the joint discovery statement.
 deadline joint-agreement-government-disclosure: 7.days after JointDiscoveryAgreementFiled() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: joint-agreement-government-disclosure (weekend)" cite "D. Nev. LCR 16-1(b)"
 {
@@ -225,9 +200,6 @@ test "Counting boundary: joint-agreement-government-disclosure (weekend)" cite "
 /// D. Nev. LCR 16-1(b)(1)(C)(v): the defense makes its reciprocal
 /// disclosures available no later than 14 days before trial.
 deadline joint-agreement-reciprocal-disclosure: 14.days before TrialScheduled() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: joint-agreement-reciprocal-disclosure (weekend)" cite "D. Nev. LCR 16-1(b)"
 {
@@ -239,9 +211,6 @@ test "Counting boundary: joint-agreement-reciprocal-disclosure (weekend)" cite "
 /// parties meet and confer on the disclosures within seven days after
 /// arraignment.
 deadline disclosure-conference: 7.days after Arraigned() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: disclosure-conference (weekend)" cite "D. Nev. LCR 16-1(b)"
 {
@@ -252,9 +221,6 @@ test "Counting boundary: disclosure-conference (weekend)" cite "D. Nev. LCR 16-1
 /// D. Nev. LCR 16-1(b)(2)(B): the government files its disclosure
 /// statement within seven days after the conference.
 deadline disclosure-statement-after-conference: 7.days after DisclosureConferenceHeld() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: disclosure-statement-after-conference (weekend)" cite "D. Nev. LCR 16-1(b)"
 {
@@ -265,9 +231,6 @@ test "Counting boundary: disclosure-statement-after-conference (weekend)" cite "
 /// D. Nev. LCR 16-1(b)(2)(B): and in no event more than 14 days after the
 /// date of arraignment.
 deadline disclosure-statement: 14.days after Arraigned() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: disclosure-statement (weekend)" cite "D. Nev. LCR 16-1(b)"
 {
@@ -282,9 +245,6 @@ deadline psr-submission: 7.business_days before SentencingScheduled() counted_by
   to CaseOrder
   op set
 } cite "D. Nev. LCR 32-1(c)"
-{
-  forum frcrimp
-}
 
 /// D. Nev. LCR 32-1(d): any sentencing memorandum is filed and served at
 /// least five business days before the sentencing hearing.
@@ -292,9 +252,6 @@ deadline sentencing-memorandum: 5.business_days before SentencingScheduled() cou
   to CaseOrder
   op set
 } cite "D. Nev. LCR 32-1(d)"
-{
-  forum frcrimp
-}
 
 /// D. Nev. LCR 32-1(d): any response to a sentencing memorandum is filed
 /// and served at least three business days before the sentencing hearing.
@@ -302,9 +259,6 @@ deadline sentencing-memorandum-response: 3.business_days before SentencingSchedu
   to CaseOrder
   op set
 } cite "D. Nev. LCR 32-1(d)"
-{
-  forum frcrimp
-}
 
 /// D. Nev. LCR 32-1(f): a motion for a forfeiture order is filed and
 /// served no later than 28 days before the sentencing hearing.
@@ -312,9 +266,6 @@ deadline forfeiture-motion: 28.days before SentencingScheduled() counted_by frcr
   to CaseOrder
   op set
 } cite "D. Nev. LCR 32-1(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: forfeiture-motion (weekend)" cite "D. Nev. LCR 32-1(f)"
 {
@@ -328,9 +279,6 @@ deadline forfeiture-response: 14.days after ForfeitureMotionServed() counted_by 
   to CaseOrder
   op set
 } cite "D. Nev. LCR 32-1(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: forfeiture-response (weekend)" cite "D. Nev. LCR 32-1(f)"
 {
@@ -344,9 +292,6 @@ deadline forfeiture-reply: 7.days after ForfeitureResponseServed() counted_by fr
   to CaseOrder
   op set
 } cite "D. Nev. LCR 32-1(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: forfeiture-reply (weekend)" cite "D. Nev. LCR 32-1(f)"
 {
@@ -360,9 +305,6 @@ test "Counting boundary: forfeiture-reply (weekend)" cite "D. Nev. LCR 32-1(f)"
 /// the official may waive the requirement for a good-faith attempt (LCR
 /// 32-2(c)(3)).
 deadline records-application: 14.days before RecordsProductionRequired() counted_by frcrimp45 cite "D. Nev. LCR 32-2(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: records-application (weekend)" cite "D. Nev. LCR 32-2(c)"
 {
@@ -374,9 +316,6 @@ test "Counting boundary: records-application (weekend)" cite "D. Nev. LCR 32-2(c
 /// of a motion for modification of sentence under FRCrimP 35 to file and
 /// serve a response.
 deadline rule35-response: 21.days after Rule35MotionServed() counted_by frcrimp45 cite "D. Nev. LCR 35-1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: rule35-response (weekend)" cite "D. Nev. LCR 35-1"
 {
@@ -388,9 +327,6 @@ test "Counting boundary: rule35-response (weekend)" cite "D. Nev. LCR 35-1"
 /// funds into interest-bearing accounts within 14 days after service of
 /// the investment order.
 deadline registry-investment: 14.days after InvestmentOrderServed() counted_by frcrimp45 cite "D. Nev. LCR 46-9(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: registry-investment (weekend)" cite "D. Nev. LCR 46-9(d)"
 {
@@ -402,9 +338,6 @@ test "Counting boundary: registry-investment (weekend)" cite "D. Nev. LCR 46-9(d
 /// order verifies, within 14 days after its service on the clerk, that the
 /// funds were invested as ordered.
 deadline registry-investment-verification: 14.days after InvestmentOrderServed() counted_by frcrimp45 cite "D. Nev. LCR 46-9(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: registry-investment-verification (weekend)" cite "D. Nev. LCR 46-9(e)"
 {
@@ -417,9 +350,6 @@ test "Counting boundary: registry-investment-verification (weekend)" cite "D. Ne
 /// matures; absent notice a renewable instrument is reinvested (LCR
 /// 46-9(g)).
 deadline timed-instrument-notice: 14.days before TimedInstrumentMatures() counted_by frcrimp45 cite "D. Nev. LCR 46-9(h)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: timed-instrument-notice (weekend)" cite "D. Nev. LCR 46-9(h)"
 {
@@ -431,9 +361,6 @@ test "Counting boundary: timed-instrument-notice (weekend)" cite "D. Nev. LCR 46
 /// clerk notifies the parties to claim them are destroyed or disposed of
 /// as the court orders.
 deadline exhibit-claim: 21.days after ExhibitClaimNoticed() counted_by frcrimp45 cite "D. Nev. LCR 55-1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-claim (weekend)" cite "D. Nev. LCR 55-1(e)"
 {

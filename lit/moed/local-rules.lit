@@ -2,6 +2,8 @@ module moed-local-rules.local-rules
 
 import core.states.missouri.{ frcp6-missouri }
 
+forum frcp
+
 // The Eastern District of Missouri's own periods under its civil Local
 // Rules, computed under FRCP 6(a), which governs "any local rule". For
 // good cause the court may extend or shorten any time limit the rules
@@ -115,17 +117,10 @@ event SealingDenied()
 /// party files a supplemental Disclosure Statement within seven days
 /// after the change or event.
 deadline supplemental-disclosure-period: 7.days after DisclosureInformationChanged() counted_by frcp6-missouri cite "E.D. Mo. L.R. 2.09"
-{
-  forum frcp
-}
-
 /// E.D. Mo. L.R. 2.06(C)(1): a self-represented litigant proceeding in
 /// forma pauperis files a written request for witness subpoenas not less
 /// than twenty-one days before the date set for trial or hearing.
 deadline pro-se-subpoena-request-period: 21.days before TrialOrHearingDate() counted_by frcp6-missouri cite "E.D. Mo. L.R. 2.06(C)"
-{
-  forum frcp
-}
 
 test "Counting boundary: pro-se-subpoena-request-period (holiday)" cite "E.D. Mo. L.R. 2.06(C)"
 {
@@ -138,9 +133,6 @@ test "Counting boundary: pro-se-subpoena-request-period (holiday)" cite "E.D. Mo
 /// filed not less than twenty-one days before the date set for trial or
 /// hearing.
 deadline pro-se-writ-application-period: 21.days before TrialOrHearingDate() counted_by frcp6-missouri cite "E.D. Mo. L.R. 2.06(C)"
-{
-  forum frcp
-}
 
 test "Counting boundary: pro-se-writ-application-period (holiday)" cite "E.D. Mo. L.R. 2.06(C)"
 {
@@ -152,9 +144,6 @@ test "Counting boundary: pro-se-writ-application-period (holiday)" cite "E.D. Mo
 /// otherwise, a party opposing a motion files a single memorandum within
 /// fourteen days after service of the motion.
 deadline opposition-period: 14.days after MotionServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 4.01(B)"
-{
-  forum frcp
-}
 
 test "Counting boundary: opposition-period (holiday)" cite "E.D. Mo. L.R. 4.01(B)"
 {
@@ -165,17 +154,10 @@ test "Counting boundary: opposition-period (holiday)" cite "E.D. Mo. L.R. 4.01(B
 /// E.D. Mo. L.R. 4.01(B): an opposition to a motion seeking an extension
 /// of time is filed within seven days after service of the motion.
 deadline extension-opposition-period: 7.days after ExtensionMotionServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 4.01(B)"
-{
-  forum frcp
-}
-
 /// E.D. Mo. L.R. 4.01(C): the moving party may file a reply memorandum
 /// within ten days after being served with the memorandum in opposition;
 /// further memoranda only with leave.
 deadline reply-period: 10.days after OppositionServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 4.01(C)"
-{
-  forum frcp
-}
 
 test "Counting boundary: reply-period (holiday)" cite "E.D. Mo. L.R. 4.01(C)"
 {
@@ -188,9 +170,6 @@ test "Counting boundary: reply-period (holiday)" cite "E.D. Mo. L.R. 4.01(C)"
 /// being served with the motion, with a Response to Statement of Material
 /// Facts (L.R. 4.01(E)).
 deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 4.01(F)"
-{
-  forum frcp
-}
 
 test "Counting boundary: summary-judgment-opposition-period (weekend)" cite "E.D. Mo. L.R. 4.01(F)"
 {
@@ -202,9 +181,6 @@ test "Counting boundary: summary-judgment-opposition-period (weekend)" cite "E.D
 /// Conference, each party gives all parties and the neutral a list of
 /// the persons who will participate for it and how each will attend.
 deadline adr-participant-list-period: 14.days before AdrConference() counted_by frcp6-missouri cite "E.D. Mo. L.R. 6.02"
-{
-  forum frcp
-}
 
 test "Counting boundary: adr-participant-list-period (weekend)" cite "E.D. Mo. L.R. 6.02"
 {
@@ -216,17 +192,10 @@ test "Counting boundary: adr-participant-list-period (weekend)" cite "E.D. Mo. L
 /// attendance, or a necessary party's absence, informs the neutral in
 /// writing no fewer than ten days before the conference.
 deadline adr-attendance-contest-period: 10.days before AdrConference() counted_by frcp6-missouri cite "E.D. Mo. L.R. 6.02"
-{
-  forum frcp
-}
-
 /// E.D. Mo. L.R. 6.02: a government entity precluded by law from
 /// delegating full settlement authority discloses that in writing not less
 /// than fourteen days before the scheduled ADR conference.
 deadline adr-government-authority-period: 14.days before AdrConference() counted_by frcp6-missouri cite "E.D. Mo. L.R. 6.02"
-{
-  forum frcp
-}
 
 test "Counting boundary: adr-government-authority-period (weekend)" cite "E.D. Mo. L.R. 6.02"
 {
@@ -238,18 +207,11 @@ test "Counting boundary: adr-government-authority-period (weekend)" cite "E.D. M
 /// conference, each party gives the neutral a confidential memorandum of
 /// the disputed facts and its position on liability and damages.
 deadline adr-memorandum-period: 10.days before AdrConference() counted_by frcp6-missouri cite "E.D. Mo. L.R. 6.02"
-{
-  forum frcp
-}
-
 /// E.D. Mo. L.R. 6.05(C): when the parties settle a claim during the ADR
 /// referral, the signed settlement agreement, stipulation, motion for
 /// leave to dismiss or proposed consent judgment is filed no later than
 /// thirty days after the last ADR conference, or as the court orders.
 deadline adr-settlement-filing-period: 30.days after LastAdrConference() counted_by frcp6-missouri cite "E.D. Mo. L.R. 6.05"
-{
-  forum frcp
-}
 
 test "Counting boundary: adr-settlement-filing-period (weekend)" cite "E.D. Mo. L.R. 6.05"
 {
@@ -262,9 +224,6 @@ test "Counting boundary: adr-settlement-filing-period (weekend)" cite "E.D. Mo. 
 /// motion to amend the Case Management Order no later than fourteen days
 /// after the last ADR conference.
 deadline adr-litigation-plan-period: 14.days after LastAdrConference() counted_by frcp6-missouri cite "E.D. Mo. L.R. 6.05"
-{
-  forum frcp
-}
 
 test "Counting boundary: adr-litigation-plan-period (holiday)" cite "E.D. Mo. L.R. 6.05"
 {
@@ -277,9 +236,6 @@ test "Counting boundary: adr-litigation-plan-period (holiday)" cite "E.D. Mo. L.
 /// court's final decision; an exhibit not timely removed after the Clerk's
 /// notice may be discarded.
 deadline exhibit-removal-period: 30.days after BenchTrialDecision() counted_by frcp6-missouri cite "E.D. Mo. L.R. 7.02(C)"
-{
-  forum frcp
-}
 
 test "Counting boundary: exhibit-removal-period (weekend)" cite "E.D. Mo. L.R. 7.02(C)"
 {
@@ -291,9 +247,6 @@ test "Counting boundary: exhibit-removal-period (weekend)" cite "E.D. Mo. L.R. 7
 /// later than twenty-one days after entry of final judgment under FRCP
 /// 58; a late motion may waive the fees.
 deadline fee-motion-period: 21.days after FinalJudgmentEntered() counted_by frcp6-missouri cite "E.D. Mo. L.R. 8.02"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-motion-period (weekend)" cite "E.D. Mo. L.R. 8.02"
 {
@@ -305,9 +258,6 @@ test "Counting boundary: fee-motion-period (weekend)" cite "E.D. Mo. L.R. 8.02"
 /// files its memorandum and evidence within fourteen days after being
 /// served with the motion (also L.R. 4.01(F)).
 deadline fee-opposition-period: 14.days after FeeMotionServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 8.02"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-opposition-period (holiday)" cite "E.D. Mo. L.R. 8.02"
 {
@@ -318,18 +268,11 @@ test "Counting boundary: fee-opposition-period (holiday)" cite "E.D. Mo. L.R. 8.
 /// E.D. Mo. L.R. 8.02: the moving party may file a reply memorandum within
 /// seven days after being served with the memorandum in opposition.
 deadline fee-reply-period: 7.days after FeeOppositionServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 8.02"
-{
-  forum frcp
-}
-
 /// E.D. Mo. L.R. 8.03(A)(1): unless the court orders otherwise, a party
 /// seeking costs files a verified bill of costs no later than twenty-one
 /// days after entry of final judgment under FRCP 58; a late bill may waive
 /// taxable costs (L.R. 8.03(A)(2)).
 deadline bill-of-costs-period: 21.days after FinalJudgmentEntered() counted_by frcp6-missouri cite "E.D. Mo. L.R. 8.03(A)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "E.D. Mo. L.R. 8.03(A)"
 {
@@ -342,9 +285,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "E.D. Mo. L.R. 8.0
 /// served; absent a timely objection the Clerk taxes costs as claimed
 /// (also L.R. 4.01(F)).
 deadline cost-objection-period: 14.days after BillOfCostsServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 8.03(A)"
-{
-  forum frcp
-}
 
 test "Counting boundary: cost-objection-period (holiday)" cite "E.D. Mo. L.R. 8.03(A)"
 {
@@ -355,18 +295,11 @@ test "Counting boundary: cost-objection-period (holiday)" cite "E.D. Mo. L.R. 8.
 /// E.D. Mo. L.R. 8.03(A)(3): the moving party may file a reply memorandum
 /// within seven days after being served with the objections.
 deadline cost-reply-period: 7.days after CostObjectionServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 8.03(A)"
-{
-  forum frcp
-}
-
 /// E.D. Mo. L.R. 8.03(B): FRAP 39(e) costs on appeal are taxed in the
 /// district court if a bill of costs is filed within twenty-one days of the
 /// issuance of the mandate or other order terminating the action by the
 /// Court of Appeals.
 deadline appeal-costs-period: 21.days after MandateIssued() counted_by frcp6-missouri cite "E.D. Mo. L.R. 8.03(B)"
-{
-  forum frcp
-}
 
 test "Counting boundary: appeal-costs-period (weekend)" cite "E.D. Mo. L.R. 8.03(B)"
 {
@@ -378,9 +311,6 @@ test "Counting boundary: appeal-costs-period (weekend)" cite "E.D. Mo. L.R. 8.03
 /// Court's ruling on consolidation of appeals is filed within twenty-eight
 /// days of the District Court's Case Management Order.
 deadline bankruptcy-consolidation-review-period: 28.days after BankruptcyCaseManagementOrder() counted_by frcp6-missouri cite "E.D. Mo. L.R. 9.01(D)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bankruptcy-consolidation-review-period (weekend)" cite "E.D. Mo. L.R. 9.01(D)"
 {
@@ -392,9 +322,6 @@ test "Counting boundary: bankruptcy-consolidation-review-period (weekend)" cite 
 /// bankruptcy appeal is filed within twenty-eight days of the Case
 /// Management Order.
 deadline bankruptcy-dismissal-motion-period: 28.days after BankruptcyCaseManagementOrder() counted_by frcp6-missouri cite "E.D. Mo. L.R. 9.01(D)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bankruptcy-dismissal-motion-period (weekend)" cite "E.D. Mo. L.R. 9.01(D)"
 {
@@ -406,9 +333,6 @@ test "Counting boundary: bankruptcy-dismissal-motion-period (weekend)" cite "E.D
 /// files any motion to dismiss or to remand, or the answer with the
 /// administrative record, within sixty days of service of the complaint.
 deadline commissioner-answer-period: 60.days after SocialSecurityComplaintServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 9.02"
-{
-  forum frcp
-}
 
 test "Counting boundary: commissioner-answer-period (weekend)" cite "E.D. Mo. L.R. 9.02"
 {
@@ -420,9 +344,6 @@ test "Counting boundary: commissioner-answer-period (weekend)" cite "E.D. Mo. L.
 /// serves and files a brief in support of the complaint within thirty days
 /// after the Commissioner serves the answer and the administrative record.
 deadline social-security-brief-period: 30.days after CommissionerAnswerServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 9.02"
-{
-  forum frcp
-}
 
 test "Counting boundary: social-security-brief-period (weekend)" cite "E.D. Mo. L.R. 9.02"
 {
@@ -434,9 +355,6 @@ test "Counting boundary: social-security-brief-period (weekend)" cite "E.D. Mo. 
 /// of the answer within thirty days after service of the plaintiff's
 /// brief.
 deadline commissioner-brief-period: 30.days after SocialSecurityBriefServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 9.02"
-{
-  forum frcp
-}
 
 test "Counting boundary: commissioner-brief-period (weekend)" cite "E.D. Mo. L.R. 9.02"
 {
@@ -448,9 +366,6 @@ test "Counting boundary: commissioner-brief-period (weekend)" cite "E.D. Mo. L.R
 /// Commissioner's brief to file a reply brief; further briefs only by
 /// leave for good cause.
 deadline social-security-reply-period: 14.days after CommissionerBriefServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 9.02"
-{
-  forum frcp
-}
 
 test "Counting boundary: social-security-reply-period (holiday)" cite "E.D. Mo. L.R. 9.02"
 {
@@ -463,9 +378,6 @@ test "Counting boundary: social-security-reply-period (holiday)" cite "E.D. Mo. 
 /// title document with a list of all parties who may claim an interest in
 /// the tract.
 deadline condemnation-title-period: 30.days after CondemnationComplaintFiled() counted_by frcp6-missouri cite "E.D. Mo. L.R. 9.04"
-{
-  forum frcp
-}
 
 test "Counting boundary: condemnation-title-period (weekend)" cite "E.D. Mo. L.R. 9.04"
 {
@@ -477,24 +389,13 @@ test "Counting boundary: condemnation-title-period (weekend)" cite "E.D. Mo. L.R
 /// the balance of the bid to the Marshal within seven days of the sale
 /// (deferred until confirmation if an objection is filed).
 deadline sale-balance-period: 7.days after AdmiraltySaleHeld() counted_by frcp6-missouri cite "E.D. Mo. L.R. 10.03"
-{
-  forum frcp
-}
-
 /// E.D. Mo. L.R. 10.03(C)(1): objections to a sale are filed within seven
 /// days after the sale date and served on the Marshal; absent objection
 /// the sale is deemed confirmed (L.R. 10.03(D)(1)).
 deadline sale-objection-period: 7.days after AdmiraltySaleHeld() counted_by frcp6-missouri cite "E.D. Mo. L.R. 10.03"
-{
-  forum frcp
-}
-
 /// E.D. Mo. L.R. 10.03(D)(1): the buyer submits a proposed order of
 /// confirmation no later than fourteen days after the sale.
 deadline sale-confirmation-order-period: 14.days after AdmiraltySaleHeld() counted_by frcp6-missouri cite "E.D. Mo. L.R. 10.03"
-{
-  forum frcp
-}
 
 test "Counting boundary: sale-confirmation-order-period (holiday)" cite "E.D. Mo. L.R. 10.03"
 {
@@ -506,25 +407,14 @@ test "Counting boundary: sale-confirmation-order-period (holiday)" cite "E.D. Mo
 /// Motion for Sealing, a party or non-party may file a Memorandum Opposing
 /// Sealing.
 deadline sealing-opposition-period: 7.days after SealingMotionFiled() counted_by frcp6-missouri cite "E.D. Mo. L.R. 13.05(A)(4)(d)"
-{
-  forum frcp
-}
-
 /// E.D. Mo. L.R. 13.05(A)(4)(e): within seven days from the filing of a
 /// Memorandum Opposing Sealing, the movant may file a Reply Supporting
 /// Sealing.
 deadline sealing-reply-period: 7.days after SealingOppositionFiled() counted_by frcp6-missouri cite "E.D. Mo. L.R. 13.05(A)(4)(e)"
-{
-  forum frcp
-}
-
 /// E.D. Mo. L.R. 13.05(A)(4)(g): an order denying sealing is stayed for
 /// 14 days after its entry, during which an appeal from it may be filed
 /// or the sealed material withdrawn before it becomes public.
 deadline sealing-denial-stay-period: 14.days after SealingDenied() counted_by frcp6-missouri cite "E.D. Mo. L.R. 13.05(A)(4)(g)"
-{
-  forum frcp
-}
 
 test "Counting boundary: sealing-denial-stay-period (holiday)" cite "E.D. Mo. L.R. 13.05(A)(4)(g)"
 {

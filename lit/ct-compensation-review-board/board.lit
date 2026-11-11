@@ -16,7 +16,7 @@ start petition-filed
 
 state petition-filed: "Petition for review filed with the board" by movant cite ?("Conn. Gen. Stat. § 31-301(a): the Workers' Compensation Act is not vendored") {
   note "The board reviews an administrative law judge's decision on the record. The petition for review, its period, form and fee are the Workers' Compensation Act's (General Statutes § 31-301), which is not vendored: they are holes."
-  edge-petition-filed-hearing "Set for hearing before the board" -> hearing {
+  "Set for hearing before the board" -> hearing {
     event ActionCommenced()
     authority cite ?("Conn. Gen. Stat. § 31-301: the Workers' Compensation Act is not vendored")
   }
@@ -24,7 +24,7 @@ state petition-filed: "Petition for review filed with the board" by movant cite 
 
 decision hearing: "Board hears the petition" by court cite ?("Conn. Gen. Stat. § 31-301: the Workers' Compensation Act is not vendored") {
   note "The board's hearing procedure is the Act's (General Statutes § 31-301, not vendored). When the board is of the opinion that the decision involves principles of law which are not free from reasonable doubt and which public interest requires the Appellate Court to determine, it may, on its own motion and without any act of the parties, prepare a reservation request in the manner of Section 73-1 and deliver it to the appellate clerk and all parties of record (Practice Book § 76-5)."
-  edge-hearing-decision "Board decides" -> decision {
+  "Board decides" -> decision {
     authority cite ?("Conn. Gen. Stat. § 31-301: the Workers' Compensation Act is not vendored")
   }
   edge-hearing-reserved "Question of law reserved to the Appellate Court" -> reservation {

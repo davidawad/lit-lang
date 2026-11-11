@@ -248,9 +248,7 @@ start motion-filed
 state motion-filed: "Motion filed and set for hearing" by movant cite "Bankr. E.D. La. LR 9013-1(B)"
 {
   note "A motion that requires a hearing is set, when filed, for the first motion day at least 21 days after it is noticed, except as the FRBP or the court provides; the motions LR 9013-1(D) lists may be submitted ex parte (LR 9013-1(B), (D)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Objection or response filed" -> opposed {
-    authority cite "Bankr. E.D. La. LR 9013-1(E)"
-  }
+  "Objection or response filed" -> opposed { authority cite "Bankr. E.D. La. LR 9013-1(E)" }
   edge-motion-filed-unopposed "No timely objection" -> ruling {
     authority cite "Bankr. E.D. La. LR 9013-1(E)"
   }
@@ -259,7 +257,7 @@ state motion-filed: "Motion filed and set for hearing" by movant cite "Bankr. E.
 state opposed: "Objection filed; heard on motion day" by opponent cite "Bankr. E.D. La. LR 9013-1(E)"
 {
   note "Objections and responses are filed no later than seven days before the hearing; a later filing needs leave (LR 9013-1(E)). Matters needing evidence or argument over twenty minutes are specially set (LR 9013-1(G))."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. E.D. La. LR 9013-1(F)" }
+  "Hearing held" -> ruling { authority cite "Bankr. E.D. La. LR 9013-1(F)" }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. E.D. La. LR 9013-1(F)"

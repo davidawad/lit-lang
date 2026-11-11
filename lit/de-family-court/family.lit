@@ -22,20 +22,18 @@ state commenced: "Complaint or petition filed" by movant cite ?("Fam. Ct. Civ. R
 
 decision pleadings: "Answer or motion to dismiss" by court cite ?("Fam. Ct. Civ. R. 12: not vendored") {
   note "The response period and dismissal grounds are not stated: the Family Court Civil Rules are not vendored."
-  edge-pleadings-dismissed "Dismissed on the pleadings" -> dismissed {
+  "Dismissed on the pleadings" -> dismissed {
     authority cite ?("Fam. Ct. Civ. R. 12: not vendored")
   }
   edge-pleadings-answered "Answered: case proceeds" -> discovery {
     authority cite ?("Fam. Ct. Civ. R. 12: not vendored")
   }
-  edge-pleadings-settled "Settled or withdrawn" -> settled {
-    authority cite ?("Fam. Ct. Civ. R. 41: not vendored")
-  }
+  "Settled or withdrawn" -> settled { authority cite ?("Fam. Ct. Civ. R. 41: not vendored") }
 }
 
 state discovery: "Discovery and pretrial" by movant cite ?("Fam. Ct. Civ. R. 26: not vendored") {
   note "Discovery scope, limits and scheduling are not stated: the Family Court Civil Rules are not vendored."
-  edge-discovery-dispositive "Dispositive motion or trial setting" -> dispositive {
+  "Dispositive motion or trial setting" -> dispositive {
     authority cite ?("Fam. Ct. Civ. R. 56: not vendored")
   }
 }
@@ -45,14 +43,12 @@ decision dispositive: "Summary disposition or trial" by court cite ?("Fam. Ct. C
   edge-dispositive-granted "Decided without trial" -> judgment {
     authority cite ?("Fam. Ct. Civ. R. 56: not vendored")
   }
-  edge-dispositive-trial "Tried" -> trial { authority cite ?("Fam. Ct. Civ. R. 16: not vendored") }
+  "Tried" -> trial { authority cite ?("Fam. Ct. Civ. R. 16: not vendored") }
 }
 
 state trial: "Trial or hearing" by court cite ?("Fam. Ct. Civ. R. 16: not vendored") {
   note "Trial procedure is not stated: the Family Court Civil Rules are not vendored."
-  edge-trial-judgment "Decision rendered" -> judgment {
-    authority cite ?("Fam. Ct. Civ. R. 58: not vendored")
-  }
+  "Decision rendered" -> judgment { authority cite ?("Fam. Ct. Civ. R. 58: not vendored") }
 }
 
 state judgment: "Judgment or decision entered" by court cite ?("Fam. Ct. Civ. R. 58: not vendored") {

@@ -2,6 +2,8 @@ module lamd-local-rules.local-rules
 
 import core.states.louisiana.{ frcp6-louisiana }
 
+forum frcp
+
 // The Middle District of Louisiana's own civil periods, computed under the
 // federal rules (FRCP 6(a) governs "any local rule"). Reply memoranda may
 // be filed without leave only on Rule 12 and Rule 56 motions; a reply on
@@ -72,91 +74,48 @@ event FinalDisposition()
 /// with opposing affidavits and supporting documents then available,
 /// within twenty-one days after service of the motion.
 deadline response-period: 21.days after MotionServed() counted_by frcp6-louisiana cite "M.D. La. LR 7(f)"
-{
-  forum frcp
-}
-
 /// M.D. La. LR 7(f): a reply memorandum on a Rule 12 or Rule 56 motion is
 /// filed within fourteen days after service of the response.
 deadline reply-period: 14.days after ResponseServed() counted_by frcp6-louisiana cite "M.D. La. LR 7(f)"
-{
-  forum frcp
-}
-
 /// M.D. La. LR 26(a)(3): any meeting of the parties is held in time for
 /// its report to be filed no later than two weeks prior to the date of the
 /// scheduling conference.
 deadline rule26f-report-period: 2.weeks before SchedulingConference() counted_by frcp6-louisiana cite "M.D. La. LR 26(a)"
-{
-  forum frcp
-}
-
 /// M.D. La. LR 26(b): initial disclosures under FRCP 26(a)(1) are made no
 /// later than seven days before the Case Management Conference, unless a
 /// court order sets a different time or a party objects at the attorney
 /// conference.
 deadline initial-disclosure-period: 7.days before CaseManagementConference() counted_by frcp6-louisiana cite "M.D. La. LR 26(b)"
-{
-  forum frcp
-}
-
 /// M.D. La. LR 26(d)(1): absent exceptional circumstances, a discovery
 /// motion filed after the discovery deadline is timely only if filed
 /// within seven days after the deadline and it concerns conduct in the
 /// final seven days of discovery.
 deadline late-discovery-motion-period: 7.days after DiscoveryDeadline() counted_by frcp6-louisiana cite "M.D. La. LR 26(d)"
-{
-  forum frcp
-}
-
 /// M.D. La. LR 41(b)(2): before a dismissal for failure to prosecute, the
 /// plaintiff has fourteen calendar days from mailing of the notice to file
 /// evidence of good cause; with no response in time the court may dismiss.
 deadline prosecution-good-cause-period: 14.days after ProsecutionNoticeMailed() counted_by frcp6-louisiana cite "M.D. La. LR 41(b)"
-{
-  forum frcp
-}
-
 /// M.D. La. LR 41(b)(3): a dismissal for failure to prosecute is without
 /// prejudice, and the order allows reinstatement within thirty days for
 /// good cause shown.
 deadline reinstatement-period: 30.days after ProsecutionDismissalOrdered() counted_by frcp6-louisiana cite "M.D. La. LR 41(b)"
-{
-  forum frcp
-}
-
 /// M.D. La. LR 54(c): within thirty days after receiving notice of entry
 /// of judgment, unless otherwise ordered, the party allowed costs serves
 /// and files a notice of application to tax costs with a supporting
 /// memorandum.
 deadline costs-application-period: 30.days after JudgmentEntryNoticed() counted_by frcp6-louisiana cite "M.D. La. LR 54(c)"
-{
-  forum frcp
-}
-
 /// M.D. La. LR 55: a judgment of default is not entered until fourteen
 /// days after entry of default; this is the earliest date, not a last
 /// day.
 deadline default-judgment-waiting-period: 14.days after DefaultEntered() counted_by frcp6-louisiana cite "M.D. La. LR 55"
-{
-  forum frcp
-}
-
 /// M.D. La. LR 56(e): a request to strike made in a reply statement of
 /// material facts may be answered by a response filed within 14 days of
 /// service of the reply statement.
 deadline strike-request-response-period: 14.days after ReplyStatementServed() counted_by frcp6-louisiana cite "M.D. La. LR 56(e)"
-{
-  forum frcp
-}
-
 /// M.D. La. LR 79(f): exhibits in the clerk's custody are removed within
 /// thirty days of the final disposition of the case, or may be destroyed
 /// or otherwise disposed of by the clerk.
 deadline exhibit-removal-period: 30.days after FinalDisposition() counted_by frcp6-louisiana cite "M.D. La. LR 79(f)"
-{
-  forum frcp
-}
 
 test "Deadline arithmetic: response-period (21 days after)" cite "M.D. La. LR 7(f)"
 {

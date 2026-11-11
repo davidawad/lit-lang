@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The Middle District of Louisiana's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"). All
 // criminal motions comply with Local Civil Rules 7, 10 and 11 (LCrR 12),
@@ -68,9 +70,6 @@ deadline response-period: 21.days after MotionServed() counted_by frcrimp45 dele
   to CaseOrder
   op set
 } cite "M.D. La. LCrR 12; M.D. La. LR 7(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "M.D. La. LCrR 12; M.D. La. LR 7(f)"
 {
@@ -81,9 +80,6 @@ test "Counting boundary: response-period (weekend)" cite "M.D. La. LCrR 12; M.D.
 /// M.D. La. LCrR 32(b): a sentencing memorandum is filed under seal at
 /// least fourteen days before the date of sentencing.
 deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by frcrimp45 cite "M.D. La. LCrR 32(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-memorandum (weekend)" cite "M.D. La. LCrR 32(b)"
 {
@@ -95,9 +91,6 @@ test "Counting boundary: sentencing-memorandum (weekend)" cite "M.D. La. LCrR 32
 /// memorandum and a proposed order, is filed under seal at least fourteen
 /// days before the date of sentencing.
 deadline substantial-assistance-motion: 14.days before SentencingScheduled() counted_by frcrimp45 cite "M.D. La. LCrR 32(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: substantial-assistance-motion (weekend)" cite "M.D. La. LCrR 32(c)"
 {
@@ -109,9 +102,6 @@ test "Counting boundary: substantial-assistance-motion (weekend)" cite "M.D. La.
 /// the offering party within thirty days of the final disposition of the
 /// case, failing which the Clerk may destroy or otherwise dispose of them.
 deadline exhibit-removal: 30.days after FinalDisposition() counted_by frcrimp45 cite "M.D. La. LCrR 55(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-removal (weekend)" cite "M.D. La. LCrR 55(f)"
 {

@@ -37,22 +37,20 @@ decision initial-appearance: "Release or detention" by court cite "CrR 3.2"
 decision probable-cause: "Charge filed" by court cite "CrR 2.1"
 {
   note "The State's initial pleading is an indictment or an information in all criminal proceedings filed by the prosecuting attorney (CrR 2.1(a)); the rules provide no preliminary hearing step separate from the probable cause determination (CrR 3.2.1)."
-  edge-probable-cause-charged "Information or indictment filed" -> charged {
-    authority cite "CrR 2.1(a)"
-  }
+  "Information or indictment filed" -> charged { authority cite "CrR 2.1(a)" }
   edge-probable-cause-none "No probable cause; released" -> dismissed { authority cite "CrR 3.2" }
 }
 
 state charged: "Indictment or information" by court cite "CrR 2.1"
 {
   note "The indictment or information is a plain, concise and definite written statement of the essential facts constituting the offense (CrR 2.1(a)(1)). The defendant is arraigned within the periods CrR 4.1(a) sets for a defendant detained in jail and one not detained, which are not stated here (currency unconfirmed)."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "CrR 4.1" }
+  "Arraignment" -> arraignment { authority cite "CrR 4.1" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "CrR 4.1"
 {
   note "A defendant may plead not guilty, not guilty by reason of insanity, or guilty, and pleads separately to each count (CrR 4.2(a), (b)). The court is responsible for ensuring trial in accordance with CrR 3.3, under which the allowable time for trial, its commencement date, excluded periods and the consequence of a violation are set; the periods are not stated here (currency unconfirmed) (CrR 3.3(a))."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "CrR 4.7" }
+  "Discovery" -> discovery { authority cite "CrR 4.7" }
 }
 
 state discovery: "Discovery and the omnibus hearing" by prosecution cite "CrR 4.5"
@@ -83,10 +81,8 @@ decision plea-decision: "Plea or trial" by accused cite "CrR 4.2"
 {
   note "A guilty plea is accepted under CrR 4.2. Cases required to be tried by jury are so tried unless the defendant files a written waiver with the court's consent (CrR 6.1(a)); the number of jurors CrR 6.1(b) sets is not stated here (currency unconfirmed)."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "CrR 4.2" }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "CrR 6.1" }
-  edge-plea-decision-dismissed "Prosecutor's motion to dismiss granted" -> dismissed {
-    authority cite "CrR 8.3(a)"
-  }
+  "Trial" -> trial { authority cite "CrR 6.1" }
+  "Prosecutor's motion to dismiss granted" -> dismissed { authority cite "CrR 8.3(a)" }
 }
 
 decision trial: "Verdict" by court cite "CrR 6.16"
@@ -107,9 +103,7 @@ decision post-trial: "Post-trial motions" by court cite "CrR 7.5"
 state sentencing: "Presentence report and sentencing" by court cite "CrR 7.2"
 {
   note "After a plea, finding or verdict of guilt of a felony the court may order a risk assessment or presentence investigation and report within the period CrR 7.1(a) sets, not stated here (currency unconfirmed). At sentencing the court states the precise terms of the sentence and ensures the record reflects all time in custody (CrR 7.2(a))."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "CrR 7.3"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "CrR 7.3" }
 }
 
 decision judgment: "Judgment and sentence" by prosecution cite "CrR 7.3"

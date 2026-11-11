@@ -10,7 +10,7 @@ start filed
 
 state filed: "Claim filed with the Industrial Commission" by movant cite ?("N.C. Gen. Stat. § 97-24, Chapter 97 not vendored") {
   note "The time and form for filing a claim, and any fee, are set by the Workers' Compensation Act, N.C. Gen. Stat. Chapter 97, which is not vendored; they stay holes. The earlier outline named no leading decision."
-  edge-filed-hearing "Set for hearing" -> hearing {
+  "Set for hearing" -> hearing {
     event ActionCommenced()
     authority cite ?("N.C. Gen. Stat. § 97-84, Chapter 97 not vendored")
   }
@@ -18,7 +18,7 @@ state filed: "Claim filed with the Industrial Commission" by movant cite ?("N.C.
 
 state hearing: "Hearing before a deputy commissioner" by court cite ?("N.C. Gen. Stat. § 97-84, Chapter 97 not vendored") {
   note "Hearing procedure, evidence and the record before the deputy commissioner and on review by the Full Commission are set by N.C. Gen. Stat. Chapter 97 and the Commission's own rules, neither vendored; they stay holes. Where the Commission reviews a record of proceedings before a deputy commissioner, the items of that record needed to understand the issues go into the record on any appeal (N.C. R. App. P. 18(c)(7))."
-  edge-hearing-decision "Award or decision issued" -> decision {
+  "Award or decision issued" -> decision {
     authority cite ?("N.C. Gen. Stat. § 97-85, Chapter 97 not vendored")
   }
 }

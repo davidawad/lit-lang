@@ -238,9 +238,6 @@ NodeField    = "group", Ident | "note", String | "valence", Ident
              | "basis", Expr                         (* §5.1 "Basis" *)
              | "formerly", IdList ;
 EdgeDecl     = [ Ident | "_" ], String, "->", Ref, { EdgeClause }, [ EdgeFields ] ;
-An omitted edge id derives as `edge-<from>-<to>`, with `-<n>` appended
-when parallel edges share the target, where `n` is the edge's one-based
-source-order position among all edges from that node to that target.
 EdgeClause   = "by", Ref | "p", ProbValue ;
 ProbValue    = Number, [ "/", Number ] | Hole | "(", Expr, ")" ;
 EdgeFields   = "{", { EdgeField, Sep }, "}" ;
@@ -342,6 +339,10 @@ Bool         = "true" | "false" ;
 Hole         = "?", [ "(", String, ")" ] ;
 Type         = Ident, [ "<", Type, { ",", Type }, ">" ] | RefinedType ;   (* RefinedType: §3.5 *)
 ```
+
+An omitted edge id derives as `edge-<from>-<to>`, with `-<n>` appended
+when parallel edges share the target, where `n` is the edge's one-based
+source-order position among all edges from that node to that target.
 
 ### 3.2 Matters (`.case`)
 

@@ -2,6 +2,8 @@ module wvsd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Southern District of West Virginia's own criminal periods. Stated in
 // the rules but not declared: the pretrial hearing at least 14 days before
 // trial (LR Cr P 12.1(d)), which binds the court's setting; juror
@@ -35,9 +37,6 @@ event RealPropertyBondApproved()
 /// for discovery, the magistrate judge sets the date for the defendant's
 /// pretrial motions 14 days before the pretrial motions hearing.
 deadline pretrial-motion-period: 14.days before PretrialMotionsHearing() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 12.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motion-period (weekend)" cite "S.D. W. Va. LR Cr P 12.1(a)"
 {
@@ -49,9 +48,6 @@ test "Counting boundary: pretrial-motion-period (weekend)" cite "S.D. W. Va. LR 
 /// defendant's pretrial motions under LR Cr P 12.1(a) and (b), counted from
 /// the motion.
 deadline pretrial-response-period: 7.days after PretrialMotionFiled() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 12.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-response-period (weekend)" cite "S.D. W. Va. LR Cr P 12.1(c)"
 {
@@ -63,9 +59,6 @@ test "Counting boundary: pretrial-response-period (weekend)" cite "S.D. W. Va. L
 /// certification that the technology staff has been notified no later than
 /// 7 days before the scheduled commencement of the trial or proceeding.
 deadline technology-certification-period: 7.days before TechnologyProceeding() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 12.1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: technology-certification-period (weekend)" cite "S.D. W. Va. LR Cr P 12.1(e)"
 {
@@ -78,9 +71,6 @@ test "Counting boundary: technology-certification-period (weekend)" cite "S.D. W
 /// government provides the requested material and files a written response
 /// to each request.
 deadline standard-discovery-period: 14.days after StandardDiscoveryRequested() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 16.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: standard-discovery-period (weekend)" cite "S.D. W. Va. LR Cr P 16.1(c)"
 {
@@ -91,9 +81,6 @@ test "Counting boundary: standard-discovery-period (weekend)" cite "S.D. W. Va. 
 /// LR Cr P 16.1(d): the defendant provides all reciprocal discovery within
 /// 14 days of receiving the government's materials and responses.
 deadline reciprocal-discovery-period: 14.days after GovernmentDiscoveryReceived() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 16.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reciprocal-discovery-period (weekend)" cite "S.D. W. Va. LR Cr P 16.1(d)"
 {
@@ -105,9 +92,6 @@ test "Counting boundary: reciprocal-discovery-period (weekend)" cite "S.D. W. Va
 /// real-property bond, the surety files a copy of the notice of
 /// encumbrance it filed with the county recorder or registrar of titles.
 deadline encumbrance-notice-period: 14.days after RealPropertyBondApproved() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 46.1(c)(2)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: encumbrance-notice-period (weekend)" cite "S.D. W. Va. LR Cr P 46.1(c)(2)"
 {

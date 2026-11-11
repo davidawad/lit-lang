@@ -47,13 +47,11 @@ start court-martial
 
 state court-martial: "General or special court-martial" by court cite ?("10 U.S.C. § 816: UCMJ not vendored") {
   note "Trial procedure is outside this package. Before findings the United States may appeal the rulings JRAP 5(b)(4) lists under Article 62, UCMJ; a petition for extraordinary relief under 28 U.S.C. § 1651 or Article 6b, UCMJ, lies to the Court (JRAP 5(b)(8), (9); 19)."
-  edge-court-martial-judgment "Findings of guilty: judgment entered" -> judgment {
+  "Findings of guilty: judgment entered" -> judgment {
     event JudgmentEntered()
     authority cite "JRAP 5(b)"
   }
-  edge-court-martial-government-appeal "United States appeals a ruling (Article 62)" -> government-appeal {
-    authority cite "JRAP 20"
-  }
+  "United States appeals a ruling (Article 62)" -> government-appeal { authority cite "JRAP 20" }
   edge-court-martial-writ "Petition for extraordinary relief" -> writ-petition {
     authority cite "JRAP 19"
   }
@@ -62,7 +60,7 @@ state court-martial: "General or special court-martial" by court cite ?("10 U.S.
 state judgment: "Judgment of the court-martial entered" by court cite ?("10 U.S.C. § 860c: UCMJ not vendored") {
   note "The sentence as entered in the judgment under Article 60c, UCMJ, decides the route: death, a dismissal or a dishonorable or bad-conduct discharge, or confinement for two years or more is reviewed automatically (JRAP 5(b)(1)); other special and general courts-martial with a finding of guilty are reviewed on the accused's timely appeal (JRAP 5(b)(2)). Only the Judge Advocate General may approve an appeal of the sentence by the United States under Article 56(d), UCMJ, filed within 60 days after the judgment is entered into the record (JRAP 5(b)(6); 20(a)(2), (c)(2))."
   edge-judgment-route "The accused's route to review" -> review-route { authority cite "JRAP 5(b)" }
-  edge-judgment-sentence-appeal "United States appeals the sentence (Article 56(d))" -> sentence-appeal {
+  "United States appeals the sentence (Article 56(d))" -> sentence-appeal {
     authority cite "JRAP 20(c)(2)"
   }
 }
@@ -96,18 +94,16 @@ state docketed: "Docketed: assignments of error, answer and reply" by movant cit
 
 decision decision: "Court of Criminal Appeals decision" by court cite ?("10 U.S.C. § 866: UCMJ not vendored") {
   note "The Court acts under Article 66, UCMJ (not vendored, so the scope of review and the relief the Court may grant are holes). It may order a remand under Article 66(f)(3), UCMJ, keeping jurisdiction for fact-finding or correction of the record, or returning jurisdiction to the court-martial (JRAP 29(a), (b)). Its orders and decisions are served on appellate counsel and the Judge Advocate General (JRAP 30). A motion for reconsideration is due no later than 30 days after the order, decision or opinion, an answer no later than 7 days after receipt of the motion, and the time may not be extended beyond the deadline for a petition for review to the Court of Appeals for the Armed Forces (JRAP 31(b), (c), (e)); an order granting reconsideration vacates the decision (CGCCA R. 31.1)."
-  edge-decision-affirmed "Findings and sentence affirmed" -> affirmed {
+  "Findings and sentence affirmed" -> affirmed {
     event DecisionServed()
     authority cite ?("10 U.S.C. § 866: UCMJ not vendored")
   }
-  edge-decision-relief "Findings set aside or sentence reduced" -> relief {
+  "Findings set aside or sentence reduced" -> relief {
     event DecisionServed()
     authority cite ?("10 U.S.C. § 866: UCMJ not vendored")
   }
-  edge-decision-remanded "Remanded under Article 66(f)" -> remanded { authority cite "JRAP 29" }
-  edge-decision-reconsideration "Motion for reconsideration" -> reconsideration {
-    authority cite "JRAP 31"
-  }
+  "Remanded under Article 66(f)" -> remanded { authority cite "JRAP 29" }
+  "Motion for reconsideration" -> reconsideration { authority cite "JRAP 31" }
   edge-decision-caaf "Petition to the Court of Appeals for the Armed Forces" -> caaf-petition {
     authority cite ?("10 U.S.C. § 867: UCMJ not vendored")
   }

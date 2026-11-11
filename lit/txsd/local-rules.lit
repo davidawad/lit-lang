@@ -3,6 +3,8 @@ module txsd-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.states.texas.{ frcp6-texas }
 
+forum frcp
+
 // The Southern District of Texas's own civil periods, counted under FRCP
 // 6. The court may, on its own motion or on application, shorten or extend
 // these periods (LR 7.8). The notice of electronic filing is service on
@@ -58,9 +60,6 @@ deadline response-period: 21.days after OpposedMotionFiled() counted_by frcp6-te
   to CaseOrder
   op set
 } cite "S.D. Tex. LR 7.3"
-{
-  forum frcp
-}
 
 test "Counting boundary: response-period (weekend)" cite "S.D. Tex. LR 7.3"
 {
@@ -75,9 +74,6 @@ deadline reply-period: 7.days after ResponseFiled() counted_by frcp6-texas deleg
   to CaseOrder
   op set
 } cite "S.D. Tex. LR 7.4"
-{
-  forum frcp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "S.D. Tex. LR 7.4"
 {
@@ -89,9 +85,6 @@ test "Counting boundary: reply-period (weekend)" cite "S.D. Tex. LR 7.4"
 /// appointed provider files written objections, with its reasons, within
 /// ten days of entry of the order for ADR.
 deadline adr-objection-period: 10.days after AdrOrderEntered() counted_by frcp6-texas cite "S.D. Tex. LR 16.4"
-{
-  forum frcp
-}
 
 test "Counting boundary: adr-objection-period (weekend)" cite "S.D. Tex. LR 16.4"
 {
@@ -104,18 +97,11 @@ test "Counting boundary: adr-objection-period (weekend)" cite "S.D. Tex. LR 16.4
 /// lists, including whether the case settled and the provider's fees; it
 /// does not apply to non-binding arbitration under 28 U.S.C. § 654.
 deadline adr-report-period: 14.days after AdrCompleted() counted_by frcp6-texas cite "S.D. Tex. LR 16.4"
-{
-  forum frcp
-}
-
 /// S.D. Tex. LR 44.1: a party requiring authentication of an exhibit
 /// notifies the offering party in writing within 7 days after the exhibit
 /// is listed and made available; failure to object in writing before trial
 /// concedes authenticity.
 deadline authentication-objection-period: 7.days after ExhibitListed() counted_by frcp6-texas cite "S.D. Tex. LR 44.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: authentication-objection-period (weekend)" cite "S.D. Tex. LR 44.1"
 {
@@ -127,9 +113,6 @@ test "Counting boundary: authentication-objection-period (weekend)" cite "S.D. T
 /// least 7 days before trial, in writing, with copies of the disputed
 /// exhibit and authority.
 deadline admissibility-objection-period: 7.days before TrialDate() counted_by frcp6-texas cite "S.D. Tex. LR 46"
-{
-  forum frcp
-}
 
 test "Counting boundary: admissibility-objection-period (weekend)" cite "S.D. Tex. LR 46"
 {
@@ -141,16 +124,9 @@ test "Counting boundary: admissibility-objection-period (weekend)" cite "S.D. Te
 /// fees taxable as costs, is filed within 14 days of the entry of a final
 /// judgment.
 deadline bill-of-costs-period: 14.days after FinalJudgmentEntered() counted_by frcp6-texas cite "S.D. Tex. LR 54.2"
-{
-  forum frcp
-}
-
 /// S.D. Tex. LR 54.2: objections to the bill, the attorney's fees or both
 /// are filed within 7 days of the bill's filing.
 deadline bill-of-costs-objection-period: 7.days after BillOfCostsFiled() counted_by frcp6-texas cite "S.D. Tex. LR 54.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-objection-period (weekend)" cite "S.D. Tex. LR 54.2"
 {
@@ -162,9 +138,6 @@ test "Counting boundary: bill-of-costs-objection-period (weekend)" cite "S.D. Te
 /// withdrawn within 7 days after the completion of the trial, and reduced
 /// reproductions or photographs substituted.
 deadline oversized-exhibit-withdrawal: 7.days after TrialCompleted() counted_by frcp6-texas cite "S.D. Tex. LR 79.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: oversized-exhibit-withdrawal (weekend)" cite "S.D. Tex. LR 79.2"
 {
@@ -177,9 +150,6 @@ test "Counting boundary: oversized-exhibit-withdrawal (weekend)" cite "S.D. Tex.
 /// not removed are disposed of by the clerk at the offering party's
 /// expense.
 deadline exhibit-removal: 30.days after DispositionWithoutAppeal() counted_by frcp6-texas cite "S.D. Tex. LR 79.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: exhibit-removal (weekend)" cite "S.D. Tex. LR 79.2"
 {
@@ -191,9 +161,6 @@ test "Counting boundary: exhibit-removal (weekend)" cite "S.D. Tex. LR 79.2"
 /// court of appeals are removed by the offering party within 14 days after
 /// written notice from the clerk.
 deadline returned-exhibit-removal: 14.days after ReturnedExhibitsNoticed() counted_by frcp6-texas cite "S.D. Tex. LR 79.2"
-{
-  forum frcp
-}
 
 test "Deadline arithmetic: response-period (21 days after)" cite "S.D. Tex. LR 7.3"
 {

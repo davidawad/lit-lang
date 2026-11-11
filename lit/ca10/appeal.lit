@@ -45,6 +45,7 @@ test "Counting boundary: fee-period (weekend)" cite "10th Cir. R. 3.3(B)"
   given AppealDocketed() on 2026-01-03
   expect deadline(fee-period) == 2026-01-20
 }
+
 /// Within 14 days after the appeal is docketed, a counseled appellant files
 /// a docketing statement (not in pro se or FRAP 9 bail appeals).
 deadline docketing-statement-period: 14.days after AppealDocketed() counted_by frap26 cite "10th Cir. R. 3.4(A)"
@@ -54,6 +55,7 @@ test "Counting boundary: docketing-statement-period (weekend)" cite "10th Cir. R
   given AppealDocketed() on 2026-01-03
   expect deadline(docketing-statement-period) == 2026-01-20
 }
+
 /// Within 14 days after the appeal is docketed in this court, the appellant
 /// orders any necessary transcripts, or states on the transcript order form
 /// that none will be ordered (10th Cir. R. 10.2(A)(2)).
@@ -64,6 +66,7 @@ test "Counting boundary: transcript-order-period (weekend)" cite "10th Cir. R. 1
   given AppealDocketed() on 2026-01-03
   expect deadline(transcript-order-period) == 2026-01-20
 }
+
 /// With appointed counsel, the appellant files a designation of record
 /// within 14 days after the appeal is docketed.
 deadline designation-period: 14.days after AppealDocketed() counted_by frap26 cite "10th Cir. R. 10.3(A)(1)"
@@ -73,6 +76,7 @@ test "Counting boundary: designation-period (weekend)" cite "10th Cir. R. 10.3(A
   given AppealDocketed() on 2026-01-03
   expect deadline(designation-period) == 2026-01-20
 }
+
 /// The appellee may file an additional designation within 14 days after
 /// service of the appellant's designation.
 deadline appellee-designation-period: 14.days after DesignationServed() counted_by frap26 cite "10th Cir. R. 10.3(A)(2)"
@@ -82,6 +86,7 @@ test "Counting boundary: appellee-designation-period (weekend)" cite "10th Cir. 
   given DesignationServed() on 2026-01-03
   expect deadline(appellee-designation-period) == 2026-01-20
 }
+
 /// The FRAP 26.1 disclosure statement is filed within 14 days after the
 /// appeal is docketed, or with the party's first motion, response, answer
 /// or amicus brief, whichever occurs first.
@@ -92,6 +97,7 @@ test "Counting boundary: disclosure-statement-period (weekend)" cite "10th Cir. 
   given AppealDocketed() on 2026-01-03
   expect deadline(disclosure-statement-period) == 2026-01-20
 }
+
 /// A motion to dismiss the entire case for lack of appellate jurisdiction or
 /// under a claims-processing deadline is filed within 14 days after the
 /// appeal is docketed, unless good cause is shown for later filing.
@@ -102,6 +108,7 @@ test "Counting boundary: jurisdiction-motion-period (weekend)" cite "10th Cir. R
   given AppealDocketed() on 2026-01-03
   expect deadline(jurisdiction-motion-period) == 2026-01-20
 }
+
 /// A response to a summary disposition motion is filed within 14 days after
 /// the motion is served.
 deadline summary-motion-response-period: 14.days after SummaryMotionServed() counted_by frap26 cite "10th Cir. R. 27.3(A)(4)"
@@ -111,6 +118,7 @@ test "Counting boundary: summary-motion-response-period (weekend)" cite "10th Ci
   given SummaryMotionServed() on 2026-01-03
   expect deadline(summary-motion-response-period) == 2026-01-20
 }
+
 /// Counsel for the parties file written appearances within 14 days after
 /// the appeal is docketed.
 deadline appearance-period: 14.days after AppealDocketed() counted_by frap26 cite "10th Cir. R. 46.1(A)"
@@ -120,6 +128,7 @@ test "Counting boundary: appearance-period (weekend)" cite "10th Cir. R. 46.1(A)
   given AppealDocketed() on 2026-01-03
   expect deadline(appearance-period) == 2026-01-20
 }
+
 /// When an appendix is required, the appellant files the opening brief and
 /// appendix within 40 days after the district court clerk's notice that the
 /// record is complete. With appointed counsel or pro se, FRAP 31(a) governs
@@ -139,6 +148,7 @@ test "Counting boundary: brief-extension-motion-period (holiday)" cite "10th Cir
   given BriefDue() on 2026-01-04
   expect deadline(brief-extension-motion-period) == 2025-12-31
 }
+
 /// Absent a statute or order, a motion for appellate attorneys' fees is
 /// due 14 days after the time to petition for rehearing expires, when no
 /// timely petition was filed.
@@ -149,6 +159,7 @@ test "Counting boundary: fee-motion-period (weekend)" cite "10th Cir. R. 39.2(A)
   given RehearingClosed(TimeExpired) on 2026-01-03
   expect deadline(fee-motion-period) == 2026-01-20
 }
+
 /// Or 14 days after the court disposes of all timely petitions for
 /// rehearing or rehearing en banc.
 deadline fee-motion-after-rehearing-period: 14.days after RehearingDisposed() counted_by frap26 cite "10th Cir. R. 39.2(A)"
@@ -158,6 +169,7 @@ test "Counting boundary: fee-motion-after-rehearing-period (weekend)" cite "10th
   given RehearingDisposed() on 2026-01-03
   expect deadline(fee-motion-after-rehearing-period) == 2026-01-20
 }
+
 /// A response to a motion for attorneys' fees is filed within 14 days after
 /// the motion is served; the reply period is FRAP 27(a)(4)'s.
 deadline fee-motion-response-period: 14.days after FeeMotionServed() counted_by frap26 cite "10th Cir. R. 39.2(C)"
@@ -324,7 +336,7 @@ decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 10th Cir. R. 40.2"
 {
   note "A majority of the active judges not disqualified may order rehearing en banc; the grant vacates the judgment, stays the mandate and restores the case as a pending appeal (10th Cir. R. 40.2(D), (E))."
-  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+  "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
 state mandate: "Mandate Issued" by court cite "FRAP 41(b); 10th Cir. R. 41"

@@ -44,7 +44,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "Alaska R. C
 {
   note "The defenses of Rule 12(b)(1)-(7) may be made by motion before pleading; if matters outside the pleading are presented on a 12(b)(6) motion it is treated as one for summary judgment under Rule 56. A decision granting a motion to dismiss is not a final judgment under Civil Rule 58; when it adjudicates all claims the judge directs a party to file a proposed final judgment within 20 days of service of the decision (Alaska R. Civ. P. 12(b)). Opposition to a motion to dismiss is due 15 days from service or, if the plaintiff moves, when the answer is due, whichever is later; a reply may be served within five days of service of the opposition (Alaska R. Civ. P. 77(c), (d)). The earlier outline named no Alaska pleading-standard decision."
   edge-pleading-motion-granted "Granted" -> dismissed { authority cite "Alaska R. Civ. P. 12(b)" }
-  edge-pleading-motion-amend "Leave to amend" -> amend { authority cite "Alaska R. Civ. P. 15(a)" }
+  "Leave to amend" -> amend { authority cite "Alaska R. Civ. P. 15(a)" }
   edge-pleading-motion-denied "Denied: answer within 10 days of notice" -> discovery {
     authority cite "Alaska R. Civ. P. 12(a)"
   }
@@ -85,10 +85,8 @@ state discovery: "Disclosure, discovery and pretrial" by movant cite "Alaska R. 
   edge-discovery-sj "Summary judgment motion" -> summary-judgment {
     authority cite "Alaska R. Civ. P. 56"
   }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Alaska R. Civ. P. 38" }
-  edge-discovery-settled "Stipulated dismissal" -> settled {
-    authority cite "Alaska R. Civ. P. 41(a)"
-  }
+  "No dispositive motion" -> trial { authority cite "Alaska R. Civ. P. 38" }
+  "Stipulated dismissal" -> settled { authority cite "Alaska R. Civ. P. 41(a)" }
 }
 
 decision summary-judgment: "Summary judgment decided" by court cite "Alaska R. Civ. P. 56(c)"
@@ -105,9 +103,7 @@ state trial: "Trial by jury or by the court" by court cite "Alaska R. Civ. P. 38
 {
   note "Issues triable of right by a jury are so tried on a timely written demand; failure to serve a demand waives a jury (Alaska R. Civ. P. 38(b), (d)). A party who moved for a directed verdict may move for judgment notwithstanding the verdict not later than 10 days after the date shown in the clerk's certificate of distribution on the judgment (Alaska R. Civ. P. 50(b))."
   edge-trial-judgment "Verdict or decision" -> post-trial { authority cite "Alaska R. Civ. P. 58" }
-  edge-trial-settled "Settled before verdict" -> settled {
-    authority cite "Alaska R. Civ. P. 41(a)"
-  }
+  "Settled before verdict" -> settled { authority cite "Alaska R. Civ. P. 41(a)" }
 }
 
 decision post-trial: "Post-trial motions" by movant cite "Alaska R. Civ. P. 59"

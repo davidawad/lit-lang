@@ -23,12 +23,12 @@ chance review-decision: "Writ granted or denied" by court cite ?("La. Const. art
 
 state briefing: "Briefs on the merits" by petitioner cite ?("La. Sup. Ct. R.") {
   note "Merits briefing periods, form and length are set by the Supreme Court Rules, which are not vendored; they are holes."
-  edge-briefing-argument "Argued or submitted" -> argument { authority cite ?("La. Sup. Ct. R.") }
+  "Argued or submitted" -> argument { authority cite ?("La. Sup. Ct. R.") }
 }
 
 state argument: "Argument or submission" by court cite ?("La. Sup. Ct. R.") {
   note "Whether the case is argued or submitted on briefs is set by the Supreme Court Rules, which are not vendored."
-  edge-argument-decision "Decision rendered" -> decision { authority cite "La. C.C.P. art. 2164" }
+  "Decision rendered" -> decision { authority cite "La. C.C.P. art. 2164" }
 }
 
 chance decision: "Court decides" by court cite "La. C.C.P. art. 2164"

@@ -41,7 +41,7 @@ state notice-filed: "Notice of appeal filed" by movant cite "Pa.R.A.P. 902(a)"
 state briefing: "Briefs filed" by movant cite "Pa.R.A.P. 2185(a)"
 {
   note "The appellant serves and files its brief within 40 days after the date on which the record is filed, unless the prothonotary fixes a later date under a deferred briefing schedule; the appellee within 30 days after service of the appellant's brief and reproduced record; a reply brief within 14 days after service of the preceding brief, received at least three days before argument except for good cause (Pa.R.A.P. 2185(a)(1), (b)). The appellant designates the parts of the record to reproduce not later than 30 days before its brief is due, and the appellee may counter-designate within ten days after receipt (Pa.R.A.P. 2154(a)). The brief contains the parts Pa.R.A.P. 2111(a) lists, in the Superior Court with the Pa.R.A.P. 1925(b) statement appended (Pa.R.A.P. 2111(a), (d)); no question is considered unless stated in, or fairly suggested by, the statement of questions involved (Pa.R.A.P. 2116(a)). A reply brief answers only matters raised by the appellee and not previously addressed, and no further briefs are filed without leave (Pa.R.A.P. 2113(a), (c))."
-  edge-briefing-argument "Briefs filed: case listed for argument or submitted" -> argument {
+  "Briefs filed: case listed for argument or submitted" -> argument {
     authority cite "Pa.R.A.P. 2315(a)"
   }
   edge-briefing-no-brief "Appellant's brief not filed in time: appellee moves to dismiss" -> appeal-dismissed {
@@ -63,18 +63,14 @@ decision appellate-decision: "Intermediate appellate court decides" by court cit
   edge-appellate-decision-affirmed "Affirmed" -> after-affirmance {
     authority cite "Pa.R.A.P. 2542(a)"
   }
-  edge-appellate-decision-reversed "Reversed" -> reversed { authority cite "Pa.R.A.P. 2572(a)" }
-  edge-appellate-decision-remanded "Vacated and remanded" -> remanded {
-    authority cite "Pa.R.A.P. 2572(a)"
-  }
+  "Reversed" -> reversed { authority cite "Pa.R.A.P. 2572(a)" }
+  "Vacated and remanded" -> remanded { authority cite "Pa.R.A.P. 2572(a)" }
 }
 
 decision after-affirmance: "Reargument, allowance of appeal, or neither" by movant cite "Pa.R.A.P. 2542(a)"
 {
   note "An application for reargument is filed within 14 days after entry of the judgment or order (Pa.R.A.P. 2542(a)(1)); an adverse party may answer within 14 days after service (Pa.R.A.P. 2545(a)). A petition for allowance of appeal is filed with the Prothonotary of the Supreme Court within 30 days after entry of the order sought to be reviewed; if a timely application for reargument is filed, the time for all parties runs from the order denying reargument or the decision on reargument (Pa.R.A.P. 1113(a), (a)(1)). Any other party may cross-petition within 14 days of service of the first petition or within the time otherwise prescribed, whichever last expires (Pa.R.A.P. 1113(b))."
-  edge-after-affirmance-reargument "Application for reargument" -> reargument {
-    authority cite "Pa.R.A.P. 2542(a)"
-  }
+  "Application for reargument" -> reargument { authority cite "Pa.R.A.P. 2542(a)" }
   edge-after-affirmance-allowance "Petition for allowance of appeal" -> allowance-petitioned {
     event ReviewPetitionFiled()
     authority cite "Pa.R.A.P. 1113(a)"

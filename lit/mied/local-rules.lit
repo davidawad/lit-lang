@@ -98,6 +98,7 @@ test "Counting boundary: motion-response-period (weekend)" cite "E.D. Mich. LR 7
   given MotionServed() on 2026-01-03
   expect deadline(motion-response-period) == 2026-01-20
 }
+
 /// LR 7.1(e)(2)(A): a response to a motion on the enlarged schedule is
 /// filed within 21 days following service of the motion.
 deadline enlarged-motion-response-period: 21.days after EnlargedMotionServed() counted_by frcp6-michigan cite "E.D. Mich. LR 7.1(e)"
@@ -107,6 +108,7 @@ test "Counting boundary: enlarged-motion-response-period (weekend)" cite "E.D. M
   given EnlargedMotionServed() on 2026-01-03
   expect deadline(enlarged-motion-response-period) == 2026-01-26
 }
+
 /// LR 7.1(e)(1)(B): a reply brief, if filed, is filed within 7 days after
 /// service of the response.
 deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6-michigan cite "E.D. Mich. LR 7.1(e)"
@@ -116,6 +118,7 @@ test "Counting boundary: motion-reply-period (weekend)" cite "E.D. Mich. LR 7.1(
   given ResponseServed() on 2026-01-03
   expect deadline(motion-reply-period) == 2026-01-12
 }
+
 /// LR 7.1(e)(2)(B): a reply brief supporting a motion on the enlarged
 /// schedule, if filed, is filed within 14 days after service of the
 /// response.
@@ -126,6 +129,7 @@ test "Counting boundary: enlarged-motion-reply-period (weekend)" cite "E.D. Mich
   given EnlargedResponseServed() on 2026-01-03
   expect deadline(enlarged-motion-reply-period) == 2026-01-20
 }
+
 /// LR 7.1(e)(1)(B), (e)(2)(B): on either schedule a reply brief is filed
 /// at least 3 days before the motion hearing.
 deadline motion-reply-before-hearing: 3.days before MotionHearing() counted_by frcp6-michigan cite "E.D. Mich. LR 7.1(e)"
@@ -135,6 +139,7 @@ test "Counting boundary: motion-reply-before-hearing (holiday)" cite "E.D. Mich.
   given MotionHearing() on 2026-01-04
   expect deadline(motion-reply-before-hearing) == 2025-12-31
 }
+
 /// LR 7.1(h)(2): a motion for reconsideration of a non-final order is
 /// filed within 14 days after entry of the order; no response and no
 /// argument unless the court orders otherwise (LR 7.1(h)(3)). Final orders
@@ -147,6 +152,7 @@ test "Counting boundary: reconsideration-period (weekend)" cite "E.D. Mich. LR 7
   given NonFinalOrderEntered() on 2026-01-03
   expect deadline(reconsideration-period) == 2026-01-20
 }
+
 /// LR 16.4(e)(3): unless the mediator directs otherwise, each party
 /// provides the mediator a concise memorandum no later than seven
 /// calendar days before the mediation session.
@@ -157,6 +163,7 @@ test "Counting boundary: mediation-memorandum-period (holiday)" cite "E.D. Mich.
   given MediationSession() on 2026-01-01
   expect deadline(mediation-memorandum-period) == 2025-12-24
 }
+
 /// LR 16.4(e)(7): if the case settles, the parties notify the court
 /// without delay and submit documents to conclude the case within 21 days
 /// of settlement.
@@ -167,6 +174,7 @@ test "Counting boundary: mediation-closing-papers-period (weekend)" cite "E.D. M
   given MediationSettlement() on 2026-01-03
   expect deadline(mediation-closing-papers-period) == 2026-01-26
 }
+
 /// LR 26.2(d): if the court orders discovery material filed, the party or
 /// person with custody files it within 14 days of service of the order.
 deadline discovery-filing-period: 14.days after DiscoveryFilingOrderServed() counted_by frcp6-michigan cite "E.D. Mich. LR 26.2(d)"
@@ -176,6 +184,7 @@ test "Counting boundary: discovery-filing-period (weekend)" cite "E.D. Mich. LR 
   given DiscoveryFilingOrderServed() on 2026-01-03
   expect deadline(discovery-filing-period) == 2026-01-20
 }
+
 /// LR 54.1: a party seeking costs files a bill of costs no later than 28
 /// days after the entry of judgment.
 deadline bill-of-costs-period: 28.days after JudgmentEntered() counted_by frcp6-michigan cite "E.D. Mich. LR 54.1"
@@ -185,6 +194,7 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "E.D. Mich. LR 54.
   given JudgmentEntered() on 2026-01-03
   expect deadline(bill-of-costs-period) == 2026-02-02
 }
+
 /// LR 54.1.2(a): a motion for attorneys' fees and related non-taxable
 /// expenses under FRCP 54(d)(2) is filed no later than 28 days after entry
 /// of judgment.
@@ -195,6 +205,7 @@ test "Counting boundary: fee-motion-period (weekend)" cite "E.D. Mich. LR 54.1.2
   given JudgmentEntered() on 2026-01-03
   expect deadline(fee-motion-period) == 2026-02-02
 }
+
 /// LR 54.1.2(b): within 14 days after the fee motion is filed, the party
 /// against whom the award is requested responds with any objections.
 deadline fee-motion-response-period: 14.days after FeeMotionFiled() counted_by frcp6-michigan cite "E.D. Mich. LR 54.1.2(b)"
@@ -204,6 +215,7 @@ test "Counting boundary: fee-motion-response-period (weekend)" cite "E.D. Mich. 
   given FeeMotionFiled() on 2026-01-03
   expect deadline(fee-motion-response-period) == 2026-01-20
 }
+
 /// LR 54.2(a): an attorney seeking approval of fees under the Equal
 /// Access to Justice Act, 28 U.S.C. § 2412(d), files the motion within 30
 /// days of final judgment.
@@ -214,6 +226,7 @@ test "Counting boundary: eaja-fee-motion-period (weekend)" cite "E.D. Mich. LR 5
   given SocialSecurityFinalJudgment() on 2026-01-01
   expect deadline(eaja-fee-motion-period) == 2026-02-02
 }
+
 /// LR 58.1(c): within seven days after the court grants a judgment or
 /// order, or later if the court allows, a person seeking its entry may
 /// serve the proposed judgment or order with notice that it will be
@@ -225,6 +238,7 @@ test "Counting boundary: proposed-judgment-notice-period (weekend)" cite "E.D. M
   given JudgmentOrOrderGranted() on 2026-01-03
   expect deadline(proposed-judgment-notice-period) == 2026-01-12
 }
+
 /// LR 58.1(c), (c)(1): written objections to the proposed judgment or
 /// order are filed within seven days after service of the notice, or the
 /// court signs it if it comports with its decision.
@@ -239,6 +253,7 @@ test "Counting boundary: proposed-judgment-settlement-period (weekend)" cite "E.
   given ProposedJudgmentObjectionsReceived() on 2026-01-03
   expect deadline(proposed-judgment-settlement-period) == 2026-01-12
 }
+
 /// LR 72.1(d)(3): a person may respond to objections to a magistrate
 /// judge's order or report within 14 days of service of the objections.
 deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6-michigan cite "E.D. Mich. LR 72.1(d)"
@@ -248,6 +263,7 @@ test "Counting boundary: magistrate-objection-response-period (weekend)" cite "E
   given MagistrateObjectionsServed() on 2026-01-03
   expect deadline(magistrate-objection-response-period) == 2026-01-20
 }
+
 /// LR 72.1(d)(4): a reply brief is filed within 7 days of service of a
 /// response.
 deadline magistrate-objection-reply-period: 7.days after MagistrateObjectionResponseServed() counted_by frcp6-michigan cite "E.D. Mich. LR 72.1(d)"
@@ -257,6 +273,7 @@ test "Counting boundary: magistrate-objection-reply-period (weekend)" cite "E.D.
   given MagistrateObjectionResponseServed() on 2026-01-03
   expect deadline(magistrate-objection-reply-period) == 2026-01-12
 }
+
 /// LR 73.1(c): consent to a magistrate judge's civil consent authority may
 /// be entered until 28 days before the scheduled trial unless the
 /// district judge orders otherwise.
@@ -267,6 +284,7 @@ test "Counting boundary: magistrate-consent-cutoff (weekend)" cite "E.D. Mich. L
   given ScheduledTrial() on 2026-01-03
   expect deadline(magistrate-consent-cutoff) == 2025-12-05
 }
+
 /// LR 73.1(e): a party added after reference on consent who chooses to
 /// consent files the signed form within 28 days of appearance, or the case
 /// returns to the district judge.

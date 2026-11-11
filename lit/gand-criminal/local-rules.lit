@@ -2,6 +2,8 @@ module gand-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Northern District's own criminal periods. Arraignments are set under
 // the Speedy Trial Act and the court's Plan for Achieving Prompt
 // Disposition of Criminal Cases (LCrR 10.1(B)); the plan is the Act's and
@@ -47,9 +49,6 @@ event ObjectionsServed()
 /// N.D. Ga. LCrR 11.1(B): the United States has seven days to respond to
 /// a tender of a nolo contendere plea.
 deadline nolo-response-period: 7.days after NoloTenderFiled() counted_by frcrimp45 cite "N.D. Ga. LCrR 11.1(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: nolo-response-period (weekend)" cite "N.D. Ga. LCrR 11.1(B)"
 {
@@ -61,9 +60,6 @@ test "Counting boundary: nolo-response-period (weekend)" cite "N.D. Ga. LCrR 11.
 /// fourteen days after arraignment; to avoid waiver, pretrial matters are
 /// raised within this time (FRCrimP 12).
 deadline criminal-motion-period: 14.days after Arraigned() counted_by frcrimp45 cite "N.D. Ga. LCrR 12.1(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: criminal-motion-period (weekend)" cite "N.D. Ga. LCrR 12.1(B)"
 {
@@ -75,9 +71,6 @@ test "Counting boundary: criminal-motion-period (weekend)" cite "N.D. Ga. LCrR 1
 /// makes the discoverable materials the government requested available no
 /// later than twenty-one days before trial.
 deadline defense-discovery-period: 21.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Ga. LCrR 16.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-discovery-period (weekend)" cite "N.D. Ga. LCrR 16.1"
 {
@@ -89,9 +82,6 @@ test "Counting boundary: defense-discovery-period (weekend)" cite "N.D. Ga. LCrR
 /// plea at arraignment, the magistrate judge holds a pretrial conference
 /// within fourteen days of the arraignment or at a later date as required.
 deadline pretrial-conference-period: 14.days after Arraigned() counted_by frcrimp45 cite "N.D. Ga. LCrR 17.1(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-conference-period (weekend)" cite "N.D. Ga. LCrR 17.1(A)"
 {
@@ -102,9 +92,6 @@ test "Counting boundary: pretrial-conference-period (weekend)" cite "N.D. Ga. LC
 /// N.D. Ga. LCrR 57.1(D)(1)(b): retained defense counsel files a notice of
 /// appearance within three days after being retained.
 deadline retained-appearance-period: 3.days after CounselRetained() counted_by frcrimp45 cite "N.D. Ga. LCrR 57.1(D)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: retained-appearance-period (weekend)" cite "N.D. Ga. LCrR 57.1(D)"
 {
@@ -116,9 +103,6 @@ test "Counting boundary: retained-appearance-period (weekend)" cite "N.D. Ga. LC
 /// attorney gave the client fourteen days' prior notice of the intention
 /// to request permission to withdraw.
 deadline withdrawal-client-notice-period: 14.days before WithdrawalMotionFiled() counted_by frcrimp45 cite "N.D. Ga. LCrR 57.1(E)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: withdrawal-client-notice-period (weekend)" cite "N.D. Ga. LCrR 57.1(E)"
 {
@@ -130,9 +114,6 @@ test "Counting boundary: withdrawal-client-notice-period (weekend)" cite "N.D. G
 /// must within twenty-one days, or before any further proceedings, notify
 /// the clerk of new counsel or of appearing pro se; failure is a default.
 deadline replacement-counsel-period: 21.days after AttorneyCeasedToAct() counted_by frcrimp45 cite "N.D. Ga. LCrR 57.1(E)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: replacement-counsel-period (weekend)" cite "N.D. Ga. LCrR 57.1(E)"
 {
@@ -143,9 +124,6 @@ test "Counting boundary: replacement-counsel-period (weekend)" cite "N.D. Ga. LC
 /// N.D. Ga. LCrR 59(3): responses to objections may be filed within
 /// fourteen days from service of the objections.
 deadline objection-response-period: 14.days after ObjectionsServed() counted_by frcrimp45 cite "N.D. Ga. LCrR 59"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: objection-response-period (weekend)" cite "N.D. Ga. LCrR 59"
 {
@@ -157,9 +135,6 @@ test "Counting boundary: objection-response-period (weekend)" cite "N.D. Ga. LCr
 /// file, within fourteen days after the objections are served and filed, a
 /// joint statement of how the issues arose and were decided.
 deadline oral-order-joint-statement-period: 14.days after ObjectionsServed() counted_by frcrimp45 cite "N.D. Ga. LCrR 59"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: oral-order-joint-statement-period (weekend)" cite "N.D. Ga. LCrR 59"
 {

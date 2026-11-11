@@ -2,6 +2,8 @@ module ca3.appeal
 
 import core.frap26.{ frap26 }
 
+forum frap
+
 // The FRAP periods are lit/frap's: the notice-of-appeal periods of FRAP
 // 4(a)(1), the petition for permission to appeal of FRAP 5(a)(2), the
 // transcript periods of FRAP 10(b)(1) and 11(b)(1), the brief periods of
@@ -30,9 +32,6 @@ event EnBancAnswerOrdered()
 /// When a member of the panel majority asks for one, the author orders an
 /// answer to the petition for panel rehearing filed within 14 calendar days.
 deadline panel-rehearing-answer-period: 14.days after PanelRehearingAnswerOrdered() counted_by frap26 cite "3d Cir. I.O.P. 8.2"
-{
-  forum frap
-}
 
 test "Counting boundary: panel-rehearing-answer-period (weekend)" cite "3d Cir. I.O.P. 8.2"
 {
@@ -45,9 +44,6 @@ test "Counting boundary: panel-rehearing-answer-period (weekend)" cite "3d Cir. 
 /// judge orders an answer to the petition for rehearing en banc within 14
 /// calendar days from the date of the order.
 deadline en-banc-answer-period: 14.days after EnBancAnswerOrdered() counted_by frap26 cite "3d Cir. I.O.P. 9.5"
-{
-  forum frap
-}
 
 test "panel rehearing answer is due 14 days after the order directing it" cite "3d Cir. I.O.P. 8.2"
 {
@@ -92,20 +88,20 @@ decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)
 state docketed: "Appeal Docketed" by court cite "FRAP 12(a)"
 {
   note "On receiving the notice the circuit clerk dockets the appeal (FRAP 12(a)). A filing after the appeal begins is timely only if the clerk receives it, or an electronic filer completes the transaction, by 5:00 p.m. Eastern Time on the last day (3d Cir. L.A.R. 26.1(a)); the cutoff does not reach the papers that initiate the appeal (3d Cir. L.A.R. 26.1(b)) or an inmate's filing under FRAP 25(a)(2)(A)(iii) (3d Cir. L.A.R. 26.1(d)). A corporate party files its disclosure statement under FRAP 26.1."
-  edge-docketed-record "Record transmitted" -> record { authority cite "FRAP 11(b)" }
+  "Record transmitted" -> record { authority cite "FRAP 11(b)" }
 }
 
 state record: "Record on Appeal" by court cite "FRAP 10; FRAP 11"
 {
   note "The record is the district court's papers, exhibits, transcript and docket entries (FRAP 10(a)), forwarded under FRAP 11(b); lit/frap encodes the transcript-order period."
-  edge-record-briefing "Briefing begins" -> briefing { authority cite "FRAP 31(a)(1)" }
+  "Briefing begins" -> briefing { authority cite "FRAP 31(a)(1)" }
 }
 
 state briefing: "Briefs Filed" by movant cite "FRAP 28; FRAP 31(a)"
 {
   note "Principal and reply briefs under FRAP 28 and 31(a), within the FRAP 32(a)(7) limits; lit/frap encodes the periods. Electronic filers file briefs and appendices electronically under the 5:00 p.m. cutoff, which does not reach paper copies of briefs already filed electronically (3d Cir. L.A.R. 26.1(c)). Amicus briefs: FRAP 29. Before summary action affirming, reversing or remanding, the court affords the parties an opportunity to argue for or against it if merits briefs have not been filed (3d Cir. I.O.P. 10.6)."
   edge-briefing-summary "Summary action" -> decision { authority cite "3d Cir. I.O.P. 10.6" }
-  edge-briefing-argument "Briefing closed" -> argument { authority cite "FRAP 31(a)(1)" }
+  "Briefing closed" -> argument { authority cite "FRAP 31(a)(1)" }
 }
 
 decision argument: "Oral Argument?" by court cite "FRAP 34(a); 3d Cir. I.O.P. 2.1"

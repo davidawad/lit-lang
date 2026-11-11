@@ -255,10 +255,8 @@ start motion-filed
 state motion-filed: "Motion filed and set for hearing" by movant cite "D. Guam BKLR 9013-1(c)"
 {
   note "A motion includes a memorandum of points and authorities and, with it, may not exceed 15 pages exclusive of attachments (D. Guam BKLR 9013-1(b)). Unless the court directs otherwise, the movant obtains a hearing date from the courtroom deputy and gives notice not later than 28 days before the hearing (D. Guam BKLR 9013-1(c)(1)); for a motion requiring a hearing, notice is served not later than 21 days before it with a certificate or affidavit of service (D. Guam BKLR 9013-1(e)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Response filed" -> opposed { authority cite "D. Guam BKLR 9013-1(c)" }
-  edge-motion-filed-unopposed "No timely response" -> unopposed {
-    authority cite "D. Guam BKLR 9013-1(c)"
-  }
+  "Response filed" -> opposed { authority cite "D. Guam BKLR 9013-1(c)" }
+  "No timely response" -> unopposed { authority cite "D. Guam BKLR 9013-1(c)" }
 }
 
 state opposed: "Response filed" by opponent cite "D. Guam BKLR 9013-1(c)"
@@ -272,9 +270,7 @@ state opposed: "Response filed" by opponent cite "D. Guam BKLR 9013-1(c)"
 state unopposed: "No response: declaration and request for entry of order" by movant cite "D. Guam BKLR 9013-1(c)"
 {
   note "If no one files a timely response, the movant may file a declaration and request for entry of order and submit a proposed order; the court may cancel the hearing and enter the order or direct that the hearing be held. The court generally will not cancel the hearing on dispositive motions in adversary proceedings, FRBP 4001(b) or (c) motions, most motions to convert or dismiss, and chapter 11 motions other than procedural ones and stipulations (D. Guam BKLR 9013-1(c)(3), (4))."
-  edge-unopposed-ruling "Order entered or hearing held" -> ruling {
-    authority cite "D. Guam BKLR 9013-1(c)"
-  }
+  "Order entered or hearing held" -> ruling { authority cite "D. Guam BKLR 9013-1(c)" }
 }
 
 decision ruling: "Motion decided" by court cite "D. Guam BKLR 9013-1(c)"

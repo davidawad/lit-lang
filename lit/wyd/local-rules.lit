@@ -133,6 +133,7 @@ test "Counting boundary: return-of-service-period (weekend)" cite "U.S.D.C.L.R. 
   given ServiceEffected() on 2026-10-28
   expect deadline(return-of-service-period) == 2026-11-09
 }
+
 /// U.S.D.C.L.R. 7.1(b)(1)(B): each party opposing a non-dispositive
 /// motion has 14 days after its filing to file a written response; the
 /// Court may treat a failure to respond timely as a confession of the
@@ -144,6 +145,7 @@ test "Counting boundary: nondispositive-response-period (holiday)" cite "U.S.D.C
   given NondispositiveMotionFiled() on 2026-10-28
   expect deadline(nondispositive-response-period) == 2026-11-12
 }
+
 /// U.S.D.C.L.R. 7.1(b)(1)(D): for a non-dispositive motion decided
 /// without a hearing, a reply brief may be filed within 7 days of the
 /// filing of the response brief.
@@ -154,6 +156,7 @@ test "Counting boundary: nondispositive-reply-period (weekend)" cite "U.S.D.C.L.
   given NondispositiveResponseFiled() on 2026-10-31
   expect deadline(nondispositive-reply-period) == 2026-11-09
 }
+
 /// U.S.D.C.L.R. 7.1(b)(2)(A): each party opposing a dispositive motion
 /// has 14 days from its filing to file a written brief in opposition; a
 /// party that does not intend to oppose a motion not marked unopposed
@@ -165,6 +168,7 @@ test "Counting boundary: dispositive-response-period (holiday)" cite "U.S.D.C.L.
   given DispositiveMotionFiled() on 2026-10-28
   expect deadline(dispositive-response-period) == 2026-11-12
 }
+
 /// U.S.D.C.L.R. 7.1(b)(2)(C): for a dispositive motion decided without a
 /// hearing, a reply brief may be filed within 7 days of the filing of the
 /// response brief.
@@ -175,6 +179,7 @@ test "Counting boundary: dispositive-reply-period (weekend)" cite "U.S.D.C.L.R. 
   given DispositiveResponseFiled() on 2026-10-31
   expect deadline(dispositive-reply-period) == 2026-11-09
 }
+
 /// U.S.D.C.L.R. 30.1(a): unless the Court orders otherwise, reasonable
 /// notice of a deposition under FRCP 30(b)(1) is not less than 14 days,
 /// computed under FRCP 6.
@@ -185,6 +190,7 @@ test "Counting boundary: deposition-notice-period (weekend)" cite "U.S.D.C.L.R. 
   given DepositionScheduled() on 2026-10-31
   expect deadline(deposition-notice-period) == 2026-10-16
 }
+
 /// U.S.D.C.L.R. 37.1(d): a motion under FRCP 26(c) directed to a
 /// deposition is filed and served as soon as practicable after receipt of
 /// the notice, and in no event less than 5 days before the scheduled
@@ -196,6 +202,7 @@ test "Counting boundary: deposition-protective-motion-period (weekend)" cite "U.
   given DepositionScheduled() on 2026-10-29
   expect deadline(deposition-protective-motion-period) == 2026-10-23
 }
+
 /// U.S.D.C.L.R. 41.1(a): on notice that an action has settled, counsel
 /// file within 30 days, unless otherwise permitted or directed, the
 /// filings necessary to terminate it; otherwise the Court may set the
@@ -207,6 +214,7 @@ test "Counting boundary: settlement-papers-period (holiday)" cite "U.S.D.C.L.R. 
   given SettlementNoticed() on 2026-10-27
   expect deadline(settlement-papers-period) == 2026-11-27
 }
+
 /// U.S.D.C.L.R. 41.1(b): after 90 days without action, the Clerk notifies
 /// the parties that the case may be dismissed for lack of prosecution 30
 /// days from the date of the notice; if no action is taken within 30 days
@@ -218,6 +226,7 @@ test "Counting boundary: prosecution-notice-period (holiday)" cite "U.S.D.C.L.R.
   given ProsecutionNoticeGiven() on 2026-10-27
   expect deadline(prosecution-notice-period) == 2026-11-27
 }
+
 /// U.S.D.C.L.R. 54.2(a): within 14 days from entry of a final judgment
 /// for which costs are allowed, the prevailing party files a bill of
 /// costs (other than attorney's fees) on AO form 133.
@@ -228,6 +237,7 @@ test "Counting boundary: bill-of-costs-period (holiday)" cite "U.S.D.C.L.R. 54.2
   given FinalJudgmentEntered() on 2026-10-28
   expect deadline(bill-of-costs-period) == 2026-11-12
 }
+
 /// U.S.D.C.L.R. 54.2(b): if no objections are filed within 14 days after
 /// service of the bill of costs, the Clerk taxes the costs properly
 /// claimed.
@@ -238,6 +248,7 @@ test "Counting boundary: costs-objection-period (holiday)" cite "U.S.D.C.L.R. 54
   given BillOfCostsServed() on 2026-10-28
   expect deadline(costs-objection-period) == 2026-11-12
 }
+
 /// U.S.D.C.L.R. 54.2(i): costs taxable under FRAP 39(e) are waived unless
 /// the party entitled to them files a bill of costs within 14 days of the
 /// issuance of the court of appeals' mandate.
@@ -248,6 +259,7 @@ test "Counting boundary: appeal-costs-period (holiday)" cite "U.S.D.C.L.R. 54.2(
   given MandateIssued() on 2026-10-28
   expect deadline(appeal-costs-period) == 2026-11-12
 }
+
 /// U.S.D.C.L.R. 54.3(c), (e): if the parties cannot agree, the moving
 /// party files the statement of consultation with a motion for attorney's
 /// fees within 14 days of entry of the final judgment; failure to file
@@ -259,6 +271,7 @@ test "Counting boundary: fee-motion-period (holiday)" cite "U.S.D.C.L.R. 54.3(c)
   given FinalJudgmentEntered() on 2026-10-28
   expect deadline(fee-motion-period) == 2026-11-12
 }
+
 /// U.S.D.C.L.R. 54.3(d), (e): the opposing party files objections to the
 /// fee request within 14 days after the filing of the claim for
 /// attorney's fees.
@@ -269,6 +282,7 @@ test "Counting boundary: fee-objection-period (holiday)" cite "U.S.D.C.L.R. 54.3
   given FeeClaimFiled() on 2026-10-28
   expect deadline(fee-objection-period) == 2026-11-12
 }
+
 /// U.S.D.C.L.R. 73.1: in a civil case fully assigned to a magistrate
 /// judge, each party sends the Clerk's Office, within 14 days from the
 /// filing of an answer or other responsive filing, either a written
@@ -281,6 +295,7 @@ test "Counting boundary: magistrate-consent-period (holiday)" cite "U.S.D.C.L.R.
   given ResponsiveFilingInAssignedCase() on 2026-10-28
   expect deadline(magistrate-consent-period) == 2026-11-12
 }
+
 /// U.S.D.C.L.R. 74.1(a): a response to a request for reconsideration of
 /// a magistrate judge's non-dispositive order is filed within 14 days
 /// after service of the request.
@@ -291,6 +306,7 @@ test "Counting boundary: reconsideration-response-period (holiday)" cite "U.S.D.
   given ReconsiderationRequestServed() on 2026-10-28
   expect deadline(reconsideration-response-period) == 2026-11-12
 }
+
 /// U.S.D.C.L.R. 81.1: within 14 days of entry of the Order on Removal,
 /// the removing party files a copy of the entire state court record and
 /// proceedings, including the docket sheet.
@@ -301,6 +317,7 @@ test "Counting boundary: removal-record-period (holiday)" cite "U.S.D.C.L.R. 81.
   given RemovalOrderEntered() on 2026-10-28
   expect deadline(removal-record-period) == 2026-11-12
 }
+
 /// U.S.D.C.L.R. 84.2(b): a complaint accepted for filing signed only by
 /// an attorney not admitted to this Court is conditioned on association
 /// with local counsel within 14 days after the filing of the complaint.
@@ -311,6 +328,7 @@ test "Counting boundary: local-counsel-period (holiday)" cite "U.S.D.C.L.R. 84.2
   given ComplaintFiledByNonadmittedAttorney() on 2026-10-28
   expect deadline(local-counsel-period) == 2026-11-12
 }
+
 /// U.S.D.C.L.R. 83.6(b)(2): unless a statute provides a different time or
 /// the Court orders otherwise, the agency files the record within 90 days
 /// of proper service of the complaint or petition for review (60 days in
@@ -326,6 +344,7 @@ test "Counting boundary: agency-record-supplement-period (holiday)" cite "U.S.D.
   given AgencyRecordFiled() on 2026-10-28
   expect deadline(agency-record-supplement-period) == 2026-11-12
 }
+
 /// U.S.D.C.L.R. 83.6(c): unless otherwise ordered, the party seeking
 /// review serves and files an opening brief within 45 days after the
 /// record is filed (after a supplemental record is filed or the motion is
@@ -337,6 +356,7 @@ test "Counting boundary: agency-opening-brief-period (weekend)" cite "U.S.D.C.L.
   given AgencyRecordFiled() on 2026-10-28
   expect deadline(agency-opening-brief-period) == 2026-12-14
 }
+
 /// U.S.D.C.L.R. 83.6(c): the responding party serves and files a brief
 /// within 30 days after service of the opening brief.
 deadline agency-response-brief-period: 30.days after AgencyOpeningBriefServed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 83.6(c)"
@@ -346,6 +366,7 @@ test "Counting boundary: agency-response-brief-period (holiday)" cite "U.S.D.C.L
   given AgencyOpeningBriefServed() on 2026-10-27
   expect deadline(agency-response-brief-period) == 2026-11-27
 }
+
 /// U.S.D.C.L.R. 83.6(c): the plaintiff or petitioner may serve and file
 /// a reply brief within 14 days after service of the responsive brief.
 deadline agency-reply-brief-period: 14.days after AgencyResponseBriefServed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 83.6(c)"

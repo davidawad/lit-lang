@@ -35,7 +35,7 @@ decision initial-appearance: "Bail, release or detention" by court cite "W.R.Cr.
 decision probable-cause: "Preliminary examination or indictment" by court cite "W.R.Cr.P. 5.1"
 {
   note "In all cases to be tried in the district court, except on indictment, the defendant is entitled to a preliminary examination in the circuit court (W.R.Cr.P. 5.1(a)); the period within which it is held and the bind-over and discharge procedure are set by W.R.Cr.P. 5.1, and the periods are not stated here (currency unconfirmed). Grand juries are governed by W.R.Cr.P. 6."
-  edge-probable-cause-charged "Bound over; information or indictment in the district court" -> charged {
+  "Bound over; information or indictment in the district court" -> charged {
     authority cite "W.R.Cr.P. 5.1"
   }
   edge-probable-cause-none "No probable cause; discharged" -> dismissed {
@@ -46,13 +46,13 @@ decision probable-cause: "Preliminary examination or indictment" by court cite "
 state charged: "Indictment or information" by court cite "W.R.Cr.P. 3"
 {
   note "The charging documents are the indictment, the information or the citation (W.R.Cr.P. 3; 12(a)). The Rule 48(b) speedy-trial period is not stated here (currency unconfirmed)."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "W.R.Cr.P. 10" }
+  "Arraignment" -> arraignment { authority cite "W.R.Cr.P. 10" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "W.R.Cr.P. 10"
 {
   note "Arraignment is conducted in open court by reading the charge or stating its substance and calling on the defendant to plead, after the defendant is given a copy of the charging document (W.R.Cr.P. 10). A defendant may plead not guilty, not guilty by reason of mental illness or deficiency, guilty, or nolo contendere; a refusal to plead is entered as not guilty (W.R.Cr.P. 11(a)(1))."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "W.R.Cr.P. 16" }
+  "Discovery" -> discovery { authority cite "W.R.Cr.P. 16" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "W.R.Cr.P. 12"
@@ -83,7 +83,7 @@ decision plea-decision: "Plea or trial" by accused cite "W.R.Cr.P. 11"
 {
   note "The court's advice to the defendant and its acceptance of a guilty or nolo contendere plea, and plea agreements, are governed by W.R.Cr.P. 11. The attorney for the state may, by leave of court, dismiss an indictment, information or citation, and the prosecution thereupon terminates, but not during trial without the defendant's consent (W.R.Cr.P. 48(a)(1))."
   edge-plea-decision-plea "Plea accepted" -> sentencing { authority cite "W.R.Cr.P. 11" }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "W.R.Cr.P. 23(a)" }
+  "Trial" -> trial { authority cite "W.R.Cr.P. 23(a)" }
   edge-plea-decision-nolle "State dismisses by leave of court" -> dismissed {
     authority cite "W.R.Cr.P. 48(a)"
   }
@@ -113,9 +113,7 @@ decision post-trial: "Post-trial motions" by court cite "W.R.Cr.P. 33(a)"
 state sentencing: "Presentence investigation and sentencing" by court cite "W.R.Cr.P. 32"
 {
   note "In every felony case the Department of Probation and Parole conducts a presentence investigation and reports to the court (W.R.Cr.P. 32(a)(1)); the report's disclosure periods and the sentencing procedure in W.R.Cr.P. 32 are not stated here (currency unconfirmed). Correction or reduction of sentence is W.R.Cr.P. 35."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "W.R.Cr.P. 32"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "W.R.Cr.P. 32" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "W.R.A.P. 2.01(a)"

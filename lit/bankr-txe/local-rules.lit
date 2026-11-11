@@ -375,7 +375,7 @@ start motion-filed
 state motion-filed: "Motion filed and served with negative notice" by movant cite "Bankr. E.D. Tex. LBR 9007-1(a)"
 {
   note "A motion carries the negative notice its rule prescribes (21 days under LBR 9007-1(a) unless a rule sets 14, 28 or 30), stating that no hearing is held unless a written response is filed and served within that time from the date of service. The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Response filed and served" -> opposed {
+  "Response filed and served" -> opposed {
     authority cite "Bankr. E.D. Tex. LBR 9007-1(a)"
     within negative-notice-response-period
   }
@@ -387,7 +387,7 @@ state motion-filed: "Motion filed and served with negative notice" by movant cit
 state opposed: "Response filed; contested matter set for hearing" by opponent cite "Bankr. E.D. Tex. LBR 9014-1"
 {
   note "On a timely response the court sets a hearing; witnesses, exhibits and any brief are disclosed three business days before it (LBR 9014-1, 9013-1(g))."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. E.D. Tex. LBR 9014-1" }
+  "Hearing held" -> ruling { authority cite "Bankr. E.D. Tex. LBR 9014-1" }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. E.D. Tex. LBR 9007-1(a)"

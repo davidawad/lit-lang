@@ -225,7 +225,7 @@ start motion-filed
 
 state motion-filed: "Motion filed with notice of opportunity for hearing" by movant cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified") {
   note "The motion is filed with Local Form 20A, its objection date a date certain taken from the court's website, 14 days from docket entry including three days for mail service (LBR 9013-1); the value is the CURRENCY UNCONFIRMED text. The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Objection filed" -> opposed {
+  "Objection filed" -> opposed {
     authority cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
     within motion-objection-period
   }
@@ -236,7 +236,7 @@ state motion-filed: "Motion filed with notice of opportunity for hearing" by mov
 
 state opposed: "Objection filed; hearing held" by opponent cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified") {
   note "If an objection is filed the matter is heard on the date the notice states (LBR 9013-1); its current form is unverified."
-  edge-opposed-ruling "Hearing held" -> ruling {
+  "Hearing held" -> ruling {
     authority cite ?("E.D. Okla. LBR 9013-1, undated printable rules 'effective as of December 1, 2009' as later amended: CURRENCY UNCONFIRMED (no edition date on the document or the court's page); the value is the vendored text, unverified")
   }
 }

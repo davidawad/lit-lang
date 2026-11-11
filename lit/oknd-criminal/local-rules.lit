@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The Northern District of Oklahoma's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method: FRCrimP 45(c)'s three added days follow the
@@ -57,9 +59,6 @@ deadline expert-disclosure: 15.days before PretrialConferenceScheduled() counted
   to CaseOrder
   op set
 } cite "N.D. Okla. LCrR16-2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: expert-disclosure (weekend)" cite "N.D. Okla. LCrR16-2"
 {
@@ -74,9 +73,6 @@ deadline late-request-expert-disclosure: 6.days after LateExpertDisclosureReques
   to CaseOrder
   op set
 } cite "N.D. Okla. LCrR16-2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: late-request-expert-disclosure (weekend)" cite "N.D. Okla. LCrR16-2"
 {
@@ -88,9 +84,6 @@ test "Counting boundary: late-request-expert-disclosure (weekend)" cite "N.D. Ok
 /// revision, the party files any objection of record, with its basis and
 /// authority, at least 14 days before the date set for sentencing.
 deadline psr-objection-of-record: 14.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-4"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-objection-of-record (weekend)" cite "N.D. Okla. LCrR32-4"
 {
@@ -101,9 +94,6 @@ test "Counting boundary: psr-objection-of-record (weekend)" cite "N.D. Okla. LCr
 /// N.D. Okla. LCrR32-5: motions for departure or variance, each filed
 /// separately, at least 14 days before sentencing.
 deadline departure-variance-motion: 14.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-5"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: departure-variance-motion (weekend)" cite "N.D. Okla. LCrR32-5"
 {
@@ -114,9 +104,6 @@ test "Counting boundary: departure-variance-motion (weekend)" cite "N.D. Okla. L
 /// N.D. Okla. LCrR32-5: written responses to a departure or variance
 /// motion at least seven days before the date set for sentencing.
 deadline departure-variance-response: 7.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-5"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: departure-variance-response (weekend)" cite "N.D. Okla. LCrR32-5"
 {
@@ -127,9 +114,6 @@ test "Counting boundary: departure-variance-response (weekend)" cite "N.D. Okla.
 /// N.D. Okla. LCrR32-5: a separate sentencing memorandum at least 14 days
 /// before the date set for sentencing.
 deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-5"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-memorandum (weekend)" cite "N.D. Okla. LCrR32-5"
 {
@@ -140,9 +124,6 @@ test "Counting boundary: sentencing-memorandum (weekend)" cite "N.D. Okla. LCrR3
 /// N.D. Okla. LCrR32-5: a response to a sentencing memorandum at least
 /// seven days before the date set for sentencing.
 deadline sentencing-memorandum-response: 7.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-5"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-memorandum-response (weekend)" cite "N.D. Okla. LCrR32-5"
 {
@@ -154,9 +135,6 @@ test "Counting boundary: sentencing-memorandum-response (weekend)" cite "N.D. Ok
 /// recommendation to the Court, and not to the parties, at least seven
 /// days before the date set for sentencing.
 deadline sentencing-recommendation: 7.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-7"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-recommendation (weekend)" cite "N.D. Okla. LCrR32-7"
 {
@@ -170,9 +148,6 @@ deadline motions-period: 14.days after Arraigned() counted_by frcrimp45 delegabl
   to CaseOrder
   op set
 } cite "N.D. Okla. LCrR47-2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motions-period (weekend)" cite "N.D. Okla. LCrR47-2"
 {
@@ -187,9 +162,6 @@ deadline response-period: 7.days after MotionFiled() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "N.D. Okla. LCrR47-2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "N.D. Okla. LCrR47-2"
 {

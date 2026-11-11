@@ -2,6 +2,8 @@ module ncwd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Western District of North Carolina's own criminal periods. Stated in
 // the rules but not declared: the "Presentence Completion Date" of
 // approximately 90 days after a plea is accepted or a verdict returned, and
@@ -30,9 +32,6 @@ event MotionServed()
 /// the first day of the term, whichever is earlier; a later request may be
 /// denied as untimely unless good cause is found.
 deadline subpoena-request-period: 14.days before WitnessNeeded() counted_by frcrimp45 cite "W.D.N.C. LCrR 17.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: subpoena-request-period (weekend)" cite "W.D.N.C. LCrR 17.2"
 {
@@ -45,9 +44,6 @@ test "Counting boundary: subpoena-request-period (weekend)" cite "W.D.N.C. LCrR 
 /// days before the hearing date or the first day of the term, whichever is
 /// earlier.
 deadline writ-out-of-district-period: 21.days before WitnessNeeded() counted_by frcrimp45 cite "W.D.N.C. LCrR 17.3"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: writ-out-of-district-period (holiday)" cite "W.D.N.C. LCrR 17.3"
 {
@@ -58,9 +54,6 @@ test "Counting boundary: writ-out-of-district-period (holiday)" cite "W.D.N.C. L
 /// LCrR 17.3(2): for a prisoner within the district, the application is
 /// filed at least 14 days before that date.
 deadline writ-in-district-period: 14.days before WitnessNeeded() counted_by frcrimp45 cite "W.D.N.C. LCrR 17.3"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: writ-in-district-period (weekend)" cite "W.D.N.C. LCrR 17.3"
 {
@@ -73,9 +66,6 @@ test "Counting boundary: writ-in-district-period (weekend)" cite "W.D.N.C. LCrR 
 /// submitted raises no inference of concurrence and waives no later
 /// objection to the draft and final reports.
 deadline relevant-conduct-response-period: 7.days after RelevantConductSubmitted() counted_by frcrimp45 cite "W.D.N.C. LCrR 32.4(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: relevant-conduct-response-period (weekend)" cite "W.D.N.C. LCrR 32.4(b)"
 {
@@ -87,9 +77,6 @@ test "Counting boundary: relevant-conduct-response-period (weekend)" cite "W.D.N
 /// materials are filed not later than seven days before the sentencing
 /// hearing; the judge may accept late materials case by case.
 deadline sentencing-memoranda-period: 7.days before SentencingHearing() counted_by frcrimp45 cite "W.D.N.C. LCrR 32.5(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-memoranda-period (holiday)" cite "W.D.N.C. LCrR 32.5(c)"
 {
@@ -101,9 +88,6 @@ test "Counting boundary: sentencing-memoranda-period (holiday)" cite "W.D.N.C. L
 /// is filed within seven days of the date the motion is served; no motions
 /// deadline entitles a party to a continuance of trial.
 deadline response-period: 7.days after MotionServed() counted_by frcrimp45 cite "W.D.N.C. LCrR 47.1(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "W.D.N.C. LCrR 47.1(e)"
 {

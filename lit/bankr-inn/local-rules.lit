@@ -157,6 +157,7 @@ test "Counting boundary: objection-cure-notice-period (holiday)" cite "Bankr. N.
   given ObjectionNoticeServed() on 2026-10-29
   expect deadline(objection-cure-notice-period) == 2026-11-27
 }
+
 /// LBR B-2002-2(b)(3): no less than twenty-one (21) days' notice of the
 /// opportunity to object is given to the other motions subject to the rule
 /// (LBR B-2002-2(a)), measured from service of the notice; absent a timely
@@ -168,6 +169,7 @@ test "Counting boundary: objection-notice-period (weekend)" cite "Bankr. N.D. In
   given ObjectionNoticeServed() on 2026-10-31
   expect deadline(objection-notice-period) == 2026-11-23
 }
+
 /// LBR B-2002-2(d): the movant completes and serves the LBF-3 notice and
 /// makes proof of it within seven (7) days of the date the motion was filed,
 /// or waives any time limits on ruling on the motion, including those of 11
@@ -179,6 +181,7 @@ test "Counting boundary: objection-notice-service-period (holiday)" cite "Bankr.
   given NegativeNoticeMotionFiled() on 2026-10-27
   expect deadline(objection-notice-service-period) == 2026-11-04
 }
+
 /// LBR B-2014-1(c): unless objections to a debtor-in-possession's application
 /// to employ a professional are filed seven (7) days before the date first
 /// set for the § 341 meeting or within twenty-one (21) days following service
@@ -192,6 +195,7 @@ test "Counting boundary: dip-employment-objection-meeting-period (weekend)" cite
   given FirstMeetingDate() on 2026-10-31
   expect deadline(dip-employment-objection-meeting-period) == 2026-10-23
 }
+
 /// LBR B-2014-1(c): the same objection deadline, measured from service of the
 /// application.
 deadline dip-employment-objection-service-period: 21.days after DipEmploymentApplicationServed() counted_by frbp9006-indiana cite "Bankr. N.D. Ind. LBR 2014-1(c)"
@@ -201,6 +205,7 @@ test "Counting boundary: dip-employment-objection-service-period (weekend)" cite
   given DipEmploymentApplicationServed() on 2026-10-31
   expect deadline(dip-employment-objection-service-period) == 2026-11-23
 }
+
 /// LBR B-2014-2(b)(2): unless objections are filed within twenty-one (21)
 /// days following service of a trustee's application to employ after notice
 /// and of the notice of the opportunity to object, the court may approve the
@@ -212,6 +217,7 @@ test "Counting boundary: trustee-employment-objection-period (weekend)" cite "Ba
   given TrusteeEmploymentApplicationServed() on 2026-10-31
   expect deadline(trustee-employment-objection-period) == 2026-11-23
 }
+
 /// LBR B-2015-1(a): every trustee, chapter 11 debtor in possession or other
 /// debtor operating a business files a monthly statement of cash receipts and
 /// disbursements no later than twenty-one (21) days after the end of the
@@ -223,6 +229,7 @@ test "Counting boundary: monthly-operating-report-period (weekend)" cite "Bankr.
   given ReportingMonthEnded() on 2026-10-31
   expect deadline(monthly-operating-report-period) == 2026-11-23
 }
+
 /// LBR B-3006-1(a): absent an objection or other response within twenty-one
 /// (21) days after a request to withdraw a claim is filed, the court may
 /// allow the withdrawal without further notice or hearing.
@@ -233,6 +240,7 @@ test "Counting boundary: claim-withdrawal-objection-period (weekend)" cite "Bank
   given ClaimWithdrawalRequested() on 2026-10-31
   expect deadline(claim-withdrawal-objection-period) == 2026-11-23
 }
+
 /// LBR B-3007-1(e): unless a response is filed within thirty (30) days
 /// following service of the notice of objection, the court may disallow or
 /// modify the claim as objected, without further hearing.
@@ -243,6 +251,7 @@ test "Counting boundary: claim-objection-response-period (holiday)" cite "Bankr.
   given ClaimObjectionNoticeServed() on 2026-10-27
   expect deadline(claim-objection-response-period) == 2026-11-27
 }
+
 /// LBR B-3011-1(e): absent an objection or other response from the United
 /// States Attorney, or the Owner of Record if applicable, within thirty (30)
 /// days of the date the motion is filed, the court may determine it without
@@ -254,6 +263,7 @@ test "Counting boundary: unclaimed-funds-objection-period (holiday)" cite "Bankr
   given UnclaimedFundsApplicationFiled() on 2026-10-27
   expect deadline(unclaimed-funds-objection-period) == 2026-11-27
 }
+
 /// LBR B-3018-1(b), (c): unless the court orders otherwise, the plan
 /// proponent prepares, files and serves a verified report of the balloting no
 /// later than fourteen (14) days before the date set for the confirmation
@@ -265,6 +275,7 @@ test "Counting boundary: ballot-report-period (holiday)" cite "Bankr. N.D. Ind. 
   given ConfirmationHearing() on 2026-10-26
   expect deadline(ballot-report-period) == 2026-10-09
 }
+
 /// LBR B-3020-1(a): in a chapter 11 case other than under subchapter V, a
 /// proponent who would seek confirmation over a rejecting class under §
 /// 1129(b) files and serves a request no later than fourteen (14) days before
@@ -276,6 +287,7 @@ test "Counting boundary: cramdown-request-period (holiday)" cite "Bankr. N.D. In
   given ConfirmationHearing() on 2026-10-26
   expect deadline(cramdown-request-period) == 2026-10-09
 }
+
 /// LBR B-3020-1(b): in a subchapter V case, a debtor who would seek
 /// confirmation under § 1191(b) over a rejecting class files and serves a
 /// motion not later than fourteen (14) days before the date set for the
@@ -287,6 +299,7 @@ test "Counting boundary: subchapter-v-cramdown-motion-period (holiday)" cite "Ba
   given ConfirmationHearing() on 2026-10-26
   expect deadline(subchapter-v-cramdown-motion-period) == 2026-10-09
 }
+
 /// LBR B-3020-1(c): the plan proponent may be required to file an application
 /// to fix the amount of any confirmation deposit no less than fourteen (14)
 /// days before the date set for the confirmation hearing.
@@ -297,6 +310,7 @@ test "Counting boundary: confirmation-deposit-period (holiday)" cite "Bankr. N.D
   given ConfirmationHearing() on 2026-10-26
   expect deadline(confirmation-deposit-period) == 2026-10-09
 }
+
 /// LBR B-4001-1(b)(3): the deadline to object to a chapter 13 motion for
 /// relief from stay because the plan proposes to surrender property is no
 /// less than fourteen (14) days after service of the notice and no sooner
@@ -312,6 +326,7 @@ test "Counting boundary: surrender-stay-objection-meeting-period (holiday)" cite
   given FirstMeetingDate() on 2026-10-27
   expect deadline(surrender-stay-objection-meeting-period) == 2026-11-04
 }
+
 /// LBR B-4004-1(b), (c): a motion to extend the time to object to discharge
 /// or to determine dischargeability states that objections must be filed
 /// within fourteen (14) days of service; absent one the court may grant it
@@ -329,6 +344,7 @@ test "Counting boundary: discharge-motion-period (holiday)" cite "Bankr. N.D. In
   given TrusteeFinalReportFiled() on 2026-10-27
   expect deadline(discharge-motion-period) == 2026-11-27
 }
+
 /// LBR B-9014-1(b), B-4004-3(a)(1): except as ordered, on a matter in which
 /// relief may be granted only after a hearing, an objection is filed and
 /// served no later than seven (7) days before the hearing; if the hearing is
@@ -341,6 +357,7 @@ test "Counting boundary: hearing-objection-period (weekend)" cite "Bankr. N.D. I
   given ContestedHearing() on 2026-10-31
   expect deadline(hearing-objection-period) == 2026-10-23
 }
+
 /// LBR B-5071-1(b): a request to continue, reschedule, postpone or cancel a
 /// matter because of a prior conflict describes the conflict and is filed no
 /// later than ten (10) days after the notice or order scheduling the matter
@@ -352,6 +369,7 @@ test "Counting boundary: conflict-continuance-period (weekend)" cite "Bankr. N.D
   given SchedulingNoticeIssued() on 2026-10-28
   expect deadline(conflict-continuance-period) == 2026-11-09
 }
+
 /// LBR B-6004-1(c): if a motion to sell outside the ordinary course is
 /// granted, the trustee or debtor-in-possession files the FRBP 6004(f)(1)
 /// report of sale within seven (7) days following the sale and serves it on
@@ -363,6 +381,7 @@ test "Counting boundary: sale-report-period (holiday)" cite "Bankr. N.D. Ind. LB
   given SaleCompleted() on 2026-10-27
   expect deadline(sale-report-period) == 2026-11-04
 }
+
 /// LBR B-6007-1(a)(3): a trustee's or debtor-in-possession's notice of
 /// abandonment states an objection date no less than 14 days from the date
 /// the notice is served.
@@ -378,6 +397,7 @@ test "Counting boundary: motion-response-period (holiday)" cite "Bankr. N.D. Ind
   given MotionBriefServed() on 2026-10-27
   expect deadline(motion-response-period) == 2026-11-27
 }
+
 /// LBR B-7007-1(a): the moving party has fourteen (14) days after service of
 /// any response to serve and file a reply.
 deadline motion-reply-period: 14.days after MotionResponseServed() counted_by frbp9006-indiana cite "Bankr. N.D. Ind. LBR 7007-1(a)"
@@ -391,6 +411,7 @@ test "Counting boundary: exhibit-exchange-period (holiday)" cite "Bankr. N.D. In
   given AdversaryTrial() on 2026-10-26
   expect deadline(exhibit-exchange-period) == 2026-10-09
 }
+
 /// LBR B-7023-1(b): unless not practicable under FRCP 23(c)(1), a person
 /// seeking class certification files the motion within ninety (90) days of
 /// the filing of a complaint brought as a class action.
@@ -406,6 +427,7 @@ test "Counting boundary: discharge-dismissal-objection-period (weekend)" cite "B
   given DischargeDismissalMotionServed() on 2026-10-31
   expect deadline(discharge-dismissal-objection-period) == 2026-11-23
 }
+
 /// LBR B-7056-1(a): a party opposing summary judgment serves and files a
 /// Statement of Genuine Issues within thirty (30) days of the date the motion
 /// is served on it, separately or with its responsive brief.
@@ -416,6 +438,7 @@ test "Counting boundary: genuine-issues-period (holiday)" cite "Bankr. N.D. Ind.
   given MotionBriefServed() on 2026-10-27
   expect deadline(genuine-issues-period) == 2026-11-27
 }
+
 /// LBR B-7056-1(b): a surreply, permitted only if the reply cites new
 /// evidence or objects to the admissibility of the non-movant's evidence, is
 /// filed within 7 days after the movant serves the reply.
@@ -426,6 +449,7 @@ test "Counting boundary: summary-judgment-surreply-period (holiday)" cite "Bankr
   given SummaryJudgmentReplyServed() on 2026-10-27
   expect deadline(summary-judgment-surreply-period) == 2026-11-04
 }
+
 /// LBR B-9010-2(f)(2): unless other counsel has appeared, an application to
 /// withdraw is accompanied by evidence that counsel told the client in
 /// writing of the reasons and the intention to withdraw at least seven (7)
@@ -437,6 +461,7 @@ test "Counting boundary: withdrawal-client-notice-period (weekend)" cite "Bankr.
   given WithdrawalApplicationFiled() on 2026-10-31
   expect deadline(withdrawal-client-notice-period) == 2026-10-23
 }
+
 /// LBR B-9010-2(f)(3): unless the client has terminated counsel's services,
 /// the application states that any response, objection or comment should be
 /// filed within fourteen (14) days; the court may rule when that time
@@ -456,6 +481,7 @@ test "Counting boundary: exhibit-removal-appeal-period (holiday)" cite "Bankr. N
   given MandateFiled() on 2026-10-27
   expect deadline(exhibit-removal-appeal-period) == 2026-11-27
 }
+
 /// LBR B-9070-1(c): items not removed within thirty (30) days after notice
 /// from the clerk are sold by the United States Marshal or otherwise disposed
 /// of as the court directs.
@@ -483,17 +509,13 @@ state motion-noticed: "Motion filed with notice of the opportunity to object" by
 state objected: "Objection filed; motion set for hearing" by opponent cite "Bankr. N.D. Ind. LBR 9014-1(a)"
 {
   note "An objection states a short, plain factual or legal basis, or may be overruled without a hearing (LBR B-9014-1(a)), and is served on the movant and the LBR B-9013-2(c) entities (LBR B-9014-1(c)). On a timely objection the court sets the motion for hearing (LBF-3a, LBF-3b)."
-  edge-objected-hearing "Hearing held" -> hearing {
-    authority cite "Bankr. N.D. Ind. LBR 9014-1(b)"
-  }
+  "Hearing held" -> hearing { authority cite "Bankr. N.D. Ind. LBR 9014-1(b)" }
 }
 
 decision hearing: "Hearing on the motion" by court cite "Bankr. N.D. Ind. LBR 9014-1(b)"
 {
   note "A continuance for a prior conflict is requested within ten days after the scheduling notice (LBR B-5071-1(b))."
-  edge-hearing-decided "Motion granted or denied" -> decided {
-    authority cite "Bankr. N.D. Ind. LBR 9014-1(b)"
-  }
+  "Motion granted or denied" -> decided { authority cite "Bankr. N.D. Ind. LBR 9014-1(b)" }
 }
 
 terminal decided: "Motion decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. N.D. Ind. LBR 1001-1(c)"

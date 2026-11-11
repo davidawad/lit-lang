@@ -264,7 +264,7 @@ start motion-filed
 state motion-filed: "Motion filed and served with notice of the objection deadline" by movant cite "D. Colo. L.B.R. 9013-1"
 {
   note "The notice (L.B.F. 9013-1.1) states the specific date of the deadline to object and request a hearing; where no specific notice is required, a response is due within 14 days from service (L.B.R. 9013-1). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Objection and request for hearing filed" -> opposed {
+  "Objection and request for hearing filed" -> opposed {
     authority cite "D. Colo. L.B.R. 9013-1"
     within presumptive-response-period
   }
@@ -276,7 +276,7 @@ state motion-filed: "Motion filed and served with notice of the objection deadli
 state opposed: "Objection filed; certificate of contested matter" by opponent cite "D. Colo. L.B.R. 9013-1"
 {
   note "Not earlier than two days after the objection deadline the movant files a Certificate of Contested Matter and Request for Hearing (seven days for a respondent); the court may then set a hearing (L.B.R. 9013-1). Witness and exhibit lists are due five days before an evidentiary hearing (L.B.R. 9070-1)."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "D. Colo. L.B.R. 9013-1" }
+  "Hearing held" -> ruling { authority cite "D. Colo. L.B.R. 9013-1" }
 }
 
 decision ruling: "Motion decided" by court cite "D. Colo. L.B.R. 9013-1"

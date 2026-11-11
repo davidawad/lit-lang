@@ -11,7 +11,7 @@ start filed
 
 state filed: "Appeal filed with the board" by appellant cite ?("Mont. Code Ann. § 15-2-301: not vendored") {
   note "The board hears appeals from county tax appeal boards and from the Department of Revenue. The filing period, form and fees are not stated: Mont. Code Ann. § 15-2-301 is not vendored."
-  edge-filed-hearing "Set for hearing" -> hearing {
+  "Set for hearing" -> hearing {
     event ActionCommenced()
     authority cite ?("Mont. Code Ann. § 15-2-301: not vendored")
   }
@@ -19,9 +19,7 @@ state filed: "Appeal filed with the board" by appellant cite ?("Mont. Code Ann. 
 
 state hearing: "Hearing before the board" by court cite ?("Mont. Code Ann. § 15-2-301: not vendored") {
   note "Hearing procedure, evidence and the record are not stated: Mont. Code Ann. § 15-2-301 and the board's rules are not vendored."
-  edge-hearing-decision "Decision issued" -> decision {
-    authority cite ?("Mont. Code Ann. § 15-2-301: not vendored")
-  }
+  "Decision issued" -> decision { authority cite ?("Mont. Code Ann. § 15-2-301: not vendored") }
 }
 
 chance decision: "Board decides" by court cite ?("Mont. Code Ann. § 15-2-301: not vendored") {

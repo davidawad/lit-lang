@@ -122,6 +122,7 @@ test "Counting boundary: dispositive-response-period (holiday)" cite "W.D. Mich.
   given DispositiveMotionServed() on 2026-10-14
   expect deadline(dispositive-response-period) == 2026-11-12
 }
+
 /// LCivR 7.2(c): the moving party may file a reply brief within 14 days
 /// after service of the response.
 deadline dispositive-reply-period: 14.days after DispositiveResponseServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 7.2(c)"
@@ -131,6 +132,7 @@ test "Counting boundary: dispositive-reply-period (weekend)" cite "W.D. Mich. LC
   given DispositiveResponseServed() on 2026-10-17
   expect deadline(dispositive-reply-period) == 2026-11-02
 }
+
 /// LCivR 7.3(c): unless otherwise ordered, a party opposing a
 /// nondispositive motion files its responsive brief within 14 days of
 /// service of the motion; reply briefs need leave of court.
@@ -141,6 +143,7 @@ test "Counting boundary: nondispositive-response-period (weekend)" cite "W.D. Mi
   given NondispositiveMotionServed() on 2026-10-17
   expect deadline(nondispositive-response-period) == 2026-11-02
 }
+
 /// LCivR 5.7(e)(viii): a non-filing signatory or party who disputes the
 /// authenticity of a signature on an electronically filed document files
 /// an objection within 14 days after service of the document.
@@ -151,6 +154,7 @@ test "Counting boundary: signature-objection-period (weekend)" cite "W.D. Mich. 
   given SignedDocumentServed() on 2026-10-17
   expect deadline(signature-objection-period) == 2026-11-02
 }
+
 /// LCivR 8.3: in a Social Security case the defendant has 60 days after
 /// notification of the commencement of the action to file and serve the
 /// certified administrative record, which is its answer, or to move
@@ -165,6 +169,7 @@ test "Counting boundary: social-security-commissioner-brief-period (holiday)" ci
   given SocialSecurityPlaintiffBriefServed() on 2026-10-12
   expect deadline(social-security-commissioner-brief-period) == 2026-11-12
 }
+
 /// LCivR 8.4(c): the plaintiff may file and serve a reply brief within 14
 /// days after service of the Commissioner's brief.
 deadline social-security-reply-period: 14.days after SocialSecurityCommissionerBriefServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 8.4(c)"
@@ -174,6 +179,7 @@ test "Counting boundary: social-security-reply-period (weekend)" cite "W.D. Mich
   given SocialSecurityCommissionerBriefServed() on 2026-10-17
   expect deadline(social-security-reply-period) == 2026-11-02
 }
+
 /// LCivR 45.1: unless otherwise ordered, a subpoena to be served by the
 /// United States Marshals Service allows a minimum of 14 days before the
 /// required appearance.
@@ -184,6 +190,7 @@ test "Counting boundary: marshal-subpoena-period (weekend)" cite "W.D. Mich. LCi
   given SubpoenaAppearance() on 2026-10-17
   expect deadline(marshal-subpoena-period) == 2026-10-02
 }
+
 /// LCivR 54.1: if the parties cannot agree on costs, a bill of costs is
 /// filed with the clerk within 28 days from the entry of judgment.
 deadline bill-of-costs-period: 28.days after JudgmentEntered() counted_by frcp6-michigan cite "W.D. Mich. LCivR 54.1"
@@ -193,6 +200,7 @@ test "Counting boundary: bill-of-costs-period (holiday)" cite "W.D. Mich. LCivR 
   given JudgmentEntered() on 2026-10-14
   expect deadline(bill-of-costs-period) == 2026-11-12
 }
+
 /// LCivR 54.1: a party objecting to the taxation of costs files a motion
 /// to disallow within 14 days of service of the bill of costs on it.
 deadline costs-disallowance-period: 14.days after BillOfCostsServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 54.1"
@@ -202,6 +210,7 @@ test "Counting boundary: costs-disallowance-period (weekend)" cite "W.D. Mich. L
   given BillOfCostsServed() on 2026-10-17
   expect deadline(costs-disallowance-period) == 2026-11-02
 }
+
 /// LCivR 54.2(b)(i): the attorney files a motion for approval of fees
 /// under 42 U.S.C. § 406(b)(1)(A) or § 1383(d)(2)(A) no later than 35 days
 /// after the date shown on the face of the notice of award.
@@ -212,6 +221,7 @@ test "Counting boundary: social-security-fee-motion-period (weekend)" cite "W.D.
   given NoticeOfAward() on 2026-10-17
   expect deadline(social-security-fee-motion-period) == 2026-11-23
 }
+
 /// LCivR 54.2(b)(iv): any response by the client or defendant is filed
 /// within 21 days after the fee motion is served; replies need leave.
 deadline social-security-fee-response-period: 21.days after SocialSecurityFeeMotionServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 54.2(b)"
@@ -221,6 +231,7 @@ test "Counting boundary: social-security-fee-response-period (weekend)" cite "W.
   given SocialSecurityFeeMotionServed() on 2026-10-17
   expect deadline(social-security-fee-response-period) == 2026-11-09
 }
+
 /// LCivR 72.3(a): a party may appeal a magistrate judge's order
 /// determining a motion or matter within 14 days after service of the
 /// order, unless the magistrate judge or district judge prescribes a
@@ -232,6 +243,7 @@ test "Counting boundary: magistrate-order-appeal-period (weekend)" cite "W.D. Mi
   given MagistrateOrderServed() on 2026-10-17
   expect deadline(magistrate-order-appeal-period) == 2026-11-02
 }
+
 /// LCivR 72.3(a): any party may respond to another party's objections
 /// within 14 days of service.
 deadline magistrate-order-response-period: 14.days after MagistrateOrderObjectionsServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 72.3(a)"
@@ -241,6 +253,7 @@ test "Counting boundary: magistrate-order-response-period (weekend)" cite "W.D. 
   given MagistrateOrderObjectionsServed() on 2026-10-17
   expect deadline(magistrate-order-response-period) == 2026-11-02
 }
+
 /// LCivR 72.3(b): a party may object to a magistrate judge's proposed
 /// findings, recommendations or report within 14 days after being served
 /// with it, unless a different time is prescribed.
@@ -251,6 +264,7 @@ test "Counting boundary: magistrate-report-objection-period (weekend)" cite "W.D
   given MagistrateReportServed() on 2026-10-17
   expect deadline(magistrate-report-objection-period) == 2026-11-02
 }
+
 /// LCivR 72.3(b): any party may respond to another party's objections
 /// within 14 days after being served with them.
 deadline magistrate-report-response-period: 14.days after MagistrateReportObjectionsServed() counted_by frcp6-michigan cite "W.D. Mich. LCivR 72.3(b)"

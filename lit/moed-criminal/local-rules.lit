@@ -2,6 +2,8 @@ module moed-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Eastern District of Missouri's own periods in a criminal case.
 // FRCrimP 45(a) computes a period "in any local rule" of a criminal case,
 // so these count under frcrimp45. For good cause the court may extend or
@@ -62,9 +64,6 @@ event WarrantMaterialReceived()
 /// identifying any organizational victim) within 28 days after the
 /// defendant's initial appearance.
 deadline disclosure-statement-period: 28.days after InitialAppearance() counted_by frcrimp45 cite "E.D. Mo. L.R. 2.09(B)(2)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: disclosure-statement-period (weekend)" cite "E.D. Mo. L.R. 2.09(B)(2)"
 {
@@ -75,9 +74,6 @@ test "Counting boundary: disclosure-statement-period (weekend)" cite "E.D. Mo. L
 /// E.D. Mo. L.R. 2.09(B)(2): a supplemental Disclosure Statement is filed
 /// within seven days after any change in the required information.
 deadline supplemental-disclosure-period: 7.days after DisclosureInformationChanged() counted_by frcrimp45 cite "E.D. Mo. L.R. 2.09(B)(2)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: supplemental-disclosure-period (holiday)" cite "E.D. Mo. L.R. 2.09(B)(2)"
 {
@@ -89,9 +85,6 @@ test "Counting boundary: supplemental-disclosure-period (holiday)" cite "E.D. Mo
 /// otherwise, a party opposing a motion files a single memorandum within
 /// fourteen days after service of the motion.
 deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 cite "E.D. Mo. L.R. 4.01(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: opposition-period (holiday)" cite "E.D. Mo. L.R. 4.01(B)"
 {
@@ -102,9 +95,6 @@ test "Counting boundary: opposition-period (holiday)" cite "E.D. Mo. L.R. 4.01(B
 /// E.D. Mo. L.R. 4.01(B): an opposition to a motion seeking an extension
 /// of time is filed within seven days after service of the motion.
 deadline extension-opposition-period: 7.days after ExtensionMotionServed() counted_by frcrimp45 cite "E.D. Mo. L.R. 4.01(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: extension-opposition-period (holiday)" cite "E.D. Mo. L.R. 4.01(B)"
 {
@@ -116,9 +106,6 @@ test "Counting boundary: extension-opposition-period (holiday)" cite "E.D. Mo. L
 /// within ten days after being served with the memorandum in opposition;
 /// further memoranda only with leave.
 deadline reply-period: 10.days after OppositionServed() counted_by frcrimp45 cite "E.D. Mo. L.R. 4.01(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-period (holiday)" cite "E.D. Mo. L.R. 4.01(C)"
 {
@@ -131,9 +118,6 @@ test "Counting boundary: reply-period (holiday)" cite "E.D. Mo. L.R. 4.01(C)"
 /// court's final decision; an exhibit not timely removed after the Clerk's
 /// notice may be discarded.
 deadline exhibit-removal-period: 30.days after BenchTrialDecision() counted_by frcrimp45 cite "E.D. Mo. L.R. 7.02(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-removal-period (weekend)" cite "E.D. Mo. L.R. 7.02(C)"
 {
@@ -145,9 +129,6 @@ test "Counting boundary: exhibit-removal-period (weekend)" cite "E.D. Mo. L.R. 7
 /// Motion for Sealing, a party or non-party may file a Memorandum Opposing
 /// Sealing.
 deadline sealing-opposition-period: 7.days after SealingMotionFiled() counted_by frcrimp45 cite "E.D. Mo. L.R. 13.05(A)(4)(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sealing-opposition-period (holiday)" cite "E.D. Mo. L.R. 13.05(A)(4)(d)"
 {
@@ -159,9 +140,6 @@ test "Counting boundary: sealing-opposition-period (holiday)" cite "E.D. Mo. L.R
 /// Memorandum Opposing Sealing, the movant may file a Reply Supporting
 /// Sealing.
 deadline sealing-reply-period: 7.days after SealingOppositionFiled() counted_by frcrimp45 cite "E.D. Mo. L.R. 13.05(A)(4)(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sealing-reply-period (holiday)" cite "E.D. Mo. L.R. 13.05(A)(4)(e)"
 {
@@ -173,9 +151,6 @@ test "Counting boundary: sealing-reply-period (holiday)" cite "E.D. Mo. L.R. 13.
 /// 14 days after its entry, during which an appeal from it may be filed
 /// or the sealed material withdrawn before it becomes public.
 deadline sealing-denial-stay-period: 14.days after SealingDenied() counted_by frcrimp45 cite "E.D. Mo. L.R. 13.05(A)(4)(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sealing-denial-stay-period (holiday)" cite "E.D. Mo. L.R. 13.05(A)(4)(g)"
 {
@@ -188,9 +163,6 @@ test "Counting boundary: sealing-denial-stay-period (holiday)" cite "E.D. Mo. L.
 /// return, received under temporary seal, the government or another person
 /// with a sufficient privacy interest may file an ex parte Motion to Seal.
 deadline warrant-seal-motion-period: 14.days after WarrantMaterialReceived() counted_by frcrimp45 cite "E.D. Mo. L.R. 13.05(C)(4)(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: warrant-seal-motion-period (holiday)" cite "E.D. Mo. L.R. 13.05(C)(4)(b)"
 {

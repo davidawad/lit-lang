@@ -117,6 +117,7 @@ test "Counting boundary: payment-advices-trustee-period (weekend)" cite "Bankr. 
   given FirstMeetingDate() on 2026-05-02
   expect deadline(payment-advices-trustee-period) == 2026-04-24
 }
+
 /// Bankr. E.D. Cal. LBR 1007-1(c)(2): not later than 30 days after the date
 /// first set for the § 341 meeting, a party in interest may demand copies
 /// of the payment advices.
@@ -127,6 +128,7 @@ test "Counting boundary: payment-advices-demand-period (weekend)" cite "Bankr. E
   given FirstMeetingDate() on 2026-04-30
   expect deadline(payment-advices-demand-period) == 2026-06-01
 }
+
 /// Bankr. E.D. Cal. LBR 1007-1(c)(2): the debtor provides the demanded
 /// copies within 14 days of the demand.
 deadline payment-advices-production-period: 14.days after DemandForDocumentsMade() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 1007-1(c)"
@@ -140,6 +142,7 @@ test "Counting boundary: consolidation-objection-period (weekend)" cite "Bankr. 
   given PetitionFiled() on 2026-04-30
   expect deadline(consolidation-objection-period) == 2026-06-15
 }
+
 /// Bankr. E.D. Cal. LBR 1016-1(a): a notice of death of the debtor is filed
 /// within 60 days of the death.
 deadline death-notice-period: 60.days after DebtorDied() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 1016-1(a)"
@@ -149,6 +152,7 @@ test "Counting boundary: death-notice-period (holiday)" cite "Bankr. E.D. Cal. L
   given DebtorDied() on 2026-05-04
   expect deadline(death-notice-period) == 2026-07-06
 }
+
 /// Bankr. E.D. Cal. LBR 2015-1(c): monthly reports are filed not later than
 /// the 21st day of the month following the reported period.
 deadline monthly-report-period: 21.days after MonthEnded() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 2015-1(c)"
@@ -158,6 +162,7 @@ test "Counting boundary: monthly-report-period (weekend)" cite "Bankr. E.D. Cal.
   given MonthEnded() on 2026-05-02
   expect deadline(monthly-report-period) == 2026-05-26
 }
+
 /// Bankr. E.D. Cal. LBR 2015-1(d): each monthly report is served not later
 /// than seven days from the date it is filed.
 deadline monthly-report-service-period: 7.days after MonthlyReportFiled() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 2015-1(d)"
@@ -167,6 +172,7 @@ test "Counting boundary: monthly-report-service-period (weekend)" cite "Bankr. E
   given MonthlyReportFiled() on 2026-05-02
   expect deadline(monthly-report-service-period) == 2026-05-11
 }
+
 /// Bankr. E.D. Cal. LBR 2016-1(c)(5)(A): on dismissal or conversion of a
 /// chapter 13 case before confirmation, debtor's counsel refunds an excess
 /// retainer or files, serves and sets a motion for compensation within 14
@@ -181,6 +187,7 @@ test "Counting boundary: appearance-confirmation-period (weekend)" cite "Bankr. 
   given AppearanceMadeInCourt() on 2026-05-02
   expect deadline(appearance-confirmation-period) == 2026-05-11
 }
+
 /// Bankr. E.D. Cal. LBR 2017-1(f): an attorney appearing solely to contest
 /// a temporary restraining order or preliminary injunction may withdraw
 /// within 14 days after making that appearance.
@@ -199,6 +206,7 @@ test "Counting boundary: subchapter-v-claim-period (weekend)" cite "Bankr. E.D. 
   given OrderForReliefEntered() on 2026-05-02
   expect deadline(subchapter-v-claim-period) == 2026-07-13
 }
+
 /// Bankr. E.D. Cal. LBR 3004-1: the time for the debtor or trustee to file
 /// a claim for a creditor in a chapter 13 case is extended to 60 days after
 /// service of the Notice of Filed Claims.
@@ -209,6 +217,7 @@ test "Counting boundary: surrogate-claim-period (holiday)" cite "Bankr. E.D. Cal
   given NoticeOfFiledClaimsServed() on 2026-05-04
   expect deadline(surrogate-claim-period) == 2026-07-06
 }
+
 /// Bankr. E.D. Cal. LBR 3007-1(b)(1): unless 30 days' notice is elected, a
 /// claim objection is filed and served at least 44 days before the hearing.
 deadline claim-objection-notice-period: 44.days before ClaimObjectionHearing() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 3007-1(b)"
@@ -225,6 +234,7 @@ test "Counting boundary: claim-objection-opposition-period (weekend)" cite "Bank
   given ClaimObjectionHearing() on 2026-05-02
   expect deadline(claim-objection-opposition-period) == 2026-04-17
 }
+
 /// Bankr. E.D. Cal. LBR 3007-1(b)(1)(B): the objecting party may reply at
 /// least seven days before the hearing.
 deadline claim-objection-reply-period: 7.days before ClaimObjectionHearing() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 3007-1(b)"
@@ -234,6 +244,7 @@ test "Counting boundary: claim-objection-reply-period (weekend)" cite "Bankr. E.
   given ClaimObjectionHearing() on 2026-05-02
   expect deadline(claim-objection-reply-period) == 2026-04-24
 }
+
 /// Bankr. E.D. Cal. LBR 3007-1(d)(3): objections to claims are filed and
 /// served no later than 60 days after service of the Notice of Filed
 /// Claims.
@@ -244,6 +255,7 @@ test "Counting boundary: filed-claims-objection-period (holiday)" cite "Bankr. E
   given NoticeOfFiledClaimsServed() on 2026-05-04
   expect deadline(filed-claims-objection-period) == 2026-07-06
 }
+
 /// Bankr. E.D. Cal. LBR 3007-1(d)(5): a motion to modify the plan to
 /// reconcile it with the filed claims is filed and served no later than 90
 /// days after service of the Notice of Filed Claims.
@@ -262,6 +274,7 @@ test "Counting boundary: plan-objection-period (weekend)" cite "Bankr. E.D. Cal.
   given FirstMeetingDate() on 2026-05-02
   expect deadline(plan-objection-period) == 2026-05-11
 }
+
 /// Bankr. E.D. Cal. LBR 3015-1(d): a motion to confirm a chapter 13 plan is
 /// served on parties in interest at least 35 days before the hearing.
 deadline plan-motion-notice-period: 35.days before MotionHearing() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 3015-1(d)"
@@ -271,6 +284,7 @@ test "Counting boundary: plan-motion-notice-period (weekend)" cite "Bankr. E.D. 
   given MotionHearing() on 2026-05-02
   expect deadline(plan-motion-notice-period) == 2026-03-27
 }
+
 /// Bankr. E.D. Cal. LBR 3015-1(e): when no objection is filed, a
 /// confirmation order is lodged within 14 days of the expiration of the
 /// deadline for filing objections.
@@ -288,6 +302,7 @@ test "Counting boundary: default-hearing-period (weekend)" cite "Bankr. E.D. Cal
   given DefaultNoticeMailed() on 2026-05-02
   expect deadline(default-hearing-period) == 2026-06-01
 }
+
 /// Bankr. E.D. Cal. LBR 3015-1(g)(3): alternatively, the debtor cures the
 /// delinquency or moves to modify the plan within 30 days of the mailing of
 /// the notice of default.
@@ -298,6 +313,7 @@ test "Counting boundary: default-cure-period (weekend)" cite "Bankr. E.D. Cal. L
   given DefaultNoticeMailed() on 2026-04-30
   expect deadline(default-cure-period) == 2026-06-01
 }
+
 /// Bankr. E.D. Cal. LBR 5009-1(b): no later than 30 days after the Notice
 /// to Debtor of Completed Plan Payments, the debtor files and serves the §
 /// 1328 certificate.
@@ -308,6 +324,7 @@ test "Counting boundary: discharge-certification-period (weekend)" cite "Bankr. 
   given CompletedPaymentsNoticeDated() on 2026-04-30
   expect deadline(discharge-certification-period) == 2026-06-01
 }
+
 /// Bankr. E.D. Cal. LBR 5009-1(d): an objection to the debtor's discharge
 /// certifications is filed and served within 14 days of the Notice of
 /// Intent to Enter Chapter 13 Discharge.
@@ -321,6 +338,7 @@ test "Counting boundary: parties-conference-period (weekend)" cite "Bankr. E.D. 
   given SchedulingConference() on 2026-05-02
   expect deadline(parties-conference-period) == 2026-04-17
 }
+
 /// Bankr. E.D. Cal. LBR 7026-1: the written discovery plan report is filed
 /// not less than seven days after the parties' conference.
 deadline discovery-plan-report-period: 7.days after PartiesConferenceHeld() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 7026-1"
@@ -330,6 +348,7 @@ test "Counting boundary: discovery-plan-report-period (weekend)" cite "Bankr. E.
   given PartiesConferenceHeld() on 2026-05-02
   expect deadline(discovery-plan-report-period) == 2026-05-11
 }
+
 /// Bankr. E.D. Cal. LBR 7056-1(a): a motion for summary judgment is filed
 /// and served at least 42 days before the hearing.
 deadline summary-judgment-motion-period: 42.days before MotionHearing() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 7056-1(a)"
@@ -339,6 +358,7 @@ test "Counting boundary: summary-judgment-motion-period (weekend)" cite "Bankr. 
   given MotionHearing() on 2026-05-02
   expect deadline(summary-judgment-motion-period) == 2026-03-20
 }
+
 /// Bankr. E.D. Cal. LBR 7056-1(b): opposition to summary judgment is filed
 /// and served at least 21 days before the hearing.
 deadline summary-judgment-opposition-period: 21.days before MotionHearing() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 7056-1(b)"
@@ -348,6 +368,7 @@ test "Counting boundary: summary-judgment-opposition-period (weekend)" cite "Ban
   given MotionHearing() on 2026-05-02
   expect deadline(summary-judgment-opposition-period) == 2026-04-10
 }
+
 /// Bankr. E.D. Cal. LBR 7056-1(c): a reply is filed and served at least 14
 /// days before the hearing.
 deadline summary-judgment-reply-period: 14.days before MotionHearing() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 7056-1(c)"
@@ -357,6 +378,7 @@ test "Counting boundary: summary-judgment-reply-period (weekend)" cite "Bankr. E
   given MotionHearing() on 2026-05-02
   expect deadline(summary-judgment-reply-period) == 2026-04-17
 }
+
 /// Bankr. E.D. Cal. LBR 7090-1: exhibits offered at trial and not reclaimed
 /// within 60 days after entry of a final judgment or order may be disposed
 /// of by the Clerk.
@@ -367,6 +389,7 @@ test "Counting boundary: trial-exhibits-reclaim-period (holiday)" cite "Bankr. E
   given JudgmentFinal() on 2026-05-04
   expect deadline(trial-exhibits-reclaim-period) == 2026-07-06
 }
+
 /// Bankr. E.D. Cal. LBR 9014-1(e)(2): a certificate of service is filed
 /// concurrently with the documents served or not more than three days after
 /// they are filed.
@@ -377,6 +400,7 @@ test "Counting boundary: proof-of-service-period (weekend)" cite "Bankr. E.D. Ca
   given DocumentsServed() on 2026-04-30
   expect deadline(proof-of-service-period) == 2026-05-04
 }
+
 /// Bankr. E.D. Cal. LBR 9014-1(f)(1): unless 14 days' notice is elected, a
 /// motion is filed and served at least 28 days before the hearing.
 deadline motion-notice-period: 28.days before MotionHearing() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 9014-1(f)"
@@ -386,6 +410,7 @@ test "Counting boundary: motion-notice-period (weekend)" cite "Bankr. E.D. Cal. 
   given MotionHearing() on 2026-05-02
   expect deadline(motion-notice-period) == 2026-04-03
 }
+
 /// Bankr. E.D. Cal. LBR 9014-1(f)(2): alternatively, a motion is filed and
 /// served at least 14 days before the hearing, and no written opposition is
 /// required.
@@ -396,6 +421,7 @@ test "Counting boundary: motion-short-notice-period (weekend)" cite "Bankr. E.D.
   given MotionHearing() on 2026-05-02
   expect deadline(motion-short-notice-period) == 2026-04-17
 }
+
 /// Bankr. E.D. Cal. LBR 9014-1(f)(1)(B): written opposition to a motion set
 /// on 28 days' notice is served and filed at least 14 days before the
 /// hearing.
@@ -406,6 +432,7 @@ test "Counting boundary: motion-opposition-period (weekend)" cite "Bankr. E.D. C
   given MotionHearing() on 2026-05-02
   expect deadline(motion-opposition-period) == 2026-04-17
 }
+
 /// Bankr. E.D. Cal. LBR 9014-1(f)(1)(C): the moving party may reply at
 /// least seven days before the hearing.
 deadline motion-reply-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 9014-1(f)"
@@ -415,6 +442,7 @@ test "Counting boundary: motion-reply-period (weekend)" cite "Bankr. E.D. Cal. L
   given MotionHearing() on 2026-05-02
   expect deadline(motion-reply-period) == 2026-04-24
 }
+
 /// Bankr. E.D. Cal. LBR 9014-1(g): pretrial disclosures in a contested
 /// matter are made at least 30 days before the evidentiary hearing.
 deadline pretrial-disclosures-period: 30.days before EvidentiaryHearing() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 9014-1(g)"
@@ -435,6 +463,7 @@ test "Counting boundary: plaintiff-declarations-period (weekend)" cite "Bankr. E
   given Trial() on 2026-05-02
   expect deadline(plaintiff-declarations-period) == 2026-04-17
 }
+
 /// Bankr. E.D. Cal. LBR 9017-1(b)(2): the defendant submits its
 /// declarations and exhibits to opposing counsel seven days before trial.
 deadline defendant-declarations-period: 7.days before Trial() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 9017-1(b)"
@@ -444,6 +473,7 @@ test "Counting boundary: defendant-declarations-period (weekend)" cite "Bankr. E
   given Trial() on 2026-05-02
   expect deadline(defendant-declarations-period) == 2026-04-24
 }
+
 /// Bankr. E.D. Cal. LBR 9037-1(b): within 30 days of an order granting a
 /// motion to redact, the filing party submits a redacted copy of the
 /// document.
@@ -454,6 +484,7 @@ test "Counting boundary: redacted-copy-period (weekend)" cite "Bankr. E.D. Cal. 
   given RedactionOrderEntered() on 2026-04-30
   expect deadline(redacted-copy-period) == 2026-06-01
 }
+
 /// Bankr. E.D. Cal. LBR 9037-1(h): within seven days of the filing of a
 /// transcript, a party files any Notice of Intent to Request Redaction.
 deadline redaction-intent-period: 7.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 9037-1(h)"
@@ -463,6 +494,7 @@ test "Counting boundary: redaction-intent-period (weekend)" cite "Bankr. E.D. Ca
   given TranscriptFiled() on 2026-05-02
   expect deadline(redaction-intent-period) == 2026-05-11
 }
+
 /// Bankr. E.D. Cal. LBR 9037-1(i): a party who filed a notice of intent has
 /// 21 days from the filing of the transcript to file a Redaction Request.
 deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 9037-1(i)"
@@ -472,6 +504,7 @@ test "Counting boundary: redaction-request-period (weekend)" cite "Bankr. E.D. C
   given TranscriptFiled() on 2026-05-02
   expect deadline(redaction-request-period) == 2026-05-26
 }
+
 /// Bankr. E.D. Cal. LBR 9037-1(j): the court reporter files the redacted
 /// transcript within 31 days of the filing of the original.
 deadline redacted-transcript-period: 31.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. E.D. Cal. LBR 9037-1(j)"
@@ -487,7 +520,7 @@ start motion-filed
 state motion-filed: "Motion filed and served with notice of opportunity for hearing" by movant cite "Bankr. E.D. Cal. LBR 9014-1(k)"
 {
   note "On the notice of opportunity for hearing procedure the notice gives at least 14 days after service to request a hearing or object (LBR 9014-1(k)). A motion set for hearing is instead filed and served 28 days before it, with opposition 14 days and a reply 7 days before it, or on 14 days' notice with no written opposition required (LBR 9014-1(f)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Request for hearing or objection filed" -> opposed {
+  "Request for hearing or objection filed" -> opposed {
     authority cite "Bankr. E.D. Cal. LBR 9014-1(k)"
     within opportunity-objection-period
   }
@@ -499,7 +532,7 @@ state motion-filed: "Motion filed and served with notice of opportunity for hear
 state opposed: "Objection filed; matter set for hearing" by opponent cite "Bankr. E.D. Cal. LBR 9014-1(f)"
 {
   note "The matter is set for hearing under LBR 9014-1(f)."
-  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. E.D. Cal. LBR 9014-1(f)" }
+  "Hearing held" -> ruling { authority cite "Bankr. E.D. Cal. LBR 9014-1(f)" }
 }
 
 decision ruling: "Matter decided" by court cite "Bankr. E.D. Cal. LBR 9014-1(k)"

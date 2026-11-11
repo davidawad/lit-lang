@@ -43,7 +43,7 @@ decision preliminary: "Preliminary hearing" by court cite ?("N.D.R.Crim.P. 5.1, 
 
 state arraignment: "Arraignment and plea" by accused cite ?("N.D.R.Crim.P. 10, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified") {
   note "Arraignment follows N.D.R.Crim.P. 10; the pleas are guilty and not guilty (12(a), 11). Unverified: CURRENCY UNCONFIRMED."
-  edge-arraignment-pretrial "Plea of not guilty; pretrial proceedings" -> pretrial {
+  "Plea of not guilty; pretrial proceedings" -> pretrial {
     authority cite ?("N.D.R.Crim.P. 12(c), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
   }
 }
@@ -79,7 +79,7 @@ decision plea-decision: "Plea or trial" by accused cite ?("N.D.R.Crim.P. 11, CUR
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("N.D.R.Crim.P. 11, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
   }
-  edge-plea-decision-trial "Trial" -> trial {
+  "Trial" -> trial {
     authority cite ?("N.D.R.Crim.P. 23, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
   }
 }
@@ -112,7 +112,7 @@ decision post-verdict: "Post-verdict motions" by court cite ?("N.D.R.Crim.P. 33,
 
 state sentencing: "Sentence and judgment" by court cite ?("N.D.R.Crim.P. 32(a), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified") {
   note "The court imposes sentence without unnecessary delay; any part of the presentence report the court lets the defendant examine is disclosed at least 14 days before sentence unless the defendant waives it (N.D.R.Crim.P. 32(a)(1), (c)(4)(B)). The court may reduce a sentence within 120 days after it imposes sentence or revokes probation, after it receives the mandate on affirmance or dismissal of the appeal, or after a United States Supreme Court order denying review (35(b)(1)). Unverified: CURRENCY UNCONFIRMED."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+  "Sentence imposed; judgment entered" -> judgment {
     authority cite ?("N.D.R.Crim.P. 32, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
   }
 }

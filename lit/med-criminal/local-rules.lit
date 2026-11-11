@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ VerdictOrDischarge }
 
+forum frcrimp
+
 // The District of Maine's own criminal periods. The criminal local rules
 // start with Local Rule 101 and each corresponds to the Federal Rule of
 // Criminal Procedure of the same number less 100; rules that apply to
@@ -99,16 +101,9 @@ event FinalDetermination()
 /// D. Me. Local R. 111: counsel files any plea agreement with the Clerk at
 /// least 2 business days before a scheduled change of plea.
 deadline plea-agreement-filing: 2.business_days before ChangeOfPleaScheduled() counted_by frcrimp45 cite "D. Me. Local R. 111"
-{
-  forum frcrimp
-}
-
 /// D. Me. Local R. 124.1: proposed questions for jury voir dire are served
 /// and submitted at least 3 days before jury empanelment.
 deadline voir-dire-questions: 3.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D. Me. Local R. 124.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: voir-dire-questions (weekend)" cite "D. Me. Local R. 124.1"
 {
@@ -120,9 +115,6 @@ test "Counting boundary: voir-dire-questions (weekend)" cite "D. Me. Local R. 12
 /// FRCrimP 30 are served and submitted at least 3 days before jury
 /// empanelment.
 deadline jury-instruction-requests: 3.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D. Me. Local R. 130"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: jury-instruction-requests (weekend)" cite "D. Me. Local R. 130"
 {
@@ -137,9 +129,6 @@ deadline trial-brief-filing: 3.days before TrialScheduled() counted_by frcrimp45
   to CaseOrder
   op set
 } cite "D. Me. Local R. 157.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: trial-brief-filing (weekend)" cite "D. Me. Local R. 157.2"
 {
@@ -155,9 +144,6 @@ deadline revised-psr-filing: 77.days after VerdictOrDischarge(Verdict) counted_b
   to CaseOrder
   op set
 } cite "D. Me. Local R. 132(b); D. Me. Local R. 132(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: revised-psr-filing (holiday)" cite "D. Me. Local R. 132(b); D. Me. Local R. 132(e)"
 {
@@ -174,9 +160,6 @@ deadline cooperation-motion: 5.business_days before SentencingHearingScheduled()
   to CaseOrder
   op set
 } cite "D. Me. Local R. 132(g)"
-{
-  forum frcrimp
-}
 
 /// D. Me. Local R. 132(g)(3): unless the assigned judge orders otherwise,
 /// courtesy copies of sentencing exhibits are submitted 5 business days
@@ -185,9 +168,6 @@ deadline sentencing-exhibits: 5.business_days before SentencingHearingScheduled(
   to CaseOrder
   op set
 } cite "D. Me. Local R. 132(g)"
-{
-  forum frcrimp
-}
 
 /// D. Me. Local R. 132.1(a): unless the Court orders otherwise, the
 /// probation officer files the revocation report not more than 10
@@ -197,9 +177,6 @@ deadline revocation-report: 10.days after RevocationTrigger() counted_by frcrimp
   to CaseOrder
   op set
 } cite "D. Me. Local R. 132.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: revocation-report (weekend)" cite "D. Me. Local R. 132.1(a)"
 {
@@ -211,9 +188,6 @@ test "Counting boundary: revocation-report (weekend)" cite "D. Me. Local R. 132.
 /// objection, with a memorandum of law, within 21 days after the filing of
 /// a motion, it is deemed to have waived objection.
 deadline objection-period: 21.days after MotionFiled() counted_by frcrimp45 cite "D. Me. Local R. 147(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: objection-period (weekend)" cite "D. Me. Local R. 147(b)"
 {
@@ -224,9 +198,6 @@ test "Counting boundary: objection-period (weekend)" cite "D. Me. Local R. 147(b
 /// D. Me. Local R. 147(b)(1): the same 21 days for a dispositive motion or
 /// a motion to suppress evidence.
 deadline dispositive-objection-period: 21.days after DispositiveMotionFiled() counted_by frcrimp45 cite "D. Me. Local R. 147(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: dispositive-objection-period (weekend)" cite "D. Me. Local R. 147(b)"
 {
@@ -237,9 +208,6 @@ test "Counting boundary: dispositive-objection-period (weekend)" cite "D. Me. Lo
 /// D. Me. Local R. 147(c): within 14 days of the filing of an objection,
 /// the moving party may file a reply memorandum.
 deadline reply-period: 14.days after ObjectionFiled() counted_by frcrimp45 cite "D. Me. Local R. 147(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "D. Me. Local R. 147(c)"
 {
@@ -252,9 +220,6 @@ test "Counting boundary: reply-period (weekend)" cite "D. Me. Local R. 147(c)"
 /// of the action by this or any appellate court; after notice the Clerk
 /// may dispose of them.
 deadline exhibit-withdrawal: 30.days after FinalDetermination() counted_by frcrimp45 cite "D. Me. Local R. 123(f)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-withdrawal (weekend)" cite "D. Me. Local R. 123(f)"
 {

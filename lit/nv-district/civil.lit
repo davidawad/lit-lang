@@ -72,7 +72,7 @@ state amended: "Amended pleading" by plaintiff cite "NRCP 15(a)"
   edge-amended-tested "Amended pleading met with a new Rule 12(b) motion" -> dismissal-motion {
     authority cite "NRCP 12(b)"
   }
-  edge-amended-answered "Amended pleading answered" -> answered { authority cite "NRCP 15(a)" }
+  "Amended pleading answered" -> answered { authority cite "NRCP 15(a)" }
 }
 
 terminal dismissed-pleading: "Dismissed on a Rule 12(b) motion" outcome [loss, dismissal] cite "NRCP 12(b)"
@@ -121,13 +121,11 @@ state discovery: "Early case conference and discovery" by plaintiff cite "NRCP 1
   edge-discovery-sj "Motion for summary judgment" -> summary-judgment {
     authority cite "NRCP 56(a)"
   }
-  edge-discovery-trial "Case reaches trial" -> trial { authority cite "NRCP 38" }
+  "Case reaches trial" -> trial { authority cite "NRCP 38" }
   edge-discovery-unprosecuted "Not brought to trial: dismissed for want of prosecution" -> dismissed-unprosecuted {
     authority cite "NRCP 41(e)"
   }
-  edge-discovery-settled "Settlement: notice or stipulation of dismissal" -> settled {
-    authority cite "NRCP 41(a)"
-  }
+  "Settlement: notice or stipulation of dismissal" -> settled { authority cite "NRCP 41(a)" }
 }
 
 terminal dismissed-unprosecuted: "Dismissed for want of prosecution" outcome [loss, dismissal] cite "NRCP 41(e)"
@@ -158,7 +156,7 @@ state trial: "Trial by jury or by the court" by court cite "NRCP 38"
     event JudgmentEntered()
     authority cite "NRCP 58"
   }
-  edge-trial-settled "Settlement during trial" -> settled { authority cite "NRCP 41(a)" }
+  "Settlement during trial" -> settled { authority cite "NRCP 41(a)" }
 }
 
 decision judgment-entered: "Judgment entered" by court cite "NRCP 58"

@@ -52,9 +52,7 @@ decision appealability: "Statement of jurisdiction: appealable judgment entered?
   edge-appealability-dismissed "No statement, or no appealable judgment entered" -> dismissed-jurisdiction {
     authority cite "Guam R. App. P. 4.1(b)"
   }
-  edge-appealability-record "Appealable judgment entered" -> record {
-    authority cite "Guam R. App. P. 4.1(a)"
-  }
+  "Appealable judgment entered" -> record { authority cite "Guam R. App. P. 4.1(a)" }
 }
 
 terminal dismissed-jurisdiction: "Dismissed for lack of jurisdiction" outcome [loss, dismissal] cite "Guam R. App. P. 4.1(b)"
@@ -65,15 +63,13 @@ terminal dismissed-jurisdiction: "Dismissed for lack of jurisdiction" outcome [l
 state record: "Record and transcript" by petitioner cite "Guam R. App. P. 7(b)"
 {
   note "Within 10 days after filing the notice of appeal or entry of the order disposing of the last timely Rule 4(a)(4)(A) motion, whichever is later, the appellant orders in writing the transcript it considers necessary or files a certificate that none will be ordered; unless the entire transcript is ordered, the appellant files a statement of the issues within the same 10 days, the appellee may designate additional parts within 10 days after service, and the appellee may order them or move within the following 10 days (Guam R. App. P. 7(b)(1), (3)). A reporter who cannot complete the transcript within 45 days of receiving the order may ask the Supreme Court Clerk for more time (Guam R. App. P. 7.1(b)). On the filing of the transcript, or notice that none will be ordered, the Superior Court Clerk files a certificate of record, and its filing means the record is filed (Guam R. App. P. 7.1(c))."
-  edge-record-briefing "Certificate of record filed" -> briefing {
-    authority cite "Guam R. App. P. 7.1(c)"
-  }
+  "Certificate of record filed" -> briefing { authority cite "Guam R. App. P. 7.1(c)" }
 }
 
 state briefing: "Briefing" by petitioner cite "Guam R. App. P. 17(a)"
 {
   note "The appellant serves and files its brief within 40 days after the record was filed, the appellee within 30 days after service of the appellant's brief, and any reply within 14 days after service of the appellee's brief and, except for good cause, at least 14 days before argument (Guam R. App. P. 17(a)). The Clerk may grant one oral extension of no more than 14 days for good cause; any other extension is by written motion made at least 5 days before the brief is due (Guam R. App. P. 17(c)). A principal brief is limited to 30 pages, or 14,000 words or 1,300 lines; a reply brief to 15 pages or half that type volume; a motion to exceed is filed at least 14 days before the brief is due (7 days for a reply) (Guam R. App. P. 16(a))."
-  edge-briefing-argument "Briefing complete" -> argument { authority cite "Guam R. App. P. 17(a)" }
+  "Briefing complete" -> argument { authority cite "Guam R. App. P. 17(a)" }
 }
 
 decision argument: "Oral argument or submission on the briefs" by court cite "Guam R. App. P. 19(a)"

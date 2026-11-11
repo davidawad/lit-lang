@@ -3,6 +3,8 @@ module cacd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Central District of California's own criminal periods, counted
 // under the criminal rules (FRCrimP 45(a) governs "any local rule"). No
 // trigger carries a service method: FRCrimP 45(c)'s three added days
@@ -65,9 +67,6 @@ deadline suppression-response: 7.days after SuppressionMotionServed() counted_by
   to CaseOrder
   op set
 } cite "C.D. Cal. L.Cr.R. 12-1.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: suppression-response (weekend)" cite "C.D. Cal. L.Cr.R. 12-1.2"
 {
@@ -80,9 +79,6 @@ test "Counting boundary: suppression-response (weekend)" cite "C.D. Cal. L.Cr.R.
 /// later than one week before the hearing; otherwise the declarant is made
 /// available for cross-examination.
 deadline declarant-cross-examination-notice: 7.days before SuppressionHearingScheduled() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 12-1.3"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: declarant-cross-examination-notice (holiday)" cite "C.D. Cal. L.Cr.R. 12-1.3"
 {
@@ -98,9 +94,6 @@ deadline government-expert-disclosure: 30.days before TrialScheduled() counted_b
   to CaseOrder
   op set
 } cite "C.D. Cal. L.Cr.R. 16-1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-expert-disclosure (weekend)" cite "C.D. Cal. L.Cr.R. 16-1"
 {
@@ -116,9 +109,6 @@ deadline defense-expert-disclosure: 14.days before TrialScheduled() counted_by f
   to CaseOrder
   op set
 } cite "C.D. Cal. L.Cr.R. 16-1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-expert-disclosure (weekend)" cite "C.D. Cal. L.Cr.R. 16-1"
 {
@@ -130,9 +120,6 @@ test "Counting boundary: defense-expert-disclosure (weekend)" cite "C.D. Cal. L.
 /// Court is recognized unless filed with the Clerk within ten (10) days of
 /// its making.
 deadline deposit-assignment-filing: 10.days after DepositAssignmentMade() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 46-7"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: deposit-assignment-filing (weekend)" cite "C.D. Cal. L.Cr.R. 46-7"
 {
@@ -148,9 +135,6 @@ deadline settlement-conference-request: 21.days before TrialScheduled() counted_
   to CaseOrder
   op set
 } cite "C.D. Cal. L.Cr.R. 57-3.3.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: settlement-conference-request (holiday)" cite "C.D. Cal. L.Cr.R. 57-3.3.1"
 {
@@ -162,9 +146,6 @@ test "Counting boundary: settlement-conference-request (holiday)" cite "C.D. Cal
 /// criminal history summary from the Probation Officer at least 10 days
 /// before the settlement conference.
 deadline criminal-history-request: 10.days before SettlementConferenceScheduled() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 57-3.5.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: criminal-history-request (weekend)" cite "C.D. Cal. L.Cr.R. 57-3.5.2"
 {
@@ -176,9 +157,6 @@ test "Counting boundary: criminal-history-request (weekend)" cite "C.D. Cal. L.C
 /// without order of the Court, provides the summary to both counsel
 /// within 7 days of the request.
 deadline criminal-history-summary: 7.days after CriminalHistoryRequested() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 57-3.5.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: criminal-history-summary (weekend)" cite "C.D. Cal. L.Cr.R. 57-3.5.2"
 {
@@ -191,9 +169,6 @@ test "Counting boundary: criminal-history-summary (weekend)" cite "C.D. Cal. L.C
 /// writing and executed within three (3) court days from the settlement
 /// conference.
 deadline settlement-plea-agreement: 3.court_days after SettlementConferenceHeld() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 57-3.5.4"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: settlement-plea-agreement (weekend)" cite "C.D. Cal. L.Cr.R. 57-3.5.4"
 {

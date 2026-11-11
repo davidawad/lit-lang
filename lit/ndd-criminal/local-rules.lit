@@ -2,6 +2,8 @@ module ndd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of North Dakota's own criminal periods. Its time rule
 // (Crim. L.R. 45.1) was repealed on October 6, 2025, and FRCrimP 45(a)
 // computes a period "in any local rule" of a criminal case, so these count
@@ -84,9 +86,6 @@ event ObjectionServedAndFiled()
 /// limit a grand jury subpoena is filed and served seven days before the
 /// date the witness is subpoenaed to appear or produce documents.
 deadline grand-jury-subpoena-motion-period: 7.days before GrandJuryReturnDate() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 6.1(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: grand-jury-subpoena-motion-period (weekend)" cite "D.N.D. Crim. L.R. 6.1(C)"
 {
@@ -98,9 +97,6 @@ test "Counting boundary: grand-jury-subpoena-motion-period (weekend)" cite "D.N.
 /// and files requested jury instructions and a proposed verdict form at
 /// least seven days before the first day of trial.
 deadline jury-instructions-period: 7.days before TrialBegins() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 30.1(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: jury-instructions-period (weekend)" cite "D.N.D. Crim. L.R. 30.1(A)"
 {
@@ -113,9 +109,6 @@ test "Counting boundary: jury-instructions-period (weekend)" cite "D.N.D. Crim. 
 /// later than seven days before the sentencing hearing unless the court
 /// orders otherwise.
 deadline sentencing-memorandum-period: 7.days before SentencingHearing() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 32.1(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-memorandum-period (weekend)" cite "D.N.D. Crim. L.R. 32.1(B)"
 {
@@ -126,9 +119,6 @@ test "Counting boundary: sentencing-memorandum-period (weekend)" cite "D.N.D. Cr
 /// D.N.D. Crim. L.R. 32.1(B): a response to a sentencing memorandum is
 /// served and filed no later than two days before the sentencing hearing.
 deadline sentencing-response-period: 2.days before SentencingHearing() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 32.1(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-response-period (weekend)" cite "D.N.D. Crim. L.R. 32.1(B)"
 {
@@ -141,9 +131,6 @@ test "Counting boundary: sentencing-response-period (weekend)" cite "D.N.D. Crim
 /// response. Failure to respond may be deemed an admission that the
 /// motion is well taken (47.1(B)(5)).
 deadline motion-response-period: 14.days after MotionMemorandumServedAndFiled() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 47.1(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-response-period (weekend)" cite "D.N.D. Crim. L.R. 47.1(A)"
 {
@@ -154,9 +141,6 @@ test "Counting boundary: motion-response-period (weekend)" cite "D.N.D. Crim. L.
 /// D.N.D. Crim. L.R. 47.1(A)(1): the moving party has seven days after
 /// service and filing of the response to serve and file a reply.
 deadline motion-reply-period: 7.days after ResponseServedAndFiled() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 47.1(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-reply-period (holiday)" cite "D.N.D. Crim. L.R. 47.1(A)"
 {
@@ -167,9 +151,6 @@ test "Counting boundary: motion-reply-period (holiday)" cite "D.N.D. Crim. L.R. 
 /// D.N.D. Crim. L.R. 47.1(A)(2): the United States has twenty-eight days
 /// after service and filing of a motion to reduce sentence to respond.
 deadline sentence-reduction-response-period: 28.days after SentenceReductionMotionServedAndFiled() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 47.1(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentence-reduction-response-period (weekend)" cite "D.N.D. Crim. L.R. 47.1(A)"
 {
@@ -180,9 +161,6 @@ test "Counting boundary: sentence-reduction-response-period (weekend)" cite "D.N
 /// D.N.D. Crim. L.R. 47.1(A)(2): the moving party has fourteen days after
 /// service and filing of the response to reply.
 deadline sentence-reduction-reply-period: 14.days after SentenceReductionResponseServedAndFiled() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 47.1(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentence-reduction-reply-period (weekend)" cite "D.N.D. Crim. L.R. 47.1(A)"
 {
@@ -196,9 +174,6 @@ test "Counting boundary: sentence-reduction-reply-period (weekend)" cite "D.N.D.
 /// supporting memorandum and a proposed unsealing date, to keep them
 /// sealed longer.
 deadline warrant-sealing-period: 90.days after WarrantReturnFiled() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 49.1(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: warrant-sealing-period (weekend)" cite "D.N.D. Crim. L.R. 49.1(C)"
 {
@@ -210,9 +185,6 @@ test "Counting boundary: warrant-sealing-period (weekend)" cite "D.N.D. Crim. L.
 /// service and filing of an objection to a magistrate judge's
 /// non-dispositive order to serve and file a response.
 deadline objection-response-period: 7.days after ObjectionServedAndFiled() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 59.1(D)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: objection-response-period (holiday)" cite "D.N.D. Crim. L.R. 59.1(D)"
 {

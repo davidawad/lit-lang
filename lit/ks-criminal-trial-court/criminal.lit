@@ -36,9 +36,7 @@ decision initial-appearance: "Release or detention" by court cite "K.S.A. 22-280
 decision probable-cause: "Preliminary examination or indictment" by court cite "K.S.A. 22-2902"
 {
   note "The state and every person charged with a felony have a right to a preliminary examination before a magistrate unless the charge results from a grand jury indictment (K.S.A. 22-2902(a)); the period within which it is held is not stated here (currency unconfirmed). If it appears that a felony has been committed and there is probable cause to believe the defendant committed it, the magistrate binds the defendant over to the district judge; otherwise the magistrate discharges the defendant (K.S.A. 22-2902(c)); a waived examination also results in bind-over (K.S.A. 22-2902(e))."
-  edge-probable-cause-charged "Bound over; information or indictment" -> charged {
-    authority cite "K.S.A. 22-2902"
-  }
+  "Bound over; information or indictment" -> charged { authority cite "K.S.A. 22-2902" }
   edge-probable-cause-none "No probable cause; discharged" -> dismissed {
     authority cite "K.S.A. 22-2902"
   }
@@ -47,13 +45,13 @@ decision probable-cause: "Preliminary examination or indictment" by court cite "
 state charged: "Complaint, information or indictment" by court cite "K.S.A. 22-3201"
 {
   note "Prosecutions in the district court are upon complaint, indictment or information (K.S.A. 22-3201(a))."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "K.S.A. 22-3205" }
+  "Arraignment" -> arraignment { authority cite "K.S.A. 22-3205" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "K.S.A. 22-3205"
 {
   note "Arraignment is conducted in open court by reading the charge or stating its substance and calling on the defendant to plead, after the defendant is given a copy of the indictment or information; it may be held by two-way electronic audio-video communication in the court's discretion (K.S.A. 22-3205(a), (b)). The pleas are not guilty, guilty, or with the court's consent nolo contendere (K.S.A. 22-3208(1)). The K.S.A. 22-3402 speedy-trial periods run from arraignment."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "K.S.A. 22-3212" }
+  "Discovery" -> discovery { authority cite "K.S.A. 22-3212" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "K.S.A. 22-3208"
@@ -86,7 +84,7 @@ decision plea-decision: "Plea or trial" by accused cite "K.S.A. 22-3210"
 {
   note "Before or during trial a plea of guilty or nolo contendere may be accepted when it is entered in open court and the court finds the conditions K.S.A. 22-3210(a) lists, including that the plea is made voluntarily with understanding of the charge and the consequences and that there is a factual basis; withdrawal of a plea is governed by K.S.A. 22-3210(d), whose periods are not stated here (currency unconfirmed)."
   edge-plea-decision-plea "Plea accepted" -> sentencing { authority cite "K.S.A. 22-3210" }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "K.S.A. 22-3403" }
+  "Trial" -> trial { authority cite "K.S.A. 22-3403" }
 }
 
 decision trial: "Verdict" by court cite "K.S.A. 22-3421"
@@ -111,7 +109,7 @@ decision post-trial: "Post-trial motions" by court cite "K.S.A. 22-3501"
 state sentencing: "Judgment and sentence" by court cite "K.S.A. 22-3424"
 {
   note "The judgment is rendered and sentence imposed in open court (K.S.A. 22-3424(a)); if the verdict or finding is not guilty, judgment is rendered immediately and the defendant is discharged (K.S.A. 22-3424(b)). On a guilty verdict or finding, judgment is rendered and sentence pronounced without unreasonable delay, allowing adequate time for post-trial motions (K.S.A. 22-3424(c)). The sentencing guidelines (K.S.A. chapter 21) are not vendored."
-  edge-sentencing-judgment "Sentence imposed" -> judgment { authority cite "K.S.A. 22-3424" }
+  "Sentence imposed" -> judgment { authority cite "K.S.A. 22-3424" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "K.S.A. 22-3608"

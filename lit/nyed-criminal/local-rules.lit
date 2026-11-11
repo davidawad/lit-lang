@@ -3,6 +3,8 @@ module nyed-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45-sdny }
 
+forum frcrimp
+
 // The Eastern District of New York's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"; the
 // district's own computation rule, Local Criminal Rule 45.1, is
@@ -64,9 +66,6 @@ event ReconsiderationReplyFiled() paper reconsideration-reply
 /// within 14 days: a supplemental disclosure statement is filed within 14
 /// days of any change in the information the statement requires.
 deadline supplemental-disclosure-statement: 14.days after DisclosureInformationChanged() counted_by frcrimp45-sdny cite "E.D.N.Y. Local Crim. R. 12.4"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: supplemental-disclosure-statement (weekend)" cite "E.D.N.Y. Local Crim. R. 12.4"
 {
@@ -81,9 +80,6 @@ deadline government-expert-disclosure: 60.days before TrialScheduled() counted_b
   to CaseOrder
   op set
 } cite "E.D.N.Y. Local Crim. R. 16.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-expert-disclosure (weekend)" cite "E.D.N.Y. Local Crim. R. 16.2"
 {
@@ -97,9 +93,6 @@ deadline defense-expert-disclosure: 30.days before TrialScheduled() counted_by f
   to CaseOrder
   op set
 } cite "E.D.N.Y. Local Crim. R. 16.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defense-expert-disclosure (weekend)" cite "E.D.N.Y. Local Crim. R. 16.2"
 {
@@ -115,9 +108,6 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45-sd
   to CaseOrder
   op set
 } cite "E.D.N.Y. Local Crim. R. 49.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: opposition-period (weekend)" cite "E.D.N.Y. Local Crim. R. 49.1(a)"
 {
@@ -132,9 +122,6 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45-sdny
   to CaseOrder
   op set
 } cite "E.D.N.Y. Local Crim. R. 49.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "E.D.N.Y. Local Crim. R. 49.1(a)"
 {
@@ -146,9 +133,6 @@ test "Counting boundary: reply-period (weekend)" cite "E.D.N.Y. Local Crim. R. 4
 /// determining a motion is filed within 14 days after the court's
 /// determination of the original motion.
 deadline reconsideration-period: 14.days after MotionDetermined() counted_by frcrimp45-sdny cite "E.D.N.Y. Local Crim. R. 49.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reconsideration-period (weekend)" cite "E.D.N.Y. Local Crim. R. 49.1(b)"
 {

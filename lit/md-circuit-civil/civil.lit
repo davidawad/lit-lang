@@ -66,13 +66,13 @@ terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] 
 state scheduling: "Scheduling order" by court cite "Md. Rule 2-504(a)"
 {
   note "Unless the court orders a scheduling conference, the scheduling order is entered as soon as practicable, no later than 30 days after an answer is filed by any defendant (Md. Rule 2-504(a)(3)). It sets the expert-witness dates, a discovery completion date, a written-discovery cut-off not less than 35 days before it, a dispositive-motion date no earlier than 15 days after it, and the dates for joinder and amendment as of right (Md. Rule 2-504(b)(1)). A jury demand is filed within 15 days after service of the last pleading directed to the issue, or trial by jury is waived (Md. Rule 2-325(b))."
-  edge-scheduling-discovery "Order entered" -> discovery { authority cite "Md. Rule 2-402" }
+  "Order entered" -> discovery { authority cite "Md. Rule 2-402" }
 }
 
 state discovery: "Discovery" by plaintiff cite "Md. Rule 2-402"
 {
   note "Discovery reaches any matter not privileged that is relevant to the subject matter of the action (Md. Rule 2-402(a)). A motion to compel or for sanctions is filed with reasonable promptness (Md. Rule 2-432(d)); on a failure to obey an order compelling discovery, the court may dismiss the action or enter a judgment by default (Md. Rule 2-433(a)(3), (c))."
-  edge-discovery-dispute "Discovery dispute" -> dispute { authority cite "Md. Rule 2-432(b)" }
+  "Discovery dispute" -> dispute { authority cite "Md. Rule 2-432(b)" }
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
     authority cite "Md. Rule 2-501(a)"
   }

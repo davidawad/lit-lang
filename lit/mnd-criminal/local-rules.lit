@@ -2,6 +2,8 @@ module mnd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of Minnesota's own periods in a criminal case. FRCrimP
 // 45(a) computes a period "in any local rule" of a criminal case, so these
 // count under frcrimp45. The court may modify the LR 12.1 schedule for
@@ -50,9 +52,6 @@ event Sentencing()
 /// must be redacted under FRCrimP 49.1 (and, in a case that concerns a
 /// child, 18 U.S.C. § 3509(d)).
 deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by frcrimp45 cite "D. Minn. LR 5.5(b)(2)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: redaction-statement-period (holiday)" cite "D. Minn. LR 5.5(b)(2)"
 {
@@ -64,9 +63,6 @@ test "Counting boundary: redaction-statement-period (holiday)" cite "D. Minn. LR
 /// fulfills its FRCrimP 16(a) discovery obligations within 7 days after
 /// the arraignment.
 deadline government-discovery-period: 7.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(a)(2)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-discovery-period (holiday)" cite "D. Minn. LR 12.1(a)(2)"
 {
@@ -78,9 +74,6 @@ test "Counting boundary: government-discovery-period (holiday)" cite "D. Minn. L
 /// fulfills the FRCrimP 16(b) discovery obligations within 14 days after
 /// the arraignment.
 deadline defendant-discovery-period: 14.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(a)(3)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defendant-discovery-period (weekend)" cite "D. Minn. LR 12.1(a)(3)"
 {
@@ -92,9 +85,6 @@ test "Counting boundary: defendant-discovery-period (weekend)" cite "D. Minn. LR
 /// 21 days after the arraignment, after the moving party confers with the
 /// responding party (LR 12.1(b)).
 deadline pretrial-motion-period: 21.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(c)(1)(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motion-period (holiday)" cite "D. Minn. LR 12.1(c)(1)(A)"
 {
@@ -105,9 +95,6 @@ test "Counting boundary: pretrial-motion-period (holiday)" cite "D. Minn. LR 12.
 /// D. Minn. LR 12.1(c)(2): a response to an FRCrimP 12(b) motion is filed
 /// within 35 days after the arraignment.
 deadline pretrial-motion-response-period: 35.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(c)(2)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motion-response-period (weekend)" cite "D. Minn. LR 12.1(c)(2)"
 {
@@ -119,9 +106,6 @@ test "Counting boundary: pretrial-motion-response-period (weekend)" cite "D. Min
 /// hearing on an FRCrimP 12(b) motion files a notice within 35 days after
 /// the arraignment.
 deadline witness-notice-period: 35.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(c)(3)(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: witness-notice-period (weekend)" cite "D. Minn. LR 12.1(c)(3)(A)"
 {
@@ -133,9 +117,6 @@ test "Counting boundary: witness-notice-period (weekend)" cite "D. Minn. LR 12.1
 /// notice, intends to call witnesses at the same hearing files a
 /// responsive notice within 38 days after the arraignment.
 deadline responsive-witness-notice-period: 38.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(c)(3)(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: responsive-witness-notice-period (weekend)" cite "D. Minn. LR 12.1(c)(3)(B)"
 {
@@ -148,9 +129,6 @@ test "Counting boundary: responsive-witness-notice-period (weekend)" cite "D. Mi
 /// sealed document by a notice of withdrawal; a document not timely
 /// withdrawn is unsealed.
 deadline sealed-document-withdrawal-period: 7.days after SealDenied() counted_by frcrimp45 cite "D. Minn. LR 49.1(d)(5)(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sealed-document-withdrawal-period (holiday)" cite "D. Minn. LR 49.1(d)(5)(A)"
 {
@@ -164,9 +142,6 @@ test "Counting boundary: sealed-document-withdrawal-period (holiday)" cite "D. M
 /// filing requirements apply in criminal cases (2012 Advisory Committee's
 /// Note to LR 72.2).
 deadline objection-response-period: 14.days after ObjectionsServed() counted_by frcrimp45 cite "D. Minn. LR 72.2(a)(2); D. Minn. LR 72.2(b)(2)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: objection-response-period (weekend)" cite "D. Minn. LR 72.2(a)(2); D. Minn. LR 72.2(b)(2)"
 {
@@ -179,9 +154,6 @@ test "Counting boundary: objection-response-period (weekend)" cite "D. Minn. LR 
 /// Sentencing; a motion for an evidentiary hearing is filed with it (LR
 /// 83.10(f)(1)).
 deadline sentencing-position-period: 14.days after FinalPresentenceReport() counted_by frcrimp45 cite "D. Minn. LR 83.10(e)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-position-period (weekend)" cite "D. Minn. LR 83.10(e)"
 {
@@ -193,9 +165,6 @@ test "Counting boundary: sentencing-position-period (weekend)" cite "D. Minn. LR
 /// each party gives the judge, the opposing party and the probation
 /// officer a witness list and an exhibit list.
 deadline sentencing-hearing-lists-period: 7.days before SentencingEvidentiaryHearing() counted_by frcrimp45 cite "D. Minn. LR 83.10(f)(2)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-hearing-lists-period (weekend)" cite "D. Minn. LR 83.10(f)(2)"
 {
@@ -207,9 +176,6 @@ test "Counting boundary: sentencing-hearing-lists-period (weekend)" cite "D. Min
 /// may file and serve a response to the opposing party's Position
 /// Regarding Sentencing.
 deadline sentencing-response-period: 7.days before Sentencing() counted_by frcrimp45 cite "D. Minn. LR 83.10(g)(1)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-response-period (weekend)" cite "D. Minn. LR 83.10(g)(1)"
 {
@@ -221,9 +187,6 @@ test "Counting boundary: sentencing-response-period (weekend)" cite "D. Minn. LR
 /// under U.S.S.G. § 5K1.1 or 18 U.S.C. § 3553(e) is made, under seal, at
 /// least 7 days before sentencing.
 deadline downward-departure-motion-period: 7.days before Sentencing() counted_by frcrimp45 cite "D. Minn. LR 83.10(g)(2)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: downward-departure-motion-period (weekend)" cite "D. Minn. LR 83.10(g)(2)"
 {

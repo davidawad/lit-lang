@@ -4,6 +4,8 @@ import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 import frcrimp.deadlines.{ SentencingScheduled }
 
+forum frcrimp
+
 // The Eastern District of Oklahoma's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method: FRCrimP 45(c)'s three added days follow the
@@ -56,9 +58,6 @@ deadline motions-period: 14.days after Arraigned() counted_by frcrimp45 delegabl
   to CaseOrder
   op set
 } cite "E.D. Okla. LCrR 12.1(E)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motions-period (weekend)" cite "E.D. Okla. LCrR 12.1(E)"
 {
@@ -73,9 +72,6 @@ deadline response-period: 7.days after MotionFiled() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "E.D. Okla. LCrR 12.1(E)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "E.D. Okla. LCrR 12.1(E)"
 {
@@ -87,9 +83,6 @@ test "Counting boundary: response-period (weekend)" cite "E.D. Okla. LCrR 12.1(E
 /// any objections to the presentence report within seven days; the
 /// objections and responses become a permanent attachment to the report.
 deadline psr-objection-response: 7.days after PsrObjectionsSubmitted() counted_by frcrimp45 cite "E.D. Okla. LCrR 32.1(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: psr-objection-response (weekend)" cite "E.D. Okla. LCrR 32.1(B)"
 {
@@ -103,9 +96,6 @@ test "Counting boundary: psr-objection-response (weekend)" cite "E.D. Okla. LCrR
 /// sentencing factors and facts, including motions for variance and
 /// departure.
 deadline unresolved-sentencing-factors: 7.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Okla. LCrR 32.1(D)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: unresolved-sentencing-factors (weekend)" cite "E.D. Okla. LCrR 32.1(D)"
 {
@@ -117,9 +107,6 @@ test "Counting boundary: unresolved-sentencing-factors (weekend)" cite "E.D. Okl
 /// submitted within 45 days after the case is dismissed or the defendant
 /// is sentenced.
 deadline cja-voucher: 45.days after CaseDismissedOrSentenced() counted_by frcrimp45 cite "E.D. Okla. LCrR 57.2(B)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: cja-voucher (weekend)" cite "E.D. Okla. LCrR 57.2(B)"
 {

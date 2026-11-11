@@ -106,6 +106,7 @@ test "Counting boundary: claim-objection-request-period (weekend)" cite "Bankr. 
   given ClaimObjectionNoticeMailed() on 2026-05-07
   expect deadline(claim-objection-request-period) == 2026-06-08
 }
+
 /// Bankr. N.D. Cal. B.L.R. 3007-1(c): on a claim objection, notice of the
 /// scheduled hearing date under B.L.R. 9014-1(c)(1) and (2) is 30 days.
 deadline claim-objection-hearing-notice-period: 30.days before ClaimObjectionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 3007-1(c)"
@@ -119,6 +120,7 @@ test "Counting boundary: chapter-12-confirmation-notice-period (weekend)" cite "
   given ChapterTwelveConfirmationHearing() on 2026-05-09
   expect deadline(chapter-12-confirmation-notice-period) == 2026-04-03
 }
+
 /// Bankr. N.D. Cal. B.L.R. 3015-1(a)(1): objections to confirmation of a
 /// chapter 12 plan are filed and served not less than 7 days before the
 /// hearing.
@@ -129,6 +131,7 @@ test "Counting boundary: chapter-12-confirmation-objection-period (weekend)" cit
   given ChapterTwelveConfirmationHearing() on 2026-05-09
   expect deadline(chapter-12-confirmation-objection-period) == 2026-05-01
 }
+
 /// Bankr. N.D. Cal. B.L.R. 3015-1(b)(2): before confirmation, the debtor
 /// serves an amended chapter 13 plan with at least 21 days' notice of the
 /// hearing on its confirmation.
@@ -139,6 +142,7 @@ test "Counting boundary: amended-plan-notice-period (weekend)" cite "Bankr. N.D.
   given AmendedPlanHearing() on 2026-05-09
   expect deadline(amended-plan-notice-period) == 2026-04-17
 }
+
 /// Bankr. N.D. Cal. B.L.R. 3015-1(b)(3): objections to an amended chapter
 /// 13 plan are filed and served within 14 days of service of the amended
 /// plan.
@@ -152,6 +156,7 @@ test "Counting boundary: disclosure-statement-notice-period (weekend)" cite "Ban
   given DisclosureStatementHearing() on 2026-05-09
   expect deadline(disclosure-statement-notice-period) == 2026-04-03
 }
+
 /// Bankr. N.D. Cal. B.L.R. 3017-1(a): unless the court orders otherwise,
 /// the deadline for objections to a disclosure statement is 7 days before
 /// the hearing; a certificate of service is filed at least 7 days before
@@ -163,6 +168,7 @@ test "Counting boundary: disclosure-statement-objection-period (weekend)" cite "
   given DisclosureStatementHearing() on 2026-05-09
   expect deadline(disclosure-statement-objection-period) == 2026-05-01
 }
+
 /// Bankr. N.D. Cal. B.L.R. 3022-1(b): an application for a final decree is
 /// considered without a hearing unless within 14 days after service of the
 /// notice a party in interest files and serves an objection.
@@ -177,6 +183,7 @@ test "Counting boundary: discharge-delay-request-period (holiday)" cite "Bankr. 
   given DischargeStatementServed() on 2026-05-04
   expect deadline(discharge-delay-request-period) == 2026-05-26
 }
+
 /// Bankr. N.D. Cal. B.L.R. 7007-1(a): except as otherwise ordered, a motion
 /// in an adversary proceeding is filed and served at least 28 days before
 /// the hearing.
@@ -187,6 +194,7 @@ test "Counting boundary: adversary-motion-notice-period (weekend)" cite "Bankr. 
   given MotionHearing() on 2026-05-09
   expect deadline(adversary-motion-notice-period) == 2026-04-10
 }
+
 /// Bankr. N.D. Cal. B.L.R. 7007-1(b): any opposition is filed and served at
 /// least 14 days before the hearing.
 deadline adversary-opposition-period: 14.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 7007-1(b)"
@@ -196,6 +204,7 @@ test "Counting boundary: adversary-opposition-period (weekend)" cite "Bankr. N.D
   given MotionHearing() on 2026-05-09
   expect deadline(adversary-opposition-period) == 2026-04-24
 }
+
 /// Bankr. N.D. Cal. B.L.R. 7007-1(e): any reply is filed and served by the
 /// moving party at least 7 days before the hearing.
 deadline adversary-reply-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 7007-1(e)"
@@ -205,6 +214,7 @@ test "Counting boundary: adversary-reply-period (weekend)" cite "Bankr. N.D. Cal
   given MotionHearing() on 2026-05-09
   expect deadline(adversary-reply-period) == 2026-05-01
 }
+
 /// Bankr. N.D. Cal. B.L.R. 9014-1(b)(3)(A): an objection to relief sought
 /// on notice and opportunity for hearing, or a request for hearing, is
 /// filed and served within 21 days of mailing the notice.
@@ -215,6 +225,7 @@ test "Counting boundary: opportunity-objection-period (holiday)" cite "Bankr. N.
   given OpportunityNoticeMailed() on 2026-05-04
   expect deadline(opportunity-objection-period) == 2026-05-26
 }
+
 /// Bankr. N.D. Cal. B.L.R. 9014-1(b)(3)(B): a tentative hearing is set at
 /// least 14 days after the last date to object or request a hearing.
 deadline tentative-hearing-period: 14.days after ObjectionDeadline() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"
@@ -229,6 +240,7 @@ test "Counting boundary: actual-hearing-notice-period (weekend)" cite "Bankr. N.
   given TentativeHearing() on 2026-05-09
   expect deadline(actual-hearing-notice-period) == 2026-05-01
 }
+
 /// Bankr. N.D. Cal. B.L.R. 9014-1(c)(1): where relief is sought against an
 /// identified, named entity, the motion and papers are filed and served at
 /// least 28 days before the hearing.
@@ -239,6 +251,7 @@ test "Counting boundary: named-entity-motion-period (weekend)" cite "Bankr. N.D.
   given MotionHearing() on 2026-05-09
   expect deadline(named-entity-motion-period) == 2026-04-10
 }
+
 /// Bankr. N.D. Cal. B.L.R. 9014-1(c)(1): opposition is filed and served at
 /// least 14 days before the hearing.
 deadline named-entity-opposition-period: 14.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
@@ -248,6 +261,7 @@ test "Counting boundary: named-entity-opposition-period (weekend)" cite "Bankr. 
   given MotionHearing() on 2026-05-09
   expect deadline(named-entity-opposition-period) == 2026-04-24
 }
+
 /// Bankr. N.D. Cal. B.L.R. 9014-1(c)(1): any reply is filed and served at
 /// least 7 days before the hearing.
 deadline named-entity-reply-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
@@ -257,6 +271,7 @@ test "Counting boundary: named-entity-reply-period (weekend)" cite "Bankr. N.D. 
   given MotionHearing() on 2026-05-09
   expect deadline(named-entity-reply-period) == 2026-05-01
 }
+
 /// Bankr. N.D. Cal. B.L.R. 9014-1(c)(2): where relief is sought generally,
 /// the motion and papers are filed and served at least 21 days before the
 /// hearing.
@@ -267,6 +282,7 @@ test "Counting boundary: general-relief-motion-period (weekend)" cite "Bankr. N.
   given MotionHearing() on 2026-05-09
   expect deadline(general-relief-motion-period) == 2026-04-17
 }
+
 /// Bankr. N.D. Cal. B.L.R. 9014-1(c)(2): opposition to relief sought
 /// generally is filed and served no less than 7 days before the hearing.
 deadline general-relief-opposition-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
@@ -282,7 +298,7 @@ start motion-filed
 state motion-filed: "Request for relief with notice and opportunity for hearing" by movant cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"
 {
   note "Any objection or request for hearing is filed and served within 21 days of mailing the notice (B.L.R. 9014-1(b)(3)(A)); a claim objection gives 30 days (B.L.R. 3007-1(c)). Matters set for hearing follow B.L.R. 9014-1(c). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-opposed "Objection or request for hearing filed" -> opposed {
+  "Objection or request for hearing filed" -> opposed {
     authority cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"
     within opportunity-objection-period
   }
@@ -294,9 +310,7 @@ state motion-filed: "Request for relief with notice and opportunity for hearing"
 state opposed: "Objection filed; hearing noticed" by opponent cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"
 {
   note "The initiating party gives at least seven days' written notice of the hearing, or the tentative hearing goes forward as an actual hearing on notice filed not less than 7 days before it (B.L.R. 9014-1(b)(3))."
-  edge-opposed-ruling "Hearing held" -> ruling {
-    authority cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)"
-  }
+  "Hearing held" -> ruling { authority cite "Bankr. N.D. Cal. B.L.R. 9014-1(c)" }
 }
 
 decision ruling: "Relief decided" by court cite "Bankr. N.D. Cal. B.L.R. 9014-1(b)"

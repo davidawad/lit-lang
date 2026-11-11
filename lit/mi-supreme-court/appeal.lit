@@ -74,24 +74,18 @@ state briefing: "Briefs and appendixes filed" by petitioner cite "MCR 7.312(E)"
 state argument: "Session calendar; argument or submission on briefs" by court cite "MCR 7.313(B)"
 {
   note "After both parties' briefs are filed or the time for the reply has expired, the clerk notifies the parties that the case will be heard at a monthly session not less than 35 days after the notice (MCR 7.313(B)(1)). A party who did not request oral argument on the title page of its brief, or forfeited it by a late brief, is not entitled to argue unless it moves at least 21 days before the session; if neither side is entitled, the case is submitted on briefs (MCR 7.313(B)(2)). The calendar is set at least 21 days before the session (MCR 7.313(C)). Argument time in a calendar case is provided in the order granting leave; on the application each side entitled to argue has 15 minutes unless the Court orders otherwise (MCR 7.314(B))."
-  edge-argument-decision "Argued or submitted" -> decision { authority cite "MCR 7.315(A)" }
+  "Argued or submitted" -> decision { authority cite "MCR 7.315(A)" }
 }
 
 decision decision: "Supreme Court decision" by court cite "MCR 7.315(A)"
 {
   note "An opinion is written and signed by each justice deciding the case; except for affirmance by an even division, a decision is made by concurrence of a majority of the justices voting (MCR 7.315(A)). The Court may enter any judgment or order that ought to have been entered and grant relief as the case requires (MCR 7.316(A)(7)). The clerk enters an order or judgment pursuant to the opinion as of the date the opinion is filed (MCR 7.315(C)(1)). A motion for rehearing is filed within 21 days after the opinion is filed (MCR 7.311(F)(1))."
-  edge-decision-affirmed "Court of Appeals affirmed" -> affirmed {
-    event DecisionFiled()
-    authority cite "MCR 7.315(C)"
-  }
-  edge-decision-reversed "Reversed, vacated or remanded" -> reversed {
+  "Court of Appeals affirmed" -> affirmed { event DecisionFiled(), authority cite "MCR 7.315(C)" }
+  "Reversed, vacated or remanded" -> reversed {
     event DecisionFiled()
     authority cite "MCR 7.316(A)"
   }
-  edge-decision-rehearing "Rehearing moved" -> rehearing {
-    event DecisionFiled()
-    authority cite "MCR 7.311(F)"
-  }
+  "Rehearing moved" -> rehearing { event DecisionFiled(), authority cite "MCR 7.311(F)" }
 }
 
 decision rehearing: "Motion for rehearing decided" by court cite "MCR 7.311(F)"

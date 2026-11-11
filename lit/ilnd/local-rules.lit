@@ -2,6 +2,8 @@ module ilnd-local-rules.local-rules
 
 import core.states.illinois.{ frcp6-illinois }
 
+forum frcp
+
 // The Northern District of Illinois's own periods, computed under the
 // federal rules (FRCP 6(a) governs "any local rule"). Each period applies
 // "unless otherwise ordered" where the rule says so. Rules that state no
@@ -77,9 +79,6 @@ event MotionFullyBriefed()
 /// within 30 days of the party becoming aware of any change in the
 /// information reported.
 deadline affiliate-supplement-period: 30.days after AffiliateChangeLearned() counted_by frcp6-illinois cite "N.D. Ill. L.R. 3.2(f)"
-{
-  forum frcp
-}
 
 test "Counting boundary: affiliate-supplement-period (weekend)" cite "N.D. Ill. L.R. 3.2(f)"
 {
@@ -92,9 +91,6 @@ test "Counting boundary: affiliate-supplement-period (weekend)" cite "N.D. Ill. 
 /// court fixes, the clerk notifies the judge, who may impose sanctions
 /// including dismissal.
 deadline ifp-fee-period: 15.days after IfpDenialNotified() counted_by frcp6-illinois cite "N.D. Ill. L.R. 3.3(f)"
-{
-  forum frcp
-}
 
 test "Counting boundary: ifp-fee-period (weekend)" cite "N.D. Ill. L.R. 3.3(f)"
 {
@@ -106,17 +102,10 @@ test "Counting boundary: ifp-fee-period (weekend)" cite "N.D. Ill. L.R. 3.3(f)"
 /// presentment is not more than 14 days after the motion or objection is
 /// delivered to the court.
 deadline presentment-period: 14.days after MotionDelivered() counted_by frcp6-illinois cite "N.D. Ill. L.R. 5.3(b)"
-{
-  forum frcp
-}
-
 /// LR 16.1 (Standing Order, ¶ 8): no request to extend the final pretrial
 /// order and conference dates should be made less than 14 days before the
 /// scheduled conference.
 deadline pretrial-extension-request-period: 14.days before FinalPretrialConferenceHeld() counted_by frcp6-illinois cite "N.D. Ill. L.R. 16.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: pretrial-extension-request-period (weekend)" cite "N.D. Ill. L.R. 16.1"
 {
@@ -128,17 +117,10 @@ test "Counting boundary: pretrial-extension-request-period (weekend)" cite "N.D.
 /// the date of the clerk's notice asking that the case return to the prior
 /// judge, the case is reassigned to another judge.
 deadline remand-stipulation-period: 14.days after RemandMandateNoticeGiven() counted_by frcp6-illinois cite "N.D. Ill. L.R. 40.5(b)"
-{
-  forum frcp
-}
-
 /// LR 54.1(a): within 30 days of the entry of a judgment, the prevailing
 /// party files a bill of costs and serves it on each adverse party; costs
 /// other than the clerk's are otherwise deemed waived.
 deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6-illinois cite "N.D. Ill. L.R. 54.1(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "N.D. Ill. L.R. 54.1(a)"
 {
@@ -150,9 +132,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "N.D. Ill. L.R. 54
 /// provides its time records, rates and expense evidence within 21 days of
 /// the judgment or settlement agreement on which the fee motion is based.
 deadline fee-information-period: 21.days after JudgmentEntered() counted_by frcp6-illinois cite "N.D. Ill. L.R. 54.3(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-information-period (holiday)" cite "N.D. Ill. L.R. 54.3(d)"
 {
@@ -164,9 +143,6 @@ test "Counting boundary: fee-information-period (holiday)" cite "N.D. Ill. L.R. 
 /// fees it paid and its own records within 21 days of receipt of the
 /// movant's information.
 deadline fee-disclosure-period: 21.days after FeeInformationReceived() counted_by frcp6-illinois cite "N.D. Ill. L.R. 54.3(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-disclosure-period (holiday)" cite "N.D. Ill. L.R. 54.3(d)"
 {
@@ -178,17 +154,10 @@ test "Counting boundary: fee-disclosure-period (holiday)" cite "N.D. Ill. L.R. 5
 /// completed and before the motion is filed, the parties identify the
 /// hours, rates and expenses that will and will not be objected to.
 deadline fee-objection-period: 14.days after FeeExchangeCompleted() counted_by frcp6-illinois cite "N.D. Ill. L.R. 54.3(d)"
-{
-  forum frcp
-}
-
 /// LR 54.3(e): unless the court orders otherwise, the parties complete the
 /// joint statement no later than 70 days after the entry of the judgment
 /// or settlement agreement.
 deadline fee-joint-statement-period: 70.days after JudgmentEntered() counted_by frcp6-illinois cite "N.D. Ill. L.R. 54.3(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-joint-statement-period (weekend)" cite "N.D. Ill. L.R. 54.3(e)"
 {
@@ -200,9 +169,6 @@ test "Counting boundary: fee-joint-statement-period (weekend)" cite "N.D. Ill. L
 /// motion is filed and served no later than 91 days after the entry of the
 /// judgment or settlement agreement on which it is founded.
 deadline fee-motion-period: 91.days after JudgmentEntered() counted_by frcp6-illinois cite "N.D. Ill. L.R. 54.3(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-motion-period (weekend)" cite "N.D. Ill. L.R. 54.3(b)"
 {
@@ -214,17 +180,10 @@ test "Counting boundary: fee-motion-period (weekend)" cite "N.D. Ill. L.R. 54.3(
 /// after the time within which the disputed matter or materials should
 /// have been delivered.
 deadline fee-instructions-motion-period: 14.days after FeeMaterialsDueDatePassed() counted_by frcp6-illinois cite "N.D. Ill. L.R. 54.3(g)"
-{
-  forum frcp
-}
-
 /// LR 66.1(b): unless otherwise ordered, a receiver files an inventory,
 /// list of known liabilities and report not later than 21 days after
 /// appointment.
 deadline receiver-inventory-period: 21.days after ReceiverAppointed() counted_by frcp6-illinois cite "N.D. Ill. L.R. 66.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: receiver-inventory-period (holiday)" cite "N.D. Ill. L.R. 66.1(b)"
 {
@@ -236,9 +195,6 @@ test "Counting boundary: receiver-inventory-period (holiday)" cite "N.D. Ill. L.
 /// a magistrate judge other than the designated one; without objection
 /// they are deemed to consent.
 deadline magistrate-reassignment-objection-period: 21.days after MagistrateReassigned() counted_by frcp6-illinois cite "N.D. Ill. L.R. 73.1(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: magistrate-reassignment-objection-period (holiday)" cite "N.D. Ill. L.R. 73.1(e)"
 {
@@ -250,9 +206,6 @@ test "Counting boundary: magistrate-reassignment-objection-period (holiday)" cit
 /// consent who chooses to consent files its statement within 30 days of
 /// appearance.
 deadline added-party-consent-period: 30.days after AddedPartyAppeared() counted_by frcp6-illinois cite "N.D. Ill. L.R. 73.1(f)"
-{
-  forum frcp
-}
 
 test "Counting boundary: added-party-consent-period (weekend)" cite "N.D. Ill. L.R. 73.1(f)"
 {
@@ -263,9 +216,6 @@ test "Counting boundary: added-party-consent-period (weekend)" cite "N.D. Ill. L
 /// LR 78.5: a party may ask the clerk to report on the status of a motion
 /// on file and fully briefed for at least sixty days.
 deadline status-request-period: 60.days after MotionFullyBriefed() counted_by frcp6-illinois cite "N.D. Ill. L.R. 78.5"
-{
-  forum frcp
-}
 
 test "Counting boundary: status-request-period (holiday)" cite "N.D. Ill. L.R. 78.5"
 {
@@ -276,16 +226,9 @@ test "Counting boundary: status-request-period (holiday)" cite "N.D. Ill. L.R. 7
 /// LR 79.1(c)(1): exhibits deposited with the clerk are removed 90 days
 /// after a final decision if no appeal is taken.
 deadline exhibit-removal-period: 90.days after FinalDecisionUnappealed() counted_by frcp6-illinois cite "N.D. Ill. L.R. 79.1(c)"
-{
-  forum frcp
-}
-
 /// LR 79.1(c)(2): where an appeal is taken, exhibits are removed within 30
 /// days after the reviewing court's mandate is filed.
 deadline exhibit-removal-after-mandate-period: 30.days after MandateFiled() counted_by frcp6-illinois cite "N.D. Ill. L.R. 79.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: exhibit-removal-after-mandate-period (weekend)" cite "N.D. Ill. L.R. 79.1(c)"
 {
@@ -297,9 +240,6 @@ test "Counting boundary: exhibit-removal-after-mandate-period (weekend)" cite "N
 /// not transmit the certified copy of a remand order for 14 days following
 /// the date it is docketed.
 deadline remand-transmittal-period: 14.days after RemandOrderDocketed() counted_by frcp6-illinois cite "N.D. Ill. L.R. 81.2"
-{
-  forum frcp
-}
 
 test "Deadline arithmetic: affiliate-supplement-period (30 days after)" cite "N.D. Ill. L.R. 3.2(f)"
 {

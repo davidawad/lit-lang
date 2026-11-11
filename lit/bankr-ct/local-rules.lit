@@ -144,6 +144,7 @@ test "Counting boundary: amended-list-period (weekend)" cite "Bankr. D. Conn. LB
   given ListAmended() on 2026-03-21
   expect deadline(amended-list-period) == 2026-03-30
 }
+
 /// LBR 1015-1(b): unless otherwise ordered, the debtor serves an order
 /// granting joint administration on all creditors and parties in interest
 /// within 7 days after its entry.
@@ -154,6 +155,7 @@ test "Counting boundary: joint-administration-service-period (weekend)" cite "Ba
   given JointAdministrationOrdered() on 2026-03-21
   expect deadline(joint-administration-service-period) == 2026-03-30
 }
+
 /// LBR 1016-1: within 30 days of learning of the debtor's death or
 /// incompetency, the debtor's attorney files and serves a Notice of the
 /// Debtor's Death or Incompetency.
@@ -164,6 +166,7 @@ test "Counting boundary: death-notice-period (weekend)" cite "Bankr. D. Conn. LB
   given DeathOrIncompetencyLearned() on 2026-03-19
   expect deadline(death-notice-period) == 2026-04-20
 }
+
 /// LBR 1019-1: within 14 days after an order converting a case to chapter
 /// 7, the debtor files the schedules of remaining assets, abandoned property,
 /// property released from the stay and unpaid post-petition obligations.
@@ -178,6 +181,7 @@ test "Counting boundary: rule-2004-agreement-objection-period (weekend)" cite "B
   given Rule2004AgreementNoticed() on 2026-03-21
   expect deadline(rule-2004-agreement-objection-period) == 2026-03-30
 }
+
 /// LBR 2015-1: within 45 days after the order confirming a chapter 11 or
 /// subchapter V plan, the debtor in possession, trustee, distributor or plan
 /// proponent files its first report on consummation of the plan.
@@ -188,6 +192,7 @@ test "Counting boundary: post-confirmation-report-period (weekend)" cite "Bankr.
   given PlanConfirmed() on 2026-03-18
   expect deadline(post-confirmation-report-period) == 2026-05-04
 }
+
 /// LBR 2015-2(a), (d): no later than 7 days after the Notice of Appointment
 /// of Subchapter V Trustee is filed, the debtor tenders $1,000.00 to the
 /// trustee for the trustee's fees and expenses.
@@ -198,6 +203,7 @@ test "Counting boundary: subchapter-v-deposit-period (weekend)" cite "Bankr. D. 
   given SubchapterVTrusteeAppointed() on 2026-03-21
   expect deadline(subchapter-v-deposit-period) == 2026-03-30
 }
+
 /// LBR 2021-1: within 5 days of appointing a committee, the United States
 /// Trustee files a list of its members' names, addresses and telephone
 /// numbers.
@@ -213,6 +219,7 @@ test "Counting boundary: disputed-claim-notice-period (weekend)" cite "Bankr. D.
   given ClaimsBarDate() on 2026-03-17
   expect deadline(disputed-claim-notice-period) == 2026-01-30
 }
+
 /// LBR 3003-1: the same notice, measured from the initial confirmation
 /// hearing.
 deadline disputed-claim-notice-hearing-period: 45.days before InitialConfirmationHearingScheduled() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 3003-1"
@@ -222,6 +229,7 @@ test "Counting boundary: disputed-claim-notice-hearing-period (weekend)" cite "B
   given InitialConfirmationHearingScheduled() on 2026-03-17
   expect deadline(disputed-claim-notice-hearing-period) == 2026-01-30
 }
+
 /// LBR 3014-1: unless 11 U.S.C. § 1125 applies, a class of secured
 /// creditors in a subchapter V case makes the § 1111(b) election on or
 /// before 7 days after the debtor files its initial plan.
@@ -232,6 +240,7 @@ test "Counting boundary: subchapter-v-1111b-election-period (weekend)" cite "Ban
   given SubchapterVPlanFiled() on 2026-03-21
   expect deadline(subchapter-v-1111b-election-period) == 2026-03-30
 }
+
 /// LBR 3015-1: unless the court orders otherwise, an objection to
 /// confirmation of a chapter 12 plan is filed no later than 7 days before
 /// the confirmation hearing.
@@ -242,6 +251,7 @@ test "Counting boundary: chapter12-confirmation-objection-period (weekend)" cite
   given Chapter12ConfirmationHearingScheduled() on 2026-03-21
   expect deadline(chapter12-confirmation-objection-period) == 2026-03-13
 }
+
 /// LBR 3015-2(a): unless the court orders otherwise, an objection to
 /// confirmation of a chapter 13 plan is filed no later than 7 days before
 /// the confirmation hearing.
@@ -252,6 +262,7 @@ test "Counting boundary: chapter13-confirmation-objection-period (weekend)" cite
   given Chapter13ConfirmationHearingScheduled() on 2026-03-21
   expect deadline(chapter13-confirmation-objection-period) == 2026-03-13
 }
+
 /// LBR 3020-1: unless the court orders otherwise, an objection to
 /// confirmation of a chapter 11 plan is filed and served no later than 4
 /// days before the confirmation hearing.
@@ -262,6 +273,7 @@ test "Counting boundary: chapter11-confirmation-objection-period (weekend)" cite
   given Chapter11ConfirmationHearingScheduled() on 2026-03-18
   expect deadline(chapter11-confirmation-objection-period) == 2026-03-13
 }
+
 /// LBR 4002-1(a): in a chapter 7 case, no later than 7 days before the
 /// first scheduled meeting of creditors, the debtor delivers to the trustee
 /// the documents listed in Appendix I.
@@ -272,6 +284,7 @@ test "Counting boundary: chapter7-trustee-documents-period (weekend)" cite "Bank
   given FirstMeetingDate() on 2026-03-21
   expect deadline(chapter7-trustee-documents-period) == 2026-03-13
 }
+
 /// LBR 4002-1(b): in a chapter 13 case, no later than 7 days before the
 /// first scheduled meeting of creditors, the debtor delivers to the trustee
 /// the documents listed in Appendix J.
@@ -282,6 +295,7 @@ test "Counting boundary: chapter13-trustee-documents-period (weekend)" cite "Ban
   given FirstMeetingDate() on 2026-03-21
   expect deadline(chapter13-trustee-documents-period) == 2026-03-13
 }
+
 /// LBR 4002-1(c)(2): unless the court orders otherwise, an individual
 /// debtor's payment advices for the 60 days before the petition go to the
 /// chapter 7, 12 or 13 trustee, not the court, no later than 7 days before
@@ -293,6 +307,7 @@ test "Counting boundary: payment-advices-period (weekend)" cite "Bankr. D. Conn.
   given FirstMeetingDate() on 2026-03-21
   expect deadline(payment-advices-period) == 2026-03-13
 }
+
 /// LBR 6004-1(d): unless otherwise ordered, a public sale is advertised at
 /// least 14 days before the sale.
 deadline public-sale-advertising-period: 14.days before PublicSaleScheduled() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 6004-1(d)"
@@ -302,6 +317,7 @@ test "Counting boundary: public-sale-advertising-period (weekend)" cite "Bankr. 
   given PublicSaleScheduled() on 2026-03-21
   expect deadline(public-sale-advertising-period) == 2026-03-06
 }
+
 /// LBR 7004-1(a)(1), (b)(1): the plaintiff or petitioning creditor files a
 /// certificate of service of the summons within 7 days after service.
 deadline summons-service-certificate-period: 7.days after SummonsServed() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 7004-1(a)"
@@ -311,6 +327,7 @@ test "Counting boundary: summons-service-certificate-period (weekend)" cite "Ban
   given SummonsServed() on 2026-03-21
   expect deadline(summons-service-certificate-period) == 2026-03-30
 }
+
 /// LBR 7004-1(b)(3): a defendant served in a foreign country files a motion
 /// or answer within 30 days from proper service of the summons and
 /// complaint, unless the court orders a different deadline.
@@ -321,6 +338,7 @@ test "Counting boundary: foreign-defendant-answer-period (weekend)" cite "Bankr.
   given ForeignServiceMade() on 2026-03-19
   expect deadline(foreign-defendant-answer-period) == 2026-04-20
 }
+
 /// LBR 7007-1: unless ordered or noticed otherwise, the 21-day response
 /// deadline of D. Conn. L. Civ. R. 7 applies to every motion in an adversary
 /// proceeding.
@@ -331,6 +349,7 @@ test "Counting boundary: adversary-motion-response-period (weekend)" cite "Bankr
   given AdversaryMotionFiled() on 2026-03-21
   expect deadline(adversary-motion-response-period) == 2026-04-13
 }
+
 /// LBR 7007-2(a): a motion to exceed the brief page limits is filed at least
 /// 7 days before the deadline for filing the brief.
 deadline excess-pages-motion-period: 7.days before BriefDue() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 7007-2(a)"
@@ -340,6 +359,7 @@ test "Counting boundary: excess-pages-motion-period (weekend)" cite "Bankr. D. C
   given BriefDue() on 2026-03-21
   expect deadline(excess-pages-motion-period) == 2026-03-13
 }
+
 /// LBR 7016-1(a): unless otherwise ordered, the initial pretrial order or
 /// initial joint pretrial order is filed 7 days before the initial pretrial
 /// conference.
@@ -350,6 +370,7 @@ test "Counting boundary: initial-pretrial-order-period (weekend)" cite "Bankr. D
   given PretrialConferenceScheduled() on 2026-03-21
   expect deadline(initial-pretrial-order-period) == 2026-03-13
 }
+
 /// LBR 9014-1(d)(1), (e): a response or objection is filed no later than the
 /// Response Date, 14 days from the filing of the Notice of Contested Matter
 /// Procedure (21 days where FRBP 2002(a) applies, which is lit/frbp's).
@@ -363,6 +384,7 @@ test "Counting boundary: initial-hearing-continuance-period (weekend)" cite "Ban
   given InitialHearingScheduled() on 2026-03-21
   expect deadline(initial-hearing-continuance-period) == 2026-03-13
 }
+
 /// LBR 9027-1(d): a party whose removed complaint or answer does not comply
 /// with FRBP 7008 and 7012(b) files an amended complaint or answer
 /// addressing the entry of final orders within 5 days after the notice of
@@ -384,7 +406,7 @@ start motion-filed
 state motion-filed: "Motion filed with a Notice of Contested Matter Procedure" by movant cite "Bankr. D. Conn. LBR 9014-1(d)"
 {
   note "A motion subject to the Contested Matter Procedure (LBR 9014-1(c); the matters of Appendices M and N excepted, LBR 9014-1(m), (n)) is filed with a proposed order (LBR 9013-3, 9014-1(b)(2)), a certificate of service (LBR 9014-1(b)(1)) and a Notice of Contested Matter Procedure stating a Response Date of 14 or 21 days from its filing (LBR 9014-1(d)), served with the motion. The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-response "Response or objection filed by the Response Date" -> response {
+  "Response or objection filed by the Response Date" -> response {
     authority cite "Bankr. D. Conn. LBR 9014-1(e)"
   }
   edge-motion-filed-unopposed "No timely response; order may enter without further notice and hearing" -> decided {
@@ -395,15 +417,13 @@ state motion-filed: "Motion filed with a Notice of Contested Matter Procedure" b
 state response: "Response filed; Notice of Initial Hearing issued" by opponent cite "Bankr. D. Conn. LBR 9014-1(f)"
 {
   note "A response is no more than ten pages and states its specific legal and factual bases (LBR 9014-1(e)). On a timely response the Clerk issues a Notice of Initial Hearing, which the movant serves (LBR 9014-1(f)(1)). A reply of no more than five pages is filed by the last business day at least three days before the Initial Hearing; sur-replies need leave (LBR 9014-1(g)). A continuance of the Initial Hearing is requested at least 7 days before it (LBR 9014-1(j))."
-  edge-response-initial-hearing "Initial Hearing held" -> initial-hearing {
-    authority cite "Bankr. D. Conn. LBR 9014-1(h)"
-  }
+  "Initial Hearing held" -> initial-hearing { authority cite "Bankr. D. Conn. LBR 9014-1(h)" }
 }
 
 decision initial-hearing: "Initial Hearing" by court cite "Bankr. D. Conn. LBR 9014-1(h)"
 {
   note "The Initial Hearing is not evidentiary unless the court so notices or emergency relief is sought (LBR 9014-1(h)(1)); the court may grant any relief it deems appropriate there (LBR 9014-1(h)(2))."
-  edge-initial-hearing-decided "Relief granted or denied at the Initial Hearing" -> decided {
+  "Relief granted or denied at the Initial Hearing" -> decided {
     authority cite "Bankr. D. Conn. LBR 9014-1(h)"
   }
   edge-initial-hearing-final "Final Hearing scheduled" -> final-hearing {
@@ -414,9 +434,7 @@ decision initial-hearing: "Initial Hearing" by court cite "Bankr. D. Conn. LBR 9
 decision final-hearing: "Final Hearing" by court cite "Bankr. D. Conn. LBR 9014-1(i)"
 {
   note "The Clerk sends a Notice of Final Hearing, which the movant serves; the Final Hearing may be evidentiary (LBR 9014-1(i)). A continuance is sought by motion at least three business days before it (LBR 9014-1(k))."
-  edge-final-hearing-decided "Matter decided" -> decided {
-    authority cite "Bankr. D. Conn. LBR 9014-1(i)"
-  }
+  "Matter decided" -> decided { authority cite "Bankr. D. Conn. LBR 9014-1(i)" }
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. D. Conn. LBR 1001-1"

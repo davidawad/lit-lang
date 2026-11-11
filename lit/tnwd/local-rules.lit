@@ -2,6 +2,8 @@ module tnwd-local-rules.local-rules
 
 import core.frcp6.{ frcp6 }
 
+forum frcp
+
 // The Western District of Tennessee's own civil periods, computed under
 // FRCP 6 (LR 6.1(a)). Page limitations exclude captions, signature lines
 // and certificates of service or consultation (LR 7.1(d)). Periods that
@@ -125,9 +127,6 @@ event SettlementNoticeFiled()
 /// failure to respond timely to a motion other than one requesting
 /// dismissal may be deemed good grounds for granting it.
 deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "W.D. Tenn. L.R. 7.2(a)(2)"
-{
-  forum frcp
-}
 
 test "Counting boundary: response-period (weekend)" cite "W.D. Tenn. L.R. 7.2(a)(2)"
 {
@@ -139,9 +138,6 @@ test "Counting boundary: response-period (weekend)" cite "W.D. Tenn. L.R. 7.2(a)
 /// filed only by leave of court, on a motion for leave filed within 7
 /// days of service of the response.
 deadline leave-to-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "W.D. Tenn. L.R. 7.2(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: leave-to-reply-period (holiday)" cite "W.D. Tenn. L.R. 7.2(c)"
 {
@@ -153,9 +149,6 @@ test "Counting boundary: leave-to-reply-period (holiday)" cite "W.D. Tenn. L.R. 
 /// memoranda have not been submitted, the moving party complies with the
 /// rules within 14 days after removal.
 deadline removed-motion-period: 14.days after RemovedWithPendingMotions() counted_by frcp6 cite "W.D. Tenn. L.R. 7.2(f)"
-{
-  forum frcp
-}
 
 test "Counting boundary: removed-motion-period (weekend)" cite "W.D. Tenn. L.R. 7.2(f)"
 {
@@ -166,9 +159,6 @@ test "Counting boundary: removed-motion-period (weekend)" cite "W.D. Tenn. L.R. 
 /// LR 7.2(g): motions and orders to produce prisoners for testimony are
 /// filed at least 28 days prior to the date of the hearing or trial.
 deadline prisoner-production-period: 28.days before PrisonerHearingBegins() counted_by frcp6 cite "W.D. Tenn. L.R. 7.2(g)"
-{
-  forum frcp
-}
 
 test "Counting boundary: prisoner-production-period (weekend)" cite "W.D. Tenn. L.R. 7.2(g)"
 {
@@ -180,9 +170,6 @@ test "Counting boundary: prisoner-production-period (weekend)" cite "W.D. Tenn. 
 /// supplemental pleading within 7 days of entry of an order granting the
 /// motion unless the court directs otherwise.
 deadline amended-pleading-period: 7.days after AmendmentGranted() counted_by frcp6 cite "W.D. Tenn. L.R. 15.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: amended-pleading-period (holiday)" cite "W.D. Tenn. L.R. 15.1(c)"
 {
@@ -193,17 +180,10 @@ test "Counting boundary: amended-pleading-period (holiday)" cite "W.D. Tenn. L.R
 /// LR 12.1(b): a party opposing a motion to dismiss files a response
 /// within 28 days after the motion is served.
 deadline dismissal-response-period: 28.days after DismissalMotionServed() counted_by frcp6 cite "W.D. Tenn. L.R. 12.1(b)"
-{
-  forum frcp
-}
-
 /// LR 12.1(c): no leave is required to reply to a response to a motion to
 /// dismiss; replies are filed within 14 days after the response is
 /// served.
 deadline dismissal-reply-period: 14.days after DismissalResponseServed() counted_by frcp6 cite "W.D. Tenn. L.R. 12.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: dismissal-reply-period (weekend)" cite "W.D. Tenn. L.R. 12.1(c)"
 {
@@ -215,9 +195,6 @@ test "Counting boundary: dismissal-reply-period (weekend)" cite "W.D. Tenn. L.R.
 /// and law not less than 14 days before the case is set for trial; the
 /// court may require one and set its own date.
 deadline trial-memorandum-period: 14.days before TrialBegins() counted_by frcp6 cite "W.D. Tenn. L.R. 16.4"
-{
-  forum frcp
-}
 
 test "Counting boundary: trial-memorandum-period (weekend)" cite "W.D. Tenn. L.R. 16.4"
 {
@@ -228,9 +205,6 @@ test "Counting boundary: trial-memorandum-period (weekend)" cite "W.D. Tenn. L.R
 /// LR 26.1(d): parties supplement disclosures and discovery responses as
 /// FRCP 26(e) requires no later than 30 days before the trial date.
 deadline supplementation-period: 30.days before TrialBegins() counted_by frcp6 cite "W.D. Tenn. L.R. 26.1(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: supplementation-period (weekend)" cite "W.D. Tenn. L.R. 26.1(d)"
 {
@@ -242,16 +216,9 @@ test "Counting boundary: supplementation-period (weekend)" cite "W.D. Tenn. L.R.
 /// response within 28 days after the motion is served or a responsive
 /// pleading is due, whichever is later; the event is that later date.
 deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "W.D. Tenn. L.R. 56.1(b)"
-{
-  forum frcp
-}
-
 /// LR 56.1(c): no leave is required to reply on summary judgment; replies
 /// are filed within 14 days after the response is served.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "W.D. Tenn. L.R. 56.1(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: summary-judgment-reply-period (weekend)" cite "W.D. Tenn. L.R. 56.1(c)"
 {
@@ -263,9 +230,6 @@ test "Counting boundary: summary-judgment-reply-period (weekend)" cite "W.D. Ten
 /// the reply, the party opposing it may file a sur-reply within 7 days of
 /// service of the reply.
 deadline evidentiary-sur-reply-period: 7.days after SummaryJudgmentReplyServed() counted_by frcp6 cite "W.D. Tenn. L.R. 56.1(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: evidentiary-sur-reply-period (holiday)" cite "W.D. Tenn. L.R. 56.1(e)"
 {
@@ -278,9 +242,6 @@ test "Counting boundary: evidentiary-sur-reply-period (holiday)" cite "W.D. Tenn
 /// conclusions of law within 14 days after the conclusion of trial; for
 /// good cause the period may be lengthened or shortened.
 deadline post-trial-findings-period: 14.days after NonJuryTrialConcludes() counted_by frcp6 cite "W.D. Tenn. L.R. 52.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: post-trial-findings-period (weekend)" cite "W.D. Tenn. L.R. 52.1"
 {
@@ -291,17 +252,10 @@ test "Counting boundary: post-trial-findings-period (weekend)" cite "W.D. Tenn. 
 /// LR 54.1(a): if counsel cannot agree on costs, a cost bill is filed with
 /// the clerk within thirty days from the termination of the case.
 deadline cost-bill-period: 30.days after CaseTerminated() counted_by frcp6 cite "W.D. Tenn. L.R. 54.1(a)"
-{
-  forum frcp
-}
-
 /// LR 54.1(b): as FRCP 54(d)(2)(B) permits, a motion for attorney's fees
 /// and related non-taxable expenses may be filed within 14 days from the
 /// date the court's judgment becomes final.
 deadline fee-motion-period: 14.days after JudgmentBecomesFinal() counted_by frcp6 cite "W.D. Tenn. L.R. 54.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-motion-period (weekend)" cite "W.D. Tenn. L.R. 54.1(b)"
 {
@@ -313,9 +267,6 @@ test "Counting boundary: fee-motion-period (weekend)" cite "W.D. Tenn. L.R. 54.1
 /// party against whom the award is requested responds with any
 /// objections and a memorandum.
 deadline fee-objections-period: 11.days after FeeMotionServed() counted_by frcp6 cite "W.D. Tenn. L.R. 54.1(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-objections-period (weekend)" cite "W.D. Tenn. L.R. 54.1(b)"
 {
@@ -327,9 +278,6 @@ test "Counting boundary: fee-objections-period (weekend)" cite "W.D. Tenn. L.R. 
 /// magistrate judge's order on a pretrial matter within 14 days after
 /// being served with the appeal.
 deadline magistrate-appeal-response-period: 14.days after MagistrateAppealServed() counted_by frcp6 cite "W.D. Tenn. L.R. 72.1(g)"
-{
-  forum frcp
-}
 
 test "Counting boundary: magistrate-appeal-response-period (weekend)" cite "W.D. Tenn. L.R. 72.1(g)"
 {
@@ -342,9 +290,6 @@ test "Counting boundary: magistrate-appeal-response-period (weekend)" cite "W.D.
 /// proposed agreed order; if they fail to comply within 28 days of the
 /// filing of the notice, the court may dismiss the action.
 deadline settlement-dismissal-period: 28.days after SettlementNoticeFiled() counted_by frcp6 cite "W.D. Tenn. L.R. 83.13(b)"
-{
-  forum frcp
-}
 
 test "Deadline arithmetic: response-period (14 days after)" cite "W.D. Tenn. L.R. 7.2(a)(2)"
 {

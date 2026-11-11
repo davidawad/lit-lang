@@ -27,19 +27,19 @@ state published: "Application published for opposition" by opposer cite "15 USC 
   edge-01-pre-ext-first-30-1 "Opposer requests 30-day extension (granted on request)" -> ext-first-30 {
     event ExtensionRequested(Thirty)
     authority cite "37 CFR 2.102(c)(1)(i)"
-    within opposition-period {  }
+    within opposition-period {}
     attrs { opp_hours: 1 }
   }
   edge-01-pre-ext-first-90-1 "Opposer requests 90-day extension (good cause)" -> ext-first-90 {
     event ExtensionRequested(Ninety)
     authority cite "37 CFR 2.102(c)(1)(ii)"
-    within first-extension-90 {  }
+    within first-extension-90 {}
     attrs { opp_fees: 200, opp_hours: 1 }
   }
   edge-01-pre-opposition-filed-1 "Opposer opposes within the original 30 days" -> opposition-filed {
     authority cite "37 CFR 2.101(c)"
     event OppositionFiled()
-    within opposition-period {  }
+    within opposition-period {}
     note "Notice of opposition via ESTTA with $600 per class fee (37 CFR 2.6(a)(17)(ii)); application is Class 37 only (one class)."
     attrs { opp_fees: 600, opp_hours: 14 }
   }
@@ -51,7 +51,7 @@ state ext-first-30: "First extension (30 days, granted on request)" by opposer c
   edge-01-pre-ext-second-60-1 "Opposer requests additional 60 days (good cause)" -> ext-second-60 {
     event ExtensionRequested(Sixty)
     authority cite "37 CFR 2.102(c)(2)"
-    within second-extension-60 {  }
+    within second-extension-60 {}
     attrs { opp_fees: 200, opp_hours: 1 }
   }
 }

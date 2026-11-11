@@ -5,7 +5,7 @@ start notice-filed
 state notice-filed: "Notice of appeal filed" by movant cite "SDCL 15-26A-6"
 {
   note "An appeal must be taken within thirty days after the judgment or order is signed, attested and filed and written notice of entry is given to the adverse party. A timely motion under SDCL 15-6-59 or 15-6-50(b) terminates the running of the time for all parties; the full time runs again from notice of entry of the order on the motion. The period is not encoded as a deadline: the South Dakota time-computation rule (SDCL 15-6-6(a)) is not vendored."
-  edge-notice-filed-appealability "Notice filed" -> appealability { authority cite "SDCL 15-26A-6" }
+  "Notice filed" -> appealability { authority cite "SDCL 15-26A-6" }
 }
 
 decision appealability: "Appellate jurisdiction check" by court cite "SDCL 15-26A-3"
@@ -17,7 +17,7 @@ decision appealability: "Appellate jurisdiction check" by court cite "SDCL 15-26
   edge-appealability-dismissed-untimely "Notice untimely" -> dismissed-jurisdiction {
     authority cite "SDCL 15-26A-6"
   }
-  edge-appealability-briefing "Appealable order" -> briefing { authority cite "SDCL 15-26A-3" }
+  "Appealable order" -> briefing { authority cite "SDCL 15-26A-3" }
 }
 
 terminal dismissed-jurisdiction: "Appeal dismissed" outcome [loss] cite "SDCL 15-26A-3"
@@ -31,15 +31,13 @@ state briefing: "Briefing: opening, response, reply" cite "SDCL 15-26A-66"
   edge-briefing-refused "Brief refused as nonconforming" -> briefing {
     authority cite "SDCL 15-26A-70"
   }
-  edge-briefing-submission "Briefs complete" -> submission { authority cite "SDCL 15-26A-79" }
+  "Briefs complete" -> submission { authority cite "SDCL 15-26A-79" }
 }
 
 state submission: "Oral argument or submission on the briefs" cite "SDCL 15-26A-87"
 {
   note "By agreement of the parties a case may be submitted on the briefs, but the court may direct argument."
-  edge-submission-disposition "Submitted for decision" -> disposition {
-    authority cite "SDCL 15-26A-87"
-  }
+  "Submitted for decision" -> disposition { authority cite "SDCL 15-26A-87" }
 }
 
 decision disposition: "Disposition" by court {

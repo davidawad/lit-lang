@@ -47,15 +47,11 @@ state record: "Appellate record prepared and filed" by court cite "Tex. R. App. 
 state briefing: "Briefs filed" by appellant cite "Tex. R. App. P. 38.6"
 {
   note "The appellant files a brief within 30 days, 20 days in an accelerated appeal, after the later of the filing of the clerk's record or of the reporter's record; the appellee's brief is due within 30 days, 20 in an accelerated appeal, after the appellant's brief is filed; any reply within 20 days after the appellee's brief is filed; the court may extend the time on a motion complying with Rule 10.5(b), filed before or after the brief is due (Tex. R. App. P. 38.6). A brief or response may run 15,000 words if computer-generated and 50 pages if not, and in a civil case all of a party's briefs together 27,000 words or 90 pages; a reply brief 7,500 words or 25 pages (Tex. R. App. P. 9.4(i)(2)(B), (C)). A party requests oral argument on the front cover of its first brief (Tex. R. App. P. 9.4(g), 39.7). If the appellant fails to file a brief timely, the court may dismiss for want of prosecution unless the failure is reasonably explained and the appellee is not significantly injured, or may affirm on the appellee's brief (Tex. R. App. P. 38.8(a))."
-  edge-briefing-submission "Briefs filed; case set" -> submission {
-    authority cite "Tex. R. App. P. 39.8"
-  }
+  "Briefs filed; case set" -> submission { authority cite "Tex. R. App. P. 39.8" }
   edge-briefing-no-brief "No appellant's brief" -> appeal-dismissed {
     authority cite "Tex. R. App. P. 38.8"
   }
-  edge-briefing-settled "Voluntary dismissal or settlement" -> settled {
-    authority cite "Tex. R. App. P. 42.1"
-  }
+  "Voluntary dismissal or settlement" -> settled { authority cite "Tex. R. App. P. 42.1" }
 }
 
 decision submission: "Oral argument or submission without argument" by court cite "Tex. R. App. P. 39.1"
@@ -78,7 +74,7 @@ decision decision: "Judgment of the court of appeals" by court cite "Tex. R. App
     event DecisionFiled()
     authority cite "Tex. R. App. P. 43.2"
   }
-  edge-decision-remanded "Reversed and remanded" -> remanded {
+  "Reversed and remanded" -> remanded {
     event DecisionFiled()
     authority cite "Tex. R. App. P. 43.2"
   }
@@ -91,7 +87,7 @@ decision decision: "Judgment of the court of appeals" by court cite "Tex. R. App
 decision after-judgment: "Judgment against the appellant: rehearing, review or mandate" by petitioner cite "Tex. R. App. P. 49.1"
 {
   note "A motion for rehearing may be filed within 15 days after the judgment or order is rendered and must clearly state the issues relied on (Tex. R. App. P. 49.1); a motion for en banc reconsideration may be filed within the same time, with or without a motion for rehearing (Tex. R. App. P. 49.5); in an accelerated appeal the court may deny the right to file either motion or shorten the time (Tex. R. App. P. 49.7). A motion for rehearing runs 4,500 words or 15 pages (Tex. R. App. P. 9.4(i)(2)(E)). A petition for review is filed in the Supreme Court within 45 days after the court of appeals rendered judgment if no timely motion for rehearing or en banc reconsideration is filed, or after the court of appeals' last ruling on all timely filed motions (Tex. R. App. P. 53.7(a)). Absent a timely petition for review or a pending motion to extend time, the clerk issues the mandate ten days after the time to move to extend the time to file a petition for review has expired (Tex. R. App. P. 18.1(a))."
-  edge-after-judgment-rehearing "Motion for rehearing or en banc reconsideration" -> rehearing {
+  "Motion for rehearing or en banc reconsideration" -> rehearing {
     authority cite "Tex. R. App. P. 49.1"
   }
   edge-after-judgment-review "Petition for review" -> review-sought {
@@ -107,9 +103,7 @@ decision after-judgment: "Judgment against the appellant: rehearing, review or m
 decision after-judgment-won: "Judgment for the appellant: the appellee's rehearing or review" by court cite "Tex. R. App. P. 49.1"
 {
   note "The appellee may move for rehearing within 15 days after the judgment is rendered (Tex. R. App. P. 49.1) or petition for review within the Rule 53.7(a) period; otherwise the clerk issues the mandate under Rule 18.1(a)."
-  edge-after-judgment-won-rehearing "Rehearing sought by the appellee" -> rehearing {
-    authority cite "Tex. R. App. P. 49.1"
-  }
+  "Rehearing sought by the appellee" -> rehearing { authority cite "Tex. R. App. P. 49.1" }
   edge-after-judgment-won-review "Petition for review by the appellee" -> review-sought {
     event ReviewPetitionFiled()
     authority cite "Tex. R. App. P. 53.7"

@@ -94,9 +94,7 @@ decision panel-order: "Panel order on transfer" by court cite "J.P.M.L. R. 2.1(d
 state transferred: "Transferred to the transferee judge" by court cite "J.P.M.L. R. 9.1(a)"
 {
   note "The Clerk of the Panel notifies the transferee clerk to file the transfer order; on receipt of a certified copy the transferor clerk transmits the record and, unless claims are retained for simultaneous remand, closes the action (J.P.M.L. R. 9.1(a), (b))."
-  edge-transferred-pretrial "Pretrial proceedings begin" -> pretrial {
-    authority cite "J.P.M.L. R. 9.1(c)"
-  }
+  "Pretrial proceedings begin" -> pretrial { authority cite "J.P.M.L. R. 9.1(c)" }
 }
 
 state pretrial: "Coordinated or consolidated pretrial proceedings in the transferee court" by court cite "J.P.M.L. R. 10.1(a)"
@@ -121,9 +119,7 @@ decision remand-or-termination: "Termination, conditional remand or motion to re
 state cto-final: "CTO becomes final; action transferred" by court cite "J.P.M.L. R. 7.1(i)"
 {
   note "A CTO becomes effective (finalized) when it is filed with the clerk of the transferee district court (J.P.M.L. R. 7.1(i)); the transfer then proceeds as a Panel transfer."
-  edge-cto-final-transferred "Transfer effective" -> transferred {
-    authority cite "J.P.M.L. R. 7.1(i)"
-  }
+  "Transfer effective" -> transferred { authority cite "J.P.M.L. R. 7.1(i)" }
 }
 
 terminal denied-transfer: "Transfer denied or CTO vacated" outcome [loss] cite "J.P.M.L. R. 11.1(c)"

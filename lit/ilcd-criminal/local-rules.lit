@@ -3,6 +3,8 @@ module ilcd-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Central District of Illinois's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method: FRCrimP 45(c)'s three added days follow the
@@ -54,9 +56,6 @@ deadline pretrial-motions: 21.days after Arraigned() counted_by frcrimp45 delega
   to CaseOrder
   op set
 } cite "C.D. Ill. Crim. L.R. 12.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: pretrial-motions (weekend)" cite "C.D. Ill. Crim. L.R. 12.1"
 {
@@ -69,9 +68,6 @@ test "Counting boundary: pretrial-motions (weekend)" cite "C.D. Ill. Crim. L.R. 
 /// with FRCrimP 16; a declination of a requested disclosure is in writing
 /// (Crim. L.R. 16.1(B)).
 deadline discovery-conference: 7.days after Arraigned() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 16.1(A)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-conference (weekend)" cite "C.D. Ill. Crim. L.R. 16.1(A)"
 {
@@ -87,9 +83,6 @@ deadline additional-discovery-conference: 14.days after Arraigned() counted_by f
   to CaseOrder
   op set
 } cite "C.D. Ill. Crim. L.R. 16.1(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: additional-discovery-conference (weekend)" cite "C.D. Ill. Crim. L.R. 16.1(C)"
 {
@@ -106,9 +99,6 @@ deadline motion-to-compel-discovery: 14.days after Arraigned() counted_by frcrim
   to CaseOrder
   op set
 } cite "C.D. Ill. Crim. L.R. 16.1(D)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-to-compel-discovery (weekend)" cite "C.D. Ill. Crim. L.R. 16.1(D)"
 {
@@ -121,9 +111,6 @@ test "Counting boundary: motion-to-compel-discovery (weekend)" cite "C.D. Ill. C
 /// address, telephone or fax number within 14 days and serves it on all
 /// other parties.
 deadline contact-change-notice: 14.days after ContactInformationChanged() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 49.3"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: contact-change-notice (weekend)" cite "C.D. Ill. Crim. L.R. 49.3"
 {
@@ -136,9 +123,6 @@ test "Counting boundary: contact-change-notice (weekend)" cite "C.D. Ill. Crim. 
 /// signatures files an objection within 14 days of receiving notice of the
 /// filing.
 deadline authenticity-objection: 14.days after FilingNoticeReceived() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 49.10(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: authenticity-objection (weekend)" cite "C.D. Ill. Crim. L.R. 49.10(C)"
 {
@@ -149,9 +133,6 @@ test "Counting boundary: authenticity-objection (weekend)" cite "C.D. Ill. Crim.
 /// C.D. Ill. Crim. L.R. 49.12(C): a party files a Notice of Intent to
 /// Request Redaction within 7 days of the filing of the transcript.
 deadline redaction-notice: 7.days after TranscriptFiled() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 49.12(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: redaction-notice (weekend)" cite "C.D. Ill. Crim. L.R. 49.12(C)"
 {
@@ -163,9 +144,6 @@ test "Counting boundary: redaction-notice (weekend)" cite "C.D. Ill. Crim. L.R. 
 /// transcript the parties file under seal a Motion of Requested Redactions
 /// locating the material by page and line.
 deadline redaction-motion: 21.days after TranscriptFiled() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 49.12(C)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: redaction-motion (weekend)" cite "C.D. Ill. Crim. L.R. 49.12(C)"
 {

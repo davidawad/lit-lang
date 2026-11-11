@@ -127,6 +127,7 @@ test "Counting boundary: dispositive-opposition-period (weekend)" cite "D. Vt. L
   given DispositiveMotionServed() on 2026-04-23
   expect deadline(dispositive-opposition-period) == 2026-05-26
 }
+
 /// L.R. 7(a)(3)(B): unless the judge extends the deadline, a memorandum in
 /// opposition to any other motion is filed no more than 14 days after the
 /// motion is served.
@@ -147,6 +148,7 @@ test "Counting boundary: commissioner-answer-period (holiday)" cite "D. Vt. L.R.
   given SocialSecurityNoticeGiven() on 2026-04-20
   expect deadline(commissioner-answer-period) == 2026-06-22
 }
+
 /// L.R. 9(a)(2): within 30 days after the Commissioner files an answer,
 /// the plaintiff serves and files a Motion for Order Reversing the
 /// Commissioner's Decision and a supporting memorandum.
@@ -157,6 +159,7 @@ test "Counting boundary: reversal-motion-period (weekend)" cite "D. Vt. L.R. 9(a
   given CommissionerAnswerFiled() on 2026-04-23
   expect deadline(reversal-motion-period) == 2026-05-26
 }
+
 /// L.R. 9(a)(3): within 30 days after the plaintiff's motion, the
 /// Commissioner serves and files a Motion for Order Affirming the Decision
 /// of the Commissioner and a supporting memorandum.
@@ -167,6 +170,7 @@ test "Counting boundary: affirmance-motion-period (weekend)" cite "D. Vt. L.R. 9
   given ReversalMotionFiled() on 2026-04-23
   expect deadline(affirmance-motion-period) == 2026-05-26
 }
+
 /// L.R. 9(a)(4): within 14 days after the Commissioner's motion, the
 /// plaintiff may serve and file a reply.
 deadline social-security-reply-period: 14.days after AffirmanceMotionFiled() counted_by frcp6-vermont cite "D. Vt. L.R. 9(a)(4)"
@@ -184,6 +188,7 @@ test "Counting boundary: record-transmission-period (weekend)" cite "D. Vt. L.R.
   given DesignationFiled() on 2026-04-23
   expect deadline(record-transmission-period) == 2026-05-26
 }
+
 /// L.R. 9(d)(2): an opposition to withdrawal of reference is filed within
 /// 14 calendar days after service of the motion.
 deadline withdrawal-opposition-period: 14.days after WithdrawalMotionServed() counted_by frcp6-vermont cite "D. Vt. L.R. 9(d)(2)"
@@ -204,6 +209,7 @@ test "Counting boundary: evaluator-conflict-period (weekend)" cite "D. Vt. L.R. 
   given ConflictLearned() on 2026-04-25
   expect deadline(evaluator-conflict-period) == 2026-05-04
 }
+
 /// L.R. 16.1(g)(3)(B): a written request to be excused from attending the
 /// ENE session is filed at least 21 calendar days before the session date.
 deadline ene-excusal-period: 21.days before EneSessionHeld() counted_by frcp6-vermont cite "D. Vt. L.R. 16.1(g)(3)(B)"
@@ -213,6 +219,7 @@ test "Counting boundary: ene-excusal-period (weekend)" cite "D. Vt. L.R. 16.1(g)
   given EneSessionHeld() on 2026-04-25
   expect deadline(ene-excusal-period) == 2026-04-03
 }
+
 /// L.R. 16.1(h)(1): at least 14 days before the ENE session, each party
 /// submits to the evaluator and serves its written evaluation statement.
 deadline evaluation-statement-period: 14.days before EneSessionHeld() counted_by frcp6-vermont cite "D. Vt. L.R. 16.1(h)(1)"
@@ -222,6 +229,7 @@ test "Counting boundary: evaluation-statement-period (weekend)" cite "D. Vt. L.R
   given EneSessionHeld() on 2026-04-25
   expect deadline(evaluation-statement-period) == 2026-04-10
 }
+
 /// L.R. 16.1(j)(1): within 21 calendar days after the ENE session, the
 /// evaluator files and sends the evaluator's report.
 deadline evaluator-report-period: 21.days after EneSessionHeld() counted_by frcp6-vermont cite "D. Vt. L.R. 16.1(j)(1)"
@@ -231,6 +239,7 @@ test "Counting boundary: evaluator-report-period (weekend)" cite "D. Vt. L.R. 16
   given EneSessionHeld() on 2026-04-25
   expect deadline(evaluator-report-period) == 2026-05-18
 }
+
 /// L.R. 16.1(k)(1)(D): a supplemental evaluator's report is filed within
 /// 60 days from the date of the session.
 deadline supplemental-report-period: 60.days after EneSessionHeld() counted_by frcp6-vermont cite "D. Vt. L.R. 16.1(k)(1)(D)"
@@ -240,6 +249,7 @@ test "Counting boundary: supplemental-report-period (holiday)" cite "D. Vt. L.R.
   given EneSessionHeld() on 2026-04-20
   expect deadline(supplemental-report-period) == 2026-06-22
 }
+
 /// L.R. 26(a)(1): the parties' Discovery Schedule provides for completion
 /// of discovery no later than 8 months after the last answer was filed.
 deadline discovery-completion-period: 8.months after LastAnswerFiled() counted_by frcp6-vermont cite "D. Vt. L.R. 26(a)(1)"
@@ -265,6 +275,7 @@ test "Counting boundary: discovery-schedule-appearance-period (weekend)" cite "D
   given DefendantAppeared() on 2026-04-22
   expect deadline(discovery-schedule-appearance-period) == 2026-06-08
 }
+
 /// L.R. 26(b)(1): a third-party discovery schedule is filed no more than
 /// 45 days after the third-party answer is filed or the third party has
 /// otherwise appeared.
@@ -275,6 +286,7 @@ test "Counting boundary: third-party-schedule-period (weekend)" cite "D. Vt. L.R
   given ThirdPartyAppeared() on 2026-04-22
   expect deadline(third-party-schedule-period) == 2026-06-08
 }
+
 /// L.R. 26(d): unless the court orders otherwise, at least 30 days before
 /// trial counsel provide opposing counsel the designated portions of
 /// videotaped depositions they intend to offer under FRCP 32(a)(6).
@@ -293,6 +305,7 @@ test "Counting boundary: jury-instructions-period (weekend)" cite "D. Vt. L.R. 5
   given TrialBegins() on 2026-04-25
   expect deadline(jury-instructions-period) == 2026-04-10
 }
+
 /// L.R. 52: absent leave, when trial is by the court, the parties submit
 /// proposed findings of fact and conclusions of law at least 14 days
 /// before the scheduled trial date.

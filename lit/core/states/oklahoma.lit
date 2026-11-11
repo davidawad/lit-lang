@@ -3,6 +3,8 @@ module core.states.oklahoma
 import core.calendar.{ us-federal-holidays }
 import core.time.{ Scheduled, Served }
 
+forum bankr-okw
+
 /// Oklahoma's day after Thanksgiving is a state legal holiday (25 O.S.
 /// § 82.1(A)). The statute's amendment history does not show when the day
 /// after Thanksgiving was added. The vendored 2022 Title 25 text is the
@@ -41,17 +43,9 @@ counting frbp9006-oklahoma effective [2025-12-01, ..) known_at 2025-12-01 cite "
 }
 
 // Core-local clock fixtures for the Oklahoma forward-only state holiday.
-deadline oklahoma-forward-personal: 1.days after Served(Personal) counted_by frbp9006-oklahoma {
-  forum bankr-okw
-}
-
-deadline oklahoma-backward: 1.days before Scheduled() counted_by frbp9006-oklahoma {
-  forum bankr-okw
-}
-
-deadline oklahoma-forward-electronic: 1.days after Served(Electronic) counted_by frbp9006-oklahoma {
-  forum bankr-okw
-}
+deadline oklahoma-forward-personal: 1.days after Served(Personal) counted_by frbp9006-oklahoma
+deadline oklahoma-backward: 1.days before Scheduled() counted_by frbp9006-oklahoma
+deadline oklahoma-forward-electronic: 1.days after Served(Electronic) counted_by frbp9006-oklahoma
 
 test "Oklahoma day after Thanksgiving closes a forward period" cite "FRBP 9006(a)(6)(C)"
 {

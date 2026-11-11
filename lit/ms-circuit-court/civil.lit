@@ -61,7 +61,7 @@ state amended: "Amended pleading filed" by plaintiff cite "M.R.C.P. 15(a)"
 state answered: "Answer filed" by plaintiff cite "M.R.C.P. 8(c)"
 {
   note "Affirmative defenses such as accord and satisfaction, estoppel, fraud, limitations and waiver are set forth affirmatively (M.R.C.P. 8(c))."
-  edge-answered-discovery "Pleadings closed" -> discovery { authority cite "M.R.C.P. 26(b)" }
+  "Pleadings closed" -> discovery { authority cite "M.R.C.P. 26(b)" }
 }
 
 state default-request: "Default sought" by plaintiff cite "M.R.C.P. 55(a)"
@@ -70,9 +70,7 @@ state default-request: "Default sought" by plaintiff cite "M.R.C.P. 55(a)"
   edge-default-request-entered "Default entered" -> default-entered {
     authority cite "M.R.C.P. 55(a)"
   }
-  edge-default-request-answered "Answer filed before default" -> answered {
-    authority cite "M.R.C.P. 12(a)"
-  }
+  "Answer filed before default" -> answered { authority cite "M.R.C.P. 12(a)" }
 }
 
 state default-entered: "Default entered" by plaintiff cite "M.R.C.P. 55(b)"
@@ -98,9 +96,7 @@ state discovery: "Discovery" by plaintiff cite "M.R.C.P. 26(b)"
   note "Parties may obtain discovery of any matter, not privileged, relevant to the issues raised by the claims or defenses of any party (M.R.C.P. 26(b)(1)). Where no action of record has been taken during the preceding twelve months, the clerk mails notice that the case will be dismissed for want of prosecution unless within thirty days action of record is taken or good cause is shown (M.R.C.P. 41(d)(1))."
   edge-discovery-dispute "Discovery dispute" -> discovery-ruling { authority cite "M.R.C.P. 37(a)" }
   edge-discovery-sj "Summary judgment motion" -> sj-motion { authority cite "M.R.C.P. 56(c)" }
-  edge-discovery-settled "Settled: dismissal by stipulation" -> settled {
-    authority cite "M.R.C.P. 41(a)"
-  }
+  "Settled: dismissal by stipulation" -> settled { authority cite "M.R.C.P. 41(a)" }
   edge-discovery-voluntary "Voluntary dismissal" -> voluntary-dismissal {
     authority cite "M.R.C.P. 41(a)"
   }

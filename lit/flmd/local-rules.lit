@@ -66,6 +66,7 @@ test "Counting boundary: proof-of-service-period (weekend)" cite "M.D. Fla. Loca
   given ServiceOrWaiverMade() on 2025-11-01
   expect deadline(proof-of-service-period) == 2025-11-24
 }
+
 /// Local Rule 1.10(b): within 28 days after a party's failure to plead or
 /// otherwise defend, a party entitled to a default must apply for it.
 deadline default-application-period: 28.days after FailureToPleadOrDefend() counted_by frcp6-florida cite "M.D. Fla. Local Rule 1.10(b)"
@@ -75,6 +76,7 @@ test "Counting boundary: default-application-period (weekend)" cite "M.D. Fla. L
   given FailureToPleadOrDefend() on 2025-11-01
   expect deadline(default-application-period) == 2025-12-01
 }
+
 /// Local Rule 1.10(c): within 35 days after entry of a default, the party
 /// entitled to a default judgment must apply for it or file a paper
 /// identifying each unresolved issue necessary to its entry.
@@ -85,6 +87,7 @@ test "Counting boundary: default-judgment-application-period (weekend)" cite "M.
   given DefaultEntered() on 2025-11-01
   expect deadline(default-judgment-application-period) == 2025-12-08
 }
+
 /// Local Rule 3.01(d): a party may respond to a motion within 14 days
 /// after service; a motion not timely answered is subject to treatment as
 /// unopposed.
@@ -95,6 +98,7 @@ test "Counting boundary: response-period (weekend)" cite "M.D. Fla. Local Rule 3
   given MotionServed() on 2025-11-01
   expect deadline(response-period) == 2025-11-17
 }
+
 /// Local Rule 3.01(d): 21 days after service to respond to a motion to
 /// dismiss, for judgment on the pleadings, for summary judgment, to exclude
 /// or limit expert testimony, to certify a class, for a new trial, or to
@@ -106,6 +110,7 @@ test "Counting boundary: dispositive-response-period (weekend)" cite "M.D. Fla. 
   given DispositiveMotionServed() on 2025-11-01
   expect deadline(dispositive-response-period) == 2025-11-24
 }
+
 /// Local Rule 3.01(e): no reply without leave, except that a party may
 /// reply to a response to a motion for summary judgment within 14 days
 /// after service of the response; the reply must not exceed 7 pages.
@@ -116,6 +121,7 @@ test "Counting boundary: summary-judgment-reply-period (weekend)" cite "M.D. Fla
   given SummaryJudgmentResponseServed() on 2025-11-01
   expect deadline(summary-judgment-reply-period) == 2025-11-17
 }
+
 /// Local Rule 3.01(g)(3): if the opposing party is unavailable before the
 /// motion's filing, the movant after filing must try diligently for three
 /// days to contact the opposing party, then promptly supplement the motion.
@@ -126,6 +132,7 @@ test "Counting boundary: conferral-attempt-period (weekend)" cite "M.D. Fla. Loc
   given MotionFiledWithoutConference() on 2025-11-05
   expect deadline(conferral-attempt-period) == 2025-11-10
 }
+
 /// Local Rule 3.02(b)(1): the case management report is filed within 40
 /// days after any defendant appears in an action originating in the court.
 deadline case-management-report-period: 40.days after DefendantAppeared() counted_by frcp6-florida cite "M.D. Fla. Local Rule 3.02(b)(1)"
@@ -142,6 +149,7 @@ test "Counting boundary: united-states-case-management-report-period (weekend)" 
   given UnitedStatesAttorneyServed() on 2025-11-01
   expect deadline(united-states-case-management-report-period) == 2026-01-12
 }
+
 /// Local Rule 4.03(f): the mediation order requires the mediator to report
 /// within seven days after mediation its result and whether all required
 /// persons attended.
@@ -152,6 +160,7 @@ test "Counting boundary: mediation-report-period (weekend)" cite "M.D. Fla. Loca
   given MediationHeld() on 2025-11-01
   expect deadline(mediation-report-period) == 2025-11-10
 }
+
 /// Local Rule 7.01(b): within 14 days after entry of judgment, the party
 /// claiming a post-judgment attorney's fee and non-taxable expenses must
 /// move for a determination of entitlement (Local Rule 7.01(a): the
@@ -163,6 +172,7 @@ test "Counting boundary: fee-entitlement-motion-period (weekend)" cite "M.D. Fla
   given JudgmentEntered() on 2025-11-01
   expect deadline(fee-entitlement-motion-period) == 2025-11-17
 }
+
 /// Local Rule 7.01(c): within 45 days after the order determining
 /// entitlement, the claimant must file the supplemental motion on amount.
 deadline fee-amount-motion-period: 45.days after FeeEntitlementDetermined() counted_by frcp6-florida cite "M.D. Fla. Local Rule 7.01(c)"

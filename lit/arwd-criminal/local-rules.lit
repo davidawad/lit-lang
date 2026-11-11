@@ -2,6 +2,8 @@ module arwd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Western District of Arkansas's own periods in a criminal case under
 // the joint Local Rules. L.R. 7.2 governs "all motions" (its (f) names the
 // Federal Rules of Criminal Procedure), and its (b) says FRCP 6, including
@@ -41,9 +43,6 @@ event MagistrateActionTaken()
 /// failure to respond timely to a nondispositive motion is an adequate
 /// basis, without more, for granting it (L.R. 7.2(f)).
 deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 cite "W.D. Ark. L.R. 7.2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: opposition-period (weekend)" cite "W.D. Ark. L.R. 7.2(b)"
 {
@@ -56,9 +55,6 @@ test "Counting boundary: opposition-period (weekend)" cite "W.D. Ark. L.R. 7.2(b
 /// otherwise specifically provided for by law or the local rules, not
 /// later than fourteen days after it.
 deadline magistrate-review-period: 14.days after MagistrateActionTaken() counted_by frcrimp45 cite "W.D. Ark. L.R. 72.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-review-period (weekend)" cite "W.D. Ark. L.R. 72.1"
 {

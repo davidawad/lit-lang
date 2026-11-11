@@ -16,25 +16,21 @@ state commenced: "Bill in equity filed" by plaintiff cite ?("S.C. Ch. R., not ve
 
 chance pleadings: "Answer, plea or demurrer" by court cite ?("S.C. Ch. R., not vendored") {
   note "The response period and the grounds for dismissal are holes: no Court of Chancery rule is vendored."
-  edge-pleadings-dismissed "Dismissed on the pleadings" -> dismissed p ? {
-    authority cite ?("S.C. Ch. R., not vendored")
-  }
+  "Dismissed on the pleadings" -> dismissed p ? { authority cite ?("S.C. Ch. R., not vendored") }
   edge-pleadings-answered "Answered; case proceeds" -> proof p ? {
     authority cite ?("S.C. Ch. R., not vendored")
   }
-  edge-pleadings-settled "Settled or withdrawn" -> settled p ? {}
+  "Settled or withdrawn" -> settled p ? {}
 }
 
 state proof: "Proof taken" by plaintiff cite ?("S.C. Ch. R., not vendored") {
   note "How testimony was taken (before a commissioner or the chancellor) and its limits are holes: no Court of Chancery rule is vendored."
-  edge-proof-hearing "Cause set for hearing" -> hearing {
-    authority cite ?("S.C. Ch. R., not vendored")
-  }
+  "Cause set for hearing" -> hearing { authority cite ?("S.C. Ch. R., not vendored") }
 }
 
 state hearing: "Hearing before the chancellor" by court cite ?("S.C. Ch. R., not vendored") {
   note "Hearing procedure is a hole: no Court of Chancery rule is vendored."
-  edge-hearing-decree "Decree rendered" -> decree { authority cite ?("S.C. Ch. R., not vendored") }
+  "Decree rendered" -> decree { authority cite ?("S.C. Ch. R., not vendored") }
 }
 
 state decree: "Decree entered" by court cite ?("S.C. Ch. R., not vendored") {

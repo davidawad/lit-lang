@@ -46,13 +46,13 @@ terminal dismissed-untimely: "Appeal fails: notice untimely and time not extende
 state record: "Docketing, transcripts and record" by petitioner cite "NMI Sup. Ct. R. 11"
 {
   note "A party required to file a docketing statement does so within 15 days after the Clerk gives notice that the appeal has been docketed (NMI Sup. Ct. R. 3-1), and the attorney who filed the notice files a representation statement within 15 days after filing it (NMI Sup. Ct. R. 12(b)). Within 15 days after the notice of appeal, or after the order disposing of the last timely Rule 4(a)(4)(A) motion, whichever is later, the appellant files and serves Form 3 ordering a transcript or certifying that none will be ordered; the appellee may request other parts within 10 days after service of Form 3, and the appellant may add portions within 5 days after that (NMI Sup. Ct. R. 11-1(b)). The Superior Court clerk files the certificate of record within 20 days after the appellant certifies no transcript will be ordered, or within 10 days after the certified transcript is filed (NMI Sup. Ct. R. 11(c)). The Clerk may dismiss an appeal for failure to prosecute if the appellant does not remedy noncompliance within 14 days after notice (NMI Sup. Ct. R. 42-1(a))."
-  edge-record-briefing "Record filed" -> briefing { authority cite "NMI Sup. Ct. R. 31(a)" }
+  "Record filed" -> briefing { authority cite "NMI Sup. Ct. R. 31(a)" }
 }
 
 state briefing: "Briefing" by petitioner cite "NMI Sup. Ct. R. 31(a)"
 {
   note "The appellant serves and files a brief within 40 days after the record is filed; the appellee within 30 days after the appellant's brief is served; the appellant may reply within 14 days after service of the appellee's brief, but at least 3 days before argument unless the Court allows a later filing (NMI Sup. Ct. R. 31(a)(1)). A party may obtain a single automatic extension of a brief's time not exceeding 30 days (NMI Sup. Ct. R. 31-1). If the appellant fails to file a brief in time, the appellee may move to dismiss; an appellee who files none is not heard at argument without permission (NMI Sup. Ct. R. 31(c)). A principal brief may not exceed 35 pages and a reply 20 pages (NMI Sup. Ct. R. 32(a)(7))."
-  edge-briefing-argument "Briefing complete" -> argument { authority cite "NMI Sup. Ct. R. 31(a)" }
+  "Briefing complete" -> argument { authority cite "NMI Sup. Ct. R. 31(a)" }
 }
 
 decision argument: "Oral argument or submission on the briefs" by court cite "NMI Sup. Ct. R. 34(a)"
@@ -66,9 +66,7 @@ decision argument: "Oral argument or submission on the briefs" by court cite "NM
 decision decision-issued: "Judgment entered" by court cite "NMI Sup. Ct. R. 36(a)"
 {
   note "A judgment is entered when it is noted on the docket; the Clerk serves the opinion and judgment on all parties on the date of entry (NMI Sup. Ct. R. 36). A party who wants costs taxed serves and files an itemized, verified bill within 14 days after entry of judgment, and objections are filed within 10 days after service of the bill (NMI Sup. Ct. R. 39). A request for attorney fees is filed no later than 5 calendar days after the period for a rehearing petition expires or, if a timely petition is filed, no later than 5 days after its disposition (NMI Sup. Ct. R. 39-1(a)). The earlier outline named no standard-of-review decision."
-  edge-decision-issued-rehearing "Petition for rehearing" -> rehearing {
-    authority cite "NMI Sup. Ct. R. 40(a)"
-  }
+  "Petition for rehearing" -> rehearing { authority cite "NMI Sup. Ct. R. 40(a)" }
   edge-decision-issued-final "No petition" -> mandate-issued {
     authority cite "NMI Sup. Ct. R. 41(b)"
   }

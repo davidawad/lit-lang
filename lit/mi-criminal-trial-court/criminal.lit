@@ -43,15 +43,13 @@ decision preliminary-examination: "Preliminary examination" by court cite "MCR 6
 state charged: "Information or indictment" by court cite "MCR 6.112(B)"
 {
   note "A prosecution is based on an information or an indictment, filed on or before the date set for the arraignment (MCR 6.112(B), (C)). A notice of intent to seek an enhanced sentence is filed within 21 days after the defendant's arraignment on the information (MCR 6.112(F)). The defendant and the people are entitled to a speedy trial; a violation of the defendant's constitutional right to a speedy trial entitles the defendant to dismissal with prejudice (MCR 6.004(A))."
-  edge-charged-arraignment "Arraignment on the information" -> arraignment {
-    authority cite "MCR 6.113(A)"
-  }
+  "Arraignment on the information" -> arraignment { authority cite "MCR 6.113(A)" }
 }
 
 state arraignment: "Arraignment on the information" by prosecution cite "MCR 6.113"
 {
   note "Unless the defendant waives arraignment or the court for good cause orders a delay, the court with trial jurisdiction arraigns the defendant on the scheduled date (MCR 6.113(A)). On request a party provides the witness list and the other mandatory disclosures of MCR 6.201(A); the witness list may be amended without leave no later than 28 days before trial. Unless the court orders otherwise, the prosecutor complies within 21 days of a request and the defendant within 21 days of a request (MCR 6.201(G)). A defendant who will offer expert evidence of diminished capacity files notice not less than 30 days before the trial date (MCR 6.201(B))."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "MCR 6.201(G)" }
+  "Discovery" -> discovery { authority cite "MCR 6.201(G)" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "MCR 6.201"
@@ -80,7 +78,7 @@ decision plea-decision: "Plea or trial" by accused cite "MCR 6.302(A)"
 {
   note "The court may not accept a plea of guilty or nolo contendere unless convinced it is understanding, voluntary and accurate; it places the defendant under oath and carries out MCR 6.302(B)-(E) personally (MCR 6.302(A)). The defendant has the right to a jury, or may with the prosecutor's consent and the court's approval waive it (MCR 6.401)."
   edge-plea-decision-plea "Plea accepted" -> sentencing { authority cite "MCR 6.302(A)" }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "MCR 6.401" }
+  "Trial" -> trial { authority cite "MCR 6.401" }
 }
 
 decision trial: "Verdict" by court cite "MCR 6.420"
@@ -103,9 +101,7 @@ decision post-trial: "Post-trial motions" by court cite "MCR 6.431(A)"
 state sentencing: "Presentence report and sentence" by court cite "MCR 6.425(D)"
 {
   note "The court provides the presentence report to the prosecutor and the defendant's lawyer, or the unrepresented defendant, at a reasonable time but not less than two business days before the day of sentencing; if it does not, they are entitled on oral motion to an adjournment (MCR 6.425(B)). The court uses the sentencing guidelines, gives each party an opportunity to challenge the report's accuracy and states the sentence (MCR 6.425(C), (D)). Within 7 days after sentencing the court dates and signs a written judgment of sentence (MCR 6.427)."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "MCR 6.427"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "MCR 6.427" }
 }
 
 decision judgment: "Judgment of sentence" by prosecution cite "MCR 6.427"

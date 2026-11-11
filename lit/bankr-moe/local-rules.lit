@@ -197,6 +197,7 @@ test "Counting boundary: initial-installment-period (weekend)" cite "E.D. Mo. Ba
   given PetitionFiled() on 2025-12-06
   expect deadline(initial-installment-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 1006: the second installment is paid on or before
 /// sixty (60) days after the petition.
 deadline second-installment-period: 60.days after PetitionFiled() counted_by frbp9006-missouri cite "E.D. Mo. Bankr. L.R. 1006"
@@ -206,6 +207,7 @@ test "Counting boundary: second-installment-period (weekend)" cite "E.D. Mo. Ban
   given PetitionFiled() on 2025-12-02
   expect deadline(second-installment-period) == 2026-02-02
 }
+
 /// E.D. Mo. Bankr. L.R. 1006: the third installment is paid on or before
 /// ninety (90) days after the petition.
 deadline final-installment-period: 90.days after PetitionFiled() counted_by frbp9006-missouri cite "E.D. Mo. Bankr. L.R. 1006"
@@ -219,6 +221,7 @@ test "Counting boundary: fee-after-waiver-denial-period (weekend)" cite "E.D. Mo
   given FeeWaiverDenied() on 2025-12-06
   expect deadline(fee-after-waiver-denial-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 1007-1: the debtor provides the trustee
 /// documentation supporting the expenses on the Means Test and Disposable
 /// Income Official Forms fourteen (14) days before the § 341 meeting.
@@ -229,6 +232,7 @@ test "Counting boundary: means-test-documents-period (weekend)" cite "E.D. Mo. B
   given FirstMeetingDate() on 2025-12-06
   expect deadline(means-test-documents-period) == 2025-11-21
 }
+
 /// E.D. Mo. Bankr. L.R. 1007-2: § 521(a)(1)(B)(iv) is satisfied by
 /// providing the trustee payment advices at least fourteen (14) days before
 /// the first setting of the § 341 meeting (the statute's 45 days after the
@@ -240,6 +244,7 @@ test "Counting boundary: payment-advices-period (weekend)" cite "E.D. Mo. Bankr.
   given FirstMeetingDate() on 2025-12-06
   expect deadline(payment-advices-period) == 2025-11-21
 }
+
 /// E.D. Mo. Bankr. L.R. 1007-3: records of any § 521(c) education account
 /// interest are filed with the petition or within fourteen (14) days
 /// thereafter.
@@ -254,6 +259,7 @@ test "Counting boundary: amended-matrix-period (weekend)" cite "E.D. Mo. Bankr. 
   given MatrixRequested() on 2025-12-06
   expect deadline(amended-matrix-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 1017-1: upon the trustee's § 341 minute entry or
 /// another document requesting dismissal, the debtor has seven (7) days to
 /// respond, or the court may dismiss the case.
@@ -264,6 +270,7 @@ test "Counting boundary: trustee-dismissal-response-period (weekend)" cite "E.D.
   given TrusteeDismissalRequested() on 2025-12-06
   expect deadline(trustee-dismissal-response-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 1017-1: a debtor has twenty-one (21) days from
 /// service of another party's motion to dismiss a chapter 13 case to
 /// respond; if a response is filed the movant gives fourteen days' notice
@@ -275,6 +282,7 @@ test "Counting boundary: chapter13-dismissal-response-period (holiday)" cite "E.
   given Chapter13DismissalMotionServed() on 2025-12-04
   expect deadline(chapter13-dismissal-response-period) == 2025-12-26
 }
+
 /// E.D. Mo. Bankr. L.R. 1017-2: a debtor has fourteen (14) days after entry
 /// of an order of dismissal to move to reinstate and set aside the
 /// dismissal (likewise L.R. 1007-2 for dismissals under § 521(i)).
@@ -309,6 +317,7 @@ test "Counting boundary: trustee-documents-period (weekend)" cite "E.D. Mo. Bank
   given FirstMeetingDate() on 2025-12-06
   expect deadline(trustee-documents-period) == 2025-11-21
 }
+
 /// E.D. Mo. Bankr. L.R. 2004: an objection to a motion for a Rule 2004
 /// examination is filed no later than seven (7) days after its service.
 deadline exam-objection-period: 7.days after ExamMotionServed() counted_by frbp9006-missouri cite "E.D. Mo. Bankr. L.R. 2004"
@@ -318,6 +327,7 @@ test "Counting boundary: exam-objection-period (weekend)" cite "E.D. Mo. Bankr. 
   given ExamMotionServed() on 2025-12-06
   expect deadline(exam-objection-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 2015-1: no later than seven (7) days after the
 /// Notice of Appointment of Trustee, a chapter 12 debtor (and under L.R.
 /// 2015-3(C) a subchapter V debtor) tenders the trustee's deposit.
@@ -328,6 +338,7 @@ test "Counting boundary: trustee-deposit-period (weekend)" cite "E.D. Mo. Bankr.
   given TrusteeAppointmentNoticed() on 2025-12-06
   expect deadline(trustee-deposit-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 2016-1: in chapter 11 cases an objection to an
 /// application for compensation is filed and served no later than fourteen
 /// (14) days before the hearing.
@@ -338,6 +349,7 @@ test "Counting boundary: chapter11-fee-objection-period (weekend)" cite "E.D. Mo
   given Chapter11FeeHearing() on 2025-12-06
   expect deadline(chapter11-fee-objection-period) == 2025-11-21
 }
+
 /// E.D. Mo. Bankr. L.R. 2016-3: an attorney seeking fees in a chapter 13
 /// case dismissed before confirmation files the application, and obtains an
 /// order holding funds, within fourteen (14) days of the dismissal order.
@@ -357,6 +369,7 @@ test "Counting boundary: prior-fee-election-period (weekend)" cite "E.D. Mo. Ban
   given AppearanceEntered() on 2025-12-06
   expect deadline(prior-fee-election-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 3002: a claim arising from rejection or a chapter 5
 /// judgment is filed by the later of the claims bar date and thirty (30)
 /// days after the order or judgment.
@@ -367,6 +380,7 @@ test "Counting boundary: rejection-claim-period (holiday)" cite "E.D. Mo. Bankr.
   given RejectionOrderEntered() on 2025-12-02
   expect deadline(rejection-claim-period) == 2026-01-02
 }
+
 /// E.D. Mo. Bankr. L.R. 3003: in subchapter V cases, unless otherwise
 /// ordered, the non-governmental claims bar date is seventy (70) days after
 /// the petition.
@@ -377,6 +391,7 @@ test "Counting boundary: subchapter-v-claim-period (holiday)" cite "E.D. Mo. Ban
   given PetitionFiled() on 2025-12-04
   expect deadline(subchapter-v-claim-period) == 2026-02-13
 }
+
 /// E.D. Mo. Bankr. L.R. 3003: a creditor added late is given notice that it
 /// must file its claim by the later of the bar date and thirty (30) days
 /// after the notice.
@@ -387,6 +402,7 @@ test "Counting boundary: late-creditor-claim-period (holiday)" cite "E.D. Mo. Ba
   given LateCreditorNoticed() on 2025-12-02
   expect deadline(late-creditor-claim-period) == 2026-01-02
 }
+
 /// E.D. Mo. Bankr. L.R. 3007: a response to an objection to claim set for
 /// hearing is filed no later than seven (7) days before the hearing.
 deadline claim-objection-response-period: 7.days before ClaimObjectionHearing() counted_by frbp9006-missouri cite "E.D. Mo. Bankr. L.R. 3007"
@@ -396,6 +412,7 @@ test "Counting boundary: claim-objection-response-period (holiday)" cite "E.D. M
   given ClaimObjectionHearing() on 2025-12-04
   expect deadline(claim-objection-response-period) == 2025-11-26
 }
+
 /// E.D. Mo. Bankr. L.R. 3015-1: when a chapter 12 plan surrenders
 /// collateral, the debtor releases it to the creditor within forty-five
 /// (45) days of the petition.
@@ -406,6 +423,7 @@ test "Counting boundary: chapter12-surrender-period (weekend)" cite "E.D. Mo. Ba
   given PetitionFiled() on 2025-12-03
   expect deadline(chapter12-surrender-period) == 2026-01-20
 }
+
 /// E.D. Mo. Bankr. L.R. 3015-2: when a chapter 13 plan surrenders
 /// collateral, the debtor releases it to the creditor within twenty-one
 /// (21) days of the confirmation order.
@@ -416,6 +434,7 @@ test "Counting boundary: chapter13-surrender-period (holiday)" cite "E.D. Mo. Ba
   given Chapter13PlanConfirmed() on 2025-12-04
   expect deadline(chapter13-surrender-period) == 2025-12-26
 }
+
 /// E.D. Mo. Bankr. L.R. 3015-4: objections to confirmation of the debtor's
 /// original chapter 12 or 13 plan are filed and served no later than
 /// twenty-one (21) days after the conclusion of the § 341 meeting.
@@ -426,6 +445,7 @@ test "Counting boundary: plan-objection-period (holiday)" cite "E.D. Mo. Bankr. 
   given MeetingConcluded() on 2025-12-04
   expect deadline(plan-objection-period) == 2025-12-26
 }
+
 /// E.D. Mo. Bankr. L.R. 3015-4: objections to a pre-confirmation amended
 /// plan are filed and served no later than twenty-one (21) days after its
 /// service.
@@ -436,6 +456,7 @@ test "Counting boundary: amended-plan-objection-period (holiday)" cite "E.D. Mo.
   given AmendedPlanServed() on 2025-12-04
   expect deadline(amended-plan-objection-period) == 2025-12-26
 }
+
 /// E.D. Mo. Bankr. L.R. 3015-4: no later than seven (7) days after an order
 /// confirming a chapter 12 plan, the debtor serves it, or notice of it, on
 /// all creditors and parties in interest.
@@ -446,6 +467,7 @@ test "Counting boundary: chapter12-confirmation-service-period (weekend)" cite "
   given Chapter12PlanConfirmed() on 2025-12-06
   expect deadline(chapter12-confirmation-service-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 3015-5: objections to a motion to amend a confirmed
 /// chapter 12 or 13 plan are filed and served no later than twenty-one (21)
 /// days after its service.
@@ -456,6 +478,7 @@ test "Counting boundary: post-confirmation-amendment-objection-period (holiday)"
   given AmendmentMotionServed() on 2025-12-04
   expect deadline(post-confirmation-amendment-objection-period) == 2025-12-26
 }
+
 /// E.D. Mo. Bankr. L.R. 3017: unless otherwise ordered, an objection to a
 /// disclosure statement is filed and served no later than seven (7) days
 /// before its hearing.
@@ -466,6 +489,7 @@ test "Counting boundary: disclosure-statement-objection-period (holiday)" cite "
   given DisclosureStatementHearing() on 2025-12-04
   expect deadline(disclosure-statement-objection-period) == 2025-11-26
 }
+
 /// E.D. Mo. Bankr. L.R. 3017.2: counsel files and serves a Motion to
 /// Establish Confirmation Procedures within seven (7) days after the
 /// subchapter V plan is filed.
@@ -476,6 +500,7 @@ test "Counting boundary: subchapter-v-procedures-motion-period (weekend)" cite "
   given SubchapterVPlanFiled() on 2025-12-06
   expect deadline(subchapter-v-procedures-motion-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 3020: unless otherwise ordered, objections to
 /// confirmation of a chapter 11 plan are filed and served at least seven
 /// (7) days before the confirmation hearing.
@@ -486,6 +511,7 @@ test "Counting boundary: confirmation-objection-period (holiday)" cite "E.D. Mo.
   given ConfirmationHearing() on 2025-12-04
   expect deadline(confirmation-objection-period) == 2025-11-26
 }
+
 /// E.D. Mo. Bankr. L.R. 3020: the plan proponent serves the proposed
 /// confirmation order on the Master Service List seven (7) days before the
 /// confirmation hearing.
@@ -496,6 +522,7 @@ test "Counting boundary: proposed-confirmation-order-period (holiday)" cite "E.D
   given ConfirmationHearing() on 2025-12-04
   expect deadline(proposed-confirmation-order-period) == 2025-11-26
 }
+
 /// E.D. Mo. Bankr. L.R. 3022: the plan proponent applies for a final
 /// decree, or shows cause why one should not be entered, no later than
 /// three (3) months after the confirmation order.
@@ -509,6 +536,7 @@ test "Counting boundary: final-decree-objection-period (holiday)" cite "E.D. Mo.
   given FinalDecreeApplicationServed() on 2025-12-02
   expect deadline(final-decree-objection-period) == 2026-01-02
 }
+
 /// E.D. Mo. Bankr. L.R. 4001-1: a response to a motion for relief from the
 /// automatic stay is filed no later than seven (7) days before the hearing
 /// date, admitting or denying each paragraph.
@@ -519,6 +547,7 @@ test "Counting boundary: stay-relief-response-period (holiday)" cite "E.D. Mo. B
   given StayReliefHearing() on 2025-12-04
   expect deadline(stay-relief-response-period) == 2025-11-26
 }
+
 /// E.D. Mo. Bankr. L.R. 4001-2: where the stay terminates on a date certain
 /// under §§ 362(c)(3), (h), 521(a)(2) or 521(a)(6), a debtor's motion to
 /// continue it is filed within fourteen (14) days of the petition.
@@ -532,6 +561,7 @@ test "Counting boundary: trustee-stay-continuation-motion-period (holiday)" cite
   given PetitionFiled() on 2025-12-04
   expect deadline(trustee-stay-continuation-motion-period) == 2025-12-26
 }
+
 /// E.D. Mo. Bankr. L.R. 4001-5: the lessor has fourteen (14) days from the
 /// court's notice to return it with the lessor's election.
 deadline lessor-election-period: 14.days after LessorNoticeIssued() counted_by frbp9006-missouri cite "E.D. Mo. Bankr. L.R. 4001-5"
@@ -549,6 +579,7 @@ test "Counting boundary: co-debtor-stay-response-period (holiday)" cite "E.D. Mo
   given CoDebtorStayHearing() on 2025-12-04
   expect deadline(co-debtor-stay-response-period) == 2025-11-26
 }
+
 /// E.D. Mo. Bankr. L.R. 4004-1: the debtor files the chapter 13 discharge
 /// certification within fourteen (14) days of the court's notice, or the
 /// case may be closed without a discharge.
@@ -563,6 +594,7 @@ test "Counting boundary: wage-withholding-certification-period (holiday)" cite "
   given WageWithholdingNoticeIssued() on 2025-12-04
   expect deadline(wage-withholding-certification-period) == 2025-12-26
 }
+
 /// E.D. Mo. Bankr. L.R. 5009: objections to a final report are filed no
 /// later than thirty (30) days after its service.
 deadline final-report-objection-period: 30.days after FinalReportServed() counted_by frbp9006-missouri cite "E.D. Mo. Bankr. L.R. 5009"
@@ -572,6 +604,7 @@ test "Counting boundary: final-report-objection-period (holiday)" cite "E.D. Mo.
   given FinalReportServed() on 2025-12-02
   expect deadline(final-report-objection-period) == 2026-01-02
 }
+
 /// E.D. Mo. Bankr. L.R. 5011: no later than seven (7) days after service of
 /// a motion to withdraw the reference, any other party may file and serve a
 /// response.
@@ -582,6 +615,7 @@ test "Counting boundary: withdrawal-reference-response-period (weekend)" cite "E
   given WithdrawalMotionServed() on 2025-12-06
   expect deadline(withdrawal-reference-response-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 7004: the plaintiff files the certificate of
 /// service of the summons at least fourteen (14) days before the hearing
 /// date on the summons.
@@ -592,6 +626,7 @@ test "Counting boundary: summons-service-certificate-period (weekend)" cite "E.D
   given SummonsHearing() on 2025-12-06
   expect deadline(summons-service-certificate-period) == 2025-11-21
 }
+
 /// E.D. Mo. Bankr. L.R. 7016: parties exchange witness and exhibit lists
 /// and exhibits no later than fourteen (14) days before trial, unless an
 /// order provides otherwise.
@@ -602,6 +637,7 @@ test "Counting boundary: trial-exchange-period (weekend)" cite "E.D. Mo. Bankr. 
   given AdversaryTrial() on 2025-12-06
   expect deadline(trial-exchange-period) == 2025-11-21
 }
+
 /// E.D. Mo. Bankr. L.R. 7016: unless a pre-trial order directs otherwise,
 /// the parties discuss settlement no later than fourteen (14) days after an
 /// answer or other response is filed.
@@ -616,6 +652,7 @@ test "Counting boundary: discovery-response-period (holiday)" cite "E.D. Mo. Ban
   given DiscoveryRequestServed() on 2025-12-04
   expect deadline(discovery-response-period) == 2025-12-26
 }
+
 /// E.D. Mo. Bankr. L.R. 7041: twenty-one (21) days after the bankruptcy
 /// case is dismissed the court closes a related adversary proceeding
 /// without final judgment unless a party moves within that period to
@@ -627,6 +664,7 @@ test "Counting boundary: adversary-continuation-motion-period (holiday)" cite "E
   given BankruptcyCaseDismissed() on 2025-12-04
   expect deadline(adversary-continuation-motion-period) == 2025-12-26
 }
+
 /// E.D. Mo. Bankr. L.R. 7056: the response and memorandum are filed no
 /// later than twenty-one (21) days after the motion is served or a
 /// responsive pleading is due, whichever is later.
@@ -637,6 +675,7 @@ test "Counting boundary: summary-judgment-response-period (holiday)" cite "E.D. 
   given SummaryJudgmentMotionServed() on 2025-12-04
   expect deadline(summary-judgment-response-period) == 2025-12-26
 }
+
 /// E.D. Mo. Bankr. L.R. 9013-1: unless otherwise specified, a response to a
 /// matter set for hearing is filed no later than seven (7) days before the
 /// hearing, and any memorandum no later than seven days before it.
@@ -647,6 +686,7 @@ test "Counting boundary: hearing-response-period (holiday)" cite "E.D. Mo. Bankr
   given MotionHearing() on 2025-12-04
   expect deadline(hearing-response-period) == 2025-11-26
 }
+
 /// E.D. Mo. Bankr. L.R. 9019: if the court ordered the mediation, the
 /// parties agree on a mediator within seven (7) days of the order.
 deadline mediator-selection-period: 7.days after MediationOrdered() counted_by frbp9006-missouri cite "E.D. Mo. Bankr. L.R. 9019"
@@ -656,6 +696,7 @@ test "Counting boundary: mediator-selection-period (weekend)" cite "E.D. Mo. Ban
   given MediationOrdered() on 2025-12-06
   expect deadline(mediator-selection-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 9019: no later than seven (7) days after a court-
 /// ordered mediation concludes, the mediator files and serves the report.
 deadline mediator-report-period: 7.days after MediationConcluded() counted_by frbp9006-missouri cite "E.D. Mo. Bankr. L.R. 9019"
@@ -665,6 +706,7 @@ test "Counting boundary: mediator-report-period (weekend)" cite "E.D. Mo. Bankr.
   given MediationConcluded() on 2025-12-06
   expect deadline(mediator-report-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 9019: if agreement is reached, the parties prepare
 /// and file the settlement papers no later than fourteen (14) days after
 /// the mediation concludes.
@@ -678,6 +720,7 @@ test "Counting boundary: seal-objection-period (weekend)" cite "E.D. Mo. Bankr. 
   given SealMotionFiled() on 2025-12-06
   expect deadline(seal-objection-period) == 2025-12-15
 }
+
 /// E.D. Mo. Bankr. L.R. 9061: a party served with a motion or pleading
 /// heard on Negative Notice has twenty-one (21) days after service to
 /// respond (lien avoidance motions included, L.R. 4003-2).
@@ -688,6 +731,7 @@ test "Counting boundary: negative-notice-response-period (holiday)" cite "E.D. M
   given NegativeNoticeServed() on 2025-12-04
   expect deadline(negative-notice-response-period) == 2025-12-26
 }
+
 /// E.D. Mo. Bankr. L.R. 9061: the Negative Notice response time on a motion
 /// for continuation of utility service or adequate assurance under § 366 is
 /// thirty (30) days.
@@ -698,6 +742,7 @@ test "Counting boundary: utility-motion-response-period (holiday)" cite "E.D. Mo
   given UtilityMotionServed() on 2025-12-02
   expect deadline(utility-motion-response-period) == 2026-01-02
 }
+
 /// E.D. Mo. Bankr. L.R. 9061: the Negative Notice response time on a
 /// chapter 13 motion to incur automobile debt or retain automobile
 /// insurance proceeds is fourteen (14) days after service.

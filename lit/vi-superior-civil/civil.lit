@@ -64,7 +64,7 @@ decision pleading-motion: "Rule 12 motion decided" by court cite "V.I. R. Civ. P
   edge-pleading-motion-granted "Granted" -> dismissed-pleading {
     authority cite "V.I. R. Civ. P. 12(b)"
   }
-  edge-pleading-motion-amend "Leave to amend" -> amend { authority cite "V.I. R. Civ. P. 15(a)" }
+  "Leave to amend" -> amend { authority cite "V.I. R. Civ. P. 15(a)" }
   edge-pleading-motion-denied "Denied; answer due" -> discovery {
     authority cite "V.I. R. Civ. P. 12(a)"
   }
@@ -119,12 +119,8 @@ state discovery: "Disclosure, discovery and scheduling" by plaintiff cite "V.I. 
   edge-discovery-sj "Summary judgment motion" -> summary-judgment {
     authority cite "V.I. R. Civ. P. 56(a)"
   }
-  edge-discovery-mediation "Referred to mediation" -> mediation {
-    authority cite "V.I. R. Civ. P. 90(c)"
-  }
-  edge-discovery-settled "Voluntary dismissal or settlement" -> settled {
-    authority cite "V.I. R. Civ. P. 41(a)"
-  }
+  "Referred to mediation" -> mediation { authority cite "V.I. R. Civ. P. 90(c)" }
+  "Voluntary dismissal or settlement" -> settled { authority cite "V.I. R. Civ. P. 41(a)" }
 }
 
 decision discovery-dispute: "Discovery dispute decided" by court cite "V.I. R. Civ. P. 37(a)"
@@ -149,14 +145,14 @@ terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, 
 decision mediation: "Mediation" by court effective [2023-09-01, ..) known_at 2026-10-28 supersedes mediation@2019-08-08 cite "V.I. R. Civ. P. (2023) 90"
 {
   note "From September 1, 2023: the notice under Rule 90(d)(3) is notice to the Court; under new Rule 90(d)(3a) each party discloses to all other parties at least five days before the mediation the individual parties who will attend and the names and titles of the representatives of any entity, including insurer-representatives, on pain of sanctions for lack of good faith participation; mediation may be held by electronic meeting technology that lets each participant see and hear all others (Rule 90(d)(5)); and Rule 90(f) is replaced: each party appears by the party personally, an entity's representative with full authority to settle or to make a final recommendation, and for an insured party a carrier representative with the same authority, and if a party without good cause fails to appear by such a person or fails to participate in good faith, the court shall impose sanctions including mediator fees and expenses and other parties' attorney's fees and costs (V.I. R. Civ. P. (2023) 90). The five-day period is not counted here: lit/core has no counting rule for Rule 6. The other periods of Rule 90(d) are those of the base text and are not stated here (currency unconfirmed)."
-  edge-mediation-settled "Settled" -> settled { authority cite "V.I. R. Civ. P. 41(a)" }
+  "Settled" -> settled { authority cite "V.I. R. Civ. P. 41(a)" }
   edge-mediation-impasse "Not settled" -> pretrial { authority cite "V.I. R. Civ. P. 16(e)" }
 }
 
 decision mediation: "Mediation" by court effective [2019-08-08, 2023-09-01) known_at 2026-10-28 cite "V.I. R. Civ. P. 90(c)"
 {
   note "Except in criminal actions, appeals from administrative agencies, forfeitures, habeas corpus and extraordinary writs, and matters a judge excludes, a judge may refer any matter to mediation, and the parties may stipulate to mediate any issue at any time (V.I. R. Civ. P. 90(b), (c)). The procedure, including the dates of the first conference and of the notice of the agreed mediator, is governed by Rule 90(d), whose periods are not stated here (currency unconfirmed); sanctions for failure to appear or to mediate in good faith by Rule 90(f)."
-  edge-mediation-settled "Settled" -> settled { authority cite "V.I. R. Civ. P. 41(a)" }
+  "Settled" -> settled { authority cite "V.I. R. Civ. P. 41(a)" }
   edge-mediation-impasse "Not settled" -> pretrial { authority cite "V.I. R. Civ. P. 16(e)" }
 }
 
@@ -172,8 +168,8 @@ decision summary-judgment: "Summary judgment decided" by court cite "V.I. R. Civ
 state pretrial: "Final pretrial conference and order" by court cite "V.I. R. Civ. P. 16(e)"
 {
   note "The court may hold a final pretrial conference to formulate a trial plan, and its pretrial orders control the course of the action (V.I. R. Civ. P. 16(d), (e)); sanctions for noncompliance are governed by Rule 16(f). A jury trial is preserved by a demand under Rule 38(b), waived unless properly served and filed (V.I. R. Civ. P. 38(d)); the demand period is not stated here (currency unconfirmed)."
-  edge-pretrial-trial "Trial" -> trial { authority cite "V.I. R. Civ. P. 39" }
-  edge-pretrial-settled "Settled before trial" -> settled { authority cite "V.I. R. Civ. P. 41(a)" }
+  "Trial" -> trial { authority cite "V.I. R. Civ. P. 39" }
+  "Settled before trial" -> settled { authority cite "V.I. R. Civ. P. 41(a)" }
 }
 
 state trial: "Trial by jury or by the court" by court cite "V.I. R. Civ. P. 39"
@@ -187,9 +183,7 @@ state trial: "Trial by jury or by the court" by court cite "V.I. R. Civ. P. 39"
 decision judgment-entered: "Judgment entered" by court cite "V.I. R. Civ. P. 58(b)"
 {
   note "Every judgment and amended judgment is set out in a separate document, and upon determination of an action the judge enters judgment (V.I. R. Civ. P. 58(a), (b)). Costs, including attorney's fees, are governed by Rule 54(d). A motion for a new trial or to alter or amend the judgment is governed by Rule 59(b) and (e), and relief from judgment by Rule 60; their periods are not stated here (currency unconfirmed). A notice of appeal is filed with the Clerk of the Supreme Court within the time Rule 5 of the Rules of Appellate Procedure allows (V.I. R. App. P. 4(a)); see lit/vi-supreme-civil."
-  edge-judgment-entered-post-trial "Post-trial motion" -> post-trial {
-    authority cite "V.I. R. Civ. P. 59(b)"
-  }
+  "Post-trial motion" -> post-trial { authority cite "V.I. R. Civ. P. 59(b)" }
   edge-judgment-entered-appeal "Notice of appeal" -> appeal-noticed {
     authority cite "V.I. R. App. P. 4(a)"
   }

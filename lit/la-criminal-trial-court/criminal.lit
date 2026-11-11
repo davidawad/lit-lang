@@ -17,9 +17,7 @@ start arrested
 state arrested: "Arrest" by prosecution cite "La. C.Cr.P. art. 230.1"
 {
   note "The sheriff or officer having custody of an arrested person brings the person promptly before a judge for the appointment of counsel, within the period La. C.Cr.P. art. 230.1(A) sets (not stated here; currency unconfirmed); at that appearance the court may fix bail, and the article provides for extension for cause and the effect of a failure to appear (La. C.Cr.P. art. 230.1)."
-  edge-arrested-appearance "Appearance for appointment of counsel" -> appearance {
-    authority cite "La. C.Cr.P. art. 230.1"
-  }
+  "Appearance for appointment of counsel" -> appearance { authority cite "La. C.Cr.P. art. 230.1" }
 }
 
 decision appearance: "Counsel and bail" by court cite "La. C.Cr.P. art. 230.1"
@@ -43,9 +41,7 @@ decision charge: "Indictment or information" by court cite "La. C.Cr.P. art. 382
 state arraignment: "Arraignment" by prosecution cite "La. C.Cr.P. art. 551"
 {
   note "The defendant is arraigned and pleads (La. C.Cr.P. art. 551 and following). After the charge is filed the district attorney sets the matter for arraignment within the period La. C.Cr.P. art. 701(C) sets, unless just cause for a longer delay is shown. The state and the defendant have the right to a speedy trial; after a valid motion for a speedy trial, accompanied by counsel's affidavit of readiness, trial must commence within the periods La. C.Cr.P. art. 701(D) sets by class of offense and custody, failing which, if just cause is not shown at a contradictory hearing, the defendant is released without bail or the bail obligation discharged (La. C.Cr.P. art. 701). These periods are not stated here (currency unconfirmed). No trial may be commenced after the time limitations La. C.Cr.P. art. 578 sets from the institution of prosecution, by class of offense, as interrupted or suspended under arts. 579 and 580; the periods are not stated here (currency unconfirmed)."
-  edge-arraignment-discovery "Discovery and pretrial motions" -> discovery {
-    authority cite "La. C.Cr.P. art. 718"
-  }
+  "Discovery and pretrial motions" -> discovery { authority cite "La. C.Cr.P. art. 718" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "La. C.Cr.P. art. 521"
@@ -76,7 +72,7 @@ decision plea-decision: "Plea or trial" by accused cite "La. C.Cr.P. art. 556.1"
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "La. C.Cr.P. art. 556.1"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "La. C.Cr.P. art. 782" }
+  "Trial" -> trial { authority cite "La. C.Cr.P. art. 782" }
   edge-plea-decision-nolle "District attorney dismisses" -> dismissed {
     authority cite "La. C.Cr.P. art. 691"
   }
@@ -106,7 +102,7 @@ decision post-verdict: "Post-verdict motions" by court cite "La. C.Cr.P. art. 85
 state sentencing: "Sentencing" by court cite "La. C.Cr.P. art. 873"
 {
   note "After a felony conviction, and after the denial of a motion for a new trial or in arrest of judgment, the delays before sentence that La. C.Cr.P. art. 873 sets must elapse unless the defendant waives them; they are not stated here (currency unconfirmed). A motion to reconsider sentence may be filed under La. C.Cr.P. art. 881.1."
-  edge-sentencing-judgment "Sentence imposed" -> judgment { authority cite "La. C.Cr.P. art. 912" }
+  "Sentence imposed" -> judgment { authority cite "La. C.Cr.P. art. 912" }
 }
 
 decision judgment: "Motion for appeal" by accused cite "La. C.Cr.P. art. 914"

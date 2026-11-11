@@ -2,6 +2,8 @@ module tned-local-rules.local-rules
 
 import core.frcp6.{ frcp6 }
 
+forum frcp
+
 // The Eastern District of Tennessee's own civil periods, computed under
 // the federal rules (FRCP 6(a) governs "any local rule"). The briefing
 // schedule of LR 7.1(a) holds "Unless the Court notifies the parties to
@@ -57,9 +59,6 @@ event MagistrateAvailabilityNoticed()
 /// LR 7.1(a)(2): the answering brief to a motion is served and filed no
 /// later than 14 days after the service of the opening brief.
 deadline answering-brief-period: 14.days after OpeningBriefServed() counted_by frcp6 cite "E.D. Tenn. L.R. 7.1(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: answering-brief-period (weekend)" cite "E.D. Tenn. L.R. 7.1(a)"
 {
@@ -70,9 +69,6 @@ test "Counting boundary: answering-brief-period (weekend)" cite "E.D. Tenn. L.R.
 /// LR 7.1(a)(2): parties have 21 days in which to respond to dispositive
 /// motions.
 deadline dispositive-answering-brief-period: 21.days after DispositiveOpeningBriefServed() counted_by frcp6 cite "E.D. Tenn. L.R. 7.1(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: dispositive-answering-brief-period (weekend)" cite "E.D. Tenn. L.R. 7.1(a)"
 {
@@ -85,9 +81,6 @@ test "Counting boundary: dispositive-answering-brief-period (weekend)" cite "E.D
 /// otherwise a reply is not necessary, and it may not reargue the opening
 /// brief.
 deadline reply-brief-period: 7.days after AnsweringBriefServed() counted_by frcp6 cite "E.D. Tenn. L.R. 7.1(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: reply-brief-period (weekend)" cite "E.D. Tenn. L.R. 7.1(a)"
 {
@@ -99,9 +92,6 @@ test "Counting boundary: reply-brief-period (weekend)" cite "E.D. Tenn. L.R. 7.1
 /// after service of the supplemental brief. No other additional paper
 /// may be filed without prior approval of the court.
 deadline supplemental-response-period: 7.days after SupplementalBriefServed() counted_by frcp6 cite "E.D. Tenn. L.R. 7.1(d)"
-{
-  forum frcp
-}
 
 test "Counting boundary: supplemental-response-period (weekend)" cite "E.D. Tenn. L.R. 7.1(d)"
 {
@@ -114,9 +104,6 @@ test "Counting boundary: supplemental-response-period (weekend)" cite "E.D. Tenn
 /// otherwise ordered; failure may result in dismissal of the plaintiff's
 /// action or entry of default against the defendant.
 deadline proposed-findings-period: 14.days before NonJuryTrialBegins() counted_by frcp6 cite "E.D. Tenn. L.R. 52.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: proposed-findings-period (weekend)" cite "E.D. Tenn. L.R. 52.1"
 {
@@ -128,9 +115,6 @@ test "Counting boundary: proposed-findings-period (weekend)" cite "E.D. Tenn. L.
 /// a bill of costs with the Clerk within 21 days from the entry of
 /// judgment.
 deadline bill-of-costs-period: 21.days after JudgmentEntered() counted_by frcp6 cite "E.D. Tenn. L.R. 54.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "E.D. Tenn. L.R. 54.1"
 {
@@ -141,9 +125,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "E.D. Tenn. L.R. 5
 /// LR 54.1: opposing counsel file written objections within 21 days from
 /// the date of service of the bill of costs.
 deadline cost-objections-period: 21.days after BillOfCostsServed() counted_by frcp6 cite "E.D. Tenn. L.R. 54.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: cost-objections-period (weekend)" cite "E.D. Tenn. L.R. 54.1"
 {
@@ -154,9 +135,6 @@ test "Counting boundary: cost-objections-period (weekend)" cite "E.D. Tenn. L.R.
 /// LR 54.1: the prevailing party may file a reply to any objections
 /// within 14 days from the date of service.
 deadline cost-reply-period: 14.days after CostObjectionsServed() counted_by frcp6 cite "E.D. Tenn. L.R. 54.1"
-{
-  forum frcp
-}
 
 test "Counting boundary: cost-reply-period (weekend)" cite "E.D. Tenn. L.R. 54.1"
 {
@@ -170,9 +148,6 @@ test "Counting boundary: cost-reply-period (weekend)" cite "E.D. Tenn. L.R. 54.1
 /// not moved for in time are waived. The court may extend the time on a
 /// motion filed within it.
 deadline fee-motion-period: 30.days after JudgmentEntered() counted_by frcp6 cite "E.D. Tenn. L.R. 54.2"
-{
-  forum frcp
-}
 
 test "Counting boundary: fee-motion-period (weekend)" cite "E.D. Tenn. L.R. 54.2"
 {
@@ -184,9 +159,6 @@ test "Counting boundary: fee-motion-period (weekend)" cite "E.D. Tenn. L.R. 54.2
 /// parties of the availability of a magistrate judge, the parties jointly
 /// file a completed consent form.
 deadline magistrate-consent-period: 45.days after MagistrateAvailabilityNoticed() counted_by frcp6 cite "E.D. Tenn. L.R. 72.3(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: magistrate-consent-period (weekend)" cite "E.D. Tenn. L.R. 72.3(c)"
 {

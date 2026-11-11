@@ -49,7 +49,7 @@ state pretrial: "Pretrial motions and discovery" by prosecution cite ?("W. Va. R
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite ?("W. Va. R. Crim. P. 12, CURRENCY UNCONFIRMED") {
   note "CURRENCY UNCONFIRMED."
-  edge-motions-ruling-dismissed "Charges dismissed" -> dismissed {
+  "Charges dismissed" -> dismissed {
     authority cite ?("W. Va. R. Crim. P. 12, CURRENCY UNCONFIRMED")
   }
   edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
@@ -62,9 +62,7 @@ decision plea-decision: "Plea or trial" by accused cite ?("W. Va. R. Crim. P. 11
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("W. Va. R. Crim. P. 11, CURRENCY UNCONFIRMED")
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite ?("W. Va. R. Crim. P. 23, CURRENCY UNCONFIRMED")
-  }
+  "Trial" -> trial { authority cite ?("W. Va. R. Crim. P. 23, CURRENCY UNCONFIRMED") }
 }
 
 decision trial: "Verdict" by court cite ?("W. Va. R. Crim. P. 31, CURRENCY UNCONFIRMED") {
@@ -92,7 +90,7 @@ decision post-trial: "Post-verdict motions" by court cite ?("W. Va. R. Crim. P. 
 
 state sentencing: "Sentence and judgment" by court cite ?("W. Va. R. Crim. P. 32, CURRENCY UNCONFIRMED") {
   note "A motion to reduce a sentence may be made, or the court may reduce it on its own, within 120 days after the sentence is imposed or probation revoked, or within 120 days after the Supreme Court of Appeals' mandate affirming, or its order dismissing or rejecting a petition for appeal (W. Va. R. Crim. P. 35(b)). CURRENCY UNCONFIRMED: the value is the vendored text, unverified."
-  edge-sentencing-judgment "Judgment entered in the criminal docket" -> judgment {
+  "Judgment entered in the criminal docket" -> judgment {
     authority cite ?("W. Va. R. Crim. P. 37(b)(1), CURRENCY UNCONFIRMED")
   }
 }

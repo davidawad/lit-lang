@@ -38,7 +38,7 @@ decision initial-appearance: "Bail, release or detention" by court cite "Crim. P
 decision probable-cause: "Preliminary hearing or indictment" by court cite "Crim. P. 5(a)"
 {
   note "A person accused by felony complaint of a class 1, 2 or 3 felony or a level 1 or 2 drug felony, and of certain class 4, 5 or 6 or level 3 or 4 drug felonies (mandatory sentencing, crimes of violence, sexual offenses), may demand a preliminary hearing to determine probable cause (Crim. P. 5(a)(4)). Within 7 days after the defendant is brought before the county court, the prosecutor or the defendant may request the hearing; the court sets it forthwith, and it is held within 35 days of the day of setting unless good cause for a continuance is shown (Crim. P. 5(a)(4)(I)). If neither requests a hearing within 7 days, the county court binds the defendant over to the court of record for trial (Crim. P. 5(a)(5)). A case may instead proceed by grand jury indictment (Crim. P. 6, 7(a))."
-  edge-probable-cause-charged "Probable cause found or bound over; information or indictment filed" -> charged {
+  "Probable cause found or bound over; information or indictment filed" -> charged {
     authority cite "Crim. P. 5(a)"
   }
   edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
@@ -49,13 +49,13 @@ decision probable-cause: "Preliminary hearing or indictment" by court cite "Crim
 state charged: "Indictment or information" by court cite "Crim. P. 7"
 {
   note "An indictment is a written statement presented in open court by a grand jury to the district court charging a crime (Crim. P. 7(a)(1)); an information is filed by the prosecuting attorney (Crim. P. 7(b)). Arraignment follows the preliminary proceedings under Crim. P. 5, 7 and 12 (Crim. P. 10)."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Crim. P. 10" }
+  "Arraignment" -> arraignment { authority cite "Crim. P. 10" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "Crim. P. 10"
 {
   note "Arraignment is conducted in open court in the court having trial jurisdiction: the defendant is informed of the offense charged and required to plead (Crim. P. 10). For a felony, a class 1 misdemeanor, or an offense punishable by more than one year's imprisonment, the defendant must be present, though for good cause the court may accept a not-guilty plea by counsel (Crim. P. 10(a)). A defendant may plead guilty, not guilty, not guilty by reason of insanity, or with the court's consent nolo contendere (Crim. P. 11(a)). The Crim. P. 48(b) speedy-trial period runs from the entry of a plea of not guilty."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Crim. P. 16" }
+  "Discovery" -> discovery { authority cite "Crim. P. 16" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "Crim. P. 12(b)"
@@ -88,7 +88,7 @@ decision plea-decision: "Plea or trial" by accused cite "Crim. P. 11(b)"
 {
   note "The court accepts a guilty or nolo contendere plea only after advising the defendant of the Crim. P. 5(a)(2) rights and determining that the defendant understands the charge, its elements and the effect of the plea, that the plea is voluntary, that the defendant waives a jury trial, and the possible penalties (Crim. P. 11(b)). The prosecuting attorney may dismiss or enter a nolle prosequi only on a motion in open court with the court's consent and a written statement of reasons, and not during trial without the defendant's consent (Crim. P. 48(a))."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "Crim. P. 11(b)" }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Crim. P. 23(a)" }
+  "Trial" -> trial { authority cite "Crim. P. 23(a)" }
   edge-plea-decision-nolle "Dismissal or nolle prosequi with the court's consent" -> dismissed {
     authority cite "Crim. P. 48(a)"
   }
@@ -114,9 +114,7 @@ decision post-trial: "Post-trial motions" by court cite "Crim. P. 29(c)"
 state sentencing: "Presentence report and sentencing" by court cite "Crim. P. 32(a)"
 {
   note "For a felony sentence the probation department's presentence report copies are provided at least 72 hours before the sentencing hearing, or at least 7 days before it if a party so requests of the court within 7 days of the time the court sets the hearing date; if probation cannot meet the 7 days, the court gives it more time and resets the hearing at least 7 days after the copies are provided (Crim. P. 32(a)). Sentence is imposed without unreasonable delay after the defendant and the state are heard (Crim. P. 32(b)(1)). A motion to withdraw a guilty or nolo contendere plea may be made only before sentence is imposed or suspended (Crim. P. 32(d))."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "Crim. P. 32(b)"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "Crim. P. 32(b)" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "Crim. P. 32(c)"

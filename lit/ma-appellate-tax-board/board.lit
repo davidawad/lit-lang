@@ -13,7 +13,7 @@ start filed
 
 state filed: "Petition for abatement filed with the board" by petitioner cite ?("G.L. c. 58A, § 7: the General Laws are not vendored") {
   note "The board hears abatement appeals from local assessors and the Commissioner of Revenue under its formal or informal procedure. The filing period, form and fee are G.L. c. 58A's, which is not vendored: they are holes."
-  edge-filed-hearing "Set for hearing" -> hearing {
+  "Set for hearing" -> hearing {
     event ActionCommenced()
     authority cite ?("G.L. c. 58A, § 7: the General Laws are not vendored")
   }
@@ -21,7 +21,7 @@ state filed: "Petition for abatement filed with the board" by petitioner cite ?(
 
 state hearing: "Hearing before the board" by court cite ?("G.L. c. 58A, § 7: the General Laws are not vendored") {
   note "Hearing procedure, evidence and the record are G.L. c. 58A's (not vendored): holes."
-  edge-hearing-decision "Decision issued" -> decision {
+  "Decision issued" -> decision {
     authority cite ?("G.L. c. 58A, § 13: the General Laws are not vendored")
   }
 }

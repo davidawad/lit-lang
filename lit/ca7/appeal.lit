@@ -67,6 +67,7 @@ test "Counting boundary: docketing-fee-period (weekend)" cite "7th Cir. R. 3(b)"
   given AppealDocketed() on 2025-12-06
   expect deadline(docketing-fee-period) == 2025-12-22
 }
+
 /// The appellant files its docketing statement with the district clerk
 /// with the notice of appeal or with the clerk of this court within seven
 /// days of filing the notice.
@@ -77,6 +78,7 @@ test "Counting boundary: docketing-statement-period (weekend)" cite "7th Cir. R.
   given NoticeOfAppealFiled() on 2025-12-06
   expect deadline(docketing-statement-period) == 2025-12-15
 }
+
 /// Failure to file the docketing statement within 14 days of the filing of
 /// the notice of appeal leads to a $100 fine on counsel.
 deadline docketing-statement-fine-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "7th Cir. R. 3(c)(2)"
@@ -86,6 +88,7 @@ test "Counting boundary: docketing-statement-fine-period (weekend)" cite "7th Ci
   given NoticeOfAppealFiled() on 2025-12-06
   expect deadline(docketing-statement-fine-period) == 2025-12-22
 }
+
 /// Failure to file the docketing statement within 28 days of the filing of
 /// the notice of appeal is treated as abandonment and the appeal is
 /// dismissed.
@@ -96,6 +99,7 @@ test "Counting boundary: docketing-statement-abandonment-period (holiday)" cite 
   given NoticeOfAppealFiled() on 2025-12-04
   expect deadline(docketing-statement-abandonment-period) == 2026-01-02
 }
+
 /// If the appellant's docketing statement is not complete and correct, the
 /// appellee provides a complete one within 14 days after its filing.
 deadline appellee-docketing-statement-period: 14.days after DocketingStatementFiled() counted_by frap26 cite "7th Cir. R. 3(c)(1)"
@@ -105,6 +109,7 @@ test "Counting boundary: appellee-docketing-statement-period (weekend)" cite "7t
   given DocketingStatementFiled() on 2025-12-06
   expect deadline(appellee-docketing-statement-period) == 2025-12-22
 }
+
 /// Within 14 days of the notice of appeal the district court makes its
 /// docket complete and available electronically to the court of appeals.
 deadline district-docket-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "7th Cir. R. 10(a)(1)"
@@ -114,6 +119,7 @@ test "Counting boundary: district-docket-period (weekend)" cite "7th Cir. R. 10(
   given NoticeOfAppealFiled() on 2025-12-06
   expect deadline(district-docket-period) == 2025-12-22
 }
+
 /// Counsel ensures, within 21 days of filing the notice of appeal, that all
 /// documents necessary for review are on the district court docket.
 deadline record-documents-period: 21.days after NoticeOfAppealFiled() counted_by frap26 cite "7th Cir. R. 10(a)(3)"
@@ -123,6 +129,7 @@ test "Counting boundary: record-documents-period (holiday)" cite "7th Cir. R. 10
   given NoticeOfAppealFiled() on 2025-12-04
   expect deadline(record-documents-period) == 2025-12-26
 }
+
 /// In a criminal case outside the Criminal Justice Act, the appellant
 /// deposits the estimated transcript cost with the reporter within 14 days
 /// after filing the notice of appeal.
@@ -133,6 +140,7 @@ test "Counting boundary: criminal-transcript-deposit-period (weekend)" cite "7th
   given NoticeOfAppealFiled() on 2025-12-06
   expect deadline(criminal-transcript-deposit-period) == 2025-12-22
 }
+
 /// A motion for exemption from electronic filing is filed at least seven
 /// days before the document is due.
 deadline electronic-filing-exemption-period: 7.days before DocumentDue() counted_by frap26 cite "7th Cir. R. 25(b)"
@@ -142,6 +150,7 @@ test "Counting boundary: electronic-filing-exemption-period (holiday)" cite "7th
   given DocumentDue() on 2025-12-04
   expect deadline(electronic-filing-exemption-period) == 2025-11-26
 }
+
 /// A motion to extend the time to file a brief is filed at least seven days
 /// before the brief is due, unless its basis did not exist or could not be
 /// known earlier.
@@ -152,6 +161,7 @@ test "Counting boundary: brief-extension-motion-period (holiday)" cite "7th Cir.
   given DocumentDue() on 2025-12-04
   expect deadline(brief-extension-motion-period) == 2025-11-26
 }
+
 /// The disclosure statements are filed no later than 21 days after
 /// docketing, or earlier with a party's first motion or response or when
 /// the court directs.
@@ -162,6 +172,7 @@ test "Counting boundary: disclosure-statement-period (holiday)" cite "7th Cir. R
   given AppealDocketed() on 2025-12-04
   expect deadline(disclosure-statement-period) == 2025-12-26
 }
+
 /// Counsel files an updated disclosure statement within 14 days of any
 /// change in the information it must disclose.
 deadline disclosure-update-period: 14.days after DisclosureChanged() counted_by frap26 cite "7th Cir. R. 26.1(d)"
@@ -171,6 +182,7 @@ test "Counting boundary: disclosure-update-period (weekend)" cite "7th Cir. R. 2
   given DisclosureChanged() on 2025-12-06
   expect deadline(disclosure-update-period) == 2025-12-22
 }
+
 /// The time for briefs runs from docketing: FRAP 31(a)(1)'s 40 days for
 /// the appellant's brief count from the date the appeal is docketed,
 /// whatever the state of the record.
@@ -184,6 +196,7 @@ test "Counting boundary: brief-show-cause-period (weekend)" cite "7th Cir. R. 31
   given BriefShowCauseEntered() on 2025-12-06
   expect deadline(brief-show-cause-period) == 2025-12-22
 }
+
 /// Requests about scheduling argument should be made by letter no later
 /// than seven days after the filing of the appellee's brief.
 deadline argument-scheduling-request-period: 7.days after AppelleeBriefFiled() counted_by frap26 cite "7th Cir. R. 34(b)(4)"
@@ -193,6 +206,7 @@ test "Counting boundary: argument-scheduling-request-period (weekend)" cite "7th
   given AppelleeBriefFiled() on 2025-12-06
   expect deadline(argument-scheduling-request-period) == 2025-12-15
 }
+
 /// Unless good cause is shown, a motion to waive, postpone or present
 /// argument remotely is filed no later than 14 days before the argument.
 deadline argument-motion-period: 14.days before ArgumentHeard() counted_by frap26 cite "7th Cir. R. 34(e)"
@@ -202,6 +216,7 @@ test "Counting boundary: argument-motion-period (weekend)" cite "7th Cir. R. 34(
   given ArgumentHeard() on 2025-12-06
   expect deadline(argument-motion-period) == 2025-11-21
 }
+
 /// 7th Cir. R. 34(a): counsel names for oral argument are submitted at
 /// least five business days before argument.
 deadline counsel-names-period: 5.business_days before ArgumentHeard() counted_by frap26 cite "7th Cir. R. 34(a)"
@@ -221,6 +236,7 @@ test "Counting boundary: law-student-argument-motion-period (weekend)" cite "7th
   given ArgumentHeard() on 2025-12-06
   expect deadline(law-student-argument-motion-period) == 2025-11-21
 }
+
 /// Trial counsel in a criminal case, unless retained for the appeal, files
 /// a motion to withdraw or for appointment within 14 days of the notice of
 /// appeal.
@@ -231,6 +247,7 @@ test "Counting boundary: trial-counsel-motion-period (weekend)" cite "7th Cir. R
   given NoticeOfAppealFiled() on 2025-12-06
   expect deadline(trial-counsel-motion-period) == 2025-12-22
 }
+
 /// If no response to a Rule 51 notice is received within 30 days after the
 /// mailing, the appeal may be dismissed.
 deadline rule51-response-period: 30.days after Rule51NoticeMailed() counted_by frap26 cite "7th Cir. R. 51(c)"
@@ -240,6 +257,7 @@ test "Counting boundary: rule51-response-period (holiday)" cite "7th Cir. R. 51(
   given Rule51NoticeMailed() on 2025-12-02
   expect deadline(rule51-response-period) == 2026-01-02
 }
+
 /// On a remand from the Supreme Court, counsel file statements of position
 /// within 21 days after the certified copy of its judgment issues.
 deadline remand-statement-period: 21.days after SupremeCourtRemandIssued() counted_by frap26 cite "7th Cir. R. 54"
@@ -249,6 +267,7 @@ test "Counting boundary: remand-statement-period (holiday)" cite "7th Cir. R. 54
   given SupremeCourtRemandIssued() on 2025-12-04
   expect deadline(remand-statement-period) == 2025-12-26
 }
+
 /// The clerk dismisses for want of prosecution if the party does not
 /// respond within 21 days of the clerk's notice.
 deadline prosecution-notice-response-period: 21.days after ProsecutionNoticeSent() counted_by frap26 cite "7th Cir. I.O.P. 7(a)(2)"
@@ -258,6 +277,7 @@ test "Counting boundary: prosecution-notice-response-period (holiday)" cite "7th
   given ProsecutionNoticeSent() on 2025-12-04
   expect deadline(prosecution-notice-response-period) == 2025-12-26
 }
+
 /// The prevailing party files an answer to a petition for rehearing en banc
 /// within 14 days from the court's request.
 deadline en-banc-answer-period: 14.days after EnBancAnswerRequested() counted_by frap26 cite "7th Cir. I.O.P. 5(a)"
@@ -267,6 +287,7 @@ test "Counting boundary: en-banc-answer-period (weekend)" cite "7th Cir. I.O.P. 
   given EnBancAnswerRequested() on 2025-12-06
   expect deadline(en-banc-answer-period) == 2025-12-22
 }
+
 /// In a capital case on direct criminal appeal the appellant serves and
 /// files its brief within 63 days after docketing.
 deadline capital-appellant-brief-period: 63.days after CapitalAppealDocketed() counted_by frap26 cite "7th Cir. R. 22(c)(1)(A)"
@@ -276,6 +297,7 @@ test "Counting boundary: capital-appellant-brief-period (weekend)" cite "7th Cir
   given CapitalAppealDocketed() on 2025-12-06
   expect deadline(capital-appellant-brief-period) == 2026-02-09
 }
+
 /// The capital appellee's brief is due within 49 days after service of the
 /// appellant's brief.
 deadline capital-appellee-brief-period: 49.days after CapitalAppellantBriefServed() counted_by frap26 cite "7th Cir. R. 22(c)(1)(A)"
@@ -285,6 +307,7 @@ test "Counting boundary: capital-appellee-brief-period (holiday)" cite "7th Cir.
   given CapitalAppellantBriefServed() on 2025-12-01
   expect deadline(capital-appellee-brief-period) == 2026-01-20
 }
+
 /// The capital appellant may serve and file a reply brief within 21 days
 /// after service of the appellee's brief.
 deadline capital-reply-brief-period: 21.days after CapitalAppelleeBriefServed() counted_by frap26 cite "7th Cir. R. 22(c)(1)(A)"
@@ -464,9 +487,7 @@ decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)
 state docketed: "Appeal Docketed" by court cite "FRAP 12(a); 7th Cir. R. 12(a)"
 {
   note "The clerk notifies counsel of the docketing date (7th Cir. R. 12(a)). An unpaid docketing fee is due within 14 days after docketing (7th Cir. R. 3(b)). The docketing statement is due with the notice or within seven days of it; after 14 days counsel is fined $100 and after 28 days the appeal is dismissed as abandoned (7th Cir. R. 3(c)). The attorney named on the docketing statement or first filing is counsel of record (7th Cir. R. 3(d)). Disclosure statements are due within 21 days after docketing or with a first motion or response, whichever is earliest (7th Cir. R. 26.1(c)); a disclosure statement is an appearance and replaces the FRAP 12(b) representation statement (7th Cir. R. 26.1(a))."
-  edge-docketed-record "Record and transcript" -> record {
-    authority cite "FRAP 10; 7th Cir. R. 10"
-  }
+  "Record and transcript" -> record { authority cite "FRAP 10; 7th Cir. R. 10" }
   edge-docketed-default "Docket fee or docketing statement not supplied" -> dismissed-prosecution {
     authority cite "7th Cir. R. 3(b); 7th Cir. R. 3(c)(2); 7th Cir. I.O.P. 7(a)"
   }
@@ -515,7 +536,7 @@ decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 7th Cir. R. 40"
 {
   note "A request for an answer to a petition for rehearing en banc is made within 14 days of its filing, and the prevailing party answers within 14 days of the request (7th Cir. I.O.P. 5(a))."
-  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+  "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
 state mandate: "Mandate Issued" by court cite "FRAP 41(b); 7th Cir. R. 41"

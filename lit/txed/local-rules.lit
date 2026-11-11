@@ -3,6 +3,8 @@ module txed-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.states.texas.{ frcp6-texas }
 
+forum frcp
+
 // The Eastern District of Texas's own civil periods and limits, counted
 // under FRCP 6. Service is deemed completed at the "entered on" time of
 // the Notice of Electronic Filing, but a document filed electronically, or
@@ -176,9 +178,6 @@ event FinalDisposition()
 /// seven days before the scheduled execution date, or recite good cause
 /// for a late filing.
 deadline stay-of-execution-motion: 7.days before ExecutionScheduled() counted_by frcp6-texas cite "E.D. Tex. Local Rule CV-3(c)"
-{
-  forum frcp
-}
 
 test "Counting boundary: stay-of-execution-motion (weekend)" cite "E.D. Tex. Local Rule CV-3(c)"
 {
@@ -191,9 +190,6 @@ test "Counting boundary: stay-of-execution-motion (weekend)" cite "E.D. Tex. Loc
 /// version with the confidential information redacted within seven days,
 /// unless the entire document is confidential information.
 deadline redacted-public-version: 7.days after SealedDocumentFiled() counted_by frcp6-texas cite "E.D. Tex. Local Rule CV-5(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: redacted-public-version (holiday)" cite "E.D. Tex. Local Rule CV-5(a)"
 {
@@ -208,9 +204,6 @@ test "Counting boundary: redacted-public-version (holiday)" cite "E.D. Tex. Loca
 /// available only at the clerk's office for ninety days after filing
 /// (CV-5.2(b)(1)).
 deadline redaction-notice: 7.days after TranscriptFiled() counted_by frcp6-texas cite "E.D. Tex. Local Rule CV-5.2(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: redaction-notice (holiday)" cite "E.D. Tex. Local Rule CV-5.2(b)"
 {
@@ -226,9 +219,6 @@ deadline redaction-statement: 21.days after TranscriptDelivered() counted_by frc
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-5.2(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: redaction-statement (weekend)" cite "E.D. Tex. Local Rule CV-5.2(b)"
 {
@@ -244,9 +234,6 @@ deadline redacted-transcript: 31.days after TranscriptFiled() counted_by frcp6-t
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-5.2(b)"
-{
-  forum frcp
-}
 
 /// E.D. Tex. Local Rule CV-7(e): a party opposing a motion has fourteen
 /// days from the date the motion was served to file a response and any
@@ -256,9 +243,6 @@ deadline response-period: 14.days after MotionServed() counted_by frcp6-texas de
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-7(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: response-period (weekend)" cite "E.D. Tex. Local Rule CV-7(e)"
 {
@@ -272,9 +256,6 @@ deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionSe
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-7(e)"
-{
-  forum frcp
-}
 
 test "Counting boundary: summary-judgment-response-period (weekend)" cite "E.D. Tex. Local Rule CV-7(e)"
 {
@@ -290,9 +271,6 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcp6-texas dele
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-7(f)"
-{
-  forum frcp
-}
 
 test "Counting boundary: reply-period (holiday)" cite "E.D. Tex. Local Rule CV-7(f)"
 {
@@ -307,9 +285,6 @@ deadline sur-reply-period: 7.days after ReplyServed() counted_by frcp6-texas del
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-7(f)"
-{
-  forum frcp
-}
 
 test "Counting boundary: sur-reply-period (holiday)" cite "E.D. Tex. Local Rule CV-7(f)"
 {
@@ -326,9 +301,6 @@ deadline bill-of-costs-period: 14.days after CostsJudgmentDocketed() counted_by 
   to CaseOrder
   op set
 } cite "E.D. Tex. Local Rule CV-54(a)"
-{
-  forum frcp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "E.D. Tex. Local Rule CV-54(a)"
 {
@@ -341,9 +313,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "E.D. Tex. Local R
 /// days after being served with a copy; the court need not await the
 /// response before ruling.
 deadline magistrate-objection-response: 14.days after MagistrateObjectionServed() counted_by frcp6-texas cite "E.D. Tex. Local Rule CV-72(b)"
-{
-  forum frcp
-}
 
 test "Counting boundary: magistrate-objection-response (weekend)" cite "E.D. Tex. Local Rule CV-72(b)"
 {
@@ -355,9 +324,6 @@ test "Counting boundary: magistrate-objection-response (weekend)" cite "E.D. Tex
 /// it within 30 days after final disposition of the case; an exhibit
 /// remaining longer may be disposed of by the clerk.
 deadline exhibit-removal: 30.days after FinalDisposition() counted_by frcp6-texas cite "E.D. Tex. Local Rule CV-79(a)"
-{
-  forum frcp
-}
 
 test "Deadline arithmetic: stay-of-execution-motion (7 days before)" cite "E.D. Tex. Local Rule CV-3(c)"
 {

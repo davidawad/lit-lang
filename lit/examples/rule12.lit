@@ -87,15 +87,8 @@ chance mtd-ruling: "Ruling on the motion to dismiss" by court discretion cite "F
   note "Illustrative example assumption only: equal odds, not calibrated."
 }
 
-state answered: "Answer filed" {
-  group pleadings
-  edge-answered-judgment-entered "Proceed to judgment" -> judgment-entered
-}
-
-state default-risk: "Failure to respond" {
-  group outcomes
-  edge-default-risk-judgment-entered "Default entered" -> judgment-entered
-}
+state answered: "Answer filed" { group pleadings, "Proceed to judgment" -> judgment-entered }
+state default-risk: "Failure to respond" { group outcomes, "Default entered" -> judgment-entered }
 
 terminal judgment-entered: "Judgment entered" outcome [judgment, loss] {
   group outcomes

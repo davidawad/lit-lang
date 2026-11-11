@@ -99,7 +99,7 @@ state discovery: "Discovery" by plaintiff cite "Civ.R. 26(B)"
   edge-discovery-voluntary "Notice or stipulation of dismissal" -> voluntary-dismissal {
     authority cite "Civ.R. 41(A)"
   }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Civ.R. 38(B)" }
+  "No dispositive motion" -> trial { authority cite "Civ.R. 38(B)" }
 }
 
 terminal sanction-dismissal: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "Civ.R. 37(B)"
@@ -146,9 +146,7 @@ state trial: "Trial by jury or by the court" by court cite "Civ.R. 38(B)"
 decision judgment-entered: "Judgment entered and noticed" by court cite "Civ.R. 58(A)"
 {
   note "Subject to Civ.R. 54(B), the court promptly prepares, or asks counsel to prepare, a judgment entry when a jury returns a general verdict, the court announces a decision, or the court grants or denies relief; the entry is filed and journalized within 30 days of the verdict, decision or determination, absent good cause, and the judgment is effective only when entered by the clerk upon the journal (Civ.R. 58(A)(1)). Within three days of entering the judgment upon the journal, the clerk serves notice of the judgment and its date of entry on all parties not in default for failure to appear (Civ.R. 58(B)). A party who wishes to appeal files the notice of appeal within 30 days of entry; in a civil case, if the clerk has not completed service of notice within the three-day period, the 30 days run from the date the clerk actually completes service (App.R. 4(A)). A timely Civ.R. 50(B) or 59 motion, objection to a magistrate's decision, request for findings of fact and conclusions of law, or motion for attorney fees or prejudgment interest delays the appeal time until the trial court resolves the last of them (App.R. 4(B))."
-  edge-judgment-entered-post-trial "Post-trial motion served" -> post-trial {
-    authority cite "Civ.R. 59(B)"
-  }
+  "Post-trial motion served" -> post-trial { authority cite "Civ.R. 59(B)" }
   edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
     authority cite "App.R. 4(A)"
   }

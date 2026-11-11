@@ -7,12 +7,8 @@ start complaint-filed
 state complaint-filed: "Complaint filed" by plaintiff cite "NMRA 1-003"
 {
   note "A civil action is commenced by filing a complaint with the court (NMRA 1-003). The summons directs the defendant to serve a responsive pleading or motion within thirty (30) days after service of the summons (NMRA 1-004(B)(2)). Service of process shall be made with reasonable diligence, and the original summons with proof of service is filed with the court (NMRA 1-004(C)(2)); unlike FRCP 4(m) the rule states no fixed service period. Periods in this package are stated, not counted: computation is NMRA 1-006(A). No leading decision is named."
-  edge-complaint-filed-answer-due "Summons and complaint served" -> answer-due {
-    authority cite "NMRA 1-004(C)"
-  }
-  edge-complaint-filed-dismissed-inactivity "No significant action taken" -> dismissed-inactivity {
-    authority cite "NMRA 1-041(E)"
-  }
+  "Summons and complaint served" -> answer-due { authority cite "NMRA 1-004(C)" }
+  "No significant action taken" -> dismissed-inactivity { authority cite "NMRA 1-041(E)" }
 }
 
 decision answer-due: "Answer, motion or default" by court cite "NMRA 1-012(A)"
@@ -57,9 +53,7 @@ terminal dismissed-pleading: "Dismissed on pleading motion" outcome [win, dismis
 state case-management: "Scheduling order" by court cite "NMRA 1-016(B)"
 {
   note "The pretrial scheduling order is filed as soon as practicable but in no event more than one hundred twenty (120) days after filing of the complaint, and is modified only by order on good cause; if no scheduling order is entered, the court sets the case for trial no later than eighteen (18) months after the filing of the complaint (NMRA 1-016(B))."
-  edge-case-management-discovery "Scheduling order entered" -> discovery {
-    authority cite "NMRA 1-026(A)"
-  }
+  "Scheduling order entered" -> discovery { authority cite "NMRA 1-026(A)" }
 }
 
 state discovery: "Discovery" by plaintiff cite "NMRA 1-026(A)"
@@ -69,7 +63,7 @@ state discovery: "Discovery" by plaintiff cite "NMRA 1-026(A)"
   edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
     authority cite "NMRA 1-041(A)"
   }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "NMRA 1-016(D)" }
+  "No dispositive motion" -> trial { authority cite "NMRA 1-016(D)" }
 }
 
 decision sj-motion: "Summary judgment motion decided" by court cite "NMRA 1-056(C)"

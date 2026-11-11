@@ -3,6 +3,8 @@ module core.states.hawaii
 import core.calendar.{ us-federal-holidays }
 import core.time.{ Scheduled, Served }
 
+forum frcrimp
+
 /// Hawaii state holidays under HRS § 8-1 that are not already federal
 /// holidays, closed on their statutory date under § 8-2. The fixed and
 /// nth-weekday dates are represented directly. Good Friday, election days,
@@ -69,21 +71,10 @@ counting frcrimp45-hawaii effective [2023-12-01, ..) known_at 2023-04-24 cite "F
 }
 
 // Core-local pins keep the Hawaii counting rule exercised in strict checks.
-deadline hawaii-frcrimp45-kuhio-forward: 1.days after Served() counted_by frcrimp45-hawaii {
-  forum frcrimp
-}
-
-deadline hawaii-frcrimp45-kuhio-two-business-days: 2.business_days after Served() counted_by frcrimp45-hawaii {
-  forum frcrimp
-}
-
-deadline hawaii-frcrimp45-kuhio-backward: 1.days before Scheduled() counted_by frcrimp45-hawaii {
-  forum frcrimp
-}
-
-deadline hawaii-frcrimp45-electronic: 0.days after Served() counted_by frcrimp45-hawaii {
-  forum frcrimp
-}
+deadline hawaii-frcrimp45-kuhio-forward: 1.days after Served() counted_by frcrimp45-hawaii
+deadline hawaii-frcrimp45-kuhio-two-business-days: 2.business_days after Served() counted_by frcrimp45-hawaii
+deadline hawaii-frcrimp45-kuhio-backward: 1.days before Scheduled() counted_by frcrimp45-hawaii
+deadline hawaii-frcrimp45-electronic: 0.days after Served() counted_by frcrimp45-hawaii
 
 test "a forward criminal period skips Prince Kuhio Day" cite "HRS § 8-1"
 {

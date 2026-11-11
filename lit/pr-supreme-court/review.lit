@@ -38,18 +38,18 @@ decision review-decision: "Writ granted or denied" by court cite ?("Reglamento d
 
 state merits: "Merits briefing and submission" by petitioner cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored") {
   note "Merits briefing periods, form and length limits, and whether argument is heard, are in the Reglamento del Tribunal Supremo, which is not vendored: holes."
-  edge-merits-decision "Submitted for decision" -> decision {
+  "Submitted for decision" -> decision {
     authority cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
   }
 }
 
 decision decision: "Court decides" by court cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored") {
   note "The Supreme Court's decision on the merits. Reconsideration in the Supreme Court and the issuance of its mandate are in the Reglamento del Tribunal Supremo, which is not vendored: holes."
-  edge-decision-affirmed "Affirmed" -> affirmed {
+  "Affirmed" -> affirmed {
     event DecisionFiled()
     authority cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
   }
-  edge-decision-reversed "Reversed, modified or remanded" -> reversed {
+  "Reversed, modified or remanded" -> reversed {
     event DecisionFiled()
     authority cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
   }

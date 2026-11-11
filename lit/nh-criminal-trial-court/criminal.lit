@@ -61,7 +61,7 @@ decision charged: "Indictment or information" by court cite "N.H. R. Crim. P. 8(
 state arraignment: "Arraignment and plea of not guilty" by accused cite "N.H. R. Crim. P. 10(b)"
 {
   note "Arraignment is conducted in open court by reading the indictment or information, or stating its substance, and calling on the defendant to plead (N.H. R. Crim. P. 10(b)); a represented defendant may plead not guilty and waive formal arraignment in writing (N.H. R. Crim. P. 10(c)). A person arrested on a direct indictment is brought before the superior court as Rule 10(a) provides."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "N.H. R. Crim. P. 12(b)" }
+  "Discovery" -> discovery { authority cite "N.H. R. Crim. P. 12(b)" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "N.H. R. Crim. P. 12(b)"
@@ -98,7 +98,7 @@ decision plea-decision: "Plea or trial" by accused cite "N.H. R. Crim. P. 11(b)"
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "N.H. R. Crim. P. 11(b)"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "N.H. R. Crim. P. 21(b)" }
+  "Trial" -> trial { authority cite "N.H. R. Crim. P. 21(b)" }
 }
 
 decision trial: "Verdict" by court cite "N.H. R. Crim. P. 25(b)"
@@ -124,9 +124,7 @@ decision post-trial: "Motion to set aside the verdict" by court cite "N.H. R. Cr
 state sentencing: "Pre-sentence report and sentencing" by court cite "N.H. R. Crim. P. 29(c)"
 {
   note "Sentencing procedure, the pre-sentence report and the sentencing hearing are governed by Rule 29(a) to (c); an extended term requires a hearing on the necessary findings (N.H. R. Crim. P. 29(d)). The court may correct an illegal or illegally imposed sentence as provided by law (N.H. R. Crim. P. 29(i)), and a party may seek reduction, suspension or amendment as provided by law (N.H. R. Crim. P. 29(j)). Sentence review is governed by Rule 29(k); its periods are not stated here (currency unconfirmed)."
-  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
-    authority cite "N.H. R. Crim. P. 29(c)"
-  }
+  "Sentence imposed; judgment entered" -> judgment { authority cite "N.H. R. Crim. P. 29(c)" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "N.H. R. Crim. P. 34(a)"

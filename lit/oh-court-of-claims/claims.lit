@@ -63,7 +63,7 @@ state discovery: "Discovery" by plaintiff cite "Civ.R. 26(B)"
   edge-discovery-voluntary "Notice or stipulation of dismissal" -> voluntary-dismissal {
     authority cite "Civ.R. 41(A)"
   }
-  edge-discovery-trial "No dispositive motion" -> trial {
+  "No dispositive motion" -> trial {
     authority cite ?("R.C. 2743.11 (trial to the court) is not vendored")
   }
 }
@@ -97,9 +97,7 @@ state trial: "Trial" by court cite ?("R.C. 2743.11 (trial to the court) is not v
 decision judgment-entered: "Judgment entered and noticed" by court cite "Civ.R. 58(A)"
 {
   note "The judgment is effective only when entered by the clerk upon the journal (Civ.R. 58(A)(1)). Within three days of entering the judgment upon the journal, the clerk serves notice of the judgment and its date of entry on all parties not in default for failure to appear (Civ.R. 58(B)). A party who wishes to appeal files the notice of appeal within 30 days of entry; in a civil case, if the clerk has not completed service of notice within the three-day period, the 30 days run from the date the clerk actually completes service (App.R. 4(A)). A timely Civ.R. 50(B) or 59 motion, objection to a magistrate's decision, or request for findings of fact and conclusions of law delays the appeal time until the trial court resolves the last of them (App.R. 4(B)). Which court of appeals hears the appeal is set by R.C. 2743.20, which is not vendored: a hole."
-  edge-judgment-entered-post-trial "Post-trial motion served" -> post-trial {
-    authority cite "Civ.R. 59(B)"
-  }
+  "Post-trial motion served" -> post-trial { authority cite "Civ.R. 59(B)" }
   edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
     event NoticeOfAppealFiled()
     authority cite "App.R. 4(A)"

@@ -64,9 +64,7 @@ terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] 
 state case-management: "Case management order" by court cite "Fla. R. Civ. P. 1.200(d)"
 {
   note "Not later than 120 days after commencement the court assigns the case to the streamlined, general or complex track (Fla. R. Civ. P. 1.200(b)) and issues a case management order setting the trial period and the deadlines rule 1.200(d)(2) lists, strictly enforced unless changed by court order (Fla. R. Civ. P. 1.200(d)(3), (4)). Complex cases proceed under rule 1.201."
-  edge-case-management-discovery "Order entered" -> discovery {
-    authority cite "Fla. R. Civ. P. 1.280(a)"
-  }
+  "Order entered" -> discovery { authority cite "Fla. R. Civ. P. 1.280(a)" }
 }
 
 state discovery: "Discovery" by plaintiff cite "Fla. R. Civ. P. 1.280(a)"

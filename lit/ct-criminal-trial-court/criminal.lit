@@ -69,7 +69,7 @@ decision plea-decision: "Plea or trial" by accused cite "Practice Book § 39-19"
   edge-plea-decision-plea "Plea of guilty or nolo contendere accepted" -> sentencing {
     authority cite "Practice Book § 39-19"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Practice Book § 42-1" }
+  "Trial" -> trial { authority cite "Practice Book § 42-1" }
   edge-plea-decision-nolle "Nolle prosequi entered" -> dismissed {
     authority cite "Practice Book § 39-31"
   }
@@ -102,9 +102,7 @@ decision post-trial: "Motions after verdict" by court cite "Practice Book § 42-
 state sentencing: "Presentence investigation and sentencing" by court cite "Practice Book § 43-10"
 {
   note "If the defendant is convicted of a crime other than a capital felony punishable by imprisonment for more than one year, the judicial authority orders a presentence investigation, which a defendant not eligible for sentence review may waive with the consent of the sentencing judge and the prosecuting authority (Practice Book § 43-3); the judicial authority sets the sentencing date allowing for the time needed to complete the report (Practice Book § 43-6). Defense counsel may participate in the report's preparation and must be familiar with it (Practice Book §§ 43-5, 43-13). The sentencing hearing follows Practice Book § 43-10."
-  edge-sentencing-judgment "Sentence pronounced" -> judgment {
-    authority cite "Practice Book § 43-10"
-  }
+  "Sentence pronounced" -> judgment { authority cite "Practice Book § 43-10" }
 }
 
 decision judgment: "Judgment of conviction" by accused cite "Practice Book § 63-1"

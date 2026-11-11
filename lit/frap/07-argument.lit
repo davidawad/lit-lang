@@ -14,19 +14,15 @@ chance oral-argument-fork: "Oral Argument or Submission on Briefs?" by court dis
 {
   group argument-group
   note "Panel discretion to grant or dispense with oral argument — litigant expectations often misaligned with actual practice. Argument is dispensed with only when the panel unanimously agrees the appeal is frivolous, the dispositive issues are authoritatively decided, or the briefs adequately present the facts and legal arguments."
-  edge-oral-argument-fork-oral-argument-held "Panel grants oral argument" -> oral-argument-held p 0.4 {
-    authority cite "FRAP 34(a)(1)"
-  }
-  edge-oral-argument-fork-submitted-on-briefs "Panel dispenses with argument" -> submitted-on-briefs p 0.6 {
-    authority cite "FRAP 34(a)(2)"
-  }
+  "Panel grants oral argument" -> oral-argument-held p 0.4 { authority cite "FRAP 34(a)(1)" }
+  "Panel dispenses with argument" -> submitted-on-briefs p 0.6 { authority cite "FRAP 34(a)(2)" }
 }
 
 state oral-argument-held: "Oral Argument Held" by court cite "FRAP 34(c)-(d)"
 {
   group argument-group
   note "Typical 15-minute per-side allocation (circuit-specific variations apply). Panels use argument to test weak points in the briefs; oral argument is not a second chance to rewrite a losing brief but rather to address judicial concerns flagged during panel circulation."
-  edge-oral-argument-held-standard-of-review-fork "Argument concludes — panel deliberates" -> standard-of-review-fork {
+  "Argument concludes — panel deliberates" -> standard-of-review-fork {
     authority cite "FRAP 34(d)"
   }
 }
@@ -35,22 +31,20 @@ state submitted-on-briefs: "Submitted on the Briefs" by court cite "FRAP 34(a)(2
 {
   group argument-group
   note "Merits decided solely on written briefs without live argument — far more common in high-volume circuits than litigants anticipate. Decision occurs with no opportunity for live response to judicial questioning or hidden panel concerns revealed only in the opinion."
-  edge-submitted-on-briefs-standard-of-review-fork "Panel deliberates on the papers" -> standard-of-review-fork {
-    authority cite "FRAP 34(a)(2)"
-  }
+  "Panel deliberates on the papers" -> standard-of-review-fork { authority cite "FRAP 34(a)(2)" }
 }
 
 decision standard-of-review-fork: "Which Standard of Review Governs?" by court cite "FRAP (2009 ed.) 28(a)(9)(B)"
 {
   group argument-group
   note "The single most outcome-determinative procedural fork — identical facts and panel composition yield opposite affirm/reverse outcomes depending on whether the ruling implicates questions of law, discretion, or fact. Standard selection is rarely contestable once the issue category is fixed."
-  edge-standard-of-review-fork-de-novo-review "Issue is a question of law" -> de-novo-review {
+  "Issue is a question of law" -> de-novo-review {
     authority cite "Pierce v. Underwood, 487 U.S. 552, 558 (1988)"
   }
-  edge-standard-of-review-fork-abuse-of-discretion-review "Issue is a discretionary ruling" -> abuse-of-discretion-review {
+  "Issue is a discretionary ruling" -> abuse-of-discretion-review {
     authority cite "Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)"
   }
-  edge-standard-of-review-fork-clear-error-review "Issue is a factual finding" -> clear-error-review {
+  "Issue is a factual finding" -> clear-error-review {
     authority cite "FRCP 52(a)(6); Anderson v. City of Bessemer City, 470 U.S. 564 (1985)"
   }
 }
@@ -59,29 +53,29 @@ chance de-novo-review: "De Novo Review (Questions of Law)" by court discretion c
 {
   group argument-group
   note "No deference to the district court's legal conclusions — decided fresh. Includes summary judgment grants, dismissals, statutory interpretation. Highest reversal rate of the three standards. (The blueprint's garbled cite, Salve Regina Dockery Co. v. Russell, is Salve Regina College v. Russell, 499 U.S. 225 (1991), cited above.)"
-  edge-de-novo-review-affirmed "Panel affirms de novo" -> affirmed p 0.45
-  edge-de-novo-review-reversed "Panel reverses de novo" -> reversed p 0.15
-  edge-de-novo-review-reversed-and-remanded "Panel reverses and remands" -> reversed-and-remanded p 0.25
-  edge-de-novo-review-vacated-and-remanded "Panel vacates and remands" -> vacated-and-remanded p 0.1
-  edge-de-novo-review-affirmed-in-part-reversed-in-part "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05
+  "Panel affirms de novo" -> affirmed p 0.45
+  "Panel reverses de novo" -> reversed p 0.15
+  "Panel reverses and remands" -> reversed-and-remanded p 0.25
+  "Panel vacates and remands" -> vacated-and-remanded p 0.1
+  "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05
 }
 
 chance abuse-of-discretion-review: "Abuse-of-Discretion Review (Discretionary Rulings)" by court discretion cite "Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)"
 {
   group argument-group
   note "Governs evidentiary rulings, discovery orders, sanctions, case management. Reversed only for wrong legal standard, clearly erroneous facts, or a decision no reasonable judge could reach."
-  edge-abuse-of-discretion-review-affirmed "No abuse found — panel affirms" -> affirmed p 0.7
-  edge-abuse-of-discretion-review-reversed "Abuse found — panel reverses" -> reversed p 0.1
-  edge-abuse-of-discretion-review-vacated-and-remanded "Panel vacates for further findings" -> vacated-and-remanded p 0.15
-  edge-abuse-of-discretion-review-affirmed-in-part-reversed-in-part "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05
+  "No abuse found — panel affirms" -> affirmed p 0.7
+  "Abuse found — panel reverses" -> reversed p 0.1
+  "Panel vacates for further findings" -> vacated-and-remanded p 0.15
+  "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05
 }
 
 chance clear-error-review: "Clear-Error Review (Factual Findings)" by court discretion cite "FRCP 52(a)(6); Anderson v. City of Bessemer City, 470 U.S. 564 (1985)"
 {
   group argument-group
   note "Most deferential standard — reversal requires a 'definite and firm conviction that a mistake has been committed,' even if the panel would have decided differently. Especially deferential to credibility findings."
-  edge-clear-error-review-affirmed "No clear error — panel affirms" -> affirmed p 0.75
-  edge-clear-error-review-reversed "Clear error found — reverses" -> reversed p 0.08
-  edge-clear-error-review-vacated-and-remanded "Panel vacates for further findings" -> vacated-and-remanded p 0.12
-  edge-clear-error-review-affirmed-in-part-reversed-in-part "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05
+  "No clear error — panel affirms" -> affirmed p 0.75
+  "Clear error found — reverses" -> reversed p 0.08
+  "Panel vacates for further findings" -> vacated-and-remanded p 0.12
+  "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.05
 }

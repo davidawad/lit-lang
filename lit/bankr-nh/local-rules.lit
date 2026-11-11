@@ -91,6 +91,7 @@ test "Counting boundary: proof-of-value-period (weekend)" cite "Bankr. D.N.H. LB
   given MeetingOfCreditorsHeld() on 2026-05-02
   expect deadline(proof-of-value-period) == 2026-04-24
 }
+
 /// LBR 2090-1(b)(3): an attorney admitted pro hac vice secures CM/ECF
 /// access no later than 14 days after admission.
 deadline pro-hac-vice-filing-access-period: 14.days after ProHacViceAdmitted() counted_by frbp9006-new-hampshire cite "Bankr. D.N.H. LBR 2090-1(b)"
@@ -104,6 +105,7 @@ test "Counting boundary: residential-valuation-motion-period (weekend)" cite "Ba
   given MeetingOfCreditorsConcluded() on 2026-05-01
   expect deadline(residential-valuation-motion-period) == 2026-06-01
 }
+
 /// LBR 3012-2(d): a motion to determine secured status and limit a claim
 /// secured by personal or non-residential real property is served within
 /// 30 days of the concluded 341 Meeting.
@@ -114,6 +116,7 @@ test "Counting boundary: collateral-valuation-motion-period (weekend)" cite "Ban
   given MeetingOfCreditorsConcluded() on 2026-05-01
   expect deadline(collateral-valuation-motion-period) == 2026-06-01
 }
+
 /// LBR 3015-3(a): an objection to confirmation of a chapter 13 plan is
 /// filed no later than 14 days before the confirmation hearing.
 deadline confirmation-objection-period: 14.days before ConfirmationHearingScheduled() counted_by frbp9006-new-hampshire cite "Bankr. D.N.H. LBR 3015-3(a)"
@@ -123,6 +126,7 @@ test "Counting boundary: confirmation-objection-period (weekend)" cite "Bankr. D
   given ConfirmationHearingScheduled() on 2026-05-02
   expect deadline(confirmation-objection-period) == 2026-04-17
 }
+
 /// AO 3015-4(a): no later than 7 days prior to the initial confirmation
 /// hearing on a plan, amended plan or motion to modify, the chapter 13
 /// trustee files a recommendation whether it should be confirmed.
@@ -133,6 +137,7 @@ test "Counting boundary: trustee-recommendation-period (weekend)" cite "Bankr. D
   given ConfirmationHearingScheduled() on 2026-05-02
   expect deadline(trustee-recommendation-period) == 2026-04-24
 }
+
 /// LBR 3015-5(b): an objection to modifying a chapter 13 plan is filed no
 /// later than 14 days before the hearing on the motion to modify.
 deadline modification-objection-period: 14.days before ModificationHearingScheduled() counted_by frbp9006-new-hampshire cite "Bankr. D.N.H. LBR 3015-5(b)"
@@ -142,6 +147,7 @@ test "Counting boundary: modification-objection-period (weekend)" cite "Bankr. D
   given ModificationHearingScheduled() on 2026-05-02
   expect deadline(modification-objection-period) == 2026-04-17
 }
+
 /// LBR 3017-1: the objection date for a disclosure statement is 7 days
 /// prior to the disclosure statement hearing.
 deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearingScheduled() counted_by frbp9006-new-hampshire cite "Bankr. D.N.H. LBR 3017-1"
@@ -151,6 +157,7 @@ test "Counting boundary: disclosure-statement-objection-period (weekend)" cite "
   given DisclosureStatementHearingScheduled() on 2026-05-02
   expect deadline(disclosure-statement-objection-period) == 2026-04-24
 }
+
 /// LBR 3022-1: unless the plan or confirmation order designates another, the
 /// plan proponent files the motion for final decree not later than 120 days
 /// following plan confirmation, unless the court extends the time for
@@ -162,6 +169,7 @@ test "Counting boundary: final-decree-motion-period (weekend)" cite "Bankr. D.N.
   given PlanConfirmed() on 2026-05-01
   expect deadline(final-decree-motion-period) == 2026-08-31
 }
+
 /// LBR 3022-1: for a subchapter V plan confirmed non-consensually under 11
 /// U.S.C. § 1191(b), the motion for final decree is filed not later than
 /// 120 days following the completion of all plan payments.
@@ -172,6 +180,7 @@ test "Counting boundary: subchapter-v-final-decree-motion-period (weekend)" cite
   given SubchapterVPlanPaymentsCompleted() on 2026-05-01
   expect deadline(subchapter-v-final-decree-motion-period) == 2026-08-31
 }
+
 /// LBR 4003-2(c): to be valid, service of a § 522(f) lien avoidance motion is
 /// made at least 21 days prior to the hearing.
 deadline lien-avoidance-service-period: 21.days before LienAvoidanceHearingScheduled() counted_by frbp9006-new-hampshire cite "Bankr. D.N.H. LBR 4003-2(c)"
@@ -181,6 +190,7 @@ test "Counting boundary: lien-avoidance-service-period (weekend)" cite "Bankr. D
   given LienAvoidanceHearingScheduled() on 2026-05-02
   expect deadline(lien-avoidance-service-period) == 2026-04-10
 }
+
 /// LBR 7016-1(a): at least 7 days prior to the pretrial conference, the
 /// parties meet and confer on a discovery plan and the dates for the
 /// pretrial order.
@@ -191,6 +201,7 @@ test "Counting boundary: pretrial-confer-period (weekend)" cite "Bankr. D.N.H. L
   given PretrialConferenceScheduled() on 2026-05-02
   expect deadline(pretrial-confer-period) == 2026-04-24
 }
+
 /// LBR 9013-1(d): unless the Bankruptcy Rules or LBRs provide otherwise, a
 /// motion and notice of hearing are served at least 14 days prior to the
 /// hearing date.
@@ -201,6 +212,7 @@ test "Counting boundary: motion-service-period (weekend)" cite "Bankr. D.N.H. LB
   given HearingScheduled() on 2026-05-02
   expect deadline(motion-service-period) == 2026-04-17
 }
+
 /// LBR 9013-1(g)(1) and 5071-1(b): a party objecting to a motion who wants
 /// it called files a written objection no later than 7 days prior to the
 /// scheduled hearing date; otherwise the court may grant the motion without
@@ -212,6 +224,7 @@ test "Counting boundary: objection-period (weekend)" cite "Bankr. D.N.H. LBR 901
   given HearingScheduled() on 2026-05-02
   expect deadline(objection-period) == 2026-04-24
 }
+
 /// LBR 9013-1(f)(3): a movant directed to submit a proposed order or
 /// judgment after a hearing or trial submits it within 7 days following
 /// the hearing or trial, or as the court directs.
@@ -222,6 +235,7 @@ test "Counting boundary: proposed-order-period (weekend)" cite "Bankr. D.N.H. LB
   given HearingHeld() on 2026-05-02
   expect deadline(proposed-order-period) == 2026-05-11
 }
+
 /// LBR 9070-1: the offering party has 30 days after the conclusion of the
 /// proceeding to request the return of its exhibits; the clerk then
 /// disposes of them.
@@ -232,6 +246,7 @@ test "Counting boundary: exhibit-return-period (weekend)" cite "Bankr. D.N.H. LB
   given ProceedingConcluded() on 2026-05-01
   expect deadline(exhibit-return-period) == 2026-06-01
 }
+
 /// AO 3015-4(b): no later than 60 days following the last payment under the
 /// plan, the chapter 13 trustee certifies that all plan payments are
 /// complete.
@@ -248,9 +263,7 @@ start motion-filed
 state motion-filed: "Motion filed and noticed for hearing" by movant cite "Bankr. D.N.H. LBR 9013-1(b)"
 {
   note "The movant selects a hearing date from the Website (LBR 9013-1(b)) and files with the motion a notice of hearing (LBF 7104-1), a certificate of service and, except for stay-relief and chapter 13 modification motions, a proposed order (LBR 9013-1(f)); the motion and notice are served at least 14 days before the hearing (LBR 9013-1(d)). The motions LBR 9013-1(c) lists may be considered ex parte; an emergency hearing on 48 hours' notice or less is sought by application (LBR 9013-2). The movant is the party designated to give notice (LBR 5075-1(a)). The motion's FRBP periods are lit/frbp's."
-  edge-motion-filed-objection "Written objection filed" -> objection {
-    authority cite "Bankr. D.N.H. LBR 9013-1(g)"
-  }
+  "Written objection filed" -> objection { authority cite "Bankr. D.N.H. LBR 9013-1(g)" }
   edge-motion-filed-unopposed "No timely objection; granted without a hearing" -> decided {
     authority cite "Bankr. D.N.H. LBR 9013-1(g)"
   }
@@ -259,7 +272,7 @@ state motion-filed: "Motion filed and noticed for hearing" by movant cite "Bankr
 state objection: "Objection filed; motion called at the hearing" by opponent cite "Bankr. D.N.H. LBR 9013-1(g)"
 {
   note "An objection states in narrative form why the motion should be denied and is not in the form of an answer (LBR 9013-1(h)(1)); a reply may be filed at any time before the hearing (LBR 9013-1(h)(2))."
-  edge-objection-ruling "Hearing held" -> ruling { authority cite "Bankr. D.N.H. LBR 9013-1(g)" }
+  "Hearing held" -> ruling { authority cite "Bankr. D.N.H. LBR 9013-1(g)" }
 }
 
 decision ruling: "Motion decided" by court cite "Bankr. D.N.H. LBR 9013-1(g)"

@@ -125,9 +125,7 @@ decision production-merits: "Ruling on a non-frivolous petition" by court cite "
 decision adverse-ruling: "Rehearing en banc or review sought?" by petitioner cite "FISC R. 55"
 {
   note "A party may petition for rehearing en banc no later than 30 days after the order or decision is entered; in an adversarial proceeding a response is due within 14 days after filing and service of the petition (FISC R. 47(a)). A party must file a petition for review with the Clerk no later than 30 days after entry of the decision or order, except as the Act provides otherwise (FISC R. 54, 55(a)). Appeals from rulings on directive and production-order petitions are by petition to the Court of Review (FISC R. 31, 44)."
-  edge-adverse-ruling-en-banc "Petition for rehearing en banc" -> en-banc {
-    authority cite "FISC R. 47(a)"
-  }
+  "Petition for rehearing en banc" -> en-banc { authority cite "FISC R. 47(a)" }
   edge-adverse-ruling-review "Petition for review" -> appealed { authority cite "FISC R. 55(a)" }
   edge-adverse-ruling-none "No further review" -> ruling-final { authority cite "FISC R. 55(a)" }
 }

@@ -29,11 +29,9 @@ event ProtestFiled()
 rule duty protest-prefiling-notice effective [2021-08-02, ..) known_at 2021-08-02 cite "RCFC App. C 2"
 {
   deadline protest-notice-earliest: 5.court_days before ProtestFiled() counted_by rcfc6 cite "RCFC App. C 2"
-  {
-  }
+  {}
   deadline protest-notice-latest: 1.court_days before ProtestFiled() counted_by rcfc6 cite "RCFC App. C 2"
-  {
-  }
+  {}
   /// The same outer bound counted forward from the notice, which is the
   /// shape an edge window takes: filing on or before the fifth court day
   /// after the notice is the same condition as the notice on or after the
@@ -41,8 +39,7 @@ rule duty protest-prefiling-notice effective [2021-08-02, ..) known_at 2021-08-0
   /// days lie strictly between them. The one-day minimum has no forward
   /// edge window; `protest-notice-latest` states it.
   deadline protest-notice-window: 5.court_days after ProtestNoticeGiven() counted_by rcfc6 cite "RCFC App. C 2"
-  {
-  }
+  {}
 }
 
 test "the earliest notice for a Monday filing is the Monday before" cite "RCFC 6(a)(5)"

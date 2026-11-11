@@ -87,9 +87,7 @@ state default-request: "Default judgment sought" by plaintiff cite "Tex. R. Civ.
   edge-default-request-judgment "Default judgment signed" -> default-entered {
     authority cite "Tex. R. Civ. P. 239"
   }
-  edge-default-request-answered "Answer filed before default" -> answered {
-    authority cite "Tex. R. Civ. P. 239"
-  }
+  "Answer filed before default" -> answered { authority cite "Tex. R. Civ. P. 239" }
 }
 
 decision default-entered: "Default judgment signed; motion for new trial?" by court cite "Tex. R. Civ. P. 329b"
@@ -115,7 +113,7 @@ decision set-aside-ruling: "New trial after default?" by court cite "Tex. R. Civ
 state answered: "Answer on file" by plaintiff cite "Tex. R. Civ. P. 92"
 {
   note "A party makes the initial disclosures of Rule 194.2(b) within 30 days after the filing of the first answer or general appearance unless agreement or order sets a different time; a party first served or joined later makes them within 30 days after being served or joined (Tex. R. Civ. P. 194.2(a)). Some proceedings are exempt (Tex. R. Civ. P. 194.2(c))."
-  edge-answered-discovery "Discovery period" -> discovery { authority cite "Tex. R. Civ. P. 194.2" }
+  "Discovery period" -> discovery { authority cite "Tex. R. Civ. P. 194.2" }
 }
 
 state discovery: "Discovery under the discovery control plan" by plaintiff cite "Tex. R. Civ. P. 190.1"
@@ -126,7 +124,7 @@ state discovery: "Discovery under the discovery control plan" by plaintiff cite 
   }
   edge-discovery-sj "Summary judgment motion" -> sj-motion { authority cite "Tex. R. Civ. P. 166a" }
   edge-discovery-trial "Trial setting" -> trial-setting { authority cite "Tex. R. Civ. P. 216" }
-  edge-discovery-settled "Settled" -> settled { authority cite "Tex. R. Civ. P. 11" }
+  "Settled" -> settled { authority cite "Tex. R. Civ. P. 11" }
   edge-discovery-nonsuit "Nonsuit" -> voluntary-dismissal { authority cite "Tex. R. Civ. P. 162" }
   edge-discovery-inactive "Not prosecuted" -> inactivity-dismissal {
     authority cite "Tex. R. Civ. P. 165a"
@@ -167,7 +165,7 @@ state trial-setting: "Trial setting and jury request" by court cite "Tex. R. Civ
 {
   note "No jury trial is had unless a written request is filed a reasonable time before the date set for trial on the non-jury docket, but not less than thirty days in advance, with the jury fee (ten dollars in the district court) deposited within the same time (Tex. R. Civ. P. 216). In an expedited action, on any party's request the court sets trial within 90 days after the discovery period ends, may continue it twice for no more than 60 days in total, and each side has no more than eight hours for trial (Tex. R. Civ. P. 169(d))."
   edge-trial-setting-tried "Tried" -> trial-result { authority cite "Tex. R. Civ. P. 301" }
-  edge-trial-setting-settled "Settled" -> settled { authority cite "Tex. R. Civ. P. 11" }
+  "Settled" -> settled { authority cite "Tex. R. Civ. P. 11" }
   edge-trial-setting-nonsuit "Nonsuit before the plaintiff rests" -> voluntary-dismissal {
     authority cite "Tex. R. Civ. P. 162"
   }

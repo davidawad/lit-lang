@@ -37,9 +37,7 @@ start notice-filed
 state notice-filed: "Notice of appeal filed" by appellant cite "R.I. Sup. Ct. R. App. P. 3(a)"
 {
   note "An appeal is taken by filing a notice of appeal in the trial court, served on each party's attorney of record or an unrepresented party; failure to take any other step does not affect the validity of the appeal but is ground for action the Court deems appropriate, including dismissal (R.I. Sup. Ct. R. App. P. 3(a), (d)). In a civil case the notice is filed with the clerk of the trial court within 20 days of the entry of the judgment, order or decree appealed from, with a filing fee of $150; any other party may appeal within 20 days of the first notice. A timely motion under Super. R. Civ. P. 50(b), 52(b) or 59 terminates the running of the time, which runs in full from entry of the order deciding it; on excusable neglect the trial court may extend the time by up to 30 days from its expiration (R.I. Sup. Ct. R. App. P. 4(a)). The Supreme Court may not extend the time for filing a notice of appeal (R.I. Sup. Ct. R. App. P. 20(b))."
-  edge-notice-filed-timeliness "Notice filed" -> timeliness {
-    authority cite "R.I. Sup. Ct. R. App. P. 4(a)"
-  }
+  "Notice filed" -> timeliness { authority cite "R.I. Sup. Ct. R. App. P. 4(a)" }
 }
 
 decision timeliness: "Notice timely?" by court cite "R.I. Sup. Ct. R. App. P. 4(a)"
@@ -48,7 +46,7 @@ decision timeliness: "Notice timely?" by court cite "R.I. Sup. Ct. R. App. P. 4(
   edge-timeliness-dismissed "Untimely and not extended" -> dismissed-untimely {
     authority cite "R.I. Sup. Ct. R. App. P. 4(a)"
   }
-  edge-timeliness-record "Timely" -> record { authority cite "R.I. Sup. Ct. R. App. P. 10(b)" }
+  "Timely" -> record { authority cite "R.I. Sup. Ct. R. App. P. 10(b)" }
 }
 
 terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismissal] cite "R.I. Sup. Ct. R. App. P. 4(a)"
@@ -65,18 +63,14 @@ state record: "Transcript ordered and record transmitted" by petitioner cite "R.
 state statement: "Rule 12A statement and counter-statement filed" by petitioner cite "R.I. Sup. Ct. R. App. P. 12A(1)"
 {
   note "On filing the record the Clerk dockets the appeal and notifies the parties, who report errors in the title within 7 days (R.I. Sup. Ct. R. App. P. 12(b)); motions to correct the record are made within 20 days after docketing (R.I. Sup. Ct. R. App. P. 12(d)). Within 20 days after docketing the appellant files a statement of the case and summary of issues, with the judgment and the trial justice's decision, of at most 3,000 words; within 15 days after it the appellee files a counter-statement of at most 3,000 words (R.I. Sup. Ct. R. App. P. 12A(1), (2)). An appellant that misses the statement is conditionally dismissed, and an appellee that misses the counter-statement conditionally defaulted, subject to reinstatement on a filing within 10 days of the order (R.I. Sup. Ct. R. App. P. 18A). The Clerk may grant one 30-day extension on motion, and the Clerk of the Supreme Court a further one unless an objection is filed within 7 days (R.I. Sup. Ct. R. App. P. 20(b))."
-  edge-statement-conference "Single justice conference" -> conference {
-    authority cite "R.I. Sup. Ct. R. App. P. 12A(3)"
-  }
+  "Single justice conference" -> conference { authority cite "R.I. Sup. Ct. R. App. P. 12A(3)" }
 }
 
 decision conference: "Single justice conference" by court cite "R.I. Sup. Ct. R. App. P. 12A(3)"
 {
   note "A single justice may hold a conference to seek settlement in civil cases and determine the issues and how the appeal will proceed, and may order the parties to show cause why the appeal should not be decided on the show cause calendar, refer it to the full Court in conference, or place it on the regular calendar for full briefing and argument (R.I. Sup. Ct. R. App. P. 12A(3)). Eligible civil appeals may first go to the Appellate Mediation Program (R.I. Sup. Ct. R. App. P. 35)."
-  edge-conference-show-cause "Show cause order" -> show-cause {
-    authority cite "R.I. Sup. Ct. R. App. P. 12A(4)"
-  }
-  edge-conference-briefing "Regular calendar for full briefing" -> briefing {
+  "Show cause order" -> show-cause { authority cite "R.I. Sup. Ct. R. App. P. 12A(4)" }
+  "Regular calendar for full briefing" -> briefing {
     authority cite "R.I. Sup. Ct. R. App. P. 16(a)"
   }
   edge-conference-settled "Settled or withdrawn" -> withdrawn {
@@ -91,17 +85,13 @@ state show-cause: "Show cause calendar" by petitioner cite "R.I. Sup. Ct. R. App
     event DecisionFiled()
     authority cite "R.I. Sup. Ct. R. App. P. 12A(7)"
   }
-  edge-show-cause-briefing "Placed on the regular calendar" -> briefing {
-    authority cite "R.I. Sup. Ct. R. App. P. 12A(7)"
-  }
+  "Placed on the regular calendar" -> briefing { authority cite "R.I. Sup. Ct. R. App. P. 12A(7)" }
 }
 
 state briefing: "Briefs filed" by petitioner cite "R.I. Sup. Ct. R. App. P. 16(a)"
 {
   note "The appellant files its brief within 40 days after the Clerk gives notice of assignment to the regular calendar; the appellee within 40 days after the appellant's brief; the appellant may reply within 20 days after the appellee's brief (R.I. Sup. Ct. R. App. P. 16(a)-(c)). Briefs may not exceed 15,000 words and reply briefs 7,500 words without leave on written motion (R.I. Sup. Ct. R. App. P. 16(f)); the appendix is Rule 17's. A response to a citation of supplemental authority is filed within 10 days (R.I. Sup. Ct. R. App. P. 16(e)). An appellant that misses its brief is conditionally dismissed, and an appellee conditionally defaulted, subject to reinstatement on filing within 10 days of the order (R.I. Sup. Ct. R. App. P. 18A)."
-  edge-briefing-argument "Briefing complete" -> argument {
-    authority cite "R.I. Sup. Ct. R. App. P. 22(a)"
-  }
+  "Briefing complete" -> argument { authority cite "R.I. Sup. Ct. R. App. P. 22(a)" }
 }
 
 state argument: "Argument" by court cite "R.I. Sup. Ct. R. App. P. 24(b)"
@@ -116,12 +106,8 @@ state argument: "Argument" by court cite "R.I. Sup. Ct. R. App. P. 24(b)"
 decision decision: "Decision" by court cite "R.I. Sup. Ct. R. App. P. 25(a)"
 {
   note "A petition for reargument is filed within 10 days after the filing of the decision, with a memorandum of its grounds; an adverse party may file a memorandum in opposition within 10 days after receipt (R.I. Sup. Ct. R. App. P. 25(a), (b)). The Clerk's extensions do not apply to reargument petitions (R.I. Sup. Ct. R. App. P. 20(b)). No leading decision is named."
-  edge-decision-affirmed "Affirmed or appeal dismissed" -> affirmed {
-    authority cite "R.I. Sup. Ct. R. App. P. 12A(7)"
-  }
-  edge-decision-reversed "Reversed, modified or remanded" -> reversed {
-    authority cite "R.I. Sup. Ct. R. App. P. 12A(7)"
-  }
+  "Affirmed or appeal dismissed" -> affirmed { authority cite "R.I. Sup. Ct. R. App. P. 12A(7)" }
+  "Reversed, modified or remanded" -> reversed { authority cite "R.I. Sup. Ct. R. App. P. 12A(7)" }
 }
 
 terminal affirmed: "Judgment affirmed" outcome [loss, final] cite "R.I. Sup. Ct. R. App. P. 25(a)"

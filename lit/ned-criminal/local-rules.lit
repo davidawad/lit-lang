@@ -2,6 +2,8 @@ module ned-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of Nebraska's own criminal periods, computed under FRCrimP
 // 45, which NECrimR 45.1 applies to "any period of time specified in these
 // rules". The magistrate judge sets the discovery and pretrial motion
@@ -107,9 +109,6 @@ event ObjectionsServed()
 /// grand jury subpoena is filed and served 7 days before the date in the
 /// subpoena for the appearance or production.
 deadline grand-jury-subpoena-motion-period: 7.days before GrandJuryReturnDate() counted_by frcrimp45 cite "NECrimR 6.2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: grand-jury-subpoena-motion-period (holiday)" cite "NECrimR 6.2(b)"
 {
@@ -121,9 +120,6 @@ test "Counting boundary: grand-jury-subpoena-motion-period (holiday)" cite "NECr
 /// enter a change of plea, the government sends a request for interpreter
 /// form to the courtroom deputy at least 7 days before the hearing.
 deadline plea-interpreter-request-period: 7.days before ChangeOfPleaHearing() counted_by frcrimp45 cite "NECrimR 11.1(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: plea-interpreter-request-period (holiday)" cite "NECrimR 11.1(c)"
 {
@@ -136,9 +132,6 @@ test "Counting boundary: plea-interpreter-request-period (holiday)" cite "NECrim
 /// filed and served within 14 days after the filing of the plea
 /// transcript.
 deadline plea-recommendation-objection-period: 14.days after PleaTranscriptFiled() counted_by frcrimp45 cite "NECrimR 11.2(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: plea-recommendation-objection-period (weekend)" cite "NECrimR 11.2(c)"
 {
@@ -149,9 +142,6 @@ test "Counting boundary: plea-recommendation-objection-period (weekend)" cite "N
 /// NECrimR 12.3(c)(1)(A): unless the court orders otherwise, a response to
 /// a motion to suppress is filed 14 days after the motion is filed.
 deadline suppression-response-period: 14.days after MotionFiled(Suppression) counted_by frcrimp45 cite "NECrimR 12.3(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: suppression-response-period (weekend)" cite "NECrimR 12.3(c)"
 {
@@ -163,9 +153,6 @@ test "Counting boundary: suppression-response-period (weekend)" cite "NECrimR 12
 /// after the motion is filed, unless the court orders otherwise. A party's
 /// failure to brief an issue may be considered a waiver (12.3(c)(2)).
 deadline motion-response-period: 7.days after MotionFiled(Other) counted_by frcrimp45 cite "NECrimR 12.3(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: motion-response-period (weekend)" cite "NECrimR 12.3(c)"
 {
@@ -184,9 +171,6 @@ test "Counting boundary: motion-response-period (weekend) [repeat 2]" cite "NECr
 /// arraignment or files a notice within 2 days after it, unless the court
 /// orders otherwise.
 deadline discovery-notice-period: 2.days after Arraignment() counted_by frcrimp45 cite "NECrimR 16.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-notice-period (weekend)" cite "NECrimR 16.1(a)"
 {
@@ -198,9 +182,6 @@ test "Counting boundary: discovery-notice-period (weekend)" cite "NECrimR 16.1(a
 /// provides FRCrimP 16 discovery no sooner than 2 but not later than 14
 /// days after the arraignment, then files a notice of compliance.
 deadline government-discovery-period: 14.days after Arraignment() counted_by frcrimp45 cite "NECrimR 16.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: government-discovery-period (weekend)" cite "NECrimR 16.1(a)"
 {
@@ -212,9 +193,6 @@ test "Counting boundary: government-discovery-period (weekend)" cite "NECrimR 16
 /// 16(b)(1)(A) and (B) discovery within 30 days after the arraignment or as
 /// the court orders.
 deadline defendant-discovery-period: 30.days after Arraignment() counted_by frcrimp45 cite "NECrimR 16.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: defendant-discovery-period (holiday)" cite "NECrimR 16.1(b)"
 {
@@ -226,9 +204,6 @@ test "Counting boundary: defendant-discovery-period (holiday)" cite "NECrimR 16.
 /// district is delivered to the marshal at least 14 days before the
 /// hearing or trial; later service is not guaranteed.
 deadline subpoena-in-district-period: 14.days before WitnessHearing(WithinDistrict, Subpoena) counted_by frcrimp45 cite "NECrimR 17.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: subpoena-in-district-period (weekend)" cite "NECrimR 17.1(a)"
 {
@@ -239,9 +214,6 @@ test "Counting boundary: subpoena-in-district-period (weekend)" cite "NECrimR 17
 /// NECrimR 17.1(a): one to be served outside the district, at least 21
 /// days before.
 deadline subpoena-out-of-district-period: 21.days before WitnessHearing(OutsideDistrict, Subpoena) counted_by frcrimp45 cite "NECrimR 17.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: subpoena-out-of-district-period (holiday)" cite "NECrimR 17.1(a)"
 {
@@ -259,9 +231,6 @@ test "Counting boundary: subpoena-out-of-district-period (holiday) [repeat 2]" c
 /// within the district is delivered to the marshal at least 14 days before
 /// the hearing or trial.
 deadline writ-in-district-period: 14.days before WitnessHearing(WithinDistrict, WritAdTestificandum) counted_by frcrimp45 cite "NECrimR 17.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: writ-in-district-period (weekend)" cite "NECrimR 17.1(b)"
 {
@@ -278,9 +247,6 @@ test "Counting boundary: writ-in-district-period (weekend) [repeat 2]" cite "NEC
 /// NECrimR 17.1(b): one to be served outside the district, at least 30
 /// days before.
 deadline writ-out-of-district-period: 30.days before WitnessHearing(OutsideDistrict, WritAdTestificandum) counted_by frcrimp45 cite "NECrimR 17.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: writ-out-of-district-period (weekend)" cite "NECrimR 17.1(b)"
 {
@@ -298,9 +264,6 @@ test "Counting boundary: writ-out-of-district-period (weekend) [repeat 2]" cite 
 /// additional peremptory challenges is made in writing at least 14 days
 /// before jury selection.
 deadline peremptory-request-period: 14.days before JurySelection() counted_by frcrimp45 cite "NECrimR 24.2(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: peremptory-request-period (weekend)" cite "NECrimR 24.2(c)"
 {
@@ -311,9 +274,6 @@ test "Counting boundary: peremptory-request-period (weekend)" cite "NECrimR 24.2
 /// NECrimR 28.2(a)(2)(A): the government's interpreter request for trial
 /// is submitted 14 days before trial or as soon as otherwise possible.
 deadline trial-interpreter-request-period: 14.days before InterpretedProceeding(Trial) counted_by frcrimp45 cite "NECrimR 28.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: trial-interpreter-request-period (weekend)" cite "NECrimR 28.2(a)"
 {
@@ -324,9 +284,6 @@ test "Counting boundary: trial-interpreter-request-period (weekend)" cite "NECri
 /// NECrimR 28.2(a)(2)(B): for a hearing, 7 days before the hearing or as
 /// soon as otherwise possible.
 deadline hearing-interpreter-request-period: 7.days before InterpretedProceeding(Hearing) counted_by frcrimp45 cite "NECrimR 28.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: hearing-interpreter-request-period (holiday)" cite "NECrimR 28.2(a)"
 {
@@ -343,9 +300,6 @@ test "Counting boundary: hearing-interpreter-request-period (holiday) [repeat 2]
 /// NECrimR 31.2: no costs are imposed unless the government timely files
 /// a verified bill of costs, no later than 30 days before sentencing.
 deadline bill-of-costs-period: 30.days before Sentencing() counted_by frcrimp45 cite "NECrimR 31.2"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: bill-of-costs-period (weekend)" cite "NECrimR 31.2"
 {
@@ -358,9 +312,6 @@ test "Counting boundary: bill-of-costs-period (weekend)" cite "NECrimR 31.2"
 /// government responds and serves the defense with any material given
 /// that it does not already have.
 deadline probation-information-period: 7.days after ProbationRequestReceived() counted_by frcrimp45 cite "NECrimR 32.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: probation-information-period (weekend)" cite "NECrimR 32.1(a)"
 {
@@ -372,9 +323,6 @@ test "Counting boundary: probation-information-period (weekend)" cite "NECrimR 3
 /// defendant's presentence interview advises the probation and pretrial
 /// services office within 2 days after the report is ordered.
 deadline interview-notice-period: 2.days after PresentenceReportOrdered() counted_by frcrimp45 cite "NECrimR 32.1(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: interview-notice-period (weekend)" cite "NECrimR 32.1(a)"
 {
@@ -387,9 +335,6 @@ test "Counting boundary: interview-notice-period (weekend)" cite "NECrimR 32.1(a
 /// the attorneys send their versions of the offense to the probation and
 /// pretrial services officer.
 deadline offense-version-period: 7.days after GuiltyPleaOrVerdict() counted_by frcrimp45 cite "NECrimR 32.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: offense-version-period (weekend)" cite "NECrimR 32.1(b)"
 {
@@ -402,51 +347,28 @@ test "Counting boundary: offense-version-period (weekend)" cite "NECrimR 32.1(b)
 /// restitution proposals and chemical or mental health information they
 /// wish considered.
 deadline financial-information-period: 21.days after deadline(offense-version-period).nominal counted_by frcrimp45 cite "NECrimR 32.1(b)"
-{
-  forum frcrimp
-}
-
 /// NECrimR 32.1(b)(3): no later than 14 days after the date set in
 /// (b)(2), the officer distributes the initial version of the presentence
 /// report (a link of the schedule; it binds the officer).
 deadline initial-report-period: 14.days after deadline(financial-information-period).nominal counted_by frcrimp45 cite "NECrimR 32.1(b)"
-{
-  forum frcrimp
-}
-
 /// NECrimR 32.1(b)(4): no later than 14 days after the date set in
 /// (b)(3), the attorneys send the officer any objections to the initial
 /// version.
 deadline initial-report-objection-period: 14.days after deadline(initial-report-period).nominal counted_by frcrimp45 cite "NECrimR 32.1(b)"
-{
-  forum frcrimp
-}
-
 /// NECrimR 32.1(b)(5): no later than 7 days after the date set in (b)(4),
 /// the officer sends the judge and the attorneys the final version with an
 /// addendum on the objections (a link of the schedule; it binds the
 /// officer).
 deadline final-report-period: 7.days after deadline(initial-report-objection-period).nominal counted_by frcrimp45 cite "NECrimR 32.1(b)"
-{
-  forum frcrimp
-}
-
 /// NECrimR 32.1(b)(6): no later than 7 days after the date set in (b)(5),
 /// the attorneys file any alternative-sentence proposals, motions for
 /// departure, deviation or variance, and statements of position on or
 /// objections to the final report; objections not then filed may be
 /// considered waived.
 deadline sentencing-filings-period: 7.days after deadline(final-report-period).nominal counted_by frcrimp45 cite "NECrimR 32.1(b)"
-{
-  forum frcrimp
-}
-
 /// NECrimR 33.1: a response to a post-trial motion is filed within 7 days
 /// after the filing of the motion.
 deadline post-trial-response-period: 7.days after PostTrialMotionFiled() counted_by frcrimp45 cite "NECrimR 33.1"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: post-trial-response-period (weekend)" cite "NECrimR 33.1"
 {
@@ -458,9 +380,6 @@ test "Counting boundary: post-trial-response-period (weekend)" cite "NECrimR 33.
 /// opposing attorney at least 60 days before trial on the use of
 /// intercepted communications at trial.
 deadline interception-stipulation-period: 60.days before InterceptionTrial() counted_by frcrimp45 cite "NECrimR 41.2(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: interception-stipulation-period (weekend)" cite "NECrimR 41.2(d)"
 {
@@ -472,9 +391,6 @@ test "Counting boundary: interception-stipulation-period (weekend)" cite "NECrim
 /// no later than 50 days before trial, a motion for an order instructing
 /// the parties on their use.
 deadline interception-motion-period: 50.days before InterceptionTrial() counted_by frcrimp45 cite "NECrimR 41.2(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: interception-motion-period (weekend)" cite "NECrimR 41.2(d)"
 {
@@ -487,9 +403,6 @@ test "Counting boundary: interception-motion-period (weekend)" cite "NECrimR 41.
 /// name, or of the wish to appear pro se, within 14 days of the first
 /// court appearance in this district.
 deadline counsel-notice-period: 14.days after FirstAppearance() counted_by frcrimp45 cite "NECrimR 44.1(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: counsel-notice-period (weekend)" cite "NECrimR 44.1(b)"
 {
@@ -500,9 +413,6 @@ test "Counting boundary: counsel-notice-period (weekend)" cite "NECrimR 44.1(b)"
 /// NECrimR 44.1(d): an attorney files and serves notice of a changed
 /// address, telephone, fax or e-mail within 30 days of the change.
 deadline contact-change-period: 30.days after AttorneyContactChanged() counted_by frcrimp45 cite "NECrimR 44.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: contact-change-period (holiday)" cite "NECrimR 44.1(d)"
 {
@@ -514,9 +424,6 @@ test "Counting boundary: contact-change-period (holiday)" cite "NECrimR 44.1(d)"
 /// submits the completed fee and expense voucher through eVoucher within
 /// 45 days after sentencing or dismissal.
 deadline cja-voucher-period: 45.days after SentencingOrDismissal() counted_by frcrimp45 cite "NECrimR 44.3(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: cja-voucher-period (weekend)" cite "NECrimR 44.3(a)"
 {
@@ -527,9 +434,6 @@ test "Counting boundary: cja-voucher-period (weekend)" cite "NECrimR 44.3(a)"
 /// NECrimR 44.4(b): the government responds to a motion to permit joint
 /// representation within 14 days.
 deadline joint-representation-response-period: 14.days after JointRepresentationMotionFiled() counted_by frcrimp45 cite "NECrimR 44.4(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: joint-representation-response-period (weekend)" cite "NECrimR 44.4(b)"
 {
@@ -542,9 +446,6 @@ test "Counting boundary: joint-representation-response-period (weekend)" cite "N
 /// document or signature files an objection within 7 days of receiving
 /// the NEF.
 deadline signature-objection-period: 7.days after NefReceived() counted_by frcrimp45 cite "NECrimR 49.2(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: signature-objection-period (weekend)" cite "NECrimR 49.2(c)"
 {
@@ -556,9 +457,6 @@ test "Counting boundary: signature-objection-period (weekend)" cite "NECrimR 49.
 /// exhibit, document or transcript when the judge directs or no later
 /// than 7 days.
 deadline file-return-period: 7.days after FileCheckedOut() counted_by frcrimp45 cite "NECrimR 55.1(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: file-return-period (weekend)" cite "NECrimR 55.1(d)"
 {
@@ -570,9 +468,6 @@ test "Counting boundary: file-return-period (weekend)" cite "NECrimR 55.1(d)"
 /// days after a verdict is rendered or a judgment entered, the offering
 /// attorney withdraws all exhibits in the clerk's custody.
 deadline exhibit-withdrawal-period: 14.days after VerdictOrJudgment() counted_by frcrimp45 cite "NECrimR 55.1(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-withdrawal-period (weekend)" cite "NECrimR 55.1(g)"
 {
@@ -585,9 +480,6 @@ test "Counting boundary: exhibit-withdrawal-period (weekend)" cite "NECrimR 55.1
 /// the case's final disposition, files an objection before that period
 /// expires.
 deadline exhibit-destruction-objection-period: 30.days after FinalDisposition() counted_by frcrimp45 cite "NECrimR 55.1(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: exhibit-destruction-objection-period (holiday)" cite "NECrimR 55.1(g)"
 {
@@ -600,9 +492,6 @@ test "Counting boundary: exhibit-destruction-objection-period (holiday)" cite "N
 /// objections to a magistrate judge's order or findings and
 /// recommendations; no reply without leave.
 deadline objection-opposition-period: 14.days after ObjectionsServed() counted_by frcrimp45 cite "NECrimR 59.2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: objection-opposition-period (weekend)" cite "NECrimR 59.2(a)"
 {

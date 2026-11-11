@@ -13,6 +13,8 @@ import core.frcp6.tests.{
 import core.frcp6.{ frcp6 }
 import core.time.{ Served, ServiceMethod }
 
+forum frcp
+
 // The superseded versions of FRCP 6, each through the version in force on
 // the trigger date, and the worked examples the rule texts, committee
 // notes and the expect tests under tests/expect/ give.
@@ -35,7 +37,6 @@ event ThirdPartyComplaintExtensionMoved()
 /// 5 days to 7 and 14(a)(1)'s 10 days to 14; neither rule is amended since.
 deadline removal-answer: 7.days after NoticeOfRemovalFiled() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 cite "FRCP 81(c)(2)(C)"
 {
-  forum frcp
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on RemovalAnswerExtensionMoved() }
   extend { by court, discretion ExcusableNeglect, after_expiry, on RemovalAnswerExtensionMoved() }
@@ -49,7 +50,6 @@ test "Counting boundary: removal-answer (weekend)" cite "FRCP 81(c)(2)(C)"
 
 deadline third-party-complaint: 14.days after AnswerServed() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 cite "FRCP 14(a)(1)"
 {
-  forum frcp
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ThirdPartyComplaintExtensionMoved() }
   extend {
@@ -69,9 +69,6 @@ test "Counting boundary: third-party-complaint (weekend)" cite "FRCP 14(a)(1)"
 /// A fixture period of one year counted under FRCP 6: a statute's period
 /// stated in years (Rule 6(a) reaches "any applicable statute").
 deadline frcp6-1-year: 1.years after Served() counted_by frcp6 cite "FRCP (2008 ed.) 6(a)" historical
-{
-  forum frcp
-}
 
 test "under the 1985 text AEDPA's grace year from April 24, 1996 ends on the anniversary, Thursday April 24, 1997 (Ross v. Artuz; Flanagan v. Johnson)" cite "FRCP (2008 ed.) 6(a)" historical
 {

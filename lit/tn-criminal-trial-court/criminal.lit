@@ -33,7 +33,7 @@ decision initial-appearance: "Release or custody; preliminary hearing set" by co
 decision probable-cause: "Preliminary hearing" by court cite "Tenn. R. Crim. P. 5.1"
 {
   note "If the magistrate finds that an offense has been committed and probable cause to believe the defendant committed it, the defendant is bound over to the grand jury; if not, the defendant is discharged (Tenn. R. Crim. P. 5.1(b), (c))."
-  edge-probable-cause-charged "Bound over; indictment, presentment or information" -> charged {
+  "Bound over; indictment, presentment or information" -> charged {
     authority cite "Tenn. R. Crim. P. 7"
   }
   edge-probable-cause-none "No probable cause; discharged" -> dismissed {
@@ -44,13 +44,13 @@ decision probable-cause: "Preliminary hearing" by court cite "Tenn. R. Crim. P. 
 state charged: "Indictment, presentment or information" by court cite "Tenn. R. Crim. P. 7"
 {
   note "The speedy-trial statute (Tenn. Code Ann. § 40-14-101) is not vendored; the court may dismiss for unnecessary delay in presenting the charge to a grand jury against a defendant held to answer, or in bringing the defendant to trial (Tenn. R. Crim. P. 48(b))."
-  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Tenn. R. Crim. P. 10" }
+  "Arraignment" -> arraignment { authority cite "Tenn. R. Crim. P. 10" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by accused cite "Tenn. R. Crim. P. 10"
 {
   note "Before trial the defendant is called into open court and arraigned, on the record (Tenn. R. Crim. P. 10(a), (c)). Discovery is under Rule 16."
-  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Tenn. R. Crim. P. 16" }
+  "Discovery" -> discovery { authority cite "Tenn. R. Crim. P. 16" }
 }
 
 state discovery: "Discovery and pretrial motions" by prosecution cite "Tenn. R. Crim. P. 12(b)"
@@ -85,7 +85,7 @@ decision plea-decision: "Plea or trial" by accused cite "Tenn. R. Crim. P. 11"
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
     authority cite "Tenn. R. Crim. P. 11"
   }
-  edge-plea-decision-trial "Trial" -> trial { authority cite "Tenn. R. Crim. P. 23" }
+  "Trial" -> trial { authority cite "Tenn. R. Crim. P. 23" }
 }
 
 decision trial: "Verdict" by court cite "Tenn. R. Crim. P. 31"
@@ -101,9 +101,7 @@ state sentencing: "Sentence and judgment" by court cite "Tenn. R. Crim. P. 32(b)
   edge-sentencing-motions "Sentence entered; post-trial motions" -> post-trial {
     authority cite "Tenn. R. Crim. P. 33(b)"
   }
-  edge-sentencing-judgment "Sentence entered; no post-trial motion" -> judgment {
-    authority cite "Tenn. R. Crim. P. 32(b)"
-  }
+  "Sentence entered; no post-trial motion" -> judgment { authority cite "Tenn. R. Crim. P. 32(b)" }
 }
 
 decision post-trial: "Post-trial motions" by court cite "Tenn. R. Crim. P. 33(a)"

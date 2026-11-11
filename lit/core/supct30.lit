@@ -3,6 +3,8 @@ module core.supct30
 import core.calendar.{ us-federal-holidays }
 import core.time.{ Served, ServiceMethod }
 
+forum scotus
+
 /// Sup. Ct. R. 29.1 (Rules adopted April 14, 1980, effective June 30,
 /// 1980): the day of the act is excluded and the last day included
 /// "unless it is a Sunday or a federal legal holiday", when the period
@@ -351,7 +353,7 @@ counting sup-ct-30 effective [2026-03-16, ..) known_at 2026-02-17 supersedes sup
 
 // Fixtures cite nothing: they are periods for the tests, not rules in
 // force, and each test cites the rule it checks.
-deadline sup-ct-30-90-days: 90.days after Served() counted_by sup-ct-30 { forum scotus }
+deadline sup-ct-30-90-days: 90.days after Served() counted_by sup-ct-30
 
 test "ninety days from entry of judgment" cite "Sup. Ct. R. 13.1"
 {

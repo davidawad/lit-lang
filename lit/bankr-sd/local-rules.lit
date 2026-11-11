@@ -142,6 +142,7 @@ test "Counting boundary: extension-objection-period (weekend)" cite "Bankr. D.S.
   given ExtensionMotionFiled() on 2026-07-18
   expect deadline(extension-objection-period) == 2026-07-27
 }
+
 /// Bankr. D.S.D. R. 1014-1: the notice of a motion to transfer to another
 /// district sets a last date for objections 14 days after service.
 deadline transfer-objection-period: 14.days after TransferMotionServed() counted_by frbp9006 cite "Bankr. D.S.D. R. 1014-1"
@@ -158,6 +159,7 @@ test "Counting boundary: consolidation-objection-period (weekend)" cite "Bankr. 
   given ConsolidationMotionServed() on 2026-07-18
   expect deadline(consolidation-objection-period) == 2026-08-10
 }
+
 /// Bankr. D.S.D. R. 1015-1(c): the notice of a motion regarding joint
 /// administration sets a last date for objections 21 days after service.
 deadline joint-administration-objection-period: 21.days after JointAdministrationMotionServed() counted_by frbp9006 cite "Bankr. D.S.D. R. 1015-1(c)"
@@ -167,6 +169,7 @@ test "Counting boundary: joint-administration-objection-period (weekend)" cite "
   given JointAdministrationMotionServed() on 2026-07-18
   expect deadline(joint-administration-objection-period) == 2026-08-10
 }
+
 /// Bankr. D.S.D. R. 1016-2: the notice of a motion to waive credit
 /// counseling or the financial management course sets a last date for
 /// objections seven days after service.
@@ -177,6 +180,7 @@ test "Counting boundary: counseling-waiver-objection-period (weekend)" cite "Ban
   given CounselingWaiverMotionServed() on 2026-07-18
   expect deadline(counseling-waiver-objection-period) == 2026-07-27
 }
+
 /// Bankr. D.S.D. R. 2072-1: the debtor serves the Clerk's notice of the
 /// case on each South Dakota court whose proceeding may be stayed before
 /// any scheduled hearing there and no later than seven days after the
@@ -188,6 +192,7 @@ test "Counting boundary: court-notice-period (weekend)" cite "Bankr. D.S.D. R. 2
   given PetitionFiled() on 2026-07-18
   expect deadline(court-notice-period) == 2026-07-27
 }
+
 /// Bankr. D.S.D. R. 2002-1(c): the Clerk's notice of a chapter 12 or 13
 /// confirmation hearing sets a last date for objections 21 days after
 /// service of the plan, but not fewer than seven days after the first date
@@ -200,6 +205,7 @@ test "Counting boundary: plan-objection-period (weekend)" cite "Bankr. D.S.D. R.
   given PlanServed() on 2026-07-18
   expect deadline(plan-objection-period) == 2026-08-10
 }
+
 /// Bankr. D.S.D. R. 2003-1(d): within seven days after a § 341(a) meeting
 /// concludes, the presiding officer files a statement of its conclusion.
 deadline meeting-conclusion-statement-period: 7.days after MeetingConcluded() counted_by frbp9006 cite "Bankr. D.S.D. R. 2003-1(d)"
@@ -209,6 +215,7 @@ test "Counting boundary: meeting-conclusion-statement-period (weekend)" cite "Ba
   given MeetingConcluded() on 2026-07-18
   expect deadline(meeting-conclusion-statement-period) == 2026-07-27
 }
+
 /// Bankr. D.S.D. R. 2014-1(c): within seven days after an application to
 /// employ an estate professional is filed, the United States Trustee files
 /// any comments; the court may act on it once the seven days run.
@@ -219,6 +226,7 @@ test "Counting boundary: employment-comment-period (weekend)" cite "Bankr. D.S.D
   given EmploymentApplicationFiled() on 2026-07-18
   expect deadline(employment-comment-period) == 2026-07-27
 }
+
 /// Bankr. D.S.D. R. 2016-2(b): in a chapter 12 or 13 case the debtor's
 /// attorney and other estate professionals file their applications for fees
 /// through confirmation within 30 days after the plan is confirmed
@@ -230,6 +238,7 @@ test "Counting boundary: post-confirmation-fee-application-period (weekend)" cit
   given Chapter12Or13PlanConfirmed() on 2026-07-16
   expect deadline(post-confirmation-fee-application-period) == 2026-08-17
 }
+
 /// Bankr. D.S.D. R. 3003-1: unless otherwise ordered, the last day to file
 /// a proof of claim or interest in a chapter 11 case is 30 days after the
 /// first date set for the meeting of creditors (the bar date FRBP
@@ -241,6 +250,7 @@ test "Counting boundary: chapter11-claim-period (weekend)" cite "Bankr. D.S.D. R
   given FirstMeetingDate() on 2026-07-16
   expect deadline(chapter11-claim-period) == 2026-08-17
 }
+
 /// Bankr. D.S.D. R. 3011-2(e): the court's order on an application for
 /// unclaimed funds sets a last date for objections 24 days after its
 /// service.
@@ -251,6 +261,7 @@ test "Counting boundary: unclaimed-funds-objection-period (weekend)" cite "Bankr
   given UnclaimedFundsOrderServed() on 2026-07-15
   expect deadline(unclaimed-funds-objection-period) == 2026-08-10
 }
+
 /// Bankr. D.S.D. R. 3015-1A(c): an objection to a motion to extend the time
 /// to file a chapter 12 plan or for its confirmation hearing is filed
 /// within seven days after the motion is filed (likewise Rule 3015-1B(b)
@@ -262,6 +273,7 @@ test "Counting boundary: chapter12-plan-extension-objection-period (weekend)" ci
   given PlanExtensionMotionFiled() on 2026-07-18
   expect deadline(chapter12-plan-extension-objection-period) == 2026-07-27
 }
+
 /// Bankr. D.S.D. R. 3016-3: the notice of a motion to reduce or extend the
 /// chapter 11 exclusivity period sets a last date for objections seven days
 /// after service.
@@ -272,6 +284,7 @@ test "Counting boundary: exclusivity-objection-period (weekend)" cite "Bankr. D.
   given ExclusivityMotionServed() on 2026-07-18
   expect deadline(exclusivity-objection-period) == 2026-07-27
 }
+
 /// Bankr. D.S.D. R. 3018-1(c): the plan proponent files the completed
 /// ballot tabulation not less than two days before the confirmation
 /// hearing.
@@ -285,6 +298,7 @@ test "Counting boundary: post-confirmation-modification-objection-period (weeken
   given PostConfirmationModificationServed() on 2026-07-18
   expect deadline(post-confirmation-modification-objection-period) == 2026-08-10
 }
+
 /// Bankr. D.S.D. R. 3022-1(a): unless the plan provides otherwise, not
 /// later than 30 days after substantial consummation of a nonindividual's §
 /// 1129 plan, or any § 1191(a) plan, the motion for a final decree is
@@ -296,6 +310,7 @@ test "Counting boundary: final-decree-motion-period (weekend)" cite "Bankr. D.S.
   given SubstantialConsummation() on 2026-07-16
   expect deadline(final-decree-motion-period) == 2026-08-17
 }
+
 /// Bankr. D.S.D. R. 3022-1(b): not later than 45 days after completing all
 /// plan payments, an individual chapter 11 debtor (or a § 1191(b) debtor)
 /// files the certification and request for discharge.
@@ -306,6 +321,7 @@ test "Counting boundary: chapter11-discharge-request-period (weekend)" cite "Ban
   given PlanPaymentsCompleted() on 2026-07-15
   expect deadline(chapter11-discharge-request-period) == 2026-08-31
 }
+
 /// Bankr. D.S.D. R. 3072-1A(a): within 30 days after all chapter 12 plan
 /// payments are completed, the trustee files a Notice of Completion of Plan
 /// Payments (likewise Rule 3072-1B(a) in chapter 13).
@@ -316,6 +332,7 @@ test "Counting boundary: completion-notice-period (weekend)" cite "Bankr. D.S.D.
   given PlanPaymentsCompleted() on 2026-07-16
   expect deadline(completion-notice-period) == 2026-08-17
 }
+
 /// Bankr. D.S.D. R. 3072-1A(a): within 30 days after the trustee's Notice
 /// of Completion of Plan Payments, the debtor files the Certification and
 /// Request for Discharge, or the Clerk may close the case without a
@@ -327,6 +344,7 @@ test "Counting boundary: discharge-certification-period (weekend)" cite "Bankr. 
   given CompletionNoticeFiled() on 2026-07-16
   expect deadline(discharge-certification-period) == 2026-08-17
 }
+
 /// Bankr. D.S.D. R. 3072-1A(b): the notice of a motion for a hardship
 /// discharge sets a last date for objections 14 days after service
 /// (likewise Rule 3022-1 and 3072-1B).
@@ -355,6 +373,7 @@ test "Counting boundary: discharge-extension-objection-period (weekend)" cite "B
   given DischargeExtensionMotionServed() on 2026-07-18
   expect deadline(discharge-extension-objection-period) == 2026-07-27
 }
+
 /// Bankr. D.S.D. R. 4004-2: the notice of a motion objecting to discharge
 /// under § 727(a)(8), (a)(9) or § 1328(f) sets a last date for objections
 /// 21 days after service.
@@ -365,6 +384,7 @@ test "Counting boundary: discharge-objection-motion-response-period (weekend)" c
   given DischargeObjectionMotionServed() on 2026-07-18
   expect deadline(discharge-objection-motion-response-period) == 2026-08-10
 }
+
 /// Bankr. D.S.D. R. 4007-1: the notice of a motion to extend the time for a
 /// dischargeability complaint sets a last date for objections seven days
 /// after service.
@@ -375,6 +395,7 @@ test "Counting boundary: dischargeability-extension-objection-period (weekend)" 
   given DischargeabilityExtensionMotionServed() on 2026-07-18
   expect deadline(dischargeability-extension-objection-period) == 2026-07-27
 }
+
 /// Bankr. D.S.D. R. 5077-1: a Notice of Intent to Request Redaction is
 /// filed and served on the transcriber within seven days after the
 /// transcript is filed.
@@ -385,6 +406,7 @@ test "Counting boundary: redaction-intent-period (weekend)" cite "Bankr. D.S.D. 
   given TranscriptFiled() on 2026-07-18
   expect deadline(redaction-intent-period) == 2026-07-27
 }
+
 /// Bankr. D.S.D. R. 5077-1: a Transcript Redaction Request is filed and
 /// served on the transcriber within 21 days after the transcript is filed.
 deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006 cite "Bankr. D.S.D. R. 5077-1"
@@ -394,6 +416,7 @@ test "Counting boundary: redaction-request-period (weekend)" cite "Bankr. D.S.D.
   given TranscriptFiled() on 2026-07-18
   expect deadline(redaction-request-period) == 2026-08-10
 }
+
 /// Bankr. D.S.D. R. 5080-1(b): unless otherwise ordered, fees still owed to
 /// the Clerk when a case is dismissed are paid within 14 days after the
 /// dismissal order.

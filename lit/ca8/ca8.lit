@@ -9,18 +9,18 @@ start notice-filed
 
 state notice-filed: "Notice of appeal filed" by movant cite "FRAP 3(a)(1)"
 {
-  edge-notice-filed-briefing "Appeal docketed" -> briefing { authority cite "FRAP 12(c)" }
+  "Appeal docketed" -> briefing { authority cite "FRAP 12(c)" }
 }
 
 state briefing: "Briefing" cite "FRAP 31(a)(1)"
 {
   note "Eighth Circuit local rules supplement the Federal Rules of Appellate Procedure; consult Local Rules 28A, 30A, and 32A for circuit-specific brief and appendix requirements."
-  edge-briefing-argument "Briefs complete" -> argument { authority cite "8th Cir. R. 34A" }
+  "Briefs complete" -> argument { authority cite "8th Cir. R. 34A" }
 }
 
 state argument: "Oral argument or submission" cite "FRAP 34"
 {
-  edge-argument-decision "Submitted" -> decision { authority cite "FRAP 36(a)" }
+  "Submitted" -> decision { authority cite "FRAP 36(a)" }
 }
 
 decision decision: "Court decision" by court cite "FRAP 36(a)"
@@ -30,9 +30,7 @@ decision decision: "Court decision" by court cite "FRAP 36(a)"
 
 decision rehearing: "Rehearing election" by movant cite "FRAP 40(d)(1)"
 {
-  edge-rehearing-mandate "No petition or rehearing denied" -> mandate {
-    authority cite "FRAP 41(b); 8th Cir. IOP IV.F"
-  }
+  "No petition or rehearing denied" -> mandate { authority cite "FRAP 41(b); 8th Cir. IOP IV.F" }
 }
 
 terminal mandate: "Mandate issued" outcome [final] by court cite "FRAP 41(a)"

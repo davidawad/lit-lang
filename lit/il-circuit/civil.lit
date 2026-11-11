@@ -32,12 +32,8 @@ decision response-due: "Appearance, answer or motion" by court cite "Ill. S. Ct.
 decision pleading-motion: "Motion to dismiss decided" by court cite "735 ILCS 5/2-615"
 {
   note "All objections to pleadings are raised by motion, which points out the defects specifically; a motion to dismiss for substantial insufficiency in law specifies wherein the pleading is insufficient, and after ruling the court may permit or require pleading over or amending, or terminate the litigation in whole or in part (735 ILCS 5/2-615(a), (b), (d)). Within the time for pleading, a defendant may move to dismiss on the grounds section 2-619(a) lists, among them lack of subject-matter jurisdiction, another action pending, a prior judgment, the limitations period, release, the Statute of Frauds and other affirmative matter, supported by affidavit when the ground does not appear on the face of the pleading (735 ILCS 5/2-619(a)). The motion does not preclude raising the same matter by answer unless it was disposed of on the merits (735 ILCS 5/2-619(d))."
-  edge-pleading-motion-dismissed "Dismissed, terminating the litigation" -> dismissed {
-    authority cite "735 ILCS 5/2-615(d)"
-  }
-  edge-pleading-motion-amend "Leave to plead over or amend" -> amend {
-    authority cite "735 ILCS 5/2-616(a)"
-  }
+  "Dismissed, terminating the litigation" -> dismissed { authority cite "735 ILCS 5/2-615(d)" }
+  "Leave to plead over or amend" -> amend { authority cite "735 ILCS 5/2-616(a)" }
   edge-pleading-motion-denied "Denied" -> case-management { authority cite "735 ILCS 5/2-615(d)" }
 }
 
@@ -73,9 +69,7 @@ terminal default-judgment: "Default judgment for applicant" outcome [win] cite "
 state case-management: "Case management conference and order" by court cite "Ill. S. Ct. R. 218(a)"
 {
   note "Except as an approved local circuit court rule provides, the court holds a case management conference within 35 days after the parties are at issue and in no event more than 182 days following the filing of the complaint; it considers the issues, amendments, admissions, limits on discovery and deadlines for disclosure of witnesses and completion of written discovery and depositions, settlement, alternative dispute resolution and the date the case should be ready for trial (Ill. S. Ct. R. 218(a)). The schedule ensures discovery is completed not later than 60 days before the date on which the trial court reasonably anticipates trial will commence, unless the parties agree otherwise (Ill. S. Ct. R. 218(c)). Standing orders of the circuits are not vendored."
-  edge-case-management-discovery "Case management order entered" -> discovery {
-    authority cite "Ill. S. Ct. R. 218(a)"
-  }
+  "Case management order entered" -> discovery { authority cite "Ill. S. Ct. R. 218(a)" }
 }
 
 state discovery: "Discovery" by plaintiff cite "Ill. S. Ct. R. 201"
@@ -87,10 +81,8 @@ state discovery: "Discovery" by plaintiff cite "Ill. S. Ct. R. 201"
   edge-discovery-sanction "Discovery sanction dismisses the action" -> dismissed-sanction {
     authority cite "Ill. S. Ct. R. 219(c)"
   }
-  edge-discovery-settled "Voluntary dismissal before trial" -> settled {
-    authority cite "735 ILCS 5/2-1009(a)"
-  }
-  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Ill. S. Ct. R. 218(a)" }
+  "Voluntary dismissal before trial" -> settled { authority cite "735 ILCS 5/2-1009(a)" }
+  "No dispositive motion" -> trial { authority cite "Ill. S. Ct. R. 218(a)" }
 }
 
 terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "Ill. S. Ct. R. 219(c)"
@@ -115,9 +107,7 @@ decision summary-judgment: "Summary judgment decided" by court cite "735 ILCS 5/
 state trial: "Trial by jury or by the court" by court cite "735 ILCS 5/2-1105(a)"
 {
   note "A party that did not timely demand a jury waives it (735 ILCS 5/2-1105(a)). After trial or hearing begins, the plaintiff may dismiss only on terms the court fixes, on a stipulation signed by the defendant or on a motion supported by affidavit (735 ILCS 5/2-1009(c))."
-  edge-trial-post-trial "Verdict or decision" -> post-trial {
-    authority cite "735 ILCS 5/2-1202(c)"
-  }
+  "Verdict or decision" -> post-trial { authority cite "735 ILCS 5/2-1202(c)" }
 }
 
 decision post-trial: "Post-trial motions" by plaintiff cite "735 ILCS 5/2-1202"

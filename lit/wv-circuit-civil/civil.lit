@@ -67,9 +67,7 @@ state amended: "Amended pleading" by plaintiff cite "W. Va. R. Civ. P. 15(a)"
   edge-amended-tested "Amended pleading met with a new Rule 12(b) motion" -> dismissal-motion {
     authority cite "W. Va. R. Civ. P. 12(b)"
   }
-  edge-amended-answered "Amended pleading answered" -> answered {
-    authority cite "W. Va. R. Civ. P. 15(a)"
-  }
+  "Amended pleading answered" -> answered { authority cite "W. Va. R. Civ. P. 15(a)" }
 }
 
 terminal dismissed-pleading: "Dismissed on a Rule 12(b) motion" outcome [loss, dismissal] cite "W. Va. R. Civ. P. 12(b)"
@@ -107,9 +105,7 @@ terminal default-won: "Default judgment for applicant" outcome [win] cite "W. Va
 state answered: "Answer served" by plaintiff cite "W. Va. R. Civ. P. 8(b)"
 {
   note "The answer states in short and plain terms the defenses to each claim and admits or denies the allegations (Rule 8(b)). Except in proceedings exempt from initial disclosure or when the court orders otherwise, the parties confer as soon as practicable, and in any event at least 30 days after filing of a responsive pleading or Rule 12 motion, and submit a written report outlining the proposed discovery plan within 14 days after the conference (Rule 26(f)(1)-(2)). The judge issues the scheduling order within the earlier of 120 days after any defendant has been served or 90 days after any defendant has appeared, absent good cause for delay (Rule 16(b)(2)). A jury is demanded by serving a written demand no later than 14 days after the last pleading directed to the issue is served, and filing it (Rule 38(b))."
-  edge-answered-discovery "Case proceeds to discovery" -> discovery {
-    authority cite "W. Va. R. Civ. P. 26(f)"
-  }
+  "Case proceeds to discovery" -> discovery { authority cite "W. Va. R. Civ. P. 26(f)" }
 }
 
 state discovery: "Discovery" by plaintiff cite "W. Va. R. Civ. P. 26(a)"
@@ -121,10 +117,8 @@ state discovery: "Discovery" by plaintiff cite "W. Va. R. Civ. P. 26(a)"
   edge-discovery-sj "Motion for summary judgment" -> summary-judgment {
     authority cite "W. Va. R. Civ. P. 56(a)"
   }
-  edge-discovery-trial "Case reaches trial" -> trial { authority cite "W. Va. R. Civ. P. 16(b)" }
-  edge-discovery-settled "Settlement: stipulation of dismissal" -> settled {
-    authority cite "W. Va. R. Civ. P. 41(a)"
-  }
+  "Case reaches trial" -> trial { authority cite "W. Va. R. Civ. P. 16(b)" }
+  "Settlement: stipulation of dismissal" -> settled { authority cite "W. Va. R. Civ. P. 41(a)" }
 }
 
 decision discovery-sanction: "Sanction for failure to obey a discovery order" by court cite "W. Va. R. Civ. P. 37(b)"
@@ -166,9 +160,7 @@ state trial: "Trial by jury or by the court" by court cite "W. Va. R. Civ. P. 39
     event JudgmentEntered()
     authority cite "W. Va. R. Civ. P. 49(a)"
   }
-  edge-trial-settled "Settlement during trial" -> settled {
-    authority cite "W. Va. R. Civ. P. 41(a)"
-  }
+  "Settlement during trial" -> settled { authority cite "W. Va. R. Civ. P. 41(a)" }
 }
 
 decision judgment-entered: "Judgment entered" by court cite "W. Va. R. Civ. P. 58"

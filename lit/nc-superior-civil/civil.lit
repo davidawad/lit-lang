@@ -48,9 +48,7 @@ state amend: "Amended pleading" by plaintiff cite "N.C. R. Civ. P. 15(a)"
   edge-amend-tested "Amended pleading tested again" -> pleading-motion {
     authority cite "N.C. R. Civ. P. 12(b)"
   }
-  edge-amend-answered "Amended pleading answered" -> answered {
-    authority cite "N.C. R. Civ. P. 15(a)"
-  }
+  "Amended pleading answered" -> answered { authority cite "N.C. R. Civ. P. 15(a)" }
 }
 
 terminal dismissed-pleading: "Dismissed on a Rule 12(b) motion" outcome [loss, dismissal] cite "N.C. R. Civ. P. 12(b)"
@@ -77,9 +75,7 @@ terminal default-judgment: "Judgment by default entered" outcome [win] cite "N.C
 state answered: "Answer served: pleadings closed" by plaintiff cite "N.C. R. Civ. P. 8(b)"
 {
   note "A party states in short and plain terms its defenses to each claim and admits or denies the averments on which the adverse party relies (N.C. R. Civ. P. 8(b)). A party may demand a jury by serving a written demand after commencement and not later than 10 days after service of the last pleading directed to the issue (N.C. R. Civ. P. 38(b))."
-  edge-answered-discovery "Case proceeds to discovery" -> discovery {
-    authority cite "N.C. R. Civ. P. 26"
-  }
+  "Case proceeds to discovery" -> discovery { authority cite "N.C. R. Civ. P. 26" }
 }
 
 state discovery: "Discovery and pretrial" by plaintiff cite "N.C. R. Civ. P. 26"
@@ -89,9 +85,7 @@ state discovery: "Discovery and pretrial" by plaintiff cite "N.C. R. Civ. P. 26"
     authority cite "N.C. R. Civ. P. 37(a)"
   }
   edge-discovery-sj "Summary judgment motion" -> sj-motion { authority cite "N.C. R. Civ. P. 56" }
-  edge-discovery-trial "No dispositive motion: trial" -> trial {
-    authority cite "N.C. R. Civ. P. 39"
-  }
+  "No dispositive motion: trial" -> trial { authority cite "N.C. R. Civ. P. 39" }
   edge-discovery-settle "Settled: voluntary dismissal or stipulation" -> settled {
     authority cite "N.C. R. Civ. P. 41(a)"
   }

@@ -3,6 +3,8 @@ module rid-criminal-local-rules.local-rules
 import core.authority.{ CaseOrder }
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The District of Rhode Island's own criminal periods, counted under the
 // criminal rules (FRCrimP 45(a) governs "any local rule"; LR Cr 47
 // cross-refers to it). No trigger carries a service method: FRCrimP
@@ -66,9 +68,6 @@ event MagistrateObjectionResponseServed()
 /// files the written plea agreement at least 7 days before jury
 /// empanelment.
 deadline plea-agreement-filing: 7.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D.R.I. LR Cr 11(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: plea-agreement-filing (weekend)" cite "D.R.I. LR Cr 11(a)"
 {
@@ -81,9 +80,6 @@ test "Counting boundary: plea-agreement-filing (weekend)" cite "D.R.I. LR Cr 11(
 /// 16(a) and (b) disclosure, unless the party entitled to disclosure
 /// waives it in writing within that period.
 deadline discovery-request-exchange: 7.days after Arraigned() counted_by frcrimp45 cite "D.R.I. LR Cr 16"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: discovery-request-exchange (weekend)" cite "D.R.I. LR Cr 16"
 {
@@ -99,9 +95,6 @@ deadline subpoena-inspection: 7.days after SubpoenaProduction() counted_by frcri
   to CaseOrder
   op set
 } cite "D.R.I. LR Cr 17(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: subpoena-inspection (weekend)" cite "D.R.I. LR Cr 17(a)"
 {
@@ -114,9 +107,6 @@ test "Counting boundary: subpoena-inspection (weekend)" cite "D.R.I. LR Cr 17(a)
 /// counsel a chronological list of the recordings and a transcript of
 /// each.
 deadline recording-transcripts: 14.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D.R.I. LR Cr 23(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: recording-transcripts (weekend)" cite "D.R.I. LR Cr 23(b)"
 {
@@ -132,9 +122,6 @@ deadline recording-objection: 7.days after RecordingTranscriptsFurnished() count
   to CaseOrder
   op set
 } cite "D.R.I. LR Cr 23(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: recording-objection (weekend)" cite "D.R.I. LR Cr 23(b)"
 {
@@ -146,9 +133,6 @@ test "Counting boundary: recording-objection (weekend)" cite "D.R.I. LR Cr 23(b)
 /// magistrate judge communicates the objection to the Court at least 7
 /// days before empanelment.
 deadline magistrate-empanelment-objection: 7.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D.R.I. LR Cr 24(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-empanelment-objection (weekend)" cite "D.R.I. LR Cr 24(b)"
 {
@@ -159,9 +143,6 @@ test "Counting boundary: magistrate-empanelment-objection (weekend)" cite "D.R.I
 /// D.R.I. LR Cr 24(c): if and when the Court directs, proposed voir dire
 /// questions are served and submitted at least 5 days before empanelment.
 deadline voir-dire-questions: 5.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D.R.I. LR Cr 24(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: voir-dire-questions (weekend)" cite "D.R.I. LR Cr 24(c)"
 {
@@ -177,9 +158,6 @@ deadline sentencing-witness-notice: 7.days before SentencingHearingScheduled() c
   to CaseOrder
   op set
 } cite "D.R.I. LR Cr 32(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: sentencing-witness-notice (weekend)" cite "D.R.I. LR Cr 32(a)"
 {
@@ -194,9 +172,6 @@ deadline response-period: 14.days after MotionServed() counted_by frcrimp45 dele
   to CaseOrder
   op set
 } cite "D.R.I. LR Cr 47(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: response-period (weekend)" cite "D.R.I. LR Cr 47(a)"
 {
@@ -207,9 +182,6 @@ test "Counting boundary: response-period (weekend)" cite "D.R.I. LR Cr 47(a)"
 /// D.R.I. LR Cr 47(a)(4): a reply, which is not required, is filed within 7
 /// days after service of the response.
 deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 cite "D.R.I. LR Cr 47(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reply-period (weekend)" cite "D.R.I. LR Cr 47(a)"
 {
@@ -221,9 +193,6 @@ test "Counting boundary: reply-period (weekend)" cite "D.R.I. LR Cr 47(a)"
 /// magistrate judge's order, ruling, or report and recommendation is
 /// served and filed within 14 days after the objection is served.
 deadline magistrate-objection-response: 14.days after MagistrateObjectionServed() counted_by frcrimp45 cite "D.R.I. LR Cr 57.2(c); D.R.I. LR Cr 57.2(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-objection-response (weekend)" cite "D.R.I. LR Cr 57.2(c); D.R.I. LR Cr 57.2(d)"
 {
@@ -234,9 +203,6 @@ test "Counting boundary: magistrate-objection-response (weekend)" cite "D.R.I. L
 /// D.R.I. LR Cr 57.2(c)(3), (d)(3): the objecting party may serve and file
 /// a reply within 7 days after the response.
 deadline magistrate-objection-reply: 7.days after MagistrateObjectionResponseServed() counted_by frcrimp45 cite "D.R.I. LR Cr 57.2(c); D.R.I. LR Cr 57.2(d)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: magistrate-objection-reply (weekend)" cite "D.R.I. LR Cr 57.2(c); D.R.I. LR Cr 57.2(d)"
 {

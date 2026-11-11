@@ -2,6 +2,8 @@ module insd-criminal-local-rules.local-rules
 
 import core.frcrimp45.{ frcrimp45 }
 
+forum frcrimp
+
 // The Southern District of Indiana's own criminal periods, counted under
 // the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
 // carries a service method: FRCrimP 45(c)'s three added days follow the
@@ -76,9 +78,6 @@ event SealDenialServed()
 /// criminal case as related is filed within 7 days of the filing of the
 /// motion.
 deadline reassignment-objection: 7.days after ReassignmentMotionFiled() counted_by frcrimp45 cite "S.D. Ind. L. Cr. R. 12-2(b)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: reassignment-objection (weekend)" cite "S.D. Ind. L. Cr. R. 12-2(b)"
 {
@@ -93,9 +92,6 @@ test "Counting boundary: reassignment-objection (weekend)" cite "S.D. Ind. L. Cr
 /// document already available, providing it to the other party first or
 /// at the same time.
 deadline offense-versions: 14.days after SentencingProcessCommenced() counted_by frcrimp45 cite "S.D. Ind. L. Cr. R. 32-2(c)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: offense-versions (weekend)" cite "S.D. Ind. L. Cr. R. 32-2(c)"
 {
@@ -108,9 +104,6 @@ test "Counting boundary: offense-versions (weekend)" cite "S.D. Ind. L. Cr. R. 3
 /// service of the Motion to Maintain Document(s) Under Seal; if it does
 /// not, the court may rule summarily.
 deadline designating-party-statement: 14.days after SealMotionServed() counted_by frcrimp45 cite "S.D. Ind. L. Cr. R. 49.1-2(g)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: designating-party-statement (weekend)" cite "S.D. Ind. L. Cr. R. 49.1-2(g)"
 {
@@ -124,9 +117,6 @@ test "Counting boundary: designating-party-statement (weekend)" cite "S.D. Ind. 
 /// to reconsider, notice of an intended interlocutory appeal or a further
 /// order; a party acts within the 21 days to keep the seal.
 deadline unseal-after-denial: 21.days after SealDenialServed() counted_by frcrimp45 cite "S.D. Ind. L. Cr. R. 49.1-2(j); S.D. Ind. L. Cr. R. 49.1-2(a)"
-{
-  forum frcrimp
-}
 
 test "Counting boundary: unseal-after-denial (weekend)" cite "S.D. Ind. L. Cr. R. 49.1-2(j); S.D. Ind. L. Cr. R. 49.1-2(a)"
 {

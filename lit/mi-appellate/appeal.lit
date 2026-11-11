@@ -50,57 +50,39 @@ decision late-application: "Delayed application for leave granted?" by court cit
 state claim-filed: "Claim of appeal filed" by appellant cite "MCR 7.204(B)"
 {
   note "To vest the Court of Appeals with jurisdiction the appellant files the claim of appeal and the entry fee with the clerk within the time for taking an appeal (MCR 7.204(B)). With the claim the appellant files the judgment appealed from, the court reporter's certificate or a statement that the transcript has been ordered or that there is no record to transcribe, proof of service, any bond, the register of actions and a jurisdictional checklist (MCR 7.204(C))."
-  edge-claim-filed-record "Transcript ordered; record assembled" -> record {
-    authority cite "MCR 7.210"
-  }
+  "Transcript ordered; record assembled" -> record { authority cite "MCR 7.210" }
 }
 
 state record: "Record and transcript" by court cite "MCR 7.210"
 {
   note "Within seven days after a transcript is ordered, the court reporter or recorder files a certificate that it has been ordered and paid for or secured, with the estimated number of pages (MCR 7.210(B)(3)(a))."
-  edge-record-briefing "Transcript filed; briefing" -> briefing {
-    event RecordFiled()
-    authority cite "MCR 7.212(A)"
-  }
+  "Transcript filed; briefing" -> briefing { event RecordFiled(), authority cite "MCR 7.212(A)" }
 }
 
 state briefing: "Briefs filed" by appellant cite "MCR 7.212(A)"
 {
   note "In an ordinary civil appeal the appellant files its brief within 56 days after the claim of appeal is filed or the transcript is filed, whichever is later; the parties may extend that time by 28 days by signed stipulation (MCR 7.212(A)(1)(a)(iii)). The appellee may file its brief within 35 days after the appellant's brief is served, also extendable by 28 days by stipulation (MCR 7.212(A)(2)(a)(ii)). The appellant may reply within 21 days after service of the appellee's brief (MCR 7.212(G)). A party that fails to file its brief in time forfeits oral argument (MCR 7.212(A)(4)), and filing a motion does not stay the time for a brief (MCR 7.212(A)(5))."
-  edge-briefing-argument "Oral argument requested in the brief" -> argument {
-    authority cite "MCR 7.214(A)"
-  }
+  "Oral argument requested in the brief" -> argument { authority cite "MCR 7.214(A)" }
   edge-briefing-submitted "Submitted on briefs" -> decision { authority cite "MCR 7.214(E)" }
 }
 
 state argument: "Oral argument" by court cite "MCR 7.214(B)"
 {
   note "Oral argument is not permitted unless a party states 'ORAL ARGUMENT REQUESTED' on the title page of its brief or the court orders it (MCR 7.214(A)). Each side has 30 minutes; a side alone represented has 15 minutes, and the court may extend the time on a motion filed at least 21 days before the session (MCR 7.214(B))."
-  edge-argument-decision "Argued" -> decision { authority cite "MCR 7.215(A)" }
+  "Argued" -> decision { authority cite "MCR 7.215(A)" }
 }
 
 decision decision: "Court of Appeals decision" by court cite "MCR 7.216(A)"
 {
   note "The court may enter any judgment or order or grant further or different relief as the case requires, remand to take additional evidence, or dismiss an appeal for lack of jurisdiction or failure to pursue it in conformity with the rules (MCR 7.216(A)(5), (7), (10)). An opinion is published if it meets the standards of MCR 7.215(B). A motion for reconsideration may be filed within 21 days after the date of the order or opinion, and a party may answer within 14 days after service (MCR 7.215(I)(1), (2)). Unless otherwise ordered, the judgment is effective after the time for an application for leave to the Supreme Court expires or, if one is filed, after the Supreme Court disposes of the case (MCR 7.215(F)(1)(a))."
-  edge-decision-affirmed "Affirmed" -> affirmed {
-    event DecisionFiled()
-    authority cite "MCR 7.216(A)"
-  }
-  edge-decision-reversed "Reversed or modified" -> reversed {
-    event DecisionFiled()
-    authority cite "MCR 7.216(A)"
-  }
-  edge-decision-remanded "Remanded" -> remanded {
-    event DecisionFiled()
-    authority cite "MCR 7.216(A)"
-  }
+  "Affirmed" -> affirmed { event DecisionFiled(), authority cite "MCR 7.216(A)" }
+  "Reversed or modified" -> reversed { event DecisionFiled(), authority cite "MCR 7.216(A)" }
+  "Remanded" -> remanded { event DecisionFiled(), authority cite "MCR 7.216(A)" }
   edge-decision-dismissed "Appeal dismissed" -> appeal-dismissed {
     event DecisionFiled()
     authority cite "MCR 7.216(A)"
   }
-  edge-decision-reconsideration "Reconsideration sought" -> reconsideration {
-    authority cite "MCR 7.215(I)"
-  }
+  "Reconsideration sought" -> reconsideration { authority cite "MCR 7.215(I)" }
 }
 
 decision reconsideration: "Motion for reconsideration decided" by court cite "MCR 7.215(I)"

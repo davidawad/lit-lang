@@ -14,7 +14,7 @@ start charges
 
 state charges: "Commission recommendation filed" by court cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)") {
   note "Who files the recommendation, the notice to the judge and the judge's rights are stated in text that is not vendored; they stay holes."
-  edge-charges-answer "Respondent served" -> answer {
+  "Respondent served" -> answer {
     event ActionCommenced()
     authority cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)")
   }
@@ -22,7 +22,7 @@ state charges: "Commission recommendation filed" by court cite ?("Tex. Const. ar
 
 state answer: "Answer and pretrial" by movant cite ?("Tex. Gov't Code ch. 33 (not vendored)") {
   note "The answer period, discovery and any interim suspension are stated in text that is not vendored; they stay holes."
-  edge-answer-hearing "Set for hearing" -> hearing {
+  "Set for hearing" -> hearing {
     authority cite ?("Procedural rules for the removal or retirement of judges (not vendored)")
   }
 }
@@ -33,7 +33,7 @@ decision hearing: "Tribunal decides" by court cite ?("Procedural rules for the r
     event DecisionFiled()
     authority cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)")
   }
-  edge-hearing-sanction "Removal or retirement ordered" -> sanction {
+  "Removal or retirement ordered" -> sanction {
     event DecisionFiled()
     authority cite ?("Tex. Const. art. V, § 1-a(9) (not vendored)")
   }

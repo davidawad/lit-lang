@@ -218,6 +218,7 @@ test "Counting boundary: claims-agent-order-notice-period (weekend)" cite "W.PA.
   given DismissOrConvertEntered() on 2026-07-04
   expect deadline(claims-agent-order-notice-period) == 2026-07-13
 }
+
 /// W.PA.LBR 1006-1(b): whenever a case is dismissed before the filing fees
 /// are paid in full, the debtor remits the balance to the Clerk within
 /// fourteen days after entry of the order of dismissal.
@@ -233,6 +234,7 @@ test "Counting boundary: other-income-report-period (holiday)" cite "W.PA.LBR 10
   given FirstMeetingDate() on 2026-07-03
   expect deadline(other-income-report-period) == 2026-06-18
 }
+
 /// W.PA.LBR 1007-4(c), 2015-1(f)(2): a self-employed chapter 13 debtor
 /// submits Local Bankruptcy Form 5 (Chapter 13 Business Case Questionnaire)
 /// to the trustee at least fourteen days before the first scheduled meeting
@@ -244,6 +246,7 @@ test "Counting boundary: business-questionnaire-period (holiday)" cite "W.PA.LBR
   given FirstMeetingDate() on 2026-07-03
   expect deadline(business-questionnaire-period) == 2026-06-18
 }
+
 /// W.PA.LBR 2002-1(a): an entity that serves a document in satisfaction of a
 /// notice requirement files a certificate of service within seven calendar
 /// days after the date of service (immediately in an expedited matter).
@@ -254,6 +257,7 @@ test "Counting boundary: certificate-of-service-period (weekend)" cite "W.PA.LBR
   given NoticeServed() on 2026-07-04
   expect deadline(certificate-of-service-period) == 2026-07-13
 }
+
 /// W.PA.LBR 2004-1(c): not less than twenty-eight days' written notice of a
 /// proposed Rule 2004 examination is given to the entity to be examined, its
 /// counsel and other affected parties.
@@ -264,6 +268,7 @@ test "Counting boundary: examination-notice-period (weekend)" cite "W.PA.LBR 200
   given Examination() on 2026-07-04
   expect deadline(examination-notice-period) == 2026-06-05
 }
+
 /// W.PA.LBR 2004-1(c): the entity to be examined and other affected parties
 /// have fourteen days after service to respond or object to the proposed
 /// examination.
@@ -278,6 +283,7 @@ test "Counting boundary: unfiled-tax-returns-period (weekend)" cite "W.PA.LBR 20
   given PetitionFiled() on 2026-07-01
   expect deadline(unfiled-tax-returns-period) == 2026-08-31
 }
+
 /// W.PA.LBR 3002-1(a): if an amendment adding creditors is filed after the
 /// claims bar date has expired, or within thirty days before it expires, the
 /// affected creditors file proofs of claim within thirty days of the date
@@ -289,6 +295,7 @@ test "Counting boundary: added-creditor-claim-period (weekend)" cite "W.PA.LBR 3
   given AmendmentNoticeSent() on 2026-07-02
   expect deadline(added-creditor-claim-period) == 2026-08-03
 }
+
 /// W.PA.LBR 3002-3(e): all objections to an amended proof of claim in a
 /// chapter 13 case are filed and served within ninety days after it is filed
 /// and served.
@@ -303,6 +310,7 @@ test "Counting boundary: funds-on-reserve-notice-period (weekend)" cite "W.PA.LB
   given FundsReserved() on 2026-07-04
   expect deadline(funds-on-reserve-notice-period) == 2026-07-27
 }
+
 /// W.PA.LBR 3002-4(b): within twenty-one days after a Notice of Mortgage
 /// Payment Change is filed, the chapter 13 debtor files an amended plan, a
 /// declaration that the existing plan suffices, or an objection to the
@@ -314,6 +322,7 @@ test "Counting boundary: payment-change-response-period (weekend)" cite "W.PA.LB
   given PaymentChangeNoticeFiled() on 2026-07-04
   expect deadline(payment-change-response-period) == 2026-07-27
 }
+
 /// W.PA.LBR 3002-5(b): within twenty-one days after a Notice of Postpetition
 /// Fees, Expenses, and Charges is filed, the debtor files an amended plan, a
 /// declaration that the existing plan suffices, or an objection.
@@ -324,6 +333,7 @@ test "Counting boundary: postpetition-fees-response-period (weekend)" cite "W.PA
   given PostpetitionFeesNoticeFiled() on 2026-07-04
   expect deadline(postpetition-fees-response-period) == 2026-07-27
 }
+
 /// W.PA.LBR 3003-1: the deadline for creditors other than governmental units
 /// to file proofs of claim in chapter 11 cases is ninety days after the first
 /// date set for the meeting of creditors.
@@ -338,6 +348,7 @@ test "Counting boundary: unclaimed-funds-objection-period (weekend)" cite "W.PA.
   given UnclaimedFundsApplicationServed() on 2026-07-04
   expect deadline(unclaimed-funds-objection-period) == 2026-07-27
 }
+
 /// W.PA.LBR 3015-3(a): objections to the chapter 13 plan are filed at least 7
 /// days before the first date set for the meeting of creditors in the 341
 /// Notice.
@@ -348,6 +359,7 @@ test "Counting boundary: chapter13-plan-objection-period (weekend)" cite "W.PA.L
   given FirstMeetingDate() on 2026-07-04
   expect deadline(chapter13-plan-objection-period) == 2026-06-26
 }
+
 /// W.PA.LBR 3015-3(c): objections to holding the Initial Confirmation Hearing
 /// immediately after the meeting of creditors are filed at least 14 days
 /// before the first date set for the meeting.
@@ -358,6 +370,7 @@ test "Counting boundary: hearing-objection-period (holiday)" cite "W.PA.LBR 3015
   given FirstMeetingDate() on 2026-07-03
   expect deadline(hearing-objection-period) == 2026-06-18
 }
+
 /// W.PA.LBR 3018-1(e): an amended summary of ballots, accounting for ballots
 /// cast with court approval after the voting deadline, is filed within two
 /// days after the plan hearing.
@@ -368,6 +381,7 @@ test "Counting boundary: amended-ballot-summary-period (holiday)" cite "W.PA.LBR
   given PlanHearing() on 2026-07-01
   expect deadline(amended-ballot-summary-period) == 2026-07-06
 }
+
 /// W.PA.LBR 3021-1(b): within ninety days of confirmation of a chapter 9 or
 /// 11 plan, and each ninety days thereafter until the case is closed, the
 /// disbursing agent files an accounting of sums received, disbursed and
@@ -395,6 +409,7 @@ test "Counting boundary: rent-deposit-period (weekend)" cite "W.PA.LBR 4001-3(a)
   given PetitionFiled() on 2026-07-01
   expect deadline(rent-deposit-period) == 2026-07-06
 }
+
 /// W.PA.LBR 4002-2: all chapter 13 debtors submit to the trustee proof of
 /// insurance on their motor vehicles, motor homes and improved real estate
 /// within 14 days after their initial plan is filed.
@@ -417,6 +432,7 @@ test "Counting boundary: ecf-fee-payment-period (weekend)" cite "W.PA.LBR 5005-1
   given FeesIncurred() on 2026-07-01
   expect deadline(ecf-fee-payment-period) == 2026-07-06
 }
+
 /// W.PA.LBR 5005-20(b): the Clerk's Office destroys a document filed under
 /// seal unless the submitting party retrieves it within one year after the
 /// case or proceeding closes.
@@ -435,6 +451,7 @@ test "Counting boundary: custodian-account-period (weekend)" cite "W.PA.LBR 6002
   given CustodianLearnedOfCase() on 2026-07-02
   expect deadline(custodian-account-period) == 2026-08-03
 }
+
 /// W.PA.LBR 6004-1(c)(2): the sale advertisement is published no more than
 /// thirty nor less than fourteen calendar days before the scheduled date of
 /// sale.
@@ -445,6 +462,7 @@ test "Counting boundary: sale-publication-period (holiday)" cite "W.PA.LBR 6004-
   given SaleDate() on 2026-07-03
   expect deadline(sale-publication-period) == 2026-06-18
 }
+
 /// W.PA.LBR 6004-1(c)(4): an itemized Report of Sale is filed within seven
 /// calendar days of the date of consummation of the sale.
 deadline report-of-sale-period: 7.days after SaleConsummated() counted_by frbp9006-pennsylvania cite "W.PA.LBR 6004-1(c)"
@@ -454,6 +472,7 @@ test "Counting boundary: report-of-sale-period (weekend)" cite "W.PA.LBR 6004-1(
   given SaleConsummated() on 2026-07-04
   expect deadline(report-of-sale-period) == 2026-07-13
 }
+
 /// W.PA.LBR 7008-1(d): unless the court directs otherwise, the response to a
 /// motion in an adversary proceeding is filed and served within fourteen days
 /// after service (plus three days under FRBP 9006(f) when service is by
@@ -469,6 +488,7 @@ test "Counting boundary: adversary-brief-period (weekend)" cite "W.PA.LBR 7008-1
   given AdversaryMotionHearing() on 2026-07-04
   expect deadline(adversary-brief-period) == 2026-06-26
 }
+
 /// W.PA.LBR 7008-1(f): a motion for continuance of a trial date is considered
 /// only if filed and served at least seven calendar days before the scheduled
 /// trial.
@@ -479,6 +499,7 @@ test "Counting boundary: trial-continuance-motion-period (weekend)" cite "W.PA.L
   given Trial() on 2026-07-04
   expect deadline(trial-continuance-motion-period) == 2026-06-26
 }
+
 /// W.PA.LBR 7008-2(b): a party objecting to proposed findings and conclusions
 /// arranges the transcription and files a Notice of Transcript Order within
 /// fourteen days of the date the objection is filed.
@@ -496,6 +517,7 @@ test "Counting boundary: transcript-after-order-period (weekend)" cite "W.PA.LBR
   given TranscriptOrderEntered() on 2026-07-04
   expect deadline(transcript-after-order-period) == 2026-07-13
 }
+
 /// W.PA.LBR 7014-1: the third-party plaintiff delivers to a newly joined
 /// third-party defendant the docket sheets and documents of record within
 /// fourteen days after its appearance or responsive pleading.
@@ -510,6 +532,7 @@ test "Counting boundary: ediscovery-exchange-period (weekend)" cite "W.PA.LBR 70
   given PretrialConference() on 2026-07-04
   expect deadline(ediscovery-exchange-period) == 2026-06-26
 }
+
 /// W.PA.LBR 7026-1(g): within the first thirty days of discovery, each party
 /// outlines the steps it will take to segregate and preserve all relevant
 /// electronic documents.
@@ -520,6 +543,7 @@ test "Counting boundary: preservation-outline-period (weekend)" cite "W.PA.LBR 7
   given DiscoveryCommenced() on 2026-07-02
   expect deadline(preservation-outline-period) == 2026-08-03
 }
+
 /// W.PA.LBR 7026-1(h): within seven days of identifying the relevant
 /// custodians, the retention coordinators implement the procedures and
 /// counsel file a statement of compliance.
@@ -530,6 +554,7 @@ test "Counting boundary: retention-compliance-period (weekend)" cite "W.PA.LBR 7
   given CustodiansIdentified() on 2026-07-04
   expect deadline(retention-compliance-period) == 2026-07-13
 }
+
 /// W.PA.LBR 7037-1(e): compliance with discovery orders is effected within
 /// fourteen days of the entry of the order.
 deadline discovery-order-compliance-period: 14.days after DiscoveryOrderEntered() counted_by frbp9006-pennsylvania cite "W.PA.LBR 7037-1(e)"
@@ -543,6 +568,7 @@ test "Counting boundary: summary-judgment-opposition-period (weekend)" cite "W.P
   given SummaryJudgmentServed() on 2026-07-02
   expect deadline(summary-judgment-opposition-period) == 2026-08-03
 }
+
 /// W.PA.LBR 7056-1(c): within 14 days of service of the opposition, the
 /// moving party replies in the same manner.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frbp9006-pennsylvania cite "W.PA.LBR 7056-1(c)"
@@ -556,6 +582,7 @@ test "Counting boundary: appellant-transcript-request-period (holiday)" cite "W.
   given RecordDesignationFiled() on 2026-07-01
   expect deadline(appellant-transcript-request-period) == 2026-07-06
 }
+
 /// W.PA.LBR 8006-1(c): an appellee files any request for a transcript not
 /// later than two days after filing its designation of additional items.
 deadline appellee-transcript-request-period: 2.days after AppelleeDesignationFiled() counted_by frbp9006-pennsylvania cite "W.PA.LBR 8006-1(c)"
@@ -565,6 +592,7 @@ test "Counting boundary: appellee-transcript-request-period (holiday)" cite "W.P
   given AppelleeDesignationFiled() on 2026-07-01
   expect deadline(appellee-transcript-request-period) == 2026-07-06
 }
+
 /// W.PA.LBR 8006-1(d): an appellee as cross-appellant files any request for a
 /// transcript not later than two days after filing its statement of issues
 /// and designation on the cross-appeal.
@@ -575,6 +603,7 @@ test "Counting boundary: cross-appellant-transcript-request-period (holiday)" ci
   given CrossAppealIssuesFiled() on 2026-07-01
   expect deadline(cross-appellant-transcript-request-period) == 2026-07-06
 }
+
 /// W.PA.LBR 8006-1(e): a cross-appellee files any request for a transcript no
 /// later than two days after filing its designation of additional items on
 /// the cross-appeal.
@@ -585,6 +614,7 @@ test "Counting boundary: cross-appellee-transcript-request-period (holiday)" cit
   given CrossAppelleeDesignationFiled() on 2026-07-01
   expect deadline(cross-appellee-transcript-request-period) == 2026-07-06
 }
+
 /// W.PA.LBR 9013-7(c): within three days after the response deadline passes
 /// (or as soon as possible if the hearing is less than 48 hours after it),
 /// the party seeking relief files a CNO (Local Form 25) if no objection was
@@ -596,6 +626,7 @@ test "Counting boundary: certificate-of-no-objection-period (weekend)" cite "W.P
   given ResponseDeadlinePassed() on 2026-07-01
   expect deadline(certificate-of-no-objection-period) == 2026-07-06
 }
+
 /// W.PA.LBR 9014-1 (and 9006-1(b)): every responsive pleading in a contested
 /// matter is filed and served within fourteen days from the date the motion
 /// is filed (and served), with three more days for a motion served by mail.
@@ -613,6 +644,7 @@ test "Counting boundary: removed-jury-demand-period (weekend)" cite "W.PA.LBR 90
   given RemovalNoticeFiled() on 2026-07-02
   expect deadline(removed-jury-demand-period) == 2026-08-03
 }
+
 /// W.PA.LBR 9015-1(c): within thirty days of filing the demand, the demanding
 /// party files and serves the parties' consents to a jury trial and final
 /// orders in the bankruptcy court, or a motion.
@@ -623,6 +655,7 @@ test "Counting boundary: jury-consents-period (weekend)" cite "W.PA.LBR 9015-1(c
   given JuryDemandFiled() on 2026-07-02
   expect deadline(jury-consents-period) == 2026-08-03
 }
+
 /// W.PA.LBR 9016-1(g): a subpoena the clerk signs for a self-represented
 /// party but not served is returned to the court within fourteen days.
 deadline unserved-subpoena-return-period: 14.days after SubpoenaIssued() counted_by frbp9006-pennsylvania cite "W.PA.LBR 9016-1(g)"
@@ -636,6 +669,7 @@ test "Counting boundary: mediation-submission-period (weekend)" cite "W.PA.LBR 9
   given MediationConference() on 2026-07-04
   expect deadline(mediation-submission-period) == 2026-06-26
 }
+
 /// W.PA.LBR 9019-6(b): if a settlement is reached at a mediation, the party
 /// the mediator designates submits a fully executed stipulation and proposed
 /// order within seven calendar days after the end of the mediation.
@@ -646,6 +680,7 @@ test "Counting boundary: mediated-settlement-stipulation-period (weekend)" cite 
   given MediationEnded() on 2026-07-04
   expect deadline(mediated-settlement-stipulation-period) == 2026-07-13
 }
+
 /// W.PA.LBR 9020-2(a): a debtor may move for the LMP until thirty days after
 /// the first date originally scheduled for the first meeting of creditors (or
 /// at any time with the lender's consent).
@@ -656,6 +691,7 @@ test "Counting boundary: loss-mitigation-motion-period (weekend)" cite "W.PA.LBR
   given FirstMeetingDate() on 2026-07-02
   expect deadline(loss-mitigation-motion-period) == 2026-08-03
 }
+
 /// W.PA.LBR 9020-2(d): the deadline to object to a Motion for Loss Mitigation
 /// is fourteen days from its service; with none, the court may enter a Loss
 /// Mitigation Order.
@@ -678,6 +714,7 @@ test "Counting boundary: lmp-status-report-period (weekend)" cite "W.PA.LBR 9020
   given LossMitigationOrderEntered() on 2026-07-01
   expect deadline(lmp-status-report-period) == 2026-08-31
 }
+
 /// W.PA.LBR 9020-4(f): within seven days after the LMP Period concludes, the
 /// debtor files and serves an LMP Final Report, even if the case was later
 /// dismissed or converted.
@@ -688,6 +725,7 @@ test "Counting boundary: lmp-final-report-period (weekend)" cite "W.PA.LBR 9020-
   given LmpPeriodConcluded() on 2026-07-04
   expect deadline(lmp-final-report-period) == 2026-07-13
 }
+
 /// W.PA.LBR 9020-4(g): the debtor files a proposed order approving an interim
 /// trial loan modification not less than fourteen days before the first
 /// modification payment is due (in chapter 13, before the trustee's preceding
@@ -699,6 +737,7 @@ test "Counting boundary: trial-modification-order-period (holiday)" cite "W.PA.L
   given TrialModificationPaymentDue() on 2026-07-03
   expect deadline(trial-modification-order-period) == 2026-06-18
 }
+
 /// W.PA.LBR 9020-4(h): the debtor's counsel uploads to the portal any order
 /// relating to the LMP within seven days of its entry.
 deadline lmp-order-upload-period: 7.days after LmpOrderEntered() counted_by frbp9006-pennsylvania cite "W.PA.LBR 9020-4(h)"
@@ -708,6 +747,7 @@ test "Counting boundary: lmp-order-upload-period (weekend)" cite "W.PA.LBR 9020-
   given LmpOrderEntered() on 2026-07-04
   expect deadline(lmp-order-upload-period) == 2026-07-13
 }
+
 /// W.PA.LBR 9020-6(d)(1)-(2): in a chapter 13 case, a modified plan, and
 /// amended Schedules I and J if expenses change materially, are filed within
 /// fourteen days of the order approving the loan modification.
@@ -726,6 +766,7 @@ test "Counting boundary: transcript-redaction-notice-period (weekend)" cite "W.P
   given TranscriptFiled() on 2026-07-04
   expect deadline(transcript-redaction-notice-period) == 2026-07-13
 }
+
 /// W.PA.LBR 9037-1(b)(1)(B): the party requesting redaction serves Local
 /// Bankruptcy Form 36 (Transcript Redaction Request) within twenty-one days
 /// after the original transcript was filed.
@@ -736,6 +777,7 @@ test "Counting boundary: transcript-redaction-request-period (weekend)" cite "W.
   given TranscriptFiled() on 2026-07-04
   expect deadline(transcript-redaction-request-period) == 2026-07-27
 }
+
 /// W.PA.LBR 9070-1: exhibits, models and diagrams introduced at a trial or
 /// hearing are removed within fourteen calendar days after the later of the
 /// final judgment, order or other final disposition, or the Clerk destroys

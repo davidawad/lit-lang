@@ -5,9 +5,7 @@ start complaint-filed
 state complaint-filed: "Complaint filed" by plaintiff cite "Unif. Super. Ct. R. 36.10"
 {
   note "A complaint or petition is filed only when accompanied by the filing fee, the fee for sheriff service or a pauper's affidavit, a civil case initiation form and any forms required by law or rule; the filer furnishes the service copies (Rule 36.10). On the filing of the complaint the clerk forthwith issues a summons and delivers it for service (O.C.G.A. § 9-11-4(a)); the summons states the time within which the defendant must appear and file defensive pleadings and warns of judgment by default (O.C.G.A. § 9-11-4(b)). Periods in this package are stated, not counted: the Civil Practice Act computes them under O.C.G.A. § 1-3-1(d)(3) (O.C.G.A. § 9-11-6(a)), which is not vendored. Three days are added to a period running from service of a paper other than process served by mail or e-mail (O.C.G.A. § 9-11-6(e))."
-  edge-complaint-filed-service "Summons issued and served" -> service {
-    authority cite "O.C.G.A. § 9-11-4"
-  }
+  "Summons issued and served" -> service { authority cite "O.C.G.A. § 9-11-4" }
 }
 
 state service: "Service and return of service" by court cite "Unif. Super. Ct. R. 36.11"
@@ -49,9 +47,7 @@ terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] 
 state case-management: "Early planning conference and discovery plan" by court cite "Unif. Super. Ct. R. 5.4"
 {
   note "The parties may agree to, the judge may order, or a party may petition for an early planning discovery conference (Rule 5.4(1)). After it the parties may submit an agreed discovery plan within 14 days of the meeting, or, without agreement, a joint report within 14 days stating each party's position (Rule 5.4(2), (3)). The court may set a pretrial conference sua sponte or on motion (Rule 7.1)."
-  edge-case-management-discovery "Discovery begins" -> discovery {
-    authority cite "Unif. Super. Ct. R. 5.1"
-  }
+  "Discovery begins" -> discovery { authority cite "Unif. Super. Ct. R. 5.1" }
 }
 
 state discovery: "Discovery" by plaintiff cite "Unif. Super. Ct. R. 5.1"
@@ -60,9 +56,7 @@ state discovery: "Discovery" by plaintiff cite "Unif. Super. Ct. R. 5.1"
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
     authority cite "Unif. Super. Ct. R. 6.5"
   }
-  edge-discovery-pretrial "No summary judgment motion" -> pretrial {
-    authority cite "Unif. Super. Ct. R. 7.1"
-  }
+  "No summary judgment motion" -> pretrial { authority cite "Unif. Super. Ct. R. 7.1" }
   edge-discovery-settle "Settled or dismissed" -> settled {
     authority cite "Unif. Super. Ct. R. 4.10"
   }
@@ -85,9 +79,7 @@ terminal judgment-for-movant: "Judgment for the movant" outcome [win, judgment] 
 state pretrial: "Pretrial conference and order" by court cite "Unif. Super. Ct. R. 7.1"
 {
   note "When a pretrial conference is ordered, it is attended by the attorneys who will try the action, and each party presents a written proposed pretrial order; failure to appear without legal excuse or to present one authorizes removal from the trial calendar, entry of a pretrial order or another sanction except dismissal with prejudice (Rules 7.1, 7.2)."
-  edge-pretrial-trial "Placed on the ready list" -> trial {
-    authority cite "Unif. Super. Ct. R. 8.2"
-  }
+  "Placed on the ready list" -> trial { authority cite "Unif. Super. Ct. R. 8.2" }
   edge-pretrial-settle "Settled or dismissed" -> settled {
     authority cite "Unif. Super. Ct. R. 4.10"
   }

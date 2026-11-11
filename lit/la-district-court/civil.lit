@@ -11,9 +11,7 @@ state petition-filed: "Petition filed" by plaintiff cite "La. C.C.P. art. 421"
   edge-petition-filed-not-requested "Service not requested in time" -> service-dismissal {
     authority cite "La. C.C.P. art. 1201"
   }
-  edge-petition-filed-abandoned "No step taken for three years" -> abandoned {
-    authority cite "La. C.C.P. art. 561"
-  }
+  "No step taken for three years" -> abandoned { authority cite "La. C.C.P. art. 561" }
 }
 
 decision answer-due: "Answer, exception or default" by court cite "La. C.C.P. art. 1001"
@@ -64,15 +62,13 @@ state default-sought: "Default judgment sought" by plaintiff cite "La. C.C.P. ar
   edge-default-sought-judgment "Prima facie case proved" -> default-judgment {
     authority cite "La. C.C.P. art. 1702"
   }
-  edge-default-sought-answered "Answer filed before judgment" -> answered {
-    authority cite "La. C.C.P. art. 1001"
-  }
+  "Answer filed before judgment" -> answered { authority cite "La. C.C.P. art. 1001" }
 }
 
 state answered: "Answer filed" by plaintiff cite "La. C.C.P. art. 1005"
 {
   note "Affirmative defenses are set forth in the answer; a mistaken designation of an affirmative defense as a peremptory exception, or the reverse, may be treated as properly designated (La. C.C.P. art. 1005)."
-  edge-answered-discovery "Discovery" -> discovery { authority cite "La. C.C.P. art. 1421" }
+  "Discovery" -> discovery { authority cite "La. C.C.P. art. 1421" }
 }
 
 state discovery: "Discovery" by plaintiff cite "La. C.C.P. art. 1421"
@@ -90,9 +86,7 @@ state discovery: "Discovery" by plaintiff cite "La. C.C.P. art. 1421"
   edge-discovery-voluntary "Voluntary dismissal" -> voluntary-dismissal {
     authority cite "La. C.C.P. art. 1671"
   }
-  edge-discovery-abandoned "No step taken for three years" -> abandoned {
-    authority cite "La. C.C.P. art. 561"
-  }
+  "No step taken for three years" -> abandoned { authority cite "La. C.C.P. art. 561" }
 }
 
 decision discovery-ruling: "Sanctions for disobeying a discovery order" by court cite "La. C.C.P. art. 1471"

@@ -56,17 +56,13 @@ decision review-ruling: "Petition granted or refused" by court cite "Tex. R. App
 state merits-briefing: "Briefs on the merits" by prosecution cite "Tex. R. App. P. 70.1"
 {
   note "If review is granted, the petitioner (or, without a petition, the party who lost in the court of appeals) files a brief within 30 days after review is granted, and the opposing party files a brief within 30 days after the petitioner's brief is filed (Tex. R. App. P. 70.1, 70.2). Briefs comply with Rules 9 and 38 but need not contain the appendix (Tex. R. App. P. 70.3); a brief and response may run 15,000 words or 50 pages and a reply brief 7,500 words or 25 pages (Tex. R. App. P. 9.4(i)(2)(B), (C)). The Court may direct or permit other briefs (Tex. R. App. P. 70.4)."
-  edge-merits-briefing-submission "Briefs filed" -> submission {
-    authority cite "Tex. R. App. P. 69.2"
-  }
+  "Briefs filed" -> submission { authority cite "Tex. R. App. P. 69.2" }
 }
 
 state direct-appeal: "Direct appeal: record and briefs" by accused cite "Tex. R. App. P. 71.2"
 {
   note "The appellate record is prepared and filed under Rules 31, 32, 34, 35 and 37, but in the Court of Criminal Appeals (Tex. R. App. P. 71.2). Briefs follow Rules 9 and 38, need no appendix, are filed in the Court of Criminal Appeals and include a statement on oral argument (Tex. R. App. P. 71.3); additional briefs need the Court's leave (Tex. R. App. P. 71.4). In a death-penalty direct appeal a brief and response may run 37,500 words or 125 pages (Tex. R. App. P. 9.4(i)(2)(A)). An article 11.071 habeas application in a death-penalty case is filed in the convicting court not later than the 180th day after the convicting court appoints counsel or the 45th day after the state's original brief is filed on direct appeal, whichever is later (Tex. Code Crim. Proc. art. 11.071)."
-  edge-direct-appeal-submission "Briefs filed" -> submission {
-    authority cite "Tex. R. App. P. 71.3"
-  }
+  "Briefs filed" -> submission { authority cite "Tex. R. App. P. 71.3" }
 }
 
 state habeas-application: "Article 11.07 application in the convicting court" by prosecution cite "Tex. R. App. P. 73.1"
@@ -114,9 +110,7 @@ decision judgment: "Judgment" by court cite "Tex. R. App. P. 78.1"
 decision after-judgment: "Rehearing or mandate" by prosecution cite "Tex. R. App. P. 79.1"
 {
   note "A motion for rehearing may be filed with the Court's clerk within 15 days from the date of the judgment or order; in exceptional cases the Court may shorten that time or deny the right to file (Tex. R. App. P. 79.1). It must briefly and distinctly state its grounds (Tex. R. App. P. 79.2(a)), may run 4,500 words or 15 pages (Tex. R. App. P. 9.4(i)(2)(E)), and may be amended before the filing period expires (Tex. R. App. P. 79.3). The Court may extend the time on a motion complying with Rule 10.5(b) filed within the time for filing the motion for rehearing (Tex. R. App. P. 79.6). The clerk issues the mandate ten days after the time has expired for filing a motion to extend time to file a motion for rehearing, if none is pending (Tex. R. App. P. 18.1(b)). A party may move to stay the mandate pending a petition for certiorari to the Supreme Court of the United States; in a criminal case the stay lasts no more than 90 days (Tex. R. App. P. 18.2)."
-  edge-after-judgment-rehearing "Motion for rehearing" -> rehearing {
-    authority cite "Tex. R. App. P. 79.1"
-  }
+  "Motion for rehearing" -> rehearing { authority cite "Tex. R. App. P. 79.1" }
   edge-after-judgment-certiorari "Mandate stayed; certiorari sought" -> further-review {
     authority cite "Tex. R. App. P. 18.2"
   }

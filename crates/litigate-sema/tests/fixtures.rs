@@ -119,7 +119,10 @@ fn anonymous_and_omitted_edge_ids_lower_differently() {
     use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
 
     let source = include_str!("../../../lit/examples/rule12.lit")
-        .replace("barred \"Barred\" -> dismissed", "_ \"Barred\" -> dismissed")
+        .replace(
+            "barred \"Barred\" -> dismissed",
+            "_ \"Barred\" -> dismissed",
+        )
         .replace("not-barred \"Timely\" -> respond", "\"Timely\" -> respond");
     let package = LoadedPackage {
         texts: std::collections::BTreeMap::default(),

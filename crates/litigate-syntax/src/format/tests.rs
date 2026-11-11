@@ -33,7 +33,8 @@ fn derived_edge_ids_are_omitted_but_custom_ids_remain() {
 
 #[test]
 fn anonymous_marker_stays_distinct_from_an_omitted_edge_id() {
-    let out = fmt("module m\nstate from: \"From\" {\n  _ \"Anonymous\" -> to\n  \"Derived\" -> end\n}\n");
+    let out =
+        fmt("module m\nstate from: \"From\" {\n  _ \"Anonymous\" -> to\n  \"Derived\" -> end\n}\n");
     assert_eq!(
         out,
         "module m\n\nstate from: \"From\" { _ \"Anonymous\" -> to, \"Derived\" -> end }\n"
@@ -53,7 +54,8 @@ fn parallel_derived_edge_ids_number_every_edge_from_one() {
 
 #[test]
 fn parallel_edge_id_elision_is_stable_and_formatting_is_idempotent() {
-    let source = "module m\nstate from: \"From\" {\n  edge-from-to-1 \"A\" -> to\n  \"B\" -> to\n}\n";
+    let source =
+        "module m\nstate from: \"From\" {\n  edge-from-to-1 \"A\" -> to\n  \"B\" -> to\n}\n";
     let out = fmt(source);
     assert_eq!(
         out,

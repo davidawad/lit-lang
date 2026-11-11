@@ -114,6 +114,48 @@ fn omitted_edge_ids_lower_stably_and_disambiguate_parallel_targets() {
 }
 
 #[test]
+fn anonymous_and_omitted_edge_ids_lower_differently() {
+    use litigate_sema::hir::Declaration;
+    use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
+
+    let source = include_str!("../../../lit/examples/rule12.lit")
+        .replace("barred \"Barred\" -> dismissed", "_ \"Barred\" -> dismissed")
+        .replace("not-barred \"Timely\" -> respond", "\"Timely\" -> respond");
+    let package = LoadedPackage {
+        texts: std::collections::BTreeMap::default(),
+        root: "lit/examples".to_owned(),
+        manifest: include_str!("../../../lit/examples/Lit.toml").to_owned(),
+        lock: None,
+        files: vec![LoadedFile {
+            relative: "rule12.lit".to_owned(),
+            text: source,
+        }],
+    };
+    let mut db = litigate_sema::LitDatabase::default();
+    let ws = litigate_sema::db::inputs::create_workspace(&mut db, &[package]);
+    let checks = litigate_sema::check_workspace(&db, ws);
+    let node = checks[0]
+        .package
+        .as_ref()
+        .unwrap()
+        .modules
+        .iter()
+        .flat_map(|module| &module.declarations)
+        .find_map(|declaration| match declaration {
+            Declaration::Node(node) if node.meta.id == "time-barred" => Some(node),
+            _ => None,
+        })
+        .unwrap();
+    assert_eq!(
+        node.edges
+            .iter()
+            .map(|edge| edge.id.as_deref())
+            .collect::<Vec<_>>(),
+        [None, Some("edge-time-barred-respond")]
+    );
+}
+
+#[test]
 fn derived_edge_id_collision_names_both_edges() {
     use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
 

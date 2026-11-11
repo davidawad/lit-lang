@@ -199,15 +199,37 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
                             if l.iter().any(|x| matches!(&x.kind, ExprKind::Ref(r) if r.is_simple() && r.head.text == "fact")))
                     })
             });
+            let mut targets = BTreeMap::<String, usize>::new();
+            for edge in &n.edges {
+                *targets.entry(edge.to.last().text.clone()).or_default() += 1;
+            }
+            let mut parallel = BTreeMap::<String, usize>::new();
+            let edges = n
+                .edges
+                .iter()
+                .filter_map(|edge| {
+                    if let Some(name) = &edge.name {
+                        return Some(name.text.clone());
+                    }
+                    if edge.anonymous {
+                        return None;
+                    }
+                    let target = edge.to.last().text.clone();
+                    let ordinal = parallel.entry(target.clone()).or_default();
+                    *ordinal += 1;
+                    let suffix = if targets[&target] > 1 {
+                        format!("-{ordinal}")
+                    } else {
+                        String::new()
+                    };
+                    Some(format!("edge-{}-{target}{suffix}", n.name.text))
+                })
+                .collect();
             let kind = ValueKind::Node {
                 chance: n.keyword.text == "chance",
                 terminal: n.keyword.text == "terminal",
                 fact,
-                edges: n
-                    .edges
-                    .iter()
-                    .filter_map(|e| e.name.as_ref().map(|n| n.text.clone()))
-                    .collect(),
+                edges,
             };
             (n.name.text.as_str(), kind)
         }

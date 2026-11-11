@@ -179,8 +179,10 @@ pub struct Field {
 /// Edge or link declaration.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EdgeItem {
-    /// Id; `None` for `_`.
+    /// Id; `None` for an omitted id and `_`.
     pub name: Option<Name>,
+    /// Whether the source used `_` to request an anonymous edge.
+    pub anonymous: bool,
     /// Range of the id or `_`.
     pub name_range: TextRange,
     /// Label.
@@ -587,6 +589,7 @@ impl Ranges for EdgeItem {
     fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
         let Self {
             name,
+            anonymous: _,
             name_range,
             label,
             from,

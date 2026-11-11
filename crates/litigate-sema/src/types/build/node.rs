@@ -180,7 +180,7 @@ impl Cx<'_, '_> {
         for original in &n.edges {
             let target = original.to.last().text.clone();
             let mut e = original.clone();
-            if e.name.is_none() {
+            if e.name.is_none() && !e.anonymous {
                 let ordinal = parallel.entry(target.clone()).or_default();
                 *ordinal += 1;
                 let suffix = if targets[&target] > 1 {

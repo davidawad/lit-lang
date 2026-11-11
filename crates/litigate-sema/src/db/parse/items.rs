@@ -224,7 +224,7 @@ impl Lower {
     fn edge(&mut self, node: &SyntaxNode, link: bool) -> Option<EdgeItem> {
         let first = elements(node)
             .filter_map(SyntaxElement::into_token)
-            .find(|t| t.kind() == K::Ident);
+            .find(|t| matches!(t.kind(), K::Ident | K::Underscore));
         let mut refs = nodes_of(node, K::Ref).map(|r| path_of(&r));
         let from = if link { Some(refs.next()?) } else { None };
         let (Some(label), Some(to)) = (label(node), refs.next()) else {
@@ -238,6 +238,9 @@ impl Lower {
                 .as_ref()
                 .filter(|token| token.kind() == K::Ident)
                 .map(name),
+            anonymous: first
+                .as_ref()
+                .is_some_and(|token| token.kind() == K::Underscore),
             name_range,
             label,
             from,

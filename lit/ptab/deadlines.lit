@@ -50,6 +50,10 @@ import ptab.{
 rule duty pgr-filing-deadline cite "35 U.S.C. § 321(c)"
 {
   deadline pgr-filing-period: 9.months after PatentGranted() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2011-09-16 cite "35 U.S.C. § 321(c)"
+  {
+    // The statute sets the outer filing date and contains no extension grant.
+    extend { never cite "35 U.S.C. § 321(c)" }
+  }
 }
 
 test "PGR window: 9 months from a March 4 grant end on December 4" cite "35 U.S.C. § 321(c)"
@@ -77,6 +81,10 @@ test "PGR window: from May 31, February has no 31st; its last day is a Saturday"
 rule duty ipr-time-bar-deadline cite "35 U.S.C. § 315(b)"
 {
   deadline ipr-time-bar: 1.years after ComplaintServed() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2011-09-16 cite "35 U.S.C. § 315(b)"
+  {
+    // The statutory one-year bar has no extension grant; joinder is separately excepted.
+    extend { never cite "35 U.S.C. § 315(b)" }
+  }
 }
 
 test "315(b) bar: one year from service" cite "35 U.S.C. § 315(b)"

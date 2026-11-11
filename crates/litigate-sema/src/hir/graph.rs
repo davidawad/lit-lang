@@ -31,6 +31,9 @@ pub struct Node {
     /// Where the node's numbers (payoffs, attrs) come from (`basis`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub basis: Option<Basis>,
+    /// Provenance attached specifically to the terminal `payoff` number.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub payoff_provenance: Option<NumberProvenance>,
     /// Outgoing edges in source order.
     pub edges: Vec<Edge>,
     /// Ids this node had in earlier releases (`formerly`, SPEC §4.3): the
@@ -99,6 +102,38 @@ pub enum Basis {
     Estimate,
 }
 
+/// Provenance of one authored scalar number.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NumberProvenance {
+    /// Source class, absent when only a vintage is authored.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub basis: Option<NumberBasis>,
+    /// Date associated with an estimate or placeholder.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vintage: Option<String>,
+}
+
+/// Typed basis of an authored number.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case")]
+pub enum NumberBasis {
+    /// `calibrated(set-id)`.
+    Calibrated {
+        /// Calibration set id.
+        set: String,
+    },
+    /// `sourced("cite")`.
+    Sourced {
+        /// Citation text.
+        cite: String,
+    },
+    /// `estimate`.
+    Estimate,
+    /// `placeholder`.
+    Placeholder,
+}
+
 /// Display valence of a node or edge.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -128,16 +163,28 @@ pub struct Edge {
     pub authority: Option<String>,
     /// Exact probability, if authored.
     pub probability: Option<Authored<Rational>>,
+    /// Provenance for the probability number.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub probability_provenance: Option<NumberProvenance>,
     /// Attorney hours, exact.
     pub hours: Option<Rational>,
+    /// Provenance for attorney hours.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hours_provenance: Option<NumberProvenance>,
     /// Out-of-pocket cost.
     pub cost: Option<Authored<Money>>,
+    /// Provenance for out-of-pocket cost.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cost_provenance: Option<NumberProvenance>,
     /// Event pattern that takes this edge during case replay (`event`).
     pub event: Option<super::Expr>,
     /// Deadline window.
     pub deadline: Option<EdgeDeadline>,
     /// Expected elapsed calendar days (triangular).
     pub duration: Option<TriangularDuration>,
+    /// Provenance for the duration estimate.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_provenance: Option<NumberProvenance>,
     /// Display valence.
     pub valence: Option<Valence>,
     /// Filed example URL.

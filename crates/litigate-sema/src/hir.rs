@@ -30,7 +30,7 @@ pub use expr::{BinaryOp, Expr, ExprKind, Pattern, UnaryOp};
 pub use filing::{CertificateReq, Counts, Ecf, Exclusions, LengthBound, Limit, Measure, Verdict};
 pub use graph::{
     Basis, DeadlineWindow, Edge, EdgeDeadline, EdgePatch, GuardOp, GuardOpKind, Instance, Link,
-    Node, NodeKind, TriangularDuration, Valence,
+    Node, NodeKind, NumberBasis, NumberProvenance, TriangularDuration, Valence,
 };
 pub use kind::{Cell, Effect, Family, Holding, Instrument, Kind, Place, Row, Scope, StateRule};
 pub use logic::{

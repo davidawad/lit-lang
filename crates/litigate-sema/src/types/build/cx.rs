@@ -1,12 +1,69 @@
 //! Per-module building context: the expression checker plus field helpers
 //! and declaration metadata (labels, cites, effective intervals, relations).
-use crate::db::parse::tree::{Atom, Expr, ExprKind, Field, Item, Name, RefPath};
+use crate::db::parse::tree::{
+    Atom, Expr, ExprKind, Field, Item, Name, NumericBasis as ItemBasis, RefPath,
+};
 use crate::db::span::{Report, TextRange};
 use crate::hir::{Commenced, Interval, Manifest, Metadata, Relation};
 use crate::resolve::sig::{clause, clauses_of, ValueKind};
 use crate::types::expr::Checker;
 use litigate_base::{Applicability, DiagnosticCode as C};
 use std::collections::BTreeMap;
+
+pub(super) fn numeric_provenance(f: Option<&&Field>) -> Option<crate::hir::NumberProvenance> {
+    let provenance = f?.values.iter().find_map(|(atom, _)| match atom {
+        Atom::NumericProvenance(p) => Some(p),
+        _ => None,
+    })?;
+    let basis = provenance.basis.as_ref().map(|basis| match basis {
+        ItemBasis::Calibrated(set) => crate::hir::NumberBasis::Calibrated {
+            set: set.text.clone(),
+        },
+        ItemBasis::Sourced(cite) => crate::hir::NumberBasis::Sourced { cite: cite.clone() },
+        ItemBasis::Estimate => crate::hir::NumberBasis::Estimate,
+        ItemBasis::Placeholder => crate::hir::NumberBasis::Placeholder,
+    });
+    Some(crate::hir::NumberProvenance {
+        basis,
+        vintage: provenance.vintage.as_ref().map(|date| date.text.clone()),
+    })
+}
+
+pub(super) fn check_numeric_calibration(cx: &mut Cx<'_, '_>, f: Option<&&Field>) {
+    let Some((name, range)) = f.and_then(|field| {
+        field.values.iter().find_map(|(atom, range)| match atom {
+            Atom::NumericProvenance(p) => match p.basis.as_ref() {
+                Some(ItemBasis::Calibrated(name)) => Some((name.clone(), *range)),
+                _ => None,
+            },
+            _ => None,
+        })
+    }) else {
+        return;
+    };
+    let r = crate::db::parse::tree::RefPath {
+        head: name.clone(),
+        instance: None,
+        rest: Vec::new(),
+        version: None,
+        range: name.range,
+    };
+    let known = cx
+        .ck
+        .scope
+        .value(&r)
+        .is_ok_and(|(_, found)| matches!(found.item.kind, ValueKind::Calibration));
+    if !known {
+        cx.report(Report::new(
+            C::NumericProvenanceIncomplete,
+            range,
+            format!(
+                "numeric provenance names no calibration set `{}` in scope",
+                name.text
+            ),
+        ));
+    }
+}
 
 /// Building context for one module.
 pub struct Cx<'s, 'a> {

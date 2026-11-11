@@ -1,5 +1,8 @@
 //! Edges and links' edge fields (SPEC §5.1, §6 field types).
-use super::cx::{first_expr, first_ref, flag, holes_of, nested, Cx};
+use super::cx::{
+    check_numeric_calibration, first_expr, first_ref, flag, holes_of, nested, numeric_provenance,
+    Cx,
+};
 use crate::db::parse::tree::{EdgeItem, Expr, ExprKind, Field};
 use crate::db::span::Report;
 use crate::hir::{
@@ -36,6 +39,14 @@ impl Cx<'_, '_> {
     ) -> Edge {
         let clauses = self.once(&e.clauses);
         let fields = self.once(&e.fields);
+        for field in [
+            clauses.get("p"),
+            fields.get("effort"),
+            fields.get("cost"),
+            fields.get("duration"),
+        ] {
+            check_numeric_calibration(self, field);
+        }
         let to = self
             .value_ref(&e.to, "node", |k| matches!(k, ValueKind::Node { .. }))
             .unwrap_or_else(|| e.to.display());
@@ -72,11 +83,15 @@ impl Cx<'_, '_> {
             actor,
             authority: f.authority,
             probability,
+            probability_provenance: numeric_provenance(clauses.get("p")),
             hours: f.hours,
+            hours_provenance: numeric_provenance(fields.get("effort")),
             cost: f.cost,
+            cost_provenance: numeric_provenance(fields.get("cost")),
             event,
             deadline: f.deadline,
             duration: f.duration,
+            duration_provenance: numeric_provenance(fields.get("duration")),
             valence: f.valence,
             court_listener_url: f.court_listener_url,
             action_id: f.action_id,

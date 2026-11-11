@@ -60,6 +60,7 @@ expression: out
             ),
             info: None,
             basis: None,
+            payoff_provenance: None,
             edges: [
                 Edge {
                     id: Some(
@@ -70,12 +71,14 @@ expression: out
                     actor: "plaintiff",
                     authority: None,
                     probability: None,
+                    probability_provenance: None,
                     hours: Some(
                         Rational {
                             numerator: 2,
                             denominator: 1,
                         },
                     ),
+                    hours_provenance: None,
                     cost: Some(
                         Known(
                             Money {
@@ -84,6 +87,7 @@ expression: out
                             },
                         ),
                     ),
+                    cost_provenance: None,
                     event: Some(
                         Expr {
                             ty: Named(
@@ -149,6 +153,7 @@ expression: out
                             max: None,
                         },
                     ),
+                    duration_provenance: None,
                     valence: Some(
                         Bad,
                     ),
@@ -191,8 +196,11 @@ expression: out
                         "FRCP 6(a)",
                     ),
                     probability: None,
+                    probability_provenance: None,
                     hours: None,
+                    hours_provenance: None,
                     cost: None,
+                    cost_provenance: None,
                     event: None,
                     deadline: Some(
                         EdgeDeadline {
@@ -223,6 +231,7 @@ expression: out
                             max: None,
                         },
                     ),
+                    duration_provenance: None,
                     valence: None,
                     court_listener_url: None,
                     action_id: Some(
@@ -342,6 +351,7 @@ expression: out
             actor: None,
             info: None,
             basis: None,
+            payoff_provenance: None,
             edges: [],
             formerly: [],
             holes: {
@@ -395,6 +405,7 @@ expression: out
             actor: None,
             info: None,
             basis: None,
+            payoff_provenance: None,
             edges: [],
             formerly: [],
             holes: {},

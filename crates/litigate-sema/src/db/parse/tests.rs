@@ -79,7 +79,9 @@ fn item_tree_keeps_numeric_provenance_as_a_typed_atom() {
         "terminal t: \"T\" { payoff 1.usd basis placeholder vintage 2026-01-01 }\n",
     ));
     assert!(parsed.reports.is_empty(), "{:?}", parsed.reports);
-    let ItemKind::Node(node) = &parsed.tree.items[0].kind else { panic!("node") };
+    let ItemKind::Node(node) = &parsed.tree.items[0].kind else {
+        panic!("node")
+    };
     assert!(node.fields.iter().any(|field| field.values.iter().any(|(atom, _)| {
         matches!(atom, Atom::NumericProvenance(p) if p.vintage.as_ref().is_some_and(|d| d.text == "2026-01-01") && p.basis == Some(NumericBasis::Placeholder))
     })));
@@ -91,8 +93,23 @@ fn estimate_and_placeholder_without_vintage_warn_in_the_item_tree() {
         let parsed = parse(&format!(
             "module m\nterminal t: \"T\" {{ payoff 1.usd basis {basis} }}\n"
         ));
-        assert!(parsed.reports.iter().any(|r| r.code == C::NumericProvenanceIncomplete), "{basis}: {:?}", parsed.reports);
+        assert!(
+            parsed
+                .reports
+                .iter()
+                .any(|r| r.code == C::NumericProvenanceIncomplete),
+            "{basis}: {:?}",
+            parsed.reports
+        );
     }
+    let duplicate = parse(concat!(
+        "module m\n",
+        "terminal t: \"T\" { payoff 1.usd basis estimate vintage 2026-01-01 basis placeholder }\n",
+    ));
+    assert!(duplicate
+        .reports
+        .iter()
+        .any(|r| r.code == C::NumericProvenanceIncomplete));
 }
 
 #[test]

@@ -93,8 +93,11 @@ fn edge(id: Option<&str>, to: &str, p: Authored<Rational>) -> Edge {
         actor: "office".into(),
         authority: None,
         probability: Some(p),
+        probability_provenance: None,
         hours: Some(Rational::integer(8)),
+        hours_provenance: None,
         cost: None,
+        cost_provenance: None,
         event: None,
         deadline: Some(EdgeDeadline {
             window: DeadlineWindow::Inline {
@@ -107,6 +110,7 @@ fn edge(id: Option<&str>, to: &str, p: Authored<Rational>) -> Edge {
             counting: None,
         }),
         duration: None,
+        duration_provenance: None,
         valence: Some(Valence::Bad),
         court_listener_url: None,
         action_id: None,
@@ -141,6 +145,7 @@ fn chance_node() -> Node {
         actor: Some("office".into()),
         info: None,
         basis: None,
+        payoff_provenance: None,
         edges: vec![
             edge(
                 Some("granted"),

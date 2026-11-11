@@ -1252,6 +1252,15 @@ authored assumptions rather than holes. The engine's calibration and lint
 operations consume the lowered per-number labels, and `litigate query`
 lists every estimated and placeholder value by package.
 
+In pack JSON, each node or edge may have an optional `numericProvenance`
+object keyed by value name (`payoff`, `probability`, `hours`, `cost`, or
+`duration`). Each entry contains `basis` and/or `vintage`; for example,
+`{"basis":{"kind":"estimate"},"vintage":"2026-10-26"}`.
+`calibrated` carries `{"kind":"calibrated","set":"id"}` and `sourced`
+carries `{"kind":"sourced","cite":"..."}`. When a number has no
+suffix, no `numericProvenance` field is emitted, preserving the prior pack
+JSON.
+
 ### 5.2 Types, enums, events, match
 
 `type`, `enum`, and `event` declare closed nominal types. An event type
@@ -3378,6 +3387,7 @@ calendar addition with no roll as under the declared counting rule. A test
 that asserts a date where counting changes the result, such as a rolled
 boundary, discharges this lint. Chained deadlines and hour, month, and year
 units are outside the comparison.
+L9012 is a warning in both profiles.
 
 ### 9.2 Shapes
 

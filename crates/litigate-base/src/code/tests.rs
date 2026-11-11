@@ -14,6 +14,13 @@ fn code_registry_round_trips_and_explains() {
 }
 
 #[test]
+fn numeric_provenance_warning_is_warning_in_both_profiles() {
+    let code = DiagnosticCode::NumericProvenanceIncomplete;
+    assert_eq!(code.severity(Profile::Dev), Severity::Warning);
+    assert_eq!(code.severity(Profile::Strict), Severity::Warning);
+}
+
+#[test]
 fn registry_is_sorted_unique_and_well_formed() {
     let codes: Vec<&str> = DiagnosticCode::ALL.iter().map(|c| c.as_str()).collect();
     assert!(codes.windows(2).all(|w| w[0] < w[1]), "{codes:?}");

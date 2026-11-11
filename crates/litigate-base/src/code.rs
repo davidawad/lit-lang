@@ -156,7 +156,7 @@ registry! {
     PrecedentNotBinding = "L9009" => "A precedent layer does not bind at the world's location: it is persuasive there, and its binding effects are not in force",
     RepeatedTestTrigger = "L9010" => "An inline test repeats a deadline trigger whose default occurrence choice is implicit",
     CountingTestInsensitive = "L9011" => "Warning in dev and strict: every comparable test of this deadline asserts the same nominal or adjusted date under plain calendar addition with no roll as under its counting rule",
-    NumericProvenanceIncomplete = "L9012" => "An estimate or placeholder lacks a vintage, or numeric provenance fields are duplicated",
+    NumericProvenanceIncomplete = "L9012" => "Numeric provenance is incomplete or duplicated, or names no calibration set in scope",
 }
 
 /// What `explain` says of an [`DiagnosticCode::Unknown`] code.

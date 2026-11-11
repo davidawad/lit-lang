@@ -177,16 +177,19 @@ fn numeric_provenance(node: &SyntaxNode) -> super::tree::NumericProvenance {
         .filter(|t| !super::is_trivia(t.kind()))
         .collect();
     let has = |kind| tokens.iter().any(|t| t.kind() == kind);
-    let named = |kind| tokens.iter().find(|t| t.kind() == kind).map(|t| Name {
-        text: t.text().to_owned(),
-        range: super::range(t.text_range()),
-    });
+    let named = |kind| {
+        tokens.iter().find(|t| t.kind() == kind).map(|t| Name {
+            text: t.text().to_owned(),
+            range: super::range(t.text_range()),
+        })
+    };
     let basis = if has(K::KwCalibrated) {
         named(K::Ident).map(NumericBasis::Calibrated)
     } else if has(K::KwSourced) {
-        tokens.iter().find(|t| t.kind() == K::String).map(|t| {
-            NumericBasis::Sourced(t.text().trim_matches('"').to_owned())
-        })
+        tokens
+            .iter()
+            .find(|t| t.kind() == K::String)
+            .map(|t| NumericBasis::Sourced(t.text().trim_matches('"').to_owned()))
     } else if has(K::KwEstimate) {
         Some(NumericBasis::Estimate)
     } else if has(K::KwPlaceholder) {
@@ -194,7 +197,10 @@ fn numeric_provenance(node: &SyntaxNode) -> super::tree::NumericProvenance {
     } else {
         None
     };
-    NumericProvenance { basis, vintage: named(K::Date) }
+    NumericProvenance {
+        basis,
+        vintage: named(K::Date),
+    }
 }
 
 /// A plain identifier as a reference expression.

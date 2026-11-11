@@ -233,6 +233,12 @@ deadline removal-adjudication-notice-period: 14.days after RemovalNoticeFiled() 
 /// and Consent. New in the rules effective December 1, 2026 (General Order
 /// 2026-6).
 deadline referred-adjudication-notice-period: 14.days after ProceedingTransferred() counted_by frbp9006-washington effective [2026-12-01, ..) cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7012-1(c)"
+
+test "Counting boundary: referred-adjudication-notice-period (weekend)" cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7012-1(c)"
+{
+  given ProceedingTransferred() on 2026-12-05
+  expect deadline(referred-adjudication-notice-period) == 2026-12-21
+}
 /// Bankr. W.D. Wash. LBR 7016-1(b)(1): the plaintiff's pretrial statement
 /// is filed no later than 21 days before the filing of the proposed
 /// pretrial order (the rules effective December 1, 2023).

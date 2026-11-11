@@ -40,12 +40,30 @@ import frbp.events.{
 rule duty default-cure-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "L.R. BAP 8th Cir. 8005A(c)"
 {
   deadline default-cure-period: 14.days after ClerkNoticeOfDefaultIssued() counted_by frbp9006 cite "L.R. BAP 8th Cir. 8005A(c)"
+
+test "Counting boundary: default-cure-period (weekend)" cite "L.R. BAP 8th Cir. 8005A(c)"
+{
+  given ClerkNoticeOfDefaultIssued() on 2025-12-06
+  expect deadline(default-cure-period) == 2025-12-22
+}
 }
 
 rule duty mandate-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "L.R. BAP 8th Cir. 8024A"
 {
   deadline mandate-after-window-period: 7.days after RehearingWindowExpired() counted_by frbp9006 cite "L.R. BAP 8th Cir. 8024A(b)"
+
+test "Counting boundary: mandate-after-window-period (weekend)" cite "L.R. BAP 8th Cir. 8024A(b)"
+{
+  given RehearingWindowExpired() on 2025-12-06
+  expect deadline(mandate-after-window-period) == 2025-12-15
+}
   deadline mandate-after-denial-period: 7.days after RehearingDenied() counted_by frbp9006 cite "L.R. BAP 8th Cir. 8024A(c)(1)"
+
+test "Counting boundary: mandate-after-denial-period (weekend)" cite "L.R. BAP 8th Cir. 8024A(c)(1)"
+{
+  given RehearingDenied() on 2025-12-06
+  expect deadline(mandate-after-denial-period) == 2025-12-15
+}
 }
 
 test "bankruptcy notice deadline is 14 days from entry" cite "FRBP 8002(a)(1)"

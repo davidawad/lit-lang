@@ -121,13 +121,31 @@ deadline consummation-report-period: 90.days after Chapter11PlanConfirmed() coun
 /// SC LBR 2016-1(b)(8): a chapter 13 debtor's attorney files the Statement
 /// for additional fees or costs within 30 days after the matter concludes.
 deadline chapter13-fee-statement-period: 30.days after FeeMatterConcluded() counted_by frbp9006-south-carolina cite "SC LBR 2016-1(b)(8)"
+
+test "Counting boundary: chapter13-fee-statement-period (weekend)" cite "SC LBR 2016-1(b)(8)"
+{
+  given FeeMatterConcluded() on 2026-08-20
+  expect deadline(chapter13-fee-statement-period) == 2026-09-21
+}
 /// SC LBR 2082-1(d): an amended chapter 12 plan resulting from the pre-
 /// confirmation conference is filed and served at least 7 days before the
 /// confirmation hearing to be considered there.
 deadline chapter12-amended-plan-period: 7.days before Chapter12ConfirmationHearingDate() counted_by frbp9006-south-carolina cite "SC LBR 2082-1(d)"
+
+test "Counting boundary: chapter12-amended-plan-period (weekend)" cite "SC LBR 2082-1(d)"
+{
+  given Chapter12ConfirmationHearingDate() on 2026-08-22
+  expect deadline(chapter12-amended-plan-period) == 2026-08-14
+}
 /// SC LBR 2082-1(e): a chapter 12 debtor serves the trustee a completed
 /// summary of operations at least 7 days before the meeting of creditors.
 deadline chapter12-operations-summary-period: 7.days before MeetingOfCreditorsDate() counted_by frbp9006-south-carolina cite "SC LBR 2082-1(e)"
+
+test "Counting boundary: chapter12-operations-summary-period (weekend)" cite "SC LBR 2082-1(e)"
+{
+  given MeetingOfCreditorsDate() on 2026-08-22
+  expect deadline(chapter12-operations-summary-period) == 2026-08-14
+}
 /// SC LBR 2082-1(f): a party objecting to a chapter 12 discharge under §
 /// 1228(a) serves and files its objection within 14 days after service of
 /// the certification.
@@ -141,22 +159,52 @@ deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frb
 /// funds serves and files its objection within 21 days after service of the
 /// application; otherwise the court may decide it without a hearing.
 deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsApplicationServed() counted_by frbp9006-south-carolina cite "SC LBR 3011-1(f)"
+
+test "Counting boundary: unclaimed-funds-objection-period (holiday)" cite "SC LBR 3011-1(f)"
+{
+  given UnclaimedFundsApplicationServed() on 2026-08-17
+  expect deadline(unclaimed-funds-objection-period) == 2026-09-08
+}
 /// SC LBR 3015-4(b): documents the chapter 13 trustee requests are provided
 /// at least 7 days before the original confirmation hearing.
 deadline trustee-documents-period: 7.days before OriginalConfirmationHearingDate() counted_by frbp9006-south-carolina cite "SC LBR 3015-4(b)"
+
+test "Counting boundary: trustee-documents-period (weekend)" cite "SC LBR 3015-4(b)"
+{
+  given OriginalConfirmationHearingDate() on 2026-08-22
+  expect deadline(trustee-documents-period) == 2026-08-14
+}
 /// SC LBR 3015-5(a)(1): within 45 days after the debtor completes all plan
 /// payments, the chapter 13 trustee files the Report of Completion and
 /// serves the Notice to Debtor of Completion.
 deadline trustee-completion-report-period: 45.days after PlanPaymentsCompleted() counted_by frbp9006-south-carolina cite "SC LBR 3015-5(a)(1)"
+
+test "Counting boundary: trustee-completion-report-period (weekend)" cite "SC LBR 3015-5(a)(1)"
+{
+  given PlanPaymentsCompleted() on 2026-08-19
+  expect deadline(trustee-completion-report-period) == 2026-10-05
+}
 /// SC LBR 3015-5(a)(2): within 28 days after the trustee serves that
 /// notice, the debtor files and serves the Notice of Certification of Plan
 /// Completion and any Certificate of Completion of Financial Management
 /// Course.
 deadline completion-certification-period: 28.days after CompletionNoticeServed() counted_by frbp9006-south-carolina cite "SC LBR 3015-5(a)(2)"
+
+test "Counting boundary: completion-certification-period (weekend)" cite "SC LBR 3015-5(a)(2)"
+{
+  given CompletionNoticeServed() on 2026-08-22
+  expect deadline(completion-certification-period) == 2026-09-21
+}
 /// SC LBR 3015-8: a confirmed chapter 13 debtor files a report within 10
 /// days of a transaction that alters net property or debt by $25,000 or
 /// more or affects a claim the trustee pays.
 deadline post-confirmation-report-period: 10.days after PostConfirmationTransaction() counted_by frbp9006-south-carolina cite "SC LBR 3015-8"
+
+test "Counting boundary: post-confirmation-report-period (weekend)" cite "SC LBR 3015-8"
+{
+  given PostConfirmationTransaction() on 2026-08-19
+  expect deadline(post-confirmation-report-period) == 2026-08-31
+}
 /// SC LBR 3016-1(c): if a chapter 11 plan is not confirmed or a disclosure
 /// statement not approved, the case may be dismissed or converted unless
 /// the proponent files a new plan and disclosure statement within 14 days
@@ -166,11 +214,23 @@ deadline chapter11-new-plan-period: 14.days after ConfirmationDenialHearing() co
 /// non-consensual plan serves and files its objection within 21 days after
 /// service of the certification.
 deadline subchapter-v-discharge-objection-period: 21.days after SubchapterVCertificationServed() counted_by frbp9006-south-carolina cite "SC LBR 4004-2(b)"
+
+test "Counting boundary: subchapter-v-discharge-objection-period (holiday)" cite "SC LBR 4004-2(b)"
+{
+  given SubchapterVCertificationServed() on 2026-08-17
+  expect deadline(subchapter-v-discharge-objection-period) == 2026-09-08
+}
 /// SC LBR 5005-4(d)(2)(A): to complete an eSR petition, the pro se
 /// individual delivers the signed declaration, Statement About Your Social
 /// Security Numbers and photo identification within 3 days of submittal;
 /// the petition is filed when they are received.
 deadline esr-documents-period: 3.days after EsrPetitionSubmitted() counted_by frbp9006-south-carolina cite "SC LBR 5005-4(d)(2)(A)"
+
+test "Counting boundary: esr-documents-period (weekend)" cite "SC LBR 5005-4(d)(2)(A)"
+{
+  given EsrPetitionSubmitted() on 2026-08-19
+  expect deadline(esr-documents-period) == 2026-08-24
+}
 /// SC LBR 5005-4(d)(3): electronic filing through EDSS is available to a
 /// pro se individual only for 14 days after the petition date.
 deadline pro-se-electronic-filing-period: 14.days after PetitionFiled() counted_by frbp9006-south-carolina cite "SC LBR 5005-4(d)(3)"
@@ -188,10 +248,22 @@ deadline stay-pending-withdrawal-response-period: 14.days after StayPendingWithd
 /// SC LBR 5080-1(a): a filing fee not delivered with a submission under SC
 /// LBR 5005-4(d) is remitted to the clerk within 7 days.
 deadline unpaid-submission-fee-period: 7.days after UnpaidSubmissionMade() counted_by frbp9006-south-carolina cite "SC LBR 5080-1(a)"
+
+test "Counting boundary: unpaid-submission-fee-period (weekend)" cite "SC LBR 5080-1(a)"
+{
+  given UnpaidSubmissionMade() on 2026-08-22
+  expect deadline(unpaid-submission-fee-period) == 2026-08-31
+}
 /// SC LBR 5080-1(c): on denying installments to a debtor who left a prior
 /// case's fee unpaid, the court may allow up to 10 days from entry of the
 /// order to pay the entire fee.
 deadline prior-fee-full-payment-period: 10.days after InstallmentDenialForPriorFees() counted_by frbp9006-south-carolina cite "SC LBR 5080-1(c)"
+
+test "Counting boundary: prior-fee-full-payment-period (weekend)" cite "SC LBR 5080-1(c)"
+{
+  given InstallmentDenialForPriorFees() on 2026-08-19
+  expect deadline(prior-fee-full-payment-period) == 2026-08-31
+}
 /// SC LBR 6004-1(c): the moving party files a report of sale within 14 days
 /// after the closing of any sale of estate property.
 deadline sale-report-period: 14.days after SaleClosed() counted_by frbp9006-south-carolina cite "SC LBR 6004-1(c)"
@@ -211,25 +283,61 @@ deadline discovery-compliance-period: 14.days after DiscoveryOrderEntered() coun
 /// SC LBR 9013-2(a): a memorandum or brief is filed and served no later
 /// than 7 days before the hearing, unless otherwise ordered.
 deadline contested-memorandum-period: 7.days before ContestedHearingDate() counted_by frbp9006-south-carolina cite "SC LBR 9013-2(a)"
+
+test "Counting boundary: contested-memorandum-period (weekend)" cite "SC LBR 9013-2(a)"
+{
+  given ContestedHearingDate() on 2026-08-22
+  expect deadline(contested-memorandum-period) == 2026-08-14
+}
 /// SC LBR 9013-3(b): a party delegated service of an order or notice should
 /// file a certificate of service within 7 days.
 deadline delegated-service-certificate-period: 7.days after DelegatedServiceMade() counted_by frbp9006-south-carolina cite "SC LBR 9013-3(b)"
+
+test "Counting boundary: delegated-service-certificate-period (weekend)" cite "SC LBR 9013-3(b)"
+{
+  given DelegatedServiceMade() on 2026-08-22
+  expect deadline(delegated-service-certificate-period) == 2026-08-31
+}
 /// SC LBR 9015-1(c): the parties demanding and opposing a jury trial file
 /// and serve memoranda no later than 7 days before the hearing on the right
 /// to a jury trial.
 deadline jury-right-memorandum-period: 7.days before JuryRightHearingDate() counted_by frbp9006-south-carolina cite "SC LBR 9015-1(c)"
+
+test "Counting boundary: jury-right-memorandum-period (weekend)" cite "SC LBR 9015-1(c)"
+{
+  given JuryRightHearingDate() on 2026-08-22
+  expect deadline(jury-right-memorandum-period) == 2026-08-14
+}
 /// SC LBR 9019-1: notice of a settlement or compromise is filed and served
 /// within 10 days after the report of settlement to the court.
 deadline settlement-notice-period: 10.days after SettlementReported() counted_by frbp9006-south-carolina cite "SC LBR 9019-1"
+
+test "Counting boundary: settlement-notice-period (weekend)" cite "SC LBR 9019-1"
+{
+  given SettlementReported() on 2026-08-19
+  expect deadline(settlement-notice-period) == 2026-08-31
+}
 /// SC LBR 9019-2(a): a party opposing mediation has 14 days to file and
 /// serve an objection to the motion.
 deadline mediation-objection-period: 14.days after MediationMotionServed() counted_by frbp9006-south-carolina cite "SC LBR 9019-2(a)"
 /// SC LBR 9019-2(d): unless otherwise ordered, mediation is concluded
 /// within 30 days of the order appointing a mediator.
 deadline mediation-conclusion-period: 30.days after MediatorAppointed() counted_by frbp9006-south-carolina cite "SC LBR 9019-2(d)"
+
+test "Counting boundary: mediation-conclusion-period (weekend)" cite "SC LBR 9019-2(d)"
+{
+  given MediatorAppointed() on 2026-08-20
+  expect deadline(mediation-conclusion-period) == 2026-09-21
+}
 /// SC LBR 9019-2(d): the mediator reports to the court in writing within 7
 /// days following the conclusion of mediation.
 deadline mediator-report-period: 7.days after MediationConcluded() counted_by frbp9006-south-carolina cite "SC LBR 9019-2(d)"
+
+test "Counting boundary: mediator-report-period (weekend)" cite "SC LBR 9019-2(d)"
+{
+  given MediationConcluded() on 2026-08-22
+  expect deadline(mediator-report-period) == 2026-08-31
+}
 /// SC LBR 9019-2(d): the proposed order, stipulation or notice of
 /// settlement is due within 14 days of the mediator's report.
 deadline mediated-order-period: 14.days after MediatorReportFiled() counted_by frbp9006-south-carolina cite "SC LBR 9019-2(d)"

@@ -65,34 +65,88 @@ event RehearingMotionServed()
 /// within 14 days after filing the notice of appeal, the appellant pays the
 /// filing fee or moves to waive it.
 deadline fee-payment-period: 14.days after NoticeOfAppealFiled() counted_by frbp9006 cite "1st Cir. BAP L.R. 8003-1(c)(1)"
+
+test "Counting boundary: fee-payment-period (weekend)" cite "1st Cir. BAP L.R. 8003-1(c)(1)"
+{
+  given NoticeOfAppealFiled() on 2025-12-06
+  expect deadline(fee-payment-period) == 2025-12-22
+}
 /// 1st Cir. BAP L.R. 8003-1(c)(1): on an appeal by leave, within 14 days
 /// after the order granting the motion for leave to appeal.
 deadline fee-payment-leave-period: 14.days after LeaveToAppealGranted() counted_by frbp9006 cite "1st Cir. BAP L.R. 8003-1(c)(1)"
+
+test "Counting boundary: fee-payment-leave-period (weekend)" cite "1st Cir. BAP L.R. 8003-1(c)(1)"
+{
+  given LeaveToAppealGranted() on 2025-12-06
+  expect deadline(fee-payment-leave-period) == 2025-12-22
+}
 /// 1st Cir. BAP L.R. 8003-1(c)(2): the fee is paid within 14 days after
 /// entry of the order denying the waiver motion unless the bankruptcy court
 /// orders otherwise.
 deadline fee-after-waiver-denial-period: 14.days after FeeWaiverDenied() counted_by frbp9006 cite "1st Cir. BAP L.R. 8003-1(c)(2)"
+
+test "Counting boundary: fee-after-waiver-denial-period (weekend)" cite "1st Cir. BAP L.R. 8003-1(c)(2)"
+{
+  given FeeWaiverDenied() on 2025-12-06
+  expect deadline(fee-after-waiver-denial-period) == 2025-12-22
+}
 /// 1st Cir. BAP L.R. 8008-1(a): within 7 days the movant moves in the BAP,
 /// notifying it of the indicative ruling and stating whether it seeks a
 /// remand with retained jurisdiction or dismissal of the appeal.
 deadline indicative-ruling-notice-period: 7.days after IndicativeRulingIssued() counted_by frbp9006 cite "1st Cir. BAP L.R. 8008-1(a)"
+
+test "Counting boundary: indicative-ruling-notice-period (weekend)" cite "1st Cir. BAP L.R. 8008-1(a)"
+{
+  given IndicativeRulingIssued() on 2025-12-06
+  expect deadline(indicative-ruling-notice-period) == 2025-12-15
+}
 /// 1st Cir. BAP L.R. 8008-1(b): within 7 days after the bankruptcy court's
 /// order on the underlying motion, the movant reports its disposition and
 /// whether the appeal is moot or will proceed.
 deadline remand-report-period: 7.days after RemandedMotionDecided() counted_by frbp9006 cite "1st Cir. BAP L.R. 8008-1(b)"
+
+test "Counting boundary: remand-report-period (weekend)" cite "1st Cir. BAP L.R. 8008-1(b)"
+{
+  given RemandedMotionDecided() on 2025-12-06
+  expect deadline(remand-report-period) == 2025-12-15
+}
 /// 1st Cir. BAP L.R. 8013-1(a)(2): a motion to reconsider a clerk's order
 /// is filed within 14 days of service of notice of its entry.
 deadline clerk-order-reconsideration-period: 14.days after ClerkOrderEntryServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8013-1(a)(2)"
+
+test "Counting boundary: clerk-order-reconsideration-period (weekend)" cite "1st Cir. BAP L.R. 8013-1(a)(2)"
+{
+  given ClerkOrderEntryServed() on 2025-12-06
+  expect deadline(clerk-order-reconsideration-period) == 2025-12-22
+}
 /// 1st Cir. BAP L.R. 8020-1(b)(1): the defaulting party moves to reinstate
 /// within 14 days of service of the dismissal order.
 deadline reinstatement-period: 14.days after ProsecutionDismissalServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8020-1(b)(1)"
+
+test "Counting boundary: reinstatement-period (weekend)" cite "1st Cir. BAP L.R. 8020-1(b)(1)"
+{
+  given ProsecutionDismissalServed() on 2025-12-06
+  expect deadline(reinstatement-period) == 2025-12-22
+}
 /// 1st Cir. BAP L.R. 8020-1(c): a party or attorney facing sanctions may
 /// respond within fourteen days of service of the motion or order to show
 /// cause.
 deadline sanctions-response-period: 14.days after SanctionsMotionServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8020-1(c)"
+
+test "Counting boundary: sanctions-response-period (weekend)" cite "1st Cir. BAP L.R. 8020-1(c)"
+{
+  given SanctionsMotionServed() on 2025-12-06
+  expect deadline(sanctions-response-period) == 2025-12-22
+}
 /// 1st Cir. BAP L.R. 8022-1(a): a response to a motion for rehearing may
 /// be filed within 7 days after its service.
 deadline rehearing-response-period: 7.days after RehearingMotionServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8022-1(a)"
+
+test "Counting boundary: rehearing-response-period (weekend)" cite "1st Cir. BAP L.R. 8022-1(a)"
+{
+  given RehearingMotionServed() on 2025-12-06
+  expect deadline(rehearing-response-period) == 2025-12-15
+}
 
 start notice-filed
 

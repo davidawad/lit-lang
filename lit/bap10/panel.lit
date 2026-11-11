@@ -97,16 +97,40 @@ event ConstitutionalCertificationServed()
 /// to Practice or Pro Se Status, the Statement of Interested Parties and
 /// the Statement Regarding Oral Argument.
 deadline combined-statements-period: 14.days after AppealDocketingNoticed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8003-2"
+
+test "Counting boundary: combined-statements-period (weekend)" cite "10th Cir. BAP L.R. 8003-2"
+{
+  given AppealDocketingNoticed() on 2026-01-03
+  expect deadline(combined-statements-period) == 2026-01-20
+}
 /// 10th Cir. BAP L.R. 8003-3(b): the appeal may be dismissed without
 /// further notice if, within 14 days after filing the notice of appeal, a
 /// party fails to pay the required fee or file a timely motion to waive it.
 deadline fee-payment-period: 14.days after NoticeOfAppealFiled() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8003-3(b)"
+
+test "Counting boundary: fee-payment-period (weekend)" cite "10th Cir. BAP L.R. 8003-3(b)"
+{
+  given NoticeOfAppealFiled() on 2026-01-03
+  expect deadline(fee-payment-period) == 2026-01-20
+}
 /// 10th Cir. BAP L.R. 8003-3(b): on an interlocutory appeal, the same 14
 /// days run from entry of the order granting leave to appeal.
 deadline fee-payment-leave-period: 14.days after LeaveToAppealGranted() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8003-3(b)"
+
+test "Counting boundary: fee-payment-leave-period (weekend)" cite "10th Cir. BAP L.R. 8003-3(b)"
+{
+  given LeaveToAppealGranted() on 2026-01-03
+  expect deadline(fee-payment-leave-period) == 2026-01-20
+}
 /// 10th Cir. BAP L.R. 8003-3(b)(3): the required fee is paid within 14 days
 /// after entry of an order denying the appellant's motion to waive it.
 deadline fee-after-waiver-denial-period: 14.days after FeeWaiverDenied() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8003-3(b)(3)"
+
+test "Counting boundary: fee-after-waiver-denial-period (weekend)" cite "10th Cir. BAP L.R. 8003-3(b)(3)"
+{
+  given FeeWaiverDenied() on 2026-01-03
+  expect deadline(fee-after-waiver-denial-period) == 2026-01-20
+}
 /// 10th Cir. BAP L.R. 8004-2: the movant may file a reply to a response to
 /// a motion for leave to appeal within 7 days after service of the
 /// response, addressing only matters raised in the response.
@@ -115,22 +139,52 @@ deadline leave-reply-period: 7.days after LeaveResponseServed() counted_by bap10
 /// to a motion to intervene is filed within 14 days after the motion is
 /// served.
 deadline intervention-response-period: 14.days after InterventionMotionServed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8013-2"
+
+test "Counting boundary: intervention-response-period (weekend)" cite "10th Cir. BAP L.R. 8013-2"
+{
+  given InterventionMotionServed() on 2026-01-03
+  expect deadline(intervention-response-period) == 2026-01-20
+}
 /// 10th Cir. BAP L.R. 8013-2: a reply on a motion to intervene is filed
 /// within 7 days after the response is served.
 deadline intervention-reply-period: 7.days after InterventionResponseServed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8013-2"
+
+test "Counting boundary: intervention-reply-period (weekend)" cite "10th Cir. BAP L.R. 8013-2"
+{
+  given InterventionResponseServed() on 2026-01-03
+  expect deadline(intervention-reply-period) == 2026-01-12
+}
 /// 10th Cir. BAP L.R. 8019-1(c): within 14 days after the notice of oral
 /// argument is docketed, each party who has filed a brief files a statement
 /// of who will appear at argument for it.
 deadline argument-appearance-period: 14.days after ArgumentNoticeDocketed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8019-1(c)"
+
+test "Counting boundary: argument-appearance-period (weekend)" cite "10th Cir. BAP L.R. 8019-1(c)"
+{
+  given ArgumentNoticeDocketed() on 2026-01-03
+  expect deadline(argument-appearance-period) == 2026-01-20
+}
 /// 10th Cir. BAP L.R. 8026-7(a): within 14 days after the date of the
 /// notice that the appeal has been docketed, a party questioning the
 /// constitutionality of an Act of Congress or a state statute, where the
 /// government is not a party, files a written notice.
 deadline constitutional-notice-period: 14.days after AppealDocketingNoticed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8026-7(a)"
+
+test "Counting boundary: constitutional-notice-period (weekend)" cite "10th Cir. BAP L.R. 8026-7(a)"
+{
+  given AppealDocketingNoticed() on 2026-01-03
+  expect deadline(constitutional-notice-period) == 2026-01-20
+}
 /// 10th Cir. BAP L.R. 8026-7(c): an attorney general may appear in the
 /// appeal within 30 days after the date the BAP clerk serves its
 /// certification.
 deadline attorney-general-appearance-period: 30.days after ConstitutionalCertificationServed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8026-7(c)"
+
+test "Counting boundary: attorney-general-appearance-period (weekend)" cite "10th Cir. BAP L.R. 8026-7(c)"
+{
+  given ConstitutionalCertificationServed() on 2026-01-01
+  expect deadline(attorney-general-appearance-period) == 2026-02-02
+}
 
 test "the combined statements are due 14 days after the docketing notice" cite "10th Cir. BAP L.R. 8003-2"
 {

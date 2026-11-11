@@ -553,6 +553,12 @@ deadline late-document-refile-period: 3.days after LateDocumentStricken() counte
 /// 2025-003): the response time on a motion to determine under FRBP
 /// 3002.1(f) or (g)(4) is 28 days.
 deadline mortgage-claim-motion-response-period: 28.days after MortgageClaimMotionServed() counted_by frbp9006-rhode-island effective [2025-12-01, 2026-02-13) cite "R.I. LBR (Dec. 2025) 1005-1(d)"
+
+test "Counting boundary: mortgage-claim-motion-response-period (holiday)" cite "R.I. LBR (Dec. 2025) 1005-1(d)"
+{
+  given MortgageClaimMotionServed() on 2025-12-04
+  expect deadline(mortgage-claim-motion-response-period) == 2026-01-02
+}
 /// R.I. LBR 1005-1(d)(2)(Q) from February 13, 2026: a hole (General Order
 /// 2026-001).
 deadline mortgage-claim-motion-response-period: 28.days after MortgageClaimMotionServed() counted_by frbp9006-rhode-island effective [2026-02-13, ..) supersedes mortgage-claim-motion-response-period@2025-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {}

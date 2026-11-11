@@ -52,6 +52,12 @@ event ClerkNoticeOfDefaultIssued()
 /// dismissing the appeal or cross-appeal for non-prosecution.
 deadline default-cure-period: 14.days after ClerkNoticeOfDefaultIssued() counted_by frbp9006 cite "6th Cir. BAP LBR 8003-1(a)"
 
+test "Counting boundary: default-cure-period (weekend)" cite "6th Cir. BAP LBR 8003-1(a)"
+{
+  given ClerkNoticeOfDefaultIssued() on 2025-12-06
+  expect deadline(default-cure-period) == 2025-12-22
+}
+
 test "a default is remedied within fourteen days of the clerk's notice" cite "6th Cir. BAP LBR 8003-1(a)"
 {
   given ClerkNoticeOfDefaultIssued() on 2026-03-03

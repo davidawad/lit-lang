@@ -142,6 +142,12 @@ event FinalDisposition()
 /// Schedules D through H is filed within 7 days of entry of an order for
 /// relief in an involuntary case.
 deadline involuntary-mailing-list-period: 7.days after OrderForReliefEntered() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 1007-1(a)"
+
+test "Counting boundary: involuntary-mailing-list-period (weekend)" cite "Bankr. N.D. Tex. L.B.R. 1007-1(a)"
+{
+  given OrderForReliefEntered() on 2025-12-06
+  expect deadline(involuntary-mailing-list-period) == 2025-12-15
+}
 /// Bankr. N.D. Tex. L.B.R. 1007-1(c)(2): an individual debtor temporarily
 /// excluded from means testing files the FRBP 1007(b)(4) statement and
 /// calculations no later than 14 days after the exclusion expires, when it
@@ -151,11 +157,23 @@ deadline means-test-exclusion-statement-period: 14.days after MeansTestExclusion
 /// schedule of exemptions, the person filing the amendment serves notice of
 /// it on all creditors and any trustee and files a certificate of service.
 deadline exemption-amendment-notice-period: 2.days after ExemptionScheduleAmended() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 1009-1(c)"
+
+test "Counting boundary: exemption-amendment-notice-period (weekend)" cite "Bankr. N.D. Tex. L.B.R. 1009-1(c)"
+{
+  given ExemptionScheduleAmended() on 2025-12-04
+  expect deadline(exemption-amendment-notice-period) == 2025-12-08
+}
 /// Bankr. N.D. Tex. L.B.R. 1009-1(d): within 2 days of amending Schedules I
 /// and J for a material change before confirmation, the debtor serves
 /// notice of the amendment on all creditors and any trustee and files a
 /// certificate of service.
 deadline income-schedules-notice-period: 2.days after IncomeSchedulesAmended() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 1009-1(d)"
+
+test "Counting boundary: income-schedules-notice-period (weekend)" cite "Bankr. N.D. Tex. L.B.R. 1009-1(d)"
+{
+  given IncomeSchedulesAmended() on 2025-12-04
+  expect deadline(income-schedules-notice-period) == 2025-12-08
+}
 /// Bankr. N.D. Tex. L.B.R. 1019-1(a): within 14 days after an order
 /// converting a case to chapter 7, the debtor files a sworn schedule of
 /// assets remaining in its possession, abandoned property and property
@@ -173,6 +191,12 @@ deadline chapter-12-13-conversion-service-period: 14.days after ConversionToChap
 /// services is deemed contemporaneous; a later motion seeking retroactive
 /// authority must explain the delay (b)(2).
 deadline contemporaneous-employment-period: 30.days after ProfessionalCommencedServices() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 2014-1(b)"
+
+test "Counting boundary: contemporaneous-employment-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 2014-1(b)"
+{
+  given ProfessionalCommencedServices() on 2025-12-02
+  expect deadline(contemporaneous-employment-period) == 2026-01-02
+}
 /// Bankr. N.D. Tex. L.B.R. 2016-1(b)(4): if no objection to a motion for
 /// distribution of a retainer is filed within 14 days of its mailing, the
 /// professional may withdraw the interim allowances it proposed.
@@ -200,18 +224,42 @@ deadline omnibus-reset-chart-period: 2.days before ResetClaimObjectionHearing() 
 /// estimating a claim are filed at least 4 days before the hearing on the
 /// motion to estimate.
 deadline estimation-procedures-period: 4.days before EstimationHearing() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 3007-3(c)"
+
+test "Counting boundary: estimation-procedures-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 3007-3(c)"
+{
+  given EstimationHearing() on 2025-12-01
+  expect deadline(estimation-procedures-period) == 2025-11-26
+}
 /// Bankr. N.D. Tex. L.B.R. 3007-3(d): a claimant or objecting party
 /// contesting a motion to estimate files a response at least 4 days before
 /// the hearing on the motion.
 deadline estimation-response-period: 4.days before EstimationHearing() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 3007-3(d)"
+
+test "Counting boundary: estimation-response-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 3007-3(d)"
+{
+  given EstimationHearing() on 2025-12-01
+  expect deadline(estimation-response-period) == 2025-11-26
+}
 /// Bankr. N.D. Tex. L.B.R. 3015-3: unless the court orders otherwise, an
 /// objection to confirmation of a chapter 13 plan is filed no later than 7
 /// days before the pre-hearing conference on confirmation.
 deadline chapter-13-confirmation-objection-period: 7.days before ChapterThirteenConfirmationConference() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 3015-3"
+
+test "Counting boundary: chapter-13-confirmation-objection-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 3015-3"
+{
+  given ChapterThirteenConfirmationConference() on 2025-12-04
+  expect deadline(chapter-13-confirmation-objection-period) == 2025-11-26
+}
 /// Bankr. N.D. Tex. L.B.R. 3015-4(a): unless the court orders otherwise, an
 /// objection to confirmation of a chapter 12 plan is filed no later than 7
 /// days before the confirmation hearing.
 deadline chapter-12-confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 3015-4(a)"
+
+test "Counting boundary: chapter-12-confirmation-objection-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 3015-4(a)"
+{
+  given ConfirmationHearing() on 2025-12-04
+  expect deadline(chapter-12-confirmation-objection-period) == 2025-11-26
+}
 /// Bankr. N.D. Tex. L.B.R. 3017-3(a): objections to a request for
 /// conditional approval of a disclosure statement, given on at least
 /// fourteen days' notice, are filed within fourteen days.
@@ -225,6 +273,12 @@ deadline ballot-certification-period: 1.days before ConfirmationHearing() counte
 /// plan is filed and served no later than 4 days before the confirmation
 /// hearing.
 deadline chapter-11-confirmation-objection-period: 4.days before ConfirmationHearing() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 3020-1"
+
+test "Counting boundary: chapter-11-confirmation-objection-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 3020-1"
+{
+  given ConfirmationHearing() on 2025-12-01
+  expect deadline(chapter-11-confirmation-objection-period) == 2025-11-26
+}
 /// Bankr. N.D. Tex. L.B.R. 4001-1(b): a party opposing a motion for relief
 /// from stay files a response, stating how the movant can be adequately
 /// protected, within 14 days from service of the motion; otherwise relief
@@ -238,6 +292,12 @@ deadline stay-discovery-response-period: 14.days after StayDiscoveryServed() cou
 /// Divisions, the party requesting a preliminary stay hearing serves its
 /// evidentiary affidavits at least 7 days before the hearing.
 deadline stay-movant-affidavit-period: 7.days before StayPreliminaryHearing() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 4001-1(e)"
+
+test "Counting boundary: stay-movant-affidavit-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 4001-1(e)"
+{
+  given StayPreliminaryHearing() on 2025-12-04
+  expect deadline(stay-movant-affidavit-period) == 2025-11-26
+}
 /// Bankr. N.D. Tex. L.B.R. 4001-1(e)(1): the responding party serves its
 /// evidentiary affidavits at least 2 days before the preliminary hearing;
 /// failing that, relief may be granted.
@@ -247,26 +307,62 @@ deadline stay-respondent-affidavit-period: 2.days before StayPreliminaryHearing(
 /// affidavit is filed and served within 7 days of filing the motion,
 /// regardless of the hearing date.
 deadline residence-affidavit-period: 7.days after ResidenceStayMotionFiled() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 4001-1(e)"
+
+test "Counting boundary: residence-affidavit-period (weekend)" cite "Bankr. N.D. Tex. L.B.R. 4001-1(e)"
+{
+  given ResidenceStayMotionFiled() on 2025-12-06
+  expect deadline(residence-affidavit-period) == 2025-12-15
+}
 /// Bankr. N.D. Tex. L.B.R. 4001-1(f)(2): proof of service of a motion to
 /// continue or impose the automatic stay and its notice of hearing is filed
 /// within 2 days after service of the motion.
 deadline stay-continuation-proof-of-service-period: 2.days after StayContinuationMotionServed() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 4001-1(f)"
+
+test "Counting boundary: stay-continuation-proof-of-service-period (weekend)" cite "Bankr. N.D. Tex. L.B.R. 4001-1(f)"
+{
+  given StayContinuationMotionServed() on 2025-12-04
+  expect deadline(stay-continuation-proof-of-service-period) == 2025-12-08
+}
 /// Bankr. N.D. Tex. L.B.R. 7007-1(e): a response and brief to an opposed
 /// motion in an adversary proceeding are filed within 21 days from the date
 /// the motion is filed.
 deadline adversary-motion-response-period: 21.days after AdversaryMotionFiled() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 7007-1(e)"
+
+test "Counting boundary: adversary-motion-response-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 7007-1(e)"
+{
+  given AdversaryMotionFiled() on 2025-12-04
+  expect deadline(adversary-motion-response-period) == 2025-12-26
+}
 /// Bankr. N.D. Tex. L.B.R. 7016-1(a): unless the presiding judge directs
 /// otherwise, a joint pretrial order is uploaded at least 7 days before
 /// trial docket call.
 deadline joint-pretrial-order-period: 7.days before TrialDocketCall() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 7016-1(a)"
+
+test "Counting boundary: joint-pretrial-order-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 7016-1(a)"
+{
+  given TrialDocketCall() on 2025-12-04
+  expect deadline(joint-pretrial-order-period) == 2025-11-26
+}
 /// Bankr. N.D. Tex. L.B.R. 7016-1(b): proposed findings of fact and
 /// conclusions of law are filed at least 7 days before trial docket call.
 deadline proposed-findings-period: 7.days before TrialDocketCall() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 7016-1(b)"
+
+test "Counting boundary: proposed-findings-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 7016-1(b)"
+{
+  given TrialDocketCall() on 2025-12-04
+  expect deadline(proposed-findings-period) == 2025-11-26
+}
 /// Bankr. N.D. Tex. L.B.R. 9007-1(c): except in a complex chapter 11 case,
 /// a pleading or notice states that no hearing is held unless a written
 /// response is filed by a date at least 21 days from the date of service;
 /// otherwise the relief is deemed unopposed.
 deadline negative-notice-response-period: 21.days after NegativeNoticeServed() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 9007-1(c)"
+
+test "Counting boundary: negative-notice-response-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 9007-1(c)"
+{
+  given NegativeNoticeServed() on 2025-12-04
+  expect deadline(negative-notice-response-period) == 2025-12-26
+}
 /// Bankr. N.D. Tex. L.B.R. 9007-1(c) n.1: for motions to obtain credit and
 /// to waive a disclosure statement in a small business case, the negative
 /// notice response date is at least 14 days from service.
@@ -275,10 +371,22 @@ deadline credit-or-waiver-response-period: 14.days after CreditOrWaiverNoticeSer
 /// an objection to a claim states that no hearing is held unless a written
 /// response is filed by a date at least 30 days from the date of service.
 deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 9007-1(c)"
+
+test "Counting boundary: claim-objection-response-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 9007-1(c)"
+{
+  given ClaimObjectionServed() on 2025-12-02
+  expect deadline(claim-objection-response-period) == 2026-01-02
+}
 /// Bankr. N.D. Tex. L.B.R. 9007-1(c): except in a complex chapter 11 case,
 /// no objection to a sale free and clear is considered unless a written
 /// response is filed at least 4 days before the sale hearing.
 deadline sale-objection-period: 4.days before SaleHearing() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 9007-1(c)"
+
+test "Counting boundary: sale-objection-period (holiday)" cite "Bankr. N.D. Tex. L.B.R. 9007-1(c)"
+{
+  given SaleHearing() on 2025-12-01
+  expect deadline(sale-objection-period) == 2025-11-26
+}
 /// Bankr. N.D. Tex. L.B.R. 9014-1(c)(1)-(3): except in a complex chapter 11
 /// case, exhibits, exhibit and witness lists and deposition designations
 /// are exchanged and filed at least 3 calendar days before the scheduled
@@ -288,6 +396,12 @@ deadline hearing-exhibits-exchange-period: 3.days before ContestedHearing() coun
 /// removed within 60 days after final disposition of a case by the attorney
 /// who introduced them, or may be destroyed.
 deadline exhibit-removal-period: 60.days after FinalDisposition() counted_by frbp9006-texas cite "Bankr. N.D. Tex. L.B.R. 9070-1"
+
+test "Counting boundary: exhibit-removal-period (weekend)" cite "Bankr. N.D. Tex. L.B.R. 9070-1"
+{
+  given FinalDisposition() on 2025-12-02
+  expect deadline(exhibit-removal-period) == 2026-02-02
+}
 
 start motion-filed
 

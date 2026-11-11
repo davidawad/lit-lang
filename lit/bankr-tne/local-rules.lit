@@ -204,6 +204,12 @@ deadline passive-small-matter-objection-period: 7.days after PassiveSmallFeeFile
 /// 1, 2025: for a motion under FRBP 3002.1(f)(1) or (g)(4)(A), the
 /// objection time must be 28 days.
 deadline passive-mortgage-motion-objection-period: 28.days after PassiveMortgageMotionFiled() counted_by frbp9006 effective [2025-12-01, ..) cite "E.D. Tenn. LBR (GO 2025-01) 9013-1(h)"
+
+test "Counting boundary: passive-mortgage-motion-objection-period (holiday)" cite "E.D. Tenn. LBR (GO 2025-01) 9013-1(h)"
+{
+  given PassiveMortgageMotionFiled() on 2025-12-04
+  expect deadline(passive-mortgage-motion-objection-period) == 2026-01-02
+}
 /// LBR 9013-1(i)(2): unless the court reduces or extends the time, the
 /// opposing party files a response and brief in opposition to a post-
 /// hearing motion within 14 days after it is filed.

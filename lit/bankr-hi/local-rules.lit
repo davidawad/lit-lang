@@ -245,6 +245,12 @@ event RemoteRequestFiled()
 /// the debtor submits the signed declaration not later than 7 days after
 /// the date of electronic filing.
 deadline amendment-declaration-period: 7.days after AmendmentsFiledElectronically() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 1009-1(b)"
+
+test "Counting boundary: amendment-declaration-period (weekend)" cite "Bankr. D. Haw. LBR 1009-1(b)"
+{
+  given AmendmentsFiledElectronically() on 2025-12-06
+  expect deadline(amendment-declaration-period) == 2025-12-15
+}
 /// Bankr. D. Haw. LBR 1017-1: the court may grant a chapter 7 debtor's
 /// motion to convert without further notice or hearing if no objection is
 /// filed within 14 days after the motion was filed.
@@ -258,6 +264,12 @@ deadline responsible-individual-period: 14.days after PetitionFiled() counted_by
 /// paying small administrative expenses within 28 days after the date of
 /// the notice.
 deadline expense-procedure-objection-period: 28.days after ClaimsNoticeDated() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 2015-1(a)"
+
+test "Counting boundary: expense-procedure-objection-period (holiday)" cite "Bankr. D. Haw. LBR 2015-1(a)"
+{
+  given ClaimsNoticeDated() on 2025-12-04
+  expect deadline(expense-procedure-objection-period) == 2026-01-02
+}
 /// Bankr. D. Haw. LBR 2015-1(b): the trustee's motion to pay an
 /// administrative expense over $1,000 provides 14-day notice of a deadline
 /// to object.
@@ -269,16 +281,40 @@ deadline subchapter-v-deposit-period: 14.days after TrusteeAppointmentNoticeFile
 /// Bankr. D. Haw. LBR 2083-1(e)(1): a motion to dismiss a chapter 13 case
 /// requires 28-day notice of the hearing to the debtor.
 deadline dismissal-hearing-notice-period: 28.days before DismissalHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 2083-1(e)"
+
+test "Counting boundary: dismissal-hearing-notice-period (weekend)" cite "Bankr. D. Haw. LBR 2083-1(e)"
+{
+  given DismissalHearing() on 2025-12-06
+  expect deadline(dismissal-hearing-notice-period) == 2025-11-07
+}
 /// Bankr. D. Haw. LBR 2083-1(e)(2): the debtor's attorney meets and confers
 /// with the trustee at least 7 days before the dismissal hearing.
 deadline dismissal-meet-and-confer-period: 7.days before DismissalHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 2083-1(e)"
+
+test "Counting boundary: dismissal-meet-and-confer-period (holiday)" cite "Bankr. D. Haw. LBR 2083-1(e)"
+{
+  given DismissalHearing() on 2025-12-04
+  expect deadline(dismissal-meet-and-confer-period) == 2025-11-26
+}
 /// Bankr. D. Haw. LBR 2083-2(c): notice of the hearing on a chapter 13
 /// debtor's motion to sell is given not less than 28 days in advance of the
 /// hearing.
 deadline sale-hearing-notice-period: 28.days before SaleHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 2083-2(c)"
+
+test "Counting boundary: sale-hearing-notice-period (weekend)" cite "Bankr. D. Haw. LBR 2083-2(c)"
+{
+  given SaleHearing() on 2025-12-06
+  expect deadline(sale-hearing-notice-period) == 2025-11-07
+}
 /// Bankr. D. Haw. LBR 2083-2(d): an objection to the sale is timely if
 /// filed not less than 7 days before the hearing.
 deadline sale-objection-period: 7.days before SaleHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 2083-2(d)"
+
+test "Counting boundary: sale-objection-period (holiday)" cite "Bankr. D. Haw. LBR 2083-2(d)"
+{
+  given SaleHearing() on 2025-12-04
+  expect deadline(sale-objection-period) == 2025-11-26
+}
 /// Bankr. D. Haw. LBR 2083-2(f)(1): within 14 days after the closing of the
 /// sale, the debtor files a report of sale.
 deadline sale-report-period: 14.days after SaleClosed() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 2083-2(f)"
@@ -294,24 +330,54 @@ deadline chapter-11-claim-period: 90.days after FirstMeetingDate() counted_by ba
 /// timely if filed not later than 70 days after the order for relief under
 /// that chapter.
 deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 3003-1"
+
+test "Counting boundary: subchapter-v-claim-period (weekend)" cite "Bankr. D. Haw. LBR 3003-1"
+{
+  given OrderForReliefEntered() on 2025-12-06
+  expect deadline(subchapter-v-claim-period) == 2026-02-17
+}
 /// Bankr. D. Haw. LBR 3004-1(b): a creditor may file an amended proof of
 /// claim within 30 days after service of the notice of a claim filed on its
 /// behalf.
 deadline amended-surrogate-claim-period: 30.days after SurrogateClaimNoticeServed() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 3004-1(b)"
+
+test "Counting boundary: amended-surrogate-claim-period (holiday)" cite "Bankr. D. Haw. LBR 3004-1(b)"
+{
+  given SurrogateClaimNoticeServed() on 2025-12-02
+  expect deadline(amended-surrogate-claim-period) == 2026-01-02
+}
 /// Bankr. D. Haw. LBR 3007-1(b): a claim objection gives not less than 30
 /// days' notice of the deadline to respond.
 deadline claim-objection-notice-period: 30.days before ClaimObjectionHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 3007-1(b)"
 /// Bankr. D. Haw. LBR 3007-1(c): a response to a claim objection is due 7
 /// days before the scheduled hearing.
 deadline claim-objection-response-period: 7.days before ClaimObjectionHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 3007-1(c)"
+
+test "Counting boundary: claim-objection-response-period (holiday)" cite "Bankr. D. Haw. LBR 3007-1(c)"
+{
+  given ClaimObjectionHearing() on 2025-12-04
+  expect deadline(claim-objection-response-period) == 2025-11-26
+}
 /// Bankr. D. Haw. LBR 3015-1(g)(3)(B): the debtor serves the chapter 13
 /// plan and files a certificate of service at least 28 days before the
 /// confirmation hearing.
 deadline plan-service-period: 28.days before ConfirmationHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 3015-1(g)"
+
+test "Counting boundary: plan-service-period (weekend)" cite "Bankr. D. Haw. LBR 3015-1(g)"
+{
+  given ConfirmationHearing() on 2025-12-06
+  expect deadline(plan-service-period) == 2025-11-07
+}
 /// Bankr. D. Haw. LBR 3015-2(b)(1)(C), (2): an objection or response to a
 /// motion to modify a confirmed chapter 13 plan is filed not later than 7
 /// days before the hearing.
 deadline modification-objection-period: 7.days before ModificationHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 3015-2(b)"
+
+test "Counting boundary: modification-objection-period (holiday)" cite "Bankr. D. Haw. LBR 3015-2(b)"
+{
+  given ModificationHearing() on 2025-12-04
+  expect deadline(modification-objection-period) == 2025-11-26
+}
 /// Bankr. D. Haw. LBR 3015-3(d)(1): the case is dismissed unless, within 14
 /// days after entry of the order denying confirmation, the debtor files an
 /// amended plan or converts.
@@ -319,20 +385,50 @@ deadline denied-confirmation-action-period: 14.days after ConfirmationDenied() c
 /// Bankr. D. Haw. LBR 3017-1(c): a written objection to a disclosure
 /// statement is filed not later than 7 days before the hearing.
 deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 3017-1(c)"
+
+test "Counting boundary: disclosure-statement-objection-period (holiday)" cite "Bankr. D. Haw. LBR 3017-1(c)"
+{
+  given DisclosureStatementHearing() on 2025-12-04
+  expect deadline(disclosure-statement-objection-period) == 2025-11-26
+}
 /// Bankr. D. Haw. LBR 3018-1(c): the plan proponent files a ballot
 /// tabulation report not later than 7 days before the confirmation hearing.
 deadline ballot-report-period: 7.days before ConfirmationHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 3018-1(c)"
+
+test "Counting boundary: ballot-report-period (holiday)" cite "Bankr. D. Haw. LBR 3018-1(c)"
+{
+  given ConfirmationHearing() on 2025-12-04
+  expect deadline(ballot-report-period) == 2025-11-26
+}
 /// Bankr. D. Haw. LBR 3020-1(b): unless the court orders otherwise,
 /// objections to confirmation of a chapter 11 plan are filed not later than
 /// 7 days before the hearing.
 deadline confirmation-objection-period: 7.days before ConfirmationHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 3020-1(b)"
+
+test "Counting boundary: confirmation-objection-period (holiday)" cite "Bankr. D. Haw. LBR 3020-1(b)"
+{
+  given ConfirmationHearing() on 2025-12-04
+  expect deadline(confirmation-objection-period) == 2025-11-26
+}
 /// Bankr. D. Haw. LBR 3022-1: if no objection is filed within 30 days after
 /// the filing of an application for a final decree, the court may enter it.
 deadline final-decree-objection-period: 30.days after FinalDecreeApplicationFiled() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 3022-1"
+
+test "Counting boundary: final-decree-objection-period (holiday)" cite "Bankr. D. Haw. LBR 3022-1"
+{
+  given FinalDecreeApplicationFiled() on 2025-12-02
+  expect deadline(final-decree-objection-period) == 2026-01-02
+}
 /// Bankr. D. Haw. LBR 3070-2(g): to suspend distribution on a disputed
 /// claim, the debtor files and serves an objection not later than 28 days
 /// after the trustee's notice of claims filed.
 deadline disputed-claim-objection-period: 28.days after ClaimsNoticeFiled() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 3070-2(g)"
+
+test "Counting boundary: disputed-claim-objection-period (holiday)" cite "Bankr. D. Haw. LBR 3070-2(g)"
+{
+  given ClaimsNoticeFiled() on 2025-12-04
+  expect deadline(disputed-claim-objection-period) == 2026-01-02
+}
 /// Bankr. D. Haw. LBR 3070-2(i): debtor's counsel seeking a distribution
 /// after dismissal or conversion files a fee application not later than 14
 /// days after it.
@@ -340,9 +436,21 @@ deadline post-dismissal-fee-application-period: 14.days after CaseDismissedOrCon
 /// Bankr. D. Haw. LBR 4001-1(e)(1)(A): an opposition to a motion for relief
 /// from the automatic stay is filed and served 14 days before the hearing.
 deadline stay-relief-opposition-period: 14.days before StayReliefHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 4001-1(e)"
+
+test "Counting boundary: stay-relief-opposition-period (weekend)" cite "Bankr. D. Haw. LBR 4001-1(e)"
+{
+  given StayReliefHearing() on 2025-12-06
+  expect deadline(stay-relief-opposition-period) == 2025-11-21
+}
 /// Bankr. D. Haw. LBR 4001-1(e)(1)(B): the movant's reply is filed and
 /// served 7 days before the hearing.
 deadline stay-relief-reply-period: 7.days before StayReliefHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 4001-1(e)"
+
+test "Counting boundary: stay-relief-reply-period (holiday)" cite "Bankr. D. Haw. LBR 4001-1(e)"
+{
+  given StayReliefHearing() on 2025-12-04
+  expect deadline(stay-relief-reply-period) == 2025-11-26
+}
 /// Bankr. D. Haw. LBR 4001-4(c)(2): the debtor's notice gives the landlord
 /// a 14-day objection deadline on the rent payment certification.
 deadline rent-certification-objection-period: 14.days after RentCertificationNoticeServed() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 4001-4(c)"
@@ -350,21 +458,51 @@ deadline rent-certification-objection-period: 14.days after RentCertificationNot
 /// individual's discharge certification is filed within 30 days after the
 /// certification and notice are filed.
 deadline chapter-11-discharge-objection-period: 30.days after ChapterElevenDischargeNoticeFiled() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 4004-3(b)"
+
+test "Counting boundary: chapter-11-discharge-objection-period (holiday)" cite "Bankr. D. Haw. LBR 4004-3(b)"
+{
+  given ChapterElevenDischargeNoticeFiled() on 2025-12-02
+  expect deadline(chapter-11-discharge-objection-period) == 2026-01-02
+}
 /// Bankr. D. Haw. LBR 4004-3(c)(1): any objection to a chapter 12 or 13
 /// discharge certification is filed within 30 days after the date of the
 /// notice.
 deadline chapter-13-discharge-objection-period: 30.days after DischargeCertificationNoticeDated() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 4004-3(c)"
+
+test "Counting boundary: chapter-13-discharge-objection-period (holiday)" cite "Bankr. D. Haw. LBR 4004-3(c)"
+{
+  given DischargeCertificationNoticeDated() on 2025-12-02
+  expect deadline(chapter-13-discharge-objection-period) == 2026-01-02
+}
 /// Bankr. D. Haw. LBR 5005-1(c)(4): a party affected by the clerk's
 /// rejection of a document may move for judicial action within 7 days after
 /// the rejection notice.
 deadline rejection-review-period: 7.days after RejectionNoticeDated() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 5005-1(c)"
+
+test "Counting boundary: rejection-review-period (weekend)" cite "Bankr. D. Haw. LBR 5005-1(c)"
+{
+  given RejectionNoticeDated() on 2025-12-06
+  expect deadline(rejection-review-period) == 2025-12-15
+}
 /// Bankr. D. Haw. LBR 5005-4(f): the Declaration re: Electronic Filing is
 /// filed within 7 days after the electronic filing of the document.
 deadline electronic-filing-declaration-period: 7.days after DocumentFiledElectronically() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 5005-4(f)"
+
+test "Counting boundary: electronic-filing-declaration-period (weekend)" cite "Bankr. D. Haw. LBR 5005-4(f)"
+{
+  given DocumentFiledElectronically() on 2025-12-06
+  expect deadline(electronic-filing-declaration-period) == 2025-12-15
+}
 /// Bankr. D. Haw. LBR 5077-1(f): a party requests redaction of personal
 /// identifiers, or moves to redact other information, not later than 21
 /// days after the transcript is filed.
 deadline transcript-redaction-period: 21.days after TranscriptFiled() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 5077-1(f)"
+
+test "Counting boundary: transcript-redaction-period (holiday)" cite "Bankr. D. Haw. LBR 5077-1(f)"
+{
+  given TranscriptFiled() on 2025-12-04
+  expect deadline(transcript-redaction-period) == 2025-12-26
+}
 /// Bankr. D. Haw. LBR 5077-1(g): the transcriber files a redacted
 /// transcript not later than 14 days after the court grants the motion.
 deadline redacted-transcript-period: 14.days after RedactionMotionGranted() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 5077-1(g)"
@@ -372,10 +510,22 @@ deadline redacted-transcript-period: 14.days after RedactionMotionGranted() coun
 /// described in a notice is filed not later than 21 days after the notice
 /// is filed.
 deadline sale-procedure-objection-period: 21.days after ClaimNoticeFiled() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 6004-1(d)"
+
+test "Counting boundary: sale-procedure-objection-period (holiday)" cite "Bankr. D. Haw. LBR 6004-1(d)"
+{
+  given ClaimNoticeFiled() on 2025-12-04
+  expect deadline(sale-procedure-objection-period) == 2025-12-26
+}
 /// Bankr. D. Haw. LBR 7016-1(b)(2): each party files and serves a
 /// scheduling conference statement not later than 7 days before the
 /// scheduling conference.
 deadline scheduling-statement-period: 7.days before SchedulingConference() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 7016-1(b)"
+
+test "Counting boundary: scheduling-statement-period (holiday)" cite "Bankr. D. Haw. LBR 7016-1(b)"
+{
+  given SchedulingConference() on 2025-12-04
+  expect deadline(scheduling-statement-period) == 2025-11-26
+}
 /// Bankr. D. Haw. LBR 7041-1(b)(3): absent an objection filed within 14
 /// days after the notice is filed, the court may dismiss the objection to
 /// discharge.
@@ -384,22 +534,58 @@ deadline discharge-dismissal-objection-period: 14.days after DischargeDismissalN
 /// obtained on a motion heard on notice of not less than 28 days to the
 /// defendant.
 deadline default-judgment-notice-period: 28.days before DefaultJudgmentHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 7055-1(b)"
+
+test "Counting boundary: default-judgment-notice-period (weekend)" cite "Bankr. D. Haw. LBR 7055-1(b)"
+{
+  given DefaultJudgmentHearing() on 2025-12-06
+  expect deadline(default-judgment-notice-period) == 2025-11-07
+}
 /// Bankr. D. Haw. LBR 7056-1(j): a motion for summary judgment is filed so
 /// as to be heard not later than 28 days before the trial date.
 deadline summary-judgment-hearing-period: 28.days before TrialDate() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 7056-1(j)"
+
+test "Counting boundary: summary-judgment-hearing-period (weekend)" cite "Bankr. D. Haw. LBR 7056-1(j)"
+{
+  given TrialDate() on 2025-12-06
+  expect deadline(summary-judgment-hearing-period) == 2025-11-07
+}
 /// Bankr. D. Haw. LBR 9013-1(c)(1): unless the court directs otherwise, a
 /// movant gives notice of the hearing not later than 28 days before it.
 deadline motion-notice-period: 28.days before MotionHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 9013-1(c)"
+
+test "Counting boundary: motion-notice-period (weekend)" cite "Bankr. D. Haw. LBR 9013-1(c)"
+{
+  given MotionHearing() on 2025-12-06
+  expect deadline(motion-notice-period) == 2025-11-07
+}
 /// Bankr. D. Haw. LBR 9013-1(c)(2): all responses are filed and served not
 /// less than 14 days before the hearing.
 deadline motion-response-period: 14.days before MotionHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 9013-1(c)"
+
+test "Counting boundary: motion-response-period (weekend)" cite "Bankr. D. Haw. LBR 9013-1(c)"
+{
+  given MotionHearing() on 2025-12-06
+  expect deadline(motion-response-period) == 2025-11-21
+}
 /// Bankr. D. Haw. LBR 9013-1(c)(2): the movant may reply not less than 7
 /// days before the hearing.
 deadline motion-reply-period: 7.days before MotionHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 9013-1(c)"
+
+test "Counting boundary: motion-reply-period (holiday)" cite "Bankr. D. Haw. LBR 9013-1(c)"
+{
+  given MotionHearing() on 2025-12-04
+  expect deadline(motion-reply-period) == 2025-11-26
+}
 /// Bankr. D. Haw. LBR 9018-1(c): no later than 7 days after a motion to
 /// seal is filed, a party contending the information is not entitled to
 /// confidential treatment may object.
 deadline seal-objection-period: 7.days after SealMotionFiled() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 9018-1(c)"
+
+test "Counting boundary: seal-objection-period (weekend)" cite "Bankr. D. Haw. LBR 9018-1(c)"
+{
+  given SealMotionFiled() on 2025-12-06
+  expect deadline(seal-objection-period) == 2025-12-15
+}
 /// Bankr. D. Haw. LBR 9024-1(a): a motion for reconsideration of an
 /// interlocutory order is filed no later than 14 days after its entry.
 deadline reconsideration-period: 14.days after InterlocutoryOrderEntered() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 9024-1(a)"
@@ -407,19 +593,49 @@ deadline reconsideration-period: 14.days after InterlocutoryOrderEntered() count
 /// circulates the proposed order within 7 days after the announcement of
 /// the court's ruling.
 deadline proposed-order-period: 7.days after RulingAnnounced() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 9072-1(d)"
+
+test "Counting boundary: proposed-order-period (weekend)" cite "Bankr. D. Haw. LBR 9072-1(d)"
+{
+  given RulingAnnounced() on 2025-12-06
+  expect deadline(proposed-order-period) == 2025-12-15
+}
 /// Bankr. D. Haw. LBR 9072-1(d)(3): an objecting party submits a statement
 /// of objections and an alternate form of order within 7 days after the
 /// notice of submission.
 deadline form-of-order-objection-period: 7.days after OrderSubmissionNoticed() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 9072-1(d)"
+
+test "Counting boundary: form-of-order-objection-period (weekend)" cite "Bankr. D. Haw. LBR 9072-1(d)"
+{
+  given OrderSubmissionNoticed() on 2025-12-06
+  expect deadline(form-of-order-objection-period) == 2025-12-15
+}
 /// Bankr. D. Haw. LBR 9074-1(a): a request for remote participation in a
 /// trial or evidentiary hearing is filed no later than 28 days before it.
 deadline remote-participation-request-period: 28.days before TrialDate() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 9074-1(a)"
+
+test "Counting boundary: remote-participation-request-period (weekend)" cite "Bankr. D. Haw. LBR 9074-1(a)"
+{
+  given TrialDate() on 2025-12-06
+  expect deadline(remote-participation-request-period) == 2025-11-07
+}
 /// Bankr. D. Haw. LBR 9074-1(a): objections to remote participation are
 /// filed within 7 days after the request is filed.
 deadline remote-participation-objection-period: 7.days after RemoteRequestFiled() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 9074-1(a)"
+
+test "Counting boundary: remote-participation-objection-period (weekend)" cite "Bankr. D. Haw. LBR 9074-1(a)"
+{
+  given RemoteRequestFiled() on 2025-12-06
+  expect deadline(remote-participation-objection-period) == 2025-12-15
+}
 /// Bankr. D. Haw. LBR 9074-1(b): for good cause, a party moves for a remote
 /// video appearance at least 14 days before the hearing.
 deadline remote-video-motion-period: 14.days before MotionHearing() counted_by bankr-hi-9006 cite "Bankr. D. Haw. LBR 9074-1(b)"
+
+test "Counting boundary: remote-video-motion-period (weekend)" cite "Bankr. D. Haw. LBR 9074-1(b)"
+{
+  given MotionHearing() on 2025-12-06
+  expect deadline(remote-video-motion-period) == 2025-11-21
+}
 
 start motion-filed
 

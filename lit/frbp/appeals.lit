@@ -108,6 +108,12 @@ rule duty cross-notice-duty effective [2025-12-01, ..) known_at 2025-12-01 cite 
       within prescribed_due + 21.days
     }
   }
+
+test "Counting boundary: cross-notice-period (weekend)" cite "FRBP 8002(a)(3)"
+{
+  given NoticeOfAppealFiled() on 2025-12-06
+  expect deadline(cross-notice-period) == 2025-12-22
+}
 }
 
 /// FRBP 8004: an interlocutory appeal under 28 U.S.C. § 158(a)(3) needs
@@ -118,7 +124,19 @@ rule duty cross-notice-duty effective [2025-12-01, ..) known_at 2025-12-01 cite 
 rule duty leave-to-appeal-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8004"
 {
   deadline leave-response-period: 14.days after LeaveToAppealMotionServed() counted_by frbp9006 cite "FRBP 8004(b)(2)"
+
+test "Counting boundary: leave-response-period (weekend)" cite "FRBP 8004(b)(2)"
+{
+  given LeaveToAppealMotionServed() on 2025-12-06
+  expect deadline(leave-response-period) == 2025-12-22
+}
   deadline leave-motion-period: 14.days after LeaveMotionOrdered() counted_by frbp9006 cite "FRBP 8004(d)(2)"
+
+test "Counting boundary: leave-motion-period (weekend)" cite "FRBP 8004(d)(2)"
+{
+  given LeaveMotionOrdered() on 2025-12-06
+  expect deadline(leave-motion-period) == 2025-12-22
+}
 }
 
 /// FRBP 8005 and 28 U.S.C. § 158(c)(1): where a BAP hears appeals, the
@@ -129,8 +147,26 @@ rule duty leave-to-appeal-duty effective [2025-12-01, ..) known_at 2025-12-01 ci
 rule duty election-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8005"
 {
   deadline appellant-election-period: 0.days after NoticeOfAppealFiled() counted_by frbp9006 cite "28 U.S.C. § 158(c)(1)(A)"
+
+test "Counting boundary: appellant-election-period (weekend)" cite "28 U.S.C. § 158(c)(1)(A)"
+{
+  given NoticeOfAppealFiled() on 2025-12-06
+  expect deadline(appellant-election-period) == 2025-12-08
+}
   deadline other-party-election-period: 30.days after NoticeOfAppealServed() counted_by frbp9006 cite "28 U.S.C. § 158(c)(1)(B)"
+
+test "Counting boundary: other-party-election-period (holiday)" cite "28 U.S.C. § 158(c)(1)(B)"
+{
+  given NoticeOfAppealServed() on 2025-12-02
+  expect deadline(other-party-election-period) == 2026-01-02
+}
   deadline election-validity-period: 14.days after ElectionStatementFiled() counted_by frbp9006 cite "FRBP 8005(c)"
+
+test "Counting boundary: election-validity-period (weekend)" cite "FRBP 8005(c)"
+{
+  given ElectionStatementFiled() on 2025-12-06
+  expect deadline(election-validity-period) == 2025-12-22
+}
 }
 
 /// FRBP 8006: a request to certify a direct appeal is due within 60 days
@@ -145,7 +181,19 @@ rule duty direct-review-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
 {
   deadline direct-certification-request-period: 60.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 8006(f)(1)"
   deadline direct-certification-response-period: 14.days after DirectCertificationRequestServed() counted_by frbp9006 cite "FRBP 8006(f)(3)(A)"
+
+test "Counting boundary: direct-certification-response-period (weekend)" cite "FRBP 8006(f)(3)(A)"
+{
+  given DirectCertificationRequestServed() on 2025-12-06
+  expect deadline(direct-certification-response-period) == 2025-12-22
+}
   deadline direct-authorization-petition-period: 30.days after CertificationEffective() counted_by frbp9006 cite "FRBP 8006(g)"
+
+test "Counting boundary: direct-authorization-petition-period (holiday)" cite "FRBP 8006(g)"
+{
+  given CertificationEffective() on 2025-12-02
+  expect deadline(direct-authorization-petition-period) == 2026-01-02
+}
 }
 
 /// FRBP 8009: the appellant designates the record, states the issues, and
@@ -163,13 +211,61 @@ rule duty direct-review-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
 rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8009"
 {
   deadline appellant-designation-period: 14.days after NoticeOfAppealEffective() counted_by frbp9006 cite "FRBP 8009(a)(1)(B)"
+
+test "Counting boundary: appellant-designation-period (weekend)" cite "FRBP 8009(a)(1)(B)"
+{
+  given NoticeOfAppealEffective() on 2025-12-06
+  expect deadline(appellant-designation-period) == 2025-12-22
+}
   deadline appellant-designation-leave-period: 14.days after LeaveToAppealGranted() counted_by frbp9006 cite "FRBP 8009(a)(1)(B)"
+
+test "Counting boundary: appellant-designation-leave-period (weekend)" cite "FRBP 8009(a)(1)(B)"
+{
+  given LeaveToAppealGranted() on 2025-12-06
+  expect deadline(appellant-designation-leave-period) == 2025-12-22
+}
   deadline transcript-order-period: 14.days after NoticeOfAppealEffective() counted_by frbp9006 cite "FRBP 8009(b)(1)"
+
+test "Counting boundary: transcript-order-period (weekend)" cite "FRBP 8009(b)(1)"
+{
+  given NoticeOfAppealEffective() on 2025-12-06
+  expect deadline(transcript-order-period) == 2025-12-22
+}
   deadline appellee-designation-period: 14.days after AppellantDesignationServed() counted_by frbp9006 cite "FRBP 8009(a)(2)(A)"
+
+test "Counting boundary: appellee-designation-period (weekend)" cite "FRBP 8009(a)(2)(A)"
+{
+  given AppellantDesignationServed() on 2025-12-06
+  expect deadline(appellee-designation-period) == 2025-12-22
+}
   deadline cross-appellee-designation-period: 14.days after CrossAppellantDesignationServed() counted_by frbp9006 cite "FRBP 8009(a)(3)"
+
+test "Counting boundary: cross-appellee-designation-period (weekend)" cite "FRBP 8009(a)(3)"
+{
+  given CrossAppellantDesignationServed() on 2025-12-06
+  expect deadline(cross-appellee-designation-period) == 2025-12-22
+}
   deadline cross-appellant-transcript-period: 14.days after AppellantTranscriptOrderFiled() counted_by frbp9006 cite "FRBP 8009(b)(2)"
+
+test "Counting boundary: cross-appellant-transcript-period (weekend)" cite "FRBP 8009(b)(2)"
+{
+  given AppellantTranscriptOrderFiled() on 2025-12-06
+  expect deadline(cross-appellant-transcript-period) == 2025-12-22
+}
   deadline appellee-transcript-period: 14.days after AppellantTranscriptOrderFiled() counted_by frbp9006 cite "FRBP 8009(b)(3)"
+
+test "Counting boundary: appellee-transcript-period (weekend)" cite "FRBP 8009(b)(3)"
+{
+  given AppellantTranscriptOrderFiled() on 2025-12-06
+  expect deadline(appellee-transcript-period) == 2025-12-22
+}
   deadline evidence-statement-objection-period: 14.days after EvidenceStatementServed() counted_by frbp9006 cite "FRBP 8009(c)(2)"
+
+test "Counting boundary: evidence-statement-objection-period (weekend)" cite "FRBP 8009(c)(2)"
+{
+  given EvidenceStatementServed() on 2025-12-06
+  expect deadline(evidence-statement-objection-period) == 2025-12-22
+}
 }
 
 /// FRBP 8013: unless the district court or BAP orders otherwise, a
@@ -180,8 +276,26 @@ rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 
 rule duty appeal-motion-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8013"
 {
   deadline motion-response-period: 7.days after AppealMotionServed() counted_by frbp9006 cite "FRBP 8013(a)(3)(A)"
+
+test "Counting boundary: motion-response-period (weekend)" cite "FRBP 8013(a)(3)(A)"
+{
+  given AppealMotionServed() on 2025-12-06
+  expect deadline(motion-response-period) == 2025-12-15
+}
   deadline motion-reply-period: 7.days after AppealMotionResponseServed() counted_by frbp9006 cite "FRBP 8013(a)(3)(B)"
+
+test "Counting boundary: motion-reply-period (weekend)" cite "FRBP 8013(a)(3)(B)"
+{
+  given AppealMotionResponseServed() on 2025-12-06
+  expect deadline(motion-reply-period) == 2025-12-15
+}
   deadline procedural-order-reconsideration-period: 7.days after ProceduralOrderServed() counted_by frbp9006 cite "FRBP 8013(b)"
+
+test "Counting boundary: procedural-order-reconsideration-period (weekend)" cite "FRBP 8013(b)"
+{
+  given ProceduralOrderServed() on 2025-12-06
+  expect deadline(procedural-order-reconsideration-period) == 2025-12-15
+}
 }
 
 /// FRBP 8018(a): unless the district court or BAP orders otherwise, the
@@ -199,11 +313,47 @@ rule duty appeal-motion-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
 rule duty briefing-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8018(a)"
 {
   deadline appellant-brief-period: 30.days after RecordMadeAvailable() counted_by frbp9006 cite "FRBP 8018(a)(1)"
+
+test "Counting boundary: appellant-brief-period (holiday)" cite "FRBP 8018(a)(1)"
+{
+  given RecordMadeAvailable() on 2025-12-02
+  expect deadline(appellant-brief-period) == 2026-01-02
+}
   deadline appellee-brief-period: 30.days after AppellantBriefServed() counted_by frbp9006 cite "FRBP 8018(a)(2)"
+
+test "Counting boundary: appellee-brief-period (holiday)" cite "FRBP 8018(a)(2)"
+{
+  given AppellantBriefServed() on 2025-12-02
+  expect deadline(appellee-brief-period) == 2026-01-02
+}
   deadline reply-brief-period: 14.days after AppelleeBriefServed() counted_by frbp9006 cite "FRBP 8018(a)(3)"
+
+test "Counting boundary: reply-brief-period (weekend)" cite "FRBP 8018(a)(3)"
+{
+  given AppelleeBriefServed() on 2025-12-06
+  expect deadline(reply-brief-period) == 2025-12-22
+}
   deadline cross-appeal-reply-brief-period: 30.days after CrossAppealResponseBriefServed() counted_by frbp9006 cite "FRBP 8016(e)(3)"
+
+test "Counting boundary: cross-appeal-reply-brief-period (holiday)" cite "FRBP 8016(e)(3)"
+{
+  given CrossAppealResponseBriefServed() on 2025-12-02
+  expect deadline(cross-appeal-reply-brief-period) == 2026-01-02
+}
   deadline cross-appeal-final-reply-period: 14.days after CrossAppealReplyBriefServed() counted_by frbp9006 cite "FRBP 8016(e)(4)"
+
+test "Counting boundary: cross-appeal-final-reply-period (weekend)" cite "FRBP 8016(e)(4)"
+{
+  given CrossAppealReplyBriefServed() on 2025-12-06
+  expect deadline(cross-appeal-final-reply-period) == 2025-12-22
+}
   deadline supplemental-authorities-response-period: 7.days after SupplementalAuthoritiesServed() counted_by frbp9006 cite "FRBP 8014(f)"
+
+test "Counting boundary: supplemental-authorities-response-period (weekend)" cite "FRBP 8014(f)"
+{
+  given SupplementalAuthoritiesServed() on 2025-12-06
+  expect deadline(supplemental-authorities-response-period) == 2025-12-15
+}
 }
 
 /// FRBP 8021(d): a party who wants costs taxed files and serves a bill of
@@ -213,7 +363,19 @@ rule duty briefing-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRB
 rule duty costs-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8021(d)"
 {
   deadline bill-of-costs-period: 14.days after AppealJudgmentEntered() counted_by frbp9006 cite "FRBP 8021(d)"
+
+test "Counting boundary: bill-of-costs-period (weekend)" cite "FRBP 8021(d)"
+{
+  given AppealJudgmentEntered() on 2025-12-06
+  expect deadline(bill-of-costs-period) == 2025-12-22
+}
   deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frbp9006 cite "FRBP 8021(d)"
+
+test "Counting boundary: costs-objection-period (weekend)" cite "FRBP 8021(d)"
+{
+  given BillOfCostsServed() on 2025-12-06
+  expect deadline(costs-objection-period) == 2025-12-22
+}
 }
 
 /// FRBP 8022(a)(1): unless shortened or extended by order or local rule, a
@@ -222,6 +384,12 @@ rule duty costs-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8
 rule duty rehearing-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8022(a)(1)"
 {
   deadline rehearing-period: 14.days after AppealJudgmentEntered() counted_by frbp9006 cite "FRBP 8022(a)(1)"
+
+test "Counting boundary: rehearing-period (weekend)" cite "FRBP 8022(a)(1)"
+{
+  given AppealJudgmentEntered() on 2025-12-06
+  expect deadline(rehearing-period) == 2025-12-22
+}
 }
 
 test "notice period runs 14 days after bankruptcy order entered" cite "FRBP 8002(a)(1)"

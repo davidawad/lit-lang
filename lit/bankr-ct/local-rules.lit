@@ -138,14 +138,32 @@ event MailingAddressChanged()
 /// correcting addresses, the debtor files an amended creditor list, schedule
 /// or statement identifying the changes.
 deadline amended-list-period: 7.days after ListAmended() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 1009-1(a)"
+
+test "Counting boundary: amended-list-period (weekend)" cite "Bankr. D. Conn. LBR 1009-1(a)"
+{
+  given ListAmended() on 2026-03-21
+  expect deadline(amended-list-period) == 2026-03-30
+}
 /// LBR 1015-1(b): unless otherwise ordered, the debtor serves an order
 /// granting joint administration on all creditors and parties in interest
 /// within 7 days after its entry.
 deadline joint-administration-service-period: 7.days after JointAdministrationOrdered() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 1015-1(b)"
+
+test "Counting boundary: joint-administration-service-period (weekend)" cite "Bankr. D. Conn. LBR 1015-1(b)"
+{
+  given JointAdministrationOrdered() on 2026-03-21
+  expect deadline(joint-administration-service-period) == 2026-03-30
+}
 /// LBR 1016-1: within 30 days of learning of the debtor's death or
 /// incompetency, the debtor's attorney files and serves a Notice of the
 /// Debtor's Death or Incompetency.
 deadline death-notice-period: 30.days after DeathOrIncompetencyLearned() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 1016-1"
+
+test "Counting boundary: death-notice-period (weekend)" cite "Bankr. D. Conn. LBR 1016-1"
+{
+  given DeathOrIncompetencyLearned() on 2026-03-19
+  expect deadline(death-notice-period) == 2026-04-20
+}
 /// LBR 1019-1: within 14 days after an order converting a case to chapter
 /// 7, the debtor files the schedules of remaining assets, abandoned property,
 /// property released from the stay and unpaid post-petition obligations.
@@ -154,14 +172,32 @@ deadline conversion-documents-period: 14.days after CaseConverted() counted_by f
 /// 2004 Agreement is filed and served within 7 days after the notice of the
 /// agreement is filed; absent one, the agreement is deemed ordered.
 deadline rule-2004-agreement-objection-period: 7.days after Rule2004AgreementNoticed() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 2004-1(b)"
+
+test "Counting boundary: rule-2004-agreement-objection-period (weekend)" cite "Bankr. D. Conn. LBR 2004-1(b)"
+{
+  given Rule2004AgreementNoticed() on 2026-03-21
+  expect deadline(rule-2004-agreement-objection-period) == 2026-03-30
+}
 /// LBR 2015-1: within 45 days after the order confirming a chapter 11 or
 /// subchapter V plan, the debtor in possession, trustee, distributor or plan
 /// proponent files its first report on consummation of the plan.
 deadline post-confirmation-report-period: 45.days after PlanConfirmed() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 2015-1"
+
+test "Counting boundary: post-confirmation-report-period (weekend)" cite "Bankr. D. Conn. LBR 2015-1"
+{
+  given PlanConfirmed() on 2026-03-18
+  expect deadline(post-confirmation-report-period) == 2026-05-04
+}
 /// LBR 2015-2(a), (d): no later than 7 days after the Notice of Appointment
 /// of Subchapter V Trustee is filed, the debtor tenders $1,000.00 to the
 /// trustee for the trustee's fees and expenses.
 deadline subchapter-v-deposit-period: 7.days after SubchapterVTrusteeAppointed() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 2015-2(a)"
+
+test "Counting boundary: subchapter-v-deposit-period (weekend)" cite "Bankr. D. Conn. LBR 2015-2(a)"
+{
+  given SubchapterVTrusteeAppointed() on 2026-03-21
+  expect deadline(subchapter-v-deposit-period) == 2026-03-30
+}
 /// LBR 2021-1: within 5 days of appointing a committee, the United States
 /// Trustee files a list of its members' names, addresses and telephone
 /// numbers.
@@ -171,59 +207,149 @@ deadline committee-list-period: 5.days after CommitteeAppointed() counted_by frb
 /// on the earlier of 45 days before the bar date or the initial
 /// confirmation hearing (this period and the next; the earlier controls).
 deadline disputed-claim-notice-period: 45.days before ClaimsBarDate() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 3003-1"
+
+test "Counting boundary: disputed-claim-notice-period (weekend)" cite "Bankr. D. Conn. LBR 3003-1"
+{
+  given ClaimsBarDate() on 2026-03-17
+  expect deadline(disputed-claim-notice-period) == 2026-01-30
+}
 /// LBR 3003-1: the same notice, measured from the initial confirmation
 /// hearing.
 deadline disputed-claim-notice-hearing-period: 45.days before InitialConfirmationHearingScheduled() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 3003-1"
+
+test "Counting boundary: disputed-claim-notice-hearing-period (weekend)" cite "Bankr. D. Conn. LBR 3003-1"
+{
+  given InitialConfirmationHearingScheduled() on 2026-03-17
+  expect deadline(disputed-claim-notice-hearing-period) == 2026-01-30
+}
 /// LBR 3014-1: unless 11 U.S.C. § 1125 applies, a class of secured
 /// creditors in a subchapter V case makes the § 1111(b) election on or
 /// before 7 days after the debtor files its initial plan.
 deadline subchapter-v-1111b-election-period: 7.days after SubchapterVPlanFiled() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 3014-1"
+
+test "Counting boundary: subchapter-v-1111b-election-period (weekend)" cite "Bankr. D. Conn. LBR 3014-1"
+{
+  given SubchapterVPlanFiled() on 2026-03-21
+  expect deadline(subchapter-v-1111b-election-period) == 2026-03-30
+}
 /// LBR 3015-1: unless the court orders otherwise, an objection to
 /// confirmation of a chapter 12 plan is filed no later than 7 days before
 /// the confirmation hearing.
 deadline chapter12-confirmation-objection-period: 7.days before Chapter12ConfirmationHearingScheduled() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 3015-1"
+
+test "Counting boundary: chapter12-confirmation-objection-period (weekend)" cite "Bankr. D. Conn. LBR 3015-1"
+{
+  given Chapter12ConfirmationHearingScheduled() on 2026-03-21
+  expect deadline(chapter12-confirmation-objection-period) == 2026-03-13
+}
 /// LBR 3015-2(a): unless the court orders otherwise, an objection to
 /// confirmation of a chapter 13 plan is filed no later than 7 days before
 /// the confirmation hearing.
 deadline chapter13-confirmation-objection-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 3015-2(a)"
+
+test "Counting boundary: chapter13-confirmation-objection-period (weekend)" cite "Bankr. D. Conn. LBR 3015-2(a)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2026-03-21
+  expect deadline(chapter13-confirmation-objection-period) == 2026-03-13
+}
 /// LBR 3020-1: unless the court orders otherwise, an objection to
 /// confirmation of a chapter 11 plan is filed and served no later than 4
 /// days before the confirmation hearing.
 deadline chapter11-confirmation-objection-period: 4.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 3020-1"
+
+test "Counting boundary: chapter11-confirmation-objection-period (weekend)" cite "Bankr. D. Conn. LBR 3020-1"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2026-03-18
+  expect deadline(chapter11-confirmation-objection-period) == 2026-03-13
+}
 /// LBR 4002-1(a): in a chapter 7 case, no later than 7 days before the
 /// first scheduled meeting of creditors, the debtor delivers to the trustee
 /// the documents listed in Appendix I.
 deadline chapter7-trustee-documents-period: 7.days before FirstMeetingDate() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 4002-1(a)"
+
+test "Counting boundary: chapter7-trustee-documents-period (weekend)" cite "Bankr. D. Conn. LBR 4002-1(a)"
+{
+  given FirstMeetingDate() on 2026-03-21
+  expect deadline(chapter7-trustee-documents-period) == 2026-03-13
+}
 /// LBR 4002-1(b): in a chapter 13 case, no later than 7 days before the
 /// first scheduled meeting of creditors, the debtor delivers to the trustee
 /// the documents listed in Appendix J.
 deadline chapter13-trustee-documents-period: 7.days before FirstMeetingDate() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 4002-1(b)"
+
+test "Counting boundary: chapter13-trustee-documents-period (weekend)" cite "Bankr. D. Conn. LBR 4002-1(b)"
+{
+  given FirstMeetingDate() on 2026-03-21
+  expect deadline(chapter13-trustee-documents-period) == 2026-03-13
+}
 /// LBR 4002-1(c)(2): unless the court orders otherwise, an individual
 /// debtor's payment advices for the 60 days before the petition go to the
 /// chapter 7, 12 or 13 trustee, not the court, no later than 7 days before
 /// the initially scheduled § 341 meeting.
 deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 4002-1(c)"
+
+test "Counting boundary: payment-advices-period (weekend)" cite "Bankr. D. Conn. LBR 4002-1(c)"
+{
+  given FirstMeetingDate() on 2026-03-21
+  expect deadline(payment-advices-period) == 2026-03-13
+}
 /// LBR 6004-1(d): unless otherwise ordered, a public sale is advertised at
 /// least 14 days before the sale.
 deadline public-sale-advertising-period: 14.days before PublicSaleScheduled() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 6004-1(d)"
+
+test "Counting boundary: public-sale-advertising-period (weekend)" cite "Bankr. D. Conn. LBR 6004-1(d)"
+{
+  given PublicSaleScheduled() on 2026-03-21
+  expect deadline(public-sale-advertising-period) == 2026-03-06
+}
 /// LBR 7004-1(a)(1), (b)(1): the plaintiff or petitioning creditor files a
 /// certificate of service of the summons within 7 days after service.
 deadline summons-service-certificate-period: 7.days after SummonsServed() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 7004-1(a)"
+
+test "Counting boundary: summons-service-certificate-period (weekend)" cite "Bankr. D. Conn. LBR 7004-1(a)"
+{
+  given SummonsServed() on 2026-03-21
+  expect deadline(summons-service-certificate-period) == 2026-03-30
+}
 /// LBR 7004-1(b)(3): a defendant served in a foreign country files a motion
 /// or answer within 30 days from proper service of the summons and
 /// complaint, unless the court orders a different deadline.
 deadline foreign-defendant-answer-period: 30.days after ForeignServiceMade() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 7004-1(b)"
+
+test "Counting boundary: foreign-defendant-answer-period (weekend)" cite "Bankr. D. Conn. LBR 7004-1(b)"
+{
+  given ForeignServiceMade() on 2026-03-19
+  expect deadline(foreign-defendant-answer-period) == 2026-04-20
+}
 /// LBR 7007-1: unless ordered or noticed otherwise, the 21-day response
 /// deadline of D. Conn. L. Civ. R. 7 applies to every motion in an adversary
 /// proceeding.
 deadline adversary-motion-response-period: 21.days after AdversaryMotionFiled() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 7007-1"
+
+test "Counting boundary: adversary-motion-response-period (weekend)" cite "Bankr. D. Conn. LBR 7007-1"
+{
+  given AdversaryMotionFiled() on 2026-03-21
+  expect deadline(adversary-motion-response-period) == 2026-04-13
+}
 /// LBR 7007-2(a): a motion to exceed the brief page limits is filed at least
 /// 7 days before the deadline for filing the brief.
 deadline excess-pages-motion-period: 7.days before BriefDue() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 7007-2(a)"
+
+test "Counting boundary: excess-pages-motion-period (weekend)" cite "Bankr. D. Conn. LBR 7007-2(a)"
+{
+  given BriefDue() on 2026-03-21
+  expect deadline(excess-pages-motion-period) == 2026-03-13
+}
 /// LBR 7016-1(a): unless otherwise ordered, the initial pretrial order or
 /// initial joint pretrial order is filed 7 days before the initial pretrial
 /// conference.
 deadline initial-pretrial-order-period: 7.days before PretrialConferenceScheduled() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 7016-1(a)"
+
+test "Counting boundary: initial-pretrial-order-period (weekend)" cite "Bankr. D. Conn. LBR 7016-1(a)"
+{
+  given PretrialConferenceScheduled() on 2026-03-21
+  expect deadline(initial-pretrial-order-period) == 2026-03-13
+}
 /// LBR 9014-1(d)(1), (e): a response or objection is filed no later than the
 /// Response Date, 14 days from the filing of the Notice of Contested Matter
 /// Procedure (21 days where FRBP 2002(a) applies, which is lit/frbp's).
@@ -231,6 +357,12 @@ deadline contested-matter-response-period: 14.days after ContestedMatterNoticed(
 /// LBR 9014-1(j)(1): a request for continuance of an Initial Hearing is made
 /// at least 7 days before the scheduled Initial Hearing.
 deadline initial-hearing-continuance-period: 7.days before InitialHearingScheduled() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 9014-1(j)"
+
+test "Counting boundary: initial-hearing-continuance-period (weekend)" cite "Bankr. D. Conn. LBR 9014-1(j)"
+{
+  given InitialHearingScheduled() on 2026-03-21
+  expect deadline(initial-hearing-continuance-period) == 2026-03-13
+}
 /// LBR 9027-1(d): a party whose removed complaint or answer does not comply
 /// with FRBP 7008 and 7012(b) files an amended complaint or answer
 /// addressing the entry of final orders within 5 days after the notice of
@@ -240,6 +372,12 @@ deadline removal-amended-pleading-period: 5.days after RemovalNoticed() counted_
 /// self-represented filer, claimant or other party in interest files notice
 /// of it.
 deadline address-change-notice-period: 7.days after MailingAddressChanged() counted_by frbp9006-connecticut cite "Bankr. D. Conn. LBR 9083-5(b)"
+
+test "Counting boundary: address-change-notice-period (weekend)" cite "Bankr. D. Conn. LBR 9083-5(b)"
+{
+  given MailingAddressChanged() on 2026-03-21
+  expect deadline(address-change-notice-period) == 2026-03-30
+}
 
 start motion-filed
 

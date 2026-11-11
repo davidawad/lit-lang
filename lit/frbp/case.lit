@@ -38,9 +38,33 @@ import frbp.events.{
 rule duty debtor-filings-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 1007"
 {
   deadline schedules-period: 14.days after PetitionFiled() counted_by frbp9006 cite "FRBP 1007(c)(1)"
+
+test "Counting boundary: schedules-period (weekend)" cite "FRBP 1007(c)(1)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(schedules-period) == 2025-12-22
+}
   deadline involuntary-creditor-list-period: 7.days after OrderForReliefEntered() counted_by frbp9006 cite "FRBP 1007(a)(2)"
+
+test "Counting boundary: involuntary-creditor-list-period (weekend)" cite "FRBP 1007(a)(2)"
+{
+  given OrderForReliefEntered() on 2025-12-06
+  expect deadline(involuntary-creditor-list-period) == 2025-12-15
+}
   deadline involuntary-schedules-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "FRBP 1007(c)(2)"
+
+test "Counting boundary: involuntary-schedules-period (weekend)" cite "FRBP 1007(c)(2)"
+{
+  given OrderForReliefEntered() on 2025-12-06
+  expect deadline(involuntary-schedules-period) == 2025-12-22
+}
   deadline equity-holders-list-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "FRBP 1007(a)(3)"
+
+test "Counting boundary: equity-holders-list-period (weekend)" cite "FRBP 1007(a)(3)"
+{
+  given OrderForReliefEntered() on 2025-12-06
+  expect deadline(equity-holders-list-period) == 2025-12-22
+}
 }
 
 /// FRBP 1011(b): a defense or objection to an involuntary petition is
@@ -48,6 +72,12 @@ rule duty debtor-filings-duty effective [2025-12-01, ..) known_at 2025-12-01 cit
 rule duty involuntary-answer-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 1011(b)"
 {
   deadline involuntary-answer-period: 21.days after InvoluntarySummonsServed() counted_by frbp9006 cite "FRBP 1011(b)"
+
+test "Counting boundary: involuntary-answer-period (holiday)" cite "FRBP 1011(b)"
+{
+  given InvoluntarySummonsServed() on 2025-12-04
+  expect deadline(involuntary-answer-period) == 2025-12-26
+}
 }
 
 /// FRBP 1017(e)(2): except as § 704(b)(2) provides otherwise, a motion to
@@ -68,8 +98,26 @@ rule duty abuse-dismissal-duty effective [2025-12-01, ..) known_at 2025-12-01 ci
 rule duty proof-of-claim-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 3002(c)"
 {
   deadline claim-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "FRBP 3002(c)"
+
+test "Counting boundary: claim-period (weekend)" cite "FRBP 3002(c)"
+{
+  given OrderForReliefEntered() on 2025-12-06
+  expect deadline(claim-period) == 2026-02-17
+}
   deadline converted-claim-period: 70.days after CaseConverted() counted_by frbp9006 cite "FRBP 3002(c)"
+
+test "Counting boundary: converted-claim-period (weekend)" cite "FRBP 3002(c)"
+{
+  given CaseConverted() on 2025-12-06
+  expect deadline(converted-claim-period) == 2026-02-17
+}
   deadline involuntary-claim-period: 90.days after OrderForReliefEntered() counted_by frbp9006 cite "FRBP 3002(c)"
+
+test "Counting boundary: involuntary-claim-period (weekend)" cite "FRBP 3002(c)"
+{
+  given OrderForReliefEntered() on 2025-12-01
+  expect deadline(involuntary-claim-period) == 2026-03-02
+}
   deadline governmental-claim-period: 180.days after OrderForReliefEntered() counted_by frbp9006 cite "FRBP 3002(c)(1)"
 }
 
@@ -79,7 +127,19 @@ rule duty proof-of-claim-duty effective [2025-12-01, ..) known_at 2025-12-01 cit
 rule duty chapter13-plan-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 3015(b)"
 {
   deadline chapter13-plan-period: 14.days after PetitionFiled() counted_by frbp9006 cite "FRBP 3015(b)(1)"
+
+test "Counting boundary: chapter13-plan-period (weekend)" cite "FRBP 3015(b)(1)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(chapter13-plan-period) == 2025-12-22
+}
   deadline converted-chapter13-plan-period: 14.days after CaseConverted() counted_by frbp9006 cite "FRBP 3015(b)(2)"
+
+test "Counting boundary: converted-chapter13-plan-period (weekend)" cite "FRBP 3015(b)(2)"
+{
+  given CaseConverted() on 2025-12-06
+  expect deadline(converted-chapter13-plan-period) == 2025-12-22
+}
 }
 
 /// FRBP 4003(b)(1): a party in interest may object to a claimed exemption
@@ -117,9 +177,33 @@ rule duty discharge-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FR
 rule duty adversary-response-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 7012(a)"
 {
   deadline summons-service-period: 7.days after SummonsIssued() counted_by frbp9006 cite "FRBP 7004(e)(1)"
+
+test "Counting boundary: summons-service-period (weekend)" cite "FRBP 7004(e)(1)"
+{
+  given SummonsIssued() on 2025-12-06
+  expect deadline(summons-service-period) == 2025-12-15
+}
   deadline adversary-answer-period: 30.days after SummonsIssued() counted_by frbp9006 cite "FRBP 7012(a)(1)"
+
+test "Counting boundary: adversary-answer-period (holiday)" cite "FRBP 7012(a)(1)"
+{
+  given SummonsIssued() on 2025-12-02
+  expect deadline(adversary-answer-period) == 2026-01-02
+}
   deadline adversary-us-answer-period: 35.days after SummonsIssued() counted_by frbp9006 cite "FRBP 7012(a)(5)(A)"
+
+test "Counting boundary: adversary-us-answer-period (weekend)" cite "FRBP 7012(a)(5)(A)"
+{
+  given SummonsIssued() on 2025-12-06
+  expect deadline(adversary-us-answer-period) == 2026-01-12
+}
   deadline adversary-post-motion-answer-period: 14.days after AdversaryRule12MotionDenied() counted_by frbp9006 cite "FRBP 7012(a)(6)(A)"
+
+test "Counting boundary: adversary-post-motion-answer-period (weekend)" cite "FRBP 7012(a)(6)(A)"
+{
+  given AdversaryRule12MotionDenied() on 2025-12-06
+  expect deadline(adversary-post-motion-answer-period) == 2025-12-22
+}
 }
 
 /// The bankruptcy court's post-judgment motions, each within 14 days after
@@ -130,9 +214,33 @@ rule duty adversary-response-duty effective [2025-12-01, ..) known_at 2025-12-01
 rule duty post-judgment-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9023(b)"
 {
   deadline amend-findings-period: 14.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 7052"
+
+test "Counting boundary: amend-findings-period (weekend)" cite "FRBP 7052"
+{
+  given BankruptcyOrderEntered() on 2025-12-06
+  expect deadline(amend-findings-period) == 2025-12-22
+}
   deadline new-trial-period: 14.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 9023(b)"
+
+test "Counting boundary: new-trial-period (weekend)" cite "FRBP 9023(b)"
+{
+  given BankruptcyOrderEntered() on 2025-12-06
+  expect deadline(new-trial-period) == 2025-12-22
+}
   deadline jury-renewed-motion-period: 14.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 9015(c)"
+
+test "Counting boundary: jury-renewed-motion-period (weekend)" cite "FRBP 9015(c)"
+{
+  given BankruptcyOrderEntered() on 2025-12-06
+  expect deadline(jury-renewed-motion-period) == 2025-12-22
+}
   deadline tolling-relief-motion-period: 14.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 8002(b)(1)(D)"
+
+test "Counting boundary: tolling-relief-motion-period (weekend)" cite "FRBP 8002(b)(1)(D)"
+{
+  given BankruptcyOrderEntered() on 2025-12-06
+  expect deadline(tolling-relief-motion-period) == 2025-12-22
+}
 }
 
 /// FRBP 9033(b): in a non-core proceeding a party may object to the
@@ -142,7 +250,19 @@ rule duty post-judgment-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
 rule duty proposed-findings-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9033(b)"
 {
   deadline findings-objection-period: 14.days after ProposedFindingsServed() counted_by frbp9006 cite "FRBP 9033(b)(1)"
+
+test "Counting boundary: findings-objection-period (weekend)" cite "FRBP 9033(b)(1)"
+{
+  given ProposedFindingsServed() on 2025-12-06
+  expect deadline(findings-objection-period) == 2025-12-22
+}
   deadline findings-response-period: 14.days after FindingsObjectionsServed() counted_by frbp9006 cite "FRBP 9033(b)(1)"
+
+test "Counting boundary: findings-response-period (weekend)" cite "FRBP 9033(b)(1)"
+{
+  given FindingsObjectionsServed() on 2025-12-06
+  expect deadline(findings-response-period) == 2025-12-22
+}
 }
 
 test "schedules period runs 14 days after petition filed" cite "FRBP 1007(c)(1)"

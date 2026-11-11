@@ -240,6 +240,12 @@ event MandateFiled()
 /// of filing if the petition is filed electronically, a check or money order
 /// for the rent due during the 30 days after the petition.
 deadline rent-deposit-period: 1.days after PetitionFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 1002-1(b)"
+
+test "Counting boundary: rent-deposit-period (weekend)" cite "Bankr. S.D. Ind. LBR 1002-1(b)"
+{
+  given PetitionFiled() on 2025-12-05
+  expect deadline(rent-deposit-period) == 2025-12-08
+}
 /// LBR B-1002-1(c), (d): a voluntary petition filed without its lists and
 /// schedules carries the credit counseling certificate or waiver motion, the
 /// SSN statement, the fee or fee application, the creditor information and,
@@ -247,18 +253,42 @@ deadline rent-deposit-period: 1.days after PetitionFiled() counted_by frbp9006-i
 /// submit them at filing or within seven days thereafter may result in
 /// dismissal under LBR B-1017-1(b).
 deadline emergency-filing-items-period: 7.days after PetitionFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 1002-1(d)"
+
+test "Counting boundary: emergency-filing-items-period (weekend)" cite "Bankr. S.D. Ind. LBR 1002-1(d)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(emergency-filing-items-period) == 2025-12-15
+}
 /// LBR B-1017-1(b)(1): the court dismisses the case without further notice or
 /// hearing unless the FRBP 1007(f) Statement of Social Security Number is
 /// filed with the petition or within seven days thereafter.
 deadline ssn-statement-period: 7.days after PetitionFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 1017-1(b)"
+
+test "Counting boundary: ssn-statement-period (weekend)" cite "Bankr. S.D. Ind. LBR 1017-1(b)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(ssn-statement-period) == 2025-12-15
+}
 /// LBR B-1017-1(b)(3): unless an installment or (in chapter 7) waiver
 /// application has been filed, the court dismisses the case if the filing fee
 /// is not paid at filing or within seven days thereafter.
 deadline filing-fee-period: 7.days after PetitionFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 1017-1(b)"
+
+test "Counting boundary: filing-fee-period (weekend)" cite "Bankr. S.D. Ind. LBR 1017-1(b)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(filing-fee-period) == 2025-12-15
+}
 /// LBR B-1017-1(b)(4): unless a motion for extension has been filed, the
 /// court dismisses the case if creditor information is not provided at filing
 /// or within 7 days thereafter.
 deadline creditor-information-period: 7.days after PetitionFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 1017-1(b)"
+
+test "Counting boundary: creditor-information-period (weekend)" cite "Bankr. S.D. Ind. LBR 1017-1(b)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(creditor-information-period) == 2025-12-15
+}
 /// LBR B-1006-1(d): chapter 13 installment fees are paid to the clerk, not
 /// through the plan; debtor's counsel who receives good funds for an
 /// installment remits them to the court within 14 days of receipt.
@@ -269,17 +299,35 @@ deadline installment-remittance-period: 14.days after InstallmentFundsReceived()
 /// the United States Trustee and any trustee, examiner or committee are
 /// deemed not to object.
 deadline first-extension-schedules-period: 30.days after PetitionFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 1007-1(c)"
+
+test "Counting boundary: first-extension-schedules-period (holiday)" cite "Bankr. S.D. Ind. LBR 1007-1(c)"
+{
+  given PetitionFiled() on 2025-12-02
+  expect deadline(first-extension-schedules-period) == 2026-01-02
+}
 /// LBR B-1007-2(a)(2): a motion to retain a noticing, claims or balloting
 /// agent, to be excused or to extend time is filed within 28 days after the
 /// filing of a schedule or creditor list that results in more than 300
 /// creditors in a chapter 11 case.
 deadline noticing-agent-motion-period: 28.days after LargeCaseScheduleFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 1007-2(a)"
+
+test "Counting boundary: noticing-agent-motion-period (holiday)" cite "Bankr. S.D. Ind. LBR 1007-2(a)"
+{
+  given LargeCaseScheduleFiled() on 2025-12-04
+  expect deadline(noticing-agent-motion-period) == 2026-01-02
+}
 /// LBR B-1009-1(b)(1)(C): a creditor whose claim a chapter 11 debtor amends
 /// to contingent, disputed or unliquidated, or whose scheduled amount it
 /// changes, has a bar date of the later of the current claims deadline or 45
 /// days after the notice of the change (the later governs; the current
 /// deadline is the court's).
 deadline status-change-bar-period: 45.days after ClaimStatusChangeNoticed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 1009-1(b)"
+
+test "Counting boundary: status-change-bar-period (weekend)" cite "Bankr. S.D. Ind. LBR 1009-1(b)"
+{
+  given ClaimStatusChangeNoticed() on 2025-12-03
+  expect deadline(status-change-bar-period) == 2026-01-20
+}
 /// LBR B-1017-1(a)(2): a § 521(i)(2) motion to dismiss is served on the
 /// debtor, the trustee and the United States Trustee with a notice requiring
 /// a response within 14 days of service; absent a timely response the court
@@ -289,6 +337,12 @@ deadline dismissal-motion-response-period: 14.days after DismissalMotionServed()
 /// added creditors a notice providing 21 days for the filing of a motion for
 /// payment of an administrative expense, and files a certificate of service.
 deadline conversion-admin-expense-period: 21.days after ConversionToChapter7() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 1019-1(b)"
+
+test "Counting boundary: conversion-admin-expense-period (holiday)" cite "Bankr. S.D. Ind. LBR 1019-1(b)"
+{
+  given ConversionToChapter7() on 2025-12-04
+  expect deadline(conversion-admin-expense-period) == 2025-12-26
+}
 /// LBR B-1019-1(d): if the chapter 13 trustee has not done so, the debtor
 /// submits a proposed order terminating all pending Wage Assignment Orders
 /// within 14 days of the Notice of Conversion to Chapter 7 or the order
@@ -298,6 +352,12 @@ deadline conversion-wage-order-period: 14.days after ConversionToChapter7() coun
 /// applications exceed the FRBP 2002(f)(1)(I) or (a)(6) amounts, the trustee
 /// sends a 21-day Objection Notice of the final report and fee applications.
 deadline final-report-objection-period: 21.days after FinalReportNoticeServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 2002-1(g)"
+
+test "Counting boundary: final-report-objection-period (holiday)" cite "Bankr. S.D. Ind. LBR 2002-1(g)"
+{
+  given FinalReportNoticeServed() on 2025-12-04
+  expect deadline(final-report-objection-period) == 2025-12-26
+}
 /// LBR B-2014-1(b)(1): an Employment Application for the debtor's counsel in
 /// a chapter 11 or 12 case is filed within 14 days after the commencement of
 /// the case or its conversion to chapter 11 or 12.
@@ -306,6 +366,12 @@ deadline debtor-counsel-employment-period: 14.days after PetitionFiled() counted
 /// 21-day Objection Notice on the Service List; absent objection the court
 /// may grant it without a hearing, effective as of the application's filing.
 deadline employment-objection-period: 21.days after EmploymentNoticeServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 2014-1(b)"
+
+test "Counting boundary: employment-objection-period (holiday)" cite "Bankr. S.D. Ind. LBR 2014-1(b)"
+{
+  given EmploymentNoticeServed() on 2025-12-04
+  expect deadline(employment-objection-period) == 2025-12-26
+}
 /// LBR B-2014-2: a chapter 13 trustee who has not consented to the terms of a
 /// professional's retention or compensation files an objection to the
 /// debtor's Notice of Retention and Compensation Terms within 14 days of its
@@ -327,6 +393,12 @@ deadline first-interim-fee-application-period: 180.days after OrderForReliefEnte
 /// served with a 21-day Objection Notice to the debtor, the United States
 /// Trustee and any committee.
 deadline turnover-objection-period: 21.days after TurnoverNoticeServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 2070-1(a)"
+
+test "Counting boundary: turnover-objection-period (holiday)" cite "Bankr. S.D. Ind. LBR 2070-1(a)"
+{
+  given TurnoverNoticeServed() on 2025-12-04
+  expect deadline(turnover-objection-period) == 2025-12-26
+}
 /// LBR B-3002.1-1(b): if no Motion to Determine Validity of Mortgage Payment
 /// Change is filed by the day before the new amount is due, the change goes
 /// into effect unless the court orders otherwise.
@@ -335,10 +407,22 @@ deadline payment-change-motion-period: 1.days before PaymentChangeEffective() co
 /// debtor, any trustee, a creditors' committee, the United States Trustee,
 /// the affected creditor and any objector a 21-day Objection Notice.
 deadline claim-withdrawal-objection-period: 21.days after ClaimWithdrawalNoticeServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 3006-1(b)"
+
+test "Counting boundary: claim-withdrawal-objection-period (holiday)" cite "Bankr. S.D. Ind. LBR 3006-1(b)"
+{
+  given ClaimWithdrawalNoticeServed() on 2025-12-04
+  expect deadline(claim-withdrawal-objection-period) == 2025-12-26
+}
 /// LBR B-3007-1: a party objecting to a claim provides a 30-day Objection
 /// Notice to the claimant, the debtor, any trustee and the United States
 /// Trustee.
 deadline claim-objection-response-period: 30.days after ClaimObjectionNoticeServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 3007-1"
+
+test "Counting boundary: claim-objection-response-period (holiday)" cite "Bankr. S.D. Ind. LBR 3007-1"
+{
+  given ClaimObjectionNoticeServed() on 2025-12-02
+  expect deadline(claim-objection-response-period) == 2026-01-02
+}
 /// LBR B-3015-1(b): a motion to extend the time to file a chapter 13 plan is
 /// filed within 14 days after the commencement of the case.
 deadline plan-extension-motion-period: 14.days after PetitionFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 3015-1(b)"
@@ -352,6 +436,12 @@ deadline conduit-resumption-notice-period: 30.days before DirectPaymentsResume()
 /// statement, ballots and confirmation hearing notice to all creditors and
 /// parties in interest.
 deadline plan-package-distribution-period: 7.days after DisclosureStatementApproved() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 3018-1(a)"
+
+test "Counting boundary: plan-package-distribution-period (weekend)" cite "Bankr. S.D. Ind. LBR 3018-1(a)"
+{
+  given DisclosureStatementApproved() on 2025-12-06
+  expect deadline(plan-package-distribution-period) == 2025-12-15
+}
 /// LBR B-3018-1(a): the Plan Proponent files a certificate of service within
 /// 14 days after the distribution.
 deadline plan-package-service-certificate-period: 14.days after PlanPackageDistributed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 3018-1(a)"
@@ -366,6 +456,12 @@ deadline final-decree-objection-period: 14.days after FinalDecreeNoticeServed() 
 /// LBR B-3070-1(b)(2): the chapter 13 trustee may require the debtor to
 /// submit a Wage Assignment Order within seven days.
 deadline wage-order-submission-period: 7.days after WageOrderRequired() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 3070-1(b)"
+
+test "Counting boundary: wage-order-submission-period (weekend)" cite "Bankr. S.D. Ind. LBR 3070-1(b)"
+{
+  given WageOrderRequired() on 2025-12-06
+  expect deadline(wage-order-submission-period) == 2025-12-15
+}
 /// LBR B-3070-1(d): unless the chapter 13 trustee files it, within 14 days of
 /// the event requiring it the debtor submits an amended Wage Assignment Order
 /// on a modified plan payment, a new one on a change of employer, or an order
@@ -384,23 +480,53 @@ deadline incur-debt-objection-period: 14.days after IncurDebtMotionFiled() count
 /// LBR B-4003-2(b): the debtor serves a § 522(f) lien avoidance motion and a
 /// 21-day Objection Notice on the lien holder under FRBP 4003(d) and 7004.
 deadline lien-avoidance-objection-period: 21.days after LienAvoidanceNoticeServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 4003-2(b)"
+
+test "Counting boundary: lien-avoidance-objection-period (holiday)" cite "Bankr. S.D. Ind. LBR 4003-2(b)"
+{
+  given LienAvoidanceNoticeServed() on 2025-12-04
+  expect deadline(lien-avoidance-objection-period) == 2025-12-26
+}
 /// LBR B-4004-1(b), (d): within 30 days after the chapter 12 or 13 trustee
 /// files the Notice of Plan Completion, the debtor files a Motion for Entry
 /// of Discharge and, in individual cases, a Certification of Eligibility for
 /// Discharge; absent one the case may be closed without a discharge.
 deadline discharge-motion-period: 30.days after PlanCompletionNoticed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 4004-1(b)"
+
+test "Counting boundary: discharge-motion-period (holiday)" cite "Bankr. S.D. Ind. LBR 4004-1(b)"
+{
+  given PlanCompletionNoticed() on 2025-12-02
+  expect deadline(discharge-motion-period) == 2026-01-02
+}
 /// LBR B-4004-1(c): the trustee has 21 days from the filing of the Motion for
 /// Entry of Discharge or the Certification to object; the debtor serves a
 /// 21-day Objection Notice on any domestic support obligation holder.
 deadline discharge-motion-objection-period: 21.days after DischargeMotionFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 4004-1(c)"
+
+test "Counting boundary: discharge-motion-objection-period (holiday)" cite "Bankr. S.D. Ind. LBR 4004-1(c)"
+{
+  given DischargeMotionFiled() on 2025-12-04
+  expect deadline(discharge-motion-objection-period) == 2025-12-26
+}
 /// LBR B-4004-2(b)(2): within 30 days after the Notice of Completion of §
 /// 1192 Payments, the debtor in a subchapter V case confirmed under § 1191(b)
 /// files a Motion for Entry of Discharge and a Certification of Eligibility
 /// for Discharge.
 deadline subchapter-v-discharge-motion-period: 30.days after SubVPaymentsCompletionNoticed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 4004-2(b)"
+
+test "Counting boundary: subchapter-v-discharge-motion-period (holiday)" cite "Bankr. S.D. Ind. LBR 4004-2(b)"
+{
+  given SubVPaymentsCompletionNoticed() on 2025-12-02
+  expect deadline(subchapter-v-discharge-motion-period) == 2026-01-02
+}
 /// LBR B-4004-2(b)(3): the trustee has 21 days from the filing of the
 /// subchapter V Motion for Entry of Discharge or the Certification to object.
 deadline subchapter-v-discharge-objection-period: 21.days after SubVDischargeMotionFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 4004-2(b)"
+
+test "Counting boundary: subchapter-v-discharge-objection-period (holiday)" cite "Bankr. S.D. Ind. LBR 4004-2(b)"
+{
+  given SubVDischargeMotionFiled() on 2025-12-04
+  expect deadline(subchapter-v-discharge-objection-period) == 2025-12-26
+}
 /// LBR B-5011-1(d): within 14 days after service of the movant's designation
 /// of the record on a motion to withdraw the reference, any other party may
 /// file and serve a designation of additional portions.
@@ -417,6 +543,12 @@ deadline reference-withdrawal-reply-period: 14.days after ReferenceWithdrawalRes
 /// noticed with a 21-day Objection Notice (in chapter 11 a private sale is
 /// noticed as the courtroom deputy directs).
 deadline sale-objection-period: 21.days after SaleNoticeServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 6004-2(d)"
+
+test "Counting boundary: sale-objection-period (holiday)" cite "Bankr. S.D. Ind. LBR 6004-2(d)"
+{
+  given SaleNoticeServed() on 2025-12-04
+  expect deadline(sale-objection-period) == 2025-12-26
+}
 /// LBR B-6004-2(e), B-6004-3(d), B-6004-4(f): the movant (or, for an auction,
 /// the auctioneer or the party that employed it) files the FRBP 6004(f)(1)
 /// report of sale within 14 days of the later of the completion of the sale
@@ -448,27 +580,57 @@ deadline abandonment-objection-period: 14.days after AbandonmentNoticeServed() c
 /// LBR B-6008-1: the debtor serves a motion to redeem and a 21-day Objection
 /// Notice on the lien holder under FRBP 9014(b) and 7004.
 deadline redemption-objection-period: 21.days after RedemptionNoticeServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 6008-1"
+
+test "Counting boundary: redemption-objection-period (holiday)" cite "Bankr. S.D. Ind. LBR 6008-1"
+{
+  given RedemptionNoticeServed() on 2025-12-04
+  expect deadline(redemption-objection-period) == 2025-12-26
+}
 /// LBR B-7007-1(b): a party opposing a Rule 7012 motion files a response
 /// brief within 21 days after the movant serves the motion and brief, unless
 /// it first files an amended pleading it is entitled to under FRCP 15; absent
 /// a response the court may consider the motion.
 deadline rule-12-response-period: 21.days after Rule12MotionServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 7007-1(b)"
+
+test "Counting boundary: rule-12-response-period (holiday)" cite "Bankr. S.D. Ind. LBR 7007-1(b)"
+{
+  given Rule12MotionServed() on 2025-12-04
+  expect deadline(rule-12-response-period) == 2025-12-26
+}
 /// LBR B-7007-1(b): the movant may file a reply brief within 14 days after
 /// service of the response brief.
 deadline rule-12-reply-period: 14.days after Rule12ResponseServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 7007-1(b)"
 /// LBR B-7030-1(d): no deposition is scheduled on less than 14 days' notice
 /// unless counsel agree or the court orders otherwise.
 deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 7030-1(d)"
+
+test "Counting boundary: deposition-notice-period (weekend)" cite "Bankr. S.D. Ind. LBR 7030-1(d)"
+{
+  given DepositionScheduled() on 2025-12-06
+  expect deadline(deposition-notice-period) == 2025-11-21
+}
 /// LBR B-7041-2(b): unless the United States Trustee, the trustee or another
 /// entity seeks to intervene or be substituted, or objects to dismissal of a
 /// § 727 complaint, within 21 days following service of the notice, motion or
 /// stipulation, the court may dismiss without further notice or hearing.
 deadline discharge-dismissal-objection-period: 21.days after DischargeDismissalServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 7041-2(b)"
+
+test "Counting boundary: discharge-dismissal-objection-period (holiday)" cite "Bankr. S.D. Ind. LBR 7041-2(b)"
+{
+  given DischargeDismissalServed() on 2025-12-04
+  expect deadline(discharge-dismissal-objection-period) == 2025-12-26
+}
 /// LBR B-7056-1(b): a party opposing summary judgment files and serves a
 /// response brief, with a Statement of Material Facts in Dispute, within 28
 /// days after the movant serves the motion; LBR B-9014-1 applies the rule to
 /// contested matters.
 deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 7056-1(b)"
+
+test "Counting boundary: summary-judgment-response-period (holiday)" cite "Bankr. S.D. Ind. LBR 7056-1(b)"
+{
+  given SummaryJudgmentMotionServed() on 2025-12-04
+  expect deadline(summary-judgment-response-period) == 2026-01-02
+}
 /// LBR B-7056-1(c): the movant may file and serve a reply brief within 14
 /// days after a response is served.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 7056-1(c)"
@@ -476,41 +638,89 @@ deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseSer
 /// evidence or objects to the admissibility of the response's evidence, is
 /// filed and served within seven days after the movant serves the reply.
 deadline summary-judgment-surreply-period: 7.days after SummaryJudgmentReplyServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 7056-1(d)"
+
+test "Counting boundary: summary-judgment-surreply-period (weekend)" cite "Bankr. S.D. Ind. LBR 7056-1(d)"
+{
+  given SummaryJudgmentReplyServed() on 2025-12-06
+  expect deadline(summary-judgment-surreply-period) == 2025-12-15
+}
 /// LBR B-9010-2(b)(2)(A): a motion to withdraw an appearance provides the
 /// party's written request to withdraw, or a copy of a notice to the party of
 /// the intent to withdraw sent at least seven days before the motion is
 /// filed, stating any hearing, conference or deadline set in the next 30
 /// days.
 deadline withdrawal-notice-period: 7.days before WithdrawalMotionFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9010-2(b)"
+
+test "Counting boundary: withdrawal-notice-period (holiday)" cite "Bankr. S.D. Ind. LBR 9010-2(b)"
+{
+  given WithdrawalMotionFiled() on 2025-12-04
+  expect deadline(withdrawal-notice-period) == 2025-11-26
+}
 /// LBR B-9013-3(a), (f): to qualify as a First Day Motion in a chapter 11 or
 /// 12 case, a motion of a listed kind is filed with the petition or within
 /// two days thereafter and says so in its caption; it is then set for an
 /// expedited hearing.
 deadline first-day-motion-period: 2.days after PetitionFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9013-3(a)"
+
+test "Counting boundary: first-day-motion-period (weekend)" cite "Bankr. S.D. Ind. LBR 9013-3(a)"
+{
+  given PetitionFiled() on 2025-12-04
+  expect deadline(first-day-motion-period) == 2025-12-08
+}
 /// LBR B-9015-1(b)(1), (d): a jury demand, where FRCP 38 permits one, is
 /// filed with a party's first pleading or within 30 days of the filing of a
 /// notice of removal, whichever is earlier; a party that fails to demand
 /// waives trial by jury.
 deadline removal-jury-demand-period: 30.days after RemovalNoticed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9015-1(b)"
+
+test "Counting boundary: removal-jury-demand-period (holiday)" cite "Bankr. S.D. Ind. LBR 9015-1(b)"
+{
+  given RemovalNoticed() on 2025-12-02
+  expect deadline(removal-jury-demand-period) == 2026-01-02
+}
 /// LBR B-9015-1(c): within 30 days of a jury demand, any adverse party files
 /// a statement of its consent or lack of consent to the bankruptcy judge
 /// conducting the jury trial.
 deadline jury-consent-period: 30.days after JuryDemandFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9015-1(c)"
+
+test "Counting boundary: jury-consent-period (holiday)" cite "Bankr. S.D. Ind. LBR 9015-1(c)"
+{
+  given JuryDemandFiled() on 2025-12-02
+  expect deadline(jury-consent-period) == 2026-01-02
+}
 /// LBR B-9016-1: unless the parties agree or the case management plan
 /// provides otherwise, a copy of a proposed subpoena to produce or permit
 /// inspection is served on all other parties at least seven days before it is
 /// served on a nonparty.
 deadline nonparty-subpoena-notice-period: 7.days before NonpartySubpoenaServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9016-1"
+
+test "Counting boundary: nonparty-subpoena-notice-period (holiday)" cite "Bankr. S.D. Ind. LBR 9016-1"
+{
+  given NonpartySubpoenaServed() on 2025-12-04
+  expect deadline(nonparty-subpoena-notice-period) == 2025-11-26
+}
 /// LBR B-9018-1(b): five years after an order imposing a seal (unless the
 /// court set another date), the clerk notifies the party that requested it
 /// and any objector that the seal will be terminated if no objection is filed
 /// within 21 days of the notice.
 deadline seal-termination-objection-period: 21.days after SealTerminationNoticed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9018-1(b)"
+
+test "Counting boundary: seal-termination-objection-period (holiday)" cite "Bankr. S.D. Ind. LBR 9018-1(b)"
+{
+  given SealTerminationNoticed() on 2025-12-04
+  expect deadline(seal-termination-objection-period) == 2025-12-26
+}
 /// LBR B-9019-1(a), (b): a motion to approve a settlement or compromise under
 /// FRBP 9019, and a chapter 13 Motion to Approve Settlement Distribution, is
 /// noticed with a 21-day Objection Notice to the debtor, creditors, any
 /// trustee and the United States Trustee.
 deadline settlement-objection-period: 21.days after SettlementNoticeServed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9019-1(a)"
+
+test "Counting boundary: settlement-objection-period (holiday)" cite "Bankr. S.D. Ind. LBR 9019-1(a)"
+{
+  given SettlementNoticeServed() on 2025-12-04
+  expect deadline(settlement-objection-period) == 2025-12-26
+}
 /// LBR B-9019-2(e)(1): the Notice of Selection of Mediator is filed no later
 /// than 14 days after the order referring the matter to mediation, unless
 /// extended on motion.
@@ -519,22 +729,52 @@ deadline mediator-selection-period: 14.days after MediationReferred() counted_by
 /// the court's panel of three mediator candidates no later than three days
 /// after the Notice of Designation of Mediator Candidates is filed.
 deadline mediator-strike-period: 3.days after MediatorCandidatesDesignated() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9019-2(e)"
+
+test "Counting boundary: mediator-strike-period (weekend)" cite "Bankr. S.D. Ind. LBR 9019-2(e)"
+{
+  given MediatorCandidatesDesignated() on 2025-12-03
+  expect deadline(mediator-strike-period) == 2025-12-08
+}
 /// LBR B-9019-2(e)(2): the parties complete the striking within seven days of
 /// the court's designation and file a Notice of Selection of Mediator.
 deadline mediator-striking-complete-period: 7.days after MediatorCandidatesDesignated() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9019-2(e)"
+
+test "Counting boundary: mediator-striking-complete-period (weekend)" cite "Bankr. S.D. Ind. LBR 9019-2(e)"
+{
+  given MediatorCandidatesDesignated() on 2025-12-06
+  expect deadline(mediator-striking-complete-period) == 2025-12-15
+}
 /// LBR B-9019-2(e)(3), (4): the selected mediator files an affidavit
 /// disclosing connections and compensation no later than seven days after the
 /// notice of selection, and is qualified upon its filing.
 deadline mediator-affidavit-period: 7.days after MediatorSelected() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9019-2(e)"
+
+test "Counting boundary: mediator-affidavit-period (weekend)" cite "Bankr. S.D. Ind. LBR 9019-2(e)"
+{
+  given MediatorSelected() on 2025-12-06
+  expect deadline(mediator-affidavit-period) == 2025-12-15
+}
 /// LBR B-9019-2(h)(4)(A): if mediation settles the matter, the mediator or
 /// the party who requested mediation files a Report of Mediation within seven
 /// days of its conclusion.
 deadline mediation-report-period: 7.days after MediationConcluded() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9019-2(h)"
+
+test "Counting boundary: mediation-report-period (weekend)" cite "Bankr. S.D. Ind. LBR 9019-2(h)"
+{
+  given MediationConcluded() on 2025-12-06
+  expect deadline(mediation-report-period) == 2025-12-15
+}
 /// LBR B-9027-1(d): a motion to remand a removed claim or cause of action,
 /// other than for lack of subject matter jurisdiction, is filed within 30
 /// days after the notice of removal is filed and served on all parties to the
 /// removed action.
 deadline remand-motion-period: 30.days after RemovalNoticed() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9027-1(d)"
+
+test "Counting boundary: remand-motion-period (holiday)" cite "Bankr. S.D. Ind. LBR 9027-1(d)"
+{
+  given RemovalNoticed() on 2025-12-02
+  expect deadline(remand-motion-period) == 2026-01-02
+}
 /// LBR B-9070-1(b)(1), (d): if the case is not appealed, the party that
 /// offered items into evidence may claim them from the clerk within 90 days
 /// after the case is disposed of as to all issues; unclaimed items may be
@@ -544,6 +784,12 @@ deadline exhibit-claim-period: 90.days after CaseDisposed() counted_by frbp9006-
 /// within 28 days after the reviewing court's mandate is filed and the case
 /// is disposed of as to all issues, unless the court orders otherwise.
 deadline exhibit-claim-appeal-period: 28.days after MandateFiled() counted_by frbp9006-indiana cite "Bankr. S.D. Ind. LBR 9070-1(b)"
+
+test "Counting boundary: exhibit-claim-appeal-period (holiday)" cite "Bankr. S.D. Ind. LBR 9070-1(b)"
+{
+  given MandateFiled() on 2025-12-04
+  expect deadline(exhibit-claim-appeal-period) == 2026-01-02
+}
 
 start motion-noticed
 

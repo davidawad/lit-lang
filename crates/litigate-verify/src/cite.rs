@@ -347,18 +347,6 @@ impl Measure {
     }
 }
 
-#[cfg(test)]
-mod measure_tests {
-    use super::Measure;
-
-    #[test]
-    fn equivalent_periods_skip_week_and_year_conversions_that_overflow() {
-        for unit in [Measure::Week, Measure::Year] {
-            assert_eq!(unit.equivalents(u64::MAX), [(u64::MAX, unit)]);
-        }
-    }
-}
-
 /// Every count `body` states with its measure: a count in digits or words
 /// up to [`COUNT_WORDS`] words before a measure (`14 days`, `fourteen (14)
 /// calendar days`, `one hundred eighty days`, `35days`), hyphened to it
@@ -901,4 +889,16 @@ fn expression(cx: &Context<'_>, cite: &Cite<'_>, s: &L0Section, span: &Span) -> 
         "cite an expression in force during the version's window, or mark the cite \
          `historical` when a later text is cited on purpose",
     ))
+}
+
+#[cfg(test)]
+mod measure_tests {
+    use super::Measure;
+
+    #[test]
+    fn equivalent_periods_skip_week_and_year_conversions_that_overflow() {
+        for unit in [Measure::Week, Measure::Year] {
+            assert_eq!(unit.equivalents(u64::MAX), [(u64::MAX, unit)]);
+        }
+    }
 }

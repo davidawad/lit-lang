@@ -7,7 +7,7 @@ use crate::db::parse::tree::{Expr, ExprKind, Field, Item, ItemKind, Name, RefPat
 use crate::db::span::Report;
 use crate::hir::{
     BinaryOp, Bound, Capability, CauseStandard, DateRef, DayUnit, EventEffect, Extension,
-    ExtensionWindow, Motion, TriggerPolicy, Type,
+    ExtensionWindow, Motion, TriggerPolicy, Type, Value,
 };
 use crate::resolve::sig::ValueKind;
 use litigate_base::DiagnosticCode as C;
@@ -178,7 +178,16 @@ impl Cx<'_, '_> {
         self.report(Report::new(
             C::InvalidField,
             e.range,
-            "a date bound is `max(...)`, `min(...)`, or `prescribed_due` / `grant_order_entered` / `current_due` `+ N.days` or `- N.days`",
+            "a date bound is `max(...)`, `min(...)`, or `prescribed_due` / `grant_order_entered` / `current_due` `+ N.days` or `- N.days`, or `trigger_date + N.months`",
+        ));
+        None
+    }
+
+    fn invalid_month_origin<T>(&mut self, e: &Expr) -> Option<T> {
+        self.report(Report::new(
+            C::InvalidField,
+            e.range,
+            "a month is counted from the trigger; write `to trigger_date + M.months`",
         ));
         None
     }
@@ -221,10 +230,16 @@ impl Cx<'_, '_> {
             None => None,
         };
         let bound = match (fields.get("max"), fields.get("to")) {
-            (Some(m), _) => Some(Bound::Offset {
-                from: DateRef::PrescribedDue,
-                days: self.calendar_days(first_expr(m)?)?,
-            }),
+            (Some(m), _) => {
+                let expression = first_expr(m)?;
+                if self.month_unit(expression) {
+                    return self.invalid_month_origin(expression);
+                }
+                Some(Bound::Offset {
+                    from: DateRef::PrescribedDue,
+                    days: self.calendar_days(expression)?,
+                })
+            }
             (None, Some(t)) => Some(self.bound(first_expr(t)?)?),
             (None, None) => None,
         };
@@ -349,6 +364,26 @@ impl Cx<'_, '_> {
         Some(n)
     }
 
+    /// Calendar-month-family duration, represented as months.
+    fn calendar_months(&mut self, e: &Expr) -> Option<u64> {
+        let Some(Value::Days { amount, unit }) = self.ck.infer(e).value else {
+            return None;
+        };
+        let n = u64::try_from(amount).ok()?;
+        match unit {
+            DayUnit::Month => Some(n),
+            DayUnit::Year => n.checked_mul(12).or_else(|| {
+                self.report(Report::new(
+                    C::InvalidField,
+                    e.range,
+                    "calendar-month bound is too large",
+                ));
+                None
+            }),
+            _ => None,
+        }
+    }
+
     /// The cause standard `r`: one of the closed set (L2007 otherwise).
     pub(super) fn standard(&mut self, r: &RefPath) -> Option<CauseStandard> {
         let text = r.display();
@@ -418,6 +453,21 @@ impl Cx<'_, '_> {
                 days: 0,
             }),
             ExprKind::Binary(op @ (BinaryOp::Add | BinaryOp::Sub), l, n) => {
+                if *op == BinaryOp::Add
+                    && matches!(&l.kind, ExprKind::Ref(r) if r.is_simple() && r.head.text == "trigger_date")
+                {
+                    if let Some(months) = self.calendar_months(n) {
+                        return Some(Bound::Counted { months });
+                    }
+                    return self.invalid_month_origin(e);
+                }
+                if self.month_unit(n) {
+                    return self.invalid_month_origin(e);
+                }
+                if matches!(&l.kind, ExprKind::Ref(r) if r.is_simple() && r.head.text == "trigger_date")
+                {
+                    return self.invalid_month_origin(e);
+                }
                 let from = self.date_ref(l)?;
                 let days = self.calendar_days(n)?;
                 Some(if *op == BinaryOp::Add {
@@ -428,6 +478,16 @@ impl Cx<'_, '_> {
             }
             _ => self.no_bound(e),
         }
+    }
+
+    fn month_unit(&mut self, e: &Expr) -> bool {
+        matches!(
+            self.ck.infer(e).value,
+            Some(Value::Days {
+                unit: DayUnit::Month | DayUnit::Year,
+                ..
+            })
+        )
     }
 
     /// The `waive` capability `{ by A [, after_expiry] }`: a waiver has no

@@ -334,6 +334,7 @@ fn cause(s: hir::CauseStandard) -> CauseStandard {
 
 fn date_ref(r: hir::DateRef) -> DateRef {
     match r {
+        hir::DateRef::TriggerDate => DateRef::TriggerDate,
         hir::DateRef::PrescribedDue => DateRef::PrescribedDue,
         hir::DateRef::GrantOrderEntered => DateRef::GrantOrderEntered,
         hir::DateRef::CurrentDue => DateRef::CurrentDue,
@@ -342,6 +343,10 @@ fn date_ref(r: hir::DateRef) -> DateRef {
 
 fn bound(b: &hir::Bound) -> DateBound {
     match b {
+        hir::Bound::Counted { months } => DateBound::Counted {
+            from: DateRef::TriggerDate,
+            months: *months,
+        },
         hir::Bound::Offset { from, days } => DateBound::Offset {
             from: date_ref(*from),
             days: *days,

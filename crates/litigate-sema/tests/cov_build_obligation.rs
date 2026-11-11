@@ -5,6 +5,7 @@
 mod common;
 use common::{check_body, package, workspace};
 use litigate_sema::hir::Declaration;
+use litigate_sema::hir::{Bound, DateRef, Extension};
 
 /// The declarations of an error-free single-module package with `body`.
 fn declarations(body: &str) -> Vec<Declaration> {
@@ -52,6 +53,56 @@ event Plain()",
     .filter(|d| matches!(d, Declaration::Deadline(_) | Declaration::Event(_)))
     .collect();
     insta::assert_debug_snapshot!(found);
+}
+
+#[test]
+fn trigger_month_bounds_type_and_forbidden_month_origins_are_l2007() {
+    let found = declarations(
+        "deadline monthly: 21.days from Served(complaint) counted_by c6 { extend { by plaintiff, to trigger_date + 6.months } }\n\
+         deadline mixed: 21.days from Served(complaint) counted_by c6 { extend { by plaintiff, to min(trigger_date + 6.months, prescribed_due + 30.days) } }",
+    );
+    let bounds: Vec<_> = found
+        .iter()
+        .filter_map(|d| match d {
+            Declaration::Deadline(deadline) => deadline.extend.first(),
+            _ => None,
+        })
+        .map(|e| match e {
+            Extension::Bounded { until, .. } => until,
+            _ => panic!("expected bounded grant"),
+        })
+        .collect();
+    assert_eq!(bounds[0], &Bound::Counted { months: 6 });
+    assert_eq!(
+        bounds[1],
+        &Bound::Min(vec![
+            Bound::Counted { months: 6 },
+            Bound::Offset {
+                from: DateRef::PrescribedDue,
+                days: 30
+            },
+        ])
+    );
+
+    let bad = [
+        "prescribed_due + 2.months",
+        "current_due + 2.months",
+        "grant_order_entered + 2.months",
+        "trigger_date + 3.days",
+        "max 2.months",
+    ];
+    for (i, bound) in bad.iter().enumerate() {
+        let diagnostics = check_body(&format!(
+            "deadline bad{i}: 21.days from Served(complaint) counted_by c6 {{ extend {{ by plaintiff, {} }} }}",
+            if bound.starts_with("max ") { bound.to_string() } else { format!("to {bound}") }
+        ));
+        assert!(
+            diagnostics
+                .iter()
+                .any(|d| d.contains("L2007") && d.contains("month is counted from the trigger")),
+            "{bound}: {diagnostics:#?}"
+        );
+    }
 }
 
 #[test]

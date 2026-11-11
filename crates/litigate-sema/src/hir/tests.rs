@@ -229,6 +229,7 @@ fn a_bound_past_the_calendar_has_no_date() {
         days: 1,
     };
     let at = BoundDates {
+        trigger_date: "2025-01-01",
         prescribed_due: "2025-01-01",
         current_due: "2025-01-15",
         grant_order_entered: "2025-02-01",

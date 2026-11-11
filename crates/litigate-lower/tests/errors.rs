@@ -202,6 +202,42 @@ fn pack_of(p: &hir::Package) -> Box<litigate_engine::model::Pack> {
     pack
 }
 
+#[test]
+fn trigger_month_bound_lowers_as_counted_trigger_date() {
+    let mut p = example();
+    for declaration in decls(&mut p) {
+        if let Declaration::Deadline(deadline) = declaration {
+            deadline.extend.push(hir::Extension::Bounded {
+                by: "court".into(),
+                cite: None,
+                until: hir::Bound::Counted { months: 6 },
+                after_expiry: false,
+                standard: None,
+                motion: None,
+                interpretation: None,
+            });
+        }
+    }
+    let pack = pack_of(&p);
+    assert!(pack
+        .edges
+        .iter()
+        .any(|edge| edge.deadline.as_ref().is_some_and(|deadline| {
+            deadline.extensions.iter().any(|extension| {
+                matches!(
+                    extension,
+                    litigate_engine::model::ExtensionBound::Bounded {
+                        until: litigate_engine::model::DateBound::Counted {
+                            from: litigate_engine::model::DateRef::TriggerDate,
+                            months: 6
+                        },
+                        ..
+                    }
+                )
+            })
+        })));
+}
+
 /// Whether each edge of `p`'s pack has a `deadline` window.
 fn windows(p: &hir::Package) -> Vec<bool> {
     pack_of(p)

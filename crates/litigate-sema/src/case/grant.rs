@@ -194,6 +194,7 @@ pub(crate) fn judge(
     instance: Instance<'_>,
     grant: Grant<'_>,
     new: Option<&str>,
+    counted_months: &dyn Fn(u64) -> Option<String>,
 ) -> Result<Option<String>, (u8, String)> {
     let (date, action, _) = history[order];
     let Instance {
@@ -211,7 +212,9 @@ pub(crate) fn judge(
     }
     let made = grant.moved.at(current);
     let request = match grant.motion {
-        Some(m) => Some(requested(history, order, instance, m, made).map_err(|why| (1, why))?),
+        Some(m) => Some(
+            requested(history, order, instance, m, made, counted_months).map_err(|why| (1, why))?,
+        ),
         None => None,
     };
     let Some(new) = new else {
@@ -227,11 +230,15 @@ pub(crate) fn judge(
         return Ok(request);
     };
     let bound = ceiling
-        .date(BoundDates {
-            prescribed_due: prescribed,
-            current_due: current,
-            grant_order_entered: date,
-        })
+        .date_with(
+            BoundDates {
+                trigger_date: instance.from,
+                prescribed_due: prescribed,
+                current_due: current,
+                grant_order_entered: date,
+            },
+            counted_months,
+        )
         .unwrap_or_default();
     if new > bound.as_str() {
         return Err((
@@ -262,6 +269,7 @@ fn requested(
     instance: Instance<'_>,
     m: &Motion,
     made: Made<'_>,
+    counted_months: &dyn Fn(u64) -> Option<String>,
 ) -> Result<String, String> {
     let (entered, action, _) = history[order];
     let Instance {
@@ -272,11 +280,15 @@ fn requested(
         ..
     } = instance;
     let latest = m.within.as_ref().and_then(|w| {
-        w.date(BoundDates {
-            prescribed_due: prescribed,
-            current_due: current,
-            grant_order_entered: entered,
-        })
+        w.date_with(
+            BoundDates {
+                trigger_date: from,
+                prescribed_due: prescribed,
+                current_due: current,
+                grant_order_entered: entered,
+            },
+            counted_months,
+        )
     });
     let between = |j: usize| {
         let date = history[j].0;
@@ -434,7 +446,7 @@ pub fn extensions<'a>(
         let mut refusals = Vec::new();
         let mut licensed = None;
         for &grant in &held {
-            match judge(&actions, k, instance, grant, Some(new)) {
+            match judge(&actions, k, instance, grant, Some(new), &|_| None) {
                 Ok(request) => {
                     licensed = Some(request);
                     break;

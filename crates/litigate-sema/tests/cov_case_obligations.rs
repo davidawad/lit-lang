@@ -49,7 +49,7 @@ event OrderedTimed(until: Date) extends timed to until
 event Struck(option: EdgeRef) removes option
 event Elected(option: EdgeRef) elects option
 
-counting oc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays ocal }
+counting oc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays ocal, end_of_month clamp }
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
 rule duty answer-duty cite \"FRCP 12(a)\"
@@ -118,11 +118,26 @@ fn omega() -> &'static [Package] {
     P.get_or_init(|| compile(&[package("omega", &[], "", OMEGA)]))
 }
 
+const MONTHLY: &str = "module monthly\nstart open\n\
+event Entered()\nevent OrderedMonth(until: Date) extends month-bound to until\n\
+calendar cal { new-year: fixed(1, 1) effective [1870-06-28, ..) }\n\
+counting oc cite \"Rule 6(a)\" { exclude_trigger_day, include_last_day, roll_forward_on [weekend], holidays cal, end_of_month clamp }\n\
+deadline month-bound: 3.months from Entered() counted_by oc { extend { by court, to trigger_date + 4.months, after_expiry } }\n\
+state open: \"Open\" { _ \"stay\" -> open }\nterminal done: \"Done\" { payoff 0.usd }\n";
+
+fn monthly() -> &'static [Package] {
+    static P: OnceLock<Vec<Package>> = OnceLock::new();
+    P.get_or_init(|| compile(&[package("monthly", &[], "", MONTHLY)]))
+}
+
 /// Due dates by calendar arithmetic alone: the trigger plus the period.
 struct Plus;
 
 impl Clock for Plus {
     fn due(&self, r: &DueRequest) -> Result<String, String> {
+        if r.unit == litigate_sema::hir::DayUnit::Month {
+            return month_due(&r.trigger, r.amount);
+        }
         litigate_sema::types::date::add_days(&r.trigger, r.amount).ok_or_else(|| "bad".into())
     }
 
@@ -131,6 +146,23 @@ impl Clock for Plus {
         litigate_sema::types::date::add_days(&r.trigger, r.amount.saturating_sub(1))
             .ok_or_else(|| "bad".into())
     }
+}
+
+fn month_due(trigger: &str, months: u64) -> Result<String, String> {
+    let (year, month, day) = litigate_sema::types::date::parse(trigger).ok_or("bad")?;
+    let index = u64::from(year - 1) * 12 + u64::from(month - 1) + months;
+    let year = u32::try_from(index / 12 + 1).map_err(|_| "bad")?;
+    let month = u32::try_from(index % 12 + 1).map_err(|_| "bad")?;
+    let day = day.min(litigate_sema::types::date::days_in_month(year, month));
+    let nominal = format!("{year:04}-{month:02}-{day:02}");
+    let weekday =
+        (litigate_sema::types::date::day_number(&nominal).ok_or("bad")? + 4).rem_euclid(7);
+    let rolled = match weekday {
+        6 => litigate_sema::types::date::add_days(&nominal, 2),
+        0 => litigate_sema::types::date::add_days(&nominal, 1),
+        _ => Some(nominal),
+    };
+    rolled.ok_or_else(|| "bad".into())
 }
 
 /// A matter over `omega` with two defendants, `d` and `e`.
@@ -573,6 +605,54 @@ fn extensions_and_waivers() {
         ),
     ];
     insta::assert_debug_snapshot!(table(rows));
+}
+
+#[test]
+fn month_bound_is_trigger_relative_and_uses_the_clock_roll() {
+    assert_eq!(month_due("2024-01-31", 3).as_deref(), Ok("2024-04-30"));
+    assert_eq!(month_due("2024-01-31", 4).as_deref(), Ok("2024-05-31"));
+    assert_eq!(month_due("2024-11-30", 4).as_deref(), Ok("2025-03-31"));
+
+    let timely = matter(
+        "2024-06-01",
+        &[
+            "2024-01-31 Entered() by c",
+            "2024-05-31 OrderedMonth(2024-05-31) by c cite \"Rule 1\"",
+        ],
+    );
+    let timely = timely.replace("uses omega ^1.0.0", "uses monthly ^1.0.0");
+    let checked = check(
+        &timely,
+        monthly(),
+        Some(&lock(monthly())),
+        &Plus,
+        Profile::Dev,
+    );
+    assert!(checked.ok(), "{:#?}", outcome(&checked));
+
+    let late = matter(
+        "2024-06-02",
+        &[
+            "2024-01-31 Entered() by c",
+            "2024-06-01 OrderedMonth(2024-06-01) by c cite \"Rule 1\"",
+        ],
+    );
+    let late = late.replace("uses omega ^1.0.0", "uses monthly ^1.0.0");
+    let checked = check(
+        &late,
+        monthly(),
+        Some(&lock(monthly())),
+        &Plus,
+        Profile::Dev,
+    );
+    assert!(
+        outcome(&checked)
+            .iter()
+            .any(|line| line.contains("exceeds the bound")
+                && line.contains("trigger_date + 4.months = 2024-05-31")),
+        "{:#?}",
+        outcome(&checked)
+    );
 }
 
 /// `timed`, due 2011-01-24: a motion at least 10 days before the due date

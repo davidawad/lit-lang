@@ -244,11 +244,19 @@ pub struct Motion {
 }
 
 /// A date bound: `max`/`min` over calendar-day offsets after or before
-/// the prescribed or current due date or the granting order's date (FRAP
-/// 4(a)(5)(C); Sup. Ct. R. 30.2).
+/// prescribed/current due dates or the order date, and calendar months
+/// counted from the trigger under its deadline's clock rule.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub enum DateBound {
+    /// The deadline's counting rule applied to a calendar-month period from
+    /// its trigger date.
+    Counted {
+        /// The date from which the count begins (currently `triggerDate`).
+        from: DateRef,
+        /// Calendar months to count under the deadline's clock rule.
+        months: u64,
+    },
     /// `from` plus `days` calendar days.
     Offset {
         /// The date counted from.
@@ -273,6 +281,8 @@ pub enum DateBound {
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub enum DateRef {
+    /// The instance's trigger event date.
+    TriggerDate,
     /// The window's counted (or designated) due date.
     PrescribedDue,
     /// The date of the order granting the extension.

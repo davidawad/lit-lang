@@ -21,6 +21,15 @@ fn format_errors_count_the_syntax_errors() {
 }
 
 #[test]
+fn trigger_month_extension_bound_formats_to_a_fixed_point() {
+    let text = "module m\ndeadline d: 10.days from Filed() counted_by c { extend { by court, to min(trigger_date + 6.months, prescribed_due + 30.days) } }\n";
+    let once = fmt(text);
+    assert!(once.contains("trigger_date + 6.months"));
+    assert!(once.contains("prescribed_due + 30.days"));
+    assert_eq!(fmt(&once), once);
+}
+
+#[test]
 fn check_format_leaves_unparsable_and_canonical_files_alone() {
     let file = FileId::from("x.lit");
     assert_eq!(check_format("module x\nstate", FileKind::Lit, &file), None);

@@ -1371,6 +1371,16 @@ creates (design review 2026-10-23 §2.4, §2.7):
              to max(prescribed_due + 30.days, grant_order_entered + 14.days),
              after_expiry, on AppealExtensionMoved(), within prescribed_due + 30.days }
     ```
+    A date bound is `max(b, ...)`, `min(b, ...)`, `r + N.days`,
+    `r - N.days`, or `trigger_date + N.months` (also `N.years`). The
+    month-family form is permitted only from `trigger_date`: it counts the
+    named period from this instance's trigger using the declaring deadline's
+    own `counted_by` rule, month-end policy and roll. It reuses ordinary
+    deadline counting. Calendar-day bounds remain based on
+    `prescribed_due`, `current_due` or `grant_order_entered`; months from
+    those dates and `max N.months` are L2007. `trigger_date + N.days` is
+    L2007; use `prescribed_due` for a day offset. These constraints implement
+    the design ruling in lg-pb1fe.36 (2026-11-11).
   - `extend { by A, discretion S [, cite "X"] [, after_expiry, on M()] }`
     (discretionary): actor `A` may extend an instance to any later date.
     Its window is before expiry, on or before the current due date (FRCP
@@ -2849,7 +2859,7 @@ Anything without a lowering is L6001.
 | `p`, `effort`, `cost` | `RawEdge.probability`, `hours`, `cost` |
 | `authority` | `RawEdge.authority` (string, cite text, or cite-hole reason) |
 | `within d` | `RawEdge.deadline` `{length: N, unit, extendable, extensionAuthority, extensions, note}` from d's version in force; `extendable` and `extensionAuthority` derive from its typed extension grants, delegations and locks (pack schema v5); when that version is `designated p` (§5.3), `{designated: {minPeriod: N, sourceEvent, sourceEventArg: p, interpretation}, ...}` with no `length` or `unit`: `sourceEvent` the trigger's event, `interpretation` present only beside `interpretation` |
-| `extend { ... }` of d | `Deadline.extensions[]`, one per grant in source order, tagged by `bound`: `{bound: "bounded", by, until, afterExpiry, standard, motion, interpretation}`, `{bound: "discretionary", by, standard, window: "beforeExpiry" \| "afterExpiryOnMotion", motion, interpretation}`, `{bound: "nonExtendable", authority}`; a date bound is `{offset: {from, days}}` (`r + N.days`), `{before: {from, days}}` (`r - N.days`), `{max: [...]}` or `{min: [...]}`, `from` one of `prescribedDue`, `grantOrderEntered`, `currentDue`; a motion is `{event, within, unless}`, `event` and `unless` patterns in source spelling (`ExtensionMoved(AnswerPeriod)`). No grant is no `extensions`: undeclared, never not-extendable |
+| `extend { ... }` of d | `Deadline.extensions[]`, one per grant in source order, tagged by `bound`: `{bound: "bounded", by, until, afterExpiry, standard, motion, interpretation}`, `{bound: "discretionary", by, standard, window: "beforeExpiry" \| "afterExpiryOnMotion", motion, interpretation}`, `{bound: "nonExtendable", authority}`; a date bound is `{offset: {from, days}}` (`r + N.days`), `{before: {from, days}}` (`r - N.days`), `{counted: {from: "triggerDate", months}}`, `{max: [...]}` or `{min: [...]}`; day offsets use `prescribedDue`, `grantOrderEntered`, `currentDue`, counted months use `triggerDate`. A motion is `{event, within, unless}`, `event` and `unless` patterns in source spelling (`ExtensionMoved(AnswerPeriod)`). No grant is no `extensions`: undeclared, never not-extendable |
 | `deadline N.unit {…}` | same, from the literal; `unit` omitted for calendar days, `"court"` for court days; business days are L6001 |
 | `duration` | `RawEdge.duration {min, mode, max}` (a single duration is `{mode}`) |
 | `valence`, `court_listener_url`, `action_id`, `note`, `tags`, `attrs`, `sets`, `clears`, `requires`, `forbids`, `spawn`, `joins` | same-named `RawEdge` fields (`spawn` and `joins` as local node ids; the engine expands the markings they reach, §5.6) |

@@ -132,6 +132,7 @@ fn counterexample(
 ) -> Diagnostic {
     let value = |n: &str| model.iter().find(|(m, _)| m == n).map(|(_, v)| v.as_str());
     let dates = hir::BoundDates {
+        trigger_date: value("trigger_date").unwrap_or_default(),
         prescribed_due: value("prescribed_due").unwrap_or_default(),
         current_due: value("current_due").unwrap_or_default(),
         grant_order_entered: value("grant_order_entered").unwrap_or_default(),
@@ -257,6 +258,15 @@ fn join(op: BinaryOp, unit: bool, es: impl IntoIterator<Item = hir::Expr>) -> hi
 /// `to <= b`: `max` is a disjunction, `min` a conjunction.
 fn below(to: &str, b: &Bound) -> hir::Expr {
     match b {
+        // A trigger-relative month bound is checked exactly during replay
+        // under the deadline's counting rule; the refinement SMT tier only
+        // models calendar-day arithmetic.
+        Bound::Counted { .. } => expr(
+            Type::Boolean,
+            ExprKind::Literal {
+                value: Value::Boolean(true),
+            },
+        ),
         Bound::Offset { from, days: n } => cmp(
             BinaryOp::Le,
             date(to),

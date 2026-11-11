@@ -592,6 +592,8 @@ impl CauseStandard {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum DateRef {
+    /// The trigger event's date (`trigger_date`), for calendar-month bounds.
+    TriggerDate,
     /// The instance's counted due date, raised to any `later_of` floor
     /// (`prescribed_due`): "the time prescribed by this Rule 4(a)".
     PrescribedDue,
@@ -609,13 +611,14 @@ impl DateRef {
     #[must_use]
     pub fn name(self) -> &'static str {
         match self {
+            Self::TriggerDate => "trigger_date",
             Self::PrescribedDue => "prescribed_due",
             Self::GrantOrderEntered => "grant_order_entered",
             Self::CurrentDue => "current_due",
         }
     }
 
-    /// Every date reference, in declaration order.
+    /// Every date reference available to event refinements, in declaration order.
     pub const ALL: [Self; 3] = [
         Self::PrescribedDue,
         Self::GrantOrderEntered,
@@ -625,6 +628,7 @@ impl DateRef {
     /// Its date among `at`.
     fn of(self, at: BoundDates<'_>) -> &str {
         match self {
+            Self::TriggerDate => at.trigger_date,
             Self::PrescribedDue => at.prescribed_due,
             Self::GrantOrderEntered => at.grant_order_entered,
             Self::CurrentDue => at.current_due,
@@ -635,6 +639,8 @@ impl DateRef {
 /// The dates a [`Bound`] is counted from, one per [`DateRef`].
 #[derive(Debug, Clone, Copy)]
 pub struct BoundDates<'a> {
+    /// `trigger_date`.
+    pub trigger_date: &'a str,
     /// `prescribed_due`.
     pub prescribed_due: &'a str,
     /// `current_due`.
@@ -644,13 +650,19 @@ pub struct BoundDates<'a> {
 }
 
 /// A date bound: a closed expression language of `max`/`min` over
-/// `DateRef + N.days` and `DateRef - N.days` (FRAP 4(a)(5)(C): "30 days
+/// day offsets from prescribed/current due dates or the order date, and
+/// calendar months from the instance trigger. Day offsets include `N.days` (FRAP 4(a)(5)(C): "30 days
 /// after the prescribed time or 14 days after the date when the order
 /// granting the motion is entered, whichever is later"; Sup. Ct. R. 30.2,
 /// "at least 10 days before the specified final filing date").
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Bound {
+    /// `trigger_date + N.months` (counted by the deadline's clock rule).
+    Counted {
+        /// Number of calendar months from the trigger.
+        months: u64,
+    },
     /// `r + N.days`, calendar days.
     Offset {
         /// The date counted from.
@@ -676,11 +688,23 @@ impl Bound {
     /// date cannot be counted.
     #[must_use]
     pub fn date(&self, at: BoundDates<'_>) -> Option<String> {
+        self.date_with(at, &|_| None)
+    }
+
+    /// Date bound with calendar-month arithmetic supplied by the declaring
+    /// deadline's existing counting rule.
+    pub fn date_with(
+        &self,
+        at: BoundDates<'_>,
+        months: &dyn Fn(u64) -> Option<String>,
+    ) -> Option<String> {
         match self {
+            Self::Counted { months: n } => months(*n),
             Self::Offset { from, days } => crate::types::date::add_days(from.of(at), *days),
             Self::Before { from, days } => crate::types::date::sub_days(from.of(at), *days),
             Self::Max(xs) | Self::Min(xs) => {
-                let dates: Option<Vec<String>> = xs.iter().map(|x| x.date(at)).collect();
+                let dates: Option<Vec<String>> =
+                    xs.iter().map(|x| x.date_with(at, months)).collect();
                 let latest = matches!(self, Self::Max(_));
                 dates.and_then(|d| {
                     if latest {
@@ -697,6 +721,7 @@ impl Bound {
     #[must_use]
     pub fn display(&self) -> String {
         match self {
+            Self::Counted { months } => format!("trigger_date + {months}.months"),
             Self::Offset { from, days } => format!("{} + {days}.days", from.name()),
             Self::Before { from, days } => format!("{} - {days}.days", from.name()),
             Self::Max(xs) | Self::Min(xs) => format!(

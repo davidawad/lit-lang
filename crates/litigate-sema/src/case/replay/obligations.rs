@@ -816,7 +816,20 @@ impl<'g> Cx<'_, 'g> {
             current: &current,
             spent: o.request_made.as_deref(),
         };
-        let judged = grant::judge(&history, k, instance, grant, new.map(|(n, _)| n));
+        let counted_months = |months| {
+            let mut request = due.request.clone();
+            request.amount = months;
+            request.unit = crate::hir::DayUnit::Month;
+            self.clock.due(&request).ok()
+        };
+        let judged = grant::judge(
+            &history,
+            k,
+            instance,
+            grant,
+            new.map(|(n, _)| n),
+            &counted_months,
+        );
         // A refinement is judged after the window, the motion and the
         // extension's direction, before the bound (rank 3: the most
         // specific refusal).

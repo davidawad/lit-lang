@@ -112,6 +112,7 @@ syntax_kinds_with_keywords! {
         TerminalDecl => "`terminal` node declaration.",
         FieldList => "Braced, comma-separated field list.",
         Field => "One `keyword value` field.",
+        NumericProvenance => "`basis` and `vintage` attached to one authored number.",
         EdgeBlock => "Braced edge list of a node.",
         EdgeDecl => "`[id] \"label\" -> target ...`; omitted ids are derived.",
         LinkDecl => "`link` cross-package edge.",

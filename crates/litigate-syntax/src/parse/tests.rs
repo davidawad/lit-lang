@@ -40,6 +40,19 @@ fn codes(parsed: &super::Parse) -> Vec<&'static str> {
 }
 
 #[test]
+fn numeric_provenance_parses_for_probability_payoff_duration_cost_and_effort() {
+    let parsed = parse_lit(concat!(
+        "module m\n",
+        "terminal t: \"terminal\" { payoff 1.usd basis placeholder vintage 2026-01-01 }\n",
+        "decision d: \"decision\" { \"go\" -> t p 0.5 basis calibrated(cal) vintage 2026-01-01 { cost 2.usd basis sourced(\"FRCP 1\") effort 3.hours basis estimate vintage 2026-01-01 duration 4.days basis estimate vintage 2026-01-01 } }\n"
+    ));
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
+    let bad = parse_lit("module m\nterminal t: \"t\" { payoff 1.usd basis mystery }\n");
+    assert!(!bad.is_ok());
+    assert!(bad.errors().iter().any(|e| e.message.contains("expected")));
+}
+
+#[test]
 fn an_unmarked_file_is_the_default_edition() {
     assert_eq!(parse_lit("module m\n").edition(), Edition::E2026);
     assert_eq!(Edition::default(), Edition::E2026);

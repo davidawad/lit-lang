@@ -315,7 +315,7 @@ pub(crate) fn edge_tail(p: &mut Parser<'_>) {
         if p.at_kw(KwBy) && p.nth(1) == Ident && p.nth(2) != String {
             keyword_field(p, KwBy, Some(reference));
         } else if p.at_kw(KwP) && p.nth(1) != String {
-            keyword_field(p, KwP, Some(prob_value));
+            super::clauses::numeric_keyword_field(p, KwP, prob_value);
         } else {
             break;
         }

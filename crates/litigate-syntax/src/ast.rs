@@ -78,6 +78,7 @@ ast_node!(
 );
 ast_node!(FieldList, FieldList);
 ast_node!(Field, Field);
+ast_node!(NumericProvenance, NumericProvenance);
 ast_node!(EdgeBlock, EdgeBlock);
 ast_node!(EdgeDecl, EdgeDecl);
 ast_node!(LinkDecl, LinkDecl);

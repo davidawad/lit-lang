@@ -186,7 +186,11 @@ pub(crate) fn field(p: &mut Parser<'_>, specs: &[Spec]) -> bool {
     let Some((kw, value)) = specs.iter().find(|(kw, _)| p.at_kw(*kw)) else {
         return false;
     };
-    keyword_field(p, *kw, *value);
+    if let (Some(value), true) = (value, matches!(*kw, KwPayoff | KwCost | KwEffort | KwDuration)) {
+        super::clauses::numeric_keyword_field(p, *kw, *value);
+    } else {
+        keyword_field(p, *kw, *value);
+    }
     true
 }
 

@@ -267,6 +267,40 @@ pub(crate) fn money_or_hole(p: &mut Parser<'_>) -> bool {
     signed_money(p) || hole(p)
 }
 
+/// Optional provenance suffix on a scalar authored number.
+pub(crate) fn numeric_provenance(p: &mut Parser<'_>) -> bool {
+    if !p.at_kw(KwBasis) && !p.at_kw(KwVintage) {
+        return false;
+    }
+    p.start(NumericProvenance);
+    if p.at_kw(KwBasis) {
+        p.bump_as(KwBasis);
+        if p.at_kw(KwCalibrated) || p.at_kw(KwSourced) {
+            let form = if p.at_kw(KwCalibrated) { KwCalibrated } else { KwSourced };
+            p.bump_as(form);
+            p.expect(LParen);
+            if form == KwCalibrated {
+                p.expect(Ident);
+            } else {
+                p.expect(String);
+            }
+            p.expect(RParen);
+        } else if p.at_kw(KwEstimate) || p.at_kw(KwPlaceholder) {
+            let form = if p.at_kw(KwEstimate) { KwEstimate } else { KwPlaceholder };
+            p.bump_as(form);
+        } else {
+            p.error_expected(&[KwCalibrated, KwSourced, KwEstimate, KwPlaceholder]);
+            if !p.at_end() { p.bump_error(); }
+        }
+    }
+    if p.at_kw(KwVintage) {
+        p.bump_as(KwVintage);
+        p.expect(Date);
+    }
+    p.finish();
+    true
+}
+
 /// `ProbValue = Number ["/" Number] | Hole | "(" Expr ")"`.
 pub(crate) fn prob_value(p: &mut Parser<'_>) -> bool {
     if p.at(Number) && p.nth(1) == Slash {

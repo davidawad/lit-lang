@@ -143,6 +143,19 @@ pub(crate) fn keyword_field(
     p.finish();
 }
 
+/// A numeric field with its optional same-line provenance suffix.
+pub(crate) fn numeric_keyword_field(
+    p: &mut Parser<'_>,
+    kw: SyntaxKind,
+    value: super::values::Value,
+) {
+    p.start(Field);
+    p.bump_as(kw);
+    require(p, value, &[Ident, Number, Money, Duration, Question]);
+    super::values::numeric_provenance(p);
+    p.finish();
+}
+
 /// `VersionClause = ("effective" | "commenced") Interval | ("known_at" |
 /// "retracted" | "unknown_before") Date | "repealed"`, the bare `repealed`
 /// a `Field` node.

@@ -4151,11 +4151,11 @@
     }
   },
   {
-    "type": "numeric_provenance",
+    "type": "numeric_basis",
     "named": true,
     "fields": {
       "calibration": {
-        "multiple": true,
+        "multiple": false,
         "required": false,
         "types": [
           {
@@ -4165,7 +4165,7 @@
         ]
       },
       "cite": {
-        "multiple": true,
+        "multiple": false,
         "required": false,
         "types": [
           {
@@ -4173,10 +4173,35 @@
             "named": true
           }
         ]
-      },
+      }
+    }
+  },
+  {
+    "type": "numeric_provenance",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "numeric_basis",
+          "named": true
+        },
+        {
+          "type": "numeric_vintage",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "numeric_vintage",
+    "named": true,
+    "fields": {
       "date": {
-        "multiple": true,
-        "required": false,
+        "multiple": false,
+        "required": true,
         "types": [
           {
             "type": "date",

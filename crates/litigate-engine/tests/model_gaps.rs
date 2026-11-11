@@ -17,6 +17,40 @@ fn pack(v: serde_json::Value) -> Pack {
     serde_json::from_value(v).expect("test pack literal is well-formed")
 }
 
+#[test]
+fn packs_accept_optional_per_number_provenance_and_omit_it_when_absent() {
+    let mut value = json!({
+        "schemaVersion": 5, "id": "provenance", "title": "T", "startNodeId": "s",
+        "nodes": [{"id": "s", "label": "S", "kind": "terminal", "payoff": 10.0,
+          "numericProvenance": {"payoff": {"basis": {"kind": "placeholder"}, "vintage": "2026-01-01"}}}],
+        "edges": [{"from": "s", "to": "s", "label": "draw", "probability": 1.0,
+          "numericProvenance": {"probability": {"basis": {"kind": "calibrated", "set": "set-a"}}}}]
+    });
+    let parsed = Pack::from_json(&value.to_string()).expect("pack with provenance loads");
+    let encoded = serde_json::to_value(&parsed).expect("serialize pack");
+    assert_eq!(
+        encoded["nodes"][0]["numericProvenance"]["payoff"]["vintage"],
+        "2026-01-01"
+    );
+    assert_eq!(
+        encoded["edges"][0]["numericProvenance"]["probability"]["basis"]["set"],
+        "set-a"
+    );
+
+    value["nodes"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("numericProvenance");
+    value["edges"][0]
+        .as_object_mut()
+        .unwrap()
+        .remove("numericProvenance");
+    let old = Pack::from_json(&value.to_string()).expect("pack without provenance loads");
+    let encoded = serde_json::to_value(old).expect("serialize old shape");
+    assert!(encoded["nodes"][0].get("numericProvenance").is_none());
+    assert!(encoded["edges"][0].get("numericProvenance").is_none());
+}
+
 // --- graph::qualify -------------------------------------------------------
 
 #[test]

@@ -345,6 +345,9 @@ pub struct RawNode {
     /// Terminal value in USD from the protagonist's perspective (v2).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub payoff: Option<f64>,
+    /// Per-number provenance labels, keyed by scalar value name (v6 additive).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub numeric_provenance: BTreeMap<String, NumericProvenance>,
     /// Outcome tags for terminals, e.g. `win`, `fee-eligible` (v2).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub outcome: Vec<String>,
@@ -411,6 +414,9 @@ pub struct RawEdge {
     /// Probability (world edges only).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub probability: Option<f64>,
+    /// Per-number provenance labels, keyed by scalar value name (v6 additive).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub numeric_provenance: BTreeMap<String, NumericProvenance>,
     /// `good` / `caution` / `bad` / `neutral`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub valence: Option<String>,
@@ -458,6 +464,38 @@ pub struct RawEdge {
     /// Not on links.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub joins: Vec<String>,
+}
+
+/// Source label attached to one authored scalar number.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct NumericProvenance {
+    /// Typed basis, if authored.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub basis: Option<NumericBasis>,
+    /// Observation date, if authored.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vintage: Option<String>,
+}
+
+/// Closed basis set for per-number provenance.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum NumericBasis {
+    /// `calibrated(set-id)`.
+    Calibrated {
+        /// Calibration set id.
+        set: String,
+    },
+    /// `sourced("cite")`.
+    Sourced {
+        /// Citation text.
+        cite: String,
+    },
+    /// `estimate`.
+    Estimate,
+    /// `placeholder`.
+    Placeholder,
 }
 
 /// A primary source a pack was authored from.

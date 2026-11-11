@@ -171,6 +171,15 @@ fn node(sink: &mut Sink, n: &hir::Node) -> RawNode {
         valence: n.valence.map(edge::valence),
         court_listener_url: n.court_listener_url.clone(),
         payoff,
+        numeric_provenance: n
+            .payoff_provenance
+            .as_ref()
+            .map(|p| {
+                [("payoff".to_owned(), edge::provenance(p))]
+                    .into_iter()
+                    .collect()
+            })
+            .unwrap_or_default(),
         outcome,
         tags: n.tags.clone(),
         attrs: edge::attrs(sink, &n.attrs, span),

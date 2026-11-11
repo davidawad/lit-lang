@@ -358,6 +358,83 @@ fn a_patch_replaces_whole_fields() {
     );
 }
 
+/// A typed grant on a patch deadline is derived during edge lowering and
+/// must survive patch serialization for either kind of base deadline.
+#[test]
+fn a_patch_keeps_derived_extension_grants() {
+    use hir::{CauseStandard, Extension, ExtensionWindow};
+
+    for (base_extendable, base_authority) in [(None, None), (Some(false), Some("old rule"))] {
+        let mut base = example();
+        let mut granted_deadline = None;
+        for declaration in decls_mut(&mut base) {
+            if let Declaration::Deadline(deadline) = declaration {
+                deadline.extend = vec![Extension::Discretionary {
+                    by: "court".into(),
+                    cite: Some("FRCP 6(b)(1)".into()),
+                    standard: CauseStandard::GoodCause,
+                    window: ExtensionWindow::BeforeExpiry,
+                    motion: None,
+                    interpretation: None,
+                }];
+                granted_deadline = Some(deadline.clone());
+                break;
+            }
+        }
+        let granted_deadline = granted_deadline.expect("answer-period declaration");
+        let answer = node_mut(&mut base, "respond")
+            .edges
+            .iter_mut()
+            .find(|edge| edge.id.as_deref() == Some("answer"))
+            .expect("answer edge");
+        answer.deadline = Some(hir::EdgeDeadline {
+            window: hir::DeadlineWindow::Inline {
+                length: 21,
+                unit: hir::DayUnit::Calendar,
+            },
+            extendable: base_extendable,
+            extension_authority: base_authority.map(str::to_owned),
+            note: None,
+            counting: None,
+        });
+
+        let mut links = example();
+        links.manifest.links = true;
+        links.manifest.pack_id = "links".into();
+        links.modules.truncate(1);
+        let patch = hir::EdgePatch {
+            deadline: Some(hir::EdgeDeadline {
+                window: hir::DeadlineWindow::Declared {
+                    deadline: "answer-period".into(),
+                },
+                extendable: None,
+                extension_authority: None,
+                note: None,
+                counting: None,
+            }),
+            ..note("Answer it")
+        };
+        links.modules[0].declarations = vec![
+            Declaration::Deadline(granted_deadline),
+            Declaration::Instance(hir::Instance {
+                probabilities: BTreeMap::new(),
+                ..instance(BTreeMap::from([("answer".into(), patch)]))
+            }),
+        ];
+
+        let lowered = Lowerer::new(&[&links, &base])
+            .package(&links, &Options::default())
+            .unwrap_or_else(|d| panic!("{}", render_diagnostics(&d)));
+        let Document::Links(file) = lowered.document else {
+            panic!("a link file")
+        };
+        let deadline = &file.instances["copy"].patch_edges["answer"]["deadline"];
+        assert_eq!(deadline["extendable"], true);
+        assert_eq!(deadline["extensionAuthority"], "FRCP 6(b)(1)");
+        assert_eq!(deadline["extensions"].as_array().map(Vec::len), Some(1));
+    }
+}
+
 /// Overlapping span-less versions are ambiguous at the declaration's
 /// name.
 #[test]

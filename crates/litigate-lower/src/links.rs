@@ -270,7 +270,9 @@ fn instance(
 /// replacing the base edge's whole field. A written field that lowers to
 /// nothing (a `cost` hole) is null, and a member of a base object field
 /// (`deadline`, `duration`, `attrs`) that the written field lacks is null,
-/// so no part of the base field survives a merge.
+/// so no part of the base field survives a merge. A null member in the
+/// written object is omitted when the base member is absent or null (deleting
+/// it changes nothing); it remains null when the base member is non-null.
 fn patch(cx: &EdgeCx<'_, '_>, sink: &mut Sink, p: &hir::EdgePatch, base: &RawEdge) -> Value {
     let written = [
         ("authority", p.authority.is_some()),
@@ -325,18 +327,21 @@ fn patch(cx: &EdgeCx<'_, '_>, sink: &mut Sink, p: &hir::EdgePatch, base: &RawEdg
     let mut out = Map::new();
     for (key, _) in written.iter().filter(|(_, w)| *w) {
         let mut value = lowered.get(*key).cloned().unwrap_or_else(|| empty(key));
-        if key == &"deadline" {
-            if let Some(deadline) = value.as_object_mut() {
-                deadline.remove("extendable");
-                deadline.remove("extensionAuthority");
-            }
-        }
-        if let (Value::Object(new), Some(Value::Object(old))) = (&mut value, base.get(*key)) {
-            for (member, old_value) in old {
-                if old_value.is_null() {
-                    continue;
+        if let Value::Object(new) = &mut value {
+            let old = base.get(*key).and_then(Value::as_object);
+            new.retain(|member, new_value| {
+                !new_value.is_null()
+                    || old
+                        .and_then(|old| old.get(member))
+                        .is_some_and(|old_value| !old_value.is_null())
+            });
+            if let Some(old) = old {
+                for (member, old_value) in old {
+                    if old_value.is_null() {
+                        continue;
+                    }
+                    new.entry(member.clone()).or_insert(Value::Null);
                 }
-                new.entry(member.clone()).or_insert(Value::Null);
             }
         }
         out.insert((*key).to_owned(), value);

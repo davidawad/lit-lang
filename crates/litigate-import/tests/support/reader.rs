@@ -206,12 +206,13 @@ fn edge_fields(mut f: Map<String, Value>, out: &mut Map<String, Value>) {
 /// `RawEdge` object (without `from`).
 fn edge_object(node: &SyntaxNode, default_actor: &str) -> Map<String, Value> {
     let mut out = Map::new();
-    let id = node
-        .children_with_tokens()
-        .find_map(|e| e.into_token().filter(|t| t.kind() == SyntaxKind::Ident));
-    if let Some(id) = id {
+    let id_token = node.children_with_tokens().find_map(|e| {
+        e.into_token()
+            .filter(|t| matches!(t.kind(), SyntaxKind::Ident | SyntaxKind::Underscore))
+    });
+    if let Some(id) = id_token.as_ref().filter(|t| t.kind() == SyntaxKind::Ident) {
         out.insert("id".into(), json!(id.text()));
-    } else if node.kind() == SyntaxKind::EdgeDecl {
+    } else if id_token.is_none() && node.kind() == SyntaxKind::EdgeDecl {
         // sema derives ids only for node edges. A link's name is optional
         // but its endpoints identify a shared link, not a local edge id.
         let target = node

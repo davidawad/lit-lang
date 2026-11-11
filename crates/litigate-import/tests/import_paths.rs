@@ -35,6 +35,38 @@ fn text<'a>(files: &'a [ImportedFile], path: &str) -> &'a str {
         .map_or_else(|| panic!("no {path} among {files:#?}"), |f| f.text.as_str())
 }
 
+#[test]
+fn derived_and_anonymous_edge_ids_round_trip_through_formatted_source() {
+    let input = pack("edge-ids", |p| {
+        p["edges"] = json!([
+            {"id":"edge-a-b-1", "from":"a", "to":"b", "label":"Derived spelling", "actor":"applicant"},
+            {"id":"custom", "from":"a", "to":"b", "label":"Custom", "actor":"applicant"},
+            {"from":"a", "to":"b", "label":"Anonymous", "actor":"applicant"},
+            {"id":"parallel", "from":"a", "to":"b", "label":"Parallel", "actor":"applicant"}
+        ]);
+    });
+    let files = import_ok(std::slice::from_ref(&input));
+    let source = text(&files, "lit/edge-ids/edge-ids.lit");
+    let formatted = litigate_syntax::format(source, litigate_syntax::FileKind::Lit)
+        .expect("imported source formats");
+    assert_eq!(source, formatted);
+    let mut formatted_files = files.clone();
+    formatted_files
+        .iter_mut()
+        .find(|file| file.path == "lit/edge-ids/edge-ids.lit")
+        .expect("module file")
+        .text = formatted;
+    let read = read_pack(&package(&formatted_files, "lit/edge-ids"));
+    let original = Pack::from_json(&input.text).expect("fixture pack");
+    let (expected, actual) = (normalize_pack(original), normalize_pack(read));
+    assert_eq!(
+        expected,
+        actual,
+        "{:?}",
+        first_difference(&expected, &actual, "")
+    );
+}
+
 /// Asserts that package `dir` of `files` reads back as the pack `input`.
 fn assert_pack_round_trips(input: &Input, files: &[ImportedFile], dir: &str) {
     let original = Pack::from_json(&input.text).unwrap_or_else(|e| panic!("{e}"));

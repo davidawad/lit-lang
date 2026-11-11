@@ -1226,7 +1226,8 @@ compute the same values (before 1.0.0, `^` and `~` coincide).
   best first (design review 2026-10-23 §2.10): `sourced("cite")` (read
   from a primary source; the cite resolves like an `authority`,
   `cite-resolves`), `calibrated("dataset", date)` (measured),
-  `expert("name")` (a named judgment), `estimate`. Anything else is L2001.
+  `expert("name")` (a named judgment), `estimate`, `placeholder`, and
+  `calibrated(set-id)` (a calibration set in scope). Anything else is L2001.
   A number with no `basis` is an estimate and a `?` is a hole, the worst
   label. A `patch` may not write one (L2007): its numbers keep their base
   edge's. Labels lower to `lowered.basis` (§8.1) and join: a scenario is
@@ -1236,30 +1237,29 @@ compute the same values (before 1.0.0, `^` and `~` coincide).
 
 #### Typed provenance on numbers (lg-pb1fe.7)
 
-The object-level `basis` above is legacy coarse provenance. New authored
-numbers carry provenance individually, on the same declaration and line as
-the number: `p 0.3 basis calibrated("frcp-docket", 2026-10-26)`;
-`payoff 500000.usd basis placeholder`; `duration 14.days basis estimate
-vintage 2026-10-26`; `cost 250.usd basis sourced("FRCP 4(d)(2)")`; and
-`effort 3.hours basis estimate vintage 2026-10-26`. The closed basis forms
-are `calibrated(<calibration-set-id>)`, `sourced(<cite>)`, `estimate`, and
-`placeholder`. `vintage <Date>` records the date of an estimate or
-placeholder; calibrated values take their vintage from the named calibration
-set. Sourced values are checked against the cited authority. A number may
-have only one basis and one vintage. `placeholder` and `estimate` without a
-vintage are warnings in both `dev` and `strict` profiles; they remain
-authored assumptions rather than holes. The engine's calibration and lint
-operations consume the lowered per-number labels, and `litigate query`
-lists every estimated and placeholder value by package.
+The object-level `basis B` above is the default provenance for the node or
+edge's numbers. An individual number may override that default with a suffix
+on the same line: `p 0.3 basis calibrated("dataset", 2026-10-26)`;
+`payoff 500000.usd basis placeholder vintage 2026-10-26`;
+`duration 14.days basis estimate vintage 2026-10-26`;
+`cost 250.usd basis sourced("FRCP 4(d)(2)")`; and
+`effort 3.hours basis expert("Jane Roe")`. A suffix never binds across a
+newline or after a comma; in those positions `basis` is the ordinary
+object-level field. Its forms are the same as `basis B`: `sourced("cite")`,
+`calibrated("dataset", date)`, `expert("name")`, and `estimate`; number
+suffixes additionally accept `placeholder` and `calibrated(set-id)`, where
+the identifier names a calibration set in scope. Unknown set ids warn L9012.
+`vintage <Date>` follows the basis. `estimate` and `placeholder` without a
+vintage, repeated basis, and repeated vintage warn L9012 in both profiles.
 
-In pack JSON, each node or edge may have an optional `numericProvenance`
-object keyed by value name (`payoff`, `probability`, `hours`, `cost`, or
-`duration`). Each entry contains `basis` and/or `vintage`; for example,
-`{"basis":{"kind":"estimate"},"vintage":"2026-10-26"}`.
-`calibrated` carries `{"kind":"calibrated","set":"id"}` and `sourced`
-carries `{"kind":"sourced","cite":"..."}`. When a number has no
-suffix, no `numericProvenance` field is emitted, preserving the prior pack
-JSON.
+The provenance lattice is `sourced < calibrated < expert < estimate <
+placeholder < hole`. A number's effective label is its suffix, else its
+node's or edge's `basis`, else `estimate`; explicit holes remain `hole`.
+Labels lower into `lowered.basis[]` (§8.1), with one pointer per labelled
+number, for example `/edges/0/probability` or `/nodes/0/payoff`. A number
+label uses the same `basis` and `source` members as an object label and may
+include `vintage`. Scenario labels join the effective labels of the numbers
+in every pack it uses (§8.3).
 
 ### 5.2 Types, enums, events, match
 
@@ -3372,7 +3372,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9009 | precedent not binding at the world's location | | |
 | L9010 | repeated test trigger with implicit occurrence choice | | |
 | L9011 | counting test insensitive to the counting rule | | |
-| L9012 | numeric provenance is duplicated or an estimate/placeholder has no vintage | | |
+| L9012 | numeric provenance is incomplete, duplicated, or names no calibration set in scope | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
 L4009, L4010, L4011, L4012, L4013, L4014, L4016, L3010 and L2015 is `error`.
@@ -3980,16 +3980,15 @@ delegation and role work (§6 item 2).
 Design review 2026-10-23 §6 item 22 (§2.10, §2.11), decided as follows:
 
 1. **Basis labels.** `basis` on a node or edge (§5.1) with the lattice
-   `sourced < calibrated < expert < estimate < hole`; an unlabelled
+   `sourced < calibrated < expert < estimate < placeholder < hole`; an unlabelled
    number is an estimate. Propagation is the lattice join: generated
    packs and link files carry their labels in `lowered.basis` (§8.1) and
    a scenario carries the join over the packs it uses (§8.3), so `strict`
    output is always labelled rather than estimate-free. The join is over
    every number of those packs, not only the ones an op reads: sound and
-   coarse until the engine propagates labels per op. A `patch` keeps its
-   base edge's labels (L2007 on `basis` there). The corpus's prose
-   "basis: estimate" notes are not rewritten here: an unlabelled number
-   already is an estimate.
+   coarse until the engine propagates labels per op. A same-line number
+   suffix overrides its object's basis (§5.1). A `patch` keeps its base
+   edge's labels (L2007 on `basis` there).
 2. **Priors.** `beliefs { prior node: { edge: α } }` (§5.6, §8.3) types
    the beliefs block's counts as Dirichlet pseudo-counts and declares the
    prior they update. `Beta(α, β)` is its two-outcome case, written by

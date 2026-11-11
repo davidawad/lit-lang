@@ -52,6 +52,12 @@ test "fee clock: 14 days after a notice filed 2026-09-01" cite "FRCP 54(d)(2)(B)
   expect deadline(fee-motion-period) == 2026-09-15
 }
 
+test "FRCP 6(a) rolls a Saturday fee-motion deadline to Monday" cite "FRCP 54(d)(2)(B)"
+{
+  given DismissalNoticed(WithPrejudice) on 2026-03-07
+  expect deadline(fee-motion-period) == 2026-03-23
+}
+
 state pending: "Action pending; defendant unserved" cite "FRCP 4(m)"
 {
   noticed "Plaintiff files a notice of dismissal" -> dismissed by Plaintiff {

@@ -234,7 +234,8 @@ impl DiagnosticCode {
                 | Self::LateClaimProcessing
                 | Self::ConcurrentTracks
                 | Self::StaleAsOf
-                | Self::RepeatedTestTrigger,
+                | Self::RepeatedTestTrigger
+                | Self::CountingTestInsensitive,
                 _,
             )
             | (
@@ -245,7 +246,6 @@ impl DiagnosticCode {
                 | Self::RefinementUndecided,
                 Profile::Dev,
             ) => Severity::Warning,
-            (Self::CountingTestInsensitive, _) => Severity::Warning,
             _ => Severity::Error,
         }
     }

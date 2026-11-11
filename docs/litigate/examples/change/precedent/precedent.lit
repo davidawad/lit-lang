@@ -1,13 +1,12 @@
 module change-light-wonder-paper-30.waiver
 
-import mpep.deadlines.{ uspto-1-7 }
 import change-ptab-base.review.{ InstitutionDecided, director-review-period }
+import mpep.deadlines.{ uspto-1-7 }
 
 // A binding precedent's waiver is a prospective override of a declaration
 // delegated to the waiving power (docs/litigate/CHANGE.md §2.8): in
 // language 1 it is written `override`. Persuasive, it could do none of
 // this.
-
 /// "Going forward, the Office is waiving the time period under 37 C.F.R.
 /// § 42.75(c)(1) for requests for Director Review of a decision to
 /// institute a trial. The waiver will extend the deadline from fourteen
@@ -18,4 +17,10 @@ test "after Light & Wonder a request is due 30 days after institution" cite "Lig
 {
   given InstitutionDecided() on 2026-07-01
   expect deadline(waived-director-review-period) == 2026-07-31
+}
+
+test "the USPTO rolls a waived deadline falling Saturday" cite "Light & Wonder IPR2025-01072 Paper 30"
+{
+  given InstitutionDecided() on 2026-06-25
+  expect deadline(waived-director-review-period) == 2026-07-27
 }

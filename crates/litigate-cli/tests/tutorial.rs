@@ -52,11 +52,21 @@ fn the_tutorial_runs_as_written() {
     // texts no vendored history dates are holes (SPEC §7).
     let strict = run(&["check", "--profile", "strict", "lit/my-court", "cases"]);
     for d in strict.json["diagnostics"].as_array().unwrap() {
+        if d["code"] == "L9011" {
+            assert_eq!(d["severity"], "warning", "{d}");
+            continue;
+        }
         let file = d["span"]["file"].as_str().unwrap();
         let message = d["message"].as_str().unwrap();
         assert!(file.contains("/core/"), "{d}");
         assert!(message.contains("is not proved the text in force"), "{d}");
     }
+    // L9011 allowance: removed by lg-pb1fe.13
+    assert!(strict.json["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .all(|d| { d["code"] != "L9011" || d["severity"] == "warning" }));
 
     let tested = run(&["test", "lit/my-court"]);
     assert_eq!(

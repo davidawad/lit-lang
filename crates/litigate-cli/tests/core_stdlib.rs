@@ -178,12 +178,31 @@ fn strict_check_of_lit_core_has_no_source_holes() {
     let run = litigate(&["check", "--profile", "strict", "lit/core"]);
     assert_eq!(run.code, 0, "{}", run.stdout);
     let diagnostics = run.json["diagnostics"].as_array().unwrap();
-    assert!(diagnostics.is_empty(), "{diagnostics:#?}");
+    // L9011 allowance: removed by lg-pb1fe.13
+    assert!(
+        diagnostics
+            .iter()
+            .all(|d| d["code"] == "L9011" && d["severity"] == "warning"),
+        "{diagnostics:#?}"
+    );
+    assert!(
+        diagnostics
+            .iter()
+            .all(|d| d["code"] != "L9011" || d["severity"] != "error"),
+        "{diagnostics:#?}"
+    );
     let result = &run.json["result"];
     for f in result["obligations"].as_array().unwrap() {
         // A rule package has no events, so only case replay is skipped.
         let skipped = f["name"] == "case-replay" && f["status"] == "skipped";
-        assert!(f["status"] == "passed" || skipped, "{f}");
+        let l9011 = f["name"] == "rule-without-test"
+            && f["status"] == "warning"
+            && f["examples"].as_array().is_some_and(|examples| {
+                examples
+                    .iter()
+                    .all(|e| e.as_str().is_some_and(|s| s.contains(": L9011 ")))
+            });
+        assert!(f["status"] == "passed" || skipped || l9011, "{f}");
     }
     let core = &result["packages"][0];
     assert_eq!(core["name"], "core");

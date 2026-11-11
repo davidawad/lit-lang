@@ -1,12 +1,11 @@
 module change-frcp-2009-amendment.rule59
 
-import core.frcp6.{ frcp6 }
 import change-frcp-base.periods.{ JudgmentEntered, alter-amend-period }
+import core.frcp6.{ frcp6 }
 
 // An amendment versions base text (docs/litigate/CHANGE.md §2.2): its
 // declaration supersedes the base's from the effective date its order
 // fixes. It never orders authority levels.
-
 /// FRCP 59(e) as amended effective December 1, 2009: 28 days after entry
 /// of the judgment, still locked by FRCP 6(b)(2).
 deadline alter-amend-period-2009: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 supersedes alter-amend-period cite "FRCP (2009) 59(e)"
@@ -18,4 +17,10 @@ test "from December 1, 2009 a Rule 59(e) motion is due 28 days after entry" cite
 {
   given JudgmentEntered() on 2025-03-03
   expect deadline(alter-amend-period-2009) == 2025-03-31
+}
+
+test "FRCP 6(a) rolls a Rule 59(e) deadline falling Sunday" cite "FRCP (2009) 59(e)"
+{
+  given JudgmentEntered() on 2026-03-01
+  expect deadline(alter-amend-period-2009) == 2026-03-30
 }

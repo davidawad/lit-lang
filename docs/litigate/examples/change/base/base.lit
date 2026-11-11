@@ -19,7 +19,10 @@ event JudgmentEntered()
 /// FRCP 12(a)(1)(A)(i): an answer is due 21 days after service of the
 /// summons and complaint. FRCP 6(b)(1) lets the court extend it, in one
 /// case: an order, never a local rule.
-deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective [2009-12-01, ..) delegable { to CaseOrder, op set } cite "FRCP 12(a)(1)(A)(i)"
+deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective [2009-12-01, ..) delegable {
+  to CaseOrder
+  op set
+} cite "FRCP 12(a)(1)(A)(i)"
 
 test "an answer is due 21 days after service" cite "FRCP 12(a)(1)(A)(i)"
 {
@@ -27,16 +30,31 @@ test "an answer is due 21 days after service" cite "FRCP 12(a)(1)(A)(i)"
   expect deadline(answer-period) == 2025-03-24
 }
 
+test "FRCP 6(a) rolls an answer deadline falling Saturday" cite "FRCP 12(a)(1)(A)(i)"
+{
+  given ProcessServed() on 2026-03-07
+  expect deadline(answer-period) == 2026-03-30
+}
+
 /// FRCP 56(b): "Unless a different time is set by local rule or the court
 /// orders otherwise", a summary-judgment motion may be filed until 30 days
 /// after the close of all discovery. The rule delegates the period to a
 /// local rule and to an order in the case, and to nothing else.
-deadline sj-motion-period: 30.days after DiscoveryClosed() counted_by frcp6 effective [2010-12-01, ..) delegable { to LocalRule, op set } delegable { to CaseOrder, op set } cite "FRCP 56(b)"
+deadline sj-motion-period: 30.days after DiscoveryClosed() counted_by frcp6 effective [2010-12-01, ..) delegable {
+  to LocalRule
+  op set
+} delegable { to CaseOrder, op set } cite "FRCP 56(b)"
 
 test "a summary-judgment motion is due 30 days after discovery closes" cite "FRCP 56(b)"
 {
   given DiscoveryClosed() on 2025-06-02
   expect deadline(sj-motion-period) == 2025-07-02
+}
+
+test "FRCP 6(a) rolls a summary-judgment deadline falling Sunday" cite "FRCP 56(b)"
+{
+  given DiscoveryClosed() on 2026-03-06
+  expect deadline(sj-motion-period) == 2026-04-06
 }
 
 /// FRCP 59(e) as restyled effective December 1, 2007: 10 days after entry

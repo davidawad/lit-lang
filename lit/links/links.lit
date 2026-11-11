@@ -97,7 +97,7 @@ instance cafc@cofc-gov {
   note "Federal Circuit as entered by the United States appealing a CoFC plaintiff win. Perspective flipped: the government (appellant) is the opponent; payoffs are the plaintiff's (stake − appellant payoff). PLACEHOLDER STAKE: $1,000,000, the cofc package's placeholder judgment; override per matter by authoring this instance's terminal stakes."
   remove_edges [origin-to-district-court, origin-to-ptab, origin-to-itc, remand-route-district-court, remand-route-ptab, remand-route-itc, origin-to-ttab, remand-route-ttab]
   probabilities { remand-route-cofc: 1 }
-  roles { applicant: opponent, examiner: self }
+  roles { movant: opponent, appellee: self }
   payoff_transform (stake - payoff)
   stake 1_000_000.usd
   patch rehearing-file {
@@ -157,22 +157,22 @@ link cofc-appeal-protest-denied "Protester appeals the bid-protest judgment": co
   tags [appeal]
 }
 
-/// The government's appeals enter `cafc@cofc-gov`, by `examiner` (the
+/// The government's appeals enter `cafc@cofc-gov`, by `united-states` (the
 /// United States, the opponent in the cofc package).
-link cofc-gov-appeal-judgment-for-plaintiff "United States appeals the judgment for plaintiff": cofc::judgment-for-plaintiff -> cafc@cofc-gov::entry-cofc by court {
+link cofc-gov-appeal-judgment-for-plaintiff "United States appeals the judgment for plaintiff": cofc::judgment-for-plaintiff -> cafc@cofc-gov::entry-cofc by united-states {
   authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   note "The government's appeal decision (Solicitor General authorization, 28 C.F.R. § 0.20(b)) is modeled as the opponent's choice; with no probability authored it is solved adversarially (worst case for the plaintiff). Author a probability here to use an appeal rate instead."
   tags [appeal]
 }
 
 /// A judgment entered for the plaintiff on summary judgment.
-link cofc-gov-appeal-sj-for-plaintiff "United States appeals the judgment entered for plaintiff": cofc::judgment-entered -> cafc@cofc-gov::entry-cofc by court {
+link cofc-gov-appeal-sj-for-plaintiff "United States appeals the judgment entered for plaintiff": cofc::judgment-entered -> cafc@cofc-gov::entry-cofc by united-states {
   authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   tags [appeal]
 }
 
 /// A sustained bid protest; an intervenor awardee may appeal as well.
-link cofc-gov-appeal-protest-sustained "United States (or intervenor) appeals the sustained protest": cofc::protest-sustained -> cafc@cofc-gov::entry-cofc by court {
+link cofc-gov-appeal-protest-sustained "United States (or intervenor) appeals the sustained protest": cofc::protest-sustained -> cafc@cofc-gov::entry-cofc by united-states {
   authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   tags [appeal]
 }

@@ -7,9 +7,9 @@
       "id": "frcp-civil-procedure::pre-filing",
       "label": "Pre-Filing Investigation"
     },
-    "value": 885575.0,
+    "value": 478445.0,
     "converged": true,
-    "iterations": 8,
+    "iterations": 64,
     "fee_shift_rounds": 0,
     "best_line": [
       {
@@ -21,7 +21,7 @@
         "authority": "FRCP 11(b)",
         "kind": "choice",
         "step_p": 1.0,
-        "q": 885575.0
+        "q": 478445.0
       },
       {
         "id": "frcp-civil-procedure::edge-jurisdiction-venue-check-complaint-filed",
@@ -32,7 +32,7 @@
         "authority": "28 U.S.C. 1331; 1332(a); 1391(b); FRCP 3",
         "kind": "choice",
         "step_p": 1.0,
-        "q": 893075.0
+        "q": 485945.0
       },
       {
         "id": "frcp-civil-procedure::edge-complaint-filed-service-window",
@@ -44,56 +44,89 @@
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 898480.0
+        "q": 491350.0
       },
       {
-        "id": "frcp-civil-procedure::edge-service-window-waiver-requested",
-        "label": "Request waiver of service instead of formal process",
+        "id": "frcp-civil-procedure::edge-service-window-service-completed",
+        "label": "Serve defendant via formal process",
         "from": "frcp-civil-procedure::service-window",
-        "to": "frcp-civil-procedure::waiver-requested",
+        "to": "frcp-civil-procedure::service-completed",
         "role": "self",
-        "authority": "FRCP 4(d)(1)",
+        "authority": "FRCP 4(e); 4(h); 4(f)",
+        "deadline_days": 90.0,
         "kind": "choice",
         "step_p": 1.0,
-        "q": 898480.0
+        "q": 491350.0
       },
       {
-        "id": "frcp-civil-procedure::edge-waiver-requested-waiver-response-window",
-        "label": "Defendant returns executed waiver",
-        "from": "frcp-civil-procedure::waiver-requested",
-        "to": "frcp-civil-procedure::waiver-response-window",
+        "id": "frcp-civil-procedure::edge-service-completed-voluntary-dismissal",
+        "label": "Plaintiff dismisses by notice before an answer or SJ motion is served",
+        "from": "frcp-civil-procedure::service-completed",
+        "to": "frcp-civil-procedure::voluntary-dismissal",
         "role": "self",
-        "authority": "FRCP 4(d)(3)",
-        "deadline_days": 60.0,
+        "authority": "FRCP 41(a)(1)(A)(i)",
         "kind": "choice",
         "step_p": 1.0,
-        "q": 899500.0
+        "q": 493000.0
       },
       {
-        "id": "frcp-civil-procedure::edge-waiver-response-window-default-entered",
-        "label": "Fail to answer or move -- default exposure",
-        "from": "frcp-civil-procedure::waiver-response-window",
-        "to": "frcp-civil-procedure::default-entered",
+        "id": "frcp-civil-procedure::edge-voluntary-dismissal-rule60-motion",
+        "label": "Move for relief from the dismissal under Rule 60(b)",
+        "from": "frcp-civil-procedure::voluntary-dismissal",
+        "to": "frcp-civil-procedure::rule60-dismissal-motion",
         "role": "self",
-        "authority": "FRCP 55(a)",
+        "authority": "FRCP 60(b)",
         "kind": "choice",
         "step_p": 1.0,
-        "q": 900000.0
+        "q": 493500.0
       },
       {
-        "id": "frcp-civil-procedure::edge-default-entered-default-judgment-entered",
-        "label": "Clerk or court enters default judgment",
-        "from": "frcp-civil-procedure::default-entered",
-        "to": "frcp-civil-procedure::default-judgment-entered",
+        "id": "frcp-civil-procedure::edge-rule60-dismissal-motion-relief-granted",
+        "label": "Court grants Rule 60(b) relief on just terms",
+        "from": "frcp-civil-procedure::rule60-dismissal-motion",
+        "to": "frcp-civil-procedure::rule60-relief-granted",
+        "role": "self",
+        "authority": "FRCP 60(b)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 500000.0
+      },
+      {
+        "id": "frcp-civil-procedure::edge-rule60-relief-granted-reopened-case",
+        "label": "Proceed in the reopened action on the terms ordered",
+        "from": "frcp-civil-procedure::rule60-relief-granted",
+        "to": "frcp-civil-procedure::final-judgment-entered",
         "role": "nature",
-        "authority": "FRCP 55(b)(1); 55(b)(2)",
+        "authority": "FRCP 60(b)",
         "p": 1.0,
-        "kind": "wait-likely-draw",
+        "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 900000.0
+        "q": 500000.0
+      },
+      {
+        "id": "frcp-civil-procedure::edge-final-judgment-entered-notice-of-appeal-window",
+        "label": "No post-trial motion -- proceed directly toward appeal",
+        "from": "frcp-civil-procedure::final-judgment-entered",
+        "to": "frcp-civil-procedure::notice-of-appeal-window",
+        "role": "self",
+        "authority": "FRAP 4(a)(1)(A)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 500000.0
+      },
+      {
+        "id": "frcp-civil-procedure::edge-notice-of-appeal-window-judgment-final-no-appeal",
+        "label": "Elect not to appeal -- judgment becomes final",
+        "from": "frcp-civil-procedure::notice-of-appeal-window",
+        "to": "frcp-civil-procedure::judgment-final-no-appeal",
+        "role": "self",
+        "authority": "28 U.S.C. 1291",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 500000.0
       }
     ],
-    "policy_size": 116,
+    "policy_size": 103,
     "policy": null,
     "values": null
   },
@@ -107,7 +140,7 @@
     {
       "code": "mixed-node",
       "count": 6,
-      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "example": "opponent may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
       "at": [
         "frcp-civil-procedure::default-entered",
         "frcp-civil-procedure::discovery-closed",

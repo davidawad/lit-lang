@@ -28,7 +28,7 @@ state service-on-united-states: "Clerk Serves the Complaint on the United States
   }
 }
 
-decision government-response-fork: "United States Answers or Moves Under RCFC 12(b)?" by court cite "RCFC 12(a)(1)(A); 12(b)"
+decision government-response-fork: "United States Answers or Moves Under RCFC 12(b)?" by united-states cite "RCFC 12(a)(1)(A); 12(b)"
 {
   group pleading-group
   note "The United States must file an answer within 60 days after being served with the complaint (RCFC 12(a)(1)(A) -- three times the FRCP's default 21 days, reflecting DOJ's centralized litigation-assignment process) UNLESS it instead files a RCFC 12(b) motion, which resets the responsive-pleading clock to 14 days after the court rules (RCFC 12(a)(4))."

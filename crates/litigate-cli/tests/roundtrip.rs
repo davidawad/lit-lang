@@ -25,7 +25,13 @@
 //! terminal copy (7972eff), which drops its `payoff-not-authored` warning;
 //! both again after the fee motion's `fee-motion-supplemented` flag
 //! (8030f2f), which doubles FRCP's flag copies (68 to 136) and their
-//! residual fills, at the same value and best line. An engine change is
+//! residual fills, at the same value and best line. After typed party roles
+//! (lg-pb1fe.2, cfa543875), `frcp-civil-procedure`'s solve and
+//! `calibration-gaps` are re-recorded (class b): 20 FRCP edges now assign
+//! defendant moves to the opponent, changing the FRCP case value from
+//! $481,375 to -$16,655 and calibration-gaps from $885,575 to $478,445.
+//! CoFC responses are not re-recorded: the CoFC and `cafc@cofc-gov` role
+//! mappings are corrected to preserve their pre-migration decisions. An engine change is
 //! re-recorded the same way: `ptab-calibrated-institution` after explain at
 //! a base node reports its replayed flag context and the others (4f4fad3).
 //! The eighth-circuit bankruptcy appellate panel package was added on main

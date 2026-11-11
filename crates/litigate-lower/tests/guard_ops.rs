@@ -23,8 +23,8 @@ in_force = \"2009-12-01\"
 known_at = \"2025-01-01\"
 
 [package.roles]
-Plaintiff = \"self\"
-Court = \"nature\"
+plaintiff = \"self\"
+court = \"nature\"
 ";
 
 const BASE: &str = "module base
@@ -36,7 +36,7 @@ event Filed()
 event Moved()
 event Excused()
 
-state intake: \"Intake\" by Plaintiff
+state intake: \"Intake\" by plaintiff
 {
   file \"File\" -> check { event Filed() }
 }

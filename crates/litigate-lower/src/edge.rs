@@ -314,6 +314,56 @@ fn extension(x: &Extension) -> ExtensionBound {
     }
 }
 
+fn cause(s: hir::CauseStandard) -> CauseStandard {
+    match s {
+        hir::CauseStandard::GoodCause => CauseStandard::GoodCause,
+        hir::CauseStandard::ExcusableNeglect => CauseStandard::ExcusableNeglect,
+        hir::CauseStandard::GoodCauseOrExcusableNeglect => {
+            CauseStandard::GoodCauseOrExcusableNeglect
+        }
+        hir::CauseStandard::ExtraordinaryCircumstances => CauseStandard::ExtraordinaryCircumstances,
+    }
+}
+
+fn date_ref(r: hir::DateRef) -> DateRef {
+    match r {
+        hir::DateRef::PrescribedDue => DateRef::PrescribedDue,
+        hir::DateRef::GrantOrderEntered => DateRef::GrantOrderEntered,
+        hir::DateRef::CurrentDue => DateRef::CurrentDue,
+    }
+}
+
+fn bound(b: &hir::Bound) -> DateBound {
+    match b {
+        hir::Bound::Offset { from, days } => DateBound::Offset {
+            from: date_ref(*from),
+            days: *days,
+        },
+        hir::Bound::Before { from, days } => DateBound::Before {
+            from: date_ref(*from),
+            days: *days,
+        },
+        hir::Bound::Max(xs) => DateBound::Max(xs.iter().map(bound).collect()),
+        hir::Bound::Min(xs) => DateBound::Min(xs.iter().map(bound).collect()),
+    }
+}
+
+/// The motion's event pattern in source spelling (`ExtensionMoved(AnswerPeriod)`).
+fn motion(m: &hir::Motion) -> Motion {
+    Motion {
+        event: litigate_sema::case::display_event(&m.event),
+        within: m.within.as_ref().map(bound),
+        unless: m.unless.as_ref().map(litigate_sema::case::display_event),
+    }
+}
+
+/// The unqualified name of a qualified declaration id (`core.frap26::frap26`
+/// is `frap26`): the engine's clock-library rule id.
+fn local(name: &str) -> &str {
+    let tail = name.rsplit("::").next().unwrap_or(name);
+    tail.rsplit('.').next().unwrap_or(tail)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -377,60 +427,10 @@ mod tests {
             authority: "FRCP 6(b)(2)".to_owned(),
             against: vec!["CaseOrder".to_owned()],
         };
-        assert_eq!(extendability(&[named_lock.clone()], &[]), Some(false));
+        assert_eq!(extendability(std::slice::from_ref(&named_lock), &[]), Some(false));
         assert_eq!(
             extension_authority(&[named_lock], &[]).as_deref(),
             Some("FRCP 6(b)(2)")
         );
     }
-}
-
-fn cause(s: hir::CauseStandard) -> CauseStandard {
-    match s {
-        hir::CauseStandard::GoodCause => CauseStandard::GoodCause,
-        hir::CauseStandard::ExcusableNeglect => CauseStandard::ExcusableNeglect,
-        hir::CauseStandard::GoodCauseOrExcusableNeglect => {
-            CauseStandard::GoodCauseOrExcusableNeglect
-        }
-        hir::CauseStandard::ExtraordinaryCircumstances => CauseStandard::ExtraordinaryCircumstances,
-    }
-}
-
-fn date_ref(r: hir::DateRef) -> DateRef {
-    match r {
-        hir::DateRef::PrescribedDue => DateRef::PrescribedDue,
-        hir::DateRef::GrantOrderEntered => DateRef::GrantOrderEntered,
-        hir::DateRef::CurrentDue => DateRef::CurrentDue,
-    }
-}
-
-fn bound(b: &hir::Bound) -> DateBound {
-    match b {
-        hir::Bound::Offset { from, days } => DateBound::Offset {
-            from: date_ref(*from),
-            days: *days,
-        },
-        hir::Bound::Before { from, days } => DateBound::Before {
-            from: date_ref(*from),
-            days: *days,
-        },
-        hir::Bound::Max(xs) => DateBound::Max(xs.iter().map(bound).collect()),
-        hir::Bound::Min(xs) => DateBound::Min(xs.iter().map(bound).collect()),
-    }
-}
-
-/// The motion's event pattern in source spelling (`ExtensionMoved(AnswerPeriod)`).
-fn motion(m: &hir::Motion) -> Motion {
-    Motion {
-        event: litigate_sema::case::display_event(&m.event),
-        within: m.within.as_ref().map(bound),
-        unless: m.unless.as_ref().map(litigate_sema::case::display_event),
-    }
-}
-
-/// The unqualified name of a qualified declaration id (`core.frap26::frap26`
-/// is `frap26`): the engine's clock-library rule id.
-fn local(name: &str) -> &str {
-    let tail = name.rsplit("::").next().unwrap_or(name);
-    tail.rsplit('.').next().unwrap_or(tail)
 }

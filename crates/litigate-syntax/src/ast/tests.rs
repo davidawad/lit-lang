@@ -150,7 +150,7 @@ fn rule_bodies_and_deadlines_are_typed() {
         deadline.counted_by().map(|r| r.text()).as_deref(),
         Some("frcp6")
     );
-    assert_eq!(deadline.options().len(), 1);
+    assert_eq!(deadline.options().len(), 2);
 }
 
 #[test]

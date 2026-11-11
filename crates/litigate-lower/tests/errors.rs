@@ -250,6 +250,13 @@ fn deadlines(p: &hir::Package) -> Vec<litigate_engine::model::Deadline> {
 #[test]
 fn a_designated_deadline_lowers_to_a_designated_window() {
     let mut p = example();
+    // This test isolates designated windows from the example's authored
+    // discretionary grant.
+    for d in decls(&mut p) {
+        if let Declaration::Deadline(x) = d {
+            x.extend.clear();
+        }
+    }
     let counted = windows(&p);
     assert!(counted.contains(&true));
     designate(&mut p);
@@ -313,6 +320,7 @@ fn a_typed_extension_grant_derives_edge_extension_fields() {
     let mut p = example();
     for d in decls(&mut p) {
         if let Declaration::Deadline(x) = d {
+            x.extend.clear();
             x.meta.cite = Some("FRCP 12(a)(1)(A)(i)".into());
             x.extend.push(hir::Extension::Discretionary {
                 by: "court".into(),
@@ -497,6 +505,11 @@ fn bounds() -> Vec<litigate_engine::model::ExtensionBound> {
 #[test]
 fn extension_grants_lower_to_extension_bounds() {
     let mut p = example();
+    for d in decls(&mut p) {
+        if let Declaration::Deadline(x) = d {
+            x.extend.clear();
+        }
+    }
     assert!(deadlines(&p).iter().all(|d| d.extensions.is_empty()));
     let grants = grants();
     for d in decls(&mut p) {

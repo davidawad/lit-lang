@@ -164,7 +164,7 @@ module.exports = {
     seq(field('key', 'court_listener_url'), field('value', $.string)),
     seq(field('key', 'tags'), field('value', $.id_list)),
     seq(field('key', 'attrs'), field('value', $.num_record)),
-    seq(field('key', 'payoff'), field('value', choice($.signed_money, $.hole))),
+    seq(field('key', 'payoff'), field('value', choice($.signed_money, $.hole)), optional($.numeric_provenance)),
     seq(field('key', 'payoff_by_flag'), field('value', $.money_record)),
     // The statute's default fee-shift fraction at a terminal.
     seq(field('key', 'fee_shift'), field('value', $.number)),
@@ -190,7 +190,16 @@ module.exports = {
 
   _edge_clause: $ => choice($.by_clause, $.probability),
 
-  probability: $ => seq('p', field('value', $._prob_value)),
+  probability: $ => seq('p', field('value', $._prob_value), optional($.numeric_provenance)),
+
+  numeric_provenance: $ => choice(
+    seq('basis', choice(
+      seq('calibrated', '(', field('calibration', $.identifier), ')'),
+      seq('sourced', '(', field('cite', $.string), ')'),
+      'estimate', 'placeholder',
+    ), optional(seq('vintage', field('date', $.date)))),
+    seq('vintage', field('date', $.date)),
+  ),
 
   _prob_value: $ => choice($.fraction, $.number, $.hole, $.parenthesized_expression),
 
@@ -201,11 +210,11 @@ module.exports = {
   edge_field: $ => choice(
     seq(field('key', 'event'), field('value', $.call_expression)),
     seq(field('key', 'authority'), field('value', choice($.string, $.cite))),
-    seq(field('key', 'effort'), field('value', $.duration)),
-    seq(field('key', 'cost'), field('value', choice($.signed_money, $.hole))),
+    seq(field('key', 'effort'), field('value', $.duration), optional($.numeric_provenance)),
+    seq(field('key', 'cost'), field('value', choice($.signed_money, $.hole)), optional($.numeric_provenance)),
     seq(field('key', 'within'), field('value', $.ref), optional($.deadline_opts)),
     seq(field('key', 'deadline'), field('value', $.duration), optional($.deadline_opts)),
-    seq(field('key', 'duration'), field('value', choice($.duration, $.duration_range))),
+    seq(field('key', 'duration'), field('value', choice($.duration, $.duration_range)), optional($.numeric_provenance)),
     seq(field('key', 'valence'), field('value', $.identifier)),
     seq(
       field('key', choice('court_listener_url', 'action_id', 'note')),

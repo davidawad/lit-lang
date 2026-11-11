@@ -1,0 +1,55 @@
+================================================================================
+Numeric provenance stays attached to authored values
+================================================================================
+
+module m
+terminal t: "T" { payoff 1.usd basis placeholder vintage 2026-01-01 }
+decision d: "D" { "go" -> t p 0.5 basis calibrated(cal) vintage 2026-01-01 { cost 2.usd basis sourced("FRCP 1") effort 3.hours basis estimate vintage 2026-01-01 duration 4.days basis estimate vintage 2026-01-01 } }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (node_field
+          (signed_money
+            (money))
+          (numeric_provenance
+            (date)))))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (edge_decl
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (probability
+            (number)
+            (numeric_provenance
+              (identifier)
+              (date)))
+          (edge_fields
+            (edge_field
+              (signed_money
+                (money))
+              (numeric_provenance
+                (string
+                  (string_content))))
+            (edge_field
+              (duration)
+              (numeric_provenance
+                (date)))
+            (edge_field
+              (duration)
+              (numeric_provenance
+                (date)))))))))

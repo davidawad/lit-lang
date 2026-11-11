@@ -2199,6 +2199,10 @@
         {
           "type": "deadline_opts",
           "named": true
+        },
+        {
+          "type": "numeric_provenance",
+          "named": true
         }
       ]
     }
@@ -4077,6 +4081,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "numeric_provenance",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -4134,6 +4148,42 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "numeric_provenance",
+    "named": true,
+    "fields": {
+      "calibration": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "cite": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "string",
+            "named": true
+          }
+        ]
+      },
+      "date": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "date",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -4535,6 +4585,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "numeric_provenance",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -5935,6 +5995,10 @@
     "named": false
   },
   {
+    "type": "calibrated",
+    "named": false
+  },
+  {
     "type": "calibration",
     "named": false
   },
@@ -6078,6 +6142,10 @@
   {
     "type": "escape_sequence",
     "named": true
+  },
+  {
+    "type": "estimate",
+    "named": false
   },
   {
     "type": "event",
@@ -6393,6 +6461,10 @@
     "named": false
   },
   {
+    "type": "placeholder",
+    "named": false
+  },
+  {
     "type": "power",
     "named": false
   },
@@ -6478,6 +6550,10 @@
   },
   {
     "type": "source",
+    "named": false
+  },
+  {
+    "type": "sourced",
     "named": false
   },
   {

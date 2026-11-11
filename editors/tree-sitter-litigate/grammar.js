@@ -34,7 +34,7 @@ module.exports = grammar({
 
   supertypes: $ => [$._item, $._expression],
 
-  conflicts: $ => [[$.module_path], [$.edge_decl]],
+  conflicts: $ => [[$.module_path], [$.edge_decl], [$.node_field], [$.probability], [$.edge_field]],
 
   rules: {
     source_file: $ => seq(

@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/workflow.rs
+assertion_line: 104
 expression: "sound(&with(\"rule duty reply-duty cite \\\"FRCP 12(a)\\\"\\n{\\n  deadline reply-period: 14.days from \\\n             Answered(complaint) counted_by frcp6\\n}\").replacen(\"within answer-period }\",\n\"within answer-period }\\n  mark \\\"Mark\\\" -> served { sets [marked] }\", 1))"
 ---
 {
@@ -8,7 +9,7 @@ expression: "sound(&with(\"rule duty reply-duty cite \\\"FRCP 12(a)\\\"\\n{\\n  
     "status": "failed",
     "count": 1,
     "examples": [
-      "pkgs/demo/main.lit:36:1: L5009 obligation `demo::reply-period`, created by edge `answer`, can never be consumed: no marking reachable from `answered` with no flags offers a `within reply-period` edge"
+      "pkgs/demo/main.lit:39:1: L5009 obligation `demo::reply-period`, created by edge `answer`, can never be consumed: no marking reachable from `answered` with no flags offers a `within reply-period` edge"
     ],
     "evidence": {
       "checked": 4,
@@ -22,9 +23,9 @@ expression: "sound(&with(\"rule duty reply-duty cite \\\"FRCP 12(a)\\\"\\n{\\n  
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 36,
+        "line": 39,
         "col": 1,
-        "end_line": 40,
+        "end_line": 43,
         "end_col": 2
       },
       "message": "obligation `demo::reply-period`, created by edge `answer`, can never be consumed: no marking reachable from `answered` with no flags offers a `within reply-period` edge",

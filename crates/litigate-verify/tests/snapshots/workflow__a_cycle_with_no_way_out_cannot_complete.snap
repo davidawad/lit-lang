@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/workflow.rs
+assertion_line: 79
 expression: "sound(&with(\"state loop-a: \\\"A\\\" { tags [entry], _ \\\"Go\\\" -> loop-b }\\n\\\n         state loop-b: \\\"B\\\" { _ \\\"Back\\\" -> loop-a }\"))"
 ---
 {
@@ -8,7 +9,7 @@ expression: "sound(&with(\"state loop-a: \\\"A\\\" { tags [entry], _ \\\"Go\\\" 
     "status": "failed",
     "count": 1,
     "examples": [
-      "pkgs/demo/main.lit:55:1: L5007 from `loop-a` with no flags no terminal is reachable through its enabled edges `loop-a -> loop-b`"
+      "pkgs/demo/main.lit:58:1: L5007 from `loop-a` with no flags no terminal is reachable through its enabled edges `loop-a -> loop-b`"
     ],
     "evidence": {
       "checked": 4,
@@ -22,9 +23,9 @@ expression: "sound(&with(\"state loop-a: \\\"A\\\" { tags [entry], _ \\\"Go\\\" 
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 55,
+        "line": 58,
         "col": 1,
-        "end_line": 55,
+        "end_line": 58,
         "end_col": 53
       },
       "message": "from `loop-a` with no flags no terminal is reachable through its enabled edges `loop-a -> loop-b`",

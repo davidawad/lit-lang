@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/workflow.rs
+assertion_line: 91
 expression: "sound(&edit(\"within answer-period }\",\n\"within answer-period, forbids [a, b] }\\n  \\\n         twice \\\"Serve again\\\" -> served { sets [a] }\\n  \\\n         thrice \\\"Serve a third time\\\" -> served { sets [b] }\\n  \\\n         again \\\"Answer again\\\" -> answered { requires [c] }\"))"
 ---
 {
@@ -8,8 +9,8 @@ expression: "sound(&edit(\"within answer-period }\",\n\"within answer-period, fo
     "status": "failed",
     "count": 2,
     "examples": [
-      "pkgs/demo/main.lit:36:1: L5007 from `served` with flags {a} no terminal is reachable through its enabled edges `twice`, `thrice`",
-      "pkgs/demo/main.lit:36:1: L5008 edge `again` out of `served` is never enabled: it requires [c], and `served` is reached only with no flags or flags {a} or flags {b} or flags {a, b}"
+      "pkgs/demo/main.lit:39:1: L5007 from `served` with flags {a} no terminal is reachable through its enabled edges `twice`, `thrice`",
+      "pkgs/demo/main.lit:39:1: L5008 edge `again` out of `served` is never enabled: it requires [c], and `served` is reached only with no flags or flags {a} or flags {b} or flags {a, b}"
     ],
     "evidence": {
       "checked": 5,
@@ -23,9 +24,9 @@ expression: "sound(&edit(\"within answer-period }\",\n\"within answer-period, fo
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 36,
+        "line": 39,
         "col": 1,
-        "end_line": 42,
+        "end_line": 45,
         "end_col": 2
       },
       "message": "from `served` with flags {a} no terminal is reachable through its enabled edges `twice`, `thrice`",
@@ -43,9 +44,9 @@ expression: "sound(&edit(\"within answer-period }\",\n\"within answer-period, fo
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 36,
+        "line": 39,
         "col": 1,
-        "end_line": 42,
+        "end_line": 45,
         "end_col": 2
       },
       "message": "edge `again` out of `served` is never enabled: it requires [c], and `served` is reached only with no flags or flags {a} or flags {b} or flags {a, b}",

@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/packages.rs
+assertion_line: 190
 expression: "outcome(&c, Obligation::CiteResolves)"
 ---
 {
@@ -8,10 +9,10 @@ expression: "outcome(&c, Obligation::CiteResolves)"
     "status": "failed",
     "count": 1,
     "examples": [
-      "pkgs/demo/main.lit:38:3: L1010 `FRCP 99(a)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading"
+      "pkgs/demo/main.lit:41:3: L1010 `FRCP 99(a)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading"
     ],
     "evidence": {
-      "checked": 7,
+      "checked": 8,
       "subjects": "cites"
     }
   },
@@ -22,9 +23,9 @@ expression: "outcome(&c, Obligation::CiteResolves)"
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 38,
+        "line": 41,
         "col": 3,
-        "end_line": 38,
+        "end_line": 41,
         "end_col": 119
       },
       "message": "`FRCP 99(a)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",

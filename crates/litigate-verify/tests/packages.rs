@@ -222,7 +222,8 @@ fn only_duty_deadlines_constrain_a_node() {
     // An inline window and a top-level deadline beside a `power` rule:
     // neither is a duty, so neither is checked for satisfiability.
     let lit = with(
-        "deadline free-period: 30.days from Served(complaint) counted_by frcp6\n\
+        "deadline free-period: 30.days from Served(complaint) counted_by frcp6 \
+         cite \"FRCP 6(b)(1)(A)\" { extend { by court, discretion GoodCause } }\n\
          test \"free period\" cite \"FRCP 6(a)\"\n{\n  given Served(complaint, Personal) on 2025-03-03\n  \
          expect deadline(free-period) == 2025-04-02\n}\n\
          rule power move-duty cite \"FRCP 12(a)\"\n{\n  decision m: \"Move?\" by defendant \

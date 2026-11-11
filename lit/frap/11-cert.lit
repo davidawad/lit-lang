@@ -50,6 +50,7 @@ rule duty petition-for-certiorari effective [2009-12-01, ..) known_at 2009-03-26
 {
   deadline cert-period: 90.days after EnteredOnAppeal() counted_by sup-ct-30 cite "28 U.S.C. § 2101(c)"
   {
+    note "application to an individual Justice, up to 60 days; once denied, not renewable"
     trigger latest
     forum scotus
     extend {
@@ -59,6 +60,7 @@ rule duty petition-for-certiorari effective [2009-12-01, ..) known_at 2009-03-26
       on CertExtensionApplied()
       within current_due - 10.days
       unless CertExtensionDenied()
+      cite "Sup. Ct. R. 13.5"
     }
     extend {
       by justice

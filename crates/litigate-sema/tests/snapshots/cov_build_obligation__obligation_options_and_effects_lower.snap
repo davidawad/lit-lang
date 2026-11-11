@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-sema/tests/cov_build_obligation.rs
+assertion_line: 54
 expression: found
 ---
 [
@@ -118,6 +119,7 @@ expression: found
             extend: [
                 Bounded {
                     by: "court",
+                    cite: None,
                     until: Offset {
                         from: PrescribedDue,
                         days: 30,
@@ -422,6 +424,7 @@ expression: found
             extend: [
                 Bounded {
                     by: "court",
+                    cite: None,
                     until: Offset {
                         from: PrescribedDue,
                         days: 1,
@@ -529,6 +532,7 @@ expression: found
             extend: [
                 Discretionary {
                     by: "court",
+                    cite: None,
                     standard: GoodCause,
                     window: BeforeExpiry,
                     motion: None,
@@ -536,6 +540,7 @@ expression: found
                 },
                 Discretionary {
                     by: "court",
+                    cite: None,
                     standard: ExcusableNeglect,
                     window: AfterExpiryOnMotion,
                     motion: Some(
@@ -786,6 +791,7 @@ expression: found
             extend: [
                 Bounded {
                     by: "court",
+                    cite: None,
                     until: Max(
                         [
                             Offset {
@@ -959,6 +965,7 @@ expression: found
             extend: [
                 Bounded {
                     by: "court",
+                    cite: None,
                     until: Min(
                         [
                             Offset {
@@ -1074,6 +1081,7 @@ expression: found
             extend: [
                 Bounded {
                     by: "court",
+                    cite: None,
                     until: Offset {
                         from: PrescribedDue,
                         days: 3,
@@ -1087,6 +1095,7 @@ expression: found
                 },
                 Discretionary {
                     by: "court",
+                    cite: None,
                     standard: GoodCause,
                     window: BeforeExpiry,
                     motion: Some(
@@ -1239,6 +1248,7 @@ expression: found
             extend: [
                 Bounded {
                     by: "court",
+                    cite: None,
                     until: Offset {
                         from: PrescribedDue,
                         days: 60,
@@ -1347,6 +1357,7 @@ expression: found
                 },
                 Bounded {
                     by: "court",
+                    cite: None,
                     until: Offset {
                         from: PrescribedDue,
                         days: 60,

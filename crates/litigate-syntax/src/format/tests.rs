@@ -155,6 +155,13 @@ fn basis_fields_format_like_other_fields() {
 }
 
 #[test]
+fn numeric_provenance_is_canonical_and_idempotent() {
+    let out = fmt("module m\nterminal t: \"T\" { payoff 1.usd basis placeholder vintage 2026-01-01 }\n");
+    assert!(out.contains("payoff 1.usd basis placeholder vintage 2026-01-01"), "{out}");
+    assert_eq!(fmt(&out), out);
+}
+
+#[test]
 fn guard_operations_keep_their_clauses_on_one_line() {
     let out = fmt(
         "module order\ninstance base@order {\n  pack base\n  patch timely {\n    \

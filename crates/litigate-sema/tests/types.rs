@@ -72,10 +72,14 @@ fn field_types_and_placement() {
 
 #[test]
 fn unknown_numeric_calibration_set_warns() {
-    let diagnostics = check_body(
-        "terminal t: \"T\" { payoff 1.usd basis calibrated(missing-set) }",
+    let diagnostics =
+        check_body("terminal t: \"T\" { payoff 1.usd basis calibrated(missing-set) }");
+    assert!(
+        diagnostics
+            .iter()
+            .any(|d| d.contains("L9012") && d.contains("no calibration set")),
+        "{diagnostics:#?}"
     );
-    assert!(diagnostics.iter().any(|d| d.contains("L9012") && d.contains("no calibration set")), "{diagnostics:#?}");
 }
 
 #[test]

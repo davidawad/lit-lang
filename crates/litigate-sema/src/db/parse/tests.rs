@@ -104,9 +104,17 @@ fn estimate_and_placeholder_without_vintage_warn_in_the_item_tree() {
     }
     let duplicate = parse(concat!(
         "module m\n",
-        "terminal t: \"T\" { payoff 1.usd basis estimate vintage 2026-01-01 basis placeholder }\n",
+        "terminal t: \"T\" { payoff 1.usd basis estimate basis placeholder vintage 2026-01-01 }\n",
     ));
     assert!(duplicate
+        .reports
+        .iter()
+        .any(|r| r.code == C::NumericProvenanceIncomplete));
+    let duplicate_vintage = parse(concat!(
+        "module m\n",
+        "terminal t: \"T\" { payoff 1.usd basis estimate vintage 2026-01-01 vintage 2026-02-01 }\n",
+    ));
+    assert!(duplicate_vintage
         .reports
         .iter()
         .any(|r| r.code == C::NumericProvenanceIncomplete));

@@ -108,6 +108,9 @@ event AdversaryMotionFiled()
 /// An opposition to an adversary motion is filed (Bankr. D. Or. LBR
 /// 7007-1(b)).
 event AdversaryOppositionFiled()
+/// A party moves to extend a deadline under the court's general time-limit
+/// rule (Bankr. D. Or. LBR 9006-1(a)).
+event TimeLimitExtensionMoved()
 /// The pretrial order deadline in the scheduling order (Bankr. D. Or. LBR
 /// 7016-1(c)).
 event PretrialOrderDeadline()
@@ -462,6 +465,15 @@ test "Counting boundary: student-appearance-notice-period (holiday)" cite "Bankr
 /// later than 14 days after service of the motion, unless an FRBP specifies
 /// another notice period.
 deadline motion-objection-period: 14.days after MotionServed() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9013-1(c)"
+{
+  extend {
+    by court
+    discretion GoodCause
+    on TimeLimitExtensionMoved()
+    cite "Bankr. D. Or. LBR 9006-1(a)"
+  }
+}
+
 /// Bankr. D. Or. LBR 9013-1(d): in a contested matter, FRCP 26(a)(2)
 /// disclosure is due 14 days before an evidentiary hearing.
 deadline expert-disclosure-period: 14.days before EvidentiaryHearing() counted_by frbp9006-oregon cite "Bankr. D. Or. LBR 9013-1(d)"

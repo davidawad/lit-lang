@@ -3,6 +3,10 @@ module bankr-ut-local-rules.local-rules
 import core.states.utah.{ frbp9006-utah }
 import frbp.events.{ FirstMeetingDate, PetitionFiled }
 
+/// A party moves the court to set a different response period for cause
+/// (Bankr. D. Utah LBR 9006-1(a)).
+event ResponsePeriodExtensionMoved()
+
 // The Bankr. D. Utah court's own periods, counted under FRBP 9006(a), with
 // the 3 days LBR 9006-1(d) adds after mail service left to the matter. The
 // FRBP periods are lit/frbp's and are not declared again: responses in
@@ -536,10 +540,20 @@ test "Counting boundary: summary-judgment-reply-period (weekend)" cite "Bankr. D
 /// motions for relief from stay are filed and served within 14 days after
 /// notice of the motion is served.
 deadline stay-relief-objection-period: 14.days after StayReliefNoticeServed() counted_by frbp9006-utah cite "Bankr. D. Utah LBR 9006-1(b)"
+
 /// Bankr. D. Utah LBR 9006-1(b): in matters not governed by FRBP 2002, 3007
 /// or 4001 or another FRBP period, and unless the court orders otherwise,
 /// responses are filed and served within 14 days after notice is served.
 deadline response-period: 14.days after MotionNoticeServed() counted_by frbp9006-utah cite "Bankr. D. Utah LBR 9006-1(b)"
+{
+  extend {
+    by court
+    discretion GoodCause
+    on ResponsePeriodExtensionMoved()
+    cite "Bankr. D. Utah LBR 9006-1(a)"
+  }
+}
+
 /// Bankr. D. Utah LBR 9006-1(c): replies to responses and objections may be
 /// filed no later than 7 days after the response or objection is served and
 /// in no case less than 4 days before the hearing.

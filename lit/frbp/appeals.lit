@@ -7,6 +7,7 @@ import frbp.events.{
   AppealJudgmentEntered,
   AppealMotionResponseServed,
   AppealMotionServed,
+  PartEightDeadlineExtensionMoved,
   AppellantBriefServed,
   AppellantDesignationServed,
   AppellantTranscriptOrderFiled,
@@ -147,6 +148,9 @@ rule duty leave-to-appeal-duty effective [2025-12-01, ..) known_at 2025-12-01 ci
 rule duty election-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8005"
 {
   deadline appellant-election-period: 0.days after NoticeOfAppealFiled() counted_by frbp9006 cite "28 U.S.C. § 158(c)(1)(A)"
+  {
+    extend { never cite "28 U.S.C. § 158(c)(1)" }
+  }
 
   test "Counting boundary: appellant-election-period (weekend)" cite "28 U.S.C. § 158(c)(1)(A)"
   {
@@ -154,6 +158,9 @@ rule duty election-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRB
     expect deadline(appellant-election-period) == 2025-12-08
   }
   deadline other-party-election-period: 30.days after NoticeOfAppealServed() counted_by frbp9006 cite "28 U.S.C. § 158(c)(1)(B)"
+  {
+    extend { never cite "28 U.S.C. § 158(c)(1)" }
+  }
 
   test "Counting boundary: other-party-election-period (holiday)" cite "28 U.S.C. § 158(c)(1)(B)"
   {
@@ -161,6 +168,22 @@ rule duty election-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRB
     expect deadline(other-party-election-period) == 2026-01-02
   }
   deadline election-validity-period: 14.days after ElectionStatementFiled() counted_by frbp9006 cite "FRBP 8005(c)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: election-validity-period (weekend)" cite "FRBP 8005(c)"
   {
@@ -180,7 +203,39 @@ rule duty election-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRB
 rule duty direct-review-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8006"
 {
   deadline direct-certification-request-period: 60.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 8006(f)(1)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
   deadline direct-certification-response-period: 14.days after DirectCertificationRequestServed() counted_by frbp9006 cite "FRBP 8006(f)(3)(A)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: direct-certification-response-period (weekend)" cite "FRBP 8006(f)(3)(A)"
   {
@@ -188,6 +243,22 @@ rule duty direct-review-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
     expect deadline(direct-certification-response-period) == 2025-12-22
   }
   deadline direct-authorization-petition-period: 30.days after CertificationEffective() counted_by frbp9006 cite "FRBP 8006(g)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: direct-authorization-petition-period (holiday)" cite "FRBP 8006(g)"
   {
@@ -211,6 +282,22 @@ rule duty direct-review-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
 rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8009"
 {
   deadline appellant-designation-period: 14.days after NoticeOfAppealEffective() counted_by frbp9006 cite "FRBP 8009(a)(1)(B)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: appellant-designation-period (weekend)" cite "FRBP 8009(a)(1)(B)"
   {
@@ -218,6 +305,22 @@ rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 
     expect deadline(appellant-designation-period) == 2025-12-22
   }
   deadline appellant-designation-leave-period: 14.days after LeaveToAppealGranted() counted_by frbp9006 cite "FRBP 8009(a)(1)(B)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: appellant-designation-leave-period (weekend)" cite "FRBP 8009(a)(1)(B)"
   {
@@ -225,6 +328,22 @@ rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 
     expect deadline(appellant-designation-leave-period) == 2025-12-22
   }
   deadline transcript-order-period: 14.days after NoticeOfAppealEffective() counted_by frbp9006 cite "FRBP 8009(b)(1)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: transcript-order-period (weekend)" cite "FRBP 8009(b)(1)"
   {
@@ -232,6 +351,22 @@ rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 
     expect deadline(transcript-order-period) == 2025-12-22
   }
   deadline appellee-designation-period: 14.days after AppellantDesignationServed() counted_by frbp9006 cite "FRBP 8009(a)(2)(A)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: appellee-designation-period (weekend)" cite "FRBP 8009(a)(2)(A)"
   {
@@ -239,6 +374,22 @@ rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 
     expect deadline(appellee-designation-period) == 2025-12-22
   }
   deadline cross-appellee-designation-period: 14.days after CrossAppellantDesignationServed() counted_by frbp9006 cite "FRBP 8009(a)(3)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: cross-appellee-designation-period (weekend)" cite "FRBP 8009(a)(3)"
   {
@@ -246,6 +397,22 @@ rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 
     expect deadline(cross-appellee-designation-period) == 2025-12-22
   }
   deadline cross-appellant-transcript-period: 14.days after AppellantTranscriptOrderFiled() counted_by frbp9006 cite "FRBP 8009(b)(2)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: cross-appellant-transcript-period (weekend)" cite "FRBP 8009(b)(2)"
   {
@@ -253,6 +420,22 @@ rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 
     expect deadline(cross-appellant-transcript-period) == 2025-12-22
   }
   deadline appellee-transcript-period: 14.days after AppellantTranscriptOrderFiled() counted_by frbp9006 cite "FRBP 8009(b)(3)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: appellee-transcript-period (weekend)" cite "FRBP 8009(b)(3)"
   {
@@ -260,6 +443,22 @@ rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 
     expect deadline(appellee-transcript-period) == 2025-12-22
   }
   deadline evidence-statement-objection-period: 14.days after EvidenceStatementServed() counted_by frbp9006 cite "FRBP 8009(c)(2)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: evidence-statement-objection-period (weekend)" cite "FRBP 8009(c)(2)"
   {
@@ -276,6 +475,22 @@ rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 
 rule duty appeal-motion-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8013"
 {
   deadline motion-response-period: 7.days after AppealMotionServed() counted_by frbp9006 cite "FRBP 8013(a)(3)(A)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: motion-response-period (weekend)" cite "FRBP 8013(a)(3)(A)"
   {
@@ -283,6 +498,22 @@ rule duty appeal-motion-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
     expect deadline(motion-response-period) == 2025-12-15
   }
   deadline motion-reply-period: 7.days after AppealMotionResponseServed() counted_by frbp9006 cite "FRBP 8013(a)(3)(B)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: motion-reply-period (weekend)" cite "FRBP 8013(a)(3)(B)"
   {
@@ -290,6 +521,22 @@ rule duty appeal-motion-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
     expect deadline(motion-reply-period) == 2025-12-15
   }
   deadline procedural-order-reconsideration-period: 7.days after ProceduralOrderServed() counted_by frbp9006 cite "FRBP 8013(b)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: procedural-order-reconsideration-period (weekend)" cite "FRBP 8013(b)"
   {
@@ -313,6 +560,22 @@ rule duty appeal-motion-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
 rule duty briefing-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8018(a)"
 {
   deadline appellant-brief-period: 30.days after RecordMadeAvailable() counted_by frbp9006 cite "FRBP 8018(a)(1)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: appellant-brief-period (holiday)" cite "FRBP 8018(a)(1)"
   {
@@ -320,6 +583,22 @@ rule duty briefing-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRB
     expect deadline(appellant-brief-period) == 2026-01-02
   }
   deadline appellee-brief-period: 30.days after AppellantBriefServed() counted_by frbp9006 cite "FRBP 8018(a)(2)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: appellee-brief-period (holiday)" cite "FRBP 8018(a)(2)"
   {
@@ -327,6 +606,22 @@ rule duty briefing-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRB
     expect deadline(appellee-brief-period) == 2026-01-02
   }
   deadline reply-brief-period: 14.days after AppelleeBriefServed() counted_by frbp9006 cite "FRBP 8018(a)(3)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: reply-brief-period (weekend)" cite "FRBP 8018(a)(3)"
   {
@@ -384,6 +679,22 @@ rule duty costs-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8
 rule duty rehearing-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8022(a)(1)"
 {
   deadline rehearing-period: 14.days after AppealJudgmentEntered() counted_by frbp9006 cite "FRBP 8022(a)(1)"
+  {
+    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
+    extend {
+      by court
+      discretion GoodCause
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on PartEightDeadlineExtensionMoved()
+      cite "FRBP 9006(b)(1)"
+    }
+  }
 
   test "Counting boundary: rehearing-period (weekend)" cite "FRBP 8022(a)(1)"
   {

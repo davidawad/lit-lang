@@ -126,6 +126,9 @@ event MotionNoticeServed()
 /// A motion to extend the time to file schedules and statements is filed
 /// and served (Bankr. S.D. Cal. LBR 9034-1(d)).
 event ExtensionMotionServed()
+/// A party moves to extend a time limit under the Bankruptcy Rules or the
+/// local rules (Bankr. S.D. Cal. LBR 9006-1(d)).
+event TimeLimitExtensionMoved()
 /// An application to employ a professional, or for a final decree, is filed
 /// and served (Bankr. S.D. Cal. LBR 9034-1(e)).
 event EmploymentApplicationServed()
@@ -512,6 +515,23 @@ test "Counting boundary: plan-motion-notice-period (weekend)" cite "Bankr. S.D. 
 /// Bankr. S.D. Cal. LBR 9013-6(a)(3), (b): opposition to a motion is served
 /// no later than 14 days after service of the notice of motion.
 deadline motion-opposition-period: 14.days after MotionNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Cal. LBR 9013-6(a)"
+{
+  extend { by court, discretion GoodCause, cite "Bankr. S.D. Cal. LBR 9006-1(d)" }
+  extend {
+    by court
+    discretion GoodCause
+    on TimeLimitExtensionMoved()
+    cite "Bankr. S.D. Cal. LBR 9006-1(d)"
+  }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on TimeLimitExtensionMoved()
+    cite "Bankr. S.D. Cal. LBR 9006-1(d)"
+  }
+}
+
 /// Bankr. S.D. Cal. LBR 9013-6(a)(4): opposition to a motion to approve a
 /// disclosure statement or confirm a chapter 11 plan is served no later
 /// than 28 days after service of the notice of motion.

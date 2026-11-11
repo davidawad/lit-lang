@@ -102,18 +102,18 @@ fn fingerprint(root: &Path) -> String {
         root.join("lit"),
         root.join("cases"),
         root.join("sources"),
+        root.join("docs/litigate"),
         root.join("editors/tree-sitter-litigate/src"),
     ];
     for dir in &input_dirs {
         println!("cargo:rerun-if-changed={}", dir.display());
         visit(root, dir, &mut hash);
     }
-    // The CLI embeds the normative spec directly; it is not under crates/.
+    // Root build metadata and the pinned Rust toolchain are inputs too.
     for path in [
         root.join("Cargo.toml"),
         root.join("Cargo.lock"),
         root.join("rust-toolchain.toml"),
-        root.join("docs/litigate/SPEC.md"),
     ] {
         println!("cargo:rerun-if-changed={}", path.display());
         if let Ok(bytes) = std::fs::read(&path) {

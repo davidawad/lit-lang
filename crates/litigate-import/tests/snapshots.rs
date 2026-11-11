@@ -10,7 +10,7 @@ use serde_json::{json, Value};
 use std::fmt::Write as _;
 use support::{
     first_difference, import_ok, normalize_links, normalize_pack, package, read_case, read_links,
-    read_pack,
+    read_pack, without_edge_extension_summaries,
 };
 
 fn fixture(name: &str) -> Input {
@@ -43,7 +43,7 @@ fn fixture_round_trips() {
     let files = import_ok(&inputs);
     let pack = Pack::from_json(&inputs[0].text).unwrap_or_default();
     let (expected, actual) = (
-        normalize_pack(pack),
+        without_edge_extension_summaries(normalize_pack(pack)),
         normalize_pack(read_pack(&package(&files, "lit/demo"))),
     );
     assert!(
@@ -53,7 +53,7 @@ fn fixture_round_trips() {
     );
     let links: LinkFile = serde_json::from_str(&inputs[1].text).unwrap_or_default();
     let (expected, actual) = (
-        normalize_links(links),
+        without_edge_extension_summaries(normalize_links(links)),
         normalize_links(read_links(&package(&files, "lit/links"))),
     );
     assert!(
@@ -171,7 +171,11 @@ fn explicit_perspective_equal_to_package_role_is_preserved() {
     let case = files
         .files
         .iter()
-        .find(|f| f.path.ends_with(".case"))
+        .find(|f| {
+            std::path::Path::new(&f.path)
+                .extension()
+                .is_some_and(|ext| ext.eq_ignore_ascii_case("case"))
+        })
         .unwrap();
     assert!(
         case.text.contains("perspective { applicant: self }"),

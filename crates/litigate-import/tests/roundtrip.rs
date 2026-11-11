@@ -11,7 +11,7 @@ use litigate_import::Input;
 use litigate_syntax::{format, parse, FileKind};
 use support::{
     corpus, first_difference, import_ok, normalize_links, normalize_pack, package, read_case,
-    read_links, read_pack,
+    read_links, read_pack, without_edge_extension_summaries,
 };
 
 #[test]
@@ -65,7 +65,10 @@ fn every_pack_round_trips() {
             .and_then(|f| f.path.strip_suffix("/Lit.toml"))
             .unwrap_or_else(|| panic!("{}: no package", input.path));
         let back = read_pack(&package(&files, dir));
-        let (expected, actual) = (normalize_pack(original), normalize_pack(back));
+        let (expected, actual) = (
+            without_edge_extension_summaries(normalize_pack(original)),
+            normalize_pack(back),
+        );
         assert!(
             expected == actual,
             "{}: {:?}",
@@ -84,7 +87,10 @@ fn links_round_trip() {
         .and_then(|i| serde_json::from_str(&i.text).ok())
         .unwrap_or_default();
     let back = read_links(&package(&files, "lit/links"));
-    let (expected, actual) = (normalize_links(original), normalize_links(back));
+    let (expected, actual) = (
+        without_edge_extension_summaries(normalize_links(original)),
+        normalize_links(back),
+    );
     assert!(
         expected == actual,
         "{:?}",

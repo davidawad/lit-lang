@@ -55,10 +55,10 @@ pub fn corpus() -> Vec<Input> {
 }
 
 /// `text`, a built pack or `links.json`, in the legacy format the
-/// importer reads: a designated window and extension grants (pack v5,
-/// links v3) are a `deadline` declaration's, which import reports (L6002)
-/// rather than spells, so the window is dropped and the grants left
-/// undeclared, as lowering emitted them before v5.
+/// importer reads: a designated window, extension grants and their legacy
+/// summaries (pack v5, links v3) belong to a `deadline` declaration and
+/// report L6002. Strip them from generated legacy inputs so corpus tests
+/// exercise only values representable by edge windows.
 pub fn legacy(text: &str) -> String {
     let Ok(mut doc) = serde_json::from_str::<serde_json::Value>(text) else {
         return text.to_owned();
@@ -76,7 +76,9 @@ pub fn legacy(text: &str) -> String {
             {
                 edge.remove("deadline");
             } else if let Some(d) = edge.get_mut("deadline").and_then(|d| d.as_object_mut()) {
-                d.remove("extensions");
+                for key in ["extensions", "extendable", "extensionAuthority"] {
+                    d.remove(key);
+                }
             }
         }
     }

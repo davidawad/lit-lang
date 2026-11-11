@@ -458,6 +458,38 @@ fn declaration_only_windows_and_grants_are_reported_not_dropped() {
 }
 
 #[test]
+fn edge_extension_summaries_are_reported_at_their_pointers() {
+    let extendable = pack("extendable", |p| {
+        p["edges"][0]["deadline"] = json!({"length": 30, "extendable": true});
+    });
+    assert_eq!(
+        reported(&[extendable]),
+        [at(
+            "packs/extendable.json",
+            "edge-window extension availability has no .lit spelling: it is derived from a `deadline` declaration's `extend { ... }`, delegation or lock (SPEC §5.3)",
+            "/edges/0/deadline/extendable"
+        )]
+    );
+
+    let authority = pack("extension-authority", |p| {
+        p["edges"][0]["deadline"] = json!({"length": 30, "extensionAuthority": "X"});
+    });
+    assert_eq!(
+        reported(&[authority]),
+        [at(
+            "packs/extension-authority.json",
+            "edge-window extension authority has no .lit spelling: it belongs to a `deadline` declaration's `extend { ... }`, delegation or lock (SPEC §5.3)",
+            "/edges/0/deadline/extensionAuthority"
+        )]
+    );
+
+    let null = pack("null-extendable", |p| {
+        p["edges"][0]["deadline"] = json!({"length": 30, "extendable": null});
+    });
+    assert!(litigate_import::import(&[null]).is_ok());
+}
+
+#[test]
 fn a_patch_field_of_the_wrong_type_is_not_a_whole_field() {
     let links = json!({"instances": {
         "p@q": {"pack": "p", "patch_edges": {"typed": {"hours": "many"}}}

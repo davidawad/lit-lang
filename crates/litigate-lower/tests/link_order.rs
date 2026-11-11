@@ -73,6 +73,7 @@ fn link_only_modules_lower_in_file_order() {
     let Document::Links(file) = &lowered.document else {
         panic!("not a link file");
     };
+    let expected = strip_extension_summaries(expected);
     let changes = semantic_diff_links(&expected, file);
     assert!(
         changes.is_empty(),
@@ -88,4 +89,16 @@ fn link_only_modules_lower_in_file_order() {
     assert_eq!(changes.len(), 1, "{changes:?}");
     assert_eq!(changes[0].kind, ChangeKind::Order);
     assert_eq!(changes[0].pointer, "/links/order");
+}
+
+fn strip_extension_summaries(mut links: LinkFile) -> LinkFile {
+    for instance in links.instances.values_mut() {
+        for patch in instance.patch_edges.values_mut() {
+            if let Some(deadline) = patch.get_mut("deadline").and_then(serde_json::Value::as_object_mut) {
+                deadline.remove("extendable");
+                deadline.remove("extensionAuthority");
+            }
+        }
+    }
+    links
 }

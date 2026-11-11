@@ -54,10 +54,10 @@ pub fn corpus() -> Vec<Input> {
 }
 
 /// `text`, a built pack or `links.json`, in the legacy format the
-/// importer reads: a designated window and extension grants (pack v5,
-/// links v3) are a `deadline` declaration's, which import reports (L6002)
-/// rather than spells, so the window is dropped and the grants left
-/// undeclared, as lowering emitted them before v5.
+/// importer reads: a designated window, extension grants and their legacy
+/// summaries (pack v5, links v3) belong to a `deadline` declaration and
+/// report L6002. Strip them from generated legacy inputs so corpus import
+/// tests exercise only values representable by edge windows.
 pub fn legacy(text: &str) -> String {
     let Ok(mut doc) = serde_json::from_str::<serde_json::Value>(text) else {
         return text.to_owned();
@@ -75,7 +75,9 @@ pub fn legacy(text: &str) -> String {
             {
                 edge.remove("deadline");
             } else if let Some(d) = edge.get_mut("deadline").and_then(|d| d.as_object_mut()) {
-                d.remove("extensions");
+                for key in ["extensions", "extendable", "extensionAuthority"] {
+                    d.remove(key);
+                }
             }
         }
     }
@@ -452,6 +454,35 @@ pub fn normalize_links(mut file: LinkFile) -> Value {
         }
     }
     numbers_as_f64(serde_json::to_value(&file).unwrap_or(Value::Null))
+}
+
+/// Normalize only legacy edge-deadline summaries that have no source
+/// spelling; all other deadline fields remain part of the comparison.
+pub fn without_edge_extension_summaries(mut value: Value) -> Value {
+    for key in ["edges", "links"] {
+        if let Some(edges) = value.get_mut(key).and_then(Value::as_array_mut) {
+            for edge in edges.iter_mut().filter_map(Value::as_object_mut) {
+                strip_extension_summary(edge.get_mut("deadline"));
+            }
+        }
+    }
+    if let Some(instances) = value.get_mut("instances").and_then(Value::as_object_mut) {
+        for instance in instances.values_mut() {
+            if let Some(patches) = instance.get_mut("patch_edges").and_then(Value::as_object_mut) {
+                for patch in patches.values_mut().filter_map(Value::as_object_mut) {
+                    strip_extension_summary(patch.get_mut("deadline"));
+                }
+            }
+        }
+    }
+    value
+}
+
+fn strip_extension_summary(deadline: Option<&mut Value>) {
+    if let Some(deadline) = deadline.and_then(Value::as_object_mut) {
+        deadline.remove("extendable");
+        deadline.remove("extensionAuthority");
+    }
 }
 
 /// SPEC §8.6 compares numbers by binary64 value: `45` equals `45.0`.

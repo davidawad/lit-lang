@@ -319,9 +319,10 @@ impl Spelling<'_> {
     }
 
     fn deadline(&mut self, deadline: &Deadline, pointer: &str) -> String {
-        // `designated` and `extend` are a `deadline` declaration's (SPEC
-        // §5.3), whose trigger event and `counted_by` rule an edge window
-        // does not carry: reported, never dropped or counted instead.
+        // `designated`, `extend`, and their legacy summaries belong to a
+        // `deadline` declaration (SPEC §5.3), whose trigger event and
+        // `counted_by` rule an edge window does not carry: report, never
+        // drop or count them instead.
         if !deadline.extensions.is_empty() {
             self.issues.report(
                 &format!("{pointer}/extensions"),
@@ -336,6 +337,18 @@ impl Spelling<'_> {
                  declaration's `designated p`, its trigger event's `Date` argument (SPEC §5.3)",
             );
             return "deadline ?".to_owned();
+        }
+        if deadline.extendable.is_some() {
+            self.issues.report(
+                &format!("{pointer}/extendable"),
+                "edge-window extension availability has no .lit spelling: it is derived from a `deadline` declaration's `extend { ... }`, delegation or lock (SPEC §5.3)",
+            );
+        }
+        if deadline.extension_authority.is_some() {
+            self.issues.report(
+                &format!("{pointer}/extensionAuthority"),
+                "edge-window extension authority has no .lit spelling: it belongs to a `deadline` declaration's `extend { ... }`, delegation or lock (SPEC §5.3)",
+            );
         }
         let unit = match deadline.unit.as_deref() {
             None | Some("calendar") => "days",
@@ -366,12 +379,6 @@ impl Spelling<'_> {
             )
         );
         let mut opts = Vec::new();
-        if let Some(extendable) = deadline.extendable {
-            opts.push(format!("extendable {extendable}"));
-        }
-        if let Some(authority) = &deadline.extension_authority {
-            opts.push(format!("extension_authority {}", text::string(authority)));
-        }
         if let Some(note) = &deadline.note {
             opts.push(format!("note {}", text::string(note)));
         }

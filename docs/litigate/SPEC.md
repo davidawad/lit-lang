@@ -3141,11 +3141,13 @@ reject unknown fields.
 `litigate import` (crate `litigate-import`) turns legacy JSON into source
 that lowers back to semantically equal JSON (§8.6). A value with no exact
 spelling is L6002 at the input file, with its JSON pointer as a note; the
-importer never approximates. A `designated` window and `extensions`
-(pack v5, links v3) are such values: each comes from a `deadline`
+importer never approximates. A `designated` window, `extensions`,
+`extendable` and `extensionAuthority` (pack v5, links v3) are such values:
+each comes from a `deadline`
 declaration (§5.3), whose trigger event and `counted_by` rule an edge
-window does not carry, so `/edges/<i>/deadline/designated` and
-`.../extensions` are L6002, never dropped or counted instead. Its output is canonical `fmt` output that
+window does not carry, so `/edges/<i>/deadline/designated`,
+`.../extensions`, `.../extendable` and `.../extensionAuthority` are L6002,
+never dropped or counted instead. Its output is canonical `fmt` output that
 parses with no diagnostics, and it follows these conventions:
 
 - A pack becomes `lit/<dir>/` where `<dir>` is the pack's `forum` key (the

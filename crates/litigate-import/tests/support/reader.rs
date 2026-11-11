@@ -179,13 +179,6 @@ fn edge_fields(mut f: Map<String, Value>, out: &mut Map<String, Value>) {
             deadline.insert("unit".into(), json!(unit));
         }
         if let Some(Value::Object(mut opts)) = f.remove("deadline:opts") {
-            take(&mut opts, "extendable", "extendable", &mut deadline);
-            take(
-                &mut opts,
-                "extension_authority",
-                "extensionAuthority",
-                &mut deadline,
-            );
             take(&mut opts, "note", "note", &mut deadline);
             take(&mut opts, "counting", "counting", &mut deadline);
         }

@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-import/tests/snapshots.rs
+assertion_line: 37
 expression: listing
 ---
 ==> cases/demo-matter.case <- tests/fixtures/demo-scenario.json
@@ -44,11 +45,7 @@ decision filed: "Complaint \"filed\"" by applicant cite "DR 3"
     authority cite "DR 12(b)(6)"
     effort 30.hours
     cost 405.usd
-    deadline 21.court_days {
-      extendable true
-      extension_authority "DR 6(b)"
-      note "Not jurisdictional."
-    }
+    deadline 21.court_days { note "Not jurisdictional." }
     duration { mode 4.5.days, max 10.5.days }
     sets [moved]
   }

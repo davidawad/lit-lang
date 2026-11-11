@@ -33,6 +33,7 @@ fn import_then_lower_is_semantically_equal() {
             Document::Links(links) => {
                 let expected: litigate_engine::model::LinkFile =
                     serde_json::from_str(&original).unwrap_or_else(|e| panic!("{origin}: {e}"));
+                let expected = strip_extension_summaries(expected);
                 semantic_diff_links(&expected, links)
             }
         };
@@ -44,6 +45,22 @@ fn import_then_lower_is_semantically_equal() {
         checked.push(origin.clone());
     }
     assert_eq!(checked.len(), 11, "{checked:?}");
+}
+
+/// Edge-window summaries belong to declaration-only extension syntax
+/// (SPEC §5.3), which an edge cannot express and the importer reports.
+fn strip_extension_summaries(
+    mut links: litigate_engine::model::LinkFile,
+) -> litigate_engine::model::LinkFile {
+    for instance in links.instances.values_mut() {
+        for patch in instance.patch_edges.values_mut() {
+            if let Some(deadline) = patch.get_mut("deadline").and_then(serde_json::Value::as_object_mut) {
+                deadline.remove("extendable");
+                deadline.remove("extensionAuthority");
+            }
+        }
+    }
+    links
 }
 
 /// The lowered documents, re-read from their rendered text, compile into

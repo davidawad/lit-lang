@@ -107,6 +107,8 @@ rule duty certiorari-petition cite "28 U.S.C. § 2101(c)"
       on CertExtensionApplied()
       within current_due - 10.days
       unless CertExtensionDenied()
+
+      cite "Sup. Ct. R. 13.5"
     }
     extend {
       by justice

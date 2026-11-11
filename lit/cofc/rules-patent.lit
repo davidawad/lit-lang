@@ -42,6 +42,8 @@ rule duty patent-cascade cite "PRCFC 1"
   deadline patent-jpsr-period: 49.days after AnswerFiled() counted_by rcfc6 delegable {
     to CaseOrder
     op set
+
+    cite "PRCFC Rule 1(b)"
   } cite "PRCFC 3"
 
   /// Rule 3: 98 days after the answer instead when the United States has moved
@@ -49,6 +51,8 @@ rule duty patent-cascade cite "PRCFC 1"
   deadline patent-jpsr-noticed-period: 98.days after AnswerFiled() counted_by rcfc6 delegable {
     to CaseOrder
     op set
+
+    cite "PRCFC Rule 1(b)"
   } cite "PRCFC 3"
 
   /// Rule 4: the Preliminary Disclosure of Infringement Contentions is served
@@ -56,6 +60,8 @@ rule duty patent-cascade cite "PRCFC 1"
   deadline infringement-contentions-period: 56.days after AnswerFiled() counted_by rcfc6 delegable {
     to CaseOrder
     op set
+
+    cite "PRCFC Rule 1(b); RCFC 24"
   } cite "PRCFC 4"
 
   /// Rule 6: the Preliminary Disclosure of Invalidity Contentions is served 56
@@ -63,6 +69,8 @@ rule duty patent-cascade cite "PRCFC 1"
   deadline invalidity-contentions-period: 56.days after InfringementContentionsServed() counted_by rcfc6 delegable {
     to CaseOrder
     op set
+
+    cite "PRCFC Rule 1(b); RCFC 24"
   } cite "PRCFC 6"
 
   /// Rule 9: the List of Proposed Claim Terms for Construction is due 42 days
@@ -71,6 +79,8 @@ rule duty patent-cascade cite "PRCFC 1"
   deadline claim-terms-period: 42.days after InvalidityContentionsServed() counted_by rcfc6 delegable {
     to CaseOrder
     op set
+
+    cite "PRCFC Rule 1(b)"
   } cite "PRCFC 9"
 
   /// Rule 11: the Joint Claim Construction Chart is filed 35 days after the
@@ -78,6 +88,8 @@ rule duty patent-cascade cite "PRCFC 1"
   deadline joint-chart-period: 35.days after ClaimTermsExchanged() counted_by rcfc6 delegable {
     to CaseOrder
     op set
+
+    cite "PRCFC Rule 1(b)"
   } cite "PRCFC 11"
 
   /// Rule 13: claim-construction discovery closes 28 days after the Joint Claim
@@ -85,6 +97,8 @@ rule duty patent-cascade cite "PRCFC 1"
   deadline cc-discovery-period: 28.days after ClaimConstructionAppendixFiled() counted_by rcfc6 delegable {
     to CaseOrder
     op set
+
+    cite "PRCFC Rule 1(b)"
   } cite "PRCFC 13"
 
   /// Rule 14: the status conference follows the Joint Claim Construction

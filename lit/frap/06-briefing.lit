@@ -23,14 +23,20 @@ rule duty serve-and-file-briefs effective [2009-12-01, 2018-12-01) known_at 2009
   deadline appellant-brief-period: 40.days after RecordFiled() counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
+
+    cite "FRAP 26(b)"
   } cite "FRAP (2009 ed.) 31(a)(1)"
   deadline appellee-brief-period: 30.days after ServedPaper(AppellantBrief) counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
+
+    cite "FRAP 26(b)"
   } cite "FRAP (2009 ed.) 31(a)(1)"
   deadline reply-brief-period: 14.days after ServedPaper(AppelleeBrief) counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
+
+    cite "FRAP 26(b); FRAP 31(a)(1)"
   } cite "FRAP (2009 ed.) 31(a)(1)"
 }
 
@@ -44,14 +50,20 @@ rule duty serve-and-file-briefs effective [2018-12-01, ..) known_at 2018-04-26 s
   deadline appellant-brief-period: 40.days after RecordFiled() counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
+
+    cite "FRAP 26(b)"
   } cite "FRAP 31(a)(1)"
   deadline appellee-brief-period: 30.days after ServedPaper(AppellantBrief) counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
+
+    cite "FRAP 26(b)"
   } cite "FRAP 31(a)(1)"
   deadline reply-brief-period: 21.days after ServedPaper(AppelleeBrief) counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
+
+    cite "FRAP 26(b); FRAP 31(a)(1)"
   } cite "FRAP 31(a)(1)"
 }
 

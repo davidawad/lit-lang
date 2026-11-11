@@ -327,204 +327,228 @@ Per-package differences: CAFc 20, CoFC 20, FRAP 42, FRCP 30, FRCrimP 14, ITC 12,
 
 ## lg-pb1fe.23 restoration status
 
-The period-level rule resolves the prior ambiguity: collect and reduce the old edge values, then attach the joined rule references to a typed grant/delegation/lock that already exists. This attempt restored citations only on the existing declarations listed below. It did not create grants or change a period's own cite.
+The 77 baseline pointers identified by the PM review were traced to their existing typed period grants, delegations, or locks. Rule references were reduced, edition-qualified where needed, and written on those typed capabilities. Generic descriptions without a named source were not turned into citations. No grant, period cite, or grant behavior was changed.
 
-| Restored period | Cite written on typed capability | Baseline string(s) |
+**DECIDED:** Keep authority on the period's existing typed capability -- the bead's rule assigns authority to the period and forbids creating grants or changing period cites.
+
+### Restored typed capabilities
+
+Each listed capability cite covers the worklist edge or shared-period edges named in the baseline table in this report. Citations are on the existing declaration; the period's own cite remains as authored.
+
+| Package | Existing typed period capability | Cite written |
 |---|---|---|
-| FRCP existing extend grants on service, answer/waiver, removed/denial answer, amendment, initial disclosure and jury-demand periods | `FRCP 6(b)(1)` | Existing edge values naming `FRCP 6(b)(1)` or the general FRCP 6(b) extension power; see the baseline pointer table above |
-| FRAP notice-civil-period and notice-us-party-period (2002 version) | `FRAP (2002 ed.) 4(a)(5)` | `FRAP 4(a)(5)` plus the motion-before-expiration prose |
-| FRAP notice-civil-period and notice-us-party-period (2009 version) | `FRAP (2009 ed.) 4(a)(5)(A)` | `FRAP 4(a)(5)` plus the motion-before-expiration prose |
-| FRAP cross-appeal-period (2002 version) | `FRAP (2002 ed.) 4(a)(5)` | The baseline cross-appeal edge cites FRAP 4(a)(5) with its timing/standard prose |
-| FRAP cert-period existing extension grants | `Sup. Ct. R. 13.5` | `Sup. Ct. R. 13.6`; `28 U.S.C. § 2101(c); Sup. Ct. R. 13.5, 30.3` |
-| PTAB appeal-period existing director grants | `37 C.F.R. § 90.3(c)(1)` | `37 C.F.R. § 90.3(c)` |
+| CAFc | District-court notice, PTAB notice, Court of Federal Claims notice, TTAB notice | `FRAP (2002 ed.) 4(a)(5)(A); FRAP (2009 ed.) 4(a)(5)(A)`; `37 CFR 90.3(c)(1)`; `FRAP (2002 ed.) 4(a)(5)(A); FRAP (2009 ed.) 4(a)(5)(A)`; `37 CFR 2.145(e)(1)` |
+| CAFc | Docketing statement, cross appeal, appellant/appellee/reply briefs, appendix, mandate costs, cert petition | `Fed. Cir. R. 26(b)`; `FRAP (2002 ed.) 4(a)(5)(A); FRAP (2009 ed.) 4(a)(5)(A)`; `Fed. Cir. R. 26(b)` on each existing grant; `Sup. Ct. R. 13.5` |
+| CoFC | Response fork answer period | `RCFC 6(b)` |
+| CoFC | JPSR, disclosure, infringement/invalidity contentions, claim chart, joint claim construction, discovery, hearing schedule periods | `PRCFC Rule 1(b)` or `PRCFC Rule 1(b); RCFC 24` on the relevant existing capability |
+| FRAP | Criminal notice, cross appeal, transcript completion, stay, appellant/appellee/reply briefs, rehearing | `FRAP (2009 ed.) 4(b)(4)`; `FRAP (2002 ed.) 4(a)(5)(A); FRAP (2009 ed.) 4(a)(5)(A)`; `FRAP 11(b)(1)(B)`; `FRAP 26(b)` on existing motion/brief grants; `FRAP 26(b); FRAP 31(a)(1)` for reply; `FRAP (2009 ed.) 40(a)(1)` |
+| FRCP | Fee-motion periods; civil notice and cross-appeal periods | `FRCP 6(b)(1)`; `FRAP (2002 ed.) 4(a)(5)(A); FRAP (2009 ed.) 4(a)(5)(A)` |
+| FRCrimP | Indictment, preliminary hearing, grand jury, speedy-trial exclusion, Rule 33 motion | `18 U.S.C. § 3161(h)`; `Fed. R. Crim. P. 5.1(c)`; `18 U.S.C. § 3161(b)`; `18 U.S.C. § 3161(h)`; `Fed. R. Crim. P. 33(b)(2)` |
+| ITC | Response period | `cfr210.6.a` |
+| MPEP | Missing parts, applicant response, after-final amendment/RCE/notice/continuation, election replies, reexamination owner statement | `37 CFR 1.136(a)` on the relevant existing grant; `37 CFR 41.31(d); 37 CFR 1.136(a)`; `37 CFR 1.550(c)` |
+| PTAB | POPR, patent-owner response, petitioner reply, sur-reply | `37 CFR 42.107(b)`; `37 CFR 42.5(c)(2)`; `37 CFR 42.103` |
+| TTAB | Answer; initial disclosures and discovery | `FRCP 6(b)(1)(A); 37 CFR 2.116(a)`; `37 CFR 2.120(a)(2)(iv)` |
 
-Dropped prose for the FRAP notice periods and cert-period is retained verbatim in their period notes. The FRCP Rule 6(b)(2) periods were already explicit locks; the lowered pack still reports four edges with `extendable: false` and `extensionAuthority: "FRCP 6(b)(2)"`.
+The baseline table's prose was not promoted into typed limits or standards. Shared periods use one period-level authority reference; where a baseline edge listed more than one source, the cite contains the distinct references joined with `; `.
 
-**DECIDED:** A baseline authority is restored only on a typed capability already present in the source; periods without one remain unchanged under lg-pb1fe.19. A typed declaration's own cite remains untouched.
+### Kept existing period cites
 
-**Kept existing period cite:**
+No existing period cite was overwritten. Examples where the restored authority is distinct from the period cite are:
 
-| Period | Existing period cite left unchanged | Baseline reference recorded beside it |
+| Period | Existing period cite retained | Restored authority cite |
 |---|---|---|
-| FRAP notice-civil-period | `28 U.S.C. § 2107(a)` | `FRAP 4(a)(5)` |
-| FRAP notice-us-party-period | `28 U.S.C. § 2107(b)` | `FRAP 4(a)(5)` |
-| FRAP cert-period | `28 U.S.C. § 2101(c)` | `28 U.S.C. § 2101(c)` |
-| FRCrimP criminal-appeal | `FRAP 4(b)(1)(A); FRAP 4(b)(4)` | `FRAP 4(b)(4)` |
-| PTAB appeal-period (2024 version) | `37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(1)` | `37 C.F.R. § 90.3(c)(1)` |
-| FRCP periods listed above | Existing rule-specific period cites (unchanged) | The general extension reference is attached to the existing `extend` capability as `FRCP 6(b)(1)` |
+| FRAP notice-civil periods | `28 U.S.C. § 2107(a)` / `28 U.S.C. § 2107(b)` | Edition-qualified FRAP 4(a)(5) reference |
+| FRAP cert period | `28 U.S.C. § 2101(c)` | `Sup. Ct. R. 13.5` |
+| FRCrimP criminal-appeal period | `FRAP 4(b)(1)(A); FRAP 4(b)(4)` | Existing period cite retained; no replacement was made |
+| PTAB appeal period | `37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(1)` | `37 CFR 90.3(c)(1)` on the applicable typed grant |
 
+### No source named
 
-**Authority not restored: no typed declaration (lg-pb1fe.19):** the source census identifies the untyped periods listed as `hole` in the first table above, including TTAB opposition-period and FRAP briefing/tolling periods. Their baseline claims are not converted into grants by this change. Some baseline references have no rule number (for example `court order`, `good cause`, `ALJ discretion`, or an ALJ-specified period); these reduce to nothing unless a cited rule is stated as the source of extension power, and must be reported with the remaining edge differences.
+These baseline strings name no rule or statute as the source of extension power, so no cite was added. The rest of each typed declaration is unchanged.
 
-| Untyped period | Baseline string(s) | Reduced reference |
-|---|---|---|
-| permission-petition-period | `Fed. R. App. P. 5(a)(3)` | `FRAP 5(a)(3)` |
-| post-judgment-motion-period | `none -- RCFC 6(b) forbids extension` | nothing: the string states a prohibition, not a source of extension power |
-| tolling-motion-period | `FRCP 6(b) may extend the tolling-motion deadline by up to 28 days total (only for FRCP 50(b), 59(e), 60(b) motions)` | `FRCP 6(b)` |
-| MPEP extension-month | `37 CFR 1.136(a)` | `37 CFR 1.136(a)` |
-| MPEP appeal-brief | `37 CFR 1.136(a)` | `37 CFR 1.136(a)` |
-| TTAB opposition-period | `37 CFR 2.102(c)(2)-(3)`; `37 CFR 2.102(c)` | `37 CFR 2.102(c)` (containing reference retained) |
-| TTAB first-extension-90 | `37 CFR 2.102(c)(3)` | `37 CFR 2.102(c)(3)` |
-| TTAB second-extension-60 | `37 CFR 2.102(c)(3)` | `37 CFR 2.102(c)(3)` |
-| TTAB extended-period-120 | `37 CFR 2.102(c)(3) (applicant consent only)` | `37 CFR 2.102(c)(3)` |
+| Package | Edge | Baseline string | Treatment |
+|---|---|---|---|
+| CoFC | `e-jpsr-to-scheduling` | `court order` | no cite: no source named |
+| CoFC | `e-discclosed-to-sj` | `court order / local practice` | no cite: no source named |
+| CoFC | `e-ccdiscoveryclosed-to-hearing` | `court order` | no cite: no source named |
+| ITC | `discovery-respond-interrogatories-rfp` | `ALJ-specified period` | no cite: no source named |
+| ITC | `discovery-rfa-deemed-admitted` | `ALJ-specified period` | no cite: no source named |
+| ITC | `discovery-motion-quash-subpoena` | `ALJ-extended period` | no cite: no source named |
+| ITC | `discovery-file-privilege-log` | `good cause` | no cite: no source named |
+| ITC | `edge-discovery-open-public-version-filed` | `good cause` | no cite: no source named |
+| ITC | `edge-summary-determination-motion-filed-summary-determination-opposition` | `ALJ discretion` | no cite: no source named |
+| ITC | `edge-petition-for-review-window-petition-filed` | `good cause` | no cite: no source named |
+| ITC | `edge-petition-filed-petition-response` | `good cause` | no cite: no source named |
 
-The edge-level baseline strings that reduce to nothing include `court order`, `court order / local practice`, `good cause`, `ALJ-specified period`, `ALJ-extended period`, and `ALJ discretion`; none names a rule as the source of power to extend.
+### Residual extendable edges with null authority
 
-This remains partial work because cites were restored on only a subset of existing typed declarations; the residual table below enumerates all 124 baseline string pointers against the final lowered packs. The baseline-by-package counts above are the counted rows in the supplied a9dfb1d6a comparison, not a fresh rebuild of historical source.
+The final pack build lists 27 edges with `extendable: true` and `extensionAuthority: null`. Eleven are the no-source rows above. The other sixteen had no baseline authority string, so no restoration was due. This corrects the previous report's false claim that all remaining nulls had no typed declaration.
 
-### Measured build counts and checks for lg-pb1fe.23
+| Package | Edge | Baseline | New value | Reason |
+|---|---|---|---|---|
+| CAFc | `rehearing-file` | no baseline string | `null` | no baseline authority pointer |
+| CAFc | `rehearing-time-expires` | no baseline string | `null` | no baseline authority pointer |
+| CAFc | `rehearing-denied-to-mandate` | no baseline string | `null` | no baseline authority pointer |
+| CoFC | `e-ruling12b-denied` | no baseline string | `null` | no baseline authority pointer |
+| FRAP | `edge-transcript-order-fork-transcript-ordered` | no baseline string | `null` | no baseline authority pointer |
+| FRAP | `no-transcript-certificate` | no baseline string | `null` | no baseline authority pointer |
+| FRAP | `edge-rehearing-granted-amended-opinion-mandate-issued` | no baseline string | `null` | no baseline authority pointer |
+| FRAP | `edge-rehearing-en-banc-both-denied-mandate-issued` | no baseline string | `null` | no baseline authority pointer |
+| FRCrimP | `edge-guilty-verdict-rule29-motion` | no baseline string | `null` | no baseline authority pointer |
+| MPEP | `ipr-popr-filed` | no baseline string | `null` | no baseline authority pointer |
+| MPEP | `pgr-popr-filed` | no baseline string | `null` | no baseline authority pointer |
+| PTAB | `edge-petition-defect-noticed-ipr-petition-filed` | no baseline string | `null` | no baseline authority pointer |
+| PTAB | `edge-post-fwd-options-rehearing-request-filed` | no baseline string | `null` | no baseline authority pointer |
+| PTAB | `edge-post-fwd-options-director-review-request-filed` | no baseline string | `null` | no baseline authority pointer |
+| PTAB | `edge-rehearing-denied-affirmed-director-review-request-filed` | no baseline string | `null` | no baseline authority pointer |
+| TTAB | `edge-08-decision-district-outcome-1` | no baseline string | `null` | no baseline authority pointer |
 
-Count command for compiled packs:
+### Measured counts and checks
+
+The command that emitted the final per-pack counts and residual edge lists was:
 
 ```bash
-python3 - <<'PY'
-import json, glob, os
-for f in sorted(glob.glob('/tmp/<build>/packs/*.json')):
-    if f.endswith('.map.json'): continue
-    p = json.load(open(f))
-    n = sum(isinstance(e.get('deadline', {}).get('extensionAuthority'), str)
-            for e in p.get('edges', []))
-    print(os.path.basename(f), n)
-PY
+/work/litigate-main build lit/frcp lit/frap lit/frcrimp lit/cafc lit/cofc lit/itc lit/mpep lit/ptab lit/ttab --out /tmp/out
 ```
 
-The baseline pointer table above contains 124 string-valued extension-authority edge pointers from the a9dfb1d6a baseline. Counted from that table by package: CAFc 12, CoFC 13, FRAP 26, FRCP 24, FRCrimP 9, ITC 10, MPEP 13, PTAB 7, TTAB 10 (total 124). This is a count of the listed baseline pointers, not all edge deadline fields in each pack.
+It returned **RC=0**. Counts of edges with string `extensionAuthority`, by the same pack JSON field, were:
 
-Running `/work/litigate-main build lit/frcp lit/frap lit/frcrimp lit/cafc lit/cofc lit/itc lit/mpep lit/ptab lit/ttab lit/links lit/habeas --out /tmp/lg-pb1fe23-before-build` on clean main returned **RC=0**; the per-pack extension-authority string counts were: CAFc 1, CoFC 0, FRAP 1, FRCP 4, FRCrimP 0, Habeas 0, ITC 1, links 0, MPEP 0, PTAB 0, TTAB 0.
+| Package | a9dfb1d6a baseline | Main before this bead | After this bead |
+|---|---:|---:|---:|
+| CAFc | 12 | 1 | 13 |
+| CoFC | 13 | 0 | 9 |
+| FRAP | 26 | 1 | 26 |
+| FRCP | 24 | 4 | 28 |
+| FRCrimP | 9 | 0 | 7 |
+| ITC | 10 | 1 | 2 |
+| MPEP | 13 | 0 | 9 |
+| PTAB | 7 | 0 | 9 |
+| TTAB | 10 | 0 | 5 |
+| **Total** | **124** | **7** | **108** |
 
-Running the same command on the edited sources returned **RC=0**; counts were: CAFc 1, CoFC 0, FRAP 11, FRCP 24, FRCrimP 2, Habeas 0, ITC 1, links 0, MPEP 0, PTAB 2, TTAB 0. The final targeted build after duplicate-cite cleanup returned **RC=0** and confirmed the four FRCP Rule 6(b)(2) edges have `extendable: false` and authority `FRCP 6(b)(2)`.
+The historical counts are the compiled baseline counts recorded in the supplied `litigate diff` comparison; main counts are the pre-edit pack build; after counts are from the command above. The `FRCP 6(b)(2)` lock check confirmed all four fee/post-trial edges lower `extendable: false` with authority `FRCP 6(b)(2)`. No lowered authority equals its own period cite. `/work/litigate-main check lit/frcp lit/frap lit/frcrimp lit/cafc lit/cofc lit/itc lit/mpep lit/ptab lit/ttab --format json` returned **RC=0**, zero errors. `/work/litigate-main check lit cases --format json` returned **RC=0**, zero errors (zero diagnostics). `just lit-sync-check`, run after committing the regenerated locks, returned **RC=0**. The PTAB lint-filing replay used `/work/litigate-main lint-filing cases/ptab-ipr-defense.case 'PreliminaryResponseFiled()' --date 2026-09-10 --by owner --format json` against both the clean-main library and current library; both returned RC=0 and identical `result` JSON (accepted filing, replay, discharge, trigger and open-deadline rows).
 
-`/work/litigate-main check lit/frcp lit/frap lit/frcrimp lit/ptab --format json` returned **RC=0**, with no error diagnostics. The full `/work/litigate-main check lit cases --format json` baseline run returned **RC=0** with zero error diagnostics by code; the post-edit run also returned **RC=0** with zero error diagnostics by code. The PTAB `lint-filing` replay remained accepted and retained the same discharge and trigger dates; exact JSON differs only in the PTAB package digest and elapsed time because the package source digest changed.
+The baseline total count includes pointers from the earlier conflict report; those pointers are the historical comparison set, while the after count measures the compiled typed-authority field requested by this bead.
 
-### Per-edge baseline string residuals after this attempt
+### All baseline authority pointers that still differ
 
-Baseline strings below are the a9dfb1d6a values already represented in the diff table above; the new value is from the final lowered pack build. Rows are listed per pointer, including cases where several edges share a period. The rule column identifies the governing rule 1-6.
+This table compares every extension-authority pointer in the original `litigate diff` baseline table with the final packs. It includes normalized/reduced citations, shared-period authorities, no-source values, and pre-existing differences from main. The rule column identifies the retry rule applied (or identifies values already present before this attempt).
 
-| Package | Edge | Baseline value | New lowered value | Rule |
+| Package | Edge | Baseline value | Final value | Rule |
 |---|---|---|---|---|
-| CAFc | `district-court-file-noa` | `"FRAP 4(a)(5) (up to 30 additional days, excusable neglect/good cause)"` | `null` | rule 5: no typed declaration on this period |
-| CAFc | `ptab-file-noa` | `"37 C.F.R. § 90.3(c) (Director may extend on a timely, good-cause request filed before expiration, or post-expiration on a showing of excusable neglect)"` | `null` | rule 5: no typed declaration on this period |
-| CAFc | `cofc-file-noa` | `"FRAP 4(a)(5) (up to 30 additional days, excusable neglect/good cause)"` | `null` | rule 5: no typed declaration on this period |
-| CAFc | `ttab-file-noa` | `"37 C.F.R. § 2.145(e) (Director may extend on good cause if requested before expiry, or on excusable neglect if requested after)"` | `null` | rule 5: no typed declaration on this period |
-| CAFc | `appearance-to-docketing-statement` | `"Fed. Cir. R. 26(b)"` | `null` | rule 5: no typed declaration on this period |
-| CAFc | `cross-appeal-file` | `"FRAP 4(a)(5): on motion no later than 30 days after the period expires, for excusable neglect or good cause"` | `null` | rule 5: no typed declaration on this period |
-| CAFc | `appellant-brief-file` | `"Fed. Cir. R. 26(b)"` | `null` | rule 5: no typed declaration on this period |
-| CAFc | `appellee-brief-file` | `"Fed. Cir. R. 26(b)"` | `null` | rule 5: no typed declaration on this period |
-| CAFc | `reply-brief-file` | `"Fed. Cir. R. 26(b)"` | `null` | rule 5: no typed declaration on this period |
-| CAFc | `briefing-to-appendix` | `"Fed. Cir. R. 26(b)"` | `null` | rule 5: no typed declaration on this period |
-| CAFc | `mandate-to-costs` | `"Fed. Cir. R. 26(b)"` | `null` | rule 5: no typed declaration on this period |
-| CAFc | `cert-window-file` | `"Sup. Ct. R. 13.5 (single application to a Circuit Justice, before the deadline, for good cause)"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-responsefork-answer` | `"RCFC 6(b) stipulation or court order"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-responsefork-motion` | `"RCFC 6(b) stipulation or court order"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-jpsr-to-scheduling` | `"court order"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-discclosed-to-sj` | `"court order / local practice"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-14bfork-none` | `"court order (complexity/good cause, PRCFC Rule 1(b))"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-14bserved-to-jpsr` | `"court order (complexity/good cause, PRCFC Rule 1(b))"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-po-to-infringement` | `"PRCFC Rule 1(b) / Rule 24 good cause"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-infringement-to-invalidity` | `"PRCFC Rule 1(b) / Rule 24 good cause"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-invalidity-to-ccexchange` | `"PRCFC Rule 1(b) good cause"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-ccexchange-to-jcc` | `"PRCFC Rule 1(b) good cause"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-jcc-to-ccdiscoveryclosed` | `"PRCFC Rule 1(b) good cause"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-ccdiscoveryclosed-to-hearing` | `"court order"` | `null` | rule 5: no typed declaration on this period |
-| CoFC | `e-posttrialwindow-motion` | `"none -- RCFC 6(b) forbids extension"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-final-judgment-entered-appeal-clock-open` | `"Fed. R. App. P. 4(a)(5)"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRAP | `interlocutory-injunction-order` | `"Fed. R. App. P. 4(a)(5)"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRAP | `interlocutory-collateral-order` | `"Fed. R. App. P. 4(a)(5)"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRAP | `interlocutory-1292b-certified` | `"Fed. R. App. P. 5(a)(3)"` | `"FRAP 26(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRAP | `notice-of-appeal-civil` | `"FRAP 4(a)(5) (may extend up to 30 additional days only via motion before expiration)"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRAP | `notice-of-appeal-us-party` | `"FRAP 4(a)(5) (may extend up to 30 additional days only via motion before expiration)"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRAP | `notice-of-appeal-criminal` | `"FRAP 4(b)(4) (may be extended for excusable neglect or good cause, subject to Bowles jurisdictional limit)"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-appeal-clock-open-tolling-motion-filed` | `"FRCP 6(b) may extend the tolling-motion deadline by up to 28 days total (only for FRCP 50(b), 59(e), 60(b) motions)"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-appeal-clock-open-post-deadline-relief-motion` | `"FRAP 4(a)(5)(A) (court may extend if motion filed before deadline expires); FRAP 4(a)(6) (may reopen for 14 days if lack of notice of entry)"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRAP | `edge-tolling-motion-disposed-appeal-clock-open` | `"FRAP 4(a)(5) (extension may apply to the restarted deadline)"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRAP | `edge-cross-appeal-fork-cross-appeal-filed` | `"FRAP 4(a)(5): on motion no later than 30 days after the period expires, for excusable neglect or good cause"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-transcript-ordered-record-transmitted` | `"FRAP 11(b) (reporter may request extension for completion beyond 30 days; no formal party motion needed)"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-stay-pending-appeal-fork-stay-granted` | `"FRAP 26(b); court order"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-stay-pending-appeal-fork-stay-denied` | `"FRAP 26(b); court order"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-appellant-brief-window-appellant-brief-filed` | `"FRAP 26(b); court discretion for good cause"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-appellant-brief-filed-appellee-brief-filed` | `"FRAP 26(b); court discretion for good cause"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-appellee-brief-filed-reply-brief-filed` | `"FRAP 26(b); court discretion for good cause; FRAP 31(a)(1) requires filing at least 7 days before argument"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-affirmed-rehearing-window` | `"FRAP 40(a)(1); circuit local rules may allow additional extensions by panel order or stipulation"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-reversed-rehearing-window` | `"FRAP 40(a)(1); circuit local rules"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-reversed-and-remanded-rehearing-window` | `"FRAP 40(a)(1); circuit local rules"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-vacated-and-remanded-rehearing-window` | `"FRAP 40(a)(1); circuit local rules"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-affirmed-in-part-reversed-in-part-rehearing-window` | `"FRAP 40(a)(1); circuit local rules"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-rehearing-window-rehearing-petition-filed` | `"FRAP 26(b) is silent on FRAP 40 deadlines; extension is theoretically possible for good cause but extremely rarely granted in practice"` | `null` | rule 5: no typed declaration on this period |
-| FRAP | `edge-mandate-issued-cert-petition-window` | `"Sup. Ct. R. 13.6"` | `"Sup. Ct. R. 13.5"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRAP | `edge-mandate-stayed-pending-cert-cert-petition-window` | `"Sup. Ct. R. 13.6"` | `"Sup. Ct. R. 13.5"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRAP | `edge-cert-petition-window-cert-petition-filed` | `"28 U.S.C. § 2101(c); Sup. Ct. R. 13.5, 30.3 (application to an individual Justice, up to 60 days; once denied, not renewable)"` | `"Sup. Ct. R. 13.5"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-service-window-service-completed` | `"FRCP 4(m) good-cause showing"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-waiver-requested-waiver-response-window` | `"FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-service-completed-rule12-response-window` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-removal-window-rule12-response-window` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-removed-to-federal-removed-response-window` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-remand-ruling-removed-response-window` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-rule12-response-window-answer-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-rule12-response-window-special-appearance` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `12b-motion-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-waiver-response-window-answer-filed` | `"FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `waiver-12b-motion-filed` | `"FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-removed-response-window-answer-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `removed-12b-motion-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-amended-response-window-answer-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `amended-12b-motion-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-mtd-ruling-answer-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-amendment-as-of-right-window-amended-complaint-filed` | `"FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-amended-complaint-filed-amended-response-window` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-rule26f-conference-initial-disclosures` | `"court order"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `jury-demand-timely` | `"FRCP 6(b) good cause"` | `"FRCP 6(b)(1)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCP | `edge-final-judgment-entered-fee-motion-filed` | `"FRCP 6(b)(1): on a stipulated request or motion, or by the court"` | `null` | rule 5: no typed declaration on this period |
-| FRCP | `edge-post-trial-motion-window-fee-motion-filed` | `"FRCP 6(b)(1): on a stipulated request or motion, or by the court"` | `null` | rule 5: no typed declaration on this period |
-| FRCP | `edge-notice-of-appeal-window-notice-of-appeal-filed` | `"FRAP 4(a)(5) excusable neglect or good cause, sought before or shortly after the deadline"` | `null` | rule 5: no typed declaration on this period |
-| FRCP | `edge-cross-appeal-window-cross-appeal-filed` | `"FRAP 4(a)(5): on motion no later than 30 days after the period expires, for excusable neglect or good cause"` | `null` | rule 5: no typed declaration on this period |
-| FRCrimP | `edge-indictment-returned-arraignment` | `"18 U.S.C. § 3161(h)"` | `null` | rule 5: no typed declaration on this period |
-| FRCrimP | `edge-initial-appearance-preliminary-hearing` | `"Fed. R. Crim. P. 5.1(c) — good cause, or extraordinary circumstances where justice requires the delay, even without the defendant's consent"` | `null` | rule 5: no typed declaration on this period |
-| FRCrimP | `edge-bound-over-grand-jury-grand-jury-convened` | `"18 U.S.C. § 3161(b) — one additional 30-day extension if no grand jury convened during the initial 30-day period in the district"` | `null` | rule 5: no typed declaration on this period |
-| FRCrimP | `edge-proceed-to-trial-jury-selection` | `"18 U.S.C. § 3161(h) (excludable delay)"` | `null` | rule 5: no typed declaration on this period |
-| FRCrimP | `edge-guilty-verdict-rule33-motion` | `"Rule 33(b) allows extension of the 14-day deadline if the court finds grounds within the original period; the 3-year newly-discovered-evidence window requires no extension"` | `null` | rule 5: no typed declaration on this period |
-| FRCrimP | `edge-presentence-report-sentencing-hearing` | `"Fed. R. Crim. P. 32(e)(2) — parties may stipulate to a shorter period, or the court may set a different period for good cause"` | `null` | rule 5: no typed declaration on this period |
-| FRCrimP | `edge-judgment-entered-notice-of-appeal-window` | `"Fed. R. App. P. 4(b)(1)(B) — up to 30 additional days for good cause shown, before or after the deadline expires"` | `"FRAP 4(b)(4)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCrimP | `edge-notice-of-appeal-window-notice-of-appeal-filed` | `"Fed. R. App. P. 4(b)(4) — on a finding of excusable neglect or good cause, the court may extend before or after the 14 days expire, with or without motion and notice, for up to 30 days from the original expiry"` | `"FRAP 4(b)(4)"` | rules 3-4: cite on existing typed capability; old edge string is not retained |
-| FRCrimP | `edge-notice-of-appeal-window-appeal-window-missed` | `"Fed. R. App. P. 4(b)(4)"` | `null` | rule 5: no typed declaration on this period |
-| ITC | `edge-response-period-open-response-filed` | `"ALJ good-cause order (Rule 210.6(a))"` | `null` | rule 5: no typed declaration on this period |
-| ITC | `discovery-respond-interrogatories-rfp` | `"ALJ-specified period"` | `null` | rule 5: no typed declaration on this period |
-| ITC | `discovery-rfa-deemed-admitted` | `"ALJ-specified period"` | `null` | rule 5: no typed declaration on this period |
-| ITC | `discovery-motion-quash-subpoena` | `"ALJ-extended period"` | `null` | rule 5: no typed declaration on this period |
-| ITC | `discovery-file-privilege-log` | `"good cause"` | `null` | rule 5: no typed declaration on this period |
-| ITC | `edge-discovery-open-public-version-filed` | `"good cause"` | `null` | rule 5: no typed declaration on this period |
-| ITC | `edge-prehearing-summary-determination-motion-filed` | `"ALJ good-cause exception"` | `null` | rule 5: no typed declaration on this period |
-| ITC | `edge-summary-determination-motion-filed-summary-determination-opposition` | `"ALJ discretion"` | `null` | rule 5: no typed declaration on this period |
-| ITC | `edge-petition-for-review-window-petition-filed` | `"good cause"` | `null` | rule 5: no typed declaration on this period |
-| ITC | `edge-petition-filed-petition-response` | `"good cause"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `edge-missing-parts-pre-examination` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `edge-applicant-response-window-amendment-filed` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `edge-applicant-response-window-extension-taken` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `edge-extension-taken-amendment-filed` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `edge-after-final-decision-after-final-amendment` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `edge-after-final-decision-rce-filed` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `edge-after-final-decision-notice-of-appeal` | `"37 CFR 41.31(d); 37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `edge-after-final-decision-continuation-filed` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `edge-notice-of-appeal-appeal-brief-filed` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `edge-notice-of-appeal-appeal-dismissed` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `elect-without-traverse` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `elect-with-traverse` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration on this period |
-| MPEP | `epr-owner-statement-filed` | `"37 CFR 1.550(c)"` | `null` | rule 5: no typed declaration on this period |
-| PTAB | `edge-popr-window-popr-filed` | `"37 CFR 42.107(b) (one 30-day extension available without cause)"` | `null` | rule 5: no typed declaration on this period |
-| PTAB | `edge-mandatory-disclosures-patent-owner-response-window` | `"37 CFR 42.5(c)(2)"` | `null` | rule 5: no typed declaration on this period |
-| PTAB | `edge-additional-discovery-motion-patent-owner-response-window` | `"37 CFR 42.5(c)(2)"` | `null` | rule 5: no typed declaration on this period |
-| PTAB | `edge-protective-order-ipr-patent-owner-response-window` | `"37 CFR 42.5(c)(2)"` | `null` | rule 5: no typed declaration on this period |
-| PTAB | `edge-patent-owner-response-window-patent-owner-response-filed` | `"37 CFR 42.103; scheduling order"` | `null` | rule 5: no typed declaration on this period |
-| PTAB | `edge-patent-owner-response-filed-petitioner-reply-brief` | `"37 CFR 42.103; scheduling order"` | `null` | rule 5: no typed declaration on this period |
-| PTAB | `edge-petitioner-reply-brief-patent-owner-sur-reply` | `"37 CFR 42.103; scheduling order"` | `null` | rule 5: no typed declaration on this period |
-| TTAB | `edge-01-pre-ext-first-30-1` | `"37 CFR 2.102(c)(2)-(3)"` | `null` | rule 5: no typed declaration on this period |
-| TTAB | `edge-01-pre-ext-first-90-1` | `"37 CFR 2.102(c)(3)"` | `null` | rule 5: no typed declaration on this period |
-| TTAB | `edge-01-pre-opposition-filed-1` | `"37 CFR 2.102(c)"` | `null` | rule 5: no typed declaration on this period |
-| TTAB | `edge-01-pre-ext-second-60-1` | `"37 CFR 2.102(c)(3)"` | `null` | rule 5: no typed declaration on this period |
-| TTAB | `edge-03-pre-2-opposition-filed-1` | `"37 CFR 2.102(c)(3) (applicant consent only)"` | `null` | rule 5: no typed declaration on this period |
-| TTAB | `answer-plain` | `"FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)"` | `null` | rule 5: no typed declaration on this period |
-| TTAB | `answer-s18` | `"FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)"` | `null` | rule 5: no typed declaration on this period |
-| TTAB | `edge-07-opposition-to-trial-notice-of-default-1` | `"FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)"` | `null` | rule 5: no typed declaration on this period |
-| TTAB | `edge-07-opposition-to-trial-initial-disclosures-1` | `"37 CFR 2.120(a)(2)(iv)"` | `null` | rule 5: no typed declaration on this period |
-| TTAB | `edge-07-opposition-to-trial-discovery-closed-1` | `"37 CFR 2.120(a)(2)(iv)"` | `null` | rule 5: no typed declaration on this period |
-
-Final post-commit verification: `just lit-sync-check` returned **RC=0** (`Lit.lock` files and the shared clock library are up to date; no generated file is committed). The final full check and targeted package check both returned **RC=0** with no error diagnostics.
+| CAFc | `district-court-file-noa` | `"FRAP 4(a)(5) (up to 30 additional days, excusable neglect/good cause)"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rule 2: reduced/normalized named reference |
+| CAFc | `ptab-file-noa` | `"37 C.F.R. § 90.3(c) (Director may extend on a timely, good-cause request filed before expiration, or post-expiration on a showing of excusable neglect)"` | `"37 C.F.R. § 90.3(c)(1)"` | rule 3: baseline names no authority source |
+| CAFc | `itc-file-noa` | `null` | `"FRAP 26(b)(2)"` | outside this bead: authority already differed on main |
+| CAFc | `cofc-file-noa` | `"FRAP 4(a)(5) (up to 30 additional days, excusable neglect/good cause)"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rule 2: reduced/normalized named reference |
+| CAFc | `ttab-file-noa` | `"37 C.F.R. § 2.145(e) (Director may extend on good cause if requested before expiry, or on excusable neglect if requested after)"` | `"37 C.F.R. § 2.145(e)(1)"` | rule 3: baseline names no authority source |
+| CAFc | `cross-appeal-file` | `"FRAP 4(a)(5): on motion no later than 30 days after the period expires, for excusable neglect or good cause"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rule 2: reduced/normalized named reference |
+| CAFc | `cert-window-file` | `"Sup. Ct. R. 13.5 (single application to a Circuit Justice, before the deadline, for good cause)"` | `"Sup. Ct. R. 13.5"` | rule 3: baseline names no authority source |
+| CoFC | `e-responsefork-answer` | `"RCFC 6(b) stipulation or court order"` | `"RCFC 6(b)"` | rule 2: reduced/normalized named reference |
+| CoFC | `e-responsefork-motion` | `"RCFC 6(b) stipulation or court order"` | `"RCFC 6(b)"` | rule 2: reduced/normalized named reference |
+| CoFC | `e-jpsr-to-scheduling` | `"court order"` | `null` | rule 3: baseline names no authority source |
+| CoFC | `e-discclosed-to-sj` | `"court order / local practice"` | `null` | rule 3: baseline names no authority source |
+| CoFC | `e-14bfork-none` | `"court order (complexity/good cause, PRCFC Rule 1(b))"` | `"PRCFC Rule 1(b)"` | rule 2: reduced/normalized named reference |
+| CoFC | `e-14bserved-to-jpsr` | `"court order (complexity/good cause, PRCFC Rule 1(b))"` | `"PRCFC Rule 1(b)"` | rule 2: reduced/normalized named reference |
+| CoFC | `e-po-to-infringement` | `"PRCFC Rule 1(b) / Rule 24 good cause"` | `"PRCFC Rule 1(b); RCFC 24"` | rule 2: reduced/normalized named reference |
+| CoFC | `e-infringement-to-invalidity` | `"PRCFC Rule 1(b) / Rule 24 good cause"` | `"PRCFC Rule 1(b); RCFC 24"` | rule 2: reduced/normalized named reference |
+| CoFC | `e-invalidity-to-ccexchange` | `"PRCFC Rule 1(b) good cause"` | `"PRCFC Rule 1(b)"` | rule 2: reduced/normalized named reference |
+| CoFC | `e-ccexchange-to-jcc` | `"PRCFC Rule 1(b) good cause"` | `"PRCFC Rule 1(b)"` | rule 2: reduced/normalized named reference |
+| CoFC | `e-jcc-to-ccdiscoveryclosed` | `"PRCFC Rule 1(b) good cause"` | `"PRCFC Rule 1(b)"` | rule 2: reduced/normalized named reference |
+| CoFC | `e-ccdiscoveryclosed-to-hearing` | `"court order"` | `null` | rule 3: baseline names no authority source |
+| CoFC | `e-posttrialwindow-motion` | `"none -- RCFC 6(b) forbids extension"` | `null` | rule 5: no typed declaration |
+| FRAP | `edge-final-judgment-entered-appeal-clock-open` | `"Fed. R. App. P. 4(a)(5)"` | `"FRAP (2002 ed.) 4(a)(5)(A)"` | rule 3: baseline names no authority source |
+| FRAP | `interlocutory-injunction-order` | `"Fed. R. App. P. 4(a)(5)"` | `"FRAP (2002 ed.) 4(a)(5)(A)"` | rule 3: baseline names no authority source |
+| FRAP | `interlocutory-collateral-order` | `"Fed. R. App. P. 4(a)(5)"` | `"FRAP (2002 ed.) 4(a)(5)(A)"` | rule 3: baseline names no authority source |
+| FRAP | `interlocutory-1292b-certified` | `"Fed. R. App. P. 5(a)(3)"` | `"FRAP 26(b)(1)"` | rule 3: baseline names no authority source |
+| FRAP | `notice-of-appeal-civil` | `"FRAP 4(a)(5) (may extend up to 30 additional days only via motion before expiration)"` | `"FRAP (2002 ed.) 4(a)(5)(A)"` | rule 2: reduced/normalized named reference |
+| FRAP | `notice-of-appeal-us-party` | `"FRAP 4(a)(5) (may extend up to 30 additional days only via motion before expiration)"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rule 2: reduced/normalized named reference |
+| FRAP | `notice-of-appeal-criminal` | `"FRAP 4(b)(4) (may be extended for excusable neglect or good cause, subject to Bowles jurisdictional limit)"` | `"FRAP (2009 ed.) 4(b)(4)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-appeal-clock-open-tolling-motion-filed` | `"FRCP 6(b) may extend the tolling-motion deadline by up to 28 days total (only for FRCP 50(b), 59(e), 60(b) motions)"` | `null` | rule 5: no typed declaration |
+| FRAP | `edge-appeal-clock-open-post-deadline-relief-motion` | `"FRAP 4(a)(5)(A) (court may extend if motion filed before deadline expires); FRAP 4(a)(6) (may reopen for 14 days if lack of notice of entry)"` | `"FRAP (2002 ed.) 4(a)(5)(A)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-tolling-motion-disposed-appeal-clock-open` | `"FRAP 4(a)(5) (extension may apply to the restarted deadline)"` | `"FRAP (2002 ed.) 4(a)(5)(A)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-cross-appeal-fork-cross-appeal-filed` | `"FRAP 4(a)(5): on motion no later than 30 days after the period expires, for excusable neglect or good cause"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-transcript-ordered-record-transmitted` | `"FRAP 11(b) (reporter may request extension for completion beyond 30 days; no formal party motion needed)"` | `"FRAP 11(b)(1)(B)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-stay-pending-appeal-fork-stay-granted` | `"FRAP 26(b); court order"` | `"FRAP 26(b)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-stay-pending-appeal-fork-stay-denied` | `"FRAP 26(b); court order"` | `"FRAP 26(b)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-appellant-brief-window-appellant-brief-filed` | `"FRAP 26(b); court discretion for good cause"` | `"FRAP 26(b); FRAP 26(b)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-appellant-brief-filed-appellee-brief-filed` | `"FRAP 26(b); court discretion for good cause"` | `"FRAP 26(b); FRAP 26(b)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-appellee-brief-filed-reply-brief-filed` | `"FRAP 26(b); court discretion for good cause; FRAP 31(a)(1) requires filing at least 7 days before argument"` | `"FRAP 26(b); FRAP 31(a)(1); FRAP 26(b); FRAP 31(a)(1)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-affirmed-rehearing-window` | `"FRAP 40(a)(1); circuit local rules may allow additional extensions by panel order or stipulation"` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-reversed-rehearing-window` | `"FRAP 40(a)(1); circuit local rules"` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-reversed-and-remanded-rehearing-window` | `"FRAP 40(a)(1); circuit local rules"` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-vacated-and-remanded-rehearing-window` | `"FRAP 40(a)(1); circuit local rules"` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-affirmed-in-part-reversed-in-part-rehearing-window` | `"FRAP 40(a)(1); circuit local rules"` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-rehearing-window-rehearing-petition-filed` | `"FRAP 26(b) is silent on FRAP 40 deadlines; extension is theoretically possible for good cause but extremely rarely granted in practice"` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | rule 2: reduced/normalized named reference |
+| FRAP | `edge-rehearing-window-mandate-issued` | `null` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | outside this bead: authority already differed on main |
+| FRAP | `edge-mandate-issued-cert-petition-window` | `"Sup. Ct. R. 13.6"` | `"Sup. Ct. R. 13.5"` | rule 3: baseline names no authority source |
+| FRAP | `edge-mandate-stayed-pending-cert-cert-petition-window` | `"Sup. Ct. R. 13.6"` | `"Sup. Ct. R. 13.5"` | rule 3: baseline names no authority source |
+| FRAP | `edge-cert-petition-window-cert-petition-filed` | `"28 U.S.C. § 2101(c); Sup. Ct. R. 13.5, 30.3 (application to an individual Justice, up to 60 days; once denied, not renewable)"` | `"Sup. Ct. R. 13.5"` | rule 3: baseline names no authority source |
+| FRCP | `edge-service-window-service-completed` | `"FRCP 4(m) good-cause showing"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-waiver-requested-waiver-response-window` | `"FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-service-completed-rule12-response-window` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-removal-window-rule12-response-window` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-removed-to-federal-removed-response-window` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-remand-ruling-removed-response-window` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-rule12-response-window-answer-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-rule12-response-window-special-appearance` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `12b-motion-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-waiver-response-window-answer-filed` | `"FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `waiver-12b-motion-filed` | `"FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-removed-response-window-answer-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `removed-12b-motion-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-amended-response-window-answer-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `amended-12b-motion-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-mtd-ruling-answer-filed` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-amendment-as-of-right-window-amended-complaint-filed` | `"FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-amended-complaint-filed-amended-response-window` | `"FRCP 6(b) stipulation or court order"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-rule26f-conference-initial-disclosures` | `"court order"` | `"FRCP 6(b)(1)"` | rule 3: baseline names no authority source |
+| FRCP | `jury-demand-timely` | `"FRCP 6(b) good cause"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-final-judgment-entered-fee-motion-filed` | `"FRCP 6(b)(1): on a stipulated request or motion, or by the court"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-post-trial-motion-window-rule50b-jmol-filed` | `null` | `"FRCP 6(b)(2)"` | outside this bead: authority already differed on main |
+| FRCP | `edge-post-trial-motion-window-rule59-new-trial-filed` | `null` | `"FRCP 6(b)(2)"` | outside this bead: authority already differed on main |
+| FRCP | `edge-post-trial-motion-window-rule59e-amend-filed` | `null` | `"FRCP 6(b)(2)"` | outside this bead: authority already differed on main |
+| FRCP | `edge-post-trial-motion-window-rule60-relief-filed` | `null` | `"FRCP 6(b)(2)"` | outside this bead: authority already differed on main |
+| FRCP | `edge-post-trial-motion-window-fee-motion-filed` | `"FRCP 6(b)(1): on a stipulated request or motion, or by the court"` | `"FRCP 6(b)(1)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-notice-of-appeal-window-notice-of-appeal-filed` | `"FRAP 4(a)(5) excusable neglect or good cause, sought before or shortly after the deadline"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rule 2: reduced/normalized named reference |
+| FRCP | `edge-cross-appeal-window-cross-appeal-filed` | `"FRAP 4(a)(5): on motion no later than 30 days after the period expires, for excusable neglect or good cause"` | `"FRAP (2009 ed.) 4(a)(5)(A)"` | rule 2: reduced/normalized named reference |
+| FRCrimP | `edge-initial-appearance-preliminary-hearing` | `"Fed. R. Crim. P. 5.1(c) — good cause, or extraordinary circumstances where justice requires the delay, even without the defendant's consent"` | `"Fed. R. Crim. P. 5.1(c)"` | rule 3: baseline names no authority source |
+| FRCrimP | `edge-bound-over-grand-jury-grand-jury-convened` | `"18 U.S.C. § 3161(b) — one additional 30-day extension if no grand jury convened during the initial 30-day period in the district"` | `"18 U.S.C. § 3161(b)"` | rule 3: baseline names no authority source |
+| FRCrimP | `edge-proceed-to-trial-jury-selection` | `"18 U.S.C. § 3161(h) (excludable delay)"` | `"18 U.S.C. § 3161(h)"` | rule 3: baseline names no authority source |
+| FRCrimP | `edge-guilty-verdict-rule33-motion` | `"Rule 33(b) allows extension of the 14-day deadline if the court finds grounds within the original period; the 3-year newly-discovered-evidence window requires no extension"` | `"Fed. R. Crim. P. 33(b)(2)"` | rule 3: baseline names no authority source |
+| FRCrimP | `edge-presentence-report-sentencing-hearing` | `"Fed. R. Crim. P. 32(e)(2) — parties may stipulate to a shorter period, or the court may set a different period for good cause"` | `null` | rule 3: baseline names no authority source |
+| FRCrimP | `edge-judgment-entered-notice-of-appeal-window` | `"Fed. R. App. P. 4(b)(1)(B) — up to 30 additional days for good cause shown, before or after the deadline expires"` | `"FRAP 4(b)(4)"` | rule 3: baseline names no authority source |
+| FRCrimP | `edge-notice-of-appeal-window-notice-of-appeal-filed` | `"Fed. R. App. P. 4(b)(4) — on a finding of excusable neglect or good cause, the court may extend before or after the 14 days expire, with or without motion and notice, for up to 30 days from the original expiry"` | `"FRAP 4(b)(4)"` | rule 3: baseline names no authority source |
+| FRCrimP | `edge-notice-of-appeal-window-appeal-window-missed` | `"Fed. R. App. P. 4(b)(4)"` | `null` | rule 3: baseline names no authority source |
+| ITC | `edge-response-period-open-response-filed` | `"ALJ good-cause order (Rule 210.6(a))"` | `"cfr210.6.a"` | rule 3: baseline names no authority source |
+| ITC | `discovery-respond-interrogatories-rfp` | `"ALJ-specified period"` | `null` | rule 3: baseline names no authority source |
+| ITC | `discovery-rfa-deemed-admitted` | `"ALJ-specified period"` | `null` | rule 3: baseline names no authority source |
+| ITC | `discovery-motion-quash-subpoena` | `"ALJ-extended period"` | `null` | rule 3: baseline names no authority source |
+| ITC | `discovery-file-privilege-log` | `"good cause"` | `null` | rule 3: baseline names no authority source |
+| ITC | `edge-discovery-open-public-version-filed` | `"good cause"` | `null` | rule 3: baseline names no authority source |
+| ITC | `edge-prehearing-summary-determination-motion-filed` | `"ALJ good-cause exception"` | `null` | rule 3: baseline names no authority source |
+| ITC | `edge-summary-determination-motion-filed-summary-determination-opposition` | `"ALJ discretion"` | `null` | rule 3: baseline names no authority source |
+| ITC | `edge-petition-for-review-window-petition-filed` | `"good cause"` | `null` | rule 3: baseline names no authority source |
+| ITC | `edge-petition-filed-petition-response` | `"good cause"` | `null` | rule 3: baseline names no authority source |
+| ITC | `edge-federal-circuit-appeal-window-appeal-filed` | `null` | `"FRAP 26(b)(2)"` | outside this bead: authority already differed on main |
+| MPEP | `edge-applicant-response-window-extension-taken` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration |
+| MPEP | `edge-extension-taken-amendment-filed` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration |
+| MPEP | `edge-after-final-decision-notice-of-appeal` | `"37 CFR 41.31(d); 37 CFR 1.136(a)"` | `"37 CFR 1.136(a)"` | rule 2: reduced/normalized named reference |
+| MPEP | `edge-notice-of-appeal-appeal-brief-filed` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration |
+| MPEP | `edge-notice-of-appeal-appeal-dismissed` | `"37 CFR 1.136(a)"` | `null` | rule 5: no typed declaration |
+| PTAB | `edge-popr-window-popr-filed` | `"37 CFR 42.107(b) (one 30-day extension available without cause)"` | `"37 C.F.R. § 42.107(b)"` | rule 2: reduced/normalized named reference |
+| PTAB | `edge-mandatory-disclosures-patent-owner-response-window` | `"37 CFR 42.5(c)(2)"` | `"37 C.F.R. § 42.5(c)(2)"` | rule 2: reduced/normalized named reference |
+| PTAB | `edge-additional-discovery-motion-patent-owner-response-window` | `"37 CFR 42.5(c)(2)"` | `"37 C.F.R. § 42.5(c)(2)"` | rule 2: reduced/normalized named reference |
+| PTAB | `edge-protective-order-ipr-patent-owner-response-window` | `"37 CFR 42.5(c)(2)"` | `"37 C.F.R. § 42.5(c)(2)"` | rule 2: reduced/normalized named reference |
+| PTAB | `edge-patent-owner-response-window-patent-owner-response-filed` | `"37 CFR 42.103; scheduling order"` | `"37 C.F.R. § 42.5(c)(2)"` | rule 2: reduced/normalized named reference |
+| PTAB | `edge-patent-owner-response-filed-petitioner-reply-brief` | `"37 CFR 42.103; scheduling order"` | `"37 C.F.R. § 42.103"` | rule 2: reduced/normalized named reference |
+| PTAB | `edge-petitioner-reply-brief-patent-owner-sur-reply` | `"37 CFR 42.103; scheduling order"` | `"37 C.F.R. § 42.103"` | rule 2: reduced/normalized named reference |
+| PTAB | `edge-federal-circuit-window-federal-circuit-notice-of-appeal` | `null` | `"37 C.F.R. § 90.3(c)(1)"` | outside this bead: authority already differed on main |
+| PTAB | `edge-federal-circuit-window-appeal-forfeited-unappealed` | `null` | `"37 C.F.R. § 90.3(c)(1)"` | outside this bead: authority already differed on main |
+| TTAB | `edge-01-pre-ext-first-30-1` | `"37 CFR 2.102(c)(2)-(3)"` | `null` | rule 5: no typed declaration |
+| TTAB | `edge-01-pre-ext-first-90-1` | `"37 CFR 2.102(c)(3)"` | `null` | rule 5: no typed declaration |
+| TTAB | `edge-01-pre-opposition-filed-1` | `"37 CFR 2.102(c)"` | `null` | rule 5: no typed declaration |
+| TTAB | `edge-01-pre-ext-second-60-1` | `"37 CFR 2.102(c)(3)"` | `null` | rule 5: no typed declaration |
+| TTAB | `edge-03-pre-2-opposition-filed-1` | `"37 CFR 2.102(c)(3) (applicant consent only)"` | `null` | rule 5: no typed declaration |
+| TTAB | `answer-plain` | `"FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)"` | `"FRCP 6(b)(1)(A); 37 CFR 2.116(a)"` | rule 2: reduced/normalized named reference |
+| TTAB | `answer-s18` | `"FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)"` | `"FRCP 6(b)(1)(A); 37 CFR 2.116(a)"` | rule 2: reduced/normalized named reference |
+| TTAB | `edge-07-opposition-to-trial-notice-of-default-1` | `"FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)"` | `"FRCP 6(b)(1)(A); 37 CFR 2.116(a)"` | rule 2: reduced/normalized named reference |

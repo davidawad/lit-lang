@@ -197,7 +197,12 @@ rule duty ptab-notice-of-appeal cite "37 C.F.R. § 90.3(a)(1)"
   deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by uspto-1-7 effective [2012-09-16, 2024-03-29) known_at 2012-08-14 cite "77 FR 48677; 77 FR 48612"
   {
     forum ptab
-    extend { by director, discretion GoodCause, on PtabAppealExtensionRequested() }
+    extend {
+      by director
+      discretion GoodCause
+      on PtabAppealExtensionRequested()
+      cite "37 C.F.R. § 90.3(c)(1)"
+    }
     extend {
       by director
       discretion ExcusableNeglect
@@ -208,7 +213,12 @@ rule duty ptab-notice-of-appeal cite "37 C.F.R. § 90.3(a)(1)"
   deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by uspto-1-7 effective [2024-03-29, ..) known_at 2024-03-29 supersedes ptab-noa-period@2012-09-16 cite "37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(2)"
   {
     forum ptab
-    extend { by director, discretion GoodCause, on PtabAppealExtensionRequested() }
+    extend {
+      by director
+      discretion GoodCause
+      on PtabAppealExtensionRequested()
+      cite "37 C.F.R. § 90.3(c)(1)"
+    }
     extend {
       by director
       discretion ExcusableNeglect
@@ -263,6 +273,8 @@ rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
       after_expiry
       on AppealExtensionMoved()
       within prescribed_due + 30.days
+
+      cite "FRAP (2002 ed.) 4(a)(5)(A)"
     }
     lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP (2008 ed.) 26(b)(1)"
   }
@@ -280,6 +292,8 @@ rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
       after_expiry
       on AppealExtensionMoved()
       within prescribed_due + 30.days
+
+      cite "FRAP (2009 ed.) 4(a)(5)(A)"
     }
     lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
   }
@@ -308,7 +322,12 @@ rule duty ttab-notice-of-appeal cite "37 C.F.R. § 2.145(d)(1)"
   deadline ttab-noa-period: 63.days after Entered(TtabDecision) counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite "37 C.F.R. § 2.145(d)(1); 37 C.F.R. § 2.145(d)(4)(ii)"
   {
     forum ttab
-    extend { by director, discretion GoodCause, on TtabAppealExtensionRequested() }
+    extend {
+      by director
+      discretion GoodCause
+      on TtabAppealExtensionRequested()
+      cite "37 C.F.R. § 2.145(e)(1)"
+    }
     extend {
       by director
       discretion ExcusableNeglect

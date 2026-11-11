@@ -267,6 +267,8 @@ rule duty answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CF
   deadline answer-period: 30.days from InstitutionNoticed() counted_by ttab-2-196 delegable {
     to CaseOrder
     op set
+
+    cite "FRCP 6(b)(1)(A); 37 CFR 2.116(a)"
   } cite "37 CFR 2.105(a)"
   {
     designated due
@@ -389,10 +391,14 @@ rule duty discovery-schedule effective [2017-07-21, ..) known_at 2017-07-21 unkn
   deadline disclosure-period: 30.days from DiscoveryOpened() counted_by ttab-2-196 delegable {
     to CaseOrder
     op set
+
+    cite "37 CFR 2.120(a)(2)(iv)"
   } cite "37 CFR 2.120(a)(2)(ii)"
   deadline discovery-period: 180.days from DiscoveryOpened() counted_by ttab-2-196 delegable {
     to CaseOrder
     op set
+
+    cite "37 CFR 2.120(a)(2)(iv)"
   } cite "37 CFR 2.120(a)(2)(i)"
 }
 

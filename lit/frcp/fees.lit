@@ -77,7 +77,12 @@ deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6 eff
   op set
 } cite "FRCP 54(d)(2)(B)"
 {
-  extend { by court, discretion GoodCause, on TimeChangeStipulated(FeeMotionPeriod) }
+  extend {
+    by court
+    discretion GoodCause
+    on TimeChangeStipulated(FeeMotionPeriod)
+    cite "FRCP 6(b)(1)"
+  }
   extend { by court, discretion GoodCause, on ExtensionMoved(FeeMotionPeriod) }
   extend { by court, discretion GoodCause }
   extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(FeeMotionPeriod) }

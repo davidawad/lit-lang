@@ -141,10 +141,14 @@ rule duty popr-deadline cite "37 C.F.R. (2012) § 42.107(b)"
   deadline popr-period: 3.months after FilingDateNoticed() counted_by uspto-1-7 effective [2012-09-16, 2016-05-02) known_at 2012-08-14 delegable {
     to CaseOrder
     op set
+
+    cite "37 C.F.R. § 42.107(b)"
   } cite "37 C.F.R. (2012) § 42.107(b); 37 C.F.R. (2012) § 42.207(b); 37 C.F.R. (2012) § 42.5(c)(1)"
   deadline popr-period: 3.months after FilingDateNoticed() counted_by uspto-1-7 effective [2016-05-02, ..) known_at 2016-04-01 supersedes popr-period@2012-09-16 delegable {
     to CaseOrder
     op set
+
+    cite "37 C.F.R. § 42.107(b)"
   } cite "37 C.F.R. § 42.107(b); 37 C.F.R. § 42.207(b); 37 C.F.R. § 42.5(c)(1)"
 }
 
@@ -215,10 +219,14 @@ rule duty patent-owner-response-deadline cite "37 C.F.R. (2012) § 42.120(b)"
   deadline patent-owner-response-period: 3.months after TrialInstituted() counted_by uspto-1-7 effective [2012-09-16, 2021-01-08) known_at 2012-08-14 delegable {
     to CaseOrder
     op set
+
+    cite "37 C.F.R. § 42.5(c)(2)"
   } cite "37 C.F.R. (2012) § 42.120(b); 37 C.F.R. (2012) § 42.5(c)(1)"
   deadline patent-owner-response-period: 3.months after TrialInstituted() counted_by uspto-1-7 effective [2021-01-08, ..) known_at 2020-12-09 supersedes patent-owner-response-period@2012-09-16 delegable {
     to CaseOrder
     op set
+
+    cite "37 C.F.R. § 42.5(c)(2)"
   } cite "37 C.F.R. § 42.120(b); 37 C.F.R. § 42.5(c)(1)"
 }
 
@@ -251,6 +259,8 @@ test "patent owner response under the 2012 rule: a Saturday last day rolls to Mo
 deadline petitioner-reply-period: 3.months after PatentOwnerResponseFiled() counted_by uspto-1-7 effective [2025-10-01, ..) known_at 2025-10-01 unknown_before 2025-10-01 delegable {
   to CaseOrder
   op set
+
+  cite "37 C.F.R. § 42.103"
 } cite "PTAB Trial Practice Guide App. A-1"
 
 test "petitioner reply: three months from the patent owner response" cite "PTAB Trial Practice Guide App. A-1"
@@ -273,6 +283,8 @@ test "petitioner reply: a last day on Memorial Day rolls to Tuesday" cite "PTAB 
 deadline sur-reply-period: 6.weeks after PetitionerReplyFiled() counted_by uspto-1-7 effective [2025-10-01, ..) known_at 2025-10-01 unknown_before 2025-10-01 delegable {
   to CaseOrder
   op set
+
+  cite "37 C.F.R. § 42.103"
 } cite "PTAB Trial Practice Guide App. A-1"
 
 test "sur-reply: six weeks from the reply" cite "PTAB Trial Practice Guide App. A-1"

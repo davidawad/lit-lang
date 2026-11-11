@@ -58,6 +58,8 @@ event AppealClockEvent(start: AppealStart)
 deadline prelim-in-custody: 14.days after InitialAppearance(InCustody) counted_by frcrimp45 effective [2009-12-01, ..) known_at 2009-03-26 delegable {
   to CaseOrder
   op set
+
+  cite "Fed. R. Crim. P. 5.1(c)"
 } cite "FRCrimP 5.1(c); FRCrimP 5.1(d)"
 
 /// 21 days for a released defendant.
@@ -83,6 +85,8 @@ test "Counting boundary: prelim-released (holiday) [repeat 2]" cite "FRCrimP 5.1
 deadline indictment-period: 30.days after Arrested() counted_by frcrimp45 effective [2024-12-01, ..) delegable {
   to CaseOrder
   op set
+
+  cite "18 U.S.C. § 3161(b)"
 } cite "18 U.S.C. § 3161(b); 18 U.S.C. § 3161(h)"
 
 /// 70 days to trial from the later of the charge's filing and the
@@ -90,6 +94,8 @@ deadline indictment-period: 30.days after Arrested() counted_by frcrimp45 effect
 deadline speedy-trial: 70.days after TrialClockEvent() counted_by frcrimp45 effective [2024-12-01, ..) delegable {
   to CaseOrder
   op set
+
+  cite "18 U.S.C. § 3161(h)"
 } cite "18 U.S.C. § 3161(c)(1); 18 U.S.C. § 3161(h)"
 {
   trigger latest
@@ -115,6 +121,8 @@ deadline rule29-period: 14.days after VerdictOrDischarge() counted_by frcrimp45 
 deadline rule33-period: 14.days after VerdictOrDischarge(Verdict) counted_by frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 delegable {
   to CaseOrder
   op set
+
+  cite "Fed. R. Crim. P. 33(b)(2)"
 } cite "FRCrimP 33(b)(2); FRCrimP 45(b)(1)"
 
 test "Counting boundary: rule33-period (weekend)" cite "FRCrimP 33(b)(2); FRCrimP 45(b)(1)"

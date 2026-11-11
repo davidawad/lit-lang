@@ -23,7 +23,13 @@ rule duty criminal-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-
     op set
   } cite "FRAP (2009 ed.) 4(b)(1)(A)"
   {
-    extend { by court, discretion GoodCauseOrExcusableNeglect, max 30.days, after_expiry }
+    extend {
+      by court
+      discretion GoodCauseOrExcusableNeglect
+      max 30.days
+      after_expiry
+      cite "FRAP (2009 ed.) 4(b)(4)"
+    }
     lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
   }
 }

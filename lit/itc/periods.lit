@@ -34,9 +34,10 @@ rule duty respond-to-complaint cite "cfr210.13.a"
   deadline response-period: 20.days after ServedPaper(ComplaintAndNotice) counted_by itc210 effective [2025-02-03, ..) delegable {
     to CaseOrder
     op set
+
+    cite "cfr210.6.a"
   } cite "cfr210.13.a"
-  {
-  }
+  {}
 }
 
 /// 19 C.F.R. § 210.29(b)(2): answers and objections within ten days of
@@ -48,8 +49,7 @@ rule duty answer-interrogatories cite "cfr210.29.b.2"
     to CaseOrder
     op set
   } cite "cfr210.29.b.2"
-  {
-  }
+  {}
 }
 
 /// 19 C.F.R. § 210.30(b)(2): a written response to a request for
@@ -61,8 +61,7 @@ rule duty respond-to-production-requests cite "cfr210.30.b.2"
     to CaseOrder
     op set
   } cite "cfr210.30.b.2"
-  {
-  }
+  {}
 }
 
 /// 19 C.F.R. § 210.31(b): a matter may be deemed admitted unless answered
@@ -74,8 +73,7 @@ rule duty answer-admission-requests cite "cfr210.31.b"
     to CaseOrder
     op set
   } cite "cfr210.31.b"
-  {
-  }
+  {}
 }
 
 /// 19 C.F.R. § 210.32(d)(2): a motion to quash within the later of 10 days
@@ -87,8 +85,7 @@ rule duty move-to-quash cite "cfr210.32.d.2"
     to CaseOrder
     op set
   } cite "cfr210.32.d.2"
-  {
-  }
+  {}
 }
 
 /// 19 C.F.R. § 210.27(e)(1)(ii): a privilege log within 10 days of making
@@ -100,8 +97,7 @@ rule duty log-privilege cite "cfr210.27.e.1"
     to CaseOrder
     op set
   } cite "cfr210.27.e.1"
-  {
-  }
+  {}
 }
 
 /// 19 C.F.R. § 210.5(f): a public version within 30 days of the
@@ -117,8 +113,7 @@ rule duty file-public-version cite "cfr210.5.f"
     to CaseOrder
     op set
   } cite "cfr210.5.f"
-  {
-  }
+  {}
 }
 
 /// 19 C.F.R. § 210.18(b): opposing affidavits within ten (10) days after
@@ -130,8 +125,7 @@ rule duty oppose-summary-determination cite "cfr210.18.b"
     to CaseOrder
     op set
   } cite "cfr210.18.b"
-  {
-  }
+  {}
 }
 
 /// 19 C.F.R. § 210.43(a)(1): a petition for review of a final initial
@@ -144,8 +138,7 @@ rule duty petition-for-review cite "cfr210.43.a.1"
     to CaseOrder
     op set
   } cite "cfr210.43.a.1"
-  {
-  }
+  {}
 }
 
 /// 19 C.F.R. § 210.43(c): a response within eight (8) days after service of
@@ -157,8 +150,7 @@ rule duty respond-to-petition cite "cfr210.43.c"
     to CaseOrder
     op set
   } cite "cfr210.43.c"
-  {
-  }
+  {}
 }
 
 /// 19 U.S.C. § 1337(c): an appeal to the Federal Circuit "within 60 days

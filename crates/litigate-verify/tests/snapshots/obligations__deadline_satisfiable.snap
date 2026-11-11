@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/obligations.rs
+assertion_line: 269
 expression: "pair(Obligation::DeadlineSatisfiable, &one(&two_duties(\"1990-01-01\")),\n&one(&two_duties(\"2000-01-01\")),)"
 ---
 {
@@ -23,7 +24,7 @@ expression: "pair(Obligation::DeadlineSatisfiable, &one(&two_duties(\"1990-01-01
       "status": "failed",
       "count": 1,
       "examples": [
-        "pkgs/demo/main.lit:36:1: L5005 at `served`, duties `answer-period`, `old-period` are never in force on the same day as the node, so no trigger date opens all their windows"
+        "pkgs/demo/main.lit:39:1: L5005 at `served`, duties `answer-period`, `old-period` are never in force on the same day as the node, so no trigger date opens all their windows"
       ],
       "evidence": {
         "checked": 2,
@@ -37,9 +38,9 @@ expression: "pair(Obligation::DeadlineSatisfiable, &one(&two_duties(\"1990-01-01
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 36,
+          "line": 39,
           "col": 1,
-          "end_line": 40,
+          "end_line": 43,
           "end_col": 2
         },
         "message": "at `served`, duties `answer-period`, `old-period` are never in force on the same day as the node, so no trigger date opens all their windows",
@@ -49,17 +50,17 @@ expression: "pair(Obligation::DeadlineSatisfiable, &one(&two_duties(\"1990-01-01
               "file": "pkgs/demo/main.lit",
               "line": 33,
               "col": 3,
-              "end_line": 33,
-              "end_col": 101
+              "end_line": 36,
+              "end_col": 4
             },
             "message": "`answer-period` is in force [2000-01-01, ..)"
           },
           {
             "span": {
               "file": "pkgs/demo/main.lit",
-              "line": 59,
+              "line": 62,
               "col": 3,
-              "end_line": 59,
+              "end_line": 62,
               "end_col": 131
             },
             "message": "`old-period` is in force [1990-01-01, 2000-01-01)"

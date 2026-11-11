@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/obligations.rs
+assertion_line: 171
 expression: "pair(Obligation::DelegationRespected, &\ndelegation(\" delegable { to LocalRule, op set }\"), & delegation(\"\"))"
 ---
 {
@@ -23,7 +24,7 @@ expression: "pair(Obligation::DelegationRespected, &\ndelegation(\" delegable { 
       "status": "failed",
       "count": 1,
       "examples": [
-        "pkgs/local/main.lit:6:99: L3004 `local-period` (LocalRule) overrides `demo::answer-period` (FederalRule), but `demo::answer-period` does not delegate to LocalRule: missing `delegable { to LocalRule, op shorten }`"
+        "pkgs/local/main.lit:6:99: L3004 `local-period` (LocalRule) overrides `demo::answer-period` (FederalRule), but `demo::answer-period` does not delegate to LocalRule: missing `delegable { to LocalRule, op set }`"
       ]
     },
     "accepted": false,

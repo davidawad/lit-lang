@@ -39,22 +39,56 @@ event ProHacViceApproved()
 /// discovery materials acts as the court's custodian of them and
 /// preserves them until 30 days after final disposition of the case.
 deadline discovery-custody-period: 30.days after FinalDisposition() counted_by frcp6-alabama cite "N.D. Ala. LR 5.3"
+
+test "Counting boundary: discovery-custody-period (weekend)" cite "N.D. Ala. LR 5.3"
+{
+  given FinalDisposition() on 2023-12-01
+  expect deadline(discovery-custody-period) == 2024-01-02
+}
+
 /// LR 5.4: except as a judge directs otherwise, exhibits received in
 /// evidence and not withdrawn within thirty days after final disposition
 /// may thereafter be destroyed or otherwise disposed of by the clerk.
 deadline exhibit-withdrawal-period: 30.days after FinalDisposition() counted_by frcp6-alabama cite "N.D. Ala. LR 5.4"
+
+test "Counting boundary: exhibit-withdrawal-period (weekend)" cite "N.D. Ala. LR 5.4"
+{
+  given FinalDisposition() on 2023-12-01
+  expect deadline(exhibit-withdrawal-period) == 2024-01-02
+}
+
 /// LR 54.1: requests for taxation of costs other than attorneys' fees
 /// under FRCP 54(d) are filed with the clerk within 21 days after entry of
 /// judgment.
 deadline costs-period: 21.days after JudgmentEntered() counted_by frcp6-alabama cite "N.D. Ala. LR 54.1"
+
+test "Counting boundary: costs-period (weekend)" cite "N.D. Ala. LR 54.1"
+{
+  given JudgmentEntered() on 2023-12-02
+  expect deadline(costs-period) == 2023-12-26
+}
+
 /// LR 83.1(b)(1): an attorney who is not a member of the bar of this
 /// court and appears as counsel by filing any pleading or paper in a
 /// pending case applies to appear pro hac vice within ten days thereafter.
 deadline pro-hac-vice-period: 10.days after NonMemberAppeared() counted_by frcp6-alabama cite "N.D. Ala. LR 83.1(b)(1)"
+
+test "Counting boundary: pro-hac-vice-period (weekend)" cite "N.D. Ala. LR 83.1(b)(1)"
+{
+  given NonMemberAppeared() on 2023-12-06
+  expect deadline(pro-hac-vice-period) == 2023-12-18
+}
+
 /// LR 83.1(b)(2): the designated local counsel files a notice of
 /// appearance within ten days of the approval of the pro hac vice
 /// application.
 deadline local-counsel-appearance-period: 10.days after ProHacViceApproved() counted_by frcp6-alabama cite "N.D. Ala. LR 83.1(b)(2)"
+
+test "Counting boundary: local-counsel-appearance-period (weekend)" cite "N.D. Ala. LR 83.1(b)(2)"
+{
+  given ProHacViceApproved() on 2023-12-06
+  expect deadline(local-counsel-appearance-period) == 2023-12-18
+}
 
 test "Deadline arithmetic: discovery-custody-period (30 days after)" cite "N.D. Ala. LR 5.3"
 {

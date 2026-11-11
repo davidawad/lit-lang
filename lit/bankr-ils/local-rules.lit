@@ -122,16 +122,37 @@ deadline involuntary-creditor-schedules-period: 14.days after InvoluntarySchedul
 /// agent, on conversion or within 7 days of any request from the court or
 /// another party, the debtor files and uploads an amended matrix.
 deadline amended-matrix-request-period: 7.days after MatrixRequested() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 1009(D)"
+
+test "Counting boundary: amended-matrix-request-period (weekend)" cite "Bankr. S.D. Ill. LBR 1009(D)"
+{
+  given MatrixRequested() on 2025-12-06
+  expect deadline(amended-matrix-request-period) == 2025-12-15
+}
+
 /// LBR 1007-2, 1007-2(A): the payment advices or other evidence of payment
 /// received within 60 days before the petition, or a verified statement that
 /// there were none, go to the trustee (or the United States Trustee) and to a
 /// creditor who timely requests them at least 7 days before the first
 /// scheduled § 341 meeting; they are not filed.
 deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 1007-2"
+
+test "Counting boundary: payment-advices-period (holiday)" cite "Bankr. S.D. Ill. LBR 1007-2"
+{
+  given FirstMeetingDate() on 2025-12-04
+  expect deadline(payment-advices-period) == 2025-11-26
+}
+
 /// LBR 1007-2: a creditor's request for copies of the payment advices is
 /// timely only if received at least 14 days before the first scheduled § 341
 /// meeting.
 deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 1007-2"
+
+test "Counting boundary: payment-advices-request-period (weekend)" cite "Bankr. S.D. Ill. LBR 1007-2"
+{
+  given FirstMeetingDate() on 2025-12-06
+  expect deadline(payment-advices-request-period) == 2025-11-21
+}
+
 /// LBR 1007-2(A): a debtor who believes a case dismissed on the trustee's
 /// request for failure to provide payment advices was dismissed in error
 /// files any motion to reinstate within 14 days of the entry of the dismissal
@@ -142,15 +163,36 @@ deadline advices-reinstatement-motion-period: 14.days after AdvicesDismissalEnte
 /// filed state tax return, or a verified statement that none exists and why;
 /// the federal return is FRBP 4002(b)(3)'s.
 deadline state-tax-return-period: 7.days before FirstMeetingDate() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 1007-3"
+
+test "Counting boundary: state-tax-return-period (holiday)" cite "Bankr. S.D. Ill. LBR 1007-3"
+{
+  given FirstMeetingDate() on 2025-12-04
+  expect deadline(state-tax-return-period) == 2025-11-26
+}
+
 /// LBR 1017: no later than 7 days after a motion to reinstate a case
 /// dismissed for failure to make plan payments is filed, the trustee files a
 /// response consenting to or opposing reinstatement; on consent the case may
 /// be reinstated without hearing.
 deadline reinstatement-response-period: 7.days after ReinstatementMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 1017"
+
+test "Counting boundary: reinstatement-response-period (weekend)" cite "Bankr. S.D. Ill. LBR 1017"
+{
+  given ReinstatementMotionFiled() on 2025-12-06
+  expect deadline(reinstatement-response-period) == 2025-12-15
+}
+
 /// LBR 2004(D): a Rule 2004 motion's notice sets an objection, response or
 /// answer deadline of 7 days from its filing, and the hearing date if an
 /// objection is filed.
 deadline rule-2004-objection-period: 7.days after Rule2004MotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 2004(D)"
+
+test "Counting boundary: rule-2004-objection-period (weekend)" cite "Bankr. S.D. Ill. LBR 2004(D)"
+{
+  given Rule2004MotionFiled() on 2025-12-06
+  expect deadline(rule-2004-objection-period) == 2025-12-15
+}
+
 /// LBR 2015-1, 6004-2(B): the chapter 7 trustee files a report of sale,
 /// stating the property sold, the buyer and the price, within 14 days of the
 /// sale; an auctioneer's report may be substituted.
@@ -167,6 +209,13 @@ deadline interim-compensation-objection-period: 14.days after InterimCompensatio
 /// without hearing if no objection to the motion is filed within 7 days
 /// following its filing.
 deadline withdrawal-objection-period: 7.days after WithdrawalMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 2091(B)"
+
+test "Counting boundary: withdrawal-objection-period (weekend)" cite "Bankr. S.D. Ill. LBR 2091(B)"
+{
+  given WithdrawalMotionFiled() on 2025-12-06
+  expect deadline(withdrawal-objection-period) == 2025-12-15
+}
+
 /// LBR 3003: unless otherwise ordered, in a chapter 11 case the bar date for
 /// a non-governmental creditor or equity security holder whose claim or
 /// interest is not scheduled, or is scheduled as disputed, contingent or
@@ -175,6 +224,13 @@ deadline chapter11-claims-bar-period: 90.days after FirstMeetingDate() counted_b
 /// LBR 3018(C): all ballots are submitted to the plan proponent's attorney at
 /// least 7 days before the confirmation hearing.
 deadline ballot-submission-period: 7.days before Chapter11ConfirmationHearing() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 3018(C)"
+
+test "Counting boundary: ballot-submission-period (holiday)" cite "Bankr. S.D. Ill. LBR 3018(C)"
+{
+  given Chapter11ConfirmationHearing() on 2025-12-04
+  expect deadline(ballot-submission-period) == 2025-11-26
+}
+
 /// LBR 3018(C): the balloting report and certification are filed at least 3
 /// days before the confirmation hearing and served on the United States
 /// Trustee, the Service List and the plan's objectors.
@@ -183,6 +239,13 @@ deadline balloting-report-period: 3.days before Chapter11ConfirmationHearing() c
 /// payments are completed is accompanied by a notice giving all creditors 21
 /// days from its filing to object.
 deadline early-closing-objection-period: 21.days after EarlyClosingMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 3022(C)"
+
+test "Counting boundary: early-closing-objection-period (holiday)" cite "Bankr. S.D. Ill. LBR 3022(C)"
+{
+  given EarlyClosingMotionFiled() on 2025-12-04
+  expect deadline(early-closing-objection-period) == 2025-12-26
+}
+
 /// LBR 4001-2(E)(1), 9006-1: unless otherwise ordered, an opposition to a
 /// motion for relief from stay is filed and served on the movant and anyone
 /// known to claim an interest in the property not later than 14 days from the
@@ -192,6 +255,13 @@ deadline stay-relief-opposition-period: 14.days after StayReliefMotionFiled() co
 /// LBR 4003(C): the notice of a motion to avoid a lien allows 21 days from
 /// the date of filing to file objections.
 deadline lien-avoidance-objection-period: 21.days after LienAvoidanceMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 4003(C)"
+
+test "Counting boundary: lien-avoidance-objection-period (holiday)" cite "Bankr. S.D. Ill. LBR 4003(C)"
+{
+  given LienAvoidanceMotionFiled() on 2025-12-04
+  expect deadline(lien-avoidance-objection-period) == 2025-12-26
+}
+
 /// LBR 5011(A): absent leave, a motion to withdraw the reference is filed
 /// within 14 days of the filing of the first related pleading or response, or
 /// within 14 days of the pretrial order, whichever is later, or the request
@@ -210,19 +280,54 @@ deadline auction-proceeds-remittance-period: 14.days after TrusteeSaleHeld() cou
 /// LBR 6008(B): the notice of a motion for redemption allows 21 days from the
 /// date of filing to file objections.
 deadline redemption-objection-period: 21.days after RedemptionMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 6008(B)"
+
+test "Counting boundary: redemption-objection-period (holiday)" cite "Bankr. S.D. Ill. LBR 6008(B)"
+{
+  given RedemptionMotionFiled() on 2025-12-04
+  expect deadline(redemption-objection-period) == 2025-12-26
+}
+
 /// LBR 7016(A): the parties to an adversary proceeding exchange all exhibits
 /// and supply paper copies to the court at least 14 days before trial.
 deadline exhibit-exchange-period: 14.days before AdversaryTrial() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7016(A)"
+
+test "Counting boundary: exhibit-exchange-period (weekend)" cite "Bankr. S.D. Ill. LBR 7016(A)"
+{
+  given AdversaryTrial() on 2025-12-06
+  expect deadline(exhibit-exchange-period) == 2025-11-21
+}
+
 /// LBR 7016(A): each party files at least 7 days before trial a written
 /// statement as to each exhibit indicating whether it objects and why.
 deadline exhibit-objection-statement-period: 7.days before AdversaryTrial() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7016(A)"
+
+test "Counting boundary: exhibit-objection-statement-period (holiday)" cite "Bankr. S.D. Ill. LBR 7016(A)"
+{
+  given AdversaryTrial() on 2025-12-04
+  expect deadline(exhibit-objection-statement-period) == 2025-11-26
+}
+
 /// LBR 7016(A): unless otherwise ordered, the parties exchange the names of
 /// all witnesses they intend to call at least 7 days before trial.
 deadline witness-exchange-period: 7.days before AdversaryTrial() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7016(A)"
+
+test "Counting boundary: witness-exchange-period (holiday)" cite "Bankr. S.D. Ill. LBR 7016(A)"
+{
+  given AdversaryTrial() on 2025-12-04
+  expect deadline(witness-exchange-period) == 2025-11-26
+}
+
 /// LBR 7016(C): unless a pretrial order directs otherwise, the parties submit
 /// proposed findings of fact, conclusions of law and briefs at least 14 days
 /// before trial.
 deadline pretrial-findings-period: 14.days before AdversaryTrial() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7016(C)"
+
+test "Counting boundary: pretrial-findings-period (weekend)" cite "Bankr. S.D. Ill. LBR 7016(C)"
+{
+  given AdversaryTrial() on 2025-12-06
+  expect deadline(pretrial-findings-period) == 2025-11-21
+}
+
 /// LBR 7041-1: a pending adversary proceeding is dismissed 14 days after the
 /// dismissal of the underlying case unless a party, within the same period,
 /// requests otherwise by written motion.
@@ -233,10 +338,24 @@ deadline adversary-retention-motion-period: 14.days after UnderlyingCaseDismisse
 /// another entity objects or seeks to intervene or be substituted within 21
 /// days, the court may dismiss without further notice or hearing.
 deadline discharge-dismissal-objection-period: 21.days after DischargeDismissalFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7041-2(B)"
+
+test "Counting boundary: discharge-dismissal-objection-period (holiday)" cite "Bankr. S.D. Ill. LBR 7041-2(B)"
+{
+  given DischargeDismissalFiled() on 2025-12-04
+  expect deadline(discharge-dismissal-objection-period) == 2025-12-26
+}
+
 /// LBR 7056(E): the response to a motion for summary judgment and its
 /// supporting memorandum are filed within 21 days from the date the motion is
 /// filed.
 deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7056(E)"
+
+test "Counting boundary: summary-judgment-response-period (holiday)" cite "Bankr. S.D. Ill. LBR 7056(E)"
+{
+  given SummaryJudgmentMotionFiled() on 2025-12-04
+  expect deadline(summary-judgment-response-period) == 2025-12-26
+}
+
 /// LBR 7056(F): the moving party may file a reply no later than 14 days after
 /// the response is filed; further replies need leave.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 7056(F)"
@@ -248,6 +367,12 @@ deadline responsive-brief-period: 14.days after MovantBriefFiled() counted_by fr
 /// a demand for jury trial is filed, the bankruptcy judge asks the district
 /// court to withdraw the reference.
 deadline jury-consent-period: 30.days after JuryDemandFiled() counted_by frbp9006-illinois cite "Bankr. S.D. Ill. LBR 9015(C)"
+
+test "Counting boundary: jury-consent-period (holiday)" cite "Bankr. S.D. Ill. LBR 9015(C)"
+{
+  given JuryDemandFiled() on 2025-12-02
+  expect deadline(jury-consent-period) == 2026-01-02
+}
 
 start stay-relief-moved
 

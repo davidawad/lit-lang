@@ -113,14 +113,35 @@ deadline payment-advices-period: 14.days after PetitionFiled() counted_by frbp90
 /// the debtor's social security number, the debtor files a certificate of
 /// service.
 deadline corrected-ssn-certificate-period: 7.days after CorrectedSsnStatementServed() counted_by frbp9006-kentucky cite "KYEB LBR 1009-1(d)"
+
+test "Counting boundary: corrected-ssn-certificate-period (weekend)" cite "KYEB LBR 1009-1(d)"
+{
+  given CorrectedSsnStatementServed() on 2025-12-06
+  expect deadline(corrected-ssn-certificate-period) == 2025-12-15
+}
+
 /// KYEB LBR 2002-1(a): unless the Code, an FRBP or KYEB LBR 9013-1(c)
 /// provides otherwise, each party served is given at least 14 days notice
 /// of a deadline or hearing date, shown by the certificate of service.
 deadline hearing-notice-period: 14.days before HearingScheduled() counted_by frbp9006-kentucky cite "KYEB LBR 2002-1(a)"
+
+test "Counting boundary: hearing-notice-period (weekend)" cite "KYEB LBR 2002-1(a)"
+{
+  given HearingScheduled() on 2025-12-06
+  expect deadline(hearing-notice-period) == 2025-11-21
+}
+
 /// KYEB LBR 2004-1: an order on a motion for a Rule 2004 examination may be
 /// entered without a hearing unless an objection is filed within 3 days
 /// after the motion is filed.
 deadline examination-objection-period: 3.days after ExaminationMotionFiled() counted_by frbp9006-kentucky cite "KYEB LBR 2004-1"
+
+test "Counting boundary: examination-objection-period (weekend)" cite "KYEB LBR 2004-1"
+{
+  given ExaminationMotionFiled() on 2025-12-03
+  expect deadline(examination-objection-period) == 2025-12-08
+}
+
 /// KYEB LBR 2015-1(c): the chapter 7 trustee allows the U.S. Trustee at
 /// least 14 days to review the submissions before filing the motion to make
 /// an interim distribution.
@@ -149,40 +170,103 @@ deadline later-counsel-disclosure-period: 14.days after RepresentationCommenced(
 /// Clerk of the sanction within 7 days after becoming involved in a case or
 /// adversary proceeding before the court.
 deadline discipline-notice-period: 7.days after BecameInvolvedInCase() counted_by frbp9006-kentucky cite "KYEB LBR 2090-2"
+
+test "Counting boundary: discipline-notice-period (weekend)" cite "KYEB LBR 2090-2"
+{
+  given BecameInvolvedInCase() on 2025-12-06
+  expect deadline(discipline-notice-period) == 2025-12-15
+}
+
 /// KYEB LBR 2090-2: an attorney sanctioned during a matter pending before
 /// the court notifies the Clerk within 7 days after being sanctioned or
 /// disciplined.
 deadline sanction-notice-period: 7.days after AttorneySanctioned() counted_by frbp9006-kentucky cite "KYEB LBR 2090-2"
+
+test "Counting boundary: sanction-notice-period (weekend)" cite "KYEB LBR 2090-2"
+{
+  given AttorneySanctioned() on 2025-12-06
+  expect deadline(sanction-notice-period) == 2025-12-15
+}
+
 /// KYEB LBR 3015-3(a)(i): an objection to a modified chapter 13 plan is
 /// filed within 7 days after the modified plan is filed (a domestic support
 /// creditor's § 1325(a)(8) objection may be filed any time before
 /// confirmation, 3015-3(a)(ii)).
 deadline modified-plan-objection-period: 7.days after ModifiedPlanFiled() counted_by frbp9006-kentucky cite "KYEB LBR 3015-3(a)"
+
+test "Counting boundary: modified-plan-objection-period (weekend)" cite "KYEB LBR 3015-3(a)"
+{
+  given ModifiedPlanFiled() on 2025-12-06
+  expect deadline(modified-plan-objection-period) == 2025-12-15
+}
+
 /// KYEB LBR 3015-4(c): within 7 days of entry of the signed adequate
 /// protection order, the secured creditor serves it on all parties in
 /// interest and files a certificate of service.
 deadline adequate-protection-order-service-period: 7.days after AdequateProtectionOrderEntered() counted_by frbp9006-kentucky cite "KYEB LBR 3015-4(c)"
+
+test "Counting boundary: adequate-protection-order-service-period (weekend)" cite "KYEB LBR 3015-4(c)"
+{
+  given AdequateProtectionOrderEntered() on 2025-12-06
+  expect deadline(adequate-protection-order-service-period) == 2025-12-15
+}
+
 /// KYEB LBR 3017-1(b): the order setting the disclosure statement hearing
 /// fixes the deadline for objections, which ordinarily is 7 days before the
 /// hearing.
 deadline disclosure-objection-period: 7.days before DisclosureHearingScheduled() counted_by frbp9006-kentucky cite "KYEB LBR 3017-1(b)"
+
+test "Counting boundary: disclosure-objection-period (holiday)" cite "KYEB LBR 3017-1(b)"
+{
+  given DisclosureHearingScheduled() on 2025-12-04
+  expect deadline(disclosure-objection-period) == 2025-11-26
+}
+
 /// KYEB LBR 3018-2: the plan proponent files a summary of the voting
 /// results, including votes not counted, on or before 5 days before the
 /// confirmation hearing.
 deadline ballot-summary-period: 5.days before ConfirmationHearingScheduled() counted_by frbp9006-kentucky cite "KYEB LBR 3018-2"
+
+test "Counting boundary: ballot-summary-period (holiday)" cite "KYEB LBR 3018-2"
+{
+  given ConfirmationHearingScheduled() on 2025-12-02
+  expect deadline(ballot-summary-period) == 2025-11-26
+}
+
 /// KYEB LBR 3020-1(b): the Hearing Order fixes the deadline for objections
 /// to confirmation, which ordinarily is 7 days before the confirmation
 /// hearing.
 deadline confirmation-objection-period: 7.days before ConfirmationHearingScheduled() counted_by frbp9006-kentucky cite "KYEB LBR 3020-1(b)"
+
+test "Counting boundary: confirmation-objection-period (holiday)" cite "KYEB LBR 3020-1(b)"
+{
+  given ConfirmationHearingScheduled() on 2025-12-04
+  expect deadline(confirmation-objection-period) == 2025-11-26
+}
+
 /// KYEB LBR 3020-1(c): the Hearing Order fixes the time for holders of
 /// claims or interests to accept or reject the plan, which ordinarily is 7
 /// days before the confirmation hearing.
 deadline ballot-period: 7.days before ConfirmationHearingScheduled() counted_by frbp9006-kentucky cite "KYEB LBR 3020-1(c)"
+
+test "Counting boundary: ballot-period (holiday)" cite "KYEB LBR 3020-1(c)"
+{
+  given ConfirmationHearingScheduled() on 2025-12-04
+  expect deadline(ballot-period) == 2025-11-26
+}
+
 /// KYEB LBR 3071-1: unless the court orders otherwise, the proponent of a
 /// confirmed chapter 11 plan files a progress report within 45 days after
 /// entry of the confirmation order (and every 6 months thereafter until the
 /// final decree).
 deadline progress-report-period: 45.days after Chapter11ConfirmationOrderEntered() counted_by frbp9006-kentucky cite "KYEB LBR 3071-1"
+
+test "Counting boundary: progress-report-period (weekend)" cite "KYEB LBR 3071-1"
+{
+  given Chapter11ConfirmationOrderEntered() on 2025-12-03
+  expect deadline(progress-report-period) == 2026-01-20
+}
+
 /// KYEB LBR 4001-1(d): where the objection deadline in a combined stay-
 /// relief and abandonment motion expires before the meeting of creditors,
 /// the trustee has 14 days from the conclusion of the meeting to object to
@@ -198,6 +282,13 @@ deadline personal-property-amended-claim-period: 90.days after PersonalPropertyS
 /// terminating the stay, unless extended, to file an amended claim for the
 /// unpaid balance.
 deadline real-property-amended-claim-period: 210.days after RealPropertyStayTerminated() counted_by frbp9006-kentucky cite "KYEB LBR 4001-1(f)"
+
+test "Counting boundary: real-property-amended-claim-period (holiday)" cite "KYEB LBR 4001-1(f)"
+{
+  given RealPropertyStayTerminated() on 2025-12-05
+  expect deadline(real-property-amended-claim-period) == 2026-07-06
+}
+
 /// KYEB LBR 4004-3(b): a response to an individual chapter 11 debtor's
 /// Certification of Plan Completion and Request for Discharge is filed
 /// within 14 days after the certification is filed.
@@ -206,6 +297,13 @@ deadline chapter11-discharge-response-period: 14.days after Chapter11DischargeCe
 /// Completion and Request for Discharge within 30 days of the trustee's
 /// notice of plan completion.
 deadline chapter12-discharge-certification-period: 30.days after Chapter12CompletionNoticeServed() counted_by frbp9006-kentucky cite "KYEB LBR 4004-4(b)"
+
+test "Counting boundary: chapter12-discharge-certification-period (holiday)" cite "KYEB LBR 4004-4(b)"
+{
+  given Chapter12CompletionNoticeServed() on 2025-12-02
+  expect deadline(chapter12-discharge-certification-period) == 2026-01-02
+}
+
 /// KYEB LBR 4004-4(c): a response to a chapter 12 debtor's certification
 /// and request for discharge is filed within 14 days after the
 /// certification is filed.
@@ -214,6 +312,13 @@ deadline chapter12-discharge-response-period: 14.days after Chapter12DischargeCe
 /// Completion and Request for Discharge within 30 days of the trustee's
 /// notice of plan completion.
 deadline chapter13-discharge-certification-period: 30.days after Chapter13CompletionNoticeServed() counted_by frbp9006-kentucky cite "KYEB LBR 4004-5(b)"
+
+test "Counting boundary: chapter13-discharge-certification-period (holiday)" cite "KYEB LBR 4004-5(b)"
+{
+  given Chapter13CompletionNoticeServed() on 2025-12-02
+  expect deadline(chapter13-discharge-certification-period) == 2026-01-02
+}
+
 /// KYEB LBR 4004-5(c): a response to a chapter 13 debtor's certification
 /// and request for discharge is filed within 14 days after the
 /// certification is filed.
@@ -222,6 +327,13 @@ deadline chapter13-discharge-response-period: 14.days after Chapter13DischargeCe
 /// report and account is filed within 30 days of transfer of possession of
 /// the property.
 deadline custodian-report-period: 30.days after CustodianPossessionTransferred() counted_by frbp9006-kentucky cite "KYEB LBR 6002-1"
+
+test "Counting boundary: custodian-report-period (holiday)" cite "KYEB LBR 6002-1"
+{
+  given CustodianPossessionTransferred() on 2025-12-02
+  expect deadline(custodian-report-period) == 2026-01-02
+}
+
 /// KYEB LBR 9014-1(b): an objection or response to a matter noticed for
 /// hearing is filed not less than 3 days before the scheduled hearing
 /// unless the court orders otherwise.
@@ -230,10 +342,23 @@ deadline hearing-response-period: 3.days before HearingScheduled() counted_by fr
 /// judgment other than by the ECF System files a certificate of service
 /// within 7 days of its entry.
 deadline order-service-certificate-period: 7.days after OrderEntered() counted_by frbp9006-kentucky cite "KYEB LBR 9022-1(b)"
+
+test "Counting boundary: order-service-certificate-period (weekend)" cite "KYEB LBR 9022-1(b)"
+{
+  given OrderEntered() on 2025-12-06
+  expect deadline(order-service-certificate-period) == 2025-12-15
+}
+
 /// KYEB LBR 9070-1(b): an exhibit admitted at a hearing or trial that was
 /// not filed electronically beforehand is filed electronically within 3
 /// days after the hearing or trial.
 deadline admitted-exhibit-filing-period: 3.days after ExhibitHearingHeld() counted_by frbp9006-kentucky cite "KYEB LBR 9070-1(b)"
+
+test "Counting boundary: admitted-exhibit-filing-period (weekend)" cite "KYEB LBR 9070-1(b)"
+{
+  given ExhibitHearingHeld() on 2025-12-03
+  expect deadline(admitted-exhibit-filing-period) == 2025-12-08
+}
 
 test "Deadline arithmetic: payment-advices-period (14 days after)" cite "KYEB LBR 1007-1(c)"
 {

@@ -76,6 +76,11 @@ deadline hawaii-frcrimp45-kuhio-two-business-days: 2.business_days after Served(
 deadline hawaii-frcrimp45-kuhio-backward: 1.days before Scheduled() counted_by frcrimp45-hawaii
 deadline hawaii-frcrimp45-electronic: 0.days after Served() counted_by frcrimp45-hawaii
 
+test "Counting boundary: hawaii-frcrimp45-electronic (weekend)" {
+  given Served(Personal) on 2023-12-02
+  expect deadline(hawaii-frcrimp45-electronic) == 2023-12-04
+}
+
 test "a forward criminal period skips Prince Kuhio Day" cite "HRS § 8-1"
 {
   given Served(Personal) on 2027-03-25

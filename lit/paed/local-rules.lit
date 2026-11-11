@@ -62,6 +62,13 @@ event MagistrateObjectionsServed()
 /// Service, files and serves a dispositive motion or the Certified
 /// Administrative Record, which is deemed an answer.
 deadline social-security-response-period: 60.days after SocialSecurityDateOfService() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 4.1.3(c)"
+
+test "Counting boundary: social-security-response-period (weekend)" cite "E.D. Pa. L. Civ. R. 4.1.3(c)"
+{
+  given SocialSecurityDateOfService() on 2023-12-05
+  expect deadline(social-security-response-period) == 2024-02-05
+}
+
 /// LR 7.1(c): unless the court directs otherwise, a party opposing a
 /// motion serves a brief in opposition within fourteen days after service
 /// of the motion and supporting brief; a party intending to amend under
@@ -84,6 +91,13 @@ deadline third-party-joinder-period: 90.days after MovantAnswerServed() counted_
 /// application showing good cause is filed within thirty days from the
 /// date of the notice.
 deadline inactivity-application-period: 30.days after InactivityNoticeSent() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 41.1(a)"
+
+test "Counting boundary: inactivity-application-period (weekend)" cite "E.D. Pa. L. Civ. R. 41.1(a)"
+{
+  given InactivityNoticeSent() on 2023-12-01
+  expect deadline(inactivity-application-period) == 2024-01-02
+}
+
 /// LR 41.1(b): an order dismissing a settled action may be vacated,
 /// modified or stricken for good cause on an application served within
 /// ninety days of its entry, so far as consistent with FRCP 60(c).
@@ -91,6 +105,13 @@ deadline settlement-dismissal-vacatur-period: 90.days after SettlementDismissalE
 /// LR 53.2(7)(A): within thirty days after the arbitration award is
 /// entered on the docket, any party may demand a trial de novo.
 deadline trial-de-novo-demand-period: 30.days after ArbitrationAwardEntered() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 53.2"
+
+test "Counting boundary: trial-de-novo-demand-period (weekend)" cite "E.D. Pa. L. Civ. R. 53.2"
+{
+  given ArbitrationAwardEntered() on 2023-12-01
+  expect deadline(trial-de-novo-demand-period) == 2024-01-02
+}
+
 /// LR 54.1(a)(1), (3): a party requesting taxation of costs files its
 /// notice (form AO133) within seventy-five days of the entry of final
 /// judgment, unless the court orders otherwise; failure waives costs. The
@@ -103,6 +124,13 @@ deadline costs-objection-period: 14.days after CostsNoticeServed() counted_by fr
 /// LR 54.1(a)(7): a party appeals the Clerk's taxation of costs by motion
 /// to the court within seven days of the taxation, under FRCP 54(d)(1).
 deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6-pennsylvania cite "E.D. Pa. L. Civ. R. 54.1(a)"
+
+test "Counting boundary: costs-review-period (weekend)" cite "E.D. Pa. L. Civ. R. 54.1(a)"
+{
+  given CostsTaxed() on 2023-12-02
+  expect deadline(costs-review-period) == 2023-12-11
+}
+
 /// LR 72.1(IV)(a): a party may object to a magistrate judge's order on a
 /// non-dispositive matter within fourteen days after its issuance, unless
 /// the magistrate judge or a judge prescribes a different time.

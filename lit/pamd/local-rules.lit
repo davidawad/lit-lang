@@ -125,10 +125,24 @@ deadline opposition-period: 14.days after SupportingBriefServed() counted_by frc
 /// LR 7.6: where the rules require no supporting brief, the opposition is
 /// due within seven days after service of the motion.
 deadline briefless-opposition-period: 7.days after BrieflessMotionServed() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 7.6"
+
+test "Counting boundary: briefless-opposition-period (weekend)" cite "M.D. Pa. L.R. 7.6"
+{
+  given BrieflessMotionServed() on 2023-12-02
+  expect deadline(briefless-opposition-period) == 2023-12-11
+}
+
 /// LR 7.6: a brief in opposition to a motion for summary judgment, with the
 /// LR 56.1 responsive statement, is due within twenty-one days after
 /// service of the movant's brief.
 deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentBriefServed() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 7.6"
+
+test "Counting boundary: summary-judgment-opposition-period (weekend)" cite "M.D. Pa. L.R. 7.6"
+{
+  given SummaryJudgmentBriefServed() on 2023-12-02
+  expect deadline(summary-judgment-opposition-period) == 2023-12-26
+}
+
 /// LR 7.7: the movant may file a reply brief within fourteen days after
 /// service of the brief in opposition; no further brief without leave.
 deadline reply-period: 14.days after OppositionBriefServed() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 7.7"
@@ -148,19 +162,54 @@ deadline third-party-joinder-answer-period: 6.months after MovantAnswerServed() 
 /// a new defendant files and serves it within thirty days after the date of
 /// the order granting leave.
 deadline amended-pleading-new-defendant-period: 30.days after LeaveToAddDefendantGranted() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 15.1(a)"
+
+test "Counting boundary: amended-pleading-new-defendant-period (weekend)" cite "M.D. Pa. L.R. 15.1(a)"
+{
+  given LeaveToAddDefendantGranted() on 2023-12-01
+  expect deadline(amended-pleading-new-defendant-period) == 2024-01-02
+}
+
 /// LR 16.3(a): lead counsel confer at least fourteen days before the
 /// initial case management conference.
 deadline case-management-conference-meeting: 14.days before CaseManagementConferenceHeld() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 16.3(a)"
+
+test "Counting boundary: case-management-conference-meeting (weekend)" cite "M.D. Pa. L.R. 16.3(a)"
+{
+  given CaseManagementConferenceHeld() on 2023-12-02
+  expect deadline(case-management-conference-meeting) == 2023-11-17
+}
+
 /// LR 16.3(a): the joint case management form, which is the FRCP 26(f)
 /// discovery plan, is filed seven days before the case management
 /// conference.
 deadline case-management-statement: 7.days before CaseManagementConferenceHeld() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 16.3(a)"
+
+test "Counting boundary: case-management-statement (weekend)" cite "M.D. Pa. L.R. 16.3(a)"
+{
+  given CaseManagementConferenceHeld() on 2023-12-02
+  expect deadline(case-management-statement) == 2023-11-24
+}
+
 /// LR 16.3(b): lead counsel meet and confer at least fourteen calendar days
 /// before the final pretrial conference.
 deadline final-pretrial-meeting: 14.days before FinalPretrialConferenceHeld() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 16.3(b)"
+
+test "Counting boundary: final-pretrial-meeting (weekend)" cite "M.D. Pa. L.R. 16.3(b)"
+{
+  given FinalPretrialConferenceHeld() on 2023-12-02
+  expect deadline(final-pretrial-meeting) == 2023-11-17
+}
+
 /// LR 16.6: each party files and serves its pretrial memorandum at least
 /// seven days before the final pretrial conference.
 deadline pretrial-memorandum: 7.days before FinalPretrialConferenceHeld() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 16.6"
+
+test "Counting boundary: pretrial-memorandum (weekend)" cite "M.D. Pa. L.R. 16.6"
+{
+  given FinalPretrialConferenceHeld() on 2023-12-02
+  expect deadline(pretrial-memorandum) == 2023-11-24
+}
+
 /// LR 23.3: within ninety days after filing a class action complaint,
 /// unless extended for good cause, the plaintiff moves for a determination
 /// under FRCP 23(c)(1).
@@ -172,10 +221,24 @@ deadline discovery-close-period: 6.months after LastPleadingFiled() counted_by f
 /// LR 54.3: a bill of costs is filed no later than thirty days after entry
 /// of final judgment, unless an extension is granted.
 deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 54.3"
+
+test "Counting boundary: bill-of-costs-period (weekend)" cite "M.D. Pa. L.R. 54.3"
+{
+  given FinalJudgmentEntered() on 2023-12-01
+  expect deadline(bill-of-costs-period) == 2024-01-02
+}
+
 /// LR 54.3: a party appealing the clerk's taxation files a written
 /// specification of the items objected to and the grounds within seven
 /// days of the taxation, and serves it within seven days.
 deadline costs-appeal-period: 7.days after CostsTaxed() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 54.3"
+
+test "Counting boundary: costs-appeal-period (weekend)" cite "M.D. Pa. L.R. 54.3"
+{
+  given CostsTaxed() on 2023-12-02
+  expect deadline(costs-appeal-period) == 2023-12-11
+}
+
 /// LR 72.2: a party may appeal a magistrate judge's non-dispositive order
 /// within fourteen days after its issuance, unless the magistrate judge or
 /// a judge prescribes a different time, filing a brief with the appeal.
@@ -186,6 +249,13 @@ deadline magistrate-response-brief-period: 14.days after MagistrateAppealBriefSe
 /// LR 72.2, 72.3: a reply brief may be filed within seven days after
 /// service of the opposing party's brief.
 deadline magistrate-reply-brief-period: 7.days after MagistrateResponseBriefServed() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 72.2"
+
+test "Counting boundary: magistrate-reply-brief-period (weekend)" cite "M.D. Pa. L.R. 72.2"
+{
+  given MagistrateResponseBriefServed() on 2023-12-02
+  expect deadline(magistrate-reply-brief-period) == 2023-12-11
+}
+
 /// LR 72.3: a party may object to a magistrate judge's proposed findings,
 /// recommendations or report within fourteen days after being served with
 /// it.
@@ -197,12 +267,33 @@ deadline social-security-service-period: 14.days after SocialSecurityComplaintFi
 /// copy of the administrative transcript within sixty days of service of
 /// the complaint.
 deadline social-security-answer-period: 60.days after SocialSecurityComplaintServed() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 83.40.3"
+
+test "Counting boundary: social-security-answer-period (weekend)" cite "M.D. Pa. L.R. 83.40.3"
+{
+  given SocialSecurityComplaintServed() on 2023-12-05
+  expect deadline(social-security-answer-period) == 2024-02-05
+}
+
 /// LR 83.40.4: the plaintiff serves and files a brief within forty-five days
 /// of service of the defendant's answer.
 deadline social-security-plaintiff-brief-period: 45.days after SocialSecurityAnswerServed() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 83.40.4"
+
+test "Counting boundary: social-security-plaintiff-brief-period (holiday)" cite "M.D. Pa. L.R. 83.40.4"
+{
+  given SocialSecurityAnswerServed() on 2023-12-01
+  expect deadline(social-security-plaintiff-brief-period) == 2024-01-16
+}
+
 /// LR 83.40.5: the defendant files and serves its brief within thirty days
 /// after service of the plaintiff's brief.
 deadline social-security-defendant-brief-period: 30.days after SocialSecurityPlaintiffBriefServed() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 83.40.5"
+
+test "Counting boundary: social-security-defendant-brief-period (weekend)" cite "M.D. Pa. L.R. 83.40.5"
+{
+  given SocialSecurityPlaintiffBriefServed() on 2023-12-01
+  expect deadline(social-security-defendant-brief-period) == 2024-01-02
+}
+
 /// LR 83.40.6: the plaintiff may file and serve a reply within fourteen days
 /// of the filing of the defendant's brief.
 deadline social-security-reply-period: 14.days after SocialSecurityDefendantBriefFiled() counted_by frcp6-pennsylvania cite "M.D. Pa. L.R. 83.40.6"

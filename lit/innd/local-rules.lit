@@ -117,97 +117,250 @@ event ProposedFindingsServed()
 /// constitutionality. The period below is the 21-day branch; a later
 /// case-management plan tender moves the deadline to that day.
 deadline constitutional-question-notice-period: 21.days after ConstitutionalChallengeFiled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 5.1-1(a)"
+
+test "Counting boundary: constitutional-question-notice-period (weekend)" cite "N.D. Ind. L.R. 5.1-1(a)"
+{
+  given ConstitutionalChallengeFiled() on 2023-12-02
+  expect deadline(constitutional-question-notice-period) == 2023-12-26
+}
+
 /// N.D. Ind. L.R. 7-1(d)(2)(A): a party files any response brief to a
 /// motion under FRCP 12 within 21 days after the motion is served, unless
 /// it is entitled to and first files an amended pleading as a matter of
 /// course under FRCP 15(a)(1).
 deadline rule12-response-period: 21.days after Rule12MotionServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-1(d)(2)"
+
+test "Counting boundary: rule12-response-period (weekend)" cite "N.D. Ind. L.R. 7-1(d)(2)"
+{
+  given Rule12MotionServed() on 2023-12-02
+  expect deadline(rule12-response-period) == 2023-12-26
+}
+
 /// N.D. Ind. L.R. 7-1(d)(2)(B): the moving party files any reply brief
 /// within 7 days after the response brief is served.
 deadline rule12-reply-period: 7.days after Rule12ResponseServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-1(d)(2)"
+
+test "Counting boundary: rule12-reply-period (weekend)" cite "N.D. Ind. L.R. 7-1(d)(2)"
+{
+  given Rule12ResponseServed() on 2023-12-02
+  expect deadline(rule12-reply-period) == 2023-12-11
+}
+
 /// N.D. Ind. L.R. 7-1(d)(3)(A): a party files any response brief to any
 /// other motion within 14 days after the motion is served; summary-judgment
 /// motions follow L.R. 56-1(b) and (c) (L.R. 7-1(d)(1)). The court may
 /// rule summarily if no response is filed before the deadline (L.R.
 /// 7-1(d)(5)).
 deadline motion-response-period: 14.days after MotionServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-1(d)(3)"
+
+test "Counting boundary: motion-response-period (weekend)" cite "N.D. Ind. L.R. 7-1(d)(3)"
+{
+  given MotionServed() on 2023-12-02
+  expect deadline(motion-response-period) == 2023-12-18
+}
+
 /// N.D. Ind. L.R. 7-1(d)(3)(B): the moving party files any reply brief
 /// within 7 days after the response brief is served.
 deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-1(d)(3)"
+
+test "Counting boundary: motion-reply-period (weekend)" cite "N.D. Ind. L.R. 7-1(d)(3)"
+{
+  given ResponseServed() on 2023-12-02
+  expect deadline(motion-reply-period) == 2023-12-11
+}
+
 /// N.D. Ind. L.R. 7-3(b): a person challenging an agency determination on
 /// entitlement to Social Security benefits files an opening brief within
 /// 42 days after the administrative record is filed.
 deadline social-security-opening-brief-period: 42.days after AdministrativeRecordFiled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-3(b)"
+
+test "Counting boundary: social-security-opening-brief-period (weekend)" cite "N.D. Ind. L.R. 7-3(b)"
+{
+  given AdministrativeRecordFiled() on 2023-12-02
+  expect deadline(social-security-opening-brief-period) == 2024-01-16
+}
+
 /// N.D. Ind. L.R. 7-3(c): any response brief is filed within 42 days after
 /// the opening brief.
 deadline social-security-response-period: 42.days after SocialSecurityOpeningBriefFiled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-3(c)"
+
+test "Counting boundary: social-security-response-period (weekend)" cite "N.D. Ind. L.R. 7-3(c)"
+{
+  given SocialSecurityOpeningBriefFiled() on 2023-12-02
+  expect deadline(social-security-response-period) == 2024-01-16
+}
+
 /// N.D. Ind. L.R. 7-3(d): any reply brief is filed within 14 days after the
 /// response brief.
 deadline social-security-reply-period: 14.days after SocialSecurityResponseFiled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 7-3(d)"
+
+test "Counting boundary: social-security-reply-period (weekend)" cite "N.D. Ind. L.R. 7-3(d)"
+{
+  given SocialSecurityResponseFiled() on 2023-12-02
+  expect deadline(social-security-reply-period) == 2023-12-18
+}
+
 /// N.D. Ind. L.R. 30-1(b): attorneys schedule depositions with at least 14
 /// days' notice, unless opposing counsel agrees to shorter notice or the
 /// court orders otherwise.
 deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 30-1(b)"
+
+test "Counting boundary: deposition-notice-period (weekend)" cite "N.D. Ind. L.R. 30-1(b)"
+{
+  given DepositionScheduled() on 2023-12-02
+  expect deadline(deposition-notice-period) == 2023-11-17
+}
+
 /// N.D. Ind. L.R. 40-1(g)(2): a case remanded for a new trial under Seventh
 /// Circuit Rule 36 is reassigned under L.R. 40-1(f) unless the remand order
 /// directs otherwise or, within 14 days after the mandate for a new trial
 /// is docketed, all parties file a request that the previously assigned
 /// judge retry it.
 deadline retrial-judge-request-period: 14.days after NewTrialMandateDocketed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 40-1(g)"
+
+test "Counting boundary: retrial-judge-request-period (weekend)" cite "N.D. Ind. L.R. 40-1(g)"
+{
+  given NewTrialMandateDocketed() on 2023-12-02
+  expect deadline(retrial-judge-request-period) == 2023-12-18
+}
+
 /// N.D. Ind. L.R. 47-3(b): the court may not assess juror costs if, at
 /// least one full business day before the trial is set to begin, the clerk
 /// is notified of the circumstances causing delay.
 deadline jury-cost-notice-period: 1.court_days before TrialBegins() counted_by frcp6-indiana cite "N.D. Ind. L.R. 47-3(b)"
+
+test "Counting boundary: jury-cost-notice-period (weekend)" cite "N.D. Ind. L.R. 47-3(b)"
+{
+  given TrialBegins() on 2023-12-03
+  expect deadline(jury-cost-notice-period) == 2023-12-01
+}
+
 /// N.D. Ind. L.R. 54-1(a): to recover costs, a party files and serves a
 /// completed AO Form 133 within 14 days after final judgment is entered.
 /// The court may extend the 14 days for good cause if the party moves
 /// before the original deadline (L.R. 54-1(b)).
 deadline cost-bill-period: 14.days after FinalJudgmentEntered() counted_by frcp6-indiana cite "N.D. Ind. L.R. 54-1(a)"
+
+test "Counting boundary: cost-bill-period (weekend)" cite "N.D. Ind. L.R. 54-1(a)"
+{
+  given FinalJudgmentEntered() on 2023-12-02
+  expect deadline(cost-bill-period) == 2023-12-18
+}
+
 /// N.D. Ind. L.R. 56-1(b): a party opposing summary judgment, within 28
 /// days after the moving party served the motion, separately files a
 /// response brief and a Response to Statement of Material Facts.
 deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 56-1(b)"
+
+test "Counting boundary: summary-judgment-response-period (weekend)" cite "N.D. Ind. L.R. 56-1(b)"
+{
+  given SummaryJudgmentMotionServed() on 2023-12-02
+  expect deadline(summary-judgment-response-period) == 2024-01-02
+}
+
 /// N.D. Ind. L.R. 56-1(c): the moving party may, within 14 days after a
 /// response is served, separately file a reply brief and a Reply to
 /// Statement of Additional Material Facts; additional briefs need leave of
 /// court (L.R. 56-1(d)).
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 56-1(c)"
+
+test "Counting boundary: summary-judgment-reply-period (weekend)" cite "N.D. Ind. L.R. 56-1(c)"
+{
+  given SummaryJudgmentResponseServed() on 2023-12-02
+  expect deadline(summary-judgment-reply-period) == 2023-12-18
+}
+
 /// N.D. Ind. L.R. 66-1(b)(1): within 28 days after taking possession of an
 /// estate, the court-appointed officer files an inventory and appraisal of
 /// the estate's property and assets and, on a separate schedule, an
 /// inventory of those held by others. The court may alter the deadline
 /// (L.R. 66-1(e)).
 deadline receiver-inventory-period: 28.days after EstatePossessionTaken() counted_by frcp6-indiana cite "N.D. Ind. L.R. 66-1(b)"
+
+test "Counting boundary: receiver-inventory-period (weekend)" cite "N.D. Ind. L.R. 66-1(b)"
+{
+  given EstatePossessionTaken() on 2023-12-02
+  expect deadline(receiver-inventory-period) == 2024-01-02
+}
+
 /// N.D. Ind. L.R. 66-1(b)(2): within 28 days after the inventory is filed,
 /// and every three months after that, the officer files a report of its
 /// acts and an accounting. The period below is the first report.
 deadline receiver-first-report-period: 28.days after EstateInventoryFiled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 66-1(b)"
+
+test "Counting boundary: receiver-first-report-period (weekend)" cite "N.D. Ind. L.R. 66-1(b)"
+{
+  given EstateInventoryFiled() on 2023-12-02
+  expect deadline(receiver-first-report-period) == 2024-01-02
+}
+
 /// N.D. Ind. L.R. 83-6.8(b): the disciplined attorney shows cause within
 /// 30 days after the order is served why the court should not impose
 /// identical discipline (other than a fine).
 deadline identical-discipline-show-cause-period: 30.days after IdenticalDisciplineOrderServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 83-6.8(b)"
+
+test "Counting boundary: identical-discipline-show-cause-period (weekend)" cite "N.D. Ind. L.R. 83-6.8(b)"
+{
+  given IdenticalDisciplineOrderServed() on 2023-12-01
+  expect deadline(identical-discipline-show-cause-period) == 2024-01-02
+}
+
 /// N.D. Ind. L.R. 83-7(c): an attorney who accepts a request to represent
 /// an indigent party enters an appearance for the party within 14 days
 /// after accepting the request.
 deadline appointed-appearance-period: 14.days after AppointmentAccepted() counted_by frcp6-indiana cite "N.D. Ind. L.R. 83-7(c)"
+
+test "Counting boundary: appointed-appearance-period (weekend)" cite "N.D. Ind. L.R. 83-7(c)"
+{
+  given AppointmentAccepted() on 2023-12-02
+  expect deadline(appointed-appearance-period) == 2023-12-18
+}
+
 /// N.D. Ind. L.R. 83-7(e)(1): appointed counsel may seek reimbursement of
 /// reasonable expenses by petition filed before they are incurred or
 /// within 90 days after they were incurred.
 deadline appointed-expense-petition-period: 90.days after AppointmentExpenseIncurred() counted_by frcp6-indiana cite "N.D. Ind. L.R. 83-7(e)"
+
+test "Counting boundary: appointed-expense-petition-period (weekend)" cite "N.D. Ind. L.R. 83-7(e)"
+{
+  given AppointmentExpenseIncurred() on 2023-12-03
+  expect deadline(appointed-expense-petition-period) == 2024-03-04
+}
+
 /// N.D. Ind. L.R. 83-8(b): attorneys who are not bar members comply with
 /// the court's admission policy (L.R. 83-5) within 21 days of removal or
 /// transfer.
 deadline removal-admission-period: 21.days after CaseRemovedOrTransferred() counted_by frcp6-indiana cite "N.D. Ind. L.R. 83-8(b)"
+
+test "Counting boundary: removal-admission-period (weekend)" cite "N.D. Ind. L.R. 83-8(b)"
+{
+  given CaseRemovedOrTransferred() on 2023-12-02
+  expect deadline(removal-admission-period) == 2023-12-26
+}
+
 /// N.D. Ind. L.R. 83-8(c)(1): unless another attorney has appeared for the
 /// party, a motion to withdraw an appearance includes evidence that the
 /// attorney gave the party written notice of the intent to withdraw at
 /// least seven days before filing the motion.
 deadline withdrawal-notice-period: 7.days before WithdrawalMotionFiled() counted_by frcp6-indiana cite "N.D. Ind. L.R. 83-8(c)"
+
+test "Counting boundary: withdrawal-notice-period (weekend)" cite "N.D. Ind. L.R. 83-8(c)"
+{
+  given WithdrawalMotionFiled() on 2023-12-02
+  expect deadline(withdrawal-notice-period) == 2023-11-24
+}
+
 /// N.D. Ind. L.R. 200-1(a)(3)(B): within 14 days of service of a
 /// bankruptcy judge's proposed findings and conclusions, any party may file
 /// objections with the bankruptcy clerk; the district judge reviews de
 /// novo the matters timely and specifically objected to.
 deadline proposed-findings-objection-period: 14.days after ProposedFindingsServed() counted_by frcp6-indiana cite "N.D. Ind. L.R. 200-1(a)"
+
+test "Counting boundary: proposed-findings-objection-period (weekend)" cite "N.D. Ind. L.R. 200-1(a)"
+{
+  given ProposedFindingsServed() on 2023-12-02
+  expect deadline(proposed-findings-objection-period) == 2023-12-18
+}
 
 test "Deadline arithmetic: constitutional-question-notice-period (21 days after)" cite "N.D. Ind. L.R. 5.1-1(a)"
 {

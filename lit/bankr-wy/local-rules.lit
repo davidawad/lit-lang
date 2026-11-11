@@ -111,6 +111,13 @@ event ProposedOrderSubmitted()
 /// creditor, the filer serves the added creditor with each notice
 /// previously served on all creditors and files a certificate of service.
 deadline added-creditor-notice-period: 7.days after CreditorAddedByAmendment() counted_by frbp9006-wyoming cite "Wyoming LBR 1009-1(C)"
+
+test "Counting boundary: added-creditor-notice-period (weekend)" cite "Wyoming LBR 1009-1(C)"
+{
+  given CreditorAddedByAmendment() on 2025-12-06
+  expect deadline(added-creditor-notice-period) == 2025-12-15
+}
+
 /// Wyoming LBR 1019-1(B): professionals entitled to fees for pre-conversion
 /// services in a case converted from chapter 11, 12 or 13 to chapter 7 file
 /// their applications within 40 days after entry of the order converting
@@ -125,48 +132,125 @@ deadline notice-service-period: 24.days before NoticeDeadline() counted_by frbp9
 /// objection before court action, the movant allows interested parties at
 /// least 17 days, including three days for mailing, to object.
 deadline objection-period: 17.days after MotionServed() counted_by frbp9006-wyoming cite "Wyoming LBR 2002-1(B)"
+
+test "Counting boundary: objection-period (weekend)" cite "Wyoming LBR 2002-1(B)"
+{
+  given MotionServed() on 2025-12-03
+  expect deadline(objection-period) == 2025-12-22
+}
+
 /// Wyoming LBR 2004-1: absent agreement, the date of a Rule 2004
 /// examination or production may not be sooner than 14 days after service
 /// of the order on the party to whom it is directed.
 deadline examination-order-period: 14.days after ExaminationOrderServed() counted_by frbp9006-wyoming cite "Wyoming LBR 2004-1"
+
+test "Counting boundary: examination-order-period (weekend)" cite "Wyoming LBR 2004-1"
+{
+  given ExaminationOrderServed() on 2025-12-06
+  expect deadline(examination-order-period) == 2025-12-22
+}
+
 /// Wyoming LBR 2015-3(A): within 21 days of an order authorizing a trustee
 /// to operate a business, the trustee establishes a separate account for
 /// trust fund taxes.
 deadline trustee-tax-account-period: 21.days after TrusteeOperationAuthorized() counted_by frbp9006-wyoming cite "Wyoming LBR 2015-3(A)"
+
+test "Counting boundary: trustee-tax-account-period (holiday)" cite "Wyoming LBR 2015-3(A)"
+{
+  given TrusteeOperationAuthorized() on 2025-12-04
+  expect deadline(trustee-tax-account-period) == 2025-12-26
+}
+
 /// Wyoming LBR 2015-3(B): if applicable, within 21 days from the filing of
 /// a chapter 11 petition, the debtor in possession establishes a separate
 /// trust account for fiduciary tax deposits.
 deadline debtor-tax-account-period: 21.days after PetitionFiled() counted_by frbp9006-wyoming cite "Wyoming LBR 2015-3(B)"
+
+test "Counting boundary: debtor-tax-account-period (holiday)" cite "Wyoming LBR 2015-3(B)"
+{
+  given PetitionFiled() on 2025-12-04
+  expect deadline(debtor-tax-account-period) == 2025-12-26
+}
+
 /// Wyoming LBR 2015-3(C): written notice of the trust account's bank and
 /// number is mailed to the Internal Revenue Service and the United States
 /// trustee within seven days from the date the account is opened.
 deadline tax-account-notice-period: 7.days after TaxAccountOpened() counted_by frbp9006-wyoming cite "Wyoming LBR 2015-3(C)"
+
+test "Counting boundary: tax-account-notice-period (weekend)" cite "Wyoming LBR 2015-3(C)"
+{
+  given TaxAccountOpened() on 2025-12-06
+  expect deadline(tax-account-notice-period) == 2025-12-15
+}
+
 /// Wyoming LBR 2015-3(C): Form 6123, Verification of Fiduciary's Federal
 /// Tax Deposit, is filed with the Internal Revenue Service within two days
 /// of making the required deposits, with a copy to the United States
 /// trustee.
 deadline tax-deposit-verification-period: 2.days after TaxDepositMade() counted_by frbp9006-wyoming cite "Wyoming LBR 2015-3(C)"
+
+test "Counting boundary: tax-deposit-verification-period (weekend)" cite "Wyoming LBR 2015-3(C)"
+{
+  given TaxDepositMade() on 2025-12-04
+  expect deadline(tax-deposit-verification-period) == 2025-12-08
+}
+
 /// Wyoming LBR 2016-1(B): the notice of a fee application, including one
 /// under § 506(b), sets a time for objections 24 days after the date the
 /// application is served.
 deadline fee-application-objection-period: 24.days after FeeApplicationServed() counted_by frbp9006-wyoming cite "Wyoming LBR 2016-1(B)"
+
+test "Counting boundary: fee-application-objection-period (holiday)" cite "Wyoming LBR 2016-1(B)"
+{
+  given FeeApplicationServed() on 2025-12-01
+  expect deadline(fee-application-objection-period) == 2025-12-26
+}
+
 /// Wyoming LBR 2016-1(C): all fee applications in chapter 13 cases are
 /// filed within 30 days after confirmation of the plan or entry of an order
 /// modifying it; untimely applications are summarily denied absent cause.
 deadline chapter-13-fee-application-period: 30.days after PlanConfirmed() counted_by frbp9006-wyoming cite "Wyoming LBR 2016-1(C)"
+
+test "Counting boundary: chapter-13-fee-application-period (holiday)" cite "Wyoming LBR 2016-1(C)"
+{
+  given PlanConfirmed() on 2025-12-02
+  expect deadline(chapter-13-fee-application-period) == 2026-01-02
+}
+
 /// Wyoming LBR 2083-1(B): a chapter 13 debtor gives the trustee 14 days'
 /// written notice before incurring new debt, or in an emergency notice
 /// within 14 days after incurring it with an explanation.
 deadline emergency-debt-notice-period: 14.days after NewDebtIncurred() counted_by frbp9006-wyoming cite "Wyoming LBR 2083-1(B)"
+
+test "Counting boundary: emergency-debt-notice-period (weekend)" cite "Wyoming LBR 2083-1(B)"
+{
+  given NewDebtIncurred() on 2025-12-06
+  expect deadline(emergency-debt-notice-period) == 2025-12-22
+}
+
 /// Wyoming LBR 3007-1(B): claim objections in a chapter 13 case are filed
 /// and served within 21 days from the last day to file non-governmental
 /// claims, unless brought because the claim was untimely.
 deadline chapter-13-claim-objection-period: 21.days after NonGovernmentalBarDate() counted_by frbp9006-wyoming cite "Wyoming LBR 3007-1(B)"
+
+test "Counting boundary: chapter-13-claim-objection-period (holiday)" cite "Wyoming LBR 3007-1(B)"
+{
+  given NonGovernmentalBarDate() on 2025-12-04
+  expect deadline(chapter-13-claim-objection-period) == 2025-12-26
+}
+
 /// Wyoming LBR 3015-3(B): an amended plan resolving objections with a
 /// motion to vacate the confirmation hearing, or a motion to vacate on
 /// withdrawing the initial plan, is filed and served not less than four
 /// days prior to the scheduled hearing.
 deadline plan-withdrawal-vacate-period: 4.days before ConfirmationHearing() counted_by frbp9006-wyoming cite "Wyoming LBR 3015-3(B)"
+
+test "Counting boundary: plan-withdrawal-vacate-period (holiday)" cite "Wyoming LBR 3015-3(B)"
+{
+  given ConfirmationHearing() on 2025-12-01
+  expect deadline(plan-withdrawal-vacate-period) == 2025-11-26
+}
+
 /// Wyoming LBR 3015-3(B): a debtor who withdraws the initial chapter 13
 /// plan files and serves an amended plan within five days of the
 /// withdrawal.
@@ -181,14 +265,35 @@ deadline amended-plan-notice-period: 31.days before NoticeDeadline() counted_by 
 /// time for filing objections to confirmation and states the preliminary
 /// and final hearing dates.
 deadline chapter-12-plan-objection-period: 31.days after ChapterTwelveNoticeServed() counted_by frbp9006-wyoming cite "Wyoming LBR 3015-4(C)"
+
+test "Counting boundary: chapter-12-plan-objection-period (holiday)" cite "Wyoming LBR 3015-4(C)"
+{
+  given ChapterTwelveNoticeServed() on 2025-12-01
+  expect deadline(chapter-12-plan-objection-period) == 2026-01-02
+}
+
 /// Wyoming LBR 3020-1(A): not less than seven days before the chapter 11
 /// confirmation hearing, the plan proponent files a ballot report tallying
 /// the ballots by class.
 deadline ballot-report-period: 7.days before ConfirmationHearing() counted_by frbp9006-wyoming cite "Wyoming LBR 3020-1(A)"
+
+test "Counting boundary: ballot-report-period (holiday)" cite "Wyoming LBR 3020-1(A)"
+{
+  given ConfirmationHearing() on 2025-12-04
+  expect deadline(ballot-report-period) == 2025-11-26
+}
+
 /// Wyoming LBR 3022-1(A): the movant gives the United States trustee a
 /// 21-day notice to object to the chapter 11 final report and motion for
 /// entry of a final decree.
 deadline final-decree-objection-period: 21.days after FinalReportFiled() counted_by frbp9006-wyoming cite "Wyoming LBR 3022-1(A)"
+
+test "Counting boundary: final-decree-objection-period (holiday)" cite "Wyoming LBR 3022-1(A)"
+{
+  given FinalReportFiled() on 2025-12-04
+  expect deadline(final-decree-objection-period) == 2025-12-26
+}
+
 /// Wyoming LBR 3022-1(D): before the motion for a final decree, and no
 /// later than four months after entry of the confirmation order, the debtor
 /// or chapter 11 trustee ensures each professional files a final fee
@@ -197,9 +302,23 @@ deadline final-fee-application-period: 4.months after ChapterElevenConfirmed() c
 /// Wyoming LBR 4001-1(A): the notice following a stay relief motion sets a
 /// 17-day time to object, including three days for mailing.
 deadline stay-relief-objection-period: 17.days after StayReliefMotionFiled() counted_by frbp9006-wyoming cite "Wyoming LBR 4001-1(A)"
+
+test "Counting boundary: stay-relief-objection-period (weekend)" cite "Wyoming LBR 4001-1(A)"
+{
+  given StayReliefMotionFiled() on 2025-12-03
+  expect deadline(stay-relief-objection-period) == 2025-12-22
+}
+
 /// Wyoming LBR 4003-1(B): a debtor opposing an objection to exemptions
 /// files a response at least seven days before the scheduled hearing.
 deadline exemption-response-period: 7.days before ExemptionHearing() counted_by frbp9006-wyoming cite "Wyoming LBR 4003-1(B)"
+
+test "Counting boundary: exemption-response-period (holiday)" cite "Wyoming LBR 4003-1(B)"
+{
+  given ExemptionHearing() on 2025-12-04
+  expect deadline(exemption-response-period) == 2025-11-26
+}
+
 /// Wyoming LBR 6070-1(A): the Internal Revenue Service serves notice of a §
 /// 362(b)(26) setoff on the debtor, the debtor's attorney and the trustee
 /// within 40 days after the setoff.
@@ -207,45 +326,122 @@ deadline setoff-notice-period: 40.days after SetoffMade() counted_by frbp9006-wy
 /// Wyoming LBR 7026-1(B): notices of depositions under FRBP 7030 are served
 /// more than 14 days before the scheduled date.
 deadline deposition-notice-period: 14.days before DepositionDate() counted_by frbp9006-wyoming cite "Wyoming LBR 7026-1(B)"
+
+test "Counting boundary: deposition-notice-period (weekend)" cite "Wyoming LBR 7026-1(B)"
+{
+  given DepositionDate() on 2025-12-06
+  expect deadline(deposition-notice-period) == 2025-11-21
+}
+
 /// Wyoming LBR 7026-1(C): a motion under FRBP 2004 or FRCP 26(c), 30(d) or
 /// 45(c), which stays the discovery, is filed and served no less than seven
 /// days before a scheduled deposition.
 deadline discovery-motion-period: 7.days before DepositionDate() counted_by frbp9006-wyoming cite "Wyoming LBR 7026-1(C)"
+
+test "Counting boundary: discovery-motion-period (holiday)" cite "Wyoming LBR 7026-1(C)"
+{
+  given DepositionDate() on 2025-12-04
+  expect deadline(discovery-motion-period) == 2025-11-26
+}
+
 /// Wyoming LBR 7054-1: within 21 days after entry of a final judgment, a
 /// party entitled to costs may file a Certificate for Clerk to Tax Costs
 /// with an itemized statement and affidavit.
 deadline costs-certificate-period: 21.days after FinalJudgmentEntered() counted_by frbp9006-wyoming cite "Wyoming LBR 7054-1"
+
+test "Counting boundary: costs-certificate-period (holiday)" cite "Wyoming LBR 7054-1"
+{
+  given FinalJudgmentEntered() on 2025-12-04
+  expect deadline(costs-certificate-period) == 2025-12-26
+}
+
 /// Wyoming LBR 7054-1: if no objection is filed within 21 days of service
 /// of the certificate, the clerk taxes the costs properly claimed.
 deadline costs-objection-period: 21.days after CostsCertificateServed() counted_by frbp9006-wyoming cite "Wyoming LBR 7054-1"
+
+test "Counting boundary: costs-objection-period (holiday)" cite "Wyoming LBR 7054-1"
+{
+  given CostsCertificateServed() on 2025-12-04
+  expect deadline(costs-objection-period) == 2025-12-26
+}
+
 /// Wyoming LBR 9013-1(B): opposing parties respond to a non-dispositive
 /// motion in an adversary proceeding with a statement conceding it or an
 /// objection within 14 days of its filing.
 deadline adversary-motion-response-period: 14.days after AdversaryMotionFiled() counted_by frbp9006-wyoming cite "Wyoming LBR 9013-1(B)"
+
+test "Counting boundary: adversary-motion-response-period (weekend)" cite "Wyoming LBR 9013-1(B)"
+{
+  given AdversaryMotionFiled() on 2025-12-06
+  expect deadline(adversary-motion-response-period) == 2025-12-22
+}
+
 /// Wyoming LBR 9013-2: a memorandum of law is filed and served at least
 /// seven days before the scheduled hearing, except as the court allows or
 /// requires.
 deadline memorandum-period: 7.days before MotionHearing() counted_by frbp9006-wyoming cite "Wyoming LBR 9013-2"
+
+test "Counting boundary: memorandum-period (holiday)" cite "Wyoming LBR 9013-2"
+{
+  given MotionHearing() on 2025-12-04
+  expect deadline(memorandum-period) == 2025-11-26
+}
+
 /// Wyoming LBR 9013-2: where the movant must submit a memorandum, the
 /// opposing party's responsive memorandum is filed within 14 days after
 /// service of the movant's pleadings.
 deadline responsive-memorandum-period: 14.days after MovantPleadingsServed() counted_by frbp9006-wyoming cite "Wyoming LBR 9013-2"
+
+test "Counting boundary: responsive-memorandum-period (weekend)" cite "Wyoming LBR 9013-2"
+{
+  given MovantPleadingsServed() on 2025-12-06
+  expect deadline(responsive-memorandum-period) == 2025-12-22
+}
+
 /// Wyoming LBR 9013-3: a certificate of service is filed within seven days
 /// of service.
 deadline certificate-of-service-period: 7.days after DocumentServed() counted_by frbp9006-wyoming cite "Wyoming LBR 9013-3"
+
+test "Counting boundary: certificate-of-service-period (weekend)" cite "Wyoming LBR 9013-3"
+{
+  given DocumentServed() on 2025-12-06
+  expect deadline(certificate-of-service-period) == 2025-12-15
+}
+
 /// Wyoming LBR 9019-1(B): a stipulated settlement of a contested matter or
 /// a withdrawal of an objection is filed within 14 days after the date and
 /// time of the vacated hearing.
 deadline settlement-pleadings-period: 14.days after HearingVacated() counted_by frbp9006-wyoming cite "Wyoming LBR 9019-1(B)"
+
+test "Counting boundary: settlement-pleadings-period (weekend)" cite "Wyoming LBR 9019-1(B)"
+{
+  given HearingVacated() on 2025-12-06
+  expect deadline(settlement-pleadings-period) == 2025-12-22
+}
+
 /// Wyoming LBR 9070-1(A): unless otherwise ordered, in evidentiary hearings
 /// and adversary proceedings each party files and provides a list of
 /// witnesses and exhibits, and gives chambers two copies of its exhibits,
 /// no later than seven days prior to the hearing.
 deadline witness-exhibit-list-period: 7.days before MotionHearing() counted_by frbp9006-wyoming cite "Wyoming LBR 9070-1(A)"
+
+test "Counting boundary: witness-exhibit-list-period (holiday)" cite "Wyoming LBR 9070-1(A)"
+{
+  given MotionHearing() on 2025-12-04
+  expect deadline(witness-exhibit-list-period) == 2025-11-26
+}
+
 /// Wyoming LBR 9072-1(B): approval of an attorney-prepared judgment or
 /// order may be deemed waived if it is personally served on all counsel at
 /// least seven days (10 if by mail) before it is submitted.
 deadline proposed-order-service-period: 7.days before ProposedOrderSubmitted() counted_by frbp9006-wyoming cite "Wyoming LBR 9072-1(B)"
+
+test "Counting boundary: proposed-order-service-period (holiday)" cite "Wyoming LBR 9072-1(B)"
+{
+  given ProposedOrderSubmitted() on 2025-12-04
+  expect deadline(proposed-order-service-period) == 2025-11-26
+}
+
 /// Wyoming LBR 9074-2(A): a party requesting participation by video in a
 /// courtroom hearing files its motion at least ten days prior to the
 /// hearing.

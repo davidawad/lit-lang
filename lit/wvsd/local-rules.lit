@@ -99,20 +99,55 @@ event CostsObjectionsServed()
 /// within 14 days of filing the complaint; otherwise service is made by
 /// other means unless otherwise ordered.
 deadline waiver-request-period: 14.days after ComplaintFiled() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 4.1"
+
+test "Counting boundary: waiver-request-period (weekend)" cite "S.D. W. Va. LR Civ P 4.1"
+{
+  given ComplaintFiled() on 2023-12-02
+  expect deadline(waiver-request-period) == 2023-12-18
+}
+
 /// LR Civ P 4.1: the plaintiff files the waiver of service within 7 days
 /// after its return.
 deadline waiver-filing-period: 7.days after WaiverReturned() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 4.1"
+
+test "Counting boundary: waiver-filing-period (weekend)" cite "S.D. W. Va. LR Civ P 4.1"
+{
+  given WaiverReturned() on 2023-12-02
+  expect deadline(waiver-filing-period) == 2023-12-11
+}
+
 /// LR Civ P 7.1(a)(7): memoranda in response to a motion are filed and
 /// served within 14 days from service of the motion; the judicial officer
 /// may modify the time.
 deadline response-period: 14.days after MotionServed() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 7.1(a)"
+
+test "Counting boundary: response-period (weekend)" cite "S.D. W. Va. LR Civ P 7.1(a)"
+{
+  given MotionServed() on 2023-12-02
+  expect deadline(response-period) == 2023-12-18
+}
+
 /// LR Civ P 7.1(a)(7): a reply memorandum is filed and served within 7 days
 /// from service of the response. No surreply without leave.
 deadline reply-period: 7.days after ResponseServed() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 7.1(a)"
+
+test "Counting boundary: reply-period (weekend)" cite "S.D. W. Va. LR Civ P 7.1(a)"
+{
+  given ResponseServed() on 2023-12-02
+  expect deadline(reply-period) == 2023-12-11
+}
+
 /// LR Civ P 9.1(b): in a Social Security appeal, the completed consent to
 /// proceed before a magistrate judge is returned within 21 days of the
 /// clerk's notice.
 deadline consent-form-period: 21.days after ConsentFormProvided() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 9.1(b)"
+
+test "Counting boundary: consent-form-period (weekend)" cite "S.D. W. Va. LR Civ P 9.1(b)"
+{
+  given ConsentFormProvided() on 2023-12-02
+  expect deadline(consent-form-period) == 2023-12-26
+}
+
 /// LR Civ P 9.3(a), 9.5(a): no later than 60 days after the plaintiff
 /// serves the summons and complaint, the Commissioner files and serves an
 /// answer with the certified administrative transcript, or a motion to
@@ -122,14 +157,35 @@ deadline commissioner-response-period: 60.days after SocialSecurityComplaintServ
 /// 30 days after service of the certified (or supplemental) administrative
 /// transcript.
 deadline plaintiff-brief-period: 30.days after TranscriptServed() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 9.4(a)"
+
+test "Counting boundary: plaintiff-brief-period (weekend)" cite "S.D. W. Va. LR Civ P 9.4(a)"
+{
+  given TranscriptServed() on 2023-12-01
+  expect deadline(plaintiff-brief-period) == 2024-01-02
+}
+
 /// LR Civ P 9.4(a): the Commissioner's brief is filed and served no later
 /// than 30 days after service of the plaintiff's brief.
 deadline commissioner-brief-period: 30.days after PlaintiffBriefServed() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 9.4(a)"
+
+test "Counting boundary: commissioner-brief-period (weekend)" cite "S.D. W. Va. LR Civ P 9.4(a)"
+{
+  given PlaintiffBriefServed() on 2023-12-01
+  expect deadline(commissioner-brief-period) == 2024-01-02
+}
+
 /// LR Civ P 9.4(a): the plaintiff may file and serve a reply brief no later
 /// than 14 days after service of the Commissioner's brief. Responses and
 /// replies to a motion to dismiss or remand follow the same periods (LR
 /// Civ P 9.5(c)).
 deadline social-security-reply-period: 14.days after CommissionerBriefServed() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 9.4(a)"
+
+test "Counting boundary: social-security-reply-period (weekend)" cite "S.D. W. Va. LR Civ P 9.4(a)"
+{
+  given CommissionerBriefServed() on 2023-12-02
+  expect deadline(social-security-reply-period) == 2023-12-18
+}
+
 /// LR Civ P 9.6: the Fed. R. Civ. P. 54(d) limits do not apply; a motion for
 /// fees under the Equal Access to Justice Act is filed within 90 days of
 /// entry of final judgment.
@@ -138,32 +194,81 @@ deadline eaja-fee-motion-period: 90.days after FinalJudgmentEntered() counted_by
 /// scheduling conference, the parties meet to discuss and report on all
 /// Fed. R. Civ. P. 16 and 26(f) matters.
 deadline parties-meeting-period: 21.days before SchedulingConference() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 16.1(b)"
+
+test "Counting boundary: parties-meeting-period (holiday)" cite "S.D. W. Va. LR Civ P 16.1(b)"
+{
+  given SchedulingConference() on 2023-12-01
+  expect deadline(parties-meeting-period) == 2023-11-09
+}
+
 /// LR Civ P 16.1(c): the parties jointly submit the written report on their
 /// meeting no later than 14 days before the date set for the scheduling
 /// conference.
 deadline meeting-report-period: 14.days before SchedulingConference() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 16.1(c)"
+
+test "Counting boundary: meeting-report-period (weekend)" cite "S.D. W. Va. LR Civ P 16.1(c)"
+{
+  given SchedulingConference() on 2023-12-02
+  expect deadline(meeting-report-period) == 2023-11-17
+}
+
 /// LR Civ P 16.2(b): where the judicial officer requires counsel to confer
 /// before a case-management conference, their statement is filed no later
 /// than 7 days before the conference.
 deadline case-management-statement-period: 7.days before CaseManagementConference() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 16.2(b)"
+
+test "Counting boundary: case-management-statement-period (weekend)" cite "S.D. W. Va. LR Civ P 16.2(b)"
+{
+  given CaseManagementConference() on 2023-12-02
+  expect deadline(case-management-statement-period) == 2023-11-24
+}
+
 /// LR Civ P 16.7(a): unless the trial judge orders otherwise, counsel and
 /// unrepresented parties meet to negotiate settlement, and make the Fed.
 /// R. Civ. P. 26(a)(3) disclosures, no later than 21 days before the final
 /// pretrial conference.
 deadline pretrial-meeting-period: 21.days before FinalPretrialConference() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 16.7(a)"
+
+test "Counting boundary: pretrial-meeting-period (holiday)" cite "S.D. W. Va. LR Civ P 16.7(a)"
+{
+  given FinalPretrialConference() on 2023-12-01
+  expect deadline(pretrial-meeting-period) == 2023-11-09
+}
+
 /// LR Civ P 16.7(b): unless the trial judge orders otherwise, the proposed
 /// pretrial order is filed no later than 7 days before the final pretrial
 /// conference.
 deadline proposed-pretrial-order-period: 7.days before FinalPretrialConference() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 16.7(b)"
+
+test "Counting boundary: proposed-pretrial-order-period (weekend)" cite "S.D. W. Va. LR Civ P 16.7(b)"
+{
+  given FinalPretrialConference() on 2023-12-02
+  expect deadline(proposed-pretrial-order-period) == 2023-11-24
+}
+
 /// LR Civ P 26.1(a): unless ordered or stipulated otherwise, the Fed. R.
 /// Civ. P. 26(a)(1) disclosures are made no later than 30 days after the
 /// Fed. R. Civ. P. 26(f) meeting.
 deadline initial-disclosures-period: 30.days after PartiesMeeting() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 26.1(a)"
+
+test "Counting boundary: initial-disclosures-period (weekend)" cite "S.D. W. Va. LR Civ P 26.1(a)"
+{
+  given PartiesMeeting() on 2023-12-01
+  expect deadline(initial-disclosures-period) == 2024-01-02
+}
+
 /// LR Civ P 26.1(b)(1): unless ordered or stipulated otherwise, the party
 /// bearing the burden of proof on an issue makes its Fed. R. Civ. P.
 /// 26(a)(2)(A)-(B) disclosures no later than 60 days before the discovery
 /// completion date.
 deadline burden-expert-disclosure-period: 60.days before DiscoveryCompletion() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 26.1(b)"
+
+test "Counting boundary: burden-expert-disclosure-period (weekend)" cite "S.D. W. Va. LR Civ P 26.1(b)"
+{
+  given DiscoveryCompletion() on 2023-12-06
+  expect deadline(burden-expert-disclosure-period) == 2023-10-06
+}
+
 /// LR Civ P 26.1(b)(2): the party not bearing the burden of proof on an
 /// issue makes its expert disclosures no later than 30 days before the
 /// discovery completion date.
@@ -171,46 +276,122 @@ deadline responding-expert-disclosure-period: 30.days before DiscoveryCompletion
 /// LR Civ P 26.1(b)(3): rebuttal expert disclosures are made no later than
 /// 14 days before the discovery completion date.
 deadline rebuttal-expert-disclosure-period: 14.days before DiscoveryCompletion() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 26.1(b)"
+
+test "Counting boundary: rebuttal-expert-disclosure-period (weekend)" cite "S.D. W. Va. LR Civ P 26.1(b)"
+{
+  given DiscoveryCompletion() on 2023-12-02
+  expect deadline(rebuttal-expert-disclosure-period) == 2023-11-17
+}
+
 /// LR Civ P 33.1(c): interrogatories ordered answered over objection are
 /// answered within 14 days of the order, unless the court directs or the
 /// parties stipulate otherwise.
 deadline interrogatory-answers-period: 14.days after InterrogatoryAnswersOrdered() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 33.1(c)"
+
+test "Counting boundary: interrogatory-answers-period (weekend)" cite "S.D. W. Va. LR Civ P 33.1(c)"
+{
+  given InterrogatoryAnswersOrdered() on 2023-12-02
+  expect deadline(interrogatory-answers-period) == 2023-12-18
+}
+
 /// LR Civ P 34.1(c): document requests ordered answered over objection are
 /// answered within 14 days of the order, unless the court directs or the
 /// parties stipulate otherwise.
 deadline document-answers-period: 14.days after DocumentAnswersOrdered() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 34.1(c)"
+
+test "Counting boundary: document-answers-period (weekend)" cite "S.D. W. Va. LR Civ P 34.1(c)"
+{
+  given DocumentAnswersOrdered() on 2023-12-02
+  expect deadline(document-answers-period) == 2023-12-18
+}
+
 /// LR Civ P 36.1(b): when a request for admission is held proper over
 /// objection, the matter is deemed admitted unless the party served with it
 /// serves a denial or a statement why it cannot admit or deny within 14
 /// days of the order.
 deadline admission-statement-period: 14.days after AdmissionRequestHeldProper() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 36.1(b)"
+
+test "Counting boundary: admission-statement-period (weekend)" cite "S.D. W. Va. LR Civ P 36.1(b)"
+{
+  given AdmissionRequestHeldProper() on 2023-12-02
+  expect deadline(admission-statement-period) == 2023-12-18
+}
+
 /// LR Civ P 37.1(c): a motion to compel or other motion in aid of discovery
 /// not filed within 30 days after the response or disclosure was due is
 /// waived; the court for good cause, or the parties by a stipulation filed
 /// under LR Civ P 11.2, may extend the period if the scheduling order is
 /// not disturbed.
 deadline motion-to-compel-period: 30.days after DiscoveryResponseDue() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 37.1(c)"
+
+test "Counting boundary: motion-to-compel-period (weekend)" cite "S.D. W. Va. LR Civ P 37.1(c)"
+{
+  given DiscoveryResponseDue() on 2023-12-01
+  expect deadline(motion-to-compel-period) == 2024-01-02
+}
+
 /// LR Civ P 41.1: after notice that an action will be dismissed, good cause
 /// for retaining it on the docket is shown within 30 days after the date of
 /// the notice, or the judicial officer may dismiss it.
 deadline retention-cause-period: 30.days after DismissalNoticeGiven() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 41.1"
+
+test "Counting boundary: retention-cause-period (weekend)" cite "S.D. W. Va. LR Civ P 41.1"
+{
+  given DismissalNoticeGiven() on 2023-12-01
+  expect deadline(retention-cause-period) == 2024-01-02
+}
+
 /// LR Civ P 51.1: in jury cases, proposed jury instructions, special
 /// interrogatories and a verdict form are submitted to the judicial officer
 /// not less than 7 days before the trial date.
 deadline jury-instructions-period: 7.days before TrialDate() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 51.1"
+
+test "Counting boundary: jury-instructions-period (weekend)" cite "S.D. W. Va. LR Civ P 51.1"
+{
+  given TrialDate() on 2023-12-02
+  expect deadline(jury-instructions-period) == 2023-11-24
+}
+
 /// LR Civ P 52.1: in cases tried to the court, proposed findings of fact
 /// and conclusions of law are submitted to the judicial officer 14 days
 /// before trial.
 deadline proposed-findings-period: 14.days before TrialDate() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 52.1"
+
+test "Counting boundary: proposed-findings-period (weekend)" cite "S.D. W. Va. LR Civ P 52.1"
+{
+  given TrialDate() on 2023-12-02
+  expect deadline(proposed-findings-period) == 2023-11-17
+}
+
 /// LR Civ P 54.1: the prevailing party prepares a bill of costs within 30
 /// days after entry of the final judgment.
 deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 54.1"
+
+test "Counting boundary: bill-of-costs-period (weekend)" cite "S.D. W. Va. LR Civ P 54.1"
+{
+  given FinalJudgmentEntered() on 2023-12-01
+  expect deadline(bill-of-costs-period) == 2024-01-02
+}
+
 /// LR Civ P 54.1: specific objections to the bill of costs are filed within
 /// 14 days after its service.
 deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 54.1"
+
+test "Counting boundary: costs-objection-period (weekend)" cite "S.D. W. Va. LR Civ P 54.1"
+{
+  given BillOfCostsServed() on 2023-12-02
+  expect deadline(costs-objection-period) == 2023-12-18
+}
+
 /// LR Civ P 54.1: a response to the objections is filed within 7 days of
 /// their service.
 deadline costs-objection-response-period: 7.days after CostsObjectionsServed() counted_by frcp6-west-virginia cite "S.D. W. Va. LR Civ P 54.1"
+
+test "Counting boundary: costs-objection-response-period (weekend)" cite "S.D. W. Va. LR Civ P 54.1"
+{
+  given CostsObjectionsServed() on 2023-12-02
+  expect deadline(costs-objection-response-period) == 2023-12-11
+}
 
 test "Deadline arithmetic: waiver-request-period (14 days after)" cite "S.D. W. Va. LR Civ P 4.1"
 {

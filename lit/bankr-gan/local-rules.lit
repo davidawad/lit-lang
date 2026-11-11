@@ -125,10 +125,24 @@ limit trial-brief { pages <= 25 cite "N.D. Ga. BLR 7016-2(b)" } cite "N.D. Ga. B
 /// examinee's consent, is noticed by filing and serving the notice no less
 /// than seven days before the date set for the examination.
 deadline examination-notice-period: 7.days before ExaminationDate() counted_by frbp9006-georgia cite "N.D. Ga. BLR 2004-1(b)"
+
+test "Counting boundary: examination-notice-period (holiday)" cite "N.D. Ga. BLR 2004-1(b)"
+{
+  given ExaminationDate() on 2025-12-04
+  expect deadline(examination-notice-period) == 2025-11-26
+}
+
 /// N.D. Ga. BLR 5011-2(a): a motion to withdraw the reference of all or part
 /// of a bankruptcy case is served and filed on or before 30 days after the
 /// date first scheduled for the § 341(a) meeting of creditors.
 deadline case-withdrawal-motion-period: 30.days after FirstMeetingDate() counted_by frbp9006-georgia cite "N.D. Ga. BLR 5011-2(a)"
+
+test "Counting boundary: case-withdrawal-motion-period (holiday)" cite "N.D. Ga. BLR 5011-2(a)"
+{
+  given FirstMeetingDate() on 2025-12-02
+  expect deadline(case-withdrawal-motion-period) == 2026-01-02
+}
+
 /// N.D. Ga. BLR 5011-2(c): a motion to withdraw the reference of a contested
 /// matter is served and filed not later than 14 days after service of the
 /// motion, application or objection that initiates it.
@@ -144,6 +158,13 @@ deadline withdrawal-reference-reply-period: 14.days after WithdrawalReferenceRes
 /// delivers the notice letter and proposed resolution not less than seven
 /// days prior to the date of conflict.
 deadline conflict-notice-period: 7.days before ConflictDate() counted_by frbp9006-georgia cite "N.D. Ga. BLR 5071-4(b)"
+
+test "Counting boundary: conflict-notice-period (holiday)" cite "N.D. Ga. BLR 5071-4(b)"
+{
+  given ConflictDate() on 2025-12-04
+  expect deadline(conflict-notice-period) == 2025-11-26
+}
+
 /// N.D. Ga. BLR 6007-1(b): a chapter 7 trustee's verbal notice of a proposed
 /// abandonment at the meeting of creditors is reduced to a writing stating
 /// its grounds and filed within 14 days after the meeting.
@@ -152,6 +173,13 @@ deadline abandonment-writing-period: 14.days after AbandonmentMeetingHeld() coun
 /// motion to redeem or to avoid a lien on exempt property within 21 days of
 /// the date of service, or the motion is deemed unopposed.
 deadline redemption-response-period: 21.days after RedemptionMotionServed() counted_by frbp9006-georgia cite "N.D. Ga. BLR 6008-1(b)"
+
+test "Counting boundary: redemption-response-period (holiday)" cite "N.D. Ga. BLR 6008-1(b)"
+{
+  given RedemptionMotionServed() on 2025-12-04
+  expect deadline(redemption-response-period) == 2025-12-26
+}
+
 /// N.D. Ga. BLR 7007-1(c): a party opposing a motion files and serves its
 /// response, memorandum, affidavits and other responsive material not later
 /// than 14 days after service of the motion; failure to respond indicates no
@@ -160,6 +188,13 @@ deadline motion-response-period: 14.days after AdversaryMotionServed() counted_b
 /// N.D. Ga. BLR 7007-1(c): the time to respond to a motion for summary
 /// judgment is 21 days after its service.
 deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006-georgia cite "N.D. Ga. BLR 7007-1(c)"
+
+test "Counting boundary: summary-judgment-response-period (holiday)" cite "N.D. Ga. BLR 7007-1(c)"
+{
+  given SummaryJudgmentMotionServed() on 2025-12-04
+  expect deadline(summary-judgment-response-period) == 2025-12-26
+}
+
 /// N.D. Ga. BLR 7007-1(d): a reply, when the movant deems one necessary, is
 /// filed and served not later than 14 days after service of the responsive
 /// pleading.
@@ -169,6 +204,13 @@ deadline motion-reply-period: 14.days after MotionResponseServed() counted_by fr
 /// defendant's appearance, the resolution of an excluded motion or the
 /// removal of the proceeding.
 deadline rule26f-conference-period: 21.days after FirstDefendantAppearance() counted_by frbp9006-georgia cite "N.D. Ga. BLR 7016-1(a)"
+
+test "Counting boundary: rule26f-conference-period (holiday)" cite "N.D. Ga. BLR 7016-1(a)"
+{
+  given FirstDefendantAppearance() on 2025-12-04
+  expect deadline(rule26f-conference-period) == 2025-12-26
+}
+
 /// N.D. Ga. BLR 7016-1(a)(2): the parties jointly submit the written
 /// discovery plan and proposed scheduling order within 14 days after the Rule
 /// 26(f) conference.
@@ -177,6 +219,13 @@ deadline rule26f-report-period: 14.days after Rule26fConference() counted_by frb
 /// to join other parties or to amend the pleadings are filed within 30 days
 /// of the beginning of discovery.
 deadline joinder-amendment-period: 30.days after DiscoveryCommenced() counted_by frbp9006-georgia cite "N.D. Ga. BLR 7016-1(b)"
+
+test "Counting boundary: joinder-amendment-period (holiday)" cite "N.D. Ga. BLR 7016-1(b)"
+{
+  given DiscoveryCommenced() on 2025-12-02
+  expect deadline(joinder-amendment-period) == 2026-01-02
+}
+
 /// N.D. Ga. BLR 7016-1(b)(2)(C): absent a separate scheduling order,
 /// discovery is completed within 90 days of its commencement, unless the
 /// court orders otherwise under BLR 7026-2.
@@ -186,10 +235,24 @@ deadline discovery-period: 90.days after DiscoveryCommenced() counted_by frbp900
 /// pending summary judgment motion suspends the time until 30 days after the
 /// court rules on it.
 deadline pretrial-order-period: 30.days after DiscoveryClosed() counted_by frbp9006-georgia cite "N.D. Ga. BLR 7016-2(a)"
+
+test "Counting boundary: pretrial-order-period (holiday)" cite "N.D. Ga. BLR 7016-2(a)"
+{
+  given DiscoveryClosed() on 2025-12-02
+  expect deadline(pretrial-order-period) == 2026-01-02
+}
+
 /// N.D. Ga. BLR 7016-2(b)(13), 7016-3(18)(B): another party may rely on a
 /// representation that a witness will be called unless notice to the contrary
 /// is given 14 days prior to trial.
 deadline witness-withdrawal-notice-period: 14.days before TrialDate() counted_by frbp9006-georgia cite "N.D. Ga. BLR 7016-2(b)"
+
+test "Counting boundary: witness-withdrawal-notice-period (weekend)" cite "N.D. Ga. BLR 7016-2(b)"
+{
+  given TrialDate() on 2025-12-06
+  expect deadline(witness-withdrawal-notice-period) == 2025-11-21
+}
+
 /// N.D. Ga. BLR 7026-2(c): absent cause shown, a party designates an expert
 /// witness not less than 30 days prior to the close of discovery.
 deadline expert-designation-period: 30.days before DiscoveryClosed() counted_by frbp9006-georgia cite "N.D. Ga. BLR 7026-2(c)"
@@ -201,13 +264,34 @@ deadline compel-response-period: 14.days after CompelMotionServed() counted_by f
 /// other papers effecting the resolution within 30 days of the date the trial
 /// or hearing was scheduled, or it may be dismissed for want of prosecution.
 deadline resolved-matter-papers-period: 30.days after ResolvedMatterHearingDate() counted_by frbp9006-georgia cite "N.D. Ga. BLR 7041-1(a)"
+
+test "Counting boundary: resolved-matter-papers-period (holiday)" cite "N.D. Ga. BLR 7041-1(a)"
+{
+  given ResolvedMatterHearingDate() on 2025-12-02
+  expect deadline(resolved-matter-papers-period) == 2026-01-02
+}
+
 /// N.D. Ga. BLR 7056-1(b): unless the court orders otherwise, a motion for
 /// summary judgment is filed as soon as possible but not later than 28 days
 /// after the close of discovery.
 deadline summary-judgment-motion-period: 28.days after DiscoveryClosed() counted_by frbp9006-georgia cite "N.D. Ga. BLR 7056-1(b)"
+
+test "Counting boundary: summary-judgment-motion-period (holiday)" cite "N.D. Ga. BLR 7056-1(b)"
+{
+  given DiscoveryClosed() on 2025-12-04
+  expect deadline(summary-judgment-motion-period) == 2026-01-02
+}
+
 /// N.D. Ga. BLR 9007-2(b): within three days of service, the party serving
 /// notices files a Certificate of Service complying with BLR 9013-3(a).
 deadline certificate-of-service-period: 3.days after NoticeServed() counted_by frbp9006-georgia cite "N.D. Ga. BLR 9007-2(b)"
+
+test "Counting boundary: certificate-of-service-period (weekend)" cite "N.D. Ga. BLR 9007-2(b)"
+{
+  given NoticeServed() on 2025-12-03
+  expect deadline(certificate-of-service-period) == 2025-12-08
+}
+
 /// N.D. Ga. BLR 9010-5(b)(1)(F): unless the withdrawal is with the client's
 /// consent, the client has 14 days from service of the attorney's notice of
 /// intent to contact the attorney and object; the notice gives the client 14
@@ -221,14 +305,35 @@ deadline withdrawal-motion-objection-period: 14.days after WithdrawalMotionServe
 /// judge within seven days from the date of pronouncement or of the scheduled
 /// hearing.
 deadline proposed-order-period: 7.days after RulingPronounced() counted_by frbp9006-georgia cite "N.D. Ga. BLR 9013-2(a)"
+
+test "Counting boundary: proposed-order-period (weekend)" cite "N.D. Ga. BLR 9013-2(a)"
+{
+  given RulingPronounced() on 2025-12-06
+  expect deadline(proposed-order-period) == 2025-12-15
+}
+
 /// N.D. Ga. BLR 9015-2: the parties have 30 days after the clerk's notice to
 /// execute and file a joint pleading consenting to a jury trial before the
 /// bankruptcy court.
 deadline jury-consent-period: 30.days after JuryConsentNoticed() counted_by frbp9006-georgia cite "N.D. Ga. BLR 9015-2"
+
+test "Counting boundary: jury-consent-period (holiday)" cite "N.D. Ga. BLR 9015-2"
+{
+  given JuryConsentNoticed() on 2025-12-02
+  expect deadline(jury-consent-period) == 2026-01-02
+}
+
 /// N.D. Ga. BLR 9017-1(b): within 30 days after the courtroom deputy's
 /// custody ends, the introducing party retrieves its exhibits, or they may be
 /// destroyed.
 deadline exhibit-retrieval-period: 30.days after ExhibitCustodyEnded() counted_by frbp9006-georgia cite "N.D. Ga. BLR 9017-1(b)"
+
+test "Counting boundary: exhibit-retrieval-period (holiday)" cite "N.D. Ga. BLR 9017-1(b)"
+{
+  given ExhibitCustodyEnded() on 2025-12-02
+  expect deadline(exhibit-retrieval-period) == 2026-01-02
+}
+
 /// N.D. Ga. BLR 9027-1: when a proceeding is removed with pending motions not
 /// yet briefed, the moving party serves a memorandum in support within 14
 /// days after removal; opponents respond under BLR 7007-1(c).

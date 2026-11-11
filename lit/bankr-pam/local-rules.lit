@@ -157,10 +157,24 @@ event FinalJudgmentEntered()
 /// L.B.R. 1002-1(a): the clerk accepts an unsigned petition, but a signed
 /// document must be filed within seven days or the petition may be dismissed.
 deadline unsigned-petition-cure-period: 7.days after UnsignedPetitionFiled() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 1002-1(a)"
+
+test "Counting boundary: unsigned-petition-cure-period (weekend)" cite "Bankr. M.D. Pa. L.B.R. 1002-1(a)"
+{
+  given UnsignedPetitionFiled() on 2025-12-06
+  expect deadline(unsigned-petition-cure-period) == 2025-12-15
+}
+
 /// L.B.R. 1006-1(b): when a pleading is filed without the required fee, the
 /// filing party has seven days after the clerk's notice to pay it or the
 /// pleading may be stricken.
 deadline fee-deficiency-period: 7.days after FeeDeficiencyNoticed() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 1006-1(b)"
+
+test "Counting boundary: fee-deficiency-period (weekend)" cite "Bankr. M.D. Pa. L.B.R. 1006-1(b)"
+{
+  given FeeDeficiencyNoticed() on 2025-12-06
+  expect deadline(fee-deficiency-period) == 2025-12-15
+}
+
 /// L.B.R. 1007-1(a): a motion to extend the time to file lists, schedules,
 /// statements, plans or other required documents is filed within fourteen
 /// days of the entry of an order for relief or before any earlier extension
@@ -169,13 +183,34 @@ deadline schedules-extension-motion-period: 14.days after OrderForReliefEntered(
 /// L.B.R. 1007-1(b): an objection to an extension of time is filed within
 /// seven days of service of the motion.
 deadline schedules-extension-objection-period: 7.days after ExtensionMotionServed() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 1007-1(b)"
+
+test "Counting boundary: schedules-extension-objection-period (weekend)" cite "Bankr. M.D. Pa. L.B.R. 1007-1(b)"
+{
+  given ExtensionMotionServed() on 2025-12-06
+  expect deadline(schedules-extension-objection-period) == 2025-12-15
+}
+
 /// L.B.R. 1015-1(a)(2): the passive notice of a motion for joint
 /// administration provides a twenty-one day objection period; with no
 /// objection the court may enter the order.
 deadline joint-administration-objection-period: 21.days after JointAdministrationNoticeServed() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 1015-1(a)"
+
+test "Counting boundary: joint-administration-objection-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 1015-1(a)"
+{
+  given JointAdministrationNoticeServed() on 2025-12-04
+  expect deadline(joint-administration-objection-period) == 2025-12-26
+}
+
 /// L.B.R. 1015-1(b): the notice of a request for substantive consolidation
 /// provides a twenty-one day objection period.
 deadline consolidation-objection-period: 21.days after ConsolidationNoticeServed() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 1015-1(b)"
+
+test "Counting boundary: consolidation-objection-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 1015-1(b)"
+{
+  given ConsolidationNoticeServed() on 2025-12-04
+  expect deadline(consolidation-objection-period) == 2025-12-26
+}
+
 /// L.B.R. 1015-1(c)(2): no hearing is held on a motion to sever jointly
 /// administered cases unless an objection is filed within fourteen days of
 /// service.
@@ -184,10 +219,24 @@ deadline severance-objection-period: 14.days after SeveranceMotionServed() count
 /// within sixty days after conversion of the case (FRBP 1019's 30 days run
 /// unless the court orders otherwise).
 deadline converted-chapter13-final-report-period: 60.days after ConversionFromChapter13() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 1019-1"
+
+test "Counting boundary: converted-chapter13-final-report-period (weekend)" cite "Bankr. M.D. Pa. L.B.R. 1019-1"
+{
+  given ConversionFromChapter13() on 2025-12-02
+  expect deadline(converted-chapter13-final-report-period) == 2026-02-02
+}
+
 /// L.B.R. 2002-1(g): the certificate of service showing compliance with
 /// L.B.R. 2002-1 is filed no later than seven days following the date of
 /// service.
 deadline notice-certificate-period: 7.days after NoticeServed() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 2002-1(g)"
+
+test "Counting boundary: notice-certificate-period (weekend)" cite "Bankr. M.D. Pa. L.B.R. 2002-1(g)"
+{
+  given NoticeServed() on 2025-12-06
+  expect deadline(notice-certificate-period) == 2025-12-15
+}
+
 /// L.B.R. 2004-1: the court considers a motion under FRBP 2004(a) fourteen
 /// days after service on the respondent; if no objection or answer is filed
 /// within fourteen days an order may be entered.
@@ -196,20 +245,48 @@ deadline examination-objection-period: 14.days after ExaminationMotionServed() c
 /// application to employ within seven days from service of the application,
 /// unless it is filed within fourteen days of the petition.
 deadline ust-employment-objection-period: 7.days after LateEmploymentApplicationServed() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 2014-1(c)"
+
+test "Counting boundary: ust-employment-objection-period (weekend)" cite "Bankr. M.D. Pa. L.B.R. 2014-1(c)"
+{
+  given LateEmploymentApplicationServed() on 2025-12-06
+  expect deadline(ust-employment-objection-period) == 2025-12-15
+}
+
 /// L.B.R. 2014-1(c): if the application to employ is filed within fourteen
 /// days of the petition, any objection is filed within twenty-one days of the
 /// filing of the petition.
 deadline early-ust-employment-objection-period: 21.days after PetitionFiled() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 2014-1(c)"
+
+test "Counting boundary: early-ust-employment-objection-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 2014-1(c)"
+{
+  given PetitionFiled() on 2025-12-04
+  expect deadline(early-ust-employment-objection-period) == 2025-12-26
+}
+
 /// L.B.R. 2016-2(d): an attorney to be paid through a proposed chapter 13
 /// plan files a Request for Payment (L.B.F. 2016-2(c)) no later than seven
 /// days before the confirmation hearing, or before a continued hearing when
 /// additional fees are requested.
 deadline chapter13-fee-request-period: 7.days before ConfirmationHearing() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 2016-2(d)"
+
+test "Counting boundary: chapter13-fee-request-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 2016-2(d)"
+{
+  given ConfirmationHearing() on 2025-12-04
+  expect deadline(chapter13-fee-request-period) == 2025-11-26
+}
+
 /// L.B.R. 3007-1(c): unless the court orders otherwise, no hearing on an
 /// objection to claim is scheduled unless the claimant files a request for
 /// hearing or response no later than thirty days from the date the notice is
 /// served.
 deadline claim-objection-hearing-request-period: 30.days after ClaimObjectionNoticeServed() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 3007-1(c)"
+
+test "Counting boundary: claim-objection-hearing-request-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 3007-1(c)"
+{
+  given ClaimObjectionNoticeServed() on 2025-12-02
+  expect deadline(claim-objection-hearing-request-period) == 2026-01-02
+}
+
 /// L.B.R. 3015-2(d): within five days after a self-represented debtor files
 /// an amended plan before confirmation, the debtor serves it on each party on
 /// the mailing matrix and files a certificate of service.
@@ -222,15 +299,36 @@ deadline pro-se-modification-service-period: 5.days after ProSeModificationMotio
 /// the plan proponent files the Section 1126 Ballot Report Form (L.B.F.
 /// 3018-1) and serves it on the debtor and each committee.
 deadline ballot-report-period: 7.days before ConfirmationHearing() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 3018-1"
+
+test "Counting boundary: ballot-report-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 3018-1"
+{
+  given ConfirmationHearing() on 2025-12-04
+  expect deadline(ballot-report-period) == 2025-11-26
+}
+
 /// L.B.R. 3020-1: an individual chapter 11 debtor's confirmation order is not
 /// entered unless, at least seven days before the confirmation hearing, the
 /// debtor has filed the domestic support obligations certification (L.B.F.
 /// 3020-1).
 deadline individual-chapter11-dso-period: 7.days before ConfirmationHearing() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 3020-1"
+
+test "Counting boundary: individual-chapter11-dso-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 3020-1"
+{
+  given ConfirmationHearing() on 2025-12-04
+  expect deadline(individual-chapter11-dso-period) == 2025-11-26
+}
+
 /// L.B.R. 4001-5(a): a motion to extend the automatic stay under §
 /// 362(c)(3)(B) is filed and served within seven days after the petition is
 /// filed; a later motion must meet L.B.R. 9075-1 (emergency orders).
 deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 4001-5(a)"
+
+test "Counting boundary: stay-extension-motion-period (weekend)" cite "Bankr. M.D. Pa. L.B.R. 4001-5(a)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(stay-extension-motion-period) == 2025-12-15
+}
+
 /// L.B.R. 5011-1(d): a party opposing a motion to withdraw the reference
 /// files with the district court and serves an objection and brief within
 /// fourteen days after service of the motion and supporting brief.
@@ -247,11 +345,25 @@ deadline adversary-motion-response-period: 14.days after AdversaryMotionServed()
 /// conference, each party sends the mediator a mediation conference
 /// memorandum of no more than two pages.
 deadline mediation-memorandum-period: 7.days before MediationConference() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9019-2(h)"
+
+test "Counting boundary: mediation-memorandum-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 9019-2(h)"
+{
+  given MediationConference() on 2025-12-04
+  expect deadline(mediation-memorandum-period) == 2025-11-26
+}
+
 /// L.B.R. 9019-3(b)(2): the mortgage creditor has twenty-one days to file a
 /// response (a Creditor Consent Form or an objection) to the Motion to
 /// Participate; if it files neither, it waives any objection (L.B.R.
 /// 9019-3(b)(2)(C)).
 deadline participation-response-period: 21.days after ParticipationMotionFiled() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9019-3(b)"
+
+test "Counting boundary: participation-response-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(b)"
+{
+  given ParticipationMotionFiled() on 2025-12-04
+  expect deadline(participation-response-period) == 2025-12-26
+}
+
 /// L.B.R. 9019-3(c)(1): within fourteen days of entry of a Participation
 /// Order, the mortgage creditor (unless already registered) registers with
 /// the portal and posts the loss mitigation application.
@@ -261,6 +373,13 @@ deadline portal-registration-period: 14.days after ParticipationOrderEntered() c
 /// creditor registers (or after the Participation Order, if the creditor was
 /// already registered).
 deadline portal-application-period: 30.days after PortalRegistered() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+
+test "Counting boundary: portal-application-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+{
+  given PortalRegistered() on 2025-12-02
+  expect deadline(portal-application-period) == 2026-01-02
+}
+
 /// L.B.R. 9019-3(c)(3), (d)(3): within fourteen days after the debtor submits
 /// the loss mitigation application, the mortgage creditor designates a single
 /// point of contact and acknowledges the application.
@@ -269,14 +388,35 @@ deadline portal-contact-designation-period: 14.days after LossMitigationApplicat
 /// promptly, and in no event more than twenty-one days after the mortgage
 /// creditor requests it.
 deadline requested-documents-period: 21.days after DocumentsRequested() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+
+test "Counting boundary: requested-documents-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+{
+  given DocumentsRequested() on 2025-12-04
+  expect deadline(requested-documents-period) == 2025-12-26
+}
+
 /// L.B.R. 9019-3(c)(6): no less than fourteen days before a scheduled
 /// servicing transfer or assignment, the mortgage creditor files a Proposed
 /// Order Substituting MMM Servicer (L.B.F. 9019-3(c)) and updates the portal.
 deadline servicing-substitution-period: 14.days before ServicingTransfer() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+
+test "Counting boundary: servicing-substitution-period (weekend)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+{
+  given ServicingTransfer() on 2025-12-06
+  expect deadline(servicing-substitution-period) == 2025-11-21
+}
+
 /// L.B.R. 9019-3(c)(6): within thirty days of the service transfer, the
 /// substituted creditor designates a single point of contact for the loss
 /// mitigation process.
 deadline substituted-contact-period: 30.days after ServicingTransferred() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+
+test "Counting boundary: substituted-contact-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+{
+  given ServicingTransferred() on 2025-12-02
+  expect deadline(substituted-contact-period) == 2026-01-02
+}
+
 /// L.B.R. 9019-3(d)(1): outside the portal, the mortgage creditor provides
 /// the debtor the loss mitigation package and document checklist within
 /// fourteen days of the Participation Order.
@@ -285,26 +425,68 @@ deadline loss-mitigation-package-period: 14.days after ParticipationOrderEntered
 /// debtor provides two years' signed tax returns, sixty days' payment advices
 /// and any other document the creditor requests.
 deadline off-portal-documents-period: 30.days after ParticipationOrderEntered() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9019-3(d)"
+
+test "Counting boundary: off-portal-documents-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(d)"
+{
+  given ParticipationOrderEntered() on 2025-12-02
+  expect deadline(off-portal-documents-period) == 2026-01-02
+}
+
 /// L.B.R. 9019-3(f)(1): not later than seven days before the scheduled
 /// mediation session, the debtor and the mortgage creditor each send the
 /// mediator and the opposing party a memorandum of no more than two pages.
 deadline mmm-memorandum-period: 7.days before MmmMediationSession() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9019-3(f)"
+
+test "Counting boundary: mmm-memorandum-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(f)"
+{
+  given MmmMediationSession() on 2025-12-04
+  expect deadline(mmm-memorandum-period) == 2025-11-26
+}
+
 /// L.B.R. 9019-3(j)(2): the passive notice of a motion to approve a final
 /// modification allows a twenty-one day objection period, and a certificate
 /// of mailing is filed within seven days following the date of the notice.
 deadline modification-mailing-certificate-period: 7.days after ModificationNoticeGiven() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9019-3(j)"
+
+test "Counting boundary: modification-mailing-certificate-period (weekend)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(j)"
+{
+  given ModificationNoticeGiven() on 2025-12-06
+  expect deadline(modification-mailing-certificate-period) == 2025-12-15
+}
+
 /// L.B.R. 9019-3(j)(2): the passive notice allows a twenty-one day objection
 /// period to the motion to approve the final loan modification.
 deadline modification-objection-period: 21.days after ModificationNoticeGiven() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9019-3(j)"
+
+test "Counting boundary: modification-objection-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(j)"
+{
+  given ModificationNoticeGiven() on 2025-12-04
+  expect deadline(modification-objection-period) == 2025-12-26
+}
+
 /// L.B.R. 9019-3(j)(3): if no loan modification is agreed, the debtor files
 /// an amended or modified chapter 13 plan within twenty-one days to address
 /// the mortgage arrears; otherwise the creditor may move for stay relief.
 deadline mmm-amended-plan-period: 21.days after MmmProgramUnsuccessful() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9019-3(j)"
+
+test "Counting boundary: mmm-amended-plan-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(j)"
+{
+  given MmmProgramUnsuccessful() on 2025-12-04
+  expect deadline(mmm-amended-plan-period) == 2025-12-26
+}
+
 /// L.B.R. 9019-3(j)(4): if within one hundred and twenty days from the
 /// Participation Order neither a motion to approve a modification nor an
 /// amended plan addressing the lien is filed, the debtor files and serves a
 /// Loss Mitigation Status Report.
 deadline mmm-status-report-period: 120.days after ParticipationOrderEntered() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9019-3(j)"
+
+test "Counting boundary: mmm-status-report-period (weekend)" cite "Bankr. M.D. Pa. L.B.R. 9019-3(j)"
+{
+  given ParticipationOrderEntered() on 2025-12-05
+  expect deadline(mmm-status-report-period) == 2026-04-06
+}
+
 /// L.B.R. 9023-2(b): affidavits, transcripts and other documents supporting a
 /// post-trial motion on facts not of record are filed within fourteen days
 /// after the motion, unless the court orders otherwise.
@@ -331,6 +513,12 @@ deadline exhibit-retrieval-period: 14.days after FinalJudgmentEntered() counted_
 /// alleges cause and is filed at least seven days before the scheduled
 /// hearing.
 deadline remote-testimony-request-period: 7.days before TrialOrHearing() counted_by frbp9006-pennsylvania cite "Bankr. M.D. Pa. L.B.R. 9074-1(b)"
+
+test "Counting boundary: remote-testimony-request-period (holiday)" cite "Bankr. M.D. Pa. L.B.R. 9074-1(b)"
+{
+  given TrialOrHearing() on 2025-12-04
+  expect deadline(remote-testimony-request-period) == 2025-11-26
+}
 
 start motion-served
 

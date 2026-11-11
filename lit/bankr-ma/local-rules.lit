@@ -237,27 +237,69 @@ event DischargeMotionServed()
 /// the first installment is due within 7 days of the order denying the fee
 /// waiver application.
 deadline fee-after-waiver-denial-period: 7.days after FeeWaiverDenied() counted_by frbp9006-massachusetts cite "MLBR 1006-2(b)"
+
+test "Counting boundary: fee-after-waiver-denial-period (weekend)" cite "MLBR 1006-2(b)"
+{
+  given FeeWaiverDenied() on 2025-12-06
+  expect deadline(fee-after-waiver-denial-period) == 2025-12-15
+}
+
 /// MLBR 1007-1(c)(1): an individual debtor provides the trustee copies of
 /// all payment advices at least 7 days before the § 341 meeting of
 /// creditors.
 deadline payment-advices-period: 7.days before MeetingOfCreditorsScheduled() counted_by frbp9006-massachusetts cite "MLBR 1007-1(c)"
+
+test "Counting boundary: payment-advices-period (holiday)" cite "MLBR 1007-1(c)"
+{
+  given MeetingOfCreditorsScheduled() on 2025-12-04
+  expect deadline(payment-advices-period) == 2025-11-26
+}
+
 /// MLBR 1007-1(f)(3): a non-individual's petition without evidence of
 /// authority or an attorney's signature is dismissed within 7 days after
 /// the court issues a notice of defective filing.
 deadline defective-petition-cure-period: 7.days after DefectiveFilingNoticeIssued() counted_by frbp9006-massachusetts cite "MLBR 1007-1(f)"
+
+test "Counting boundary: defective-petition-cure-period (weekend)" cite "MLBR 1007-1(f)"
+{
+  given DefectiveFilingNoticeIssued() on 2025-12-06
+  expect deadline(defective-petition-cure-period) == 2025-12-15
+}
+
 /// MLBR 1016-1(c): within 30 days after the Notice of Death is filed, the
 /// deceased debtor's attorney files a certification of authority from the
 /// Personal Representative or a statement that the attorney has none.
 deadline death-authority-certification-period: 30.days after DeathNoticeFiled() counted_by frbp9006-massachusetts cite "MLBR 1016-1(c)"
+
+test "Counting boundary: death-authority-certification-period (holiday)" cite "MLBR 1016-1(c)"
+{
+  given DeathNoticeFiled() on 2025-12-02
+  expect deadline(death-authority-certification-period) == 2026-01-02
+}
+
 /// MLBR 1016-1(d): within 45 days of the filing of the Notice of Death, the
 /// Personal Representative, or a relative asserting standing, files a
 /// motion to continue administration, suspend administration or dismiss the
 /// case.
 deadline proceeding-motion-period: 45.days after DeathNoticeFiled() counted_by frbp9006-massachusetts cite "MLBR 1016-1(d)"
+
+test "Counting boundary: proceeding-motion-period (weekend)" cite "MLBR 1016-1(d)"
+{
+  given DeathNoticeFiled() on 2025-12-03
+  expect deadline(proceeding-motion-period) == 2026-01-20
+}
+
 /// MLBR 1016-1(d): if no Personal Representative or relative files one, the
 /// trustee or the United States trustee files the Proceeding Motion within
 /// 60 days of the filing of the Notice of Death.
 deadline trustee-proceeding-motion-period: 60.days after DeathNoticeFiled() counted_by frbp9006-massachusetts cite "MLBR 1016-1(d)"
+
+test "Counting boundary: trustee-proceeding-motion-period (weekend)" cite "MLBR 1016-1(d)"
+{
+  given DeathNoticeFiled() on 2025-12-02
+  expect deadline(trustee-proceeding-motion-period) == 2026-02-02
+}
+
 /// MLBR 1017-1(a): unless the court relieves the parties, the conference
 /// before a motion to dismiss or convert a chapter 11 case takes place
 /// within 14 days of service of the written request for it.
@@ -278,6 +320,13 @@ deadline pro-se-contact-change-period: 14.days after AddressChanged() counted_by
 /// ombudsman is filed within 7 days after service of the notice of
 /// appointment.
 deadline ombudsman-opposition-period: 7.days after OmbudsmanAppointmentServed() counted_by frbp9006-massachusetts cite "MLBR 2007.2-1(d)"
+
+test "Counting boundary: ombudsman-opposition-period (weekend)" cite "MLBR 2007.2-1(d)"
+{
+  given OmbudsmanAppointmentServed() on 2025-12-06
+  expect deadline(ombudsman-opposition-period) == 2025-12-15
+}
+
 /// MLBR 2014-1(d): an application to employ a professional filed within 14
 /// days from the later of case commencement or the start of services is
 /// approved effective from the date services were first rendered; otherwise
@@ -288,10 +337,24 @@ deadline retroactive-employment-period: 14.days after ProfessionalEngagementBega
 /// expense is filed within 70 days after the first date set for the § 341
 /// meeting.
 deadline chapter11-administrative-expense-period: 70.days after FirstMeetingDate() counted_by frbp9006-massachusetts cite "MLBR 3002-1(a)"
+
+test "Counting boundary: chapter11-administrative-expense-period (weekend)" cite "MLBR 3002-1(a)"
+{
+  given FirstMeetingDate() on 2025-12-06
+  expect deadline(chapter11-administrative-expense-period) == 2026-02-17
+}
+
 /// MLBR 3002-1(c): if the § 503(b)(9) motion is denied, the request is
 /// deemed an informal proof of claim and the claimant has 30 days after the
 /// order denying it to file a proof of claim.
 deadline denied-administrative-expense-claim-period: 30.days after AdministrativeExpenseDenied() counted_by frbp9006-massachusetts cite "MLBR 3002-1(c)"
+
+test "Counting boundary: denied-administrative-expense-claim-period (holiday)" cite "MLBR 3002-1(c)"
+{
+  given AdministrativeExpenseDenied() on 2025-12-02
+  expect deadline(denied-administrative-expense-claim-period) == 2026-01-02
+}
+
 /// MLBR 3007-1(d): if timely responses are filed, the objecting party files
 /// a Report and Hearing Agenda no later than 2 days prior to the hearing on
 /// the objections.
@@ -300,10 +363,24 @@ deadline claim-objection-report-period: 2.days before ClaimObjectionHearingSched
 /// chapter 13 case, the trustee forwards to the clerk the list of
 /// unnegotiated checks and a check for the full amount.
 deadline unclaimed-funds-period: 150.days after FinalDistributionMade() counted_by frbp9006-massachusetts cite "MLBR 3011-1(a)"
+
+test "Counting boundary: unclaimed-funds-period (weekend)" cite "MLBR 3011-1(a)"
+{
+  given FinalDistributionMade() on 2025-12-03
+  expect deadline(unclaimed-funds-period) == 2026-05-04
+}
+
 /// MLBR 3022-1(b): unless the plan or the court provides otherwise, the
 /// plan proponent's attorney files a motion for final decree within 60 days
 /// of the date the chapter 11 case is fully administered.
 deadline final-decree-motion-period: 60.days after CaseFullyAdministered() counted_by frbp9006-massachusetts cite "MLBR 3022-1(b)"
+
+test "Counting boundary: final-decree-motion-period (weekend)" cite "MLBR 3022-1(b)"
+{
+  given CaseFullyAdministered() on 2025-12-02
+  expect deadline(final-decree-motion-period) == 2026-02-02
+}
+
 /// MLBR 3022-1(d): if the plan proponent cannot file a motion for final
 /// decree on or before 75 days after the order confirming the plan, it
 /// files an interim report on administration progress by then.
@@ -321,23 +398,58 @@ deadline stay-continuation-motion-period: 14.days after PetitionFiled() counted_
 /// federal tax return or transcript is made no fewer than 14 days before
 /// the § 341 meeting of creditors.
 deadline tax-return-request-period: 14.days before MeetingOfCreditorsScheduled() counted_by frbp9006-massachusetts cite "MLBR 4002-1(b)"
+
+test "Counting boundary: tax-return-request-period (weekend)" cite "MLBR 4002-1(b)"
+{
+  given MeetingOfCreditorsScheduled() on 2025-12-06
+  expect deadline(tax-return-request-period) == 2025-11-21
+}
+
 /// MLBR 4002-1(b): a debtor who disputes that the requesting party is a
 /// creditor files an objection within 7 days prior to the § 341 meeting of
 /// creditors.
 deadline tax-return-request-objection-period: 7.days before MeetingOfCreditorsScheduled() counted_by frbp9006-massachusetts cite "MLBR 4002-1(b)"
+
+test "Counting boundary: tax-return-request-objection-period (holiday)" cite "MLBR 4002-1(b)"
+{
+  given MeetingOfCreditorsScheduled() on 2025-12-04
+  expect deadline(tax-return-request-objection-period) == 2025-11-26
+}
+
 /// MLBR 4002-1(c): a debtor objecting to a motion concerning the filing of
 /// or access to tax returns files the objection within 7 days after service
 /// of the motion.
 deadline tax-return-motion-objection-period: 7.days after TaxReturnMotionServed() counted_by frbp9006-massachusetts cite "MLBR 4002-1(c)"
+
+test "Counting boundary: tax-return-motion-objection-period (weekend)" cite "MLBR 4002-1(c)"
+{
+  given TaxReturnMotionServed() on 2025-12-06
+  expect deadline(tax-return-motion-objection-period) == 2025-12-15
+}
+
 /// MLBR 6004-1(c)(5)(B), (d)(4)(B) and (f)(3): unless the court sets a
 /// different deadline, the estate representative files a certificate of
 /// service no later than 7 days following service of the completed notice
 /// of sale.
 deadline sale-certificate-period: 7.days after SaleNoticeServed() counted_by frbp9006-massachusetts cite "MLBR 6004-1(c)"
+
+test "Counting boundary: sale-certificate-period (weekend)" cite "MLBR 6004-1(c)"
+{
+  given SaleNoticeServed() on 2025-12-06
+  expect deadline(sale-certificate-period) == 2025-12-15
+}
+
 /// MLBR 6004-1(f)(4): except as the court orders otherwise, a consumer
 /// privacy ombudsman files a report with recommendations within 7 days of
 /// appointment.
 deadline privacy-ombudsman-report-period: 7.days after PrivacyOmbudsmanAppointed() counted_by frbp9006-massachusetts cite "MLBR 6004-1(f)"
+
+test "Counting boundary: privacy-ombudsman-report-period (weekend)" cite "MLBR 6004-1(f)"
+{
+  given PrivacyOmbudsmanAppointed() on 2025-12-06
+  expect deadline(privacy-ombudsman-report-period) == 2025-12-15
+}
+
 /// MLBR 6007-1(a): a creditor or interested party wishing notice of an
 /// intended abandonment files and serves a written request within 14 days
 /// from the date first scheduled for the § 341 meeting.
@@ -355,6 +467,13 @@ deadline ordered-answers-period: 14.days after AnswersOrdered() counted_by frbp9
 /// knowledge is substantially incomplete files a supplemental answer or
 /// objection within 7 days.
 deadline supplemental-answer-period: 7.days after AnswerFoundIncomplete() counted_by frbp9006-massachusetts cite "MLBR 7033-1(c)"
+
+test "Counting boundary: supplemental-answer-period (weekend)" cite "MLBR 7033-1(c)"
+{
+  given AnswerFoundIncomplete() on 2025-12-06
+  expect deadline(supplemental-answer-period) == 2025-12-15
+}
+
 /// MLBR 7036-1(c): when a request for admission is determined proper after
 /// objection, the matter is deemed admitted unless the party serves a
 /// denial or a statement why it cannot admit or deny within 14 days after
@@ -366,19 +485,47 @@ deadline discovery-conference-period: 14.days after DiscoveryConferenceRequested
 /// MLBR 7037-1(a): failure to respond to a request for a discovery
 /// conference within 7 days of the request may be grounds for sanctions.
 deadline discovery-conference-response-period: 7.days after DiscoveryConferenceRequested() counted_by frbp9006-massachusetts cite "MLBR 7037-1(a)"
+
+test "Counting boundary: discovery-conference-response-period (weekend)" cite "MLBR 7037-1(a)"
+{
+  given DiscoveryConferenceRequested() on 2025-12-06
+  expect deadline(discovery-conference-response-period) == 2025-12-15
+}
+
 /// MLBR 7041-1(b): a complaint is not dismissed for lack of prosecution if,
 /// within 30 days after the Notice of Inactivity, there are further
 /// proceedings, an opposition is filed or the court orders further
 /// proceedings.
 deadline inactivity-response-period: 30.days after InactivityNoticeIssued() counted_by frbp9006-massachusetts cite "MLBR 7041-1(b)"
+
+test "Counting boundary: inactivity-response-period (holiday)" cite "MLBR 7041-1(b)"
+{
+  given InactivityNoticeIssued() on 2025-12-02
+  expect deadline(inactivity-response-period) == 2026-01-02
+}
+
 /// MLBR 7056-1(c): unless the court orders otherwise, an opposition to a
 /// motion for summary judgment is filed within 21 days after the motion is
 /// served.
 deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006-massachusetts cite "MLBR 7056-1(c)"
+
+test "Counting boundary: summary-judgment-opposition-period (holiday)" cite "MLBR 7056-1(c)"
+{
+  given SummaryJudgmentMotionServed() on 2025-12-04
+  expect deadline(summary-judgment-opposition-period) == 2025-12-26
+}
+
 /// MLBR 7056-1(d): within 21 days after the motion is served, the opposing
 /// party may also request summary judgment in its favor on the issues the
 /// motion raises.
 deadline summary-judgment-cross-motion-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006-massachusetts cite "MLBR 7056-1(d)"
+
+test "Counting boundary: summary-judgment-cross-motion-period (holiday)" cite "MLBR 7056-1(d)"
+{
+  given SummaryJudgmentMotionServed() on 2025-12-04
+  expect deadline(summary-judgment-cross-motion-period) == 2025-12-26
+}
+
 /// MLBR 7056-1(e): the original moving party files any response to the
 /// opposing party's additional Statement of Undisputed Facts within 14
 /// days.
@@ -397,6 +544,13 @@ deadline exhibit-authenticity-objection-period: 14.days after ExhibitFiled() cou
 /// days after the order determining the motion, unless the court orders
 /// otherwise.
 deadline extended-discharge-deadline-period: 7.days after ExtensionMotionDetermined() counted_by frbp9006-massachusetts cite "MLBR 9006-1"
+
+test "Counting boundary: extended-discharge-deadline-period (weekend)" cite "MLBR 9006-1"
+{
+  given ExtensionMotionDetermined() on 2025-12-06
+  expect deadline(extended-discharge-deadline-period) == 2025-12-15
+}
+
 /// MLBR 9010-2(c): if the mediation is unsuccessful, the attorney appearing
 /// for mediation purposes elects within 14 days of its conclusion to
 /// withdraw or to file a further notice of appearance.
@@ -405,6 +559,13 @@ deadline mediation-election-period: 14.days after MediationConcluded() counted_b
 /// a notice of appearance within 21 days from the date of the order
 /// allowing withdrawal, or a shorter period the court directs.
 deadline successor-appearance-period: 21.days after WithdrawalOrderEntered() counted_by frbp9006-massachusetts cite "MLBR 9010-3(d)"
+
+test "Counting boundary: successor-appearance-period (holiday)" cite "MLBR 9010-3(d)"
+{
+  given WithdrawalOrderEntered() on 2025-12-04
+  expect deadline(successor-appearance-period) == 2025-12-26
+}
+
 /// MLBR 9013-1(c): a party opposing a motion files a response by the
 /// response date in the hearing notice or, if none is set, within 14 days
 /// of service of the motion, inclusive of the three-day mailing period of
@@ -429,13 +590,34 @@ deadline jury-consent-before-trial-period: 30.days before TrialScheduled() count
 /// a signed stipulation, agreement for judgment or other document the court
 /// directs within 7 days, or another time the court directs.
 deadline settlement-papers-period: 7.days after MatterSettled() counted_by frbp9006-massachusetts cite "MLBR 9019-1(c)"
+
+test "Counting boundary: settlement-papers-period (weekend)" cite "MLBR 9019-1(c)"
+{
+  given MatterSettled() on 2025-12-06
+  expect deadline(settlement-papers-period) == 2025-12-15
+}
+
 /// MLBR 9019-1(d)(2): the moving party files a certificate of service
 /// within 7 days of the issuance of the notice on a motion to approve a
 /// stipulation of settlement, or another time the court directs.
 deadline settlement-certificate-period: 7.days after SettlementNoticeIssued() counted_by frbp9006-massachusetts cite "MLBR 9019-1(d)"
+
+test "Counting boundary: settlement-certificate-period (weekend)" cite "MLBR 9019-1(d)"
+{
+  given SettlementNoticeIssued() on 2025-12-06
+  expect deadline(settlement-certificate-period) == 2025-12-15
+}
+
 /// MLBR 9070-1: after the clerk's notice, the parties remove their trial
 /// exhibits within 30 days or the clerk may dispose of them.
 deadline exhibit-removal-period: 30.days after ExhibitRemovalNoticeIssued() counted_by frbp9006-massachusetts cite "MLBR 9070-1"
+
+test "Counting boundary: exhibit-removal-period (holiday)" cite "MLBR 9070-1"
+{
+  given ExhibitRemovalNoticeIssued() on 2025-12-02
+  expect deadline(exhibit-removal-period) == 2026-01-02
+}
+
 /// App. 1 Rule 13-2(a)(1): if the chapter 13 debtor does not file the
 /// evidence of insurance and the acknowledgement with the petition, the
 /// court may dismiss the case if they are not filed within 14 days from the
@@ -445,6 +627,13 @@ deadline chapter13-insurance-documents-period: 14.days after PetitionFiled() cou
 /// submits to the trustee evidence of business insurance and of debtor-in-
 /// possession accounts within 7 days after the commencement of the case.
 deadline business-insurance-period: 7.days after PetitionFiled() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-2(a)"
+
+test "Counting boundary: business-insurance-period (weekend)" cite "MLBR App. 1 Rule 13-2(a)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(business-insurance-period) == 2025-12-15
+}
+
 /// App. 1 Rule 13-2(a)(2)(B): a chapter 13 business debtor submits to the
 /// trustee the prior-year and year-to-date profit and loss statements
 /// within 14 days after the commencement of the case.
@@ -453,19 +642,47 @@ deadline profit-and-loss-period: 14.days after PetitionFiled() counted_by frbp90
 /// trustee a statement of quarterly income and expenses within 30 days of
 /// the close of each quarter.
 deadline quarterly-statement-period: 30.days after QuarterEnded() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-2(a)"
+
+test "Counting boundary: quarterly-statement-period (holiday)" cite "MLBR App. 1 Rule 13-2(a)"
+{
+  given QuarterEnded() on 2025-12-02
+  expect deadline(quarterly-statement-period) == 2026-01-02
+}
+
 /// App. 1 Rule 13-7(h): if no objections to a chapter 13 debtor's
 /// attorney's fee application are filed within 21 days of service, the
 /// court awards fees in its discretion.
 deadline fee-application-objection-period: 21.days after FeeApplicationServed() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-7(h)"
+
+test "Counting boundary: fee-application-objection-period (holiday)" cite "MLBR App. 1 Rule 13-7(h)"
+{
+  given FeeApplicationServed() on 2025-12-04
+  expect deadline(fee-application-objection-period) == 2025-12-26
+}
+
 /// App. 1 Rule 13-8(a): unless the court orders otherwise, an objection to
 /// confirmation of a chapter 13 plan is filed on or before 30 days after
 /// the first § 341 meeting is held, or 30 days after service of an amended
 /// or modified plan if later.
 deadline confirmation-objection-period: 30.days after MeetingOfCreditorsHeld() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-8(a)"
+
+test "Counting boundary: confirmation-objection-period (holiday)" cite "MLBR App. 1 Rule 13-8(a)"
+{
+  given MeetingOfCreditorsHeld() on 2025-12-02
+  expect deadline(confirmation-objection-period) == 2026-01-02
+}
+
 /// App. 1 Rule 13-8(a): an objection to confirmation is filed on or before
 /// 30 days after service of an amended or modified plan, or 30 days after
 /// the first § 341 meeting is held if later.
 deadline amended-plan-objection-period: 30.days after AmendedPlanServed() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-8(a)"
+
+test "Counting boundary: amended-plan-objection-period (holiday)" cite "MLBR App. 1 Rule 13-8(a)"
+{
+  given AmendedPlanServed() on 2025-12-02
+  expect deadline(amended-plan-objection-period) == 2026-01-02
+}
+
 /// App. 1 Rule 13-8(c): unless the court orders otherwise, a response to an
 /// objection to confirmation is filed within 14 days after service of the
 /// objection.
@@ -474,6 +691,13 @@ deadline confirmation-objection-response-period: 14.days after ConfirmationObjec
 /// objection to confirmation is filed, the objecting party files a
 /// certificate that the conference was held or why it was not.
 deadline confirmation-conference-certificate-period: 21.days after ConfirmationObjectionResponseFiled() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-8(e)"
+
+test "Counting boundary: confirmation-conference-certificate-period (holiday)" cite "MLBR App. 1 Rule 13-8(e)"
+{
+  given ConfirmationObjectionResponseFiled() on 2025-12-04
+  expect deadline(confirmation-conference-certificate-period) == 2025-12-26
+}
+
 /// App. 1 Rule 13-10(a): if no objections to a Modification of Plan are
 /// filed within 14 days after service, the court considers confirmation of
 /// the plan as amended.
@@ -483,63 +707,168 @@ deadline plan-modification-objection-period: 14.days after PlanModificationServe
 /// the certificate of service, the court may allow the motion without a
 /// hearing.
 deadline amended-plan-motion-objection-period: 30.days after AmendedPlanCertificateFiled() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-10(b)"
+
+test "Counting boundary: amended-plan-motion-objection-period (holiday)" cite "MLBR App. 1 Rule 13-10(b)"
+{
+  given AmendedPlanCertificateFiled() on 2025-12-02
+  expect deadline(amended-plan-motion-objection-period) == 2026-01-02
+}
+
 /// App. 1 Rule 13-12(d): objections to an amended plan after confirmation
 /// are filed no later than 30 days from the date of service of the motion
 /// to amend.
 deadline confirmed-plan-amendment-objection-period: 30.days after PlanAmendmentMotionServed() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-12(d)"
+
+test "Counting boundary: confirmed-plan-amendment-objection-period (holiday)" cite "MLBR App. 1 Rule 13-12(d)"
+{
+  given PlanAmendmentMotionServed() on 2025-12-02
+  expect deadline(confirmed-plan-amendment-objection-period) == 2026-01-02
+}
+
 /// App. 1 Rule 13-12(d): the objecting party serves notice of the hearing
 /// on a motion to amend a confirmed plan at least 7 days before the hearing
 /// date.
 deadline amendment-hearing-notice-period: 7.days before PlanAmendmentHearingScheduled() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-12(d)"
+
+test "Counting boundary: amendment-hearing-notice-period (holiday)" cite "MLBR App. 1 Rule 13-12(d)"
+{
+  given PlanAmendmentHearingScheduled() on 2025-12-04
+  expect deadline(amendment-hearing-notice-period) == 2025-11-26
+}
+
 /// App. 1 Rule 13-12(e): the chapter 13 trustee submits a proposed order
 /// confirming an amended plan within 21 days after the court allows the
 /// motion to amend.
 deadline amended-confirmation-order-period: 21.days after PlanAmendmentAllowed() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-12(e)"
+
+test "Counting boundary: amended-confirmation-order-period (holiday)" cite "MLBR App. 1 Rule 13-12(e)"
+{
+  given PlanAmendmentAllowed() on 2025-12-04
+  expect deadline(amended-confirmation-order-period) == 2025-12-26
+}
+
 /// App. 1 Rule 13-13(b): if a Designated Creditor does not timely file a
 /// proof of claim, the debtor files a surrogate proof of claim under FRBP
 /// 3004 within 30 days after the Initial Filing Deadline (the Surrogate
 /// Filing Deadline).
 deadline surrogate-claim-period: 30.days after ClaimDeadlinePassed() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-13(b)"
+
+test "Counting boundary: surrogate-claim-period (holiday)" cite "MLBR App. 1 Rule 13-13(b)"
+{
+  given ClaimDeadlinePassed() on 2025-12-02
+  expect deadline(surrogate-claim-period) == 2026-01-02
+}
+
 /// App. 1 Rule 13-13(b): within 7 days of filing an amended proof of claim
 /// after a surrogate claim, the creditor files a certificate of service on
 /// the trustee and the debtor's attorney or pro se debtor.
 deadline amended-claim-certificate-period: 7.days after AmendedClaimFiled() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-13(b)"
+
+test "Counting boundary: amended-claim-certificate-period (weekend)" cite "MLBR App. 1 Rule 13-13(b)"
+{
+  given AmendedClaimFiled() on 2025-12-06
+  expect deadline(amended-claim-certificate-period) == 2025-12-15
+}
+
 /// App. 1 Rule 13-13(b): if no surrogate claim is filed for a Designated
 /// Creditor the plan pays, the chapter 13 trustee files an objection to
 /// confirmation or a motion to dismiss no later than 10 days after the
 /// Surrogate Filing Deadline.
 deadline trustee-unfiled-claim-period: 10.days after SurrogateDeadlinePassed() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-13(b)"
+
+test "Counting boundary: trustee-unfiled-claim-period (weekend)" cite "MLBR App. 1 Rule 13-13(b)"
+{
+  given SurrogateDeadlinePassed() on 2025-12-03
+  expect deadline(trustee-unfiled-claim-period) == 2025-12-15
+}
+
 /// App. 1 Rule 13-13(e): in a chapter 13 case, a response to an objection
 /// to a proof of claim is filed within 30 days of the filing of the
 /// objection.
 deadline claim-objection-response-period: 30.days after ClaimObjectionFiled() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-13(e)"
+
+test "Counting boundary: claim-objection-response-period (holiday)" cite "MLBR App. 1 Rule 13-13(e)"
+{
+  given ClaimObjectionFiled() on 2025-12-02
+  expect deadline(claim-objection-response-period) == 2026-01-02
+}
+
 /// App. 1 Rule 13-13(f): within 7 days after a response to a claim
 /// objection is filed, the objecting party confers with the claimant's
 /// counsel.
 deadline claim-objection-conference-period: 7.days after ClaimObjectionResponseFiled() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-13(f)"
+
+test "Counting boundary: claim-objection-conference-period (weekend)" cite "MLBR App. 1 Rule 13-13(f)"
+{
+  given ClaimObjectionResponseFiled() on 2025-12-06
+  expect deadline(claim-objection-conference-period) == 2025-12-15
+}
+
 /// App. 1 Rule 13-13(g): objections to claims are served and filed within
 /// 30 days after the deadline for filing proofs of claim, or additional
 /// time the court allows on motion for good cause.
 deadline chapter13-claim-objection-period: 30.days after ClaimDeadlinePassed() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-13(g)"
+
+test "Counting boundary: chapter13-claim-objection-period (holiday)" cite "MLBR App. 1 Rule 13-13(g)"
+{
+  given ClaimDeadlinePassed() on 2025-12-02
+  expect deadline(chapter13-claim-objection-period) == 2026-01-02
+}
+
 /// App. 1 Rule 13-14(c): within 45 days after the order approving a private
 /// sale of estate real estate, the debtor's attorney or unrepresented
 /// debtor files a Status Report Regarding Sale of Estate Property.
 deadline sale-status-report-period: 45.days after PrivateSaleApproved() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-14(c)"
+
+test "Counting boundary: sale-status-report-period (weekend)" cite "MLBR App. 1 Rule 13-14(c)"
+{
+  given PrivateSaleApproved() on 2025-12-03
+  expect deadline(sale-status-report-period) == 2026-01-20
+}
+
 /// App. 1 Rule 13-15(c): a motion to approve a loan modification is filed
 /// within 45 days of receipt of the fully executed modification agreement.
 deadline loan-modification-motion-period: 45.days after ModificationAgreementReceived() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-15(c)"
+
+test "Counting boundary: loan-modification-motion-period (weekend)" cite "MLBR App. 1 Rule 13-15(c)"
+{
+  given ModificationAgreementReceived() on 2025-12-03
+  expect deadline(loan-modification-motion-period) == 2026-01-20
+}
+
 /// App. 1 Rule 13-15(e): within 30 days of court approval of a loan
 /// modification, the debtor files the amendments to the plan and schedules
 /// it requires.
 deadline modification-amendments-period: 30.days after LoanModificationApproved() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-15(e)"
+
+test "Counting boundary: modification-amendments-period (holiday)" cite "MLBR App. 1 Rule 13-15(e)"
+{
+  given LoanModificationApproved() on 2025-12-02
+  expect deadline(modification-amendments-period) == 2026-01-02
+}
+
 /// App. 1 Rule 13-15(f): within 30 days of court approval of a loan
 /// modification, the creditor files an amended proof of claim for the
 /// modified unpaid principal balance.
 deadline modification-claim-period: 30.days after LoanModificationApproved() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-15(f)"
+
+test "Counting boundary: modification-claim-period (holiday)" cite "MLBR App. 1 Rule 13-15(f)"
+{
+  given LoanModificationApproved() on 2025-12-02
+  expect deadline(modification-claim-period) == 2026-01-02
+}
+
 /// App. 1 Rule 13-16-1(a)(1): at least 7 days prior to filing a motion for
 /// relief from stay, the movant's counsel confers with the debtor's counsel
 /// or the pro se debtor.
 deadline stay-relief-conference-period: 7.days before StayReliefMotionFiled() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-16-1(a)"
+
+test "Counting boundary: stay-relief-conference-period (holiday)" cite "MLBR App. 1 Rule 13-16-1(a)"
+{
+  given StayReliefMotionFiled() on 2025-12-04
+  expect deadline(stay-relief-conference-period) == 2025-11-26
+}
+
 /// App. 1 Rule 13-16-2(b): unless the court orders otherwise, an objection
 /// to a stipulation resolving a motion for relief from stay is filed within
 /// 14 days from the date of its service.
@@ -548,10 +877,24 @@ deadline stay-stipulation-objection-period: 14.days after StayReliefStipulationS
 /// Designated Creditor relief from stay, the debtor files an amended plan,
 /// unless a motion to dismiss or convert is pending.
 deadline post-relief-amended-plan-period: 30.days after StayReliefGranted() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-16-3(c)"
+
+test "Counting boundary: post-relief-amended-plan-period (holiday)" cite "MLBR App. 1 Rule 13-16-3(c)"
+{
+  given StayReliefGranted() on 2025-12-02
+  expect deadline(post-relief-amended-plan-period) == 2026-01-02
+}
+
 /// App. 1 Rule 13-17(a): a party opposing a motion to dismiss or convert a
 /// chapter 13 case files a response within 21 days of service of the
 /// motion.
 deadline chapter13-dismissal-response-period: 21.days after Chapter13DismissalMotionServed() counted_by frbp9006-massachusetts cite "MLBR App. 1 Rule 13-17(a)"
+
+test "Counting boundary: chapter13-dismissal-response-period (holiday)" cite "MLBR App. 1 Rule 13-17(a)"
+{
+  given Chapter13DismissalMotionServed() on 2025-12-04
+  expect deadline(chapter13-dismissal-response-period) == 2025-12-26
+}
+
 /// App. 1 Rule 13-17(c): if confirmation is denied, the case is dismissed
 /// without further notice unless within 14 days, or another time the court
 /// fixes, the debtor files an amended plan, moves to convert, obtains a

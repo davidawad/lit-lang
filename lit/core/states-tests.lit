@@ -68,8 +68,18 @@ deadline federal-three-business-days: 3.business_days after Served() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: federal-three-business-days (weekend)" {
+  given Served(Personal) on 1985-08-01
+  expect deadline(federal-three-business-days) == 1985-08-06
+}
+
 deadline virgin-islands-three-business-days-backward: 3.business_days before Served() counted_by frcrimp45-virgin-islands {
   forum frcrimp
+}
+
+test "Counting boundary: virgin-islands-three-business-days-backward (weekend)" {
+  given Served(Personal) on 2023-12-05
+  expect deadline(virgin-islands-three-business-days-backward) == 2023-11-30
 }
 
 deadline federal-three-business-days-backward: 3.business_days before Served() counted_by frcrimp45 {
@@ -94,66 +104,168 @@ deadline frbp9006-alabama-smoke: 1.days after Served() counted_by frbp9006-alaba
   forum bankr-alm
 }
 
+test "Counting boundary: frbp9006-alabama-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-alabama-smoke) == 2025-12-08
+}
+
 deadline frbp9006-alaska-smoke: 1.days after Served() counted_by frbp9006-alaska { forum bankr-ak }
+
+test "Counting boundary: frbp9006-alaska-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-alaska-smoke) == 2025-12-08
+}
 
 deadline frbp9006-arizona-smoke: 1.days after Served() counted_by frbp9006-arizona {
   forum bankr-az
+}
+
+test "Counting boundary: frbp9006-arizona-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-arizona-smoke) == 2025-12-08
 }
 
 deadline frbp9006-colorado-smoke: 1.days after Served() counted_by frbp9006-colorado {
   forum bankr-co
 }
 
+test "Counting boundary: frbp9006-colorado-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-colorado-smoke) == 2025-12-08
+}
+
 deadline frbp9006-connecticut-smoke: 1.days after Served() counted_by frbp9006-connecticut {
   forum bankr-ct
+}
+
+test "Counting boundary: frbp9006-connecticut-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-connecticut-smoke) == 2025-12-08
 }
 
 deadline frbp9006-delaware-smoke: 1.days after Served() counted_by frbp9006-delaware {
   forum bankr-de
 }
 
+test "Counting boundary: frbp9006-delaware-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-delaware-smoke) == 2025-12-08
+}
+
 deadline frbp9006-district-of-columbia-smoke: 1.days after Served() counted_by frbp9006-district-of-columbia {
   forum bankr-dc
+}
+
+test "Counting boundary: frbp9006-district-of-columbia-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-district-of-columbia-smoke) == 2025-12-08
 }
 
 deadline frbp9006-florida-smoke: 1.days after Served() counted_by frbp9006-florida {
   forum bankr-flm
 }
 
+test "Counting boundary: frbp9006-florida-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-florida-smoke) == 2025-12-08
+}
+
 deadline frbp9006-guam-smoke: 1.days after Served() counted_by frbp9006-guam { forum bankr-gu }
+
+test "Counting boundary: frbp9006-guam-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-guam-smoke) == 2025-12-08
+}
+
 deadline frbp9006-idaho-smoke: 1.days after Served() counted_by frbp9006-idaho { forum bankr-id }
+
+test "Counting boundary: frbp9006-idaho-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-idaho-smoke) == 2025-12-08
+}
 
 deadline frbp9006-illinois-smoke: 1.days after Served() counted_by frbp9006-illinois {
   forum bankr-ilc
+}
+
+test "Counting boundary: frbp9006-illinois-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-illinois-smoke) == 2025-12-08
 }
 
 deadline frbp9006-indiana-smoke: 1.days after Served() counted_by frbp9006-indiana {
   forum bankr-inn
 }
 
+test "Counting boundary: frbp9006-indiana-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-indiana-smoke) == 2025-12-08
+}
+
 deadline frbp9006-iowa-smoke: 1.days after Served() counted_by frbp9006-iowa { forum bankr-ian }
+
+test "Counting boundary: frbp9006-iowa-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-iowa-smoke) == 2025-12-08
+}
+
 deadline frbp9006-kansas-smoke: 1.days after Served() counted_by frbp9006-kansas { forum bankr-ks }
+
+test "Counting boundary: frbp9006-kansas-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-kansas-smoke) == 2025-12-08
+}
 
 deadline frbp9006-kentucky-smoke: 1.days after Served() counted_by frbp9006-kentucky {
   forum bankr-kye
+}
+
+test "Counting boundary: frbp9006-kentucky-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-kentucky-smoke) == 2025-12-08
 }
 
 deadline frbp9006-louisiana-smoke: 1.days after Served() counted_by frbp9006-louisiana {
   forum bankr-lae
 }
 
+test "Counting boundary: frbp9006-louisiana-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-louisiana-smoke) == 2025-12-08
+}
+
 deadline frbp9006-maine-smoke: 1.days after Served() counted_by frbp9006-maine { forum bankr-me }
+
+test "Counting boundary: frbp9006-maine-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-maine-smoke) == 2025-12-08
+}
 
 deadline frbp9006-maryland-smoke: 1.days after Served() counted_by frbp9006-maryland {
   forum bankr-md
+}
+
+test "Counting boundary: frbp9006-maryland-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-maryland-smoke) == 2025-12-08
 }
 
 deadline frbp9006-massachusetts-smoke: 1.days after Served() counted_by frbp9006-massachusetts {
   forum bankr-ma
 }
 
+test "Counting boundary: frbp9006-massachusetts-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-massachusetts-smoke) == 2025-12-08
+}
+
 deadline frbp9006-michigan-smoke: 1.days after Served() counted_by frbp9006-michigan {
   forum bankr-mie
+}
+
+test "Counting boundary: frbp9006-michigan-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-michigan-smoke) == 2025-12-08
 }
 
 deadline frbp9006-michigan-2-court-days-before: 2.court_days before Scheduled() counted_by frbp9006-michigan {
@@ -168,102 +280,262 @@ deadline frbp9006-minnesota-smoke: 1.days after Served() counted_by frbp9006-min
   forum bankr-mn
 }
 
+test "Counting boundary: frbp9006-minnesota-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-minnesota-smoke) == 2025-12-08
+}
+
 deadline frbp9006-missouri-smoke: 1.days after Served() counted_by frbp9006-missouri {
   forum bankr-moe
+}
+
+test "Counting boundary: frbp9006-missouri-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-missouri-smoke) == 2025-12-08
 }
 
 deadline frbp9006-montana-smoke: 1.days after Served() counted_by frbp9006-montana {
   forum bankr-mt
 }
 
+test "Counting boundary: frbp9006-montana-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-montana-smoke) == 2025-12-08
+}
+
 deadline frbp9006-nebraska-smoke: 1.days after Served() counted_by frbp9006-nebraska {
   forum bankr-ne
+}
+
+test "Counting boundary: frbp9006-nebraska-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-nebraska-smoke) == 2025-12-08
 }
 
 deadline frbp9006-oklahoma-smoke: 1.days after Served() counted_by frbp9006-oklahoma {
   forum bankr-okw
 }
 
+test "Counting boundary: frbp9006-oklahoma-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-oklahoma-smoke) == 2025-12-08
+}
+
 deadline frbp9006-nevada-smoke: 1.days after Served() counted_by frbp9006-nevada { forum bankr-nv }
+
+test "Counting boundary: frbp9006-nevada-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-nevada-smoke) == 2025-12-08
+}
 
 deadline frbp9006-new-hampshire-smoke: 1.days after Served() counted_by frbp9006-new-hampshire {
   forum bankr-nh
+}
+
+test "Counting boundary: frbp9006-new-hampshire-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-new-hampshire-smoke) == 2025-12-08
 }
 
 deadline frbp9006-new-jersey-smoke: 1.days after Served() counted_by frbp9006-new-jersey {
   forum bankr-nj
 }
 
+test "Counting boundary: frbp9006-new-jersey-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-new-jersey-smoke) == 2025-12-08
+}
+
 deadline frbp9006-new-mexico-smoke: 1.days after Served() counted_by frbp9006-new-mexico {
   forum bankr-nm
+}
+
+test "Counting boundary: frbp9006-new-mexico-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-new-mexico-smoke) == 2025-12-08
 }
 
 deadline frbp9006-new-york-smoke: 1.days after Served() counted_by frbp9006-new-york {
   forum bankr-nye
 }
 
+test "Counting boundary: frbp9006-new-york-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-new-york-smoke) == 2025-12-08
+}
+
 deadline frbp9006-north-carolina-smoke: 1.days after Served() counted_by frbp9006-north-carolina {
   forum bankr-nce
+}
+
+test "Counting boundary: frbp9006-north-carolina-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-north-carolina-smoke) == 2025-12-08
 }
 
 deadline frbp9006-north-dakota-smoke: 1.days after Served() counted_by frbp9006-north-dakota {
   forum bankr-nd
 }
 
+test "Counting boundary: frbp9006-north-dakota-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-north-dakota-smoke) == 2025-12-08
+}
+
 deadline frbp9006-northern-mariana-islands-smoke: 1.days after Served() counted_by frbp9006-northern-mariana-islands {
   forum bankr-mp
 }
 
+test "Counting boundary: frbp9006-northern-mariana-islands-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-northern-mariana-islands-smoke) == 2025-12-08
+}
+
 deadline frbp9006-oregon-smoke: 1.days after Served() counted_by frbp9006-oregon { forum bankr-or }
+
+test "Counting boundary: frbp9006-oregon-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-oregon-smoke) == 2025-12-08
+}
 
 deadline frbp9006-pennsylvania-smoke: 1.days after Served() counted_by frbp9006-pennsylvania {
   forum bankr-pae
+}
+
+test "Counting boundary: frbp9006-pennsylvania-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-pennsylvania-smoke) == 2025-12-08
 }
 
 deadline frbp9006-puerto-rico-smoke: 1.days after Served() counted_by frbp9006-puerto-rico {
   forum bankr-pr
 }
 
+test "Counting boundary: frbp9006-puerto-rico-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-puerto-rico-smoke) == 2025-12-08
+}
+
 deadline frbp9006-rhode-island-smoke: 1.days after Served() counted_by frbp9006-rhode-island {
   forum bankr-ri
+}
+
+test "Counting boundary: frbp9006-rhode-island-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-rhode-island-smoke) == 2025-12-08
 }
 
 deadline frbp9006-south-carolina-smoke: 1.days after Served() counted_by frbp9006-south-carolina {
   forum bankr-sc
 }
 
+test "Counting boundary: frbp9006-south-carolina-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-south-carolina-smoke) == 2025-12-08
+}
+
 deadline frbp9006-texas-smoke: 1.days after Served() counted_by frbp9006-texas { forum bankr-txe }
+
+test "Counting boundary: frbp9006-texas-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-texas-smoke) == 2025-12-08
+}
+
 deadline frbp9006-utah-smoke: 1.days after Served() counted_by frbp9006-utah { forum bankr-ut }
+
+test "Counting boundary: frbp9006-utah-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-utah-smoke) == 2025-12-08
+}
 
 deadline frbp9006-vermont-smoke: 1.days after Served() counted_by frbp9006-vermont {
   forum bankr-vt
+}
+
+test "Counting boundary: frbp9006-vermont-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-vermont-smoke) == 2025-12-08
 }
 
 deadline frbp9006-virginia-smoke: 1.days after Served() counted_by frbp9006-virginia {
   forum bankr-vae
 }
 
+test "Counting boundary: frbp9006-virginia-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-virginia-smoke) == 2025-12-08
+}
+
 deadline frbp9006-washington-smoke: 1.days after Served() counted_by frbp9006-washington {
   forum bankr-wae
+}
+
+test "Counting boundary: frbp9006-washington-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-washington-smoke) == 2025-12-08
 }
 
 deadline frbp9006-west-virginia-smoke: 1.days after Served() counted_by frbp9006-west-virginia {
   forum bankr-wvn
 }
 
+test "Counting boundary: frbp9006-west-virginia-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-west-virginia-smoke) == 2025-12-08
+}
+
 deadline frbp9006-wisconsin-smoke: 1.days after Served() counted_by frbp9006-wisconsin {
   forum bankr-wie
+}
+
+test "Counting boundary: frbp9006-wisconsin-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-wisconsin-smoke) == 2025-12-08
 }
 
 deadline frbp9006-wyoming-smoke: 1.days after Served() counted_by frbp9006-wyoming {
   forum bankr-wy
 }
 
+test "Counting boundary: frbp9006-wyoming-smoke (weekend)" {
+  given Served(Personal) on 2025-12-05
+  expect deadline(frbp9006-wyoming-smoke) == 2025-12-08
+}
+
 deadline frcp6-alabama-smoke: 1.days after Served() counted_by frcp6-alabama { forum frcp }
+
+test "Counting boundary: frcp6-alabama-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-alabama-smoke) == 2023-12-04
+}
+
 deadline frcp6-alaska-smoke: 1.days after Served() counted_by frcp6-alaska { forum frcp }
+
+test "Counting boundary: frcp6-alaska-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-alaska-smoke) == 2023-12-04
+}
+
 deadline frcp6-arizona-smoke: 1.days after Served() counted_by frcp6-arizona { forum frcp }
+
+test "Counting boundary: frcp6-arizona-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-arizona-smoke) == 2023-12-04
+}
+
 deadline frcp6-colorado-smoke: 1.days after Served() counted_by frcp6-colorado { forum frcp }
+
+test "Counting boundary: frcp6-colorado-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-colorado-smoke) == 2023-12-04
+}
+
 deadline frcp6-connecticut-smoke: 1.days after Served() counted_by frcp6-connecticut { forum frcp }
+
+test "Counting boundary: frcp6-connecticut-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-connecticut-smoke) == 2023-12-04
+}
 
 deadline frcp6-connecticut-lincoln-forward: 1.days after Served() counted_by frcp6-connecticut {
   forum frcp
@@ -275,91 +547,317 @@ deadline frcp6-connecticut-lincoln-backward: 3.court_days before Scheduled() cou
 
 deadline frcp6-delaware-smoke: 1.days after Served() counted_by frcp6-delaware { forum frcp }
 
+test "Counting boundary: frcp6-delaware-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-delaware-smoke) == 2023-12-04
+}
+
 deadline frcp6-district-of-columbia-smoke: 1.days after Served() counted_by frcp6-district-of-columbia {
   forum frcp
 }
 
+test "Counting boundary: frcp6-district-of-columbia-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-district-of-columbia-smoke) == 2023-12-04
+}
+
 deadline frcp6-florida-smoke: 1.days after Served() counted_by frcp6-florida { forum frcp }
+
+test "Counting boundary: frcp6-florida-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-florida-smoke) == 2023-12-04
+}
+
 deadline frcp6-guam-smoke: 1.days after Served() counted_by frcp6-guam { forum frcp }
+
+test "Counting boundary: frcp6-guam-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-guam-smoke) == 2023-12-04
+}
+
 deadline frcp6-idaho-smoke: 1.days after Served() counted_by frcp6-idaho { forum frcp }
+
+test "Counting boundary: frcp6-idaho-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-idaho-smoke) == 2023-12-04
+}
+
 deadline frcp6-illinois-smoke: 1.days after Served() counted_by frcp6-illinois { forum frcp }
+
+test "Counting boundary: frcp6-illinois-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-illinois-smoke) == 2023-12-04
+}
+
 deadline frcp6-indiana-smoke: 1.days after Served() counted_by frcp6-indiana { forum frcp }
+
+test "Counting boundary: frcp6-indiana-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-indiana-smoke) == 2023-12-04
+}
 
 deadline frcp6-indiana-lincoln-saturday: 1.days after Served() counted_by frcp6-indiana {
   forum frcp
 }
 
 deadline frcp6-iowa-smoke: 1.days after Served() counted_by frcp6-iowa { forum frcp }
+
+test "Counting boundary: frcp6-iowa-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-iowa-smoke) == 2023-12-04
+}
+
 deadline frcp6-kansas-smoke: 1.days after Served() counted_by frcp6-kansas { forum frcp }
+
+test "Counting boundary: frcp6-kansas-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-kansas-smoke) == 2023-12-04
+}
+
 deadline frcp6-kentucky-smoke: 1.days after Served() counted_by frcp6-kentucky { forum frcp }
+
+test "Counting boundary: frcp6-kentucky-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-kentucky-smoke) == 2023-12-04
+}
+
 deadline frcp6-louisiana-smoke: 1.days after Served() counted_by frcp6-louisiana { forum frcp }
+
+test "Counting boundary: frcp6-louisiana-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-louisiana-smoke) == 2023-12-04
+}
+
 deadline frcp6-maine-smoke: 1.days after Served() counted_by frcp6-maine { forum frcp }
+
+test "Counting boundary: frcp6-maine-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-maine-smoke) == 2023-12-04
+}
+
 deadline frcp6-maryland-smoke: 1.days after Served() counted_by frcp6-maryland { forum frcp }
+
+test "Counting boundary: frcp6-maryland-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-maryland-smoke) == 2023-12-04
+}
 
 deadline frcp6-maryland-lincoln-saturday: 1.days after Served() counted_by frcp6-maryland {
   forum frcp
+}
+
+test "Counting boundary: frcp6-maryland-lincoln-saturday (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-maryland-lincoln-saturday) == 2023-12-04
 }
 
 deadline frcp6-massachusetts-smoke: 1.days after Served() counted_by frcp6-massachusetts {
   forum frcp
 }
 
+test "Counting boundary: frcp6-massachusetts-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-massachusetts-smoke) == 2023-12-04
+}
+
 deadline frcp6-michigan-smoke: 1.days after Served() counted_by frcp6-michigan { forum frcp }
+
+test "Counting boundary: frcp6-michigan-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-michigan-smoke) == 2023-12-04
+}
+
 deadline frcp6-minnesota-smoke: 1.days after Served() counted_by frcp6-minnesota { forum frcp }
+
+test "Counting boundary: frcp6-minnesota-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-minnesota-smoke) == 2023-12-04
+}
+
 deadline frcp6-missouri-smoke: 1.days after Served() counted_by frcp6-missouri { forum frcp }
+
+test "Counting boundary: frcp6-missouri-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-missouri-smoke) == 2023-12-04
+}
+
 deadline frcp6-montana-smoke: 1.days after Served() counted_by frcp6-montana { forum frcp }
+
+test "Counting boundary: frcp6-montana-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-montana-smoke) == 2023-12-04
+}
+
 deadline frcp6-nebraska-smoke: 1.days after Served() counted_by frcp6-nebraska { forum frcp }
+
+test "Counting boundary: frcp6-nebraska-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-nebraska-smoke) == 2023-12-04
+}
+
 deadline frcp6-nevada-smoke: 1.days after Served() counted_by frcp6-nevada { forum frcp }
+
+test "Counting boundary: frcp6-nevada-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-nevada-smoke) == 2023-12-04
+}
 
 deadline frcp6-new-hampshire-smoke: 1.days after Served() counted_by frcp6-new-hampshire {
   forum frcp
 }
 
+test "Counting boundary: frcp6-new-hampshire-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-new-hampshire-smoke) == 2023-12-04
+}
+
 deadline frcp6-new-jersey-smoke: 1.days after Served() counted_by frcp6-new-jersey { forum frcp }
+
+test "Counting boundary: frcp6-new-jersey-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-new-jersey-smoke) == 2023-12-04
+}
+
 deadline frcp6-new-mexico-smoke: 1.days after Served() counted_by frcp6-new-mexico { forum frcp }
+
+test "Counting boundary: frcp6-new-mexico-smoke (weekend)" {
+  given Served(Personal) on 2016-12-02
+  expect deadline(frcp6-new-mexico-smoke) == 2016-12-05
+}
+
 deadline frcp6-new-york-smoke: 1.days after Served() counted_by frcp6-new-york { forum frcp }
+
+test "Counting boundary: frcp6-new-york-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-new-york-smoke) == 2023-12-04
+}
 
 deadline frcp6-north-carolina-smoke: 1.days after Served() counted_by frcp6-north-carolina {
   forum frcp
+}
+
+test "Counting boundary: frcp6-north-carolina-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-north-carolina-smoke) == 2023-12-04
 }
 
 deadline frcp6-north-dakota-smoke: 1.days after Served() counted_by frcp6-north-dakota {
   forum frcp
 }
 
+test "Counting boundary: frcp6-north-dakota-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-north-dakota-smoke) == 2023-12-04
+}
+
 deadline frcp6-northern-mariana-islands-smoke: 1.days after Served() counted_by frcp6-northern-mariana-islands {
   forum frcp
+}
+
+test "Counting boundary: frcp6-northern-mariana-islands-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-northern-mariana-islands-smoke) == 2023-12-04
 }
 
 deadline frcp6-pennsylvania-smoke: 1.days after Served() counted_by frcp6-pennsylvania {
   forum frcp
 }
 
+test "Counting boundary: frcp6-pennsylvania-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-pennsylvania-smoke) == 2023-12-04
+}
+
 deadline frcp6-puerto-rico-smoke: 1.days after Served() counted_by frcp6-puerto-rico { forum frcp }
+
+test "Counting boundary: frcp6-puerto-rico-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-puerto-rico-smoke) == 2023-12-04
+}
 
 deadline frcp6-rhode-island-smoke: 1.days after Served() counted_by frcp6-rhode-island {
   forum frcp
+}
+
+test "Counting boundary: frcp6-rhode-island-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-rhode-island-smoke) == 2023-12-04
 }
 
 deadline frcp6-south-carolina-smoke: 1.days after Served() counted_by frcp6-south-carolina {
   forum frcp
 }
 
+test "Counting boundary: frcp6-south-carolina-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-south-carolina-smoke) == 2023-12-04
+}
+
 deadline frcp6-texas-smoke: 1.days after Served() counted_by frcp6-texas { forum frcp }
+
+test "Counting boundary: frcp6-texas-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-texas-smoke) == 2023-12-04
+}
+
 deadline frcp6-utah-smoke: 1.days after Served() counted_by frcp6-utah { forum frcp }
+
+test "Counting boundary: frcp6-utah-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-utah-smoke) == 2023-12-04
+}
+
 deadline frcp6-vermont-smoke: 1.days after Served() counted_by frcp6-vermont { forum frcp }
+
+test "Counting boundary: frcp6-vermont-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-vermont-smoke) == 2023-12-04
+}
+
 deadline frcp6-virginia-smoke: 1.days after Served() counted_by frcp6-virginia { forum frcp }
+
+test "Counting boundary: frcp6-virginia-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-virginia-smoke) == 2023-12-04
+}
+
 deadline frcp6-washington-smoke: 1.days after Served() counted_by frcp6-washington { forum frcp }
+
+test "Counting boundary: frcp6-washington-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-washington-smoke) == 2023-12-04
+}
 
 deadline frcp6-west-virginia-smoke: 1.days after Served() counted_by frcp6-west-virginia {
   forum frcp
 }
 
+test "Counting boundary: frcp6-west-virginia-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-west-virginia-smoke) == 2023-12-04
+}
+
 deadline frcp6-wisconsin-smoke: 1.days after Served() counted_by frcp6-wisconsin { forum frcp }
+
+test "Counting boundary: frcp6-wisconsin-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-wisconsin-smoke) == 2023-12-04
+}
+
 deadline frcp6-wyoming-smoke: 1.days after Served() counted_by frcp6-wyoming { forum frcp }
+
+test "Counting boundary: frcp6-wyoming-smoke (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcp6-wyoming-smoke) == 2023-12-04
+}
 
 deadline frcrimp45-delaware-smoke: 1.days after Served() counted_by frcrimp45-delaware {
   forum frcrimp
+}
+
+test "Counting boundary: frcrimp45-delaware-smoke (weekend)" {
+  given Served(Personal) on 2011-05-06
+  expect deadline(frcrimp45-delaware-smoke) == 2011-05-09
 }
 
 test "frbp9006-alabama counts a one-day period" {

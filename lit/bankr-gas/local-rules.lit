@@ -27,6 +27,13 @@ event ConfirmationOrderEntered()
 /// FRBP 2015(a)(5) requires within thirty days of the entry of the order of
 /// confirmation.
 deadline confirmation-report-period: 30.days after ConfirmationOrderEntered() counted_by frbp9006 cite ?("S.D. Ga. LBR 2015-1(a), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {}
+
+test "Counting boundary: confirmation-report-period (holiday)" cite "S.D. Ga. LBR 2015-1(a), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified"
+{
+  given ConfirmationOrderEntered() on 2025-12-02
+  expect deadline(confirmation-report-period) == 2026-01-02
+}
+
 /// LBR 2015-1(b): unless the court orders otherwise, the trustee or debtor in
 /// possession files an application for a final decree in the prescribed
 /// form within 180 days of the entry of the order of confirmation.

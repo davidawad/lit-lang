@@ -45,7 +45,18 @@ counting frbp9006-oklahoma effective [2025-12-01, ..) known_at 2025-12-01 cite "
 // Core-local clock fixtures for the Oklahoma forward-only state holiday.
 deadline oklahoma-forward-personal: 1.days after Served(Personal) counted_by frbp9006-oklahoma
 deadline oklahoma-backward: 1.days before Scheduled() counted_by frbp9006-oklahoma
+
+test "Counting boundary: oklahoma-backward (weekend)" {
+  given Scheduled() on 2025-12-01
+  expect deadline(oklahoma-backward) == 2025-11-28
+}
+
 deadline oklahoma-forward-electronic: 1.days after Served(Electronic) counted_by frbp9006-oklahoma
+
+test "Counting boundary: oklahoma-forward-electronic (weekend)" {
+  given Served(Electronic) on 2025-12-05
+  expect deadline(oklahoma-forward-electronic) == 2025-12-08
+}
 
 test "Oklahoma day after Thanksgiving closes a forward period" cite "FRBP 9006(a)(6)(C)"
 {

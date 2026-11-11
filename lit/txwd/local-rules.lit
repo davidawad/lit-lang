@@ -99,6 +99,12 @@ event TrialSetting()
 /// advises the court. Unrepresented and confined filers are exempt.
 deadline cover-sheet-period: 7.days after CoverSheetDeficiencyNoticed() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-3(a)"
 
+test "Counting boundary: cover-sheet-period (weekend)" cite "W.D. Tex. Local Rule CV-3(a)"
+{
+  given CoverSheetDeficiencyNoticed() on 2023-12-02
+  expect deadline(cover-sheet-period) == 2023-12-11
+}
+
 /// W.D. Tex. Local Rule CV-7(d)(2): a response to a discovery or case
 /// management motion is filed not later than 7 days after the filing of
 /// the motion; without a timely response the court may grant the motion
@@ -107,6 +113,12 @@ deadline discovery-response-period: 7.days after DiscoveryMotionFiled() counted_
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CV-7(d)"
+
+test "Counting boundary: discovery-response-period (weekend)" cite "W.D. Tex. Local Rule CV-7(d)"
+{
+  given DiscoveryMotionFiled() on 2023-12-02
+  expect deadline(discovery-response-period) == 2023-12-11
+}
 
 /// W.D. Tex. Local Rule CV-7(d)(2): a response to any other motion is
 /// filed not later than 14 days after the filing of the motion, except as
@@ -125,11 +137,23 @@ deadline reply-period: 7.days after ResponseFiled() counted_by frcp6-texas deleg
   op set
 } cite "W.D. Tex. Local Rule CV-7(e)"
 
+test "Counting boundary: reply-period (weekend)" cite "W.D. Tex. Local Rule CV-7(e)"
+{
+  given ResponseFiled() on 2023-12-02
+  expect deadline(reply-period) == 2023-12-11
+}
+
 /// W.D. Tex. Local Rule CV-15(a): notwithstanding Rule CV-7's time limits,
 /// a party may respond to a first FRCP 12(b) motion by filing an amended
 /// pleading as a matter of course not later than 21 days after the filing
 /// of the motion.
 deadline amendment-as-of-course-period: 21.days after FirstRule12bMotionFiled() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-15(a)"
+
+test "Counting boundary: amendment-as-of-course-period (weekend)" cite "W.D. Tex. Local Rule CV-15(a)"
+{
+  given FirstRule12bMotionFiled() on 2023-12-02
+  expect deadline(amendment-as-of-course-period) == 2023-12-26
+}
 
 /// W.D. Tex. Local Rule CV-16(c): not later than 60 days after any
 /// appearance of any defendant, the parties, having first conferred under
@@ -139,6 +163,12 @@ deadline proposed-scheduling-order-period: 60.days after DefendantAppeared() cou
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CV-16(c)"
+
+test "Counting boundary: proposed-scheduling-order-period (weekend)" cite "W.D. Tex. Local Rule CV-16(c)"
+{
+  given DefendantAppeared() on 2023-12-05
+  expect deadline(proposed-scheduling-order-period) == 2024-02-05
+}
 
 /// W.D. Tex. Local Rule CV-16(e): absent exceptional circumstances, no
 /// motion relating to discovery is filed after the discovery deadline
@@ -164,6 +194,12 @@ deadline pretrial-disclosure-period: 14.days before FirstTrialSetting() counted_
 /// waived unless excused for good cause.
 deadline pretrial-objection-period: 7.days before FirstTrialSetting() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-16(g)"
 
+test "Counting boundary: pretrial-objection-period (weekend)" cite "W.D. Tex. Local Rule CV-16(g)"
+{
+  given FirstTrialSetting() on 2023-12-02
+  expect deadline(pretrial-objection-period) == 2023-11-24
+}
+
 /// W.D. Tex. Local Rule CV-26(d)(2): once the producing party has actual
 /// notice that a produced document will be used, it objects to the
 /// document's authenticity within the time the court orders or Rule CV-16
@@ -182,6 +218,12 @@ deadline executed-answers-period: 21.days after UnexecutedAnswersServed() counte
   op set
 } cite "W.D. Tex. Local Rule CV-33(a)"
 
+test "Counting boundary: executed-answers-period (weekend)" cite "W.D. Tex. Local Rule CV-33(a)"
+{
+  given UnexecutedAnswersServed() on 2023-12-02
+  expect deadline(executed-answers-period) == 2023-12-26
+}
+
 /// W.D. Tex. Local Rule CV-54(a)(1): a party awarded costs files and serves
 /// a proposed bill of costs on Form AO 133 not later than 14 days after the
 /// entry of judgment.
@@ -194,19 +236,46 @@ deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6-
 /// costs notifies the requesting party not later than 7 days after it is
 /// filed, and the parties confer.
 deadline bill-of-costs-opposition-period: 7.days after ProposedBillOfCostsFiled() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-54(a)"
+
+test "Counting boundary: bill-of-costs-opposition-period (weekend)" cite "W.D. Tex. Local Rule CV-54(a)"
+{
+  given ProposedBillOfCostsFiled() on 2023-12-02
+  expect deadline(bill-of-costs-opposition-period) == 2023-12-11
+}
+
 /// W.D. Tex. Local Rule CV-54(a)(3): if a dispute remains, the joint or
 /// requesting party's motion on the bill of costs is filed not later than
 /// 21 days after the filing of the proposed bill.
 deadline bill-of-costs-motion-period: 21.days after ProposedBillOfCostsFiled() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-54(a)"
+
+test "Counting boundary: bill-of-costs-motion-period (weekend)" cite "W.D. Tex. Local Rule CV-54(a)"
+{
+  given ProposedBillOfCostsFiled() on 2023-12-02
+  expect deadline(bill-of-costs-motion-period) == 2023-12-26
+}
+
 /// W.D. Tex. Local Rule CV-54(a)(5): a party dissatisfied with the clerk's
 /// action may move for review not later than 7 days after the clerk has
 /// taxed costs.
 deadline cost-review-motion-period: 7.days after CostsTaxed() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-54(a)"
+
+test "Counting boundary: cost-review-motion-period (weekend)" cite "W.D. Tex. Local Rule CV-54(a)"
+{
+  given CostsTaxed() on 2023-12-02
+  expect deadline(cost-review-motion-period) == 2023-12-11
+}
+
 /// W.D. Tex. Local Rule CV-79(a): the party offering an exhibit or
 /// deposition removes it from the clerk's office within 60 days after the
 /// final disposition of the case, including appeal; one remaining longer
 /// may be destroyed or otherwise disposed of by the clerk.
 deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcp6-texas cite "W.D. Tex. Local Rule CV-79(a)"
+
+test "Counting boundary: exhibit-removal (weekend)" cite "W.D. Tex. Local Rule CV-79(a)"
+{
+  given FinalDisposition() on 2023-12-05
+  expect deadline(exhibit-removal) == 2024-02-05
+}
 
 /// W.D. Tex. Local Rule CV-88(a): unless specifically ordered otherwise,
 /// the parties agree on an ADR method, provider, compensation and
@@ -216,6 +285,12 @@ deadline adr-completion-period: 60.days before TrialSetting() counted_by frcp6-t
   to CaseOrder
   op set
 } cite "W.D. Tex. Local Rule CV-88(a)"
+
+test "Counting boundary: adr-completion-period (weekend)" cite "W.D. Tex. Local Rule CV-88(a)"
+{
+  given TrialSetting() on 2023-12-06
+  expect deadline(adr-completion-period) == 2023-10-06
+}
 
 test "Deadline arithmetic: cover-sheet-period (7 days after)" cite "W.D. Tex. Local Rule CV-3(a)"
 {

@@ -90,25 +90,60 @@ event FinalDisposition()
 /// complete mailing matrix of all known creditors and parties in interest
 /// within fourteen days of entry of the order for relief.
 deadline involuntary-mailing-matrix-period: 14.days after OrderForReliefEntered() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 1007-2(A)"
+
+test "Counting boundary: involuntary-mailing-matrix-period (weekend)" cite "Bankr. E.D. La. LR 1007-2(A)"
+{
+  given OrderForReliefEntered() on 2025-12-06
+  expect deadline(involuntary-mailing-matrix-period) == 2025-12-22
+}
+
 /// Bankr. E.D. La. LR 1007-2(D)(1): when an amendment adds a creditor
 /// before the § 341(a) meeting, the debtor notices the added party at least
 /// twenty-one days before the meeting; later, or with less notice, the
 /// debtor moves ex parte to amend (D)(2).
 deadline added-creditor-notice-period: 21.days before FirstMeetingDate() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 1007-2(D)"
+
+test "Counting boundary: added-creditor-notice-period (holiday)" cite "Bankr. E.D. La. LR 1007-2(D)"
+{
+  given FirstMeetingDate() on 2025-12-02
+  expect deadline(added-creditor-notice-period) == 2025-11-10
+}
+
 /// Bankr. E.D. La. LR 1007-2(E): when an amendment adding a creditor after
 /// the bar date or the discharge and dischargeability deadlines is granted,
 /// those deadlines are automatically extended as to the added party twenty-
 /// eight days from notice of entry of the order.
 deadline added-creditor-extended-deadline-period: 28.days after AddedCreditorOrderNoticed() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 1007-2(E)"
+
+test "Counting boundary: added-creditor-extended-deadline-period (holiday)" cite "Bankr. E.D. La. LR 1007-2(E)"
+{
+  given AddedCreditorOrderNoticed() on 2025-12-04
+  expect deadline(added-creditor-extended-deadline-period) == 2026-01-02
+}
+
 /// Bankr. E.D. La. LR 1008-1(A): within seven days after filing the
 /// petition, the debtor delivers to the Clerk an original Declaration
 /// Regarding Electronic Filing.
 deadline electronic-filing-declaration-period: 7.days after PetitionFiled() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 1008-1(A)"
+
+test "Counting boundary: electronic-filing-declaration-period (weekend)" cite "Bankr. E.D. La. LR 1008-1(A)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(electronic-filing-declaration-period) == 2025-12-15
+}
+
 /// Bankr. E.D. La. LR 2003-1(B)(2): a motion under FRBP 2020 for review of
 /// the United States Trustee's denial of a request to reschedule a meeting
 /// of creditors, or to appear through a representative, is filed no later
 /// than seven days after the movant receives notice of the denial.
 deadline meeting-denial-review-motion-period: 7.days after RescheduleDenialReceived() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 2003-1(B)"
+
+test "Counting boundary: meeting-denial-review-motion-period (weekend)" cite "Bankr. E.D. La. LR 2003-1(B)"
+{
+  given RescheduleDenialReceived() on 2025-12-06
+  expect deadline(meeting-denial-review-motion-period) == 2025-12-15
+}
+
 /// Bankr. E.D. La. LR 2003-1(B)(4)(a): when a chapter 13 debtor's request
 /// to reschedule the § 341(a) meeting is granted, the debtor is deemed to
 /// consent to a claims bar date ninety days after the conclusion of the
@@ -128,44 +163,107 @@ deadline rescheduled-meeting-dismissal-motion-period: 60.days after RescheduledM
 /// objections to claims of exemptions may be filed until thirty days after
 /// the conclusion of the § 341(a) meeting.
 deadline rescheduled-meeting-exemption-objection-period: 30.days after RescheduledMeetingConcluded() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 2003-1(B)"
+
+test "Counting boundary: rescheduled-meeting-exemption-objection-period (holiday)" cite "Bankr. E.D. La. LR 2003-1(B)"
+{
+  given RescheduledMeetingConcluded() on 2025-12-02
+  expect deadline(rescheduled-meeting-exemption-objection-period) == 2026-01-02
+}
+
 /// Bankr. E.D. La. LR 2004-1(B)(1): a person objecting to a Rule 2004
 /// examination sought by ex parte motion files the objection at least seven
 /// days before the proposed examination, unless the motion was filed fewer
 /// than seven days before it, and notices the objection for hearing before
 /// the examination date (B)(2).
 deadline examination-objection-period: 7.days before ProposedExaminationDate() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 2004-1(B)"
+
+test "Counting boundary: examination-objection-period (holiday)" cite "Bankr. E.D. La. LR 2004-1(B)"
+{
+  given ProposedExaminationDate() on 2025-12-04
+  expect deadline(examination-objection-period) == 2025-11-26
+}
+
 /// Bankr. E.D. La. LR 3015-1(B): a chapter 13 plan not filed with the
 /// petition is served in full on the mailing matrix at least twenty-eight
 /// days before the first confirmation hearing (also LR 4002-1(A)(5)).
 deadline chapter-13-plan-service-period: 28.days before ConfirmationHearing() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 3015-1(B)"
+
+test "Counting boundary: chapter-13-plan-service-period (weekend)" cite "Bankr. E.D. La. LR 3015-1(B)"
+{
+  given ConfirmationHearing() on 2025-12-06
+  expect deadline(chapter-13-plan-service-period) == 2025-11-07
+}
+
 /// Bankr. E.D. La. LR 3015-1(B): the proposed chapter 13 plan is filed and
 /// served on the chapter 13 trustee at least fourteen days before the §
 /// 341(a) meeting (also LR 4002-1(A)(5)).
 deadline chapter-13-plan-trustee-period: 14.days before FirstMeetingDate() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 3015-1(B)"
+
+test "Counting boundary: chapter-13-plan-trustee-period (weekend)" cite "Bankr. E.D. La. LR 3015-1(B)"
+{
+  given FirstMeetingDate() on 2025-12-06
+  expect deadline(chapter-13-plan-trustee-period) == 2025-11-21
+}
+
 /// Bankr. E.D. La. LR 3015-1(D): in chapter 11 cases, written objections to
 /// a disclosure statement or to plan confirmation are filed and served no
 /// later than seven days before the hearing, unless the court orders
 /// otherwise.
 deadline chapter-11-objection-period: 7.days before DisclosureOrConfirmationHearing() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 3015-1(D)"
+
+test "Counting boundary: chapter-11-objection-period (holiday)" cite "Bankr. E.D. La. LR 3015-1(D)"
+{
+  given DisclosureOrConfirmationHearing() on 2025-12-04
+  expect deadline(chapter-11-objection-period) == 2025-11-26
+}
+
 /// Bankr. E.D. La. LR 3015-2(A)(2): in chapter 11, 12 and 13 cases, an
 /// amended plan is filed no later than seven days before the confirmation
 /// hearing, with a redline copy to chambers; a later amendment may not be
 /// considered.
 deadline amended-plan-filing-period: 7.days before ConfirmationHearing() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 3015-2(A)"
+
+test "Counting boundary: amended-plan-filing-period (holiday)" cite "Bankr. E.D. La. LR 3015-2(A)"
+{
+  given ConfirmationHearing() on 2025-12-04
+  expect deadline(amended-plan-filing-period) == 2025-11-26
+}
+
 /// Bankr. E.D. La. LR 3015-2(A)(2): the movant files the notice of hearing
 /// and certificate of service of the amended plan at least seven days
 /// before the confirmation hearing.
 deadline amended-plan-certificate-period: 7.days before ConfirmationHearing() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 3015-2(A)"
+
+test "Counting boundary: amended-plan-certificate-period (holiday)" cite "Bankr. E.D. La. LR 3015-2(A)"
+{
+  given ConfirmationHearing() on 2025-12-04
+  expect deadline(amended-plan-certificate-period) == 2025-11-26
+}
+
 /// Bankr. E.D. La. LR 3015-2(A)(2), (4): material amendments without
 /// consent are noticed, and in chapter 13 cases served on the affected
 /// parties and the trustee, at least twenty-eight days before the hearing
 /// on confirmation.
 deadline material-amendment-notice-period: 28.days before ConfirmationHearing() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 3015-2(A)"
+
+test "Counting boundary: material-amendment-notice-period (weekend)" cite "Bankr. E.D. La. LR 3015-2(A)"
+{
+  given ConfirmationHearing() on 2025-12-06
+  expect deadline(material-amendment-notice-period) == 2025-11-07
+}
+
 /// Bankr. E.D. La. LR 3015-4(B): in a chapter 13 case, if debtor's counsel
 /// files a confirmation affidavit no later than five days before the
 /// confirmation hearing and no objection is made, the court may confirm the
 /// plan without a hearing.
 deadline confirmation-affidavit-period: 5.days before ConfirmationHearing() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 3015-4(B)"
+
+test "Counting boundary: confirmation-affidavit-period (holiday)" cite "Bankr. E.D. La. LR 3015-4(B)"
+{
+  given ConfirmationHearing() on 2025-12-02
+  expect deadline(confirmation-affidavit-period) == 2025-11-26
+}
+
 /// Bankr. E.D. La. LR 3018-1(A): at least three days before the hearing on
 /// confirmation, the chapter 11 plan proponent certifies the amount and
 /// number of allowed claims and interests of each class accepting or
@@ -179,69 +277,180 @@ deadline ballot-delivery-period: 3.days before ConfirmationHearing() counted_by 
 /// obligations under the plan; the court may extend the date for good
 /// cause.
 deadline final-decree-motion-period: 30.days after PlanObligationsCompleted() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 3022-1(A)"
+
+test "Counting boundary: final-decree-motion-period (holiday)" cite "Bankr. E.D. La. LR 3022-1(A)"
+{
+  given PlanObligationsCompleted() on 2025-12-02
+  expect deadline(final-decree-motion-period) == 2026-01-02
+}
+
 /// Bankr. E.D. La. LR 4001-2(A): to obtain an extension of the automatic
 /// stay, the debtor files a motion to extend or impose it within seven days
 /// of the filing of the petition.
 deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 4001-2(A)"
+
+test "Counting boundary: stay-extension-motion-period (weekend)" cite "Bankr. E.D. La. LR 4001-2(A)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(stay-extension-motion-period) == 2025-12-15
+}
+
 /// Bankr. E.D. La. LR 4002-1(A)(1): a chapter 13 debtor provides all tax
 /// refunds to the trustee within seven days of receipt.
 deadline tax-refund-turnover-period: 7.days after TaxRefundReceived() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 4002-1(A)"
+
+test "Counting boundary: tax-refund-turnover-period (weekend)" cite "Bankr. E.D. La. LR 4002-1(A)"
+{
+  given TaxRefundReceived() on 2025-12-06
+  expect deadline(tax-refund-turnover-period) == 2025-12-15
+}
+
 /// Bankr. E.D. La. LR 4002-1(A)(1): a chapter 13 debtor who wishes to
 /// receive any portion of a tax refund moves for use of the funds within
 /// twenty-one days of the trustee's receipt of them.
 deadline tax-refund-use-motion-period: 21.days after TaxRefundReceivedByTrustee() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 4002-1(A)"
+
+test "Counting boundary: tax-refund-use-motion-period (holiday)" cite "Bankr. E.D. La. LR 4002-1(A)"
+{
+  given TaxRefundReceivedByTrustee() on 2025-12-04
+  expect deadline(tax-refund-use-motion-period) == 2025-12-26
+}
+
 /// Bankr. E.D. La. LR 4002-1(C)(1)(a): within seven days of the filing of
 /// the petition, an individual chapter 11 debtor provides the United States
 /// Trustee a proposed budget of monthly income and expenses.
 deadline chapter-11-budget-period: 7.days after PetitionFiled() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 4002-1(C)"
+
+test "Counting boundary: chapter-11-budget-period (weekend)" cite "Bankr. E.D. La. LR 4002-1(C)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(chapter-11-budget-period) == 2025-12-15
+}
+
 /// Bankr. E.D. La. LR 4002-1(C)(1)(a): the United States Trustee files a
 /// notice of approval attaching the individual chapter 11 debtor's budget
 /// within thirty days of the petition date.
 deadline chapter-11-budget-approval-period: 30.days after PetitionFiled() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 4002-1(C)"
+
+test "Counting boundary: chapter-11-budget-approval-period (holiday)" cite "Bankr. E.D. La. LR 4002-1(C)"
+{
+  given PetitionFiled() on 2025-12-02
+  expect deadline(chapter-11-budget-approval-period) == 2026-01-02
+}
+
 /// Bankr. E.D. La. LR 4002-1(C)(1)(a): if no agreement is reached, the
 /// individual chapter 11 debtor moves for approval of a budget within
 /// thirty-seven days of the petition.
 deadline chapter-11-budget-motion-period: 37.days after PetitionFiled() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 4002-1(C)"
+
+test "Counting boundary: chapter-11-budget-motion-period (weekend)" cite "Bankr. E.D. La. LR 4002-1(C)"
+{
+  given PetitionFiled() on 2025-12-04
+  expect deadline(chapter-11-budget-motion-period) == 2026-01-12
+}
+
 /// Bankr. E.D. La. LR 7007-1: on certification of no previous extension and
 /// no objection, the court allows by ex parte motion one extension of
 /// twenty-one days from the time the pleading would otherwise be due.
 deadline pleading-extension-period: 21.days after PleadingOtherwiseDue() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 7007-1"
+
+test "Counting boundary: pleading-extension-period (holiday)" cite "Bankr. E.D. La. LR 7007-1"
+{
+  given PleadingOtherwiseDue() on 2025-12-04
+  expect deadline(pleading-extension-period) == 2025-12-26
+}
+
 /// Bankr. E.D. La. LR 7040-1(D), 9017-1(B): unless the presiding judge
 /// orders otherwise, within seven days after the conclusion of an
 /// evidentiary trial or hearing counsel jointly submit, electronically, all
 /// documentary exhibits admitted.
 deadline trial-exhibits-submission-period: 7.days after EvidentiaryHearingConcluded() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 7040-1(D)"
+
+test "Counting boundary: trial-exhibits-submission-period (weekend)" cite "Bankr. E.D. La. LR 7040-1(D)"
+{
+  given EvidentiaryHearingConcluded() on 2025-12-06
+  expect deadline(trial-exhibits-submission-period) == 2025-12-15
+}
+
 /// Bankr. E.D. La. LR 7054-1: within thirty days after receiving notice of
 /// entry of judgment, the prevailing party claiming costs serves and files
 /// a notice of application to have the costs taxed, with a supporting
 /// memorandum.
 deadline costs-application-period: 30.days after JudgmentEntryNoticed() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 7054-1"
+
+test "Counting boundary: costs-application-period (holiday)" cite "Bankr. E.D. La. LR 7054-1"
+{
+  given JudgmentEntryNoticed() on 2025-12-02
+  expect deadline(costs-application-period) == 2026-01-02
+}
+
 /// Bankr. E.D. La. LR 7055-1(A): when the defendant has not timely
 /// answered, the plaintiff requests the Clerk's entry of default within
 /// fourteen days after the answer deadline, or the court may dismiss the
 /// adversary proceeding.
 deadline default-request-period: 14.days after AnswerDeadlinePassed() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 7055-1(A)"
+
+test "Counting boundary: default-request-period (weekend)" cite "Bankr. E.D. La. LR 7055-1(A)"
+{
+  given AnswerDeadlinePassed() on 2025-12-06
+  expect deadline(default-request-period) == 2025-12-22
+}
+
 /// Bankr. E.D. La. LR 7055-1(B): the plaintiff files a motion for default
 /// judgment within fourteen days after the Clerk's entry of default, or the
 /// court may dismiss the adversary proceeding.
 deadline default-judgment-motion-period: 14.days after DefaultEntered() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 7055-1(B)"
+
+test "Counting boundary: default-judgment-motion-period (weekend)" cite "Bankr. E.D. La. LR 7055-1(B)"
+{
+  given DefaultEntered() on 2025-12-06
+  expect deadline(default-judgment-motion-period) == 2025-12-22
+}
+
 /// Bankr. E.D. La. LR 9013-1(E): objections and responses to a motion
 /// noticed for hearing are filed no later than seven days before the
 /// hearing unless the court orders otherwise; a later filing needs leave
 /// and may be stricken.
 deadline motion-objection-period: 7.days before MotionHearing() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 9013-1(E)"
+
+test "Counting boundary: motion-objection-period (holiday)" cite "Bankr. E.D. La. LR 9013-1(E)"
+{
+  given MotionHearing() on 2025-12-04
+  expect deadline(motion-objection-period) == 2025-11-26
+}
+
 /// Bankr. E.D. La. LR 9013-1(G): evidence on a non-routine matter may be
 /// presented by affidavit submitted into the record at least seven days
 /// before the hearing.
 deadline affidavit-evidence-period: 7.days before MotionHearing() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 9013-1(G)"
+
+test "Counting boundary: affidavit-evidence-period (holiday)" cite "Bankr. E.D. La. LR 9013-1(G)"
+{
+  given MotionHearing() on 2025-12-04
+  expect deadline(affidavit-evidence-period) == 2025-11-26
+}
+
 /// Bankr. E.D. La. LR 9014-1(A)(1): motions to continue may be filed ex
 /// parte no later than seven days before the hearing date and are served on
 /// all interested parties.
 deadline continuance-motion-period: 7.days before MotionHearing() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 9014-1(A)"
+
+test "Counting boundary: continuance-motion-period (holiday)" cite "Bankr. E.D. La. LR 9014-1(A)"
+{
+  given MotionHearing() on 2025-12-04
+  expect deadline(continuance-motion-period) == 2025-11-26
+}
+
 /// Bankr. E.D. La. LR 9017-1(C): exhibits admitted into evidence are
 /// retrieved within thirty days of the final disposition of the case or
 /// adversary proceeding, after which the Clerk may destroy them.
 deadline exhibit-retrieval-period: 30.days after FinalDisposition() counted_by frbp9006-louisiana cite "Bankr. E.D. La. LR 9017-1(C)"
+
+test "Counting boundary: exhibit-retrieval-period (holiday)" cite "Bankr. E.D. La. LR 9017-1(C)"
+{
+  given FinalDisposition() on 2025-12-02
+  expect deadline(exhibit-retrieval-period) == 2026-01-02
+}
 
 start motion-filed
 

@@ -68,6 +68,11 @@ deadline frcp6-delaware-1-day: 1.days after Served() counted_by frcp6-delaware
 deadline frcp6-delaware-1-court-day-before: 1.court_days before Scheduled() counted_by frcp6-delaware
 deadline frcp6-delaware-3-calendar-days: 3.days before Scheduled() counted_by frcp6-delaware
 
+test "Counting boundary: frcp6-delaware-3-calendar-days (weekend)" {
+  given Scheduled() on 2023-12-05
+  expect deadline(frcp6-delaware-3-calendar-days) == 2023-12-01
+}
+
 test "the trigger day is excluded" cite "FRCP 6(a)(1)(A)"
 {
   given Served(Personal) on 2026-01-06

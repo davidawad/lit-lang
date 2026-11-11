@@ -53,16 +53,44 @@ event AdversarySettled()
 /// W.D.N.Y. LBR 1015-1(B): the party that obtained the order for joint
 /// administration files a consolidated matrix within 10 days of its entry.
 deadline consolidated-matrix-period: 10.days after JointAdministrationOrdered() counted_by frbp9006-new-york cite ?("W.D.N.Y. LBR 1015-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {}
+
+test "Counting boundary: consolidated-matrix-period (weekend)" cite "W.D.N.Y. LBR 1015-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given JointAdministrationOrdered() on 2025-12-03
+  expect deadline(consolidated-matrix-period) == 2025-12-15
+}
+
 /// W.D.N.Y. LBR 2016-1(B): every application for compensation is filed at
 /// least 25 days before the calendar at which it is to be considered.
 deadline fee-application-period: 25.days before FeeApplicationCalendar() counted_by frbp9006-new-york cite ?("W.D.N.Y. LBR 2016-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {}
+
+test "Counting boundary: fee-application-period (weekend)" cite "W.D.N.Y. LBR 2016-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given FeeApplicationCalendar() on 2025-12-03
+  expect deadline(fee-application-period) == 2025-11-07
+}
+
 /// W.D.N.Y. LBR 2016-2(A): a debtor's attorney who does not apply for an
 /// allowance before 15 days after the mailing of the FRBP 2002(f)(9) notice
 /// of the trustee's final report waives it.
 deadline debtor-attorney-fee-application-period: 15.days after FinalReportNoticeMailed() counted_by frbp9006-new-york cite ?("W.D.N.Y. LBR 2016-2(A), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {}
+
+test "Counting boundary: debtor-attorney-fee-application-period (weekend)" cite "W.D.N.Y. LBR 2016-2(A), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given FinalReportNoticeMailed() on 2025-12-05
+  expect deadline(debtor-attorney-fee-application-period) == 2025-12-22
+}
+
 /// W.D.N.Y. LBR 2091-1(B): a successor attorney files a Rule 2016 Statement
 /// of Compensation within 10 days of the Notice of Substitution of Attorney.
 deadline successor-attorney-statement-period: 10.days after SubstitutionNoticed() counted_by frbp9006-new-york cite ?("W.D.N.Y. LBR 2091-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {}
+
+test "Counting boundary: successor-attorney-statement-period (weekend)" cite "W.D.N.Y. LBR 2091-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given SubstitutionNoticed() on 2025-12-03
+  expect deadline(successor-attorney-statement-period) == 2025-12-15
+}
+
 /// W.D.N.Y. LBR 6004-1(B): a creditor may obtain a hearing on a proposed sale
 /// by filing a written demand within 20 days of the notice date.
 deadline sale-hearing-demand-period: 20.days after SaleStatementNoticed() counted_by frbp9006-new-york cite ?("W.D.N.Y. LBR 6004-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {}
@@ -72,27 +100,68 @@ deadline abandonment-hearing-demand-period: 20.days after AbandonmentStatementNo
 /// W.D.N.Y. LBR 6070-1(B): the debtor objects to a tax claim estimated for
 /// want of returns within 30 days of service of a copy of the claim.
 deadline estimated-tax-claim-objection-period: 30.days after EstimatedTaxClaimServed() counted_by frbp9006-new-york cite ?("W.D.N.Y. LBR 6070-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {}
+
+test "Counting boundary: estimated-tax-claim-objection-period (holiday)" cite "W.D.N.Y. LBR 6070-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given EstimatedTaxClaimServed() on 2025-12-02
+  expect deadline(estimated-tax-claim-objection-period) == 2026-01-02
+}
+
 /// W.D.N.Y. LBR 6070-1(B): if the debtor is not served with the estimated
 /// claim, the objection is filed within 30 days after the 180-day period for
 /// governmental claims under § 502 closes.
 deadline unserved-tax-claim-objection-period: 30.days after GovernmentalClaimPeriodClosed() counted_by frbp9006-new-york cite ?("W.D.N.Y. LBR 6070-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {}
+
+test "Counting boundary: unserved-tax-claim-objection-period (holiday)" cite "W.D.N.Y. LBR 6070-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given GovernmentalClaimPeriodClosed() on 2025-12-02
+  expect deadline(unserved-tax-claim-objection-period) == 2026-01-02
+}
+
 /// W.D.N.Y. LBR 7055-1(B): a plaintiff entitled to a default requests entry of
 /// default and judgment within 60 days after the last day to answer, or the
 /// proceeding is calendared for dismissal.
 deadline default-request-period: 60.days after AnswerDeadline() counted_by frbp9006-new-york cite ?("W.D.N.Y. LBR 7055-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {}
+
+test "Counting boundary: default-request-period (weekend)" cite "W.D.N.Y. LBR 7055-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given AnswerDeadline() on 2025-12-02
+  expect deadline(default-request-period) == 2026-02-02
+}
+
 /// W.D.N.Y. LBR 9013-1(B): except as a rule or order provides, notices of
 /// motion with supporting papers are served and filed at least 5 days before
 /// the return date (8 days if served by mail).
 deadline motion-service-period: 5.days before ReturnDate() counted_by frbp9006-new-york cite ?("W.D.N.Y. LBR 9013-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {}
+
+test "Counting boundary: motion-service-period (holiday)" cite "W.D.N.Y. LBR 9013-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given ReturnDate() on 2025-12-02
+  expect deadline(motion-service-period) == 2025-11-26
+}
+
 /// W.D.N.Y. LBR 9014-1(A), (C): an objection to a chapter 7 trustee's final
 /// report and account is filed and served on the United States Trustee
 /// within 15 days of the date the summary is sent; no dividend is paid until
 /// then.
 deadline final-report-objection-period: 15.days after FinalReportSummarySent() counted_by frbp9006-new-york cite ?("W.D.N.Y. LBR 9014-1(A), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {}
+
+test "Counting boundary: final-report-objection-period (weekend)" cite "W.D.N.Y. LBR 9014-1(A), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given FinalReportSummarySent() on 2025-12-05
+  expect deadline(final-report-objection-period) == 2025-12-22
+}
+
 /// W.D.N.Y. LBR 9071-1(B): when an adversary proceeding is settled, the
 /// parties file a signed agreement for judgment or stipulation of dismissal
 /// within 30 days, or the court may dismiss it.
 deadline settlement-filing-period: 30.days after AdversarySettled() counted_by frbp9006-new-york cite ?("W.D.N.Y. LBR 9071-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {}
+
+test "Counting boundary: settlement-filing-period (holiday)" cite "W.D.N.Y. LBR 9071-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments"
+{
+  given AdversarySettled() on 2025-12-02
+  expect deadline(settlement-filing-period) == 2026-01-02
+}
 
 start motion-filed
 

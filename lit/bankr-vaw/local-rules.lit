@@ -86,32 +86,88 @@ deadline employment-objection-period: 14.days after EmploymentApplicationFiled()
 /// case is filed no later than 7 days before entry of the order approving
 /// the trustee's final distribution, or it is untimely.
 deadline chapter7-fee-application-period: 7.days before FinalDistributionOrderEntered() counted_by frbp9006-virginia cite "W.D. Va. LBR 2016-1"
+
+test "Counting boundary: chapter7-fee-application-period (holiday)" cite "W.D. Va. LBR 2016-1"
+{
+  given FinalDistributionOrderEntered() on 2025-12-04
+  expect deadline(chapter7-fee-application-period) == 2025-11-26
+}
+
 /// LBR 3017-2(A): a small business or subchapter V debtor seeking
 /// conditional approval submits the proposed plan and disclosure statement
 /// to the U.S. Trustee no fewer than 7 days before filing them.
 deadline trustee-preliminary-review-period: 7.days before PlanDisclosureFiled() counted_by frbp9006-virginia cite "W.D. Va. LBR 3017-2(A)"
+
+test "Counting boundary: trustee-preliminary-review-period (holiday)" cite "W.D. Va. LBR 3017-2(A)"
+{
+  given PlanDisclosureFiled() on 2025-12-04
+  expect deadline(trustee-preliminary-review-period) == 2025-11-26
+}
+
 /// LBR 3017-2(A): the U.S. Trustee comments to the debtor within 7 days
 /// after the submission.
 deadline trustee-comment-period: 7.days after PlanDisclosureSubmitted() counted_by frbp9006-virginia cite "W.D. Va. LBR 3017-2(A)"
+
+test "Counting boundary: trustee-comment-period (weekend)" cite "W.D. Va. LBR 3017-2(A)"
+{
+  given PlanDisclosureSubmitted() on 2025-12-06
+  expect deadline(trustee-comment-period) == 2025-12-15
+}
+
 /// LBR 3017-2(C): within 7 days after the filing of the plan, disclosure
 /// statement and motion for conditional approval, the U.S. Trustee files a
 /// statement on the disclosure statement; any party in interest may file
 /// one within that period.
 deadline trustee-statement-period: 7.days after ConditionalApprovalMotionFiled() counted_by frbp9006-virginia cite "W.D. Va. LBR 3017-2(C)"
+
+test "Counting boundary: trustee-statement-period (weekend)" cite "W.D. Va. LBR 3017-2(C)"
+{
+  given ConditionalApprovalMotionFiled() on 2025-12-06
+  expect deadline(trustee-statement-period) == 2025-12-15
+}
+
 /// LBR 3022-1(B): debtor's counsel gives 28 days' notice to all creditors
 /// and the U.S. Trustee of the hearing on an application for a final
 /// decree.
 deadline final-decree-notice-period: 28.days before FinalDecreeHearingDate() counted_by frbp9006-virginia cite "W.D. Va. LBR 3022-1(B)"
+
+test "Counting boundary: final-decree-notice-period (weekend)" cite "W.D. Va. LBR 3022-1(B)"
+{
+  given FinalDecreeHearingDate() on 2025-12-06
+  expect deadline(final-decree-notice-period) == 2025-11-07
+}
+
 /// LBR 3022-1(C): written objections to a final decree are filed not later
 /// than 7 days before the hearing.
 deadline final-decree-objection-period: 7.days before FinalDecreeHearingDate() counted_by frbp9006-virginia cite "W.D. Va. LBR 3022-1(C)"
+
+test "Counting boundary: final-decree-objection-period (holiday)" cite "W.D. Va. LBR 3022-1(C)"
+{
+  given FinalDecreeHearingDate() on 2025-12-04
+  expect deadline(final-decree-objection-period) == 2025-11-26
+}
+
 /// LBR 4002-1(A)(2): the debtor provides payment advices to a creditor who
 /// timely requests them at least 7 days before the meeting of creditors.
 deadline payment-advices-period: 7.days before MeetingOfCreditorsDate() counted_by frbp9006-virginia cite "W.D. Va. LBR 4002-1(A)(2)"
+
+test "Counting boundary: payment-advices-period (holiday)" cite "W.D. Va. LBR 4002-1(A)(2)"
+{
+  given MeetingOfCreditorsDate() on 2025-12-04
+  expect deadline(payment-advices-period) == 2025-11-26
+}
+
 /// LBR 4002-1(A)(2): to be timely the request must be received at least 14
 /// days before the first date set for the meeting of creditors, or any
 /// adjourned or continued meeting.
 deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frbp9006-virginia cite "W.D. Va. LBR 4002-1(A)(2)"
+
+test "Counting boundary: payment-advices-request-period (weekend)" cite "W.D. Va. LBR 4002-1(A)(2)"
+{
+  given FirstMeetingDate() on 2025-12-06
+  expect deadline(payment-advices-request-period) == 2025-11-21
+}
+
 /// LBR 4002-3(C): within 14 days of the clerk's notice the lessor consents
 /// to receive the tendered rent payment or objects to the debtor's
 /// certification; silence is acceptance.
@@ -120,10 +176,24 @@ deadline lessor-response-period: 14.days after LessorNoticeSent() counted_by frb
 /// Compliance with § 1328 within 60 days of the trustee's notice of
 /// completion of plan payments, or the case may close without a discharge.
 deadline discharge-certification-period: 60.days after PlanCompletionNoticeFiled() counted_by frbp9006-virginia cite "W.D. Va. LBR 4004-1(A)"
+
+test "Counting boundary: discharge-certification-period (weekend)" cite "W.D. Va. LBR 4004-1(A)"
+{
+  given PlanCompletionNoticeFiled() on 2025-12-02
+  expect deadline(discharge-certification-period) == 2026-02-02
+}
+
 /// LBR 4004-1(B): creditors and parties in interest have 30 days from the
 /// court's notice to dispute the completion report or the certification and
 /// request a hearing.
 deadline discharge-dispute-period: 30.days after DischargeDisputeNoticeSent() counted_by frbp9006-virginia cite "W.D. Va. LBR 4004-1(B)"
+
+test "Counting boundary: discharge-dispute-period (holiday)" cite "W.D. Va. LBR 4004-1(B)"
+{
+  given DischargeDisputeNoticeSent() on 2025-12-02
+  expect deadline(discharge-dispute-period) == 2026-01-02
+}
+
 /// LBR 5005-4: an electronic filer produces the signed paper originals
 /// within 14 days after a written request by the case trustee or the U.S.
 /// Trustee.
@@ -132,6 +202,13 @@ deadline signed-originals-period: 14.days after OriginalsRequested() counted_by 
 /// discharge gives at least 21 days' written notice of the hearing to the
 /// U.S. Trustee, the trustee and all creditors.
 deadline discharge-dismissal-notice-period: 21.days before DischargeDismissalHearingDate() counted_by frbp9006-virginia cite "W.D. Va. LBR 7041-1"
+
+test "Counting boundary: discharge-dismissal-notice-period (holiday)" cite "W.D. Va. LBR 7041-1"
+{
+  given DischargeDismissalHearingDate() on 2025-12-02
+  expect deadline(discharge-dismissal-notice-period) == 2025-11-10
+}
+
 /// LBR 8006-1: a party designating items not filed electronically provides
 /// copies to the clerk within 14 days after filing the designation, or the
 /// clerk copies them at its expense.
@@ -140,28 +217,69 @@ deadline record-copies-period: 14.days after RecordDesignationFiled() counted_by
 /// 45 days after the notice of appeal, the clerk certifies the deficiencies
 /// to the District Court.
 deadline record-transmittal-period: 45.days after NoticeOfAppealFiled() counted_by frbp9006-virginia cite "W.D. Va. LBR 8007-1(B)"
+
+test "Counting boundary: record-transmittal-period (weekend)" cite "W.D. Va. LBR 8007-1(B)"
+{
+  given NoticeOfAppealFiled() on 2025-12-03
+  expect deadline(record-transmittal-period) == 2026-01-20
+}
+
 /// LBR 9013-1(H): the motion, notice of hearing and certification of notice
 /// are filed within 7 days after the court gives the hearing date, or the
 /// date may be reassigned.
 deadline hearing-notice-period: 7.days after HearingDateGiven() counted_by frbp9006-virginia cite "W.D. Va. LBR 9013-1(H)"
+
+test "Counting boundary: hearing-notice-period (weekend)" cite "W.D. Va. LBR 9013-1(H)"
+{
+  given HearingDateGiven() on 2025-12-06
+  expect deadline(hearing-notice-period) == 2025-12-15
+}
+
 /// LBR 9013-1(M): an opposing party's written response is filed and served
 /// at least 7 days before the noticed hearing, unless another time is
 /// prescribed or notice is short.
 deadline motion-response-period: 7.days before NoticedHearingDate() counted_by frbp9006-virginia cite "W.D. Va. LBR 9013-1(M)"
+
+test "Counting boundary: motion-response-period (holiday)" cite "W.D. Va. LBR 9013-1(M)"
+{
+  given NoticedHearingDate() on 2025-12-04
+  expect deadline(motion-response-period) == 2025-11-26
+}
+
 /// LBR 9015-1(B): not later than 21 days after a jury demand, the demanding
 /// party files all parties' consent to a jury trial in the bankruptcy
 /// court.
 deadline jury-consent-period: 21.days after JuryDemandMade() counted_by frbp9006-virginia cite "W.D. Va. LBR 9015-1(B)"
+
+test "Counting boundary: jury-consent-period (holiday)" cite "W.D. Va. LBR 9015-1(B)"
+{
+  given JuryDemandMade() on 2025-12-04
+  expect deadline(jury-consent-period) == 2025-12-26
+}
+
 /// LBR 9015-1(B): without the consent, the demanding party has an
 /// additional 14 days to move the District Court to withdraw the reference.
 deadline jury-withdrawal-motion-period: 14.days after JuryConsentDeadlinePassed() counted_by frbp9006-virginia cite "W.D. Va. LBR 9015-1(B)"
 /// LBR 9070-1(B): exhibits and trial materials are withdrawn within 30 days
 /// after the judgment and the time for appeal or rehearing pass.
 deadline exhibit-withdrawal-period: 30.days after AppealTimeExpired() counted_by frbp9006-virginia cite "W.D. Va. LBR 9070-1(B)"
+
+test "Counting boundary: exhibit-withdrawal-period (holiday)" cite "W.D. Va. LBR 9070-1(B)"
+{
+  given AppealTimeExpired() on 2025-12-02
+  expect deadline(exhibit-withdrawal-period) == 2026-01-02
+}
+
 /// LBR 9072-1(A): when the court instructs a party to prepare a proposed
 /// order, it is filed within 10 days after the conclusion of the trial,
 /// hearing or other disposition.
 deadline proposed-order-period: 10.days after MatterDisposed() counted_by frbp9006-virginia cite "W.D. Va. LBR 9072-1(A)"
+
+test "Counting boundary: proposed-order-period (weekend)" cite "W.D. Va. LBR 9072-1(A)"
+{
+  given MatterDisposed() on 2025-12-03
+  expect deadline(proposed-order-period) == 2025-12-15
+}
 
 start motion-filed
 

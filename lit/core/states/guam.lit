@@ -123,7 +123,18 @@ counting frcrimp45-guam effective [2023-12-01, ..) known_at 2023-04-24 cite "FRC
 
 deadline frcrimp45-guam-forward-holiday: 1.days after Served() counted_by frcrimp45-guam
 deadline frcrimp45-guam-backward-holiday: 1.days before Scheduled() counted_by frcrimp45-guam
+
+test "Counting boundary: frcrimp45-guam-backward-holiday (weekend)" {
+  given Scheduled() on 2023-12-03
+  expect deadline(frcrimp45-guam-backward-holiday) == 2023-12-01
+}
+
 deadline frcrimp45-guam-electronic-service: 1.days after Served() counted_by frcrimp45-guam
+
+test "Counting boundary: frcrimp45-guam-electronic-service (weekend)" {
+  given Served(Personal) on 2023-12-01
+  expect deadline(frcrimp45-guam-electronic-service) == 2023-12-04
+}
 
 test "Guam Liberation Day closes a forward criminal period" cite "FRCrimP 45(a)(6)(C)"
 {

@@ -57,9 +57,23 @@ limit brief { pages <= 25 cite "N.D.W. Va. LBR 9004-1(c)" } cite "N.D.W. Va. LBR
 /// for it to 30 days from service of the amended schedule or list, without
 /// notice or order.
 deadline added-creditor-discharge-objection-period: 30.days after AmendedScheduleServed() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 1009-1(a)"
+
+test "Counting boundary: added-creditor-discharge-objection-period (holiday)" cite "N.D.W. Va. LBR 1009-1(a)"
+{
+  given AmendedScheduleServed() on 2025-12-02
+  expect deadline(added-creditor-discharge-objection-period) == 2026-01-02
+}
+
 /// LBR 1014-2: an objection to venue is filed within 21 days of the date
 /// first set for the meeting of creditors.
 deadline venue-objection-period: 21.days after FirstMeetingDate() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 1014-2"
+
+test "Counting boundary: venue-objection-period (holiday)" cite "N.D.W. Va. LBR 1014-2"
+{
+  given FirstMeetingDate() on 2025-12-04
+  expect deadline(venue-objection-period) == 2025-12-26
+}
+
 /// LBR 1072-1(b): a debtor may ask the U.S. Trustee's Regional Office at
 /// least three days before filing to hold the meeting of creditors at a
 /// different location.
@@ -68,42 +82,119 @@ deadline meeting-location-request-period: 3.days before PetitionFiled() counted_
 /// moves to approve it, extend or waive appearance at least 7 days before
 /// the scheduled meeting.
 deadline appearance-motion-period: 7.days before ScheduledMeetingDate() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 2003-1(b)(2)"
+
+test "Counting boundary: appearance-motion-period (holiday)" cite "N.D.W. Va. LBR 2003-1(b)(2)"
+{
+  given ScheduledMeetingDate() on 2025-12-04
+  expect deadline(appearance-motion-period) == 2025-11-26
+}
+
 /// LBR 2003-1(b)(3): the debtor or counsel should notify the trustee and
 /// U.S. Trustee of a disability needing accommodation not less than 14 days
 /// before the § 341 meeting.
 deadline accommodation-notice-period: 14.days before ScheduledMeetingDate() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 2003-1(b)(3)"
+
+test "Counting boundary: accommodation-notice-period (weekend)" cite "N.D.W. Va. LBR 2003-1(b)(3)"
+{
+  given ScheduledMeetingDate() on 2025-12-06
+  expect deadline(accommodation-notice-period) == 2025-11-21
+}
+
 /// LBR 2003-1(c)(1): a request for a continuance of the meeting goes first
 /// to the trustee, or in chapter 11 to the U.S. Trustee, at least 7 days
 /// before the meeting.
 deadline continuance-request-period: 7.days before ScheduledMeetingDate() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 2003-1(c)(1)"
+
+test "Counting boundary: continuance-request-period (holiday)" cite "N.D.W. Va. LBR 2003-1(c)(1)"
+{
+  given ScheduledMeetingDate() on 2025-12-04
+  expect deadline(continuance-request-period) == 2025-11-26
+}
+
 /// LBR 4001-1(c): a motion to extend the automatic stay beyond the 30th day
 /// under § 362(c)(3)(B) is filed within 7 days of the petition date.
 deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 4001-1(c)"
+
+test "Counting boundary: stay-extension-motion-period (weekend)" cite "N.D.W. Va. LBR 4001-1(c)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(stay-extension-motion-period) == 2025-12-15
+}
+
 /// LBR 5005-1(e)(5): an attorney directed to submit an order reflecting a
 /// hearing's outcome submits it within 7 days unless otherwise directed.
 deadline directed-order-period: 7.days after OrderDirected() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 5005-1(e)(5)"
+
+test "Counting boundary: directed-order-period (weekend)" cite "N.D.W. Va. LBR 5005-1(e)(5)"
+{
+  given OrderDirected() on 2025-12-06
+  expect deadline(directed-order-period) == 2025-12-15
+}
+
 /// LBR 5077-1(b): a request to redact personal data identifiers is due
 /// within 21 calendar days of the filing of the transcript, or longer if
 /// the court orders.
 deadline transcript-redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 5077-1(b)"
+
+test "Counting boundary: transcript-redaction-request-period (holiday)" cite "N.D.W. Va. LBR 5077-1(b)"
+{
+  given TranscriptFiled() on 2025-12-04
+  expect deadline(transcript-redaction-request-period) == 2025-12-26
+}
+
 /// LBR 5077-1(b): the court reporter or transcriber files the redacted
 /// transcript within 31 calendar days of the delivery of the transcript, or
 /// longer if the court orders.
 deadline redacted-transcript-period: 31.days after TranscriptDelivered() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 5077-1(b)"
+
+test "Counting boundary: redacted-transcript-period (holiday)" cite "N.D.W. Va. LBR 5077-1(b)"
+{
+  given TranscriptDelivered() on 2025-12-01
+  expect deadline(redacted-transcript-period) == 2026-01-02
+}
+
 /// LBR 6004-1: unless the court orders otherwise, a FRBP 6004(f)(1) report
 /// of sale is timely if filed within 45 days of the sale.
 deadline sale-report-period: 45.days after SaleCompleted() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 6004-1"
+
+test "Counting boundary: sale-report-period (weekend)" cite "N.D.W. Va. LBR 6004-1"
+{
+  given SaleCompleted() on 2025-12-03
+  expect deadline(sale-report-period) == 2026-01-20
+}
+
 /// LBR 7007-1(d): a response to a motion in an adversary proceeding is
 /// filed within 21 days from the motion's filing, or three days before the
 /// hearing if earlier.
 deadline adversary-motion-response-period: 21.days after AdversaryMotionFiled() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 7007-1(d)"
+
+test "Counting boundary: adversary-motion-response-period (holiday)" cite "N.D.W. Va. LBR 7007-1(d)"
+{
+  given AdversaryMotionFiled() on 2025-12-04
+  expect deadline(adversary-motion-response-period) == 2025-12-26
+}
+
 /// LBR 7007-1(e): a reply is filed within 7 days from the response's
 /// filing, or three days before the hearing if earlier.
 deadline adversary-motion-reply-period: 7.days after AdversaryResponseFiled() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 7007-1(e)"
+
+test "Counting boundary: adversary-motion-reply-period (weekend)" cite "N.D.W. Va. LBR 7007-1(e)"
+{
+  given AdversaryResponseFiled() on 2025-12-06
+  expect deadline(adversary-motion-reply-period) == 2025-12-15
+}
+
 /// LBR 9013-1(d): a response to a motion is filed within 21 days from the
 /// motion's filing, or 3 days before the hearing if earlier, unless another
 /// period applies.
 deadline motion-response-period: 21.days after MotionFiled() counted_by frbp9006-west-virginia cite "N.D.W. Va. LBR 9013-1(d)"
+
+test "Counting boundary: motion-response-period (holiday)" cite "N.D.W. Va. LBR 9013-1(d)"
+{
+  given MotionFiled() on 2025-12-04
+  expect deadline(motion-response-period) == 2025-12-26
+}
+
 /// LBR 9013-1(f)(2): a party intending to object at a hearing set without
 /// filed objections files a written objection at least three days before
 /// the hearing.

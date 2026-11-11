@@ -27,6 +27,12 @@ event DefendantsAppeared()
 /// matters other than adversary proceedings are exempt (L.R. 3(D)).
 deadline adr-consideration-period: 30.days after DefendantsAppeared() counted_by frcp6-wisconsin cite "W.D. Wis. L.R. 3"
 
+test "Counting boundary: adr-consideration-period (weekend)" cite "W.D. Wis. L.R. 3"
+{
+  given DefendantsAppeared() on 2023-12-01
+  expect deadline(adr-consideration-period) == 2024-01-02
+}
+
 test "adr consideration period: 30 days after the defendants appear" cite "W.D. Wis. L.R. 3"
 {
   given DefendantsAppeared() on 2026-11-02

@@ -129,30 +129,85 @@ event UnscannableFilingNoticed()
 /// continue (or by noon of the working day before a scheduled hearing, if
 /// earlier).
 deadline continuance-position: 3.business_days after MultiDefendantContinuanceMotionFiled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 2.2"
+
+test "Counting boundary: continuance-position (weekend)" cite "D. Haw. CrimLR 2.2"
+{
+  given MultiDefendantContinuanceMotionFiled() on 2023-12-06
+  expect deadline(continuance-position) == 2023-12-11
+}
+
 /// D. Haw. CrimLR 2.3(b): no less than one week before the trial
 /// conference, the parties meet and confer and file a Joint Trial
 /// Presentation Statement.
 deadline joint-trial-presentation-statement: 7.days before TrialConferenceScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 2.3(b)"
+
+test "Counting boundary: joint-trial-presentation-statement (weekend)" cite "D. Haw. CrimLR 2.3(b)"
+{
+  given TrialConferenceScheduled() on 2023-12-02
+  expect deadline(joint-trial-presentation-statement) == 2023-11-24
+}
+
 /// D. Haw. CrimLR 5.2(b)(2): any opposition to a motion to file under seal
 /// is due no later than seven (7) days after the filing of the motion.
 deadline sealing-opposition: 7.days after SealingMotionFiled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 5.2(b)"
+
+test "Counting boundary: sealing-opposition (weekend)" cite "D. Haw. CrimLR 5.2(b)"
+{
+  given SealingMotionFiled() on 2023-12-02
+  expect deadline(sealing-opposition) == 2023-12-11
+}
+
 /// D. Haw. CrimLR 5.2(b)(2): if the court denies the motion, the movant
 /// informs the court within four (4) days whether it withdraws the
 /// document or has it filed publicly; otherwise the document is returned.
 deadline sealing-denial-election: 4.days after SealingMotionDenied() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 5.2(b)"
+
+test "Counting boundary: sealing-denial-election (weekend)" cite "D. Haw. CrimLR 5.2(b)"
+{
+  given SealingMotionDenied() on 2023-12-05
+  expect deadline(sealing-denial-election) == 2023-12-11
+}
+
 /// D. Haw. CrimLR 5.2(b)(3): within seven (7) days after a motion to file
 /// a matter publicly is filed, any party may oppose it and seek to have the
 /// matter sealed.
 deadline public-filing-opposition: 7.days after PublicFilingMotionFiled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 5.2(b)"
+
+test "Counting boundary: public-filing-opposition (weekend)" cite "D. Haw. CrimLR 5.2(b)"
+{
+  given PublicFilingMotionFiled() on 2023-12-02
+  expect deadline(public-filing-opposition) == 2023-12-11
+}
+
 /// D. Haw. CrimLR 5.3(b): a motion to seal a hearing is filed no later
 /// than five (5) days before the scheduled hearing.
 deadline hearing-sealing-motion: 5.days before HearingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 5.3(b)"
+
+test "Counting boundary: hearing-sealing-motion (weekend)" cite "D. Haw. CrimLR 5.3(b)"
+{
+  given HearingScheduled() on 2023-12-01
+  expect deadline(hearing-sealing-motion) == 2023-11-24
+}
+
 /// D. Haw. CrimLR 5.3(b): no later than three (3) days after the filing of
 /// a motion to seal a hearing, any person may file an opposition.
 deadline hearing-sealing-opposition: 3.days after HearingSealingMotionFiled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 5.3(b)"
+
+test "Counting boundary: hearing-sealing-opposition (weekend)" cite "D. Haw. CrimLR 5.3(b)"
+{
+  given HearingSealingMotionFiled() on 2023-12-06
+  expect deadline(hearing-sealing-opposition) == 2023-12-11
+}
+
 /// D. Haw. CrimLR 12.2(a)(1): a motion for leave to continue a motion or
 /// response deadline is filed at least one (1) day before the deadline.
 deadline deadline-continuance-motion: 1.days before MotionDeadline() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 12.2(a)"
+
+test "Counting boundary: deadline-continuance-motion (weekend)" cite "D. Haw. CrimLR 12.2(a)"
+{
+  given MotionDeadline() on 2023-12-03
+  expect deadline(deadline-continuance-motion) == 2023-12-01
+}
 
 /// D. Haw. CrimLR 12.2(a)(1): unless authorized or directed by the court,
 /// no reply is filed; a motion for leave to file a reply is filed within
@@ -162,55 +217,144 @@ deadline reply-leave-motion: 2.days after ResponseFiled() counted_by frcrimp45-h
   op set
 } cite "D. Haw. CrimLR 12.2(a)"
 
+test "Counting boundary: reply-leave-motion (weekend)" cite "D. Haw. CrimLR 12.2(a)"
+{
+  given ResponseFiled() on 2023-12-01
+  expect deadline(reply-leave-motion) == 2023-12-04
+}
+
 /// D. Haw. CrimLR 12.4: except with leave of court for good cause, a
 /// substantive joinder in a motion or opposition is filed and served within
 /// three (3) days of the filing of the motion or opposition joined.
 deadline joinder: 3.days after JoinableFilingMade() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 12.4"
+
+test "Counting boundary: joinder (weekend)" cite "D. Haw. CrimLR 12.4"
+{
+  given JoinableFilingMade() on 2023-12-06
+  expect deadline(joinder) == 2023-12-11
+}
+
 /// D. Haw. CrimLR 16(b): a defendant who does not request the discovery
 /// CrimLR 16(a) describes files a notice to the government within five (5)
 /// days after arraignment, which relieves the government of those
 /// obligations.
 deadline discovery-declination: 5.days after Arraigned() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 16(b)"
+
+test "Counting boundary: discovery-declination (weekend)" cite "D. Haw. CrimLR 16(b)"
+{
+  given Arraigned() on 2023-12-04
+  expect deadline(discovery-declination) == 2023-12-11
+}
+
 /// D. Haw. CrimLR 32.2(b)(4): not less than fourteen (14) days before the
 /// sentencing date, the final presentence report addressing any unresolved
 /// objections is submitted to the court and the parties under seal.
 deadline final-psr: 14.days before SentencingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(b)"
+
+test "Counting boundary: final-psr (weekend)" cite "D. Haw. CrimLR 32.2(b)"
+{
+  given SentencingScheduled() on 2023-12-02
+  expect deadline(final-psr) == 2023-11-17
+}
+
 /// D. Haw. CrimLR 32.2(c): not less than fourteen (14) days before the
 /// sentencing date, the government may file a motion under USSG § 5K1.1 or
 /// 18 U.S.C. § 3553(e).
 deadline substantial-assistance-motion: 14.days before SentencingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(c)"
+
+test "Counting boundary: substantial-assistance-motion (weekend)" cite "D. Haw. CrimLR 32.2(c)"
+{
+  given SentencingScheduled() on 2023-12-02
+  expect deadline(substantial-assistance-motion) == 2023-11-17
+}
+
 /// D. Haw. CrimLR 32.2(d): not less than ten (10) days before the
 /// sentencing date, a party seeking an evidentiary hearing files a request
 /// with its witnesses, exhibits and expected duration.
 deadline evidentiary-hearing-request: 10.days before SentencingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(d)"
+
+test "Counting boundary: evidentiary-hearing-request (holiday)" cite "D. Haw. CrimLR 32.2(d)"
+{
+  given SentencingScheduled() on 2023-12-03
+  expect deadline(evidentiary-hearing-request) == 2023-11-22
+}
+
 /// D. Haw. CrimLR 32.2(d): the opposing party responds, and files its own
 /// witness and exhibit lists if it would call witnesses, seven (7) days
 /// before the sentencing date.
 deadline evidentiary-hearing-response: 7.days before SentencingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(d)"
+
+test "Counting boundary: evidentiary-hearing-response (weekend)" cite "D. Haw. CrimLR 32.2(d)"
+{
+  given SentencingScheduled() on 2023-12-02
+  expect deadline(evidentiary-hearing-response) == 2023-11-24
+}
+
 /// D. Haw. CrimLR 32.2(e): not less than five (5) days before the
 /// sentencing date, sentencing memoranda are filed by defense counsel
 /// responding to a government motion, any party seeking a variance, and any
 /// party responding to objections in the Sentencing Statements.
 deadline sentencing-memoranda: 5.days before SentencingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(e)"
+
+test "Counting boundary: sentencing-memoranda (weekend)" cite "D. Haw. CrimLR 32.2(e)"
+{
+  given SentencingScheduled() on 2023-12-01
+  expect deadline(sentencing-memoranda) == 2023-11-24
+}
+
 /// D. Haw. CrimLR 32.2(h): where the parties agree at the plea that
 /// expedited sentencing is warranted, they file a Joint Request for
 /// Expedited Sentencing within one (1) business day of the entry of the
 /// guilty plea.
 deadline expedited-sentencing-request: 1.business_days after ExpeditedPleaEntered() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(h)"
+
+test "Counting boundary: expedited-sentencing-request (weekend)" cite "D. Haw. CrimLR 32.2(h)"
+{
+  given ExpeditedPleaEntered() on 2023-12-01
+  expect deadline(expedited-sentencing-request) == 2023-12-04
+}
+
 /// D. Haw. CrimLR 32.2(h): where expedited sentencing is granted, the draft
 /// presentence report is issued no later than thirty (30) days after the
 /// change of plea.
 deadline expedited-draft-psr: 30.days after ExpeditedSentencingGranted() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(h)"
+
+test "Counting boundary: expedited-draft-psr (weekend)" cite "D. Haw. CrimLR 32.2(h)"
+{
+  given ExpeditedSentencingGranted() on 2023-12-01
+  expect deadline(expedited-draft-psr) == 2024-01-02
+}
+
 /// D. Haw. CrimLR 32.2(h): the parties file Sentencing Statements within
 /// three (3) days of receiving the expedited draft presentence report.
 deadline expedited-sentencing-statements: 3.days after ExpeditedDraftPsrReceived() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(h)"
+
+test "Counting boundary: expedited-sentencing-statements (weekend)" cite "D. Haw. CrimLR 32.2(h)"
+{
+  given ExpeditedDraftPsrReceived() on 2023-12-06
+  expect deadline(expedited-sentencing-statements) == 2023-12-11
+}
+
 /// D. Haw. CrimLR 32.2(h): in an expedited sentencing the final
 /// presentence report is submitted no less than three (3) days before
 /// sentencing.
 deadline expedited-final-psr: 3.days before ExpeditedSentencingScheduled() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 32.2(h)"
+
+test "Counting boundary: expedited-final-psr (weekend)" cite "D. Haw. CrimLR 32.2(h)"
+{
+  given ExpeditedSentencingScheduled() on 2023-12-05
+  expect deadline(expedited-final-psr) == 2023-12-01
+}
+
 /// D. Haw. CrimLR 58.3(b): within thirty-five (35) days after a transcript
 /// has been ordered, the original and one copy are filed with the clerk.
 deadline misdemeanor-appeal-transcript: 35.days after AppealTranscriptOrdered() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 58.3(b)"
+
+test "Counting boundary: misdemeanor-appeal-transcript (weekend)" cite "D. Haw. CrimLR 58.3(b)"
+{
+  given AppealTranscriptOrdered() on 2023-12-02
+  expect deadline(misdemeanor-appeal-transcript) == 2024-01-08
+}
 
 /// D. Haw. CrimLR 58.3(e): unless the appellant elected an abbreviated
 /// appeal, the appellant serves and files a brief within twenty-one (21)
@@ -221,6 +365,12 @@ deadline misdemeanor-appellant-brief: 21.days after AppealRecordComplete() count
   op set
 } cite "D. Haw. CrimLR 58.3(e)"
 
+test "Counting boundary: misdemeanor-appellant-brief (weekend)" cite "D. Haw. CrimLR 58.3(e)"
+{
+  given AppealRecordComplete() on 2023-12-02
+  expect deadline(misdemeanor-appellant-brief) == 2023-12-26
+}
+
 /// D. Haw. CrimLR 58.3(e): the appellee serves and files a responsive
 /// brief within twenty-one (21) days after service of the appellant's
 /// brief.
@@ -229,6 +379,12 @@ deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counte
   op set
 } cite "D. Haw. CrimLR 58.3(e)"
 
+test "Counting boundary: misdemeanor-appellee-brief (weekend)" cite "D. Haw. CrimLR 58.3(e)"
+{
+  given AppellantBriefServed() on 2023-12-02
+  expect deadline(misdemeanor-appellee-brief) == 2023-12-26
+}
+
 /// D. Haw. CrimLR 58.3(e): the appellant may serve and file a reply brief
 /// within seven (7) days after service of the appellee's brief.
 deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45-hawaii delegable {
@@ -236,24 +392,57 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by 
   op set
 } cite "D. Haw. CrimLR 58.3(e)"
 
+test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "D. Haw. CrimLR 58.3(e)"
+{
+  given AppelleeBriefServed() on 2023-12-02
+  expect deadline(misdemeanor-reply-brief) == 2023-12-11
+}
+
 /// D. Haw. CrimLR 59.1: objections to a proposed order requiring
 /// stipulation or approval as to form are e-mailed to chambers within one
 /// (1) day of receiving the prevailing party's draft.
 deadline proposed-order-objection: 1.days after ProposedOrderDraftReceived() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 59.1"
+
+test "Counting boundary: proposed-order-objection (weekend)" cite "D. Haw. CrimLR 59.1"
+{
+  given ProposedOrderDraftReceived() on 2023-12-01
+  expect deadline(proposed-order-objection) == 2023-12-04
+}
+
 /// D. Haw. CrimLR 60.1: a motion for reconsideration asserting manifest
 /// error of law or fact is filed within fourteen (14) days of the court's
 /// order; reconsideration of a case-dispositive order follows FRCP 59 or
 /// 60.
 deadline reconsideration-manifest-error: 14.days after OrderEntered() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 60.1"
+
+test "Counting boundary: reconsideration-manifest-error (weekend)" cite "D. Haw. CrimLR 60.1"
+{
+  given OrderEntered() on 2023-12-02
+  expect deadline(reconsideration-manifest-error) == 2023-12-18
+}
+
 /// D. Haw. CrimLR 79.2: at least sixty (60) days before a sealing order
 /// expires, the clerk notifies the Criminal Chief of the United States
 /// Attorney's Office of the unsealing date; the government may move to
 /// extend the sealing order.
 deadline unsealing-notice: 60.days before SealingOrderExpires() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 79.2"
+
+test "Counting boundary: unsealing-notice (weekend)" cite "D. Haw. CrimLR 79.2"
+{
+  given SealingOrderExpires() on 2023-12-06
+  expect deadline(unsealing-notice) == 2023-10-06
+}
+
 /// D. Haw. CrimLR 81.1(c)(3)(B): if a self-represented defendant's
 /// document cannot be scanned, the clerk notifies the litigant to serve it
 /// by other means within three (3) business days.
 deadline unscannable-filing-service: 3.business_days after UnscannableFilingNoticed() counted_by frcrimp45-hawaii cite "D. Haw. CrimLR 81.1(c)"
+
+test "Counting boundary: unscannable-filing-service (weekend)" cite "D. Haw. CrimLR 81.1(c)"
+{
+  given UnscannableFilingNoticed() on 2023-12-06
+  expect deadline(unscannable-filing-service) == 2023-12-11
+}
 
 test "continuance position: 3 business days after the trigger" cite "D. Haw. CrimLR 2.2"
 {

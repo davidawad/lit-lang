@@ -102,6 +102,13 @@ deadline amendment-notice-period: 14.days after ScheduleAmendmentFiled() counted
 /// Bankr. W.D. Wash. LBR 1009-1(c): the certificate of service of that
 /// notice is filed within 7 days (the rules effective December 1, 2023).
 deadline amendment-notice-certificate-period: 7.days after AmendmentNoticeTransmitted() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 1009-1(c)"
+
+test "Counting boundary: amendment-notice-certificate-period (weekend)" cite "Bankr. W.D. Wash. LBR 1009-1(c)"
+{
+  given AmendmentNoticeTransmitted() on 2025-12-06
+  expect deadline(amendment-notice-certificate-period) == 2025-12-15
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 1009-1(c), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline amendment-notice-certificate-period: 7.days after AmendmentNoticeTransmitted() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes amendment-notice-certificate-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 1009-1(c)"
@@ -109,6 +116,13 @@ deadline amendment-notice-certificate-period: 7.days after AmendmentNoticeTransm
 /// creditors no later than 7 days from the filing of the petition, or the
 /// case may be dismissed (the rules effective December 1, 2023).
 deadline creditor-list-period: 7.days after PetitionFiled() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 1017-1(c)"
+
+test "Counting boundary: creditor-list-period (weekend)" cite "Bankr. W.D. Wash. LBR 1017-1(c)"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(creditor-list-period) == 2025-12-15
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 1017-1(c), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline creditor-list-period: 7.days after PetitionFiled() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes creditor-list-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 1017-1(c)"
@@ -124,6 +138,13 @@ deadline dip-tax-return-period: 14.days after OrderForReliefEntered() counted_by
 /// initial proof of insurance within 7 days after the order for relief (the
 /// rules effective December 1, 2023).
 deadline dip-insurance-period: 7.days after OrderForReliefEntered() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 2015-1(b)"
+
+test "Counting boundary: dip-insurance-period (weekend)" cite "Bankr. W.D. Wash. LBR 2015-1(b)"
+{
+  given OrderForReliefEntered() on 2025-12-06
+  expect deadline(dip-insurance-period) == 2025-12-15
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 2015-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline dip-insurance-period: 7.days after OrderForReliefEntered() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes dip-insurance-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 2015-1(b)"
@@ -137,6 +158,13 @@ deadline dip-budget-period: 14.days after OrderForReliefEntered() counted_by frb
 /// after the order of confirmation (the rules effective December 1, 2023).
 /// The amended rules of December 1, 2026 drop it.
 deadline excess-fee-application-period: 21.days after PlanConfirmed() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) repealed cite "Bankr. W.D. Wash. LBR 2016-1(e)"
+
+test "Counting boundary: excess-fee-application-period (holiday)" cite "Bankr. W.D. Wash. LBR 2016-1(e)"
+{
+  given PlanConfirmed() on 2025-12-04
+  expect deadline(excess-fee-application-period) == 2025-12-26
+}
+
 /// Bankr. W.D. Wash. LBR 2016-2: a bankruptcy petition preparer serves
 /// Official Form B119 and the disclosure of compensation on the United
 /// States Trustee within fourteen days after filing (the rules effective
@@ -150,6 +178,13 @@ deadline preparer-disclosure-period: 14.days after PreparerDocumentFiled() count
 /// than 60 days after entry of the order confirming a plan (the rules
 /// effective December 1, 2023).
 deadline chapter-11-claim-objection-period: 60.days after PlanConfirmed() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3007-1(a)"
+
+test "Counting boundary: chapter-11-claim-objection-period (weekend)" cite "Bankr. W.D. Wash. LBR 3007-1(a)"
+{
+  given PlanConfirmed() on 2025-12-02
+  expect deadline(chapter-11-claim-objection-period) == 2026-02-02
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3007-1(a), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline chapter-11-claim-objection-period: 60.days after PlanConfirmed() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes chapter-11-claim-objection-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3007-1(a)"
@@ -157,6 +192,13 @@ deadline chapter-11-claim-objection-period: 60.days after PlanConfirmed() counte
 /// case are filed and served no later than 270 days from the petition date,
 /// unless good cause is shown (the rules effective December 1, 2023).
 deadline chapter-13-claim-objection-period: 270.days after PetitionFiled() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3007-1(b)"
+
+test "Counting boundary: chapter-13-claim-objection-period (weekend)" cite "Bankr. W.D. Wash. LBR 3007-1(b)"
+{
+  given PetitionFiled() on 2025-12-02
+  expect deadline(chapter-13-claim-objection-period) == 2026-08-31
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3007-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline chapter-13-claim-objection-period: 270.days after PetitionFiled() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes chapter-13-claim-objection-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3007-1(b)"
@@ -165,6 +207,13 @@ deadline chapter-13-claim-objection-period: 270.days after PetitionFiled() count
 /// originally scheduled meeting of creditors (the rules effective December
 /// 1, 2023).
 deadline plan-service-period: 14.days before FirstMeetingDate() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3015-1(c)"
+
+test "Counting boundary: plan-service-period (weekend)" cite "Bankr. W.D. Wash. LBR 3015-1(c)"
+{
+  given FirstMeetingDate() on 2025-12-06
+  expect deadline(plan-service-period) == 2025-11-21
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3015-1(c), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline plan-service-period: 14.days before FirstMeetingDate() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes plan-service-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3015-1(c)"
@@ -172,6 +221,13 @@ deadline plan-service-period: 14.days before FirstMeetingDate() counted_by frbp9
 /// to an objection to confirmation no later than 7 days before the
 /// confirmation hearing (the rules effective December 1, 2023).
 deadline confirmation-reply-period: 7.days before ConfirmationHearing() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3015-1(d)"
+
+test "Counting boundary: confirmation-reply-period (holiday)" cite "Bankr. W.D. Wash. LBR 3015-1(d)"
+{
+  given ConfirmationHearing() on 2025-12-04
+  expect deadline(confirmation-reply-period) == 2025-11-26
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3015-1(d), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline confirmation-reply-period: 7.days before ConfirmationHearing() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes confirmation-reply-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3015-1(d)"
@@ -179,6 +235,13 @@ deadline confirmation-reply-period: 7.days before ConfirmationHearing() counted_
 /// plan payments, chapter 13 debtors file their domestic support
 /// certifications (the rules effective December 1, 2023).
 deadline domestic-support-certification-period: 30.days after PlanPaymentsCompleted() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3015-1(l)"
+
+test "Counting boundary: domestic-support-certification-period (holiday)" cite "Bankr. W.D. Wash. LBR 3015-1(l)"
+{
+  given PlanPaymentsCompleted() on 2025-12-02
+  expect deadline(domestic-support-certification-period) == 2026-01-02
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3015-1(l), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline domestic-support-certification-period: 30.days after PlanPaymentsCompleted() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes domestic-support-certification-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3015-1(l)"
@@ -187,6 +250,13 @@ deadline domestic-support-certification-period: 30.days after PlanPaymentsComple
 /// later than 7 days before the hearing (the rules effective December 1,
 /// 2023).
 deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3017-1(a)"
+
+test "Counting boundary: disclosure-statement-objection-period (holiday)" cite "Bankr. W.D. Wash. LBR 3017-1(a)"
+{
+  given DisclosureStatementHearing() on 2025-12-04
+  expect deadline(disclosure-statement-objection-period) == 2025-11-26
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3017-1(a), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes disclosure-statement-objection-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3017-1(a)"
@@ -195,6 +265,13 @@ deadline disclosure-statement-objection-period: 7.days before DisclosureStatemen
 /// days before the confirmation hearing (the rules effective December 1,
 /// 2023).
 deadline confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 3020-1(b)"
+
+test "Counting boundary: confirmation-objection-period (holiday)" cite "Bankr. W.D. Wash. LBR 3020-1(b)"
+{
+  given ConfirmationHearing() on 2025-12-04
+  expect deadline(confirmation-objection-period) == 2025-11-26
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 3020-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes confirmation-objection-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 3020-1(b)"
@@ -209,6 +286,13 @@ deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() coun
 /// later than 21 days after the filing of the motion (the rules effective
 /// December 1, 2023).
 deadline withdrawal-reply-period: 21.days after WithdrawalMotionFiled() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 5011-1(b)"
+
+test "Counting boundary: withdrawal-reply-period (holiday)" cite "Bankr. W.D. Wash. LBR 5011-1(b)"
+{
+  given WithdrawalMotionFiled() on 2025-12-04
+  expect deadline(withdrawal-reply-period) == 2025-12-26
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 5011-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline withdrawal-reply-period: 21.days after WithdrawalMotionFiled() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes withdrawal-reply-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 5011-1(b)"
@@ -244,6 +328,13 @@ test "Counting boundary: referred-adjudication-notice-period (weekend)" cite "Ba
 /// is filed no later than 21 days before the filing of the proposed
 /// pretrial order (the rules effective December 1, 2023).
 deadline plaintiff-pretrial-statement-period: 21.days before ProposedPretrialOrderFiled() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 7016-1(b)"
+
+test "Counting boundary: plaintiff-pretrial-statement-period (holiday)" cite "Bankr. W.D. Wash. LBR 7016-1(b)"
+{
+  given ProposedPretrialOrderFiled() on 2025-12-02
+  expect deadline(plaintiff-pretrial-statement-period) == 2025-11-10
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline plaintiff-pretrial-statement-period: 21.days before ProposedPretrialOrderFiled() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes plaintiff-pretrial-statement-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b)"
@@ -251,6 +342,13 @@ deadline plaintiff-pretrial-statement-period: 21.days before ProposedPretrialOrd
 /// is filed not later than 14 days before the filing of the proposed
 /// pretrial order (the rules effective December 1, 2023).
 deadline defendant-pretrial-statement-period: 14.days before ProposedPretrialOrderFiled() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 7016-1(b)"
+
+test "Counting boundary: defendant-pretrial-statement-period (weekend)" cite "Bankr. W.D. Wash. LBR 7016-1(b)"
+{
+  given ProposedPretrialOrderFiled() on 2025-12-06
+  expect deadline(defendant-pretrial-statement-period) == 2025-11-21
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline defendant-pretrial-statement-period: 14.days before ProposedPretrialOrderFiled() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes defendant-pretrial-statement-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b)"
@@ -258,6 +356,13 @@ deadline defendant-pretrial-statement-period: 14.days before ProposedPretrialOrd
 /// not later than 7 days before the filing of the proposed pretrial order
 /// (the rules effective December 1, 2023).
 deadline pretrial-conference-of-attorneys-period: 7.days before ProposedPretrialOrderFiled() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 7016-1(b)"
+
+test "Counting boundary: pretrial-conference-of-attorneys-period (holiday)" cite "Bankr. W.D. Wash. LBR 7016-1(b)"
+{
+  given ProposedPretrialOrderFiled() on 2025-12-04
+  expect deadline(pretrial-conference-of-attorneys-period) == 2025-11-26
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline pretrial-conference-of-attorneys-period: 7.days before ProposedPretrialOrderFiled() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes pretrial-conference-of-attorneys-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b)"
@@ -265,6 +370,13 @@ deadline pretrial-conference-of-attorneys-period: 7.days before ProposedPretrial
 /// no later than 7 days before the scheduled trial date (the rules
 /// effective December 1, 2023).
 deadline proposed-pretrial-order-period: 7.days before TrialDate() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 7016-1(b)"
+
+test "Counting boundary: proposed-pretrial-order-period (holiday)" cite "Bankr. W.D. Wash. LBR 7016-1(b)"
+{
+  given TrialDate() on 2025-12-04
+  expect deadline(proposed-pretrial-order-period) == 2025-11-26
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline proposed-pretrial-order-period: 7.days before TrialDate() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes proposed-pretrial-order-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 7016-1(b)"
@@ -279,6 +391,13 @@ deadline claim-objection-notice-period: 30.days before MotionHearing() counted_b
 /// avoidance are filed and served at least 28 days before the hearing (the
 /// rules effective December 1, 2023).
 deadline summary-judgment-notice-period: 28.days before MotionHearing() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9013-1(d)"
+
+test "Counting boundary: summary-judgment-notice-period (weekend)" cite "Bankr. W.D. Wash. LBR 9013-1(d)"
+{
+  given MotionHearing() on 2025-12-06
+  expect deadline(summary-judgment-notice-period) == 2025-11-07
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline summary-judgment-notice-period: 28.days before MotionHearing() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes summary-judgment-notice-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d)"
@@ -286,6 +405,13 @@ deadline summary-judgment-notice-period: 28.days before MotionHearing() counted_
 /// and served at least 21 days before the hearing unless a longer period
 /// applies (the rules effective December 1, 2023).
 deadline motion-notice-period: 21.days before MotionHearing() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9013-1(d)"
+
+test "Counting boundary: motion-notice-period (holiday)" cite "Bankr. W.D. Wash. LBR 9013-1(d)"
+{
+  given MotionHearing() on 2025-12-02
+  expect deadline(motion-notice-period) == 2025-11-10
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline motion-notice-period: 21.days before MotionHearing() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes motion-notice-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d)"
@@ -294,6 +420,13 @@ deadline motion-notice-period: 21.days before MotionHearing() counted_by frbp900
 /// not later than 7 days before the hearing (the rules effective December
 /// 1, 2023).
 deadline motion-response-period: 7.days before MotionHearing() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9013-1(d)"
+
+test "Counting boundary: motion-response-period (holiday)" cite "Bankr. W.D. Wash. LBR 9013-1(d)"
+{
+  given MotionHearing() on 2025-12-04
+  expect deadline(motion-response-period) == 2025-11-26
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline motion-response-period: 7.days before MotionHearing() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes motion-response-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(d)"
@@ -308,6 +441,13 @@ deadline reconsideration-period: 14.days after OrderEntered() counted_by frbp900
 /// order files and serves an objection not later than 3 days before the
 /// date set for its presentation (the rules effective December 1, 2023).
 deadline presentation-objection-period: 3.days before OrderPresentation() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9013-1(i)"
+
+test "Counting boundary: presentation-objection-period (weekend)" cite "Bankr. W.D. Wash. LBR 9013-1(i)"
+{
+  given OrderPresentation() on 2025-12-02
+  expect deadline(presentation-objection-period) == 2025-11-28
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(i), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline presentation-objection-period: 3.days before OrderPresentation() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes presentation-objection-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9013-1(i)"
@@ -315,6 +455,13 @@ deadline presentation-objection-period: 3.days before OrderPresentation() counte
 /// filed within 30 days of the notice of removal (the rules effective
 /// December 1, 2023).
 deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9027-1(b)"
+
+test "Counting boundary: remand-motion-period (holiday)" cite "Bankr. W.D. Wash. LBR 9027-1(b)"
+{
+  given RemovalNoticeFiled() on 2025-12-02
+  expect deadline(remand-motion-period) == 2026-01-02
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9027-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes remand-motion-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9027-1(b)"
@@ -322,6 +469,13 @@ deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frb
 /// parties who have not answered do so within 21 days of the notice of
 /// removal (the rules effective December 1, 2023).
 deadline removed-answer-period: 21.days after RemovalNoticeFiled() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9027-1(b)"
+
+test "Counting boundary: removed-answer-period (holiday)" cite "Bankr. W.D. Wash. LBR 9027-1(b)"
+{
+  given RemovalNoticeFiled() on 2025-12-04
+  expect deadline(removed-answer-period) == 2025-12-26
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9027-1(b), from December 1, 2026
 /// (General Order 2026-6): the same period, carried into the amended rules.
 deadline removed-answer-period: 21.days after RemovalNoticeFiled() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes removed-answer-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9027-1(b)"
@@ -337,6 +491,13 @@ deadline removal-report-supplement-period: 14.days after RemovalReportFiled() co
 /// counsel and client file a Mediation Certification (the rules effective
 /// December 1, 2023).
 deadline mediation-certification-period: 28.days after AdversaryAnswerFiled() counted_by frbp9006-washington effective [2023-12-01, 2026-12-01) cite "Bankr. W.D. Wash. LBR 9040-3"
+
+test "Counting boundary: mediation-certification-period (holiday)" cite "Bankr. W.D. Wash. LBR 9040-3"
+{
+  given AdversaryAnswerFiled() on 2025-12-04
+  expect deadline(mediation-certification-period) == 2026-01-02
+}
+
 /// Bankr. W.D. Wash. LBR (Dec. 2026) 9040-3, from December 1, 2026 (General
 /// Order 2026-6): the same period, carried into the amended rules.
 deadline mediation-certification-period: 28.days after AdversaryAnswerFiled() counted_by frbp9006-washington effective [2026-12-01, ..) supersedes mediation-certification-period@2023-12-01 cite "Bankr. W.D. Wash. LBR (Dec. 2026) 9040-3"

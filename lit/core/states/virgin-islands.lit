@@ -53,8 +53,19 @@ counting frcrimp45-virgin-islands effective [2023-12-01, ..) known_at 2023-04-24
 // sees the state rule count actual deadlines. January 6 is a VI-only holiday.
 deadline virgin-islands-one-business-day: 1.business_days after Served() counted_by frcrimp45-virgin-islands
 deadline virgin-islands-one-business-day-backward: 1.business_days before Served() counted_by frcrimp45-virgin-islands
+
+test "Counting boundary: virgin-islands-one-business-day-backward (weekend)" {
+  given Served(Personal) on 2023-12-03
+  expect deadline(virgin-islands-one-business-day-backward) == 2023-12-01
+}
+
 deadline virgin-islands-one-business-day-backward-federal: 1.business_days before Served() counted_by frcrimp45
 deadline virgin-islands-fourteen-days-electronic: 14.days after Served(Electronic) counted_by frcrimp45-virgin-islands
+
+test "Counting boundary: virgin-islands-fourteen-days-electronic (weekend)" {
+  given Served(Electronic) on 2023-12-02
+  expect deadline(virgin-islands-fourteen-days-electronic) == 2023-12-18
+}
 
 test "Virgin Islands Three King's Day closes only a forward business-day count" cite "1 V.I.C. § 171(a)"
 {

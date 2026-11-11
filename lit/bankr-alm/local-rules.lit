@@ -82,6 +82,13 @@ deadline installment-denial-fee-period: 14.days after InstallmentApplicationDeni
 /// or hearing when no response to a motion to dismiss served under the rule
 /// is filed within 21 days of its service.
 deadline dismissal-response-period: 21.days after DismissalMotionServed() counted_by frbp9006-alabama cite "M.D. Ala. LBR 1017-2(b)"
+
+test "Counting boundary: dismissal-response-period (holiday)" cite "M.D. Ala. LBR 1017-2(b)"
+{
+  given DismissalMotionServed() on 2025-12-04
+  expect deadline(dismissal-response-period) == 2025-12-26
+}
+
 /// M.D. Ala. LBR 2003-1(b)(2): unless otherwise ordered, a debtor excused
 /// from appearing at the meeting of creditors files the completed
 /// interrogatories no later than 14 days after the order excusing the
@@ -92,35 +99,91 @@ deadline excused-interrogatories-period: 14.days after AppearanceExcusedOrder() 
 /// 21 days; attendance and production may not be required less than 21
 /// days after service of the notice.
 deadline examination-production-period: 21.days after ExaminationNoticeServed() counted_by frbp9006-alabama cite "M.D. Ala. LBR 2004-1(c)"
+
+test "Counting boundary: examination-production-period (holiday)" cite "M.D. Ala. LBR 2004-1(c)"
+{
+  given ExaminationNoticeServed() on 2025-12-04
+  expect deadline(examination-production-period) == 2025-12-26
+}
+
 /// M.D. Ala. LBR 2004-1(d): a party in interest who wishes to attend files
 /// and serves a cross-notice of examination at least 14 days in advance of
 /// the scheduled examination.
 deadline cross-notice-period: 14.days before ExaminationDate() counted_by frbp9006-alabama cite "M.D. Ala. LBR 2004-1(d)"
+
+test "Counting boundary: cross-notice-period (weekend)" cite "M.D. Ala. LBR 2004-1(d)"
+{
+  given ExaminationDate() on 2025-12-06
+  expect deadline(cross-notice-period) == 2025-11-21
+}
+
 /// M.D. Ala. LBR 2004-1(e): an interested party may object to the notice
 /// of examination or production no later than seven days prior to its
 /// date; the examination is stayed until the court rules.
 deadline examination-objection-period: 7.days before ExaminationDate() counted_by frbp9006-alabama cite "M.D. Ala. LBR 2004-1(e)"
+
+test "Counting boundary: examination-objection-period (holiday)" cite "M.D. Ala. LBR 2004-1(e)"
+{
+  given ExaminationDate() on 2025-12-04
+  expect deadline(examination-objection-period) == 2025-11-26
+}
+
 /// M.D. Ala. LBR 3007-1(c)(3): an objection to claim under negative notice
 /// may be ruled upon unless a party in interest files a response within 30
 /// days of the date of its service.
 deadline claim-objection-response-period: 30.days after NegativeNoticeServed() counted_by frbp9006-alabama cite "M.D. Ala. LBR 3007-1(c)(3)"
+
+test "Counting boundary: claim-objection-response-period (holiday)" cite "M.D. Ala. LBR 3007-1(c)(3)"
+{
+  given NegativeNoticeServed() on 2025-12-02
+  expect deadline(claim-objection-response-period) == 2026-01-02
+}
+
 /// M.D. Ala. LBR 3007-1(c)(6): absent a response, the objecting party has
 /// seven days from the "Declaration and Order Due" event to file the Local
 /// Form 5 declaration and submit the order, or the objection is set for
 /// hearing.
 deadline claim-objection-declaration-period: 7.days after DeclarationAndOrderDue() counted_by frbp9006-alabama cite "M.D. Ala. LBR 3007-1(c)(6)"
+
+test "Counting boundary: claim-objection-declaration-period (weekend)" cite "M.D. Ala. LBR 3007-1(c)(6)"
+{
+  given DeclarationAndOrderDue() on 2025-12-06
+  expect deadline(claim-objection-declaration-period) == 2025-12-15
+}
+
 /// M.D. Ala. LBR 4001-2(c), (g)-(h): a chapter 13 conditional denial order
 /// provides that the creditor mails any notice of default with at least 21
 /// days' notice to cure, from the date of mailing.
 deadline default-cure-period: 21.days after DefaultNoticeMailed() counted_by frbp9006-alabama cite "M.D. Ala. LBR 4001-2(c)"
+
+test "Counting boundary: default-cure-period (holiday)" cite "M.D. Ala. LBR 4001-2(c)"
+{
+  given DefaultNoticeMailed() on 2025-12-04
+  expect deadline(default-cure-period) == 2025-12-26
+}
+
 /// M.D. Ala. LBR 4001-2(f): an amended or supplemental proof of claim for
 /// post-petition arrearage or fees a conditional denial order authorizes is
 /// filed within 60 days of the order's entry.
 deadline conditional-denial-claim-period: 60.days after ConditionalDenialEntered() counted_by frbp9006-alabama cite "M.D. Ala. LBR 4001-2(f)"
+
+test "Counting boundary: conditional-denial-claim-period (weekend)" cite "M.D. Ala. LBR 4001-2(f)"
+{
+  given ConditionalDenialEntered() on 2025-12-02
+  expect deadline(conditional-denial-claim-period) == 2026-02-02
+}
+
 /// M.D. Ala. LBR 4001-3: a motion to extend the automatic stay under 11
 /// U.S.C. § 362(c)(3) is filed and served within seven days of the filing
 /// of the petition.
 deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frbp9006-alabama cite "M.D. Ala. LBR 4001-3"
+
+test "Counting boundary: stay-extension-motion-period (weekend)" cite "M.D. Ala. LBR 4001-3"
+{
+  given PetitionFiled() on 2025-12-06
+  expect deadline(stay-extension-motion-period) == 2025-12-15
+}
+
 /// M.D. Ala. LBR 4002-1(b)(2): without formal discovery, a debtor produces
 /// proof of a plan payment within 14 days of a written request.
 deadline payment-proof-period: 14.days after PaymentProofRequested() counted_by frbp9006-alabama cite "M.D. Ala. LBR 4002-1(b)(2)"
@@ -128,6 +191,13 @@ deadline payment-proof-period: 14.days after PaymentProofRequested() counted_by 
 /// completion of plan payments in a chapter 12 or 13 case, the debtor files
 /// the motion and certification for entry of a discharge.
 deadline discharge-motion-period: 30.days after PlanCompletionNoticeFiled() counted_by frbp9006-alabama cite "M.D. Ala. LBR 4004-1(a)"
+
+test "Counting boundary: discharge-motion-period (holiday)" cite "M.D. Ala. LBR 4004-1(a)"
+{
+  given PlanCompletionNoticeFiled() on 2025-12-02
+  expect deadline(discharge-motion-period) == 2026-01-02
+}
+
 /// M.D. Ala. LBR 4070-1(a), (c): if the creditor does not receive proof of
 /// insurance within 14 days of the filing of its Notice, it may submit an
 /// order lifting the stay as to the collateral.
@@ -135,18 +205,46 @@ deadline insurance-proof-period: 14.days after InsuranceNoticeFiled() counted_by
 /// M.D. Ala. LBR 4070-1(d): a debtor who objects to the creditor's order has
 /// seven days from the filing of the Notice to file a detailed objection.
 deadline insurance-objection-period: 7.days after InsuranceNoticeFiled() counted_by frbp9006-alabama cite "M.D. Ala. LBR 4070-1(d)"
+
+test "Counting boundary: insurance-objection-period (weekend)" cite "M.D. Ala. LBR 4070-1(d)"
+{
+  given InsuranceNoticeFiled() on 2025-12-06
+  expect deadline(insurance-objection-period) == 2025-12-15
+}
+
 /// M.D. Ala. LBR 7016-1: no later than seven days prior to a scheduling
 /// conference set by order, counsel confer on the FRCP 26(f) matters.
 deadline scheduling-conference-period: 7.days before SchedulingConference() counted_by frbp9006-alabama cite "M.D. Ala. LBR 7016-1"
+
+test "Counting boundary: scheduling-conference-period (holiday)" cite "M.D. Ala. LBR 7016-1"
+{
+  given SchedulingConference() on 2025-12-04
+  expect deadline(scheduling-conference-period) == 2025-11-26
+}
+
 /// M.D. Ala. LBR 9007-1(c): a filing under the negative notice procedure may
 /// be granted unless a party in interest files a response within 21 days of
 /// the date of service.
 deadline negative-notice-response-period: 21.days after NegativeNoticeServed() counted_by frbp9006-alabama cite "M.D. Ala. LBR 9007-1(c)"
+
+test "Counting boundary: negative-notice-response-period (holiday)" cite "M.D. Ala. LBR 9007-1(c)"
+{
+  given NegativeNoticeServed() on 2025-12-04
+  expect deadline(negative-notice-response-period) == 2025-12-26
+}
+
 /// M.D. Ala. LBR 9007-1(f): for a filing on the court's List for LBR
 /// 9007-1(f), absent a response the moving party has seven days from the
 /// "Declaration and Order Due" event to file the declaration and submit an
 /// order, or the matter is set for hearing.
 deadline negative-notice-declaration-period: 7.days after DeclarationAndOrderDue() counted_by frbp9006-alabama cite "M.D. Ala. LBR 9007-1(f)"
+
+test "Counting boundary: negative-notice-declaration-period (weekend)" cite "M.D. Ala. LBR 9007-1(f)"
+{
+  given DeclarationAndOrderDue() on 2025-12-06
+  expect deadline(negative-notice-declaration-period) == 2025-12-15
+}
+
 /// M.D. Ala. LBR 9027-1(b): within 14 days of filing the notice of removal,
 /// the removing party files proof that it filed a copy with the clerk of the
 /// court from which the claim was removed.
@@ -155,10 +253,23 @@ deadline removal-proof-period: 14.days after RemovalNoticeFiled() counted_by frb
 /// submitted to the court and made available to opposing parties
 /// electronically no later than seven days prior to the trial or hearing.
 deadline exhibits-period: 7.days before TrialOrHearing() counted_by frbp9006-alabama cite "M.D. Ala. LBR 9070-1(b)"
+
+test "Counting boundary: exhibits-period (holiday)" cite "M.D. Ala. LBR 9070-1(b)"
+{
+  given TrialOrHearing() on 2025-12-04
+  expect deadline(exhibits-period) == 2025-11-26
+}
+
 /// M.D. Ala. LBR 9070-1(e): the clerk may dispose of unclaimed paper
 /// exhibits unless a party notifies the clerk that it intends to reclaim
 /// them within 30 days after the matter concludes.
 deadline exhibit-reclaim-period: 30.days after MatterConcluded() counted_by frbp9006-alabama cite "M.D. Ala. LBR 9070-1(e)"
+
+test "Counting boundary: exhibit-reclaim-period (holiday)" cite "M.D. Ala. LBR 9070-1(e)"
+{
+  given MatterConcluded() on 2025-12-02
+  expect deadline(exhibit-reclaim-period) == 2026-01-02
+}
 
 start filing-served
 

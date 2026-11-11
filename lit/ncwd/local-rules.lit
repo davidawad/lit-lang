@@ -82,29 +82,78 @@ deadline ncdps-answer-period: 60.days after NcdpsWaiverFiled() counted_by frcp6-
 /// LCvR 7.1(e): responses to motions are filed within fourteen days of the
 /// date on which the motion is served.
 deadline response-period: 14.days after MotionServed() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 7.1(e)"
+
+test "Counting boundary: response-period (weekend)" cite "W.D.N.C. LCvR 7.1(e)"
+{
+  given MotionServed() on 2023-12-02
+  expect deadline(response-period) == 2023-12-18
+}
+
 /// LCvR 7.1(e): a reply, if any, is filed within seven days of the date on
 /// which the response is served, limited to matters newly raised in it.
 deadline reply-period: 7.days after ResponseServed() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 7.1(e)"
+
+test "Counting boundary: reply-period (weekend)" cite "W.D.N.C. LCvR 7.1(e)"
+{
+  given ResponseServed() on 2023-12-02
+  expect deadline(reply-period) == 2023-12-11
+}
+
 /// LCvR 7.2(g): the plaintiff may file one reply brief fourteen calendar
 /// days after the Commissioner submits its brief, limited to issues raised
 /// for the first time in it.
 deadline social-security-reply-period: 14.days after CommissionerBriefSubmitted() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 7.2(g)"
+
+test "Counting boundary: social-security-reply-period (weekend)" cite "W.D.N.C. LCvR 7.2(g)"
+{
+  given CommissionerBriefSubmitted() on 2023-12-02
+  expect deadline(social-security-reply-period) == 2023-12-18
+}
+
 /// LCvR 16.1(a): not later than fourteen days from joinder of the issues,
 /// the parties confer under FRCP 26(f) and conduct the Initial Attorney's
 /// Conference; the period is tolled during a pro se litigant's opt-in
 /// period (LCvR 16.4).
 deadline initial-attorneys-conference-period: 14.days after IssuesJoined() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 16.1(a)"
+
+test "Counting boundary: initial-attorneys-conference-period (weekend)" cite "W.D.N.C. LCvR 16.1(a)"
+{
+  given IssuesJoined() on 2023-12-02
+  expect deadline(initial-attorneys-conference-period) == 2023-12-18
+}
+
 /// LCvR 16.1(b): within seven days of the Initial Attorney's Conference the
 /// parties file its Certificate, with a proposed discovery plan.
 deadline iac-certificate-period: 7.days after InitialAttorneysConference() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 16.1(b)"
+
+test "Counting boundary: iac-certificate-period (weekend)" cite "W.D.N.C. LCvR 16.1(b)"
+{
+  given InitialAttorneysConference() on 2023-12-02
+  expect deadline(iac-certificate-period) == 2023-12-11
+}
+
 /// LCvR 16.1(c): a Joint Stipulation of Consent to a magistrate judge's
 /// jurisdiction is filed with the Certificate of Initial Attorney's
 /// Conference or within seven days of the Court's ruling on a motion to
 /// stay.
 deadline consent-stipulation-period: 7.days after StayMotionRuled() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 16.1(c)"
+
+test "Counting boundary: consent-stipulation-period (weekend)" cite "W.D.N.C. LCvR 16.1(c)"
+{
+  given StayMotionRuled() on 2023-12-02
+  expect deadline(consent-stipulation-period) == 2023-12-11
+}
+
 /// LCvR 16.4: a pro se litigant has fourteen days from receipt of the
 /// Opt-In Notice to opt into the Pro Se Settlement Assistance Program.
 deadline pro-se-opt-in-period: 14.days after OptInNoticeReceived() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 16.4"
+
+test "Counting boundary: pro-se-opt-in-period (weekend)" cite "W.D.N.C. LCvR 16.4"
+{
+  given OptInNoticeReceived() on 2023-12-02
+  expect deadline(pro-se-opt-in-period) == 2023-12-18
+}
+
 /// LCvR 45.2: notice of a document subpoena to a non-party, with a copy, is
 /// served on all other parties at least three calendar days before the
 /// subpoena is served on the non-party, unless the parties agree or the
@@ -115,16 +164,43 @@ deadline subpoena-notice-period: 3.days before NonPartySubpoenaServed() counted_
 /// Clerk of Court receives the mandate or other order terminating the
 /// action on appeal; failure to file in time waives costs.
 deadline bill-of-costs-period: 30.days after CostsPeriodTriggered() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 54.1(a)"
+
+test "Counting boundary: bill-of-costs-period (weekend)" cite "W.D.N.C. LCvR 54.1(a)"
+{
+  given CostsPeriodTriggered() on 2023-12-01
+  expect deadline(bill-of-costs-period) == 2024-01-02
+}
+
 /// LCvR 54.1(d): an adverse party may file an objection with a supporting
 /// brief within fourteen days after the electronic filing of the bill of
 /// costs.
 deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 54.1(d)"
+
+test "Counting boundary: costs-objection-period (weekend)" cite "W.D.N.C. LCvR 54.1(d)"
+{
+  given BillOfCostsFiled() on 2023-12-02
+  expect deadline(costs-objection-period) == 2023-12-18
+}
+
 /// LCvR 54.1(d): within seven days after the objection, the prevailing
 /// party may file a response with brief.
 deadline costs-response-period: 7.days after CostsObjectionFiled() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 54.1(d)"
+
+test "Counting boundary: costs-response-period (weekend)" cite "W.D.N.C. LCvR 54.1(d)"
+{
+  given CostsObjectionFiled() on 2023-12-02
+  expect deadline(costs-response-period) == 2023-12-11
+}
+
 /// LCvR 54.1(e): a party may request review of the Clerk of Court's ruling
 /// by motion within seven days after entry of the Clerk of Court's order.
 deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6-north-carolina cite "W.D.N.C. LCvR 54.1(e)"
+
+test "Counting boundary: costs-review-period (weekend)" cite "W.D.N.C. LCvR 54.1(e)"
+{
+  given CostsTaxed() on 2023-12-02
+  expect deadline(costs-review-period) == 2023-12-11
+}
 
 test "ncdps waiver response period: 60 days after the trigger" cite "W.D.N.C. LCvR 4.3(b)"
 {

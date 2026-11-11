@@ -12,12 +12,24 @@ forum frap
 // periods for the tests, not rules in force, and each test cites the rule
 // it checks.
 deadline frap26-1-day: 1.days after Served() counted_by frap26
+
+test "Counting boundary: frap26-1-day (holiday)" {
+  given Served(Personal) on 1968-07-03
+  expect deadline(frap26-1-day) == 1968-07-05
+}
+
 deadline frap26-5-days: 5.days after Served() counted_by frap26
 deadline frap26-10-days: 10.days after Served() counted_by frap26
 deadline frap26-14-days: 14.days after Served() counted_by frap26
 deadline frap26-26-days: 26.days after Served() counted_by frap26
 deadline frap26-30-days: 30.days after Served() counted_by frap26
 deadline frap26-45-days: 45.days after Served() counted_by frap26
+
+test "Counting boundary: frap26-45-days (weekend)" {
+  given Served(Personal) on 1968-07-03
+  expect deadline(frap26-45-days) == 1968-08-19
+}
+
 deadline frap26-60-days: 60.days after Served() counted_by frap26
 deadline frap26-63-days: 63.days after Served() counted_by frap26
 deadline frap26-90-days: 90.days after Served() counted_by frap26

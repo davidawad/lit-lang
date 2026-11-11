@@ -136,6 +136,13 @@ event SaleConfirmed()
 /// documents are unsealed 120 days from the date of entry of the sealing
 /// order.
 deadline unsealing-period: 120.days after SealingOrderEntered() counted_by frcp6-alabama cite "S.D. Ala. GenLR 5.2(d)(5)"
+
+test "Counting boundary: unsealing-period (weekend)" cite "S.D. Ala. GenLR 5.2(d)(5)"
+{
+  given SealingOrderEntered() on 2023-12-01
+  expect deadline(unsealing-period) == 2024-04-01
+}
+
 /// GenLR 72(c)(2): where the parties have not consented to magistrate
 /// judge jurisdiction, any other party may serve and file a response to an
 /// objection within fourteen days from the date of service of the
@@ -145,10 +152,24 @@ deadline magistrate-objection-response-period: 14.days after MagistrateObjection
 /// may serve and file a reply within seven days from the date of service
 /// of the response.
 deadline magistrate-objection-reply-period: 7.days after MagistrateObjectionResponseServed() counted_by frcp6-alabama cite "S.D. Ala. GenLR 72(c)(3)"
+
+test "Counting boundary: magistrate-objection-reply-period (weekend)" cite "S.D. Ala. GenLR 72(c)(3)"
+{
+  given MagistrateObjectionResponseServed() on 2023-12-02
+  expect deadline(magistrate-objection-reply-period) == 2023-12-11
+}
+
 /// GenLR 79(d): a party granted temporary withdrawal returns the court
 /// file, exhibit, document or transcript within seven days, unless the
 /// judge by order sets a different time.
 deadline file-return-period: 7.days after FileWithdrawn() counted_by frcp6-alabama cite "S.D. Ala. GenLR 79(d)"
+
+test "Counting boundary: file-return-period (weekend)" cite "S.D. Ala. GenLR 79(d)"
+{
+  given FileWithdrawn() on 2023-12-02
+  expect deadline(file-return-period) == 2023-12-11
+}
+
 /// GenLR 79(f)(1): within fourteen days after a trial is concluded, the
 /// offering party withdraws all exhibits in the clerk's custody.
 deadline exhibit-withdrawal-period: 14.days after TrialConcluded() counted_by frcp6-alabama cite "S.D. Ala. GenLR 79(f)(1)"
@@ -158,6 +179,13 @@ deadline discovery-withdrawal-period: 14.days after CaseConcluded() counted_by f
 /// GenLR 79(f)(2): exhibits and discovery material not withdrawn within
 /// sixty days after a case is concluded may be disposed of by the clerk.
 deadline exhibit-disposal-period: 60.days after CaseConcluded() counted_by frcp6-alabama cite "S.D. Ala. GenLR 79(f)(2)"
+
+test "Counting boundary: exhibit-disposal-period (weekend)" cite "S.D. Ala. GenLR 79(f)(2)"
+{
+  given CaseConcluded() on 2023-12-05
+  expect deadline(exhibit-disposal-period) == 2024-02-05
+}
+
 /// GenLR 79(f)(3)(A): a party retains exhibits and discovery material
 /// withdrawn from the clerk's custody for at least one year after the
 /// judgment is final.
@@ -166,14 +194,35 @@ deadline exhibit-retention-period: 1.years after JudgmentFinal() counted_by frcp
 /// completed by summons, the person making service files proof of it
 /// within seven days of the date of service.
 deadline proof-of-service-period: 7.days after ServiceCompleted() counted_by frcp6-alabama cite "S.D. Ala. CivLR 4(a)(1)"
+
+test "Counting boundary: proof-of-service-period (weekend)" cite "S.D. Ala. CivLR 4(a)(1)"
+{
+  given ServiceCompleted() on 2023-12-02
+  expect deadline(proof-of-service-period) == 2023-12-11
+}
+
 /// CivLR 4(a)(2): if service is waived, the plaintiff files the waiver
 /// within seven days after receipt of the waiver.
 deadline waiver-filing-period: 7.days after WaiverReceived() counted_by frcp6-alabama cite "S.D. Ala. CivLR 4(a)(2)"
+
+test "Counting boundary: waiver-filing-period (weekend)" cite "S.D. Ala. CivLR 4(a)(2)"
+{
+  given WaiverReceived() on 2023-12-02
+  expect deadline(waiver-filing-period) == 2023-12-11
+}
+
 /// CivLR 4(a)(3): if within forty-five days after the filing of the
 /// complaint the plaintiff has neither completed service by summons nor
 /// received a waiver, the plaintiff files a notice describing its efforts
 /// to complete service and their results.
 deadline service-attempt-notice-period: 45.days after ComplaintFiled() counted_by frcp6-alabama cite "S.D. Ala. CivLR 4(a)(3)"
+
+test "Counting boundary: service-attempt-notice-period (holiday)" cite "S.D. Ala. CivLR 4(a)(3)"
+{
+  given ComplaintFiled() on 2023-12-01
+  expect deadline(service-attempt-notice-period) == 2024-01-16
+}
+
 /// CivLR 7(c): unless the court orders otherwise, the non-movant files
 /// any brief or paper in opposition to a motion, other than one under FRCP
 /// 56, within fourteen days of service of the motion.
@@ -182,14 +231,35 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcp6-alabam
 /// motion, other than one under FRCP 56, is filed within seven days of
 /// service of the non-movant's response.
 deadline reply-period: 7.days after ResponseServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 7(d)"
+
+test "Counting boundary: reply-period (weekend)" cite "S.D. Ala. CivLR 7(d)"
+{
+  given ResponseServed() on 2023-12-02
+  expect deadline(reply-period) == 2023-12-11
+}
+
 /// CivLR 7.1(a): where filing the Disclosure Statement with the initial
 /// filing is impossible or impracticable, it is filed within seven days
 /// after the initial filing, or such other time as the court directs.
 deadline disclosure-statement-period: 7.days after InitialFilingMade() counted_by frcp6-alabama cite "S.D. Ala. CivLR 7.1(a)"
+
+test "Counting boundary: disclosure-statement-period (weekend)" cite "S.D. Ala. CivLR 7.1(a)"
+{
+  given InitialFilingMade() on 2023-12-02
+  expect deadline(disclosure-statement-period) == 2023-12-11
+}
+
 /// CivLR 10(c): a party who commences a civil action under a pseudonym
 /// files and serves a motion for permission to proceed under it within
 /// twenty-one days of service of the complaint.
 deadline pseudonym-motion-period: 21.days after PseudonymousComplaintServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 10(c)"
+
+test "Counting boundary: pseudonym-motion-period (weekend)" cite "S.D. Ala. CivLR 10(c)"
+{
+  given PseudonymousComplaintServed() on 2023-12-02
+  expect deadline(pseudonym-motion-period) == 2023-12-26
+}
+
 /// CivLR 15(c): if a responsive pleading is required, a party that has
 /// appeared and was served with the proposed amended pleading serves its
 /// answer or other responsive pleading within fourteen days after the
@@ -198,9 +268,23 @@ deadline amended-pleading-response-period: 14.days after AmendmentGranted() coun
 /// CivLR 16(c)(1): unless otherwise ordered, the parties file a joint
 /// pretrial document seven days before the final pretrial conference.
 deadline joint-pretrial-document-period: 7.days before FinalPretrialConference() counted_by frcp6-alabama cite "S.D. Ala. CivLR 16(c)(1)"
+
+test "Counting boundary: joint-pretrial-document-period (weekend)" cite "S.D. Ala. CivLR 16(c)(1)"
+{
+  given FinalPretrialConference() on 2023-12-02
+  expect deadline(joint-pretrial-document-period) == 2023-11-24
+}
+
 /// CivLR 16(d)(4)(B): within thirty days of the case being referred to
 /// ENE, the neutral evaluator hosts the confidential evaluation meeting.
 deadline ene-session-period: 30.days after EneReferred() counted_by frcp6-alabama cite "S.D. Ala. CivLR 16(d)(4)(B)"
+
+test "Counting boundary: ene-session-period (weekend)" cite "S.D. Ala. CivLR 16(d)(4)(B)"
+{
+  given EneReferred() on 2023-12-01
+  expect deadline(ene-session-period) == 2024-01-02
+}
+
 /// CivLR 54(a)(1): no later than fourteen days after entry of judgment, a
 /// party seeking costs files a verified bill of costs. Absent court order,
 /// an appeal does not extend the deadline (CivLR 54(a)(2)).
@@ -215,13 +299,34 @@ deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by fr
 /// CivLR 54(a)(3): the party claiming costs serves any response within
 /// seven days of service of the objections.
 deadline costs-objection-response-period: 7.days after CostsObjectionsServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 54(a)(3)"
+
+test "Counting boundary: costs-objection-response-period (weekend)" cite "S.D. Ala. CivLR 54(a)(3)"
+{
+  given CostsObjectionsServed() on 2023-12-02
+  expect deadline(costs-objection-response-period) == 2023-12-11
+}
+
 /// CivLR 54(b): a party may move for review of the clerk's taxation of
 /// costs no later than seven days after taxation.
 deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 54(b)"
+
+test "Counting boundary: costs-review-period (weekend)" cite "S.D. Ala. CivLR 54(b)"
+{
+  given CostsTaxed() on 2023-12-02
+  expect deadline(costs-review-period) == 2023-12-11
+}
+
 /// CivLR 56(b): unless the court orders otherwise, the non-movant files
 /// any response in opposition to a summary judgment motion within
 /// twenty-eight days of service of the motion.
 deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 56(b)"
+
+test "Counting boundary: summary-judgment-response-period (weekend)" cite "S.D. Ala. CivLR 56(b)"
+{
+  given SummaryJudgmentMotionServed() on 2023-12-02
+  expect deadline(summary-judgment-response-period) == 2024-01-02
+}
+
 /// CivLR 56(c): unless the court orders otherwise, any reply is filed
 /// within fourteen days of service of the non-movant's response.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-alabama cite "S.D. Ala. CivLR 56(c)"
@@ -234,18 +339,46 @@ deadline intangible-show-cause-period: 14.days after IntangibleSummonsServed() c
 /// consecutive weeks, begins not later than twenty-one days following
 /// seizure.
 deadline arrest-notice-period: 21.days after PropertySeized() counted_by frcp6-alabama cite "S.D. Ala. CivLR 102(b)"
+
+test "Counting boundary: arrest-notice-period (weekend)" cite "S.D. Ala. CivLR 102(b)"
+{
+  given PropertySeized() on 2023-12-02
+  expect deadline(arrest-notice-period) == 2023-12-26
+}
+
 /// CivLR 104(g): a party ordered to post security for costs posts it
 /// within seven days after the order is entered; a party who fails to may
 /// not participate further except by order of court.
 deadline admiralty-security-period: 7.days after SecurityOrderEntered() counted_by frcp6-alabama cite "S.D. Ala. CivLR 104(g)"
+
+test "Counting boundary: admiralty-security-period (weekend)" cite "S.D. Ala. CivLR 104(g)"
+{
+  given SecurityOrderEntered() on 2023-12-02
+  expect deadline(admiralty-security-period) == 2023-12-11
+}
+
 /// CivLR 104(j): the Marshal may, on notice, petition for an order to
 /// release the vessel if additional sums are not advanced within seven
 /// days after the Marshal's request.
 deadline marshal-advance-period: 7.days after MarshalAdvanceRequested() counted_by frcp6-alabama cite "S.D. Ala. CivLR 104(j)"
+
+test "Counting boundary: marshal-advance-period (weekend)" cite "S.D. Ala. CivLR 104(j)"
+{
+  given MarshalAdvanceRequested() on 2023-12-02
+  expect deadline(marshal-advance-period) == 2023-12-11
+}
+
 /// CivLR 104(m)(1): unless otherwise ordered, the last publication of the
 /// notice of sale is not less than seven days immediately preceding the
 /// sale.
 deadline sale-notice-period: 7.days before SaleHeld() counted_by frcp6-alabama cite "S.D. Ala. CivLR 104(m)(1)"
+
+test "Counting boundary: sale-notice-period (weekend)" cite "S.D. Ala. CivLR 104(m)(1)"
+{
+  given SaleHeld() on 2023-12-02
+  expect deadline(sale-notice-period) == 2023-11-24
+}
+
 /// CivLR 104(m)(2)(C): if an objection to the sale is timely filed, the
 /// bidder is excused from paying the balance of the purchase price until
 /// five days after the sale is confirmed.
@@ -254,6 +387,12 @@ deadline objected-sale-balance-period: 5.days after SaleConfirmed() counted_by f
 /// confirmed by order no sooner than five days and no later than seven
 /// days after the sale.
 deadline sale-confirmation-period: 7.days after SaleHeld() counted_by frcp6-alabama cite "S.D. Ala. CivLR 104(m)(7)"
+
+test "Counting boundary: sale-confirmation-period (weekend)" cite "S.D. Ala. CivLR 104(m)(7)"
+{
+  given SaleHeld() on 2023-12-02
+  expect deadline(sale-confirmation-period) == 2023-12-11
+}
 
 test "Deadline arithmetic: unsealing-period (120 days after)" cite "S.D. Ala. GenLR 5.2(d)(5)"
 {

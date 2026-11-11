@@ -134,10 +134,24 @@ event BankruptcyReplyBriefFiled() paper bankruptcy-reply-brief
 /// nongovernmental plaintiff that is not a natural person files its
 /// disclosure form.
 deadline plaintiff-disclosure-period: 21.days after ComplaintFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 7.1(a)"
+
+test "Counting boundary: plaintiff-disclosure-period (weekend)" cite "S.D. Iowa LR 7.1(a)"
+{
+  given ComplaintFiled() on 2023-12-02
+  expect deadline(plaintiff-disclosure-period) == 2023-12-26
+}
+
 /// LR 7.1(b): within 30 days after service of a civil complaint on a
 /// nongovernmental defendant that is not a natural person, the defendant
 /// files its disclosure statement.
 deadline defendant-disclosure-period: 30.days after ComplaintServed() counted_by frcp6-iowa cite "S.D. Iowa LR 7.1(b)"
+
+test "Counting boundary: defendant-disclosure-period (weekend)" cite "S.D. Iowa LR 7.1(b)"
+{
+  given ComplaintServed() on 2023-12-01
+  expect deadline(defendant-disclosure-period) == 2024-01-02
+}
+
 /// LR 7(e): each party resisting a motion files its resistance brief within
 /// 14 days after the motion is served; a resistance to a motion for summary
 /// judgment follows LR 56.
@@ -146,18 +160,46 @@ deadline resistance-period: 14.days after MotionServed() counted_by frcp6-iowa c
 /// resistance, any party may move for reconsideration within 7 days after
 /// the order is entered.
 deadline reconsideration-period: 7.days after OrderEnteredWithoutResistance() counted_by frcp6-iowa cite "S.D. Iowa LR 7(e)"
+
+test "Counting boundary: reconsideration-period (weekend)" cite "S.D. Iowa LR 7(e)"
+{
+  given OrderEnteredWithoutResistance() on 2023-12-02
+  expect deadline(reconsideration-period) == 2023-12-11
+}
+
 /// LR 7(g): the moving party may file a reply brief, not more than 5 pages,
 /// within 7 days after a resistance is served, to assert newly decided
 /// authority or answer new and unanticipated arguments.
 deadline reply-period: 7.days after ResistanceServed() counted_by frcp6-iowa cite "S.D. Iowa LR 7(g)"
+
+test "Counting boundary: reply-period (weekend)" cite "S.D. Iowa LR 7(g)"
+{
+  given ResistanceServed() on 2023-12-02
+  expect deadline(reply-period) == 2023-12-11
+}
+
 /// LR 5A(g)(8): within 7 days after an electronically filed motion,
 /// resistance or reply totaling more than 100 pages with its supporting
 /// filings is filed, the filer delivers a paper copy to the clerk (also LR
 /// 10(c)(3), 56(f)).
 deadline paper-copy-period: 7.days after LongFilingFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 5A(g)(8)"
+
+test "Counting boundary: paper-copy-period (weekend)" cite "S.D. Iowa LR 5A(g)(8)"
+{
+  given LongFilingFiled() on 2023-12-02
+  expect deadline(paper-copy-period) == 2023-12-11
+}
+
 /// LR 5A(g)(9): within 7 days after an administrative record is filed
 /// electronically, the filer delivers a paper copy to the clerk.
 deadline record-copy-period: 7.days after AdministrativeRecordFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 5A(g)(9)"
+
+test "Counting boundary: record-copy-period (weekend)" cite "S.D. Iowa LR 5A(g)(9)"
+{
+  given AdministrativeRecordFiled() on 2023-12-02
+  expect deadline(record-copy-period) == 2023-12-11
+}
+
 /// LR 5A(i): a lawyer or party who disputes the authenticity of a signature
 /// on an electronically filed document files an objection within 14 days
 /// after receiving the NEF; otherwise the signature is presumed authentic.
@@ -169,6 +211,13 @@ deadline scheduling-plan-period: 90.days after ComplaintFiled() counted_by frcp6
 /// LR 81(b): within 60 days after a notice of removal is filed, counsel
 /// submit the proposed scheduling order and discovery plan (also LR 16(a)).
 deadline removal-scheduling-plan-period: 60.days after NoticeOfRemovalFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 81(b)"
+
+test "Counting boundary: removal-scheduling-plan-period (weekend)" cite "S.D. Iowa LR 81(b)"
+{
+  given NoticeOfRemovalFiled() on 2023-12-05
+  expect deadline(removal-scheduling-plan-period) == 2024-02-05
+}
+
 /// LR 16(h): in an action for judicial review on an administrative record
 /// other than a Social Security benefits case, the parties confer and
 /// submit a proposed scheduling order within 90 days after the complaint is
@@ -185,6 +234,13 @@ deadline proposed-pretrial-order-period: 3.days before FinalPretrialConference()
 /// exhibits are served at least 21 days before the final pretrial
 /// conference (restated in LR 26(c)).
 deadline pretrial-disclosure-period: 21.days before FinalPretrialConference() counted_by frcp6-iowa cite "S.D. Iowa LR 16A(c)"
+
+test "Counting boundary: pretrial-disclosure-period (holiday)" cite "S.D. Iowa LR 16A(c)"
+{
+  given FinalPretrialConference() on 2023-12-01
+  expect deadline(pretrial-disclosure-period) == 2023-11-09
+}
+
 /// LR 16A(d): trial briefs, proposed voir dire, the statement of the case
 /// and proposed jury instructions with a verdict form are filed at least 3
 /// days before the final pretrial conference.
@@ -214,12 +270,33 @@ deadline service-statement-period: 97.days after ComplaintFiled() counted_by frc
 /// entry of default, unless the plaintiff advises that further court action
 /// is needed first.
 deadline default-judgment-motion-period: 30.days after DefaultEntered() counted_by frcp6-iowa cite "S.D. Iowa LR 41(a)(3)"
+
+test "Counting boundary: default-judgment-motion-period (weekend)" cite "S.D. Iowa LR 41(a)(3)"
+{
+  given DefaultEntered() on 2023-12-01
+  expect deadline(default-judgment-motion-period) == 2024-01-02
+}
+
 /// LR 41(b): within 30 days after advising the court that an action has
 /// been settled, the parties file the documents required to terminate it.
 deadline settlement-papers-period: 30.days after SettlementAdvised() counted_by frcp6-iowa cite "S.D. Iowa LR 41(b)"
+
+test "Counting boundary: settlement-papers-period (weekend)" cite "S.D. Iowa LR 41(b)"
+{
+  given SettlementAdvised() on 2023-12-01
+  expect deadline(settlement-papers-period) == 2024-01-02
+}
+
 /// LR 41(b): either party may move to reinstate a settled case dismissed
 /// under LR 41(b) within 60 days after the date of the dismissal order.
 deadline reinstatement-period: 60.days after SettlementDismissalEntered() counted_by frcp6-iowa cite "S.D. Iowa LR 41(b)"
+
+test "Counting boundary: reinstatement-period (weekend)" cite "S.D. Iowa LR 41(b)"
+{
+  given SettlementDismissalEntered() on 2023-12-05
+  expect deadline(reinstatement-period) == 2024-02-05
+}
+
 /// LR 54(a)(1)(A): within 14 days after entry of judgment, a party entitled
 /// to costs files the AO 133 form; failing to file it by then waives
 /// taxation of costs.
@@ -231,23 +308,58 @@ deadline costs-resistance-period: 14.days after CostFormServed() counted_by frcp
 /// 39(e) are waived unless the party entitled to them requests their
 /// taxation within 21 days after the mandate issues.
 deadline appeal-costs-period: 21.days after MandateIssued() counted_by frcp6-iowa cite "S.D. Iowa LR 54(a)(2)"
+
+test "Counting boundary: appeal-costs-period (weekend)" cite "S.D. Iowa LR 54(a)(2)"
+{
+  given MandateIssued() on 2023-12-02
+  expect deadline(appeal-costs-period) == 2023-12-26
+}
+
 /// LR 54A(b): in a Social Security benefits case the plaintiff won, counsel
 /// files an EAJA fee application or a certificate that the government's
 /// positions were substantially justified within 30 days after entry of
 /// final judgment.
 deadline social-security-fee-period: 30.days after SocialSecurityJudgmentEntered() counted_by frcp6-iowa cite "S.D. Iowa LR 54A(b)"
+
+test "Counting boundary: social-security-fee-period (weekend)" cite "S.D. Iowa LR 54A(b)"
+{
+  given SocialSecurityJudgmentEntered() on 2023-12-01
+  expect deadline(social-security-fee-period) == 2024-01-02
+}
+
 /// LR 54A(c): a petition under 5 U.S.C. § 504(c)(2) for leave to appeal an
 /// agency fee determination is filed within 30 days after entry of the
 /// agency's order.
 deadline agency-fee-petition-period: 30.days after AgencyFeeOrderEntered() counted_by frcp6-iowa cite "S.D. Iowa LR 54A(c)"
+
+test "Counting boundary: agency-fee-petition-period (weekend)" cite "S.D. Iowa LR 54A(c)"
+{
+  given AgencyFeeOrderEntered() on 2023-12-01
+  expect deadline(agency-fee-petition-period) == 2024-01-02
+}
+
 /// LR 54A(c): any answer to a petition for leave to appeal an agency fee
 /// determination is filed within 30 days after service of the petition.
 deadline agency-fee-answer-period: 30.days after FeePetitionServed() counted_by frcp6-iowa cite "S.D. Iowa LR 54A(c)"
+
+test "Counting boundary: agency-fee-answer-period (weekend)" cite "S.D. Iowa LR 54A(c)"
+{
+  given FeePetitionServed() on 2023-12-01
+  expect deadline(agency-fee-answer-period) == 2024-01-02
+}
+
 /// LR 56(b): a party resisting a motion for summary judgment files its
 /// brief, response to the statement of material facts, statement of
 /// additional facts and appendix within 21 days after service of the
 /// motion.
 deadline summary-judgment-resistance-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-iowa cite "S.D. Iowa LR 56(b)"
+
+test "Counting boundary: summary-judgment-resistance-period (weekend)" cite "S.D. Iowa LR 56(b)"
+{
+  given SummaryJudgmentMotionServed() on 2023-12-02
+  expect deadline(summary-judgment-resistance-period) == 2023-12-26
+}
+
 /// LR 56(g): a request for relief under FRCP 56(d) is made by separate
 /// motion filed within 14 days after service of the motion for summary
 /// judgment.
@@ -255,6 +367,13 @@ deadline rule-56d-motion-period: 14.days after SummaryJudgmentMotionServed() cou
 /// LR 56(d): the moving party replies to the resisting party's statement of
 /// additional facts within 7 days after its service.
 deadline summary-judgment-reply-period: 7.days after AdditionalFactsServed() counted_by frcp6-iowa cite "S.D. Iowa LR 56(d)"
+
+test "Counting boundary: summary-judgment-reply-period (weekend)" cite "S.D. Iowa LR 56(d)"
+{
+  given AdditionalFactsServed() on 2023-12-02
+  expect deadline(summary-judgment-reply-period) == 2023-12-11
+}
+
 /// LR 72A: a party seeking review of a magistrate judge's pretrial order or
 /// report and recommendation files specific written objections within 14
 /// days after service of the order or report.
@@ -266,14 +385,34 @@ deadline magistrate-objection-response-period: 14.days after ObjectionsServed() 
 /// nongovernmental removing party that is not a natural person files its
 /// disclosure statement.
 deadline removing-party-disclosure-period: 21.days after NoticeOfRemovalFiled() counted_by frcp6-iowa cite "S.D. Iowa LR 81(c)"
+
+test "Counting boundary: removing-party-disclosure-period (weekend)" cite "S.D. Iowa LR 81(c)"
+{
+  given NoticeOfRemovalFiled() on 2023-12-02
+  expect deadline(removing-party-disclosure-period) == 2023-12-26
+}
+
 /// LR 81(d): within 30 days after service of the notice of removal, each
 /// remaining nongovernmental party that is not a natural person files its
 /// disclosure statement.
 deadline remaining-party-disclosure-period: 30.days after NoticeOfRemovalServed() counted_by frcp6-iowa cite "S.D. Iowa LR 81(d)"
+
+test "Counting boundary: remaining-party-disclosure-period (weekend)" cite "S.D. Iowa LR 81(d)"
+{
+  given NoticeOfRemovalServed() on 2023-12-01
+  expect deadline(remaining-party-disclosure-period) == 2024-01-02
+}
+
 /// LR 83B(b): when a case set for jury trial settles, the clerk is notified
 /// at least 7 days before the day scheduled for jury selection; otherwise
 /// juror costs may be assessed, except for good cause.
 deadline jury-cost-notice-period: 7.days before JurySelection() counted_by frcp6-iowa cite "S.D. Iowa LR 83B(b)"
+
+test "Counting boundary: jury-cost-notice-period (weekend)" cite "S.D. Iowa LR 83B(b)"
+{
+  given JurySelection() on 2023-12-02
+  expect deadline(jury-cost-notice-period) == 2023-11-24
+}
 
 test "Deadline arithmetic: plaintiff-disclosure-period (21 days after)" cite "S.D. Iowa LR 7.1(a)"
 {

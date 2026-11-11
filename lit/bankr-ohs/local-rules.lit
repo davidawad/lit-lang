@@ -143,6 +143,13 @@ deadline photo-id-period: 14.days after PetitionWithoutIdFiled() counted_by frbp
 /// debtor files the mailing list of creditors and parties in interest not
 /// later than 7 days after entry of the order for relief.
 deadline involuntary-mailing-list-period: 7.days after OrderForReliefEntered() counted_by frbp9006 cite "S.D. Ohio LBR 1007-2(a)"
+
+test "Counting boundary: involuntary-mailing-list-period (weekend)" cite "S.D. Ohio LBR 1007-2(a)"
+{
+  given OrderForReliefEntered() on 2025-12-06
+  expect deadline(involuntary-mailing-list-period) == 2025-12-15
+}
+
 /// LBR 1009-1(b): after a closed case is reopened to add a prepetition
 /// creditor, the amendment is filed within 14 days of the entry date of the
 /// reopening order.
@@ -156,25 +163,67 @@ deadline responsible-person-period: 14.days after PetitionFiled() counted_by frb
 /// report and fee applications with the thirty-day Notice of Deadline to
 /// Object.
 deadline final-report-objection-period: 30.days after FinalReportSummaryServed() counted_by frbp9006 cite "S.D. Ohio LBR 2002-1(d)"
+
+test "Counting boundary: final-report-objection-period (holiday)" cite "S.D. Ohio LBR 2002-1(d)"
+{
+  given FinalReportSummaryServed() on 2025-12-02
+  expect deadline(final-report-objection-period) == 2026-01-02
+}
+
 /// LBR 2003-1(b): a response to a motion to reschedule a § 341 meeting is
 /// filed within 7 days from the date of service on the certificate of
 /// service.
 deadline reschedule-response-period: 7.days after RescheduleMotionServed() counted_by frbp9006 cite "S.D. Ohio LBR 2003-1(b)"
+
+test "Counting boundary: reschedule-response-period (weekend)" cite "S.D. Ohio LBR 2003-1(b)"
+{
+  given RescheduleMotionServed() on 2025-12-06
+  expect deadline(reschedule-response-period) == 2025-12-15
+}
+
 /// LBR 2016-1(b)(5): the fee application of the debtor’s attorney in a
 /// chapter 13 case dismissed before confirmation is filed no later than 21
 /// days after entry of the order of dismissal.
 deadline dismissed-case-fee-period: 21.days after Chapter13DismissalEntered() counted_by frbp9006 cite "S.D. Ohio LBR 2016-1(b)"
+
+test "Counting boundary: dismissed-case-fee-period (holiday)" cite "S.D. Ohio LBR 2016-1(b)"
+{
+  given Chapter13DismissalEntered() on 2025-12-04
+  expect deadline(dismissed-case-fee-period) == 2025-12-26
+}
+
 /// LBR 2016-1(b)(6)(A): if the debtor's attorney withdraws, the fee
 /// application is filed no later than 21 days after legal representation is
 /// discontinued.
 deadline discontinued-representation-fee-period: 21.days after RepresentationDiscontinued() counted_by frbp9006 cite "S.D. Ohio LBR 2016-1(b)"
+
+test "Counting boundary: discontinued-representation-fee-period (holiday)" cite "S.D. Ohio LBR 2016-1(b)"
+{
+  given RepresentationDiscontinued() on 2025-12-04
+  expect deadline(discontinued-representation-fee-period) == 2025-12-26
+}
+
 /// LBR 2071-1: within 7 days of its first meeting, unless the United States
 /// trustee has filed it, an official committee files a report naming its
 /// chairperson and service designee.
 deadline committee-report-period: 7.days after CommitteeFirstMeeting() counted_by frbp9006 cite "S.D. Ohio LBR 2071-1"
+
+test "Counting boundary: committee-report-period (weekend)" cite "S.D. Ohio LBR 2071-1"
+{
+  given CommitteeFirstMeeting() on 2025-12-06
+  expect deadline(committee-report-period) == 2025-12-15
+}
+
 /// LBR 2090-2: an attorney ordered to show cause why discipline should not
 /// be imposed responds within 30 days after service of the order.
 deadline show-cause-period: 30.days after ShowCauseOrderServed() counted_by frbp9006 cite "S.D. Ohio LBR 2090-2"
+
+test "Counting boundary: show-cause-period (holiday)" cite "S.D. Ohio LBR 2090-2"
+{
+  given ShowCauseOrderServed() on 2025-12-02
+  expect deadline(show-cause-period) == 2026-01-02
+}
+
 /// LBR 2090-2(d)(4): an attorney objecting to the chief district judge's
 /// interim disciplinary order files the objection and memorandum with the
 /// clerk of the district court within 14 days of its entry.
@@ -182,10 +231,24 @@ deadline interim-discipline-objection-period: 14.days after InterimDisciplineOrd
 /// LBR 2091-1(c): unless the court orders otherwise, an attorney may not
 /// withdraw within 21 days before a trial or hearing on any matter.
 deadline attorney-withdrawal-period: 21.days before TrialOrHearingScheduled() counted_by frbp9006 cite "S.D. Ohio LBR 2091-1(c)"
+
+test "Counting boundary: attorney-withdrawal-period (holiday)" cite "S.D. Ohio LBR 2091-1(c)"
+{
+  given TrialOrHearingScheduled() on 2025-12-02
+  expect deadline(attorney-withdrawal-period) == 2025-11-10
+}
+
 /// LBR 3007-1(a), (c): the claimant files and serves a response to an
 /// objection to its claim not later than 30 days after service of the
 /// objection.
 deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006 cite "S.D. Ohio LBR 3007-1(c)"
+
+test "Counting boundary: claim-objection-response-period (holiday)" cite "S.D. Ohio LBR 3007-1(c)"
+{
+  given ClaimObjectionServed() on 2025-12-02
+  expect deadline(claim-objection-response-period) == 2026-01-02
+}
+
 /// LBR 3012-1(b): an objection to confirmation based on the value of
 /// personal property subject to a lien, or to the failure to list it as
 /// secured, is filed and served within 14 days after the § 341 meeting is
@@ -198,34 +261,90 @@ deadline appraisal-service-period: 14.days after MeetingConcluded() counted_by f
 /// plan is filed and served within 21 days after its service, unless the
 /// trustee notices or the court orders otherwise.
 deadline modification-objection-period: 21.days after PlanModificationMotionServed() counted_by frbp9006 cite "S.D. Ohio LBR 3015-2(c)"
+
+test "Counting boundary: modification-objection-period (holiday)" cite "S.D. Ohio LBR 3015-2(c)"
+{
+  given PlanModificationMotionServed() on 2025-12-04
+  expect deadline(modification-objection-period) == 2025-12-26
+}
+
 /// LBR 3015-3(a)(1): an objection to confirmation of an initial chapter 13
 /// plan is filed within 14 days after the § 341 meeting is concluded.
 deadline confirmation-objection-period: 14.days after MeetingConcluded() counted_by frbp9006 cite "S.D. Ohio LBR 3015-3(a)"
 /// LBR 3016-1(b): an order granting a chapter 11 enlargement of time gives
 /// creditors and parties in interest 21 days from its service to object.
 deadline enlargement-objection-period: 21.days after ExclusivityEnlargementServed() counted_by frbp9006 cite "S.D. Ohio LBR 3016-1(b)"
+
+test "Counting boundary: enlargement-objection-period (holiday)" cite "S.D. Ohio LBR 3016-1(b)"
+{
+  given ExclusivityEnlargementServed() on 2025-12-04
+  expect deadline(enlargement-objection-period) == 2025-12-26
+}
+
 /// LBR 3020-1: unless otherwise ordered, a party presenting witnesses or
 /// evidence at a chapter 11 confirmation hearing files and serves witness
 /// and exhibit lists not later than 7 days before it.
 deadline confirmation-witness-list-period: 7.days before ConfirmationHearingScheduled() counted_by frbp9006 cite "S.D. Ohio LBR 3020-1"
+
+test "Counting boundary: confirmation-witness-list-period (holiday)" cite "S.D. Ohio LBR 3020-1"
+{
+  given ConfirmationHearingScheduled() on 2025-12-04
+  expect deadline(confirmation-witness-list-period) == 2025-11-26
+}
+
 /// LBR 4001-1(a)(8): a request for a preliminary hearing on a motion for
 /// relief from stay is filed no later than 7 days after entry of the order
 /// setting the final hearing or service of the motion.
 deadline preliminary-stay-hearing-period: 7.days after StayHearingOrderEntered() counted_by frbp9006 cite "S.D. Ohio LBR 4001-1(a)"
+
+test "Counting boundary: preliminary-stay-hearing-period (weekend)" cite "S.D. Ohio LBR 4001-1(a)"
+{
+  given StayHearingOrderEntered() on 2025-12-06
+  expect deadline(preliminary-stay-hearing-period) == 2025-12-15
+}
+
 /// LBR 4002-1(b): payment advices for the 60 days before the petition are
 /// not filed but provided to the trustee and the United States trustee at
 /// least 7 days before the first date set for the § 341 meeting.
 deadline payment-advices-meeting-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "S.D. Ohio LBR 4002-1(b)"
+
+test "Counting boundary: payment-advices-meeting-period (holiday)" cite "S.D. Ohio LBR 4002-1(b)"
+{
+  given FirstMeetingDate() on 2025-12-04
+  expect deadline(payment-advices-meeting-period) == 2025-11-26
+}
+
 /// LBR 4002-1(b): and not later than 45 days after the petition is filed.
 deadline payment-advices-outer-period: 45.days after PetitionFiled() counted_by frbp9006 cite "S.D. Ohio LBR 4002-1(b)"
+
+test "Counting boundary: payment-advices-outer-period (weekend)" cite "S.D. Ohio LBR 4002-1(b)"
+{
+  given PetitionFiled() on 2025-12-03
+  expect deadline(payment-advices-outer-period) == 2026-01-20
+}
+
 /// LBR 4002-1(d): a chapter 13 debtor eligible for a discharge files LBR
 /// Form 4002-1 within 21 days after the trustee's Certification of Final
 /// Payment, or the case may close without a discharge.
 deadline discharge-certification-period: 21.days after FinalPaymentCertified() counted_by frbp9006 cite "S.D. Ohio LBR 4002-1(d)"
+
+test "Counting boundary: discharge-certification-period (holiday)" cite "S.D. Ohio LBR 4002-1(d)"
+{
+  given FinalPaymentCertified() on 2025-12-04
+  expect deadline(discharge-certification-period) == 2025-12-26
+}
+
 /// LBR 4002-1(f)(1): absent a written extension, within 21 days after
 /// service of a trustee's written request the debtor serves the information
 /// or documents or moves for a protective order.
 deadline trustee-request-period: 21.days after TrusteeRequestServed() counted_by frbp9006 cite "S.D. Ohio LBR 4002-1(f)"
+
+test "Counting boundary: trustee-request-period (holiday)" cite "S.D. Ohio LBR 4002-1(f)"
+{
+  given TrusteeRequestServed() on 2025-12-04
+  expect deadline(trustee-request-period) == 2025-12-26
+}
+
 /// LBR 5011-1(b): a response to a motion for withdrawal of the reference is
 /// filed with the bankruptcy court within 14 days from service of the
 /// motion.
@@ -233,14 +352,35 @@ deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() coun
 /// LBR 5011-1(c): a reply memorandum may be filed within 7 days after
 /// service of the response.
 deadline withdrawal-reply-period: 7.days after WithdrawalResponseServed() counted_by frbp9006 cite "S.D. Ohio LBR 5011-1(c)"
+
+test "Counting boundary: withdrawal-reply-period (weekend)" cite "S.D. Ohio LBR 5011-1(c)"
+{
+  given WithdrawalResponseServed() on 2025-12-06
+  expect deadline(withdrawal-reply-period) == 2025-12-15
+}
+
 /// LBR 6004-1(a)(1)(F): a written objection to a noticed use, sale or
 /// lease, with a request for hearing, is filed and served not later than 21
 /// days from service of the notice unless the court shortens it.
 deadline sale-objection-period: 21.days after SaleNoticeServed() counted_by frbp9006 cite "S.D. Ohio LBR 6004-1(a)"
+
+test "Counting boundary: sale-objection-period (holiday)" cite "S.D. Ohio LBR 6004-1(a)"
+{
+  given SaleNoticeServed() on 2025-12-04
+  expect deadline(sale-objection-period) == 2025-12-26
+}
+
 /// LBR 6004-1(a)(2)(A): unless otherwise ordered, within 21 days after a
 /// sale outside the ordinary course and before disbursing proceeds, the
 /// trustee or debtor in possession files a report of sale.
 deadline sale-report-period: 21.days after SaleCompleted() counted_by frbp9006 cite "S.D. Ohio LBR 6004-1(a)"
+
+test "Counting boundary: sale-report-period (holiday)" cite "S.D. Ohio LBR 6004-1(a)"
+{
+  given SaleCompleted() on 2025-12-04
+  expect deadline(sale-report-period) == 2025-12-26
+}
+
 /// LBR 6007-1(a): an objection to a noticed abandonment is filed and served
 /// within 14 days of service of the notice, or the property is deemed
 /// abandoned.
@@ -253,12 +393,33 @@ deadline abandonment-request-response-period: 14.days after AbandonmentRequestRe
 /// Statement within 30 days of entry of the Order Governing Pretrial and
 /// Trial Procedures or other deadline the court sets.
 deadline pretrial-statement-period: 30.days after PretrialOrderEntered() counted_by frbp9006 cite "S.D. Ohio LBR 7016-1(a)"
+
+test "Counting boundary: pretrial-statement-period (holiday)" cite "S.D. Ohio LBR 7016-1(a)"
+{
+  given PretrialOrderEntered() on 2025-12-02
+  expect deadline(pretrial-statement-period) == 2026-01-02
+}
+
 /// LBR 7026-1: opposition to a motion for a protective order or to compel
 /// discovery is filed within 7 days of the motion's filing.
 deadline discovery-opposition-period: 7.days after DiscoveryMotionFiled() counted_by frbp9006 cite "S.D. Ohio LBR 7026-1"
+
+test "Counting boundary: discovery-opposition-period (weekend)" cite "S.D. Ohio LBR 7026-1"
+{
+  given DiscoveryMotionFiled() on 2025-12-06
+  expect deadline(discovery-opposition-period) == 2025-12-15
+}
+
 /// LBR 7026-1: a reply memorandum is filed within 7 days of the filing of
 /// the memorandum in opposition.
 deadline discovery-reply-period: 7.days after DiscoveryOppositionFiled() counted_by frbp9006 cite "S.D. Ohio LBR 7026-1"
+
+test "Counting boundary: discovery-reply-period (weekend)" cite "S.D. Ohio LBR 7026-1"
+{
+  given DiscoveryOppositionFiled() on 2025-12-06
+  expect deadline(discovery-reply-period) == 2025-12-15
+}
+
 /// LBR 9011-2(a): an individual appearing pro se files and serves notice of
 /// a change of mailing address or telephone number within 14 days from the
 /// change.
@@ -267,24 +428,65 @@ deadline pro-se-address-period: 14.days after ProSeAddressChanged() counted_by f
 /// memorandum opposing a motion or application is filed within 21 days from
 /// service on the certificate of service, the period of the 21-day notice.
 deadline motion-response-period: 21.days after MotionServed() counted_by frbp9006 cite "S.D. Ohio LBR 9013-1(b)"
+
+test "Counting boundary: motion-response-period (holiday)" cite "S.D. Ohio LBR 9013-1(b)"
+{
+  given MotionServed() on 2025-12-04
+  expect deadline(motion-response-period) == 2025-12-26
+}
+
 /// LBR 9013-1(c): a reply memorandum may be filed within 7 days after
 /// service of the response memorandum.
 deadline motion-reply-period: 7.days after ResponseServed() counted_by frbp9006 cite "S.D. Ohio LBR 9013-1(c)"
+
+test "Counting boundary: motion-reply-period (weekend)" cite "S.D. Ohio LBR 9013-1(c)"
+{
+  given ResponseServed() on 2025-12-06
+  expect deadline(motion-reply-period) == 2025-12-15
+}
+
 /// LBR 9070-1: a party contesting the authenticity or accuracy of the
 /// standing trustee's financial records files and serves its witnesses,
 /// exhibits and reasons at least 7 days before the hearing.
 deadline trustee-records-challenge-period: 7.days before TrusteeRecordsHearingScheduled() counted_by frbp9006 cite "S.D. Ohio LBR 9070-1"
+
+test "Counting boundary: trustee-records-challenge-period (holiday)" cite "S.D. Ohio LBR 9070-1"
+{
+  given TrusteeRecordsHearingScheduled() on 2025-12-04
+  expect deadline(trustee-records-challenge-period) == 2025-11-26
+}
+
 /// LBR 9072-1(e): if no response is filed in time, the movant submits a
 /// proposed order within 7 days of the expiration of the response period.
 deadline unopposed-order-period: 7.days after ResponseTimeExpired() counted_by frbp9006 cite "S.D. Ohio LBR 9072-1(e)"
+
+test "Counting boundary: unopposed-order-period (weekend)" cite "S.D. Ohio LBR 9072-1(e)"
+{
+  given ResponseTimeExpired() on 2025-12-06
+  expect deadline(unopposed-order-period) == 2025-12-15
+}
+
 /// LBR 9072-1(f): unless otherwise ordered, within 7 days after a hearing
 /// or trial the prevailing party submits a proposed order conforming to the
 /// decision.
 deadline post-hearing-order-period: 7.days after HearingOrTrialHeld() counted_by frbp9006 cite "S.D. Ohio LBR 9072-1(f)"
+
+test "Counting boundary: post-hearing-order-period (weekend)" cite "S.D. Ohio LBR 9072-1(f)"
+{
+  given HearingOrTrialHeld() on 2025-12-06
+  expect deadline(post-hearing-order-period) == 2025-12-15
+}
+
 /// LBR 9072-1(g): unless otherwise ordered, within 7 days of informing the
 /// court of a resolution before hearing or trial, the party seeking relief
 /// submits a proposed order conforming to it.
 deadline agreed-order-period: 7.days after ResolutionReported() counted_by frbp9006 cite "S.D. Ohio LBR 9072-1(g)"
+
+test "Counting boundary: agreed-order-period (weekend)" cite "S.D. Ohio LBR 9072-1(g)"
+{
+  given ResolutionReported() on 2025-12-06
+  expect deadline(agreed-order-period) == 2025-12-15
+}
 
 test "Deadline arithmetic: photo-id-period (14 days after)" cite "S.D. Ohio LBR 1002-1"
 {

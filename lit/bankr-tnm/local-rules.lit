@@ -98,25 +98,67 @@ deadline conversion-schedules-period: 14.days after ConversionNoticed() counted_
 /// of creditors notice to the entities affected within 7 days of filing the
 /// list or amendment.
 deadline added-creditor-notice-period: 7.days after CreditorListFiled() counted_by frbp9006 cite "M.D. Tenn. LBR 2002-1(a)"
+
+test "Counting boundary: added-creditor-notice-period (weekend)" cite "M.D. Tenn. LBR 2002-1(a)"
+{
+  given CreditorListFiled() on 2025-12-06
+  expect deadline(added-creditor-notice-period) == 2025-12-15
+}
+
 /// LBR 2003-1(a): an objection to dismissal for the debtor's nonappearance
 /// at the meeting of creditors is filed within 21 days from entry of the
 /// Notice and Motion to Dismiss; otherwise the clerk enters an Order of
 /// Dismissal.
 deadline nonappearance-objection-period: 21.days after NonappearanceDismissalEntered() counted_by frbp9006 cite "M.D. Tenn. LBR 2003-1(a)"
+
+test "Counting boundary: nonappearance-objection-period (holiday)" cite "M.D. Tenn. LBR 2003-1(a)"
+{
+  given NonappearanceDismissalEntered() on 2025-12-04
+  expect deadline(nonappearance-objection-period) == 2025-12-26
+}
+
 /// LBR 2003-1(b): the debtor gives notice of a rescheduled meeting of
 /// creditors to the trustees, creditors and parties in interest no later
 /// than 7 days after obtaining the date.
 deadline rescheduled-meeting-notice-period: 7.days after RescheduledMeetingObtained() counted_by frbp9006 cite "M.D. Tenn. LBR 2003-1(b)"
+
+test "Counting boundary: rescheduled-meeting-notice-period (weekend)" cite "M.D. Tenn. LBR 2003-1(b)"
+{
+  given RescheduledMeetingObtained() on 2025-12-06
+  expect deadline(rescheduled-meeting-notice-period) == 2025-12-15
+}
+
 /// LBR 2003-1(c): motions and orders to produce prisoners for a meeting of
 /// creditors are filed at least 14 days before the scheduled meeting.
 deadline prisoner-production-period: 14.days before MeetingOfCreditorsScheduled() counted_by frbp9006 cite "M.D. Tenn. LBR 2003-1(c)"
+
+test "Counting boundary: prisoner-production-period (weekend)" cite "M.D. Tenn. LBR 2003-1(c)"
+{
+  given MeetingOfCreditorsScheduled() on 2025-12-06
+  expect deadline(prisoner-production-period) == 2025-11-21
+}
+
 /// LBR 2081-2: an involuntary debtor eligible for complex case treatment
 /// files its notice of election with its answer or within 21 days after
 /// service of the summons, whichever is earlier.
 deadline complex-election-period: 21.days after InvoluntarySummonsServed() counted_by frbp9006 cite "M.D. Tenn. LBR 2081-2"
+
+test "Counting boundary: complex-election-period (holiday)" cite "M.D. Tenn. LBR 2081-2"
+{
+  given InvoluntarySummonsServed() on 2025-12-04
+  expect deadline(complex-election-period) == 2025-12-26
+}
+
 /// LBR 2081-2(j): objections to a matter set for an omnibus hearing are
 /// filed at least 7 days before the omnibus hearing date.
 deadline omnibus-objection-period: 7.days before OmnibusHearingScheduled() counted_by frbp9006 cite "M.D. Tenn. LBR 2081-2(j)"
+
+test "Counting boundary: omnibus-objection-period (holiday)" cite "M.D. Tenn. LBR 2081-2(j)"
+{
+  given OmnibusHearingScheduled() on 2025-12-04
+  expect deadline(omnibus-objection-period) == 2025-11-26
+}
+
 /// LBR 2081-2(m): objections to a professional's Monthly Statement are
 /// filed within 14 days of its service; after that the debtor may pay 80%
 /// of the undisputed fees and expenses.
@@ -125,10 +167,24 @@ deadline monthly-statement-objection-period: 14.days after MonthlyStatementServe
 /// days after the trustee's written notice is exposed to preclusion and
 /// other relief.
 deadline lien-information-cure-period: 21.days after NoncomplianceNoticeSent() counted_by frbp9006 cite "M.D. Tenn. LBR 3001-1(b)"
+
+test "Counting boundary: lien-information-cure-period (holiday)" cite "M.D. Tenn. LBR 3001-1(b)"
+{
+  given NoncomplianceNoticeSent() on 2025-12-04
+  expect deadline(lien-information-cure-period) == 2025-12-26
+}
+
 /// LBR 3015-1(d): a written objection to confirmation of a chapter 13 plan
 /// is filed at least 5 calendar days before the meeting of creditors (an
 /// oral objection may be raised at the meeting).
 deadline chapter13-confirmation-objection-period: 5.days before FirstMeetingDate() counted_by frbp9006 cite "M.D. Tenn. LBR 3015-1(d)"
+
+test "Counting boundary: chapter13-confirmation-objection-period (holiday)" cite "M.D. Tenn. LBR 3015-1(d)"
+{
+  given FirstMeetingDate() on 2025-12-02
+  expect deadline(chapter13-confirmation-objection-period) == 2025-11-26
+}
+
 /// LBR 4001-1(f)(1): an agreed order granting stay relief or abandonment
 /// without a motion orders that any objection be filed within 14 days of
 /// its entry.
@@ -141,6 +197,13 @@ deadline involuntary-responsible-person-period: 14.days after OrderForReliefEnte
 /// vehicle for lapse of insurance, the creditor moves for relief from the §
 /// 362 stay.
 deadline vehicle-stay-motion-period: 7.days after VehicleRepossessed() counted_by frbp9006 cite "M.D. Tenn. LBR 4070-1(c)"
+
+test "Counting boundary: vehicle-stay-motion-period (weekend)" cite "M.D. Tenn. LBR 4070-1(c)"
+{
+  given VehicleRepossessed() on 2025-12-06
+  expect deadline(vehicle-stay-motion-period) == 2025-12-15
+}
+
 /// LBR 6007-1(a): in a no asset case, abandonment is effective 14 days
 /// after the notice unless an objection is filed.
 deadline no-asset-abandonment-period: 14.days after NoAssetNoticeIssued() counted_by frbp9006 cite "M.D. Tenn. LBR 6007-1(a)"
@@ -152,15 +215,36 @@ deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFil
 /// served by the earlier of 21 days after service of the commencing paper
 /// and 7 days before a scheduled hearing.
 deadline contested-response-service-period: 21.days after ContestedMatterServed() counted_by frbp9006 cite "M.D. Tenn. LBR 9014-1(c)"
+
+test "Counting boundary: contested-response-service-period (holiday)" cite "M.D. Tenn. LBR 9014-1(c)"
+{
+  given ContestedMatterServed() on 2025-12-04
+  expect deadline(contested-response-service-period) == 2025-12-26
+}
+
 /// LBR 9014-1(c): the hearing limb of that earlier-of deadline, 7 days
 /// before any scheduled hearing of the contested matter.
 deadline contested-response-hearing-period: 7.days before ContestedHearingScheduled() counted_by frbp9006 cite "M.D. Tenn. LBR 9014-1(c)"
+
+test "Counting boundary: contested-response-hearing-period (holiday)" cite "M.D. Tenn. LBR 9014-1(c)"
+{
+  given ContestedHearingScheduled() on 2025-12-04
+  expect deadline(contested-response-hearing-period) == 2025-11-26
+}
+
 /// LBR 9014-1(d)(2)(D): when the movant elects pretrial disclosures, the
 /// initial disclosures of witnesses and documents (paragraphs (A) and (B))
 /// are completed no later than 7 calendar days after service of the
 /// objection or response (or by the fourth business day before the hearing,
 /// if earlier).
 deadline initial-disclosure-period: 7.days after ContestedResponseServed() counted_by frbp9006 cite "M.D. Tenn. LBR 9014-1(d)"
+
+test "Counting boundary: initial-disclosure-period (weekend)" cite "M.D. Tenn. LBR 9014-1(d)"
+{
+  given ContestedResponseServed() on 2025-12-06
+  expect deadline(initial-disclosure-period) == 2025-12-15
+}
+
 /// LBR 9014-1(d)(2)(D): the expert witness disclosures of paragraph (C) are
 /// completed no later than 14 days after service of the response (or by the
 /// fourth business day before the hearing, if earlier).
@@ -168,6 +252,12 @@ deadline expert-disclosure-period: 14.days after ContestedResponseServed() count
 /// LBR 9070-1: after final determination of a matter or proceeding, parties
 /// have 28 days to withdraw exhibits.
 deadline exhibit-withdrawal-period: 28.days after FinalDetermination() counted_by frbp9006 cite "M.D. Tenn. LBR 9070-1"
+
+test "Counting boundary: exhibit-withdrawal-period (holiday)" cite "M.D. Tenn. LBR 9070-1"
+{
+  given FinalDetermination() on 2025-12-04
+  expect deadline(exhibit-withdrawal-period) == 2026-01-02
+}
 
 test "Deadline arithmetic: conversion-schedules-period (14 days after)" cite "M.D. Tenn. LBR 1017-1"
 {

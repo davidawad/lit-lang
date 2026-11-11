@@ -123,23 +123,58 @@ deadline involuntary-disclosure-statement-period: 14.days after OrderForReliefEn
 /// is served so as to be received, and filed with proof of service, at
 /// least 7 days before the presentment date.
 deadline presentment-objection-period: 7.days before PresentmentDate() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 2002-1(e)"
+
+test "Counting boundary: presentment-objection-period (holiday)" cite "E.D.N.Y. LBR 2002-1(e)"
+{
+  given PresentmentDate() on 2025-12-04
+  expect deadline(presentment-objection-period) == 2025-11-26
+}
+
 /// LBR 2003-1(a): in a chapter 13 case, the debtor provides the trustee the
 /// mandatory disclosures (payment advices, contribution affidavits,
 /// valuations, leases, a prior-case affidavit and post-petition payment
 /// proof) no later than 7 days before the first date set for the § 341
 /// meeting.
 deadline chapter13-meeting-disclosures-period: 7.days before FirstMeetingDate() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 2003-1(a)"
+
+test "Counting boundary: chapter13-meeting-disclosures-period (holiday)" cite "E.D.N.Y. LBR 2003-1(a)"
+{
+  given FirstMeetingDate() on 2025-12-04
+  expect deadline(chapter13-meeting-disclosures-period) == 2025-11-26
+}
+
 /// LBR 2003-1(b): the chapter 13 debtor provides the trustee the further
 /// documents no later than 7 days before the first date set for
 /// confirmation.
 deadline chapter13-confirmation-disclosures-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 2003-1(b)"
+
+test "Counting boundary: chapter13-confirmation-disclosures-period (holiday)" cite "E.D.N.Y. LBR 2003-1(b)"
+{
+  given Chapter13ConfirmationHearingScheduled() on 2025-12-04
+  expect deadline(chapter13-confirmation-disclosures-period) == 2025-11-26
+}
+
 /// LBR 2016-2: an application for a final award of compensation in a
 /// chapter 7 case is filed and served no later than 21 days before the
 /// hearing on the trustee's final account.
 deadline final-compensation-application-period: 21.days before FinalAccountHearingScheduled() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 2016-2"
+
+test "Counting boundary: final-compensation-application-period (holiday)" cite "E.D.N.Y. LBR 2016-2"
+{
+  given FinalAccountHearingScheduled() on 2025-12-02
+  expect deadline(final-compensation-application-period) == 2025-11-10
+}
+
 /// LBR 2016-2: objections to the application are filed at least 7 days
 /// before the hearing.
 deadline final-compensation-objection-period: 7.days before FinalAccountHearingScheduled() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 2016-2"
+
+test "Counting boundary: final-compensation-objection-period (holiday)" cite "E.D.N.Y. LBR 2016-2"
+{
+  given FinalAccountHearingScheduled() on 2025-12-04
+  expect deadline(final-compensation-objection-period) == 2025-11-26
+}
+
 /// LBR 2090-2: where the debtor's retainer agreement excludes the defense of
 /// an adversary proceeding, the attorney of record files and serves the
 /// relevant portions of the agreement within 14 days of service of the
@@ -150,10 +185,24 @@ deadline retainer-exclusion-period: 14.days after SummonsServed() counted_by frb
 /// days, has 30 days from the effective date of the amendment to file a
 /// proof of claim.
 deadline amended-schedule-claim-period: 30.days after ScheduleAmendmentEffective() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 3007-2"
+
+test "Counting boundary: amended-schedule-claim-period (holiday)" cite "E.D.N.Y. LBR 3007-2"
+{
+  given ScheduleAmendmentEffective() on 2025-12-02
+  expect deadline(amended-schedule-claim-period) == 2026-01-02
+}
+
 /// LBR 3015-1(b): unless the plan is filed with the petition, the chapter 13
 /// debtor serves the plan on the trustee and all creditors within 7 days of
 /// filing it, and files proof of service.
 deadline chapter13-plan-service-period: 7.days after Chapter13PlanFiled() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 3015-1(b)"
+
+test "Counting boundary: chapter13-plan-service-period (weekend)" cite "E.D.N.Y. LBR 3015-1(b)"
+{
+  given Chapter13PlanFiled() on 2025-12-06
+  expect deadline(chapter13-plan-service-period) == 2025-12-15
+}
+
 /// LBR 3015-1(c): a plan or summary stating the payments to the debtor's
 /// attorney as an administrative expense stands in for separate notice only
 /// if served on all parties in interest at least 14 days before the
@@ -167,16 +216,44 @@ deadline chapter13-modification-service-period: 14.days before Chapter13Confirma
 /// chapter 9 or 11 plan, the proponent files and serves a summary of the
 /// ballots and any notice of cramdown.
 deadline ballot-summary-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 3018-1(a)"
+
+test "Counting boundary: ballot-summary-period (holiday)" cite "E.D.N.Y. LBR 3018-1(a)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2025-12-04
+  expect deadline(ballot-summary-period) == 2025-11-26
+}
+
 /// LBR 3018-1(b): at least 7 days before the confirmation hearing, the
 /// proponent or the balloting agent files the certification of the vote.
 deadline vote-certification-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 3018-1(b)"
+
+test "Counting boundary: vote-certification-period (holiday)" cite "E.D.N.Y. LBR 3018-1(b)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2025-12-04
+  expect deadline(vote-certification-period) == 2025-11-26
+}
+
 /// LBR 3018-1(c): the person tabulating ballots notifies a holder whose
 /// election is ineffective at least 7 days before the confirmation hearing.
 deadline ineffective-election-notice-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 3018-1(c)"
+
+test "Counting boundary: ineffective-election-notice-period (holiday)" cite "E.D.N.Y. LBR 3018-1(c)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2025-12-04
+  expect deadline(ineffective-election-notice-period) == 2025-11-26
+}
+
 /// LBR 3020-1(a): objections to confirmation of a chapter 9 or 11 plan are
 /// filed at least 7 days before the first date set for the confirmation
 /// hearing.
 deadline chapter11-confirmation-objection-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 3020-1(a)"
+
+test "Counting boundary: chapter11-confirmation-objection-period (holiday)" cite "E.D.N.Y. LBR 3020-1(a)"
+{
+  given Chapter11ConfirmationHearingScheduled() on 2025-12-04
+  expect deadline(chapter11-confirmation-objection-period) == 2025-11-26
+}
+
 /// LBR 3021(a): within 14 days after the order confirming a chapter 11
 /// plan, the plan proponent files on presentment a proposed order with a
 /// timetable for substantial consummation and a final decree.
@@ -195,20 +272,55 @@ deadline lessor-election-period: 14.days after CureComplianceNoticed() counted_b
 /// LBR 4003-1(a): an amendment to a claim of exemptions is not effective
 /// until proof of service is filed, which is done within 7 days of service.
 deadline exemption-amendment-proof-period: 7.days after ExemptionAmendmentServed() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 4003-1(a)"
+
+test "Counting boundary: exemption-amendment-proof-period (weekend)" cite "E.D.N.Y. LBR 4003-1(a)"
+{
+  given ExemptionAmendmentServed() on 2025-12-06
+  expect deadline(exemption-amendment-proof-period) == 2025-12-15
+}
+
 /// LBR 4003-1(b): a creditor added fewer than 30 days before, or after, the
 /// FRBP 4003(b) deadline has 30 days from service of the amendment to
 /// object to the property claimed as exempt.
 deadline added-creditor-exemption-objection-period: 30.days after CreditorAddedToSchedulesServed() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 4003-1(b)"
+
+test "Counting boundary: added-creditor-exemption-objection-period (holiday)" cite "E.D.N.Y. LBR 4003-1(b)"
+{
+  given CreditorAddedToSchedulesServed() on 2025-12-02
+  expect deadline(added-creditor-exemption-objection-period) == 2026-01-02
+}
+
 /// LBR 6004-1(b): a trustee may sell estate property it reasonably believes
 /// worth no more than $10,000 in aggregate on 7 days' written notice to the
 /// United States trustee, interested parties and the landlord.
 deadline small-sale-notice-period: 7.days before SmallSaleDate() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 6004-1(b)"
+
+test "Counting boundary: small-sale-notice-period (holiday)" cite "E.D.N.Y. LBR 6004-1(b)"
+{
+  given SmallSaleDate() on 2025-12-04
+  expect deadline(small-sale-notice-period) == 2025-11-26
+}
+
 /// LBR 6004-1(e)(i): the auctioneer pays the gross proceeds to the trustee
 /// or debtor in possession no later than 7 days after receiving them.
 deadline auction-proceeds-period: 7.days after AuctionProceedsReceived() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 6004-1(e)"
+
+test "Counting boundary: auction-proceeds-period (weekend)" cite "E.D.N.Y. LBR 6004-1(e)"
+{
+  given AuctionProceedsReceived() on 2025-12-06
+  expect deadline(auction-proceeds-period) == 2025-12-15
+}
+
 /// LBR 6004-1(f): within 21 days after the last date of the auction, the
 /// auctioneer files a verified report.
 deadline auction-report-period: 21.days after AuctionConcluded() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 6004-1(f)"
+
+test "Counting boundary: auction-report-period (holiday)" cite "E.D.N.Y. LBR 6004-1(f)"
+{
+  given AuctionConcluded() on 2025-12-04
+  expect deadline(auction-report-period) == 2025-12-26
+}
+
 /// LBR 6004-1(f): if not all proceeds were received by then, the auctioneer
 /// files a supplemental report within 14 days after all are received.
 deadline auction-supplemental-report-period: 14.days after AllAuctionProceedsReceived() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 6004-1(f)"
@@ -224,32 +336,88 @@ deadline records-inspection-period: 14.days after InterrogatoryAnswersServed() c
 /// moves for them within 21 days of the remand, unless the appellate court
 /// orders otherwise.
 deadline remand-motion-period: 21.days after Remanded() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 8024-1"
+
+test "Counting boundary: remand-motion-period (holiday)" cite "E.D.N.Y. LBR 8024-1"
+{
+  given Remanded() on 2025-12-04
+  expect deadline(remand-motion-period) == 2025-12-26
+}
+
 /// LBR 9006-1(a)(i): unless the rules provide otherwise, motion papers are
 /// served at least 14 days before the hearing date.
 deadline motion-service-period: 14.days before HearingScheduled() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 9006-1(a)"
 /// LBR 9006-1(a)(ii): answering papers are served so as to be received at
 /// least 7 days before the hearing date.
 deadline answering-papers-period: 7.days before HearingScheduled() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 9006-1(a)"
+
+test "Counting boundary: answering-papers-period (holiday)" cite "E.D.N.Y. LBR 9006-1(a)"
+{
+  given HearingScheduled() on 2025-12-04
+  expect deadline(answering-papers-period) == 2025-11-26
+}
+
 /// LBR 9006-1(a)(iii): reply papers are served and filed at least 3 days
 /// before the hearing date.
 deadline reply-papers-period: 3.days before HearingScheduled() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 9006-1(a)"
+
+test "Counting boundary: reply-papers-period (weekend)" cite "E.D.N.Y. LBR 9006-1(a)"
+{
+  given HearingScheduled() on 2025-12-02
+  expect deadline(reply-papers-period) == 2025-11-28
+}
+
 /// LBR 9019-1(b): the mediation participants select a mediator and an
 /// alternate from the Mediation Register within 7 days of the order
 /// assigning the matter to mediation.
 deadline mediator-selection-period: 7.days after MediationOrdered() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 9019-1(b)"
+
+test "Counting boundary: mediator-selection-period (weekend)" cite "E.D.N.Y. LBR 9019-1(b)"
+{
+  given MediationOrdered() on 2025-12-06
+  expect deadline(mediator-selection-period) == 2025-12-15
+}
+
 /// LBR 9019-1(b): within 7 days of selecting a mediator, the participants
 /// and the mediator submit a proposed Mediation Order.
 deadline mediation-order-submission-period: 7.days after MediatorSelected() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 9019-1(b)"
+
+test "Counting boundary: mediation-order-submission-period (weekend)" cite "E.D.N.Y. LBR 9019-1(b)"
+{
+  given MediatorSelected() on 2025-12-06
+  expect deadline(mediation-order-submission-period) == 2025-12-15
+}
+
 /// LBR 9019-1(c)(i): the initial mediation conference takes place no later
 /// than 30 days after the entry of the Mediation Order.
 deadline initial-mediation-conference-period: 30.days after MediationOrderEntered() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 9019-1(c)"
+
+test "Counting boundary: initial-mediation-conference-period (holiday)" cite "E.D.N.Y. LBR 9019-1(c)"
+{
+  given MediationOrderEntered() on 2025-12-02
+  expect deadline(initial-mediation-conference-period) == 2026-01-02
+}
+
 /// LBR 9037-1(e): the party seeking redaction files a correctly redacted
 /// document or proof of claim within 21 days of the granting of the motion.
 deadline redacted-filing-period: 21.days after RedactionGranted() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 9037-1(e)"
+
+test "Counting boundary: redacted-filing-period (holiday)" cite "E.D.N.Y. LBR 9037-1(e)"
+{
+  given RedactionGranted() on 2025-12-04
+  expect deadline(redacted-filing-period) == 2025-12-26
+}
+
 /// LBR 9070-1(b)(ii): if an appeal has been taken, the responsible party
 /// removes its filed exhibits within 30 days after the record on appeal is
 /// returned to the Clerk.
 deadline exhibit-removal-period: 30.days after RecordReturned() counted_by frbp9006-new-york cite "E.D.N.Y. LBR 9070-1(b)"
+
+test "Counting boundary: exhibit-removal-period (holiday)" cite "E.D.N.Y. LBR 9070-1(b)"
+{
+  given RecordReturned() on 2025-12-02
+  expect deadline(exhibit-removal-period) == 2026-01-02
+}
+
 /// LBR 9072-1(a), (b): a party directed to settle or submit an order,
 /// judgment or decree files it within 14 days of the court's direction, or
 /// such other time as the court directs.

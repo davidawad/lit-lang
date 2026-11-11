@@ -62,6 +62,13 @@ event MagistrateObjectionsServed()
 /// Disclosure Statement with the initial pleading or other paper, it is
 /// filed within seven days of the date of the original filing.
 deadline disclosure-statement-period: 7.days after DisclosureDeferredFilingMade() counted_by frcp6-pennsylvania cite "W.D. Pa. LCvR 7.1"
+
+test "Counting boundary: disclosure-statement-period (weekend)" cite "W.D. Pa. LCvR 7.1"
+{
+  given DisclosureDeferredFilingMade() on 2023-12-02
+  expect deadline(disclosure-statement-period) == 2023-12-11
+}
+
 /// LCvR 7.1.B: a party filing a civil RICO action files a RICO case
 /// statement with the complaint or within fourteen days thereafter.
 deadline rico-case-statement-period: 14.days after RicoComplaintFiled() counted_by frcp6-pennsylvania cite "W.D. Pa. LCvR 7.1"
@@ -69,27 +76,76 @@ deadline rico-case-statement-period: 14.days after RicoComplaintFiled() counted_
 /// rights proceeding, the plaintiff files the form consenting to or
 /// declining the jurisdiction of the magistrate judge.
 deadline plaintiff-consent-form-period: 21.days after PrisonerCivilRightsCommenced() counted_by frcp6-pennsylvania cite "W.D. Pa. LCvR 10"
+
+test "Counting boundary: plaintiff-consent-form-period (weekend)" cite "W.D. Pa. LCvR 10"
+{
+  given PrisonerCivilRightsCommenced() on 2023-12-02
+  expect deadline(plaintiff-consent-form-period) == 2023-12-26
+}
+
 /// LCvR 10.E: the respondent files the same form within 21 days of its
 /// appearance.
 deadline respondent-consent-form-period: 21.days after PrisonerCivilRightsRespondentAppeared() counted_by frcp6-pennsylvania cite "W.D. Pa. LCvR 10"
+
+test "Counting boundary: respondent-consent-form-period (weekend)" cite "W.D. Pa. LCvR 10"
+{
+  given PrisonerCivilRightsRespondentAppeared() on 2023-12-02
+  expect deadline(respondent-consent-form-period) == 2023-12-26
+}
+
 /// LCvR 16.1.C.2: within 30 days of the filing of the plaintiff's pretrial
 /// statement, the defendant files its pretrial statement.
 deadline defendant-pretrial-statement-period: 30.days after PlaintiffPretrialStatementFiled() counted_by frcp6-pennsylvania cite "W.D. Pa. LCvR 16.1"
+
+test "Counting boundary: defendant-pretrial-statement-period (weekend)" cite "W.D. Pa. LCvR 16.1"
+{
+  given PlaintiffPretrialStatementFiled() on 2023-12-01
+  expect deadline(defendant-pretrial-statement-period) == 2024-01-02
+}
+
 /// LCvR 16.1.C.3: within 30 days of the filing of the defendant's pretrial
 /// statement, any third-party defendant files its pretrial statement.
 deadline third-party-pretrial-statement-period: 30.days after DefendantPretrialStatementFiled() counted_by frcp6-pennsylvania cite "W.D. Pa. LCvR 16.1"
+
+test "Counting boundary: third-party-pretrial-statement-period (weekend)" cite "W.D. Pa. LCvR 16.1"
+{
+  given DefendantPretrialStatementFiled() on 2023-12-01
+  expect deadline(third-party-pretrial-statement-period) == 2024-01-02
+}
+
 /// LCvR 16.1.C.6.f: a motion to supplement a pretrial statement is filed
 /// and served not less than seven days before the final pretrial
 /// conference.
 deadline supplement-pretrial-statement-motion: 7.days before FinalPretrialConferenceHeld() counted_by frcp6-pennsylvania cite "W.D. Pa. LCvR 16.1"
+
+test "Counting boundary: supplement-pretrial-statement-motion (weekend)" cite "W.D. Pa. LCvR 16.1"
+{
+  given FinalPretrialConferenceHeld() on 2023-12-02
+  expect deadline(supplement-pretrial-statement-motion) == 2023-11-24
+}
+
 /// LCvR 23.E: at least seven days before the Pretrial Conference in a class
 /// action, the parties submit the Joint Report of the Parties and Proposed
 /// Scheduling and Discovery Order.
 deadline class-joint-report: 7.days before ClassPretrialConferenceHeld() counted_by frcp6-pennsylvania cite "W.D. Pa. LCvR 23"
+
+test "Counting boundary: class-joint-report (weekend)" cite "W.D. Pa. LCvR 23"
+{
+  given ClassPretrialConferenceHeld() on 2023-12-02
+  expect deadline(class-joint-report) == 2023-11-24
+}
+
 /// LCvR 56.C: within 30 days of service of a motion for summary judgment,
 /// the opposing party files its responsive concise statement, memorandum
 /// in opposition and appendix.
 deadline summary-judgment-opposition-period: 30.days after SummaryJudgmentMotionServed() counted_by frcp6-pennsylvania cite "W.D. Pa. LCvR 56"
+
+test "Counting boundary: summary-judgment-opposition-period (weekend)" cite "W.D. Pa. LCvR 56"
+{
+  given SummaryJudgmentMotionServed() on 2023-12-01
+  expect deadline(summary-judgment-opposition-period) == 2024-01-02
+}
+
 /// LCvR 56.D: within 14 days of service of the opposing party's
 /// submission, the moving party may reply.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6-pennsylvania cite "W.D. Pa. LCvR 56"

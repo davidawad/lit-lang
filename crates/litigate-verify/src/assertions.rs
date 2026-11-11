@@ -173,27 +173,26 @@ pub(crate) fn counting_boundary(
     let ExprKind::Call { callee, .. } = &deadline.trigger.kind else {
         return Ok(None);
     };
-    let Some(args) = cx.declarations().find_map(|d| match d {
-        Declaration::Test(test) => test.givens.iter().find_map(|(given, _)| match &given.kind {
-            ExprKind::Call {
-                callee: given_callee,
-                args,
-            } if given_callee == callee => Some(args),
+    let candidates: Vec<&[Expr]> = cx
+        .declarations()
+        .filter_map(|d| match d {
+            Declaration::Test(test) => {
+                Some(
+                    test.givens
+                        .iter()
+                        .filter_map(|(given, _)| match &given.kind {
+                            ExprKind::Call {
+                                callee: given_callee,
+                                args,
+                            } if given_callee == callee => Some(args.as_slice()),
+                            _ => None,
+                        }),
+                )
+            }
             _ => None,
-        }),
-        _ => None,
-    }) else {
-        return Ok(None);
-    };
-    let event = format!(
-        "{}({})",
-        callee.rsplit("::").next().unwrap_or(callee),
-        args.iter()
-            .map(test_arg)
-            .collect::<Option<Vec<_>>>()
-            .ok_or("trigger has no valid literal test variant")?
-            .join(", ")
-    );
+        })
+        .flatten()
+        .collect();
     let owner = cx.owner(&deadline.meta.id).0;
     let clocks = Clocks::new(cx, &deadline.meta.effective.known_at);
     let Some((pkg, counting)) =
@@ -201,10 +200,21 @@ pub(crate) fn counting_boundary(
     else {
         return Ok(None);
     };
-    let method = service_method(Some(counting), args).map(|m| format!("{m:?}"));
-    if method.as_ref().is_some_and(|m| matches!(counting.service_extensions.get(m), Some(hir::ServiceTime::Adds(n, _)) if *n > 0)) {
-        return Ok(None);
-    }
+    let Some(args) = candidates.into_iter().find(|args| {
+        args.iter().all(|arg| test_arg(arg).is_some())
+            && service_method(Some(counting), args)
+                .map(|m| format!("{m:?}"))
+                .is_none_or(|m| !matches!(counting.service_extensions.get(&m), Some(hir::ServiceTime::Adds(n, _)) if *n > 0))
+    }) else { return Ok(None) };
+    let event = format!(
+        "{}({})",
+        callee.rsplit("::").next().unwrap_or(callee),
+        args.iter()
+            .map(test_arg)
+            .flatten()
+            .collect::<Vec<_>>()
+            .join(", ")
+    );
     let lib = clocks.get(pkg, counting)?;
     let rule_id = counting.meta.id.as_str();
     let rule = lib.clock(rule_id).map_err(|error| error.to_string())?;
@@ -264,17 +274,19 @@ pub(crate) fn counting_boundary(
             .meta
             .cite
             .as_deref()
-            .map(|c| format!("\n  cite {}", serde_json::to_string(c).unwrap_or_default()))
+            .map(|c| format!(" cite {}", serde_json::to_string(c).unwrap_or_default()))
             .unwrap_or_default();
+        let open = if cite.is_empty() { " {" } else { "\n{" };
         return Ok(Some((
             format!(
-                "\n\ntest {}{} {{\n  given {} on {}\n  expect deadline({}) == {}\n}}",
+                "\n\ntest {}{}{}\n  given {} on {}\n  expect deadline({}) == {}\n}}",
                 serde_json::to_string(&format!(
                     "Counting boundary: {} ({boundary})",
                     deadline.meta.id
                 ))
                 .unwrap_or_default(),
                 cite,
+                open,
                 event,
                 trigger.to_iso(),
                 deadline.meta.id,

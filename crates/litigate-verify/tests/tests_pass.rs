@@ -113,6 +113,69 @@ fn l9011_fix_is_machine_applicable_and_generates_a_passing_counting_test() {
     assert_eq!(fixes_again, 0);
 }
 
+#[test]
+fn l9011_without_a_roll_keeps_the_warning_without_a_fix() {
+    let source = BASE
+        .replace("  roll_forward_on [weekend, legal_holiday]\n", "")
+        .replace(
+            "test \"mail service adds three days\" cite \"FRCP 6(d)\"\n{\n  given Served(complaint, Mail) on 2025-03-03\n  expect deadline(answer-period) == 2025-03-27\n}\n",
+            "",
+        );
+    let checked = verify_one(&source, Profile::Strict);
+    let diagnostic = checked
+        .verification
+        .diagnostics
+        .iter()
+        .find(|d| d.code.as_str() == "L9011")
+        .expect("L9011 remains for a non-rolling rule");
+    assert!(diagnostic.fixes.is_empty());
+    assert!(diagnostic
+        .notes
+        .iter()
+        .any(|n| n.message.contains("no discriminating rolled date")));
+}
+
+#[test]
+fn l9011_generates_fixes_for_forward_calendar_and_court_days() {
+    for declaration in [
+        "deadline answer-period: 1.days from Served(complaint) counted_by frcp6",
+        "deadline answer-period: 1.court_days from Served(complaint) counted_by frcp6",
+    ] {
+        let mut source = BASE
+            .replace(
+                "deadline answer-period: 21.days from Served(complaint) counted_by frcp6",
+                declaration,
+            )
+            .replace(
+                "test \"mail service adds three days\" cite \"FRCP 6(d)\"\n{\n  given Served(complaint, Mail) on 2025-03-03\n  expect deadline(answer-period) == 2025-03-27\n}\n",
+                "",
+            );
+        source = source
+            .replace("== 2025-03-24", "== 2025-03-04")
+            .replace("== 2025-03-27", "== 2025-03-07");
+        let checked = verify_one(&source, Profile::Strict);
+        let diagnostic = checked
+            .verification
+            .diagnostics
+            .iter()
+            .find(|d| d.code.as_str() == "L9011")
+            .unwrap_or_else(|| {
+                panic!(
+                    "missing L9011 for {declaration}: {:#?}",
+                    checked.verification.diagnostics
+                )
+            });
+        let fix = diagnostic.fixes.first().expect("boundary fix");
+        assert_eq!(
+            fix.applicability,
+            litigate_base::Applicability::MachineApplicable
+        );
+        assert!(fix.edits[0]
+            .replacement
+            .contains("Counting boundary: answer-period"));
+    }
+}
+
 tests_pass!(
     the_latest_matching_given_triggers_a_latest_policy_deadline,
     Passed,

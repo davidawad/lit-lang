@@ -278,7 +278,7 @@ pub(crate) fn numeric_provenance(p: &mut Parser<'_>) -> bool {
     while p.at_kw(KwBasis) {
         numeric_basis(p);
     }
-    while p.at_kw(KwVintage) {
+    while p.at_kw(KwVintage) && !p.newline_before() {
         p.bump_as(KwVintage);
         p.expect(Date);
     }
@@ -292,18 +292,24 @@ pub(crate) fn numeric_provenance(p: &mut Parser<'_>) -> bool {
 
 fn numeric_basis(p: &mut Parser<'_>) {
     p.bump_as(KwBasis);
-    if p.at_kw(KwCalibrated) || p.at_kw(KwSourced) {
+    if p.at_kw(KwCalibrated) || p.at_kw(KwSourced) || p.at_kw(KwExpert) {
         let form = if p.at_kw(KwCalibrated) {
             KwCalibrated
-        } else {
+        } else if p.at_kw(KwSourced) {
             KwSourced
+        } else {
+            KwExpert
         };
         p.bump_as(form);
         p.expect(LParen);
-        if form == KwCalibrated {
-            p.expect(Ident);
+        if form == KwCalibrated && p.at(Ident) {
+            p.bump();
         } else {
             p.expect(String);
+            if form == KwCalibrated {
+                p.expect(Comma);
+                p.expect(Date);
+            }
         }
         p.expect(RParen);
     } else if p.at_kw(KwEstimate) || p.at_kw(KwPlaceholder) {
@@ -314,7 +320,7 @@ fn numeric_basis(p: &mut Parser<'_>) {
         };
         p.bump_as(form);
     } else {
-        p.error_expected(&[KwCalibrated, KwSourced, KwEstimate, KwPlaceholder]);
+        p.error_expected(&[KwCalibrated, KwSourced, KwExpert, KwEstimate, KwPlaceholder]);
         if !p.at_end() {
             p.bump_error();
         }

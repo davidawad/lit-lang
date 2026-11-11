@@ -121,6 +121,34 @@ fn estimate_and_placeholder_without_vintage_warn_in_the_item_tree() {
 }
 
 #[test]
+fn basis_on_newline_or_after_comma_remains_object_level() {
+    let source = concat!(
+        "module m\n",
+        "chance c: \"C\" { regular \"R\" -> w p 1/2 {\n  effort 2.hours\n  basis estimate\n} }\n",
+        "terminal t: \"T\" { payoff 0.usd, basis sourced(\"FRCP 97(a)\") }\n",
+    );
+    let parsed = parse(source);
+    assert!(parsed.reports.is_empty(), "{:?}", parsed.reports);
+    let ItemKind::Node(node) = &parsed.tree.items[0].kind else {
+        panic!("node")
+    };
+    let edge = &node.edges[0];
+    assert!(edge.fields.iter().any(|f| f.key.text == "basis"));
+    assert!(!edge.fields.iter().any(|f| f
+        .values
+        .iter()
+        .any(|(a, _)| matches!(a, Atom::NumericProvenance(_)))));
+    let ItemKind::Node(terminal) = &parsed.tree.items[1].kind else {
+        panic!("node")
+    };
+    assert!(terminal.fields.iter().any(|f| f.key.text == "basis"));
+    assert!(!terminal.fields.iter().any(|f| f
+        .values
+        .iter()
+        .any(|(a, _)| matches!(a, Atom::NumericProvenance(_)))));
+}
+
+#[test]
 fn every_construct_lowers_without_reports() {
     for file in [
         "crates/litigate-syntax/tests/fixtures/constructs.lit",

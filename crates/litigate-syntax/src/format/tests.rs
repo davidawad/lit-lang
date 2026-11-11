@@ -166,6 +166,21 @@ fn numeric_provenance_is_canonical_and_idempotent() {
 }
 
 #[test]
+fn basis_never_moves_between_numeric_suffix_and_object_field() {
+    let source = "module m\nchance c: \"C\" { regular \"R\" -> w p 1/2 {\n  effort 2.hours\n  basis estimate\n} }\nterminal t: \"T\" { payoff 0.usd, basis sourced(\"FRCP 97(a)\") }\n";
+    let formatted = fmt(source);
+    assert!(
+        formatted.contains("effort 2.hours, basis estimate"),
+        "{formatted}"
+    );
+    assert!(
+        formatted.contains("payoff 0.usd, basis sourced(\"FRCP 97(a)\")"),
+        "{formatted}"
+    );
+    assert_eq!(fmt(&formatted), formatted);
+}
+
+#[test]
 fn guard_operations_keep_their_clauses_on_one_line() {
     let out = fmt(
         "module order\ninstance base@order {\n  pack base\n  patch timely {\n    \

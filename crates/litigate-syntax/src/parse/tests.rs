@@ -43,7 +43,9 @@ fn codes(parsed: &super::Parse) -> Vec<&'static str> {
 fn numeric_provenance_parses_for_probability_payoff_duration_cost_and_effort() {
     let bases = [
         "basis calibrated(cal)",
+        "basis calibrated(\"dataset\", 2026-01-01)",
         "basis sourced(\"FRCP 1\")",
+        "basis expert(\"Jane Roe\")",
         "basis estimate vintage 2026-01-01",
         "basis placeholder vintage 2026-01-01",
     ];

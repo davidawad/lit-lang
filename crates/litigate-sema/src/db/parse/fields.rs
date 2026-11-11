@@ -184,7 +184,17 @@ fn numeric_provenance(node: &SyntaxNode) -> super::tree::NumericProvenance {
         })
     };
     let basis = if has(K::KwCalibrated) {
-        named(K::Ident).map(NumericBasis::Calibrated)
+        if let (Some(dataset), Some(date)) = (
+            tokens.iter().find(|t| t.kind() == K::String),
+            tokens.iter().find(|t| t.kind() == K::Date),
+        ) {
+            Some(NumericBasis::CalibratedDated(
+                dataset.text().trim_matches('"').to_owned(),
+                date.text().to_owned(),
+            ))
+        } else {
+            named(K::Ident).map(NumericBasis::Calibrated)
+        }
     } else if has(K::KwSourced) {
         tokens
             .iter()
@@ -192,6 +202,11 @@ fn numeric_provenance(node: &SyntaxNode) -> super::tree::NumericProvenance {
             .map(|t| NumericBasis::Sourced(t.text().trim_matches('"').to_owned()))
     } else if has(K::KwEstimate) {
         Some(NumericBasis::Estimate)
+    } else if has(K::KwExpert) {
+        tokens
+            .iter()
+            .find(|t| t.kind() == K::String)
+            .map(|t| NumericBasis::Expert(t.text().trim_matches('"').to_owned()))
     } else if has(K::KwPlaceholder) {
         Some(NumericBasis::Placeholder)
     } else {

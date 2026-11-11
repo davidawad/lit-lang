@@ -24,6 +24,28 @@ impl Cx<'_, '_> {
                     .note("it says where the numbers of this node or edge come from"),
             );
         }
+        if let Some(Basis::CalibratedSet { set }) = &basis {
+            let r = crate::db::parse::tree::RefPath {
+                head: crate::db::parse::tree::Name {
+                    text: set.clone(),
+                    range: x.range,
+                },
+                instance: None,
+                rest: Vec::new(),
+                version: None,
+                range: x.range,
+            };
+            let known = self.ck.scope.value(&r).is_ok_and(|(_, found)| {
+                matches!(found.item.kind, crate::resolve::sig::ValueKind::Calibration)
+            });
+            if !known {
+                self.report(Report::new(
+                    C::NumericProvenanceIncomplete,
+                    x.range,
+                    format!("basis names no calibration set `{set}` in scope"),
+                ));
+            }
+        }
         basis
     }
 }
@@ -36,6 +58,9 @@ fn shape(x: &Expr) -> Option<Basis> {
     };
     match &x.kind {
         ExprKind::Ref(r) if r.is_simple() && r.head.text == "estimate" => Some(Basis::Estimate),
+        ExprKind::Ref(r) if r.is_simple() && r.head.text == "placeholder" => {
+            Some(Basis::Placeholder)
+        }
         ExprKind::Call(callee, args) if callee.is_simple() => {
             match (callee.head.text.as_str(), args.as_slice()) {
                 ("expert", [name]) => text(name).map(|name| Basis::Expert { name }),
@@ -43,6 +68,12 @@ fn shape(x: &Expr) -> Option<Basis> {
                     (Some(dataset), ExprKind::Date(as_of)) => Some(Basis::Calibrated {
                         dataset,
                         as_of: as_of.clone(),
+                    }),
+                    _ => None,
+                },
+                ("calibrated", [set]) => match &set.kind {
+                    ExprKind::Ref(r) if r.is_simple() => Some(Basis::CalibratedSet {
+                        set: r.head.text.clone(),
                     }),
                     _ => None,
                 },

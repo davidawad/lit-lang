@@ -93,6 +93,11 @@ pub enum Basis {
         /// Its date.
         as_of: String,
     },
+    /// `calibrated(set-id)`: a named calibration declaration.
+    CalibratedSet {
+        /// Calibration set identifier.
+        set: String,
+    },
     /// `expert("name")`: a named expert's judgment.
     Expert {
         /// Who.
@@ -100,6 +105,8 @@ pub enum Basis {
     },
     /// `estimate`: a working estimate, said so.
     Estimate,
+    /// An explicitly provisional placeholder.
+    Placeholder,
 }
 
 /// Provenance of one authored scalar number.
@@ -108,30 +115,10 @@ pub enum Basis {
 pub struct NumberProvenance {
     /// Source class, absent when only a vintage is authored.
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub basis: Option<NumberBasis>,
+    pub basis: Option<Basis>,
     /// Date associated with an estimate or placeholder.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub vintage: Option<String>,
-}
-
-/// Typed basis of an authored number.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = "kind", rename_all = "snake_case")]
-pub enum NumberBasis {
-    /// `calibrated(set-id)`.
-    Calibrated {
-        /// Calibration set id.
-        set: String,
-    },
-    /// `sourced("cite")`.
-    Sourced {
-        /// Citation text.
-        cite: String,
-    },
-    /// `estimate`.
-    Estimate,
-    /// `placeholder`.
-    Placeholder,
 }
 
 /// Display valence of a node or edge.

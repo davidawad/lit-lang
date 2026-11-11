@@ -16,12 +16,17 @@ pub(super) fn numeric_provenance(f: Option<&&Field>) -> Option<crate::hir::Numbe
         _ => None,
     })?;
     let basis = provenance.basis.as_ref().map(|basis| match basis {
-        ItemBasis::Calibrated(set) => crate::hir::NumberBasis::Calibrated {
+        ItemBasis::Calibrated(set) => crate::hir::Basis::CalibratedSet {
             set: set.text.clone(),
         },
-        ItemBasis::Sourced(cite) => crate::hir::NumberBasis::Sourced { cite: cite.clone() },
-        ItemBasis::Estimate => crate::hir::NumberBasis::Estimate,
-        ItemBasis::Placeholder => crate::hir::NumberBasis::Placeholder,
+        ItemBasis::CalibratedDated(dataset, as_of) => crate::hir::Basis::Calibrated {
+            dataset: dataset.clone(),
+            as_of: as_of.clone(),
+        },
+        ItemBasis::Sourced(cite) => crate::hir::Basis::Sourced { cite: cite.clone() },
+        ItemBasis::Expert(name) => crate::hir::Basis::Expert { name: name.clone() },
+        ItemBasis::Estimate => crate::hir::Basis::Estimate,
+        ItemBasis::Placeholder => crate::hir::Basis::Placeholder,
     });
     Some(crate::hir::NumberProvenance {
         basis,

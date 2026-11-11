@@ -181,8 +181,12 @@ pub struct NumericProvenance {
 pub enum NumericBasis {
     /// `calibrated(set-id)`.
     Calibrated(Name),
+    /// `calibrated("dataset", date)`.
+    CalibratedDated(String, String),
     /// `sourced("cite")`.
     Sourced(String),
+    /// `expert("name")`.
+    Expert(String),
     /// `estimate`.
     Estimate,
     /// `placeholder`.

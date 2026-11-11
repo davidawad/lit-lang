@@ -444,7 +444,22 @@ mod tests {
         let built = |dir: &str, file: &str| {
             std::fs::read_to_string(std::path::Path::new(dir).join(file)).unwrap_or_default()
         };
-        let read = |file: &str| built(litgraph_packs::PACKS_DIR, file);
+        let read = |file: &str| {
+            let text = built(litgraph_packs::PACKS_DIR, file);
+            let mut value: serde_json::Value = serde_json::from_str(&text).unwrap_or_default();
+            for edge in value["edges"].as_array_mut().into_iter().flatten() {
+                let Some(deadline) = edge
+                    .get_mut("deadline")
+                    .and_then(serde_json::Value::as_object_mut)
+                else {
+                    continue;
+                };
+                for key in ["extensions", "extendable", "extensionAuthority"] {
+                    deadline.remove(key);
+                }
+            }
+            value.to_string()
+        };
         // These packages use only edge-window shapes the importer can spell;
         // FRCP/FRAP grants are refused by design until the source language
         // has a lossless spelling for their deadline-level grants.

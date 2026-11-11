@@ -21,13 +21,13 @@ fn sorts_imports_and_separates_items() {
 }
 
 #[test]
-fn derived_edge_ids_are_omitted_but_custom_ids_remain() {
+fn explicit_ids_remain_even_when_they_match_the_derived_form() {
     let out = fmt(
         "module m\nstate from: \"From\" {\n  edge-from-alone \"A\" -> alone\n  custom \"B\" -> to\n  \"C\" -> end\n}\n",
     );
     assert_eq!(
         out,
-        "module m\n\nstate from: \"From\" { \"A\" -> alone, custom \"B\" -> to, \"C\" -> end }\n"
+        "module m\n\nstate from: \"From\" { edge-from-alone \"A\" -> alone, custom \"B\" -> to, \"C\" -> end }\n"
     );
 }
 
@@ -42,24 +42,24 @@ fn anonymous_marker_stays_distinct_from_an_omitted_edge_id() {
 }
 
 #[test]
-fn parallel_derived_edge_ids_number_every_edge_from_one() {
+fn explicit_parallel_ids_remain_when_they_match_the_derived_form() {
     let out = fmt(
         "module m\nstate from: \"From\" {\n  edge-from-to-1 \"A\" -> to\n  edge-from-to-2 \"B\" -> to\n}\n",
     );
     assert_eq!(
         out,
-        "module m\n\nstate from: \"From\" { \"A\" -> to, \"B\" -> to }\n"
+        "module m\n\nstate from: \"From\" { edge-from-to-1 \"A\" -> to, edge-from-to-2 \"B\" -> to }\n"
     );
 }
 
 #[test]
-fn parallel_edge_id_elision_is_stable_and_formatting_is_idempotent() {
+fn explicit_parallel_edge_ids_are_stable_and_formatting_is_idempotent() {
     let source =
         "module m\nstate from: \"From\" {\n  edge-from-to-1 \"A\" -> to\n  \"B\" -> to\n}\n";
     let out = fmt(source);
     assert_eq!(
         out,
-        "module m\n\nstate from: \"From\" { \"A\" -> to, \"B\" -> to }\n"
+        "module m\n\nstate from: \"From\" { edge-from-to-1 \"A\" -> to, \"B\" -> to }\n"
     );
     assert_eq!(fmt(&out), out);
 }

@@ -23,7 +23,33 @@ fn with_pack(name: &str) -> PathBuf {
         dir.join("p.json"),
     )
     .unwrap();
+    legacy_pack(&dir.join("p.json"));
     dir
+}
+
+fn legacy_pack(path: &Path) {
+    let mut pack: Value = serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
+    for edge in pack["edges"].as_array_mut().into_iter().flatten() {
+        let Some(edge) = edge.as_object_mut() else {
+            continue;
+        };
+        if edge
+            .get("deadline")
+            .and_then(|d| d.get("designated"))
+            .is_some()
+        {
+            edge.remove("deadline");
+        } else if let Some(deadline) = edge.get_mut("deadline").and_then(Value::as_object_mut) {
+            for key in ["extensions", "extendable", "extensionAuthority"] {
+                deadline.remove(key);
+            }
+        }
+    }
+    write(
+        path.parent().unwrap(),
+        path.file_name().unwrap().to_str().unwrap(),
+        &pack,
+    );
 }
 
 /// `dir/p.json`, the built frcp pack without its extension grants and
@@ -43,7 +69,9 @@ fn legacy_frcp(dir: &Path) {
         {
             edge.remove("deadline");
         } else if let Some(d) = edge.get_mut("deadline").and_then(Value::as_object_mut) {
-            d.remove("extensions");
+            for key in ["extensions", "extendable", "extensionAuthority"] {
+                d.remove(key);
+            }
         }
     }
     write(dir, "p.json", &pack);

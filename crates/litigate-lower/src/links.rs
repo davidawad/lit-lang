@@ -325,8 +325,17 @@ fn patch(cx: &EdgeCx<'_, '_>, sink: &mut Sink, p: &hir::EdgePatch, base: &RawEdg
     let mut out = Map::new();
     for (key, _) in written.iter().filter(|(_, w)| *w) {
         let mut value = lowered.get(*key).cloned().unwrap_or_else(|| empty(key));
+        if key == &"deadline" {
+            if let Some(deadline) = value.as_object_mut() {
+                deadline.remove("extendable");
+                deadline.remove("extensionAuthority");
+            }
+        }
         if let (Value::Object(new), Some(Value::Object(old))) = (&mut value, base.get(*key)) {
-            for member in old.keys() {
+            for (member, old_value) in old {
+                if old_value.is_null() {
+                    continue;
+                }
                 new.entry(member.clone()).or_insert(Value::Null);
             }
         }

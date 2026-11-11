@@ -81,6 +81,28 @@ pub fn legacy(text: &str) -> String {
             }
         }
     }
+    if let Some(instances) = doc
+        .get_mut("instances")
+        .and_then(serde_json::Value::as_object_mut)
+    {
+        for instance in instances.values_mut() {
+            if let Some(patches) = instance
+                .get_mut("patch_edges")
+                .and_then(serde_json::Value::as_object_mut)
+            {
+                for patch in patches.values_mut() {
+                    if let Some(deadline) = patch
+                        .get_mut("deadline")
+                        .and_then(serde_json::Value::as_object_mut)
+                    {
+                        for key in ["extensions", "extendable", "extensionAuthority"] {
+                            deadline.remove(key);
+                        }
+                    }
+                }
+            }
+        }
+    }
     doc.to_string()
 }
 

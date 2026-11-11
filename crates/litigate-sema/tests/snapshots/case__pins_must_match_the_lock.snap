@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-sema/tests/case.rs
+assertion_line: 394
 expression: table
 ---
 {
@@ -7,6 +8,6 @@ expression: table
         "2:6 L1007 `frcp-rule12-example` is not pinned: the matter has no Lit.lock\n    note: run `litigate lock` to pin the packages this matter uses",
     ],
     "stale digest": [
-        "2:6 L1007 `uses frcp-rule12-example` does not match its pin\n    note: Lit.lock pins frcp-rule12-example 0.1.0 sha256:0000000000000000000000000000000000000000000000000000000000000000, but the loaded package is 0.1.0 sha256:ebcce373511748e44bfe55110d2f7f14d3db04a0addc865c8933da62511837d0\n    note: run `litigate lock` to pin the packages this matter uses",
+        "2:6 L1007 `uses frcp-rule12-example` does not match its pin\n    note: Lit.lock pins frcp-rule12-example 0.1.0 sha256:0000000000000000000000000000000000000000000000000000000000000000, but the loaded package is 0.1.0 sha256:de6d74a1222ff86b17e0d284c552e0e2be612026d3586fc2d0f06a63c6dccb27\n    note: run `litigate lock` to pin the packages this matter uses",
     ],
 }

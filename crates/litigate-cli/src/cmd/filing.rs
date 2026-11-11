@@ -651,6 +651,7 @@ mod tests {
             standard: None,
             motion: None,
             interpretation: None,
+            cite: None,
         };
         let discretionary = |window| Extension::Discretionary {
             by: "court".into(),
@@ -658,6 +659,7 @@ mod tests {
             window,
             motion: None,
             interpretation: None,
+            cite: None,
         };
         let windows: Vec<Option<Value>> = [
             bounded(false),

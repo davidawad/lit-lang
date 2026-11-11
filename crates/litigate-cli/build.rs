@@ -128,7 +128,12 @@ fn hash_root_files(root: &Path, hash: &mut Sha256) {
 }
 
 fn hash_build_environment(hash: &mut Sha256) {
-    for name in ["TARGET", "PROFILE"] {
+    for name in [
+        "TARGET",
+        "PROFILE",
+        "CARGO_CFG_TARGET_OS",
+        "CARGO_CFG_TARGET_ARCH",
+    ] {
         hash_environment_value(hash, name);
     }
     let mut features: Vec<_> = std::env::vars()
@@ -143,8 +148,13 @@ fn hash_build_environment(hash: &mut Sha256) {
 
 fn hash_environment_value(hash: &mut Sha256, name: &str) {
     println!("cargo:rerun-if-env-changed={name}");
-    let value = std::env::var(name).unwrap_or_default();
-    hash_named(hash, name, value.as_bytes());
+    match std::env::var_os(name) {
+        Some(value) => {
+            hash_named(hash, name, b"set:");
+            hash_named(hash, name, value.to_string_lossy().as_bytes());
+        }
+        None => hash_named(hash, name, b"unset"),
+    }
 }
 
 fn hash_rustc(hash: &mut Sha256) {

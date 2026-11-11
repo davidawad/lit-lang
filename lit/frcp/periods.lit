@@ -419,6 +419,7 @@ deadline jury-demand-period: 14.days after LastPleadingServed() counted_by frcp6
 deadline jmol-renewal-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 50(b)"
 {
   lock against [LocalRule, StandingOrder, CaseOrder] cite "FRCP 6(b)(2)"
+  extend { never cite "FRCP 6(b)(2)" }
 }
 
 /// Rule 59(b): a new-trial motion is due 28 days after entry of judgment;
@@ -427,6 +428,7 @@ deadline jmol-renewal-period: 28.days after JudgmentEntered() counted_by frcp6 e
 deadline new-trial-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 59(b)"
 {
   lock against [LocalRule, StandingOrder, CaseOrder] cite "FRCP 6(b)(2)"
+  extend { never cite "FRCP 6(b)(2)" }
 }
 
 /// Rule 59(e): a motion to alter or amend the judgment is due 28 days after
@@ -435,6 +437,7 @@ deadline new-trial-period: 28.days after JudgmentEntered() counted_by frcp6 effe
 deadline alter-amend-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 59(e)"
 {
   lock against [LocalRule, StandingOrder, CaseOrder] cite "FRCP 6(b)(2)"
+  extend { never cite "FRCP 6(b)(2)" }
 }
 
 /// Rule 60(c)(1): a Rule 60(b)(1)-(3) motion is due "no more than a year
@@ -444,6 +447,7 @@ deadline alter-amend-period: 28.days after JudgmentEntered() counted_by frcp6 ef
 deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by frcp6 effective [2007-12-01, ..) cite "FRCP 60(c)(1)"
 {
   lock against [LocalRule, StandingOrder, CaseOrder] cite "FRCP 6(b)(2)"
+  extend { never cite "FRCP 6(b)(2)" }
 }
 
 /// FRAP 4(a)(1)(A) before the 2009 amendments, as the 2002 edition of 28

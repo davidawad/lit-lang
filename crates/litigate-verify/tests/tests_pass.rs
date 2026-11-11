@@ -104,7 +104,7 @@ fn l9011_fix_is_machine_applicable_and_generates_a_passing_counting_test() {
     );
     let replacement = &fix.edits[0].replacement;
     assert!(!replacement.contains('<'));
-    assert!(replacement.contains("naive") == false);
+    assert!(!replacement.contains("naive"));
     let mut applied = source.clone();
     applied.push_str(replacement);
     let checked = verify_one(&applied, Profile::Strict);

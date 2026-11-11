@@ -188,6 +188,7 @@ pub fn check_session_with(
 /// resolved references are fully qualified strings; walking the serialized
 /// HIR fields includes references nested in expressions, rules, and package
 /// declarations without treating labels or prose as references.
+#[allow(clippy::too_many_lines)] // Keep the dependency-hole closure in one auditable pass.
 fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
     use litigate_sema::hir::{Declaration as D, Package};
 
@@ -201,13 +202,18 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
             D::Default(x) => Some(&x.meta),
             D::Exception(x) => Some(&x.meta),
             D::Transition(x) => Some(&x.meta),
-            D::TypeAlias(_) | D::Enum(_) | D::Event(_) | D::Test(_) => None,
             D::Grant(x) => Some(&x.meta),
             D::Limit(x) => Some(&x.meta),
             D::Recharacterize(x) => Some(&x.meta),
             D::Invalidate(x) => Some(&x.meta),
             D::Calibration(x) => Some(&x.meta),
-            D::Authority(_) | D::Link(_) | D::Instance(_) => None,
+            D::TypeAlias(_)
+            | D::Enum(_)
+            | D::Event(_)
+            | D::Test(_)
+            | D::Authority(_)
+            | D::Link(_)
+            | D::Instance(_) => None,
         }
     }
     fn declarations(p: &Package) -> Vec<&D> {

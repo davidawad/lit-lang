@@ -19,6 +19,7 @@ fn blocks(text: &str, lang: &str) -> Vec<String> {
 }
 
 #[test]
+#[allow(clippy::too_many_lines)] // The tutorial is verified as one end-to-end walkthrough.
 fn the_tutorial_runs_as_written() {
     let text = std::fs::read_to_string(repo().join("docs/litigate/TUTORIAL.md")).unwrap();
     let (toml, lit) = (blocks(&text, "toml"), blocks(&text, "lit"));

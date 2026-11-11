@@ -63,6 +63,13 @@ fn main() {
 /// A deterministic identity of compiler inputs, computed while building
 /// instead of hashing the hundreds-of-megabytes executable on every run.
 fn fingerprint(root: &Path) -> String {
+    fn update(hash: &mut Sha256, name: &str, bytes: &[u8]) {
+        hash.update((name.len() as u64).to_be_bytes());
+        hash.update(name.as_bytes());
+        hash.update((bytes.len() as u64).to_be_bytes());
+        hash.update(bytes);
+    }
+
     fn visit(root: &Path, dir: &Path, hash: &mut Sha256) {
         let Ok(read) = std::fs::read_dir(dir) else {
             return;
@@ -74,38 +81,86 @@ fn fingerprint(root: &Path) -> String {
         entries.sort();
         for path in entries {
             if path.is_dir() {
-                if !path
-                    .file_name()
-                    .is_some_and(|name| name.to_string_lossy().starts_with('.'))
-                {
+                let name = path.file_name().unwrap_or_default().to_string_lossy();
+                if !name.starts_with('.') && name != "target" {
                     visit(root, &path, hash);
                 }
-            } else if path
-                .extension()
-                .is_some_and(|ext| matches!(ext.to_str(), Some("rs" | "toml" | "args")))
-                || path.file_name().is_some_and(|name| name == "Cargo.lock")
-            {
+            } else if path.is_file() {
                 let relative = path.strip_prefix(root).unwrap_or(&path).to_string_lossy();
-                println!("cargo:rerun-if-changed={}", path.display());
-                let bytes = std::fs::read(&path).unwrap_or_default();
-                hash.update((relative.len() as u64).to_be_bytes());
-                hash.update(relative.as_bytes());
-                hash.update((bytes.len() as u64).to_be_bytes());
-                hash.update(bytes);
+                if let Ok(bytes) = std::fs::read(&path) {
+                    update(hash, &relative, &bytes);
+                }
             }
         }
     }
     let mut hash = Sha256::new();
-    visit(root, &root.join("crates"), &mut hash);
-    for path in [root.join("Cargo.toml"), root.join("Cargo.lock")] {
+    // Cargo watches directory mtimes recursively, including newly-created
+    // source files. Per-file watches alone miss additions.
+    // `litigate-import` links the generated tree-sitter parser from here.
+    let input_dirs = vec![
+        root.join("crates"),
+        root.join("lit"),
+        root.join("cases"),
+        root.join("sources"),
+        root.join("editors/tree-sitter-litigate/src"),
+    ];
+    for dir in &input_dirs {
+        println!("cargo:rerun-if-changed={}", dir.display());
+        visit(root, dir, &mut hash);
+    }
+    // The CLI embeds the normative spec directly; it is not under crates/.
+    for path in [
+        root.join("Cargo.toml"),
+        root.join("Cargo.lock"),
+        root.join("rust-toolchain.toml"),
+        root.join("docs/litigate/SPEC.md"),
+    ] {
+        println!("cargo:rerun-if-changed={}", path.display());
         if let Ok(bytes) = std::fs::read(&path) {
             let relative = path.strip_prefix(root).unwrap_or(&path).to_string_lossy();
-            hash.update((relative.len() as u64).to_be_bytes());
-            hash.update(relative.as_bytes());
-            hash.update((bytes.len() as u64).to_be_bytes());
-            hash.update(bytes);
-            println!("cargo:rerun-if-changed={}", path.display());
+            update(&mut hash, &relative, &bytes);
         }
+    }
+
+    for name in ["TARGET", "PROFILE"] {
+        println!("cargo:rerun-if-env-changed={name}");
+        update(
+            &mut hash,
+            name,
+            std::env::var(name).unwrap_or_default().as_bytes(),
+        );
+    }
+    let mut features: Vec<_> = std::env::vars()
+        .filter(|(name, _)| name.starts_with("CARGO_FEATURE_"))
+        .collect();
+    features.sort_by(|a, b| a.0.cmp(&b.0));
+    for (name, value) in features {
+        println!("cargo:rerun-if-env-changed={name}");
+        update(&mut hash, &name, value.as_bytes());
+    }
+    let rustc = std::env::var_os("RUSTC")
+        .and_then(|rustc| std::process::Command::new(rustc).arg("-V").output().ok())
+        .filter(|out| out.status.success())
+        .map(|out| String::from_utf8_lossy(&out.stdout).trim().to_owned())
+        .unwrap_or_default();
+    update(&mut hash, "rustc -V", rustc.as_bytes());
+
+    for name in [
+        "LITIGATE_SMT_Z3_ARCHIVE",
+        "LITIGATE_SMT_Z3_SOURCE",
+        "CC",
+        "CXX",
+        "CC_x86_64_unknown_linux_musl",
+        "CXX_x86_64_unknown_linux_musl",
+        "AR_x86_64_unknown_linux_musl",
+        "RANLIB_x86_64_unknown_linux_musl",
+    ] {
+        println!("cargo:rerun-if-env-changed={name}");
+        update(
+            &mut hash,
+            name,
+            std::env::var(name).unwrap_or_default().as_bytes(),
+        );
     }
     let mut fingerprint = String::with_capacity(64);
     for byte in hash.finalize() {

@@ -273,32 +273,47 @@ pub(crate) fn numeric_provenance(p: &mut Parser<'_>) -> bool {
         return false;
     }
     p.start(NumericProvenance);
-    if p.at_kw(KwBasis) {
-        p.bump_as(KwBasis);
-        if p.at_kw(KwCalibrated) || p.at_kw(KwSourced) {
-            let form = if p.at_kw(KwCalibrated) { KwCalibrated } else { KwSourced };
-            p.bump_as(form);
-            p.expect(LParen);
-            if form == KwCalibrated {
-                p.expect(Ident);
-            } else {
-                p.expect(String);
-            }
-            p.expect(RParen);
-        } else if p.at_kw(KwEstimate) || p.at_kw(KwPlaceholder) {
-            let form = if p.at_kw(KwEstimate) { KwEstimate } else { KwPlaceholder };
-            p.bump_as(form);
+    while p.at_kw(KwBasis) || p.at_kw(KwVintage) {
+        if p.at_kw(KwBasis) {
+            numeric_basis(p);
         } else {
-            p.error_expected(&[KwCalibrated, KwSourced, KwEstimate, KwPlaceholder]);
-            if !p.at_end() { p.bump_error(); }
+            p.bump_as(KwVintage);
+            p.expect(Date);
         }
-    }
-    if p.at_kw(KwVintage) {
-        p.bump_as(KwVintage);
-        p.expect(Date);
     }
     p.finish();
     true
+}
+
+fn numeric_basis(p: &mut Parser<'_>) {
+    p.bump_as(KwBasis);
+    if p.at_kw(KwCalibrated) || p.at_kw(KwSourced) {
+        let form = if p.at_kw(KwCalibrated) {
+            KwCalibrated
+        } else {
+            KwSourced
+        };
+        p.bump_as(form);
+        p.expect(LParen);
+        if form == KwCalibrated {
+            p.expect(Ident);
+        } else {
+            p.expect(String);
+        }
+        p.expect(RParen);
+    } else if p.at_kw(KwEstimate) || p.at_kw(KwPlaceholder) {
+        let form = if p.at_kw(KwEstimate) {
+            KwEstimate
+        } else {
+            KwPlaceholder
+        };
+        p.bump_as(form);
+    } else {
+        p.error_expected(&[KwCalibrated, KwSourced, KwEstimate, KwPlaceholder]);
+        if !p.at_end() {
+            p.bump_error();
+        }
+    }
 }
 
 /// `ProbValue = Number ["/" Number] | Hole | "(" Expr ")"`.

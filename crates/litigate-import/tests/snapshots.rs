@@ -145,13 +145,23 @@ fn invalid_documents_are_reported_at_their_position() {
         Input::new("packs/other.json", "{\"hello\": 1}"),
         pack_with(|p| p["edges"][0]["replaces"] = json!(["x::y"])),
         Input::new("packs/q.json", pack_with(|p| p["id"] = json!("q")).text),
-        Input::new(
-            "scenarios/s.json",
-            json!({"id": "s", "summary": "S", "packs": ["q"], "sources": [{"title": "T", "as_of": "x"}],
-                   "scenario": {"start": "q::a", "perspective": {"applicant": "self"}}})
-            .to_string(),
-        ),
     ];
     let diagnostics = import(&inputs).err().unwrap_or_default();
     insta::assert_snapshot!(serde_json::to_string_pretty(&diagnostics).unwrap_or_default());
+}
+
+#[test]
+fn explicit_perspective_equal_to_package_role_is_preserved() {
+    let inputs = [
+        pack_with(|p| p["id"] = json!("q")),
+        Input::new(
+            "scenarios/s.json",
+            json!({"id": "s", "summary": "S", "packs": ["q"], "sources": [{"title": "T", "as_of": "x"}],
+                   "scenario": {"perspective": {"applicant": "self"}}})
+            .to_string(),
+        ),
+    ];
+    let files = import(&inputs).unwrap_or_else(|d| panic!("{d:?}"));
+    let case = files.files.iter().find(|f| f.path.ends_with(".case")).unwrap();
+    assert!(case.text.contains("perspective { applicant: self }"), "{}", case.text);
 }

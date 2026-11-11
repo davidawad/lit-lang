@@ -38,39 +38,5 @@ expression: "serde_json::to_string_pretty(&diagnostics).unwrap_or_default()"
       "end_col": 1
     },
     "message": "parse: pack p: edge a->b uses `replaces`, which is only valid in links.json"
-  },
-  {
-    "code": "L6002",
-    "severity": "error",
-    "span": {
-      "file": "scenarios/s.json",
-      "line": 1,
-      "col": 1,
-      "end_line": 1,
-      "end_col": 1
-    },
-    "message": "an explicit start equal to the package start lowers to no start (SPEC §8.3)",
-    "notes": [
-      {
-        "message": "at JSON pointer `/scenario/start`"
-      }
-    ]
-  },
-  {
-    "code": "L6002",
-    "severity": "error",
-    "span": {
-      "file": "scenarios/s.json",
-      "line": 1,
-      "col": 1,
-      "end_line": 1,
-      "end_col": 1
-    },
-    "message": "a perspective entry equal to the package role lowers to nothing (SPEC §8.3)",
-    "notes": [
-      {
-        "message": "at JSON pointer `/scenario/perspective/applicant`"
-      }
-    ]
   }
 ]

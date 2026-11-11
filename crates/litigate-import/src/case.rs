@@ -155,19 +155,12 @@ fn source_text(
 
 fn perspective(
     roles: &BTreeMap<String, Role>,
-    primary: Option<&Pack>,
     issues: &mut Issues,
 ) -> String {
     let entries: Vec<String> = roles
         .iter()
         .map(|(actor, role)| {
             let at = format!("/scenario/perspective/{actor}");
-            if primary.and_then(|p| p.roles.get(actor)) == Some(role) {
-                issues.report(
-                    &at,
-                    "a perspective entry equal to the package role lowers to nothing (SPEC §8.3)",
-                );
-            }
             format!("{}: {}", issues.ident(actor, &at, false), role_name(*role))
         })
         .collect();
@@ -353,7 +346,7 @@ fn posture(named: &NamedScenario, primary: Option<&Pack>, issues: &mut Issues) -
         out.push(format!("start {start}"));
     }
     if !scenario.perspective.is_empty() {
-        out.push(perspective(&scenario.perspective, primary, issues));
+        out.push(perspective(&scenario.perspective, issues));
     }
     if !named.parties.is_empty() {
         out.push(parties(named, issues));

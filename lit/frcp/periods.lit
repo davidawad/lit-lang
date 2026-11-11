@@ -156,7 +156,7 @@ deadline service-period: 120.days after ComplaintFiled() counted_by frcp6 effect
   op set
 } cite "FRCP (2011 ed.) 4(m)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(ServicePeriod) }
   extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(ServicePeriod) }
 }
@@ -173,7 +173,7 @@ deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effecti
   op set
 } cite "FRCP (2015 ed.) 4(m)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(ServicePeriod) }
   extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(ServicePeriod) }
 }
@@ -183,7 +183,7 @@ deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effecti
   op set
 } cite "FRCP 4(m)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(ServicePeriod) }
   extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(ServicePeriod) }
 }
@@ -196,7 +196,7 @@ deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effecti
 /// unchanged.
 deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp6 effective [2009-12-01, 2024-12-01) cite "FRCP (2011 ed.) 12(a)(1)(A)(ii)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(WaiverAnswerPeriod) }
   extend {
     by court
@@ -208,7 +208,7 @@ deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp
 
 deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp6 effective [2024-12-01, ..) supersedes waiver-answer-period@2009-12-01 cite "FRCP 12(a)(1)(A)(ii)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(WaiverAnswerPeriod) }
   extend {
     by court
@@ -229,7 +229,7 @@ deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective
   op set
 } cite "FRCP (2011 ed.) 12(a)(1)(A)(i)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(AnswerPeriod) }
   extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(AnswerPeriod) }
 }
@@ -239,7 +239,7 @@ deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective
   op set
 } cite "FRCP 12(a)(1)(A)(i)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(AnswerPeriod) }
   extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(AnswerPeriod) }
 }
@@ -264,7 +264,7 @@ deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_
   op set
 } cite "FRCP 81(c)(2)(A)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(RemovedAnswerPeriod) }
   extend {
     by court
@@ -284,7 +284,7 @@ deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frc
   op set
 } cite "FRCP (2011 ed.) 12(a)(4)(A)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(DenialAnswerPeriod) }
   extend {
     by court
@@ -299,7 +299,7 @@ deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frc
   op set
 } cite "FRCP 12(a)(4)(A)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(DenialAnswerPeriod) }
   extend {
     by court
@@ -319,7 +319,7 @@ deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frc
 /// App. prints it).
 deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed() counted_by frcp6 effective [2009-12-01, 2023-12-01) cite "FRCP (2011 ed.) 15(a)(1)(B)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(AmendmentAsOfCoursePeriod) }
   extend {
     by court
@@ -331,7 +331,7 @@ deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed()
 
 deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed() counted_by frcp6 effective [2023-12-01, ..) supersedes amendment-as-of-course-period@2009-12-01 cite "FRCP 15(a)(1)(B)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(AmendmentAsOfCoursePeriod) }
   extend {
     by court
@@ -352,7 +352,7 @@ deadline amended-response-period: 14.days after AmendedPleadingServed() counted_
   op set
 } cite "FRCP (2011 ed.) 15(a)(3)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(AmendedResponsePeriod) }
   extend {
     by court
@@ -367,7 +367,7 @@ deadline amended-response-period: 14.days after AmendedPleadingServed() counted_
   op set
 } cite "FRCP 15(a)(3)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(AmendedResponsePeriod) }
   extend {
     by court
@@ -385,7 +385,7 @@ deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counte
   op set
 } cite "FRCP 26(a)(1)(C)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(InitialDisclosurePeriod) }
   extend {
     by court
@@ -403,7 +403,7 @@ deadline jury-demand-period: 14.days after LastPleadingServed() counted_by frcp6
   op set
 } cite "FRCP 38(b)(1)"
 {
-  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   extend { by court, discretion GoodCause, on ExtensionMoved(JuryDemandPeriod) }
   extend {
     by court

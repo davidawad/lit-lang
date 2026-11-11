@@ -2896,7 +2896,7 @@ Anything without a lowering is L6001.
 | `deadline N.unit {…}` | same, from the literal; `unit` omitted for calendar days, `"court"` for court days; business days are L6001 |
 | `duration` | `RawEdge.duration {min, mode, max}` (a single duration is `{mode}`) |
 | `valence`, `court_listener_url`, `action_id`, `note`, `tags`, `attrs`, `sets`, `clears`, `requires`, `forbids`, `spawn`, `joins` | same-named `RawEdge` fields (`spawn` and `joins` as local node ids; the engine expands the markings they reach, §5.6) |
-| node or edge `basis` | `lowered.basis[]` `{pointer: "/nodes/i" \| "/edges/i", basis, source}`: `sourced` with the cite, `calibrated` with `dataset@date`, `expert` with the name, `estimate`; a link's at `/links/i` |
+| node or edge `basis` | `lowered.basis[]` `{pointer, basis, source?, vintage?}`: object pointers `/nodes/i`, `/edges/i`, `/links/i`; a numeric suffix points to its value, such as `/nodes/i/payoff` or `/edges/i/probability` |
 | `counting` / `calendar` | `Pack.counting` (the rule id) plus a clock-library fragment (§8.2) |
 | `event`, authority lattice, relations, defaults, exceptions, transitions, tests, types, recharacterizations, invalidations | not emitted (verification only) |
 

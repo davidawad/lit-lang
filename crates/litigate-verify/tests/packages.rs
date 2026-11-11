@@ -196,7 +196,7 @@ fn cite_resolves_checks_edge_authorities() {
 fn cite_resolves_checks_sourced_bases() {
     let lit = edit(
         "{ event Answered(complaint), within answer-period }",
-        "{ event Answered(complaint), within answer-period, basis sourced(\"FRCP 98(a)\") }",
+        "{ event Answered(complaint), within answer-period, basis sourced(\"FRCP 98(a)\"), effort 2.hours basis sourced(\"FRCP 4(d)(2)\") }",
     )
     .replacen(
         "{ payoff 0.usd }",
@@ -212,7 +212,9 @@ fn cite_resolves_checks_sourced_bases() {
     let found = outcome(&c, Obligation::CiteResolves);
     let text = serde_json::to_string(&found).unwrap_or_default();
     assert!(
-        text.contains("FRCP 98(a)") && text.contains("FRCP 97(a)"),
+        text.contains("FRCP 98(a)")
+            && text.contains("FRCP 97(a)")
+            && text.contains("FRCP 4(d)(2)"),
         "{text}"
     );
 }

@@ -104,7 +104,7 @@ pub(crate) fn number_label(
             source: None,
             vintage: None,
         },
-        |basis| crate::basis::label(pointer, basis),
+        |basis| crate::basis::label(pointer.clone(), basis),
     );
     label.vintage.clone_from(&value.vintage);
     (value.basis.is_some() || value.vintage.is_some()).then_some(label)
@@ -410,6 +410,55 @@ mod tests {
                 .unwrap(),
             serde_json::json!({"pointer":"/edges/0/probability","basis":"sourced","source":"FRCP 1","vintage":"2026-01-01"})
         );
+    }
+
+    #[test]
+    fn every_basis_form_uses_the_lowered_lattice_and_value_pointer() {
+        let cases = [
+            (
+                hir::Basis::Sourced {
+                    cite: "FRCP 1".into(),
+                },
+                litigate_engine::model::Basis::Sourced,
+            ),
+            (
+                hir::Basis::Calibrated {
+                    dataset: "docket".into(),
+                    as_of: "2026-01-01".into(),
+                },
+                litigate_engine::model::Basis::Calibrated,
+            ),
+            (
+                hir::Basis::CalibratedSet {
+                    set: "docket".into(),
+                },
+                litigate_engine::model::Basis::Calibrated,
+            ),
+            (
+                hir::Basis::Expert {
+                    name: "Jane Roe".into(),
+                },
+                litigate_engine::model::Basis::Expert,
+            ),
+            (
+                hir::Basis::Estimate,
+                litigate_engine::model::Basis::Estimate,
+            ),
+            (
+                hir::Basis::Placeholder,
+                litigate_engine::model::Basis::Placeholder,
+            ),
+        ];
+        for (basis, expected) in cases {
+            let value = hir::NumberProvenance {
+                basis: Some(basis),
+                vintage: Some("2026-01-01".into()),
+            };
+            let label = number_label("/edges/0/probability".into(), &value).unwrap();
+            assert_eq!(label.pointer, "/edges/0/probability");
+            assert_eq!(label.basis, expected);
+            assert_eq!(label.vintage.as_deref(), Some("2026-01-01"));
+        }
     }
 
     fn delegation(op: hir::DelegatedOp) -> hir::Delegation {

@@ -146,6 +146,26 @@ fn basis_on_newline_or_after_comma_remains_object_level() {
         .values
         .iter()
         .any(|(a, _)| matches!(a, Atom::NumericProvenance(_)))));
+    let formatted =
+        litigate_syntax::format::format(source, litigate_syntax::FileKind::Lit).unwrap();
+    let reparsed = parse(&formatted);
+    assert!(reparsed.reports.is_empty(), "{:?}", reparsed.reports);
+    let ItemKind::Node(after) = &reparsed.tree.items[0].kind else {
+        panic!("node")
+    };
+    assert!(after.edges[0].fields.iter().any(|f| f.key.text == "basis"));
+    assert!(!after.edges[0].fields.iter().any(|f| f
+        .values
+        .iter()
+        .any(|(a, _)| matches!(a, Atom::NumericProvenance(_)))));
+    let ItemKind::Node(after_terminal) = &reparsed.tree.items[1].kind else {
+        panic!("node")
+    };
+    assert!(after_terminal.fields.iter().any(|f| f.key.text == "basis"));
+    assert!(!after_terminal.fields.iter().any(|f| f
+        .values
+        .iter()
+        .any(|(a, _)| matches!(a, Atom::NumericProvenance(_)))));
 }
 
 #[test]

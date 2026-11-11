@@ -202,6 +202,39 @@ fn a_scenario_joins_every_number_it_rests_on() {
     assert_eq!(scenario_basis(&pkg, &case), at(Basis::Calibrated));
 }
 
+#[test]
+fn a_placeholder_number_is_the_scenario_label() {
+    let mut pkg = example();
+    for declaration in decls_mut(&mut pkg) {
+        if let Declaration::Node(node) = declaration {
+            node.attrs.clear();
+            if let hir::NodeKind::Terminal { payoff, .. } = &mut node.kind {
+                *payoff = None;
+            }
+            for edge in &mut node.edges {
+                edge.probability = None;
+                edge.cost = None;
+                edge.hours = None;
+                edge.duration = None;
+                edge.attrs.clear();
+            }
+        }
+    }
+    let terminal = node_mut(&mut pkg, "dismissed");
+    let hir::NodeKind::Terminal { payoff, .. } = &mut terminal.kind else {
+        panic!("terminal")
+    };
+    *payoff = Some(Authored::Known(usd(0)));
+    terminal.payoff_provenance = Some(hir::NumberProvenance {
+        basis: Some(hir::Basis::Placeholder),
+        vintage: Some("2026-01-01".into()),
+    });
+    assert_eq!(
+        scenario_basis(&pkg, &acme()),
+        vec![label("/scenario", Basis::Placeholder, None)]
+    );
+}
+
 /// An edge whose only number is a cost, or a duration, rests on it: the
 /// scenario's join reads it as an estimate like any unlabelled number.
 #[test]

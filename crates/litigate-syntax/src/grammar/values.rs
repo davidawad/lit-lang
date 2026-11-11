@@ -275,14 +275,14 @@ pub(crate) fn numeric_provenance(p: &mut Parser<'_>) -> bool {
         return false;
     }
     p.start(NumericProvenance);
-    while p.at_kw(KwBasis) {
+    while p.at_kw(KwBasis) && !p.newline_before() {
         numeric_basis(p);
     }
     while p.at_kw(KwVintage) && !p.newline_before() {
         p.bump_as(KwVintage);
         p.expect(Date);
     }
-    if p.at_kw(KwBasis) {
+    if p.at_kw(KwBasis) && !p.newline_before() {
         p.error_expected(&[RBrace]);
         p.bump_error();
     }

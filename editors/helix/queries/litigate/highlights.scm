@@ -43,6 +43,7 @@
 ] @keyword
 
 (discretion) @keyword
+"discretion" @keyword
 (repealed_clause) @keyword
 
 ; These words are keywords only in typed guard operations, never in expressions.

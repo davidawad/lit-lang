@@ -63,7 +63,7 @@ use serde::Serialize;
 use std::time::Instant;
 
 fn timed<T>(package: &str, phase: &str, f: impl FnOnce() -> T) -> T {
-    if !std::env::var_os("LITIGATE_PHASE_TIMINGS").is_some_and(|value| value == "1") {
+    if std::env::var_os("LITIGATE_PHASE_TIMINGS").is_none_or(|value| value != "1") {
         return f();
     }
     let started = Instant::now();

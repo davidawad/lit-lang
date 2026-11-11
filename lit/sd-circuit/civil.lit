@@ -2,7 +2,7 @@ module sd-circuit-court-civil.civil
 
 start complaint-filed
 
-state complaint-filed: "Action commenced" by applicant cite "SDCL 15-6-3"
+state complaint-filed: "Action commenced" by plaintiff cite "SDCL 15-6-3"
 {
   note "A civil action is commenced as provided in SDCL 15-2-30 and 15-2-31, which are not vendored. The summons requires an answer within thirty days after its service, exclusive of the day of service (SDCL 15-6-4(a)); a complaint need not be served with it (SDCL 15-6-4(b)). Personal service is made as SDCL 15-6-4(d) provides; SDCL 15-6-4 is vendored only by subdivision, so the service edge cites the answer period that service starts."
   edge-complaint-filed-response-due "Summons served" -> response-due {

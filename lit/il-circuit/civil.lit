@@ -4,7 +4,7 @@ import il-state-rules.{ JudgmentEntered, NoticeOfAppealFiled }
 
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "735 ILCS 5/2-201(a)"
+state complaint-filed: "Complaint filed" by plaintiff cite "735 ILCS 5/2-201(a)"
 {
   note "Every action, unless a statute expressly provides otherwise, is commenced by filing a complaint; the clerk issues summons on the plaintiff's request, and the form of summons and process and the service of pleadings follow the rules (735 ILCS 5/2-201(a)). A plaintiff wanting a jury files the demand with the clerk when the action is commenced; a defendant, not later than the filing of its answer; otherwise the party waives a jury (735 ILCS 5/2-1105(a), alike in the text with and without P.A. 98-1132, held unconstitutional). Periods in this package are stated, not counted: Illinois computes time under the Statute on Statutes (5 ILCS 70/1.11), which is not vendored. The earlier outline said Illinois is a fact-pleading state; no vendored text states it, and its leading decision on pleading (Marshall v. Burger King Corp.) is removed: no reporter text is vendored."
   edge-complaint-filed-served "Summons served" -> response-due {
@@ -41,7 +41,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "735 ILCS 5/
   edge-pleading-motion-denied "Denied" -> case-management { authority cite "735 ILCS 5/2-615(d)" }
 }
 
-state amend: "Amended pleading" by applicant cite "735 ILCS 5/2-616(a)"
+state amend: "Amended pleading" by plaintiff cite "735 ILCS 5/2-616(a)"
 {
   note "At any time before final judgment, amendments may be allowed on just and reasonable terms, adding or dismissing parties, changing the cause of action or defense, or adding new ones (735 ILCS 5/2-616(a)). An amended claim arising from the same transaction or occurrence as the original pleading is not barred by a limitations period that had not expired when the original was filed (735 ILCS 5/2-616(b))."
   edge-amend-tested "Amended pleading tested again" -> pleading-motion {
@@ -78,7 +78,7 @@ state case-management: "Case management conference and order" by court cite "Ill
   }
 }
 
-state discovery: "Discovery" by applicant cite "Ill. S. Ct. R. 201"
+state discovery: "Discovery" by plaintiff cite "Ill. S. Ct. R. 201"
 {
   note "The parties make reasonable attempts to resolve discovery differences, and every discovery motion states that trial counsel, after personal consultation and reasonable attempts, could not reach an accord, or that opposing counsel was unavailable or unreasonable (Ill. S. Ct. R. 201(k)). Interrogatories are answered within 28 days after service (Ill. S. Ct. R. 213(d)); a production request specifies a reasonable time, not less than 28 days after service (Ill. S. Ct. R. 214); each fact or document of which admission is requested is admitted unless a sworn denial or objection is served within 28 days after service of the request (Ill. S. Ct. R. 216(c)). On unreasonable failure to comply with the discovery rules or an order under them, the court may stay proceedings, bar pleadings, claims, defenses or witnesses, enter default judgment or dismiss the action with or without prejudice, among other just orders (Ill. S. Ct. R. 219(c))."
   edge-discovery-sj "Summary judgment motion" -> summary-judgment {
@@ -120,7 +120,7 @@ state trial: "Trial by jury or by the court" by court cite "735 ILCS 5/2-1105(a)
   }
 }
 
-decision post-trial: "Post-trial motions" by applicant cite "735 ILCS 5/2-1202"
+decision post-trial: "Post-trial motions" by plaintiff cite "735 ILCS 5/2-1202"
 {
   note "In jury cases all relief after trial is sought in a single post-trial motion stating the points relied on and the relief desired, filed within 30 days after entry of judgment or discharge of a jury that reached no verdict, or within further time the court allows within the 30 days; a party failing to seek a new trial in it waives one (735 ILCS 5/2-1202(b), (c), (e)). In cases tried without a jury, a party may move for rehearing, retrial, modification or vacatur within 30 days after entry of judgment or further time allowed within the 30 days (735 ILCS 5/2-1203(a)). A post-trial motion filed in apt time stays enforcement of the judgment (735 ILCS 5/2-1202(d))."
   edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered {
@@ -129,7 +129,7 @@ decision post-trial: "Post-trial motions" by applicant cite "735 ILCS 5/2-1202"
   }
 }
 
-decision judgment-entered: "Final judgment entered" by office cite "Ill. S. Ct. R. 303(a)"
+decision judgment-entered: "Final judgment entered" by court cite "Ill. S. Ct. R. 303(a)"
 {
   note "The notice of appeal is filed with the clerk of the circuit court within 30 days after entry of the final judgment or, if a timely posttrial motion is filed, within 30 days after entry of the order disposing of the last pending postjudgment motion; a request to reconsider a ruling on a postjudgment motion does not toll the time (Ill. S. Ct. R. 303(a)(1), (2)). A judgment is not final and appealable while a Rule 137 claim remains pending unless the court makes a Rule 304(a) finding (Ill. S. Ct. R. 303(a)(1))."
   edge-judgment-entered-appeal "Notice of appeal within 30 days" -> appeal-taken {

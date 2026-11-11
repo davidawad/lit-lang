@@ -11,7 +11,7 @@ module al-criminal-trial-court.criminal
 // Garza) are removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "Ala. R. Crim. P. 4.1"
+state arrested: "Arrest or summons" by prosecution cite "Ala. R. Crim. P. 4.1"
 {
   note "Arrest by an officer and on a warrant or summons (Ala. R. Crim. P. 4.1); the initial appearance after an arrest without a warrant is Ala. R. Crim. P. 4.3(a). The period to the initial appearance is a hole: the vendored rules' currency is unconfirmed."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
@@ -38,7 +38,7 @@ decision preliminary-hearing: "Preliminary hearing or indictment" by court cite 
   }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "Ala. R. Crim. P. 14.1"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "Ala. R. Crim. P. 14.1"
 {
   note "Arraignment (Ala. R. Crim. P. 14.1). Alabama has no fixed-day speedy-trial rule: Rule 8.1 gives criminal trials priority insofar as practicable, and the constitutional standard governs; no period is stated."
   edge-arraignment-motions "Pretrial motions and discovery" -> pretrial {
@@ -46,7 +46,7 @@ state arraignment: "Arraignment and plea of not guilty" by applicant cite "Ala. 
   }
 }
 
-decision pretrial: "Pretrial motions and discovery" by applicant cite "Ala. R. Crim. P. 15.3"
+decision pretrial: "Pretrial motions and discovery" by prosecution cite "Ala. R. Crim. P. 15.3"
 {
   note "The time for pretrial motions under Rule 15.2 is Ala. R. Crim. P. 15.3(a); discovery on the defendant's written request is Ala. R. Crim. P. 16.1. Both periods are holes (currency unconfirmed)."
   edge-pretrial-granted "Charge dismissed on motion" -> dismissed {
@@ -56,7 +56,7 @@ decision pretrial: "Pretrial motions and discovery" by applicant cite "Ala. R. C
   edge-pretrial-speedy "Trial set with priority" -> trial { authority cite "Ala. R. Crim. P. 8.1" }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Ala. R. Crim. P. 14.4"
+decision plea-decision: "Plea or trial" by accused cite "Ala. R. Crim. P. 14.4"
 {
   note "The colloquy before a guilty plea is Ala. R. Crim. P. 14.4."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
@@ -91,7 +91,7 @@ decision post-trial: "Motion for new trial or in arrest of judgment" by court ci
   }
 }
 
-decision appeal-decision: "Notice of appeal within 42 days?" by applicant cite "Ala. R. App. P. 4(b)"
+decision appeal-decision: "Notice of appeal within 42 days?" by accused cite "Ala. R. App. P. 4(b)"
 {
   note "The defendant's notice of appeal is filed with the trial clerk within 42 days (six weeks) after pronouncement of the sentence, or after the denial of a motion in arrest of judgment, for new trial or for judgment of acquittal filed within 30 days from pronouncement, or after its deemed denial under Ala. R. Crim. P. 20.3(f) or 24.4; it may be oral (Ala. R. App. P. 4(b)(1))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken {

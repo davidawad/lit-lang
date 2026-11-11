@@ -16,7 +16,7 @@ import ok-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 // text of Rule 17 itself cites, as that rule reports them.
 start complaint-filed
 
-state complaint-filed: "Petition filed" by applicant cite ?("12 O.S. § 2003") {
+state complaint-filed: "Petition filed" by plaintiff cite ?("12 O.S. § 2003") {
   note "Commencement of the action is governed by the Pleading Code (12 O.S. § 2003), not vendored (lg-l6xh, #16): a hole; the vendored rules speak of the summons and petition (Okla. Dist. Ct. R. 2(b)(i)). The Pleading Code governs all proceedings in actions pending on the day it took effect, except where its application would not be feasible or would work injustice (Okla. Dist. Ct. R. 1). The person serving process states in the proof the name of the person served and the date, place and method of service (Okla. Dist. Ct. R. 2(a)). The service period and the summons (12 O.S. § 2004) are holes."
   edge-complaint-filed-service "Summons issued and served" -> service-check {
     event ActionCommenced()
@@ -24,7 +24,7 @@ state complaint-filed: "Petition filed" by applicant cite ?("12 O.S. § 2003") {
   }
 }
 
-decision service-check: "Service within the required period" by office cite ?("12 O.S. § 2004") {
+decision service-check: "Service within the required period" by court cite ?("12 O.S. § 2004") {
   note "The time to serve the summons and the consequence of failing to serve it in time are 12 O.S. § 2004, not vendored (lg-l6xh, #16): a hole. Objections to personal jurisdiction, to the issuance or service of the summons and to venue are waived if the party asks for affirmative relief on a permissive counterclaim, a crossclaim or a third-party petition; a compulsory counterclaim does not waive them (Okla. Dist. Ct. R. 3)."
   edge-service-check-served "Served" -> answer-due { authority cite "Okla. Dist. Ct. R. 2(b)" }
   edge-service-check-unserved "Not served in time" -> dismissed-unserved {
@@ -32,7 +32,7 @@ decision service-check: "Service within the required period" by office cite ?("1
   }
 }
 
-decision answer-due: "Answer, motion or default" by office cite "Okla. Dist. Ct. R. 2(b)"
+decision answer-due: "Answer, motion or default" by court cite "Okla. Dist. Ct. R. 2(b)"
 {
   note "Defendants, third-party defendants and joined parties file their responsive pleading and serve it within 20 days after being served with process, unless the time is extended by the service and filing of a motion or by the entry of an appearance; when the summons and petition are served by mail, within 20 days after receipt, or after acceptance was refused (Okla. Dist. Ct. R. 2(b)(i)). After service with the summons, papers are served on a party's attorney of record (Okla. Dist. Ct. R. 2(b)(ii)). A plaintiff may assert a claim against a third-party defendant within 20 days after service of the third-party petition, a third-party defendant against the plaintiff within 20 days after being served, and a reply to a counterclaim in an answer to a third-party petition or crossclaim is served within 20 days; later, only with leave of court (Okla. Dist. Ct. R. 4.1). The Pleading Code's own response periods (12 O.S. § 2012(A)) are not vendored (lg-l6xh, #16)."
   edge-answer-due-default "No response" -> default-entered {
@@ -79,7 +79,7 @@ state case-management: "Scheduling and pretrial conference" by court cite "Okla.
   }
 }
 
-state discovery: "Discovery" by applicant cite ?("12 O.S. § 3226") {
+state discovery: "Discovery" by plaintiff cite ?("12 O.S. § 3226") {
   note "Discovery scope and sanctions are 12 O.S. §§ 3226 and 3237, not vendored (lg-l6xh, #16): holes."
   edge-discovery-sj "Summary judgment motion served" -> sj-motion {
     authority cite "Okla. Dist. Ct. R. 13(a)"
@@ -123,12 +123,12 @@ decision post-trial: "New-trial motion decided" by court cite "Okla. Dist. Ct. R
   edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Okla. Dist. Ct. R. 17" }
 }
 
-state judgment-entered: "Judgment filed" by office cite ?("12 O.S. § 696.2") {
+state judgment-entered: "Judgment filed" by court cite ?("12 O.S. § 696.2") {
   note "The filing of the judgment and the start of the appeal time are 12 O.S. §§ 696.2-696.3 and 990A, not vendored (lg-l6xh, #16): holes. In multi-party or multi-claim cases the judgment must dispose of all claims and parties, or of at least one entirely with the express determination that there is no just reason for delay (12 O.S. § 994, as Okla. Dist. Ct. R. 13(h) reports it)."
   edge-judgment-entered-appeal "Next step" -> appeal-decision { authority cite ?("12 O.S. § 990A") }
 }
 
-decision appeal-decision: "Appeal commenced within time?" by applicant cite ?("12 O.S. § 990A") {
+decision appeal-decision: "Appeal commenced within time?" by plaintiff cite ?("12 O.S. § 990A") {
   note "How and when the appeal is commenced (12 O.S. § 990A and the Supreme Court Rules) is not vendored (lg-l6xh, #16): the form and the period are holes. The vendored rules report only that a dismissal or summary judgment is reviewed on an accelerated basis under Okla. Sup. Ct. R. 1.36, on the record Okla. Dist. Ct. R. 4(m) and 13(h) list."
   edge-appeal-decision-taken "Appeal commenced" -> appeal-taken {
     event NoticeOfAppealFiled()

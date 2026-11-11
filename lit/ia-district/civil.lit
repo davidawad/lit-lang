@@ -4,7 +4,7 @@ import ia-state-rules.{ JudgmentEntered }
 
 start commenced
 
-state commenced: "Action commenced" by applicant cite "Iowa R. Civ. P. 1.301"
+state commenced: "Action commenced" by plaintiff cite "Iowa R. Civ. P. 1.301"
 {
   note "For all purposes a civil action is commenced by filing a petition with the court; the filing date determines whether it was commenced within the limitation period (Iowa R. Civ. P. 1.301(1)). The plaintiff serves the original notice with a copy of the petition (Iowa R. Civ. P. 1.302(3)). If service is not made within 90 days after the petition is filed, the court, on motion or its own initiative after notice, dismisses without prejudice as to that party or directs another time or manner of service, and extends the time for good cause (Iowa R. Civ. P. 1.302(5)). Periods in this package are stated, not counted: time is computed under Iowa Code section 4.1(34) (Iowa R. Civ. P. 1.1801), which is not vendored, and core has no Iowa holiday calendar. The filing fee is not stated in the vendored rules."
   edge-commenced-served "Original notice and petition served" -> answer-due {
@@ -20,7 +20,7 @@ terminal dismissed-unserved: "Dismissed without prejudice for want of service" o
   note "Dismissal without prejudice as to the unserved party after notice, unless the court directs another time or manner of service or extends the time for good cause (Iowa R. Civ. P. 1.302(5))."
 }
 
-decision answer-due: "Motion, answer or default" by office cite "Iowa R. Civ. P. 1.303"
+decision answer-due: "Motion, answer or default" by court cite "Iowa R. Civ. P. 1.303"
 {
   note "Unless otherwise provided, the defendant serves, and within a reasonable time thereafter files, a motion or answer within 20 days after service of the original notice and petition; an Iowa statute fixing another time governs; a defendant served by publication answers by the date in the published notice, not less than 20 days after the last publication; and one served by mail under rule 1.306 by the date in the mailed notice, not less than 60 days after mailing (Iowa R. Civ. P. 1.303(1), (2), (4), (5)). An answer to a cross-claim and a reply to a counterclaim are served within 20 days after service (Iowa R. Civ. P. 1.441(2)). For good cause, but not ex parte, the court may extend the time to answer or reply by not more than 30 days (Iowa R. Civ. P. 1.441(6)). No leading decision is named."
   edge-answer-due-default "No timely motion or answer" -> default-entered {
@@ -50,7 +50,7 @@ terminal default-entered: "Default entered" outcome [loss] cite "Iowa R. Civ. P.
   note "A party is in default when it fails to serve and file a motion or answer as rule 1.303 requires (Iowa R. Civ. P. 1.971(1)). The clerk enters that default on written application, which must certify that written notice of intention to apply was given after the default occurred and at least ten days before the application was filed, the ten days running from the date of mailing (Iowa R. Civ. P. 1.972(2), (3)(c)); the notice provisions do not apply to small claims, forcible entry and detainer, juvenile cases or service by publication (Iowa R. Civ. P. 1.972(4)). Judgment on a sum certain is entered by the clerk on affidavit, otherwise on the prevailing party's motion (Iowa R. Civ. P. 1.973). On motion for good cause the court may set aside a default or its judgment for mistake, inadvertence, surprise, excusable neglect or unavoidable casualty; the motion is filed promptly after the grounds are discovered and not more than 60 days after entry of the judgment (Iowa R. Civ. P. 1.977). Outcome from the defending side."
 }
 
-state discovery: "Disclosures, discovery and trial setting" by applicant cite "Iowa R. Civ. P. 1.507"
+state discovery: "Disclosures, discovery and trial setting" by plaintiff cite "Iowa R. Civ. P. 1.507"
 {
   note "The parties confer as soon as practicable, but no later than 21 days after any defendant has answered or appeared, and submit a written report outlining the discovery plan within seven days after the conference (Iowa R. Civ. P. 1.507(1), (2)). Initial disclosures are made at or within 14 days after the discovery conference unless a stipulation or order sets another time (Iowa R. Civ. P. 1.500(1)(f)). No later than 21 days after any defendant has answered or appeared, the clerk sends a notice of a trial-setting conference to be held no earlier than 35 and no later than 50 days after that answer or appearance (Iowa R. Civ. P. 1.906). The court may enter a scheduling order on application or its own motion, which is modified only for good cause (Iowa R. Civ. P. 1.602(2)). A written jury demand is made not later than ten days after the last pleading directed to the issue; otherwise jury trial is waived (Iowa R. Civ. P. 1.902(1), (2)). Every civil action is to be tried within one year of filing; a case whose petition was filed more than one year before July 15 of a year is tried before January 1 of the next year or dismissed without prejudice after the clerk's notice, and reinstatement is sought within six months of dismissal (Iowa R. Civ. P. 1.944(1), (2), (6))."
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
@@ -102,7 +102,7 @@ decision post-trial: "Post-trial motions decided" by court cite "Iowa R. Civ. P.
   }
 }
 
-state judgment-entered: "Final judgment entered" by office cite "Iowa R. Civ. P. 1.959"
+state judgment-entered: "Final judgment entered" by court cite "Iowa R. Civ. P. 1.959"
 {
   note "Judgments and orders are entered on the record of the court and clearly specify the relief granted (Iowa R. Civ. P. 1.959)."
   edge-judgment-entered-appeal "Next step" -> appeal-decision {
@@ -110,7 +110,7 @@ state judgment-entered: "Final judgment entered" by office cite "Iowa R. Civ. P.
   }
 }
 
-decision appeal-decision: "Notice of appeal within 30 days?" by applicant cite "Iowa R. App. P. 6.101"
+decision appeal-decision: "Notice of appeal within 30 days?" by plaintiff cite "Iowa R. App. P. 6.101"
 {
   note "A notice of appeal is filed in the district court, with an informational copy to the supreme court, within 30 days after the filing of the final order or judgment; if a motion under Iowa R. Civ. P. 1.904(2) or 1.1007 is timely filed, within 30 days after the filing of the ruling on that motion (Iowa R. App. P. 6.101(1)(b), (c)). In chapter 232 termination and child in need of assistance proceedings the period is 15 days (Iowa R. App. P. 6.101(1)(a)). A notice of cross-appeal is filed within the 30-day limit or within 10 days after the notice of appeal is filed, whichever is later (Iowa R. App. P. 6.101(2)(b))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken {

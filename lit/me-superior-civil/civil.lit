@@ -12,7 +12,7 @@ limit reply-memorandum { pages <= 7 cite "M.R. Civ. P. 7(f)" } cite "M.R. Civ. P
 
 start commenced
 
-state commenced: "Action commenced" by applicant cite "M.R. Civ. P. 3"
+state commenced: "Action commenced" by plaintiff cite "M.R. Civ. P. 3"
 {
   note "A civil action is commenced by service of the summons, complaint and notice regarding Electronic Service, with the complaint filed within 20 days after service is completed, or by filing the complaint, with the return of service filed within 90 days after filing; if the complaint or the return is not timely filed the action may be dismissed on motion and notice (M.R. Civ. P. 3). Periods in this package are stated, not counted: computation is M.R. Civ. P. 6(a), which excludes intermediate Saturdays, Sundays and legal holidays from periods under 7 days. The filing fee is not stated in the vendored rules."
   edge-commenced-served "Defendant served" -> answer-due { authority cite "M.R. Civ. P. 12(a)" }
@@ -26,7 +26,7 @@ terminal dismissed-unserved: "Dismissed for untimely filing" outcome [loss, dism
   note "Dismissal on motion and notice; the court may tax a reasonable attorney fee as costs if the action was vexatiously commenced (M.R. Civ. P. 3)."
 }
 
-decision answer-due: "Answer, motion or default" by office cite "M.R. Civ. P. 12(a)"
+decision answer-due: "Answer, motion or default" by court cite "M.R. Civ. P. 12(a)"
 {
   note "A defendant serves the answer within 20 days after service of the summons, complaint and notice regarding Electronic Service, or within 50 days if served under Rule 4(e), 4(f) or 4(j) outside the Continental United States or Canada; an answer to a cross-claim and a reply to a counterclaim are due within 20 days (M.R. Civ. P. 12(a)). No leading decision is named."
   edge-answer-due-default "No response" -> default-entered { authority cite "M.R. Civ. P. 55(a)" }
@@ -60,7 +60,7 @@ state scheduling: "Scheduling order" by court cite "M.R. Civ. P. 16(a)"
   edge-scheduling-discovery "Order entered" -> discovery { authority cite "M.R. Civ. P. 26" }
 }
 
-state discovery: "Discovery" by applicant cite "M.R. Civ. P. 26"
+state discovery: "Discovery" by plaintiff cite "M.R. Civ. P. 26"
 {
   note "Discovery is governed by M.R. Civ. P. 26 through 37 within the deadlines of the scheduling order (M.R. Civ. P. 16(a)); sanctions for failure to make discovery are rule 37's."
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
@@ -100,7 +100,7 @@ decision post-trial: "Post-trial motions decided" by court cite "M.R. Civ. P. 59
   }
 }
 
-state judgment-entered: "Final judgment entered" by office cite "M.R. Civ. P. 58"
+state judgment-entered: "Final judgment entered" by court cite "M.R. Civ. P. 58"
 {
   note "No execution issues and no enforcement proceeding is taken until 21 days after entry of the judgment or until the time for appeal has expired (M.R. Civ. P. 62(a))."
   edge-judgment-entered-appeal "Next step" -> appeal-decision {
@@ -108,7 +108,7 @@ state judgment-entered: "Final judgment entered" by office cite "M.R. Civ. P. 58
   }
 }
 
-decision appeal-decision: "Notice of appeal within 21 days of entry?" by applicant cite "M.R. App. P. 2B(c)"
+decision appeal-decision: "Notice of appeal within 21 days of entry?" by plaintiff cite "M.R. App. P. 2B(c)"
 {
   note "An appeal in a civil case may be taken within 21 days after entry into the docket of the judgment appealed from, unless a shorter time is provided by law; after a timely motion under M.R. Civ. P. 50(b), 52(a) or (b), or 59, the notice may be filed up to 21 days after entry of the order on the motion (M.R. App. P. 2B(c)). The trial court may extend the time by up to 21 days for good cause (M.R. App. P. 2B(d))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken { authority cite "M.R. App. P. 2A(b)" }

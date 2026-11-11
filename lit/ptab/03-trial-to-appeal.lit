@@ -55,7 +55,7 @@ decision patent-owner-response-window: "Patent Owner Response Window" effective 
 /// From January 8, 2021 (85 FR 79120): the sur-reply and the response
 /// rules whose text is cited; earlier trial practice is not encoded
 /// (`unknown_before`).
-state patent-owner-response-filed: "Patent Owner Response Filed" by applicant effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.120(a)-(b)"
+state patent-owner-response-filed: "Patent Owner Response Filed" by patent-owner effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.120(a)-(b)"
 {
   group trial-group
   note "May include expert declarations, claim construction arguments, and objective indicia of nonobviousness. Arguments not raised here (or in prior motion practice) are waived — they cannot be resurrected in sur-reply or at the hearing, and waiver bars any estoppel defense on that theory."
@@ -137,7 +137,7 @@ decision motion-to-amend-decision: "Motion to Amend Decision Point" cite "35 U.S
 /// From October 18, 2024, when the motion-to-amend rule (89 FR 76421) made
 /// preliminary guidance and the revised motion part of 37 C.F.R. § 42.121;
 /// the 2019-2024 pilot program is not encoded (`unknown_before`).
-state mta-filed: "Contingent Motion to Amend Filed" by examiner effective [2024-10-18, ..) unknown_before 2024-10-18 cite "35 U.S.C. § 316(d); 37 C.F.R. § 42.121(a)"
+state mta-filed: "Contingent Motion to Amend Filed" by board effective [2024-10-18, ..) unknown_before 2024-10-18 cite "35 U.S.C. § 316(d); 37 C.F.R. § 42.121(a)"
 {
   group trial-group
   note "Must propose a reasonable number of substitute claims (presumptively one-to-one), supported by the original specification without new matter, responding to the unpatentability ground raised. Lectrosonics set the burden-shifting framework the current MTA Pilot Program builds on."
@@ -173,7 +173,7 @@ state mta-preliminary-guidance: "Board Issues Preliminary Guidance" effective [2
 /// From October 18, 2024, when the motion-to-amend rule (89 FR 76421) made
 /// preliminary guidance and the revised motion part of 37 C.F.R. § 42.121;
 /// the 2019-2024 pilot program is not encoded (`unknown_before`).
-state mta-revised-filed: "Revised Motion to Amend Filed" by applicant effective [2024-10-18, ..) unknown_before 2024-10-18 cite "37 C.F.R. § 42.121(f)"
+state mta-revised-filed: "Revised Motion to Amend Filed" by petitioner effective [2024-10-18, ..) unknown_before 2024-10-18 cite "37 C.F.R. § 42.121(f)"
 {
   group trial-group
   note "Patent owner may file one revised MTA responding to the preliminary guidance and/or petitioner's opposition — a second bite unavailable in ordinary IPR motion practice, preventing unfair surprise."
@@ -225,7 +225,7 @@ terminal ipr-terminated-settlement: "IPR Terminated by Settlement" outcome [sett
   payoff 400_000.usd
 }
 
-state adverse-judgment-request: "Patent Owner Requests Adverse Judgment" by examiner cite "37 CFR 42.73(b)"
+state adverse-judgment-request: "Patent Owner Requests Adverse Judgment" by board cite "37 CFR 42.73(b)"
 {
   group trial-group
   note "Patent owner may request adverse judgment (e.g., cancel all challenged claims) rather than litigate to a FWD, to cut losses — but estoppel attaches as if the claims had been found unpatentable at FWD; the waiver is identical."
@@ -264,7 +264,7 @@ decision oral-hearing-request: "Oral Hearing Requested" effective [2016-05-02, .
 /// From the May 2, 2016 amendment of 37 C.F.R. § 42.70 (81 FR 18750),
 /// whose text is cited; earlier hearing practice is not encoded
 /// (`unknown_before`).
-state oral-hearing-held: "Oral Hearing Held" by office effective [2016-05-02, ..) unknown_before 2016-05-02 cite "37 CFR 42.70(b)"
+state oral-hearing-held: "Oral Hearing Held" by board effective [2016-05-02, ..) unknown_before 2016-05-02 cite "37 CFR 42.70(b)"
 {
   group hearing-group
   note "Argument only — no new evidence at hearing, no new documentary exhibits. Demonstratives must be served in advance and may not contain material outside the record; the Board typically probes weak spots in the written briefing."
@@ -277,7 +277,7 @@ state oral-hearing-held: "Oral Hearing Held" by office effective [2016-05-02, ..
 
 /// The Board's merits determination (35 U.S.C. § 318(a)), a nature draw with
 /// the pack's probabilities.
-chance fwd-issued: "Board Issues Final Written Decision" by examiner discretion cite "35 U.S.C. § 318(a); 37 CFR § 42.73"
+chance fwd-issued: "Board Issues Final Written Decision" by board discretion cite "35 U.S.C. § 318(a); 37 CFR § 42.73"
 {
   group fwd-group
   note "The Board decides the patentability of every instituted claim (SAS all-or-nothing), whether or not a hearing was held. Due within 1 year of institution, extendable to 18 months (316(a)(11))."
@@ -362,7 +362,7 @@ decision post-fwd-options: "Post-FWD Options" effective [2024-10-31, ..) unknown
 /// From January 8, 2021 (85 FR 79120): the sur-reply and the response
 /// rules whose text is cited; earlier trial practice is not encoded
 /// (`unknown_before`).
-state rehearing-request-filed: "Rehearing Request Filed" by examiner effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.71(d)"
+state rehearing-request-filed: "Rehearing Request Filed" by board effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.71(d)"
 {
   group rehearing-director-group
   note "Must specifically identify matters the panel misapprehended or overlooked — no new arguments or evidence. Decided by the same panel that issued the FWD; the panel typically decides within 3-6 months, though no hard deadline governs the Board's own turnaround."
@@ -376,7 +376,7 @@ state rehearing-request-filed: "Rehearing Request Filed" by examiner effective [
 /// The panel's ruling, not a party's choice. A party's escalation to the
 /// Director after a denial leaves `rehearing-denied-affirmed`.
 /// From January 8, 2021, as `rehearing-request-filed`.
-chance rehearing-decision: "Panel Decides Rehearing Request" by examiner discretion effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.71(d)"
+chance rehearing-decision: "Panel Decides Rehearing Request" by board discretion effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 CFR 42.71(d)"
 {
   group rehearing-director-group
   note "Rehearing grant rate is exceptionally low (panels affirm their own prior reasoning in the large majority of requests). If granted, the panel may modify claim construction or validity findings, but this remains intra-panel review without external accountability."
@@ -422,7 +422,7 @@ state rehearing-granted-modified: "Rehearing Granted — Decision Modified" effe
 /// From October 31, 2024, when Director Review became 37 C.F.R. § 42.75
 /// (89 FR 79744); the 2021-2024 interim process is not encoded
 /// (`unknown_before`).
-state director-review-request-filed: "Director Review Requested" by examiner effective [2024-10-31, ..) unknown_before 2024-10-31 cite "37 C.F.R. § 42.75(a); 37 C.F.R. § 42.75(c)"
+state director-review-request-filed: "Director Review Requested" by board effective [2024-10-31, ..) unknown_before 2024-10-31 cite "37 C.F.R. § 42.75(a); 37 C.F.R. § 42.75(c)"
 {
   group rehearing-director-group
   note "Arthrex required some avenue for accountable review of APJ decisions; the Director personally reviews on request or sua sponte, available on institution decisions and final written decisions. Typically decided within 3-9 months, with no hard deadline prescribed."
@@ -434,7 +434,7 @@ state director-review-request-filed: "Director Review Requested" by examiner eff
 /// Director review is discretionary; the pack authors the affirm, modify and
 /// remand draw (0.75/0.15/0.1). From October 31, 2024 (37 C.F.R. § 42.75,
 /// 89 FR 79744); the interim process before it is not encoded.
-chance director-review-decision: "Director Decides Review Request" by examiner discretion effective [2024-10-31, ..) unknown_before 2024-10-31 cite "37 C.F.R. § 42.75(e)(2)"
+chance director-review-decision: "Director Decides Review Request" by board discretion effective [2024-10-31, ..) unknown_before 2024-10-31 cite "37 C.F.R. § 42.75(e)(2)"
 {
   group rehearing-director-group
   note "Director's review is truly de novo — not bound by panel reasoning. The Director may affirm, reverse, modify (e.g., reinstate claims the panel invalidated), or remand any aspect of the panel's decision — genuine hierarchical review, unlike a panel reviewing its own work."
@@ -509,7 +509,7 @@ terminal appeal-forfeited-unappealed: "No Timely Appeal — FWD Final" outcome [
   payoff 400_000.usd
 }
 
-state federal-circuit-notice-of-appeal: "Notice of Appeal Filed" by office cite "35 U.S.C. § 319; 28 U.S.C. § 1295(a)(4)(A)"
+state federal-circuit-notice-of-appeal: "Notice of Appeal Filed" by board cite "35 U.S.C. § 319; 28 U.S.C. § 1295(a)(4)(A)"
 {
   group appeal-group
   note "Federal Circuit has exclusive jurisdiction over PTAB appeals. The notice must identify the Board's final decision and the appealing party; failure to adequately name a party can waive appellability."
@@ -522,7 +522,7 @@ state federal-circuit-notice-of-appeal: "Notice of Appeal Filed" by office cite 
 
 /// Federal Circuit review of the Board (35 U.S.C. § 319; 5 U.S.C. § 706), a
 /// nature draw with the pack's probabilities.
-chance federal-circuit-review: "Federal Circuit Reviews the Decision" by office discretion cite "35 U.S.C. § 319; 5 U.S.C. § 706"
+chance federal-circuit-review: "Federal Circuit Reviews the Decision" by board discretion cite "35 U.S.C. § 319; 5 U.S.C. § 706"
 {
   group appeal-group
   note "Substantial-evidence review for factual findings; de novo review for legal conclusions, including claim-construction subsidiary facts post-Teva v. Sandoz. The Board's discretionary decisions (e.g., Fintiv stays) receive abuse-of-discretion review. Claim-construction and §101-based PGR outcomes are reversed at higher rates than the overall average."
@@ -542,7 +542,7 @@ terminal cafc-affirms: "Federal Circuit Affirms" outcome [affirmed, final] cite 
   payoff 450_000.usd
 }
 
-terminal cafc-vacates-remands: "Federal Circuit Vacates/Remands" by examiner outcome [remand] cite "35 U.S.C. § 319"
+terminal cafc-vacates-remands: "Federal Circuit Vacates/Remands" by board outcome [remand] cite "35 U.S.C. § 319"
 {
   group appeal-group
   note "Sends the case back to the Board for further proceedings consistent with the Federal Circuit's opinion; no fixed statutory deadline governs Board reconsideration, but the typical timeline runs 6-18 months. Modeled as this playthrough's terminal disposition even though remand loops back into a new final written decision. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's remand-tier convention (see cafc). Modeled as this playthrough's terminal disposition even though a remand loops back into a new final written decision."

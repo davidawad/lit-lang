@@ -15,7 +15,7 @@ state claim-accrues: "Claim Against the United States Accrues" cite "28 U.S.C. �
   }
 }
 
-decision patent-claim-fork: "Is This a §1498(a) Patent/Copyright Use Claim?" by applicant cite "28 U.S.C. § 1498(a)"
+decision patent-claim-fork: "Is This a §1498(a) Patent/Copyright Use Claim?" by movant cite "28 U.S.C. § 1498(a)"
 {
   group threshold-group
   note "§1498(a) is the exclusive Tucker Act-adjacent remedy when the United States (or a contractor acting with its authorization and consent) uses or manufactures a patented invention without a license: the patent owner's sole remedy is an action against the United States in the CoFC for 'reasonable and entire compensation' -- no injunction, no treble/enhanced damages, no jury. A patent claim gets the 35 U.S.C. §286 administrative-claim tolling option before the §2501 clock is checked; other claims (contract, takings, pay, bid protest) go straight to the limitations check. A matter elects its claim's track here with a cited `Elected` event."
@@ -25,7 +25,7 @@ decision patent-claim-fork: "Is This a §1498(a) Patent/Copyright Use Claim?" by
   }
 }
 
-decision patent-admin-claim-fork: "File the Optional §286 Administrative Claim?" by applicant cite "35 U.S.C. § 286, last paragraph"
+decision patent-admin-claim-fork: "File the Optional §286 Administrative Claim?" by movant cite "35 U.S.C. § 286, last paragraph"
 {
   group threshold-group
   note "A §1498(a) plaintiff may first file a written claim for compensation with the agency, tolling §2501 while the agency considers it, or sue without one: the administrative claim is not a jurisdictional prerequisite."
@@ -40,7 +40,7 @@ decision patent-admin-claim-fork: "File the Optional §286 Administrative Claim?
   }
 }
 
-state patent-admin-claim-filed: "Written Administrative Claim for Compensation Filed (Optional)" by office cite "35 U.S.C. § 286, last paragraph"
+state patent-admin-claim-filed: "Written Administrative Claim for Compensation Filed (Optional)" by court cite "35 U.S.C. § 286, last paragraph"
 {
   group threshold-group
   note "The patentee may (but need not) file a written claim for compensation with the department/agency having authority to settle it. Filing this claim tolls the running of §2501's 6-year period, for up to 6 years, between the date the agency receives the written claim and the date the agency mails notice that the claim is denied. This is the patent-specific analog to an administrative exhaustion step -- purely optional, and skipping it does not forfeit the CoFC suit, it just forgoes the tolling."
@@ -67,7 +67,7 @@ chance limitations-check: "Is the Petition Filed Within 6 Years of Accrual?" cit
     authority cite "28 U.S.C. § 2501"
     note "Prior (labeled estimate, not a measured statistic): competent counsel screens for this jurisdictional trap before filing, so most FILED claims clear it; override with scenario.facts once this matter's actual filing history is known (accrual date vs. filing date; any parallel suit)."
   }
-  e-limitations-barred "Petition filed more than 6 years after accrual" -> dismissed-time-barred by office p 0.05 {
+  e-limitations-barred "Petition filed more than 6 years after accrual" -> dismissed-time-barred by court p 0.05 {
     authority cite "28 U.S.C. § 2501"
     valence bad
     note "Prior (labeled estimate, not a measured statistic): competent counsel screens for this jurisdictional trap before filing, so most FILED claims clear it; override with scenario.facts once this matter's actual filing history is known (accrual date vs. filing date; any parallel suit)."
@@ -83,7 +83,7 @@ terminal dismissed-time-barred: "DISMISSED -- Time-Barred Under §2501" outcome 
   payoff 0.usd
 }
 
-chance section-1500-check: "Is the Same Claim Currently Pending in Any Other Court?" by office cite "28 U.S.C. § 1500"
+chance section-1500-check: "Is the Same Claim Currently Pending in Any Other Court?" by court cite "28 U.S.C. § 1500"
 {
   group threshold-group
   note "THE CLASSIC TRAP: §1500 strips CoFC jurisdiction over any claim for which the plaintiff has a suit pending in any other court against the United States (or anyone acting under its authority) arising from substantially the same operative facts -- even if the other suit seeks different relief. United States v. Tohono O'odham Nation, 563 U.S. 307 (2011). Filing (or failing to dismiss) a parallel district-court/agency suit before or simultaneously with the CoFC complaint is a routine, entirely avoidable way to lose CoFC jurisdiction; the fix is to dismiss the other suit BEFORE filing here, not after."
@@ -108,7 +108,7 @@ terminal dismissed-1500-bar: "DISMISSED -- §1500 Same-Claim-Pending Bar" outcom
   payoff 0.usd
 }
 
-decision filing-track-fork: "Standard Complaint or Procurement-Protest Complaint?" by applicant cite "28 U.S.C. § 1491(b); RCFC App. C 1"
+decision filing-track-fork: "Standard Complaint or Procurement-Protest Complaint?" by movant cite "28 U.S.C. § 1491(b); RCFC App. C 1"
 {
   group threshold-group
   note "A §1491(b) bid/proposal protest (challenging a federal procurement solicitation, award, or proposed award) follows a materially different, expedited pre-filing and briefing track under RCFC Appendix C. All other claims (contract, §1498(a) patent, takings, illegal exaction, federal pay, etc.) follow the standard RCFC 3/4/12 complaint track."

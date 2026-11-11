@@ -13,7 +13,7 @@ state trial-bench: "Bench Trial (No Jury)" cite "RCFC 39; RCFC 52"
   }
 }
 
-state verdict-rendered: "Court Renders Findings & Conclusions" by office cite "RCFC 52(a)"
+state verdict-rendered: "Court Renders Findings & Conclusions" by court cite "RCFC 52(a)"
 {
   group trial-post-trial-group
   note "For a bench trial, the court must find the facts specially and state its conclusions of law separately (RCFC 52(a)). This pack defers the win/loss determination to 'prevailing-party-fork' below (after RCFC 59 post-trial practice can still amend the judgment or order a new trial), rather than forking win/loss at the verdict itself."
@@ -31,7 +31,7 @@ state judgment-rcfc58-entered: "Judgment Entered (Separate Document)" cite "RCFC
   }
 }
 
-decision post-trial-motion-window: "File a RCFC 59 Motion?" by applicant cite "RCFC 59(a)-(b), (e)"
+decision post-trial-motion-window: "File a RCFC 59 Motion?" by movant cite "RCFC 59(a)-(b), (e)"
 {
   group trial-post-trial-group
   note "A motion for a new trial or reconsideration (RCFC 59(a)(1)(A)/(B)), or upon a showing of fraud/wrong/injustice to the United States specifically (RCFC 59(a)(1)(C), which has NO FRCP counterpart and is a uniquely government-protective ground), or a motion to alter/amend the judgment (RCFC 59(e)), must be filed no later than 28 days after entry of judgment. RCFC 6(b) forbids the court from extending this deadline. A response may be filed only at the court's request (RCFC 59(f))."
@@ -50,7 +50,7 @@ decision post-trial-motion-window: "File a RCFC 59 Motion?" by applicant cite "R
   }
 }
 
-chance rule59-motion-ruling: "Court Rules on RCFC 59 Motion" by office discretion cite "RCFC 59(a), (d)"
+chance rule59-motion-ruling: "Court Rules on RCFC 59 Motion" by court discretion cite "RCFC 59(a), (d)"
 {
   group trial-post-trial-group
   note "Outcome distribution authored at 0.15 new-trial-granted / 0.10 judgment-amended / 0.75 denied -- TEACHING ESTIMATE, reflecting that post-trial motions to overturn the court's own recent findings face real institutional headwind. The court may also order a new trial ON ITS OWN within 28 days of judgment for any reason that would justify granting one on a party's motion (RCFC 59(d))."
@@ -90,7 +90,7 @@ state costs-and-fees-window: "Bill of Costs & EAJA Fee Application Window" cite 
   }
 }
 
-chance prevailing-party-fork: "Who Prevailed?" by office discretion cite "RCFC 52(a); RCFC 54(d)"
+chance prevailing-party-fork: "Who Prevailed?" by court discretion cite "RCFC 52(a); RCFC 54(d)"
 {
   group trial-post-trial-group
   note "Resolves the win/loss determination first modeled probabilistically at 'verdict-rendered,' carried through post-trial-motion practice. Outcome distribution authored at 0.50 plaintiff-prevails / 0.50 government-prevails -- TEACHING ESTIMATE, matching 'verdict-rendered' since this pack does not separately model RCFC 59 flipping the ultimate winner (a RCFC59-granted new trial or amended judgment loops back upstream instead, see the loop edges into 'trial-bench' and 'judgment-rcfc58-entered')."

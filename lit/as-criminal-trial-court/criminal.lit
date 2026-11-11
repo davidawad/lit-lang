@@ -17,7 +17,7 @@ module as-high-court-criminal.criminal
 // text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "TCRCrP 4"
+state arrested: "Arrest or summons" by prosecution cite "TCRCrP 4"
 {
   note "On a complaint made on oath before a district court judge or justice of the High Court, a warrant or summons issues on probable cause (TCRCrP 3; 4). An arrested person is taken without unnecessary delay before the next sitting of the district court, and after a warrantless arrest a complaint is filed forthwith (TCRCrP 5(a))."
   edge-arrested-appearance "Initial appearance in the district court" -> initial-appearance {
@@ -45,19 +45,19 @@ decision probable-cause: "Preliminary examination" by court cite "TCRCrP 5.1"
   }
 }
 
-state charged: "Information" by office cite "TCRCrP 7(a)"
+state charged: "Information" by court cite "TCRCrP 7(a)"
 {
   note "All felony offenses are initiated in the High Court by the filing of an information (TCRCrP 7(a)); the Rules of Criminal Procedure state no grand jury procedure (Rule 6 is omitted)."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "TCRCrP 10" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "TCRCrP 10"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "TCRCrP 10"
 {
   note "Arraignment is conducted in open court by reading the complaint or information or stating its substance and calling on the defendant to plead, after the defendant is given a copy (TCRCrP 10). A defendant may plead not guilty, guilty or, with the court's consent, nolo contendere, and a refusal to plead is entered as not guilty (TCRCrP 11(a), (b))."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "TCRCrP 16" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "TCRCrP 12"
+state discovery: "Discovery and pretrial motions" by prosecution cite "TCRCrP 12"
 {
   note "On request the government permits inspection of the defendant's statements and the other material Rule 16(a) lists (TCRCrP 16(a)). The pleadings are the complaint, information and pleas, and defenses and objections are raised by motion (TCRCrP 12(a)); the motion periods Rule 12 sets are not stated here (currency unconfirmed)."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling { authority cite "TCRCrP 12" }
@@ -81,7 +81,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "TCRCrP 12"
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "TCRCrP 11"
+decision plea-decision: "Plea or trial" by accused cite "TCRCrP 11"
 {
   note "A guilty or nolo contendere plea is accepted under Rule 11. Cases required to be tried by jury are so tried unless the defendant waives in writing with the court's approval, and the rules set the size of the jury (TCRCrP 23(a), (b)); the number is not stated here (currency unconfirmed)."
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
@@ -120,7 +120,7 @@ state sentencing: "Sentencing" by court cite "TCRCrP 32(a)"
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "TCRCrP 32"
+decision judgment: "Judgment of conviction" by accused cite "TCRCrP 32"
 {
   note "In a criminal case the defendant's motion for a new trial is filed within 10 days after entry of the judgment, and the notice of appeal within 10 days after the denial of the motion for a new trial (ACR 4(b); unofficial, currency unconfirmed, bound under lg-f3q8.77). 43.0802 A.S.C.A. is not vendored."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "A.C.R. 4(b)" }

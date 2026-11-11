@@ -16,7 +16,7 @@ import tx-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
 // Court considers are the rule's (Tex. R. App. P. 56.1(a)).
 start petition
 
-decision petition: "Petition for review?" by applicant cite "Tex. R. App. P. 53.7"
+decision petition: "Petition for review?" by petitioner cite "Tex. R. App. P. 53.7"
 {
   note "The Supreme Court may review a court of appeals' final judgment on a petition for review; a party who seeks to alter that judgment must file one (Tex. R. App. P. 53.1). Unless the Court orders an earlier deadline, the petition is filed with the Supreme Court clerk within 45 days after the court of appeals rendered judgment if no motion for rehearing or en banc reconsideration is timely filed, or after the court of appeals' last ruling on all timely filed motions (Tex. R. App. P. 53.7(a)); a premature petition is treated as filed after the last ruling (Tex. R. App. P. 53.7(b)); after a timely petition any other party may file within 45 days after the last timely rehearing motion is overruled or 30 days after any preceding petition, whichever is later (Tex. R. App. P. 53.7(c)). The Court may extend the time on a motion complying with Rule 10.5(b) filed no later than 15 days after the last day for filing (Tex. R. App. P. 53.7(f)); a petition mistakenly filed in the court of appeals is deemed filed the same day with the Supreme Court clerk (Tex. R. App. P. 53.7(g)). The petition contains the items Rule 53.2 lists, including an introduction of no more than 1,000 words or 4 pages (Tex. R. App. P. 53.2(a)), and runs 6,500 words or 20 pages in all (Tex. R. App. P. 9.4(i)(2)(D))."
   edge-petition-none "No petition: the court of appeals' judgment stands" -> review-not-sought {
@@ -39,7 +39,7 @@ decision response: "Response requested or ordered?" by court cite "Tex. R. App. 
   }
 }
 
-state merits-briefs: "Briefs on the merits, if ordered" by applicant cite "Tex. R. App. P. 55.1"
+state merits-briefs: "Briefs on the merits, if ordered" by petitioner cite "Tex. R. App. P. 55.1"
 {
   note "A brief on the merits is not filed unless the Court orders it (Tex. R. App. P. 55.1). Briefs follow the schedule in the clerk's notice; if none is stated, the petitioner's brief is due within 30 days after the notice, the respondent's within 30 days after receiving it, and any reply within 15 days after receiving the respondent's brief, and the Court may extend the time on a motion complying with Rule 10.5(b) (Tex. R. App. P. 55.7). The petitioner's brief is confined to the issues stated in the petition (Tex. R. App. P. 55.2); a party may rely on its court of appeals brief (Tex. R. App. P. 55.5). A brief and response may run 15,000 words or 50 pages, and a reply brief 7,500 words or 25 pages (Tex. R. App. P. 9.4(i)(2)(B), (C))."
   edge-merits-briefs-order "Petition considered" -> petition-order {
@@ -81,7 +81,7 @@ decision judgment: "Judgment of the Supreme Court" by court cite "Tex. R. App. P
   }
 }
 
-decision rehearing: "Rehearing sought?" by applicant cite "Tex. R. App. P. 64.1"
+decision rehearing: "Rehearing sought?" by petitioner cite "Tex. R. App. P. 64.1"
 {
   note "A motion for rehearing may be filed with the clerk within 15 days from the date the Court renders judgment or makes an order disposing of a petition for review; in exceptional cases the Court may shorten the time or deny the right to file (Tex. R. App. P. 64.1). It must specify the points relied on (Tex. R. App. P. 64.2); no response is needed unless ordered, and the motion will not be granted without one (Tex. R. App. P. 64.3). A second motion is considered only if the Court modifies or vacates its judgment or issues a different opinion (Tex. R. App. P. 64.4). The Court may extend the time on a motion complying with Rule 10.5(b) filed no later than 15 days after the last date for filing (Tex. R. App. P. 64.5). A motion for rehearing runs 4,500 words or 15 pages (Tex. R. App. P. 9.4(i)(2)(E)). Absent a timely motion, the mandate issues ten days after the time to move to extend the time for rehearing has expired (Tex. R. App. P. 18.1(b)); a party may move to stay it pending a petition for certiorari to the Supreme Court of the United States (Tex. R. App. P. 18.2)."
   edge-rehearing-none "No rehearing; mandate issues" -> judgment-lost {

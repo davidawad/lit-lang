@@ -11,7 +11,7 @@ import co-state-rules.{ JudgmentEntered, NoticeOfAppealFiled }
 // compilation's annotation to C.R.C.P. 12 reports it.
 start commenced
 
-state commenced: "Action commenced" by applicant cite "C.R.C.P. 3"
+state commenced: "Action commenced" by plaintiff cite "C.R.C.P. 3"
 {
   note "A civil action is commenced by filing a complaint with the court or by service of a summons and complaint; if commenced by service, the complaint must be filed within 14 days after service, or the service of summons is deemed ineffective and void (C.R.C.P. 3(a)). If a defendant is not served within 63 days (nine weeks) after the complaint is filed, the court, on motion or on its own after notice to the plaintiff, dismisses the action without prejudice against that defendant or orders service within a specified time; on good cause shown it extends the time for service (C.R.C.P. 4(m))."
   edge-commenced-served "Defendant served" -> answer-due {
@@ -24,7 +24,7 @@ state commenced: "Action commenced" by applicant cite "C.R.C.P. 3"
 
 terminal dismissed-unserved: "Dismissed without prejudice for want of service" outcome [win, dismissal] cite "C.R.C.P. 4(m)"
 
-decision answer-due: "Answer, motion or default" by office cite "Rule Change 2024(08), C.R.C.P. 12(a)"
+decision answer-due: "Answer, motion or default" by court cite "Rule Change 2024(08), C.R.C.P. 12(a)"
 {
   note "A defendant files an answer or other response within 21 days after service of the summons and complaint, except as otherwise provided by rule or statute; if the court denies a Rule 12 motion or postpones it to trial, the responsive pleading is filed within 14 days after notice of the court's action, and if it grants a motion for a more definite statement, within 14 days after service of that statement (Rule Change 2024(08), C.R.C.P. 12(a)). If the complaint is not served with the summons, or the summons is served outside Colorado or by publication, the time is 35 days after service (C.R.C.P. 12(a))."
   edge-answer-due-default "No response" -> default-entered { authority cite "C.R.C.P. 55(a)" }
@@ -52,7 +52,7 @@ terminal default-entered: "Default entered" outcome [loss] cite "C.R.C.P. 55(a)"
   note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend and that is made to appear by affidavit or otherwise, the clerk enters the default (C.R.C.P. 55(a)). A party entitled to a default judgment applies to the court; a party who has appeared is served with written notice of the application at least 7 days before the hearing (C.R.C.P. 55(b)). For good cause shown the court may set aside an entry of default, and a default judgment in accordance with Rule 60(b) (C.R.C.P. 55(c)). Outcome from the defending side."
 }
 
-state discovery: "Pleadings closed; discovery" by applicant cite "C.R.C.P. 26"
+state discovery: "Pleadings closed; discovery" by plaintiff cite "C.R.C.P. 26"
 {
   note "Discovery is governed by C.R.C.P. 26 through 37. A party demands a jury by filing and serving a demand not later than 14 days after service of the last pleading directed to the issue and paying the jury fee; another party may demand a jury on other issues within 14 days after service of a demand limited to some issues; failure to file and serve a demand and pay the fee waives trial by jury (C.R.C.P. 38(b)-(e))."
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion { authority cite "C.R.C.P. 56(c)" }
@@ -91,13 +91,13 @@ decision post-trial: "Post-trial motions decided" by court cite "C.R.C.P. 59(a)"
   }
 }
 
-state judgment-entered: "Final judgment entered" by office cite "C.R.C.P. 58(a)"
+state judgment-entered: "Final judgment entered" by court cite "C.R.C.P. 58(a)"
 {
   note "The effective date of entry of judgment is the actual date of the signing of the written judgment; entry is not delayed for the taxing of costs (C.R.C.P. 58(a)). A motion for relief for mistake, inadvertence, surprise, excusable neglect or fraud is made within a reasonable time and not more than 182 days after the judgment (C.R.C.P. 60(b))."
   edge-judgment-entered-appeal "Next step" -> appeal-decision { authority cite "C.A.R. 4(a)" }
 }
 
-decision appeal-decision: "Notice of appeal within 49 days of entry?" by applicant cite "C.A.R. 4(a)"
+decision appeal-decision: "Notice of appeal within 49 days of entry?" by plaintiff cite "C.A.R. 4(a)"
 {
   note "The notice of appeal is filed with the appellate court, with an advisory copy served on the lower court, within 49 days after entry of the judgment; once a timely notice is filed any other party may file a notice within 14 days after it. A timely C.R.C.P. 59 motion terminates the running of the time for all parties, which runs from the order disposing of the last such motion or its deemed denial under C.R.C.P. 59(j). On a showing of excusable neglect the appellate court may extend the time by not more than 35 days. If notice of entry is transmitted by mail or E-Service, the time runs from the mailing or E-Service (C.A.R. 4(a))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken {

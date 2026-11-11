@@ -17,7 +17,7 @@ module ar-criminal-trial-court.criminal
 // counting rule and verified source text.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite ?("Ark. R. Crim. P. 8.1, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified") {
+state arrested: "Arrest or summons" by prosecution cite ?("Ark. R. Crim. P. 8.1, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified") {
   note "An arrested person not released by citation or otherwise is taken before a judicial officer without unnecessary delay (Ark. R. Crim. P. 8.1). A person arrested without a warrant is not held unless a judicial officer determines reasonable cause promptly, and in no event later than 48 hours from the arrest unless the prosecuting attorney shows a bona fide emergency or other extraordinary circumstance; the determination may be made at the first appearance (4.1(e)). The speedy-trial time runs from the date of arrest or service of summons (28.2(a)). Unverified: the rules are CURRENCY UNCONFIRMED."
   edge-arrested-appearance "First appearance" -> first-appearance {
     authority cite ?("Ark. R. Crim. P. 8.1, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified")
@@ -37,14 +37,14 @@ decision first-appearance: "First appearance and pretrial release" by court cite
   }
 }
 
-state charged: "Indictment or information" by office cite ?("Ark. R. Crim. P. 8.6, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified") {
+state charged: "Indictment or information" by court cite ?("Ark. R. Crim. P. 8.6, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified") {
   note "The formal charge is filed in a court of competent jurisdiction (Ark. R. Crim. P. 8.6). Unverified: CURRENCY UNCONFIRMED."
   edge-charged-arraignment "Arraignment and plea" -> pretrial {
     authority cite ?("Ark. R. Crim. P. 24.3, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified")
   }
 }
 
-state pretrial: "Discovery and pretrial motions" by applicant cite ?("Ark. R. Crim. P. 16.2, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified") {
+state pretrial: "Discovery and pretrial motions" by prosecution cite ?("Ark. R. Crim. P. 16.2, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified") {
   note "A motion to suppress illegally obtained evidence is filed timely but not later than ten days before the date set for trial, though the court may entertain a later one for good cause; an order granting suppression before trial is reviewable under Rule 3 of the Rules of Appellate Procedure--Criminal (Ark. R. Crim. P. 16.2(b), (d)). The prosecuting attorney's disclosure duties are Rule 17.1. Speedy trial: a defendant held in a city or county jail is released on recognizance if not tried within nine months, and a defendant in prison on another conviction, or on bail or otherwise at liberty, is entitled to dismissal with an absolute bar to prosecution if not tried within twelve months, each from the time in Rule 28.2 and excluding only the periods of necessary delay Rule 28.3 authorizes (28.1(a)-(c)); a denied motion to dismiss may be raised in a post-trial appeal (28.1(d)). Unverified: CURRENCY UNCONFIRMED."
   edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
     authority cite ?("Ark. R. Crim. P. 16.2, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified")
@@ -67,7 +67,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite ?("Ark. R. C
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite ?("Ark. R. Crim. P. 24.3, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified") {
+decision plea-decision: "Plea or trial" by accused cite ?("Ark. R. Crim. P. 24.3, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified") {
   note "The defendant pleads with the aid of counsel, and the court accepts a guilty plea only after advising the defendant and determining that the plea is voluntary and accurate (Ark. R. Crim. P. 24.2-24.6). Unverified: CURRENCY UNCONFIRMED."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("Ark. R. Crim. P. 24.5, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified")
@@ -94,7 +94,7 @@ state sentencing: "Sentencing and entry of judgment" by court cite ?("Ark. R. Cr
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite ?("Ark. R. Crim. P. 33.3, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified") {
+decision judgment: "Judgment of conviction" by accused cite ?("Ark. R. Crim. P. 33.3, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified") {
   note "Posttrial motions and applications for relief are filed within thirty days after the entry of judgment (one filed earlier is treated as filed the day after entry); a hearing, if held, is within ten days of filing unless circumstances justify delay; a motion neither granted nor denied within thirty days after filing is deemed denied on the 30th day; and after such a motion the time to file a notice of appeal does not expire until thirty days after the disposition of all motions (Ark. R. Crim. P. 33.3). The notice-of-appeal period itself is Rule 2 of the Rules of Appellate Procedure--Criminal, which is not vendored: a hole. Unverified: CURRENCY UNCONFIRMED."
   edge-judgment-posttrial-granted "Posttrial motion granted; new trial" -> trial {
     authority cite ?("Ark. R. Crim. P. 33.3, CURRENCY UNCONFIRMED (the court rules database states only 'Current To: 2026'); the value is the vendored text, unverified")

@@ -25,7 +25,7 @@ import nv-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 // both are removed.
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "NRCP 3"
+state complaint-filed: "Complaint filed" by plaintiff cite "NRCP 3"
 {
   note "A civil action is commenced by filing a complaint with the court (Rule 3). The summons and complaint must be served on a defendant no later than 120 days after the complaint is filed unless the court extends the time; if not, the court must dismiss the action without prejudice as to that defendant on motion or on its own order to show cause. A motion to extend made before the period expires gets an extension on good cause; one made after it must also show good cause for the late motion (Rule 4(e))."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
@@ -42,7 +42,7 @@ terminal dismissed-unserved: "Dismissed without prejudice for untimely service" 
   note "Outcome from the applicant's side: dismissal without prejudice as to the unserved defendant under Rule 4(e)(2)."
 }
 
-decision answer-due: "Answer, Rule 12 motion, or no response" by office cite "NRCP 12(a)"
+decision answer-due: "Answer, Rule 12 motion, or no response" by court cite "NRCP 12(a)"
 {
   note "Unless another time is specified by Rule 4.2(c)(3)(E), Rule 12 or a statute, a defendant serves an answer within 21 days after being served with the summons and complaint or, if it timely waived service under Rule 4.1, within 60 days after the request for a waiver was sent (90 days if sent outside the United States) (Rule 12(a)(1)(A)). The State, its public entities and political subdivisions, and their officers and employees sued for acts relating to their public duties answer within 45 days after service, or after required service on the Attorney General if later (Rule 12(a)(2)). Lack of subject-matter or personal jurisdiction, insufficient process or service of process, failure to state a claim and failure to join a party under Rule 19 may be raised by motion made before pleading (Rule 12(b))."
   edge-answer-due-answer "Answer served" -> answered { authority cite "NRCP 12(a)" }
@@ -66,7 +66,7 @@ decision dismissal-motion: "Rule 12(b) motion decided" by court cite "NRCP 12(b)
   }
 }
 
-state amended: "Amended pleading" by applicant cite "NRCP 15(a)"
+state amended: "Amended pleading" by plaintiff cite "NRCP 15(a)"
 {
   note "A party may amend its pleading once as a matter of course within 21 days after serving it or, if a responsive pleading is required, 21 days after service of a responsive pleading or of a motion under Rule 12(b), (e) or (f), whichever is earlier; otherwise only with the opposing party's written consent or the court's leave, which the court should freely give when justice so requires (Rule 15(a)(1), (2)). Unless the court orders otherwise, any required response to an amended pleading is made within the time remaining to respond to the original pleading or within 14 days after service of the amended pleading, whichever is later (Rule 15(a)(3))."
   edge-amended-tested "Amended pleading met with a new Rule 12(b) motion" -> dismissal-motion {
@@ -107,7 +107,7 @@ terminal default-won: "Default judgment for applicant" outcome [win] cite "NRCP 
   note "Outcome from the applicant's side: a default judgment under Rule 55(b), which must not differ in kind from, or exceed in amount, what the pleadings demand (Rule 54(c))."
 }
 
-state answered: "Answer served" by applicant cite "NRCP 12(a)"
+state answered: "Answer served" by plaintiff cite "NRCP 12(a)"
 {
   note "On any issue triable of right by a jury, a party demands a jury trial by serving a written demand at any time after commencement and no later than the entry of the order first setting the case for trial, filing it, and, unless the local rules provide otherwise, depositing the first day's jury fees with the clerk; a party that fails to file and serve a proper demand waives a jury trial (Rule 38(b), (d)). Another party may demand a jury on other issues within 14 days after being served with a demand limited to some issues (Rule 38(c))."
   edge-answered-conference "Early case conference held" -> discovery {
@@ -115,7 +115,7 @@ state answered: "Answer served" by applicant cite "NRCP 12(a)"
   }
 }
 
-state discovery: "Early case conference and discovery" by applicant cite "NRCP 16.1(b)"
+state discovery: "Early case conference and discovery" by plaintiff cite "NRCP 16.1(b)"
 {
   note "Unless the case is exempt, the parties who have filed a pleading hold an early case conference within 30 days after service of an answer by the first answering defendant (Rule 16.1(b)(2)(A)) and file a joint or individual case conference report within 30 days after it (Rule 16.1(c)(1)(A)); initial disclosures are made at or within 14 days after the conference unless a stipulation or order sets a different time (Rule 16.1(a)(1)(C)). If the conference is not held within 180 days after service of an answer, or the plaintiff files no case conference report within 240 days after it, the court may dismiss the case as to that defendant without prejudice (Rule 16.1(e)(1), (2)). Unless a local rule or order sets a different time, a party may move for summary judgment at any time until 30 days after the close of all discovery (Rule 56(b))."
   edge-discovery-sj "Motion for summary judgment" -> summary-judgment {

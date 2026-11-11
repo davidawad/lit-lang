@@ -182,14 +182,14 @@ test "fee motion response is due 14 days after service" cite "10th Cir. R. 39.2(
 
 start threshold
 
-decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+decision threshold: "Appealable Order or Judgment?" by movant cite "28 U.S.C. § 1291"
 {
   note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes are lit/frap's. A motion to dismiss the entire case for lack of appellate jurisdiction is due within 14 days after docketing (10th Cir. R. 27.3(A)(3)(a))."
   edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
   edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
 }
 
-decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)"
 {
   note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods. Counsel or a pro se appellant signs the notice (10th Cir. R. 3.1), and the district clerk sends the preliminary record electronically (10th Cir. R. 3.2)."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
@@ -202,7 +202,7 @@ decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)
   }
 }
 
-state record: "Record and Transcript" by applicant cite "FRAP 10; 10th Cir. R. 10"
+state record: "Record and Transcript" by movant cite "FRAP 10; 10th Cir. R. 10"
 {
   note "With retained counsel the record is an appendix filed with the opening brief; with appointed counsel the district court forwards a designated record; in pro se appeals the court prepares the record (10th Cir. R. 10.1). The appellant orders transcripts, or states that none will be ordered, within 14 days after docketing (10th Cir. R. 10.2). Appointed counsel designate the record within 14 days after docketing and the appellee may add to it within 14 days after service (10th Cir. R. 10.3(A)). The district clerk notifies the parties when the record is complete (10th Cir. R. 11.1(A)). The court need not remedy an inadequate record and may decline to consider an issue it does not support (10th Cir. R. 10.4(B))."
   edge-record-brief "Record complete" -> briefing { authority cite "10th Cir. R. 11.1(A)" }
@@ -211,7 +211,7 @@ state record: "Record and Transcript" by applicant cite "FRAP 10; 10th Cir. R. 1
   }
 }
 
-state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 10th Cir. R. 31.1"
+state briefing: "Briefs Filed" by movant cite "FRAP 31(a)(1); 10th Cir. R. 31.1"
 {
   note "When an appendix is required the opening brief and appendix are due 40 days after the record-complete notice; with appointed counsel or pro se, FRAP 31(a) governs (10th Cir. R. 31.1(A)); the appellee's and reply periods are lit/frap's. Mediation does not toll the briefing time (10th Cir. R. 33.1(F)). Extensions are disfavored and a motion is due at least 3 days before the brief (10th Cir. R. 27.6); a motion to exceed the word count filed within 14 days of the due date must show why earlier filing was not possible (10th Cir. R. 28.3(A)). The court accepts 13-point type (10th Cir. R. 32(A))."
   edge-briefing-argue "Briefing complete" -> argument {
@@ -234,7 +234,7 @@ state decision: "Decision Issued" by court cite "FRAP 36; 10th Cir. R. 36"
   edge-decision-issued "Judgment entered" -> rehearing-decision { authority cite "FRAP 36" }
 }
 
-decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 {
   note "The petition is due 14 days after entry of judgment, or 45 days in a civil case with a United States party (FRAP 40(d)(1)); lit/frap encodes both periods. Panel rehearing is not routine and en banc review is extraordinary (10th Cir. R. 40.1); an en banc petition says so on its cover and attaches the panel decision (10th Cir. R. 40.2). Only one petition per party is accepted and reconsideration of the ruling may not be sought (10th Cir. R. 40.4)."
   edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
@@ -249,13 +249,13 @@ state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 10th Cir. R. 40
   edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
-state mandate: "Mandate Issued" by office cite "FRAP 41(b); 10th Cir. R. 41"
+state mandate: "Mandate Issued" by court cite "FRAP 41(b); 10th Cir. R. 41"
 {
   note "The mandate issues under FRAP 41(b); lit/frap encodes the period. A civil stay requires a substantial possibility that certiorari would be granted (10th Cir. R. 41.1(B)). The mandate is not delayed for a fee motion, which is due 14 days after the rehearing time expires or after the court disposes of all timely petitions (10th Cir. R. 39.2). Copy costs are taxable at no more than 20 cents per page (10th Cir. R. 39.1)."
   edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
 }
 
-decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+decision further-review: "Further Review Sought?" by movant cite "28 U.S.C. § 1254"
 {
   note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's. A petition for rehearing is not required before a petition for certiorari (10th Cir. R. 40.1(C))."
   edge-further-review-none "No further review" -> final-decision {

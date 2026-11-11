@@ -7,7 +7,7 @@ import ut-state-rules.{ ReviewPetitionFiled }
 // 22(a)). The merits of review are not modeled.
 start petition
 
-decision petition: "Petition for certiorari?" by applicant cite "URAP 48(a)"
+decision petition: "Petition for certiorari?" by petitioner cite "URAP 48(a)"
 {
   note "Unless otherwise provided by law, review of a Court of Appeals decision is initiated by filing in the Utah Supreme Court a petition for a writ of certiorari (URAP 45(a)). The petition is filed with the Supreme Court clerk within 30 days after the Court of Appeals' final decision issues, not from the remittitur, and the clerk rejects an untimely petition (URAP 48(a), (b)); a timely Rule 35(a) petition for rehearing runs the time for all parties from its denial or the decision on rehearing (URAP 48(c)). Before the time expires the Supreme Court grants a request to extend it by no more than 30 days; within 30 days after it expires it grants a motion only on good cause or excusable neglect, by no more than 30 days past the prescribed time or 14 days from the order, whichever is later, and only once (URAP 48(e)). The petition may not exceed 20 pages, excluding the index, table of authorities, required verbatim quotations and appendix, and no separate brief is filed (URAP 49(c), (d)). No leading decision is named."
   edge-petition-none "No petition" -> no-petition { authority cite "URAP 36(a)" }

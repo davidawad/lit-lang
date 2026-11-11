@@ -128,7 +128,7 @@ test "a publication request is received within 28 days of a memorandum" cite "9t
 
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite "FRBP 8002(a)(1)"
+state notice-filed: "Notice of appeal filed" by appellant cite "FRBP 8002(a)(1)"
 {
   note "The notice of appeal is filed with the bankruptcy clerk within 14 days after entry of the judgment, order or decree (FRBP 8002(a)(1), lit/frbp). The appellant attaches a copy of the entered judgment, order or decree; if the notice precedes entry, the appellant forwards a copy to the BAP Clerk immediately upon entry (9th Cir. BAP R. 8003-1)."
   edge-notice-filed-appealability "Notice filed within 14 days" -> appealability {
@@ -171,7 +171,7 @@ terminal district-handoff: "Appeal heard by the district court" outcome [procedu
   note "The district court's local rules govern from here; they are outside this panel package."
 }
 
-state record-assembled: "Record assembled" by applicant cite "FRBP 8009"
+state record-assembled: "Record assembled" by appellant cite "FRBP 8009"
 {
   note "The appellant designates the record, states the issues and orders any transcript within 14 days after the notice of appeal becomes effective (FRBP 8009(a)(1)(B), (b)(1), lit/frbp). The excerpts of the record include the transcripts needed for review under the applicable standard; the Panel need consider only the portions included (9th Cir. BAP R. 8009-1). When the designations and transcripts are filed, the bankruptcy clerk certifies to the BAP Clerk that the record is complete and retains the record (9th Cir. BAP R. 8010-1)."
   edge-record-assembled-briefing "Record complete" -> briefing {
@@ -180,7 +180,7 @@ state record-assembled: "Record assembled" by applicant cite "FRBP 8009"
   }
 }
 
-state briefing: "Briefing" by applicant cite "FRBP 8018(a)"
+state briefing: "Briefing" by appellant cite "FRBP 8018(a)"
 {
   note "The FRBP 8018(a) brief periods are lit/frbp's; FRBP 8015 governs form and length. Each non-governmental party attaches to its initial brief a certification of interested parties, and the appellant a statement of related cases (9th Cir. BAP R. 8015(a)-1). The appendix (excerpts of the record) is filed electronically by electronic filers, with a complete table of contents (9th Cir. BAP R. 8018(b)-1). A motion to extend a brief's time is filed within the time for that brief with a supporting declaration; a brief received late is not accepted without a granted extension (9th Cir. BAP R. 8018(a)-1)."
   edge-briefing-argument "Briefing complete" -> argument {
@@ -213,7 +213,7 @@ decision decision-issued: "Disposition" by court cite "9th Cir. BAP R. 8024-1(a)
   }
 }
 
-decision rehearing-window: "Rehearing" by applicant cite "FRBP 8022(a)(1)"
+decision rehearing-window: "Rehearing" by appellant cite "FRBP 8022(a)(1)"
 {
   note "A motion for rehearing is due within 14 days after entry of the judgment on appeal (FRBP 8022(a)(1), lit/frbp); the BAP rules set no other period."
   edge-rehearing-window-further-review "No motion" -> further-review {
@@ -240,7 +240,7 @@ terminal rehearing-granted: "Rehearing granted" outcome [appeal] cite "FRBP 8022
   note "The BAP may dispose of the appeal without reargument, restore it to the calendar, or issue another order (FRBP 8022(a)(5)). Modeled as an exit."
 }
 
-decision further-review: "Appeal to the Ninth Circuit" by applicant cite "28 U.S.C. § 158(d)(1)"
+decision further-review: "Appeal to the Ninth Circuit" by petitioner cite "28 U.S.C. § 158(d)(1)"
 {
   note "The court of appeals has jurisdiction of appeals from all final decisions of the BAP (28 U.S.C. § 158(d)(1)); the FRAP apply as FRAP 6(b) provides, and after a timely rehearing motion the time to appeal runs from the order disposing of it (FRAP 6(b)(2)(A)(i)). The appeal periods are lit/frap's."
   edge-further-review-circuit "Appeal taken" -> circuit-appeal { authority cite "FRAP 6(b)(1)" }

@@ -10,7 +10,7 @@ import pa-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeO
 // decision.
 start charges
 
-state charges: "Formal charges filed by the Judicial Conduct Board" by office cite ?("Pa. Const. art. V, § 18(b)(5): not vendored") {
+state charges: "Formal charges filed by the Judicial Conduct Board" by court cite ?("Pa. Const. art. V, § 18(b)(5): not vendored") {
   note "The Judicial Conduct Board files formal charges against a judge in the Court of Judicial Discipline. Who may file, notice and the respondent's rights are not stated: Pa. Const. art. V, § 18(b)(5) is not vendored."
   edge-charges-answer "Respondent served" -> answer {
     event ActionCommenced()
@@ -18,7 +18,7 @@ state charges: "Formal charges filed by the Judicial Conduct Board" by office ci
   }
 }
 
-state answer: "Answer and pretrial" by applicant cite ?("C.J.D.R.P. 413: not vendored") {
+state answer: "Answer and pretrial" by movant cite ?("C.J.D.R.P. 413: not vendored") {
   note "The respondent answers the charges. The answer period, discovery and interim suspension are not stated: the Court of Judicial Discipline Rules of Procedure are not vendored."
   edge-answer-hearing "Set for trial" -> hearing {
     authority cite ?("C.J.D.R.P. 501: not vendored")
@@ -44,7 +44,7 @@ decision decision: "Court of Judicial Discipline decides" by court cite ?("Pa. C
   }
 }
 
-decision sanction: "Review sought?" by applicant cite ?("Pa. Const. art. V, § 18(c): not vendored") {
+decision sanction: "Review sought?" by movant cite ?("Pa. Const. art. V, § 18(c): not vendored") {
   note "The outline routes review of a sanction to the Supreme Court of Pennsylvania. The review period, the reviewing body's composition and its standard of review are not stated: Pa. Const. art. V, § 18(c) is not vendored."
   edge-sanction-final "No review" -> sanction-final {
     event JudgmentEntered()

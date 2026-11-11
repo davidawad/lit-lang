@@ -6,7 +6,7 @@ import wi-state-rules.{ ReviewPetitionFiled }
 // petitioner's side. Every period is stated in a note, not counted.
 start petition
 
-decision petition: "Petition for review?" by applicant cite "Wis. Stat. § 808.10(1)"
+decision petition: "Petition for review?" by petitioner cite "Wis. Stat. § 808.10(1)"
 {
   note "A decision of the court of appeals is reviewable only on a petition for review granted by the Supreme Court (Wis. Stat. § 808.10(1)). The decision the petition seeks to review is the Court of Appeals' affirmance, reversal or modification, or remand."
   edge-petition-affirmed "Petition for review of an affirmance" -> affirmed-review {

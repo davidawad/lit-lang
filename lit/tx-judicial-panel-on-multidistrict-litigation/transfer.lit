@@ -11,7 +11,7 @@ import tx-state-rules.{ ActionCommenced, DecisionFiled }
 // leading decision was named; none is kept.
 start request
 
-state request: "Motion to transfer filed" by applicant cite ?("Tex. R. Jud. Admin. 13.3 (not vendored)") {
+state request: "Motion to transfer filed" by plaintiff cite ?("Tex. R. Jud. Admin. 13.3 (not vendored)") {
   note "Who may move, the form of the motion and the response periods are stated in Rule 13 of the Rules of Judicial Administration, which is not vendored; they stay holes. Pretrial proceedings in multidistrict litigation may also be governed by Rules 11 and 13 of the Rules of Judicial Administration (Tex. R. Civ. P. 166)."
   edge-request-decision "Submitted for decision" -> decision {
     event ActionCommenced()

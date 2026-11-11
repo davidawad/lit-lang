@@ -9,7 +9,7 @@ import mt-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeO
 // stated. The outline named no decision.
 start filed
 
-state filed: "Appeal filed with the board" by applicant cite ?("Mont. Code Ann. § 15-2-301: not vendored") {
+state filed: "Appeal filed with the board" by appellant cite ?("Mont. Code Ann. § 15-2-301: not vendored") {
   note "The board hears appeals from county tax appeal boards and from the Department of Revenue. The filing period, form and fees are not stated: Mont. Code Ann. § 15-2-301 is not vendored."
   edge-filed-hearing "Set for hearing" -> hearing {
     event ActionCommenced()
@@ -30,7 +30,7 @@ chance decision: "Board decides" by court cite ?("Mont. Code Ann. § 15-2-301: n
   edge-decision-denied "Relief denied" -> review p ? { event DecisionFiled() }
 }
 
-decision review: "Judicial review sought?" by applicant cite ?("Mont. Code Ann. § 15-2-303: not vendored") {
+decision review: "Judicial review sought?" by petitioner cite ?("Mont. Code Ann. § 15-2-303: not vendored") {
   note "The review period and the reviewing court are not stated: Mont. Code Ann. § 15-2-303 is not vendored."
   edge-review-none "No review" -> final-decision {
     event JudgmentEntered()

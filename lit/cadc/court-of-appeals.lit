@@ -25,14 +25,14 @@ test "appellant brief is due 40 days after the record is filed" cite "Fed. R. Ap
   expect deadline(appellant-brief-period) == 2026-02-17
 }
 
-decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+decision threshold: "Appealable Order or Judgment?" by movant cite "28 U.S.C. § 1291"
 {
   note "The appealability basis is not modeled. The cited statute governs final decisions; this graph does not attempt to state the full interlocutory jurisdiction doctrine."
   edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
   edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
 }
 
-decision notice: "Notice of Appeal Within Time?" by applicant cite "Fed. R. App. P. 4(a)(1)(A)"
+decision notice: "Notice of Appeal Within Time?" by movant cite "Fed. R. App. P. 4(a)(1)(A)"
 {
   note "Whether a notice is timely depends on the applicable statute, rule, and proceeding. This node asserts no period."
   edge-notice-late "Untimely notice" -> dismissed-untimely {
@@ -41,13 +41,13 @@ decision notice: "Notice of Appeal Within Time?" by applicant cite "Fed. R. App.
   edge-notice-timely "Timely notice" -> record { authority cite "Fed. R. App. P. 4(a)(1)(A)" }
 }
 
-state record: "Record and Transcript Assembled" by office cite "Fed. R. App. P. 10"
+state record: "Record and Transcript Assembled" by court cite "Fed. R. App. P. 10"
 {
   note "The record and transcript process is governed by FRAP 10 and 11 and the corresponding D.C. Circuit rules."
   edge-record-brief "Record filed" -> briefing { authority cite "Fed. R. App. P. 10" }
 }
 
-state briefing: "Briefs Filed" by applicant cite "Fed. R. App. P. 31"
+state briefing: "Briefs Filed" by movant cite "Fed. R. App. P. 31"
 {
   note "Briefing is governed by FRAP 28, 31, and 32 and the corresponding D.C. Circuit rules. No timing or length limit is asserted here."
   edge-briefing-argue "Briefing complete" -> argument { authority cite "Fed. R. App. P. 31" }
@@ -67,7 +67,7 @@ state decision: "Decision Issued" by court cite "Fed. R. App. P. 36"
   }
 }
 
-decision rehearing-decision: "Rehearing Sought?" by applicant cite "Fed. R. App. P. 40"
+decision rehearing-decision: "Rehearing Sought?" by movant cite "Fed. R. App. P. 40"
 {
   note "Panel and en banc rehearing are governed by FRAP 35 and 40 and the corresponding D.C. Circuit rules."
   edge-rehearing-decision-none "No petition" -> mandate { authority cite "Fed. R. App. P. 40" }
@@ -84,13 +84,13 @@ state rehearing-order: "Rehearing Order" by court cite "Fed. R. App. P. 40"
   }
 }
 
-state mandate: "Mandate or Remittitur Issued" by office cite "Fed. R. App. P. 41"
+state mandate: "Mandate or Remittitur Issued" by court cite "Fed. R. App. P. 41"
 {
   note "Mandate is governed by FRAP 41 and the corresponding D.C. Circuit rules."
   edge-mandate-further "Mandate issued" -> further-review { authority cite "Fed. R. App. P. 41" }
 }
 
-decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+decision further-review: "Further Review Sought?" by movant cite "28 U.S.C. § 1254"
 {
   note "Certiorari from a court of appeals is authorized by 28 U.S.C. § 1254. Supreme Court procedure is outside this package; no period is asserted."
   edge-further-review-none "No further review" -> final-decision {

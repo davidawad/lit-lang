@@ -14,7 +14,7 @@ import pa-state-rules.{ NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
 // appeals, which have shorter periods throughout, are outside this package.
 start order-entered
 
-state order-entered: "Final order entered in the trial court" by applicant cite "Pa.R.A.P. 903(a)"
+state order-entered: "Final order entered in the trial court" by movant cite "Pa.R.A.P. 903(a)"
 {
   note "An appeal may be taken as of right from any final order of a trial court, one that disposes of all claims and of all parties or is entered as final on an express determination that an immediate appeal would facilitate resolution of the entire case; an application for that determination is filed within 30 days of entry of the order and is deemed denied unless acted on within 30 days after filing (Pa.R.A.P. 341(a)-(c)). The notice of appeal is filed within 30 days after the entry of the order appealed from (Pa.R.A.P. 903(a)). If a party files a timely notice of appeal, any other party may file one within 14 days of the date the first was served, or within the time otherwise prescribed, whichever period last expires (Pa.R.A.P. 903(b))."
   edge-order-entered-notice "Notice of appeal filed in time" -> notice-filed {
@@ -29,7 +29,7 @@ terminal time-barred: "Appeal time missed" outcome [loss, dismissal] cite "Pa.R.
   note "Outcome from the applicant's side. The failure to file a notice of appeal within the time allowed by Pa.R.A.P. 903 renders an appeal invalid; other defects in taking the appeal do not affect its validity (Pa.R.A.P. 902(b)(1), (2))."
 }
 
-state notice-filed: "Notice of appeal filed" by applicant cite "Pa.R.A.P. 902(a)"
+state notice-filed: "Notice of appeal filed" by movant cite "Pa.R.A.P. 902(a)"
 {
   note "The notice of appeal is filed with the clerk of the trial court in each docket in which the order has been entered (Pa.R.A.P. 902(a)). The appellant requests any transcript required and pays for it as the Pennsylvania Rules of Judicial Administration prescribe; failing that, the appellate court may dismiss the appeal (Pa.R.A.P. 1911(a), (d)). If the trial judge orders a concise statement of the errors complained of on appeal, the judge allows at least 21 days from the order's entry on the docket to file and serve it, and issues not included in a timely statement are waived (Pa.R.A.P. 1925(b), (b)(2)(i), (b)(4)(vii)). The judge files at least a brief opinion of the reasons for the order if they do not already appear of record (Pa.R.A.P. 1925(a)(1)). The record, with the transcript and exhibits, is transmitted to the appellate court within 60 days after the filing of the notice of appeal (Pa.R.A.P. 1931(a)(1))."
   edge-notice-filed-record "Record transmitted" -> briefing {
@@ -38,7 +38,7 @@ state notice-filed: "Notice of appeal filed" by applicant cite "Pa.R.A.P. 902(a)
   }
 }
 
-state briefing: "Briefs filed" by applicant cite "Pa.R.A.P. 2185(a)"
+state briefing: "Briefs filed" by movant cite "Pa.R.A.P. 2185(a)"
 {
   note "The appellant serves and files its brief within 40 days after the date on which the record is filed, unless the prothonotary fixes a later date under a deferred briefing schedule; the appellee within 30 days after service of the appellant's brief and reproduced record; a reply brief within 14 days after service of the preceding brief, received at least three days before argument except for good cause (Pa.R.A.P. 2185(a)(1), (b)). The appellant designates the parts of the record to reproduce not later than 30 days before its brief is due, and the appellee may counter-designate within ten days after receipt (Pa.R.A.P. 2154(a)). The brief contains the parts Pa.R.A.P. 2111(a) lists, in the Superior Court with the Pa.R.A.P. 1925(b) statement appended (Pa.R.A.P. 2111(a), (d)); no question is considered unless stated in, or fairly suggested by, the statement of questions involved (Pa.R.A.P. 2116(a)). A reply brief answers only matters raised by the appellee and not previously addressed, and no further briefs are filed without leave (Pa.R.A.P. 2113(a), (c))."
   edge-briefing-argument "Briefs filed: case listed for argument or submitted" -> argument {
@@ -69,7 +69,7 @@ decision appellate-decision: "Intermediate appellate court decides" by court cit
   }
 }
 
-decision after-affirmance: "Reargument, allowance of appeal, or neither" by applicant cite "Pa.R.A.P. 2542(a)"
+decision after-affirmance: "Reargument, allowance of appeal, or neither" by movant cite "Pa.R.A.P. 2542(a)"
 {
   note "An application for reargument is filed within 14 days after entry of the judgment or order (Pa.R.A.P. 2542(a)(1)); an adverse party may answer within 14 days after service (Pa.R.A.P. 2545(a)). A petition for allowance of appeal is filed with the Prothonotary of the Supreme Court within 30 days after entry of the order sought to be reviewed; if a timely application for reargument is filed, the time for all parties runs from the order denying reargument or the decision on reargument (Pa.R.A.P. 1113(a), (a)(1)). Any other party may cross-petition within 14 days of service of the first petition or within the time otherwise prescribed, whichever last expires (Pa.R.A.P. 1113(b))."
   edge-after-affirmance-reargument "Application for reargument" -> reargument {

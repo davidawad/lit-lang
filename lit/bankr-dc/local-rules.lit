@@ -416,7 +416,7 @@ deadline proposed-order-period: 14.days after MatterConcluded() counted_by frbp9
 
 start motion-filed
 
-state motion-filed: "Motion filed with notice of opportunity to object" by applicant cite "Bankr. D.D.C. LBR 9013-1(c)"
+state motion-filed: "Motion filed with notice of opportunity to object" by movant cite "Bankr. D.D.C. LBR 9013-1(c)"
 {
   note "A written motion states its grounds and relief with particularity (LBR 9013-1(a)-(b)) and carries a conspicuous notice of the motion, objection deadline and hearing substantially in Official Form B 420A, unless filed with a motion to shorten time under LBR 9013-2 (LBR 9013-1(c)). A hearing date is taken from the Court's website or the Courtroom Deputy (LBR 5070-1(a)); a party may not set a hearing on less than 14 days' notice without an order under LBR 9013-2 (LBR 9013-1(d)(3)). The motion's FRBP periods are lit/frbp's."
   edge-motion-filed-response "Response filed" -> response {
@@ -444,7 +444,7 @@ decision ruling: "Motion decided" by court cite "Bankr. D.D.C. LBR 9013-1(e)"
   edge-ruling-denied "Denied" -> proposed-order { authority cite "Bankr. D.D.C. LBR 9072-1(e)" }
 }
 
-state proposed-order: "Prevailing party submits the proposed order" by applicant cite "Bankr. D.D.C. LBR 9072-1(e)"
+state proposed-order: "Prevailing party submits the proposed order" by movant cite "Bankr. D.D.C. LBR 9072-1(e)"
 {
   note "The proposed order stands alone, carries the endorsements and service list LBR 9072-1(a)-(c) require, and is filed within 14 days after the disposition (LBR 9072-1(e))."
   edge-proposed-order-decided "Order filed" -> decided {

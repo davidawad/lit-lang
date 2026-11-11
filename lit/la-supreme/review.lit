@@ -4,7 +4,7 @@ import la-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
 
 start petition
 
-decision petition: "Apply for a writ of review?" by applicant cite ?("La. Const. art. V, sec. 5; La. Sup. Ct. R. X") {
+decision petition: "Apply for a writ of review?" by petitioner cite ?("La. Const. art. V, sec. 5; La. Sup. Ct. R. X") {
   note "Review of a court of appeal decision in the Supreme Court of Louisiana is by writ application under the court's supervisory jurisdiction (La. Const. art. V, § 5) and Supreme Court Rule X; neither is vendored, so the application delay, its form, length and the grounds for a grant are holes. A court of appeal decision arrives from lit/la-appellate."
   edge-petition-none "No application: the court of appeal decision stands" -> review-not-sought {
     authority cite ?("La. Sup. Ct. R. X")
@@ -21,7 +21,7 @@ chance review-decision: "Writ granted or denied" by court cite ?("La. Const. art
   edge-review-granted "Writ granted" -> briefing p ? {}
 }
 
-state briefing: "Briefs on the merits" by applicant cite ?("La. Sup. Ct. R.") {
+state briefing: "Briefs on the merits" by petitioner cite ?("La. Sup. Ct. R.") {
   note "Merits briefing periods, form and length are set by the Supreme Court Rules, which are not vendored; they are holes."
   edge-briefing-argument "Argued or submitted" -> argument { authority cite ?("La. Sup. Ct. R.") }
 }
@@ -38,7 +38,7 @@ chance decision: "Court decides" by court cite "La. C.C.P. art. 2164"
   edge-decision-reversed "Reversed, amended or remanded" -> rehearing p ? { event DecisionFiled() }
 }
 
-decision rehearing: "Apply for rehearing?" by applicant cite ?("La. Sup. Ct. R.") {
+decision rehearing: "Apply for rehearing?" by petitioner cite ?("La. Sup. Ct. R.") {
   note "The rehearing delay and grounds are set by the Supreme Court Rules, which are not vendored; they are holes."
   edge-rehearing-none "No rehearing" -> judgment-final {
     event MandateIssued()

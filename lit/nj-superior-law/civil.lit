@@ -18,7 +18,7 @@ import nj-state-rules.{ JudgmentEntered }
 // on summary judgment; no reporter text is vendored, so they are removed.
 start complaint-filed
 
-state complaint-filed: "Complaint filed: one form of action" by applicant cite "N.J. Ct. R. 4:2-1"
+state complaint-filed: "Complaint filed: one form of action" by movant cite "N.J. Ct. R. 4:2-1"
 {
   note "There is one form of action in civil practice, the civil action (R. 4:2-1). The plaintiff, the plaintiff's attorney or the clerk may issue the summons; if it is not issued within 15 days from the date of the Track Assignment Notice, the action may be dismissed under R. 4:37-2(a) (R. 4:4-1). The primary method of obtaining in personam jurisdiction over a defendant in New Jersey is personal service of the summons and complaint within the State on the persons R. 4:4-4(a) lists; if, by affidavit, personal service cannot be made despite diligent effort and inquiry, jurisdiction may be obtained by personal service outside the State or by registered or certified and ordinary mail (R. 4:4-4(b)(1)). Mailed service in lieu of personal service is effective only if the defendant answers or appears, no default may be entered on it, and if the defendant does not answer or appear within 60 days following mailed service, service is made as otherwise prescribed and the time under R. 4:4-1 for issuing the summons begins anew (R. 4:4-4(c))."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
@@ -26,7 +26,7 @@ state complaint-filed: "Complaint filed: one form of action" by applicant cite "
   }
 }
 
-decision answer-due: "Answer, motion to dismiss, or no response" by office cite "N.J. Ct. R. 4:6-1(a)"
+decision answer-due: "Answer, motion to dismiss, or no response" by court cite "N.J. Ct. R. 4:6-1(a)"
 {
   note "The defendant serves an answer, including any counterclaim, within 35 days after service of the summons and complaint on it; an answer to a counterclaim or crossclaim is served within 35 days after its service, and a reply to an answer, where permitted, within 20 days after service of the answer (R. 4:6-1(a)). The time may be enlarged once by written consent of the parties for not more than 60 days, the consent filed with the responsive pleading within that period; further enlargements only by court order on notice for good cause (R. 4:6-1(c)). Every defense is asserted in the answer, except that lack of subject-matter or personal jurisdiction, insufficiency of process or of service, failure to state a claim and failure to join a party without whom the action cannot proceed may be made by motion, with briefs, before pleading (R. 4:6-2)."
   edge-answer-due-answer "Answer filed" -> answered { authority cite "N.J. Ct. R. 4:6-1(a)" }
@@ -52,7 +52,7 @@ decision dismissal-motion: "Motion to dismiss decided" by court cite "N.J. Ct. R
   }
 }
 
-state amended: "Amended pleading" by applicant cite "N.J. Ct. R. 4:9-1"
+state amended: "Amended pleading" by movant cite "N.J. Ct. R. 4:9-1"
 {
   note "A party may amend any pleading as of course before a responsive pleading is served or, if no responsive pleading is to be served and the action is not on the trial calendar, within 90 days after it is served; thereafter only by written consent of the adverse party or by leave of court, freely given in the interest of justice, on a motion annexing the proposed amended pleading. The response to an amended pleading is due within the time remaining for response to the original pleading or within 20 days after service of the amended pleading, whichever is longer, unless the court orders otherwise (R. 4:9-1)."
   edge-amended-tested "Amended pleading met with a new motion to dismiss" -> dismissal-motion {
@@ -68,7 +68,7 @@ terminal dismissed-pleading: "Dismissed on a motion under R. 4:6-2" outcome [los
   note "Outcome from the applicant's side. A final judgment, one that finally resolves all issues as to all parties, is appealable to the Appellate Division as of right (R. 2:2-3(a), (b)); the time to appeal is set by R. 2:4-1, which is not vendored."
 }
 
-state default-entered: "Default entered by the clerk" by office cite "N.J. Ct. R. 4:43-1"
+state default-entered: "Default entered by the clerk" by court cite "N.J. Ct. R. 4:43-1"
 {
   note "If a party against whom affirmative relief is sought fails to plead or otherwise defend, or its answer is stricken with prejudice, the clerk enters a default on a formal written request supported by the attorney's affidavit reciting service and that the time to answer has expired and not been extended; the request and affidavit are filed together within 6 months of the actual default, and later only on notice of motion; the attorney mails a copy of the default to a defendant served personally or by mail (R. 4:43-1). No default is entered on optional mailed service (R. 4:4-4(c)). A final judgment by default may be entered after, but not simultaneously with, the default: by the clerk for a sum certain on an affidavit of the items, and by the court on notice of motion in all other cases, with proof hearings as needed; notice of an application made more than six months after the default is mailed to the defendant (R. 4:43-2(a), (b)). If the party entitled to a default judgment does not apply within four months after the default, the court issues a written notice under R. 1:13-7(a) (R. 4:43-2(d)). Setting aside an entry of default is governed by R. 4:43-3, which is not vendored."
   edge-default-entered-judgment "Final judgment by default" -> default-judgment {
@@ -92,7 +92,7 @@ terminal default-won: "Default judgment for applicant" outcome [win] cite "N.J. 
   note "Outcome from the applicant's side: a final judgment by default under R. 4:43-2."
 }
 
-state answered: "Answer filed" by applicant cite "N.J. Ct. R. 4:6-1(a)"
+state answered: "Answer filed" by movant cite "N.J. Ct. R. 4:6-1(a)"
 {
   note "The party filing the responsive pleading certifies that it was served within the time allowed by R. 4:6 or the other rule it names (R. 4:6-1(d)). The answer includes any counterclaim (R. 4:6-1(a))."
   edge-answered-discovery "Case proceeds to discovery" -> discovery {
@@ -100,7 +100,7 @@ state answered: "Answer filed" by applicant cite "N.J. Ct. R. 4:6-1(a)"
   }
 }
 
-state discovery: "Discovery" by applicant cite "N.J. Ct. R. 4:10-2(a)"
+state discovery: "Discovery" by movant cite "N.J. Ct. R. 4:10-2(a)"
 {
   note "Parties may obtain discovery of any matter, not privileged, relevant to the subject matter of the action, including electronically stored information (R. 4:10-2(a)); trial preparation materials and expert discovery are limited (R. 4:10-2(c), (d)). Discovery is completed within the time for the case's Track, counted from the first answer or 90 days after the first defendant is served, whichever is first: Track I 150 days, Track II 300 days, Tracks III and IV 450 days; joining a new party extends the discovery end date by 60 days, and the party joining it shares discovery within 20 days after service of the new party's initial pleading (R. 4:24-1(a), (b)). The parties may consent to extend discovery once by 60 days before it expires; otherwise a motion is made returnable before the period ends, and no extension is permitted after an arbitration or trial date is fixed absent exceptional circumstances (R. 4:24-1(c)). On remand from a federal court, the time from the notice of removal to the filing of the remand order is excluded, and a case management conference is held within thirty days of the filing of the remand order (R. 4:24-1(d))."
   edge-discovery-delinquent "Demand for discovery not complied with" -> discovery-dismissal {

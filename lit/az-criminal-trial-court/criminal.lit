@@ -14,7 +14,7 @@ module az-superior-court-criminal.criminal
 // are removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "Ariz. R. Crim. P. 4.1"
+state arrested: "Arrest or summons" by prosecution cite "Ariz. R. Crim. P. 4.1"
 {
   note "An arrested person must be promptly taken before a magistrate for an initial appearance; if it does not occur within 24 hours after arrest, the person must be immediately released from custody (Ariz. R. Crim. P. 4.1(a)). After an arrest without a warrant, a complaint must be promptly filed, and if it is not filed within 48 hours after the initial appearance the person must be released and any preliminary hearing dates vacated (Ariz. R. Crim. P. 4.1(b)(2)). Each presiding judge must make a magistrate available every day of the week for initial appearances (Ariz. R. Crim. P. 4.1(d))."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
@@ -44,19 +44,19 @@ decision probable-cause: "Preliminary hearing or grand jury" by court cite "Ariz
   }
 }
 
-state charged: "Indictment or information" by office cite "Ariz. R. Crim. P. 13.1"
+state charged: "Indictment or information" by court cite "Ariz. R. Crim. P. 13.1"
 {
   note "An indictment is a written charge endorsed as a true bill and presented by a grand jury; an information is a written charge signed and presented by the State (Ariz. R. Crim. P. 13.1(b), (c)). The arraignment is held no later than 10 days after the filing of the indictment, information or complaint for a defendant in custody, or 30 days for a defendant not in custody (Ariz. R. Crim. P. 14.2)."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Ariz. R. Crim. P. 14.2" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "Ariz. R. Crim. P. 14.1"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "Ariz. R. Crim. P. 14.1"
 {
   note "At arraignment the defendant is formally advised of the charges and rights, counsel is assured, a plea is entered and a trial date or later court date is set (Ariz. R. Crim. P. 14.1). The Rule 8 trial clock runs from arraignment: trial must begin no later than 150 days after arraignment for a defendant in custody, 180 days for a defendant released under Rule 7, 270 days in a complex case, and 24 months after the notice of intent to seek death in a capital case (Ariz. R. Crim. P. 8.2(a)); a retrial after a mistrial or new-trial order must begin no later than 60 days after the order, and after an appellate reversal no later than 90 days after the mandate (Ariz. R. Crim. P. 8.2(c)). Periods listed in Rule 8.4 are excluded, and a party may move no later than 25 days after arraignment to suspend Rule 8 for extraordinary circumstances (Ariz. R. Crim. P. 8.1(e)). A trial may be continued only on a showing of extraordinary circumstances (Ariz. R. Crim. P. 8.5(b))."
   edge-arraignment-discovery "Disclosure" -> discovery { authority cite "Ariz. R. Crim. P. 15.1" }
 }
 
-state discovery: "Disclosure and pretrial motions" by applicant cite "Ariz. R. Crim. P. 15.1"
+state discovery: "Disclosure and pretrial motions" by prosecution cite "Ariz. R. Crim. P. 15.1"
 {
   note "In a felony case the State makes its initial reports available by the preliminary hearing or, if none is held, the arraignment, and its supplemental disclosures no later than 30 days after arraignment in superior court, unless the court orders otherwise (Ariz. R. Crim. P. 15.1(a), (c)). The defendant's disclosures are due in superior court 40 days after arraignment or 10 days after the State's supplemental disclosure, whichever is first (Ariz. R. Crim. P. 15.2). In a first-degree murder case the State gives notice whether it seeks death no later than 60 days after arraignment, extendable by stipulation (Ariz. R. Crim. P. 15.1(i)). All motions must be made no later than 20 days before trial, except lack of jurisdiction, and the court may modify motion deadlines (Ariz. R. Crim. P. 16.1(b)); a response is due no later than 10 days after service of a motion and a reply no later than 3 days after service of the response (Ariz. R. Crim. P. 1.9(b))."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -84,7 +84,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Ariz. R. Cr
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Ariz. R. Crim. P. 17.1"
+decision plea-decision: "Plea or trial" by accused cite "Ariz. R. Crim. P. 17.1"
 {
   note "A plea agreement must be in writing, signed by the defendant, defense counsel and the prosecutor, and filed; any party may withdraw before the court accepts it, and the court is not bound by its sentencing terms (Ariz. R. Crim. P. 17.4(b), (d)). Before accepting the agreement the court confirms with the defendant that it contains all its terms and that the defendant understands and agrees to them (Ariz. R. Crim. P. 17.4(c)). The defendant may waive a jury only with the consent of the State and the court, in writing or on the record (Ariz. R. Crim. P. 18.1(b))."
   edge-plea-decision-plea "Guilty or no-contest plea accepted" -> sentencing {
@@ -127,7 +127,7 @@ state sentencing: "Presentence report and sentencing" by court cite "Ariz. R. Cr
   }
 }
 
-decision judgment: "Judgment and sentence" by applicant cite "Ariz. R. Crim. P. 26.10"
+decision judgment: "Judgment and sentence" by prosecution cite "Ariz. R. Crim. P. 26.10"
 {
   note "A notice of appeal from a judgment of conviction and sentence must be filed no later than 20 days after the oral pronouncement of sentence, and a cross-appeal no later than 20 days after the notice of appeal; a death sentence is appealed automatically (Ariz. R. Crim. P. 31.2(a), (b)). Rule 1.10 governs computation in Rule 31, except that 5 days are not added for electronic service (Ariz. R. Crim. P. 31.3(d)). A notice of post-conviction relief for a claim under Rule 32.1(a) is due within 90 days after the oral pronouncement of sentence or 30 days after the mandate in the direct appeal, whichever is later; after a plea, Rule 33 applies and the notice is due within 90 days after the oral pronouncement of sentence (Ariz. R. Crim. P. 32.4(b)(3)(A); 33.4(b)(3)(A)). Federal habeas belongs to lit/habeas."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {

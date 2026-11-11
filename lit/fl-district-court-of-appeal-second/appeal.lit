@@ -10,7 +10,7 @@ import fl-state-rules.{
 
 start threshold
 
-decision threshold: "Appealable final order?" by applicant cite "Fla. R. App. P. 9.030(b)"
+decision threshold: "Appealable final order?" by appellant cite "Fla. R. App. P. 9.030(b)"
 {
   note "Florida Second District Court of Appeal: the district's internal operating procedures and administrative orders supplement the Florida Rules of Appellate Procedure; they are not vendored and not modeled. District courts of appeal review by appeal final orders of trial courts not directly reviewable by the supreme court or a circuit court, nonfinal orders as rule 9.130 prescribes, and administrative action if general law provides (Fla. R. App. P. 9.030(b)(1)). No leading decision is named."
   edge-threshold-no "Not appealable" -> dismissed-jurisdiction {
@@ -19,7 +19,7 @@ decision threshold: "Appealable final order?" by applicant cite "Fla. R. App. P.
   edge-threshold-yes "Appealable" -> notice { authority cite "Fla. R. App. P. 9.030(b)" }
 }
 
-decision notice: "Notice of appeal within 30 days of rendition?" by applicant cite "Fla. R. App. P. 9.110(b)"
+decision notice: "Notice of appeal within 30 days of rendition?" by appellant cite "Fla. R. App. P. 9.110(b)"
 {
   note "Jurisdiction is invoked by filing a notice with the clerk of the lower tribunal within 30 days of rendition of the order to be reviewed (Fla. R. App. P. 9.110(b)), substantially in the form of rule 9.900(a) with a conformed copy of the order attached (Fla. R. App. P. 9.110(d)). An appellee may cross-appeal by serving a notice within 15 days of service of the appellant's timely notice or within the time for a notice of appeal, whichever is later (Fla. R. App. P. 9.110(g))."
   edge-notice-late "Untimely notice" -> dismissed-untimely {
@@ -31,7 +31,7 @@ decision notice: "Notice of appeal within 30 days of rendition?" by applicant ci
   }
 }
 
-state record: "Record prepared and transmitted" by office cite "Fla. R. App. P. 9.110(e)"
+state record: "Record prepared and transmitted" by court cite "Fla. R. App. P. 9.110(e)"
 {
   note "Within 50 days of the notice the clerk of the lower tribunal prepares the record rule 9.200 prescribes and serves the index; within 60 days it transmits the record or files a notice of inability (Fla. R. App. P. 9.110(e)). The record is all documents filed below, the exhibits that are not physical evidence and the transcripts filed, less the papers rule 9.200(a)(1) excepts."
   edge-record-brief "Record transmitted" -> briefing {
@@ -40,7 +40,7 @@ state record: "Record prepared and transmitted" by office cite "Fla. R. App. P. 
   }
 }
 
-state briefing: "Briefs served" by applicant cite "Fla. R. App. P. 9.210(g)"
+state briefing: "Briefs served" by appellant cite "Fla. R. App. P. 9.210(g)"
 {
   note "The initial brief is served within 70 days of filing the notice (Fla. R. App. P. 9.110(f)); unless otherwise required, the answer brief within 30 days after service of the initial brief, the reply brief within 30 days after service of the answer brief, and a cross-reply brief within 30 days thereafter (Fla. R. App. P. 9.210(g)). Initial and answer briefs are limited to 13,000 words or 50 pages and a reply to 4,000 words or 15 pages (Fla. R. App. P. 9.210(a)(2)(B))."
   edge-briefing-argue "Briefing complete" -> argument { authority cite "Fla. R. App. P. 9.320(a)" }
@@ -61,7 +61,7 @@ state decision: "Order or decision issued" by court cite "Fla. R. App. P. 9.330(
   }
 }
 
-decision rehearing-decision: "Rehearing sought within 15 days?" by applicant cite "Fla. R. App. P. 9.330(a)"
+decision rehearing-decision: "Rehearing sought within 15 days?" by appellant cite "Fla. R. App. P. 9.330(a)"
 {
   note "A motion for rehearing, clarification, certification or a written opinion may be filed within 15 days of an order or decision or within such other time as the court sets (Fla. R. App. P. 9.330(a)(1)); a motion for rehearing states with particularity the points of law or fact overlooked or misapprehended (Fla. R. App. P. 9.330(a)(2)(A))."
   edge-rehearing-decision-none "No motion" -> mandate { authority cite "Fla. R. App. P. 9.340(a)" }
@@ -77,7 +77,7 @@ state rehearing-order: "Rehearing motion decided" by court cite "Fla. R. App. P.
   }
 }
 
-state mandate: "Mandate issued" by office cite "Fla. R. App. P. 9.340(a)"
+state mandate: "Mandate issued" by court cite "Fla. R. App. P. 9.340(a)"
 {
   note "Unless the court orders otherwise, the clerk issues the mandate after expiration of 15 days from the order or decision (Fla. R. App. P. 9.340(a)); a timely motion for rehearing extends that until 15 days after rendition of the order denying it (Fla. R. App. P. 9.340(b)). The court may recall the mandate, but not more than 120 days after its issuance (Fla. R. App. P. 9.340(a))."
   edge-mandate-further "Mandate issued" -> further-review {
@@ -86,7 +86,7 @@ state mandate: "Mandate issued" by office cite "Fla. R. App. P. 9.340(a)"
   }
 }
 
-decision further-review: "Supreme Court review sought within 30 days?" by applicant cite "Fla. R. App. P. 9.120(b)"
+decision further-review: "Supreme Court review sought within 30 days?" by petitioner cite "Fla. R. App. P. 9.120(b)"
 {
   note "The supreme court's discretionary jurisdiction (Fla. R. App. P. 9.030(a)(2)(A)) is invoked by filing a notice with the clerk of the district court of appeal within 30 days of rendition of the order to be reviewed (Fla. R. App. P. 9.120(b)). The petitioner's brief on jurisdiction is served within 10 days of filing the notice and the respondent's within 30 days after service of the petitioner's; no reply is permitted (Fla. R. App. P. 9.120(d)). Briefs on jurisdiction are limited to 2,500 words or 10 pages (Fla. R. App. P. 9.210(a)(2)(A)). Review in the Supreme Court of the United States is not modeled."
   edge-further-review-none "No further review" -> final-decision {

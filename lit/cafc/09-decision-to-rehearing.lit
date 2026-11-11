@@ -11,7 +11,7 @@ import core.frap26.{ frap26 }
 /// A tribunal-discretion draw. It stays a `decision` by `office`, as in the
 /// pack, because a `chance` node lowers to kind `state`; its probabilities
 /// are the pack's, with their bases in each edge's note.
-chance panel-decision: "Panel Decides the Appeal" by office discretion cite "Fed. Cir. IOP #8; Fed. Cir. IOP #9; FRAP 36"
+chance panel-decision: "Panel Decides the Appeal" by court discretion cite "Fed. Cir. IOP #8; Fed. Cir. IOP #9; FRAP 36"
 {
   group decision-group
   note "Straw vote in reverse seniority order on outcome and disposition vehicle (precedential opinion, nonprecedential opinion, or Rule 36 judgment) — IOP #8 ¶ 1; IOP #9 ¶ 1. Probability basis: the Federal Circuit issued Rule 36 summary affirmances in ~20% of merits terminations in 2024 (Jason Rantanen, 'Federal Circuit Decisions - 2024 Stats and Datapack,' Patently-O, June 2025) — the only figure on this node's edges independently sourced to a cited statistic; note the same source finds the Rule 36 rate is far higher in PTAB-origin appeals specifically (43% of PTAB appeals 2011-2024, and 67% vs 18% depending on whether the patent owner or the petitioner is the appellant) — not separately modeled here since this pack does not branch panel-decision by origin. The remaining five splits (opinion-affirmed, reversed outright, vacated/remanded, mixed, dismissed) apportion the balance as teaching estimates and are NOT independently sourced — flagged APPROXIMATE, consistent with ptab-patent-trial-appeal-board.json's and itc-337.json's own convention for unsourced splits."
@@ -45,7 +45,7 @@ chance panel-decision: "Panel Decides the Appeal" by office discretion cite "Fed
   }
 }
 
-terminal rule36-affirmance: "Rule 36 Judgment of Affirmance Without Opinion" by applicant outcome [loss] cite "Fed. Cir. R. 36(a)-(b)"
+terminal rule36-affirmance: "Rule 36 Judgment of Affirmance Without Opinion" by movant outcome [loss] cite "Fed. Cir. R. 36(a)-(b)"
 {
   group decision-group
   note "Entered when an opinion would have no precedential value and one of Rule 36(a)(1)-(5) applies (findings not clearly erroneous; sufficient evidence for a jury verdict; record supports SJ/directed verdict/JOP; agency decision warrants affirmance under its governing standard of review; or no error of law). No separate judgment is prepared — the order is the judgment (Fed. Cir. R. 36(b)). Payoff 0 per the authoring brief's convention (affirmed-for-appellee)."
@@ -56,7 +56,7 @@ terminal rule36-affirmance: "Rule 36 Judgment of Affirmance Without Opinion" by 
   }
 }
 
-terminal affirmed: "Affirmed (With Opinion)" by applicant outcome [loss] cite "FRAP 36(a)"
+terminal affirmed: "Affirmed (With Opinion)" by movant outcome [loss] cite "FRAP 36(a)"
 {
   group decision-group
   valence bad
@@ -66,7 +66,7 @@ terminal affirmed: "Affirmed (With Opinion)" by applicant outcome [loss] cite "F
   }
 }
 
-terminal reversed: "Reversed (No Remand)" by applicant outcome [win] cite "FRAP 36(a)"
+terminal reversed: "Reversed (No Remand)" by movant outcome [win] cite "FRAP 36(a)"
 {
   group decision-group
   note "Relatively rare outright disposition — most reversals on questions requiring further fact-finding or application of law route through vacatur-and-remand instead."
@@ -77,7 +77,7 @@ terminal reversed: "Reversed (No Remand)" by applicant outcome [win] cite "FRAP 
   }
 }
 
-terminal affirmed-in-part-reversed-in-part: "Affirmed in Part, Reversed in Part" by applicant outcome [remand] cite "FRAP 36(a)"
+terminal affirmed-in-part-reversed-in-part: "Affirmed in Part, Reversed in Part" by movant outcome [remand] cite "FRAP 36(a)"
 {
   group decision-group
   note "Illustrative mixed-result payoff (between the 0 affirmance and 1,000,000 reversal anchors); in practice a mixed disposition often carries its own remand on the reversed portion, not separately modeled as a route into the remand-destination node to keep the graph tractable."
@@ -108,7 +108,7 @@ terminal dismissed-jurisdictional-defect: "Dismissed — Jurisdictional/Mootness
 /// nothing: the matter states its `facts`. The probabilities are only the
 /// prior of a matter whose history does not decide it; each `cafc@origin`
 /// instance sets its own route to 1.
-chance remand-destination: "Vacated/Remanded — Destination Tribunal" by office cite "FRAP 36(a)"
+chance remand-destination: "Vacated/Remanded — Destination Tribunal" by court cite "FRAP 36(a)"
 {
   group decision-group
   note "A matter fact, not an independent statistical draw: which of the remand terminals applies is determined entirely by the tribunal the appeal came from, which replay reads from the matter's own entry event. The 0.25/0.25/0.25/0.25 split is only the prior of a matter whose history does not name its origin -- see cafc-SOURCES-NOTES.md."
@@ -175,7 +175,7 @@ terminal remanded-to-ttab: "Remanded to the TTAB" outcome [remand] {
   payoff 400_000.usd
 }
 
-decision rehearing-window: "Losing Party Weighs Rehearing" by applicant cite "Fed. Cir. R. 40(a)(1), (f)"
+decision rehearing-window: "Losing Party Weighs Rehearing" by movant cite "Fed. Cir. R. 40(a)(1), (f)"
 {
   group rehearing-group
   rehearing-file "File petition for panel rehearing/rehearing en banc/combined petition" -> rehearing-petition-filed {
@@ -197,7 +197,7 @@ decision rehearing-window: "Losing Party Weighs Rehearing" by applicant cite "Fe
   }
 }
 
-state rehearing-petition-filed: "Petition for Panel Rehearing / Rehearing En Banc / Combined Petition Filed" by office cite "Fed. Cir. R. 40(a)(1)-(2), (b)"
+state rehearing-petition-filed: "Petition for Panel Rehearing / Rehearing En Banc / Combined Petition Filed" by court cite "Fed. Cir. R. 40(a)(1)-(2), (b)"
 {
   group rehearing-group
   note "Panel rehearing is the ordinary means of reconsideration; rehearing en banc 'is not favored' (Rule 40(a)(1)). A party seeking both must combine them in a single document unless a local rule says otherwise."
@@ -209,7 +209,7 @@ state rehearing-petition-filed: "Petition for Panel Rehearing / Rehearing En Ban
 /// A tribunal-discretion draw. It stays a `decision` by `office`, as in the
 /// pack, because a `chance` node lowers to kind `state`; its probabilities
 /// are the pack's, with their bases in each edge's note.
-chance panel-en-banc-rehearing-decision: "Panel (and, if Combined, the Full Court) Rules on the Petition" by office discretion cite "Fed. Cir. R. 40(a)(1)-(4), (c)"
+chance panel-en-banc-rehearing-decision: "Panel (and, if Combined, the Full Court) Rules on the Petition" by court discretion cite "Fed. Cir. R. 40(a)(1)-(4), (c)"
 {
   group rehearing-group
   rehearing-denied-edge "Deny rehearing and rehearing en banc" -> rehearing-denied p 0.93 {
@@ -222,7 +222,7 @@ chance panel-en-banc-rehearing-decision: "Panel (and, if Combined, the Full Cour
   }
 }
 
-state rehearing-denied: "Rehearing Denied — Panel Decision Stands" by office cite "Fed. Cir. R. 40(a)(4)"
+state rehearing-denied: "Rehearing Denied — Panel Decision Stands" by court cite "Fed. Cir. R. 40(a)(4)"
 {
   group rehearing-group
   rehearing-denied-to-mandate "Mandate clock resumes" -> mandate-issued {
@@ -233,7 +233,7 @@ state rehearing-denied: "Rehearing Denied — Panel Decision Stands" by office c
   }
 }
 
-state rehearing-relief-granted: "Rehearing Granted — Panel Modifies, or Case Reheard En Banc" by office cite "Fed. Cir. R. 40(e)"
+state rehearing-relief-granted: "Rehearing Granted — Panel Modifies, or Case Reheard En Banc" by court cite "Fed. Cir. R. 40(e)"
 {
   group rehearing-group
   note "For a granted en banc petition, the panel opinion is vacated and the case is reargued before the full active court; the case is modeled here as looping back into panel-decision to represent the fresh disposition that follows."

@@ -65,7 +65,7 @@ event SupplementalReviewBriefFiled() paper supplemental-review-brief
 
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite "Ark. R. App. P.–Civ. 3"
+state notice-filed: "Notice of appeal filed" by movant cite "Ark. R. App. P.–Civ. 3"
 {
   note "The appeal arrives from lit/ar-circuit. A notice of appeal is filed within 30 days from the entry of the judgment, decree or order appealed from, or of the Rule 54(b) certificate; a notice of cross-appeal within the later of 10 days after the notice of appeal is filed or 30 days from entry (Ark. R. App. P.–Civ. 4(a)). A timely motion under Ark. R. Civ. P. 50(b), 52(b) or 59(a), or another motion to vacate, alter or amend made no later than 10 days after entry, extends the time to 30 days from the order disposing of the last motion or from its deemed denial on the 30th day after filing (Ark. R. App. P.–Civ. 4(b)(1)); on a failure to receive notice of the judgment, the circuit court on motion filed within 180 days of entry extends the time by 14 days from its order (Ark. R. App. P.–Civ. 4(b)(3)). The filing fee is not stated in the vendored rules. All cases are filed in the Court of Appeals except those Ark. Sup. Ct. R. 1-2(a) assigns to the Supreme Court, and any case is subject to reassignment or transfer (Ark. Sup. Ct. R. 1-2(a)-(c)). No leading decision is named."
   edge-notice-filed-appealability "Notice filed" -> appealability {
@@ -89,13 +89,13 @@ terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" 
   note "Outcome from the appellant's side."
 }
 
-state record: "Record lodged" by applicant cite "Ark. R. App. P.–Civ. 5(a)"
+state record: "Record lodged" by movant cite "Ark. R. App. P.–Civ. 5(a)"
 {
   note "The record on appeal is filed with the clerk of the Supreme Court and docketed within 90 days from the filing of the first notice of appeal, or within 30 days in an appeal from an interlocutory order under Rule 2(a)(6) or (7) (Ark. R. App. P.–Civ. 5(a)). When stenographically reported material is designated, the circuit court may extend the time by order entered before it expires, on the findings Rule 5(b)(1) lists, but in no event more than seven months from the filing of the first notice of appeal; beyond that, the appellant may petition the Supreme Court for a writ of certiorari under Ark. Sup. Ct. R. 3-5 (Ark. R. App. P.–Civ. 5(b)). Any party may docket the appeal on a partial record to move for dismissal or other intermediate relief (Ark. R. App. P.–Civ. 5(c))."
   edge-record-briefing "Record lodged" -> briefing { authority cite "Ark. Sup. Ct. R. 4-4(b)" }
 }
 
-state briefing: "Briefing: appellant, appellee, reply" by applicant cite "Ark. Sup. Ct. R. 4-4"
+state briefing: "Briefing: appellant, appellee, reply" by movant cite "Ark. Sup. Ct. R. 4-4"
 {
   note "The appellant files its brief within 40 days of lodging the record; the appellee within 30 days after the appellant's brief is filed; the appellant may reply within fifteen days after the appellee's brief, and any cross-appellant's reply is filed within fifteen days after the cross-appellee's brief (Ark. Sup. Ct. R. 4-4(b)-(d)). The clerk may extend a brief's due date by seven calendar days on request; any further extension needs a written motion showing good cause, and stipulations of counsel for continuances are not recognized (Ark. Sup. Ct. R. 4-4(h)). A substantially compliant but noncompliant brief is marked tendered and may be resubmitted within seven calendar days (Ark. Sup. Ct. R. 4-4(g)(1)). Word-count limits are Ark. Sup. Ct. R. 4-2(d), encoded above; briefs use proportionally spaced type of not less than 14 points (Ark. Sup. Ct. R. 4-1(d))."
   edge-briefing-submitted "Briefs complete" -> argument { authority cite "Ark. Sup. Ct. R. 4-4(f)" }
@@ -127,7 +127,7 @@ decision disposition: "Decision" by court cite "Ark. Sup. Ct. R. 5-2"
   edge-disposition-remanded "Remanded" -> after-remanded { authority cite "Ark. Sup. Ct. R. 5-2" }
 }
 
-decision after-affirmed: "Affirmed: rehearing or review petition?" by applicant cite "Ark. Sup. Ct. R. 2-3(a)"
+decision after-affirmed: "Affirmed: rehearing or review petition?" by movant cite "Ark. Sup. Ct. R. 2-3(a)"
 {
   note "A petition for rehearing, with its brief, evidence of service and a certificate of merit, is filed within 18 calendar days from the date of decision; the respondent may file a brief on the following Monday (Supreme Court) or Wednesday (Court of Appeals) or within seven calendar days of the petition, whichever is later; a party may file only one petition, and no oral argument is heard (Ark. Sup. Ct. R. 2-3(a), (b), (i), (j)). A petition to the Supreme Court for review of a Court of Appeals decision is filed within 10 calendar days after the end of the Court of Appeals rehearing period, and a response within 10 calendar days of the petition; review is discretionary and no appeal as of right lies (Ark. Sup. Ct. R. 2-4(a), (e); 1-2(d))."
   edge-after-affirmed-petition "Rehearing or review petition filed" -> further-affirmed {
@@ -154,7 +154,7 @@ terminal affirmed-final: "Affirmed: mandate issued" outcome [loss, judgment] cit
   note "The clerk issues the mandate when the decision becomes final and mails it to the circuit clerk; absent special leave or stipulation, no mandate issues within 18 calendar days after the judgment is rendered. A party seeking certiorari in the Supreme Court of the United States may move to stay or recall the mandate, a stay not exceeding 90 days unless extended (Ark. Sup. Ct. R. 5-3(a)-(c)). Outcome from the appellant's side."
 }
 
-decision after-reversed: "Reversed or vacated: rehearing or review petition?" by applicant cite "Ark. Sup. Ct. R. 2-3(a)"
+decision after-reversed: "Reversed or vacated: rehearing or review petition?" by movant cite "Ark. Sup. Ct. R. 2-3(a)"
 {
   note "Rehearing within 18 calendar days from the date of decision (Ark. Sup. Ct. R. 2-3(a)); a petition for review within 10 calendar days after the end of the Court of Appeals rehearing period (Ark. Sup. Ct. R. 2-4(a))."
   edge-after-reversed-petition "Rehearing or review petition filed" -> further-reversed {
@@ -180,7 +180,7 @@ terminal reversed-final: "Reversed or vacated: mandate issued" outcome [win, jud
   note "Outcome from the appellant's side."
 }
 
-decision after-remanded: "Remanded: rehearing or review petition?" by applicant cite "Ark. Sup. Ct. R. 2-3(a)"
+decision after-remanded: "Remanded: rehearing or review petition?" by movant cite "Ark. Sup. Ct. R. 2-3(a)"
 {
   note "Rehearing within 18 calendar days from the date of decision (Ark. Sup. Ct. R. 2-3(a)); a petition for review within 10 calendar days after the end of the Court of Appeals rehearing period (Ark. Sup. Ct. R. 2-4(a))."
   edge-after-remanded-petition "Rehearing or review petition filed" -> further-remanded {

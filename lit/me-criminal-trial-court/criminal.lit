@@ -22,7 +22,7 @@ module me-criminal-trial-court.criminal
 // are removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "M.R.U. Crim. P. 4"
+state arrested: "Arrest or summons" by prosecution cite "M.R.U. Crim. P. 4"
 {
   note "A complaint is a written statement of the essential facts constituting the crime charged (M.R.U. Crim. P. 3); on it the court issues an arrest warrant or a summons (M.R.U. Crim. P. 4). When a defendant arrested without a warrant is not released within 48 hours after arrest, including Saturdays, Sundays and legal holidays, the court or a justice of the peace determines within that time, except in a bona fide emergency or other extraordinary circumstance, whether there is probable cause, and discharges the defendant if there is none; at 36 hours the custodian notifies the attorney for the State; Rule 45(a) and (b) do not apply (M.R.U. Crim. P. 4A(a))."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
@@ -55,7 +55,7 @@ decision charging: "Indictment, waiver or complaint" by court cite "M.R.U. Crim.
   }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "M.R.U. Crim. P. 10"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "M.R.U. Crim. P. 10"
 {
   note "Arraignment is conducted in open court by reading the indictment, information or complaint, or stating its substance, and calling on the defendant to plead; a represented defendant charged with a Class D or E crime may plead in writing through counsel (M.R.U. Crim. P. 10). A defendant may plead not guilty, not criminally responsible by reason of insanity, guilty or, with the court's consent, nolo contendere (M.R.U. Crim. P. 11(a)(1))."
   edge-arraignment-discovery "Automatic discovery" -> discovery {
@@ -63,7 +63,7 @@ state arraignment: "Arraignment and plea of not guilty" by applicant cite "M.R.U
   }
 }
 
-state discovery: "Discovery, dispositional conference and pretrial motions" by applicant cite "M.R.U. Crim. P. 16(b)"
+state discovery: "Discovery, dispositional conference and pretrial motions" by prosecution cite "M.R.U. Crim. P. 16(b)"
 {
   note "The State provides automatic discovery (M.R.U. Crim. P. 16(a)): at the initial appearance or arraignment on a Class A, B or C charge, within 7 days after a not-guilty plea to a Class D or E crime, and no later than 14 days before a dispositional conference held before indictment (M.R.U. Crim. P. 16(b)(1) to (4)); later material is disclosed within 14 days after the State obtains it (M.R.U. Crim. P. 16(b)(5)); the State answers a written discovery request within 14 days (M.R.U. Crim. P. 16(c)), and a motion for court-ordered discovery within 7 days (M.R.U. Crim. P. 16(d)). The defendant's reciprocal duties run from the dispositional conference: notice of expert mental-state evidence at least 7 days before it, and inspection and expert disclosures on request at least 14 days before it (M.R.U. Crim. P. 16A); a notice of alibi is due within 7 days after the State's demand, which may be served no later than 14 days before jury selection, and the State answers within 7 days (M.R.U. Crim. P. 16A). Motions to dismiss, on joinder, for court-ordered discovery, to suppress and on admissibility are served (not filed) at least 7 days before the dispositional conference and, if the matter is not resolved there, filed no later than the next court day (M.R.U. Crim. P. 12(b)(3)(A)); other motions are filed promptly (M.R.U. Crim. P. 12(b)(3)(B)); a motion in limine is made no later than 7 days before jury selection (M.R.U. Crim. P. 12(c)). A written motion and notice of its hearing are served at least 7 days before the hearing unless a rule or order fixes another period, and 3 days are added after service by mail (M.R.U. Crim. P. 45(d), (e)). At the dispositional conference the parties discuss resolution with the court (M.R.U. Crim. P. 18)."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -91,7 +91,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "M.R.U. Crim
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "M.R.U. Crim. P. 18(d)"
+decision plea-decision: "Plea or trial" by accused cite "M.R.U. Crim. P. 18(d)"
 {
   note "If the parties reach a plea agreement at the dispositional conference, the court takes the plea in open court or schedules it; if not, the matter is set for jury trial unless the defendant waives it (M.R.U. Crim. P. 18(d), (e)), and in a Class C or higher case on a complaint or information the defendant elects whether to waive indictment (M.R.U. Crim. P. 18(f)). Before accepting a guilty or nolo contendere plea to a Class C or higher crime the court determines that it is knowing, voluntary and has a factual basis (M.R.U. Crim. P. 11(b) to (e)); a conditional plea needs the court's approval and the State's consent (M.R.U. Crim. P. 11(a)(2)); plea agreements are governed by Rule 11A and filing agreements by Rule 11B. The attorney for the State may dismiss by a written dismissal stating the reasons, but not during trial without the defendant's consent (M.R.U. Crim. P. 48(a)). Scheduling and continuances follow Rule 25A."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
@@ -134,7 +134,7 @@ state sentencing: "Presentence report and sentencing" by court cite "M.R.U. Crim
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "M.R.U. Crim. P. 32(b)"
+decision judgment: "Judgment of conviction" by accused cite "M.R.U. Crim. P. 32(b)"
 {
   note "The judgment of conviction sets forth the plea, the verdict or findings, and the adjudication and sentence (M.R.U. Crim. P. 32(b)). An appeal in a criminal case is taken within 21 days after entry into the docket of the judgment or order appealed from, unless a shorter time is provided by law; a notice filed after the verdict or judgment but before its entry is treated as filed on the date of entry (M.R. App. P. 2B(a)(1), (b)(1)). A timely motion under M.R.U. Crim. P. 29, 33, 34 or 35(a) or (c) filed within 21 days after entry of judgment extends the time to 21 days after entry of the order on it (M.R. App. P. 2B(b)(2)). An application for leave to appeal a sentence is filed within the same time (M.R. App. P. 20(b); 15 M.R.S. §§ 2151 to 2157, not vendored). Within one year after a sentence is imposed the court may correct an illegal sentence, or reduce a sentence not yet completed (M.R.U. Crim. P. 35). A stay of execution pending appeal is governed by Rule 38. lit/core has no counting rule for the Maine appellate rules, so the 21-day period is not encoded as a counted deadline."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {

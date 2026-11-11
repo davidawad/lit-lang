@@ -4,7 +4,7 @@ import nm-state-rules.{ JudgmentEntered }
 
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "NMRA 1-003"
+state complaint-filed: "Complaint filed" by plaintiff cite "NMRA 1-003"
 {
   note "A civil action is commenced by filing a complaint with the court (NMRA 1-003). The summons directs the defendant to serve a responsive pleading or motion within thirty (30) days after service of the summons (NMRA 1-004(B)(2)). Service of process shall be made with reasonable diligence, and the original summons with proof of service is filed with the court (NMRA 1-004(C)(2)); unlike FRCP 4(m) the rule states no fixed service period. Periods in this package are stated, not counted: computation is NMRA 1-006(A). No leading decision is named."
   edge-complaint-filed-answer-due "Summons and complaint served" -> answer-due {
@@ -15,7 +15,7 @@ state complaint-filed: "Complaint filed" by applicant cite "NMRA 1-003"
   }
 }
 
-decision answer-due: "Answer, motion or default" by office cite "NMRA 1-012(A)"
+decision answer-due: "Answer, motion or default" by court cite "NMRA 1-012(A)"
 {
   note "A defendant serves an answer within thirty (30) days after service of the summons and complaint; an answer to a cross-claim is due within thirty (30) days after its service, and a reply to a counterclaim within thirty (30) days after service of the answer (NMRA 1-012(A)). Failure to state a claim upon which relief can be granted may be raised by motion made before pleading (NMRA 1-012(B)(6))."
   edge-answer-due-default "No response" -> default-entered { authority cite "NMRA 1-055(A)" }
@@ -62,7 +62,7 @@ state case-management: "Scheduling order" by court cite "NMRA 1-016(B)"
   }
 }
 
-state discovery: "Discovery" by applicant cite "NMRA 1-026(A)"
+state discovery: "Discovery" by plaintiff cite "NMRA 1-026(A)"
 {
   note "Discovery methods are NMRA 1-026(A) and scope 1-026(B); an order compelling discovery is NMRA 1-037(A) and sanctions for failure to comply with an order NMRA 1-037(B)."
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion { authority cite "NMRA 1-056(D)" }
@@ -102,13 +102,13 @@ decision post-trial: "Post-trial motions decided" by court cite "NMRA 1-050(B)"
   }
 }
 
-state judgment-entered: "Judgment entered" by office cite "NMRA 1-058(D)"
+state judgment-entered: "Judgment entered" by court cite "NMRA 1-058(D)"
 {
   note "On signing, an order or judgment is filed promptly in the clerk's office and that filing constitutes its entry (NMRA 1-058(D)). The party recovering costs files an itemized cost bill within fifteen (15) days after filing of the final judgment or waives costs; objections are due within ten (10) days after service of the cost bill (NMRA 1-054(D)(4)). A motion for attorney fees is filed and served no later than fifteen (15) days after entry of judgment unless a statute or order provides otherwise (NMRA 1-054(E)(2)). Execution may issue on entry unless the court orders otherwise (NMRA 1-062(A))."
   edge-judgment-entered-appeal "Next step" -> appeal-decision { authority cite "NMRA 12-201(A)" }
 }
 
-decision appeal-decision: "Notice of appeal within time?" by applicant cite "NMRA 12-201(A)"
+decision appeal-decision: "Notice of appeal within time?" by plaintiff cite "NMRA 12-201(A)"
 {
   note "A notice of appeal is filed within thirty (30) days after the judgment or order appealed from is filed in the district court clerk's office (NMRA 12-201(A)(1)(b)); the three (3)-day mailing period of NMRA 12-308(B) does not apply (NMRA 12-201(A)(2)). A timely motion under NMRA 1-050(B), 1-052(D) or 1-059, or a 1-060(B) motion filed not later than thirty (30) days after the judgment, restarts the full time from the order disposing of the last such motion (NMRA 12-201(D)(1))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken { authority cite "NMRA 12-201(A)" }

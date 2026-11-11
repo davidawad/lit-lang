@@ -19,7 +19,7 @@ module ca-superior-court-criminal.criminal
 // encoded: source periods remain holes until their authority is verified.
 start arrested
 
-state arrested: "Arrest and complaint" by applicant cite ?("Penal Code Part 2, arrest and arraignment on the complaint (Pen. Code §§ 825, 859, 859a): not vendored") {
+state arrested: "Arrest and complaint" by prosecution cite ?("Penal Code Part 2, arrest and arraignment on the complaint (Pen. Code §§ 825, 859, 859a): not vendored") {
   note "Arrest, the complaint and the arraignment on the complaint before a magistrate are governed by Penal Code Part 2 sections that are not vendored; their periods are holes. A felony plea before the magistrate is certified to the superior court under Penal Code section 859a (Cal. Rules of Court, rule 4.114)."
   edge-arrested-appearance "Arraignment on the complaint" -> initial-appearance {
     authority cite ?("Penal Code § 859 (arraignment on the complaint): not vendored")
@@ -47,7 +47,7 @@ decision probable-cause: "Preliminary examination or grand jury" by court cite ?
   }
 }
 
-state charged: "Information or indictment" by office cite "Cal. Rules of Court, rule 4.110"
+state charged: "Information or indictment" by court cite "Cal. Rules of Court, rule 4.110"
 {
   note "Rule 4.110 sets the time limits for proceedings on an information or indictment, including filing the information after the holding to answer and holding the arraignment; they are not stated here (currency unconfirmed)."
   edge-charged-arraignment "Arraignment on the information or indictment" -> arraignment {
@@ -55,7 +55,7 @@ state charged: "Information or indictment" by office cite "Cal. Rules of Court, 
   }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "Cal. Rules of Court, rule 4.100"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "Cal. Rules of Court, rule 4.100"
 {
   note "At the arraignment on the information or indictment, on a plea of not guilty, the court sets the dates for trial and for filing and serving motions, unless otherwise ordered for good cause (Cal. Rules of Court, rule 4.100). A felony defendant must be brought to trial within the period Penal Code section 1382(a)(2) sets after arraignment on the indictment or information, or after a mistrial, new-trial order or remittitur, unless good cause is shown or the defendant waives; the period is not stated here (currency unconfirmed)."
   edge-arraignment-discovery "Discovery and motions" -> discovery {
@@ -63,7 +63,7 @@ state arraignment: "Arraignment and plea of not guilty" by applicant cite "Cal. 
   }
 }
 
-state discovery: "Pretrial motions and continuances" by applicant cite "Cal. Rules of Court, rule 4.111"
+state discovery: "Pretrial motions and continuances" by prosecution cite "Cal. Rules of Court, rule 4.111"
 {
   note "Pretrial motions, oppositions and replies are served and filed within the court-day periods rule 4.111(a) sets, unless otherwise ordered or provided by law; the periods are not stated here (currency unconfirmed). Motions to continue a trial are disfavored and are denied unless the moving party shows under Penal Code section 1050 that the ends of justice require it (Cal. Rules of Court, rule 4.113); a continuance requires written notice within the period section 1050(b) sets and good cause, and neither the parties' convenience nor their stipulation is good cause in itself (Cal. Penal Code 1050(b), (e)). The discovery statutes (Pen. Code § 1054 et seq.) are not vendored."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -91,7 +91,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Cal. Rules 
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Cal. Rules of Court, rule 4.112"
+decision plea-decision: "Plea or trial" by accused cite "Cal. Rules of Court, rule 4.112"
 {
   note "The court may hold a readiness conference in a felony case within the window rule 4.112(a) sets before trial, at which trial counsel appear prepared to discuss disposition without trial (Cal. Rules of Court, rule 4.112); the window is not stated here (currency unconfirmed). Cases are assigned for trial under rule 4.115, and before jury selection the court holds a pre-voir dire conference (Cal. Rules of Court, rule 4.200). The plea statutes are not vendored."
   edge-plea-decision-plea "Guilty or no-contest plea accepted" -> sentencing {
@@ -121,7 +121,7 @@ state sentencing: "Sentencing" by court cite "Cal. Rules of Court, rule 4.433"
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite ?("California Rules of Court, rule 8.308 (time to appeal in a felony case): not vendored") {
+decision judgment: "Judgment of conviction" by accused cite ?("California Rules of Court, rule 8.308 (time to appeal in a felony case): not vendored") {
   note "The notice of appeal in a felony case is governed by California Rules of Court, rule 8.308, which is not vendored, so its period is a hole."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
     authority cite ?("California Rules of Court, rule 8.308: not vendored")

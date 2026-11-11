@@ -15,7 +15,7 @@ import mn-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, Revie
 // lit/mn-rules'.
 start notice-filed
 
-state notice-filed: "Notice of appeal filed and served" by applicant cite "Minn. R. Civ. App. P. 103.01"
+state notice-filed: "Notice of appeal filed and served" by movant cite "Minn. R. Civ. App. P. 103.01"
 {
   note "An appeal is made by filing a notice of appeal with the clerk of the appellate courts and serving it on the adverse parties within the appeal period, with proof of service and of filing with the trial court administrator, a copy of the judgment or order, the statement of the case and a filing fee of $550 (Minn. R. Civ. App. P. 103.01, subd. 1). Unless a statute provides otherwise, an appeal from a judgment is taken within 60 days after its entry, and from an appealable order within 60 days after service by any party of written notice of its filing; a timely motion under Minn. R. Civ. P. 50.02, 52.02 or 59, or under Rule 60 within the new-trial time, restarts the time from service of notice of filing of the order disposing of the last such motion, and a notice filed before then is premature and of no effect (Rule 104.01). Another party may file a notice of related appeal within 14 days after service of the first notice, or within the time otherwise prescribed, whichever ends later (Rule 104.01, subd. 4). The court may not extend the time to file the notice of appeal (Rule 126.02)."
   edge-notice-filed-appealability "Notice filed" -> appealability {
@@ -89,7 +89,7 @@ decision disposition: "Court of Appeals decision" by court cite "Minn. R. Civ. A
   }
 }
 
-decision affirmed-entered: "Affirmed: further review election" by applicant cite "Minn. R. Civ. App. P. 117"
+decision affirmed-entered: "Affirmed: further review election" by movant cite "Minn. R. Civ. App. P. 117"
 {
   note "A party seeking review files a petition with proof of service and a $550 filing fee with the clerk of the appellate courts within 30 days of the filing of the Court of Appeals' decision (Minn. R. Civ. App. P. 117, subd. 1); a response is due within 21 days of service (subd. 4)."
   edge-affirmed-entered-review-petitioned "Petition for review filed" -> review-petitioned {
@@ -102,7 +102,7 @@ decision affirmed-entered: "Affirmed: further review election" by applicant cite
   }
 }
 
-decision reversed-entered: "Reversed or vacated: further review election" by applicant cite "Minn. R. Civ. App. P. 117"
+decision reversed-entered: "Reversed or vacated: further review election" by movant cite "Minn. R. Civ. App. P. 117"
 {
   note "Any party seeking review petitions within 30 days of the filing of the decision (Minn. R. Civ. App. P. 117, subd. 1). An appellant who prevailed ordinarily files no petition; the opposing party may, and the appellant may then seek conditional cross-review in its response (subd. 4)."
   edge-reversed-entered-review-petitioned "Petition for review filed" -> review-petitioned {
@@ -115,7 +115,7 @@ decision reversed-entered: "Reversed or vacated: further review election" by app
   }
 }
 
-decision remanded-entered: "Remanded: further review election" by applicant cite "Minn. R. Civ. App. P. 117"
+decision remanded-entered: "Remanded: further review election" by movant cite "Minn. R. Civ. App. P. 117"
 {
   note "Any party seeking review petitions within 30 days of the filing of the decision (Minn. R. Civ. App. P. 117, subd. 1)."
   edge-remanded-entered-review-petitioned "Petition for review filed" -> review-petitioned {

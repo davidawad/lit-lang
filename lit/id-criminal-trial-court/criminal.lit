@@ -15,7 +15,7 @@ module id-district-court-criminal.criminal
 // reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "I.C.R. 4"
+state arrested: "Arrest or summons" by prosecution cite "I.C.R. 4"
 {
   note "A warrant or summons issues on a complaint (I.C.R. 3; 4). The initial appearance before a magistrate is the defendant's first appearance after arrest or summons, at which probable cause is determined and the defendant is advised of the charge and rights (I.C.R. 5); the time limits Rule 5 sets are not stated here (currency unconfirmed)."
   edge-arrested-appearance "Initial appearance before a magistrate" -> initial-appearance {
@@ -43,7 +43,7 @@ decision probable-cause: "Preliminary hearing or grand jury" by court cite "I.C.
   }
 }
 
-state charged: "Indictment or information" by office cite "I.C.R. 7(a)"
+state charged: "Indictment or information" by court cite "I.C.R. 7(a)"
 {
   note "All felony offenses must be prosecuted by indictment or information (I.C.R. 7(a)); the time for filing an information after the preliminary hearing is set by Rule 7 and not stated here (currency unconfirmed)."
   edge-charged-arraignment "Arraignment in district court" -> arraignment {
@@ -51,13 +51,13 @@ state charged: "Indictment or information" by office cite "I.C.R. 7(a)"
   }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "I.C.R. 10(a)"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "I.C.R. 10(a)"
 {
   note "After an indictment or information is filed the defendant is arraigned on it by the court and must appear in person (I.C.R. 10(a)). A defendant may plead guilty or not guilty, and a refusal to plead is entered as not guilty (I.C.R. 11(a))."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "I.C.R. 16(a)" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "I.C.R. 12"
+state discovery: "Discovery and pretrial motions" by prosecution cite "I.C.R. 12"
 {
   note "As soon as practicable after charges are filed the prosecuting attorney must make the mandatory disclosures Rule 16(a) lists (I.C.R. 16(a)); the response periods Rule 16 sets are not stated here (currency unconfirmed). The only pleadings are the complaint, indictment or information and the pleas of guilty and not guilty, and defenses and objections are raised by motion (I.C.R. 12(a)); the pretrial-motion deadlines Rule 12 sets are not stated here (currency unconfirmed)."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling { authority cite "I.C.R. 12" }
@@ -81,7 +81,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "I.C.R. 12"
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "I.C.R. 11"
+decision plea-decision: "Plea or trial" by accused cite "I.C.R. 11"
 {
   note "A guilty plea is accepted under Rule 11. In felony cases issues of fact are tried by a jury unless the defendant waives a jury in writing in open court with the prosecutor's consent (I.C.R. 23(a)); the number of jurors Rule 23 sets is not stated here (currency unconfirmed)."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "I.C.R. 11" }
@@ -115,7 +115,7 @@ state sentencing: "Presentence investigation and sentencing" by court cite "I.C.
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "I.C.R. 33"
+decision judgment: "Judgment of conviction" by accused cite "I.C.R. 33"
 {
   note "An appeal as of right from the district court is taken by physically filing a notice of appeal with the clerk of the district court within 42 days from the date of the clerk's filing stamp on the judgment or appealable order, in any civil or criminal action (I.A.R. 14(a))."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "I.A.R. 14(a)" }

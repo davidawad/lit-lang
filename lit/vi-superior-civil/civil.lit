@@ -19,7 +19,7 @@ start complaint-filed
 /// Rule 4 as amended by SCT-Prom-2023-0003, effective September 1, 2023:
 /// a dated layer over the base text that supersedes the base version of
 /// this step from that date.
-state complaint-filed: "Complaint filed; summons served" by applicant effective [2023-09-01, ..) known_at 2026-10-28 supersedes complaint-filed@2019-08-08 cite "V.I. R. Civ. P. (2023) 4"
+state complaint-filed: "Complaint filed; summons served" by plaintiff effective [2023-09-01, ..) known_at 2026-10-28 supersedes complaint-filed@2019-08-08 cite "V.I. R. Civ. P. (2023) 4"
 {
   note "A civil action is commenced by filing a complaint with the clerk of court (V.I. R. Civ. P. 3). From September 1, 2023, Rule 4(c)(1) refers to the service period of Rule 4(n) (formerly cited as 4(m)), Rule 4(e)(4)(A) refers to subparts (e)(1) to (e)(3), and Rule 4(m)(2) is replaced: service outside the Territory of the United States Virgin Islands must be proved as provided in 5 V.I.C. § 4911 (V.I. R. Civ. P. (2023) 4). The time limit for service is set by Rule 4(n) of the base text and is not stated here (currency unconfirmed)."
   edge-complaint-filed-served "Defendant served" -> answer-due {
@@ -30,7 +30,7 @@ state complaint-filed: "Complaint filed; summons served" by applicant effective 
   }
 }
 
-state complaint-filed: "Complaint filed; summons served" by applicant effective [2019-08-08, 2023-09-01) known_at 2026-10-28 cite "V.I. R. Civ. P. 3"
+state complaint-filed: "Complaint filed; summons served" by plaintiff effective [2019-08-08, 2023-09-01) known_at 2026-10-28 cite "V.I. R. Civ. P. 3"
 {
   note "A civil action is commenced by filing a complaint with the clerk of court; filing fees are a matter of statute (4 V.I.C. §§ 511-513), not of the rules (V.I. R. Civ. P. 3). A summons is issued on presentation to the clerk and served with the complaint (V.I. R. Civ. P. 4(b), (c)); the manner of service depends on the defendant and on whether it is found within or outside the Virgin Islands (V.I. R. Civ. P. 4(e)-(k)), and proof of service is governed by Rule 4(m). The time limit for service is set by Rule 4(n) and is not stated here (currency unconfirmed)."
   edge-complaint-filed-served "Defendant served" -> answer-due {
@@ -46,7 +46,7 @@ terminal dismissed-unserved: "Dismissed for untimely service" outcome [loss, dis
   note "If a defendant is not served within the time Rule 4(n) sets, the court dismisses the action without prejudice against that defendant or orders that service be made within a specified time, extending it for good cause (V.I. R. Civ. P. 4(n)). The period is not stated here (currency unconfirmed)."
 }
 
-decision answer-due: "Answer, Rule 12 motion or default" by office cite "V.I. R. Civ. P. 12(a)"
+decision answer-due: "Answer, Rule 12 motion or default" by court cite "V.I. R. Civ. P. 12(a)"
 {
   note "The time to serve a responsive pleading depends on where and how the defendant was served (within the Virgin Islands, personally outside it under 5 V.I.C. § 4911, or by publication or mail under 5 V.I.C. § 112(c)), on counterclaims, crossclaims and orders to reply, and on whether the defendant is the Government of the Virgin Islands, a public corporation or agency, or an officer or employee sued in an official capacity (V.I. R. Civ. P. 12(a)(1), (2)). The periods are not stated here (currency unconfirmed)."
   edge-answer-due-answer "Answer served" -> discovery { authority cite "V.I. R. Civ. P. 12(a)" }
@@ -78,7 +78,7 @@ terminal dismissed-pleading: "Dismissed on the pleadings" outcome [loss, dismiss
 /// Rule 15(a)(1) as amended by SCT-Prom-2023-0003, effective September 1,
 /// 2023: a dated layer over the base text that supersedes the base version
 /// of this step from that date.
-state amend: "Amended pleading" by applicant effective [2023-09-01, ..) known_at 2026-10-28 supersedes amend@2019-08-08 cite "V.I. R. Civ. P. (2023) 15"
+state amend: "Amended pleading" by plaintiff effective [2023-09-01, ..) known_at 2026-10-28 supersedes amend@2019-08-08 cite "V.I. R. Civ. P. (2023) 15"
 {
   note "From September 1, 2023, Rule 15(a)(1) allows amendment once as a matter of course \"no later than\" (formerly \"within\") the periods it states after serving the pleading or after service of a responsive pleading or Rule 12(b), (e) or (f) motion (V.I. R. Civ. P. (2023) 15). The periods themselves are those of the base text and are not stated here (currency unconfirmed). Otherwise a party may amend only with the opposing party's written consent or the court's leave, freely given when justice so requires (V.I. R. Civ. P. 15(a)(2)); the form, filing and effect of an amendment are governed by Rule 15-1."
   edge-amend-tested "Amended pleading tested again" -> pleading-motion {
@@ -86,7 +86,7 @@ state amend: "Amended pleading" by applicant effective [2023-09-01, ..) known_at
   }
 }
 
-state amend: "Amended pleading" by applicant effective [2019-08-08, 2023-09-01) known_at 2026-10-28 cite "V.I. R. Civ. P. 15(a)"
+state amend: "Amended pleading" by plaintiff effective [2019-08-08, 2023-09-01) known_at 2026-10-28 cite "V.I. R. Civ. P. 15(a)"
 {
   note "A party may amend once as a matter of course within the periods Rule 15(a)(1) states, which are not stated here (currency unconfirmed); otherwise only with the opposing party's written consent or the court's leave, freely given when justice so requires (V.I. R. Civ. P. 15(a)(2)). The response to an amended pleading is governed by Rule 15(a)(3); the form, filing and effect of an amendment by Rule 15-1."
   edge-amend-tested "Amended pleading tested again" -> pleading-motion {
@@ -110,7 +110,7 @@ terminal default-judgment: "Default judgment entered" outcome [win] cite "V.I. R
   note "Outcome from the plaintiff's side. A default judgment must not differ in kind from what is demanded in the pleadings (V.I. R. Civ. P. 54(c))."
 }
 
-state discovery: "Disclosure, discovery and scheduling" by applicant cite "V.I. R. Civ. P. 26(b)"
+state discovery: "Disclosure, discovery and scheduling" by plaintiff cite "V.I. R. Civ. P. 26(b)"
 {
   note "Required disclosures, the scope and limits of discovery, its timing and the parties' conference and discovery plan are governed by Rule 26(a), (b), (d) and (f), expert discovery also by Rule 26-1, and pretrial conferences and the scheduling order by Rule 16(a)-(b); their periods are not stated here (currency unconfirmed)."
   edge-discovery-dispute "Discovery dispute" -> discovery-dispute {
@@ -184,7 +184,7 @@ state trial: "Trial by jury or by the court" by court cite "V.I. R. Civ. P. 39"
   }
 }
 
-decision judgment-entered: "Judgment entered" by office cite "V.I. R. Civ. P. 58(b)"
+decision judgment-entered: "Judgment entered" by court cite "V.I. R. Civ. P. 58(b)"
 {
   note "Every judgment and amended judgment is set out in a separate document, and upon determination of an action the judge enters judgment (V.I. R. Civ. P. 58(a), (b)). Costs, including attorney's fees, are governed by Rule 54(d). A motion for a new trial or to alter or amend the judgment is governed by Rule 59(b) and (e), and relief from judgment by Rule 60; their periods are not stated here (currency unconfirmed). A notice of appeal is filed with the Clerk of the Supreme Court within the time Rule 5 of the Rules of Appellate Procedure allows (V.I. R. App. P. 4(a)); see lit/vi-supreme-civil."
   edge-judgment-entered-post-trial "Post-trial motion" -> post-trial {

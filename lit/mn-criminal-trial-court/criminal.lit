@@ -15,7 +15,7 @@ module mn-criminal-trial-court.criminal
 // they are removed here.
 start arrested
 
-state arrested: "Arrest" by applicant cite "Minn. R. Crim. P. 4.02"
+state arrested: "Arrest" by prosecution cite "Minn. R. Crim. P. 4.02"
 {
   note "A defendant arrested with a warrant is taken before a judge as the warrant directs (Minn. R. Crim. P. 4.01). After a warrantless arrest, a person not released is brought before the nearest available judge of the county without unnecessary delay and not more than 36 hours after the arrest, exclusive of the day of arrest, Sundays and legal holidays, or as soon as a judge is available, and a complaint is presented to the judge before that appearance (4.02, subd. 5). A judge determines probable cause without unnecessary delay and in any event within 48 hours from the arrest, counting the day of arrest, Saturdays, Sundays and legal holidays; without it the person is released immediately (4.03, subd. 1)."
   edge-arrested-appearance "First appearance (Rule 5)" -> first-appearance {
@@ -48,7 +48,7 @@ state second-appearance: "Second appearance (Rule 8) and arraignment" by court c
   }
 }
 
-state omnibus: "Omnibus Hearing and pretrial motions" by applicant cite "Minn. R. Crim. P. 11.02"
+state omnibus: "Omnibus Hearing and pretrial motions" by prosecution cite "Minn. R. Crim. P. 11.02"
 {
   note "Defenses, objections, issues and requests that can be decided without trial are raised by pretrial motion including everything then available; omitting one waives it, except lack of jurisdiction or failure of the charge to state an offense, unless the court grants relief for good cause (Minn. R. Crim. P. 10.01, subd. 2). In felony and gross misdemeanor cases motions are made in writing and served no later than three days before the Omnibus Hearing unless the court permits later service for good cause, and a motion for privileged or confidential victim records no later than 10 days before its hearing (10.03, subd. 1). The court hears at the Omnibus Hearing the motions on probable cause, evidence, discovery, other-acts and relationship evidence, constitutional and procedural issues and aggravated sentence (11.02)."
   edge-omnibus-motions "Motions heard" -> motions-ruling {
@@ -73,7 +73,7 @@ decision motions-ruling: "Omnibus rulings" by court cite "Minn. R. Crim. P. 11.0
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Minn. R. Crim. P. 11.09"
+decision plea-decision: "Plea or trial" by accused cite "Minn. R. Crim. P. 11.09"
 {
   note "On a plea other than guilty a trial date is set and the defendant tried as soon as possible; on any party's demand after the plea, trial starts within 60 days unless the court finds good cause for a later date, and unless exigent circumstances exist a defendant not tried within 120 days from the plea and the demand is released on nonmonetary conditions (Minn. R. Crim. P. 11.09)."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
@@ -118,7 +118,7 @@ state sentencing: "Sentencing" by court cite "Minn. R. Crim. P. 27.03"
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Minn. R. Crim. P. 28.02"
+decision judgment: "Judgment of conviction" by accused cite "Minn. R. Crim. P. 28.02"
 {
   note "In felony and gross misdemeanor cases the defendant's appeal is filed within 90 days after final judgment or entry of the order appealed from (30 days in misdemeanor cases, 60 days from an order denying postconviction relief); a notice filed after the decision is announced but before sentencing or judgment is treated as filed the same day as them; and a timely motion to vacate, for judgment of acquittal or for a new trial tolls the time until the order denying it (Minn. R. Crim. P. 28.02, subd. 4(3))."
   edge-judgment-appeal "Appeal filed within 90 days" -> appeal-taken {

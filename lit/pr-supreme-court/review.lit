@@ -14,7 +14,7 @@ import pr-state-rules.{ DecisionFiled, ReviewPetitionFiled }
 // and the certification writ of P.R. R. Civ. P. 52.2(d) are not modeled.
 start petition
 
-decision petition: "Petition for certiorari?" by applicant cite "P.R. R. Civ. P. 52.2(b)"
+decision petition: "Petition for certiorari?" by petitioner cite "P.R. R. Civ. P. 52.2(b)"
 {
   note "A petition for certiorari to the Supreme Court to review, in its discretion, a judgment or resolution of the Court of Appeals on an appeal is filed within the jurisdictional term of thirty days from the archivo en autos of a copy of the notice of the judgment or resolution; a petition to review the Court of Appeals' other final judgments or resolutions in discretionary recourses, or any interlocutory resolution of it, within thirty days from notice, a term of strict compliance extendable only for special circumstances stated in the petition (P.R. R. Civ. P. 52.2(b)). Where the Commonwealth, a municipality, their officers or a non-corporate instrumentality is a party, certiorari to review a Court of Appeals judgment or resolution on an appeal is filed within the jurisdictional term of sixty days; a term counted from the archivo en autos runs from the mailing of the notice where that date differs (P.R. R. Civ. P. 52.2(c)). A timely motion for reconsideration in the Court of Appeals interrupts the term, which runs anew from the archivo en autos of the notice of the ruling finally resolving it (P.R. R. Civ. P. 52.2(f); Regl. T.A. R. 84(A)), and the interruption benefits every other party (P.R. R. Civ. P. 52.2(h)). The petition's form, contents, length and fee are in the Reglamento del Tribunal Supremo, which is not vendored."
   edge-petition-none "No petition: the Court of Appeals' decision stands" -> review-not-sought {
@@ -36,7 +36,7 @@ decision review-decision: "Writ granted or denied" by court cite ?("Reglamento d
   }
 }
 
-state merits: "Merits briefing and submission" by applicant cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored") {
+state merits: "Merits briefing and submission" by petitioner cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored") {
   note "Merits briefing periods, form and length limits, and whether argument is heard, are in the Reglamento del Tribunal Supremo, which is not vendored: holes."
   edge-merits-decision "Submitted for decision" -> decision {
     authority cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")

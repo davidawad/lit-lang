@@ -15,7 +15,7 @@ module de-superior-court-criminal.criminal
 // removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "Del. Super. Ct. Crim. R. 4"
+state arrested: "Arrest or summons" by prosecution cite "Del. Super. Ct. Crim. R. 4"
 {
   note "Proceedings may be instituted by indictment, by complaint, or when lawful by information or by arrest or summons without a warrant or complaint; the complaint is a written statement of the essential facts made on oath (Del. Super. Ct. Crim. R. 3). On a complaint showing probable cause a warrant issues, or in the committing magistrate's discretion a summons (Del. Super. Ct. Crim. R. 4(a)). An arrested person is taken without unreasonable delay before the nearest available committing magistrate, and a complaint showing probable cause is filed forthwith after an arrest without a warrant (Del. Super. Ct. Crim. R. 5(a))."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
@@ -45,7 +45,7 @@ decision probable-cause: "Preliminary examination or indictment" by court cite "
   }
 }
 
-state charged: "Indictment or information" by office cite "Del. Super. Ct. Crim. R. 7(a)"
+state charged: "Indictment or information" by court cite "Del. Super. Ct. Crim. R. 7(a)"
 {
   note "A capital offense is prosecuted by indictment; an offense within the Superior Court's exclusive jurisdiction is prosecuted by indictment or, if the defendant waives indictment in writing or in open court, by information; any other offense by indictment or information, which may be filed without leave of court (Del. Super. Ct. Crim. R. 7(a), (b)). The indictment or information is a plain, concise and definite written statement of the essential facts (Del. Super. Ct. Crim. R. 7(c)). The court may dismiss for unnecessary delay in presenting the charge to a grand jury or filing an information against a defendant held to answer (Del. Super. Ct. Crim. R. 48(b)), which states no period."
   edge-charged-arraignment "Arraignment" -> arraignment {
@@ -53,7 +53,7 @@ state charged: "Indictment or information" by office cite "Del. Super. Ct. Crim.
   }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "Del. Super. Ct. Crim. R. 10"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "Del. Super. Ct. Crim. R. 10"
 {
   note "Arraignment in open court consists of reading the indictment or information, or stating its substance, and calling on the defendant to plead, after giving the defendant a copy (Del. Super. Ct. Crim. R. 10(a)); an incarcerated defendant may be arraigned by closed-circuit television, and counsel may enter a written plea of not guilty in lieu of arraignment except on a charge of murder in the first degree (Del. Super. Ct. Crim. R. 10(b), (c)). A defendant who refuses to plead is entered as pleading not guilty (Del. Super. Ct. Crim. R. 11(a)(1))."
   edge-arraignment-discovery "Discovery" -> discovery {
@@ -61,7 +61,7 @@ state arraignment: "Arraignment and plea of not guilty" by applicant cite "Del. 
   }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "Del. Super. Ct. Crim. R. 12(b)"
+state discovery: "Discovery and pretrial motions" by prosecution cite "Del. Super. Ct. Crim. R. 12(b)"
 {
   note "Discovery and inspection are governed by Rule 16; notices of alibi, insanity or mental-condition evidence and public-authority defenses by Rules 12.1 to 12.3; a pretrial conference by Rule 17.1. Defenses and objections based on defects in the institution of the prosecution or in the indictment or information must be raised before trial by motion (Del. Super. Ct. Crim. R. 12(b)); the time for pretrial motions and the effect of a failure to raise them are set by Rule 12 and are not stated here (currency unconfirmed)."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -89,7 +89,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Del. Super.
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Del. Super. Ct. Crim. R. 11(a)"
+decision plea-decision: "Plea or trial" by accused cite "Del. Super. Ct. Crim. R. 11(a)"
 {
   note "A defendant may plead not guilty, guilty, nolo contendere or guilty but mentally ill; nolo contendere, or guilty without admitting the essential facts, only with the court's consent (Del. Super. Ct. Crim. R. 11(a), (b)). Before accepting a plea of guilty or nolo contendere the court addresses the defendant as Rule 11(c) requires; plea agreements are governed by Rule 11(e). The Attorney General may file a dismissal without leave of court, but not during trial without the defendant's consent or after conviction without leave (Del. Super. Ct. Crim. R. 48(a))."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
@@ -134,7 +134,7 @@ state sentencing: "Presentence investigation and sentencing" by court cite "Del.
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Del. Super. Ct. Crim. R. 37"
+decision judgment: "Judgment of conviction" by accused cite "Del. Super. Ct. Crim. R. 37"
 {
   note "The procedure on appeal is as the rules of the Supreme Court provide (Del. Super. Ct. Crim. R. 37(a)). A notice of appeal from a sentence in a direct appeal of a criminal conviction is filed in the office of the Clerk of the Supreme Court within 30 days after the sentence is imposed, and the State may cross-appeal within 30 days of the defendant's notice; a pro se inmate's late notice is deemed timely if deposited in the institution's internal mail on or before the last day (Del. Supr. Ct. R. 6(a)(iii), (b)(iii)). lit/core has no counting rule for the Delaware Supreme Court Rules, so the period is not encoded as a counted deadline. A stay of execution of the sentence pending appeal is governed by Rule 38."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {

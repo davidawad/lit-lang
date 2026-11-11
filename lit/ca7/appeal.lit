@@ -303,21 +303,21 @@ test "capital reply brief is due 21 days after the appellee's" cite "7th Cir. R.
 
 start threshold
 
-decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+decision threshold: "Appealable Order or Judgment?" by movant cite "28 U.S.C. § 1291"
 {
   note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes, including permission to appeal under FRAP 5, are lit/frap's. The appellant's jurisdictional statement must give the statutory basis of appellate jurisdiction and the dates of judgment, any tolling motion and its disposition, and the notice of appeal (7th Cir. R. 28(a)(2))."
   edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
   edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
 }
 
-decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)"
 {
   note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods. Fees follow the Judicial Conference's Court of Appeals Miscellaneous Fee Schedule (7th Cir. R. 45(a)); the circuit rules state no amount, so no fee is carried here."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
   edge-notice-timely "Timely notice" -> docketed { authority cite "FRAP 3(a)(1); 7th Cir. R. 3(a)" }
 }
 
-state docketed: "Appeal Docketed" by office cite "FRAP 12(a); 7th Cir. R. 12(a)"
+state docketed: "Appeal Docketed" by court cite "FRAP 12(a); 7th Cir. R. 12(a)"
 {
   note "The clerk notifies counsel of the docketing date (7th Cir. R. 12(a)). An unpaid docketing fee is due within 14 days after docketing (7th Cir. R. 3(b)). The docketing statement is due with the notice or within seven days of it; after 14 days counsel is fined $100 and after 28 days the appeal is dismissed as abandoned (7th Cir. R. 3(c)). The attorney named on the docketing statement or first filing is counsel of record (7th Cir. R. 3(d)). Disclosure statements are due within 21 days after docketing or with a first motion or response, whichever is earliest (7th Cir. R. 26.1(c)); a disclosure statement is an appearance and replaces the FRAP 12(b) representation statement (7th Cir. R. 26.1(a))."
   edge-docketed-record "Record and transcript" -> record {
@@ -328,7 +328,7 @@ state docketed: "Appeal Docketed" by office cite "FRAP 12(a); 7th Cir. R. 12(a)"
   }
 }
 
-state record: "Record and Transcript" by applicant cite "FRAP 10; 7th Cir. R. 10"
+state record: "Record and Transcript" by movant cite "FRAP 10; 7th Cir. R. 10"
 {
   note "The district court makes its docket complete and available electronically within 14 days of the notice (7th Cir. R. 10(a)(1)); counsel ensures within 21 days that every document needed for review is on it (7th Cir. R. 10(a)(3)). Transcripts are ordered on the court's form (7th Cir. R. 10(c)); a reporter's request to extend the transcript time beyond 30 days from the order is filed with the clerk on the court's form, and beyond 60 days needs a statement from the district judge (7th Cir. R. 10(h))."
   edge-record-brief "Briefing runs from docketing" -> briefing {
@@ -336,7 +336,7 @@ state record: "Record and Transcript" by applicant cite "FRAP 10; 7th Cir. R. 10
   }
 }
 
-state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 7th Cir. R. 31(a)"
+state briefing: "Briefs Filed" by movant cite "FRAP 31(a)(1); 7th Cir. R. 31(a)"
 {
   note "Except in agency cases the brief periods run from docketing, regardless of the record (7th Cir. R. 31(a)): the appellant's 40 days of FRAP 31(a)(1) count from the date the appeal is docketed. Extensions are not favored and need a motion with an affidavit filed at least seven days before the due date (7th Cir. R. 26). A principal brief may contain up to 14,000 words and a reply 7,000, in 12-point type with 11-point footnotes (7th Cir. R. 32(b), (c)); in a cross-appeal the appellee's combined brief may contain 16,500 words (7th Cir. R. 28.1), and an amicus brief 7,000 (7th Cir. R. 29). The appendix bound with the brief holds the judgment and the reasons for it (7th Cir. R. 30(a))."
   edge-briefing-argue "Briefing complete" -> argument {
@@ -359,7 +359,7 @@ state decision: "Decision Issued" by court cite "FRAP 36; 7th Cir. R. 32.1"
   edge-decision-issued "Judgment entered" -> rehearing-decision { authority cite "FRAP 36" }
 }
 
-decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 {
   note "lit/frap encodes the FRAP 40(d)(1) periods. In an agency case the period runs from the final order or dispositive opinion, not a later formal judgment (7th Cir. R. 40(c)); after a decision from the bench it runs from the written order (7th Cir. R. 40(d))."
   edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
@@ -374,13 +374,13 @@ state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 7th Cir. R. 40"
   edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
-state mandate: "Mandate Issued" by office cite "FRAP 41(b); 7th Cir. R. 41"
+state mandate: "Mandate Issued" by court cite "FRAP 41(b); 7th Cir. R. 41"
 {
   note "The mandate issues under FRAP 41(b); lit/frap encodes the period. It issues immediately when an appeal is dismissed voluntarily, for failure to pay the docket fee, for failure to file the docketing statement, or for failure to file the appellant's brief (7th Cir. R. 41)."
   edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
 }
 
-decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+decision further-review: "Further Review Sought?" by movant cite "28 U.S.C. § 1254"
 {
   note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's. On a remand from the Supreme Court, counsel file statements of position within 21 days after its judgment issues (7th Cir. R. 54)."
   edge-further-review-none "No further review" -> final-decision {

@@ -11,7 +11,7 @@ module bankr-wiw-local-rules.local-rules
 // form requirements, not encoded.
 start agreement-filed
 
-state agreement-filed: "Reaffirmation agreement filed" by applicant cite "Bankr. W.D. Wis. LBR 4008-1"
+state agreement-filed: "Reaffirmation agreement filed" by movant cite "Bankr. W.D. Wis. LBR 4008-1"
 {
   note "The § 524(d) hearing is deemed waived unless a party to the agreement specifically requests one when the agreement is filed, or the debtor filed pro se, in which case a hearing is scheduled under § 524(c)(6)(A); a requested hearing is held within sixty days (LBR 4008-1). No discharge hearing is scheduled unless the debtor has entered into a § 524(c) reaffirmation agreement and requests a hearing under § 524(d) (LBR 4004-1). The FRBP 4008 filing period is lit/frbp's."
   edge-agreement-filed-hearing "Hearing requested with the agreement, or the debtor is pro se" -> reaffirmation-hearing {

@@ -22,7 +22,7 @@ import tx-state-rules.{
 // vendored, and the standard of review is not modeled.
 start notice
 
-decision notice: "Notice of appeal within time?" by applicant cite "Tex. R. App. P. 26.1"
+decision notice: "Notice of appeal within time?" by appellant cite "Tex. R. App. P. 26.1"
 {
   note "An appeal is perfected when a written notice of appeal is filed with the trial court clerk; a notice mistakenly filed with the appellate court is deemed filed the same day with the trial court clerk (Tex. R. App. P. 25.1(a)). A party who seeks to alter the judgment must file a notice (Tex. R. App. P. 25.1(c)); the notice must state what Rule 25.1(d) lists, be served on all parties and be delivered to each court reporter (Tex. R. App. P. 25.1(e)), and may be amended to correct a defect before the appellant's brief is filed (Tex. R. App. P. 25.1(g)). The notice is filed within 30 days after the judgment is signed, or within 90 days if any party timely files a motion for new trial, a motion to modify the judgment, a motion to reinstate under Tex. R. Civ. P. 165a, or a request for findings of fact and conclusions of law that are required or could properly be considered; within 20 days in an accelerated appeal; within six months in a restricted appeal; and another party may file within the applicable period or 14 days after the first notice, whichever is later (Tex. R. App. P. 26.1). The appellate court may extend the time if, within 15 days after the deadline, the party files the notice in the trial court and a motion complying with Rule 10.5(b) in the appellate court (Tex. R. App. P. 26.3). Filing the notice does not suspend enforcement of the judgment unless it is superseded under Rule 24 (Tex. R. App. P. 25.1(h))."
   edge-notice-late "No timely notice" -> time-barred { authority cite "Tex. R. App. P. 26.1" }
@@ -32,7 +32,7 @@ decision notice: "Notice of appeal within time?" by applicant cite "Tex. R. App.
   }
 }
 
-state record: "Appellate record prepared and filed" by office cite "Tex. R. App. P. 35.1"
+state record: "Appellate record prepared and filed" by court cite "Tex. R. App. P. 35.1"
 {
   note "The appellate record is filed within 60 days after the judgment is signed; within 120 days if Rule 26.1(a) applies; within 10 days after the notice of appeal in an accelerated appeal; within 30 days after the notice in a restricted appeal (Tex. R. App. P. 35.1). The trial court clerk prepares the clerk's record once a notice of appeal is filed and the fee is paid or arranged, and the court reporter the reporter's record once it is requested and paid for or arranged; each extension of the deadline may not exceed 30 days in an ordinary or restricted appeal or 10 days in an accelerated appeal (Tex. R. App. P. 35.3). If the record is late, the appellate clerk asks that it be filed within 30 days, or 10 days in an accelerated appeal (Tex. R. App. P. 37.3(a)); if the clerk's record is not filed because the appellant failed to pay or arrange the fee, the court may dismiss for want of prosecution after a reasonable opportunity to cure, and without a reporter's record for that reason it may decide the issues that do not require one (Tex. R. App. P. 37.3(b), (c))."
   edge-record-filed "Record filed" -> briefing {
@@ -44,7 +44,7 @@ state record: "Appellate record prepared and filed" by office cite "Tex. R. App.
   }
 }
 
-state briefing: "Briefs filed" by applicant cite "Tex. R. App. P. 38.6"
+state briefing: "Briefs filed" by appellant cite "Tex. R. App. P. 38.6"
 {
   note "The appellant files a brief within 30 days, 20 days in an accelerated appeal, after the later of the filing of the clerk's record or of the reporter's record; the appellee's brief is due within 30 days, 20 in an accelerated appeal, after the appellant's brief is filed; any reply within 20 days after the appellee's brief is filed; the court may extend the time on a motion complying with Rule 10.5(b), filed before or after the brief is due (Tex. R. App. P. 38.6). A brief or response may run 15,000 words if computer-generated and 50 pages if not, and in a civil case all of a party's briefs together 27,000 words or 90 pages; a reply brief 7,500 words or 25 pages (Tex. R. App. P. 9.4(i)(2)(B), (C)). A party requests oral argument on the front cover of its first brief (Tex. R. App. P. 9.4(g), 39.7). If the appellant fails to file a brief timely, the court may dismiss for want of prosecution unless the failure is reasonably explained and the appellee is not significantly injured, or may affirm on the appellee's brief (Tex. R. App. P. 38.8(a))."
   edge-briefing-submission "Briefs filed; case set" -> submission {
@@ -88,7 +88,7 @@ decision decision: "Judgment of the court of appeals" by court cite "Tex. R. App
   }
 }
 
-decision after-judgment: "Judgment against the appellant: rehearing, review or mandate" by applicant cite "Tex. R. App. P. 49.1"
+decision after-judgment: "Judgment against the appellant: rehearing, review or mandate" by petitioner cite "Tex. R. App. P. 49.1"
 {
   note "A motion for rehearing may be filed within 15 days after the judgment or order is rendered and must clearly state the issues relied on (Tex. R. App. P. 49.1); a motion for en banc reconsideration may be filed within the same time, with or without a motion for rehearing (Tex. R. App. P. 49.5); in an accelerated appeal the court may deny the right to file either motion or shorten the time (Tex. R. App. P. 49.7). A motion for rehearing runs 4,500 words or 15 pages (Tex. R. App. P. 9.4(i)(2)(E)). A petition for review is filed in the Supreme Court within 45 days after the court of appeals rendered judgment if no timely motion for rehearing or en banc reconsideration is filed, or after the court of appeals' last ruling on all timely filed motions (Tex. R. App. P. 53.7(a)). Absent a timely petition for review or a pending motion to extend time, the clerk issues the mandate ten days after the time to move to extend the time to file a petition for review has expired (Tex. R. App. P. 18.1(a))."
   edge-after-judgment-rehearing "Motion for rehearing or en banc reconsideration" -> rehearing {

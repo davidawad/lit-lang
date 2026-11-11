@@ -2,7 +2,7 @@ module fl-criminal-trial-court.criminal
 
 start arrested
 
-state arrested: "Arrest" by applicant cite "Fla. R. Crim. P. 3.130(a)"
+state arrested: "Arrest" by prosecution cite "Fla. R. Crim. P. 3.130(a)"
 {
   note "Every arrested person not lawfully released is taken before a judge, in person or by audio-video communication technology, within 24 hours of arrest (Fla. R. Crim. P. 3.130(a)). Periods in this package are stated, not counted: their computation is governed by Florida Rule of General Practice and Judicial Administration 2.514, which is not vendored. The outline's decisions (County of Riverside v. McLaughlin, Gerstein v. Pugh, Gideon, Brady, Mapp, Barker, Boykin, Frye, Jackson, Ramos, Apprendi, Flores-Ortega, Garza) are removed: no reporter text is vendored."
   edge-arrested-first-appearance "First appearance" -> formal-charge {
@@ -10,7 +10,7 @@ state arrested: "Arrest" by applicant cite "Fla. R. Crim. P. 3.130(a)"
   }
 }
 
-decision formal-charge: "Formal charges filed in time?" by office cite "Fla. R. Crim. P. 3.134(a)"
+decision formal-charge: "Formal charges filed in time?" by court cite "Fla. R. Crim. P. 3.134(a)"
 {
   note "For a defendant in custody the state files formal charges by information or indictment, or for a misdemeanor by whatever documents constitute a formal charge, within 30 days from arrest or service of the capias; uncharged on the 30th day, the defendant is released on recognizance on the 33rd day, or on good cause the 40th, unless charged by then, and no defendant stays in custody beyond 40 days uncharged (Fla. R. Crim. P. 3.134(a)). Defendants on pretrial release are governed by Fla. R. Crim. P. 3.134(b)."
   edge-formal-charge-filed "Information or indictment filed" -> arraignment {
@@ -29,7 +29,7 @@ state arraignment: "Arraignment" by court cite "Fla. R. Crim. P. 3.160(a)"
   }
 }
 
-decision pretrial: "Discovery, pretrial motions and speedy trial" by applicant cite "Fla. R. Crim. P. 3.220(a)"
+decision pretrial: "Discovery, pretrial motions and speedy trial" by prosecution cite "Fla. R. Crim. P. 3.220(a)"
 {
   note "A defendant who files and serves a Notice of Discovery elects reciprocal discovery; the prosecutor serves the Discovery Exhibit within 15 days after service of the notice (Fla. R. Crim. P. 3.220(a), (b)(1)). A motion to suppress is filed before trial or before a deadline the judge sets unless there is good cause or the state does not object (Fla. R. Crim. P. 3.190(g)(4)). A defendant charged by indictment or information may file a Demand for Speedy Trial: the court holds a calendar call within 5 days and sets trial between 5 and 60 days from the demand, and a defendant not tried within 60 days of the demand is entitled to the remedy of subdivision (o) (Fla. R. Crim. P. 3.191(b)); the demand binds both sides (Fla. R. Crim. P. 3.191(g))."
   edge-pretrial-plea "Plea negotiations" -> plea-decision {
@@ -54,7 +54,7 @@ decision speedy-trial-hearing: "Speedy trial recapture" by court cite "Fla. R. C
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Fla. R. Crim. P. 3.172(a)"
+decision plea-decision: "Plea or trial" by accused cite "Fla. R. Crim. P. 3.172(a)"
 {
   note "Before accepting a plea of guilty or nolo contendere the judge determines that it is voluntary and has a factual basis (Fla. R. Crim. P. 3.172(a)); plea discussions and agreements are Fla. R. Crim. P. 3.171."
   edge-plea-decision-plea "Plea accepted" -> sentencing {
@@ -95,7 +95,7 @@ state sentencing: "Sentencing hearing" by court cite "Fla. R. Crim. P. 3.720"
   }
 }
 
-decision appeal-decision: "Notice of appeal within 30 days of the sentence?" by applicant cite "Fla. R. App. P. 9.140(b)"
+decision appeal-decision: "Notice of appeal within 30 days of the sentence?" by accused cite "Fla. R. App. P. 9.140(b)"
 {
   note "The defendant files the notice prescribed by rule 9.110(d) with the clerk of the lower tribunal at any time between rendition of a final judgment and 30 days following rendition of a written order imposing sentence, served on the state attorney and attorney general; a cross-appeal is within 15 days of service of the state's notice (Fla. R. App. P. 9.140(b)(3), (4))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken {

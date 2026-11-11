@@ -19,7 +19,7 @@ module nh-criminal-trial-court.criminal
 // removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Complaint, arrest or summons" by applicant cite "N.H. R. Crim. P. 3"
+state arrested: "Complaint, arrest or summons" by prosecution cite "N.H. R. Crim. P. 3"
 {
   note "The complaint is a signed written statement of the essential facts constituting the offense charged (N.H. R. Crim. P. 3(a)); an arrest warrant issues on a sworn application showing probable cause (N.H. R. Crim. P. 3(b)); a summons may not issue on a felony complaint (N.H. R. Crim. P. 3(d)). The time for filing the complaint before arraignment is set by Rule 4(a) and is not stated here (currency unconfirmed)."
   edge-arrested-appearance "Arraignment in the circuit court" -> initial-appearance {
@@ -49,7 +49,7 @@ decision probable-cause: "Probable cause hearing or indictment" by court cite "N
   }
 }
 
-decision charged: "Indictment or information" by office cite "N.H. R. Crim. P. 8(d)"
+decision charged: "Indictment or information" by court cite "N.H. R. Crim. P. 8(d)"
 {
   note "The superior court summons the grand jury, which indicts or returns a no true bill (N.H. R. Crim. P. 8(a), (d)); if it returns a no true bill on a charge against a defendant who is incarcerated or on bail, the defendant is notified (N.H. R. Crim. P. 8(c)). An offense punishable by imprisonment for more than one year may be prosecuted by an information with a waiver of indictment, except an offense punishable by death (N.H. R. Crim. P. 9)."
   edge-charged-indicted "Indictment returned, or information on a waiver" -> arraignment {
@@ -58,13 +58,13 @@ decision charged: "Indictment or information" by office cite "N.H. R. Crim. P. 8
   edge-charged-no-true-bill "No true bill" -> dismissed { authority cite "N.H. R. Crim. P. 8(c)" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "N.H. R. Crim. P. 10(b)"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "N.H. R. Crim. P. 10(b)"
 {
   note "Arraignment is conducted in open court by reading the indictment or information, or stating its substance, and calling on the defendant to plead (N.H. R. Crim. P. 10(b)); a represented defendant may plead not guilty and waive formal arraignment in writing (N.H. R. Crim. P. 10(c)). A person arrested on a direct indictment is brought before the superior court as Rule 10(a) provides."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "N.H. R. Crim. P. 12(b)" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "N.H. R. Crim. P. 12(b)"
+state discovery: "Discovery and pretrial motions" by prosecution cite "N.H. R. Crim. P. 12(b)"
 {
   note "The superior court's discovery and scheduling provisions apply unless the presiding justice orders otherwise; their periods (the State's and the defendant's disclosures, and the notice of other-acts evidence before jury selection) are set by Rule 12(b) and are not stated here (currency unconfirmed) (N.H. R. Crim. P. 12(b)). Discovery depositions are governed by Rule 13 and notices of defenses and of extended terms by Rule 14. Pretrial motions in the superior court are filed within the times Rule 15(b) sets, which are not stated here (currency unconfirmed) (N.H. R. Crim. P. 15(b))."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -92,7 +92,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "N.H. R. Cri
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "N.H. R. Crim. P. 11(b)"
+decision plea-decision: "Plea or trial" by accused cite "N.H. R. Crim. P. 11(b)"
 {
   note "Pleas in the superior court are governed by Rule 11(b), which sets out what the court determines before accepting a plea of guilty, including that it is not the result of unlawful force, threats or promises; negotiated pleas by Rule 11(c). Trial by the court or by jury in the superior court is governed by Rule 21(b), and jury selection by Rule 22."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
@@ -129,7 +129,7 @@ state sentencing: "Pre-sentence report and sentencing" by court cite "N.H. R. Cr
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "N.H. R. Crim. P. 34(a)"
+decision judgment: "Judgment of conviction" by accused cite "N.H. R. Crim. P. 34(a)"
 {
   note "The time for a defense notice of appeal is as set forth in Supreme Court Rule 7 (N.H. R. Crim. P. 34(a)): a mandatory appeal is filed by the approved notice of appeal form within 30 days from the date on the clerk's written notice of the decision on the merits, and a timely post-decision motion stays the appeal period (N.H. Sup. Ct. R. 7(1)). Bail pending appeal is governed by Rule 32 and transcripts by Rule 33. lit/core has no counting rule for the New Hampshire Supreme Court rules (N.H. Sup. Ct. R. 27(1)), so the 30-day period is not encoded as a counted deadline."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {

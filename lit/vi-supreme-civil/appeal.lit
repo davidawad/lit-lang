@@ -35,7 +35,7 @@ event ReplyBriefFiled() paper reply-brief
 
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite "V.I. R. App. P. 4(a)"
+state notice-filed: "Notice of appeal filed" by appellant cite "V.I. R. App. P. 4(a)"
 {
   note "An appeal as of right from the Superior Court is taken by filing a notice of appeal with the Clerk of the Supreme Court, conventionally or electronically, within the time Rule 5 allows; failure to take any other step does not affect the validity of the appeal (V.I. R. App. P. 4(a)). The notice names the appellants, the judgment or order appealed from and the issues to be presented, is served on every other party with a certificate of service, and a copy is mailed to the trial judge, who may file a written opinion within 15 days thereafter (V.I. R. App. P. 4(c), (d), (f)). In a civil case the notice is filed within 30 days after entry of the judgment or order, or within 60 days if the Government of the Virgin Islands or the United States or an officer or agency of either is a party; another party may appeal within 14 days after the first notice or within the time otherwise prescribed, whichever ends later (V.I. R. App. P. 5(a)(1), (3)). A timely motion for judgment as a matter of law, to amend or make findings, for a new trial, to alter or amend, or (if filed within 28 days) for relief from the judgment extends the time for all parties until 30 days after entry of the order disposing of the last such motion; a motion not decided within 120 days of filing is deemed denied (V.I. R. App. P. 5(a)(4)). The Superior Court may extend the time on a motion filed not later than 30 days after it expires, on excusable neglect or good cause, by no more than 30 days past the prescribed time or 14 days after the order granting the motion, whichever is later; it may reopen the time for 14 days on a motion filed within 90 days after entry or 14 days after receipt of notice, whichever is earlier (V.I. R. App. P. 5(a)(8), (10)). An order is appealable as of right if final or within the interlocutory categories of 4 V.I.C. § 33(b) and (c) (V.I. R. App. P. 5(a)(2)). The docket fee accompanies the notice; if the appeal is docketed without it, the appellant pays it within 14 days after docketing or the Clerk may dismiss the appeal unless a motion to proceed in forma pauperis is filed (V.I. R. App. P. 3(a))."
   edge-notice-filed-record "Appeal docketed; record and transcript prepared" -> record {
@@ -59,7 +59,7 @@ terminal dismissed-fee: "Appeal dismissed: docket fee unpaid" outcome [loss, dis
   note "Outcome from the appellant's side. The Clerk of the Supreme Court is authorized to dismiss the appeal without further notice when the fee is not paid within 14 days after docketing and no motion to proceed in forma pauperis with supporting documents has been filed (V.I. R. App. P. 3(a))."
 }
 
-state record: "Transcript ordered and record completed" by applicant cite "V.I. R. App. P. 10(b)"
+state record: "Transcript ordered and record completed" by petitioner cite "V.I. R. App. P. 10(b)"
 {
   note "The record on appeal is the original papers and exhibits filed in the Superior Court, the transcript, if any, and a certified copy of the docket entries (V.I. R. App. P. 10(a)). Within 14 days after filing the notice of appeal (or entry of the order disposing of a timely Rule 5(a)(4) motion) the appellant orders the needed transcript on the Transcript Purchase Order form and, unless the entire transcript is ordered, files a statement of the issues; the appellee may designate additional parts within 14 days after service of the completed form, and, if the appellant does not order them within 14 days after the designation, the appellee may within the following 14 days order them or move for an order requiring the appellant to (V.I. R. App. P. 10(b)). Where no report was made, the appellant serves a statement of the evidence within 14 days after filing the notice of appeal and the appellee may object within 14 days after service (V.I. R. App. P. 10(c)). A court reporter who cannot complete the transcript within 60 days after receipt of the order requests an extension from the Clerk of the Supreme Court; the record is complete when all ordered transcripts are filed with the Clerk of the Superior Court, who then transmits it electronically (V.I. R. App. P. 11(b))."
   edge-record-mediation "Selected for appellate mediation" -> mediation {
@@ -81,7 +81,7 @@ decision mediation: "Appellate mediation" by court cite "V.I. R. App. P. 7(a)"
   }
 }
 
-state briefing: "Briefs and appendix filed" by applicant cite "V.I. R. App. P. 25(a)"
+state briefing: "Briefs and appendix filed" by petitioner cite "V.I. R. App. P. 25(a)"
 {
   note "The appellant serves and files a brief within 40 days after the date on which the record is complete and the briefing schedule is issued, whichever occurs earlier; the appellee within 30 days after service of the appellant's brief; and the appellant may reply within 14 days after service of the appellee's brief; the Supreme Court may modify the periods by order (V.I. R. App. P. 25(a)). The appellant files the appendix with its brief (V.I. R. App. P. 24(a)). Principal briefs are limited to 7,800 words and reply briefs to 3,900 words, with a word-count certificate (V.I. R. App. P. 22(f)). Issues not raised below, not briefed, or only adverted to in a perfunctory manner are deemed waived, though the Court may notice an error affecting substantial rights (V.I. R. App. P. 22(m)). If the appellant fails to file a brief in time the appellee may move to dismiss; an appellee who fails to file is not heard at oral argument without permission (V.I. R. App. P. 25(c))."
   edge-briefing-argument "Briefing complete" -> argument { authority cite "V.I. R. App. P. 27(a)" }
@@ -111,7 +111,7 @@ decision argument: "Oral argument or submission on the briefs" by court cite "V.
   }
 }
 
-decision judgment-entered: "Judgment entered" by office cite "V.I. R. App. P. 28"
+decision judgment-entered: "Judgment entered" by court cite "V.I. R. App. P. 28"
 {
   note "The notation of a judgment in the docket is its entry; the Clerk attests and enters it, distributes the opinion and order or the judgment order to all parties, and gives notice of the date of entry (V.I. R. App. P. 28). If a money judgment in a civil case is affirmed, interest allowed by law runs from the date of the Superior Court judgment (V.I. R. App. P. 29). A party seeking costs files an itemized, verified bill of costs with proof of service within 14 days after entry of judgment; objections are filed within 14 days after service and an answer within 14 days after service of the objections; attorney's fees sought as costs are determined by the Superior Court on remand (V.I. R. App. P. 30(b)). If the judgment is affirmed costs are taxed against the appellant, and if reversed against the appellee, unless otherwise ordered (V.I. R. App. P. 30(a))."
   edge-judgment-rehearing "Petition for rehearing" -> rehearing {
@@ -128,7 +128,7 @@ decision judgment-entered: "Judgment entered" by office cite "V.I. R. App. P. 28
 /// Rule 31 as replaced, and Rule 40 as designated, by SCT-Prom-2024-0001,
 /// effective December 1, 2024: a dated layer over the base text that
 /// supersedes the base version of this step from that date.
-state rehearing: "Petition for panel rehearing or rehearing en banc" by applicant effective [2024-12-01, ..) known_at 2026-10-28 supersedes rehearing@2017-03-01 cite "V.I. R. App. P. (2024) 31"
+state rehearing: "Petition for panel rehearing or rehearing en banc" by petitioner effective [2024-12-01, ..) known_at 2026-10-28 supersedes rehearing@2017-03-01 cite "V.I. R. App. P. (2024) 31"
 {
   note "SCT-Prom-2024-0001 replaces Rule 31 in its entirety (panel hearing and rehearing) and designates a new Rule 40 (petition for hearing or rehearing en banc), effective December 1, 2024 unless modified as a result of comments; no later modifying order is listed (sources/vi-supreme-civil/PROVENANCE.md). Cases are assigned to panels of Justices; a panel petition states with particularity each point of law or fact the panel overlooked or misapprehended, oral argument on it is not permitted, and no response may be filed unless the panel requests one (V.I. R. App. P. (2024) 31). A petition for rehearing en banc is filed within the time Rule 31 sets for a panel petition; en banc hearing is not favored and is ordinarily ordered only to secure uniformity of the court's decisions or for a question of exceptional importance (V.I. R. App. P. (2024) 40). The order's vendored text is the OCR layer of a scanned PDF and no second public source of the same edition is vendored, so its filing period and word limit are not stated here; read the original order."
   edge-rehearing-mandate "Petition decided" -> mandate-issued {
@@ -136,7 +136,7 @@ state rehearing: "Petition for panel rehearing or rehearing en banc" by applican
   }
 }
 
-state rehearing: "Petition for rehearing" by applicant effective [2017-03-01, 2024-12-01) known_at 2026-10-28 cite "V.I. R. App. P. 31(a)"
+state rehearing: "Petition for rehearing" by petitioner effective [2017-03-01, 2024-12-01) known_at 2026-10-28 cite "V.I. R. App. P. 31(a)"
 {
   note "A petition for rehearing may be filed within 14 days after entry of judgment, stating with particularity the points of law or fact the Court overlooked or misapprehended; oral argument on it is not permitted, no answer is received unless the Court requests one, and a petition is ordinarily not granted without such a request; if granted the Court may finally dispose of the cause without reargument, restore it to the calendar, or make other orders (V.I. R. App. P. 31(a)). The petition may not exceed 3,900 words (V.I. R. App. P. 31(b))."
   edge-rehearing-mandate "Petition decided" -> mandate-issued {

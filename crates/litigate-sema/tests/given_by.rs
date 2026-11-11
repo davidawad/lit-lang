@@ -102,15 +102,15 @@ fn a_given_records_its_actor_by_index() {
     );
     assert_eq!(diagnostics, Vec::<String>::new());
     let actors: Vec<(usize, String)> = test_of(&pkg.unwrap()).actors.clone().into_iter().collect();
-    assert_eq!(actors, [(2, "Court".to_owned())]);
+    assert_eq!(actors, [(2, "court".to_owned())]);
 }
 
 #[test]
-fn an_undeclared_actor_is_l1009() {
+fn an_undeclared_actor_is_l1016() {
     let (_, diagnostics) = compiled("  given Extended(2025-04-30) by Nobody on 2025-03-10\n");
     assert_eq!(
         diagnostics,
-        ["pkgs/demo/main.lit:28:33 L1009 actor `Nobody` is not declared in `[package.roles]`"]
+        ["pkgs/demo/main.lit:28:33 L1016 `Nobody` is not a canonical `core.roles` designation"]
     );
 }
 
@@ -124,7 +124,7 @@ fn an_order_by_the_grant_holder_extends_the_period() {
 fn an_order_naming_no_actor_extends_nothing() {
     assert_eq!(
         refused("p", "  given Extended(2025-04-30) on 2025-03-10\n"),
-        "only Court may extend `p`, but `Extended(2025-04-30)` on 2025-03-10 names no actor (`given ... by <actor> on <date>`)"
+        "only court may extend `p`, but `Extended(2025-04-30)` on 2025-03-10 names no actor (`given ... by <actor> on <date>`)"
     );
 }
 
@@ -133,9 +133,9 @@ fn an_order_by_another_actor_extends_nothing() {
     assert_eq!(
         refused(
             "p",
-            "  given Extended(2025-04-30) by Plaintiff on 2025-03-10\n"
+            "  given Extended(2025-04-30) by plaintiff on 2025-03-10\n"
         ),
-        "only Court may extend `p`, but `Extended(2025-04-30)` on 2025-03-10 is by `Plaintiff`"
+        "only court may extend `p`, but `Extended(2025-04-30)` on 2025-03-10 is by `plaintiff`"
     );
 }
 

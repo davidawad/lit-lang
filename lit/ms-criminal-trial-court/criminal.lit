@@ -15,7 +15,7 @@ module ms-criminal-trial-court.criminal
 // vendored.
 start arrested
 
-state arrested: "Arrest" by applicant cite "MRCrP 5.1"
+state arrested: "Arrest" by prosecution cite "MRCrP 5.1"
 {
   note "A person arrested without a warrant may be released on personal recognizance or an appearance bond under Rule 8 or, if not released, is taken without unnecessary delay, and in no event later than the period MRCrP 5.1(b)(3) sets, before a judge for an initial appearance; if not, the person is released on the minimum bail Rule 8 specifies unless the offense is not bailable (MRCrP 5.1(b)). The period is not stated here (currency unconfirmed). A criminal proceeding is commenced by charging affidavit, indictment or bill of information (MRCrP 2.1(a)), and an arrest warrant or summons issues under Rule 3."
   edge-arrested-appearance "Initial appearance" -> initial-appearance { authority cite "MRCrP 5.2" }
@@ -41,7 +41,7 @@ decision preliminary-hearing: "Preliminary hearing or indictment" by court cite 
   }
 }
 
-state charged: "Indictment" by office cite "MRCrP 14.1"
+state charged: "Indictment" by court cite "MRCrP 14.1"
 {
   note "The grand jury is governed by Rule 13. The indictment's nature and contents, joinder, severance and amendment are governed by Rules 14.1 to 14.4; a defendant may waive indictment and proceed by information as Rule 14.5 provides; dismissal is governed by Rule 14.6."
   edge-charged-arraignment "Indictment served; arraignment" -> arraignment {
@@ -49,13 +49,13 @@ state charged: "Indictment" by office cite "MRCrP 14.1"
   }
 }
 
-state arraignment: "Arraignment and trial setting" by applicant cite "MRCrP 15.1"
+state arraignment: "Arraignment and trial setting" by prosecution cite "MRCrP 15.1"
 {
   note "A copy of the indictment is served before arraignment, which unless waived is held within the period after service that MRCrP 15.1(a) sets; at arraignment the court reads the charge, takes the plea, ensures counsel, reviews bond and sets reasonable deadlines for filing and hearing all pretrial motions (MRCrP 15.1). Within the period after arraignment that MRCrP 9(a) sets, the court enters an order setting trial, which is set no later than the period MRCrP 9(a) sets after arraignment; criminal trials have priority over civil trials, and a continuance needs good cause shown by written order (MRCrP 9). The periods are not stated here (currency unconfirmed). The statutory speedy-trial rule, Miss. Code Ann. § 99-17-1, is not vendored."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "MRCrP 17.1" }
 }
 
-state discovery: "Disclosure, discovery and pretrial motions" by applicant cite "MRCrP 17.2"
+state discovery: "Disclosure, discovery and pretrial motions" by prosecution cite "MRCrP 17.2"
 {
   note "In felony cases and misdemeanor trials in circuit and county court, the prosecution's and the defendant's disclosures are governed by Rules 17.2 and 17.3, with the continuing duty to disclose and sanctions of Rules 17.8 and 17.9 (MRCrP 17.1). Pretrial motions are filed and heard within the deadlines the court sets at arraignment (MRCrP 15.1(b)); motions generally follow Rule 34. Mental examinations are governed by Rule 12."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling { authority cite "MRCrP 15.1" }
@@ -76,7 +76,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "MRCrP 14.6"
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "MRCrP 15.3"
+decision plea-decision: "Plea or trial" by accused cite "MRCrP 15.3"
 {
   note "The entry of a plea of guilty or nolo contendere is governed by Rule 15.3; a defendant charged with a felony who wishes to plead guilty must plead personally (MRCrP 15.3(a)). Plea bargaining is governed by Rule 15.4. Trial by jury is governed by Rule 18.1, whose jury sizes and concurrence are not stated here (currency unconfirmed)."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "MRCrP 15.3" }
@@ -109,7 +109,7 @@ decision post-trial: "Post-trial motions" by court cite "MRCrP 25.1"
   }
 }
 
-decision judgment: "Appeal" by applicant cite "M.R.A.P. 4"
+decision judgment: "Appeal" by accused cite "M.R.A.P. 4"
 {
   note "The notice of appeal is filed with the clerk of the trial court within 30 days after the date of entry of the judgment or order appealed from (M.R.A.P. 4(a)); in a criminal case the 30 days run from the denial of a timely motion for judgment of acquittal notwithstanding the verdict or for a new trial, or from the imposition of sentence, whichever is later, and a notice filed before the motion is disposed of is ineffective until then (M.R.A.P. 4(e)). Any other party may file within 14 days after the first notice, or within the time otherwise prescribed, whichever is later (M.R.A.P. 4(c)). The trial court may extend the time on a motion filed not later than 30 days after the time expires, on good cause before expiry or excusable neglect after, by no more than 30 days past the prescribed time or 10 days from the order, whichever is later (M.R.A.P. 4(g)). Appeals from justice, municipal and county court follow MRCrP 29 and 30."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "M.R.A.P. 4" }

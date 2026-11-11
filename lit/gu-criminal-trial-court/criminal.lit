@@ -16,7 +16,7 @@ module gu-superior-court-criminal.criminal
 // Garza v. Idaho) are removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "8 GCA § 45.10"
+state arrested: "Arrest or summons" by prosecution cite "8 GCA § 45.10"
 {
   note "An officer making an arrest under a warrant, or a person arresting without one, takes the arrested person without unnecessary delay before a judge of the Superior Court (8 GCA § 45.10(a)); the outer limit 8 GCA § 45.10(c) sets is not stated here (currency unconfirmed). A complaint is filed as 8 GCA § 45.20 provides."
   edge-arrested-appearance "First appearance" -> initial-appearance {
@@ -44,19 +44,19 @@ decision probable-cause: "Preliminary examination or grand jury" by court cite "
   }
 }
 
-state charged: "Indictment, information or complaint" by office cite "8 GCA § 1.15"
+state charged: "Indictment, information or complaint" by court cite "8 GCA § 1.15"
 {
   note "An indictment is a written accusation presented by the grand jury charging a felony or a felony and a related misdemeanor (8 GCA § 50.54(a)). The court must dismiss if an information is not filed or an indictment returned within the time 8 GCA §§ 45.45, 45.50 and 45.80 prescribe (8 GCA § 80.60(a)(1)); the periods are not stated here (currency unconfirmed)."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "8 GCA § 60.10" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "8 GCA § 60.10"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "8 GCA § 60.10"
 {
   note "The defendant is arraigned promptly after the indictment, information or complaint is filed, in open court, by reading the charge or stating its substance and calling on the defendant to plead (8 GCA § 60.10). The pleas are not guilty, not guilty by reason of mental illness, disease or defect, guilty and nolo contendere, and a refusal to plead is entered as not guilty (8 GCA § 60.40). The trial-commencement periods of 8 GCA § 80.60(a)(2) and (3) run from arraignment; they are not stated here (currency unconfirmed)."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "8 GCA § 70.10" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "8 GCA § 65.15"
+state discovery: "Discovery and pretrial motions" by prosecution cite "8 GCA § 65.15"
 {
   note "Defects in the institution of the prosecution or in the charge, among other matters, must be raised before trial by motion (8 GCA § 65.15), and the prosecutor's discovery obligations are in 8 GCA § 70.10. Under the Superior Court's rule, a motion is in writing with a supporting memorandum, states whether an evidentiary hearing is requested, and is served under 8 GCA §§ 1.25 and 1.29; the parties file and serve their witness lists within twenty-four (24) hours of a scheduled evidentiary hearing (Guam Super. Ct. CR 1.1(b), (c)). The assigned judge issues a criminal trial scheduling order setting the trial date within ninety (90) days of the case being filed (or of its assignment, if assigned more than thirty (30) days after filing), changed only for good cause, and no continuance is granted merely on the parties' stipulation (Guam Super. Ct. CR 1.1(e), (f)). A party may request or waive oral argument within three (3) days after the last paper on a motion is filed (Guam Super. Ct. CR 1.1(g))."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -82,7 +82,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "8 GCA § 65
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "8 GCA § 60.40"
+decision plea-decision: "Plea or trial" by accused cite "8 GCA § 60.40"
 {
   note "Before accepting a guilty or nolo contendere plea the court advises the defendant and determines that the plea is voluntary and has a factual basis (8 GCA §§ 60.50, 60.60, 60.70); plea bargaining is regulated by 8 GCA § 60.80. A jury trial may be waived only with the consent of the government and the court (8 GCA § 85.10)."
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
@@ -121,7 +121,7 @@ state sentencing: "Judgment and sentence" by court cite "8 GCA § 120.14"
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "8 GCA § 130.40"
+decision judgment: "Judgment of conviction" by accused cite "8 GCA § 130.40"
 {
   note "A defendant's notice of appeal must be filed in the Superior Court within ten (10) days after the later of the entry of the judgment or order appealed from or the government's notice of appeal; the government's within thirty (30) days (Guam R. App. P. 4(b)(1)). The statutory time for the notice (8 GCA § 130.40) is not stated here (currency unconfirmed)."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {

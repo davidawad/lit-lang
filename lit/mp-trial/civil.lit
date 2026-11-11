@@ -18,7 +18,7 @@ event ReplyMemorandumFiled() paper reply-memorandum
 
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "NMI R. Civ. P. 3"
+state complaint-filed: "Complaint filed" by movant cite "NMI R. Civ. P. 3"
 {
   note "A civil action is commenced by filing a complaint with the Superior Court (NMI R. Civ. P. 3). Periods in this package are stated, not counted: Rule 6(a) excludes the trigger day, includes the last day unless it is a Saturday, Sunday or legal holiday, and excludes intermediate Saturdays, Sundays and legal holidays from a period of 10 days or less unless it is expressed in calendar days; legal holidays include those declared under 1 CMC § 311. Three days are added after service by mail, by leaving it with the clerk or by other Rule 5(b) means (NMI R. Civ. P. 6). The filing fee is not stated in the vendored rules. The earlier outline named no leading decision for this step."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
@@ -42,7 +42,7 @@ decision service-review: "Good cause for late service shown?" by court cite "NMI
 
 terminal dismissed-unserved: "Dismissed without prejudice for want of service" outcome [loss, dismissal] cite "NMI R. Civ. P. 4"
 
-decision answer-due: "Answer, motion or default" by office cite "NMI R. Civ. P. 12"
+decision answer-due: "Answer, motion or default" by court cite "NMI R. Civ. P. 12"
 {
   note "Unless another time is specified by the rule or by Commonwealth law, a defendant serves an answer within 21 days after being served with the summons and complaint or, having timely waived service under Rule 4(d), within 60 days after the request for a waiver was sent (90 days if sent outside any jurisdiction of the United States); the Commonwealth, its agencies and officers or employees sued in an official capacity answer within 30 days after service on the Attorney General, and those sued individually for acts on the Commonwealth's behalf within 30 days after service on them or on the Attorney General, whichever is later. A Rule 12 motion alters these periods: if the court denies it or postpones it to trial, the responsive pleading is due within 14 days after notice of the court's action (NMI R. Civ. P. 12). The clerk may enter once, on consent, an order extending the time to plead by 10 days (NMI R. Civ. P. 77)."
   edge-answer-due-default "No answer or defense" -> default-entered {
@@ -64,7 +64,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "NMI R. Civ.
   }
 }
 
-state amend: "Amended pleading" by applicant cite "NMI R. Civ. P. 15"
+state amend: "Amended pleading" by movant cite "NMI R. Civ. P. 15"
 {
   note "A party may amend once as a matter of course within 21 days after serving the pleading or, if a responsive pleading is required, within 21 days after service of the responsive pleading or of a Rule 12(b), (e) or (f) motion, whichever is earlier; otherwise only with the opposing party's written consent or the court's leave, freely given when justice so requires. A response to an amended pleading is due within the time remaining on the original or within 14 days after service of the amendment, whichever is later (NMI R. Civ. P. 15)."
   edge-amend-tested "Amended pleading tested again" -> pleading-motion {
@@ -93,7 +93,7 @@ terminal default-judgment: "Default judgment" outcome [loss] cite "NMI R. Civ. P
   note "Outcome from the defending side."
 }
 
-state discovery: "Disclosure, discovery and pretrial" by applicant cite "NMI R. Civ. P. 26"
+state discovery: "Disclosure, discovery and pretrial" by movant cite "NMI R. Civ. P. 26"
 {
   note "Initial disclosures are made within 14 days after the parties' Rule 26(f) conference unless a stipulation or order sets another time; a party joined later discloses within 30 days after being served or joined. Expert disclosures are made at least 90 days before the trial date (rebuttal within 30 days after the other party's), pretrial disclosures at least 30 days before trial, and objections to them within 14 days after they are made (NMI R. Civ. P. 26). The scheduling conference is conducted within 90 days after the complaint is filed or within 45 days of the last pleading permitted by Rule 7, whichever comes last, subject to any other date the court sets (NMI R. Civ. P. 16). A jury is demanded by serving a written demand not later than 60 days after the last pleading is filed and paying the jury fee by the date the demand is filed; another party may demand other issues within 14 days after service, and a proper demand may be withdrawn, with the parties' consent, no later than 45 days before trial (NMI R. Civ. P. 38)."
   edge-discovery-sj "Summary judgment motion" -> summary-judgment {
@@ -117,7 +117,7 @@ state trial: "Trial by jury or by the court" by court cite "NMI R. Civ. P. 38"
   edge-trial-settled "Settled before verdict" -> settled { authority cite "NMI R. Civ. P. 41" }
 }
 
-decision post-trial: "Post-trial motions" by applicant cite "NMI R. Civ. P. 59"
+decision post-trial: "Post-trial motions" by movant cite "NMI R. Civ. P. 59"
 {
   note "A renewed motion for judgment as a matter of law is filed no later than 10 days after entry of judgment, or after the jury was discharged on an issue not decided by a verdict (NMI R. Civ. P. 50(b)); a motion to amend findings no later than 10 days after entry of judgment (NMI R. Civ. P. 52(b)); a motion for a new trial no later than 20 days after entry of judgment, with opposing affidavits within 14 days after service, and the court may order a new trial on its own within the same 20 days; a motion to alter or amend no later than 10 days after entry (NMI R. Civ. P. 59(b), (d), (e)). The federal rules allow 28 days for each (NMI R. Civ. P. 50, 52, 59, notes). The court may not extend these times except as the rules state (NMI R. Civ. P. 6). A post-judgment motion and its notice of hearing are filed and served not later than 14 calendar days before the hearing, the opposition within 7 calendar days after service and the reply within 2 calendar days (NMI R. Civ. P. 6). A timely motion under Rule 50(b), 52(b), 54(d)(2), 59(e) or 59, or under Rule 60 filed within 28 days after judgment, restarts the time to appeal from the order disposing of the last of them (NMI Sup. Ct. R. 4(a))."
   edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered {
@@ -125,7 +125,7 @@ decision post-trial: "Post-trial motions" by applicant cite "NMI R. Civ. P. 59"
   }
 }
 
-decision judgment-entered: "Judgment entered" by office cite "NMI R. Civ. P. 58"
+decision judgment-entered: "Judgment entered" by court cite "NMI R. Civ. P. 58"
 {
   note "Where a judgment requires settlement as to form, the prevailing party prepares and serves a draft within 10 days after the announcement of the decision, the other parties state approval or disapproval within five days, and the clerk submits the drafts to the judge after 15 days (NMI R. Civ. P. 58). The clerk may tax costs on 7 days' notice, reviewable on motion served within the next 7 days; a motion for attorney's fees is filed no later than 14 days after entry of judgment unless a statute or order provides otherwise (NMI R. Civ. P. 54). The earlier outline named no finality decision."
   edge-judgment-entered-appeal "Notice of appeal within 30 days" -> appeal-taken {

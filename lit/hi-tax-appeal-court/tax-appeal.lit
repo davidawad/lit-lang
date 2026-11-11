@@ -4,7 +4,7 @@ import hi-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 
 start commenced
 
-state commenced: "Tax appeal filed" by applicant cite ?("HRS § 232-17 and the Rules of the Tax Appeal Court are not vendored") {
+state commenced: "Tax appeal filed" by appellant cite ?("HRS § 232-17 and the Rules of the Tax Appeal Court are not vendored") {
   note "What the tax appeal court hears, the filing period, fees and form of the appeal are not stated in vendored text: HRS chapter 232 and the Rules of the Tax Appeal Court are not vendored. The HRAP adopt the Rules of the Tax Appeal Court as part of the HRAP whenever applicable (Haw. R. App. P. 2.1(a)). The outline named no leading decision and none is cited."
   edge-commenced-served "Appeal served" -> pleadings {
     event ActionCommenced()
@@ -25,7 +25,7 @@ decision pleadings: "Answer or motion to dismiss" by court cite ?("the Rules of 
   }
 }
 
-state discovery: "Discovery and pretrial" by applicant cite ?("the Rules of the Tax Appeal Court are not vendored") {
+state discovery: "Discovery and pretrial" by appellant cite ?("the Rules of the Tax Appeal Court are not vendored") {
   note "Discovery scope, limits and scheduling are not stated in vendored text."
   edge-discovery-dispositive "Dispositive motion or trial setting" -> dispositive {
     authority cite ?("the Rules of the Tax Appeal Court are not vendored")
@@ -55,7 +55,7 @@ state judgment: "Judgment or decision entered" by court cite ?("HRS § 232-13 is
   }
 }
 
-decision post-judgment: "Appeal?" by applicant cite "Haw. R. App. P. 4(a)"
+decision post-judgment: "Appeal?" by appellant cite "Haw. R. App. P. 4(a)"
 {
   note "When a civil appeal is permitted by law, the notice of appeal is filed within 30 days after entry of the judgment or appealable order; a mailed notice is timely if postmarked within that time and received no later than 5 days after the postmark (Haw. R. App. P. 4(a)(1)). The appellate courts do not include the tax appeal court (Haw. R. App. P. 2.1(b)). The statute permitting the appeal and naming the court that hears it (HRS § 232-19) is not vendored. Periods are stated, not counted: Rule 26(a) computes them and has no counting rule in lit/core."
   edge-post-appeal "Notice of appeal filed" -> appeal-taken {

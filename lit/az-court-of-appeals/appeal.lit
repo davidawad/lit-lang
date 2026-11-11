@@ -24,7 +24,7 @@ event ReviewPetitionFiled() paper review-petition
 
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite "ARCAP 9(a)"
+state notice-filed: "Notice of appeal filed" by appellant cite "ARCAP 9(a)"
 {
   note "The notice of appeal is filed with the clerk of the superior court that entered the judgment no later than 30 days after entry of the judgment, unless ARCAP 9 or the law provides another time; a notice of cross-appeal is due 20 days after the appellant's notice or 30 days after entry, whichever is later (ARCAP 8(a), (b), 9(a), (b)). A notice filed after the court announces its decision but before entry of the judgment is treated as filed after entry (ARCAP 9(c)). A timely motion under Civil Rule 50(b), 52(b), 59(a) or 59(d), or under Rule 60 filed within 15 days after entry, restarts the time from entry of the signed order disposing of the last such motion (ARCAP 9(e)(1)). The statutory filing fee is paid to the superior court clerk with the notice unless exempt, waived or deferred; the amount is not stated in the rules (ARCAP 8(e)). Periods are stated, not counted: Civil Rules 6(a) and, except for electronically served documents, 6(c) compute them (ARCAP 5(a))."
   edge-notice-filed-timely "Timely notice" -> appealability { authority cite "ARCAP 9(a)" }
@@ -51,13 +51,13 @@ decision appealability: "Appealable judgment?" by court cite "Ariz. R. Civ. P. 5
 
 terminal dismissed-jurisdiction: "Dismissed: no appealable judgment" outcome [loss, dismissal] cite "Ariz. R. Civ. P. 54(b)"
 
-state record: "Transcripts ordered; record transmitted" by applicant cite "ARCAP 11(c)"
+state record: "Transcripts ordered; record transmitted" by appellant cite "ARCAP 11(c)"
 {
   note "The appellant orders transcripts within 10 days after filing the notice of appeal (or after entry of the order disposing of the last ARCAP 9(e) motion, whichever is later), and within 15 days files in the superior court and serves a notice of transcript order and, if less than a complete transcript is ordered, a statement of the issues (ARCAP 11(c)(2), (3)). Another party's designation of additional transcripts, the appellant's notice of intention not to order them (5 days after service of the designation) and the response (5 days) follow ARCAP 11(c)(4). Within 30 days after the notice of appeal is filed, the superior court clerk transmits the index, documents and exhibits to the appellate clerk; the reporter provides an ordered and paid-for transcript within 30 days after the order, and the ordering party serves it within 5 days after receipt (ARCAP 11.1(b), (c), (d)). The appellate clerk assigns a case number no later than 10 days after receiving the record items, and its initial notice directs the appellant to pay the appellate filing fee within 10 days and to file the opening brief within 60 days; in Division One the appellant files a case management statement within 20 days after that notice (ARCAP 12(a), (b), (d))."
   edge-record-briefing "Initial notice distributed" -> briefing { authority cite "ARCAP 12(b)" }
 }
 
-state briefing: "Briefing" by applicant cite "ARCAP 15(a)"
+state briefing: "Briefing" by appellant cite "ARCAP 15(a)"
 {
   note "The opening brief is due within 60 days after the appellate clerk distributes the initial notice, and the appeal may be dismissed if it is not timely filed; the answering brief within 40 days after service of the opening brief, failing which the appeal may be submitted on the opening brief and the record; and the optional reply brief within 20 days after service of the answering brief (ARCAP 15(a)(1)-(3)). On a cross-appeal the combined briefs are due 40, 40 and 20 days after service of the brief before (ARCAP 15(a)(4), (5)). Opening and answering briefs may not exceed 14,000 words and reply briefs 7,000, each with a certificate of compliance (ARCAP 14(a)). The appeal is at issue when the final reply brief is filed or due, whichever is earlier (ARCAP 15(b)). A party claiming attorneys' fees on appeal gives notice in its brief (ARCAP 21(a))."
   edge-briefing-argument "Appeal at issue" -> argument { authority cite "ARCAP 15(b)" }
@@ -77,7 +77,7 @@ decision decision-issued: "Decision" by court cite "ARCAP 28(a)"
   }
 }
 
-decision reconsideration-window: "Move for reconsideration?" by applicant cite "ARCAP 22(c)"
+decision reconsideration-window: "Move for reconsideration?" by appellant cite "ARCAP 22(c)"
 {
   note "A motion for reconsideration is filed within 15 days after the appellate court enters its decision and may not exceed 3,500 words; it is not required before a petition for review (ARCAP 22(a), (c), (e))."
   edge-reconsideration-window-none "No motion" -> review-window { authority cite "ARCAP 22(a)" }
@@ -100,7 +100,7 @@ terminal reconsideration-granted: "Reconsideration granted: decision revisited" 
   note "Modeled as an exit: the court reconsiders the points of law or fact the motion showed it erroneously determined (ARCAP 22(b)), and a new decision returns to the decision stage."
 }
 
-decision review-window: "Petition for review?" by applicant cite "ARCAP 23(b)"
+decision review-window: "Petition for review?" by petitioner cite "ARCAP 23(b)"
 {
   note "A petition for review to the Supreme Court is filed within 30 days after entry of the Court of Appeals' decision or, if any party timely moved for reconsideration, within 15 days after final disposition of the motion or 30 days after entry of the decision, whichever is later; a cross-petition within 15 days after service of the petition or 30 days after entry, whichever is later (ARCAP 23(b)). A petition, cross-petition or response may not exceed 3,500 words (ARCAP 23(g)(2))."
   edge-review-window-none "No petition: mandate issues" -> final-appellate {

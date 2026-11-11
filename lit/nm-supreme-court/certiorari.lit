@@ -27,7 +27,7 @@ event ReplyBriefFiled() paper reply-brief
 
 start petition
 
-decision petition: "Petition for writ of certiorari within 30 days?" by applicant cite "NMRA 12-502(B)"
+decision petition: "Petition for writ of certiorari within 30 days?" by petitioner cite "NMRA 12-502(B)"
 {
   note "The petition is filed with the Supreme Court clerk within thirty (30) days after final action by the Court of Appeals, and served immediately on the respondent, with the docket fee; final action is the filing of the Court of Appeals decision or, if a timely motion for rehearing was filed, the disposition of the last such motion, and the three (3)-day period of NMRA 12-308(B) does not apply (NMRA 12-502(B)). The petition shows the dates of the decision and any rehearing order, the questions presented (the Court considers only those), the material facts, the basis for the writ (a conflict with a decision of the Supreme Court or of the Court of Appeals, quoting the conflicting parts; a significant question of law under the New Mexico or United States Constitution; or an issue of substantial public interest), a concise argument with references to where the questions were presented in the Court of Appeals briefs, related or prior appeals, and a prayer for relief (NMRA 12-502(C)(2)); the Court of Appeals decision, any summary-calendar notices and any rehearing motion and order are attached (NMRA 12-502(C)(3)). The body may not exceed ten (10) pages, or 3,150 words or 342 monospaced lines with a statement of compliance (NMRA 12-502(D), (E)). Court of Appeals mandate does not issue until the time for certiorari has elapsed or, if it is sought, until final disposition of the petition or final action by the Supreme Court (NMRA 12-402(C)). No leading decision on the grant standard is named."
   edge-petition-none "No petition: the Court of Appeals decision stands" -> review-not-sought {
@@ -49,7 +49,7 @@ decision preliminary: "Writ granted or denied?" by court cite "NMRA 12-502"
   }
 }
 
-state briefing: "Merits briefs filed" by applicant cite "NMRA 12-502(K)"
+state briefing: "Merits briefs filed" by petitioner cite "NMRA 12-502(K)"
 {
   note "Additional briefs are filed only as the Supreme Court directs, and conform to NMRA 12-318 unless it orders otherwise (NMRA 12-502(K)). In a case from the Court of Appeals general calendar, the petitioner files and serves a brief in chief within forty-five (45) days after service of the order granting the petition; in a case from the summary or legal calendar, the transcript or notice of non-designation and designations of exhibits are filed under NMRA 12-211 and 12-212, and the brief in chief is due within forty-five (45) days after the clerk's notice that the record has been filed in the Supreme Court (NMRA 12-502(K)(1), (2)). The respondent files an answer brief within forty-five (45) days after service of the brief in chief, and the petitioner may reply within twenty (20) days after service of the answer brief (NMRA 12-502(K)(3)). The body of a brief in chief or answer brief may not exceed thirty-five (35) pages or 11,000 words (1,200 monospaced lines), and of a reply fifteen (15) pages or 4,400 words (480 lines) (NMRA 12-318(F)(2), (3)). The Supreme Court may order an expedited schedule in a time-sensitive case (NMRA 12-502(M))."
   edge-briefing-submit "Briefing complete" -> submission { authority cite "NMRA 12-502(L)" }
@@ -74,7 +74,7 @@ decision decision: "Supreme Court decision" by court cite "NMRA 12-402(A)"
   }
 }
 
-decision rehearing: "Rehearing sought?" by applicant cite "NMRA 12-404(A)"
+decision rehearing: "Rehearing sought?" by petitioner cite "NMRA 12-404(A)"
 {
   note "A motion for rehearing may be filed within fifteen (15) days after the filing of the disposition or of any later modification of it, unless the time is shortened or enlarged by order; the three (3)-day period of NMRA 12-308 does not apply. It states briefly and with particularity, without argument, the points of law or fact overlooked or misapprehended, with a supporting brief if it rests on a point not raised by any party but relied on by the Court (NMRA 12-404(A)). Unless otherwise ordered, mandate issues fifteen (15) days after the latest of the entry of disposition or its modification (NMRA 12-402(B))."
   edge-rehearing-none "No motion" -> mandate-issued {

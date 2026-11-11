@@ -10,7 +10,7 @@ import ri-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 // earlier outline named no leading decisions.
 start commenced
 
-state commenced: "Complaint filed" by applicant cite "R.I. Super. Ct. R. Civ. P. 3"
+state commenced: "Complaint filed" by plaintiff cite "R.I. Super. Ct. R. Civ. P. 3"
 {
   note "A civil action is commenced by filing a complaint and all other required documents together with the fees prescribed by law (R.I. Super. Ct. R. Civ. P. 3). If service of the summons, complaint, Language Assistance Notice and other required documents is not made on a defendant within 120 days after commencement, the court on motion or on its own initiative after notice to the plaintiff dismisses the action without prejudice as to that defendant or directs service within a specified time; on good cause the court extends the time (R.I. Super. Ct. R. Civ. P. 4(l)). A defendant asked to waive service has at least 30 days from the request (60 if addressed outside the United States) to return the waiver (R.I. Super. Ct. R. Civ. P. 4(d))."
   edge-commenced-served "Defendant served" -> answer-due {
@@ -24,7 +24,7 @@ state commenced: "Complaint filed" by applicant cite "R.I. Super. Ct. R. Civ. P.
 
 terminal dismissed-unserved: "Dismissed without prejudice for want of service" outcome [win, dismissal] cite "R.I. Super. Ct. R. Civ. P. 4(l)"
 
-decision answer-due: "Answer, motion or default" by office cite "R.I. Super. Ct. R. Civ. P. 12(a)"
+decision answer-due: "Answer, motion or default" by court cite "R.I. Super. Ct. R. Civ. P. 12(a)"
 {
   note "A defendant serves an answer within 20 days after service of the summons, complaint, Language Assistance Notice and other required documents (or after the last publication of an order of notice), or, if service was timely waived under Rule 4(d), within 60 days after the request for waiver was sent (90 days if addressed outside the United States). An answer to a cross-claim and a reply to a counterclaim are due within 20 days after service (R.I. Super. Ct. R. Civ. P. 12(a)). A party served electronically or by mail has one added day for a period running from service (R.I. Super. Ct. R. Civ. P. 6(d))."
   edge-answer-due-default "No response" -> default-entered {
@@ -56,7 +56,7 @@ terminal default-entered: "Default entered" outcome [loss] cite "R.I. Super. Ct.
   note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend and that is made to appear by affidavit or otherwise, the clerk enters the default (R.I. Super. Ct. R. Civ. P. 55(a)). The clerk enters judgment for a sum certain against a defendant defaulted for failure to appear; otherwise the party applies to the court, and a party who has appeared is served with written notice of the application at least 10 days before the hearing (R.I. Super. Ct. R. Civ. P. 55(b)). For good cause the court may set aside an entry of default, and a default judgment under Rule 60(b) (R.I. Super. Ct. R. Civ. P. 55(c)). Outcome from the defending side."
 }
 
-state discovery: "Pleadings closed; discovery" by applicant cite "R.I. Super. Ct. R. Civ. P. 26"
+state discovery: "Pleadings closed; discovery" by plaintiff cite "R.I. Super. Ct. R. Civ. P. 26"
 {
   note "Discovery is governed by R.I. Super. Ct. R. Civ. P. 26 through 37. A party demands a jury by serving a written demand not later than 10 days after service of the last pleading directed to the issue and filing it; another party may demand a jury on other issues within 10 days after service of a demand limited to some issues; failure to serve and file a demand waives trial by jury (R.I. Super. Ct. R. Civ. P. 38(b)-(d)). The court may direct a pretrial conference and enters an order that controls the subsequent course of the action (R.I. Super. Ct. R. Civ. P. 16)."
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
@@ -103,7 +103,7 @@ decision post-trial: "Post-trial motions decided" by court cite "R.I. Super. Ct.
   }
 }
 
-state judgment-entered: "Final judgment entered" by office cite "R.I. Super. Ct. R. Civ. P. 58(a)"
+state judgment-entered: "Final judgment entered" by court cite "R.I. Super. Ct. R. Civ. P. 58(a)"
 {
   note "A motion for relief under Rule 60(b)(1)-(3) is made within a reasonable time and not more than one year after the judgment (R.I. Super. Ct. R. Civ. P. 60(b))."
   edge-judgment-entered-appeal "Next step" -> appeal-decision {
@@ -111,7 +111,7 @@ state judgment-entered: "Final judgment entered" by office cite "R.I. Super. Ct.
   }
 }
 
-decision appeal-decision: "Notice of appeal within 20 days of entry?" by applicant cite "R.I. Sup. Ct. R. App. P. 4(a)"
+decision appeal-decision: "Notice of appeal within 20 days of entry?" by plaintiff cite "R.I. Sup. Ct. R. App. P. 4(a)"
 {
   note "In a civil case the notice of appeal is filed with the clerk of the trial court within 20 days of the entry of the judgment, order or decree appealed from, with a filing fee of $150; once a timely notice is filed any other party may file a notice within 20 days of it. A timely motion under Super. R. Civ. P. 50(b), 52(b) or 59 terminates the running of the time, which runs in full from entry of the order deciding it. On a showing of excusable neglect the trial court may extend the time by up to 30 days from the expiration of the original time (R.I. Sup. Ct. R. App. P. 4(a))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken {

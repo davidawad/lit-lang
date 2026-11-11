@@ -4,7 +4,7 @@ import mt-state-rules.{ JudgmentEntered }
 
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "M. R. Civ. P. 3"
+state complaint-filed: "Complaint filed" by plaintiff cite "M. R. Civ. P. 3"
 {
   note "A civil action is commenced by filing a complaint with the court (M. R. Civ. P. 3). Periods in this package are stated, not counted: Rule 6(a) excludes the trigger day, counts every day, and includes the last day unless it is a Saturday, Sunday or legal holiday, Montana's legal holidays including state general election day and days the Governor declares (M. R. Civ. P. 6(a)); 3 days are added after service under Rule 5(b)(2)(C)-(F) (M. R. Civ. P. 6(d)). The filing fee is not stated in the vendored rules. The earlier outline named no leading decision for this step."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
@@ -20,7 +20,7 @@ terminal dismissed-unserved: "Dismissed without prejudice for want of service" o
   note "A plaintiff must accomplish service within three years after filing the complaint; absent an appearance by the defendant, the court on motion or on its own must dismiss the action without prejudice if the plaintiff fails to do so (M. R. Civ. P. 4(t)(1))."
 }
 
-decision answer-due: "Answer, motion or default" by office cite "M. R. Civ. P. 12(a)"
+decision answer-due: "Answer, motion or default" by court cite "M. R. Civ. P. 12(a)"
 {
   note "A defendant serves an answer within 21 days after being served with the summons and complaint; the State of Montana, a state agency, or an officer or employee sued in an official capacity within 42 days after service on the attorney general; a state officer or employee sued individually for acts on the state's behalf within 42 days after service on the officer or employee or on the attorney general, whichever is later. A Rule 12 motion alters the period: if the court denies it or postpones its disposition until trial, the responsive pleading is due within 14 days after notice of the court's action (M. R. Civ. P. 12(a))."
   edge-answer-due-default "No answer or defense" -> default-entered {
@@ -42,7 +42,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "M. R. Civ. 
   }
 }
 
-state amend: "Amended pleading" by applicant cite "M. R. Civ. P. 15(a)"
+state amend: "Amended pleading" by plaintiff cite "M. R. Civ. P. 15(a)"
 {
   note "A party may amend once as a matter of course within 21 days after serving the pleading or, if a responsive pleading is required, 21 days after service of a responsive pleading or of a Rule 12(b), (e) or (f) motion, whichever is earlier; otherwise only with the opposing party's written consent or the court's leave, freely given when justice so requires. A required response is due within the time remaining on the original pleading or 14 days after service of the amendment, whichever is later (M. R. Civ. P. 15(a))."
   edge-amend-tested "Amended pleading tested again" -> pleading-motion {
@@ -71,7 +71,7 @@ terminal default-judgment: "Default judgment" outcome [loss] cite "M. R. Civ. P.
   note "Outcome from the defending side."
 }
 
-state discovery: "Discovery and pretrial" by applicant cite "M. R. Civ. P. 26"
+state discovery: "Discovery and pretrial" by plaintiff cite "M. R. Civ. P. 26"
 {
   note "Discovery is by deposition, interrogatories, production, examination and requests for admission (M. R. Civ. P. 26(a)); the vendored rule states no initial-disclosure period. On a party's request, the judge issues a scheduling order within 90 days, limiting the time to join parties, amend the pleadings, complete discovery and file motions (M. R. Civ. P. 16(b)). A jury is demanded by serving a written demand no later than 14 days after the last pleading directed to the issue is served, and filing it (M. R. Civ. P. 38(b))."
   edge-discovery-sj "Summary judgment motion" -> summary-judgment {
@@ -98,7 +98,7 @@ state trial: "Trial by jury or by the court" by court cite "M. R. Civ. P. 38"
   edge-trial-settled "Settled before verdict" -> settled { authority cite "M. R. Civ. P. 41(a)" }
 }
 
-decision post-trial: "Post-trial motions" by applicant cite "M. R. Civ. P. 59"
+decision post-trial: "Post-trial motions" by plaintiff cite "M. R. Civ. P. 59"
 {
   note "A motion for a new trial is filed no later than 28 days after entry of judgment and states in its heading the dates 60 and 120 days from its filing (M. R. Civ. P. 59(b)); opposing affidavits follow within 14 days after service (M. R. Civ. P. 59(c)); a motion to alter or amend is filed no later than 28 days after entry (M. R. Civ. P. 59(e)). Either motion not addressed in a written order within 60 days from filing is deemed denied, or within 120 days if the court extended the time (M. R. Civ. P. 59(f)). The court must not extend these times (M. R. Civ. P. 6(b)(2)). A timely motion under Rules 50(b), 52(b), 59 or 60(b) restarts the time to appeal from its disposition or deemed denial (M. R. App. P. 4(5)(a)(v))."
   edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered {
@@ -107,7 +107,7 @@ decision post-trial: "Post-trial motions" by applicant cite "M. R. Civ. P. 59"
   }
 }
 
-decision judgment-entered: "Final judgment entered" by office cite "M. R. Civ. P. 58"
+decision judgment-entered: "Final judgment entered" by court cite "M. R. Civ. P. 58"
 {
   note "Every judgment is set out in a separate document; where one is required, judgment is entered when it is in the civil docket and set out in the separate document or 150 days have run (M. R. Civ. P. 58(a), (c)). A judgment is not final for appeal until any necessary determination of costs, attorney fees or sanctions is made (M. R. Civ. P. 58(e)). The prevailing party serves notice of entry within 14 days after entry (M. R. Civ. P. 77(d)). The clerk may tax costs on 14 days' notice, reviewable on motion served within the next 7 days; a motion for attorney fees is filed no later than 14 days after entry of judgment unless a statute or order provides otherwise (M. R. Civ. P. 54(d))."
   edge-judgment-entered-appeal "Notice of appeal within 30 days" -> appeal-taken {

@@ -37,7 +37,7 @@ state opposition-filed: "Notice of opposition filed (commenced)" by board cite "
   }
 }
 
-decision instituted: "Board institutes; answer due on the date the notice of institution designates" by applicant cite "37 CFR 2.105(a); 2.106(a); TBMP 310.03(a)"
+decision instituted: "Board institutes; answer due on the date the notice of institution designates" by respondent cite "37 CFR 2.105(a); 2.106(a); TBMP 310.03(a)"
 {
   group opposition
   answer-plain "File answer (denials, crowded-field amplification), no counterclaim" -> answered {
@@ -97,7 +97,7 @@ chance notice-of-default: "Notice of default for no answer: applicant must show 
   }
 }
 
-decision answered: "Answer on file; exits and next stage" by applicant cite "37 CFR 2.106(b); TBMP 311"
+decision answered: "Answer on file; exits and next stage" by respondent cite "37 CFR 2.106(b); TBMP 311"
 {
   group opposition
   edge-07-opposition-to-trial-judgment-2135-2 "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
@@ -198,7 +198,7 @@ chance talks-answered: "Suspended for settlement after answer" by board cite "37
   }
 }
 
-state discovery-conference: "Discovery conference held (Board attorney on request)" by applicant cite "37 CFR 2.120(a)(2)(i); FRCP 26(f)"
+state discovery-conference: "Discovery conference held (Board attorney on request)" by respondent cite "37 CFR 2.120(a)(2)(i); FRCP 26(f)"
 {
   group discovery
   edge-07-opposition-to-trial-initial-disclosures-1 "Serve initial disclosures" -> initial-disclosures {
@@ -219,7 +219,7 @@ state initial-disclosures: "Initial disclosures served (30 days after discovery 
   }
 }
 
-decision discovery-open: "Discovery open (180 days)" by applicant cite "37 CFR 2.120(a)(2)(i)"
+decision discovery-open: "Discovery open (180 days)" by respondent cite "37 CFR 2.120(a)(2)(i)"
 {
   group discovery
   edge-07-opposition-to-trial-judgment-2135-4 "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
@@ -254,7 +254,7 @@ decision discovery-open: "Discovery open (180 days)" by applicant cite "37 CFR 2
   }
 }
 
-decision discovery-closed: "Discovery closed; ACR/trial/settlement decision" by applicant cite "37 CFR 2.121(a); TBMP 702.04"
+decision discovery-closed: "Discovery closed; ACR/trial/settlement decision" by respondent cite "37 CFR 2.121(a); TBMP 702.04"
 {
   group discovery
   edge-07-opposition-to-trial-judgment-2135-5 "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
@@ -356,7 +356,7 @@ state acr-record: "ACR: stipulated record, Board decides on summary-judgment-sty
   }
 }
 
-state trial-periods: "Trial periods: pretrial disclosures, plaintiff 30d, defendant 30d, rebuttal 15d" by applicant cite "37 CFR 2.121(a)-(c); TBMP 702.01"
+state trial-periods: "Trial periods: pretrial disclosures, plaintiff 30d, defendant 30d, rebuttal 15d" by respondent cite "37 CFR 2.121(a)-(c); TBMP 702.01"
 {
   group trial
   edge-07-opposition-to-trial-trial-closed-1 "Take trial testimony / notices of reliance" -> trial-closed {
@@ -367,7 +367,7 @@ state trial-periods: "Trial periods: pretrial disclosures, plaintiff 30d, defend
   }
 }
 
-decision trial-closed: "Trial closed; briefing decision" by applicant cite "37 CFR 2.128(a)"
+decision trial-closed: "Trial closed; briefing decision" by respondent cite "37 CFR 2.128(a)"
 {
   group trial
   edge-07-opposition-to-trial-judgment-2135-6 "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {

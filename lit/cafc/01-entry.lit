@@ -34,7 +34,7 @@ decision appeal-origin: "Adverse Ruling From an Origin Tribunal" cite "28 U.S.C.
   }
 }
 
-state entry-district-court: "District Court Patent Judgment Entered" by applicant cite "28 U.S.C. § 1295(a)(1)"
+state entry-district-court: "District Court Patent Judgment Entered" by movant cite "28 U.S.C. § 1295(a)(1)"
 {
   group entry-group
   note "Final judgment (or an appealable interlocutory order under 28 U.S.C. § 1292(c)(1)-(2)) in a civil action arising under an Act of Congress relating to patents or plant variety protection, or in which a party asserted a compulsory patent counterclaim. Non-patent district-court appeals with a patent counterclaim removed on appeal still route here; purely non-patent district-court appeals go to the regional circuit, not modeled in this pack."
@@ -55,7 +55,7 @@ state entry-district-court: "District Court Patent Judgment Entered" by applican
   }
 }
 
-state entry-ptab: "PTAB Final Written Decision (or Operative Post-FWD Decision)" by applicant cite "28 U.S.C. § 1295(a)(4)(A); 35 U.S.C. §§ 141-144, 319"
+state entry-ptab: "PTAB Final Written Decision (or Operative Post-FWD Decision)" by movant cite "28 U.S.C. § 1295(a)(4)(A); 35 U.S.C. §§ 141-144, 319"
 {
   group entry-group
   note "Reached from ptab-patent-trial-appeal-board.json's fwd-all-unpatentable / fwd-all-confirmed / fwd-mixed terminals, or from a later rehearing/Director-review decision if one was sought. Only actual trial participants may appeal (35 U.S.C. § 319) — no § 145 civil-action alternative exists for AIA trials, unlike ex parte prosecution appeals under § 145."
@@ -76,7 +76,7 @@ state entry-ptab: "PTAB Final Written Decision (or Operative Post-FWD Decision)"
   }
 }
 
-state entry-itc: "ITC Final Determination — Presidential (USTR) Review Period Expired" by applicant cite "28 U.S.C. § 1295(a)(6); 19 U.S.C. § 1337(c), (j)"
+state entry-itc: "ITC Final Determination — Presidential (USTR) Review Period Expired" by movant cite "28 U.S.C. § 1295(a)(6); 19 U.S.C. § 1337(c), (j)"
 {
   group entry-group
   note "Reached from itc-337.json's no-violation-outcome or remedy-in-effect nodes, i.e. only after the 60-day § 1337(j) Presidential/USTR disapproval window has run without a veto (a veto is itc-337.json's determination-vetoed terminal — no force or effect, nothing to appeal). Any person adversely affected, including the complainant on a no-violation determination, may appeal."
@@ -96,7 +96,7 @@ state entry-itc: "ITC Final Determination — Presidential (USTR) Review Period 
   }
 }
 
-state entry-cofc: "Court of Federal Claims Judgment Entered" by applicant cite "28 U.S.C. § 1295(a)(3); 28 U.S.C. § 2522"
+state entry-cofc: "Court of Federal Claims Judgment Entered" by movant cite "28 U.S.C. § 1295(a)(3); 28 U.S.C. § 2522"
 {
   group entry-group
   note "Final judgment of the U.S. Court of Federal Claims, including patent/copyright takings (28 U.S.C. § 1498) and other CoFC matters within Federal Circuit jurisdiction."
@@ -158,7 +158,7 @@ terminal window-blown-ttab: "TTAB-Origin Notice of Appeal Untimely — Window Bl
   payoff 0.usd
 }
 
-state entry-ttab: "TTAB Final Decision (Opposition, Cancellation or Ex Parte Appeal)" by applicant cite "28 U.S.C. § 1295(a)(4)(B); 15 U.S.C. § 1071(a); 37 C.F.R. § 2.145"
+state entry-ttab: "TTAB Final Decision (Opposition, Cancellation or Ex Parte Appeal)" by movant cite "28 U.S.C. § 1295(a)(4)(B); 15 U.S.C. § 1071(a); 37 C.F.R. § 2.145"
 {
   group entry-group
   note "Reached from ttab-trademark-trial-and-appeal-board.json's decision nodes. A party dissatisfied with a final TTAB decision may appeal on the Board record to the Federal Circuit (15 U.S.C. § 1071(a)) or instead file a de novo civil action in district court under § 1071(b) (not modeled here). Electing the civil action forecloses the appeal and vice versa, and an adverse party can force the civil-action route by electing it within the period to respond (§ 1071(a)(1))."

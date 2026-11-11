@@ -7,7 +7,7 @@ import frap.rehearing.{ rehearing-period }
 
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite "FRAP 3(a)(1)"
+state notice-filed: "Notice of appeal filed" by movant cite "FRAP 3(a)(1)"
 {
   edge-notice-filed-briefing "Appeal docketed" -> briefing { authority cite "FRAP 12(c)" }
 }
@@ -28,14 +28,14 @@ decision decision: "Court decision" by court cite "FRAP 36(a)"
   edge-decision-judgment "Judgment entered" -> rehearing { authority cite "FRAP 40(d)(1)" }
 }
 
-decision rehearing: "Rehearing election" by applicant cite "FRAP 40(d)(1)"
+decision rehearing: "Rehearing election" by movant cite "FRAP 40(d)(1)"
 {
   edge-rehearing-mandate "No petition or rehearing denied" -> mandate {
     authority cite "FRAP 41(b); 8th Cir. IOP IV.F"
   }
 }
 
-terminal mandate: "Mandate issued" outcome [final] by office cite "FRAP 41(a)"
+terminal mandate: "Mandate issued" outcome [final] by court cite "FRAP 41(a)"
 {
   note "The Internal Operating Procedures describe the court's internal assignment, panel, and decisional practices; they do not create filing deadlines."
 }

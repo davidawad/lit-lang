@@ -11,7 +11,7 @@ import ar-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeO
 // requiring an arithmetic test.
 start filed
 
-state filed: "Claim filed" by applicant cite ?("Ark. Code Ann. § 11-9-702: not vendored") {
+state filed: "Claim filed" by movant cite ?("Ark. Code Ann. § 11-9-702: not vendored") {
   note "A claim for compensation is filed with the Commission. The filing period, form and fees are not stated: Ark. Code Ann. § 11-9-702 is not vendored."
   edge-filed-hearing "Set for hearing" -> hearing {
     event ActionCommenced()
@@ -38,7 +38,7 @@ decision decision: "Administrative law judge decides" by court cite ?("Ark. Code
   }
 }
 
-decision review: "Review by the Full Commission or the Court of Appeals sought?" by applicant cite ?("Ark. Code Ann. § 11-9-711: not vendored") {
+decision review: "Review by the Full Commission or the Court of Appeals sought?" by movant cite ?("Ark. Code Ann. § 11-9-711: not vendored") {
   note "The outline routes a decision to review by the Full Commission and the Commission's decision to the Arkansas Court of Appeals (lit/arkctapp). The review periods and the reviewing body's standard are not stated: Ark. Code Ann. § 11-9-711 is not vendored."
   edge-review-none "No review: the decision is final" -> final-decision {
     event JudgmentEntered()

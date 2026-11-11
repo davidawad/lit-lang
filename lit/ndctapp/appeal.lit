@@ -28,7 +28,7 @@ event RehearingPetitionFiled() paper rehearing-petition
 
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite "N.D.R.App.P. 4(a)"
+state notice-filed: "Notice of appeal filed" by movant cite "N.D.R.App.P. 4(a)"
 {
   note "An appeal permitted by law as of right is taken by filing a notice of appeal with the clerk of the supreme court within the time allowed by Rule 4, served on each other party with proof of service filed with it (N.D.R.App.P. 3(a)(1), 3(d)(1)). In a civil case the notice is filed within 60 days from service of notice of entry of the judgment or order appealed; any other party may file within 14 days after the first notice or within its own time, whichever ends later; a timely motion under N.D.R.Civ.P. 50(b), 52(b), 54 (fees), 59, or 60 if served and filed no later than 28 days after notice of entry, restarts the full time from service of notice of entry of the order disposing of the last such motion; and the supreme court may extend the time on a motion made no later than 30 days after it expires, for excusable neglect or good cause, by no more than 30 days (N.D.R.App.P. 4(a)). Notice of the appeal is not made until any required docket fee is paid or waived (N.D.R.App.P. 12). Periods in this package are stated, not counted: computation is N.D.R.App.P. 26(a), and 3 days are added after service by mail or commercial carrier unless the document is delivered on the date of service stated (N.D.R.App.P. 26(c))."
   edge-notice-filed-appealability "Notice filed" -> appealability {
@@ -101,7 +101,7 @@ decision disposition: "Disposition" by court cite "N.D.R.App.P. 35(a)"
   }
 }
 
-decision affirmed-entered: "Affirmed: rehearing election" by applicant cite "N.D.R.App.P. 40(a)"
+decision affirmed-entered: "Affirmed: rehearing election" by movant cite "N.D.R.App.P. 40(a)"
 {
   note "A petition for rehearing may be filed within 14 days after entry of judgment unless the time is shortened or enlarged by order; no answer is permitted unless the court requests one (N.D.R.App.P. 40(a)); the petition or answer may not exceed 10 pages (N.D.R.App.P. 40(b)). If the judgment is affirmed, costs are taxed against the appellant unless the law provides or the court orders otherwise (N.D.R.App.P. 39(a))."
   edge-affirmed-entered-rehearing-affirmed "Rehearing petition filed" -> rehearing-affirmed {
@@ -125,7 +125,7 @@ decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite "N.D.R.
   }
 }
 
-decision mandate-affirmed: "Mandate issued: certiorari election" by applicant cite "N.D.R.App.P. 41(b)"
+decision mandate-affirmed: "Mandate issued: certiorari election" by movant cite "N.D.R.App.P. 41(b)"
 {
   note "The mandate issues 21 days after entry of judgment or 7 days after entry of an order denying a timely petition for rehearing, unless the court shortens or extends the time, and is effective when issued (N.D.R.App.P. 41(b), (c)). A stay of the mandate pending a petition for certiorari may be granted on motion for up to 30 days unless extended for cause (N.D.R.App.P. 41(d)(2)). A petition for certiorari to a state court of last resort is timely within 90 days after entry of the judgment (Sup. Ct. R. 13.1), running from entry and not from the mandate, or from the denial of a timely rehearing petition (Sup. Ct. R. 13.3)."
   edge-mandate-affirmed-federal-review "Petition for certiorari" -> federal-review {
@@ -141,7 +141,7 @@ terminal affirmed-final: "Affirmed: final" outcome [loss] cite "N.D.R.App.P. 41(
   note "Outcome from the applicant's side."
 }
 
-decision reversed-entered: "Reversed or modified: rehearing election" by applicant cite "N.D.R.App.P. 40(a)"
+decision reversed-entered: "Reversed or modified: rehearing election" by movant cite "N.D.R.App.P. 40(a)"
 {
   note "A petition for rehearing may be filed within 14 days after entry of judgment (N.D.R.App.P. 40(a)(1)). If the judgment is reversed, costs are taxed against the appellee unless the law provides or the court orders otherwise (N.D.R.App.P. 39(a))."
   edge-reversed-entered-rehearing-reversed "Rehearing petition filed" -> rehearing-reversed {
@@ -164,7 +164,7 @@ decision rehearing-reversed: "Rehearing ruling (reversed or modified)" by court 
   }
 }
 
-decision mandate-reversed: "Mandate issued: certiorari election" by applicant cite "N.D.R.App.P. 41(b)"
+decision mandate-reversed: "Mandate issued: certiorari election" by movant cite "N.D.R.App.P. 41(b)"
 {
   note "The mandate issues as N.D.R.App.P. 41(b) provides; certiorari timing is Sup. Ct. R. 13.1 and 13.3. The district court enters final judgment in accordance with the court's judgment unless the court orders otherwise (N.D.R.App.P. 35(a)(4))."
   edge-mandate-reversed-federal-review "Petition for certiorari" -> federal-review {
@@ -180,7 +180,7 @@ terminal reversed-final: "Reversed or modified: final" outcome [win] cite "N.D.R
   note "Outcome from the applicant's side."
 }
 
-decision remanded-entered: "Remanded: rehearing election" by applicant cite "N.D.R.App.P. 40(a)"
+decision remanded-entered: "Remanded: rehearing election" by movant cite "N.D.R.App.P. 40(a)"
 {
   note "A petition for rehearing may be filed within 14 days after entry of judgment (N.D.R.App.P. 40(a)(1)). When the court remands and retains jurisdiction, a party may request supplemental briefing or argument in writing within 14 days of the district court's certification (N.D.R.App.P. 35(a)(3)(B))."
   edge-remanded-entered-rehearing-remanded "Rehearing petition filed" -> rehearing-remanded {
@@ -203,7 +203,7 @@ decision rehearing-remanded: "Rehearing ruling (remanded)" by court cite "N.D.R.
   }
 }
 
-decision mandate-remanded: "Mandate issued: certiorari election" by applicant cite "N.D.R.App.P. 41(b)"
+decision mandate-remanded: "Mandate issued: certiorari election" by movant cite "N.D.R.App.P. 41(b)"
 {
   note "The mandate issues as N.D.R.App.P. 41(b) provides; certiorari timing is Sup. Ct. R. 13.1 and 13.3."
   edge-mandate-remanded-federal-review "Petition for certiorari" -> federal-review {

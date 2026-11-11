@@ -10,7 +10,7 @@ event RehearingPetitionFiled()
 // note, not counted (Iowa Code section 4.1(34) is not vendored).
 start application
 
-decision application: "Apply for further review within 20 days?" by applicant cite "Iowa R. App. P. 6.1103"
+decision application: "Apply for further review within 20 days?" by petitioner cite "Iowa R. App. P. 6.1103"
 {
   note "An application for further review is filed within 20 days following the filing of the court of appeals decision, or within ten days in a chapter 232 child in need of assistance or termination of parental rights appeal; the court of appeals must extend the time if the failure to file timely was due to the clerk of the supreme court's failure to notify the applicant of the decision (Iowa R. App. P. 6.1103(1)(a)). The application is a single document in the rule 6.903(1) form containing, in order, the questions presented on the first page after the cover, a table of contents, a statement supporting further review that identifies the specific issue of importance and any conflicting authority, a brief with all contentions and authorities (none incorporated by reference), and the court of appeals decision showing its filing date; the only other attachments are relevant district court record materials of at most ten pages, district court orders and agency rulings (Iowa R. App. P. 6.1103(1)(c)). The cover states the court and appellate number, the caption, the date the decision was filed, the title and counsel's or the self-represented party's contact details (Iowa R. App. P. 6.1103(4)). The application may not exceed two-fifths of the length limitations for a required brief in rule 6.903(1)(i) (13,000 words in a proportionally spaced typeface, Iowa R. App. P. 6.903(1)(i)(1)), exclusive of the court of appeals decision, the tables and the attached record materials, orders and agency decisions, and includes a Form 10 certificate of compliance (Iowa R. App. P. 6.1103(5)); the limit is stated here and not declared, since the rule states it only as a fraction. The applicant pays the clerk of the supreme court a filing fee or moves to waive or defer it under rules 6.703(1)(g) and 6.703(2) (Iowa R. App. P. 6.1103(1)(e)); the amount is in rule 6.703, not stated here. The decision arrives from lit/iowactapp."
   edge-application-none "No application: the court of appeals decision stands" -> review-not-sought {
@@ -34,7 +34,7 @@ decision review-decision: "Further review granted or denied" by court cite "Iowa
   }
 }
 
-state briefing: "Supplemental briefs, if required" by applicant cite "Iowa R. App. P. 6.1103"
+state briefing: "Supplemental briefs, if required" by petitioner cite "Iowa R. App. P. 6.1103"
 {
   note "If further review is granted, the supreme court may require the parties to file supplemental briefs on all or some of the issues to be reviewed (Iowa R. App. P. 6.1103(6)). It may review any or all of the issues raised in the original appeal or limit its review to those the application brought to its attention (Iowa R. App. P. 6.1103(1)(d)). No supplemental briefing period is stated in the vendored text."
   edge-briefing-submission "Ready for submission" -> submission {
@@ -64,7 +64,7 @@ decision decision: "Supreme court decision" by court cite "Iowa R. App. P. 6.120
   }
 }
 
-decision rehearing: "Petition for rehearing within 14 days?" by applicant cite "Iowa R. App. P. 6.1205"
+decision rehearing: "Petition for rehearing within 14 days?" by petitioner cite "Iowa R. App. P. 6.1205"
 {
   note "A petition for rehearing is filed within 14 days after the filing of the supreme court opinion unless the court shortens or enlarges the time; none lies from an order denying further review. It states with particularity the points of law or fact the court overlooked or misapprehended, in the rule 6.903(1) form and, except by the court's permission, not exceeding one-fifth of the length limitations for a required brief in rule 6.903(1)(i). Oral argument on it is not permitted (Iowa R. App. P. 6.1205(1), (2), (4))."
   edge-rehearing-none "No rehearing petition" -> decided-against {

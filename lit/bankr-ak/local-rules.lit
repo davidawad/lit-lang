@@ -592,7 +592,7 @@ deadline hearing-evidence-period: 7.days before MatterHearing() counted_by frbp9
 
 start motion-filed
 
-state motion-filed: "Motion filed and noticed" by applicant cite "AK LBR 9013-1(a)"
+state motion-filed: "Motion filed and noticed" by movant cite "AK LBR 9013-1(a)"
 {
   note "A motion or application governed by FRBP 9014 states the relief and its reasons with relevant facts and authorities and is filed with its exhibits, a proposed order and supporting affidavits (AK LBR 9013-1(a)); it is noticed under AK LBR 2002-1. The motion's FRBP periods are lit/frbp's."
   edge-motion-filed-opposed "Opposition filed" -> opposed {
@@ -613,7 +613,7 @@ state opposed: "Opposition filed" by opponent cite "AK LBR 9013-1(b)"
   }
 }
 
-state unopposed: "No opposition: certificate and proposed order" by applicant cite "AK LBR 9075-1(a)"
+state unopposed: "No opposition: certificate and proposed order" by movant cite "AK LBR 9075-1(a)"
 {
   note "Absent a timely opposition no hearing is required unless a rule requires one; the movant lodges a proposed order and files a Certificate of No Objections (AK LBF 4) signed under penalty of perjury (AK LBR 9075-1(a)(3), 9021-1(c)(2)[A])."
   edge-unopposed-ruling "Proposed order lodged" -> ruling {

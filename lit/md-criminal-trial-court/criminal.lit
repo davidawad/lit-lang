@@ -13,7 +13,7 @@ module md-criminal-trial-court.criminal
 // 1 (2023), is kept as the rule prints it.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "Md. Rule 4-212"
+state arrested: "Arrest or summons" by prosecution cite "Md. Rule 4-212"
 {
   note "A defendant arrested appears before a judicial officer of the District Court, who advises of the charges, the right to counsel and, for a felony outside the District Court's jurisdiction that is not indicted, the right to a preliminary hearing on a request made then or within ten days (Md. Rule 4-213(a)); in the circuit court the initial appearance occurs on execution of a warrant or on appearance in response to a summons (Md. Rule 4-213(c))."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
@@ -43,7 +43,7 @@ decision probable-cause: "Preliminary hearing or waiver" by court cite "Md. Rule
   }
 }
 
-state charged: "Charging document filed in circuit court" by office cite "Md. Rule 4-201"
+state charged: "Charging document filed in circuit court" by court cite "Md. Rule 4-201"
 {
   note "Counsel appears or the defendant first appears before the circuit court (Md. Rules 4-213(c), 4-214). The earlier of those two events starts the mandatory-motion, State-disclosure and trial-date periods below."
   edge-charged-motions "Appearance of counsel or first appearance" -> pretrial {
@@ -51,7 +51,7 @@ state charged: "Charging document filed in circuit court" by office cite "Md. Ru
   }
 }
 
-state pretrial: "Mandatory motions and discovery" by applicant cite "Md. Rule 4-252"
+state pretrial: "Mandatory motions and discovery" by prosecution cite "Md. Rule 4-252"
 {
   note "A defect in the institution of the prosecution or in the charging document, an unlawful search, seizure, interception or pretrial identification, an unlawfully obtained statement, and a request for joint or separate trial are raised by motion or waived (Md. Rule 4-252(a)); the motion is filed within 30 days after the earlier of the appearance of counsel or the first appearance before the court under Rule 4-213(c), or within five days after discovery disclosing its basis is furnished (Md. Rule 4-252(b)). A motion to transfer to juvenile court has the same 30 days (Md. Rule 4-252(c)). A response, if made, is filed within 15 days after service of the motion (Md. Rule 4-252(f)). The State's Attorney makes its disclosure within 30 days after the earlier of the appearance of counsel or the first appearance, and the defense no later than 30 days before the first scheduled trial date, a defense under Md. Rule 4-263(e)(6) at least 10 days before it (Md. Rule 4-263(h)); a motion to compel is filed within ten days after the discovery was due or received, and a response within five days after its service (Md. Rule 4-263(i))."
   edge-pretrial-motion "Mandatory motion filed" -> motions-ruling {
@@ -71,7 +71,7 @@ decision motions-ruling: "Ruling on mandatory motions" by court cite "Md. Rule 4
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Md. Rule 4-242"
+decision plea-decision: "Plea or trial" by accused cite "Md. Rule 4-242"
 {
   note "The circuit court trial date is set within 30 days after the earlier of the appearance of counsel or the defendant's first appearance before the circuit court, and not later than 180 days after the earlier of those events; only the county administrative judge or a designee may change it, for good cause (Md. Rule 4-271(a)(1), cross-referencing Code, Criminal Procedure Article, § 6-103, and Jackson v. State, 485 Md. 1 (2023)). Pleas and plea agreements are governed by Md. Rules 4-242 and 4-243."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "Md. Rule 4-242" }
@@ -106,7 +106,7 @@ state sentencing: "Presentence investigation and sentencing" by court cite "Md. 
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Md. Rule 8-202"
+decision judgment: "Judgment of conviction" by accused cite "Md. Rule 8-202"
 {
   note "The notice of appeal is filed within 30 days after entry of the judgment (Md. Rule 8-202(a)); when a timely motion for new trial under Rule 4-331(a) is filed, within 30 days after the later of the entry of judgment or the entry of a notice withdrawing the motion or an order denying it (Md. Rule 8-202(b)). The appeal goes to the Appellate Court of Maryland."
   edge-judgment-appeal "Notice of appeal filed within 30 days" -> appeal-taken {

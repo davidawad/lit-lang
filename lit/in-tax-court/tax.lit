@@ -45,7 +45,7 @@ event ReviewReplyFiled() paper review-reply
 
 start commenced
 
-state commenced: "Original tax appeal filed" by applicant cite ?("Ind. Code ch. 33-26; Ind. Tax Ct. R.: not vendored") {
+state commenced: "Original tax appeal filed" by plaintiff cite ?("Ind. Code ch. 33-26; Ind. Tax Ct. R.: not vendored") {
   note "Commencement of an original tax appeal from a final determination of the Department of State Revenue or the Indiana Board of Tax Review, its filing period, fee and form: holes, because neither the Tax Court rules nor Ind. Code ch. 33-26 is vendored. A party who proceeds in forma pauperis in the Tax Court pays no fee on a later Petition for Review (App. R. 63(P))."
   edge-commenced-decision "Tried or submitted" -> tax-decision {
     authority cite ?("Ind. Tax Ct. R.: not vendored")
@@ -80,7 +80,7 @@ terminal won: "Decided for the petitioner" outcome [win] cite "Ind. Appellate Ru
   note "The adverse party may petition for rehearing in the Tax Court or for review in the Supreme Court within the Rule 63 periods (App. R. 63(B), (C)). Outcome from the applicant's side."
 }
 
-decision post-judgment: "Rehearing, review or acceptance" by applicant cite "Ind. Appellate Rule 63(B)"
+decision post-judgment: "Rehearing, review or acceptance" by plaintiff cite "Ind. Appellate Rule 63(B)"
 {
   note "A party adversely affected by a Final Judgment or final disposition may file a Petition for Rehearing with the Tax Court, not a Motion to Correct Error, governed by Rule 54; it need not be filed to seek review, but when used, the ruling on it is the final decision from which one review may be sought (App. R. 63(B)). Rule 54(B) requires the Petition for Rehearing no later than thirty (30) days after the decision. The Notice of Intent to Petition for Review is filed with the Clerk under Rule 9 (except its filing fee) no later than thirty (30) days after the docket entry of the Final Judgment or final disposition, or, if a timely Petition for Rehearing was filed by any party, of its final disposition; Rule 25(C)'s three-day mail extension does not apply and no extension is granted (App. R. 63(C), (K))."
   edge-post-judgment-rehearing "Petition for rehearing in the Tax Court" -> rehearing {
@@ -110,7 +110,7 @@ decision rehearing: "Rehearing ruling" by court cite "Ind. Appellate Rule 63(B)"
   }
 }
 
-state record: "Clerk's Record and Transcript" by office cite "Ind. Appellate Rule 63(D)"
+state record: "Clerk's Record and Transcript" by court cite "Ind. Appellate Rule 63(D)"
 {
   note "The Clerk gives the Court Reporter notice of the Notice of Intent and assembles the Clerk's Record under Rule 10; the Court Reporter prepares and files the Transcript under Rule 11; the Clerk retains, transmits and grants access to the Record under Rule 12, where \"trial court clerk\" means the Clerk (App. R. 63(D))."
   edge-record-petition "Notice of completion: petition for review" -> briefing {
@@ -119,7 +119,7 @@ state record: "Clerk's Record and Transcript" by office cite "Ind. Appellate Rul
   }
 }
 
-state briefing: "Petition for Review, response and reply" by applicant cite "Ind. Appellate Rule 63(E)"
+state briefing: "Petition for Review, response and reply" by plaintiff cite "Ind. Appellate Rule 63(E)"
 {
   note "The Petition for Review is filed no later than thirty (30) days after the docket entry of the Clerk's Notice of Completion of Clerk's Record if it reports the Transcript complete or not requested, and otherwise of the Clerk's Notice of Completion of Transcript (App. R. 63(E)); the petitioner pays a $125.00 fee unless a state or governmental unit, or in forma pauperis in the Tax Court (App. R. 63(P)). A brief in response may be filed no later than thirty (30) days after the Petition is served, and a reply no later than fifteen (15) days after the response is served (App. R. 63(F), (G)). The Petition and response each carry a Reasons for Granting [or Denying] Review section immediately before the Argument, and no separate brief in support is filed (App. R. 63(I)); any brief may discuss the decision's fiscal impact (App. R. 63(J)). Extensions of these times may be sought under Rule 35 (App. R. 63(K)). Appendices follow Rules 49 to 51 (App. R. 63(L))."
   edge-briefing-ruling "Briefs filed: review considered" -> review {

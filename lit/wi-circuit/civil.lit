@@ -15,7 +15,7 @@ import wi-state-rules.{ JudgmentEntered }
 // local rules and judges' standing orders are not vendored.
 start complaint-filed
 
-state complaint-filed: "Summons and complaint filed" by applicant cite "Wis. Stat. § 801.02(1)"
+state complaint-filed: "Summons and complaint filed" by plaintiff cite "Wis. Stat. § 801.02(1)"
 {
   note "A civil action in which a personal judgment is sought is commenced as to a defendant when a summons and a complaint naming the person as defendant are filed with the court, provided an authenticated copy of each is served on the defendant within 90 days after filing (Wis. Stat. § 801.02(1)); the original summons and complaint are filed together and the copies served together, and fees payable on commencement are paid to the clerk at filing (§ 801.02(3), (6)). The 90-day period may not be enlarged (Wis. Stat. § 801.15(2)(a)). Periods are computed under § 801.15(1)(b): the day of the act is excluded and the last day included unless the clerk of courts office is closed; Saturdays, Sundays and holidays are excluded from a period of less than 11 days. A written motion that cannot be heard ex parte, with its notice of hearing, is served not later than 5 days before the hearing unless a statute or order fixes another period, and opposing affidavits not later than one day before it (§ 801.15(4)); 3 days are added to a prescribed period after service by mail, and one day after service by facsimile, electronic mail or the electronic filing system completed between 5 p.m. and midnight (§ 801.15(5)). The filing fee is not stated in the vendored chapters."
   edge-complaint-filed-served "Summons and complaint served within 90 days" -> answer-due {
@@ -31,7 +31,7 @@ terminal not-commenced: "Action not commenced: no timely service" outcome [loss,
   note "Without service within 90 days after filing, the action is not commenced as to that defendant (Wis. Stat. § 801.02(1)); the court may not enlarge the 90-day period (Wis. Stat. § 801.15(2)(a))."
 }
 
-decision answer-due: "Answer, motion or default" by office cite "Wis. Stat. § 802.06(1)"
+decision answer-due: "Answer, motion or default" by court cite "Wis. Stat. § 802.06(1)"
 {
   note "A defendant serves an answer within 20 days after service of the complaint; the state, its agencies, officers, employees and agents within 45 days; and, if a defendant is an insurance company or any cause of action in the original pleading, cross claim or counterclaim is founded in tort, the period is 45 days. A cross claim is answered and a counterclaim replied to within 20 days after service. A motion under § 802.06(2) alters these periods unless the court fixes another time: if the court denies it or postpones it to trial, the responsive pleading is served within 10 days after notice of the court's action; if it grants a motion for a more definite statement, within 10 days after service of the statement (Wis. Stat. § 802.06(1)). On motion for cause shown the court may enlarge a period; a motion made after it expires requires excusable neglect (Wis. Stat. § 801.15(2)(a))."
   edge-answer-due-default "No answer: time for joining issue expired" -> default-motion {
@@ -55,7 +55,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "Wis. Stat. 
   }
 }
 
-state amend: "Amended pleading" by applicant cite "Wis. Stat. § 802.09(1)"
+state amend: "Amended pleading" by plaintiff cite "Wis. Stat. § 802.09(1)"
 {
   note "A party may amend its pleading once as a matter of course at any time within 6 months after the summons and complaint are filed or within the time set in a scheduling order under § 802.10; otherwise only by leave of court, freely given when justice so requires, or by the adverse party's written consent. A response to an amended pleading is due within 20 days after its service unless the court orders otherwise or none is required, and within 45 days if a defendant is an insurance company, a cause of action is founded in tort, or the responding party is the state or its officer, agent, employee or agency (Wis. Stat. § 802.09(1))."
   edge-amend-tested "Amended pleading tested again" -> pleading-motion {
@@ -90,7 +90,7 @@ state scheduling: "Scheduling order" by court cite "Wis. Stat. § 802.10(3)"
   edge-scheduling-discovery "Discovery opens" -> discovery { authority cite "Wis. Stat. § 804.01" }
 }
 
-state discovery: "Discovery" by applicant cite "Wis. Stat. § 804.01"
+state discovery: "Discovery" by plaintiff cite "Wis. Stat. § 804.01"
 {
   note "Written interrogatories are answered within 30 days after service, but a defendant may answer within 45 days after service of the summons and complaint on it (Wis. Stat. § 804.08(1)); a request to produce is answered in writing within 30 days after service, with the same 45-day allowance for a defendant (Wis. Stat. § 804.09(2)); a matter in a request for admission is admitted unless answered or objected to within 30 days after service, and a defendant need not answer before 45 days after service of the summons and complaint (Wis. Stat. § 804.11(1)). The court may allow a shorter or longer time. Failure to obey a discovery order may be sanctioned, including by dismissing the action (Wis. Stat. § 804.12(2))."
   edge-discovery-sj "Summary judgment motion" -> summary-judgment {
@@ -145,7 +145,7 @@ decision motions-after-verdict: "Motions after verdict" by court cite "Wis. Stat
   }
 }
 
-decision judgment-entered: "Judgment entered" by office cite "Wis. Stat. § 806.06"
+decision judgment-entered: "Judgment entered" by court cite "Wis. Stat. § 806.06"
 {
   note "A judgment is rendered when signed by the judge, or by the clerk at the judge's written direction, and entered when filed in the clerk's office; after entry either party may serve a written notice of entry containing the date of entry. The party in whose favor judgment is rendered and who has it entered perfects it within 30 days of entry, or within 30 days of service of notice of entry if the other party has it entered, or forfeits the right to recover costs (Wis. Stat. § 806.06(1), (3), (4)). The appeal is initiated within 45 days of entry if written notice of entry is given within 21 days of the judgment, otherwise within 90 days of entry (Wis. Stat. § 808.04(1))."
   edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {

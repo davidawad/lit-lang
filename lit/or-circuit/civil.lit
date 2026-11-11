@@ -18,7 +18,7 @@ module or-circuit-civil.civil
 // reporter text is vendored, so none is cited.
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "ORCP 3"
+state complaint-filed: "Complaint filed" by plaintiff cite "ORCP 3"
 {
   note "Other than for purposes of statutes of limitations, an action is commenced by filing a complaint with the clerk of the court (Rule 3). The summons directs the defendant to appear and defend within the time required by Rule 7 C(2) and warns that, if the defendant fails to, the plaintiff will apply for the relief demanded (Rule 7 C(1)(b))."
   edge-complaint-filed-served "Summons and complaint served" -> response-due {
@@ -26,7 +26,7 @@ state complaint-filed: "Complaint filed" by applicant cite "ORCP 3"
   }
 }
 
-decision response-due: "Answer, Rule 21 motion, or no appearance" by office cite "ORCP 7 C(2)"
+decision response-due: "Answer, Rule 21 motion, or no appearance" by court cite "ORCP 7 C(2)"
 {
   note "If the summons is served by any manner other than publication, the defendant appears and defends within 30 days from the date of service; if served by publication, within 30 days from the date of first publication stated in the summons (Rule 7 C(2)). An answer or a responsive motion is filed with the clerk within that time (Rule 15 A). A reply to a counterclaim or to affirmative allegations in an answer, and an answer to a cross-claim, is filed within 30 days from service of the counterclaim, answer or cross-claim (Rule 15 A)."
   edge-response-due-answer "Answer filed" -> answered { authority cite "ORCP 15 A" }
@@ -52,7 +52,7 @@ decision dismissal-motion: "Rule 21 A motion decided" by court cite "ORCP 21 A"
   }
 }
 
-state amended: "Amended pleading" by applicant cite "ORCP 23 A"
+state amended: "Amended pleading" by plaintiff cite "ORCP 23 A"
 {
   note "Apart from amendment as of course, a party may amend a pleading only by leave of court or by written consent of the adverse party, and leave is freely given when justice so requires (Rule 23 A). An amended pleading is complete in itself, without reference to the original (Rule 23 D). A party responds to an amended pleading within the time remaining for response to the original or within 10 days after service of the amended pleading, whichever is longer, unless the court otherwise directs (Rule 15 C)."
   edge-amended-tested "Amended pleading met with a new Rule 21 A motion" -> dismissal-motion {
@@ -66,7 +66,7 @@ terminal dismissed-pleading: "Dismissed on a Rule 21 A motion" outcome [loss, di
   note "Outcome from the applicant's side: judgment for the moving party under Rule 21 A(2)(c). The appeal is lit/or-court-of-appeals."
 }
 
-state default-sought: "Order of default and judgment by default sought" by applicant cite "ORCP 69 C"
+state default-sought: "Order of default and judgment by default sought" by plaintiff cite "ORCP 69 C"
 {
   note "When a party served with summons under Rule 7 has failed to appear by filing a motion or answer, or otherwise to defend, the party seeking affirmative relief may apply for an order of default and a judgment by default (Rule 69 A(1)). If the party to be defaulted has appeared or given written notice of intent to appear, notice of intent to apply for an order of default is filed and served at least 10 days, unless shortened by the court, before applying, and may not be served before the Rule 7 C(2) time has expired (Rule 69 B(2)). The motion for order of default is supported by an affidavit or declaration (Rule 69 C(1)); the motion for judgment by default shows the relief sought, including any amounts due (Rule 69 D(1)). For good cause shown, the court may set aside an order of default (Rule 69 F)."
   edge-default-sought-judgment "Judgment by default entered" -> default-judgment {
@@ -93,13 +93,13 @@ terminal default-won: "Judgment by default for applicant" outcome [win] cite "OR
   note "Outcome from the applicant's side: a judgment by default under Rule 69 D."
 }
 
-state answered: "Answer filed" by applicant cite "ORCP 15 A"
+state answered: "Answer filed" by plaintiff cite "ORCP 15 A"
 {
   note "The trial of all issues of fact is by jury unless the parties consent to trial without a jury by written stipulation filed with the court or oral stipulation in open court entered in the record, or the court finds that no right of jury trial exists on those issues (Rule 51 C). Issues of law are tried by the court (Rule 51 B)."
   edge-answered-discovery "Case proceeds to discovery" -> discovery { authority cite "ORCP 36 A" }
 }
 
-state discovery: "Discovery" by applicant cite "ORCP 36 A"
+state discovery: "Discovery" by plaintiff cite "ORCP 36 A"
 {
   note "Parties may obtain discovery by depositions on oral examination or written questions, production of documents or things or entry on land, physical and mental examinations, and requests for admission (Rule 36 A). A party against whom a claim is asserted may, at any time up to 14 days before trial, serve an offer to allow judgment; the claimant accepts by filing the endorsed offer before trial and within 7 days from its service, and if it is not accepted and the claimant fails to obtain a more favorable judgment, the claimant recovers no costs, prevailing party fees, disbursements or attorney fees incurred after the offer and pays the offeror's costs and disbursements from its service (Rule 54 E(1)-(3))."
   edge-discovery-order-disobeyed "Discovery order disobeyed" -> discovery-sanction {

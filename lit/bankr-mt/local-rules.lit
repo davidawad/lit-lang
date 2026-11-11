@@ -325,7 +325,7 @@ deadline removal-jury-demand-period: 21.days after RemovalNoticeFiled() counted_
 
 start motion-filed
 
-state motion-filed: "Motion filed with notice of opportunity to respond" by applicant cite "Mont. LBR 9013-1(f)"
+state motion-filed: "Motion filed with notice of opportunity to respond" by movant cite "Mont. LBR 9013-1(f)"
 {
   note "Each motion carries, in bold and conspicuous print, the Notice of Opportunity to Respond and Request a Hearing within 14 days of the motion's date, amended where an FRBP or other authority sets a longer or shorter period (Mont. LBR 9013-1(f), (g)); a supporting memorandum is filed with it (Mont. LBR 9013-2(a)). The motion's FRBP periods are lit/frbp's."
   edge-motion-filed-opposed "Response and request for hearing filed" -> opposed {
@@ -343,7 +343,7 @@ state opposed: "Response filed; contested matter noticed for hearing" by opponen
   edge-opposed-ruling "Hearing held" -> ruling { authority cite "Mont. LBR 9013-1(l)" }
 }
 
-state unopposed: "No response: certificate of no objection and proposed order" by applicant cite "Mont. LBR 9013-1(k)"
+state unopposed: "No response: certificate of no objection and proposed order" by movant cite "Mont. LBR 9013-1(k)"
 {
   note "After the response period expires with no timely response, the movant files a certificate of no objection and submits a proposed order; without the certificate within 14 days the motion is denied without prejudice (Mont. LBR 9013-1(k)(3))."
   edge-unopposed-ruling "Certificate filed and proposed order submitted" -> ruling {

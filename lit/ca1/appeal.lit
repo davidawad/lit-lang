@@ -69,7 +69,7 @@ test "mandate issues 7 days after rehearing time expires" cite "FRAP 41(b)(1)"
 
 start notice-filed
 
-state notice-filed: "Notice of Appeal Filed" by applicant cite "FRAP 3(a)(1)"
+state notice-filed: "Notice of Appeal Filed" by movant cite "FRAP 3(a)(1)"
 {
   note "The filing deadline is governed by FRAP 4(a)(1). The 30-day and 60-day periods are the values expressly stated in that rule. Bowles v. Russell, 551 U.S. 205 (2007), holds that a late civil notice beyond the statutory time limit deprives the court of appeals of jurisdiction."
   edge-notice-filed-record "Notice filed; record and docketing follow" -> record-transmitted {
@@ -79,7 +79,7 @@ state notice-filed: "Notice of Appeal Filed" by applicant cite "FRAP 3(a)(1)"
   }
 }
 
-state record-transmitted: "Record Transmitted and Docketed" by office cite "FRAP 10, 11, 12"
+state record-transmitted: "Record Transmitted and Docketed" by court cite "FRAP 10, 11, 12"
 {
   edge-record-briefing "Briefing schedule set" -> briefing {
     authority cite "FRAP 31(a)(1); 1st Cir. R. 31.0"
@@ -87,7 +87,7 @@ state record-transmitted: "Record Transmitted and Docketed" by office cite "FRAP
   }
 }
 
-state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 1st Cir. R. 31.0"
+state briefing: "Briefs Filed" by movant cite "FRAP 31(a)(1); 1st Cir. R. 31.0"
 {
   edge-briefing-argument "Briefing complete" -> argument-decision {
     authority cite "FRAP 34; 1st Cir. R. 34.0"
@@ -113,7 +113,7 @@ decision rehearing-stage: "Rehearing or En Banc Petition" by court cite "FRAP 40
   }
 }
 
-state mandate-stage: "Mandate Issues" by office cite "FRAP 41(b)(1)"
+state mandate-stage: "Mandate Issues" by court cite "FRAP 41(b)(1)"
 {
   edge-mandate-final "Mandate issues" -> final-judgment { authority cite "FRAP 41(b)(1)" }
 }

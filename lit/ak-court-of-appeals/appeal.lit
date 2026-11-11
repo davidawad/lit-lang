@@ -15,7 +15,7 @@ event ReplyBriefServed() paper reply-brief
 
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite "Alaska R. App. P. 204(a)"
+state notice-filed: "Notice of appeal filed" by appellant cite "Alaska R. App. P. 204(a)"
 {
   note "The notice of appeal is filed within 30 days from the date shown in the clerk's certificate of distribution on the judgment, unless Rules 216-219 set a shorter time; another party may appeal within 14 days of a timely notice or within the 30 days, whichever expires last (Alaska R. App. P. 204(a)(1), (2)). In a criminal case a timely motion for a new trial, in arrest of judgment or for reconsideration, or a Criminal Rule 35 motion made within the 30 days, lets the appeal be filed within 30 days after the date of notice of the order deciding it (Alaska R. App. P. 204(a)(4)). No cost bond is required in a criminal case (Alaska R. App. P. 204(c)(2)). A defendant may appeal a sentence as excessive only within the limits of Alaska R. App. P. 215(a)(1). Periods are stated, not counted: Appellate Rule 502(a) computes them. Leading decisions: none named; the outline identified none."
   edge-notice-filed-appealable "Timely notice from a final judgment" -> appealability {
@@ -46,7 +46,7 @@ terminal dismissed-jurisdiction: "Dismissed: no appealable judgment" outcome [lo
   note "Review of a non-appealable order lies only by petition for review (Alaska R. App. P. 402), not modeled here."
 }
 
-state record: "Record and transcript" by applicant cite "Alaska R. App. P. 210"
+state record: "Record and transcript" by appellant cite "Alaska R. App. P. 210"
 {
   note "The record is the entire trial court file, the electronic record and designated transcripts (Alaska R. App. P. 210(a)). The appellant designates the parts to be transcribed with the notice of appeal; any other party may designate more within 10 days after service of that designation (Alaska R. App. P. 210(b)(1)(A)). The clerk of the appellate courts arranges a transcript prepared at public expense (Alaska R. App. P. 210(b)(2)); preparation is completed within 40 days after issuance of the opening notice (Alaska R. App. P. 210(b)(4)). The court then gives notice of the due date for the appellant's brief (Alaska R. App. P. 210(f))."
   edge-record-briefing "Notice of the brief due date" -> briefing {
@@ -55,7 +55,7 @@ state record: "Record and transcript" by applicant cite "Alaska R. App. P. 210"
   }
 }
 
-state briefing: "Briefing" by applicant cite "Alaska R. App. P. 212(a)"
+state briefing: "Briefing" by appellant cite "Alaska R. App. P. 212(a)"
 {
   note "The appellant serves and files its brief within 30 days after the court's notice of the due date; the appellee within 30 days after service of the appellant's brief; within 20 days after service of the appellee's brief the appellant files a reply or a notice that none will be filed (Alaska R. App. P. 212(a)(1)(A)). Within ten days after the clerk returns a brief, seven bound copies are filed in an appeal before the court of appeals (Alaska R. App. P. 212(a)(2)(A)). Principal briefs may not exceed 50 numbered pages and a reply 20 pages (Alaska R. App. P. 212(c)(4))."
   edge-briefing-argument "Briefing complete" -> argument {
@@ -104,7 +104,7 @@ terminal rehearing-granted: "Rehearing granted: the matter is reheard" outcome [
   note "Modeled as an exit; in practice it returns to decision."
 }
 
-decision petition-for-hearing: "Petition for hearing in the supreme court?" by applicant cite "Alaska R. App. P. 303(a)"
+decision petition-for-hearing: "Petition for hearing in the supreme court?" by petitioner cite "Alaska R. App. P. 303(a)"
 {
   note "A petition for hearing may be filed in the supreme court from any final decision of the court of appeals (Alaska R. App. P. 302(a)(1)), within 30 days after the date of notice of the decision; a cross-petition within 30 days after service of the petition (Alaska R. App. P. 303(a)(1), (3)). The petition may not exceed fifteen pages (Alaska R. App. P. 303(b))."
   edge-hearing-filed "Petition for hearing filed" -> further-review {

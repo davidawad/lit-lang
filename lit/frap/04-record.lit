@@ -57,7 +57,7 @@ test "a 30th day on the Saturday after Independence Day rolls to Monday" cite "F
   expect deadline(transcript-filing-period) == 2025-07-07
 }
 
-decision transcript-order-fork: "Transcript Needed?" by applicant cite "FRAP 10(b)"
+decision transcript-order-fork: "Transcript Needed?" by movant cite "FRAP 10(b)"
 {
   group record-group
   note "Appellant must decide within 14 days of the notice of appeal whether to order the transcript. Ordering creates an enforceable duty on the court reporter to transcribe and file; failure to order by the deadline doesn't waive the opportunity to appeal, but will delay the record and potentially prejudice waiver arguments if the record remains incomplete."
@@ -87,7 +87,7 @@ decision transcript-order-fork: "Transcript Needed?" by applicant cite "FRAP 10(
   }
 }
 
-state transcript-ordered: "Transcript Ordered" by office cite "FRAP 10(b)(1)"
+state transcript-ordered: "Transcript Ordered" by court cite "FRAP 10(b)(1)"
 {
   group record-group
   note "Written order must be filed with the district clerk; appellant arranges payment with the reporter at the time of ordering. If ordering only a partial transcript, appellant must designate issues on appeal, and appellee then has 14 days to designate additional portions — refusal to order those portions gives appellee grounds to seek a court order compelling appellant to do so, shifting cost and timeline control from appellant to appellee."
@@ -102,7 +102,7 @@ state transcript-ordered: "Transcript Ordered" by office cite "FRAP 10(b)(1)"
   }
 }
 
-state statement-in-lieu-of-transcript: "Agreed Statement in Lieu of Transcript" by examiner cite "FRAP 10(d)"
+state statement-in-lieu-of-transcript: "Agreed Statement in Lieu of Transcript" by court cite "FRAP 10(d)"
 {
   group record-group
   note "Agreed statement must be signed by both parties and contain only facts 'essential to the court's resolution of the issues' — neither party may later expand it mid-appeal to contest completeness. The statement still requires district court approval before certification, creating a procedural gate. Missing the district court's approval forecloses this pathway and forces a return to transcript ordering."
@@ -111,7 +111,7 @@ state statement-in-lieu-of-transcript: "Agreed Statement in Lieu of Transcript" 
   }
 }
 
-state record-transmitted: "Record on Appeal Complete and Transmitted" by office cite "FRAP (2009 ed.) 11(b)"
+state record-transmitted: "Record on Appeal Complete and Transmitted" by court cite "FRAP (2009 ed.) 11(b)"
 {
   group record-group
   note "The record is 'complete' when the transcript is filed (or agreed statement approved) and the district clerk has numbered and transmitted all original papers to the appellate clerk. The reporter's duty is to note receipt and file within 30 days; delays beyond 30 days require a reporter request for extension (not appellant's action), and failure to report timely triggers mandatory circuit-to-district notification, shifting the compliance burden to the trial judge."

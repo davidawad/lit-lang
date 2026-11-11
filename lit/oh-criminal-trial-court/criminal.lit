@@ -13,7 +13,7 @@ module oh-criminal-trial-court.criminal
 // so they are removed and the rules alone state the procedure.
 start arrested
 
-state arrested: "Arrest or summons on a complaint" by applicant cite "Crim.R. 4"
+state arrested: "Arrest or summons on a complaint" by prosecution cite "Crim.R. 4"
 {
   note "A warrant or summons issues on a complaint (Crim.R. 4(A)). When the defendant first appears before a judge or magistrate, the defendant is told of the charge, the right to counsel and to assigned counsel without cost under Crim.R. 44, the right to remain silent, the right to a preliminary hearing in a felony case not begun by indictment, and, where appropriate, the right to a jury trial and the need to demand one in petty offense cases (Crim.R. 5(A))."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
@@ -43,19 +43,19 @@ decision probable-cause: "Preliminary hearing or indictment" by court cite "Crim
   }
 }
 
-state charged: "Indictment or information" by office cite "Crim.R. 7(A)"
+state charged: "Indictment or information" by court cite "Crim.R. 7(A)"
 {
   note "A felony punishable by death or life imprisonment is prosecuted by indictment; any other felony by indictment unless the defendant, advised of the right, waives it in writing and in open court, and the offense may then be prosecuted by information (Crim.R. 7(A)). The speedy-trial periods run under R.C. 2945.71 to 2945.73, which are not vendored."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Crim.R. 10(A)" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "Crim.R. 10(A)"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "Crim.R. 10(A)"
 {
   note "Arraignment is conducted in open court by reading the indictment, information or complaint, or stating its substance, and calling on the defendant to plead (Crim.R. 10(A)). A defendant demands discovery within twenty-one days after arraignment or seven days before trial, whichever is earlier, or at a reasonable later time the court permits; a motion to compel is made no later than seven days before trial, or three days after the opposing party provides discovery, whichever is later (Crim.R. 16(M)). A defendant who will offer alibi testimony, or evidence or argument of self-defense, defense of another or defense of a residence, gives written notice not less than thirty days before trial in a felony case and fourteen days in a misdemeanor case, or the court may exclude the evidence (Crim.R. 12.1, 12.2)."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "Crim.R. 16(M)" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "Crim.R. 12(D)"
+state discovery: "Discovery and pretrial motions" by prosecution cite "Crim.R. 12(D)"
 {
   note "All pretrial motions, except as Crim.R. 7(E) and 16(M) provide, are made within thirty-five days after arraignment or seven days before trial, whichever is earlier; the court in the interest of justice may extend the time (Crim.R. 12(D)). A written motion and notice of its hearing are served not later than seven days before the hearing unless a rule or order fixes another period (Crim.R. 45(D)). Speedy-trial discharge is statutory (R.C. 2945.73), not vendored."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -79,7 +79,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Crim.R. 12(
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Crim.R. 11(C)"
+decision plea-decision: "Plea or trial" by accused cite "Crim.R. 11(C)"
 {
   note "In a felony case the court does not accept a plea of guilty or no contest without addressing the defendant personally and determining that the plea is voluntary, with an understanding of the charges and the maximum penalty and of the rights waived (Crim.R. 11(C)). A negotiated plea's underlying agreement is stated on the record (Crim.R. 11(F)). In petty offense cases with a right to a jury, trial is to the court unless the defendant files a written jury demand not less than ten days before the date set for trial, or on or before the third day after receiving notice of the trial date, whichever is later (Crim.R. 23(A))."
   edge-plea-decision-plea "Guilty or no contest plea accepted" -> sentencing {
@@ -116,7 +116,7 @@ state sentencing: "Presentence investigation and sentence" by court cite "Crim.R
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Crim.R. 32(C)"
+decision judgment: "Judgment of conviction" by accused cite "Crim.R. 32(C)"
 {
   note "The judgment of conviction sets forth the conviction and the sentence, is signed by the judge and entered on the journal by the clerk within 30 days of the announcement of the sentence, and is effective only when journalized (Crim.R. 32(C)); entry is the event App.R. 4 runs from (App.R. 4(D)). The notice of appeal is filed within 30 days of entry of the final order (App.R. 4(A)(1)). A timely motion in arrest of judgment, a new-trial motion on grounds other than newly discovered evidence, or objections to a magistrate's decision start the time anew from the order resolving the last of them (App.R. 4(B)(3)). After the 30 days a defendant may appeal only with the court of appeals' leave on a motion for delayed appeal (App.R. 5(A))."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "App.R. 4(A)" }

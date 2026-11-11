@@ -211,7 +211,7 @@ state judgment-below: "Judgment of a state court of last resort or a federal cou
   }
 }
 
-decision petition-window: "Petition filed within the Rule 13 period?" by applicant cite "Sup. Ct. R. 13.1"
+decision petition-window: "Petition filed within the Rule 13 period?" by petitioner cite "Sup. Ct. R. 13.1"
 {
   note "A petition is timely when filed with the Clerk within 90 days after entry of the judgment (Sup. Ct. R. 13.1; 28 U.S.C. § 2101(c) for a civil case); the Clerk will not file a petition that is jurisdictionally out of time (Sup. Ct. R. 13.2). Time is computed under Rule 30 (Sup. Ct. R. 30.1)."
   edge-petition-window-filed "Petition filed in time" -> petition-docketed {
@@ -235,7 +235,7 @@ decision extension-ruling: "Extension of time granted or denied" by justice cite
   }
 }
 
-state petition-docketed: "Petition filed and placed on the docket" by applicant cite "Sup. Ct. R. 12.1"
+state petition-docketed: "Petition filed and placed on the docket" by petitioner cite "Sup. Ct. R. 12.1"
 {
   note "The petitioner files 40 copies of the petition prepared under Rule 33.1 and pays the Rule 38(a) docket fee (Sup. Ct. R. 12.1), $300 (Sup. Ct. R. 38). A petitioner proceeding in forma pauperis files an original and 10 copies prepared under Rule 33.2, with the motion for leave (Sup. Ct. R. 12.2). The petition complies with Rule 14 and is filed with proof of service; the case is then placed on the docket and the petitioner notifies all respondents (Sup. Ct. R. 12.3). A booklet-format petition is limited to 9,000 words on the chart of Sup. Ct. R. 33.1(g)(i); one on 8 1/2- by 11-inch paper to 40 pages (Sup. Ct. R. 33.2). A respondent may file a conditional cross-petition no more than 30 days after docketing (Sup. Ct. R. 12.5). An amicus curiae brief supporting the petitioner is due within 30 days after docketing or a call for a response, whichever is later (Sup. Ct. R. 37.2)."
   edge-petition-docketed-response "Docketed; the opposition period runs" -> response-decision {
@@ -255,7 +255,7 @@ decision response-decision: "Brief in opposition filed or waived" by respondent 
   }
 }
 
-state reply-brief: "Reply to the brief in opposition (optional)" by applicant cite "Sup. Ct. R. 15.6"
+state reply-brief: "Reply to the brief in opposition (optional)" by petitioner cite "Sup. Ct. R. 15.6"
 {
   note "The petitioner may file a reply addressed to new points raised in the brief in opposition, but distribution is not deferred pending its receipt (Sup. Ct. R. 15.6); it is limited to 3,000 words on the chart of Sup. Ct. R. 33.1(g)(iii), or 15 pages on 8 1/2- by 11-inch paper (Sup. Ct. R. 33.2). Any party may file a supplemental brief on new cases, legislation or other intervening matter while the petition is pending (Sup. Ct. R. 15.8)."
   edge-reply-brief-distribution "Distribution after the waiting period" -> distribution {
@@ -263,7 +263,7 @@ state reply-brief: "Reply to the brief in opposition (optional)" by applicant ci
   }
 }
 
-state distribution: "Petition distributed to the Court" by office cite "Sup. Ct. R. 15.5"
+state distribution: "Petition distributed to the Court" by court cite "Sup. Ct. R. 15.5"
 {
   note "The Clerk distributes the petition on an express waiver of the brief in opposition or, if none is filed, when the time for it expires; after a timely brief in opposition, the Clerk distributes the papers no less than 14 days after it is filed unless the petitioner expressly waives the 14-day waiting period (Sup. Ct. R. 15.5). Distribution is deferred while a docketed cross-petition is not yet due for distribution (Sup. Ct. R. 15.7)."
   edge-distribution-disposition "Considered by the Court" -> disposition {
@@ -281,7 +281,7 @@ decision disposition: "Order on the petition" by court cite "Sup. Ct. R. 16.1"
   }
 }
 
-state grant-order: "Grant order entered; case scheduled for briefing and argument" by office cite "Sup. Ct. R. 16.2"
+state grant-order: "Grant order entered; case scheduled for briefing and argument" by court cite "Sup. Ct. R. 16.2"
 {
   note "The Clerk enters the order granting the petition, notifies counsel and the court below, and requests the record if it has not been filed; the case is scheduled for briefing and oral argument, and a formal writ does not issue unless specially directed (Sup. Ct. R. 16.2)."
   edge-grant-order-merits "Briefing begins" -> petitioner-merits-brief {
@@ -289,7 +289,7 @@ state grant-order: "Grant order entered; case scheduled for briefing and argumen
   }
 }
 
-state petitioner-merits-brief: "Petitioner's brief on the merits" by applicant cite "Sup. Ct. R. 25.1"
+state petitioner-merits-brief: "Petitioner's brief on the merits" by petitioner cite "Sup. Ct. R. 25.1"
 {
   note "The petitioner files 40 copies of the brief on the merits within 45 days of the order granting the writ (Sup. Ct. R. 25.1). It complies with Rules 33.1 and 34, sets out the questions presented on the first page after the cover, and may not raise additional questions or change the substance of those presented in the petition (Sup. Ct. R. 24.1). It is limited to 13,000 words on the chart of Sup. Ct. R. 33.1(g)(v). An extension is not favored (Sup. Ct. R. 25.5)."
   edge-petitioner-merits-brief-filed "Petitioner's brief filed" -> respondent-merits-brief {
@@ -307,7 +307,7 @@ state respondent-merits-brief: "Respondent's brief on the merits" by respondent 
   }
 }
 
-state reply-merits-brief: "Petitioner's reply brief on the merits" by applicant cite "Sup. Ct. R. 25.3"
+state reply-merits-brief: "Petitioner's reply brief on the merits" by petitioner cite "Sup. Ct. R. 25.3"
 {
   note "The petitioner files 40 copies of any reply brief within 30 days after the respondent's brief is filed, and it must actually be received by the Clerk not later than 2 p.m. 10 days before the date of oral argument (Sup. Ct. R. 25.3). It is limited to 6,000 words on the chart of Sup. Ct. R. 33.1(g)(vii)."
   edge-reply-merits-brief-argument "Case calendared and argued" -> argument {
@@ -337,7 +337,7 @@ decision merits-decision: "Opinion and judgment on the merits" by court cite "Su
   }
 }
 
-decision rehearing-window: "Petition for rehearing of the merits judgment?" by applicant cite "Sup. Ct. R. 44.1"
+decision rehearing-window: "Petition for rehearing of the merits judgment?" by petitioner cite "Sup. Ct. R. 44.1"
 {
   note "A petition for rehearing of a judgment on the merits is due within 25 days after entry unless the Court or a Justice shortens or extends the time; it is accompanied by the Rule 38(b) fee, $200 (Sup. Ct. R. 38), and a certificate that it is presented in good faith and not for delay, is not argued, and is granted only by a majority at the instance of a Justice who concurred in the judgment (Sup. Ct. R. 44.1). It is limited to 3,000 words on the chart of Sup. Ct. R. 33.1(g)(xv), or 15 pages on 8 1/2- by 11-inch paper (Sup. Ct. R. 33.2). No response is filed unless the Court requests one, and rehearing is not granted without one absent extraordinary circumstances (Sup. Ct. R. 44.3)."
   edge-rehearing-window-filed "Petition for rehearing filed" -> rehearing-decision {
@@ -356,7 +356,7 @@ decision rehearing-decision: "Rehearing granted or denied" by court cite "Sup. C
   }
 }
 
-state denial-order: "Order denying certiorari entered" by office cite "Sup. Ct. R. 16.3"
+state denial-order: "Order denying certiorari entered" by court cite "Sup. Ct. R. 16.3"
 {
   note "The Clerk enters the order of denial and notifies counsel and the court below; the order is not suspended pending a petition for rehearing except by order of the Court or a Justice (Sup. Ct. R. 16.3)."
   edge-denial-order-rehearing "Petition for rehearing of the denial" -> denial-rehearing {

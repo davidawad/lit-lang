@@ -12,7 +12,7 @@ import de-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered }
 // kept. Probabilities are not authored: no calibration is vendored.
 start complaint
 
-state complaint: "Complaint filed and referred to a Panel" by office cite "Del. Supr. Ct. R. 68(a)"
+state complaint: "Complaint filed and referred to a Panel" by court cite "Del. Supr. Ct. R. 68(a)"
 {
   note "A complaint filed in the Court on the Judiciary is referred by the Chief Justice to a Panel for review and investigation; until then it is not a civil or criminal action brought in a court of the State for the appointment of counsel to a State officer (Del. Supr. Ct. R. 68(a)). Who may file, notice and the respondent's rights are not stated: the Court on the Judiciary Rules are not vendored."
   edge-complaint-charges "Formal charges filed and served" -> answer {
@@ -24,7 +24,7 @@ state complaint: "Complaint filed and referred to a Panel" by office cite "Del. 
   }
 }
 
-state answer: "Answer and pretrial" by applicant cite ?("Ct. on Jud. R.: not vendored") {
+state answer: "Answer and pretrial" by movant cite ?("Ct. on Jud. R.: not vendored") {
   note "The answer period, discovery and interim suspension are not stated: the Court on the Judiciary Rules are not vendored."
   edge-answer-hearing "Set for hearing" -> hearing {
     authority cite ?("Ct. on Jud. R.: not vendored")

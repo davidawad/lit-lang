@@ -17,7 +17,7 @@ event AppelleeBriefFiled() paper brief
 
 start notice
 
-decision notice: "Notice of appeal within 30 days?" by applicant cite "Iowa R. App. P. 6.101"
+decision notice: "Notice of appeal within 30 days?" by movant cite "Iowa R. App. P. 6.101"
 {
   note "An appeal from a final order appealable as a matter of right is taken by filing a notice of appeal with the clerk of the district court where the order was entered, with an informational copy to the clerk of the supreme court (Iowa R. App. P. 6.102(2)). The notice is filed within 30 days after the filing of the final order or judgment or, if a motion under Iowa R. Civ. P. 1.904(2) or 1.1007 is timely filed, within 30 days after the filing of the ruling on that motion (Iowa R. App. P. 6.101(1)(b), (c)). A notice of cross-appeal is filed within the 30-day limit or within 10 days after the notice of appeal is filed, whichever is later (Iowa R. App. P. 6.101(2)(b)). The time is tolled when the notice is served, if it is filed within a reasonable time (Iowa R. App. P. 6.101(4)). If the clerk of the district court failed to notify the appellant of the judgment, the supreme court may extend the time on a motion filed no later than 60 days after the original deadline, by not more than 30 days after the order granting it (Iowa R. App. P. 6.101(5)). The filing fee is $150, paid to the clerk of the supreme court within seven days after filing the notice of appeal (Iowa R. App. P. 6.102(3), 6.703(1)(a)). No leading decision is named."
   edge-notice-timely "Timely notice" -> record {
@@ -32,7 +32,7 @@ terminal final-no-appeal: "Judgment final: no timely appeal" outcome [loss, fina
   note "Outcome from the appellant's side."
 }
 
-state record: "Combined certificate, transcript and briefing notice" by office cite "Iowa R. App. P. 6.804"
+state record: "Combined certificate, transcript and briefing notice" by court cite "Iowa R. App. P. 6.804"
 {
   note "The appellant files the combined certificate with the clerks of the district court and the supreme court within seven days after filing the notice of appeal or the appointment of new appellate counsel, whichever is later, certifying any transcript ordered (Iowa R. App. P. 6.804(1), (2)). A transcript of an electronically recorded proceeding needs an application in the district court within seven days of the notice of appeal (Iowa R. App. P. 6.803(1)). The reporter files the transcript and certificate of filing within 40 days from service of the combined certificate in a civil case (Iowa R. App. P. 6.803(3)(b)(3)). When all ordered transcripts are filed, the clerk of the supreme court issues the notice of briefing deadline (Iowa R. App. P. 6.803(6))."
   edge-record-briefing "Briefing notice issued" -> briefing {
@@ -43,7 +43,7 @@ state record: "Combined certificate, transcript and briefing notice" by office c
   }
 }
 
-state briefing: "Briefs filed" by applicant cite "Iowa R. App. P. 6.901"
+state briefing: "Briefs filed" by movant cite "Iowa R. App. P. 6.901"
 {
   note "The appellant's brief is filed within 50 days after the clerk gives the notice of briefing deadline; the appellee's brief, or a statement waiving it, within 30 days after service of the appellant's brief; and the appellant's reply brief within 21 days after service of the appellee's brief; with a cross-appeal the appellee/cross-appellant may reply within 14 days after service of the appellant/cross-appellee's reply (Iowa R. App. P. 6.901(1)). A brief in a proportionally spaced typeface may contain no more than 13,000 words and a reply brief half that type volume (Iowa R. App. P. 6.903(1)(i)(1)). Oral argument is requested in the brief and is denied if unlikely to assist the court (Iowa R. App. P. 6.908(1), (2))."
   edge-briefing-routing "Briefing complete" -> routing { authority cite "Iowa R. App. P. 6.1101" }
@@ -77,7 +77,7 @@ decision appeals-decision: "Court of appeals decision" by court cite "Iowa R. Ap
   }
 }
 
-decision further-review-election: "Apply for further review within 20 days?" by applicant cite "Iowa R. App. P. 6.1103"
+decision further-review-election: "Apply for further review within 20 days?" by movant cite "Iowa R. App. P. 6.1103"
 {
   note "An application for further review is filed within 20 days following the filing of the court of appeals decision; a resistance may be filed within ten days after service of the application (Iowa R. App. P. 6.1103(1)(a)(2), (2)). Further review is not a matter of right but of judicial discretion (Iowa R. App. P. 6.1103(1)(b)). Unless the court of appeals orders otherwise, procedendo does not issue until 27 days after its opinion is filed or while an application for further review is pending (Iowa R. App. P. 6.1208(2)(b))."
   edge-further-review-election-apply "Application filed" -> further-review {

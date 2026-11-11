@@ -14,7 +14,7 @@ module la-criminal-trial-court.criminal
 // vendored.
 start arrested
 
-state arrested: "Arrest" by applicant cite "La. C.Cr.P. art. 230.1"
+state arrested: "Arrest" by prosecution cite "La. C.Cr.P. art. 230.1"
 {
   note "The sheriff or officer having custody of an arrested person brings the person promptly before a judge for the appointment of counsel, within the period La. C.Cr.P. art. 230.1(A) sets (not stated here; currency unconfirmed); at that appearance the court may fix bail, and the article provides for extension for cause and the effect of a failure to appear (La. C.Cr.P. art. 230.1)."
   edge-arrested-appearance "Appearance for appointment of counsel" -> appearance {
@@ -29,7 +29,7 @@ decision appearance: "Counsel and bail" by court cite "La. C.Cr.P. art. 230.1"
   edge-appearance-released "Released on bail" -> charge { authority cite "La. C.Cr.P. art. 230.1" }
 }
 
-decision charge: "Indictment or information" by office cite "La. C.Cr.P. art. 382"
+decision charge: "Indictment or information" by court cite "La. C.Cr.P. art. 382"
 {
   note "A prosecution for an offense punishable by death or life imprisonment is instituted by grand jury indictment; other prosecutions in a district court by indictment or information (La. C.Cr.P. art. 382(A)). A preliminary examination may be ordered before or after indictment (La. C.Cr.P. art. 292). If the charge is not timely filed for a defendant in custody or on bail, the remedy is release under La. C.Cr.P. art. 701(B)."
   edge-charge-filed "Indictment or information filed" -> arraignment {
@@ -40,7 +40,7 @@ decision charge: "Indictment or information" by office cite "La. C.Cr.P. art. 38
   }
 }
 
-state arraignment: "Arraignment" by applicant cite "La. C.Cr.P. art. 551"
+state arraignment: "Arraignment" by prosecution cite "La. C.Cr.P. art. 551"
 {
   note "The defendant is arraigned and pleads (La. C.Cr.P. art. 551 and following). After the charge is filed the district attorney sets the matter for arraignment within the period La. C.Cr.P. art. 701(C) sets, unless just cause for a longer delay is shown. The state and the defendant have the right to a speedy trial; after a valid motion for a speedy trial, accompanied by counsel's affidavit of readiness, trial must commence within the periods La. C.Cr.P. art. 701(D) sets by class of offense and custody, failing which, if just cause is not shown at a contradictory hearing, the defendant is released without bail or the bail obligation discharged (La. C.Cr.P. art. 701). These periods are not stated here (currency unconfirmed). No trial may be commenced after the time limitations La. C.Cr.P. art. 578 sets from the institution of prosecution, by class of offense, as interrupted or suspended under arts. 579 and 580; the periods are not stated here (currency unconfirmed)."
   edge-arraignment-discovery "Discovery and pretrial motions" -> discovery {
@@ -48,7 +48,7 @@ state arraignment: "Arraignment" by applicant cite "La. C.Cr.P. art. 551"
   }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "La. C.Cr.P. art. 521"
+state discovery: "Discovery and pretrial motions" by prosecution cite "La. C.Cr.P. art. 521"
 {
   note "On written motion the court orders the district attorney to permit inspection of law enforcement reports, documents and tangible objects, subject to art. 723 (La. C.Cr.P. art. 718). Pretrial motions are made or filed within the period after receipt of initial discovery that La. C.Cr.P. art. 521(A) sets, unless a different time is provided by law or fixed by the court for good cause; the court allows more time on written motion and good cause, and fixes a time to respond to a motion for discovery or favorable evidence (La. C.Cr.P. art. 521). The period is not stated here (currency unconfirmed). A motion to quash lies on the grounds of La. C.Cr.P. art. 532, including the expiry of the time limitation for commencing trial."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -70,7 +70,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "La. C.Cr.P.
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "La. C.Cr.P. art. 556.1"
+decision plea-decision: "Plea or trial" by accused cite "La. C.Cr.P. art. 556.1"
 {
   note "In a felony case the court does not accept a plea of guilty or nolo contendere without first addressing the defendant personally in open court and informing the defendant of, and determining that the defendant understands, the matters La. C.Cr.P. art. 556.1 lists, and that the plea is voluntary (La. C.Cr.P. art. 556.1). The district attorney may dismiss the charge (La. C.Cr.P. art. 691)."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
@@ -109,7 +109,7 @@ state sentencing: "Sentencing" by court cite "La. C.Cr.P. art. 873"
   edge-sentencing-judgment "Sentence imposed" -> judgment { authority cite "La. C.Cr.P. art. 912" }
 }
 
-decision judgment: "Motion for appeal" by applicant cite "La. C.Cr.P. art. 914"
+decision judgment: "Motion for appeal" by accused cite "La. C.Cr.P. art. 914"
 {
   note "Only a final judgment or ruling is appealable; the defendant may appeal a judgment imposing sentence (La. C.Cr.P. art. 912). The defendant appeals to the court of appeal from a judgment in a case triable by jury, and to the supreme court from a judgment in a capital case in which a death sentence has been imposed; in other cases review is by application for a writ of review (La. C.Cr.P. art. 912.1). The motion for an appeal is made orally in open court or by written motion, within the period after rendition of the judgment, or after the ruling on a motion to reconsider sentence, that La. C.Cr.P. art. 914(B) sets; the period is not stated here (currency unconfirmed). On the order of appeal the trial court's jurisdiction is divested except as La. C.Cr.P. art. 916 provides."
   edge-judgment-appeal "Motion for appeal granted" -> appeal-taken {

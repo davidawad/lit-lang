@@ -13,7 +13,7 @@ module nv-district-court-criminal.criminal
 // are removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "NRS 171.178"
+state arrested: "Arrest or summons" by prosecution cite "NRS 171.178"
 {
   note "A peace officer making an arrest under a warrant issued on a complaint, or without a warrant, takes the arrested person without unnecessary delay before a magistrate (NRS 171.178(1), (2)). If the person is not brought before a magistrate within 72 hours after arrest, excluding nonjudicial days, the magistrate gives the prosecuting attorney an opportunity to explain the delay and may release the person if the delay was unnecessary (NRS 171.178(3)). When a person arrested without a warrant is brought before a magistrate, a complaint must be filed forthwith (NRS 171.178(4))."
   edge-arrested-appearance "Appearance before the magistrate" -> initial-appearance {
@@ -43,7 +43,7 @@ decision probable-cause: "Preliminary examination or grand jury" by court cite "
   }
 }
 
-state charged: "Indictment or information" by office cite "NRS 173.035"
+state charged: "Indictment or information" by court cite "NRS 173.035"
 {
   note "An information may be filed against a person bound over after a preliminary examination or who waived it (NRS 173.035(1)). If no indictment is found or information filed within 15 days after the person has been held to answer, the court may dismiss the complaint (NRS 178.556(1))."
   edge-charged-arraignment "Arraignment in district court" -> arraignment {
@@ -51,13 +51,13 @@ state charged: "Indictment or information" by office cite "NRS 173.035"
   }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "NRS 174.015"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "NRS 174.015"
 {
   note "Arraignment is conducted in open court by reading the indictment or information or stating the substance of the charge and calling on the defendant to plead, after the defendant is given a copy (NRS 174.015(1)). A defendant may plead not guilty, guilty, guilty but mentally ill or, with the court's consent, nolo contendere (NRS 174.035(1)). If a defendant whose trial has not been postponed on the defendant's application is not brought to trial within 60 days after the arraignment on the indictment or information, the district court may dismiss it (NRS 178.556(1))."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "NRS 174.235" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "NRS 174.125"
+state discovery: "Discovery and pretrial motions" by prosecution cite "NRS 174.125"
 {
   note "At the defendant's request the prosecuting attorney permits inspection and copying of the defendant's and witnesses' statements, examination and test reports, and the documents and objects the State intends to introduce (NRS 174.235(1)); a request may be made only within 30 days after arraignment or a reasonable later time the court permits, and must be complied with not less than 30 days before trial (NRS 174.285). Motions that would delay trial, including motions to suppress, must be made before trial: in a single-judge district in writing on not less than 10 days' notice, and in a district with two or more judges in writing not less than 15 days before the date set for trial (or within 5 days after the plea if fewer than 15 days intervene) (NRS 174.125(1)-(3)). Pleas other than those NRS 174.075 lists, demurrers and motions to quash are abolished and raised by motion (NRS 174.075(2))."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling { authority cite "NRS 174.125" }
@@ -81,7 +81,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "NRS 174.125
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "NRS 174.035"
+decision plea-decision: "Plea or trial" by accused cite "NRS 174.035"
 {
   note "A written plea agreement must be substantially in the form NRS 174.063 prescribes, and an oral guilty or nolo contendere plea is accepted only after the court addresses the defendant personally and determines it is voluntary and understood (NRS 174.035(2)). Cases required to be tried by jury are so tried unless the defendant waives in writing with the court's approval and the prosecutor's consent; a capital defendant pleading not guilty must be tried by jury (NRS 175.011(1)). Juries consist of 12 jurors, or by written stipulation approved by the court not fewer than six (NRS 175.021(2))."
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
@@ -115,7 +115,7 @@ state sentencing: "Presentence investigation and sentencing" by court cite "NRS 
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "NRAP 4(b)"
+decision judgment: "Judgment of conviction" by accused cite "NRAP 4(b)"
 {
   note "The district court judge must enter a written judgment of conviction within 14 days after sentencing, and a judgment is entered when signed and filed with the clerk (NRAP 4(b)(5), (6)(A)). A defendant's notice of appeal must be filed with the district court clerk within 30 days after the later of entry of the judgment or order appealed from or the State's notice of appeal; a notice filed after announcement but before entry is treated as filed on the day of entry (NRAP 4(b)(1)(A), (2)). An appeal is taken by filing a notice of appeal with the clerk of the district court (NRS 177.075(1))."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "NRAP 4(b)" }

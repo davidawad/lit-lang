@@ -15,7 +15,7 @@ import frbp.appeals.{
 
 start notice-filed
 
-state notice-filed: "Bankruptcy order appealed" by applicant cite "FRBP 8002(a)(1)"
+state notice-filed: "Bankruptcy order appealed" by appellant cite "FRBP 8002(a)(1)"
 {
   note "The notice of appeal is filed with the bankruptcy clerk. Final and specified interlocutory bankruptcy orders are appealable under 28 U.S.C. § 158(a). Appealability of a specific order remains a matter fact."
   edge-notice-filed-appealability "Notice filed within 14 days" -> appealability {
@@ -67,7 +67,7 @@ state circuit-handoff: "Direct appeal to court of appeals" cite "FRBP 8006(a)"
   }
 }
 
-state record: "Record and briefing" by applicant cite "FRBP 8009; FRBP 8018"
+state record: "Record and briefing" by appellant cite "FRBP 8009; FRBP 8018"
 {
   note "The appellant's brief is due 30 days after notice that the record was sent or is available electronically; the appellee's brief is due 30 days after service; a reply is due 14 days after service of the appellee's brief and at least 7 days before argument unless the BAP allows later filing for cause. Under FRBP 8015, a principal brief is limited to 30 pages or, with a compliance certificate, 13,000 words or 1,300 monospaced lines; a reply is limited to 15 pages or half that type volume. BAP Local Rule 8015A permits the panel to accept a brief that does not meet all Rule 8015 requirements. The appellant must designate the record and order any transcript within 14 days after the notice of appeal becomes effective; the appellee may designate additional record items within 14 days after service of the appellant's designation. The record designation is governed by FRBP 8009 and BAP Local Rule 8009A."
   edge-record-argument "Briefing complete; argument or submission" -> argument {

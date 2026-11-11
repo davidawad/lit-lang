@@ -12,7 +12,7 @@ import de-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 // authored: no calibration is vendored.
 start commenced
 
-state commenced: "Complaint or petition filed" by applicant cite ?("Ct. Ch. R. 3: not vendored") {
+state commenced: "Complaint or petition filed" by plaintiff cite ?("Ct. Ch. R. 3: not vendored") {
   note "Commencement in the Delaware Court of Chancery, whose jurisdiction covers equity, corporate and fiduciary litigation tried without a jury; the jurisdictional statutes (10 Del. C. ch. 3) are not vendored. The filing period, fees and pleading form are not stated: the Court of Chancery Rules are not vendored."
   edge-commenced-served "Process served" -> pleadings {
     event ActionCommenced()
@@ -33,7 +33,7 @@ decision pleadings: "Answer or motion to dismiss" by court cite ?("Ct. Ch. R. 12
   }
 }
 
-state discovery: "Discovery and pretrial" by applicant cite ?("Ct. Ch. R. 26: not vendored") {
+state discovery: "Discovery and pretrial" by plaintiff cite ?("Ct. Ch. R. 26: not vendored") {
   note "Discovery scope, limits and scheduling are not stated: the Court of Chancery Rules are not vendored."
   edge-discovery-dispositive "Dispositive motion or trial setting" -> dispositive {
     authority cite ?("Ct. Ch. R. 56: not vendored")
@@ -63,7 +63,7 @@ state judgment: "Judgment or decision entered" by court cite ?("Ct. Ch. R. 58: n
   }
 }
 
-decision post-judgment: "Appeal or no appeal" by applicant cite "Del. Supr. Ct. R. 6(a)"
+decision post-judgment: "Appeal or no appeal" by plaintiff cite "Del. Supr. Ct. R. 6(a)"
 {
   note "A notice of appeal in a civil case is filed in the office of the Clerk of the Supreme Court within 30 days after entry upon the docket of the judgment, order or decree appealed from, except appeals controlled by 10 Del. C. § 146 (Del. Supr. Ct. R. 6(a)(i)); any other party may cross-appeal within 15 days after the first notice of appeal was filed or within 30 days after entry of the judgment, whichever is later (Del. Supr. Ct. R. 6(b)(i)). The time for taking an appeal or cross-appeal may not be enlarged (Del. Supr. Ct. R. 11(b)). An appeal from an interlocutory order lies only on certification by the trial court and acceptance by the Supreme Court (Del. Supr. Ct. R. 42). The appeal continues in lit/de-supreme-civil."
   edge-post-appeal "Notice of appeal filed in time" -> appeal-taken {

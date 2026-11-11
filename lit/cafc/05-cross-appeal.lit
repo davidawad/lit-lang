@@ -6,7 +6,7 @@ import cafc.appeal-periods.{ cross-appeal-period }
 import cafc.briefing.{ appellant-brief-window }
 import cafc.{ Filed, Paper, cross-appeal-group }
 
-decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by applicant cite "FRAP 4(a)(3); Fed. Cir. R. 28.1"
+decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by movant cite "FRAP 4(a)(3); Fed. Cir. R. 28.1"
 {
   group cross-appeal-group
   note "A cross-appeal is proper only where the appellee seeks to modify or overturn the judgment, not merely to defend it on alternative grounds — Bailey v. Dart Container Corp., 292 F.3d 1360 (Fed. Cir. 2002). Fed. Cir. R. 28.1 sets Federal-Circuit-specific page/word/color-cover limits and the four-brief sequence for cross-appeals; the 14-day filing deadline itself is the general FRAP 4(a)(3) deadline, not separately shortened by a Federal Circuit rule."
@@ -27,7 +27,7 @@ decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by applicant cit
   }
 }
 
-state cross-appeal-filed: "Notice of Cross-Appeal Filed" by office cite "FRAP 4(a)(3); Fed. Cir. R. 28.1"
+state cross-appeal-filed: "Notice of Cross-Appeal Filed" by court cite "FRAP 4(a)(3); Fed. Cir. R. 28.1"
 {
   group cross-appeal-group
   cross-appeal-filed-to-briefing "Cross-appeal docketed — briefing under Fed. Cir. R. 31(a)(1)(C)-(D)/28.1" -> appellant-brief-window {
@@ -35,7 +35,7 @@ state cross-appeal-filed: "Notice of Cross-Appeal Filed" by office cite "FRAP 4(
   }
 }
 
-state no-cross-appeal: "No Cross-Appeal — Judgment Defended Only" by office cite "FRAP 4(a)(3)"
+state no-cross-appeal: "No Cross-Appeal — Judgment Defended Only" by court cite "FRAP 4(a)(3)"
 {
   group cross-appeal-group
   no-cross-appeal-to-briefing "Proceed to ordinary briefing" -> appellant-brief-window {

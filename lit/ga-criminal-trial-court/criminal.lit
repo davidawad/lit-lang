@@ -11,7 +11,7 @@ module ga-criminal-trial-court.criminal
 // Flores-Ortega, Garza) are removed: no reporter text is vendored.
 start charged
 
-state charged: "Indictment or accusation" by office cite ?("O.C.G.A. Title 17 (not vendored): arrest, commitment, bail and indictment") {
+state charged: "Indictment or accusation" by court cite ?("O.C.G.A. Title 17 (not vendored): arrest, commitment, bail and indictment") {
   note "Arrest, first appearance, commitment hearing, bail and the charge are O.C.G.A. Title 17's, which is not vendored; every period there is a hole."
   edge-charged-arraignment "Arraignment set" -> arraignment {
     authority cite "Ga. Unif. Super. Ct. R. 30.1"
@@ -26,7 +26,7 @@ state arraignment: "Arraignment" by court cite "Ga. Unif. Super. Ct. R. 30.2"
   }
 }
 
-decision pretrial: "Motions, demurrers, special pleas and notices" by applicant cite "Ga. Unif. Super. Ct. R. 31.1"
+decision pretrial: "Motions, demurrers, special pleas and notices" by accused cite "Ga. Unif. Super. Ct. R. 31.1"
 {
   note "Motions, demurrers and special pleas are filed at or before the time set by law unless the judge extends it in writing before trial (Ga. Unif. Super. Ct. R. 31.1); the time set by law is O.C.G.A. Title 17's, a hole. Unless the law provides otherwise, the state's notice of child-victim hearsay, the defense's notice of insanity, mental illness or intellectual disability, and the defense's notice of the victim's specific acts of violence are given and filed at least 10 days before trial unless the judge shortens or lengthens the time (Ga. Unif. Super. Ct. R. 31.1, 31.5, 31.6(A)); the state's rebuttal notice to acts of violence within five days before trial (Ga. Unif. Super. Ct. R. 31.6(C)). Motions are generally heard at or after arraignment and before trial (Ga. Unif. Super. Ct. R. 31.2); the judge may hold a status conference before trial (Ga. Unif. Super. Ct. R. 31.7). The statutory speedy-trial demand and its discharge remedy (O.C.G.A. §§ 17-7-170, 17-7-171) are holes: the code is not vendored."
   edge-pretrial-competency "Competency in question" -> competency {
@@ -54,7 +54,7 @@ decision competency: "Mental competency to stand trial" by court cite "Ga. Unif.
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Ga. Unif. Super. Ct. R. 33.1"
+decision plea-decision: "Plea or trial" by accused cite "Ga. Unif. Super. Ct. R. 33.1"
 {
   note "A defendant may plead guilty, not guilty or, in the judge's discretion, nolo contendere; a guilty or nolo plea is received from the defendant personally in open court (Ga. Unif. Super. Ct. R. 33.1). The judge determines the plea's voluntariness and accuracy and informs the defendant (Ga. Unif. Super. Ct. R. 33.7-33.9), and states any intention to reject a plea agreement (Ga. Unif. Super. Ct. R. 33.10)."
   edge-plea-decision-plea "Plea accepted" -> sentenced {
@@ -82,7 +82,7 @@ state sentenced: "Sentence imposed" by court cite "Ga. Unif. Super. Ct. R. 35.2"
   }
 }
 
-decision appeal-decision: "Notice of appeal in time?" by applicant cite ?("O.C.G.A. § 5-6-38 (not vendored)") {
+decision appeal-decision: "Notice of appeal in time?" by accused cite ?("O.C.G.A. § 5-6-38 (not vendored)") {
   note "The criminal notice of appeal, its period and the effect of a motion for new trial are O.C.G.A. § 5-6-38 and Title 17's, not vendored: the period is a hole. Rule 34 (Unified Appeal) is only a publisher's note pointing to a separate document, which is not vendored."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken {
     authority cite ?("O.C.G.A. § 5-6-38 (not vendored)")

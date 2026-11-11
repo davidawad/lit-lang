@@ -19,7 +19,7 @@ module in-trial-court-civil.civil
 // orders are not vendored.
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "Ind. Trial Rule 3"
+state complaint-filed: "Complaint filed" by movant cite "Ind. Trial Rule 3"
 {
   note "A civil action is commenced by filing a complaint or the equivalent pleading a statute specifies, by paying the prescribed filing fee or filing an order waiving it, and, where service of process is required, by furnishing the clerk the copies of the complaint and summons needed (T.R. 3). The summons states the time within which the rules require the person served to respond and warns that judgment by default may be rendered for failure to do so (T.R. 4(C)). A written motion that cannot be heard ex parte, with notice of its hearing, is served not less than five days before the hearing unless a rule or order fixes another period; opposing affidavits may be served not less than one day before it (T.R. 6(E), (F)). Whenever no action has been taken in a civil case for sixty days, the court, on motion or on its own, orders a hearing to dismiss it, and dismisses it at the plaintiff's costs absent sufficient cause shown (T.R. 41(E))."
   edge-complaint-filed-served "Summons and complaint served" -> response-due {
@@ -30,7 +30,7 @@ state complaint-filed: "Complaint filed" by applicant cite "Ind. Trial Rule 3"
   }
 }
 
-decision response-due: "Answer, Rule 12 motion, or no response" by office cite "Ind. Trial Rule 6(D)"
+decision response-due: "Answer, Rule 12 motion, or no response" by court cite "Ind. Trial Rule 6(D)"
 {
   note "Except as the rules otherwise provide or the court orders, a response to a pleading is filed within twenty days after service of the pleading; a response to a motion within twenty days after service and any reply within fourteen days after service of the response, except for motions to continue, summary judgment motions, motions to correct error and Rule 60(B) motions (T.R. 6(D)). A party may receive one automatic thirty-day enlargement of time to respond to a complaint or other pleading by filing a notice, granted without order if filed on or before the original due date (T.R. 6(B)). A motion under Rule 12(B) is made before pleading if a further pleading is permitted; if the court does not grant it, the responsive pleading is filed within ten days of the order (T.R. 12(A)(1), (B)). A party may demand a jury by filing and serving a written demand not later than ten (10) days after the first responsive pleading to the complaint (T.R. 38(B))."
   edge-response-due-default "No timely response: default" -> default-entered {
@@ -62,7 +62,7 @@ state sched: "Pre-trial conference" by court cite "Ind. Trial Rule 16(A)"
   edge-sched-discovery "Discovery proceeds" -> discovery { authority cite "Ind. Trial Rule 26" }
 }
 
-state discovery: "Discovery" by applicant cite "Ind. Trial Rule 26"
+state discovery: "Discovery" by movant cite "Ind. Trial Rule 26"
 {
   note "Interrogatories are answered within the period the serving party designates, not less than thirty days after service (T.R. 33(C)); a request to produce is answered within the period designated, not less than thirty days after service (T.R. 34(D)); a request for admission may be served without leave not earlier than ten days after the issues are first closed on the merits, and a matter is admitted unless answered or objected to within the period designated, not less than thirty days after service (T.R. 36(B), (C)). A request or subpoena to a non-party is not served until at least ten days after a copy is served on all other parties; an objecting party serves a written response within ten days and moves to quash within twenty days of the objection (T.R. 34(G)). The court may alter these times. Failure to obey a discovery order may be sanctioned by dismissing the action (T.R. 37(B)(2))."
   edge-discovery-sj "Summary judgment motion" -> sj-ruling {

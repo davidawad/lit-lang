@@ -14,7 +14,7 @@ import cafc.{ mediation-group }
 /// semantic equality with the pack. Fed. Cir. R. 33(b) makes the
 /// guidelines binding on the parties; the rule is not cited, since the
 /// vendored amendment history records no Fed. Cir. R. 33 version.
-chance mediation-screening: "OGC Screens for the Mediation Program" by office discretion cite "Appellate Mediation Program Guidelines §§ 2-3"
+chance mediation-screening: "OGC Screens for the Mediation Program" by court discretion cite "Appellate Mediation Program Guidelines §§ 2-3"
 {
   group mediation-group
   note "Participation is mandatory for cases the Office of General Counsel selects; OGC contacts principal counsel, reviews the docketing statement and briefs, and determines whether a case is a good mediation candidate. If counsel represents to OGC that mediation would not be fruitful, efforts cease. No published selection rate exists: the 0.15 / 0.85 split is the pack's teaching estimate, unsourced, for `litigate calibration` to rank."
@@ -60,7 +60,7 @@ terminal settled-in-mediation: "Case Settled Through Mediation" outcome [settlem
   payoff 350_000.usd
 }
 
-state mediation-unsuccessful: "Mediation Unsuccessful — Appeal Proceeds" by office cite "Appellate Mediation Program Guidelines § 8"
+state mediation-unsuccessful: "Mediation Unsuccessful — Appeal Proceeds" by court cite "Appellate Mediation Program Guidelines § 8"
 {
   group mediation-group
   unsuccessful-to-motions "Appeal proceeds" -> motions-fork {

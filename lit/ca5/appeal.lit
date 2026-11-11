@@ -116,14 +116,14 @@ test "reinstatement is due 180 days after the dismissal, rolled past a Saturday"
 
 start threshold
 
-decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+decision threshold: "Appealable Order or Judgment?" by movant cite "28 U.S.C. § 1291"
 {
   note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes are lit/frap's."
   edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
   edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
 }
 
-decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)"
 {
   note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
@@ -134,7 +134,7 @@ decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)
   }
 }
 
-state record: "Record and Transcript Assembled" by office cite "FRAP 10; 5th Cir. R. 10.1, 11.3"
+state record: "Record and Transcript Assembled" by court cite "FRAP 10; 5th Cir. R. 10.1, 11.3"
 {
   note "The appellant orders the transcript on the clerk's form (5th Cir. R. 10.1). The district clerk sends the record within 15 days of the notice of appeal or of the transcript's filing, whichever is later, or asks for an extension (5th Cir. R. 11.3). The Notice of Appearance Form is due within 30 days of the notice of appeal (5th Cir. R. 12); the parties review the record within 20 days of its dispatch (5th Cir. R. 30.1)."
   edge-record-brief "Briefing notice issued" -> briefing { authority cite "5th Cir. R. 31.3" }
@@ -143,7 +143,7 @@ state record: "Record and Transcript Assembled" by office cite "FRAP 10; 5th Cir
   }
 }
 
-state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 5th Cir. R. 31.3"
+state briefing: "Briefs Filed" by movant cite "FRAP 31(a)(1); 5th Cir. R. 31.3"
 {
   note "The appellant's brief is due 40 days after the briefing notice (5th Cir. R. 31.3), with record excerpts in place of an appendix (5th Cir. R. 30.1, 30.1.2); the appellee's and reply briefs follow FRAP 31(a)(1). A request to extend is due at least 7 days before the due date (5th Cir. R. 31.4.1(a)); a motion for an extra-length brief at least 10 days before it (5th Cir. R. 32.4). Length is FRAP 32(a)(7)'s, and the certificate of interested persons does not count toward it (5th Cir. R. 32.2)."
   edge-briefing-argue "Briefing complete" -> argument {
@@ -168,7 +168,7 @@ state decision: "Decision Issued" by court cite "FRAP 36"
   }
 }
 
-decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 {
   note "Separate petitions are required for panel and en banc rehearing (5th Cir. R. 40.1); the clerk must receive either within the time of FRAP 40(d)(1) (5th Cir. R. 40.1.4, 40.2.4), 14 days after entry of judgment or 45 days in a civil case with a United States party; lit/frap encodes both periods."
   edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
@@ -183,13 +183,13 @@ state rehearing-order: "Rehearing Order" by court cite "FRAP 40"
   edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
-state mandate: "Mandate Issued" by office cite "FRAP 41(b)"
+state mandate: "Mandate Issued" by court cite "FRAP 41(b)"
 {
   note "The mandate issues 7 days after the time to petition for rehearing expires or 7 days after an order denying a timely petition (FRAP 41(b)); lit/frap encodes the period. Once issued it is not recalled except to prevent injustice (5th Cir. R. 41.2)."
   edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
 }
 
-decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+decision further-review: "Further Review Sought?" by movant cite "28 U.S.C. § 1254"
 {
   note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's."
   edge-further-review-none "No further review" -> final-decision {

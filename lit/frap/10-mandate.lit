@@ -90,7 +90,7 @@ test "a bill served by mail gains 3 days for objections" cite "FRAP 26(c)"
   expect deadline(cost-objection-period) == 2025-04-03
 }
 
-state mandate-issued: "Mandate Issues" by office cite "FRAP (2009 ed.) 41(a)–(b)"
+state mandate-issued: "Mandate Issues" by court cite "FRAP (2009 ed.) 41(a)–(b)"
 {
   group mandate-group
   note "The mandate is the formal order returning jurisdiction to the district court — distinct from the opinion and critical for enforcing the judgment. It issues automatically 7 days after either expiration of the rehearing period or denial of a timely rehearing petition. The mandate, not the opinion, is what actually binds the district court."
@@ -103,14 +103,14 @@ state mandate-issued: "Mandate Issues" by office cite "FRAP (2009 ed.) 41(a)–(
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
   }
-  edge-mandate-issued-mandate-stayed-pending-cert "Move to stay mandate for cert" -> mandate-stayed-pending-cert by applicant {
+  edge-mandate-issued-mandate-stayed-pending-cert "Move to stay mandate for cert" -> mandate-stayed-pending-cert by movant {
     authority cite "FRAP (2009 ed.) 41(d)(1)"
     effort 8.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
 }
 
-state mandate-stayed-pending-cert: "Mandate Stayed Pending Certiorari" by examiner cite "FRAP (2009 ed.) 41(d)(1)–(2)"
+state mandate-stayed-pending-cert: "Mandate Stayed Pending Certiorari" by court cite "FRAP (2009 ed.) 41(d)(1)–(2)"
 {
   group mandate-group
   note "On motion, the court of appeals may stay its mandate pending a cert petition — otherwise the district court could enforce the judgment while the Supreme Court is still deciding whether to take the case. The stay is discretionary and requires a showing of likelihood of cert grant plus irreparable harm."

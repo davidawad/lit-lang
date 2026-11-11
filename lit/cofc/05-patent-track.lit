@@ -41,7 +41,7 @@ decision patent-14b-notice-fork: "Notify a Government Contractor as an Intereste
       note "49 days after the answer."
     }
   }
-  e-14bfork-notice "United States moves to notice the contractor who performed the accused use/manufacture" -> patent-14b-notice-served by examiner {
+  e-14bfork-notice "United States moves to notice the contractor who performed the accused use/manufacture" -> patent-14b-notice-served by court {
     authority cite "RCFC 14(b)(2)"
     effort 15.hours
     note "VERY IMPORTANT IN §1498 CASES: brings the actual manufacturer/user before the court even though §1498(a) channels the patentee's whole remedy into the suit against the United States alone."
@@ -71,7 +71,7 @@ state patent-early-meeting: "Early Meeting of Counsel (Patent-Specific Agenda)" 
   }
 }
 
-state patent-protective-order-entered: "Patent Protective Order Entered" by applicant cite "RCFC 26(c)(1); PRCFC 19(b); Appendix of Forms, Form 8A"
+state patent-protective-order-entered: "Patent Protective Order Entered" by movant cite "RCFC 26(c)(1); PRCFC 19(b); Appendix of Forms, Form 8A"
 {
   group patent-track-group
   note "The court's standard-form protective order for patent cases (Form 8A) governs confidential technical/financial discovery, including a 'Restricted -- Attorneys' Eyes Only' tier and Written Assurance obligations (Form 9A) for anyone granted access."
@@ -87,7 +87,7 @@ state patent-protective-order-entered: "Patent Protective Order Entered" by appl
   }
 }
 
-state patent-infringement-contentions: "Preliminary Disclosure of Infringement Contentions" by examiner cite "PRCFC 4; PRCFC 5"
+state patent-infringement-contentions: "Preliminary Disclosure of Infringement Contentions" by court cite "PRCFC 4; PRCFC 5"
 {
   group patent-track-group
   note "Within 56 days after the answer, plaintiff serves claim charts identifying each asserted claim, each accused product/process/method, an element-by-element infringement chart (literal or DOE), and priority-date contentions -- accompanied by document production on conception/reduction-to-practice, the file history, and chain of title (Rule 5). Nothing in this disclosure is an admission regarding prior art (35 U.S.C. §§102-103)."
@@ -102,7 +102,7 @@ state patent-infringement-contentions: "Preliminary Disclosure of Infringement C
   }
 }
 
-state patent-invalidity-contentions: "Preliminary Disclosure of Invalidity Contentions" by applicant cite "PRCFC 6; PRCFC 7"
+state patent-invalidity-contentions: "Preliminary Disclosure of Invalidity Contentions" by movant cite "PRCFC 6; PRCFC 7"
 {
   group patent-track-group
   note "Within 56 days after service of the infringement contentions, defendant (and any defendant-intervenors, e.g. a noticed contractor) serves invalidity contentions: each prior-art item or combination, anticipation/obviousness explanations, and any other invalidity/unenforceability basis -- plus document production on the accused product's operation and any additional prior art (Rule 7). Rule 8 (response) has been RESCINDED."
@@ -132,7 +132,7 @@ state patent-claim-construction-exchange: "Claim-Term Identification & Proposed-
   }
 }
 
-state patent-joint-claim-construction-chart: "Joint Claim Construction Chart & Prehearing Statement Filed" by applicant cite "PRCFC 11; PRCFC 12"
+state patent-joint-claim-construction-chart: "Joint Claim Construction Chart & Prehearing Statement Filed" by movant cite "PRCFC 11; PRCFC 12"
 {
   group patent-track-group
   note "Within 35 days after the claim-term exchange, the parties file a Joint Claim Construction Chart (agreed terms + each side's disputed-term proposal with evidence) and a Joint Claim Construction Appendix and Prehearing Statement (paginated prosecution history as the 'JA', proposed Person of Ordinary Skill in the Art definition, proposed hearing schedule, witness disclosures)."
@@ -148,7 +148,7 @@ state patent-joint-claim-construction-chart: "Joint Claim Construction Chart & P
   }
 }
 
-state patent-claim-construction-discovery-closed: "Claim-Construction Discovery Completed" by office cite "PRCFC 13"
+state patent-claim-construction-discovery-closed: "Claim-Construction Discovery Completed" by court cite "PRCFC 13"
 {
   group patent-track-group
   note "Within 28 days after the Joint Claim Construction Appendix/Prehearing Statement is filed, all discovery relating to claim construction (including depositions of any claim-construction witnesses/experts identified in that filing) must be complete."
@@ -162,7 +162,7 @@ state patent-claim-construction-discovery-closed: "Claim-Construction Discovery 
   }
 }
 
-state patent-claim-construction-hearing: "Claim Construction Status Conference & Hearing" by office cite "PRCFC 14; PRCFC 15"
+state patent-claim-construction-hearing: "Claim Construction Status Conference & Hearing" by court cite "PRCFC 14; PRCFC 15"
 {
   group patent-track-group
   note "Within 7 days after the Joint Claim Construction Appendix/Prehearing Statement, the court schedules a status conference and sets the Claim Construction Hearing within 90 days thereafter. Claim Construction Briefs are OPTIONAL (a party may instead rest on the Joint Chart): if filed, plaintiff's opening brief is due 56 days after the Joint Chart, responsive briefs 28 days later, and any reply 14 days after that."
@@ -206,7 +206,7 @@ state patent-mandatory-settlement-discussion: "Mandatory Settlement Discussion" 
 /// is (Rule 17(a) leaves the outcome to its text, which the event does not
 /// carry). It is real uncertainty until the paper is filed, not a fact
 /// knowable at filing, so the node is a draw, not `fact`.
-chance patent-settlement-fork: "Settlement Reached at Mandatory Discussion?" by office cite "PRCFC 17"
+chance patent-settlement-fork: "Settlement Reached at Mandatory Discussion?" by court cite "PRCFC 17"
 {
   group patent-track-group
   note "Decided on the docket by the Patent Rule 17 paper (a motion requesting dismissal, or a joint statement of compliance). Prior: 0.30 settled / 0.70 case-continues -- TEACHING ESTIMATE, reflecting that claim construction is a major but not usually case-ending uncertainty-resolution event; most §1498 cases still need a damages determination even after claims are construed favorably or unfavorably for one side."
@@ -222,7 +222,7 @@ chance patent-settlement-fork: "Settlement Reached at Mandatory Discussion?" by 
   }
 }
 
-state patent-final-contentions-expert-discovery: "Final Contentions Supplementation & Expert Discovery" by applicant cite "PRCFC 23; RCFC 26(a)(2)"
+state patent-final-contentions-expert-discovery: "Final Contentions Supplementation & Expert Discovery" by movant cite "PRCFC 23; RCFC 26(a)(2)"
 {
   group patent-track-group
   note "PRCFC Rule 23 folds the ordinary RCFC 26 supplementation duty onto every Appendix J disclosure; PRCFC Rule 24 permits amending the infringement/invalidity contentions only by court order on a timely good-cause showing (e.g., a claim construction different from what a party proposed, an opponent's material contention changes, newly discovered prior art despite diligence, or newly discovered nonpublic accused-product information). Expert reports on infringement, invalidity, and 'reasonable and entire compensation' damages are exchanged and expert depositions taken under ordinary RCFC 26 practice."
@@ -233,7 +233,7 @@ state patent-final-contentions-expert-discovery: "Final Contentions Supplementat
   }
 }
 
-decision patent-dispositive-motion-fork: "Dispositive Motion Filed Before Trial?" by applicant cite "RCFC 56"
+decision patent-dispositive-motion-fork: "Dispositive Motion Filed Before Trial?" by movant cite "RCFC 56"
 {
   group patent-track-group
   note "After claim construction and expert discovery, either side may move for summary judgment on infringement, invalidity, or (if liability is undisputed) damages. This feeds back into the SAME RCFC 56/58/59/54/EAJA machinery already modeled on the general track -- §1498's remedy limits (no injunction, no enhanced damages, no jury) constrain what any resulting judgment can award, but not the procedural mechanics of getting there."

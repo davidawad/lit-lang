@@ -6,7 +6,7 @@ import va-state-rules.{ MandateIssued, ReviewPetitionFiled }
 // period is stated in a note, not counted.
 start petition
 
-decision petition: "Appeal to the Supreme Court of Virginia?" by applicant cite "Va. Sup. Ct. R. 5:14(a)"
+decision petition: "Appeal to the Supreme Court of Virginia?" by petitioner cite "Va. Sup. Ct. R. 5:14(a)"
 {
   note "An appeal to the Supreme Court of Virginia requires a notice of appeal filed with the clerk of the Court of Appeals within 30 days after entry of final judgment or of the order denying a timely petition for rehearing (Va. Sup. Ct. R. 5:14(a)), then a petition for appeal (Va. Sup. Ct. R. 5:17(a))."
   edge-petition-none "No appeal" -> mandate-issued {

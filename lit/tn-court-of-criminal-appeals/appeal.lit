@@ -41,7 +41,7 @@ event RehearingPetitionFiled() paper rehearing-petition
 
 start judgment-entered
 
-state judgment-entered: "Judgment entered in the trial court" by applicant cite "Tenn. R. App. P. 3(b)"
+state judgment-entered: "Judgment entered in the trial court" by prosecution cite "Tenn. R. App. P. 3(b)"
 {
   note "A defendant's appeal as of right lies from a judgment of conviction on a plea of not guilty, and on a plea of guilty or nolo contendere only for a certified question of law reserved under Tenn. R. Crim. P. 37(b)(2)(A) or (D), a sentence imposed without a plea agreement on sentence, or unwaived issues apparent from the record (Tenn. R. App. P. 3(b)). The state's appeal as of right lies only from the orders Tenn. R. App. P. 3(c) lists, among them dismissal of the charge, a judgment of acquittal after a guilty verdict and arrest of judgment. In a jury case an issue of trial error or another ground for a new trial is waived unless stated in a motion for a new trial (Tenn. R. App. P. 3(e)). The notice of appeal is filed with the clerk of the appellate court within 30 days after entry of the judgment; in criminal cases it is not jurisdictional and its timely filing may be waived in the interest of justice (Tenn. R. App. P. 4(a)). A timely motion for judgment of acquittal, suspended sentence, withdrawal of a guilty plea, new trial or arrest of judgment runs the time from the order disposing of it (Tenn. R. App. P. 4(c))."
   edge-judgment-entered-notice-filed "Notice of appeal filed in time, or late filing waived" -> notice-filed {
@@ -53,13 +53,13 @@ state judgment-entered: "Judgment entered in the trial court" by applicant cite 
   }
 }
 
-state notice-filed: "Notice of appeal filed" by applicant cite "Tenn. R. App. P. 3(e)"
+state notice-filed: "Notice of appeal filed" by accused cite "Tenn. R. App. P. 3(e)"
 {
   note "An appeal as of right is taken by timely filing the notice of appeal with the clerk of the appellate court and serving it under Rule 5 (Tenn. R. App. P. 3(e))."
   edge-notice-filed-record "Record prepared" -> record { authority cite "Tenn. R. App. P. 24" }
 }
 
-state record: "Record on appeal" by office cite "Tenn. R. App. P. 24"
+state record: "Record on appeal" by court cite "Tenn. R. App. P. 24"
 {
   note "Within 15 days after filing the notice of appeal the appellant files and serves a description of the parts of the record it intends to include; the appellee may designate additional parts within 15 days after service (Tenn. R. App. P. 24(a)). The transcript, or a statement of the evidence where none is available, is filed with the clerk of the trial court within 60 days after filing the notice of appeal (Tenn. R. App. P. 24(b), (c)). On receiving the record the appellate clerk files it and immediately serves notice of the filing date; failure to file the transcript or statement in time may lead to dismissal (Tenn. R. App. P. 26(a), (b))."
   edge-record-briefing "Record filed; briefing" -> briefing {
@@ -68,7 +68,7 @@ state record: "Record on appeal" by office cite "Tenn. R. App. P. 24"
   }
 }
 
-state briefing: "Briefs" by applicant cite "Tenn. R. App. P. 29(a)"
+state briefing: "Briefs" by prosecution cite "Tenn. R. App. P. 29(a)"
 {
   note "The appellant serves and files a brief within 30 days after the record is filed with the clerk, the appellee within 30 days after the appellant's brief, and reply briefs within 14 days after the preceding brief (Tenn. R. App. P. 29(a)); if the appellant's brief is late, the appellee may move to dismiss and the appellant may respond within 14 days (Tenn. R. App. P. 29(c)). The briefs' contents follow Tenn. R. App. P. 27. Extensions are granted under Tenn. R. App. P. 21(b) on motion with an affidavit of reasons stating whether the opposing party consents, and a late brief or motion is lodged with a motion showing good cause to file it (Tenn. Ct. Crim. App. R. 8(b), (c)). Issues not supported by argument, citation to authorities or references to the record are treated as waived (Tenn. Ct. Crim. App. R. 10(b))."
   edge-briefing-argument "Briefs filed" -> argument { authority cite "Tenn. R. App. P. 35" }
@@ -103,7 +103,7 @@ decision appellate-decision: "Court of Criminal Appeals decision" by court cite 
   }
 }
 
-decision after-affirmance: "Rehearing, further review or mandate" by applicant cite "Tenn. R. App. P. 39"
+decision after-affirmance: "Rehearing, further review or mandate" by prosecution cite "Tenn. R. App. P. 39"
 {
   note "A petition for rehearing is filed within 10 days after entry of judgment unless the court shortens or enlarges the time (Tenn. R. App. P. 39(b)). The application for permission to appeal to the Supreme Court is filed within 60 days after entry of the judgment, or after denial of a timely rehearing petition or the judgment on rehearing (Tenn. R. App. P. 11(b)); its timely filing stays the mandate until the Supreme Court disposes of it (Tenn. R. App. P. 42(b))."
   edge-after-affirmance-rehearing "Petition for rehearing" -> rehearing {
@@ -119,7 +119,7 @@ decision after-affirmance: "Rehearing, further review or mandate" by applicant c
   }
 }
 
-state rehearing: "Petition for rehearing" by applicant cite "Tenn. R. App. P. 39"
+state rehearing: "Petition for rehearing" by prosecution cite "Tenn. R. App. P. 39"
 {
   note "No answer is permitted unless the court requests one, and rehearing is granted if a majority of the court's members are satisfied it is appropriate (Tenn. R. App. P. 39(d), (e))."
   edge-rehearing-granted "Rehearing granted" -> appellate-decision {

@@ -3,7 +3,7 @@ module cofc.bid-protest
 import cofc.rules-protest.{ protest-notice-window }
 import cofc.{ bid-protest-group }
 
-state bid-protest-prefiling-notice: "Pre-Filing Notice to DOJ, Clerk, Contracting Officer & Awardee" by applicant cite "RCFC App. C 2; RCFC App. C 3"
+state bid-protest-prefiling-notice: "Pre-Filing Notice to DOJ, Clerk, Contracting Officer & Awardee" by movant cite "RCFC App. C 2; RCFC App. C 3"
 {
   group bid-protest-group
   note "Except in exceptional circumstances, protest counsel must give advance notice of the intent to file -- at least 1 day but no more than 5 days before filing (excluding Saturdays/Sundays/legal holidays) -- to DOJ Commercial Litigation Branch, the CoFC clerk, the procuring agency's contracting officer, and (if known) the apparently successful offeror. The notice must include the disclosure required by RCFC 7.1(a) plus solicitation number, contracting officer, whether injunctive relief will be sought, any prior GAO protest, and whether a protective order will be needed."
@@ -17,7 +17,7 @@ state bid-protest-prefiling-notice: "Pre-Filing Notice to DOJ, Clerk, Contractin
   }
 }
 
-state bid-protest-complaint-filed: "Protest Complaint Filed (Possibly Under Seal)" by office cite "RCFC 3; RCFC App. C 4; RCFC App. C 5; RCFC App. C 6; RCFC App. C 7"
+state bid-protest-complaint-filed: "Protest Complaint Filed (Possibly Under Seal)" by court cite "RCFC 3; RCFC App. C 4; RCFC App. C 5; RCFC App. C 6; RCFC App. C 7"
 {
   group bid-protest-group
   note "Filed as any civil action (RCFC 3), fee $405.00 (§1491(b) protests pay the standard complaint fee, not a separate schedule). If the complaint contains confidential/proprietary information, plaintiff must move for leave to file under seal with a proposed redacted version attached."
@@ -33,7 +33,7 @@ state bid-protest-initial-status-conference: "Initial Status Conference" cite "R
   e-protest-conference-to-pi-fork "Conference addresses intervention, protective order, AR timing, and injunctive relief" -> bid-protest-injunctive-relief-fork
 }
 
-decision bid-protest-injunctive-relief-fork: "Temporary Restraining Order / Preliminary Injunction Sought?" by applicant cite "RCFC App. C 9; RCFC App. C 10; RCFC App. C 11; RCFC App. C 12; RCFC App. C 13; RCFC App. C 14; RCFC App. C 15; RCFC 65"
+decision bid-protest-injunctive-relief-fork: "Temporary Restraining Order / Preliminary Injunction Sought?" by movant cite "RCFC App. C 9; RCFC App. C 10; RCFC App. C 11; RCFC App. C 12; RCFC App. C 13; RCFC App. C 14; RCFC App. C 15; RCFC 65"
 {
   group bid-protest-group
   note "An application for a TRO/PI must be filed with (or promptly after) the complaint, accompanied by affidavits and proof that DOJ and the awardee received copies. The court expedites PI hearings in protest cases specifically so plaintiffs rarely need a standalone TRO first."
@@ -48,7 +48,7 @@ decision bid-protest-injunctive-relief-fork: "Temporary Restraining Order / Prel
   }
 }
 
-state bid-protest-merits-briefing: "Administrative-Record Briefing (Cross-Motions for Judgment on the AR)" by applicant cite "RCFC 52.1; RCFC App. C 8(e); RCFC App. C 8(f)"
+state bid-protest-merits-briefing: "Administrative-Record Briefing (Cross-Motions for Judgment on the AR)" by movant cite "RCFC 52.1; RCFC App. C 8(e); RCFC App. C 8(f)"
 {
   group bid-protest-group
   note "Protests are ordinarily decided on the administrative record via cross-motions for judgment on the AR under RCFC 52.1 rather than a full RCFC 56 summary-judgment/trial sequence -- the record is what the agency actually considered, supplemented only on a showing of necessity."
@@ -59,7 +59,7 @@ state bid-protest-merits-briefing: "Administrative-Record Briefing (Cross-Motion
   }
 }
 
-chance bid-protest-merits-ruling: "Court Rules on the Protest" by office discretion cite "RCFC 52.1; 28 U.S.C. §1491(b)(4) (arbitrary-and-capricious/APA-derived standard)"
+chance bid-protest-merits-ruling: "Court Rules on the Protest" by court discretion cite "RCFC 52.1; 28 U.S.C. §1491(b)(4) (arbitrary-and-capricious/APA-derived standard)"
 {
   group bid-protest-group
   note "Outcome distribution authored at 0.20 sustained / 0.80 denied -- TEACHING ESTIMATE only, not a cited empirical GAO/CoFC bid-protest sustain-rate figure (publicly reported CoFC-specific sustain rates were not verified against a primary source in this pass; flag as UNVERIFIED if precision matters). The arbitrary-and-capricious standard is highly deferential to the procuring agency."

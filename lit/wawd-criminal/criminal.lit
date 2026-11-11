@@ -34,7 +34,7 @@ import frcrimp.deadlines.{
 
 start arrested
 
-state arrested: "Arrest or summons on a complaint" by applicant cite "FRCrimP 5(a)(1)(A)"
+state arrested: "Arrest or summons on a complaint" by prosecution cite "FRCrimP 5(a)(1)(A)"
 {
   note "OUTLINE. Initial appearance without unnecessary delay (FRCrimP 5(a)(1)(A)). The court's duty-magistrate, after-hours and CJA appointment practice are holes (W.D. Wash. local criminal rules; verify numbering)."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
@@ -73,7 +73,7 @@ state preliminary-hearing: "Preliminary hearing or indictment" by court cite "FR
   }
 }
 
-state charged: "Indictment or information" by office cite "FRCrimP 7(c)(1)"
+state charged: "Indictment or information" by court cite "FRCrimP 7(c)(1)"
 {
   note "OUTLINE. The court's Speedy Trial Act plan (18 U.S.C. § 3165) and local case-assignment and related-case rules are holes."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "FRCrimP 10(a)" }
@@ -82,7 +82,7 @@ state charged: "Indictment or information" by office cite "FRCrimP 7(c)(1)"
   }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "FRCrimP 10(a)"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "FRCrimP 10(a)"
 {
   note "OUTLINE. Local arraignment, scheduling and standing discovery orders are holes. Key decision (verify): Brady v. Maryland, 373 U.S. 83 (1963)."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "FRCrimP 16(a)(1)" }
@@ -91,7 +91,7 @@ state arraignment: "Arraignment and plea of not guilty" by applicant cite "FRCri
   }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "FRCrimP 12(b)(3)"
+state discovery: "Discovery and pretrial motions" by prosecution cite "FRCrimP 12(b)(3)"
 {
   note "OUTLINE. The pretrial-motion deadline is set by the court (FRCrimP 12(c)(1)); local motion, briefing and hearing practice is a hole. Key decisions (verify): Barker v. Wingo, 407 U.S. 514 (1972); Zedner v. United States, 547 U.S. 489 (2006)."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -114,7 +114,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "FRCrimP 12(
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "FRCrimP 11(a)(1)"
+decision plea-decision: "Plea or trial" by accused cite "FRCrimP 11(a)(1)"
 {
   note "OUTLINE. Local change-of-plea and plea-agreement practice are holes. Key decisions (verify): Boykin v. Alabama, 395 U.S. 238 (1969); Missouri v. Frye, 566 U.S. 134 (2012)."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "FRCrimP 11(b)(1)" }
@@ -163,7 +163,7 @@ state sentencing: "Presentence report and sentencing" by court cite "FRCrimP 32(
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "FRCrimP 32(k)(1)"
+decision judgment: "Judgment of conviction" by accused cite "FRCrimP 32(k)(1)"
 {
   note "OUTLINE. Key decisions (verify): Roe v. Flores-Ortega, 528 U.S. 470 (2000); Garza v. Idaho, 586 U.S. 232 (2019)."
   edge-judgment-correction "Sentence corrected for clear error" -> judgment-final {

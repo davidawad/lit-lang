@@ -4,7 +4,7 @@ import ms-state-rules.{ NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
 
 start judgment-entered
 
-decision judgment-entered: "Judgment or order entered: appeal or permission sought?" by applicant cite "M.R.A.P. 3(a)"
+decision judgment-entered: "Judgment or order entered: appeal or permission sought?" by appellant cite "M.R.A.P. 3(a)"
 {
   note "An appeal permitted by law as of right is taken by filing a notice of appeal with the clerk of the trial court within the time allowed by M.R.A.P. 4 (M.R.A.P. 3(a)); which judgments are appealable as of right rests on statute, which is not vendored. The date of entry of judgment is the date it is entered in the general docket (M.R.A.P. 4, Comment). An interlocutory order may be appealed only by permission: a petition for permission to appeal is filed with the clerk of the Supreme Court within 21 days after entry of the order (M.R.A.P. 5(a)). Periods in this package are stated, not counted: computation is M.R.A.P. 26(a), and three days are added after service by mail (M.R.A.P. 26(c)). The outline named no leading decisions."
   edge-judgment-entered-notice "Appeal as of right" -> notice { authority cite "M.R.A.P. 3(a)" }
@@ -22,7 +22,7 @@ decision interlocutory-petition: "Permission to appeal granted?" by court cite "
   }
 }
 
-decision notice: "Notice of appeal within time?" by applicant cite "M.R.A.P. 4(a)"
+decision notice: "Notice of appeal within time?" by appellant cite "M.R.A.P. 4(a)"
 {
   note "The notice of appeal is filed with the clerk of the trial court within 30 days after the date of entry of the judgment or order appealed from (M.R.A.P. 4(a)). If a timely notice is filed, any other party may file a notice within 14 days after the first notice was filed, or within the time otherwise prescribed, whichever last expires (M.R.A.P. 4(c)). A timely motion under M.R.C.P. 50(b), 52(b) or 59, or under M.R.C.P. 60 filed no later than 10 days after entry of judgment, makes the time run for all parties from entry of the order disposing of the last such motion (M.R.A.P. 4(d)). The trial court may extend the time on a motion filed not later than 30 days after the time expires, for good cause before expiry or excusable neglect after; no extension exceeds 30 days past the prescribed time or 10 days from the order granting it, whichever is later (M.R.A.P. 4(g)). The trial court may reopen the time for 14 days for a party that did not receive notice of entry within 21 days, on a motion filed within 180 days of entry or 7 days of receipt of notice, whichever is earlier (M.R.A.P. 4(h)). The appellant pays the docket fee to the trial court clerk on filing the notice (M.R.A.P. 3(e))."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "M.R.A.P. 2(a)" }
@@ -32,7 +32,7 @@ decision notice: "Notice of appeal within time?" by applicant cite "M.R.A.P. 4(a
   }
 }
 
-state record: "Record designated, cost deposited and record filed" by applicant cite "M.R.A.P. 10(b)"
+state record: "Record designated, cost deposited and record filed" by appellant cite "M.R.A.P. 10(b)"
 {
   note "Within seven (7) days after filing the notice of appeal the appellant files and serves a written designation of the parts of the record necessary for the appeal (M.R.A.P. 10(b)(1)), with a statement of the issues unless the entire record is designated (M.R.A.P. 10(b)(4)); the appellee may designate more within 14 days after service (M.R.A.P. 10(b)(4)). Within seven (7) days after filing the notice the appellant also estimates and deposits the cost of preparing the record and files a certificate of compliance (M.R.A.P. 11(b)(1)). Where no transcript is available, a statement of the evidence is filed within 60 days after filing the notice of appeal (M.R.A.P. 10(c)). The clerk of the Supreme Court dockets the appeal on receipt of the notice and files the record on receipt, giving notice of the date of filing (M.R.A.P. 13)."
   edge-record-assignment "Record filed" -> assignment {
@@ -55,7 +55,7 @@ decision assignment: "Retained by the Supreme Court or assigned to the Court of 
   }
 }
 
-state briefing: "Briefing" by applicant cite "M.R.A.P. 31(b)"
+state briefing: "Briefing" by appellant cite "M.R.A.P. 31(b)"
 {
   note "The appellant's brief is due within 40 days after the date on which the record is filed, the appellee's within 30 days after service of the appellant's brief, and any reply within 14 days after service of the appellee's brief; cross-appeal briefing follows M.R.A.P. 31(b). Except by permission, principal briefs may not exceed 50 pages and reply briefs 25 pages (M.R.A.P. 28(h)); the summary of the argument should seldom exceed two and never five pages (M.R.A.P. 28(a)(6)). Record excerpts accompany the brief (M.R.A.P. 30). A party wanting oral argument states ORAL ARGUMENT REQUESTED on the cover of its brief, the appellee on its principal brief and the appellant on its reply brief or by letter within the time for it (M.R.A.P. 34(b))."
   edge-briefing-argument "Oral argument set" -> argument { authority cite "M.R.A.P. 34(a)" }
@@ -77,7 +77,7 @@ state decision: "Decision handed down" by court cite "M.R.A.P. 35-A(a)"
   edge-decision-final "No rehearing sought" -> final-decision { authority cite "M.R.A.P. 41(a)" }
 }
 
-decision rehearing: "Rehearing decided; certiorari sought from a Court of Appeals judgment?" by applicant cite "M.R.A.P. 40(a)"
+decision rehearing: "Rehearing decided; certiorari sought from a Court of Appeals judgment?" by petitioner cite "M.R.A.P. 40(a)"
 {
   note "If rehearing is granted, the court may dispose of the cause without reargument or restore it to the calendar; after a grant a party may file a second motion within 14 days after the judgment on rehearing, but no further motion follows a denial (M.R.A.P. 40(a)). A petition for a writ of certiorari to review a Court of Appeals decision is filed in the Supreme Court and served within fourteen (14) days from entry of the Court of Appeals' judgment on the motion for rehearing, unless extended on motion filed within that time; it may not exceed ten (10) pages (M.R.A.P. 17(b)). Review is discretionary and ordinarily limited to conflicts, an unconsidered controlling constitutional provision, and cases the Supreme Court should have decided (M.R.A.P. 17(a))."
   edge-rehearing-final "No certiorari petition" -> final-decision {

@@ -14,7 +14,7 @@ module ks-criminal-trial-court.criminal
 // vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "K.S.A. 22-2901"
+state arrested: "Arrest or summons" by prosecution cite "K.S.A. 22-2901"
 {
   note "A person arrested in the county where the crime is alleged to have been committed is taken without unnecessary delay before a magistrate of the court that issued the warrant, or, after a warrantless arrest on probable cause, before the nearest available magistrate (K.S.A. 22-2901(1)); the complaint and warrant are governed by K.S.A. 22-2301 to 22-2305."
   edge-arrested-appearance "First appearance" -> initial-appearance {
@@ -44,19 +44,19 @@ decision probable-cause: "Preliminary examination or indictment" by court cite "
   }
 }
 
-state charged: "Complaint, information or indictment" by office cite "K.S.A. 22-3201"
+state charged: "Complaint, information or indictment" by court cite "K.S.A. 22-3201"
 {
   note "Prosecutions in the district court are upon complaint, indictment or information (K.S.A. 22-3201(a))."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "K.S.A. 22-3205" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "K.S.A. 22-3205"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "K.S.A. 22-3205"
 {
   note "Arraignment is conducted in open court by reading the charge or stating its substance and calling on the defendant to plead, after the defendant is given a copy of the indictment or information; it may be held by two-way electronic audio-video communication in the court's discretion (K.S.A. 22-3205(a), (b)). The pleas are not guilty, guilty, or with the court's consent nolo contendere (K.S.A. 22-3208(1)). The K.S.A. 22-3402 speedy-trial periods run from arraignment."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "K.S.A. 22-3212" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "K.S.A. 22-3208"
+state discovery: "Discovery and pretrial motions" by prosecution cite "K.S.A. 22-3208"
 {
   note "Discovery and inspection are governed by K.S.A. 22-3212. Any defense or objection capable of determination without trial of the general issue may be raised before trial by motion (K.S.A. 22-3208(2)); the time for such motions is set by K.S.A. 22-3208 and is not stated here (currency unconfirmed). A person charged with a crime and not brought to trial within the periods K.S.A. 22-3402 sets after arraignment, for a defendant held in jail solely on the charge and for one on an appearance bond, is entitled to be discharged from further liability to be tried for the crime, unless the delay results from the defendant's application or fault or a continuance the section allows; the periods are not stated here (currency unconfirmed)."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -82,7 +82,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "K.S.A. 22-3
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "K.S.A. 22-3210"
+decision plea-decision: "Plea or trial" by accused cite "K.S.A. 22-3210"
 {
   note "Before or during trial a plea of guilty or nolo contendere may be accepted when it is entered in open court and the court finds the conditions K.S.A. 22-3210(a) lists, including that the plea is made voluntarily with understanding of the charge and the consequences and that there is a factual basis; withdrawal of a plea is governed by K.S.A. 22-3210(d), whose periods are not stated here (currency unconfirmed)."
   edge-plea-decision-plea "Plea accepted" -> sentencing { authority cite "K.S.A. 22-3210" }
@@ -114,7 +114,7 @@ state sentencing: "Judgment and sentence" by court cite "K.S.A. 22-3424"
   edge-sentencing-judgment "Sentence imposed" -> judgment { authority cite "K.S.A. 22-3424" }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "K.S.A. 22-3608"
+decision judgment: "Judgment of conviction" by accused cite "K.S.A. 22-3608"
 {
   note "An appeal from a district court's final judgment in a criminal case is taken to the Court of Appeals, or directly to the Supreme Court in the cases K.S.A. 22-3601(b) lists (K.S.A. 22-3601(a)). The time for the defendant's appeal runs from the expiration of the district court's power to modify the sentence, as K.S.A. 22-3608 provides; the period is not stated here (currency unconfirmed). Appellate procedure is the Kansas Supreme Court Rules (lit/ks-court-of-appeals; sources/ks-state-appellate)."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "K.S.A. 22-3608" }

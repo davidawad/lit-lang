@@ -29,7 +29,7 @@ event ReplyBriefFiled() paper reply-brief
 
 start invoked
 
-decision invoked: "Direct appeal or certiorari from a plea" by applicant cite "Okla. Ct. Crim. App. R. 1.2"
+decision invoked: "Direct appeal or certiorari from a plea" by accused cite "Okla. Ct. Crim. App. R. 1.2"
 {
   note "A conviction after trial is appealed directly (Section II); a conviction on a plea of guilty or nolo contendere is reviewed by certiorari (Section IV). The Rules of Sections I, II and III apply in all appeals unless a section governing a specific appeal provides otherwise (Okla. Ct. Crim. App. R. 1.0(B))."
   edge-invoked-direct "Conviction after trial: direct appeal" -> notice-filed {
@@ -59,7 +59,7 @@ terminal plea-withdrawn: "Plea withdrawn in the trial court" outcome [win] cite 
   note "Outcome from the defendant's side: the case returns to the trial court on the charge."
 }
 
-state notice-filed: "Notice of intent to appeal and designation of record" by applicant cite "Okla. Ct. Crim. App. R. 2.1(B)"
+state notice-filed: "Notice of intent to appeal and designation of record" by accused cite "Okla. Ct. Crim. App. R. 2.1(B)"
 {
   note "An appeal is commenced by trial counsel's filing in the trial court a written notice of intent to appeal and a designation of record within ten days from the date the Judgment and Sentence is imposed in open court; the filing is jurisdictional and failure to file in time waives the right to appeal. A certified copy is filed with the Clerk of the Court of Criminal Appeals within ten days after the notice is filed in the trial court (Okla. Ct. Crim. App. R. 2.1(B); 2.5(A)). A motion for a new trial is not required to commence an appeal (Okla. Ct. Crim. App. R. 2.1(B)(1)). The Clerk then issues a Certificate of Appeal with the due date for the petition in error and the record (Okla. Ct. Crim. App. R. 2.1(B))."
   edge-notice-filed-perfection "Notice filed" -> perfection {
@@ -81,7 +81,7 @@ terminal review-dismissed: "Appeal dismissed or review waived" outcome [loss, di
   note "Outcome from the defendant's side: the untimely filing of the notice of intent to appeal, or of the petition for certiorari, waives the right to appeal (Okla. Ct. Crim. App. R. 2.1(B); 4.3(A))."
 }
 
-state record: "Record completed and transmitted" by office cite "Okla. Ct. Crim. App. R. 2.3"
+state record: "Record completed and transmitted" by court cite "Okla. Ct. Crim. App. R. 2.3"
 {
   note "The record is made ready for transmission so that the trial court clerk's notice of completion reaches the Clerk of this Court in time; the trial court clerk notifies the parties and, within 90 days in misdemeanor or regular felony cases from the Judgment and Sentence, the Clerk of this Court (Okla. Ct. Crim. App. R. 2.3(A), (B)). Within ten days after receiving that notification, the Clerk of this Court issues a notice to transmit the record (Okla. Ct. Crim. App. R. 2.3(C))."
   edge-record-briefing "Notice to transmit filed" -> briefing {
@@ -89,7 +89,7 @@ state record: "Record completed and transmitted" by office cite "Okla. Ct. Crim.
   }
 }
 
-state briefing: "Briefing" by applicant cite "Okla. Ct. Crim. App. R. 3.4"
+state briefing: "Briefing" by prosecution cite "Okla. Ct. Crim. App. R. 3.4"
 {
   note "Unless the Court orders otherwise, the appellant's brief is filed within 60 days from the date the Clerk files the notice to transmit the record, and the appellee's answer brief within 60 days from the filing of the appellant's brief (Okla. Ct. Crim. App. R. 3.4(B), (C)). A reply brief may be filed within 20 days of the answer brief and only answers it; a supplemental brief needs leave and is filed within 15 days of leave; each is limited to 10 pages (Okla. Ct. Crim. App. R. 3.4(F)). Extensions are not favored: each application, with an affidavit of facts, may obtain at most 30 days, and the Presiding Judge or Vice-Presiding Judge may grant at most 60 days in total (Okla. Ct. Crim. App. R. 3.4(D)). A brief may not exceed 50 typewritten pages except as otherwise specified (Okla. Ct. Crim. App. R. 3.5(D)). When briefs are not filed, the appeal may be dismissed or submitted on the record as filed (Okla. Ct. Crim. App. R. 3.6(A))."
   edge-briefing-submitted "Briefs filed" -> argument {
@@ -120,7 +120,7 @@ decision decision: "Decision" by court cite "Okla. Ct. Crim. App. R. 3.13(A)"
   }
 }
 
-decision after-decision: "Rehearing, mandate or certiorari" by applicant cite "Okla. Ct. Crim. App. R. 3.14"
+decision after-decision: "Rehearing, mandate or certiorari" by prosecution cite "Okla. Ct. Crim. App. R. 3.14"
 {
   note "A petition for rehearing, filed by the attorney of record within 20 days from the filing of the opinion, lies only where a decisive question was overlooked or the decision conflicts with a statute or controlling decision not called to the Court's attention; if none is filed within 20 days the decision is final (Okla. Ct. Crim. App. R. 3.14(A), (B), (D)). After 20 days from the filing of the decision the Clerk issues the mandate to the trial court, and a timely petition for rehearing stays it (Okla. Ct. Crim. App. R. 3.15(A), (B)). A petition for certiorari to the Supreme Court of the United States is timely within 90 days after entry of the judgment of a state court of last resort (Sup. Ct. R. 13.1)."
   edge-after-decision-rehearing "Petition for rehearing" -> rehearing {

@@ -8,7 +8,7 @@ import cafc.{ Brief, BriefServed, Docketed, Filed, Paper, briefing-group }
 import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
 
-decision appellant-brief-window: "Appellant's Principal Brief Due" by applicant cite "Fed. Cir. R. 31(a)(1)(A)-(B)"
+decision appellant-brief-window: "Appellant's Principal Brief Due" by movant cite "Fed. Cir. R. 31(a)(1)(A)-(B)"
 {
   group briefing-group
   note "60 days after docketing (appeal from a court) or after the certified list/index is served (appeal from an agency, e.g. PTAB/ITC) — this court's local extension of the FRAP 31(a)(1) default 40-day period. Word limit 14,000 words (Fed. Cir. R. 32(b)(1)), or the Fed. Cir. R. 28.1(b)/(e) cross-appeal limits (14,000/16,500/7,000 across the four briefs) if a cross-appeal is pending."
@@ -29,7 +29,7 @@ decision appellant-brief-window: "Appellant's Principal Brief Due" by applicant 
   }
 }
 
-state appellant-brief-filed: "Opening Brief Filed" by examiner cite "Fed. Cir. R. 31(a)(1); Fed. Cir. R. 32(b)(1)"
+state appellant-brief-filed: "Opening Brief Filed" by appellee cite "Fed. Cir. R. 31(a)(1); Fed. Cir. R. 32(b)(1)"
 {
   group briefing-group
   appellee-brief-file "File response brief" -> appellee-brief-filed {
@@ -53,7 +53,7 @@ terminal dismissed-failure-to-prosecute: "DISMISSED — Failure to Prosecute (No
   payoff 0.usd
 }
 
-state appellee-brief-filed: "Appellee's Principal/Response Brief Filed" by applicant cite "Fed. Cir. R. 31(a)(2)"
+state appellee-brief-filed: "Appellee's Principal/Response Brief Filed" by movant cite "Fed. Cir. R. 31(a)(2)"
 {
   group briefing-group
   reply-brief-file "File reply brief" -> reply-brief-filed {
@@ -73,14 +73,14 @@ state appellee-brief-filed: "Appellee's Principal/Response Brief Filed" by appli
   }
 }
 
-state reply-brief-filed: "Appellant's Reply Brief Filed" by office cite "FRAP 31(a)(1)"
+state reply-brief-filed: "Appellant's Reply Brief Filed" by court cite "FRAP 31(a)(1)"
 {
   group briefing-group
   note "Reply brief deadline is the unmodified FRAP default (Fed. Cir. R. 31 does not extend it): 21 days after the appellee's brief is served, but must be filed at least 7 days before argument. Word limit 7,000 words (Fed. Cir. R. 32(b)(1))."
   reply-brief-closes "Briefing closes" -> briefing-complete { authority cite "Fed. Cir. R. 31" }
 }
 
-state briefing-complete: "Briefing Closed" by applicant cite "Fed. Cir. R. 31"
+state briefing-complete: "Briefing Closed" by movant cite "Fed. Cir. R. 31"
 {
   group briefing-group
   briefing-to-appendix "Serve and file the joint appendix" -> joint-appendix-filed {

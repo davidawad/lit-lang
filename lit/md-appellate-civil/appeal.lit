@@ -46,7 +46,7 @@ event ReconsiderationMoved() paper reconsideration-motion
 
 start notice
 
-decision notice: "Notice of appeal within 30 days after entry?" by applicant cite "Md. Rule 8-202(a)"
+decision notice: "Notice of appeal within 30 days after entry?" by appellant cite "Md. Rule 8-202(a)"
 {
   note "Except as provided in Rule 8-204, the only method of securing review by the Appellate Court is a notice of appeal filed with the clerk of the lower court within the time Rule 8-202 prescribes (Md. Rule 8-201(a)), with the filing fee (Md. Rule 8-201(b)) and a Civil Appeal Information Report (Md. Rule 8-205(b)). The notice is filed within 30 days after entry of the judgment or order appealed from (Md. Rule 8-202(a)); after a timely motion under Rule 2-532, 2-533, 2-534 or 11-218, within 30 days after entry of a notice withdrawing it or the order disposing of it (Md. Rule 8-202(c)). Any other party may note an appeal within ten days after the first notice or within any longer time the Rule allows (Md. Rule 8-202(e)). Entry occurs when the clerk enters a record on the docket of the electronic case management system (Md. Rule 8-202(f)). The Courts and Judicial Proceedings Article (final judgment, §§ 12-301 and 12-303) is not vendored. No leading decision is named."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "Md. Rule 8-602(b)" }
@@ -56,7 +56,7 @@ decision notice: "Notice of appeal within 30 days after entry?" by applicant cit
   }
 }
 
-state record: "Transcript ordered and record transmitted" by office cite "Md. Rule 8-412(a)"
+state record: "Transcript ordered and record transmitted" by court cite "Md. Rule 8-412(a)"
 {
   note "In a civil action subject to Rule 8-205(a), the appellant orders the transcript within ten days after the Rule 8-206(c) order to proceed (Md. Rule 8-411(b)(2)), and the clerk of the lower court transmits the record within sixty days after that order (Md. Rule 8-412(a)(2)); in an expedited appeal under Rule 8-207(a), within thirty days after the first notice of appeal (Md. Rule 8-412(a)(1)). On docketing the record, the Clerk sends notice of the appellant's brief due date, no earlier than 40 days after the notice unless the Court orders otherwise (Md. Rule 8-412(c)). The appeal may be dismissed if the record is not transmitted in time, unless the failure was caused by a judge, a clerk, the court reporter or the appellee (Md. Rule 8-602(c)(3))."
   edge-record-briefing "Record docketed" -> briefing {
@@ -65,7 +65,7 @@ state record: "Transcript ordered and record transmitted" by office cite "Md. Ru
   }
 }
 
-state briefing: "Briefs filed" by applicant cite "Md. Rule 8-502(a)"
+state briefing: "Briefs filed" by appellant cite "Md. Rule 8-502(a)"
 {
   note "The appellant's brief is filed by the date in the Clerk's Rule 8-412(c) notice; the appellee's within 30 days after the appellant's; a reply not later than the earlier of 20 days after the appellee's brief or ten days before the scheduled argument (Md. Rule 8-502(a)(1)-(3)). By joint stipulation the parties may extend a principal brief by no more than 30 days (Md. Rule 8-502(b)(2)(A)). The appellant files a record extract with its brief in every civil case (Md. Rule 8-501(a)). Principal briefs are limited to 9,100 words and a reply to 3,900 in the Appellate Court (Md. Rule 8-503(d)(1), (3)). An appeal may be dismissed when the appellant's brief or record extract is late (Md. Rule 8-602(c)(5)); a late appellee may not argue without permission (Md. Rule 8-502(d))."
   edge-briefing-argument "Briefing complete" -> argument { authority cite "Md. Rule 8-522(a)" }
@@ -86,7 +86,7 @@ state decision: "Appeal decided" by court cite "Md. Rule 8-604(a)"
   }
 }
 
-decision post-decision: "Reconsideration, certiorari or mandate" by applicant cite "Md. Rule 8-605(a)"
+decision post-decision: "Reconsideration, certiorari or mandate" by petitioner cite "Md. Rule 8-605(a)"
 {
   note "A motion for reconsideration is filed before the mandate issues or within 30 days after the filing of the opinion, whichever is earlier; no response may be filed unless the Court requests one (Md. Rule 8-605(a)); it is limited to 3,900 words (Md. Rule 8-605(c)) and delays the mandate unless the Court orders otherwise (Md. Rule 8-605(e))."
   edge-post-decision-reconsider "Reconsideration moved" -> reconsideration {

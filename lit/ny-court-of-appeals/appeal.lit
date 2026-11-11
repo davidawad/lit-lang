@@ -34,7 +34,7 @@ event MeritsLetterFiled() paper merits-letter
 
 start motion
 
-decision motion: "Motion in the Court of Appeals for leave to appeal?" by applicant cite "CPLR 5602(a)"
+decision motion: "Motion in the Court of Appeals for leave to appeal?" by appellant cite "CPLR 5602(a)"
 {
   note "An appeal may be taken to the Court of Appeals by permission of the Appellate Division granted before application to the Court of Appeals, or by permission of the Court of Appeals upon refusal by the Appellate Division or upon direct application (CPLR 5602(a)). In an action originating in the supreme court the appeal lies from an order of the Appellate Division which finally determines the action and is not appealable as of right, or from a final judgment where the Appellate Division has made an order on a prior appeal which necessarily affects it (CPLR 5602(a)(1)). The motion must be made within thirty days, computed from service by a party of a copy of the order and written notice of its entry, or, where the Appellate Division has already denied permission, of a copy of that order and written notice of its entry; when the movant served the copy and notice, the time runs from that service (CPLR 5513(b)). A party served with the adverse party's motion papers may move within ten days after that service or within the thirty days, whichever is longer (CPLR 5513(c)). Service by mail or overnight delivery adds the days CPLR 2103(b)(2) and (6) provide (CPLR 5513(d)); CPLR 2103 is not vendored and the days are not stated. The movant files an original and one copy of its motion with proof of service, noticed for a return date in compliance with CPLR 5516 and 22 NYCRR 500.21(b) (22 NYCRR 500.22(a)): motions are returnable on a Monday, are submitted without oral argument unless the court directs otherwise, and are filed at Court of Appeals Hall no later than noon on the Friday preceding the return date (22 NYCRR 500.21(a), (c)); personal service gives at least eight days' notice, regular mail at least 13 and overnight delivery at least nine (22 NYCRR 500.21(b)). The motion is a single document containing the notice of motion, the procedural history showing timeliness, a showing of jurisdiction, a concise statement of the questions presented and why they merit review, such as that the issues are novel or of public importance, present a conflict with prior decisions of this Court, or involve a conflict among the departments of the Appellate Division, a disclosure statement if required, and the orders and opinions below (22 NYCRR 500.22(b)); the record and briefs below are filed in digital format (22 NYCRR 500.22(c)). The movant remits the CPLR 8022 fee with each motion (22 NYCRR 500.3(b)). The outline named no leading decision on the grant standard; none is kept."
   edge-motion-none "No motion: the Appellate Division order stands" -> no-motion {
@@ -63,7 +63,7 @@ terminal leave-denied: "Leave to appeal denied" outcome [final, loss] cite "CPLR
   note "The Appellate Division order stands. A motion to reargue the denial is served not later than 30 days after the motion was decided, states the points claimed to have been overlooked or misapprehended, and is entertained only once per party (22 NYCRR 500.24(b), (c), (e)); it is not modeled. Federal certiorari (28 U.S.C. § 1257) is not vendored and not modeled."
 }
 
-state preliminary: "Preliminary appeal statement filed" by applicant cite "22 NYCRR 500.9(a)"
+state preliminary: "Preliminary appeal statement filed" by appellant cite "22 NYCRR 500.9(a)"
 {
   note "Within 10 days after entry of the order granting leave to appeal, the appellant files an original and one copy of a preliminary appeal statement on the court's form, with the required attachments and proof of service; no fee is due at that filing (22 NYCRR 500.9(a)). Where a party asserts that a statute is unconstitutional, the appellant first gives the Attorney General written notice (22 NYCRR 500.9(b))."
   edge-preliminary-screened "Statement reviewed by the clerk" -> screening {
@@ -88,7 +88,7 @@ terminal dismissed-jurisdiction: "Appeal dismissed or transferred for want of ju
   note "Outcome from the appellant's side."
 }
 
-state alternative: "Letter submissions on the merits" by applicant cite "22 NYCRR 500.11(c)"
+state alternative: "Letter submissions on the merits" by appellant cite "22 NYCRR 500.11(c)"
 {
   note "The appeal is determined on the intermediate appellate court record or appendix and briefs, the writings below and letter submissions on the merits (22 NYCRR 500.11(a)). Within 25 days after the clerk's letter, the appellant files three copies of the record or appendix and of each brief below, an original and two copies of its letter of arguments with proof of service, and the fee required by 500.3(a) (22 NYCRR 500.11(c)). The respondent files its letter within 20 days after service of the appellant's submission (22 NYCRR 500.11(d)). A reply is not permitted unless authorized by the court (22 NYCRR 500.11(e)), and an argument made below but not addressed or reserved in the letter is deemed abandoned (22 NYCRR 500.11(f)). If the court terminates the alternative review, the clerk sets a schedule for full briefing (22 NYCRR 500.11(i)). Extensions for good cause may be granted by the clerk (22 NYCRR 500.15)."
   edge-alternative-submitted "Letters filed; appeal submitted" -> decision {
@@ -100,7 +100,7 @@ state alternative: "Letter submissions on the merits" by applicant cite "22 NYCR
   }
 }
 
-state briefing: "Record material and briefs filed" by applicant cite "22 NYCRR 500.12(b)"
+state briefing: "Record material and briefs filed" by appellant cite "22 NYCRR 500.12(b)"
 {
   note "The clerk's scheduling letter sets the filing dates for record material and briefs (22 NYCRR 500.12(a)). If no scheduling letter issues, the appellant serves and files its record material and an original and nine copies of its brief within 60 days after entry of the order granting leave (22 NYCRR 500.12(b)); the respondent files within 45 days after service of the appellant's brief (22 NYCRR 500.12(c)); and a reply brief, not required, may be filed within 15 days after service of the respondent's brief (22 NYCRR 500.12(d)). Surreply briefs are not permitted (22 NYCRR 500.12(g)). The appellant supplies record material by subpoenaing the original file with an appendix, by filing the reproduced record used below with an appendix, or by a new and full record (22 NYCRR 500.14(a)), and remits the CPLR 8022 fee on filing record material (22 NYCRR 500.3(a)). Briefs carry a table of contents, table of authorities, questions presented and point headings, and the appellant's brief a statement of the court's jurisdiction (22 NYCRR 500.13(a)). The clerk may grant a reasonable extension for good cause (22 NYCRR 500.15)."
   edge-briefing-complete "Briefing complete" -> argument {

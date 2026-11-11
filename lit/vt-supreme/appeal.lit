@@ -24,7 +24,7 @@ event ReargumentMotionFiled() paper reargument-brief
 
 start notice
 
-decision notice: "Notice of appeal within 30 days of entry?" by applicant cite "V.R.A.P. 4(a)"
+decision notice: "Notice of appeal within 30 days of entry?" by appellant cite "V.R.A.P. 4(a)"
 {
   note "An appeal as of right is taken by filing a notice of appeal with the superior court clerk within the time Rule 4 allows; any entry fee required under 32 V.S.A. § 1431 is due at the time for filing the notice (V.R.A.P. 3(b)(1)); the fee statute is not vendored and the amount is not stated. The notice is filed within 30 days after entry of the judgment or order appealed from; another party may appeal within 14 days after the first notice or within the time otherwise prescribed, whichever ends later (V.R.A.P. 4(a)(1), (6)). A timely motion under V.R.C.P. 50(b), 52(b), 59 or the other motions Rule 4(b) lists restarts the full time from the order disposing of the last remaining motion (V.R.A.P. 4(b)). The superior court may extend the time on a motion filed no later than 30 days after it expires, on excusable neglect or good cause, by no more than 30 days after the original time or 14 days after the order, whichever is later (V.R.A.P. 4(d)), and may reopen it for 14 days for lack of notice of the judgment (V.R.A.P. 4(c)). The Supreme Court may not extend the time to file a notice of appeal unless law or these rules authorize it (V.R.A.P. 26(b)). No leading decision is named."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "V.R.A.P. 4(a)" }
@@ -36,13 +36,13 @@ terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismi
   note "Only the timely filing of a notice of appeal is essential to the appeal's validity (V.R.A.P. 3(b)(1)(D)). Outcome from the appellant's side."
 }
 
-state record: "Appeal docketed; record complete" by office cite "V.R.A.P. 12(b)"
+state record: "Appeal docketed; record complete" by court cite "V.R.A.P. 12(b)"
 {
   note "Within 14 days after taking the appeal the appellant files a docketing statement (V.R.A.P. 3(e)), and within 14 days of filing the notice files a statement that no transcript is necessary or orders the transcript; failing to order one waives any issue that needs it (V.R.A.P. 10(b)(1)). The superior court clerk transmits the appeal within 14 days after the notice is filed (V.R.A.P. 11(b)(1)). The Supreme Court clerk dockets the appeal and, once each ordered transcript is complete or none is needed, notifies the parties that the record is complete; it is complete on the date that notification is docketed (V.R.A.P. 12(a), (b)). An appellee may move to dismiss if the appellant fails to order the transcript or pay any required entry fee (V.R.A.P. 12(d))."
   edge-record-briefing "Record complete" -> briefing { authority cite "V.R.A.P. 31(a)" }
 }
 
-state briefing: "Briefs filed" by applicant cite "V.R.A.P. 31(a)"
+state briefing: "Briefs filed" by petitioner cite "V.R.A.P. 31(a)"
 {
   note "The appellant serves and files a brief within 40 days after the record on appeal is complete, the appellee within 30 days after the appellant's brief is served, and the appellant may reply within 21 days after service of the appellee's brief (V.R.A.P. 31(a)). The parties may stipulate once to extend each brief, by up to 40 days for the appellant's principal brief, 30 days for the appellee's and 21 days for a reply (V.R.A.P. 26(c)). A principal brief may not exceed 9000 words and a reply brief 4500 words (V.R.A.P. 32(a)(4))."
   edge-briefing-argument "Briefing complete" -> argument { authority cite "V.R.A.P. 34(a)" }
@@ -71,13 +71,13 @@ decision decision: "Supreme Court decision" by court cite "V.R.A.P. 36"
   }
 }
 
-state mandate-affirmed: "Mandate issues: affirmed" by office cite "V.R.A.P. 41(a)"
+state mandate-affirmed: "Mandate issues: affirmed" by court cite "V.R.A.P. 41(a)"
 {
   note "The mandate issues 21 days after entry of judgment or 7 days after entry of an order denying a timely motion for reargument, unless the Court orders otherwise; a timely reargument motion stays it until disposition, and a stay granted on motion may not exceed 30 days unless extended for good cause (V.R.A.P. 41(a), (c)). If a judgment is affirmed, costs are taxed against the appellant (V.R.A.P. 39(a))."
   edge-mandate-affirmed-final "Mandate issued" -> affirmed { authority cite "V.R.A.P. 41(a)" }
 }
 
-state mandate-reversed: "Mandate issues: reversed or vacated" by office cite "V.R.A.P. 41(a)"
+state mandate-reversed: "Mandate issues: reversed or vacated" by court cite "V.R.A.P. 41(a)"
 {
   note "The mandate issues as rule 41(a) provides; costs on a reversal follow V.R.A.P. 39(a)(3)-(5). Further proceedings in the superior court are not modeled."
   edge-mandate-reversed-final "Mandate issued" -> reversed { authority cite "V.R.A.P. 41(a)" }

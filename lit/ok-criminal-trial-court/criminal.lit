@@ -18,7 +18,7 @@ module ok-criminal-trial-court.criminal
 // are removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite ?("Okla. Stat. tit. 22, arrest, summons and complaint (not vendored)") {
+state arrested: "Arrest or summons" by prosecution cite ?("Okla. Stat. tit. 22, arrest, summons and complaint (not vendored)") {
   note "Arrest, presentment before a magistrate and the complaint are governed by Title 22, which is not vendored; any period for presentment is a hole."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
     authority cite ?("Okla. Stat. tit. 22, initial appearance (not vendored)")
@@ -45,21 +45,21 @@ decision probable-cause: "Preliminary hearing or grand jury" by court cite ?("Ok
   }
 }
 
-state charged: "Indictment or information" by office cite ?("Okla. Stat. tit. 22, indictment and information (not vendored)") {
+state charged: "Indictment or information" by court cite ?("Okla. Stat. tit. 22, indictment and information (not vendored)") {
   note "The statutory speedy-trial provision (Okla. Stat. tit. 22, § 812.1) is not vendored; its periods and exclusions are holes."
   edge-charged-arraignment "Arraignment" -> arraignment {
     authority cite ?("Okla. Stat. tit. 22, arraignment (not vendored)")
   }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite ?("Okla. Stat. tit. 22, arraignment (not vendored)") {
+state arraignment: "Arraignment and plea of not guilty" by accused cite ?("Okla. Stat. tit. 22, arraignment (not vendored)") {
   note "Arraignment, pleas and discovery are governed by Title 22 (not vendored); their periods are holes."
   edge-arraignment-discovery "Discovery" -> discovery {
     authority cite ?("Okla. Stat. tit. 22, discovery (not vendored)")
   }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)") {
+state discovery: "Discovery and pretrial motions" by prosecution cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)") {
   note "The pretrial-motion period and the statutory speedy-trial demand and dismissal (Okla. Stat. tit. 22, § 812.1) are holes."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
     authority cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)")
@@ -85,7 +85,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite ?("Okla. Sta
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Okla. Ct. Crim. App. R. 4.1"
+decision plea-decision: "Plea or trial" by accused cite "Okla. Ct. Crim. App. R. 4.1"
 {
   note "Every plea in the district courts, except traffic, fish and game and non-predicate misdemeanor pleas, uses the plea of guilty summary of facts form (OCCA Form 13.10) (Okla. Ct. Crim. App. R. 4.1). The plea colloquy and its standards are otherwise governed by Title 22 (not vendored)."
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
@@ -114,7 +114,7 @@ state sentencing: "Judgment and Sentence pronounced" by court cite "Okla. Ct. Cr
   }
 }
 
-decision judgment: "Notice of intent to appeal" by applicant cite "Okla. Ct. Crim. App. R. 2.1(B)"
+decision judgment: "Notice of intent to appeal" by accused cite "Okla. Ct. Crim. App. R. 2.1(B)"
 {
   note "After a trial, trial counsel commences the appeal by filing in the trial court a notice of intent to appeal and designation of record within ten days from the date the Judgment and Sentence is imposed in open court; the filing is jurisdictional and its absence waives the appeal (Okla. Ct. Crim. App. R. 2.1(B)). After a plea, the defendant must first apply to withdraw the plea within ten days from the pronouncement of the Judgment and Sentence (Okla. Ct. Crim. App. R. 4.2(A)). The appeal is perfected in the Court of Criminal Appeals within 90 days from the Judgment and Sentence (Okla. Ct. Crim. App. R. 1.4(A)); lit/core has no counting rule for OCCA Rule 1.4, so these periods are not encoded as counted deadlines."
   edge-judgment-appeal "Notice of intent to appeal filed" -> appeal-taken {

@@ -8,7 +8,7 @@ import nc-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeO
 // App. P. 18. No period is a counted deadline.
 start filed
 
-state filed: "Claim filed with the Industrial Commission" by applicant cite ?("N.C. Gen. Stat. § 97-24, Chapter 97 not vendored") {
+state filed: "Claim filed with the Industrial Commission" by movant cite ?("N.C. Gen. Stat. § 97-24, Chapter 97 not vendored") {
   note "The time and form for filing a claim, and any fee, are set by the Workers' Compensation Act, N.C. Gen. Stat. Chapter 97, which is not vendored; they stay holes. The earlier outline named no leading decision."
   edge-filed-hearing "Set for hearing" -> hearing {
     event ActionCommenced()
@@ -33,7 +33,7 @@ chance decision: "Commission decides" by court cite ?("N.C. Gen. Stat. § 97-85,
   }
 }
 
-decision review: "Appeal to the Court of Appeals?" by applicant cite "N.C. R. App. P. 18(b)"
+decision review: "Appeal to the Court of Appeals?" by movant cite "N.C. R. App. P. 18(b)"
 {
   note "An appeal of right from an administrative tribunal directly to the appellate division under N.C.G.S. § 7A-29 follows the rules for appeals from the trial divisions except as Article IV provides (N.C. R. App. P. 18(a)). The times and methods are Rule 18's unless the General Statutes provide otherwise, in which case the General Statutes control (N.C. R. App. P. 18(b)(1)); the Industrial Commission's statute, N.C. Gen. Stat. § 97-86, is not vendored, so whether it displaces Rule 18 is a hole. Under Rule 18(b)(2) any party may appeal a final decision for alleged errors of law by filing and serving a notice of appeal within thirty days after receipt of a copy of the final decision, which is sent by registered or certified mail; the notice names the parties appealing, the decision and the court, and is signed. If no transcript of the fact-finding proceedings was made, the parties may order one under Rule 7 (N.C. R. App. P. 18(b)(3)). The period is stated, not counted."
   edge-review-none "No appeal" -> final-decision {

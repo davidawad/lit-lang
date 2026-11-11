@@ -4,7 +4,7 @@ import nd-state-rules.{ JudgmentEntered }
 
 start complaint-filed
 
-state complaint-filed: "Action commenced" by applicant cite "N.D.R.Civ.P. 3"
+state complaint-filed: "Action commenced" by plaintiff cite "N.D.R.Civ.P. 3"
 {
   note "A civil action is commenced by the service of a summons (N.D.R.Civ.P. 3). The summons states the time within which the rules require the defendant to appear and defend, and a copy of the complaint is served with it except when service is by publication (N.D.R.Civ.P. 4(c)). Service by publication, or personal service outside the state, is made within 60 days after the declaration for publication is filed, or the action is considered discontinued as to any defendant not served in that time, and is complete fifteen days after the first publication or the out-of-state service (N.D.R.Civ.P. 4(e)(6), 4(g)). Periods in this package are stated, not counted: computation is N.D.R.Civ.P. 6(a). No leading decision is named."
   edge-complaint-filed-response-due "Summons served" -> response-due {

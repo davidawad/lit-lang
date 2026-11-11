@@ -14,7 +14,7 @@ module ia-criminal-trial-court.criminal
 // vendored, so they are removed here.
 start arrested
 
-state arrested: "Arrest or citation" by applicant cite "Iowa R. Crim. P. 2.2(2)"
+state arrested: "Arrest or citation" by prosecution cite "Iowa R. Crim. P. 2.2(2)"
 {
   note "An officer making an arrest, with or without a warrant, takes the arrested person before a magistrate, in person or by interactive audiovisual system, within 24 hours unless no magistrate is available, and in all events within 48 hours; a complaint is filed forthwith after a warrantless arrest, and the magistrate makes an initial determination of probable cause from it (Iowa R. Crim. P. 2.2(2)). The initial appearance may be waived in writing; its date is then the date the waiver is filed (2.2(2)(c))."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
@@ -47,13 +47,13 @@ decision probable-cause: "Preliminary hearing, indictment or trial information" 
   }
 }
 
-state charged: "Indictment or trial information" by office cite "Iowa R. Crim. P. 2.5(1)"
+state charged: "Indictment or trial information" by court cite "Iowa R. Crim. P. 2.5(1)"
 {
   note "Every indictable offense may be prosecuted by a trial information with minutes of testimony, filed at any time; a district judge (or a district associate judge with jurisdiction) approves and files it if the minutes, unexplained, would warrant a conviction, and otherwise the charge may go to the grand jury (Iowa R. Crim. P. 2.5(1), (4)). Arraignment is conducted as soon as practicable after the indictment is filed (2.8(1))."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Iowa R. Crim. P. 2.8(1)" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "Iowa R. Crim. P. 2.8(1)"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "Iowa R. Crim. P. 2.8(1)"
 {
   note "The defendant receives the indictment and minutes, is informed of the right to counsel, and is called on to plead; formal arraignment may be waived by a written arraignment and plea of not guilty, whose filing date is the date of arraignment (Iowa R. Crim. P. 2.8(1)). Within 7 days after a plea of not guilty the court sets the trial date by written order; if the defendant waives speedy trial at arraignment, the court may hold a case management conference within 30 days to set the trial date and the motion and deposition deadlines (2.9). A motion for a bill of particulars may be made before or within 10 days after arraignment (2.11(7))."
   edge-arraignment-pretrial "Pretrial proceedings" -> pretrial {
@@ -61,7 +61,7 @@ state arraignment: "Arraignment and plea of not guilty" by applicant cite "Iowa 
   }
 }
 
-state pretrial: "Discovery and pretrial motions" by applicant cite "Iowa R. Crim. P. 2.11(6)"
+state pretrial: "Discovery and pretrial motions" by prosecution cite "Iowa R. Crim. P. 2.11(6)"
 {
   note "Pretrial motions, other than for a bill of particulars and in limine, are filed when their grounds reasonably appear and no later than 40 days after arraignment; motions in limine no later than 9 days before the trial date; the court may set other deadlines on a party's request (Iowa R. Crim. P. 2.11(6)). Failure to raise timely the defenses, objections and requests that must be made before trial waives them, though the court may relieve the waiver for good cause (2.11(5)). The defendant must be brought to trial within 90 days after indictment, and every case within one year after the initial arraignment, unless good cause is shown or the deadline is waived; a written waiver of the 90 days waives the 45 days as well, and the one year is waived only by the defendant personally on the record or in writing (2.33(2)(b)-(d))."
   edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
@@ -89,7 +89,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Iowa R. Cri
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Iowa R. Crim. P. 2.8(2)"
+decision plea-decision: "Plea or trial" by accused cite "Iowa R. Crim. P. 2.8(2)"
 {
   note "A defendant may plead guilty, not guilty, or former conviction or acquittal; the court may refuse a guilty plea and accepts one only on the colloquy and factual basis the rule requires, informing the defendant that any challenge to the plea proceedings must be raised in a timely motion in arrest of judgment and of its time (Iowa R. Crim. P. 2.8(2)). The terms of a plea agreement are disclosed on the record when the plea is offered (2.10(2)). Before judgment the court may permit a guilty plea to be withdrawn for good cause and in the interests of justice (2.8(5))."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
@@ -129,7 +129,7 @@ state sentencing: "Pronouncing judgment" by court cite "Iowa R. Crim. P. 2.23(1)
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Iowa R. App. P. 6.101(1)"
+decision judgment: "Judgment of conviction" by accused cite "Iowa R. App. P. 6.101(1)"
 {
   note "A notice of appeal is filed in the district court, with an informational copy to the supreme court, within 30 days after the filing of the final order or judgment (Iowa R. App. P. 6.101(1)(b))."
   edge-judgment-appeal "Notice of appeal filed within 30 days" -> appeal-taken {

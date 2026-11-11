@@ -22,7 +22,7 @@ import cavc.periods.{
 // they set, and the scope and standard of review of § 7261 are not encoded.
 start board-decision
 
-state board-decision: "Board of Veterans' Appeals decision issued" by office cite "CAVC R. 3(a)"
+state board-decision: "Board of Veterans' Appeals decision issued" by court cite "CAVC R. 3(a)"
 {
   note "A person adversely affected by a Board decision appeals by filing a Notice of Appeal with the Clerk within the time allowed by law (CAVC R. 3(a)). The Notice must be received by the Clerk not later than 120 days after the Board issues notice of the decision to the appellant and any authorized representative (CAVC R. 4(a)(1)); a mailed Notice is deemed received on the date of its legible U.S. Postal Service postmark, otherwise on the date the Clerk receives it (CAVC R. 4(a)(2)). A $50 filing fee is submitted with the Notice or received not later than 14 days after it is filed (CAVC R. 3(f)), unless waived on a declaration of financial hardship (CAVC R. 24)."
   edge-board-decision-notice "Appellant files a Notice of Appeal" -> notice-timeliness {
@@ -54,7 +54,7 @@ decision late-notice-ruling: "Good cause, excusable neglect or equitable tolling
   edge-late-notice-denied "Not excused" -> dismissed-untimely { authority cite "CAVC R. 3(a)" }
 }
 
-state docketing: "Appeal docketed; copy of Board decision" by office cite "CAVC R. 4(b)"
+state docketing: "Appeal docketed; copy of Board decision" by court cite "CAVC R. 4(b)"
 {
   note "On receipt of the Notice the Clerk dockets the appeal and sends a notice of docketing (CAVC R. 4(b)). Not later than 30 days after the notice of docketing the Secretary files and serves a copy of the Board decision showing the date notice of it was issued (CAVC R. 4(c)). A person who participated before the Board may intervene, and any other person may move to intervene, not later than 60 days after the notice of docketing (CAVC R. 15(a), (b))."
   edge-docketing-record "Docketed" -> record-before-agency {
@@ -65,7 +65,7 @@ state docketing: "Appeal docketed; copy of Board decision" by office cite "CAVC 
   }
 }
 
-state record-before-agency: "Record before the agency served" by office cite "CAVC R. 10(a)"
+state record-before-agency: "Record before the agency served" by court cite "CAVC R. 10(a)"
 {
   note "Not later than 60 days following the notice of docketing the Secretary assembles, paginates and serves the record before the agency and files a notice certifying service (CAVC R. 10(a)); it is not filed with the Court unless the Court so orders (CAVC R. 10(c)). A motion disputing the record is filed within 14 days after it is served, and a response within 7 days after the motion is served (CAVC R. 10(b)). In cases scheduled for a pre-briefing staff conference, the appellant submits a summary of issues of up to 10 pages no later than 14 days before the conference (CAVC R. 33(b))."
   edge-record-before-agency-briefing "Record settled; briefing begins" -> briefing-path {
@@ -76,7 +76,7 @@ state record-before-agency: "Record before the agency served" by office cite "CA
   }
 }
 
-decision briefing-path: "Briefs filed or joint motion for remand" by applicant cite "CAVC R. 28"
+decision briefing-path: "Briefs filed or joint motion for remand" by petitioner cite "CAVC R. 28"
 {
   note "The appellant's brief is due not later than 60 days after the 14-day Rule 10(b) period expires or 30 days after the Rule 33 staff conference, whichever is later (CAVC R. 31(a)(1)); the Secretary's brief not later than 60 days after service of the appellant's brief (CAVC R. 31(a)(2)); the reply not later than 14 days after service of the Secretary's brief (CAVC R. 31(a)(3)). Principal briefs may not exceed 30 pages and reply briefs 15 (CAVC R. 32(e)). Once the appellant is noticed to file a brief, no motion other than a joint motion for remand or termination is accepted in lieu of a brief (CAVC R. 28(g)). The Secretary files the record of proceedings not later than 14 days after the reply brief is filed and served or was due (CAVC R. 28.1(a)(3)). The Court may extend a period for good cause up to a total of 45 days for a filing, and beyond that only for extraordinary circumstances (CAVC R. 26(b))."
   edge-briefing-path-jmr "Joint motion for remand" -> joint-remand {
@@ -119,7 +119,7 @@ decision decision-path: "Oral argument, submission and decision" by court cite "
   }
 }
 
-decision post-decision-motion: "Motion under Rule 35 or none" by applicant cite "CAVC R. 35"
+decision post-decision-motion: "Motion under Rule 35 or none" by petitioner cite "CAVC R. 35"
 {
   note "A party may move for reconsideration by the single Judge, for panel decision, or both; after a panel decision, for panel reconsideration or full Court review (CAVC R. 35(a)-(c)). The motion is filed not later than 21 days after the dispositive action, or 51 days if the movant is located outside the United States, Puerto Rico or the Virgin Islands (CAVC R. 35(d)); it may not exceed 15 pages (CAVC R. 35(f))."
   edge-post-decision-motion-filed "Motion filed" -> reconsideration-ruling {
@@ -142,7 +142,7 @@ decision reconsideration-ruling: "Ruling on the Rule 35 motion" by court cite "C
   }
 }
 
-decision judgment-entered: "Judgment entered" by applicant cite "CAVC R. 36"
+decision judgment-entered: "Judgment entered" by petitioner cite "CAVC R. 36"
 {
   note "Unless the Court orders otherwise, judgment is effective when entered on the docket, after the Rule 35(d) time expires or the Court decides the last permitted Rule 35 motion (CAVC R. 36(b)(2)). Judgment begins the 60-day period for appealing to the Federal Circuit (CAVC R. 36(a)). Mandate, when the judgment becomes final, generally is 60 days after judgment unless a timely notice of appeal is filed or the Court directs otherwise (CAVC R. 41(a), (b))."
   edge-judgment-entered-cafc "Notice of appeal to the Federal Circuit" -> cafc-review {
@@ -155,7 +155,7 @@ decision judgment-entered: "Judgment entered" by applicant cite "CAVC R. 36"
   }
 }
 
-state mandate-issued: "Mandate issued; judgment final" by applicant cite "CAVC R. 41(a)"
+state mandate-issued: "Mandate issued; judgment final" by petitioner cite "CAVC R. 41(a)"
 {
   note "Mandate is when the Court's judgment becomes final and effective as a matter of law (CAVC R. 41(a)). An application for attorney fees and expenses under 28 U.S.C. § 2412(d) is submitted not later than 30 days after the judgment becomes final; the time is set by statute and may not be extended (CAVC R. 39(a), 26(b))."
   edge-mandate-issued-eaja "Prevailing party applies for fees" -> eaja-application {

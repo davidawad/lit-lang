@@ -5,7 +5,7 @@ module cafc.motions
 import cafc.cross-appeal.{ cross-appeal-fork }
 import cafc.{ motions-group }
 
-decision motions-fork: "Move to Stay Judgment Pending Appeal?" by applicant cite "FRAP 8(a); Fed. Cir. R. 8"
+decision motions-fork: "Move to Stay Judgment Pending Appeal?" by movant cite "FRAP 8(a); Fed. Cir. R. 8"
 {
   group motions-group
   note "FRAP 8(a)(1) requires moving in the trial tribunal first unless that would be impracticable or relief was denied/not afforded; only then may the movant apply to this court (Fed. Cir. R. 8(c) requires a statement explaining why). A Fed. Cir. R. 8(a) motion must attach the notice of appeal, the judgment below, any trial-court stay order, and a certificate of interest."
@@ -25,7 +25,7 @@ decision motions-fork: "Move to Stay Judgment Pending Appeal?" by applicant cite
   }
 }
 
-state stay-granted: "Stay Granted — Judgment/Remedy Suspended" by office cite "FRAP 8(a)(1); Fed. Cir. R. 8"
+state stay-granted: "Stay Granted — Judgment/Remedy Suspended" by court cite "FRAP 8(a)(1); Fed. Cir. R. 8"
 {
   group motions-group
   note "Typically conditioned on a bond or other security (FRAP 8(a)(1)(E))."
@@ -34,7 +34,7 @@ state stay-granted: "Stay Granted — Judgment/Remedy Suspended" by office cite 
   }
 }
 
-state stay-denied: "Stay Denied — Judgment/Remedy Enforceable" by office cite "FRAP 8(a)"
+state stay-denied: "Stay Denied — Judgment/Remedy Enforceable" by court cite "FRAP 8(a)"
 {
   group motions-group
   stay-denied-to-cross-appeal "Proceed to cross-appeal consideration" -> cross-appeal-fork {

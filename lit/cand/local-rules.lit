@@ -208,7 +208,7 @@ deadline sealing-response-period: 4.days after DesignatingStatementFiled() count
 // in advance: those are the only moves out of `reply-filed`.
 start response-timing
 
-decision response-timing: "Respond to a motion filed under Civil L.R. 7-11 whose character is contestable" by applicant cite "N.D. Cal. Civil L.R. 7-11(b)"
+decision response-timing: "Respond to a motion filed under Civil L.R. 7-11 whose character is contestable" by movant cite "N.D. Cal. Civil L.R. 7-11(b)"
 {
   tags [entry]
   note "The opposing party chooses whether to cover the shorter administrative clock or to brief on the regular one."
@@ -222,7 +222,7 @@ decision response-timing: "Respond to a motion filed under Civil L.R. 7-11 whose
   }
 }
 
-state early-opposition: "Opposition filed within the administrative period" by applicant cite "N.D. Cal. Civil L.R. 7-11(c)"
+state early-opposition: "Opposition filed within the administrative period" by movant cite "N.D. Cal. Civil L.R. 7-11(c)"
 {
   note "Filed within 4 days, the opposition is timely on either characterization; an administrative motion is then deemed submitted the next day (Civil L.R. 7-11(c)), and a regular one proceeds to a reply under Civil L.R. 7-3(c)."
   edge-early-opposition-submitted "Deemed submitted the day after the opposition is due" -> submitted {
@@ -250,7 +250,7 @@ state deemed-submitted-unopposed: "Deemed submitted without the opposition" by c
   }
 }
 
-state regular-briefing: "Motion briefed as a regular motion" by applicant cite "N.D. Cal. Civil L.R. 7-3(a)"
+state regular-briefing: "Motion briefed as a regular motion" by movant cite "N.D. Cal. Civil L.R. 7-3(a)"
 {
   note "The opposition, or a Statement of Nonopposition, is due 14 days after the motion was filed (Civil L.R. 7-3(a), (b)); the reply 7 days after the opposition was due (Civil L.R. 7-3(c))."
   edge-regular-briefing-replied "Opposition filed; movant replies" -> reply-filed {
@@ -262,7 +262,7 @@ state regular-briefing: "Motion briefed as a regular motion" by applicant cite "
   }
 }
 
-state reply-filed: "Reply filed: no further papers without prior Court approval" by applicant cite "N.D. Cal. Civil L.R. 7-3(d)"
+state reply-filed: "Reply filed: no further papers without prior Court approval" by movant cite "N.D. Cal. Civil L.R. 7-3(d)"
 {
   note "Once a reply is filed, no additional memoranda, papers or letters may be filed without prior Court approval, except an Objection to Reply Evidence (Civil L.R. 7-3(d)(1)) or a Statement of Recent Decision before the noticed hearing date (Civil L.R. 7-3(d)(2))."
   edge-reply-filed-objection "Objection to Reply Evidence on new reply evidence" -> submitted {

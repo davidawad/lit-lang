@@ -45,7 +45,7 @@ event DecisionServed()
 
 start court-martial
 
-state court-martial: "General or special court-martial" by office cite ?("10 U.S.C. § 816: UCMJ not vendored") {
+state court-martial: "General or special court-martial" by court cite ?("10 U.S.C. § 816: UCMJ not vendored") {
   note "Trial procedure is outside this package. Before findings the United States may appeal the rulings JRAP 5(b)(4) lists under Article 62, UCMJ; a petition for extraordinary relief under 28 U.S.C. § 1651 or Article 6b, UCMJ, lies to the Court (JRAP 5(b)(8), (9); 19)."
   edge-court-martial-judgment "Findings of guilty: judgment entered" -> judgment {
     event JudgmentEntered()
@@ -59,7 +59,7 @@ state court-martial: "General or special court-martial" by office cite ?("10 U.S
   }
 }
 
-state judgment: "Judgment of the court-martial entered" by office cite ?("10 U.S.C. § 860c: UCMJ not vendored") {
+state judgment: "Judgment of the court-martial entered" by court cite ?("10 U.S.C. § 860c: UCMJ not vendored") {
   note "The sentence as entered in the judgment under Article 60c, UCMJ, decides the route: death, a dismissal or a dishonorable or bad-conduct discharge, or confinement for two years or more is reviewed automatically (JRAP 5(b)(1)); other special and general courts-martial with a finding of guilty are reviewed on the accused's timely appeal (JRAP 5(b)(2)). Only the Judge Advocate General may approve an appeal of the sentence by the United States under Article 56(d), UCMJ, filed within 60 days after the judgment is entered into the record (JRAP 5(b)(6); 20(a)(2), (c)(2))."
   edge-judgment-route "The accused's route to review" -> review-route { authority cite "JRAP 5(b)" }
   edge-judgment-sentence-appeal "United States appeals the sentence (Article 56(d))" -> sentence-appeal {
@@ -67,7 +67,7 @@ state judgment: "Judgment of the court-martial entered" by office cite ?("10 U.S
   }
 }
 
-decision review-route: "Automatic review, appeal, waiver or Article 69" by applicant cite "JRAP 5(b)"
+decision review-route: "Automatic review, appeal, waiver or Article 69" by movant cite "JRAP 5(b)"
 {
   note "Automatic review: the case is docketed on the date the record of trial is transmitted to the Court and to appellate defense counsel (CGCCA R. 18.3). Appeal: timely if the accused files a Notice of Appeal before the later of 90 days after the accused is provided notice of appellate rights under Article 65(c), UCMJ, or the date the Court sets by rule or order; the government then provides the complete record, including a verbatim transcript (JRAP 18(d)(2)). In every court-martial without a sentence of death, the Court has no jurisdiction over an appeal properly waived or withdrawn (JRAP 5(c)). A case not reviewed by the Court goes to the Judge Advocate General under Articles 65(d) and 69, UCMJ (JRAP 5(b)(3), (c))."
   edge-review-route-automatic "Automatic review: record docketed" -> docketed {
@@ -84,7 +84,7 @@ decision review-route: "Automatic review, appeal, waiver or Article 69" by appli
   }
 }
 
-state docketed: "Docketed: assignments of error, answer and reply" by applicant cite "JRAP 18(d)"
+state docketed: "Docketed: assignments of error, answer and reply" by movant cite "JRAP 18(d)"
 {
   note "Appellate counsel for the accused may file assignments of error, setting forth each error separately (JRAP 18(a)); Grostefon issues follow the form of CGCCA R. 18.2 (United States v. Grostefon, 12 M.J. 431 (C.M.A. 1982), as JRAP 18(b) cites it); a case may be submitted on its merits without assignment of error, and then the government need not respond (CGCCA R. 18.1). The appellant's brief is due no later than 60 days after the Court has received the record and docketed the case on automatic review, or after the complete record is provided on appeal; the United States' answer no later than 30 days after the appellant's brief; a reply no later than 7 days after the answer; if no brief is filed for the accused, the United States may file one within 30 days after the time for it expires (JRAP 18(d)(1), (2)). Briefs and answers may not exceed 20,000 words, replies 10,000, with a word count certificate (CGCCA R. 17.3). A motion for enlargement of time must be submitted at least 7 calendar days before the filing is due (5 for a reply), and enlargements ordinarily run up to 30 calendar days; the appellant's first needs no showing of good cause (CGCCA R. 23.2). A suggestion for en banc consideration is filed within 7 days after the answer or the reply (JRAP 27(b)). A valid waiver or withdrawal filed after docketing bars further review, and the Court dismisses the appeal (JRAP 16; CGCCA R. 16.1)."
   edge-docketed-briefed "Briefing complete" -> decision {
@@ -132,7 +132,7 @@ decision caaf-petition: "Petition for grant of review to CAAF" by court cite ?("
   }
 }
 
-state tjag-review: "Review by the Judge Advocate General" by office cite ?("10 U.S.C. § 869: UCMJ not vendored") {
+state tjag-review: "Review by the Judge Advocate General" by court cite ?("10 U.S.C. § 869: UCMJ not vendored") {
   note "The Judge Advocate General reviews under Article 69, UCMJ (not vendored; the request and its periods are holes) and decides whether a waiver or withdrawal is valid (JRAP 5(c)). After action under Article 69(c)(1), UCMJ, the accused may apply to the Court for review no later than 60 days from the earlier of notice of the decision or its deposit in the mails; the application states with particularity the substantial basis for concluding the action was prejudicial error, and no further briefs are filed unless the Court orders (JRAP 5(b)(3); 18(d)(3))."
   edge-tjag-review-application "Application for review granted" -> docketed {
     authority cite "JRAP 18(d)"
@@ -142,7 +142,7 @@ state tjag-review: "Review by the Judge Advocate General" by office cite ?("10 U
   }
 }
 
-state government-appeal: "Appeal by the United States (Article 62)" by office cite "JRAP 20"
+state government-appeal: "Appeal by the United States (Article 62)" by court cite "JRAP 20"
 {
   note "Only a representative the Judge Advocate General designates may file it, with the Notice of Appeal R.C.M. 908(b)(3) describes (JRAP 20(a)(1), (b)(1)). Trial counsel has 20 days from the Notice of Appeal to forward the appeal and record; the designee files the record within 5 days of receipt; appellate government counsel has 20 days from filing to file a supporting brief; the appellee 20 days from that brief to answer; the United States 7 days from the answer to reply (JRAP 20(c)(1)). These appeals have priority where practicable (JRAP 20(d))."
   edge-government-appeal-decided "Court decides the appeal" -> government-appeal-decided {
@@ -150,7 +150,7 @@ state government-appeal: "Appeal by the United States (Article 62)" by office ci
   }
 }
 
-state sentence-appeal: "Sentence appeal by the United States (Article 56(d))" by office cite "JRAP 20"
+state sentence-appeal: "Sentence appeal by the United States (Article 56(d))" by court cite "JRAP 20"
 {
   note "Approved only by the Judge Advocate General and filed within 60 days after the judgment is entered into the record, under R.C.M. 1117 (JRAP 20(a)(2), (b)(2), (c)(2))."
   edge-sentence-appeal-decided "Court decides the sentence appeal" -> sentence-appeal-decided {
@@ -158,7 +158,7 @@ state sentence-appeal: "Sentence appeal by the United States (Article 56(d))" by
   }
 }
 
-state writ-petition: "Petition for extraordinary relief" by applicant cite "JRAP 19"
+state writ-petition: "Petition for extraordinary relief" by movant cite "JRAP 19"
 {
   note "Filed as soon as possible and no later than 20 days after the petitioner learns of the action complained of, except a petition for habeas corpus or error coram nobis, which may be filed at any time (JRAP 19(b)(1)). If the Court orders an answer, it is due within 20 days of receipt of the order, and a reply within 7 days of receipt of the answer (JRAP 19(g)(1))."
   edge-writ-petition-decided "Court acts on the petition" -> writ-decided {

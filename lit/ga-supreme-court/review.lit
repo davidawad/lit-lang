@@ -6,7 +6,7 @@ import ga-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
 // period is stated in a note, not counted (Rule 11).
 start petition
 
-decision petition: "Petition for certiorari?" by applicant cite "Ga. Sup. Ct. R. 38"
+decision petition: "Petition for certiorari?" by petitioner cite "Ga. Sup. Ct. R. 38"
 {
   note "Compliance with the certiorari timing rule is mandatory. The notice of intention to apply for certiorari is filed in the Court of Appeals under that court's rules, not in this Court (Rule 38(1)); the petition is filed with the Clerk of the Supreme Court within 20 days after the entry of the Court of Appeals' judgment or the disposition of the motion for reconsideration, if one is filed, with the filing fee Rule 5 requires (Rule 38(2)): $300 in a civil case (Rule 5(1)(b)). The Court of Appeals' decision, and its order on reconsideration if any, is attached (Rule 39). The petition states the questions presented under a separate heading at its beginning and argues why they meet the Rule 40 standard, not merely why the decision below was error (Rule 41(2), (3)); it is limited to 7,000 words, or 20 pages if typed or handwritten on paper (Rule 20(3)). A request to extend the time is filed far enough ahead of the due date to permit timely filing if it is denied (Rule 12(2))."
   edge-petition-none "No petition: the Court of Appeals' decision stands" -> review-not-sought {
@@ -27,7 +27,7 @@ decision certiorari: "Certiorari decided" by court cite "Ga. Sup. Ct. R. 40"
   edge-certiorari-granted "Certiorari granted" -> briefing { authority cite "Ga. Sup. Ct. R. 45" }
 }
 
-state briefing: "Briefs on the questions posed by the grant" by applicant cite "Ga. Sup. Ct. R. 45"
+state briefing: "Briefs on the questions posed by the grant" by petitioner cite "Ga. Sup. Ct. R. 45"
 {
   note "On a grant both parties brief only the questions the order granting certiorari poses, on the Rule 10 schedule counted from the date of that order (Rule 45): the appellant's principal brief within 20 days, the appellee's within 40 days or 20 days after the appellant's brief, whichever is later, and any reply within 50 days or ten days after the appellee's brief, whichever is later (Rule 10(1), (2)). Principal briefs are limited to 10,000 words and replies to 7,000 (Rule 20(1), (2)). Failing to comply with an order to file a brief may cause the appeal to be dismissed (Rule 10(5))."
   edge-briefing-argument "Briefs filed" -> argument { authority cite "Ga. Sup. Ct. R. 50" }
@@ -52,7 +52,7 @@ decision decision: "Judgment" by court cite "Ga. Sup. Ct. R. 58"
   }
 }
 
-decision reconsideration: "Motion for reconsideration?" by applicant cite "Ga. Sup. Ct. R. 27"
+decision reconsideration: "Motion for reconsideration?" by petitioner cite "Ga. Sup. Ct. R. 27"
 {
   note "A motion for reconsideration must be received by the Clerk's Office or electronically filed within ten days from the date of the ruling, with the ruling attached; it is limited to 5,000 words, and no second motion by the same party is filed without permission (Rule 27(1), (2)). The Court may by special order shorten the period (Rule 27(3)). A motion to stay the remittitur to seek review in the Supreme Court of the United States is filed with the motion for reconsideration or, if none is filed, within the time for one (Rule 61). Extensions to file a motion for reconsideration are granted only in unusual circumstances, on a request filed before the deadline (Rule 12(1))."
   edge-reconsideration-none "No motion" -> remittitur {

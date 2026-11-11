@@ -20,7 +20,7 @@ event RehearingPetitionFiled() paper rehearing-petition
 // 70/1.11 is not vendored).
 start petition
 
-decision petition: "Petition for leave to appeal?" by applicant cite "Ill. S. Ct. R. 315(b)"
+decision petition: "Petition for leave to appeal?" by petitioner cite "Ill. S. Ct. R. 315(b)"
 {
   note "Unless a timely petition for rehearing is filed in the Appellate Court, the petition for leave to appeal is filed in the Supreme Court within 35 days after entry of the Appellate Court's judgment; after a timely rehearing petition, within 35 days after the order denying it or the modified decision, and if rehearing is granted, within 35 days of the judgment on rehearing. Extensions are not favored and are allowed only in the most extreme and compelling circumstances; a corrected opinion where no rehearing petition was filed does not extend the time (Ill. S. Ct. R. 315(b)(1)). For a Rule 23 order the time is the same unless a timely Rule 23(f) motion to publish is filed, when it runs 35 days from the opinion or the order denying the motion (Ill. S. Ct. R. 315(b)(2)). The petition contains the prayer for leave, the judgment and rehearing dates, the points relied on, a statement of facts, a short argument why review is warranted and an appendix with the Appellate Court's opinion or order, and is limited to 20 pages or, alternatively, 6,000 words, excluding the items Rule 341(b)(1) excludes (Ill. S. Ct. R. 315(c), (d)); the limit is stated here and not declared, as in lit/illappct. The petition arrives from lit/illappct. No petition lies from the Workers' Compensation Commission division unless two judges of its panel certify a substantial question (Ill. S. Ct. R. 315(a))."
   edge-petition-none "No petition: the Appellate Court's mandate issues" -> review-not-sought {
@@ -43,7 +43,7 @@ decision review-decision: "Leave to appeal allowed or denied" by court cite "Ill
   }
 }
 
-state briefing: "Briefing on leave allowed" by applicant cite "Ill. S. Ct. R. 315(h)"
+state briefing: "Briefing on leave allowed" by petitioner cite "Ill. S. Ct. R. 315(h)"
 {
   note "On leave allowed the clerk of the Appellate Court transmits the record unless already filed (Ill. S. Ct. R. 315(g)). Within 14 days after leave was allowed the appellant serves and files its notice of election to let the petition stand as its brief or to file an additional brief, which is then due within 35 days from the date leave was allowed. The appellee's notice of election is due within 14 days after the due date of the appellant's notice or brief, and its brief within 35 days of that due date; the appellant may reply within 14 days of the due date of the appellee's brief, and where the appellee seeks cross-relief the combined reply and response is due within 35 days and the appellee's reply within 14 days (Ill. S. Ct. R. 315(h)). Child custody and delinquent minor cases run on shorter times (Ill. S. Ct. R. 315(i), (j)). Briefs conform, to the extent appropriate, to Rules 341 through 343 (Ill. S. Ct. R. 315(h)); the Rule 341(b) brief limits are declared in lit/illappct."
   edge-briefing-argument "Briefs complete" -> argument { authority cite "Ill. S. Ct. R. 352(a)" }
@@ -70,7 +70,7 @@ decision decision: "Court decides" by court cite "Ill. S. Ct. R. 367(a)"
   }
 }
 
-decision rehearing-affirmed: "Affirmed: rehearing election" by applicant cite "Ill. S. Ct. R. 367(a)"
+decision rehearing-affirmed: "Affirmed: rehearing election" by petitioner cite "Ill. S. Ct. R. 367(a)"
 {
   note "A petition for rehearing may be filed within 21 days after the filing of the judgment unless the court shortens or enlarges the time; extensions are not favored. It states briefly the points claimed to have been overlooked or misapprehended and does not reargue the case (Ill. S. Ct. R. 367(a), (b)). Without a timely petition the clerk transmits the mandate to the circuit court not earlier than 35 days after entry of judgment unless the court orders otherwise (Ill. S. Ct. R. 368(a))."
   edge-rehearing-affirmed-none "No rehearing petition" -> affirmed-final {
@@ -95,7 +95,7 @@ decision rehearing-decision-affirmed: "Rehearing ruling (affirmed)" by court cit
   }
 }
 
-decision rehearing-reversed: "Reversed, vacated or remanded: rehearing election" by applicant cite "Ill. S. Ct. R. 367(a)"
+decision rehearing-reversed: "Reversed, vacated or remanded: rehearing election" by petitioner cite "Ill. S. Ct. R. 367(a)"
 {
   note "A petition for rehearing may be filed within 21 days after the filing of the judgment unless the court shortens or enlarges the time; extensions are not favored. It states briefly the points claimed to have been overlooked or misapprehended and does not reargue the case (Ill. S. Ct. R. 367(a), (b)). Without a timely petition the clerk transmits the mandate to the circuit court not earlier than 35 days after entry of judgment unless the court orders otherwise (Ill. S. Ct. R. 368(a))."
   edge-rehearing-reversed-none "No rehearing petition" -> reversed-final {

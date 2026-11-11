@@ -2,7 +2,7 @@ module la-appellate-civil.appeal
 
 start judgment-signed
 
-state judgment-signed: "Judgment signed" by applicant cite "La. C.C.P. art. 2083"
+state judgment-signed: "Judgment signed" by appellant cite "La. C.C.P. art. 2083"
 {
   note "A final judgment is appealable in all causes in which appeals are given by law, whether rendered after hearing, by default or by reformation; a partial final judgment under La. C.C.P. art. 1915(A) is appealable likewise; an interlocutory judgment is appealable only when expressly provided by law (La. C.C.P. art. 2083). A judgment that determines the merits in whole is final; one that determines only preliminary matters is interlocutory (La. C.C.P. art. 1841). Other rulings are reviewed by supervisory writ (Unif. R. La. Ct. App. 4-3). Periods in this package are stated, not counted: computation is La. C.C.P. art. 5059, not vendored. The trial-court graph is lit/la-district-court."
   edge-judgment-signed-appeal "Order of appeal obtained in time" -> appeal-ordered {
@@ -14,7 +14,7 @@ state judgment-signed: "Judgment signed" by applicant cite "La. C.C.P. art. 2083
   edge-judgment-signed-late "Delay missed" -> time-barred { authority cite "La. C.C.P. art. 2121" }
 }
 
-state appeal-ordered: "Order of appeal granted" by applicant cite "La. C.C.P. art. 2121"
+state appeal-ordered: "Order of appeal granted" by appellant cite "La. C.C.P. art. 2121"
 {
   note "An appeal is taken by obtaining an order, within the delay allowed, from the court which rendered the judgment, on oral motion in open court, written motion or petition; the order shows the return day and the security to be furnished, and the clerk mails notice of the appeal (La. C.C.P. art. 2121). A suspensive appeal may be taken, and its security furnished, only within thirty days of the expiration of the delay for applying for a new trial or JNOV if none was timely filed, or of the mailing of notice of the refusal of a timely application; with several such motions the delay runs for all parties from the last one acted on; an order of appeal granted before all timely motions are disposed of is premature and takes effect on their denial; and a notice of removal to federal court interrupts the delay (La. C.C.P. art. 2123). The devolutive appeal delay (La. C.C.P. art. 2087) and the return day (La. C.C.P. art. 2125) are not vendored. Within seven (7) days of the order of appeal the trial-court clerk transmits the notice of appeal to the Court of Appeal and the judicial administrator of the Supreme Court (Unif. R. La. Ct. App. 2-2.1)."
   edge-appeal-ordered-lodged "Record lodged" -> record-lodged {
@@ -22,7 +22,7 @@ state appeal-ordered: "Order of appeal granted" by applicant cite "La. C.C.P. ar
   }
 }
 
-state record-lodged: "Record lodged in the Court of Appeal" by office cite "La. C.C.P. art. 2127"
+state record-lodged: "Record lodged in the Court of Appeal" by court cite "La. C.C.P. art. 2127"
 {
   note "The clerk of the trial court prepares the record and lodges it with the appellate court on or before the return day or any extension; the clerk's failure to do so timely or correctly does not prejudice the appeal (La. C.C.P. art. 2127; Unif. R. La. Ct. App. 2-2.2). The appellate clerk notifies counsel of the date of lodging (Unif. R. La. Ct. App. 2-2.3). An appeal is submitted without oral argument unless a written request is filed within thirty (30) days after lodging of the record and permission is granted; a timely request by one party applies to all (Unif. R. La. Ct. App. 2-11.4)."
   edge-record-lodged-briefing "Briefing" -> briefing {
@@ -30,7 +30,7 @@ state record-lodged: "Record lodged in the Court of Appeal" by office cite "La. 
   }
 }
 
-state briefing: "Briefs filed" by applicant cite "Unif. R. La. Ct. App. 2-12.7"
+state briefing: "Briefs filed" by appellant cite "Unif. R. La. Ct. App. 2-12.7"
 {
   note "The appellant's brief is filed not later than 25 calendar days after lodging of the record, the appellee's not later than 45 calendar days after lodging, and any reply brief not later than 10 calendar days after the appellee brief is filed (Unif. R. La. Ct. App. 2-12.7). An extension may be granted for good cause on motion filed on or before the due date; an extension to the appellant extends the appellee's time by twenty days from the extended date (Unif. R. La. Ct. App. 2-12.8). Original appellant and appellee briefs on legal-size paper may not exceed thirty-one pages and reply briefs thirteen; on letter-size paper forty-one and eighteen, excluding the cover, tables, the judgment and reasons, and the certificate of service; a motion to exceed is filed before the due date (Unif. R. La. Ct. App. 2-12.2). A party whose brief is late forfeits oral argument (Unif. R. La. Ct. App. 2-12.12). The clerk posts the docket not less than 30 days before the date fixed for argument or submission (Unif. R. La. Ct. App. 2-11.9); argument is limited to 40 minutes, divided equally between opposing parties (Unif. R. La. Ct. App. 2-15.2)."
   edge-briefing-decided "Argued or submitted" -> appellate-decision {
@@ -55,7 +55,7 @@ decision appellate-decision: "Court of Appeal decision" by court cite "La. C.C.P
   }
 }
 
-state rehearing-applied: "Application for rehearing" by applicant cite "Unif. R. La. Ct. App. 2-18.2"
+state rehearing-applied: "Application for rehearing" by appellant cite "Unif. R. La. Ct. App. 2-18.2"
 {
   note "In cases governed by the Code of Civil Procedure an application for rehearing is filed on or before fourteen days after transmission of the notice of the judgment, and no extension is granted (Unif. R. La. Ct. App. 2-18.2). Except with permission it may not exceed 10 pages, and oral argument on it is not permitted (Unif. R. La. Ct. App. 2-18.1); the support brief is filed with it (Unif. R. La. Ct. App. 2-18.3). Rehearing is considered only where the court granted a writ on the merits, dismissed an appeal or ruled on the merits of an appeal (Unif. R. La. Ct. App. 2-18.7)."
   edge-rehearing-granted "Rehearing granted" -> rehearing-granted {
@@ -66,7 +66,7 @@ state rehearing-applied: "Application for rehearing" by applicant cite "Unif. R.
   }
 }
 
-state writ-application: "Application for supervisory writs" by applicant cite "Unif. R. La. Ct. App. 4-3"
+state writ-application: "Application for supervisory writs" by appellant cite "Unif. R. La. Ct. App. 4-3"
 {
   note "The party intending to apply gives notice of intention to the opposing parties and asks the judge whose ruling is at issue to set a return date (Unif. R. La. Ct. App. 4-2). In civil cases the return date may not exceed 30 days from the date of notice of the judgment under La. C.C.P. art. 1914; the trial court or the Court of Appeal may extend it on a motion filed within the return date, and an application not filed in time is not considered absent a showing that the delay was not the applicant's fault (Unif. R. La. Ct. App. 4-3). A writ application does not stay the trial court's proceedings unless a stay is expressly ordered (Unif. R. La. Ct. App. 4-4)."
   edge-writ-application-ruling "Application filed by the return date" -> writ-ruling {

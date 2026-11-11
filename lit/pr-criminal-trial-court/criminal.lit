@@ -20,7 +20,7 @@ module pr-criminal-trial-court.criminal
 // vendored.
 start arrested
 
-state arrested: "Complaint (denuncia), arrest or summons" by applicant cite "R. P. Crim. Regla 6"
+state arrested: "Complaint (denuncia), arrest or summons" by prosecution cite "R. P. Crim. Regla 6"
 {
   note "A criminal proceeding begins by a sworn complaint (denuncia) (R. P. Crim. Regla 5). If the sworn complaint or statements show probable cause, the magistrate issues an arrest warrant or a summons (R. P. Crim. Regla 6(a), (c)); arrest is defined and governed by Reglas 4 and 10 to 21. A person arrested, with or without a warrant, is brought without unnecessary delay before the nearest available magistrate, who informs the person of the complaint and of the right to counsel (R. P. Crim. Regla 22(a), (b))."
   edge-arrested-appearance "Appearance before the magistrate" -> initial-appearance {
@@ -50,7 +50,7 @@ decision probable-cause: "Preliminary hearing (vista preliminar)" by court cite 
   }
 }
 
-state charged: "Accusation (acusación)" by office cite "R. P. Crim. Regla 34"
+state charged: "Accusation (acusación)" by court cite "R. P. Crim. Regla 34"
 {
   note "The accusation and the complaint are defined by Regla 34 and their contents by Regla 35. The time within which the accusation must be filed and the defendant tried bears on a Regla 64(n) motion to dismiss, whose periods are not stated here (currency unconfirmed)."
   edge-charged-arraignment "Arraignment (lectura de acusación)" -> arraignment {
@@ -58,13 +58,13 @@ state charged: "Accusation (acusación)" by office cite "R. P. Crim. Regla 34"
   }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "R. P. Crim. Regla 52"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "R. P. Crim. Regla 52"
 {
   note "The accusation is read to the defendant as Reglas 52 to 58 provide, and the defendant answers it as Regla 61 provides; pleas (alegaciones) are governed by Regla 68 and following."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "R. P. Crim. Regla 95" }
 }
 
-state discovery: "Discovery and motions to dismiss" by applicant cite "R. P. Crim. Regla 63"
+state discovery: "Discovery and motions to dismiss" by prosecution cite "R. P. Crim. Regla 63"
 {
   note "The prosecution's discovery in favor of the defendant is governed by Regla 95. Defenses and objections, when they are raised and their waiver, are governed by Regla 63, within times not stated here (currency unconfirmed); the grounds of a motion to dismiss are listed in Regla 64, among them the speedy-trial ground of Regla 64(n)."
   edge-discovery-motions "Motion to dismiss filed" -> motions-ruling {
@@ -90,7 +90,7 @@ decision motions-ruling: "Ruling on motions to dismiss" by court cite "R. P. Cri
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "R. P. Crim. Regla 68"
+decision plea-decision: "Plea or trial" by accused cite "R. P. Crim. Regla 68"
 {
   note "Pleas and plea agreements are governed by Regla 68 and following. A defendant has the right to a jury trial, which may be waived, as Regla 111 provides; the number of jurors and the verdict are governed by Regla 112 and are not stated here (currency unconfirmed). The presumption of innocence and reasonable doubt are stated in Regla 110."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
@@ -127,7 +127,7 @@ state sentencing: "Presentence report and sentence" by court cite "R. P. Crim. R
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "R. P. Crim. Regla 193"
+decision judgment: "Judgment of conviction" by accused cite "R. P. Crim. Regla 193"
 {
   note "The defendant may appeal a final judgment to the Tribunal de Apelaciones, except that a conviction on a guilty plea is reviewable only by discretionary certiorari (R. P. Crim. Regla 193). The appeal of a final judgment in a criminal case is filed within thirty days after the judgment is pronounced; the term is jurisdictional, and a timely new-trial motion under Reglas 188(e) and 192 or a reconsideration motion under Regla 194 extends it to thirty days after notice of the order disposing of the motion (Regl. T.A. R. 23(A)). The prosecutor and the Solicitor General are notified within the same thirty days, a term of strict compliance (Regl. T.A. R. 23(B)). Correction or modification of sentence lies under Regla 185, and post-sentence relief under Regla 192.1; bail on appeal under Regla 198. lit/core has no counting rule for the Puerto Rico rules, so the 30-day period is not encoded as a counted deadline."
   edge-judgment-appeal "Appeal filed" -> appeal-taken { authority cite "Regl. T.A. R. 23" }

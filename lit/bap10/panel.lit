@@ -200,7 +200,7 @@ test "a forward period rolls on Colorado's Frances Cabrini Day" cite "10th Cir. 
 
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite "FRBP 8002(a)(1)"
+state notice-filed: "Notice of appeal filed" by appellant cite "FRBP 8002(a)(1)"
 {
   note "The notice of appeal is filed with the bankruptcy clerk within 14 days after entry of the judgment, order or decree (FRBP 8002(a)(1), lit/frbp). A separate notice and fee is required for each judgment, order or decree appealed, except as FRBP 8003(a)(4) provides (10th Cir. BAP L.R. 8003-1). A motion for leave to appeal filed without a notice is treated as both (10th Cir. BAP L.R. 8004-1). The fee is paid to the bankruptcy court within 14 days after the notice, or the appeal may be dismissed without further notice (10th Cir. BAP L.R. 8003-3(b), fee-payment-period)."
   edge-notice-filed-appealability "Notice filed within 14 days" -> appealability {
@@ -240,7 +240,7 @@ terminal district-handoff: "Appeal heard by the district court" outcome [procedu
   note "The district court's local rules govern from here; they are outside this panel package."
 }
 
-state docketed: "Appeal docketed with the BAP" by applicant cite "10th Cir. BAP L.R. 8003-2"
+state docketed: "Appeal docketed with the BAP" by appellant cite "10th Cir. BAP L.R. 8003-2"
 {
   note "Within 14 days of the docketing notice, or before a party's first motion or response if earlier, each party files the combined statements: admission to practice or pro se status, interested parties (which satisfies FRBP 8012, 10th Cir. BAP L.R. 8012-1) and oral argument (10th Cir. BAP L.R. 8003-2, combined-statements-period). An appellant's failure to comply may result in dismissal without further notice; a nonparticipating appellee suffers no default (8003-2(a)(3)-(4)). A party questioning the constitutionality of a statute where the government is not a party files a written notice within the same 14 days (10th Cir. BAP L.R. 8026-7(a), constitutional-notice-period)."
   edge-docketed-record-assembled "Statements filed" -> record-assembled {
@@ -252,7 +252,7 @@ state docketed: "Appeal docketed with the BAP" by applicant cite "10th Cir. BAP 
   }
 }
 
-state record-assembled: "Record assembled" by applicant cite "FRBP 8009"
+state record-assembled: "Record assembled" by appellant cite "FRBP 8009"
 {
   note "The appellant designates the record, states the issues and orders any transcript within 14 days after the notice of appeal becomes effective (FRBP 8009(a)(1)(B), (b)(1), lit/frbp). The FRBP 8009(a)(4) items are the record on appeal, presented to the BAP by the parties as an appendix under FRBP 8018(b) and 10th Cir. BAP L.R. 8018-1, not by copies to the bankruptcy court (10th Cir. BAP L.R. 8009-1). The bankruptcy clerk's notices under FRBP 8003(d)(1) and 10th Cir. BAP L.R. 8005-1(c) constitute transmission of the record (10th Cir. BAP L.R. 8010-1(b))."
   edge-record-assembled-briefing "Record designated" -> briefing {
@@ -261,7 +261,7 @@ state record-assembled: "Record assembled" by applicant cite "FRBP 8009"
   }
 }
 
-state briefing: "Briefing" by applicant cite "FRBP 8018(a)"
+state briefing: "Briefing" by appellant cite "FRBP 8018(a)"
 {
   note "The FRBP 8018(a) brief periods are lit/frbp's; FRBP 8015 governs form and length, and the Statement of Related Cases is excluded from the length limits (10th Cir. BAP L.R. 8014-1, 8015-1(d)). The appendix is filed separately and must contain all transcripts needed for review (10th Cir. BAP L.R. 8018-1); the Court need not remedy an inadequate record and may decline to consider an issue (8009-3). A notice of deficiency suspends the briefing schedule unless the court orders otherwise (8015-1(e))."
   edge-briefing-argument "Briefing complete" -> argument {
@@ -294,7 +294,7 @@ decision decision-issued: "Disposition" by court cite "FRBP 8024(a)"
   }
 }
 
-decision rehearing-window: "Rehearing" by applicant cite "FRBP 8022(a)(1)"
+decision rehearing-window: "Rehearing" by appellant cite "FRBP 8022(a)(1)"
 {
   note "A motion for rehearing is due within 14 days after entry of the judgment on appeal (FRBP 8022(a)(1), lit/frbp). Rehearing is granted only if a significant issue was overlooked or misconstrued, and the Court considers one motion from each party (10th Cir. BAP L.R. 8022-1). The mandate issues promptly after the rehearing time expires, and a timely motion stays it (10th Cir. BAP L.R. 8024-3)."
   edge-rehearing-window-further-review "No motion" -> further-review {
@@ -321,7 +321,7 @@ terminal rehearing-granted: "Rehearing granted" outcome [appeal] cite "FRBP 8022
   note "The BAP may dispose of the appeal without reargument, restore it to the calendar, or issue another order (FRBP 8022(a)(5)). Modeled as an exit."
 }
 
-decision further-review: "Appeal to the Tenth Circuit" by applicant cite "28 U.S.C. § 158(d)(1)"
+decision further-review: "Appeal to the Tenth Circuit" by petitioner cite "28 U.S.C. § 158(d)(1)"
 {
   note "The court of appeals has jurisdiction of appeals from all final decisions of the BAP (28 U.S.C. § 158(d)(1)); the FRAP apply as FRAP 6(b) provides, and after a timely rehearing motion the time to appeal runs from the order disposing of it (FRAP 6(b)(2)(A)(i)). The appeal periods are lit/frap's. If the mandate is stayed pending that appeal, it issues promptly after the BAP receives the court of appeals' mandate (10th Cir. BAP L.R. 8024-3(c))."
   edge-further-review-circuit "Appeal taken" -> circuit-appeal { authority cite "FRAP 6(b)(1)" }

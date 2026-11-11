@@ -20,7 +20,7 @@ module ma-criminal-trial-court.criminal
 // vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "Mass. R. Crim. P. 3.1"
+state arrested: "Arrest or summons" by prosecution cite "Mass. R. Crim. P. 3.1"
 {
   note "A criminal proceeding begins by complaint or indictment (Mass. R. Crim. P. 3(a)); a complaint issues on probable cause (Mass. R. Crim. P. 3(g)), and a summons or arrest warrant on it (Mass. R. Crim. P. 6). No person is held in custody for more than twenty-four hours after an arrest, absent exigent circumstances, unless a warrant or other judicial process authorizes the detention, a complaint has been authorized, or a judicial officer has determined that there is probable cause; the police present the information for that determination as soon as reasonably possible and no later than twenty-four hours after arrest, and a person for whom probable cause is not found is released (Mass. R. Crim. P. 3.1(a), (c), (f))."
   edge-arrested-appearance "Arraignment" -> initial-appearance {
@@ -42,7 +42,7 @@ decision initial-appearance: "Arraignment, bail or detention" by court cite "Mas
   }
 }
 
-state charged: "Indictment or complaint" by office cite "Mass. R. Crim. P. 3(b)"
+state charged: "Indictment or complaint" by court cite "Mass. R. Crim. P. 3(b)"
 {
   note "A defendant charged with an offense punishable by imprisonment in state prison has the right to be proceeded against by indictment, except where the offense is within the concurrent jurisdiction of the District and Superior Courts and the District Court retains jurisdiction (Mass. R. Crim. P. 3(b)); indictment may be waived (Mass. R. Crim. P. 3(c)). A probable cause hearing is governed by Rule 3(f) and the grand jury by Rule 5. The Rule 36 trial clock runs from the return day in the court in which the case awaits trial (Mass. R. Crim. P. 36(b)(1))."
   edge-charged-pretrial "Pretrial conference" -> discovery {
@@ -50,7 +50,7 @@ state charged: "Indictment or complaint" by office cite "Mass. R. Crim. P. 3(b)"
   }
 }
 
-state discovery: "Pretrial conference, discovery and pretrial motions" by applicant cite "Mass. R. Crim. P. 11(a)"
+state discovery: "Pretrial conference, discovery and pretrial motions" by prosecution cite "Mass. R. Crim. P. 11(a)"
 {
   note "At arraignment the court orders the prosecutor and defense counsel to a pretrial conference on a date certain, and a pretrial hearing follows (Mass. R. Crim. P. 11(a), (b)); a compliance hearing is held as Rule 11(c) provides. The prosecutor provides the automatic discovery of Rule 14(b) at arraignment to the extent it is in the prosecutor's possession, and what is then available to the prosecution team by the first pretrial conference, unless the court orders otherwise; later material is disclosed promptly (Mass. R. Crim. P. 14(c), (d)); reciprocal discovery and notices of defenses are governed by Rules 14.1 to 14.4. Discovery motions are filed before the conclusion of the pretrial hearing, or later for good cause (Mass. R. Crim. P. 13(d)(1)); a pretrial motion that does not seek discovery is filed before the trial date is assigned under Rule 11(b) or (c) or within 21 days after, unless the court permits later filing for good cause (Mass. R. Crim. P. 13(d)(2)); within seven days after a motion is filed the clerk or judge assigns a hearing date (Mass. R. Crim. P. 13(d)(3)). A written motion and notice of hearing are served at least seven days before the hearing in the Superior Court, and opposing affidavits at least one day before (Mass. R. Crim. P. 46(c)). Continuances are governed by Rule 10."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -78,7 +78,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Mass. R. Cr
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Mass. R. Crim. P. 12(a)"
+decision plea-decision: "Plea or trial" by accused cite "Mass. R. Crim. P. 12(a)"
 {
   note "A defendant may plead not guilty, guilty or, with the judge's consent, nolo contendere, and in a District Court a defendant may, after a plea of not guilty, admit to sufficient facts (Mass. R. Crim. P. 12(a)); plea discussions and the judge's colloquy are governed by Rule 12(b) to (d), and a plea agreement the judge rejects may be withdrawn (Mass. R. Crim. P. 12(c), (d)). With the prosecutor's written agreement the defendant may tender a plea of guilty or an admission to sufficient facts reserving the right to appeal specified rulings that would, if reversed, make the Commonwealth's case not viable; the notice of appeal is filed within thirty days of the acceptance of the plea (Mass. R. Crim. P. 12(b)(6)). The prosecutor may enter a nolle prosequi, during trial only with the defendant's consent (Mass. R. Crim. P. 16(a), (b))."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
@@ -123,7 +123,7 @@ state sentencing: "Presentence report and sentencing" by court cite "Mass. R. Cr
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Mass. R. Crim. P. 28(a)"
+decision judgment: "Judgment of conviction" by accused cite "Mass. R. Crim. P. 28(a)"
 {
   note "In a criminal case, unless a statute or court rule provides otherwise, the notice of appeal is filed with the clerk of the lower court within 30 days after entry of the judgment, appealable order or adjudication, entry of a notice of appeal by the Commonwealth, or the imposition of sentence, whichever comes last (Mass. R. A. P. 4(b)(1)); a timely new-trial motion extends the period (Mass. R. A. P. 4(b)(2)). The trial judge may revise or revoke an illegal disposition on the prosecutor's written motion filed within sixty days of the disposition, and an unjust disposition on the defendant's written motion filed within sixty days of the disposition, of the rescript on direct review, or of the disposition of a codefendant's charges (Mass. R. Crim. P. 29(a)). A stay of execution pending appeal is governed by Rule 31. lit/core has no counting rule for the Massachusetts appellate rules, so the 30-day period is not encoded as a counted deadline."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {

@@ -10,7 +10,7 @@ limit reconsideration-motion {
 
 start commenced
 
-state commenced: "Complaint filed" by applicant cite "N.H. Super. Ct. R. 4(b)"
+state commenced: "Complaint filed" by plaintiff cite "N.H. Super. Ct. R. 4(b)"
 {
   note "A civil action is initiated by filing the Complaint, an Appearance and either the filing fee or a motion to waive it, and is deemed commenced for the statute of limitations on the date the Complaint is filed (N.H. Super. Ct. R. 4(b)). The fee for the original entry of an action at law or equity is $285.00 (N.H. Super. Ct. R. 201). The court issues a Summons stating the court-ordered deadline for service; proof of service is filed within 21 days of that deadline, and a defendant not served by it is dismissed with or without prejudice (N.H. Super. Ct. R. 4(c)). Periods in this package are stated, not counted: computation is N.H. Super. Ct. R. 2, which excludes the day of the triggering act and carries a last day that falls on a Saturday, Sunday or legal holiday under RSA ch. 288 to the next day that is none of them."
   edge-commenced-served "Defendant served" -> answer-due {
@@ -27,7 +27,7 @@ terminal dismissed-unserved: "Dismissed for want of service" outcome [loss, dism
   note "The court dismisses the action with or without prejudice, as justice may require (N.H. Super. Ct. R. 4(c))."
 }
 
-decision answer-due: "Answer, motion to dismiss or default" by office cite "N.H. Super. Ct. R. 9(a)"
+decision answer-due: "Answer, motion to dismiss or default" by court cite "N.H. Super. Ct. R. 9(a)"
 {
   note "Appearances and Answers are due within 30 days of the date the defendant is served with the Summons and Complaint (N.H. Super. Ct. R. 4(e), 9(a)). Instead of an Answer the defendant may, within the same 30 days, file a Motion to Dismiss (N.H. Super. Ct. R. 9(b)). Affirmative defenses not pleaded or raised by motion within that time are waived (N.H. Super. Ct. R. 9(d)); a challenge to personal jurisdiction, process or service of process is waived unless made by a Motion to Dismiss filed within 30 days after service (N.H. Super. Ct. R. 9(e)). A defendant demands a jury on the first page of the Answer (N.H. Super. Ct. R. 9(c)). No leading decision is named."
   edge-answer-due-default "No timely Answer" -> default-entered {
@@ -65,7 +65,7 @@ state scheduling: "Case structuring" by court cite "N.H. Super. Ct. R. 5(a)"
   }
 }
 
-state discovery: "Discovery" by applicant cite "N.H. Super. Ct. R. 21"
+state discovery: "Discovery" by plaintiff cite "N.H. Super. Ct. R. 21"
 {
   note "Automatic disclosures are due from the plaintiff not later than 30 days, and from the defendant not later than 60 days, after the defendant files its Answer (N.H. Super. Ct. R. 22). Interrogatories are answered within 30 days after service (N.H. Super. Ct. R. 23(i)); document requests within 30 days after service (N.H. Super. Ct. R. 24); requests for admission are deemed admitted unless answered within 30 days after service (N.H. Super. Ct. R. 28). Discovery ordered by the court is provided within 10 days of the order unless the court directs otherwise (N.H. Super. Ct. R. 29(f))."
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
@@ -109,7 +109,7 @@ decision post-trial: "Post-trial motions decided" by court cite "N.H. Super. Ct.
   }
 }
 
-state judgment-entered: "Final judgment" by office cite "N.H. Super. Ct. R. 46(d)"
+state judgment-entered: "Final judgment" by court cite "N.H. Super. Ct. R. 46(d)"
 {
   note "Unless a notice of appeal has been filed with the supreme court, final judgment is entered on the 31st day from the date on the court's written notice of the verdict or decree, or, after a timely post-verdict motion, of the court's action on the motion (N.H. Super. Ct. R. 46(d)). A party aggrieved by an order on costs may appeal within 30 days from the date of notice of the order (N.H. Super. Ct. R. 45(a))."
   edge-judgment-entered-appeal "Next step" -> appeal-decision {
@@ -117,7 +117,7 @@ state judgment-entered: "Final judgment" by office cite "N.H. Super. Ct. R. 46(d
   }
 }
 
-decision appeal-decision: "Notice of appeal within 30 days of the clerk's notice?" by applicant cite "N.H. Sup. Ct. R. 7"
+decision appeal-decision: "Notice of appeal within 30 days of the clerk's notice?" by plaintiff cite "N.H. Sup. Ct. R. 7"
 {
   note "A mandatory appeal, and any other appeal from a decision on the merits, is filed within 30 days from the date on the clerk's written notice of the decision on the merits; a timely post-decision motion stays the appeal period (N.H. Sup. Ct. R. 7(1)). The superior court grants no extension of time to file an appeal document in the supreme court (N.H. Super. Ct. R. 46(e))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken {

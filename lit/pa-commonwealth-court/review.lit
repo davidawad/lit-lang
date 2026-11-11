@@ -13,7 +13,7 @@ import pa-state-rules.{ DecisionFiled, NoticeOfAppealFiled, RecordFiled, ReviewP
 // named no leading decisions.
 start order-entered
 
-decision order-entered: "Order entered: petition for review or notice of appeal?" by applicant cite "Pa.R.A.P. 1512(a)"
+decision order-entered: "Order entered: petition for review or notice of appeal?" by movant cite "Pa.R.A.P. 1512(a)"
 {
   note "Review of a quasijudicial order of a government unit, or of an order appealable under 42 Pa.C.S. § 763(b) (awards of arbitrators) or any other provision of law, is obtained by filing a petition for review with the prothonotary of the appellate court within 30 days after the entry of the order; any other party may cross-petition within 14 days of service of the first petition or within the 30 days, whichever last expires (Pa.R.A.P. 1511, 1512(a)). Shorter or longer periods apply to the determinations listed in Pa.R.A.P. 1512(b). An appeal from a final order of a court of common pleas is taken by notice of appeal filed with the clerk of the trial court within 30 days after the entry of the order (Pa.R.A.P. 902(a), 903(a))."
   edge-order-entered-petition "Petition for review of a government unit's order" -> petition-filed {
@@ -34,7 +34,7 @@ terminal time-barred: "Time for review missed" outcome [loss, dismissal] cite "P
   note "Outcome from the applicant's side. Failure to take any step other than the timely filing of a petition for review does not affect the validity of the review proceeding (Pa.R.A.P. 1511); likewise, failure to file a notice of appeal within the time Pa.R.A.P. 903 allows renders an appeal invalid, while other defects do not (Pa.R.A.P. 902(b)(1), (2))."
 }
 
-state petition-filed: "Petition for review filed" by applicant cite "Pa.R.A.P. 1513(d)"
+state petition-filed: "Petition for review filed" by movant cite "Pa.R.A.P. 1513(d)"
 {
   note "The aggrieved party is named as petitioner and, unless it is disinterested, the government unit and no one else as respondent (Pa.R.A.P. 1513(a)). The petition states the basis for jurisdiction, the parties, the order and its date of entry, a general statement of objections (an omitted issue is not waived if the court can address it on the certified record), the relief sought, a copy of the order and the Pa.R.A.P. 127 certificate of compliance, with a notice to participate if other parties below are not named; no notice to plead or verification is needed (Pa.R.A.P. 1513(d)). No answer is authorized (Pa.R.A.P. 1516(a)). A party below may intervene as of right by notice within 30 days after notice of the filing of the petition (Pa.R.A.P. 1531(a)). In counseled matters a docketing statement is filed within ten days of receipt of the notice of docketing, on pain of dismissal (Pa.R.A.P. 3706(b)(1), (d)). The government unit files the certified record within 40 days after service of the petition, and the prothonotary notifies the parties of the filing date (Pa.R.A.P. 1952(a))."
   edge-petition-filed-record "Certified record filed" -> briefing {
@@ -43,7 +43,7 @@ state petition-filed: "Petition for review filed" by applicant cite "Pa.R.A.P. 1
   }
 }
 
-state notice-filed: "Notice of appeal filed" by applicant cite "Pa.R.A.P. 902(a)"
+state notice-filed: "Notice of appeal filed" by movant cite "Pa.R.A.P. 902(a)"
 {
   note "The notice of appeal is filed with the clerk of the trial court in each docket in which the order has been entered (Pa.R.A.P. 902(a)). If a party files a timely notice of appeal, any other party may file one within 14 days of service of the first or within the time otherwise prescribed, whichever last expires (Pa.R.A.P. 903(b)). In counseled matters a docketing statement is filed within ten days of receipt of the notice of docketing (Pa.R.A.P. 3706(b)(1)). The record, with the transcript and exhibits, is transmitted to the appellate court within 60 days after the filing of the notice of appeal (Pa.R.A.P. 1931(a)(1))."
   edge-notice-filed-record "Record transmitted" -> briefing {
@@ -52,7 +52,7 @@ state notice-filed: "Notice of appeal filed" by applicant cite "Pa.R.A.P. 902(a)
   }
 }
 
-state briefing: "Briefs filed" by applicant cite "Pa.R.A.P. 2185(a)"
+state briefing: "Briefs filed" by movant cite "Pa.R.A.P. 2185(a)"
 {
   note "The appellant or petitioner serves and files its brief within 40 days after the date on which the record is filed, unless the prothonotary fixes a later date under a deferred briefing schedule; the appellee or respondent within 30 days after service of that brief and the reproduced record; a reply brief within 14 days after service of the preceding brief, received at least three days before argument except for good cause (Pa.R.A.P. 2185(a)(1), (b)). The prothonotary may grant a first, unopposed extension of 30 days or less on written request; any other extension needs a formal application (Pa.R.A.P. 3714(c)). A principal brief is limited to 14,000 words and a reply brief to 7,000 (Pa.R.A.P. 2135(a)(1)). On review of a quasijudicial order only questions raised before the government unit are heard, except questions of the validity of a statute, of the government unit's subject-matter jurisdiction, or that could not by due diligence have been raised below (Pa.R.A.P. 1551(a))."
   edge-briefing-argument "Briefs filed: case listed for argument or submitted" -> argument {
@@ -88,7 +88,7 @@ decision appellate-decision: "Commonwealth Court decides" by court cite "Pa.R.A.
   }
 }
 
-decision after-affirmance: "Reargument, allowance of appeal, or neither" by applicant cite "Pa.R.A.P. 2542(a)"
+decision after-affirmance: "Reargument, allowance of appeal, or neither" by movant cite "Pa.R.A.P. 2542(a)"
 {
   note "An application for reargument is filed within 14 days after entry of the judgment or order (Pa.R.A.P. 2542(a)(1)); the court may allow reargument before the court en banc only for compelling and persuasive reasons (Pa.R.A.P. 3723). No application for reargument is permitted from a final order under the Election Code or the Local Government Unit Debt Act (Pa.R.A.P. 2543). A petition for allowance of appeal is filed with the Prothonotary of the Supreme Court within 30 days after entry of the order sought to be reviewed (ten days in Election Code and public-debt matters); if a timely application for reargument is filed, the time for all parties runs from the order denying reargument or the decision on reargument (Pa.R.A.P. 1113(a), (a)(1), (c))."
   edge-after-affirmance-reargument "Application for reargument" -> reargument {

@@ -11,7 +11,7 @@ import ma-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeO
 // 3(a) and 4(a). The earlier outline named no decision and none is cited.
 start filed
 
-state filed: "Claim filed with the Department" by applicant cite ?("G.L. c. 152, § 10: the General Laws are not vendored") {
+state filed: "Claim filed with the Department" by movant cite ?("G.L. c. 152, § 10: the General Laws are not vendored") {
   note "A claim proceeds through conciliation, conference and hearing before an administrative judge. The filing period, form and fee are G.L. c. 152's, which is not vendored: they are holes."
   edge-filed-hearing "Set for conference and hearing" -> hearing {
     event ActionCommenced()
@@ -34,7 +34,7 @@ chance decision: "Reviewing board decides" by court cite ?("G.L. c. 152, § 11C:
   edge-decision-denied "Relief denied" -> review p ?("no calibration yet") { event DecisionFiled() }
 }
 
-decision review: "Appeal from the reviewing board?" by applicant cite "Mass. R. A. P. 3(a)"
+decision review: "Appeal from the reviewing board?" by movant cite "Mass. R. A. P. 3(a)"
 {
   note "An appeal permitted by law from a lower court, which includes a board, commission or appellate division (Mass. R. A. P. 1(c)), is taken by filing a notice of appeal with the clerk of the lower court within the time allowed by rule 4, with service upon all parties; failure to take any later step does not affect the validity of the appeal (Mass. R. A. P. 3(a)(1)). In a civil case, unless a statute provides otherwise, the notice is filed within 30 days of entry of the judgment, decree, appealable order or adjudication, or within 60 days if the Commonwealth or an officer or agency of it is a party (Mass. R. A. P. 4(a)(1)(A)). Which decisions are appealable, to which court, and whether the statute (G.L. c. 152, § 12, not vendored) provides a different period are holes."
   edge-review-none "No appeal" -> final-decision {

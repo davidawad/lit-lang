@@ -4,7 +4,7 @@ import ny-state-rules.{ JudgmentEntered }
 
 start commenced
 
-state commenced: "Action commenced by filing" by applicant cite "CPLR 304(a)"
+state commenced: "Action commenced by filing" by petitioner cite "CPLR 304(a)"
 {
   note "An action is commenced by filing a summons and complaint or a summons with notice; where circumstances prevent immediate filing, an order requiring filing at a specific time not later than five days thereafter commences the action (CPLR 304(a)). Filing is delivery to the clerk of the court in the county where the action is brought, and is not accepted unless the fee CPLR 8018 specifies has been paid (CPLR 304(c)); CPLR 8018 is not vendored and the fee is not stated. Service is made within 120 days after commencement, or, where the statute of limitations is four months or less, not later than 15 days after it expires; otherwise the court, on motion, dismisses without prejudice as to that defendant or, on good cause or in the interest of justice, extends the time (CPLR 306-b). Periods in this package are stated, not counted: their computation (General Construction Law §§ 20, 25-a; CPLR 2103) is not vendored."
   edge-commenced-served "Defendant served" -> answer-due { authority cite "CPLR 306-b" }
@@ -18,7 +18,7 @@ terminal dismissed-unserved: "Dismissed without prejudice for untimely service" 
   note "Dismissal is on motion and without prejudice as to the unserved defendant; the court may instead extend the time for service upon good cause shown or in the interest of justice (CPLR 306-b)."
 }
 
-decision answer-due: "Answer, motion or default" by office cite "CPLR 3012(a)"
+decision answer-due: "Answer, motion or default" by court cite "CPLR 3012(a)"
 {
   note "An answer is served within 20 days after service of the pleading to which it responds (CPLR 3012(a)), or within 30 days after service is complete where the summons and complaint were delivered to a state official or served under CPLR 303, 308(2)-(5), 313, 314 or 315 (CPLR 3012(c)). If the complaint was not served with the summons, the defendant may demand it within the time CPLR 320(a) allows for an appearance; the complaint is served within 20 days after the demand, and the time to appear runs until 20 days after its service (CPLR 3012(b)); CPLR 320 is not vendored. The court may extend the time to appear or plead on a showing of reasonable excuse (CPLR 3012(d)). The outline's leading decision on pleading challenges (Leon v. Martinez, 84 N.Y.2d 83 (1994)) is removed: no reporter text is vendored to check it against."
   edge-answer-due-default "No appearance or answer" -> default-entered {
@@ -49,7 +49,7 @@ terminal default-entered: "Default judgment" outcome [loss] cite "CPLR 3215(a)"
   note "When a defendant has failed to appear, plead or proceed to trial, the plaintiff may seek a default judgment; on a claim for a sum certain the application may be made to the clerk within one year after the default, and otherwise to the court (CPLR 3215(a)). If the plaintiff takes no proceedings for entry of judgment within one year after the default, the court dismisses the complaint as abandoned unless sufficient cause is shown (CPLR 3215(c)). A defendant who has appeared is entitled to at least five days' notice of the application (CPLR 3215(g)(1)). Outcome from the defending side."
 }
 
-state discovery: "Disclosure" by applicant cite "CPLR 3101(a)"
+state discovery: "Disclosure" by petitioner cite "CPLR 3101(a)"
 {
   note "There is full disclosure of all matter material and necessary in the prosecution or defense of an action, regardless of the burden of proof, by the persons CPLR 3101(a) lists. The note of issue (CPLR 3402) is not vendored."
   edge-discovery-sj "Summary judgment motion" -> sj-motion { authority cite "CPLR 3212(a)" }
@@ -83,13 +83,13 @@ decision post-trial: "Post-trial motions decided" by court cite "CPLR 4404(a)"
   }
 }
 
-state judgment-entered: "Judgment entered" by office cite "CPLR 5016(a)"
+state judgment-entered: "Judgment entered" by court cite "CPLR 5016(a)"
 {
   note "A judgment is entered when, after it has been signed by the clerk, it is filed (CPLR 5016(a)). Judgment on a general jury verdict is entered by the clerk unless the court directs otherwise; on a special verdict the court directs entry (CPLR 5016(b)). The time to appeal runs from service of the judgment with written notice of its entry (lit/ny-appellate-division)."
   edge-judgment-entered-appeal "Next step" -> appeal-decision { authority cite "CPLR 5016(a)" }
 }
 
-decision appeal-decision: "Notice of appeal?" by applicant cite "CPLR 5016(a)"
+decision appeal-decision: "Notice of appeal?" by appellant cite "CPLR 5016(a)"
 {
   note "An appeal to the Appellate Division continues in lit/ny-appellate-division, which states the time to take it."
   edge-appeal-decision-taken "Notice of appeal filed" -> appeal-taken {

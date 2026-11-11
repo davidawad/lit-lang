@@ -15,7 +15,7 @@ module nmcca.review
 // vendored Rule 18(b) itself cites.
 start trial-result
 
-state trial-result: "Court-martial findings and sentence" by office cite ?("10 U.S.C. § 816") {
+state trial-result: "Court-martial findings and sentence" by court cite ?("10 U.S.C. § 816") {
   note "General or special court-martial findings and sentence. The trial, the entry of judgment under Article 60c, UCMJ, and post-trial processing are holes: neither the UCMJ nor the Rules for Courts-Martial is vendored."
   edge-trial-result-judgment "Judgment entered" -> review-route {
     authority cite ?("10 U.S.C. § 860c")
@@ -40,14 +40,14 @@ decision review-route: "Which review the case receives" by court cite "NMCCA R. 
   }
 }
 
-decision appeal-election: "Accused files a Notice of Appeal" by applicant cite "NMCCA R. 18"
+decision appeal-election: "Accused files a Notice of Appeal" by movant cite "NMCCA R. 18"
 {
   note "An appeal by the accused under Article 66(b)(1)(A) or (B) is timely if the Notice of Appeal is filed with the Court within 90 days of the date the Office of the Judge Advocate General mails the Article 65(c) notice of the right to appeal to the accused's last known address; the appeal is docketed on the Court's receipt of the Notice (Service Court rule on appeals by the accused under Article 66(b)(1), Rule 18.5(a)(1); Appendix L item 4). A cross-appeal from a United States sentence appeal is timely within 90 days of the mailing of notice of that appeal (Rule 18.5(b)(2))."
   edge-appeal-election-filed "Notice of Appeal filed" -> docketed { authority cite "NMCCA R. 18" }
   edge-appeal-election-none "No timely appeal" -> not-appealed { authority cite "NMCCA R. 18" }
 }
 
-state docketed: "Case docketed; assignments of error due" by applicant cite "NMCCA R. 18"
+state docketed: "Case docketed; assignments of error due" by movant cite "NMCCA R. 18"
 {
   note "Any brief for the accused is due within 60 days after appellate counsel is notified that the Judge Advocate General has referred the record to the Court (Rule 18(d)); on an appeal by the accused, within 60 days after the Court receives the Notice of Appeal (Rule 18.5(a)(2); Appendix L items 1, 5). Assignments of error are set out separately (Rule 18(a)), in a brief substantially as in Appendix I (Rule 18.1(b)). Issues the accused raises personally are presented under United States v. Grostefon, 12 M.J. 431 (C.M.A. 1982), by counsel (Rule 18(b); Rule 18.3). A represented accused may not file pro se (Rule 18(c)(2)). Periods for enlargement are under Rule 23 (not encoded here)."
   edge-docketed-withdraw "Waiver or withdrawal of appellate review" -> withdrawal {
@@ -68,7 +68,7 @@ decision withdrawal: "Court acts on the waiver or withdrawal" by court cite "NMC
   edge-withdrawal-denied "Denied: review continues" -> docketed { authority cite "NMCCA R. 16" }
 }
 
-state answer: "Government answer and reply" by office cite "NMCCA R. 18"
+state answer: "Government answer and reply" by court cite "NMCCA R. 18"
 {
   note "The Government's answer is due within 30 days after the brief and assignments of error (Rule 18(d); Rule 18.4(a)). The Service Court rule gives the accused 20 days after the answer for a reply, notwithstanding the 7 days of Joint Rule 18(d) (Rule 18.4(b); Appendix L item 3). If the accused files no brief, the Government may file one within 30 days after the accused's time expires (Rule 18(d)). A motion for oral argument is due 7 days after the answer (Appendix L item 15; Rule 25)."
   edge-answer-submitted "Briefing complete" -> ccca-decision { authority cite "NMCCA R. 18" }
@@ -102,7 +102,7 @@ decision reconsideration: "Reconsideration" by court cite "NMCCA R. 31"
   edge-reconsideration-denied "Denied" -> caaf-petition { authority cite "NMCCA R. 31" }
 }
 
-decision caaf-petition: "Petition for grant of review to CAAF" by applicant cite ?("10 U.S.C. § 867") {
+decision caaf-petition: "Petition for grant of review to CAAF" by movant cite ?("10 U.S.C. § 867") {
   note "Review by the Court of Appeals for the Armed Forces under Article 67 (UCMJ not vendored, so the cite is a hole). CAAF's own procedure, including the 60-day petition period of CAAF R. 19(a)(1), is in lit/caaf."
   edge-caaf-petition-filed "Petition filed" -> caaf-review { authority cite ?("10 U.S.C. § 867") }
   edge-caaf-petition-none "No petition: decision final" -> ccca-final {
@@ -110,7 +110,7 @@ decision caaf-petition: "Petition for grant of review to CAAF" by applicant cite
   }
 }
 
-state tjag-review: "Review by the Judge Advocate General" by office cite ?("10 U.S.C. § 869") {
+state tjag-review: "Review by the Judge Advocate General" by court cite ?("10 U.S.C. § 869") {
   note "Article 69 review by the Judge Advocate General: its request and periods are holes (UCMJ not vendored). The Court reviews the action only by the Judge Advocate General's order or on the accused's application, and only on matters of law (Rule 5(b)(3), (4); Rule 18.6(a))."
   edge-tjag-review-ordered "Judge Advocate General sends the case to the Court" -> docketed {
     authority cite "NMCCA R. 5"
@@ -128,7 +128,7 @@ decision application: "Application for review under Article 69(d)" by court cite
   edge-application-denied "Denied" -> tjag-decided { authority cite "NMCCA R. 18" }
 }
 
-state government-appeal: "Government appeal under Article 62" by office cite "NMCCA R. 20"
+state government-appeal: "Government appeal under Article 62" by court cite "NMCCA R. 20"
 {
   note "Only a representative designated by the Judge Advocate General may file, under R.C.M. 908 (Rule 20(a)(1), (b)(1)). Trial counsel has 20 days from the notice of appeal to forward the appeal and record to the designee, who files the record within 5 days of receipt; appellate government counsel has 20 days from filing for a supporting brief; the appellee answers within 20 days of that brief; the United States may reply within 7 days of the answer (Rule 20(c)(1)). The parties give these appeals priority where practicable (Rule 20(d)). The rulings that may be appealed are listed in Rule 5(b)(5)."
   edge-government-appeal-decided "Court decides" -> government-appeal-decided {
@@ -136,7 +136,7 @@ state government-appeal: "Government appeal under Article 62" by office cite "NM
   }
 }
 
-state sentence-appeal: "Government sentence appeal under Article 56(d)" by office cite "NMCCA R. 20"
+state sentence-appeal: "Government sentence appeal under Article 56(d)" by court cite "NMCCA R. 20"
 {
   note "Only the Judge Advocate General may approve the filing (Rule 20(a)(2)). Under R.C.M. 1117 the appeal must be filed within 60 days after the judgment of the court-martial is entered into the record (Rule 20(c)(2)). The defense answer is due within 20 days after the Government's appeal and brief (Service Court rule on Article 56(d) sentence appeals). The accused may cross-appeal (Rule 18.5(b))."
   edge-sentence-appeal-decided "Court decides" -> government-appeal-decided {

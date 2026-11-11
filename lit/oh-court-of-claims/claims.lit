@@ -14,7 +14,7 @@ import oh-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 // earlier outline named no Ohio decision.
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "Civ.R. 3(A)"
+state complaint-filed: "Complaint filed" by plaintiff cite "Civ.R. 3(A)"
 {
   note "A civil action is commenced by filing a complaint with the court, if service is obtained within one year from such filing upon a named defendant (Civ.R. 3(A)). Upon the filing of the complaint the clerk forthwith issues a summons for each defendant (Civ.R. 4(A)). If service is not made upon a defendant within six months after the filing of the complaint and the party cannot show good cause, the action is dismissed as to that defendant without prejudice (Civ.R. 4(E)). The court's jurisdiction over claims against the state, the limitations period and the filing fee are set by R.C. Chapter 2743, which is not vendored. A public-records complaint referred to a special master (R.C. 2743.75) is outside this package."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
@@ -31,7 +31,7 @@ terminal service-dismissal: "Dismissed without prejudice for failure of service"
   note "Outcome from the applicant's side. The dismissal is without prejudice (Civ.R. 4(E))."
 }
 
-decision answer-due: "Answer or Civ.R. 12 motion" by office cite "Civ.R. 12(A)"
+decision answer-due: "Answer or Civ.R. 12 motion" by court cite "Civ.R. 12(A)"
 {
   note "The defendant serves an answer within twenty-eight days after service of the summons and complaint (Civ.R. 12(A)(1)). Service of a Civ.R. 12 motion alters this period unless the court fixes a different time: if the motion is denied, the responsive pleading is served within fourteen days after notice of the court's action (Civ.R. 12(A)(2)). Whether R.C. Chapter 2743 sets a different answer period for the state is a hole: the statute is not vendored. No default judgment is entered against the state or an officer or agency of it unless the claimant establishes the claim by evidence satisfactory to the court (Civ.R. 55(D))."
   edge-answer-due-answer "Answer served" -> discovery { authority cite "Civ.R. 12(A)" }
@@ -56,7 +56,7 @@ terminal dismissed-merits: "Dismissed on the pleadings" outcome [loss, dismissal
   note "Outcome from the applicant's side. A dismissal for lack of jurisdiction over the person or the subject matter is a failure otherwise than on the merits; any other dismissal not provided for in Civ.R. 41 operates as an adjudication upon the merits unless the court otherwise specifies (Civ.R. 41(B)(3), (4)). An appeal runs from the final order (App.R. 4(A))."
 }
 
-state discovery: "Discovery" by applicant cite "Civ.R. 26(B)"
+state discovery: "Discovery" by plaintiff cite "Civ.R. 26(B)"
 {
   note "Parties may obtain discovery regarding any nonprivileged matter relevant to any party's claim or defense and proportional to the needs of the case (Civ.R. 26(B)(1)). A party may serve up to forty written interrogatories without leave of court (Civ.R. 33(A)); responses to interrogatories, requests for production and requests for admission are due within a designated period not less than twenty-eight days after service (Civ.R. 33(A), 34(B), 36(A))."
   edge-discovery-sj "Summary judgment motion" -> summary-judgment { authority cite "Civ.R. 56(A)" }
@@ -94,7 +94,7 @@ state trial: "Trial" by court cite ?("R.C. 2743.11 (trial to the court) is not v
   }
 }
 
-decision judgment-entered: "Judgment entered and noticed" by office cite "Civ.R. 58(A)"
+decision judgment-entered: "Judgment entered and noticed" by court cite "Civ.R. 58(A)"
 {
   note "The judgment is effective only when entered by the clerk upon the journal (Civ.R. 58(A)(1)). Within three days of entering the judgment upon the journal, the clerk serves notice of the judgment and its date of entry on all parties not in default for failure to appear (Civ.R. 58(B)). A party who wishes to appeal files the notice of appeal within 30 days of entry; in a civil case, if the clerk has not completed service of notice within the three-day period, the 30 days run from the date the clerk actually completes service (App.R. 4(A)). A timely Civ.R. 50(B) or 59 motion, objection to a magistrate's decision, or request for findings of fact and conclusions of law delays the appeal time until the trial court resolves the last of them (App.R. 4(B)). Which court of appeals hears the appeal is set by R.C. 2743.20, which is not vendored: a hole."
   edge-judgment-entered-post-trial "Post-trial motion served" -> post-trial {

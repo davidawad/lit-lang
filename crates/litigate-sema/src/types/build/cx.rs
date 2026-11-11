@@ -295,7 +295,8 @@ impl Cx<'_, '_> {
             "either",
             "opponent",
         ];
-        if r.is_simple() && !DESIGNATIONS.contains(&r.head.text.as_str()) {
+        let canonical = r.is_simple() && DESIGNATIONS.contains(&r.head.text.as_str());
+        if r.is_simple() && !canonical {
             let suggestion = DESIGNATIONS
                 .iter()
                 .find(|candidate| candidate.eq_ignore_ascii_case(&r.head.text));
@@ -330,12 +331,12 @@ impl Cx<'_, '_> {
                 .manifest
                 .map(|m| m.roles.keys().map(String::as_str).collect()),
         };
-        let known = r.is_simple()
+        let known = canonical
             && (r.head.text == "either"
                 || declared
                     .as_ref()
                     .is_none_or(|d| d.contains(&r.head.text.as_str())));
-        if !known {
+        if canonical && !known {
             let roles = declared.unwrap_or_default();
             let owner = self
                 .link_from

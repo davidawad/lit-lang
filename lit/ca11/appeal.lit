@@ -134,27 +134,27 @@ test "mandate issues 7 days after rehearing time expires" cite "FRAP 41(b)"
 
 start threshold
 
-decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+decision threshold: "Appealable Order or Judgment?" by movant cite "28 U.S.C. § 1291"
 {
   note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes are lit/frap's."
   edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
   edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
 }
 
-decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)"
 {
   note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
   edge-notice-timely "Timely notice" -> record { authority cite "FRAP 4(a)(1)(A)" }
 }
 
-state record: "Record and Transcript Assembled" by office cite "FRAP 10; 11th Cir. R. 12-1"
+state record: "Record and Transcript Assembled" by court cite "FRAP 10; 11th Cir. R. 12-1"
 {
   note "The record is deemed filed when the reporter files the transcript, or on docketing when no transcript is ordered (11th Cir. R. 12-1). The Civil Appeal Statement is due 14 days after docketing (11th Cir. R. 33-1(a)(1))."
   edge-record-brief "Record filed" -> briefing { authority cite "11th Cir. R. 12-1" }
 }
 
-state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 11th Cir. R. 31-1"
+state briefing: "Briefs Filed" by movant cite "FRAP 31(a)(1); 11th Cir. R. 31-1"
 {
   note "Briefs are due 40, 30 and 21 days (11th Cir. R. 31-1(a)); each party's appendix 7 days after its brief (11th Cir. R. 30-1(c)). Length is FRAP 32(a)(7)'s; a motion to exceed it is due at least seven days before the brief (11th Cir. R. 32-4)."
   edge-briefing-argue "Briefing complete" -> argument {
@@ -176,7 +176,7 @@ state decision: "Decision Issued" by court cite "FRAP 36"
   }
 }
 
-decision rehearing-decision: "Rehearing Sought?" by applicant cite "11th Cir. R. 40-2"
+decision rehearing-decision: "Rehearing Sought?" by movant cite "11th Cir. R. 40-2"
 {
   note "A petition for panel rehearing or rehearing en banc is due 21 days after entry of judgment, 45 days in a civil appeal with a United States party (11th Cir. R. 40-2)."
   edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
@@ -191,13 +191,13 @@ state rehearing-order: "Rehearing Order" by court cite "FRAP 40"
   edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
-state mandate: "Mandate Issued" by office cite "FRAP 41(b)"
+state mandate: "Mandate Issued" by court cite "FRAP 41(b)"
 {
   note "The mandate issues 7 days after the time to petition for rehearing expires or 7 days after an order denying a timely petition (FRAP 41(b)); an application for attorney's fees is due 14 days after either (11th Cir. R. 39-2(a))."
   edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
 }
 
-decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+decision further-review: "Further Review Sought?" by movant cite "28 U.S.C. § 1254"
 {
   note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's."
   edge-further-review-none "No further review" -> final-decision {

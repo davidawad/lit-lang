@@ -230,14 +230,14 @@ test "a default is remedied within 15 days of the clerk's notice" cite "4th Cir.
 
 start threshold
 
-decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+decision threshold: "Appealable Order or Judgment?" by movant cite "28 U.S.C. § 1291"
 {
   note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes, including permission to appeal under FRAP 5, are lit/frap's. A petition for permission to appeal is entered on the miscellaneous docket, with no docket fee unless it is granted (4th Cir. R. 5)."
   edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
   edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
 }
 
-decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)"
 {
   note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
@@ -248,7 +248,7 @@ decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)
   }
 }
 
-state docketed: "Appeal Docketed" by office cite "FRAP 12(a); 4th Cir. R. 3(b)"
+state docketed: "Appeal Docketed" by court cite "FRAP 12(a); 4th Cir. R. 3(b)"
 {
   note "Within 14 days of docketing, counsel files a docketing statement with any transcript order attached (4th Cir. R. 3(b)), each party its disclosure statement (4th Cir. R. 26.1(d)), and each attorney of record a written appearance (4th Cir. R. 46(c)); an opposing party reports errors in the docketing statement within 10 days of its service (4th Cir. R. 3(b)). Counseled civil and agency cases are reviewed by a circuit mediator after the docketing statements are filed; the conference does not toll the briefing time (4th Cir. R. 33)."
   edge-docketed-record "Record and transcript" -> record {
@@ -259,7 +259,7 @@ state docketed: "Appeal Docketed" by office cite "FRAP 12(a); 4th Cir. R. 3(b)"
   }
 }
 
-state record: "Record and Transcript" by applicant cite "FRAP 10; 4th Cir. R. 10"
+state record: "Record and Transcript" by movant cite "FRAP 10; 4th Cir. R. 10"
 {
   note "The appellant orders the transcript on the court's form after making financial arrangements with the reporter (4th Cir. R. 10(c)(1)). When all parties are represented, the district clerk retains the record until a judge of the court asks for it (4th Cir. R. 10(a)). The clerk sends the reporter a transcript order acknowledgment with the due date computed under the district reporter management plan; a reporter who sees a problem returns it within 7 days (4th Cir. R. 11(a)). The court uses the plans' time limits in place of FRAP 11(b)(1)(B)'s (4th Cir. R. 11(b)); those limits are set outside the circuit rules, so lit/frap's FRAP period is not replaced here."
   edge-record-brief "Briefing order issued" -> briefing { authority cite "4th Cir. R. 31(b)" }
@@ -268,7 +268,7 @@ state record: "Record and Transcript" by applicant cite "FRAP 10; 4th Cir. R. 10
   }
 }
 
-state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 4th Cir. R. 31(b)"
+state briefing: "Briefs Filed" by movant cite "FRAP 31(a)(1); 4th Cir. R. 31(b)"
 {
   note "A formal briefing schedule issues on receipt of the record or the clerk's finding that it is complete, and it, not FRAP 31(a)(1)'s receipt of the record, controls the appendix designation and brief dates (4th Cir. R. 31(b)). Extensions are granted only in extraordinary circumstances (4th Cir. R. 31(c)). Briefs may not exceed the FRAP 32(a)(7) and 28.1(e)(2) limits without advance permission, sought at least 10 days before the due date (4th Cir. R. 32(b)). Criminal appeals run on 4th Cir. R. 31(a)'s shortened periods; non-capital habeas, § 2255 and pro se appeals may be informally briefed (4th Cir. R. 34(b))."
   edge-briefing-argue "Briefing complete" -> argument {
@@ -291,7 +291,7 @@ state decision: "Decision Issued" by court cite "FRAP 36; 4th Cir. R. 36"
   edge-decision-issued "Judgment entered" -> rehearing-decision { authority cite "FRAP 36" }
 }
 
-decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 {
   note "The clerk denies as untimely a petition received later than 45 days after entry of judgment in a civil case with a United States party or 14 days after it in any other case, and extends the time only for death or serious illness or an extraordinary circumstance (4th Cir. R. 40(c)); lit/frap encodes the FRAP 40(d)(1) periods. A petition for rehearing en banc is made in the same document as the petition for rehearing (4th Cir. R. 40(a))."
   edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
@@ -306,13 +306,13 @@ state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 4th Cir. R. 40"
   edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
-state mandate: "Mandate Issued" by office cite "FRAP 41(b); 4th Cir. R. 41"
+state mandate: "Mandate Issued" by court cite "FRAP 41(b); 4th Cir. R. 41"
 {
   note "The mandate issues under FRAP 41(b); lit/frap encodes the period. A motion to stay it pending certiorari must show a substantial question and good cause (4th Cir. R. 41). On issuance the clerk notifies the parties and the lower court that the judgment takes effect that day (4th Cir. I.O.P. 41.1)."
   edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
 }
 
-decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+decision further-review: "Further Review Sought?" by movant cite "28 U.S.C. § 1254"
 {
   note "Certiorari under 28 U.S.C. § 1254; its period runs from the judgment or the denial of a timely rehearing petition, not from the mandate (4th Cir. I.O.P. 41.2), and is lit/frap's."
   edge-further-review-none "No further review" -> final-decision {

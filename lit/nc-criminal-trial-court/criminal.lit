@@ -12,7 +12,7 @@ module nc-criminal-trial-court.criminal
 // which are removed.
 start arrested
 
-state arrested: "Arrest and initial appearance" by applicant cite ?("G.S. 15A-511, CURRENCY UNCONFIRMED") {
+state arrested: "Arrest and initial appearance" by prosecution cite ?("G.S. 15A-511, CURRENCY UNCONFIRMED") {
   note "A defendant arrested is brought before a magistrate for an initial appearance (G.S. 15A-511). A defendant charged with a crime in the original jurisdiction of the superior court is brought before a district court judge for a first appearance within 96 hours after being taken into custody or at the first regular session of district court in the county, whichever is first; a defendant not in custody, at the next session (G.S. 15A-601(a), (c)). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
   edge-arrested-appearance "First appearance before a district court judge" -> probable-cause {
     authority cite ?("G.S. 15A-601, CURRENCY UNCONFIRMED")
@@ -29,7 +29,7 @@ decision probable-cause: "Probable-cause hearing or waiver" by court cite ?("G.S
   }
 }
 
-state charged: "Indictment returned" by office cite ?("G.S. 15A-952, CURRENCY UNCONFIRMED") {
+state charged: "Indictment returned" by court cite ?("G.S. 15A-952, CURRENCY UNCONFIRMED") {
   note "Motions to continue, for change of venue or a special venire, to dismiss under G.S. 15A-955 or for improper venue, and motions addressed to the pleadings are made at or before arraignment when a written request for arraignment is filed and arraignment precedes the trial session; when arraignment is at the trial session, by 5:00 p.m. on the Wednesday before it; without a written request for arraignment, not later than 21 days from the return of the bill of indictment as a true bill (G.S. 15A-952(b), (c)). Failure to file in time is a waiver (G.S. 15A-952(e)). Motions on jurisdiction or the failure to charge an offense may be made at any time (G.S. 15A-952(d)). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
   edge-charged-motions "Pretrial motions" -> motions-ruling {
     authority cite ?("G.S. 15A-952(c), CURRENCY UNCONFIRMED")
@@ -49,7 +49,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite ?("G.S. 15A-
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite ?("G.S. 15A-1021, CURRENCY UNCONFIRMED") {
+decision plea-decision: "Plea or trial" by accused cite ?("G.S. 15A-1021, CURRENCY UNCONFIRMED") {
   note "Plea arrangements are governed by G.S. 15A-1021 to 15A-1027. A defendant confined in an institution in the State may request trial of a pending charge, and if the prosecutor does not proceed within six months from the date the request is filed the charge is dismissed (G.S. 15A-711). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("G.S. 15A-1022, CURRENCY UNCONFIRMED")
@@ -87,7 +87,7 @@ decision post-trial: "Motion for appropriate relief" by court cite ?("G.S. 15A-1
   edge-post-trial-denied "Motion denied" -> judgment { authority cite "N.C. R. App. P. 4(a)" }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "N.C. R. App. P. 4(a)"
+decision judgment: "Judgment of conviction" by accused cite "N.C. R. App. P. 4(a)"
 {
   note "Notice of appeal is given within the time, in the manner and with the effect the rules of appellate procedure provide (G.S. 15A-1448(b), CURRENCY UNCONFIRMED). An appeal is taken by oral notice at trial, or by filing notice with the clerk of superior court and serving it within fourteen days after entry of the judgment or order, or within fourteen days after a ruling on a motion for appropriate relief made during the fourteen days after entry of the judgment (N.C. R. App. P. 4(a))."
   edge-judgment-appeal "Notice of appeal within fourteen days" -> appeal-taken {

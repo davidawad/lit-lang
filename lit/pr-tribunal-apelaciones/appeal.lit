@@ -16,7 +16,7 @@ module pr-tribunal-apelaciones.appeal
 // issued, R. 39(A)) is a separate recourse this package does not model.
 start appeal-filed
 
-state appeal-filed: "Escrito de apelación filed and served" by applicant cite "Regl. T.A. R. 13(A)"
+state appeal-filed: "Escrito de apelación filed and served" by movant cite "Regl. T.A. R. 13(A)"
 {
   note "An appeal from a civil judgment of the Court of First Instance is filed within the jurisdictional term of thirty days from the archivo en autos of a copy of the notice of judgment, unless a special law provides otherwise; the term is sixty days where the Commonwealth, its officers or a non-corporate instrumentality, or a municipality or its officers, is a party. The date the notice is sent by the electronic platform is the archivo en autos; for notice by mail on a later date, the term runs from the mailing (Regl. T.A. R. 13(A)). The appellant serves the appeal and appendices within the same term, which for service is of strict compliance, and certifies the date of service with its signature (Regl. T.A. R. 13(B)(1)). The appeal is perfected by filing the escrito with the fee; the date the fee is paid is the filing date (Regl. T.A. R. 14(A)). Filing a civil appeal stays proceedings below as to the judgment appealed unless the Court of Appeals orders otherwise, but not a sale of perishable goods, an injunction, mandamus or order to do or desist, a support order, or a custody or visitation order (Regl. T.A. R. 18)."
   edge-appeal-filed-review "Court reviews jurisdiction and timeliness" -> jurisdiction {
@@ -31,7 +31,7 @@ decision jurisdiction: "Jurisdiction and timeliness reviewed" by court cite "Reg
   edge-jurisdiction-briefing "Appeal proceeds" -> briefing { authority cite "Regl. T.A. R. 22" }
 }
 
-state briefing: "Briefs filed" by applicant cite "Regl. T.A. R. 22"
+state briefing: "Briefs filed" by movant cite "Regl. T.A. R. 22"
 {
   note "The escrito de apelación may not exceed twenty-five pages for a physical record or thirty-five for an electronic one, exclusive of the certificate of service, index and appendix, unless the court allows more (Regl. T.A. R. 16(D)); its appendix holds the pleadings, the judgment and notice of its archivo en autos, and the papers showing interruption and resumption of the appeal term, and the court may allow missing documents to be filed within fifteen days of notice of its order (Regl. T.A. R. 16(E)). Where error is assigned to the sufficiency or weighing of testimony, the appellant reproduces the oral evidence under Regl. T.A. R. 76, showing within ten days after filing the appeal that the method chosen is the fastest (Regl. T.A. R. 19(A), (B)), and may file a supplementary brief thirty days after the transcript or narrative statement is filed (Regl. T.A. R. 21). The appellee files its brief within thirty days after the appeal is filed, or after the reproduction of the oral evidence is filed where there is one, and may reply to a supplementary brief within thirty days (Regl. T.A. R. 22); the appellee's brief has the same page limits (Regl. T.A. R. 73(E)). A request for an extension must reach the clerk at least three business days before the term expires, and an extension runs from the end of the original term (Regl. T.A. R. 72(B))."
   edge-briefing-argument "Briefing complete" -> argument { authority cite "Regl. T.A. R. 80(A)" }
@@ -55,7 +55,7 @@ decision panel-decision: "Panel decides" by court cite "Regl. T.A. R. 10(A)"
   }
 }
 
-decision after-decision: "Reconsideration, Supreme Court review, or neither" by applicant cite "Regl. T.A. R. 84(A)"
+decision after-decision: "Reconsideration, Supreme Court review, or neither" by movant cite "Regl. T.A. R. 84(A)"
 {
   note "A motion for reconsideration in any civil matter is filed within the non-extendable term of fifteen days from the archivo en autos of a copy of the notice of the Court of Appeals' resolution or judgment; a timely motion suspends the terms to appeal or seek review in the Supreme Court, which run anew from the archivo en autos of the notice of the ruling that finally resolves it (Regl. T.A. R. 84(A)). The term to seek review in the Supreme Court is in the Ley de la Judicatura and the Reglamento del Tribunal Supremo, which are not vendored."
   edge-after-decision-reconsideration "Motion for reconsideration" -> reconsideration {
@@ -78,7 +78,7 @@ decision reconsideration: "Reconsideration decided" by court cite "Regl. T.A. R.
   }
 }
 
-decision after-reconsideration: "Supreme Court review or none" by applicant cite "Regl. T.A. R. 84(A)"
+decision after-reconsideration: "Supreme Court review or none" by movant cite "Regl. T.A. R. 84(A)"
 {
   note "The terms to seek review in the Supreme Court run anew from the archivo en autos of the notice of the ruling that finally resolves the reconsideration (Regl. T.A. R. 84(A))."
   edge-after-reconsideration-supreme-court "Review sought in the Supreme Court" -> supreme-court {

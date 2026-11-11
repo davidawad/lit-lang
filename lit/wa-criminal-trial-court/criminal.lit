@@ -15,7 +15,7 @@ module wa-superior-court-criminal.criminal
 // reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "CrR 2.2"
+state arrested: "Arrest or summons" by prosecution cite "CrR 2.2"
 {
   note "A warrant of arrest or summons issues on an indictment, information or complaint (CrR 2.2). A person arrested without a warrant has a judicial determination of probable cause within the period CrR 3.2.1(a) sets, which is not stated here (currency unconfirmed), and a preliminary appearance under CrR 3.2.1."
   edge-arrested-appearance "Preliminary appearance" -> initial-appearance {
@@ -43,19 +43,19 @@ decision probable-cause: "Charge filed" by court cite "CrR 2.1"
   edge-probable-cause-none "No probable cause; released" -> dismissed { authority cite "CrR 3.2" }
 }
 
-state charged: "Indictment or information" by office cite "CrR 2.1"
+state charged: "Indictment or information" by court cite "CrR 2.1"
 {
   note "The indictment or information is a plain, concise and definite written statement of the essential facts constituting the offense (CrR 2.1(a)(1)). The defendant is arraigned within the periods CrR 4.1(a) sets for a defendant detained in jail and one not detained, which are not stated here (currency unconfirmed)."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "CrR 4.1" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "CrR 4.1"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "CrR 4.1"
 {
   note "A defendant may plead not guilty, not guilty by reason of insanity, or guilty, and pleads separately to each count (CrR 4.2(a), (b)). The court is responsible for ensuring trial in accordance with CrR 3.3, under which the allowable time for trial, its commencement date, excluded periods and the consequence of a violation are set; the periods are not stated here (currency unconfirmed) (CrR 3.3(a))."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "CrR 4.7" }
 }
 
-state discovery: "Discovery and the omnibus hearing" by applicant cite "CrR 4.5"
+state discovery: "Discovery and the omnibus hearing" by prosecution cite "CrR 4.5"
 {
   note "Except as protective orders provide, the prosecuting attorney discloses the material CrR 4.7(a) lists, and the defendant the material CrR 4.7(b) lists, within the times the rule sets, not stated here (currency unconfirmed). Pretrial motions are heard at the omnibus hearing under CrR 4.5, and suppression hearings under CrR 3.6; confessions are tested under CrR 3.5."
   edge-discovery-motions "Motion at the omnibus hearing" -> motions-ruling {
@@ -79,7 +79,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "CrR 4.5"
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "CrR 4.2"
+decision plea-decision: "Plea or trial" by accused cite "CrR 4.2"
 {
   note "A guilty plea is accepted under CrR 4.2. Cases required to be tried by jury are so tried unless the defendant files a written waiver with the court's consent (CrR 6.1(a)); the number of jurors CrR 6.1(b) sets is not stated here (currency unconfirmed)."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "CrR 4.2" }
@@ -112,7 +112,7 @@ state sentencing: "Presentence report and sentencing" by court cite "CrR 7.2"
   }
 }
 
-decision judgment: "Judgment and sentence" by applicant cite "CrR 7.3"
+decision judgment: "Judgment and sentence" by prosecution cite "CrR 7.3"
 {
   note "A notice of appeal must be filed in the trial court within the longer of 30 days after entry of the decision to be reviewed or the time RAP 5.2(e) provides (RAP 5.2(a)). Relief from a judgment or order, including for clerical mistakes, follows CrR 7.8."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "RAP 5.2" }

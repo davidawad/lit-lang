@@ -4,7 +4,7 @@ import ma-state-rules.{ JudgmentEntered }
 
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "Mass. R. Civ. P. 3"
+state complaint-filed: "Complaint filed" by plaintiff cite "Mass. R. Civ. P. 3"
 {
   note "A civil action is commenced by mailing the complaint and the entry fee to the clerk by certified or registered mail, filing them with the clerk, or submitting the complaint through the court's electronic filing system with electronic payment of the entry fee (Mass. R. Civ. P. 3); waiver of the fee for indigency is sought under G.L. c. 261, § 27C. Periods in this package are stated, not counted: Mass. R. Civ. P. 6(a) computes them, excluding intermediate Saturdays, Sundays and legal holidays from a period under 7 days, and no lit/core counting rule encodes it. The earlier outline's decisions (Iannacchino v. Ford Motor Co.; Kourouvacilis v. General Motors Corp.) are removed: no reporter text is vendored."
   edge-complaint-filed-service "Summons and complaint served" -> service-check {
@@ -12,7 +12,7 @@ state complaint-filed: "Complaint filed" by applicant cite "Mass. R. Civ. P. 3"
   }
 }
 
-decision service-check: "Service within 90 days" by office cite "Mass. R. Civ. P. 4(j)"
+decision service-check: "Service within 90 days" by court cite "Mass. R. Civ. P. 4(j)"
 {
   note "If the summons and complaint are not served on a defendant within 90 days after the complaint is filed and the plaintiff cannot show good cause, the action is dismissed as to that defendant without prejudice, on the court's own initiative with notice or on motion (Mass. R. Civ. P. 4(j))."
   edge-service-check-served "Served" -> answer-due { authority cite "Mass. R. Civ. P. 12(a)" }
@@ -21,7 +21,7 @@ decision service-check: "Service within 90 days" by office cite "Mass. R. Civ. P
   }
 }
 
-decision answer-due: "Answer, motion or default" by office cite "Mass. R. Civ. P. 12(a)"
+decision answer-due: "Answer, motion or default" by court cite "Mass. R. Civ. P. 12(a)"
 {
   note "A party served with a pleading requiring a response serves the responsive pleading within 20 days unless the court orders otherwise (Mass. R. Civ. P. 12(a)(1)). A motion under rule 12 alters the period: if the court denies the motion or postpones it to trial, the responsive pleading is due within 10 days after notice of the court's action; if it grants a more definite statement, within 10 days after service of that statement (Mass. R. Civ. P. 12(a)(2)). Three days are added after mail or electronic service (Mass. R. Civ. P. 6(d))."
   edge-answer-due-default "No response" -> default-entered {
@@ -59,7 +59,7 @@ terminal dismissed-unserved: "Dismissed for failure to serve" outcome [loss, dis
 
 terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] cite "Mass. R. Civ. P. 12(b)"
 
-state discovery: "Discovery and pretrial" by applicant cite "Mass. R. Civ. P. 26(a)"
+state discovery: "Discovery and pretrial" by plaintiff cite "Mass. R. Civ. P. 26(a)"
 {
   note "Discovery is by deposition, interrogatories, production, examinations and requests for admission, unlimited in frequency unless the court orders otherwise (Mass. R. Civ. P. 26(a)). The court may direct a pretrial conference and enter an order that controls the subsequent course of the action (Mass. R. Civ. P. 16). Superior Court tracking orders are not vendored."
   edge-discovery-sj "Summary judgment motion served" -> sj-motion {
@@ -105,7 +105,7 @@ decision post-trial: "Post-trial motions decided" by court cite "Mass. R. Civ. P
   }
 }
 
-state judgment-entered: "Judgment entered" by office cite "Mass. R. Civ. P. 58(a)"
+state judgment-entered: "Judgment entered" by court cite "Mass. R. Civ. P. 58(a)"
 {
   note "Every judgment is set forth on a separate document and is effective only when so set forth and entered under rule 79(a); entry is not delayed for the taxing of costs (Mass. R. Civ. P. 58(a)). Relief for mistake, newly discovered evidence or fraud is sought within a reasonable time and not more than one year after the judgment (Mass. R. Civ. P. 60(b))."
   edge-judgment-entered-appeal "Next step" -> appeal-decision {
@@ -113,7 +113,7 @@ state judgment-entered: "Judgment entered" by office cite "Mass. R. Civ. P. 58(a
   }
 }
 
-decision appeal-decision: "Notice of appeal within 30 days of entry?" by applicant cite "Mass. R. A. P. 4(a)"
+decision appeal-decision: "Notice of appeal within 30 days of entry?" by plaintiff cite "Mass. R. A. P. 4(a)"
 {
   note "In a civil case, unless a statute provides otherwise, the notice of appeal is filed with the clerk of the lower court within 30 days of entry of the judgment, or within 60 days if the Commonwealth or an officer or agency of it is a party (Mass. R. A. P. 4(a)(1)(A)); any other party may file within 14 days of the first notice (Mass. R. A. P. 4(a)(1)(C)). On excusable neglect the lower court may extend the time by not more than 30 days from its expiration (Mass. R. A. P. 4(c))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken { authority cite "Mass. R. A. P. 4(a)" }

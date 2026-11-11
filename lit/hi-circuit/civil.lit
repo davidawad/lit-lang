@@ -4,7 +4,7 @@ import hi-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "Haw. R. Civ. P. 3"
+state complaint-filed: "Complaint filed" by plaintiff cite "Haw. R. Civ. P. 3"
 {
   note "A civil action is commenced by filing a complaint with the court (Haw. R. Civ. P. 3); the complaint is accompanied by a civil information sheet filed with it (Haw. R. Civ. P. 3.1(a)). Upon filing the clerk issues a summons, which is served together with the complaint (Haw. R. Civ. P. 4(a), (d)). Periods in this package are stated, not counted: Rule 6(a) excludes the trigger day, includes the last day unless it is a Saturday, Sunday or holiday, and excludes intermediate Saturdays, Sundays and holidays from a period of less than 7 days; 'holiday' is a day so designated under HRS § 8-1; 2 days are added after service by mail (Haw. R. Civ. P. 6(a), (e)). The filing fee is not stated in the vendored rules. The earlier outline named no leading decision for this step."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
@@ -13,7 +13,7 @@ state complaint-filed: "Complaint filed" by applicant cite "Haw. R. Civ. P. 3"
   }
 }
 
-decision answer-due: "Answer, motion or default" by office cite "Haw. R. Civ. P. 12(a)"
+decision answer-due: "Answer, motion or default" by court cite "Haw. R. Civ. P. 12(a)"
 {
   note "A defendant serves an answer within 20 days after being served with the summons and complaint, except when service is made under Rule 4(c) and a different time is prescribed in an order of court under a statute or rule of court. A Rule 12 motion alters the period: if the court denies it or postpones its disposition to trial, the responsive pleading is served within 10 days after notice of the court's action; if it grants a more definite statement, within 10 days after service of that statement (Haw. R. Civ. P. 12(a)(1), (3))."
   edge-answer-due-default "No plea or defense" -> default-entered {
@@ -35,7 +35,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "Haw. R. Civ
   }
 }
 
-state amend: "Amended pleading" by applicant cite "Haw. R. Civ. P. 15(a)"
+state amend: "Amended pleading" by plaintiff cite "Haw. R. Civ. P. 15(a)"
 {
   note "A party may amend once as a matter of course before a responsive pleading is served; otherwise only by leave of court or by written consent of the adverse party, and leave is freely given when justice so requires. A motion or stipulation to amend carries the proposed amended pleading in Ramseyer format (Haw. R. Civ. P. 15(a))."
   edge-amend-tested "Amended pleading tested again" -> pleading-motion {
@@ -64,7 +64,7 @@ terminal default-judgment: "Default judgment" outcome [loss] cite "Haw. R. Civ. 
   note "Outcome from the defending side."
 }
 
-state discovery: "Disclosure, discovery and pretrial" by applicant cite "Haw. R. Civ. P. 26(a)"
+state discovery: "Disclosure, discovery and pretrial" by plaintiff cite "Haw. R. Civ. P. 26(a)"
 {
   note "A party makes its initial disclosures at or within 14 days after the parties' Rule 26(f) conference unless a different time is set by stipulation or court order, or a party objects during the conference (Haw. R. Civ. P. 26(a)(1)(C)). A party demands a jury by serving a written demand not later than 10 days after service of the last pleading directed to the issue and filing it as Rule 5(d) requires (Haw. R. Civ. P. 38(b))."
   edge-discovery-sj "Summary judgment motion" -> summary-judgment {
@@ -92,7 +92,7 @@ state trial: "Trial by jury or by the court" by court cite "Haw. R. Civ. P. 38"
   edge-trial-settled "Settled before verdict" -> settled { authority cite "Haw. R. Civ. P. 41(a)" }
 }
 
-decision post-trial: "Post-trial motions" by applicant cite "Haw. R. Civ. P. 59"
+decision post-trial: "Post-trial motions" by plaintiff cite "Haw. R. Civ. P. 59"
 {
   note "A motion for a new trial, and a motion to alter or amend a judgment, are filed no later than 10 days after entry of the judgment; opposing affidavits follow within 10 days after service (Haw. R. Civ. P. 59(b), (c), (e)). A motion to amend findings is made not later than 10 days after entry of judgment (Haw. R. Civ. P. 52(b)). The court may not extend the time for action under Rules 50(b), 52(b), 59(b), (d) and (e) and 60(b) except as those rules state (Haw. R. Civ. P. 6(b)). A timely post-judgment motion of these kinds, or for attorney's fees or costs, extends the time to appeal as Haw. R. App. P. 4(a)(3) provides; the order of July 15, 2026 rewrites that subdivision effective January 1, 2027 (sources/hi-ica), so its periods are not stated here."
   edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered {
@@ -101,7 +101,7 @@ decision post-trial: "Post-trial motions" by applicant cite "Haw. R. Civ. P. 59"
   }
 }
 
-decision judgment-entered: "Final judgment entered" by office cite "Haw. R. Civ. P. 58"
+decision judgment-entered: "Final judgment entered" by court cite "Haw. R. Civ. P. 58"
 {
   note "Unless the court directs otherwise, the prevailing party prepares and submits a proposed judgment; filing in the clerk's office is entry, entry is not delayed for taxing costs, and every judgment is set forth on a separate document (Haw. R. Civ. P. 58). Costs may be taxed by the clerk on 48 hours' notice and reviewed on motion served within 5 days thereafter; a motion for attorneys' fees is filed and served no later than 14 days after entry of an appealable order or judgment unless a statute or order provides otherwise (Haw. R. Civ. P. 54(d)(1), (2)(B))."
   edge-judgment-entered-appeal "Notice of appeal within 30 days" -> appeal-taken {

@@ -4,7 +4,7 @@ import as-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "T.C.R.C.P. 3"
+state complaint-filed: "Complaint filed" by movant cite "T.C.R.C.P. 3"
 {
   note "A civil action is commenced by filing a complaint with the court (T.C.R.C.P. 3). The rule text is the American Samoa Bar Association's posting, UNOFFICIAL and CURRENCY UNCONFIRMED (sources/as-high-court/PROVENANCE.md). Periods in this package are stated, not counted: Rule 6(a) excludes the trigger day, includes the last day unless it is a Saturday, Sunday or legal holiday (New Year's Day, Washington's Birthday, Flag Day, Memorial Day, Independence Day, Columbus Day, Veterans Day, Thanksgiving Day, Christmas Day and any day appointed by the Governor or the Fono), and excludes intermediate Saturdays, Sundays and legal holidays from a period of less than 7 days; 6 days are added after service by mail (T.C.R.C.P. 6(a), (e)). The vendored rules state no filing fee and no time limit for service. The earlier outline named no leading decision for this step."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
@@ -13,7 +13,7 @@ state complaint-filed: "Complaint filed" by applicant cite "T.C.R.C.P. 3"
   }
 }
 
-decision answer-due: "Answer, motion or default" by office cite "T.C.R.C.P. 12(a)"
+decision answer-due: "Answer, motion or default" by court cite "T.C.R.C.P. 12(a)"
 {
   note "On filing of the complaint the clerk issues a summons, in English and Samoan, stating the time within which the defendant must appear and defend; the summons and complaint are served together, by the marshal or any non-party at least 18 years old (T.C.R.C.P. 4(a)-(d)). A defendant serves an answer within 20 days after service of the summons and complaint, except when service is made under Rule 4(e) and the order prescribes a different time; the United States or its officer or agency within 60 days after service on the United States attorney. A Rule 12 motion alters the period unless the court fixes another: if the motion is denied or postponed to trial, the responsive pleading is served within 10 days after notice of the court's action; if a more definite statement is ordered, within 10 days after its service (T.C.R.C.P. 12(a))."
   edge-answer-due-default "No answer or defense" -> default-entered {
@@ -35,7 +35,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "T.C.R.C.P. 
   }
 }
 
-state amend: "Amended pleading" by applicant cite "T.C.R.C.P. 15(a)"
+state amend: "Amended pleading" by movant cite "T.C.R.C.P. 15(a)"
 {
   note "A party may amend once as a matter of course before a responsive pleading is served; otherwise only by leave of court, freely given when justice so requires, or by written consent of the adverse party. A party pleads in response within the time remaining on the original pleading or within 10 days after service of the amendment, whichever is longer, unless the court orders otherwise (T.C.R.C.P. 15(a))."
   edge-amend-tested "Amended pleading tested again" -> pleading-motion {
@@ -64,7 +64,7 @@ terminal default-judgment: "Default judgment" outcome [loss] cite "T.C.R.C.P. 55
   note "Outcome from the defending side. A default judgment may not differ in kind from or exceed the amount demanded (T.C.R.C.P. 54(c))."
 }
 
-state discovery: "Discovery and pretrial" by applicant cite "T.C.R.C.P. 26(a)"
+state discovery: "Discovery and pretrial" by movant cite "T.C.R.C.P. 26(a)"
 {
   note "Parties may obtain discovery by depositions, interrogatories, production, examinations and requests for admission; unless the court orders otherwise the frequency of use is not limited (T.C.R.C.P. 26(a)). The court may in its discretion hold a pretrial conference and enter an order that controls the subsequent course of the action (T.C.R.C.P. 16). The vendored rules state no disclosure or discovery deadline."
   edge-discovery-sj "Summary judgment motion" -> summary-judgment { authority cite "T.C.R.C.P. 56" }
@@ -92,7 +92,7 @@ state trial: "Trial by the court" by court cite "T.C.R.C.P. 52(a)"
   edge-trial-settled "Settled before decision" -> settled { authority cite "T.C.R.C.P. 41(a)" }
 }
 
-decision judgment-entered: "Judgment entered" by office cite "T.C.R.C.P. 58"
+decision judgment-entered: "Judgment entered" by court cite "T.C.R.C.P. 58"
 {
   note "Every judgment is set forth on a separate document and is effective only when so set forth and entered; entry is not delayed for the taxing of costs (T.C.R.C.P. 58). Costs are allowed as of course to the prevailing party unless the court otherwise directs, taxed by the clerk on one day's notice and reviewed on motion served within 5 days thereafter (T.C.R.C.P. 54(d)). In a civil case appealable as of right, a motion for a new trial, required by 43.0802 A.S.C.A., is filed within 10 days after entry of the judgment (A.C.R. 4(a)); the statute is not vendored. A motion to alter or amend the judgment is served not later than 10 days after its entry (T.C.R.C.P. 59(e)), and the court may not extend the time for action under Rules 52(b), 59(b) and 60(b) (T.C.R.C.P. 6(b))."
   edge-judgment-entered-new-trial "Motion for new trial within 10 days" -> new-trial {
@@ -110,7 +110,7 @@ decision new-trial: "Motion for new trial decided" by court cite "T.C.R.C.P. 59(
   }
 }
 
-decision appeal-window: "Appeal or not" by applicant cite "A.C.R. 4(a)"
+decision appeal-window: "Appeal or not" by movant cite "A.C.R. 4(a)"
 {
   note "The notice of appeal is filed with the clerk of court within 10 days after the denial of the motion for a new trial (A.C.R. 4(a)); failure to take any other step does not affect the validity of the appeal but is ground for such action as the appellate division deems appropriate, which may include dismissal (A.C.R. 3(a))."
   edge-appeal-window-appeal "Notice of appeal filed" -> appeal-taken {

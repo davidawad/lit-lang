@@ -26,7 +26,7 @@ state scheduling-order-issued: "RCFC 16(b) Scheduling Order Entered" cite "RCFC 
   }
 }
 
-decision discovery-open: "Discovery Open (RCFC 26-37)" by applicant cite "RCFC 26(b)(1)"
+decision discovery-open: "Discovery Open (RCFC 26-37)" by movant cite "RCFC 26(b)(1)"
 {
   group general-track-group
   note "Parties may discover any nonprivileged matter relevant to a claim or defense and proportional to the needs of the case. This hub node is the player-choice cycle -- propounding/responding to discovery, compelling, and protecting -- that runs until the scheduling order's discovery cutoff."
@@ -48,7 +48,7 @@ state discovery-dispute-motion: "Motion to Compel / Motion for Protective Order"
   e-discdispute-to-ruling "Court rules on the discovery motion" -> discovery-dispute-ruling
 }
 
-chance discovery-dispute-ruling: "Court Rules on Discovery Motion" by office discretion cite "RCFC 37(a); RCFC 26(c)"
+chance discovery-dispute-ruling: "Court Rules on Discovery Motion" by court discretion cite "RCFC 37(a); RCFC 26(c)"
 {
   group general-track-group
   note "Outcome distribution authored at 0.6 granted / 0.4 denied -- TEACHING ESTIMATE, loosely tracking the general federal-practice pattern that a certified good-faith motion to compel succeeds more often than not once actually filed."
@@ -60,7 +60,7 @@ chance discovery-dispute-ruling: "Court Rules on Discovery Motion" by office dis
   }
 }
 
-state discovery-closed: "Discovery Closed / Post-Discovery Conference" by applicant cite "RCFC App. A 11; RCFC App. A 12"
+state discovery-closed: "Discovery Closed / Post-Discovery Conference" by movant cite "RCFC App. A 11; RCFC App. A 12"
 {
   group general-track-group
   note "Upon completion of all discovery (including expert discovery), the court holds a post-discovery conference to decide whether the case proceeds by summary judgment, trial, or ADR, and enters a further scheduling order."
@@ -85,7 +85,7 @@ state summary-judgment-motion-filed: "RCFC 56 Motion for Summary Judgment Filed"
   e-sj-to-ruling "Briefing completes; court rules on summary judgment" -> sj-ruling
 }
 
-chance sj-ruling: "Court Rules on Summary Judgment" by office discretion cite "RCFC 56(a)"
+chance sj-ruling: "Court Rules on Summary Judgment" by court discretion cite "RCFC 56(a)"
 {
   group general-track-group
   note "Outcome distribution authored at 0.50 denied-proceeds-to-trial / 0.15 granted-in-part / 0.20 granted-for-government-in-full / 0.15 granted-for-plaintiff-in-full -- TEACHING ESTIMATE, not a cited empirical CoFC grant-rate figure. A full grant for the government disposes of the case; a full grant for plaintiff on liability AND damages produces a final judgment without trial (the 'judgment-entered' route this pack uses as its Federal Circuit composition anchor)."
@@ -126,7 +126,7 @@ terminal judgment-entered: "JUDGMENT ENTERED FOR PLAINTIFF ON FULL SUMMARY JUDGM
   payoff 1_000_000.usd
 }
 
-decision adr-referral-decision: "Refer Case to ADR?" by applicant cite "RCFC 16(a)(5); RCFC App. H 3"
+decision adr-referral-decision: "Refer Case to ADR?" by movant cite "RCFC 16(a)(5); RCFC App. H 3"
 {
   group adr-group
   note "At any point, the parties may notify the assigned judge of a desire to pursue ADR (mediation by a settlement judge, early neutral evaluation, mini-trial, outcome-prediction assistance, or non-binding arbitration -- Appendix H ¶2). Participation is voluntary; a party's good-faith determination that ADR is inappropriate is respected. For §1498 cases specifically, ADR is commonly suggested after claim construction (Appendix H ¶2(j)) -- modeled on the patent track as its own mandatory settlement-discussion node under PRCFC Rule 16."
@@ -154,7 +154,7 @@ state adr-mediation-session: "ADR Session(s) Conducted" cite "RCFC App. H 2; RCF
 /// impasse edge. It is real uncertainty until the order is entered, not a
 /// fact knowable at filing, so the node is a draw, not `fact`: the
 /// probabilities are the prior of a matter that has no order yet.
-chance adr-outcome-ruling: "ADR Concludes" by office cite "RCFC App. H 3(h)"
+chance adr-outcome-ruling: "ADR Concludes" by court cite "RCFC App. H 3(h)"
 {
   group adr-group
   note "Decided on the docket by the order concluding the ADR proceeding (Appendix H ¶3(h)). Prior: 0.40 settlement-reached / 0.60 impasse-returns-to-litigation -- TEACHING ESTIMATE, not a cited empirical CoFC ADR settlement-rate figure."

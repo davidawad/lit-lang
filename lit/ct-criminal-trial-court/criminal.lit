@@ -15,7 +15,7 @@ module ct-superior-court-criminal.criminal
 // vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "Practice Book § 36-1"
+state arrested: "Arrest or summons" by prosecution cite "Practice Book § 36-1"
 {
   note "A judicial authority may issue an arrest warrant on an application supported by affidavit showing probable cause (Practice Book §§ 36-1, 36-2), and a summons may issue instead (Practice Book §§ 36-7, 36-8). A defendant not released from custody sooner is brought before a judicial authority for arraignment no later than the first court day following arrest; a defendant not in custody appears at the time and place the summons or the terms of release specify (Practice Book § 37-1(a)). A hospitalized or incapacitated defendant is presented no later than the next court day after discharge, return to custody or recovery, or may be arraigned remotely for good cause (Practice Book § 37-1(b), (c)). Prosecution is by information (Practice Book §§ 36-11, 36-12)."
   edge-arrested-arraignment "Arraignment" -> initial-appearance {
@@ -37,7 +37,7 @@ decision initial-appearance: "Probable cause and release" by court cite "Practic
   }
 }
 
-state pretrial: "Plea of not guilty, discovery and pretrial motions" by applicant cite "Practice Book § 41-5"
+state pretrial: "Plea of not guilty, discovery and pretrial motions" by accused cite "Practice Book § 41-5"
 {
   note "A defendant who pleads not guilty (Practice Book § 37-9) proceeds to discovery and pretrial motions. Unless the rules or a statute provide otherwise, all pretrial motions or requests are made not later than ten days after the first pretrial conference in the court where the case will be tried, or at a later time the judicial authority fixes; lack of jurisdiction and failure to charge an offense may be raised at any time (Practice Book § 41-5). On a written request filed under Section 41-5, the prosecuting authority discloses the listed items promptly, but no later than forty-five days from the filing of the request unless the judicial authority extends the time for good cause shown (Practice Book § 40-11(a)). Notices of a mental-disease defense and of alibi are governed by Practice Book §§ 40-17 to 40-25. A claim that the defendant has been denied a speedy trial is raised by a motion to dismiss (Practice Book § 41-8(7))."
   edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
@@ -63,7 +63,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Practice Bo
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Practice Book § 39-19"
+decision plea-decision: "Plea or trial" by accused cite "Practice Book § 39-19"
 {
   note "Plea discussions and agreements are governed by Practice Book §§ 39-1 to 39-17. The judicial authority does not accept a plea of guilty or nolo contendere without first addressing the defendant personally and determining that the defendant understands the matters Practice Book § 39-19 lists, that the plea is voluntary (§ 39-20) and that it has a factual basis (§ 39-21); a plea may be withdrawn before sentence on the grounds of Practice Book §§ 39-26 and 39-27. The prosecuting authority may enter a nolle prosequi, which terminates the prosecution (Practice Book §§ 39-29, 39-31); the defendant may object and demand a trial or dismissal (Practice Book § 39-30)."
   edge-plea-decision-plea "Plea of guilty or nolo contendere accepted" -> sentencing {
@@ -107,7 +107,7 @@ state sentencing: "Presentence investigation and sentencing" by court cite "Prac
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Practice Book § 63-1"
+decision judgment: "Judgment of conviction" by accused cite "Practice Book § 63-1"
 {
   note "After a conviction at trial the clerk advises the defendant in writing, immediately after sentence is pronounced, of the right to appeal, its time limits and the right of an indigent person to a fee waiver and appointed counsel (Practice Book § 43-30). Unless a statute provides a different period, an appeal is filed within twenty days of the date notice of the judgment is given; in a criminal case appealing a judgment of conviction, the appeal period begins when sentence is pronounced in open court, and a motion that would render the judgment ineffective, filed within the appeal period, may start a new twenty-day period (Practice Book § 63-1(a)-(c)); extensions are governed by Practice Book § 66-1(a). Where sentence review is available under General Statutes § 51-195, the defendant may apply for review by the review division within thirty days from the date sentence is imposed or a suspended sentence is revoked (Practice Book § 43-24). The judicial authority may correct an illegal sentence at any time (Practice Book § 43-22)."
   edge-judgment-appeal "Appeal filed" -> appeal-taken { authority cite "Practice Book § 63-1" }

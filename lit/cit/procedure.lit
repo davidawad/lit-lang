@@ -20,7 +20,7 @@ import cit.periods.{
 // decisions, cited there and noted below as the Comments state them.
 start commencement
 
-decision commencement: "How the action is commenced" by applicant cite "USCIT R. 3(a)"
+decision commencement: "How the action is commenced" by movant cite "USCIT R. 3(a)"
 {
   note "A civil action is commenced by filing with the clerk: a summons alone in an action described in 28 U.S.C. § 1581(a) or (b); a summons, and within 30 days thereafter a complaint, in a § 1581(c) action contesting a determination listed in section 516A(a)(2) or (3) of the Tariff Act of 1930; or a summons and complaint concurrently in all other actions (USCIT R. 3(a)). The filing fee is $400, except $175 in a § 1581(a) action and $35 in a § 1581(d)(1) action (USCIT R. 3(b)); a § 1581(a) complaint carries a $200 fee (USCIT R. 3(c)). The Practice Comment to USCIT R. 3 cites Georgetown Steel v. United States, 801 F.2d 1308 (Fed. Cir. 1986), for the 30-day complaint period. The jurisdictional grants of § 1581 and the limitations periods of 28 U.S.C. § 2636 are not vendored, so no limitations period is encoded."
   edge-commencement-summons "Summons filed; the clerk serves it" -> summons-served {
@@ -46,7 +46,7 @@ state summons-served: "Summons served by the clerk" by court cite "USCIT R. 4(a)
   }
 }
 
-decision plaintiff-service: "Plaintiff serves the summons and complaint" by applicant cite "USCIT R. 4(b)"
+decision plaintiff-service: "Plaintiff serves the summons and complaint" by movant cite "USCIT R. 4(b)"
 {
   note "In an action commenced by concurrent filing the plaintiff causes service of the summons and complaint (USCIT R. 4(b)(1)), or requests a waiver, which gives the defendant at least 30 days (60 outside any judicial district) to return it (USCIT R. 4(c)(1)(F)); a defendant who timely returns a waiver answers 60 days after the request was sent, or 90 days outside any judicial district (USCIT R. 4(c)(3)). A defendant not served within 90 days after the complaint is filed is dismissed without prejudice or ordered served (USCIT R. 4(l))."
   edge-plaintiff-service-served "Service made" -> answer-due {
@@ -58,7 +58,7 @@ decision plaintiff-service: "Plaintiff serves the summons and complaint" by appl
   }
 }
 
-decision answer-due: "Answer or Rule 12 motion" by office cite "USCIT R. 12(a)"
+decision answer-due: "Answer or Rule 12 motion" by court cite "USCIT R. 12(a)"
 {
   note "The United States answers within 60 days after service on the Attorney-in-Charge, International Trade Field Office (USCIT R. 12(a)(1)(A)); in a § 1581(f) confidential-information action, within 14 days (USCIT R. 12(a)(1)(A)(ii)); any other defendant within 21 days after service (USCIT R. 12(a)(1)(B)(i)). A Rule 12(b) defense is raised by motion before pleading (USCIT R. 12(b)); a response to a dispositive motion is due within 35 days after its service (USCIT R. 7(d))."
   edge-answer-due-answer "Answer served" -> pleadings-closed {
@@ -101,7 +101,7 @@ state pleadings-closed: "Pleadings closed; scheduling" by court cite "USCIT R. 1
   }
 }
 
-state discovery: "Discovery" by applicant cite "USCIT R. 26"
+state discovery: "Discovery" by movant cite "USCIT R. 26"
 {
   note "Disclosure and discovery under USCIT R. 26 through 37. A summary judgment motion may be filed, unless the court orders otherwise, at any time until 30 days after the close of all discovery (USCIT R. 56(b))."
   edge-discovery-summary-judgment "Summary judgment motion" -> summary-judgment {
@@ -114,7 +114,7 @@ state discovery: "Discovery" by applicant cite "USCIT R. 26"
   }
 }
 
-state agency-record: "Agency record filed; motion for judgment on the agency record" by applicant cite "USCIT R. 56.2"
+state agency-record: "Agency record filed; motion for judgment on the agency record" by movant cite "USCIT R. 56.2"
 {
   note "The agency files the record within 40 days after service of the complaint on it (USCIT R. 73.2(a)). No later than 30 days after the record is filed the parties file a Joint Status Report and proposed briefing schedule (USCIT R. 56.2(a)(5)(A)). Unless the scheduling order provides otherwise, the motion is due 60 days after service of the scheduling order, responses 60 days after service of the movant's brief, and the reply 28 days after service of the response (USCIT R. 56.2(d)); the joint appendix follows within 14 days of the reply briefs (USCIT R. 56.2(c)(3)). Cross-motions are prohibited (USCIT R. 56.2(b)). A statutory injunction motion is due within 30 days after service of the complaint (USCIT R. 56.2(a)(4)(A)), and a notice of voluntary dismissal within 30 days after service of the complaint (USCIT R. 56.2(g)). USCIT R. 56.1 governs agency-record actions other than § 1581(c). The standard of review of 28 U.S.C. § 2640 is not vendored."
   edge-agency-record-briefed "Joint Status Report filed; motion briefed" -> agency-judgment-ruling {
@@ -180,7 +180,7 @@ state findings: "Findings of fact and conclusions of law" by court cite "USCIT R
   edge-findings-judgment "Findings entered" -> judgment-entered { authority cite "USCIT R. 58" }
 }
 
-decision judgment-entered: "Judgment entered" by applicant cite "USCIT R. 58"
+decision judgment-entered: "Judgment entered" by movant cite "USCIT R. 58"
 {
   note "Every judgment is set out in a separate document, with the exceptions of USCIT R. 58(a); where one is required, judgment is entered when it is set out in one or 150 days after its docket entry, whichever is earlier (USCIT R. 58(c)(2)). A motion for a new trial or rehearing is due not later than 30 days after entry (USCIT R. 59(b)); a motion to alter or amend no later than 30 days after entry (USCIT R. 59(e)); a Rule 60(b)(1)-(3) motion no more than a year after entry (USCIT R. 60(c)(1)); USCIT R. 6(b)(2) forbids extending those periods. An EAJA application is due within 30 days after the date of final judgment (USCIT R. 54.1(a))."
   edge-judgment-post-trial "Post-judgment motion filed" -> post-trial-ruling {

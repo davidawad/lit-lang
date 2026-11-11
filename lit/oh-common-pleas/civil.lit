@@ -17,7 +17,7 @@ import oh-state-rules.{ JudgmentEntered }
 // vendored either.
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "Civ.R. 3(A)"
+state complaint-filed: "Complaint filed" by plaintiff cite "Civ.R. 3(A)"
 {
   note "A civil action is commenced by filing a complaint with the court, if service is obtained within one year from such filing upon a named defendant, or upon an incorrectly named or fictitiously named defendant whose name is later corrected under Civ.R. 15(C) or (D) (Civ.R. 3(A)). Upon the filing of the complaint the clerk forthwith issues a summons for each defendant (Civ.R. 4(A)). If service is not made upon a defendant within six months after the filing of the complaint and the party cannot show good cause, the action is dismissed as to that defendant without prejudice, on the court's own initiative with notice or upon motion; this does not apply to out-of-state service under Civ.R. 4.3 or service in a foreign country under Civ.R. 4.5 (Civ.R. 4(E)). The filing fee is not stated in the vendored rules."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
@@ -33,7 +33,7 @@ terminal service-dismissal: "Dismissed without prejudice for failure of service"
   note "Outcome from the applicant's side. The dismissal is without prejudice (Civ.R. 4(E)); the action is commenced only if service is obtained within one year from filing (Civ.R. 3(A))."
 }
 
-decision answer-due: "Answer, Civ.R. 12 motion, or default" by office cite "Civ.R. 12(A)"
+decision answer-due: "Answer, Civ.R. 12 motion, or default" by court cite "Civ.R. 12(A)"
 {
   note "The defendant serves an answer within twenty-eight days after service of the summons and complaint, or within twenty-eight days after the completion of service by publication (Civ.R. 12(A)(1)). An answer to a cross-claim, and a reply to a counterclaim, are due within twenty-eight days after service. Service of a Civ.R. 12 motion alters these periods unless the court fixes a different time: if the motion is denied, the responsive pleading is served within fourteen days after notice of the court's action; if it is granted, within fourteen days after service of the pleading that complies with the order (Civ.R. 12(A)(2)). Affirmative defenses are set forth in the responsive pleading (Civ.R. 8(C))."
   edge-answer-due-answer "Answer served" -> discovery { authority cite "Civ.R. 12(A)" }
@@ -57,7 +57,7 @@ decision pleading-motion: "Civ.R. 12(B) or 12(C) motion decided" by court cite "
   }
 }
 
-state amended: "Amended pleading" by applicant cite "Civ.R. 15(A)"
+state amended: "Amended pleading" by plaintiff cite "Civ.R. 15(A)"
 {
   note "A party may amend its pleading once as a matter of course within twenty-eight days after serving it or, if a responsive pleading is required, within twenty-eight days after service of a responsive pleading or of a motion under Civ.R. 12(B), (E) or (F), whichever is earlier; otherwise only with the opposing party's written consent or the court's leave, which the court freely gives when justice so requires. Unless the court orders otherwise, a required response to an amended pleading is made within the time remaining to respond to the original pleading or within fourteen days after service of the amended pleading, whichever is later (Civ.R. 15(A))."
   edge-amended-tested "Amended pleading tested again" -> pleading-motion {
@@ -70,7 +70,7 @@ terminal dismissed-merits: "Dismissed on the pleadings" outcome [loss, dismissal
   note "Outcome from the applicant's side. A dismissal under Civ.R. 41(B), and any dismissal not provided for in Civ.R. 41, operates as an adjudication upon the merits unless the court otherwise specifies, except that a dismissal for lack of jurisdiction over the person or the subject matter, or for failure to join a party under Civ.R. 19 or 19.1, is a failure otherwise than on the merits (Civ.R. 41(B)(3), (4)). An appeal runs from the final order (App.R. 4(A))."
 }
 
-state default-application: "Application for default judgment" by applicant cite "Civ.R. 55(A)"
+state default-application: "Application for default judgment" by plaintiff cite "Civ.R. 55(A)"
 {
   note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend, the party entitled to a judgment by default applies in writing or orally to the court; no default judgment is entered against a minor or an incompetent person unless represented by a guardian or other representative who has appeared. A party in default who has appeared in the action is served with written notice of the application at least seven days before the hearing on it. The court may conduct hearings to determine damages or establish the truth of an averment (Civ.R. 55(A)). No default judgment is entered against the state, a political subdivision, or an officer or agency of either unless the claimant establishes the claim by evidence satisfactory to the court (Civ.R. 55(D)); a judgment by default is subject to the limits of Civ.R. 54(C) (Civ.R. 55(C))."
   edge-default-application-granted "Default judgment entered" -> default-judgment {
@@ -86,7 +86,7 @@ terminal default-judgment: "Default judgment for applicant" outcome [win] cite "
   note "Outcome from the applicant's side. The court may set a default judgment aside in accordance with Civ.R. 60(B) (Civ.R. 55(B))."
 }
 
-state discovery: "Discovery" by applicant cite "Civ.R. 26(B)"
+state discovery: "Discovery" by plaintiff cite "Civ.R. 26(B)"
 {
   note "Parties may obtain discovery regarding any nonprivileged matter relevant to any party's claim or defense and proportional to the needs of the case (Civ.R. 26(B)(1)). A party may serve up to forty written interrogatories on any other party without leave of court, each subpart counting as a separate interrogatory; answers and objections are served within the period the requesting party designates, not less than twenty-eight days after service (Civ.R. 33(A)). A response to a request for production is served within a designated period not less than twenty-eight days after service (Civ.R. 34(B)). A matter in a request for admission is admitted unless a written answer or objection is served within a designated period not less than twenty-eight days after service (Civ.R. 36(A)). The court may allow a shorter or longer time. A motion to compel includes a certification that the movant in good faith conferred or attempted to confer to obtain the discovery without court action (Civ.R. 37(A)(1))."
   edge-discovery-sj "Summary judgment motion" -> summary-judgment { authority cite "Civ.R. 56(A)" }
@@ -143,7 +143,7 @@ state trial: "Trial by jury or by the court" by court cite "Civ.R. 38(B)"
   }
 }
 
-decision judgment-entered: "Judgment entered and noticed" by office cite "Civ.R. 58(A)"
+decision judgment-entered: "Judgment entered and noticed" by court cite "Civ.R. 58(A)"
 {
   note "Subject to Civ.R. 54(B), the court promptly prepares, or asks counsel to prepare, a judgment entry when a jury returns a general verdict, the court announces a decision, or the court grants or denies relief; the entry is filed and journalized within 30 days of the verdict, decision or determination, absent good cause, and the judgment is effective only when entered by the clerk upon the journal (Civ.R. 58(A)(1)). Within three days of entering the judgment upon the journal, the clerk serves notice of the judgment and its date of entry on all parties not in default for failure to appear (Civ.R. 58(B)). A party who wishes to appeal files the notice of appeal within 30 days of entry; in a civil case, if the clerk has not completed service of notice within the three-day period, the 30 days run from the date the clerk actually completes service (App.R. 4(A)). A timely Civ.R. 50(B) or 59 motion, objection to a magistrate's decision, request for findings of fact and conclusions of law, or motion for attorney fees or prejudgment interest delays the appeal time until the trial court resolves the last of them (App.R. 4(B))."
   edge-judgment-entered-post-trial "Post-trial motion served" -> post-trial {

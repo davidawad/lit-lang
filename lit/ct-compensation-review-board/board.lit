@@ -14,7 +14,7 @@ import ct-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeO
 // Book Chapter 76. It named no decision and none is cited.
 start petition-filed
 
-state petition-filed: "Petition for review filed with the board" by applicant cite ?("Conn. Gen. Stat. § 31-301(a): the Workers' Compensation Act is not vendored") {
+state petition-filed: "Petition for review filed with the board" by movant cite ?("Conn. Gen. Stat. § 31-301(a): the Workers' Compensation Act is not vendored") {
   note "The board reviews an administrative law judge's decision on the record. The petition for review, its period, form and fee are the Workers' Compensation Act's (General Statutes § 31-301), which is not vendored: they are holes."
   edge-petition-filed-hearing "Set for hearing before the board" -> hearing {
     event ActionCommenced()
@@ -52,7 +52,7 @@ chance decision: "Board decides" by court cite ?("Conn. Gen. Stat. § 31-301: th
   edge-decision-denied "Relief denied" -> review p ?("no calibration yet") { event DecisionFiled() }
 }
 
-decision review: "Appeal to the Appellate Court?" by applicant cite "Practice Book § 76-1"
+decision review: "Appeal to the Appellate Court?" by movant cite "Practice Book § 76-1"
 {
   note "Appeals to the Appellate Court from a decision of the board conform to the rules governing other appeals, except as Sections 76-2 to 76-6 provide (Practice Book § 76-1). An appeal is filed within twenty days of notice of the decision unless a statute provides a different period (Practice Book § 63-1(a)); the statutory period for an appeal from the board (General Statutes § 31-301b) is not vendored, so the period is a hole."
   edge-review-none "No appeal" -> final-decision {
@@ -65,7 +65,7 @@ decision review: "Appeal to the Appellate Court?" by applicant cite "Practice Bo
   }
 }
 
-state appeal-filed: "Appeal filed; case file delivered" by office cite "Practice Book § 76-3"
+state appeal-filed: "Appeal filed; case file delivered" by court cite "Practice Book § 76-3"
 {
   note "The appeal is filed with the appellate clerk under Section 63-3; the appellant delivers a copy of the appeal form to each party of record under Section 62-7 and to the board, and the appellate clerk delivers a copy to the board and each appearing party (Practice Book § 76-2). Within ten days of the issuance of notice of the filing of the appeal, the board delivers to the appellate clerk an electronic copy of the numbered case file with a table of contents; all exhibits before the board are exhibits on appeal; the parties still comply with the appendix requirements of Section 67-8 (Practice Book § 76-3). No entry fee is paid and no costs are taxed, unless the court finds the appeal frivolous or filed for vexation or delay (Practice Book § 76-4). References to the trial court or trial judge mean the board members who rendered the decision (Practice Book § 76-6)."
   edge-appeal-filed-appellate "Appeal proceeds in the Appellate Court" -> appeal-taken {

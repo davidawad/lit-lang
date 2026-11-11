@@ -213,14 +213,14 @@ test "exception to the clerk's cost order is due 14 days after entry" cite "9th 
 
 start threshold
 
-decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+decision threshold: "Appealable Order or Judgment?" by movant cite "28 U.S.C. § 1291"
 {
   note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes are lit/frap's."
   edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
   edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
 }
 
-decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)"
 {
   note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
@@ -230,7 +230,7 @@ decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)
   }
 }
 
-state record: "Record and Transcript Assembled" by applicant cite "FRAP 10; 9th Cir. R. 10-3"
+state record: "Record and Transcript Assembled" by movant cite "FRAP 10; 9th Cir. R. 10-3"
 {
   note "The appellant serves its transcript notice within 7 days of the notice of appeal and the appellee may respond within 7 days of service (9th Cir. R. 10-3.1(a), (b)); the transcript order is due within 14 days of the notice of appeal (9th Cir. R. 10-3.1(d)). In a counseled civil appeal the Mediation Questionnaire is due within 5 days of docketing (9th Cir. R. 3-4). A preliminary injunction appeal runs on the expedited schedule of 9th Cir. R. 3-3(b)."
   edge-record-brief "Briefing begins" -> briefing { authority cite "9th Cir. R. 31-2" }
@@ -239,7 +239,7 @@ state record: "Record and Transcript Assembled" by applicant cite "FRAP 10; 9th 
   }
 }
 
-state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 9th Cir. R. 31-2"
+state briefing: "Briefs Filed" by movant cite "FRAP 31(a)(1); 9th Cir. R. 31-2"
 {
   note "The parties follow the briefing schedule the court sets; absent specific due dates FRAP 31(a)'s apply, and the reply is due 21 days from service of the last answering brief (9th Cir. R. 31-2.1(a)). Excerpts of record replace the FRAP 30 appendix (9th Cir. R. 30-1). One streamlined extension of up to 30 days is available on request on or before the due date; otherwise a written motion is due at least 7 days before it (9th Cir. R. 31-2.2). Principal briefs may not exceed 14,000 words (9th Cir. R. 32-1(a))."
   edge-briefing-argue "Briefing complete" -> argument {
@@ -262,7 +262,7 @@ state decision: "Decision Issued" by court cite "FRAP 36"
   edge-decision-issued "Disposition entered" -> rehearing-decision { authority cite "FRAP 36" }
 }
 
-decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 {
   note "A party seeking further consideration of an order that ends the case complies with the time limits of FRAP 40(d)(1) (9th Cir. R. 27-10(a)(1)): 14 days after entry of judgment, or 45 days in a civil case with a United States party; lit/frap encodes both periods. The petition may not exceed 15 pages or 4,200 words (9th Cir. R. 40-1(b))."
   edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
@@ -277,13 +277,13 @@ state rehearing-order: "Rehearing Order" by court cite "FRAP 40"
   edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
-state mandate: "Mandate Issued" by office cite "FRAP 41(b)"
+state mandate: "Mandate Issued" by court cite "FRAP 41(b)"
 {
   note "The mandate issues 7 days after the time to petition for rehearing expires or 7 days after an order denying a timely petition (FRAP 41(b)); lit/frap encodes the period. A motion to stay the mandate pending certiorari is denied if the petition would be frivolous or filed merely for delay (9th Cir. R. 41-1)."
   edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
 }
 
-decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+decision further-review: "Further Review Sought?" by movant cite "28 U.S.C. § 1254"
 {
   note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's."
   edge-further-review-none "No further review" -> final-decision {

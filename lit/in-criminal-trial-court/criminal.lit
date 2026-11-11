@@ -17,7 +17,7 @@ module in-trial-court-criminal.criminal
 // vendored.
 start charged
 
-state charged: "Information or indictment filed" by office cite "Ind. Crim. Rule 2.1"
+state charged: "Information or indictment filed" by court cite "Ind. Crim. Rule 2.1"
 {
   note "A criminal case is commenced by filing a charging information or indictment of sufficient specificity to allow preparation of a defense, complying with Ind. Code § 35-40-5-12 (not vendored) and Access to Court Records Rule 5(C) (Ind. Crim. Rule 2.1). Before charges are filed the prosecutor may use a precharge subpoena duces tecum, which the recipient may meet or move to quash within ten days (Ind. Crim. Rule 1.4(A)). The state's appearance states the information Rule 1.3(A) lists. Arrest and the initial hearing's timing are governed by Ind. Code ch. 35-33 (not vendored)."
   edge-charged-initial-hearing "Initial hearing" -> initial-hearing {
@@ -36,7 +36,7 @@ decision initial-hearing: "Initial hearing and pretrial release" by court cite "
   }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "Ind. Crim. Rule 2.5"
+state discovery: "Discovery and pretrial motions" by prosecution cite "Ind. Crim. Rule 2.5"
 {
   note "The state discloses the witnesses, statements, reports, exculpatory material and other items of Rule 2.5(B)(2) within thirty days from the initial hearing, an appearance by defense counsel or an appearance by a pro se defendant, whichever is later; the defense furnishes the items of Rule 2.5(C)(1) within thirty days after the prosecutor's disclosure; disclosure continues as supplemental discovery arises (Ind. Crim. Rule 2.5(A)(4), (B)(1), (C)(1)). A subpoena duces tecum is not served on a non-party until at least fifteen days after the proposed subpoena is served on the other parties, and its recipient responds or moves to quash within twenty days (Ind. Crim. Rule 2.5(E)). Written motions state specific contentions with cogent reasoning and authority; a motion to dismiss is accompanied by a separate memorandum and meets Ind. Code § 35-34-1-4 (not vendored); counsel is strongly encouraged to file a pretrial motion to suppress at least ten days before a jury trial, but the objection is preserved by a timely objection at trial (Ind. Crim. Rule 2.7). In a misdemeanor case the defendant demands a jury by a written demand not later than ten days before the first scheduled trial date, or the jury is waived unless the defendant had less than fifteen days' notice of the trial date and no advisement of the consequence (Ind. Crim. Rule 3.1(B)(1))."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -75,7 +75,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Ind. Crim. 
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Ind. Crim. Rule 3.3(A)"
+decision plea-decision: "Plea or trial" by accused cite "Ind. Crim. Rule 3.3(A)"
 {
   note "A defendant may plead not guilty, guilty, or guilty but mentally ill (Ind. Crim. Rule 3.3(A)). Before accepting a guilty plea the court advises the defendant of the nature of the charges, the rights waived (including the right to appeal the conviction), the maximum and minimum sentences, the firearm consequence in a domestic-violence case, that an accepted plea agreement binds the court, and the immigration consequences; a felony plea's waiver is oral, a misdemeanor plea's may be written; the court finds the plea voluntary and, before judgment, a factual basis, and a defendant may not plead guilty while asserting innocence (Ind. Crim. Rule 3.3(B)). The court does not take part in plea discussions; a felony plea agreement is written and filed; the court may take it under advisement until sentencing, and if it accepts it is bound by it (Ind. Crim. Rule 3.3(C))."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
@@ -99,7 +99,7 @@ state sentencing: "Sentencing and advisements" by court cite "Ind. Crim. Rule 5.
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Ind. Crim. Rule 5.4"
+decision judgment: "Judgment of conviction" by accused cite "Ind. Crim. Rule 5.4"
 {
   note "A motion to correct error is not a prerequisite for appeal except to raise newly discovered material evidence, including jury misconduct, producible within thirty days after sentencing; if filed, it is filed within thirty days after the date of sentencing (Ind. Crim. Rule 5.3). The notice of appeal is filed within thirty days after the sentencing order is entered on the chronological case summary, or, after a timely motion to correct error, within thirty days after the ruling is entered or the motion is deemed denied under Trial Rule 53.3, whichever is earlier (Ind. Crim. Rule 5.4; Ind. Appellate Rule 9(A)(1)). Unless the notice of appeal is timely filed, the right to appeal is forfeited except as provided by Post-Conviction Rule 2 (Ind. Appellate Rule 9(A)(5)). lit/core has no counting rule for these rules, so the periods are not encoded as counted deadlines."
   edge-judgment-correct-error "Motion to correct error" -> correct-error {

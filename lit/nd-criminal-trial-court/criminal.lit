@@ -14,7 +14,7 @@ module nd-criminal-trial-court.criminal
 // are removed here.
 start arrested
 
-state arrested: "Arrest" by applicant cite ?("N.D.R.Crim.P. 5(a), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified") {
+state arrested: "Arrest" by prosecution cite ?("N.D.R.Crim.P. 5(a), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified") {
   note "An officer making an arrest takes the arrested person without unnecessary delay before the nearest available magistrate; after a warrantless arrest the magistrate promptly determines probable cause, and if it exists a complaint or information is filed (N.D.R.Crim.P. 5(a)). Unverified: CURRENCY UNCONFIRMED."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
     authority cite ?("N.D.R.Crim.P. 5(a), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
@@ -41,14 +41,14 @@ decision preliminary: "Preliminary hearing" by court cite ?("N.D.R.Crim.P. 5.1, 
   }
 }
 
-state arraignment: "Arraignment and plea" by applicant cite ?("N.D.R.Crim.P. 10, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified") {
+state arraignment: "Arraignment and plea" by accused cite ?("N.D.R.Crim.P. 10, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified") {
   note "Arraignment follows N.D.R.Crim.P. 10; the pleas are guilty and not guilty (12(a), 11). Unverified: CURRENCY UNCONFIRMED."
   edge-arraignment-pretrial "Plea of not guilty; pretrial proceedings" -> pretrial {
     authority cite ?("N.D.R.Crim.P. 12(c), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
   }
 }
 
-state pretrial: "Discovery, omnibus hearing and pretrial motions" by applicant cite ?("N.D.R.Crim.P. 12(c), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified") {
+state pretrial: "Discovery, omnibus hearing and pretrial motions" by prosecution cite ?("N.D.R.Crim.P. 12(c), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified") {
   note "The court may, at or soon after arraignment, set a deadline for pretrial motions; if it sets none, the deadline is the start of trial; it may extend or reset the deadline before trial; a Rule 12(b)(3) motion (including a speedy-trial violation and suppression) made late is untimely unless the party shows good cause (N.D.R.Crim.P. 12(b)(3), (c)). If the court holds an omnibus hearing, a pretrial motion, request or issue not raised there is waived unless the party lacked the information (17.1(b)(3)). Unverified: CURRENCY UNCONFIRMED."
   edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
     authority cite ?("N.D.R.Crim.P. 12(b), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
@@ -74,7 +74,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite ?("N.D.R.Cri
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite ?("N.D.R.Crim.P. 11, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified") {
+decision plea-decision: "Plea or trial" by accused cite ?("N.D.R.Crim.P. 11, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified") {
   note "Pleas and plea agreements are N.D.R.Crim.P. 11. Unverified: CURRENCY UNCONFIRMED."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("N.D.R.Crim.P. 11, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
@@ -117,7 +117,7 @@ state sentencing: "Sentence and judgment" by court cite ?("N.D.R.Crim.P. 32(a), 
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "N.D.R.App.P. 4(b)"
+decision judgment: "Judgment of conviction" by accused cite "N.D.R.App.P. 4(b)"
 {
   note "A defendant's notice of appeal is filed with the clerk of the supreme court within 30 days after the entry of the judgment, order or verdict being appealed, whichever occurs last (N.D.R.App.P. 4(b)(1)(A)); after a timely motion under the criminal rules listed in 4(b)(3)(A), within 30 days after the entry of the order disposing of the last such motion (4(b)(3)(A)); a judgment, order or verdict is entered when it is entered on the criminal docket (4(b)(6))."
   edge-judgment-appeal "Notice of appeal filed within 30 days" -> appeal-taken {

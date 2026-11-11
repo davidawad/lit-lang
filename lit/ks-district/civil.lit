@@ -12,7 +12,7 @@ import ks-state-rules.{ JudgmentEntered }
 // are named in notes but not cited. The outline named no leading decisions.
 start complaint-filed
 
-state complaint-filed: "Petition filed" by applicant cite "K.S.A. 60-203(a)"
+state complaint-filed: "Petition filed" by plaintiff cite "K.S.A. 60-203(a)"
 {
   note "A civil action is commenced at the time of filing a petition with the court if service of process is obtained, or the first publication is made for service by publication, within 90 days after the petition is filed; the court may extend that time an additional 30 days on a showing of good cause by the plaintiff. Otherwise the action is commenced only at service of process or first publication (K.S.A. 60-203(a)). If purported service is later adjudicated invalid, the action is considered commenced at the time under subsection (a) if valid service is obtained within 90 days after that adjudication, extendable by 30 days for good cause (K.S.A. 60-203(b)). An entry of appearance has the same effect as service (K.S.A. 60-203(c)). Substantial compliance with any method of serving process effects valid service if the party served was made aware of the action (K.S.A. 60-204). A pleading demanding money damages over $75,000 without a specific amount states only that the damages exceed $75,000, except in contract actions; a demand of $75,000 or less specifies the amount (K.S.A. 60-208(a))."
   edge-complaint-filed-served "Served within 90 days (or the extended 30)" -> answer-due {
@@ -23,13 +23,13 @@ state complaint-filed: "Petition filed" by applicant cite "K.S.A. 60-203(a)"
   }
 }
 
-state late-service: "Action commenced at service" by applicant cite "K.S.A. 60-203(a)"
+state late-service: "Action commenced at service" by plaintiff cite "K.S.A. 60-203(a)"
 {
   note "When service of process or first publication is not made within the 90 days (or the 30-day extension), the action is commenced at the time of service or first publication, not at filing (K.S.A. 60-203(a)(2)); whether a limitations period has run by then is outside this package."
   edge-late-service-answer "Defendant served" -> answer-due { authority cite "K.S.A. 60-212(a)" }
 }
 
-decision answer-due: "Answer, K.S.A. 60-212 motion, or default" by office cite "K.S.A. 60-212(a)"
+decision answer-due: "Answer, K.S.A. 60-212 motion, or default" by court cite "K.S.A. 60-212(a)"
 {
   note "Unless otherwise provided by law, a defendant serves an answer within 21 days after being served with the summons and petition, or within the time fixed in the notice when service is by publication, which must not be less than 41 days from first publication. An answer to a counterclaim or crossclaim is due within 21 days after service of the pleading, and a reply to an answer within 21 days after service of an order to reply (K.S.A. 60-212(a)(1)). Unless the court sets a different time, serving a K.S.A. 60-212 motion alters these periods: if the court denies the motion or postpones it until trial, the responsive pleading is served within 14 days after notice of the court's action; if it grants a motion for a more definite statement, within 14 days after that statement is served (K.S.A. 60-212(a)(2)). Affirmative defenses are stated in the responsive pleading (K.S.A. 60-208(c))."
   edge-answer-due-answer "Answer served" -> case-management { authority cite "K.S.A. 60-216(b)" }
@@ -53,7 +53,7 @@ decision pleading-motion: "K.S.A. 60-212 motion decided" by court cite "K.S.A. 6
   }
 }
 
-state amended: "Amended pleading" by applicant cite "K.S.A. 60-215(a)"
+state amended: "Amended pleading" by plaintiff cite "K.S.A. 60-215(a)"
 {
   note "A party may amend its pleading once as a matter of course within 21 days after serving it or, if a responsive pleading is required, within 21 days after service of a responsive pleading or of a motion under K.S.A. 60-212(b), (e) or (f), whichever is earlier; otherwise only with the opposing party's written consent or the court's leave, which the court should freely give when justice so requires. Unless the court orders otherwise, a required response to an amended pleading is made within the time remaining to respond to the original pleading or within 21 days after service of the amended pleading, whichever is later (K.S.A. 60-215(a)). An amendment relates back as K.S.A. 60-215(c) provides."
   edge-amended-tested "Amended pleading tested again" -> pleading-motion {
@@ -82,7 +82,7 @@ state case-management: "Case management conference" by court cite "K.S.A. 60-216
   }
 }
 
-state discovery: "Discovery" by applicant cite "K.S.A. 60-226(b)"
+state discovery: "Discovery" by plaintiff cite "K.S.A. 60-226(b)"
 {
   note "Parties may obtain discovery regarding any nonprivileged matter relevant to any party's claim or defense and proportional to the needs of the case (K.S.A. 60-226(b)(1)). A party provides any third-party litigation funding agreement to the court for in camera review, and delivers a sworn disclosure statement to all other parties, within 30 days after commencement of the action or 30 days after execution of the agreement, whichever is later (K.S.A. 60-226(b)(3)(B)(i)). Absent a stipulation or court order, expert disclosures are made at least 90 days before the date set for trial or for the case to be ready for trial, or, for evidence intended solely to rebut another party's expert disclosure, within 30 days after that disclosure (K.S.A. 60-226(b)(6)(C)); additions or changes to an expert's disclosure or deposition testimony are disclosed at least 30 days before trial unless the court orders otherwise (K.S.A. 60-226(e)(2))."
   edge-discovery-sj "Summary judgment motion" -> sj-motion { authority cite "K.S.A. 60-256(c)" }
@@ -135,7 +135,7 @@ decision post-trial: "Post-trial motions decided" by court cite "K.S.A. 60-250(b
   }
 }
 
-decision judgment-entered: "Judgment entered" by office cite "K.S.A. 60-258"
+decision judgment-entered: "Judgment entered" by court cite "K.S.A. 60-258"
 {
   note "Entry of judgment is subject to K.S.A. 60-254(b). No judgment is effective unless and until a journal entry or judgment form is signed by the judge and filed with the clerk. When judgment is entered by judgment form, the clerk serves a copy on all attorneys of record within three days, excluding Saturdays, Sundays and legal holidays; failure of that service does not affect the judgment's validity (K.S.A. 60-258). When an appeal is permitted, it may be taken within 30 days from the entry of judgment; on a showing of excusable neglect based on a party's failure to learn of the entry, the district court may extend the time by not more than 30 days from the expiration of the original time (K.S.A. 60-2103(a))."
   edge-judgment-entered-appeal "Notice of appeal filed within 30 days" -> appeal-taken {

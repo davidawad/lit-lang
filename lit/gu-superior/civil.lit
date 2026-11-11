@@ -2,7 +2,7 @@ module gu-superior-court-civil.civil
 
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "Guam R. Civ. P. 3"
+state complaint-filed: "Complaint filed" by movant cite "Guam R. Civ. P. 3"
 {
   note "A civil action is commenced by filing a complaint with the court (Guam R. Civ. P. 3). Periods in this package are stated, not counted: Rule 6(a) excludes the trigger day, counts every day including intermediate Saturdays, Sundays and legal holidays, and includes the last day unless it is a Saturday, Sunday, legal holiday (1 GCA § 1000(a), (b) and holidays appointed by the President, Congress, the laws of Guam or the Governor) or, for a filing, a day the clerk's office is inaccessible; 3 days are added after service under Rule 5(b)(2)(B), (C) or (D) (Guam R. Civ. P. 6(a), (d)). The filing fee is not stated in the vendored rules. The earlier outline named no leading decision for this step."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
@@ -26,7 +26,7 @@ decision service-review: "Good cause for failure of service shown?" by court cit
 
 terminal dismissed-unserved: "Dismissed without prejudice for want of service" outcome [loss, dismissal] cite "Guam R. Civ. P. 4(m)"
 
-decision answer-due: "Answer, motion or default" by office cite "Guam R. Civ. P. 12(a)"
+decision answer-due: "Answer, motion or default" by court cite "Guam R. Civ. P. 12(a)"
 {
   note "A defendant serves an answer within 20 days after service of the summons and complaint; the government of Guam or its officer or agency, within 60 days after service on the Attorney General or agency counsel. A Rule 12 motion alters the period unless the court fixes another: if the motion is denied or postponed to trial, the responsive pleading is served within 10 days after notice of the court's action; if a more definite statement is ordered, within 10 days after its service (Guam R. Civ. P. 12(a))."
   edge-answer-due-default "No answer or defense" -> default-entered {
@@ -48,7 +48,7 @@ decision pleading-motion: "Motion to dismiss decided" by court cite "Guam R. Civ
   }
 }
 
-state amend: "Amended pleading" by applicant cite "Guam R. Civ. P. 15(a)"
+state amend: "Amended pleading" by movant cite "Guam R. Civ. P. 15(a)"
 {
   note "A party may amend once as a matter of course before a responsive pleading is served; otherwise only by leave of court, freely given when justice so requires, or by written consent of the adverse party. A party pleads in response within the time remaining on the original pleading or within 10 days after service of the amendment, whichever is longer, unless the court orders otherwise (Guam R. Civ. P. 15(a))."
   edge-amend-tested "Amended pleading tested again" -> pleading-motion {
@@ -77,7 +77,7 @@ terminal default-judgment: "Default judgment" outcome [loss] cite "Guam R. Civ. 
   note "Outcome from the defending side."
 }
 
-state discovery: "Disclosure, discovery and pretrial" by applicant cite "Guam R. Civ. P. 26(f)"
+state discovery: "Disclosure, discovery and pretrial" by movant cite "Guam R. Civ. P. 26(f)"
 {
   note "Except in exempt proceedings or when otherwise ordered, the parties confer on their claims, disclosures and a proposed discovery plan as soon as practicable and in any event at least 21 days before a scheduling conference is held or a scheduling order is due under Rule 16(b) (Guam R. Civ. P. 26(f)). A jury is demanded by serving a written demand not later than 10 days after service of the last pleading directed to the issue and filing it (Guam R. Civ. P. 38(b))."
   edge-discovery-sj "Summary judgment motion" -> summary-judgment {
@@ -105,7 +105,7 @@ state trial: "Trial by jury or by the court" by court cite "Guam R. Civ. P. 38"
   edge-trial-settled "Settled before verdict" -> settled { authority cite "Guam R. Civ. P. 41(a)" }
 }
 
-decision post-trial: "Post-trial motions" by applicant cite "Guam R. Civ. P. 59"
+decision post-trial: "Post-trial motions" by movant cite "Guam R. Civ. P. 59"
 {
   note "A motion for a new trial, and a motion to alter or amend the judgment, are filed no later than 10 days after entry of the judgment; opposing affidavits follow within 10 days after service, extendable up to 20 days (Guam R. Civ. P. 59(b), (c), (e)). A motion to amend findings is filed no later than 10 days after entry of judgment (Guam R. Civ. P. 52(b)). The court must not extend these times (Guam R. Civ. P. 6(b)). A timely motion under Rules 50(b), 52(b), 59, 54(d)(2) where the court extends the time under Rule 58(c), or 60 filed within 10 days after judgment runs the time to appeal from the order disposing of the last such motion (Guam R. App. P. 4(a))."
   edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered {
@@ -113,7 +113,7 @@ decision post-trial: "Post-trial motions" by applicant cite "Guam R. Civ. P. 59"
   }
 }
 
-decision judgment-entered: "Final judgment entered" by office cite "Guam R. Civ. P. 58"
+decision judgment-entered: "Final judgment entered" by court cite "Guam R. Civ. P. 58"
 {
   note "Every judgment is set forth on a separate document, with exceptions for orders disposing of motions under Rules 50(b), 52(b), 54, 59 and 60; a judgment requiring a separate document is entered when docketed under Rule 79(a) and the earlier of its setting forth on a separate document or 150 days from docketing (Guam R. Civ. P. 58(a), (b)). Costs other than attorneys' fees are allowed as of course to the prevailing party unless the court otherwise directs, taxed by the clerk on one day's notice and reviewed on motion served within 5 days thereafter (Guam R. Civ. P. 54(d))."
   edge-judgment-entered-appeal "Notice of appeal within 30 days" -> appeal-taken {

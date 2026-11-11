@@ -12,7 +12,7 @@ import co-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
 // annotation to C.A.R. 54 reports it.
 start petition
 
-decision petition: "Petition for writ of certiorari?" by applicant cite "Rule Change 2026(05), C.A.R. 52(b)"
+decision petition: "Petition for writ of certiorari?" by petitioner cite "Rule Change 2026(05), C.A.R. 52(b)"
 {
   note "A petition for writ of certiorari is filed within 42 days after entry of the final judgment on appeal, whether by opinion or by order, if no petition for rehearing is filed, or within 28 days after the intermediate appellate court denies rehearing or issues a new or modified opinion after granting it; no certiorari proceeding may be initiated until the time for rehearing in the intermediate court has expired; a timely petition, or a timely motion to extend the time for one, transfers jurisdiction to the supreme court (Rule Change 2026(05), C.A.R. 52(b)). In workers' compensation and unemployment insurance cases the petition is filed within 28 days after the court of appeals opinion if no rehearing petition is filed, or within 14 days after rehearing is denied (C.A.R. 52(b)(2)). After appearance and payment of the docket fee the supreme court may for good cause extend the time or permit a late petition (C.A.R. 56). The petition complies with C.A.R. 32 and contains, in order, tables of contents and authorities, an advisory listing of the issues, a reference to the reports of the opinion, the grounds of jurisdiction with the dates of the judgment and any rehearing order, any pending case granted on the same issue, a statement of the case, the argument for issuing the writ with preservation and standard of review, and an appendix with the opinion (C.A.R. 53(a)). A stay of the intermediate court's decision is first sought in that court (C.A.R. 55)."
   edge-petition-none "No petition: the court of appeals judgment stands" -> no-petition {
@@ -33,7 +33,7 @@ decision review-decided: "Certiorari granted or denied" by court cite "C.A.R. 49
   edge-review-decided-granted "Granted" -> briefing { authority cite "C.A.R. 54(a)" }
 }
 
-state briefing: "Merits briefs" by applicant cite "C.A.R. 57"
+state briefing: "Merits briefs" by petitioner cite "C.A.R. 57"
 {
   note "On a grant the clerk issues an order notifying the lower court and counsel, and the certified transcript of record on file is treated as though sent up in response to a formal writ (C.A.R. 54(a)). Merits briefs comply with the content and length requirements of C.A.R. 28 and the form and service requirements of C.A.R. 25 and 32, and are filed within the time C.A.R. 31 prescribes, except that in workers' compensation cases the petitioner serves and files its opening brief within 14 days and the respondent its brief within 7 days after service of it, and no other brief is permitted; briefs filed below may not be incorporated by reference (C.A.R. 57)."
   edge-briefing-argue "Briefs closed" -> argument { authority cite "C.A.R. 34(a)" }
@@ -54,7 +54,7 @@ state decision: "Decision on the writ" by court cite "C.A.R. 35(a)"
   }
 }
 
-decision rehearing-decision: "Rehearing sought?" by applicant cite "Rule Change 2026(05), C.A.R. 40(c)"
+decision rehearing-decision: "Rehearing sought?" by petitioner cite "Rule Change 2026(05), C.A.R. 40(c)"
 {
   note "In certiorari proceedings a petition for rehearing may be filed after an opinion on the merits of a granted writ, or when the court, after granting the writ, dismisses it as improvidently granted; never after an order denying the petition (Rule Change 2026(05), C.A.R. 40(c)(3)). Unless the time is shortened or extended by order it is filed within 14 days after entry of judgment and states with particularity each point overlooked or misapprehended (C.A.R. 40(a))."
   edge-rehearing-decision-none "No petition" -> mandate {
@@ -73,7 +73,7 @@ state rehearing-order: "Rehearing decided" by court cite "C.A.R. 40(a)"
   }
 }
 
-state mandate: "Mandate issued" by office cite "Rule Change 2024(11), C.A.R. 41(b)"
+state mandate: "Mandate issued" by court cite "Rule Change 2024(11), C.A.R. 41(b)"
 {
   note "Unless the court grants or removes a stay or otherwise changes the time, the supreme court mandate issues no earlier than 14 days after entry of the judgment, or immediately where a petition for rehearing is not permitted; if rehearing is denied, or an extended time for it runs without a petition, no earlier than 2 days after the order denying it or the extended deadline; and immediately when a United States Supreme Court order denying certiorari is filed (Rule Change 2024(11), C.A.R. 41(b)(2))."
   edge-mandate-final "Mandate issued" -> decided {

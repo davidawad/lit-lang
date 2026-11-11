@@ -19,7 +19,7 @@ event ReplyBriefFiled() paper or-state-rules.sct-reply-brief
 
 start commenced
 
-state commenced: "Appeal filed in the Tax Court" by applicant cite ?("ORS 305.280; Tax Court Rules: not vendored") {
+state commenced: "Appeal filed in the Tax Court" by plaintiff cite ?("ORS 305.280; Tax Court Rules: not vendored") {
   note "Commencement of an appeal in the Tax Court (in the Magistrate Division, with de novo trial in the Regular Division), its filing period, fee and form: holes, because neither the Tax Court Rules nor ORS chapter 305 is vendored. Tax Court Rule 9 A incorporates UTCR chapter 21 in Tax Court proceedings (ORAP 2.05, note); UTCR chapter 21 is not vendored."
   edge-commenced-proceeds "Appeal docketed" -> tax-decision {
     event ActionCommenced()
@@ -50,7 +50,7 @@ terminal settled: "Settled or withdrawn" outcome [settlement] cite ?("Tax Court 
   note "Settlement terms are outside this package."
 }
 
-decision post-judgment: "Direct appeal to the Supreme Court?" by applicant cite "ORAP 12.05"
+decision post-judgment: "Direct appeal to the Supreme Court?" by plaintiff cite "ORAP 12.05"
 {
   note "A direct appeal from a court of law to the Supreme Court is taken in the manner of ORAP chapters 2 and 3 except as a statute or another rule provides (ORAP 12.05(1)(a), (2)); ORS 305.445 governs Tax Court judgments and orders and is not vendored, so the time for the notice of appeal is a hole. The notice is served and filed within the time the statute allows, substantially in the form of Appendix 2.05, with the complete title and case number below, a statement of the judgment appealed from and the judge who signed it, the adverse parties, and a copy of the judgment (ORAP 2.05(1)-(4), (12)); the entry date of a Tax Court judgment is identified under UTCR 21.060(3)(b), which Tax Court Rule 9 A incorporates (ORAP 2.05, note). The case-initiating document states the statutory authority for filing directly in the Supreme Court, and filing fees are assessed under ORS 21.010, not vendored (ORAP 12.05(4))."
   edge-post-judgment-appeal "Notice of appeal filed" -> appealability {
@@ -76,7 +76,7 @@ terminal dismissed-jurisdiction: "Dismissed: decision not appealable" outcome [l
   note "Outcome from the applicant's side: dismissal on a determination that the decision is not appealable (ORAP 2.35(5))."
 }
 
-state briefing: "Briefs in the Supreme Court" by applicant cite "ORAP 5.80"
+state briefing: "Briefs in the Supreme Court" by plaintiff cite "ORAP 5.80"
 {
   note "Unless a statute or the rules provide otherwise, the opening brief and excerpt of record are filed within 49 days after the transcript is settled or waived, an agreed narrative statement is filed, or, if none is designated, the notice of appeal is filed; the answering brief within 49 days after the opening brief; a reply within 21 days after the answering brief (ORAP 5.80(1)-(3)). The court may set a special briefing schedule on motion or on its own initiative (ORAP 12.05(5)). An opening or answering brief may not exceed 14,000 words and a reply 4,000, or 50 and 15 pages for a party without a word count, with the word-count certificate at the end (ORAP 5.05(1)(b)(i), (c), (d))."
   edge-briefing-opening "Opening brief filed" -> answering {
@@ -85,7 +85,7 @@ state briefing: "Briefs in the Supreme Court" by applicant cite "ORAP 5.80"
   }
 }
 
-state answering: "Answering and reply briefs" by applicant cite "ORAP 5.80"
+state answering: "Answering and reply briefs" by plaintiff cite "ORAP 5.80"
 {
   note "The respondent's answering brief is due within 49 days after the opening brief, and the appellant's reply, if any, within 21 days after the answering brief (ORAP 5.80(2), (3))."
   edge-answering-reply "Reply filed: submitted" -> decision {

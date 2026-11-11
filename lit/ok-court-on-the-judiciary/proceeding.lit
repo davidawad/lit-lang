@@ -10,7 +10,7 @@ import ok-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeO
 // earlier outline named no leading decision; none is cited.
 start charges
 
-state charges: "Charges filed" by office cite ?("Okla. Const. art. VII-A") {
+state charges: "Charges filed" by court cite ?("Okla. Const. art. VII-A") {
   note "How proceedings against a judge in the Court on the Judiciary begin, who may file them, notice and the respondent's rights are in Okla. Const. art. VII-A and the court's rules, not vendored (lg-l6xh, #16): holes. The applicant is the respondent judge."
   edge-charges-answer "Respondent served" -> answer {
     event ActionCommenced()
@@ -18,7 +18,7 @@ state charges: "Charges filed" by office cite ?("Okla. Const. art. VII-A") {
   }
 }
 
-state answer: "Answer and pretrial" by applicant cite ?("Okla. Const. art. VII-A") {
+state answer: "Answer and pretrial" by movant cite ?("Okla. Const. art. VII-A") {
   note "The answer period, discovery and any interim suspension are holes (lg-l6xh, #16)."
   edge-answer-hearing "Set for trial" -> hearing { authority cite ?("Okla. Const. art. VII-A") }
 }
@@ -36,7 +36,7 @@ chance decision: "Court decides" by court cite ?("Okla. Const. art. VII-A") {
   edge-decision-sanction "Sanction ordered" -> sanction p ? { event DecisionFiled() }
 }
 
-decision sanction: "Review sought?" by applicant cite ?("Okla. Const. art. VII-A") {
+decision sanction: "Review sought?" by movant cite ?("Okla. Const. art. VII-A") {
   note "Whether, when and where the respondent may seek review is a hole (lg-l6xh, #16)."
   edge-sanction-final "No review" -> sanction-final {
     event JudgmentEntered()

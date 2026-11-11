@@ -16,7 +16,7 @@ module ut-criminal-trial-court.criminal
 // text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "URCrP 6"
+state arrested: "Arrest or summons" by prosecution cite "URCrP 6"
 {
   note "A felony is prosecuted by information (URCrP 4) or indictment (URCrP 4A); a warrant of arrest or summons issues under URCrP 6. A person arrested without a warrant is presented without unnecessary delay before a magistrate for the determination of probable cause and eligibility for pretrial release, on a sworn probable cause statement presented within the time URCrP 9(a)(2) sets, which is not stated here (currency unconfirmed)."
   edge-arrested-appearance "First appearance" -> initial-appearance { authority cite "URCrP 7" }
@@ -42,19 +42,19 @@ decision probable-cause: "Preliminary examination" by court cite "URCrP 7B"
   }
 }
 
-state charged: "Information or indictment in the district court" by office cite "URCrP 4"
+state charged: "Information or indictment in the district court" by court cite "URCrP 4"
 {
   note "On the return of an indictment or the receipt of the magistrate's records after a bind-over, the defendant is arraigned forthwith in the district court (URCrP 10(a)). The speedy-trial statute (Utah Code 77-29-1) is not vendored."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "URCrP 10(a)" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "URCrP 10"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "URCrP 10"
 {
   note "Arraignment is in open court (URCrP 10(a)); a defect in the proceedings before arraignment must be expressly objected to before a guilty plea or is waived (URCrP 10(c)). Upon arraignment a defendant, except for an infraction, is represented by counsel unless counsel is waived in open court (URCrP 11(a)). A defendant may plead not guilty, guilty, no contest with the court's consent, not guilty by reason of insanity, or guilty with a mental condition (URCrP 11(b), (c)); on a not-guilty plea the case is set for trial, with a preference for an early trial for a defendant unable to make bail (URCrP 11(d))."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "URCrP 16" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "URCrP 12"
+state discovery: "Discovery and pretrial motions" by prosecution cite "URCrP 12"
 {
   note "Discovery is governed by URCrP 16. A defense, objection or request capable of determination without trial may be raised before trial by written motion, and the motions URCrP 12(c)(1) lists must be raised a stated time before trial, which is not stated here (currency unconfirmed). The court must dismiss the information or indictment for unreasonable or unconstitutional delay in bringing the defendant to trial (URCrP 25(b)(1)); the statutory speedy-trial demand (Utah Code 77-29-1) is a hole."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling { authority cite "URCrP 12(c)" }
@@ -76,7 +76,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "URCrP 25"
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "URCrP 11"
+decision plea-decision: "Plea or trial" by accused cite "URCrP 11"
 {
   note "The court's acceptance of a plea of guilty or no contest and its findings are governed by URCrP 11; the plea forms are not encoded here."
   edge-plea-decision-plea "Guilty or no contest plea accepted" -> sentencing {
@@ -107,7 +107,7 @@ decision post-trial: "Motion for new trial" by court cite "URCrP 24"
   edge-post-trial-denied "No motion, or motion denied" -> judgment { authority cite "URAP 4(b)" }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "URAP 4(a)"
+decision judgment: "Judgment of conviction" by accused cite "URAP 4(a)"
 {
   note "The notice of appeal is filed with the clerk of the trial court within 30 days after the date of entry of the judgment or order appealed from (URAP 4(a)); a timely URCrP 24 new-trial motion restarts that time from the order disposing of it (URAP 4(b)(1)(G)). The trial court may extend the time for good cause on a motion filed before it expires, or for good cause or excusable neglect on a motion filed within 30 days after it expires, by no more than the limit URAP 4(e) sets (URAP 4(e)). A defendant deprived of the right to appeal through no fault of the defendant may have the 30-day period reinstated (URAP 4(f)). lit/core has no counting rule for URAP 22, so the period is not encoded as a counted deadline."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "URAP 4(a)" }

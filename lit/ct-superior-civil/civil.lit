@@ -17,7 +17,7 @@ import ct-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 // standard is the rule's own (Practice Book § 17-49).
 start process-served
 
-state process-served: "Writ, summons and complaint served and returned" by applicant cite "Practice Book § 8-1"
+state process-served: "Writ, summons and complaint served and returned" by plaintiff cite "Practice Book § 8-1"
 {
   note "Process in civil actions is a writ of summons or attachment, describing the parties, the court to which it is returnable and the time and place of appearance, accompanied by the plaintiff's complaint, signed by a Commissioner of the Superior Court or a judge or clerk of the court; in civil actions other than family and summary process it is on Form JD-CV-1 (Practice Book § 8-1(a)). Pleadings, including motions and requests addressed to them, advance within thirty days from the return day, and each later pleading at least one step within each successive thirty days (Practice Book § 10-8)."
   edge-process-served-pleads "Defendant appears and pleads" -> pleading-due {
@@ -29,7 +29,7 @@ state process-served: "Writ, summons and complaint served and returned" by appli
   }
 }
 
-decision pleading-due: "Motion to dismiss, motion to strike, answer, or no pleading" by office cite "Practice Book § 10-8"
+decision pleading-due: "Motion to dismiss, motion to strike, answer, or no pleading" by court cite "Practice Book § 10-8"
 {
   note "Commencing on the return day, pleadings, including motions and requests addressed to the pleadings, advance within thirty days from the return day; discovery does not suspend that time unless the judicial authority finds good cause (Practice Book § 10-8). A defendant wishing to contest the court's jurisdiction does so by a motion to dismiss filed within thirty days of the filing of an appearance (Practice Book § 10-30(b)). A party contesting the legal sufficiency of a complaint uses a motion to strike, with a memorandum of law (Practice Book § 10-39)."
   edge-pleading-due-dismiss "Motion to dismiss" -> dismissal-motion {
@@ -69,7 +69,7 @@ decision strike-motion: "Motion to strike decided" by court cite "Practice Book 
   }
 }
 
-state amended: "Amended pleading" by applicant cite "Practice Book § 10-60"
+state amended: "Amended pleading" by plaintiff cite "Practice Book § 10-60"
 {
   note "A party may amend by order of the judicial authority, by written consent of the adverse party, or by filing a request for leave with the amended pleading; if no party objects within fifteen days from the date the request is filed, the amendment is deemed filed by consent (Practice Book § 10-60(a)). The adverse party may plead to an amended pleading within the time provided by Section 10-8 or, if it has already pleaded, alter its pleading within ten days after the amendment (Practice Book § 10-61)."
   edge-amended-pleads "Pleadings advance on the amended complaint" -> pleading-due {
@@ -87,7 +87,7 @@ terminal stricken: "Complaint stricken and not repleaded" outcome [loss, dismiss
   note "Outcome from the applicant's side: the motion to strike granted and no amended pleading filed."
 }
 
-state default-entered: "Default for failure to appear or to plead" by office cite "Practice Book § 17-32"
+state default-entered: "Default for failure to appear or to plead" by court cite "Practice Book § 17-32"
 {
   note "If no appearance has been entered for a party on or before the second day following the return day, another party may move for a nonsuit or default for failure to appear; the clerk acts on a motion for default for failure to appear not less than seven days from its filing, and an appearance before judgment sets the default aside by operation of law (Practice Book § 17-20(a), (d)). Where a defendant is in default for failure to plead under Section 10-8, the plaintiff may move for default, acted on by the clerk not less than seven days from the filing of the motion; an answer filed before judgment sets the default aside unless a claim for a hearing in damages or a motion for judgment has been filed, and neither may be filed before fifteen days have run (Practice Book § 17-32). The judicial authority may render judgment after default as Section 17-33 provides."
   edge-default-entered-judgment "Judgment after default" -> default-judgment {
@@ -114,7 +114,7 @@ terminal default-won: "Judgment after default for applicant" outcome [win] cite 
   note "Outcome from the applicant's side: judgment after default under Section 17-33."
 }
 
-state discovery: "Discovery" by applicant cite "Practice Book § 13-2"
+state discovery: "Discovery" by plaintiff cite "Practice Book § 13-2"
 {
   note "A party may obtain discovery of information and of papers, documents and electronically stored information material to the subject matter of the action and not privileged (Practice Book § 13-2). Interrogatories are answered under oath and served within sixty days after the date of certification of service, unless a stipulation or the judicial authority allows longer or objections are filed and served within the sixty days (Practice Book § 13-7(a)); requests for production are answered within the same sixty days on the same terms (Practice Book § 13-10(a)). The Superior Court judges' amendments effective January 1, 2027 add a fifteen-day period in residential summary process matters to both sections and leave the sixty days unchanged."
   edge-discovery-noncompliance "Failure to answer or comply with a discovery order" -> discovery-sanction {

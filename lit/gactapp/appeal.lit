@@ -2,7 +2,7 @@ module ga-court-of-appeals-civil-appeals.appeal
 
 start docketed
 
-state docketed: "Appeal docketed" by office cite "Ga. Ct. App. R. 11"
+state docketed: "Appeal docketed" by court cite "Ga. Ct. App. R. 11"
 {
   note "No appeal is docketed until the notice of appeal, the record and any requested transcripts are filed in the Clerk's office (Rule 11(a)). The Clerk sends notice of the docketing date and briefing schedule (Rule 13). The filing fee is $300 in all civil cases, accruing on docketing (Rule 5(a)). The notice-of-appeal period (O.C.G.A. § 5-6-38) is not vendored; an extension of it may be sought in this Court before the period expires, only once, for no longer than the time otherwise allowed (Rule 16(a)). A filing deadline falling on a Saturday, Sunday, an official state or national holiday, or a day the Clerk's office is closed for an emergency is extended to the next business day (Rule 3)."
   edge-docketed-transfer "Within another court's jurisdiction: transferred" -> transferred {
@@ -18,7 +18,7 @@ terminal transferred: "Transferred by order to the court with jurisdiction" outc
   note "An appeal or application within the jurisdiction of another court is transferred to that court by order (Rule 11(b))."
 }
 
-state briefing: "Briefing: appellant, appellee, reply" by applicant cite "Ga. Ct. App. R. 23"
+state briefing: "Briefing: appellant, appellee, reply" by movant cite "Ga. Ct. App. R. 23"
 {
   note "Appellant's brief and enumeration of errors are filed within 20 days after the appeal is docketed; failure may result in dismissal (Rule 23(a)). Appellee's brief should be filed within 40 days after docketing or 20 days after appellant's brief, whichever is later (Rule 23(b)). Appellant may reply within 20 days from the filing of appellee's brief (Rule 23(c)). A request for oral argument is filed as a motion within 20 days from docketing (Rule 28(a)(2)). Efiled briefs are limited to 8,400 words in civil cases, the reply to 4,200; paper briefs to 30 pages, the reply to 15 (Rule 24(f)). Extensions of time to file a brief are discretionary and by written order (Rule 16(b)). The periods are not encoded as deadlines: the Georgia rule for counting a period is not vendored."
   edge-briefing-dismissed "Appellant's brief not filed in time: appeal dismissed" -> dismissed {
@@ -49,7 +49,7 @@ decision decision: "Judgment" by court cite "Ga. Ct. App. R. 33"
   }
 }
 
-decision post-judgment: "Reconsideration, certiorari, or neither" by applicant cite "Ga. Ct. App. R. 37"
+decision post-judgment: "Reconsideration, certiorari, or neither" by movant cite "Ga. Ct. App. R. 37"
 {
   note "A motion for reconsideration is filed within 10 days from the rendition of the judgment and must be received by 4:30 p.m.; it is limited to 4,200 words and no extension is granted except for providential cause (Rule 37(a), (b)). Notice of intention to petition the Supreme Court of Georgia for certiorari is filed with this Court's Clerk within 10 days after the judgment, or after the order on a motion for reconsideration (Rule 38(a)(1)); reconsideration is not a prerequisite."
   edge-post-judgment-reconsideration "Motion for reconsideration" -> reconsideration {

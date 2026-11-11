@@ -16,7 +16,7 @@ module mp-superior-court-criminal.criminal
 // are removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "Com. R. Crim. P. 4"
+state arrested: "Arrest or summons" by prosecution cite "Com. R. Crim. P. 4"
 {
   note "On a complaint showing probable cause a summons or, at the government's request, an arrest warrant issues (Com. R. Crim. P. 4(a)); Rules 4 and 9 were amended in March 2015, as the filed amendments in the vendored text show. A person arrested with or without a warrant is taken without unnecessary delay before the nearest available judge of the Superior Court, and after a warrantless arrest a complaint is filed forthwith (Com. R. Crim. P. 5(a))."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
@@ -46,19 +46,19 @@ decision probable-cause: "Preliminary examination" by court cite "Com. R. Crim. 
   }
 }
 
-state charged: "Information" by office cite "Com. R. Crim. P. 7(a)"
+state charged: "Information" by court cite "Com. R. Crim. P. 7(a)"
 {
   note "All offenses except misdemeanors are prosecuted by information, which may be filed without leave of court (Com. R. Crim. P. 7(a)). A motion for a bill of particulars may be made before arraignment or within ten (10) days after it, or later with leave (Com. R. Crim. P. 7(f)). If there is unnecessary delay in filing an information against a defendant held to answer, or in bringing a defendant to trial, the court may dismiss the information or complaint (Com. R. Crim. P. 48(b))."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Com. R. Crim. P. 10" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "Com. R. Crim. P. 10"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "Com. R. Crim. P. 10"
 {
   note "Arraignment is conducted in open court by reading the complaint or information or stating its substance and calling on the defendant to plead, after the defendant is given a copy (Com. R. Crim. P. 10). A defendant may plead not guilty, guilty or nolo contendere, and a refusal to plead is entered as not guilty (Com. R. Crim. P. 11(a))."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "Com. R. Crim. P. 16" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "Com. R. Crim. P. 12"
+state discovery: "Discovery and pretrial motions" by prosecution cite "Com. R. Crim. P. 12"
 {
   note "On request the government discloses the defendant's statements and the other material Rule 16(a) lists (Com. R. Crim. P. 16(a)). Defects in instituting the prosecution or in the charge, motions to suppress, discovery requests and severance requests must be raised before trial, and the court may set a time for pretrial motions at or after arraignment (Com. R. Crim. P. 12(b), (c)). A written motion and notice of hearing are served not later than five (5) days before the hearing unless a different period is fixed, opposing affidavits not less than one (1) day before, and three (3) days are added after service by mail (Com. R. Crim. P. 45(d), (e))."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -84,7 +84,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Com. R. Cri
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Com. R. Crim. P. 11"
+decision plea-decision: "Plea or trial" by accused cite "Com. R. Crim. P. 11"
 {
   note "A plea of guilty or nolo contendere is accepted under Rule 11. In a problem-solving court the court may, on the motion of both parties, hold a guilty or nolo contendere plea in abeyance under a written agreement, for not longer than 24 months absent an extension for good cause (Com. R. Crim. P. 11-1(b), (c)). Cases required to be tried by jury are so tried unless the defendant waives a jury in writing, and juries are of six unless the parties stipulate otherwise before verdict (Com. R. Crim. P. 23(a), (b))."
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
@@ -127,7 +127,7 @@ state sentencing: "Sentencing" by court cite "Com. R. Crim. P. 32(a)"
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Com. R. Crim. P. 32(b)"
+decision judgment: "Judgment of conviction" by accused cite "Com. R. Crim. P. 32(b)"
 {
   note "A judgment of conviction sets forth the plea, the verdict or findings, and the adjudication and sentence (Com. R. Crim. P. 32(b)(1)). A defendant's notice of appeal must be filed in the Superior Court within 30 days after the later of the entry of the judgment or order appealed from or the government's notice of appeal (NMI Sup. Ct. R. 4(b)(1)(A))."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {

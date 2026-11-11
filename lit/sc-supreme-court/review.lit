@@ -6,7 +6,7 @@ import sc-state-rules.{ MandateIssued, ReviewPetitionFiled }
 // period is stated in a note, not counted.
 start petition
 
-decision petition: "Petition for certiorari?" by applicant cite "S.C. App. Ct. R. 242(c)"
+decision petition: "Petition for certiorari?" by petitioner cite "S.C. App. Ct. R. 242(c)"
 {
   note "A petition for a writ of certiorari is served and filed with the Clerks of the Court of Appeals and the Supreme Court within thirty days after the petition for rehearing in the Court of Appeals is finally decided; it may present only questions raised in the Court of Appeals and in the petition for rehearing, and may not exceed twenty-five pages (S.C. App. Ct. R. 242(c), (d))."
   edge-petition-none "No petition" -> remittitur { authority cite "S.C. App. Ct. R. 221(b)" }

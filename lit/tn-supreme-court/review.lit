@@ -43,7 +43,7 @@ event RehearingPetitionFiled() paper rehearing-petition
 
 start application
 
-decision application: "Application for permission to appeal?" by applicant cite "Tenn. R. App. P. 11(a)"
+decision application: "Application for permission to appeal?" by petitioner cite "Tenn. R. App. P. 11(a)"
 {
   note "An appeal by permission lies from a final decision of the Court of Appeals or Court of Criminal Appeals to the Supreme Court only on application and in the Supreme Court's discretion; the reasons considered, neither controlling nor fully measuring that discretion, are the need to secure uniformity of decision, settlement of important questions of law or of questions of public interest, and the exercise of the court's supervisory authority (Tenn. R. App. P. 11(a)). The application is filed with the clerk of the Supreme Court within 60 days after entry of the intermediate court's judgment, or, if a timely petition for rehearing is filed, within 60 days after its denial or the judgment on rehearing; except for an application from the Court of Criminal Appeals' disposition of a Rule 9 or Rule 10 appeal, the time is not jurisdictional in a case from the Court of Criminal Appeals and may be waived in the interest of justice (Tenn. R. App. P. 11(b)). It states the dates of judgment and any rehearing, the questions presented with the standard of review for each, the relevant facts with references to the record, and the reasons for review; it may not exceed 15,000 words, the intermediate court's opinion is appended, and the appellant's brief may be filed with it (Tenn. R. App. P. 11(b)). The original and five copies are filed and served under Rule 20 (Tenn. R. App. P. 11(c)). The state and the defendant may each seek permission in a criminal action (Tenn. R. App. P. 11(g)). The timely application stays the intermediate court's mandate until final disposition (Tenn. R. App. P. 42(b))."
   edge-application-none "No application: the intermediate decision stands" -> review-not-sought {
@@ -66,7 +66,7 @@ decision permission: "Permission to appeal granted or denied" by court cite "Ten
   }
 }
 
-state briefing: "Briefs" by applicant cite "Tenn. R. App. P. 11(f)"
+state briefing: "Briefs" by petitioner cite "Tenn. R. App. P. 11(f)"
 {
   note "The appellant serves and files a brief within 30 days after permission is granted; an appellant who filed a brief with the application may file a supplemental brief in that time, or else files notice of its election not to, failing which the appellee's time runs from the 30th day after the grant. The appellee's brief is due within 30 days after the appellant's brief, supplemental brief or notice of election, and reply briefs within 14 days after the preceding brief; where permission is granted from the denial of a Rule 9 application, the appellant's brief is due within 30 days after the record is filed under Rule 9(e) (Tenn. R. App. P. 11(f)). Otherwise Rules 27-30 govern the briefs' content, filing and form (Tenn. R. App. P. 11(f)): principal briefs are limited to 15,000 words and reply and supplemental briefs to 5,000, with a certificate of the word count (Tenn. R. App. P. 30(e)). If an appellant's brief is late any appellee may move to dismiss, and if an appellee's is late the appellant may move to submit on the record and its brief; the other side may respond within 14 days (Tenn. R. App. P. 29(c))."
   edge-briefing-argument "Briefs filed" -> argument { authority cite "Tenn. R. App. P. 35" }
@@ -94,7 +94,7 @@ decision decision: "Supreme Court decision" by court cite "Tenn. R. App. P. 13"
   }
 }
 
-decision post-decision-affirmed: "Rehearing sought?" by applicant cite "Tenn. R. App. P. 39"
+decision post-decision-affirmed: "Rehearing sought?" by petitioner cite "Tenn. R. App. P. 39"
 {
   note "A petition for rehearing is filed with the clerk within 10 days after entry of judgment unless the court or a justice shortens or enlarges the time, extensions being allowed only in extreme and unavoidable circumstances; it states the reasons with references to the opinion, record or briefs and may not exceed 15 pages without permission (Tenn. R. App. P. 39(b)). The grounds considered are a misstatement of the material facts, a conflict with a statute, prior decision or other principle of law, an overlooked or misapprehended material fact or proposition of law, or reliance on matters the parties were not heard on; rehearing is not granted to reargue matters fully argued (Tenn. R. App. P. 39(a)). No answer is permitted unless the court requests one, rehearing is granted if a majority of the members are satisfied it is appropriate, and no second petition is filed except on motion and leave (Tenn. R. App. P. 39(d)-(f))."
   edge-post-decision-affirmed-none "No rehearing: mandate issues" -> affirmed {

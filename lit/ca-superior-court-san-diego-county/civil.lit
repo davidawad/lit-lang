@@ -17,7 +17,7 @@ import ca-state-rules.{ JudgmentEntered, NoticeOfAppealFiled }
 // but not cited. The outline named no leading decisions.
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "Cal. Code Civ. Proc. § 350"
+state complaint-filed: "Complaint filed" by movant cite "Cal. Code Civ. Proc. § 350"
 {
   note "Superior Court of California, County of San Diego: the court's local rules (divisions I and II, civil) supplement the Code of Civil Procedure and the Rules of Court; they are not vendored and not modeled. An action is commenced, within the meaning of the limitations title, when the complaint is filed (Cal. Code Civ. Proc. § 350). The summons directs the defendant to file a written pleading in response to the complaint within 30 days after the summons is served, and warns that default may be entered otherwise (Cal. Code Civ. Proc. § 412.20(a)(3), (4)). A summons may be served by personal delivery of a copy of the summons and complaint, complete at delivery (Cal. Code Civ. Proc. § 415.10); the other methods of service are in the same chapter."
   edge-complaint-filed-served "Summons and complaint served" -> response-due {
@@ -25,7 +25,7 @@ state complaint-filed: "Complaint filed" by applicant cite "Cal. Code Civ. Proc.
   }
 }
 
-decision response-due: "Answer, demurrer, or default" by office cite "Cal. Code Civ. Proc. § 412.20(a)"
+decision response-due: "Answer, demurrer, or default" by court cite "Cal. Code Civ. Proc. § 412.20(a)"
 {
   note "The defendant responds within 30 days after the summons is served (Cal. Code Civ. Proc. § 412.20(a)(3)). A party against whom a complaint has been filed may object to it by demurrer or answer on the grounds of Cal. Code Civ. Proc. § 430.10: no subject-matter jurisdiction, lack of capacity, another action pending, defect or misjoinder of parties, failure to state facts sufficient to constitute a cause of action, uncertainty, an undeterminable contract form, or a missing § 411.35 certificate. A ground on the face of the pleading is taken by demurrer, one that is not by answer, and a party may demur and answer at the same time (Cal. Code Civ. Proc. § 430.30). A demurrer is filed within 30 days after service of the complaint (Cal. Code Civ. Proc. § 430.40(a)). Before demurring the parties meet and confer at least 5 days before the responsive pleading is due; if they cannot, the demurring party gets an automatic 30-day extension by filing a declaration on or before the date the demurrer would be due (Cal. Code Civ. Proc. § 430.41(a)(2))."
   edge-response-due-default "No answer, demurrer or listed motion filed in time" -> default-entered {
@@ -60,7 +60,7 @@ terminal dismissed: "Dismissed on demurrer" outcome [loss, dismissal] cite "Cal.
   note "Outcome from the applicant's side. Except where § 597 applies, the court may dismiss the complaint as to the defendant after a demurrer is sustained without leave to amend and either party moves for dismissal, or after a demurrer is sustained with leave to amend, the plaintiff fails to amend within the time the court allows, and either party moves for dismissal (Cal. Code Civ. Proc. § 581(f)(1), (2)). An appeal lies from the judgment (Cal. Code Civ. Proc. § 904.1(a)(1))."
 }
 
-state discovery: "Discovery" by applicant cite "Cal. Code Civ. Proc. § 2016.010"
+state discovery: "Discovery" by movant cite "Cal. Code Civ. Proc. § 2016.010"
 {
   note "Discovery is governed by the Civil Discovery Act (Cal. Code Civ. Proc. § 2016.010 and following); only its general provisions are vendored, so its methods, limits and cutoffs are not stated here."
   edge-discovery-settled "Dismissal on request or consent" -> settled {
@@ -99,7 +99,7 @@ decision trial: "Jury or bench trial" by court cite "Cal. Code Civ. Proc. § 631
   }
 }
 
-decision post-trial: "New trial or JNOV motion" by applicant cite "Cal. Code Civ. Proc. § 659(a)"
+decision post-trial: "New trial or JNOV motion" by movant cite "Cal. Code Civ. Proc. § 659(a)"
 {
   note "A party intending to move for a new trial files and serves a notice of intention after the decision and before entry of judgment, or within 15 days of service of notice of entry of judgment by the clerk under § 664.5 or by a party, or within 180 days after entry of judgment, whichever is earliest; these times cannot be extended by order, stipulation or § 1013 (Cal. Code Civ. Proc. § 659(a), (b)). Briefs follow within 10 days of the notice, opposition within 10 days after service, and a reply within five days (Cal. Code Civ. Proc. § 659a). The grounds for a new trial are those of Cal. Code Civ. Proc. § 657. The court's power to rule expires 75 days after the clerk mails, or a party serves, notice of entry of judgment, whichever is earlier, or 75 days after the first notice of intention if no notice of entry was given (Cal. Code Civ. Proc. § 660(c)). A motion for judgment notwithstanding the verdict is made within the § 659 period, briefed under § 659a (Cal. Code Civ. Proc. § 629(b))."
   edge-post-trial-judgment-entered "Motions resolved or none filed" -> judgment-entered {
@@ -108,7 +108,7 @@ decision post-trial: "New trial or JNOV motion" by applicant cite "Cal. Code Civ
   }
 }
 
-decision judgment-entered: "Judgment entered" by office cite "Cal. Code Civ. Proc. § 664(a)"
+decision judgment-entered: "Judgment entered" by court cite "Cal. Code Civ. Proc. § 664(a)"
 {
   note "After a jury trial the clerk enters judgment in conformity to the verdict within 24 hours after its rendition; after a court trial the clerk enters judgment immediately upon the filing of the decision; no judgment is effectual for any purpose until entered (Cal. Code Civ. Proc. § 664(a)). The version operative January 1, 2027 (Stats. 2025, Ch. 559, Sec. 4) instead has the clerk enter a court-trial judgment within 30 days after the filing of the decision, or within 30 days after a requested statement of decision becomes final. A notice of appeal is filed on or before the earliest of 60 days after the clerk serves notice of entry or a filed-endorsed copy of the judgment, 60 days after a party serves or is served with one, or 180 days after entry of judgment; no court may extend that time, and a late notice is dismissed (Cal. Rules of Court, rule 8.104(a), (b))."
   edge-judgment-entered-appeal-filed "Notice of appeal" -> appeal-filed {

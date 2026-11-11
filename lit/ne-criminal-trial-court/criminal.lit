@@ -16,7 +16,7 @@ module ne-criminal-trial-court.criminal
 // removed here.
 start arrested
 
-state arrested: "Arrest" by applicant cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): arrest and first appearance") {
+state arrested: "Arrest" by prosecution cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): arrest and first appearance") {
   note "Arrest, the first appearance, bail and the preliminary hearing are chapter 29 sections that are not vendored; their periods are holes."
   edge-arrested-appearance "First appearance and bail" -> charging {
     authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): first appearance and bail")
@@ -33,7 +33,7 @@ decision charging: "Preliminary hearing; information or indictment" by court cit
   }
 }
 
-state pretrial: "Arraignment, discovery and pretrial motions" by applicant cite ?("Neb. Rev. Stat. 29-1207, CURRENCY UNCONFIRMED (the Legislature's pages state no edition date); the value is the vendored text, unverified") {
+state pretrial: "Arraignment, discovery and pretrial motions" by prosecution cite ?("Neb. Rev. Stat. 29-1207, CURRENCY UNCONFIRMED (the Legislature's pages state no edition date); the value is the vendored text, unverified") {
   note "Every person indicted or informed against is brought to trial within six months, computed as § 29-1207 provides: a retrial runs from the mistrial, the order granting a new trial or the mandate on remand, and excluded are the delay from other proceedings concerning the defendant (including the time from filing to final disposition of the defendant's pretrial motions), continuances at the defendant's request or with consent (a defendant whose continuance carries the trial past six months is deemed to waive the right), certain continuances for the prosecution, and the defendant's absence or unavailability, among others (Neb. Rev. Stat. § 29-1207(1)-(4); unverified, CURRENCY UNCONFIRMED). The arraignment, discovery and pretrial motion sections are not vendored."
   edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
     authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): pretrial motions")
@@ -56,7 +56,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite ?("Neb. Rev.
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): pleas") {
+decision plea-decision: "Plea or trial" by accused cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): pleas") {
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): pleas")
   }
@@ -90,7 +90,7 @@ state sentencing: "Sentencing and judgment" by court cite ?("Neb. Rev. Stat. ch.
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Neb. Rev. Stat. § 25-1912(1)"
+decision judgment: "Judgment of conviction" by accused cite "Neb. Rev. Stat. § 25-1912(1)"
 {
   note "Reversal, vacation or modification of a district court judgment, including judgments and sentences upon convictions for felonies and misdemeanors, is sought by filing in the office of the clerk of the district court, within thirty days after the entry of the judgment, a notice of intention to prosecute the appeal, with the docket fee; a notice filed after the decision is announced but before entry is treated as filed on the date of entry, and the appeal is perfected when the notice is filed and the fee deposited (Neb. Rev. Stat. § 25-1912(1), (2), (4)). A criminal defendant who applies within thirty days to proceed in forma pauperis pays no docket fee (§ 29-2306; unverified, CURRENCY UNCONFIRMED). On notice of intention to appeal, execution of the sentence is suspended until the appeal is determined (§ 29-2301; unverified)."
   edge-judgment-appeal "Notice of appeal filed within 30 days" -> appeal-taken {

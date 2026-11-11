@@ -2,7 +2,7 @@ module ga-superior-court-civil.civil
 
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "Unif. Super. Ct. R. 36.10"
+state complaint-filed: "Complaint filed" by plaintiff cite "Unif. Super. Ct. R. 36.10"
 {
   note "A complaint or petition is filed only when accompanied by the filing fee, the fee for sheriff service or a pauper's affidavit, a civil case initiation form and any forms required by law or rule; the filer furnishes the service copies (Rule 36.10). On the filing of the complaint the clerk forthwith issues a summons and delivers it for service (O.C.G.A. § 9-11-4(a)); the summons states the time within which the defendant must appear and file defensive pleadings and warns of judgment by default (O.C.G.A. § 9-11-4(b)). Periods in this package are stated, not counted: the Civil Practice Act computes them under O.C.G.A. § 1-3-1(d)(3) (O.C.G.A. § 9-11-6(a)), which is not vendored. Three days are added to a period running from service of a paper other than process served by mail or e-mail (O.C.G.A. § 9-11-6(e))."
   edge-complaint-filed-service "Summons issued and served" -> service {
@@ -10,13 +10,13 @@ state complaint-filed: "Complaint filed" by applicant cite "Unif. Super. Ct. R. 
   }
 }
 
-state service: "Service and return of service" by office cite "Unif. Super. Ct. R. 36.11"
+state service: "Service and return of service" by court cite "Unif. Super. Ct. R. 36.11"
 {
   note "The sheriff or other authorized person enters the return of service on a form provided by the clerk and files it with the clerk (Rule 36.11). The person serving the process files proof of service with the court within five business days of the service date; if it is not filed within five business days, the time to answer does not begin to run until it is filed (O.C.G.A. § 9-11-4(h)). Dismissal for untimely service is not modeled."
   edge-service-answer "Served" -> answer-due { authority cite "O.C.G.A. § 9-11-4" }
 }
 
-decision answer-due: "Answer, motion or default" by office cite "O.C.G.A. § 9-11-12"
+decision answer-due: "Answer, motion or default" by court cite "O.C.G.A. § 9-11-12"
 {
   note "A defendant serves an answer within 30 days after service of the summons and complaint unless a statute provides otherwise; serving a motion under § 9-11-12 alters that time unless the court sets another: the answer is due within 15 days after notice of the court denying the motion or postponing it to trial, or within 15 days after service of a more definite statement (O.C.G.A. § 9-11-12(a)). If no answer is filed within the time required, the case is automatically in default unless the time was extended as provided by law; the default may be opened as of right by filing defenses within 15 days of the day of default on payment of costs (O.C.G.A. § 9-11-55(a)). The Uniform Rules start the discovery period 30 days after service when no answer is filed within 30 days of service or by the date set by an extension or order (Rule 5.1); that is a discovery rule, not the answer deadline."
   edge-answer-due-default "No defensive pleading filed" -> default-entered {
@@ -54,7 +54,7 @@ state case-management: "Early planning conference and discovery plan" by court c
   }
 }
 
-state discovery: "Discovery" by applicant cite "Unif. Super. Ct. R. 5.1"
+state discovery: "Discovery" by plaintiff cite "Unif. Super. Ct. R. 5.1"
 {
   note "To use the court's compulsory process to compel discovery, discovery must be commenced promptly and completed within 6 months after the filing of the answer, or, when no answer is filed within 30 days of service, within 6 months beginning 30 days after service; the court may open, extend, reopen or shorten that time (Rule 5.1). Original discovery material is not filed except as O.C.G.A. § 9-11-29.1(a) requires, but a certificate of service of written discovery is filed (Rule 5.2). A deposition is limited to one day of seven hours unless authorized or stipulated (Rule 5.3). A motion to compel quotes or attaches each request at issue and is filed with a certificate that counsel conferred in good faith (Rule 6.4)."
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
@@ -120,7 +120,7 @@ decision post-trial: "Post-trial motions decided" by court cite "Unif. Super. Ct
   }
 }
 
-state judgment-entered: "Judgment filed" by office cite "O.C.G.A. § 9-11-58"
+state judgment-entered: "Judgment filed" by court cite "O.C.G.A. § 9-11-58"
 {
   note "Judgments, settlements, dismissals and other dispositions are filed only with a civil case disposition form (Rule 36.10). A judgment is signed by the judge and filed with the clerk; filing the signed judgment with the fully completed civil case disposition form is its entry, and unless the court directs otherwise no judgment is effective until entered (O.C.G.A. § 9-11-58(a), (b))."
   edge-judgment-entered-appeal "Next step" -> appeal-decision {
@@ -128,7 +128,7 @@ state judgment-entered: "Judgment filed" by office cite "O.C.G.A. § 9-11-58"
   }
 }
 
-decision appeal-decision: "Notice of appeal within time?" by applicant cite "Ga. Ct. App. R. 16"
+decision appeal-decision: "Notice of appeal within time?" by plaintiff cite "Ga. Ct. App. R. 16"
 {
   note "The notice-of-appeal period (O.C.G.A. § 5-6-38) and appellate jurisdiction are statutes that are not vendored, so the period is not stated. An extension may be sought in the Court of Appeals under O.C.G.A. § 5-6-39 before the period expires, after a bona fide effort to obtain it from the trial court; only one is permitted, and it cannot exceed the time otherwise allowed (Ga. Ct. App. R. 16(a))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken { authority cite "Ga. Ct. App. R. 11" }

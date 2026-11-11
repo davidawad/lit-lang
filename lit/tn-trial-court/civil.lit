@@ -4,7 +4,7 @@ import tn-state-rules.{ JudgmentEntered, NoticeOfAppealFiled }
 
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "Tenn. R. Civ. P. 3"
+state complaint-filed: "Complaint filed" by movant cite "Tenn. R. Civ. P. 3"
 {
   note "All civil actions are commenced by filing a complaint with the clerk of the court, and the action is commenced for any statute of limitations on that filing whether or not process is issued or served (Tenn. R. Civ. P. 3). Upon the filing the clerk promptly issues the summons and delivers it for service (Tenn. R. Civ. P. 4.01(1)). A plaintiff may instead request a waiver of service, allowing the defendant at least 30 days from the date the request is sent to return it (Tenn. R. Civ. P. 4.07(2)(f)). Periods in this package are stated, not counted: computation is Tenn. R. Civ. P. 6, not vendored. The earlier outline's decisions (Webb v. Nashville Area Habitat for Humanity, Inc., 346 S.W.3d 422 (Tenn. 2011); Rye v. Women's Care Center of Memphis, MPLLC, 477 S.W.3d 235 (Tenn. 2015)) are removed: no reporter text is vendored."
   edge-complaint-filed-response-due "Summons served or service waived" -> response-due {

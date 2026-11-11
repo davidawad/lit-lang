@@ -14,7 +14,7 @@ module vt-superior-court-criminal.criminal
 // vendored.
 start arrested
 
-state arrested: "Arrest or citation" by applicant cite ?("V.R.Cr.P. 3, 4 (arrest, citation and summons; not vendored; verify numbering)") {
+state arrested: "Arrest or citation" by prosecution cite ?("V.R.Cr.P. 3, 4 (arrest, citation and summons; not vendored; verify numbering)") {
   note "Arrest, citation and the time to bring an arrested person before a judicial officer are set by the Vermont Rules of Criminal Procedure, which are not vendored; the period is a hole."
   edge-arrested-arraignment "Arraignment" -> arraignment {
     authority cite ?("V.R.Cr.P. 5, 10 (appearance and arraignment; not vendored; verify numbering)")
@@ -34,7 +34,7 @@ decision arraignment: "Arraignment, counsel and release" by court cite ?("V.R.Cr
   }
 }
 
-state pretrial: "Plea of not guilty, discovery and pretrial motions" by applicant cite ?("V.R.Cr.P. 12, 16 (pretrial motions and discovery; not vendored; verify numbering)") {
+state pretrial: "Plea of not guilty, discovery and pretrial motions" by accused cite ?("V.R.Cr.P. 12, 16 (pretrial motions and discovery; not vendored; verify numbering)") {
   note "Discovery, notice of defenses and the time for pretrial motions are set by the V.R.Cr.P., which are not vendored; the periods are holes, and so is the speedy-trial rule and its remedy."
   edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
     authority cite ?("V.R.Cr.P. 12 (pretrial motions; not vendored; verify numbering)")
@@ -54,7 +54,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite ?("V.R.Cr.P.
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite ?("V.R.Cr.P. 11 (pleas; not vendored; verify numbering)") {
+decision plea-decision: "Plea or trial" by accused cite ?("V.R.Cr.P. 11 (pleas; not vendored; verify numbering)") {
   note "The plea colloquy, plea agreements and withdrawal of a plea are holes (V.R.Cr.P. 11 is not vendored), and so is the prosecutor's dismissal (V.R.Cr.P. 48(a))."
   edge-plea-decision-plea "Plea of guilty or nolo contendere accepted" -> sentencing {
     authority cite ?("V.R.Cr.P. 11 (pleas; not vendored; verify numbering)")
@@ -96,7 +96,7 @@ state sentencing: "Presentence investigation and sentencing" by court cite ?("V.
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "V.R.A.P. 4(a)"
+decision judgment: "Judgment of conviction" by accused cite "V.R.A.P. 4(a)"
 {
   note "The notice of appeal is filed with the superior court clerk within 30 days after entry of the judgment or order appealed from (V.R.A.P. 4(a)(1)); in a criminal case a judgment is entered when it is entered in the criminal docket (V.R.A.P. 4(e)(3)). A notice filed after the court announces a decision or sentence but before entry is treated as filed on the date of entry (V.R.A.P. 4(a)(3)). If one party timely files, any other party may file within 14 days after the first notice or within the time otherwise prescribed, whichever ends later (V.R.A.P. 4(a)(6)). The State's appeal in a criminal case is due within 7 business days after entry, or within 30 days in a case resulting in a life sentence where the defendant has not waived appeal (V.R.A.P. 4(a)(2)). The superior court may extend the time for excusable neglect or good cause on a motion filed no later than 30 days after the time expires, by no more than 30 days after the original time or 14 days after the order granting the motion, whichever is later (V.R.A.P. 4(d)). An inmate's notice is timely if deposited in the institution's internal mail system on or before the last day (V.R.A.P. 4(f)). Computation of time follows V.R.A.P. 26(a); lit/core has no Vermont holiday calendar, so the period is not encoded as a counted deadline. Sentence reduction or modification (V.R.Cr.P. 35) is a hole."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "V.R.A.P. 4(a)" }

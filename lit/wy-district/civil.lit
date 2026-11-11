@@ -4,7 +4,7 @@ import wy-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 
 start complaint-filed
 
-state complaint-filed: "Action commenced" by applicant cite "W.R.C.P. 3"
+state complaint-filed: "Action commenced" by plaintiff cite "W.R.C.P. 3"
 {
   note "A civil action is commenced by filing a complaint with the court; after a dismissal under Rule 4(w), a new action is commenced by filing a complaint if service is obtained within 90 days of the applicable statute of limitations (W.R.C.P. 3). If a defendant is not served within 90 days after the complaint is filed, the court must dismiss the action without prejudice against that defendant or order service within a specified time, and must extend the time on good cause; this does not apply to service in a foreign country (W.R.C.P. 4(w)). Periods in this package are stated, not counted: computation is W.R.C.P. 6(a). No leading decision is named."
   edge-complaint-filed-response-due "Summons and complaint served" -> response-due {

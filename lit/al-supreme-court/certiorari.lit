@@ -32,7 +32,7 @@ event RehearingApplicationFiled() paper rehearing-brief
 
 start petition
 
-decision petition: "Petition for a writ of certiorari within 14 days?" by applicant cite "Ala. R. App. P. 39(b)(3)"
+decision petition: "Petition for a writ of certiorari within 14 days?" by petitioner cite "Ala. R. App. P. 39(b)(3)"
 {
   note "Certiorari review is not a matter of right but of judicial discretion, granted only for special and important reasons; in civil cases a petition is considered only from decisions initially holding valid or invalid a city ordinance or a state or federal statute or treaty, or initially construing a controlling provision of the Alabama or United States Constitution; affecting a class of constitutional, state or county officers; on a material question of first impression for the Supreme Court of Alabama; in conflict with prior decisions of the Supreme Court of the United States, the Supreme Court of Alabama or either court of appeals (quoting the conflicting parts); or seeking to overrule controlling Alabama Supreme Court cases the court of appeals followed (Ala. R. App. P. 39(a)(1)). The petition is filed with the clerk of the Supreme Court within 14 days (2 weeks) after the release of the Court of Civil Appeals decision or, if an application for rehearing was filed there, within 14 days of its decision on that application (Ala. R. App. P. 39(b)(3)); rehearing in the Court of Civil Appeals is not a prerequisite, but an application that was filed must have complied with Rule 40(e) (Ala. R. App. P. 39(b)(1), 40(d)(2)). The docket fee of Rule 35A(a)(3), which is not vendored, is paid on filing (Ala. R. App. P. 39(b)(2)). The petition may not exceed 3,000 words (15 pages pro se), and states the grounds, attaches the opinion or memorandum and any rehearing order, and may present a statement of the facts (Ala. R. App. P. 39(d)); the original is filed with the Supreme Court clerk, one copy with the clerk of the court of appeals and one served on each party (Ala. R. App. P. 39(e)). No brief is filed before the writ issues unless the Court orders (Ala. R. App. P. 39(b)(4)). A timely petition stays the court of appeals' certificate of judgment until final disposition (Ala. R. App. P. 41(b)). No leading decision on the grant standard is named."
   edge-petition-none "No petition: the Court of Civil Appeals decision stands" -> review-not-sought {
@@ -56,7 +56,7 @@ decision preliminary: "Writ issued or petition denied?" by court cite "Ala. R. A
   }
 }
 
-state briefing: "Merits briefs filed" by applicant cite "Ala. R. App. P. 39(g)"
+state briefing: "Merits briefs filed" by petitioner cite "Ala. R. App. P. 39(g)"
 {
   note "The petitioner may file, within 28 days (4 weeks) after the clerk's notice that the writ has issued, a brief on the merits or a waiver of it, which must contain every argument it wishes the court to consider; the respondent may file a brief in response, or must file a waiver, within 21 days (3 weeks), and may address whether the petition meets the grounds of Rule 39(a)(1); the petitioner may reply within 14 days (2 weeks) of the filing of the respondent's brief (Ala. R. App. P. 39(g)). The briefs take the form Rule 28 prescribes (Ala. R. App. P. 39(g)): a principal brief at most 14,000 words and a reply 7,000 (Ala. R. App. P. 28(j)). Service and filing follow Rule 31, which is not vendored."
   edge-briefing-submit "Briefing complete" -> submission { authority cite "Ala. R. App. P. 39(i)" }
@@ -83,7 +83,7 @@ decision decision: "Supreme Court decision" by court cite "Ala. R. App. P. 39(k)
   }
 }
 
-decision rehearing: "Rehearing sought?" by applicant cite "Ala. R. App. P. 40(c)"
+decision rehearing: "Rehearing sought?" by petitioner cite "Ala. R. App. P. 40(c)"
 {
   note "A party who has not prevailed, and who filed a brief on original submission, may apply for rehearing, stating with particularity the points of law or facts overlooked or misapprehended, with a supporting brief (Ala. R. App. P. 40(a), (b)). The application and brief are filed within 14 days (2 weeks) of the date the decision is issued (Ala. R. App. P. 40(c)), each at most 3,000 words (Ala. R. App. P. 40(g)). Without an application, the certificate of judgment issues 18 days after the entry of judgment unless the time is shortened or enlarged by order (Ala. R. App. P. 41(a))."
   edge-rehearing-none "No application" -> certificate-issued {

@@ -11,7 +11,7 @@ import ok-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
 // leading decision; none is cited.
 start petition
 
-decision petition: "Petition for certiorari?" by applicant cite ?("Okla. Sup. Ct. R.") {
+decision petition: "Petition for certiorari?" by petitioner cite ?("Okla. Sup. Ct. R.") {
   note "How review of a Court of Civil Appeals decision is sought (by petition for certiorari), its period, form, length and grounds are in the Oklahoma Supreme Court Rules, not vendored (lg-l6xh, #16): holes, the procedure unverified."
   edge-petition-none "No petition: the Court of Civil Appeals decision stands" -> review-not-sought {
     authority cite ?("Okla. Sup. Ct. R.")
@@ -28,7 +28,7 @@ chance review-decision: "Court grants or denies certiorari" by court cite ?("Okl
   edge-review-granted "Certiorari granted" -> briefing p ? {}
 }
 
-state briefing: "Briefs filed" by applicant cite ?("Okla. Sup. Ct. R.") {
+state briefing: "Briefs filed" by petitioner cite ?("Okla. Sup. Ct. R.") {
   note "Whether and when supplemental briefs are filed after certiorari is granted, and their limits, are in the Supreme Court Rules, not vendored (lg-l6xh, #16): holes."
   edge-briefing-argument "Submitted" -> argument { authority cite ?("Okla. Sup. Ct. R.") }
 }
@@ -44,7 +44,7 @@ chance decision: "Court decides" by court cite ?("Okla. Sup. Ct. R.") {
   edge-decision-reversed "Reversed, vacated or remanded" -> rehearing p ? { event DecisionFiled() }
 }
 
-decision rehearing: "Rehearing sought?" by applicant cite ?("Okla. Sup. Ct. R.") {
+decision rehearing: "Rehearing sought?" by petitioner cite ?("Okla. Sup. Ct. R.") {
   note "The rehearing period and grounds are in the Supreme Court Rules, not vendored (lg-l6xh, #16): holes."
   edge-rehearing-none "No rehearing" -> mandate-issued {
     event MandateIssued()

@@ -70,7 +70,7 @@ event TransferReplyFiled() paper transfer-reply
 
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite "Ind. Appellate Rule 9(A)"
+state notice-filed: "Notice of appeal filed" by movant cite "Ind. Appellate Rule 9(A)"
 {
   note "A party initiates an appeal by filing a Notice of Appeal with the Clerk within thirty (30) days after the entry of a Final Judgment is noted in the Chronological Case Summary; if any party files a timely motion to correct error, within thirty (30) days after the ruling on it is noted or thirty (30) days after it is deemed denied under Trial Rule 53.3, whichever occurs first (App. R. 9(A)(1)). Unless the Notice of Appeal is timely filed, the right to appeal is forfeited except as provided by P.C.R. 2 (App. R. 9(A)(5)). The appellant pays the Clerk the $250 filing fee when the Notice of Appeal is filed, unless the appeal is in forma pauperis or for a governmental unit (App. R. 9(E)). An appellee may cross-appeal without a Notice of Appeal by raising cross-appeal issues in its brief (App. R. 9(D)). The Notice of Appeal designates the portions of the Transcript needed (App. R. 9(F)(5))."
   edge-notice-filed-appealability "Notice timely filed" -> appealability {
@@ -97,7 +97,7 @@ terminal dismissed-jurisdiction: "Appeal dismissed or forfeited" outcome [loss, 
   note "Outcome from the applicant's side: the right to appeal is forfeited without a timely Notice of Appeal (App. R. 9(A)(5)), or the appeal is dismissed for lack of jurisdiction (App. R. 36(B))."
 }
 
-state record: "Clerk's Record and Transcript" by office cite "Ind. Appellate Rule 10"
+state record: "Clerk's Record and Transcript" by court cite "Ind. Appellate Rule 10"
 {
   note "Within thirty (30) days of the filing of the Notice of Appeal, the trial court clerk assembles the Clerk's Record and, on or before that deadline, files and serves a Notice of Completion of Clerk's Record stating whether the Transcript is completed, not completed or not requested (App. R. 10(B), (C)). The Court Reporter has forty-five (45) days after the Notice of Appeal is filed to file the Transcript (App. R. 11(B)); if it is filed after the Notice of Completion of Clerk's Record, the clerk files and serves a Notice of Completion of Transcript within five (5) days after it is filed (App. R. 10(D))."
   edge-record-briefing "Notice of completion served: briefing begins" -> briefing {
@@ -105,7 +105,7 @@ state record: "Clerk's Record and Transcript" by office cite "Ind. Appellate Rul
   }
 }
 
-state briefing: "Briefing: appellant, appellee, reply" by applicant cite "Ind. Appellate Rule 45(B)"
+state briefing: "Briefing: appellant, appellee, reply" by movant cite "Ind. Appellate Rule 45(B)"
 {
   note "The appellant's brief is filed no later than thirty (30) days after the Notice of Completion of Clerk's Record is served if it reports the Transcript complete or not requested, and otherwise after the Notice of Completion of Transcript is served; the three-day mail extension does not apply to it. The appellee's brief is filed no later than thirty (30) days after service of the appellant's brief; any reply brief no later than fifteen (15) days after service of the appellee's brief, or thirty (30) days if it also serves as the cross-appellee's brief; any cross-appellant's reply brief no later than fifteen (15) days after service of the appellant's reply brief (App. R. 45(B)). The appellant's failure to file its brief timely may subject the appeal to summary dismissal, and the appellee's may result in reversal on a showing of prima facie error (App. R. 45(D)). A motion to file an oversized brief is filed at least fifteen (15) days before the brief is due and states the words requested (App. R. 44(B))."
   edge-briefing-argument "Briefs filed" -> argument { authority cite "Ind. Appellate Rule 45(B)" }
@@ -136,7 +136,7 @@ decision disposition: "Disposition" by court cite "Ind. Appellate Rule 66(C)"
   }
 }
 
-decision affirmed-entered: "Affirmed: rehearing or transfer election" by applicant cite "Ind. Appellate Rule 54(B)"
+decision affirmed-entered: "Affirmed: rehearing or transfer election" by movant cite "Ind. Appellate Rule 54(B)"
 {
   note "A Petition for Rehearing is filed no later than thirty (30) days after the decision, with no extension (App. R. 54(B)). A Petition to Transfer is filed no later than forty-five (45) days after the adverse decision if rehearing was not sought, or thirty (30) days after disposition of the Petition for Rehearing, with no extension; the petitioner pays a $125 filing fee unless a governmental unit or in forma pauperis (App. R. 56(B), 57(C))."
   edge-affirmed-entered-rehearing "Petition for rehearing" -> rehearing-affirmed {
@@ -180,7 +180,7 @@ terminal affirmed-final: "Affirmed: final" outcome [loss] cite "Ind. Appellate R
   note "The Clerk certifies the decision to the trial court only after the time for all Petitions for Rehearing, Transfer or Review has expired, unless all parties request earlier certification; the trial court and parties take no action in reliance on it until it is certified (App. R. 65(E)). On a motion within sixty (60) days after the final decision the Clerk taxes costs, which the appellee recovers when the judgment is affirmed in whole (App. R. 67(A), (C)). Outcome from the applicant's side."
 }
 
-decision reversed-entered: "Reversed: rehearing or transfer election" by applicant cite "Ind. Appellate Rule 54(B)"
+decision reversed-entered: "Reversed: rehearing or transfer election" by movant cite "Ind. Appellate Rule 54(B)"
 {
   note "The opponent may seek rehearing within thirty (30) days after the decision or transfer within forty-five (45) days, with no extension (App. R. 54(B), 57(C)). The applicant elects what to do while those periods run."
   edge-reversed-entered-rehearing "Petition for rehearing" -> rehearing-reversed {
@@ -224,7 +224,7 @@ terminal reversed-final: "Reversed: final" outcome [win] cite "Ind. Appellate Ru
   note "Certified to the trial court after the time for rehearing and transfer expires (App. R. 65(E)). When a judgment is reversed in whole, the appellant recovers costs on a motion within sixty (60) days after the final decision (App. R. 67(A), (C)). Outcome from the applicant's side."
 }
 
-decision remanded-entered: "Remanded: rehearing or transfer election" by applicant cite "Ind. Appellate Rule 54(B)"
+decision remanded-entered: "Remanded: rehearing or transfer election" by movant cite "Ind. Appellate Rule 54(B)"
 {
   note "Rehearing within thirty (30) days after the decision and transfer within forty-five (45) days, with no extension (App. R. 54(B), 57(C))."
   edge-remanded-entered-rehearing "Petition for rehearing" -> rehearing-remanded {

@@ -93,7 +93,7 @@ deadline exhibit-withdrawal-period: 30.days after FinalDisposition() counted_by 
 
 start motion-served
 
-state motion-served: "Lien avoidance motion filed and served with notice of opportunity to object" by applicant cite "Bankr. N.D. Ala. R. 4003-2(b)"
+state motion-served: "Lien avoidance motion filed and served with notice of opportunity to object" by movant cite "Bankr. N.D. Ala. R. 4003-2(b)"
 {
   note "A § 522(f) motion in substantial compliance with the court's form is served on the trustee, the affected creditor and any committee (Rule 4003-2(b)); its notice advises that objections are due within 30 days of service and that the court may set a hearing by later notice (Rule 4003-2(c))."
   edge-motion-served-objection "Objection or response filed" -> objected {
@@ -113,7 +113,7 @@ state objected: "Objection filed; hearing set" by opponent cite "Bankr. N.D. Ala
   edge-objected-hearing "Hearing held" -> ruling { authority cite "Bankr. N.D. Ala. R. 4003-2(c)" }
 }
 
-state order-submitted: "Proposed order submitted" by applicant cite "Bankr. N.D. Ala. R. 4003-2(e)"
+state order-submitted: "Proposed order submitted" by movant cite "Bankr. N.D. Ala. R. 4003-2(e)"
 {
   note "With no objection or response, the movant submits a proposed order in substantial compliance with the court's form no sooner than 30 and no later than 45 days after the motion was filed and served (Rule 4003-2(e))."
   edge-order-submitted-ruling "Order considered" -> ruling {

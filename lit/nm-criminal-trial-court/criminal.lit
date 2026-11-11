@@ -12,7 +12,7 @@ module nm-criminal-trial-court.criminal
 // quotes County of Riverside v. McLaughlin.
 start arrested
 
-state arrested: "Arrest, summons or complaint" by applicant cite "NMRA 5-201"
+state arrested: "Arrest, summons or complaint" by prosecution cite "NMRA 5-201"
 {
   note "A prosecution is commenced by filing a complaint, an information or an indictment (NMRA 5-201(A)); warrants and summonses issue under Rule 5-208. After an arrest without a warrant, a judge determines probable cause promptly, and in any event within 48 hours after custody begins and no later than the first appearance, whichever is earlier; the court may not extend the 48 hours, and weekends and legal holidays count notwithstanding Rule 5-104(A) (NMRA 5-301)."
   edge-arrested-appearance "First appearance and release" -> initial-appearance {
@@ -42,19 +42,19 @@ decision probable-cause: "Preliminary examination or grand jury" by court cite "
   }
 }
 
-state charged: "Indictment or information" by office cite "NMRA 5-201"
+state charged: "Indictment or information" by court cite "NMRA 5-201"
 {
   note "An information is a written statement signed by the district attorney containing the essential facts and the common name of the offense (NMRA 5-201(C)). The defendant is arraigned on the information or indictment within 15 days after its filing or the arrest, whichever is later (NMRA 5-303(A))."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "NMRA 5-303" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "NMRA 5-303"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "NMRA 5-303"
 {
   note "Arraignment is on the information or indictment within 15 days after its filing or the arrest, whichever is later; the defendant may appear by two-way audio-visual communication as Rule 5-303(A) allows (NMRA 5-303(A)). The pleas are those Rule 5-304(A) allows. Disclosure by the state and by the defendant are governed by Rules 5-501 and 5-502."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "NMRA 5-501" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "NMRA 5-601"
+state discovery: "Discovery and pretrial motions" by prosecution cite "NMRA 5-601"
 {
   note "Unless the rules or the court provide otherwise, a pretrial motion is made at arraignment or within 90 days after it, unless the court waives the time on good cause (NMRA 5-601(E)(1)). Defenses and objections based on defects in the initiation of the prosecution or in the charging document (other than jurisdiction or failure to charge an offense) must be raised before trial or are waived, though the court may grant relief for cause (NMRA 5-601(D)). A party intending to call witnesses at an evidentiary hearing on a motion discloses them at least five days before the hearing unless the court orders a shorter time (NMRA 5-601(F)). For a case of concurrent jurisdiction refiled from a lower court, the defendant may move for dismissal if trial is not set within the lower court's deadline, on the factors Rule 5-604(B) lists; for cases originally filed in the district court the rule sets no deadline (NMRA 5-604(C))."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -80,7 +80,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "NMRA 5-601(
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "NMRA 5-304"
+decision plea-decision: "Plea or trial" by accused cite "NMRA 5-304"
 {
   note "A plea agreement that would eliminate the need for trial is submitted by a deadline the court sets, and no plea agreement may be entered later than five days before the scheduled date for jury selection or the start of a bench trial; the court sets a hearing within the plea deadline at which the defendant must be present (NMRA 5-304(E)). An untimely plea agreement is governed by Rule 5-304(F)."
   edge-plea-decision-plea "Plea accepted" -> sentencing { authority cite "NMRA 5-304(C)" }
@@ -112,7 +112,7 @@ state sentencing: "Judgment and sentence" by court cite "NMRA 5-701(A)"
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "NMRA 5-702"
+decision judgment: "Judgment of conviction" by accused cite "NMRA 5-702"
 {
   note "Within the time the Rules of Appellate Procedure allow, defense counsel files either a notice of appeal under Rule 12-201 or the defendant's sworn affidavit, in the approved form and witnessed by counsel, stating the decision not to appeal (NMRA 5-702(B)). A notice of appeal is filed within 30 days after the judgment or order appealed from is filed in the district court clerk's office (ten days for the state's appeal of a suppression order), and Rule 12-308(B)'s three added days do not apply (NMRA 12-201(A)). A sentence imposed in an illegal manner may be corrected within 30 days after it is imposed, and a motion to reduce a sentence may be filed within 90 days of the written judgment and sentence or the other events Rule 5-801(B) lists; a motion to reduce tolls the time for appeal only if filed within 30 days of the written judgment and sentence (NMRA 5-801(A)-(C)). lit/core has no counting rule for the appellate rules, so the period is not encoded as a counted deadline."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "NMRA 12-201(A)" }

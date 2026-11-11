@@ -14,7 +14,7 @@ import mn-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 // 6.04), and the filing fee statute are not vendored.
 start complaint-filed
 
-state complaint-filed: "Action commenced" by applicant cite "Minn. R. Civ. P. 3.01"
+state complaint-filed: "Action commenced" by plaintiff cite "Minn. R. Civ. P. 3.01"
 {
   note "A civil action is commenced against each defendant when the summons is served on that defendant, at the date of signing of a waiver of service under Rule 4.05, or when the summons is delivered for service to the sheriff in the county where the defendant resides, but such delivery is ineffectual unless the summons is actually served, or first published, within 60 days thereafter (Minn. R. Civ. P. 3.01). A copy of the complaint is served with the summons, except on service by publication (Rule 3.02). An action not filed with the court within one year of commencement against any party is deemed dismissed with prejudice against all parties unless the parties sign a stipulation within that year to extend the filing period (Rule 5.04(a)). Periods are computed under Rule 6.01: the trigger day is excluded, every day is counted, and a last day falling on a Saturday, Sunday or legal holiday runs to the next day that is not one; 3 days are added after service by United States Mail, and 1 day after other service accomplished after 5:00 p.m. (Rule 6.01(e)). The filing fee is not stated in the vendored rules."
   edge-complaint-filed-response-due "Summons served" -> response-due {

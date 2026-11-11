@@ -19,7 +19,7 @@ event RehearingPetitionFiled() paper ky-state-rules.rehearing-petition
 
 start petition
 
-decision petition: "Motion for discretionary review?" by applicant cite "RAP 44(B)"
+decision petition: "Motion for discretionary review?" by petitioner cite "RAP 44(B)"
 {
   note "A motion for discretionary review of a Court of Appeals decision is filed within 30 days after the date of the order or opinion sought to be reviewed or, after a timely RAP 43 petition or motion in the Court of Appeals, within 30 days after the order denying it or the opinion finally disposing of the case there; a late motion is dismissed (RAP 44(B)(2), (3)). The motion states the material facts, the questions of law and the specific reasons why the judgment should be reviewed, is limited to 5,250 words or 13 pages if computer-generated, or 15 pages if handwritten or typewritten, and is filed with copies of the decisions below (RAP 44(C), (D), (F)). The filing fee of RAP 13 is required with it (RAP 44(K))."
   edge-petition-none "No motion: the Court of Appeals opinion becomes final" -> review-not-sought {
@@ -38,13 +38,13 @@ chance review-decision: "Court grants or denies review" by court cite "RAP 44(A)
   edge-review-decision-granted "Review granted" -> cross-motion p ? { authority cite "RAP 44(J)" }
 }
 
-state cross-motion: "Cross motion for discretionary review" by office cite "RAP 46(A)"
+state cross-motion: "Cross motion for discretionary review" by court cite "RAP 46(A)"
 {
   note "If the motion is granted the respondent may, within 10 days, file a cross motion designating issues raised in the original appeal that the motion omits, and each cross respondent may respond within 10 days after it is filed; the cross motion suspends the running of time for briefing, which is computed in full from the order granting or denying it (RAP 46(A), (B), (D))."
   edge-cross-motion-briefing "Briefing begins" -> briefing { authority cite "RAP 44(J)" }
 }
 
-state briefing: "Merits briefs filed" by applicant cite "RAP 30(C)"
+state briefing: "Merits briefs filed" by petitioner cite "RAP 30(C)"
 {
   note "When the Supreme Court has granted a motion for discretionary review, the movant becomes the appellant and files its brief no later than 60 days from the date of entry of the order granting review; the appellee's response brief is due no later than 60 days after the appellant's brief is filed, and the appellant may reply no later than 15 days after the last response brief is filed (RAP 30(C)(1), 44(J)(1)). In the Supreme Court an initial or response brief may not exceed 17,500 words or 40 pages if computer-generated, or 50 pages if handwritten or typewritten, and a reply brief 3,500 words or 7 pages, or 10 pages (RAP 31(G)(3)). A cross-movant whose cross motion is granted briefs its issues in its response brief, and the movant replies in its reply brief (RAP 46(E))."
   edge-briefing-submission "All briefs filed or the time expired: submitted" -> submission {
@@ -71,7 +71,7 @@ chance decision: "Supreme Court decides" by court cite "RAP 40(A)"
   }
 }
 
-decision rehearing: "Petition for rehearing?" by applicant cite "RAP 43(B)"
+decision rehearing: "Petition for rehearing?" by petitioner cite "RAP 43(B)"
 {
   note "A petition for rehearing, modification or extension is filed not later than 20 days from the date the opinion was issued, and any response no later than 20 days from the petition's filing; petitions and responses are limited to 3,500 words or 8 pages if computer-generated, or 10 pages if handwritten or typewritten (RAP 43(B)(3), (5)). A Supreme Court opinion becomes final on the 21st day after its rendition unless a RAP 43 petition has been timely filed or an extension granted (RAP 40(G)(1))."
   edge-rehearing-none "No petition: the opinion becomes final" -> opinion-final {

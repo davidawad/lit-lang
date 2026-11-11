@@ -6,7 +6,7 @@ import pa-state-rules.{ ReviewPetitionFiled }
 // Commonwealth Court, from the petitioner's side.
 start petition
 
-decision petition: "Petition for allowance of appeal?" by applicant cite "Pa.R.A.P. 1114(a)"
+decision petition: "Petition for allowance of appeal?" by petitioner cite "Pa.R.A.P. 1114(a)"
 {
   note "Review of a final order of the Superior Court or the Commonwealth Court is not a matter of right but of sound judicial discretion (Pa.R.A.P. 1114(a)); the petition is filed with the Prothonotary of the Supreme Court within 30 days after entry of the order sought to be reviewed."
   edge-petition-none "No petition" -> affirmed { authority cite "Pa.R.A.P. 2572(a)" }

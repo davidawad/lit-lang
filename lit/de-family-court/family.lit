@@ -12,7 +12,7 @@ import de-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 // authored: no calibration is vendored.
 start commenced
 
-state commenced: "Complaint or petition filed" by applicant cite ?("Fam. Ct. Civ. R. 3: not vendored") {
+state commenced: "Complaint or petition filed" by movant cite ?("Fam. Ct. Civ. R. 3: not vendored") {
   note "Commencement in the Delaware Family Court (domestic relations, support, custody and related matters); the jurisdictional statutes (10 Del. C. ch. 9) and review of a commissioner's order are not vendored. The filing period, fees and pleading form are not stated: the Family Court Civil Rules are not vendored."
   edge-commenced-served "Process served" -> pleadings {
     event ActionCommenced()
@@ -33,7 +33,7 @@ decision pleadings: "Answer or motion to dismiss" by court cite ?("Fam. Ct. Civ.
   }
 }
 
-state discovery: "Discovery and pretrial" by applicant cite ?("Fam. Ct. Civ. R. 26: not vendored") {
+state discovery: "Discovery and pretrial" by movant cite ?("Fam. Ct. Civ. R. 26: not vendored") {
   note "Discovery scope, limits and scheduling are not stated: the Family Court Civil Rules are not vendored."
   edge-discovery-dispositive "Dispositive motion or trial setting" -> dispositive {
     authority cite ?("Fam. Ct. Civ. R. 56: not vendored")
@@ -63,7 +63,7 @@ state judgment: "Judgment or decision entered" by court cite ?("Fam. Ct. Civ. R.
   }
 }
 
-decision post-judgment: "Appeal or no appeal" by applicant cite "Del. Supr. Ct. R. 6(a)"
+decision post-judgment: "Appeal or no appeal" by movant cite "Del. Supr. Ct. R. 6(a)"
 {
   note "A notice of appeal in a civil case is filed in the office of the Clerk of the Supreme Court within 30 days after entry upon the docket of the judgment, order or decree appealed from, except appeals controlled by 10 Del. C. § 146 (Del. Supr. Ct. R. 6(a)(i)); any other party may cross-appeal within 15 days after the first notice of appeal was filed or within 30 days after entry of the judgment, whichever is later (Del. Supr. Ct. R. 6(b)(i)). The time for taking an appeal or cross-appeal may not be enlarged (Del. Supr. Ct. R. 11(b)). An appeal from an interlocutory order lies only on certification by the trial court and acceptance by the Supreme Court (Del. Supr. Ct. R. 42). The appeal continues in lit/de-supreme-civil. In appeals originating in the Family Court the record and the documents filed with the Clerk of the Supreme Court and all proceedings remain confidential unless the Court orders otherwise (Del. Supr. Ct. R. 9(bb)); in an appeal from a termination of parental rights proceeding an indigent appellant may move to waive the nonrefundable filing fee (Del. Supr. Ct. R. 26(e)). 10 Del. C. § 1051 is not vendored."
   edge-post-appeal "Notice of appeal filed in time" -> appeal-taken {

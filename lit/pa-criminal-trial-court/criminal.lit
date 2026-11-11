@@ -12,7 +12,7 @@ module pa-common-pleas-criminal.criminal
 // vendored.
 start arrested
 
-state arrested: "Arrest and complaint" by applicant cite "Pa.R.Crim.P. 519"
+state arrested: "Arrest and complaint" by prosecution cite "Pa.R.Crim.P. 519"
 {
   note "A defendant arrested without a warrant in a court case is charged by a complaint and afforded a preliminary arraignment by the proper issuing authority without unnecessary delay (Pa.R.Crim.P. 519(A)(1)); for certain misdemeanors the arresting officer instead releases the defendant, and the complaint is then filed within 5 days of the release and the case proceeds by summons (Pa.R.Crim.P. 519(B))."
   edge-arrested-appearance "Preliminary arraignment" -> initial-appearance {
@@ -40,19 +40,19 @@ decision probable-cause: "Preliminary hearing or indicting grand jury" by court 
   }
 }
 
-state charged: "Information" by office cite "Pa.R.Crim.P. 560"
+state charged: "Information" by court cite "Pa.R.Crim.P. 560"
 {
   note "After the defendant is held for court or indicted, the attorney for the Commonwealth prepares an information and files it with the court of common pleas (Pa.R.Crim.P. 560(A)). Trial in a court case commences within 365 days from the filing of the written complaint, counting only delay caused by the Commonwealth's want of due diligence; a defendant entitled to bail is not held in pretrial incarceration more than 180 days from the complaint, counting all delay not caused by the defendant (Pa.R.Crim.P. 600(A)(2)(a), (B)(1), (C))."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Pa.R.Crim.P. 571(A)" }
 }
 
-state arraignment: "Arraignment" by applicant cite "Pa.R.Crim.P. 571"
+state arraignment: "Arraignment" by prosecution cite "Pa.R.Crim.P. 571"
 {
   note "Unless local rule provides otherwise or the court postpones it for cause, arraignment takes place no later than 10 days after the information is filed (Pa.R.Crim.P. 571(A)). The defendant is advised of the right to counsel, the charges, the right to file motions and their time limits, and the effect of failing to appear; appearance may be waived on the conditions of Pa.R.Crim.P. 571(D)."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "Pa.R.Crim.P. 573" }
 }
 
-state discovery: "Discovery and the omnibus pretrial motion" by applicant cite "Pa.R.Crim.P. 578"
+state discovery: "Discovery and the omnibus pretrial motion" by prosecution cite "Pa.R.Crim.P. 578"
 {
   note "Counsel first try in good faith to resolve discovery informally; a motion for refused items is made within 14 days after arraignment unless the court extends the time (Pa.R.Crim.P. 573(A)); mandatory and discretionary disclosure by the Commonwealth is in Pa.R.Crim.P. 573(B). All pretrial requests for relief are ordinarily joined in one omnibus pretrial motion (Pa.R.Crim.P. 578), filed and served within 30 days after arraignment unless the opportunity or the grounds were unknown or the court extends the time for cause (Pa.R.Crim.P. 579(A)). A defendant not tried within the Rule 600(A) period may move at any time before trial to dismiss the charges with prejudice, and one held beyond the Rule 600(B) period may move for release on nominal bail (Pa.R.Crim.P. 600(D))."
   edge-discovery-motions "Omnibus pretrial motion filed" -> motions-ruling {
@@ -76,7 +76,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Pa.R.Crim.P
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Pa.R.Crim.P. 590"
+decision plea-decision: "Plea or trial" by accused cite "Pa.R.Crim.P. 590"
 {
   note "Pleas are taken in open court; the defendant may plead not guilty, guilty or, with the judge's consent, nolo contendere, and the judge accepts a plea of guilty or nolo contendere only after an on-the-record inquiry that it is voluntarily and understandingly tendered (Pa.R.Crim.P. 590(A)). The terms of a plea agreement are stated on the record and the defendant is separately questioned on them; a local rule setting deadlines for accepting negotiated pleas is prohibited (Pa.R.Crim.P. 590(B)). On the Commonwealth's motion the court may order a nolle prosequi in open court (Pa.R.Crim.P. 585(A))."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
@@ -115,7 +115,7 @@ decision post-sentence: "Post-sentence motion" by court cite "Pa.R.Crim.P. 720(B
   }
 }
 
-decision judgment: "Judgment of sentence" by applicant cite "Pa.R.Crim.P. 720(A)"
+decision judgment: "Judgment of sentence" by prosecution cite "Pa.R.Crim.P. 720(A)"
 {
   note "After a timely post-sentence motion, the notice of appeal is filed within 30 days of the entry of the order deciding it, denying it by operation of law, or memorializing its withdrawal; without one, within 30 days of imposition of sentence; after a timely Commonwealth motion to modify sentence, within 30 days of the order disposing of it (Pa.R.Crim.P. 720(A)(2)-(4); Pa.R.A.P. 903(a), (c)(3)). A cross-appeal may be filed within 14 days of service of the first notice of appeal (Pa.R.A.P. 903(b)). lit/core has no counting rule for the Pennsylvania rules, so the periods are not encoded as counted deadlines."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "Pa.R.A.P. 903" }

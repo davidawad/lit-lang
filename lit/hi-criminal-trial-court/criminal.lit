@@ -13,7 +13,7 @@ module hi-circuit-court-criminal.criminal
 // Garza v. Idaho) are removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "Haw. R. Penal P. 5(a)"
+state arrested: "Arrest or summons" by prosecution cite "Haw. R. Penal P. 5(a)"
 {
   note "An officer making an arrest under a warrant takes the arrested person without unnecessary delay before the court (Haw. R. Penal P. 5(a)(1)). After a warrantless arrest of a person held in custody, a district judge must determine probable cause as soon as practicable and, HRPP 45 notwithstanding, not later than 48 hours after the arrest, on at least an affidavit or declaration of the arresting officer; if probable cause is not found or not determined within that time, the person is released (Haw. R. Penal P. 5(a)(2))."
   edge-arrested-appearance "Initial appearance in district court" -> initial-appearance {
@@ -43,7 +43,7 @@ decision probable-cause: "Preliminary hearing, indictment or information" by cou
   }
 }
 
-state charged: "Indictment, information or complaint" by office cite "Haw. R. Penal P. 7(a)"
+state charged: "Indictment, information or complaint" by court cite "Haw. R. Penal P. 7(a)"
 {
   note "The charge is an indictment, a superseding indictment, an information or a complaint filed in court (Haw. R. Penal P. 7(a)). A motion for a bill of particulars may be made before arraignment or within 10 days after it (Haw. R. Penal P. 7(g)). A defendant held to answer is arraigned in circuit court within 14 days after the district court's oral order of commitment, and a defendant arrested on a grand jury or information warrant not later than 7 days after arrest or return (Haw. R. Penal P. 10(a)-(c))."
   edge-charged-arraignment "Arraignment in circuit court" -> arraignment {
@@ -51,13 +51,13 @@ state charged: "Indictment, information or complaint" by office cite "Haw. R. Pe
   }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "Haw. R. Penal P. 10"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "Haw. R. Penal P. 10"
 {
   note "A defendant may plead not guilty, guilty or, with the court's consent, no contest, and a refusal to plead is entered as not guilty (Haw. R. Penal P. 11(a), (b)). The HRPP 48 clock: on the defendant's motion the court must dismiss the charge, with or without prejudice in its discretion, if trial is not commenced within 6 months from arrest (if bail is set) or the filing of the charge, whichever is sooner, from re-arrest or re-filing after a dismissal on the defendant's motion, or from a mistrial, new-trial order or remand (Haw. R. Penal P. 48(b)); the periods HRPP 48(c) and (d) list are excluded."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "Haw. R. Penal P. 16" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "Haw. R. Penal P. 12"
+state discovery: "Discovery and pretrial motions" by prosecution cite "Haw. R. Penal P. 12"
 {
   note "Except for matters defense counsel must designate in writing, the prosecution discloses the HRPP 16(b)(1) materials within ten (10) calendar days following arraignment and plea (Haw. R. Penal P. 16(e)(1)). Pretrial motions and requests must be made within 21 days after arraignment unless the court otherwise directs (Haw. R. Penal P. 12(c)). A written motion and notice of hearing are served not later than 48 hours before the hearing, opposing memoranda not less than 72 hours before a hearing on a motion filed 14 or more days ahead, and replies not later than 24 hours before the hearing, unless the court orders otherwise (Haw. R. Penal P. 45)."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -83,7 +83,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Haw. R. Pen
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Haw. R. Penal P. 11"
+decision plea-decision: "Plea or trial" by accused cite "Haw. R. Penal P. 11"
 {
   note "With the court's approval and the State's consent a defendant may enter a conditional plea reserving review of a specified pretrial motion (Haw. R. Penal P. 11(a)(2)). Cases required to be tried by jury are so tried unless the defendant waives with the court's approval, in writing or orally on the record; juries are of 12 unless the parties stipulate in writing to fewer (Haw. R. Penal P. 23(a), (b))."
   edge-plea-decision-plea "Guilty or no-contest plea accepted" -> sentencing {
@@ -126,7 +126,7 @@ state sentencing: "Sentencing" by court cite "Haw. R. Penal P. 32(a)"
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Haw. R. Penal P. 32"
+decision judgment: "Judgment of conviction" by accused cite "Haw. R. Penal P. 32"
 {
   note "The circuit court judgment sets forth the plea, the verdict or findings, and the adjudication and sentence, and its filing with the clerk is its entry (Haw. R. Penal P. 32(c)(1)). In a criminal case the notice of appeal is filed within 30 days after entry of the judgment or order appealed from; a mailed notice is timely if postmarked in time and received within 5 days after the postmark (Haw. R. App. P. 4(b)(1)). The court may reduce a sentence within 90 days after it is imposed or after the mandate or a final denial of review (Haw. R. Penal P. 35(b)); a motion to correct an illegal sentence more than 90 days after imposition proceeds under HRPP 40 (Haw. R. Penal P. 35(a))."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {

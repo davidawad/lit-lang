@@ -38,7 +38,7 @@ deadline consent-order-objection-period: 14.days after ConsentOrderForwarded() c
 
 start order-forwarded
 
-state order-forwarded: "Proposed consent order forwarded to opposing counsel" by applicant cite ?("E.D. Ark. Bankr. LR 9019-1(c), undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified") {
+state order-forwarded: "Proposed consent order forwarded to opposing counsel" by movant cite ?("E.D. Ark. Bankr. LR 9019-1(c), undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified") {
   note "The party responsible for the order (designated by the court or agreed by the parties, LR 9019-1(b)) forwards it to the opposing attorney, who has 14 days from its mailing or transmission to object to its form or content (LR 9019-1(c)); the value is the CURRENCY UNCONFIRMED text's."
   edge-order-forwarded-objection "Objection to form or content" -> objected {
     authority cite ?("E.D. Ark. Bankr. LR 9019-1(c), undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified")
@@ -55,7 +55,7 @@ state objected: "Objection to the proposed order" by opponent cite ?("E.D. Ark. 
   }
 }
 
-state submitted: "Consent Order submitted to the court" by applicant cite ?("E.D. Ark. Bankr. LR 9019-1(c), undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified") {
+state submitted: "Consent Order submitted to the court" by movant cite ?("E.D. Ark. Bankr. LR 9019-1(c), undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified") {
   note "Upon the signatures, or when opposing counsel does not respond within the period, the preparing party submits the order (LR 9019-1(c))."
   edge-submitted-court "Order considered" -> ruling {
     authority cite ?("E.D. Ark. Bankr. LR 9019-1(c), undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified")

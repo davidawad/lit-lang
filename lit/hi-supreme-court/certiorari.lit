@@ -4,7 +4,7 @@ import hi-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
 
 start application
 
-decision application: "Application for a writ of certiorari?" by applicant cite "Haw. R. App. P. 40.1(a)"
+decision application: "Application for a writ of certiorari?" by petitioner cite "Haw. R. App. P. 40.1(a)"
 {
   note "A party seeks review of the Intermediate Court of Appeals' decision by filing an application for a writ of certiorari within 30 days after the filing of that court's judgment on appeal or dismissal order; a mailed application is timely if postmarked within that time and received no later than 5 days after the postmark. A written request for an extension filed within the same 30 days gets an automatic 30-day extension from the appellate clerk; an untimely request extends nothing (Haw. R. App. P. 40.1(a)). The applicant is denominated the petitioner (Haw. R. App. P. 40.1(c)). The application may not exceed 20 pages and states the questions presented, the prior proceedings, the material facts and a brief argument, with the challenged opinion, dispositional order or ruling attached (Haw. R. App. P. 40.1(d)). The outline named no leading decision on the grant standard and none is cited."
   edge-application-none "No application: the intermediate court's judgment takes effect" -> review-not-sought {

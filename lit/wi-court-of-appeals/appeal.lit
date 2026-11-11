@@ -12,7 +12,7 @@ import wi-state-rules.{ NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
 // appeal, and the record is § 809.15. It named no leading decision.
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite "Wis. Stat. § 809.10(1)"
+state notice-filed: "Notice of appeal filed" by appellant cite "Wis. Stat. § 809.10(1)"
 {
   note "An appeal is initiated by filing a notice of appeal with the clerk of the circuit court in which the judgment or order was entered (Wis. Stat. § 809.10(1)(a)), within 45 days of entry of the final judgment or order if written notice of entry is given within 21 days of it under § 806.06(5), otherwise within 90 days of entry (Wis. Stat. § 808.04(1)); the court may not enlarge the time to appeal a final judgment or order (Wis. Stat. § 809.82(2)(b)). The appellant pays the filing fee to the clerk of the court of appeals when the notice is filed, and the circuit court clerk transmits the notice, docketing statement and circuit court record within 3 days (Wis. Stat. § 809.11(1), (2)). Within 14 days after filing the notice, the appellant requests the transcript and arranges payment, and files a statement on transcript (Wis. Stat. § 809.11(4)). The fee amount is not stated in the vendored chapters."
   edge-notice-filed-appealability "Appeal docketed" -> appealability {
@@ -37,7 +37,7 @@ terminal dismissed-jurisdiction: "Appeal dismissed for want of appellate jurisdi
   note "Outcome from the applicant's side."
 }
 
-state record: "Record transmitted" by office cite "Wis. Stat. § 809.15"
+state record: "Record transmitted" by court cite "Wis. Stat. § 809.15"
 {
   note "The clerk of the circuit court transmits the record to the court of appeals within 20 days after the transcript designated in the statement on transcript is filed, or after a statement that no transcript is necessary, unless the court extends the time; if the reporter files late, within 90 days after the notice of appeal unless the court of appeals extends the transcript time (Wis. Stat. § 809.15(4))."
   edge-record-briefing "Record filed in the court of appeals" -> briefing {
@@ -46,7 +46,7 @@ state record: "Record transmitted" by office cite "Wis. Stat. § 809.15"
   }
 }
 
-state briefing: "Briefing" by applicant cite "Wis. Stat. § 809.19"
+state briefing: "Briefing" by appellant cite "Wis. Stat. § 809.19"
 {
   note "The appellant files its brief within 40 days of the filing of the record in the court of appeals (Wis. Stat. § 809.19(1)). The respondent files within the later of 30 days after service of the appellant's brief (plus 3 days under § 801.15(5)(a) if served by mail), 30 days after the appellant's brief is filed, and 30 days after the record is filed (Wis. Stat. § 809.19(3)(a)). The appellant files a reply brief, or a statement that none will be filed, within the later of 15 days after service of the respondent's brief (plus 3 days if served by mail) and the other date § 809.19(4)(a) states. A party's brief is limited to 50 pages monospaced or 11,000 words, a reply to 13 pages or 3,000 words (Wis. Stat. § 809.19(8)(c)). The court may enlarge or reduce these times on its own motion or for good cause (Wis. Stat. § 809.82(2)(a))."
   edge-briefing-argument "Briefs complete" -> argument { authority cite "Wis. Stat. § 809.22" }
@@ -73,7 +73,7 @@ decision decision: "Decision" by court cite "Wis. Stat. § 808.09"
   }
 }
 
-decision affirmed-entered: "Affirmed: reconsideration or review election" by applicant cite "Wis. Stat. § 809.24(1)"
+decision affirmed-entered: "Affirmed: reconsideration or review election" by petitioner cite "Wis. Stat. § 809.24(1)"
 {
   note "A party may file a motion for reconsideration in the court of appeals within 20 days after the date of the decision; it states with particularity the points of law or fact erroneously decided, no response is permitted unless the court orders one, and the motion is limited to 5 pages or 1,100 words (Wis. Stat. § 809.24(1)). A petition for review is filed in the Supreme Court within 30 days of the date of the decision (Wis. Stat. § 808.10(1)); a timely reconsideration motion tolls that period (Wis. Stat. § 808.10(2)). Costs are claimed by a statement filed within 14 days of the filing of the decision, and an opposing party may object within 11 days after service (Wis. Stat. § 809.25(1))."
   edge-affirmed-entered-reconsider "Motion for reconsideration" -> affirmed-reconsideration {
@@ -99,7 +99,7 @@ decision affirmed-reconsideration: "Reconsideration decided (affirmed)" by court
   }
 }
 
-decision affirmed-after-reconsideration: "Review election after reconsideration (affirmed)" by applicant cite "Wis. Stat. § 808.10(2)"
+decision affirmed-after-reconsideration: "Review election after reconsideration (affirmed)" by petitioner cite "Wis. Stat. § 808.10(2)"
 {
   note "A motion for reconsideration filed within 20 days after the decision tolls the 30-day period for a petition for review (Wis. Stat. § 808.10(2))."
   edge-affirmed-after-reconsideration-review "Petition for review" -> affirmed-review-petitioned {
@@ -121,7 +121,7 @@ terminal affirmed-final: "Affirmed: final, record remitted" outcome [loss] cite 
   note "The clerk of the court of appeals transmits the judgment and decision and the record to the circuit court 31 days after the filing of the decision, or as soon thereafter as practicable; a petition for review or a reconsideration motion stays the transmittal (Wis. Stat. § 809.26(1)). Outcome from the applicant's side."
 }
 
-decision reversed-entered: "Reversed or modified: reconsideration or review election" by applicant cite "Wis. Stat. § 809.24(1)"
+decision reversed-entered: "Reversed or modified: reconsideration or review election" by petitioner cite "Wis. Stat. § 809.24(1)"
 {
   note "A party may file a motion for reconsideration in the court of appeals within 20 days after the date of the decision; it states with particularity the points of law or fact erroneously decided, no response is permitted unless the court orders one, and the motion is limited to 5 pages or 1,100 words (Wis. Stat. § 809.24(1)). A petition for review is filed in the Supreme Court within 30 days of the date of the decision (Wis. Stat. § 808.10(1)); a timely reconsideration motion tolls that period (Wis. Stat. § 808.10(2)). Costs are claimed by a statement filed within 14 days of the filing of the decision, and an opposing party may object within 11 days after service (Wis. Stat. § 809.25(1))."
   edge-reversed-entered-reconsider "Motion for reconsideration" -> reversed-reconsideration {
@@ -147,7 +147,7 @@ decision reversed-reconsideration: "Reconsideration decided (reversed or modifie
   }
 }
 
-decision reversed-after-reconsideration: "Review election after reconsideration (reversed or modified)" by applicant cite "Wis. Stat. § 808.10(2)"
+decision reversed-after-reconsideration: "Review election after reconsideration (reversed or modified)" by petitioner cite "Wis. Stat. § 808.10(2)"
 {
   note "A motion for reconsideration filed within 20 days after the decision tolls the 30-day period for a petition for review (Wis. Stat. § 808.10(2))."
   edge-reversed-after-reconsideration-review "Petition for review" -> reversed-review-petitioned {
@@ -169,7 +169,7 @@ terminal reversed-final: "Reversed or modified: final, record remitted" outcome 
   note "The clerk of the court of appeals transmits the judgment and decision and the record to the circuit court 31 days after the filing of the decision, or as soon thereafter as practicable; a petition for review or a reconsideration motion stays the transmittal (Wis. Stat. § 809.26(1)). Outcome from the applicant's side."
 }
 
-decision remanded-entered: "Remanded: reconsideration or review election" by applicant cite "Wis. Stat. § 809.24(1)"
+decision remanded-entered: "Remanded: reconsideration or review election" by petitioner cite "Wis. Stat. § 809.24(1)"
 {
   note "A party may file a motion for reconsideration in the court of appeals within 20 days after the date of the decision; it states with particularity the points of law or fact erroneously decided, no response is permitted unless the court orders one, and the motion is limited to 5 pages or 1,100 words (Wis. Stat. § 809.24(1)). A petition for review is filed in the Supreme Court within 30 days of the date of the decision (Wis. Stat. § 808.10(1)); a timely reconsideration motion tolls that period (Wis. Stat. § 808.10(2)). Costs are claimed by a statement filed within 14 days of the filing of the decision, and an opposing party may object within 11 days after service (Wis. Stat. § 809.25(1))."
   edge-remanded-entered-reconsider "Motion for reconsideration" -> remanded-reconsideration {
@@ -195,7 +195,7 @@ decision remanded-reconsideration: "Reconsideration decided (remanded)" by court
   }
 }
 
-decision remanded-after-reconsideration: "Review election after reconsideration (remanded)" by applicant cite "Wis. Stat. § 808.10(2)"
+decision remanded-after-reconsideration: "Review election after reconsideration (remanded)" by petitioner cite "Wis. Stat. § 808.10(2)"
 {
   note "A motion for reconsideration filed within 20 days after the decision tolls the 30-day period for a petition for review (Wis. Stat. § 808.10(2))."
   edge-remanded-after-reconsideration-review "Petition for review" -> remanded-review-petitioned {

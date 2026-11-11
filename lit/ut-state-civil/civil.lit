@@ -4,7 +4,7 @@ import ut-state-rules.{ JudgmentEntered, NoticeOfAppealFiled }
 
 start complaint-filed
 
-state complaint-filed: "Action commenced" by applicant cite "URCP 3"
+state complaint-filed: "Action commenced" by plaintiff cite "URCP 3"
 {
   note "A civil action is commenced by filing a complaint, or by serving a summons with a copy of the complaint under Rule 4; in the second case the complaint, summons and proof of service are filed within ten days of service or the action is deemed dismissed (URCP 3(a)). In an action commenced by filing, the summons and complaint are served no later than 120 days after the complaint is filed unless the court orders a different period under Rule 6; if not timely served, the action against the unserved defendant may be dismissed without prejudice (URCP 4(b)). Periods in this package are stated, not counted: computation is URCP 6(a). The outline's leading decision (Orvis v. Johnson, 2008 UT 2) is removed: no reporter text is vendored."
   edge-complaint-filed-response-due "Summons and complaint served" -> response-due {

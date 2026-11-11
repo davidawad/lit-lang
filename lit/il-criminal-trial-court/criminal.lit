@@ -18,7 +18,7 @@ module il-circuit-court-criminal.criminal
 // vendored.
 start arrested
 
-state arrested: "Arrest and first appearance" by applicant cite "725 ILCS 5/109-1(a)"
+state arrested: "Arrest and first appearance" by prosecution cite "725 ILCS 5/109-1(a)"
 {
   note "A person arrested with or without a warrant is taken without unnecessary delay before the nearest and most accessible judge, and a charge is filed (725 ILCS 5/109-1(a)); the outer limit that section sets for a regional jail authority's county, and the arrest provisions of Article 107, are not stated here (currency unconfirmed). The appearance may be by two-way audio-visual communication where the section allows it."
   edge-arrested-appearance "First appearance; pretrial release determined" -> pretrial-release {
@@ -48,19 +48,19 @@ decision probable-cause: "Preliminary examination or indictment" by court cite "
   }
 }
 
-state charged: "Information or indictment" by office cite "725 ILCS 5/111-2"
+state charged: "Information or indictment" by court cite "725 ILCS 5/111-2"
 {
   note "All prosecutions of felonies are by information or indictment (725 ILCS 5/111-2(a)); the grand jury is governed by Article 112. The speedy-trial statute runs from custody for a person in custody and from the trial demand for a person on pretrial release or recognizance; its periods are set by 725 ILCS 5/103-5(a) and (b) and are not stated here (currency unconfirmed). Delay is agreed to by a defendant in custody unless the defendant objects by a written or oral demand for trial on the record (725 ILCS 5/103-5(a))."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "725 ILCS 5/113-1" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "725 ILCS 5/113-1"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "725 ILCS 5/113-1"
 {
   note "Before trial the defendant is called into open court, informed of the charge and called upon to plead; on request the formal charge is read, and the arraignment is entered of record (725 ILCS 5/113-1). Discovery is governed by Supreme Court Rules 411 to 417: on defense counsel's written motion the State discloses the witnesses, statements and other material Rule 412(a) lists, and the defense discloses under Rule 413; the times Rule 415 regulates are not stated here (currency unconfirmed)."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "Ill. S. Ct. R. 412(a)" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "725 ILCS 5/114-1(a)"
+state discovery: "Discovery and pretrial motions" by prosecution cite "725 ILCS 5/114-1(a)"
 {
   note "On the defendant's written motion before trial, before or after a plea, the court may dismiss the charge on the grounds Section 114-1(a) lists, among them that the defendant has not been tried in compliance with Section 103-5, that the prosecution is time-barred, immunity, and grand jury defects (725 ILCS 5/114-1(a)). Other pretrial motions (continuances, substitution of judge, suppression) are in Article 114."
   edge-discovery-motions "Motion to dismiss or other pretrial motion" -> motions-ruling {
@@ -86,7 +86,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "725 ILCS 5/
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Ill. S. Ct. R. 402(a)"
+decision plea-decision: "Plea or trial" by accused cite "Ill. S. Ct. R. 402(a)"
 {
   note "The court does not accept a plea of guilty, or a stipulation that the evidence is sufficient to convict, without first addressing the defendant personally in open court and determining that the defendant understands the nature of the charge, the sentencing range, and the rights waived, and that the plea is voluntary and has a factual basis (Ill. S. Ct. R. 402). All prosecutions except on a plea of guilty or guilty but mentally ill are tried by the court and a jury unless the defendant waives a jury in writing (725 ILCS 5/115-1)."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
@@ -121,7 +121,7 @@ state sentencing: "Sentencing" by court cite ?("730 ILCS 5/5-4-1 (sentencing hea
   }
 }
 
-decision judgment: "Judgment and appeal" by applicant cite "Ill. S. Ct. R. 606(b)"
+decision judgment: "Judgment and appeal" by accused cite "Ill. S. Ct. R. 606(b)"
 {
   note "An appeal is perfected by filing a notice of appeal with the trial court clerk; the clerk files one for an unrepresented defendant who asks in open court or in writing (Ill. S. Ct. R. 606(a)). The notice is due within the period Rule 606(b) sets after the entry of the final judgment or, after a timely motion directed against the judgment, after the order disposing of it, and a premature notice is treated as filed on entry; the period is not stated here (currency unconfirmed). After a judgment on a plea of guilty no appeal lies unless the defendant first files in the trial court a motion to reconsider the sentence or to withdraw the plea and vacate the judgment within the period Rule 604(d) sets, which is not stated here (currency unconfirmed). lit/core has no counting rule for Illinois."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {

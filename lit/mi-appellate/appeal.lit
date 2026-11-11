@@ -26,7 +26,7 @@ limit reconsideration-answer { words <= 2_500 cite "MCR 7.215(I)" } cite "MCR 7.
 
 start judgment-entered
 
-state judgment-entered: "Final judgment entered in the circuit court" by applicant cite "MCR 7.203(A)"
+state judgment-entered: "Final judgment entered in the circuit court" by appellant cite "MCR 7.203(A)"
 {
   note "The Court of Appeals has jurisdiction of an appeal of right by an aggrieved party from a final judgment or final order of the circuit court, except one on appeal from another court (MCR 7.203(A)(1)); other orders are reviewed by leave (MCR 7.203(B)). The time limit for an appeal of right is jurisdictional and MCR 1.108 computes it; 'entry' is the date the judgment is signed or entered in the register of actions (MCR 7.204(A)). In a civil case the appeal of right is taken within 21 days after entry of the judgment, or of an order deciding a motion for new trial, rehearing, reconsideration or other relief filed within the initial 21-day period (MCR 7.204(A)(1))."
   edge-judgment-entered-claim "Claim of appeal filed within 21 days" -> claim-filed {
@@ -47,7 +47,7 @@ decision late-application: "Delayed application for leave granted?" by court cit
   }
 }
 
-state claim-filed: "Claim of appeal filed" by applicant cite "MCR 7.204(B)"
+state claim-filed: "Claim of appeal filed" by appellant cite "MCR 7.204(B)"
 {
   note "To vest the Court of Appeals with jurisdiction the appellant files the claim of appeal and the entry fee with the clerk within the time for taking an appeal (MCR 7.204(B)). With the claim the appellant files the judgment appealed from, the court reporter's certificate or a statement that the transcript has been ordered or that there is no record to transcribe, proof of service, any bond, the register of actions and a jurisdictional checklist (MCR 7.204(C))."
   edge-claim-filed-record "Transcript ordered; record assembled" -> record {
@@ -55,7 +55,7 @@ state claim-filed: "Claim of appeal filed" by applicant cite "MCR 7.204(B)"
   }
 }
 
-state record: "Record and transcript" by office cite "MCR 7.210"
+state record: "Record and transcript" by court cite "MCR 7.210"
 {
   note "Within seven days after a transcript is ordered, the court reporter or recorder files a certificate that it has been ordered and paid for or secured, with the estimated number of pages (MCR 7.210(B)(3)(a))."
   edge-record-briefing "Transcript filed; briefing" -> briefing {
@@ -64,7 +64,7 @@ state record: "Record and transcript" by office cite "MCR 7.210"
   }
 }
 
-state briefing: "Briefs filed" by applicant cite "MCR 7.212(A)"
+state briefing: "Briefs filed" by appellant cite "MCR 7.212(A)"
 {
   note "In an ordinary civil appeal the appellant files its brief within 56 days after the claim of appeal is filed or the transcript is filed, whichever is later; the parties may extend that time by 28 days by signed stipulation (MCR 7.212(A)(1)(a)(iii)). The appellee may file its brief within 35 days after the appellant's brief is served, also extendable by 28 days by stipulation (MCR 7.212(A)(2)(a)(ii)). The appellant may reply within 21 days after service of the appellee's brief (MCR 7.212(G)). A party that fails to file its brief in time forfeits oral argument (MCR 7.212(A)(4)), and filing a motion does not stay the time for a brief (MCR 7.212(A)(5))."
   edge-briefing-argument "Oral argument requested in the brief" -> argument {
@@ -73,7 +73,7 @@ state briefing: "Briefs filed" by applicant cite "MCR 7.212(A)"
   edge-briefing-submitted "Submitted on briefs" -> decision { authority cite "MCR 7.214(E)" }
 }
 
-state argument: "Oral argument" by office cite "MCR 7.214(B)"
+state argument: "Oral argument" by court cite "MCR 7.214(B)"
 {
   note "Oral argument is not permitted unless a party states 'ORAL ARGUMENT REQUESTED' on the title page of its brief or the court orders it (MCR 7.214(A)). Each side has 30 minutes; a side alone represented has 15 minutes, and the court may extend the time on a motion filed at least 21 days before the session (MCR 7.214(B))."
   edge-argument-decision "Argued" -> decision { authority cite "MCR 7.215(A)" }
@@ -110,7 +110,7 @@ decision reconsideration: "Motion for reconsideration decided" by court cite "MC
   edge-reconsideration-denied "Denied" -> supreme-review { authority cite "MCR 7.305(C)" }
 }
 
-decision supreme-review: "Application for leave to appeal to the Supreme Court?" by applicant cite "MCR 7.305(C)"
+decision supreme-review: "Application for leave to appeal to the Supreme Court?" by petitioner cite "MCR 7.305(C)"
 {
   note "In a civil case the application is filed within 42 days after the Court of Appeals order or opinion resolving the appeal, or its order denying a timely motion for reconsideration (MCR 7.305(C)(2)); it must show one of the grounds of MCR 7.305(B). The Supreme Court will not accept a motion to file a late application (MCR 7.316(B)). The application, its answer and reply, and the Court's decision on it are lit/mi-supreme-court's."
   edge-supreme-review-none "Not sought: the Court of Appeals decision stands" -> review-not-sought {

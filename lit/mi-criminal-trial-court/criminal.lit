@@ -10,7 +10,7 @@ module mi-criminal-trial-court.criminal
 // rules alone state the procedure.
 start arrested
 
-state arrested: "Arrest on a warrant or complaint" by applicant cite "MCR 6.104(A)"
+state arrested: "Arrest on a warrant or complaint" by prosecution cite "MCR 6.104(A)"
 {
   note "Unless released beforehand, an arrested person is taken without unnecessary delay before a court for arraignment, or arraigned without unnecessary delay by two-way interactive video (MCR 6.104(A)). An accused arrested without a warrant is arraigned on a complaint filed at or before the arraignment (MCR 6.104(D))."
   edge-arrested-arraignment "Arraignment on the warrant or complaint" -> district-arraignment {
@@ -40,7 +40,7 @@ decision preliminary-examination: "Preliminary examination" by court cite "MCR 6
   }
 }
 
-state charged: "Information or indictment" by office cite "MCR 6.112(B)"
+state charged: "Information or indictment" by court cite "MCR 6.112(B)"
 {
   note "A prosecution is based on an information or an indictment, filed on or before the date set for the arraignment (MCR 6.112(B), (C)). A notice of intent to seek an enhanced sentence is filed within 21 days after the defendant's arraignment on the information (MCR 6.112(F)). The defendant and the people are entitled to a speedy trial; a violation of the defendant's constitutional right to a speedy trial entitles the defendant to dismissal with prejudice (MCR 6.004(A))."
   edge-charged-arraignment "Arraignment on the information" -> arraignment {
@@ -48,13 +48,13 @@ state charged: "Information or indictment" by office cite "MCR 6.112(B)"
   }
 }
 
-state arraignment: "Arraignment on the information" by applicant cite "MCR 6.113"
+state arraignment: "Arraignment on the information" by prosecution cite "MCR 6.113"
 {
   note "Unless the defendant waives arraignment or the court for good cause orders a delay, the court with trial jurisdiction arraigns the defendant on the scheduled date (MCR 6.113(A)). On request a party provides the witness list and the other mandatory disclosures of MCR 6.201(A); the witness list may be amended without leave no later than 28 days before trial. Unless the court orders otherwise, the prosecutor complies within 21 days of a request and the defendant within 21 days of a request (MCR 6.201(G)). A defendant who will offer expert evidence of diminished capacity files notice not less than 30 days before the trial date (MCR 6.201(B))."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "MCR 6.201(G)" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "MCR 6.201"
+state discovery: "Discovery and pretrial motions" by prosecution cite "MCR 6.201"
 {
   note "A party who fails to comply with MCR 6.201 may be ordered to disclose, have the evidence excluded, or face another just order (MCR 6.201(K)). A state prisoner against whom a charge is pending is brought to trial within 180 days after the department of corrections delivers to the prosecutor notice of the place of imprisonment and a request for final disposition; if action is not commenced in time, the court loses jurisdiction and dismisses with prejudice (MCR 6.004(D))."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling { authority cite "MCR 6.201(K)" }
@@ -76,7 +76,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "MCR 6.110(H
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "MCR 6.302(A)"
+decision plea-decision: "Plea or trial" by accused cite "MCR 6.302(A)"
 {
   note "The court may not accept a plea of guilty or nolo contendere unless convinced it is understanding, voluntary and accurate; it places the defendant under oath and carries out MCR 6.302(B)-(E) personally (MCR 6.302(A)). The defendant has the right to a jury, or may with the prosecutor's consent and the court's approval waive it (MCR 6.401)."
   edge-plea-decision-plea "Plea accepted" -> sentencing { authority cite "MCR 6.302(A)" }
@@ -108,7 +108,7 @@ state sentencing: "Presentence report and sentence" by court cite "MCR 6.425(D)"
   }
 }
 
-decision judgment: "Judgment of sentence" by applicant cite "MCR 6.427"
+decision judgment: "Judgment of sentence" by prosecution cite "MCR 6.427"
 {
   note "An appeal of right in a criminal case is taken under MCR 6.425(G)(1), within 42 days after entry of an order denying a timely request for appointed appellate counsel, within 42 days after entry of the judgment, or within 42 days after an order denying a timely motion for new trial, directed verdict of acquittal or to correct an invalid sentence; the time is jurisdictional and MCR 1.108 computes it (MCR 7.204(A)). Without a timely claim, an application for leave to appeal may be filed within the times of MCR 7.205(A)(2)."
   edge-judgment-appeal "Claim of appeal filed" -> appeal-taken { authority cite "MCR 7.204(A)" }

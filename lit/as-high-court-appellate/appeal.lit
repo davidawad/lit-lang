@@ -4,7 +4,7 @@ import as-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, Recor
 
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite "A.C.R. 3(a)"
+state notice-filed: "Notice of appeal filed" by appellant cite "A.C.R. 3(a)"
 {
   note "An appeal permitted by law as of right from the trial division, the land and titles division or the district court is taken by filing a notice of appeal with the clerk of court within the time allowed by Rule 4 (A.C.R. 3(a)). In a civil case a motion for a new trial, required by 43.0802 A.S.C.A. (not vendored), is filed within 10 days after entry of the judgment or order appealed from, and the notice of appeal within 10 days after the motion is denied; a timely Rule 52(b) motion to amend findings runs the time from the order disposing of it (A.C.R. 4(a)). The rule text is the American Samoa Bar Association's posting, UNOFFICIAL and CURRENCY UNCONFIRMED (sources/as-high-court-appellate/PROVENANCE.md). Periods are stated, not counted: Rule 26(a) excludes the trigger day, includes the last day unless it is a Saturday, Sunday or legal holiday, and excludes intermediate Saturdays, Sundays and legal holidays from a period of less than 7 days; 6 days are added after service by mail (A.C.R. 26(a), (c)). The filing fee is set by 26 HCR, which is not vendored (A.C.R. 3(e))."
   edge-notice-filed-timely "Timely notice" -> appealability {
@@ -30,7 +30,7 @@ decision appealability: "Appeal permitted by law as of right?" by court cite "A.
 
 terminal dismissed-jurisdiction: "Dismissed: no appeal of right" outcome [loss, dismissal] cite "A.C.R. 3(a)"
 
-state record: "Record and transcript" by applicant cite "A.C.R. 10(b)"
+state record: "Record and transcript" by appellant cite "A.C.R. 10(b)"
 {
   note "The notice of appeal requests an estimate of the transcript; the appellant has 5 days from filing the notice to request the estimate from the court reporters, and if no request is made or no transcript will be ordered, the appellant's brief is due 35 days from the filing of the notice of appeal (A.C.R. 3(c)). Within 10 days after receiving the estimate the appellant orders the needed transcript in writing, or certifies that none is ordered, and unless the entire transcript is ordered files a statement of the issues; the appellee may designate additional parts within 10 days after service (A.C.R. 10(b)). If the transcript cannot be completed within 30 days of the order the reporter requests an extension from the clerk (A.C.R. 11(b)). On assembly the clerk files the record and notifies the parties of the filing date (A.C.R. 12(b))."
   edge-record-filed "Record filed" -> briefing {
@@ -39,7 +39,7 @@ state record: "Record and transcript" by applicant cite "A.C.R. 10(b)"
   }
 }
 
-state briefing: "Briefing" by applicant cite "A.C.R. 31(a)"
+state briefing: "Briefing" by appellant cite "A.C.R. 31(a)"
 {
   note "The appellant serves and files a brief within 40 days after the record is filed; the appellee within 30 days after service of the appellant's brief; a reply brief may follow within 14 days after service of the appellee's brief and, except for good cause, at least 3 days before argument (A.C.R. 31(a)). Except by permission, principal briefs may not exceed 50 pages and reply briefs 25 pages, exclusive of tables and addenda (A.C.R. 28(g))."
   edge-briefing-complete "Briefing complete" -> argument { authority cite "A.C.R. 31(a)" }
@@ -60,7 +60,7 @@ decision decision-issued: "Decision and entry of judgment" by court cite "A.C.R.
   }
 }
 
-decision rehearing-window: "Petition for rehearing?" by applicant cite "A.C.R. 40(a)"
+decision rehearing-window: "Petition for rehearing?" by petitioner cite "A.C.R. 40(a)"
 {
   note "A petition for rehearing is filed within 14 days after entry of judgment unless the time is shortened or enlarged by order, stating with particularity the points overlooked or misapprehended; no oral argument and no answer unless requested (A.C.R. 40(a)). Except by permission it may not exceed 15 pages (A.C.R. 40(b))."
   edge-rehearing-window-none "No petition" -> mandate-issued { authority cite "A.C.R. 41(a)" }

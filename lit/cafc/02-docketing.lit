@@ -8,7 +8,7 @@ import cafc.{ Docketed, Filed, Paper, docketing-group }
 import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
 
-state notice-of-appeal-filed: "Notice of Appeal Filed (Convergence)" by office cite "FRAP 3; FRAP 4"
+state notice-of-appeal-filed: "Notice of Appeal Filed (Convergence)" by court cite "FRAP 3; FRAP 4"
 {
   group docketing-group
   note "All four origins converge here once their own deadline is met; downstream docketing, certificate-of-interest, briefing, and decision mechanics are uniform across origins except where a specific rule/edge below says otherwise."
@@ -17,7 +17,7 @@ state notice-of-appeal-filed: "Notice of Appeal Filed (Convergence)" by office c
   }
 }
 
-state docketed: "Appeal Docketed at the Federal Circuit" by applicant cite "FRAP 12(a)"
+state docketed: "Appeal Docketed at the Federal Circuit" by movant cite "FRAP 12(a)"
 {
   group docketing-group
   docketed-to-appearance "File entry of appearance and certificate of interest" -> appearance-and-coi-filed {
@@ -33,7 +33,7 @@ state docketed: "Appeal Docketed at the Federal Circuit" by applicant cite "FRAP
   }
 }
 
-state appearance-and-coi-filed: "Entry of Appearance & Certificate of Interest Filed" by applicant cite "Fed. Cir. R. 47.3(b)(1); Fed. Cir. R. 47.4(a)-(b)"
+state appearance-and-coi-filed: "Entry of Appearance & Certificate of Interest Filed" by movant cite "Fed. Cir. R. 47.3(b)(1); Fed. Cir. R. 47.4(a)-(b)"
 {
   group docketing-group
   note "Certificate of interest must be filed contemporaneously with the first-filed entry of appearance (Fed. Cir. R. 47.4(b)) and satisfies the FRAP 26.1 disclosure-statement requirement (Fed. Cir. R. 26.1). United States and unrepresented individuals are exempt absent Rule 47.4(a)(6) organizational-victim/bankruptcy disclosures. An amended certificate is due within 7 days of any change (Fed. Cir. R. 47.4(c))."
@@ -50,7 +50,7 @@ state appearance-and-coi-filed: "Entry of Appearance & Certificate of Interest F
   }
 }
 
-state docketing-statement-filed: "Docketing Statement Filed" by office cite "Fed. Cir. R. 47.6"
+state docketing-statement-filed: "Docketing Statement Filed" by court cite "Fed. Cir. R. 47.6"
 {
   group docketing-group
   note "Except for unrepresented parties, each appellant/cross-appellant/petitioner files a docketing statement on Form 26 within 14 days of docketing; it satisfies the FRAP 10(b)(3)(A) statement-of-issues requirement. Also the document the Office of General Counsel screens (together with the briefs, once filed) to select cases for mediation."

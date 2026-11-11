@@ -396,7 +396,7 @@ deadline redacted-document-period: 7.days after RedactionGranted() counted_by fr
 
 start motion-served
 
-state motion-served: "Motion served on negative notice" by applicant cite "Bankr. S.D. Fla. Local Rule 9013-3(a)"
+state motion-served: "Motion served on negative notice" by movant cite "Bankr. S.D. Fla. Local Rule 9013-3(a)"
 {
   note "A motion the rule lists may be served on 21 days' negative notice (Local Rule 9013-3(b)), or on 14 days' for the listed stay relief motions (Local Rule 9013-3(c)), with the bulletin beneath its title and a proposed order attached; it may not seek more than one form of relief or relief against an unrepresented debtor (Local Rule 9013-3(a)(2))."
   edge-motion-served-response "Written response or objection filed and served" -> responded {
@@ -415,7 +415,7 @@ state responded: "Response filed; matter set for hearing" by opponent cite "Bank
   }
 }
 
-state order-uploaded: "Proposed order uploaded" by applicant cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(4)"
+state order-uploaded: "Proposed order uploaded" by movant cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(4)"
 {
   note "The movant uploads the proposed order no later than seven days after the negative notice period expires (Local Rule 9013-3(a)(4)); its preamble recites service, the expired response time and the absence of a response (Local Rule 9013-3(b)(1)(B), (c)(1)(B))."
   edge-order-uploaded-ruling "Order considered" -> ruling {

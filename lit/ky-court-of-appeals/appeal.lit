@@ -30,7 +30,7 @@ event RehearingPetitionFiled() paper ky-state-rules.rehearing-petition
 
 start judgment-entered
 
-state judgment-entered: "Circuit court judgment entered and its service noted" by applicant cite "RAP 3(A)"
+state judgment-entered: "Circuit court judgment entered and its service noted" by appellant cite "RAP 3(A)"
 {
   note "Unless a statute or court rule provides a different time, the notice of appeal is filed with the clerk of the court from which the appeal is taken no later than 30 days from the date of notation of service of the judgment or order appealed from under CR 77.04(2) (RAP 3(A)(1), (2)). A timely CR 50.02, 52.02 or 59 motion starts the time for all parties from the entry of the order disposing of the last of them, except when a new trial is granted (RAP 3(E)(2)). On excusable neglect based on a party's failure to learn of the entry, the trial court may extend the time by not more than 10 days from the expiration of the original time (RAP 3(D)). The appellant pays the required fees when the notice is tendered, or tenders a motion to proceed in forma pauperis with it (RAP 2(I), 3(A)(3))."
   edge-judgment-entered-notice "Notice of appeal filed in time" -> notice-filed {
@@ -45,7 +45,7 @@ terminal time-barred: "Appeal time missed" outcome [loss, dismissal] cite "RAP 1
   note "Outcome from the applicant's side. The timely filing of a notice of appeal is jurisdictional (RAP 2(A)(2)); the failure to file it timely results in dismissal (RAP 2(A)(3), 10(A))."
 }
 
-decision notice-filed: "Notice of appeal filed: transfer sought?" by applicant cite "RAP 17(A)"
+decision notice-filed: "Notice of appeal filed: transfer sought?" by appellant cite "RAP 17(A)"
 {
   note "The notice specifies the parties taking the appeal, identifies the judgment or order appealed from and its date, and certifies service on counsel for all parties (RAP 2(B)(1)). No later than 10 days from the filing of the notice of appeal to the Court of Appeals, any party may move in the Supreme Court to transfer the case to that Court; other parties may respond within 10 days of the filing of the motion. Transfer is discretionary and is granted only on a showing that the case is of great and immediate public importance. The motion suspends the running of time for further steps, which is computed in full from the order granting or denying transfer (RAP 17(A), (C), (D))."
   edge-notice-filed-no-transfer "No transfer motion" -> prehearing { authority cite "RAP 22(A)" }
@@ -69,7 +69,7 @@ terminal transferred: "Transferred to the Supreme Court" outcome [appeal] cite "
   note "The appeal proceeds in the Supreme Court as an appeal of right (RAP 17(E)); RAP 22 does not apply to cases transferred to the Supreme Court (RAP 22(A)(2)). Merits proceedings in the Supreme Court on transfer are not modeled."
 }
 
-state prehearing: "Prehearing procedure" by office cite "RAP 22(A)"
+state prehearing: "Prehearing procedure" by court cite "RAP 22(A)"
 {
   note "In civil cases other than those RAP 22(A)(2) excepts, any party may file a motion for a prehearing conference with a prehearing statement no later than 20 days from the notice of appeal, and other parties may respond with a supplemental statement no later than 10 days from its filing (RAP 22(A)(1), (C)(3)). Time for further steps does not begin until the Court of Appeals so orders: if no motion is filed, from the clerk's notice saying so; if one is, from the order that no conference will be held or the order reciting the conference's results (RAP 22(B)). The circuit court clerk certifies the record within 30 days of the order ending the prehearing procedure, or, where RAP 22 does not apply, within 30 days after the first notice of appeal, and notifies the appellate clerk and serves the parties with the notice of certification and the index (RAP 26(B)(4), (5))."
   edge-prehearing-record "Record certified and notice of certification served" -> briefing {
@@ -78,7 +78,7 @@ state prehearing: "Prehearing procedure" by office cite "RAP 22(A)"
   }
 }
 
-state briefing: "Briefs filed" by applicant cite "RAP 30(C)"
+state briefing: "Briefs filed" by appellant cite "RAP 30(C)"
 {
   note "In a non-expedited civil case without a cross-appeal the appellant files its initial brief no later than 60 days after the docket notation of the notice of certification under RAP 26(B)(5), the appellee its response brief no later than 60 days after the appellant's brief is filed, and the appellant may reply no later than 15 days after the last appellee's response brief is filed (RAP 30(C)(1)). In the Court of Appeals an initial or response brief may not exceed 8,750 words or 20 pages if computer-generated, or 25 pages if handwritten or typewritten, and a reply brief 1,750 words or 4 pages, or 5 pages (RAP 31(G)(2)). If the appellant's brief is not filed in time the Court may dismiss the appeal; if the appellee's is not, it may accept the appellant's statement of the facts and issues, reverse if the appellant's brief reasonably appears to sustain that, or regard the failure as a confession of error (RAP 31(H))."
   edge-briefing-submitted "All briefs filed or the time expired: submitted" -> submission {
@@ -113,7 +113,7 @@ chance appellate-decision: "Court of Appeals decides" by court cite "RAP 40(A)"
   }
 }
 
-decision post-opinion: "Rehearing, discretionary review, or neither?" by applicant cite "RAP 40(G)"
+decision post-opinion: "Rehearing, discretionary review, or neither?" by petitioner cite "RAP 40(G)"
 {
   note "A petition for rehearing, modification, extension or publication is filed not later than 20 days from the date the opinion was issued, and any response no later than 20 days from the petition's filing; petitions and responses are limited to 3,500 words or 8 pages if computer-generated, or 10 pages if handwritten or typewritten (RAP 43(B)(3), (5)). A motion for discretionary review by the Supreme Court is filed within 30 days after the date of the opinion, or, after a timely RAP 43 petition, within 30 days after the order denying it or the opinion finally disposing of the case (RAP 44(B)(2)). A Court of Appeals opinion becomes final on the 31st day after its rendition unless a RAP 43 petition or RAP 44 motion has been timely filed or an extension granted (RAP 40(G)(1))."
   edge-post-opinion-none "Neither: the opinion becomes final" -> opinion-final {
@@ -141,7 +141,7 @@ chance rehearing-decision: "Rehearing decided" by court cite "RAP 43(B)"
   }
 }
 
-decision post-rehearing: "Discretionary review after rehearing denied?" by applicant cite "RAP 44(B)"
+decision post-rehearing: "Discretionary review after rehearing denied?" by petitioner cite "RAP 44(B)"
 {
   note "The motion for discretionary review is filed within 30 days after the date of the order denying the petition (RAP 44(B)(2)); otherwise the opinion becomes final on the 31st day after the denial (RAP 40(G)(3)(c))."
   edge-post-rehearing-none "No motion: the opinion becomes final" -> opinion-final {

@@ -18,7 +18,7 @@ import ky-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 // either.
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "CR 3.01"
+state complaint-filed: "Complaint filed" by plaintiff cite "CR 3.01"
 {
   note "A civil action is commenced by the filing of a complaint with the court and the issuance of a summons or warning order thereon in good faith (CR 3.01). Upon the filing of the complaint the clerk forthwith issues the summons and, at the initiating party's direction, mails it with the complaint by registered or certified mail, transfers it to a person authorized to serve it, or returns it to the party for service; service by mail is complete only upon delivery (CR 4.01(1)). The summons and complaint are served together (CR 4.04(1)). The filing fees of CR 3.02 are not modeled."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
@@ -27,7 +27,7 @@ state complaint-filed: "Complaint filed" by applicant cite "CR 3.01"
   }
 }
 
-decision answer-due: "Answer, CR 12 motion, or default" by office cite "CR 12.01"
+decision answer-due: "Answer, CR 12 motion, or default" by court cite "CR 12.01"
 {
   note "A defendant serves an answer within 20 days after service of the summons; an answer to a cross-claim, and a reply to a counterclaim, are due within 20 days after service. Service of a CR 12 motion alters these periods unless the court fixes a different time: if the court denies the motion or postpones it to trial, the responsive pleading is served within ten days after entry of the order; if it grants a motion for a more definite statement, within 10 days after service of that statement (CR 12.01). Every defense is asserted in the responsive pleading, except that lack of subject-matter or personal jurisdiction, improper venue, insufficiency of process or of its service, failure to state a claim upon which relief can be granted, and failure to join a party under CR 19 may be made by motion before pleading (CR 12.02)."
   edge-answer-due-answer "Answer served" -> discovery { authority cite "CR 12.01" }
@@ -49,7 +49,7 @@ decision pleading-motion: "CR 12.02(f) or 12.03 motion decided" by court cite "C
   }
 }
 
-state amended: "Amended pleading" by applicant cite "CR 15.01"
+state amended: "Amended pleading" by plaintiff cite "CR 15.01"
 {
   note "A party may amend its pleading once as a matter of course at any time before a responsive pleading is served or, if no responsive pleading is permitted and the action is not on the trial calendar, within 20 days after serving it; otherwise only by leave of court or the adverse party's written consent, and leave is freely given when justice so requires. A party pleads in response to an amended pleading within the time remaining for response to the original pleading or within 10 days after service of the amended pleading, whichever is longer, unless the court otherwise orders (CR 15.01)."
   edge-amended-tested "Amended pleading tested again" -> pleading-motion {
@@ -62,7 +62,7 @@ terminal dismissed-merits: "Dismissed on the pleadings" outcome [loss, dismissal
   note "Outcome from the applicant's side. Unless the court's order otherwise specifies, a dismissal not provided for in CR 41, other than one for lack of jurisdiction, improper venue, want of prosecution under CR 77.02(2) or failure to join a party under CR 19, operates as an adjudication upon the merits (CR 41.02(3)). An appeal runs from the notation of service of the final judgment (RAP 3(A))."
 }
 
-state default-application: "Application for default judgment" by applicant cite "CR 55.01"
+state default-application: "Application for default judgment" by plaintiff cite "CR 55.01"
 {
   note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend, the party entitled to a judgment by default applies to the court. A party in default who has appeared is served with written notice of the application at least three days before the hearing on it; a motion for judgment against a party in default for failure to appear is accompanied by the attorney's certificate that the defaulting party has served no papers on the attorney. The court, without a jury unless one is demanded by a party entitled to it or required by statute or the Constitution, conducts the hearings needed to fix damages or establish an averment; a party in default for failure to appear waives trial by jury (CR 55.01)."
   edge-default-application-granted "Default judgment entered" -> default-judgment {
@@ -85,7 +85,7 @@ terminal default-judgment: "Default judgment for applicant" outcome [win] cite "
   note "Outcome from the applicant's side. Damages and costs are not stated in the vendored rules for this posture."
 }
 
-state discovery: "Discovery" by applicant cite "CR 26.02"
+state discovery: "Discovery" by plaintiff cite "CR 26.02"
 {
   note "Parties may obtain discovery regarding any matter, not privileged, relevant to the subject matter of the pending action; it is no ground for objection that the information sought will be inadmissible at trial if it appears reasonably calculated to lead to the discovery of admissible evidence (CR 26.02(1)). Trial-preparation materials need a showing of substantial need and undue hardship (CR 26.02(3)); experts are discovered as CR 26.02(4) provides. If a party fails to obey an order to provide or permit discovery, the court may, among other orders, strike pleadings, stay proceedings, dismiss the action or render a default judgment, and requires the disobedient party or its attorney to pay the reasonable expenses caused unless the failure was substantially justified (CR 37.02(2), (3))."
   edge-discovery-sj "Summary judgment motion" -> summary-judgment { authority cite "CR 56.03" }
@@ -142,7 +142,7 @@ state trial: "Trial by jury or by the court" by court cite "CR 38.02"
   }
 }
 
-decision judgment-entered: "Judgment entered and its service noted" by office cite "CR 58"
+decision judgment-entered: "Judgment entered and its service noted" by court cite "CR 58"
 {
   note "A judgment or order is signed by the judge; the clerk forthwith notes it in the civil docket, and that notation is the entry, effective at the time of notation (CR 58(1)). Immediately upon entry of a judgment or final order the clerk serves notice of the entry by mail on every party not in default for failure to appear, and notes the service and its date in the docket; the date of that notation, or of an earlier filed waiver, is the date of entry for the running of the time for appeal under RAP 3 (CR 77.04(1), (2)). Where multiple claims or parties are involved, a judgment on fewer than all of them is final only on the court's determination, recited in it, that there is no just reason for delay and that it is final (CR 54.02(1)). Unless a statute or court rule provides a different time, the notice of appeal is filed with the circuit court clerk no later than 30 days from the date of notation of service; on excusable neglect based on a party's failure to learn of the entry, the trial court may extend the time by not more than 10 days (RAP 3(A), (D))."
   edge-judgment-entered-post-trial "CR 50.02, 52.02 or 59 motion served" -> post-trial {

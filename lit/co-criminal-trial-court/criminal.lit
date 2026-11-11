@@ -16,7 +16,7 @@ module co-criminal-trial-court.criminal
 // vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "Crim. P. 4"
+state arrested: "Arrest or summons" by prosecution cite "Crim. P. 4"
 {
   note "A felony complaint (Crim. P. 3) supports a warrant or summons (Crim. P. 4). A person arrested with or without a warrant is taken without unnecessary delay before the nearest available county or district court, and a felony complaint, information or indictment is then filed without unnecessary delay in the proper court (Crim. P. 5(a)(1))."
   edge-arrested-appearance "First appearance" -> initial-appearance {
@@ -46,19 +46,19 @@ decision probable-cause: "Preliminary hearing or indictment" by court cite "Crim
   }
 }
 
-state charged: "Indictment or information" by office cite "Crim. P. 7"
+state charged: "Indictment or information" by court cite "Crim. P. 7"
 {
   note "An indictment is a written statement presented in open court by a grand jury to the district court charging a crime (Crim. P. 7(a)(1)); an information is filed by the prosecuting attorney (Crim. P. 7(b)). Arraignment follows the preliminary proceedings under Crim. P. 5, 7 and 12 (Crim. P. 10)."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Crim. P. 10" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "Crim. P. 10"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "Crim. P. 10"
 {
   note "Arraignment is conducted in open court in the court having trial jurisdiction: the defendant is informed of the offense charged and required to plead (Crim. P. 10). For a felony, a class 1 misdemeanor, or an offense punishable by more than one year's imprisonment, the defendant must be present, though for good cause the court may accept a not-guilty plea by counsel (Crim. P. 10(a)). A defendant may plead guilty, not guilty, not guilty by reason of insanity, or with the court's consent nolo contendere (Crim. P. 11(a)). The Crim. P. 48(b) speedy-trial period runs from the entry of a plea of not guilty."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "Crim. P. 16" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "Crim. P. 12(b)"
+state discovery: "Discovery and pretrial motions" by prosecution cite "Crim. P. 12(b)"
 {
   note "The prosecuting attorney makes the materials Crim. P. 16 Part I lists available to the defense (Crim. P. 16(a)(1)). A motion raising defenses and objections before trial is made within 21 days following arraignment (Crim. P. 12(b)(3)). A defendant not brought to trial within six months from the entry of a plea of not guilty is discharged and the charges dismissed with prejudice, unless a period is excluded or the time extended under Crim. P. 48(b)(2) to (6); to be entitled to that dismissal the defendant must move for it before trial or a guilty plea, and failure to move is a waiver (Crim. P. 48(b)(1), (5)). A defendant's continuance extends the period by six months from the date it was granted (Crim. P. 48(b)(3))."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -84,7 +84,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Crim. P. 12
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Crim. P. 11(b)"
+decision plea-decision: "Plea or trial" by accused cite "Crim. P. 11(b)"
 {
   note "The court accepts a guilty or nolo contendere plea only after advising the defendant of the Crim. P. 5(a)(2) rights and determining that the defendant understands the charge, its elements and the effect of the plea, that the plea is voluntary, that the defendant waives a jury trial, and the possible penalties (Crim. P. 11(b)). The prosecuting attorney may dismiss or enter a nolle prosequi only on a motion in open court with the court's consent and a written statement of reasons, and not during trial without the defendant's consent (Crim. P. 48(a))."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "Crim. P. 11(b)" }
@@ -119,7 +119,7 @@ state sentencing: "Presentence report and sentencing" by court cite "Crim. P. 32
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Crim. P. 32(c)"
+decision judgment: "Judgment of conviction" by accused cite "Crim. P. 32(c)"
 {
   note "After a trial the court, on passing sentence, informs the defendant of the right to seek review and of the time limits for a notice of appeal (Crim. P. 32(c)(1)). The defendant's notice of appeal is filed in the appellate court, with an advisory copy served on the trial court, within 49 days after entry of the judgment or order appealed from (C.A.R. 4(b)(1)); on a showing of excusable neglect the appellate court may extend the time by up to 35 days from its expiry (C.A.R. 4(b)(3)). A judgment is entered when it is entered in the criminal docket (C.A.R. 4(b)(4)). A felony sentence may be reviewed once on appeal (C.A.R. 4(b)(5); C.R.S. 18-1-409, not vendored). lit/core has no counting rule for C.A.R. 26, so the period is not encoded as a counted deadline."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "C.A.R. 4(b)" }

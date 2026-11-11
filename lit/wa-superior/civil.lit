@@ -4,7 +4,7 @@ import wa-state-rules.{ JudgmentEntered }
 
 start complaint-filed
 
-state complaint-filed: "Action commenced" by applicant cite "CR 3(a)"
+state complaint-filed: "Action commenced" by movant cite "CR 3(a)"
 {
   note "A civil action is commenced by service of a summons and a copy of the complaint under rule 4, or by filing a complaint; on any other party's written demand the plaintiff pays the filing fee and files the summons and complaint within 14 days after service of the demand or the service is void, and commencement for tolling a statute of limitations is governed by RCW 4.16.170 (CR 3(a)). Periods in this package are stated, not counted: CR 6 (computation of time) is not vendored. The filing fee is not stated in the vendored rules. The earlier outline named no leading decision for this step."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
@@ -12,7 +12,7 @@ state complaint-filed: "Action commenced" by applicant cite "CR 3(a)"
   }
 }
 
-decision answer-due: "Answer, motion or default" by office cite "CR 12(a)"
+decision answer-due: "Answer, motion or default" by court cite "CR 12(a)"
 {
   note "Unless a statute or rule sets another time, the summons requires the defendant to serve a defense within 20 days after service of the summons, exclusive of the day of service (CR 4(a)(2)). The answer is due within 20 days after personal service under rule 4; within 60 days from first publication when the summons is published under rule 4(d)(3); within 60 days after service out of state under RCW 4.28.180 and 4.28.185 or on the Secretary of State under RCW 46.64.040; within 60 days after service in a jail, detention facility or prison unless a statute states another time; or within any other period a statute or rule fixes (CR 12(a)(1)-(5)). A cross claim and a reply to a counterclaim are answered within 20 days (CR 12(a))."
   edge-answer-due-default "No appearance, pleading or defense" -> default-entered {
@@ -49,7 +49,7 @@ terminal default-judgment: "Default judgment" outcome [loss] cite "CR 55(b)"
   note "Outcome from the defending side. For a sum certain, the court enters judgment on motion and affidavit of the amount due; otherwise as CR 55(b) provides, with proof of service on file (CR 55(b))."
 }
 
-state discovery: "Discovery" by applicant cite "CR 26"
+state discovery: "Discovery" by movant cite "CR 26"
 {
   note "The court may hold a discovery conference on a party's motion; objections or additions to the matters the motion sets forth are served not later than 10 days after service of the motion, and the court then enters a discovery plan and schedule (CR 26(f)). Each party and attorney must participate in good faith in framing a proposed discovery plan."
   edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
@@ -83,7 +83,7 @@ decision trial: "Jury or bench trial" by court cite "CR 38(b)"
   edge-trial-settled "Settled before verdict" -> settled { authority cite "CR 41(e)" }
 }
 
-decision post-trial: "Post-trial motions" by applicant cite "CR 59(b)"
+decision post-trial: "Post-trial motions" by movant cite "CR 59(b)"
 {
   note "A renewed motion for judgment as a matter of law is filed no later than 10 days after entry of judgment and may join a motion for a new trial (CR 50(b)). A motion for a new trial or for reconsideration is filed not later than 10 days after entry of the judgment, order or other decision, noted to be heard within 30 days after entry unless the court directs otherwise (CR 59(b)); opposing affidavits are due 10 days after service, extendable up to 20 days (CR 59(c)). The court may order a new-trial hearing on its own initiative not later than 10 days after entry of judgment (CR 59(d))."
   edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {

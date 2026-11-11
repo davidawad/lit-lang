@@ -4,7 +4,7 @@ import fl-state-rules.{ JudgmentEntered }
 
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "Fla. R. Civ. P. 1.050"
+state complaint-filed: "Complaint filed" by plaintiff cite "Fla. R. Civ. P. 1.050"
 {
   note "Every civil action is deemed commenced when the complaint or petition is filed (Fla. R. Civ. P. 1.050). Periods in this package are stated, not counted: their computation is governed by Florida Rule of General Practice and Judicial Administration 2.514 (Fla. R. Civ. P. 1.090(a)), which is not vendored."
   edge-complaint-filed-service "Summons issued and served" -> service-check {
@@ -12,7 +12,7 @@ state complaint-filed: "Complaint filed" by applicant cite "Fla. R. Civ. P. 1.05
   }
 }
 
-decision service-check: "Service within 120 days" by office cite "Fla. R. Civ. P. 1.070(j)"
+decision service-check: "Service within 120 days" by court cite "Fla. R. Civ. P. 1.070(j)"
 {
   note "If initial process and the initial pleading are not served on a defendant within 120 days after the initial pleading directed to that defendant is filed, the court must direct service within a specified time or dismiss the action without prejudice or drop that defendant; on good cause or excusable neglect it must extend the time (Fla. R. Civ. P. 1.070(j))."
   edge-service-check-served "Served" -> answer-due { authority cite "Fla. R. Civ. P. 1.140(a)" }
@@ -21,7 +21,7 @@ decision service-check: "Service within 120 days" by office cite "Fla. R. Civ. P
   }
 }
 
-decision answer-due: "Answer, motion or default" by office cite "Fla. R. Civ. P. 1.140(a)"
+decision answer-due: "Answer, motion or default" by court cite "Fla. R. Civ. P. 1.140(a)"
 {
   note "Unless a statute prescribes otherwise, the answer is due within 20 days after service of original process and the initial pleading; the state, its agency, or an officer or employee sued in an official capacity has 40 days, or 30 days when sued under section 768.28, Florida Statutes (Fla. R. Civ. P. 1.140(a)(1), (2)). After a motion under rule 1.140 is denied or postponed, the responsive pleading is due within 10 days after the filing of the order (Fla. R. Civ. P. 1.140(a)(3))."
   edge-answer-due-default "No response" -> default-entered {
@@ -69,7 +69,7 @@ state case-management: "Case management order" by court cite "Fla. R. Civ. P. 1.
   }
 }
 
-state discovery: "Discovery" by applicant cite "Fla. R. Civ. P. 1.280(a)"
+state discovery: "Discovery" by plaintiff cite "Fla. R. Civ. P. 1.280(a)"
 {
   note "Initial discovery disclosures are served without awaiting a request (Fla. R. Civ. P. 1.280(a)); a party may not seek discovery before serving its own, except by stipulation or court order (Fla. R. Civ. P. 1.280(f)(1)). Sanctions for failure to make discovery are rule 1.380's."
   edge-discovery-sj "Summary judgment motion served" -> sj-motion {
@@ -114,7 +114,7 @@ decision post-trial: "Post-trial motions decided" by court cite "Fla. R. Civ. P.
   }
 }
 
-state judgment-entered: "Final judgment rendered" by office cite "Fla. R. App. P. 9.110(b)"
+state judgment-entered: "Final judgment rendered" by court cite "Fla. R. App. P. 9.110(b)"
 {
   note "A motion for costs and attorneys' fees is served no later than 30 days after filing of the judgment (Fla. R. Civ. P. 1.525)."
   edge-judgment-entered-appeal "Next step" -> appeal-decision {
@@ -122,7 +122,7 @@ state judgment-entered: "Final judgment rendered" by office cite "Fla. R. App. P
   }
 }
 
-decision appeal-decision: "Notice of appeal within 30 days of rendition?" by applicant cite "Fla. R. App. P. 9.110(b)"
+decision appeal-decision: "Notice of appeal within 30 days of rendition?" by plaintiff cite "Fla. R. App. P. 9.110(b)"
 {
   note "Appeal jurisdiction is invoked by filing a notice with the clerk of the lower tribunal within 30 days of rendition of the order to be reviewed (Fla. R. App. P. 9.110(b)); the court may not extend the time for taking an appeal (Fla. R. Civ. P. 1.090(b)(2))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken {

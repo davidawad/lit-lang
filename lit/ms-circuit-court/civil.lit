@@ -4,7 +4,7 @@ import ms-state-rules.{ ActionCommenced, JudgmentEntered }
 
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "M.R.C.P. 3(a)"
+state complaint-filed: "Complaint filed" by plaintiff cite "M.R.C.P. 3(a)"
 {
   note "A civil action is commenced by filing a complaint with the court, with the costs deposit the law and rules require (M.R.C.P. 3(a)). Periods in this package are stated, not counted: computation is M.R.C.P. 6(a). The outline's one named decision, Brown v. Credit Center, Inc., 444 So. 2d 358 (Miss. 1983), could not be checked against a vendored reporter and is removed."
   edge-complaint-filed-service "Summons issued for service" -> service-made {
@@ -13,7 +13,7 @@ state complaint-filed: "Complaint filed" by applicant cite "M.R.C.P. 3(a)"
   }
 }
 
-decision service-made: "Served within 120 days?" by applicant cite "M.R.C.P. 4(h)"
+decision service-made: "Served within 120 days?" by plaintiff cite "M.R.C.P. 4(h)"
 {
   note "If service of the summons and complaint is not made on a defendant within 120 days after the filing of the complaint and good cause is not shown, the action is dismissed as to that defendant without prejudice, on the court's own initiative with notice or on motion (M.R.C.P. 4(h)). If no acknowledgment of service by mail is received within 20 days after mailing, service may be made in any other permitted manner (M.R.C.P. 4(c)(3)(B))."
   edge-service-made-response "Served in time" -> response-due { authority cite "M.R.C.P. 4(h)" }
@@ -22,7 +22,7 @@ decision service-made: "Served within 120 days?" by applicant cite "M.R.C.P. 4(h
   }
 }
 
-decision response-due: "Answer, Rule 12 motion, or nothing" by office cite "M.R.C.P. 12(a)"
+decision response-due: "Answer, Rule 12 motion, or nothing" by court cite "M.R.C.P. 12(a)"
 {
   note "A defendant serves the answer within thirty days after service of the summons and complaint, or within the time directed under Rule 4 (M.R.C.P. 12(a)). A Rule 12 motion alters the time: if it is denied or postponed, the responsive pleading is served within ten days after notice of the court's action (M.R.C.P. 12(a)(1)); these times may be extended once only, for not more than ten days, by written stipulation filed in the record (M.R.C.P. 12(a)). Affirmative defenses are set forth in the answer (M.R.C.P. 8(c))."
   edge-response-due-answer "Answer filed" -> answered { authority cite "M.R.C.P. 12(a)" }
@@ -32,7 +32,7 @@ decision response-due: "Answer, Rule 12 motion, or nothing" by office cite "M.R.
   edge-response-due-default "No response" -> default-request { authority cite "M.R.C.P. 55(a)" }
 }
 
-state pleading-motion: "Rule 12(b)(6) or 12(c) motion" by office cite "M.R.C.P. 12(b)"
+state pleading-motion: "Rule 12(b)(6) or 12(c) motion" by court cite "M.R.C.P. 12(b)"
 {
   note "Failure to state a claim upon which relief can be granted may be raised by motion (M.R.C.P. 12(b)(6)); after the pleadings are closed a party may move for judgment on the pleadings (M.R.C.P. 12(c)). A written motion and notice of its hearing are served not later than five days before the hearing unless the rules or an order fix another period (M.R.C.P. 6(d))."
   edge-pleading-motion-ruling "Court rules" -> pleading-ruling { authority cite "M.R.C.P. 12(b)" }
@@ -50,7 +50,7 @@ decision pleading-ruling: "Ruling on the pleading challenge" by court cite "M.R.
   edge-pleading-ruling-denied "Denied" -> answered { authority cite "M.R.C.P. 12(a)" }
 }
 
-state amended: "Amended pleading filed" by applicant cite "M.R.C.P. 15(a)"
+state amended: "Amended pleading filed" by plaintiff cite "M.R.C.P. 15(a)"
 {
   note "A party may amend as a matter of course before a responsive pleading is served; otherwise by leave of court or written consent of the adverse party (M.R.C.P. 15(a))."
   edge-amended-response "Amended pleading served" -> response-due {
@@ -58,13 +58,13 @@ state amended: "Amended pleading filed" by applicant cite "M.R.C.P. 15(a)"
   }
 }
 
-state answered: "Answer filed" by applicant cite "M.R.C.P. 8(c)"
+state answered: "Answer filed" by plaintiff cite "M.R.C.P. 8(c)"
 {
   note "Affirmative defenses such as accord and satisfaction, estoppel, fraud, limitations and waiver are set forth affirmatively (M.R.C.P. 8(c))."
   edge-answered-discovery "Pleadings closed" -> discovery { authority cite "M.R.C.P. 26(b)" }
 }
 
-state default-request: "Default sought" by applicant cite "M.R.C.P. 55(a)"
+state default-request: "Default sought" by plaintiff cite "M.R.C.P. 55(a)"
 {
   note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend and that fact is made to appear by affidavit or otherwise, the clerk enters the default (M.R.C.P. 55(a))."
   edge-default-request-entered "Default entered" -> default-entered {
@@ -75,7 +75,7 @@ state default-request: "Default sought" by applicant cite "M.R.C.P. 55(a)"
   }
 }
 
-state default-entered: "Default entered" by applicant cite "M.R.C.P. 55(b)"
+state default-entered: "Default entered" by plaintiff cite "M.R.C.P. 55(b)"
 {
   note "The party entitled to a default judgment applies to the court; a party who has appeared is served with written notice of the application at least three days before the hearing, but judgment may be entered on the day the case is set for trial without that notice (M.R.C.P. 55(b)). The court may conduct hearings to determine damages (M.R.C.P. 55(b))."
   edge-default-entered-judgment "Default judgment sought" -> default-judgment {
@@ -93,7 +93,7 @@ decision set-aside-ruling: "Set aside the default?" by court cite "M.R.C.P. 55(c
   edge-set-aside-refused "Refused" -> default-judgment { authority cite "M.R.C.P. 55(c)" }
 }
 
-state discovery: "Discovery" by applicant cite "M.R.C.P. 26(b)"
+state discovery: "Discovery" by plaintiff cite "M.R.C.P. 26(b)"
 {
   note "Parties may obtain discovery of any matter, not privileged, relevant to the issues raised by the claims or defenses of any party (M.R.C.P. 26(b)(1)). Where no action of record has been taken during the preceding twelve months, the clerk mails notice that the case will be dismissed for want of prosecution unless within thirty days action of record is taken or good cause is shown (M.R.C.P. 41(d)(1))."
   edge-discovery-dispute "Discovery dispute" -> discovery-ruling { authority cite "M.R.C.P. 37(a)" }
@@ -118,7 +118,7 @@ decision discovery-ruling: "Discovery ruling" by court cite "M.R.C.P. 37(b)"
   }
 }
 
-state sj-motion: "Summary judgment motion" by office cite "M.R.C.P. 56(c)"
+state sj-motion: "Summary judgment motion" by court cite "M.R.C.P. 56(c)"
 {
   note "A claimant may move at any time after thirty days from commencement of the action (M.R.C.P. 56(a)). The motion is served at least ten days before the time fixed for the hearing, and the adverse party may serve opposing affidavits before the day of the hearing; judgment is rendered forthwith if there is no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (M.R.C.P. 56(c))."
   edge-sj-motion-ruling "Motion heard" -> sj-ruling { authority cite "M.R.C.P. 56(c)" }
@@ -134,7 +134,7 @@ decision sj-ruling: "Summary judgment ruling" by court cite "M.R.C.P. 56(c)"
   edge-sj-ruling-denied "Denied" -> trial-setting { authority cite "M.R.C.P. 56(d)" }
 }
 
-state trial-setting: "Trial setting and jury trial" by office cite "M.R.C.P. 40(b)"
+state trial-setting: "Trial setting and jury trial" by court cite "M.R.C.P. 40(b)"
 {
   note "Cases are set on the trial docket at least twenty (20) days before the trial date unless all parties agree to a shorter period (M.R.C.P. 40(b)). The court may direct a pretrial conference at least twenty days before trial (M.R.C.P. 16). The right of trial by jury is preserved inviolate and is waived only by a specific written stipulation filed with the court (M.R.C.P. 38(a), (b)); the rules set no jury-demand period, contrary to the outline."
   edge-trial-setting-result "Tried" -> trial-result { authority cite "M.R.C.P. 38(a)" }

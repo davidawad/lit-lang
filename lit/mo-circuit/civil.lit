@@ -15,7 +15,7 @@ import mo-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 
 start complaint-filed
 
-state complaint-filed: "Action commenced" by applicant cite ?("Mo. Sup. Ct. R. 53.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
+state complaint-filed: "Action commenced" by plaintiff cite ?("Mo. Sup. Ct. R. 53.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)") {
   note "Petition filed under Rule 53.01 (unverified). Ultimate-facts pleading standard (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
   edge-complaint-filed-response-due "Summons served" -> response-due {
     event ActionCommenced()

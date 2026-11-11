@@ -6,7 +6,7 @@ import fl-state-rules.{ ReviewPetitionFiled }
 // petitioner's side. Every period is stated in a note, not counted.
 start petition
 
-decision petition: "Invoke the Supreme Court's discretionary jurisdiction?" by applicant cite "Fla. R. App. P. 9.120(b)"
+decision petition: "Invoke the Supreme Court's discretionary jurisdiction?" by petitioner cite "Fla. R. App. P. 9.120(b)"
 {
   note "The supreme court's discretionary jurisdiction (Fla. R. App. P. 9.030(a)(2)(A)) is invoked by filing a notice with the clerk of the district court of appeal within 30 days of rendition of the order to be reviewed (Fla. R. App. P. 9.120(b)). The petitioner's brief on jurisdiction is served within 10 days of filing the notice and the respondent's within 30 days after service of the petitioner's; no reply is permitted (Fla. R. App. P. 9.120(d))."
   edge-petition-none "No notice" -> no-review { authority cite "Fla. R. App. P. 9.120(b)" }

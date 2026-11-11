@@ -12,7 +12,7 @@ module tx-criminal-trial-court.criminal
 // Code's own statement of the speedy-trial right (art. 1.05) is cited.
 start arrested
 
-state arrested: "Arrest" by applicant cite "Tex. Code Crim. Proc. art. 14.06"
+state arrested: "Arrest" by prosecution cite "Tex. Code Crim. Proc. art. 14.06"
 {
   note "The person making an arrest, or having custody of the person arrested, takes the person before a magistrate without unnecessary delay, but not later than 48 hours after the arrest (Tex. Code Crim. Proc. art. 14.06; art. 15.17). For a Class C misdemeanor other than public intoxication, a peace officer may issue a citation instead (Tex. Code Crim. Proc. art. 14.06)."
   edge-arrested-magistrate "Taken before a magistrate" -> magistrate {
@@ -42,7 +42,7 @@ decision probable-cause: "Examining trial or indictment" by court cite "Tex. Cod
   }
 }
 
-state charged: "Indictment or information" by office cite "Tex. Code Crim. Proc. art. 1.05"
+state charged: "Indictment or information" by court cite "Tex. Code Crim. Proc. art. 1.05"
 {
   note "The accused has the right to a speedy public trial by an impartial jury and to a copy of the accusation (Tex. Code Crim. Proc. art. 1.05). Insofar as practicable, a criminal trial takes preference over civil trials, and that of a jailed defendant over other criminal trials, with further priorities for child victims and defendants restored to competency (Tex. Code Crim. Proc. art. 32A.01). The vendored chapter 32A (Speedy Trial) holds only article 32A.01 and sets no period."
   edge-charged-arraignment "Arraignment" -> arraignment {
@@ -50,7 +50,7 @@ state charged: "Indictment or information" by office cite "Tex. Code Crim. Proc.
   }
 }
 
-state arraignment: "Arraignment" by applicant cite "Tex. Code Crim. Proc. art. 26.02"
+state arraignment: "Arraignment" by prosecution cite "Tex. Code Crim. Proc. art. 26.02"
 {
   note "There is an arraignment in every felony case after indictment and in every misdemeanor case punishable by imprisonment (Tex. Code Crim. Proc. art. 26.01); it fixes the defendant's identity and hears the plea (Tex. Code Crim. Proc. art. 26.02). Counsel is appointed for an indigent defendant under the county's procedures (Tex. Code Crim. Proc. art. 26.04)."
   edge-arraignment-discovery "Discovery and pretrial matters" -> discovery {
@@ -58,7 +58,7 @@ state arraignment: "Arraignment" by applicant cite "Tex. Code Crim. Proc. art. 2
   }
 }
 
-state discovery: "Discovery and the pretrial hearing" by applicant cite "Tex. Code Crim. Proc. art. 28.01"
+state discovery: "Discovery and the pretrial hearing" by prosecution cite "Tex. Code Crim. Proc. art. 28.01"
 {
   note "As soon as practicable after a timely request, the state produces and permits inspection of the offense reports, statements and other items article 39.14(a) lists. On a party's request made not later than the 30th day before jury selection (or, without a jury, the presentation of evidence) is scheduled to begin, the other party discloses its expert witnesses not later than the 20th day before that date (Tex. Code Crim. Proc. art. 39.14). The court may set a pretrial hearing on arraignment, pleadings, special pleas, exceptions to the indictment, continuances, motions to suppress and other matters; a preliminary matter not raised or filed seven days before that hearing may not be raised later without leave for good cause, and the defendant must have notice allowing not less than 10 days to raise or file them (Tex. Code Crim. Proc. art. 28.01)."
   edge-discovery-motions "Pretrial motion heard" -> motions-ruling {
@@ -80,7 +80,7 @@ decision motions-ruling: "Ruling on pretrial matters" by court cite "Tex. Code C
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Tex. Code Crim. Proc. art. 26.13"
+decision plea-decision: "Plea or trial" by accused cite "Tex. Code Crim. Proc. art. 26.13"
 {
   note "Before accepting a plea of guilty or nolo contendere the court admonishes the defendant of the punishment range, that the prosecutor's recommendation is not binding, the limits on appeal in a plea bargain, and the immigration, registration and community-supervision consequences; if it rejects a plea agreement the defendant may withdraw the plea, and no plea is accepted unless the defendant is competent and the plea free and voluntary (Tex. Code Crim. Proc. art. 26.13). A defendant may waive a jury in person, in writing, in open court, with the consent of the court and the state's attorney, except in a capital case in which the state seeks death (Tex. Code Crim. Proc. art. 1.13)."
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
@@ -117,7 +117,7 @@ decision post-trial: "Motion for new trial" by court cite "Tex. R. App. P. 21.4"
   }
 }
 
-decision judgment: "Appeal" by applicant cite "Tex. R. App. P. 26.2"
+decision judgment: "Appeal" by accused cite "Tex. R. App. P. 26.2"
 {
   note "A defendant has the right of appeal (Tex. Code Crim. Proc. art. 44.02); in a plea-bargain case only on matters raised by written pretrial motion and ruled on, with the trial court's permission, or where a statute authorizes it, and the trial court certifies the defendant's right of appeal with each judgment of guilt (Tex. R. App. P. 25.2(a)). An appeal is perfected by timely filing a notice of appeal (Tex. R. App. P. 25.2(b)): within 30 days after the day sentence is imposed or suspended in open court or the court enters an appealable order, or within 90 days after sentencing if the defendant timely filed a motion for new trial (Tex. R. App. P. 26.2(a)). The appellate court may extend the time if, within 15 days after the deadline, the party files the notice in the trial court and a motion complying with Rule 10.5(b) in the appellate court (Tex. R. App. P. 26.3). In a death-penalty case no notice of appeal is needed; the trial clerk files a notice of conviction with the Court of Criminal Appeals within thirty days after the death sentence (Tex. R. App. P. 25.2(b))."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {

@@ -334,7 +334,7 @@ deadline remote-testimony-request-period: 7.days before TrialOrHearing() counted
 
 start motion-served
 
-state motion-served: "Motion to participate in mortgage modification mediation filed and served" by applicant cite "Bankr. M.D. Pa. L.B.R. 9019-3(b)"
+state motion-served: "Motion to participate in mortgage modification mediation filed and served" by movant cite "Bankr. M.D. Pa. L.B.R. 9019-3(b)"
 {
   note "A chapter 13 debtor meeting the program criteria files a Motion to Participate with the L.B.F. 9019-3(a) notice, serves the mortgage creditor and counsel, and elects whether to use the portal (L.B.R. 9019-3(a)-(b)(1))."
   edge-motion-served-consent "Creditor consents" -> participating {
@@ -349,7 +349,7 @@ state motion-served: "Motion to participate in mortgage modification mediation f
   }
 }
 
-state participating: "Participation Order entered; loss mitigation review" by applicant cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
+state participating: "Participation Order entered; loss mitigation review" by movant cite "Bankr. M.D. Pa. L.B.R. 9019-3(c)"
 {
   note "Through the portal or outside it, the creditor posts or sends the loss mitigation package, the debtor submits the application and documents, and the creditor designates a single point of contact (L.B.R. 9019-3(c)-(d)); the court may refer the matter to a mediator (L.B.R. 9019-3(e))."
   edge-participating-result "Review and any mediation concluded" -> result {

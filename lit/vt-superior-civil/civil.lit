@@ -2,7 +2,7 @@ module vt-superior-court-civil.civil
 
 start commenced
 
-state commenced: "Action commenced" by applicant cite "V.R.C.P. 3"
+state commenced: "Action commenced" by plaintiff cite "V.R.C.P. 3"
 {
   note "A civil action is commenced by filing a complaint, or, where no attachment, trustee process or replevin is to be made, by service of the summons and complaint. An action commenced by filing is served within 60 days after the complaint is filed; an action commenced by service has its complaint filed within 21 days after service on the first defendant served is completed; if service or filing is not timely the action may be dismissed on motion, including the court's under Rule 41(b)(1), and notice (V.R.C.P. 3(a)). Periods in this package are stated, not counted: computation is V.R.C.P. 6(a). The filing fee is not stated in the vendored rules; its waiver is V.R.C.P. 3.1."
   edge-commenced-served "Defendant served" -> answer-due { authority cite "V.R.C.P. 4" }
@@ -16,7 +16,7 @@ terminal dismissed-unserved: "Dismissed for untimely service or filing" outcome 
   note "Dismissal on motion and notice; if the action was vexatiously commenced the court may tax a reasonable attorney's fee as costs for the defendant (V.R.C.P. 3(a)). The court may also dismiss on its own motion when no proof of service is filed within 90 days of the filing of the action or of an extended service deadline (V.R.C.P. 41(b)(1)(ii))."
 }
 
-decision answer-due: "Answer, motion or default" by office cite "V.R.C.P. 12(a)"
+decision answer-due: "Answer, motion or default" by court cite "V.R.C.P. 12(a)"
 {
   note "A defendant serves an answer within 21 days after being served with the summons and complaint, or within 49 days when served under Rule 4(e), 4(f) or 4(k) outside the continental United States or Canada; when service was timely waived under Rule 4(l), within 60 days after the waiver request was sent, or 90 days if the defendant was addressed outside the United States. An answer to a cross-claim and a reply to a counterclaim are due within 21 days (V.R.C.P. 12(a)). No leading decision is named."
   edge-answer-due-default "No response" -> default-entered { authority cite "V.R.C.P. 55(a)" }
@@ -42,7 +42,7 @@ terminal default-entered: "Default judgment" outcome [loss] cite "V.R.C.P. 55(a)
 
 terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] cite "V.R.C.P. 12(b)"
 
-state discovery: "Discovery" by applicant cite "V.R.C.P. 26"
+state discovery: "Discovery" by plaintiff cite "V.R.C.P. 26"
 {
   note "Discovery is governed by V.R.C.P. 26 through 37; a scheduling order may set the dates for pretrial motions, third-party joinder and the close of discovery, after which the case is ready for trial (V.R.C.P. 16.2). The court may direct a pretrial conference, and its order controls the subsequent course of the action (V.R.C.P. 16). A jury demand is served not later than 14 days after service of the last pleading directed to the issue; failure to serve and file it waives a jury (V.R.C.P. 38(b), (d))."
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion { authority cite "V.R.C.P. 56(b)" }
@@ -80,13 +80,13 @@ decision post-trial: "Post-trial motions decided" by court cite "V.R.C.P. 59(b)"
   }
 }
 
-state judgment-entered: "Final judgment entered" by office cite "V.R.C.P. 58"
+state judgment-entered: "Final judgment entered" by court cite "V.R.C.P. 58"
 {
   note "A judgment is set forth on a separate document and is effective when entered under Rule 79(a) and set forth on the separate document, or when 150 days have run from entry (V.R.C.P. 58(a), (b)). No execution issues and no enforcement proceeding is taken until 30 days after entry or until the time for appeal as extended by Appellate Rule 4 has expired (V.R.C.P. 62(a)(1))."
   edge-judgment-entered-appeal "Next step" -> appeal-decision { authority cite "V.R.A.P. 4(a)" }
 }
 
-decision appeal-decision: "Notice of appeal within 30 days of entry?" by applicant cite "V.R.A.P. 4(a)"
+decision appeal-decision: "Notice of appeal within 30 days of entry?" by plaintiff cite "V.R.A.P. 4(a)"
 {
   note "The notice of appeal is filed with the superior court clerk within 30 days after entry of the judgment or order appealed from (V.R.A.P. 4(a)(1)). A timely motion under V.R.C.P. 50(b), 52(b), 59 and the other motions Rule 4(b) lists restarts the full time from entry of the order disposing of the last remaining motion (V.R.A.P. 4(b))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken { authority cite "V.R.A.P. 3(b)" }

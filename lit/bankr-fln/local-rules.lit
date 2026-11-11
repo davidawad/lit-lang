@@ -350,7 +350,7 @@ deadline exhibit-reclaim-period: 30.days after ExhibitReclaimNoticed() counted_b
 
 start matter-served
 
-state matter-served: "Matter served with the negative notice legend" by applicant cite "N.D. Fla. LBR 2002-2(B)"
+state matter-served: "Matter served with the negative notice legend" by movant cite "N.D. Fla. LBR 2002-2(B)"
 {
   note "A matter on the court's Negative Notice List is served as the rules require, with proof of service, and the approved legend immediately after its title (LBR 2002-2(B)); the legend gives 21 days to object unless a rule or order says otherwise (LBR 2002-2(C)), 30 days for a lien-stripping motion (LBR 3012-2(A)(2)(c))."
   edge-matter-served-objection "Objection filed in time" -> objected {
@@ -367,7 +367,7 @@ state objected: "Objection filed; hearing may be scheduled" by opponent cite "N.
   edge-objected-hearing "Hearing held" -> ruling { authority cite "N.D. Fla. LBR 2002-2(D)" }
 }
 
-state order-submitted: "Proposed order submitted" by applicant cite "N.D. Fla. LBR 2002-2(C)(2)"
+state order-submitted: "Proposed order submitted" by movant cite "N.D. Fla. LBR 2002-2(C)(2)"
 {
   note "The movant submits a proposed order not later than 14 days after the objection period expires, reciting service with the legend, the absence of objection and that the matter is unopposed; otherwise the relief may be denied for lack of prosecution (LBR 2002-2(C)(2))."
   edge-order-submitted-ruling "Order considered" -> ruling {

@@ -23,7 +23,7 @@ event OralArgumentStatementFiled() paper oral-argument-statement
 
 start actions-pending
 
-state actions-pending: "Civil actions with common fact questions pending in different districts" by applicant cite "J.P.M.L. R. 6.2(a)"
+state actions-pending: "Civil actions with common fact questions pending in different districts" by movant cite "J.P.M.L. R. 6.2(a)"
 {
   note "A party to an action may initiate proceedings to transfer under 28 U.S.C. § 1407 by filing a motion (J.P.M.L. R. 6.2(a)); a potential tag-along action of an existing MDL may instead be conditionally transferred by the Clerk of the Panel (J.P.M.L. R. 7.1(b)). The statute is not vendored; the Panel Rules define the Panel, MDL and tag-along action by reference to it (J.P.M.L. R. 1.1). The pendency of a motion or conditional order does not affect or suspend orders and pretrial proceedings in the district court (J.P.M.L. R. 2.1(d))."
   edge-actions-pending-initiated "Transfer motion or conditional transfer order" -> initiation {
@@ -31,7 +31,7 @@ state actions-pending: "Civil actions with common fact questions pending in diff
   }
 }
 
-decision initiation: "Motion to transfer or conditional transfer order" by applicant cite "J.P.M.L. R. 6.2(a)"
+decision initiation: "Motion to transfer or conditional transfer order" by movant cite "J.P.M.L. R. 6.2(a)"
 {
   note "A motion to transfer under J.P.M.L. R. 6.2 starts a full Panel proceeding; the Clerk issues a Notice of Filing of Motion to Transfer with the briefing schedule (J.P.M.L. R. 6.2(b)). For a potential tag-along action of an existing MDL the Clerk may enter a conditional transfer order (CTO) to the previously designated transferee district (J.P.M.L. R. 7.1(b)). Within 14 days of a Notice of Filing each party files a Notice of Appearance (J.P.M.L. R. 4.1(c), 6.2(c)) and each nongovernmental corporate party a disclosure statement (J.P.M.L. R. 5.1(b))."
   edge-initiation-motion "Motion to transfer filed" -> motion-briefing {
@@ -42,7 +42,7 @@ decision initiation: "Motion to transfer or conditional transfer order" by appli
   }
 }
 
-state motion-briefing: "Motion practice: responses and replies" by applicant cite "J.P.M.L. R. 6.1(c)"
+state motion-briefing: "Motion practice: responses and replies" by movant cite "J.P.M.L. R. 6.1(c)"
 {
   note "Any other party may file a response within 21 days after filing of a motion; failure to respond is treated as acquiescence (J.P.M.L. R. 6.1(c)). The movant may reply within 7 days after the lapse of the response period, with a consolidated reply to more than one opposition limited to 20 pages (J.P.M.L. R. 6.1(d)). A brief with a motion and any response is limited to 20 pages and a reply to 10 pages (J.P.M.L. R. 3.2(a)(iii)). Interested Party Responses are due no later than 7 days before the hearing session, absent leave (J.P.M.L. R. 6.2(e)). The Clerk may shorten or enlarge the periods and page limits (J.P.M.L. R. 6.1(e)); miscellaneous relief is under J.P.M.L. R. 6.3."
   edge-motion-briefing-hearing "Briefing closed" -> hearing-session {
@@ -50,7 +50,7 @@ state motion-briefing: "Motion practice: responses and replies" by applicant cit
   }
 }
 
-decision cto-stage: "CTO opposed?" by applicant cite "J.P.M.L. R. 7.1(c)"
+decision cto-stage: "CTO opposed?" by movant cite "J.P.M.L. R. 7.1(c)"
 {
   note "The Clerk serves the CTO on each party but does not send it to the clerk of the transferee district until 7 days after its entry (J.P.M.L. R. 7.1(b)). A party opposing transfer files a notice of opposition within that 7-day period; the Clerk then withholds the order and issues a Notice of Filed Opposition with the briefing schedule (J.P.M.L. R. 7.1(c)). Within 14 days of that notice the opposing party files a motion to vacate the CTO and brief, which the Clerk sets for the next appropriate hearing session; failure to file is treated as withdrawal of the opposition (J.P.M.L. R. 7.1(g)). Failure to respond to a CTO is acquiescence (J.P.M.L. R. 7.1(d)). Absent exceptional circumstances the Panel will not extend the time to file a notice of opposition (J.P.M.L. R. 6.3(b))."
   edge-cto-stage-opposed "Opposed: motion to vacate filed" -> show-cause-or-hearing {

@@ -162,7 +162,7 @@ deadline exhibit-reclaim-period: 30.days after MatterConcluded() counted_by frbp
 
 start filing-served
 
-state filing-served: "Filing served under the negative notice procedure" by applicant cite "M.D. Ala. LBR 9007-1(b)"
+state filing-served: "Filing served under the negative notice procedure" by movant cite "M.D. Ala. LBR 9007-1(b)"
 {
   note "A filing on the court's Negative Notice List carries the LBR 9007-1(c) legend and may be granted unless a party in interest files a response within 21 days of service (30 days for an objection to claim, LBR 3007-1(c)(3)); the court may set any such filing for hearing sua sponte."
   edge-filing-served-response "Response filed" -> responded {
@@ -179,7 +179,7 @@ state responded: "Response filed; matter set for hearing" by opponent cite "M.D.
   edge-responded-hearing "Hearing held" -> ruling { authority cite "M.D. Ala. LBR 9007-1(b)" }
 }
 
-state declaration-due: "Declaration in support of entry of order due" by applicant cite "M.D. Ala. LBR 9007-1(f)"
+state declaration-due: "Declaration in support of entry of order due" by movant cite "M.D. Ala. LBR 9007-1(f)"
 {
   note "The moving party files the Local Form 5 declaration and submits an order within seven days of the \"Declaration and Order Due\" event (LBR 9007-1(f), 9072-1(e)(3)); otherwise the matter is set for hearing."
   edge-declaration-due-filed "Declaration filed and order submitted" -> ruling {

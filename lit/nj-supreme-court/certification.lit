@@ -27,7 +27,7 @@ limit reconsideration-motion {
 
 start notice-of-petition
 
-decision notice-of-petition: "Notice of petition for certification within 20 days?" by applicant cite "N.J. Ct. R. 2:12-3(a)"
+decision notice-of-petition: "Notice of petition for certification within 20 days?" by petitioner cite "N.J. Ct. R. 2:12-3(a)"
 {
   note "To seek certification of a final judgment of the Appellate Division, the petitioner, within 20 days after its entry, serves a notice of petition for certification on all parties who may be affected and files the original with the Clerk of the Supreme Court, with the fee under N.J.S.A. 22A:2, and a copy with the Clerk of the Appellate Division (R. 2:12-3(a)). A notice of cross petition is served and filed within 10 days after the service and filing of the notice of petition, and is otherwise governed by the rules for a petition (R. 2:12-3(b)). The date the Appellate Division opinion is filed is the date its judgment is entered (R. 2:11-3(b)). Neither a proceeding for certification nor any other proceeding stays a civil action; a stay may be ordered on motion, and pending proceedings in the Supreme Court a stay is sought first from the Appellate Division (R. 2:9-5(a), (b))."
   edge-notice-of-petition-none "No petition: the Appellate Division judgment stands" -> review-not-sought {
@@ -39,7 +39,7 @@ decision notice-of-petition: "Notice of petition for certification within 20 day
   }
 }
 
-state petition: "Petition for certification served and filed" by applicant cite "N.J. Ct. R. 2:12-7(b)"
+state petition: "Petition for certification served and filed" by petitioner cite "N.J. Ct. R. 2:12-7(b)"
 {
   note "Within 10 days after filing the notice of petition or 30 days after entry of the final judgment, whichever is later, the petitioner serves two copies of the petition on each opposing party and files four copies, with four copies of the Appellate Division brief and appendix, with the Clerk of the Supreme Court (R. 2:12-7(b)). The petition is in the form of a brief conforming to R. 2:6, at most 20 pages exclusive of tables and appendix; it states the matter involved, the question presented, the errors complained of, the reasons certification should be allowed and comments on the Appellate Division opinion; it annexes the notice of petition, the written opinions below and any relevant oral opinions or findings; and it is signed and certified as presenting a substantial question, filed in good faith and not for delay (R. 2:12-7(a))."
   edge-petition-certification "Petition submitted for decision" -> certification {

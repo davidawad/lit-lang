@@ -13,7 +13,7 @@ import co-state-rules.{ DecisionFiled, NoticeOfAppealFiled }
 // C.A.R. 3.1 reports it.
 start petition
 
-decision petition: "Petition to review the ALJ's order?" by applicant cite ?("C.R.S. § 8-43-301, not vendored") {
+decision petition: "Petition to review the ALJ's order?" by petitioner cite ?("C.R.S. § 8-43-301, not vendored") {
   note "Review by the Industrial Claim Appeals Office panel of an administrative law judge's order is sought by a petition to review under part 3 of article 43 of title 8, C.R.S. (the cross reference to C.A.R. 3.1). That statute is not vendored: the time for the petition, its form, the briefs before the panel and any fee are holes."
   edge-petition-none "No petition: the ALJ's order stands" -> alj-order-final {
     authority cite ?("C.R.S. § 8-43-301, not vendored")
@@ -32,7 +32,7 @@ state panel-review: "Panel review and order" by court cite ?("C.R.S. § 8-43-301
   }
 }
 
-decision appeal-decision: "Appeal to the court of appeals?" by applicant cite "Rule Change 2025(02), C.A.R. 3.1(a)"
+decision appeal-decision: "Appeal to the court of appeals?" by appellant cite "Rule Change 2025(02), C.A.R. 3.1(a)"
 {
   note "Appeals from orders and awards of the Industrial Claim Appeals Office are taken in the manner and within the time prescribed by statute; self-represented litigants in unemployment cases may use JDF 664 to file a combined notice of appeal and opening brief (Rule Change 2025(02), C.A.R. 3.1(a)). The statute (C.R.S. § 8-43-307) is not vendored: the time to appeal is a hole. The notice sets out a C.A.R. 32 caption with the agency case number, the nature of the case, the order appealed and the basis of jurisdiction, whether it resolved all issues and is final, the date of the certificate of mailing of the final order, an advisory listing of the issues, counsel, an appendix with the order and the agency's findings, and a certificate of service on the panel in workers' compensation cases and on every other party before the agency (C.A.R. 3.1(d), relettered (e) by Rule Change 2025(02), which leaves its items unchanged). The compilation's annotation to C.A.R. 3.1 reports that the procedural requirements for review of the commission's orders are mandatory and jurisdictional (Hildreth v. Dir. of Div. of Labor, 30 Colo. App. 415, 497 P.2d 350 (1972))."
   edge-appeal-decision-none "No appeal: the panel's order stands" -> panel-order-final {
@@ -44,7 +44,7 @@ decision appeal-decision: "Appeal to the court of appeals?" by applicant cite "R
   }
 }
 
-state appeal-briefing: "Record and briefs in the court of appeals" by applicant cite "Rule Change 2025(02), C.A.R. 3.1(c)"
+state appeal-briefing: "Record and briefs in the court of appeals" by appellant cite "Rule Change 2025(02), C.A.R. 3.1(c)"
 {
   note "The agency arranges the record of the proceedings in chronological order, properly paginated and fully indexed (Rule Change 2025(02), C.A.R. 3.1(b)). The appellant files an opening brief 14 days after the record is filed; the appellee may file an answer brief within 14 days after service of the opening brief; the appellant may reply within 7 days after service of the answer brief; where a self-represented litigant files a combined notice and opening brief, the answer brief is due 14 days after the record is filed; briefs comply with C.A.R. 28 and 32 (Rule Change 2025(02), C.A.R. 3.1(c)). These appeals have precedence over any civil cause of a different nature in the court of appeals and are determined as other appeals (Rule Change 2025(02), C.A.R. 3.1(d))."
   edge-appeal-briefing-decided "Court of appeals decides" -> appeal-decided {

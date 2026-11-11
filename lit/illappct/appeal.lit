@@ -48,7 +48,7 @@ event RehearingPetitionFiled() paper rehearing-petition
 
 start notice-filed
 
-state notice-filed: "Notice of appeal filed" by applicant cite "Ill. S. Ct. R. 303(a)"
+state notice-filed: "Notice of appeal filed" by movant cite "Ill. S. Ct. R. 303(a)"
 {
   note "The notice of appeal is filed with the circuit court clerk within 30 days after entry of the final judgment or, after a timely posttrial motion, within 30 days after entry of the order disposing of the last pending postjudgment motion; a notice filed after the court announces its decision but before entry is treated as filed on entry (Ill. S. Ct. R. 303(a)(1), (2)). Another party may join, appeal separately or cross-appeal within 10 days after service of the notice or within 30 days of the judgment or of the order disposing of the last postjudgment motion, whichever is later, and the circuit clerk files the notice with the reviewing court within five days (Ill. S. Ct. R. 303(a)(3), (4)). The notice may be amended without leave within the original 30-day period (Ill. S. Ct. R. 303(b)(5)). The appeal arrives from lit/il-circuit."
   edge-notice-filed-appealability "Notice filed" -> appealability {
@@ -73,7 +73,7 @@ terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" 
   note "Outcome from the applicant's (appellant's) side."
 }
 
-state record: "Record on appeal" by applicant cite "Ill. S. Ct. R. 321"
+state record: "Record on appeal" by movant cite "Ill. S. Ct. R. 321"
 {
   note "The record on appeal consists of the judgment appealed from, the notice of appeal and the entire original common law record, which includes every document filed, judgment and order entered and exhibit offered and filed, unless the parties stipulate or a court orders less, and any report of proceedings prepared under Rule 323 (Ill. S. Ct. R. 321). Court reporting personnel file a transcribed report of proceedings with the circuit court clerk within 49 days after the filing of the notice of appeal; without a verbatim transcript, a proposed bystander's report is served within 28 days after the notice of appeal is filed (Ill. S. Ct. R. 323(b), (c)). The time for filing the record (Rule 326) is not vendored."
   edge-record-briefing "Record filed" -> briefing {
@@ -82,7 +82,7 @@ state record: "Record on appeal" by applicant cite "Ill. S. Ct. R. 321"
   }
 }
 
-state briefing: "Briefing: appellant, appellee, reply" by applicant cite "Ill. S. Ct. R. 341(b)"
+state briefing: "Briefing: appellant, appellee, reply" by movant cite "Ill. S. Ct. R. 341(b)"
 {
   note "Briefs are limited as the declared limits state (Ill. S. Ct. R. 341(b)(1)); a motion to exceed them is not favored and is filed not less than 10 days before the brief is due, or 5 days before a reply brief, supported by affidavit or certification (Ill. S. Ct. R. 341(b)(2)). An amicus curiae brief is filed only by leave of court or at its request, and amicus curiae does not argue orally (Ill. S. Ct. R. 345(a), (c)). Motions are served, presented and filed as Rule 361(b) provides, and a motion to extend time is filed on or before the due date (Ill. S. Ct. R. 361(b), (f)). The briefing schedule (Rule 343) is not vendored."
   edge-briefing-argument "Briefs complete" -> argument { authority cite "Ill. S. Ct. R. 352(a)" }
@@ -118,7 +118,7 @@ terminal leave-granted: "Leave to appeal granted: merits in the Illinois Supreme
   note "If leave is allowed, the appellant may let the petition stand as its brief or file a brief, and serves and files its notice of election within 14 days after the date leave was allowed (Ill. S. Ct. R. 315(h)). The Supreme Court's merits stage is lit/il-supreme-court (il-supreme-court-civil)."
 }
 
-decision reversed-entered: "Reversed or vacated: rehearing election" by applicant cite "Ill. S. Ct. R. 367(a)"
+decision reversed-entered: "Reversed or vacated: rehearing election" by movant cite "Ill. S. Ct. R. 367(a)"
 {
   note "A petition for rehearing may be filed within 21 days after the filing of the judgment unless the court shortens or enlarges the time; extensions are not favored. It states briefly the points claimed to have been overlooked or misapprehended and does not reargue the case. No answer is received unless the court requests one; the answer is then due within 21 days and a reply within 14 days after the answer's due date (Ill. S. Ct. R. 367(a), (b), (d))."
   edge-reversed-entered-rehearing "Rehearing petition filed" -> rehearing-reversed {
@@ -140,7 +140,7 @@ decision rehearing-reversed: "Rehearing ruling (reversed or vacated)" by court c
   }
 }
 
-decision mandate-reversed: "Leave to appeal election (reversed or vacated)" by applicant cite "Ill. S. Ct. R. 315(b)"
+decision mandate-reversed: "Leave to appeal election (reversed or vacated)" by movant cite "Ill. S. Ct. R. 315(b)"
 {
   note "The clerk transmits the mandate to the circuit court not earlier than 35 days after entry of judgment unless the court orders otherwise; a timely petition for rehearing stays the mandate, and after denial the mandate issues not earlier than 35 days after the order denying it (Ill. S. Ct. R. 368(a)). Unless a timely petition for rehearing is filed, a petition for leave to appeal is filed in the Supreme Court within 35 days after entry of the Appellate Court's judgment; after a timely rehearing petition, within 35 days after the order denying it or the modified decision; extensions are allowed only in the most extreme and compelling circumstances (Ill. S. Ct. R. 315(b)(1)). The respondent may answer within 21 days after the time for the petition expires (Ill. S. Ct. R. 315(f)). The petition is limited to 20 pages or, alternatively, 6,000 words, excluding the items Rule 341(b)(1) excludes (Ill. S. Ct. R. 315(d)); the limit is stated here and not declared, because the excluded items are named only in Rule 341(b)(1). Review by the United States Supreme Court under 28 U.S.C. § 1257 is not modeled: the statute is not vendored."
   edge-mandate-reversed-petition "Petition for leave to appeal filed" -> review-reversed {
@@ -169,7 +169,7 @@ terminal reversed-final: "Reversed or vacated: final" outcome [win] cite "Ill. S
   note "Outcome from the applicant's (appellant's) side; the mandate returns the case to the circuit court (Ill. S. Ct. R. 368(a))."
 }
 
-decision affirmed-entered: "Affirmed: rehearing election" by applicant cite "Ill. S. Ct. R. 367(a)"
+decision affirmed-entered: "Affirmed: rehearing election" by movant cite "Ill. S. Ct. R. 367(a)"
 {
   note "A petition for rehearing may be filed within 21 days after the filing of the judgment unless the court shortens or enlarges the time; extensions are not favored. It states briefly the points claimed to have been overlooked or misapprehended and does not reargue the case. No answer is received unless the court requests one; the answer is then due within 21 days and a reply within 14 days after the answer's due date (Ill. S. Ct. R. 367(a), (b), (d))."
   edge-affirmed-entered-rehearing "Rehearing petition filed" -> rehearing-affirmed {
@@ -191,7 +191,7 @@ decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite "Ill. S
   }
 }
 
-decision mandate-affirmed: "Leave to appeal election (affirmed)" by applicant cite "Ill. S. Ct. R. 315(b)"
+decision mandate-affirmed: "Leave to appeal election (affirmed)" by movant cite "Ill. S. Ct. R. 315(b)"
 {
   note "The clerk transmits the mandate to the circuit court not earlier than 35 days after entry of judgment unless the court orders otherwise; a timely petition for rehearing stays the mandate, and after denial the mandate issues not earlier than 35 days after the order denying it (Ill. S. Ct. R. 368(a)). Unless a timely petition for rehearing is filed, a petition for leave to appeal is filed in the Supreme Court within 35 days after entry of the Appellate Court's judgment; after a timely rehearing petition, within 35 days after the order denying it or the modified decision; extensions are allowed only in the most extreme and compelling circumstances (Ill. S. Ct. R. 315(b)(1)). The respondent may answer within 21 days after the time for the petition expires (Ill. S. Ct. R. 315(f)). The petition is limited to 20 pages or, alternatively, 6,000 words, excluding the items Rule 341(b)(1) excludes (Ill. S. Ct. R. 315(d)); the limit is stated here and not declared, because the excluded items are named only in Rule 341(b)(1). Review by the United States Supreme Court under 28 U.S.C. § 1257 is not modeled: the statute is not vendored."
   edge-mandate-affirmed-petition "Petition for leave to appeal filed" -> review-affirmed {
@@ -220,7 +220,7 @@ terminal affirmed-final: "Affirmed: final" outcome [loss] cite "Ill. S. Ct. R. 3
   note "Outcome from the applicant's (appellant's) side; the mandate returns the case to the circuit court (Ill. S. Ct. R. 368(a))."
 }
 
-decision remanded-entered: "Remanded: rehearing election" by applicant cite "Ill. S. Ct. R. 367(a)"
+decision remanded-entered: "Remanded: rehearing election" by movant cite "Ill. S. Ct. R. 367(a)"
 {
   note "A petition for rehearing may be filed within 21 days after the filing of the judgment unless the court shortens or enlarges the time; extensions are not favored. It states briefly the points claimed to have been overlooked or misapprehended and does not reargue the case. No answer is received unless the court requests one; the answer is then due within 21 days and a reply within 14 days after the answer's due date (Ill. S. Ct. R. 367(a), (b), (d))."
   edge-remanded-entered-rehearing "Rehearing petition filed" -> rehearing-remanded {
@@ -242,7 +242,7 @@ decision rehearing-remanded: "Rehearing ruling (remanded)" by court cite "Ill. S
   }
 }
 
-decision mandate-remanded: "Leave to appeal election (remanded)" by applicant cite "Ill. S. Ct. R. 315(b)"
+decision mandate-remanded: "Leave to appeal election (remanded)" by movant cite "Ill. S. Ct. R. 315(b)"
 {
   note "The clerk transmits the mandate to the circuit court not earlier than 35 days after entry of judgment unless the court orders otherwise; a timely petition for rehearing stays the mandate, and after denial the mandate issues not earlier than 35 days after the order denying it (Ill. S. Ct. R. 368(a)). Unless a timely petition for rehearing is filed, a petition for leave to appeal is filed in the Supreme Court within 35 days after entry of the Appellate Court's judgment; after a timely rehearing petition, within 35 days after the order denying it or the modified decision; extensions are allowed only in the most extreme and compelling circumstances (Ill. S. Ct. R. 315(b)(1)). The respondent may answer within 21 days after the time for the petition expires (Ill. S. Ct. R. 315(f)). The petition is limited to 20 pages or, alternatively, 6,000 words, excluding the items Rule 341(b)(1) excludes (Ill. S. Ct. R. 315(d)); the limit is stated here and not declared, because the excluded items are named only in Rule 341(b)(1). Review by the United States Supreme Court under 28 U.S.C. § 1257 is not modeled: the statute is not vendored."
   edge-mandate-remanded-petition "Petition for leave to appeal filed" -> review-remanded {

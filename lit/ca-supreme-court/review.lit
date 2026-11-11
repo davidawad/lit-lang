@@ -6,7 +6,7 @@ import ca-state-rules.{ MandateIssued, ReviewPetitionFiled }
 // petitioner's side. Every period is stated in a note, not counted.
 start petition
 
-decision petition: "Petition for review?" by applicant cite "Cal. Rules of Court, rule 8.500(e)"
+decision petition: "Petition for review?" by petitioner cite "Cal. Rules of Court, rule 8.500(e)"
 {
   note "A party may petition the Supreme Court for review of any Court of Appeal decision (Cal. Rules of Court, rule 8.500(a)(1)). The petition is served and filed within 10 days after the decision is final in the Court of Appeal; that time may not be extended. An answer is due within 20 days after the petition is filed and a reply within 10 days after the answer (rule 8.500(e))."
   edge-petition-none "No petition" -> no-petition {

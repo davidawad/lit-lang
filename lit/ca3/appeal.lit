@@ -57,7 +57,7 @@ test "en banc answer due on a Saturday rolls to Monday" cite "3d Cir. I.O.P. 9.5
 
 start threshold
 
-decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+decision threshold: "Appealable Order or Judgment?" by movant cite "28 U.S.C. § 1291"
 {
   note "A final decision of a district court is appealable under 28 U.S.C. § 1291. An interlocutory order may be reviewed on a petition for permission to appeal (FRAP 5); its period is lit/frap's. When an appeal is dismissed for want of an FRCP 54(b) certification, the court's form order allows a new appeal on the present briefs and record if the district court makes the determination within 30 days (3d Cir. I.O.P. 17.4)."
   edge-threshold-no "Not appealable" -> dismissed-jurisdiction {
@@ -76,26 +76,26 @@ decision leave-petition: "Permission to Appeal Granted?" by court cite "FRAP 5"
   edge-leave-denied "Permission denied" -> dismissed-jurisdiction { authority cite "FRAP 5(a)(1)" }
 }
 
-decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)"
 {
   note "The notice is filed with the district clerk within 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods and the FRAP 4(a)(4)(A) tolling motions. The docketing fee is not modeled: its amount is not stated in the vendored current text."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
   edge-notice-timely "Timely notice" -> docketed { authority cite "FRAP 3(a)(1)" }
 }
 
-state docketed: "Appeal Docketed" by office cite "FRAP 12(a)"
+state docketed: "Appeal Docketed" by court cite "FRAP 12(a)"
 {
   note "On receiving the notice the circuit clerk dockets the appeal (FRAP 12(a)). A filing after the appeal begins is timely only if the clerk receives it, or an electronic filer completes the transaction, by 5:00 p.m. Eastern Time on the last day (3d Cir. L.A.R. 26.1(a)); the cutoff does not reach the papers that initiate the appeal (3d Cir. L.A.R. 26.1(b)) or an inmate's filing under FRAP 25(a)(2)(A)(iii) (3d Cir. L.A.R. 26.1(d)). A corporate party files its disclosure statement under FRAP 26.1."
   edge-docketed-record "Record transmitted" -> record { authority cite "FRAP 11(b)" }
 }
 
-state record: "Record on Appeal" by office cite "FRAP 10; FRAP 11"
+state record: "Record on Appeal" by court cite "FRAP 10; FRAP 11"
 {
   note "The record is the district court's papers, exhibits, transcript and docket entries (FRAP 10(a)), forwarded under FRAP 11(b); lit/frap encodes the transcript-order period."
   edge-record-briefing "Briefing begins" -> briefing { authority cite "FRAP 31(a)(1)" }
 }
 
-state briefing: "Briefs Filed" by applicant cite "FRAP 28; FRAP 31(a)"
+state briefing: "Briefs Filed" by movant cite "FRAP 28; FRAP 31(a)"
 {
   note "Principal and reply briefs under FRAP 28 and 31(a), within the FRAP 32(a)(7) limits; lit/frap encodes the periods. Electronic filers file briefs and appendices electronically under the 5:00 p.m. cutoff, which does not reach paper copies of briefs already filed electronically (3d Cir. L.A.R. 26.1(c)). Amicus briefs: FRAP 29. Before summary action affirming, reversing or remanding, the court affords the parties an opportunity to argue for or against it if merits briefs have not been filed (3d Cir. I.O.P. 10.6)."
   edge-briefing-summary "Summary action" -> decision { authority cite "3d Cir. I.O.P. 10.6" }
@@ -117,7 +117,7 @@ state decision: "Opinion or Judgment Order Issued" by court cite "FRAP 36; 3d Ci
   edge-decision-judgment "Judgment entered" -> rehearing-decision { authority cite "FRAP 36" }
 }
 
-decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 {
   note "A petition for panel rehearing or rehearing en banc is due within 14 days after entry of judgment, or 45 days in a civil case with a United States party (FRAP 40(d)(1)); lit/frap encodes both. Rehearing en banc is not favored (3d Cir. I.O.P. 9.3)."
   edge-rehearing-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
@@ -132,13 +132,13 @@ state rehearing: "Rehearing Petition Pending" by court cite "FRAP 40; 3d Cir. I.
   edge-rehearing-decided "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
-state mandate: "Mandate Issued" by office cite "FRAP 41(b)"
+state mandate: "Mandate Issued" by court cite "FRAP 41(b)"
 {
   note "The mandate issues 7 days after the time to petition for rehearing expires or 7 days after entry of an order denying a timely petition (FRAP 41(b)); lit/frap encodes the period. The court does not stay or recall the mandate pending certiorari unless the failure to do so affects a substantive right of the applicant (3d Cir. I.O.P. 10.8). Costs: FRAP 39."
   edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
 }
 
-decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+decision further-review: "Further Review Sought?" by movant cite "28 U.S.C. § 1254"
 {
   note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's."
   edge-further-review-none "No further review" -> final-decision {

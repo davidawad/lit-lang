@@ -4,7 +4,7 @@ import az-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 
 start commenced
 
-state commenced: "Complaint filed in the Tax Court" by applicant cite "Ariz. R. Civ. P. 3"
+state commenced: "Complaint filed in the Tax Court" by plaintiff cite "Ariz. R. Civ. P. 3"
 {
   note "A civil action is commenced by filing a complaint with the court (Ariz. R. Civ. P. 3); the Civil Rules govern all civil actions and proceedings in the superior court (Ariz. R. Civ. P. 1), and an action in the Tax Court is an action in superior court with no change of judge as a matter of right (Ariz. R. Civ. P. 42.1(a)). The Tax Court's jurisdiction, the time to bring a tax appeal, its filing fee and its small claims division are set by statutes that are not vendored, so they are holes and are not modeled. Periods are stated, not counted: Civil Rule 6(a) excludes intermediate Saturdays, Sundays and legal holidays from a period under 11 days (Ariz. R. Civ. P. 6(a)). Leading decisions: none is vendored, so none is named."
   edge-commenced-served "Summons and complaint served" -> pleadings {
@@ -27,7 +27,7 @@ decision pleadings: "Answer, motion to dismiss or dismissal by the plaintiff" by
   }
 }
 
-state discovery: "Disclosure and discovery" by applicant cite "Ariz. R. Civ. P. 26"
+state discovery: "Disclosure and discovery" by plaintiff cite "Ariz. R. Civ. P. 26"
 {
   note "Discovery is governed by Civil Rules 26 to 37, with prompt disclosure under Rule 26.1 and tiered limits under Rule 26.2 (Ariz. R. Civ. P. 26, 26.1, 26.2); any Tax Court practice displacing them is not vendored and is a hole."
   edge-discovery-dispositive "Summary judgment motion or trial setting" -> dispositive {
@@ -61,7 +61,7 @@ state judgment: "Judgment entered" by court cite "Ariz. R. Civ. P. 58(b)"
   }
 }
 
-decision post-judgment: "Appeal?" by applicant cite "ARCAP 9(a)"
+decision post-judgment: "Appeal?" by plaintiff cite "ARCAP 9(a)"
 {
   note "The notice of appeal is filed with the clerk of the superior court no later than 30 days after entry of the judgment, unless ARCAP 9 or the law provides another time (ARCAP 9(a)); the statute governing appeals from the Tax Court is not vendored, so whether it provides another time is a hole."
   edge-post-appeal "Notice of appeal filed" -> appeal-taken {

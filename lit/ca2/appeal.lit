@@ -367,14 +367,14 @@ test "criminal panel rehearing is due 45 days after judgment" cite "2d Cir. R. 4
 
 start threshold
 
-decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+decision threshold: "Appealable Order or Judgment?" by movant cite "28 U.S.C. § 1291"
 {
   note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes are lit/frap's."
   edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
   edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
 }
 
-decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)"
 {
   note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods. The district clerk may serve an electronically filed notice on counseled parties electronically (2d Cir. R. 3.1)."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
@@ -383,7 +383,7 @@ decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)
   }
 }
 
-state docketing: "Appeal Docketed" by applicant cite "2d Cir. R. 12.1"
+state docketing: "Appeal Docketed" by movant cite "2d Cir. R. 12.1"
 {
   note "Within 14 days after the notice of appeal, a counseled civil appellant files Form C (Civil Appeal Pre-Argument Statement) with its addenda and Form D (Civil Appeal Transcript Information Form), and pays the docketing fee fixed by the Judicial Conference under 28 U.S.C. § 1913 unless it seeks or has leave to proceed in forma pauperis (2d Cir. R. 12.1(a)-(c)). The fee amount is not stated in the vendored rules, so no cost is encoded. Every party files the Acknowledgment and Notice of Appearance Form within 14 days after receiving the docketing notice (2d Cir. R. 12.3(a)). Counseled civil appeals are referred to the Civil Appeals Mediation Program (2d Cir. R. 33.1)."
   edge-docketing-record "Docketing requirements met" -> record {
@@ -394,13 +394,13 @@ state docketing: "Appeal Docketed" by applicant cite "2d Cir. R. 12.1"
   }
 }
 
-state record: "Record and Transcript Assembled" by applicant cite "FRAP 10; 2d Cir. R. 11.1"
+state record: "Record and Transcript Assembled" by movant cite "FRAP 10; 2d Cir. R. 11.1"
 {
   note "The transcript order is due within 14 days after the notice of appeal (FRAP 10(b)(1)); lit/frap encodes it. The ready date, the later of receipt of the last transcript or the certificate that none will be ordered, starts the briefing schedule (2d Cir. R. 31.2(a)(1)(A))."
   edge-record-brief "Ready date" -> briefing { authority cite "2d Cir. R. 31.2(a)" }
 }
 
-state briefing: "Briefs Filed" by applicant cite "2d Cir. R. 31.2"
+state briefing: "Briefs Filed" by movant cite "2d Cir. R. 31.2"
 {
   note "Within 14 days after the ready date the appellant requests a brief deadline within 91 days of it, or its brief is due in 40 days; the appellee likewise within 14 days after the last appellant's brief, within 91 days, or in 30 days; the reply is due 21 days after the last appellee's brief (2d Cir. R. 31.2(a)(1)-(2)). A dispositive motion, an in forma pauperis motion or an LR 42.1 stipulation tolls these periods (2d Cir. R. 31.2(a)(3)). An appeal from a threshold dismissal on the Expedited Appeals Calendar is briefed in 35, 35 and 14 days (2d Cir. R. 31.2(b)(3)). Principal briefs are limited to 14,000 words and reply briefs to 7,000 (2d Cir. R. 32.1(a)(4)); a motion for an oversized brief is due 14 days before the brief (2d Cir. R. 27.1(e)(3)), and an extension needs an extraordinary circumstance (2d Cir. R. 27.1(f)). Six paper copies of each brief are submitted (2d Cir. R. 31.1)."
   edge-briefing-argue "Briefing complete" -> argument {
@@ -424,7 +424,7 @@ state decision: "Decision Issued" by court cite "FRAP 36"
   edge-decision-issued "Disposition entered" -> rehearing-decision { authority cite "FRAP 36" }
 }
 
-decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 {
   note "A petition for rehearing is due 14 days after entry of judgment, or 45 days in a civil case with a United States party (FRAP 40(d)(1)); lit/frap encodes both periods. Panel and en banc requests go in a single document (2d Cir. R. 40.1(a)). In a direct criminal appeal the panel rehearing period is 45 days (2d Cir. R. 40.1(b))."
   edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
@@ -439,13 +439,13 @@ state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 2d Cir. IOP 40.
   edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
-state mandate: "Mandate Issued" by office cite "FRAP 41(b)"
+state mandate: "Mandate Issued" by court cite "FRAP 41(b)"
 {
   note "The mandate issues 7 days after the time to petition for rehearing expires or 7 days after an order denying a timely petition (FRAP 41(b)); lit/frap encodes the period."
   edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
 }
 
-decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+decision further-review: "Further Review Sought?" by movant cite "28 U.S.C. § 1254"
 {
   note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's."
   edge-further-review-none "No further review" -> final-decision {

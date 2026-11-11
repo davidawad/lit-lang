@@ -2,7 +2,7 @@ module ar-circuit-court-civil.civil
 
 start commenced
 
-state commenced: "Action commenced" by applicant cite "Ark. R. Civ. P. 3(a)"
+state commenced: "Action commenced" by plaintiff cite "Ark. R. Civ. P. 3(a)"
 {
   note "A civil action is commenced by filing a complaint with the clerk of the court, who notes on it the date and precise time of filing (Ark. R. Civ. P. 3(a)). If service is not made on a defendant within 120 days after the filing of the complaint, or within an extension granted on written motion and good cause made within the 120 days or a previous extension, the action is dismissed as to that defendant without prejudice on motion or on the court's initiative; an order of extension must be entered within 30 days after the motion is filed, by the end of the 120-day period or by the end of the previous extension, whichever is later (Ark. R. Civ. P. 4(i)). The court may not extend the Rule 4(i) time except as that rule states (Ark. R. Civ. P. 6(b)). Periods in this package are stated, not counted: computation is Ark. R. Civ. P. 6(a). The filing fee is not stated in the vendored rules; its waiver is Ark. R. Civ. P. 72."
   edge-commenced-served "Defendant served" -> answer-due { authority cite "Ark. R. Civ. P. 4" }
@@ -16,7 +16,7 @@ terminal dismissed-unserved: "Dismissed without prejudice for untimely service" 
   note "Dismissal under Rule 4(i)(1) is without prejudice and as to the unserved defendant only. The subdivision does not apply to service in a foreign country under Rule 4(h) or to complaints against unknown tortfeasors (Ark. R. Civ. P. 4(i)(3))."
 }
 
-decision answer-due: "Answer, motion or default" by office cite "Ark. R. Civ. P. 12(a)"
+decision answer-due: "Answer, motion or default" by court cite "Ark. R. Civ. P. 12(a)"
 {
   note "A defendant files an answer within 30 days after service of the summons and complaint; a defendant served by warning order under Rule 4(g)(3) or (4), within 30 days from the date of first publication or posting; a defendant incarcerated in a jail, penitentiary or other correctional facility in Arkansas, within 60 days after service. An answer or reply to a cross-claim or counterclaim is filed within 30 days after service. The court may on motion extend the time for any responsive pleading (Ark. R. Civ. P. 12(a)(1)). After remand from federal court, an adverse party has 30 days from receipt of notice of the filing of the remand order to answer or move (Ark. R. Civ. P. 12(a)(3)). The 3 business days Rule 6(d) adds after service by mail do not extend the time to answer or move when the summons and complaint are served by mail or commercial delivery company under Rule 4 (Ark. R. Civ. P. 6(d)). No leading decision is named."
   edge-answer-due-default "No response" -> default-entered {
@@ -46,7 +46,7 @@ terminal default-entered: "Default judgment" outcome [loss] cite "Ark. R. Civ. P
 
 terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] cite "Ark. R. Civ. P. 12(b)"
 
-state discovery: "Discovery" by applicant cite "Ark. R. Civ. P. 26"
+state discovery: "Discovery" by plaintiff cite "Ark. R. Civ. P. 26"
 {
   note "Discovery is governed by Ark. R. Civ. P. 26 through 37. The court may direct a pretrial conference (Ark. R. Civ. P. 16). A party demands a jury in writing at any time after commencement and not later than 20 days before the trial date; when a demand covers only some issues, any other party may demand a jury on the others within 10 days after service of the demand; failure to file the demand waives a jury (Ark. R. Civ. P. 38(a)-(c)). Where there has been no action shown on the record for the past 12 months, or a failure to comply with the rules or an order, the court sends notice that the case will be dismissed for want of prosecution unless application is made on a stated day, upon good cause, to continue it (Ark. R. Civ. P. 41(b))."
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
@@ -88,7 +88,7 @@ decision post-trial: "Post-trial motions decided" by court cite "Ark. R. Civ. P.
   }
 }
 
-state judgment-entered: "Final judgment entered" by office cite "Ark. R. Civ. P. 58"
+state judgment-entered: "Final judgment entered" by court cite "Ark. R. Civ. P. 58"
 {
   note "Every judgment or decree is set forth on a separate document and is effective only when so set forth and entered as provided in Administrative Order No. 2; entry is not delayed for the taxing of costs (Ark. R. Civ. P. 58). Administrative Order No. 2 is not vendored. A judgment or order is entered for appeal purposes when filed under Administrative Order No. 2(b) (Ark. R. App. P.–Civ. 4(d))."
   edge-judgment-entered-appeal "Next step" -> appeal-decision {
@@ -96,7 +96,7 @@ state judgment-entered: "Final judgment entered" by office cite "Ark. R. Civ. P.
   }
 }
 
-decision appeal-decision: "Notice of appeal within 30 days of entry?" by applicant cite "Ark. R. App. P.–Civ. 4(a)"
+decision appeal-decision: "Notice of appeal within 30 days of entry?" by plaintiff cite "Ark. R. App. P.–Civ. 4(a)"
 {
   note "A notice of appeal is filed within 30 days from the entry of the judgment, decree or order appealed from, or of the Rule 54(b) certificate; a notice of cross-appeal within the later of 10 days after the notice of appeal is filed or 30 days from entry; a notice filed after the decision is announced but before entry is treated as filed on the day after entry (Ark. R. App. P.–Civ. 4(a)). A timely motion under Ark. R. Civ. P. 50(b), 52(b) or 59(a), or another motion to vacate, alter or amend the judgment made no later than 10 days after entry, extends the time for all parties to 30 days from entry of the order disposing of the last outstanding motion or from the day it is deemed denied, the 30th day after its filing (Ark. R. App. P.–Civ. 4(b)(1)). On a showing of failure to receive notice of the judgment, the circuit court, on motion filed within 180 days of entry, extends the time by 14 days from entry of the extension order (Ark. R. App. P.–Civ. 4(b)(3))."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken {

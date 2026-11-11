@@ -17,7 +17,7 @@ import wv-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 // removed.
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "W. Va. R. Civ. P. 3(a)"
+state complaint-filed: "Complaint filed" by plaintiff cite "W. Va. R. Civ. P. 3(a)"
 {
   note "A civil action is commenced by filing a complaint with the court; a complaint naming more than one individual plaintiff not related by marriage or a derivative or fiduciary relationship is docketed as a separate civil action, with a separate fee, for each plaintiff (Rule 3(a)). Every complaint is accompanied by a completed civil case information statement in the form the Supreme Court of Appeals prescribes (Rule 3(b)). If a defendant is not served within 120 days after the complaint is filed, the court on motion or on its own, after notice to the plaintiff, dismisses the action without prejudice against that defendant or orders service within a specified time; on good cause shown it extends the time (Rule 4(i))."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
@@ -35,7 +35,7 @@ terminal dismissed-unserved: "Dismissed without prejudice for untimely service" 
   note "Outcome from the applicant's side: dismissal without prejudice against the unserved defendant under Rule 4(i)."
 }
 
-decision answer-due: "Answer, Rule 12 motion, or no response" by office cite "W. Va. R. Civ. P. 12(a)"
+decision answer-due: "Answer, Rule 12 motion, or no response" by court cite "W. Va. R. Civ. P. 12(a)"
 {
   note "A defendant serves an answer within 30 days after being served with the summons and complaint, accompanied by a completed civil case information statement (Rule 12(a)(1)(A)); an answer to a counterclaim or crossclaim is served within 30 days after service of the pleading stating it (Rule 12(a)(1)(B)). Every defense is asserted in the responsive pleading, but lack of subject-matter or personal jurisdiction, improper venue, insufficient process or service of process, failure to state a claim and failure to join a party under Rule 19 may be made by motion, before pleading if a responsive pleading is allowed (Rule 12(b)). Response and reply memoranda on a motion are filed and served within 21 days of service of the motion and within 7 days of service of the response; surreply only by leave (Rule 6(d)(3))."
   edge-answer-due-answer "Answer served" -> answered { authority cite "W. Va. R. Civ. P. 12(a)" }
@@ -61,7 +61,7 @@ decision dismissal-motion: "Rule 12(b) motion decided" by court cite "W. Va. R. 
   }
 }
 
-state amended: "Amended pleading" by applicant cite "W. Va. R. Civ. P. 15(a)"
+state amended: "Amended pleading" by plaintiff cite "W. Va. R. Civ. P. 15(a)"
 {
   note "A party may amend its pleading once as a matter of course within 21 days after serving it or, if a responsive pleading is required, 21 days after service of a responsive pleading or of a motion under Rule 12(b), (e) or (f), whichever is earlier (Rule 15(a)(1)); otherwise only with the opposing party's written consent or the court's leave, which the court should freely give when justice so requires (Rule 15(a)(2)). Unless the court orders otherwise, a required response to an amended pleading is made within the time remaining to respond to the original or within 14 days after service of the amendment, whichever is later (Rule 15(a)(3))."
   edge-amended-tested "Amended pleading met with a new Rule 12(b) motion" -> dismissal-motion {
@@ -77,7 +77,7 @@ terminal dismissed-pleading: "Dismissed on a Rule 12(b) motion" outcome [loss, d
   note "Outcome from the applicant's side. Appeals are governed by the West Virginia Rules of Appellate Procedure (Rule 72); the appeal is lit/wv-appellate-civil."
 }
 
-state default-entered: "Default entered by the clerk" by office cite "W. Va. R. Civ. P. 55(a)"
+state default-entered: "Default entered by the clerk" by court cite "W. Va. R. Civ. P. 55(a)"
 {
   note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend, and that is shown by affidavit or otherwise, the clerk enters its default (Rule 55(a)). For a sum certain or one that computation can make certain, the clerk enters judgment for that amount and costs on the plaintiff's request with an affidavit of the amount due; in all other cases the party applies to the court, and a party that has appeared is served with written notice of the application at least 7 days before the hearing (Rule 55(b)). The court may set aside an entry of default for good cause (Rule 55(c))."
   edge-default-entered-judgment "Default judgment entered" -> default-judgment {
@@ -104,7 +104,7 @@ terminal default-won: "Default judgment for applicant" outcome [win] cite "W. Va
   note "Outcome from the applicant's side: a default judgment under Rule 55(b), entered under Rule 58 (Rule 55(d))."
 }
 
-state answered: "Answer served" by applicant cite "W. Va. R. Civ. P. 8(b)"
+state answered: "Answer served" by plaintiff cite "W. Va. R. Civ. P. 8(b)"
 {
   note "The answer states in short and plain terms the defenses to each claim and admits or denies the allegations (Rule 8(b)). Except in proceedings exempt from initial disclosure or when the court orders otherwise, the parties confer as soon as practicable, and in any event at least 30 days after filing of a responsive pleading or Rule 12 motion, and submit a written report outlining the proposed discovery plan within 14 days after the conference (Rule 26(f)(1)-(2)). The judge issues the scheduling order within the earlier of 120 days after any defendant has been served or 90 days after any defendant has appeared, absent good cause for delay (Rule 16(b)(2)). A jury is demanded by serving a written demand no later than 14 days after the last pleading directed to the issue is served, and filing it (Rule 38(b))."
   edge-answered-discovery "Case proceeds to discovery" -> discovery {
@@ -112,7 +112,7 @@ state answered: "Answer served" by applicant cite "W. Va. R. Civ. P. 8(b)"
   }
 }
 
-state discovery: "Discovery" by applicant cite "W. Va. R. Civ. P. 26(a)"
+state discovery: "Discovery" by plaintiff cite "W. Va. R. Civ. P. 26(a)"
 {
   note "Initial disclosures are made at or within 30 days after the filing of the Rule 26(f)(2) written report, unless a stipulation or order sets a different time or a party objects in the proposed discovery plan; a party served or joined later discloses within 30 days after being served or joined (Rule 26(a)(1)(C)-(D)). Absent a stipulation or order, expert disclosures are made at least 90 days before the date set for trial, and rebuttal disclosures within 30 days after the other party's disclosure (Rule 26(a)(2)(D)). A motion to compel includes a certification of a good-faith attempt to confer (Rule 37(a)(1)). A party may move for summary judgment at any time until 30 days after the close of all discovery, unless a court order sets a different time (Rule 56(b))."
   edge-discovery-order-disobeyed "Discovery order disobeyed" -> discovery-sanction {

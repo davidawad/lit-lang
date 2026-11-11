@@ -16,7 +16,7 @@ module ak-superior-court-criminal.criminal
 // removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite "Alaska R. Crim. P. 4"
+state arrested: "Arrest or summons" by prosecution cite "Alaska R. Crim. P. 4"
 {
   note "On a complaint showing probable cause a warrant or summons issues (Alaska R. Crim. P. 3; 4). An arrested person not cited and released appears before a judicial officer without unnecessary delay and within the outer limit Alaska R. Crim. P. 5(a)(1) sets, which is not stated here (currency unconfirmed)."
   edge-arrested-appearance "Appearance before the judicial officer" -> initial-appearance {
@@ -46,19 +46,19 @@ decision probable-cause: "Preliminary examination or grand jury" by court cite "
   }
 }
 
-state charged: "Indictment or information" by office cite "Alaska R. Crim. P. 7(a)"
+state charged: "Indictment or information" by court cite "Alaska R. Crim. P. 7(a)"
 {
   note "An offense punishable by imprisonment for a term exceeding one year is prosecuted by indictment unless indictment is waived, and any other offense by indictment or information (Alaska R. Crim. P. 7(a), (b))."
   edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Alaska R. Crim. P. 10" }
 }
 
-state arraignment: "Arraignment and plea of not guilty" by applicant cite "Alaska R. Crim. P. 10"
+state arraignment: "Arraignment and plea of not guilty" by accused cite "Alaska R. Crim. P. 10"
 {
   note "A defendant may plead not guilty, guilty or nolo contendere, and a refusal to plead is entered as not guilty (Alaska R. Crim. P. 11(a)). Trial dates in the superior court are set under Rule 45, and a defendant must be tried within the speedy-trial limit Alaska R. Crim. P. 45(b) sets, measured from the event Rule 45(c) names and excluding the periods Rule 45(d) lists; the period is not stated here (currency unconfirmed)."
   edge-arraignment-discovery "Discovery" -> discovery { authority cite "Alaska R. Crim. P. 16" }
 }
 
-state discovery: "Discovery and pretrial motions" by applicant cite "Alaska R. Crim. P. 12"
+state discovery: "Discovery and pretrial motions" by prosecution cite "Alaska R. Crim. P. 12"
 {
   note "Discovery before trial should be as full and free as possible consistent with protection of persons, effective law enforcement and the adversary system (Alaska R. Crim. P. 16(a)). Pleas other than not guilty, guilty and nolo contendere, demurrers and motions to quash are abolished in favor of motions, and defenses capable of determination before trial are raised by pretrial motion (Alaska R. Crim. P. 12(a), (b)); the motion periods Rule 12 sets are not stated here (currency unconfirmed)."
   edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
@@ -86,7 +86,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "Alaska R. C
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite "Alaska R. Crim. P. 11"
+decision plea-decision: "Plea or trial" by accused cite "Alaska R. Crim. P. 11"
 {
   note "The court does not accept a plea of guilty or nolo contendere without first determining that it is voluntary (Alaska R. Crim. P. 11(d)). A jury may be waived with the government's consent and the court's approval, in writing in a felony case; the number of jurors is set by Rule 23(b) and not stated here (currency unconfirmed) (Alaska R. Crim. P. 23)."
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
@@ -129,7 +129,7 @@ state sentencing: "Presentence report and sentencing" by court cite "Alaska R. C
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite "Alaska R. Crim. P. 32.3"
+decision judgment: "Judgment of conviction" by accused cite "Alaska R. Crim. P. 32.3"
 {
   note "The notice of appeal is filed within 30 days from the date shown in the clerk's certificate of distribution on the judgment appealed from, unless a shorter time applies under Rules 216 to 219 (Alaska R. App. P. 204(a)(1)); appeals from sentences and conviction are governed by Alaska R. Crim. P. 32.5."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {

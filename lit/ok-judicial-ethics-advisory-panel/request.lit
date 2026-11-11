@@ -10,7 +10,7 @@ import ok-state-rules.{ ActionCommenced, DecisionFiled }
 // stated. The earlier outline named no leading decision; none is cited.
 start request
 
-state request: "Request submitted" by applicant cite ?("Okla. Code of Jud. Conduct") {
+state request: "Request submitted" by movant cite ?("Okla. Code of Jud. Conduct") {
   note "A judge or judicial candidate asks the panel for an advisory opinion on judicial ethics; who may ask, the form and any response period are holes (lg-l6xh, #16)."
   edge-request-decision "Submitted for decision" -> decision {
     event ActionCommenced()

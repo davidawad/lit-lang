@@ -13,7 +13,7 @@ import mi-state-rules.{ JudgmentEntered }
 // vendored, so they are removed and MCR 2.116 alone states the standard.
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "MCR 2.101(B)"
+state complaint-filed: "Complaint filed" by plaintiff cite "MCR 2.101(B)"
 {
   note "There is one form of action, the civil action, and it is commenced by filing a complaint with a court (MCR 2.101(A), (B)). On the filing of the complaint the clerk issues a summons, to be served as MCR 2.103 and 2.105 provide (MCR 2.102(A))."
   edge-complaint-filed-served "Defendant served before the summons expires" -> response-due {
@@ -24,7 +24,7 @@ state complaint-filed: "Complaint filed" by applicant cite "MCR 2.101(B)"
   }
 }
 
-decision response-due: "Answer, motion, or nothing" by office cite "MCR 2.108(A)"
+decision response-due: "Answer, motion, or nothing" by court cite "MCR 2.108(A)"
 {
   note "A defendant served in Michigan under MCR 2.105(A)(1) serves and files an answer or takes other permitted action within 21 days after service of the summons and complaint; within 28 days if served outside Michigan or by registered mail (MCR 2.108(A)(1), (2)). A motion raising a defense or objection to a pleading is served and filed within the time for the responsive pleading (MCR 2.108(B)). Affirmative defenses must be stated in the responsive pleading (MCR 2.111(F)(3))."
   edge-response-due-answer "Answer filed" -> answered { authority cite "MCR 2.108(A)" }
@@ -48,13 +48,13 @@ decision pleading-motion: "Summary disposition under MCR 2.116(C)(7) or (C)(8) d
   }
 }
 
-state amended: "Amended pleading filed" by applicant cite "MCR 2.118(A)"
+state amended: "Amended pleading filed" by plaintiff cite "MCR 2.118(A)"
 {
   note "A party may amend once as a matter of course within 14 days after being served with a responsive pleading, and otherwise only by leave of court or written consent; leave shall be freely given when justice so requires (MCR 2.118(A)(1), (2)). An order granting a motion under MCR 2.116 sets the time for the amended pleading (MCR 2.108(C)(2)). The response to an amended pleading is due within the time remaining for the original or within 21 days after service of the amendment, whichever is longer (MCR 2.108(C)(3))."
   edge-amended-response "Amended pleading served" -> response-due { authority cite "MCR 2.118(B)" }
 }
 
-state default-entered: "Default entered" by applicant cite "MCR 2.603(A)"
+state default-entered: "Default entered" by plaintiff cite "MCR 2.603(A)"
 {
   note "If a party against whom affirmative relief is sought has failed to plead or otherwise defend, the clerk enters the default when that fact is known to the clerk or verified in a request for default; notice is sent to all parties who have appeared and to the defaulted party (MCR 2.603(A)). A party requesting a default judgment gives notice at least 7 days before entry when the defaulted party has appeared, the relief differs from or exceeds the pleadings, or no specific amount is demanded (MCR 2.603(B)(1)). The clerk may enter judgment for a sum certain against a defendant defaulted for failure to appear; otherwise the party moves the court (MCR 2.603(B)(2), (3))."
   edge-default-entered-judgment "Default judgment sought" -> default-judgment {
@@ -72,7 +72,7 @@ decision set-aside-ruling: "Set aside the default?" by court cite "MCR 2.603(D)"
   edge-set-aside-refused "Refused" -> default-judgment { authority cite "MCR 2.603(D)" }
 }
 
-state answered: "Answer filed; discovery" by applicant cite "MCR 2.302(B)"
+state answered: "Answer filed; discovery" by plaintiff cite "MCR 2.302(B)"
 {
   note "Parties may obtain discovery of any non-privileged matter relevant to any party's claims or defenses and proportional to the needs of the case (MCR 2.302(B)(1)). A party may demand a jury by filing a written demand within 28 days after the filing of the answer or a timely reply, paying the jury fee provided by law; failure to file the demand or pay the fee waives trial by jury (MCR 2.508(B)(1), (D)(1)). The court may dismiss an action in which no steps or proceedings appear to have been taken within 91 days for lack of progress, after notice (MCR 2.502(A))."
   edge-answered-dispute "Motion to compel" -> discovery-ruling { authority cite "MCR 2.313(A)" }

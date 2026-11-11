@@ -134,14 +134,14 @@ test "reconsideration of a clerk's order is due 14 days after notice of entry is
 
 start threshold
 
-decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+decision threshold: "Appealable Order or Judgment?" by movant cite "28 U.S.C. § 1291"
 {
   note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes are lit/frap's."
   edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
   edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
 }
 
-decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+decision notice: "Notice of Appeal Within Time?" by movant cite "FRAP 4(a)(1)(A)"
 {
   note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
@@ -151,7 +151,7 @@ decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)
   }
 }
 
-state record: "Record and Transcript" by applicant cite "FRAP 10; 6 Cir. R. 10"
+state record: "Record and Transcript" by movant cite "FRAP 10; 6 Cir. R. 10"
 {
   note "Represented parties order the transcript, or certify that none is needed, through the electronic transcript order in CM/ECF (6 Cir. R. 10(a)(1)); the court reads the district court's electronic record directly and the district clerk does not forward it (6 Cir. R. 11(a)(1)). In a civil case the appellant files a Civil Appeal Statement of Parties and Issues as the court directs (6 Cir. R. 33(a)). A state habeas appeal on an unwritten state court record carries the transcript periods of 6 Cir. R. 30(b)(5)."
   edge-record-brief "Briefing schedule set" -> briefing { authority cite "6 Cir. R. 31(c)(1)" }
@@ -160,7 +160,7 @@ state record: "Record and Transcript" by applicant cite "FRAP 10; 6 Cir. R. 10"
   }
 }
 
-state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 6 Cir. R. 31(c)"
+state briefing: "Briefs Filed" by movant cite "FRAP 31(a)(1); 6 Cir. R. 31(c)"
 {
   note "The court sets a briefing schedule; the FRAP 31(a)(1) periods apply except that the clerk sets the appellant's brief date (6 Cir. R. 31(c)(1)). Preliminary injunction appeals and the other cases 6 Cir. R. 31(c)(2) lists are briefed on an expedited schedule; death penalty cases run on 6 Cir. R. 31(c)(3), and their briefs may be one-and-a-half times the FRAP 32(a)(7) length (6 Cir. R. 32(b)(2)), a number the rule does not write out, so it is not encoded. Extensions are sought by written motion and are disfavored (6 Cir. R. 26(a)(1)). A party wanting oral argument says why in the brief, in a statement of not more than one page (6 Cir. R. 34(a))."
   edge-briefing-argue "Briefing complete" -> argument {
@@ -183,7 +183,7 @@ state decision: "Decision Issued" by court cite "FRAP 36; 6 Cir. R. 36"
   edge-decision-issued "Judgment entered" -> rehearing-decision { authority cite "FRAP 36" }
 }
 
-decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+decision rehearing-decision: "Rehearing Sought?" by movant cite "FRAP 40(d)(1)"
 {
   note "The petition is due 14 days after entry of judgment, or 45 days in a civil case with a United States party (FRAP 40(d)(1)); lit/frap encodes both periods. A petition seeking rehearing en banc must say so plainly on the cover and in the title, and a copy of the opinion or order accompanies it (6 Cir. R. 40(a)); an extension is granted only for the most compelling reasons (6 Cir. R. 40(c))."
   edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
@@ -198,13 +198,13 @@ state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 6 Cir. R. 40"
   edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
 }
 
-state mandate: "Mandate Issued" by office cite "FRAP 41(b); 6 Cir. R. 41"
+state mandate: "Mandate Issued" by court cite "FRAP 41(b); 6 Cir. R. 41"
 {
   note "The mandate issues under FRAP 41(b); lit/frap encodes the period. A stay pending certiorari requires a showing that the petition would present a substantial question and good cause (6 Cir. R. 41(a)); the motion must be received within 7 days after the rehearing time expires or from entry of an order on rehearing (6 Cir. R. 41(b))."
   edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
 }
 
-decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+decision further-review: "Further Review Sought?" by movant cite "28 U.S.C. § 1254"
 {
   note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's. A petition for rehearing is not a prerequisite to certiorari (6 Cir. I.O.P. 40(a)(1)(B))."
   edge-further-review-none "No further review" -> final-decision {

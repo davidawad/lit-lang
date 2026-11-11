@@ -12,7 +12,7 @@ import dc-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
 // modeled. The outline named no leading decision; none is cited.
 start complaint-filed
 
-state complaint-filed: "Complaint filed" by applicant cite "Super. Ct. Civ. R. 3"
+state complaint-filed: "Complaint filed" by plaintiff cite "Super. Ct. Civ. R. 3"
 {
   note "A civil action is commenced by filing a complaint with the court (Super. Ct. Civ. R. 3). Within 60 days of the filing of the complaint, or within 60 days from the return date of an order of publication, the plaintiff files an acknowledgment of service or proof of service of the summons, complaint, Initial Order and the other orders directed at filing, separately for each defendant who has not responded; foreclosures of the right of redemption under D.C. Code § 47-1370 have 180 days, collection and subrogation cases follow Rule 40-III, and service abroad follows the governing statute or treaty (Super. Ct. Civ. R. 4(m)(1)). Before the period expires the plaintiff may move to extend it, and on good cause the court must extend it (Super. Ct. Civ. R. 4(m)(2)). The court must hold an initial scheduling and settlement conference as soon as practicable after the complaint is filed (Super. Ct. Civ. R. 16(b)(1))."
   edge-complaint-filed-served "Summons and complaint served; proof filed" -> answer-due {
@@ -29,7 +29,7 @@ terminal dismissed-unserved: "Dismissed without prejudice for want of service" o
   note "Except for service abroad under Rule 4(f), (h)(2) or (j)(1), or Rule 54-II, failure to comply results in dismissal of the complaint without prejudice; the clerk enters the dismissal and serves notice on the parties (Super. Ct. Civ. R. 4(m)(4)). Outcome from the defending side."
 }
 
-decision answer-due: "Answer, motion or default" by office cite "Super. Ct. Civ. R. 12"
+decision answer-due: "Answer, motion or default" by court cite "Super. Ct. Civ. R. 12"
 {
   note "Unless a statute specifies another time, a defendant serves an answer within 21 days after being served with the summons and complaint; the United States or the District of Columbia, or an agency, officer or employee of either sued in an official capacity, within 60 days after service on the United States attorney or the Attorney General for the District of Columbia, and an officer or employee sued individually for acts in connection with official duties within 60 days after the later service (Super. Ct. Civ. R. 12(a)(1)-(3)). Before a default is ordered, the time to plead may be extended by an order on a motion showing good cause, or once by a praecipe signed by the parties for not more than 21 days (Super. Ct. Civ. R. 55(a)(3)). Failure to respond in time results in entry of a default by the clerk or the court on its own (Super. Ct. Civ. R. 12(a)(5))."
   edge-answer-due-default "No response" -> default-entered {
@@ -72,7 +72,7 @@ state case-management: "Scheduling conference and order" by court cite "Super. C
   }
 }
 
-state discovery: "Discovery" by applicant cite "Super. Ct. Civ. R. 26"
+state discovery: "Discovery" by plaintiff cite "Super. Ct. Civ. R. 26"
 {
   note "Discovery is governed by Super. Ct. Civ. R. 26 through 37 and the scheduling order. Unless the court orders otherwise, a motion for summary judgment may be filed at any time until 30 days after the close of all discovery, with a statement of the material facts in separately numbered paragraphs (Super. Ct. Civ. R. 56(b))."
   edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
@@ -116,13 +116,13 @@ decision post-trial: "Post-trial motions decided" by court cite "Super. Ct. Civ.
   }
 }
 
-state judgment-entered: "Judgment entered" by office cite "Super. Ct. Civ. R. 58"
+state judgment-entered: "Judgment entered" by court cite "Super. Ct. Civ. R. 58"
 {
   note "Every judgment and amended judgment is set out in a separate document, except an order disposing of a Rule 50(b), 52(b), 54, 59 or 60 motion; the clerk enters judgment on a general verdict, for costs or a sum certain, or on denial of all relief without awaiting the court's direction (Super. Ct. Civ. R. 58(a), (b))."
   edge-judgment-entered-appeal "Next step" -> appeal-decision { authority cite "D.C. App. R. 4" }
 }
 
-decision appeal-decision: "Notice of appeal within time?" by applicant cite "D.C. App. R. 4"
+decision appeal-decision: "Notice of appeal within time?" by plaintiff cite "D.C. App. R. 4"
 {
   note "The notice of appeal is filed with the Clerk of the Superior Court within 30 days after entry of the judgment or order appealed from, unless another time is specified (D.C. App. R. 4(a)(1)); the Superior Court may extend the time on excusable neglect or good cause if the notice is filed no later than 30 days after the time expires (D.C. App. R. 4(a)(5)). The appeal continues in lit/dc-state-appellate."
   edge-appeal-decision-taken "Notice filed" -> appeal-taken {

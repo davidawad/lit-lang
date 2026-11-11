@@ -3363,6 +3363,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9009 | precedent not binding at the world's location | | |
 | L9010 | repeated test trigger with implicit occurrence choice | | |
 | L9011 | counting test insensitive to the counting rule | | |
+| L9012 | numeric provenance is duplicated or an estimate/placeholder has no vintage | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
 L4009, L4010, L4011, L4012, L4013, L4014, L4016, L3010 and L2015 is `error`.

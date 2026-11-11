@@ -106,6 +106,7 @@ impl Lower {
             let atom = match child.kind() {
                 K::FieldList => Some(Atom::Fields(self.field_list(&child))),
                 K::Interval => interval(&child).map(|(from, to)| Atom::Interval(from, to)),
+                K::NumericProvenance => numeric_provenance(&child).map(Atom::NumericProvenance),
                 _ => self.expr(&child).map(Atom::Expr),
             };
             values.push((atom?, r));
@@ -166,6 +167,34 @@ impl Lower {
         let range = values.iter().fold(key.range, |acc, (_, r)| acc.cover(*r));
         Some(Field { key, values, range })
     }
+}
+
+fn numeric_provenance(node: &SyntaxNode) -> Option<super::tree::NumericProvenance> {
+    use super::tree::{Name, NumericBasis, NumericProvenance};
+    let tokens: Vec<_> = node
+        .descendants_with_tokens()
+        .filter_map(rowan::NodeOrToken::into_token)
+        .filter(|t| !super::is_trivia(t.kind()))
+        .collect();
+    let has = |kind| tokens.iter().any(|t| t.kind() == kind);
+    let named = |kind| tokens.iter().find(|t| t.kind() == kind).map(|t| Name {
+        text: t.text().to_owned(),
+        range: super::range(t.text_range()),
+    });
+    let basis = if has(K::KwCalibrated) {
+        named(K::Ident).map(NumericBasis::Calibrated)
+    } else if has(K::KwSourced) {
+        tokens.iter().find(|t| t.kind() == K::String).map(|t| {
+            NumericBasis::Sourced(t.text().trim_matches('"').to_owned())
+        })
+    } else if has(K::KwEstimate) {
+        Some(NumericBasis::Estimate)
+    } else if has(K::KwPlaceholder) {
+        Some(NumericBasis::Placeholder)
+    } else {
+        None
+    };
+    Some(NumericProvenance { basis, vintage: named(K::Date) })
 }
 
 /// A plain identifier as a reference expression.

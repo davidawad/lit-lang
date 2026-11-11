@@ -77,6 +77,7 @@ fn field_holes(f: &Field, path: &str, out: &mut BTreeMap<String, Option<String>>
                 }
             }
             Atom::Interval(..) => {}
+            Atom::NumericProvenance(..) => {}
         }
     }
 }

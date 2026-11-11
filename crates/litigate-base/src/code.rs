@@ -156,6 +156,7 @@ registry! {
     PrecedentNotBinding = "L9009" => "A precedent layer does not bind at the world's location: it is persuasive there, and its binding effects are not in force",
     RepeatedTestTrigger = "L9010" => "An inline test repeats a deadline trigger whose default occurrence choice is implicit",
     CountingTestInsensitive = "L9011" => "Warning in dev and strict: every comparable test of this deadline asserts the same nominal or adjusted date under plain calendar addition with no roll as under its counting rule",
+    NumericProvenanceIncomplete = "L9012" => "An estimate or placeholder lacks a vintage, or numeric provenance fields are duplicated",
 }
 
 /// What `explain` says of an [`DiagnosticCode::Unknown`] code.
@@ -217,6 +218,7 @@ impl DiagnosticCode {
     #[must_use]
     pub const fn severity(self, profile: Profile) -> Severity {
         match (self, profile) {
+            (Self::NumericProvenanceIncomplete, _) => Severity::Warning,
             (
                 Self::AnonymousEdge
                 | Self::UndeclaredEventId

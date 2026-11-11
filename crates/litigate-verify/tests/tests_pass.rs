@@ -180,8 +180,8 @@ tests_pass!(
     the_latest_matching_given_triggers_a_latest_policy_deadline,
     Passed,
     first_test(&format!("{SERVICES}2025-03-24")).replacen(
-        "counted_by frcp6\n",
-        "counted_by frcp6 { trigger latest }\n",
+        "counted_by frcp6 cite \"FRCP 12(a)\"\n  {\n    extend { by court, discretion GoodCause }\n  }",
+        "counted_by frcp6 cite \"FRCP 12(a)\" { trigger latest, extend { by court, discretion GoodCause } }",
         1
     )
 );
@@ -233,8 +233,8 @@ tests_pass!(
          expect deadline(answer-period) == 1980-03-24"
     )
     .replacen(
-        "counted_by frcp6\n",
-        "counted_by frcp6 effective [1990-01-01, ..)\n",
+        "counted_by frcp6 cite \"FRCP 12(a)\"",
+        "counted_by frcp6 effective [1990-01-01, ..) cite \"FRCP 12(a)\"",
         1
     )
 );

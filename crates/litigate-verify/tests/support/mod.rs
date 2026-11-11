@@ -273,7 +273,7 @@ test "answer due 21 days after personal service" cite "FRCP 12(a)"
   expect deadline(answer-period) == 2025-03-24
 }
 
-test "mail service adds three days" cite "FRCP 12(a)"
+test "mail service adds three days" cite "FRCP 6(d)"
 {
   given Served(complaint, Mail) on 2025-03-03
   expect deadline(answer-period) == 2025-03-27

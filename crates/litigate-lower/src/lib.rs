@@ -60,6 +60,20 @@ use litigate_sema::hir;
 use litigate_sema::temporal::World;
 use select::Selection;
 use serde::Serialize;
+use std::time::Instant;
+
+fn timed<T>(package: &str, phase: &str, f: impl FnOnce() -> T) -> T {
+    if !std::env::var_os("LITIGATE_PHASE_TIMINGS").is_some_and(|value| value == "1") {
+        return f();
+    }
+    let started = Instant::now();
+    let result = f();
+    eprintln!(
+        "LITIGATE_PHASE\t{package}\t{phase}\t{:.3}ms",
+        started.elapsed().as_secs_f64() * 1000.0
+    );
+    result
+}
 
 /// Build dates (SPEC §8.1): the version of every declaration in force on
 /// `as_of`, among versions recorded by `known_at`. Each defaults to the
@@ -244,11 +258,16 @@ impl<'a> Lowerer<'a> {
             vec![&pkg.manifest.name]
         };
         let corpus = &pkg.manifest.in_force.known_at;
-        let build = self.build(&roots, corpus, Some(corpus), options);
+        let package_name = pkg.manifest.name.as_str();
+        let build = timed(package_name, "lower:selection", || {
+            self.build(&roots, corpus, Some(corpus), options)
+        });
         let mut sink = Sink::new(&manifest_file(pkg));
         let calibration = calibration::sets(pkg, &mut sink);
         let lowered = if pkg.manifest.links {
-            let (file, source_map) = links::links(&build, pkg, &mut sink);
+            let (file, source_map) = timed(package_name, "lower:links+citation", || {
+                links::links(&build, pkg, &mut sink)
+            });
             LoweredPackage {
                 document: Document::Links(file),
                 source_map,
@@ -256,9 +275,13 @@ impl<'a> Lowerer<'a> {
                 calibration,
             }
         } else {
-            let (pack, source_map) = pack::pack(&build, pkg, &mut sink);
+            let (pack, source_map) = timed(package_name, "lower:pack+citation", || {
+                pack::pack(&build, pkg, &mut sink)
+            });
             let decls = pack::emitted(&build, pkg, &mut Sink::new(""));
-            let clock = clock::fragment(&build, pkg, &decls, None, &mut sink);
+            let clock = timed(package_name, "lower:clock-fragment", || {
+                clock::fragment(&build, pkg, &decls, None, &mut sink)
+            });
             LoweredPackage {
                 document: Document::Pack(Box::new(pack)),
                 source_map,

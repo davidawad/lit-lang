@@ -29,6 +29,7 @@ pub mod library;
 pub mod matter;
 pub mod mcp;
 pub mod out;
+mod phase_timing;
 pub mod prov;
 pub mod queries;
 mod render;
@@ -227,7 +228,12 @@ fn execute_with(
     }
     let started = Stopwatch::start();
     let outcome = cmd::dispatch(command, src);
-    out::print(op, outcome, format, color, started.elapsed_ms())
+    let print = || out::print(op, outcome, format, color, started.elapsed_ms());
+    if op == "check" {
+        phase_timing::measure("command", "output", print)
+    } else {
+        print()
+    }
 }
 
 /// Wall-clock timing. `std::time::Instant` panics on

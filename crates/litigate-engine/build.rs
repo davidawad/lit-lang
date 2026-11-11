@@ -8,6 +8,7 @@
 //! calibration sets and named scenarios are built from `lit/` and `cases/`
 //! by the `litgraph-packs` crate, which embeds those.
 
+use sha2::{Digest, Sha256};
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 
@@ -67,6 +68,7 @@ fn embed_dir(
     collect_files(read, ext, &mut entries);
     entries.sort();
     let mut src = format!("/// {doc}\npub static {ident}: &[(&str, &str)] = &[\n");
+    let mut source_digest = Sha256::new();
     for p in &entries {
         println!("cargo:rerun-if-changed={}", p.display());
         let name = p.strip_prefix(dir).unwrap_or(p).to_string_lossy();
@@ -80,6 +82,38 @@ fn embed_dir(
         );
     }
     src.push_str("];\n");
+    if ident == "SOURCES_EMBEDDED" {
+        let mut files: Vec<_> = entries
+            .iter()
+            .map(|p| {
+                let name = p.strip_prefix(dir).unwrap_or(p).to_string_lossy();
+                let name = name.replace(std::path::MAIN_SEPARATOR, "/");
+                (
+                    key_prefix.map_or_else(|| name.clone(), |prefix| format!("{prefix}{name}")),
+                    p,
+                )
+            })
+            .collect();
+        files.sort_by(|a, b| a.0.cmp(&b.0));
+        for (key, path) in files {
+            let text =
+                std::fs::read(path).unwrap_or_else(|e| panic!("reading {}: {e}", path.display()));
+            source_digest.update((key.len() as u64).to_be_bytes());
+            source_digest.update(key.as_bytes());
+            source_digest.update((text.len() as u64).to_be_bytes());
+            source_digest.update(&text);
+        }
+        let digest = source_digest.finalize();
+        let mut digest_hex = String::with_capacity(64);
+        for byte in digest {
+            let _ = write!(digest_hex, "{byte:02x}");
+        }
+        src.push_str("/// Build-time SHA-256 of the embedded source corpus.\n");
+        let _ = writeln!(
+            src,
+            "pub const EMBEDDED_SOURCE_DIGEST: &str = {digest_hex:?};"
+        );
+    }
     if let Err(e) = std::fs::write(out_file, src) {
         panic!("writing {}: {e}", out_file.display());
     }

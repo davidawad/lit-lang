@@ -3383,6 +3383,8 @@ failure.
 
 ### 9.3 CLI (`litigate`)
 
+Set `LITIGATE_PHASE_TIMINGS=1` to print `check` phase wall times to stderr; it does not change stdout or the check result.
+
 All commands accept `--format json|human` (default `human` on a TTY, else
 `json`). Human output renders the same diagnostics with ariadne.
 

@@ -47,6 +47,13 @@ pub struct SourceCorpus {
 }
 
 impl SourceCorpus {
+    /// SHA-256 over every path and byte in the embedded corpus, computed by
+    /// the build script so runtime verification does not re-hash its inputs.
+    #[must_use]
+    pub const fn embedded_digest() -> &'static str {
+        EMBEDDED_SOURCE_DIGEST
+    }
+
     /// Build a corpus from `(path, text)` pairs, parsing each into
     /// sections.
     #[must_use]

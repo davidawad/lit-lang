@@ -130,7 +130,7 @@ pub fn package_with_cache(
 ) -> Verdict {
     let corpus = corpus();
     let mut own: Vec<Diagnostic> = pkg.check.diagnostics.clone();
-    let locked = lock(db, ws, pkg);
+    let locked = crate::phase_timing::measure(&pkg.name, "lock", || lock(db, ws, pkg));
     own.extend(locked.iter().cloned());
     if profile == Profile::Strict {
         own.extend(format(pkg));
@@ -144,7 +144,9 @@ pub fn package_with_cache(
         ),
         Some(hir) => {
             own.extend(anonymous_edges(hir));
-            let lowering = Lowerer::new(all).with_corpus(corpus).package(hir, options);
+            let lowering = crate::phase_timing::measure(&pkg.name, "lower+clock+cites", || {
+                Lowerer::new(all).with_corpus(corpus).package(hir, options)
+            });
             if let Err(errors) = &lowering {
                 own.extend(errors.iter().cloned());
             }
@@ -155,10 +157,13 @@ pub fn package_with_cache(
                 packages: all,
                 options,
             };
-            let verification =
-                verify_cached(db, ws, pkg, all, options, profile, corpus, cache, &input);
+            let verification = crate::phase_timing::measure(&pkg.name, "verification", || {
+                verify_cached(db, ws, pkg, all, options, profile, corpus, cache, &input)
+            });
             let (tests, test_diagnostics) =
-                inline_tests::run(clocks, hir, &pkg.files, None, options.known_at.as_deref());
+                crate::phase_timing::measure(&pkg.name, "inline-tests", || {
+                    inline_tests::run(clocks, hir, &pkg.files, None, options.known_at.as_deref())
+                });
             (verification, lowering.ok(), tests, test_diagnostics)
         }
     };
@@ -203,17 +208,24 @@ fn verify_cached(
     let verify = || litigate_verify::verify_package(input, corpus, profile);
     match cache.filter(|_| std::env::var_os("LITGRAPH_SOURCES").is_none()) {
         Some(cache) => {
-            let root = expected_lock(db, ws, pkg.input).root();
-            let mut loaded: Vec<String> = all
-                .iter()
-                .map(|p| format!("{} {} {}", p.manifest.name, p.manifest.version, p.digest))
-                .collect();
-            loaded.sort();
-            let loaded = loaded.join("\n");
+            let root = crate::phase_timing::measure(&pkg.name, "cache-resolution-digest", || {
+                expected_lock(db, ws, pkg.input).root()
+            });
+            let loaded = crate::phase_timing::measure(&pkg.name, "cache-key-inputs", || {
+                let mut loaded: Vec<String> = all
+                    .iter()
+                    .map(|p| format!("{} {} {}", p.manifest.name, p.manifest.version, p.digest))
+                    .collect();
+                loaded.sort();
+                loaded.join("\n")
+            });
             let profile = format!("{profile:?}");
             let as_of = options.as_of.as_deref().unwrap_or_default();
             let known_at = options.known_at.as_deref().unwrap_or_default();
-            let corpus_digest = corpus_digest(corpus);
+            let corpus_digest =
+                crate::phase_timing::measure(&pkg.name, "cache-corpus-digest", || {
+                    corpus_digest(corpus)
+                });
             let key = [
                 pkg.root.as_str(),
                 &root,
@@ -223,7 +235,7 @@ fn verify_cached(
                 known_at,
                 &corpus_digest,
             ];
-            cache.verified(&key, verify)
+            crate::phase_timing::measure(&pkg.name, "cache-lookup", || cache.verified(&key, verify))
         }
         None => verify(),
     }
@@ -231,11 +243,8 @@ fn verify_cached(
 
 /// A stable digest of every source file used to verify citations.
 fn corpus_digest(source_corpus: &SourceCorpus) -> String {
-    static EMBEDDED: OnceLock<String> = OnceLock::new();
-    if std::ptr::eq(source_corpus, corpus()) {
-        return EMBEDDED
-            .get_or_init(|| compute_corpus_digest(source_corpus))
-            .clone();
+    if std::ptr::eq(source_corpus, SourceCorpus::embedded_ref()) {
+        return SourceCorpus::embedded_digest().to_owned();
     }
     compute_corpus_digest(source_corpus)
 }
@@ -281,6 +290,14 @@ mod tests {
     fn embedded_corpus_digest_is_stable_across_package_verifications() {
         let embedded = corpus();
         assert_eq!(corpus_digest(embedded), corpus_digest(embedded));
+        assert_eq!(
+            corpus_digest(embedded),
+            compute_corpus_digest(embedded),
+            "files={} first={:?} last={:?}",
+            embedded.files.len(),
+            embedded.files.keys().min(),
+            embedded.files.keys().max()
+        );
     }
 
     #[test]

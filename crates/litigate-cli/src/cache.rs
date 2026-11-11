@@ -2,8 +2,8 @@
 //! dependencies at digest Z" is a build-cache fact, never a `Lit.lock`
 //! one: an entry is keyed by the Merkle root of X's resolution (X's own
 //! digests and every dependency's, computed on read), the profile, the
-//! build dates, source corpus and the compiler (its version and the digest
-//! of its executable), so a change to any dependency's digest or source
+//! build dates, source corpus and the compiler (its version and a
+//! build-input fingerprint), so a change to any dependency's digest or source
 //! text misses every dependent's entry, and so does an upgraded compiler
 //! over the same tree. Only
 //! a session read from disk uses it;
@@ -128,17 +128,22 @@ impl Cache {
     /// next run. An unreadable or unwritable entry is a miss, never an
     /// error.
     pub fn verified(&self, key: &[&str], verify: impl FnOnce() -> Verification) -> Verification {
+        let started = std::time::Instant::now();
         let path = self.path(key);
         let stored = std::fs::read_to_string(&path)
             .ok()
             .and_then(|text| serde_json::from_str::<Entry>(&text).ok());
+        trace_phase("cache:read", started.elapsed());
         if let Some(entry) = stored {
             return Verification {
                 report: entry.report,
                 diagnostics: entry.diagnostics,
             };
         }
+        let started = std::time::Instant::now();
         let fresh = verify();
+        trace_phase("cache:verify", started.elapsed());
+        let started = std::time::Instant::now();
         let entry = Entry {
             report: fresh.report.clone(),
             diagnostics: fresh.diagnostics.clone(),
@@ -147,40 +152,37 @@ impl Cache {
         let _ = std::fs::create_dir_all(&self.dir);
         let tmp = path.with_extension(format!("{}.tmp", std::process::id()));
         let _ = std::fs::write(&tmp, text).and_then(|()| std::fs::rename(&tmp, &path));
+        trace_phase("cache:write", started.elapsed());
         fresh
     }
 }
 
-/// This compiler: its version and the SHA-256 of its executable's bytes,
-/// so an upgraded or rebuilt compiler never reads another build's entries,
-/// even one installed with the same size and modification time. Computed
-/// once per process, on the first lookup; an executable that cannot be
-/// read keys on its version with a marker no readable build produces.
+fn trace_phase(phase: &str, elapsed: std::time::Duration) {
+    if std::env::var_os("LITIGATE_PHASE_TIMINGS").is_some_and(|value| value == "1") {
+        eprintln!(
+            "LITIGATE_PHASE\tcache\t{phase}\t{:.3}ms",
+            elapsed.as_secs_f64() * 1000.0
+        );
+    }
+}
+
+/// This compiler: package version and its build-time source fingerprint.
 fn compiler() -> &'static str {
     static COMPILER: OnceLock<String> = OnceLock::new();
     COMPILER.get_or_init(|| {
         identity(
             env!("CARGO_PKG_VERSION"),
-            std::env::current_exe()
-                .and_then(std::fs::read)
-                .ok()
-                .as_deref(),
+            Some(env!("LITIGATE_BUILD_FINGERPRINT")),
         )
     })
 }
 
-/// The compiler identity of `version` built as `exe`.
-pub(crate) fn identity(version: &str, exe: Option<&[u8]>) -> String {
-    let digest = exe.map_or_else(
-        || "unreadable".to_owned(),
-        |bytes| {
-            format!(
-                "sha256:{}",
-                litigate_sema::pkg::lock::hex(&Sha256::digest(bytes))
-            )
-        },
-    );
-    format!("{version} {digest}")
+/// The compiler identity of `version` built from `fingerprint`.
+pub(crate) fn identity(version: &str, fingerprint: Option<&str>) -> String {
+    match fingerprint {
+        Some(digest) => format!("{version} sha256:{digest}"),
+        None => format!("{version} unavailable"),
+    }
 }
 
 #[cfg(test)]
@@ -296,14 +298,13 @@ mod tests {
     }
 
     #[test]
-    fn the_compiler_is_its_version_and_executable_digest() {
-        let a = identity("1.0.0", Some(b"build a"));
-        // Same version, same size, other bytes: another compiler.
-        assert_ne!(a, identity("1.0.0", Some(b"build b")));
-        assert_ne!(a, identity("1.0.1", Some(b"build a")));
-        assert_eq!(a, identity("1.0.0", Some(b"build a")));
+    fn the_compiler_is_its_version_and_source_fingerprint() {
+        let a = identity("1.0.0", Some("build a"));
+        assert_ne!(a, identity("1.0.0", Some("build b")));
+        assert_ne!(a, identity("1.0.1", Some("build a")));
+        assert_eq!(a, identity("1.0.0", Some("build a")));
         assert!(a.starts_with("1.0.0 sha256:"), "{a}");
-        assert_eq!(identity("1.0.0", None), "1.0.0 unreadable");
+        assert_eq!(identity("1.0.0", None), "1.0.0 unavailable");
         assert!(compiler().starts_with(concat!(env!("CARGO_PKG_VERSION"), " sha256:")));
     }
 

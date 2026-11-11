@@ -434,7 +434,9 @@ impl Session {
             .iter()
             .map(|p| relative_to(&root, &root.join(p)))
             .collect();
-        let (db, ws) = litigate_sema::load_in(src, &root, &roots, None)?;
+        let (db, ws) = crate::phase_timing::measure("workspace", "read+parse", || {
+            litigate_sema::load_in(src, &root, &roots, None)
+        })?;
         let packages = ws
             .packages(&db)
             .iter()
@@ -668,8 +670,19 @@ impl Session {
 #[must_use]
 pub fn package(db: &dyn salsa::Database, input: PackageInput, requested: &BTreeSet<String>) -> Pkg {
     let root = input.root(db).clone();
-    let check = litigate_sema::db::queries::check_package(db, input).clone();
-    let manifest = parse_manifest(input.manifest_text(db)).ok();
+    let (manifest, name) = crate::phase_timing::measure(&root, "read+parse", || {
+        let manifest = parse_manifest(input.manifest_text(db)).ok();
+        for file in input.files(db) {
+            let _ = litigate_sema::db::queries::item_tree(db, *file);
+        }
+        let name = manifest
+            .as_ref()
+            .map_or_else(|| root.clone(), |m| m.manifest.name.clone());
+        (manifest, name)
+    });
+    let check = crate::phase_timing::measure(&name, "sema", || {
+        litigate_sema::db::queries::check_package(db, input).clone()
+    });
     let files: Vec<(String, String)> =
         std::iter::once((input.manifest_path(db), input.manifest_text(db).clone()))
             .chain(
@@ -679,18 +692,20 @@ pub fn package(db: &dyn salsa::Database, input: PackageInput, requested: &BTreeS
                     .map(|f| (f.path(db), f.text(db).clone())),
             )
             .collect();
-    let digest = check.package.as_ref().map_or_else(
-        || {
-            litigate_sema::pkg::lock::digest(
-                input.manifest_text(db),
-                input
-                    .files(db)
-                    .iter()
-                    .map(|f| (f.relative(db).as_str(), f.text(db).as_str())),
-            )
-        },
-        |p| p.digest.clone(),
-    );
+    let digest = crate::phase_timing::measure(&name, "digest", || {
+        check.package.as_ref().map_or_else(
+            || {
+                litigate_sema::pkg::lock::digest(
+                    input.manifest_text(db),
+                    input
+                        .files(db)
+                        .iter()
+                        .map(|f| (f.relative(db).as_str(), f.text(db).as_str())),
+                )
+            },
+            |p| p.digest.clone(),
+        )
+    });
     Pkg {
         input,
         requested: requested.contains(&root),

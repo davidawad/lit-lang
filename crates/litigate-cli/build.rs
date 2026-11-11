@@ -13,6 +13,7 @@
 //! `OUT_DIR/stdlib.rs`, so `litigate vendor` rewrites a vendored copy to
 //! exactly the one this binary was built with (lg-70c6).
 
+use sha2::{Digest, Sha256};
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -52,7 +53,65 @@ fn main() {
     });
     println!("cargo:rustc-env=LITIGATE_GIT_COMMIT={commit}");
     println!("cargo:rustc-env=LITIGATE_GIT_TREE={tree}");
+    println!(
+        "cargo:rustc-env=LITIGATE_BUILD_FINGERPRINT={}",
+        fingerprint(&dir.join("../.."))
+    );
     embed_stdlib(&dir.join("../../lit"));
+}
+
+/// A deterministic identity of compiler inputs, computed while building
+/// instead of hashing the hundreds-of-megabytes executable on every run.
+fn fingerprint(root: &Path) -> String {
+    fn visit(root: &Path, dir: &Path, hash: &mut Sha256) {
+        let Ok(read) = std::fs::read_dir(dir) else {
+            return;
+        };
+        let mut entries: Vec<_> = read
+            .filter_map(Result::ok)
+            .map(|entry| entry.path())
+            .collect();
+        entries.sort();
+        for path in entries {
+            if path.is_dir() {
+                if !path
+                    .file_name()
+                    .is_some_and(|name| name.to_string_lossy().starts_with('.'))
+                {
+                    visit(root, &path, hash);
+                }
+            } else if path
+                .extension()
+                .is_some_and(|ext| matches!(ext.to_str(), Some("rs" | "toml" | "args")))
+                || path.file_name().is_some_and(|name| name == "Cargo.lock")
+            {
+                let relative = path.strip_prefix(root).unwrap_or(&path).to_string_lossy();
+                println!("cargo:rerun-if-changed={}", path.display());
+                let bytes = std::fs::read(&path).unwrap_or_default();
+                hash.update((relative.len() as u64).to_be_bytes());
+                hash.update(relative.as_bytes());
+                hash.update((bytes.len() as u64).to_be_bytes());
+                hash.update(bytes);
+            }
+        }
+    }
+    let mut hash = Sha256::new();
+    visit(root, &root.join("crates"), &mut hash);
+    for path in [root.join("Cargo.toml"), root.join("Cargo.lock")] {
+        if let Ok(bytes) = std::fs::read(&path) {
+            let relative = path.strip_prefix(root).unwrap_or(&path).to_string_lossy();
+            hash.update((relative.len() as u64).to_be_bytes());
+            hash.update(relative.as_bytes());
+            hash.update((bytes.len() as u64).to_be_bytes());
+            hash.update(bytes);
+            println!("cargo:rerun-if-changed={}", path.display());
+        }
+    }
+    let mut fingerprint = String::with_capacity(64);
+    for byte in hash.finalize() {
+        let _ = write!(fingerprint, "{byte:02x}");
+    }
+    fingerprint
 }
 
 /// Writes `OUT_DIR/stdlib.rs`: `STDLIB_FILES`, `(DIR/relative path,

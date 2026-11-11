@@ -47,6 +47,20 @@ use litigate_engine::model::Pack;
 use litigate_lower::{Document, LoweredPackage, Lowerer, Options, SourceMap};
 use litigate_sema::{hir, PackageCheck};
 use report::{Builder, Obligation as O};
+use std::time::Instant;
+
+fn timed<T>(package: &str, phase: &str, f: impl FnOnce() -> T) -> T {
+    if std::env::var_os("LITIGATE_PHASE_TIMINGS").is_none_or(|value| value != "1") {
+        return f();
+    }
+    let started = Instant::now();
+    let result = f();
+    eprintln!(
+        "LITIGATE_PHASE\t{package}\tverify:{phase}\t{:.3}ms",
+        started.elapsed().as_secs_f64() * 1000.0
+    );
+    result
+}
 
 /// A lowered document with its reproducible verification report.
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
@@ -139,100 +153,185 @@ pub fn verify_package(
         .known_at
         .as_deref()
         .unwrap_or(&input.package.manifest.in_force.known_at);
+    let package = input.package.manifest.name.as_str();
     let mut b = Builder::default();
     sema::aggregate(&mut b, &input.check.diagnostics);
     evidence::hir(&mut b, &cx);
     let mut holes = input.check.holes.clone();
+    let mut insensitive = std::collections::BTreeSet::new();
     let mut out = Vec::new();
-    let mut record = |b: &mut Builder, name: O, found: Vec<Diagnostic>| {
-        out.extend(found.iter().cloned());
-        b.check(name, found);
-    };
     match input.lowered.map(|l| (&l.document, &l.source_map)) {
         Ok((Document::Pack(pack), map)) => {
-            holes.extend(
-                pack.lowered
-                    .as_ref()
-                    .into_iter()
-                    .flat_map(|lowered| lowered.holes.iter())
-                    .filter(|hole| hole.pointer.ends_with("/deadline/extendable"))
-                    .map(|hole| {
-                        let source = map
-                            .entries
-                            .iter()
-                            .filter(|entry| hole.pointer.starts_with(&entry.pointer))
-                            .max_by_key(|entry| entry.pointer.len());
-                        litigate_sema::Hole {
-                            span: source
-                                .and_then(|entry| entry.span.clone())
-                                .unwrap_or_else(|| cx.span_or_manifest(None)),
-                            reason: hole.reason.clone(),
-                        }
-                    }),
-            );
-            let reached = graph::reached(pack);
-            evidence::graph(&mut b, &cx, reached.len());
-            evidence::tests(&mut b, &cx);
-            record(&mut b, O::GraphExits, graph::exits(&cx, pack));
-            record(
+            insensitive = verify_pack(
+                &cx,
+                &PackVerification {
+                    input,
+                    corpus,
+                    known_at,
+                },
+                pack,
+                map,
                 &mut b,
-                O::GraphReachable,
-                graph::unreachable(&cx, pack, &reached),
+                &mut out,
+                &mut holes,
             );
-            record(
-                &mut b,
-                O::DeadlineSatisfiable,
-                deadline::unsatisfiable(&cx, &reached),
-            );
-            let unsound = net::check(&mut b, &cx, pack, map);
-            record(&mut b, O::WorkflowSound, unsound);
-            record(
-                &mut b,
-                O::CiteResolves,
-                cite::unresolved(&cx, pack, corpus, &input.check.holes),
-            );
-            holes.extend(cite::unproven(&cx, pack, corpus, &input.check.holes));
-            record(&mut b, O::TestsPass, assertions::failures(&cx, known_at));
         }
         Ok((Document::Links(_), _)) => {
-            for name in ON_PACK.into_iter().chain([O::DeadlineSatisfiable]) {
-                b.skip(name, "a links package has no graph or sources of its own; checked where it composes packs");
-            }
-            evidence::tests(&mut b, &cx);
-            record(&mut b, O::TestsPass, assertions::failures(&cx, known_at));
+            insensitive = verify_links(&cx, package, known_at, &mut b, &mut out);
         }
         Err(lowering) => {
-            sema::aggregate(&mut b, lowering);
-            let every: std::collections::BTreeSet<String> =
-                cx.nodes().map(|n| n.meta.id.clone()).collect();
-            evidence::deadline(&mut b, every.len());
-            record(
-                &mut b,
-                O::DeadlineSatisfiable,
-                deadline::unsatisfiable(&cx, &every),
-            );
-            for name in ON_PACK.into_iter().chain([O::TestsPass]) {
-                b.skip(name, "not checked: the package did not lower");
-            }
+            verify_lowering(&cx, package, lowering, &mut b, &mut out);
         }
     }
-    record(&mut b, O::DistExact, graph::empty_distributions(&cx));
-    let mut typed = cycle::unbounded(&cx);
-    typed.extend(refinement::bounds(&cx));
-    record(&mut b, O::WellTyped, typed);
-    evidence::holes(&mut b, holes.len());
-    record(&mut b, O::Holes, lints::holes(&holes, profile));
-    let insensitive = assertions::counting_insensitive(&cx, known_at);
     record(
         &mut b,
+        &mut out,
+        O::DistExact,
+        timed(package, "dist-exact", || graph::empty_distributions(&cx)),
+    );
+    let mut typed = timed(package, "cycle-bounds", || cycle::unbounded(&cx));
+    typed.extend(timed(package, "refinement-bounds", || {
+        refinement::bounds(&cx)
+    }));
+    record(&mut b, &mut out, O::WellTyped, typed);
+    evidence::holes(&mut b, holes.len());
+    record(
+        &mut b,
+        &mut out,
+        O::Holes,
+        timed(package, "holes", || lints::holes(&holes, profile)),
+    );
+    record(
+        &mut b,
+        &mut out,
         O::RuleWithoutTest,
-        lints::untested(&cx, &insensitive),
+        timed(package, "rule-without-test", || {
+            lints::untested(&cx, &insensitive)
+        }),
     );
     b.skip(
         O::CaseReplay,
         "a rule package has no events; replay is checked per case",
     );
     Verification::new(b, out, profile)
+}
+
+fn record(b: &mut Builder, out: &mut Vec<Diagnostic>, name: O, found: Vec<Diagnostic>) {
+    out.extend(found.iter().cloned());
+    b.check(name, found);
+}
+
+struct PackVerification<'a, 'p> {
+    input: &'a PackageInput<'p>,
+    corpus: &'a SourceCorpus,
+    known_at: &'a str,
+}
+
+fn verify_pack(
+    cx: &Context<'_>,
+    verification: &PackVerification<'_, '_>,
+    pack: &Pack,
+    map: &SourceMap,
+    b: &mut Builder,
+    out: &mut Vec<Diagnostic>,
+    holes: &mut Vec<litigate_sema::types::build::Hole>,
+) -> std::collections::BTreeSet<String> {
+    let package = verification.input.package.manifest.name.as_str();
+    let reached = timed(package, "graph-reached", || graph::reached(pack));
+    evidence::graph(b, cx, reached.len());
+    evidence::tests(b, cx);
+    record(
+        b,
+        out,
+        O::GraphExits,
+        timed(package, "graph-exits", || graph::exits(cx, pack)),
+    );
+    record(
+        b,
+        out,
+        O::GraphReachable,
+        timed(package, "graph-reachable", || {
+            graph::unreachable(cx, pack, &reached)
+        }),
+    );
+    record(
+        b,
+        out,
+        O::DeadlineSatisfiable,
+        timed(package, "deadline-satisfiable", || {
+            deadline::unsatisfiable(cx, &reached)
+        }),
+    );
+    let unsound = timed(package, "workflow-sound", || net::check(b, cx, pack, map));
+    record(b, out, O::WorkflowSound, unsound);
+    record(
+        b,
+        out,
+        O::CiteResolves,
+        timed(package, "cite-resolves", || {
+            cite::unresolved(
+                cx,
+                pack,
+                verification.corpus,
+                &verification.input.check.holes,
+            )
+        }),
+    );
+    holes.extend(cite::unproven(
+        cx,
+        pack,
+        verification.corpus,
+        &verification.input.check.holes,
+    ));
+    let (failures, insensitive) = timed(package, "tests-pass+counting-insensitive", || {
+        assertions::check(cx, verification.known_at)
+    });
+    record(b, out, O::TestsPass, failures);
+    insensitive
+}
+
+fn verify_links(
+    cx: &Context<'_>,
+    package: &str,
+    known_at: &str,
+    b: &mut Builder,
+    out: &mut Vec<Diagnostic>,
+) -> std::collections::BTreeSet<String> {
+    for name in ON_PACK.into_iter().chain([O::DeadlineSatisfiable]) {
+        b.skip(
+            name,
+            "a links package has no graph or sources of its own; checked where it composes packs",
+        );
+    }
+    evidence::tests(b, cx);
+    let (failures, insensitive) = timed(package, "tests-pass+counting-insensitive", || {
+        assertions::check(cx, known_at)
+    });
+    record(b, out, O::TestsPass, failures);
+    insensitive
+}
+
+fn verify_lowering(
+    cx: &Context<'_>,
+    package: &str,
+    lowering: &[Diagnostic],
+    b: &mut Builder,
+    out: &mut Vec<Diagnostic>,
+) {
+    sema::aggregate(b, lowering);
+    let every: std::collections::BTreeSet<String> = cx.nodes().map(|n| n.meta.id.clone()).collect();
+    evidence::deadline(b, every.len());
+    record(
+        b,
+        out,
+        O::DeadlineSatisfiable,
+        timed(package, "deadline-satisfiable", || {
+            deadline::unsatisfiable(cx, &every)
+        }),
+    );
+    for name in ON_PACK.into_iter().chain([O::TestsPass]) {
+        b.skip(name, "not checked: the package did not lower");
+    }
 }
 
 /// The report of a package sema rejected (it has no HIR): its diagnostics

@@ -30,127 +30,107 @@ use litigate_sema::temporal::{Key, World};
 use std::cell::RefCell;
 use std::collections::BTreeMap;
 
-/// L5006 for every assertion that does not hold or cannot be evaluated,
-/// with versions selected among those recorded by `known_at`.
-pub(crate) fn failures(cx: &Context<'_>, known_at: &str) -> Vec<Diagnostic> {
-    let clocks = Clocks::new(cx, known_at);
-    cx.declarations()
-        .filter_map(|d| match d {
-            Declaration::Test(t) => Some(t),
-            _ => None,
-        })
-        .flat_map(|t| {
-            t.expects
-                .iter()
-                .filter_map(|e| expectation(cx, &clocks, t, e))
-                .collect::<Vec<_>>()
-        })
-        .collect()
-}
-
-/// Deadlines whose inline assertions never distinguish their counted date
-/// from plain calendar addition. Hours and calendar-month/year periods are
-/// skipped because elapsed hours and calendar clamping have no plain-day
-/// addition equivalent. Chained deadlines are also skipped: their trigger is
-/// another computed deadline rather than a test-supplied event.
-pub(crate) fn counting_insensitive(
+/// Check inline assertions and identify rules whose tests do not distinguish
+/// counted dates, sharing one clock and each evaluated deadline value.
+pub(crate) fn check(
     cx: &Context<'_>,
     known_at: &str,
-) -> std::collections::BTreeSet<String> {
+) -> (Vec<Diagnostic>, std::collections::BTreeSet<String>) {
     let clocks = Clocks::new(cx, known_at);
     let mut tested = BTreeMap::<String, bool>::new();
+    let mut failures = Vec::new();
     for declaration in cx.declarations() {
         let Declaration::Test(test) = declaration else {
             continue;
         };
-        for expectation in &test.expects {
-            let (target, nominal, expected) = match (&expectation.lhs.kind, &expectation.rhs.kind) {
-                (
-                    ExprKind::Call { callee, args },
-                    ExprKind::Literal {
-                        value: Value::Date(date),
-                    },
-                ) if callee == "deadline" => match args.first().map(|a| &a.kind) {
-                    Some(ExprKind::Ref { target }) => (target, false, date),
-                    _ => continue,
-                },
-                (
-                    ExprKind::Field { base, .. },
-                    ExprKind::Literal {
-                        value: Value::Date(date),
-                    },
-                ) => match &base.kind {
-                    ExprKind::Call { callee, args } if callee == "deadline" => {
-                        match args.first().map(|a| &a.kind) {
-                            Some(ExprKind::Ref { target }) => (
-                                target,
-                                matches!(&expectation.lhs.kind, ExprKind::Field { field, .. } if field == "nominal"),
-                                date,
-                            ),
-                            _ => continue,
-                        }
-                    }
-                    _ => continue,
-                },
-                _ => continue,
-            };
-            let Some(deadline) = cx.deadline_versions(target).first().copied() else {
-                continue;
-            };
-            if deadline.chain.is_some()
-                || !matches!(
-                    deadline.unit,
-                    hir::DayUnit::Calendar
-                        | hir::DayUnit::Court
-                        | hir::DayUnit::Business
-                        | hir::DayUnit::Week
-                )
-            {
-                continue;
-            }
-            let Some((given, date)) = test
-                .givens
-                .iter()
-                .find(|(given, _)| matches(&deadline.trigger, given))
-            else {
-                continue;
-            };
-            let Ok(actual) = due(cx, &clocks, test, target, nominal) else {
-                continue;
-            };
-            let Ok(trigger) = clock::Date::parse_iso(date) else {
-                continue;
-            };
-            let (owner, _) = cx.owner(target);
-            let Ok(counting) = counting_of(&clocks, owner, deadline, date) else {
-                continue;
-            };
-            let excluded_trigger = counting.map_or(true, |(_, rule)| rule.exclude_trigger_day);
-            let amount = i64::try_from(deadline.amount).unwrap_or(i64::MAX);
-            let amount_days = if deadline.unit == hir::DayUnit::Week {
-                amount.saturating_mul(7)
-            } else {
-                amount
-            };
-            let delta = amount_days.saturating_sub(i64::from(!excluded_trigger));
-            let naive = trigger
-                .add_days(if deadline.direction == hir::Direction::Forward {
-                    delta
-                } else {
-                    -delta
-                })
-                .to_iso();
-            let _ = given;
-            let entry = tested.entry(cx.local(target).to_owned()).or_insert(true);
-            if !is_counting_insensitive(&actual, &naive, expected) {
-                *entry = false;
+        for exp in &test.expects {
+            let (failure, sensitivity) = expectation(cx, &clocks, test, exp);
+            failures.extend(failure);
+            if let Some((target, insensitive)) = sensitivity {
+                *tested.entry(target.clone()).or_insert(true) &= insensitive;
             }
         }
     }
-    tested
+    let insensitive = tested
         .into_iter()
         .filter_map(|(id, insensitive)| insensitive.then_some(id))
-        .collect()
+        .collect();
+    (failures, insensitive)
+}
+
+fn date_deadline_expectation(expectation: &hir::Expectation) -> Option<(&str, bool, &str)> {
+    let ExprKind::Literal {
+        value: Value::Date(expected),
+    } = &expectation.rhs.kind
+    else {
+        return None;
+    };
+    let (expression, nominal) = match &expectation.lhs.kind {
+        ExprKind::Call { .. } => (&expectation.lhs, false),
+        ExprKind::Field { base, field } => (base.as_ref(), field == "nominal"),
+        _ => return None,
+    };
+    let ExprKind::Call { callee, args } = &expression.kind else {
+        return None;
+    };
+    if callee != "deadline" {
+        return None;
+    }
+    match args.first().map(|arg| &arg.kind) {
+        Some(ExprKind::Ref { target }) => Some((target, nominal, expected)),
+        _ => None,
+    }
+}
+
+fn counting_expectation<'a>(
+    cx: &Context<'_>,
+    clocks: &Clocks,
+    test: &hir::Test,
+    expectation: &'a hir::Expectation,
+    lhs: &Value,
+) -> Option<(&'a str, bool)> {
+    let (target, _nominal, expected) = date_deadline_expectation(expectation)?;
+    let deadline = cx.deadline_versions(target).first().copied()?;
+    if deadline.chain.is_some()
+        || !matches!(
+            deadline.unit,
+            hir::DayUnit::Calendar
+                | hir::DayUnit::Court
+                | hir::DayUnit::Business
+                | hir::DayUnit::Week
+        )
+    {
+        return None;
+    }
+    let (_, date) = test
+        .givens
+        .iter()
+        .find(|(given, _)| matches(&deadline.trigger, given))?;
+    let Value::Date(actual) = lhs else {
+        return None;
+    };
+    let trigger = clock::Date::parse_iso(date).ok()?;
+    let (owner, _) = cx.owner(target);
+    let counting = counting_of(clocks, owner, deadline, date).ok()?;
+    let excluded_trigger = counting.is_none_or(|(_, rule)| rule.exclude_trigger_day);
+    let amount = i64::try_from(deadline.amount).unwrap_or(i64::MAX);
+    let amount_days = if deadline.unit == hir::DayUnit::Week {
+        amount.saturating_mul(7)
+    } else {
+        amount
+    };
+    let delta = amount_days.saturating_sub(i64::from(!excluded_trigger));
+    let naive = trigger
+        .add_days(if deadline.direction == hir::Direction::Forward {
+            delta
+        } else {
+            -delta
+        })
+        .to_iso();
+    Some((
+        cx.local(target),
+        is_counting_insensitive(actual, &naive, expected),
+    ))
 }
 
 /// Build a reproducible boundary test for a deadline, if its lowered clock
@@ -331,7 +311,7 @@ fn expectation(
     clocks: &Clocks,
     test: &hir::Test,
     e: &hir::Expectation,
-) -> Option<Diagnostic> {
+) -> (Option<Diagnostic>, Option<(String, bool)>) {
     let span = cx.span_or_manifest(e.lhs.span.as_ref().or(test.span.as_ref()));
     let fail = |message: String| {
         note(
@@ -342,7 +322,11 @@ fn expectation(
     };
     let lhs = eval(cx, clocks, test, &e.lhs);
     let rhs = eval(cx, clocks, test, &e.rhs);
-    match (lhs, rhs) {
+    let sensitivity = lhs.as_ref().ok().and_then(|lhs| {
+        counting_expectation(cx, clocks, test, e, lhs)
+            .map(|(target, insensitive)| (target.to_owned(), insensitive))
+    });
+    let diagnostic = match (lhs, rhs) {
         (Ok(l), Ok(r)) => match compare(&l, e.op, &r) {
             Some(true) => None,
             Some(false) => Some(fail(format!(
@@ -362,7 +346,8 @@ fn expectation(
         (Err(why), _) | (_, Err(why)) => {
             Some(fail(format!("cannot evaluate the assertion: {why}")))
         }
-    }
+    };
+    (diagnostic, sensitivity)
 }
 
 /// Evaluates a test-side expression to a literal value.

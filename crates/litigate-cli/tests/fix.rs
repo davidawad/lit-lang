@@ -97,6 +97,30 @@ fn actor_designations_are_typed_and_case_fixes_are_applied() {
 }
 
 #[test]
+fn l9011_fix_runs_through_cli_and_is_idempotent() {
+    let dir = workspace("l9011", OUT_OF_ORDER);
+    let path = dir.join("lit/akd/local-rules.lit");
+    let test = "test \"Counting boundary: signature-objection-period (weekend)\" cite \"D. Alaska L.Civ.R. 5.1(e)\"\n{\n  given DocumentServed() on 2025-10-18\n  expect deadline(signature-objection-period) == 2025-11-03\n}\n";
+    let source = std::fs::read_to_string(&path).unwrap();
+    assert!(source.contains(test));
+    std::fs::write(&path, source.replacen(test, "", 1)).unwrap();
+    let lock = litigate_in(&dir, &["lock", "lit/akd"]);
+    assert_eq!(lock.code, 0, "{}", lock.stdout);
+
+    let fixed = litigate_in(&dir, &["fix", "lit/akd/local-rules.lit", "--code", "L9011"]);
+    assert_eq!(fixed.code, 0, "{}", fixed.stdout);
+    assert_eq!(fixed.json["result"]["changed_files"][0], "lit/akd/local-rules.lit");
+    let after = std::fs::read_to_string(&path).unwrap();
+    assert!(after.contains("Counting boundary: signature-objection-period"));
+    let tests = litigate_in(&dir, &["test", "lit/akd"]);
+    assert_eq!(tests.code, 0, "{}", tests.stdout);
+
+    let second = litigate_in(&dir, &["fix", "lit/akd/local-rules.lit", "--code", "L9011"]);
+    assert_eq!(second.code, 0, "{}", second.stdout);
+    assert_eq!(std::fs::read_to_string(path).unwrap(), after);
+}
+
+#[test]
 fn replay_errors_are_precise() {
     let late = OUT_OF_ORDER
         .replace(

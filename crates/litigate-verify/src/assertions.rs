@@ -19,7 +19,7 @@
 //! matches `p`. An assertion this evaluator cannot compute fails: an
 //! unevaluated test is not a passing one.
 use crate::diag::{emit, note};
-use crate::{same_expr, Context};
+use crate::{Context, same_expr};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
 use litigate_engine::clock::{self, ClockConfig, ClockLibrary, DayDeadline, Unit};
 use litigate_lower::Lowerer;
@@ -170,7 +170,11 @@ pub(crate) fn counting_boundary(
     {
         return Ok(None);
     }
-    let ExprKind::Call { callee, .. } = &deadline.trigger.kind else {
+    let ExprKind::Call {
+        callee,
+        args: trigger_args,
+    } = &deadline.trigger.kind
+    else {
         return Ok(None);
     };
     let candidates: Vec<&[Expr]> = cx
@@ -184,7 +188,11 @@ pub(crate) fn counting_boundary(
                             ExprKind::Call {
                                 callee: given_callee,
                                 args,
-                            } if given_callee == callee => Some(args.as_slice()),
+                            } if given_callee == callee
+                                && trigger_arguments_match(trigger_args, args) =>
+                            {
+                                Some(args.as_slice())
+                            }
                             _ => None,
                         }),
                 )
@@ -308,6 +316,10 @@ fn test_arg(arg: &Expr) -> Option<String> {
         } => Some(v.rsplit("::").next().unwrap_or(v).to_owned()),
         _ => None,
     }
+}
+
+fn trigger_arguments_match(trigger: &[Expr], given: &[Expr]) -> bool {
+    trigger.len() <= given.len() && trigger.iter().zip(given).all(|(a, b)| same_expr(a, b))
 }
 
 fn is_counting_insensitive(actual: &str, naive: &str, expected: &str) -> bool {
@@ -915,6 +927,27 @@ mod tests {
         let literal = variant("Document::complaint");
         assert!(!matches(&literal, &event));
         assert!(!matches(&event, &literal));
+    }
+
+    #[test]
+    fn boundary_candidates_match_trigger_arguments() {
+        let trigger = call("InitialAppearance", &["Custody::Released"]);
+        let matching = call("InitialAppearance", &["Custody::Released", "Extra::field"]);
+        let unrelated = call("InitialAppearance", &["Custody::InCustody"]);
+        let ExprKind::Call { args, .. } = &trigger.kind else {
+            unreachable!();
+        };
+        let ExprKind::Call { args: matching, .. } = &matching.kind else {
+            unreachable!();
+        };
+        let ExprKind::Call {
+            args: unrelated, ..
+        } = &unrelated.kind
+        else {
+            unreachable!();
+        };
+        assert!(trigger_arguments_match(args, matching));
+        assert!(!trigger_arguments_match(args, unrelated));
     }
 
     #[test]

@@ -430,6 +430,14 @@ The historical counts are the compiled baseline counts recorded in the supplied 
 
 The baseline total count includes pointers from the earlier conflict report; those pointers are the historical comparison set, while the after count measures the compiled typed-authority field requested by this bead.
 
+Retry verification: `target/release/litigate --format json check lit/frap lit/ttab lit/cafc lit/links` exited 0; `target/release/litigate --format json check lit cases` exited 0 with 0 errors; `target/release/litigate --format json test lit/frap lit/ttab` exited 0 with 72 passed and 0 failed. After committing the regenerated locks, `just lit-sync-check` exited 0 and reported the `Lit.lock` files and shared clock library up to date.
+
+### CAFC link-instance authority overlay
+
+The three `cafc@cofc`, `cafc@cofc-gov`, and `cafc@itc` instances replace the edge's deadline with `within rehearing-period-united-states-party`. The links rule has no typed extension grant to lower, and replacing that deadline cannot inherit its omitted extension members from the base CAFC deadline. This is compiler behavior in `crates/litigate-lower/src/links.rs`, `patch`: it lowers the replacement deadline and explicitly fills every omitted member already present on the base deadline with `null`. The null `extensionAuthority` is therefore caused by the edge-patch replacement semantics, not by a missing source-side overlay; no source edit was made, as directed for compiler behavior.
+
+**DECIDED:** Leave the three link overlays unchanged -- `patch` is replacing the whole typed deadline object and intentionally nulls omitted members; changing the compiler is outside this bead's data-only correction.
+
 ### All baseline authority pointers that still differ
 
 This table compares every extension-authority pointer in the original `litigate diff` baseline table with the final packs. It includes normalized/reduced citations, shared-period authorities, no-source values, and pre-existing differences from main. The rule column identifies the retry rule applied (or identifies values already present before this attempt).
@@ -546,6 +554,36 @@ This table compares every extension-authority pointer in the original `litigate 
 | PTAB | `edge-federal-circuit-window-appeal-forfeited-unappealed` | `null` | `"37 C.F.R. § 90.3(c)(1)"` | outside this bead: authority already differed on main |
 | TTAB | `edge-01-pre-ext-first-30-1` | `"37 CFR 2.102(c)(2)-(3)"` | `null` | rule 5: no typed declaration |
 | TTAB | `edge-01-pre-ext-first-90-1` | `"37 CFR 2.102(c)(3)"` | `null` | rule 5: no typed declaration |
+
+### Lowered edge values changed since 4d460e346
+
+Built the baseline packs from commit `4d460e346` and the final packs from this tree with the same release binary. The comparator walks every edge and link-instance patch field in the nine touched forum packs and `links.json`, plus removed edge-scoped extension holes, reporting every changed leaf as `pack, edge, field, old, new`. It excludes package pins and non-edge metadata, which are not lowered edge values.
+
+Baseline source checkout:
+
+```bash
+git worktree add --detach /tmp/lg-pb1fe-baseline 4d460e346
+```
+
+Baseline build command (package paths shortened here to the same ten explicit directories used in the run):
+
+```bash
+target/release/litigate --format json build /tmp/lg-pb1fe-baseline/lit/{cafc,cofc,frap,frcp,frcrimp,itc,mpep,ptab,ttab,links} \
+  --lib /tmp/lg-pb1fe-baseline/lit --out /tmp/lg-pb1fe-lowered-baseline \
+  --pack-file cafc=cafc-federal-circuit --pack-file cofc=cofc-court-of-federal-claims
+target/release/litigate --format json build lit/{cafc,cofc,frap,frcp,frcrimp,itc,mpep,ptab,ttab,links} \
+  --out /tmp/lg-pb1fe-lowered-final \
+  --pack-file cafc=cafc-federal-circuit --pack-file cofc=cofc-court-of-federal-claims
+```
+
+The comparison table was produced by:
+
+```bash
+python3 scripts/lowered-json-diff.py /tmp/lg-pb1fe-lowered-baseline/packs /tmp/lg-pb1fe-lowered-final/packs \
+  cafc-federal-circuit cofc-court-of-federal-claims frap-appellate-procedure \
+  frcp-civil-procedure frcrimp-criminal-procedure itc-337 links mpep-prosecution \
+  ptab-patent-trial-appeal-board ttab-trademark-trial-and-appeal-board
+```
 | TTAB | `edge-01-pre-opposition-filed-1` | `"37 CFR 2.102(c)"` | `null` | rule 5: no typed declaration |
 | TTAB | `edge-01-pre-ext-second-60-1` | `"37 CFR 2.102(c)(3)"` | `null` | rule 5: no typed declaration |
 | TTAB | `edge-03-pre-2-opposition-filed-1` | `"37 CFR 2.102(c)(3) (applicant consent only)"` | `null` | rule 5: no typed declaration |
@@ -576,8 +614,8 @@ Whole-corpus check: `target/release/litigate check lit cases --format json` exit
 - `/edges/notice-of-appeal-criminal/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 4(b)(4); “the district court may extend the time”.
 - `/edges/edge-appeal-clock-open-tolling-motion-filed/deadline/extendable` — `false → null` — locked against extension by FRCP 6(b)(2); “may not extend the time to act under Rule 50(b), 52(b), 59(b), (d), and (e)”.
 - `/edges/edge-tolling-motion-disposed-appeal-clock-open/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 4(a)(5)(A); “may extend the time to file a notice of appeal”.
-- `/edges/edge-transcript-order-fork-transcript-ordered/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 26(b)(1); “may extend any time prescribed by these rules for good cause”.
-- `/edges/no-transcript-certificate/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 26(b)(1); “may extend any time prescribed by these rules for good cause”.
+- `/edges/edge-transcript-order-fork-transcript-ordered/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 26(b); “For good cause, the court may extend the time prescribed by these rules ...”.
+- `/edges/no-transcript-certificate/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 26(b); “For good cause, the court may extend the time prescribed by these rules ...”.
 - `/edges/edge-rehearing-window-rehearing-petition-filed/deadline/extendable` — `false → true` — extend by typed grant; cite FRAP 40(d)(1); “unless the time is shortened or extended by order or local rule”.
 - `/edges/edge-rehearing-window-mandate-issued/deadline/extendable` — `null → true` — extend by case order under FRAP 40(d)(1); “unless the time is shortened or extended by order or local rule”.
 - `/edges/edge-rehearing-granted-amended-opinion-mandate-issued/deadline/extendable` — `null → true` — extend by case order under FRAP 41(b); “the court may shorten or extend the time by order”.
@@ -620,12 +658,117 @@ Whole-corpus check: `target/release/litigate check lit cases --format json` exit
 - `/edges/edge-federal-circuit-window-federal-circuit-notice-of-appeal/deadline/extendable` — `false → true` — extend by typed grant; cite 37 C.F.R. § 90.3(c)(1); “The Director ... may extend the time”.
 - `/edges/edge-federal-circuit-window-appeal-forfeited-unappealed/deadline/extendable` — `false → true` — extend by typed grant; cite 37 C.F.R. § 90.3(c)(1); “The Director ... may extend the time”.
 - `/edges/edge-01-pre-ext-first-30-1/deadline/extendable` — `true → null` — extendable by Board under 37 C.F.R. § 2.102(c)(1)(i); “a single request for an additional thirty days”.
-- `/edges/edge-01-pre-ext-first-90-1/deadline/extendable` — `true → null` — extendable by Board under 37 C.F.R. § 2.102(c)(2); “an additional sixty days for good cause”.
+- `/edges/edge-01-pre-ext-first-90-1/deadline/extendable` — `true → null` — extendable by Board under 37 C.F.R. § 2.102(c)(3); “After receiving one or two extensions of time totaling ninety days ... one final request”.
 - `/edges/edge-01-pre-opposition-filed-1/deadline/extendable` — `true → null` — extendable by Board under 37 C.F.R. § 2.102(c)(1); “a request to extend must be filed before those thirty days expire”.
 - `/edges/edge-01-pre-ext-second-60-1/deadline/extendable` — `true → null` — extendable by Board under 37 C.F.R. § 2.102(c)(3); “the applicant consents to the extension”.
 - `/edges/edge-03-pre-2-opposition-filed-1/deadline/extendable` — `true → null` — extendable by Board under 37 C.F.R. § 2.102(c)(3); “the applicant consents to the extension”.
-- `/edges/edge-04-standstill-2-opposition-filed-1/deadline/extendable` — `false → null` — locked at the 180-day outer limit by 37 C.F.R. § 2.102(c)(3); “in no case later than 180 days”.
+- `/edges/edge-04-standstill-2-opposition-filed-1/deadline/extendable` — `false → null` — locked at the 180-day outer limit by 37 C.F.R. § 2.102(c); “shall not be extended beyond 180 days from the date of publication”.
 - `/edges/answer-plain/deadline/extendable` — `null → true` — extend by Board for good cause through FRCP 6(b)(1)(A), applied by 37 C.F.R. § 2.116(a); “wherever applicable and appropriate”.
 - `/edges/answer-s18/deadline/extendable` — `null → true` — extend by Board for good cause through FRCP 6(b)(1)(A), applied by 37 C.F.R. § 2.116(a); “wherever applicable and appropriate”.
 - `/edges/edge-07-opposition-to-trial-notice-of-default-1/deadline/extendable` — `null → true` — extend by Board for good cause through FRCP 6(b)(1)(A), applied by 37 C.F.R. § 2.116(a); “wherever applicable and appropriate”.
 - `/edges/edge-08-decision-district-outcome-1/deadline/extendable` — `false → true` — extend by typed grant; cite 37 C.F.R. § 2.145(e)(1); “The Director ... may extend the time”.
+| Pack | Edge or pointer | Field | Old | New |
+|---|---|---|---|---|
+| cafc-federal-circuit | `rehearing-denied-to-mandate` | `deadline/extensionAuthority` | `<missing>` | `"FRAP 41(b)"` |
+| cafc-federal-circuit | `rehearing-file` | `deadline/extensionAuthority` | `<missing>` | `"Fed. Cir. R. 40(f)(1)"` |
+| cafc-federal-circuit | `rehearing-time-expires` | `deadline/extensionAuthority` | `<missing>` | `"Fed. Cir. R. 40(f)(1)"` |
+| cofc-court-of-federal-claims | `e-ruling12b-denied` | `deadline/extensionAuthority` | `<missing>` | `"RCFC 12(a)(4)(A)"` |
+| frap-appellate-procedure | `edge-affirmed-in-part-reversed-in-part-rehearing-window` | `deadline/extensionAuthority` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | `"FRAP 40(d)(1); FRAP 40(d)(1)"` |
+| frap-appellate-procedure | `edge-affirmed-rehearing-window` | `deadline/extensionAuthority` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | `"FRAP 40(d)(1); FRAP 40(d)(1)"` |
+| frap-appellate-procedure | `edge-appeal-clock-open-tolling-motion-filed` | `deadline/extendable` | `<missing>` | `false` |
+| frap-appellate-procedure | `edge-appeal-clock-open-tolling-motion-filed` | `deadline/extensionAuthority` | `<missing>` | `"FRCP 6(b)(2)"` |
+| frap-appellate-procedure | `edge-appeal-clock-open-tolling-motion-filed` | `deadline/extensions/0/authority` | `<missing>` | `"FRCP 6(b)(2)"` |
+| frap-appellate-procedure | `edge-appeal-clock-open-tolling-motion-filed` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
+| frap-appellate-procedure | `edge-appeal-clock-open-tolling-motion-filed` | `lowered.holes/deadline/extendable` | `"the period declares neither a typed &#96;extend&#96; grant, a typed &#96;delegable&#96; extension, nor an &#96;extend { never ... }&#96; lock"` | `<missing>` |
+| frap-appellate-procedure | `edge-rehearing-en-banc-both-denied-mandate-issued` | `deadline/extensionAuthority` | `<missing>` | `"FRAP 41(b)"` |
+| frap-appellate-procedure | `edge-rehearing-granted-amended-opinion-mandate-issued` | `deadline/extensionAuthority` | `<missing>` | `"FRAP 41(b)"` |
+| frap-appellate-procedure | `edge-rehearing-window-mandate-issued` | `deadline/extensionAuthority` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | `"FRAP 40(d)(1); FRAP 40(d)(1)"` |
+| frap-appellate-procedure | `edge-rehearing-window-rehearing-petition-filed` | `deadline/extensionAuthority` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | `"FRAP 40(d)(1); FRAP 40(d)(1)"` |
+| frap-appellate-procedure | `edge-reversed-and-remanded-rehearing-window` | `deadline/extensionAuthority` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | `"FRAP 40(d)(1); FRAP 40(d)(1)"` |
+| frap-appellate-procedure | `edge-reversed-rehearing-window` | `deadline/extensionAuthority` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | `"FRAP 40(d)(1); FRAP 40(d)(1)"` |
+| frap-appellate-procedure | `edge-transcript-order-fork-transcript-ordered` | `deadline/extensionAuthority` | `<missing>` | `"FRAP 26(b)"` |
+| frap-appellate-procedure | `edge-vacated-and-remanded-rehearing-window` | `deadline/extensionAuthority` | `"FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 40(a)(1)"` | `"FRAP 40(d)(1); FRAP 40(d)(1)"` |
+| frap-appellate-procedure | `no-transcript-certificate` | `deadline/extensionAuthority` | `<missing>` | `"FRAP 26(b)"` |
+| frcrimp-criminal-procedure | `edge-guilty-verdict-rule29-motion` | `deadline/extensionAuthority` | `<missing>` | `"FRCrimP 45(b)(1)"` |
+| frcrimp-criminal-procedure | `edge-judgment-entered-rule35-motion` | `deadline/extendable` | `<missing>` | `false` |
+| frcrimp-criminal-procedure | `edge-judgment-entered-rule35-motion` | `deadline/extensionAuthority` | `<missing>` | `"FRCrimP 45(b)(2)"` |
+| frcrimp-criminal-procedure | `edge-judgment-entered-rule35-motion` | `deadline/extensions/0/authority` | `<missing>` | `"FRCrimP 45(b)(2)"` |
+| frcrimp-criminal-procedure | `edge-judgment-entered-rule35-motion` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
+| frcrimp-criminal-procedure | `edge-judgment-entered-rule35-motion` | `lowered.holes/deadline/extendable` | `"the period declares neither a typed &#96;extend&#96; grant, a typed &#96;delegable&#96; extension, nor an &#96;extend { never ... }&#96; lock"` | `<missing>` |
+| frcrimp-criminal-procedure | `edge-notice-of-appeal-window-appeal-window-missed` | `deadline/counting` | `<missing>` | `"frap26"` |
+| frcrimp-criminal-procedure | `edge-notice-of-appeal-window-appeal-window-missed` | `deadline/extendable` | `<missing>` | `true` |
+| frcrimp-criminal-procedure | `edge-notice-of-appeal-window-appeal-window-missed` | `deadline/extensionAuthority` | `<missing>` | `"FRAP 4(b)(4)"` |
+| frcrimp-criminal-procedure | `edge-notice-of-appeal-window-appeal-window-missed` | `deadline/extensions/0/afterExpiry` | `<missing>` | `true` |
+| frcrimp-criminal-procedure | `edge-notice-of-appeal-window-appeal-window-missed` | `deadline/extensions/0/bound` | `<missing>` | `"bounded"` |
+| frcrimp-criminal-procedure | `edge-notice-of-appeal-window-appeal-window-missed` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
+| frcrimp-criminal-procedure | `edge-notice-of-appeal-window-appeal-window-missed` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCauseOrExcusableNeglect"` |
+| frcrimp-criminal-procedure | `edge-notice-of-appeal-window-appeal-window-missed` | `deadline/extensions/0/until/offset/days` | `<missing>` | `30` |
+| frcrimp-criminal-procedure | `edge-notice-of-appeal-window-appeal-window-missed` | `deadline/extensions/0/until/offset/from` | `<missing>` | `"prescribedDue"` |
+| frcrimp-criminal-procedure | `edge-notice-of-appeal-window-appeal-window-missed` | `deadline/extensions/1/authority` | `<missing>` | `"FRAP 26(b)(1)"` |
+| frcrimp-criminal-procedure | `edge-notice-of-appeal-window-appeal-window-missed` | `deadline/extensions/1/bound` | `<missing>` | `"nonExtendable"` |
+| links | `cafc@cofc-gov` | `rehearing-file/deadline/extensionAuthority` | `<missing>` | `null` |
+| links | `cafc@cofc-gov` | `rehearing-time-expires/deadline/extensionAuthority` | `<missing>` | `null` |
+| links | `cafc@cofc` | `rehearing-file/deadline/extensionAuthority` | `<missing>` | `null` |
+| links | `cafc@cofc` | `rehearing-time-expires/deadline/extensionAuthority` | `<missing>` | `null` |
+| links | `cafc@itc` | `rehearing-file/deadline/extensionAuthority` | `<missing>` | `null` |
+| links | `cafc@itc` | `rehearing-time-expires/deadline/extensionAuthority` | `<missing>` | `null` |
+| mpep-prosecution | `edge-noa-received-issue-fee-paid` | `deadline/extendable` | `<missing>` | `false` |
+| mpep-prosecution | `edge-noa-received-issue-fee-paid` | `deadline/extensionAuthority` | `<missing>` | `"37 CFR 1.311(a)"` |
+| mpep-prosecution | `edge-noa-received-issue-fee-paid` | `deadline/extensions/0/authority` | `<missing>` | `"37 CFR 1.311(a)"` |
+| mpep-prosecution | `edge-noa-received-issue-fee-paid` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
+| mpep-prosecution | `edge-noa-received-issue-fee-paid` | `lowered.holes/deadline/extendable` | `"the period declares neither a typed &#96;extend&#96; grant, a typed &#96;delegable&#96; extension, nor an &#96;extend { never ... }&#96; lock"` | `<missing>` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `deadline/extendable` | `<missing>` | `true` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `deadline/extensionAuthority` | `<missing>` | `"37 CFR 90.3(c)(1); 37 CFR 90.3(c)(1)"` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `deadline/extensions/0/by` | `<missing>` | `"office"` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `deadline/extensions/0/motion/event` | `<missing>` | `"BoardAppealExtensionRequested()"` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `deadline/extensions/1/by` | `<missing>` | `"office"` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `deadline/extensions/1/motion/event` | `<missing>` | `"BoardAppealExtensionRequested()"` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `deadline/extensions/1/standard` | `<missing>` | `"ExcusableNeglect"` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `deadline/extensions/1/window` | `<missing>` | `"afterExpiryOnMotion"` |
+| mpep-prosecution | `edge-ptab-affirmed-federal-circuit-appeal` | `lowered.holes/deadline/extendable` | `"the period declares neither a typed &#96;extend&#96; grant, a typed &#96;delegable&#96; extension, nor an &#96;extend { never ... }&#96; lock"` | `<missing>` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `deadline/extendable` | `<missing>` | `true` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `deadline/extensionAuthority` | `<missing>` | `"37 CFR 90.3(c)(1); 37 CFR 90.3(c)(1)"` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `deadline/extensions/0/by` | `<missing>` | `"office"` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `deadline/extensions/0/motion/event` | `<missing>` | `"BoardAppealExtensionRequested()"` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `deadline/extensions/1/by` | `<missing>` | `"office"` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `deadline/extensions/1/motion/event` | `<missing>` | `"BoardAppealExtensionRequested()"` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `deadline/extensions/1/standard` | `<missing>` | `"ExcusableNeglect"` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `deadline/extensions/1/window` | `<missing>` | `"afterExpiryOnMotion"` |
+| mpep-prosecution | `edge-ptab-affirmed-sec145-action` | `lowered.holes/deadline/extendable` | `"the period declares neither a typed &#96;extend&#96; grant, a typed &#96;delegable&#96; extension, nor an &#96;extend { never ... }&#96; lock"` | `<missing>` |
+| mpep-prosecution | `ipr-popr-filed` | `deadline/extensionAuthority` | `<missing>` | `"37 CFR 42.5(c)(1)"` |
+| mpep-prosecution | `pgr-popr-filed` | `deadline/extensionAuthority` | `<missing>` | `"37 CFR 42.5(c)(1)"` |
+| ptab-patent-trial-appeal-board | `edge-petition-defect-noticed-ipr-petition-filed` | `deadline/extensionAuthority` | `<missing>` | `"37 C.F.R. § 42.5(c)(1)"` |
+| ptab-patent-trial-appeal-board | `edge-post-fwd-options-director-review-request-filed` | `deadline/extensionAuthority` | `<missing>` | `"37 C.F.R. § 42.5(c)(1)"` |
+| ptab-patent-trial-appeal-board | `edge-post-fwd-options-rehearing-request-filed` | `deadline/extensionAuthority` | `<missing>` | `"37 C.F.R. § 42.5(c)(1)"` |
+| ptab-patent-trial-appeal-board | `edge-rehearing-denied-affirmed-director-review-request-filed` | `deadline/extensionAuthority` | `<missing>` | `"37 C.F.R. § 42.5(c)(1)"` |
+| ttab-trademark-trial-and-appeal-board | `edge-01-pre-ext-first-30-1` | `deadline/extendable` | `<missing>` | `true` |
+| ttab-trademark-trial-and-appeal-board | `edge-01-pre-ext-first-30-1` | `deadline/extensionAuthority` | `<missing>` | `"37 CFR 2.102(c)(1)"` |
+| ttab-trademark-trial-and-appeal-board | `edge-01-pre-ext-first-30-1` | `lowered.holes/deadline/extendable` | `"the period declares neither a typed &#96;extend&#96; grant, a typed &#96;delegable&#96; extension, nor an &#96;extend { never ... }&#96; lock"` | `<missing>` |
+| ttab-trademark-trial-and-appeal-board | `edge-01-pre-ext-first-90-1` | `deadline/extendable` | `<missing>` | `true` |
+| ttab-trademark-trial-and-appeal-board | `edge-01-pre-ext-first-90-1` | `deadline/extensionAuthority` | `<missing>` | `"37 CFR 2.102(c)(3)"` |
+| ttab-trademark-trial-and-appeal-board | `edge-01-pre-ext-first-90-1` | `lowered.holes/deadline/extendable` | `"the period declares neither a typed &#96;extend&#96; grant, a typed &#96;delegable&#96; extension, nor an &#96;extend { never ... }&#96; lock"` | `<missing>` |
+| ttab-trademark-trial-and-appeal-board | `edge-01-pre-ext-second-60-1` | `deadline/extendable` | `<missing>` | `true` |
+| ttab-trademark-trial-and-appeal-board | `edge-01-pre-ext-second-60-1` | `deadline/extensionAuthority` | `<missing>` | `"37 CFR 2.102(c)(3)"` |
+| ttab-trademark-trial-and-appeal-board | `edge-01-pre-ext-second-60-1` | `lowered.holes/deadline/extendable` | `"the period declares neither a typed &#96;extend&#96; grant, a typed &#96;delegable&#96; extension, nor an &#96;extend { never ... }&#96; lock"` | `<missing>` |
+| ttab-trademark-trial-and-appeal-board | `edge-01-pre-opposition-filed-1` | `deadline/extendable` | `<missing>` | `true` |
+| ttab-trademark-trial-and-appeal-board | `edge-01-pre-opposition-filed-1` | `deadline/extensionAuthority` | `<missing>` | `"37 CFR 2.102(c)(1)"` |
+| ttab-trademark-trial-and-appeal-board | `edge-01-pre-opposition-filed-1` | `lowered.holes/deadline/extendable` | `"the period declares neither a typed &#96;extend&#96; grant, a typed &#96;delegable&#96; extension, nor an &#96;extend { never ... }&#96; lock"` | `<missing>` |
+| ttab-trademark-trial-and-appeal-board | `edge-03-pre-2-opposition-filed-1` | `deadline/extendable` | `<missing>` | `true` |
+| ttab-trademark-trial-and-appeal-board | `edge-03-pre-2-opposition-filed-1` | `deadline/extensionAuthority` | `<missing>` | `"37 CFR 2.102(c)(3)"` |
+| ttab-trademark-trial-and-appeal-board | `edge-03-pre-2-opposition-filed-1` | `lowered.holes/deadline/extendable` | `"the period declares neither a typed &#96;extend&#96; grant, a typed &#96;delegable&#96; extension, nor an &#96;extend { never ... }&#96; lock"` | `<missing>` |
+| ttab-trademark-trial-and-appeal-board | `edge-04-standstill-2-opposition-filed-1` | `deadline/extendable` | `<missing>` | `false` |
+| ttab-trademark-trial-and-appeal-board | `edge-04-standstill-2-opposition-filed-1` | `deadline/extensionAuthority` | `<missing>` | `"37 CFR 2.102(c)"` |
+| ttab-trademark-trial-and-appeal-board | `edge-04-standstill-2-opposition-filed-1` | `deadline/extensions/0/authority` | `<missing>` | `"37 CFR 2.102(c)"` |
+| ttab-trademark-trial-and-appeal-board | `edge-04-standstill-2-opposition-filed-1` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
+| ttab-trademark-trial-and-appeal-board | `edge-04-standstill-2-opposition-filed-1` | `lowered.holes/deadline/extendable` | `"the period declares neither a typed &#96;extend&#96; grant, a typed &#96;delegable&#96; extension, nor an &#96;extend { never ... }&#96; lock"` | `<missing>` |
+| ttab-trademark-trial-and-appeal-board | `edge-08-decision-district-outcome-1` | `deadline/extensionAuthority` | `<missing>` | `"37 CFR 2.145(e)(1); 37 CFR 2.145(e)(1)"` |
+
+Changed lowered leaves: 101

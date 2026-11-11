@@ -174,7 +174,7 @@ rule duty extensions-of-time effective [2017-01-14, ..) known_at 2016-10-07 cite
     to CaseOrder
     op set
 
-    cite "37 CFR 2.102(c)(2)"
+    cite "37 CFR 2.102(c)(3)"
   } cite "37 CFR 2.102(c)(1)(ii)"
   deadline second-extension-60: 60.days from FirstExtensionExpired() counted_by ttab-2-196 delegable {
     to CaseOrder
@@ -193,7 +193,7 @@ rule duty extensions-of-time effective [2017-01-14, ..) known_at 2016-10-07 cite
   } cite "37 CFR 2.102(c)(3)"
   deadline outer-limit-180: 180.days from Published() counted_by ttab-2-196 cite "37 CFR 2.102(c)"
   {
-    extend { never cite "37 CFR 2.102(c)(3)" }
+    extend { never cite "37 CFR 2.102(c)" }
   }
 }
 

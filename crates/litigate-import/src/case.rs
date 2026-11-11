@@ -153,10 +153,7 @@ fn source_text(
     }
 }
 
-fn perspective(
-    roles: &BTreeMap<String, Role>,
-    issues: &mut Issues,
-) -> String {
+fn perspective(roles: &BTreeMap<String, Role>, issues: &mut Issues) -> String {
     let entries: Vec<String> = roles
         .iter()
         .map(|(actor, role)| {

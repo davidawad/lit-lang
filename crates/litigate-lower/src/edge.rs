@@ -77,12 +77,6 @@ pub(crate) fn edge(cx: &EdgeCx<'_, '_>, sink: &mut Sink, from: String, e: &hir::
         cost,
         hours: e.hours.and_then(|h| sink.number(h, span)),
         probability,
-        numeric_provenance: provenance_map([
-            ("probability", e.probability_provenance.as_ref()),
-            ("hours", e.hours_provenance.as_ref()),
-            ("cost", e.cost_provenance.as_ref()),
-            ("duration", e.duration_provenance.as_ref()),
-        ]),
         valence: e.valence.map(valence),
         court_listener_url: e.court_listener_url.clone(),
         action_id: e.action_id.clone(),
@@ -99,32 +93,21 @@ pub(crate) fn edge(cx: &EdgeCx<'_, '_>, sink: &mut Sink, from: String, e: &hir::
     }
 }
 
-pub(crate) fn provenance(
+pub(crate) fn number_label(
+    pointer: String,
     value: &hir::NumberProvenance,
-) -> litigate_engine::model::NumericProvenance {
-    let basis = value.basis.as_ref().map(|basis| match basis {
-        hir::NumberBasis::Calibrated { set } => {
-            litigate_engine::model::NumericBasis::Calibrated { set: set.clone() }
-        }
-        hir::NumberBasis::Sourced { cite } => {
-            litigate_engine::model::NumericBasis::Sourced { cite: cite.clone() }
-        }
-        hir::NumberBasis::Estimate => litigate_engine::model::NumericBasis::Estimate,
-        hir::NumberBasis::Placeholder => litigate_engine::model::NumericBasis::Placeholder,
-    });
-    litigate_engine::model::NumericProvenance {
-        basis,
-        vintage: value.vintage.clone(),
-    }
-}
-
-fn provenance_map<'a>(
-    values: impl IntoIterator<Item = (&'static str, Option<&'a hir::NumberProvenance>)>,
-) -> BTreeMap<String, litigate_engine::model::NumericProvenance> {
-    values
-        .into_iter()
-        .filter_map(|(name, value)| value.map(|p| (name.to_owned(), provenance(p))))
-        .collect()
+) -> Option<litigate_engine::model::BasisLabel> {
+    let mut label = value.basis.as_ref().map_or_else(
+        || litigate_engine::model::BasisLabel {
+            pointer: pointer.clone(),
+            basis: litigate_engine::model::Basis::Estimate,
+            source: None,
+            vintage: None,
+        },
+        |basis| crate::basis::label(pointer, basis),
+    );
+    label.vintage.clone_from(&value.vintage);
+    (value.basis.is_some() || value.vintage.is_some()).then_some(label)
 }
 
 /// `Deadline.unit`: absent for calendar days, `"court"` for court days,
@@ -415,16 +398,17 @@ mod tests {
     use super::*;
 
     #[test]
-    fn per_number_provenance_lowers_to_the_pack_contract() {
+    fn per_number_basis_lowers_to_a_pointer_label() {
         let value = hir::NumberProvenance {
-            basis: Some(hir::NumberBasis::Sourced {
+            basis: Some(hir::Basis::Sourced {
                 cite: "FRCP 1".into(),
             }),
             vintage: Some("2026-01-01".into()),
         };
         assert_eq!(
-            serde_json::to_value(provenance(&value)).unwrap(),
-            serde_json::json!({"basis":{"kind":"sourced","cite":"FRCP 1"},"vintage":"2026-01-01"})
+            serde_json::to_value(number_label("/edges/0/probability".into(), &value).unwrap())
+                .unwrap(),
+            serde_json::json!({"pointer":"/edges/0/probability","basis":"sourced","source":"FRCP 1","vintage":"2026-01-01"})
         );
     }
 

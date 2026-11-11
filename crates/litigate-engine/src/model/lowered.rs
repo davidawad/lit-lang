@@ -80,6 +80,8 @@ pub enum Basis {
     Expert,
     /// A teaching or working estimate (the label of an unlabelled number).
     Estimate,
+    /// A knowingly incomplete placeholder value.
+    Placeholder,
     /// An explicit hole: no value at all.
     Hole,
 }
@@ -105,6 +107,9 @@ pub struct BasisLabel {
     /// What it rests on: the cite, `dataset@date`, or the expert.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source: Option<String>,
+    /// Date attached to this number, when authored.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vintage: Option<String>,
 }
 
 /// Provenance of a lowered document.

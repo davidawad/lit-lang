@@ -246,8 +246,26 @@ fn edge_cites(d: &Declaration) -> Vec<CiteOf<'_>> {
                     .into_iter()
                     .flatten()
                     .map(|c| (c, e.span.as_ref(), false, Vec::new()))
+                    .chain(
+                        [
+                            e.probability_provenance.as_ref(),
+                            e.hours_provenance.as_ref(),
+                            e.cost_provenance.as_ref(),
+                            e.duration_provenance.as_ref(),
+                        ]
+                        .into_iter()
+                        .flatten()
+                        .filter_map(|p| sourced(p.basis.as_ref()))
+                        .map(|c| (c, e.span.as_ref(), false, Vec::new())),
+                    )
             })
             .chain(sourced(n.basis.as_ref()).map(|c| (c, n.meta.span.as_ref(), false, Vec::new())))
+            .chain(
+                n.payoff_provenance
+                    .as_ref()
+                    .and_then(|p| sourced(p.basis.as_ref()))
+                    .map(|c| (c, n.meta.span.as_ref(), false, Vec::new())),
+            )
             .collect(),
         _ => Vec::new(),
     }

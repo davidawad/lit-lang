@@ -171,15 +171,6 @@ fn node(sink: &mut Sink, n: &hir::Node) -> RawNode {
         valence: n.valence.map(edge::valence),
         court_listener_url: n.court_listener_url.clone(),
         payoff,
-        numeric_provenance: n
-            .payoff_provenance
-            .as_ref()
-            .map(|p| {
-                [("payoff".to_owned(), edge::provenance(p))]
-                    .into_iter()
-                    .collect()
-            })
-            .unwrap_or_default(),
         outcome,
         tags: n.tags.clone(),
         attrs: edge::attrs(sink, &n.attrs, span),
@@ -293,6 +284,27 @@ pub(crate) fn pack(
         "/edges",
         edges.iter().map(|(_, e)| e.basis.as_ref()),
     ));
+    for (i, n) in origins.iter().enumerate() {
+        if let Some(p) = &n.payoff_provenance {
+            if let Some(label) = edge::number_label(format!("/nodes/{i}/payoff"), p) {
+                basis.push(label);
+            }
+        }
+    }
+    for (i, (_, e)) in edges.iter().enumerate() {
+        for (field, p) in [
+            ("probability", e.probability_provenance.as_ref()),
+            ("hours", e.hours_provenance.as_ref()),
+            ("cost", e.cost_provenance.as_ref()),
+            ("duration", e.duration_provenance.as_ref()),
+        ] {
+            if let Some(label) =
+                p.and_then(|p| edge::number_label(format!("/edges/{i}/{field}"), p))
+            {
+                basis.push(label);
+            }
+        }
+    }
     let mut holes = lowered_holes(build, pkg, &syntax, &origins, &edges);
     let filing_limits = limits
         .iter()

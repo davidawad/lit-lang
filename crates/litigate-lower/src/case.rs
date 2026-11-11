@@ -427,6 +427,7 @@ fn basis(build: &Build<'_, '_>, case: &hir::Case) -> Vec<BasisLabel> {
             pointer: "/scenario".to_owned(),
             basis,
             source: None,
+            vintage: None,
         })
         .into_iter()
         .collect()

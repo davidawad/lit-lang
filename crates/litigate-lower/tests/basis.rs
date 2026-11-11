@@ -14,6 +14,7 @@ fn label(pointer: &str, basis: Basis, source: Option<&str>) -> BasisLabel {
         pointer: pointer.into(),
         basis,
         source: source.map(str::to_owned),
+        vintage: None,
     }
 }
 

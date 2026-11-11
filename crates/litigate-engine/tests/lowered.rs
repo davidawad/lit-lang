@@ -88,6 +88,7 @@ fn basis_labels_join_and_point_into_the_document() {
         pointer: pointer.into(),
         basis,
         source: None,
+        vintage: None,
     };
     let lowered = serde_json::from_value::<Lowered>(header(&[]))
         .unwrap()

@@ -9,6 +9,7 @@ use std::collections::BTreeMap;
 impl R<'_, '_> {
     /// The `stakes` block: each terminal's stake, and the fee-shift
     /// fractions its entries give (`j: 1.usd fee_shift 0.5`).
+    #[allow(clippy::too_many_lines)] // Keep expansion and conflict checks together.
     pub(super) fn stakes(
         &mut self,
         block: &SyntaxNode,

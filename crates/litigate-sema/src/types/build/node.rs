@@ -139,6 +139,7 @@ impl Cx<'_, '_> {
     }
 
     /// Builds one node.
+    #[allow(clippy::too_many_lines)] // Node fields, edge ids, and diagnostics share this context.
     pub fn node(&mut self, n: &NodeItem, item: &Item, rule: Option<&Item>) -> Node {
         let meta = self.meta(&n.name, Some(&n.label), item, rule);
         let clauses = self.once(&n.clauses);
@@ -184,7 +185,7 @@ impl Cx<'_, '_> {
                 let ordinal = parallel.entry(target.clone()).or_default();
                 *ordinal += 1;
                 let suffix = if targets[&target] > 1 {
-                    format!("-{}", ordinal)
+                    format!("-{ordinal}")
                 } else {
                     String::new()
                 };

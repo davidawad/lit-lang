@@ -38,7 +38,9 @@ const DROPPED: &[&str] = &[
     "event E(a)",
     "state : \"A\"",
     "state a:",
-    "link \"L\": a -> b",
+    // A link without an explicit id is now complete. Keep this row a
+    // recovery case by omitting the target instead.
+    "link \"L\": a ->",
     "link x \"L\" -> b",
     "link x \"L\": a ->",
     "instance",

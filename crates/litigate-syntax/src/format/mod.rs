@@ -115,7 +115,7 @@ impl Item {
 
 fn format_tree(root: &SyntaxNode) -> String {
     let forum = module_forum(root);
-    let (mut items, tail) = collect_items(root, forum.as_ref().map(|(name, _)| name.clone()));
+    let (mut items, tail) = collect_items(root, forum.as_ref().map(|(name, _)| name.as_str()));
     if let Some((name, _insert)) = forum.filter(|(_, insert)| *insert) {
         let position = items
             .iter()
@@ -171,7 +171,7 @@ fn format_tree(root: &SyntaxNode) -> String {
 /// item (or trail the previous one when on its line); the rest form the
 /// tail. A `.case` header (`case id`) is its own item; a clean `.case` file
 /// always has item nodes after it, and the first one flushes it.
-fn collect_items(root: &SyntaxNode, forum: Option<String>) -> (Vec<Item>, Vec<String>) {
+fn collect_items(root: &SyntaxNode, forum: Option<&str>) -> (Vec<Item>, Vec<String>) {
     let mut items: Vec<Item> = Vec::new();
     let mut leading: Vec<String> = Vec::new();
     let mut newlines = 0usize;
@@ -198,7 +198,7 @@ fn collect_items(root: &SyntaxNode, forum: Option<String>) -> (Vec<Item>, Vec<St
             }
             NodeOrToken::Token(token) => {
                 header
-                    .get_or_insert_with(|| Builder::new(forum.clone()))
+                    .get_or_insert_with(|| Builder::new(forum.map(str::to_owned)))
                     .token(&token);
                 newlines = 0;
             }
@@ -206,7 +206,7 @@ fn collect_items(root: &SyntaxNode, forum: Option<String>) -> (Vec<Item>, Vec<St
                 if let Some(builder) = header.take() {
                     items.push(item(CaseFile, None, std::mem::take(&mut leading), builder));
                 }
-                let mut builder = Builder::new(forum.clone());
+                let mut builder = Builder::new(forum.map(str::to_owned));
                 builder.node(&node);
                 let key = (node.kind() == ImportDecl).then(|| significant_text(&node));
                 items.push(item(

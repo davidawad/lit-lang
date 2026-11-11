@@ -150,6 +150,26 @@ pub fn verify_package(
     };
     match input.lowered.map(|l| (&l.document, &l.source_map)) {
         Ok((Document::Pack(pack), map)) => {
+            holes.extend(
+                pack.lowered
+                    .as_ref()
+                    .into_iter()
+                    .flat_map(|lowered| lowered.holes.iter())
+                    .filter(|hole| hole.pointer.ends_with("/deadline/extendable"))
+                    .map(|hole| {
+                        let source = map
+                            .entries
+                            .iter()
+                            .filter(|entry| hole.pointer.starts_with(&entry.pointer))
+                            .max_by_key(|entry| entry.pointer.len());
+                        litigate_sema::Hole {
+                            span: source
+                                .and_then(|entry| entry.span.clone())
+                                .unwrap_or_else(|| cx.span_or_manifest(None)),
+                            reason: hole.reason.clone(),
+                        }
+                    }),
+            );
             let reached = graph::reached(pack);
             evidence::graph(&mut b, &cx, reached.len());
             evidence::tests(&mut b, &cx);

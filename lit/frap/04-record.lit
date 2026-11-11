@@ -65,7 +65,6 @@ decision transcript-order-fork: "Transcript Needed?" by movant cite "FRAP 10(b)"
     authority cite "FRAP 10(b)(1)"
     effort 2.hours
     within transcript-order-period {
-      extendable false
       note "No extension is available for the 14-day ordering deadline; missing it leaves the appellant with only the option to seek appellate relief on an inadequate record, or risk abandonment of issues not covered by existing papers."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -75,7 +74,6 @@ decision transcript-order-fork: "Transcript Needed?" by movant cite "FRAP 10(b)"
     authority cite "FRAP 10(b)(1)(B)"
     effort 0.5.hours
     within transcript-order-period {
-      extendable false
       note "Same 14-day window as ordering a transcript: FRAP 10(b)(1) requires the appellant, within 14 days after filing the notice of appeal, either to order the transcript or to 'file a certificate stating that no transcript will be ordered.'"
     }
     note "The usual route when the appeal is from a ruling on the papers (a Rule 12(b)(6) dismissal, a summary judgment) and there is no hearing transcript to order: the record is the original papers and docket entries (FRAP 10(a)). Hours: teaching estimate, a one-page certificate."
@@ -94,8 +92,6 @@ state transcript-ordered: "Transcript Ordered" by court cite "FRAP 10(b)(1)"
   edge-transcript-ordered-record-transmitted "Transcript completed and filed" -> record-transmitted {
     authority cite "FRAP (2009 ed.) 11(b)"
     within transcript-filing-period {
-      extendable true
-      extension_authority "FRAP 11(b) (reporter may request extension for completion beyond 30 days; no formal party motion needed)"
       note "Reporter has 30 days from receipt of the order to file the transcript with the district clerk. Requests for additional time are filed with the circuit clerk. Failure to file timely triggers circuit-clerk notice to the trial judge and risks sanction if the record becomes unavailable."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }

@@ -364,6 +364,22 @@ fn lowered_holes(
     let edge_holes = edges.iter().enumerate().flat_map(|(i, (raw, e))| {
         let base = format!("/edges/{i}");
         let mut out = holes::at(&base, &e.holes);
+        let declared_period = matches!(
+            e.deadline.as_ref().map(|deadline| &deadline.window),
+            Some(hir::DeadlineWindow::Declared { .. })
+        );
+        if declared_period
+            && raw.deadline.as_ref().is_some_and(|deadline| {
+                deadline.extendable.is_none() && deadline.extensions.is_empty()
+            })
+        {
+            out.push(Hole {
+                pointer: format!("{base}/deadline/extendable"),
+                reason: Some(
+                    "the period declares neither a typed `extend` grant, a typed `delegable` extension, nor an `extend { never ... }` lock".to_owned(),
+                ),
+            });
+        }
         // An edge is in force with its node's version.
         let from = origins.iter().find(|n| n.meta.id == raw.from);
         let from = from.map_or("", |n| n.meta.effective.from.as_str());

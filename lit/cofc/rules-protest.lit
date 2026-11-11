@@ -30,11 +30,9 @@ rule duty protest-prefiling-notice effective [2021-08-02, ..) known_at 2021-08-0
 {
   deadline protest-notice-earliest: 5.court_days before ProtestFiled() counted_by rcfc6 cite "RCFC App. C 2"
   {
-    extendable false
   }
   deadline protest-notice-latest: 1.court_days before ProtestFiled() counted_by rcfc6 cite "RCFC App. C 2"
   {
-    extendable false
   }
   /// The same outer bound counted forward from the notice, which is the
   /// shape an edge window takes: filing on or before the fifth court day
@@ -44,7 +42,6 @@ rule duty protest-prefiling-notice effective [2021-08-02, ..) known_at 2021-08-0
   /// edge window; `protest-notice-latest` states it.
   deadline protest-notice-window: 5.court_days after ProtestNoticeGiven() counted_by rcfc6 cite "RCFC App. C 2"
   {
-    extendable false
   }
 }
 

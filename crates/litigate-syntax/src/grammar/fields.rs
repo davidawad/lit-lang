@@ -70,8 +70,6 @@ pub(crate) const DEADLINE_OPTS: &[Spec] = &[
 /// interpretation its least time rests on, and the cited terms its period
 /// is derived from.
 pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
-    (KwExtendable, Some(boolean)),
-    (KwExtensionAuthority, Some(string_or_hole)),
     (KwNote, Some(string)),
     (KwBearer, Some(ref_or_call)),
     (KwTrigger, Some(ref_or_call)),

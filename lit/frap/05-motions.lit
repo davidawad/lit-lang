@@ -44,8 +44,6 @@ decision stay-pending-appeal-fork: "Move to Stay Judgment Pending Appeal?" by mo
     authority cite "FRAP (2009 ed.) 8(a)(1)"
     effort 15.hours
     within motion-response-period {
-      extendable true
-      extension_authority "FRAP 26(b); court order"
       note "10-day response period (FRAP 27(a)(3)) applies to all motions, including a motion to stay. Failure to meet the deadline may result in the motion being deemed submitted without response, waiver of oral argument, or denial."
     }
     duration { min 1.5.days, mode 5.days, max 10.days }
@@ -55,8 +53,6 @@ decision stay-pending-appeal-fork: "Move to Stay Judgment Pending Appeal?" by mo
   edge-stay-pending-appeal-fork-stay-denied "Stay motion denied" -> stay-denied by court {
     authority cite "FRAP (2009 ed.) 8(a)"
     within motion-response-period {
-      extendable true
-      extension_authority "FRAP 26(b); court order"
       note "Same 10-day response period applies. Missing the deadline for opposition may result in default or deemed abandonment of objections."
     }
     duration { min 1.5.days, mode 5.days, max 10.days }

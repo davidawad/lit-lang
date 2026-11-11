@@ -97,8 +97,6 @@ state mandate-issued: "Mandate Issues" by court cite "FRAP (2009 ed.) 41(a)–(b
   edge-mandate-issued-cert-petition-window "Judgment final — cert clock runs" -> cert-petition-window {
     authority cite "FRAP (2009 ed.) 41(b); Sup. Ct. R. 13.3"
     within cert-period {
-      extendable true
-      extension_authority "Sup. Ct. R. 13.6"
       note "The 90-day deadline is measured from the date the appellate opinion is filed/docketed. Missing this deadline forecloses any Supreme Court review; the judgment becomes final and enforceable. Extensions require filing before the deadline expires."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -117,8 +115,6 @@ state mandate-stayed-pending-cert: "Mandate Stayed Pending Certiorari" by court 
   edge-mandate-stayed-pending-cert-cert-petition-window "Stay granted — cert proceeds" -> cert-petition-window {
     authority cite "FRAP (2009 ed.) 41(d)(2)"
     within cert-period {
-      extendable true
-      extension_authority "Sup. Ct. R. 13.6"
       note "If cert is denied or the 90-day window expires (whichever is earlier), the stay terminates automatically and the mandate issues to enforce the judgment."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }

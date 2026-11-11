@@ -142,8 +142,8 @@ decision d: "D" {
     authority cite "FRCP 4(m)"
     effort 8.hours
     cost -2_000.50.usd
-    within answer-period { extendable true, extension_authority "FRCP 6(b)", note "x" }
-    deadline 5.court_days { extendable false }
+    within answer-period { note "x" }
+    deadline 5.court_days
     duration { min 1.days, mode 2.days max 3.days }
     valence good
     court_listener_url "u"
@@ -197,18 +197,10 @@ decision d: "D" {
                 (identifier))
               (deadline_opts
                 (deadline_opt
-                  (boolean))
-                (deadline_opt
-                  (string
-                    (string_content)))
-                (deadline_opt
                   (string
                     (string_content)))))
             (edge_field
-              (duration)
-              (deadline_opts
-                (deadline_opt
-                  (boolean))))
+              (duration))
             (edge_field
               (duration_range
                 (duration)
@@ -393,48 +385,6 @@ state s: "S" cite ?("RCFC Appendix J, Rule 3") {
               (duration_range
                 (duration)
                 (duration)))))))))
-
-================================================================================
-An extension authority hole
-================================================================================
-
-module m
-decision d: "D" by a {
-  answer "Answer" -> answered {
-    within answer-period { extension_authority ?("TTAB answer-time extension authority") }
-  }
-}
-
----
-
-(source_file
-  (lit_file
-    (module_decl
-      (module_path
-        (identifier)))
-    (node_decl
-      (identifier)
-      (string
-        (string_content))
-      (by_clause
-        (ref
-          (identifier)))
-      (node_body
-        (edge_decl
-          (identifier)
-          (string
-            (string_content))
-          (ref
-            (identifier))
-          (edge_fields
-            (edge_field
-              (ref
-                (identifier))
-              (deadline_opts
-                (deadline_opt
-                  (hole
-                    (string
-                      (string_content))))))))))))
 
 ================================================================================
 Basis fields

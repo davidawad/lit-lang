@@ -37,8 +37,6 @@ state final-judgment-entered: "Final Judgment" by court cite "28 U.S.C. § 1291;
   edge-final-judgment-entered-appeal-clock-open "Final judgment starts appeal clock" -> appeal-clock-open {
     authority cite "FRAP (2009 ed.) 4(a)(1)(A)"
     within notice-civil-period {
-      extendable true
-      extension_authority "Fed. R. App. P. 4(a)(5)"
       note "Notice of appeal due within 30 days of entry of final judgment, extendable to 60 days maximum under FRAP 4(a)(5). Deadline is jurisdictional; missing it by even one day strips appellate court of jurisdiction. Post-judgment motions may alter the triggering date under FRAP 4(a)(4)."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -64,8 +62,6 @@ decision interlocutory-review-fork: "Interlocutory Review Door Available?" by mo
     authority cite "28 U.S.C. § 1292(a)(1)"
     effort 8.hours
     within notice-civil-period {
-      extendable true
-      extension_authority "Fed. R. App. P. 4(a)(5)"
       note "Appeal of right from injunction/receivership orders. Notice of appeal due within 30 days of entry, extendable to 60 days maximum under FRAP 4(a)(5). Missing the deadline strips appellate jurisdiction regardless of merit."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -75,8 +71,6 @@ decision interlocutory-review-fork: "Interlocutory Review Door Available?" by mo
     authority cite "Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)"
     effort 10.hours
     within notice-civil-period {
-      extendable true
-      extension_authority "Fed. R. App. P. 4(a)(5)"
       note "Collateral order doctrine requires all three Cohen factors: (1) conclusively determines a disputed question; (2) resolves an important issue separate from the merits; (3) unreviewable on appeal from final judgment. Same 30-day deadline as statutory appeals."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -86,8 +80,6 @@ decision interlocutory-review-fork: "Interlocutory Review Door Available?" by mo
     authority cite "28 U.S.C. § 1292(b); FRAP (2009 ed.) 5(a)-(b)"
     effort 20.hours
     within permission-petition-period {
-      extendable false
-      extension_authority "Fed. R. App. P. 5(a)(3)"
       note "Permissive appeal. District court must certify substantial ground for difference of opinion within 10 days of entry (FRAP 5(a)(1)); applicant then has 10 days to apply to the appellate court (FRAP 5(a)(3)). Neither deadline is extendable."
     }
     duration { min 1.5.days, mode 5.days, max 10.days }

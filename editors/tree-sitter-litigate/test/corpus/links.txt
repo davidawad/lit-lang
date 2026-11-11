@@ -59,7 +59,7 @@ instance cafc@cofc {
   roles { Plaintiff: Appellant }
   payoff_transform (stake - payoff)
   stake ?
-  patch e1 { effort 3.hours, note "x", tags [a, b], within d { extendable false }, }
+  patch e1 { effort 3.hours, note "x", tags [a, b], within d, }
 }
 
 ---
@@ -129,10 +129,7 @@ instance cafc@cofc {
                 (identifier))))
           (edge_field
             (ref
-              (identifier))
-            (deadline_opts
-              (deadline_opt
-                (boolean)))))))))
+              (identifier))))))))
 
 ================================================================================
 Replaces may name an anonymous edge by its derived id

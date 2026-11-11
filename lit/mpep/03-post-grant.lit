@@ -19,7 +19,6 @@ decision patent-challenged: "Patent Challenged (Post-Grant)" effective [2024-01-
     authority cite "35 U.S.C. 311–314; 37 CFR 42.100"
     cost 19_000.usd
     within ipr-time-bar {
-      extendable false
       note "If the petitioner was served with an infringement complaint, 35 U.S.C. 315(b) bars a petition filed more than one year later — unextendable."
     }
     duration { min 54.8.days, mode 182.5.days, max 365.days }
@@ -29,7 +28,6 @@ decision patent-challenged: "Patent Challenged (Post-Grant)" effective [2024-01-
     authority cite "35 U.S.C. 321–324; 37 CFR 42.200"
     cost 20_000.usd
     within pgr-window {
-      extendable false
       note "PGR must be filed within 9 months of grant (35 U.S.C. 321(c)); AIA patents only. Unextendable, jurisdictional."
     }
     duration { min 40.5.days, mode 135.days, max 270.days }
@@ -50,7 +48,6 @@ decision patent-challenged: "Patent Challenged (Post-Grant)" effective [2025-01-
     authority cite "35 U.S.C. 311–314; 37 CFR 42.100"
     cost 23_750.usd
     within ipr-time-bar {
-      extendable false
       note "If the petitioner was served with an infringement complaint, 35 U.S.C. 315(b) bars a petition filed more than one year later — unextendable."
     }
     duration { min 54.8.days, mode 182.5.days, max 365.days }
@@ -60,7 +57,6 @@ decision patent-challenged: "Patent Challenged (Post-Grant)" effective [2025-01-
     authority cite "35 U.S.C. 321–324; 37 CFR 42.200"
     cost 25_000.usd
     within pgr-window {
-      extendable false
       note "PGR must be filed within 9 months of grant (35 U.S.C. 321(c)); AIA patents only. Unextendable, jurisdictional."
     }
     duration { min 40.5.days, mode 135.days, max 270.days }
@@ -81,7 +77,6 @@ state ipr-petition-filed: "IPR Petition Filed" by applicant effective [2024-01-3
     authority cite "37 CFR 42.107; 35 U.S.C. 313"
     effort 60.hours
     within ipr-preliminary-response {
-      extendable false
       note "POPR due within 3 months of the notice according the petition a filing date. Optional; argue discretionary denial and/or the merits."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -149,7 +144,6 @@ state pgr-petition-filed: "PGR Petition Filed" by applicant effective [2024-01-3
     authority cite "37 CFR 42.207; 35 U.S.C. 323"
     effort 60.hours
     within pgr-preliminary-response {
-      extendable false
       note "POPR due within 3 months of the filing-date notice."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -228,8 +222,6 @@ decision epr-ordered: "Reexam Ordered" by applicant effective [2024-01-31, ..) c
     authority cite "35 U.S.C. 304; 37 CFR 1.530(b); MPEP 2249"
     effort 40.hours
     within reexam-owner-statement {
-      extendable true
-      extension_authority "37 CFR 1.550(c)"
       note "Optional statement due within a period of not less than two months from the order. Filing it entitles the third-party requester to a reply (37 CFR 1.535) — usually a strategic mistake."
     }
     duration { min 9.days, mode 30.days, max 60.days }

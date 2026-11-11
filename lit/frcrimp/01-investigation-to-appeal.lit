@@ -91,8 +91,6 @@ state indictment-returned: "Indictment Returned (True Bill)" by court delegable 
   edge-indictment-returned-arraignment "Schedule arraignment on indictment" -> arraignment {
     authority cite "Fed. R. Crim. P. 10; 18 U.S.C. § 3161(c)(1)"
     within speedy-trial {
-      extendable true
-      extension_authority "18 U.S.C. § 3161(h)"
       note "Trial must commence within 70 days of indictment or initial appearance, whichever is later. Missing the deadline triggers dismissal with prejudice unless § 3161(h) exclusions (motions, continuances, ends-of-justice findings) apply."
     }
     duration { min 10.5.days, mode 35.days, max 70.days }
@@ -152,8 +150,6 @@ state initial-appearance: "Initial Appearance" by court effective [2020-10-21, .
   edge-initial-appearance-preliminary-hearing "Set preliminary hearing" -> preliminary-hearing {
     authority cite "Fed. R. Crim. P. 5.1(c)"
     within prelim-in-custody {
-      extendable true
-      extension_authority "Fed. R. Crim. P. 5.1(c) — good cause, or extraordinary circumstances where justice requires the delay, even without the defendant's consent"
       note "14 days if the defendant is in custody; 21 days if released. Missing the deadline does not dismiss the charge but may support a waiver or prejudicial-delay challenge."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -193,8 +189,6 @@ state bound-over-grand-jury: "Bound Over to Grand Jury" by court delegable {
   edge-bound-over-grand-jury-grand-jury-convened "Refer case to grand jury" -> grand-jury-convened {
     authority cite "Fed. R. Crim. P. 6; 18 U.S.C. § 3161(b)"
     within indictment-period {
-      extendable true
-      extension_authority "18 U.S.C. § 3161(b) — one additional 30-day extension if no grand jury convened during the initial 30-day period in the district"
       note "Indictment must be filed within 30 days of arrest or summons. Violation requires dismissal without prejudice under the Speedy Trial Act; the clock runs from arrest, not from the bind-over date."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -552,8 +546,6 @@ state proceed-to-trial: "No Plea Agreement — Proceed to Trial" by court delega
   edge-proceed-to-trial-jury-selection "Empanel jury" -> jury-selection {
     authority cite "Fed. R. Crim. P. 24; 18 U.S.C. § 3161"
     within speedy-trial {
-      extendable true
-      extension_authority "18 U.S.C. § 3161(h) (excludable delay)"
       note "Jury selection must begin within 70 days of indictment under the Speedy Trial Act. The 70-day period itself is rigid; only statutory § 3161(h) exclusions (continuances, motions, case complexity) toll the clock."
     }
     duration { min 10.5.days, mode 35.days, max 70.days }
@@ -676,7 +668,6 @@ state guilty-verdict: "Guilty Verdict" by accused delegable {
     authority cite "Fed. R. Crim. P. 29(c)"
     effort 10.hours
     within rule29-period {
-      extendable false
       note "After 14 days from verdict the court loses jurisdiction to grant judgment of acquittal under Rule 29; failure to file forfeits the claim on the merits."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -686,8 +677,6 @@ state guilty-verdict: "Guilty Verdict" by accused delegable {
     authority cite "Fed. R. Crim. P. 33"
     effort 20.hours
     within rule33-period {
-      extendable true
-      extension_authority "Rule 33(b) allows extension of the 14-day deadline if the court finds grounds within the original period; the 3-year newly-discovered-evidence window requires no extension"
       note "Standard grounds are barred after 14 days post-verdict unless extension is sought within that window; newly-discovered-evidence claims get 3 years but must be genuinely unavailable at trial."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -719,8 +708,6 @@ state presentence-report: "Presentence Investigation Report (PSR)" by court dele
   edge-presentence-report-sentencing-hearing "Finalize PSR" -> sentencing-hearing {
     authority cite "Fed. R. Crim. P. 32(e)-(h)"
     deadline 35.days {
-      extendable true
-      extension_authority "Fed. R. Crim. P. 32(e)(2) — parties may stipulate to a shorter period, or the court may set a different period for good cause"
       note "PSR must be disclosed at least 35 days before sentencing unless waived; parties must have the opportunity to review, object, and correct factual inaccuracies before the hearing."
     }
     duration { min 5.2.days, mode 17.5.days, max 35.days }
@@ -770,7 +757,6 @@ terminal judgment-entered: "Judgment and Commitment Entered" outcome [loss, conv
   edge-judgment-entered-rule35-motion "Consider Rule 35 relief" -> rule35-motion {
     authority cite "Fed. R. Crim. P. 35(a)"
     within rule35-period {
-      extendable false
       note "After 14 days from judgment entry, the trial court is powerless to correct the sentence under Rule 35(a), even for obvious clear error; the government's separate Rule 35(b) substantial-assistance motion has its own 1-year window and does not extend this one."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -778,8 +764,6 @@ terminal judgment-entered: "Judgment and Commitment Entered" outcome [loss, conv
   edge-judgment-entered-notice-of-appeal-window "Start appeal clock" -> notice-of-appeal-window by court {
     authority cite "Fed. R. App. P. 4(b)(1)"
     within criminal-appeal {
-      extendable true
-      extension_authority "Fed. R. App. P. 4(b)(1)(B) — up to 30 additional days for good cause shown, before or after the deadline expires"
       note "Appeal deadline is 14 days from judgment entry; if it passes without a notice of appeal or a timely extension request and the government objects, the appeal is dismissed and the sentence becomes final."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -812,8 +796,6 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by accused delegable
     effort 3.hours
     cost 605.usd
     within criminal-appeal {
-      extendable true
-      extension_authority "Fed. R. App. P. 4(b)(4) — on a finding of excusable neglect or good cause, the court may extend before or after the 14 days expire, with or without motion and notice, for up to 30 days from the original expiry"
       note "Missing both the original window and the 30-day extension period forecloses direct appeal entirely."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -824,8 +806,6 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by accused delegable
     authority cite "Fed. R. App. P. 4(b); Eberhart v. United States, 546 U.S. 12 (2005)"
     effort 0.hours
     deadline 14.days {
-      extendable true
-      extension_authority "Fed. R. App. P. 4(b)(4)"
       note "A mandatory claim-processing rule: once the government objects to untimeliness, the court must dismiss and admits no equitable exception — the conviction becomes unreviewable on direct appeal; only § 2255 collateral relief survives. The government forfeits the objection if it does not raise it."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }

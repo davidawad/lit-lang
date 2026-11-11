@@ -32,8 +32,6 @@ state mandatory-disclosures: "Mandatory Initial Disclosures Exchanged" effective
   edge-mandatory-disclosures-patent-owner-response-window "Disclosures complete — no motion needed" -> patent-owner-response-window {
     authority cite "37 CFR 42.120(b)"
     within patent-owner-response-period {
-      extendable true
-      extension_authority "37 CFR 42.5(c)(2)"
       note "Patent Owner Response due 3 months from the institution date. Extensions require a showing of good cause per 37 CFR 42.5(c)(2). Missing this deadline without an extension waives the response and may preclude arguments at trial."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -64,8 +62,6 @@ chance additional-discovery-motion: "Motion for Additional Discovery" by board d
   edge-additional-discovery-motion-patent-owner-response-window "Board denies additional discovery" -> patent-owner-response-window p 0.7 {
     authority cite "37 CFR 42.51(b)(2); 37 CFR 42.120"
     within patent-owner-response-period {
-      extendable true
-      extension_authority "37 CFR 42.5(c)(2)"
       note "The Patent Owner Response deadline (three months from institution) remains unaffected by a discovery motion denial. Failure to extend if needed results in waiver of the response and preclusion at trial."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -82,8 +78,6 @@ state protective-order-ipr: "Protective Order Governs Discovery" by board effect
   edge-protective-order-ipr-patent-owner-response-window "Discovery proceeds under protective order" -> patent-owner-response-window {
     authority cite "37 CFR 42.54(a); 37 CFR 42.120"
     within patent-owner-response-period {
-      extendable true
-      extension_authority "37 CFR 42.5(c)(2)"
       note "Patent Owner Response must comply with protective order terms while still meeting the 90-day deadline from institution. Extensions require good cause; confidentiality restrictions do not excuse untimeliness."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }

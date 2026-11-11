@@ -39,8 +39,6 @@ state missing-parts: "Notice: Missing Parts" by applicant effective [2024-01-31,
     effort 2.hours
     cost 160.usd
     within missing-parts-reply {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "Missing parts surcharge required. Filing date not accorded until specification present."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -63,8 +61,6 @@ state missing-parts: "Notice: Missing Parts" by applicant effective [2025-01-19,
     effort 2.hours
     cost 170.usd
     within missing-parts-reply {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "Missing parts surcharge required. Filing date not accorded until specification present."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -113,8 +109,6 @@ decision applicant-response-window: "Response Window Open" by applicant effectiv
     authority cite "37 CFR 1.111; MPEP 714"
     effort 15.hours
     within ssp-reply {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "SSP is 3 months. Extendable month-by-month to the 6-month statutory ceiling under 35 U.S.C. 133. No extension beyond 6 months is possible."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -125,8 +119,6 @@ decision applicant-response-window: "Response Window Open" by applicant effectiv
     effort 0.5.hours
     cost 220.usd
     within extension-month {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "Month 4 extension. Two more available (months 5 and 6). The 6-month absolute ceiling under 35 U.S.C. 133 cannot be exceeded."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -151,8 +143,6 @@ decision applicant-response-window: "Response Window Open" by applicant effectiv
     authority cite "37 CFR 1.111; MPEP 714"
     effort 15.hours
     within ssp-reply {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "SSP is 3 months. Extendable month-by-month to the 6-month statutory ceiling under 35 U.S.C. 133. No extension beyond 6 months is possible."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -163,8 +153,6 @@ decision applicant-response-window: "Response Window Open" by applicant effectiv
     effort 0.5.hours
     cost 235.usd
     within extension-month {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "Month 4 extension. Two more available (months 5 and 6). The 6-month absolute ceiling under 35 U.S.C. 133 cannot be exceeded."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -189,8 +177,6 @@ state extension-taken: "Extension of Time Taken" by applicant effective [2024-01
     authority cite "37 CFR 1.111; MPEP 714"
     effort 15.hours
     within extension-month {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "Further extensions available up to the 6-month ceiling."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -200,7 +186,6 @@ state extension-taken: "Extension of Time Taken" by applicant effective [2024-01
     effort 0.5.hours
     cost 640.usd
     within extension-month {
-      extendable false
       note "Month 5 or 6 extension. After month 6, 35 U.S.C. 133 prohibits any further extension — abandonment is automatic."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -216,8 +201,6 @@ state extension-taken: "Extension of Time Taken" by applicant effective [2025-01
     authority cite "37 CFR 1.111; MPEP 714"
     effort 15.hours
     within extension-month {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "Further extensions available up to the 6-month ceiling."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -227,7 +210,6 @@ state extension-taken: "Extension of Time Taken" by applicant effective [2025-01
     effort 0.5.hours
     cost 690.usd
     within extension-month {
-      extendable false
       note "Month 5 or 6 extension. After month 6, 35 U.S.C. 133 prohibits any further extension — abandonment is automatic."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -287,8 +269,6 @@ decision after-final-decision: "After-Final Choice" by applicant effective [2024
     authority cite "37 CFR 1.116; MPEP 714.12"
     effort 10.hours
     within final-reply {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "After-final amendment limited in scope. Examiner has discretion to enter or not."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -298,8 +278,6 @@ decision after-final-decision: "After-Final Choice" by applicant effective [2024
     effort 12.hours
     cost 1_360.usd
     within final-reply {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "RCE requires a submission + fee. Must be filed before payment of issue fee or abandonment. Reduces or eliminates patent term adjustment (PTA). Key trap: repeated RCEs compound PTA harm."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -311,8 +289,6 @@ decision after-final-decision: "After-Final Choice" by applicant effective [2024
     effort 6.hours
     cost 840.usd
     within final-reply {
-      extendable true
-      extension_authority "37 CFR 41.31(d); 37 CFR 1.136(a)"
       note "Notice of Appeal timing is governed by 37 CFR 41.31(a)(1) (any twice-rejected claim) and runs within the period under 37 CFR 1.134/1.136 (the SSP for reply to the final rejection). Extensions of that period are authorized by 37 CFR 41.31(d). Cheaper up front than RCE but risks all rejected claims; the appeal brief must follow within 2 months (37 CFR 41.37(a))."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -328,8 +304,6 @@ decision after-final-decision: "After-Final Choice" by applicant effective [2024
     effort 25.hours
     cost 1_820.usd
     within final-reply {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "Continuation must be filed while the parent is still pending (before issue-fee payment or abandonment) to claim the parent's priority under 35 U.S.C. 120. Alternative to RCE/appeal that opens a fresh child on the same disclosure."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -345,8 +319,6 @@ decision after-final-decision: "After-Final Choice" by applicant effective [2025
     authority cite "37 CFR 1.116; MPEP 714.12"
     effort 10.hours
     within final-reply {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "After-final amendment limited in scope. Examiner has discretion to enter or not."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -356,8 +328,6 @@ decision after-final-decision: "After-Final Choice" by applicant effective [2025
     effort 12.hours
     cost 1_500.usd
     within final-reply {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "RCE requires a submission + fee. Must be filed before payment of issue fee or abandonment. Reduces or eliminates patent term adjustment (PTA). Key trap: repeated RCEs compound PTA harm."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -369,8 +339,6 @@ decision after-final-decision: "After-Final Choice" by applicant effective [2025
     effort 6.hours
     cost 905.usd
     within final-reply {
-      extendable true
-      extension_authority "37 CFR 41.31(d); 37 CFR 1.136(a)"
       note "Notice of Appeal timing is governed by 37 CFR 41.31(a)(1) (any twice-rejected claim) and runs within the period under 37 CFR 1.134/1.136 (the SSP for reply to the final rejection). Extensions of that period are authorized by 37 CFR 41.31(d). Cheaper up front than RCE but risks all rejected claims; the appeal brief must follow within 2 months (37 CFR 41.37(a))."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -386,8 +354,6 @@ decision after-final-decision: "After-Final Choice" by applicant effective [2025
     effort 25.hours
     cost 2_000.usd
     within final-reply {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "Continuation must be filed while the parent is still pending (before issue-fee payment or abandonment) to claim the parent's priority under 35 U.S.C. 120. Alternative to RCE/appeal that opens a fresh child on the same disclosure."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -467,8 +433,6 @@ state notice-of-appeal: "Notice of Appeal Filed" by applicant effective [2024-01
     authority cite "37 CFR 41.37; MPEP 1205"
     effort 40.hours
     within appeal-brief {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "Brief must be filed within 2 months of Notice of Appeal. Failure to file brief = abandonment of appeal. The brief is the applicant's primary substantive document before PTAB."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -478,8 +442,6 @@ state notice-of-appeal: "Notice of Appeal Filed" by applicant effective [2024-01
     authority cite "37 CFR 41.37(a); MPEP 1215.04; MPEP 710.02(e)"
     effort 0.hours
     within appeal-brief {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "Brief due 2 months from notice of appeal, extendable up to 5 months under 37 CFR 1.136(a). If no brief is filed within that period, the appeal stands DISMISSED by operation of the rule (37 CFR 41.37; MPEP 1215.04) — the appeal is not 'denied' (Rev-01.2024 replaced 'denied' with 'dismissed' throughout ch. 1200)."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -505,7 +467,6 @@ state examiners-answer: "Examiner's Answer" by applicant effective [2024-01-31, 
     effort 1.hours
     cost 2_360.usd
     within appeal-forwarding-fee {
-      extendable false
       note "The APPEAL FORWARDING FEE (37 CFR 41.20(b)(4)) — not a brief fee — is due within 2 months of the Examiner's Answer to forward the appeal to the Board (35 U.S.C. 41 note; MPEP 1208.01). 37 CFR 41.37 itself carries NO brief fee. Non-payment means the appeal is dismissed."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -529,7 +490,6 @@ state examiners-answer: "Examiner's Answer" by applicant effective [2025-01-19, 
     effort 1.hours
     cost 2_535.usd
     within appeal-forwarding-fee {
-      extendable false
       note "The APPEAL FORWARDING FEE (37 CFR 41.20(b)(4)) — not a brief fee — is due within 2 months of the Examiner's Answer to forward the appeal to the Board (35 U.S.C. 41 note; MPEP 1208.01). 37 CFR 41.37 itself carries NO brief fee. Non-payment means the appeal is dismissed."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -573,7 +533,6 @@ decision ptab-affirmed: "PTAB Affirmed" by applicant effective [2024-01-31, ..) 
     authority cite "35 U.S.C. 141; 37 CFR 90.1"
     effort 80.hours
     within court-review {
-      extendable false
       note "63-day deadline from PTAB decision. No extensions available for Federal Circuit appeals."
     }
     duration { min 9.4.days, mode 31.5.days, max 63.days }
@@ -582,7 +541,6 @@ decision ptab-affirmed: "PTAB Affirmed" by applicant effective [2024-01-31, ..) 
     authority cite "35 U.S.C. 145; 37 CFR 90.3"
     effort 120.hours
     within court-review {
-      extendable false
       note "63-day deadline. De novo review with new evidence. Expensive — USPTO may recover attorney fees if applicant loses."
     }
     duration { min 9.4.days, mode 31.5.days, max 63.days }
@@ -642,8 +600,6 @@ decision restriction-requirement: "Restriction / Election Requirement" by applic
     authority cite "37 CFR 1.142; 37 CFR 1.143; MPEP 818.01"
     effort 3.hours
     within election-reply {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "Election without traverse concedes the restriction; non-elected claims withdrawn. No petition right preserved."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -652,8 +608,6 @@ decision restriction-requirement: "Restriction / Election Requirement" by applic
     authority cite "37 CFR 1.143; 37 CFR 1.144; MPEP 818.01(d)"
     effort 5.hours
     within election-reply {
-      extendable true
-      extension_authority "37 CFR 1.136(a)"
       note "Traverse preserves the right to petition the restriction requirement to the Director under 37 CFR 1.144 after a final requirement. Applicant must still elect and prosecute one invention."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -728,7 +682,6 @@ state noa-received: "Notice of Allowance Received" by applicant effective [2024-
     effort 1.hours
     cost 1_200.usd
     within issue-fee {
-      extendable false
       note "Issue fee due 3 months from NOA. NOT extendable under any authority — 37 CFR 1.311(a); MPEP 1306 [R-01.2024]. No 37 CFR 1.136(a)/(b) extension is available. Late payment = abandonment; only a 37 CFR 1.137 revival petition (unintentional delay) can restore the application."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -751,7 +704,6 @@ state noa-received: "Notice of Allowance Received" by applicant effective [2025-
     effort 1.hours
     cost 1_290.usd
     within issue-fee {
-      extendable false
       note "Issue fee due 3 months from NOA. NOT extendable under any authority — 37 CFR 1.311(a); MPEP 1306 [R-01.2024]. No 37 CFR 1.136(a)/(b) extension is available. Late payment = abandonment; only a 37 CFR 1.137 revival petition (unintentional delay) can restore the application."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -799,7 +751,6 @@ terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effec
     effort 25.hours
     cost 3_340.usd
     within broadening-reissue {
-      extendable false
       note "Two-year broadening window from the date of patent grant. Filing on the anniversary date is timely (MPEP 1403). After it closes, broadening reissue is gone FOREVER — an unextendable, irreversible forfeiture (flag mpep/broadening-window-closed)."
     }
     duration { min 109.5.days, mode 365.days, max 730.days }
@@ -839,7 +790,6 @@ terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effec
     effort 25.hours
     cost 3_670.usd
     within broadening-reissue {
-      extendable false
       note "Two-year broadening window from the date of patent grant. Filing on the anniversary date is timely (MPEP 1403). After it closes, broadening reissue is gone FOREVER — an unextendable, irreversible forfeiture (flag mpep/broadening-window-closed)."
     }
     duration { min 109.5.days, mode 365.days, max 730.days }

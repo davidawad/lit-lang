@@ -53,7 +53,7 @@ module a
 deadline answer-period: 21.days from Served(complaint) counted_by frcp6
 deadline reply: 3.business_days before Hearing() counted_by core.frcp6@2009-12-01
   effective [2009-12-01, ..) cite "FRCP 6" { note "x" }
-deadline later: 8.hours after Filed counted_by frcp6 { extendable true }
+deadline later: 8.hours after Filed counted_by frcp6 { extend { by court, discretion GoodCause } }
 
 ---
 
@@ -103,8 +103,9 @@ deadline later: 8.hours after Filed counted_by frcp6 { extendable true }
       (ref
         (identifier))
       (deadline_decl_opts
-        (deadline_opt
-          (boolean))))))
+        (capability
+          (identifier)
+          (identifier))))))
 
 ================================================================================
 Counting rules

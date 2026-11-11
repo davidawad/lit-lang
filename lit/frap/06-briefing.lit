@@ -100,8 +100,6 @@ decision appellant-brief-window: "Appellant's Opening Brief Due" by movant cite 
     effort 100.hours
     event PrincipalBriefFiled()
     within appellant-brief-period {
-      extendable true
-      extension_authority "FRAP 26(b); court discretion for good cause"
       note "Failure to file by day 40 (or the extended date) permits an appellee motion to dismiss for want of prosecution under FRAP 31(c), triggering a dismissal that is nearly impossible to revive."
     }
     duration { min 6.days, mode 20.days, max 40.days }
@@ -124,8 +122,6 @@ state appellant-brief-filed: "Opening Brief Filed" by movant cite "FRAP (2009 ed
     effort 90.hours
     event PrincipalBriefFiled()
     within appellee-brief-period {
-      extendable true
-      extension_authority "FRAP 26(b); court discretion for good cause"
       note "Appellee's failure to file within 30 days is grounds for default, but the appellee retains the right to oral argument by court permission even if the brief is late; missing this deadline is far less terminal than the appellant's miss."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -149,8 +145,6 @@ state appellee-brief-filed: "Appellee's Response Brief Filed" by movant cite "FR
     authority cite "FRAP (2009 ed.) 31(a)(1); FRAP (2009 ed.) 28(c)"
     effort 40.hours
     within reply-brief-period {
-      extendable true
-      extension_authority "FRAP 26(b); court discretion for good cause; FRAP 31(a)(1) requires filing at least 7 days before argument"
       note "Reply brief must be filed at least 7 days before oral argument (if scheduled) or risk rejection. Late reply briefs are rarely accepted; this is a cascading deadline that depends on the argument calendar, not a pure 21-day rule."
     }
     duration { min 3.1.days, mode 10.5.days, max 21.days }

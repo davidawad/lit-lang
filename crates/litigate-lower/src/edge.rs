@@ -113,7 +113,7 @@ fn unit(sink: &mut Sink, unit: DayUnit, span: Option<&Span>) -> Result<Option<St
     }
 }
 
-/// `within d` (from d's version in force, edge options winning) or a
+/// `within d` (from d's version in force) or a
 /// literal `deadline N.unit`. A designated `d` (SPEC §5.3) is a
 /// `designated` window, its amount the least time and never a `length`:
 /// the due date is each matter's notice's. `d`'s `extend` grants are its
@@ -190,17 +190,81 @@ fn deadline(
         extensions: declared
             .map(|x| x.extend.iter().map(extension).collect())
             .unwrap_or_default(),
-        extendable: d.extendable.or(declared.and_then(|x| x.extendable)),
-        extension_authority: d
-            .extension_authority
-            .clone()
-            .or_else(|| declared.and_then(|x| x.extension_authority.clone())),
+        extendable: declared.and_then(derived_extendable),
+        extension_authority: declared.and_then(derived_extension_authority),
         note: d
             .note
             .clone()
             .or_else(|| declared.and_then(|x| x.note.clone())),
         counting,
     })
+}
+
+/// A period is extendable when its typed grant or typed delegation permits
+/// an extension. A lone typed lock explicitly says it is not.
+fn derived_extendable(d: &hir::Deadline) -> Option<bool> {
+    extendability(&d.extend, &d.meta.delegations)
+}
+
+fn extendability(extensions: &[Extension], delegations: &[hir::Delegation]) -> Option<bool> {
+    if extensions.iter().any(|grant| grant.by().is_some())
+        || delegations.iter().any(|grant| {
+            grant
+                .ops
+                .iter()
+                .any(|op| matches!(op, hir::DelegatedOp::Extend | hir::DelegatedOp::Set))
+        })
+    {
+        Some(true)
+    } else if extensions
+        .iter()
+        .any(|grant| matches!(grant, hir::Extension::NonExtendable { .. }))
+    {
+        Some(false)
+    } else {
+        None
+    }
+}
+
+/// A cite on a typed delegation is the authority it names; otherwise use
+/// the deadline's cite. A lock carries its own forbidding authority.
+fn derived_extension_authority(d: &hir::Deadline) -> Option<String> {
+    extension_authority(&d.extend, &d.meta.delegations, d.meta.cite.as_deref())
+}
+
+fn extension_authority(
+    extensions: &[Extension],
+    delegations: &[hir::Delegation],
+    cite: Option<&str>,
+) -> Option<String> {
+    match extendability(extensions, delegations) {
+        None => return None,
+        Some(false) => {
+            let authorities: Vec<&str> = extensions
+                .iter()
+                .filter_map(|grant| match grant {
+                    hir::Extension::NonExtendable { authority, .. } => Some(authority.as_str()),
+                    _ => None,
+                })
+                .collect();
+            return (!authorities.is_empty()).then(|| authorities.join("; "));
+        }
+        Some(true) => {}
+    }
+    let delegated = delegations
+        .iter()
+        .filter(|grant| {
+            grant
+                .ops
+                .iter()
+                .any(|op| matches!(op, hir::DelegatedOp::Extend | hir::DelegatedOp::Set))
+        })
+        .filter_map(|grant| grant.cite.as_deref())
+        .collect::<Vec<_>>();
+    if !delegated.is_empty() {
+        return Some(delegated.join("; "));
+    }
+    cite.map(str::to_owned)
 }
 
 /// One `extend` grant as a pack extension bound.
@@ -240,6 +304,55 @@ fn extension(x: &Extension) -> ExtensionBound {
         Extension::NonExtendable { authority, .. } => ExtensionBound::NonExtendable {
             authority: authority.clone(),
         },
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn delegation(op: hir::DelegatedOp) -> hir::Delegation {
+        hir::Delegation {
+            to: "CaseOrder".to_owned(),
+            ops: vec![op],
+            max: None,
+            standard: None,
+            on: None,
+            cite: Some("FRCP 6(b)".to_owned()),
+        }
+    }
+
+    #[test]
+    fn extension_status_comes_from_typed_grants_and_delegations() {
+        let lock = Extension::NonExtendable {
+            authority: "FRCP 6(b)(2)".to_owned(),
+            against: Vec::new(),
+        };
+        assert_eq!(extendability(&[], &[]), None);
+        assert_eq!(extendability(&[lock], &[]), Some(false));
+        assert_eq!(
+            extendability(&[], &[delegation(hir::DelegatedOp::Extend)]),
+            Some(true)
+        );
+        assert_eq!(
+            extendability(&[], &[delegation(hir::DelegatedOp::Set)]),
+            Some(true)
+        );
+        assert_eq!(
+            extendability(&[], &[delegation(hir::DelegatedOp::Shorten)]),
+            None
+        );
+        let delegations = vec![
+            hir::Delegation {
+                cite: Some("shorten cite".to_owned()),
+                ..delegation(hir::DelegatedOp::Shorten)
+            },
+            delegation(hir::DelegatedOp::Extend),
+        ];
+        assert_eq!(
+            extension_authority(&[], &delegations, Some("fallback cite")).as_deref(),
+            Some("FRCP 6(b)")
+        );
     }
 }
 

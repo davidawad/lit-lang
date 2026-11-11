@@ -38,8 +38,6 @@ decision patent-owner-response-window: "Patent Owner Response Window" effective 
     event PatentOwnerResponseFiled()
     authority cite "37 CFR 42.120"
     within patent-owner-response-period {
-      extendable true
-      extension_authority "37 CFR 42.103; scheduling order"
       note "Missing the POR deadline (three months after institution unless the scheduling order sets another date) means the Board decides on an unrebutted record — the patent owner has forfeited its right to argue on the merits and will nearly certainly lose. An extension must be requested before the deadline expires."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -64,8 +62,6 @@ state patent-owner-response-filed: "Patent Owner Response Filed" by patent-owner
     authority cite "37 CFR 42.23(a)"
     effort 50.hours
     within petitioner-reply-period {
-      extendable true
-      extension_authority "37 CFR 42.103; scheduling order"
       note "Missing the petitioner reply deadline (3 months after the POR due date in the Trial Practice Guide's sample scheduling order) results in the reply not being entered or considered; the patent owner's arguments stand unrebutted."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -102,8 +98,6 @@ state petitioner-reply-brief: "Petitioner Reply Filed" effective [2021-01-08, ..
     event SurReplyFiled()
     authority cite "37 CFR 42.23(b)"
     within sur-reply-period {
-      extendable true
-      extension_authority "37 CFR 42.103; scheduling order"
       note "Missing the sur-reply deadline (6 weeks after the petitioner reply due date in the Trial Practice Guide's sample scheduling order) forecloses the patent owner's final opportunity to respond on the record before oral hearing or FWD; the rebuttal record closes."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -340,7 +334,6 @@ decision post-fwd-options: "Post-FWD Options" effective [2024-10-31, ..) unknown
     event RehearingRequested()
     authority cite "37 CFR 42.71(d)"
     within rehearing-period {
-      extendable false
       note "Missing the 30-day rehearing deadline forfeits the right to request panel rehearing. The Federal Circuit appeal window (63 days) then runs directly from the original FWD date."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -349,7 +342,6 @@ decision post-fwd-options: "Post-FWD Options" effective [2024-10-31, ..) unknown
     event DirectorReviewRequested()
     authority cite "37 C.F.R. § 42.75(c)"
     within director-review-period {
-      extendable false
       note "Missing the 30-day Director review request deadline forfeits the party's ability to petition for review, but the Director may still sua sponte initiate review. The Federal Circuit appeal window begins separately and is unaffected by missing this deadline."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -402,7 +394,6 @@ state rehearing-denied-affirmed: "Rehearing Denied — FWD Stands" effective [20
     event DirectorReviewRequested()
     authority cite "37 C.F.R. § 42.75(a)"
     within director-review-after-rehearing-period {
-      extendable false
       note "After a rehearing denial, a party may escalate to Director review within 30 days of the rehearing decision. Missing this deadline forfeits Director review eligibility (though the Director may still sua sponte review)."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -484,7 +475,6 @@ decision federal-circuit-window: "Federal Circuit Appeal Window" cite "35 U.S.C.
     authority cite "35 U.S.C. § 319; 37 CFR § 90.3(a)"
     cost 600.usd
     within appeal-period {
-      extendable false
       note "If the notice of appeal is not filed within 63 days of the Board's operative decision, the deadline expires with no remedy; the Board's decision becomes final and unreviewable, terminating all appellate rights."
     }
     duration { min 9.4.days, mode 31.5.days, max 63.days }
@@ -493,7 +483,6 @@ decision federal-circuit-window: "Federal Circuit Appeal Window" cite "35 U.S.C.
   edge-federal-circuit-window-appeal-forfeited-unappealed "Let the 63-day window lapse" -> appeal-forfeited-unappealed {
     authority cite "35 U.S.C. § 319; 37 CFR § 90.3(a)"
     within appeal-period {
-      extendable false
       note "Lapse of the 63-day window triggers automatic forfeiture of the right to appeal; no subsequent motion for reinstatement, late filing, or equitable relief is available. The decision becomes final and binding."
     }
     duration { min 9.4.days, mode 31.5.days, max 63.days }

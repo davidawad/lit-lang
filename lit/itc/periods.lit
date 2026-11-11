@@ -36,8 +36,6 @@ rule duty respond-to-complaint cite "cfr210.13.a"
     op set
   } cite "cfr210.13.a"
   {
-    extendable true
-    extension_authority "ALJ good-cause order (Rule 210.6(a))"
   }
 }
 
@@ -51,8 +49,6 @@ rule duty answer-interrogatories cite "cfr210.29.b.2"
     op set
   } cite "cfr210.29.b.2"
   {
-    extendable true
-    extension_authority "ALJ-specified period"
   }
 }
 
@@ -66,8 +62,6 @@ rule duty respond-to-production-requests cite "cfr210.30.b.2"
     op set
   } cite "cfr210.30.b.2"
   {
-    extendable true
-    extension_authority "ALJ-specified period"
   }
 }
 
@@ -81,8 +75,6 @@ rule duty answer-admission-requests cite "cfr210.31.b"
     op set
   } cite "cfr210.31.b"
   {
-    extendable true
-    extension_authority "ALJ-specified period"
   }
 }
 
@@ -96,8 +88,6 @@ rule duty move-to-quash cite "cfr210.32.d.2"
     op set
   } cite "cfr210.32.d.2"
   {
-    extendable true
-    extension_authority "ALJ-extended period"
   }
 }
 
@@ -111,8 +101,6 @@ rule duty log-privilege cite "cfr210.27.e.1"
     op set
   } cite "cfr210.27.e.1"
   {
-    extendable true
-    extension_authority "good cause"
   }
 }
 
@@ -130,8 +118,6 @@ rule duty file-public-version cite "cfr210.5.f"
     op set
   } cite "cfr210.5.f"
   {
-    extendable true
-    extension_authority "good cause"
   }
 }
 
@@ -145,8 +131,6 @@ rule duty oppose-summary-determination cite "cfr210.18.b"
     op set
   } cite "cfr210.18.b"
   {
-    extendable true
-    extension_authority "ALJ discretion"
   }
 }
 
@@ -161,8 +145,6 @@ rule duty petition-for-review cite "cfr210.43.a.1"
     op set
   } cite "cfr210.43.a.1"
   {
-    extendable true
-    extension_authority "good cause"
   }
 }
 
@@ -176,8 +158,6 @@ rule duty respond-to-petition cite "cfr210.43.c"
     op set
   } cite "cfr210.43.c"
   {
-    extendable true
-    extension_authority "good cause"
   }
 }
 
@@ -193,7 +173,6 @@ rule duty appeal-to-federal-circuit cite "usc1337.c"
   deadline federal-circuit-appeal-period: 60.days after DeterminationFinal() counted_by frap26 effective [1995-01-01, ..) cite "usc1337.c"
   {
     forum cafc
-    extendable false
     extend { never cite "FRAP 26(b)(2)" }
   }
 }

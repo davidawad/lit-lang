@@ -204,7 +204,7 @@ state discovery-conference: "Discovery conference held (Board attorney on reques
   edge-07-opposition-to-trial-initial-disclosures-1 "Serve initial disclosures" -> initial-disclosures {
     authority cite "37 CFR 2.120(a)(2)(ii)"
     effort 8.hours
-    within disclosure-period { extendable true, extension_authority "37 CFR 2.120(a)(2)(iv)" }
+    within disclosure-period {  }
     duration { min 30.days, mode 30.days, max 45.days }
     attrs { opp_hours: 8 }
   }
@@ -247,7 +247,7 @@ decision discovery-open: "Discovery open (180 days)" by respondent cite "37 CFR 
   edge-07-opposition-to-trial-discovery-closed-1 "Conduct discovery (written discovery, depositions, protective order)" -> discovery-closed {
     authority cite "37 CFR 2.120(a)(2)(i); 2.120(a)(3)"
     effort 35.hours
-    within discovery-period { extendable true, extension_authority "37 CFR 2.120(a)(2)(iv)" }
+    within discovery-period {  }
     duration { min 180.days, mode 180.days, max 270.days }
     tags [continue]
     attrs { opp_hours: 40 }

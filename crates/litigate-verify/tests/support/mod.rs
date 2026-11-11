@@ -36,8 +36,8 @@ pub fn pkg_with_sources(
     let identity = format!(
         "pack_id = \"{name}\"\nforum = \"demo\"\nauthority = \"{authority}\"\ntitle = \"Demo\"\n"
     );
-    let roles = "\n[package.roles]\nPlaintiff = \"self\"\nDefendant = \"opponent\"\n\
-                 Court = \"nature\"\n\n";
+    let roles = "\n[package.roles]\nplaintiff = \"self\"\ndefendant = \"opponent\"\n\
+                 court = \"nature\"\n\n";
     loaded(name, &format!("{identity}{roles}{sources}"), deps, lit)
 }
 
@@ -254,7 +254,10 @@ calendar federal cite "FRCP 6(a)(6)" historical
 
 rule duty answer-duty cite "FRCP 12(a)"
 {
-  deadline answer-period: 21.days from Served(complaint) counted_by frcp6
+  deadline answer-period: 21.days from Served(complaint) counted_by frcp6 cite "FRCP 12(a)"
+  {
+    extend { by court, discretion GoodCause }
+  }
 }
 
 state served: "Complaint served" by defendant cite "FRCP 12(a)"

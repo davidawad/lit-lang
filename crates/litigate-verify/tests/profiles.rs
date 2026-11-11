@@ -38,6 +38,37 @@ fn a_hole_warns_in_dev_and_fails_in_strict() {
 }
 
 #[test]
+fn a_missing_extension_grant_is_a_hole_in_both_profiles() {
+    let lit = edit(
+        "deadline answer-period: 21.days from Served(complaint) counted_by frcp6 cite \"FRCP 12(a)\"\n  {\n    extend { by court, discretion GoodCause }\n  }",
+        "deadline answer-period: 21.days from Served(complaint) counted_by frcp6 cite \"FRCP 12(a)\"",
+    );
+    let dev = verify_one(&lit, Profile::Dev);
+    let strict = verify_one(&lit, Profile::Strict);
+    let Some(litigate_lower::Document::Pack(pack)) =
+        dev.lowered.as_ref().map(|lowered| &lowered.document)
+    else {
+        panic!("expected a lowered pack: {dev:#?}")
+    };
+    assert!(pack.lowered.as_ref().is_some_and(|lowered| lowered
+        .holes
+        .iter()
+        .any(|hole| hole.pointer.ends_with("/deadline/extendable"))));
+    assert_eq!(
+        status(&dev, Obligation::Holes),
+        Some(ObligationStatus::Warning)
+    );
+    assert!(dev.verification.is_accepted());
+    assert!(codes(&dev).contains(&("L9002", Severity::Warning)));
+    assert_eq!(
+        status(&strict, Obligation::Holes),
+        Some(ObligationStatus::Failed)
+    );
+    assert!(!strict.verification.is_accepted());
+    assert!(codes(&strict).contains(&("L5002", Severity::Error)));
+}
+
+#[test]
 fn an_untested_rule_warns_in_dev_and_fails_in_strict() {
     let lit = with(
         "rule duty reply-duty cite \"FRCP 12(a)\"\n{\n  deadline reply-period: 14.days from \
@@ -98,7 +129,7 @@ fn profiles_never_change_counts_or_values() {
 fn a_clean_program_is_accepted_in_both_profiles() {
     for profile in [Profile::Dev, Profile::Strict] {
         let c = verify_one(BASE, profile);
-        assert!(c.verification.is_accepted(), "{profile:?}");
+        assert!(c.verification.is_accepted(), "{profile:?}: {c:#?}");
         assert!(c.verification.diagnostics.is_empty(), "{profile:?}");
         let skipped: Vec<Obligation> = c
             .verification

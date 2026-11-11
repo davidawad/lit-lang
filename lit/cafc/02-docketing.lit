@@ -26,7 +26,6 @@ state docketed: "Appeal Docketed at the Federal Circuit" by movant cite "FRAP 12
     cost 0.usd
     event Filed(EntryOfAppearance)
     within appearance-period {
-      extendable false
       note "14 days after docketing (counsel retained before docketing); 14 days after retention/bar admission if later."
     }
     tags [appeal]
@@ -43,8 +42,6 @@ state appearance-and-coi-filed: "Entry of Appearance & Certificate of Interest F
     cost 0.usd
     event Filed(DocketingStatement)
     within docketing-statement-period {
-      extendable true
-      extension_authority "Fed. Cir. R. 26(b)"
       note "14 days after the case is docketed. Except for unrepresented parties."
     }
   }

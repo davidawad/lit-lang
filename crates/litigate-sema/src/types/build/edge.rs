@@ -352,8 +352,33 @@ impl Cx<'_, '_> {
                 return None;
             }
         };
-        let opts = nested(f);
-        let opts = self.once(opts);
+        let raw_opts = nested(f);
+        for (i, option) in raw_opts.iter().enumerate().filter(|(_, option)| {
+            matches!(
+                option.key.text.as_str(),
+                "extendable" | "extension_authority"
+            )
+        }) {
+            let range =
+                raw_opts
+                    .get(i + 1)
+                    .map_or(option.range, |next| crate::db::span::TextRange {
+                        end: next.range.start,
+                        ..option.range
+                    });
+            self.report(
+                Report::new(
+                    C::InvalidField,
+                    option.key.range,
+                    format!(
+                        "edge deadline option `{}` duplicates the period's typed extension grant; declare it on the period",
+                        option.key.text
+                    ),
+                )
+                .fix(range, "", Applicability::MachineApplicable),
+            );
+        }
+        let opts = self.once(raw_opts);
         if within.is_some() {
             if let Some(counting) = opts.get("counting") {
                 self.not_allowed(

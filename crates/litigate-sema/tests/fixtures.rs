@@ -61,6 +61,44 @@ fn worked_example_hole_reasons_survive_the_sema_check() {
 }
 
 #[test]
+fn old_edge_extension_options_have_machine_applicable_removal_fixes() {
+    use litigate_base::{Applicability, DiagnosticCode};
+    use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
+
+    let source = include_str!("../../../lit/examples/rule12.lit").replace(
+        "within answer-period\n",
+        "within answer-period { extendable false, extension_authority \"FRCP 6(b)\" }\n",
+    );
+    let package = LoadedPackage {
+        texts: std::collections::BTreeMap::default(),
+        root: "lit/examples".to_owned(),
+        manifest: include_str!("../../../lit/examples/Lit.toml").to_owned(),
+        lock: None,
+        files: vec![LoadedFile {
+            relative: "rule12.lit".to_owned(),
+            text: source,
+        }],
+    };
+    let mut db = litigate_sema::LitDatabase::default();
+    let ws = litigate_sema::db::inputs::create_workspace(&mut db, &[package]);
+    let checks = litigate_sema::check_workspace(&db, ws);
+    let diagnostics: Vec<_> = checks[0]
+        .diagnostics
+        .iter()
+        .filter(|d| {
+            d.code == DiagnosticCode::InvalidField
+                && d.message.starts_with("edge deadline option `")
+        })
+        .collect();
+    assert_eq!(diagnostics.len(), 4, "{:#?}", checks[0].diagnostics);
+    assert!(diagnostics.iter().all(|d| {
+        d.fixes.len() == 1
+            && d.fixes[0].applicability == Applicability::MachineApplicable
+            && d.fixes[0].edits[0].replacement.is_empty()
+    }));
+}
+
+#[test]
 fn worked_example_lock_matches_and_round_trips() -> std::io::Result<()> {
     let repo = repo();
     let (db, ws) = litigate_sema::load(&repo, &[repo.join("lit/examples")], None)?;

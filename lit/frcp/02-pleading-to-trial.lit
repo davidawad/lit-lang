@@ -35,8 +35,6 @@ decision service-window: "Rule 4(m) Service Window" by plaintiff cite "FRCP 4(m)
     effort 3.hours
     cost 150.usd
     within service-period {
-      extendable true
-      extension_authority "FRCP 4(m) good-cause showing"
       note "90 days after filing. The court must extend for an appropriate period on a good-cause showing; absent good cause the court has discretion to extend or dismiss without prejudice."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -62,8 +60,6 @@ decision waiver-requested: "Waiver of Service Requested" by plaintiff cite "FRCP
     authority cite "FRCP 4(d)(3)"
     effort 1.hours
     within waiver-answer-period {
-      extendable true
-      extension_authority "FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"
       note "60 days after the waiver request was sent (90 days if sent to a defendant outside any U.S. judicial district) -- longer than the bare 21-day Rule 12(a)(1)(A)(i) clock, the incentive for waiving."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -87,8 +83,6 @@ decision service-completed: "Service of Process Completed" by plaintiff cite "FR
     authority cite "FRCP 12(a)(1)(A)(i)"
     effort 0.hours
     within answer-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
       note "21 days after service of the summons and complaint."
     }
     duration { min 3.1.days, mode 10.5.days, max 21.days }
@@ -119,7 +113,6 @@ decision removal-window: "Removal Window (Defendant's Election)" by defendant ef
     effort 6.hours
     cost 405.usd
     within removal-period {
-      extendable false
       note "30 days from formal service, running from service under Murphy Bros., Inc. v. Michetti Pipe Stringing, Inc., 526 U.S. 344 (1999), not from informal receipt. Not extendable by stipulation or court order."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -130,8 +123,6 @@ decision removal-window: "Removal Window (Defendant's Election)" by defendant ef
     authority cite "28 U.S.C. 1446(b)"
     effort 0.hours
     within answer-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
       note "The removal option itself is unextendable and lapses at 30 days; the underlying Rule 12(a)(1)(A)(i) response clock is unaffected by declining to remove."
     }
     duration { min 3.1.days, mode 10.5.days, max 21.days }
@@ -148,7 +139,6 @@ decision removed-to-federal: "Case Removed to Federal Court" by defendant cite "
     effort 10.hours
     cost 3_000.usd
     within remand-motion-period {
-      extendable false
       note "A motion to remand for a procedural defect must be made within 30 days after the notice of removal is filed; a motion (or the court's own initiative) based on lack of subject-matter jurisdiction has no outer time limit and may be raised at any time before final judgment."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -157,8 +147,6 @@ decision removed-to-federal: "Case Removed to Federal Court" by defendant cite "
     authority cite "FRCP 81(c)(2)"
     effort 0.hours
     within removed-answer-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
       note "Rule 81(c)(2) gives the longer of: time remaining under state practice, 21 days after receipt of the initial pleading, or 7 days after the removal notice is filed."
     }
     duration { min 3.1.days, mode 10.5.days, max 21.days }
@@ -176,8 +164,7 @@ chance remand-ruling: "Court Rules on Motion to Remand" by court discretion cite
   edge-remand-ruling-removed-response-window "Court denies remand -- federal forum retained" -> removed-response-window p 0.7 {
     authority cite "28 U.S.C. 1447(c)"
     within removed-answer-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
+
     }
     duration { min 3.1.days, mode 10.5.days, max 21.days }
   }
@@ -200,8 +187,6 @@ decision rule12-response-window: "Rule 12 Response Window" by defendant cite "FR
     effort 15.hours
     cost 4_000.usd
     within answer-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
       note "Baseline Rule 12(a)(1)(A)(i) clock -- see this node's own note for how the actual applicable length varies by entry path (waiver, removal, or a denied Rule 12 motion)."
     }
     duration { min 3.1.days, mode 10.5.days, max 21.days }
@@ -212,8 +197,6 @@ decision rule12-response-window: "Rule 12 Response Window" by defendant cite "FR
     effort 30.hours
     cost 8_000.usd
     within answer-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
       note "Modeled as a pre-answer appearance in the response window."
     }
     duration { min 3.1.days, mode 10.5.days, max 21.days }
@@ -224,8 +207,6 @@ decision rule12-response-window: "Rule 12 Response Window" by defendant cite "FR
     effort 30.hours
     cost 8_000.usd
     within answer-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
       note "Filing the motion extends the responsive-pleading deadline to 14 days after the court denies or postpones disposition (Rule 12(a)(4)(A))."
     }
     duration { min 3.1.days, mode 10.5.days, max 21.days }
@@ -261,8 +242,6 @@ decision waiver-response-window: "Rule 12 Response Window (Service Waived)" by d
     effort 15.hours
     cost 4_000.usd
     within waiver-answer-period {
-      extendable true
-      extension_authority "FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"
       note "60 days after the waiver request was sent (Rule 12(a)(1)(A)(ii))."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -273,8 +252,6 @@ decision waiver-response-window: "Rule 12 Response Window (Service Waived)" by d
     effort 30.hours
     cost 8_000.usd
     within waiver-answer-period {
-      extendable true
-      extension_authority "FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"
       note "Filing the motion extends the responsive-pleading deadline to 14 days after the court denies or postpones disposition (Rule 12(a)(4)(A))."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -297,8 +274,6 @@ decision removed-response-window: "Rule 12 Response Window (After Removal)" by d
     effort 15.hours
     cost 4_000.usd
     within removed-answer-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
       note "21 days after the defendant received the initial pleading (Rule 81(c)(2)(A))."
     }
     duration { min 3.1.days, mode 10.5.days, max 21.days }
@@ -309,8 +284,6 @@ decision removed-response-window: "Rule 12 Response Window (After Removal)" by d
     effort 30.hours
     cost 8_000.usd
     within removed-answer-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
       note "Filing the motion extends the responsive-pleading deadline to 14 days after the court denies or postpones disposition (Rule 12(a)(4)(A))."
     }
     duration { min 3.1.days, mode 10.5.days, max 21.days }
@@ -333,8 +306,6 @@ decision amended-response-window: "Rule 12 Response Window (Amended Pleading)" b
     effort 15.hours
     cost 4_000.usd
     within amended-response-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
       note "14 days after service of the amended pleading, or the time left on the original if later (Rule 15(a)(3))."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -345,8 +316,6 @@ decision amended-response-window: "Rule 12 Response Window (Amended Pleading)" b
     effort 30.hours
     cost 8_000.usd
     within amended-response-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
       note "Filing the motion extends the responsive-pleading deadline to 14 days after the court denies or postpones disposition (Rule 12(a)(4)(A))."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -391,8 +360,7 @@ chance mtd-ruling: "Court Rules on Motion to Dismiss" by court discretion cite "
   edge-mtd-ruling-answer-filed "Motion denied -- answer due within 14 days" -> answer-filed p 0.45 {
     authority cite "FRCP 12(a)(4)(A)"
     within denial-answer-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
+
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
   }
@@ -588,8 +556,6 @@ decision amendment-as-of-right-window: "Rule 15(a)(1) Amendment-as-of-Right Wind
     effort 8.hours
     cost 2_500.usd
     within amendment-as-of-course-period {
-      extendable true
-      extension_authority "FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"
       note "21 days after service of the responsive pleading, or 21 days after service of a Rule 12(b)/(e)/(f) motion, whichever is earlier. The court may extend it under FRCP 6(b)(1) (Rule 15(a)(1) is not on the 6(b)(2) list); missing it unextended forfeits the matter-of-course right, leaving consent or leave under Rule 15(a)(2)."
     }
     duration { min 3.1.days, mode 10.5.days, max 21.days }
@@ -614,8 +580,6 @@ state amended-complaint-filed: "Amended Complaint Filed" by court cite "FRCP 15(
   edge-amended-complaint-filed-amended-response-window "Responsive-pleading window reopens for the amended pleading" -> amended-response-window {
     authority cite "FRCP 15(a)(3)"
     within amended-response-period {
-      extendable true
-      extension_authority "FRCP 6(b) stipulation or court order"
       note "Response due within the time remaining to respond to the original pleading, or 14 days after service of the amended pleading, whichever is LATER."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -685,8 +649,6 @@ state rule26f-conference: "Rule 26(f) Conference" by plaintiff cite "FRCP 26(f);
     authority cite "FRCP 26(f)(1); 26(f)(2)"
     effort 6.hours
     within initial-disclosure-period {
-      extendable true
-      extension_authority "court order"
       note "Initial disclosures due at or within 14 days after the Rule 26(f) conference unless the parties stipulate or the court sets a different time."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -1026,8 +988,6 @@ decision jury-demand-decision: "Jury Demand Window" by plaintiff cite "FRCP 38(b
     effort 0.5.hours
     cost 0.usd
     within jury-demand-period {
-      extendable true
-      extension_authority "FRCP 6(b) good cause"
       note "14 days after the last pleading directed to the issue is served."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }

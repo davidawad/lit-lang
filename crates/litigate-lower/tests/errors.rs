@@ -66,6 +66,7 @@ fn only(pkg: &hir::Package, code: C, needle: &str) {
 #[test]
 fn business_day_edge_deadlines_lower_to_the_business_unit() {
     let mut business = example();
+    let holes_before = deadline_holes(&business);
     node(&mut business, "respond").edges[2].deadline = Some(hir::EdgeDeadline {
         window: DeadlineWindow::Inline {
             length: 3,
@@ -83,6 +84,7 @@ fn business_day_edge_deadlines_lower_to_the_business_unit() {
             .as_ref()
             .is_some_and(|deadline| deadline.unit.as_deref() == Some("business"))
     }));
+    assert_eq!(deadline_holes(&business), holes_before);
 }
 
 #[test]
@@ -266,10 +268,11 @@ fn a_designated_deadline_lowers_to_a_designated_window() {
                 })),
         "{found:#?}"
     );
-    // Its extension lowers as a counted window's does: what the source
-    // states, edge options winning; nothing stated is undeclared (absent),
-    // never not-extendable, and no hole stands in for it.
-    assert_eq!(deadline_holes(&p), Vec::<(String, String)>::new());
+    // This example period has no typed extension grant, delegation or lock:
+    // its missing status is explicit as a hole, never inferred false.
+    assert!(deadline_holes(&p)
+        .iter()
+        .any(|(_, reason)| reason.contains("neither a typed `extend`")));
     assert!(found.iter().all(|d| d.extendable.is_none()));
     for d in decls(&mut p) {
         match d {
@@ -292,15 +295,40 @@ fn a_designated_deadline_lowers_to_a_designated_window() {
     }
     let found = deadlines(&p);
     assert!(
-        found.iter().all(|d| d.extendable == Some(false)
-            && d.extension_authority.as_deref() == Some("Rule X")
+        found.iter().all(|d| d.extendable.is_none()
+            && d.extension_authority.as_deref() != Some("Rule X")
             && d.designated
                 .as_ref()
                 .and_then(|x| x.interpretation.as_deref())
                 == Some("no start named")),
         "{found:#?}"
     );
-    assert_eq!(deadline_holes(&p), Vec::<(String, String)>::new());
+    assert!(deadline_holes(&p)
+        .iter()
+        .any(|(_, reason)| reason.contains("neither a typed `extend`")));
+}
+
+#[test]
+fn a_typed_extension_grant_derives_edge_extension_fields() {
+    let mut p = example();
+    for d in decls(&mut p) {
+        if let Declaration::Deadline(x) = d {
+            x.meta.cite = Some("FRCP 12(a)(1)(A)(i)".into());
+            x.extend.push(hir::Extension::Discretionary {
+                by: "court".into(),
+                standard: hir::CauseStandard::GoodCause,
+                window: hir::ExtensionWindow::BeforeExpiry,
+                motion: None,
+                interpretation: None,
+            });
+        }
+    }
+    let found = deadlines(&p);
+    assert!(found.iter().all(|d| d.extendable == Some(true)));
+    assert!(found
+        .iter()
+        .all(|d| d.extension_authority.as_deref() == Some("FRCP 12(a)(1)(A)(i)")));
+    assert!(deadline_holes(&p).is_empty());
 }
 
 /// The motion event pattern `Moved(answer)`.

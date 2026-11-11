@@ -21,14 +21,12 @@ state custody: "In custody under a final judgment" by movant cite "28 U.S.C. § 
   edge-custody-state-petition "File a § 2254 petition" -> preliminary-review {
     authority cite "28 U.S.C. § 2244(d)(1); 2254 Rule 3(c)"
     within state-petition-limitation {
-      extendable false
       note "The statute states no extension; the § 2244(d)(2) exclusion is not modeled, so a pending state application makes the true last day later than the counted one. An inmate's paper is timely if deposited in the institution's internal mailing system on or before the last day (2254 Rule 3(d))."
     }
   }
   edge-custody-federal-motion "File a § 2255 motion" -> preliminary-review {
     authority cite "28 U.S.C. § 2255(f); 2255 Rule 3(c)"
     within federal-motion-limitation {
-      extendable false
       note "The statute states no extension. An inmate's paper is timely if deposited in the institution's internal mailing system on or before the last day (2255 Rule 3(d))."
     }
   }
@@ -46,7 +44,6 @@ decision authorization: "Court of appeals rules on authorization" by court cite 
   edge-authorization-granted "Authorized" -> preliminary-review {
     authority cite "28 U.S.C. § 2244(b)(3)(C)"
     within successive-authorization-ruling {
-      extendable false
       note "The court of appeals' own period; the statute states no consequence of a later ruling."
     }
   }

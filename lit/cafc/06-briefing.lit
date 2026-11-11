@@ -18,8 +18,6 @@ decision appellant-brief-window: "Appellant's Principal Brief Due" by movant cit
     cost 0.usd
     event BriefServed(Principal)
     within appellant-brief-period {
-      extendable true
-      extension_authority "Fed. Cir. R. 26(b)"
       note "60 days after docketing (court appeal) or service of the certified list/index (agency appeal)."
     }
     tags [appeal, dispositive]
@@ -37,8 +35,6 @@ state appellant-brief-filed: "Opening Brief Filed" by appellee cite "Fed. Cir. R
     effort 200.hours
     event BriefServed(Response)
     within appellee-brief-period {
-      extendable true
-      extension_authority "Fed. Cir. R. 26(b)"
       note "40 days after the appellant's brief is served (this court's local extension of the FRAP 31(a)(1) default 30 days)."
     }
   }
@@ -62,8 +58,6 @@ state appellee-brief-filed: "Appellee's Principal/Response Brief Filed" by movan
     cost 0.usd
     event Filed(ReplyBrief)
     within reply-brief-period {
-      extendable true
-      extension_authority "Fed. Cir. R. 26(b)"
       note "21 days after service of the appellee's brief, but must be filed at least 7 days before oral argument absent good cause."
     }
   }
@@ -89,8 +83,6 @@ state briefing-complete: "Briefing Closed" by movant cite "Fed. Cir. R. 31"
     cost 6_000.usd
     event Filed(JointAppendix)
     within appendix-period {
-      extendable true
-      extension_authority "Fed. Cir. R. 26(b)"
       note "7 days after the last reply brief is served and filed (or, if no reply brief, within the time the reply brief would have been due). Failure to file authorizes the clerk to dismiss the case (Fed. Cir. R. 30(a)(5))."
     }
     tags [appeal]

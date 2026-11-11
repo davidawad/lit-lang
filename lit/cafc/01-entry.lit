@@ -44,8 +44,6 @@ state entry-district-court: "District Court Patent Judgment Entered" by movant c
     cost 605.usd
     event Filed(NoticeOfAppeal)
     within district-court-noa-period {
-      extendable true
-      extension_authority "FRAP 4(a)(5) (up to 30 additional days, excusable neglect/good cause)"
       note "30 days; 60 days if the United States or a U.S. officer/agency/employee is a party (FRAP 4(a)(1)(B)). Jurisdictional under Bowles v. Russell, 551 U.S. 205 (2007) as applied by the regional circuits and this court alike; 28 U.S.C. § 2107."
     }
     tags [appeal]
@@ -65,8 +63,6 @@ state entry-ptab: "PTAB Final Written Decision (or Operative Post-FWD Decision)"
     cost 600.usd
     event Filed(NoticeOfAppeal)
     within ptab-noa-period {
-      extendable true
-      extension_authority "37 C.F.R. § 90.3(c) (Director may extend on a timely, good-cause request filed before expiration, or post-expiration on a showing of excusable neglect)"
       note "63 days after the date of the final Board decision (or 63 days after action on a timely rehearing request). Filed with the Director, not directly with the Federal Circuit clerk — mirrors ptab-patent-trial-appeal-board.json's federal-circuit-window node, modeled here as the CAFC-side counterpart."
     }
     tags [appeal]
@@ -86,7 +82,6 @@ state entry-itc: "ITC Final Determination — Presidential (USTR) Review Period 
     cost 600.usd
     event Filed(NoticeOfAppeal)
     within itc-noa-period {
-      extendable false
       note "60 days, unextendable per 19 U.S.C. § 1337(c) — mirrors itc-337.json's appeal-filed edge (flag itc337/fedcir-appeal-forfeited on a miss)."
     }
     tags [appeal]
@@ -106,8 +101,6 @@ state entry-cofc: "Court of Federal Claims Judgment Entered" by movant cite "28 
     cost 605.usd
     event Filed(NoticeOfAppeal)
     within cofc-noa-period {
-      extendable true
-      extension_authority "FRAP 4(a)(5) (up to 30 additional days, excusable neglect/good cause)"
       note "60 days after CoFC entry of judgment — the United States is necessarily a party to every CoFC judgment, so the FRAP 4(a)(1)(B) 60-day (not 30-day) period governs as a matter of course. Jurisdictional; cannot be waived even for excusable neglect in most circumstances."
     }
     note "Docketing fee for a CoFC-origin appeal is not separately itemized on the CAFC fee schedule reviewed (which lists 'appeal from a district court' at $605 and 'petition for review' at $600); $605 used here as a reasonable proxy since both are Judicial-Conference-set fees under 28 U.S.C. § 1913 collected on filing the notice of appeal — UNVERIFIED to the exact cent."
@@ -167,8 +160,6 @@ state entry-ttab: "TTAB Final Decision (Opposition, Cancellation or Ex Parte App
     effort 4.hours
     event Filed(NoticeOfAppeal)
     within ttab-noa-period {
-      extendable true
-      extension_authority "37 C.F.R. § 2.145(e) (Director may extend on good cause if requested before expiry, or on excusable neglect if requested after)"
       note "63 days after the final TTAB decision (or after action on a timely request for reconsideration). Filed with the Director, then docketed at the Federal Circuit. A cross-appeal may be filed within 14 days after service of the notice of appeal or 63 days, whichever is later. Notice-of-appeal fee not modeled (UNVERIFIED)."
     }
     tags [appeal]

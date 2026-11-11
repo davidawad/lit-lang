@@ -238,9 +238,6 @@ module.exports = {
   deadline_opts: $ => braced($.deadline_opt),
 
   deadline_opt: $ => choice(
-    seq(field('key', 'extendable'), field('value', $.boolean)),
-    // A hole leaves the extension authority undeclared (SPEC §3.1).
-    seq(field('key', 'extension_authority'), field('value', choice($.string, $.hole))),
     seq(field('key', choice('note', 'counting')), field('value', $.string)),
   ),
 

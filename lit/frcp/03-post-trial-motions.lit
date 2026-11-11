@@ -31,8 +31,6 @@ decision final-judgment-entered: "Final Judgment Entered" by plaintiff cite "FRC
     event FeeMotionFiled()
     effort 15.hours
     within fee-motion-period {
-      extendable true
-      extension_authority "FRCP 6(b)(1): on a stipulated request or motion, or by the court"
       note "14 days after entry of judgment unless a statute or court order provides otherwise."
     }
     note "A collateral filing: it discharges the fee clock and leaves the post-judgment posture where it is, so the motion and appeal clocks run on (lit/frcp/fees.lit). It carries the motion's hours, and is filed once."
@@ -60,7 +58,6 @@ decision post-trial-motion-window: "Post-Trial Motion Window" by plaintiff cite 
     effort 30.hours
     cost 8_000.usd
     within jmol-renewal-period {
-      extendable false
       note "28 days after entry of judgment. Rule 6(b)(2) forbids any extension of this deadline."
     }
     duration { min 4.2.days, mode 14.days, max 28.days }
@@ -70,7 +67,6 @@ decision post-trial-motion-window: "Post-Trial Motion Window" by plaintiff cite 
     effort 25.hours
     cost 8_000.usd
     within new-trial-period {
-      extendable false
       note "28 days after entry of judgment. Rule 6(b)(2) forbids any extension of this deadline."
     }
     duration { min 4.2.days, mode 14.days, max 28.days }
@@ -80,7 +76,6 @@ decision post-trial-motion-window: "Post-Trial Motion Window" by plaintiff cite 
     effort 20.hours
     cost 6_000.usd
     within alter-amend-period {
-      extendable false
       note "28 days after entry of judgment. Excluded from Rule 6(b) extension entirely -- no good-cause or excusable-neglect relief is available."
     }
     duration { min 4.2.days, mode 14.days, max 28.days }
@@ -90,7 +85,6 @@ decision post-trial-motion-window: "Post-Trial Motion Window" by plaintiff cite 
     effort 25.hours
     cost 7_000.usd
     within relief-from-judgment-period {
-      extendable false
       note "Grounds (1)-(3) (mistake, newly discovered evidence, fraud) must be raised within a reasonable time and no more than one year after entry of judgment; grounds (4)-(6) require only a reasonable time with no fixed outer cap."
     }
     duration { min 54.8.days, mode 182.5.days, max 365.days }
@@ -105,8 +99,6 @@ decision post-trial-motion-window: "Post-Trial Motion Window" by plaintiff cite 
     event FeeMotionFiled()
     effort 15.hours
     within fee-motion-period {
-      extendable true
-      extension_authority "FRCP 6(b)(1): on a stipulated request or motion, or by the court"
       note "14 days after entry of judgment unless a statute or court order provides otherwise."
     }
     note "A collateral filing: it discharges the fee clock and leaves the post-judgment posture where it is, so the motion and appeal clocks run on (lit/frcp/fees.lit). It carries the motion's hours, and is filed once."

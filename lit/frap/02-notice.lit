@@ -75,8 +75,6 @@ decision appeal-clock-open: "Notice of Appeal Window Open" by movant cite "FRAP 
     effort 4.hours
     cost 605.usd
     within notice-civil-period {
-      extendable false
-      extension_authority "FRAP 4(a)(5) (may extend up to 30 additional days only via motion before expiration)"
       note "If notice is not filed within 30 days, the appeal is untimely. Under Bowles, no equitable exception or late filing is permitted — appellate jurisdiction is lost permanently and cannot be restored."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -88,8 +86,6 @@ decision appeal-clock-open: "Notice of Appeal Window Open" by movant cite "FRAP 
     effort 4.hours
     cost 605.usd
     within notice-us-party-period {
-      extendable false
-      extension_authority "FRAP 4(a)(5) (may extend up to 30 additional days only via motion before expiration)"
       note "When the U.S., a U.S. agency, or an officer acting in official capacity is a party, the deadline is 60 days. Missing this deadline forecloses appellate jurisdiction entirely under 28 U.S.C. § 2107."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -101,8 +97,6 @@ decision appeal-clock-open: "Notice of Appeal Window Open" by movant cite "FRAP 
     effort 4.hours
     cost 605.usd
     within notice-criminal-period {
-      extendable false
-      extension_authority "FRAP 4(b)(4) (may be extended for excusable neglect or good cause, subject to Bowles jurisdictional limit)"
       note "Criminal defendants have only 14 days to file notice of appeal. A late notice — even one day late — is untimely and strips appellate jurisdiction; no exception for prosecutor's error or trial counsel's mistake."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -113,8 +107,6 @@ decision appeal-clock-open: "Notice of Appeal Window Open" by movant cite "FRAP 
     authority cite "FRAP (2009 ed.) 4(a)(4)(A); FRCP 50(b), 59(e), 60(b)(2)"
     effort 8.hours
     within tolling-motion-period {
-      extendable false
-      extension_authority "FRCP 6(b) may extend the tolling-motion deadline by up to 28 days total (only for FRCP 50(b), 59(e), 60(b) motions)"
       note "Tolling motions must be filed within the FRCP deadline (e.g., 28 days for a FRCP 59(e) motion for new trial). A tolling motion filed even one day late does not restart the appeal clock."
     }
     duration { min 4.2.days, mode 14.days, max 28.days }
@@ -130,8 +122,6 @@ decision appeal-clock-open: "Notice of Appeal Window Open" by movant cite "FRAP 
     authority cite "FRAP (2009 ed.) 4(a)(5)(A)"
     effort 10.hours
     within notice-civil-period {
-      extendable true
-      extension_authority "FRAP 4(a)(5)(A) (court may extend if motion filed before deadline expires); FRAP 4(a)(6) (may reopen for 14 days if lack of notice of entry)"
       note "A party may file a motion to extend time to appeal before the deadline expires. The district court may grant up to 30 additional days for excusable neglect or good cause. A motion filed after the deadline expires may only invoke FRAP 4(a)(6) (reopening)."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -167,8 +157,6 @@ state tolling-motion-disposed: "Tolling Motion Disposed" by court cite "FRAP (20
   edge-tolling-motion-disposed-appeal-clock-open "Appeal clock restarts from disposition" -> appeal-clock-open {
     authority cite "FRAP (2009 ed.) 4(a)(4)(A)"
     within notice-civil-period {
-      extendable false
-      extension_authority "FRAP 4(a)(5) (extension may apply to the restarted deadline)"
       note "The full appeal period runs anew from the date the order disposing of the last tolling motion is entered. A new 30-day clock (or 60-day if U.S. party) begins; missing this deadline is fatal."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }

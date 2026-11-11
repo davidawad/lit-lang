@@ -218,6 +218,7 @@ impl DiagnosticCode {
     #[must_use]
     pub const fn severity(self, profile: Profile) -> Severity {
         match (self, profile) {
+            #[allow(clippy::match_same_arms)]
             (Self::NumericProvenanceIncomplete, _) => Severity::Warning,
             (
                 Self::AnonymousEdge

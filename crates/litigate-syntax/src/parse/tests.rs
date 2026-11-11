@@ -41,6 +41,26 @@ fn codes(parsed: &super::Parse) -> Vec<&'static str> {
 
 #[test]
 fn numeric_provenance_parses_for_probability_payoff_duration_cost_and_effort() {
+    let bases = [
+        "basis calibrated(cal)",
+        "basis sourced(\"FRCP 1\")",
+        "basis estimate vintage 2026-01-01",
+        "basis placeholder vintage 2026-01-01",
+    ];
+    let forms = [
+        ("payoff", "terminal t: \"T\" { payoff 1.usd {suffix} }"),
+        ("p", "decision d: \"D\" { \"go\" -> t p 0.5 {suffix} }"),
+        ("duration", "decision d: \"D\" { \"go\" -> t { duration 4.days {suffix} } }"),
+        ("cost", "decision d: \"D\" { \"go\" -> t { cost 2.usd {suffix} } }"),
+        ("effort", "decision d: \"D\" { \"go\" -> t { effort 3.hours {suffix} } }"),
+    ];
+    for (kind, template) in forms {
+        for basis in bases {
+            let line = template.replace("{suffix}", basis);
+            let parsed = parse_lit(&format!("module m\n{line}\n"));
+            assert!(parsed.is_ok(), "{kind} {basis}: {:?}", parsed.errors());
+        }
+    }
     let parsed = parse_lit(concat!(
         "module m\n",
         "terminal t: \"terminal\" { payoff 1.usd basis placeholder vintage 2026-01-01 }\n",

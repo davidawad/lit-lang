@@ -106,7 +106,7 @@ impl Lower {
             let atom = match child.kind() {
                 K::FieldList => Some(Atom::Fields(self.field_list(&child))),
                 K::Interval => interval(&child).map(|(from, to)| Atom::Interval(from, to)),
-                K::NumericProvenance => numeric_provenance(&child).map(Atom::NumericProvenance),
+                K::NumericProvenance => Some(Atom::NumericProvenance(numeric_provenance(&child))),
                 _ => self.expr(&child).map(Atom::Expr),
             };
             values.push((atom?, r));
@@ -169,7 +169,7 @@ impl Lower {
     }
 }
 
-fn numeric_provenance(node: &SyntaxNode) -> Option<super::tree::NumericProvenance> {
+fn numeric_provenance(node: &SyntaxNode) -> super::tree::NumericProvenance {
     use super::tree::{Name, NumericBasis, NumericProvenance};
     let tokens: Vec<_> = node
         .descendants_with_tokens()
@@ -194,7 +194,7 @@ fn numeric_provenance(node: &SyntaxNode) -> Option<super::tree::NumericProvenanc
     } else {
         None
     };
-    Some(NumericProvenance { basis, vintage: named(K::Date) })
+    NumericProvenance { basis, vintage: named(K::Date) }
 }
 
 /// A plain identifier as a reference expression.

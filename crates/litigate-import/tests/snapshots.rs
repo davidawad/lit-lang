@@ -141,14 +141,14 @@ fn unrepresentable_values_are_l6002_with_their_json_pointer() {
 #[test]
 fn invalid_documents_are_reported_at_their_position() {
     let inputs = [
+        Input::new("packs/q.json", pack_with(|p| p["id"] = json!("q")).text),
         Input::new("packs/broken.json", "{\"nodes\": [}"),
         Input::new("packs/other.json", "{\"hello\": 1}"),
         pack_with(|p| p["edges"][0]["replaces"] = json!(["x::y"])),
-        Input::new("packs/q.json", pack_with(|p| p["id"] = json!("q")).text),
         Input::new(
             "scenarios/start.json",
-            json!({"id": "start", "summary": "S", "packs": ["p"], "sources": [{"title": "T", "as_of": "x"}],
-                   "scenario": {"start": "p::s"}})
+            json!({"id": "start", "summary": "S", "packs": ["q"], "sources": [{"title": "T", "as_of": "x"}],
+                   "scenario": {"start": "q::a"}})
             .to_string(),
         ),
     ];

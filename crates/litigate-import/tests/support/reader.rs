@@ -211,6 +211,24 @@ fn edge_object(node: &SyntaxNode, default_actor: &str) -> Map<String, Value> {
         .find_map(|e| e.into_token().filter(|t| t.kind() == SyntaxKind::Ident));
     if let Some(id) = id {
         out.insert("id".into(), json!(id.text()));
+    } else if node.kind() == SyntaxKind::EdgeDecl {
+        // sema derives ids only for node edges. A link's name is optional
+        // but its endpoints identify a shared link, not a local edge id.
+        let target = node.children().find(|n| n.kind() == SyntaxKind::Ref)
+            .map(|r| text_of(&r));
+        let edge_block = node.parent();
+        let declaration = edge_block.as_ref().and_then(SyntaxNode::parent);
+        if let (Some(target), Some(edge_block), Some(declaration)) = (target, edge_block, declaration) {
+            let from = declaration.children_with_tokens().find_map(|e| e.into_token()
+                .filter(|t| t.kind() == SyntaxKind::Ident)).map(|t| t.text().to_owned());
+            let related: Vec<_> = edge_block.children().filter(|e| e.kind() == SyntaxKind::EdgeDecl)
+                .filter(|e| e.children().find(|n| n.kind() == SyntaxKind::Ref)
+                    .is_some_and(|r| text_of(&r) == target)).collect();
+            let ordinal = related.iter().position(|e| e.text_range() == node.text_range()).map(|i| i + 1);
+            if let (Some(from), Some(ordinal)) = (from, ordinal) {
+                out.insert("id".into(), json!(litigate_syntax::derived_edge_id(&from, &target, ordinal, related.len() > 1)));
+            }
+        }
     }
     let label = node
         .children_with_tokens()

@@ -343,8 +343,6 @@ Type         = Ident, [ "<", Type, { ",", Type }, ">" ] | RefinedType ;   (* Ref
 An omitted edge id derives as `edge-<from>-<to>`, with `-<n>` appended
 when parallel edges share the target, where `n` is the edge's one-based
 source-order position among all edges from that node to that target.
-An explicit id is retained even when it equals that derived spelling; a
-pack may use the explicit value as a referenced id.
 
 ### 3.2 Matters (`.case`)
 
@@ -1212,8 +1210,8 @@ compute the same values (before 1.0.0, `^` and `~` coincide).
   `edge-<from>-<to>-N`, where `N` is its one-based position among those
   edges in source order. This disambiguation is local to a node declaration.
   The id is present in lowered output and can be referenced like any other
-  edge id. An explicit id is retained even when it equals this result, so
-  imported pack ids and references round-trip without being rewritten.
+  edge id. An explicit id that equals this result is redundant and the
+  formatter removes it; a different explicit id is retained.
 - Tags `entry` (an extra root for reachability) and `fact` (a matter fact,
   allowed only on `chance`, L2007) carry meaning. All other tags are opaque.
 - `group` must name a declared group (L1002).

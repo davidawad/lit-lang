@@ -77,6 +77,7 @@ impl Builder {
             }
             return;
         }
+        let redundant_edge_id = redundant_edge_id(node);
         let children: Vec<Element> = node.children_with_tokens().collect();
         let mut index = 0;
         while index < children.len() {
@@ -86,6 +87,8 @@ impl Builder {
                     index = self.block(node, &children, index);
                     continue;
                 }
+                NodeOrToken::Token(token)
+                    if redundant_edge_id.is_some_and(|id| id == token.text_range()) => {}
                 NodeOrToken::Token(token) => self.token(token),
             }
             index += 1;
@@ -206,6 +209,48 @@ impl Builder {
         self.after_cite = false;
         open + 1 + close + 1
     }
+}
+
+/// The id token of a node edge when it spells the canonical derived id.
+/// Parallel edges are numbered from one in source order.
+fn redundant_edge_id(node: &SyntaxNode) -> Option<rowan::TextRange> {
+    if node.kind() != EdgeDecl {
+        return None;
+    }
+    let id = node
+        .children_with_tokens()
+        .filter_map(NodeOrToken::into_token)
+        .find(|token| token.kind() == Ident)?;
+    let target = node
+        .children()
+        .find(|child| child.kind() == Ref)?
+        .last_token()?
+        .text()
+        .to_owned();
+    let edge_block = node.parent()?;
+    let declaration = edge_block.parent()?;
+    let from = declaration
+        .children_with_tokens()
+        .filter_map(NodeOrToken::into_token)
+        .find(|token| token.kind() == Ident)?
+        .text()
+        .to_owned();
+    let target_of = |edge: &SyntaxNode| {
+        edge.children()
+            .find(|child| child.kind() == Ref)
+            .and_then(|r| r.last_token())
+            .map(|t| t.text().to_owned())
+    };
+    let same_target: Vec<_> = edge_block
+        .children()
+        .filter(|edge| edge.kind() == EdgeDecl && target_of(edge).as_deref() == Some(&target))
+        .collect();
+    let ordinal = same_target
+        .iter()
+        .position(|edge| edge.text_range() == node.text_range())?
+        + 1;
+    let expected = crate::derived_edge_id(&from, &target, ordinal, same_target.len() > 1);
+    (id.text() == expected).then_some(id.text_range())
 }
 
 /// True when nothing but trivia follows `token` in its parent node: the

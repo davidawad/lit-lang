@@ -124,6 +124,45 @@ fn outcome_stakes_expand_tags_and_keep_terminal_overrides_exhaustive() {
 }
 
 #[test]
+fn outcome_stakes_do_not_cover_an_untagged_terminal_without_an_entry() {
+    let mut packages = examples().to_vec();
+    for module in &mut packages[0].modules {
+        for declaration in &mut module.declarations {
+            if let litigate_sema::hir::Declaration::Node(node) = declaration {
+                if node.meta.id.rsplit("::").next() == Some("dismissed") {
+                    if let NodeKind::Terminal {
+                        outcomes, payoff, ..
+                    } = &mut node.kind
+                    {
+                        outcomes.clear();
+                        *payoff = None;
+                    }
+                }
+            }
+        }
+    }
+    let lock = lock(&packages);
+    let text = edited(&[(
+        "stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd }",
+        "stakes { outcome loss: -2_000_000.usd }",
+    )]);
+    let checked = check_with(
+        &text,
+        &packages,
+        Some(&lock),
+        examples_clock(),
+        Profile::Dev,
+    );
+    assert!(
+        checked.diagnostics.iter().any(|diagnostic| {
+            diagnostic.code.as_str() == "L4004" && diagnostic.message.contains("dismissed")
+        }),
+        "{:#?}",
+        render(&checked.diagnostics)
+    );
+}
+
+#[test]
 fn conflicting_outcome_stakes_name_both_tags_and_allow_an_explicit_override() {
     let mut packages = examples().to_vec();
     for module in &mut packages[0].modules {

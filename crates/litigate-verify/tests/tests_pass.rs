@@ -69,6 +69,50 @@ fn counting_insensitive_lint_fires_on_weekdays_and_clears_on_a_rolled_boundary()
         .any(|d| d.code.as_str() == "L9011"));
 }
 
+#[test]
+fn l9011_fix_is_machine_applicable_and_generates_a_passing_counting_test() {
+    let source = BASE.replace(
+        "test \"mail service adds three days\" cite \"FRCP 6(d)\"\n{\n  given Served(complaint, Mail) on 2025-03-03\n  expect deadline(answer-period) == 2025-03-27\n}\n",
+        "",
+    );
+    let checked = verify_one(&source, Profile::Strict);
+    let diagnostic = checked
+        .verification
+        .diagnostics
+        .iter()
+        .find(|d| d.code.as_str() == "L9011")
+        .expect("L9011");
+    let fix = diagnostic.fixes.first().expect("boundary fix");
+    assert_eq!(
+        fix.applicability,
+        litigate_base::Applicability::MachineApplicable
+    );
+    let replacement = &fix.edits[0].replacement;
+    assert!(!replacement.contains('<'));
+    assert!(replacement.contains("naive") == false);
+    let mut applied = source.clone();
+    applied.push_str(replacement);
+    let checked = verify_one(&applied, Profile::Strict);
+    assert!(!checked
+        .verification
+        .diagnostics
+        .iter()
+        .any(|d| d.code.as_str() == "L9011"));
+    assert_eq!(
+        outcome(&checked, Obligation::TestsPass)
+            .finding
+            .map(|finding| finding.status),
+        Some(ObligationStatus::Passed)
+    );
+    let fixes_again = checked
+        .verification
+        .diagnostics
+        .iter()
+        .filter(|d| !d.fixes.is_empty())
+        .count();
+    assert_eq!(fixes_again, 0);
+}
+
 tests_pass!(
     the_latest_matching_given_triggers_a_latest_policy_deadline,
     Passed,

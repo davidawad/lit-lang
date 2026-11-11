@@ -76,13 +76,15 @@ fn insensitive_deadline(cx: &Context<'_>, x: &hir::Deadline) -> (String, Diagnos
         span.clone(),
         format!("every test of deadline `{id}` has the same date under plain calendar addition as under counting rule `{}`", cx.local(&x.counting)),
     );
-    let fix = format!("\n\ntest \"{id} counting rule boundary\" {{\n  given <trigger event> on <date chosen so the naive due date is closed>\n  expect deadline({id}) == <date computed by the counting rule>\n  cite \"<counting rule cite>\"\n}}\n");
     let mut d = d;
-    d.fixes.push(Fix::single(
-        end_of(&span),
-        fix,
-        Applicability::HasPlaceholders,
-    ));
+    match crate::assertions::counting_boundary(cx, x) {
+        Ok(Some((fix, compared))) => {
+            d.message = format!("{}; generated boundary test compares {compared}", d.message);
+            d.fixes.push(Fix::single(end_of(&span), fix, Applicability::MachineApplicable));
+        }
+        Ok(None) => d = note(d, None, "no discriminating rolled date exists within two years of the effective-date anchor, or the deadline's trigger cannot be represented as a valid test event"),
+        Err(why) => d = note(d, None, format!("could not generate a counting-boundary test: {why}")),
+    }
     (format!("counting-insensitive:{id}"), d)
 }
 

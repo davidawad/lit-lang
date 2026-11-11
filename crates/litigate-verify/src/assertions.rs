@@ -153,6 +153,149 @@ pub(crate) fn counting_insensitive(
         .collect()
 }
 
+/// Build a reproducible boundary test for a deadline, if its lowered clock
+/// has a weekend/holiday roll that changes a plain calendar-day count.
+pub(crate) fn counting_boundary(
+    cx: &Context<'_>,
+    deadline: &hir::Deadline,
+) -> Result<Option<(String, String)>, String> {
+    if deadline.chain.is_some()
+        || !matches!(
+            deadline.unit,
+            hir::DayUnit::Calendar
+                | hir::DayUnit::Court
+                | hir::DayUnit::Business
+                | hir::DayUnit::Week
+        )
+    {
+        return Ok(None);
+    }
+    let ExprKind::Call { callee, .. } = &deadline.trigger.kind else {
+        return Ok(None);
+    };
+    let Some(args) = cx.declarations().find_map(|d| match d {
+        Declaration::Test(test) => test.givens.iter().find_map(|(given, _)| match &given.kind {
+            ExprKind::Call {
+                callee: given_callee,
+                args,
+            } if given_callee == callee => Some(args),
+            _ => None,
+        }),
+        _ => None,
+    }) else {
+        return Ok(None);
+    };
+    let event = format!(
+        "{}({})",
+        callee.rsplit("::").next().unwrap_or(callee),
+        args.iter()
+            .map(test_arg)
+            .collect::<Option<Vec<_>>>()
+            .ok_or("trigger has no valid literal test variant")?
+            .join(", ")
+    );
+    let owner = cx.owner(&deadline.meta.id).0;
+    let clocks = Clocks::new(cx, &deadline.meta.effective.known_at);
+    let Some((pkg, counting)) =
+        counting_of(&clocks, owner, deadline, &deadline.meta.effective.from)?
+    else {
+        return Ok(None);
+    };
+    let method = service_method(Some(counting), args).map(|m| format!("{m:?}"));
+    if method.as_ref().is_some_and(|m| matches!(counting.service_extensions.get(m), Some(hir::ServiceTime::Adds(n, _)) if *n > 0)) {
+        return Ok(None);
+    }
+    let lib = clocks.get(pkg, counting)?;
+    let rule_id = counting.meta.id.as_str();
+    let rule = lib.clock(rule_id).map_err(|error| error.to_string())?;
+    let unit = engine_unit(deadline.unit);
+    let amount = i64::try_from(deadline.amount).map_err(|_| "deadline period is too large")?;
+    let delta = if deadline.unit == hir::DayUnit::Week {
+        amount.saturating_mul(7)
+    } else {
+        amount
+    };
+    let delta = delta.saturating_sub(i64::from(!counting.exclude_trigger_day));
+    let start = clock::Date::parse_iso(&deadline.meta.effective.from).map_err(|e| e.to_string())?;
+    let end = deadline
+        .meta
+        .effective
+        .to
+        .as_deref()
+        .map(clock::Date::parse_iso)
+        .transpose()
+        .map_err(|e| e.to_string())?;
+    for offset in 0..=730 {
+        let trigger = start.add_days(offset);
+        if end.is_some_and(|end| trigger >= end) {
+            break;
+        }
+        let naive = trigger.add_days(if deadline.direction == hir::Direction::Forward {
+            delta
+        } else {
+            -delta
+        });
+        if !naive.is_weekend() && !rule.is_legal_holiday(naive, &[]) {
+            continue;
+        }
+        let request = DayDeadline {
+            trigger,
+            days: amount,
+            direction: if deadline.direction == hir::Direction::Forward {
+                clock::Direction::Forward
+            } else {
+                clock::Direction::Backward
+            },
+            unit,
+            service_method: None,
+        };
+        let Ok(computed) = clock::compute_due_date(&request, &rule, &ClockConfig::default()) else {
+            continue;
+        };
+        if computed.due_date == naive.to_iso() {
+            continue;
+        }
+        let boundary = if naive.is_weekend() {
+            "weekend"
+        } else {
+            "holiday"
+        };
+        let cite = deadline
+            .meta
+            .cite
+            .as_deref()
+            .map(|c| format!("\n  cite {}", serde_json::to_string(c).unwrap_or_default()))
+            .unwrap_or_default();
+        return Ok(Some((
+            format!(
+                "\n\ntest {}{} {{\n  given {} on {}\n  expect deadline({}) == {}\n}}",
+                serde_json::to_string(&format!(
+                    "Counting boundary: {} ({boundary})",
+                    deadline.meta.id
+                ))
+                .unwrap_or_default(),
+                cite,
+                event,
+                trigger.to_iso(),
+                deadline.meta.id,
+                computed.due_date
+            ),
+            format!("naive {} rolls to {}", naive.to_iso(), computed.due_date),
+        )));
+    }
+    Ok(None)
+}
+
+fn test_arg(arg: &Expr) -> Option<String> {
+    match &arg.kind {
+        ExprKind::Ref { target } => Some(target.rsplit("::").next().unwrap_or(target).to_owned()),
+        ExprKind::Literal {
+            value: Value::Variant(v),
+        } => Some(v.rsplit("::").next().unwrap_or(v).to_owned()),
+        _ => None,
+    }
+}
+
 fn is_counting_insensitive(actual: &str, naive: &str, expected: &str) -> bool {
     actual == naive && actual == expected
 }

@@ -70,6 +70,21 @@ fn counting_insensitive_lint_fires_on_weekdays_and_clears_on_a_rolled_boundary()
 }
 
 #[test]
+fn lowering_failure_preserves_counting_insensitive_lint_output() {
+    let source = BASE.replace("payoff 0.usd", "payoff 0.eur");
+    let checked = verify_one(&source, Profile::Strict);
+    assert!(
+        checked.lowered.is_none(),
+        "the unsupported currency must fail lowering"
+    );
+    assert!(!checked
+        .verification
+        .diagnostics
+        .iter()
+        .any(|diagnostic| diagnostic.code.as_str() == "L9011"));
+}
+
+#[test]
 fn l9011_fix_is_machine_applicable_and_generates_a_passing_counting_test() {
     let source = BASE.replace(
         "test \"mail service adds three days\" cite \"FRCP 6(d)\"\n{\n  given Served(complaint, Mail) on 2025-03-03\n  expect deadline(answer-period) == 2025-03-27\n}\n",

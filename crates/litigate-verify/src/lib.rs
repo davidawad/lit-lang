@@ -158,31 +158,30 @@ pub fn verify_package(
     sema::aggregate(&mut b, &input.check.diagnostics);
     evidence::hir(&mut b, &cx);
     let mut holes = input.check.holes.clone();
-    let mut insensitive = std::collections::BTreeSet::new();
     let mut out = Vec::new();
-    match input.lowered.map(|l| (&l.document, &l.source_map)) {
-        Ok((Document::Pack(pack), map)) => {
-            insensitive = verify_pack(
-                &cx,
-                &PackVerification {
-                    input,
-                    corpus,
-                    known_at,
-                },
-                pack,
-                map,
-                &mut b,
-                &mut out,
-                &mut holes,
-            );
-        }
-        Ok((Document::Links(_), _)) => {
-            insensitive = verify_links(&cx, package, known_at, &mut b, &mut out);
-        }
+    let insensitive = match input.lowered.map(|l| (&l.document, &l.source_map)) {
+        Ok((Document::Pack(pack), map)) => verify_pack(
+            &cx,
+            &PackVerification {
+                input,
+                corpus,
+                known_at,
+            },
+            pack,
+            map,
+            &mut b,
+            &mut out,
+            &mut holes,
+        ),
+        Ok((Document::Links(_), _)) => verify_links(&cx, package, known_at, &mut b, &mut out),
         Err(lowering) => {
             verify_lowering(&cx, package, lowering, &mut b, &mut out);
+            // Preserve the historical L9011 behavior on this path. Tests
+            // are not reported as `tests-pass` when lowering fails, but
+            // their counting sensitivity still informs `rule-without-test`.
+            assertions::check(&cx, known_at).1
         }
-    }
+    };
     record(
         &mut b,
         &mut out,

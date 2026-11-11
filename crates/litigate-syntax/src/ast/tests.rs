@@ -121,7 +121,7 @@ fn ref_parts_split_instances_paths_and_versions() {
 
 #[test]
 fn rule_bodies_and_deadlines_are_typed() {
-    let text = "module m\nrule duty r effective [2020-01-01, ..) cite \"X 1\"\n{\n  deadline d: 21.days from Served(c) counted_by frcp6 { note \"n\" }\n}\n";
+    let text = "module m\nrule duty r effective [2020-01-01, ..) cite \"X 1\"\n{\n  deadline d: 21.days from Served(c) counted_by frcp6 { note \"n\" lock against [CaseOrder] cite \"X 2\" }\n}\n";
     let parsed = parse_lit(text);
     assert!(parsed.is_ok(), "{:?}", parsed.errors());
     let file = parsed.lit_file().expect("root");

@@ -326,10 +326,21 @@ fn a_typed_extension_grant_derives_edge_extension_fields() {
     }
     let found = deadlines(&p);
     assert!(found.iter().all(|d| d.extendable == Some(true)));
+    assert!(found.iter().all(|d| d.extension_authority.is_none()));
+    assert!(deadline_holes(&p).is_empty());
+
+    for d in decls(&mut p) {
+        if let Declaration::Deadline(x) = d {
+            if let Some(hir::Extension::Discretionary { cite, .. }) = x.extend.first_mut() {
+                *cite = Some("FRCP 12(a)(1)(A)(i)".into());
+            }
+        }
+    }
+    let found = deadlines(&p);
+    assert!(found.iter().all(|d| d.extendable == Some(true)));
     assert!(found
         .iter()
         .all(|d| d.extension_authority.as_deref() == Some("FRCP 12(a)(1)(A)(i)")));
-    assert!(deadline_holes(&p).is_empty());
 }
 
 /// The motion event pattern `Moved(answer)`.
@@ -367,6 +378,7 @@ fn grants() -> Vec<hir::Extension> {
     vec![
         Extension::Bounded {
             by: "Court".into(),
+            cite: None,
             until: Bound::Max(vec![due(30), Bound::Min(vec![due(0), order(14)])]),
             after_expiry: true,
             standard: Some(S::GoodCauseOrExcusableNeglect),
@@ -379,6 +391,7 @@ fn grants() -> Vec<hir::Extension> {
         },
         Extension::Bounded {
             by: "Court".into(),
+            cite: None,
             until: Bound::Before {
                 from: R::CurrentDue,
                 days: 10,
@@ -390,6 +403,7 @@ fn grants() -> Vec<hir::Extension> {
         },
         Extension::Discretionary {
             by: "Court".into(),
+            cite: None,
             standard: S::GoodCause,
             window: W::BeforeExpiry,
             motion: None,
@@ -397,6 +411,7 @@ fn grants() -> Vec<hir::Extension> {
         },
         Extension::Discretionary {
             by: "Court".into(),
+            cite: None,
             standard: S::ExcusableNeglect,
             window: W::AfterExpiryOnMotion,
             motion: Some(hir::Motion {

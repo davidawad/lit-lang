@@ -503,6 +503,22 @@ fn a_named_lock_is_a_deadline_option_and_lock_is_reserved_elsewhere() {
 }
 
 #[test]
+fn an_extension_grant_accepts_a_cite() {
+    let parsed = parse_lit(
+        r#"module m
+deadline d: 1.days from E() counted_by c { extend { by court, discretion GoodCause, cite "X" } }
+"#,
+    );
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
+    let formatted = crate::format(&parsed.syntax().text().to_string(), crate::FileKind::Lit)
+        .expect("formats cited extension grant");
+    assert!(
+        formatted.contains("discretion GoodCause, cite \"X\""),
+        "{formatted}"
+    );
+}
+
+#[test]
 fn a_rule_index_parses_after_the_rules_name() {
     let parsed = parse_lit(
         "module m\nrule duty r Rule[FederalRule, base, [2010-01-01, ..), _, [2010-01-01, 2020-01-01)] cite \"X\" { start s }\n",

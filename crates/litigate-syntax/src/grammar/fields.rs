@@ -103,7 +103,6 @@ pub(crate) const GRANT_FIELDS: &[Spec] = &[
 
 /// Fields of an `extend`/`waive` capability.
 pub(crate) const CAPABILITY_FIELDS: &[Spec] = &[
-    (KwCite, Some(cite)),
     (KwBy, Some(reference)),
     (KwMax, Some(duration)),
     (KwTo, Some(bound)),
@@ -303,7 +302,15 @@ fn bound(p: &mut Parser<'_>) -> bool {
 /// after_expiry, on Motion(), within Bound, unless Denial() }` or `{ never
 /// cite "X" }`.
 fn capability(p: &mut Parser<'_>) -> bool {
-    field_list(p, CAPABILITY_FIELDS)
+    if !p.at(LBrace) {
+        return false;
+    }
+    let mut expected = keywords(CAPABILITY_FIELDS);
+    expected.push(KwCite);
+    brace_list(p, Sep::Optional, &expected, &mut |p| {
+        field(p, CAPABILITY_FIELDS) || cite(p)
+    });
+    true
 }
 
 /// `{ to Level | [Level, ...], op Op | [Op, ...], max Duration, discretion

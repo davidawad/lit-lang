@@ -147,6 +147,39 @@ fn p1_a_licensed_override_is_selected() {
 }
 
 #[test]
+fn an_extension_grant_keeps_its_cite_in_hir() {
+    let mut federal = fed(r#" { extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" } }"#);
+    federal.manifest = federal
+        .manifest
+        .replace("Plaintiff", "plaintiff")
+        .replace("Defendant", "defendant")
+        .replace("Court", "court");
+    for file in &mut federal.files {
+        file.text = file
+            .text
+            .replace("Plaintiff", "plaintiff")
+            .replace("Defendant", "defendant");
+    }
+    let packages = [core(), federal];
+    let hir = compile(&packages);
+    let grant = hir
+        .iter()
+        .find(|p| p.manifest.name == "fed")
+        .unwrap()
+        .modules
+        .iter()
+        .flat_map(|m| &m.declarations)
+        .find_map(|d| match d {
+            Declaration::Deadline(x) if x.meta.id == "answer-period" => x.extend.first(),
+            _ => None,
+        })
+        .expect("extension grant");
+    assert!(
+        matches!(grant, Extension::Discretionary { cite: Some(cite), .. } if cite == "FRCP 6(b)(1)")
+    );
+}
+
+#[test]
 fn p1_a_displacing_claimant_is_followed_to_its_own_winner() {
     let standing = pkg(
         "standing",

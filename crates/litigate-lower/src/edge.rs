@@ -379,7 +379,7 @@ mod tests {
         };
         assert_eq!(extendability(&[named_lock.clone()], &[]), Some(false));
         assert_eq!(
-            extension_authority(&[named_lock], &[], None).as_deref(),
+            extension_authority(&[named_lock], &[]).as_deref(),
             Some("FRCP 6(b)(2)")
         );
     }

@@ -288,7 +288,7 @@ fn the_new_surface_is_discoverable() {
 /// one outcome on every visit is not clairvoyance about a draw (it loops
 /// forever), so a node on a cycle reports no outcome EVPI and is always
 /// screened in for the Monte Carlo EVPPI instead. Cyclic nodes screen
-/// first in canonical id order; the CoFC catalog now has other uncertain
+/// first in canonical id order; the `CoFC` catalog now has other uncertain
 /// nodes before it, so screen the full set to keep this cycle covered.
 #[test]
 fn a_node_on_a_cycle_gets_evppi_not_outcome_evpi() {

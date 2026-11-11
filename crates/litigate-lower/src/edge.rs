@@ -235,6 +235,14 @@ fn extension_authority(
     extensions: &[Extension],
     delegations: &[hir::Delegation],
 ) -> Option<String> {
+    fn join_distinct<'a>(authorities: impl IntoIterator<Item = &'a str>) -> Option<String> {
+        let mut seen = std::collections::BTreeSet::new();
+        let authorities = authorities
+            .into_iter()
+            .filter(|authority| seen.insert(*authority))
+            .collect::<Vec<_>>();
+        (!authorities.is_empty()).then(|| authorities.join("; "))
+    }
     match extendability(extensions, delegations) {
         None => return None,
         Some(false) => {
@@ -245,7 +253,7 @@ fn extension_authority(
                     _ => None,
                 })
                 .collect();
-            return (!authorities.is_empty()).then(|| authorities.join("; "));
+            return join_distinct(authorities);
         }
         Some(true) => {}
     }
@@ -268,8 +276,7 @@ fn extension_authority(
             hir::Extension::NonExtendable { .. } => None,
         })
         .collect::<Vec<_>>();
-    let authorities = delegated.into_iter().chain(granted).collect::<Vec<_>>();
-    (!authorities.is_empty()).then(|| authorities.join("; "))
+    join_distinct(delegated.into_iter().chain(granted))
 }
 
 /// One `extend` grant as a pack extension bound.
@@ -420,8 +427,32 @@ mod tests {
             interpretation: None,
         };
         assert_eq!(
-            extension_authority(&[cited_grant], &[]).as_deref(),
+            extension_authority(std::slice::from_ref(&cited_grant), &[]).as_deref(),
             Some("FRCP 6(b)(1)")
+        );
+        let same_cite = Extension::Discretionary {
+            by: "court".into(),
+            cite: Some("FRCP 6(b)(1)".into()),
+            standard: hir::CauseStandard::GoodCause,
+            window: hir::ExtensionWindow::BeforeExpiry,
+            motion: None,
+            interpretation: None,
+        };
+        assert_eq!(
+            extension_authority(&[cited_grant.clone(), same_cite], &[]).as_deref(),
+            Some("FRCP 6(b)(1)")
+        );
+        let second_cite = Extension::Discretionary {
+            by: "court".into(),
+            cite: Some("FRCP 6(b)(2)".into()),
+            standard: hir::CauseStandard::GoodCause,
+            window: hir::ExtensionWindow::BeforeExpiry,
+            motion: None,
+            interpretation: None,
+        };
+        assert_eq!(
+            extension_authority(&[cited_grant, second_cite], &[]).as_deref(),
+            Some("FRCP 6(b)(1); FRCP 6(b)(2)")
         );
         let named_lock = Extension::NonExtendable {
             authority: "FRCP 6(b)(2)".to_owned(),

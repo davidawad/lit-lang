@@ -149,6 +149,7 @@ is saved as it is, with the parse error in the echo area."
    `([,@litigate-ts-mode--conditional-keywords] @font-lock-keyword-face
      [,@litigate-ts-mode--directive-keywords] @font-lock-preprocessor-face
      (discretion) @font-lock-keyword-face
+     "discretion" @font-lock-keyword-face
      (guard_op operator: ["and" "or"] @font-lock-keyword-face)
      [,@litigate-ts-mode--declaration-keywords] @font-lock-keyword-face
      [,@litigate-ts-mode--clause-keywords] @font-lock-keyword-face)

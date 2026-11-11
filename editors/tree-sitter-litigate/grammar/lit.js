@@ -241,6 +241,10 @@ module.exports = {
 
   deadline_opt: $ => choice(
     seq(field('key', choice('note', 'counting')), field('value', $.string)),
+    // Retained only so the editor parser can show the compiler's L2007
+    // removal diagnostic for the superseded edge-level extension options.
+    seq(field('key', 'extendable'), field('value', $.boolean)),
+    seq(field('key', 'extension_authority'), field('value', choice($.string, $.hole))),
   ),
 
   // A deadline declaration's options add the obligation it creates

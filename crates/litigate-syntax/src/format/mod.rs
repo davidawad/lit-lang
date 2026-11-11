@@ -7,7 +7,10 @@ mod doc;
 
 use crate::error::SyntaxError;
 use crate::parse::{parse, FileKind, SyntaxNode, SyntaxToken};
-use crate::syntax_kind::SyntaxKind::{self, CaseFile, Comment, DocComment, ImportDecl, Whitespace};
+use crate::syntax_kind::SyntaxKind::{
+    self, CaseFile, Comment, DeadlineDecl, DocComment, Field, FieldList, ForumDefaultDecl, Ident,
+    ImportDecl, KwForum, SourceFile, Whitespace,
+};
 use build::Builder;
 use litigate_base::{Diagnostic, DiagnosticCode, FileId, LineIndex};
 use rowan::NodeOrToken;
@@ -111,7 +114,29 @@ impl Item {
 }
 
 fn format_tree(root: &SyntaxNode) -> String {
-    let (mut items, tail) = collect_items(root);
+    let forum = module_forum(root);
+    let (mut items, tail) = collect_items(root, forum.as_ref().map(|(name, _)| name.clone()));
+    if let Some((name, _insert)) = forum.filter(|(_, insert)| *insert) {
+        let position = items
+            .iter()
+            .rposition(|item| {
+                matches!(
+                    item.kind,
+                    SyntaxKind::ModuleDecl | ImportDecl | SyntaxKind::PackageDecl
+                )
+            })
+            .map_or(0, |index| index + 1);
+        items.insert(
+            position,
+            Item {
+                kind: ForumDefaultDecl,
+                sort_key: None,
+                leading: Vec::new(),
+                body: format!("forum {name}"),
+                trailing: Vec::new(),
+            },
+        );
+    }
     sort_imports(&mut items);
     let case = root.kind() == CaseFile;
     let mut out = String::new();
@@ -146,7 +171,7 @@ fn format_tree(root: &SyntaxNode) -> String {
 /// item (or trail the previous one when on its line); the rest form the
 /// tail. A `.case` header (`case id`) is its own item; a clean `.case` file
 /// always has item nodes after it, and the first one flushes it.
-fn collect_items(root: &SyntaxNode) -> (Vec<Item>, Vec<String>) {
+fn collect_items(root: &SyntaxNode, forum: Option<String>) -> (Vec<Item>, Vec<String>) {
     let mut items: Vec<Item> = Vec::new();
     let mut leading: Vec<String> = Vec::new();
     let mut newlines = 0usize;
@@ -172,14 +197,16 @@ fn collect_items(root: &SyntaxNode) -> (Vec<Item>, Vec<String>) {
                 newlines = 0;
             }
             NodeOrToken::Token(token) => {
-                header.get_or_insert_with(Builder::new).token(&token);
+                header
+                    .get_or_insert_with(|| Builder::new(forum.clone()))
+                    .token(&token);
                 newlines = 0;
             }
             NodeOrToken::Node(node) => {
                 if let Some(builder) = header.take() {
                     items.push(item(CaseFile, None, std::mem::take(&mut leading), builder));
                 }
-                let mut builder = Builder::new();
+                let mut builder = Builder::new(forum.clone());
                 builder.node(&node);
                 let key = (node.kind() == ImportDecl).then(|| significant_text(&node));
                 items.push(item(
@@ -193,6 +220,74 @@ fn collect_items(root: &SyntaxNode) -> (Vec<Item>, Vec<String>) {
         }
     }
     (items, leading)
+}
+
+/// Returns a module's explicit default forum, or the common deadline forum
+/// that formatting can safely hoist. The boolean says whether to insert it.
+fn module_forum(root: &SyntaxNode) -> Option<(String, bool)> {
+    if root.kind() != SourceFile {
+        return None;
+    }
+    if let Some(decl) = root.children().find(|node| node.kind() == ForumDefaultDecl) {
+        let forum = decl
+            .children_with_tokens()
+            .filter_map(NodeOrToken::into_token)
+            .find(|token| token.kind() == Ident)?
+            .text()
+            .to_owned();
+        return Some((forum, false));
+    }
+    let deadlines: Vec<_> = root
+        .descendants()
+        .filter(|node| node.kind() == DeadlineDecl)
+        .collect();
+    if deadlines.is_empty() {
+        return None;
+    }
+    let forums: Vec<_> = deadlines
+        .iter()
+        .map(|deadline| {
+            deadline
+                .children()
+                .find(|node| node.kind() == FieldList)
+                .and_then(|fields| {
+                    fields
+                        .children()
+                        .find_map(|field| simple_forum_field(&field))
+                })
+        })
+        .collect();
+    let first = forums.first()?.as_ref()?.clone();
+    forums
+        .iter()
+        .all(|forum| forum.as_deref() == Some(first.as_str()))
+        .then_some((first, true))
+}
+
+/// A bare `forum IDENT` option; adoption citations and comments make it
+/// declaration-specific and therefore ineligible for hoisting.
+pub(super) fn simple_forum_field(field: &SyntaxNode) -> Option<String> {
+    if field.kind() != Field
+        || field.parent().is_none_or(|list| {
+            list.kind() != FieldList || list.parent().is_none_or(|d| d.kind() != DeadlineDecl)
+        })
+        || field
+            .descendants_with_tokens()
+            .filter_map(NodeOrToken::into_token)
+            .any(|token| matches!(token.kind(), Comment | DocComment))
+    {
+        return None;
+    }
+    let tokens: Vec<_> = field
+        .descendants_with_tokens()
+        .filter_map(NodeOrToken::into_token)
+        .filter(|token| !matches!(token.kind(), Whitespace | Comment | DocComment))
+        .collect();
+    if tokens.len() == 2 && tokens[0].kind() == KwForum && tokens[1].kind() == Ident {
+        Some(tokens[1].text().to_owned())
+    } else {
+        None
+    }
 }
 
 fn item(kind: SyntaxKind, sort_key: Option<String>, leading: Vec<String>, b: Builder) -> Item {

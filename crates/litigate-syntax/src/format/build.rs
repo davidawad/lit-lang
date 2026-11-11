@@ -21,15 +21,17 @@ pub(crate) struct Builder {
     prev: Option<Prev>,
     newlines: usize,
     after_cite: bool,
+    forum_default: Option<std::string::String>,
 }
 
 impl Builder {
-    pub(crate) fn new() -> Self {
+    pub(crate) fn new(forum_default: Option<std::string::String>) -> Self {
         Self {
             out: Vec::new(),
             prev: None,
             newlines: 0,
             after_cite: false,
+            forum_default,
         }
     }
 
@@ -39,6 +41,31 @@ impl Builder {
 
     /// Emits every child of `node`.
     pub(crate) fn node(&mut self, node: &SyntaxNode) {
+        if node.kind() == FieldList
+            && node
+                .parent()
+                .is_some_and(|parent| parent.kind() == DeadlineDecl)
+            && self.forum_default.as_deref().is_some_and(|forum| {
+                let fields: Vec<_> = node
+                    .children()
+                    .filter(|child| child.kind() == Field)
+                    .collect();
+                !fields.is_empty()
+                    && fields
+                        .iter()
+                        .all(|field| super::simple_forum_field(field).as_deref() == Some(forum))
+            })
+        {
+            return;
+        }
+        if node.kind() == Field
+            && self
+                .forum_default
+                .as_deref()
+                .is_some_and(|forum| super::simple_forum_field(node).as_deref() == Some(forum))
+        {
+            return;
+        }
         if node.kind() == RefinedType {
             // Its braces enclose an expression, not a block: `{x: T | p}`
             // stays on its line.
@@ -50,6 +77,7 @@ impl Builder {
             }
             return;
         }
+        let redundant_edge_id = redundant_edge_id(node);
         let children: Vec<Element> = node.children_with_tokens().collect();
         let mut index = 0;
         while index < children.len() {
@@ -59,6 +87,8 @@ impl Builder {
                     index = self.block(node, &children, index);
                     continue;
                 }
+                NodeOrToken::Token(token)
+                    if redundant_edge_id.is_some_and(|id| id == token.text_range()) => {}
                 NodeOrToken::Token(token) => self.token(token),
             }
             index += 1;
@@ -145,6 +175,11 @@ impl Builder {
                     newlines += token.text().matches('\n').count();
                 }
                 NodeOrToken::Token(token) if token.kind() == Comma => {}
+                NodeOrToken::Node(field)
+                    if field.kind() == Field
+                        && self.forum_default.as_deref().is_some_and(|forum| {
+                            super::simple_forum_field(field).as_deref() == Some(forum)
+                        }) => {}
                 NodeOrToken::Token(token) if matches!(token.kind(), Comment | DocComment) => {
                     let text = Doc::text(token.text().trim_end());
                     match entries.last_mut() {
@@ -158,7 +193,7 @@ impl Builder {
                 }
                 element => {
                     pending.blank |= newlines > 1 && !entries.is_empty();
-                    pending.doc = Some(entry_doc(element));
+                    pending.doc = Some(entry_doc(element, self.forum_default.clone()));
                     entries.push(std::mem::take(&mut pending));
                     newlines = 0;
                 }
@@ -174,6 +209,52 @@ impl Builder {
         self.after_cite = false;
         open + 1 + close + 1
     }
+}
+
+/// The id token of a node edge when it spells the canonical derived id.
+/// Parallel edges are numbered from one in source order.
+fn redundant_edge_id(node: &SyntaxNode) -> Option<rowan::TextRange> {
+    if node.kind() != EdgeDecl {
+        return None;
+    }
+    let id = node
+        .children_with_tokens()
+        .filter_map(NodeOrToken::into_token)
+        .find(|token| token.kind() == Ident)?;
+    let target = node
+        .children()
+        .find(|child| child.kind() == Ref)?
+        .last_token()?
+        .text()
+        .to_owned();
+    let edge_block = node.parent()?;
+    let declaration = edge_block.parent()?;
+    let from = declaration
+        .children_with_tokens()
+        .filter_map(NodeOrToken::into_token)
+        .find(|token| token.kind() == Ident)?
+        .text()
+        .to_owned();
+    let target_of = |edge: &SyntaxNode| {
+        edge.children()
+            .find(|child| child.kind() == Ref)
+            .and_then(|r| r.last_token())
+            .map(|t| t.text().to_owned())
+    };
+    let same_target: Vec<_> = edge_block
+        .children()
+        .filter(|edge| edge.kind() == EdgeDecl && target_of(edge).as_deref() == Some(&target))
+        .collect();
+    let expected = if same_target.len() > 1 {
+        let ordinal = same_target
+            .iter()
+            .position(|edge| edge.text_range() == node.text_range())?
+            + 1;
+        format!("edge-{from}-{target}-{ordinal}")
+    } else {
+        format!("edge-{from}-{target}")
+    };
+    (id.text() == expected).then_some(id.text_range())
 }
 
 /// True when nothing but trivia follows `token` in its parent node: the
@@ -195,8 +276,8 @@ struct Entry {
     blank: bool,
 }
 
-fn entry_doc(element: &Element) -> Doc {
-    let mut builder = Builder::new();
+fn entry_doc(element: &Element, forum_default: Option<std::string::String>) -> Doc {
+    let mut builder = Builder::new(forum_default);
     match element {
         NodeOrToken::Node(node) => builder.node(node),
         NodeOrToken::Token(token) => builder.token(token),

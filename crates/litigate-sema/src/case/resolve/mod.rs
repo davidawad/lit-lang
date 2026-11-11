@@ -8,6 +8,7 @@
 pub mod analysis;
 mod blocks;
 mod params;
+mod stakes;
 
 use super::event::{self, ToSpan};
 use super::graph::Graph;
@@ -222,8 +223,9 @@ impl<'g> R<'_, 'g> {
         let parties = child(root, K::PartiesBlock).map_or_else(Vec::new, |b| self.parties(&b));
         let events = child(root, K::EventsBlock).map_or_else(Vec::new, |b| self.events(&b, text));
         let facts = child(root, K::FactsBlock).map_or_else(BTreeMap::new, |b| self.facts(&b));
-        let (stakes, fee_shifts) =
-            child(root, K::StakesBlock).map_or_else(Default::default, |b| self.stakes(&b, text));
+        let (stakes, fee_shifts) = child(root, K::StakesBlock).map_or_else(Default::default, |b| {
+            self.stakes(&b, text, &as_of, known_at.as_deref())
+        });
         let (observations, priors) =
             child(root, K::BeliefsBlock).map_or_else(Default::default, |b| self.beliefs(&b));
         let opponent_models =

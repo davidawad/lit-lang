@@ -1,8 +1,8 @@
 //! Module header and declarations (SPEC §3.1).
 use super::expr::{declared_type, expr_children, is_expr, path_of};
 use super::tree::{
-    ArmItem, EdgeItem, HolidayItem, Import, Item, ItemKind, ItemTree, LimitEntry, LimitEntryKind,
-    LimitItem, Name, NodeItem, PackageHeader, TestStmt,
+    ArmItem, Atom, EdgeItem, Field, HolidayItem, Import, Item, ItemKind, ItemTree, LimitEntry,
+    LimitEntryKind, LimitItem, Name, NodeItem, PackageHeader, RefPath, TestStmt,
 };
 use super::{
     docs, elements, head, ident, label, name, node_of, nodes_after, nodes_of, range,
@@ -48,6 +48,10 @@ fn type_alias(node: &SyntaxNode) -> Option<ItemKind> {
 impl Lower {
     pub(crate) fn file(&mut self, root: &SyntaxNode) -> ItemTree {
         let mut tree = ItemTree::default();
+        let default_forum = root
+            .children()
+            .find(|node| node.kind() == K::ForumDefaultDecl)
+            .and_then(|node| ident(&node));
         for node in root.children() {
             match node.kind() {
                 K::ModuleDecl => {
@@ -66,6 +70,11 @@ impl Lower {
                     }
                 }
                 _ => tree.items.extend(self.item(&node)),
+            }
+        }
+        if let Some(forum) = default_forum {
+            for item in &mut tree.items {
+                inherit_forum(item, &forum);
             }
         }
         tree
@@ -208,21 +217,28 @@ impl Lower {
         Some(item)
     }
 
-    /// `(Ident | "_") String [":" Ref] "->" Ref {EdgeClause} [EdgeFields]`
+    /// `[Ident] String [":" Ref] "->" Ref {EdgeClause} [EdgeFields]`
     /// (the `: Ref` source only in a `link`). An edge starts with its name
-    /// and label; a link without them has no references either.
+    /// and label; a link without them has no references either. The id is
+    /// optional on a node edge and is derived during semantic building.
     fn edge(&mut self, node: &SyntaxNode, link: bool) -> Option<EdgeItem> {
         let first = elements(node)
             .filter_map(SyntaxElement::into_token)
-            .find(|t| matches!(t.kind(), K::Ident | K::Underscore))?;
+            .find(|t| t.kind() == K::Ident);
         let mut refs = nodes_of(node, K::Ref).map(|r| path_of(&r));
         let from = if link { Some(refs.next()?) } else { None };
         let (Some(label), Some(to)) = (label(node), refs.next()) else {
             return None;
         };
+        let name_range = first
+            .as_ref()
+            .map_or(label.range, |token| range(token.text_range()));
         Some(EdgeItem {
-            name: (first.kind() == K::Ident).then(|| name(&first)),
-            name_range: range(first.text_range()),
+            name: first
+                .as_ref()
+                .filter(|token| token.kind() == K::Ident)
+                .map(name),
+            name_range,
             label,
             from,
             to,
@@ -395,6 +411,45 @@ impl Lower {
             .next()
             .and_then(|l| token_of(&l, K::Date))?;
         Some(TestStmt::Given(value, by, name(&date)))
+    }
+}
+
+/// A module's `forum F` supplies the deadline default unless its declaration
+/// has an explicit `forum` option.
+fn inherit_forum(item: &mut Item, forum: &Name) {
+    match &mut item.kind {
+        ItemKind::Deadline { opts, .. } => {
+            if opts.iter().any(|field| field.key.text == "forum") {
+                return;
+            }
+            let range = forum.range;
+            opts.push(Field {
+                key: Name {
+                    text: "forum".into(),
+                    range,
+                },
+                values: vec![(
+                    Atom::Expr(crate::db::parse::tree::Expr {
+                        kind: crate::db::parse::tree::ExprKind::Ref(RefPath {
+                            head: forum.clone(),
+                            instance: None,
+                            rest: Vec::new(),
+                            version: None,
+                            range,
+                        }),
+                        range,
+                    }),
+                    range,
+                )],
+                range,
+            });
+        }
+        ItemKind::Rule(_, _, _, nested) => {
+            for item in nested {
+                inherit_forum(item, forum);
+            }
+        }
+        _ => {}
     }
 }
 

@@ -304,7 +304,7 @@ fn clause(fields: &[Field], kw: SyntaxKind) -> Option<Field> {
 macro_rules! edge_accessors {
     ($($ty:ty),+) => {$(
         impl $ty {
-            /// Edge id; `None` for an anonymous `_` edge.
+            /// Edge id; `None` in source when the compiler derives it.
             #[must_use]
             pub fn id(&self) -> Option<Token> {
                 tokens(self.syntax())

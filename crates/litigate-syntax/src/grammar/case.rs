@@ -3,7 +3,7 @@ use super::fields::{field_list, stake_value, SOURCE_FIELDS};
 use super::values::{
     call, cite, date, number, record, reference, require, signed_money, string, Key,
 };
-use super::{delimited, Sep};
+use super::{delimited, delimited_node, Sep};
 use crate::error::SyntaxError;
 use crate::parser::{Parser, CASE_ITEM_KEYWORDS};
 use crate::syntax_kind::SyntaxKind::{self, *};
@@ -147,7 +147,9 @@ fn case_item(p: &mut Parser<'_>, kw: SyntaxKind, kind: SyntaxKind) {
             require(p, |p| record(p, Key::Ref, reference), &[LBrace]);
         }
         KwStakes => {
-            require(p, |p| record(p, Key::Ref, stake_value), &[LBrace]);
+            if !stakes(p) {
+                p.error_expected(&[LBrace]);
+            }
         }
         KwBeliefs => block(p, Sep::Optional, &mut belief),
         KwOpponents => block(p, Sep::Optional, &mut opponent),
@@ -156,6 +158,39 @@ fn case_item(p: &mut Parser<'_>, kw: SyntaxKind, kind: SyntaxKind) {
         }
     }
     p.finish();
+}
+
+/// A stake key is either a terminal ref or `outcome TAG`.
+fn stakes(p: &mut Parser<'_>) -> bool {
+    if !p.at(LBrace) {
+        return false;
+    }
+    let mut entry = |p: &mut Parser<'_>| {
+        if !p.at(Ident) && !p.at_kw(KwOutcome) {
+            return false;
+        }
+        p.start(RecordField);
+        if p.at_kw(KwOutcome) {
+            p.bump_as(KwOutcome);
+            p.expect(Ident);
+        } else {
+            reference(p);
+        }
+        if p.expect(Colon) && !stake_value(p) {
+            p.error_expected(&[Money, Ident]);
+        }
+        p.finish();
+        true
+    };
+    delimited_node(
+        p,
+        RecordExpr,
+        (LBrace, RBrace),
+        Sep::Optional,
+        &[Ident, KwOutcome],
+        &mut entry,
+    );
+    true
 }
 
 fn block(p: &mut Parser<'_>, sep: Sep, elem: &mut dyn FnMut(&mut Parser<'_>) -> bool) {

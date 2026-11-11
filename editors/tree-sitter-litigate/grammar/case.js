@@ -104,7 +104,10 @@ module.exports = {
   stakes_block: $ => seq('stakes', braced($.stake_entry)),
 
   stake_entry: $ => seq(
-    field('node', $.ref),
+    choice(
+      field('node', $.ref),
+      seq('outcome', field('outcome', $.identifier)),
+    ),
     ':',
     choice(
       seq(

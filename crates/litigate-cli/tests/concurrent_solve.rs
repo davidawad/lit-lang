@@ -115,7 +115,7 @@ state discovery: "Discovery"
 {
   close "Close discovery" -> discovery-closed by court { cost 40.usd }
 }
-state discovery-closed: "Discovery closed" { _ "Wait" -> discovery-closed by court }
+state discovery-closed: "Discovery closed" { "Wait" -> discovery-closed by court }
 terminal ruled: "Ruled" { payoff 700.usd }
 "#;
 

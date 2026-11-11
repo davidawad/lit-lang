@@ -57,8 +57,8 @@ transition time-2009-counting amends frcp6@2009-12-01 cite "FRCP 86(a)(2)(B)"
 
 state served: "Complaint served" by defendant cite "FRCP 4"
 {
-  _ "The 2009 amendments take effect while the action is pending" -> prior-rules
-  _ "Proceed under the rules in force" -> respond
+  "The 2009 amendments take effect while the action is pending" -> prior-rules
+  "Proceed under the rules in force" -> respond
 }
 
 chance prior-rules: "Does the court keep the pre-2009 time rules?" by court discretion cite "FRCP 86(a)(2)(B)"

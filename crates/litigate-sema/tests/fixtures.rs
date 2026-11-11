@@ -61,6 +61,89 @@ fn worked_example_hole_reasons_survive_the_sema_check() {
 }
 
 #[test]
+fn omitted_edge_ids_lower_stably_and_disambiguate_parallel_targets() {
+    use litigate_sema::hir::Declaration;
+    use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
+
+    let source = include_str!("../../../lit/examples/rule12.lit")
+        .replace("barred \"Barred\" -> dismissed", "\"Barred\" -> dismissed")
+        .replace(
+            "not-barred \"Timely\" -> respond",
+            "\"Timely\" -> dismissed",
+        );
+    let package = LoadedPackage {
+        texts: std::collections::BTreeMap::default(),
+        root: "lit/examples".to_owned(),
+        manifest: include_str!("../../../lit/examples/Lit.toml").to_owned(),
+        lock: None,
+        files: vec![LoadedFile {
+            relative: "rule12.lit".to_owned(),
+            text: source,
+        }],
+    };
+    let mut db = litigate_sema::LitDatabase::default();
+    let ws = litigate_sema::db::inputs::create_workspace(&mut db, &[package]);
+    let checks = litigate_sema::check_workspace(&db, ws);
+    assert!(
+        checks[0].diagnostics.is_empty(),
+        "{:#?}",
+        checks[0].diagnostics
+    );
+    let node = checks[0]
+        .package
+        .as_ref()
+        .unwrap()
+        .modules
+        .iter()
+        .flat_map(|module| &module.declarations)
+        .find_map(|declaration| match declaration {
+            Declaration::Node(node) if node.meta.id == "time-barred" => Some(node),
+            _ => None,
+        })
+        .unwrap();
+    assert_eq!(
+        node.edges
+            .iter()
+            .map(|edge| edge.id.as_deref())
+            .collect::<Vec<_>>(),
+        [
+            Some("edge-time-barred-dismissed-1"),
+            Some("edge-time-barred-dismissed-2")
+        ]
+    );
+}
+
+#[test]
+fn module_forum_is_inherited_by_deadlines_and_declaration_options_override_it() {
+    use litigate_sema::db::parse::tree::{Atom, ExprKind, ItemKind};
+
+    let parsed = litigate_sema::db::parse::parse(
+        "module m\nforum frap\ndeadline own: 2.days from Served() counted_by c { forum frcp }\ndeadline inherited: 3.days from Served() counted_by c\n",
+    );
+    assert!(parsed.reports.is_empty(), "{:#?}", parsed.reports);
+    let forums: Vec<_> = parsed
+        .tree
+        .items
+        .iter()
+        .filter_map(|item| match &item.kind {
+            ItemKind::Deadline { opts, .. } => opts
+                .iter()
+                .find(|field| field.key.text == "forum")
+                .and_then(|field| field.values.first())
+                .and_then(|(atom, _)| match atom {
+                    Atom::Expr(expr) => match &expr.kind {
+                        ExprKind::Ref(path) => Some(path.head.text.as_str()),
+                        _ => None,
+                    },
+                    _ => None,
+                }),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(forums, ["frcp", "frap"], "{:#?}", parsed.tree.items);
+}
+
+#[test]
 fn old_edge_extension_options_have_machine_applicable_removal_fixes() {
     use litigate_base::{Applicability, DiagnosticCode};
     use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};

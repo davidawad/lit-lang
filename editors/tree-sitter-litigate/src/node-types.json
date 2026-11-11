@@ -1997,12 +1997,8 @@
       },
       "name": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
-          {
-            "type": "anonymous",
-            "named": true
-          },
           {
             "type": "identifier",
             "named": true
@@ -2637,6 +2633,22 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "forum_default_decl",
+    "named": true,
+    "fields": {
+      "forum": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -3604,6 +3616,10 @@
       "types": [
         {
           "type": "_item",
+          "named": true
+        },
+        {
+          "type": "forum_default_decl",
           "named": true
         },
         {
@@ -5171,10 +5187,20 @@
     "fields": {
       "node": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "ref",
+            "named": true
+          }
+        ]
+      },
+      "outcome": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
             "named": true
           }
         ]

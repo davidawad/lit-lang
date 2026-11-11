@@ -7,6 +7,7 @@ pub const LIT_ITEM_KEYWORDS: &[SyntaxKind] = &[
     KwModule,
     KwImport,
     KwPackage,
+    KwForum,
     KwStart,
     KwGroup,
     KwType,
@@ -66,6 +67,7 @@ pub(crate) const fn is_decl(kind: SyntaxKind) -> bool {
     matches!(
         kind,
         ModuleDecl
+            | ForumDefaultDecl
             | ImportDecl
             | PackageDecl
             | StartDecl

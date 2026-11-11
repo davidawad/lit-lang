@@ -43,12 +43,23 @@ pub(crate) fn lit_file(p: &mut Parser<'_>) {
         p.error_expected(&[KwModule]);
     }
     let mut rank = 0u8;
+    let mut forum_seen = false;
     // Every pass consumes a token: an item consumes its keyword, and
     // recovery stops only at an item keyword (the anchors of a `.lit` file).
     while !p.at_end() {
         match p.at_any_kw(LIT_ITEM_KEYWORDS) {
             Some(kw) => {
                 rank = check_order(p, kw, rank);
+                if kw == KwForum {
+                    if forum_seen {
+                        p.push_error(SyntaxError::new(
+                            DiagnosticCode::UnexpectedToken,
+                            p.current_range(),
+                            "a module may declare its default `forum` only once",
+                        ));
+                    }
+                    forum_seen = true;
+                }
                 item(p, kw);
                 item_end(p, &[]);
             }
@@ -99,6 +110,7 @@ pub(crate) fn item(p: &mut Parser<'_>, kw: SyntaxKind) {
     match kw {
         KwModule | KwImport => header(p, kw),
         KwPackage => package(p),
+        KwForum => module_forum(p),
         KwStart => simple(p, StartDecl, kw),
         KwGroup => group(p),
         KwType => type_decl(p),
@@ -109,6 +121,14 @@ pub(crate) fn item(p: &mut Parser<'_>, kw: SyntaxKind) {
         KwLimit => super::filing::limit(p),
         _ => decls::decl(p, kw),
     }
+}
+
+/// `forum id`: the module's default forum for its deadline declarations.
+fn module_forum(p: &mut Parser<'_>) {
+    p.start(ForumDefaultDecl);
+    p.bump_as(KwForum);
+    p.expect(Ident);
+    p.finish();
 }
 
 fn simple(p: &mut Parser<'_>, kind: SyntaxKind, kw: SyntaxKind) {
@@ -266,19 +286,22 @@ fn body_entry(p: &mut Parser<'_>) -> bool {
     field(p, NODE_FIELDS)
 }
 
-/// LL(3): `(Ident | "_") String "->"` is an edge; so is `Ident String`
+/// LL(3): `[Ident] String "->"` is an edge; so is `Ident String`
 /// when the identifier is not a string-valued field keyword.
 fn at_edge(p: &Parser<'_>) -> bool {
-    let id = p.at(Underscore) || p.at(Ident);
+    let id = p.at(Ident);
     let string_field = p.at_kw(KwNote) || p.at_kw(KwCourtListenerUrl);
-    id && p.nth(1) == String && (p.nth(2) == Arrow || !string_field)
+    (p.at(String) && p.nth(1) == Arrow)
+        || (id && p.nth(1) == String && (p.nth(2) == Arrow || !string_field))
 }
 
-/// `(Ident | "_") String "->" Ref {EdgeClause} [EdgeFields]`.
+/// `[Ident] String "->" Ref {EdgeClause} [EdgeFields]`.
 fn edge(p: &mut Parser<'_>) {
     p.start(EdgeDecl);
-    p.bump();
-    p.bump();
+    if p.at(Ident) {
+        p.bump();
+    }
+    p.expect(String);
     arrow(p);
     require(p, reference, &[Ident]);
     edge_tail(p);

@@ -21,6 +21,39 @@ fn sorts_imports_and_separates_items() {
 }
 
 #[test]
+fn derived_edge_ids_are_omitted_but_custom_ids_remain() {
+    let out = fmt(
+        "module m\nstate from: \"From\" {\n  edge-from-alone \"A\" -> alone\n  custom \"B\" -> to\n  \"C\" -> end\n}\n",
+    );
+    assert_eq!(
+        out,
+        "module m\n\nstate from: \"From\" { \"A\" -> alone, custom \"B\" -> to, \"C\" -> end }\n"
+    );
+}
+
+#[test]
+fn parallel_derived_edge_ids_number_every_edge_from_one() {
+    let out = fmt(
+        "module m\nstate from: \"From\" {\n  edge-from-to-1 \"A\" -> to\n  edge-from-to-2 \"B\" -> to\n}\n",
+    );
+    assert_eq!(
+        out,
+        "module m\n\nstate from: \"From\" { \"A\" -> to, \"B\" -> to }\n"
+    );
+}
+
+#[test]
+fn shared_deadline_forum_is_hoisted_to_the_module() {
+    let out = fmt(
+        "module m\ndeadline a: 2.days from Served() counted_by c { forum frap }\ndeadline b: 3.days from Filed() counted_by c { forum frap }\n",
+    );
+    assert_eq!(
+        out,
+        "module m\n\nforum frap\n\ndeadline a: 2.days from Served() counted_by c\ndeadline b: 3.days from Filed() counted_by c\n"
+    );
+}
+
+#[test]
 fn cite_before_body_breaks_the_body() {
     let out = fmt("module m\nrule duty r cite \"FRCP 1\" { start s }\n");
     assert_eq!(

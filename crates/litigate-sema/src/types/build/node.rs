@@ -1,7 +1,7 @@
 //! Graph nodes and their edges (SPEC §5.1, field types from §6).
 use super::cx::{first_expr, first_ref, holes_of, Cx};
 use super::edge::Draw;
-use crate::db::parse::tree::{EdgeItem, Expr, ExprKind, Field, Item, NodeItem, RefPath};
+use crate::db::parse::tree::{EdgeItem, Expr, ExprKind, Field, Item, Name, NodeItem, RefPath};
 use crate::db::span::Report;
 use crate::hir::{Authored, Edge, Money, Node, NodeKind, Rational, Type, Valence, Value};
 use crate::resolve::suggest;
@@ -170,9 +170,29 @@ impl Cx<'_, '_> {
             "terminal" => self.terminal(&clauses, &fields),
             _ => NodeKind::State,
         };
+        let mut targets = BTreeMap::<String, usize>::new();
+        for edge in &n.edges {
+            *targets.entry(edge.to.last().text.clone()).or_default() += 1;
+        }
+        let mut parallel = BTreeMap::<String, usize>::new();
         let mut seen = BTreeSet::new();
         let mut edges = Vec::new();
-        for e in &n.edges {
+        for original in &n.edges {
+            let target = original.to.last().text.clone();
+            let mut e = original.clone();
+            if e.name.is_none() {
+                let ordinal = parallel.entry(target.clone()).or_default();
+                *ordinal += 1;
+                let suffix = if targets[&target] > 1 {
+                    format!("-{}", ordinal)
+                } else {
+                    String::new()
+                };
+                e.name = Some(Name {
+                    text: format!("edge-{}-{target}{suffix}", n.name.text),
+                    range: e.name_range,
+                });
+            }
             if let Some(id) = &e.name {
                 if !seen.insert(id.text.clone()) {
                     self.report(Report::new(
@@ -188,7 +208,7 @@ impl Cx<'_, '_> {
                 Draw::Forbidden
             };
             let fact = chance && tags.iter().any(|t| t == "fact");
-            edges.push(self.edge(e, &n.name.text, actor.as_deref(), draw, fact));
+            edges.push(self.edge(&e, &n.name.text, actor.as_deref(), draw, fact));
         }
         self.probability_sum(n, &edges, chance);
         self.disjoint_guards(n, &edges);

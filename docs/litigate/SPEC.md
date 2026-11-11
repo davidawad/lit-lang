@@ -214,7 +214,8 @@ Item         = StartDecl | GroupDecl | TypeDecl | EnumDecl | EventDecl | NodeDec
              | LinkDecl | InstanceDecl | RuleDecl | DeadlineDecl | CountingDecl
              | CalendarDecl | TransitionDecl | AuthorityDecl | DefaultDecl
              | ExceptionDecl | TestDecl | GrantDecl | RecharDecl | InvalidDecl
-             | CalibrationDecl ;
+             | CalibrationDecl | ForumDefaultDecl ;
+ForumDefaultDecl = "forum", Ident ;
 StartDecl    = "start", Ident ;
 GroupDecl    = "group", Ident, ":", String ;
 TypeDecl     = "type", Ident, "=", Type, [ WhereClause ] ;   (* refinements: §3.5 *)
@@ -236,7 +237,7 @@ NodeField    = "group", Ident | "note", String | "valence", Ident
              | "fee_shift", Number
              | "basis", Expr                         (* §5.1 "Basis" *)
              | "formerly", IdList ;
-EdgeDecl     = (Ident | "_"), String, "->", Ref, { EdgeClause }, [ EdgeFields ] ;
+EdgeDecl     = [ Ident ], String, "->", Ref, { EdgeClause }, [ EdgeFields ] ;
 EdgeClause   = "by", Ref | "p", ProbValue ;
 ProbValue    = Number, [ "/", Number ] | Hole | "(", Expr, ")" ;
 EdgeFields   = "{", { EdgeField, Sep }, "}" ;
@@ -364,8 +365,9 @@ PartiesBlock = "parties", "{", { Ident, ":", Ident, Ident, Sep }, "}" ;
 EventsBlock  = "events", "{", { [ Ident, ":" ], Date, [ "docket", Number ], CallExpr, ("by" | "on"), Ident,
                [ Cite ] }, "}" ;
 FactsBlock   = "facts", "{", { Ref, ":", Ref, Sep }, "}" ;
-StakesBlock  = "stakes", "{", { Ref, ":", ( (SignedMoney | "unvalued"), [ FeeShift ]
+StakesBlock  = "stakes", "{", { StakeKey, ":", ( (SignedMoney | "unvalued"), [ FeeShift ]
                | FeeShift ), Sep }, "}" ;
+StakeKey     = Ref | "outcome", Ident ;
 FeeShift     = "fee_shift", Number ;
 BeliefsBlock = "beliefs", "{", { ("prior" | "observe"), Ref, ":", "{", { Ref, ":", Number, Sep },
                "}", Sep }, "}" ;
@@ -1177,8 +1179,7 @@ compute the same values (before 1.0.0, `^` and `~` coincide).
   terminal (whose onward route is drawn); on a `decision`'s or a
   `state`'s edge, or a link leaving one, it is L2008. A self edge (`to` =
   its node) must not carry `p` (L2008). There are no mixed nodes.
-- `when C` guards an edge of a `fact` chance node (L2007 elsewhere, and on
-  an anonymous edge: the fact it derives names its edge). `C` is a
+- `when C` guards an edge of a `fact` chance node (L2007 elsewhere). `C` is a
   `Bool` over the matter's history only: `has_event(P)`, comparisons
   (`== != < <= > >=`) of date terms (a date literal, `date_of(P)` or
   `deadline(d)`), `true`/`false`, `!`, `&&`, `||` (L2001 otherwise). The
@@ -1196,8 +1197,14 @@ compute the same values (before 1.0.0, `^` and `~` coincide).
 - `event` binds an edge to an event pattern for case replay (§5.6). `within d`
   ties the edge to deadline declaration `d`. `deadline 30.days` is a literal
   window with no trigger semantics, kept for legacy edges.
-- `_` edges have no id. Lowering omits `id` and litgraph derives
-  `from->to#n`. Such edges can't be referenced (L9003 info).
+- An edge may omit its id. Its stable id is `edge-<from>-<to>`, using the
+  source node id and the target's final local id. When that node declaration
+  has multiple edges to the same target, every such edge instead receives
+  `edge-<from>-<to>-N`, where `N` is its one-based position among those
+  edges in source order. This disambiguation is local to a node declaration.
+  The id is present in lowered output and can be referenced like any other
+  edge id. An explicit id that equals this result is redundant and the
+  formatter removes it; a different explicit id is retained.
 - Tags `entry` (an extra root for reachability) and `fact` (a matter fact,
   allowed only on `chance`, L2007) carry meaning. All other tags are opaque.
 - `group` must name a declared group (L1002).
@@ -1296,6 +1303,10 @@ must compute that forum's periods (`forums` below); otherwise L3009, so no
 forum borrows another's computation rule (design review 2026-10-23, L2-L4).
 A district's or a circuit's own period is its own forum's: it needs no
 `forum frcp` or `forum frap`, since its family's rule counts it.
+At module scope, `forum F` sets the default forum for every deadline in
+that module. A deadline's own `forum F` option overrides it; when neither
+is present, the package's forum remains the default. The module default
+does not change the package manifest or any other module.
 `forum F cite "X" quote "..."` declares the rule by which `F`'s rules set
 the period, the **adopting rule**, with the words that adopt them: a
 Court of Federal Claims appeal is `forum frap cite "28 U.S.C. § 2522"
@@ -2256,7 +2267,13 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   terminal's fee-shift fraction for the matter (`scenario.fee_shifts`);
   `t: fee_shift f` alone gives no stake, so the terminal still needs a
   value from its package or another entry. Either form must name a
-  terminal (L4004).
+  terminal (L4004). `outcome tag: value` supplies that value to each
+  terminal in the used packages whose selected declaration at `as_of` and
+  `known_at` has `outcome [tag, ...]`. Multiple outcome rows that match one
+  terminal may supply the same value. Different values for that terminal
+  are L4004 naming both tags unless an explicit terminal entry overrides
+  them; the explicit entry supplies the matter's value. Outcome rows do not
+  change the exhaustiveness requirement.
 - `beliefs { observe node: { edge: count } }`: node must be a chance node, edges
   its own (L4006).
 - `beliefs { prior node: { edge: α } }` declares the Dirichlet prior the

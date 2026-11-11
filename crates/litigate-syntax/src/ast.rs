@@ -64,6 +64,7 @@ macro_rules! ast_node {
 ast_node!(LitFile, SourceFile);
 ast_node!(CaseFile, CaseFile);
 ast_node!(ModuleDecl, ModuleDecl);
+ast_node!(ForumDefaultDecl, ForumDefaultDecl);
 ast_node!(ImportDecl, ImportDecl);
 ast_node!(PackageDecl, PackageDecl);
 ast_node!(StartDecl, StartDecl);

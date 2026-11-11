@@ -1,8 +1,8 @@
 //! The `facts`, `stakes`, `beliefs`, and `opponents` blocks of a matter.
-use super::{child, children, field_value, money, sig, R};
+use super::{child, children, field_value, sig, R};
 use crate::db::parse::ref_path;
 use crate::db::span::{Report, TextRange};
-use crate::hir::{NodeKind, Observation, OpponentModel, Prior, Rational, Stake};
+use crate::hir::{NodeKind, Observation, OpponentModel, Prior, Rational};
 use crate::types::rational;
 use litigate_base::{Applicability, DiagnosticCode as C};
 use litigate_syntax::{SyntaxKind as K, SyntaxNode};
@@ -19,7 +19,7 @@ impl R<'_, '_> {
 
     /// Record fields keyed by a node reference that have a value or a
     /// `fee_shift` field: (node, key range, field).
-    fn entries(&mut self, block: &SyntaxNode) -> Vec<(String, TextRange, SyntaxNode)> {
+    pub(super) fn entries(&mut self, block: &SyntaxNode) -> Vec<(String, TextRange, SyntaxNode)> {
         let Some(record) = child(block, K::RecordExpr) else {
             return Vec::new();
         };
@@ -74,73 +74,8 @@ impl R<'_, '_> {
         facts
     }
 
-    /// The `stakes` block: each terminal's stake, and the fee-shift
-    /// fractions its entries give (`j: 1.usd fee_shift 0.5`).
-    pub(super) fn stakes(
-        &mut self,
-        block: &SyntaxNode,
-        text: &str,
-    ) -> (BTreeMap<String, Stake>, BTreeMap<String, Rational>) {
-        if let Some(close) = child(block, K::RecordExpr)
-            .and_then(|r| r.last_token())
-            .filter(|t| t.kind() == K::RBrace)
-        {
-            let at = crate::db::parse::range(close.text_range());
-            let before = text.get(..at.start as usize).unwrap_or_default();
-            let multiline = before
-                .rsplit('\n')
-                .next()
-                .is_some_and(|l| l.trim().is_empty());
-            let (insert, prefix, suffix) = if multiline {
-                let line_start =
-                    u32::try_from(before.rfind('\n').map_or(0, |i| i + 1)).unwrap_or(at.start);
-                (
-                    TextRange::new(line_start, line_start),
-                    "  ".to_owned(),
-                    "\n".to_owned(),
-                )
-            } else {
-                let last = before.trim_end();
-                let end = u32::try_from(last.len()).unwrap_or(at.start);
-                let sep = if last.ends_with('{') { " " } else { ", " };
-                (TextRange::new(end, end), sep.to_owned(), String::new())
-            };
-            self.spans.stakes_end = Some((self.s(insert), prefix, suffix));
-        }
-        let mut stakes = BTreeMap::new();
-        let mut fee_shifts = BTreeMap::new();
-        for (node, key, f) in self.entries(block) {
-            if let Some(v) = child(&f, K::Field).and_then(|s| self.fee_shift(&s)) {
-                fee_shifts.insert(node.clone(), v);
-            }
-            let Some(value) = field_value(&f) else {
-                self.spans.stakes.insert(node, self.s(key));
-                continue;
-            };
-            let range = sig(&value);
-            self.spans.stakes.insert(node.clone(), self.s(range));
-            let written: String = value.text().to_string().split_whitespace().collect();
-            let stake = if written == "unvalued" {
-                Some(Stake::Unvalued)
-            } else {
-                money(&written).map(Stake::Value)
-            };
-            match stake {
-                Some(s) => {
-                    stakes.insert(node, s);
-                }
-                None => self.out.push(Report::new(
-                    C::TypeMismatch,
-                    range,
-                    "expected a money amount like `-2_000.usd`, or `unvalued`",
-                )),
-            }
-        }
-        (stakes, fee_shifts)
-    }
-
     /// A stake's `fee_shift` fraction, in `[0, 1]`.
-    fn fee_shift(&mut self, field: &SyntaxNode) -> Option<Rational> {
+    pub(super) fn fee_shift(&mut self, field: &SyntaxNode) -> Option<Rational> {
         let (text, range) = super::token_text(field, K::Number)?;
         let value = rational::parse_decimal(&text)
             .ok()

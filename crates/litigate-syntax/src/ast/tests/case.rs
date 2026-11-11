@@ -21,6 +21,14 @@ fn version(op: &str, version: &str) -> VersionText {
 }
 
 #[test]
+fn stakes_accept_outcome_tag_keys_and_terminal_overrides() {
+    let parsed = parse_case(
+        "case c uses p ^1.0.0 as_of 2025-01-01 summary \"s\" stakes { outcome loss: -2.usd, terminal: 0.usd }\n",
+    );
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
+}
+
+#[test]
 fn header_items_of_a_full_matter() {
     let file = case(MATTER);
     assert_eq!(text(file.name()).as_deref(), Some("acme-appeal"));

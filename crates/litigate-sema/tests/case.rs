@@ -97,6 +97,80 @@ fn a_terminal_whose_pack_authors_a_payoff_needs_no_stake() {
     assert!(missing.diagnostics[0].message.contains("dismissed"));
 }
 
+#[test]
+fn outcome_stakes_expand_tags_and_keep_terminal_overrides_exhaustive() {
+    let text = edited(&[(
+        "stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd }",
+        "stakes { outcome loss: -2_000_000.usd, outcome win: 0.usd }",
+    )]);
+    let checked = check_example(&text, Profile::Dev);
+    assert!(checked.ok(), "{:#?}", render(&checked.diagnostics));
+    let case = checked.case.expect("resolved case");
+    assert_eq!(case.stakes.len(), 2);
+    assert_eq!(
+        case.stakes["frcp-rule12-example::judgment-entered"],
+        litigate_sema::hir::Stake::Value(litigate_sema::hir::Money {
+            minor_units: -200_000_000,
+            currency: "usd".into()
+        })
+    );
+    assert_eq!(
+        case.stakes["frcp-rule12-example::dismissed"],
+        litigate_sema::hir::Stake::Value(litigate_sema::hir::Money {
+            minor_units: 0,
+            currency: "usd".into()
+        })
+    );
+}
+
+#[test]
+fn conflicting_outcome_stakes_name_both_tags_and_allow_an_explicit_override() {
+    let mut packages = examples().to_vec();
+    for module in &mut packages[0].modules {
+        for declaration in &mut module.declarations {
+            if let litigate_sema::hir::Declaration::Node(node) = declaration {
+                if node.meta.id.rsplit("::").next() == Some("judgment-entered") {
+                    if let NodeKind::Terminal { outcomes, .. } = &mut node.kind {
+                        outcomes.push("win".into());
+                    }
+                }
+            }
+        }
+    }
+    let lock = lock(&packages);
+    let text = edited(&[(
+        "stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd }",
+        "stakes { outcome loss: -2_000_000.usd, outcome win: 0.usd }",
+    )]);
+    let conflict = check_with(
+        &text,
+        &packages,
+        Some(&lock),
+        examples_clock(),
+        Profile::Dev,
+    );
+    let diagnostic = conflict
+        .diagnostics
+        .iter()
+        .find(|diagnostic| diagnostic.message.contains("matches outcomes"))
+        .expect("conflicting tags are reported");
+    assert!(diagnostic.message.contains("`loss`"));
+    assert!(diagnostic.message.contains("`win`"));
+
+    let explicit_override = text.replace(
+        "outcome win: 0.usd }",
+        "outcome win: 0.usd, judgment-entered: -2_000_000.usd }",
+    );
+    let checked = check_with(
+        &explicit_override,
+        &packages,
+        Some(&lock),
+        examples_clock(),
+        Profile::Dev,
+    );
+    assert!(checked.ok(), "{:#?}", render(&checked.diagnostics));
+}
+
 /// A pack-authored payoff is a valued stake, not an `unvalued` one, so
 /// `strict` accepts it too (SPEC §5.6).
 #[test]

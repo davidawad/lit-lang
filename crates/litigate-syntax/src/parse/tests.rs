@@ -79,6 +79,10 @@ fn numeric_provenance_parses_for_probability_payoff_duration_cost_and_effort() {
     let bad = parse_lit("module m\nterminal t: \"t\" { payoff 1.usd basis mystery }\n");
     assert!(!bad.is_ok());
     assert!(bad.errors().iter().any(|e| e.message.contains("expected")));
+    let reversed = parse_lit(
+        "module m\nterminal t: \"t\" { payoff 1.usd vintage 2026-01-01 basis estimate }\n",
+    );
+    assert!(!reversed.is_ok());
 }
 
 #[test]

@@ -44,6 +44,12 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 ci
   forum frcrimp
 }
 
+test "Counting boundary: opposition-period (weekend)" cite "E.D. Ark. L.R. 7.2(b)"
+{
+  given MotionServed() on 2020-11-07
+  expect deadline(opposition-period) == 2020-11-23
+}
+
 /// L.R. 72.1, part XI.A: a party may file and serve an application for
 /// review of a magistrate judge's action, review of which is not
 /// otherwise specifically provided for by law or the local rules, not
@@ -51,6 +57,12 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 ci
 deadline magistrate-review-period: 14.days after MagistrateActionTaken() counted_by frcrimp45 cite "E.D. Ark. L.R. 72.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: magistrate-review-period (weekend)" cite "E.D. Ark. L.R. 72.1"
+{
+  given MagistrateActionTaken() on 2020-11-07
+  expect deadline(magistrate-review-period) == 2020-11-23
 }
 
 test "opposition period: 14 days after the trigger" cite "E.D. Ark. L.R. 7.2(b)"

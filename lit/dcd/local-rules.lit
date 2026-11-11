@@ -134,6 +134,12 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcp6-district
   forum frcp
 }
 
+test "Counting boundary: reply-period (weekend)" cite "D.D.C. LCvR 7(d)"
+{
+  given OppositionServed() on 2026-09-19
+  expect deadline(reply-period) == 2026-09-28
+}
+
 /// D.D.C. LCvR 7(g): on the granting of a motion to vacate an entry of
 /// default or a default judgment, the movant has 14 days to answer or
 /// otherwise respond to the complaint.
@@ -152,6 +158,12 @@ deadline administrative-record-list: 30.days after AgencyReviewAnswerServed() co
 } cite "D.D.C. LCvR 7(n)"
 {
   forum frcp
+}
+
+test "Counting boundary: administrative-record-list (weekend)" cite "D.D.C. LCvR 7(n)"
+{
+  given AgencyReviewAnswerServed() on 2026-09-17
+  expect deadline(administrative-record-list) == 2026-10-19
 }
 
 /// D.D.C. LCvR 7(n)(2): the joint appendix of the cited portions of the
@@ -180,6 +192,12 @@ deadline pretrial-statement: 14.days before FinalPretrialConference() counted_by
   forum frcp
 }
 
+test "Counting boundary: pretrial-statement (weekend)" cite "D.D.C. LCvR 16.5(a)"
+{
+  given FinalPretrialConference() on 2026-09-19
+  expect deadline(pretrial-statement) == 2026-09-04
+}
+
 /// D.D.C. LCvR 30.1: service of a notice of deposition seven days before
 /// the deposition is "reasonable notice" under FRCP 30(b); the Court may
 /// enlarge or shorten the time for good cause.
@@ -189,6 +207,12 @@ deadline deposition-notice: 7.days before Deposition() counted_by frcp6-district
 } cite "D.D.C. LCvR 30.1"
 {
   forum frcp
+}
+
+test "Counting boundary: deposition-notice (holiday)" cite "D.D.C. LCvR 30.1"
+{
+  given Deposition() on 2026-09-14
+  expect deadline(deposition-notice) == 2026-09-04
 }
 
 /// D.D.C. LCvR 30.1: for a deposition more than 50 miles from the District
@@ -201,12 +225,24 @@ deadline distant-deposition-notice: 14.days before DistantDeposition() counted_b
   forum frcp
 }
 
+test "Counting boundary: distant-deposition-notice (weekend)" cite "D.D.C. LCvR 30.1"
+{
+  given DistantDeposition() on 2026-09-19
+  expect deadline(distant-deposition-notice) == 2026-09-04
+}
+
 /// D.D.C. LCvR 65.1(c): the opposition to an application for a preliminary
 /// injunction is served and filed within seven days after service of the
 /// application, with all affidavits the defendant relies on.
 deadline preliminary-injunction-opposition: 7.days after PreliminaryInjunctionApplicationServed() counted_by frcp6-district-of-columbia cite "D.D.C. LCvR 65.1(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: preliminary-injunction-opposition (weekend)" cite "D.D.C. LCvR 65.1(c)"
+{
+  given PreliminaryInjunctionApplicationServed() on 2026-09-19
+  expect deadline(preliminary-injunction-opposition) == 2026-09-28
 }
 
 /// D.D.C. LCvR 54.1(a): a bill of costs is filed within 21 days after entry
@@ -219,6 +255,12 @@ deadline bill-of-costs: 21.days after JudgmentEntered() counted_by frcp6-distric
 } cite "D.D.C. LCvR 54.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: bill-of-costs (weekend)" cite "D.D.C. LCvR 54.1(a)"
+{
+  given JudgmentEntered() on 2026-09-19
+  expect deadline(bill-of-costs) == 2026-10-13
 }
 
 /// D.D.C. LCvR 54.1(b): a party from whom costs are sought may oppose the

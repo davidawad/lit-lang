@@ -62,6 +62,12 @@ deadline retained-counsel-withdrawal-period: 7.days after Arraigned() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: retained-counsel-withdrawal-period (weekend)" cite "N.D. Fla. Loc. R. 11.1(I)"
+{
+  given Arraigned() on 2015-11-28
+  expect deadline(retained-counsel-withdrawal-period) == 2015-12-07
+}
+
 /// N.D. Fla. Loc. R. 26.2(B): at the earliest opportunity and no later
 /// than 7 days after arraignment, the defendant's attorney contacts the
 /// government's attorney in a good-faith attempt to obtain discoverable
@@ -69,6 +75,12 @@ deadline retained-counsel-withdrawal-period: 7.days after Arraigned() counted_by
 deadline defense-discovery-contact-period: 7.days after Arraigned() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(B)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defense-discovery-contact-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(B)"
+{
+  given Arraigned() on 2015-11-28
+  expect deadline(defense-discovery-contact-period) == 2015-12-07
 }
 
 /// N.D. Fla. Loc. R. 26.2(B): on the defendant's request the government
@@ -80,6 +92,12 @@ deadline government-disclosure-period: 7.days after DefenseDisclosureRequested()
   forum frcrimp
 }
 
+test "Counting boundary: government-disclosure-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(B)"
+{
+  given DefenseDisclosureRequested() on 2015-11-28
+  expect deadline(government-disclosure-period) == 2015-12-07
+}
+
 /// N.D. Fla. Loc. R. 26.2(D): within 7 days after arraignment, or promptly
 /// after acquiring knowledge of it, the government provides Brady and
 /// Giglio material, testifying informants' convictions, identification
@@ -87,6 +105,12 @@ deadline government-disclosure-period: 7.days after DefenseDisclosureRequested()
 deadline brady-giglio-disclosure-period: 7.days after Arraigned() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(D)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: brady-giglio-disclosure-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(D)"
+{
+  given Arraigned() on 2015-11-28
+  expect deadline(brady-giglio-disclosure-period) == 2015-12-07
 }
 
 /// N.D. Fla. Loc. R. 26.2(C): the government makes its FRCrimP 16 requests
@@ -97,12 +121,24 @@ deadline government-reciprocal-request-period: 3.days after DefenseRequestMet() 
   forum frcrimp
 }
 
+test "Counting boundary: government-reciprocal-request-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(C)"
+{
+  given DefenseRequestMet() on 2015-11-25
+  expect deadline(government-reciprocal-request-period) == 2015-11-30
+}
+
 /// N.D. Fla. Loc. R. 26.2(C)(1): within 7 days after the government's
 /// request, the defendant provides the documents and tangible objects it
 /// intends to introduce in its case-in-chief.
 deadline defense-documents-period: 7.days after GovernmentDisclosureRequested() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defense-documents-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(C)"
+{
+  given GovernmentDisclosureRequested() on 2015-11-28
+  expect deadline(defense-documents-period) == 2015-12-07
 }
 
 /// N.D. Fla. Loc. R. 26.2(C)(3): within 14 days after the government's
@@ -112,12 +148,24 @@ deadline defense-expert-summary-period: 14.days after GovernmentDisclosureReques
   forum frcrimp
 }
 
+test "Counting boundary: defense-expert-summary-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(C)"
+{
+  given GovernmentDisclosureRequested() on 2015-11-28
+  expect deadline(defense-expert-summary-period) == 2015-12-14
+}
+
 /// N.D. Fla. Loc. R. 26.2(C)(2): at least 30 days before trial, the
 /// defendant provides the results or reports of examinations and tests it
 /// intends to introduce or that a defense witness prepared.
 deadline defense-reports-period: 30.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defense-reports-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(C)"
+{
+  given TrialScheduled() on 2015-11-24
+  expect deadline(defense-reports-period) == 2015-10-23
 }
 
 /// N.D. Fla. Loc. R. 26.2(F)(1): a defendant relying on insanity, or
@@ -129,11 +177,23 @@ deadline insanity-notice-period: 14.days after Arraigned() counted_by frcrimp45 
   forum frcrimp
 }
 
+test "Counting boundary: insanity-notice-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(F)"
+{
+  given Arraigned() on 2015-11-28
+  expect deadline(insanity-notice-period) == 2015-12-14
+}
+
 /// N.D. Fla. Loc. R. 26.2(F)(3): a defendant relying on entrapment
 /// discloses it by written notice at least 14 days before trial.
 deadline entrapment-notice-period: 14.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 26.2(F)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: entrapment-notice-period (holiday)" cite "N.D. Fla. Loc. R. 26.2(F)"
+{
+  given TrialScheduled() on 2015-11-25
+  expect deadline(entrapment-notice-period) == 2015-11-10
 }
 
 /// N.D. Fla. Loc. R. 26.2(G)(1): the attorneys confer at least 7 days
@@ -144,11 +204,23 @@ deadline discovery-conference-period: 7.days before JurySelectionScheduled() cou
   forum frcrimp
 }
 
+test "Counting boundary: discovery-conference-period (weekend)" cite "N.D. Fla. Loc. R. 26.2(G)"
+{
+  given JurySelectionScheduled() on 2015-11-28
+  expect deadline(discovery-conference-period) == 2015-11-20
+}
+
 /// N.D. Fla. Loc. R. 88.1(G): a sentencing memorandum is due three days
 /// before the sentencing hearing.
 deadline sentencing-memorandum-period: 3.days before SentencingHearingScheduled() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 88.1(G)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-memorandum-period (weekend)" cite "N.D. Fla. Loc. R. 88.1(G)"
+{
+  given SentencingHearingScheduled() on 2015-11-24
+  expect deadline(sentencing-memorandum-period) == 2015-11-20
 }
 
 /// N.D. Fla. Loc. R. 88.2(D): the appellant serves and files a brief
@@ -159,6 +231,12 @@ deadline misdemeanor-appellant-brief-period: 15.days after MisdemeanorAppealReco
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appellant-brief-period (weekend)" cite "N.D. Fla. Loc. R. 88.2(D)"
+{
+  given MisdemeanorAppealRecordReady() on 2015-11-27
+  expect deadline(misdemeanor-appellant-brief-period) == 2015-12-14
+}
+
 /// N.D. Fla. Loc. R. 88.2(D): the appellee's brief within 15 days of
 /// service of the appellant's brief.
 deadline misdemeanor-appellee-brief-period: 15.days after MisdemeanorAppellantBriefServed() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 88.2(D)"
@@ -166,11 +244,23 @@ deadline misdemeanor-appellee-brief-period: 15.days after MisdemeanorAppellantBr
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appellee-brief-period (weekend)" cite "N.D. Fla. Loc. R. 88.2(D)"
+{
+  given MisdemeanorAppellantBriefServed() on 2015-11-27
+  expect deadline(misdemeanor-appellee-brief-period) == 2015-12-14
+}
+
 /// N.D. Fla. Loc. R. 88.2(D): an optional reply brief within 7 days of
 /// service of the appellee's brief.
 deadline misdemeanor-reply-brief-period: 7.days after MisdemeanorAppelleeBriefServed() counted_by frcrimp45 cite "N.D. Fla. Loc. R. 88.2(D)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: misdemeanor-reply-brief-period (weekend)" cite "N.D. Fla. Loc. R. 88.2(D)"
+{
+  given MisdemeanorAppelleeBriefServed() on 2015-11-28
+  expect deadline(misdemeanor-reply-brief-period) == 2015-12-07
 }
 
 test "retained counsel withdrawal period: 7 days after the trigger" cite "N.D. Fla. Loc. R. 11.1(I)"

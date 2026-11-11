@@ -113,11 +113,23 @@ deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "M.
   forum frcp
 }
 
+test "Counting boundary: response-period (weekend)" cite "M.D. Tenn. L.R. 7.01(a)(3)"
+{
+  given MotionServed() on 2025-05-17
+  expect deadline(response-period) == 2025-06-02
+}
+
 /// LR 7.01(a)(4): an optional reply memorandum may be filed within 7 days
 /// after service of the response.
 deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "M.D. Tenn. L.R. 7.01(a)(4)"
 {
   forum frcp
+}
+
+test "Counting boundary: reply-period (weekend)" cite "M.D. Tenn. L.R. 7.01(a)(4)"
+{
+  given ResponseServed() on 2025-05-17
+  expect deadline(reply-period) == 2025-05-27
 }
 
 /// LR 7.01(b): if the court acts on a motion before the time allowed for
@@ -126,6 +138,12 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "M.D.
 deadline early-ruling-relief-period: 14.days after EarlyRulingServed() counted_by frcp6 cite "M.D. Tenn. L.R. 7.01(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: early-ruling-relief-period (weekend)" cite "M.D. Tenn. L.R. 7.01(b)"
+{
+  given EarlyRulingServed() on 2025-05-17
+  expect deadline(early-ruling-relief-period) == 2025-06-02
 }
 
 /// LR 56.01(d): unless otherwise ordered, the respondent responds to a
@@ -138,11 +156,23 @@ deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionSe
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-response-period (weekend)" cite "M.D. Tenn. L.R. 56.01(d)"
+{
+  given SummaryJudgmentMotionServed() on 2025-05-17
+  expect deadline(summary-judgment-response-period) == 2025-06-09
+}
+
 /// LR 56.01(f): unless otherwise ordered, the movant may file an optional
 /// reply within 14 days of service of the response.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "M.D. Tenn. L.R. 56.01(f)"
 {
   forum frcp
+}
+
+test "Counting boundary: summary-judgment-reply-period (weekend)" cite "M.D. Tenn. L.R. 56.01(f)"
+{
+  given SummaryJudgmentResponseServed() on 2025-05-17
+  expect deadline(summary-judgment-reply-period) == 2025-06-02
 }
 
 /// LR 39.01(c)(4): in jury cases, counsel offering a deposition as a
@@ -154,12 +184,24 @@ deadline deposition-designation-period: 14.days before TrialBegins() counted_by 
   forum frcp
 }
 
+test "Counting boundary: deposition-designation-period (weekend)" cite "M.D. Tenn. L.R. 39.01(c)"
+{
+  given TrialBegins() on 2025-05-17
+  expect deadline(deposition-designation-period) == 2025-05-02
+}
+
 /// LR 39.01(c)(4): objections to the designated deposition portions are
 /// filed, with any videos, no later than 7 days before trial or as the
 /// court orders.
 deadline deposition-objection-period: 7.days before TrialBegins() counted_by frcp6 cite "M.D. Tenn. L.R. 39.01(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: deposition-objection-period (weekend)" cite "M.D. Tenn. L.R. 39.01(c)"
+{
+  given TrialBegins() on 2025-05-17
+  expect deadline(deposition-objection-period) == 2025-05-09
 }
 
 /// LR 39.01(e): unless a pretrial or other order provides otherwise,
@@ -180,12 +222,24 @@ deadline trial-subpoena-period: 14.days before TrialBegins() counted_by frcp6 ci
   forum frcp
 }
 
+test "Counting boundary: trial-subpoena-period (weekend)" cite "M.D. Tenn. L.R. 39.01(f)"
+{
+  given TrialBegins() on 2025-05-17
+  expect deadline(trial-subpoena-period) == 2025-05-02
+}
+
 /// LR 54.01(a): if counsel cannot agree on costs, the prevailing party
 /// files a bill of costs with supporting documentation within 30 days
 /// from the entry of the judgment.
 deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: bill-of-costs-period (weekend)" cite "M.D. Tenn. L.R. 54.01(a)"
+{
+  given JudgmentEntered() on 2025-05-15
+  expect deadline(bill-of-costs-period) == 2025-06-16
 }
 
 /// LR 54.01(a): exceptions to the Clerk's proposed taxation are filed
@@ -195,11 +249,23 @@ deadline taxation-exceptions-period: 14.days after NoticeOfTaxationFiled() count
   forum frcp
 }
 
+test "Counting boundary: taxation-exceptions-period (weekend)" cite "M.D. Tenn. L.R. 54.01(a)"
+{
+  given NoticeOfTaxationFiled() on 2025-05-17
+  expect deadline(taxation-exceptions-period) == 2025-06-02
+}
+
 /// LR 54.01(a): a motion for court review of the Clerk's taxation is
 /// filed within 7 days from the filing of the Taxation of Costs.
 deadline taxation-review-period: 7.days after TaxationOfCostsFiled() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: taxation-review-period (weekend)" cite "M.D. Tenn. L.R. 54.01(a)"
+{
+  given TaxationOfCostsFiled() on 2025-05-17
+  expect deadline(taxation-review-period) == 2025-05-27
 }
 
 /// LR 54.01(b)(1): unless a statute or order provides otherwise, a motion
@@ -208,6 +274,12 @@ deadline taxation-review-period: 7.days after TaxationOfCostsFiled() counted_by 
 deadline fee-motion-period: 30.days after JudgmentEntered() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(b)(1)"
 {
   forum frcp
+}
+
+test "Counting boundary: fee-motion-period (weekend)" cite "M.D. Tenn. L.R. 54.01(b)(1)"
+{
+  given JudgmentEntered() on 2025-05-15
+  expect deadline(fee-motion-period) == 2025-06-16
 }
 
 /// LR 54.01(b)(2): unless a statute or order provides otherwise, a motion
@@ -219,12 +291,24 @@ deadline appellate-fee-motion-period: 30.days after MandateEntered() counted_by 
   forum frcp
 }
 
+test "Counting boundary: appellate-fee-motion-period (weekend)" cite "M.D. Tenn. L.R. 54.01(b)(2)"
+{
+  given MandateEntered() on 2025-05-15
+  expect deadline(appellate-fee-motion-period) == 2025-06-16
+}
+
 /// LR 54.01(c): the party against whom fees are requested files any
 /// objections, with a memorandum, within 14 days of the filing of the
 /// motion; failure may be deemed no opposition.
 deadline fee-objections-period: 14.days after FeeMotionFiled() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: fee-objections-period (weekend)" cite "M.D. Tenn. L.R. 54.01(c)"
+{
+  given FeeMotionFiled() on 2025-05-17
+  expect deadline(fee-objections-period) == 2025-06-02
 }
 
 /// LR 72.01(b): any response to a motion for review of a magistrate
@@ -235,6 +319,12 @@ deadline review-response-period: 14.days after ReviewMotionServed() counted_by f
   forum frcp
 }
 
+test "Counting boundary: review-response-period (weekend)" cite "M.D. Tenn. L.R. 72.01(b)"
+{
+  given ReviewMotionServed() on 2025-05-17
+  expect deadline(review-response-period) == 2025-06-02
+}
+
 /// LR 72.04: if transcripts are needed for review, the moving party
 /// arranges transcription within 14 days from service of the motion for
 /// review on opposing counsel.
@@ -243,12 +333,24 @@ deadline review-transcript-period: 14.days after ReviewMotionServed() counted_by
   forum frcp
 }
 
+test "Counting boundary: review-transcript-period (weekend)" cite "M.D. Tenn. L.R. 72.04"
+{
+  given ReviewMotionServed() on 2025-05-17
+  expect deadline(review-transcript-period) == 2025-06-02
+}
+
 /// LR 73.01(c)(1): after an additional party joins a case referred to a
 /// magistrate judge on consent, a new consent form, if all parties agree,
 /// is filed within 30 days after the additional party's appearance.
 deadline added-party-consent-period: 30.days after AdditionalPartyAppears() counted_by frcp6 cite "M.D. Tenn. L.R. 73.01(c)(1)"
 {
   forum frcp
+}
+
+test "Counting boundary: added-party-consent-period (weekend)" cite "M.D. Tenn. L.R. 73.01(c)(1)"
+{
+  given AdditionalPartyAppears() on 2025-05-15
+  expect deadline(added-party-consent-period) == 2025-06-16
 }
 
 test "Deadline arithmetic: response-period (14 days after)" cite "M.D. Tenn. L.R. 7.01(a)(3)"

@@ -37,12 +37,24 @@ deadline reply-period: 14.days after ResponseServed() counted_by frcp6 cite "M.D
   forum frcp
 }
 
+test "Counting boundary: reply-period (weekend)" cite "M.D. Ga. L.R. 7.3"
+{
+  given ResponseServed() on 2022-03-12
+  expect deadline(reply-period) == 2022-03-28
+}
+
 /// L.R. 7.3.1(C): briefing concludes with the reply; a party desiring to
 /// file a surreply moves in writing for permission within 14 days of the
 /// filing of the brief to which reply is desired.
 deadline surreply-motion-period: 14.days after ReplyBriefFiled() counted_by frcp6 cite "M.D. Ga. L.R. 7.3.1"
 {
   forum frcp
+}
+
+test "Counting boundary: surreply-motion-period (weekend)" cite "M.D. Ga. L.R. 7.3.1"
+{
+  given ReplyBriefFiled() on 2022-03-12
+  expect deadline(surreply-motion-period) == 2022-03-28
 }
 
 /// L.R. 7.6: except for motions under Fed. R. Civ. P. 59(e), a motion for
@@ -53,11 +65,23 @@ deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 c
   forum frcp
 }
 
+test "Counting boundary: reconsideration-period (weekend)" cite "M.D. Ga. L.R. 7.6"
+{
+  given OrderEntered() on 2022-03-12
+  expect deadline(reconsideration-period) == 2022-03-28
+}
+
 /// L.R. 7.6: responses to a motion for reconsideration are filed not later
 /// than 14 days after service of the motion.
 deadline reconsideration-response-period: 14.days after ReconsiderationMotionServed() counted_by frcp6 cite "M.D. Ga. L.R. 7.6"
 {
   forum frcp
+}
+
+test "Counting boundary: reconsideration-response-period (weekend)" cite "M.D. Ga. L.R. 7.6"
+{
+  given ReconsiderationMotionServed() on 2022-03-12
+  expect deadline(reconsideration-response-period) == 2022-03-28
 }
 
 /// L.R. 7.7: a party objecting to a motion excepted from the standard
@@ -68,12 +92,24 @@ deadline excepted-motion-objection-period: 7.days after ExceptedMotionServed() c
   forum frcp
 }
 
+test "Counting boundary: excepted-motion-objection-period (weekend)" cite "M.D. Ga. L.R. 7.7"
+{
+  given ExceptedMotionServed() on 2022-03-12
+  expect deadline(excepted-motion-objection-period) == 2022-03-21
+}
+
 /// L.R. 54.1: unless a statute provides otherwise, a motion for attorney's
 /// fees is filed within 14 days from the clerk's entry of judgment; a late
 /// motion is deemed a waiver of fees.
 deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "M.D. Ga. L.R. 54.1"
 {
   forum frcp
+}
+
+test "Counting boundary: fee-motion-period (weekend)" cite "M.D. Ga. L.R. 54.1"
+{
+  given JudgmentEntered() on 2022-03-12
+  expect deadline(fee-motion-period) == 2022-03-28
 }
 
 /// L.R. 54.2.2: the prevailing party files a bill of costs within 30 days
@@ -83,11 +119,23 @@ deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 
   forum frcp
 }
 
+test "Counting boundary: bill-of-costs-period (weekend)" cite "M.D. Ga. L.R. 54.2.2"
+{
+  given JudgmentEntered() on 2022-03-10
+  expect deadline(bill-of-costs-period) == 2022-04-11
+}
+
 /// L.R. 54.2.2: opposing counsel has 21 days from service of the bill of
 /// costs to file a response.
 deadline bill-of-costs-response-period: 21.days after BillOfCostsServed() counted_by frcp6 cite "M.D. Ga. L.R. 54.2.2"
 {
   forum frcp
+}
+
+test "Counting boundary: bill-of-costs-response-period (weekend)" cite "M.D. Ga. L.R. 54.2.2"
+{
+  given BillOfCostsServed() on 2022-03-12
+  expect deadline(bill-of-costs-response-period) == 2022-04-04
 }
 
 start motion-served

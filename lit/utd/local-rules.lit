@@ -183,6 +183,12 @@ deadline filing-fee-period: 7.days after ComplaintFiled() counted_by frcp6-utah 
   forum frcp
 }
 
+test "Counting boundary: filing-fee-period (weekend)" cite "DUCivR 3-1"
+{
+  given ComplaintFiled() on 2025-12-06
+  expect deadline(filing-fee-period) == 2025-12-15
+}
+
 /// DUCivR 7-1(a)(4)(A)(iii): a response to a motion under FRCP 12(b),
 /// 12(c) or 23(c) is filed within 28 days after service of the motion,
 /// unless the court orders otherwise. A stipulation to extend a filing
@@ -192,6 +198,12 @@ deadline filing-fee-period: 7.days after ComplaintFiled() counted_by frcp6-utah 
 deadline pleading-response-period: 28.days after PleadingMotionServed() counted_by frcp6-utah cite "DUCivR 7-1(a)(4)"
 {
   forum frcp
+}
+
+test "Counting boundary: pleading-response-period (holiday)" cite "DUCivR 7-1(a)(4)"
+{
+  given PleadingMotionServed() on 2025-12-04
+  expect deadline(pleading-response-period) == 2026-01-02
 }
 
 /// DUCivR 7-1(a)(4)(A)(iv): a reply may be filed within 14 days after
@@ -209,6 +221,12 @@ deadline pleading-reply-period: 14.days after PleadingResponseServed() counted_b
 deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6-utah cite "DUCivR 7-1(a)(4)"
 {
   forum frcp
+}
+
+test "Counting boundary: summary-judgment-response-period (holiday)" cite "DUCivR 7-1(a)(4)"
+{
+  given SummaryJudgmentMotionServed() on 2025-12-04
+  expect deadline(summary-judgment-response-period) == 2026-01-02
 }
 
 /// DUCivR 7-1(a)(4)(B)(iv): a reply may be filed within 14 days after
@@ -254,6 +272,12 @@ deadline evidentiary-objection-period: 7.days after ReplyWithNewEvidenceServed()
   forum frcp
 }
 
+test "Counting boundary: evidentiary-objection-period (weekend)" cite "DUCivR 7-1(b)"
+{
+  given ReplyWithNewEvidenceServed() on 2025-12-06
+  expect deadline(evidentiary-objection-period) == 2025-12-15
+}
+
 /// DUCivR 7-1: if the court has not ruled on the motion, a party may file
 /// a response to a Notice of Supplemental Authority within 7 days after
 /// service of the notice; the court may decide the motion without waiting
@@ -261,6 +285,12 @@ deadline evidentiary-objection-period: 7.days after ReplyWithNewEvidenceServed()
 deadline supplemental-authority-response-period: 7.days after SupplementalAuthorityNoticeServed() counted_by frcp6-utah cite "DUCivR 7-1"
 {
   forum frcp
+}
+
+test "Counting boundary: supplemental-authority-response-period (weekend)" cite "DUCivR 7-1"
+{
+  given SupplementalAuthorityNoticeServed() on 2025-12-06
+  expect deadline(supplemental-authority-response-period) == 2025-12-15
 }
 
 /// DUCivR 7-6(b)(3): any party may file a response to a motion for leave
@@ -271,11 +301,23 @@ deadline amicus-motion-response-period: 7.days after AmicusMotionServed() counte
   forum frcp
 }
 
+test "Counting boundary: amicus-motion-response-period (weekend)" cite "DUCivR 7-6(b)"
+{
+  given AmicusMotionServed() on 2025-12-06
+  expect deadline(amicus-motion-response-period) == 2025-12-15
+}
+
 /// DUCivR 7-6(b)(4): a party granted leave files the amicus memorandum
 /// within 3 days of the order.
 deadline amicus-memorandum-filing-period: 3.days after AmicusLeaveGranted() counted_by frcp6-utah cite "DUCivR 7-6(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: amicus-memorandum-filing-period (weekend)" cite "DUCivR 7-6(b)"
+{
+  given AmicusLeaveGranted() on 2025-12-03
+  expect deadline(amicus-memorandum-filing-period) == 2025-12-08
 }
 
 /// DUCivR 7-6(e)(1): an amicus supporting the moving party files its
@@ -295,6 +337,12 @@ deadline amicus-opposing-period: 7.days after OpposedResponseFiled() counted_by 
   forum frcp
 }
 
+test "Counting boundary: amicus-opposing-period (weekend)" cite "DUCivR 7-6(e)"
+{
+  given OpposedResponseFiled() on 2025-12-06
+  expect deadline(amicus-opposing-period) == 2025-12-15
+}
+
 /// DUCivR 37-1(b)(2)(C): a Short Form Discovery Motion is filed no later
 /// than 45 days after the prompt written communication of DUCivR
 /// 37-1(a)(2) was sent to opposing counsel, unless the court extends the
@@ -303,6 +351,12 @@ deadline amicus-opposing-period: 7.days after OpposedResponseFiled() counted_by 
 deadline short-form-discovery-motion-period: 45.days after DiscoveryDisputeLetterSent() counted_by frcp6-utah cite "DUCivR 37-1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: short-form-discovery-motion-period (weekend)" cite "DUCivR 37-1(b)"
+{
+  given DiscoveryDisputeLetterSent() on 2025-12-03
+  expect deadline(short-form-discovery-motion-period) == 2026-01-20
 }
 
 /// DUCivR 54-1(a)(2)(A)(i): unless a statute provides otherwise or the
@@ -350,6 +404,12 @@ deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6-utah ci
   forum frcp
 }
 
+test "Counting boundary: costs-review-period (weekend)" cite "DUCivR 54-1(b)"
+{
+  given CostsTaxed() on 2025-12-06
+  expect deadline(costs-review-period) == 2025-12-15
+}
+
 /// DUCivR 72-2(b)(3): if the district judge does not overrule an objection
 /// to a magistrate judge's order within 14 days after it is filed, the
 /// non-objecting party emails a proposed order to chambers. A response is
@@ -368,6 +428,12 @@ deadline consent-form-period: 21.days after ConsentFormSent() counted_by frcp6-u
   forum frcp
 }
 
+test "Counting boundary: consent-form-period (holiday)" cite "DUCivR 72-3(c)"
+{
+  given ConsentFormSent() on 2025-12-04
+  expect deadline(consent-form-period) == 2025-12-26
+}
+
 /// DUCivR 81-1(a)(2)(C): in a diversity removal, if the citizenship
 /// information or service dates the Notice of Removal must state are
 /// unknown, the removing party files an amended notice containing them
@@ -377,6 +443,12 @@ deadline consent-form-period: 21.days after ConsentFormSent() counted_by frcp6-u
 deadline removal-amended-notice-period: 21.days after ActionRemoved() counted_by frcp6-utah cite "DUCivR 81-1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: removal-amended-notice-period (holiday)" cite "DUCivR 81-1(a)"
+{
+  given ActionRemoved() on 2025-12-04
+  expect deadline(removal-amended-notice-period) == 2025-12-26
 }
 
 test "Deadline arithmetic: filing-fee-period (7 days after)" cite "DUCivR 3-1"

@@ -49,6 +49,12 @@ deadline grand-jury-subpoena-challenge: 7.days before GrandJurySubpoenaReturnDat
   forum frcrimp
 }
 
+test "Counting boundary: grand-jury-subpoena-challenge (weekend)" cite "N.D. Ind. L. Cr. R. 6-1(d)"
+{
+  given GrandJurySubpoenaReturnDate() on 2022-02-26
+  expect deadline(grand-jury-subpoena-challenge) == 2022-02-18
+}
+
 /// N.D. Ind. L. Cr. R. 12-1(a): a party using the pretrial authentication
 /// procedure serves on opposing parties, at least 30 days before trial, a
 /// copy of each exhibit and a statement of intent to authenticate it under
@@ -58,12 +64,24 @@ deadline authentication-notice: 30.days before TrialDateSet() counted_by frcrimp
   forum frcrimp
 }
 
+test "Counting boundary: authentication-notice (weekend)" cite "N.D. Ind. L. Cr. R. 12-1(a)"
+{
+  given TrialDateSet() on 2022-02-28
+  expect deadline(authentication-notice) == 2022-01-28
+}
+
 /// N.D. Ind. L. Cr. R. 12-1(b): if the subdivision (a) procedure is used,
 /// an objection to an exhibit's authenticity or foundation is waived
 /// unless an opposing party files it at least 14 days before trial.
 deadline authentication-objection: 14.days before TrialDateSet() counted_by frcrimp45 cite "N.D. Ind. L. Cr. R. 12-1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: authentication-objection (weekend)" cite "N.D. Ind. L. Cr. R. 12-1(b)"
+{
+  given TrialDateSet() on 2022-02-26
+  expect deadline(authentication-objection) == 2022-02-11
 }
 
 test "grand jury subpoena challenge: 7 days before the trigger" cite "N.D. Ind. L. Cr. R. 6-1(d)"

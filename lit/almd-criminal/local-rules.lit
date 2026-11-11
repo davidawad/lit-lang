@@ -36,6 +36,12 @@ deadline drug-test-challenge-notice-period: 14.days before RevocationHearingSche
   forum frcrimp
 }
 
+test "Counting boundary: drug-test-challenge-notice-period (weekend)" cite "M.D. Ala. LCrR 57.1"
+{
+  given RevocationHearingScheduled() on 2010-12-04
+  expect deadline(drug-test-challenge-notice-period) == 2010-11-19
+}
+
 /// M.D. Ala. LCrR 57.1(2): after such a notice, the government files and
 /// serves, at least seven days before the hearing "computed in accordance
 /// with Fed. R. Crim. P. 45", each laboratory report, the chain-of-custody
@@ -43,6 +49,12 @@ deadline drug-test-challenge-notice-period: 14.days before RevocationHearingSche
 deadline drug-test-materials-period: 7.days before RevocationHearingScheduled() counted_by frcrimp45 cite "M.D. Ala. LCrR 57.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: drug-test-materials-period (holiday)" cite "M.D. Ala. LCrR 57.1"
+{
+  given RevocationHearingScheduled() on 2010-12-02
+  expect deadline(drug-test-materials-period) == 2010-11-24
 }
 
 test "drug test challenge notice period: 14 days before the trigger" cite "M.D. Ala. LCrR 57.1"

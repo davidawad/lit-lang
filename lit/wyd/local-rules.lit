@@ -127,82 +127,190 @@ event AgencyResponseBriefServed()
 /// returned, and in any event no later than the time within which the
 /// party served must respond.
 deadline return-of-service-period: 10.days after ServiceEffected() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 4.1(b)"
+
+test "Counting boundary: return-of-service-period (weekend)" cite "U.S.D.C.L.R. 4.1(b)"
+{
+  given ServiceEffected() on 2026-10-28
+  expect deadline(return-of-service-period) == 2026-11-09
+}
 /// U.S.D.C.L.R. 7.1(b)(1)(B): each party opposing a non-dispositive
 /// motion has 14 days after its filing to file a written response; the
 /// Court may treat a failure to respond timely as a confession of the
 /// motion.
 deadline nondispositive-response-period: 14.days after NondispositiveMotionFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 7.1(b)(1)(B)"
+
+test "Counting boundary: nondispositive-response-period (holiday)" cite "U.S.D.C.L.R. 7.1(b)(1)(B)"
+{
+  given NondispositiveMotionFiled() on 2026-10-28
+  expect deadline(nondispositive-response-period) == 2026-11-12
+}
 /// U.S.D.C.L.R. 7.1(b)(1)(D): for a non-dispositive motion decided
 /// without a hearing, a reply brief may be filed within 7 days of the
 /// filing of the response brief.
 deadline nondispositive-reply-period: 7.days after NondispositiveResponseFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 7.1(b)(1)(D)"
+
+test "Counting boundary: nondispositive-reply-period (weekend)" cite "U.S.D.C.L.R. 7.1(b)(1)(D)"
+{
+  given NondispositiveResponseFiled() on 2026-10-31
+  expect deadline(nondispositive-reply-period) == 2026-11-09
+}
 /// U.S.D.C.L.R. 7.1(b)(2)(A): each party opposing a dispositive motion
 /// has 14 days from its filing to file a written brief in opposition; a
 /// party that does not intend to oppose a motion not marked unopposed
 /// files a notice of non-opposition no later than the same deadline.
 deadline dispositive-response-period: 14.days after DispositiveMotionFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 7.1(b)(2)(A)"
+
+test "Counting boundary: dispositive-response-period (holiday)" cite "U.S.D.C.L.R. 7.1(b)(2)(A)"
+{
+  given DispositiveMotionFiled() on 2026-10-28
+  expect deadline(dispositive-response-period) == 2026-11-12
+}
 /// U.S.D.C.L.R. 7.1(b)(2)(C): for a dispositive motion decided without a
 /// hearing, a reply brief may be filed within 7 days of the filing of the
 /// response brief.
 deadline dispositive-reply-period: 7.days after DispositiveResponseFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 7.1(b)(2)(C)"
+
+test "Counting boundary: dispositive-reply-period (weekend)" cite "U.S.D.C.L.R. 7.1(b)(2)(C)"
+{
+  given DispositiveResponseFiled() on 2026-10-31
+  expect deadline(dispositive-reply-period) == 2026-11-09
+}
 /// U.S.D.C.L.R. 30.1(a): unless the Court orders otherwise, reasonable
 /// notice of a deposition under FRCP 30(b)(1) is not less than 14 days,
 /// computed under FRCP 6.
 deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 30.1(a)"
+
+test "Counting boundary: deposition-notice-period (weekend)" cite "U.S.D.C.L.R. 30.1(a)"
+{
+  given DepositionScheduled() on 2026-10-31
+  expect deadline(deposition-notice-period) == 2026-10-16
+}
 /// U.S.D.C.L.R. 37.1(d): a motion under FRCP 26(c) directed to a
 /// deposition is filed and served as soon as practicable after receipt of
 /// the notice, and in no event less than 5 days before the scheduled
 /// deposition.
 deadline deposition-protective-motion-period: 5.days before DepositionScheduled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 37.1(d)"
+
+test "Counting boundary: deposition-protective-motion-period (weekend)" cite "U.S.D.C.L.R. 37.1(d)"
+{
+  given DepositionScheduled() on 2026-10-29
+  expect deadline(deposition-protective-motion-period) == 2026-10-23
+}
 /// U.S.D.C.L.R. 41.1(a): on notice that an action has settled, counsel
 /// file within 30 days, unless otherwise permitted or directed, the
 /// filings necessary to terminate it; otherwise the Court may set the
 /// action for trial.
 deadline settlement-papers-period: 30.days after SettlementNoticed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 41.1(a)"
+
+test "Counting boundary: settlement-papers-period (holiday)" cite "U.S.D.C.L.R. 41.1(a)"
+{
+  given SettlementNoticed() on 2026-10-27
+  expect deadline(settlement-papers-period) == 2026-11-27
+}
 /// U.S.D.C.L.R. 41.1(b): after 90 days without action, the Clerk notifies
 /// the parties that the case may be dismissed for lack of prosecution 30
 /// days from the date of the notice; if no action is taken within 30 days
 /// after notice, the Court may enter the order of dismissal.
 deadline prosecution-notice-period: 30.days after ProsecutionNoticeGiven() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 41.1(b)"
+
+test "Counting boundary: prosecution-notice-period (holiday)" cite "U.S.D.C.L.R. 41.1(b)"
+{
+  given ProsecutionNoticeGiven() on 2026-10-27
+  expect deadline(prosecution-notice-period) == 2026-11-27
+}
 /// U.S.D.C.L.R. 54.2(a): within 14 days from entry of a final judgment
 /// for which costs are allowed, the prevailing party files a bill of
 /// costs (other than attorney's fees) on AO form 133.
 deadline bill-of-costs-period: 14.days after FinalJudgmentEntered() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 54.2(a)"
+
+test "Counting boundary: bill-of-costs-period (holiday)" cite "U.S.D.C.L.R. 54.2(a)"
+{
+  given FinalJudgmentEntered() on 2026-10-28
+  expect deadline(bill-of-costs-period) == 2026-11-12
+}
 /// U.S.D.C.L.R. 54.2(b): if no objections are filed within 14 days after
 /// service of the bill of costs, the Clerk taxes the costs properly
 /// claimed.
 deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 54.2(b)"
+
+test "Counting boundary: costs-objection-period (holiday)" cite "U.S.D.C.L.R. 54.2(b)"
+{
+  given BillOfCostsServed() on 2026-10-28
+  expect deadline(costs-objection-period) == 2026-11-12
+}
 /// U.S.D.C.L.R. 54.2(i): costs taxable under FRAP 39(e) are waived unless
 /// the party entitled to them files a bill of costs within 14 days of the
 /// issuance of the court of appeals' mandate.
 deadline appeal-costs-period: 14.days after MandateIssued() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 54.2(i)"
+
+test "Counting boundary: appeal-costs-period (holiday)" cite "U.S.D.C.L.R. 54.2(i)"
+{
+  given MandateIssued() on 2026-10-28
+  expect deadline(appeal-costs-period) == 2026-11-12
+}
 /// U.S.D.C.L.R. 54.3(c), (e): if the parties cannot agree, the moving
 /// party files the statement of consultation with a motion for attorney's
 /// fees within 14 days of entry of the final judgment; failure to file
 /// timely is a waiver unless the Court grants relief for good cause.
 deadline fee-motion-period: 14.days after FinalJudgmentEntered() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 54.3(c)"
+
+test "Counting boundary: fee-motion-period (holiday)" cite "U.S.D.C.L.R. 54.3(c)"
+{
+  given FinalJudgmentEntered() on 2026-10-28
+  expect deadline(fee-motion-period) == 2026-11-12
+}
 /// U.S.D.C.L.R. 54.3(d), (e): the opposing party files objections to the
 /// fee request within 14 days after the filing of the claim for
 /// attorney's fees.
 deadline fee-objection-period: 14.days after FeeClaimFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 54.3(d)"
+
+test "Counting boundary: fee-objection-period (holiday)" cite "U.S.D.C.L.R. 54.3(d)"
+{
+  given FeeClaimFiled() on 2026-10-28
+  expect deadline(fee-objection-period) == 2026-11-12
+}
 /// U.S.D.C.L.R. 73.1: in a civil case fully assigned to a magistrate
 /// judge, each party sends the Clerk's Office, within 14 days from the
 /// filing of an answer or other responsive filing, either a written
 /// consent under 28 U.S.C. § 636(c) or a written election to have the
 /// action reassigned to a district judge.
 deadline magistrate-consent-period: 14.days after ResponsiveFilingInAssignedCase() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 73.1"
+
+test "Counting boundary: magistrate-consent-period (holiday)" cite "U.S.D.C.L.R. 73.1"
+{
+  given ResponsiveFilingInAssignedCase() on 2026-10-28
+  expect deadline(magistrate-consent-period) == 2026-11-12
+}
 /// U.S.D.C.L.R. 74.1(a): a response to a request for reconsideration of
 /// a magistrate judge's non-dispositive order is filed within 14 days
 /// after service of the request.
 deadline reconsideration-response-period: 14.days after ReconsiderationRequestServed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 74.1(a)"
+
+test "Counting boundary: reconsideration-response-period (holiday)" cite "U.S.D.C.L.R. 74.1(a)"
+{
+  given ReconsiderationRequestServed() on 2026-10-28
+  expect deadline(reconsideration-response-period) == 2026-11-12
+}
 /// U.S.D.C.L.R. 81.1: within 14 days of entry of the Order on Removal,
 /// the removing party files a copy of the entire state court record and
 /// proceedings, including the docket sheet.
 deadline removal-record-period: 14.days after RemovalOrderEntered() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 81.1"
+
+test "Counting boundary: removal-record-period (holiday)" cite "U.S.D.C.L.R. 81.1"
+{
+  given RemovalOrderEntered() on 2026-10-28
+  expect deadline(removal-record-period) == 2026-11-12
+}
 /// U.S.D.C.L.R. 84.2(b): a complaint accepted for filing signed only by
 /// an attorney not admitted to this Court is conditioned on association
 /// with local counsel within 14 days after the filing of the complaint.
 deadline local-counsel-period: 14.days after ComplaintFiledByNonadmittedAttorney() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 84.2(b)"
+
+test "Counting boundary: local-counsel-period (holiday)" cite "U.S.D.C.L.R. 84.2(b)"
+{
+  given ComplaintFiledByNonadmittedAttorney() on 2026-10-28
+  expect deadline(local-counsel-period) == 2026-11-12
+}
 /// U.S.D.C.L.R. 83.6(b)(2): unless a statute provides a different time or
 /// the Court orders otherwise, the agency files the record within 90 days
 /// of proper service of the complaint or petition for review (60 days in
@@ -212,17 +320,41 @@ deadline agency-record-period: 90.days after AgencyPetitionServed() counted_by f
 /// for consideration of extra-record evidence, is filed within 14 days
 /// after the record was filed.
 deadline agency-record-supplement-period: 14.days after AgencyRecordFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 83.6(b)(3)"
+
+test "Counting boundary: agency-record-supplement-period (holiday)" cite "U.S.D.C.L.R. 83.6(b)(3)"
+{
+  given AgencyRecordFiled() on 2026-10-28
+  expect deadline(agency-record-supplement-period) == 2026-11-12
+}
 /// U.S.D.C.L.R. 83.6(c): unless otherwise ordered, the party seeking
 /// review serves and files an opening brief within 45 days after the
 /// record is filed (after a supplemental record is filed or the motion is
 /// denied, if a (b)(3) motion is filed).
 deadline agency-opening-brief-period: 45.days after AgencyRecordFiled() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 83.6(c)"
+
+test "Counting boundary: agency-opening-brief-period (weekend)" cite "U.S.D.C.L.R. 83.6(c)"
+{
+  given AgencyRecordFiled() on 2026-10-28
+  expect deadline(agency-opening-brief-period) == 2026-12-14
+}
 /// U.S.D.C.L.R. 83.6(c): the responding party serves and files a brief
 /// within 30 days after service of the opening brief.
 deadline agency-response-brief-period: 30.days after AgencyOpeningBriefServed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 83.6(c)"
+
+test "Counting boundary: agency-response-brief-period (holiday)" cite "U.S.D.C.L.R. 83.6(c)"
+{
+  given AgencyOpeningBriefServed() on 2026-10-27
+  expect deadline(agency-response-brief-period) == 2026-11-27
+}
 /// U.S.D.C.L.R. 83.6(c): the plaintiff or petitioner may serve and file
 /// a reply brief within 14 days after service of the responsive brief.
 deadline agency-reply-brief-period: 14.days after AgencyResponseBriefServed() counted_by frcp6-wyoming cite "U.S.D.C.L.R. 83.6(c)"
+
+test "Counting boundary: agency-reply-brief-period (holiday)" cite "U.S.D.C.L.R. 83.6(c)"
+{
+  given AgencyResponseBriefServed() on 2026-10-28
+  expect deadline(agency-reply-brief-period) == 2026-11-12
+}
 
 test "Deadline arithmetic: return-of-service-period (10 days after)" cite "U.S.D.C.L.R. 4.1(b)"
 {

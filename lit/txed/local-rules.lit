@@ -180,6 +180,12 @@ deadline stay-of-execution-motion: 7.days before ExecutionScheduled() counted_by
   forum frcp
 }
 
+test "Counting boundary: stay-of-execution-motion (weekend)" cite "E.D. Tex. Local Rule CV-3(c)"
+{
+  given ExecutionScheduled() on 2026-02-14
+  expect deadline(stay-of-execution-motion) == 2026-02-06
+}
+
 /// E.D. Tex. Local Rule CV-5(a)(7)(E): except as Local Rule CR-49
 /// provides, a party filing a document under seal must publicly file a
 /// version with the confidential information redacted within seven days,
@@ -187,6 +193,12 @@ deadline stay-of-execution-motion: 7.days before ExecutionScheduled() counted_by
 deadline redacted-public-version: 7.days after SealedDocumentFiled() counted_by frcp6-texas cite "E.D. Tex. Local Rule CV-5(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: redacted-public-version (holiday)" cite "E.D. Tex. Local Rule CV-5(a)"
+{
+  given SealedDocumentFiled() on 2026-02-09
+  expect deadline(redacted-public-version) == 2026-02-17
 }
 
 /// E.D. Tex. Local Rule CV-5.2(b)(3): within seven days of the filing of
@@ -200,6 +212,12 @@ deadline redaction-notice: 7.days after TranscriptFiled() counted_by frcp6-texas
   forum frcp
 }
 
+test "Counting boundary: redaction-notice (holiday)" cite "E.D. Tex. Local Rule CV-5.2(b)"
+{
+  given TranscriptFiled() on 2026-02-09
+  expect deadline(redaction-notice) == 2026-02-17
+}
+
 /// E.D. Tex. Local Rule CV-5.2(b)(4): a party requesting redaction submits
 /// to the court reporter or transcriber and files a statement of where the
 /// personal data identifiers appear within twenty-one days of the
@@ -210,6 +228,12 @@ deadline redaction-statement: 21.days after TranscriptDelivered() counted_by frc
 } cite "E.D. Tex. Local Rule CV-5.2(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: redaction-statement (weekend)" cite "E.D. Tex. Local Rule CV-5.2(b)"
+{
+  given TranscriptDelivered() on 2026-02-14
+  expect deadline(redaction-statement) == 2026-03-09
 }
 
 /// E.D. Tex. Local Rule CV-5.2(b)(5): the court reporter or transcriber
@@ -236,6 +260,12 @@ deadline response-period: 14.days after MotionServed() counted_by frcp6-texas de
   forum frcp
 }
 
+test "Counting boundary: response-period (weekend)" cite "E.D. Tex. Local Rule CV-7(e)"
+{
+  given MotionServed() on 2026-02-14
+  expect deadline(response-period) == 2026-03-02
+}
+
 /// E.D. Tex. Local Rule CV-7(e): twenty-one days for a summary judgment
 /// motion.
 deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-texas delegable {
@@ -244,6 +274,12 @@ deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionSe
 } cite "E.D. Tex. Local Rule CV-7(e)"
 {
   forum frcp
+}
+
+test "Counting boundary: summary-judgment-response-period (weekend)" cite "E.D. Tex. Local Rule CV-7(e)"
+{
+  given SummaryJudgmentMotionServed() on 2026-02-14
+  expect deadline(summary-judgment-response-period) == 2026-03-09
 }
 
 /// E.D. Tex. Local Rule CV-7(f): unless the presiding judge directs
@@ -258,6 +294,12 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcp6-texas dele
   forum frcp
 }
 
+test "Counting boundary: reply-period (holiday)" cite "E.D. Tex. Local Rule CV-7(f)"
+{
+  given ResponseServed() on 2026-02-09
+  expect deadline(reply-period) == 2026-02-17
+}
+
 /// E.D. Tex. Local Rule CV-7(f): a sur-reply responding to issues raised
 /// in the reply may be served and filed within seven days from the date
 /// the reply is served; absent leave, no further submissions are allowed.
@@ -267,6 +309,12 @@ deadline sur-reply-period: 7.days after ReplyServed() counted_by frcp6-texas del
 } cite "E.D. Tex. Local Rule CV-7(f)"
 {
   forum frcp
+}
+
+test "Counting boundary: sur-reply-period (holiday)" cite "E.D. Tex. Local Rule CV-7(f)"
+{
+  given ReplyServed() on 2026-02-09
+  expect deadline(sur-reply-period) == 2026-02-17
 }
 
 /// E.D. Tex. Local Rule CV-54(a): unless a statute or the presiding judge
@@ -282,6 +330,12 @@ deadline bill-of-costs-period: 14.days after CostsJudgmentDocketed() counted_by 
   forum frcp
 }
 
+test "Counting boundary: bill-of-costs-period (weekend)" cite "E.D. Tex. Local Rule CV-54(a)"
+{
+  given CostsJudgmentDocketed() on 2026-02-14
+  expect deadline(bill-of-costs-period) == 2026-03-02
+}
+
 /// E.D. Tex. Local Rule CV-72(b): a party may respond to another party's
 /// objection to a magistrate judge's non-dispositive order within fourteen
 /// days after being served with a copy; the court need not await the
@@ -289,6 +343,12 @@ deadline bill-of-costs-period: 14.days after CostsJudgmentDocketed() counted_by 
 deadline magistrate-objection-response: 14.days after MagistrateObjectionServed() counted_by frcp6-texas cite "E.D. Tex. Local Rule CV-72(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: magistrate-objection-response (weekend)" cite "E.D. Tex. Local Rule CV-72(b)"
+{
+  given MagistrateObjectionServed() on 2026-02-14
+  expect deadline(magistrate-objection-response) == 2026-03-02
 }
 
 /// E.D. Tex. Local Rule CV-79(a)(4): the party offering an exhibit removes

@@ -41,6 +41,12 @@ deadline removal-answer: 7.days after NoticeOfRemovalFiled() counted_by frcp6 ef
   extend { by court, discretion ExcusableNeglect, after_expiry, on RemovalAnswerExtensionMoved() }
 }
 
+test "Counting boundary: removal-answer (weekend)" cite "FRCP 81(c)(2)(C)"
+{
+  given NoticeOfRemovalFiled() on 2009-12-05
+  expect deadline(removal-answer) == 2009-12-14
+}
+
 deadline third-party-complaint: 14.days after AnswerServed() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 cite "FRCP 14(a)(1)"
 {
   forum frcp
@@ -52,6 +58,12 @@ deadline third-party-complaint: 14.days after AnswerServed() counted_by frcp6 ef
     after_expiry
     on ThirdPartyComplaintExtensionMoved()
   }
+}
+
+test "Counting boundary: third-party-complaint (weekend)" cite "FRCP 14(a)(1)"
+{
+  given AnswerServed() on 2009-12-05
+  expect deadline(third-party-complaint) == 2009-12-21
 }
 
 /// A fixture period of one year counted under FRCP 6: a statute's period

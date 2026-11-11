@@ -154,6 +154,12 @@ deadline complaint-demand-period: 14.days after SummonsWithNoticeRemoved() count
   forum frcp
 }
 
+test "Counting boundary: complaint-demand-period (weekend)" cite "N.D.N.Y. L.R. 5.1(f)"
+{
+  given SummonsWithNoticeRemoved() on 2026-01-03
+  expect deadline(complaint-demand-period) == 2026-01-20
+}
+
 /// L.R. 5.1(f): within 20 days of service of the demand, the plaintiff
 /// serves a complaint.
 deadline removed-complaint-period: 20.days after ComplaintDemandServed() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 5.1(f)"
@@ -170,6 +176,12 @@ deadline dispositive-opposition-period: 21.days after DispositiveMotionServed() 
   forum frcp
 }
 
+test "Counting boundary: dispositive-opposition-period (weekend)" cite "N.D.N.Y. L.R. 7.1(a)"
+{
+  given DispositiveMotionServed() on 2026-01-03
+  expect deadline(dispositive-opposition-period) == 2026-01-26
+}
+
 /// L.R. 7.1(a)(1): the moving party's reply papers, if any, are filed and
 /// served no more than 7 days after service of the response papers; a
 /// surreply is not permitted.
@@ -178,12 +190,24 @@ deadline dispositive-reply-period: 7.days after DispositiveResponseServed() coun
   forum frcp
 }
 
+test "Counting boundary: dispositive-reply-period (weekend)" cite "N.D.N.Y. L.R. 7.1(a)"
+{
+  given DispositiveResponseServed() on 2026-01-03
+  expect deadline(dispositive-reply-period) == 2026-01-12
+}
+
 /// L.R. 7.1(a)(2): opposition papers to a non-dispositive motion are filed
 /// and served no more than 21 days after service of the motion; a reply
 /// needs the Court's prior permission.
 deadline nondispositive-opposition-period: 21.days after NonDispositiveMotionServed() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 7.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: nondispositive-opposition-period (weekend)" cite "N.D.N.Y. L.R. 7.1(a)"
+{
+  given NonDispositiveMotionServed() on 2026-01-03
+  expect deadline(nondispositive-opposition-period) == 2026-01-26
 }
 
 /// L.R. 7.1(c): a cross-motion is filed and served with the opposition,
@@ -195,6 +219,12 @@ deadline cross-motion-reply-period: 7.days after CrossMotionServed() counted_by 
   forum frcp
 }
 
+test "Counting boundary: cross-motion-reply-period (weekend)" cite "N.D.N.Y. L.R. 7.1(c)"
+{
+  given CrossMotionServed() on 2026-01-03
+  expect deadline(cross-motion-reply-period) == 2026-01-12
+}
+
 /// L.R. 7.2(c): an amicus curiae files its motion for leave no later than
 /// 7 days after the principal brief of the party it supports (or, if it
 /// supports neither party, of the moving party) is filed, absent good
@@ -204,11 +234,23 @@ deadline amicus-period: 7.days after PrincipalBriefFiled() counted_by frcp6-new-
   forum frcp
 }
 
+test "Counting boundary: amicus-period (weekend)" cite "N.D.N.Y. L.R. 7.2(c)"
+{
+  given PrincipalBriefFiled() on 2026-01-03
+  expect deadline(amicus-period) == 2026-01-12
+}
+
 /// L.R. 9.2: a party asserting a RICO claim files a RICO statement within
 /// 30 days of the filing of the pleading containing the claim.
 deadline rico-statement-period: 30.days after RicoPleadingFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 9.2"
 {
   forum frcp
+}
+
+test "Counting boundary: rico-statement-period (weekend)" cite "N.D.N.Y. L.R. 9.2"
+{
+  given RicoPleadingFiled() on 2026-01-01
+  expect deadline(rico-statement-period) == 2026-02-02
 }
 
 /// L.R. 15.1(c): unless the Court orders otherwise, the moving party files
@@ -219,11 +261,23 @@ deadline amended-pleading-period: 14.days after AmendmentGranted() counted_by fr
   forum frcp
 }
 
+test "Counting boundary: amended-pleading-period (weekend)" cite "N.D.N.Y. L.R. 15.1(c)"
+{
+  given AmendmentGranted() on 2026-01-03
+  expect deadline(amended-pleading-period) == 2026-01-20
+}
+
 /// L.R. 16.2: motions to compel discovery are filed and served no later
 /// than 14 days after the discovery cut-off.
 deadline motion-to-compel-period: 14.days after DiscoveryCutoff() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 16.2"
 {
   forum frcp
+}
+
+test "Counting boundary: motion-to-compel-period (weekend)" cite "N.D.N.Y. L.R. 16.2"
+{
+  given DiscoveryCutoff() on 2026-01-03
+  expect deadline(motion-to-compel-period) == 2026-01-20
 }
 
 /// L.R. 41.3: within 30 days after notifying the Court or Clerk of a
@@ -233,6 +287,12 @@ deadline motion-to-compel-period: 14.days after DiscoveryCutoff() counted_by frc
 deadline stipulation-of-dismissal-period: 30.days after SettlementNotified() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 41.3"
 {
   forum frcp
+}
+
+test "Counting boundary: stipulation-of-dismissal-period (weekend)" cite "N.D.N.Y. L.R. 41.3"
+{
+  given SettlementNotified() on 2026-01-01
+  expect deadline(stipulation-of-dismissal-period) == 2026-02-02
 }
 
 /// L.R. 41.3: in an action involving a municipal defendant, the
@@ -251,6 +311,12 @@ deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6-
   forum frcp
 }
 
+test "Counting boundary: bill-of-costs-period (weekend)" cite "N.D.N.Y. L.R. 54.1(a)"
+{
+  given JudgmentEntered() on 2026-01-01
+  expect deadline(bill-of-costs-period) == 2026-02-02
+}
+
 /// L.R. 54.1(a): an opposing party may file objections to the bill of
 /// costs within 14 days of its filing date.
 deadline cost-objections-period: 14.days after BillOfCostsFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 54.1(a)"
@@ -258,11 +324,23 @@ deadline cost-objections-period: 14.days after BillOfCostsFiled() counted_by frc
   forum frcp
 }
 
+test "Counting boundary: cost-objections-period (weekend)" cite "N.D.N.Y. L.R. 54.1(a)"
+{
+  given BillOfCostsFiled() on 2026-01-03
+  expect deadline(cost-objections-period) == 2026-01-20
+}
+
 /// L.R. 54.1(a): the prevailing party may reply to the objections within 7
 /// days of their filing.
 deadline cost-reply-period: 7.days after CostObjectionsFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 54.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: cost-reply-period (weekend)" cite "N.D.N.Y. L.R. 54.1(a)"
+{
+  given CostObjectionsFiled() on 2026-01-03
+  expect deadline(cost-reply-period) == 2026-01-12
 }
 
 /// L.R. 60.1: unless the Court, a statute or a rule (such as FRCP 50, 52,
@@ -274,6 +352,12 @@ deadline reconsideration-period: 14.days after ChallengedOrderEntered() counted_
   forum frcp
 }
 
+test "Counting boundary: reconsideration-period (weekend)" cite "N.D.N.Y. L.R. 60.1"
+{
+  given ChallengedOrderEntered() on 2026-01-03
+  expect deadline(reconsideration-period) == 2026-01-20
+}
+
 /// L.R. 72.1(b): an appeal from a magistrate judge's decision of a
 /// non-dispositive matter, its notice and the appellant's brief, is filed
 /// and served within 14 days after service of the order; there is no
@@ -283,6 +367,12 @@ deadline magistrate-appeal-period: 14.days after MagistrateOrderServed() counted
   forum frcp
 }
 
+test "Counting boundary: magistrate-appeal-period (weekend)" cite "N.D.N.Y. L.R. 72.1(b)"
+{
+  given MagistrateOrderServed() on 2026-01-03
+  expect deadline(magistrate-appeal-period) == 2026-01-20
+}
+
 /// L.R. 72.1(b): opposition papers are due 14 days after the appellant's
 /// brief is filed.
 deadline magistrate-appeal-opposition-period: 14.days after MagistrateAppealBriefFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 72.1(b)"
@@ -290,11 +380,23 @@ deadline magistrate-appeal-opposition-period: 14.days after MagistrateAppealBrie
   forum frcp
 }
 
+test "Counting boundary: magistrate-appeal-opposition-period (weekend)" cite "N.D.N.Y. L.R. 72.1(b)"
+{
+  given MagistrateAppealBriefFiled() on 2026-01-03
+  expect deadline(magistrate-appeal-opposition-period) == 2026-01-20
+}
+
 /// L.R. 72.1(b): the appellant's reply brief is due 7 days after the
 /// appellee's brief is filed.
 deadline magistrate-appeal-reply-period: 7.days after MagistrateAppealOppositionFiled() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 72.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: magistrate-appeal-reply-period (weekend)" cite "N.D.N.Y. L.R. 72.1(b)"
+{
+  given MagistrateAppealOppositionFiled() on 2026-01-03
+  expect deadline(magistrate-appeal-reply-period) == 2026-01-12
 }
 
 /// L.R. 72.1(c): objections to a magistrate judge's report and
@@ -305,12 +407,24 @@ deadline recommendation-objection-period: 14.days after RecommendationServed() c
   forum frcp
 }
 
+test "Counting boundary: recommendation-objection-period (weekend)" cite "N.D.N.Y. L.R. 72.1(c)"
+{
+  given RecommendationServed() on 2026-01-03
+  expect deadline(recommendation-objection-period) == 2026-01-20
+}
+
 /// L.R. 72.1(c): the opposing party may file and serve its response within
 /// 14 days after service of the objections; the objecting party may not
 /// reply.
 deadline recommendation-response-period: 14.days after ObjectionsServed() counted_by frcp6-new-york cite "N.D.N.Y. L.R. 72.1(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: recommendation-response-period (weekend)" cite "N.D.N.Y. L.R. 72.1(c)"
+{
+  given ObjectionsServed() on 2026-01-03
+  expect deadline(recommendation-response-period) == 2026-01-20
 }
 
 /// L.R. 81.2(b): on a bankruptcy appeal, the appellant's brief is due 40

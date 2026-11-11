@@ -73,6 +73,12 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 de
   forum frcrimp
 }
 
+test "Counting boundary: opposition-period (weekend)" cite "W.D.N.Y. Loc. R. Crim. P. 12(b)"
+{
+  given MotionServed() on 2025-01-04
+  expect deadline(opposition-period) == 2025-01-21
+}
+
 /// W.D.N.Y. Loc. R. Crim. P. 12(b)(2): absent a court order, the moving
 /// party has 7 days after service of the responding papers to file and
 /// serve reply papers.
@@ -82,6 +88,12 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 delega
 } cite "W.D.N.Y. Loc. R. Crim. P. 12(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reply-period (weekend)" cite "W.D.N.Y. Loc. R. Crim. P. 12(b)"
+{
+  given ResponseServed() on 2025-01-04
+  expect deadline(reply-period) == 2025-01-13
 }
 
 /// W.D.N.Y. Loc. R. Crim. P. 15(d): unresolved objections made at a
@@ -96,12 +108,24 @@ deadline video-deposition-objections: 7.days before TrialScheduled() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: video-deposition-objections (holiday)" cite "W.D.N.Y. Loc. R. Crim. P. 15(d)"
+{
+  given TrialScheduled() on 2025-01-01
+  expect deadline(video-deposition-objections) == 2024-12-24
+}
+
 /// W.D.N.Y. Loc. R. Crim. P. 26(c): a party that does not remove its paper
 /// or other physical exhibits within 30 days from the date of the Clerk's
 /// notice may have them destroyed or otherwise disposed of.
 deadline exhibit-removal: 30.days after ExhibitRemovalNoticed() counted_by frcrimp45 cite "W.D.N.Y. Loc. R. Crim. P. 26(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-removal (weekend)" cite "W.D.N.Y. Loc. R. Crim. P. 26(c)"
+{
+  given ExhibitRemovalNoticed() on 2025-01-02
+  expect deadline(exhibit-removal) == 2025-02-03
 }
 
 /// W.D.N.Y. Loc. R. Crim. P. 41(b): an executed search warrant is returned
@@ -112,12 +136,24 @@ deadline search-warrant-return: 14.days after SearchWarrantExecuted() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: search-warrant-return (weekend)" cite "W.D.N.Y. Loc. R. Crim. P. 41(b)"
+{
+  given SearchWarrantExecuted() on 2025-01-04
+  expect deadline(search-warrant-return) == 2025-01-21
+}
+
 /// W.D.N.Y. Loc. R. Crim. P. 59(c)(2): a party seeking more time to object
 /// to a magistrate judge's recommended disposition moves the District
 /// Judge for an extension within 14 days after being served with it.
 deadline objection-extension-motion: 14.days after RecommendedDispositionServed() counted_by frcrimp45 cite "W.D.N.Y. Loc. R. Crim. P. 59(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: objection-extension-motion (weekend)" cite "W.D.N.Y. Loc. R. Crim. P. 59(c)"
+{
+  given RecommendedDispositionServed() on 2025-01-04
+  expect deadline(objection-extension-motion) == 2025-01-21
 }
 
 test "opposition period: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Crim. P. 12(b)"

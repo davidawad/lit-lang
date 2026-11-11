@@ -121,12 +121,24 @@ deadline dispositive-opposition-period: 21.days after DispositiveMotionServed() 
   forum frcp
 }
 
+test "Counting boundary: dispositive-opposition-period (holiday)" cite "NECivR 7.1(b)(1)(B)"
+{
+  given DispositiveMotionServed() on 2025-12-04
+  expect deadline(dispositive-opposition-period) == 2025-12-26
+}
+
 /// NECivR 7.1(b)(1)(B): a brief opposing any other motion is filed and
 /// served within 14 days after the motion and supporting brief are filed
 /// and served.
 deadline opposition-period: 14.days after MotionServed() counted_by frcp6-nebraska cite "NECivR 7.1(b)(1)(B)"
 {
   forum frcp
+}
+
+test "Counting boundary: opposition-period (weekend)" cite "NECivR 7.1(b)(1)(B)"
+{
+  given MotionServed() on 2025-12-06
+  expect deadline(opposition-period) == 2025-12-22
 }
 
 /// NECivR 7.1(c)(1): a reply brief and index of evidence supporting a
@@ -139,12 +151,24 @@ deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionS
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-reply-period (weekend)" cite "NECivR 7.1(c)(1)"
+{
+  given SummaryJudgmentOppositionServed() on 2025-12-06
+  expect deadline(summary-judgment-reply-period) == 2025-12-22
+}
+
 /// NECivR 7.1(c)(1): a reply brief supporting any other motion is filed
 /// and served within 7 days after the opposing party files and serves the
 /// opposing brief.
 deadline reply-period: 7.days after OppositionServed() counted_by frcp6-nebraska cite "NECivR 7.1(c)(1)"
 {
   forum frcp
+}
+
+test "Counting boundary: reply-period (weekend)" cite "NECivR 7.1(c)(1)"
+{
+  given OppositionServed() on 2025-12-06
+  expect deadline(reply-period) == 2025-12-15
 }
 
 /// NECivR 11.1(a)(1)(B), (2)(B), (3)(B): a party challenging the
@@ -155,12 +179,24 @@ deadline signature-objection-period: 7.days after NefReceived() counted_by frcp6
   forum frcp
 }
 
+test "Counting boundary: signature-objection-period (weekend)" cite "NECivR 11.1(a)(1)(B)"
+{
+  given NefReceived() on 2025-12-06
+  expect deadline(signature-objection-period) == 2025-12-15
+}
+
 /// NECivR 12.1: when a party files a motion to dismiss, its time to answer
 /// all claims, including those the motion does not address, is suspended
 /// until 14 days after the court rules on the motion.
 deadline answer-after-ruling-period: 14.days after MotionToDismissRuled() counted_by frcp6-nebraska cite "NECivR 12.1"
 {
   forum frcp
+}
+
+test "Counting boundary: answer-after-ruling-period (weekend)" cite "NECivR 12.1"
+{
+  given MotionToDismissRuled() on 2025-12-06
+  expect deadline(answer-after-ruling-period) == 2025-12-22
 }
 
 /// NECivR 30.1(f): the party seeking to use a video deposition at trial
@@ -172,6 +208,12 @@ deadline video-objections-period: 7.days before TrialBegins() counted_by frcp6-n
   forum frcp
 }
 
+test "Counting boundary: video-objections-period (holiday)" cite "NECivR 30.1(f)"
+{
+  given TrialBegins() on 2025-12-04
+  expect deadline(video-objections-period) == 2025-11-26
+}
+
 /// NECivR 32.1(c): at least 7 days before showing the video, the party
 /// seeking to use it delivers a copy of the edited video to opposing
 /// attorneys; their written objections are served at least 24 hours
@@ -181,11 +223,23 @@ deadline edited-video-period: 7.days before VideoShown() counted_by frcp6-nebras
   forum frcp
 }
 
+test "Counting boundary: edited-video-period (holiday)" cite "NECivR 32.1(c)"
+{
+  given VideoShown() on 2025-12-04
+  expect deadline(edited-video-period) == 2025-11-26
+}
+
 /// NECivR 39.2(a): unless ordered otherwise, each party files a trial brief
 /// at least 7 days before the trial begins.
 deadline trial-brief-period: 7.days before TrialBegins() counted_by frcp6-nebraska cite "NECivR 39.2(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: trial-brief-period (holiday)" cite "NECivR 39.2(a)"
+{
+  given TrialBegins() on 2025-12-04
+  expect deadline(trial-brief-period) == 2025-11-26
 }
 
 /// NECivR 40.1(b): the plaintiff in a removed action may file a written
@@ -196,6 +250,12 @@ deadline removed-place-of-trial-period: 14.days after RemovalNoticeServed() coun
   forum frcp
 }
 
+test "Counting boundary: removed-place-of-trial-period (weekend)" cite "NECivR 40.1(b)"
+{
+  given RemovalNoticeServed() on 2025-12-06
+  expect deadline(removed-place-of-trial-period) == 2025-12-22
+}
+
 /// NECivR 40.1(b): a request for a place of trial different from the one
 /// first requested is filed as a motion, and any other party then has 14
 /// days to respond.
@@ -204,12 +264,24 @@ deadline place-of-trial-response-period: 14.days after PlaceOfTrialMotionFiled()
   forum frcp
 }
 
+test "Counting boundary: place-of-trial-response-period (weekend)" cite "NECivR 40.1(b)"
+{
+  given PlaceOfTrialMotionFiled() on 2025-12-06
+  expect deadline(place-of-trial-response-period) == 2025-12-22
+}
+
 /// NECivR 40.1(d): responses to the trial judge's designation of a
 /// different place of trial are filed within 14 days of the designation
 /// unless the trial judge specifies a shorter time.
 deadline designation-response-period: 14.days after PlaceOfTrialDesignated() counted_by frcp6-nebraska cite "NECivR 40.1(d)"
 {
   forum frcp
+}
+
+test "Counting boundary: designation-response-period (weekend)" cite "NECivR 40.1(d)"
+{
+  given PlaceOfTrialDesignated() on 2025-12-06
+  expect deadline(designation-response-period) == 2025-12-22
 }
 
 /// NECivR 41.1: within 30 days after notifying the court or clerk of a
@@ -221,12 +293,24 @@ deadline settlement-papers-period: 30.days after SettlementNotified() counted_by
   forum frcp
 }
 
+test "Counting boundary: settlement-papers-period (holiday)" cite "NECivR 41.1"
+{
+  given SettlementNotified() on 2025-12-02
+  expect deadline(settlement-papers-period) == 2026-01-02
+}
+
 /// NECivR 41.1: after such a dismissal, the case may be reinstated within
 /// 30 days after the date of the order on a showing of good cause why the
 /// parties did not consummate the settlement.
 deadline reinstatement-period: 30.days after SettlementDismissalEntered() counted_by frcp6-nebraska cite "NECivR 41.1"
 {
   forum frcp
+}
+
+test "Counting boundary: reinstatement-period (holiday)" cite "NECivR 41.1"
+{
+  given SettlementDismissalEntered() on 2025-12-02
+  expect deadline(reinstatement-period) == 2026-01-02
 }
 
 /// NECivR 45.1(b): after receipt of notice of a nonparty subpoena for
@@ -238,11 +322,23 @@ deadline subpoena-objection-period: 7.days after SubpoenaNoticeReceived() counte
   forum frcp
 }
 
+test "Counting boundary: subpoena-objection-period (weekend)" cite "NECivR 45.1(b)"
+{
+  given SubpoenaNoticeReceived() on 2025-12-06
+  expect deadline(subpoena-objection-period) == 2025-12-15
+}
+
 /// NECivR 51.1(a): unless ordered otherwise, each party files requested
 /// jury instructions 7 days before the first day of trial.
 deadline jury-instructions-period: 7.days before TrialBegins() counted_by frcp6-nebraska cite "NECivR 51.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: jury-instructions-period (holiday)" cite "NECivR 51.1(a)"
+{
+  given TrialBegins() on 2025-12-04
+  expect deadline(jury-instructions-period) == 2025-11-26
 }
 
 /// NECivR 51.1(b): objections to requested jury instructions, with
@@ -261,6 +357,12 @@ deadline proposed-findings-period: 7.days before TrialBegins() counted_by frcp6-
   forum frcp
 }
 
+test "Counting boundary: proposed-findings-period (holiday)" cite "NECivR 52.1"
+{
+  given TrialBegins() on 2025-12-04
+  expect deadline(proposed-findings-period) == 2025-11-26
+}
+
 /// NECivR 54.1(b), (d): a party entitled to recover costs files a verified
 /// bill of costs within 30 days after entry of judgment; post-trial
 /// motions do not extend the time, and a party who does not file within
@@ -268,6 +370,12 @@ deadline proposed-findings-period: 7.days before TrialBegins() counted_by frcp6-
 deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6-nebraska cite "NECivR 54.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: bill-of-costs-period (holiday)" cite "NECivR 54.1(b)"
+{
+  given JudgmentEntered() on 2025-12-02
+  expect deadline(bill-of-costs-period) == 2026-01-02
 }
 
 /// NECivR 56.1(b)(3): the opposing party's brief and response to the
@@ -278,12 +386,24 @@ deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionSe
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-response-period (holiday)" cite "NECivR 56.1(b)(3)"
+{
+  given SummaryJudgmentMotionServed() on 2025-12-04
+  expect deadline(summary-judgment-response-period) == 2025-12-26
+}
+
 /// NECivR 56.1(c): when the opposing party submits a statement of
 /// additional material facts, the movant serves and files its responses
 /// within 14 days after service of the opposing statement.
 deadline additional-facts-response-period: 14.days after AdditionalFactsServed() counted_by frcp6-nebraska cite "NECivR 56.1(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: additional-facts-response-period (weekend)" cite "NECivR 56.1(c)"
+{
+  given AdditionalFactsServed() on 2025-12-06
+  expect deadline(additional-facts-response-period) == 2025-12-22
 }
 
 /// NECivR 72.2(a): a party objects to a magistrate judge's order or
@@ -294,12 +414,24 @@ deadline magistrate-objections-period: 14.days after MagistrateOrderServed() cou
   forum frcp
 }
 
+test "Counting boundary: magistrate-objections-period (weekend)" cite "NECivR 72.2(a)"
+{
+  given MagistrateOrderServed() on 2025-12-06
+  expect deadline(magistrate-objections-period) == 2025-12-22
+}
+
 /// NECivR 72.2(a): unless ordered otherwise, an opposing party may file an
 /// opposing brief within 14 days of being served with the statement of
 /// objections; the objecting party may not reply without leave.
 deadline magistrate-opposition-period: 14.days after ObjectionsServed() counted_by frcp6-nebraska cite "NECivR 72.2(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: magistrate-opposition-period (weekend)" cite "NECivR 72.2(a)"
+{
+  given ObjectionsServed() on 2025-12-06
+  expect deadline(magistrate-opposition-period) == 2025-12-22
 }
 
 /// NECivR 79.1(f)(1): within 14 days after a verdict is rendered, the
@@ -310,11 +442,23 @@ deadline exhibit-withdrawal-verdict-period: 14.days after VerdictRendered() coun
   forum frcp
 }
 
+test "Counting boundary: exhibit-withdrawal-verdict-period (weekend)" cite "NECivR 79.1(f)(1)"
+{
+  given VerdictRendered() on 2025-12-06
+  expect deadline(exhibit-withdrawal-verdict-period) == 2025-12-22
+}
+
 /// NECivR 79.1(f)(1): within 14 days after a judgment is entered, the
 /// offering attorney withdraws all exhibits in the clerk's custody.
 deadline exhibit-withdrawal-judgment-period: 14.days after JudgmentEntered() counted_by frcp6-nebraska cite "NECivR 79.1(f)(1)"
 {
   forum frcp
+}
+
+test "Counting boundary: exhibit-withdrawal-judgment-period (weekend)" cite "NECivR 79.1(f)(1)"
+{
+  given JudgmentEntered() on 2025-12-06
+  expect deadline(exhibit-withdrawal-judgment-period) == 2025-12-22
 }
 
 test "Deadline arithmetic: dispositive-opposition-period (21 days after)" cite "NECivR 7.1(b)(1)(B)"

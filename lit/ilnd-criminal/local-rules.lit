@@ -101,6 +101,12 @@ deadline pretrial-motions: 21.days after Arraigned() counted_by frcrimp45 delega
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motions (holiday)" cite "N.D. Ill. LCR 12.1(a)"
+{
+  given Arraigned() on 2026-05-04
+  expect deadline(pretrial-motions) == 2026-05-26
+}
+
 /// N.D. Ill. LCR 16.1(a): within 7 days after the arraignment the United
 /// States attorney and the defendant's attorney confer and attempt to agree
 /// on a timetable and procedures for Rule 16 disclosure, agents' notes,
@@ -110,6 +116,12 @@ deadline discovery-conference: 7.days after Arraigned() counted_by frcrimp45 cit
   forum frcrimp
 }
 
+test "Counting boundary: discovery-conference (weekend)" cite "N.D. Ill. LCR 16.1(a)"
+{
+  given Arraigned() on 2026-05-09
+  expect deadline(discovery-conference) == 2026-05-18
+}
+
 /// N.D. Ill. LCR 16.1(b): a written declination of a requested Rule 16
 /// disclosure, signed personally by the United States attorney or first
 /// assistant or by defendant's counsel, is served on opposing counsel and
@@ -117,6 +129,12 @@ deadline discovery-conference: 7.days after Arraigned() counted_by frcrimp45 cit
 deadline disclosure-declination: 5.days after DiscoveryConferenceHeld() counted_by frcrimp45 cite "N.D. Ill. LCR 16.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: disclosure-declination (weekend)" cite "N.D. Ill. LCR 16.1(b)"
+{
+  given DiscoveryConferenceHeld() on 2026-05-04
+  expect deadline(disclosure-declination) == 2026-05-11
 }
 
 /// N.D. Ill. LCR 12.1(b): a motion for additional discovery or inspection
@@ -132,12 +150,24 @@ deadline additional-discovery-motion: 7.days after DiscoveryConferenceHeld() cou
   forum frcrimp
 }
 
+test "Counting boundary: additional-discovery-motion (weekend)" cite "N.D. Ill. LCR 12.1(b)"
+{
+  given DiscoveryConferenceHeld() on 2026-05-09
+  expect deadline(additional-discovery-motion) == 2026-05-18
+}
+
 /// N.D. Ill. LCR 32.1(d): the defendant participates in an interview, if
 /// any, with the probation office within 14 days after the determination
 /// of guilt; failing to schedule it does not affect the other dates.
 deadline presentence-interview: 14.days after GuiltDetermined() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: presentence-interview (weekend)" cite "N.D. Ill. LCR 32.1(d)"
+{
+  given GuiltDetermined() on 2026-05-09
+  expect deadline(presentence-interview) == 2026-05-26
 }
 
 /// N.D. Ill. LCR 32.1(e): not more than 14 days after the determination of
@@ -149,6 +179,12 @@ deadline government-version: 14.days after GuiltDetermined() counted_by frcrimp4
   forum frcrimp
 }
 
+test "Counting boundary: government-version (weekend)" cite "N.D. Ill. LCR 32.1(e)"
+{
+  given GuiltDetermined() on 2026-05-09
+  expect deadline(government-version) == 2026-05-26
+}
+
 /// N.D. Ill. LCR 32.1(e): not more than 7 days after the government's
 /// submission, each defendant's attorney submits a version of the offense
 /// conduct to the probation officer.
@@ -157,12 +193,24 @@ deadline defendant-version: 7.days after GovernmentVersionSubmitted() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: defendant-version (weekend)" cite "N.D. Ill. LCR 32.1(e)"
+{
+  given GovernmentVersionSubmitted() on 2026-05-09
+  expect deadline(defendant-version) == 2026-05-18
+}
+
 /// N.D. Ill. LCR 32.1(e): within 7 days after receiving the co-defendants'
 /// versions, each co-defendant's attorney submits and serves that
 /// defendant's version as it relates to the defendants' respective roles.
 deadline codefendant-role-version: 7.days after CodefendantVersionsReceived() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: codefendant-role-version (weekend)" cite "N.D. Ill. LCR 32.1(e)"
+{
+  given CodefendantVersionsReceived() on 2026-05-09
+  expect deadline(codefendant-role-version) == 2026-05-18
 }
 
 /// N.D. Ill. LCR 32.1(g): not later than 14 days before sentencing,
@@ -178,11 +226,23 @@ deadline defense-position-paper: 14.days before SentencingScheduled() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: defense-position-paper (weekend)" cite "N.D. Ill. LCR 32.1(g); N.D. Ill. LCR 32.1(c)"
+{
+  given SentencingScheduled() on 2026-05-09
+  expect deadline(defense-position-paper) == 2026-04-24
+}
+
 /// N.D. Ill. LCR 32.1(g): the Government has leave to respond 7 days after
 /// the defense position paper.
 deadline government-position-response: 7.days after DefensePositionPaperFiled() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(g)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: government-position-response (weekend)" cite "N.D. Ill. LCR 32.1(g)"
+{
+  given DefensePositionPaperFiled() on 2026-05-09
+  expect deadline(government-position-response) == 2026-05-18
 }
 
 /// N.D. Ill. LCR 41(e)(2): a motion to extend an order sealing a warrant
@@ -193,6 +253,12 @@ deadline seal-extension-motion: 3.days before WarrantSealExpires() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: seal-extension-motion (weekend)" cite "N.D. Ill. LCR 41(e)"
+{
+  given WarrantSealExpires() on 2026-05-05
+  expect deadline(seal-extension-motion) == 2026-05-01
+}
+
 /// N.D. Ill. LCR 41(f): the return of a search warrant, with a copy of the
 /// warrant, is filed electronically within 60 days after the warrant's
 /// execution, under seal if the application and warrant are sealed.
@@ -201,12 +267,24 @@ deadline warrant-return-filing: 60.days after WarrantExecuted() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: warrant-return-filing (holiday)" cite "N.D. Ill. LCR 41(f)"
+{
+  given WarrantExecuted() on 2026-05-04
+  expect deadline(warrant-return-filing) == 2026-07-06
+}
+
 /// N.D. Ill. LCR 44.1(6): within 45 days of the conclusion of the
 /// representation, CJA counsel approved for interim payments submits a
 /// final voucher for the 20 percent withheld and the final interim period.
 deadline cja-final-voucher: 45.days after CjaRepresentationConcluded() counted_by frcrimp45 cite "N.D. Ill. LCR 44.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: cja-final-voucher (holiday)" cite "N.D. Ill. LCR 44.1"
+{
+  given CjaRepresentationConcluded() on 2026-05-05
+  expect deadline(cja-final-voucher) == 2026-06-22
 }
 
 /// N.D. Ill. LCR 47.1(b): the opposing party files an answering brief
@@ -220,6 +298,12 @@ deadline answering-brief: 14.days after SupportingBriefReceived() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: answering-brief (weekend)" cite "N.D. Ill. LCR 47.1(b)"
+{
+  given SupportingBriefReceived() on 2026-05-09
+  expect deadline(answering-brief) == 2026-05-26
+}
+
 /// N.D. Ill. LCR 47.1(b): the moving party may file a reply brief within 7
 /// days of receipt of the answering brief; a reply not filed in time is
 /// waived, and the court may shorten or extend the time.
@@ -229,6 +313,12 @@ deadline reply-brief: 7.days after AnsweringBriefReceived() counted_by frcrimp45
 } cite "N.D. Ill. LCR 47.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reply-brief (weekend)" cite "N.D. Ill. LCR 47.1(b)"
+{
+  given AnsweringBriefReceived() on 2026-05-09
+  expect deadline(reply-brief) == 2026-05-18
 }
 
 test "pretrial motions: 21 days after the trigger" cite "N.D. Ill. LCR 12.1(a)"

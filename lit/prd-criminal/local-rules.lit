@@ -124,11 +124,23 @@ deadline discovery-motion: 14.days after DiscoveryReplyReceived() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: discovery-motion (weekend)" cite "D.P.R. L.Crim.R. 116(b)"
+{
+  given DiscoveryReplyReceived() on 2024-10-19
+  expect deadline(discovery-motion) == 2024-11-04
+}
+
 /// D.P.R. L.Crim.R. 116(b)(3): the opposing party files its response to a
 /// discovery motion within 14 days of receipt.
 deadline discovery-motion-response: 14.days after DiscoveryMotionReceived() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 116(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: discovery-motion-response (weekend)" cite "D.P.R. L.Crim.R. 116(b)"
+{
+  given DiscoveryMotionReceived() on 2024-10-19
+  expect deadline(discovery-motion-response) == 2024-11-04
 }
 
 /// D.P.R. L.Crim.R. 116B: unless the court orders otherwise, the attorney
@@ -143,12 +155,24 @@ deadline law-enforcement-notes: 30.days after IndictmentFiled() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: law-enforcement-notes (weekend)" cite "D.P.R. L.Crim.R. 116B"
+{
+  given IndictmentFiled() on 2024-10-17
+  expect deadline(law-enforcement-notes) == 2024-11-18
+}
+
 /// D.P.R. L.Crim.R. 123(e)(4): exhibits not removed as the rule requires
 /// are removed within 30 days of the clerk's written notice, after which
 /// the court authorizes the clerk to destroy or dispose of them.
 deadline exhibit-removal: 30.days after ExhibitRemovalNoticed() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 123(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-removal (weekend)" cite "D.P.R. L.Crim.R. 123(e)"
+{
+  given ExhibitRemovalNoticed() on 2024-10-17
+  expect deadline(exhibit-removal) == 2024-11-18
 }
 
 /// D.P.R. L.Crim.R. 124(a): unless the court orders otherwise, requests for
@@ -161,6 +185,12 @@ deadline special-voir-dire: 7.days before TrialScheduled() counted_by frcrimp45 
   forum frcrimp
 }
 
+test "Counting boundary: special-voir-dire (weekend)" cite "D.P.R. L.Crim.R. 124(a)"
+{
+  given TrialScheduled() on 2024-10-19
+  expect deadline(special-voir-dire) == 2024-10-11
+}
+
 /// D.P.R. L.Crim.R. 130: unless the court orders otherwise, written
 /// requests for case-specific jury instructions under FRCrimP 30 are filed
 /// at least 7 days before jury impanelment.
@@ -170,6 +200,12 @@ deadline jury-instruction-requests: 7.days before ImpanelmentScheduled() counted
 } cite "D.P.R. L.Crim.R. 130"
 {
   forum frcrimp
+}
+
+test "Counting boundary: jury-instruction-requests (weekend)" cite "D.P.R. L.Crim.R. 130"
+{
+  given ImpanelmentScheduled() on 2024-10-19
+  expect deadline(jury-instruction-requests) == 2024-10-11
 }
 
 /// D.P.R. L.Crim.R. 132(b)(1): no later than 21 days after a plea or
@@ -185,6 +221,12 @@ deadline government-version-of-facts: 21.days after GuiltEstablished() counted_b
   forum frcrimp
 }
 
+test "Counting boundary: government-version-of-facts (weekend)" cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
+{
+  given GuiltEstablished() on 2024-10-19
+  expect deadline(government-version-of-facts) == 2024-11-12
+}
+
 /// D.P.R. L.Crim.R. 132(b): the presentence interview is conducted no
 /// later than 14 days after the change of plea hearing.
 deadline presentence-interview: 14.days after ChangeOfPleaHearing() counted_by frcrimp45 delegable {
@@ -193,6 +235,12 @@ deadline presentence-interview: 14.days after ChangeOfPleaHearing() counted_by f
 } cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: presentence-interview (weekend)" cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
+{
+  given ChangeOfPleaHearing() on 2024-10-19
+  expect deadline(presentence-interview) == 2024-11-04
 }
 
 /// D.P.R. L.Crim.R. 132(b)(4): a motion for a departure, variance or
@@ -206,6 +254,12 @@ deadline departure-motion: 14.days before SentencingHearingScheduled() counted_b
   forum frcrimp
 }
 
+test "Counting boundary: departure-motion (weekend)" cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
+{
+  given SentencingHearingScheduled() on 2024-10-19
+  expect deadline(departure-motion) == 2024-10-04
+}
+
 /// D.P.R. L.Crim.R. 132.1(a): if no preliminary revocation hearing is
 /// scheduled, the evidence of the alleged violations is disclosed within 14
 /// days of the initial appearance; otherwise before the preliminary
@@ -213,6 +267,12 @@ deadline departure-motion: 14.days before SentencingHearingScheduled() counted_b
 deadline revocation-disclosure: 14.days after RevocationInitialAppearance() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 132.1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: revocation-disclosure (weekend)" cite "D.P.R. L.Crim.R. 132.1(a)"
+{
+  given RevocationInitialAppearance() on 2024-10-19
+  expect deadline(revocation-disclosure) == 2024-11-04
 }
 
 /// D.P.R. L.Crim.R. 144(b)(1): counsel appointed under the Criminal Justice
@@ -227,12 +287,24 @@ deadline cja-voucher: 45.days after CjaDisposition() counted_by frcrimp45 delega
   forum frcrimp
 }
 
+test "Counting boundary: cja-voucher (weekend)" cite "D.P.R. L.Crim.R. 144(b)"
+{
+  given CjaDisposition() on 2024-10-16
+  expect deadline(cja-voucher) == 2024-12-02
+}
+
 /// D.P.R. L.Crim.R. 144(c): when a CJA voucher is substantially reduced,
 /// the court allows counsel no more than 10 days to explain or support the
 /// reduced amounts.
 deadline cja-reduction-response: 10.days after CjaVoucherReduced() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 144(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: cja-reduction-response (weekend)" cite "D.P.R. L.Crim.R. 144(c)"
+{
+  given CjaVoucherReduced() on 2024-10-16
+  expect deadline(cja-reduction-response) == 2024-10-28
 }
 
 /// D.P.R. L.Crim.R. 144A(k)(2)(i): upon the return or unsealing of a
@@ -244,12 +316,24 @@ deadline capital-mitigation-submission: 90.days after CapitalIndictment() counte
   forum frcrimp
 }
 
+test "Counting boundary: capital-mitigation-submission (weekend)" cite "D.P.R. L.Crim.R. 144A(k)"
+{
+  given CapitalIndictment() on 2024-10-20
+  expect deadline(capital-mitigation-submission) == 2025-01-21
+}
+
 /// D.P.R. L.Crim.R. 144A(k)(2)(ii): after the first 90 days, the
 /// government concludes its Death Penalty Evaluation form and prosecution
 /// memorandum to the Attorney General within the next 60 days.
 deadline death-penalty-evaluation: 60.days after CapitalMitigationPeriodElapsed() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 144A(k)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: death-penalty-evaluation (weekend)" cite "D.P.R. L.Crim.R. 144A(k)"
+{
+  given CapitalMitigationPeriodElapsed() on 2024-10-16
+  expect deadline(death-penalty-evaluation) == 2024-12-16
 }
 
 /// D.P.R. L.Crim.R. 144A(k)(2)(iii): if the government intends to seek the
@@ -261,12 +345,24 @@ deadline death-penalty-notice: 30.days after DeathPenaltyEvaluationSubmitted() c
   forum frcrimp
 }
 
+test "Counting boundary: death-penalty-notice (weekend)" cite "D.P.R. L.Crim.R. 144A(k)"
+{
+  given DeathPenaltyEvaluationSubmitted() on 2024-10-17
+  expect deadline(death-penalty-notice) == 2024-11-18
+}
+
 /// D.P.R. L.Crim.R. 147(b): an opposing party that does not file a written
 /// opposition within 14 days after a motion's filing is deemed to have
 /// waived objection.
 deadline opposition-period: 14.days after MotionFiled() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 147(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: opposition-period (weekend)" cite "D.P.R. L.Crim.R. 147(b)"
+{
+  given MotionFiled() on 2024-10-19
+  expect deadline(opposition-period) == 2024-11-04
 }
 
 /// D.P.R. L.Crim.R. 147(b): the same 14 days for a dispositive or
@@ -276,11 +372,23 @@ deadline dispositive-opposition-period: 14.days after DispositiveMotionFiled() c
   forum frcrimp
 }
 
+test "Counting boundary: dispositive-opposition-period (weekend)" cite "D.P.R. L.Crim.R. 147(b)"
+{
+  given DispositiveMotionFiled() on 2024-10-19
+  expect deadline(dispositive-opposition-period) == 2024-11-04
+}
+
 /// D.P.R. L.Crim.R. 147(c): with prior leave of court, the moving party may
 /// file a reply within 7 days of the service of an opposition.
 deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 147(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reply-period (weekend)" cite "D.P.R. L.Crim.R. 147(c)"
+{
+  given OppositionServed() on 2024-10-19
+  expect deadline(reply-period) == 2024-10-28
 }
 
 test "discovery motion: 14 days after the trigger" cite "D.P.R. L.Crim.R. 116(b)"

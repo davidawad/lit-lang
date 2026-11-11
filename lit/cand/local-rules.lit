@@ -117,49 +117,115 @@ event DesignatingStatementFiled()
 /// time that affects a hearing or proceeding on the court's calendar is
 /// filed no later than 14 days before the scheduled event.
 deadline change-time-request-period: 14.days before HearingScheduled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 6-1(b)"
+
+test "Counting boundary: change-time-request-period (weekend)" cite "N.D. Cal. Civil L.R. 6-1(b)"
+{
+  given HearingScheduled() on 2026-10-03
+  expect deadline(change-time-request-period) == 2026-09-18
+}
 /// N.D. Cal. Civil L.R. 6-3(b): unless otherwise ordered, an opposition to
 /// a motion to enlarge or shorten time is filed no later than 4 days after
 /// receiving the motion.
 deadline change-time-opposition-period: 4.days after ChangeTimeMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 6-3(b)"
+
+test "Counting boundary: change-time-opposition-period (weekend)" cite "N.D. Cal. Civil L.R. 6-3(b)"
+{
+  given ChangeTimeMotionFiled() on 2026-10-06
+  expect deadline(change-time-opposition-period) == 2026-10-13
+}
 /// N.D. Cal. Civil L.R. 7-2(a): except as the assigned Judge or the Local
 /// Rules otherwise order or permit, and except for a motion made during a
 /// trial or hearing, a motion is noticed for hearing not less than 35 days
 /// after it is filed, so it is filed no later than 35 days before the
 /// noticed hearing. FRCP 6(d) does not extend the period.
 deadline motion-notice-period: 35.days before MotionHearingNoticed() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-2(a)"
+
+test "Counting boundary: motion-notice-period (weekend)" cite "N.D. Cal. Civil L.R. 7-2(a)"
+{
+  given MotionHearingNoticed() on 2026-10-03
+  expect deadline(motion-notice-period) == 2026-08-28
+}
 /// N.D. Cal. Civil L.R. 7-3(a): the opposition to a motion is filed and
 /// served not more than 14 days after the motion was filed. A party that
 /// does not oppose files a Statement of Nonopposition within the same time
 /// (N.D. Cal. Civil L.R. 7-3(b)).
 deadline opposition-period: 14.days after MotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-3(a)"
+
+test "Counting boundary: opposition-period (weekend)" cite "N.D. Cal. Civil L.R. 7-3(a)"
+{
+  given MotionFiled() on 2026-10-03
+  expect deadline(opposition-period) == 2026-10-19
+}
 /// N.D. Cal. Civil L.R. 7-3(c): the reply is filed and served not more
 /// than 7 days after the opposition was due. Within that time the moving
 /// party may instead withdraw the motion (N.D. Cal. Civil L.R. 7-7(e)).
 deadline reply-period: 7.days after OppositionDue() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-3(c)"
+
+test "Counting boundary: reply-period (weekend)" cite "N.D. Cal. Civil L.R. 7-3(c)"
+{
+  given OppositionDue() on 2026-10-03
+  expect deadline(reply-period) == 2026-10-13
+}
 /// N.D. Cal. Civil L.R. 7-3(d)(1): if the reply submits new evidence, an
 /// Objection to Reply Evidence is filed and served not more than 7 days
 /// after the reply was filed.
 deadline reply-evidence-objection-period: 7.days after ReplyFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-3(d)"
+
+test "Counting boundary: reply-evidence-objection-period (weekend)" cite "N.D. Cal. Civil L.R. 7-3(d)"
+{
+  given ReplyFiled() on 2026-10-03
+  expect deadline(reply-evidence-objection-period) == 2026-10-13
+}
 /// N.D. Cal. Civil L.R. 7-8(d): unless the court orders otherwise, no
 /// motion for sanctions may be served and filed more than 14 days after the
 /// district court enters judgment.
 deadline sanctions-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-8(d)"
+
+test "Counting boundary: sanctions-motion-period (weekend)" cite "N.D. Cal. Civil L.R. 7-8(d)"
+{
+  given JudgmentEntered() on 2026-10-03
+  expect deadline(sanctions-motion-period) == 2026-10-19
+}
 /// N.D. Cal. Civil L.R. 7-11(b): an opposition to or support for a motion
 /// for administrative relief is filed no later than 4 days after the motion
 /// was filed; the motion is then deemed submitted the next day (N.D. Cal.
 /// Civil L.R. 7-11(c)).
 deadline administrative-opposition-period: 4.days after AdministrativeMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-11(b)"
+
+test "Counting boundary: administrative-opposition-period (weekend)" cite "N.D. Cal. Civil L.R. 7-11(b)"
+{
+  given AdministrativeMotionFiled() on 2026-10-06
+  expect deadline(administrative-opposition-period) == 2026-10-13
+}
 /// N.D. Cal. Civil L.R. 37-3: no discovery-related motion may be filed more
 /// than 7 days after the applicable discovery cut-off.
 deadline discovery-motion-period: 7.days after DiscoveryCutOff() counted_by frcp6 cite "N.D. Cal. Civil L.R. 37-3"
+
+test "Counting boundary: discovery-motion-period (weekend)" cite "N.D. Cal. Civil L.R. 37-3"
+{
+  given DiscoveryCutOff() on 2026-10-03
+  expect deadline(discovery-motion-period) == 2026-10-13
+}
 /// N.D. Cal. Civil L.R. 54-1(a): a prevailing party claiming taxable costs
 /// serves and files a bill of costs no later than 14 days after entry of the
 /// judgment or order under which costs may be claimed; a party that does not
 /// is deemed to have waived costs (N.D. Cal. Civil L.R. 54-1(c)).
 deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Cal. Civil L.R. 54-1(a)"
+
+test "Counting boundary: bill-of-costs-period (weekend)" cite "N.D. Cal. Civil L.R. 54-1(a)"
+{
+  given JudgmentEntered() on 2026-10-03
+  expect deadline(bill-of-costs-period) == 2026-10-19
+}
 /// N.D. Cal. Civil L.R. 54-2(a): specific objections to the bill of costs
 /// are served and filed within 14 days after service of the bill.
 deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "N.D. Cal. Civil L.R. 54-2(a)"
+
+test "Counting boundary: costs-objection-period (weekend)" cite "N.D. Cal. Civil L.R. 54-2(a)"
+{
+  given BillOfCostsServed() on 2026-10-03
+  expect deadline(costs-objection-period) == 2026-10-19
+}
 /// N.D. Cal. Civil L.R. 54-5(a): a motion for attorney's fees is served and
 /// filed within 14 days of entry of judgment by the district court unless
 /// the court orders otherwise on a stipulation to enlarge time (Civil L.R.
@@ -171,25 +237,55 @@ deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by fr
 /// and confer before filing and the declarations Civil L.R. 54-5(b)
 /// requires, and that an appeal does not extend it.
 deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Cal. Civil L.R. 54-5(a)"
+
+test "Counting boundary: fee-motion-period (weekend)" cite "N.D. Cal. Civil L.R. 54-5(a)"
+{
+  given JudgmentEntered() on 2026-10-03
+  expect deadline(fee-motion-period) == 2026-10-19
+}
 /// N.D. Cal. Civil L.R. 72-2(d): if the district judge makes no order
 /// denying the motion or setting a briefing schedule within 14 days of its
 /// filing, the motion for relief from a magistrate judge's nondispositive
 /// order is deemed denied.
 deadline magistrate-relief-deemed-denied: 14.days after MagistrateReliefMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 72-2(d)"
+
+test "Counting boundary: magistrate-relief-deemed-denied (weekend)" cite "N.D. Cal. Civil L.R. 72-2(d)"
+{
+  given MagistrateReliefMotionFiled() on 2026-10-03
+  expect deadline(magistrate-relief-deemed-denied) == 2026-10-19
+}
 /// N.D. Cal. Civil L.R. 73-1(a)(2): in a case initially assigned to a
 /// magistrate judge, when a motion the magistrate judge cannot hear without
 /// consent is filed, the parties file written consent or request
 /// reassignment to a district judge no later than 7 days after the motion
 /// is filed, unless otherwise directed.
 deadline consent-period: 7.days after ConsentMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 73-1(a)"
+
+test "Counting boundary: consent-period (weekend)" cite "N.D. Cal. Civil L.R. 73-1(a)"
+{
+  given ConsentMotionFiled() on 2026-10-03
+  expect deadline(consent-period) == 2026-10-13
+}
 /// N.D. Cal. Civil L.R. 79-5(f)(3): the Designating Party files its
 /// statement or declaration within 7 days of the filing of the motion to
 /// consider whether its material should be sealed; failing that, the
 /// document may be unsealed without further notice.
 deadline designating-statement-period: 7.days after OtherPartySealingMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 79-5(f)"
+
+test "Counting boundary: designating-statement-period (weekend)" cite "N.D. Cal. Civil L.R. 79-5(f)"
+{
+  given OtherPartySealingMotionFiled() on 2026-10-03
+  expect deadline(designating-statement-period) == 2026-10-13
+}
 /// N.D. Cal. Civil L.R. 79-5(f)(4): any response is filed no later than 4
 /// days after the Designating Party files its statement or declaration.
 deadline sealing-response-period: 4.days after DesignatingStatementFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 79-5(f)"
+
+test "Counting boundary: sealing-response-period (weekend)" cite "N.D. Cal. Civil L.R. 79-5(f)"
+{
+  given DesignatingStatementFiled() on 2026-10-06
+  expect deadline(sealing-response-period) == 2026-10-13
+}
 
 // The character of a motion. Civil L.R. 7-11 covers "miscellaneous
 // administrative matters, not otherwise governed by a federal statute,

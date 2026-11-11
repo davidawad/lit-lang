@@ -75,6 +75,12 @@ deadline proof-of-service-period: 14.days after SummonsServed() counted_by frcp6
   forum frcp
 }
 
+test "Counting boundary: proof-of-service-period (weekend)" cite "D.R.I. LR Cv 5.1(a)"
+{
+  given SummonsServed() on 2024-04-06
+  expect deadline(proof-of-service-period) == 2024-04-22
+}
+
 /// LR Cv 7(a)(3): a response to a motion is filed within 14 days after
 /// service of the motion unless the Court shortens or extends the time.
 /// The same period governs objections to a motion for summary judgment
@@ -82,6 +88,12 @@ deadline proof-of-service-period: 14.days after SummonsServed() counted_by frcp6
 deadline motion-response-period: 14.days after MotionServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 7(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: motion-response-period (weekend)" cite "D.R.I. LR Cv 7(a)"
+{
+  given MotionServed() on 2024-04-06
+  expect deadline(motion-response-period) == 2024-04-22
 }
 
 /// LR Cv 7(a)(4): a reply, which is not required, is filed within 7 days
@@ -92,12 +104,24 @@ deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6-rho
   forum frcp
 }
 
+test "Counting boundary: motion-reply-period (weekend)" cite "D.R.I. LR Cv 7(a)"
+{
+  given ResponseServed() on 2024-04-06
+  expect deadline(motion-reply-period) == 2024-04-15
+}
+
 /// LR Cv 16(b): at least 7 days before the initial scheduling conference,
 /// counsel for each party asserting a claim, counterclaim or cross claim
 /// files the statement of claims.
 deadline statement-of-claims-period: 7.days before InitialSchedulingConference() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 16(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: statement-of-claims-period (weekend)" cite "D.R.I. LR Cv 16(b)"
+{
+  given InitialSchedulingConference() on 2024-04-06
+  expect deadline(statement-of-claims-period) == 2024-03-29
 }
 
 /// LR Cv 26(a): unless the Court orders otherwise, the parties confer for
@@ -110,12 +134,24 @@ deadline discovery-conference-period: 14.days after LastAnswerFiled() counted_by
   forum frcp
 }
 
+test "Counting boundary: discovery-conference-period (weekend)" cite "D.R.I. LR Cv 26(a)"
+{
+  given LastAnswerFiled() on 2024-04-06
+  expect deadline(discovery-conference-period) == 2024-04-22
+}
+
 /// LR Cv 37(b): when a motion to compel discovery is granted, the required
 /// response is provided within 21 days or such other time as the Court
 /// orders.
 deadline compelled-response-period: 21.days after CompelOrderEntered() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 37(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: compelled-response-period (weekend)" cite "D.R.I. LR Cv 37(b)"
+{
+  given CompelOrderEntered() on 2024-04-06
+  expect deadline(compelled-response-period) == 2024-04-29
 }
 
 /// LR Cv 39(b)(1): at least 14 days before empanelment, a party proposing
@@ -126,12 +162,24 @@ deadline recorded-conversations-period: 14.days before Empanelment() counted_by 
   forum frcp
 }
 
+test "Counting boundary: recorded-conversations-period (weekend)" cite "D.R.I. LR Cv 39(b)"
+{
+  given Empanelment() on 2024-04-06
+  expect deadline(recorded-conversations-period) == 2024-03-22
+}
+
 /// LR Cv 39(b)(3): within 7 days after the transcripts are furnished, or
 /// such other period as the Court allows, a party disputing a recording or
 /// transcript files its objection.
 deadline recorded-conversations-objection-period: 7.days after TranscriptsFurnished() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 39(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: recorded-conversations-objection-period (weekend)" cite "D.R.I. LR Cv 39(b)"
+{
+  given TranscriptsFurnished() on 2024-04-06
+  expect deadline(recorded-conversations-objection-period) == 2024-04-15
 }
 
 /// LR Cv 47(b): proposed voir dire questions, when the Court directs
@@ -142,12 +190,24 @@ deadline voir-dire-questions-period: 5.days before Empanelment() counted_by frcp
   forum frcp
 }
 
+test "Counting boundary: voir-dire-questions-period (weekend)" cite "D.R.I. LR Cv 47(b)"
+{
+  given Empanelment() on 2024-04-04
+  expect deadline(voir-dire-questions-period) == 2024-03-29
+}
+
 /// LR Cv 54(a): within 14 days after entry of judgment, a party seeking
 /// costs files and serves a bill of costs; failure waives any claim for
 /// costs unless the Court otherwise orders for good cause shown.
 deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 54(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: bill-of-costs-period (weekend)" cite "D.R.I. LR Cv 54(a)"
+{
+  given JudgmentEntered() on 2024-04-06
+  expect deadline(bill-of-costs-period) == 2024-04-22
 }
 
 /// LR Cv 54(d): a challenge to the costs the Clerk taxed is made by motion
@@ -158,11 +218,23 @@ deadline costs-review-period: 7.days after CostsNotified() counted_by frcp6-rhod
   forum frcp
 }
 
+test "Counting boundary: costs-review-period (weekend)" cite "D.R.I. LR Cv 54(d)"
+{
+  given CostsNotified() on 2024-04-06
+  expect deadline(costs-review-period) == 2024-04-15
+}
+
 /// LR Cv 54(d): within 7 days of the filing of the motion to review, a
 /// party objecting to it may file a response.
 deadline costs-review-response-period: 7.days after CostsReviewMotionFiled() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 54(d)"
 {
   forum frcp
+}
+
+test "Counting boundary: costs-review-response-period (weekend)" cite "D.R.I. LR Cv 54(d)"
+{
+  given CostsReviewMotionFiled() on 2024-04-06
+  expect deadline(costs-review-response-period) == 2024-04-15
 }
 
 /// LR Cv 54(e): within 14 days after a motion to review the Clerk's action
@@ -171,6 +243,12 @@ deadline costs-review-response-period: 7.days after CostsReviewMotionFiled() cou
 deadline costs-review-conference-period: 14.days after CostsReviewMotionFiled() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 54(e)"
 {
   forum frcp
+}
+
+test "Counting boundary: costs-review-conference-period (weekend)" cite "D.R.I. LR Cv 54(e)"
+{
+  given CostsReviewMotionFiled() on 2024-04-06
+  expect deadline(costs-review-conference-period) == 2024-04-22
 }
 
 /// LR Cv 72(c)(1): an objection to a magistrate judge's order or ruling in
@@ -183,6 +261,12 @@ deadline magistrate-order-objection-period: 14.days after MagistrateOrderServed(
   forum frcp
 }
 
+test "Counting boundary: magistrate-order-objection-period (weekend)" cite "D.R.I. LR Cv 72(c)"
+{
+  given MagistrateOrderServed() on 2024-04-06
+  expect deadline(magistrate-order-objection-period) == 2024-04-22
+}
+
 /// LR Cv 72(c)(3): a response to the objection is served and filed within
 /// 14 days after the objection is served.
 deadline magistrate-order-response-period: 14.days after MagistrateOrderObjectionServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 72(c)"
@@ -190,11 +274,23 @@ deadline magistrate-order-response-period: 14.days after MagistrateOrderObjectio
   forum frcp
 }
 
+test "Counting boundary: magistrate-order-response-period (weekend)" cite "D.R.I. LR Cv 72(c)"
+{
+  given MagistrateOrderObjectionServed() on 2024-04-06
+  expect deadline(magistrate-order-response-period) == 2024-04-22
+}
+
 /// LR Cv 72(c)(3): the objecting party may serve and file a reply within 7
 /// days after the response.
 deadline magistrate-order-reply-period: 7.days after MagistrateOrderResponseServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 72(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: magistrate-order-reply-period (weekend)" cite "D.R.I. LR Cv 72(c)"
+{
+  given MagistrateOrderResponseServed() on 2024-04-06
+  expect deadline(magistrate-order-reply-period) == 2024-04-15
 }
 
 /// LR Cv 72(d)(1): an objection to a magistrate judge's Report and
@@ -207,11 +303,23 @@ deadline magistrate-report-objection-period: 14.days after MagistrateReportServe
   forum frcp
 }
 
+test "Counting boundary: magistrate-report-objection-period (weekend)" cite "D.R.I. LR Cv 72(d)"
+{
+  given MagistrateReportServed() on 2024-04-06
+  expect deadline(magistrate-report-objection-period) == 2024-04-22
+}
+
 /// LR Cv 72(d)(3): a response to the objection is served and filed within
 /// 14 days after the objection is served.
 deadline magistrate-report-response-period: 14.days after MagistrateReportObjectionServed() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 72(d)"
 {
   forum frcp
+}
+
+test "Counting boundary: magistrate-report-response-period (weekend)" cite "D.R.I. LR Cv 72(d)"
+{
+  given MagistrateReportObjectionServed() on 2024-04-06
+  expect deadline(magistrate-report-response-period) == 2024-04-22
 }
 
 /// LR Cv 72(d)(3): the objecting party may serve and file a reply within 7
@@ -221,6 +329,12 @@ deadline magistrate-report-reply-period: 7.days after MagistrateReportResponseSe
   forum frcp
 }
 
+test "Counting boundary: magistrate-report-reply-period (weekend)" cite "D.R.I. LR Cv 72(d)"
+{
+  given MagistrateReportResponseServed() on 2024-04-06
+  expect deadline(magistrate-report-reply-period) == 2024-04-15
+}
+
 /// LR Cv 81(a): within 14 days after filing a notice of removal, the
 /// removing party does whatever is necessary to enable the state court
 /// clerk to assemble and electronically transmit a certified copy of the
@@ -228,6 +342,12 @@ deadline magistrate-report-reply-period: 7.days after MagistrateReportResponseSe
 deadline state-court-record-period: 14.days after RemovalNoticeFiled() counted_by frcp6-rhode-island cite "D.R.I. LR Cv 81(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: state-court-record-period (weekend)" cite "D.R.I. LR Cv 81(a)"
+{
+  given RemovalNoticeFiled() on 2024-04-06
+  expect deadline(state-court-record-period) == 2024-04-22
 }
 
 test "Deadline arithmetic: proof-of-service-period (14 days after)" cite "D.R.I. LR Cv 5.1(a)"

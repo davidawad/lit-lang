@@ -110,12 +110,24 @@ deadline voir-dire-questions: 3.days before EmpanelmentScheduled() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: voir-dire-questions (weekend)" cite "D. Me. Local R. 124.1"
+{
+  given EmpanelmentScheduled() on 2025-04-01
+  expect deadline(voir-dire-questions) == 2025-03-28
+}
+
 /// D. Me. Local R. 130: written requests for jury instructions under
 /// FRCrimP 30 are served and submitted at least 3 days before jury
 /// empanelment.
 deadline jury-instruction-requests: 3.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D. Me. Local R. 130"
 {
   forum frcrimp
+}
+
+test "Counting boundary: jury-instruction-requests (weekend)" cite "D. Me. Local R. 130"
+{
+  given EmpanelmentScheduled() on 2025-04-01
+  expect deadline(jury-instruction-requests) == 2025-03-28
 }
 
 /// D. Me. Local R. 157.2: unless the Court orders otherwise, each party
@@ -129,6 +141,12 @@ deadline trial-brief-filing: 3.days before TrialScheduled() counted_by frcrimp45
   forum frcrimp
 }
 
+test "Counting boundary: trial-brief-filing (weekend)" cite "D. Me. Local R. 157.2"
+{
+  given TrialScheduled() on 2025-04-01
+  expect deadline(trial-brief-filing) == 2025-03-28
+}
+
 /// D. Me. Local R. 132(b): the probation officer files the revised
 /// presentence report, with its addendum of objections and the officer's
 /// comments, no more than 77 days after the verdict or finding of guilt.
@@ -139,6 +157,12 @@ deadline revised-psr-filing: 77.days after VerdictOrDischarge(Verdict) counted_b
 } cite "D. Me. Local R. 132(b); D. Me. Local R. 132(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: revised-psr-filing (holiday)" cite "D. Me. Local R. 132(b); D. Me. Local R. 132(e)"
+{
+  given VerdictOrDischarge(Verdict) on 2025-04-03
+  expect deadline(revised-psr-filing) == 2025-06-20
 }
 
 /// D. Me. Local R. 132(g)(1): unless the assigned judge orders otherwise,
@@ -177,12 +201,24 @@ deadline revocation-report: 10.days after RevocationTrigger() counted_by frcrimp
   forum frcrimp
 }
 
+test "Counting boundary: revocation-report (weekend)" cite "D. Me. Local R. 132.1(a)"
+{
+  given RevocationTrigger() on 2025-04-02
+  expect deadline(revocation-report) == 2025-04-14
+}
+
 /// D. Me. Local R. 147(b)(1): unless the opposing party files a written
 /// objection, with a memorandum of law, within 21 days after the filing of
 /// a motion, it is deemed to have waived objection.
 deadline objection-period: 21.days after MotionFiled() counted_by frcrimp45 cite "D. Me. Local R. 147(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: objection-period (weekend)" cite "D. Me. Local R. 147(b)"
+{
+  given MotionFiled() on 2025-04-05
+  expect deadline(objection-period) == 2025-04-28
 }
 
 /// D. Me. Local R. 147(b)(1): the same 21 days for a dispositive motion or
@@ -192,11 +228,23 @@ deadline dispositive-objection-period: 21.days after DispositiveMotionFiled() co
   forum frcrimp
 }
 
+test "Counting boundary: dispositive-objection-period (weekend)" cite "D. Me. Local R. 147(b)"
+{
+  given DispositiveMotionFiled() on 2025-04-05
+  expect deadline(dispositive-objection-period) == 2025-04-28
+}
+
 /// D. Me. Local R. 147(c): within 14 days of the filing of an objection,
 /// the moving party may file a reply memorandum.
 deadline reply-period: 14.days after ObjectionFiled() counted_by frcrimp45 cite "D. Me. Local R. 147(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reply-period (weekend)" cite "D. Me. Local R. 147(c)"
+{
+  given ObjectionFiled() on 2025-04-05
+  expect deadline(reply-period) == 2025-04-21
 }
 
 /// D. Me. Local R. 123(f)(2): documentary exhibits are withdrawn by the
@@ -206,6 +254,12 @@ deadline reply-period: 14.days after ObjectionFiled() counted_by frcrimp45 cite 
 deadline exhibit-withdrawal: 30.days after FinalDetermination() counted_by frcrimp45 cite "D. Me. Local R. 123(f)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-withdrawal (weekend)" cite "D. Me. Local R. 123(f)"
+{
+  given FinalDetermination() on 2025-04-03
+  expect deadline(exhibit-withdrawal) == 2025-05-05
 }
 
 test "plea agreement filing: 2 business days before the trigger" cite "D. Me. Local R. 111"

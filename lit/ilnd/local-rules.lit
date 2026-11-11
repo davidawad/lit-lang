@@ -81,6 +81,12 @@ deadline affiliate-supplement-period: 30.days after AffiliateChangeLearned() cou
   forum frcp
 }
 
+test "Counting boundary: affiliate-supplement-period (weekend)" cite "N.D. Ill. L.R. 3.2(f)"
+{
+  given AffiliateChangeLearned() on 2026-05-07
+  expect deadline(affiliate-supplement-period) == 2026-06-08
+}
+
 /// LR 3.3(f): if the required fees are not paid within 15 days of the
 /// clerk's notification after denial of an IFP petition, or other time the
 /// court fixes, the clerk notifies the judge, who may impose sanctions
@@ -88,6 +94,12 @@ deadline affiliate-supplement-period: 30.days after AffiliateChangeLearned() cou
 deadline ifp-fee-period: 15.days after IfpDenialNotified() counted_by frcp6-illinois cite "N.D. Ill. L.R. 3.3(f)"
 {
   forum frcp
+}
+
+test "Counting boundary: ifp-fee-period (weekend)" cite "N.D. Ill. L.R. 3.3(f)"
+{
+  given IfpDenialNotified() on 2026-05-08
+  expect deadline(ifp-fee-period) == 2026-05-26
 }
 
 /// LR 5.3(b): where a judge requires a notice of presentment, the date of
@@ -106,6 +118,12 @@ deadline pretrial-extension-request-period: 14.days before FinalPretrialConferen
   forum frcp
 }
 
+test "Counting boundary: pretrial-extension-request-period (weekend)" cite "N.D. Ill. L.R. 16.1"
+{
+  given FinalPretrialConferenceHeld() on 2026-05-09
+  expect deadline(pretrial-extension-request-period) == 2026-04-24
+}
+
 /// LR 40.5(b): unless all parties file a stipulation within 14 days after
 /// the date of the clerk's notice asking that the case return to the prior
 /// judge, the case is reassigned to another judge.
@@ -122,6 +140,12 @@ deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6-
   forum frcp
 }
 
+test "Counting boundary: bill-of-costs-period (weekend)" cite "N.D. Ill. L.R. 54.1(a)"
+{
+  given JudgmentEntered() on 2026-05-07
+  expect deadline(bill-of-costs-period) == 2026-06-08
+}
+
 /// LR 54.3(d)(4): unless the court sets a different schedule, the movant
 /// provides its time records, rates and expense evidence within 21 days of
 /// the judgment or settlement agreement on which the fee motion is based.
@@ -130,12 +154,24 @@ deadline fee-information-period: 21.days after JudgmentEntered() counted_by frcp
   forum frcp
 }
 
+test "Counting boundary: fee-information-period (holiday)" cite "N.D. Ill. L.R. 54.3(d)"
+{
+  given JudgmentEntered() on 2026-05-04
+  expect deadline(fee-information-period) == 2026-05-26
+}
+
 /// LR 54.3(d)(5): if no agreement is reached, the respondent discloses the
 /// fees it paid and its own records within 21 days of receipt of the
 /// movant's information.
 deadline fee-disclosure-period: 21.days after FeeInformationReceived() counted_by frcp6-illinois cite "N.D. Ill. L.R. 54.3(d)"
 {
   forum frcp
+}
+
+test "Counting boundary: fee-disclosure-period (holiday)" cite "N.D. Ill. L.R. 54.3(d)"
+{
+  given FeeInformationReceived() on 2026-05-04
+  expect deadline(fee-disclosure-period) == 2026-05-26
 }
 
 /// LR 54.3(d): within 14 days after the exchange of information is
@@ -154,12 +190,24 @@ deadline fee-joint-statement-period: 70.days after JudgmentEntered() counted_by 
   forum frcp
 }
 
+test "Counting boundary: fee-joint-statement-period (weekend)" cite "N.D. Ill. L.R. 54.3(e)"
+{
+  given JudgmentEntered() on 2026-05-09
+  expect deadline(fee-joint-statement-period) == 2026-07-20
+}
+
 /// LR 54.3(b): unless the court's order sets a different schedule, the fee
 /// motion is filed and served no later than 91 days after the entry of the
 /// judgment or settlement agreement on which it is founded.
 deadline fee-motion-period: 91.days after JudgmentEntered() counted_by frcp6-illinois cite "N.D. Ill. L.R. 54.3(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: fee-motion-period (weekend)" cite "N.D. Ill. L.R. 54.3(b)"
+{
+  given JudgmentEntered() on 2026-05-09
+  expect deadline(fee-motion-period) == 2026-08-10
 }
 
 /// LR 54.3(g): a motion for instructions is filed not later than 14 days
@@ -178,12 +226,24 @@ deadline receiver-inventory-period: 21.days after ReceiverAppointed() counted_by
   forum frcp
 }
 
+test "Counting boundary: receiver-inventory-period (holiday)" cite "N.D. Ill. L.R. 66.1(b)"
+{
+  given ReceiverAppointed() on 2026-05-04
+  expect deadline(receiver-inventory-period) == 2026-05-26
+}
+
 /// LR 73.1(e): the parties may object within 21 days of a reassignment to
 /// a magistrate judge other than the designated one; without objection
 /// they are deemed to consent.
 deadline magistrate-reassignment-objection-period: 21.days after MagistrateReassigned() counted_by frcp6-illinois cite "N.D. Ill. L.R. 73.1(e)"
 {
   forum frcp
+}
+
+test "Counting boundary: magistrate-reassignment-objection-period (holiday)" cite "N.D. Ill. L.R. 73.1(e)"
+{
+  given MagistrateReassigned() on 2026-05-04
+  expect deadline(magistrate-reassignment-objection-period) == 2026-05-26
 }
 
 /// LR 73.1(f): a party added after transfer to a magistrate judge on
@@ -194,11 +254,23 @@ deadline added-party-consent-period: 30.days after AddedPartyAppeared() counted_
   forum frcp
 }
 
+test "Counting boundary: added-party-consent-period (weekend)" cite "N.D. Ill. L.R. 73.1(f)"
+{
+  given AddedPartyAppeared() on 2026-05-07
+  expect deadline(added-party-consent-period) == 2026-06-08
+}
+
 /// LR 78.5: a party may ask the clerk to report on the status of a motion
 /// on file and fully briefed for at least sixty days.
 deadline status-request-period: 60.days after MotionFullyBriefed() counted_by frcp6-illinois cite "N.D. Ill. L.R. 78.5"
 {
   forum frcp
+}
+
+test "Counting boundary: status-request-period (holiday)" cite "N.D. Ill. L.R. 78.5"
+{
+  given MotionFullyBriefed() on 2026-05-04
+  expect deadline(status-request-period) == 2026-07-06
 }
 
 /// LR 79.1(c)(1): exhibits deposited with the clerk are removed 90 days
@@ -213,6 +285,12 @@ deadline exhibit-removal-period: 90.days after FinalDecisionUnappealed() counted
 deadline exhibit-removal-after-mandate-period: 30.days after MandateFiled() counted_by frcp6-illinois cite "N.D. Ill. L.R. 79.1(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: exhibit-removal-after-mandate-period (weekend)" cite "N.D. Ill. L.R. 79.1(c)"
+{
+  given MandateFiled() on 2026-05-07
+  expect deadline(exhibit-removal-after-mandate-period) == 2026-06-08
 }
 
 /// LR 81.2: unless the court directs earlier transmittal, the clerk does

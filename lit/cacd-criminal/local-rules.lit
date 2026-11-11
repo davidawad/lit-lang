@@ -69,6 +69,12 @@ deadline suppression-response: 7.days after SuppressionMotionServed() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: suppression-response (weekend)" cite "C.D. Cal. L.Cr.R. 12-1.2"
+{
+  given SuppressionMotionServed() on 2025-12-06
+  expect deadline(suppression-response) == 2025-12-15
+}
+
 /// C.D. Cal. L.Cr.R. 12-1.3: a party that does not desire to
 /// cross-examine a declarant files and serves a notice to that effect no
 /// later than one week before the hearing; otherwise the declarant is made
@@ -76,6 +82,12 @@ deadline suppression-response: 7.days after SuppressionMotionServed() counted_by
 deadline declarant-cross-examination-notice: 7.days before SuppressionHearingScheduled() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 12-1.3"
 {
   forum frcrimp
+}
+
+test "Counting boundary: declarant-cross-examination-notice (holiday)" cite "C.D. Cal. L.Cr.R. 12-1.3"
+{
+  given SuppressionHearingScheduled() on 2025-12-04
+  expect deadline(declarant-cross-examination-notice) == 2025-11-26
 }
 
 /// C.D. Cal. L.Cr.R. 16-1(1): unless the parties agree or the Court orders
@@ -90,6 +102,12 @@ deadline government-expert-disclosure: 30.days before TrialScheduled() counted_b
   forum frcrimp
 }
 
+test "Counting boundary: government-expert-disclosure (weekend)" cite "C.D. Cal. L.Cr.R. 16-1"
+{
+  given TrialScheduled() on 2025-12-01
+  expect deadline(government-expert-disclosure) == 2025-10-31
+}
+
 /// C.D. Cal. L.Cr.R. 16-1(2): unless the parties agree or the Court orders
 /// otherwise, on a timely FRCrimP 16(b)(1)(C)(i) request the defendant
 /// discloses its case-in-chief expert testimony no later than 14 days
@@ -102,12 +120,24 @@ deadline defense-expert-disclosure: 14.days before TrialScheduled() counted_by f
   forum frcrimp
 }
 
+test "Counting boundary: defense-expert-disclosure (weekend)" cite "C.D. Cal. L.Cr.R. 16-1"
+{
+  given TrialScheduled() on 2025-12-06
+  expect deadline(defense-expert-disclosure) == 2025-11-21
+}
+
 /// C.D. Cal. L.Cr.R. 46-7: no assignment of monies deposited with the
 /// Court is recognized unless filed with the Clerk within ten (10) days of
 /// its making.
 deadline deposit-assignment-filing: 10.days after DepositAssignmentMade() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 46-7"
 {
   forum frcrimp
+}
+
+test "Counting boundary: deposit-assignment-filing (weekend)" cite "C.D. Cal. L.Cr.R. 46-7"
+{
+  given DepositAssignmentMade() on 2025-12-03
+  expect deadline(deposit-assignment-filing) == 2025-12-15
 }
 
 /// C.D. Cal. L.Cr.R. 57-3.3.1: if the trial judge sets no settlement
@@ -122,12 +152,24 @@ deadline settlement-conference-request: 21.days before TrialScheduled() counted_
   forum frcrimp
 }
 
+test "Counting boundary: settlement-conference-request (holiday)" cite "C.D. Cal. L.Cr.R. 57-3.3.1"
+{
+  given TrialScheduled() on 2025-12-02
+  expect deadline(settlement-conference-request) == 2025-11-10
+}
+
 /// C.D. Cal. L.Cr.R. 57-3.5.2: either counsel may request the defendant's
 /// criminal history summary from the Probation Officer at least 10 days
 /// before the settlement conference.
 deadline criminal-history-request: 10.days before SettlementConferenceScheduled() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 57-3.5.2"
 {
   forum frcrimp
+}
+
+test "Counting boundary: criminal-history-request (weekend)" cite "C.D. Cal. L.Cr.R. 57-3.5.2"
+{
+  given SettlementConferenceScheduled() on 2025-12-02
+  expect deadline(criminal-history-request) == 2025-11-21
 }
 
 /// C.D. Cal. L.Cr.R. 57-3.5.2: on a timely request the Probation Officer,
@@ -138,6 +180,12 @@ deadline criminal-history-summary: 7.days after CriminalHistoryRequested() count
   forum frcrimp
 }
 
+test "Counting boundary: criminal-history-summary (weekend)" cite "C.D. Cal. L.Cr.R. 57-3.5.2"
+{
+  given CriminalHistoryRequested() on 2025-12-06
+  expect deadline(criminal-history-summary) == 2025-12-15
+}
+
 /// C.D. Cal. L.Cr.R. 57-3.5.4: if a settlement is agreed by both counsel
 /// and approved by the defendant, the plea agreement is reduced to
 /// writing and executed within three (3) court days from the settlement
@@ -145,6 +193,12 @@ deadline criminal-history-summary: 7.days after CriminalHistoryRequested() count
 deadline settlement-plea-agreement: 3.court_days after SettlementConferenceHeld() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 57-3.5.4"
 {
   forum frcrimp
+}
+
+test "Counting boundary: settlement-plea-agreement (weekend)" cite "C.D. Cal. L.Cr.R. 57-3.5.4"
+{
+  given SettlementConferenceHeld() on 2025-12-03
+  expect deadline(settlement-plea-agreement) == 2025-12-08
 }
 
 test "suppression response: 7 days after the trigger" cite "C.D. Cal. L.Cr.R. 12-1.2"

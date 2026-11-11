@@ -127,6 +127,12 @@ deadline pro-se-subpoena-request-period: 21.days before TrialOrHearingDate() cou
   forum frcp
 }
 
+test "Counting boundary: pro-se-subpoena-request-period (holiday)" cite "E.D. Mo. L.R. 2.06(C)"
+{
+  given TrialOrHearingDate() on 2025-12-18
+  expect deadline(pro-se-subpoena-request-period) == 2025-11-26
+}
+
 /// E.D. Mo. L.R. 2.06(C)(2): a self-represented litigant's application
 /// for a writ of habeas corpus ad testificandum for a non-party witness is
 /// filed not less than twenty-one days before the date set for trial or
@@ -136,12 +142,24 @@ deadline pro-se-writ-application-period: 21.days before TrialOrHearingDate() cou
   forum frcp
 }
 
+test "Counting boundary: pro-se-writ-application-period (holiday)" cite "E.D. Mo. L.R. 2.06(C)"
+{
+  given TrialOrHearingDate() on 2025-12-18
+  expect deadline(pro-se-writ-application-period) == 2025-11-26
+}
+
 /// E.D. Mo. L.R. 4.01(B): except as the rules or an order provide
 /// otherwise, a party opposing a motion files a single memorandum within
 /// fourteen days after service of the motion.
 deadline opposition-period: 14.days after MotionServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 4.01(B)"
 {
   forum frcp
+}
+
+test "Counting boundary: opposition-period (holiday)" cite "E.D. Mo. L.R. 4.01(B)"
+{
+  given MotionServed() on 2025-12-18
+  expect deadline(opposition-period) == 2026-01-02
 }
 
 /// E.D. Mo. L.R. 4.01(B): an opposition to a motion seeking an extension
@@ -159,6 +177,12 @@ deadline reply-period: 10.days after OppositionServed() counted_by frcp6-missour
   forum frcp
 }
 
+test "Counting boundary: reply-period (holiday)" cite "E.D. Mo. L.R. 4.01(C)"
+{
+  given OppositionServed() on 2025-12-15
+  expect deadline(reply-period) == 2025-12-26
+}
+
 /// E.D. Mo. L.R. 4.01(F): a party opposing a motion for summary judgment
 /// files its memorandum and documentary evidence twenty-one days after
 /// being served with the motion, with a Response to Statement of Material
@@ -168,12 +192,24 @@ deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotion
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-opposition-period (weekend)" cite "E.D. Mo. L.R. 4.01(F)"
+{
+  given SummaryJudgmentMotionServed() on 2025-12-20
+  expect deadline(summary-judgment-opposition-period) == 2026-01-12
+}
+
 /// E.D. Mo. L.R. 6.02: not later than fourteen days before the ADR
 /// Conference, each party gives all parties and the neutral a list of
 /// the persons who will participate for it and how each will attend.
 deadline adr-participant-list-period: 14.days before AdrConference() counted_by frcp6-missouri cite "E.D. Mo. L.R. 6.02"
 {
   forum frcp
+}
+
+test "Counting boundary: adr-participant-list-period (weekend)" cite "E.D. Mo. L.R. 6.02"
+{
+  given AdrConference() on 2025-12-20
+  expect deadline(adr-participant-list-period) == 2025-12-05
 }
 
 /// E.D. Mo. L.R. 6.02: a party contesting another party's manner of
@@ -190,6 +226,12 @@ deadline adr-attendance-contest-period: 10.days before AdrConference() counted_b
 deadline adr-government-authority-period: 14.days before AdrConference() counted_by frcp6-missouri cite "E.D. Mo. L.R. 6.02"
 {
   forum frcp
+}
+
+test "Counting boundary: adr-government-authority-period (weekend)" cite "E.D. Mo. L.R. 6.02"
+{
+  given AdrConference() on 2025-12-20
+  expect deadline(adr-government-authority-period) == 2025-12-05
 }
 
 /// E.D. Mo. L.R. 6.02: not later than ten days before the initial ADR
@@ -209,6 +251,12 @@ deadline adr-settlement-filing-period: 30.days after LastAdrConference() counted
   forum frcp
 }
 
+test "Counting boundary: adr-settlement-filing-period (weekend)" cite "E.D. Mo. L.R. 6.05"
+{
+  given LastAdrConference() on 2025-12-18
+  expect deadline(adr-settlement-filing-period) == 2026-01-20
+}
+
 /// E.D. Mo. L.R. 6.05(D): when the ADR referral yields scheduling or case
 /// management agreements, the parties file a proposed litigation plan or
 /// motion to amend the Case Management Order no later than fourteen days
@@ -216,6 +264,12 @@ deadline adr-settlement-filing-period: 30.days after LastAdrConference() counted
 deadline adr-litigation-plan-period: 14.days after LastAdrConference() counted_by frcp6-missouri cite "E.D. Mo. L.R. 6.05"
 {
   forum frcp
+}
+
+test "Counting boundary: adr-litigation-plan-period (holiday)" cite "E.D. Mo. L.R. 6.05"
+{
+  given LastAdrConference() on 2025-12-18
+  expect deadline(adr-litigation-plan-period) == 2026-01-02
 }
 
 /// E.D. Mo. L.R. 7.02(C): after a non-jury trial the parties who offered
@@ -227,6 +281,12 @@ deadline exhibit-removal-period: 30.days after BenchTrialDecision() counted_by f
   forum frcp
 }
 
+test "Counting boundary: exhibit-removal-period (weekend)" cite "E.D. Mo. L.R. 7.02(C)"
+{
+  given BenchTrialDecision() on 2025-12-18
+  expect deadline(exhibit-removal-period) == 2026-01-20
+}
+
 /// E.D. Mo. L.R. 8.02: a party seeking attorney's fees files its motion no
 /// later than twenty-one days after entry of final judgment under FRCP
 /// 58; a late motion may waive the fees.
@@ -235,12 +295,24 @@ deadline fee-motion-period: 21.days after FinalJudgmentEntered() counted_by frcp
   forum frcp
 }
 
+test "Counting boundary: fee-motion-period (weekend)" cite "E.D. Mo. L.R. 8.02"
+{
+  given FinalJudgmentEntered() on 2025-12-20
+  expect deadline(fee-motion-period) == 2026-01-12
+}
+
 /// E.D. Mo. L.R. 8.02: each party opposing a motion for attorney's fees
 /// files its memorandum and evidence within fourteen days after being
 /// served with the motion (also L.R. 4.01(F)).
 deadline fee-opposition-period: 14.days after FeeMotionServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 8.02"
 {
   forum frcp
+}
+
+test "Counting boundary: fee-opposition-period (holiday)" cite "E.D. Mo. L.R. 8.02"
+{
+  given FeeMotionServed() on 2025-12-18
+  expect deadline(fee-opposition-period) == 2026-01-02
 }
 
 /// E.D. Mo. L.R. 8.02: the moving party may file a reply memorandum within
@@ -259,6 +331,12 @@ deadline bill-of-costs-period: 21.days after FinalJudgmentEntered() counted_by f
   forum frcp
 }
 
+test "Counting boundary: bill-of-costs-period (weekend)" cite "E.D. Mo. L.R. 8.03(A)"
+{
+  given FinalJudgmentEntered() on 2025-12-20
+  expect deadline(bill-of-costs-period) == 2026-01-12
+}
+
 /// E.D. Mo. L.R. 8.03(A)(3): each party objecting to a bill of costs files
 /// a memorandum of specific objections within fourteen days of being
 /// served; absent a timely objection the Clerk taxes costs as claimed
@@ -266,6 +344,12 @@ deadline bill-of-costs-period: 21.days after FinalJudgmentEntered() counted_by f
 deadline cost-objection-period: 14.days after BillOfCostsServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 8.03(A)"
 {
   forum frcp
+}
+
+test "Counting boundary: cost-objection-period (holiday)" cite "E.D. Mo. L.R. 8.03(A)"
+{
+  given BillOfCostsServed() on 2025-12-18
+  expect deadline(cost-objection-period) == 2026-01-02
 }
 
 /// E.D. Mo. L.R. 8.03(A)(3): the moving party may file a reply memorandum
@@ -284,12 +368,24 @@ deadline appeal-costs-period: 21.days after MandateIssued() counted_by frcp6-mis
   forum frcp
 }
 
+test "Counting boundary: appeal-costs-period (weekend)" cite "E.D. Mo. L.R. 8.03(B)"
+{
+  given MandateIssued() on 2025-12-20
+  expect deadline(appeal-costs-period) == 2026-01-12
+}
+
 /// E.D. Mo. L.R. 9.01(D)(2): a motion for review of the Bankruptcy
 /// Court's ruling on consolidation of appeals is filed within twenty-eight
 /// days of the District Court's Case Management Order.
 deadline bankruptcy-consolidation-review-period: 28.days after BankruptcyCaseManagementOrder() counted_by frcp6-missouri cite "E.D. Mo. L.R. 9.01(D)"
 {
   forum frcp
+}
+
+test "Counting boundary: bankruptcy-consolidation-review-period (weekend)" cite "E.D. Mo. L.R. 9.01(D)"
+{
+  given BankruptcyCaseManagementOrder() on 2025-12-20
+  expect deadline(bankruptcy-consolidation-review-period) == 2026-01-20
 }
 
 /// E.D. Mo. L.R. 9.01(D)(3): a motion to dismiss a procedurally defective
@@ -300,12 +396,24 @@ deadline bankruptcy-dismissal-motion-period: 28.days after BankruptcyCaseManagem
   forum frcp
 }
 
+test "Counting boundary: bankruptcy-dismissal-motion-period (weekend)" cite "E.D. Mo. L.R. 9.01(D)"
+{
+  given BankruptcyCaseManagementOrder() on 2025-12-20
+  expect deadline(bankruptcy-dismissal-motion-period) == 2026-01-20
+}
+
 /// E.D. Mo. L.R. 9.02: in a 42 U.S.C. § 405(g) review the Commissioner
 /// files any motion to dismiss or to remand, or the answer with the
 /// administrative record, within sixty days of service of the complaint.
 deadline commissioner-answer-period: 60.days after SocialSecurityComplaintServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 9.02"
 {
   forum frcp
+}
+
+test "Counting boundary: commissioner-answer-period (weekend)" cite "E.D. Mo. L.R. 9.02"
+{
+  given SocialSecurityComplaintServed() on 2025-12-16
+  expect deadline(commissioner-answer-period) == 2026-02-17
 }
 
 /// E.D. Mo. L.R. 9.02: unless the court orders otherwise, the plaintiff
@@ -316,12 +424,24 @@ deadline social-security-brief-period: 30.days after CommissionerAnswerServed() 
   forum frcp
 }
 
+test "Counting boundary: social-security-brief-period (weekend)" cite "E.D. Mo. L.R. 9.02"
+{
+  given CommissionerAnswerServed() on 2025-12-18
+  expect deadline(social-security-brief-period) == 2026-01-20
+}
+
 /// E.D. Mo. L.R. 9.02: the Commissioner serves and files a brief in support
 /// of the answer within thirty days after service of the plaintiff's
 /// brief.
 deadline commissioner-brief-period: 30.days after SocialSecurityBriefServed() counted_by frcp6-missouri cite "E.D. Mo. L.R. 9.02"
 {
   forum frcp
+}
+
+test "Counting boundary: commissioner-brief-period (weekend)" cite "E.D. Mo. L.R. 9.02"
+{
+  given SocialSecurityBriefServed() on 2025-12-18
+  expect deadline(commissioner-brief-period) == 2026-01-20
 }
 
 /// E.D. Mo. L.R. 9.02: the plaintiff has fourteen days after service of the
@@ -332,6 +452,12 @@ deadline social-security-reply-period: 14.days after CommissionerBriefServed() c
   forum frcp
 }
 
+test "Counting boundary: social-security-reply-period (holiday)" cite "E.D. Mo. L.R. 9.02"
+{
+  given CommissionerBriefServed() on 2025-12-18
+  expect deadline(social-security-reply-period) == 2026-01-02
+}
+
 /// E.D. Mo. L.R. 9.04(D)(1): within thirty days of filing a condemnation
 /// complaint, the government files a current abstract of title or other
 /// title document with a list of all parties who may claim an interest in
@@ -339,6 +465,12 @@ deadline social-security-reply-period: 14.days after CommissionerBriefServed() c
 deadline condemnation-title-period: 30.days after CondemnationComplaintFiled() counted_by frcp6-missouri cite "E.D. Mo. L.R. 9.04"
 {
   forum frcp
+}
+
+test "Counting boundary: condemnation-title-period (weekend)" cite "E.D. Mo. L.R. 9.04"
+{
+  given CondemnationComplaintFiled() on 2025-12-18
+  expect deadline(condemnation-title-period) == 2026-01-20
 }
 
 /// E.D. Mo. L.R. 10.03(B)(2): a successful bidder of $1,000 or more pays
@@ -364,6 +496,12 @@ deadline sale-confirmation-order-period: 14.days after AdmiraltySaleHeld() count
   forum frcp
 }
 
+test "Counting boundary: sale-confirmation-order-period (holiday)" cite "E.D. Mo. L.R. 10.03"
+{
+  given AdmiraltySaleHeld() on 2025-12-18
+  expect deadline(sale-confirmation-order-period) == 2026-01-02
+}
+
 /// E.D. Mo. L.R. 13.05(A)(4)(d): within seven days from the filing of a
 /// Motion for Sealing, a party or non-party may file a Memorandum Opposing
 /// Sealing.
@@ -386,6 +524,12 @@ deadline sealing-reply-period: 7.days after SealingOppositionFiled() counted_by 
 deadline sealing-denial-stay-period: 14.days after SealingDenied() counted_by frcp6-missouri cite "E.D. Mo. L.R. 13.05(A)(4)(g)"
 {
   forum frcp
+}
+
+test "Counting boundary: sealing-denial-stay-period (holiday)" cite "E.D. Mo. L.R. 13.05(A)(4)(g)"
+{
+  given SealingDenied() on 2025-12-18
+  expect deadline(sealing-denial-stay-period) == 2026-01-02
 }
 
 test "Deadline arithmetic: supplemental-disclosure-period (7 days after)" cite "E.D. Mo. L.R. 2.09"

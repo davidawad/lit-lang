@@ -91,6 +91,12 @@ deadline opposition-period: 21.days after MotionServed() counted_by frcrimp45 de
   forum frcrimp
 }
 
+test "Counting boundary: opposition-period (weekend)" cite "N.D.N.Y. L.R. Cr. P. 12.1(a)"
+{
+  given MotionServed() on 2026-01-03
+  expect deadline(opposition-period) == 2026-01-26
+}
+
 /// N.D.N.Y. L.R. Cr. P. 12.1(a): the moving party files and serves any
 /// reply no more than seven days after service of the response papers,
 /// unless the Court orders otherwise.
@@ -102,11 +108,23 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 delega
   forum frcrimp
 }
 
+test "Counting boundary: reply-period (weekend)" cite "N.D.N.Y. L.R. Cr. P. 12.1(a)"
+{
+  given ResponseServed() on 2026-01-03
+  expect deadline(reply-period) == 2026-01-12
+}
+
 /// N.D.N.Y. L.R. Cr. P. 12.1(h): a motion for reconsideration of a Court
 /// order is filed within 14 days of the date of the decision.
 deadline reconsideration-period: 14.days after DecisionEntered() counted_by frcrimp45 cite "N.D.N.Y. L.R. Cr. P. 12.1(h)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reconsideration-period (weekend)" cite "N.D.N.Y. L.R. Cr. P. 12.1(h)"
+{
+  given DecisionEntered() on 2026-01-03
+  expect deadline(reconsideration-period) == 2026-01-20
 }
 
 /// N.D.N.Y. L.R. Cr. P. 14.1(b): 14 days after arraignment, or on a date
@@ -121,12 +139,24 @@ deadline government-discovery: 14.days after Arraigned() counted_by frcrimp45 de
   forum frcrimp
 }
 
+test "Counting boundary: government-discovery (weekend)" cite "N.D.N.Y. L.R. Cr. P. 14.1(b)"
+{
+  given Arraigned() on 2026-01-03
+  expect deadline(government-discovery) == 2026-01-20
+}
+
 /// N.D.N.Y. L.R. Cr. P. 14.1(c): unless the defendant refuses in writing
 /// the FRCrimP 16(a)(1)(C)-(E) materials, the defendant makes available all
 /// FRCrimP 16(b) information within 21 days of arraignment.
 deadline defense-discovery: 21.days after Arraigned() counted_by frcrimp45 cite "N.D.N.Y. L.R. Cr. P. 14.1(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defense-discovery (weekend)" cite "N.D.N.Y. L.R. Cr. P. 14.1(c)"
+{
+  given Arraigned() on 2026-01-03
+  expect deadline(defense-discovery) == 2026-01-26
 }
 
 /// N.D.N.Y. L.R. Cr. P. 14.1(d): no less than 14 days before the start of
@@ -141,12 +171,24 @@ deadline giglio-disclosure: 14.days before JurySelectionScheduled() counted_by f
   forum frcrimp
 }
 
+test "Counting boundary: giglio-disclosure (weekend)" cite "N.D.N.Y. L.R. Cr. P. 14.1(d)"
+{
+  given JurySelectionScheduled() on 2026-01-03
+  expect deadline(giglio-disclosure) == 2025-12-19
+}
+
 /// N.D.N.Y. L.R. Cr. P. 32.1(b): defense counsel who wishes to attend the
 /// probation officer's interview of the defendant advises the Probation
 /// Office within two days of the date the presentence report is ordered.
 deadline presentence-interview-notice: 2.days after PresentenceReportOrdered() counted_by frcrimp45 cite "N.D.N.Y. L.R. Cr. P. 32.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: presentence-interview-notice (weekend)" cite "N.D.N.Y. L.R. Cr. P. 32.1(b)"
+{
+  given PresentenceReportOrdered() on 2026-01-01
+  expect deadline(presentence-interview-notice) == 2026-01-05
 }
 
 /// N.D.N.Y. L.R. Cr. P. 32.3: letters in support of the defendant's
@@ -157,11 +199,23 @@ deadline letters-in-support: 7.days before SentencingScheduled() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: letters-in-support (holiday)" cite "N.D.N.Y. L.R. Cr. P. 32.3"
+{
+  given SentencingScheduled() on 2026-01-01
+  expect deadline(letters-in-support) == 2025-12-24
+}
+
 /// N.D.N.Y. L.R. Cr. P. 41.1(b): the search warrant return is filed within
 /// 30 days after the execution of the warrant.
 deadline search-warrant-return: 30.days after SearchWarrantExecuted() counted_by frcrimp45 cite "N.D.N.Y. L.R. Cr. P. 41.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: search-warrant-return (weekend)" cite "N.D.N.Y. L.R. Cr. P. 41.1(b)"
+{
+  given SearchWarrantExecuted() on 2026-01-01
+  expect deadline(search-warrant-return) == 2026-02-02
 }
 
 /// N.D.N.Y. L.R. Cr. P. 41.1(c), (d): in a sealed search warrant case the
@@ -177,6 +231,12 @@ deadline search-warrant-unseal: 180.days after SearchWarrantReturnFiled() counte
   forum frcrimp
 }
 
+test "Counting boundary: search-warrant-unseal (holiday)" cite "N.D.N.Y. L.R. Cr. P. 41.1(c); N.D.N.Y. L.R. Cr. P. 41.1(d)"
+{
+  given SearchWarrantReturnFiled() on 2026-01-04
+  expect deadline(search-warrant-unseal) == 2026-07-06
+}
+
 /// N.D.N.Y. L.R. Cr. P. 44.2(a): defense counsel's appearance certifies
 /// six credit hours of federal criminal defense continuing education in
 /// the past two years or, if not, that counsel will complete them within
@@ -184,6 +244,12 @@ deadline search-warrant-unseal: 180.days after SearchWarrantReturnFiled() counte
 deadline defense-cle-certification: 30.days after AppearanceFiled() counted_by frcrimp45 cite "N.D.N.Y. L.R. Cr. P. 44.2(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defense-cle-certification (weekend)" cite "N.D.N.Y. L.R. Cr. P. 44.2(a)"
+{
+  given AppearanceFiled() on 2026-01-01
+  expect deadline(defense-cle-certification) == 2026-02-02
 }
 
 /// N.D.N.Y. L.R. Cr. P. 59.1(a), (c): unless otherwise ordered, on an
@@ -199,6 +265,12 @@ deadline magistrate-appeal-appellant-brief: 14.days after MagistrateAppealNotice
   forum frcrimp
 }
 
+test "Counting boundary: magistrate-appeal-appellant-brief (weekend)" cite "N.D.N.Y. L.R. Cr. P. 59.1(a); N.D.N.Y. L.R. Cr. P. 59.1(c)"
+{
+  given MagistrateAppealNoticed() on 2026-01-03
+  expect deadline(magistrate-appeal-appellant-brief) == 2026-01-20
+}
+
 /// N.D.N.Y. L.R. Cr. P. 59.1(a), (c): unless otherwise ordered, the
 /// appellee's brief is filed within 14 days following submission of the
 /// appellant's brief; the appeal is taken on submission without oral
@@ -211,6 +283,12 @@ deadline magistrate-appeal-appellee-brief: 14.days after MagistrateAppellantBrie
   forum frcrimp
 }
 
+test "Counting boundary: magistrate-appeal-appellee-brief (weekend)" cite "N.D.N.Y. L.R. Cr. P. 59.1(a); N.D.N.Y. L.R. Cr. P. 59.1(c)"
+{
+  given MagistrateAppellantBriefFiled() on 2026-01-03
+  expect deadline(magistrate-appeal-appellee-brief) == 2026-01-20
+}
+
 /// N.D.N.Y. L.R. Cr. P. 59.1(a): on an appeal from a release or detention
 /// order, any reply brief is filed within seven days following submission
 /// of the appellee's brief, unless otherwise ordered. The consent
@@ -221,6 +299,12 @@ deadline magistrate-appeal-reply-brief: 7.days after MagistrateAppelleeBriefFile
 } cite "N.D.N.Y. L.R. Cr. P. 59.1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: magistrate-appeal-reply-brief (weekend)" cite "N.D.N.Y. L.R. Cr. P. 59.1(a)"
+{
+  given MagistrateAppelleeBriefFiled() on 2026-01-03
+  expect deadline(magistrate-appeal-reply-brief) == 2026-01-12
 }
 
 test "opposition period: 21 days after the trigger" cite "N.D.N.Y. L.R. Cr. P. 12.1(a)"

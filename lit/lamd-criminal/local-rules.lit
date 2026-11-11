@@ -72,11 +72,23 @@ deadline response-period: 21.days after MotionServed() counted_by frcrimp45 dele
   forum frcrimp
 }
 
+test "Counting boundary: response-period (weekend)" cite "M.D. La. LCrR 12; M.D. La. LR 7(f)"
+{
+  given MotionServed() on 2022-08-20
+  expect deadline(response-period) == 2022-09-12
+}
+
 /// M.D. La. LCrR 32(b): a sentencing memorandum is filed under seal at
 /// least fourteen days before the date of sentencing.
 deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by frcrimp45 cite "M.D. La. LCrR 32(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-memorandum (weekend)" cite "M.D. La. LCrR 32(b)"
+{
+  given SentencingScheduled() on 2022-08-20
+  expect deadline(sentencing-memorandum) == 2022-08-05
 }
 
 /// M.D. La. LCrR 32(c): a government motion under USSG § 5K1.1, with its
@@ -87,12 +99,24 @@ deadline substantial-assistance-motion: 14.days before SentencingScheduled() cou
   forum frcrimp
 }
 
+test "Counting boundary: substantial-assistance-motion (weekend)" cite "M.D. La. LCrR 32(c)"
+{
+  given SentencingScheduled() on 2022-08-20
+  expect deadline(substantial-assistance-motion) == 2022-08-05
+}
+
 /// M.D. La. LCrR 55(f): exhibits in the Clerk's custody are removed by
 /// the offering party within thirty days of the final disposition of the
 /// case, failing which the Clerk may destroy or otherwise dispose of them.
 deadline exhibit-removal: 30.days after FinalDisposition() counted_by frcrimp45 cite "M.D. La. LCrR 55(f)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-removal (weekend)" cite "M.D. La. LCrR 55(f)"
+{
+  given FinalDisposition() on 2022-08-18
+  expect deadline(exhibit-removal) == 2022-09-19
 }
 
 test "response period: 21 days after the trigger" cite "M.D. La. LCrR 12; M.D. La. LR 7(f)"

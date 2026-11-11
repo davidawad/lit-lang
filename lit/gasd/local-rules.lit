@@ -41,11 +41,23 @@ deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionSe
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-response-period (weekend)" cite "S.D. Ga. LR Civ. 56(b)"
+{
+  given SummaryJudgmentMotionServed() on 2026-10-10
+  expect deadline(summary-judgment-response-period) == 2026-11-02
+}
+
 /// LR Civ. 7(c), 56(c): a reply may be filed within 7 days of service of the
 /// response; any further brief needs leave of court (LR Civ. 7(d), 56(d)).
 deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "S.D. Ga. LR Civ. 7(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: reply-period (weekend)" cite "S.D. Ga. LR Civ. 7(c)"
+{
+  given ResponseServed() on 2026-10-10
+  expect deadline(reply-period) == 2026-10-19
 }
 
 /// LR Civ. 5.2: when a motion to seal is denied, the material is returned
@@ -56,11 +68,23 @@ deadline seal-appeal-notice-period: 14.days after SealDenied() counted_by frcp6 
   forum frcp
 }
 
+test "Counting boundary: seal-appeal-notice-period (weekend)" cite "S.D. Ga. LR Civ. 5.2"
+{
+  given SealDenied() on 2026-10-10
+  expect deadline(seal-appeal-notice-period) == 2026-10-26
+}
+
 /// LR Civ. 26(a)(2): the parties conduct the Rule 26(f) conference within
 /// 28 days from the date the first answer is filed.
 deadline planning-conference-period: 28.days after FirstAnswerFiled() counted_by frcp6 cite "S.D. Ga. LR Civ. 26(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: planning-conference-period (weekend)" cite "S.D. Ga. LR Civ. 26(a)"
+{
+  given FirstAnswerFiled() on 2026-10-10
+  expect deadline(planning-conference-period) == 2026-11-09
 }
 
 /// LR Civ. 26(a)(2): in a removed case the conference is held within 28 days
@@ -70,11 +94,23 @@ deadline removed-planning-conference-period: 28.days after Removed() counted_by 
   forum frcp
 }
 
+test "Counting boundary: removed-planning-conference-period (weekend)" cite "S.D. Ga. LR Civ. 26(a)"
+{
+  given Removed() on 2026-10-10
+  expect deadline(removed-planning-conference-period) == 2026-11-09
+}
+
 /// LR Civ. 26(a)(3): the joint Rule 26(f) report is filed within 7 days of
 /// the conference.
 deadline planning-report-period: 7.days after RuleTwentySixFConferenceHeld() counted_by frcp6 cite "S.D. Ga. LR Civ. 26(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: planning-report-period (weekend)" cite "S.D. Ga. LR Civ. 26(a)"
+{
+  given RuleTwentySixFConferenceHeld() on 2026-10-10
+  expect deadline(planning-report-period) == 2026-10-19
 }
 
 /// LR Civ. 26(a)(4): initial disclosures under Rule 26(a)(1) are served
@@ -84,11 +120,23 @@ deadline initial-disclosures-period: 14.days after RuleTwentySixFConferenceHeld(
   forum frcp
 }
 
+test "Counting boundary: initial-disclosures-period (weekend)" cite "S.D. Ga. LR Civ. 26(a)"
+{
+  given RuleTwentySixFConferenceHeld() on 2026-10-10
+  expect deadline(initial-disclosures-period) == 2026-10-26
+}
+
 /// LR Civ. 23(b): a motion for class certification is filed within 90 days
 /// from the commencement of discovery.
 deadline class-certification-period: 90.days after DiscoveryCommenced() counted_by frcp6 cite "S.D. Ga. LR Civ. 23(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: class-certification-period (weekend)" cite "S.D. Ga. LR Civ. 23(b)"
+{
+  given DiscoveryCommenced() on 2026-10-11
+  expect deadline(class-certification-period) == 2027-01-11
 }
 
 /// LR Civ. 54(a): a bill of costs under Fed. R. Civ. P. 54 is filed by the
@@ -99,12 +147,24 @@ deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 
   forum frcp
 }
 
+test "Counting boundary: bill-of-costs-period (weekend)" cite "S.D. Ga. LR Civ. 54(a)"
+{
+  given JudgmentEntered() on 2026-10-10
+  expect deadline(bill-of-costs-period) == 2026-10-26
+}
+
 /// LR Civ. 54(b): a bill of costs on appeal taxable in the district court
 /// under Fed. R. App. P. 39 is filed within 14 days of the filing of the
 /// appellate court's mandate in this Court.
 deadline appeal-costs-period: 14.days after MandateFiled() counted_by frcp6 cite "S.D. Ga. LR Civ. 54(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: appeal-costs-period (weekend)" cite "S.D. Ga. LR Civ. 54(b)"
+{
+  given MandateFiled() on 2026-10-10
+  expect deadline(appeal-costs-period) == 2026-10-26
 }
 
 start motion-served

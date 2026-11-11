@@ -42,6 +42,12 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 ci
   forum frcrimp
 }
 
+test "Counting boundary: opposition-period (weekend)" cite "D. Md. Local Rule 105.2(a)"
+{
+  given MotionServed() on 2025-12-06
+  expect deadline(opposition-period) == 2025-12-22
+}
+
 /// Local Rules 105.2(a), 207.1: a reply memorandum is filed within 14 days
 /// after service of the opposition. Surreply memoranda are not permitted
 /// unless the Court orders otherwise.
@@ -50,11 +56,23 @@ deadline reply-period: 14.days after OppositionServed() counted_by frcrimp45 cit
   forum frcrimp
 }
 
+test "Counting boundary: reply-period (weekend)" cite "D. Md. Local Rule 105.2(a)"
+{
+  given OppositionServed() on 2025-12-06
+  expect deadline(reply-period) == 2025-12-22
+}
+
 /// Local Rules 105.10, 207.1: a motion to reconsider an order is filed no
 /// later than 14 days after its entry.
 deadline reconsideration-period: 14.days after OrderEntered() counted_by frcrimp45 cite "D. Md. Local Rule 105.10"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reconsideration-period (weekend)" cite "D. Md. Local Rule 105.10"
+{
+  given OrderEntered() on 2025-12-06
+  expect deadline(reconsideration-period) == 2025-12-22
 }
 
 /// Local Rule 206.3(a): within 14 days of the date of a bail forfeiture
@@ -66,6 +84,12 @@ deadline surety-forfeiture-period: 14.days after BailForfeitureOrdered() counted
   forum frcrimp
 }
 
+test "Counting boundary: surety-forfeiture-period (weekend)" cite "D. Md. Local Rule 206.3(a)"
+{
+  given BailForfeitureOrdered() on 2025-12-06
+  expect deadline(surety-forfeiture-period) == 2025-12-22
+}
+
 /// Local Rule 302.1: within 30 days of the docketing of a criminal appeal
 /// from a magistrate judge, the appellant files and serves a memorandum of
 /// the points of law, facts and authorities; the Court may dismiss the
@@ -75,11 +99,23 @@ deadline magistrate-appeal-memorandum-period: 30.days after MagistrateAppealDock
   forum frcrimp
 }
 
+test "Counting boundary: magistrate-appeal-memorandum-period (holiday)" cite "D. Md. Local Rule 302.1"
+{
+  given MagistrateAppealDocketed() on 2025-12-02
+  expect deadline(magistrate-appeal-memorandum-period) == 2026-01-02
+}
+
 /// Local Rule 302.1: the appellee files an answering memorandum within 30
 /// days after the appellant's.
 deadline magistrate-appeal-answer-period: 30.days after AppellantMemorandumFiled() counted_by frcrimp45 cite "D. Md. Local Rule 302.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: magistrate-appeal-answer-period (holiday)" cite "D. Md. Local Rule 302.1"
+{
+  given AppellantMemorandumFiled() on 2025-12-02
+  expect deadline(magistrate-appeal-answer-period) == 2026-01-02
 }
 
 test "opposition period: 14 days after the trigger" cite "D. Md. Local Rule 105.2(a)"

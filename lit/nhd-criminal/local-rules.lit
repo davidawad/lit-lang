@@ -82,11 +82,23 @@ deadline complex-case-status-conference: 14.days after ArraignedComplexCase() co
   forum frcrimp
 }
 
+test "Counting boundary: complex-case-status-conference (weekend)" cite "D.N.H. LCrR 10.2"
+{
+  given ArraignedComplexCase() on 2025-12-06
+  expect deadline(complex-case-status-conference) == 2025-12-22
+}
+
 /// D.N.H. LCrR 10.3: counsel confer to discuss discovery within 7 days
 /// after the arraignment.
 deadline post-arraignment-meeting: 7.days after Arraigned() counted_by frcrimp45 cite "D.N.H. LCrR 10.3"
 {
   forum frcrimp
+}
+
+test "Counting boundary: post-arraignment-meeting (weekend)" cite "D.N.H. LCrR 10.3"
+{
+  given Arraigned() on 2025-12-06
+  expect deadline(post-arraignment-meeting) == 2025-12-15
 }
 
 /// D.N.H. LCrR 11.2(b): the expedited plea and sentencing hearing is
@@ -99,12 +111,24 @@ deadline expedited-hearing: 45.days after ExpeditedNoticeFiled() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: expedited-hearing (weekend)" cite "D.N.H. LCrR 11.2(b); D.N.H. LCrR 11.2(e)"
+{
+  given ExpeditedNoticeFiled() on 2025-12-03
+  expect deadline(expedited-hearing) == 2026-01-20
+}
+
 /// D.N.H. LCrR 11.2(c): the probation office discloses the abbreviated
 /// presentence investigation report no later than 5 days before the
 /// scheduled expedited plea and sentencing hearing.
 deadline expedited-psr-disclosure: 5.days before ExpeditedHearingScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 11.2(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: expedited-psr-disclosure (holiday)" cite "D.N.H. LCrR 11.2(c)"
+{
+  given ExpeditedHearingScheduled() on 2025-12-02
+  expect deadline(expedited-psr-disclosure) == 2025-11-26
 }
 
 /// D.N.H. LCrR 12.1(a): discovery motions are filed within 30 days after
@@ -115,6 +139,12 @@ deadline discovery-motions: 30.days after Arraigned() counted_by frcrimp45 deleg
 } cite "D.N.H. LCrR 12.1(a); D.N.H. LCrR 10.2"
 {
   forum frcrimp
+}
+
+test "Counting boundary: discovery-motions (holiday)" cite "D.N.H. LCrR 12.1(a); D.N.H. LCrR 10.2"
+{
+  given Arraigned() on 2025-12-02
+  expect deadline(discovery-motions) == 2026-01-02
 }
 
 /// D.N.H. LCrR 12.1(b): dispositive and evidentiary motions (motions to
@@ -128,11 +158,23 @@ deadline dispositive-motions: 21.days before TrialScheduled() counted_by frcrimp
   forum frcrimp
 }
 
+test "Counting boundary: dispositive-motions (holiday)" cite "D.N.H. LCrR 12.1(b); D.N.H. LCrR 10.2"
+{
+  given TrialScheduled() on 2025-12-02
+  expect deadline(dispositive-motions) == 2025-11-10
+}
+
 /// D.N.H. LCrR 12.1(c): motions in limine are filed no later than 7 days
 /// before trial.
 deadline motions-in-limine: 7.days before TrialScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 12.1(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: motions-in-limine (holiday)" cite "D.N.H. LCrR 12.1(c)"
+{
+  given TrialScheduled() on 2025-12-04
+  expect deadline(motions-in-limine) == 2025-11-26
 }
 
 /// D.N.H. LCrR 12.1(e): with an assented-to motion to extend the time to
@@ -144,6 +186,12 @@ deadline indictment-extension-waiver: 10.days after ExtensionToIndictGranted() c
   forum frcrimp
 }
 
+test "Counting boundary: indictment-extension-waiver (weekend)" cite "D.N.H. LCrR 12.1(e)"
+{
+  given ExtensionToIndictGranted() on 2025-12-03
+  expect deadline(indictment-extension-waiver) == 2025-12-15
+}
+
 /// D.N.H. LCrR 12.1(f): unless the FRCrimP or the local rules provide
 /// otherwise, an objection and memorandum in opposition to a motion is
 /// filed within 14 days from the date the motion is filed; otherwise
@@ -151,6 +199,12 @@ deadline indictment-extension-waiver: 10.days after ExtensionToIndictGranted() c
 deadline objection-period: 14.days after MotionFiled() counted_by frcrimp45 cite "D.N.H. LCrR 12.1(f)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: objection-period (weekend)" cite "D.N.H. LCrR 12.1(f)"
+{
+  given MotionFiled() on 2025-12-06
+  expect deadline(objection-period) == 2025-12-22
 }
 
 /// D.N.H. LCrR 16.1(b)(1); 16.1(c): within 14 days after the arraignment,
@@ -165,6 +219,12 @@ deadline government-routine-discovery: 14.days after Arraigned() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: government-routine-discovery (weekend)" cite "D.N.H. LCrR 16.1(b); D.N.H. LCrR 16.1(c)"
+{
+  given Arraigned() on 2025-12-06
+  expect deadline(government-routine-discovery) == 2025-12-22
+}
+
 /// D.N.H. LCrR 16.1(b)(2): within 30 days after the arraignment, unless
 /// the parties agree on another date or the defendant declined reciprocal
 /// discovery, the defendant discloses the FRCrimP 16(b) information.
@@ -176,6 +236,12 @@ deadline defendant-routine-discovery: 30.days after Arraigned() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: defendant-routine-discovery (holiday)" cite "D.N.H. LCrR 16.1(b)"
+{
+  given Arraigned() on 2025-12-02
+  expect deadline(defendant-routine-discovery) == 2026-01-02
+}
+
 /// D.N.H. LCrR 16.1(b)(3): later identified expert witnesses and later
 /// obtained FRCrimP 16(a)(1)(G)(iii) and (b)(1)(C)(iii) material are
 /// disclosed no later than 30 days before trial.
@@ -184,12 +250,24 @@ deadline later-expert-disclosure: 30.days before TrialScheduled() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: later-expert-disclosure (weekend)" cite "D.N.H. LCrR 16.1(b)"
+{
+  given TrialScheduled() on 2025-12-01
+  expect deadline(later-expert-disclosure) == 2025-10-31
+}
+
 /// D.N.H. LCrR 16.1(b)(3): rebuttal expert witnesses and their FRCrimP
 /// 16(a)(1)(G)(iii) material are disclosed no later than 15 days before
 /// trial.
 deadline rebuttal-expert-disclosure: 15.days before TrialScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 16.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: rebuttal-expert-disclosure (weekend)" cite "D.N.H. LCrR 16.1(b)"
+{
+  given TrialScheduled() on 2025-12-01
+  expect deadline(rebuttal-expert-disclosure) == 2025-11-14
 }
 
 /// D.N.H. LCrR 16.1(d): the government discloses Brady and Giglio material
@@ -203,6 +281,12 @@ deadline exculpatory-disclosure: 21.days before TrialScheduled() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: exculpatory-disclosure (holiday)" cite "D.N.H. LCrR 16.1(d)"
+{
+  given TrialScheduled() on 2025-12-02
+  expect deadline(exculpatory-disclosure) == 2025-11-10
+}
+
 /// D.N.H. LCrR 16.1(e): the government discloses witness statements
 /// (FRCrimP 26.2(f); 18 U.S.C. § 3500) at least 7 days before the
 /// proceeding at which the witness is expected to testify, unless it
@@ -212,11 +296,23 @@ deadline witness-statements: 7.days before ProceedingScheduled() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: witness-statements (holiday)" cite "D.N.H. LCrR 16.1(e)"
+{
+  given ProceedingScheduled() on 2025-12-04
+  expect deadline(witness-statements) == 2025-11-26
+}
+
 /// D.N.H. LCrR 16.1(f): the government discloses the general nature of
 /// any Fed. R. Evid. 404(b) evidence at least 7 days before trial.
 deadline rule-404b-notice: 7.days before TrialScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 16.1(f)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: rule-404b-notice (holiday)" cite "D.N.H. LCrR 16.1(f)"
+{
+  given TrialScheduled() on 2025-12-04
+  expect deadline(rule-404b-notice) == 2025-11-26
 }
 
 /// D.N.H. LCrR 16.1(g): the parties exchange and file exhibit lists at
@@ -226,11 +322,23 @@ deadline exhibit-lists: 7.days before TrialScheduled() counted_by frcrimp45 cite
   forum frcrimp
 }
 
+test "Counting boundary: exhibit-lists (holiday)" cite "D.N.H. LCrR 16.1(g)"
+{
+  given TrialScheduled() on 2025-12-04
+  expect deadline(exhibit-lists) == 2025-11-26
+}
+
 /// D.N.H. LCrR 16.1(h): the parties file a statement on the use of the
 /// Jury Evidence Recording System at least 7 days before trial.
 deadline jers-statement: 7.days before TrialScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 16.1(h)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: jers-statement (holiday)" cite "D.N.H. LCrR 16.1(h)"
+{
+  given TrialScheduled() on 2025-12-04
+  expect deadline(jers-statement) == 2025-11-26
 }
 
 /// D.N.H. LCrR 16.1(i): the parties exchange and file witness lists at
@@ -244,11 +352,23 @@ deadline witness-lists: 7.days before TrialScheduled() counted_by frcrimp45 dele
   forum frcrimp
 }
 
+test "Counting boundary: witness-lists (holiday)" cite "D.N.H. LCrR 16.1(i)"
+{
+  given TrialScheduled() on 2025-12-04
+  expect deadline(witness-lists) == 2025-11-26
+}
+
 /// D.N.H. LCrR 24.1: requests for special voir dire are filed no later
 /// than 7 days before trial.
 deadline special-voir-dire: 7.days before TrialScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 24.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: special-voir-dire (holiday)" cite "D.N.H. LCrR 24.1"
+{
+  given TrialScheduled() on 2025-12-04
+  expect deadline(special-voir-dire) == 2025-11-26
 }
 
 /// D.N.H. LCrR 32.1(a): sentencing occurs without unnecessary delay, but
@@ -262,12 +382,24 @@ deadline sentencing-period: 98.days after GuiltEstablished() counted_by frcrimp4
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-period (weekend)" cite "D.N.H. LCrR 32.1(a)"
+{
+  given GuiltEstablished() on 2025-12-06
+  expect deadline(sentencing-period) == 2026-03-16
+}
+
 /// D.N.H. LCrR 32.1(c): no later than 14 days after a plea or verdict of
 /// guilty, the government provides the probation office a written version
 /// of the facts, including all relevant conduct.
 deadline government-version-of-facts: 14.days after GuiltEstablished() counted_by frcrimp45 cite "D.N.H. LCrR 32.1(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: government-version-of-facts (weekend)" cite "D.N.H. LCrR 32.1(c)"
+{
+  given GuiltEstablished() on 2025-12-06
+  expect deadline(government-version-of-facts) == 2025-12-22
 }
 
 /// D.N.H. LCrR 32.1(d): the probation officer discloses the initial
@@ -279,6 +411,12 @@ deadline initial-psr-disclosure: 42.days before SentencingHearingScheduled() cou
   forum frcrimp
 }
 
+test "Counting boundary: initial-psr-disclosure (weekend)" cite "D.N.H. LCrR 32.1(d)"
+{
+  given SentencingHearingScheduled() on 2025-12-06
+  expect deadline(initial-psr-disclosure) == 2025-10-24
+}
+
 /// D.N.H. LCrR 32.1(g): the probation officer provides the revised
 /// presentence report, the addendum and the proposed sentencing options and
 /// supervision conditions to the court and the parties no later than 14
@@ -286,6 +424,12 @@ deadline initial-psr-disclosure: 42.days before SentencingHearingScheduled() cou
 deadline revised-psr-disclosure: 14.days before SentencingHearingScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 32.1(g)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: revised-psr-disclosure (weekend)" cite "D.N.H. LCrR 32.1(g)"
+{
+  given SentencingHearingScheduled() on 2025-12-06
+  expect deadline(revised-psr-disclosure) == 2025-11-21
 }
 
 /// D.N.H. LCrR 32.1(i): a motion for a departure or variance, or a
@@ -297,6 +441,12 @@ deadline sentencing-memorandum: 10.days before SentencingHearingScheduled() coun
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-memorandum (weekend)" cite "D.N.H. LCrR 32.1(i)"
+{
+  given SentencingHearingScheduled() on 2025-12-02
+  expect deadline(sentencing-memorandum) == 2025-11-21
+}
+
 /// D.N.H. LCrR 32.1(i): a response to a sentencing memorandum or a motion
 /// for a departure or variance is filed no later than 4 days before the
 /// scheduled sentencing hearing.
@@ -305,12 +455,24 @@ deadline sentencing-response: 4.days before SentencingHearingScheduled() counted
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-response (holiday)" cite "D.N.H. LCrR 32.1(i)"
+{
+  given SentencingHearingScheduled() on 2025-12-01
+  expect deadline(sentencing-response) == 2025-11-26
+}
+
 /// D.N.H. LCrR 44.1(b): counsel appointed under the Criminal Justice Act
 /// file the completed voucher for fees and expenses as soon as possible,
 /// but no later than 45 days from the date of disposition.
 deadline cja-voucher: 45.days after CjaDisposition() counted_by frcrimp45 cite "D.N.H. LCrR 44.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: cja-voucher (weekend)" cite "D.N.H. LCrR 44.1(b)"
+{
+  given CjaDisposition() on 2025-12-03
+  expect deadline(cja-voucher) == 2026-01-20
 }
 
 test "complex case status conference: 14 days after the trigger" cite "D.N.H. LCrR 10.2"

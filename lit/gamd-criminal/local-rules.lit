@@ -40,11 +40,23 @@ deadline motion-response-period: 21.days after MotionServed() counted_by frcrimp
   forum frcrimp
 }
 
+test "Counting boundary: motion-response-period (weekend)" cite "M.D. Ga. Local Criminal Rule 47.2"
+{
+  given MotionServed() on 2022-03-12
+  expect deadline(motion-response-period) == 2022-04-04
+}
+
 /// M.D. Ga. Local Criminal Rule 47.3: any reply is served within fourteen
 /// days after service of the response.
 deadline motion-reply-period: 14.days after MotionResponseServed() counted_by frcrimp45 cite "M.D. Ga. Local Criminal Rule 47.3"
 {
   forum frcrimp
+}
+
+test "Counting boundary: motion-reply-period (weekend)" cite "M.D. Ga. Local Criminal Rule 47.3"
+{
+  given MotionResponseServed() on 2022-03-12
+  expect deadline(motion-reply-period) == 2022-03-28
 }
 
 test "motion response period: 21 days after the trigger" cite "M.D. Ga. Local Criminal Rule 47.2"

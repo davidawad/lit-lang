@@ -61,12 +61,24 @@ deadline opposing-suggestions-period: 14.days after MotionFiled() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: opposing-suggestions-period (weekend)" cite "W.D. Mo. L.R. 7.0(c); W.D. Mo. L.R. 99.0"
+{
+  given MotionFiled() on 2026-07-11
+  expect deadline(opposing-suggestions-period) == 2026-07-27
+}
+
 /// W.D. Mo. L.R. 7.0(c)(3), applied by L.R. 99.0: within 14 days after
 /// the opposing suggestions are filed, the moving party may file reply
 /// suggestions.
 deadline reply-suggestions-period: 14.days after OpposingSuggestionsFiled() counted_by frcrimp45 cite "W.D. Mo. L.R. 7.0(c); W.D. Mo. L.R. 99.0"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reply-suggestions-period (weekend)" cite "W.D. Mo. L.R. 7.0(c); W.D. Mo. L.R. 99.0"
+{
+  given OpposingSuggestionsFiled() on 2026-07-11
+  expect deadline(reply-suggestions-period) == 2026-07-27
 }
 
 /// W.D. Mo. L.R. 74.1(b)(2), applied by L.R. 99.0: a party may respond to
@@ -78,6 +90,12 @@ deadline objection-response-period: 14.days after ObjectionsServed() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: objection-response-period (weekend)" cite "W.D. Mo. L.R. 74.1(b); W.D. Mo. L.R. 99.0"
+{
+  given ObjectionsServed() on 2026-07-11
+  expect deadline(objection-response-period) == 2026-07-27
+}
+
 /// W.D. Mo. L.R. 79.2(a), applied by L.R. 99.0: after trial or as soon as
 /// possible, but no more than 14 days after a verdict is rendered or a
 /// judgment entered, the offering attorney withdraws any exhibits in the
@@ -85,6 +103,12 @@ deadline objection-response-period: 14.days after ObjectionsServed() counted_by 
 deadline exhibit-withdrawal-period: 14.days after VerdictOrJudgment() counted_by frcrimp45 cite "W.D. Mo. L.R. 79.2(a); W.D. Mo. L.R. 99.0"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-withdrawal-period (weekend)" cite "W.D. Mo. L.R. 79.2(a); W.D. Mo. L.R. 99.0"
+{
+  given VerdictOrJudgment() on 2026-07-11
+  expect deadline(exhibit-withdrawal-period) == 2026-07-27
 }
 
 /// W.D. Mo. L.R. 80.1(a)(2), applied by L.R. 99.0: within 7 days after a
@@ -95,12 +119,24 @@ deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: redaction-notice-period (weekend)" cite "W.D. Mo. L.R. 80.1(a); W.D. Mo. L.R. 99.0"
+{
+  given TranscriptFiled() on 2026-07-11
+  expect deadline(redaction-notice-period) == 2026-07-20
+}
+
 /// W.D. Mo. L.R. 80.1(a)(3), applied by L.R. 99.0: within 21 days after the
 /// transcript is filed, a party that filed a Notice of Intent to Redact
 /// files a statement of the page and line numbers of the identifiers.
 deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by frcrimp45 cite "W.D. Mo. L.R. 80.1(a); W.D. Mo. L.R. 99.0"
 {
   forum frcrimp
+}
+
+test "Counting boundary: redaction-statement-period (weekend)" cite "W.D. Mo. L.R. 80.1(a); W.D. Mo. L.R. 99.0"
+{
+  given TranscriptFiled() on 2026-07-11
+  expect deadline(redaction-statement-period) == 2026-08-03
 }
 
 /// W.D. Mo. L.R. 99.1(d)(2): within 14 days after being served with a
@@ -112,6 +148,12 @@ deadline surety-objection-period: 14.days after SuretyDisqualificationServed() c
   forum frcrimp
 }
 
+test "Counting boundary: surety-objection-period (weekend)" cite "W.D. Mo. L.R. 99.1(d)"
+{
+  given SuretyDisqualificationServed() on 2026-07-11
+  expect deadline(surety-objection-period) == 2026-07-27
+}
+
 /// W.D. Mo. L.R. 99.8(i): within 7 days after the presentence
 /// investigation report is submitted under L.R. 99.8(g), defense counsel,
 /// a pro se defendant or the United States may submit to the court notice
@@ -120,6 +162,12 @@ deadline surety-objection-period: 14.days after SuretyDisqualificationServed() c
 deadline unresolved-objection-notice-period: 7.days after PresentenceReportSubmitted() counted_by frcrimp45 cite "W.D. Mo. L.R. 99.8(i)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: unresolved-objection-notice-period (weekend)" cite "W.D. Mo. L.R. 99.8(i)"
+{
+  given PresentenceReportSubmitted() on 2026-07-11
+  expect deadline(unresolved-objection-notice-period) == 2026-07-20
 }
 
 test "opposing suggestions period: 14 days after the trigger" cite "W.D. Mo. L.R. 7.0(c); W.D. Mo. L.R. 99.0"

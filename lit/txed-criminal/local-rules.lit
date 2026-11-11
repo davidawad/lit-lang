@@ -111,6 +111,12 @@ deadline dispositive-response-period: 14.days after DispositiveMotionServed() co
   forum frcrimp
 }
 
+test "Counting boundary: dispositive-response-period (weekend)" cite "E.D. Tex. Local Rule CR-47(b)"
+{
+  given DispositiveMotionServed() on 2026-02-14
+  expect deadline(dispositive-response-period) == 2026-03-02
+}
+
 /// E.D. Tex. Local Rule CR-47(b)(1): the same fourteen-day response
 /// period, for a non-dispositive motion.
 deadline nondispositive-response-period: 14.days after NondispositiveMotionServed() counted_by frcrimp45 delegable {
@@ -119,6 +125,12 @@ deadline nondispositive-response-period: 14.days after NondispositiveMotionServe
 } cite "E.D. Tex. Local Rule CR-47(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: nondispositive-response-period (weekend)" cite "E.D. Tex. Local Rule CR-47(b)"
+{
+  given NondispositiveMotionServed() on 2026-02-14
+  expect deadline(nondispositive-response-period) == 2026-03-02
 }
 
 /// E.D. Tex. Local Rule CR-47(b)(2): unless the presiding judge directs
@@ -130,6 +142,12 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 delega
 } cite "E.D. Tex. Local Rule CR-47(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reply-period (holiday)" cite "E.D. Tex. Local Rule CR-47(b)"
+{
+  given ResponseServed() on 2026-02-09
+  expect deadline(reply-period) == 2026-02-17
 }
 
 /// E.D. Tex. Local Rule CR-47(b)(2): a sur-reply responding to issues
@@ -144,6 +162,12 @@ deadline sur-reply-period: 7.days after ReplyServed() counted_by frcrimp45 deleg
   forum frcrimp
 }
 
+test "Counting boundary: sur-reply-period (holiday)" cite "E.D. Tex. Local Rule CR-47(b)"
+{
+  given ReplyServed() on 2026-02-09
+  expect deadline(sur-reply-period) == 2026-02-17
+}
+
 /// E.D. Tex. Local Rule CR-49.1(b)(3): within seven days of the filing of
 /// the transcript in CM/ECF, each party wishing to redact it files a
 /// Notice of Intent to Request Redaction; if none is filed, the court
@@ -151,6 +175,12 @@ deadline sur-reply-period: 7.days after ReplyServed() counted_by frcrimp45 deleg
 deadline redaction-notice: 7.days after TranscriptFiled() counted_by frcrimp45 cite "E.D. Tex. Local Rule CR-49.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: redaction-notice (holiday)" cite "E.D. Tex. Local Rule CR-49.1(b)"
+{
+  given TranscriptFiled() on 2026-02-09
+  expect deadline(redaction-notice) == 2026-02-17
 }
 
 /// E.D. Tex. Local Rule CR-49.1(b)(4): a party requesting redaction
@@ -165,6 +195,12 @@ deadline redaction-statement: 21.days after TranscriptDelivered() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: redaction-statement (weekend)" cite "E.D. Tex. Local Rule CR-49.1(b)"
+{
+  given TranscriptDelivered() on 2026-02-14
+  expect deadline(redaction-statement) == 2026-03-09
+}
+
 /// E.D. Tex. Local Rule CR-49.1(b)(5): the court reporter or transcriber
 /// performs the requested redactions and files a redacted transcript
 /// within thirty-one days of the filing of the transcript, or longer if
@@ -177,12 +213,24 @@ deadline redacted-transcript: 31.days after TranscriptFiled() counted_by frcrimp
   forum frcrimp
 }
 
+test "Counting boundary: redacted-transcript (weekend)" cite "E.D. Tex. Local Rule CR-49.1(b)"
+{
+  given TranscriptFiled() on 2026-02-11
+  expect deadline(redacted-transcript) == 2026-03-16
+}
+
 /// E.D. Tex. Local Rule CR-55(c): the party offering an exhibit removes
 /// it within 30 days after final disposition of the case; an exhibit
 /// remaining longer may be disposed of by the clerk.
 deadline exhibit-removal: 30.days after FinalDisposition() counted_by frcrimp45 cite "E.D. Tex. Local Rule CR-55(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-removal (weekend)" cite "E.D. Tex. Local Rule CR-55(c)"
+{
+  given FinalDisposition() on 2026-02-12
+  expect deadline(exhibit-removal) == 2026-03-16
 }
 
 /// E.D. Tex. Local Rule CR-59(b): a party may respond to another party's
@@ -192,6 +240,12 @@ deadline exhibit-removal: 30.days after FinalDisposition() counted_by frcrimp45 
 deadline magistrate-objection-response: 14.days after MagistrateObjectionServed() counted_by frcrimp45 cite "E.D. Tex. Local Rule CR-59(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: magistrate-objection-response (weekend)" cite "E.D. Tex. Local Rule CR-59(b)"
+{
+  given MagistrateObjectionServed() on 2026-02-14
+  expect deadline(magistrate-objection-response) == 2026-03-02
 }
 
 test "dispositive response period: 14 days after the trigger" cite "E.D. Tex. Local Rule CR-47(b)"

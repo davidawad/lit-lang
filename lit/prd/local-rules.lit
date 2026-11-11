@@ -113,12 +113,24 @@ deadline form-correction-period: 30.days after DefectiveFilingNoticed() counted_
   forum frcp
 }
 
+test "Counting boundary: form-correction-period (weekend)" cite "D.P.R. L. Civ. R. 3(c)"
+{
+  given DefectiveFilingNoticed() on 2024-10-17
+  expect deadline(form-correction-period) == 2024-11-18
+}
+
 /// L.Civ.R. 3A(c)(4)(b): when court appearances conflict, counsel notify
 /// each judge in writing not later than seven days after receipt of the
 /// notice giving rise to the conflict.
 deadline calendar-conflict-notice-period: 7.days after ConflictNoticeReceived() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 3A(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: calendar-conflict-notice-period (weekend)" cite "D.P.R. L. Civ. R. 3A(c)"
+{
+  given ConflictNoticeReceived() on 2024-10-19
+  expect deadline(calendar-conflict-notice-period) == 2024-10-28
 }
 
 /// L.Civ.R. 7(b): unless the opposing party files a written opposition
@@ -138,6 +150,12 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcp6-puerto-r
   forum frcp
 }
 
+test "Counting boundary: reply-period (weekend)" cite "D.P.R. L. Civ. R. 7(c)"
+{
+  given OppositionServed() on 2024-10-19
+  expect deadline(reply-period) == 2024-10-28
+}
+
 /// L.Civ.R. 9(b)(1): a party seeking fees under the Equal Access to Justice
 /// Act, 28 U.S.C. § 2412, files its request within 30 days after the
 /// judgment remanding the case to the Commissioner becomes final; a late
@@ -145,6 +163,12 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcp6-puerto-r
 deadline eaja-fee-request-period: 30.days after RemandJudgmentFinal() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 9(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: eaja-fee-request-period (weekend)" cite "D.P.R. L. Civ. R. 9(b)"
+{
+  given RemandJudgmentFinal() on 2024-10-17
+  expect deadline(eaja-fee-request-period) == 2024-11-18
 }
 
 /// L.Civ.R. 9(b)(2): a party seeking fees under 42 U.S.C. § 406(b) files
@@ -162,6 +186,12 @@ deadline social-security-fee-response-period: 30.days after SocialSecurityFeeReq
   forum frcp
 }
 
+test "Counting boundary: social-security-fee-response-period (weekend)" cite "D.P.R. L. Civ. R. 9(b)"
+{
+  given SocialSecurityFeeRequestReceived() on 2024-10-17
+  expect deadline(social-security-fee-response-period) == 2024-11-18
+}
+
 /// L.Civ.R. 16(c): at least 14 days before the pretrial conference, at
 /// plaintiff's counsel's initiative, counsel for each party meet to prepare
 /// the proposed Pretrial Order.
@@ -170,11 +200,23 @@ deadline pretrial-meeting-period: 14.days before PretrialConference() counted_by
   forum frcp
 }
 
+test "Counting boundary: pretrial-meeting-period (weekend)" cite "D.P.R. L. Civ. R. 16(c)"
+{
+  given PretrialConference() on 2024-10-19
+  expect deadline(pretrial-meeting-period) == 2024-10-04
+}
+
 /// L.Civ.R. 16(c): the proposed Pretrial Order is filed at least seven days
 /// before the pretrial conference.
 deadline proposed-pretrial-order-period: 7.days before PretrialConference() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 16(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: proposed-pretrial-order-period (weekend)" cite "D.P.R. L. Civ. R. 16(c)"
+{
+  given PretrialConference() on 2024-10-19
+  expect deadline(proposed-pretrial-order-period) == 2024-10-11
 }
 
 /// L.Civ.R. 16(e): unless otherwise ordered, an objection to the final
@@ -190,6 +232,12 @@ deadline pretrial-order-objection-period: 14.days after PretrialOrderApproved() 
 deadline jury-instructions-period: 7.days before TrialCommences() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 51"
 {
   forum frcp
+}
+
+test "Counting boundary: jury-instructions-period (weekend)" cite "D.P.R. L. Civ. R. 51"
+{
+  given TrialCommences() on 2024-10-19
+  expect deadline(jury-instructions-period) == 2024-10-11
 }
 
 /// L.Civ.R. 54(a): bills of costs, with supporting memoranda, are filed
@@ -280,12 +328,24 @@ deadline mediation-submission-period: 7.days before FirstMediationSession() coun
   forum frcp
 }
 
+test "Counting boundary: mediation-submission-period (weekend)" cite "D.P.R. L. Civ. R. 83J(e)"
+{
+  given FirstMediationSession() on 2024-10-19
+  expect deadline(mediation-submission-period) == 2024-10-11
+}
+
 /// L.Civ.R. 83K(d)(2): the parties to a bankruptcy appeal heard by this
 /// court notify the bankruptcy court of the judgment concluding the appeal
 /// within 30 days of its entry.
 deadline bankruptcy-appeal-judgment-notice-period: 30.days after BankruptcyAppealJudgmentEntered() counted_by frcp6-puerto-rico cite "D.P.R. L. Civ. R. 83K(d)"
 {
   forum frcp
+}
+
+test "Counting boundary: bankruptcy-appeal-judgment-notice-period (weekend)" cite "D.P.R. L. Civ. R. 83K(d)"
+{
+  given BankruptcyAppealJudgmentEntered() on 2024-10-17
+  expect deadline(bankruptcy-appeal-judgment-notice-period) == 2024-11-18
 }
 
 test "Deadline arithmetic: form-correction-period (30 days after)" cite "D.P.R. L. Civ. R. 3(c)"

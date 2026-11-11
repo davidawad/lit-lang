@@ -88,12 +88,24 @@ deadline defendant-pretrial-motions: 14.days after ArraignmentOrScheduledDate() 
   forum frcrimp
 }
 
+test "Counting boundary: defendant-pretrial-motions (weekend)" cite "W.D. Tex. Local Rule CR-12(a)"
+{
+  given ArraignmentOrScheduledDate() on 2023-04-29
+  expect deadline(defendant-pretrial-motions) == 2023-05-15
+}
+
 /// W.D. Tex. Local Rule CR-15B(b)(2)(A): the court orders the deposition
 /// of a detained material witness taken not later than 35 days after the
 /// witness first appeared before the officer.
 deadline material-witness-deposition: 35.days after MaterialWitnessAppeared() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-15B(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: material-witness-deposition (weekend)" cite "W.D. Tex. Local Rule CR-15B(b)"
+{
+  given MaterialWitnessAppeared() on 2023-04-29
+  expect deadline(material-witness-deposition) == 2023-06-05
 }
 
 /// W.D. Tex. Local Rule CR-15B(c)(1)(B): the material witness is ordered
@@ -104,6 +116,12 @@ deadline material-witness-deposition: 35.days after MaterialWitnessAppeared() co
 deadline material-witness-release: 45.days after MaterialWitnessAppeared() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-15B(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: material-witness-release (weekend)" cite "W.D. Tex. Local Rule CR-15B(c)"
+{
+  given MaterialWitnessAppeared() on 2023-04-26
+  expect deadline(material-witness-release) == 2023-06-12
 }
 
 /// W.D. Tex. Local Rule CR-15B(c)(1)(A): the material witness is ordered
@@ -124,6 +142,12 @@ deadline undisclosed-information-motion: 14.days after RefusalChecklistFiled() c
   forum frcrimp
 }
 
+test "Counting boundary: undisclosed-information-motion (weekend)" cite "W.D. Tex. Local Rule CR-16(a)"
+{
+  given RefusalChecklistFiled() on 2023-04-29
+  expect deadline(undisclosed-information-motion) == 2023-05-15
+}
+
 /// W.D. Tex. Local Rule CR-16(b)(1)(C): unless the court orders or the
 /// parties agree otherwise in writing, discovery for trial is provided not
 /// later than 14 days after arraignment or, if arraignment is waived,
@@ -134,6 +158,12 @@ deadline trial-discovery: 14.days after ArraignmentOrScheduledDate() counted_by 
 } cite "W.D. Tex. Local Rule CR-16(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: trial-discovery (weekend)" cite "W.D. Tex. Local Rule CR-16(b)"
+{
+  given ArraignmentOrScheduledDate() on 2023-04-29
+  expect deadline(trial-discovery) == 2023-05-15
 }
 
 /// W.D. Tex. Local Rule CR-16(b)(1)(B): unless the court orders or the
@@ -159,6 +189,12 @@ deadline sentencing-time: 60.days after VerdictOrPlea() counted_by frcrimp45 del
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-time (weekend)" cite "W.D. Tex. Local Rule CR-32(a)"
+{
+  given VerdictOrPlea() on 2023-04-26
+  expect deadline(sentencing-time) == 2023-06-26
+}
+
 /// W.D. Tex. Local Rule CR-46(b)(2): unless the court orders otherwise,
 /// the Pretrial Services Office gives its recommendation on each detained
 /// witness's continued detention or release within 7 days of receiving
@@ -166,6 +202,12 @@ deadline sentencing-time: 60.days after VerdictOrPlea() counted_by frcrimp45 del
 deadline detained-witness-recommendation: 7.days after DetainedWitnessReportReceived() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-46(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: detained-witness-recommendation (weekend)" cite "W.D. Tex. Local Rule CR-46(b)"
+{
+  given DetainedWitnessReportReceived() on 2023-04-29
+  expect deadline(detained-witness-recommendation) == 2023-05-08
 }
 
 /// W.D. Tex. Local Rule CR-47(b): a party opposing a motion files its
@@ -176,6 +218,12 @@ deadline response-period: 11.days after MotionServed() counted_by frcrimp45 cite
   forum frcrimp
 }
 
+test "Counting boundary: response-period (weekend)" cite "W.D. Tex. Local Rule CR-47(b)"
+{
+  given MotionServed() on 2023-04-26
+  expect deadline(response-period) == 2023-05-08
+}
+
 /// W.D. Tex. Local Rule CR-55(b): within 60 days after final disposition
 /// of the case, the party who offered an exhibit removes it from the
 /// clerk; an exhibit not removed may be destroyed or otherwise disposed
@@ -183,6 +231,12 @@ deadline response-period: 11.days after MotionServed() counted_by frcrimp45 cite
 deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-55(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-removal (weekend)" cite "W.D. Tex. Local Rule CR-55(b)"
+{
+  given FinalDisposition() on 2023-04-26
+  expect deadline(exhibit-removal) == 2023-06-26
 }
 
 test "defendant pretrial motions: 14 days after the trigger" cite "W.D. Tex. Local Rule CR-12(a)"

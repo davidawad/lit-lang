@@ -66,11 +66,23 @@ deadline disclosure-statement-period: 28.days after InitialAppearance() counted_
   forum frcrimp
 }
 
+test "Counting boundary: disclosure-statement-period (weekend)" cite "E.D. Mo. L.R. 2.09(B)(2)"
+{
+  given InitialAppearance() on 2025-12-20
+  expect deadline(disclosure-statement-period) == 2026-01-20
+}
+
 /// E.D. Mo. L.R. 2.09(B)(2): a supplemental Disclosure Statement is filed
 /// within seven days after any change in the required information.
 deadline supplemental-disclosure-period: 7.days after DisclosureInformationChanged() counted_by frcrimp45 cite "E.D. Mo. L.R. 2.09(B)(2)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: supplemental-disclosure-period (holiday)" cite "E.D. Mo. L.R. 2.09(B)(2)"
+{
+  given DisclosureInformationChanged() on 2025-12-18
+  expect deadline(supplemental-disclosure-period) == 2025-12-26
 }
 
 /// E.D. Mo. L.R. 4.01(B): except as the rules or an order provide
@@ -81,11 +93,23 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 ci
   forum frcrimp
 }
 
+test "Counting boundary: opposition-period (holiday)" cite "E.D. Mo. L.R. 4.01(B)"
+{
+  given MotionServed() on 2025-12-18
+  expect deadline(opposition-period) == 2026-01-02
+}
+
 /// E.D. Mo. L.R. 4.01(B): an opposition to a motion seeking an extension
 /// of time is filed within seven days after service of the motion.
 deadline extension-opposition-period: 7.days after ExtensionMotionServed() counted_by frcrimp45 cite "E.D. Mo. L.R. 4.01(B)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: extension-opposition-period (holiday)" cite "E.D. Mo. L.R. 4.01(B)"
+{
+  given ExtensionMotionServed() on 2025-12-18
+  expect deadline(extension-opposition-period) == 2025-12-26
 }
 
 /// E.D. Mo. L.R. 4.01(C): the moving party may file a reply memorandum
@@ -94,6 +118,12 @@ deadline extension-opposition-period: 7.days after ExtensionMotionServed() count
 deadline reply-period: 10.days after OppositionServed() counted_by frcrimp45 cite "E.D. Mo. L.R. 4.01(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reply-period (holiday)" cite "E.D. Mo. L.R. 4.01(C)"
+{
+  given OppositionServed() on 2025-12-15
+  expect deadline(reply-period) == 2025-12-26
 }
 
 /// E.D. Mo. L.R. 7.02(C): after a non-jury trial the parties who offered
@@ -105,12 +135,24 @@ deadline exhibit-removal-period: 30.days after BenchTrialDecision() counted_by f
   forum frcrimp
 }
 
+test "Counting boundary: exhibit-removal-period (weekend)" cite "E.D. Mo. L.R. 7.02(C)"
+{
+  given BenchTrialDecision() on 2025-12-18
+  expect deadline(exhibit-removal-period) == 2026-01-20
+}
+
 /// E.D. Mo. L.R. 13.05(A)(4)(d): within seven days from the filing of a
 /// Motion for Sealing, a party or non-party may file a Memorandum Opposing
 /// Sealing.
 deadline sealing-opposition-period: 7.days after SealingMotionFiled() counted_by frcrimp45 cite "E.D. Mo. L.R. 13.05(A)(4)(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sealing-opposition-period (holiday)" cite "E.D. Mo. L.R. 13.05(A)(4)(d)"
+{
+  given SealingMotionFiled() on 2025-12-18
+  expect deadline(sealing-opposition-period) == 2025-12-26
 }
 
 /// E.D. Mo. L.R. 13.05(A)(4)(e): within seven days from the filing of a
@@ -121,12 +163,24 @@ deadline sealing-reply-period: 7.days after SealingOppositionFiled() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: sealing-reply-period (holiday)" cite "E.D. Mo. L.R. 13.05(A)(4)(e)"
+{
+  given SealingOppositionFiled() on 2025-12-18
+  expect deadline(sealing-reply-period) == 2025-12-26
+}
+
 /// E.D. Mo. L.R. 13.05(A)(4)(g): an order denying sealing is stayed for
 /// 14 days after its entry, during which an appeal from it may be filed
 /// or the sealed material withdrawn before it becomes public.
 deadline sealing-denial-stay-period: 14.days after SealingDenied() counted_by frcrimp45 cite "E.D. Mo. L.R. 13.05(A)(4)(g)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sealing-denial-stay-period (holiday)" cite "E.D. Mo. L.R. 13.05(A)(4)(g)"
+{
+  given SealingDenied() on 2025-12-18
+  expect deadline(sealing-denial-stay-period) == 2026-01-02
 }
 
 /// E.D. Mo. L.R. 13.05(C)(4)(b): within fourteen days from the court's
@@ -136,6 +190,12 @@ deadline sealing-denial-stay-period: 14.days after SealingDenied() counted_by fr
 deadline warrant-seal-motion-period: 14.days after WarrantMaterialReceived() counted_by frcrimp45 cite "E.D. Mo. L.R. 13.05(C)(4)(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: warrant-seal-motion-period (holiday)" cite "E.D. Mo. L.R. 13.05(C)(4)(b)"
+{
+  given WarrantMaterialReceived() on 2025-12-18
+  expect deadline(warrant-seal-motion-period) == 2026-01-02
 }
 
 test "disclosure statement period: 28 days after the trigger" cite "E.D. Mo. L.R. 2.09(B)(2)"

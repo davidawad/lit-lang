@@ -93,6 +93,12 @@ deadline custody-address-notice-period: 14.days after CustodyAddressChanged() co
   forum frcp
 }
 
+test "Counting boundary: custody-address-notice-period (weekend)" cite "SDIL-LR 3.1"
+{
+  given CustodyAddressChanged() on 2025-09-27
+  expect deadline(custody-address-notice-period) == 2025-10-14
+}
+
 /// SDIL-LR 7.1(b)(1)(A): an adverse party has 30 days after service of a
 /// motion listed in SDIL-LR 7.1(b)(1) to file a response.
 deadline briefed-motion-response-period: 30.days after BriefedMotionServed() counted_by frcp6-illinois cite "SDIL-LR 7.1(b)"
@@ -100,11 +106,23 @@ deadline briefed-motion-response-period: 30.days after BriefedMotionServed() cou
   forum frcp
 }
 
+test "Counting boundary: briefed-motion-response-period (weekend)" cite "SDIL-LR 7.1(b)"
+{
+  given BriefedMotionServed() on 2025-09-25
+  expect deadline(briefed-motion-response-period) == 2025-10-27
+}
+
 /// SDIL-LR 7.1(b)(1)(B): reply briefs, if any, are filed within 14 days of
 /// the service of a response.
 deadline briefed-motion-reply-period: 14.days after BriefedMotionResponseServed() counted_by frcp6-illinois cite "SDIL-LR 7.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: briefed-motion-reply-period (weekend)" cite "SDIL-LR 7.1(b)"
+{
+  given BriefedMotionResponseServed() on 2025-09-27
+  expect deadline(briefed-motion-reply-period) == 2025-10-14
 }
 
 /// SDIL-LR 7.1(b)(1)(C): all civil motions to dismiss, for judgment on the
@@ -124,11 +142,23 @@ deadline other-motion-response-period: 14.days after OtherMotionServed() counted
   forum frcp
 }
 
+test "Counting boundary: other-motion-response-period (weekend)" cite "SDIL-LR 7.1(b)"
+{
+  given OtherMotionServed() on 2025-09-27
+  expect deadline(other-motion-response-period) == 2025-10-14
+}
+
 /// SDIL-LR 7.1(b)(2)(B): a reply, if any, is filed within 7 days of the
 /// service of the response.
 deadline other-motion-reply-period: 7.days after OtherMotionResponseServed() counted_by frcp6-illinois cite "SDIL-LR 7.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: other-motion-reply-period (weekend)" cite "SDIL-LR 7.1(b)"
+{
+  given OtherMotionResponseServed() on 2025-09-27
+  expect deadline(other-motion-reply-period) == 2025-10-06
 }
 
 /// SDIL-LR 16.2(a): the jointly prepared report of the FRCP 26(f)
@@ -137,6 +167,12 @@ deadline other-motion-reply-period: 7.days after OtherMotionResponseServed() cou
 deadline joint-report-period: 7.days before SchedulingConferenceHeld() counted_by frcp6-illinois cite "SDIL-LR 16.2(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: joint-report-period (weekend)" cite "SDIL-LR 16.2(a)"
+{
+  given SchedulingConferenceHeld() on 2025-09-27
+  expect deadline(joint-report-period) == 2025-09-19
 }
 
 /// SDIL-LR 23.1(b): seven days prior to any scheduling and discovery
@@ -148,12 +184,24 @@ deadline class-action-report-period: 7.days before SchedulingConferenceHeld() co
   forum frcp
 }
 
+test "Counting boundary: class-action-report-period (weekend)" cite "SDIL-LR 23.1(b)"
+{
+  given SchedulingConferenceHeld() on 2025-09-27
+  expect deadline(class-action-report-period) == 2025-09-19
+}
+
 /// SDIL-LR 54.2(b): opposing counsel has 14 days from the date the clerk
 /// gives notice to file objections to costs; without objection the clerk
 /// taxes the appropriate costs.
 deadline costs-objection-period: 14.days after CostsNoticeGiven() counted_by frcp6-illinois cite "SDIL-LR 54.2(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: costs-objection-period (weekend)" cite "SDIL-LR 54.2(b)"
+{
+  given CostsNoticeGiven() on 2025-09-27
+  expect deadline(costs-objection-period) == 2025-10-14
 }
 
 /// SDIL-LR 54.2(c): unless a federal statute separately authorizes
@@ -164,12 +212,24 @@ deadline costs-request-period: 30.days after JudgmentEntered() counted_by frcp6-
   forum frcp
 }
 
+test "Counting boundary: costs-request-period (weekend)" cite "SDIL-LR 54.2(c)"
+{
+  given JudgmentEntered() on 2025-09-25
+  expect deadline(costs-request-period) == 2025-10-27
+}
+
 /// SDIL-LR 73.1(a): any party may appeal a magistrate judge's order under
 /// 28 U.S.C. § 636(b)(1)(A) within 14 days after its issuance, unless a
 /// magistrate or district judge prescribes a different time.
 deadline magistrate-order-appeal-period: 14.days after MagistrateOrderIssued() counted_by frcp6-illinois cite "SDIL-LR 73.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: magistrate-order-appeal-period (weekend)" cite "SDIL-LR 73.1(a)"
+{
+  given MagistrateOrderIssued() on 2025-09-27
+  expect deadline(magistrate-order-appeal-period) == 2025-10-14
 }
 
 /// SDIL-LR 83.7: in a death penalty case within the rule, the petitioner or
@@ -180,11 +240,23 @@ deadline capital-habeas-documents-period: 10.days after CapitalHabeasPetitionFil
   forum frcp
 }
 
+test "Counting boundary: capital-habeas-documents-period (weekend)" cite "SDIL-LR 83.7"
+{
+  given CapitalHabeasPetitionFiled() on 2025-09-24
+  expect deadline(capital-habeas-documents-period) == 2025-10-06
+}
+
 /// SDIL-LR 83.10(a): upon notice of the assignment, assigned counsel files
 /// an appearance within 14 days or as the court directs.
 deadline assigned-counsel-appearance-period: 14.days after AssignmentNoticeReceived() counted_by frcp6-illinois cite "SDIL-LR 83.10(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: assigned-counsel-appearance-period (weekend)" cite "SDIL-LR 83.10(a)"
+{
+  given AssignmentNoticeReceived() on 2025-09-27
+  expect deadline(assigned-counsel-appearance-period) == 2025-10-14
 }
 
 test "Deadline arithmetic: custody-address-notice-period (14 days after)" cite "SDIL-LR 3.1"

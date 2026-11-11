@@ -70,6 +70,12 @@ deadline pretrial-motion-period: 14.days after Arraigned() counted_by frcrimp45 
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motion-period (weekend)" cite "S.D. Ga. LR Crim. 12(a)"
+{
+  given Arraigned() on 2026-10-10
+  expect deadline(pretrial-motion-period) == 2026-10-26
+}
+
 /// S.D. Ga. LR Crim. 12(a)(1): responses to those motions are filed within
 /// fourteen days of the last day for filing motions.
 deadline pretrial-motion-response-period: 14.days after MotionDeadlinePassed() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 12(a)"
@@ -77,10 +83,22 @@ deadline pretrial-motion-response-period: 14.days after MotionDeadlinePassed() c
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motion-response-period (weekend)" cite "S.D. Ga. LR Crim. 12(a)"
+{
+  given MotionDeadlinePassed() on 2026-10-10
+  expect deadline(pretrial-motion-response-period) == 2026-10-26
+}
+
 /// S.D. Ga. LR Crim. 12(a)(2): a response to any other pretrial motion is
 /// filed within seven days of its filing, or as soon as possible if the
 /// motion asks for relief sooner.
 deadline other-motion-response-period: 7.days after PretrialMotionFiled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 12(a)"
+
+test "Counting boundary: other-motion-response-period (weekend)" cite "S.D. Ga. LR Crim. 12(a)"
+{
+  given PretrialMotionFiled() on 2026-10-10
+  expect deadline(other-motion-response-period) == 2026-10-19
+}
 
 /// S.D. Ga. LR Crim. 12(i): witness and exhibit lists are filed at least
 /// three business days before the hearing on a motion.
@@ -104,6 +122,12 @@ deadline government-initial-disclosure-period: 14.days after Arraigned() counted
   forum frcrimp
 }
 
+test "Counting boundary: government-initial-disclosure-period (weekend)" cite "S.D. Ga. LR Crim. 16B(a)"
+{
+  given Arraigned() on 2026-10-10
+  expect deadline(government-initial-disclosure-period) == 2026-10-26
+}
+
 /// S.D. Ga. LR Crim. 16B(b): no later than fourteen days before trial the
 /// government discloses Giglio material and the general nature of prior or
 /// intrinsic acts evidence.
@@ -112,12 +136,24 @@ deadline government-later-disclosure-period: 14.days before TrialScheduled() cou
   forum frcrimp
 }
 
+test "Counting boundary: government-later-disclosure-period (weekend)" cite "S.D. Ga. LR Crim. 16B(b)"
+{
+  given TrialScheduled() on 2026-10-10
+  expect deadline(government-later-disclosure-period) == 2026-09-25
+}
+
 /// S.D. Ga. LR Crim. 16D: on the government's request, a defendant bound
 /// by FRCrimP 16(b)(1) discloses not more than seven days after the request,
 /// or promptly after acquiring possession.
 deadline defense-disclosure-period: 7.days after GovernmentDisclosureRequested() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 16D"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defense-disclosure-period (weekend)" cite "S.D. Ga. LR Crim. 16D"
+{
+  given GovernmentDisclosureRequested() on 2026-10-10
+  expect deadline(defense-disclosure-period) == 2026-10-19
 }
 
 /// S.D. Ga. LR Crim. 16E(c): at least seven days before the pretrial
@@ -129,12 +165,24 @@ deadline stipulation-conference-period: 7.days before PretrialConferenceSchedule
   forum frcrimp
 }
 
+test "Counting boundary: stipulation-conference-period (weekend)" cite "S.D. Ga. LR Crim. 16E(c)"
+{
+  given PretrialConferenceScheduled() on 2026-10-10
+  expect deadline(stipulation-conference-period) == 2026-10-02
+}
+
 /// S.D. Ga. LR Crim. 16E(c): the parties file all stipulations, signed by
 /// the defendant, defense counsel and the government, at least two days
 /// before trial.
 deadline stipulation-filing-period: 2.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 16E(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: stipulation-filing-period (weekend)" cite "S.D. Ga. LR Crim. 16E(c)"
+{
+  given TrialScheduled() on 2026-10-12
+  expect deadline(stipulation-filing-period) == 2026-10-09
 }
 
 /// S.D. Ga. LR Crim. 16E(d): demonstrative, summary and composite exhibits
@@ -144,11 +192,23 @@ deadline demonstrative-exhibit-period: 2.days before TrialScheduled() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: demonstrative-exhibit-period (weekend)" cite "S.D. Ga. LR Crim. 16E(d)"
+{
+  given TrialScheduled() on 2026-10-12
+  expect deadline(demonstrative-exhibit-period) == 2026-10-09
+}
+
 /// S.D. Ga. LR Crim. 24(a): unless ordered otherwise, requests for special
 /// voir dire are filed no later than seven days before trial.
 deadline voir-dire-request-period: 7.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 24(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: voir-dire-request-period (weekend)" cite "S.D. Ga. LR Crim. 24(a)"
+{
+  given TrialScheduled() on 2026-10-10
+  expect deadline(voir-dire-request-period) == 2026-10-02
 }
 
 /// S.D. Ga. LR Crim. 32A(d): unless the judge orders otherwise, a
@@ -157,6 +217,12 @@ deadline voir-dire-request-period: 7.days before TrialScheduled() counted_by frc
 deadline sentencing-memorandum-period: 1.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 32A(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-memorandum-period (weekend)" cite "S.D. Ga. LR Crim. 32A(d)"
+{
+  given SentencingHearingScheduled() on 2026-10-11
+  expect deadline(sentencing-memorandum-period) == 2026-10-09
 }
 
 /// S.D. Ga. LR Crim. 32B(b): defense counsel files the Post-Conviction
@@ -168,11 +234,23 @@ deadline post-conviction-certification-period: 14.days after Sentenced() counted
   forum frcrimp
 }
 
+test "Counting boundary: post-conviction-certification-period (weekend)" cite "S.D. Ga. LR Crim. 32B(b)"
+{
+  given Sentenced() on 2026-10-10
+  expect deadline(post-conviction-certification-period) == 2026-10-26
+}
+
 /// S.D. Ga. LR Crim. 44D(a): the government responds within seven days to
 /// a motion for joint representation.
 deadline joint-representation-response-period: 7.days after JointRepresentationMotionFiled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 44D(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: joint-representation-response-period (weekend)" cite "S.D. Ga. LR Crim. 44D(a)"
+{
+  given JointRepresentationMotionFiled() on 2026-10-10
+  expect deadline(joint-representation-response-period) == 2026-10-19
 }
 
 /// S.D. Ga. LR Crim. 49.1(d): material a denied motion to seal sought to
@@ -181,6 +259,12 @@ deadline joint-representation-response-period: 7.days after JointRepresentationM
 deadline sealing-appeal-notice-period: 14.days after SealingDenied() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 49.1(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sealing-appeal-notice-period (weekend)" cite "S.D. Ga. LR Crim. 49.1(d)"
+{
+  given SealingDenied() on 2026-10-10
+  expect deadline(sealing-appeal-notice-period) == 2026-10-26
 }
 
 test "pretrial motion period: 14 days after the trigger" cite "S.D. Ga. LR Crim. 12(a)"

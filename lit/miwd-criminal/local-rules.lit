@@ -71,46 +71,112 @@ event TrialOrHearingScheduled()
 /// United States Marshals Service allows a minimum of fourteen days before
 /// the required appearance.
 deadline marshal-subpoena-lead-time: 14.days before SubpoenaAppearanceDate() counted_by frcrimp45 cite "W.D. Mich. LCrR 17.1"
+
+test "Counting boundary: marshal-subpoena-lead-time (weekend)" cite "W.D. Mich. LCrR 17.1"
+{
+  given SubpoenaAppearanceDate() on 2026-10-17
+  expect deadline(marshal-subpoena-lead-time) == 2026-10-02
+}
 /// LCrR 32.2(a): the initial interview with the defendant, defense counsel
 /// and the probation officer is scheduled within seven days of the order
 /// setting the sentencing date.
 deadline initial-interview-period: 7.days after SentencingDateOrderEntered() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(a)"
+
+test "Counting boundary: initial-interview-period (weekend)" cite "W.D. Mich. LCrR 32.2(a)"
+{
+  given SentencingDateOrderEntered() on 2026-10-17
+  expect deadline(initial-interview-period) == 2026-10-26
+}
 /// LCrR 32.2(a): counsel for the government makes the offense conduct
 /// information, including all relevant conduct, available within seven
 /// days of the order.
 deadline offense-conduct-period: 7.days after SentencingDateOrderEntered() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(a)"
+
+test "Counting boundary: offense-conduct-period (weekend)" cite "W.D. Mich. LCrR 32.2(a)"
+{
+  given SentencingDateOrderEntered() on 2026-10-17
+  expect deadline(offense-conduct-period) == 2026-10-26
+}
 /// LCrR 32.2(b): at least forty-seven days before the date scheduled for
 /// sentencing the probation officer provides the presentence report,
 /// except the sentencing rationale, to government and defense counsel or
 /// the pro se defendant.
 deadline psr-disclosure-period: 47.days before SentencingScheduled() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(b)"
+
+test "Counting boundary: psr-disclosure-period (weekend)" cite "W.D. Mich. LCrR 32.2(b)"
+{
+  given SentencingScheduled() on 2026-10-15
+  expect deadline(psr-disclosure-period) == 2026-08-28
+}
 /// LCrR 32.2(f): not less than twenty-one days before the date set for
 /// sentencing the probation officer submits the final report with its
 /// addendum of unresolved objections and provides a copy to counsel.
 deadline final-report-period: 21.days before SentencingScheduled() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(f)"
+
+test "Counting boundary: final-report-period (weekend)" cite "W.D. Mich. LCrR 32.2(f)"
+{
+  given SentencingScheduled() on 2026-10-17
+  expect deadline(final-report-period) == 2026-09-25
+}
 /// LCrR 32.2(g): not less than fourteen days before the date set for
 /// sentencing a party seeking a departure or variance submits a separate
 /// motion, and all sentencing memoranda are filed by the same date.
 deadline departure-motion-period: 14.days before SentencingScheduled() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(g)"
+
+test "Counting boundary: departure-motion-period (weekend)" cite "W.D. Mich. LCrR 32.2(g)"
+{
+  given SentencingScheduled() on 2026-10-17
+  expect deadline(departure-motion-period) == 2026-10-02
+}
 /// LCrR 32.2(g): not less than seven days before sentencing any party may
 /// respond to a previously filed motion or sentencing memorandum.
 deadline sentencing-response-period: 7.days before SentencingScheduled() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(g)"
+
+test "Counting boundary: sentencing-response-period (weekend)" cite "W.D. Mich. LCrR 32.2(g)"
+{
+  given SentencingScheduled() on 2026-10-17
+  expect deadline(sentencing-response-period) == 2026-10-09
+}
 /// LCrR 32.2(j): in no event is sentence imposed less than ten days
 /// following disclosure of the presentence report without the defendant's
 /// consent; this is the earliest such date.
 deadline earliest-sentencing-date: 10.days after PresentenceReportDisclosed() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(j)"
+
+test "Counting boundary: earliest-sentencing-date (weekend)" cite "W.D. Mich. LCrR 32.2(j)"
+{
+  given PresentenceReportDisclosed() on 2026-10-14
+  expect deadline(earliest-sentencing-date) == 2026-10-26
+}
 /// LCrR 47.1(c): unless otherwise ordered, a party opposing a dispositive
 /// motion files a responsive brief and supporting materials within
 /// twenty-eight days after service of the motion.
 deadline dispositive-response-period: 28.days after DispositiveMotionServed() counted_by frcrimp45 cite "W.D. Mich. LCrR 47.1(c)"
+
+test "Counting boundary: dispositive-response-period (holiday)" cite "W.D. Mich. LCrR 47.1(c)"
+{
+  given DispositiveMotionServed() on 2026-10-14
+  expect deadline(dispositive-response-period) == 2026-11-12
+}
 /// LCrR 47.2(c): unless otherwise ordered, a party opposing a
 /// nondispositive motion files a responsive brief within fourteen days of
 /// service of the motion; a reply needs leave of court.
 deadline nondispositive-response-period: 14.days after NondispositiveMotionServed() counted_by frcrimp45 cite "W.D. Mich. LCrR 47.2(c)"
+
+test "Counting boundary: nondispositive-response-period (weekend)" cite "W.D. Mich. LCrR 47.2(c)"
+{
+  given NondispositiveMotionServed() on 2026-10-17
+  expect deadline(nondispositive-response-period) == 2026-11-02
+}
 /// LCrR 49.10(e)(viii): a non-filing signatory or party who disputes the
 /// authenticity of a signature on an electronically filed document files
 /// an objection within fourteen days after service of the document.
 deadline signature-objection-period: 14.days after SignedDocumentServed() counted_by frcrimp45 cite "W.D. Mich. LCrR 49.10(e)"
+
+test "Counting boundary: signature-objection-period (weekend)" cite "W.D. Mich. LCrR 49.10(e)"
+{
+  given SignedDocumentServed() on 2026-10-17
+  expect deadline(signature-objection-period) == 2026-11-02
+}
 /// LCrR 24.1 and 49.1: juror information and paper copies are due at least
 /// three business days before trial or a hearing.
 deadline juror-information-copy-period: 3.business_days before TrialOrHearingScheduled() counted_by frcrimp45 cite "W.D. Mich. LCrR 24.1; W.D. Mich. LCrR 49.1"

@@ -39,6 +39,12 @@ deadline pretrial-motion-period: 14.days before PretrialMotionsHearing() counted
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motion-period (weekend)" cite "S.D. W. Va. LR Cr P 12.1(a)"
+{
+  given PretrialMotionsHearing() on 2017-06-10
+  expect deadline(pretrial-motion-period) == 2017-05-26
+}
+
 /// LR Cr P 12.1(c): the government has 7 days to respond to the
 /// defendant's pretrial motions under LR Cr P 12.1(a) and (b), counted from
 /// the motion.
@@ -47,12 +53,24 @@ deadline pretrial-response-period: 7.days after PretrialMotionFiled() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-response-period (weekend)" cite "S.D. W. Va. LR Cr P 12.1(c)"
+{
+  given PretrialMotionFiled() on 2017-06-10
+  expect deadline(pretrial-response-period) == 2017-06-19
+}
+
 /// LR Cr P 12.1(e): counsel needing courtroom technology files the
 /// certification that the technology staff has been notified no later than
 /// 7 days before the scheduled commencement of the trial or proceeding.
 deadline technology-certification-period: 7.days before TechnologyProceeding() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 12.1(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: technology-certification-period (weekend)" cite "S.D. W. Va. LR Cr P 12.1(e)"
+{
+  given TechnologyProceeding() on 2017-06-10
+  expect deadline(technology-certification-period) == 2017-06-02
 }
 
 /// LR Cr P 16.1(c): unless the parties agree or the court orders
@@ -64,11 +82,23 @@ deadline standard-discovery-period: 14.days after StandardDiscoveryRequested() c
   forum frcrimp
 }
 
+test "Counting boundary: standard-discovery-period (weekend)" cite "S.D. W. Va. LR Cr P 16.1(c)"
+{
+  given StandardDiscoveryRequested() on 2017-06-10
+  expect deadline(standard-discovery-period) == 2017-06-26
+}
+
 /// LR Cr P 16.1(d): the defendant provides all reciprocal discovery within
 /// 14 days of receiving the government's materials and responses.
 deadline reciprocal-discovery-period: 14.days after GovernmentDiscoveryReceived() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 16.1(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reciprocal-discovery-period (weekend)" cite "S.D. W. Va. LR Cr P 16.1(d)"
+{
+  given GovernmentDiscoveryReceived() on 2017-06-10
+  expect deadline(reciprocal-discovery-period) == 2017-06-26
 }
 
 /// LR Cr P 46.1(c)(2): within 14 days after the court approves a
@@ -77,6 +107,12 @@ deadline reciprocal-discovery-period: 14.days after GovernmentDiscoveryReceived(
 deadline encumbrance-notice-period: 14.days after RealPropertyBondApproved() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 46.1(c)(2)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: encumbrance-notice-period (weekend)" cite "S.D. W. Va. LR Cr P 46.1(c)(2)"
+{
+  given RealPropertyBondApproved() on 2017-06-10
+  expect deadline(encumbrance-notice-period) == 2017-06-26
 }
 
 test "pretrial motion period: 14 days before the trigger" cite "S.D. W. Va. LR Cr P 12.1(a)"

@@ -103,12 +103,24 @@ deadline discovery-conference: 14.days after Arraigned() counted_by frcrimp45 ci
   forum frcrimp
 }
 
+test "Counting boundary: discovery-conference (weekend)" cite "D. Conn. Crim. App. 1(A)"
+{
+  given Arraigned() on 2026-09-26
+  expect deadline(discovery-conference) == 2026-10-13
+}
+
 /// Standing Order on Discovery (A): an agreement reached at the discovery
 /// conference is reduced to writing and filed by the government within 3
 /// days of reaching it.
 deadline discovery-agreement-filing: 3.days after DiscoveryAgreementReached() counted_by frcrimp45 cite "D. Conn. Crim. App. 1(A)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: discovery-agreement-filing (weekend)" cite "D. Conn. Crim. App. 1(A)"
+{
+  given DiscoveryAgreementReached() on 2026-09-30
+  expect deadline(discovery-agreement-filing) == 2026-10-05
 }
 
 /// Standing Order on Discovery (A)(1): within 14 days after the
@@ -125,6 +137,12 @@ deadline government-disclosure: 14.days after Arraigned() counted_by frcrimp45 d
   forum frcrimp
 }
 
+test "Counting boundary: government-disclosure (weekend)" cite "D. Conn. Crim. App. 1(A)"
+{
+  given Arraigned() on 2026-09-26
+  expect deadline(government-disclosure) == 2026-10-13
+}
+
 /// Standing Order on Discovery (B)(1): within 14 days after the government
 /// provides the Paragraph A discovery, defense counsel informs it in
 /// writing whether the defense is alibi, mental condition or public
@@ -138,6 +156,12 @@ deadline defense-disclosure: 14.days after GovernmentDiscoveryProvided() counted
   forum frcrimp
 }
 
+test "Counting boundary: defense-disclosure (weekend)" cite "D. Conn. Crim. App. 1(B)"
+{
+  given GovernmentDiscoveryProvided() on 2026-09-26
+  expect deadline(defense-disclosure) == 2026-10-13
+}
+
 /// Standing Order on Discovery (C)(1)(a)(ii): unless otherwise ordered,
 /// the government's expert-witness disclosure is made no later than 60
 /// days before the final pretrial conference.
@@ -149,6 +173,12 @@ deadline government-expert-disclosure: 60.days before FinalPretrialConferenceSch
   forum frcrimp
 }
 
+test "Counting boundary: government-expert-disclosure (weekend)" cite "D. Conn. Crim. App. 1(C)"
+{
+  given FinalPretrialConferenceScheduled() on 2026-09-30
+  expect deadline(government-expert-disclosure) == 2026-07-31
+}
+
 /// Standing Order on Discovery (C)(2)(a)(ii): unless otherwise ordered,
 /// the defendant's expert-witness disclosure is made no later than 30 days
 /// before the final pretrial conference.
@@ -158,6 +188,12 @@ deadline defense-expert-disclosure: 30.days before FinalPretrialConferenceSchedu
 } cite "D. Conn. Crim. App. 1(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defense-expert-disclosure (weekend)" cite "D. Conn. Crim. App. 1(C)"
+{
+  given FinalPretrialConferenceScheduled() on 2026-09-28
+  expect deadline(defense-expert-disclosure) == 2026-08-28
 }
 
 /// D. Conn. L. Civ. R. 7(a)2: unless the Court orders otherwise, an
@@ -173,6 +209,12 @@ deadline opposition-period: 21.days after MotionFiled() counted_by frcrimp45 del
   forum frcrimp
 }
 
+test "Counting boundary: opposition-period (weekend)" cite "D. Conn. L. Civ. R. 7(a); D. Conn. L. Cr. R. 1(c)"
+{
+  given MotionFiled() on 2026-09-26
+  expect deadline(opposition-period) == 2026-10-19
+}
+
 /// D. Conn. L. Civ. R. 7(d): a reply memorandum, permitted but not
 /// required, is filed within 14 days of the filing of the responsive
 /// memorandum; no sur-reply without permission.
@@ -181,12 +223,24 @@ deadline reply-period: 14.days after ResponsiveMemorandumFiled() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: reply-period (weekend)" cite "D. Conn. L. Civ. R. 7(d); D. Conn. L. Cr. R. 1(c)"
+{
+  given ResponsiveMemorandumFiled() on 2026-09-26
+  expect deadline(reply-period) == 2026-10-13
+}
+
 /// D. Conn. L. Civ. R. 7(c)1: a motion for reconsideration, where
 /// appropriate, is filed and served within 7 days of the filing of the
 /// decision or order; no response is needed unless the Court requests one.
 deadline reconsideration-period: 7.days after DecisionFiled() counted_by frcrimp45 cite "D. Conn. L. Civ. R. 7(c); D. Conn. L. Cr. R. 1(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reconsideration-period (weekend)" cite "D. Conn. L. Civ. R. 7(c); D. Conn. L. Cr. R. 1(c)"
+{
+  given DecisionFiled() on 2026-09-26
+  expect deadline(reconsideration-period) == 2026-10-05
 }
 
 /// D. Conn. L. Cr. R. 32(a), (e): unless otherwise ordered, the probation
@@ -203,6 +257,12 @@ deadline initial-psr-disclosure: 42.days after GuiltyPleaOrVerdict() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: initial-psr-disclosure (weekend)" cite "D. Conn. L. Cr. R. 32(a); D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(f)"
+{
+  given GuiltyPleaOrVerdict() on 2026-09-26
+  expect deadline(initial-psr-disclosure) == 2026-11-09
+}
+
 /// D. Conn. L. Cr. R. 32(c), (e): the probation officer dockets and
 /// discloses the revised presentence report with its addendum on Day 66.
 deadline revised-psr-disclosure: 66.days after GuiltyPleaOrVerdict() counted_by frcrimp45 delegable {
@@ -211,6 +271,12 @@ deadline revised-psr-disclosure: 66.days after GuiltyPleaOrVerdict() counted_by 
 } cite "D. Conn. L. Cr. R. 32(c); D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(f)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: revised-psr-disclosure (weekend)" cite "D. Conn. L. Cr. R. 32(c); D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(f)"
+{
+  given GuiltyPleaOrVerdict() on 2026-09-30
+  expect deadline(revised-psr-disclosure) == 2026-12-07
 }
 
 /// D. Conn. L. Cr. R. 32(e), (n): the defendant's sentencing memorandum
@@ -225,6 +291,12 @@ deadline defense-sentencing-memorandum: 70.days after GuiltyPleaOrVerdict() coun
   forum frcrimp
 }
 
+test "Counting boundary: defense-sentencing-memorandum (weekend)" cite "D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(n); D. Conn. L. Cr. R. 32(f)"
+{
+  given GuiltyPleaOrVerdict() on 2026-09-26
+  expect deadline(defense-sentencing-memorandum) == 2026-12-07
+}
+
 /// D. Conn. L. Cr. R. 32(e), (n): the government's sentencing memorandum
 /// is filed on Day 77.
 deadline government-sentencing-memorandum: 77.days after GuiltyPleaOrVerdict() counted_by frcrimp45 delegable {
@@ -233,6 +305,12 @@ deadline government-sentencing-memorandum: 77.days after GuiltyPleaOrVerdict() c
 } cite "D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(n); D. Conn. L. Cr. R. 32(f)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: government-sentencing-memorandum (weekend)" cite "D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(n); D. Conn. L. Cr. R. 32(f)"
+{
+  given GuiltyPleaOrVerdict() on 2026-09-26
+  expect deadline(government-sentencing-memorandum) == 2026-12-14
 }
 
 /// D. Conn. L. Cr. R. 32(e): any reply sentencing memorandum, optional, is
@@ -245,6 +323,12 @@ deadline reply-sentencing-memorandum: 80.days after GuiltyPleaOrVerdict() counte
   forum frcrimp
 }
 
+test "Counting boundary: reply-sentencing-memorandum (weekend)" cite "D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(f)"
+{
+  given GuiltyPleaOrVerdict() on 2026-09-30
+  expect deadline(reply-sentencing-memorandum) == 2026-12-21
+}
+
 /// D. Conn. L. Cr. R. 32(e): sentencing on Day 84. The Court may postpone
 /// the scheduling order for good cause or modify its times for good cause
 /// shown (L. Cr. R. 32(e), (f)).
@@ -254,6 +338,12 @@ deadline sentencing-date: 84.days after GuiltyPleaOrVerdict() counted_by frcrimp
 } cite "D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(f)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-date (weekend)" cite "D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(f)"
+{
+  given GuiltyPleaOrVerdict() on 2026-09-26
+  expect deadline(sentencing-date) == 2026-12-21
 }
 
 test "discovery conference: 14 days after the trigger" cite "D. Conn. Crim. App. 1(A)"

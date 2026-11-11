@@ -106,6 +106,12 @@ deadline initial-psr-disclosure: 28.days before SentencingScheduled() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: initial-psr-disclosure (weekend)" cite "D.D.C. LCrR 32.2(a); D.D.C. LCrR 32.2(g)"
+{
+  given SentencingScheduled() on 2026-09-19
+  expect deadline(initial-psr-disclosure) == 2026-08-21
+}
+
 /// D.D.C. LCrR 47(b): within 14 days of the date of service, or at such
 /// other time as the Court directs, an opposing party serves and files a
 /// memorandum of points and authorities in opposition; if none is filed in
@@ -118,11 +124,23 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 de
   forum frcrimp
 }
 
+test "Counting boundary: opposition-period (weekend)" cite "D.D.C. LCrR 47(b)"
+{
+  given MotionServed() on 2026-09-19
+  expect deadline(opposition-period) == 2026-10-05
+}
+
 /// D.D.C. LCrR 47(d): within seven days after service of the memorandum in
 /// opposition, the moving party may serve and file a reply memorandum.
 deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 cite "D.D.C. LCrR 47(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reply-period (weekend)" cite "D.D.C. LCrR 47(d)"
+{
+  given OppositionServed() on 2026-09-19
+  expect deadline(reply-period) == 2026-09-28
 }
 
 /// D.D.C. LCrR 49(f)(3)(i): notice of a change in the address or telephone
@@ -133,6 +151,12 @@ deadline address-change-notice: 14.days after AddressChanged() counted_by frcrim
   forum frcrimp
 }
 
+test "Counting boundary: address-change-notice (weekend)" cite "D.D.C. LCrR 49(f)"
+{
+  given AddressChanged() on 2026-09-19
+  expect deadline(address-change-notice) == 2026-10-05
+}
+
 /// D.D.C. LCrR 57.12(b)(1): a defendant's objection to the United States
 /// Attorney's related-case designation is served on the U.S. Attorney and
 /// filed with the Clerk within 21 days after arraignment; the assigned
@@ -140,6 +164,12 @@ deadline address-change-notice: 14.days after AddressChanged() counted_by frcrim
 deadline related-case-objection: 21.days after ArraignedOnRelatedDesignation() counted_by frcrimp45 cite "D.D.C. LCrR 57.12(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: related-case-objection (weekend)" cite "D.D.C. LCrR 57.12(b)"
+{
+  given ArraignedOnRelatedDesignation() on 2026-09-19
+  expect deadline(related-case-objection) == 2026-10-13
 }
 
 /// D.D.C. LCrR 56.2(b): after a guilty verdict the Clerk keeps the
@@ -152,12 +182,24 @@ deadline exhibit-retake: 30.days after FinalDisposition() counted_by frcrimp45 c
   forum frcrimp
 }
 
+test "Counting boundary: exhibit-retake (weekend)" cite "D.D.C. LCrR 56.2(b)"
+{
+  given FinalDisposition() on 2026-09-17
+  expect deadline(exhibit-retake) == 2026-10-19
+}
+
 /// D.D.C. LCrR 56.2(d): a party that fails to retake its exhibits within
 /// 30 days of the Clerk's notice may have them destroyed or otherwise
 /// disposed of by the Clerk.
 deadline exhibit-retake-after-notice: 30.days after ExhibitRetakeNoticed() counted_by frcrimp45 cite "D.D.C. LCrR 56.2(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-retake-after-notice (weekend)" cite "D.D.C. LCrR 56.2(d)"
+{
+  given ExhibitRetakeNoticed() on 2026-09-17
+  expect deadline(exhibit-retake-after-notice) == 2026-10-19
 }
 
 /// D.D.C. LCrR 59.1(b): written objections to a magistrate judge's ruling
@@ -173,6 +215,12 @@ deadline magistrate-ruling-objection: 14.days after MagistrateRulingServed() cou
   forum frcrimp
 }
 
+test "Counting boundary: magistrate-ruling-objection (weekend)" cite "D.D.C. LCrR 59.1(b)"
+{
+  given MagistrateRulingServed() on 2026-09-19
+  expect deadline(magistrate-ruling-objection) == 2026-10-05
+}
+
 /// D.D.C. LCrR 59.2(b): written objections to a magistrate judge's
 /// proposed findings and recommendations are filed within 14 days after
 /// service; failure to object in time may waive appellate review of an
@@ -181,6 +229,12 @@ deadline magistrate-ruling-objection: 14.days after MagistrateRulingServed() cou
 deadline magistrate-recommendation-objection: 14.days after MagistrateRecommendationServed() counted_by frcrimp45 cite "D.D.C. LCrR 59.2(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: magistrate-recommendation-objection (weekend)" cite "D.D.C. LCrR 59.2(b)"
+{
+  given MagistrateRecommendationServed() on 2026-09-19
+  expect deadline(magistrate-recommendation-objection) == 2026-10-05
 }
 
 /// D.D.C. LCrR 59.3(a): a request for review of a magistrate judge's order
@@ -193,6 +247,12 @@ deadline unassigned-magistrate-review: 14.days after UnassignedMagistrateOrderSe
 } cite "D.D.C. LCrR 59.3(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: unassigned-magistrate-review (weekend)" cite "D.D.C. LCrR 59.3(a)"
+{
+  given UnassignedMagistrateOrderServed() on 2026-09-19
+  expect deadline(unassigned-magistrate-review) == 2026-10-05
 }
 
 test "initial psr disclosure: 28 days before the trigger" cite "D.D.C. LCrR 32.2(a); D.D.C. LCrR 32.2(g)"

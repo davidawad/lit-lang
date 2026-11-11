@@ -104,6 +104,12 @@ deadline entity-new-counsel-period: 30.days after EntityCounselWithdrawalMoved()
   forum frcp
 }
 
+test "Counting boundary: entity-new-counsel-period (holiday)" cite "D. Md. Local Rule 101.2(b)"
+{
+  given EntityCounselWithdrawalMoved() on 2025-12-02
+  expect deadline(entity-new-counsel-period) == 2026-01-02
+}
+
 /// Local Rule 103.5(a): within 30 days after filing the notice of removal
 /// (with the process, pleadings and orders served on it and the state
 /// docket sheet), the removing party files every other document then on
@@ -111,6 +117,12 @@ deadline entity-new-counsel-period: 30.days after EntityCounselWithdrawalMoved()
 deadline removal-record-period: 30.days after NoticeOfRemovalFiled() counted_by frcp6-maryland cite "D. Md. Local Rule 103.5(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: removal-record-period (holiday)" cite "D. Md. Local Rule 103.5(a)"
+{
+  given NoticeOfRemovalFiled() on 2025-12-02
+  expect deadline(removal-record-period) == 2026-01-02
 }
 
 /// Local Rule 103.5(b): a motion pending at removal without a legal
@@ -128,6 +140,12 @@ deadline removed-motion-memorandum-period: 14.days after RemovedWithMotionPendin
 deadline removal-disclosure-period: 7.days after NoticeOfRemovalFiled() counted_by frcp6-maryland cite "D. Md. Local Rule 103.5(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: removal-disclosure-period (weekend)" cite "D. Md. Local Rule 103.5(c)"
+{
+  given NoticeOfRemovalFiled() on 2025-12-06
+  expect deadline(removal-disclosure-period) == 2025-12-15
 }
 
 /// Local Rule 103.8(a): if a party demanding affirmative relief has not
@@ -154,6 +172,12 @@ deadline prosecution-show-cause-period: 14.days after ProsecutionShowCauseOrdere
 deadline motion-to-compel-period: 30.days after DiscoveryResponseReceived() counted_by frcp6-maryland cite "D. Md. Local Rule 104.8(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: motion-to-compel-period (holiday)" cite "D. Md. Local Rule 104.8(a)"
+{
+  given DiscoveryResponseReceived() on 2025-12-02
+  expect deadline(motion-to-compel-period) == 2026-01-02
 }
 
 /// Local Rule 104.8(a): the opposing party serves its memorandum in
@@ -208,12 +232,24 @@ deadline amicus-brief-period: 7.days after PrincipalBriefFiled() counted_by frcp
   forum frcp
 }
 
+test "Counting boundary: amicus-brief-period (weekend)" cite "D. Md. Local Rule 105.12(e)"
+{
+  given PrincipalBriefFiled() on 2025-12-06
+  expect deadline(amicus-brief-period) == 2025-12-15
+}
+
 /// Local Rule 106.3: unless ordered or agreed otherwise, the plaintiff
 /// serves its draft pretrial order on opposing counsel 14 days before the
 /// pretrial order is due.
 deadline pretrial-draft-period: 14.days before PretrialOrderDue() counted_by frcp6-maryland cite "D. Md. Local Rule 106.3"
 {
   forum frcp
+}
+
+test "Counting boundary: pretrial-draft-period (weekend)" cite "D. Md. Local Rule 106.3"
+{
+  given PretrialOrderDue() on 2025-12-06
+  expect deadline(pretrial-draft-period) == 2025-11-21
 }
 
 /// Local Rule 106.3: opposing counsel serves proposed revisions and
@@ -223,11 +259,23 @@ deadline pretrial-revisions-period: 7.days before PretrialOrderDue() counted_by 
   forum frcp
 }
 
+test "Counting boundary: pretrial-revisions-period (holiday)" cite "D. Md. Local Rule 106.3"
+{
+  given PretrialOrderDue() on 2025-12-04
+  expect deadline(pretrial-revisions-period) == 2025-11-26
+}
+
 /// Local Rule 106.4(a): unless the Court orders otherwise, the pretrial
 /// order is submitted seven days before the pretrial conference.
 deadline pretrial-order-period: 7.days before PretrialConferenceScheduled() counted_by frcp6-maryland cite "D. Md. Local Rule 106.4(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: pretrial-order-period (holiday)" cite "D. Md. Local Rule 106.4(a)"
+{
+  given PretrialConferenceScheduled() on 2025-12-04
+  expect deadline(pretrial-order-period) == 2025-11-26
 }
 
 /// Local Rule 109.1(a): a bill of costs is filed within 14 days of the
@@ -269,6 +317,12 @@ deadline fee-memorandum-period: 35.days after FeeMotionFiled() counted_by frcp6-
   forum frcp
 }
 
+test "Counting boundary: fee-memorandum-period (weekend)" cite "D. Md. Local Rule 109.2(a)"
+{
+  given FeeMotionFiled() on 2025-12-06
+  expect deadline(fee-memorandum-period) == 2026-01-12
+}
+
 /// Local Rule 109.2(a): if an appeal is taken from the underlying judgment,
 /// unless the Court orders otherwise, the memorandum is filed within 14
 /// days of the issuance of the mandate.
@@ -290,6 +344,12 @@ deadline fee-opposition-period: 14.days after FeeMemorandumServed() counted_by f
 deadline social-security-fee-motion-period: 30.days after NoticeOfAwardSent() counted_by frcp6-maryland cite "D. Md. Local Rule 109.2(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: social-security-fee-motion-period (holiday)" cite "D. Md. Local Rule 109.2(c)"
+{
+  given NoticeOfAwardSent() on 2025-12-02
+  expect deadline(social-security-fee-motion-period) == 2026-01-02
 }
 
 test "Deadline arithmetic: entity-new-counsel-period (30 days after)" cite "D. Md. Local Rule 101.2(b)"

@@ -80,6 +80,12 @@ deadline filing-after-service-period: 7.days after PaperServed() counted_by frcp
   forum frcp
 }
 
+test "Counting boundary: filing-after-service-period (weekend)" cite "E.D. Ark. L.R. 5.4"
+{
+  given PaperServed() on 2020-11-07
+  expect deadline(filing-after-service-period) == 2020-11-16
+}
+
 /// L.R. 5.5(e): the party amending files the original of the amended
 /// pleading within seven days of the entry of the order granting leave to
 /// amend, unless the court orders otherwise. The rule does not apply to
@@ -89,12 +95,24 @@ deadline amended-pleading-period: 7.days after LeaveToAmendGranted() counted_by 
   forum frcp
 }
 
+test "Counting boundary: amended-pleading-period (weekend)" cite "E.D. Ark. L.R. 5.5(e)"
+{
+  given LeaveToAmendGranted() on 2020-11-07
+  expect deadline(amended-pleading-period) == 2020-11-16
+}
+
 /// L.R. 5.5(c)(2): if a communication from the court to a pro se
 /// plaintiff is not responded to within thirty days, the case may be
 /// dismissed without prejudice.
 deadline pro-se-response-period: 30.days after ProSeCommunicationSent() counted_by frcp6 cite "E.D. Ark. L.R. 5.5(c)(2)"
 {
   forum frcp
+}
+
+test "Counting boundary: pro-se-response-period (weekend)" cite "E.D. Ark. L.R. 5.5(c)(2)"
+{
+  given ProSeCommunicationSent() on 2020-11-05
+  expect deadline(pro-se-response-period) == 2020-12-07
 }
 
 /// L.R. 7.2(b): within fourteen days from the date of service of a motion
@@ -108,11 +126,23 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "
   forum frcp
 }
 
+test "Counting boundary: opposition-period (weekend)" cite "E.D. Ark. L.R. 7.2(b)"
+{
+  given MotionServed() on 2020-11-07
+  expect deadline(opposition-period) == 2020-11-23
+}
+
 /// L.R. 7.2(b), 56.1(d): a party moving for summary judgment has seven
 /// days to file a reply in further support of the motion.
 deadline summary-judgment-reply-period: 7.days after SummaryJudgmentResponseFiled() counted_by frcp6 cite "E.D. Ark. L.R. 7.2(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: summary-judgment-reply-period (weekend)" cite "E.D. Ark. L.R. 7.2(b)"
+{
+  given SummaryJudgmentResponseFiled() on 2020-11-07
+  expect deadline(summary-judgment-reply-period) == 2020-11-16
 }
 
 /// L.R. 7.2(b): a party seeking relief under 28 U.S.C. § 2254 or § 2255
@@ -122,6 +152,12 @@ deadline habeas-reply-period: 7.days after HabeasResponseFiled() counted_by frcp
   forum frcp
 }
 
+test "Counting boundary: habeas-reply-period (weekend)" cite "E.D. Ark. L.R. 7.2(b)"
+{
+  given HabeasResponseFiled() on 2020-11-07
+  expect deadline(habeas-reply-period) == 2020-11-16
+}
+
 /// L.R. 23.1(3): the other parties respond to a motion for class
 /// certification within fourteen days, admitting or denying the facts
 /// alleged. The motion's own deadline is set in the Final Scheduling
@@ -129,6 +165,12 @@ deadline habeas-reply-period: 7.days after HabeasResponseFiled() counted_by frcp
 deadline class-certification-response-period: 14.days after ClassCertificationMotionFiled() counted_by frcp6 cite "E.D. Ark. L.R. 23.1"
 {
   forum frcp
+}
+
+test "Counting boundary: class-certification-response-period (weekend)" cite "E.D. Ark. L.R. 23.1"
+{
+  given ClassCertificationMotionFiled() on 2020-11-07
+  expect deadline(class-certification-response-period) == 2020-11-23
 }
 
 /// L.R. 54.1(a): a motion for attorney's fees is filed within fourteen
@@ -142,12 +184,24 @@ deadline fee-motion-period: 14.days after FeeJudgmentEntered() counted_by frcp6 
   forum frcp
 }
 
+test "Counting boundary: fee-motion-period (weekend)" cite "E.D. Ark. L.R. 54.1(a)"
+{
+  given FeeJudgmentEntered() on 2020-11-07
+  expect deadline(fee-motion-period) == 2020-11-23
+}
+
 /// L.R. 54.1(a): objections to an allowance of fees are filed within
 /// fourteen days after service on the party against whom the award is
 /// sought.
 deadline fee-objection-period: 14.days after FeeMotionServed() counted_by frcp6 cite "E.D. Ark. L.R. 54.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: fee-objection-period (weekend)" cite "E.D. Ark. L.R. 54.1(a)"
+{
+  given FeeMotionServed() on 2020-11-07
+  expect deadline(fee-objection-period) == 2020-11-23
 }
 
 /// L.R. 72.1, part VII.B: a party appeals a magistrate judge's ruling on
@@ -159,12 +213,24 @@ deadline magistrate-appeal-period: 14.days after MagistrateRulingEntered() count
   forum frcp
 }
 
+test "Counting boundary: magistrate-appeal-period (weekend)" cite "E.D. Ark. L.R. 72.1"
+{
+  given MagistrateRulingEntered() on 2020-11-07
+  expect deadline(magistrate-appeal-period) == 2020-11-23
+}
+
 /// L.R. 72.1, part VIII.C: within fourteen days after being served with a
 /// magistrate judge's proposed findings and recommendations, any party may
 /// serve and file written objections.
 deadline recommendation-objection-period: 14.days after RecommendationServed() counted_by frcp6 cite "E.D. Ark. L.R. 72.1"
 {
   forum frcp
+}
+
+test "Counting boundary: recommendation-objection-period (weekend)" cite "E.D. Ark. L.R. 72.1"
+{
+  given RecommendationServed() on 2020-11-07
+  expect deadline(recommendation-objection-period) == 2020-11-23
 }
 
 /// L.R. 72.1, part XI.A: a party may file and serve an application for
@@ -175,12 +241,24 @@ deadline magistrate-review-period: 14.days after MagistrateActionTaken() counted
   forum frcp
 }
 
+test "Counting boundary: magistrate-review-period (weekend)" cite "E.D. Ark. L.R. 72.1"
+{
+  given MagistrateActionTaken() on 2020-11-07
+  expect deadline(magistrate-review-period) == 2020-11-23
+}
+
 /// L.R. 83.1, part II(d)A: a bankruptcy court order dismissing a late or
 /// incomplete appeal is reviewed by the district court on motion filed
 /// within fourteen days after entry of the order.
 deadline bankruptcy-dismissal-review-period: 14.days after BankruptcyDismissalEntered() counted_by frcp6 cite "E.D. Ark. L.R. 83.1"
 {
   forum frcp
+}
+
+test "Counting boundary: bankruptcy-dismissal-review-period (weekend)" cite "E.D. Ark. L.R. 83.1"
+{
+  given BankruptcyDismissalEntered() on 2020-11-07
+  expect deadline(bankruptcy-dismissal-review-period) == 2020-11-23
 }
 
 test "filing after service period: 7 days after the trigger" cite "E.D. Ark. L.R. 5.4"

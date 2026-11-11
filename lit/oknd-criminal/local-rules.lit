@@ -61,6 +61,12 @@ deadline expert-disclosure: 15.days before PretrialConferenceScheduled() counted
   forum frcrimp
 }
 
+test "Counting boundary: expert-disclosure (weekend)" cite "N.D. Okla. LCrR16-2"
+{
+  given PretrialConferenceScheduled() on 2026-08-02
+  expect deadline(expert-disclosure) == 2026-07-17
+}
+
 /// N.D. Okla. LCrR16-2: disclosures in response to requests made fewer
 /// than 21 days before the pretrial conference are made within six days of
 /// the request.
@@ -72,12 +78,24 @@ deadline late-request-expert-disclosure: 6.days after LateExpertDisclosureReques
   forum frcrimp
 }
 
+test "Counting boundary: late-request-expert-disclosure (weekend)" cite "N.D. Okla. LCrR16-2"
+{
+  given LateExpertDisclosureRequested() on 2026-08-02
+  expect deadline(late-request-expert-disclosure) == 2026-08-10
+}
+
 /// N.D. Okla. LCrR32-4: if the probation officer rejects a proposed
 /// revision, the party files any objection of record, with its basis and
 /// authority, at least 14 days before the date set for sentencing.
 deadline psr-objection-of-record: 14.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-4"
 {
   forum frcrimp
+}
+
+test "Counting boundary: psr-objection-of-record (weekend)" cite "N.D. Okla. LCrR32-4"
+{
+  given SentencingScheduled() on 2026-08-01
+  expect deadline(psr-objection-of-record) == 2026-07-17
 }
 
 /// N.D. Okla. LCrR32-5: motions for departure or variance, each filed
@@ -87,11 +105,23 @@ deadline departure-variance-motion: 14.days before SentencingScheduled() counted
   forum frcrimp
 }
 
+test "Counting boundary: departure-variance-motion (weekend)" cite "N.D. Okla. LCrR32-5"
+{
+  given SentencingScheduled() on 2026-08-01
+  expect deadline(departure-variance-motion) == 2026-07-17
+}
+
 /// N.D. Okla. LCrR32-5: written responses to a departure or variance
 /// motion at least seven days before the date set for sentencing.
 deadline departure-variance-response: 7.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-5"
 {
   forum frcrimp
+}
+
+test "Counting boundary: departure-variance-response (weekend)" cite "N.D. Okla. LCrR32-5"
+{
+  given SentencingScheduled() on 2026-08-01
+  expect deadline(departure-variance-response) == 2026-07-24
 }
 
 /// N.D. Okla. LCrR32-5: a separate sentencing memorandum at least 14 days
@@ -101,11 +131,23 @@ deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-memorandum (weekend)" cite "N.D. Okla. LCrR32-5"
+{
+  given SentencingScheduled() on 2026-08-01
+  expect deadline(sentencing-memorandum) == 2026-07-17
+}
+
 /// N.D. Okla. LCrR32-5: a response to a sentencing memorandum at least
 /// seven days before the date set for sentencing.
 deadline sentencing-memorandum-response: 7.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-5"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-memorandum-response (weekend)" cite "N.D. Okla. LCrR32-5"
+{
+  given SentencingScheduled() on 2026-08-01
+  expect deadline(sentencing-memorandum-response) == 2026-07-24
 }
 
 /// N.D. Okla. LCrR32-7: the Probation Office discloses its sentencing
@@ -114,6 +156,12 @@ deadline sentencing-memorandum-response: 7.days before SentencingScheduled() cou
 deadline sentencing-recommendation: 7.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-7"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-recommendation (weekend)" cite "N.D. Okla. LCrR32-7"
+{
+  given SentencingScheduled() on 2026-08-01
+  expect deadline(sentencing-recommendation) == 2026-07-24
 }
 
 /// N.D. Okla. LCrR47-2: unless ordered otherwise, all motions are filed
@@ -126,6 +174,12 @@ deadline motions-period: 14.days after Arraigned() counted_by frcrimp45 delegabl
   forum frcrimp
 }
 
+test "Counting boundary: motions-period (weekend)" cite "N.D. Okla. LCrR47-2"
+{
+  given Arraigned() on 2026-08-01
+  expect deadline(motions-period) == 2026-08-17
+}
+
 /// N.D. Okla. LCrR47-2: responses are filed within seven days of the
 /// motion's filing; after that the Court may treat the motion as ripe
 /// even if no response has been filed.
@@ -135,6 +189,12 @@ deadline response-period: 7.days after MotionFiled() counted_by frcrimp45 delega
 } cite "N.D. Okla. LCrR47-2"
 {
   forum frcrimp
+}
+
+test "Counting boundary: response-period (weekend)" cite "N.D. Okla. LCrR47-2"
+{
+  given MotionFiled() on 2026-08-01
+  expect deadline(response-period) == 2026-08-10
 }
 
 test "expert disclosure: 15 days before the trigger" cite "N.D. Okla. LCrR16-2"

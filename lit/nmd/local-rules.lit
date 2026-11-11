@@ -94,6 +94,12 @@ deadline supplemental-authorities-response-period: 7.days after SupplementalAuth
   forum frcp
 }
 
+test "Counting boundary: supplemental-authorities-response-period (weekend)" cite "D.N.M.LR-Civ. 7.8(c)"
+{
+  given SupplementalAuthoritiesNoticeFiled() on 2020-10-03
+  expect deadline(supplemental-authorities-response-period) == 2020-10-13
+}
+
 /// D.N.M.LR-Civ. 10.3(b): a paper filed without signature is stricken
 /// unless signed within fourteen days after the omission is called to the
 /// party's attention.
@@ -111,12 +117,24 @@ deadline deficiency-cure-period: 45.days after DeficiencyNoticed() counted_by fr
   forum frcp
 }
 
+test "Counting boundary: deficiency-cure-period (weekend)" cite "D.N.M.LR-Civ. 10.3(c)"
+{
+  given DeficiencyNoticed() on 2020-10-01
+  expect deadline(deficiency-cure-period) == 2020-11-16
+}
+
 /// D.N.M.LR-Civ. 16.1: after the FRCP 26(f) conference the parties file
 /// the completed Joint Status Report at least seven days before the
 /// scheduling conference, or as ordered by the Court.
 deadline joint-status-report-period: 7.days before SchedulingConference() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 16.1"
 {
   forum frcp
+}
+
+test "Counting boundary: joint-status-report-period (weekend)" cite "D.N.M.LR-Civ. 16.1"
+{
+  given SchedulingConference() on 2020-10-03
+  expect deadline(joint-status-report-period) == 2020-09-25
 }
 
 /// D.N.M.LR-Civ. 26.6: a party served with an objection to an
@@ -131,12 +149,24 @@ deadline discovery-objection-motion-period: 21.days after DiscoveryObjectionServ
   forum frcp
 }
 
+test "Counting boundary: discovery-objection-motion-period (weekend)" cite "D.N.M.LR-Civ. 26.6"
+{
+  given DiscoveryObjectionServed() on 2020-10-03
+  expect deadline(discovery-objection-motion-period) == 2020-10-26
+}
+
 /// D.N.M.LR-Civ. 30.1: notice of a deposition under FRCP 30(b) is served
 /// at least fourteen days before the scheduled deposition, unless the
 /// parties agree or the Court orders a shorter time.
 deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 30.1"
 {
   forum frcp
+}
+
+test "Counting boundary: deposition-notice-period (weekend)" cite "D.N.M.LR-Civ. 30.1"
+{
+  given DepositionScheduled() on 2020-10-03
+  expect deadline(deposition-notice-period) == 2020-09-18
 }
 
 /// D.N.M.LR-Civ. 41.1: a civil action in which no steps are taken for
@@ -147,12 +177,24 @@ deadline want-of-prosecution-period: 30.days after ProsecutionNoticeGiven() coun
   forum frcp
 }
 
+test "Counting boundary: want-of-prosecution-period (weekend)" cite "D.N.M.LR-Civ. 41.1"
+{
+  given ProsecutionNoticeGiven() on 2020-10-01
+  expect deadline(want-of-prosecution-period) == 2020-11-02
+}
+
 /// D.N.M.LR-Civ. 54.1: a motion to tax costs is filed and served within
 /// thirty days of entry of judgment; failure to do so waives the claim to
 /// costs.
 deadline costs-motion-period: 30.days after JudgmentEntered() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 54.1"
 {
   forum frcp
+}
+
+test "Counting boundary: costs-motion-period (weekend)" cite "D.N.M.LR-Civ. 54.1"
+{
+  given JudgmentEntered() on 2020-10-01
+  expect deadline(costs-motion-period) == 2020-11-02
 }
 
 /// D.N.M.LR-Civ. 54.5(a): a motion for attorney's fees not brought under
@@ -163,11 +205,23 @@ deadline fee-motion-period: 30.days after JudgmentEntered() counted_by frcp6-new
   forum frcp
 }
 
+test "Counting boundary: fee-motion-period (weekend)" cite "D.N.M.LR-Civ. 54.5(a)"
+{
+  given JudgmentEntered() on 2020-10-01
+  expect deadline(fee-motion-period) == 2020-11-02
+}
+
 /// D.N.M.LR-Civ. 58.2(a)(2): a prevailing party's proposed order or
 /// judgment is entered if not objected to within seven days of service.
 deadline proposed-order-objection-period: 7.days after ProposedOrderServed() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 58.2(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: proposed-order-objection-period (weekend)" cite "D.N.M.LR-Civ. 58.2(a)"
+{
+  given ProposedOrderServed() on 2020-10-03
+  expect deadline(proposed-order-objection-period) == 2020-10-13
 }
 
 /// D.N.M.LR-Civ. 81.1(a): a party removing an action under 28 U.S.C.
@@ -176,6 +230,12 @@ deadline proposed-order-objection-period: 7.days after ProposedOrderServed() cou
 deadline removal-record-period: 28.days after NoticeOfRemovalFiled() counted_by frcp6-new-mexico cite "D.N.M.LR-Civ. 81.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: removal-record-period (weekend)" cite "D.N.M.LR-Civ. 81.1(a)"
+{
+  given NoticeOfRemovalFiled() on 2020-10-03
+  expect deadline(removal-record-period) == 2020-11-02
 }
 
 test "Deadline arithmetic: response-period (14 days after)" cite "D.N.M.LR-Civ. 7.4(a)"

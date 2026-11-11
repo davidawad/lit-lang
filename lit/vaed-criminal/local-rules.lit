@@ -42,6 +42,12 @@ deadline pretrial-motion-period: 14.days after Arraigned() counted_by frcrimp45 
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motion-period (weekend)" cite "E.D. Va. Loc. Crim. R. 12(A)"
+{
+  given Arraigned() on 2024-12-01
+  expect deadline(pretrial-motion-period) == 2024-12-16
+}
+
 /// Local Criminal Rule 12(A): a response to a pretrial motion is filed
 /// within 14 calendar days after the motion is filed, or another time the
 /// Court fixes.
@@ -50,12 +56,24 @@ deadline pretrial-response-period: 14.days after PretrialMotionFiled() counted_b
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-response-period (weekend)" cite "E.D. Va. Loc. Crim. R. 12(A)"
+{
+  given PretrialMotionFiled() on 2024-12-01
+  expect deadline(pretrial-response-period) == 2024-12-16
+}
+
 /// Local Criminal Rule 24(B): in a multi-defendant case, a motion for more
 /// peremptory challenges is made at least 21 days before the date set for
 /// trial; an untimely motion is not entertained.
 deadline peremptory-challenge-motion-period: 21.days before TrialDate() counted_by frcrimp45 cite "E.D. Va. Loc. Crim. R. 24(B)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: peremptory-challenge-motion-period (weekend)" cite "E.D. Va. Loc. Crim. R. 24(B)"
+{
+  given TrialDate() on 2024-12-01
+  expect deadline(peremptory-challenge-motion-period) == 2024-11-08
 }
 
 /// Local Criminal Rule 30: except as a pretrial or scheduling order
@@ -67,12 +85,24 @@ deadline jury-instructions-period: 7.days before TrialDate() counted_by frcrimp4
   forum frcrimp
 }
 
+test "Counting boundary: jury-instructions-period (weekend)" cite "E.D. Va. Loc. Crim. R. 30"
+{
+  given TrialDate() on 2024-12-01
+  expect deadline(jury-instructions-period) == 2024-11-22
+}
+
 /// Local Criminal Rule 47(E): unless otherwise ordered, a motion is deemed
 /// withdrawn if the movant does not set it for hearing, or arrange to
 /// submit it without one, within 30 days after it is filed.
 deadline motion-setting-period: 30.days after MotionFiled() counted_by frcrimp45 cite "E.D. Va. Loc. Crim. R. 47(E)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: motion-setting-period (holiday)" cite "E.D. Va. Loc. Crim. R. 47(E)"
+{
+  given MotionFiled() on 2024-12-02
+  expect deadline(motion-setting-period) == 2025-01-02
 }
 
 /// Local Criminal Rule 47(F)(1): unless the Court directs otherwise, the
@@ -83,12 +113,24 @@ deadline response-period: 14.days after MotionServed() counted_by frcrimp45 cite
   forum frcrimp
 }
 
+test "Counting boundary: response-period (weekend)" cite "E.D. Va. Loc. Crim. R. 47(F)(1)"
+{
+  given MotionServed() on 2024-12-01
+  expect deadline(response-period) == 2024-12-16
+}
+
 /// Local Criminal Rule 47(F)(1): the moving party may file a reply brief
 /// within six calendar days after service of the response; no further
 /// brief without leave of Court.
 deadline reply-period: 6.days after ResponseServed() counted_by frcrimp45 cite "E.D. Va. Loc. Crim. R. 47(F)(1)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reply-period (weekend)" cite "E.D. Va. Loc. Crim. R. 47(F)(1)"
+{
+  given ResponseServed() on 2024-12-01
+  expect deadline(reply-period) == 2024-12-09
 }
 
 /// Local Criminal Rule 57.3(D): unless the parties file a written
@@ -98,6 +140,12 @@ deadline reply-period: 6.days after ResponseServed() counted_by frcrimp45 cite "
 deadline record-stipulation-period: 21.days after NoticeOfAppealFiled() counted_by frcrimp45 cite "E.D. Va. Loc. Crim. R. 57.3(D)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: record-stipulation-period (weekend)" cite "E.D. Va. Loc. Crim. R. 57.3(D)"
+{
+  given NoticeOfAppealFiled() on 2024-12-01
+  expect deadline(record-stipulation-period) == 2024-12-23
 }
 
 test "pretrial motion period: 14 days after the trigger" cite "E.D. Va. Loc. Crim. R. 12(A)"

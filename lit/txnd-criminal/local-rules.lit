@@ -72,6 +72,12 @@ deadline exhibit-exchange: 14.days before TrialScheduled() counted_by frcrimp45 
   forum frcrimp
 }
 
+test "Counting boundary: exhibit-exchange (weekend)" cite "N.D. Tex. LCrR 16.1"
+{
+  given TrialScheduled() on 2026-09-05
+  expect deadline(exhibit-exchange) == 2026-08-21
+}
+
 /// N.D. Tex. LCrR 23.1: unless the presiding judge directs otherwise, at
 /// least 14 days before trial in a nonjury case the parties file and serve
 /// proposed findings of fact and conclusions of law.
@@ -81,6 +87,12 @@ deadline proposed-findings: 14.days before TrialScheduled() counted_by frcrimp45
 } cite "N.D. Tex. LCrR 23.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: proposed-findings (weekend)" cite "N.D. Tex. LCrR 23.1"
+{
+  given TrialScheduled() on 2026-09-05
+  expect deadline(proposed-findings) == 2026-08-21
 }
 
 /// N.D. Tex. LCrR 30.1: unless the presiding judge directs otherwise, at
@@ -94,6 +106,12 @@ deadline requested-jury-charge: 14.days before TrialScheduled() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: requested-jury-charge (weekend)" cite "N.D. Tex. LCrR 30.1"
+{
+  given TrialScheduled() on 2026-09-05
+  expect deadline(requested-jury-charge) == 2026-08-21
+}
+
 /// N.D. Tex. LCrR 47.1(e): a response and brief to an opposed motion are
 /// filed within 14 days from the date the motion is filed, unless the
 /// presiding judge directs otherwise (LCrR 47.1).
@@ -105,12 +123,24 @@ deadline response-period: 14.days after OpposedMotionFiled() counted_by frcrimp4
   forum frcrimp
 }
 
+test "Counting boundary: response-period (weekend)" cite "N.D. Tex. LCrR 47.1(e)"
+{
+  given OpposedMotionFiled() on 2026-09-05
+  expect deadline(response-period) == 2026-09-21
+}
+
 /// N.D. Tex. LCrR 49.2(g): unless excused for cause, an attorney other
 /// than a prisoner pro se party registers as an ECF user within 14 days of
 /// the date the attorney appears in a case.
 deadline ecf-registration: 14.days after AttorneyAppeared() counted_by frcrimp45 cite "N.D. Tex. LCrR 49.2(g)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: ecf-registration (weekend)" cite "N.D. Tex. LCrR 49.2(g)"
+{
+  given AttorneyAppeared() on 2026-09-05
+  expect deadline(ecf-registration) == 2026-09-21
 }
 
 /// N.D. Tex. LCrR 49.6: the attorney who submits a charging document or a
@@ -121,6 +151,12 @@ deadline paper-original: 7.days after SignedDocumentSubmitted() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: paper-original (weekend)" cite "N.D. Tex. LCrR 49.6"
+{
+  given SignedDocumentSubmitted() on 2026-09-05
+  expect deadline(paper-original) == 2026-09-14
+}
+
 /// N.D. Tex. LCrR 55.2(b): every exhibit in the court's custody is
 /// removed from the clerk's office, by the attorney who introduced it,
 /// within 60 days after final disposition of the case; one not removed may
@@ -128,6 +164,12 @@ deadline paper-original: 7.days after SignedDocumentSubmitted() counted_by frcri
 deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcrimp45 cite "N.D. Tex. LCrR 55.2(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-removal (weekend)" cite "N.D. Tex. LCrR 55.2(b)"
+{
+  given FinalDisposition() on 2026-09-01
+  expect deadline(exhibit-removal) == 2026-11-02
 }
 
 /// N.D. Tex. LCrR 55.4: unless the presiding judge directs otherwise, a
@@ -142,12 +184,24 @@ deadline keep-sealed-motion: 60.days after FinalDisposition() counted_by frcrimp
   forum frcrimp
 }
 
+test "Counting boundary: keep-sealed-motion (weekend)" cite "N.D. Tex. LCrR 55.4"
+{
+  given FinalDisposition() on 2026-09-01
+  expect deadline(keep-sealed-motion) == 2026-11-02
+}
+
 /// N.D. Tex. LCrR 59.1(b), 59.2(b): a response brief to objections filed
 /// under FRCrimP 59(a) or 59(b)(2) complies with LCrR 47.2 and is filed
 /// within 14 days from the date the objections are filed.
 deadline magistrate-objection-response: 14.days after MagistrateObjectionsFiled() counted_by frcrimp45 cite "N.D. Tex. LCrR 59.1(b); N.D. Tex. LCrR 59.2(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: magistrate-objection-response (weekend)" cite "N.D. Tex. LCrR 59.1(b); N.D. Tex. LCrR 59.2(b)"
+{
+  given MagistrateObjectionsFiled() on 2026-09-05
+  expect deadline(magistrate-objection-response) == 2026-09-21
 }
 
 test "exhibit exchange: 14 days before the trigger" cite "N.D. Tex. LCrR 16.1"

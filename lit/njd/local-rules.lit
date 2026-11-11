@@ -116,46 +116,112 @@ deadline motion-papers-period: 24.days before MotionDay() counted_by frcp6-new-j
 /// automatic adjournment under L.Civ.R. 7.1(d)(5), which moves the period to
 /// 14 days before the new motion day.
 deadline opposition-period: 14.days before MotionDay() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 7.1(d)"
+
+test "Counting boundary: opposition-period (weekend)" cite "D.N.J. L. Civ. R. 7.1(d)"
+{
+  given MotionDay() on 2026-10-24
+  expect deadline(opposition-period) == 2026-10-09
+}
 /// L.Civ.R. 7.1(d)(3): a reply, if any, is filed at least seven days before
 /// the motion day. No reply is filed without leave on a cross-motion,
 /// reconsideration, case management or discovery motion.
 deadline reply-period: 7.days before MotionDay() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 7.1(d)"
+
+test "Counting boundary: reply-period (weekend)" cite "D.N.J. L. Civ. R. 7.1(d)"
+{
+  given MotionDay() on 2026-10-24
+  expect deadline(reply-period) == 2026-10-16
+}
 /// L.Civ.R. 7.1(e): if the proposed order annexed to the motion does not
 /// reflect the ruling, the prevailing party, if directed, submits an order
 /// within seven days of the ruling on notice to all parties.
 deadline proposed-order-period: 7.days after MotionRuled() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 7.1(e)"
+
+test "Counting boundary: proposed-order-period (weekend)" cite "D.N.J. L. Civ. R. 7.1(e)"
+{
+  given MotionRuled() on 2026-10-24
+  expect deadline(proposed-order-period) == 2026-11-02
+}
 /// L.Civ.R. 7.1(i): unless a statute or rule such as Fed. R. Civ. P. 50, 52
 /// or 59 provides otherwise, a motion for reconsideration is served and
 /// filed within 14 days after entry of the order or judgment on the
 /// original motion.
 deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 7.1(i)"
+
+test "Counting boundary: reconsideration-period (weekend)" cite "D.N.J. L. Civ. R. 7.1(i)"
+{
+  given OrderEntered() on 2026-10-24
+  expect deadline(reconsideration-period) == 2026-11-09
+}
 /// L.Civ.R. 7.1.1(a): within 30 days of filing an initial pleading or of
 /// transfer or removal of the matter to this district, each party files a
 /// statement disclosing any non-party providing non-recourse litigation
 /// funding.
 deadline litigation-funding-disclosure-period: 30.days after InitialPleadingFiled() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 7.1.1(a)"
+
+test "Counting boundary: litigation-funding-disclosure-period (weekend)" cite "D.N.J. L. Civ. R. 7.1.1(a)"
+{
+  given InitialPleadingFiled() on 2026-10-22
+  expect deadline(litigation-funding-disclosure-period) == 2026-11-23
+}
 /// L.Civ.R. 8.1: within 14 days after service of a written request, the
 /// party pleading unliquidated damages furnishes a statement of the amount
 /// claimed.
 deadline damages-statement-period: 14.days after DamagesRequestServed() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 8.1"
+
+test "Counting boundary: damages-statement-period (weekend)" cite "D.N.J. L. Civ. R. 8.1"
+{
+  given DamagesRequestServed() on 2026-10-24
+  expect deadline(damages-statement-period) == 2026-11-09
+}
 /// L.Civ.R. 10.1(a): counsel and unrepresented parties file notice of a
 /// change of their or their client's address within seven days of being
 /// apprised of it.
 deadline address-change-period: 7.days after AddressChangeLearned() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 10.1(a)"
+
+test "Counting boundary: address-change-period (weekend)" cite "D.N.J. L. Civ. R. 10.1(a)"
+{
+  given AddressChangeLearned() on 2026-10-24
+  expect deadline(address-change-period) == 2026-11-02
+}
 /// L.Civ.R. 12.2: when a Fed. R. Civ. P. 12(b) motion addresses fewer than
 /// all claims, the pleading in response to the claims not dismissed is
 /// filed 14 days after entry of the order resolving the motion.
 deadline remaining-claims-response-period: 14.days after PartialDismissalOrderEntered() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 12.2"
+
+test "Counting boundary: remaining-claims-response-period (weekend)" cite "D.N.J. L. Civ. R. 12.2"
+{
+  given PartialDismissalOrderEntered() on 2026-10-24
+  expect deadline(remaining-claims-response-period) == 2026-11-09
+}
 /// L.Civ.R. 26.1(b)(2): the initial Fed. R. Civ. P. 26(f) meeting is
 /// convened at least 21 days before the initial scheduling conference.
 deadline parties-meeting-period: 21.days before InitialSchedulingConference() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 26.1(b)"
+
+test "Counting boundary: parties-meeting-period (weekend)" cite "D.N.J. L. Civ. R. 26.1(b)"
+{
+  given InitialSchedulingConference() on 2026-10-24
+  expect deadline(parties-meeting-period) == 2026-10-02
+}
 /// L.Civ.R. 26.1(b)(2): the proposed discovery plan generated at the
 /// meeting is delivered to the Magistrate Judge within 14 days after it.
 deadline discovery-plan-period: 14.days after PartiesMeeting() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 26.1(b)"
+
+test "Counting boundary: discovery-plan-period (weekend)" cite "D.N.J. L. Civ. R. 26.1(b)"
+{
+  given PartiesMeeting() on 2026-10-24
+  expect deadline(discovery-plan-period) == 2026-11-09
+}
 /// L.Civ.R. 26.1(b)(2): unless stipulated or directed otherwise, initial
 /// disclosures under Fed. R. Civ. P. 26(a)(1) are made within 14 days after
 /// the initial meeting of the parties.
 deadline initial-disclosures-period: 14.days after PartiesMeeting() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 26.1(b)"
+
+test "Counting boundary: initial-disclosures-period (weekend)" cite "D.N.J. L. Civ. R. 26.1(b)"
+{
+  given PartiesMeeting() on 2026-10-24
+  expect deadline(initial-disclosures-period) == 2026-11-09
+}
 /// L.Civ.R. 41.1(b): within 60 days after entry of the order
 /// administratively terminating a settled case, counsel file the papers to
 /// dismiss it under Fed. R. Civ. P. 41(a)(1)(A)(ii); otherwise the court
@@ -168,39 +234,93 @@ deadline settlement-dismissal-period: 60.days after AdministrativeTerminationEnt
 /// failure waives all costs. The period from a post-trial order runs from
 /// an event this layer does not model.
 deadline bill-of-costs-period: 30.days after CostsJudgmentEntered() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 54.1(a)"
+
+test "Counting boundary: bill-of-costs-period (weekend)" cite "D.N.J. L. Civ. R. 54.1(a)"
+{
+  given CostsJudgmentEntered() on 2026-10-22
+  expect deadline(bill-of-costs-period) == 2026-11-23
+}
 /// L.Civ.R. 54.1(h): a dissatisfied party appeals the Clerk's taxation to
 /// the court by notice of motion served within seven days of the Clerk's
 /// action, as Fed. R. Civ. P. 54(d) provides.
 deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 54.1(h)"
+
+test "Counting boundary: costs-review-period (weekend)" cite "D.N.J. L. Civ. R. 54.1(h)"
+{
+  given CostsTaxed() on 2026-10-24
+  expect deadline(costs-review-period) == 2026-11-02
+}
 /// L.Civ.R. 54.2(a): where a counsel fee is allowed by the court or
 /// permitted by statute, the motion for fees and expenses is filed within
 /// 30 days of entry of the judgment or order, unless the court extends it.
 deadline fee-motion-period: 30.days after FeeJudgmentEntered() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 54.2(a)"
+
+test "Counting boundary: fee-motion-period (weekend)" cite "D.N.J. L. Civ. R. 54.2(a)"
+{
+  given FeeJudgmentEntered() on 2026-10-22
+  expect deadline(fee-motion-period) == 2026-11-23
+}
 /// L.Civ.R. 58.1(b): in cases under Fed. R. Civ. P. 58(b)(2), the
 /// prevailing party submits a judgment or order on notice within seven days
 /// after the determination.
 deadline proposed-judgment-period: 7.days after JudgmentDetermined() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 58.1(b)"
+
+test "Counting boundary: proposed-judgment-period (weekend)" cite "D.N.J. L. Civ. R. 58.1(b)"
+{
+  given JudgmentDetermined() on 2026-10-24
+  expect deadline(proposed-judgment-period) == 2026-11-02
+}
 /// L.Civ.R. 58.1(b): unless the court directs otherwise, the judgment may be
 /// signed if no specific objection is received from the adversary within
 /// seven days of receipt of the prevailing party's judgment or order.
 deadline proposed-judgment-objection-period: 7.days after ProposedJudgmentReceived() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 58.1(b)"
+
+test "Counting boundary: proposed-judgment-objection-period (weekend)" cite "D.N.J. L. Civ. R. 58.1(b)"
+{
+  given ProposedJudgmentReceived() on 2026-10-24
+  expect deadline(proposed-judgment-objection-period) == 2026-11-02
+}
 /// L.Civ.R. 72.1(c)(1)(A): a party appeals a magistrate judge's
 /// determination of a non-dispositive matter within 14 days after being
 /// served with the order; a timely motion for reargument under L.Civ.R.
 /// 7.1(i) restarts the period from service of the order deciding it.
 deadline magistrate-order-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 72.1(c)"
+
+test "Counting boundary: magistrate-order-appeal-period (weekend)" cite "D.N.J. L. Civ. R. 72.1(c)"
+{
+  given MagistrateOrderServed() on 2026-10-24
+  expect deadline(magistrate-order-appeal-period) == 2026-11-09
+}
 /// L.Civ.R. 72.1(c)(2): a party objects to a magistrate judge's proposed
 /// findings, recommendations or report within 14 days after being served
 /// with a copy.
 deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 72.1(c)"
+
+test "Counting boundary: magistrate-report-objection-period (weekend)" cite "D.N.J. L. Civ. R. 72.1(c)"
+{
+  given MagistrateReportServed() on 2026-10-24
+  expect deadline(magistrate-report-objection-period) == 2026-11-09
+}
 /// L.Civ.R. 73.1(d): the form consenting to trial before a magistrate judge
 /// is filed not later than 21 days after the final pretrial conference.
 deadline magistrate-consent-period: 21.days after FinalPretrialConference() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 73.1(d)"
+
+test "Counting boundary: magistrate-consent-period (holiday)" cite "D.N.J. L. Civ. R. 73.1(d)"
+{
+  given FinalPretrialConference() on 2026-10-21
+  expect deadline(magistrate-consent-period) == 2026-11-12
+}
 /// L.Civ.R. 201.1(h)(1): a demand for trial de novo is filed and served
 /// within 30 days after the arbitration award is filed and served; the
 /// period is 60 days in an action to which the United States or its
 /// employee or agency is a party (below).
 deadline trial-de-novo-demand-period: 30.days after ArbitrationAwardServed() counted_by frcp6-new-jersey cite "D.N.J. L. Civ. R. 201.1(h)"
+
+test "Counting boundary: trial-de-novo-demand-period (weekend)" cite "D.N.J. L. Civ. R. 201.1(h)"
+{
+  given ArbitrationAwardServed() on 2026-10-22
+  expect deadline(trial-de-novo-demand-period) == 2026-11-23
+}
 /// L.Civ.R. 201.1(h)(1): in an action to which the United States or any of
 /// its employees or agencies is a party, the demand for trial de novo is
 /// filed and served within 60 days.

@@ -62,6 +62,12 @@ deadline response-period: 21.days after OpposedMotionFiled() counted_by frcp6-te
   forum frcp
 }
 
+test "Counting boundary: response-period (weekend)" cite "S.D. Tex. LR 7.3"
+{
+  given OpposedMotionFiled() on 2026-03-28
+  expect deadline(response-period) == 2026-04-20
+}
+
 /// S.D. Tex. LR 7.4(E): unless the presiding judge directs otherwise, the
 /// movant may file a reply brief within 7 days from the date the response
 /// is filed.
@@ -73,12 +79,24 @@ deadline reply-period: 7.days after ResponseFiled() counted_by frcp6-texas deleg
   forum frcp
 }
 
+test "Counting boundary: reply-period (weekend)" cite "S.D. Tex. LR 7.4"
+{
+  given ResponseFiled() on 2026-03-28
+  expect deadline(reply-period) == 2026-04-06
+}
+
 /// S.D. Tex. LR 16.4(E): a party opposing the ADR referral, method or
 /// appointed provider files written objections, with its reasons, within
 /// ten days of entry of the order for ADR.
 deadline adr-objection-period: 10.days after AdrOrderEntered() counted_by frcp6-texas cite "S.D. Tex. LR 16.4"
 {
   forum frcp
+}
+
+test "Counting boundary: adr-objection-period (weekend)" cite "S.D. Tex. LR 16.4"
+{
+  given AdrOrderEntered() on 2026-04-01
+  expect deadline(adr-objection-period) == 2026-04-13
 }
 
 /// S.D. Tex. LR 16.4(K): within 14 days of completion of the ADR
@@ -99,12 +117,24 @@ deadline authentication-objection-period: 7.days after ExhibitListed() counted_b
   forum frcp
 }
 
+test "Counting boundary: authentication-objection-period (weekend)" cite "S.D. Tex. LR 44.1"
+{
+  given ExhibitListed() on 2026-03-28
+  expect deadline(authentication-objection-period) == 2026-04-06
+}
+
 /// S.D. Tex. LR 46: objections to the admissibility of exhibits are made at
 /// least 7 days before trial, in writing, with copies of the disputed
 /// exhibit and authority.
 deadline admissibility-objection-period: 7.days before TrialDate() counted_by frcp6-texas cite "S.D. Tex. LR 46"
 {
   forum frcp
+}
+
+test "Counting boundary: admissibility-objection-period (weekend)" cite "S.D. Tex. LR 46"
+{
+  given TrialDate() on 2026-03-28
+  expect deadline(admissibility-objection-period) == 2026-03-20
 }
 
 /// S.D. Tex. LR 54.2: a bill of costs, with any application for attorney's
@@ -122,12 +152,24 @@ deadline bill-of-costs-objection-period: 7.days after BillOfCostsFiled() counted
   forum frcp
 }
 
+test "Counting boundary: bill-of-costs-objection-period (weekend)" cite "S.D. Tex. LR 54.2"
+{
+  given BillOfCostsFiled() on 2026-03-28
+  expect deadline(bill-of-costs-objection-period) == 2026-04-06
+}
+
 /// S.D. Tex. LR 79.2(A): exhibits not easily stored in a file folder are
 /// withdrawn within 7 days after the completion of the trial, and reduced
 /// reproductions or photographs substituted.
 deadline oversized-exhibit-withdrawal: 7.days after TrialCompleted() counted_by frcp6-texas cite "S.D. Tex. LR 79.2"
 {
   forum frcp
+}
+
+test "Counting boundary: oversized-exhibit-withdrawal (weekend)" cite "S.D. Tex. LR 79.2"
+{
+  given TrialCompleted() on 2026-03-28
+  expect deadline(oversized-exhibit-withdrawal) == 2026-04-06
 }
 
 /// S.D. Tex. LR 79.2(B): if there is no appeal, the offering party removes
@@ -137,6 +179,12 @@ deadline oversized-exhibit-withdrawal: 7.days after TrialCompleted() counted_by 
 deadline exhibit-removal: 30.days after DispositionWithoutAppeal() counted_by frcp6-texas cite "S.D. Tex. LR 79.2"
 {
   forum frcp
+}
+
+test "Counting boundary: exhibit-removal (weekend)" cite "S.D. Tex. LR 79.2"
+{
+  given DispositionWithoutAppeal() on 2026-03-27
+  expect deadline(exhibit-removal) == 2026-04-27
 }
 
 /// S.D. Tex. LR 79.2(B): when there is an appeal, exhibits returned by the

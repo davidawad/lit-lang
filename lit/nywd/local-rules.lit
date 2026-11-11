@@ -127,6 +127,12 @@ deadline unsealed-filing-period: 14.days after SealingDenied() counted_by frcp6-
   forum frcp
 }
 
+test "Counting boundary: unsealed-filing-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 5.3(g)"
+{
+  given SealingDenied() on 2026-01-17
+  expect deadline(unsealed-filing-period) == 2026-02-02
+}
+
 /// Loc. R. Civ. P. 5.5(f): the judgment in a Social Security action is
 /// final and not appealable 60 days after entry; unless stipulated, an
 /// EAJA petition may not be filed before then.
@@ -142,11 +148,23 @@ deadline eaja-petition-period: 30.days after SocialSecurityJudgmentFinal() count
   forum frcp
 }
 
+test "Counting boundary: eaja-petition-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
+{
+  given SocialSecurityJudgmentFinal() on 2026-01-15
+  expect deadline(eaja-petition-period) == 2026-02-17
+}
+
 /// Loc. R. Civ. P. 5.5(f): the defendant has 30 days to respond to the
 /// EAJA petition.
 deadline eaja-response-period: 30.days after EajaPetitionFiled() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
 {
   forum frcp
+}
+
+test "Counting boundary: eaja-response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
+{
+  given EajaPetitionFiled() on 2026-01-15
+  expect deadline(eaja-response-period) == 2026-02-17
 }
 
 /// Loc. R. Civ. P. 5.5(g)(4): within 30 days of service of a § 406(b)
@@ -159,12 +177,24 @@ deadline fee-petition-response-period: 30.days after FeePetitionServed() counted
   forum frcp
 }
 
+test "Counting boundary: fee-petition-response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 5.5(g)"
+{
+  given FeePetitionServed() on 2026-01-15
+  expect deadline(fee-petition-response-period) == 2026-02-17
+}
+
 /// Loc. R. Civ. P. 7(a)(2)(C): a party seeking to exceed the page limit
 /// applies by letter at least 7 days before the date the memorandum must
 /// be filed.
 deadline page-extension-request-period: 7.days before MemorandumDue() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: page-extension-request-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(a)"
+{
+  given MemorandumDue() on 2026-01-17
+  expect deadline(page-extension-request-period) == 2026-01-09
 }
 
 /// Loc. R. Civ. P. 7(b)(2)(A): absent a scheduling order, the party
@@ -175,11 +205,23 @@ deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionSe
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  given SummaryJudgmentMotionServed() on 2026-01-17
+  expect deadline(summary-judgment-response-period) == 2026-02-17
+}
+
 /// Loc. R. Civ. P. 7(b)(2)(A): the moving party has 14 days after service
 /// of the responding papers to file and serve reply papers.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: summary-judgment-reply-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  given SummaryJudgmentResponseServed() on 2026-01-17
+  expect deadline(summary-judgment-reply-period) == 2026-02-02
 }
 
 /// Loc. R. Civ. P. 7(b)(2)(A): if the opposing party cross-moves, the
@@ -189,11 +231,23 @@ deadline cross-motion-response-period: 28.days after CrossMotionServed() counted
   forum frcp
 }
 
+test "Counting boundary: cross-motion-response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  given CrossMotionServed() on 2026-01-17
+  expect deadline(cross-motion-response-period) == 2026-02-17
+}
+
 /// Loc. R. Civ. P. 7(b)(2)(A): the cross-moving party has 14 days after
 /// service of the responding papers to reply.
 deadline cross-motion-reply-period: 14.days after CrossMotionResponseServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: cross-motion-reply-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  given CrossMotionResponseServed() on 2026-01-17
+  expect deadline(cross-motion-reply-period) == 2026-02-02
 }
 
 /// Loc. R. Civ. P. 7(b)(2)(B): on all other motions, absent a scheduling
@@ -204,11 +258,23 @@ deadline response-period: 14.days after MotionServed() counted_by frcp6-new-york
   forum frcp
 }
 
+test "Counting boundary: response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  given MotionServed() on 2026-01-17
+  expect deadline(response-period) == 2026-02-02
+}
+
 /// Loc. R. Civ. P. 7(b)(2)(B): the moving party has 7 days after service
 /// of the responding papers to file and serve reply papers.
 deadline reply-period: 7.days after ResponseServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: reply-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  given ResponseServed() on 2026-01-17
+  expect deadline(reply-period) == 2026-01-26
 }
 
 /// Loc. R. Civ. P. 15(c): unless the order sets a different deadline, the
@@ -219,11 +285,23 @@ deadline amended-pleading-period: 14.days after AmendmentGranted() counted_by fr
   forum frcp
 }
 
+test "Counting boundary: amended-pleading-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 15(c)"
+{
+  given AmendmentGranted() on 2026-01-17
+  expect deadline(amended-pleading-period) == 2026-02-02
+}
+
 /// Loc. R. Civ. P. 16(c)(2): the plaintiff provides a written settlement
 /// demand at least 14 days before the first settlement conference.
 deadline settlement-demand-period: 14.days before SettlementConferenceHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: settlement-demand-period (holiday)" cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
+{
+  given SettlementConferenceHeld() on 2026-01-15
+  expect deadline(settlement-demand-period) == 2025-12-31
 }
 
 /// Loc. R. Civ. P. 16(c)(2): the defendant responds to the demand in
@@ -233,12 +311,24 @@ deadline settlement-response-period: 7.days before SettlementConferenceHeld() co
   forum frcp
 }
 
+test "Counting boundary: settlement-response-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
+{
+  given SettlementConferenceHeld() on 2026-01-17
+  expect deadline(settlement-response-period) == 2026-01-09
+}
+
 /// Loc. R. Civ. P. 16(e)(2): no later than 14 days before the final
 /// pretrial conference, or another date the Court sets, each party files
 /// and serves a pretrial statement.
 deadline pretrial-statement-period: 14.days before FinalPretrialConferenceHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 16(e)"
 {
   forum frcp
+}
+
+test "Counting boundary: pretrial-statement-period (holiday)" cite "W.D.N.Y. Loc. R. Civ. P. 16(e)"
+{
+  given FinalPretrialConferenceHeld() on 2026-01-15
+  expect deadline(pretrial-statement-period) == 2025-12-31
 }
 
 /// Loc. R. Civ. P. 26(d)(3): where a privilege asserted at a deposition
@@ -250,11 +340,23 @@ deadline deposition-privilege-log-period: 14.days after PrivilegeAssertedAtDepos
   forum frcp
 }
 
+test "Counting boundary: deposition-privilege-log-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 26(d)"
+{
+  given PrivilegeAssertedAtDeposition() on 2026-01-17
+  expect deadline(deposition-privilege-log-period) == 2026-02-02
+}
+
 /// Loc. R. Civ. P. 30(a): absent agreement or order, each deposition
 /// notice is served at least 21 days before the date set for examination.
 deadline deposition-notice-period: 21.days before DepositionHeld() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 30(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: deposition-notice-period (holiday)" cite "W.D.N.Y. Loc. R. Civ. P. 30(a)"
+{
+  given DepositionHeld() on 2026-01-15
+  expect deadline(deposition-notice-period) == 2025-12-24
 }
 
 /// Loc. R. Civ. P. 30(b): a deposition at which documents are sought is
@@ -265,12 +367,24 @@ deadline deposition-documents-period: 7.days before DepositionHeld() counted_by 
   forum frcp
 }
 
+test "Counting boundary: deposition-documents-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 30(b)"
+{
+  given DepositionHeld() on 2026-01-17
+  expect deadline(deposition-documents-period) == 2026-01-09
+}
+
 /// Loc. R. Civ. P. 30(c)(4): unresolved objections in a video deposition
 /// are submitted by motion in limine no later than 7 days before trial or
 /// any earlier deadline the Court sets.
 deadline video-objection-motion-period: 7.days before TrialBegins() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 30(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: video-objection-motion-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 30(c)"
+{
+  given TrialBegins() on 2026-01-17
+  expect deadline(video-objection-motion-period) == 2026-01-09
 }
 
 /// Loc. R. Civ. P. 41(a): when a case is settled, the parties file a
@@ -281,11 +395,23 @@ deadline stipulation-of-dismissal-period: 14.days after CaseSettled() counted_by
   forum frcp
 }
 
+test "Counting boundary: stipulation-of-dismissal-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 41(a)"
+{
+  given CaseSettled() on 2026-01-17
+  expect deadline(stipulation-of-dismissal-period) == 2026-02-02
+}
+
 /// Loc. R. Civ. P. 54(a): within 30 days after entry of final judgment, a
 /// party entitled to costs submits a verified Bill of Costs to the Clerk.
 deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 54(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: bill-of-costs-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 54(a)"
+{
+  given FinalJudgmentEntered() on 2026-01-15
+  expect deadline(bill-of-costs-period) == 2026-02-17
 }
 
 /// Loc. R. Civ. P. 54(b): the opposing party files any memorandum in
@@ -295,11 +421,23 @@ deadline cost-opposition-period: 21.days after BillOfCostsServed() counted_by fr
   forum frcp
 }
 
+test "Counting boundary: cost-opposition-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 54(b)"
+{
+  given BillOfCostsServed() on 2026-01-17
+  expect deadline(cost-opposition-period) == 2026-02-09
+}
+
 /// Loc. R. Civ. P. 54(c): the prevailing party files any reply within 21
 /// days of service of the opposing memorandum.
 deadline cost-reply-period: 21.days after CostOppositionServed() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 54(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: cost-reply-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 54(c)"
+{
+  given CostOppositionServed() on 2026-01-17
+  expect deadline(cost-reply-period) == 2026-02-09
 }
 
 /// Loc. R. Civ. P. 72(b): a party seeking more time to object to a
@@ -310,12 +448,24 @@ deadline objection-extension-period: 14.days after RecommendationServed() counte
   forum frcp
 }
 
+test "Counting boundary: objection-extension-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 72(b)"
+{
+  given RecommendationServed() on 2026-01-17
+  expect deadline(objection-extension-period) == 2026-02-02
+}
+
 /// Loc. R. Civ. P. 79(c): a party that does not remove paper or physical
 /// exhibits within 30 days from the Clerk's notice may have them destroyed
 /// or otherwise disposed of.
 deadline exhibit-removal-period: 30.days after ExhibitRemovalNoticeGiven() counted_by frcp6-new-york cite "W.D.N.Y. Loc. R. Civ. P. 79(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: exhibit-removal-period (weekend)" cite "W.D.N.Y. Loc. R. Civ. P. 79(c)"
+{
+  given ExhibitRemovalNoticeGiven() on 2026-01-15
+  expect deadline(exhibit-removal-period) == 2026-02-17
 }
 
 test "unsealed filing period: 14 days after the trigger" cite "W.D.N.Y. Loc. R. Civ. P. 5.3(g)"

@@ -62,6 +62,12 @@ deadline victim-subpoena-objection: 14.days after VictimSubpoenaNoticeServed() c
   forum frcrimp
 }
 
+test "Counting boundary: victim-subpoena-objection (weekend)" cite "D. Wyo. L.Cr.R. 17.1(d)"
+{
+  given VictimSubpoenaNoticeServed() on 2026-08-01
+  expect deadline(victim-subpoena-objection) == 2026-08-17
+}
+
 /// D. Wyo. L.Cr.R. 30.1: unless otherwise ordered, the parties file
 /// proposed voir dire, jury instructions and verdict forms seven calendar
 /// days before trial.
@@ -73,6 +79,12 @@ deadline voir-dire-instructions-verdict-forms: 7.days before TrialScheduled() co
   forum frcrimp
 }
 
+test "Counting boundary: voir-dire-instructions-verdict-forms (weekend)" cite "D. Wyo. L.Cr.R. 30.1"
+{
+  given TrialScheduled() on 2026-08-01
+  expect deadline(voir-dire-instructions-verdict-forms) == 2026-07-24
+}
+
 /// D. Wyo. L.Cr.R. 32.1(b): under 18 U.S.C. § 3664(d)(1), the attorney for
 /// the government gives the probation officer a listing of the amounts
 /// subject to restitution not later than 60 days before the date initially
@@ -80,6 +92,12 @@ deadline voir-dire-instructions-verdict-forms: 7.days before TrialScheduled() co
 deadline restitution-listing: 60.days before SentencingScheduled() counted_by frcrimp45 cite "D. Wyo. L.Cr.R. 32.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: restitution-listing (weekend)" cite "D. Wyo. L.Cr.R. 32.1(b)"
+{
+  given SentencingScheduled() on 2026-08-05
+  expect deadline(restitution-listing) == 2026-06-05
 }
 
 /// D. Wyo. L.Cr.R. 32.1(e): if counsel believe the material in the
@@ -90,12 +108,24 @@ deadline psr-accuracy-statement: 14.days after PsrFiled() counted_by frcrimp45 c
   forum frcrimp
 }
 
+test "Counting boundary: psr-accuracy-statement (weekend)" cite "D. Wyo. L.Cr.R. 32.1(e)"
+{
+  given PsrFiled() on 2026-08-01
+  expect deadline(psr-accuracy-statement) == 2026-08-17
+}
+
 /// D. Wyo. L.Cr.R. 44.1(e)(1): CJA Form 20 is submitted to the Clerk's
 /// office for payment no later than 45 days from the termination of the
 /// case in this Court.
 deadline cja-form-20: 45.days after CaseTerminated() counted_by frcrimp45 cite "D. Wyo. L.Cr.R. 44.1(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: cja-form-20 (weekend)" cite "D. Wyo. L.Cr.R. 44.1(e)"
+{
+  given CaseTerminated() on 2026-08-05
+  expect deadline(cja-form-20) == 2026-09-21
 }
 
 /// D. Wyo. L.Cr.R. 47.1(a): unless otherwise ordered, a party opposing a
@@ -109,6 +139,12 @@ deadline response-period: 14.days after MotionFiled() counted_by frcrimp45 deleg
   forum frcrimp
 }
 
+test "Counting boundary: response-period (weekend)" cite "D. Wyo. L.Cr.R. 47.1(a)"
+{
+  given MotionFiled() on 2026-08-01
+  expect deadline(response-period) == 2026-08-17
+}
+
 /// D. Wyo. L.Cr.R. 55.1(b): exhibits are kept until the time to appeal has
 /// expired or any appeal has concluded; if counsel has not retrieved them
 /// fourteen days after the Clerk's notice, the Clerk's office destroys
@@ -116,6 +152,12 @@ deadline response-period: 14.days after MotionFiled() counted_by frcrimp45 deleg
 deadline exhibit-retrieval: 14.days after ExhibitRetrievalNoticed() counted_by frcrimp45 cite "D. Wyo. L.Cr.R. 55.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-retrieval (weekend)" cite "D. Wyo. L.Cr.R. 55.1(b)"
+{
+  given ExhibitRetrievalNoticed() on 2026-08-01
+  expect deadline(exhibit-retrieval) == 2026-08-17
 }
 
 test "victim subpoena objection: 14 days after the trigger" cite "D. Wyo. L.Cr.R. 17.1(d)"

@@ -155,6 +155,12 @@ deadline fax-replacement-period: 7.days after DocumentFaxed() counted_by frcp6-i
   forum frcp
 }
 
+test "Counting boundary: fax-replacement-period (weekend)" cite "S.D. Ind. L.R. 5-10(e)"
+{
+  given DocumentFaxed() on 2026-07-04
+  expect deadline(fax-replacement-period) == 2026-07-13
+}
+
 /// S.D. Ind. L.R. 5-11(d)(5): the designating party, within 14 days of
 /// service of the Motion to Maintain Document(s) under Seal, files a
 /// Statement Authorizing Unsealing, or a Brief in Support with a redacted
@@ -164,12 +170,24 @@ deadline seal-designation-period: 14.days after SealMotionServed() counted_by fr
   forum frcp
 }
 
+test "Counting boundary: seal-designation-period (weekend)" cite "S.D. Ind. L.R. 5-11(d)"
+{
+  given SealMotionServed() on 2026-07-04
+  expect deadline(seal-designation-period) == 2026-07-20
+}
+
 /// S.D. Ind. L.R. 5-11(f): any opposition to a Motion to Maintain
 /// Document(s) Under Seal is filed within 14 days of service of the Brief
 /// in Support; a member of the public may challenge a sealing at any time.
 deadline seal-opposition-period: 14.days after SealBriefServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 5-11(f)"
 {
   forum frcp
+}
+
+test "Counting boundary: seal-opposition-period (weekend)" cite "S.D. Ind. L.R. 5-11(f)"
+{
+  given SealBriefServed() on 2026-07-04
+  expect deadline(seal-opposition-period) == 2026-07-20
 }
 
 /// S.D. Ind. L.R. 5-12(b): finding good cause to revise the briefing times
@@ -182,6 +200,12 @@ deadline social-security-opening-brief-period: 56.days after SocialSecuritySched
   forum frcp
 }
 
+test "Counting boundary: social-security-opening-brief-period (weekend)" cite "S.D. Ind. L.R. 5-12(b)"
+{
+  given SocialSecuritySchedulingOrderEntered() on 2026-07-04
+  expect deadline(social-security-opening-brief-period) == 2026-08-31
+}
+
 /// S.D. Ind. L.R. 5-12(b): the defendant has 56 days after service of the
 /// plaintiff's brief to file a response.
 deadline social-security-response-period: 56.days after SocialSecurityOpeningBriefServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 5-12(b)"
@@ -189,11 +213,23 @@ deadline social-security-response-period: 56.days after SocialSecurityOpeningBri
   forum frcp
 }
 
+test "Counting boundary: social-security-response-period (weekend)" cite "S.D. Ind. L.R. 5-12(b)"
+{
+  given SocialSecurityOpeningBriefServed() on 2026-07-04
+  expect deadline(social-security-response-period) == 2026-08-31
+}
+
 /// S.D. Ind. L.R. 5-12(b): the plaintiff has 28 days after service of the
 /// response brief to file a reply.
 deadline social-security-reply-period: 28.days after SocialSecurityResponseServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 5-12(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: social-security-reply-period (weekend)" cite "S.D. Ind. L.R. 5-12(b)"
+{
+  given SocialSecurityResponseServed() on 2026-07-04
+  expect deadline(social-security-reply-period) == 2026-08-03
 }
 
 /// S.D. Ind. L.R. 5.1-1(a): a notice of constitutional challenge under FRCP
@@ -207,6 +243,12 @@ deadline constitutional-challenge-notice-period: 21.days after ConstitutionalCha
   forum frcp
 }
 
+test "Counting boundary: constitutional-challenge-notice-period (weekend)" cite "S.D. Ind. L.R. 5.1-1(a)"
+{
+  given ConstitutionalChallengeFiled() on 2026-07-04
+  expect deadline(constitutional-challenge-notice-period) == 2026-07-27
+}
+
 /// S.D. Ind. L.R. 7-1(c)(2): a party files any response brief to a motion
 /// under FRCP 12(b), (e) or (f) within 21 days after the motion is served,
 /// unless it is entitled to and first files an amended pleading as a
@@ -216,11 +258,23 @@ deadline rule12-response-period: 21.days after Rule12MotionServed() counted_by f
   forum frcp
 }
 
+test "Counting boundary: rule12-response-period (weekend)" cite "S.D. Ind. L.R. 7-1(c)(2)"
+{
+  given Rule12MotionServed() on 2026-07-04
+  expect deadline(rule12-response-period) == 2026-07-27
+}
+
 /// S.D. Ind. L.R. 7-1(c)(2): if a response to a motion to dismiss is filed,
 /// any reply is due within 7 days after service of the response.
 deadline rule12-reply-period: 7.days after Rule12ResponseServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 7-1(c)(2)"
 {
   forum frcp
+}
+
+test "Counting boundary: rule12-reply-period (weekend)" cite "S.D. Ind. L.R. 7-1(c)(2)"
+{
+  given Rule12ResponseServed() on 2026-07-04
+  expect deadline(rule12-reply-period) == 2026-07-13
 }
 
 /// S.D. Ind. L.R. 7-1(c)(3)(A): any response to another motion is due
@@ -231,11 +285,23 @@ deadline motion-response-period: 14.days after MotionServed() counted_by frcp6-i
   forum frcp
 }
 
+test "Counting boundary: motion-response-period (weekend)" cite "S.D. Ind. L.R. 7-1(c)(3)"
+{
+  given MotionServed() on 2026-07-04
+  expect deadline(motion-response-period) == 2026-07-20
+}
+
 /// S.D. Ind. L.R. 7-1(c)(3)(B): any reply is due within 7 days after
 /// service of the response.
 deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 7-1(c)(3)"
 {
   forum frcp
+}
+
+test "Counting boundary: motion-reply-period (weekend)" cite "S.D. Ind. L.R. 7-1(c)(3)"
+{
+  given ResponseServed() on 2026-07-04
+  expect deadline(motion-reply-period) == 2026-07-13
 }
 
 /// S.D. Ind. L.R. 10-1(c): the sealed Notice of intention to proceed under
@@ -246,6 +312,12 @@ deadline pseudonym-service-period: 7.days after OpposingPartyAppeared() counted_
   forum frcp
 }
 
+test "Counting boundary: pseudonym-service-period (weekend)" cite "S.D. Ind. L.R. 10-1(c)"
+{
+  given OpposingPartyAppeared() on 2026-07-04
+  expect deadline(pseudonym-service-period) == 2026-07-13
+}
+
 /// S.D. Ind. L.R. 10-1(d): any objection to the pseudonym motion is filed
 /// by the opposing party within 21 days of its appearance.
 deadline pseudonym-objection-period: 21.days after OpposingPartyAppeared() counted_by frcp6-indiana cite "S.D. Ind. L.R. 10-1(d)"
@@ -253,11 +325,23 @@ deadline pseudonym-objection-period: 21.days after OpposingPartyAppeared() count
   forum frcp
 }
 
+test "Counting boundary: pseudonym-objection-period (weekend)" cite "S.D. Ind. L.R. 10-1(d)"
+{
+  given OpposingPartyAppeared() on 2026-07-04
+  expect deadline(pseudonym-objection-period) == 2026-07-27
+}
+
 /// S.D. Ind. L.R. 10-1(e): if the pseudonym motion is denied, the litigant
 /// has 14 days to file the complaint in his or her true name.
 deadline true-name-complaint-period: 14.days after PseudonymMotionDenied() counted_by frcp6-indiana cite "S.D. Ind. L.R. 10-1(e)"
 {
   forum frcp
+}
+
+test "Counting boundary: true-name-complaint-period (weekend)" cite "S.D. Ind. L.R. 10-1(e)"
+{
+  given PseudonymMotionDenied() on 2026-07-04
+  expect deadline(true-name-complaint-period) == 2026-07-20
 }
 
 /// S.D. Ind. L.R. 16-1(c): unless otherwise ordered or exempted under L.R.
@@ -269,6 +353,12 @@ deadline case-management-plan-period: 90.days after CaseFiledOrRemoved() counted
   forum frcp
 }
 
+test "Counting boundary: case-management-plan-period (weekend)" cite "S.D. Ind. L.R. 16-1(c)"
+{
+  given CaseFiledOrRemoved() on 2026-07-05
+  expect deadline(case-management-plan-period) == 2026-10-05
+}
+
 /// S.D. Ind. L.R. 16-2: within 21 days after the court receives a case
 /// remanded by the court of appeals for further proceedings, or
 /// transferred from another district, each party files a statement of
@@ -278,11 +368,23 @@ deadline remand-position-statement-period: 21.days after RemandOrTransferReceive
   forum frcp
 }
 
+test "Counting boundary: remand-position-statement-period (weekend)" cite "S.D. Ind. L.R. 16-2"
+{
+  given RemandOrTransferReceived() on 2026-07-04
+  expect deadline(remand-position-statement-period) == 2026-07-27
+}
+
 /// S.D. Ind. L.R. 30-1: unless agreed by counsel or otherwise ordered, no
 /// deposition is scheduled on less than 14 days notice.
 deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6-indiana cite "S.D. Ind. L.R. 30-1"
 {
   forum frcp
+}
+
+test "Counting boundary: deposition-notice-period (holiday)" cite "S.D. Ind. L.R. 30-1"
+{
+  given DepositionScheduled() on 2026-07-03
+  expect deadline(deposition-notice-period) == 2026-06-18
 }
 
 /// S.D. Ind. L.R. 40-1(g)(2): a case remanded for a new trial under Seventh
@@ -295,6 +397,12 @@ deadline retrial-judge-request-period: 15.days after NewTrialMandateDocketed() c
   forum frcp
 }
 
+test "Counting boundary: retrial-judge-request-period (weekend)" cite "S.D. Ind. L.R. 40-1(g)"
+{
+  given NewTrialMandateDocketed() on 2026-07-03
+  expect deadline(retrial-judge-request-period) == 2026-07-20
+}
+
 /// S.D. Ind. L.R. 45-1: a copy of a proposed subpoena to produce or permit
 /// is served on all other parties at least 7 days before it is served on a
 /// nonparty, unless the parties agree otherwise or the case management
@@ -302,6 +410,12 @@ deadline retrial-judge-request-period: 15.days after NewTrialMandateDocketed() c
 deadline nonparty-subpoena-notice-period: 7.days before NonpartySubpoenaServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 45-1"
 {
   forum frcp
+}
+
+test "Counting boundary: nonparty-subpoena-notice-period (weekend)" cite "S.D. Ind. L.R. 45-1"
+{
+  given NonpartySubpoenaServed() on 2026-07-04
+  expect deadline(nonparty-subpoena-notice-period) == 2026-06-26
 }
 
 /// S.D. Ind. L.R. 47-3(a): the court may order the parties to pay juror
@@ -313,6 +427,12 @@ deadline jury-cost-notice-period: 1.court_days before TrialBegins() counted_by f
   forum frcp
 }
 
+test "Counting boundary: jury-cost-notice-period (holiday)" cite "S.D. Ind. L.R. 47-3(a)"
+{
+  given TrialBegins() on 2026-07-04
+  expect deadline(jury-cost-notice-period) == 2026-07-02
+}
+
 /// S.D. Ind. L.R. 54-1(a): a party cannot recover attorney's fees and costs
 /// unless it files and serves a bill of costs and a motion for fees within
 /// 14 days after final judgment is entered; the court may extend the
@@ -320,6 +440,12 @@ deadline jury-cost-notice-period: 1.court_days before TrialBegins() counted_by f
 deadline costs-and-fees-period: 14.days after FinalJudgmentEntered() counted_by frcp6-indiana cite "S.D. Ind. L.R. 54-1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: costs-and-fees-period (weekend)" cite "S.D. Ind. L.R. 54-1(a)"
+{
+  given FinalJudgmentEntered() on 2026-07-04
+  expect deadline(costs-and-fees-period) == 2026-07-20
 }
 
 /// S.D. Ind. L.R. 56-1(b): a party opposing summary judgment, within 28
@@ -330,11 +456,23 @@ deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionSe
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-response-period (weekend)" cite "S.D. Ind. L.R. 56-1(b)"
+{
+  given SummaryJudgmentMotionServed() on 2026-07-04
+  expect deadline(summary-judgment-response-period) == 2026-08-03
+}
+
 /// S.D. Ind. L.R. 56-1(c): the movant may file a reply brief within 14
 /// days after a response is served.
 deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 56-1(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: summary-judgment-reply-period (weekend)" cite "S.D. Ind. L.R. 56-1(c)"
+{
+  given SummaryJudgmentResponseServed() on 2026-07-04
+  expect deadline(summary-judgment-reply-period) == 2026-07-20
 }
 
 /// S.D. Ind. L.R. 56-1(d): a party opposing summary judgment may file a
@@ -346,6 +484,12 @@ deadline summary-judgment-surreply-period: 7.days after SummaryJudgmentReplyServ
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-surreply-period (weekend)" cite "S.D. Ind. L.R. 56-1(d)"
+{
+  given SummaryJudgmentReplyServed() on 2026-07-04
+  expect deadline(summary-judgment-surreply-period) == 2026-07-13
+}
+
 /// S.D. Ind. L.R. 66-1(b)(1): within 28 days after taking possession of an
 /// estate, the court-appointed officer files an inventory and appraisal of
 /// the estate's property and assets and, on a separate schedule, an
@@ -353,6 +497,12 @@ deadline summary-judgment-surreply-period: 7.days after SummaryJudgmentReplyServ
 deadline receiver-inventory-period: 28.days after EstatePossessionTaken() counted_by frcp6-indiana cite "S.D. Ind. L.R. 66-1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: receiver-inventory-period (weekend)" cite "S.D. Ind. L.R. 66-1(b)"
+{
+  given EstatePossessionTaken() on 2026-07-04
+  expect deadline(receiver-inventory-period) == 2026-08-03
 }
 
 /// S.D. Ind. L.R. 66-1(b)(2): within 28 days after the inventory is filed,
@@ -363,12 +513,24 @@ deadline receiver-first-report-period: 28.days after EstateInventoryFiled() coun
   forum frcp
 }
 
+test "Counting boundary: receiver-first-report-period (weekend)" cite "S.D. Ind. L.R. 66-1(b)"
+{
+  given EstateInventoryFiled() on 2026-07-04
+  expect deadline(receiver-first-report-period) == 2026-08-03
+}
+
 /// S.D. Ind. L.R. 79-1(b)(1): if the case is not appealed, the party that
 /// offered items into evidence claims them from the clerk within 90 days
 /// after the case is disposed of as to all issues.
 deadline exhibit-claim-period: 90.days after CaseDisposedWithoutAppeal() counted_by frcp6-indiana cite "S.D. Ind. L.R. 79-1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: exhibit-claim-period (weekend)" cite "S.D. Ind. L.R. 79-1(b)"
+{
+  given CaseDisposedWithoutAppeal() on 2026-07-05
+  expect deadline(exhibit-claim-period) == 2026-10-05
 }
 
 /// S.D. Ind. L.R. 79-1(b)(2): if the case is appealed, the offering party
@@ -380,6 +542,12 @@ deadline exhibit-claim-after-appeal-period: 28.days after MandateFiled() counted
   forum frcp
 }
 
+test "Counting boundary: exhibit-claim-after-appeal-period (weekend)" cite "S.D. Ind. L.R. 79-1(b)"
+{
+  given MandateFiled() on 2026-07-04
+  expect deadline(exhibit-claim-after-appeal-period) == 2026-08-03
+}
+
 /// S.D. Ind. L.R. 80-2(a)(2): if any portion of an official transcript is
 /// subject to FRCP 5.2, the attorneys of record file a Notice of Intent to
 /// Request Redaction within 7 days from the date the transcript was filed;
@@ -387,6 +555,12 @@ deadline exhibit-claim-after-appeal-period: 28.days after MandateFiled() counted
 deadline redaction-intent-notice-period: 7.days after TranscriptFiled() counted_by frcp6-indiana cite "S.D. Ind. L.R. 80-2(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: redaction-intent-notice-period (weekend)" cite "S.D. Ind. L.R. 80-2(a)"
+{
+  given TranscriptFiled() on 2026-07-04
+  expect deadline(redaction-intent-notice-period) == 2026-07-13
 }
 
 /// S.D. Ind. L.R. 80-2(a)(3): if redaction of personal data identifiers is
@@ -397,12 +571,24 @@ deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by 
   forum frcp
 }
 
+test "Counting boundary: redaction-statement-period (weekend)" cite "S.D. Ind. L.R. 80-2(a)"
+{
+  given TranscriptFiled() on 2026-07-04
+  expect deadline(redaction-statement-period) == 2026-07-27
+}
+
 /// S.D. Ind. L.R. 80-2(b): a party seeking redaction of information beyond
 /// the personal data identifiers files a Motion to Redact Transcript within
 /// 21 days from the date the transcript was filed.
 deadline redaction-motion-period: 21.days after TranscriptFiled() counted_by frcp6-indiana cite "S.D. Ind. L.R. 80-2(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: redaction-motion-period (weekend)" cite "S.D. Ind. L.R. 80-2(b)"
+{
+  given TranscriptFiled() on 2026-07-04
+  expect deadline(redaction-motion-period) == 2026-07-27
 }
 
 /// S.D. Ind. L.R. 81-1(b): within 30 days after the filing of a notice of
@@ -414,12 +600,24 @@ deadline removal-response-period: 30.days after RemovalNoticeFiled() counted_by 
   forum frcp
 }
 
+test "Counting boundary: removal-response-period (weekend)" cite "S.D. Ind. L.R. 81-1(b)"
+{
+  given RemovalNoticeFiled() on 2026-07-02
+  expect deadline(removal-response-period) == 2026-08-03
+}
+
 /// S.D. Ind. L.R. 81-2(b): a non-removing party files any objection to the
 /// completeness of the State Court Record, and supplements it, within 7
 /// days of service of the notice of removal and record.
 deadline state-court-record-objection-period: 7.days after StateCourtRecordServed() counted_by frcp6-indiana cite "S.D. Ind. L.R. 81-2(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: state-court-record-objection-period (weekend)" cite "S.D. Ind. L.R. 81-2(b)"
+{
+  given StateCourtRecordServed() on 2026-07-04
+  expect deadline(state-court-record-objection-period) == 2026-07-13
 }
 
 /// S.D. Ind. L.R. 81-2(e)(2): a party whose motion remains pending in state
@@ -431,6 +629,12 @@ deadline pending-motion-refiling-period: 7.days after MovantAppeared() counted_b
   forum frcp
 }
 
+test "Counting boundary: pending-motion-refiling-period (weekend)" cite "S.D. Ind. L.R. 81-2(e)"
+{
+  given MovantAppeared() on 2026-07-04
+  expect deadline(pending-motion-refiling-period) == 2026-07-13
+}
+
 /// S.D. Ind. L.R. 83-7(a)(2): an attorney of record not admitted to
 /// practice before the court either complies with its admission policy
 /// (L.R. 83-5, 83-6) or withdraws the appearance within 21 days after the
@@ -438,6 +642,12 @@ deadline pending-motion-refiling-period: 7.days after MovantAppeared() counted_b
 deadline removal-admission-period: 21.days after CaseRemovedOrTransferred() counted_by frcp6-indiana cite "S.D. Ind. L.R. 83-7(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: removal-admission-period (weekend)" cite "S.D. Ind. L.R. 83-7(a)"
+{
+  given CaseRemovedOrTransferred() on 2026-07-04
+  expect deadline(removal-admission-period) == 2026-07-27
 }
 
 /// S.D. Ind. L.R. 83-7(b)(2): a motion to withdraw an appearance fixes a
@@ -449,12 +659,24 @@ deadline withdrawal-notice-period: 7.days before WithdrawalDate() counted_by frc
   forum frcp
 }
 
+test "Counting boundary: withdrawal-notice-period (weekend)" cite "S.D. Ind. L.R. 83-7(b)"
+{
+  given WithdrawalDate() on 2026-07-04
+  expect deadline(withdrawal-notice-period) == 2026-06-26
+}
+
 /// S.D. Ind. L.R. 87: if recruited counsel and the litigant enter into a
 /// fee agreement providing for fees, counsel files a Notice of Fee
 /// Agreement, which may be ex parte, within 28 days after it is executed.
 deadline recruited-fee-agreement-notice-period: 28.days after RecruitedFeeAgreementExecuted() counted_by frcp6-indiana cite "S.D. Ind. L.R. 87"
 {
   forum frcp
+}
+
+test "Counting boundary: recruited-fee-agreement-notice-period (weekend)" cite "S.D. Ind. L.R. 87"
+{
+  given RecruitedFeeAgreementExecuted() on 2026-07-04
+  expect deadline(recruited-fee-agreement-notice-period) == 2026-08-03
 }
 
 test "Deadline arithmetic: fax-replacement-period (7 days after)" cite "S.D. Ind. L.R. 5-10(e)"

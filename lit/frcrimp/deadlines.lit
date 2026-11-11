@@ -66,6 +66,18 @@ deadline prelim-released: 21.days after InitialAppearance(Released) counted_by f
   op set
 } cite "FRCrimP 5.1(c); FRCrimP 5.1(d)"
 
+test "Counting boundary: prelim-released (holiday)" cite "FRCrimP 5.1(c); FRCrimP 5.1(d)"
+{
+  given InitialAppearance(Released) on 2009-12-04
+  expect deadline(prelim-released) == 2009-12-28
+}
+
+test "Counting boundary: prelim-released (holiday) [repeat 2]" cite "FRCrimP 5.1(c); FRCrimP 5.1(d)"
+{
+  given InitialAppearance(Released) on 2009-12-04
+  expect deadline(prelim-released) == 2009-12-28
+}
+
 /// 30 days from arrest or summons to indictment or information; an
 /// ends-of-justice continuance excludes time (§ 3161(h)(7)).
 deadline indictment-period: 30.days after Arrested() counted_by frcrimp45 effective [2024-12-01, ..) delegable {
@@ -104,6 +116,12 @@ deadline rule33-period: 14.days after VerdictOrDischarge(Verdict) counted_by frc
   to CaseOrder
   op set
 } cite "FRCrimP 33(b)(2); FRCrimP 45(b)(1)"
+
+test "Counting boundary: rule33-period (weekend)" cite "FRCrimP 33(b)(2); FRCrimP 45(b)(1)"
+{
+  given VerdictOrDischarge(Verdict) on 2023-12-02
+  expect deadline(rule33-period) == 2023-12-18
+}
 
 /// At least 35 days before sentencing, unless the defendant waives it;
 /// Rule 32(b)(2) lets the court change any Rule 32 time limit for good

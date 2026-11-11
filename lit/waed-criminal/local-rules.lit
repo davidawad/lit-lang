@@ -67,6 +67,12 @@ deadline plea-objection-response: 7.days after PleaObjectionsServed() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: plea-objection-response (weekend)" cite "E.D. Wash. LCrR 11(i)"
+{
+  given PleaObjectionsServed() on 2015-02-21
+  expect deadline(plea-objection-response) == 2015-03-02
+}
+
 /// E.D. Wash. LCrR 16(a): absent notice to the contrary, at arraignment or
 /// within fourteen (14) days thereafter the government makes its Rule 16(a),
 /// interception, search warrant, warrantless seizure, identification and
@@ -74,6 +80,12 @@ deadline plea-objection-response: 7.days after PleaObjectionsServed() counted_by
 deadline government-disclosure: 14.days after Arraigned() counted_by frcrimp45 cite "E.D. Wash. LCrR 16(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: government-disclosure (weekend)" cite "E.D. Wash. LCrR 16(a)"
+{
+  given Arraigned() on 2015-02-21
+  expect deadline(government-disclosure) == 2015-03-09
 }
 
 /// E.D. Wash. LCrR 16(a)(7)-(9): no later than twenty-eight (28) days
@@ -84,11 +96,23 @@ deadline government-pretrial-disclosure: 28.days before TrialScheduled() counted
   forum frcrimp
 }
 
+test "Counting boundary: government-pretrial-disclosure (weekend)" cite "E.D. Wash. LCrR 16(a)"
+{
+  given TrialScheduled() on 2015-02-21
+  expect deadline(government-pretrial-disclosure) == 2015-01-23
+}
+
 /// E.D. Wash. LCrR 16(b): no later than fourteen (14) days before trial,
 /// the defense makes its Rule 16(b) case-in-chief material available.
 deadline defense-disclosure: 14.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 16(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defense-disclosure (weekend)" cite "E.D. Wash. LCrR 16(b)"
+{
+  given TrialScheduled() on 2015-02-21
+  expect deadline(defense-disclosure) == 2015-02-06
 }
 
 /// E.D. Wash. LCrR 16(b)(1), (2): no later than twenty-one (21) days before
@@ -98,6 +122,12 @@ deadline defense-disclosure: 14.days before TrialScheduled() counted_by frcrimp4
 deadline defense-notices: 21.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 16(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defense-notices (weekend)" cite "E.D. Wash. LCrR 16(b)"
+{
+  given TrialScheduled() on 2015-02-21
+  expect deadline(defense-notices) == 2015-01-30
 }
 
 /// E.D. Wash. LCrR 23(d): each party files and serves any trial brief no
@@ -111,11 +141,23 @@ deadline trial-brief: 7.days before TrialScheduled() counted_by frcrimp45 delega
   forum frcrimp
 }
 
+test "Counting boundary: trial-brief (weekend)" cite "E.D. Wash. LCrR 23(d)"
+{
+  given TrialScheduled() on 2015-02-21
+  expect deadline(trial-brief) == 2015-02-13
+}
+
 /// E.D. Wash. LCrR 24(a): each party files and serves any suggested voir
 /// dire questions no later than seven (7) days before trial.
 deadline voir-dire-questions: 7.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 24(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: voir-dire-questions (weekend)" cite "E.D. Wash. LCrR 24(a)"
+{
+  given TrialScheduled() on 2015-02-21
+  expect deadline(voir-dire-questions) == 2015-02-13
 }
 
 /// E.D. Wash. LCrR 30(a): each party files and serves proposed jury
@@ -126,11 +168,23 @@ deadline jury-instructions: 7.days before TrialScheduled() counted_by frcrimp45 
   forum frcrimp
 }
 
+test "Counting boundary: jury-instructions (weekend)" cite "E.D. Wash. LCrR 30(a)"
+{
+  given TrialScheduled() on 2015-02-21
+  expect deadline(jury-instructions) == 2015-02-13
+}
+
 /// E.D. Wash. LCrR 58(g)(2)(E): the appellant's brief is filed and served
 /// within twenty-eight (28) days after the filing of the notice of appeal.
 deadline magistrate-appeal-appellant-brief: 28.days after MagistrateAppealNoticed() counted_by frcrimp45 cite "E.D. Wash. LCrR 58(g)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: magistrate-appeal-appellant-brief (weekend)" cite "E.D. Wash. LCrR 58(g)"
+{
+  given MagistrateAppealNoticed() on 2015-02-21
+  expect deadline(magistrate-appeal-appellant-brief) == 2015-03-23
 }
 
 /// E.D. Wash. LCrR 58(g)(2)(E): the appellee's responsive brief is filed
@@ -140,11 +194,23 @@ deadline magistrate-appeal-appellee-brief: 14.days after AppellantBriefServed() 
   forum frcrimp
 }
 
+test "Counting boundary: magistrate-appeal-appellee-brief (weekend)" cite "E.D. Wash. LCrR 58(g)"
+{
+  given AppellantBriefServed() on 2015-02-21
+  expect deadline(magistrate-appeal-appellee-brief) == 2015-03-09
+}
+
 /// E.D. Wash. LCrR 58(g)(2)(E): the appellant may file and serve a reply
 /// brief within seven (7) days thereafter.
 deadline magistrate-appeal-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45 cite "E.D. Wash. LCrR 58(g)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: magistrate-appeal-reply-brief (weekend)" cite "E.D. Wash. LCrR 58(g)"
+{
+  given AppelleeBriefServed() on 2015-02-21
+  expect deadline(magistrate-appeal-reply-brief) == 2015-03-02
 }
 
 test "plea objection response: 7 days after the trigger" cite "E.D. Wash. LCrR 11(i)"

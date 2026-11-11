@@ -66,6 +66,12 @@ deadline complex-case-status-conference: 21.days after ComplexCaseDeclared() cou
   forum frcrimp
 }
 
+test "Counting boundary: complex-case-status-conference (weekend)" cite "D. Ariz. LRCrim 16.2(a)"
+{
+  given ComplexCaseDeclared() on 2026-10-31
+  expect deadline(complex-case-status-conference) == 2026-11-23
+}
+
 /// D. Ariz. LRCrim 16.3(a)(1): unless otherwise ordered, a party discloses
 /// the FRCrimP 16(a)(1)(G) or 16(b)(1)(C) information for a case-in-chief
 /// expert no later than 45 days before the final pretrial conference; the
@@ -76,6 +82,12 @@ deadline case-in-chief-expert-disclosure: 45.days before FinalPretrialConference
 } cite "D. Ariz. LRCrim 16.3(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: case-in-chief-expert-disclosure (weekend)" cite "D. Ariz. LRCrim 16.3(a)"
+{
+  given FinalPretrialConferenceScheduled() on 2026-10-28
+  expect deadline(case-in-chief-expert-disclosure) == 2026-09-11
 }
 
 /// D. Ariz. LRCrim 16.3(a)(2): unless otherwise ordered, a party discloses
@@ -89,6 +101,12 @@ deadline rebuttal-expert-disclosure: 14.days before FinalPretrialConferenceSched
   forum frcrimp
 }
 
+test "Counting boundary: rebuttal-expert-disclosure (weekend)" cite "D. Ariz. LRCrim 16.3(a)"
+{
+  given FinalPretrialConferenceScheduled() on 2026-10-31
+  expect deadline(rebuttal-expert-disclosure) == 2026-10-16
+}
+
 /// D. Ariz. LRCrim 49.4(d): if a request to file under seal is denied in
 /// full, the submitting party may, within five (5) days of the entry of
 /// the order denying it, resubmit the document for filing in the public
@@ -96,6 +114,12 @@ deadline rebuttal-expert-disclosure: 14.days before FinalPretrialConferenceSched
 deadline sealing-resubmission: 5.days after SealingDenied() counted_by frcrimp45 cite "D. Ariz. LRCrim 49.4(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sealing-resubmission (weekend)" cite "D. Ariz. LRCrim 49.4(d)"
+{
+  given SealingDenied() on 2026-11-02
+  expect deadline(sealing-resubmission) == 2026-11-09
 }
 
 /// D. Ariz. LRCrim 58.2(c): the appellant files its memorandum within
@@ -110,6 +134,12 @@ deadline misdemeanor-appeal-opening-memorandum: 30.days after MisdemeanorAppealN
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appeal-opening-memorandum (weekend)" cite "D. Ariz. LRCrim 58.2(c)"
+{
+  given MisdemeanorAppealNoticed() on 2026-10-29
+  expect deadline(misdemeanor-appeal-opening-memorandum) == 2026-11-30
+}
+
 /// D. Ariz. LRCrim 58.2(d): the appellee files an answering memorandum
 /// within twenty-one (21) days of the filing and service of the
 /// appellant's memorandum.
@@ -121,6 +151,12 @@ deadline misdemeanor-appeal-answering-memorandum: 21.days after AppellantMemoran
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appeal-answering-memorandum (weekend)" cite "D. Ariz. LRCrim 58.2(d)"
+{
+  given AppellantMemorandumServed() on 2026-10-31
+  expect deadline(misdemeanor-appeal-answering-memorandum) == 2026-11-23
+}
+
 /// D. Ariz. LRCrim 58.2(e): the appellant may file a reply memorandum
 /// within fourteen (14) days of the date of service of the appellee's
 /// memorandum.
@@ -130,6 +166,12 @@ deadline misdemeanor-appeal-reply-memorandum: 14.days after AppelleeMemorandumSe
 } cite "D. Ariz. LRCrim 58.2(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: misdemeanor-appeal-reply-memorandum (holiday)" cite "D. Ariz. LRCrim 58.2(e)"
+{
+  given AppelleeMemorandumServed() on 2026-10-28
+  expect deadline(misdemeanor-appeal-reply-memorandum) == 2026-11-12
 }
 
 test "complex case status conference: 21 days after the trigger" cite "D. Ariz. LRCrim 16.2(a)"

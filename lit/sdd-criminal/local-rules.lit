@@ -62,6 +62,12 @@ deadline discovery-stipulation-period: 14.days after InitialAppearance() counted
   forum frcrimp
 }
 
+test "Counting boundary: discovery-stipulation-period (weekend)" cite "D.S.D. Crim. LR 16.1(A)"
+{
+  given InitialAppearance() on 2025-03-01
+  expect deadline(discovery-stipulation-period) == 2025-03-17
+}
+
 /// D.S.D. Crim. LR 16.1(C)(1): the government and the defendant disclose to
 /// each other no later than 21 calendar days before the start of trial
 /// each retained expert witness for the case-in-chief, with the written
@@ -71,11 +77,23 @@ deadline expert-disclosure-period: 21.days before TrialBegins() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: expert-disclosure-period (weekend)" cite "D.S.D. Crim. LR 16.1(C)"
+{
+  given TrialBegins() on 2025-03-01
+  expect deadline(expert-disclosure-period) == 2025-02-07
+}
+
 /// D.S.D. Crim. LR 16.1(C)(2): a rebuttal expert is identified, with the
 /// same written disclosure, no later than 7 calendar days before trial.
 deadline rebuttal-expert-disclosure-period: 7.days before TrialBegins() counted_by frcrimp45 cite "D.S.D. Crim. LR 16.1(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: rebuttal-expert-disclosure-period (holiday)" cite "D.S.D. Crim. LR 16.1(C)"
+{
+  given TrialBegins() on 2025-02-24
+  expect deadline(rebuttal-expert-disclosure-period) == 2025-02-14
 }
 
 /// D.S.D. Crim. LR 17.1(A): a defendant unable to pay files an ex parte
@@ -86,11 +104,29 @@ deadline subpoena-motion-in-district-period: 14.days before WitnessHearing(Withi
   forum frcrimp
 }
 
+test "Counting boundary: subpoena-motion-in-district-period (weekend)" cite "D.S.D. Crim. LR 17.1(A)"
+{
+  given WitnessHearing(WithinDistrict) on 2025-03-01
+  expect deadline(subpoena-motion-in-district-period) == 2025-02-14
+}
+
 /// D.S.D. Crim. LR 17.1(A): at least 21 calendar days before, for one to be
 /// served outside the district.
 deadline subpoena-motion-out-of-district-period: 21.days before WitnessHearing(OutsideDistrict) counted_by frcrimp45 cite "D.S.D. Crim. LR 17.1(A)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: subpoena-motion-out-of-district-period (weekend)" cite "D.S.D. Crim. LR 17.1(A)"
+{
+  given WitnessHearing(OutsideDistrict) on 2025-03-01
+  expect deadline(subpoena-motion-out-of-district-period) == 2025-02-07
+}
+
+test "Counting boundary: subpoena-motion-out-of-district-period (weekend) [repeat 2]" cite "D.S.D. Crim. LR 17.1(A)"
+{
+  given WitnessHearing(OutsideDistrict) on 2025-03-01
+  expect deadline(subpoena-motion-out-of-district-period) == 2025-02-07
 }
 
 /// D.S.D. Crim. LR 17.1(C): an application for a writ of habeas corpus ad
@@ -102,11 +138,29 @@ deadline writ-application-in-district-period: 14.days before WritWitnessHearing(
   forum frcrimp
 }
 
+test "Counting boundary: writ-application-in-district-period (weekend)" cite "D.S.D. Crim. LR 17.1(C)"
+{
+  given WritWitnessHearing(WithinDistrict) on 2025-03-01
+  expect deadline(writ-application-in-district-period) == 2025-02-14
+}
+
 /// D.S.D. Crim. LR 17.1(C): at least 21 calendar days before, for one to be
 /// served outside the district.
 deadline writ-application-out-of-district-period: 21.days before WritWitnessHearing(OutsideDistrict) counted_by frcrimp45 cite "D.S.D. Crim. LR 17.1(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: writ-application-out-of-district-period (weekend)" cite "D.S.D. Crim. LR 17.1(C)"
+{
+  given WritWitnessHearing(OutsideDistrict) on 2025-03-01
+  expect deadline(writ-application-out-of-district-period) == 2025-02-07
+}
+
+test "Counting boundary: writ-application-out-of-district-period (weekend) [repeat 2]" cite "D.S.D. Crim. LR 17.1(C)"
+{
+  given WritWitnessHearing(OutsideDistrict) on 2025-03-01
+  expect deadline(writ-application-out-of-district-period) == 2025-02-07
 }
 
 /// D.S.D. Crim. LR 24.1: in a multi-defendant case a defendant's request for
@@ -117,12 +171,24 @@ deadline peremptory-request-period: 14.days before JurySelection() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: peremptory-request-period (weekend)" cite "D.S.D. Crim. LR 24.1"
+{
+  given JurySelection() on 2025-03-01
+  expect deadline(peremptory-request-period) == 2025-02-14
+}
+
 /// D.S.D. Crim. LR 32.1(C)(4): unless otherwise ordered, counsel file all
 /// letters of support, sealed, no later than 28 days after the draft
 /// presentence report is filed.
 deadline support-letters-period: 28.days after DraftPresentenceReportFiled() counted_by frcrimp45 cite "D.S.D. Crim. LR 32.1(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: support-letters-period (weekend)" cite "D.S.D. Crim. LR 32.1(C)"
+{
+  given DraftPresentenceReportFiled() on 2025-03-01
+  expect deadline(support-letters-period) == 2025-03-31
 }
 
 /// D.S.D. Crim. LR 32.1(C)(5): unless otherwise ordered, all other
@@ -134,12 +200,24 @@ deadline sentencing-documents-period: 7.days before Sentencing() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-documents-period (holiday)" cite "D.S.D. Crim. LR 32.1(C)"
+{
+  given Sentencing() on 2025-02-24
+  expect deadline(sentencing-documents-period) == 2025-02-14
+}
+
 /// D.S.D. Crim. LR 47.1(C): on or before 7 calendar days after service of a
 /// motion and brief, unless the court orders otherwise, every opposing
 /// party serves and files a responsive brief.
 deadline motion-response-period: 7.days after MotionAndBriefServed() counted_by frcrimp45 cite "D.S.D. Crim. LR 47.1(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: motion-response-period (weekend)" cite "D.S.D. Crim. LR 47.1(C)"
+{
+  given MotionAndBriefServed() on 2025-03-01
+  expect deadline(motion-response-period) == 2025-03-10
 }
 
 /// D.S.D. Crim. LR 47.1(C): the movant may file a reply brief within 4
@@ -149,6 +227,12 @@ deadline motion-reply-period: 4.days after ResponsiveBriefServed() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: motion-reply-period (weekend)" cite "D.S.D. Crim. LR 47.1(C)"
+{
+  given ResponsiveBriefServed() on 2025-02-25
+  expect deadline(motion-reply-period) == 2025-03-03
+}
+
 /// D.S.D. Crim. LR 57.3(B)(2): the parties have 21 days to review their
 /// returned documentary exhibits for the redactions D.S.D. Crim. LR 49.1.1
 /// requires; the offering party then files them, or the clerk unrestricts
@@ -156,6 +240,12 @@ deadline motion-reply-period: 4.days after ResponsiveBriefServed() counted_by fr
 deadline exhibit-redaction-review-period: 21.days after DocumentaryExhibitsReturned() counted_by frcrimp45 cite "D.S.D. Crim. LR 57.3(B)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-redaction-review-period (weekend)" cite "D.S.D. Crim. LR 57.3(B)"
+{
+  given DocumentaryExhibitsReturned() on 2025-03-01
+  expect deadline(exhibit-redaction-review-period) == 2025-03-24
 }
 
 test "discovery stipulation period: 14 days after the trigger" cite "D.S.D. Crim. LR 16.1(A)"

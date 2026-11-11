@@ -75,10 +75,22 @@ event WithdrawalMotionServed()
 /// pauperis, the party pays the entire filing fee and has 21 days, unless
 /// the Court specifies a different time, within which to pay it.
 deadline pauper-fee-period: 21.days after PauperMotionDenied() counted_by frcp6 cite "N.D. Okla. LCvR3-2(c)"
+
+test "Counting boundary: pauper-fee-period (weekend)" cite "N.D. Okla. LCvR3-2(c)"
+{
+  given PauperMotionDenied() on 2026-08-01
+  expect deadline(pauper-fee-period) == 2026-08-24
+}
 /// N.D. Okla. LCvR7-1(e): each party opposing a motion, other than a
 /// discovery motion, files and serves a response brief within 21 days
 /// from the date the motion was filed.
 deadline motion-response-period: 21.days after MotionFiled() counted_by frcp6 cite "N.D. Okla. LCvR7-1(e)"
+
+test "Counting boundary: motion-response-period (weekend)" cite "N.D. Okla. LCvR7-1(e)"
+{
+  given MotionFiled() on 2026-08-01
+  expect deadline(motion-response-period) == 2026-08-24
+}
 /// N.D. Okla. LCvR37-2(e): notwithstanding LCvR7-1(e) and (f), a response
 /// to a discovery motion under FRCP 26 through 37 or 45 is filed within
 /// 14 days from the date the motion was filed; an unopposed discovery
@@ -88,6 +100,12 @@ deadline discovery-response-period: 14.days after DiscoveryMotionFiled() counted
 /// tenders the jointly prepared, proposed final Pretrial Order to the
 /// Clerk of Court 7 days before the pretrial conference.
 deadline pretrial-order-period: 7.days before PretrialConferenceSet() counted_by frcp6 cite "N.D. Okla. LCvR16-1"
+
+test "Counting boundary: pretrial-order-period (weekend)" cite "N.D. Okla. LCvR16-1"
+{
+  given PretrialConferenceSet() on 2026-08-01
+  expect deadline(pretrial-order-period) == 2026-07-24
+}
 /// N.D. Okla. LCvR16-2: a governmental entity unable to send a
 /// representative with full settlement authority moves for leave to
 /// proceed with limited authority no later than 14 days before the
@@ -102,17 +120,41 @@ deadline pro-se-contact-period: 14.days after ProSeContactChanged() counted_by f
 /// the Court within 7 days of the bankruptcy filing by a formal notice in
 /// the civil case.
 deadline bankruptcy-notice-period: 7.days after PartyBankruptcyFiled() counted_by frcp6 cite "N.D. Okla. LCvR21-1"
+
+test "Counting boundary: bankruptcy-notice-period (weekend)" cite "N.D. Okla. LCvR21-1"
+{
+  given PartyBankruptcyFiled() on 2026-08-01
+  expect deadline(bankruptcy-notice-period) == 2026-08-10
+}
 /// N.D. Okla. LCvR30-1(a)(1): subject to an order enlarging or shortening
 /// the time, a subpoena to compel a witness to attend a deposition is
 /// served on the witness at least 7 days before the deposition.
 deadline deposition-subpoena-period: 7.days before DepositionScheduled() counted_by frcp6 cite "N.D. Okla. LCvR30-1(a)"
+
+test "Counting boundary: deposition-subpoena-period (weekend)" cite "N.D. Okla. LCvR30-1(a)"
+{
+  given DepositionScheduled() on 2026-08-01
+  expect deadline(deposition-subpoena-period) == 2026-07-24
+}
 /// N.D. Okla. LCvR30-1(a)(2): reasonable notice to parties under FRCP
 /// 30(b)(1) of the taking of a deposition is 7 days.
 deadline deposition-notice-period: 7.days before DepositionScheduled() counted_by frcp6 cite "N.D. Okla. LCvR30-1(a)"
+
+test "Counting boundary: deposition-notice-period (weekend)" cite "N.D. Okla. LCvR30-1(a)"
+{
+  given DepositionScheduled() on 2026-08-01
+  expect deadline(deposition-notice-period) == 2026-07-24
+}
 /// N.D. Okla. LCvR45-1(a): a party proceeding in forma pauperis files its
 /// written motion for issuance of a subpoena not less than 21 days before
 /// the date set for trial or hearing.
 deadline pauper-subpoena-motion-period: 21.days before TrialOrHearingSet() counted_by frcp6 cite "N.D. Okla. LCvR45-1(a)"
+
+test "Counting boundary: pauper-subpoena-motion-period (weekend)" cite "N.D. Okla. LCvR45-1(a)"
+{
+  given TrialOrHearingSet() on 2026-08-01
+  expect deadline(pauper-subpoena-motion-period) == 2026-07-10
+}
 /// N.D. Okla. LCvR54-1(a): a prevailing party seeking costs files and
 /// serves the bill of costs (Form AO-133) and its brief not more than 14
 /// days after entry of judgment.
@@ -120,6 +162,12 @@ deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 
 /// N.D. Okla. LCvR54-1(b): objections to the allowance of costs are filed
 /// within 21 days from the date the bill of costs was filed.
 deadline costs-objection-period: 21.days after BillOfCostsFiled() counted_by frcp6 cite "N.D. Okla. LCvR54-1(b)"
+
+test "Counting boundary: costs-objection-period (weekend)" cite "N.D. Okla. LCvR54-1(b)"
+{
+  given BillOfCostsFiled() on 2026-08-01
+  expect deadline(costs-objection-period) == 2026-08-24
+}
 /// N.D. Okla. LCvR81-2(c): the removing party files a Status Report on
 /// Removed Action (Form CV-22) at the time of filing the notice of
 /// removal or within 5 days of its filing.

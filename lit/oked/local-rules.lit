@@ -78,10 +78,22 @@ event WithdrawalMotionServed()
 /// suit or proceeding, or it is subject to immediate dismissal without
 /// prejudice to refiling.
 deadline filing-fee-period: 7.days after ActionFiled() counted_by frcp6 cite "E.D. Okla. LCvR 3.2"
+
+test "Counting boundary: filing-fee-period (weekend)" cite "E.D. Okla. LCvR 3.2"
+{
+  given ActionFiled() on 2016-07-09
+  expect deadline(filing-fee-period) == 2016-07-18
+}
 /// E.D. Okla. LCvR 3.3(d): if the motion to proceed in forma pauperis is
 /// denied, the filing party has 21 days, unless the Court specifies a
 /// different time, to pay the filing fees.
 deadline pauper-fee-period: 21.days after PauperMotionDenied() counted_by frcp6 cite "E.D. Okla. LCvR 3.3(d)"
+
+test "Counting boundary: pauper-fee-period (weekend)" cite "E.D. Okla. LCvR 3.3(d)"
+{
+  given PauperMotionDenied() on 2016-07-09
+  expect deadline(pauper-fee-period) == 2016-08-01
+}
 /// E.D. Okla. LCvR 7.1(d): each party opposing a motion or objection files
 /// and serves a response within 14 days from the date the motion or
 /// objection was filed.
@@ -94,31 +106,73 @@ deadline reply-period: 14.days after ResponseFiled() counted_by frcp6 cite "E.D.
 /// and pro se parties confer at least 14 days before the date it is to be
 /// submitted.
 deadline status-report-conference-period: 14.days before JointStatusReportDue() counted_by frcp6 cite "E.D. Okla. LCvR 16.1(a)"
+
+test "Counting boundary: status-report-conference-period (weekend)" cite "E.D. Okla. LCvR 16.1(a)"
+{
+  given JointStatusReportDue() on 2016-07-09
+  expect deadline(status-report-conference-period) == 2016-06-24
+}
 /// E.D. Okla. LCvR 16.2(e): a governmental entity unable to send a
 /// representative with full settlement authority files and delivers its
 /// motion to proceed with limited authority no later than 14 days before
 /// the conference.
 deadline limited-authority-motion-period: 14.days before SettlementConferenceSet() counted_by frcp6 cite "E.D. Okla. LCvR 16.2(e)"
+
+test "Counting boundary: limited-authority-motion-period (weekend)" cite "E.D. Okla. LCvR 16.2(e)"
+{
+  given SettlementConferenceSet() on 2016-07-09
+  expect deadline(limited-authority-motion-period) == 2016-06-24
+}
 /// E.D. Okla. LCvR 16.2(f): unless the Court orders otherwise, the
 /// settlement statement, at most 5 pages, is submitted to the settlement
 /// judge and served at least 7 days before the settlement conference.
 deadline settlement-statement-period: 7.days before SettlementConferenceSet() counted_by frcp6 cite "E.D. Okla. LCvR 16.2(f)"
+
+test "Counting boundary: settlement-statement-period (weekend)" cite "E.D. Okla. LCvR 16.2(f)"
+{
+  given SettlementConferenceSet() on 2016-07-09
+  expect deadline(settlement-statement-period) == 2016-07-01
+}
 /// E.D. Okla. LCvR 21.1: when a party to a civil case files bankruptcy, or
 /// an involuntary proceeding is commenced against it, notice is given
 /// within 7 days of the bankruptcy filing by a formal notice in the civil
 /// case.
 deadline bankruptcy-notice-period: 7.days after PartyBankruptcyFiled() counted_by frcp6 cite "E.D. Okla. LCvR 21.1"
+
+test "Counting boundary: bankruptcy-notice-period (weekend)" cite "E.D. Okla. LCvR 21.1"
+{
+  given PartyBankruptcyFiled() on 2016-07-09
+  expect deadline(bankruptcy-notice-period) == 2016-07-18
+}
 /// E.D. Okla. LCvR 30.1(a)(1): subject to an order enlarging or shortening
 /// the time, a subpoena to compel a witness to attend a deposition is
 /// served on the witness at least 7 days before the deposition.
 deadline deposition-subpoena-period: 7.days before DepositionScheduled() counted_by frcp6 cite "E.D. Okla. LCvR 30.1(a)"
+
+test "Counting boundary: deposition-subpoena-period (weekend)" cite "E.D. Okla. LCvR 30.1(a)"
+{
+  given DepositionScheduled() on 2016-07-09
+  expect deadline(deposition-subpoena-period) == 2016-07-01
+}
 /// E.D. Okla. LCvR 30.1(a)(2): reasonable notice to parties under FRCP
 /// 30(b)(1) of the taking of a deposition is 7 days.
 deadline deposition-notice-period: 7.days before DepositionScheduled() counted_by frcp6 cite "E.D. Okla. LCvR 30.1(a)"
+
+test "Counting boundary: deposition-notice-period (weekend)" cite "E.D. Okla. LCvR 30.1(a)"
+{
+  given DepositionScheduled() on 2016-07-09
+  expect deadline(deposition-notice-period) == 2016-07-01
+}
 /// E.D. Okla. LCvR 30.1(f): except by order of the Court, trial
 /// depositions may be taken on reasonable notice up to 14 days before
 /// trial.
 deadline trial-deposition-period: 14.days before TrialSet() counted_by frcp6 cite "E.D. Okla. LCvR 30.1(f)"
+
+test "Counting boundary: trial-deposition-period (weekend)" cite "E.D. Okla. LCvR 30.1(f)"
+{
+  given TrialSet() on 2016-07-09
+  expect deadline(trial-deposition-period) == 2016-06-24
+}
 /// E.D. Okla. LCvR 54.1(a): a prevailing party seeking costs under 28
 /// U.S.C. § 1920 files and serves the bill of costs and its brief not more
 /// than 14 days after entry of judgment.
@@ -138,6 +192,12 @@ deadline fee-response-period: 14.days after FeeMotionFiled() counted_by frcp6 ci
 /// Entry of Appearance and registers for electronic case filing within 7
 /// days after the motion is granted.
 deadline pro-hac-vice-appearance-period: 7.days after ProHacViceGranted() counted_by frcp6 cite "E.D. Okla. LCvR 83.4(c)"
+
+test "Counting boundary: pro-hac-vice-appearance-period (weekend)" cite "E.D. Okla. LCvR 83.4(c)"
+{
+  given ProHacViceGranted() on 2016-07-09
+  expect deadline(pro-hac-vice-appearance-period) == 2016-07-18
+}
 /// E.D. Okla. LCvR 84.1: a motion to withdraw the reference of a
 /// bankruptcy case is filed and served within 14 days after the first
 /// meeting of creditors is held (in an adversary proceeding or contested

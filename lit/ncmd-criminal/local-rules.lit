@@ -42,6 +42,12 @@ deadline draft-report-period: 45.days before SentencingScheduled() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: draft-report-period (weekend)" cite "M.D.N.C. LCrR 32.2(b)"
+{
+  given SentencingScheduled() on 2026-06-02
+  expect deadline(draft-report-period) == 2026-04-17
+}
+
 /// LCrR 32.2(d): within 21 calendar days after disclosure of the draft
 /// report, a party maintaining an unresolved objection files a sealed
 /// "Position Paper Regarding Sentencing Factors" with a certificate of
@@ -49,6 +55,12 @@ deadline draft-report-period: 45.days before SentencingScheduled() counted_by fr
 deadline position-paper-period: 21.days after DraftReportDisclosed() counted_by frcrimp45 cite "M.D.N.C. LCrR 32.2(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: position-paper-period (weekend)" cite "M.D.N.C. LCrR 32.2(d)"
+{
+  given DraftReportDisclosed() on 2026-06-06
+  expect deadline(position-paper-period) == 2026-06-29
 }
 
 /// LCrR 32.2(d): within 28 calendar days after disclosure of the draft
@@ -59,6 +71,12 @@ deadline position-response-period: 28.days after DraftReportDisclosed() counted_
   forum frcrimp
 }
 
+test "Counting boundary: position-response-period (holiday)" cite "M.D.N.C. LCrR 32.2(d)"
+{
+  given DraftReportDisclosed() on 2026-06-05
+  expect deadline(position-response-period) == 2026-07-06
+}
+
 /// LR 5.4(c)(4)b., applied by LCrR 57.1: when the filing party is not the
 /// party claiming confidentiality, the party claiming it files a response
 /// with the LR 5.4(c)(3) materials within 14 days of the motion to seal.
@@ -67,11 +85,23 @@ deadline sealing-response-period: 14.days after SealMotionFiled() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: sealing-response-period (holiday)" cite "M.D.N.C. LR 5.4(c)"
+{
+  given SealMotionFiled() on 2026-06-05
+  expect deadline(sealing-response-period) == 2026-06-22
+}
+
 /// LR 5.4(c)(5), applied by LCrR 57.1: a party opposing sealing files its
 /// objection within 14 days of the filing of the supporting materials.
 deadline sealing-objection-period: 14.days after SealSupportFiled() counted_by frcrimp45 cite "M.D.N.C. LR 5.4(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sealing-objection-period (holiday)" cite "M.D.N.C. LR 5.4(c)"
+{
+  given SealSupportFiled() on 2026-06-05
+  expect deadline(sealing-objection-period) == 2026-06-22
 }
 
 test "draft report period: 45 days before the trigger" cite "M.D.N.C. LCrR 32.2(b)"

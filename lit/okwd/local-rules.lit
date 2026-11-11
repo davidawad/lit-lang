@@ -106,6 +106,12 @@ event WithdrawalResponseFiled()
 /// different time, to pay the filing fees; on payment the formal filing
 /// relates back to the conditional filing.
 deadline pauper-fee-period: 21.days after PauperApplicationDenied() counted_by frcp6 cite "W.D. Okla. LCvR3.3(e)"
+
+test "Counting boundary: pauper-fee-period (weekend)" cite "W.D. Okla. LCvR3.3(e)"
+{
+  given PauperApplicationDenied() on 2026-04-25
+  expect deadline(pauper-fee-period) == 2026-05-18
+}
 /// W.D. Okla. LCvR4.2: proof of service by the server's affidavit is
 /// filed with the Clerk's Office within 14 days of service.
 deadline return-of-service-period: 14.days after ServiceEffected() counted_by frcp6 cite "W.D. Okla. LCvR4.2"
@@ -113,25 +119,61 @@ deadline return-of-service-period: 14.days after ServiceEffected() counted_by fr
 /// identifiers from an official transcript, and a motion for any other
 /// redaction, are filed within 21 days of the filing of the transcript.
 deadline transcript-redaction-period: 21.days after TranscriptFiled() counted_by frcp6 cite "W.D. Okla. LCvR5.2.1(b)"
+
+test "Counting boundary: transcript-redaction-period (weekend)" cite "W.D. Okla. LCvR5.2.1(b)"
+{
+  given TranscriptFiled() on 2026-04-25
+  expect deadline(transcript-redaction-period) == 2026-05-18
+}
 /// W.D. Okla. LCvR7.1(g): each party opposing a motion files a response
 /// within 21 days after the date the motion was filed; a motion not
 /// opposed within 21 days may, in the court's discretion, be deemed
 /// confessed.
 deadline motion-response-period: 21.days after MotionFiled() counted_by frcp6 cite "W.D. Okla. LCvR7.1(g)"
+
+test "Counting boundary: motion-response-period (weekend)" cite "W.D. Okla. LCvR7.1(g)"
+{
+  given MotionFiled() on 2026-04-25
+  expect deadline(motion-response-period) == 2026-05-18
+}
 /// W.D. Okla. LCvR7.1(g): the same 21 days to respond to a motion for
 /// summary judgment.
 deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionFiled() counted_by frcp6 cite "W.D. Okla. LCvR7.1(g)"
+
+test "Counting boundary: summary-judgment-response-period (weekend)" cite "W.D. Okla. LCvR7.1(g)"
+{
+  given SummaryJudgmentMotionFiled() on 2026-04-25
+  expect deadline(summary-judgment-response-period) == 2026-05-18
+}
 /// W.D. Okla. LCvR7.1(h): unless the court prohibits it, a reply to new
 /// matter raised in the response may be filed within 7 days after the
 /// date the response was filed.
 deadline reply-period: 7.days after ResponseFiled() counted_by frcp6 cite "W.D. Okla. LCvR7.1(h)"
+
+test "Counting boundary: reply-period (weekend)" cite "W.D. Okla. LCvR7.1(h)"
+{
+  given ResponseFiled() on 2026-04-25
+  expect deadline(reply-period) == 2026-05-04
+}
 /// W.D. Okla. LCvR7.2(a): in a bankruptcy appeal, the appellant serves and
 /// files its brief within 21 days after the transmission of the record to
 /// the clerk of the district court.
 deadline bankruptcy-appellant-brief-period: 21.days after BankruptcyRecordTransmitted() counted_by frcp6 cite "W.D. Okla. LCvR7.2(a)"
+
+test "Counting boundary: bankruptcy-appellant-brief-period (weekend)" cite "W.D. Okla. LCvR7.2(a)"
+{
+  given BankruptcyRecordTransmitted() on 2026-04-25
+  expect deadline(bankruptcy-appellant-brief-period) == 2026-05-18
+}
 /// W.D. Okla. LCvR7.2(a): the appellee serves and files its brief within
 /// 21 days after service of the appellant's brief.
 deadline bankruptcy-appellee-brief-period: 21.days after BankruptcyAppellantBriefServed() counted_by frcp6 cite "W.D. Okla. LCvR7.2(a)"
+
+test "Counting boundary: bankruptcy-appellee-brief-period (weekend)" cite "W.D. Okla. LCvR7.2(a)"
+{
+  given BankruptcyAppellantBriefServed() on 2026-04-25
+  expect deadline(bankruptcy-appellee-brief-period) == 2026-05-18
+}
 /// W.D. Okla. LCvR7.2(a): the appellant may serve and file a reply brief
 /// within 14 days after service of the appellee's brief.
 deadline bankruptcy-reply-brief-period: 14.days after BankruptcyAppelleeBriefServed() counted_by frcp6 cite "W.D. Okla. LCvR7.2(a)"
@@ -139,19 +181,43 @@ deadline bankruptcy-reply-brief-period: 14.days after BankruptcyAppelleeBriefSer
 /// leave to amend or supplement files the new pleading, which may not
 /// differ from the proposed pleading, within 7 days.
 deadline amended-pleading-period: 7.days after LeaveToAmendGranted() counted_by frcp6 cite "W.D. Okla. LCvR15.1"
+
+test "Counting boundary: amended-pleading-period (weekend)" cite "W.D. Okla. LCvR15.1"
+{
+  given LeaveToAmendGranted() on 2026-04-25
+  expect deadline(amended-pleading-period) == 2026-05-04
+}
 /// W.D. Okla. LCvR16.1: unless the court orders otherwise, the parties
 /// file their Joint Status Report and Discovery Plan not later than 7
 /// days prior to the status and scheduling conference.
 deadline joint-status-report-period: 7.days before SchedulingConferenceSet() counted_by frcp6 cite "W.D. Okla. LCvR16.1"
+
+test "Counting boundary: joint-status-report-period (weekend)" cite "W.D. Okla. LCvR16.1"
+{
+  given SchedulingConferenceSet() on 2026-04-25
+  expect deadline(joint-status-report-period) == 2026-04-17
+}
 /// W.D. Okla. LCvR16.3(e): unless otherwise ordered, the mediator's report
 /// in a court-ordered mediation is filed no later than 7 days after
 /// completion of the mediation.
 deadline mediator-report-period: 7.days after MediationCompleted() counted_by frcp6 cite "W.D. Okla. LCvR16.3(e)"
+
+test "Counting boundary: mediator-report-period (weekend)" cite "W.D. Okla. LCvR16.3(e)"
+{
+  given MediationCompleted() on 2026-04-25
+  expect deadline(mediator-report-period) == 2026-05-04
+}
 /// W.D. Okla. LCvR21.1: when a party to a civil case files bankruptcy, or
 /// an involuntary proceeding is commenced against it, counsel (or the
 /// party, if pro se) files a formal notice in the civil case within 7
 /// days of the bankruptcy filing.
 deadline bankruptcy-notice-period: 7.days after PartyBankruptcyFiled() counted_by frcp6 cite "W.D. Okla. LCvR21.1"
+
+test "Counting boundary: bankruptcy-notice-period (weekend)" cite "W.D. Okla. LCvR21.1"
+{
+  given PartyBankruptcyFiled() on 2026-04-25
+  expect deadline(bankruptcy-notice-period) == 2026-05-04
+}
 /// W.D. Okla. LCvR30.1(a)(1): subject to an order enlarging or shortening
 /// the time, a subpoena to compel a witness to attend a deposition is
 /// served on the witness at least 14 days before the deposition.
@@ -163,10 +229,22 @@ deadline deposition-notice-period: 14.days before DepositionScheduled() counted_
 /// subpoena attached, is filed at least 7 days before the subpoena is
 /// served on the nonparty.
 deadline subpoena-notice-period: 7.days before NonpartySubpoenaServed() counted_by frcp6 cite "W.D. Okla. LCvR45.1(a)"
+
+test "Counting boundary: subpoena-notice-period (weekend)" cite "W.D. Okla. LCvR45.1(a)"
+{
+  given NonpartySubpoenaServed() on 2026-04-25
+  expect deadline(subpoena-notice-period) == 2026-04-17
+}
 /// W.D. Okla. LCvR45.1(b): within 7 days from the filing of the notice,
 /// any party may move to preclude service of the subpoena; if the motion
 /// is timely, the subpoena is not served until it is determined.
 deadline subpoena-protective-motion-period: 7.days after SubpoenaNoticeFiled() counted_by frcp6 cite "W.D. Okla. LCvR45.1(b)"
+
+test "Counting boundary: subpoena-protective-motion-period (weekend)" cite "W.D. Okla. LCvR45.1(b)"
+{
+  given SubpoenaNoticeFiled() on 2026-04-25
+  expect deadline(subpoena-protective-motion-period) == 2026-05-04
+}
 /// W.D. Okla. LCvR54.1: a prevailing party seeking costs under 28 U.S.C.
 /// § 1920 files the bill of costs and its brief not more than 14 days
 /// after entry of judgment.
@@ -191,6 +269,12 @@ deadline removal-jury-demand-period: 14.days after RemovalNoticeFiled() counted_
 /// moving party files a notice of pending motion with the state-court
 /// papers needed to adjudicate it.
 deadline pending-motion-notice-period: 30.days after RemovalNoticeFiled() counted_by frcp6 cite "W.D. Okla. LCvR81.2(b)"
+
+test "Counting boundary: pending-motion-notice-period (weekend)" cite "W.D. Okla. LCvR81.2(b)"
+{
+  given RemovalNoticeFiled() on 2026-04-23
+  expect deadline(pending-motion-notice-period) == 2026-05-26
+}
 /// W.D. Okla. LCvR81.4: to be timely under 28 U.S.C. § 157(d), a motion to
 /// withdraw the reference of a bankruptcy case is filed and served within
 /// 14 days after the first meeting of creditors is concluded (30 days
@@ -205,6 +289,12 @@ deadline withdrawal-response-period: 14.days after WithdrawalMotionFiled() count
 /// W.D. Okla. LCvR81.4: replies are filed within 7 days of the filing of
 /// any response.
 deadline withdrawal-reply-period: 7.days after WithdrawalResponseFiled() counted_by frcp6 cite "W.D. Okla. LCvR81.4"
+
+test "Counting boundary: withdrawal-reply-period (weekend)" cite "W.D. Okla. LCvR81.4"
+{
+  given WithdrawalResponseFiled() on 2026-04-25
+  expect deadline(withdrawal-reply-period) == 2026-05-04
+}
 
 test "Deadline arithmetic: pauper-fee-period (21 days after)" cite "W.D. Okla. LCvR3.3(e)"
 {

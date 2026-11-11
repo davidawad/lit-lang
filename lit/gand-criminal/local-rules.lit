@@ -51,12 +51,24 @@ deadline nolo-response-period: 7.days after NoloTenderFiled() counted_by frcrimp
   forum frcrimp
 }
 
+test "Counting boundary: nolo-response-period (weekend)" cite "N.D. Ga. LCrR 11.1(B)"
+{
+  given NoloTenderFiled() on 2024-04-06
+  expect deadline(nolo-response-period) == 2024-04-15
+}
+
 /// N.D. Ga. LCrR 12.1(B): motions in criminal proceedings are filed within
 /// fourteen days after arraignment; to avoid waiver, pretrial matters are
 /// raised within this time (FRCrimP 12).
 deadline criminal-motion-period: 14.days after Arraigned() counted_by frcrimp45 cite "N.D. Ga. LCrR 12.1(B)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: criminal-motion-period (weekend)" cite "N.D. Ga. LCrR 12.1(B)"
+{
+  given Arraigned() on 2024-04-06
+  expect deadline(criminal-motion-period) == 2024-04-22
 }
 
 /// N.D. Ga. LCrR 16.1: unless the Court orders otherwise, the defendant
@@ -67,6 +79,12 @@ deadline defense-discovery-period: 21.days before TrialScheduled() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: defense-discovery-period (weekend)" cite "N.D. Ga. LCrR 16.1"
+{
+  given TrialScheduled() on 2024-04-06
+  expect deadline(defense-discovery-period) == 2024-03-15
+}
+
 /// N.D. Ga. LCrR 17.1(A)(1): in an Atlanta Division case with a not-guilty
 /// plea at arraignment, the magistrate judge holds a pretrial conference
 /// within fourteen days of the arraignment or at a later date as required.
@@ -75,11 +93,23 @@ deadline pretrial-conference-period: 14.days after Arraigned() counted_by frcrim
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-conference-period (weekend)" cite "N.D. Ga. LCrR 17.1(A)"
+{
+  given Arraigned() on 2024-04-06
+  expect deadline(pretrial-conference-period) == 2024-04-22
+}
+
 /// N.D. Ga. LCrR 57.1(D)(1)(b): retained defense counsel files a notice of
 /// appearance within three days after being retained.
 deadline retained-appearance-period: 3.days after CounselRetained() counted_by frcrimp45 cite "N.D. Ga. LCrR 57.1(D)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: retained-appearance-period (weekend)" cite "N.D. Ga. LCrR 57.1(D)"
+{
+  given CounselRetained() on 2024-04-03
+  expect deadline(retained-appearance-period) == 2024-04-08
 }
 
 /// N.D. Ga. LCrR 57.1(E)(2)(b): the motion to withdraw states that the
@@ -90,12 +120,24 @@ deadline withdrawal-client-notice-period: 14.days before WithdrawalMotionFiled()
   forum frcrimp
 }
 
+test "Counting boundary: withdrawal-client-notice-period (weekend)" cite "N.D. Ga. LCrR 57.1(E)"
+{
+  given WithdrawalMotionFiled() on 2024-04-06
+  expect deadline(withdrawal-client-notice-period) == 2024-03-22
+}
+
 /// N.D. Ga. LCrR 57.1(E)(5): when an attorney ceases to act, the party
 /// must within twenty-one days, or before any further proceedings, notify
 /// the clerk of new counsel or of appearing pro se; failure is a default.
 deadline replacement-counsel-period: 21.days after AttorneyCeasedToAct() counted_by frcrimp45 cite "N.D. Ga. LCrR 57.1(E)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: replacement-counsel-period (weekend)" cite "N.D. Ga. LCrR 57.1(E)"
+{
+  given AttorneyCeasedToAct() on 2024-04-06
+  expect deadline(replacement-counsel-period) == 2024-04-29
 }
 
 /// N.D. Ga. LCrR 59(3): responses to objections may be filed within
@@ -105,12 +147,24 @@ deadline objection-response-period: 14.days after ObjectionsServed() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: objection-response-period (weekend)" cite "N.D. Ga. LCrR 59"
+{
+  given ObjectionsServed() on 2024-04-06
+  expect deadline(objection-response-period) == 2024-04-22
+}
+
 /// N.D. Ga. LCrR 59(2)(b): if the objected-to order was oral, the parties
 /// file, within fourteen days after the objections are served and filed, a
 /// joint statement of how the issues arose and were decided.
 deadline oral-order-joint-statement-period: 14.days after ObjectionsServed() counted_by frcrimp45 cite "N.D. Ga. LCrR 59"
 {
   forum frcrimp
+}
+
+test "Counting boundary: oral-order-joint-statement-period (weekend)" cite "N.D. Ga. LCrR 59"
+{
+  given ObjectionsServed() on 2024-04-06
+  expect deadline(oral-order-joint-statement-period) == 2024-04-22
 }
 
 test "nolo response period: 7 days after the trigger" cite "N.D. Ga. LCrR 11.1(B)"

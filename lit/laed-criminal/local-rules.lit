@@ -55,6 +55,12 @@ deadline discovery-response: 8.days before DiscoveryMotionHearing() counted_by f
   forum frcrimp
 }
 
+test "Counting boundary: discovery-response (holiday)" cite "E.D. La. LCrR 12"
+{
+  given DiscoveryMotionHearing() on 2022-03-01
+  expect deadline(discovery-response) == 2022-02-18
+}
+
 /// E.D. La. LCrR 32.1.1: a motion or letter requesting a departure from
 /// the Sentencing Guidelines is delivered to the sentencing judge's
 /// chambers no later than 4:30 p.m. on the third working day before the

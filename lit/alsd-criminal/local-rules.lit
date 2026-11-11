@@ -56,6 +56,12 @@ deadline pretrial-motion-period: 14.days after Arraigned() counted_by frcrimp45 
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motion-period (weekend)" cite "S.D. Ala. CrLR 12(a)"
+{
+  given Arraigned() on 2015-08-01
+  expect deadline(pretrial-motion-period) == 2015-08-17
+}
+
 /// S.D. Ala. CrLR 12(a)(3): absent a court order, the non-movant has seven
 /// days from service of the motion to file a response.
 deadline motion-response-period: 7.days after MotionServed() counted_by frcrimp45 cite "S.D. Ala. CrLR 12(a)"
@@ -63,11 +69,23 @@ deadline motion-response-period: 7.days after MotionServed() counted_by frcrimp4
   forum frcrimp
 }
 
+test "Counting boundary: motion-response-period (weekend)" cite "S.D. Ala. CrLR 12(a)"
+{
+  given MotionServed() on 2015-08-01
+  expect deadline(motion-response-period) == 2015-08-10
+}
+
 /// S.D. Ala. CrLR 12(a)(4): absent a court order, the movant has seven
 /// days from service of the response to file a reply.
 deadline motion-reply-period: 7.days after MotionResponseServed() counted_by frcrimp45 cite "S.D. Ala. CrLR 12(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: motion-reply-period (weekend)" cite "S.D. Ala. CrLR 12(a)"
+{
+  given MotionResponseServed() on 2015-08-01
+  expect deadline(motion-reply-period) == 2015-08-10
 }
 
 /// S.D. Ala. CrLR 12(b): the non-movant may file a response opposing an
@@ -78,12 +96,24 @@ deadline evidentiary-hearing-response-period: 7.days after EvidentiaryHearingMot
   forum frcrimp
 }
 
+test "Counting boundary: evidentiary-hearing-response-period (weekend)" cite "S.D. Ala. CrLR 12(b)"
+{
+  given EvidentiaryHearingMotionServed() on 2015-08-01
+  expect deadline(evidentiary-hearing-response-period) == 2015-08-10
+}
+
 /// S.D. Ala. CrLR 12.4(b): the government files its disclosure statement,
 /// when required, within fourteen days after the indictment or information
 /// is filed.
 deadline government-disclosure-statement-period: 14.days after ChargeFiled() counted_by frcrimp45 cite "S.D. Ala. CrLR 12.4(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: government-disclosure-statement-period (weekend)" cite "S.D. Ala. CrLR 12.4(b)"
+{
+  given ChargeFiled() on 2015-08-01
+  expect deadline(government-disclosure-statement-period) == 2015-08-17
 }
 
 /// S.D. Ala. CrLR 13(b): absent a court order, an objection to a motion to
@@ -94,12 +124,24 @@ deadline related-case-objection-period: 7.days after RelatedCaseMotionFiled() co
   forum frcrimp
 }
 
+test "Counting boundary: related-case-objection-period (weekend)" cite "S.D. Ala. CrLR 13(b)"
+{
+  given RelatedCaseMotionFiled() on 2015-08-01
+  expect deadline(related-case-objection-period) == 2015-08-10
+}
+
 /// S.D. Ala. CrLR 16(e): within three days of conviction the government
 /// gives the defendant any additional information it provided to the
 /// Probation Office for the guideline calculation.
 deadline post-conviction-disclosure-period: 3.days after Convicted() counted_by frcrimp45 cite "S.D. Ala. CrLR 16(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: post-conviction-disclosure-period (weekend)" cite "S.D. Ala. CrLR 16(e)"
+{
+  given Convicted() on 2015-08-05
+  expect deadline(post-conviction-disclosure-period) == 2015-08-10
 }
 
 /// S.D. Ala. CrLR 32(b)(4): fourteen days before the sentencing hearing,
@@ -113,11 +155,23 @@ deadline sentencing-position-period: 14.days before SentencingHearingScheduled()
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-position-period (weekend)" cite "S.D. Ala. CrLR 32(b)"
+{
+  given SentencingHearingScheduled() on 2015-08-01
+  expect deadline(sentencing-position-period) == 2015-07-17
+}
+
 /// S.D. Ala. CrLR 32(b)(5): counsel confer no later than ten days before
 /// the sentencing hearing on its length and witnesses.
 deadline sentencing-conference-period: 10.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Ala. CrLR 32(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-conference-period (weekend)" cite "S.D. Ala. CrLR 32(b)"
+{
+  given SentencingHearingScheduled() on 2015-08-04
+  expect deadline(sentencing-conference-period) == 2015-07-24
 }
 
 /// S.D. Ala. CrLR 32(b)(5): a party anticipating a sentencing hearing over
@@ -128,12 +182,24 @@ deadline sentencing-length-notice-period: 7.days before SentencingHearingSchedul
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-length-notice-period (weekend)" cite "S.D. Ala. CrLR 32(b)"
+{
+  given SentencingHearingScheduled() on 2015-08-01
+  expect deadline(sentencing-length-notice-period) == 2015-07-24
+}
+
 /// S.D. Ala. CrLR 32(b)(6): the Probation Office files under seal the
 /// presentence report, its addendum of unresolved disputes and its
 /// recommendation no later than seven days before the sentencing hearing.
 deadline presentence-addendum-period: 7.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Ala. CrLR 32(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: presentence-addendum-period (weekend)" cite "S.D. Ala. CrLR 32(b)"
+{
+  given SentencingHearingScheduled() on 2015-08-01
+  expect deadline(presentence-addendum-period) == 2015-07-24
 }
 
 /// S.D. Ala. CrLR 44(a)(1): unless the court is notified in writing
@@ -144,6 +210,12 @@ deadline presentence-addendum-period: 7.days before SentencingHearingScheduled()
 deadline retained-counsel-withdrawal-period: 14.days after Arraigned() counted_by frcrimp45 cite "S.D. Ala. CrLR 44(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: retained-counsel-withdrawal-period (weekend)" cite "S.D. Ala. CrLR 44(a)"
+{
+  given Arraigned() on 2015-08-01
+  expect deadline(retained-counsel-withdrawal-period) == 2015-08-17
 }
 
 test "pretrial motion period: 14 days after the trigger" cite "S.D. Ala. CrLR 12(a)"

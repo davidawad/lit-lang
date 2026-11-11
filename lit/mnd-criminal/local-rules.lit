@@ -54,12 +54,24 @@ deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: redaction-statement-period (holiday)" cite "D. Minn. LR 5.5(b)(2)"
+{
+  given TranscriptFiled() on 2026-06-12
+  expect deadline(redaction-statement-period) == 2026-07-06
+}
+
 /// D. Minn. LR 12.1(a)(2): to the extent practicable, the government
 /// fulfills its FRCrimP 16(a) discovery obligations within 7 days after
 /// the arraignment.
 deadline government-discovery-period: 7.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(a)(2)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: government-discovery-period (holiday)" cite "D. Minn. LR 12.1(a)(2)"
+{
+  given Arraignment() on 2026-06-12
+  expect deadline(government-discovery-period) == 2026-06-22
 }
 
 /// D. Minn. LR 12.1(a)(3): to the extent practicable, the defendant
@@ -70,6 +82,12 @@ deadline defendant-discovery-period: 14.days after Arraignment() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: defendant-discovery-period (weekend)" cite "D. Minn. LR 12.1(a)(3)"
+{
+  given Arraignment() on 2026-06-13
+  expect deadline(defendant-discovery-period) == 2026-06-29
+}
+
 /// D. Minn. LR 12.1(c)(1)(A): a motion under FRCrimP 12(b) is filed within
 /// 21 days after the arraignment, after the moving party confers with the
 /// responding party (LR 12.1(b)).
@@ -78,11 +96,23 @@ deadline pretrial-motion-period: 21.days after Arraignment() counted_by frcrimp4
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motion-period (holiday)" cite "D. Minn. LR 12.1(c)(1)(A)"
+{
+  given Arraignment() on 2026-06-12
+  expect deadline(pretrial-motion-period) == 2026-07-06
+}
+
 /// D. Minn. LR 12.1(c)(2): a response to an FRCrimP 12(b) motion is filed
 /// within 35 days after the arraignment.
 deadline pretrial-motion-response-period: 35.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(c)(2)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: pretrial-motion-response-period (weekend)" cite "D. Minn. LR 12.1(c)(2)"
+{
+  given Arraignment() on 2026-06-13
+  expect deadline(pretrial-motion-response-period) == 2026-07-20
 }
 
 /// D. Minn. LR 12.1(c)(3)(A): a party intending to call witnesses at the
@@ -93,12 +123,24 @@ deadline witness-notice-period: 35.days after Arraignment() counted_by frcrimp45
   forum frcrimp
 }
 
+test "Counting boundary: witness-notice-period (weekend)" cite "D. Minn. LR 12.1(c)(3)(A)"
+{
+  given Arraignment() on 2026-06-13
+  expect deadline(witness-notice-period) == 2026-07-20
+}
+
 /// D. Minn. LR 12.1(c)(3)(B): a party that, after reviewing such a
 /// notice, intends to call witnesses at the same hearing files a
 /// responsive notice within 38 days after the arraignment.
 deadline responsive-witness-notice-period: 38.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(c)(3)(B)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: responsive-witness-notice-period (weekend)" cite "D. Minn. LR 12.1(c)(3)(B)"
+{
+  given Arraignment() on 2026-06-10
+  expect deadline(responsive-witness-notice-period) == 2026-07-20
 }
 
 /// D. Minn. LR 49.1(d)(5)(A): within 7 days after entry of the order
@@ -108,6 +150,12 @@ deadline responsive-witness-notice-period: 38.days after Arraignment() counted_b
 deadline sealed-document-withdrawal-period: 7.days after SealDenied() counted_by frcrimp45 cite "D. Minn. LR 49.1(d)(5)(A)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sealed-document-withdrawal-period (holiday)" cite "D. Minn. LR 49.1(d)(5)(A)"
+{
+  given SealDenied() on 2026-06-12
+  expect deadline(sealed-document-withdrawal-period) == 2026-06-22
 }
 
 /// D. Minn. LR 72.2(a)(2), (b)(2): a party may respond to another party's
@@ -120,6 +168,12 @@ deadline objection-response-period: 14.days after ObjectionsServed() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: objection-response-period (weekend)" cite "D. Minn. LR 72.2(a)(2); D. Minn. LR 72.2(b)(2)"
+{
+  given ObjectionsServed() on 2026-06-13
+  expect deadline(objection-response-period) == 2026-06-29
+}
+
 /// D. Minn. LR 83.10(e): within 14 days of the date of the final
 /// presentence report, each party files and serves a Position Regarding
 /// Sentencing; a motion for an evidentiary hearing is filed with it (LR
@@ -127,6 +181,12 @@ deadline objection-response-period: 14.days after ObjectionsServed() counted_by 
 deadline sentencing-position-period: 14.days after FinalPresentenceReport() counted_by frcrimp45 cite "D. Minn. LR 83.10(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-position-period (weekend)" cite "D. Minn. LR 83.10(e)"
+{
+  given FinalPresentenceReport() on 2026-06-13
+  expect deadline(sentencing-position-period) == 2026-06-29
 }
 
 /// D. Minn. LR 83.10(f)(2): at least 7 days before an evidentiary hearing
@@ -137,6 +197,12 @@ deadline sentencing-hearing-lists-period: 7.days before SentencingEvidentiaryHea
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-hearing-lists-period (weekend)" cite "D. Minn. LR 83.10(f)(2)"
+{
+  given SentencingEvidentiaryHearing() on 2026-06-13
+  expect deadline(sentencing-hearing-lists-period) == 2026-06-05
+}
+
 /// D. Minn. LR 83.10(g)(1): at least 7 days before sentencing, each party
 /// may file and serve a response to the opposing party's Position
 /// Regarding Sentencing.
@@ -145,12 +211,24 @@ deadline sentencing-response-period: 7.days before Sentencing() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-response-period (weekend)" cite "D. Minn. LR 83.10(g)(1)"
+{
+  given Sentencing() on 2026-06-13
+  expect deadline(sentencing-response-period) == 2026-06-05
+}
+
 /// D. Minn. LR 83.10(g)(2): a government motion for a downward departure
 /// under U.S.S.G. § 5K1.1 or 18 U.S.C. § 3553(e) is made, under seal, at
 /// least 7 days before sentencing.
 deadline downward-departure-motion-period: 7.days before Sentencing() counted_by frcrimp45 cite "D. Minn. LR 83.10(g)(2)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: downward-departure-motion-period (weekend)" cite "D. Minn. LR 83.10(g)(2)"
+{
+  given Sentencing() on 2026-06-13
+  expect deadline(downward-departure-motion-period) == 2026-06-05
 }
 
 test "redaction statement period: 21 days after the trigger" cite "D. Minn. LR 5.5(b)(2)"

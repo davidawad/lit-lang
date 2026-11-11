@@ -102,6 +102,12 @@ deadline related-case-response: 7.days after RelatedCaseNoticeServed() counted_b
   forum frcrimp
 }
 
+test "Counting boundary: related-case-response (weekend)" cite "N.D. Cal. Crim. L.R. 8-1(d)"
+{
+  given RelatedCaseNoticeServed() on 2026-08-01
+  expect deadline(related-case-response) == 2026-08-10
+}
+
 /// N.D. Cal. Crim. L.R. 17.1-1(b): unless otherwise ordered, not less than
 /// 7 days before the pretrial conference the parties file a pretrial
 /// conference statement.
@@ -113,12 +119,24 @@ deadline pretrial-conference-statement: 7.days before PretrialConferenceSchedule
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-conference-statement (weekend)" cite "N.D. Cal. Crim. L.R. 17.1-1(b)"
+{
+  given PretrialConferenceScheduled() on 2026-08-01
+  expect deadline(pretrial-conference-statement) == 2026-07-24
+}
+
 /// N.D. Cal. Crim. L.R. 32-3(b): within 7 days after receiving the
 /// Probation Officer's written request for information, the attorney for
 /// the government responds and serves a copy on defense counsel.
 deadline sentencing-information-response: 7.days after ProbationRequestReceived() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 32-3(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-information-response (weekend)" cite "N.D. Cal. Crim. L.R. 32-3(b)"
+{
+  given ProbationRequestReceived() on 2026-08-01
+  expect deadline(sentencing-information-response) == 2026-08-10
 }
 
 /// N.D. Cal. Crim. L.R. 32-3(c): material a party wishes the Probation
@@ -129,12 +147,24 @@ deadline sentencing-material-submission: 45.days before SentencingScheduled() co
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-material-submission (weekend)" cite "N.D. Cal. Crim. L.R. 32-3(c)"
+{
+  given SentencingScheduled() on 2026-07-29
+  expect deadline(sentencing-material-submission) == 2026-06-12
+}
+
 /// N.D. Cal. Crim. L.R. 32-5(a): at least 14 days before the date set for
 /// sentencing, the Probation Officer discloses the final presentence report
 /// and recommendations and lodges a copy with the sentencing Judge.
 deadline final-psr-disclosure: 14.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 32-5(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: final-psr-disclosure (weekend)" cite "N.D. Cal. Crim. L.R. 32-5(a)"
+{
+  given SentencingScheduled() on 2026-08-01
+  expect deadline(final-psr-disclosure) == 2026-07-17
 }
 
 /// N.D. Cal. Crim. L.R. 32-5(b): any sentencing memorandum, which is
@@ -145,12 +175,24 @@ deadline sentencing-memorandum: 7.days before SentencingScheduled() counted_by f
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-memorandum (weekend)" cite "N.D. Cal. Crim. L.R. 32-5(b)"
+{
+  given SentencingScheduled() on 2026-08-01
+  expect deadline(sentencing-memorandum) == 2026-07-24
+}
+
 /// N.D. Cal. Crim. L.R. 32-5(c): a response to the opposing party's
 /// sentencing memorandum may be filed no later than 3 days before the date
 /// set for sentencing.
 deadline sentencing-memorandum-response: 3.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 32-5(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-memorandum-response (weekend)" cite "N.D. Cal. Crim. L.R. 32-5(c)"
+{
+  given SentencingScheduled() on 2026-07-29
+  expect deadline(sentencing-memorandum-response) == 2026-07-24
 }
 
 /// N.D. Cal. Crim. L.R. 32-6(c)(2): an addendum recording the Judge's
@@ -162,12 +204,24 @@ deadline accuracy-addendum: 5.days before PsrToBureauScheduled() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: accuracy-addendum (weekend)" cite "N.D. Cal. Crim. L.R. 32-6(c)"
+{
+  given PsrToBureauScheduled() on 2026-07-30
+  expect deadline(accuracy-addendum) == 2026-07-24
+}
+
 /// N.D. Cal. Crim. L.R. 32.1-1(e): at least 7 days before sentencing after
 /// revocation, the Probation Officer discloses the dispositional report and
 /// recommendation and lodges a copy with the sentencing Judge.
 deadline revocation-dispositional-report: 7.days before RevocationSentencingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 32.1-1(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: revocation-dispositional-report (weekend)" cite "N.D. Cal. Crim. L.R. 32.1-1(e)"
+{
+  given RevocationSentencingScheduled() on 2026-08-01
+  expect deadline(revocation-dispositional-report) == 2026-07-24
 }
 
 /// N.D. Cal. Crim. L.R. 47-2(a): except as the assigned Judge directs, a
@@ -182,6 +236,12 @@ deadline motion-notice: 14.days before MotionHearingScheduled() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: motion-notice (weekend)" cite "N.D. Cal. Crim. L.R. 47-2(a)"
+{
+  given MotionHearingScheduled() on 2026-08-01
+  expect deadline(motion-notice) == 2026-07-17
+}
+
 /// N.D. Cal. Crim. L.R. 47-2(d): any opposition to a noticed motion is
 /// served and filed not more than 7 days after the motion is filed.
 deadline motion-opposition: 7.days after MotionFiled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 47-2(d)"
@@ -189,11 +249,23 @@ deadline motion-opposition: 7.days after MotionFiled() counted_by frcrimp45 cite
   forum frcrimp
 }
 
+test "Counting boundary: motion-opposition (weekend)" cite "N.D. Cal. Crim. L.R. 47-2(d)"
+{
+  given MotionFiled() on 2026-08-01
+  expect deadline(motion-opposition) == 2026-08-10
+}
+
 /// N.D. Cal. Crim. L.R. 47-2(d): any reply is served and filed not more
 /// than 4 days after the opposition is due.
 deadline motion-reply: 4.days after OppositionDue() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 47-2(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: motion-reply (weekend)" cite "N.D. Cal. Crim. L.R. 47-2(d)"
+{
+  given OppositionDue() on 2026-07-29
+  expect deadline(motion-reply) == 2026-08-03
 }
 
 /// N.D. Cal. Crim. L.R. 56-1(d): if the Administrative Motion to File
@@ -205,11 +277,23 @@ deadline sealing-refiling: 7.days after SealingDenied() counted_by frcrimp45 cit
   forum frcrimp
 }
 
+test "Counting boundary: sealing-refiling (weekend)" cite "N.D. Cal. Crim. L.R. 56-1(d)"
+{
+  given SealingDenied() on 2026-08-01
+  expect deadline(sealing-refiling) == 2026-08-10
+}
+
 /// N.D. Cal. Crim. L.R. 58-2(d): the appellant serves and files an opening
 /// brief not later than 35 days before the date set for the hearing.
 deadline misdemeanor-appeal-opening-brief: 35.days before MisdemeanorAppealHearingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 58-2(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: misdemeanor-appeal-opening-brief (weekend)" cite "N.D. Cal. Crim. L.R. 58-2(d)"
+{
+  given MisdemeanorAppealHearingScheduled() on 2026-08-01
+  expect deadline(misdemeanor-appeal-opening-brief) == 2026-06-26
 }
 
 /// N.D. Cal. Crim. L.R. 58-2(d): the appellee serves and files a
@@ -219,11 +303,23 @@ deadline misdemeanor-appeal-responsive-brief: 21.days before MisdemeanorAppealHe
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appeal-responsive-brief (weekend)" cite "N.D. Cal. Crim. L.R. 58-2(d)"
+{
+  given MisdemeanorAppealHearingScheduled() on 2026-08-01
+  expect deadline(misdemeanor-appeal-responsive-brief) == 2026-07-10
+}
+
 /// N.D. Cal. Crim. L.R. 58-2(d): the appellant may serve and file a reply
 /// not later than 14 days before the hearing date.
 deadline misdemeanor-appeal-reply-brief: 14.days before MisdemeanorAppealHearingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 58-2(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: misdemeanor-appeal-reply-brief (weekend)" cite "N.D. Cal. Crim. L.R. 58-2(d)"
+{
+  given MisdemeanorAppealHearingScheduled() on 2026-08-01
+  expect deadline(misdemeanor-appeal-reply-brief) == 2026-07-17
 }
 
 test "related case response: 7 days after the trigger" cite "N.D. Cal. Crim. L.R. 8-1(d)"

@@ -68,6 +68,12 @@ deadline supplemental-disclosure-statement: 14.days after DisclosureInformationC
   forum frcrimp
 }
 
+test "Counting boundary: supplemental-disclosure-statement (weekend)" cite "S.D.N.Y. Local Crim. R. 12.4"
+{
+  given DisclosureInformationChanged() on 2026-01-03
+  expect deadline(supplemental-disclosure-statement) == 2026-01-20
+}
+
 /// Local Criminal Rule 16.2: unless the court orders otherwise, the
 /// government makes its FRCrimP 16(a)(1)(G) expert disclosures at least 60
 /// days before trial.
@@ -79,6 +85,12 @@ deadline government-expert-disclosure: 60.days before TrialScheduled() counted_b
   forum frcrimp
 }
 
+test "Counting boundary: government-expert-disclosure (weekend)" cite "S.D.N.Y. Local Crim. R. 16.2"
+{
+  given TrialScheduled() on 2026-01-07
+  expect deadline(government-expert-disclosure) == 2025-11-07
+}
+
 /// Local Criminal Rule 16.2: unless the court orders otherwise, the defense
 /// makes its expert disclosures at least 30 days before trial.
 deadline defense-expert-disclosure: 30.days before TrialScheduled() counted_by frcrimp45-sdny delegable {
@@ -87,6 +99,12 @@ deadline defense-expert-disclosure: 30.days before TrialScheduled() counted_by f
 } cite "S.D.N.Y. Local Crim. R. 16.2"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defense-expert-disclosure (weekend)" cite "S.D.N.Y. Local Crim. R. 16.2"
+{
+  given TrialScheduled() on 2026-01-05
+  expect deadline(defense-expert-disclosure) == 2025-12-05
 }
 
 /// Local Criminal Rule 49.1(a)(1): unless a statute or rule provides
@@ -101,6 +119,12 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45-sd
   forum frcrimp
 }
 
+test "Counting boundary: opposition-period (weekend)" cite "S.D.N.Y. Local Crim. R. 49.1(a)"
+{
+  given MotionServed() on 2026-01-03
+  expect deadline(opposition-period) == 2026-01-20
+}
+
 /// Local Criminal Rule 49.1(a)(2): reply papers are filed within seven days
 /// after service of the opposing papers, unless the court orders
 /// otherwise.
@@ -112,12 +136,24 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45-sdny
   forum frcrimp
 }
 
+test "Counting boundary: reply-period (weekend)" cite "S.D.N.Y. Local Crim. R. 49.1(a)"
+{
+  given OppositionServed() on 2026-01-03
+  expect deadline(reply-period) == 2026-01-12
+}
+
 /// Local Criminal Rule 49.1(b): a motion for reconsideration of an order
 /// determining a motion is filed within 14 days after the court's
 /// determination of the original motion.
 deadline reconsideration-period: 14.days after MotionDetermined() counted_by frcrimp45-sdny cite "S.D.N.Y. Local Crim. R. 49.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reconsideration-period (weekend)" cite "S.D.N.Y. Local Crim. R. 49.1(b)"
+{
+  given MotionDetermined() on 2026-01-03
+  expect deadline(reconsideration-period) == 2026-01-20
 }
 
 test "supplemental disclosure statement: 14 days after the trigger" cite "S.D.N.Y. Local Crim. R. 12.4"

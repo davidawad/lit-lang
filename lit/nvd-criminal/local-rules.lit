@@ -94,6 +94,12 @@ deadline arraignment-waiver: 7.days before ArraignmentScheduled() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: arraignment-waiver (weekend)" cite "D. Nev. LCR 10-1"
+{
+  given ArraignmentScheduled() on 2020-04-18
+  expect deadline(arraignment-waiver) == 2020-04-10
+}
+
 /// D. Nev. LCR 12-1(a)(1): unless the court orders otherwise, each party
 /// has 30 days from the arraignment to file and serve the pretrial motions
 /// and notices LCR 12-1(b) lists.
@@ -103,6 +109,12 @@ deadline pretrial-motions: 30.days after Arraigned() counted_by frcrimp45 delega
 } cite "D. Nev. LCR 12-1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: pretrial-motions (weekend)" cite "D. Nev. LCR 12-1(a)"
+{
+  given Arraigned() on 2020-04-17
+  expect deadline(pretrial-motions) == 2020-05-18
 }
 
 /// D. Nev. LCR 12-1(a)(2): responses to pretrial motions and notices are
@@ -116,6 +128,12 @@ deadline pretrial-response: 14.days after PretrialMotionServed() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-response (weekend)" cite "D. Nev. LCR 12-1(a)"
+{
+  given PretrialMotionServed() on 2020-04-18
+  expect deadline(pretrial-response) == 2020-05-04
+}
+
 /// D. Nev. LCR 12-1(a)(3): a reply brief may be filed and served within
 /// seven days from the date of service of the response.
 deadline pretrial-reply: 7.days after PretrialResponseServed() counted_by frcrimp45 delegable {
@@ -126,12 +144,24 @@ deadline pretrial-reply: 7.days after PretrialResponseServed() counted_by frcrim
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-reply (weekend)" cite "D. Nev. LCR 12-1(a)"
+{
+  given PretrialResponseServed() on 2020-04-18
+  expect deadline(pretrial-reply) == 2020-04-27
+}
+
 /// D. Nev. LCR 12-3: any response to a motion for district judge review of
 /// a release or detention order is filed within 14 days of the filing of
 /// the motion; replies only with leave.
 deadline detention-review-response: 14.days after DetentionReviewMotionFiled() counted_by frcrimp45 cite "D. Nev. LCR 12-3"
 {
   forum frcrimp
+}
+
+test "Counting boundary: detention-review-response (weekend)" cite "D. Nev. LCR 12-3"
+{
+  given DetentionReviewMotionFiled() on 2020-04-18
+  expect deadline(detention-review-response) == 2020-05-04
 }
 
 /// D. Nev. LCR 16-1(a)(2): in a case designated complex, the parties meet
@@ -142,11 +172,23 @@ deadline complex-case-conference: 7.days after ComplexCaseDesignated() counted_b
   forum frcrimp
 }
 
+test "Counting boundary: complex-case-conference (weekend)" cite "D. Nev. LCR 16-1(a)"
+{
+  given ComplexCaseDesignated() on 2020-04-18
+  expect deadline(complex-case-conference) == 2020-04-27
+}
+
 /// D. Nev. LCR 16-1(a)(3): the parties file the proposed complex-case
 /// schedule within seven days after meeting and conferring.
 deadline complex-case-schedule: 7.days after ComplexCaseConferenceHeld() counted_by frcrimp45 cite "D. Nev. LCR 16-1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: complex-case-schedule (weekend)" cite "D. Nev. LCR 16-1(a)"
+{
+  given ComplexCaseConferenceHeld() on 2020-04-18
+  expect deadline(complex-case-schedule) == 2020-04-27
 }
 
 /// D. Nev. LCR 16-1(b)(1)(A): unless the court orders otherwise, the
@@ -160,6 +202,12 @@ deadline joint-discovery-agreement: 7.days after Arraigned() counted_by frcrimp4
   forum frcrimp
 }
 
+test "Counting boundary: joint-discovery-agreement (weekend)" cite "D. Nev. LCR 16-1(b)"
+{
+  given Arraigned() on 2020-04-18
+  expect deadline(joint-discovery-agreement) == 2020-04-27
+}
+
 /// D. Nev. LCR 16-1(b)(1)(C)(iii): the government makes the disclosures
 /// required by statute, rule or the Constitution available within seven
 /// days after filing the joint discovery statement.
@@ -168,11 +216,23 @@ deadline joint-agreement-government-disclosure: 7.days after JointDiscoveryAgree
   forum frcrimp
 }
 
+test "Counting boundary: joint-agreement-government-disclosure (weekend)" cite "D. Nev. LCR 16-1(b)"
+{
+  given JointDiscoveryAgreementFiled() on 2020-04-18
+  expect deadline(joint-agreement-government-disclosure) == 2020-04-27
+}
+
 /// D. Nev. LCR 16-1(b)(1)(C)(v): the defense makes its reciprocal
 /// disclosures available no later than 14 days before trial.
 deadline joint-agreement-reciprocal-disclosure: 14.days before TrialScheduled() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: joint-agreement-reciprocal-disclosure (weekend)" cite "D. Nev. LCR 16-1(b)"
+{
+  given TrialScheduled() on 2020-04-18
+  expect deadline(joint-agreement-reciprocal-disclosure) == 2020-04-03
 }
 
 /// D. Nev. LCR 16-1(b)(2)(A): without a joint discovery agreement, the
@@ -183,6 +243,12 @@ deadline disclosure-conference: 7.days after Arraigned() counted_by frcrimp45 ci
   forum frcrimp
 }
 
+test "Counting boundary: disclosure-conference (weekend)" cite "D. Nev. LCR 16-1(b)"
+{
+  given Arraigned() on 2020-04-18
+  expect deadline(disclosure-conference) == 2020-04-27
+}
+
 /// D. Nev. LCR 16-1(b)(2)(B): the government files its disclosure
 /// statement within seven days after the conference.
 deadline disclosure-statement-after-conference: 7.days after DisclosureConferenceHeld() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
@@ -190,11 +256,23 @@ deadline disclosure-statement-after-conference: 7.days after DisclosureConferenc
   forum frcrimp
 }
 
+test "Counting boundary: disclosure-statement-after-conference (weekend)" cite "D. Nev. LCR 16-1(b)"
+{
+  given DisclosureConferenceHeld() on 2020-04-18
+  expect deadline(disclosure-statement-after-conference) == 2020-04-27
+}
+
 /// D. Nev. LCR 16-1(b)(2)(B): and in no event more than 14 days after the
 /// date of arraignment.
 deadline disclosure-statement: 14.days after Arraigned() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: disclosure-statement (weekend)" cite "D. Nev. LCR 16-1(b)"
+{
+  given Arraigned() on 2020-04-18
+  expect deadline(disclosure-statement) == 2020-05-04
 }
 
 /// D. Nev. LCR 32-1(c): unless the court orders otherwise, the presentence
@@ -238,6 +316,12 @@ deadline forfeiture-motion: 28.days before SentencingScheduled() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: forfeiture-motion (weekend)" cite "D. Nev. LCR 32-1(f)"
+{
+  given SentencingScheduled() on 2020-04-18
+  expect deadline(forfeiture-motion) == 2020-03-20
+}
+
 /// D. Nev. LCR 32-1(f): any response is filed and served within 14 days
 /// from the date of service of the forfeiture motion.
 deadline forfeiture-response: 14.days after ForfeitureMotionServed() counted_by frcrimp45 delegable {
@@ -246,6 +330,12 @@ deadline forfeiture-response: 14.days after ForfeitureMotionServed() counted_by 
 } cite "D. Nev. LCR 32-1(f)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: forfeiture-response (weekend)" cite "D. Nev. LCR 32-1(f)"
+{
+  given ForfeitureMotionServed() on 2020-04-18
+  expect deadline(forfeiture-response) == 2020-05-04
 }
 
 /// D. Nev. LCR 32-1(f): any reply brief may be filed and served within
@@ -258,6 +348,12 @@ deadline forfeiture-reply: 7.days after ForfeitureResponseServed() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: forfeiture-reply (weekend)" cite "D. Nev. LCR 32-1(f)"
+{
+  given ForfeitureResponseServed() on 2020-04-18
+  expect deadline(forfeiture-reply) == 2020-04-27
+}
+
 /// D. Nev. LCR 32-2(c)(2): a written application for presentence or
 /// supervision records for a purpose other than sentencing reaches the
 /// determining official at least 14 days before production is required;
@@ -268,12 +364,24 @@ deadline records-application: 14.days before RecordsProductionRequired() counted
   forum frcrimp
 }
 
+test "Counting boundary: records-application (weekend)" cite "D. Nev. LCR 32-2(c)"
+{
+  given RecordsProductionRequired() on 2020-04-18
+  expect deadline(records-application) == 2020-04-03
+}
+
 /// D. Nev. LCR 35-1: the government has 21 days from the date of service
 /// of a motion for modification of sentence under FRCrimP 35 to file and
 /// serve a response.
 deadline rule35-response: 21.days after Rule35MotionServed() counted_by frcrimp45 cite "D. Nev. LCR 35-1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: rule35-response (weekend)" cite "D. Nev. LCR 35-1"
+{
+  given Rule35MotionServed() on 2020-04-18
+  expect deadline(rule35-response) == 2020-05-11
 }
 
 /// D. Nev. LCR 46-9(d): the clerk takes all reasonable steps to deposit
@@ -284,12 +392,24 @@ deadline registry-investment: 14.days after InvestmentOrderServed() counted_by f
   forum frcrimp
 }
 
+test "Counting boundary: registry-investment (weekend)" cite "D. Nev. LCR 46-9(d)"
+{
+  given InvestmentOrderServed() on 2020-04-18
+  expect deadline(registry-investment) == 2020-05-04
+}
+
 /// D. Nev. LCR 46-9(e): the attorney or pro se party who obtained the
 /// order verifies, within 14 days after its service on the clerk, that the
 /// funds were invested as ordered.
 deadline registry-investment-verification: 14.days after InvestmentOrderServed() counted_by frcrimp45 cite "D. Nev. LCR 46-9(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: registry-investment-verification (weekend)" cite "D. Nev. LCR 46-9(e)"
+{
+  given InvestmentOrderServed() on 2020-04-18
+  expect deadline(registry-investment-verification) == 2020-05-04
 }
 
 /// D. Nev. LCR 46-9(h): notice to the clerk on the disposition of funds in
@@ -301,12 +421,24 @@ deadline timed-instrument-notice: 14.days before TimedInstrumentMatures() counte
   forum frcrimp
 }
 
+test "Counting boundary: timed-instrument-notice (weekend)" cite "D. Nev. LCR 46-9(h)"
+{
+  given TimedInstrumentMatures() on 2020-04-18
+  expect deadline(timed-instrument-notice) == 2020-04-03
+}
+
 /// D. Nev. LCR 55-1(e): exhibits not withdrawn within 21 days after the
 /// clerk notifies the parties to claim them are destroyed or disposed of
 /// as the court orders.
 deadline exhibit-claim: 21.days after ExhibitClaimNoticed() counted_by frcrimp45 cite "D. Nev. LCR 55-1(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-claim (weekend)" cite "D. Nev. LCR 55-1(e)"
+{
+  given ExhibitClaimNoticed() on 2020-04-18
+  expect deadline(exhibit-claim) == 2020-05-11
 }
 
 test "arraignment waiver: 7 days before the trigger" cite "D. Nev. LCR 10-1"

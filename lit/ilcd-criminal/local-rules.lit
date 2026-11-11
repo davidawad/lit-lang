@@ -58,6 +58,12 @@ deadline pretrial-motions: 21.days after Arraigned() counted_by frcrimp45 delega
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motions (weekend)" cite "C.D. Ill. Crim. L.R. 12.1"
+{
+  given Arraigned() on 2026-09-05
+  expect deadline(pretrial-motions) == 2026-09-28
+}
+
 /// C.D. Ill. Crim. L.R. 16.1(A): within 7 days after the arraignment the
 /// United States Attorney and the defendant's attorney confer and comply
 /// with FRCrimP 16; a declination of a requested disclosure is in writing
@@ -65,6 +71,12 @@ deadline pretrial-motions: 21.days after Arraigned() counted_by frcrimp45 delega
 deadline discovery-conference: 7.days after Arraigned() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 16.1(A)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: discovery-conference (weekend)" cite "C.D. Ill. Crim. L.R. 16.1(A)"
+{
+  given Arraigned() on 2026-09-05
+  expect deadline(discovery-conference) == 2026-09-14
 }
 
 /// C.D. Ill. Crim. L.R. 16.1(C): if additional discovery or inspection is
@@ -77,6 +89,12 @@ deadline additional-discovery-conference: 14.days after Arraigned() counted_by f
 } cite "C.D. Ill. Crim. L.R. 16.1(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: additional-discovery-conference (weekend)" cite "C.D. Ill. Crim. L.R. 16.1(C)"
+{
+  given Arraigned() on 2026-09-05
+  expect deadline(additional-discovery-conference) == 2026-09-21
 }
 
 /// C.D. Ill. Crim. L.R. 16.1(D): a motion to compel additional discovery or
@@ -92,6 +110,12 @@ deadline motion-to-compel-discovery: 14.days after Arraigned() counted_by frcrim
   forum frcrimp
 }
 
+test "Counting boundary: motion-to-compel-discovery (weekend)" cite "C.D. Ill. Crim. L.R. 16.1(D)"
+{
+  given Arraigned() on 2026-09-05
+  expect deadline(motion-to-compel-discovery) == 2026-09-21
+}
+
 /// C.D. Ill. Crim. L.R. 49.3: an attorney or pro se party registered for
 /// electronic filing files notice of a change of email address, mailing
 /// address, telephone or fax number within 14 days and serves it on all
@@ -99,6 +123,12 @@ deadline motion-to-compel-discovery: 14.days after Arraigned() counted_by frcrim
 deadline contact-change-notice: 14.days after ContactInformationChanged() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 49.3"
 {
   forum frcrimp
+}
+
+test "Counting boundary: contact-change-notice (weekend)" cite "C.D. Ill. Crim. L.R. 49.3"
+{
+  given ContactInformationChanged() on 2026-09-05
+  expect deadline(contact-change-notice) == 2026-09-21
 }
 
 /// C.D. Ill. Crim. L.R. 49.10(C): a party or non-filing signatory who
@@ -110,11 +140,23 @@ deadline authenticity-objection: 14.days after FilingNoticeReceived() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: authenticity-objection (weekend)" cite "C.D. Ill. Crim. L.R. 49.10(C)"
+{
+  given FilingNoticeReceived() on 2026-09-05
+  expect deadline(authenticity-objection) == 2026-09-21
+}
+
 /// C.D. Ill. Crim. L.R. 49.12(C): a party files a Notice of Intent to
 /// Request Redaction within 7 days of the filing of the transcript.
 deadline redaction-notice: 7.days after TranscriptFiled() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 49.12(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: redaction-notice (weekend)" cite "C.D. Ill. Crim. L.R. 49.12(C)"
+{
+  given TranscriptFiled() on 2026-09-05
+  expect deadline(redaction-notice) == 2026-09-14
 }
 
 /// C.D. Ill. Crim. L.R. 49.12(C): within 21 days from the filing of the
@@ -123,6 +165,12 @@ deadline redaction-notice: 7.days after TranscriptFiled() counted_by frcrimp45 c
 deadline redaction-motion: 21.days after TranscriptFiled() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 49.12(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: redaction-motion (weekend)" cite "C.D. Ill. Crim. L.R. 49.12(C)"
+{
+  given TranscriptFiled() on 2026-09-05
+  expect deadline(redaction-motion) == 2026-09-28
 }
 
 test "pretrial motions: 21 days after the trigger" cite "C.D. Ill. Crim. L.R. 12.1"

@@ -119,6 +119,12 @@ deadline revised-capital-habeas-filing-period: 14.days after CapitalHabeasLeaveD
   forum frcp
 }
 
+test "Counting boundary: revised-capital-habeas-filing-period (weekend)" cite "D. Ariz. LRCiv 3.5"
+{
+  given CapitalHabeasLeaveDenied() on 2025-12-06
+  expect deadline(revised-capital-habeas-filing-period) == 2025-12-22
+}
+
 /// LRCiv 3.7(b): when an action is assigned to a magistrate judge, each party
 /// executes and files within fourteen days of its appearance either a written
 /// consent under 28 U.S.C. § 636(c) or a written election to have the action
@@ -128,6 +134,12 @@ deadline magistrate-consent-period: 14.days after MagistrateCaseAppearance() cou
   forum frcp
 }
 
+test "Counting boundary: magistrate-consent-period (weekend)" cite "D. Ariz. LRCiv 3.7"
+{
+  given MagistrateCaseAppearance() on 2025-12-06
+  expect deadline(magistrate-consent-period) == 2025-12-22
+}
+
 /// LRCiv 5.6(d): within fourteen days after service of the notice of lodging,
 /// the designating party files and serves either a notice withdrawing the
 /// confidentiality designation or a motion to seal; otherwise the court may
@@ -135,6 +147,12 @@ deadline magistrate-consent-period: 14.days after MagistrateCaseAppearance() cou
 deadline seal-designation-response-period: 14.days after LodgingNoticeServed() counted_by frcp6-arizona cite "D. Ariz. LRCiv 5.6"
 {
   forum frcp
+}
+
+test "Counting boundary: seal-designation-response-period (weekend)" cite "D. Ariz. LRCiv 5.6"
+{
+  given LodgingNoticeServed() on 2025-12-06
+  expect deadline(seal-designation-response-period) == 2025-12-22
 }
 
 /// LRCiv 5.6(e): if a request to file under seal is denied in full, the
@@ -153,12 +171,24 @@ deadline response-memorandum-period: 14.days after MotionServed() counted_by frc
   forum frcp
 }
 
+test "Counting boundary: response-memorandum-period (weekend)" cite "D. Ariz. LRCiv 7.2"
+{
+  given MotionServed() on 2025-12-06
+  expect deadline(response-memorandum-period) == 2025-12-22
+}
+
 /// LRCiv 7.2(d): unless otherwise ordered, and except as LRCiv 12.1 and 56.1
 /// provide, the moving party has seven days after service of the responsive
 /// memorandum to file a reply memorandum.
 deadline reply-memorandum-period: 7.days after ResponseServed() counted_by frcp6-arizona cite "D. Ariz. LRCiv 7.2"
 {
   forum frcp
+}
+
+test "Counting boundary: reply-memorandum-period (weekend)" cite "D. Ariz. LRCiv 7.2"
+{
+  given ResponseServed() on 2025-12-06
+  expect deadline(reply-memorandum-period) == 2025-12-15
 }
 
 /// LRCiv 7.2(g)(2): absent good cause shown, a motion for reconsideration is
@@ -169,12 +199,24 @@ deadline reconsideration-period: 14.days after OrderFiled() counted_by frcp6-ari
   forum frcp
 }
 
+test "Counting boundary: reconsideration-period (weekend)" cite "D. Ariz. LRCiv 7.2"
+{
+  given OrderFiled() on 2025-12-06
+  expect deadline(reconsideration-period) == 2025-12-22
+}
+
 /// LRCiv 15.1(a): if leave to amend is granted, the party whose pleading was
 /// amended files and serves the amended pleading within fourteen days of the
 /// filing of the order, unless the court orders otherwise.
 deadline amended-pleading-filing-period: 14.days after LeaveToAmendGranted() counted_by frcp6-arizona cite "D. Ariz. LRCiv 15.1"
 {
   forum frcp
+}
+
+test "Counting boundary: amended-pleading-filing-period (weekend)" cite "D. Ariz. LRCiv 15.1"
+{
+  given LeaveToAmendGranted() on 2025-12-06
+  expect deadline(amended-pleading-filing-period) == 2025-12-22
 }
 
 /// LRCiv 16.1(b): within thirty days after the answer is filed or thirty days
@@ -186,11 +228,23 @@ deadline social-security-opening-brief-period: 30.days after SocialSecurityAnswe
   forum frcp
 }
 
+test "Counting boundary: social-security-opening-brief-period (holiday)" cite "D. Ariz. LRCiv 16.1"
+{
+  given SocialSecurityAnswerOrRuling() on 2025-12-02
+  expect deadline(social-security-opening-brief-period) == 2026-01-02
+}
+
 /// LRCiv 16.1(c): the defendant files an answering brief within thirty days
 /// after service of the plaintiff's opening brief.
 deadline social-security-answering-brief-period: 30.days after OpeningBriefServed() counted_by frcp6-arizona cite "D. Ariz. LRCiv 16.1"
 {
   forum frcp
+}
+
+test "Counting boundary: social-security-answering-brief-period (holiday)" cite "D. Ariz. LRCiv 16.1"
+{
+  given OpeningBriefServed() on 2025-12-02
+  expect deadline(social-security-answering-brief-period) == 2026-01-02
 }
 
 /// LRCiv 16.1(d): the plaintiff may file a reply brief within fourteen days
@@ -199,6 +253,12 @@ deadline social-security-answering-brief-period: 30.days after OpeningBriefServe
 deadline social-security-reply-brief-period: 14.days after AnsweringBriefServed() counted_by frcp6-arizona cite "D. Ariz. LRCiv 16.1"
 {
   forum frcp
+}
+
+test "Counting boundary: social-security-reply-brief-period (weekend)" cite "D. Ariz. LRCiv 16.1"
+{
+  given AnsweringBriefServed() on 2025-12-06
+  expect deadline(social-security-reply-brief-period) == 2025-12-22
 }
 
 /// LRCiv 40.2(c): in a civil jury trial, unless written notice is given to
@@ -210,6 +270,12 @@ deadline jury-fee-settlement-notice-period: 5.days before JuryTrialBegins() coun
   forum frcp
 }
 
+test "Counting boundary: jury-fee-settlement-notice-period (holiday)" cite "D. Ariz. LRCiv 40.2"
+{
+  given JuryTrialBegins() on 2025-12-02
+  expect deadline(jury-fee-settlement-notice-period) == 2025-11-26
+}
+
 /// LRCiv 52.1: unless the court directs otherwise, the prevailing party
 /// prepares draft findings and conclusions within seven days after the
 /// rendition of the decision in the presence of counsel, and otherwise within
@@ -217,6 +283,12 @@ deadline jury-fee-settlement-notice-period: 5.days before JuryTrialBegins() coun
 deadline draft-findings-period: 7.days after DecisionRendered() counted_by frcp6-arizona cite "D. Ariz. LRCiv 52.1"
 {
   forum frcp
+}
+
+test "Counting boundary: draft-findings-period (weekend)" cite "D. Ariz. LRCiv 52.1"
+{
+  given DecisionRendered() on 2025-12-06
+  expect deadline(draft-findings-period) == 2025-12-15
 }
 
 /// LRCiv 52.1: the adverse party files and serves proposed objections,
@@ -227,12 +299,24 @@ deadline findings-objection-period: 7.days after DraftFindingsServed() counted_b
   forum frcp
 }
 
+test "Counting boundary: findings-objection-period (weekend)" cite "D. Ariz. LRCiv 52.1"
+{
+  given DraftFindingsServed() on 2025-12-06
+  expect deadline(findings-objection-period) == 2025-12-15
+}
+
 /// LRCiv 54.1(a): a party entitled to costs files and serves a bill of costs
 /// within fourteen days after the entry of final judgment, unless the time is
 /// extended under FRCP 6(b).
 deadline bill-of-costs-period: 14.days after FinalJudgmentEntered() counted_by frcp6-arizona cite "D. Ariz. LRCiv 54.1"
 {
   forum frcp
+}
+
+test "Counting boundary: bill-of-costs-period (weekend)" cite "D. Ariz. LRCiv 54.1"
+{
+  given FinalJudgmentEntered() on 2025-12-06
+  expect deadline(bill-of-costs-period) == 2025-12-22
 }
 
 /// LRCiv 54.1(b): within fourteen days after service of the bill of costs, a
@@ -242,12 +326,24 @@ deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by fr
   forum frcp
 }
 
+test "Counting boundary: costs-objection-period (weekend)" cite "D. Ariz. LRCiv 54.1"
+{
+  given BillOfCostsServed() on 2025-12-06
+  expect deadline(costs-objection-period) == 2025-12-22
+}
+
 /// LRCiv 54.1(b): the clerk's taxation of costs is final unless modified on
 /// review by the court on motion served within seven days thereafter, under
 /// FRCP 54(d).
 deadline taxation-review-period: 7.days after TaxationNoticeSent() counted_by frcp6-arizona cite "D. Ariz. LRCiv 54.1"
 {
   forum frcp
+}
+
+test "Counting boundary: taxation-review-period (weekend)" cite "D. Ariz. LRCiv 54.1"
+{
+  given TaxationNoticeSent() on 2025-12-06
+  expect deadline(taxation-review-period) == 2025-12-15
 }
 
 /// LRCiv 54.2(b)(2): unless a statute or order provides otherwise, a party
@@ -260,12 +356,24 @@ deadline fee-motion-period: 14.days after FinalJudgmentEntered() counted_by frcp
   forum frcp
 }
 
+test "Counting boundary: fee-motion-period (weekend)" cite "D. Ariz. LRCiv 54.2"
+{
+  given FinalJudgmentEntered() on 2025-12-06
+  expect deadline(fee-motion-period) == 2025-12-22
+}
+
 /// LRCiv 56.1(d): notwithstanding LRCiv 7.2(c), (d) and (f), the party
 /// opposing summary judgment has, unless otherwise ordered, thirty days after
 /// service to serve and file a responsive memorandum.
 deadline summary-judgment-response-period: 30.days after SummaryJudgmentMotionServed() counted_by frcp6-arizona cite "D. Ariz. LRCiv 56.1"
 {
   forum frcp
+}
+
+test "Counting boundary: summary-judgment-response-period (holiday)" cite "D. Ariz. LRCiv 56.1"
+{
+  given SummaryJudgmentMotionServed() on 2025-12-02
+  expect deadline(summary-judgment-response-period) == 2026-01-02
 }
 
 /// LRCiv 56.1(d): the moving party has, unless otherwise ordered, fifteen days
@@ -276,12 +384,24 @@ deadline summary-judgment-reply-period: 15.days after SummaryJudgmentResponseSer
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-reply-period (weekend)" cite "D. Ariz. LRCiv 56.1"
+{
+  given SummaryJudgmentResponseServed() on 2025-12-05
+  expect deadline(summary-judgment-reply-period) == 2025-12-22
+}
+
 /// LRCiv 83.2(c): unless otherwise ordered, an attorney directed to show cause
 /// why reciprocal discipline should not issue responds in writing within
 /// fourteen days after notice of the order is sent.
 deadline discipline-response-period: 14.days after ShowCauseNoticeSent() counted_by frcp6-arizona cite "D. Ariz. LRCiv 83.2"
 {
   forum frcp
+}
+
+test "Counting boundary: discipline-response-period (weekend)" cite "D. Ariz. LRCiv 83.2"
+{
+  given ShowCauseNoticeSent() on 2025-12-06
+  expect deadline(discipline-response-period) == 2025-12-22
 }
 
 /// LRCiv 83.2(d): within seven days of the sending of a notice of suspension
@@ -292,6 +412,12 @@ deadline client-notice-period: 7.days after SuspensionNoticeSent() counted_by fr
   forum frcp
 }
 
+test "Counting boundary: client-notice-period (weekend)" cite "D. Ariz. LRCiv 83.2"
+{
+  given SuspensionNoticeSent() on 2025-12-06
+  expect deadline(client-notice-period) == 2025-12-15
+}
+
 /// LRCiv 83.3(d): an attorney or unrepresented party files a notice of a name
 /// or address change, and an attorney of a firm name or e-mail address
 /// change, no later than fourteen days before the effective date.
@@ -300,11 +426,23 @@ deadline address-change-notice-period: 14.days before AddressChangeEffective() c
   forum frcp
 }
 
+test "Counting boundary: address-change-notice-period (weekend)" cite "D. Ariz. LRCiv 83.3"
+{
+  given AddressChangeEffective() on 2025-12-06
+  expect deadline(address-change-notice-period) == 2025-11-21
+}
+
 /// LRCiv 83.3(d): an unrepresented party who is incarcerated submits the
 /// notice within seven days after the effective date of the change.
 deadline incarcerated-address-change-period: 7.days after AddressChangeEffective() counted_by frcp6-arizona cite "D. Ariz. LRCiv 83.3"
 {
   forum frcp
+}
+
+test "Counting boundary: incarcerated-address-change-period (weekend)" cite "D. Ariz. LRCiv 83.3"
+{
+  given AddressChangeEffective() on 2025-12-06
+  expect deadline(incarcerated-address-change-period) == 2025-12-15
 }
 
 test "revised capital habeas filing period: 14 days after the trigger" cite "D. Ariz. LRCiv 3.5"

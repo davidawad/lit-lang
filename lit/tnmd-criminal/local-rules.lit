@@ -57,46 +57,112 @@ event ProductionHearingScheduled()
 /// motion requiring a determination of law files a memorandum of law in
 /// response not later than fourteen days after service of the motion.
 deadline law-motion-response-period: 14.days after LawMotionServed() counted_by frcrimp45 cite "M.D. Tenn. LCrR 12.01(c)"
+
+test "Counting boundary: law-motion-response-period (weekend)" cite "M.D. Tenn. LCrR 12.01(c)"
+{
+  given LawMotionServed() on 2025-05-17
+  expect deadline(law-motion-response-period) == 2025-06-02
+}
 /// LCrR 12.01(c)(3): an optional reply memorandum may be filed within seven
 /// days after service of the response.
 deadline law-motion-reply-period: 7.days after LawResponseServed() counted_by frcrimp45 cite "M.D. Tenn. LCrR 12.01(c)"
+
+test "Counting boundary: law-motion-reply-period (weekend)" cite "M.D. Tenn. LCrR 12.01(c)"
+{
+  given LawResponseServed() on 2025-05-17
+  expect deadline(law-motion-reply-period) == 2025-05-27
+}
 /// LCrR 16.01(a)(1): unless an extension of time is agreed to, no later
 /// than fourteen days after the date (or effective date) of arraignment
 /// the government provides the automatic discovery of FRCrimP
 /// 16(a)(1)(A)-(F), states whether the defendant was an aggrieved person of
 /// electronic surveillance, and provides the identification documents.
 deadline automatic-discovery-period: 14.days after Arraigned() counted_by frcrimp45 cite "M.D. Tenn. LCrR 16.01(a)"
+
+test "Counting boundary: automatic-discovery-period (weekend)" cite "M.D. Tenn. LCrR 16.01(a)"
+{
+  given Arraigned() on 2025-05-17
+  expect deadline(automatic-discovery-period) == 2025-06-02
+}
 /// LCrR 16.01(b): a motion regarding discovery is filed within fourteen
 /// days after a discovery request is denied or the discovery is otherwise
 /// due, unless the court orders otherwise.
 deadline discovery-motion-period: 14.days after DiscoveryDeniedOrDue() counted_by frcrimp45 cite "M.D. Tenn. LCrR 16.01(b)"
+
+test "Counting boundary: discovery-motion-period (weekend)" cite "M.D. Tenn. LCrR 16.01(b)"
+{
+  given DiscoveryDeniedOrDue() on 2025-05-17
+  expect deadline(discovery-motion-period) == 2025-06-02
+}
 /// LCrR 16.01(b): a response is filed within seven days after the motion is
 /// filed and served, unless the court orders otherwise.
 deadline discovery-motion-response-period: 7.days after DiscoveryMotionFiled() counted_by frcrimp45 cite "M.D. Tenn. LCrR 16.01(b)"
+
+test "Counting boundary: discovery-motion-response-period (weekend)" cite "M.D. Tenn. LCrR 16.01(b)"
+{
+  given DiscoveryMotionFiled() on 2025-05-17
+  expect deadline(discovery-motion-response-period) == 2025-05-27
+}
 /// LCrR 32.01(a): the sentencing hearing is set at least eighty days from
 /// the finding of guilt or the hearing on the petition to enter a plea;
 /// this is the earliest such date.
 deadline earliest-sentencing-date: 80.days after GuiltFoundOrPleaHearing() counted_by frcrimp45 cite "M.D. Tenn. LCrR 32.01(a)"
+
+test "Counting boundary: earliest-sentencing-date (weekend)" cite "M.D. Tenn. LCrR 32.01(a)"
+{
+  given GuiltFoundOrPleaHearing() on 2025-05-15
+  expect deadline(earliest-sentencing-date) == 2025-08-04
+}
 /// LCrR 32.01(c)(3): within seven days of receiving the objections, the
 /// probation officer discloses to all parties any changes or unresolved
 /// factual disputes or objections to the report.
 deadline objection-disclosure-period: 7.days after ReportObjectionsReceived() counted_by frcrimp45 cite "M.D. Tenn. LCrR 32.01(c)"
+
+test "Counting boundary: objection-disclosure-period (weekend)" cite "M.D. Tenn. LCrR 32.01(c)"
+{
+  given ReportObjectionsReceived() on 2025-05-17
+  expect deadline(objection-disclosure-period) == 2025-05-27
+}
 /// LCrR 32.01(c)(4): at least seven days before sentencing each side files
 /// its "Position ... Regarding Presentence Report", limited to unresolved
 /// matters previously raised with all parties in writing.
 deadline position-paper-period: 7.days before SentencingScheduled() counted_by frcrimp45 cite "M.D. Tenn. LCrR 32.01(c)"
+
+test "Counting boundary: position-paper-period (weekend)" cite "M.D. Tenn. LCrR 32.01(c)"
+{
+  given SentencingScheduled() on 2025-05-17
+  expect deadline(position-paper-period) == 2025-05-09
+}
 /// LCrR 32.01(e): by no later than three days before the sentencing
 /// hearing, unless ordered otherwise, counsel for all parties file a
 /// statement of the relevant 18 U.S.C. § 3553(a) factors.
 deadline section-3553a-statement-period: 3.days before SentencingScheduled() counted_by frcrimp45 cite "M.D. Tenn. LCrR 32.01(e)"
+
+test "Counting boundary: section-3553a-statement-period (weekend)" cite "M.D. Tenn. LCrR 32.01(e)"
+{
+  given SentencingScheduled() on 2025-05-20
+  expect deadline(section-3553a-statement-period) == 2025-05-16
+}
 /// LCrR 32.01(f): all other sentencing related filings are filed no later
 /// than three days before the sentencing hearing, unless the court orders
 /// or permits otherwise.
 deadline other-sentencing-filings-period: 3.days before SentencingScheduled() counted_by frcrimp45 cite "M.D. Tenn. LCrR 32.01(f)"
+
+test "Counting boundary: other-sentencing-filings-period (weekend)" cite "M.D. Tenn. LCrR 32.01(f)"
+{
+  given SentencingScheduled() on 2025-05-20
+  expect deadline(other-sentencing-filings-period) == 2025-05-16
+}
 /// LCrR 57.05: every motion and order to produce a prisoner or detainee is
 /// filed at least fourteen days before the date of the hearing; relief
 /// requires an order of the court.
 deadline production-motion-period: 14.days before ProductionHearingScheduled() counted_by frcrimp45 cite "M.D. Tenn. LCrR 57.05"
+
+test "Counting boundary: production-motion-period (weekend)" cite "M.D. Tenn. LCrR 57.05"
+{
+  given ProductionHearingScheduled() on 2025-05-17
+  expect deadline(production-motion-period) == 2025-05-02
+}
 
 test "law motion response period: 14 days after the trigger" cite "M.D. Tenn. LCrR 12.01(c)"
 {

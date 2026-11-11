@@ -30,6 +30,12 @@ deadline pretrial-motions: 14.days after PleaEntered() counted_by frcrimp45 dele
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motions (weekend)" cite "D.N.M.I. LCrR 12.1"
+{
+  given PleaEntered() on 2004-01-03
+  expect deadline(pretrial-motions) == 2004-01-20
+}
+
 test "pretrial motions: 14 days after the trigger" cite "D.N.M.I. LCrR 12.1"
 {
   given PleaEntered() on 2027-03-01

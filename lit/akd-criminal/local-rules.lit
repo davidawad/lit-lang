@@ -116,12 +116,24 @@ deadline presentence-interview: 14.days after ChangeOfPleaProposed() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: presentence-interview (weekend)" cite "D. Alaska L.Crim.R. 11.1(b)"
+{
+  given ChangeOfPleaProposed() on 2025-10-18
+  expect deadline(presentence-interview) == 2025-11-03
+}
+
 /// D. Alaska L.Crim.R. 16.1(a): the discovery materials FRCrimP 16 lists,
 /// exclusive of expert reports, are provided to the defense within 14
 /// calendar days after the arraignment.
 deadline rule16-discovery: 14.days after Arraigned() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 16.1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: rule16-discovery (weekend)" cite "D. Alaska L.Crim.R. 16.1(a)"
+{
+  given Arraigned() on 2025-10-18
+  expect deadline(rule16-discovery) == 2025-11-03
 }
 
 /// D. Alaska L.Crim.R. 23.1(a): a party wishing to introduce drugs, cash,
@@ -141,11 +153,23 @@ deadline weapon-exhibit-marshal-contact: 7.days before WeaponExhibitScheduled() 
   forum frcrimp
 }
 
+test "Counting boundary: weapon-exhibit-marshal-contact (weekend)" cite "D. Alaska L.Crim.R. 23.1(b)"
+{
+  given WeaponExhibitScheduled() on 2025-10-18
+  expect deadline(weapon-exhibit-marshal-contact) == 2025-10-10
+}
+
 /// D. Alaska L.Crim.R. 32.1(b): the draft presentence report is disclosed
 /// to counsel not less than 42 days before the sentencing date.
 deadline draft-psr-disclosure: 42.days before SentencingScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: draft-psr-disclosure (weekend)" cite "D. Alaska L.Crim.R. 32.1(b)"
+{
+  given SentencingScheduled() on 2025-10-18
+  expect deadline(draft-psr-disclosure) == 2025-09-05
 }
 
 /// D. Alaska L.Crim.R. 32.1(c): the final presentence report is disclosed
@@ -157,6 +181,12 @@ deadline final-psr-disclosure: 21.days before SentencingScheduled() counted_by f
   forum frcrimp
 }
 
+test "Counting boundary: final-psr-disclosure (weekend)" cite "D. Alaska L.Crim.R. 32.1(c)"
+{
+  given SentencingScheduled() on 2025-10-18
+  expect deadline(final-psr-disclosure) == 2025-09-26
+}
+
 /// D. Alaska L.Crim.R. 32.1(e)(1): not less than 7 days before the
 /// sentencing hearing, each party files and serves a sentencing
 /// memorandum, with its sealed addendum (L.Crim.R. 32.1(f)); a motion for
@@ -166,12 +196,24 @@ deadline sentencing-memorandum: 7.days before SentencingScheduled() counted_by f
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-memorandum (weekend)" cite "D. Alaska L.Crim.R. 32.1(e)"
+{
+  given SentencingScheduled() on 2025-10-18
+  expect deadline(sentencing-memorandum) == 2025-10-10
+}
+
 /// D. Alaska L.Crim.R. 32.1(e)(2): not less than 3 days before the
 /// sentencing hearing, each party may reply to the opposing sentencing
 /// memorandum.
 deadline sentencing-reply: 3.days before SentencingScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-reply (weekend)" cite "D. Alaska L.Crim.R. 32.1(e)"
+{
+  given SentencingScheduled() on 2025-10-15
+  expect deadline(sentencing-reply) == 2025-10-10
 }
 
 /// D. Alaska L.Crim.R. 32.1.1(a)(2)(A): if the person is in custody, the
@@ -183,6 +225,12 @@ deadline revocation-initial-appearance: 7.days after RevocationPetitionFiledInCu
   forum frcrimp
 }
 
+test "Counting boundary: revocation-initial-appearance (weekend)" cite "D. Alaska L.Crim.R. 32.1.1(a)"
+{
+  given RevocationPetitionFiledInCustody() on 2025-10-18
+  expect deadline(revocation-initial-appearance) == 2025-10-27
+}
+
 /// D. Alaska L.Crim.R. 32.1.1(c)(2)(A): an objection to a magistrate
 /// judge's report and recommendation on a revocation violation is filed
 /// within 7 days of the date announced; without a timely objection the
@@ -190,6 +238,12 @@ deadline revocation-initial-appearance: 7.days after RevocationPetitionFiledInCu
 deadline revocation-recommendation-objection: 7.days after RevocationRecommendationAnnounced() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1.1(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: revocation-recommendation-objection (weekend)" cite "D. Alaska L.Crim.R. 32.1.1(c)"
+{
+  given RevocationRecommendationAnnounced() on 2025-10-18
+  expect deadline(revocation-recommendation-objection) == 2025-10-27
 }
 
 /// D. Alaska L.Crim.R. 32.1.1(e)(2)(A): unless otherwise ordered, the
@@ -201,6 +255,12 @@ deadline violation-recommendation-filing: 7.days before DispositionHearingSchedu
 } cite "D. Alaska L.Crim.R. 32.1.1(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: violation-recommendation-filing (weekend)" cite "D. Alaska L.Crim.R. 32.1.1(e)"
+{
+  given DispositionHearingScheduled() on 2025-10-18
+  expect deadline(violation-recommendation-filing) == 2025-10-10
 }
 
 /// D. Alaska L.Crim.R. 32.1.1(e)(2)(B): unless otherwise ordered, a party
@@ -223,6 +283,12 @@ deadline psr-disclosure-opposition: 14.days after PsrDisclosureMotionFiled() cou
   forum frcrimp
 }
 
+test "Counting boundary: psr-disclosure-opposition (weekend)" cite "D. Alaska L.Crim.R. 32.1.2(e)"
+{
+  given PsrDisclosureMotionFiled() on 2025-10-18
+  expect deadline(psr-disclosure-opposition) == 2025-11-03
+}
+
 /// D. Alaska L.Crim.R. 46.1(d)(1): counsel requesting other release
 /// services gives Pretrial Services and opposing counsel a written request
 /// no less than 4 business days before the hearing at which it is
@@ -241,6 +307,12 @@ deadline travel-request: 10.days before IntendedTravel() counted_by frcrimp45 ci
   forum frcrimp
 }
 
+test "Counting boundary: travel-request (weekend)" cite "D. Alaska L.Crim.R. 46.2"
+{
+  given IntendedTravel() on 2025-10-15
+  expect deadline(travel-request) == 2025-10-03
+}
+
 /// D. Alaska L.Crim.R. 47.1(c): unless otherwise ordered, an opposition to
 /// a pretrial motion is filed within 7 days of the filing of the motion.
 deadline pretrial-opposition: 7.days after PretrialMotionFiled() counted_by frcrimp45 delegable {
@@ -249,6 +321,12 @@ deadline pretrial-opposition: 7.days after PretrialMotionFiled() counted_by frcr
 } cite "D. Alaska L.Crim.R. 47.1(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: pretrial-opposition (weekend)" cite "D. Alaska L.Crim.R. 47.1(c)"
+{
+  given PretrialMotionFiled() on 2025-10-18
+  expect deadline(pretrial-opposition) == 2025-10-27
 }
 
 /// D. Alaska L.Crim.R. 47.1(c): unless otherwise ordered, an opposition to
@@ -262,6 +340,12 @@ deadline post-conviction-opposition: 14.days after PostConvictionMotionFiled() c
   forum frcrimp
 }
 
+test "Counting boundary: post-conviction-opposition (weekend)" cite "D. Alaska L.Crim.R. 47.1(c)"
+{
+  given PostConvictionMotionFiled() on 2025-10-18
+  expect deadline(post-conviction-opposition) == 2025-11-03
+}
+
 /// D. Alaska L.Crim.R. 47.1(g)(2)(A): a motion for reconsideration for
 /// manifest error of law or fact is filed and served not later than 7
 /// days after the entry of the order.
@@ -270,12 +354,24 @@ deadline reconsideration-manifest-error: 7.days after OrderEntered() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: reconsideration-manifest-error (weekend)" cite "D. Alaska L.Crim.R. 47.1(g)"
+{
+  given OrderEntered() on 2025-10-18
+  expect deadline(reconsideration-manifest-error) == 2025-10-27
+}
+
 /// D. Alaska L.Crim.R. 47.1(g)(2)(B): a motion for reconsideration on new
 /// material facts or an intervening change in the law is filed and served
 /// within 14 days of the discovery or change in law.
 deadline reconsideration-new-facts: 14.days after NewFactsOrLawChange() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 47.1(g)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: reconsideration-new-facts (weekend)" cite "D. Alaska L.Crim.R. 47.1(g)"
+{
+  given NewFactsOrLawChange() on 2025-10-18
+  expect deadline(reconsideration-new-facts) == 2025-11-03
 }
 
 /// D. Alaska L.Crim.R. 47.1(g)(3): no response to a motion for
@@ -290,6 +386,12 @@ deadline reconsideration-response: 7.days after ReconsiderationResponseRequested
   forum frcrimp
 }
 
+test "Counting boundary: reconsideration-response (weekend)" cite "D. Alaska L.Crim.R. 47.1(g)"
+{
+  given ReconsiderationResponseRequested() on 2025-10-18
+  expect deadline(reconsideration-response) == 2025-10-27
+}
+
 /// D. Alaska L.Crim.R. 47.1(g)(4): no reply is filed unless the court
 /// requests one; unless otherwise ordered, it is filed within 7 days of
 /// the order requesting it.
@@ -301,12 +403,24 @@ deadline reconsideration-reply: 7.days after ReconsiderationReplyRequested() cou
   forum frcrimp
 }
 
+test "Counting boundary: reconsideration-reply (weekend)" cite "D. Alaska L.Crim.R. 47.1(g)"
+{
+  given ReconsiderationReplyRequested() on 2025-10-18
+  expect deadline(reconsideration-reply) == 2025-10-27
+}
+
 /// D. Alaska L.Crim.R. 47.1(j)(3): if a motion to submit documents in
 /// camera is granted, the documents are filed through CM/ECF as an ex
 /// parte document within 7 days.
 deadline in-camera-filing: 7.days after InCameraReviewGranted() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 47.1(j)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: in-camera-filing (weekend)" cite "D. Alaska L.Crim.R. 47.1(j)"
+{
+  given InCameraReviewGranted() on 2025-10-18
+  expect deadline(in-camera-filing) == 2025-10-27
 }
 
 /// D. Alaska L.Crim.R. 59.1: unless otherwise ordered, a party may file
@@ -321,6 +435,12 @@ deadline recommendation-objection: 14.days after RecommendationIssued() counted_
   forum frcrimp
 }
 
+test "Counting boundary: recommendation-objection (weekend)" cite "D. Alaska L.Crim.R. 59.1"
+{
+  given RecommendationIssued() on 2025-10-18
+  expect deadline(recommendation-objection) == 2025-11-03
+}
+
 /// D. Alaska L.Crim.R. 59.1: the opposing party may respond to the
 /// objections within 7 days of their filing.
 deadline recommendation-objection-response: 7.days after RecommendationObjectionsFiled() counted_by frcrimp45 delegable {
@@ -329,6 +449,12 @@ deadline recommendation-objection-response: 7.days after RecommendationObjection
 } cite "D. Alaska L.Crim.R. 59.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: recommendation-objection-response (weekend)" cite "D. Alaska L.Crim.R. 59.1"
+{
+  given RecommendationObjectionsFiled() on 2025-10-18
+  expect deadline(recommendation-objection-response) == 2025-10-27
 }
 
 test "presentence interview: 14 days after the trigger" cite "D. Alaska L.Crim.R. 11.1(b)"

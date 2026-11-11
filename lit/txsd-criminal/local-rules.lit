@@ -67,6 +67,12 @@ deadline interview-attendance-notice: 7.days after GuiltDetermined() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: interview-attendance-notice (weekend)" cite "S.D. Tex. Cr 32.3(A)"
+{
+  given GuiltDetermined() on 2026-03-28
+  expect deadline(interview-attendance-notice) == 2026-04-06
+}
+
 /// S.D. Tex. Cr32.7(B): within 14 days after the time for objections, but
 /// in no event later than 7 days before sentencing (FRCrimP 32(g), not
 /// restated), the probation office submits the final report to the
@@ -74,6 +80,12 @@ deadline interview-attendance-notice: 7.days after GuiltDetermined() counted_by 
 deadline final-report: 14.days after ObjectionPeriodEnded() counted_by frcrimp45 cite "S.D. Tex. Cr 32.7(B)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: final-report (weekend)" cite "S.D. Tex. Cr 32.7(B)"
+{
+  given ObjectionPeriodEnded() on 2026-03-28
+  expect deadline(final-report) == 2026-04-13
 }
 
 /// S.D. Tex. Cr55.2(A): a party requiring authentication of an exhibit
@@ -85,6 +97,12 @@ deadline authentication-notice: 7.days after ExhibitListed() counted_by frcrimp4
   forum frcrimp
 }
 
+test "Counting boundary: authentication-notice (weekend)" cite "S.D. Tex. Cr 55.2(A)"
+{
+  given ExhibitListed() on 2026-03-28
+  expect deadline(authentication-notice) == 2026-04-06
+}
+
 /// S.D. Tex. Cr55.2(B): objections to the admissibility of exhibits are
 /// made at least 7 days before trial by notifying the court in writing of
 /// the disputes, with copies of the disputed exhibits and authority.
@@ -93,12 +111,24 @@ deadline exhibit-objections: 7.days before TrialScheduled() counted_by frcrimp45
   forum frcrimp
 }
 
+test "Counting boundary: exhibit-objections (weekend)" cite "S.D. Tex. Cr 55.2(B)"
+{
+  given TrialScheduled() on 2026-03-28
+  expect deadline(exhibit-objections) == 2026-03-20
+}
+
 /// S.D. Tex. Cr55.2(C)(1): exhibits not easily stored in a file folder are
 /// withdrawn within 7 days after the completion of the trial, and reduced
 /// reproductions or photographs substituted.
 deadline oversized-exhibit-withdrawal: 7.days after TrialCompleted() counted_by frcrimp45 cite "S.D. Tex. Cr 55.2(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: oversized-exhibit-withdrawal (weekend)" cite "S.D. Tex. Cr 55.2(C)"
+{
+  given TrialCompleted() on 2026-03-28
+  expect deadline(oversized-exhibit-withdrawal) == 2026-04-06
 }
 
 /// S.D. Tex. Cr55.2(C)(2): if there is no appeal, the offering party
@@ -110,12 +140,24 @@ deadline exhibit-removal: 30.days after DisposedWithoutAppeal() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: exhibit-removal (weekend)" cite "S.D. Tex. Cr 55.2(C)"
+{
+  given DisposedWithoutAppeal() on 2026-03-27
+  expect deadline(exhibit-removal) == 2026-04-27
+}
+
 /// S.D. Tex. Cr55.2(C)(2): when there is an appeal, the offering party
 /// removes exhibits returned by the court of appeals within 14 days after
 /// the clerk's written notice.
 deadline returned-exhibit-removal: 14.days after ReturnedExhibitsNoticed() counted_by frcrimp45 cite "S.D. Tex. Cr 55.2(C)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: returned-exhibit-removal (weekend)" cite "S.D. Tex. Cr 55.2(C)"
+{
+  given ReturnedExhibitsNoticed() on 2026-03-28
+  expect deadline(returned-exhibit-removal) == 2026-04-13
 }
 
 test "interview attendance notice: 7 days after the trigger" cite "S.D. Tex. Cr 32.3(A)"

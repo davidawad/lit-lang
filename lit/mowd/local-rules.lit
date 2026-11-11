@@ -105,6 +105,12 @@ deadline opposing-suggestions-period: 14.days after MotionFiled() counted_by frc
   forum frcp
 }
 
+test "Counting boundary: opposing-suggestions-period (weekend)" cite "W.D. Mo. L.R. 7.0(c)"
+{
+  given MotionFiled() on 2026-07-11
+  expect deadline(opposing-suggestions-period) == 2026-07-27
+}
+
 /// W.D. Mo. L.R. 7.0(c)(2): for a summary judgment motion a party instead
 /// has 21 days to file its opposing suggestions.
 deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 7.0(c)"
@@ -112,11 +118,23 @@ deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotion
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-opposition-period (weekend)" cite "W.D. Mo. L.R. 7.0(c)"
+{
+  given SummaryJudgmentMotionFiled() on 2026-07-11
+  expect deadline(summary-judgment-opposition-period) == 2026-08-03
+}
+
 /// W.D. Mo. L.R. 7.0(c)(3): within 14 days after the opposing suggestions
 /// are filed, the moving party may file reply suggestions.
 deadline reply-suggestions-period: 14.days after OpposingSuggestionsFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 7.0(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: reply-suggestions-period (weekend)" cite "W.D. Mo. L.R. 7.0(c)"
+{
+  given OpposingSuggestionsFiled() on 2026-07-11
+  expect deadline(reply-suggestions-period) == 2026-07-27
 }
 
 /// W.D. Mo. L.R. 7.1(c): if the information in a certificate of interest
@@ -156,6 +174,12 @@ deadline social-security-reply-period: 21.days after CommissionerBriefServed() c
   forum frcp
 }
 
+test "Counting boundary: social-security-reply-period (weekend)" cite "W.D. Mo. L.R. 9.1(d)"
+{
+  given CommissionerBriefServed() on 2026-07-11
+  expect deadline(social-security-reply-period) == 2026-08-03
+}
+
 /// W.D. Mo. L.R. 9.2(h): unless the court extends it, the petitioner files
 /// any reply suggestions within 14 days after the respondent's opposing
 /// suggestions are served; absent a timely reply and good cause, the court
@@ -163,6 +187,12 @@ deadline social-security-reply-period: 21.days after CommissionerBriefServed() c
 deadline habeas-reply-period: 14.days after HabeasOppositionServed() counted_by frcp6-missouri cite "W.D. Mo. L.R. 9.2(h)"
 {
   forum frcp
+}
+
+test "Counting boundary: habeas-reply-period (weekend)" cite "W.D. Mo. L.R. 9.2(h)"
+{
+  given HabeasOppositionServed() on 2026-07-11
+  expect deadline(habeas-reply-period) == 2026-07-27
 }
 
 /// W.D. Mo. L.R. 15.1(b): when the court grants leave to amend, the moving
@@ -180,6 +210,12 @@ deadline proposed-scheduling-order-period: 14.days after DiscoveryConferenceHeld
   forum frcp
 }
 
+test "Counting boundary: proposed-scheduling-order-period (weekend)" cite "W.D. Mo. L.R. 16.1(b)"
+{
+  given DiscoveryConferenceHeld() on 2026-07-11
+  expect deadline(proposed-scheduling-order-period) == 2026-07-27
+}
+
 /// W.D. Mo. L.R. 30.1: a party other than the one conducting a deposition
 /// that will record it by non-stenographic means files the method and the
 /// technician's name, address and employer no later than 3 days before the
@@ -187,6 +223,12 @@ deadline proposed-scheduling-order-period: 14.days after DiscoveryConferenceHeld
 deadline recording-notice-period: 3.days before DepositionDate() counted_by frcp6-missouri cite "W.D. Mo. L.R. 30.1"
 {
   forum frcp
+}
+
+test "Counting boundary: recording-notice-period (weekend)" cite "W.D. Mo. L.R. 30.1"
+{
+  given DepositionDate() on 2026-07-14
+  expect deadline(recording-notice-period) == 2026-07-10
 }
 
 /// W.D. Mo. L.R. 47.1(c): a party wanting additional peremptory challenges
@@ -205,6 +247,12 @@ deadline bill-of-costs-period: 21.days after FinalJudgmentEntered() counted_by f
   forum frcp
 }
 
+test "Counting boundary: bill-of-costs-period (weekend)" cite "W.D. Mo. L.R. 54.1(a)"
+{
+  given FinalJudgmentEntered() on 2026-07-11
+  expect deadline(bill-of-costs-period) == 2026-08-03
+}
+
 /// W.D. Mo. L.R. 54.1(a)(1): within 14 days after the bill of costs is
 /// filed, each objecting party files suggestions stating specific
 /// objections; absent a timely objection the Clerk taxes costs as claimed
@@ -214,11 +262,23 @@ deadline cost-objection-period: 14.days after BillOfCostsFiled() counted_by frcp
   forum frcp
 }
 
+test "Counting boundary: cost-objection-period (weekend)" cite "W.D. Mo. L.R. 54.1(a)"
+{
+  given BillOfCostsFiled() on 2026-07-11
+  expect deadline(cost-objection-period) == 2026-07-27
+}
+
 /// W.D. Mo. L.R. 54.1(a)(1): within 14 days after objections are filed,
 /// the party seeking costs may file reply suggestions.
 deadline cost-reply-period: 14.days after CostObjectionsFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 54.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: cost-reply-period (weekend)" cite "W.D. Mo. L.R. 54.1(a)"
+{
+  given CostObjectionsFiled() on 2026-07-11
+  expect deadline(cost-reply-period) == 2026-07-27
 }
 
 /// W.D. Mo. L.R. 54.1(b): the Clerk taxes FRAP 39(e) costs if a bill of
@@ -229,11 +289,23 @@ deadline appeal-costs-period: 21.days after MandateIssued() counted_by frcp6-mis
   forum frcp
 }
 
+test "Counting boundary: appeal-costs-period (weekend)" cite "W.D. Mo. L.R. 54.1(b)"
+{
+  given MandateIssued() on 2026-07-11
+  expect deadline(appeal-costs-period) == 2026-08-03
+}
+
 /// W.D. Mo. L.R. 55.1(a)(1): written notice of the intention to move for
 /// entry of default is given at least 14 days before the motion is filed.
 deadline default-notice-period: 14.days before DefaultMotionFiled() counted_by frcp6-missouri cite "W.D. Mo. L.R. 55.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: default-notice-period (weekend)" cite "W.D. Mo. L.R. 55.1(a)"
+{
+  given DefaultMotionFiled() on 2026-07-11
+  expect deadline(default-notice-period) == 2026-06-26
 }
 
 /// W.D. Mo. L.R. 58.2: when the court so orders, the prevailing party
@@ -260,6 +332,12 @@ deadline receiver-inventory-period: 30.days after ReceiverPossession() counted_b
   forum frcp
 }
 
+test "Counting boundary: receiver-inventory-period (weekend)" cite "W.D. Mo. L.R. 66.1(b)"
+{
+  given ReceiverPossession() on 2026-07-09
+  expect deadline(receiver-inventory-period) == 2026-08-10
+}
+
 /// W.D. Mo. L.R. 79.2(a): after trial or as soon as possible, but no more
 /// than 14 days after a verdict is rendered or a judgment entered, the
 /// offering attorney withdraws any exhibits in the Clerk's custody and
@@ -267,6 +345,12 @@ deadline receiver-inventory-period: 30.days after ReceiverPossession() counted_b
 deadline exhibit-withdrawal-period: 14.days after VerdictOrJudgment() counted_by frcp6-missouri cite "W.D. Mo. L.R. 79.2(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: exhibit-withdrawal-period (weekend)" cite "W.D. Mo. L.R. 79.2(a)"
+{
+  given VerdictOrJudgment() on 2026-07-11
+  expect deadline(exhibit-withdrawal-period) == 2026-07-27
 }
 
 /// W.D. Mo. L.R. 80.1(a)(2): within 7 days after a transcript is filed,
@@ -285,6 +369,12 @@ deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by 
   forum frcp
 }
 
+test "Counting boundary: redaction-statement-period (weekend)" cite "W.D. Mo. L.R. 80.1(a)"
+{
+  given TranscriptFiled() on 2026-07-11
+  expect deadline(redaction-statement-period) == 2026-08-03
+}
+
 /// W.D. Mo. L.R. 83.5(f)(2): an attorney not a member of the court's bar
 /// who enters a limited initial appearance complies with L.R. 83.5(f)(3)
 /// within 14 days after entering it, or may be removed from the case.
@@ -293,12 +383,24 @@ deadline admission-compliance-period: 14.days after LimitedAppearanceEntered() c
   forum frcp
 }
 
+test "Counting boundary: admission-compliance-period (weekend)" cite "W.D. Mo. L.R. 83.5(f)"
+{
+  given LimitedAppearanceEntered() on 2026-07-11
+  expect deadline(admission-compliance-period) == 2026-07-27
+}
+
 /// W.D. Mo. L.R. 83.7(e): any party may file written objections to a fee
 /// imposed on a person who sought leave to proceed in forma pauperis
 /// within 21 days after being notified of the fee.
 deadline ifp-fee-objection-period: 21.days after IfpFeeNotified() counted_by frcp6-missouri cite "W.D. Mo. L.R. 83.7(e)"
 {
   forum frcp
+}
+
+test "Counting boundary: ifp-fee-objection-period (weekend)" cite "W.D. Mo. L.R. 83.7(e)"
+{
+  given IfpFeeNotified() on 2026-07-11
+  expect deadline(ifp-fee-objection-period) == 2026-08-03
 }
 
 test "Deadline arithmetic: opposing-suggestions-period (14 days after)" cite "W.D. Mo. L.R. 7.0(c)"

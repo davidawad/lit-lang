@@ -85,6 +85,12 @@ deadline arraignment-period: 10.days after TrialClockEvent() counted_by frcrimp4
   forum frcrimp
 }
 
+test "Counting boundary: arraignment-period (weekend)" cite "D. Del. Crim. Plan § 4(a)"
+{
+  given TrialClockEvent(Indictment) on 2011-05-04
+  expect deadline(arraignment-period) == 2011-05-16
+}
+
 /// D. Del. Crim. Plan § 5(a): unless the Court orders otherwise at
 /// arraignment, motions for a bill of particulars, on defects in the
 /// institution of the prosecution or in the charge, for relief from
@@ -101,6 +107,12 @@ deadline pretrial-motions: 10.days after Arraigned() counted_by frcrimp45-delawa
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motions (weekend)" cite "D. Del. Crim. Plan § 5(a)"
+{
+  given Arraigned() on 2011-05-04
+  expect deadline(pretrial-motions) == 2011-05-16
+}
+
 /// D. Del. Crim. Plan § 5(c): a defendant who intends to rely on an
 /// insanity defense or to introduce expert testimony of a mental
 /// condition bearing on guilt notifies the government in writing and
@@ -115,6 +127,12 @@ deadline mental-condition-notice: 10.days after Arraigned() counted_by frcrimp45
   forum frcrimp
 }
 
+test "Counting boundary: mental-condition-notice (weekend)" cite "D. Del. Crim. Plan § 5(c)"
+{
+  given Arraigned() on 2011-05-04
+  expect deadline(mental-condition-notice) == 2011-05-16
+}
+
 /// D. Del. Crim. Plan § 5(d)(6): all post-hearing submissions are filed no
 /// later than thirty days after the proceeding's conclusion, unless the
 /// Court finds a longer continuance in the interest of justice under 18
@@ -127,6 +145,12 @@ deadline post-hearing-submissions: 30.days after MotionProceedingConcluded() cou
   forum frcrimp
 }
 
+test "Counting boundary: post-hearing-submissions (weekend)" cite "D. Del. Crim. Plan § 5(d)"
+{
+  given MotionProceedingConcluded() on 2011-05-05
+  expect deadline(post-hearing-submissions) == 2011-06-06
+}
+
 /// D. Del. Crim. Plan § 6(g)(2): a scheduling conflict of counsel is not a
 /// ground for continuance unless the Court receives notice of it and a
 /// motion to reschedule the trial within five days of the order setting
@@ -137,12 +161,24 @@ deadline reschedule-motion: 5.days after TrialSettingOrdered() counted_by frcrim
   forum frcrimp
 }
 
+test "Counting boundary: reschedule-motion (weekend)" cite "D. Del. Crim. Plan § 6(g)"
+{
+  given TrialSettingOrdered() on 2011-05-02
+  expect deadline(reschedule-motion) == 2011-05-09
+}
+
 /// D. Del. Crim. Plan § 10(d)(3), (f)(3): when a continuance runs to a date
 /// not certain, a party informs the Court within five days of learning
 /// that the circumstances that justify it no longer exist.
 deadline continuance-grounds-notice: 5.days after ContinuanceGroundsEnded() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 10(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: continuance-grounds-notice (weekend)" cite "D. Del. Crim. Plan § 10(d)"
+{
+  given ContinuanceGroundsEnded() on 2011-05-02
+  expect deadline(continuance-grounds-notice) == 2011-05-09
 }
 
 /// D. Del. Crim. Plan § 13: the United States Attorney, within twenty days
@@ -154,12 +190,24 @@ deadline prisoner-presence: 20.days after PrisonerCharged() counted_by frcrimp45
   forum frcrimp
 }
 
+test "Counting boundary: prisoner-presence (weekend)" cite "D. Del. Crim. Plan § 13"
+{
+  given PrisonerCharged() on 2011-05-02
+  expect deadline(prisoner-presence) == 2011-05-23
+}
+
 /// D. Del. Crim. Plan § 8(b)(5): no later than twenty calendar days before
 /// the sentencing hearing, the probation officer submits the final draft
 /// of the presentence report to the parties.
 deadline final-draft-psr: 20.days before SentencingScheduled() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 8(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: final-draft-psr (weekend)" cite "D. Del. Crim. Plan § 8(b)"
+{
+  given SentencingScheduled() on 2011-05-06
+  expect deadline(final-draft-psr) == 2011-04-15
 }
 
 /// D. Del. Crim. Plan § 8(b)(6): no later than fourteen calendar days
@@ -173,12 +221,24 @@ deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-memorandum (weekend)" cite "D. Del. Crim. Plan § 8(b)"
+{
+  given SentencingScheduled() on 2011-05-07
+  expect deadline(sentencing-memorandum) == 2011-04-22
+}
+
 /// D. Del. Crim. Plan § 8(b)(7): no later than eight days before the
 /// sentencing hearing, the opposing party files any response to a
 /// sentencing memorandum.
 deadline sentencing-memorandum-response: 8.days before SentencingScheduled() counted_by frcrimp45-delaware cite "D. Del. Crim. Plan § 8(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-memorandum-response (weekend)" cite "D. Del. Crim. Plan § 8(b)"
+{
+  given SentencingScheduled() on 2011-05-02
+  expect deadline(sentencing-memorandum-response) == 2011-04-22
 }
 
 test "arraignment period: 10 days after the trigger" cite "D. Del. Crim. Plan § 4(a)"

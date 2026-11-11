@@ -34,6 +34,12 @@ deadline subpoena-request-period: 14.days before WitnessNeeded() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: subpoena-request-period (weekend)" cite "W.D.N.C. LCrR 17.2"
+{
+  given WitnessNeeded() on 2022-12-03
+  expect deadline(subpoena-request-period) == 2022-11-18
+}
+
 /// LCrR 17.3(1): an application for a writ of habeas corpus ad prosequendum
 /// or ad testificandum for an out-of-district prisoner is filed at least 21
 /// days before the hearing date or the first day of the term, whichever is
@@ -43,11 +49,23 @@ deadline writ-out-of-district-period: 21.days before WitnessNeeded() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: writ-out-of-district-period (holiday)" cite "W.D.N.C. LCrR 17.3"
+{
+  given WitnessNeeded() on 2022-12-02
+  expect deadline(writ-out-of-district-period) == 2022-11-10
+}
+
 /// LCrR 17.3(2): for a prisoner within the district, the application is
 /// filed at least 14 days before that date.
 deadline writ-in-district-period: 14.days before WitnessNeeded() counted_by frcrimp45 cite "W.D.N.C. LCrR 17.3"
 {
   forum frcrimp
+}
+
+test "Counting boundary: writ-in-district-period (weekend)" cite "W.D.N.C. LCrR 17.3"
+{
+  given WitnessNeeded() on 2022-12-03
+  expect deadline(writ-in-district-period) == 2022-11-18
 }
 
 /// LCrR 32.4(b): the defendant may submit a response or objection to the
@@ -59,6 +77,12 @@ deadline relevant-conduct-response-period: 7.days after RelevantConductSubmitted
   forum frcrimp
 }
 
+test "Counting boundary: relevant-conduct-response-period (weekend)" cite "W.D.N.C. LCrR 32.4(b)"
+{
+  given RelevantConductSubmitted() on 2022-12-03
+  expect deadline(relevant-conduct-response-period) == 2022-12-12
+}
+
 /// LCrR 32.5(c): sentencing memoranda, supporting letters and other
 /// materials are filed not later than seven days before the sentencing
 /// hearing; the judge may accept late materials case by case.
@@ -67,12 +91,24 @@ deadline sentencing-memoranda-period: 7.days before SentencingHearing() counted_
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-memoranda-period (holiday)" cite "W.D.N.C. LCrR 32.5(c)"
+{
+  given SentencingHearing() on 2022-12-01
+  expect deadline(sentencing-memoranda-period) == 2022-11-23
+}
+
 /// LCrR 47.1(e): unless the Court directs otherwise, a response to a motion
 /// is filed within seven days of the date the motion is served; no motions
 /// deadline entitles a party to a continuance of trial.
 deadline response-period: 7.days after MotionServed() counted_by frcrimp45 cite "W.D.N.C. LCrR 47.1(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: response-period (weekend)" cite "W.D.N.C. LCrR 47.1(e)"
+{
+  given MotionServed() on 2022-12-03
+  expect deadline(response-period) == 2022-12-12
 }
 
 test "subpoena request period: 14 days before the trigger" cite "W.D.N.C. LCrR 17.2"

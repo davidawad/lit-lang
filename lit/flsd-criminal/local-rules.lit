@@ -51,6 +51,12 @@ deadline speedy-trial-report-period: 21.days after Arraigned() counted_by frcrim
   forum frcrimp
 }
 
+test "Counting boundary: speedy-trial-report-period (holiday)" cite "S.D. Fla. L.R. 88.5"
+{
+  given Arraigned() on 2025-12-04
+  expect deadline(speedy-trial-report-period) == 2025-12-26
+}
+
 /// S.D. Fla. L.R. 88.9(c): motions in criminal cases are filed and served
 /// within twenty-eight days from the arraignment of the defendant to whom
 /// the motion applies; a motion arising from a post-arraignment event
@@ -58,6 +64,12 @@ deadline speedy-trial-report-period: 21.days after Arraigned() counted_by frcrim
 deadline criminal-motion-period: 28.days after Arraigned() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.9(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: criminal-motion-period (holiday)" cite "S.D. Fla. L.R. 88.9(c)"
+{
+  given Arraigned() on 2025-12-04
+  expect deadline(criminal-motion-period) == 2026-01-02
 }
 
 /// S.D. Fla. L.R. 88.10(o)(2): discovery in connection with trial is made
@@ -68,12 +80,24 @@ deadline trial-discovery-period: 14.days after Arraigned() counted_by frcrimp45 
   forum frcrimp
 }
 
+test "Counting boundary: trial-discovery-period (weekend)" cite "S.D. Fla. L.R. 88.10(o)"
+{
+  given Arraigned() on 2025-12-06
+  expect deadline(trial-discovery-period) == 2025-12-22
+}
+
 /// S.D. Fla. L.R. 88.10(o)(3)(A): the initial written summary of expert
 /// testimony is provided within fourteen days of the written request, but
 /// need not be provided earlier than fourteen days after the arraignment.
 deadline expert-summary-period: 14.days after ExpertSummaryRequested() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.10(o)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: expert-summary-period (weekend)" cite "S.D. Fla. L.R. 88.10(o)"
+{
+  given ExpertSummaryRequested() on 2025-12-06
+  expect deadline(expert-summary-period) == 2025-12-22
 }
 
 /// S.D. Fla. L.R. 88.10(o)(3)(B)(i), (iii): the full FRCrimP 16(a)(1)(G)
@@ -86,12 +110,24 @@ deadline expert-case-in-chief-disclosure-period: 21.days before TrialScheduled()
   forum frcrimp
 }
 
+test "Counting boundary: expert-case-in-chief-disclosure-period (holiday)" cite "S.D. Fla. L.R. 88.10(o)"
+{
+  given TrialScheduled() on 2025-12-02
+  expect deadline(expert-case-in-chief-disclosure-period) == 2025-11-10
+}
+
 /// S.D. Fla. L.R. 88.10(o)(3)(B)(ii), (iv): the disclosure for expert
 /// testimony offered to counter the other side's timely disclosed expert
 /// testimony is made no later than seven days before trial.
 deadline expert-rebuttal-disclosure-period: 7.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.10(o)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: expert-rebuttal-disclosure-period (holiday)" cite "S.D. Fla. L.R. 88.10(o)"
+{
+  given TrialScheduled() on 2025-12-04
+  expect deadline(expert-rebuttal-disclosure-period) == 2025-11-26
 }
 
 /// S.D. Fla. L.R. 88.10(o)(4): discovery in connection with a post-trial
@@ -102,12 +138,24 @@ deadline post-trial-discovery-period: 7.days before PostTrialHearingScheduled() 
   forum frcrimp
 }
 
+test "Counting boundary: post-trial-discovery-period (holiday)" cite "S.D. Fla. L.R. 88.10(o)"
+{
+  given PostTrialHearingScheduled() on 2025-12-04
+  expect deadline(post-trial-discovery-period) == 2025-11-26
+}
+
 /// S.D. Fla. L.R. 88.8(a): within seven days after a guilty plea or
 /// verdict, defense counsel and the probation officer arrange the initial
 /// presentence interview.
 deadline presentence-interview-period: 7.days after GuiltEntered() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.8(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: presentence-interview-period (weekend)" cite "S.D. Fla. L.R. 88.8(a)"
+{
+  given GuiltEntered() on 2025-12-06
+  expect deadline(presentence-interview-period) == 2025-12-15
 }
 
 /// S.D. Fla. L.R. 88.8(b): counsel confer no later than seven days before
@@ -118,6 +166,12 @@ deadline sentencing-conference-period: 7.days before SentencingHearingScheduled(
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-conference-period (holiday)" cite "S.D. Fla. L.R. 88.8(b)"
+{
+  given SentencingHearingScheduled() on 2025-12-04
+  expect deadline(sentencing-conference-period) == 2025-11-26
+}
+
 /// S.D. Fla. L.R. 88.8(b): a party anticipating a sentencing proceeding
 /// over one hour files and serves a notice of the witnesses and time
 /// needed, with a courtesy copy to Probation, no later than five days
@@ -126,6 +180,12 @@ deadline sentencing-conference-period: 7.days before SentencingHearingScheduled(
 deadline sentencing-notice-period: 5.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.8(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-notice-period (holiday)" cite "S.D. Fla. L.R. 88.8(b)"
+{
+  given SentencingHearingScheduled() on 2025-12-02
+  expect deadline(sentencing-notice-period) == 2025-11-26
 }
 
 test "speedy trial report period: 21 days after the trigger" cite "S.D. Fla. L.R. 88.5"

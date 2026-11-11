@@ -70,6 +70,12 @@ deadline pretrial-motions: 20.days after ArraignedOnIndictment() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motions (weekend)" cite "E.D. Wis. Criminal L. R. 12(b); E.D. Wis. Criminal L. R. 58(a)"
+{
+  given ArraignedOnIndictment() on 2026-08-02
+  expect deadline(pretrial-motions) == 2026-08-24
+}
+
 /// E.D. Wis. Criminal L. R. 12(b)(2): absent a court order, the non-movant
 /// may file a response within 10 days from the date the motion is due, or
 /// files a statement that it will not respond.
@@ -79,6 +85,12 @@ deadline pretrial-motion-response: 10.days after PretrialMotionDue() counted_by 
 } cite "E.D. Wis. Criminal L. R. 12(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: pretrial-motion-response (weekend)" cite "E.D. Wis. Criminal L. R. 12(b)"
+{
+  given PretrialMotionDue() on 2026-07-29
+  expect deadline(pretrial-motion-response) == 2026-08-10
 }
 
 /// E.D. Wis. Criminal L. R. 12(b)(3): absent a court order, the movant may
@@ -91,12 +103,24 @@ deadline pretrial-motion-reply: 5.days after PretrialResponseDue() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motion-reply (weekend)" cite "E.D. Wis. Criminal L. R. 12(b)"
+{
+  given PretrialResponseDue() on 2026-08-03
+  expect deadline(pretrial-motion-reply) == 2026-08-10
+}
+
 /// E.D. Wis. Criminal L. R. 12(c): the non-movant may file a response
 /// opposing an evidentiary hearing, stating why it is unnecessary, within
 /// 3 days after the filing of the motion seeking one.
 deadline evidentiary-hearing-opposition: 3.days after EvidentiaryHearingMotionFiled() counted_by frcrimp45 cite "E.D. Wis. Criminal L. R. 12(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: evidentiary-hearing-opposition (weekend)" cite "E.D. Wis. Criminal L. R. 12(c)"
+{
+  given EvidentiaryHearingMotionFiled() on 2026-07-29
+  expect deadline(evidentiary-hearing-opposition) == 2026-08-03
 }
 
 /// E.D. Wis. Criminal L. R. 13(b): any objection to a motion to reassign a
@@ -107,6 +131,12 @@ deadline reassignment-objection: 7.days after ReassignmentMotionFiled() counted_
   forum frcrimp
 }
 
+test "Counting boundary: reassignment-objection (weekend)" cite "E.D. Wis. Criminal L. R. 13(b)"
+{
+  given ReassignmentMotionFiled() on 2026-08-01
+  expect deadline(reassignment-objection) == 2026-08-10
+}
+
 /// E.D. Wis. Criminal L. R. 16.1(a): as soon after indictment as
 /// practicable, and in no event more than 14 days after arraignment, the
 /// attorney for the government and defense counsel confer regarding
@@ -114,6 +144,12 @@ deadline reassignment-objection: 7.days after ReassignmentMotionFiled() counted_
 deadline discovery-conference: 14.days after ArraignedOnIndictment() counted_by frcrimp45 cite "E.D. Wis. Criminal L. R. 16.1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: discovery-conference (weekend)" cite "E.D. Wis. Criminal L. R. 16.1(a)"
+{
+  given ArraignedOnIndictment() on 2026-08-01
+  expect deadline(discovery-conference) == 2026-08-17
 }
 
 /// E.D. Wis. Criminal L. R. 16(a)(4): unless the Court orders otherwise,
@@ -128,6 +164,12 @@ deadline expert-disclosure: 15.days before TrialCommences() counted_by frcrimp45
   forum frcrimp
 }
 
+test "Counting boundary: expert-disclosure (weekend)" cite "E.D. Wis. Criminal L. R. 16(a)"
+{
+  given TrialCommences() on 2026-08-02
+  expect deadline(expert-disclosure) == 2026-07-17
+}
+
 /// E.D. Wis. Criminal L. R. 16(a)(5): if the government follows the
 /// Expanded Discovery Policy, the defense discloses FRCrimP 16(b)(1)(A) and
 /// (B) material as soon as reasonably practicable and not later than 15
@@ -135,6 +177,12 @@ deadline expert-disclosure: 15.days before TrialCommences() counted_by frcrimp45
 deadline defense-reciprocal-disclosure: 15.days before TrialCommences() counted_by frcrimp45 cite "E.D. Wis. Criminal L. R. 16(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defense-reciprocal-disclosure (weekend)" cite "E.D. Wis. Criminal L. R. 16(a)"
+{
+  given TrialCommences() on 2026-08-02
+  expect deadline(defense-reciprocal-disclosure) == 2026-07-17
 }
 
 /// E.D. Wis. Criminal L. R. 32(b): when the defendant has waived the
@@ -148,6 +196,12 @@ deadline psr-objections-on-waiver: 10.days before SentencingScheduled() counted_
 } cite "E.D. Wis. Criminal L. R. 32(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: psr-objections-on-waiver (weekend)" cite "E.D. Wis. Criminal L. R. 32(b)"
+{
+  given SentencingScheduled() on 2026-07-29
+  expect deadline(psr-objections-on-waiver) == 2026-07-17
 }
 
 test "pretrial motions: 20 days after the trigger" cite "E.D. Wis. Criminal L. R. 12(b); E.D. Wis. Criminal L. R. 58(a)"

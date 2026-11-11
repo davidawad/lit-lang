@@ -98,6 +98,12 @@ deadline impeachment-disclosure: 7.days before TrialScheduled() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: impeachment-disclosure (holiday)" cite "D. Mont. L.R. CR 16.1(c)"
+{
+  given TrialScheduled() on 2025-12-04
+  expect deadline(impeachment-disclosure) == 2025-11-26
+}
+
 /// D. Mont. L.R. CR 16.1(f)(1): on the defendant's request the government
 /// provides the discovery FRCrimP 16(a)(1)(A)-(E) and (G) requires no later
 /// than 14 days after arraignment, unless the presiding judge orders
@@ -110,12 +116,24 @@ deadline government-discovery: 14.days after Arraigned() counted_by frcrimp45 de
   forum frcrimp
 }
 
+test "Counting boundary: government-discovery (weekend)" cite "D. Mont. L.R. CR 16.1(f)"
+{
+  given Arraigned() on 2025-12-06
+  expect deadline(government-discovery) == 2025-12-22
+}
+
 /// D. Mont. L.R. CR 16.1(f)(2): FRCrimP 16(a)(1)(F) examination and test
 /// reports are provided as soon as reasonably possible and no later than
 /// seven days before trial.
 deadline examination-report-disclosure: 7.days before TrialScheduled() counted_by frcrimp45 cite "D. Mont. L.R. CR 16.1(f)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: examination-report-disclosure (holiday)" cite "D. Mont. L.R. CR 16.1(f)"
+{
+  given TrialScheduled() on 2025-12-04
+  expect deadline(examination-report-disclosure) == 2025-11-26
 }
 
 /// D. Mont. L.R. CR 16.2: on the government's request, and unless
@@ -129,6 +147,12 @@ deadline defense-discovery: 21.days after DefenseDiscoveryRequested() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: defense-discovery (holiday)" cite "D. Mont. L.R. CR 16.2"
+{
+  given DefenseDiscoveryRequested() on 2025-12-04
+  expect deadline(defense-discovery) == 2025-12-26
+}
+
 /// D. Mont. L.R. CR 16.3: unless the presiding judge sets a specific
 /// deadline, the parties disclose the additional expert information no
 /// later than 21 days before trial.
@@ -140,6 +164,12 @@ deadline expert-disclosure: 21.days before TrialScheduled() counted_by frcrimp45
   forum frcrimp
 }
 
+test "Counting boundary: expert-disclosure (holiday)" cite "D. Mont. L.R. CR 16.3"
+{
+  given TrialScheduled() on 2025-12-02
+  expect deadline(expert-disclosure) == 2025-11-10
+}
+
 /// D. Mont. L.R. CR 17.1: a party requesting production of a prisoner by
 /// the Marshals Service obtains the court's order no later than 21 days
 /// before the proceeding; a lesser time only on motion and good cause.
@@ -148,12 +178,24 @@ deadline prisoner-production-order: 21.days before ProceedingScheduled() counted
   forum frcrimp
 }
 
+test "Counting boundary: prisoner-production-order (holiday)" cite "D. Mont. L.R. CR 17.1"
+{
+  given ProceedingScheduled() on 2025-12-02
+  expect deadline(prisoner-production-order) == 2025-11-10
+}
+
 /// D. Mont. L.R. CR 17.2(a): a party requesting Marshal service of a
 /// criminal summons or subpoena notifies the Marshal, with the necessary
 /// documentation, no later than 21 days before the desired date of service.
 deadline marshal-service-request: 21.days before DesiredServiceDate() counted_by frcrimp45 cite "D. Mont. L.R. CR 17.2(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: marshal-service-request (holiday)" cite "D. Mont. L.R. CR 17.2(a)"
+{
+  given DesiredServiceDate() on 2025-12-02
+  expect deadline(marshal-service-request) == 2025-11-10
 }
 
 /// D. Mont. L.R. CR 24.1(a)(3)(B): unless the court orders otherwise,
@@ -178,6 +220,12 @@ deadline juror-interview-request: 14.days after VerdictReturned() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: juror-interview-request (weekend)" cite "D. Mont. L.R. CR 24.2(b)"
+{
+  given VerdictReturned() on 2025-12-06
+  expect deadline(juror-interview-request) == 2025-12-22
+}
+
 /// D. Mont. L.R. CR 47.2(a): the response brief is filed 14 days after the
 /// motion and supporting brief.
 deadline motion-response: 14.days after MotionFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 47.2(a)"
@@ -185,11 +233,23 @@ deadline motion-response: 14.days after MotionFiled() counted_by frcrimp45 cite 
   forum frcrimp
 }
 
+test "Counting boundary: motion-response (weekend)" cite "D. Mont. L.R. CR 47.2(a)"
+{
+  given MotionFiled() on 2025-12-06
+  expect deadline(motion-response) == 2025-12-22
+}
+
 /// D. Mont. L.R. CR 47.2(a): the reply is filed 7 days after the response
 /// brief.
 deadline motion-reply: 7.days after ResponseFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 47.2(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: motion-reply (weekend)" cite "D. Mont. L.R. CR 47.2(a)"
+{
+  given ResponseFiled() on 2025-12-06
+  expect deadline(motion-reply) == 2025-12-15
 }
 
 /// D. Mont. L.R. CR 58.2(a)(1): the official transcript is ordered seven
@@ -200,11 +260,23 @@ deadline misdemeanor-transcript-order: 7.days after MisdemeanorAppealNoticed() c
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-transcript-order (weekend)" cite "D. Mont. L.R. CR 58.2(a)"
+{
+  given MisdemeanorAppealNoticed() on 2025-12-06
+  expect deadline(misdemeanor-transcript-order) == 2025-12-15
+}
+
 /// D. Mont. L.R. CR 58.2(a)(2): the official transcript is filed 21 days
 /// after the notice of appeal is filed.
 deadline misdemeanor-transcript-filing: 21.days after MisdemeanorAppealNoticed() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: misdemeanor-transcript-filing (holiday)" cite "D. Mont. L.R. CR 58.2(a)"
+{
+  given MisdemeanorAppealNoticed() on 2025-12-04
+  expect deadline(misdemeanor-transcript-filing) == 2025-12-26
 }
 
 /// D. Mont. L.R. CR 58.2(a)(3): the appellant's brief is filed within 14
@@ -214,6 +286,12 @@ deadline misdemeanor-appellant-brief: 14.days after AppealTranscriptFiled() coun
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appellant-brief (weekend)" cite "D. Mont. L.R. CR 58.2(a)"
+{
+  given AppealTranscriptFiled() on 2025-12-06
+  expect deadline(misdemeanor-appellant-brief) == 2025-12-22
+}
+
 /// D. Mont. L.R. CR 58.2(a)(4): the appellee's brief is filed within 14
 /// days after the appellant's brief is filed.
 deadline misdemeanor-appellee-brief: 14.days after AppellantBriefFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
@@ -221,11 +299,23 @@ deadline misdemeanor-appellee-brief: 14.days after AppellantBriefFiled() counted
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appellee-brief (weekend)" cite "D. Mont. L.R. CR 58.2(a)"
+{
+  given AppellantBriefFiled() on 2025-12-06
+  expect deadline(misdemeanor-appellee-brief) == 2025-12-22
+}
+
 /// D. Mont. L.R. CR 58.2(a)(5): the reply brief is filed seven days after
 /// the appellee's brief is filed.
 deadline misdemeanor-reply-brief: 7.days after AppelleeBriefFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "D. Mont. L.R. CR 58.2(a)"
+{
+  given AppelleeBriefFiled() on 2025-12-06
+  expect deadline(misdemeanor-reply-brief) == 2025-12-15
 }
 
 test "impeachment disclosure: 7 days before the trigger" cite "D. Mont. L.R. CR 16.1(c)"

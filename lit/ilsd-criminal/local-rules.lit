@@ -56,6 +56,12 @@ deadline exhibit-removal: 90.days after FinalDecisionUnappealed() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: exhibit-removal (weekend)" cite "SDIL-LR 79.1(b)"
+{
+  given FinalDecisionUnappealed() on 2025-09-22
+  expect deadline(exhibit-removal) == 2025-12-22
+}
+
 /// SDIL-LR 79.1(b)(2): when an appeal is taken, an exhibit not removed is
 /// destroyed or otherwise disposed of within 90 days after the reviewing
 /// court's mandate is filed; on appeal the parties make the exhibits
@@ -64,6 +70,12 @@ deadline exhibit-removal: 90.days after FinalDecisionUnappealed() counted_by frc
 deadline exhibit-removal-after-mandate: 90.days after AppellateMandateFiled() counted_by frcrimp45 cite "SDIL-LR 79.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: exhibit-removal-after-mandate (weekend)" cite "SDIL-LR 79.1(b)"
+{
+  given AppellateMandateFiled() on 2025-09-22
+  expect deadline(exhibit-removal-after-mandate) == 2025-12-22
 }
 
 /// Objections to the presentence investigation report are received by a
@@ -84,6 +96,12 @@ deadline presentence-objection-response: 7.days after PresentenceObjectionsRecei
   forum frcrimp
 }
 
+test "Counting boundary: presentence-objection-response (weekend)" cite "SDIL-LR Appendix A, Cr32.1(b)(1)"
+{
+  given PresentenceObjectionsReceived() on 2025-09-27
+  expect deadline(presentence-objection-response) == 2025-10-06
+}
+
 /// SDIL-LR Appendix A, Cr41.1(a)(2): the United States Attorney shows
 /// cause, within 14 days of the Clerk's notice, why the search warrant case
 /// or a portion of it should remain inaccessible; a judicial officer then
@@ -92,6 +110,12 @@ deadline presentence-objection-response: 7.days after PresentenceObjectionsRecei
 deadline search-warrant-show-cause: 14.days after SearchWarrantShowCauseNoticeIssued() counted_by frcrimp45 cite "SDIL-LR Appendix A, Cr41.1(a)(2)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: search-warrant-show-cause (weekend)" cite "SDIL-LR Appendix A, Cr41.1(a)(2)"
+{
+  given SearchWarrantShowCauseNoticeIssued() on 2025-09-27
+  expect deadline(search-warrant-show-cause) == 2025-10-14
 }
 
 test "exhibit removal: 90 days after the trigger" cite "SDIL-LR 79.1(b)"

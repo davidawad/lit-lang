@@ -74,6 +74,12 @@ deadline restitution-information: 14.days after ChangeOfPleaHearingHeld() counte
   forum frcrimp
 }
 
+test "Counting boundary: restitution-information (weekend)" cite "W.D. Okla. LCrR11.2"
+{
+  given ChangeOfPleaHearingHeld() on 2026-04-25
+  expect deadline(restitution-information) == 2026-05-11
+}
+
 /// W.D. Okla. LCrR12.1(a): unless otherwise ordered or addressed elsewhere
 /// by the rules, all pretrial motions, including requests for rulings on
 /// contested discovery, are filed and served within 21 days from the date
@@ -86,11 +92,23 @@ deadline pretrial-motions: 21.days after NotGuiltyPleaEntered() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motions (weekend)" cite "W.D. Okla. LCrR12.1(a)"
+{
+  given NotGuiltyPleaEntered() on 2026-04-25
+  expect deadline(pretrial-motions) == 2026-05-18
+}
+
 /// W.D. Okla. LCrR12.1(b): the opposing party files and serves a response
 /// within 9 days after the motion is filed.
 deadline pretrial-response: 9.days after PretrialMotionFiled() counted_by frcrimp45 cite "W.D. Okla. LCrR12.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: pretrial-response (weekend)" cite "W.D. Okla. LCrR12.1(b)"
+{
+  given PretrialMotionFiled() on 2026-04-23
+  expect deadline(pretrial-response) == 2026-05-04
 }
 
 /// W.D. Okla. LCrR12.3.1: notice of a defense under FRCrimP 12.1, 12.2 or
@@ -101,11 +119,23 @@ deadline notice-of-defenses: 14.days after NotGuiltyPleaEntered() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: notice-of-defenses (weekend)" cite "W.D. Okla. LCrR12.3.1"
+{
+  given NotGuiltyPleaEntered() on 2026-04-25
+  expect deadline(notice-of-defenses) == 2026-05-11
+}
+
 /// W.D. Okla. LCrR16.1(a): counsel meet and confer at a discovery
 /// conference within 14 days after a plea of not guilty is entered.
 deadline discovery-conference: 14.days after NotGuiltyPleaEntered() counted_by frcrimp45 cite "W.D. Okla. LCrR16.1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: discovery-conference (weekend)" cite "W.D. Okla. LCrR16.1(a)"
+{
+  given NotGuiltyPleaEntered() on 2026-04-25
+  expect deadline(discovery-conference) == 2026-05-11
 }
 
 /// W.D. Okla. LCrR16.1(b): within 7 days after the discovery conference
@@ -116,6 +146,12 @@ deadline discovery-joint-statement: 7.days after DiscoveryConferenceCompleted() 
   forum frcrimp
 }
 
+test "Counting boundary: discovery-joint-statement (weekend)" cite "W.D. Okla. LCrR16.1(b)"
+{
+  given DiscoveryConferenceCompleted() on 2026-04-25
+  expect deadline(discovery-joint-statement) == 2026-05-04
+}
+
 /// W.D. Okla. LCrR12.3: a motion in limine is filed and served at least 7
 /// days before the commencement of the scheduled trial docket.
 deadline motion-in-limine: 7.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR12.3"
@@ -123,11 +159,23 @@ deadline motion-in-limine: 7.days before TrialDocketScheduled() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: motion-in-limine (weekend)" cite "W.D. Okla. LCrR12.3"
+{
+  given TrialDocketScheduled() on 2026-04-25
+  expect deadline(motion-in-limine) == 2026-04-17
+}
+
 /// W.D. Okla. LCrR12.3: objections to a motion in limine are filed 4 days
 /// before the commencement of the scheduled trial docket.
 deadline motion-in-limine-objection: 4.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR12.3"
 {
   forum frcrimp
+}
+
+test "Counting boundary: motion-in-limine-objection (weekend)" cite "W.D. Okla. LCrR12.3"
+{
+  given TrialDocketScheduled() on 2026-04-23
+  expect deadline(motion-in-limine-objection) == 2026-04-17
 }
 
 /// W.D. Okla. LCrR16.4: unless otherwise ordered, expert witness
@@ -141,6 +189,12 @@ deadline expert-disclosure: 14.days before TrialDocketScheduled() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: expert-disclosure (weekend)" cite "W.D. Okla. LCrR16.4"
+{
+  given TrialDocketScheduled() on 2026-04-25
+  expect deadline(expert-disclosure) == 2026-04-10
+}
+
 /// W.D. Okla. LCrR24.1: requested voir dire, if any, is filed and served
 /// at least 7 days before the commencement of the scheduled trial docket.
 deadline voir-dire-request: 7.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR24.1"
@@ -148,11 +202,23 @@ deadline voir-dire-request: 7.days before TrialDocketScheduled() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: voir-dire-request (weekend)" cite "W.D. Okla. LCrR24.1"
+{
+  given TrialDocketScheduled() on 2026-04-25
+  expect deadline(voir-dire-request) == 2026-04-17
+}
+
 /// W.D. Okla. LCrR24.1: objections to requested voir dire are filed at
 /// least 4 days before the commencement of the scheduled trial docket.
 deadline voir-dire-objection: 4.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR24.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: voir-dire-objection (weekend)" cite "W.D. Okla. LCrR24.1"
+{
+  given TrialDocketScheduled() on 2026-04-23
+  expect deadline(voir-dire-objection) == 2026-04-17
 }
 
 /// W.D. Okla. LCrR30.1: requested jury instructions, supported by
@@ -163,12 +229,24 @@ deadline jury-instructions: 7.days before TrialDocketScheduled() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: jury-instructions (weekend)" cite "W.D. Okla. LCrR30.1"
+{
+  given TrialDocketScheduled() on 2026-04-25
+  expect deadline(jury-instructions) == 2026-04-17
+}
+
 /// W.D. Okla. LCrR30.1: objections to requested jury instructions are
 /// filed at least 4 days before the commencement of the scheduled trial
 /// docket.
 deadline jury-instruction-objection: 4.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR30.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: jury-instruction-objection (weekend)" cite "W.D. Okla. LCrR30.1"
+{
+  given TrialDocketScheduled() on 2026-04-23
+  expect deadline(jury-instruction-objection) == 2026-04-17
 }
 
 /// W.D. Okla. LCrR32.2: all sentencing memoranda and motions are filed
@@ -179,11 +257,23 @@ deadline sentencing-memoranda: 14.days after FinalPsrReceived() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-memoranda (weekend)" cite "W.D. Okla. LCrR32.2"
+{
+  given FinalPsrReceived() on 2026-04-25
+  expect deadline(sentencing-memoranda) == 2026-05-11
+}
+
 /// W.D. Okla. LCrR32.2: any response to a sentencing memorandum or motion
 /// is filed within 14 days thereafter.
 deadline sentencing-response: 14.days after SentencingFilingMade() counted_by frcrimp45 cite "W.D. Okla. LCrR32.2"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-response (weekend)" cite "W.D. Okla. LCrR32.2"
+{
+  given SentencingFilingMade() on 2026-04-25
+  expect deadline(sentencing-response) == 2026-05-11
 }
 
 /// W.D. Okla. LCrR44.2: all Criminal Justice Act vouchers are submitted
@@ -194,6 +284,12 @@ deadline cja-voucher: 45.days after CaseDismissedOrSentenced() counted_by frcrim
   forum frcrimp
 }
 
+test "Counting boundary: cja-voucher (weekend)" cite "W.D. Okla. LCrR44.2"
+{
+  given CaseDismissedOrSentenced() on 2026-04-23
+  expect deadline(cja-voucher) == 2026-06-08
+}
+
 /// W.D. Okla. LCrR47.1(b): for a post-trial or post-conviction motion,
 /// other than one under 28 U.S.C. § 2255, a response is filed within 21
 /// days after the motion is filed.
@@ -202,12 +298,24 @@ deadline post-trial-response: 21.days after PostTrialMotionFiled() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: post-trial-response (weekend)" cite "W.D. Okla. LCrR47.1(b)"
+{
+  given PostTrialMotionFiled() on 2026-04-25
+  expect deadline(post-trial-response) == 2026-05-18
+}
+
 /// W.D. Okla. LCrR49.1.1(b): a request to redact personal data identifiers
 /// from an official transcript is filed, on the Appendix VII form, within
 /// 21 days of the filing of the transcript.
 deadline transcript-redaction-request: 21.days after TranscriptFiled() counted_by frcrimp45 cite "W.D. Okla. LCrR49.1.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: transcript-redaction-request (weekend)" cite "W.D. Okla. LCrR49.1.1(b)"
+{
+  given TranscriptFiled() on 2026-04-25
+  expect deadline(transcript-redaction-request) == 2026-05-18
 }
 
 /// W.D. Okla. LCrR49.1.1(c): a motion for redactions other than the
@@ -219,6 +327,12 @@ deadline transcript-redaction-motion: 21.days after TranscriptFiled() counted_by
 } cite "W.D. Okla. LCrR49.1.1(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: transcript-redaction-motion (weekend)" cite "W.D. Okla. LCrR49.1.1(c)"
+{
+  given TranscriptFiled() on 2026-04-25
+  expect deadline(transcript-redaction-motion) == 2026-05-18
 }
 
 test "restitution information: 14 days after the trigger" cite "W.D. Okla. LCrR11.2"

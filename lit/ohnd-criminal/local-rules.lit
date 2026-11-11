@@ -38,24 +38,54 @@ event RevocationHearing()
 /// magistrate judge's report within fourteen days after being served with
 /// a copy of them.
 deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcrimp45 cite "N.D. Ohio LCrR 5.3(b)"
+
+test "Counting boundary: magistrate-objection-response-period (weekend)" cite "N.D. Ohio LCrR 5.3(b)"
+{
+  given MagistrateObjectionsServed() on 2024-10-05
+  expect deadline(magistrate-objection-response-period) == 2024-10-21
+}
 /// LCrR 32.2(a): when the court orders a presentence report it sets a
 /// sentencing date not less than fourteen weeks from the date the plea or
 /// conviction of guilty is entered; this is the earliest such date. The
 /// court may modify the time requirements on motion (LCrR 32.2(b)(5)).
 deadline earliest-sentencing-date: 14.weeks after GuiltEnteredReportOrdered() counted_by frcrimp45 cite "N.D. Ohio LCrR 32.2(a)"
+
+test "Counting boundary: earliest-sentencing-date (weekend)" cite "N.D. Ohio LCrR 32.2(a)"
+{
+  given GuiltEnteredReportOrdered() on 2024-10-05
+  expect deadline(earliest-sentencing-date) == 2025-01-13
+}
 /// LCrR 32.2(b)(1): not less than six weeks before the date set for
 /// sentencing the probation officer discloses the presentence report to
 /// the defendant, defense counsel and the United States Attorney.
 deadline psr-disclosure-period: 6.weeks before SentencingScheduled() counted_by frcrimp45 cite "N.D. Ohio LCrR 32.2(b)"
+
+test "Counting boundary: psr-disclosure-period (weekend)" cite "N.D. Ohio LCrR 32.2(b)"
+{
+  given SentencingScheduled() on 2024-10-05
+  expect deadline(psr-disclosure-period) == 2024-08-23
+}
 /// LCrR 32.2(b)(4): not later than two weeks before sentencing the
 /// probation officer submits the presentence report and the statement of
 /// unresolved objections to the sentencing judge and provides the revised
 /// report and statement to the parties.
 deadline revised-psr-period: 2.weeks before SentencingScheduled() counted_by frcrimp45 cite "N.D. Ohio LCrR 32.2(b)"
+
+test "Counting boundary: revised-psr-period (weekend)" cite "N.D. Ohio LCrR 32.2(b)"
+{
+  given SentencingScheduled() on 2024-10-05
+  expect deadline(revised-psr-period) == 2024-09-20
+}
 /// LCrR 32.2(c): no later than one week before sentencing the parties file
 /// any information the court requires and any information they intend to
 /// rely on at sentencing, served on all parties and the probation officer.
 deadline sentencing-position-period: 1.weeks before SentencingScheduled() counted_by frcrimp45 cite "N.D. Ohio LCrR 32.2(c)"
+
+test "Counting boundary: sentencing-position-period (weekend)" cite "N.D. Ohio LCrR 32.2(c)"
+{
+  given SentencingScheduled() on 2024-10-05
+  expect deadline(sentencing-position-period) == 2024-09-27
+}
 /// LCrR 32.2(c): sentencing information is filed no later than three
 /// business days before sentencing.
 deadline sentencing-information-period: 3.business_days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Ohio LCrR 32.2(c)"

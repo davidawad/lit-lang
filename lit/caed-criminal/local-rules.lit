@@ -96,6 +96,12 @@ deadline misdemeanor-appeal-transcript: 14.days after MisdemeanorAppealNoticed()
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appeal-transcript (weekend)" cite "E.D. Cal. L.R. 422(b)"
+{
+  given MisdemeanorAppealNoticed() on 2026-02-28
+  expect deadline(misdemeanor-appeal-transcript) == 2026-03-16
+}
+
 /// E.D. Cal. L.R. 422(e): the appellant's brief is served and filed within
 /// twenty-one (21) days after the filing of the transcript or certificate;
 /// the assigned Judge may alter the periods (L.R. 144).
@@ -105,6 +111,12 @@ deadline misdemeanor-appellant-brief: 21.days after AppealTranscriptFiled() coun
 } cite "E.D. Cal. L.R. 422(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: misdemeanor-appellant-brief (weekend)" cite "E.D. Cal. L.R. 422(e)"
+{
+  given AppealTranscriptFiled() on 2026-02-28
+  expect deadline(misdemeanor-appellant-brief) == 2026-03-23
 }
 
 /// E.D. Cal. L.R. 422(e): the appellee's brief is served and filed within
@@ -118,6 +130,12 @@ deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counte
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appellee-brief (weekend)" cite "E.D. Cal. L.R. 422(e)"
+{
+  given AppellantBriefServed() on 2026-02-28
+  expect deadline(misdemeanor-appellee-brief) == 2026-03-23
+}
+
 /// E.D. Cal. L.R. 422(e): the appellant may serve and file a reply brief
 /// within seven (7) days after service of the appellee's brief.
 deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45 delegable {
@@ -128,6 +146,12 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "E.D. Cal. L.R. 422(e)"
+{
+  given AppelleeBriefServed() on 2026-02-28
+  expect deadline(misdemeanor-reply-brief) == 2026-03-09
+}
+
 /// E.D. Cal. L.R. 423(c): if the United States Attorney neither commences
 /// proceedings nor dismisses within ninety-one (91) days after service of
 /// the Magistrate Judge's notice of the defendant's election, the charge
@@ -135,6 +159,12 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by 
 deadline class-a-election-prosecution: 91.days after DistrictJudgeElectionNoticed() counted_by frcrimp45 cite "E.D. Cal. L.R. 423(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: class-a-election-prosecution (holiday)" cite "E.D. Cal. L.R. 423(c)"
+{
+  given DistrictJudgeElectionNoticed() on 2026-02-23
+  expect deadline(class-a-election-prosecution) == 2026-05-26
 }
 
 /// E.D. Cal. L.R. 429(a): a motion to reopen a detention hearing is
@@ -148,11 +178,23 @@ deadline bail-review-notice: 7.days before BailReviewHearingScheduled() counted_
   forum frcrimp
 }
 
+test "Counting boundary: bail-review-notice (holiday)" cite "E.D. Cal. L.R. 429(a)"
+{
+  given BailReviewHearingScheduled() on 2026-02-23
+  expect deadline(bail-review-notice) == 2026-02-13
+}
+
 /// E.D. Cal. L.R. 429(c): any opposition is filed at least two days before
 /// the hearing date.
 deadline bail-review-opposition: 2.days before BailReviewHearingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 429(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: bail-review-opposition (weekend)" cite "E.D. Cal. L.R. 429(c)"
+{
+  given BailReviewHearingScheduled() on 2026-02-23
+  expect deadline(bail-review-opposition) == 2026-02-20
 }
 
 /// E.D. Cal. L.R. 430.1(e): a criminal motion is filed for hearing not
@@ -167,6 +209,12 @@ deadline motion-notice: 14.days before MotionHearingScheduled() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: motion-notice (weekend)" cite "E.D. Cal. L.R. 430.1(e)"
+{
+  given MotionHearingScheduled() on 2026-02-28
+  expect deadline(motion-notice) == 2026-02-13
+}
+
 /// E.D. Cal. L.R. 430.1(f): any opposition to a noticed motion, or a
 /// statement of non-opposition, is served and filed within 7 days after the
 /// motion is filed; a party that has not timely opposed is not heard in
@@ -179,6 +227,12 @@ deadline motion-opposition: 7.days after MotionFiled() counted_by frcrimp45 dele
   forum frcrimp
 }
 
+test "Counting boundary: motion-opposition (weekend)" cite "E.D. Cal. L.R. 430.1(f)"
+{
+  given MotionFiled() on 2026-02-28
+  expect deadline(motion-opposition) == 2026-03-09
+}
+
 /// E.D. Cal. L.R. 430.1(f): any reply is served and filed not more than 4
 /// days after the opposition is due.
 deadline motion-reply: 4.days after OppositionDue() counted_by frcrimp45 delegable {
@@ -189,12 +243,24 @@ deadline motion-reply: 4.days after OppositionDue() counted_by frcrimp45 delegab
   forum frcrimp
 }
 
+test "Counting boundary: motion-reply (weekend)" cite "E.D. Cal. L.R. 430.1(f)"
+{
+  given OppositionDue() on 2026-02-24
+  expect deadline(motion-reply) == 2026-03-02
+}
+
 /// E.D. Cal. L.R. 430.1(j): an appeal from a final decision of the
 /// Magistrate Judge is served and filed within fourteen (14) days after the
 /// date of the decision.
 deadline magistrate-decision-appeal: 14.days after MagistrateDecision() counted_by frcrimp45 cite "E.D. Cal. L.R. 430.1(j)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: magistrate-decision-appeal (weekend)" cite "E.D. Cal. L.R. 430.1(j)"
+{
+  given MagistrateDecision() on 2026-02-28
+  expect deadline(magistrate-decision-appeal) == 2026-03-16
 }
 
 /// E.D. Cal. L.R. 440(a): on the defendant's request and unless otherwise
@@ -209,12 +275,24 @@ deadline government-initial-disclosure: 14.days after Arraigned() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: government-initial-disclosure (weekend)" cite "E.D. Cal. L.R. 440(a)"
+{
+  given Arraigned() on 2026-02-28
+  expect deadline(government-initial-disclosure) == 2026-03-16
+}
+
 /// E.D. Cal. L.R. 440(b): in no event does the government fail to disclose
 /// reports of examinations or tests at least seven (7) days before the
 /// trial confirmation or pretrial conference.
 deadline examination-report-disclosure: 7.days before TrialConfirmationScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 440(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: examination-report-disclosure (holiday)" cite "E.D. Cal. L.R. 440(b)"
+{
+  given TrialConfirmationScheduled() on 2026-02-23
+  expect deadline(examination-report-disclosure) == 2026-02-13
 }
 
 /// E.D. Cal. L.R. 440(c): unless otherwise ordered, the defendant provides
@@ -228,6 +306,12 @@ deadline defense-discovery: 21.days after DefenseDiscoveryRequested() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: defense-discovery (weekend)" cite "E.D. Cal. L.R. 440(c)"
+{
+  given DefenseDiscoveryRequested() on 2026-02-28
+  expect deadline(defense-discovery) == 2026-03-23
+}
+
 /// E.D. Cal. L.R. 461(b): not less than twenty-eight (28) days before the
 /// sentencing hearing, counsel for the defendant and the government each
 /// deliver to the probation officer, and exchange, a written statement of
@@ -235,6 +319,12 @@ deadline defense-discovery: 21.days after DefenseDiscoveryRequested() counted_by
 deadline psr-informal-objections: 28.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 461(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: psr-informal-objections (weekend)" cite "E.D. Cal. L.R. 461(b)"
+{
+  given SentencingScheduled() on 2026-02-28
+  expect deadline(psr-informal-objections) == 2026-01-30
 }
 
 /// E.D. Cal. L.R. 461(c): not less than twenty-one (21) days before the
@@ -245,6 +335,12 @@ deadline psr-submission: 21.days before SentencingScheduled() counted_by frcrimp
   forum frcrimp
 }
 
+test "Counting boundary: psr-submission (weekend)" cite "E.D. Cal. L.R. 461(c)"
+{
+  given SentencingScheduled() on 2026-02-28
+  expect deadline(psr-submission) == 2026-02-06
+}
+
 /// E.D. Cal. L.R. 461(d): not less than fourteen (14) days before the
 /// sentencing hearing, counsel each file and serve all objections and facts
 /// in dispute to be resolved by the Court; except for good cause, only
@@ -253,6 +349,12 @@ deadline psr-submission: 21.days before SentencingScheduled() counted_by frcrimp
 deadline psr-formal-objections: 14.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 461(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: psr-formal-objections (weekend)" cite "E.D. Cal. L.R. 461(d)"
+{
+  given SentencingScheduled() on 2026-02-28
+  expect deadline(psr-formal-objections) == 2026-02-13
 }
 
 test "interpreter cancellation notice: 2 court days before the trigger" cite "E.D. Cal. L.R. 403(d)"

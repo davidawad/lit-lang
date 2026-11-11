@@ -85,6 +85,12 @@ deadline government-automatic-discovery: 28.days after Arraigned() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: government-automatic-discovery (weekend)" cite "D. Mass. L.R. 116.1(c); D. Mass. L.R. 116.2(b)"
+{
+  given Arraigned() on 2026-09-12
+  expect deadline(government-automatic-discovery) == 2026-10-13
+}
+
 /// D. Mass. L.R. 116.1(d): within 28 days after arraignment, absent a
 /// contrary schedule, the defendant produces the material described in
 /// FRCrimP 16(b)(1)(A) and (B).
@@ -94,6 +100,12 @@ deadline defendant-automatic-discovery: 28.days after Arraigned() counted_by frc
 } cite "D. Mass. L.R. 116.1(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defendant-automatic-discovery (weekend)" cite "D. Mass. L.R. 116.1(d)"
+{
+  given Arraigned() on 2026-09-12
+  expect deadline(defendant-automatic-discovery) == 2026-10-13
 }
 
 /// D. Mass. L.R. 116.1(g): after a discovery waiver, within 28 days of
@@ -108,6 +120,12 @@ deadline waiver-discovery-response: 28.days after DiscoveryRequestReceived() cou
   forum frcrimp
 }
 
+test "Counting boundary: waiver-discovery-response (weekend)" cite "D. Mass. L.R. 116.1(g)"
+{
+  given DiscoveryRequestReceived() on 2026-09-12
+  expect deadline(waiver-discovery-response) == 2026-10-13
+}
+
 /// D. Mass. L.R. 116.3(a): within 14 days of the completion of automatic
 /// discovery, any party may request additional discovery by letter.
 deadline discovery-letter: 14.days after AutomaticDiscoveryCompleted() counted_by frcrimp45 cite "D. Mass. L.R. 116.3(a)"
@@ -115,11 +133,23 @@ deadline discovery-letter: 14.days after AutomaticDiscoveryCompleted() counted_b
   forum frcrimp
 }
 
+test "Counting boundary: discovery-letter (weekend)" cite "D. Mass. L.R. 116.3(a)"
+{
+  given AutomaticDiscoveryCompleted() on 2026-09-12
+  expect deadline(discovery-letter) == 2026-09-28
+}
+
 /// D. Mass. L.R. 116.3(a): the opposing party replies in writing to a
 /// discovery letter no later than 14 days after its receipt.
 deadline discovery-letter-reply: 14.days after DiscoveryRequestReceived() counted_by frcrimp45 cite "D. Mass. L.R. 116.3(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: discovery-letter-reply (weekend)" cite "D. Mass. L.R. 116.3(a)"
+{
+  given DiscoveryRequestReceived() on 2026-09-12
+  expect deadline(discovery-letter-reply) == 2026-09-28
 }
 
 /// D. Mass. L.R. 116.3(g): a discovery motion is filed within 14 days of
@@ -130,11 +160,23 @@ deadline discovery-motion: 14.days after DiscoveryReplyReceived() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: discovery-motion (weekend)" cite "D. Mass. L.R. 116.3(g)"
+{
+  given DiscoveryReplyReceived() on 2026-09-12
+  expect deadline(discovery-motion) == 2026-09-28
+}
+
 /// D. Mass. L.R. 116.3(i): the opposing party files its response to a
 /// discovery motion within 14 days of receipt.
 deadline discovery-motion-response: 14.days after DiscoveryMotionReceived() counted_by frcrimp45 cite "D. Mass. L.R. 116.3(i)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: discovery-motion-response (weekend)" cite "D. Mass. L.R. 116.3(i)"
+{
+  given DiscoveryMotionReceived() on 2026-09-12
+  expect deadline(discovery-motion-response) == 2026-09-28
 }
 
 /// D. Mass. L.R. 116.5(a)-(c): unless the court orders otherwise, counsel
@@ -148,6 +190,12 @@ deadline status-joint-memorandum: 7.days before StatusConferenceScheduled() coun
   forum frcrimp
 }
 
+test "Counting boundary: status-joint-memorandum (weekend)" cite "D. Mass. L.R. 116.5(a); D. Mass. L.R. 116.5(b); D. Mass. L.R. 116.5(c)"
+{
+  given StatusConferenceScheduled() on 2026-09-12
+  expect deadline(status-joint-memorandum) == 2026-09-04
+}
+
 /// D. Mass. L.R. 117.1(a): within 14 days of receiving the magistrate
 /// judge's final status report, or at the earliest practicable time before
 /// trial consistent with the Speedy Trial Act, the district judge conducts
@@ -158,6 +206,12 @@ deadline initial-pretrial-conference: 14.days after FinalStatusReportReceived() 
 } cite "D. Mass. L.R. 117.1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: initial-pretrial-conference (weekend)" cite "D. Mass. L.R. 117.1(a)"
+{
+  given FinalStatusReportReceived() on 2026-09-12
+  expect deadline(initial-pretrial-conference) == 2026-09-28
 }
 
 /// D. Mass. L.R. 116.2(b)(2); 117.1(a)(4): unless the government invokes
@@ -173,6 +227,12 @@ deadline exculpatory-trial-disclosure: 21.days before TrialDateSet() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: exculpatory-trial-disclosure (weekend)" cite "D. Mass. L.R. 116.2(b); D. Mass. L.R. 117.1(a)"
+{
+  given TrialDateSet() on 2026-09-12
+  expect deadline(exculpatory-trial-disclosure) == 2026-08-21
+}
+
 /// D. Mass. L.R. 117.1(a)(8): unless a party objected under L.R.
 /// 117.1(a)(6), at least 7 days before the trial date the government
 /// provides the names and addresses of its case-in-chief and alibi-rebuttal
@@ -185,6 +245,12 @@ deadline government-witness-exhibit-disclosure: 7.days before TrialDateSet() cou
   forum frcrimp
 }
 
+test "Counting boundary: government-witness-exhibit-disclosure (weekend)" cite "D. Mass. L.R. 117.1(a)"
+{
+  given TrialDateSet() on 2026-09-12
+  expect deadline(government-witness-exhibit-disclosure) == 2026-09-04
+}
+
 /// D. Mass. L.R. 117.1(a)(10): unless a party objected under L.R.
 /// 117.1(a)(6), at least 7 days before trial the defendant provides
 /// witness and exhibit identification and materials to the same extent.
@@ -194,6 +260,12 @@ deadline defendant-witness-exhibit-disclosure: 7.days before TrialDateSet() coun
 } cite "D. Mass. L.R. 117.1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: defendant-witness-exhibit-disclosure (weekend)" cite "D. Mass. L.R. 117.1(a)"
+{
+  given TrialDateSet() on 2026-09-12
+  expect deadline(defendant-witness-exhibit-disclosure) == 2026-09-04
 }
 
 test "government automatic discovery: 28 days after the trigger" cite "D. Mass. L.R. 116.1(c); D. Mass. L.R. 116.2(b)"

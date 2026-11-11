@@ -91,6 +91,12 @@ deadline waiver-notice-proof-period: 7.days after WaiverRequestMailed() counted_
   forum frcp
 }
 
+test "Counting boundary: waiver-notice-proof-period (weekend)" cite "C.D. Ill. Civ. L.R. 4.1"
+{
+  given WaiverRequestMailed() on 2026-09-05
+  expect deadline(waiver-notice-proof-period) == 2026-09-14
+}
+
 /// Civ. LR 5.2: an attorney or pro se party whose contact information
 /// changes after registering for electronic filing files notice of the
 /// change within 14 days and serves it on all other parties.
@@ -106,11 +112,23 @@ deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp
   forum frcp
 }
 
+test "Counting boundary: redaction-notice-period (weekend)" cite "C.D. Ill. Civ. L.R. 5.11(C)"
+{
+  given TranscriptFiled() on 2026-09-05
+  expect deadline(redaction-notice-period) == 2026-09-14
+}
+
 /// Civ. LR 5.11(C): within 21 days from the filing of the transcript, the
 /// parties file under seal a Motion of Requested Redactions.
 deadline redaction-motion-period: 21.days after TranscriptFiled() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 5.11(C)"
 {
   forum frcp
+}
+
+test "Counting boundary: redaction-motion-period (weekend)" cite "C.D. Ill. Civ. L.R. 5.11(C)"
+{
+  given TranscriptFiled() on 2026-09-05
+  expect deadline(redaction-motion-period) == 2026-09-28
 }
 
 /// Civ. LR 7.1(B)(2): a response to a motion is filed within 14 days after
@@ -129,11 +147,23 @@ deadline reply-leave-period: 7.days after ResponseServed() counted_by frcp6-illi
   forum frcp
 }
 
+test "Counting boundary: reply-leave-period (weekend)" cite "C.D. Ill. Civ. L.R. 7.1(B)"
+{
+  given ResponseServed() on 2026-09-05
+  expect deadline(reply-leave-period) == 2026-09-14
+}
+
 /// Civ. LR 7.1(D)(2): within 21 days after service of a motion for summary
 /// judgment, any party opposing it files a response.
 deadline sj-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 7.1(D)"
 {
   forum frcp
+}
+
+test "Counting boundary: sj-response-period (weekend)" cite "C.D. Ill. Civ. L.R. 7.1(D)"
+{
+  given SummaryJudgmentMotionServed() on 2026-09-05
+  expect deadline(sj-response-period) == 2026-09-28
 }
 
 /// Civ. LR 7.1(D)(3): within 14 days after service of the response, the
@@ -167,12 +197,24 @@ deadline trial-brief-period: 14.days before TrialBegins() counted_by frcp6-illin
   forum frcp
 }
 
+test "Counting boundary: trial-brief-period (weekend)" cite "C.D. Ill. Civ. L.R. 16.1(E)"
+{
+  given TrialBegins() on 2026-09-05
+  expect deadline(trial-brief-period) == 2026-08-21
+}
+
 /// Civ. LR 16.1(F): unless otherwise ordered, plaintiff's counsel submits
 /// the proposed final pretrial order to opposing counsel at least 7 days
 /// prior to the final pretrial conference.
 deadline pretrial-order-draft-period: 7.days before FinalPretrialConferenceHeld() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 16.1(F)"
 {
   forum frcp
+}
+
+test "Counting boundary: pretrial-order-draft-period (weekend)" cite "C.D. Ill. Civ. L.R. 16.1(F)"
+{
+  given FinalPretrialConferenceHeld() on 2026-09-05
+  expect deadline(pretrial-order-draft-period) == 2026-08-28
 }
 
 /// Civ. LR 16.3(E)(1): in a prisoner or detainee case, a defendant that is
@@ -182,6 +224,12 @@ deadline pretrial-order-draft-period: 7.days before FinalPretrialConferenceHeld(
 deadline state-defendant-answer-period: 60.days after StateDefendantServed() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 16.3(E)"
 {
   forum frcp
+}
+
+test "Counting boundary: state-defendant-answer-period (weekend)" cite "C.D. Ill. Civ. L.R. 16.3(E)"
+{
+  given StateDefendantServed() on 2026-09-08
+  expect deadline(state-defendant-answer-period) == 2026-11-09
 }
 
 /// Civ. LR 16.3(H): in a prisoner or detainee case, responses to motions
@@ -208,6 +256,12 @@ deadline prisoner-pretrial-order-period: 14.days before FinalPretrialConferenceH
   forum frcp
 }
 
+test "Counting boundary: prisoner-pretrial-order-period (weekend)" cite "C.D. Ill. Civ. L.R. 16.3"
+{
+  given FinalPretrialConferenceHeld() on 2026-09-05
+  expect deadline(prisoner-pretrial-order-period) == 2026-08-21
+}
+
 /// Civ. LR 16.4: the parties notify the ADR Administrator upon initiating
 /// private mediation and within 14 days after its conclusion.
 deadline private-mediation-notice-period: 14.days after PrivateMediationConcluded() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 16.4"
@@ -221,6 +275,12 @@ deadline private-mediation-notice-period: 14.days after PrivateMediationConclude
 deadline mediation-memorandum-period: 7.days before FirstMediationMeeting() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 16.4"
 {
   forum frcp
+}
+
+test "Counting boundary: mediation-memorandum-period (weekend)" cite "C.D. Ill. Civ. L.R. 16.4"
+{
+  given FirstMediationMeeting() on 2026-09-05
+  expect deadline(mediation-memorandum-period) == 2026-08-28
 }
 
 /// Civ. LR 40.1(E)(4)(b)(ii): a civil action seeking to bar or mandate
@@ -247,6 +307,12 @@ deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6-
   forum frcp
 }
 
+test "Counting boundary: bill-of-costs-period (weekend)" cite "C.D. Ill. Civ. L.R. 54.1(A)"
+{
+  given JudgmentEntered() on 2026-09-03
+  expect deadline(bill-of-costs-period) == 2026-10-05
+}
+
 /// Civ. LR 72.2(A): a party opposing an appeal from a magistrate judge's
 /// non-dispositive order files its memorandum of law within 14 days after
 /// service of the appeal.
@@ -263,6 +329,12 @@ deadline exhibit-removal-period: 60.days after CaseDecidedUnappealed() counted_b
   forum frcp
 }
 
+test "Counting boundary: exhibit-removal-period (weekend)" cite "C.D. Ill. Civ. L.R. 79.1(B)"
+{
+  given CaseDecidedUnappealed() on 2026-09-08
+  expect deadline(exhibit-removal-period) == 2026-11-09
+}
+
 /// Civ. LR 79.1(B): where an appeal is taken, exhibits are taken away
 /// within 30 days after the filing of the reviewing court's mandate
 /// disposing of the case.
@@ -271,11 +343,23 @@ deadline exhibit-removal-after-mandate-period: 30.days after MandateFiled() coun
   forum frcp
 }
 
+test "Counting boundary: exhibit-removal-after-mandate-period (weekend)" cite "C.D. Ill. Civ. L.R. 79.1(B)"
+{
+  given MandateFiled() on 2026-09-03
+  expect deadline(exhibit-removal-after-mandate-period) == 2026-10-05
+}
+
 /// Civ. LR 79.1(C): exhibits not removed within 30 days after notice from
 /// the clerk may be sold or disposed of as the presiding judge directs.
 deadline exhibit-neglect-period: 30.days after ExhibitRemovalNoticeGiven() counted_by frcp6-illinois cite "C.D. Ill. Civ. L.R. 79.1(C)"
 {
   forum frcp
+}
+
+test "Counting boundary: exhibit-neglect-period (weekend)" cite "C.D. Ill. Civ. L.R. 79.1(C)"
+{
+  given ExhibitRemovalNoticeGiven() on 2026-09-03
+  expect deadline(exhibit-neglect-period) == 2026-10-05
 }
 
 test "Deadline arithmetic: waiver-notice-proof-period (7 days after)" cite "C.D. Ill. Civ. L.R. 4.1"

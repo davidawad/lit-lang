@@ -150,11 +150,23 @@ deadline discovery-opposition-period: 7.days after DiscoveryMotionServed() count
   forum frcp
 }
 
+test "Counting boundary: discovery-opposition-period (weekend)" cite "E.D.N.Y. Local Civ. R. 6.1(a)"
+{
+  given DiscoveryMotionServed() on 2026-01-03
+  expect deadline(discovery-opposition-period) == 2026-01-12
+}
+
 /// Local Civ. R. 6.1(a): reply papers on such a motion are served within
 /// two days after service of the answering papers.
 deadline discovery-reply-period: 2.days after DiscoveryOppositionServed() counted_by frcp6-new-york cite "E.D.N.Y. Local Civ. R. 6.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: discovery-reply-period (weekend)" cite "E.D.N.Y. Local Civ. R. 6.1(a)"
+{
+  given DiscoveryOppositionServed() on 2026-01-02
+  expect deadline(discovery-reply-period) == 2026-01-05
 }
 
 /// Local Civ. R. 6.1(b): on any other civil motion, petition or
@@ -165,11 +177,23 @@ deadline opposition-period: 14.days after MotionServed() counted_by frcp6-new-yo
   forum frcp
 }
 
+test "Counting boundary: opposition-period (weekend)" cite "E.D.N.Y. Local Civ. R. 6.1(b)"
+{
+  given MotionServed() on 2026-01-03
+  expect deadline(opposition-period) == 2026-01-20
+}
+
 /// Local Civ. R. 6.1(b): reply papers are served within seven days after
 /// service of the answering papers.
 deadline reply-period: 7.days after OppositionServed() counted_by frcp6-new-york cite "E.D.N.Y. Local Civ. R. 6.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: reply-period (weekend)" cite "E.D.N.Y. Local Civ. R. 6.1(b)"
+{
+  given OppositionServed() on 2026-01-03
+  expect deadline(reply-period) == 2026-01-12
 }
 
 /// Local Civ. R. 6.3: unless the court, a statute or a rule (such as FRCP
@@ -182,12 +206,24 @@ deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6-n
   forum frcp
 }
 
+test "Counting boundary: reconsideration-period (weekend)" cite "E.D.N.Y. Local Civ. R. 6.3"
+{
+  given OrderEntered() on 2026-01-03
+  expect deadline(reconsideration-period) == 2026-01-20
+}
+
 /// Local Civ. R. 7.1.1: for FRCP 7.1(b)(2), "promptly" means within 14
 /// days; a supplemental disclosure statement is filed within 14 days of
 /// any change in the required information.
 deadline supplemental-disclosure-period: 14.days after DisclosureInformationChanged() counted_by frcp6-new-york cite "E.D.N.Y. Local Civ. R. 7.1.1"
 {
   forum frcp
+}
+
+test "Counting boundary: supplemental-disclosure-period (weekend)" cite "E.D.N.Y. Local Civ. R. 7.1.1"
+{
+  given DisclosureInformationChanged() on 2026-01-03
+  expect deadline(supplemental-disclosure-period) == 2026-01-20
 }
 
 /// Local Civ. R. 12.1: when the court treats a motion against a pro se
@@ -199,12 +235,24 @@ deadline pro-se-notice-period: 14.days after ConversionRuled() counted_by frcp6-
   forum frcp
 }
 
+test "Counting boundary: pro-se-notice-period (weekend)" cite "E.D.N.Y. Local Civ. R. 12.1"
+{
+  given ConversionRuled() on 2026-01-03
+  expect deadline(pro-se-notice-period) == 2026-01-20
+}
+
 /// Local Civ. R. 15.1(b): unless the court orders otherwise, a represented
 /// moving party files the amended or supplemental pleading within seven
 /// days of the order granting the motion.
 deadline amended-pleading-period: 7.days after AmendmentGranted() counted_by frcp6-new-york cite "E.D.N.Y. Local Civ. R. 15.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: amended-pleading-period (weekend)" cite "E.D.N.Y. Local Civ. R. 15.1(b)"
+{
+  given AmendmentGranted() on 2026-01-03
+  expect deadline(amended-pleading-period) == 2026-01-12
 }
 
 /// Local Civ. R. 33.2(d): the standard prisoner pro se interrogatories and
@@ -214,6 +262,12 @@ deadline amended-pleading-period: 7.days after AmendmentGranted() counted_by frc
 deadline prisoner-discovery-period: 120.days after PrisonerComplaintServed() counted_by frcp6-new-york cite "E.D.N.Y. Local Civ. R. 33.2(d)"
 {
   forum frcp
+}
+
+test "Counting boundary: prisoner-discovery-period (weekend)" cite "E.D.N.Y. Local Civ. R. 33.2(d)"
+{
+  given PrisonerComplaintServed() on 2026-01-02
+  expect deadline(prisoner-discovery-period) == 2026-05-04
 }
 
 /// Local Civ. R. 39.1(b)(1): filed trial and hearing exhibits are removed
@@ -231,6 +285,12 @@ deadline exhibit-removal-appeal-period: 30.days after AppealDisposed() counted_b
   forum frcp
 }
 
+test "Counting boundary: exhibit-removal-appeal-period (weekend)" cite "E.D.N.Y. Local Civ. R. 39.1(b)"
+{
+  given AppealDisposed() on 2026-01-02
+  expect deadline(exhibit-removal-appeal-period) == 2026-02-02
+}
+
 /// Local Civ. R. 54.1(a): unless the court extends the period for good
 /// cause, a party seeking costs files a notice of taxation of costs within
 /// 30 days after the entry of final judgment; a party that does not is
@@ -238,6 +298,12 @@ deadline exhibit-removal-appeal-period: 30.days after AppealDisposed() counted_b
 deadline taxation-notice-period: 30.days after FinalJudgmentEntered() counted_by frcp6-new-york cite "E.D.N.Y. Local Civ. R. 54.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: taxation-notice-period (weekend)" cite "E.D.N.Y. Local Civ. R. 54.1(a)"
+{
+  given FinalJudgmentEntered() on 2026-01-02
+  expect deadline(taxation-notice-period) == 2026-02-02
 }
 
 /// Local Civ. R. 54.1(a): in the case of an appeal by any party, the
@@ -248,12 +314,24 @@ deadline taxation-notice-appeal-period: 30.days after AppealDisposed() counted_b
   forum frcp
 }
 
+test "Counting boundary: taxation-notice-appeal-period (weekend)" cite "E.D.N.Y. Local Civ. R. 54.1(a)"
+{
+  given AppealDisposed() on 2026-01-02
+  expect deadline(taxation-notice-appeal-period) == 2026-02-02
+}
+
 /// Local Civ. R. 72.1(b)(1): a response to an objection to a magistrate
 /// judge's order on a nondispositive matter is served within 14 days after
 /// being served with the objection.
 deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6-new-york cite "E.D.N.Y. Local Civ. R. 72.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: magistrate-objection-response-period (weekend)" cite "E.D.N.Y. Local Civ. R. 72.1(b)"
+{
+  given MagistrateObjectionServed() on 2026-01-03
+  expect deadline(magistrate-objection-response-period) == 2026-01-20
 }
 
 /// Local Soc. Sec. R. 7.1: if a pro se plaintiff files no brief within the
@@ -264,12 +342,24 @@ deadline commissioner-pro-se-brief-period: 30.days after PlaintiffBriefDue() cou
   forum frcp
 }
 
+test "Counting boundary: commissioner-pro-se-brief-period (weekend)" cite "E.D.N.Y. Local Soc. Sec. R. 7.1"
+{
+  given PlaintiffBriefDue() on 2026-01-02
+  expect deadline(commissioner-pro-se-brief-period) == 2026-02-02
+}
+
 /// Local Soc. Sec. R. 8.1: the pro se plaintiff's brief in opposition is
 /// filed and served within 14 days after service of the Commissioner's
 /// brief.
 deadline pro-se-opposition-period: 14.days after CommissionerBriefServed() counted_by frcp6-new-york cite "E.D.N.Y. Local Soc. Sec. R. 8.1"
 {
   forum frcp
+}
+
+test "Counting boundary: pro-se-opposition-period (weekend)" cite "E.D.N.Y. Local Soc. Sec. R. 8.1"
+{
+  given CommissionerBriefServed() on 2026-01-03
+  expect deadline(pro-se-opposition-period) == 2026-01-20
 }
 
 /// Local Civ. R. 83.7(d)(3)(A) (Eastern District only): in a case removed
@@ -280,6 +370,12 @@ deadline pro-se-opposition-period: 14.days after CommissionerBriefServed() count
 deadline arbitration-certification-period: 30.days after CaseDocketedHere() counted_by frcp6-new-york cite "E.D.N.Y. Local Civ. R. 83.7(d)"
 {
   forum frcp
+}
+
+test "Counting boundary: arbitration-certification-period (weekend)" cite "E.D.N.Y. Local Civ. R. 83.7(d)"
+{
+  given CaseDocketedHere() on 2026-01-02
+  expect deadline(arbitration-certification-period) == 2026-02-02
 }
 
 /// Local Civ. R. 83.7(e)(1): the notice of the arbitration hearing advises
@@ -298,6 +394,12 @@ deadline arbitration-exemption-period: 21.days after ArbitrationNoticeReceived()
   forum frcp
 }
 
+test "Counting boundary: arbitration-exemption-period (weekend)" cite "E.D.N.Y. Local Civ. R. 83.7(e)"
+{
+  given ArbitrationNoticeReceived() on 2026-01-03
+  expect deadline(arbitration-exemption-period) == 2026-01-26
+}
+
 /// Local Civ. R. 83.7(e)(2): within four days of receiving the exemption
 /// letter, an opposing affected party may submit a responsive letter of at
 /// most three pages.
@@ -306,12 +408,24 @@ deadline arbitration-exemption-response-period: 4.days after ExemptionLetterRece
   forum frcp
 }
 
+test "Counting boundary: arbitration-exemption-response-period (weekend)" cite "E.D.N.Y. Local Civ. R. 83.7(e)"
+{
+  given ExemptionLetterReceived() on 2026-01-06
+  expect deadline(arbitration-exemption-response-period) == 2026-01-12
+}
+
 /// Local Civ. R. 83.7(f)(5): copies or photographs of all exhibits, except
 /// those intended solely for impeachment, are marked and delivered to
 /// adverse parties at least 14 days before the arbitration hearing.
 deadline arbitration-exhibit-period: 14.days before ArbitrationHearingHeld() counted_by frcp6-new-york cite "E.D.N.Y. Local Civ. R. 83.7(f)"
 {
   forum frcp
+}
+
+test "Counting boundary: arbitration-exhibit-period (weekend)" cite "E.D.N.Y. Local Civ. R. 83.7(f)"
+{
+  given ArbitrationHearingHeld() on 2026-01-03
+  expect deadline(arbitration-exhibit-period) == 2025-12-19
 }
 
 /// Local Civ. R. 83.7(f)(5): the arbitrators receive exhibits without
@@ -323,6 +437,12 @@ deadline arbitration-authenticity-period: 7.days before ArbitrationHearingHeld()
   forum frcp
 }
 
+test "Counting boundary: arbitration-authenticity-period (weekend)" cite "E.D.N.Y. Local Civ. R. 83.7(f)"
+{
+  given ArbitrationHearingHeld() on 2026-01-03
+  expect deadline(arbitration-authenticity-period) == 2025-12-26
+}
+
 /// Local Civ. R. 83.7(h)(1): within 30 days after the arbitration award is
 /// entered on the docket, any party may demand a trial de novo in writing;
 /// otherwise the award is entered as the court's judgment, which is not
@@ -330,6 +450,12 @@ deadline arbitration-authenticity-period: 7.days before ArbitrationHearingHeld()
 deadline trial-de-novo-period: 30.days after AwardEntered() counted_by frcp6-new-york cite "E.D.N.Y. Local Civ. R. 83.7(h)"
 {
   forum frcp
+}
+
+test "Counting boundary: trial-de-novo-period (weekend)" cite "E.D.N.Y. Local Civ. R. 83.7(h)"
+{
+  given AwardEntered() on 2026-01-02
+  expect deadline(trial-de-novo-period) == 2026-02-02
 }
 
 test "discovery opposition period: 7 days after the trigger" cite "E.D.N.Y. Local Civ. R. 6.1(a)"

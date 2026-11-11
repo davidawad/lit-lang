@@ -99,6 +99,12 @@ deadline sealing-report-period: 10.days after SealMotionFiled() counted_by frcp6
   forum frcp
 }
 
+test "Counting boundary: sealing-report-period (weekend)" cite "M.D.N.C. LR 5.4(b)"
+{
+  given SealMotionFiled() on 2026-06-03
+  expect deadline(sealing-report-period) == 2026-06-15
+}
+
 /// LR 5.4(c)(4)b.: when the filing party is not the party claiming
 /// confidentiality, the party claiming it files a response with the LR
 /// 5.4(c)(3) materials within 14 days of the motion to seal.
@@ -107,11 +113,23 @@ deadline sealing-response-period: 14.days after SealMotionFiled() counted_by frc
   forum frcp
 }
 
+test "Counting boundary: sealing-response-period (holiday)" cite "M.D.N.C. LR 5.4(c)"
+{
+  given SealMotionFiled() on 2026-06-05
+  expect deadline(sealing-response-period) == 2026-06-22
+}
+
 /// LR 5.4(c)(5): a party opposing sealing files its objection within 14
 /// days of the filing of the LR 5.4(c)(3) supporting materials.
 deadline sealing-objection-period: 14.days after SealSupportFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 5.4(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: sealing-objection-period (holiday)" cite "M.D.N.C. LR 5.4(c)"
+{
+  given SealSupportFiled() on 2026-06-05
+  expect deadline(sealing-objection-period) == 2026-06-22
 }
 
 /// LR 7.3(f): a respondent opposing a motion files a response brief within
@@ -122,6 +140,12 @@ deadline response-period: 21.days after MotionServed() counted_by frcp6-north-ca
   forum frcp
 }
 
+test "Counting boundary: response-period (weekend)" cite "M.D.N.C. LR 7.3(f)"
+{
+  given MotionServed() on 2026-06-06
+  expect deadline(response-period) == 2026-06-29
+}
+
 /// LR 7.3(g): in a PSLRA case, briefs responding to a motion to serve as
 /// lead plaintiff are filed within seven calendar days of the filing of the
 /// motion; no reply briefs are permitted.
@@ -130,12 +154,24 @@ deadline lead-plaintiff-response-period: 7.days after LeadPlaintiffMotionFiled()
   forum frcp
 }
 
+test "Counting boundary: lead-plaintiff-response-period (weekend)" cite "M.D.N.C. LR 7.3(g)"
+{
+  given LeadPlaintiffMotionFiled() on 2026-06-06
+  expect deadline(lead-plaintiff-response-period) == 2026-06-15
+}
+
 /// LR 7.3(h): a reply brief, limited to matters newly raised in the
 /// response, may be filed within 14 days after service of the response (7
 /// days on a discovery motion).
 deadline reply-period: 14.days after ResponseServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 7.3(h)"
 {
   forum frcp
+}
+
+test "Counting boundary: reply-period (holiday)" cite "M.D.N.C. LR 7.3(h)"
+{
+  given ResponseServed() on 2026-06-05
+  expect deadline(reply-period) == 2026-06-22
 }
 
 /// LR 11.1(b): if mail from the clerk to a pro se plaintiff is returned and
@@ -147,11 +183,23 @@ deadline pro-se-address-period: 63.days after ProSeMailReturned() counted_by frc
   forum frcp
 }
 
+test "Counting boundary: pro-se-address-period (weekend)" cite "M.D.N.C. LR 11.1(b)"
+{
+  given ProSeMailReturned() on 2026-06-06
+  expect deadline(pro-se-address-period) == 2026-08-10
+}
+
 /// LR 16.1(b): the parties hold their FRCP 26(f) meeting at least 14 days
 /// before the scheduled initial pretrial conference.
 deadline rule-26f-meeting-period: 14.days before InitialPretrialConference() counted_by frcp6-north-carolina cite "M.D.N.C. LR 16.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: rule-26f-meeting-period (weekend)" cite "M.D.N.C. LR 16.1(b)"
+{
+  given InitialPretrialConference() on 2026-06-06
+  expect deadline(rule-26f-meeting-period) == 2026-05-22
 }
 
 /// LR 16.1(b): the joint (LR 16.2) or separate (LR 16.3) Rule 26(f) Reports
@@ -161,12 +209,24 @@ deadline rule-26f-report-period: 10.days after RuleTwentySixFMeeting() counted_b
   forum frcp
 }
 
+test "Counting boundary: rule-26f-report-period (weekend)" cite "M.D.N.C. LR 16.1(b)"
+{
+  given RuleTwentySixFMeeting() on 2026-06-03
+  expect deadline(rule-26f-report-period) == 2026-06-15
+}
+
 /// LR 16.1(b): a party claiming damages for medical or psychological
 /// injury provides an executed HIPAA-compliant release for each provider
 /// within 14 days after the Rule 26(f) conference.
 deadline medical-release-period: 14.days after RuleTwentySixFMeeting() counted_by frcp6-north-carolina cite "M.D.N.C. LR 16.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: medical-release-period (holiday)" cite "M.D.N.C. LR 16.1(b)"
+{
+  given RuleTwentySixFMeeting() on 2026-06-05
+  expect deadline(medical-release-period) == 2026-06-22
 }
 
 /// LR 23.1(b): within 90 days after entry of the initial pretrial order,
@@ -185,11 +245,23 @@ deadline protective-order-response-period: 14.days after ProtectiveOrderMotionSe
   forum frcp
 }
 
+test "Counting boundary: protective-order-response-period (holiday)" cite "M.D.N.C. LR 26.2(d)"
+{
+  given ProtectiveOrderMotionServed() on 2026-06-05
+  expect deadline(protective-order-response-period) == 2026-06-22
+}
+
 /// LR 37.1(c): a response to a discovery-related motion is filed within 14
 /// days after service of the motion.
 deadline discovery-response-period: 14.days after DiscoveryMotionServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 37.1(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: discovery-response-period (holiday)" cite "M.D.N.C. LR 37.1(c)"
+{
+  given DiscoveryMotionServed() on 2026-06-05
+  expect deadline(discovery-response-period) == 2026-06-22
 }
 
 /// LR 26.2(d), 37.1(c): a reply to a response on a protective-order or
@@ -200,6 +272,12 @@ deadline discovery-reply-period: 7.days after DiscoveryResponseServed() counted_
   forum frcp
 }
 
+test "Counting boundary: discovery-reply-period (weekend)" cite "M.D.N.C. LR 37.1(c)"
+{
+  given DiscoveryResponseServed() on 2026-06-06
+  expect deadline(discovery-reply-period) == 2026-06-15
+}
+
 /// LR 40.1(c)(2)-(4): no later than 21 days before trial each party files a
 /// trial brief, with proposed findings and conclusions in a non-jury case
 /// or proposed jury instructions in a jury case.
@@ -208,11 +286,23 @@ deadline trial-brief-period: 21.days before TrialDate() counted_by frcp6-north-c
   forum frcp
 }
 
+test "Counting boundary: trial-brief-period (weekend)" cite "M.D.N.C. LR 40.1(c)"
+{
+  given TrialDate() on 2026-06-06
+  expect deadline(trial-brief-period) == 2026-05-15
+}
+
 /// LR 40.1(d): a motion to seal trial testimony or exhibits, or to close
 /// the courtroom, is filed at least 7 days before trial.
 deadline trial-seal-motion-period: 7.days before TrialDate() counted_by frcp6-north-carolina cite "M.D.N.C. LR 40.1(d)"
 {
   forum frcp
+}
+
+test "Counting boundary: trial-seal-motion-period (holiday)" cite "M.D.N.C. LR 40.1(d)"
+{
+  given TrialDate() on 2026-06-01
+  expect deadline(trial-seal-motion-period) == 2026-05-22
 }
 
 /// LR 40.1(d): any other party may file a response at least 3 days before
@@ -232,12 +322,24 @@ deadline bill-of-costs-period: 30.days after CostsPeriodTriggered() counted_by f
   forum frcp
 }
 
+test "Counting boundary: bill-of-costs-period (holiday)" cite "M.D.N.C. LR 54.1(a)"
+{
+  given CostsPeriodTriggered() on 2026-06-03
+  expect deadline(bill-of-costs-period) == 2026-07-06
+}
+
 /// LR 54.1(b)(1): an adverse party objects by a motion for disallowance
 /// with a supporting brief within fourteen days after the bill of costs is
 /// filed.
 deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6-north-carolina cite "M.D.N.C. LR 54.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: costs-objection-period (holiday)" cite "M.D.N.C. LR 54.1(b)"
+{
+  given BillOfCostsFiled() on 2026-06-05
+  expect deadline(costs-objection-period) == 2026-06-22
 }
 
 /// LR 54.1(b)(1): within seven days after the objection, the prevailing
@@ -247,11 +349,23 @@ deadline costs-response-period: 7.days after CostsObjectionFiled() counted_by fr
   forum frcp
 }
 
+test "Counting boundary: costs-response-period (weekend)" cite "M.D.N.C. LR 54.1(b)"
+{
+  given CostsObjectionFiled() on 2026-06-06
+  expect deadline(costs-response-period) == 2026-06-15
+}
+
 /// LR 54.1(b)(2): a party may request review of the clerk's ruling by
 /// motion within seven days after the clerk's action.
 deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 54.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: costs-review-period (weekend)" cite "M.D.N.C. LR 54.1(b)"
+{
+  given CostsTaxed() on 2026-06-06
+  expect deadline(costs-review-period) == 2026-06-15
 }
 
 /// LR 54.2: within twenty-one days after entry of a judgment, the parties
@@ -264,12 +378,24 @@ deadline fee-motion-period: 21.days after JudgmentEntered() counted_by frcp6-nor
   forum frcp
 }
 
+test "Counting boundary: fee-motion-period (weekend)" cite "M.D.N.C. LR 54.2"
+{
+  given JudgmentEntered() on 2026-06-06
+  expect deadline(fee-motion-period) == 2026-06-29
+}
+
 /// LR 56.1(a): a party intending to file a motion for summary judgment or
 /// another dispositive motion files and serves notice of that intention
 /// within 14 days following the close of the discovery period.
 deadline dispositive-notice-period: 14.days after DiscoveryClosed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 56.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: dispositive-notice-period (holiday)" cite "M.D.N.C. LR 56.1(a)"
+{
+  given DiscoveryClosed() on 2026-06-05
+  expect deadline(dispositive-notice-period) == 2026-06-22
 }
 
 /// LR 56.1(b): all dispositive motions and supporting briefs are filed and
@@ -280,12 +406,24 @@ deadline dispositive-motion-period: 30.days after DiscoveryClosed() counted_by f
   forum frcp
 }
 
+test "Counting boundary: dispositive-motion-period (holiday)" cite "M.D.N.C. LR 56.1(b)"
+{
+  given DiscoveryClosed() on 2026-06-03
+  expect deadline(dispositive-motion-period) == 2026-07-06
+}
+
 /// LR 7.3(f), 56.1(d)-(e): the response brief to a summary judgment motion
 /// is filed within 30 days after service of the motion and brief; failing
 /// to respond may lead the Court to treat the motion as uncontested.
 deadline summary-judgment-response-period: 30.days after SummaryJudgmentMotionServed() counted_by frcp6-north-carolina cite "M.D.N.C. LR 56.1(d)"
 {
   forum frcp
+}
+
+test "Counting boundary: summary-judgment-response-period (holiday)" cite "M.D.N.C. LR 56.1(d)"
+{
+  given SummaryJudgmentMotionServed() on 2026-06-03
+  expect deadline(summary-judgment-response-period) == 2026-07-06
 }
 
 test "sealing report period: 10 days after the trigger" cite "M.D.N.C. LR 5.4(b)"

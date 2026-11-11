@@ -63,6 +63,12 @@ deadline response-period: 14.days after MotionServed() counted_by frcrimp45 dele
   forum frcrimp
 }
 
+test "Counting boundary: response-period (weekend)" cite "D. Kan. Rule CR1.2"
+{
+  given MotionServed() on 2026-04-04
+  expect deadline(response-period) == 2026-04-20
+}
+
 /// D. Kan. Rule CR1.2: any reply is filed within 7 days after the response
 /// is served, unless otherwise ordered.
 deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 delegable {
@@ -73,12 +79,24 @@ deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 delega
   forum frcrimp
 }
 
+test "Counting boundary: reply-period (weekend)" cite "D. Kan. Rule CR1.2"
+{
+  given ResponseServed() on 2026-04-04
+  expect deadline(reply-period) == 2026-04-13
+}
+
 /// D. Kan. Rule CR1.3(c): any response to a notice of supplemental
 /// authorities is made within 5 days, linked to it in CM/ECF and limited
 /// to 350 words.
 deadline supplemental-authority-response: 5.days after SupplementalAuthorityNoticed() counted_by frcrimp45 cite "D. Kan. Rule CR1.3(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: supplemental-authority-response (weekend)" cite "D. Kan. Rule CR1.3(c)"
+{
+  given SupplementalAuthorityNoticed() on 2026-04-06
+  expect deadline(supplemental-authority-response) == 2026-04-13
 }
 
 /// D. Kan. Rule CR32.1(c): after the final presentence report has been
@@ -89,6 +107,12 @@ deadline supplemental-authority-response: 5.days after SupplementalAuthorityNoti
 deadline sentencing-factors-statement: 5.days before SentencingScheduled() counted_by frcrimp45 cite "D. Kan. Rule CR32.1(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-factors-statement (weekend)" cite "D. Kan. Rule CR32.1(c)"
+{
+  given SentencingScheduled() on 2026-04-02
+  expect deadline(sentencing-factors-statement) == 2026-03-27
 }
 
 /// D. Kan. Rule 7.3 (applicable in criminal cases, D. Kan. Rule CR1.1): a
@@ -102,6 +126,12 @@ deadline reconsideration-motion: 14.days after OrderServed() counted_by frcrimp4
   forum frcrimp
 }
 
+test "Counting boundary: reconsideration-motion (weekend)" cite "D. Kan. Rule 7.3"
+{
+  given OrderServed() on 2026-04-04
+  expect deadline(reconsideration-motion) == 2026-04-20
+}
+
 /// D. Kan. Rule 72.1.4(e) (applicable in criminal cases, D. Kan. Rule
 /// CR1.1): in criminal cases, a motion to appeal or otherwise seek review
 /// by a district judge of a magistrate judge's order is filed within 14
@@ -113,6 +143,12 @@ deadline magistrate-order-review: 14.days after MagistrateOrderEntered() counted
 } cite "D. Kan. Rule 72.1.4(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: magistrate-order-review (weekend)" cite "D. Kan. Rule 72.1.4(e)"
+{
+  given MagistrateOrderEntered() on 2026-04-04
+  expect deadline(magistrate-order-review) == 2026-04-20
 }
 
 test "response period: 14 days after the trigger" cite "D. Kan. Rule CR1.2"

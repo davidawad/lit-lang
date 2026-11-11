@@ -100,6 +100,12 @@ deadline ecf-registration-period: 14.days after AttorneyAppeared() counted_by fr
   forum frcp
 }
 
+test "Counting boundary: ecf-registration-period (weekend)" cite "N.D. Tex. LR 5.1(f)"
+{
+  given AttorneyAppeared() on 2026-09-05
+  expect deadline(ecf-registration-period) == 2026-09-21
+}
+
 /// N.D. Tex. LR 7.1(e): a response and brief to an opposed motion are
 /// filed within 21 days from the date the motion is filed.
 deadline response-period: 21.days after OpposedMotionFiled() counted_by frcp6-texas delegable {
@@ -108,6 +114,12 @@ deadline response-period: 21.days after OpposedMotionFiled() counted_by frcp6-te
 } cite "N.D. Tex. LR 7.1(e)"
 {
   forum frcp
+}
+
+test "Counting boundary: response-period (weekend)" cite "N.D. Tex. LR 7.1(e)"
+{
+  given OpposedMotionFiled() on 2026-09-05
+  expect deadline(response-period) == 2026-09-28
 }
 
 /// N.D. Tex. LR 7.1(f): unless the presiding judge directs otherwise, the
@@ -121,6 +133,12 @@ deadline reply-period: 14.days after ResponseFiled() counted_by frcp6-texas dele
   forum frcp
 }
 
+test "Counting boundary: reply-period (weekend)" cite "N.D. Tex. LR 7.1(f)"
+{
+  given ResponseFiled() on 2026-09-05
+  expect deadline(reply-period) == 2026-09-21
+}
+
 /// N.D. Tex. LR 16.4: unless the presiding judge directs otherwise, the
 /// pretrial order, prepared by all attorneys, is submitted at least 14 days
 /// before the scheduled date for trial.
@@ -130,6 +148,12 @@ deadline pretrial-order-period: 14.days before TrialDate() counted_by frcp6-texa
 } cite "N.D. Tex. LR 16.4"
 {
   forum frcp
+}
+
+test "Counting boundary: pretrial-order-period (weekend)" cite "N.D. Tex. LR 16.4"
+{
+  given TrialDate() on 2026-09-05
+  expect deadline(pretrial-order-period) == 2026-08-21
 }
 
 /// N.D. Tex. LR 23.2: within 90 days of filing a class action complaint,
@@ -144,12 +168,24 @@ deadline class-certification-period: 90.days after ClassComplaintFiled() counted
   forum frcp
 }
 
+test "Counting boundary: class-certification-period (weekend)" cite "N.D. Tex. LR 23.2"
+{
+  given ClassComplaintFiled() on 2026-09-06
+  expect deadline(class-certification-period) == 2026-12-07
+}
+
 /// N.D. Tex. LR 26.2(a): every exhibit a party intends to offer at trial,
 /// other than for impeachment, is marked and exchanged with opposing
 /// parties at least 14 days before the scheduled date for trial.
 deadline exhibit-exchange-period: 14.days before TrialDate() counted_by frcp6-texas cite "N.D. Tex. LR 26.2(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: exhibit-exchange-period (weekend)" cite "N.D. Tex. LR 26.2(a)"
+{
+  given TrialDate() on 2026-09-05
+  expect deadline(exhibit-exchange-period) == 2026-08-21
 }
 
 /// N.D. Tex. LR 26.2(b): at least 14 days before the scheduled trial date,
@@ -159,12 +195,24 @@ deadline exhibit-witness-list-period: 14.days before TrialDate() counted_by frcp
   forum frcp
 }
 
+test "Counting boundary: exhibit-witness-list-period (weekend)" cite "N.D. Tex. LR 26.2(b)"
+{
+  given TrialDate() on 2026-09-05
+  expect deadline(exhibit-witness-list-period) == 2026-08-21
+}
+
 /// N.D. Tex. LR 26.2(c): the portions of any depositions to be offered at
 /// trial are designated in lists delivered and filed at least 14 days
 /// before the scheduled trial date.
 deadline deposition-designation-period: 14.days before TrialDate() counted_by frcp6-texas cite "N.D. Tex. LR 26.2(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: deposition-designation-period (weekend)" cite "N.D. Tex. LR 26.2(c)"
+{
+  given TrialDate() on 2026-09-05
+  expect deadline(deposition-designation-period) == 2026-08-21
 }
 
 /// N.D. Tex. LR 52.1: unless the presiding judge directs otherwise, at
@@ -178,12 +226,24 @@ deadline proposed-findings-period: 14.days before TrialDate() counted_by frcp6-t
   forum frcp
 }
 
+test "Counting boundary: proposed-findings-period (weekend)" cite "N.D. Tex. LR 52.1"
+{
+  given TrialDate() on 2026-09-05
+  expect deadline(proposed-findings-period) == 2026-08-21
+}
+
 /// N.D. Tex. LR 53.1(b): a response brief to objections or a motion under
 /// FRCP 53(f)(2) is filed within 21 days from the date the objections or
 /// motion is filed.
 deadline master-response-period: 21.days after MasterObjectionsFiled() counted_by frcp6-texas cite "N.D. Tex. LR 53.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: master-response-period (weekend)" cite "N.D. Tex. LR 53.1(b)"
+{
+  given MasterObjectionsFiled() on 2026-09-05
+  expect deadline(master-response-period) == 2026-09-28
 }
 
 /// N.D. Tex. LR 53.1(c): unless the presiding judge directs otherwise, the
@@ -195,6 +255,12 @@ deadline master-reply-period: 14.days after MasterResponseFiled() counted_by frc
 } cite "N.D. Tex. LR 53.1(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: master-reply-period (weekend)" cite "N.D. Tex. LR 53.1(c)"
+{
+  given MasterResponseFiled() on 2026-09-05
+  expect deadline(master-reply-period) == 2026-09-21
 }
 
 /// N.D. Tex. LR 54.1: unless a statute or the presiding judge provides
@@ -209,6 +275,12 @@ deadline bill-of-costs-period: 14.days after CostsJudgmentDocketed() counted_by 
   forum frcp
 }
 
+test "Counting boundary: bill-of-costs-period (weekend)" cite "N.D. Tex. LR 54.1"
+{
+  given CostsJudgmentDocketed() on 2026-09-05
+  expect deadline(bill-of-costs-period) == 2026-09-21
+}
+
 /// N.D. Tex. LR 56.2(a): unless the presiding judge directs otherwise, no
 /// summary judgment motion may be filed within 90 days of the trial
 /// setting.
@@ -220,6 +292,12 @@ deadline summary-judgment-cutoff: 90.days before TrialDate() counted_by frcp6-te
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-cutoff (weekend)" cite "N.D. Tex. LR 56.2(a)"
+{
+  given TrialDate() on 2026-09-04
+  expect deadline(summary-judgment-cutoff) == 2026-06-05
+}
+
 /// N.D. Tex. LR 62.2: unless all affected parties consent, an order
 /// transferring a case to a district court outside the Fifth Circuit is
 /// stayed for 21 days from the date it is entered on the docket.
@@ -228,11 +306,23 @@ deadline transfer-stay-period: 21.days after TransferOrderEntered() counted_by f
   forum frcp
 }
 
+test "Counting boundary: transfer-stay-period (weekend)" cite "N.D. Tex. LR 62.2"
+{
+  given TransferOrderEntered() on 2026-09-05
+  expect deadline(transfer-stay-period) == 2026-09-28
+}
+
 /// N.D. Tex. LR 72.1(b): a response brief to objections under FRCP 72(a)
 /// is filed within 21 days from the date the objections are filed.
 deadline nondispositive-objection-response-period: 21.days after NondispositiveObjectionsFiled() counted_by frcp6-texas cite "N.D. Tex. LR 72.1(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: nondispositive-objection-response-period (weekend)" cite "N.D. Tex. LR 72.1(b)"
+{
+  given NondispositiveObjectionsFiled() on 2026-09-05
+  expect deadline(nondispositive-objection-response-period) == 2026-09-28
 }
 
 /// N.D. Tex. LR 72.1(c), 72.2(c): unless the presiding judge directs
@@ -246,6 +336,12 @@ deadline magistrate-objection-reply-period: 14.days after MagistrateResponseFile
   forum frcp
 }
 
+test "Counting boundary: magistrate-objection-reply-period (weekend)" cite "N.D. Tex. LR 72.1(c)"
+{
+  given MagistrateResponseFiled() on 2026-09-05
+  expect deadline(magistrate-objection-reply-period) == 2026-09-21
+}
+
 /// N.D. Tex. LR 79.2(b): every exhibit in the court's custody is removed
 /// from the clerk's office within 60 days after final disposition of the
 /// case, by the attorney who introduced it; one not removed may be
@@ -253,6 +349,12 @@ deadline magistrate-objection-reply-period: 14.days after MagistrateResponseFile
 deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcp6-texas cite "N.D. Tex. LR 79.2(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: exhibit-removal (weekend)" cite "N.D. Tex. LR 79.2(b)"
+{
+  given FinalDisposition() on 2026-09-01
+  expect deadline(exhibit-removal) == 2026-11-02
 }
 
 /// N.D. Tex. LR 79.4: unless the presiding judge directs otherwise, a
@@ -264,12 +366,24 @@ deadline keep-sealed-motion-period: 60.days after FinalDisposition() counted_by 
   forum frcp
 }
 
+test "Counting boundary: keep-sealed-motion-period (weekend)" cite "N.D. Tex. LR 79.4"
+{
+  given FinalDisposition() on 2026-09-01
+  expect deadline(keep-sealed-motion-period) == 2026-11-02
+}
+
 /// N.D. Tex. LR 81.2: within 21 days after the notice of removal is filed,
 /// the plaintiff files a separately signed certificate of interested
 /// persons, or adopts another party's previously filed certificate.
 deadline removal-certificate-period: 21.days after RemovalNoticeFiled() counted_by frcp6-texas cite "N.D. Tex. LR 81.2"
 {
   forum frcp
+}
+
+test "Counting boundary: removal-certificate-period (weekend)" cite "N.D. Tex. LR 81.2"
+{
+  given RemovalNoticeFiled() on 2026-09-05
+  expect deadline(removal-certificate-period) == 2026-09-28
 }
 
 test "Deadline arithmetic: ecf-registration-period (14 days after)" cite "N.D. Tex. LR 5.1(f)"

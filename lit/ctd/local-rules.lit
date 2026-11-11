@@ -125,6 +125,12 @@ deadline service-proof-period: 7.days after ServiceProofReceived() counted_by fr
   forum frcp
 }
 
+test "Counting boundary: service-proof-period (weekend)" cite "D. Conn. L. Civ. R. 4(d)"
+{
+  given ServiceProofReceived() on 2026-09-26
+  expect deadline(service-proof-period) == 2026-10-05
+}
+
 /// D. Conn. L. Civ. R. 4(d): if the complaint will not be served within 90
 /// days after it is filed, the plaintiff files within that time a motion
 /// for additional time on good cause shown or, if no extension is
@@ -144,6 +150,12 @@ deadline opposition-period: 21.days after MotionFiled() counted_by frcp6-connect
   forum frcp
 }
 
+test "Counting boundary: opposition-period (weekend)" cite "D. Conn. L. Civ. R. 7(a)"
+{
+  given MotionFiled() on 2026-09-26
+  expect deadline(opposition-period) == 2026-10-19
+}
+
 /// D. Conn. L. Civ. R. 7(a)5: a motion for permission to depart from the
 /// memorandum length and format limits is filed at least 7 days before the
 /// deadline for filing the memorandum at issue.
@@ -152,12 +164,24 @@ deadline length-departure-motion-period: 7.days before MemorandumDeadline() coun
   forum frcp
 }
 
+test "Counting boundary: length-departure-motion-period (weekend)" cite "D. Conn. L. Civ. R. 7(a)"
+{
+  given MemorandumDeadline() on 2026-09-26
+  expect deadline(length-departure-motion-period) == 2026-09-18
+}
+
 /// D. Conn. L. Civ. R. 7(b)2: any party may move within 7 days of an order
 /// granting a motion for extension of time to have the Court set it aside
 /// for good cause.
 deadline extension-set-aside-period: 7.days after ExtensionGranted() counted_by frcp6-connecticut cite "D. Conn. L. Civ. R. 7(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: extension-set-aside-period (weekend)" cite "D. Conn. L. Civ. R. 7(b)"
+{
+  given ExtensionGranted() on 2026-09-26
+  expect deadline(extension-set-aside-period) == 2026-10-05
 }
 
 /// D. Conn. L. Civ. R. 7(b)3: a motion for extension of time is filed at
@@ -178,6 +202,12 @@ deadline reconsideration-period: 7.days after DecisionFiled() counted_by frcp6-c
   forum frcp
 }
 
+test "Counting boundary: reconsideration-period (weekend)" cite "D. Conn. L. Civ. R. 7(c)"
+{
+  given DecisionFiled() on 2026-09-26
+  expect deadline(reconsideration-period) == 2026-10-05
+}
+
 /// D. Conn. L. Civ. R. 7(d): a reply memorandum, permitted but not
 /// required, is filed within 14 days of the filing of the responsive
 /// memorandum, computed under FRCP 6. No sur-reply without permission.
@@ -194,6 +224,12 @@ deadline fee-sanctions-motion-period: 30.days after JudgmentEntered() counted_by
   forum frcp
 }
 
+test "Counting boundary: fee-sanctions-motion-period (weekend)" cite "D. Conn. L. Civ. R. 11"
+{
+  given JudgmentEntered() on 2026-09-25
+  expect deadline(fee-sanctions-motion-period) == 2026-10-26
+}
+
 /// D. Conn. L. Civ. R. 26(f)(1): within thirty days after the first
 /// appearance of a defendant, the attorneys of record and appearing
 /// self-represented parties confer for the purposes of FRCP 26(f),
@@ -202,6 +238,12 @@ deadline fee-sanctions-motion-period: 30.days after JudgmentEntered() counted_by
 deadline planning-conference-period: 30.days after DefendantFirstAppears() counted_by frcp6-connecticut cite "D. Conn. L. Civ. R. 26(f)"
 {
   forum frcp
+}
+
+test "Counting boundary: planning-conference-period (weekend)" cite "D. Conn. L. Civ. R. 26(f)"
+{
+  given DefendantFirstAppears() on 2026-09-25
+  expect deadline(planning-conference-period) == 2026-10-26
 }
 
 /// D. Conn. L. Civ. R. 26(f)(1): within 14 days after the conference, the
@@ -227,12 +269,24 @@ deadline dismissal-explanation-period: 21.days after ProposedDismissalNoticed() 
   forum frcp
 }
 
+test "Counting boundary: dismissal-explanation-period (weekend)" cite "D. Conn. L. Civ. R. 41(a)"
+{
+  given ProposedDismissalNoticed() on 2026-09-26
+  expect deadline(dismissal-explanation-period) == 2026-10-19
+}
+
 /// D. Conn. L. Civ. R. 41(b): a case reported settled is closed subject to
 /// the parties' right to move to reopen within 30 days, unless the Court
 /// specifies a longer period.
 deadline reopen-motion-period: 30.days after SettledCaseClosed() counted_by frcp6-connecticut cite "D. Conn. L. Civ. R. 41(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: reopen-motion-period (weekend)" cite "D. Conn. L. Civ. R. 41(b)"
+{
+  given SettledCaseClosed() on 2026-09-25
+  expect deadline(reopen-motion-period) == 2026-10-26
 }
 
 /// D. Conn. L. Civ. R. 54(a)1: a party seeking costs files and serves a
@@ -284,6 +338,12 @@ deadline address-change-period: 30.days after OfficeAddressChanged() counted_by 
   forum frcp
 }
 
+test "Counting boundary: address-change-period (weekend)" cite "D. Conn. L. Civ. R. 83.1(d)"
+{
+  given OfficeAddressChanged() on 2026-09-25
+  expect deadline(address-change-period) == 2026-10-26
+}
+
 /// D. Conn. L. Civ. R. 83.3(a): a cash deposit or corporate surety bond of
 /// $500.00 as security for costs, ordered by the Clerk as of course on a
 /// defendant's (or counterclaim defendant's) request, is given within
@@ -292,6 +352,12 @@ deadline address-change-period: 30.days after OfficeAddressChanged() counted_by 
 deadline security-for-costs-period: 30.days after SecurityOrderEntered() counted_by frcp6-connecticut cite "D. Conn. L. Civ. R. 83.3(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: security-for-costs-period (weekend)" cite "D. Conn. L. Civ. R. 83.3(a)"
+{
+  given SecurityOrderEntered() on 2026-09-25
+  expect deadline(security-for-costs-period) == 2026-10-26
 }
 
 /// D. Conn. L. Civ. R. 83.6(d): the offering party arranges for the return

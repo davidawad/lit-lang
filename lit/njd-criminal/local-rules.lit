@@ -62,6 +62,12 @@ deadline rule12-motions: 30.days after PleaEntered() counted_by frcrimp45 delega
   forum frcrimp
 }
 
+test "Counting boundary: rule12-motions (weekend)" cite "D.N.J. L.Cr.R. 12.1"
+{
+  given PleaEntered() on 2026-10-22
+  expect deadline(rule12-motions) == 2026-11-23
+}
+
 /// D.N.J. L.Cr.R. 41.1: defenses and objections permitted by FRCrimP 41 are
 /// made before pleading or within 30 days thereafter, unless the Court at
 /// arraignment, on application of counsel, specifies otherwise, or good
@@ -74,6 +80,12 @@ deadline rule41-motions: 30.days after PleaEntered() counted_by frcrimp45 delega
   forum frcrimp
 }
 
+test "Counting boundary: rule41-motions (weekend)" cite "D.N.J. L.Cr.R. 41.1"
+{
+  given PleaEntered() on 2026-10-22
+  expect deadline(rule41-motions) == 2026-11-23
+}
+
 /// D.N.J. L.Cr.R. 58.1(d)(2): in an appeal from a magistrate judge's
 /// misdemeanor or petty-offense judgment, the appellant serves and submits
 /// a brief within 21 days of the filing of the notice of appeal; briefs
@@ -83,6 +95,12 @@ deadline misdemeanor-appellant-brief: 21.days after MisdemeanorAppealNoticed() c
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appellant-brief (holiday)" cite "D.N.J. L.Cr.R. 58.1(d)"
+{
+  given MisdemeanorAppealNoticed() on 2026-10-21
+  expect deadline(misdemeanor-appellant-brief) == 2026-11-12
+}
+
 /// D.N.J. L.Cr.R. 58.1(d)(2): the appellee serves and submits a brief
 /// within 21 days after receipt of a copy of the appellant's brief.
 deadline misdemeanor-appellee-brief: 21.days after AppellantBriefReceived() counted_by frcrimp45 cite "D.N.J. L.Cr.R. 58.1(d)"
@@ -90,11 +108,23 @@ deadline misdemeanor-appellee-brief: 21.days after AppellantBriefReceived() coun
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appellee-brief (holiday)" cite "D.N.J. L.Cr.R. 58.1(d)"
+{
+  given AppellantBriefReceived() on 2026-10-21
+  expect deadline(misdemeanor-appellee-brief) == 2026-11-12
+}
+
 /// D.N.J. L.Cr.R. 58.1(d)(2): the appellant may serve and submit a reply
 /// brief within seven days after receipt of the appellee's brief.
 deadline misdemeanor-reply-brief: 7.days after AppelleeBriefReceived() counted_by frcrimp45 cite "D.N.J. L.Cr.R. 58.1(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "D.N.J. L.Cr.R. 58.1(d)"
+{
+  given AppelleeBriefReceived() on 2026-10-24
+  expect deadline(misdemeanor-reply-brief) == 2026-11-02
 }
 
 test "rule12 motions: 30 days after the trigger" cite "D.N.J. L.Cr.R. 12.1"

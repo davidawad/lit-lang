@@ -60,10 +60,22 @@ event TrialOrDispositiveHearingScheduled()
 /// LR 7.1(b): absent an agreed order, a response opposing a motion for an
 /// extension of time is filed within 7 days of service of the motion.
 deadline extension-response-period: 7.days after ExtensionMotionServed() counted_by frcp6-kentucky cite "E.D. Ky. LR 7.1(b)"
+
+test "Counting boundary: extension-response-period (weekend)" cite "E.D. Ky. LR 7.1(b)"
+{
+  given ExtensionMotionServed() on 2026-10-31
+  expect deadline(extension-response-period) == 2026-11-09
+}
 /// LR 7.1(c): unless the court orders otherwise, a party opposing a motion
 /// files a response within 21 days of service of the motion; failure to
 /// respond timely may be grounds for granting it.
 deadline motion-response-period: 21.days after MotionServed() counted_by frcp6-kentucky cite "E.D. Ky. LR 7.1(c)"
+
+test "Counting boundary: motion-response-period (weekend)" cite "E.D. Ky. LR 7.1(c)"
+{
+  given MotionServed() on 2026-10-31
+  expect deadline(motion-response-period) == 2026-11-23
+}
 /// LR 7.1(c): a party may file a reply within 14 days of service of the
 /// response.
 deadline motion-reply-period: 14.days after ResponseServed() counted_by frcp6-kentucky cite "E.D. Ky. LR 7.1(c)"
@@ -72,6 +84,12 @@ deadline motion-reply-period: 14.days after ResponseServed() counted_by frcp6-ke
 /// considers relevant that it did not file on removal, with the state court
 /// docket sheet.
 deadline state-record-period: 30.days after NoticeOfRemovalFiled() counted_by frcp6-kentucky cite "E.D. Ky. LR 81.1(a)"
+
+test "Counting boundary: state-record-period (holiday)" cite "E.D. Ky. LR 81.1(a)"
+{
+  given NoticeOfRemovalFiled() on 2026-10-27
+  expect deadline(state-record-period) == 2026-11-27
+}
 /// LR 81.1(b): a movant who wants the district court to rule on a motion
 /// pending in state court at removal refiles it within 14 days after
 /// removal; responses and replies then follow LR 7.1.
@@ -80,14 +98,32 @@ deadline refiled-motion-period: 14.days after ActionRemoved() counted_by frcp6-k
 /// permitted, the party presents the subpoena, Form 285 and the fees to the
 /// Marshal Service at least fourteen days before the compliance date.
 deadline marshal-subpoena-period: 14.days before SubpoenaComplianceDate() counted_by frcp6-kentucky cite "E.D. Ky. LR 45.1"
+
+test "Counting boundary: marshal-subpoena-period (weekend)" cite "E.D. Ky. LR 45.1"
+{
+  given SubpoenaComplianceDate() on 2026-10-31
+  expect deadline(marshal-subpoena-period) == 2026-10-16
+}
 /// LR 54.3: the prevailing party files a bill of costs with the clerk and
 /// serves it on each adverse party within thirty days of entry of
 /// judgment; costs other than the clerk's are otherwise waived.
 deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6-kentucky cite "E.D. Ky. LR 54.3"
+
+test "Counting boundary: bill-of-costs-period (holiday)" cite "E.D. Ky. LR 54.3"
+{
+  given JudgmentEntered() on 2026-10-27
+  expect deadline(bill-of-costs-period) == 2026-11-27
+}
 /// LR 54.4: unless a statute provides otherwise, a motion for attorney's
 /// fees and related nontaxable expenses under FRCP 54(d)(2) is filed no
 /// later than 30 days after entry of judgment, or they are waived.
 deadline fee-motion-period: 30.days after JudgmentEntered() counted_by frcp6-kentucky cite "E.D. Ky. LR 54.4"
+
+test "Counting boundary: fee-motion-period (holiday)" cite "E.D. Ky. LR 54.4"
+{
+  given JudgmentEntered() on 2026-10-27
+  expect deadline(fee-motion-period) == 2026-11-27
+}
 /// LR 72.2: subject to any deadline the court sets, a party objecting to a
 /// magistrate judge's non-dispositive order files a written objection
 /// within fourteen days of service of the order.
@@ -96,13 +132,31 @@ deadline magistrate-objection-period: 14.days after MagistrateOrderServed() coun
 /// 42 U.S.C. § 406(b) or § 1383(d)(2)(A) within 30 days of the date shown on
 /// the most recent notice of award (EAJA fees are outside the rule).
 deadline social-security-fee-petition-period: 30.days after NoticeOfAward() counted_by frcp6-kentucky cite "E.D. Ky. LR 83.11(a)"
+
+test "Counting boundary: social-security-fee-petition-period (holiday)" cite "E.D. Ky. LR 83.11(a)"
+{
+  given NoticeOfAward() on 2026-10-27
+  expect deadline(social-security-fee-petition-period) == 2026-11-27
+}
 /// LR 83.11(a)(2): the United States Attorney or the claimant may respond
 /// to the fee petition within 30 days of its filing.
 deadline social-security-fee-response-period: 30.days after SocialSecurityFeePetitionFiled() counted_by frcp6-kentucky cite "E.D. Ky. LR 83.11(a)"
+
+test "Counting boundary: social-security-fee-response-period (holiday)" cite "E.D. Ky. LR 83.11(a)"
+{
+  given SocialSecurityFeePetitionFiled() on 2026-10-27
+  expect deadline(social-security-fee-response-period) == 2026-11-27
+}
 /// LR 83.6: absent leave on a motion showing compelling circumstances, an
 /// attorney of record may not withdraw within twenty-one days of trial or
 /// a hearing on any motion for judgment or dismissal.
 deadline withdrawal-cutoff: 21.days before TrialOrDispositiveHearingScheduled() counted_by frcp6-kentucky cite "E.D. Ky. LR 83.6"
+
+test "Counting boundary: withdrawal-cutoff (weekend)" cite "E.D. Ky. LR 83.6"
+{
+  given TrialOrDispositiveHearingScheduled() on 2026-10-31
+  expect deadline(withdrawal-cutoff) == 2026-10-09
+}
 
 test "Deadline arithmetic: extension-response-period (7 days after)" cite "E.D. Ky. LR 7.1(b)"
 {

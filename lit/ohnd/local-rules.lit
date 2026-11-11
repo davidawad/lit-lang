@@ -112,16 +112,40 @@ event MagistrateObjectionsServed()
 /// opposing a dispositive motion serves and files its memorandum in
 /// opposition within thirty days after service of the motion.
 deadline dispositive-opposition-period: 30.days after DispositiveMotionServed() counted_by frcp6 cite "N.D. Ohio L.R. 7.1(d)"
+
+test "Counting boundary: dispositive-opposition-period (weekend)" cite "N.D. Ohio L.R. 7.1(d)"
+{
+  given DispositiveMotionServed() on 2026-04-10
+  expect deadline(dispositive-opposition-period) == 2026-05-11
+}
 /// LR 7.1(d): the opposition to a non-dispositive motion is due within
 /// fourteen days after service of the motion.
 deadline non-dispositive-opposition-period: 14.days after NonDispositiveMotionServed() counted_by frcp6 cite "N.D. Ohio L.R. 7.1(d)"
+
+test "Counting boundary: non-dispositive-opposition-period (weekend)" cite "N.D. Ohio L.R. 7.1(d)"
+{
+  given NonDispositiveMotionServed() on 2026-04-11
+  expect deadline(non-dispositive-opposition-period) == 2026-04-27
+}
 /// LR 7.1(e): the movant may serve and file a reply supporting a
 /// dispositive motion within fourteen days after service of the
 /// memorandum in opposition.
 deadline dispositive-reply-period: 14.days after DispositiveOppositionServed() counted_by frcp6 cite "N.D. Ohio L.R. 7.1(e)"
+
+test "Counting boundary: dispositive-reply-period (weekend)" cite "N.D. Ohio L.R. 7.1(e)"
+{
+  given DispositiveOppositionServed() on 2026-04-11
+  expect deadline(dispositive-reply-period) == 2026-04-27
+}
 /// LR 7.1(e): the reply supporting a non-dispositive motion is due within
 /// seven days after service of the memorandum in opposition.
 deadline non-dispositive-reply-period: 7.days after NonDispositiveOppositionServed() counted_by frcp6 cite "N.D. Ohio L.R. 7.1(e)"
+
+test "Counting boundary: non-dispositive-reply-period (weekend)" cite "N.D. Ohio L.R. 7.1(e)"
+{
+  given NonDispositiveOppositionServed() on 2026-04-11
+  expect deadline(non-dispositive-reply-period) == 2026-04-20
+}
 /// LR 16.3(a)(2): when every defendant is in default of answer, the
 /// plaintiff seeks default judgment within ninety days of perfection of
 /// service (or of sending a FRCP 4(d) waiver request), or shows cause why
@@ -130,10 +154,22 @@ deadline default-judgment-period: 90.days after ServicePerfectedAllInDefault() c
 /// LR 16.3(a)(4): counsel for each party files and serves a proposed
 /// agenda at least seven days before the Case Management Conference.
 deadline case-management-agenda: 7.days before CaseManagementConferenceHeld() counted_by frcp6 cite "N.D. Ohio L.R. 16.3(a)"
+
+test "Counting boundary: case-management-agenda (weekend)" cite "N.D. Ohio L.R. 16.3(a)"
+{
+  given CaseManagementConferenceHeld() on 2026-04-11
+  expect deadline(case-management-agenda) == 2026-04-03
+}
 /// LR 37.1(b): no discovery dispute may be brought to the court's
 /// attention, and no motion to compel filed, more than ten days after the
 /// discovery cut-off date.
 deadline discovery-dispute-cutoff: 10.days after DiscoveryCutoff() counted_by frcp6 cite "N.D. Ohio L.R. 37.1(b)"
+
+test "Counting boundary: discovery-dispute-cutoff (weekend)" cite "N.D. Ohio L.R. 37.1(b)"
+{
+  given DiscoveryCutoff() on 2026-04-15
+  expect deadline(discovery-dispute-cutoff) == 2026-04-27
+}
 /// LR 16.3.1(d): the certified administrative record, which serves as the
 /// agency's answer, is due sixty days after notice of the complaint is
 /// sent, unless a motion to dismiss is filed.
@@ -141,23 +177,59 @@ deadline administrative-record-period: 60.days after SocialSecurityComplaintNoti
 /// LR 16.3.1(e)(1): the plaintiff's merits brief is due within 45 days of
 /// the filing of the administrative record.
 deadline social-security-plaintiff-brief-period: 45.days after AdministrativeRecordFiled() counted_by frcp6 cite "N.D. Ohio L.R. 16.3.1(e)"
+
+test "Counting boundary: social-security-plaintiff-brief-period (holiday)" cite "N.D. Ohio L.R. 16.3.1(e)"
+{
+  given AdministrativeRecordFiled() on 2026-04-10
+  expect deadline(social-security-plaintiff-brief-period) == 2026-05-26
+}
 /// LR 16.3.1(e)(2): the Social Security Administration's opposition is due
 /// 45 days after the plaintiff's brief is filed.
 deadline social-security-defendant-brief-period: 45.days after SocialSecurityPlaintiffBriefFiled() counted_by frcp6 cite "N.D. Ohio L.R. 16.3.1(e)"
+
+test "Counting boundary: social-security-defendant-brief-period (holiday)" cite "N.D. Ohio L.R. 16.3.1(e)"
+{
+  given SocialSecurityPlaintiffBriefFiled() on 2026-04-10
+  expect deadline(social-security-defendant-brief-period) == 2026-05-26
+}
 /// LR 16.3.1(e)(3): the plaintiff's reply brief, if any, is due 14 days
 /// after the defendant's brief is filed.
 deadline social-security-reply-period: 14.days after SocialSecurityDefendantBriefFiled() counted_by frcp6 cite "N.D. Ohio L.R. 16.3.1(e)"
+
+test "Counting boundary: social-security-reply-period (weekend)" cite "N.D. Ohio L.R. 16.3.1(e)"
+{
+  given SocialSecurityDefendantBriefFiled() on 2026-04-11
+  expect deadline(social-security-reply-period) == 2026-04-27
+}
 /// LR 72.3(a): a party may appeal a magistrate judge's FRCP 72(a) order
 /// within fourteen days after service of the order.
 deadline magistrate-order-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "N.D. Ohio L.R. 72.3(a)"
+
+test "Counting boundary: magistrate-order-appeal-period (weekend)" cite "N.D. Ohio L.R. 72.3(a)"
+{
+  given MagistrateOrderServed() on 2026-04-11
+  expect deadline(magistrate-order-appeal-period) == 2026-04-27
+}
 /// LR 72.3(b): a party may object to a magistrate judge's FRCP 72(b)
 /// proposed findings, recommendations or report within fourteen days after
 /// being served with it; failure to object in time waives subsequent
 /// review absent good cause.
 deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "N.D. Ohio L.R. 72.3(b)"
+
+test "Counting boundary: magistrate-report-objection-period (weekend)" cite "N.D. Ohio L.R. 72.3(b)"
+{
+  given MagistrateReportServed() on 2026-04-11
+  expect deadline(magistrate-report-objection-period) == 2026-04-27
+}
 /// LR 72.3(b): any party may respond to another party's objections within
 /// fourteen days after being served with them.
 deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6 cite "N.D. Ohio L.R. 72.3(b)"
+
+test "Counting boundary: magistrate-objection-response-period (weekend)" cite "N.D. Ohio L.R. 72.3(b)"
+{
+  given MagistrateObjectionsServed() on 2026-04-11
+  expect deadline(magistrate-objection-response-period) == 2026-04-27
+}
 
 test "dispositive opposition: 30 days after service of the motion" cite "N.D. Ohio L.R. 7.1(d)"
 {

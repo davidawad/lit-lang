@@ -32,17 +32,41 @@ event TrialOrHearingScheduled()
 /// LCrR 47.1(b): a response opposing a motion for an extension of time is
 /// filed within 7 days of service of the motion.
 deadline extension-response-period: 7.days after ExtensionMotionServed() counted_by frcrimp45 cite "W.D. Ky. LCrR 47.1(b)"
+
+test "Counting boundary: extension-response-period (weekend)" cite "W.D. Ky. LCrR 47.1(b)"
+{
+  given ExtensionMotionServed() on 2026-10-31
+  expect deadline(extension-response-period) == 2026-11-09
+}
 /// LCrR 47.1(d): unless the court orders otherwise, a party opposing a
 /// motion files a response within 14 days of service of the motion;
 /// failure to respond timely may be grounds for granting it.
 deadline motion-response-period: 14.days after MotionServed() counted_by frcrimp45 cite "W.D. Ky. LCrR 47.1(d)"
+
+test "Counting boundary: motion-response-period (holiday)" cite "W.D. Ky. LCrR 47.1(d)"
+{
+  given MotionServed() on 2026-10-28
+  expect deadline(motion-response-period) == 2026-11-12
+}
 /// LCrR 47.1(d): a party may file a reply within 14 days of service of the
 /// response.
 deadline motion-reply-period: 14.days after ResponseServed() counted_by frcrimp45 cite "W.D. Ky. LCrR 47.1(d)"
+
+test "Counting boundary: motion-reply-period (holiday)" cite "W.D. Ky. LCrR 47.1(d)"
+{
+  given ResponseServed() on 2026-10-28
+  expect deadline(motion-reply-period) == 2026-11-12
+}
 /// LCrR 57.6: absent leave on a motion showing compelling circumstances,
 /// an attorney of record may not withdraw within twenty-one days of trial
 /// or an evidentiary hearing.
 deadline withdrawal-cutoff: 21.days before TrialOrHearingScheduled() counted_by frcrimp45 cite "W.D. Ky. LCrR 57.6"
+
+test "Counting boundary: withdrawal-cutoff (weekend)" cite "W.D. Ky. LCrR 57.6"
+{
+  given TrialOrHearingScheduled() on 2026-10-31
+  expect deadline(withdrawal-cutoff) == 2026-10-09
+}
 
 test "extension response period: 7 days after the trigger" cite "W.D. Ky. LCrR 47.1(b)"
 {

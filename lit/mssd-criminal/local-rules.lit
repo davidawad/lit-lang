@@ -56,11 +56,23 @@ deadline response-period: 11.days after MotionFiled() counted_by frcrimp45 cite 
   forum frcrimp
 }
 
+test "Counting boundary: response-period (weekend)" cite "U.L.Cr.R. 47(C)"
+{
+  given MotionFiled() on 2019-12-03
+  expect deadline(response-period) == 2019-12-16
+}
+
 /// U.L.Cr.R. 47(D): counsel who desires to file a rebuttal may do so
 /// within five calendar days after service of the response.
 deadline rebuttal-period: 5.days after ResponseServed() counted_by frcrimp45 cite "U.L.Cr.R. 47(D)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: rebuttal-period (weekend)" cite "U.L.Cr.R. 47(D)"
+{
+  given ResponseServed() on 2019-12-02
+  expect deadline(rebuttal-period) == 2019-12-09
 }
 
 test "response period: 11 days after the trigger" cite "U.L.Cr.R. 47(C)"

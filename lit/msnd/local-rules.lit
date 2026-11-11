@@ -60,12 +60,24 @@ deadline state-record-period: 14.days after Removed() counted_by frcp6 cite "N.D
   forum frcp
 }
 
+test "Counting boundary: state-record-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 5(b)"
+{
+  given Removed() on 2024-12-01
+  expect deadline(state-record-period) == 2024-12-16
+}
+
 /// L.U. Civ. R. 5(b)(1): within 14 days after the case management
 /// conference, the parties file as separate docket items the unresolved
 /// state court motions they wish to advance.
 deadline state-motions-period: 14.days after CaseManagementConferenceHeld() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 5(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: state-motions-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 5(b)"
+{
+  given CaseManagementConferenceHeld() on 2024-12-01
+  expect deadline(state-motions-period) == 2024-12-16
 }
 
 /// L.U. Civ. R. 7(b)(4): the respondent files a response and memorandum
@@ -86,6 +98,12 @@ deadline rebuttal-period: 7.days after ResponseServed() counted_by frcp6 cite "N
   forum frcp
 }
 
+test "Counting boundary: rebuttal-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  given ResponseServed() on 2024-12-01
+  expect deadline(rebuttal-period) == 2024-12-09
+}
+
 /// L.U. Civ. R. 7(b)(2)(D): unless the case management order provides
 /// otherwise, case-dispositive motions and motions challenging an opposing
 /// party's expert are filed no later than 14 calendar days after the
@@ -93,6 +111,12 @@ deadline rebuttal-period: 7.days after ResponseServed() counted_by frcp6 cite "N
 deadline dispositive-motion-period: 14.days after DiscoveryDeadline() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 7(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: dispositive-motion-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  given DiscoveryDeadline() on 2024-12-01
+  expect deadline(dispositive-motion-period) == 2024-12-16
 }
 
 /// L.U. Civ. R. 7(b)(2)(E): motions in limine, other than motions
@@ -103,11 +127,23 @@ deadline limine-motion-period: 21.days before PretrialConference() counted_by fr
   forum frcp
 }
 
+test "Counting boundary: limine-motion-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  given PretrialConference() on 2024-12-01
+  expect deadline(limine-motion-period) == 2024-11-08
+}
+
 /// L.U. Civ. R. 7(b)(2)(E): responses to motions in limine are filed no
 /// later than 14 calendar days before the pretrial conference.
 deadline limine-response-period: 14.days before PretrialConference() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 7(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: limine-response-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  given PretrialConference() on 2024-12-01
+  expect deadline(limine-response-period) == 2024-11-15
 }
 
 /// L.U. Civ. R. 7(b)(8): a motion for a protective order limiting or
@@ -118,12 +154,24 @@ deadline deposition-protective-order-period: 7.days after DepositionNoticed() co
   forum frcp
 }
 
+test "Counting boundary: deposition-protective-order-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  given DepositionNoticed() on 2024-12-01
+  expect deadline(deposition-protective-order-period) == 2024-12-09
+}
+
 /// L.U. Civ. R. 15 (and 7(b)(2)): when leave to amend is granted, the
 /// movant files the amended pleading as a separately docketed item within
 /// seven days from entry of the order granting the motion.
 deadline amended-pleading-period: 7.days after LeaveToAmendGranted() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 15"
 {
   forum frcp
+}
+
+test "Counting boundary: amended-pleading-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 15"
+{
+  given LeaveToAmendGranted() on 2024-12-01
+  expect deadline(amended-pleading-period) == 2024-12-09
 }
 
 /// L.U. Civ. R. 16(b)(2): in a transferred action the parties hold the FRCP
@@ -133,11 +181,23 @@ deadline transferred-conference-period: 14.days after Transferred() counted_by f
   forum frcp
 }
 
+test "Counting boundary: transferred-conference-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 16(b)"
+{
+  given Transferred() on 2024-12-01
+  expect deadline(transferred-conference-period) == 2024-12-16
+}
+
 /// L.U. Civ. R. 16(b)(1)(C), 16(b)(3)(D): within 14 days of the order
 /// lifting a stay the parties confer, and all other deadlines follow.
 deadline stay-lifted-conference-period: 14.days after StayLifted() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 16(b)"
 {
   forum frcp
+}
+
+test "Counting boundary: stay-lifted-conference-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 16(b)"
+{
+  given StayLifted() on 2024-12-01
+  expect deadline(stay-lifted-conference-period) == 2024-12-16
 }
 
 /// L.U. Civ. R. 16(b)(3)(A): a motion asserting lack of jurisdiction is
@@ -148,11 +208,23 @@ deadline jurisdiction-motion-period: 7.days before CaseManagementConference() co
   forum frcp
 }
 
+test "Counting boundary: jurisdiction-motion-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 16(b)"
+{
+  given CaseManagementConference() on 2024-12-01
+  expect deadline(jurisdiction-motion-period) == 2024-11-22
+}
+
 /// L.U. Civ. R. 16(c): the magistrate judge may require a proposed case
 /// management order no later than 14 days after the attorney conference.
 deadline proposed-case-management-order-period: 14.days after AttorneyConferenceHeld() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 16(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: proposed-case-management-order-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 16(c)"
+{
+  given AttorneyConferenceHeld() on 2024-12-01
+  expect deadline(proposed-case-management-order-period) == 2024-12-16
 }
 
 /// L.U. Civ. R. 16(d): unless the court sets another time or a party
@@ -163,11 +235,23 @@ deadline initial-disclosures-period: 14.days after AttorneyConferenceHeld() coun
   forum frcp
 }
 
+test "Counting boundary: initial-disclosures-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 16(d)"
+{
+  given AttorneyConferenceHeld() on 2024-12-01
+  expect deadline(initial-disclosures-period) == 2024-12-16
+}
+
 /// L.U. Civ. R. 16(d), 26(a)(1)(A): in no event are the disclosures made
 /// later than seven days before the case management conference.
 deadline disclosures-outer-period: 7.days before CaseManagementConference() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 16(d)"
 {
   forum frcp
+}
+
+test "Counting boundary: disclosures-outer-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 16(d)"
+{
+  given CaseManagementConference() on 2024-12-01
+  expect deadline(disclosures-outer-period) == 2024-11-22
 }
 
 /// L.U. Civ. R. 16(g)(5): at least seven days before the settlement
@@ -178,12 +262,24 @@ deadline settlement-memorandum-period: 7.days before SettlementConference() coun
   forum frcp
 }
 
+test "Counting boundary: settlement-memorandum-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 16(g)"
+{
+  given SettlementConference() on 2024-12-01
+  expect deadline(settlement-memorandum-period) == 2024-11-22
+}
+
 /// L.U. Civ. R. 16(j)(2): a request that the final pretrial conference be
 /// dispensed with is made not later than 14 days before the scheduled
 /// conference.
 deadline pretrial-excusal-request-period: 14.days before PretrialConference() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 16(j)"
 {
   forum frcp
+}
+
+test "Counting boundary: pretrial-excusal-request-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 16(j)"
+{
+  given PretrialConference() on 2024-12-01
+  expect deadline(pretrial-excusal-request-period) == 2024-11-15
 }
 
 /// L.U. Civ. R. 26(a)(3): challenges to inadequate expert disclosure are
@@ -194,6 +290,12 @@ deadline expert-disclosure-challenge-period: 30.days before DiscoveryDeadline() 
   forum frcp
 }
 
+test "Counting boundary: expert-disclosure-challenge-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 26(a)"
+{
+  given DiscoveryDeadline() on 2024-12-02
+  expect deadline(expert-disclosure-challenge-period) == 2024-11-01
+}
+
 /// L.U. Civ. R. 51(a): requests for jury instructions are submitted not
 /// later than 14 days before the date for which trial is set.
 deadline jury-instructions-period: 14.days before TrialDate() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 51(a)"
@@ -201,11 +303,23 @@ deadline jury-instructions-period: 14.days before TrialDate() counted_by frcp6 c
   forum frcp
 }
 
+test "Counting boundary: jury-instructions-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 51(a)"
+{
+  given TrialDate() on 2024-12-01
+  expect deadline(jury-instructions-period) == 2024-11-15
+}
+
 /// L.U. Civ. R. 54(c): the prevailing party to whom costs are awarded files
 /// the bill of costs not later than 30 days after entry of judgment.
 deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 54(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: bill-of-costs-period (holiday)" cite "N.D. Miss. L.U. Civ. R. 54(c)"
+{
+  given JudgmentEntered() on 2024-12-02
+  expect deadline(bill-of-costs-period) == 2025-01-02
 }
 
 /// L.U. Civ. R. 72(a)(1)(A): an appeal of a magistrate judge's ruling is
@@ -216,11 +330,23 @@ deadline ruling-objection-period: 14.days after MagistrateRulingServed() counted
   forum frcp
 }
 
+test "Counting boundary: ruling-objection-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 72(a)"
+{
+  given MagistrateRulingServed() on 2024-12-01
+  expect deadline(ruling-objection-period) == 2024-12-16
+}
+
 /// L.U. Civ. R. 72(a)(1)(A): the opposing party responds, or gives notice
 /// that it will not, within 14 days of service of the objections.
 deadline ruling-objection-response-period: 14.days after RulingObjectionsServed() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 72(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: ruling-objection-response-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 72(a)"
+{
+  given RulingObjectionsServed() on 2024-12-01
+  expect deadline(ruling-objection-response-period) == 2024-12-16
 }
 
 /// L.U. Civ. R. 72(a)(3): each party has 14 days after service of a report
@@ -230,6 +356,12 @@ deadline report-objection-period: 14.days after ReportServed() counted_by frcp6 
   forum frcp
 }
 
+test "Counting boundary: report-objection-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 72(a)"
+{
+  given ReportServed() on 2024-12-01
+  expect deadline(report-objection-period) == 2024-12-16
+}
+
 /// L.U. Civ. R. 72(a)(3): within seven days of service of the objection the
 /// opposing party responds or gives notice that it will not.
 deadline report-objection-response-period: 7.days after ReportObjectionsServed() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 72(a)"
@@ -237,11 +369,23 @@ deadline report-objection-response-period: 7.days after ReportObjectionsServed()
   forum frcp
 }
 
+test "Counting boundary: report-objection-response-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 72(a)"
+{
+  given ReportObjectionsServed() on 2024-12-01
+  expect deadline(report-objection-response-period) == 2024-12-09
+}
+
 /// L.U. Civ. R. 73(e): a party added after reference on consent that elects
 /// to consent files its consent within 21 days of its appearance.
 deadline added-party-consent-period: 21.days after AddedPartyAppeared() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 73(e)"
 {
   forum frcp
+}
+
+test "Counting boundary: added-party-consent-period (weekend)" cite "N.D. Miss. L.U. Civ. R. 73(e)"
+{
+  given AddedPartyAppeared() on 2024-12-01
+  expect deadline(added-party-consent-period) == 2024-12-23
 }
 
 start motion-served

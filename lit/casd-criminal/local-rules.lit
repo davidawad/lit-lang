@@ -85,12 +85,24 @@ deadline plea-recommendation-objection: 14.days after PleaRecommendationEntered(
   forum frcrimp
 }
 
+test "Counting boundary: plea-recommendation-objection (holiday)" cite "S.D. Cal. CrimLR 11.1(d)"
+{
+  given PleaRecommendationEntered() on 2026-06-05
+  expect deadline(plea-recommendation-objection) == 2026-06-22
+}
+
 /// S.D. Cal. CrimLR 11.1(f): if the district judge requests it, the Clerk
 /// provides a transcript of the Rule 11 allocution at least seven (7) days
 /// before the sentencing hearing.
 deadline allocution-transcript: 7.days before SentencingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 11.1(f)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: allocution-transcript (holiday)" cite "S.D. Cal. CrimLR 11.1(f)"
+{
+  given SentencingScheduled() on 2026-06-01
+  expect deadline(allocution-transcript) == 2026-05-22
 }
 
 /// S.D. Cal. CrimLR 16.1.a: not later than seven (7) calendar days before
@@ -102,11 +114,23 @@ deadline discovery-timetable-report: 7.days before FirstMotionHearingScheduled()
   forum frcrimp
 }
 
+test "Counting boundary: discovery-timetable-report (holiday)" cite "S.D. Cal. CrimLR 16.1.a"
+{
+  given FirstMotionHearingScheduled() on 2026-06-01
+  expect deadline(discovery-timetable-report) == 2026-05-22
+}
+
 /// S.D. Cal. CrimLR 32.1(a)(5): fourteen (14) days before the sentencing
 /// hearing, all objections to the presentence report are filed and served.
 deadline psr-objections: 14.days before SentencingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 32.1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: psr-objections (weekend)" cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  given SentencingScheduled() on 2026-06-06
+  expect deadline(psr-objections) == 2026-05-22
 }
 
 /// S.D. Cal. CrimLR 32.1(a)(5): if the presentence report is not filed
@@ -115,6 +139,12 @@ deadline psr-objections: 14.days before SentencingScheduled() counted_by frcrimp
 deadline psr-objections-after-late-report: 17.days after LatePsrFiled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 32.1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: psr-objections-after-late-report (holiday)" cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  given LatePsrFiled() on 2026-06-02
+  expect deadline(psr-objections-after-late-report) == 2026-06-22
 }
 
 /// S.D. Cal. CrimLR 32.1(a)(6): unless otherwise ordered, a motion for
@@ -128,6 +158,12 @@ deadline departure-motion: 14.days before SentencingScheduled() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: departure-motion (weekend)" cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  given SentencingScheduled() on 2026-06-06
+  expect deadline(departure-motion) == 2026-05-22
+}
+
 /// S.D. Cal. CrimLR 32.1(a)(6), (7), (8): an opposition to a departure
 /// motion, a sentencing memorandum (summarizing any written plea
 /// agreement) and each party's sentencing summary chart are filed and
@@ -138,12 +174,24 @@ deadline sentencing-filings: 7.days before SentencingScheduled() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-filings (holiday)" cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  given SentencingScheduled() on 2026-06-01
+  expect deadline(sentencing-filings) == 2026-05-22
+}
+
 /// S.D. Cal. CrimLR 32.1(a)(9): no less than seven (7) days before the
 /// sentencing hearing, the Probation Department files and serves an
 /// addendum addressing all timely objections.
 deadline psr-addendum: 7.days before SentencingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 32.1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: psr-addendum (holiday)" cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  given SentencingScheduled() on 2026-06-01
+  expect deadline(psr-addendum) == 2026-05-22
 }
 
 /// S.D. Cal. CrimLR 47.1(b): a motion is filed and served at least
@@ -158,6 +206,12 @@ deadline motion-filing: 14.days before MotionHearingScheduled() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: motion-filing (weekend)" cite "S.D. Cal. CrimLR 47.1(b)"
+{
+  given MotionHearingScheduled() on 2026-06-06
+  expect deadline(motion-filing) == 2026-05-22
+}
+
 /// S.D. Cal. CrimLR 47.1(c): each opposing party serves and files an
 /// opposition, or a statement of non-opposition, not later than seven (7)
 /// days before the hearing; supporting declarations follow the same
@@ -165,6 +219,12 @@ deadline motion-filing: 14.days before MotionHearingScheduled() counted_by frcri
 deadline motion-opposition: 7.days before MotionHearingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 47.1(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: motion-opposition (holiday)" cite "S.D. Cal. CrimLR 47.1(c)"
+{
+  given MotionHearingScheduled() on 2026-06-01
+  expect deadline(motion-opposition) == 2026-05-22
 }
 
 /// S.D. Cal. CrimLR 57.2.1(d)(1): within seven (7) days of receiving
@@ -176,11 +236,23 @@ deadline related-case-objection: 7.days after RelatedCaseObjectionWindowOpens() 
   forum frcrimp
 }
 
+test "Counting boundary: related-case-objection (weekend)" cite "S.D. Cal. CrimLR 57.2.1(d)"
+{
+  given RelatedCaseObjectionWindowOpens() on 2026-06-06
+  expect deadline(related-case-objection) == 2026-06-15
+}
+
 /// S.D. Cal. CrimLR 57.2.1(d)(1): within seven (7) days of any objection,
 /// the United States Attorney may file and serve a reply.
 deadline related-case-reply: 7.days after RelatedCaseObjectionFiled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 57.2.1(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: related-case-reply (weekend)" cite "S.D. Cal. CrimLR 57.2.1(d)"
+{
+  given RelatedCaseObjectionFiled() on 2026-06-06
+  expect deadline(related-case-reply) == 2026-06-15
 }
 
 /// S.D. Cal. CrimLR 57.2.1(d)(1): where one judge is assigned to the
@@ -191,12 +263,24 @@ deadline related-case-ruling: 7.days after RelatedCaseReplyDue() counted_by frcr
   forum frcrimp
 }
 
+test "Counting boundary: related-case-ruling (weekend)" cite "S.D. Cal. CrimLR 57.2.1(d)"
+{
+  given RelatedCaseReplyDue() on 2026-06-06
+  expect deadline(related-case-ruling) == 2026-06-15
+}
+
 /// S.D. Cal. CrimLR 58.1(b)(2): within thirty (30) days after a transcript
 /// has been ordered, the original and one copy are filed with the
 /// magistrate judge.
 deadline misdemeanor-appeal-transcript: 30.days after AppealTranscriptOrdered() counted_by frcrimp45 cite "S.D. Cal. CrimLR 58.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: misdemeanor-appeal-transcript (holiday)" cite "S.D. Cal. CrimLR 58.1(b)"
+{
+  given AppealTranscriptOrdered() on 2026-06-03
+  expect deadline(misdemeanor-appeal-transcript) == 2026-07-06
 }
 
 /// S.D. Cal. CrimLR 58.1(b)(4): the appellant serves and files its brief
@@ -210,6 +294,12 @@ deadline misdemeanor-appellant-brief: 21.days after MisdemeanorAppealHearingNoti
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appellant-brief (weekend)" cite "S.D. Cal. CrimLR 58.1(b)"
+{
+  given MisdemeanorAppealHearingNoticed() on 2026-06-06
+  expect deadline(misdemeanor-appellant-brief) == 2026-06-29
+}
+
 /// S.D. Cal. CrimLR 58.1(b)(4): the appellee serves and files its brief
 /// within twenty-one (21) days after service of the appellant's brief.
 deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counted_by frcrimp45 delegable {
@@ -220,6 +310,12 @@ deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counte
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appellee-brief (weekend)" cite "S.D. Cal. CrimLR 58.1(b)"
+{
+  given AppellantBriefServed() on 2026-06-06
+  expect deadline(misdemeanor-appellee-brief) == 2026-06-29
+}
+
 /// S.D. Cal. CrimLR 58.1(b)(4): the appellant may serve and file a reply
 /// brief within seven (7) days after service of the appellee's brief.
 deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45 delegable {
@@ -228,6 +324,12 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by 
 } cite "S.D. Cal. CrimLR 58.1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "S.D. Cal. CrimLR 58.1(b)"
+{
+  given AppelleeBriefServed() on 2026-06-06
+  expect deadline(misdemeanor-reply-brief) == 2026-06-15
 }
 
 test "plea recommendation objection: 14 days after the trigger" cite "S.D. Cal. CrimLR 11.1(d)"

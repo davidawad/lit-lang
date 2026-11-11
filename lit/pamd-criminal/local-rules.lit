@@ -62,6 +62,12 @@ deadline continuance-opposition: 7.days after ContinuanceMotionServed() counted_
   forum frcrimp
 }
 
+test "Counting boundary: continuance-opposition (weekend)" cite "M.D. Pa. LCrR 12.1(c)"
+{
+  given ContinuanceMotionServed() on 2014-12-06
+  expect deadline(continuance-opposition) == 2014-12-15
+}
+
 /// M.D. Pa. LCrR 32.1(a): the presentence report disclosure date the court
 /// sets is no later than fifty-six days after the verdict of guilty or the
 /// entry of a plea of guilty or nolo contendere; the court may modify the
@@ -72,6 +78,12 @@ deadline psr-disclosure-date: 56.days after GuiltyVerdictOrPlea() counted_by frc
 } cite "M.D. Pa. LCrR 32.1(a); M.D. Pa. LCrR 32.1(j)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: psr-disclosure-date (weekend)" cite "M.D. Pa. LCrR 32.1(a); M.D. Pa. LCrR 32.1(j)"
+{
+  given GuiltyVerdictOrPlea() on 2014-12-06
+  expect deadline(psr-disclosure-date) == 2015-02-02
 }
 
 /// M.D. Pa. LCrR 32.1(a): the sentencing date is no later than ninety-eight
@@ -86,6 +98,12 @@ deadline sentencing-date: 98.days after GuiltyVerdictOrPlea() counted_by frcrimp
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-date (weekend)" cite "M.D. Pa. LCrR 32.1(a); M.D. Pa. LCrR 32.1(j)"
+{
+  given GuiltyVerdictOrPlea() on 2014-12-06
+  expect deadline(sentencing-date) == 2015-03-16
+}
+
 /// M.D. Pa. LCrR 32.1(c): within seven days after a verdict of guilty or
 /// the entry of a plea of guilty or nolo contendere, the government
 /// provides the probation officer and defense counsel a comprehensive
@@ -96,6 +114,12 @@ deadline offense-conduct-statement: 7.days after GuiltyVerdictOrPlea() counted_b
 } cite "M.D. Pa. LCrR 32.1(c); M.D. Pa. LCrR 32.1(j)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: offense-conduct-statement (weekend)" cite "M.D. Pa. LCrR 32.1(c); M.D. Pa. LCrR 32.1(j)"
+{
+  given GuiltyVerdictOrPlea() on 2014-12-06
+  expect deadline(offense-conduct-statement) == 2014-12-15
 }
 
 /// M.D. Pa. LCrR 32.1(c): if the defendant is responsible for restitution,
@@ -110,11 +134,23 @@ deadline restitution-information: 28.days after GuiltyVerdictOrPlea() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: restitution-information (holiday)" cite "M.D. Pa. LCrR 32.1(c); M.D. Pa. LCrR 32.1(j)"
+{
+  given GuiltyVerdictOrPlea() on 2014-12-04
+  expect deadline(restitution-information) == 2015-01-02
+}
+
 /// M.D. Pa. LCrR 58.1: the appellant serves and submits a brief within
 /// fourteen days of the date of filing of the appeal.
 deadline misdemeanor-appellant-brief: 14.days after MisdemeanorAppealFiled() counted_by frcrimp45 cite "M.D. Pa. LCrR 58.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: misdemeanor-appellant-brief (weekend)" cite "M.D. Pa. LCrR 58.1"
+{
+  given MisdemeanorAppealFiled() on 2014-12-06
+  expect deadline(misdemeanor-appellant-brief) == 2014-12-22
 }
 
 /// M.D. Pa. LCrR 58.1: the United States Attorney serves and submits a
@@ -125,11 +161,23 @@ deadline misdemeanor-appellee-brief: 14.days after AppellantBriefReceived() coun
   forum frcrimp
 }
 
+test "Counting boundary: misdemeanor-appellee-brief (weekend)" cite "M.D. Pa. LCrR 58.1"
+{
+  given AppellantBriefReceived() on 2014-12-06
+  expect deadline(misdemeanor-appellee-brief) == 2014-12-22
+}
+
 /// M.D. Pa. LCrR 58.1: the appellant may serve and submit a reply brief
 /// within seven days after receipt of the appellee's brief.
 deadline misdemeanor-reply-brief: 7.days after AppelleeBriefReceived() counted_by frcrimp45 cite "M.D. Pa. LCrR 58.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: misdemeanor-reply-brief (weekend)" cite "M.D. Pa. LCrR 58.1"
+{
+  given AppelleeBriefReceived() on 2014-12-06
+  expect deadline(misdemeanor-reply-brief) == 2014-12-15
 }
 
 /// M.D. Pa. LCrR 58.3(b): the violation notice instructs the defendant to
@@ -139,6 +187,12 @@ deadline misdemeanor-reply-brief: 7.days after AppelleeBriefReceived() counted_b
 deadline violation-notice-election: 21.days after ViolationNoticeIssued() counted_by frcrimp45 cite "M.D. Pa. LCrR 58.3(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: violation-notice-election (holiday)" cite "M.D. Pa. LCrR 58.3(b)"
+{
+  given ViolationNoticeIssued() on 2014-12-04
+  expect deadline(violation-notice-election) == 2014-12-26
 }
 
 test "continuance opposition: 7 days after the trigger" cite "M.D. Pa. LCrR 12.1(c)"

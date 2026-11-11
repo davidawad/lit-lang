@@ -43,6 +43,12 @@ deadline motion-filing-period: 30.days after DiscoveryBegan() counted_by frcp6 c
   forum frcp
 }
 
+test "Counting boundary: motion-filing-period (weekend)" cite "N.D. Ga. LR 7.1(A)"
+{
+  given DiscoveryBegan() on 2026-08-13
+  expect deadline(motion-filing-period) == 2026-09-14
+}
+
 /// LR 7.1(B): a party opposing a motion serves its response not later than
 /// 14 days after service of the motion. Failure to respond indicates no
 /// opposition. Briefs in support of or in response to a motion are limited
@@ -59,12 +65,24 @@ deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionSe
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-response-period (weekend)" cite "N.D. Ga. LR 7.1(B)"
+{
+  given SummaryJudgmentMotionServed() on 2026-08-15
+  expect deadline(summary-judgment-response-period) == 2026-09-08
+}
+
 /// LR 7.1(C): a reply, when the movant deems one necessary, is served not
 /// later than 14 days after service of the response. A reply brief may not
 /// exceed 15 pages (LR 7.1(D)).
 deadline reply-period: 14.days after ResponseServed() counted_by frcp6 cite "N.D. Ga. LR 7.1(C)"
 {
   forum frcp
+}
+
+test "Counting boundary: reply-period (weekend)" cite "N.D. Ga. LR 7.1(C)"
+{
+  given ResponseServed() on 2026-08-15
+  expect deadline(reply-period) == 2026-08-31
 }
 
 /// LR 7.2(A): on removal with motions pending on which briefs have not been
@@ -75,6 +93,12 @@ deadline removed-motion-memorandum-period: 14.days after RemovedWithPendingMotio
   forum frcp
 }
 
+test "Counting boundary: removed-motion-memorandum-period (weekend)" cite "N.D. Ga. LR 7.2(A)"
+{
+  given RemovedWithPendingMotions() on 2026-08-15
+  expect deadline(removed-motion-memorandum-period) == 2026-08-31
+}
+
 /// LR 7.2(E): a motion to reconsider an order or judgment is filed within 28
 /// days after its entry.
 deadline reconsideration-period: 28.days after OrderOrJudgmentEntered() counted_by frcp6 cite "N.D. Ga. LR 7.2(E)"
@@ -82,11 +106,23 @@ deadline reconsideration-period: 28.days after OrderOrJudgmentEntered() counted_
   forum frcp
 }
 
+test "Counting boundary: reconsideration-period (holiday)" cite "N.D. Ga. LR 7.2(E)"
+{
+  given OrderOrJudgmentEntered() on 2026-08-10
+  expect deadline(reconsideration-period) == 2026-09-08
+}
+
 /// LR 7.2(E): responses to a motion for reconsideration are filed not later
 /// than 14 days after service of the motion.
 deadline reconsideration-response-period: 14.days after ReconsiderationMotionServed() counted_by frcp6 cite "N.D. Ga. LR 7.2(E)"
 {
   forum frcp
+}
+
+test "Counting boundary: reconsideration-response-period (weekend)" cite "N.D. Ga. LR 7.2(E)"
+{
+  given ReconsiderationMotionServed() on 2026-08-15
+  expect deadline(reconsideration-response-period) == 2026-08-31
 }
 
 /// LR 7.3: unless the Court directs otherwise, the prevailing party's
@@ -97,11 +133,23 @@ deadline oral-ruling-order-period: 7.days after OralOrderAnnounced() counted_by 
   forum frcp
 }
 
+test "Counting boundary: oral-ruling-order-period (weekend)" cite "N.D. Ga. LR 7.3"
+{
+  given OralOrderAnnounced() on 2026-08-15
+  expect deadline(oral-ruling-order-period) == 2026-08-24
+}
+
 /// LR 16.1: lead counsel confer in person (the Rule 26(f) conference) within
 /// sixteen days after the appearance of a defendant by answer or motion.
 deadline planning-conference-period: 16.days after DefendantAppeared() counted_by frcp6 cite "N.D. Ga. LR 16.1"
 {
   forum frcp
+}
+
+test "Counting boundary: planning-conference-period (weekend)" cite "N.D. Ga. LR 16.1"
+{
+  given DefendantAppeared() on 2026-08-13
+  expect deadline(planning-conference-period) == 2026-08-31
 }
 
 /// LR 16.2: the Joint Preliminary Report and Discovery Plan is filed within
@@ -113,12 +161,24 @@ deadline joint-preliminary-report-period: 30.days after DefendantAppeared() coun
   forum frcp
 }
 
+test "Counting boundary: joint-preliminary-report-period (weekend)" cite "N.D. Ga. LR 16.2"
+{
+  given DefendantAppeared() on 2026-08-13
+  expect deadline(joint-preliminary-report-period) == 2026-09-14
+}
+
 /// LR 26.1(A): the Fed. R. Civ. P. 26(a)(1) initial disclosures are made at
 /// or within 30 days after the appearance of a defendant by answer or
 /// motion.
 deadline initial-disclosures-period: 30.days after DefendantAppeared() counted_by frcp6 cite "N.D. Ga. LR 26.1(A)"
 {
   forum frcp
+}
+
+test "Counting boundary: initial-disclosures-period (weekend)" cite "N.D. Ga. LR 26.1(A)"
+{
+  given DefendantAppeared() on 2026-08-13
+  expect deadline(initial-disclosures-period) == 2026-09-14
 }
 
 /// LR 26.2(A): the discovery period commences thirty days after the
@@ -128,6 +188,12 @@ deadline initial-disclosures-period: 30.days after DefendantAppeared() counted_b
 deadline discovery-commencement-period: 30.days after DefendantAnswered() counted_by frcp6 cite "N.D. Ga. LR 26.2(A)"
 {
   forum frcp
+}
+
+test "Counting boundary: discovery-commencement-period (weekend)" cite "N.D. Ga. LR 26.2(A)"
+{
+  given DefendantAnswered() on 2026-08-13
+  expect deadline(discovery-commencement-period) == 2026-09-14
 }
 
 /// LR 37.1(B): unless the Court orders otherwise, a motion to compel is
@@ -140,11 +206,23 @@ deadline motion-to-compel-period: 14.days after DiscoveryResponseServed() counte
   forum frcp
 }
 
+test "Counting boundary: motion-to-compel-period (weekend)" cite "N.D. Ga. LR 37.1(B)"
+{
+  given DiscoveryResponseServed() on 2026-08-15
+  expect deadline(motion-to-compel-period) == 2026-08-31
+}
+
 /// LR 16.3: the post-discovery settlement conference of lead counsel is held
 /// no later than fourteen days after the close of discovery.
 deadline settlement-conference-period: 14.days after DiscoveryClosed() counted_by frcp6 cite "N.D. Ga. LR 16.3"
 {
   forum frcp
+}
+
+test "Counting boundary: settlement-conference-period (weekend)" cite "N.D. Ga. LR 16.3"
+{
+  given DiscoveryClosed() on 2026-08-15
+  expect deadline(settlement-conference-period) == 2026-08-31
 }
 
 /// LR 56.1(D): unless the Court orders otherwise, a motion for summary
@@ -153,6 +231,12 @@ deadline settlement-conference-period: 14.days after DiscoveryClosed() counted_b
 deadline summary-judgment-filing-period: 30.days after DiscoveryClosed() counted_by frcp6 cite "N.D. Ga. LR 56.1(D)"
 {
   forum frcp
+}
+
+test "Counting boundary: summary-judgment-filing-period (weekend)" cite "N.D. Ga. LR 56.1(D)"
+{
+  given DiscoveryClosed() on 2026-08-13
+  expect deadline(summary-judgment-filing-period) == 2026-09-14
 }
 
 /// LR 16.4(A): the proposed consolidated pretrial order is filed no later
@@ -165,11 +249,23 @@ deadline pretrial-order-period: 30.days after DiscoveryClosed() counted_by frcp6
   forum frcp
 }
 
+test "Counting boundary: pretrial-order-period (weekend)" cite "N.D. Ga. LR 16.4(A)"
+{
+  given DiscoveryClosed() on 2026-08-13
+  expect deadline(pretrial-order-period) == 2026-09-14
+}
+
 /// LR 54.1: the prevailing party files a bill of costs within thirty days
 /// after the entry of judgment; a late bill is not taxed.
 deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "N.D. Ga. LR 54.1"
 {
   forum frcp
+}
+
+test "Counting boundary: bill-of-costs-period (weekend)" cite "N.D. Ga. LR 54.1"
+{
+  given JudgmentEntered() on 2026-08-13
+  expect deadline(bill-of-costs-period) == 2026-09-14
 }
 
 /// LR 54.2(A)(2): within thirty days (or such other period as the Court
@@ -178,6 +274,12 @@ deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 
 deadline fee-itemization-period: 30.days after FeeMotionFiled() counted_by frcp6 cite "N.D. Ga. LR 54.2(A)"
 {
   forum frcp
+}
+
+test "Counting boundary: fee-itemization-period (weekend)" cite "N.D. Ga. LR 54.2(A)"
+{
+  given FeeMotionFiled() on 2026-08-13
+  expect deadline(fee-itemization-period) == 2026-09-14
 }
 
 start motion-served

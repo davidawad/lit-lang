@@ -81,6 +81,12 @@ deadline deed-cancellation-period: 21.days after BondConditionsSatisfied() count
   forum frcrimp
 }
 
+test "Counting boundary: deed-cancellation-period (weekend)" cite "E.D.N.C. Local Criminal Rule 10.2"
+{
+  given BondConditionsSatisfied() on 2023-06-03
+  expect deadline(deed-cancellation-period) == 2023-06-26
+}
+
 /// Local Criminal Rule 12.1: all pretrial motions, those under FRCrimP 12,
 /// 14, 16 and 41 included, are filed no later than 30 days after indictment
 /// or initial appearance, whichever is later, or within another time the
@@ -92,11 +98,23 @@ deadline pretrial-motion-period: 30.days after IndictmentOrAppearance() counted_
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motion-period (weekend)" cite "E.D.N.C. Local Criminal Rule 12.1"
+{
+  given IndictmentOrAppearance() on 2023-06-01
+  expect deadline(pretrial-motion-period) == 2023-07-03
+}
+
 /// Local Criminal Rule 12.1: responses to pretrial motions are filed within
 /// 14 days after their service unless the court orders otherwise.
 deadline pretrial-response-period: 14.days after PretrialMotionServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 12.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: pretrial-response-period (weekend)" cite "E.D.N.C. Local Criminal Rule 12.1"
+{
+  given PretrialMotionServed() on 2023-06-03
+  expect deadline(pretrial-response-period) == 2023-06-20
 }
 
 /// Local Criminal Rule 16.1(b): the attorney for the government arranges
@@ -108,6 +126,12 @@ deadline discovery-conference-period: 21.days after IndictmentOrAppearance() cou
   forum frcrimp
 }
 
+test "Counting boundary: discovery-conference-period (weekend)" cite "E.D.N.C. Local Criminal Rule 16.1(b)"
+{
+  given IndictmentOrAppearance() on 2023-06-03
+  expect deadline(discovery-conference-period) == 2023-06-26
+}
+
 /// Local Criminal Rule 17.1: witness subpoenas are delivered to the Marshal
 /// or another qualified server at least 7 days before the Monday of the
 /// trial week; a subpoena delivered later and not served is no ground for a
@@ -115,6 +139,12 @@ deadline discovery-conference-period: 21.days after IndictmentOrAppearance() cou
 deadline subpoena-delivery-period: 7.days before TrialWeekMonday() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 17.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: subpoena-delivery-period (weekend)" cite "E.D.N.C. Local Criminal Rule 17.1"
+{
+  given TrialWeekMonday() on 2023-06-03
+  expect deadline(subpoena-delivery-period) == 2023-05-26
 }
 
 /// Local Criminal Rules 24.1(a), 24.2(b): unless a written plea agreement is
@@ -125,12 +155,24 @@ deadline trial-submissions-period: 7.days before TrialSessionOpens() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: trial-submissions-period (weekend)" cite "E.D.N.C. Local Criminal Rule 24.1(a)"
+{
+  given TrialSessionOpens() on 2023-06-03
+  expect deadline(trial-submissions-period) == 2023-05-26
+}
+
 /// Local Criminal Rule 32.2(k): the defendant and an attending attorney make
 /// themselves available for the presentence interview within 14 calendar
 /// days of the adjudication of guilt.
 deadline presentence-interview-period: 14.days after GuiltAdjudicated() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 32.2(k)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: presentence-interview-period (weekend)" cite "E.D.N.C. Local Criminal Rule 32.2(k)"
+{
+  given GuiltAdjudicated() on 2023-06-03
+  expect deadline(presentence-interview-period) == 2023-06-20
 }
 
 /// Local Criminal Rule 44.1(a): a defendant who does not apply for, or is
@@ -143,12 +185,24 @@ deadline retained-counsel-period: 14.days after FirstAppearance() counted_by frc
   forum frcrimp
 }
 
+test "Counting boundary: retained-counsel-period (weekend)" cite "E.D.N.C. Local Criminal Rule 44.1(a)"
+{
+  given FirstAppearance() on 2023-06-03
+  expect deadline(retained-counsel-period) == 2023-06-20
+}
+
 /// Local Criminal Rule 47.1(c): a response to a motion is filed within 14
 /// days after its service unless the court orders, or the Federal Rules
 /// prescribe, otherwise.
 deadline response-period: 14.days after MotionServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 47.1(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: response-period (weekend)" cite "E.D.N.C. Local Criminal Rule 47.1(c)"
+{
+  given MotionServed() on 2023-06-03
+  expect deadline(response-period) == 2023-06-20
 }
 
 /// Local Criminal Rule 47.3(k): within 14 days of the filing of a
@@ -159,12 +213,24 @@ deadline translation-objection-period: 14.days after TranslationFiled() counted_
   forum frcrimp
 }
 
+test "Counting boundary: translation-objection-period (weekend)" cite "E.D.N.C. Local Criminal Rule 47.3(k)"
+{
+  given TranslationFiled() on 2023-06-03
+  expect deadline(translation-objection-period) == 2023-06-20
+}
+
 /// Local Criminal Rule 50.2(c): a response to a Notice of Related Cases or
 /// to a sua sponte reassignment is filed within 7 days after the notice is
 /// served or the reassignment made, or within the time the court sets.
 deadline related-case-response-period: 7.days after RelatedCaseNoticeServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 50.2(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: related-case-response-period (weekend)" cite "E.D.N.C. Local Criminal Rule 50.2(c)"
+{
+  given RelatedCaseNoticeServed() on 2023-06-03
+  expect deadline(related-case-response-period) == 2023-06-12
 }
 
 /// Local Criminal Rule 55.2(b)(3): a person whose motion to seal is denied
@@ -176,6 +242,12 @@ deadline public-refiling-period: 3.days after SealDenied() counted_by frcrimp45 
   forum frcrimp
 }
 
+test "Counting boundary: public-refiling-period (weekend)" cite "E.D.N.C. Local Criminal Rule 55.2(b)(3)"
+{
+  given SealDenied() on 2023-05-31
+  expect deadline(public-refiling-period) == 2023-06-05
+}
+
 /// Local Criminal Rule 55.2(c): the clerk may dispose of sealed documents
 /// not scanned into CM/ECF on 14 days' notice; an objection filed in that
 /// period goes to the presiding judge.
@@ -184,11 +256,23 @@ deadline sealed-disposal-objection-period: 14.days after SealedDisposalNoticed()
   forum frcrimp
 }
 
+test "Counting boundary: sealed-disposal-objection-period (weekend)" cite "E.D.N.C. Local Criminal Rule 55.2(c)(1)"
+{
+  given SealedDisposalNoticed() on 2023-06-03
+  expect deadline(sealed-disposal-objection-period) == 2023-06-20
+}
+
 /// Local Criminal Rule 57.3: attorneys and unrepresented persons notify the
 /// court in writing within 14 days of a change of address.
 deadline address-change-period: 14.days after AddressChanged() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 57.3"
 {
   forum frcrimp
+}
+
+test "Counting boundary: address-change-period (weekend)" cite "E.D.N.C. Local Criminal Rule 57.3"
+{
+  given AddressChanged() on 2023-06-03
+  expect deadline(address-change-period) == 2023-06-20
 }
 
 /// Local Criminal Rule 57.6: unless the clerk excepts it, a party using
@@ -199,12 +283,24 @@ deadline technology-certification-period: 7.days before TechnologyProceeding() c
   forum frcrimp
 }
 
+test "Counting boundary: technology-certification-period (weekend)" cite "E.D.N.C. Local Criminal Rule 57.6"
+{
+  given TechnologyProceeding() on 2023-06-03
+  expect deadline(technology-certification-period) == 2023-05-26
+}
+
 /// Local Criminal Rule 58.1(b)(4): on an appeal from a magistrate judge's
 /// misdemeanor judgment, the appellant serves and files its memorandum of
 /// claimed errors within 21 days of the filing of the transcript.
 deadline appellant-memorandum-period: 21.days after AppealTranscriptFiled() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: appellant-memorandum-period (weekend)" cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
+{
+  given AppealTranscriptFiled() on 2023-06-03
+  expect deadline(appellant-memorandum-period) == 2023-06-26
 }
 
 /// Local Criminal Rule 58.1(b)(4): if there is to be no transcript, the
@@ -215,11 +311,23 @@ deadline appellant-memorandum-no-transcript-period: 21.days after NoTranscriptAp
   forum frcrimp
 }
 
+test "Counting boundary: appellant-memorandum-no-transcript-period (weekend)" cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
+{
+  given NoTranscriptAppealNoticed() on 2023-06-03
+  expect deadline(appellant-memorandum-no-transcript-period) == 2023-06-26
+}
+
 /// Local Criminal Rule 58.1(b)(4): the appellee serves and files its
 /// memorandum within 21 days of service of the appellant's.
 deadline appellee-memorandum-period: 21.days after AppellantMemorandumServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: appellee-memorandum-period (weekend)" cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
+{
+  given AppellantMemorandumServed() on 2023-06-03
+  expect deadline(appellee-memorandum-period) == 2023-06-26
 }
 
 /// Local Criminal Rule 58.1(b)(4): the appellant may serve and file a reply
@@ -228,6 +336,12 @@ deadline appellee-memorandum-period: 21.days after AppellantMemorandumServed() c
 deadline appeal-reply-period: 7.days after AppelleeMemorandumServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: appeal-reply-period (weekend)" cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
+{
+  given AppelleeMemorandumServed() on 2023-06-03
+  expect deadline(appeal-reply-period) == 2023-06-12
 }
 
 test "deed cancellation period: 21 days after the trigger" cite "E.D.N.C. Local Criminal Rule 10.2"

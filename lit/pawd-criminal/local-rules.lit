@@ -58,6 +58,12 @@ deadline pretrial-motions: 14.days after Arraigned() counted_by frcrimp45 delega
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motions (weekend)" cite "W.D. Pa. LCrR 12"
+{
+  given Arraigned() on 2016-11-05
+  expect deadline(pretrial-motions) == 2016-11-21
+}
+
 /// W.D. Pa. LCrR 12.C: a party opposing a motion may file and serve a
 /// response, with a memorandum or brief, within fourteen days after
 /// service of the motion, unless the Court extends the time.
@@ -67,6 +73,12 @@ deadline motion-response: 14.days after MotionServed() counted_by frcrimp45 dele
 } cite "W.D. Pa. LCrR 12"
 {
   forum frcrimp
+}
+
+test "Counting boundary: motion-response (weekend)" cite "W.D. Pa. LCrR 12"
+{
+  given MotionServed() on 2016-11-05
+  expect deadline(motion-response) == 2016-11-21
 }
 
 /// W.D. Pa. LCrR 12.D: the movant may file and serve a reply memorandum
@@ -80,6 +92,12 @@ deadline motion-reply: 14.days after ResponseServed() counted_by frcrimp45 deleg
   forum frcrimp
 }
 
+test "Counting boundary: motion-reply (weekend)" cite "W.D. Pa. LCrR 12"
+{
+  given ResponseServed() on 2016-11-05
+  expect deadline(motion-reply) == 2016-11-21
+}
+
 /// W.D. Pa. LCrR 16.B: if the defendant did not request discovery at
 /// arraignment, the government discloses the Rule 16 material within
 /// seven days of the defendant's request and files a receipt listing the
@@ -87,6 +105,12 @@ deadline motion-reply: 14.days after ResponseServed() counted_by frcrimp45 deleg
 deadline rule16-disclosure: 7.days after DiscoveryRequested() counted_by frcrimp45 cite "W.D. Pa. LCrR 16"
 {
   forum frcrimp
+}
+
+test "Counting boundary: rule16-disclosure (holiday)" cite "W.D. Pa. LCrR 16"
+{
+  given DiscoveryRequested() on 2016-11-04
+  expect deadline(rule16-disclosure) == 2016-11-14
 }
 
 /// W.D. Pa. LCrR 32.C: no later than 7 weeks before the date set for
@@ -99,6 +123,12 @@ deadline tentative-psr-disclosure: 7.weeks before SentencingScheduled() counted_
 } cite "W.D. Pa. LCrR 32"
 {
   forum frcrimp
+}
+
+test "Counting boundary: tentative-psr-disclosure (weekend)" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2016-11-05
+  expect deadline(tentative-psr-disclosure) == 2016-09-16
 }
 
 /// W.D. Pa. LCrR 32.C.2.a: a party disputing, or seeking to add, facts or
@@ -114,6 +144,12 @@ deadline administrative-resolution: 2.weeks after TentativePsrDisclosed() counte
   forum frcrimp
 }
 
+test "Counting boundary: administrative-resolution (weekend)" cite "W.D. Pa. LCrR 32"
+{
+  given TentativePsrDisclosed() on 2016-11-05
+  expect deadline(administrative-resolution) == 2016-11-21
+}
+
 /// W.D. Pa. LCrR 32.C.3: no later than 5 weeks before sentencing, the
 /// Probation Office discloses the report, as amended, to the Court, the
 /// defendant, defense counsel and the government.
@@ -123,6 +159,12 @@ deadline psr-to-court: 5.weeks before SentencingScheduled() counted_by frcrimp45
 } cite "W.D. Pa. LCrR 32"
 {
   forum frcrimp
+}
+
+test "Counting boundary: psr-to-court (weekend)" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2016-11-05
+  expect deadline(psr-to-court) == 2016-09-30
 }
 
 /// W.D. Pa. LCrR 32.C.4: no later than 4 weeks before sentencing, each
@@ -138,6 +180,12 @@ deadline sentencing-position: 4.weeks before SentencingScheduled() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-position (weekend)" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2016-11-05
+  expect deadline(sentencing-position) == 2016-10-07
+}
+
 /// W.D. Pa. LCrR 32.C.5: a party may respond to the opposing party's
 /// position no later than 3 weeks prior to sentencing.
 deadline sentencing-position-response: 3.weeks before SentencingScheduled() counted_by frcrimp45 delegable {
@@ -146,6 +194,12 @@ deadline sentencing-position-response: 3.weeks before SentencingScheduled() coun
 } cite "W.D. Pa. LCrR 32"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-position-response (weekend)" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2016-11-05
+  expect deadline(sentencing-position-response) == 2016-10-14
 }
 
 /// W.D. Pa. LCrR 32.C.6.a: no later than 2 weeks before sentencing, the
@@ -159,6 +213,12 @@ deadline psr-addendum: 2.weeks before SentencingScheduled() counted_by frcrimp45
   forum frcrimp
 }
 
+test "Counting boundary: psr-addendum (weekend)" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2016-11-05
+  expect deadline(psr-addendum) == 2016-10-21
+}
+
 /// W.D. Pa. LCrR 32.C.8: no later than 1 week before sentencing, a party
 /// may file supplemental information or a memorandum on sentencing and
 /// serve it on the Probation Office.
@@ -170,6 +230,12 @@ deadline supplemental-memorandum: 1.weeks before SentencingScheduled() counted_b
   forum frcrimp
 }
 
+test "Counting boundary: supplemental-memorandum (weekend)" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2016-11-05
+  expect deadline(supplemental-memorandum) == 2016-10-28
+}
+
 /// W.D. Pa. LCrR 32.C.8: opposing counsel may respond to supplemental
 /// information or a memorandum no later than three days before sentencing.
 deadline supplemental-response: 3.days before SentencingScheduled() counted_by frcrimp45 delegable {
@@ -178,6 +244,12 @@ deadline supplemental-response: 3.days before SentencingScheduled() counted_by f
 } cite "W.D. Pa. LCrR 32"
 {
   forum frcrimp
+}
+
+test "Counting boundary: supplemental-response (weekend)" cite "W.D. Pa. LCrR 32"
+{
+  given SentencingScheduled() on 2016-11-01
+  expect deadline(supplemental-response) == 2016-10-28
 }
 
 test "pretrial motions: 14 days after the trigger" cite "W.D. Pa. LCrR 12"

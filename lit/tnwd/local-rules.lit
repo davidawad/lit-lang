@@ -129,12 +129,24 @@ deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "W.
   forum frcp
 }
 
+test "Counting boundary: response-period (weekend)" cite "W.D. Tenn. L.R. 7.2(a)(2)"
+{
+  given MotionServed() on 2025-11-22
+  expect deadline(response-period) == 2025-12-08
+}
+
 /// LR 7.2(c): except under LR 12.1(c) and 56.1(c), a reply memorandum is
 /// filed only by leave of court, on a motion for leave filed within 7
 /// days of service of the response.
 deadline leave-to-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "W.D. Tenn. L.R. 7.2(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: leave-to-reply-period (holiday)" cite "W.D. Tenn. L.R. 7.2(c)"
+{
+  given ResponseServed() on 2025-11-20
+  expect deadline(leave-to-reply-period) == 2025-11-28
 }
 
 /// LR 7.2(f): when an action is removed with pending motions on which
@@ -145,11 +157,23 @@ deadline removed-motion-period: 14.days after RemovedWithPendingMotions() counte
   forum frcp
 }
 
+test "Counting boundary: removed-motion-period (weekend)" cite "W.D. Tenn. L.R. 7.2(f)"
+{
+  given RemovedWithPendingMotions() on 2025-11-22
+  expect deadline(removed-motion-period) == 2025-12-08
+}
+
 /// LR 7.2(g): motions and orders to produce prisoners for testimony are
 /// filed at least 28 days prior to the date of the hearing or trial.
 deadline prisoner-production-period: 28.days before PrisonerHearingBegins() counted_by frcp6 cite "W.D. Tenn. L.R. 7.2(g)"
 {
   forum frcp
+}
+
+test "Counting boundary: prisoner-production-period (weekend)" cite "W.D. Tenn. L.R. 7.2(g)"
+{
+  given PrisonerHearingBegins() on 2025-11-22
+  expect deadline(prisoner-production-period) == 2025-10-24
 }
 
 /// LR 15.1(c): the moving party files and serves the amended or
@@ -158,6 +182,12 @@ deadline prisoner-production-period: 28.days before PrisonerHearingBegins() coun
 deadline amended-pleading-period: 7.days after AmendmentGranted() counted_by frcp6 cite "W.D. Tenn. L.R. 15.1(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: amended-pleading-period (holiday)" cite "W.D. Tenn. L.R. 15.1(c)"
+{
+  given AmendmentGranted() on 2025-11-20
+  expect deadline(amended-pleading-period) == 2025-11-28
 }
 
 /// LR 12.1(b): a party opposing a motion to dismiss files a response
@@ -175,6 +205,12 @@ deadline dismissal-reply-period: 14.days after DismissalResponseServed() counted
   forum frcp
 }
 
+test "Counting boundary: dismissal-reply-period (weekend)" cite "W.D. Tenn. L.R. 12.1(c)"
+{
+  given DismissalResponseServed() on 2025-11-22
+  expect deadline(dismissal-reply-period) == 2025-12-08
+}
+
 /// LR 16.4: parties in civil cases may file a trial memorandum of facts
 /// and law not less than 14 days before the case is set for trial; the
 /// court may require one and set its own date.
@@ -183,11 +219,23 @@ deadline trial-memorandum-period: 14.days before TrialBegins() counted_by frcp6 
   forum frcp
 }
 
+test "Counting boundary: trial-memorandum-period (weekend)" cite "W.D. Tenn. L.R. 16.4"
+{
+  given TrialBegins() on 2025-11-22
+  expect deadline(trial-memorandum-period) == 2025-11-07
+}
+
 /// LR 26.1(d): parties supplement disclosures and discovery responses as
 /// FRCP 26(e) requires no later than 30 days before the trial date.
 deadline supplementation-period: 30.days before TrialBegins() counted_by frcp6 cite "W.D. Tenn. L.R. 26.1(d)"
 {
   forum frcp
+}
+
+test "Counting boundary: supplementation-period (weekend)" cite "W.D. Tenn. L.R. 26.1(d)"
+{
+  given TrialBegins() on 2025-11-17
+  expect deadline(supplementation-period) == 2025-10-17
 }
 
 /// LR 56.1(b): a party opposing a summary judgment motion files a
@@ -205,12 +253,24 @@ deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseSer
   forum frcp
 }
 
+test "Counting boundary: summary-judgment-reply-period (weekend)" cite "W.D. Tenn. L.R. 56.1(c)"
+{
+  given SummaryJudgmentResponseServed() on 2025-11-22
+  expect deadline(summary-judgment-reply-period) == 2025-12-08
+}
+
 /// LR 56.1(e): if an objection to evidentiary materials is first raised in
 /// the reply, the party opposing it may file a sur-reply within 7 days of
 /// service of the reply.
 deadline evidentiary-sur-reply-period: 7.days after SummaryJudgmentReplyServed() counted_by frcp6 cite "W.D. Tenn. L.R. 56.1(e)"
 {
   forum frcp
+}
+
+test "Counting boundary: evidentiary-sur-reply-period (holiday)" cite "W.D. Tenn. L.R. 56.1(e)"
+{
+  given SummaryJudgmentReplyServed() on 2025-11-20
+  expect deadline(evidentiary-sur-reply-period) == 2025-11-28
 }
 
 /// LR 52.1: absent a contrary order, in non-jury cases each party may
@@ -220,6 +280,12 @@ deadline evidentiary-sur-reply-period: 7.days after SummaryJudgmentReplyServed()
 deadline post-trial-findings-period: 14.days after NonJuryTrialConcludes() counted_by frcp6 cite "W.D. Tenn. L.R. 52.1"
 {
   forum frcp
+}
+
+test "Counting boundary: post-trial-findings-period (weekend)" cite "W.D. Tenn. L.R. 52.1"
+{
+  given NonJuryTrialConcludes() on 2025-11-22
+  expect deadline(post-trial-findings-period) == 2025-12-08
 }
 
 /// LR 54.1(a): if counsel cannot agree on costs, a cost bill is filed with
@@ -237,6 +303,12 @@ deadline fee-motion-period: 14.days after JudgmentBecomesFinal() counted_by frcp
   forum frcp
 }
 
+test "Counting boundary: fee-motion-period (weekend)" cite "W.D. Tenn. L.R. 54.1(b)"
+{
+  given JudgmentBecomesFinal() on 2025-11-22
+  expect deadline(fee-motion-period) == 2025-12-08
+}
+
 /// LR 54.1(b): within eleven days after service of the fee motion, the
 /// party against whom the award is requested responds with any
 /// objections and a memorandum.
@@ -245,12 +317,24 @@ deadline fee-objections-period: 11.days after FeeMotionServed() counted_by frcp6
   forum frcp
 }
 
+test "Counting boundary: fee-objections-period (weekend)" cite "W.D. Tenn. L.R. 54.1(b)"
+{
+  given FeeMotionServed() on 2025-11-18
+  expect deadline(fee-objections-period) == 2025-12-01
+}
+
 /// LR 72.1(g)(1): any other party may respond to an appeal from a
 /// magistrate judge's order on a pretrial matter within 14 days after
 /// being served with the appeal.
 deadline magistrate-appeal-response-period: 14.days after MagistrateAppealServed() counted_by frcp6 cite "W.D. Tenn. L.R. 72.1(g)"
 {
   forum frcp
+}
+
+test "Counting boundary: magistrate-appeal-response-period (weekend)" cite "W.D. Tenn. L.R. 72.1(g)"
+{
+  given MagistrateAppealServed() on 2025-11-22
+  expect deadline(magistrate-appeal-response-period) == 2025-12-08
 }
 
 /// LR 83.13(b): after filing the notice of settlement the parties

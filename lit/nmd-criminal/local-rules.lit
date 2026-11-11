@@ -94,6 +94,12 @@ deadline psr-interview-response: 7.days after PsrInterviewRequested() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: psr-interview-response (weekend)" cite "D.N.M.LR-Cr. 32.A"
+{
+  given PsrInterviewRequested() on 2025-11-15
+  expect deadline(psr-interview-response) == 2025-11-24
+}
+
 /// D.N.M.LR-Cr. 32.C(1): before filing formal objections to the
 /// presentence report, the parties confer with each other and the
 /// probation officer about them within 14 days after the report is filed.
@@ -103,6 +109,12 @@ deadline psr-objection-conferral: 14.days after InitialPsrFiled() counted_by frc
 } cite "D.N.M.LR-Cr. 32.C(1); D.N.M.LR-Cr. 32.C(5)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: psr-objection-conferral (weekend)" cite "D.N.M.LR-Cr. 32.C(1); D.N.M.LR-Cr. 32.C(5)"
+{
+  given InitialPsrFiled() on 2025-11-15
+  expect deadline(psr-objection-conferral) == 2025-12-01
 }
 
 /// D.N.M.LR-Cr. 32.C(2): any unresolved objection to the presentence
@@ -116,6 +128,12 @@ deadline unresolved-objection-or-departure: 14.days before SentencingScheduled()
   forum frcrimp
 }
 
+test "Counting boundary: unresolved-objection-or-departure (weekend)" cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
+{
+  given SentencingScheduled() on 2025-11-15
+  expect deadline(unresolved-objection-or-departure) == 2025-10-31
+}
+
 /// D.N.M.LR-Cr. 32.C(2): any response is filed seven days after the filing
 /// of the unresolved objection or motion for departure.
 deadline sentencing-objection-response: 7.days after SentencingObjectionFiled() counted_by frcrimp45 delegable {
@@ -126,6 +144,12 @@ deadline sentencing-objection-response: 7.days after SentencingObjectionFiled() 
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-objection-response (weekend)" cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
+{
+  given SentencingObjectionFiled() on 2025-11-15
+  expect deadline(sentencing-objection-response) == 2025-11-24
+}
+
 /// D.N.M.LR-Cr. 32.C(2): any reply is filed three days after the filing of
 /// any response.
 deadline sentencing-objection-reply: 3.days after SentencingResponseFiled() counted_by frcrimp45 delegable {
@@ -134,6 +158,12 @@ deadline sentencing-objection-reply: 3.days after SentencingResponseFiled() coun
 } cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-objection-reply (weekend)" cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
+{
+  given SentencingResponseFiled() on 2025-11-19
+  expect deadline(sentencing-objection-reply) == 2025-11-24
 }
 
 /// D.N.M.LR-Cr. 32.C(3): parties with no objections or departure motions
@@ -147,6 +177,12 @@ deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-memorandum (weekend)" cite "D.N.M.LR-Cr. 32.C(3); D.N.M.LR-Cr. 32.C(5)"
+{
+  given SentencingScheduled() on 2025-11-15
+  expect deadline(sentencing-memorandum) == 2025-10-31
+}
+
 /// D.N.M.LR-Cr. 47.8(a): a response is served within 14 days after service
 /// of the motion; the Court may extend the period.
 deadline response-period: 14.days after MotionServed() counted_by frcrimp45 delegable {
@@ -155,6 +191,12 @@ deadline response-period: 14.days after MotionServed() counted_by frcrimp45 dele
 } cite "D.N.M.LR-Cr. 47.8(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: response-period (weekend)" cite "D.N.M.LR-Cr. 47.8(a)"
+{
+  given MotionServed() on 2025-11-15
+  expect deadline(response-period) == 2025-12-01
 }
 
 /// D.N.M.LR-Cr. 47.8(a): a reply is served within 14 days after service of
@@ -168,11 +210,23 @@ deadline reply-period: 14.days after ResponseServed() counted_by frcrimp45 deleg
   forum frcrimp
 }
 
+test "Counting boundary: reply-period (weekend)" cite "D.N.M.LR-Cr. 47.8(a)"
+{
+  given ResponseServed() on 2025-11-15
+  expect deadline(reply-period) == 2025-12-01
+}
+
 /// D.N.M.LR-Cr. 58.2(a): the appellant's brief is filed and served within
 /// 14 days after the filing of the notice of appeal.
 deadline petty-appellant-brief-period: 14.days after PettyAppealNoticed() counted_by frcrimp45 cite "D.N.M.LR-Cr. 58.2(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: petty-appellant-brief-period (weekend)" cite "D.N.M.LR-Cr. 58.2(a)"
+{
+  given PettyAppealNoticed() on 2025-11-15
+  expect deadline(petty-appellant-brief-period) == 2025-12-01
 }
 
 /// D.N.M.LR-Cr. 58.2(b): the appellee's brief is filed and served within
@@ -182,11 +236,23 @@ deadline petty-appellee-brief-period: 14.days after PettyAppellantBriefFiled() c
   forum frcrimp
 }
 
+test "Counting boundary: petty-appellee-brief-period (weekend)" cite "D.N.M.LR-Cr. 58.2(b)"
+{
+  given PettyAppellantBriefFiled() on 2025-11-15
+  expect deadline(petty-appellee-brief-period) == 2025-12-01
+}
+
 /// D.N.M.LR-Cr. 58.2(c): the appellant may file and serve a reply brief
 /// within seven days after the filing and service of the appellee's brief.
 deadline petty-reply-brief-period: 7.days after PettyAppelleeBriefFiled() counted_by frcrimp45 cite "D.N.M.LR-Cr. 58.2(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: petty-reply-brief-period (weekend)" cite "D.N.M.LR-Cr. 58.2(c)"
+{
+  given PettyAppelleeBriefFiled() on 2025-11-15
+  expect deadline(petty-reply-brief-period) == 2025-11-24
 }
 
 test "psr interview response: 7 days after the trigger" cite "D.N.M.LR-Cr. 32.A"

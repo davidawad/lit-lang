@@ -94,6 +94,12 @@ deadline motion-response-period: 21.days after MotionServed() counted_by frcp6-c
   forum frcp
 }
 
+test "Counting boundary: motion-response-period (holiday)" cite "D.C.COLO.LCivR 7.1(d)"
+{
+  given MotionServed() on 2025-12-04
+  expect deadline(motion-response-period) == 2025-12-26
+}
+
 /// D.C.COLO.LCivR 7.1(d): the moving party may file a reply no later than
 /// 14 days after the date of service of the response, or such lesser or
 /// greater time as the court may allow.
@@ -108,6 +114,12 @@ deadline motion-reply-period: 14.days after ResponseServed() counted_by frcp6-co
 deadline supplemental-authority-period: 7.days before MotionHearing() counted_by frcp6-colorado cite "D.C.COLO.LCivR 7.1(f)"
 {
   forum frcp
+}
+
+test "Counting boundary: supplemental-authority-period (holiday)" cite "D.C.COLO.LCivR 7.1(f)"
+{
+  given MotionHearing() on 2025-12-04
+  expect deadline(supplemental-authority-period) == 2025-11-26
 }
 
 /// D.C.COLO.LCivR 7.2(e): a document filed as restricted without an
@@ -136,6 +148,12 @@ deadline deposition-notice-period: 14.days before DepositionTaken() counted_by f
   forum frcp
 }
 
+test "Counting boundary: deposition-notice-period (weekend)" cite "D.C.COLO.LCivR 30.1"
+{
+  given DepositionTaken() on 2025-12-06
+  expect deadline(deposition-notice-period) == 2025-11-21
+}
+
 /// D.C.COLO.LCivR 40.1(c)(4): in an action directly assigned to a
 /// magistrate judge, unless otherwise ordered, each party files the
 /// mandatory Consent/Non-Consent form no later than seven days before the
@@ -146,11 +164,23 @@ deadline direct-assignment-consent-period: 7.days before SchedulingConference() 
   forum frcp
 }
 
+test "Counting boundary: direct-assignment-consent-period (holiday)" cite "D.C.COLO.LCivR 40.1(c)"
+{
+  given SchedulingConference() on 2025-12-04
+  expect deadline(direct-assignment-consent-period) == 2025-11-26
+}
+
 /// D.C.COLO.LCivR 40.1(c)(4): the 45-day alternative to the seven-day
 /// consent deadline; the earlier of the two governs.
 deadline direct-assignment-consent-outer-period: 45.days after FirstNonAnswerResponseFiled() counted_by frcp6-colorado cite "D.C.COLO.LCivR 40.1(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: direct-assignment-consent-outer-period (weekend)" cite "D.C.COLO.LCivR 40.1(c)"
+{
+  given FirstNonAnswerResponseFiled() on 2025-12-03
+  expect deadline(direct-assignment-consent-outer-period) == 2026-01-20
 }
 
 /// D.C.COLO.LCivR 40.1(c)(7): if a party added after reference to a
@@ -159,6 +189,12 @@ deadline direct-assignment-consent-outer-period: 45.days after FirstNonAnswerRes
 deadline added-party-direct-consent-period: 21.days after AddedPartyNotified() counted_by frcp6-colorado cite "D.C.COLO.LCivR 40.1(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: added-party-direct-consent-period (holiday)" cite "D.C.COLO.LCivR 40.1(c)"
+{
+  given AddedPartyNotified() on 2025-12-04
+  expect deadline(added-party-direct-consent-period) == 2025-12-26
 }
 
 /// D.C.COLO.LCivR 72.2(c): unless the assigned district judge orders
@@ -171,11 +207,23 @@ deadline consent-jurisdiction-period: 7.days before SchedulingConference() count
   forum frcp
 }
 
+test "Counting boundary: consent-jurisdiction-period (holiday)" cite "D.C.COLO.LCivR 72.2(c)"
+{
+  given SchedulingConference() on 2025-12-04
+  expect deadline(consent-jurisdiction-period) == 2025-11-26
+}
+
 /// D.C.COLO.LCivR 72.2(c): the 45-day alternative to the seven-day consent
 /// deadline; the earlier of the two governs.
 deadline consent-jurisdiction-outer-period: 45.days after FirstNonAnswerResponseFiled() counted_by frcp6-colorado cite "D.C.COLO.LCivR 72.2(c)"
 {
   forum frcp
+}
+
+test "Counting boundary: consent-jurisdiction-outer-period (weekend)" cite "D.C.COLO.LCivR 72.2(c)"
+{
+  given FirstNonAnswerResponseFiled() on 2025-12-03
+  expect deadline(consent-jurisdiction-outer-period) == 2026-01-20
 }
 
 /// D.C.COLO.LCivR 72.2(e): if an added party does not file a consent
@@ -186,12 +234,24 @@ deadline added-party-consent-period: 21.days after AddedPartyConsentNoticeMailed
   forum frcp
 }
 
+test "Counting boundary: added-party-consent-period (holiday)" cite "D.C.COLO.LCivR 72.2(e)"
+{
+  given AddedPartyConsentNoticeMailed() on 2025-12-04
+  expect deadline(added-party-consent-period) == 2025-12-26
+}
+
 /// D.C.COLO.LCivR 45.1: except as D.C.COLO.LCivR 30.1 provides or the
 /// court orders, a subpoena is served no later than seven days before the
 /// date it specifies, calculated under Fed. R. Civ. P. 6(a)(1).
 deadline subpoena-service-period: 7.days before SubpoenaReturnDate() counted_by frcp6-colorado cite "D.C.COLO.LCivR 45.1"
 {
   forum frcp
+}
+
+test "Counting boundary: subpoena-service-period (holiday)" cite "D.C.COLO.LCivR 45.1"
+{
+  given SubpoenaReturnDate() on 2025-12-04
+  expect deadline(subpoena-service-period) == 2025-11-26
 }
 
 /// D.C.COLO.LCivR 54.1: a bill of costs is filed on the court's form no
@@ -207,6 +267,12 @@ deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6-
 deadline sj-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6-colorado cite "D.C.COLO.LCivR 56.1(a)"
 {
   forum frcp
+}
+
+test "Counting boundary: sj-response-period (holiday)" cite "D.C.COLO.LCivR 56.1(a)"
+{
+  given SummaryJudgmentMotionServed() on 2025-12-04
+  expect deadline(sj-response-period) == 2025-12-26
 }
 
 /// D.C.COLO.LCivR 56.1(a): a reply may be filed no later than 14 days
@@ -240,6 +306,12 @@ deadline state-court-record-period: 14.days after RemovalNoticeFiled() counted_b
 deadline ada-accommodation-period: 7.days before HearingOrTrial() counted_by frcp6-colorado cite "D.C.COLO.LCivR 83.3"
 {
   forum frcp
+}
+
+test "Counting boundary: ada-accommodation-period (holiday)" cite "D.C.COLO.LCivR 83.3"
+{
+  given HearingOrTrial() on 2025-12-04
+  expect deadline(ada-accommodation-period) == 2025-11-26
 }
 
 /// D.C.COLO.LCivR 83.3: a request for an American Sign Language

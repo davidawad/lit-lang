@@ -78,11 +78,23 @@ deadline report-return: 7.days after ReportHearingHeld() counted_by frcrimp45 ci
   forum frcrimp
 }
 
+test "Counting boundary: report-return (weekend)" cite "DUCrimR 5-1"
+{
+  given ReportHearingHeld() on 2025-12-06
+  expect deadline(report-return) == 2025-12-15
+}
+
 /// DUCrimR 12-1(b): a response memorandum is filed within 14 days after
 /// service of the motion.
 deadline response-period: 14.days after MotionServed() counted_by frcrimp45 cite "DUCrimR 12-1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: response-period (weekend)" cite "DUCrimR 12-1(b)"
+{
+  given MotionServed() on 2025-12-06
+  expect deadline(response-period) == 2025-12-22
 }
 
 /// DUCrimR 12-1(c): the movant may file a reply memorandum, limited to
@@ -93,6 +105,12 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 cite
   forum frcrimp
 }
 
+test "Counting boundary: reply-period (weekend)" cite "DUCrimR 12-1(c)"
+{
+  given OppositionServed() on 2025-12-06
+  expect deadline(reply-period) == 2025-12-15
+}
+
 /// DUCrimR 12-1(e)(2): if the court has not ruled, a party may file a
 /// response of at most 2 pages within 7 days after service of a Notice of
 /// Supplemental Authority; the court may decide the motion without waiting
@@ -100,6 +118,12 @@ deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 cite
 deadline supplemental-authority-response: 7.days after SupplementalAuthorityServed() counted_by frcrimp45 cite "DUCrimR 12-1(e)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: supplemental-authority-response (weekend)" cite "DUCrimR 12-1(e)"
+{
+  given SupplementalAuthorityServed() on 2025-12-06
+  expect deadline(supplemental-authority-response) == 2025-12-15
 }
 
 /// DUCrimR 16-1(c): unless the court orders otherwise, the parties
@@ -113,6 +137,12 @@ deadline expert-disclosure: 30.days before FinalPretrialConferenceScheduled() co
   forum frcrimp
 }
 
+test "Counting boundary: expert-disclosure (weekend)" cite "DUCrimR 16-1(c)"
+{
+  given FinalPretrialConferenceScheduled() on 2025-12-01
+  expect deadline(expert-disclosure) == 2025-10-31
+}
+
 /// DUCrimR 17-2(c): a victim may file a sealed motion to quash or modify,
 /// or otherwise object to, the subpoena within 14 days after service of
 /// the notice; if none is filed, the movant files a certificate of
@@ -122,11 +152,23 @@ deadline victim-subpoena-objection: 14.days after VictimSubpoenaNoticeServed() c
   forum frcrimp
 }
 
+test "Counting boundary: victim-subpoena-objection (weekend)" cite "DUCrimR 17-2(c)"
+{
+  given VictimSubpoenaNoticeServed() on 2025-12-06
+  expect deadline(victim-subpoena-objection) == 2025-12-22
+}
+
 /// DUCrimR 32-1(a)(3): within 7 days after notice of an objection, the
 /// parties and probation make reasonable efforts to resolve it.
 deadline psr-objection-resolution: 7.days after PsrObjectionNoticed() counted_by frcrimp45 cite "DUCrimR 32-1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: psr-objection-resolution (weekend)" cite "DUCrimR 32-1(a)"
+{
+  given PsrObjectionNoticed() on 2025-12-06
+  expect deadline(psr-objection-resolution) == 2025-12-15
 }
 
 /// DUCrimR 32-1(b)(2): no fewer than 7 days before sentencing, a party may
@@ -135,6 +177,12 @@ deadline psr-objection-resolution: 7.days after PsrObjectionNoticed() counted_by
 deadline sentencing-memorandum: 7.days before SentencingScheduled() counted_by frcrimp45 cite "DUCrimR 32-1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: sentencing-memorandum (holiday)" cite "DUCrimR 32-1(b)"
+{
+  given SentencingScheduled() on 2025-12-04
+  expect deadline(sentencing-memorandum) == 2025-11-26
 }
 
 /// DUCrimR 32-1(b)(3): unless ordered otherwise, documents pertaining to
@@ -148,6 +196,12 @@ deadline sentencing-documents-to-probation: 10.days before SentencingScheduled()
   forum frcrimp
 }
 
+test "Counting boundary: sentencing-documents-to-probation (weekend)" cite "DUCrimR 32-1(b)"
+{
+  given SentencingScheduled() on 2025-12-02
+  expect deadline(sentencing-documents-to-probation) == 2025-11-21
+}
+
 /// DUCrimR 41-1(b): a motion to extend the seal of a FRCrimP 41 case and a
 /// proposed order are presented to a magistrate judge at least 10 days
 /// before the seal expires.
@@ -156,12 +210,24 @@ deadline seal-extension-motion: 10.days before SealExpires() counted_by frcrimp4
   forum frcrimp
 }
 
+test "Counting boundary: seal-extension-motion (weekend)" cite "DUCrimR 41-1(b)"
+{
+  given SealExpires() on 2025-12-02
+  expect deadline(seal-extension-motion) == 2025-11-21
+}
+
 /// DUCrimR 41-1(c): at least 10 days before the seal expires, the
 /// government gives the Clerk's Office a copy of the FRCrimP 41 document
 /// redacted as FRCrimP 49.1 requires.
 deadline warrant-redacted-copy: 10.days before SealExpires() counted_by frcrimp45 cite "DUCrimR 41-1(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: warrant-redacted-copy (weekend)" cite "DUCrimR 41-1(c)"
+{
+  given SealExpires() on 2025-12-02
+  expect deadline(warrant-redacted-copy) == 2025-11-21
 }
 
 /// DUCrimR 49.1-1(a)(2): when a motion to unseal is granted or a seal is
@@ -173,12 +239,24 @@ deadline unsealed-redacted-copy: 10.days before SealExpires() counted_by frcrimp
   forum frcrimp
 }
 
+test "Counting boundary: unsealed-redacted-copy (weekend)" cite "DUCrimR 49.1-1(a)"
+{
+  given SealExpires() on 2025-12-02
+  expect deadline(unsealed-redacted-copy) == 2025-11-21
+}
+
 /// DUCrimR 49.1-1(b)(1): within 14 days after receiving notice that an
 /// original transcript has been filed, each party reviews its portions
 /// for personal identifiers.
 deadline transcript-review: 14.days after TranscriptFilingNoticed() counted_by frcrimp45 cite "DUCrimR 49.1-1(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: transcript-review (weekend)" cite "DUCrimR 49.1-1(b)"
+{
+  given TranscriptFilingNoticed() on 2025-12-06
+  expect deadline(transcript-review) == 2025-12-22
 }
 
 /// DUCrimR 49.1-1(c)(1): if redaction is required, a party files a Notice
@@ -189,11 +267,23 @@ deadline redaction-intent-notice: 21.days after TranscriptFilingNoticed() counte
   forum frcrimp
 }
 
+test "Counting boundary: redaction-intent-notice (holiday)" cite "DUCrimR 49.1-1(c)"
+{
+  given TranscriptFilingNoticed() on 2025-12-04
+  expect deadline(redaction-intent-notice) == 2025-12-26
+}
+
 /// DUCrimR 49.1-1(c)(2): the Redaction Request, identifying page, line and
 /// redaction, is filed within 42 days after receiving that notice.
 deadline redaction-request: 42.days after TranscriptFilingNoticed() counted_by frcrimp45 cite "DUCrimR 49.1-1(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: redaction-request (weekend)" cite "DUCrimR 49.1-1(c)"
+{
+  given TranscriptFilingNoticed() on 2025-12-06
+  expect deadline(redaction-request) == 2026-01-20
 }
 
 /// DUCrimR 58-2(a): a party appealing a magistrate judge's order in a
@@ -204,11 +294,23 @@ deadline petty-appeal-notice: 14.days after PettyOrderEntered() counted_by frcri
   forum frcrimp
 }
 
+test "Counting boundary: petty-appeal-notice (weekend)" cite "DUCrimR 58-2(a)"
+{
+  given PettyOrderEntered() on 2025-12-06
+  expect deadline(petty-appeal-notice) == 2025-12-22
+}
+
 /// DUCrimR 58-2(b)(1): the appellant's brief is filed and served within 14
 /// days after filing the notice of appeal.
 deadline petty-appellant-brief: 14.days after PettyAppealNoticed() counted_by frcrimp45 cite "DUCrimR 58-2(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: petty-appellant-brief (weekend)" cite "DUCrimR 58-2(b)"
+{
+  given PettyAppealNoticed() on 2025-12-06
+  expect deadline(petty-appellant-brief) == 2025-12-22
 }
 
 /// DUCrimR 58-2(b)(2): the appellee's brief is filed and served within 14
@@ -218,11 +320,23 @@ deadline petty-appellee-brief: 14.days after PettyAppellantBriefServed() counted
   forum frcrimp
 }
 
+test "Counting boundary: petty-appellee-brief (weekend)" cite "DUCrimR 58-2(b)"
+{
+  given PettyAppellantBriefServed() on 2025-12-06
+  expect deadline(petty-appellee-brief) == 2025-12-22
+}
+
 /// DUCrimR 58-2(b)(3): the appellant may file and serve a reply brief
 /// within 7 days after service of the appellee's brief.
 deadline petty-reply-brief: 7.days after PettyAppelleeBriefServed() counted_by frcrimp45 cite "DUCrimR 58-2(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: petty-reply-brief (weekend)" cite "DUCrimR 58-2(b)"
+{
+  given PettyAppelleeBriefServed() on 2025-12-06
+  expect deadline(petty-reply-brief) == 2025-12-15
 }
 
 test "report return: 7 days after the trigger" cite "DUCrimR 5-1"

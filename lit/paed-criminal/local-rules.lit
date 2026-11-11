@@ -62,11 +62,23 @@ deadline pretrial-motions: 14.days after Arraigned() counted_by frcrimp45 delega
   forum frcrimp
 }
 
+test "Counting boundary: pretrial-motions (weekend)" cite "E.D. Pa. LCrR 12.1"
+{
+  given Arraigned() on 2018-09-22
+  expect deadline(pretrial-motions) == 2018-10-09
+}
+
 /// E.D. Pa. LCrR 12.1: within seven days after receipt of a motion, a party
 /// opposing it files and serves an answer and a memorandum in opposition.
 deadline motion-answer: 7.days after MotionReceived() counted_by frcrimp45 cite "E.D. Pa. LCrR 12.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: motion-answer (weekend)" cite "E.D. Pa. LCrR 12.1"
+{
+  given MotionReceived() on 2018-09-22
+  expect deadline(motion-answer) == 2018-10-01
 }
 
 /// E.D. Pa. LCrR 16.1(a): within seven days after arraignment, or within
@@ -80,6 +92,12 @@ deadline discovery-conference: 7.days after Arraigned() counted_by frcrimp45 del
 } cite "E.D. Pa. LCrR 16.1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: discovery-conference (weekend)" cite "E.D. Pa. LCrR 16.1(a)"
+{
+  given Arraigned() on 2018-09-22
+  expect deadline(discovery-conference) == 2018-10-01
 }
 
 test "pretrial motions: 14 days after the trigger" cite "E.D. Pa. LCrR 12.1"

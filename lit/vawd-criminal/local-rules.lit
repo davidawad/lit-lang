@@ -32,12 +32,24 @@ deadline appeal-grounds-period: 14.days after MagistrateAppealNoticed() counted_
   forum frcrimp
 }
 
+test "Counting boundary: appeal-grounds-period (weekend)" cite "W.D. Va. Crim. R. 59(a)"
+{
+  given MagistrateAppealNoticed() on 2025-10-25
+  expect deadline(appeal-grounds-period) == 2025-11-10
+}
+
 /// Criminal Rule 59(a): if the appellant ordered a transcript, the
 /// supporting memorandum is filed within 14 days of the filing of the
 /// transcript, or another period the district judge directs.
 deadline transcript-memorandum-period: 14.days after AppealTranscriptFiled() counted_by frcrimp45 cite "W.D. Va. Crim. R. 59(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: transcript-memorandum-period (weekend)" cite "W.D. Va. Crim. R. 59(a)"
+{
+  given AppealTranscriptFiled() on 2025-10-25
+  expect deadline(transcript-memorandum-period) == 2025-11-10
 }
 
 /// Criminal Rule 59(b): the appellee has 21 days from the filing of the
@@ -47,6 +59,12 @@ deadline transcript-memorandum-period: 14.days after AppealTranscriptFiled() cou
 deadline appeal-response-period: 21.days after AppellantCaseComplete() counted_by frcrimp45 cite "W.D. Va. Crim. R. 59(b)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: appeal-response-period (weekend)" cite "W.D. Va. Crim. R. 59(b)"
+{
+  given AppellantCaseComplete() on 2025-10-25
+  expect deadline(appeal-response-period) == 2025-11-17
 }
 
 test "appeal grounds period: 14 days after the trigger" cite "W.D. Va. Crim. R. 59(a)"

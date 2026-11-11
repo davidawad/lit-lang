@@ -81,6 +81,12 @@ deadline continuance-opposition: 7.days after ContinuanceMotionServed() counted_
   forum frcrimp
 }
 
+test "Counting boundary: continuance-opposition (weekend)" cite "D.V.I. LRCr 12.5(c)"
+{
+  given ContinuanceMotionServed() on 2026-02-01
+  expect deadline(continuance-opposition) == 2026-02-09
+}
+
 /// D.V.I. LRCr 12.6(a): the government moves for complex-case designation
 /// before the initial discovery conference begins, and a defendant files
 /// a written response, agreeing or opposing with reasons, no later than
@@ -92,6 +98,12 @@ deadline complex-designation-response: 7.days after DiscoveryConferenceCompleted
 } cite "D.V.I. LRCr 12.6(a); D.V.I. LRCr 12.6(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: complex-designation-response (weekend)" cite "D.V.I. LRCr 12.6(a); D.V.I. LRCr 12.6(c)"
+{
+  given DiscoveryConferenceCompleted() on 2026-02-01
+  expect deadline(complex-designation-response) == 2026-02-09
 }
 
 /// D.V.I. LRCr 12.6(b): a defendant seeking complex-case designation files
@@ -106,6 +118,12 @@ deadline defendant-complex-designation: 5.days after GovernmentDiscoveryDue() co
   forum frcrimp
 }
 
+test "Counting boundary: defendant-complex-designation (weekend)" cite "D.V.I. LRCr 12.6(b); D.V.I. LRCr 12.6(c)"
+{
+  given GovernmentDiscoveryDue() on 2026-02-02
+  expect deadline(defendant-complex-designation) == 2026-02-09
+}
+
 /// D.V.I. LRCr 16.1(a)(1): unless otherwise ordered, no later than 14 days
 /// after the arraignment on the first information or indictment, counsel
 /// for the government and the defendant confer and try to agree on a
@@ -118,6 +136,12 @@ deadline initial-discovery-conference: 14.days after ArraignedOnFirstCharge() co
   forum frcrimp
 }
 
+test "Counting boundary: initial-discovery-conference (weekend)" cite "D.V.I. LRCr 16.1(a)"
+{
+  given ArraignedOnFirstCharge() on 2026-02-01
+  expect deadline(initial-discovery-conference) == 2026-02-17
+}
+
 /// D.V.I. LRCr 16.1(a)(2): within five days of the completion of the
 /// conference, the parties file a notice of proposed pretrial discovery
 /// timetable stating every agreed deadline; its deadlines bind the parties
@@ -125,6 +149,12 @@ deadline initial-discovery-conference: 14.days after ArraignedOnFirstCharge() co
 deadline discovery-timetable-notice: 5.days after DiscoveryConferenceCompleted() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 16.1(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: discovery-timetable-notice (weekend)" cite "D.V.I. LRCr 16.1(a)"
+{
+  given DiscoveryConferenceCompleted() on 2026-02-02
+  expect deadline(discovery-timetable-notice) == 2026-02-09
 }
 
 /// D.V.I. LRCr 16.1(b): unless the Court sets a different deadline, a
@@ -141,6 +171,12 @@ deadline government-rule16: 28.days after GovernmentDiscoveryClock() counted_by 
   forum frcrimp
 }
 
+test "Counting boundary: government-rule16 (weekend)" cite "D.V.I. LRCr 16.1(b)"
+{
+  given GovernmentDiscoveryClock(Arraignment) on 2026-02-01
+  expect deadline(government-rule16) == 2026-03-02
+}
+
 /// D.V.I. LRCr 16.1(c): on the same conditions, a defendant satisfies a
 /// Rule 16(b) obligation on the government's written request within the
 /// later of 14 days after the request or 14 days after the government's
@@ -153,6 +189,12 @@ deadline defendant-rule16: 14.days after DefendantDiscoveryClock() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: defendant-rule16 (weekend)" cite "D.V.I. LRCr 16.1(c)"
+{
+  given DefendantDiscoveryClock(GovernmentRequest) on 2026-02-01
+  expect deadline(defendant-rule16) == 2026-02-17
+}
+
 /// D.V.I. LRCr 16.1(d)(1): a defendant's earlier discovery request applies
 /// to a new information or indictment in the same case unless the
 /// defendant files a notice limiting it within one day of the arraignment
@@ -160,6 +202,12 @@ deadline defendant-rule16: 14.days after DefendantDiscoveryClock() counted_by fr
 deadline superseding-request-limit: 1.days after ArraignedOnSupersedingCharge() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 16.1(d)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: superseding-request-limit (weekend)" cite "D.V.I. LRCr 16.1(d)"
+{
+  given ArraignedOnSupersedingCharge() on 2026-02-06
+  expect deadline(superseding-request-limit) == 2026-02-09
 }
 
 /// D.V.I. LRCr 16.1(d)(2): unless the Court sets a different deadline or a
@@ -174,6 +222,12 @@ deadline superseding-government-rule16: 14.days after ArraignedOnSupersedingChar
   forum frcrimp
 }
 
+test "Counting boundary: superseding-government-rule16 (weekend)" cite "D.V.I. LRCr 16.1(d)"
+{
+  given ArraignedOnSupersedingCharge() on 2026-02-01
+  expect deadline(superseding-government-rule16) == 2026-02-17
+}
+
 /// D.V.I. LRCr 16.1(d)(2): the defendant satisfies a Rule 16(b) obligation
 /// under a prior request no later than 7 days after the government's
 /// deadline under the corresponding subsection of Rule 16(a).
@@ -185,6 +239,12 @@ deadline superseding-defendant-rule16: 7.days after GovernmentDiscoveryDue() cou
   forum frcrimp
 }
 
+test "Counting boundary: superseding-defendant-rule16 (weekend)" cite "D.V.I. LRCr 16.1(d)"
+{
+  given GovernmentDiscoveryDue() on 2026-02-01
+  expect deadline(superseding-defendant-rule16) == 2026-02-09
+}
+
 /// D.V.I. LRCr 16.1(f)(2): a response to a motion to modify the time,
 /// place or manner of discovery is filed within three business days after
 /// service of the motion.
@@ -193,11 +253,23 @@ deadline discovery-modification-response: 3.business_days after DiscoveryModific
   forum frcrimp
 }
 
+test "Counting boundary: discovery-modification-response (weekend)" cite "D.V.I. LRCr 16.1(f)"
+{
+  given DiscoveryModificationMotionServed() on 2026-02-04
+  expect deadline(discovery-modification-response) == 2026-02-09
+}
+
 /// D.V.I. LRCr 16.1(f)(2): a reply is filed within three business days
 /// after service of the response.
 deadline discovery-modification-reply: 3.business_days after DiscoveryModificationResponseServed() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 16.1(f)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: discovery-modification-reply (weekend)" cite "D.V.I. LRCr 16.1(f)"
+{
+  given DiscoveryModificationResponseServed() on 2026-02-04
+  expect deadline(discovery-modification-reply) == 2026-02-09
 }
 
 /// D.V.I. LRCr 16.1(h): counsel for the government and the defendant file
@@ -212,12 +284,24 @@ deadline joint-discovery-statement: 7.days before TrialCommencement() counted_by
   forum frcrimp
 }
 
+test "Counting boundary: joint-discovery-statement (weekend)" cite "D.V.I. LRCr 16.1(h)"
+{
+  given TrialCommencement() on 2026-02-01
+  expect deadline(joint-discovery-statement) == 2026-01-23
+}
+
 /// D.V.I. LRCr 28.1: except in preliminary proceedings, every request for
 /// interpreting services is made to the Court at least seven days before
 /// the interpreter's services are required.
 deadline interpreter-request: 7.days before InterpretedAppearance() counted_by frcrimp45-virgin-islands cite "D.V.I. LRCr 28.1"
 {
   forum frcrimp
+}
+
+test "Counting boundary: interpreter-request (weekend)" cite "D.V.I. LRCr 28.1"
+{
+  given InterpretedAppearance() on 2026-02-01
+  expect deadline(interpreter-request) == 2026-01-23
 }
 
 test "continuance opposition: 7 days after the trigger" cite "D.V.I. LRCr 12.5(c)"

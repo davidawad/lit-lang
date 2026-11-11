@@ -77,12 +77,24 @@ deadline release-detention-review-period: 14.days after ReleaseOrDetentionOrderF
   forum frcrimp
 }
 
+test "Counting boundary: release-detention-review-period (holiday)" cite "N.D. Iowa LCrR 5(a)"
+{
+  given ReleaseOrDetentionOrderFiled() on 2020-12-11
+  expect deadline(release-detention-review-period) == 2020-12-28
+}
+
 /// N.D. Iowa LCrR 10: a defendant waiving personal appearance at the
 /// arraignment under FRCrimP 10(b) files the written waiver at least 4
 /// days before the time scheduled for the arraignment.
 deadline arraignment-waiver-period: 4.days before ArraignmentScheduled() counted_by frcrimp45 cite "N.D. Iowa LCrR 10"
 {
   forum frcrimp
+}
+
+test "Counting boundary: arraignment-waiver-period (weekend)" cite "N.D. Iowa LCrR 10"
+{
+  given ArraignmentScheduled() on 2020-12-09
+  expect deadline(arraignment-waiver-period) == 2020-12-04
 }
 
 /// N.D. Iowa LCrR 12(a): unless the court orders another deadline,
@@ -98,11 +110,23 @@ deadline non-trial-motion-period: 28.days after FirstArraignment() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: non-trial-motion-period (weekend)" cite "N.D. Iowa LCrR 12(a)"
+{
+  given FirstArraignment() on 2020-12-12
+  expect deadline(non-trial-motion-period) == 2021-01-11
+}
+
 /// N.D. Iowa LCrR 12(a): a motion relating to a notice or request is
 /// timely if filed within 7 days after service of the notice or request.
 deadline notice-motion-period: 7.days after NoticeOrRequestServed() counted_by frcrimp45 cite "N.D. Iowa LCrR 12(a)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: notice-motion-period (weekend)" cite "N.D. Iowa LCrR 12(a)"
+{
+  given NoticeOrRequestServed() on 2020-12-12
+  expect deadline(notice-motion-period) == 2020-12-21
 }
 
 /// N.D. Iowa LCrR 12(b): after a trial continuance the original deadlines
@@ -114,12 +138,24 @@ deadline new-deadlines-request-period: 7.days after ContinuanceOrderEntered() co
   forum frcrimp
 }
 
+test "Counting boundary: new-deadlines-request-period (weekend)" cite "N.D. Iowa LCrR 12(b)"
+{
+  given ContinuanceOrderEntered() on 2020-12-12
+  expect deadline(new-deadlines-request-period) == 2020-12-21
+}
+
 /// N.D. Iowa LCrR 12(c): motions in limine, FRE 104(a) motions and all
 /// other trial-related motions are filed as soon as practicable, and at
 /// least 7 days before trial.
 deadline trial-motion-period: 7.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Iowa LCrR 12(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: trial-motion-period (weekend)" cite "N.D. Iowa LCrR 12(c)"
+{
+  given TrialScheduled() on 2020-12-12
+  expect deadline(trial-motion-period) == 2020-12-04
 }
 
 /// N.D. Iowa LCrR 17(a), (c): a subpoena or writ of habeas corpus ad
@@ -131,11 +167,29 @@ deadline marshal-delivery-in-district-period: 14.days before WitnessHearing(With
   forum frcrimp
 }
 
+test "Counting boundary: marshal-delivery-in-district-period (holiday)" cite "N.D. Iowa LCrR 17(a); N.D. Iowa LCrR 17(c)"
+{
+  given WitnessHearing(WithinDistrict) on 2020-12-10
+  expect deadline(marshal-delivery-in-district-period) == 2020-11-25
+}
+
 /// N.D. Iowa LCrR 17(a), (c): one to be served outside the district is
 /// delivered at least 21 days before the hearing or trial.
 deadline marshal-delivery-out-of-district-period: 21.days before WitnessHearing(OutsideDistrict) counted_by frcrimp45 cite "N.D. Iowa LCrR 17(a); N.D. Iowa LCrR 17(c)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: marshal-delivery-out-of-district-period (weekend)" cite "N.D. Iowa LCrR 17(a); N.D. Iowa LCrR 17(c)"
+{
+  given WitnessHearing(OutsideDistrict) on 2020-12-12
+  expect deadline(marshal-delivery-out-of-district-period) == 2020-11-20
+}
+
+test "Counting boundary: marshal-delivery-out-of-district-period (weekend) [repeat 2]" cite "N.D. Iowa LCrR 17(a); N.D. Iowa LCrR 17(c)"
+{
+  given WitnessHearing(OutsideDistrict) on 2020-12-12
+  expect deadline(marshal-delivery-out-of-district-period) == 2020-11-20
 }
 
 /// N.D. Iowa LCrR 24: in a multi-defendant case a defendant's request for
@@ -146,6 +200,12 @@ deadline peremptory-request-period: 14.days before JurySelection() counted_by fr
   forum frcrimp
 }
 
+test "Counting boundary: peremptory-request-period (holiday)" cite "N.D. Iowa LCrR 24"
+{
+  given JurySelection() on 2020-12-10
+  expect deadline(peremptory-request-period) == 2020-11-25
+}
+
 /// N.D. Iowa LCrR 47: a resistance to a motion in a criminal case is
 /// filed within 7 days after the motion is served.
 deadline resistance-period: 7.days after MotionServed() counted_by frcrimp45 cite "N.D. Iowa LCrR 47"
@@ -153,11 +213,23 @@ deadline resistance-period: 7.days after MotionServed() counted_by frcrimp45 cit
   forum frcrimp
 }
 
+test "Counting boundary: resistance-period (weekend)" cite "N.D. Iowa LCrR 47"
+{
+  given MotionServed() on 2020-12-12
+  expect deadline(resistance-period) == 2020-12-21
+}
+
 /// N.D. Iowa LCrR 47: in any event, the resistance is filed at least 4
 /// days before the proceeding at which the motion will be heard.
 deadline resistance-before-hearing-period: 4.days before MotionHearing() counted_by frcrimp45 cite "N.D. Iowa LCrR 47"
 {
   forum frcrimp
+}
+
+test "Counting boundary: resistance-before-hearing-period (weekend)" cite "N.D. Iowa LCrR 47"
+{
+  given MotionHearing() on 2020-12-09
+  expect deadline(resistance-before-hearing-period) == 2020-12-04
 }
 
 /// N.D. Iowa LCrR 59: any response to objections to a magistrate judge's
@@ -168,6 +240,12 @@ deadline objection-response-period: 7.days after ObjectionsServed() counted_by f
   forum frcrimp
 }
 
+test "Counting boundary: objection-response-period (weekend)" cite "N.D. Iowa LCrR 59"
+{
+  given ObjectionsServed() on 2020-12-12
+  expect deadline(objection-response-period) == 2020-12-21
+}
+
 /// N.D. Iowa LCrR 59: in any event, the objections are filed at least 14
 /// days before trial.
 deadline objection-before-trial-period: 14.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Iowa LCrR 59"
@@ -175,11 +253,23 @@ deadline objection-before-trial-period: 14.days before TrialScheduled() counted_
   forum frcrimp
 }
 
+test "Counting boundary: objection-before-trial-period (holiday)" cite "N.D. Iowa LCrR 59"
+{
+  given TrialScheduled() on 2020-12-10
+  expect deadline(objection-before-trial-period) == 2020-11-25
+}
+
 /// N.D. Iowa LCrR 59: and any response to them at least 7 days before
 /// trial.
 deadline objection-response-before-trial-period: 7.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Iowa LCrR 59"
 {
   forum frcrimp
+}
+
+test "Counting boundary: objection-response-before-trial-period (weekend)" cite "N.D. Iowa LCrR 59"
+{
+  given TrialScheduled() on 2020-12-12
+  expect deadline(objection-response-before-trial-period) == 2020-12-04
 }
 
 test "release detention review period: 14 days after the trigger" cite "N.D. Iowa LCrR 5(a)"

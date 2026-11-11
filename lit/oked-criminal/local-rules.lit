@@ -60,6 +60,12 @@ deadline motions-period: 14.days after Arraigned() counted_by frcrimp45 delegabl
   forum frcrimp
 }
 
+test "Counting boundary: motions-period (weekend)" cite "E.D. Okla. LCrR 12.1(E)"
+{
+  given Arraigned() on 2016-07-09
+  expect deadline(motions-period) == 2016-07-25
+}
+
 /// E.D. Okla. LCrR 12.1(E): responses are filed within seven days of the
 /// filing of the motions, unless a statute or the Federal Rules of
 /// Criminal Procedure fix a different time or the Court orders otherwise.
@@ -71,12 +77,24 @@ deadline response-period: 7.days after MotionFiled() counted_by frcrimp45 delega
   forum frcrimp
 }
 
+test "Counting boundary: response-period (weekend)" cite "E.D. Okla. LCrR 12.1(E)"
+{
+  given MotionFiled() on 2016-07-09
+  expect deadline(response-period) == 2016-07-18
+}
+
 /// E.D. Okla. LCrR 32.1(B): opposing counsel submits a written response to
 /// any objections to the presentence report within seven days; the
 /// objections and responses become a permanent attachment to the report.
 deadline psr-objection-response: 7.days after PsrObjectionsSubmitted() counted_by frcrimp45 cite "E.D. Okla. LCrR 32.1(B)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: psr-objection-response (weekend)" cite "E.D. Okla. LCrR 32.1(B)"
+{
+  given PsrObjectionsSubmitted() on 2016-07-09
+  expect deadline(psr-objection-response) == 2016-07-18
 }
 
 /// E.D. Okla. LCrR 32.1(D): after the final presentence report has been
@@ -89,12 +107,24 @@ deadline unresolved-sentencing-factors: 7.days before SentencingScheduled() coun
   forum frcrimp
 }
 
+test "Counting boundary: unresolved-sentencing-factors (weekend)" cite "E.D. Okla. LCrR 32.1(D)"
+{
+  given SentencingScheduled() on 2016-07-09
+  expect deadline(unresolved-sentencing-factors) == 2016-07-01
+}
+
 /// E.D. Okla. LCrR 57.2(B): all Criminal Justice Act vouchers are
 /// submitted within 45 days after the case is dismissed or the defendant
 /// is sentenced.
 deadline cja-voucher: 45.days after CaseDismissedOrSentenced() counted_by frcrimp45 cite "E.D. Okla. LCrR 57.2(B)"
 {
   forum frcrimp
+}
+
+test "Counting boundary: cja-voucher (weekend)" cite "E.D. Okla. LCrR 57.2(B)"
+{
+  given CaseDismissedOrSentenced() on 2016-07-06
+  expect deadline(cja-voucher) == 2016-08-22
 }
 
 test "motions period: 14 days after the trigger" cite "E.D. Okla. LCrR 12.1(E)"

@@ -11,7 +11,7 @@ type Cases = &'static [(&'static str, &'static [&'static str])];
 /// What may start a top-level `.lit` item.
 macro_rules! items {
     () => {
-        "one of `module`, `import`, `package`, `start`, `group`, `type`, `enum`, `event`, \
+        "one of `module`, `import`, `package`, `forum`, `start`, `group`, `type`, `enum`, `event`, \
          `state`, `decision`, `chance`, `terminal`, `link`, `instance`, `rule`, `deadline`, \
          `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, `test`, \
          `limit`, `grant`, `recharacterize`, `invalidate`, or `calibration`"

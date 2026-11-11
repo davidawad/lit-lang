@@ -36,12 +36,21 @@ fn formatting_the_corpus_is_idempotent_and_structure_preserving() {
         let once = format(&text, kind).unwrap_or_else(|e| panic!("{}: {e}", path.display()));
         let twice = format(&once, kind).unwrap_or_else(|e| panic!("{}: {e}", path.display()));
         assert_eq!(once, twice, "{} is not idempotent", path.display());
-        assert_eq!(
-            shape(&parse(&text, kind).syntax()),
-            shape(&parse(&once, kind).syntax()),
-            "{}: formatting changed the tree",
-            path.display()
-        );
+        let before = shape(&parse(&text, kind).syntax());
+        let after = shape(&parse(&once, kind).syntax());
+        if before != after {
+            let mismatch = before
+                .lines()
+                .zip(after.lines())
+                .position(|(left, right)| left != right)
+                .unwrap_or_else(|| before.lines().count().min(after.lines().count()));
+            panic!(
+                "{}: formatting changed the tree at line {mismatch}\nBEFORE: {}\nAFTER: {}",
+                path.display(),
+                before.lines().nth(mismatch).unwrap_or("<end>"),
+                after.lines().nth(mismatch).unwrap_or("<end>")
+            );
+        }
     }
 }
 

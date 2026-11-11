@@ -93,7 +93,7 @@ fn stakes_take_a_fee_shift_with_a_value_or_alone() {
             ),
             (
                 &nothing,
-                &["L0001 5:13-5:14 expected an identifier, found `}`"],
+                &["L0001 5:13-5:14 expected a money literal like `100.usd` or an identifier, found `}`"],
             ),
         ],
     );

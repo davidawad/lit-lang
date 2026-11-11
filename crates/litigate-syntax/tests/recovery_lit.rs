@@ -6,7 +6,7 @@ mod support;
 use litigate_syntax::{parse, FileKind, SyntaxKind};
 use support::diag::check_all;
 
-const ITEMS: &str = "one of `module`, `import`, `package`, `start`, `group`, `type`, \
+const ITEMS: &str = "one of `module`, `import`, `package`, `forum`, `start`, `group`, `type`, \
                      `enum`, `event`, `state`, `decision`, `chance`, `terminal`, `link`, \
                      `instance`, `rule`, `deadline`, `counting`, `calendar`, `transition`, \
                      `authority`, `default`, `exception`, `test`, `limit`, `grant`, \

@@ -230,7 +230,17 @@ fn verify_cached(
 }
 
 /// A stable digest of every source file used to verify citations.
-fn corpus_digest(corpus: &SourceCorpus) -> String {
+fn corpus_digest(source_corpus: &SourceCorpus) -> String {
+    static EMBEDDED: OnceLock<String> = OnceLock::new();
+    if std::ptr::eq(source_corpus, corpus()) {
+        return EMBEDDED
+            .get_or_init(|| compute_corpus_digest(source_corpus))
+            .clone();
+    }
+    compute_corpus_digest(source_corpus)
+}
+
+fn compute_corpus_digest(corpus: &SourceCorpus) -> String {
     let mut files: Vec<_> = corpus.files.iter().collect();
     files.sort_by(|a, b| a.0.cmp(b.0));
     let mut hash = Sha256::new();
@@ -265,6 +275,12 @@ mod tests {
 
         assert_eq!(corpus_digest(&corpus), corpus_digest(&same));
         assert_ne!(corpus_digest(&corpus), corpus_digest(&changed));
+    }
+
+    #[test]
+    fn embedded_corpus_digest_is_stable_across_package_verifications() {
+        let embedded = corpus();
+        assert_eq!(corpus_digest(embedded), corpus_digest(embedded));
     }
 
     #[test]

@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-sema/tests/fixtures.rs
+assertion_line: 23
 expression: check.package
 ---
 {
@@ -41,7 +42,7 @@ expression: check.package
     ],
     "dependencies": {}
   },
-  "digest": "ebcce373511748e44bfe55110d2f7f14d3db04a0addc865c8933da62511837d0",
+  "digest": "de6d74a1222ff86b17e0d284c552e0e2be612026d3586fc2d0f06a63c6dccb27",
   "modules": [
     {
       "name": "frcp.rule12",
@@ -287,7 +288,7 @@ expression: check.package
               "file": "lit/examples/rule12.lit",
               "line": 51,
               "col": 1,
-              "end_line": 54,
+              "end_line": 57,
               "end_col": 2
             }
           },
@@ -301,7 +302,7 @@ expression: check.package
           "meta": {
             "id": "answer-period",
             "label": "",
-            "cite": null,
+            "cite": "FRCP 6(b)(1)(A)",
             "effective": {
               "from": "2009-12-01",
               "to": null,
@@ -313,8 +314,8 @@ expression: check.package
               "file": "lit/examples/rule12.lit",
               "line": 53,
               "col": 3,
-              "end_line": 53,
-              "end_col": 74
+              "end_line": 56,
+              "end_col": 4
             }
           },
           "amount": 21,
@@ -364,7 +365,15 @@ expression: check.package
           "extendable": null,
           "extension_authority": null,
           "note": null,
-          "linear": true
+          "linear": true,
+          "extend": [
+            {
+              "bound": "discretionary",
+              "by": "court",
+              "standard": "GoodCause",
+              "window": "before_expiry"
+            }
+          ]
         },
         {
           "decl": "node",
@@ -381,9 +390,9 @@ expression: check.package
             "relations": [],
             "span": {
               "file": "lit/examples/rule12.lit",
-              "line": 56,
+              "line": 59,
               "col": 1,
-              "end_line": 61,
+              "end_line": 64,
               "end_col": 2
             }
           },
@@ -431,9 +440,9 @@ expression: check.package
               "forbids": [],
               "span": {
                 "file": "lit/examples/rule12.lit",
-                "line": 59,
+                "line": 62,
                 "col": 3,
-                "end_line": 59,
+                "end_line": 62,
                 "end_col": 38
               }
             },
@@ -467,9 +476,9 @@ expression: check.package
               "forbids": [],
               "span": {
                 "file": "lit/examples/rule12.lit",
-                "line": 60,
+                "line": 63,
                 "col": 3,
-                "end_line": 60,
+                "end_line": 63,
                 "end_col": 40
               }
             }
@@ -490,9 +499,9 @@ expression: check.package
             "relations": [],
             "span": {
               "file": "lit/examples/rule12.lit",
-              "line": 63,
+              "line": 66,
               "col": 1,
-              "end_line": 78,
+              "end_line": 81,
               "end_col": 2
             }
           },
@@ -542,9 +551,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 67,
+                        "line": 70,
                         "col": 20,
-                        "end_line": 67,
+                        "end_line": 70,
                         "end_col": 29
                       }
                     }
@@ -552,9 +561,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 67,
+                  "line": 70,
                   "col": 11,
-                  "end_line": 67,
+                  "end_line": 70,
                   "end_col": 30
                 }
               },
@@ -580,9 +589,9 @@ expression: check.package
               "forbids": [],
               "span": {
                 "file": "lit/examples/rule12.lit",
-                "line": 66,
+                "line": 69,
                 "col": 3,
-                "end_line": 70,
+                "end_line": 73,
                 "end_col": 4
               }
             },
@@ -621,9 +630,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 72,
+                        "line": 75,
                         "col": 26,
-                        "end_line": 72,
+                        "end_line": 75,
                         "end_col": 35
                       }
                     }
@@ -631,9 +640,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 72,
+                  "line": 75,
                   "col": 11,
-                  "end_line": 72,
+                  "end_line": 75,
                   "end_col": 36
                 }
               },
@@ -661,9 +670,9 @@ expression: check.package
               "forbids": [],
               "span": {
                 "file": "lit/examples/rule12.lit",
-                "line": 71,
+                "line": 74,
                 "col": 3,
-                "end_line": 76,
+                "end_line": 79,
                 "end_col": 4
               }
             },
@@ -693,9 +702,9 @@ expression: check.package
               "forbids": [],
               "span": {
                 "file": "lit/examples/rule12.lit",
-                "line": 77,
+                "line": 80,
                 "col": 3,
-                "end_line": 77,
+                "end_line": 80,
                 "end_col": 84
               }
             }
@@ -716,9 +725,9 @@ expression: check.package
             "relations": [],
             "span": {
               "file": "lit/examples/rule12.lit",
-              "line": 80,
+              "line": 83,
               "col": 1,
-              "end_line": 86,
+              "end_line": 89,
               "end_col": 2
             }
           },
@@ -764,9 +773,9 @@ expression: check.package
               "forbids": [],
               "span": {
                 "file": "lit/examples/rule12.lit",
-                "line": 83,
+                "line": 86,
                 "col": 3,
-                "end_line": 83,
+                "end_line": 86,
                 "end_col": 46
               }
             },
@@ -800,9 +809,9 @@ expression: check.package
               "forbids": [],
               "span": {
                 "file": "lit/examples/rule12.lit",
-                "line": 84,
+                "line": 87,
                 "col": 3,
-                "end_line": 84,
+                "end_line": 87,
                 "end_col": 43
               }
             }
@@ -823,9 +832,9 @@ expression: check.package
             "relations": [],
             "span": {
               "file": "lit/examples/rule12.lit",
-              "line": 88,
+              "line": 91,
               "col": 1,
-              "end_line": 91,
+              "end_line": 94,
               "end_col": 2
             }
           },
@@ -864,9 +873,9 @@ expression: check.package
               "forbids": [],
               "span": {
                 "file": "lit/examples/rule12.lit",
-                "line": 90,
+                "line": 93,
                 "col": 3,
-                "end_line": 90,
+                "end_line": 93,
                 "end_col": 75
               }
             }
@@ -887,9 +896,9 @@ expression: check.package
             "relations": [],
             "span": {
               "file": "lit/examples/rule12.lit",
-              "line": 93,
+              "line": 96,
               "col": 1,
-              "end_line": 96,
+              "end_line": 99,
               "end_col": 2
             }
           },
@@ -928,9 +937,9 @@ expression: check.package
               "forbids": [],
               "span": {
                 "file": "lit/examples/rule12.lit",
-                "line": 95,
+                "line": 98,
                 "col": 3,
-                "end_line": 95,
+                "end_line": 98,
                 "end_col": 75
               }
             }
@@ -951,9 +960,9 @@ expression: check.package
             "relations": [],
             "span": {
               "file": "lit/examples/rule12.lit",
-              "line": 98,
+              "line": 101,
               "col": 1,
-              "end_line": 101,
+              "end_line": 104,
               "end_col": 2
             }
           },
@@ -996,9 +1005,9 @@ expression: check.package
             "relations": [],
             "span": {
               "file": "lit/examples/rule12.lit",
-              "line": 103,
+              "line": 106,
               "col": 1,
-              "end_line": 103,
+              "end_line": 106,
               "end_col": 96
             }
           },
@@ -1055,9 +1064,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 107,
+                        "line": 110,
                         "col": 16,
-                        "end_line": 107,
+                        "end_line": 110,
                         "end_col": 25
                       }
                     },
@@ -1075,9 +1084,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 107,
+                        "line": 110,
                         "col": 27,
-                        "end_line": 107,
+                        "end_line": 110,
                         "end_col": 35
                       }
                     }
@@ -1085,9 +1094,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 107,
+                  "line": 110,
                   "col": 9,
-                  "end_line": 107,
+                  "end_line": 110,
                   "end_col": 36
                 }
               },
@@ -1114,9 +1123,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 108,
+                        "line": 111,
                         "col": 19,
-                        "end_line": 108,
+                        "end_line": 111,
                         "end_col": 32
                       }
                     }
@@ -1124,9 +1133,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 108,
+                  "line": 111,
                   "col": 10,
-                  "end_line": 108,
+                  "end_line": 111,
                   "end_col": 33
                 }
               },
@@ -1144,9 +1153,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 108,
+                  "line": 111,
                   "col": 37,
-                  "end_line": 108,
+                  "end_line": 111,
                   "end_col": 47
                 }
               }
@@ -1154,9 +1163,9 @@ expression: check.package
           ],
           "span": {
             "file": "lit/examples/rule12.lit",
-            "line": 105,
+            "line": 108,
             "col": 1,
-            "end_line": 109,
+            "end_line": 112,
             "end_col": 2
           }
         },
@@ -1189,9 +1198,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 113,
+                        "line": 116,
                         "col": 16,
-                        "end_line": 113,
+                        "end_line": 116,
                         "end_col": 25
                       }
                     },
@@ -1209,9 +1218,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 113,
+                        "line": 116,
                         "col": 27,
-                        "end_line": 113,
+                        "end_line": 116,
                         "end_col": 31
                       }
                     }
@@ -1219,9 +1228,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 113,
+                  "line": 116,
                   "col": 9,
-                  "end_line": 113,
+                  "end_line": 116,
                   "end_col": 32
                 }
               },
@@ -1248,9 +1257,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 114,
+                        "line": 117,
                         "col": 19,
-                        "end_line": 114,
+                        "end_line": 117,
                         "end_col": 32
                       }
                     }
@@ -1258,9 +1267,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 114,
+                  "line": 117,
                   "col": 10,
-                  "end_line": 114,
+                  "end_line": 117,
                   "end_col": 33
                 }
               },
@@ -1278,9 +1287,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 114,
+                  "line": 117,
                   "col": 37,
-                  "end_line": 114,
+                  "end_line": 117,
                   "end_col": 47
                 }
               }
@@ -1288,9 +1297,9 @@ expression: check.package
           ],
           "span": {
             "file": "lit/examples/rule12.lit",
-            "line": 111,
+            "line": 114,
             "col": 1,
-            "end_line": 115,
+            "end_line": 118,
             "end_col": 2
           }
         }

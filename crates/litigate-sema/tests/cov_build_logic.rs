@@ -78,7 +78,7 @@ fn links_replace_only_existing_edges() {
     let out = links(
         "module links\n\
 link a \"A\": base::done -> base::entry { replaces [base::go, base, nope::go, base::gone, base::fact.x, \"base::entry->done#1\", \"nope\", \"base::entry\", \"base::nowhere->done#1\", \"base::fact->done#1\", \"zz::entry->done#1\"] }\n\
-link b \"B\": nope::x -> base::entry by Whoever\n",
+link b \"B\": nope::x -> base::entry by whoever\n",
     );
     insta::assert_debug_snapshot!(out);
 }

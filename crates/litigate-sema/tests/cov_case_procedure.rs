@@ -34,10 +34,10 @@ counting oc-old cite \"FRCP 6(a)\" subject_to oc { exclude_trigger_day, include_
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
 deadline answer: 21.days from Served(complaint) counted_by oc effective [2009-12-01, 2011-03-01) known_at 2009-01-01 delegable { to CaseOrder, op extend, discretion GoodCause, on ExtensionMoved(true) } {
-  bearer Defendant
+  bearer defendant
 }
 deadline answer: 21.days from Served(complaint) counted_by oc effective [2011-03-01, ..) known_at 2011-01-01 supersedes answer@2009-12-01 delegable { to CaseOrder, op extend, discretion GoodCause, on ExtensionMoved(true) } {
-  bearer Defendant
+  bearer defendant
 }
 
 /// An emergency's delegation, on the same motion, outside the matter's
@@ -57,7 +57,7 @@ const RESET: &str = "module reset
 import rho.{ answer, oc, Served, Doc }
 start done
 
-deadline answer-extended: 51.days from Served(complaint) counted_by oc effective [2011-02-01, ..) known_at 2011-02-01 override answer { bearer Defendant }
+deadline answer-extended: 51.days from Served(complaint) counted_by oc effective [2011-02-01, ..) known_at 2011-02-01 override answer { bearer defendant }
 
 terminal done: \"Done\" { payoff 0.usd }
 ";
@@ -93,7 +93,7 @@ fn run(events: &[&str]) -> Vec<String> {
     });
     let text = format!(
         "case t\nuses rho ^1.0.0, reset ^1.0.0\nas_of 2011-06-01\nsummary \"s\"\n\n\
-         parties {{\n  p: Plaintiff Corporation\n  d: Defendant Corporation\n  c: Court Tribunal\n}}\n\
+         parties {{\n  p: plaintiff Corporation\n  d: defendant Corporation\n  c: court Tribunal\n}}\n\
          events {{\n{events}}}\n"
     );
     let packages = packages();

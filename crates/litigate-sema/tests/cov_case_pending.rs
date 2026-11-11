@@ -33,7 +33,7 @@ deadline plain: 10.days from Entered() counted_by pc {
 
 state open: \"Open\"
 {
-  file \"File\" -> done by Plaintiff { event Filed(), within period }
+  file \"File\" -> done by plaintiff { event Filed(), within period }
 }
 
 terminal done: \"Done\" { payoff 0.usd }
@@ -66,7 +66,7 @@ fn run(as_of: &str, events: &[&str]) -> Vec<String> {
     });
     let text = format!(
         "case t\nuses pend ^1.0.0\nas_of {as_of}\nsummary \"s\"\n\n\
-         parties {{\n  p: Plaintiff Corporation\n  c: Court Tribunal\n}}\n\
+         parties {{\n  p: plaintiff Corporation\n  c: court Tribunal\n}}\n\
          events {{\n  2011-01-04 Entered() by c\n{events}}}\nstakes {{ done: 0.usd }}\n"
     );
     let checked = check(&text, pend(), Some(&lock(pend())), &Plus, Profile::Dev);

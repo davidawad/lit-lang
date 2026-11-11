@@ -29,11 +29,11 @@ calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed neares
 rule duty answer-duty cite \"FRCP 12(a)\"
 {
   deadline answer: 30.days from Noticed() counted_by oc effective [2009-12-01, 2012-01-01) cite \"FRCP 12(a)\" {
-    bearer Defendant
+    bearer defendant
     designated due
   }
   deadline answer: 0.days from Reset() counted_by oc effective [2012-01-01, ..) {
-    bearer Defendant
+    bearer defendant
     designated due
   }
 }
@@ -41,7 +41,7 @@ rule duty answer-duty cite \"FRCP 12(a)\"
 rule duty counter-duty cite \"FRCP 12(a)\"
 {
   deadline counter: 30.days from Designated() counted_by oc effective [2009-12-01, ..) cite \"FRCP 12(a)\" {
-    bearer Defendant
+    bearer defendant
     designated due
     interpretation \"the rule names no start\"
   }
@@ -85,7 +85,7 @@ fn run(as_of: &str, events: &[&str]) -> Vec<String> {
     });
     let text = format!(
         "case t\nuses sigma ^1.0.0\nas_of {as_of}\nsummary \"s\"\n\n\
-         parties {{\n  d: Defendant Corporation\n}}\n\
+         parties {{\n  d: defendant Corporation\n}}\n\
          events {{\n{events}}}\nstakes {{ done: 0.usd }}\n"
     );
     let checked = check(&text, sigma(), Some(&lock(sigma())), &Plus, Profile::Dev);

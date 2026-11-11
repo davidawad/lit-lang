@@ -3,7 +3,7 @@ source: crates/litigate-sema/tests/cov_build_obligation.rs
 expression: out
 ---
 [
-    "pkgs/demo/main.lit:10:67 L1009 actor `Nobody` is not declared in `[package.roles]`",
+    "pkgs/demo/main.lit:10:67 L1016 `Nobody` is not a canonical `core.roles` designation",
     "pkgs/demo/main.lit:11:68 L2007 unknown trigger policy; expected `first`, `latest`, `each`, or `later_of(<deadline>)`",
     "pkgs/demo/main.lit:12:77 L2007 `later_of` names deadline `c` itself",
     "pkgs/demo/main.lit:13:68 L2007 unknown trigger policy; expected `first`, `latest`, `each`, or `later_of(<deadline>)`",
@@ -18,12 +18,10 @@ expression: out
     "pkgs/demo/main.lit:22:60 L2007 `extend` names the actor holding it: `by <Actor>`",
     "pkgs/demo/main.lit:23:78 L2007 `max` is not allowed on a `waive` capability: a waiver has no extent [fix: \"\"]",
     "pkgs/demo/main.lit:24:60 L2007 `waive` names the actor holding it: `by <Actor>`",
-    "pkgs/demo/main.lit:25:78 L2007 deadline `p` is `extendable false` but grants an `extend` capability",
-    "pkgs/demo/main.lit:26:121 L1009 actor `Courtt` is not declared in `[package.roles]` [fix: \"Court\"]",
+    "pkgs/demo/main.lit:26:104 L1016 `courtt` is not a canonical `core.roles` designation",
     "pkgs/demo/main.lit:27:68 L2007 unknown trigger policy; expected `first`, `latest`, `each`, or `later_of(<deadline>)`",
     "pkgs/demo/main.lit:28:77 L1002 `a` is not an imported module",
     "pkgs/demo/main.lit:29:96 L2007 `by` is not allowed with `never`: a lock has no extender or bound of its own [fix: \"\"]",
-    "pkgs/demo/main.lit:32:77 L2007 deadline `y` is `extendable true` but grants no extension (`extend { never ... }` alone)",
     "pkgs/demo/main.lit:33:78 L2007 `discretion` is not allowed on a `waive` capability: a waiver has no extent [fix: \"\"]",
     "pkgs/demo/main.lit:33:100 L2007 `never` is not allowed on a `waive` capability: a waiver has no extent [fix: \"\"]",
     "pkgs/demo/main.lit:34:91 L0001 expected an identifier, found `3`",

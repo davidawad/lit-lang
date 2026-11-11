@@ -238,7 +238,7 @@ fn example_replay_table() {
         ),
         (
             "parties: undeclared actor",
-            edited(&[("acme: Plaintiff", "acme: Plantiff")]),
+            edited(&[("acme: plaintiff", "acme: Plantiff")]),
             Profile::Dev,
         ),
         (
@@ -249,8 +249,8 @@ fn example_replay_table() {
         (
             "parties: duplicate party",
             edited(&[(
-                "widget: Defendant Corporation",
-                "widget: Defendant Corporation\n  widget: Defendant Corporation",
+                "widget: defendant Corporation",
+                "widget: defendant Corporation\n  widget: defendant Corporation",
             )]),
             Profile::Dev,
         ),

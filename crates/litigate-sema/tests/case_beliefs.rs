@@ -35,7 +35,7 @@ fn a_chance_node_is_observable() {
 
 #[test]
 fn a_decision_every_actor_of_which_plays_nature_is_observable() {
-    let text = observing_respond("perspective { Defendant: nature }");
+    let text = observing_respond("perspective { defendant: nature }");
     let checked = check_example(&text, Profile::Dev);
     assert!(
         checked
@@ -55,8 +55,8 @@ fn a_decision_someone_in_the_matter_takes_is_not() {
         // acme is self, so the other party's actor is the opponent.
         "perspective acme",
         // The package role: Defendant is the opponent.
-        "perspective { Plaintiff: self }",
-        "perspective { Defendant: opponent }",
+        "perspective { plaintiff: self }",
+        "perspective { defendant: opponent }",
     ] {
         let text = observing_respond(perspective);
         assert_eq!(belief_errors(&text), 1, "{perspective}");

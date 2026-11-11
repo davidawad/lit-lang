@@ -15,9 +15,9 @@ expression: check.package
     "description": "Answer-or-move decision under FRCP 12(a); the shared W1 fixture.",
     "jurisdiction": "United States district courts",
     "roles": {
-      "Court": "nature",
-      "Defendant": "opponent",
-      "Plaintiff": "self"
+      "court": "nature",
+      "defendant": "opponent",
+      "plaintiff": "self"
     },
     "in_force": {
       "from": "2009-12-01",
@@ -41,7 +41,7 @@ expression: check.package
     ],
     "dependencies": {}
   },
-  "digest": "e9ae443b6514ddb36cb552380c1e2aa0c2d166be857b2a106db26018e7585bbd",
+  "digest": "ebcce373511748e44bfe55110d2f7f14d3db04a0addc865c8933da62511837d0",
   "modules": [
     {
       "name": "frcp.rule12",
@@ -399,13 +399,13 @@ expression: check.package
             "fact"
           ],
           "attrs": {},
-          "actor": "Court",
+          "actor": "court",
           "edges": [
             {
               "id": "barred",
               "to": "dismissed",
               "label": "Barred",
-              "actor": "Court",
+              "actor": "court",
               "authority": null,
               "probability": {
                 "state": "known",
@@ -441,7 +441,7 @@ expression: check.package
               "id": "not-barred",
               "to": "respond",
               "label": "Timely",
-              "actor": "Court",
+              "actor": "court",
               "authority": null,
               "probability": {
                 "state": "known",
@@ -505,13 +505,13 @@ expression: check.package
           "court_listener_url": null,
           "tags": [],
           "attrs": {},
-          "actor": "Defendant",
+          "actor": "defendant",
           "edges": [
             {
               "id": "answer",
               "to": "answered",
               "label": "File an answer",
-              "actor": "Defendant",
+              "actor": "defendant",
               "authority": null,
               "probability": null,
               "hours": {
@@ -590,7 +590,7 @@ expression: check.package
               "id": "move-dismiss",
               "to": "mtd-ruling",
               "label": "Move to dismiss under Rule 12(b)(6)",
-              "actor": "Defendant",
+              "actor": "defendant",
               "authority": null,
               "probability": null,
               "hours": {
@@ -671,7 +671,7 @@ expression: check.package
               "id": "default",
               "to": "default-risk",
               "label": "Let the deadline pass",
-              "actor": "Defendant",
+              "actor": "defendant",
               "authority": null,
               "probability": null,
               "hours": null,
@@ -732,13 +732,13 @@ expression: check.package
           "court_listener_url": null,
           "tags": [],
           "attrs": {},
-          "actor": "Court",
+          "actor": "court",
           "edges": [
             {
               "id": "granted",
               "to": "dismissed",
               "label": "Motion granted",
-              "actor": "Court",
+              "actor": "court",
               "authority": null,
               "probability": {
                 "state": "known",
@@ -774,7 +774,7 @@ expression: check.package
               "id": "denied",
               "to": "answered",
               "label": "Motion denied",
-              "actor": "Court",
+              "actor": "court",
               "authority": null,
               "probability": {
                 "state": "known",

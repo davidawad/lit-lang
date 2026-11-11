@@ -17,7 +17,7 @@ pub fn pkg(
     files: &[(&str, &str)],
 ) -> LoadedPackage {
     let mut manifest = format!(
-        "[package]\nname = \"{name}\"\nversion = \"1.0.0\"\nlanguage = 1\npack_id = \"{name}\"\nforum = \"demo\"\nauthority = \"{authority}\"\ntitle = \"T\"\nin_force = \"{in_force}\"\nknown_at = \"2025-01-01\"\n\n[package.roles]\nPlaintiff = \"self\"\nDefendant = \"opponent\"\nCourt = \"nature\"\n"
+        "[package]\nname = \"{name}\"\nversion = \"1.0.0\"\nlanguage = 1\npack_id = \"{name}\"\nforum = \"demo\"\nauthority = \"{authority}\"\ntitle = \"T\"\nin_force = \"{in_force}\"\nknown_at = \"2025-01-01\"\n\n[package.roles]\nplaintiff = \"self\"\ndefendant = \"opponent\"\ncourt = \"nature\"\n"
     );
     if !deps.is_empty() {
         manifest.push_str("\n[dependencies]\n");

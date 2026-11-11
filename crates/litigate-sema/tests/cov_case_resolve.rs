@@ -37,7 +37,7 @@ fn header_items_table() {
         ),
         (
             "perspective: a role that is not self, opponent, or nature",
-            header("perspective { Plaintiff: self, Court: boss }"),
+            header("perspective { plaintiff: self, Court: boss }"),
         ),
         (
             "uses: a package that is not loaded",
@@ -211,7 +211,7 @@ fn malformed_matters_table() {
     let item = |head: &str| header(head);
     let parties = |block: &str| {
         header("").replace(
-            "parties {\n  p: Plaintiff Corporation\n  d: Defendant Corporation\n  c: Court Tribunal\n}",
+            "parties {\n  p: plaintiff Corporation\n  d: defendant Corporation\n  c: court Tribunal\n}",
             block,
         )
     };
@@ -259,15 +259,15 @@ fn malformed_matters_table() {
         ),
         (
             "perspective: an actor with no role",
-            item("perspective { Plaintiff: }"),
+            item("perspective { plaintiff: }"),
         ),
         (
             "parties: a party with no entity type",
-            parties("parties { p: Plaintiff, d: Defendant Corporation }"),
+            parties("parties { p: Plaintiff, d: defendant Corporation }"),
         ),
         (
             "parties: a party with no actor",
-            parties("parties { p: , d: Defendant Corporation }"),
+            parties("parties { p: , d: defendant Corporation }"),
         ),
         (
             "stakes: entries with no terminal or no value",

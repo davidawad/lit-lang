@@ -165,7 +165,7 @@ expression: table(rows)
     ],
     "extend: a stipulated cap binds only its own grant": [
         "15:14 L4001 an extension to 2011-01-30 exceeds the bound of `omega::post`: prescribed_due + 3.days = 2011-01-17 (prescribed_due 2011-01-14, grant_order_entered 2011-01-11)\n    note: `post` runs 10 calendar days from `Entered()` on 2011-01-04 under `oc@2009-12-01`",
-        "16:41 L4001 only Court or Plaintiff may extend `omega::post`, but `d` is Defendant",
+        "16:41 L4001 only court or plaintiff may extend `omega::post`, but `d` is defendant",
         "trace Triggered Entered() omega::open -> omega::open",
         "trace Extended OrderedPost(2011-01-17) omega::open -> omega::open",
         "obligation omega::appeal #0 Lapsed",
@@ -263,8 +263,8 @@ expression: table(rows)
     ],
     "extend: only the capability's actor may extend": [
         "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-14: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
-        "14:37 L4001 only Court may extend `omega::answer`, but `p` is Plaintiff",
-        "15:37 L4001 only Court may extend `omega::answer`, but `d` is not a party acting by the event",
+        "14:37 L4001 only court may extend `omega::answer`, but `p` is plaintiff",
+        "15:37 L4001 only court may extend `omega::answer`, but `d` is not a party acting by the event",
         "trace Triggered Served(complaint) omega::open -> omega::open",
         "obligation omega::answer #0 Breached bearer d linear",
     ],

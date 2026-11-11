@@ -11,7 +11,7 @@ const RENAMED: &str = "module alpha
 start intake
 enum Document { complaint }
 event Served(document: Document)
-state intake: \"Intake\" by Plaintiff {
+state intake: \"Intake\" by plaintiff {
   formerly [start-node]
   serve \"Serve\" -> responded { event Served(complaint) formerly [served] }
   _ \"Drop\" -> responded

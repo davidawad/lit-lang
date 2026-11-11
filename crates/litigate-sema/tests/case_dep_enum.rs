@@ -17,8 +17,8 @@ fn loaded(name: &str, deps: &str, files: &[(&str, &str)]) -> LoadedPackage {
         manifest: format!(
             "[package]\nname = \"{name}\"\nversion = \"1.0.0\"\nlanguage = 1\npack_id = \"{name}\"\n\
              forum = \"frcp\"\nauthority = \"FederalRule\"\ntitle = \"T\"\nin_force = \"2007-12-01\"\n\
-             known_at = \"2025-01-01\"\n\n[package.roles]\nPlaintiff = \"self\"\nDefendant = \"opponent\"\n\
-             Court = \"nature\"\n{deps}"
+             known_at = \"2025-01-01\"\n\n[package.roles]\nplaintiff = \"self\"\ndefendant = \"opponent\"\n\
+             court = \"nature\"\n{deps}"
         ),
         lock: None,
         files: files
@@ -33,7 +33,7 @@ fn loaded(name: &str, deps: &str, files: &[(&str, &str)]) -> LoadedPackage {
 
 const COURT: &str = "module court.answer\n\nimport core.time.{ ServiceMethod }\n\nstart filed\n\n\
 event Served(method: ServiceMethod)\n\n\
-state filed: \"Complaint filed\" by Plaintiff\n{\n  \
+state filed: \"Complaint filed\" by plaintiff\n{\n  \
 personal \"Serve personally\" -> served { event Served(Personal) }\n  \
 mail \"Serve by mail\" -> served { event Served(ServiceMethod::Mail) }\n}\n\n\
 decision served: \"Answer or default\" by defendant\n{\n  \
@@ -81,7 +81,7 @@ fn packages() -> &'static [Package] {
 fn matter(served: &str) -> String {
     format!(
         "case t\nuses court ^1.0.0\nas_of 2025-04-01\nsummary \"S\"\n\n\
-         parties {{\n  acme: Plaintiff Corporation\n  roadrunner: Defendant Individual\n}}\n\n\
+         parties {{\n  acme: plaintiff Corporation\n  roadrunner: defendant Individual\n}}\n\n\
          events {{\n  2025-03-03 {served} on roadrunner\n}}\n\n\
          stakes {{ answered: 0.usd, defaulted: 100_000.usd }}\n"
     )

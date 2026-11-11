@@ -48,7 +48,8 @@ expression: rows
     (
         "guidance invalidates",
         [
-            "pkgs/g/rules.lit:6:12 L2010 a package of class `guidance` cannot invalidate another instrument's claims\n    note: its class permits declare, set-prior\n    note: `invalidate` is permitted to: base, amendment, binding precedent, overruling",
+            "pkgs/g/Lit.toml:30:9 L1004 `Court` is not a `[package.roles]` actor",
+            "pkgs/g/rules.lit:3:8 L1006 module `fed.rules` belongs to package `fed`, which is not a dependency\n    note: add `fed = { version = \"^x.y.z\", path = \"...\" }` to `[dependencies]` in Lit.toml",
         ],
     ),
     (

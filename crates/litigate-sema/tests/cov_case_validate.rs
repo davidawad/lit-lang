@@ -13,7 +13,7 @@ const BENCHED: &str = "2010-01-04 Benched(complaint) by p";
 fn two_parties(head: &str, tail: &str) -> String {
     format!(
         "case t\nuses alpha ^1.0.0\nas_of 2011-06-01\nsummary \"s\"\n{head}\n\
-         parties {{ p: Plaintiff Corporation, d: Defendant Corporation }}\n{tail}\n"
+         parties {{ p: plaintiff Corporation, d: defendant Corporation }}\n{tail}\n"
     )
 }
 
@@ -34,11 +34,11 @@ fn parties_and_perspective_table() {
         ),
         (
             "perspective: sets an actor the package does not declare",
-            two_parties("perspective { Plaintiff: self, Judge: nature }", STAKES),
+            two_parties("perspective { plaintiff: self, Judge: nature }", STAKES),
         ),
         (
             "ok: perspective sets every actor it names",
-            two_parties("perspective { Plaintiff: self, Court: nature }", STAKES),
+            two_parties("perspective { plaintiff: self, Court: nature }", STAKES),
         ),
     ];
     let table: BTreeMap<&str, Vec<String>> = rows
@@ -58,7 +58,7 @@ fn observations_table() {
         ),
         (
             "ok: an actor's role set explicitly",
-            "perspective { Court: nature }",
+            "perspective { court: nature }",
             "observe bench: { allow: 2, deny: 1 }",
         ),
         (
@@ -78,7 +78,7 @@ fn observations_table() {
         ),
         (
             "not a draw: a decision an actor of the perspective takes",
-            "perspective { Court: opponent }",
+            "perspective { court: opponent }",
             "observe bench: { allow: 2, deny: 1 }",
         ),
     ];

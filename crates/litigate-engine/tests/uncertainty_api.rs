@@ -288,12 +288,13 @@ fn the_new_surface_is_discoverable() {
 /// one outcome on every visit is not clairvoyance about a draw (it loops
 /// forever), so a node on a cycle reports no outcome EVPI and is always
 /// screened in for the Monte Carlo EVPPI instead. Cyclic nodes screen
-/// first in canonical id order, so `top: 2` reaches it.
+/// first in canonical id order; screening all candidates ensures it is
+/// included even as the catalog changes.
 #[test]
 fn a_node_on_a_cycle_gets_evppi_not_outcome_evpi() {
     let req: Request = serde_json::from_value(json!({
         "scenario": "cofc-1498-patent-case",
-        "op": {"op": "voi", "samples": 40, "top": 2}
+        "op": {"op": "voi", "samples": 40, "top": 100}
     }))
     .unwrap();
     let resp = handle(&req, &litgraph_packs::catalog().unwrap());

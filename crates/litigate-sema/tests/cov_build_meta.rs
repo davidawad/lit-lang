@@ -62,8 +62,8 @@ fn fields_are_given_once_and_id_lists_hold_plain_identifiers() {
 fn actors_are_declared_roles_or_either() {
     let out = check_body(
         "state a1: \"A\" by either { _ \"go\" -> t }\n\
-state a2: \"A\" by Plaintif { _ \"go\" -> t }\n\
-state a3: \"A\" by Plaintiff.x { _ \"go\" -> t }",
+state a2: \"A\" by plaintif { _ \"go\" -> t }\n\
+state a3: \"A\" by plaintiff.x { _ \"go\" -> t }",
     );
     insta::assert_debug_snapshot!(out);
 }
@@ -71,11 +71,11 @@ state a3: \"A\" by Plaintiff.x { _ \"go\" -> t }",
 #[test]
 fn a_pack_without_roles_lists_no_actors() {
     let manifest = common::manifest("demo", &[]).replace(
-        "Plaintiff = \"self\"\nDefendant = \"opponent\"\nCourt = \"nature\"\n",
+        "plaintiff = \"self\"\ndefendant = \"opponent\"\ncourt = \"nature\"\n",
         "",
     );
     let text =
-        "module main\nstart s\nstate s: \"S\" by Anyone { _ \"go\" -> t }\nterminal t: \"T\"\n";
+        "module main\nstart s\nstate s: \"S\" by anyone { _ \"go\" -> t }\nterminal t: \"T\"\n";
     let pkg = litigate_sema::pkg::load::LoadedPackage {
         texts: std::collections::BTreeMap::new(),
         manifest,

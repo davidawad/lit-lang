@@ -37,7 +37,7 @@ fn an_unpinned_or_mismatched_file_is_unverified_text() {
     let base = BASE.to_owned();
     let unpinned = under(PIN, "", &base);
     let messages = unresolved(&unpinned);
-    assert_eq!(messages.len(), 6, "{messages:?}");
+    assert_eq!(messages.len(), 5, "{messages:?}");
     assert!(
         messages[0].contains("source `frcp` pins no `path_sha256`"),
         "{messages:?}"
@@ -50,7 +50,7 @@ fn an_unpinned_or_mismatched_file_is_unverified_text() {
         &base,
     );
     let messages = unresolved(&mismatched);
-    assert_eq!(messages.len(), 6, "{messages:?}");
+    assert_eq!(messages.len(), 5, "{messages:?}");
     assert!(
         messages[0].contains("is not the text source `frcp` pins"),
         "{messages:?}"
@@ -156,9 +156,12 @@ fn a_cite_hole_cites_no_expression() {
 
 /// [`BASE`] with the answer period's forum adopted by `adoption`.
 fn adopted(adoption: &str) -> String {
-    let period = "deadline answer-period: 21.days from Served(complaint) counted_by frcp6";
-    assert!(BASE.contains(period));
-    BASE.replacen(period, &format!("{period} {{ forum demo {adoption} }}"), 1)
+    let period = "deadline answer-period: 21.days from Served(complaint) counted_by frcp6 cite \"FRCP 12(a)\"";
+    let adopted = "deadline answer-period: 21.days from Served(complaint) counted_by frcp6";
+    let period_and_open = format!("{period}\n  {{");
+    let replacement = format!("{adopted}\n  {{ forum demo {adoption},");
+    assert!(BASE.contains(&period_and_open));
+    BASE.replacen(&period_and_open, &replacement, 1)
 }
 
 #[test]
@@ -220,7 +223,7 @@ fn a_quote_is_held_to_the_bound_file_not_another_with_the_heading() {
 #[test]
 fn a_deadline_period_is_held_to_its_cited_vendored_text() {
     let lit = BASE.replacen(
-        "deadline answer-period: 21.days from Served(complaint) counted_by frcp6",
+        "deadline answer-period: 21.days from Served(complaint) counted_by frcp6 cite \"FRCP 12(a)\"",
         "deadline answer-period: 20.days from Served(complaint) counted_by frcp6 cite \"FRCP 12(a)\"",
         1,
     );

@@ -21,8 +21,8 @@ fn loaded(name: &str, pack_id: &str, deps: &str, files: &[(&str, &str)]) -> Load
         manifest: format!(
             "[package]\nname = \"{name}\"\nversion = \"1.0.0\"\nlanguage = 1\npack_id = \"{pack_id}\"\n\
              forum = \"frcp\"\nauthority = \"FederalRule\"\ntitle = \"T\"\nin_force = \"2007-12-01\"\n\
-             known_at = \"2025-01-01\"\n\n[package.roles]\nPlaintiff = \"self\"\nDefendant = \"opponent\"\n\
-             Court = \"nature\"\n{deps}"
+             known_at = \"2025-01-01\"\n\n[package.roles]\nplaintiff = \"self\"\ndefendant = \"opponent\"\n\
+             court = \"nature\"\n{deps}"
         ),
         lock: None,
         files: files
@@ -37,7 +37,7 @@ fn loaded(name: &str, pack_id: &str, deps: &str, files: &[(&str, &str)]) -> Load
 
 const COURT: &str = "module court.answer\n\nimport core.time.{ Noticed }\n\nstart filed\n\n\
 event Filed()\n\n\
-state filed: \"Complaint filed\" by Plaintiff\n{\n  \
+state filed: \"Complaint filed\" by plaintiff\n{\n  \
 notice \"Notice\" -> noticed { event Noticed() }\n}\n\n\
 decision noticed: \"Answer or default\" by defendant\n{\n  \
 answer \"File an answer\" -> answered { event Filed() }\n  default \"Let it pass\" -> defaulted\n}\n\n\
@@ -105,7 +105,7 @@ fn check(uses: &str, noticed: &str) -> litigate_sema::case::CheckedCase {
     let lock = lock(packages());
     let text = format!(
         "case t\n{uses}as_of 2025-04-01\nsummary \"S\"\n\n\
-         parties {{\n  acme: Plaintiff Corporation\n  roadrunner: Defendant Individual\n}}\n\n\
+         parties {{\n  acme: plaintiff Corporation\n  roadrunner: defendant Individual\n}}\n\n\
          events {{\n  2025-03-03 {noticed} by acme\n}}\n"
     );
     check_with(

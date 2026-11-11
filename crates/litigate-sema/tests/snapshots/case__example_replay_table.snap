@@ -54,7 +54,7 @@ expression: table
         "17:3 L4005 party `widget` is declared twice; a party holds one role per proceeding",
     ],
     "parties: undeclared actor": [
-        "15:9 L4005 `Plantiff` is not an actor of `frcp-rule12-example`\n    note: actors: Court, Defendant, Plaintiff\n    fix @15:9-15:17 MaybeIncorrect: \"Plaintiff\"",
+        "15:9 L4005 `Plantiff` is not an actor of `frcp-rule12-example`\n    note: actors: court, defendant, plaintiff\n    fix @15:9-15:17 MaybeIncorrect: \"plaintiff\"",
     ],
     "parties: undeclared event party": [
         "21:63 L4005 `wigdet` is not a declared party",
@@ -86,7 +86,7 @@ expression: table
         "22:14 L4001 `Answered(complaint)` is not a legal event at stage `frcp-rule12-example::mtd-ruling` (Ruling on the motion to dismiss)\n    note: legal events: none (no event moves this stage; it is decided by court)\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
     ],
     "typestate: the plaintiff cannot answer": [
-        "21:57 L4001 `Answered(complaint)` at stage `frcp-rule12-example::respond` is taken by defendant, but `acme` plays Plaintiff",
+        "21:57 L4001 `Answered(complaint)` at stage `frcp-rule12-example::respond` is taken by defendant, but `acme` plays plaintiff",
     ],
     "uses: requirement the lock does not satisfy": [
         "2:6 L1007 Lit.lock pins `frcp-rule12-example` 0.1.0, which does not satisfy `^0.2.0`\n    note: run `litigate lock`",

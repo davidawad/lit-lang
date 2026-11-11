@@ -254,6 +254,33 @@ impl Cx<'_, '_> {
     /// Checks that `actor` is declared in `[package.roles]` (or `either`);
     /// a link's actor is declared by the pack its `from` node belongs to.
     pub fn actor(&mut self, r: &RefPath) -> String {
+        let canonical = self.canonical_actor(r);
+        let link_actors = self.link_from.as_ref().map(|pack| {
+            self.ck
+                .scope
+                .packs
+                .iter()
+                .find(|s| s.pack_id == *pack)
+                .map(|s| s.actors.iter().map(String::as_str).collect::<Vec<_>>())
+        });
+        let declared: Option<Vec<&str>> = match link_actors {
+            Some(actors) => actors,
+            None => self
+                .manifest
+                .map(|m| m.roles.keys().map(String::as_str).collect()),
+        };
+        let known = canonical
+            && (r.head.text == "either"
+                || declared
+                    .as_ref()
+                    .is_none_or(|d| d.contains(&r.head.text.as_str())));
+        if canonical && !known {
+            self.report_undeclared_actor(r, &declared.unwrap_or_default());
+        }
+        r.display()
+    }
+
+    fn canonical_actor(&mut self, r: &RefPath) -> bool {
         // Actor names are the lowercase, kebab-case spellings of the
         // designations in `lit/core/roles.lit`. Keep `either` as the core
         // neutral-party designation used by packages that do not resolve a
@@ -317,55 +344,34 @@ impl Cx<'_, '_> {
             }
             self.report(report);
         }
-        let link_actors = self.link_from.as_ref().map(|pack| {
-            self.ck
-                .scope
-                .packs
-                .iter()
-                .find(|s| s.pack_id == *pack)
-                .map(|s| s.actors.iter().map(String::as_str).collect::<Vec<_>>())
-        });
-        let declared: Option<Vec<&str>> = match link_actors {
-            Some(actors) => actors,
-            None => self
-                .manifest
-                .map(|m| m.roles.keys().map(String::as_str).collect()),
-        };
-        let known = canonical
-            && (r.head.text == "either"
-                || declared
-                    .as_ref()
-                    .is_none_or(|d| d.contains(&r.head.text.as_str())));
-        if canonical && !known {
-            let roles = declared.unwrap_or_default();
-            let owner = self
-                .link_from
-                .as_ref()
-                .map_or_else(String::new, |pack| format!(" of pack `{pack}`"));
-            let mut report = Report::new(
-                C::UnknownActorDesignation,
-                r.range,
-                format!(
-                    "actor `{}` is not a declared `core.roles` designation in `[package.roles]`{owner}",
-                    r.display()
-                ),
-            )
-            .note(format!(
-                "declared actors: {}",
-                if roles.is_empty() {
-                    "(none)".to_owned()
-                } else {
-                    roles.join(", ")
-                }
-            ));
-            if let Some(best) =
-                crate::resolve::suggest::nearest(&r.head.text, roles.iter().copied())
-            {
-                report = report.fix(r.range, best, Applicability::MaybeIncorrect);
+        canonical
+    }
+
+    fn report_undeclared_actor(&mut self, r: &RefPath, roles: &[&str]) {
+        let owner = self
+            .link_from
+            .as_ref()
+            .map_or_else(String::new, |pack| format!(" of pack `{pack}`"));
+        let mut report = Report::new(
+            C::UnknownActorDesignation,
+            r.range,
+            format!(
+                "actor `{}` is not a declared `core.roles` designation in `[package.roles]`{owner}",
+                r.display()
+            ),
+        )
+        .note(format!(
+            "declared actors: {}",
+            if roles.is_empty() {
+                "(none)".to_owned()
+            } else {
+                roles.join(", ")
             }
-            self.report(report);
+        ));
+        if let Some(best) = crate::resolve::suggest::nearest(&r.head.text, roles.iter().copied()) {
+            report = report.fix(r.range, best, Applicability::MaybeIncorrect);
         }
-        r.display()
+        self.report(report);
     }
 
     /// Resolves `r` to a value of the kind accepted by `want`, returning

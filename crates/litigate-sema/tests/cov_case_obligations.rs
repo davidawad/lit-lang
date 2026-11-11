@@ -55,11 +55,11 @@ calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed neares
 rule duty answer-duty cite \"FRCP 12(a)\"
 {
   deadline answer: 10.days from Served(complaint) counted_by oc {
-    bearer Defendant
+    bearer defendant
     extend { by court, max 10.days }
     waive { by court }
   }
-  deadline amended: 2.days from Served(amended) counted_by oc { bearer Defendant, trigger later_of(answer) }
+  deadline amended: 2.days from Served(amended) counted_by oc { bearer defendant, trigger later_of(answer) }
   deadline late: 10.days from Served(motion) counted_by oc {
     trigger each
     extend { by court, max 30.days, after_expiry }
@@ -76,7 +76,7 @@ deadline reply: 5.days from Noticed() counted_by oc { trigger latest }
 deadline post: 10.days from Entered() counted_by oc {
   extend { by court, discretion GoodCause }
   extend { by court, discretion ExcusableNeglect, after_expiry, on MovedPost() }
-  extend { by Plaintiff, max 3.days }
+  extend { by plaintiff, max 3.days }
 }
 deadline locked: 10.days from Entered() counted_by oc { extend { never cite \"FRCP 6(b)(2)\" } }
 deadline motion-only: 10.days from Entered() counted_by oc {
@@ -106,7 +106,7 @@ state open: \"Open\"
   answer \"Answer\" -> open by defendant { event Answered(complaint), within answer }
   answer-amended \"Answer the amendment\" -> open by defendant { event Answered(amended), within amended }
   answer-motion \"Answer the motion\" -> open by defendant { event Answered(motion), within late }
-  reply \"Reply\" -> open by Plaintiff { event Replied(), within reply }
+  reply \"Reply\" -> open by plaintiff { event Replied(), within reply }
   close \"Close\" -> done by court { event Closed() }
 }
 
@@ -141,7 +141,7 @@ fn matter(as_of: &str, events: &[&str]) -> String {
     });
     format!(
         "case t\nuses omega ^1.0.0\nas_of {as_of}\nsummary \"s\"\n\n\
-         parties {{\n  p: Plaintiff Corporation\n  d: Defendant Corporation\n  e: Defendant Corporation\n  c: Court Tribunal\n}}\n\
+         parties {{\n  p: plaintiff Corporation\n  d: defendant Corporation\n  e: defendant Corporation\n  c: court Tribunal\n}}\n\
          events {{\n{events}}}\nstakes {{ done: 0.usd }}\n"
     )
 }
@@ -685,7 +685,7 @@ fn uncountable_instances_are_neither_breached_nor_extended() {
 fn bearers_no_party_plays_and_late_floors() {
     // No party plays `Defendant`: the answer period is unbound, and lapses.
     let text = matter("2011-02-01", &[SERVED_D]).replace(
-        "  d: Defendant Corporation\n  e: Defendant Corporation\n",
+        "  d: defendant Corporation\n  e: defendant Corporation\n",
         "",
     );
     let rows: BTreeMap<&str, Vec<String>> = [

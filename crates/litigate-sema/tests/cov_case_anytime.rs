@@ -33,11 +33,11 @@ state pleading: \"Pleading\"
 {
   move \"Move to dismiss\" -> answer-due by defendant { event Moved() }
 }
-decision answer-due: \"Answer\" by Plaintiff
+decision answer-due: \"Answer\" by plaintiff
 {
   answer \"Answer\" -> opposition-due { event Answered(), within answer-period }
 }
-decision opposition-due: \"Oppose\" by Plaintiff
+decision opposition-due: \"Oppose\" by plaintiff
 {
   oppose \"Oppose\" -> reply-due { event Opposed(), within opposition-period, anytime }
 }
@@ -61,7 +61,7 @@ fn run(events: &[&str]) -> Vec<String> {
     });
     let text = format!(
         "case t\nuses at ^1.0.0\nas_of 2011-06-01\nsummary \"s\"\n\n\
-         parties {{\n  p: Plaintiff Corporation\n  d: Defendant Corporation\n  c: Court Tribunal\n}}\n\
+         parties {{\n  p: plaintiff Corporation\n  d: defendant Corporation\n  c: court Tribunal\n}}\n\
          events {{\n{events}}}\n"
     );
     let checked = check(

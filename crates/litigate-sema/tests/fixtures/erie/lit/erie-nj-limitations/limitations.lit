@@ -25,7 +25,7 @@ start accrued
 
 /// Commencing the action answers the limitations period wherever the
 /// matter stands.
-state accrued: "Claim accrued" by Plaintiff
+state accrued: "Claim accrued" by plaintiff
 {
   commence "Commence the action" -> commenced { event ActionCommenced(), within contract-period, anytime }
 }

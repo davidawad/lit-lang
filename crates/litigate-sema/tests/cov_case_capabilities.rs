@@ -36,7 +36,7 @@ counting oc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
 deadline answer: 10.days from Served(complaint) counted_by oc known_at 2009-01-01 {
-  bearer Defendant
+  bearer defendant
   characterization claim_processing cite \"FRCP 12(a)\"
 }
 deadline appeal: 10.days from Entered() counted_by oc known_at 2009-01-01 {
@@ -53,8 +53,8 @@ grant emergency on [locked, answer] effective [2020-03-15, 2020-06-13) known_at 
 state open: \"Open\" known_at 2009-01-01
 {
   answer \"Answer\" -> open by defendant { event Answered(complaint), within answer }
-  appeal \"Appeal\" -> open by Plaintiff { event Appealed(), within appeal }
-  move \"Move\" -> open by Plaintiff { event Moved() }
+  appeal \"Appeal\" -> open by plaintiff { event Appealed(), within appeal }
+  move \"Move\" -> open by plaintiff { event Moved() }
 }
 ";
 
@@ -83,7 +83,7 @@ fn matter(known_at: &str, events: &[&str]) -> String {
     });
     format!(
         "case t\nuses kappa ^1.0.0\nas_of 2025-01-01\n{known_at}summary \"s\"\n\n\
-         parties {{\n  p: Plaintiff Corporation\n  d: Defendant Corporation\n  c: Court Tribunal\n}}\n\
+         parties {{\n  p: plaintiff Corporation\n  d: defendant Corporation\n  c: court Tribunal\n}}\n\
          events {{\n{events}}}\n"
     )
 }

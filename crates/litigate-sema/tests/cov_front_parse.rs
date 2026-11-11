@@ -177,12 +177,12 @@ fn incomplete_parts_are_dropped_from_their_declaration() {
     assert_eq!(node("1"), (String::new(), vec![]));
 
     let ItemKind::Deadline { clauses, opts, .. } = only_item(
-        "deadline d: 1.days from x counted_by c effective [2020-01-01 known_at 2021-01-01 cite { extendable true }",
+        "deadline d: 1.days from x counted_by c effective [2020-01-01 known_at 2021-01-01 cite { extend { by court } }",
     ) else {
         panic!("deadline");
     };
     assert_eq!(keys(&clauses), ["known_at"]);
-    assert_eq!(keys(&opts), ["extendable"]);
+    assert_eq!(keys(&opts), ["extend"]);
 
     for incomplete in ["effective", "effective [", "effective [.., 2020-01-01)"] {
         let ItemKind::Deadline { clauses, .. } = only_item(&format!(
@@ -201,7 +201,7 @@ fn patches_lower_to_edge_fields() {
         other => panic!("{other:?}"),
     };
     assert_eq!(patches("patch { note \"x\" }"), Vec::<Field>::new());
-    let fields = patches("patch ok { note \"n\", tags [a], within d { extendable true } }");
+    let fields = patches("patch ok { note \"n\", tags [a], within d { extend { by court } } }");
     let [(
         Atom::Expr(Expr {
             kind: ExprKind::Ref(edge),

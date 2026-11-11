@@ -34,15 +34,15 @@ counting oc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
 deadline answer: 10.days from Served(Mail) counted_by oc {
-  bearer Defendant
+  bearer defendant
   extend { by court, max 30.days }
 }
 
 state open: \"Open\"
 {
   answer \"Answer\" -> done by defendant { event Answered(), within answer }
-  stipulate \"Stipulate\" -> open by Plaintiff { event Stipulated() }
-  notice \"Notice\" -> open by Plaintiff { event Noticed() }
+  stipulate \"Stipulate\" -> open by plaintiff { event Stipulated() }
+  notice \"Notice\" -> open by plaintiff { event Noticed() }
 }
 
 terminal done: \"Done\" { payoff 0.usd }

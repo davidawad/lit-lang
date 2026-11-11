@@ -42,7 +42,7 @@ fn module_level_errors() {
 
 #[test]
 fn package_level_errors() {
-    let one = "module one\npackage other { forum demo, authority Statute }\nstart s\nstate s: \"S\" by Judge { _ \"go\" -> s2 }\nstate s2: \"S2\"\n";
+    let one = "module one\npackage other { forum demo, authority Statute }\nstart s\nstate s: \"S\" by judge { _ \"go\" -> s2 }\nstate s2: \"S2\"\n";
     let two = "module two\nstart s3\nstate s3: \"S3\"\nstate s2: \"again\"\n";
     let (db, ws) = workspace(&[package(
         "demo",
@@ -121,7 +121,7 @@ default a when true => 1\ndefault c when true => a-1\ndefault d when true => a-1
 fn links_packages_resolve_qualified_names() {
     let base = "module base\nstart entry\nstate entry: \"E\" { go \"Go\" -> done }\nterminal done: \"D\"\n";
     let links = "module links\nlink appeal \"Appeal\": base::done -> base@copy::entry p 1/2 { replaces [base::go] }\n\
-instance base @ copy { pack base, probabilities { go: 1/3 }, roles { Court: nature }, patch go { note \"n\" } }\n\
+instance base @ copy { pack base, probabilities { go: 1/3 }, roles { court: nature }, patch go { note \"n\" } }\n\
 link bad \"Bad\": base::nowhere -> nope::entry { replaces [base::gone] }\n";
     let (db, ws) = workspace(&[
         package("base", &[], &[("base.lit", base)]),

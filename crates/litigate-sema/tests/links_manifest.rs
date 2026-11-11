@@ -24,18 +24,18 @@ fn base() -> LoadedPackage {
     package(
         "base",
         &[],
-        &[("base.lit", "module base\nstart s\nstate s: \"S\" by Plaintiff { go \"Go\" -> t }\nterminal t: \"T\"\n")],
+        &[("base.lit", "module base\nstart s\nstate s: \"S\" by plaintiff { go \"Go\" -> t }\nterminal t: \"T\"\n")],
     )
 }
 
 #[test]
 fn links_package_without_pack_identity_checks_clean() {
-    let text = "module links\nlink up \"Up\": base::t -> base::s by defendant\nlink odd \"Odd\": base::t -> base::s by Clerk\n";
+    let text = "module links\nlink up \"Up\": base::t -> base::s by defendant\nlink odd \"Odd\": base::t -> base::s by clerk\n";
     let (db, ws) = workspace(&[links(text), base()]);
     assert_eq!(
         render(&db, ws),
         [
-            "pkgs/links/links.lit:3:39 L1009 actor `Clerk` is not declared in `[package.roles]` of pack `base`"
+            "pkgs/links/links.lit:3:39 L1016 actor `clerk` is not a declared `core.roles` designation in `[package.roles]` of pack `base`"
         ]
     );
 }

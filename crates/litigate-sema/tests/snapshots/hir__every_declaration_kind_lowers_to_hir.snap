@@ -15,9 +15,9 @@ expression: json
       "description": null,
       "jurisdiction": null,
       "roles": {
-        "Court": "nature",
-        "Defendant": "opponent",
-        "Plaintiff": "self"
+        "court": "nature",
+        "defendant": "opponent",
+        "plaintiff": "self"
       },
       "in_force": {
         "from": "2009-12-01",
@@ -27,7 +27,7 @@ expression: json
       "sources": [],
       "dependencies": {}
     },
-    "digest": "5b7ef54e3e5fbe49b9fb64a5e814d9dc62649023a0490e5c7022bea33c81eed0",
+    "digest": "0f8546a0055ec6d251809ec36184155869f67f80eb73ec4e168b9ecf4981ad99",
     "modules": [
       {
         "name": "rules",
@@ -784,13 +784,13 @@ expression: json
             "court_listener_url": null,
             "tags": [],
             "attrs": {},
-            "actor": "Defendant",
+            "actor": "defendant",
             "edges": [
               {
                 "id": "respond",
                 "to": "done",
                 "label": "Respond",
-                "actor": "Defendant",
+                "actor": "defendant",
                 "authority": null,
                 "probability": null,
                 "hours": {
@@ -1031,9 +1031,9 @@ expression: json
       "description": null,
       "jurisdiction": null,
       "roles": {
-        "Court": "nature",
-        "Defendant": "opponent",
-        "Plaintiff": "self"
+        "court": "nature",
+        "defendant": "opponent",
+        "plaintiff": "self"
       },
       "in_force": {
         "from": "2009-12-01",
@@ -1045,7 +1045,7 @@ expression: json
         "rules": "^1.0.0"
       }
     },
-    "digest": "fde68f068a31382a73de332e1669beac7bc5de460b48d217a3c8c300ff030739",
+    "digest": "41dfd68cb16a5ed589bc077c0c7816e7721c2c8cbff8586fc716cf3122a260ea",
     "modules": [
       {
         "name": "links",
@@ -1059,7 +1059,7 @@ expression: json
               "id": "appeal",
               "to": "rules@copy::pending",
               "label": "Appeal",
-              "actor": "Plaintiff",
+              "actor": "plaintiff",
               "authority": null,
               "probability": {
                 "state": "known",

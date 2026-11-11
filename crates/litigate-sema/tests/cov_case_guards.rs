@@ -28,7 +28,7 @@ deadline bar: 30.days from Served() counted_by oc
 deadline never: 30.days from Benched() counted_by oc
 deadline fixer: 10.days from Fixed() counted_by oc
 
-state intake: \"Intake\" by Plaintiff
+state intake: \"Intake\" by plaintiff
 {
   file \"File\" -> check { event Filed() }
   ops \"Ops\" -> lt { event Noted() }
@@ -43,7 +43,7 @@ chance check: \"Timely?\" by court
   late \"Late\" -> barred p 1/2 { when !has_event(Fixed()) && !(date_of(Filed()) <= deadline(bar)) }
 }
 
-state heard: \"Heard\" by Plaintiff
+state heard: \"Heard\" by plaintiff
 {
   go \"Go\" -> won { event Noted() }
 }
@@ -90,7 +90,7 @@ chance eq: \"Eq\" by court
   n \"N\" -> barred p 1/2 { when !(date_of(Noted()) == 2010-02-01) }
 }
 
-state tail: \"Tail\" by Plaintiff
+state tail: \"Tail\" by plaintiff
 {
   go \"Go\" -> won { event Filed() }
 }

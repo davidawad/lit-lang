@@ -110,14 +110,14 @@ expression: found
             extension_authority: None,
             note: None,
             bearer: Some(
-                "Defendant",
+                "defendant",
             ),
             bearer_other: false,
             policy: Latest,
             linear: true,
             extend: [
                 Bounded {
-                    by: "Court",
+                    by: "court",
                     until: Offset {
                         from: PrescribedDue,
                         days: 30,
@@ -130,7 +130,7 @@ expression: found
             ],
             waive: Some(
                 Capability {
-                    by: "Plaintiff",
+                    by: "plaintiff",
                     after_expiry: false,
                 },
             ),
@@ -358,7 +358,7 @@ expression: found
                         line: 20,
                         col: 1,
                         end_line: 20,
-                        end_col: 122,
+                        end_col: 105,
                     },
                 ),
                 imported: false,
@@ -412,9 +412,7 @@ expression: found
             counting: "c6",
             forum: "demo",
             adoption: None,
-            extendable: Some(
-                true,
-            ),
+            extendable: None,
             extension_authority: None,
             note: None,
             bearer: None,
@@ -423,7 +421,7 @@ expression: found
             linear: false,
             extend: [
                 Bounded {
-                    by: "Court",
+                    by: "court",
                     until: Offset {
                         from: PrescribedDue,
                         days: 1,
@@ -467,7 +465,7 @@ expression: found
                         line: 21,
                         col: 1,
                         end_line: 21,
-                        end_col: 203,
+                        end_col: 186,
                     },
                 ),
                 imported: false,
@@ -521,9 +519,7 @@ expression: found
             counting: "c6",
             forum: "demo",
             adoption: None,
-            extendable: Some(
-                true,
-            ),
+            extendable: None,
             extension_authority: None,
             note: None,
             bearer: None,
@@ -532,14 +528,14 @@ expression: found
             linear: false,
             extend: [
                 Discretionary {
-                    by: "Court",
+                    by: "court",
                     standard: GoodCause,
                     window: BeforeExpiry,
                     motion: None,
                     interpretation: None,
                 },
                 Discretionary {
-                    by: "Court",
+                    by: "court",
                     standard: ExcusableNeglect,
                     window: AfterExpiryOnMotion,
                     motion: Some(
@@ -566,9 +562,9 @@ expression: found
                                                         "pkgs/demo/main.lit",
                                                     ),
                                                     line: 21,
-                                                    col: 189,
+                                                    col: 172,
                                                     end_line: 21,
-                                                    end_col: 198,
+                                                    end_col: 181,
                                                 },
                                             ),
                                         },
@@ -580,9 +576,9 @@ expression: found
                                             "pkgs/demo/main.lit",
                                         ),
                                         line: 21,
-                                        col: 182,
+                                        col: 165,
                                         end_line: 21,
-                                        end_col: 199,
+                                        end_col: 182,
                                     },
                                 ),
                             },
@@ -626,7 +622,7 @@ expression: found
                         line: 22,
                         col: 1,
                         end_line: 22,
-                        end_col: 113,
+                        end_col: 95,
                     },
                 ),
                 imported: false,
@@ -680,9 +676,7 @@ expression: found
             counting: "c6",
             forum: "demo",
             adoption: None,
-            extendable: Some(
-                false,
-            ),
+            extendable: None,
             extension_authority: None,
             note: None,
             bearer: None,
@@ -728,7 +722,7 @@ expression: found
                         line: 23,
                         col: 1,
                         end_line: 23,
-                        end_col: 308,
+                        end_col: 291,
                     },
                 ),
                 imported: false,
@@ -782,9 +776,7 @@ expression: found
             counting: "c6",
             forum: "demo",
             adoption: None,
-            extendable: Some(
-                true,
-            ),
+            extendable: None,
             extension_authority: None,
             note: None,
             bearer: None,
@@ -793,7 +785,7 @@ expression: found
             linear: false,
             extend: [
                 Bounded {
-                    by: "Court",
+                    by: "court",
                     until: Max(
                         [
                             Offset {
@@ -834,9 +826,9 @@ expression: found
                                                         "pkgs/demo/main.lit",
                                                     ),
                                                     line: 23,
-                                                    col: 222,
+                                                    col: 205,
                                                     end_line: 23,
-                                                    end_col: 231,
+                                                    end_col: 214,
                                                 },
                                             ),
                                         },
@@ -848,9 +840,9 @@ expression: found
                                             "pkgs/demo/main.lit",
                                         ),
                                         line: 23,
-                                        col: 215,
+                                        col: 198,
                                         end_line: 23,
-                                        end_col: 232,
+                                        end_col: 215,
                                     },
                                 ),
                             },
@@ -966,7 +958,7 @@ expression: found
             linear: false,
             extend: [
                 Bounded {
-                    by: "Court",
+                    by: "court",
                     until: Min(
                         [
                             Offset {
@@ -1081,7 +1073,7 @@ expression: found
             linear: false,
             extend: [
                 Bounded {
-                    by: "Court",
+                    by: "court",
                     until: Offset {
                         from: PrescribedDue,
                         days: 3,
@@ -1094,7 +1086,7 @@ expression: found
                     ),
                 },
                 Discretionary {
-                    by: "Court",
+                    by: "court",
                     standard: GoodCause,
                     window: BeforeExpiry,
                     motion: Some(
@@ -1246,7 +1238,7 @@ expression: found
             linear: false,
             extend: [
                 Bounded {
-                    by: "Court",
+                    by: "court",
                     until: Offset {
                         from: PrescribedDue,
                         days: 60,
@@ -1354,7 +1346,7 @@ expression: found
                     interpretation: None,
                 },
                 Bounded {
-                    by: "Court",
+                    by: "court",
                     until: Offset {
                         from: PrescribedDue,
                         days: 60,

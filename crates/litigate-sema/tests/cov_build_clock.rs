@@ -194,7 +194,7 @@ counting k5 { holidays cal, service_extension { Mail: 1.5.days } }",
 #[test]
 fn deadlines_lower_direction_and_options() {
     let deadlines: Vec<_> = declarations(
-        "deadline back: 3.days before Served(complaint) counted_by c6 { extendable true, extension_authority \"Court\", note \"n\" }",
+        "deadline back: 3.days before Served(complaint) counted_by c6 { note \"n\" }",
     )
     .into_iter()
     .filter(|d| matches!(d, Declaration::Deadline(_)))

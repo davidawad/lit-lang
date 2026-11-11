@@ -34,7 +34,7 @@ deadline after-move: 30.days from Moved() counted_by bc
 deadline after-strike: 30.days from Struck() counted_by bc
 deadline after-excuse: 30.days from Excused() counted_by bc
 
-state intake: \"Intake\" by Plaintiff
+state intake: \"Intake\" by plaintiff
 {
   file \"File\" -> check { event Filed() }
 }
@@ -46,7 +46,7 @@ chance check: \"Timely?\" by court delegable { to CaseOrder, op set }
   late \"Late\" -> barred p 1/2 { when !has_event(Moved()) && has_event(Struck()) }
 }
 
-state heard: \"Heard\" by Plaintiff
+state heard: \"Heard\" by plaintiff
 {
   go \"Go\" -> won { event Noted() }
 }

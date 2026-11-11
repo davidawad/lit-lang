@@ -57,7 +57,7 @@ fn run(events: &[&str]) -> Vec<String> {
     });
     let text = format!(
         "case t\nuses mu ^1.0.0\nas_of 2012-01-01\nsummary \"s\"\n\n\
-         parties {{\n  p: Plaintiff Corporation\n  d: Defendant Corporation\n  c: Court Tribunal\n}}\n\
+         parties {{\n  p: plaintiff Corporation\n  d: defendant Corporation\n  c: court Tribunal\n}}\n\
          events {{\n{events}}}\n"
     );
     let checked = check(

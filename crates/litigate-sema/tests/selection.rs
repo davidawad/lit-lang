@@ -50,7 +50,7 @@ event Answered(document: Document)
 counting c6 {counting} {{ holidays cal }}
 calendar cal {{ new-year: fixed(1, 1) effective [1870-06-28, ..) }}
 deadline answer-period: 21.days from Served() counted_by c6 effective [2009-12-01, ..){clauses}
-state s: \"S\" by Plaintiff {{ serve \"Serve\" -> r {{ event Served(complaint) }} }}
+state s: \"S\" by plaintiff {{ serve \"Serve\" -> r {{ event Served(complaint) }} }}
 decision r: \"R\" by defendant {{ answer \"Answer\" -> done {{ event Answered(complaint), within answer-period }} }}
 terminal done: \"Done\" {{ payoff 0.usd }}
 "
@@ -570,7 +570,7 @@ fn matter(uses: &str, events: &[&str]) -> String {
     });
     format!(
         "case t\nuses {uses}\nas_of 2012-06-01\nsummary \"s\"\n\
-         parties {{\n  p: Plaintiff Corporation\n  d: Defendant Corporation\n}}\n\
+         parties {{\n  p: plaintiff Corporation\n  d: defendant Corporation\n}}\n\
          events {{\n{events}}}\nstakes {{ done: 0.usd }}\n"
     )
 }
@@ -697,7 +697,7 @@ fn stages(extra: &str) -> LoadedPackage {
 start s
 enum Document {{ complaint }}
 event Served(document: Document)
-state s: \"S\" by Plaintiff {{ serve \"Serve\" -> r {{ event Served(complaint) }} }}
+state s: \"S\" by plaintiff {{ serve \"Serve\" -> r {{ event Served(complaint) }} }}
 state r: \"R\" by defendant {{ _ \"End\" -> done }}
 terminal done: \"Done\" {{ payoff 0.usd }}
 {extra}

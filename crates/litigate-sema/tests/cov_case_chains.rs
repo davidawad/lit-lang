@@ -36,7 +36,7 @@ deadline orphan2: 1.days from deadline(orphan).nominal counted_by oc
 state open: \\\"Open\\\"
 {
   oppose \\\"Oppose\\\" -> open by defendant { event Opposed(), within after-nominal }
-  reply \\\"Reply\\\" -> open by Plaintiff { event Replied(), within orphan }
+  reply \\\"Reply\\\" -> open by plaintiff { event Replied(), within orphan }
   rejoin \\\"Rejoin\\\" -> open by defendant { event Rejoined(), within orphan2 }
 }
 ";
@@ -67,7 +67,7 @@ fn run(events: &[&str]) -> Vec<String> {
     });
     let text = format!(
         "case t\nuses chain ^1.0.0\nas_of 2011-06-01\nsummary \"s\"\n\n\
-         parties {{\n  p: Plaintiff Corporation\n  d: Defendant Corporation\n}}\n\
+         parties {{\n  p: plaintiff Corporation\n  d: defendant Corporation\n}}\n\
          events {{\n{events}}}\nstakes {{ open: 0.usd }}\n"
     );
     let checked = check(&text, chain(), Some(&lock(chain())), &Plus, Profile::Dev);
@@ -167,7 +167,7 @@ fn followed() -> &'static [Package] {
 fn follow_in(loaded: &[Package], header: &str, events: &str) -> litigate_sema::case::CheckedCase {
     let text = format!(
         "case t\nuses follower ^1.0.0\nas_of 2011-06-01\nsummary \"s\"\n{header}\n\
-         parties {{\n  d: Defendant Corporation\n}}\n\
+         parties {{\n  d: defendant Corporation\n}}\n\
          events {{\n{events}}}\n"
     );
     let used: Vec<Package> = followed()

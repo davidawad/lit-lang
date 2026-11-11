@@ -212,7 +212,7 @@ state open: \"Open\" effective [2009-12-01, ..)
     let matter = |events: &str| {
         format!(
             "case t\nuses old ^1.0.0\nas_of 2013-01-01\nsummary \"s\"\n\n\
-             parties {{\n  p: Plaintiff Corporation\n  d: Defendant Corporation\n}}\n\
+             parties {{\n  p: plaintiff Corporation\n  d: defendant Corporation\n}}\n\
              events {{\n{events}}}\n"
         )
     };

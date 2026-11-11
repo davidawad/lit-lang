@@ -9,7 +9,7 @@ expression: "json!({\n    \"days\": clash(DayUnit::Calendar), \"court days\": cl
       "status": "failed",
       "count": 1,
       "examples": [
-        "pkgs/demo/main.lit:36:1: L5005 at `served`, duty `answer-period` closes on or after its trigger but duty `reply-period` closes 3 days before the same trigger, so no date meets both"
+        "pkgs/demo/main.lit:39:1: L5005 at `served`, duty `answer-period` closes on or after its trigger but duty `reply-period` closes 3 days before the same trigger, so no date meets both"
       ],
       "evidence": {
         "checked": 2,
@@ -23,9 +23,9 @@ expression: "json!({\n    \"days\": clash(DayUnit::Calendar), \"court days\": cl
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 36,
+          "line": 39,
           "col": 1,
-          "end_line": 40,
+          "end_line": 43,
           "end_col": 2
         },
         "message": "at `served`, duty `answer-period` closes on or after its trigger but duty `reply-period` closes 3 days before the same trigger, so no date meets both",
@@ -35,18 +35,18 @@ expression: "json!({\n    \"days\": clash(DayUnit::Calendar), \"court days\": cl
               "file": "pkgs/demo/main.lit",
               "line": 33,
               "col": 3,
-              "end_line": 33,
-              "end_col": 74
+              "end_line": 36,
+              "end_col": 4
             },
             "message": "`answer-period` counts forward"
           },
           {
             "span": {
               "file": "pkgs/demo/main.lit",
-              "line": 58,
+              "line": 61,
               "col": 3,
-              "end_line": 58,
-              "end_col": 72
+              "end_line": 61,
+              "end_col": 118
             },
             "message": "`reply-period` counts backward from the same trigger; give it a different trigger"
           }
@@ -60,7 +60,7 @@ expression: "json!({\n    \"days\": clash(DayUnit::Calendar), \"court days\": cl
       "status": "failed",
       "count": 1,
       "examples": [
-        "pkgs/demo/main.lit:36:1: L5005 at `served`, duty `answer-period` closes on or after its trigger but duty `reply-period` closes 3 court days before the same trigger, so no date meets both"
+        "pkgs/demo/main.lit:39:1: L5005 at `served`, duty `answer-period` closes on or after its trigger but duty `reply-period` closes 3 court days before the same trigger, so no date meets both"
       ],
       "evidence": {
         "checked": 2,
@@ -74,9 +74,9 @@ expression: "json!({\n    \"days\": clash(DayUnit::Calendar), \"court days\": cl
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 36,
+          "line": 39,
           "col": 1,
-          "end_line": 40,
+          "end_line": 43,
           "end_col": 2
         },
         "message": "at `served`, duty `answer-period` closes on or after its trigger but duty `reply-period` closes 3 court days before the same trigger, so no date meets both",
@@ -86,18 +86,18 @@ expression: "json!({\n    \"days\": clash(DayUnit::Calendar), \"court days\": cl
               "file": "pkgs/demo/main.lit",
               "line": 33,
               "col": 3,
-              "end_line": 33,
-              "end_col": 74
+              "end_line": 36,
+              "end_col": 4
             },
             "message": "`answer-period` counts forward"
           },
           {
             "span": {
               "file": "pkgs/demo/main.lit",
-              "line": 58,
+              "line": 61,
               "col": 3,
-              "end_line": 58,
-              "end_col": 72
+              "end_line": 61,
+              "end_col": 118
             },
             "message": "`reply-period` counts backward from the same trigger; give it a different trigger"
           }
@@ -111,7 +111,7 @@ expression: "json!({\n    \"days\": clash(DayUnit::Calendar), \"court days\": cl
       "status": "failed",
       "count": 1,
       "examples": [
-        "pkgs/demo/main.lit:36:1: L5005 at `served`, duty `answer-period` closes on or after its trigger but duty `reply-period` closes 3 business days before the same trigger, so no date meets both"
+        "pkgs/demo/main.lit:39:1: L5005 at `served`, duty `answer-period` closes on or after its trigger but duty `reply-period` closes 3 business days before the same trigger, so no date meets both"
       ],
       "evidence": {
         "checked": 2,
@@ -125,9 +125,9 @@ expression: "json!({\n    \"days\": clash(DayUnit::Calendar), \"court days\": cl
         "severity": "error",
         "span": {
           "file": "pkgs/demo/main.lit",
-          "line": 36,
+          "line": 39,
           "col": 1,
-          "end_line": 40,
+          "end_line": 43,
           "end_col": 2
         },
         "message": "at `served`, duty `answer-period` closes on or after its trigger but duty `reply-period` closes 3 business days before the same trigger, so no date meets both",
@@ -137,18 +137,18 @@ expression: "json!({\n    \"days\": clash(DayUnit::Calendar), \"court days\": cl
               "file": "pkgs/demo/main.lit",
               "line": 33,
               "col": 3,
-              "end_line": 33,
-              "end_col": 74
+              "end_line": 36,
+              "end_col": 4
             },
             "message": "`answer-period` counts forward"
           },
           {
             "span": {
               "file": "pkgs/demo/main.lit",
-              "line": 58,
+              "line": 61,
               "col": 3,
-              "end_line": 58,
-              "end_col": 72
+              "end_line": 61,
+              "end_col": 118
             },
             "message": "`reply-period` counts backward from the same trigger; give it a different trigger"
           }

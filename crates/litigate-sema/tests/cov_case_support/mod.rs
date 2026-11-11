@@ -15,8 +15,8 @@ fn manifest(name: &str, deps: &[&str], roles: &str) -> String {
     let mut text = format!(
         "[package]\nname = \"{name}\"\nversion = \"1.0.0\"\nlanguage = 1\npack_id = \"{name}\"\n\
          forum = \"demo\"\nauthority = \"FederalRule\"\ntitle = \"T\"\nin_force = \"2009-12-01\"\n\
-         known_at = \"2025-01-01\"\n\n[package.roles]\nPlaintiff = \"self\"\nDefendant = \"opponent\"\n\
-         Court = \"nature\"\n{roles}\n[sources.frcp]\ntitle = \"FRCP\"\n\
+         known_at = \"2025-01-01\"\n\n[package.roles]\nplaintiff = \"self\"\ndefendant = \"opponent\"\n\
+         court = \"nature\"\n{roles}\n[sources.frcp]\ntitle = \"FRCP\"\n\
          url = \"https://www.law.cornell.edu/rules/frcp\"\nas_of = \"2024-12-01\"\n\
          cite_prefixes = [\"FRCP\"]\n"
     );
@@ -102,7 +102,7 @@ transition keep-grace amends grace@2015-01-01 cite \"FRCP 1\"
   otherwise -> grace@2015-01-01
 }
 
-state intake: \"Intake\" by Plaintiff
+state intake: \"Intake\" by plaintiff
 {
   serve \"Serve\" -> respond { event Served(complaint) }
   file \"File\" -> filed { event Filed(complaint) }
@@ -158,16 +158,16 @@ decision lone: \"Lone\" by court
   only \"Only\" -> answered { event Benched(motion) }
 }
 
-state new-stage: \"New\" by Plaintiff effective [2030-01-01, ..)
+state new-stage: \"New\" by plaintiff effective [2030-01-01, ..)
 {
   go \"Go\" -> answered { event Answered(motion) }
 }
 
-state staged: \"Staged\" by Plaintiff effective [2009-12-01, 2010-06-01)
+state staged: \"Staged\" by plaintiff effective [2009-12-01, 2010-06-01)
 {
   go \"Go\" -> answered { event Answered(motion) }
 }
-state staged: \"Staged\" by Plaintiff effective [2010-06-01, ..) supersedes staged@2009-12-01
+state staged: \"Staged\" by plaintiff effective [2010-06-01, ..) supersedes staged@2009-12-01
 {
   go \"Go\" -> answered { event Answered(motion) }
 }
@@ -186,7 +186,7 @@ start g0
 enum Kind { a, b }
 event Pinged(kind: Kind)
 event Struck(kind: Kind)
-state g0: \"G0\" by Plaintiff
+state g0: \"G0\" by plaintiff
 {
   ping \"Ping\" -> g1 { event Pinged(a) }
   strike \"Strike\" -> g1 { event Struck(a) }
@@ -266,7 +266,7 @@ pub fn matter(uses: &str, head: &str, events: &[&str], tail: &str) -> String {
     });
     format!(
         "case t\nuses {uses}\nas_of 2011-06-01\nsummary \"s\"\n{head}\n\
-         parties {{\n  p: Plaintiff Corporation\n  d: Defendant Corporation\n  c: Court Tribunal\n}}\n\
+         parties {{\n  p: plaintiff Corporation\n  d: defendant Corporation\n  c: court Tribunal\n}}\n\
          events {{\n{events}}}\n{tail}\n"
     )
 }

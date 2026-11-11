@@ -21,12 +21,12 @@ test "an answer is due 21 days after service" cite "FRCP 12(a)(1)(A)(i)"
 
 start pre-filing
 
-state pre-filing: "Before the complaint" by Plaintiff
+state pre-filing: "Before the complaint" by plaintiff
 {
   file "File the complaint" -> service { event ComplaintFiled() }
 }
 
-state service: "Serve process" by Plaintiff
+state service: "Serve process" by plaintiff
 {
   serve "Serve the summons and complaint" -> answer-due { event ProcessServed() }
 }

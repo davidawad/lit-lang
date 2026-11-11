@@ -181,7 +181,7 @@ fn each_class_rejects_the_operations_outside_its_row() {
             layer(
                 "guidance",
                 "CaseOrder",
-                "binds = [\"Court\"]\n",
+                "binds = [\"court\"]\n",
                 "chance d: \"D\" by court {\n  a \"A\" -> l p 1/2\n  b \"B\" -> l p 1/2\n}\nchance o: \"O\" by defendant {\n  a \"A\" -> l p 1/2\n  b \"B\" -> l p 1/2\n}\ncounting mine { holidays cal }",
             ),
         ),
@@ -289,7 +289,7 @@ fn a_class_is_justified_by_its_instrument() {
         ),
         (
             "binds outside guidance",
-            manifest(|t| t + "binds = [\"Court\"]\n"),
+            manifest(|t| t + "binds = [\"court\"]\n"),
         ),
         ("guidance without binds", manifest(kind("guidance"))),
         (
@@ -342,11 +342,11 @@ fn a_parsed_class_is_typed_and_base_is_omitted_from_hir() {
     assert_eq!(json["kind"]["class"], "precedent");
     assert_eq!(json["instrument"]["designation"], "1 F.4th 1");
     let guidance =
-        parse(layer("guidance", "CaseOrder", "binds = [\"Court\"]\n", "").manifest).expect("valid");
+        parse(layer("guidance", "CaseOrder", "binds = [\"court\"]\n", "").manifest).expect("valid");
     assert_eq!(
         guidance.kind,
         Kind::Guidance {
-            binds: vec!["Court".to_owned()]
+            binds: vec!["court".to_owned()]
         }
     );
     let base = parse(pkg("b", "FederalRule", "2009-12-01", &[], &[]).manifest).expect("valid");
@@ -400,9 +400,9 @@ fn the_rows_are_the_matrix() {
     assert!(Kind::CaseOrder.may_set_prior("anyone"));
     assert!(!Kind::Overruling.may_set_prior("anyone"));
     let guidance = Kind::Guidance {
-        binds: vec!["Court".to_owned()],
+        binds: vec!["court".to_owned()],
     };
-    assert!(guidance.may_set_prior("Court") && !guidance.may_set_prior("Defendant"));
+    assert!(guidance.may_set_prior("court") && !guidance.may_set_prior("defendant"));
     let json = serde_json::to_string(&Effect::GrantCap).expect("json");
     assert_eq!(json, "\"grant-cap\"");
 }

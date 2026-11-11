@@ -22,7 +22,8 @@ expression: rows
     (
         "guidance reads",
         [
-            "pkgs/g/rules.lit:7:79 L2010 a package of class `guidance` cannot defeat another package's default or read its deadline\n    note: its class permits declare, set-prior\n    note: `interpret` is permitted to: base, amendment, local-rule, standing-order, case-order, binding precedent",
+            "pkgs/g/Lit.toml:30:9 L1004 `Court` is not a `[package.roles]` actor",
+            "pkgs/g/rules.lit:3:8 L1006 module `fed.rules` belongs to package `fed`, which is not a dependency\n    note: add `fed = { version = \"^x.y.z\", path = \"...\" }` to `[dependencies]` in Lit.toml",
         ],
     ),
 ]

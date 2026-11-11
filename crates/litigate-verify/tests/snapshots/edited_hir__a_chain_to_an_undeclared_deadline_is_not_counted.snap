@@ -8,7 +8,7 @@ expression: "tests_pass(&lit, |p|\n{\n    for d in deadlines(p)\n    {\n        
     "status": "failed",
     "count": 1,
     "examples": [
-      "pkgs/demo/main.lit:59:10: L5006 cannot evaluate the assertion: no `given` event matches the trigger of `chained`"
+      "pkgs/demo/main.lit:62:10: L5006 cannot evaluate the assertion: no `given` event matches the trigger of `chained`"
     ],
     "evidence": {
       "checked": 3,
@@ -22,9 +22,9 @@ expression: "tests_pass(&lit, |p|\n{\n    for d in deadlines(p)\n    {\n        
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 59,
+        "line": 62,
         "col": 10,
-        "end_line": 59,
+        "end_line": 62,
         "end_col": 27
       },
       "message": "cannot evaluate the assertion: no `given` event matches the trigger of `chained`",
@@ -32,9 +32,9 @@ expression: "tests_pass(&lit, |p|\n{\n    for d in deadlines(p)\n    {\n        
         {
           "span": {
             "file": "pkgs/demo/main.lit",
-            "line": 56,
+            "line": 59,
             "col": 1,
-            "end_line": 60,
+            "end_line": 63,
             "end_col": 2
           },
           "message": "in test \"chained\""

@@ -55,8 +55,8 @@ fn loaded(name: &str, deps: &str, sources: &str, files: &[(&str, &str)]) -> Load
         manifest: format!(
             "[package]\nname = \"{name}\"\nversion = \"1.0.0\"\nlanguage = 1\npack_id = \"{name}\"\n\
              forum = \"frcp\"\nauthority = \"FederalRule\"\ntitle = \"T\"\nin_force = \"2007-12-01\"\n\
-             known_at = \"2025-01-01\"\n\n[package.roles]\nPlaintiff = \"self\"\nDefendant = \"opponent\"\n\
-             Court = \"nature\"\n{deps}{sources}"
+             known_at = \"2025-01-01\"\n\n[package.roles]\nplaintiff = \"self\"\ndefendant = \"opponent\"\n\
+             court = \"nature\"\n{deps}{sources}"
         ),
         lock: None,
         files: files
@@ -234,7 +234,7 @@ pub fn render(diagnostics: &[Diagnostic]) -> Vec<String> {
 pub fn matter_2009(events: &[&str]) -> String {
     format!(
         "case pending-2009\nuses frcp ^1.0.0\nas_of 2010-06-01\nsummary \"A matter pending across the 2009 amendments.\"\n\n\
-         parties {{\n  acme: Plaintiff Corporation\n  widget: Defendant Corporation\n  court: Court Tribunal\n}}\n\n\
+         parties {{\n  acme: plaintiff Corporation\n  widget: defendant Corporation\n  court: court Tribunal\n}}\n\n\
          events {{\n{}}}\n\nstakes {{\n  answered: 0.usd\n  dismissed: 0.usd\n  defaulted: -1_000.usd\n}}\n",
         events.iter().fold(String::new(), |mut s, e| {
             let _ = writeln!(s, "  {e}");

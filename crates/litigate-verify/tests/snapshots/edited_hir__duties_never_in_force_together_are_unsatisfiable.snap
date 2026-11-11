@@ -8,7 +8,7 @@ expression: found
     "status": "failed",
     "count": 1,
     "examples": [
-      "pkgs/demo/main.lit:36:1: L5005 at `served`, duties `answer-period`, `reply-period` are never in force on the same day as the node, so no trigger date opens all their windows"
+      "pkgs/demo/main.lit:39:1: L5005 at `served`, duties `answer-period`, `reply-period` are never in force on the same day as the node, so no trigger date opens all their windows"
     ],
     "evidence": {
       "checked": 2,
@@ -22,9 +22,9 @@ expression: found
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 36,
+        "line": 39,
         "col": 1,
-        "end_line": 40,
+        "end_line": 43,
         "end_col": 2
       },
       "message": "at `served`, duties `answer-period`, `reply-period` are never in force on the same day as the node, so no trigger date opens all their windows",
@@ -34,8 +34,8 @@ expression: found
             "file": "pkgs/demo/main.lit",
             "line": 33,
             "col": 3,
-            "end_line": 33,
-            "end_col": 74
+            "end_line": 36,
+            "end_col": 4
           },
           "message": "`answer-period` is in force [2000-01-01, ..)"
         },
@@ -44,28 +44,28 @@ expression: found
             "file": "pkgs/demo/main.lit",
             "line": 33,
             "col": 3,
-            "end_line": 33,
-            "end_col": 74
+            "end_line": 36,
+            "end_col": 4
           },
           "message": "`answer-period` is in force [2000-01-01, ..)"
         },
         {
           "span": {
             "file": "pkgs/demo/main.lit",
-            "line": 58,
+            "line": 61,
             "col": 3,
-            "end_line": 58,
-            "end_col": 72
+            "end_line": 61,
+            "end_col": 118
           },
           "message": "`reply-period` is in force [1990-01-01, 2000-01-01)"
         },
         {
           "span": {
             "file": "pkgs/demo/main.lit",
-            "line": 58,
+            "line": 61,
             "col": 3,
-            "end_line": 58,
-            "end_col": 72
+            "end_line": 61,
+            "end_col": 118
           },
           "message": "`reply-period` is in force [1990-01-01, 2000-01-01)"
         }

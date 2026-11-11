@@ -28,7 +28,7 @@ calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed neares
 rule duty answer-duty cite \"FRCP 12(a)\"
 {
   deadline answer: 30.days from Noticed() counted_by oc cite \"FRCP 12(a)\" {
-    bearer Defendant
+    bearer defendant
   }
 }
 
@@ -55,7 +55,7 @@ fn run(as_of: &str, events: &[&str]) -> Vec<String> {
     });
     let text = format!(
         "case t\nuses tau ^1.0.0\nas_of {as_of}\nsummary \"s\"\n\n\
-         parties {{\n  d: Defendant Corporation\n}}\n\
+         parties {{\n  d: defendant Corporation\n}}\n\
          events {{\n{events}}}\nstakes {{ done: 0.usd }}\n"
     );
     let checked = check(

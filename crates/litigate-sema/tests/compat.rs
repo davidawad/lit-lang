@@ -14,7 +14,7 @@ event Served(document: Document)
 counting ac { exclude_trigger_day, include_last_day, holidays acal }
 calendar acal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 deadline answer-period: 21.days from Served(complaint) counted_by ac
-state intake: \"Intake\" by Plaintiff {
+state intake: \"Intake\" by plaintiff {
   serve \"Serve\" -> responded { event Served(complaint) within answer-period }
   wait \"Wait\" -> responded
 }
@@ -125,11 +125,11 @@ fn removed_renamed_and_retyped_ids_are_interface_changes() {
 #[test]
 fn identity_and_actors_are_interface() {
     let old = hir("1.0.0", BASE);
-    let mut moved = loaded("2.0.0", "Clerk = \"nature\"\n", BASE);
+    let mut moved = loaded("2.0.0", "clerk = \"nature\"\n", BASE);
     moved.manifest = moved
         .manifest
         .replace("pack_id = \"alpha\"", "pack_id = \"alpha-two\"")
-        .replace("Defendant = \"opponent\"", "Defendant = \"nature\"");
+        .replace("defendant = \"opponent\"", "defendant = \"nature\"");
     let new = compile(&[moved]).remove(0);
     let c = classify(&old, &new);
     let changes: Vec<String> = c
@@ -141,7 +141,7 @@ fn identity_and_actors_are_interface() {
         changes,
         [
             "Interface manifest pack_id",
-            "Interface actor Defendant",
+            "Interface actor defendant",
             "Value package",
         ]
     );

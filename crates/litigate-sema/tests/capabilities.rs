@@ -45,7 +45,7 @@ counting c6 {{ holidays cal }}
 counting c7 {{ holidays cal }}
 calendar cal {{ new-year: fixed(1, 1) effective [1870-06-28, ..) }}
 deadline answer-period: 21.days from Served() counted_by c6 effective [2009-12-01, ..){clauses} {{ {opts} }}
-state s: \"S\" by Plaintiff {{ serve \"Serve\" -> r {{ event Served(complaint) }} }}
+state s: \"S\" by plaintiff {{ serve \"Serve\" -> r {{ event Served(complaint) }} }}
 decision r: \"R\" by defendant {{ answer \"Answer\" -> done {{ event Answered(complaint), within answer-period }} }}
 terminal done: \"Done\" {{ payoff 0.usd }}
 {extra}
@@ -457,7 +457,7 @@ fn any_other_difference_replaces_the_value() {
     // which `extend` does not cover.
     let rows: &[(&str, &str)] = &[
         ("21.days before Served() counted_by c6", ""),
-        ("21.days from Served() counted_by c6", "bearer Defendant"),
+        ("21.days from Served() counted_by c6", "bearer defendant"),
         ("21.days from Served() counted_by c6", "trigger latest"),
         ("21.days from Served() counted_by c6", "waive { by court }"),
     ];
@@ -655,7 +655,7 @@ deadline c: 21.days from Served(complaint) counted_by c6 { extend { never cite \
 deadline d: 21.days from Served(complaint) counted_by c6 { lock against [Nobody, CaseOrder] cite \"FRAP 26(b)(1)\" }\n\
 deadline e: 21.days from Served(complaint) counted_by c6 { lock against [CaseOrder] cite \"X\", lock against [LocalRule] cite \"Y\" }\n\
 deadline f: 21.days from Served(complaint) counted_by c6 { lock [CaseOrder] cite \"X\" }\n\
-deadline g: 21.days from Served(complaint) counted_by c6 { extendable true, lock against [CaseOrder] cite \"X\" }",
+deadline g: 21.days from Served(complaint) counted_by c6 { lock against [CaseOrder] cite \"X\" }",
     );
     insta::assert_debug_snapshot!(out);
     // Outside a deadline's options `lock` is still reserved (L0007).

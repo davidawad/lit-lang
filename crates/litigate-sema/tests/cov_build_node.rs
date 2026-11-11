@@ -23,10 +23,10 @@ fn node_and_edge_fields_lower() {
     let out = nodes(
         "group g: \"G\"\n\
 deadline dl: 3.days from Served(complaint) counted_by c6\n\
-state rich: \"Rich\" by Plaintiff {\n\
+state rich: \"Rich\" by plaintiff {\n\
   group g\n  valence caution\n  note \"n\"\n  court_listener_url \"u\"\n  attrs { weight: -1.5 }\n\
-  a \"A\" -> done { within dl { extendable false }, effort 2.hours, cost 3.usd, event Served(complaint), duration 13.5.days, valence bad }\n\
-  b \"B\" -> done by either { deadline 5.court_days { extendable true, extension_authority \"Court\", counting \"frap26\" }, duration { min 1.days, mode 2.5.days }, action_id \"x\", note \"m\", tags [t], sets [s], clears [c], requires [r], forbids [f], authority cite \"FRCP 6(a)\" }\n\
+  a \"A\" -> done { within dl, effort 2.hours, cost 3.usd, event Served(complaint), duration 13.5.days, valence bad }\n\
+  b \"B\" -> done by either { deadline 5.court_days { counting \"frap26\" }, duration { min 1.days, mode 2.5.days }, action_id \"x\", note \"m\", tags [t], sets [s], clears [c], requires [r], forbids [f], authority cite \"FRCP 6(a)\" }\n\
 }\n\
 terminal done: \"Done\" outcome [won] { valence neutral, payoff ?(\"tbd\"), payoff_by_flag { won: 5.usd, lost: -2.usd }, fee_shift 0.5 }\n\
 state good: \"Good\" { valence good }",
@@ -142,42 +142,32 @@ chance bare: \"B\" { tags [fact]\n  y \"Y\" -> t p 1 { when } }\n",
 #[test]
 fn information_sets_offer_one_choice() {
     let out = check_body(
-        "decision a: \"A\" by Plaintiff info filing { x \"File\" -> t, y \"Wait\" -> t }\n\
-decision b: \"B\" by Plaintiff info filing { y \"Wait\" -> t, x \"File\" -> t }\n\
-decision c: \"C\" by Plaintiff info filing { x \"File\" -> t }\n\
+        "decision a: \"A\" by plaintiff info filing { x \"File\" -> t, y \"Wait\" -> t }\n\
+decision b: \"B\" by plaintiff info filing { y \"Wait\" -> t, x \"File\" -> t }\n\
+decision c: \"C\" by plaintiff info filing { x \"File\" -> t }\n\
 decision d: \"D\" by defendant info filing { x \"File\" -> t, y \"Wait\" -> t }\n\
-decision e: \"E\" by Plaintiff info other { x \"File\" -> t }\n\
+decision e: \"E\" by plaintiff info other { x \"File\" -> t }\n\
 state f: \"F\" info filing { x \"File\" -> t }",
     );
     insta::assert_debug_snapshot!(out);
     let info = nodes(
-        "decision a: \"A\" by Plaintiff info filing { x \"File\" -> t }",
+        "decision a: \"A\" by plaintiff info filing { x \"File\" -> t }",
         &["a"],
     );
     assert!(matches!(&info[..], [Declaration::Node(n)] if n.info.as_deref() == Some("filing")));
 }
 
 #[test]
-fn an_extension_authority_hole_leaves_it_undeclared() {
-    let out = nodes(
+fn an_edge_extension_authority_is_rejected_in_favor_of_a_typed_period_grant() {
+    let out = check_body(
         "deadline dl: 3.days from Served(complaint) counted_by c6\n\
-state open: \"S\" by Plaintiff {\n\
+state open: \"S\" by plaintiff {\n\
   a \"A\" -> done { within dl { extension_authority ?(\"unverified\") } }\n\
 }\n\
 terminal done: \"Done\" outcome [won]",
-        &["open"],
-    );
-    let [Declaration::Node(n)] = out.as_slice() else {
-        panic!("{out:?}");
-    };
-    let e = &n.edges[0];
-    let d = e.deadline.as_ref().unwrap();
-    assert_eq!(
-        (d.extendable, d.extension_authority.as_deref()),
-        (None, None)
     );
     assert_eq!(
-        e.holes.get("within.extension_authority"),
-        Some(&Some("unverified".to_owned()))
+        out,
+        ["pkgs/demo/main.lit:12:29 L2007 edge deadline option `extension_authority` duplicates the period's typed extension grant; declare it on the period [fix: \"\"]"]
     );
 }

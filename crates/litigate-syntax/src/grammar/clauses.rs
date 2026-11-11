@@ -151,7 +151,7 @@ pub(crate) fn numeric_keyword_field(
 ) {
     p.start(Field);
     p.bump_as(kw);
-    require(p, value, &[Ident, Number, Money, Duration, Question]);
+    require(p, value, &[Ident]);
     super::values::numeric_provenance(p);
     p.finish();
 }

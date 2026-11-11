@@ -173,11 +173,12 @@ module.exports = {
     seq(field('key', 'formerly'), field('value', $.id_list)),
   ),
 
-  // SPEC §3.4: `[Ident] String ->` is an edge; field keywords are also
+  // SPEC §3.4: `[Ident|_] String ->` is an edge; field keywords are also
   // valid edge ids, so they are aliased back to identifiers here.
   edge_decl: $ => seq(
     optional(field('name', choice(
       $.identifier,
+      alias('_', $.anonymous),
       ...EDGE_ID_WORDS.map(word => alias(word, $.identifier)),
     ))),
     field('label', $.string),

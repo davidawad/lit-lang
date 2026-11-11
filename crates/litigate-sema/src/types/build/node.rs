@@ -175,7 +175,7 @@ impl Cx<'_, '_> {
             *targets.entry(edge.to.last().text.clone()).or_default() += 1;
         }
         let mut parallel = BTreeMap::<String, usize>::new();
-        let mut seen = BTreeSet::new();
+        let mut seen = BTreeMap::<String, String>::new();
         let mut edges = Vec::new();
         for original in &n.edges {
             let target = original.to.last().text.clone();
@@ -194,11 +194,14 @@ impl Cx<'_, '_> {
                 });
             }
             if let Some(id) = &e.name {
-                if !seen.insert(id.text.clone()) {
+                if let Some(previous_target) = seen.insert(id.text.clone(), target.clone()) {
                     self.report(Report::new(
                         C::DuplicateName,
                         id.range,
-                        format!("node `{}` already has an edge `{}`", n.name.text, id.text),
+                        format!(
+                            "edge id `{}` to `{}` duplicates the edge id to `{}` on node `{}`",
+                            id.text, target, previous_target, n.name.text
+                        ),
                     ));
                 }
             }

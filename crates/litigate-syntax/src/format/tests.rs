@@ -32,6 +32,15 @@ fn derived_edge_ids_are_omitted_but_custom_ids_remain() {
 }
 
 #[test]
+fn anonymous_marker_stays_distinct_from_an_omitted_edge_id() {
+    let out = fmt("module m\nstate from: \"From\" {\n  _ \"Anonymous\" -> to\n  \"Derived\" -> end\n}\n");
+    assert_eq!(
+        out,
+        "module m\n\nstate from: \"From\" { _ \"Anonymous\" -> to, \"Derived\" -> end }\n"
+    );
+}
+
+#[test]
 fn parallel_derived_edge_ids_number_every_edge_from_one() {
     let out = fmt(
         "module m\nstate from: \"From\" {\n  edge-from-to-1 \"A\" -> to\n  edge-from-to-2 \"B\" -> to\n}\n",
@@ -43,6 +52,17 @@ fn parallel_derived_edge_ids_number_every_edge_from_one() {
 }
 
 #[test]
+fn parallel_edge_id_elision_is_stable_and_formatting_is_idempotent() {
+    let source = "module m\nstate from: \"From\" {\n  edge-from-to-1 \"A\" -> to\n  \"B\" -> to\n}\n";
+    let out = fmt(source);
+    assert_eq!(
+        out,
+        "module m\n\nstate from: \"From\" { \"A\" -> to, \"B\" -> to }\n"
+    );
+    assert_eq!(fmt(&out), out);
+}
+
+#[test]
 fn shared_deadline_forum_is_hoisted_to_the_module() {
     let out = fmt(
         "module m\ndeadline a: 2.days from Served() counted_by c { forum frap }\ndeadline b: 3.days from Filed() counted_by c { forum frap }\n",
@@ -51,6 +71,16 @@ fn shared_deadline_forum_is_hoisted_to_the_module() {
         out,
         "module m\n\nforum frap\n\ndeadline a: 2.days from Served() counted_by c\ndeadline b: 3.days from Filed() counted_by c\n"
     );
+}
+
+#[test]
+fn nested_rule_deadlines_share_the_hoisted_module_forum() {
+    let out = fmt(
+        "module m\nrule duty r { deadline a: 2.days from Served() counted_by c { forum frap } }\ndeadline b: 3.days from Filed() counted_by c { forum frap }\n",
+    );
+    assert!(out.starts_with("module m\n\nforum frap\n\n"), "{out}");
+    assert!(!out.contains("{ forum frap }"), "{out}");
+    assert_eq!(fmt(&out), out);
 }
 
 #[test]

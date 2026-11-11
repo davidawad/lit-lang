@@ -5,7 +5,7 @@ Edges with targets
 module a
 state s: "S" {
   go "Go" -> next
-  "Anonymous" -> next
+  _ "Anonymous" -> next
   far "Qualified" -> cafc@cofc::entry-cofc
   old "Versioned" -> answer-period@2009-12-01
 }
@@ -24,6 +24,12 @@ state s: "S" {
       (node_body
         (edge_decl
           (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier)))
+        (edge_decl
+          (anonymous)
           (string
             (string_content))
           (ref

@@ -286,19 +286,20 @@ fn body_entry(p: &mut Parser<'_>) -> bool {
     field(p, NODE_FIELDS)
 }
 
-/// LL(3): `[Ident] String "->"` is an edge; so is `Ident String`
+/// LL(3): `[Ident|_] String "->"` is an edge; so is `Ident String`
 /// when the identifier is not a string-valued field keyword.
 fn at_edge(p: &Parser<'_>) -> bool {
     let id = p.at(Ident);
     let string_field = p.at_kw(KwNote) || p.at_kw(KwCourtListenerUrl);
-    (p.at(String) && p.nth(1) == Arrow)
+    (p.at(Underscore) && p.nth(1) == String && p.nth(2) == Arrow)
+        || (p.at(String) && p.nth(1) == Arrow)
         || (id && p.nth(1) == String && (p.nth(2) == Arrow || !string_field))
 }
 
-/// `[Ident] String "->" Ref {EdgeClause} [EdgeFields]`.
+/// `[Ident|_] String "->" Ref {EdgeClause} [EdgeFields]`.
 fn edge(p: &mut Parser<'_>) {
     p.start(EdgeDecl);
-    if p.at(Ident) {
+    if p.at(Ident) || p.at(Underscore) {
         p.bump();
     }
     p.expect(String);

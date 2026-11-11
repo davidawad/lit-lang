@@ -237,7 +237,7 @@ NodeField    = "group", Ident | "note", String | "valence", Ident
              | "fee_shift", Number
              | "basis", Expr                         (* §5.1 "Basis" *)
              | "formerly", IdList ;
-EdgeDecl     = [ Ident ], String, "->", Ref, { EdgeClause }, [ EdgeFields ] ;
+EdgeDecl     = [ Ident | "_" ], String, "->", Ref, { EdgeClause }, [ EdgeFields ] ;
 EdgeClause   = "by", Ref | "p", ProbValue ;
 ProbValue    = Number, [ "/", Number ] | Hole | "(", Expr, ")" ;
 EdgeFields   = "{", { EdgeField, Sep }, "}" ;
@@ -417,8 +417,9 @@ only the symbolic operators.
 
 ### 3.4 Parsing decisions and recovery
 
-- In a `NodeBody`, an item that starts with `Ident`/`_` followed by a `String`
-  and then `->` is an `EdgeDecl`. Anything else is a `NodeField`. This is the
+- In a `NodeBody`, `String ->` and `Ident|_ String ->` start an `EdgeDecl`.
+  `_` is the explicit anonymous-edge marker; the string directly followed by
+  `->` is the id-less form. Anything else is a `NodeField`. This is the
   only LL(3) decision. Everywhere else LL(1) is enough.
 - Field values are atoms, so juxtaposed items are unambiguous. Wrap a compound
   expression in parentheses.
@@ -1197,7 +1198,9 @@ compute the same values (before 1.0.0, `^` and `~` coincide).
 - `event` binds an edge to an event pattern for case replay (§5.6). `within d`
   ties the edge to deadline declaration `d`. `deadline 30.days` is a literal
   window with no trigger semantics, kept for legacy edges.
-- An edge may omit its id. Its stable id is `edge-<from>-<to>`, using the
+- An edge may omit its id. A lone `_` remains the anonymous-edge marker: it
+  lowers without an id, and the engine derives `from->to#n` (L9003). An edge
+  with no id token receives the stable id `edge-<from>-<to>`, using the
   source node id and the target's final local id. When that node declaration
   has multiple edges to the same target, every such edge instead receives
   `edge-<from>-<to>-N`, where `N` is its one-based position among those

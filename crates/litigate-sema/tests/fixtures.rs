@@ -114,6 +114,38 @@ fn omitted_edge_ids_lower_stably_and_disambiguate_parallel_targets() {
 }
 
 #[test]
+fn derived_edge_id_collision_names_both_edges() {
+    use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
+
+    let source = include_str!("../../../lit/examples/rule12.lit")
+        .replace("barred \"Barred\" -> dismissed", "\"Barred\" -> dismissed")
+        .replace(
+            "not-barred \"Timely\" -> respond",
+            "edge-time-barred-dismissed \"Timely\" -> respond",
+        );
+    let package = LoadedPackage {
+        texts: std::collections::BTreeMap::default(),
+        root: "lit/examples".to_owned(),
+        manifest: include_str!("../../../lit/examples/Lit.toml").to_owned(),
+        lock: None,
+        files: vec![LoadedFile {
+            relative: "rule12.lit".to_owned(),
+            text: source,
+        }],
+    };
+    let mut db = litigate_sema::LitDatabase::default();
+    let ws = litigate_sema::db::inputs::create_workspace(&mut db, &[package]);
+    let checks = litigate_sema::check_workspace(&db, ws);
+    let duplicate = checks[0]
+        .diagnostics
+        .iter()
+        .find(|diagnostic| diagnostic.code == C::DuplicateName)
+        .expect("the explicit edge id collides with the derived id");
+    assert!(duplicate.message.contains("dismissed"), "{duplicate:#?}");
+    assert!(duplicate.message.contains("respond"), "{duplicate:#?}");
+}
+
+#[test]
 fn module_forum_is_inherited_by_deadlines_and_declaration_options_override_it() {
     use litigate_sema::db::parse::tree::{Atom, ExprKind, ItemKind};
 

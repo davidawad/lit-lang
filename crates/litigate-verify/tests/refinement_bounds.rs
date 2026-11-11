@@ -19,8 +19,8 @@ fn program(refinement: &str) -> String {
 /// [`program`] with the order event's parameters `params`.
 fn with_params(params: &str) -> String {
     let lit = edit(
-        "  deadline answer-period: 21.days from Served(complaint) counted_by frcp6\n",
-        "  deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {\n    \
+        "  deadline answer-period: 21.days from Served(complaint) counted_by frcp6 cite \"FRCP 12(a)\"\n",
+        "  deadline answer-period: 21.days from Served(complaint) counted_by frcp6 cite \"FRCP 12(a)\" {\n    \
          extend { by court, to max(prescribed_due + 30.days, grant_order_entered + 14.days) }\n  }\n",
     );
     lit.replace(

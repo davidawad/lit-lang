@@ -226,8 +226,7 @@ fn extendability(extensions: &[Extension], delegations: &[hir::Delegation]) -> O
     }
 }
 
-/// A cite on a typed delegation is the authority it names; otherwise use
-/// the deadline's cite. A lock carries its own forbidding authority.
+/// Extension authority comes from the typed grant, delegation or lock only.
 fn derived_extension_authority(d: &hir::Deadline) -> Option<String> {
     extension_authority(&d.extend, &d.meta.delegations, d.meta.cite.as_deref())
 }
@@ -264,7 +263,13 @@ fn extension_authority(
     if !delegated.is_empty() {
         return Some(delegated.join("; "));
     }
-    cite.map(str::to_owned)
+    // `extend` grants have no separate cite field; the declaration cite is
+    // the authority for its grant. Without a grant cite, keep it unknown.
+    extensions
+        .iter()
+        .any(|grant| grant.by().is_some())
+        .then(|| cite.map(str::to_owned))
+        .flatten()
 }
 
 /// One `extend` grant as a pack extension bound.
@@ -350,8 +355,21 @@ mod tests {
             delegation(hir::DelegatedOp::Extend),
         ];
         assert_eq!(
-            extension_authority(&[], &delegations, Some("fallback cite")).as_deref(),
+            extension_authority(&[], &delegations, None).as_deref(),
             Some("FRCP 6(b)")
+        );
+        assert_eq!(
+            extension_authority(&[], &[], Some("period cite")).as_deref(),
+            None
+        );
+        let named_lock = Extension::NonExtendable {
+            authority: "FRCP 6(b)(2)".to_owned(),
+            against: vec!["CaseOrder".to_owned()],
+        };
+        assert_eq!(extendability(&[named_lock.clone()], &[]), Some(false));
+        assert_eq!(
+            extension_authority(&[named_lock], &[], None).as_deref(),
+            Some("FRCP 6(b)(2)")
         );
     }
 }

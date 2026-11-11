@@ -1396,8 +1396,14 @@ creates (design review 2026-10-23 §2.4, §2.7):
     FRAP 26(b) and FRCP 6(b)(2) bind the courts (`lock against
     [LocalRule, StandingOrder, CaseOrder]`), so an emergency grant at the
     rule's own level reaches the period without `unlock`; `never` binds
-    that level too. The corpus keeps `never` until each lock is read
-    against its text.
+    that level too. For lowering the legacy `extendable` summary, a lock
+    with no grant or extension/set delegation makes the period not
+    extendable even when it names lower authorities; the lock's cite is
+    its `extensionAuthority`. A grant or extension/set delegation alongside
+    the lock keeps the summary extendable, because it represents the
+    declaration's own authority. An extension authority is emitted only
+    from a typed lock, grant or delegation cite; it never falls back to the
+    period's own cite. A grant without a cite has null `extensionAuthority`.
 
   The cause standard `S` is a closed set: `GoodCause`, `ExcusableNeglect`,
   `GoodCauseOrExcusableNeglect` (FRAP 4(a)(5)(A)(ii)), or

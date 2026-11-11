@@ -160,8 +160,8 @@ fn delegation(delegable: &str) -> Vec<LoadedPackage> {
             "FederalRule",
             &[],
             &edit(
-                "counted_by frcp6\n",
-                &format!("counted_by frcp6{delegable}\n"),
+                "counted_by frcp6 cite \"FRCP 12(a)\"",
+                &format!("counted_by frcp6{delegable} cite \"FRCP 12(a)\""),
             ),
         ),
         pkg("local", "LocalRule", &["demo"], local),
@@ -250,8 +250,8 @@ fn two_duties(from: &str) -> String {
         expect deadline(old-period) == 1995-03-23\n}";
     with(old)
         .replacen(
-            "counted_by frcp6\n",
-            &format!("counted_by frcp6 effective [{from}, ..)\n"),
+            "counted_by frcp6 cite \"FRCP 12(a)\"",
+            &format!("counted_by frcp6 effective [{from}, ..) cite \"FRCP 12(a)\""),
             1,
         )
         .replacen(

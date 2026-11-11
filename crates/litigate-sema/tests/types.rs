@@ -71,6 +71,21 @@ fn field_types_and_placement() {
 }
 
 #[test]
+fn legacy_deadline_extension_option_has_l2007_removal_fix() {
+    let diagnostics = check_body(
+        "deadline old: 21.days from Served(complaint) counted_by c6\nstate legacy: \"L\" { a \"A\" -> t { within old { extendable false } } }",
+    );
+    assert!(
+        diagnostics.iter().any(|diagnostic| {
+            diagnostic.contains("L2007")
+                && diagnostic.contains("extendable")
+                && diagnostic.contains("[fix: \"\"]")
+        }),
+        "{diagnostics:#?}"
+    );
+}
+
+#[test]
 fn unit_mixing_note_names_an_imported_counting_rule() {
     let rules = "module rules\ncounting frcp6 { holidays cal }\ncalendar cal { new-year: fixed(1, 1) effective [1870-06-28, ..) }\n";
     let main = "module main\nimport rules.{frcp6}\nstart s\nterminal s: \"S\"\ndefault d when true => 21.days + 5.court_days\n";

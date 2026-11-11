@@ -345,7 +345,7 @@ fn edges_expose_clauses_and_fields() {
     );
 
     let stay = &edges[1];
-    assert_eq!(stay.by().map(|r| r.text()).as_deref(), Some("Court"));
+    assert_eq!(stay.by().map(|r| r.text()).as_deref(), Some("court"));
     assert_eq!(
         stay.probability().map(|e| e.kind()),
         Some(SyntaxKind::Ratio)

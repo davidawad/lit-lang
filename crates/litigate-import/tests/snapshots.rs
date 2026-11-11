@@ -145,6 +145,12 @@ fn invalid_documents_are_reported_at_their_position() {
         Input::new("packs/other.json", "{\"hello\": 1}"),
         pack_with(|p| p["edges"][0]["replaces"] = json!(["x::y"])),
         Input::new("packs/q.json", pack_with(|p| p["id"] = json!("q")).text),
+        Input::new(
+            "scenarios/start.json",
+            json!({"id": "start", "summary": "S", "packs": ["p"], "sources": [{"title": "T", "as_of": "x"}],
+                   "scenario": {"start": "p::s"}})
+            .to_string(),
+        ),
     ];
     let diagnostics = import(&inputs).err().unwrap_or_default();
     insta::assert_snapshot!(serde_json::to_string_pretty(&diagnostics).unwrap_or_default());

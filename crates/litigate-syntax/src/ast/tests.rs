@@ -79,7 +79,7 @@ fn node_accessors_expose_every_part() {
         node.label().map(|t| t.text().to_owned()).as_deref(),
         Some("\"C\"")
     );
-    assert_eq!(node.by().map(|r| r.text()).as_deref(), Some("Court"));
+    assert_eq!(node.by().map(|r| r.text()).as_deref(), Some("court"));
     assert!(node.discretion());
     assert_eq!(node.cites()[0].text().as_deref(), Some("FRCP 8(c)(1)"));
     assert_eq!(node.fields().len(), 1);
@@ -121,7 +121,7 @@ fn ref_parts_split_instances_paths_and_versions() {
 
 #[test]
 fn rule_bodies_and_deadlines_are_typed() {
-    let text = "module m\nrule duty r effective [2020-01-01, ..) cite \"X 1\"\n{\n  deadline d: 21.days from Served(c) counted_by frcp6 { extendable false }\n}\n";
+    let text = "module m\nrule duty r effective [2020-01-01, ..) cite \"X 1\"\n{\n  deadline d: 21.days from Served(c) counted_by frcp6 { note \"n\" }\n}\n";
     let parsed = parse_lit(text);
     assert!(parsed.is_ok(), "{:?}", parsed.errors());
     let file = parsed.lit_file().expect("root");

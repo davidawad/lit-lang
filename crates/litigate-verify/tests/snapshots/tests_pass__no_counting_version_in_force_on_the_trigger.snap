@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/tests_pass.rs
+assertion_line: 276
 expression: found
 ---
 {
@@ -8,7 +9,7 @@ expression: found
     "status": "failed",
     "count": 1,
     "examples": [
-      "pkgs/demo/main.lit:46:10: L5006 cannot evaluate the assertion: no version of counting rule `frcp6` recorded by 2025-01-01 is in force on 1995-03-03"
+      "pkgs/demo/main.lit:49:10: L5006 cannot evaluate the assertion: no version of counting rule `frcp6` recorded by 2025-01-01 is in force on 1995-03-03"
     ],
     "evidence": {
       "checked": 2,
@@ -22,9 +23,9 @@ expression: found
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 46,
+        "line": 49,
         "col": 10,
-        "end_line": 46,
+        "end_line": 49,
         "end_col": 33
       },
       "message": "cannot evaluate the assertion: no version of counting rule `frcp6` recorded by 2025-01-01 is in force on 1995-03-03",
@@ -32,9 +33,9 @@ expression: found
         {
           "span": {
             "file": "pkgs/demo/main.lit",
-            "line": 43,
+            "line": 46,
             "col": 1,
-            "end_line": 47,
+            "end_line": 50,
             "end_col": 2
           },
           "message": "in test \"answer due 21 days after personal service\""

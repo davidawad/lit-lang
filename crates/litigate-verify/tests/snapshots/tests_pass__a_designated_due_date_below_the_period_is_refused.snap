@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/tests_pass.rs
+assertion_line: 381
 expression: found
 ---
 {
@@ -8,7 +9,7 @@ expression: found
     "status": "failed",
     "count": 1,
     "examples": [
-      "pkgs/demo/main.lit:60:10: L5006 cannot evaluate the assertion: `Noticed` on 2025-03-03 designates `noticed-answer` due 2025-03-20, earlier than the least time the rule allows, 30 calendar days from 2025-03-03 (2025-04-02)"
+      "pkgs/demo/main.lit:63:10: L5006 cannot evaluate the assertion: `Noticed` on 2025-03-03 designates `noticed-answer` due 2025-03-20, earlier than the least time the rule allows, 30 calendar days from 2025-03-03 (2025-04-02)"
     ],
     "evidence": {
       "checked": 3,
@@ -22,9 +23,9 @@ expression: found
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 60,
+        "line": 63,
         "col": 10,
-        "end_line": 60,
+        "end_line": 63,
         "end_col": 34
       },
       "message": "cannot evaluate the assertion: `Noticed` on 2025-03-03 designates `noticed-answer` due 2025-03-20, earlier than the least time the rule allows, 30 calendar days from 2025-03-03 (2025-04-02)",
@@ -32,9 +33,9 @@ expression: found
         {
           "span": {
             "file": "pkgs/demo/main.lit",
-            "line": 57,
+            "line": 60,
             "col": 1,
-            "end_line": 61,
+            "end_line": 64,
             "end_col": 2
           },
           "message": "in test \"too short a notice\""

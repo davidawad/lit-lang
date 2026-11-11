@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/tests_pass.rs
+assertion_line: 218
 expression: found
 ---
 {
@@ -8,7 +9,7 @@ expression: found
     "status": "failed",
     "count": 1,
     "examples": [
-      "pkgs/demo/main.lit:46:10: L5006 expected {\"kind\":\"number\",\"value\":{\"numerator\":1,\"denominator\":1}} == {\"kind\":\"number\",\"value\":{\"numerator\":2,\"denominator\":1}}, but it is {\"kind\":\"number\",\"value\":{\"numerator\":1,\"denominator\":1}}"
+      "pkgs/demo/main.lit:49:10: L5006 expected {\"kind\":\"number\",\"value\":{\"numerator\":1,\"denominator\":1}} == {\"kind\":\"number\",\"value\":{\"numerator\":2,\"denominator\":1}}, but it is {\"kind\":\"number\",\"value\":{\"numerator\":1,\"denominator\":1}}"
     ],
     "evidence": {
       "checked": 2,
@@ -22,9 +23,9 @@ expression: found
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 46,
+        "line": 49,
         "col": 10,
-        "end_line": 46,
+        "end_line": 49,
         "end_col": 11
       },
       "message": "expected {\"kind\":\"number\",\"value\":{\"numerator\":1,\"denominator\":1}} == {\"kind\":\"number\",\"value\":{\"numerator\":2,\"denominator\":1}}, but it is {\"kind\":\"number\",\"value\":{\"numerator\":1,\"denominator\":1}}",
@@ -32,9 +33,9 @@ expression: found
         {
           "span": {
             "file": "pkgs/demo/main.lit",
-            "line": 43,
+            "line": 46,
             "col": 1,
-            "end_line": 48,
+            "end_line": 51,
             "end_col": 2
           },
           "message": "in test \"answer due 21 days after personal service\""

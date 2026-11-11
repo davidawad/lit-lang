@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/tests_pass.rs
+assertion_line: 418
 expression: found
 ---
 {
@@ -8,7 +9,7 @@ expression: found
     "status": "failed",
     "count": 1,
     "examples": [
-      "pkgs/demo/main.lit:64:10: L5006 cannot evaluate the assertion: the chain through `demo::loop-a` is a cycle"
+      "pkgs/demo/main.lit:67:10: L5006 cannot evaluate the assertion: the chain through `demo::loop-a` is a cycle"
     ],
     "evidence": {
       "checked": 3,
@@ -22,9 +23,9 @@ expression: found
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 64,
+        "line": 67,
         "col": 10,
-        "end_line": 64,
+        "end_line": 67,
         "end_col": 26
       },
       "message": "cannot evaluate the assertion: the chain through `demo::loop-a` is a cycle",
@@ -32,9 +33,9 @@ expression: found
         {
           "span": {
             "file": "pkgs/demo/main.lit",
-            "line": 61,
+            "line": 64,
             "col": 1,
-            "end_line": 65,
+            "end_line": 68,
             "end_col": 2
           },
           "message": "in test \"a cycle in force\""

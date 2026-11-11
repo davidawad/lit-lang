@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/tests_pass.rs
+assertion_line: 354
 expression: found
 ---
 {
@@ -8,9 +9,9 @@ expression: found
     "status": "failed",
     "count": 3,
     "examples": [
-      "pkgs/demo/main.lit:46:10: L5006 cannot evaluate the assertion: the given event does not match the trigger of `moved`",
-      "pkgs/demo/main.lit:52:10: L5006 cannot evaluate the assertion: the given event does not match the trigger of `moved`",
-      "pkgs/demo/main.lit:59:10: L5006 cannot evaluate the assertion: the given event does not match the trigger of `moved`"
+      "pkgs/demo/main.lit:49:10: L5006 cannot evaluate the assertion: the given event does not match the trigger of `moved`",
+      "pkgs/demo/main.lit:55:10: L5006 cannot evaluate the assertion: the given event does not match the trigger of `moved`",
+      "pkgs/demo/main.lit:62:10: L5006 cannot evaluate the assertion: the given event does not match the trigger of `moved`"
     ],
     "evidence": {
       "checked": 3,
@@ -24,9 +25,9 @@ expression: found
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 46,
+        "line": 49,
         "col": 10,
-        "end_line": 46,
+        "end_line": 49,
         "end_col": 33
       },
       "message": "cannot evaluate the assertion: the given event does not match the trigger of `moved`",
@@ -34,9 +35,9 @@ expression: found
         {
           "span": {
             "file": "pkgs/demo/main.lit",
-            "line": 43,
+            "line": 46,
             "col": 1,
-            "end_line": 47,
+            "end_line": 50,
             "end_col": 2
           },
           "message": "in test \"answer due 21 days after personal service\""
@@ -48,9 +49,9 @@ expression: found
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 52,
+        "line": 55,
         "col": 10,
-        "end_line": 52,
+        "end_line": 55,
         "end_col": 33
       },
       "message": "cannot evaluate the assertion: the given event does not match the trigger of `moved`",
@@ -58,9 +59,9 @@ expression: found
         {
           "span": {
             "file": "pkgs/demo/main.lit",
-            "line": 49,
+            "line": 52,
             "col": 1,
-            "end_line": 53,
+            "end_line": 56,
             "end_col": 2
           },
           "message": "in test \"mail service adds three days\""
@@ -72,9 +73,9 @@ expression: found
       "severity": "error",
       "span": {
         "file": "pkgs/demo/main.lit",
-        "line": 59,
+        "line": 62,
         "col": 10,
-        "end_line": 59,
+        "end_line": 62,
         "end_col": 33
       },
       "message": "cannot evaluate the assertion: the given event does not match the trigger of `moved`",
@@ -82,9 +83,9 @@ expression: found
         {
           "span": {
             "file": "pkgs/demo/main.lit",
-            "line": 56,
+            "line": 59,
             "col": 1,
-            "end_line": 60,
+            "end_line": 63,
             "end_col": 2
           },
           "message": "in test \"the claimant's trigger\""

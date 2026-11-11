@@ -192,6 +192,8 @@ module.exports = {
 
   probability: $ => seq('p', field('value', $._prob_value), optional($.numeric_provenance)),
 
+  // Tree-sitter has no external scanner here, so this suffix is permissive
+  // across newlines; the compiler binds it only on the number's line.
   numeric_provenance: $ => choice(
     seq(repeat1($.numeric_basis), repeat($.numeric_vintage)),
     repeat1($.numeric_vintage),

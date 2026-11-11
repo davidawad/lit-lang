@@ -269,7 +269,9 @@ pub(crate) fn money_or_hole(p: &mut Parser<'_>) -> bool {
 
 /// Optional provenance suffix on a scalar authored number.
 pub(crate) fn numeric_provenance(p: &mut Parser<'_>) -> bool {
-    if !p.at_kw(KwBasis) && !p.at_kw(KwVintage) {
+    // A newline starts the next object-level field; `basis` remains that
+    // field unless it follows the number on the same line.
+    if p.newline_before() || (!p.at_kw(KwBasis) && !p.at_kw(KwVintage)) {
         return false;
     }
     p.start(NumericProvenance);

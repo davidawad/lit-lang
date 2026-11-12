@@ -229,20 +229,9 @@ impl Cx<'_, '_> {
             )?),
             None => None,
         };
-        let bound = match (fields.get("max"), fields.get("to")) {
-            (Some(m), _) => {
-                let expression = first_expr(m)?;
-                if self.month_unit(expression) {
-                    return self.invalid_month_origin(expression);
-                }
-                Some(Bound::Offset {
-                    from: DateRef::PrescribedDue,
-                    days: self.calendar_days(expression)?,
-                })
-            }
-            (None, Some(t)) => Some(self.bound(first_expr(t)?)?),
-            (None, None) => None,
-        };
+        let bound = self
+            .extension_bound(fields.get("max"), fields.get("to"))
+            .ok()?;
         if let Some(bound) = bound {
             return Some(Extension::Bounded {
                 by: by?,
@@ -283,6 +272,29 @@ impl Cx<'_, '_> {
             motion,
             interpretation,
         })
+    }
+
+    /// The optional bound of an `extend` grant: `max N.days` or `to B`.
+    fn extension_bound(
+        &mut self,
+        maximum: Option<&&Field>,
+        to: Option<&&Field>,
+    ) -> Result<Option<Bound>, ()> {
+        match (maximum, to) {
+            (Some(m), _) => {
+                let expression = first_expr(m).ok_or(())?;
+                if self.month_unit(expression) {
+                    self.invalid_month_origin::<()>(expression);
+                    return Err(());
+                }
+                Ok(Some(Bound::Offset {
+                    from: DateRef::PrescribedDue,
+                    days: self.calendar_days(expression).ok_or(())?,
+                }))
+            }
+            (None, Some(t)) => Ok(Some(self.bound(first_expr(t).ok_or(())?).ok_or(())?)),
+            (None, None) => Ok(None),
+        }
     }
 
     /// `extend { never cite "X" }`: a lock, which takes no other field.

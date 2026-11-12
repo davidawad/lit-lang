@@ -818,6 +818,7 @@ impl<'g> Cx<'_, 'g> {
         };
         let counted_months = |months| {
             let mut request = due.request.clone();
+            instance.from.clone_into(&mut request.trigger);
             request.amount = months;
             request.unit = crate::hir::DayUnit::Month;
             self.clock.due(&request).ok()

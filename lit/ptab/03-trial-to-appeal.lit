@@ -259,16 +259,19 @@ chance fwd-issued: "Board Issues Final Written Decision" by board discretion cit
   note "The Board decides the patentability of every instituted claim (SAS all-or-nothing), whether or not a hearing was held. Due within 1 year of institution, extendable to 18 months (316(a)(11))."
   "Hold all instituted claims unpatentable" -> fwd-all-unpatentable p 0.55 {
     authority cite "35 U.S.C. § 318(a)"
-    sets [ipr-estopped]
+    sets [ipr-estopped, fwd-all-unpatentable]
+    clears [fwd-all-confirmed]
   }
   "Confirm all instituted claims patentable" -> fwd-all-confirmed p 0.25 {
     authority cite "35 U.S.C. § 318(a)"
     note "Estoppel attaches to the losing petitioner too: 315(e) is triggered by a final written decision issuing, not by which side wins it (see node note)."
-    sets [ipr-estopped]
+    sets [ipr-estopped, fwd-all-confirmed]
+    clears [fwd-all-unpatentable]
   }
   "Cancel some claims, confirm others" -> fwd-mixed p 0.2 {
     authority cite "35 U.S.C. § 318(a)"
     sets [ipr-estopped]
+    clears [fwd-all-unpatentable, fwd-all-confirmed]
   }
 }
 
@@ -353,6 +356,7 @@ chance rehearing-decision: "Panel Decides Rehearing Request" by board discretion
   }
   "Grant rehearing — modify decision" -> rehearing-granted-modified p 0.1 {
     authority cite "37 C.F.R. § 42.71(d)"
+    clears [fwd-all-unpatentable, fwd-all-confirmed]
   }
 }
 
@@ -406,9 +410,11 @@ chance director-review-decision: "Director Decides Review Request" by board disc
   }
   "Director modifies the decision" -> director-review-modified p 0.15 {
     authority cite "37 C.F.R. § 42.75(e)(2)"
+    clears [fwd-all-unpatentable, fwd-all-confirmed]
   }
   "Director remands for further proceedings" -> patent-owner-response-window p 0.1 {
     authority cite "37 C.F.R. § 42.75(e)(2)"
+    clears [fwd-all-unpatentable, fwd-all-confirmed]
   }
 }
 
@@ -448,8 +454,29 @@ decision federal-circuit-window: "Federal Circuit Appeal Window" cite "35 U.S.C.
     duration { min 9.4.days, mode 31.5.days, max 63.days }
     note "Filing fee $600.00: the Court of Appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023) alone -- no district-clerk equivalent of 28 U.S.C. § 1917's $5.00 notice fee applies to a direct agency-to-CAFC appeal (matches cafc-federal-circuit.json's ptab-file-noa edge and itc-337.json's federal-circuit-appeal-window->appeal-filed edge)."
   }
+  "Let the 63-day window lapse" -> appeal-forfeited-unappealed-win {
+    authority cite "35 U.S.C. § 319; 37 C.F.R. § 90.3(a)"
+    requires [fwd-all-unpatentable]
+    forbids [fwd-all-confirmed]
+    within appeal-period {
+      note "Lapse of the 63-day window triggers automatic forfeiture of the right to appeal; no subsequent motion for reinstatement, late filing, or equitable relief is available. The decision becomes final and binding."
+    }
+    duration { min 9.4.days, mode 31.5.days, max 63.days }
+    valence bad
+  }
+  "Let the 63-day window lapse" -> appeal-forfeited-unappealed-loss {
+    authority cite "35 U.S.C. § 319; 37 C.F.R. § 90.3(a)"
+    requires [fwd-all-confirmed]
+    forbids [fwd-all-unpatentable]
+    within appeal-period {
+      note "Lapse of the 63-day window triggers automatic forfeiture of the right to appeal; no subsequent motion for reinstatement, late filing, or equitable relief is available. The decision becomes final and binding."
+    }
+    duration { min 9.4.days, mode 31.5.days, max 63.days }
+    valence bad
+  }
   "Let the 63-day window lapse" -> appeal-forfeited-unappealed {
     authority cite "35 U.S.C. § 319; 37 C.F.R. § 90.3(a)"
+    forbids [fwd-all-unpatentable, fwd-all-confirmed]
     within appeal-period {
       note "Lapse of the 63-day window triggers automatic forfeiture of the right to appeal; no subsequent motion for reinstatement, late filing, or equitable relief is available. The decision becomes final and binding."
     }
@@ -458,10 +485,26 @@ decision federal-circuit-window: "Federal Circuit Appeal Window" cite "35 U.S.C.
   }
 }
 
+terminal appeal-forfeited-unappealed-win: "No Timely Appeal — FWD Final (Unpatentable)" outcome [final, appeal-forfeited, win] cite "35 U.S.C. § 319; 37 C.F.R. § 90.3(a)"
+{
+  group appeal-group
+  note "PERMADEATH #2. Missing the 63-day window forfeits all further review; the FWD becomes final and unreviewable. PLACEHOLDER PAYOFF: $1,000,000, carried from fwd-all-unpatentable because that result stands."
+  valence bad
+  payoff 1_000_000.usd
+}
+
+terminal appeal-forfeited-unappealed-loss: "No Timely Appeal — FWD Final (Confirmed)" outcome [final, appeal-forfeited, loss] cite "35 U.S.C. § 319; 37 C.F.R. § 90.3(a)"
+{
+  group appeal-group
+  note "PERMADEATH #2. Missing the 63-day window forfeits all further review; the FWD becomes final and unreviewable. PLACEHOLDER PAYOFF: $0, carried from fwd-all-confirmed because that result stands."
+  valence bad
+  payoff 0.usd
+}
+
 terminal appeal-forfeited-unappealed: "No Timely Appeal — FWD Final" outcome [final, appeal-forfeited] cite "35 U.S.C. § 319; 37 C.F.R. § 90.3(a)"
 {
   group appeal-group
-  note "PERMADEATH #2. Missing the 63-day window forfeits all further review; the FWD (as it stands after any rehearing/Director review) becomes final and unreviewable by operation of statute — no subsequent motion for reinstatement, late filing, or equitable relief is available. PLACEHOLDER PAYOFF: $400,000, override per matter. Reachable after any of the three FWD outcomes (all-unpatentable / all-confirmed / mixed) funnel through the same appeal window, so a single payoff necessarily blends a possible unappealed win with a possible unappealed loss; override once the matter's actual FWD result is known."
+  note "PERMADEATH #2. Missing the 63-day window forfeits all further review; the FWD becomes final and unreviewable. PLACEHOLDER PAYOFF: $400,000 for a mixed or unknown FWD result."
   valence bad
   payoff 400_000.usd
 }
@@ -491,14 +534,42 @@ chance federal-circuit-review: "Federal Circuit Reviews the Decision" by board d
 {
   group appeal-group
   note "Substantial-evidence review for factual findings; de novo review for legal conclusions, including claim-construction subsidiary facts post-Teva v. Sandoz. The Board's discretionary decisions (e.g., Fintiv stays) receive abuse-of-discretion review. Claim-construction and §101-based PGR outcomes are reversed at higher rates than the overall average."
-  "Affirm the Board" -> cafc-affirms p 0.8 { authority cite "35 U.S.C. § 319" }
+  "Affirm the Board" -> cafc-affirms-win p 0.8 {
+    authority cite "35 U.S.C. § 319"
+    requires [fwd-all-unpatentable]
+    forbids [fwd-all-confirmed]
+  }
+  "Affirm the Board" -> cafc-affirms-loss p 0.8 {
+    authority cite "35 U.S.C. § 319"
+    requires [fwd-all-confirmed]
+  }
+  "Affirm the Board" -> cafc-affirms p 0.8 {
+    authority cite "35 U.S.C. § 319"
+    forbids [fwd-all-unpatentable, fwd-all-confirmed]
+  }
   "Vacate or remand to the Board" -> cafc-vacates-remands p 0.2 { authority cite "35 U.S.C. § 319" }
+}
+
+terminal cafc-affirms-win: "Federal Circuit Affirms (Unpatentable)" outcome [affirmed, final, win] cite "35 U.S.C. § 319"
+{
+  group appeal-group
+  note "The Board's FWD and its estoppel consequences stand as issued. PLACEHOLDER PAYOFF: $1,000,000, carried from fwd-all-unpatentable because that result stands."
+  valence good
+  payoff 1_000_000.usd
+}
+
+terminal cafc-affirms-loss: "Federal Circuit Affirms (Confirmed)" outcome [affirmed, final, loss] cite "35 U.S.C. § 319"
+{
+  group appeal-group
+  note "The Board's FWD and its estoppel consequences stand as issued. PLACEHOLDER PAYOFF: $0, carried from fwd-all-confirmed because that result stands."
+  valence bad
+  payoff 0.usd
 }
 
 terminal cafc-affirms: "Federal Circuit Affirms" outcome [affirmed, final] cite "35 U.S.C. § 319"
 {
   group appeal-group
-  note "The Board's FWD and its estoppel consequences stand as issued, becoming a final, appealable judgment. Further review only by discretionary Supreme Court certiorari (rare, not modeled here). PLACEHOLDER PAYOFF: $450,000, override per matter. Affirms whichever FWD result preceded it (blended for the same reason as `appeal-forfeited-unappealed`); override once the matter's actual FWD result is known."
+  note "The Board's FWD and its estoppel consequences stand as issued. PLACEHOLDER PAYOFF: $450,000 for a mixed or unknown FWD result."
   valence good
   payoff 450_000.usd
 }
@@ -511,6 +582,7 @@ terminal cafc-vacates-remands: "Federal Circuit Vacates/Remands" by board outcom
   payoff 400_000.usd
   "Board reconsiders on remand" -> fwd-issued {
     authority cite "35 U.S.C. § 319; 37 C.F.R. § 42.73"
+    clears [fwd-all-unpatentable, fwd-all-confirmed]
     duration { min 180.days, mode 365.days, max 540.days }
     note "Duration: formalizes this edge's own note ('typical timeline runs 6-18 months') into the duration field."
   }

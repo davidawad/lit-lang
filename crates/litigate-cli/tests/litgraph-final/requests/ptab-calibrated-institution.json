@@ -12,7 +12,7 @@
     },
     "control": "chance",
     "who_decides": "tribunal/chance",
-    "value": 569808.108026,
+    "value": 618845.206142,
     "interrupt_mass": 1.0,
     "options": [
       {
@@ -23,7 +23,7 @@
         "role": "nature",
         "authority": "35 U.S.C. § 314(a); 37 C.F.R. § 42.108(a)",
         "p": 0.681,
-        "q": 628823.108026,
+        "q": 677860.206142,
         "cost": 0.0,
         "hours": 0.0,
         "fees": 0.0,
@@ -32,19 +32,19 @@
         "then": [
           {
             "terminal": "adverse-judgment-terminal{ipr-estopped}",
-            "p": 0.293415
+            "p": 0.336107
           },
           {
             "terminal": "ipr-terminated-settlement",
-            "p": 0.291667
+            "p": 0.333333
           },
           {
-            "terminal": "fwd-all-unpatentable{ipr-estopped}#end",
-            "p": 0.151808
+            "terminal": "fwd-all-unpatentable{fwd-all-unpatentable,ipr-estopped}#end",
+            "p": 0.120436
           },
           {
-            "terminal": "appeal-forfeited-unappealed{ipr-estopped}",
-            "p": 0.103252
+            "terminal": "appeal-forfeited-unappealed-win{fwd-all-unpatentable,ipr-estopped}",
+            "p": 0.050934
           }
         ]
       },
@@ -56,7 +56,7 @@
         "role": "nature",
         "authority": "35 U.S.C. § 314(a); 35 U.S.C. § 325(d)",
         "p": 0.1595,
-        "q": 458823.108026,
+        "q": 507860.206142,
         "cost": 0.0,
         "hours": 0.0,
         "fees": 0.0,
@@ -65,19 +65,19 @@
         "then": [
           {
             "terminal": "adverse-judgment-terminal{ipr-estopped,prior-petition-denied}",
-            "p": 0.293415
+            "p": 0.336107
           },
           {
             "terminal": "ipr-terminated-settlement{prior-petition-denied}",
-            "p": 0.291667
+            "p": 0.333333
           },
           {
-            "terminal": "fwd-all-unpatentable{ipr-estopped,prior-petition-denied}#end",
-            "p": 0.151808
+            "terminal": "fwd-all-unpatentable{fwd-all-unpatentable,ipr-estopped,prior-petition-denied}#end",
+            "p": 0.120436
           },
           {
-            "terminal": "appeal-forfeited-unappealed{ipr-estopped,prior-petition-denied}",
-            "p": 0.103252
+            "terminal": "appeal-forfeited-unappealed-win{fwd-all-unpatentable,ipr-estopped,prior-petition-denied}",
+            "p": 0.050934
           }
         ]
       },
@@ -89,7 +89,7 @@
         "role": "nature",
         "authority": "35 U.S.C. § 314(a); 37 C.F.R. § 42.108",
         "p": 0.1595,
-        "q": 428823.108026,
+        "q": 477860.206142,
         "cost": 0.0,
         "hours": 0.0,
         "fees": 0.0,
@@ -98,19 +98,19 @@
         "then": [
           {
             "terminal": "adverse-judgment-terminal{ipr-estopped,prior-petition-denied}",
-            "p": 0.293415
+            "p": 0.336107
           },
           {
             "terminal": "ipr-terminated-settlement{prior-petition-denied}",
-            "p": 0.291667
+            "p": 0.333333
           },
           {
-            "terminal": "fwd-all-unpatentable{ipr-estopped,prior-petition-denied}#end",
-            "p": 0.151808
+            "terminal": "fwd-all-unpatentable{fwd-all-unpatentable,ipr-estopped,prior-petition-denied}#end",
+            "p": 0.120436
           },
           {
-            "terminal": "appeal-forfeited-unappealed{ipr-estopped,prior-petition-denied}",
-            "p": 0.103252
+            "terminal": "appeal-forfeited-unappealed-win{fwd-all-unpatentable,ipr-estopped,prior-petition-denied}",
+            "p": 0.050934
           }
         ]
       }
@@ -138,7 +138,7 @@
             "prior-petition-denied"
           ],
           "steps": 10,
-          "value": 569808.108026,
+          "value": 618845.206142,
           "chosen": null,
           "same_choice": true
         }
@@ -148,8 +148,8 @@
   "warnings": [
     {
       "code": "compile",
-      "count": 17,
-      "example": "state flags expanded the graph: 104 additional node(s) for reachable flag combinations",
+      "count": 21,
+      "example": "state flags expanded the graph: 156 additional node(s) for reachable flag combinations",
       "at": []
     },
     {
@@ -175,7 +175,7 @@
     },
     {
       "code": "probability-fill",
-      "count": 93,
+      "count": 125,
       "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
       "at": [
         "ptab-patent-trial-appeal-board::adverse-judgment-request",

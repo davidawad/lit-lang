@@ -5,31 +5,6 @@
   "result": {
     "nodes": [
       {
-        "id": "ptab-patent-trial-appeal-board::fwd-all-unpatentable{ipr-estopped}",
-        "kind": "decision",
-        "label": "FWD: All Claims Unpatentable",
-        "control": "chance",
-        "payoff": null,
-        "payoff_source": "default",
-        "outcome": [
-          "win",
-          "fwd"
-        ]
-      },
-      {
-        "id": "ptab-patent-trial-appeal-board::fwd-all-confirmed{ipr-estopped}",
-        "kind": "decision",
-        "label": "FWD: All Claims Confirmed Patentable",
-        "control": "chance",
-        "payoff": null,
-        "payoff_source": "default",
-        "outcome": [
-          "loss",
-          "fwd",
-          "estoppel"
-        ]
-      },
-      {
         "id": "ptab-patent-trial-appeal-board::fwd-mixed{ipr-estopped}",
         "kind": "decision",
         "label": "FWD: Mixed Result",
@@ -79,30 +54,6 @@
       }
     ],
     "edges": [
-      {
-        "id": "ptab-patent-trial-appeal-board::edge-fwd-all-unpatentable-post-fwd-options{ipr-estopped}",
-        "label": "Patent owner considers post-FWD relief",
-        "from": "ptab-patent-trial-appeal-board::fwd-all-unpatentable{ipr-estopped}",
-        "to": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
-        "role": "nature",
-        "authority": "35 U.S.C. § 319",
-        "p": 0.5,
-        "active": true,
-        "hours": 0.0,
-        "fees": 0.0
-      },
-      {
-        "id": "ptab-patent-trial-appeal-board::edge-fwd-all-confirmed-post-fwd-options{ipr-estopped}",
-        "label": "Petitioner considers post-FWD relief",
-        "from": "ptab-patent-trial-appeal-board::fwd-all-confirmed{ipr-estopped}",
-        "to": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
-        "role": "nature",
-        "authority": "35 U.S.C. § 319",
-        "p": 0.5,
-        "active": true,
-        "hours": 0.0,
-        "fees": 0.0
-      },
       {
         "id": "ptab-patent-trial-appeal-board::edge-fwd-mixed-post-fwd-options{ipr-estopped}",
         "label": "Either party considers post-FWD relief",
@@ -158,8 +109,8 @@
   "warnings": [
     {
       "code": "compile",
-      "count": 17,
-      "example": "state flags expanded the graph: 104 additional node(s) for reachable flag combinations",
+      "count": 21,
+      "example": "state flags expanded the graph: 156 additional node(s) for reachable flag combinations",
       "at": []
     },
     {
@@ -185,7 +136,7 @@
     },
     {
       "code": "probability-fill",
-      "count": 91,
+      "count": 123,
       "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
       "at": [
         "ptab-patent-trial-appeal-board::adverse-judgment-request",

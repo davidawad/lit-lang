@@ -12,7 +12,7 @@
     },
     "control": "me",
     "who_decides": "you",
-    "value": 5329526.026721,
+    "value": 5369053.190047,
     "interrupt_mass": 0.0,
     "options": [
       {
@@ -22,7 +22,7 @@
         "to": "cofc::trial-bench",
         "role": "self",
         "authority": "28 U.S.C. §1498(a)",
-        "q": 5329526.026721,
+        "q": 5369053.190047,
         "cost": 17000.0,
         "hours": 20.0,
         "fees": 0.0,
@@ -32,11 +32,11 @@
         "regret": 0.0,
         "then": [
           {
-            "terminal": "cert-denied{panel-affirmed}",
-            "p": 0.265228
+            "terminal": "cert-not-sought-after-affirmance{panel-affirmed}",
+            "p": 0.267908
           },
           {
-            "terminal": "cert-not-sought{panel-affirmed}",
+            "terminal": "cert-not-sought-after-affirmance{panel-affirmed}",
             "p": 0.264609
           },
           {
@@ -56,22 +56,22 @@
         "to": "cofc::summary-judgment-motion-filed",
         "role": "self",
         "authority": "RCFC 56",
-        "q": 5181115.133994,
+        "q": 5219044.277607,
         "cost": 25500.0,
         "hours": 30.0,
         "fees": 0.0,
         "note": "Feeds back into the same RCFC 56/58/59/54/EAJA machinery already modeled on the general track.",
         "chosen": false,
         "kind": "choice",
-        "regret": 148410.892727,
+        "regret": 150008.912441,
         "then": [
           {
-            "terminal": "cert-not-sought{panel-affirmed}",
+            "terminal": "cert-not-sought-after-affirmance{panel-affirmed}",
             "p": 0.275275
           },
           {
-            "terminal": "cert-denied{panel-affirmed}",
-            "p": 0.254506
+            "terminal": "cert-not-sought-after-affirmance{panel-affirmed}",
+            "p": 0.257076
           },
           {
             "terminal": "affirmed-in-part-reversed-in-part{panel-mixed}#end",
@@ -95,13 +95,17 @@
     },
     {
       "code": "mixed-node",
-      "count": 4,
+      "count": 12,
       "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
       "at": [
         "cofc::discovery-open",
         "cofc::patent-14b-notice-fork",
         "cofc::post-trial-motion-window",
-        "cofc::service-on-united-states"
+        "cofc::service-on-united-states",
+        "cafc::cert-petition-window{panel-reversed}",
+        "cafc@cofc-gov::cert-petition-window{panel-affirmed}",
+        "cafc@cofc-gov::cert-petition-window{panel-reversed}",
+        "cafc@cofc::cert-petition-window{panel-reversed}"
       ]
     },
     {

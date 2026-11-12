@@ -20,7 +20,19 @@ decision cert-petition-window: "Certiorari Petition Window" by movant cite "28 U
     }
     tags [appeal]
   }
-  cert-window-lapse "90-day window lapses" -> cert-not-sought { authority cite "Sup. Ct. R. 13.1" }
+  cert-window-lapse-affirmed "90-day window lapses; panel affirmance stands" -> cert-not-sought-after-affirmance by appellant {
+    authority cite "Sup. Ct. R. 13.1"
+    requires [panel-affirmed]
+    forbids [panel-reversed]
+  }
+  cert-window-lapse-reversed "90-day window lapses; panel reversal stands" -> cert-not-sought-after-reversal by appellee {
+    authority cite "Sup. Ct. R. 13.1"
+    requires [panel-reversed]
+  }
+  cert-window-lapse-neutral "90-day window lapses; panel result is mixed or unknown" -> cert-not-sought {
+    authority cite "Sup. Ct. R. 13.1"
+    forbids [panel-affirmed, panel-reversed]
+  }
 }
 
 terminal cert-not-sought: "FINAL — Certiorari Not Sought" outcome [final] cite "Sup. Ct. R. 13.1"
@@ -30,6 +42,22 @@ terminal cert-not-sought: "FINAL — Certiorari Not Sought" outcome [final] cite
   valence good
   payoff 0.usd
   payoff_by_flag { panel-affirmed: 0.usd, panel-mixed: 250_000.usd, panel-reversed: 1_000_000.usd }
+}
+
+terminal cert-not-sought-after-affirmance: "FINAL — Certiorari Not Sought After Panel Affirmance" outcome [final, loss] cite "Sup. Ct. R. 13.1"
+{
+  group cert-group
+  note "Not seeking certiorari leaves the panel's affirmance undisturbed. PLACEHOLDER PAYOFF: $0, copied from the existing payoff_by_flag value for panel-affirmed on cert-not-sought."
+  valence bad
+  payoff 0.usd
+}
+
+terminal cert-not-sought-after-reversal: "FINAL — Certiorari Not Sought After Panel Reversal" outcome [final, win] cite "Sup. Ct. R. 13.1"
+{
+  group cert-group
+  note "Not seeking certiorari leaves the panel's reversal undisturbed. PLACEHOLDER PAYOFF: $1,000,000, copied from the existing payoff_by_flag value for panel-reversed on cert-not-sought."
+  valence good
+  payoff 1_000_000.usd
 }
 
 state cert-petition-filed: "Petition for Certiorari Filed" by court cite "Sup. Ct. R. 10; 28 U.S.C. § 1254(1)"
@@ -46,9 +74,21 @@ state cert-petition-filed: "Petition for Certiorari Filed" by court cite "Sup. C
 chance cert-review-decision: "Supreme Court Grants or Denies Certiorari" by court discretion cite "Sup. Ct. R. 10"
 {
   group cert-group
-  cert-review-deny "Certiorari denied" -> cert-denied p 0.99 {
+  cert-review-deny-affirmed "Certiorari denied; panel affirmance stands" -> cert-denied-after-affirmance p 0.99 {
     authority cite "Sup. Ct. R. 10"
     note "Widely cited SCOTUS-wide grant rate of roughly 1% of petitions (rule of four, Sup. Ct. R. 10); not Federal-Circuit-specific. Carried over from frap-appellate-procedure.json's identical figure."
+    requires [panel-affirmed]
+    forbids [panel-reversed]
+  }
+  cert-review-deny-reversed "Certiorari denied; panel reversal stands" -> cert-denied-after-reversal p 0.99 {
+    authority cite "Sup. Ct. R. 10"
+    note "Same certiorari denial estimate as cert-review-deny-affirmed."
+    requires [panel-reversed]
+  }
+  cert-review-deny-neutral "Certiorari denied; panel result is mixed or unknown" -> cert-denied p 0.99 {
+    authority cite "Sup. Ct. R. 10"
+    note "Same certiorari denial estimate as cert-review-deny-affirmed."
+    forbids [panel-affirmed, panel-reversed]
   }
   cert-review-grant "Certiorari granted" -> cert-granted p 0.01 {
     authority cite "28 U.S.C. § 1254(1); Sup. Ct. R. 10"
@@ -63,6 +103,22 @@ terminal cert-denied: "CERT DENIED (Final)" outcome [final] cite "Sup. Ct. R. 10
   valence good
   payoff 0.usd
   payoff_by_flag { panel-affirmed: 0.usd, panel-mixed: 250_000.usd, panel-reversed: 1_000_000.usd }
+}
+
+terminal cert-denied-after-affirmance: "CERT DENIED — Panel Affirmance Final" outcome [final, loss] cite "Sup. Ct. R. 10"
+{
+  group cert-group
+  note "Cert denial leaves the panel's affirmance in force; it is not a merits decision. PLACEHOLDER PAYOFF: $0, copied from the existing payoff_by_flag value for panel-affirmed on cert-denied."
+  valence bad
+  payoff 0.usd
+}
+
+terminal cert-denied-after-reversal: "CERT DENIED — Panel Reversal Final" outcome [final, win] cite "Sup. Ct. R. 10"
+{
+  group cert-group
+  note "Cert denial leaves the panel's reversal in force; it is not a merits decision. PLACEHOLDER PAYOFF: $1,000,000, copied from the existing payoff_by_flag value for panel-reversed on cert-denied."
+  valence good
+  payoff 1_000_000.usd
 }
 
 terminal cert-granted: "CERT GRANTED — Case Transfers to the Supreme Court" outcome [remand] cite "28 U.S.C. § 1254(1); Sup. Ct. R. 10"

@@ -10,100 +10,92 @@
     "runs": 50000,
     "seed": 7,
     "net": {
-      "mean": 4085656.2614,
-      "std": 4472339.553943995,
-      "min": -3716760.0,
-      "p05": -1216315.0,
+      "mean": 4122344.329,
+      "std": 4504967.606999793,
+      "min": -3487050.0,
+      "p05": -1111960.0,
       "p25": -563710.0,
       "p50": 4916795.0,
       "p75": 7707185.0,
-      "p95": 10984890.0,
+      "p95": 11044390.0,
       "max": 11516140.0
     },
-    "cvar": -1347476.548,
+    "cvar": -1293840.016,
     "alpha": 0.1,
-    "p_loss": 0.3424,
+    "p_loss": 0.34268,
     "metrics": {
       "dollars": {
-        "mean": 858019.7386,
-        "std": 463970.08087123255,
+        "mean": 832791.671,
+        "std": 436197.1177311544,
         "min": 69860.0,
         "p05": 364205.0,
         "p25": 483860.0,
         "p50": 742210.0,
-        "p75": 1242470.0,
-        "p95": 1714220.0,
-        "max": 3716760.0
+        "p75": 1150315.0,
+        "p95": 1571720.0,
+        "max": 4138165.0
       },
       "elapsed": {
-        "mean": 589.70528,
-        "std": 258.0152042421776,
+        "mean": 573.74524,
+        "std": 240.94547502977676,
         "min": 148.0,
         "p05": 255.0,
         "p25": 381.0,
-        "p50": 537.0,
-        "p75": 826.0,
-        "p95": 1051.0,
-        "max": 2028.0
+        "p50": 540.0,
+        "p75": 743.0,
+        "p95": 968.0,
+        "max": 2252.0
       }
     },
     "truncated": 0,
     "terminals": [
       {
-        "terminal": "cafc@cofc::cert-not-sought{panel-affirmed}",
-        "p": 0.2786
+        "terminal": "cafc@cofc::cert-not-sought-after-affirmance{panel-affirmed}",
+        "p": 0.27856
       },
       {
         "terminal": "cofc::settled-adr",
-        "p": 0.20642
+        "p": 0.2069
       },
       {
-        "terminal": "cafc@cofc-gov::cert-denied{panel-affirmed}",
-        "p": 0.14248
+        "terminal": "cafc@cofc-gov::cert-not-sought-after-affirmance{panel-affirmed}",
+        "p": 0.14564
       },
       {
         "terminal": "cafc@cofc::affirmed-in-part-reversed-in-part{panel-mixed}#end",
-        "p": 0.1056
+        "p": 0.105
       },
       {
         "terminal": "cafc@cofc::reversed{panel-reversed}#end",
-        "p": 0.0602
+        "p": 0.06182
       },
       {
         "terminal": "cafc@cofc-gov::cert-denied{panel-mixed}",
-        "p": 0.04984
+        "p": 0.04838
       },
       {
         "terminal": "cafc@cofc::settled-in-mediation",
-        "p": 0.04898
+        "p": 0.04766
       },
       {
-        "terminal": "cafc@cofc-gov::cert-denied{panel-reversed}",
-        "p": 0.0328
+        "terminal": "cafc@cofc-gov::cert-not-sought-after-reversal{panel-reversed}",
+        "p": 0.03294
       },
       {
         "terminal": "cafc@cofc::dismissed-jurisdictional-defect",
-        "p": 0.03094
+        "p": 0.03114
       },
       {
         "terminal": "cafc@cofc-gov::settled-in-mediation",
-        "p": 0.02474
+        "p": 0.02518
       },
       {
         "terminal": "cafc@cofc-gov::dismissed-jurisdictional-defect",
-        "p": 0.01658
-      },
-      {
-        "terminal": "cafc@cofc-gov::cert-granted{panel-affirmed}",
-        "p": 0.0019
+        "p": 0.01626
       },
       {
         "terminal": "cafc@cofc-gov::cert-granted{panel-mixed}",
-        "p": 0.00062
-      },
-      {
-        "terminal": "cafc@cofc-gov::cert-granted{panel-reversed}",
-        "p": 0.0003
+        "p": 0.00052
       }
     ],
     "samples": [
@@ -230,7 +222,7 @@
         "Mandate clock resumes",
         "File itemized, verified bill of costs",
         "Costs determination does not delay the certiorari clock",
-        "90-day window lapses"
+        "90-day window lapses; panel affirmance stands"
       ],
       [
         "Determine whether the claim is a §1498(a) patent/copyright use claim",
@@ -272,13 +264,17 @@
     },
     {
       "code": "mixed-node",
-      "count": 4,
+      "count": 12,
       "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
       "at": [
         "cofc::discovery-open",
         "cofc::patent-14b-notice-fork",
         "cofc::post-trial-motion-window",
-        "cofc::service-on-united-states"
+        "cofc::service-on-united-states",
+        "cafc::cert-petition-window{panel-reversed}",
+        "cafc@cofc-gov::cert-petition-window{panel-affirmed}",
+        "cafc@cofc-gov::cert-petition-window{panel-reversed}",
+        "cafc@cofc::cert-petition-window{panel-reversed}"
       ]
     },
     {

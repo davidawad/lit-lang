@@ -358,6 +358,156 @@ fn terminal_copy(graph: &Graph, node: usize) -> usize {
 }
 
 #[test]
+fn cafc_cert_terminals_preserve_panel_direction_and_neutral_stakes() {
+    let out = scratch("cafc-cert-terminal-split");
+    let built = litigate(&["build", "lit/cafc", "--out", out.to_str().unwrap()]);
+    assert_eq!(built.code, 0, "{}{}", built.stdout, built.stderr);
+    let pack: Value =
+        serde_json::from_slice(&std::fs::read(out.join("packs/cafc.json")).unwrap()).unwrap();
+
+    let node = |id: &str| {
+        pack["nodes"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|node| node["id"] == id)
+            .unwrap_or_else(|| panic!("missing CAFC node {id}"))
+    };
+    let edge = |id: &str| {
+        pack["edges"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|edge| edge["id"] == id)
+            .unwrap_or_else(|| panic!("missing CAFC edge {id}"))
+    };
+    let has = |values: &Value, value: &str| {
+        values
+            .as_array()
+            .is_some_and(|items| items.iter().any(|item| item == value))
+    };
+
+    let neutral_payoffs = json!({
+        "panel-affirmed": 0,
+        "panel-mixed": 250_000,
+        "panel-reversed": 1_000_000,
+    });
+    for (neutral, loss, win) in [
+        (
+            "cert-not-sought",
+            "cert-not-sought-after-affirmance",
+            "cert-not-sought-after-reversal",
+        ),
+        (
+            "cert-denied",
+            "cert-denied-after-affirmance",
+            "cert-denied-after-reversal",
+        ),
+    ] {
+        assert_eq!(node(neutral)["outcome"], json!(["final"]));
+        assert_eq!(node(neutral)["payoff"], json!(0));
+        assert_eq!(node(neutral)["payoffByFlag"], neutral_payoffs);
+        assert_eq!(node(loss)["outcome"], json!(["final", "loss"]));
+        assert_eq!(node(loss)["payoff"], json!(0));
+        assert_eq!(node(win)["outcome"], json!(["final", "win"]));
+        assert_eq!(node(win)["payoff"], json!(1_000_000));
+    }
+    for id in ["cert-window-lapse-affirmed", "cert-review-deny-affirmed"] {
+        assert!(has(&edge(id)["requires"], "panel-affirmed"), "{id}");
+        assert!(has(&edge(id)["forbids"], "panel-reversed"), "{id}");
+    }
+    for id in ["cert-window-lapse-reversed", "cert-review-deny-reversed"] {
+        assert!(has(&edge(id)["requires"], "panel-reversed"), "{id}");
+    }
+    for (id, target) in [
+        (
+            "cert-window-lapse-affirmed",
+            "cert-not-sought-after-affirmance",
+        ),
+        (
+            "cert-window-lapse-reversed",
+            "cert-not-sought-after-reversal",
+        ),
+        ("cert-window-lapse-neutral", "cert-not-sought"),
+        ("cert-review-deny-affirmed", "cert-denied-after-affirmance"),
+        ("cert-review-deny-reversed", "cert-denied-after-reversal"),
+        ("cert-review-deny-neutral", "cert-denied"),
+    ] {
+        assert_eq!(edge(id)["to"], target, "{id}");
+    }
+    for id in ["cert-window-lapse-neutral", "cert-review-deny-neutral"] {
+        assert!(has(&edge(id)["forbids"], "panel-affirmed"), "{id}");
+        assert!(has(&edge(id)["forbids"], "panel-reversed"), "{id}");
+    }
+    assert_eq!(edge("cert-window-lapse-affirmed")["actor"], "appellant");
+    assert_eq!(edge("cert-window-lapse-reversed")["actor"], "appellee");
+    assert_eq!(
+        edge("cert-window-lapse-affirmed")["authority"],
+        "Sup. Ct. R. 13.1"
+    );
+    assert_eq!(
+        edge("cert-window-lapse-reversed")["authority"],
+        "Sup. Ct. R. 13.1"
+    );
+    assert_eq!(
+        edge("cert-review-deny-affirmed")["authority"],
+        "Sup. Ct. R. 10"
+    );
+    assert_eq!(
+        edge("cert-review-deny-reversed")["authority"],
+        "Sup. Ct. R. 10"
+    );
+    assert_eq!(
+        edge("cert-review-deny-neutral")["authority"],
+        "Sup. Ct. R. 10"
+    );
+    for id in [
+        "cert-review-deny-affirmed",
+        "cert-review-deny-reversed",
+        "cert-review-deny-neutral",
+    ] {
+        assert_eq!(edge(id)["probability"], json!(0.99), "{id}");
+    }
+    assert_eq!(edge("cert-review-grant")["probability"], json!(0.01));
+
+    for (id, flag, cleared) in [
+        (
+            "panel-to-rule36",
+            "panel-affirmed",
+            ["panel-reversed", "panel-mixed"],
+        ),
+        (
+            "panel-to-affirmed",
+            "panel-affirmed",
+            ["panel-reversed", "panel-mixed"],
+        ),
+        (
+            "panel-to-reversed",
+            "panel-reversed",
+            ["panel-affirmed", "panel-mixed"],
+        ),
+        (
+            "panel-to-mixed",
+            "panel-mixed",
+            ["panel-affirmed", "panel-reversed"],
+        ),
+    ] {
+        assert!(has(&edge(id)["sets"], flag), "{id}");
+        for other in cleared {
+            assert!(has(&edge(id)["clears"], other), "{id} must clear {other}");
+        }
+    }
+    for id in ["panel-to-remand", "rehearing-granted-to-decision"] {
+        for flag in ["panel-affirmed", "panel-reversed", "panel-mixed"] {
+            assert!(has(&edge(id)["clears"], flag), "{id} must clear {flag}");
+        }
+    }
+    assert!(edge("rehearing-denied-edge")["clears"].is_null());
+    assert!(edge("panel-to-dismissed")["sets"].is_null());
+    assert!(edge("panel-to-dismissed")["clears"].is_null());
+}
+
+#[test]
 fn an_unknown_set_param_returns_an_error_envelope_with_nearest_valid_param() {
     let run = litigate(&["solve", "cases/frcp-civil-case.case", "--set", "raet=900"]);
     assert_eq!(run.code, 2, "{}{}", run.stdout, run.stderr);

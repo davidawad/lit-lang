@@ -19,25 +19,30 @@ chance panel-decision: "Panel Decides the Appeal" by court discretion cite "Fed.
     authority cite "Fed. Cir. R. 36(a)"
     note "~20% of 2024 merits terminations per patentlyo-2024-datapack. Sets panel-affirmed so cert-not-sought/cert-denied can restore this outcome's payoff if rehearing/cert is entered and denied — see docs/PACK_SCHEMA.md#state-flags and docs/CRITIQUE.md."
     sets [panel-affirmed]
+    clears [panel-reversed, panel-mixed]
   }
   panel-to-affirmed "Panel affirms with an opinion" -> affirmed p 0.28 {
     authority cite "FRAP 36(a)"
     note "Teaching estimate apportioning the non-Rule-36 balance — not independently sourced."
     sets [panel-affirmed]
+    clears [panel-reversed, panel-mixed]
   }
   panel-to-reversed "Panel reverses outright, no remand" -> reversed p 0.1 {
     authority cite "FRAP 36(a)"
     note "Teaching estimate — not independently sourced."
     sets [panel-reversed]
+    clears [panel-affirmed, panel-mixed]
   }
   panel-to-remand "Panel vacates and remands" -> remand-destination p 0.2 {
     authority cite "FRAP 36(a)"
     note "Teaching estimate — not independently sourced."
+    clears [panel-affirmed, panel-reversed, panel-mixed]
   }
   panel-to-mixed "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.17 {
     authority cite "FRAP 36(a)"
     note "Teaching estimate — not independently sourced."
     sets [panel-mixed]
+    clears [panel-affirmed, panel-reversed]
   }
   panel-to-dismissed "Panel dismisses for a jurisdictional/mootness defect" -> dismissed-jurisdictional-defect p 0.05 {
     authority cite "28 U.S.C. § 1295; FRAP 3"

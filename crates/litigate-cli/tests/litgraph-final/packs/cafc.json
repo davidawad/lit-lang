@@ -142,7 +142,7 @@
         "q": 0.0
       }
     ],
-    "policy_size": 169,
+    "policy_size": 171,
     "policy": null,
     "values": null
   },
@@ -159,6 +159,21 @@
       "example": "matter fact not set via scenario.facts; using the authored prior (5 of 5 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
       "at": [
         "cafc::remand-destination"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 8,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "cafc::cert-petition-window{panel-reversed}",
+        "cafc@cofc-gov::cert-petition-window{panel-affirmed}",
+        "cafc@cofc-gov::cert-petition-window{panel-reversed}",
+        "cafc@cofc::cert-petition-window{panel-reversed}",
+        "cafc@district-court::cert-petition-window{panel-reversed}",
+        "cafc@itc::cert-petition-window{panel-reversed}",
+        "cafc@ptab::cert-petition-window{panel-reversed}",
+        "cafc@ttab::cert-petition-window{panel-reversed}"
       ]
     },
     {

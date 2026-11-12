@@ -3,96 +3,96 @@
   "api_version": 1,
   "op": "tornado",
   "result": {
-    "base_value": 4116516.29109,
+    "base_value": 4137903.353491,
     "rows": [
       {
         "input": "param:stakes",
         "low_value": 9.0,
         "high_value": 15.0,
-        "v_low": 2872641.532109725,
-        "v_high": 5360147.506045957,
-        "swing": 2487505.9739362323,
+        "v_low": 2895002.770623113,
+        "v_high": 5380912.719362724,
+        "swing": 2485909.9487396106,
         "policy_changes": true
       },
       {
         "input": "p:cafc@cofc::panel-to-reversed",
         "low_value": 0.0,
         "high_value": 0.2,
-        "v_low": 3474172.058059372,
-        "v_high": 4736773.088823432,
-        "swing": 1262601.03076406,
+        "v_low": 3496132.5364426146,
+        "v_high": 4757606.452351321,
+        "swing": 1261473.915908706,
         "policy_changes": true
       },
       {
         "input": "p:cofc::e-prevailing-plaintiff",
         "low_value": 0.4,
         "high_value": 0.6,
-        "v_low": 3764408.984096568,
-        "v_high": 4491679.59946419,
-        "swing": 727270.6153676221,
+        "v_low": 3781821.10573228,
+        "v_high": 4517351.6631326955,
+        "swing": 735530.5574004157,
         "policy_changes": true
       },
       {
         "input": "p:cafc@cofc-gov::panel-to-reversed",
         "low_value": 0.0,
         "high_value": 0.2,
-        "v_low": 4437887.44510882,
-        "v_high": 3807295.9817168955,
-        "swing": 630591.4633919243,
+        "v_low": 4461289.97723788,
+        "v_high": 3826743.7780132415,
+        "swing": 634546.1992246388,
         "policy_changes": true
       },
       {
         "input": "p:cofc::e-ruling12b-jurisdiction",
         "low_value": 0.04999999999999999,
         "high_value": 0.25,
-        "v_low": 4363586.477924143,
-        "v_high": 3883564.4004545086,
-        "swing": 480022.07746963436,
+        "v_low": 4387067.5242938595,
+        "v_high": 3902977.1351109324,
+        "swing": 484090.3891829271,
         "policy_changes": false
       },
       {
         "input": "p:cafc@cofc::panel-to-affirmed",
         "low_value": 0.18000000000000002,
         "high_value": 0.38,
-        "v_low": 4352968.938193203,
-        "v_high": 3885030.3549368232,
-        "swing": 467938.5832563797,
+        "v_low": 4375017.961660314,
+        "v_high": 3905769.3606910864,
+        "swing": 469248.60096922796,
         "policy_changes": true
       },
       {
         "input": "p:cofc::e-ruling12b-failstate",
         "low_value": 0.0,
         "high_value": 0.2,
-        "v_low": 4349468.181814011,
-        "v_high": 3896156.3941875687,
-        "swing": 453311.7876264425,
+        "v_low": 4372829.571958374,
+        "v_high": 3915675.8492608126,
+        "swing": 457153.7226975616,
         "policy_changes": false
       },
       {
         "input": "p:cofc::e-ruling12b-denied",
         "low_value": 0.45000000000000007,
         "high_value": 0.65,
-        "v_low": 3892149.5494756987,
-        "v_high": 4317265.484211156,
-        "swing": 425115.9347354574,
+        "v_low": 3911688.9789652983,
+        "v_high": 4340305.691863901,
+        "swing": 428616.7128986027,
         "policy_changes": false
-      },
-      {
-        "input": "param:rate",
-        "low_value": 637.5,
-        "high_value": 1062.5,
-        "v_low": 4327718.466989955,
-        "v_high": 3905009.6851607184,
-        "swing": 422708.78182923654,
-        "policy_changes": true
       },
       {
         "input": "p:cafc@cofc::panel-to-rule36",
         "low_value": 0.1,
         "high_value": 0.30000000000000004,
-        "v_low": 4329095.615814762,
-        "v_high": 3907959.9135376206,
-        "swing": 421135.7022771416,
+        "v_low": 4351077.804702156,
+        "v_high": 3928763.111776834,
+        "swing": 422314.69292532234,
+        "policy_changes": true
+      },
+      {
+        "input": "param:rate",
+        "low_value": 637.5,
+        "high_value": 1062.5,
+        "v_low": 4343842.461757871,
+        "v_high": 3932052.3269886714,
+        "swing": 411790.1347691999,
         "policy_changes": true
       }
     ]
@@ -106,13 +106,17 @@
     },
     {
       "code": "mixed-node",
-      "count": 4,
+      "count": 12,
       "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
       "at": [
         "cofc::discovery-open",
         "cofc::patent-14b-notice-fork",
         "cofc::post-trial-motion-window",
-        "cofc::service-on-united-states"
+        "cofc::service-on-united-states",
+        "cafc::cert-petition-window{panel-reversed}",
+        "cafc@cofc-gov::cert-petition-window{panel-affirmed}",
+        "cafc@cofc-gov::cert-petition-window{panel-reversed}",
+        "cafc@cofc::cert-petition-window{panel-reversed}"
       ]
     },
     {

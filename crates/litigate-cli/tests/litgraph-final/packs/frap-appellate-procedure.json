@@ -60,31 +60,34 @@
         "q": 500000.0
       }
     ],
-    "policy_size": 19,
+    "policy_size": 31,
     "policy": null,
     "values": null
   },
   "warnings": [
     {
       "code": "compile",
-      "count": 6,
-      "example": "terminal frap-appellate-procedure::affirmed has 1 out-edge(s); modeled as a choice with an explicit accept edge",
+      "count": 13,
+      "example": "state flags expanded the graph: 42 additional node(s) for reachable flag combinations",
       "at": []
     },
     {
       "code": "mixed-node",
-      "count": 4,
+      "count": 7,
       "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
       "at": [
         "frap-appellate-procedure::interlocutory-review-fork",
         "frap-appellate-procedure::mandate-issued",
         "frap-appellate-procedure::stay-pending-appeal-fork",
-        "frap-appellate-procedure::voluntary-dismissal-fork"
+        "frap-appellate-procedure::voluntary-dismissal-fork",
+        "frap-appellate-procedure::mandate-issued{panel-affirmed}",
+        "frap-appellate-procedure::mandate-issued{panel-reversed}",
+        "frap-appellate-procedure::mandate-issued{panel-reversed-and-remanded}"
       ]
     },
     {
       "code": "probability-fill",
-      "count": 24,
+      "count": 36,
       "example": "2 of 2 out-edges lack probabilities; filled (Residual)",
       "at": [
         "frap-appellate-procedure::appealability-fork",

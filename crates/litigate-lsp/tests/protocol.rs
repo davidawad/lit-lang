@@ -292,6 +292,39 @@ async fn symbols_nest_edges_under_nodes() {
 }
 
 #[tokio::test]
+async fn symbols_name_parallel_omitted_edges_with_derived_ordinals() {
+    let mut c = Client::examples("protocol-parallel-edge-symbols", &[]).await;
+    let text = read(LIT).replace(
+        "state answered: \"Answer filed\" { group pleadings, \"Proceed to judgment\" -> judgment-entered }",
+        "state answered: \"Answer filed\" { group pleadings, \"Proceed to judgment\" -> judgment-entered, \"Proceed again\" -> judgment-entered }",
+    );
+    c.open(LIT, &text).await;
+    let syms = c
+        .request(
+            "textDocument/documentSymbol",
+            json!({"textDocument": {"uri": c.uri(LIT)}}),
+        )
+        .await;
+    let answered = syms
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|symbol| symbol["name"] == "answered")
+        .unwrap();
+    let children: Vec<&str> = answered["children"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter_map(|child| child["name"].as_str())
+        .collect();
+    assert!(
+        children.contains(&"edge-answered-judgment-entered-1")
+            && children.contains(&"edge-answered-judgment-entered-2"),
+        "{children:?}"
+    );
+}
+
+#[tokio::test]
 async fn formatting_returns_the_canonical_text() {
     let mut c = Client::repo().await;
     let canonical = read(LIT);

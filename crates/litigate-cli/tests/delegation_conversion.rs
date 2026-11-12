@@ -26,17 +26,14 @@ use support::{copy_dir, litigate_in, repo, scratch};
 /// The legacy meaning of `delegable_to [L]`: every operation.
 const LEGACY_OPS: &str = "op [extend, shorten, set, suspend, compute_method]";
 
-/// Clauses in the converted form across the current corpus (including
-/// derived package copies). The count fell from 368 to 306 when MPEP's
-/// extension delegations became typed grants (lg-pb1fe.36):
-/// lg-flu.29 then removed the four on the certiorari periods (frap, cafc)
-/// and the Federal Circuit PTAB and TTAB notice-of-appeal periods, now
-/// extended only by a Justice or the Director; lg-962.10.1 added two in
-/// the same form, on the FRAP 32(a)(7) and 37 C.F.R. § 42.24 filing
-/// limits (FRAP 32(e), § 42.24(a)(2)); lg-red5 one, on the FRAP 40(d)(1)
-/// United States party rehearing period. The FRCP 54(d)(2)(B) fee clause
-/// is formatted as a top-level multiline block and counts too (lg-3vd1).
-const CONVERTED: usize = 306;
+/// Every converted clause in the current corpus, including cited blocks.
+/// The 368-clause count before lg-pb1fe.19 grew by four TTAB clauses in that
+/// change: opposition-period, first-extension-90, second-extension-60, and
+/// extended-period-120. The current census includes 303 plain multiline
+/// blocks, 66 cited multiline blocks, and three inline blocks on origin/main
+/// 1c637758. lg-pb1fe.36 did not change these clauses; the prior count of 306
+/// skipped the cited blocks.
+const CONVERTED: usize = 372;
 
 /// There are no extra corrections in this corpus: the district-court
 /// notice-of-appeal period is authored once in `appeal-periods.lit`.
@@ -84,9 +81,18 @@ fn widen_all(dir: &Path) -> usize {
                     && i >= 2
                     && lines[i - 2].trim_end().ends_with("delegable {")
                     && lines[i - 1].trim_start().starts_with("to ")
-                    && lines
-                        .get(i + 1)
-                        .is_some_and(|l| l.trim_start().starts_with('}'));
+                    && {
+                        let mut close = i + 1;
+                        while lines.get(close).is_some_and(|l| {
+                            let trimmed = l.trim();
+                            trimmed.is_empty() || trimmed.starts_with("cite ")
+                        }) {
+                            close += 1;
+                        }
+                        lines
+                            .get(close)
+                            .is_some_and(|l| l.trim_start().starts_with('}'))
+                    };
                 if multiline {
                     let indent = &line[..line.len() - line.trim_start().len()];
                     let _ = writeln!(out, "{indent}{LEGACY_OPS}");

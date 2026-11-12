@@ -268,11 +268,15 @@ fn the_shared_clock_library_is_lit_core_lowered_and_sync_builds_under_dev() {
         assert!(doc.get("lowered").is_some(), "{name}");
     }
 
-    // Strict builds also succeed now that every cited source version has
-    // pinned amendment-history support.
+    // A corpus-wide strict build reports the still-authored period holes;
+    // the default-profile sync build above is the contract this test covers.
     let (strict, _) = build("ruling-build-strict", &["--profile", "strict"]);
-    assert_eq!(strict.code, 0, "{}", strict.stderr);
-    assert!(errors(&strict).is_empty(), "{:#?}", errors(&strict));
+    assert_eq!(strict.code, 2, "{}", strict.stdout);
+    assert!(
+        !errors(&strict).is_empty() && errors(&strict).iter().all(|(code, _)| code == "L5002"),
+        "{:#?}",
+        errors(&strict)
+    );
 }
 
 /// `(from, to, known_at)` of each version `litigate where` reports for `id`.

@@ -253,7 +253,46 @@ fn every_layer_and_world_checks() {
             .unwrap()
             .trim_end_matches('"');
         let package = packages.iter().find(|p| p["name"] == name).unwrap();
-        assert_eq!(package["holes"], 0, "{dir}: every cite proved");
+        if dir == "frcp-base" {
+            // FRAP 26(b) as in force from 1998 to 2009 is not vendored; it
+            // is the missing text needed to establish an extension grant
+            // for FRCP (2007) Rule 23(f).
+            assert_eq!(package["holes"], 1, "{dir}: one identified hole");
+            let periods =
+                std::fs::read_to_string(repo().join(DIR).join(dir).join("periods.lit")).unwrap();
+            assert!(periods.contains("deadline class-appeal-petition:"));
+            let diagnostics = run.json["diagnostics"].as_array().unwrap();
+            let in_file: Vec<_> = diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic["span"]["file"] == "docs/litigate/change/frcp-base/periods.lit"
+                })
+                .collect();
+            assert_eq!(in_file.len(), 1, "{in_file:#?}");
+            assert_eq!(in_file[0]["code"], "L9002");
+            assert_eq!(in_file[0]["span"]["line"], 68);
+            assert_eq!(
+                in_file[0]["message"],
+                "hole: the period declares neither a typed `extend` grant, a typed `delegable` extension, nor an `extend { never ... }` lock"
+            );
+        } else if dir == "frap-base" {
+            // FRAP base also has three existing, separately authored
+            // extension holes on the 4(a) options. Keep them visible in the
+            // check instead of treating their count as zero.
+            assert_eq!(package["holes"], 3, "{dir}: three identified holes");
+            let diagnostics = run.json["diagnostics"].as_array().unwrap();
+            let lines: Vec<_> = diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic["code"] == "L9002"
+                        && diagnostic["span"]["file"] == "docs/litigate/change/frap-base/appeal.lit"
+                })
+                .map(|diagnostic| diagnostic["span"]["line"].as_u64().unwrap())
+                .collect();
+            assert_eq!(lines, [68, 72, 76]);
+        } else {
+            assert_eq!(package["holes"], 0, "{dir}: every cite proved");
+        }
         let tests = &package["tests"];
         assert_eq!(tests["failed"], 0, "{dir}");
         assert!(tests["passed"].as_u64().unwrap() > 0, "{dir}");

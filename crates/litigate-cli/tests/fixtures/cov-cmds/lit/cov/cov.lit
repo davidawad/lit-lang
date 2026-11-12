@@ -103,12 +103,12 @@ chance mtd-ruling: "Ruling on the motion to dismiss" by court discretion cite "F
   denied "Motion denied" -> answered p 1/2
 }
 
-state answered: "Answer filed" { group pleadings, "Proceed to judgment" -> judgment-entered }
+state answered: "Answer filed" { group pleadings, _ "Proceed to judgment" -> judgment-entered }
 state default-risk: "Failure to respond"
 {
   group outcomes
-  "Default entered" -> judgment-entered
-  "Default judgment by the clerk" -> judgment-entered
+  _ "Default entered" -> judgment-entered
+  _ "Default judgment by the clerk" -> judgment-entered
 }
 
 terminal judgment-entered: "Judgment entered" outcome [judgment, loss] { group outcomes, payoff -100.usd }

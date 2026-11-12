@@ -9,7 +9,10 @@
 //! node where the grammar fixes one (`facts { node: edge }`,
 //! `observe node: { edge: n }`).
 use litigate_cli::Checked;
-use litigate_syntax::{parse, FileKind, SyntaxKind as K, SyntaxNode, TextRange, TextSize};
+use litigate_syntax::{
+    ast::{AstNode, EdgeDecl, NodeDecl},
+    derived_edge_id, parse, FileKind, SyntaxKind as K, SyntaxNode, TextRange, TextSize,
+};
 use std::collections::BTreeMap;
 use std::path::Path;
 
@@ -185,6 +188,41 @@ fn owner(node: &SyntaxNode) -> String {
         .find(|a| NODES.contains(&a.kind()))
         .and_then(|a| idents(&a).first().map(|t| t.text().to_owned()))
         .unwrap_or_default()
+}
+
+/// The compiler's canonical id for an omitted, named edge. Explicit `_`
+/// edges remain anonymous and do not acquire a symbol.
+fn derived_edge_name(node: &SyntaxNode) -> Option<String> {
+    let edge = EdgeDecl::cast(node.clone())?;
+    if edge.id().is_some()
+        || node
+            .children_with_tokens()
+            .filter_map(rowan::NodeOrToken::into_token)
+            .any(|token| token.kind() == K::Underscore)
+    {
+        return None;
+    }
+    let target = edge.target()?.idents().last()?.text().to_owned();
+    let declaration = node
+        .ancestors()
+        .find(|ancestor| NODES.contains(&ancestor.kind()))
+        .and_then(NodeDecl::cast)?;
+    let edges = declaration.edges();
+    let target_of = |edge: &EdgeDecl| edge.target()?.idents().last().map(|t| t.text().to_owned());
+    let same_target: Vec<_> = edges
+        .iter()
+        .filter(|candidate| target_of(candidate) == Some(target.clone()))
+        .collect();
+    let ordinal = same_target
+        .iter()
+        .position(|candidate| candidate.syntax() == node)?
+        + 1;
+    Some(derived_edge_id(
+        &owner(node),
+        &target,
+        ordinal,
+        same_target.len() > 1,
+    ))
 }
 
 /// A module path as written, without trivia (`civil.rule12`).
@@ -375,6 +413,19 @@ impl Index {
             package: scope.package.clone(),
         };
         let found: Vec<Def> = match (node.kind(), ids.split_first()) {
+            (K::EdgeDecl, None) => derived_edge_name(node)
+                .map(|name| {
+                    vec![Def {
+                        name,
+                        space: Space::Edge(owner(node)),
+                        kind: node.kind(),
+                        file: file.to_owned(),
+                        name_range: node.text_range(),
+                        full_range: node.text_range(),
+                        package: scope.package.clone(),
+                    }]
+                })
+                .unwrap_or_default(),
             (_, None) => Vec::new(),
             (K::EnumDecl, Some((name, variants))) => std::iter::once(def(name, Space::Decl))
                 .chain(variants.iter().map(|v| Def {

@@ -167,3 +167,40 @@ The PTAB default is petitioner `self`, patent-owner `opponent`, following FRCP's
 The changed expectations are limited to these PTAB outputs; TTAB remains pinned at `-$74,025.00`, and the TTAB applicant matter remains `-$31,820.00` (`opponent_value = -$3,032.50`, `policy_size = 78`). The solve traces carry the pack's existing fallback warnings, including `probability-fill` (101 package nodes) and, in the PTAB matter, `fact-unset` (2 nodes) and `mixed-node` (6 nodes); these estimates are not authored certainty.
 
 The `litigate fmt` change to `lit/ptab/03-trial-to-appeal.lit` is layout-only (6 insertions, 2 deletions). I built the PTAB package before and after formatting; the graph JSON is byte-identical after removing the package source digest and its dependent world digest. Those two content-address fields change because the source text's digest includes formatting, so the literal output files are not byte-identical; all procedural pack content is unchanged.
+
+## PTAB opening nodes (follow-up)
+
+**DECIDED:** `either` is the implicit actor only when no node or edge actor is supplied; SPEC §5.1 says, “An edge's actor is its own `by`, else the node's `by`, else `either`.” The suit edge is now explicitly `by patent-owner`: PTAB maps `either` to `nature` (`lit/ptab/Lit.toml:29`), and the SPEC says the engine uses that actor role to decide choice versus draw (§13.7). A complaint filing is the patent owner’s act, not a neutral draw. Each petitioner move from `patent-granted` and `infringement-complaint-served` is explicitly `by petitioner`.
+
+**DECIDED:** The node `by` is inherited by every edge without its own `by` (SPEC §5.1). State-node audit, with verdicts on whether inherited edges belong to the declared node actor:
+
+- `lit/ptab/01-pre-petition-to-institution.lit:35` `patent-granted` — fixed: complaint edge is `patent-owner`; challenge evaluation and direct PGR filing are `petitioner`.
+- `lit/ptab/01-pre-petition-to-institution.lit:62` `infringement-complaint-served` — fixed: challenge evaluation and direct IPR filing are `petitioner`.
+- `lit/ptab/01-pre-petition-to-institution.lit:236` `popr-filed` — pass: Board decides institution.
+- `lit/ptab/01-pre-petition-to-institution.lit:252` `popr-waived` — pass: Board decides institution.
+- `lit/ptab/01-pre-petition-to-institution.lit:336` `institution-granted` — pass: Board issues scheduling order; settlement edge explicitly allows either party.
+- `lit/ptab/02-post-institution.lit:72` `protective-order-ipr` — pass: Board-imposed protective-order transition proceeds into the response window.
+- `lit/ptab/03-trial-to-appeal.lit:52` `patent-owner-response-filed` — doubtful: the “File Petitioner Reply” edge inherits `patent-owner`, though its label names the petitioner. Explicitly assigning it changes the defense matter value despite its opening posture; it is left untouched to preserve the bead’s required matter pin.
+- `lit/ptab/03-trial-to-appeal.lit:124` `mta-filed` — pass: Board issues preliminary guidance; settlement edge explicitly allows either party.
+- `lit/ptab/03-trial-to-appeal.lit:156` `mta-revised-filed` — pass: petitioner opposes the revised amendment.
+- `lit/ptab/03-trial-to-appeal.lit:206` `adverse-judgment-request` — pass: Board enters the adverse judgment.
+- `lit/ptab/03-trial-to-appeal.lit:243` `oral-hearing-held` — pass: Board issues the FWD.
+- `lit/ptab/03-trial-to-appeal.lit:333` `rehearing-request-filed` — pass: Board panel considers rehearing.
+- `lit/ptab/03-trial-to-appeal.lit:388` `director-review-request-filed` — pass: Director reviews the decision.
+- `lit/ptab/03-trial-to-appeal.lit:469` `federal-circuit-notice-of-appeal` — doubtful: the node says `by board`, then hands to a Board-attributed Federal Circuit review chance node; this may be the intended tribunal/nature routing and is left unchanged.
+
+The changed package choice is at `patent-granted`: the petitioner controls its own challenge choices, while the patent owner controls the decision to sue. The defense matter has an explicit perspective and replays from a later posture, so its solve remains unchanged. Recorded outputs and snapshot changes follow after running the release binary.
+
+Recorded after the opening-node attribution change (baseline is the source/pin state after lg-pb1fe.33):
+
+| Output | Old | New | Why it moved |
+|---|---:|---:|---|
+| PTAB package solve | `$510,737.442007` (policy 13) | `$514,737.442007` (policy 14) | At `patent-granted`, the petitioner now controls the two challenge moves and chooses “File PGR petition directly” (`q = $514,737.442007`). The opponent controls the suit edge; its best value there is `$510,737.442007`. The protagonist's direct PGR choice raises the package value by `$4,000`. |
+| `cases/ptab-ipr-defense.case` solve | `$1,191,295.315355` (policy 211) | `$1,191,295.315355` (policy 210 observed) | The case still starts at the replayed §315(b) time-bar check and the value is unchanged. Policy size falls by one in the engine output despite the opening posture; no case expectation was re-recorded. |
+| `ptab-calibrated-institution` | `$569,035.765633` | `$569,035.765633` | Scalar stays the same; its `mixed-node` warning drops from 6 to 5 because the infringement-complaint-served node no longer has petitioner moves inherited from the patent-owner actor. |
+| `ptab-robust-institution` | `$246,794.612481` | `$296,756.444858` | Robust policy now begins with the self-controlled “Consider challenging without suit” option (`q = $296,756.444858`) and selects joinder downstream. The old policy began with opponent-controlled direct PGR. The robust objective therefore values the corrected petitioner-controlled strategy `$49,961.832377` higher. |
+| `ptab-ipr-estoppel-flag` | no scalar solve value; `mixed-node` 6 | no scalar solve value; `mixed-node` 5 | This graph request has no decision value. It no longer reports infringement-complaint-served as a mixed actor node. |
+
+The only changed recorded pins are the PTAB pack solve and the three PTAB requests above. Warnings remain material to interpretation: package solve reports `probability-fill` 101, `mixed-node` 5, and `fact-unset` 2; the defense matter reports `probability-fill` 425 and `mixed-node` 5. Its probabilities include fills, so these are model outputs with fallback estimates, not authored certainty.
+
+Verification on the updated release binary: `litigate check lit cases` exited 0 with zero errors; `litigate fmt --check lit cases` exited 0; `litigate test lit/ptab` exited 0 with 35 passed and 0 failed. Strict PTAB check exited 2 with 9 errors; the attribution edits introduce no strict finding (they alter only edge actors), and the repository's strict baseline is already 9. The requested nextest selection ran 58 tests: 53 passed and only the five specified main-branch failures occurred (`ttab_check_human_output_is_limited_to_the_case_when_core_has_no_holes`; `the_director_extends_the_ttab_civil_action_period`; `the_director_not_the_court_extends_the_federal_circuit_ptab_window`; `ttab_opposition_matter`; `ttab_published_fixture_forks_with_unknown_deadlines`). PTAB roundtrip/pin tests passed. `lit-sync-check` must be rerun after committing the regenerated PTAB lock because its gate rejects any modified tracked lock in the working tree.

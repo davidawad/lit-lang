@@ -7,39 +7,15 @@
       "id": "ptab-patent-trial-appeal-board::patent-granted",
       "label": "Patent Granted"
     },
-    "value": 510737.442007,
+    "value": 514737.442007,
     "converged": true,
     "iterations": 56,
     "fee_shift_rounds": 0,
     "best_line": [
       {
-        "id": "ptab-patent-trial-appeal-board::edge-patent-granted-infringement-complaint-served",
-        "label": "Get sued for infringement",
+        "id": "ptab-patent-trial-appeal-board::edge-patent-granted-pgr-petition-filed",
+        "label": "File PGR petition directly",
         "from": "ptab-patent-trial-appeal-board::patent-granted",
-        "to": "ptab-patent-trial-appeal-board::infringement-complaint-served",
-        "role": "nature",
-        "authority": "35 U.S.C. § 315(b)",
-        "p": 1.0,
-        "kind": "opponent-waits-likely-draw",
-        "step_p": 1.0,
-        "q": 510737.442007
-      },
-      {
-        "id": "ptab-patent-trial-appeal-board::edge-infringement-complaint-served-challenge-vehicle-decision",
-        "label": "Evaluate IPR/PGR after being sued",
-        "from": "ptab-patent-trial-appeal-board::infringement-complaint-served",
-        "to": "ptab-patent-trial-appeal-board::challenge-vehicle-decision",
-        "role": "opponent",
-        "authority": "35 U.S.C. § 315(b)",
-        "p": 1.0,
-        "kind": "wait-likely-draw",
-        "step_p": 1.0,
-        "q": 510737.442007
-      },
-      {
-        "id": "ptab-patent-trial-appeal-board::edge-challenge-vehicle-decision-pgr-petition-filed",
-        "label": "File PGR petition within 9 months",
-        "from": "ptab-patent-trial-appeal-board::challenge-vehicle-decision",
         "to": "ptab-patent-trial-appeal-board::pgr-petition-filed",
         "role": "self",
         "authority": "35 U.S.C. § 321(c)",
@@ -73,7 +49,7 @@
         "q": 700000.0
       }
     ],
-    "policy_size": 13,
+    "policy_size": 14,
     "policy": null,
     "values": null
   },
@@ -95,10 +71,9 @@
     },
     {
       "code": "mixed-node",
-      "count": 6,
+      "count": 5,
       "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
       "at": [
-        "ptab-patent-trial-appeal-board::infringement-complaint-served",
         "ptab-patent-trial-appeal-board::patent-granted",
         "ptab-patent-trial-appeal-board::patent-owner-response-filed",
         "ptab-patent-trial-appeal-board::patent-owner-response-filed{ipr-estopped}",

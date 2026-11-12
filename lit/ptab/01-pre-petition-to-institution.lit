@@ -36,16 +36,16 @@ state patent-granted: "Patent Granted" by patent-owner cite "35 U.S.C. § 151"
 {
   group pre-petition-group
   note "The patent issues with all claims allowed. If an AIA patent (effective date post-Sept 16, 2011), the 9-month PGR window under 35 U.S.C. § 321(c) begins to run on this date; the 20-year statutory term also begins. Any third-party challenge via IPR is subject to the 1-year bar under § 315(b) if infringement suit is later served."
-  "Get sued for infringement" -> infringement-complaint-served by either {
+  "Get sued for infringement" -> infringement-complaint-served by patent-owner {
     event ComplaintServed()
     authority cite "35 U.S.C. § 315(b)"
   }
-  "Consider challenging without suit" -> challenge-vehicle-decision {
+  "Consider challenging without suit" -> challenge-vehicle-decision by petitioner {
     authority cite "35 U.S.C. § 311; 35 U.S.C. § 321"
     effort 2.hours
     note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
   }
-  "File PGR petition directly" -> pgr-petition-filed {
+  "File PGR petition directly" -> pgr-petition-filed by petitioner {
     event PgrPetitionFiled()
     authority cite "35 U.S.C. § 321(c)"
     effort 130.hours
@@ -63,7 +63,7 @@ state infringement-complaint-served: "Infringement Complaint Served" by patent-o
 {
   group pre-petition-group
   note "Service of an infringement complaint — including amended, counterclaim, or cross-claim allegations — starts the unextendable 1-year clock to file an IPR petition. A voluntarily dismissed complaint still starts or restarts this bar; estoppel under § 315(e)(1) attaches to all invalidation grounds raised or reasonably could have been raised, binding the petitioner in any subsequent proceeding."
-  "Evaluate IPR/PGR after being sued" -> challenge-vehicle-decision {
+  "Evaluate IPR/PGR after being sued" -> challenge-vehicle-decision by petitioner {
     authority cite "35 U.S.C. § 315(b)"
     effort 8.hours
     note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."

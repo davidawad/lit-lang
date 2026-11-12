@@ -98,12 +98,12 @@ state entry-cofc: "Court of Federal Claims Judgment Entered" by movant cite "28 
   cofc-file-noa "File notice of appeal with the CoFC clerk" -> notice-of-appeal-filed {
     authority cite "28 U.S.C. § 2522; 28 U.S.C. § 1295(a)(3); FRAP 4(a)(1)(B)"
     effort 3.hours
-    cost 605.usd
+    cost 605.usd basis estimate
     event Filed(NoticeOfAppeal)
     within cofc-noa-period {
       note "60 days after CoFC entry of judgment — the United States is necessarily a party to every CoFC judgment, so the FRAP 4(a)(1)(B) 60-day (not 30-day) period governs as a matter of course. Jurisdictional; cannot be waived even for excusable neglect in most circumstances."
     }
-    note "Docketing fee for a CoFC-origin appeal is not separately itemized on the CAFC fee schedule reviewed (which lists 'appeal from a district court' at $605 and 'petition for review' at $600); $605 used here as a reasonable proxy since both are Judicial-Conference-set fees under 28 U.S.C. § 1913 collected on filing the notice of appeal — UNVERIFIED to the exact cent."
+    note "Docketing fee for a CoFC-origin appeal is not separately itemized on the CAFC fee schedule reviewed (which lists 'appeal from a district court' at $605 and 'petition for review' at $600); $605 used here as a reasonable proxy since both are Judicial-Conference-set fees under 28 U.S.C. § 1913 collected on filing the notice of appeal —  to the exact cent."
     tags [appeal]
   }
   cofc-window-blown "Let the 60-day window lapse" -> window-blown-cofc {

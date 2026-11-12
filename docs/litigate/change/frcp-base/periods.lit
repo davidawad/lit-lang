@@ -48,8 +48,36 @@ deadline renewed-jmol-motion: 10.days after JudgmentEntered() counted_by frcp6 e
 }
 
 /// FRCP 23(f), added December 1, 1998: a petition for permission to appeal
-/// within 10 days after the class-certification order is entered.
-deadline class-appeal-petition: 10.days after ClassOrderEntered() counted_by frcp6 effective [1998-12-01, ..) known_at 1998-04-24 cite "FRCP (2007) 23(f)" historical
+/// within 10 days after the class-certification order is entered. This
+/// interval remains an honest extension hole: the official govinfo Code
+/// editions reachable here begin in 2000, after this interval's start.
+deadline class-appeal-petition: 10.days after ClassOrderEntered() counted_by frcp6 effective [1998-12-01, 2000-12-01) known_at 1998-04-24 cite "FRCP (2007) 23(f)" historical
+
+/// FRAP 26(b) (2000 ed.) provides: "But the court may not extend the time
+/// to file: ... a petition for permission to appeal." The prohibition
+/// locks FRCP 23(f)'s petition period. This version starts only when that
+/// official edition is in force; the Rule 4 move is not an enlargement of
+/// this distinct permission petition period.
+deadline class-appeal-petition: 10.days after ClassOrderEntered() counted_by frcp6 effective [2000-12-01, 2002-12-01) supersedes class-appeal-petition@1998-12-01 cite "FRCP (2007) 23(f)" historical
+{
+  extend { never cite "FRAP (2000 ed.) 26(b)" }
+}
+
+/// FRAP 26(b) (2002 ed.) says: "But the court may not extend the time
+/// to file: ... a petition for permission to appeal." It locks this
+/// period, distinct from any extension to file an appeal under Rule 4.
+deadline class-appeal-petition: 10.days after ClassOrderEntered() counted_by frcp6 effective [2002-12-01, 2008-12-01) supersedes class-appeal-petition@2000-12-01 cite "FRCP (2007) 23(f)" historical
+{
+  extend { never cite "FRAP (2002 ed.) 26(b)" }
+}
+
+/// FRAP 26(b) (2008 ed.) says: "But the court may not extend the time
+/// to file: ... a petition for permission to appeal." It locks this
+/// period, distinct from any extension to file an appeal under Rule 4.
+deadline class-appeal-petition: 10.days after ClassOrderEntered() counted_by frcp6 effective [2008-12-01, ..) supersedes class-appeal-petition@2002-12-01 cite "FRCP (2007) 23(f)" historical
+{
+  extend { never cite "FRAP (2008 ed.) 26(b)" }
+}
 
 decision entered: "Judgment or class-certification order entered: what does the losing party file?" by movant effective [1968-07-01, ..) cite "FRCP (2007) 59(b)" historical
 {

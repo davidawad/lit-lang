@@ -254,32 +254,19 @@ fn every_layer_and_world_checks() {
             .trim_end_matches('"');
         let package = packages.iter().find(|p| p["name"] == name).unwrap();
         if dir == "frcp-base" {
-            // FRAP 26(b) as in force from 1998 to 2009 is not vendored; it
-            // is the missing text needed to establish an extension grant
-            // for FRCP (2007) Rule 23(f).
-            assert_eq!(package["holes"], 1, "{dir}: one identified hole");
+            // The active FRCP 23(f) version has its FRAP 26(b) lock from
+            // the vendored 2000 edition; the pre-2000 interval is recorded
+            // as open in periods.lit because no earlier official edition
+            // was reachable.
+            assert_eq!(package["holes"], 0, "{dir}: active periods are typed");
             let periods =
                 std::fs::read_to_string(repo().join(DIR).join(dir).join("periods.lit")).unwrap();
             assert!(periods.contains("deadline class-appeal-petition:"));
-            let diagnostics = run.json["diagnostics"].as_array().unwrap();
-            let in_file: Vec<_> = diagnostics
-                .iter()
-                .filter(|diagnostic| {
-                    diagnostic["span"]["file"] == "docs/litigate/change/frcp-base/periods.lit"
-                })
-                .collect();
-            assert_eq!(in_file.len(), 1, "{in_file:#?}");
-            assert_eq!(in_file[0]["code"], "L9002");
-            assert_eq!(in_file[0]["span"]["line"], 68);
-            assert_eq!(
-                in_file[0]["message"],
-                "hole: the period declares neither a typed `extend` grant, a typed `delegable` extension, nor an `extend { never ... }` lock"
-            );
         } else if dir == "frap-base" {
-            // FRAP base also has three existing, separately authored
-            // extension holes on the 4(a) options. Keep them visible in the
-            // check instead of treating their count as zero.
-            assert_eq!(package["holes"], 3, "{dir}: three identified holes");
+            // The Rule 4(a)(6) window spans pre-2000 dates for which the
+            // official Rule 26(b) edition was not reachable; keep that one
+            // extension hole visible and pinned to its declaration.
+            assert_eq!(package["holes"], 1, "{dir}: one dated-source hole");
             let diagnostics = run.json["diagnostics"].as_array().unwrap();
             let lines: Vec<_> = diagnostics
                 .iter()
@@ -289,7 +276,7 @@ fn every_layer_and_world_checks() {
                 })
                 .map(|diagnostic| diagnostic["span"]["line"].as_u64().unwrap())
                 .collect();
-            assert_eq!(lines, [68, 72, 76]);
+            assert_eq!(lines, [163]);
         } else {
             assert_eq!(package["holes"], 0, "{dir}: every cite proved");
         }

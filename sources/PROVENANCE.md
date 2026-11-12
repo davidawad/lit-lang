@@ -126,6 +126,26 @@ Entries live in the forum's own
 
 ## Files
 
+### `usc-28-{2000,2002,2008}-frap-rule26.txt` — FRAP Rule 26
+
+- Retrieved from the three official GovInfo U.S. Code HTML editions linked
+  in the change-layer packages: the 2000, 2002, and 2008 editions of
+  28 U.S.C. Appendix, Federal Rules of Appellate Procedure, Rule 26.
+  Each transcription keeps the complete Rule 26 statutory body as served,
+  one section per `statutory-body*` paragraph, with only HTML entities and
+  whitespace normalized. The Rule 26(b) extension sentences and exceptions
+  were compared sentence by sentence with each original HTML page; no
+  wording differences were found.
+- Text SHA-256: 2000 `69fb015f59fd86b2b3890325ac5d5b99578d6b073637983e38a5e9161363ea20`;
+  2002 `c956d25165e0b6f3f2fa9ca894283c449d4d5119e2da8545e0aa4eb63c570e21`;
+  2008 `3e2099086c665f26abb5c5c10f8c47a73b11305ee9a7e3d6921e5e024e24be5e`.
+- As-served originals are `original/usc-28-2000-frap-rule26.html`
+  (SHA-256 `b60cf061694b74e4b3e0a5c0c9b230174b777d63ebef80c25864eae8ce7db975`),
+  `original/usc-28-2002-frap-rule26.html` (SHA-256
+  `376b24ff236b967e9d4b3d3fad881f3f479218e9d3945487b727f226a4b20d0d`),
+  and `original/usc-28-2008-frap-rule26.html` (SHA-256
+  `c9a9e2174f36cce7706030fa5fb55be3c0661960736086b1de57afc8475d8cdc`).
+
 ### `frcp.txt` — Federal Rules of Civil Procedure (98 rules), December 1, 2025
 
 - Ported from `civ-pro-the-gathering/content/reference/frcp-full.json`

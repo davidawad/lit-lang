@@ -57,6 +57,8 @@ event SummonsFiled()
 event ComplaintFiled()
 /// The summons and complaint are served under USCIT R. 4.
 event ComplaintServed()
+/// A motion seeking an extension under USCIT R. 6(b).
+event ExtensionMotionFiled()
 
 /// Where a waiver of service was requested (USCIT R. 4(c)(1)).
 enum WaiverPlace { WithinDistrict, Abroad }
@@ -111,6 +113,17 @@ event FinalJudgment()
 /// 516A(a)(2) or (3) of the Tariff Act of 1930, the action is commenced by
 /// "A summons, and within 30 days thereafter a complaint".
 deadline complaint-after-summons-period: 30.days after SummonsFiled() counted_by uscit6 cite "USCIT R. 3(a)(2)"
+{
+  extend { by court, discretion GoodCause, cite "USCIT R. 6(b)(1)(A)" }
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "USCIT R. 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "USCIT R. 6(b)(1)(B)"
+  }
+}
 
 test "Counting boundary: complaint-after-summons-period (weekend)" cite "USCIT R. 3(a)(2)"
 {
@@ -122,6 +135,17 @@ test "Counting boundary: complaint-after-summons-period (weekend)" cite "USCIT R
 /// dismissed without prejudice or ordered served; good cause extends it.
 /// It does not apply to service in a foreign country.
 deadline service-period: 90.days after ComplaintFiled() counted_by uscit6 cite "USCIT R. 4(l)"
+{
+  extend { by court, discretion GoodCause, cite "USCIT R. 6(b)(1)(A)" }
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "USCIT R. 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "USCIT R. 6(b)(1)(B)"
+  }
+}
 
 test "Counting boundary: service-period (weekend)" cite "USCIT R. 4(l)"
 {
@@ -161,12 +185,36 @@ test "Counting boundary: waiver-answer-abroad-period (weekend) [repeat 2]" cite 
 /// Attorney-in-Charge, International Trade Field Office; no answer is
 /// served in a § 1581(c) action (12(a)(1)(A)(i)).
 deadline government-answer-period: 60.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 12(a)(1)(A)"
+{
+  extend { by court, discretion GoodCause, cite "USCIT R. 6(b)(1)(A)" }
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "USCIT R. 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "USCIT R. 6(b)(1)(B)"
+  }
+}
+
 /// In a § 1581(f) action for an order to make confidential information
 /// available under section 777(c)(2) of the Tariff Act of 1930, the answer
 /// is due 14 days after service of the summons and complaint.
 deadline confidential-information-answer-period: 14.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 12(a)(1)(A)(ii)"
+
 /// Any other defendant answers within 21 days after being served.
 deadline answer-period: 21.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 12(a)(1)(B)(i)"
+{
+  extend { by court, discretion GoodCause, cite "USCIT R. 6(b)(1)(A)" }
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "USCIT R. 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "USCIT R. 6(b)(1)(B)"
+  }
+}
 
 test "Counting boundary: answer-period (weekend)" cite "USCIT R. 12(a)(1)(B)(i)"
 {
@@ -177,6 +225,17 @@ test "Counting boundary: answer-period (weekend)" cite "USCIT R. 12(a)(1)(B)(i)"
 /// After the court denies a Rule 12 motion or postpones its disposition
 /// until trial, the responsive pleading is due 14 days after notice.
 deadline answer-after-motion-period: 14.days after MotionDisposed() counted_by uscit6 cite "USCIT R. 12(a)(2)(A)"
+{
+  extend { by court, discretion GoodCause, cite "USCIT R. 6(b)(1)(A)" }
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "USCIT R. 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "USCIT R. 6(b)(1)(B)"
+  }
+}
 
 test "Counting boundary: answer-after-motion-period (weekend)" cite "USCIT R. 12(a)(2)(A)"
 {
@@ -229,6 +288,18 @@ test "Counting boundary: statutory-injunction-period (weekend)" cite "USCIT R. 5
 /// In a § 1581(c) action the agency files the record within 40 days after
 /// service of the complaint on it.
 deadline agency-record-period: 40.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 73.2(a)"
+{
+  extend { by court, discretion GoodCause, cite "USCIT R. 6(b)(1)(A)" }
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "USCIT R. 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "USCIT R. 6(b)(1)(B)"
+  }
+}
+
 /// In a § 1581(a) or (b) action CBP files the entry documents within 90
 /// days after the summons is filed.
 deadline customs-documents-period: 90.days after SummonsFiled() counted_by uscit6 cite "USCIT R. 73.1(a)"
@@ -242,6 +313,17 @@ test "Counting boundary: customs-documents-period (weekend)" cite "USCIT R. 73.1
 /// The Joint Status Report and proposed briefing schedule are due no later
 /// than 30 days after the record is filed.
 deadline joint-status-report-period: 30.days after AgencyRecordFiled() counted_by uscit6 cite "USCIT R. 56.2(a)(5)(A)"
+{
+  extend { by court, discretion GoodCause, cite "USCIT R. 6(b)(1)(A)" }
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "USCIT R. 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "USCIT R. 6(b)(1)(B)"
+  }
+}
 
 test "Counting boundary: joint-status-report-period (weekend)" cite "USCIT R. 56.2(a)(5)(A)"
 {
@@ -254,6 +336,18 @@ test "Counting boundary: joint-status-report-period (weekend)" cite "USCIT R. 56
 /// order, responses 60 days after service of the movant's brief, and the
 /// reply 28 days after service of the response.
 deadline agency-record-motion-period: 60.days after ServedPaper(SchedulingOrder) counted_by uscit6 cite "USCIT R. 56.2(d)"
+{
+  extend { by court, discretion GoodCause, cite "USCIT R. 6(b)(1)(A)" }
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "USCIT R. 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "USCIT R. 6(b)(1)(B)"
+  }
+}
+
 deadline agency-record-response-period: 60.days after ServedPaper(AgencyRecordMotion) counted_by uscit6 cite "USCIT R. 56.2(d)"
 deadline agency-record-reply-period: 28.days after ServedPaper(AgencyRecordResponse) counted_by uscit6 cite "USCIT R. 56.2(d)"
 
@@ -319,6 +413,17 @@ test "Counting boundary: remand-record-period (weekend)" cite "USCIT R. 56.2(h)(
 }
 
 deadline remand-opposition-period: 30.days after RemandDeterminationFiled() counted_by uscit6 cite "USCIT R. 56.2(h)(2)"
+{
+  extend { by court, discretion GoodCause, cite "USCIT R. 6(b)(1)(A)" }
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "USCIT R. 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "USCIT R. 6(b)(1)(B)"
+  }
+}
 
 test "Counting boundary: remand-opposition-period (weekend)" cite "USCIT R. 56.2(h)(2)"
 {
@@ -345,6 +450,17 @@ test "Counting boundary: remand-appendix-period (weekend)" cite "USCIT R. 56.2(h
 /// Unless the court orders otherwise, a summary judgment motion may be
 /// filed until 30 days after the close of all discovery.
 deadline summary-judgment-period: 30.days after DiscoveryClosed() counted_by uscit6 cite "USCIT R. 56(b)"
+{
+  extend { by court, discretion GoodCause, cite "USCIT R. 6(b)(1)(A)" }
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "USCIT R. 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "USCIT R. 6(b)(1)(B)"
+  }
+}
 
 test "Counting boundary: summary-judgment-period (weekend)" cite "USCIT R. 56(b)"
 {

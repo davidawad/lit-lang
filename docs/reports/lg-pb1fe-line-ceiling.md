@@ -173,4 +173,11 @@ diff -u /tmp/lg-pb1fe.9/before-normalized.json /tmp/lg-pb1fe.9/after-normalized.
 
 Output: no diff. The unnormalized outputs were 825842 bytes before and 825847 bytes after.
 
-Gate results are recorded after the final post-rebase run below.
+Gate results:
+
+- `cargo fmt --all -- --check`: exit 0.
+- `cargo clippy --workspace --all-targets -- -D warnings`: exit 0.
+- `cargo nextest run -p litigate-base --test line_ceiling`: 3 passed, 0 failed.
+- The end-of-workspace-set run of `cargo nextest run -p litigate-cli -p litigate-lsp -p litigate-verify -p litigate-base -p litigate-syntax -p litigate-sema -p litigate-engine`: 2446 tests, 2444 passed, 2 failed, 1 skipped (exit 100). The failures reproduce in isolation and are unrelated to the refactor: `every_embedded_calibration_entry_resolves` reports 1 unresolved entry in `frcp-fy2024.json`; `every_vendored_text_has_its_sha256_recorded` reports six source text files without current hashes in provenance. The affected refactor tests passed in that run. The post-fetch rerun for the four touched crates is recorded below when complete.
+
+The final pre-finish fetch returned `30d2114e`; rebase reported the branch already up to date. The ratchet test passed after rebase. The list remains at 60 over-limit files; no other branch growth was present on the fetched base.

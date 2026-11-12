@@ -54,30 +54,30 @@ decision interlocutory-review-fork: "Interlocutory Review Door Available?" by mo
   note "Three doors strictly govern interlocutory review: first, § 1292(a)(1) injunction/receivership orders (as of right); second, the collateral order doctrine (Cohen test requiring three conjunctive factors); third, § 1292(b) permissive certification (requires district court consent and substantial ground for difference of opinion). Missing all three means no appeal — litigation continues until final judgment."
   interlocutory-injunction-order "Injunction order — appeal as of right" -> immediately-appealable-interlocutory {
     authority cite "28 U.S.C. § 1292(a)(1)"
-    effort 8.hours
+    effort 8.hours basis estimate
     within notice-civil-period {
       note "Appeal of right from injunction/receivership orders. Notice of appeal due within 30 days of entry, extendable to 60 days maximum under FRAP 4(a)(5). Missing the deadline strips appellate jurisdiction regardless of merit."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   interlocutory-collateral-order "Order meets collateral order doctrine" -> immediately-appealable-interlocutory {
     authority cite "Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)"
-    effort 10.hours
+    effort 10.hours basis estimate
     within notice-civil-period {
       note "Collateral order doctrine requires all three Cohen factors: (1) conclusively determines a disputed question; (2) resolves an important issue separate from the merits; (3) unreviewable on appeal from final judgment. Same 30-day deadline as statutory appeals."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   interlocutory-1292b-certified "Certify for interlocutory appeal" -> immediately-appealable-interlocutory {
     authority cite "28 U.S.C. § 1292(b); FRAP (2009 ed.) 5(a)-(b)"
-    effort 20.hours
+    effort 20.hours basis estimate
     within permission-petition-period {
       note "Permissive appeal. District court must certify substantial ground for difference of opinion within 10 days of entry (FRAP 5(a)(1)); applicant then has 10 days to apply to the appellate court (FRAP 5(a)(3)). Neither deadline is extendable."
     }
     duration { min 1.5.days, mode 5.days, max 10.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "No interlocutory door applies" -> interlocutory-review-unavailable by court {
     authority cite "28 U.S.C. § 1291"

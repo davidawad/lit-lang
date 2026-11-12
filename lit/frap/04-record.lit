@@ -67,12 +67,12 @@ decision transcript-order-fork: "Transcript Needed?" by movant cite "FRAP 10(b)"
   note "Appellant must decide within 14 days of the notice of appeal whether to order the transcript. Ordering creates an enforceable duty on the court reporter to transcribe and file; failure to order by the deadline doesn't waive the opportunity to appeal, but will delay the record and potentially prejudice waiver arguments if the record remains incomplete."
   "Order the necessary transcript" -> transcript-ordered {
     authority cite "FRAP 10(b)(1)"
-    effort 2.hours
+    effort 2.hours basis estimate
     within transcript-order-period {
       note "No extension is available for the 14-day ordering deadline; missing it leaves the appellant with only the option to seek appellate relief on an inadequate record, or risk abandonment of issues not covered by existing papers."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   no-transcript-certificate "Certify that no transcript will be ordered" -> record-transmitted {
     authority cite "FRAP 10(b)(1)(B)"
@@ -84,8 +84,8 @@ decision transcript-order-fork: "Transcript Needed?" by movant cite "FRAP 10(b)"
   }
   "File agreed statement instead" -> statement-in-lieu-of-transcript {
     authority cite "FRAP 10(c)-(d)"
-    effort 6.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 6.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 

@@ -79,60 +79,60 @@ decision appeal-clock-open: "Notice of Appeal Window Open" by movant cite "FRAP 
   note "The appeal deadline is jurisdictional and non-waivable under Bowles v. Russell, 551 U.S. 205 (2007). Civil cases have 30 days (60 if the U.S., a U.S. agency, or officer is a party); criminal defendants have 14 days. Missing this deadline strips appellate jurisdiction permanently."
   notice-of-appeal-civil "File notice of appeal (civil)" -> notice-of-appeal-filed {
     authority cite "FRAP (2009 ed.) 4(a)(1)(A)"
-    effort 4.hours
+    effort 4.hours basis estimate
     cost 605.usd
     within notice-civil-period {
       note "If notice is not filed within 30 days, the appeal is untimely. Under Bowles, no equitable exception or late filing is permitted — appellate jurisdiction is lost permanently and cannot be restored."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
     valence good
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Filing fee $605.00: $600.00 court-of-appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023) plus the $5.00 statutory notice-of-appeal fee (28 U.S.C. § 1917), both collected by the district clerk on filing; waivable IFP under 28 U.S.C. § 1915."
+    note "Hours: BigLaw-honest estimate for the effort of this move. Filing fee $605.00: $600.00 court-of-appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023) plus the $5.00 statutory notice-of-appeal fee (28 U.S.C. § 1917), both collected by the district clerk on filing; waivable IFP under 28 U.S.C. § 1915."
   }
   notice-of-appeal-us-party "File notice of appeal (US party)" -> notice-of-appeal-filed {
     authority cite "FRAP (2009 ed.) 4(a)(1)(B)"
-    effort 4.hours
+    effort 4.hours basis estimate
     cost 605.usd
     within notice-us-party-period {
       note "When the U.S., a U.S. agency, or an officer acting in official capacity is a party, the deadline is 60 days. Missing this deadline forecloses appellate jurisdiction entirely under 28 U.S.C. § 2107."
     }
     duration { min 9.days, mode 30.days, max 60.days }
     valence good
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 filing fee as the standard notice of appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) — the longer 60-day period applies because the U.S., its agency, or officer is a party, not because the filer here is the government."
+    note "Hours: BigLaw-honest estimate for the effort of this move. Same $605.00 filing fee as the standard notice of appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) — the longer 60-day period applies because the U.S., its agency, or officer is a party, not because the filer here is the government."
   }
   notice-of-appeal-criminal "File notice of appeal (criminal)" -> notice-of-appeal-filed {
     authority cite "FRAP (2009 ed.) 4(b)(1)(A)"
-    effort 4.hours
+    effort 4.hours basis estimate
     cost 605.usd
     within notice-criminal-period {
       note "Criminal defendants have only 14 days to file notice of appeal. A late notice — even one day late — is untimely and strips appellate jurisdiction; no exception for prosecutor's error or trial counsel's mistake."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
     valence good
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 fee as a civil appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) applies in principle, but most criminal appellants proceed in forma pauperis with appointed CJA counsel (FRAP 24(a); 28 U.S.C. § 1915), waiving prepayment."
+    note "Hours: BigLaw-honest estimate for the effort of this move. Same $605.00 fee as a civil appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) applies in principle, but most criminal appellants proceed in forma pauperis with appointed CJA counsel (FRAP 24(a); 28 U.S.C. § 1915), waiving prepayment."
   }
   "File Rule 4(a)(4) tolling motion" -> tolling-motion-filed {
     authority cite "FRAP (2009 ed.) 4(a)(4)(A); FRCP 50(b), 59(e), 60(b)(2)"
-    effort 8.hours
+    effort 8.hours basis estimate
     within tolling-motion-period {
       note "Tolling motions must be filed within the FRCP deadline (e.g., 28 days for a FRCP 59(e) motion for new trial). A tolling motion filed even one day late does not restart the appeal clock."
     }
     duration { min 4.2.days, mode 14.days, max 28.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "Let the deadline lapse" -> notice-of-appeal-untimely {
     authority cite "Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107"
-    effort 0.hours
+    effort 0.hours basis estimate
     valence bad
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "Move to extend or reopen deadline" -> post-deadline-relief-motion {
     authority cite "FRAP (2009 ed.) 4(a)(5)(A)"
-    effort 10.hours
+    effort 10.hours basis estimate
     within notice-civil-period {
       note "A party may file a motion to extend time to appeal before the deadline expires. The district court may grant up to 30 additional days for excusable neglect or good cause. A motion filed after the deadline expires may only invoke FRAP 4(a)(6) (reopening)."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 

@@ -11,18 +11,18 @@ decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by movant cite "
   note "A party wishing to attack a judgment (not merely defend it against the appellant's arguments) must file its own notice of cross-appeal. A cross-appeal asserts a separate basis for reversal or a request that the court award a more favorable judgment to the cross-appellant than the district court gave."
   "File notice of cross-appeal" -> cross-appeal-filed {
     authority cite "FRAP (2009 ed.) 4(a)(3)"
-    effort 4.hours
+    effort 4.hours basis estimate
     cost 605.usd
     within cross-appeal-period {
       note "14 days after the first notice of appeal, or within the original FRAP 4(a)(1) period, whichever is later. Only a FRAP 4(a)(5) extension saves a missed deadline; no equitable exception revives it."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 filing fee as an initial notice of appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) — a separate notice, a separate fee."
+    note "Hours: BigLaw-honest estimate for the effort of this move. Same $605.00 filing fee as an initial notice of appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) — a separate notice, a separate fee."
   }
   "Decline to cross-appeal" -> cross-appeal-not-filed {
     authority cite "FRAP (2009 ed.) 4(a)(3)"
-    effort 0.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 0.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 

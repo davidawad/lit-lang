@@ -44,13 +44,13 @@ decision stay-pending-appeal-fork: "Move to Stay Judgment Pending Appeal?" by mo
   }
   "Move for stay pending appeal — granted" -> stay-granted {
     authority cite "FRAP (2009 ed.) 8(a)(1)"
-    effort 15.hours
+    effort 15.hours basis estimate
     within motion-response-period {
       note "10-day response period (FRAP 27(a)(3)) applies to all motions, including a motion to stay. Failure to meet the deadline may result in the motion being deemed submitted without response, waiver of oral argument, or denial."
     }
     duration { min 1.5.days, mode 5.days, max 10.days }
     valence good
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "Stay motion denied" -> stay-denied by court {
     authority cite "FRAP (2009 ed.) 8(a)"

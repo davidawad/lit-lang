@@ -81,21 +81,21 @@ decision rehearing-window: "Seek Rehearing?" by movant cite "FRAP (2009 ed.) 40(
   note "After judgment entry, parties have 14 days (or 45 if the U.S. is a party) to file a petition for panel rehearing, en banc rehearing, or both in a combined petition. Most circuits treat the deadline as firm. Filing preserves the issue and tolls the 90-day certiorari clock under Supreme Court Rule 13.3."
   "Petition for rehearing / en banc" -> rehearing-petition-filed {
     authority cite "FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 35(c)"
-    effort 60.hours
+    effort 60.hours basis estimate
     within rehearing-period {
       note "Missing the 14-day (or 45-day if the U.S. is a party) deadline forfeits the right to seek rehearing and loses the ability to toll the Supreme Court's 90-day certiorari clock under Rule 13.3."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "No rehearing sought — time expires" -> mandate-issued {
     authority cite "FRAP (2009 ed.) 41(b)"
-    effort 0.hours
+    effort 0.hours basis estimate
     within rehearing-period {
       note "If no rehearing petition is filed within 14 days (or 45 days for the U.S.), the time to petition expires and the mandate issues automatically 7 days thereafter. The 90-day Supreme Court certiorari clock then runs from the original judgment date."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 

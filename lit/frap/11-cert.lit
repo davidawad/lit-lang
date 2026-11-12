@@ -100,38 +100,38 @@ decision cert-petition-window: "Certiorari Petition Window" by movant cite "Sup.
   note "90 days from entry of judgment or from denial of a timely rehearing petition — not extendable except by a single application to a Circuit Justice for good cause, filed before the deadline expires."
   "File petition for certiorari" -> cert-petition-filed {
     authority cite "Sup. Ct. R. 13.1; 28 U.S.C. § 1254(1)"
-    effort 80.hours
+    effort 80.hours basis estimate
     within cert-period {
       note "Failure to file within 90 days permanently bars federal review; there is no tolling, no exceptions for attorney mistake, and no relief even if the court of appeals misled the parties about the deadline."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "90-day window lapses" -> cert-not-sought-after-affirmance {
     authority cite "Sup. Ct. R. 13.1"
-    effort 0.hours
+    effort 0.hours basis estimate
     requires [panel-affirmed]
     forbids [panel-reversed, panel-reversed-and-remanded]
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "90-day window lapses" -> cert-not-sought-after-reversal {
     authority cite "Sup. Ct. R. 13.1"
-    effort 0.hours
+    effort 0.hours basis estimate
     requires [panel-reversed]
     forbids [panel-affirmed, panel-reversed-and-remanded]
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "90-day window lapses" -> cert-not-sought-after-reversal {
     authority cite "Sup. Ct. R. 13.1"
-    effort 0.hours
+    effort 0.hours basis estimate
     requires [panel-reversed-and-remanded]
     forbids [panel-affirmed, panel-reversed]
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "90-day window lapses" -> cert-not-sought {
     authority cite "Sup. Ct. R. 13.1"
-    effort 0.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 0.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
     forbids [panel-affirmed, panel-reversed, panel-reversed-and-remanded]
   }
 }

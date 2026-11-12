@@ -51,7 +51,8 @@ rule duty pgr-filing-deadline cite "35 U.S.C. § 321(c)"
 {
   deadline pgr-filing-period: 9.months after PatentGranted() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2011-09-16 cite "35 U.S.C. § 321(c)"
   {
-    // The statute sets the outer filing date and contains no extension grant.
+    // 35 U.S.C. § 321(c) says a petition "may only be filed not later than"
+    // the 9-month date, prohibiting a later filing.
     extend { never cite "35 U.S.C. § 321(c)" }
   }
 }
@@ -82,7 +83,8 @@ rule duty ipr-time-bar-deadline cite "35 U.S.C. § 315(b)"
 {
   deadline ipr-time-bar: 1.years after ComplaintServed() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2011-09-16 cite "35 U.S.C. § 315(b)"
   {
-    // The statutory one-year bar has no extension grant; joinder is separately excepted.
+    // 35 U.S.C. § 315(b) says an IPR "may not be instituted if the petition"
+    // is filed more than 1 year after service; joinder is separately excepted.
     extend { never cite "35 U.S.C. § 315(b)" }
   }
 }

@@ -162,9 +162,9 @@ chance presidential-review-window: "Presidential (USTR) Review Window" by commis
 terminal determination-vetoed: "Presidential/USTR Disapproval — No Force or Effect" outcome [final, no-remedy] effective [1995-01-01, ..) cite "usc1337.j"
 {
   group presidential-review-group
-  note "'[S]uch determination and the action taken... shall have no force or effect.' Not merely the remedy — the DETERMINATION ITSELF is voided, which is why this is modeled as a clean terminal with no onward Federal Circuit appeal edge: there is nothing left to appeal. A governor's-clemency-style override of what looked like a final civil judgment, with no FRCP analog. PLACEHOLDER PAYOFF: $50,000, override per matter. This terminal is only reachable after a VIOLATION finding and remedy (`remedy-determined`) -- the merits were won, but § 1337(j) voids the determination and remedy entirely, so self recovers no exclusion/cease-desist relief. The pack's authored `valence` of 'good' reflects the rarity/drama of a presidential override, not self's economic outcome; this payoff instead reflects the lost remedy (nominal vindication value only)."
+  note "'[S]uch determination and the action taken... shall have no force or effect.' Not merely the remedy — the DETERMINATION ITSELF is voided, which is why this is modeled as a clean terminal with no onward Federal Circuit appeal edge: there is nothing left to appeal. A governor's-clemency-style override of what looked like a final civil judgment, with no FRCP analog.  $50,000, override per matter. This terminal is only reachable after a VIOLATION finding and remedy (`remedy-determined`) -- the merits were won, but § 1337(j) voids the determination and remedy entirely, so self recovers no exclusion/cease-desist relief. The pack's authored `valence` of 'good' reflects the rarity/drama of a presidential override, not self's economic outcome; this payoff instead reflects the lost remedy (nominal vindication value only)."
   valence good
-  payoff 50_000.usd
+  payoff 50_000.usd basis placeholder
 }
 
 state remedy-in-effect: "Remedy Takes Effect" by complainant effective [1995-01-01, ..) cite "usc1337.j"
@@ -242,17 +242,17 @@ state appeal-filed: "Notice of Appeal Filed (Federal Circuit)" by commission eff
 terminal determination-final-unappealed-violation: "Commission Violation Determination Stands — Unappealed" outcome [final, win] effective [1995-01-01, ..) cite "usc1337.c"
 {
   group federal-circuit-appeal-group
-  note "The 60-day window closes with no notice of appeal; the violation determination and remedy stand unreviewed. PLACEHOLDER PAYOFF: $400,000 retained from the former blended terminal because violation stands."
+  note "The 60-day window closes with no notice of appeal; the violation determination and remedy stand unreviewed.  $400,000 retained from the former blended terminal because violation stands."
   valence good
-  payoff 400_000.usd
+  payoff 400_000.usd basis placeholder
 }
 
 terminal determination-final-unappealed-no-violation: "Commission No-Violation Determination Stands — Unappealed" outcome [final, loss] effective [1995-01-01, ..) cite "usc1337.c"
 {
   group federal-circuit-appeal-group
-  note "The 60-day window closes with no notice of appeal; no violation stands unreviewed. PLACEHOLDER PAYOFF: $0 because the adverse no-violation merits result has no authored payoff."
+  note "The 60-day window closes with no notice of appeal; no violation stands unreviewed.  $0 because the adverse no-violation merits result has no authored payoff."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 /// A ruling the tribunal makes under a legal standard, not the Commission's
@@ -302,17 +302,17 @@ state cafc-remanded: "Federal Circuit Reverses or Remands" by commission effecti
 terminal cafc-affirmed-violation: "Federal Circuit Affirms Violation Determination" outcome [affirmed, final, win] effective [1995-01-01, ..) cite "usc1337.c"
 {
   group federal-circuit-appeal-group
-  note "The Commission's violation determination and remedy stand as issued. PLACEHOLDER PAYOFF: $700,000 retained from the former blended terminal because violation stands."
+  note "The Commission's violation determination and remedy stand as issued.  $700,000 retained from the former blended terminal because violation stands."
   valence good
   court_listener_url "https://www.courtlistener.com/opinion/615096/tianrui-group-co-v-international-trade-commission/"
-  payoff 700_000.usd
+  payoff 700_000.usd basis placeholder
 }
 
 terminal cafc-affirmed-no-violation: "Federal Circuit Affirms No-Violation Determination" outcome [affirmed, final, loss] effective [1995-01-01, ..) cite "usc1337.c"
 {
   group federal-circuit-appeal-group
-  note "The Commission's no-violation determination stands as issued. PLACEHOLDER PAYOFF: $0 because the adverse no-violation merits result has no authored payoff."
+  note "The Commission's no-violation determination stands as issued.  $0 because the adverse no-violation merits result has no authored payoff."
   valence bad
   court_listener_url "https://www.courtlistener.com/opinion/615096/tianrui-group-co-v-international-trade-commission/"
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }

@@ -455,8 +455,9 @@ fn the_generated_pack_carries_the_designated_answer_window() {
             .collect::<Vec<_>>(),
         ["answered", "answered", "notice-of-default"]
     );
-    // The source cite now populates extensionAuthority directly (lg-pb1fe.22).
-    let authority = "FRCP 6(b)(1)(A); 37 CFR 2.116(a)";
+    // 37 CFR 2.116(a) applies the FRCP as of the proceeding; the 2017 text
+    // is the edition vendored for this pack (lg-pb1fe.35).
+    let authority = "FRCP (2017 ed.) 6(b)(1)(A); 37 CFR 2.116(a)";
     for &i in &answers {
         let d = &edges[i]["deadline"];
         assert_eq!(
@@ -558,7 +559,7 @@ fn an_answer_extension_through_rule_6b_stands_with_the_interpretation_warning() 
         &[
             "2026-07-06 InstitutionNoticed(2026-08-05) on applicant",
             "2026-08-03 AnswerExtensionMoved() by applicant",
-            "2026-08-07 AnswerTimeExtended(2026-09-04) by board cite \"FRCP 6(b)(1)(A); 37 CFR 2.116(a)\"",
+            "2026-08-07 AnswerTimeExtended(2026-09-04) by board cite \"FRCP (2017 ed.) 6(b)(1)(A); 37 CFR 2.116(a)\"",
         ],
         false,
     );
@@ -586,7 +587,7 @@ fn an_answer_extension_through_rule_6b_stands_with_the_interpretation_warning() 
         "ttab-extended-by-board",
         &[
             "2026-07-06 InstitutionNoticed(2026-08-05) on applicant",
-            "2026-08-04 AnswerTimeExtended(2026-09-04) by board cite \"FRCP 6(b)(1)(A); 37 CFR 2.116(a)\"",
+            "2026-08-04 AnswerTimeExtended(2026-09-04) by board cite \"FRCP (2017 ed.) 6(b)(1)(A); 37 CFR 2.116(a)\"",
         ],
         false,
     );
@@ -603,7 +604,7 @@ fn an_answer_extension_through_rule_6b_stands_with_the_interpretation_warning() 
             "2026-06-02 Published() on applicant",
             "2026-06-30 OppositionFiled() by opposer",
             "2026-07-06 InstitutionNoticed(2026-08-05) on applicant",
-            "2026-08-04 AnswerTimeExtended(2026-08-19) by board cite \"FRCP 6(b)(1)(A); 37 CFR 2.116(a)\"",
+            "2026-08-04 AnswerTimeExtended(2026-08-19) by board cite \"FRCP (2017 ed.) 6(b)(1)(A); 37 CFR 2.116(a)\"",
             "2026-08-19 AnswerFiled(Plain) by applicant",
         ],
         false,
@@ -626,7 +627,7 @@ fn an_answer_extension_after_the_date_without_a_prior_request_is_rejected() {
         "ttab-extended-late",
         &[
             "2026-07-06 InstitutionNoticed(2026-08-05) on applicant",
-            "2026-08-10 AnswerTimeExtended(2026-09-04) by board cite \"FRCP 6(b)(1)(A); 37 CFR 2.116(a)\"",
+            "2026-08-10 AnswerTimeExtended(2026-09-04) by board cite \"FRCP (2017 ed.) 6(b)(1)(A); 37 CFR 2.116(a)\"",
         ],
         false,
     );

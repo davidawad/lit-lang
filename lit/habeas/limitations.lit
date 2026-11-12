@@ -68,6 +68,8 @@ event SuccessiveAuthorizationMoved()
 /// The clerk's service of a magistrate judge's proposed findings and
 /// recommendations on the parties (2254 Rule 8(b); 2255 Rule 8(b)).
 event ProposedFindingsServed(method: ServiceMethod)
+/// A motion seeking an enlargement under FRCP 6(b)(1).
+event ExtensionMotionFiled()
 
 /// § 2244(d)(1): a 1-year period for an application by a person in custody
 /// under a state-court judgment, from the latest of its four dates (added
@@ -143,6 +145,14 @@ deadline proposed-findings-objections: 14.days after ProposedFindingsServed() co
 {
   forum frcp cite "2254 Rule 12"
     quote "are not inconsistent with any statutory provisions or these rules,"
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "FRCP 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "FRCP 6(b)(1)(B)"
+  }
 }
 
 test "the § 2244(d)(1) year ends on the anniversary of finality" cite "28 U.S.C. § 2244(d)(1)(A)"

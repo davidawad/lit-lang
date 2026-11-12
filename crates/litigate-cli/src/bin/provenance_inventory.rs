@@ -27,23 +27,15 @@ fn is_decl(s: &str) -> bool {
 }
 
 fn declarations(lines: &[&str]) -> Vec<Decl> {
-    let starts: Vec<usize> = lines.iter().enumerate().filter_map(|(i, s)| is_decl(s).then_some(i)).collect();
+    let starts: Vec<usize> = lines.iter().enumerate().filter_map(|(i, s)| {
+        (is_decl(s) || s.contains(" -> ")).then_some(i)
+    }).collect();
     starts.iter().enumerate().map(|(n, &start)| {
         let next = starts.get(n + 1).copied().unwrap_or(lines.len());
-        let mut depth = 0i32;
-        let mut opened = false;
-        let mut end = next.saturating_sub(1);
-        for (i, raw) in lines.iter().enumerate().take(next).skip(start) {
-            let s = raw.trim();
-            // Ignore braces inside quoted note text; structural braces are DSL syntax.
-            if !s.starts_with("note ") && !s.starts_with("//") && !s.starts_with("///") {
-                let opens = s.chars().filter(|c| *c == '{').count() as i32;
-                let closes = s.chars().filter(|c| *c == '}').count() as i32;
-                depth += opens - closes;
-                opened |= opens > 0;
-                if opened && depth <= 0 { end = i; break; }
-            }
-        }
+        // A transition (`... -> ... {`) is a declaration in its own right.
+        // Bounding it at the next declaration keeps sibling edge values from
+        // being attributed to the current edge's note.
+        let end = next.saturating_sub(1);
         Decl { start, end, header: lines[start].trim().to_string() }
     }).collect()
 }
@@ -59,6 +51,12 @@ fn marker_names(line: &str) -> Vec<&'static str> {
 
 fn field_kind(line: &str) -> Option<(&'static str, &'static str)> {
     let lower = line.trim_start().to_ascii_lowercase();
+    if let Some((_, tail)) = lower.split_once("->") {
+        let words: Vec<_> = tail.split_whitespace().collect();
+        if words.windows(2).any(|pair| pair[0] == "p" && pair[1] != "{") {
+            return Some(("p", "probability"));
+        }
+    }
     FIELDS.iter().find_map(|(prefix, kind)| {
         let valid = lower.strip_prefix(prefix)?;
         (valid.starts_with(' ') || valid.starts_with(':')).then_some((*prefix, *kind))
@@ -82,6 +80,7 @@ fn walk(path: &Path) {
         }).collect();
         let note_lower = line.to_ascii_lowercase();
         let stated_kind = if note_lower.contains("placeholder payoff")
+                || note_lower.contains("neutral placeholder")
                 || (note_lower.contains("placeholder inputs") && note_lower.contains("payoff"))
                 || note_lower.contains("unverified dollar figure") { Some("payoff") }
             else if note_lower.contains("basis: estimate") && note_lower.contains("hours:") { Some("effort") }

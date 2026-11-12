@@ -28,9 +28,9 @@ in_force = "2024-12-01"       # default effective start: the date of the text ci
 known_at = "2024-12-01"       # default corpus date
 
 [package.roles]               # actor -> self | opponent | nature
-Plaintiff = "self"
-Defendant = "opponent"
-Court = "nature"
+plaintiff = "self"
+defendant = "opponent"
+court = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
@@ -66,13 +66,13 @@ rule duty answer-duty cite "FRCP 12(a)(1)(A)(i)"
   deadline answer-period: 21.days from Served() counted_by frcp6
 }
 
-decision served: "Answer or let the deadline pass" by Defendant cite "FRCP 12(a)(1)(A)(i)"
+decision served: "Answer or let the deadline pass" by defendant cite "FRCP 12(a)(1)(A)(i)"
 {
   answer "File an answer" -> answered { effort 8.hours, within answer-period }
   default "Let the deadline pass" -> defaulted { valence bad }
 }
 
-chance answered: "Merits" by Court cite "FRCP 56(a)"
+chance answered: "Merits" by court cite "FRCP 56(a)"
 {
   win "Judgment for the plaintiff" -> plaintiff-wins p 2/5
   lose "Judgment for the defendant" -> defendant-wins p 3/5
@@ -165,8 +165,8 @@ notes "Tutorial matter. Stakes are illustrative."
 perspective acme
 
 parties {
-  acme: Plaintiff Corporation
-  roadrunner: Defendant Individual
+  acme: plaintiff Corporation
+  roadrunner: defendant Individual
 }
 
 events {

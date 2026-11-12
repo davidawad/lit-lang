@@ -1948,7 +1948,7 @@ mod tests {
             let (_, respond) = b.node(&format!("{PACK}::respond")).unwrap();
             let mut state = respond.clone();
             state.kind = NodeKind::State;
-            state.edges[0].actor = "Court".to_owned();
+            state.edges[0].actor = "court".to_owned();
             state.edges[1].to = "nope::x".to_owned();
             // An edge back to the node itself is not an option.
             state.edges[2].to = "respond".to_owned();

@@ -605,7 +605,7 @@ fn the_director_extends_the_ttab_civil_action_period() {
         "ttab-2-145-e",
         &["ttab"],
         "ttab-trademark-trial-and-appeal-board ^0.1.0",
-        "  applicant: applicant Corporation\n  director: director Agency\n",
+        "  applicant: respondent Corporation\n  director: director Agency\n",
         "director",
     );
     assert_eq!(ok.code, 0, "{}", ok.stdout);
@@ -624,7 +624,7 @@ fn the_director_extends_the_ttab_civil_action_period() {
         "ttab-2-145-e-court",
         &["frcp", "ttab"],
         "frcp-civil-procedure ^2024.12.0, ttab-trademark-trial-and-appeal-board ^0.1.0",
-        "  applicant: applicant Corporation\n  plaintiff: plaintiff Corporation\n  district: court Tribunal\n",
+        "  applicant: plaintiff Corporation\n  district: court Tribunal\n",
         "district",
     );
     assert_eq!(court.code, 2, "{}", court.stdout);

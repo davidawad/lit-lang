@@ -649,7 +649,7 @@ fn an_answer_extension_after_the_date_without_a_prior_request_is_rejected() {
     assert_eq!(
         errors(&run),
         [format!(
-            "only board may extend `{TTAB}::answer-period`, but `applicant` is applicant"
+            "only board may extend `{TTAB}::answer-period`, but `applicant` is respondent"
         )]
     );
 }

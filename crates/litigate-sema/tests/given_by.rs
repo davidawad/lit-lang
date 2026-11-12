@@ -86,9 +86,15 @@ fn extend(d: &str, givens: &str) -> Result<Vec<(usize, String)>, String> {
         pack: "demo".to_owned(),
         name: d.to_owned(),
     };
-    extensions(deadline, d, &history, 0, "2025-03-24", |action| {
-        extends(&world, &pkg, &key, action)
-    })
+    extensions(
+        deadline,
+        d,
+        &history,
+        0,
+        "2025-03-24",
+        &|_| None,
+        |action| extends(&world, &pkg, &key, action),
+    )
 }
 
 fn refused(d: &str, givens: &str) -> String {

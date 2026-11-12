@@ -341,6 +341,24 @@ pub fn due_of(
     judged.due(owner, d, CHAIN_LIMIT)
 }
 
+/// Counts `months` from the same trigger under the declaration and clock
+/// that counted `d`'s period.
+pub fn months_from(
+    clocks: &Clocks<'_>,
+    world: &World<'_>,
+    (owner, d): (&str, &hir::Deadline),
+    events: &[MatterEvent<'_>],
+    at: usize,
+    known_at: Option<&str>,
+    months: u64,
+) -> Result<String, String> {
+    let mut bound = d.clone();
+    bound.amount = months;
+    bound.unit = DayUnit::Month;
+    bound.direction = hir::Direction::Forward;
+    due_of(clocks, world, (owner, &bound), events, at, known_at).map(|due| due.computed.due_date)
+}
+
 /// How many chained periods a chain may follow before it is a cycle.
 const CHAIN_LIMIT: usize = 16;
 

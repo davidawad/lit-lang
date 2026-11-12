@@ -229,17 +229,23 @@ pub(crate) fn judge(
     let Some(ceiling) = grant.ceiling else {
         return Ok(request);
     };
-    let bound = ceiling
-        .date_with(
-            BoundDates {
-                trigger_date: instance.from,
-                prescribed_due: prescribed,
-                current_due: current,
-                grant_order_entered: date,
-            },
-            counted_months,
-        )
-        .unwrap_or_default();
+    let Some(bound) = ceiling.date_with(
+        BoundDates {
+            trigger_date: instance.from,
+            prescribed_due: prescribed,
+            current_due: current,
+            grant_order_entered: date,
+        },
+        counted_months,
+    ) else {
+        let months = ceiling.counted_months().unwrap_or_default();
+        return Err((
+            2,
+            format!(
+                "cannot count {months} months from the trigger under the governing deadline's counting rule"
+            ),
+        ));
+    };
     if new > bound.as_str() {
         return Err((
             2,
@@ -382,6 +388,7 @@ pub fn extensions<'a>(
     history: &[Given<'a>],
     trigger: usize,
     counted: &str,
+    counted_months: &dyn Fn(u64) -> Option<String>,
     extends: impl Fn(&'a Expr) -> Option<Option<&'a Expr>>,
 ) -> Result<Vec<(usize, String)>, String> {
     let actions: Vec<Moment<'_>> = history
@@ -446,7 +453,7 @@ pub fn extensions<'a>(
         let mut refusals = Vec::new();
         let mut licensed = None;
         for &grant in &held {
-            match judge(&actions, k, instance, grant, Some(new), &|_| None) {
+            match judge(&actions, k, instance, grant, Some(new), counted_months) {
                 Ok(request) => {
                     licensed = Some(request);
                     break;

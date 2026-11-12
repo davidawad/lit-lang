@@ -162,9 +162,30 @@ impl Cx<'_> {
         let trigger = order.iter().position(|&i| i == at).unwrap_or_default();
         let world = self.world;
         let pkg = self.pkg;
-        let applied = grant::extensions(d, name, &history, trigger, &counted, |action| {
-            grant::extends(world, pkg, key, action)
-        })?;
+        let trigger_event = [MatterEvent::on(
+            history[trigger].date,
+            history[trigger].action,
+        )];
+        let applied = grant::extensions(
+            d,
+            name,
+            &history,
+            trigger,
+            &counted,
+            &|months| {
+                clock::months_from(
+                    self.clocks,
+                    world,
+                    (key.pack.as_str(), d),
+                    &trigger_event,
+                    0,
+                    Some(self.known_at),
+                    months,
+                )
+                .ok()
+            },
+            |action| grant::extends(world, pkg, key, action),
+        )?;
         let Some((_, last)) = applied.last() else {
             return Ok(V::Date(counted));
         };

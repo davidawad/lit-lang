@@ -684,6 +684,16 @@ pub enum Bound {
 }
 
 impl Bound {
+    /// The first counted month term in this bound, if any.
+    #[must_use]
+    pub fn counted_months(&self) -> Option<u64> {
+        match self {
+            Self::Counted { months } => Some(*months),
+            Self::Max(xs) | Self::Min(xs) => xs.iter().find_map(Self::counted_months),
+            _ => None,
+        }
+    }
+
     /// The bound's date, given the dates it is counted from; `None` if a
     /// date cannot be counted.
     #[must_use]

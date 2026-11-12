@@ -571,11 +571,68 @@ fn due(
         })
         .collect();
     let trigger = order.iter().position(|&i| i == at).unwrap_or_default();
-    let mut applied =
-        grant::extensions(governing, target, &history, trigger, &adjusted, |action| {
-            grant::extends(&clocks.world, cx.package, &key, action)
-        })?;
+    let trigger_event = history[trigger];
+    let mut applied = grant::extensions(
+        governing,
+        target,
+        &history,
+        trigger,
+        &adjusted,
+        &|months| {
+            let (owner, _) = cx.owner(target);
+            counted_months(
+                &clocks,
+                owner,
+                governing,
+                trigger_event.action,
+                trigger_event.date,
+                months,
+            )
+            .ok()
+        },
+        |action| grant::extends(&clocks.world, cx.package, &key, action),
+    )?;
     Ok(applied.pop().map_or(adjusted, |(_, new)| new))
+}
+
+fn counted_months(
+    clocks: &Clocks<'_>,
+    owner: &hir::Package,
+    deadline: &hir::Deadline,
+    event: &Expr,
+    trigger: &str,
+    months: u64,
+) -> Result<String, String> {
+    let counting = counting_of(clocks, owner, deadline, trigger)?;
+    let library = match counting {
+        Some((pkg, c)) => clocks.get(pkg, c)?,
+        None => ClockLibrary::embedded().0.clone(),
+    };
+    let rule = counting.map_or_else(
+        || {
+            deadline
+                .counting
+                .rsplit("::")
+                .next()
+                .unwrap_or(&deadline.counting)
+        },
+        |(_, c)| c.meta.id.as_str(),
+    );
+    let method = service_method(
+        counting.map(|(_, c)| c),
+        arguments(&deadline.trigger, event).unwrap_or(&[]),
+    );
+    let request = DayDeadline {
+        trigger: clock::Date::parse_iso(trigger).map_err(|e| e.to_string())?,
+        days: i64::try_from(months).map_err(|_| format!("{months} months is out of range"))?,
+        direction: clock::Direction::Forward,
+        unit: Unit::Month,
+        service_method: method,
+    };
+    let rule = library.clock(rule).map_err(|e| e.to_string())?;
+    clock::compute_due_date(&request, &rule, &ClockConfig::default())
+        .map(|due| due.due_date)
+        .map_err(|e| e.to_string())
 }
 
 /// Event `e`, written in package `from`'s view, respelled for package

@@ -20,6 +20,8 @@ event ClaimConstructionAppendixFiled()
 event ClaimConstructionOrderEntered()
 /// The parties hold a mandatory settlement discussion (Appendix J, Rule 16).
 event SettlementDiscussionHeld()
+/// A motion asking to extend a period governed by RCFC 6(b).
+event ExtensionMotionFiled()
 
 /// The paper Patent Rule 17 requires within 7 days after each settlement
 /// discussion: "(a) a joint statement of compliance with PRCFC 16,
@@ -112,11 +114,33 @@ rule duty patent-cascade cite "PRCFC 1"
   /// after the Claim Construction Opinion and Order. The legacy pack marks it
   /// unextendable and records no delegation.
   deadline settlement-discussion-period: 14.days after ClaimConstructionOrderEntered() counted_by rcfc6 cite "PRCFC 16(a)"
+  {
+    extend { by court, discretion GoodCause, cite "RCFC 6(b)(1)(A)" }
+    extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "RCFC 6(b)(1)(A)" }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on ExtensionMotionFiled()
+      cite "RCFC 6(b)(1)(B)"
+    }
+  }
 
   /// Rule 17: "Within 7 days after each settlement discussion", a joint
   /// statement of compliance or a motion requesting that the case be
   /// dismissed. Unextendable in the legacy pack; no delegation recorded.
   deadline settlement-statement-period: 7.days after SettlementDiscussionHeld() counted_by rcfc6 cite "PRCFC 17"
+  {
+    extend { by court, discretion GoodCause, cite "RCFC 6(b)(1)(A)" }
+    extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "RCFC 6(b)(1)(A)" }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on ExtensionMotionFiled()
+      cite "RCFC 6(b)(1)(B)"
+    }
+  }
 }
 
 test "patent-jpsr-period: 49 days after AnswerFiled" cite "PRCFC 3"

@@ -24,19 +24,19 @@ rule duty serve-and-file-briefs effective [2009-12-01, 2018-12-01) known_at 2009
     to [LocalRule, CaseOrder]
     op set
 
-    cite "FRAP 26(b)"
+    cite "FRAP (2009 ed.) 26(b)"
   } cite "FRAP (2009 ed.) 31(a)(1)"
   deadline appellee-brief-period: 30.days after ServedPaper(AppellantBrief) counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
 
-    cite "FRAP 26(b)"
+    cite "FRAP (2009 ed.) 26(b)"
   } cite "FRAP (2009 ed.) 31(a)(1)"
   deadline reply-brief-period: 14.days after ServedPaper(AppelleeBrief) counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
 
-    cite "FRAP 26(b); FRAP 31(a)(1)"
+    cite "FRAP (2009 ed.) 26(b); FRAP (2009 ed.) 31(a)(1)"
   } cite "FRAP (2009 ed.) 31(a)(1)"
 }
 
@@ -51,23 +51,23 @@ rule duty serve-and-file-briefs effective [2018-12-01, ..) known_at 2018-04-26 s
     to [LocalRule, CaseOrder]
     op set
 
-    cite "FRAP 26(b)"
-  } cite "FRAP 31(a)(1)"
+    cite "FRAP (2018 ed.) 26(b)"
+  } cite "FRAP (2018 ed.) 31(a)(1)"
   deadline appellee-brief-period: 30.days after ServedPaper(AppellantBrief) counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
 
-    cite "FRAP 26(b)"
-  } cite "FRAP 31(a)(1)"
+    cite "FRAP (2018 ed.) 26(b)"
+  } cite "FRAP (2018 ed.) 31(a)(1)"
   deadline reply-brief-period: 21.days after ServedPaper(AppelleeBrief) counted_by frap26 delegable {
     to [LocalRule, CaseOrder]
     op set
 
-    cite "FRAP 26(b); FRAP 31(a)(1)"
-  } cite "FRAP 31(a)(1)"
+    cite "FRAP (2018 ed.) 26(b); FRAP (2018 ed.) 31(a)(1)"
+  } cite "FRAP (2018 ed.) 31(a)(1)"
 }
 
-test "the opening brief is due 40 days after the record is filed" cite "FRAP 31(a)(1)"
+test "the opening brief is due 40 days after the record is filed" cite "FRAP (2018 ed.) 31(a)(1)"
 {
   given RecordFiled() on 2025-02-05
   expect deadline(appellant-brief-period) == 2025-03-17
@@ -79,7 +79,7 @@ test "a 40th day on a Saturday rolls to Monday" cite "FRAP 26(a)(1)(C)"
   expect deadline(appellant-brief-period) == 2025-04-14
 }
 
-test "the appellee's brief is due 30 days after service of the opening brief" cite "FRAP 31(a)(1)"
+test "the appellee's brief is due 30 days after service of the opening brief" cite "FRAP (2018 ed.) 31(a)(1)"
 {
   given ServedPaper(AppellantBrief, Electronic) on 2025-04-14
   expect deadline(appellee-brief-period) == 2025-05-14
@@ -91,7 +91,7 @@ test "a 30th day on Independence Day rolls to Monday" cite "FRAP 26(a)(6)(A)"
   expect deadline(appellee-brief-period) == 2025-07-07
 }
 
-test "a reply is due 21 days after service of the appellee's brief" cite "FRAP 31(a)(1)"
+test "a reply is due 21 days after service of the appellee's brief" cite "FRAP (2018 ed.) 31(a)(1)"
 {
   given ServedPaper(AppelleeBrief, Electronic) on 2025-05-14
   expect deadline(reply-brief-period) == 2025-06-04

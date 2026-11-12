@@ -200,8 +200,9 @@ module.exports = {
   ),
 
   numeric_basis: $ => seq('basis', choice(
-    seq('calibrated', '(', field('calibration', $.identifier), ')'),
+    seq('calibrated', '(', choice(field('calibration', $.identifier), seq(field('dataset', $.string), ',', field('as_of', $.date))), ')'),
     seq('sourced', '(', field('cite', $.string), ')'),
+    seq('expert', '(', field('name', $.string), ')'),
     'estimate', 'placeholder',
   )),
 

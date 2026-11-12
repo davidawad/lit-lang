@@ -94,17 +94,17 @@ pub(crate) fn edge(cx: &EdgeCx<'_, '_>, sink: &mut Sink, from: String, e: &hir::
 }
 
 pub(crate) fn number_label(
-    pointer: String,
+    pointer: &str,
     value: &hir::NumberProvenance,
 ) -> Option<litigate_engine::model::BasisLabel> {
     let mut label = value.basis.as_ref().map_or_else(
         || litigate_engine::model::BasisLabel {
-            pointer: pointer.clone(),
+            pointer: pointer.to_owned(),
             basis: litigate_engine::model::Basis::Estimate,
             source: None,
             vintage: None,
         },
-        |basis| crate::basis::label(pointer.clone(), basis),
+        |basis| crate::basis::label(pointer.to_owned(), basis),
     );
     label.vintage.clone_from(&value.vintage);
     (value.basis.is_some() || value.vintage.is_some()).then_some(label)
@@ -406,8 +406,7 @@ mod tests {
             vintage: Some("2026-01-01".into()),
         };
         assert_eq!(
-            serde_json::to_value(number_label("/edges/0/probability".into(), &value).unwrap())
-                .unwrap(),
+            serde_json::to_value(number_label("/edges/0/probability", &value).unwrap()).unwrap(),
             serde_json::json!({"pointer":"/edges/0/probability","basis":"sourced","source":"FRCP 1","vintage":"2026-01-01"})
         );
     }
@@ -454,7 +453,7 @@ mod tests {
                 basis: Some(basis),
                 vintage: Some("2026-01-01".into()),
             };
-            let label = number_label("/edges/0/probability".into(), &value).unwrap();
+            let label = number_label("/edges/0/probability", &value).unwrap();
             assert_eq!(label.pointer, "/edges/0/probability");
             assert_eq!(label.basis, expected);
             assert_eq!(label.vintage.as_deref(), Some("2026-01-01"));

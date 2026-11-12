@@ -36,6 +36,11 @@ state s: "S" {
           (ref
             (identifier)))
         (edge_decl
+          (string
+            (string_content))
+          (ref
+            (identifier)))
+        (edge_decl
           (identifier)
           (string
             (string_content))
@@ -488,3 +493,68 @@ decision d: "D" by Plaintiff {
               (ref
                 (identifier)))
             (edge_field)))))))
+
+================================================================================
+Number provenance suffixes
+================================================================================
+
+module a
+chance c: "C" {
+  win "Win" -> t p 1/2 basis expert("Jane Roe") vintage 2026-01-01
+  lose "Lose" -> t p 1/2 basis calibrated(dataset)
+}
+terminal t: "T" { payoff 0.usd basis placeholder vintage 2026-01-01 }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (probability
+            (fraction
+              (number)
+              (number))
+            (numeric_provenance
+              (numeric_basis
+                (string
+                  (string_content)))
+              (numeric_vintage
+                (date)))))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (probability
+            (fraction
+              (number)
+              (number))
+            (numeric_provenance
+              (numeric_basis
+                (identifier)))))))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (node_field
+          (signed_money
+            (money))
+          (numeric_provenance
+            (numeric_basis)
+            (numeric_vintage
+              (date))))))))

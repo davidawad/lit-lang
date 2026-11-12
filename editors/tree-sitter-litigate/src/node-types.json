@@ -4154,6 +4154,16 @@
     "type": "numeric_basis",
     "named": true,
     "fields": {
+      "as_of": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "date",
+            "named": true
+          }
+        ]
+      },
       "calibration": {
         "multiple": false,
         "required": false,
@@ -4165,6 +4175,26 @@
         ]
       },
       "cite": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "string",
+            "named": true
+          }
+        ]
+      },
+      "dataset": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "string",
+            "named": true
+          }
+        ]
+      },
+      "name": {
         "multiple": false,
         "required": false,
         "types": [
@@ -6194,6 +6224,10 @@
   },
   {
     "type": "expect",
+    "named": false
+  },
+  {
+    "type": "expert",
     "named": false
   },
   {

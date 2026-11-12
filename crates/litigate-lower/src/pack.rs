@@ -6,8 +6,8 @@ use crate::source_map::{Citations, Entry, SourceMap};
 use crate::Build;
 use litigate_base::{DiagnosticCode as C, Span};
 use litigate_engine::model::{
-    local_edge_ids, CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax, Group, Hole, NodeKind, Pack,
-    RawEdge, RawNode, Role, Source, PACK_SCHEMA_VERSION,
+    local_edge_ids, BasisLabel, CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax, Group, Hole,
+    NodeKind, Pack, RawEdge, RawNode, Role, Source, PACK_SCHEMA_VERSION,
 };
 use litigate_sema::hir::{self, ActorRole, Authored, Declaration};
 use std::collections::BTreeMap;
@@ -179,6 +179,35 @@ fn node(sink: &mut Sink, n: &hir::Node) -> RawNode {
     }
 }
 
+/// Individual number suffixes as labels at the scalar fields they describe.
+fn number_basis(nodes: &[&hir::Node], edges: &[(RawEdge, &hir::Edge)]) -> Vec<BasisLabel> {
+    let mut labels = Vec::new();
+    for (i, node) in nodes.iter().enumerate() {
+        if let Some(label) = node
+            .payoff_provenance
+            .as_ref()
+            .and_then(|p| edge::number_label(&format!("/nodes/{i}/payoff"), p))
+        {
+            labels.push(label);
+        }
+    }
+    for (i, (_, edge)) in edges.iter().enumerate() {
+        for (field, provenance) in [
+            ("probability", edge.probability_provenance.as_ref()),
+            ("hours", edge.hours_provenance.as_ref()),
+            ("cost", edge.cost_provenance.as_ref()),
+            ("duration", edge.duration_provenance.as_ref()),
+        ] {
+            if let Some(label) =
+                provenance.and_then(|p| edge::number_label(&format!("/edges/{i}/{field}"), p))
+            {
+                labels.push(label);
+            }
+        }
+    }
+    labels
+}
+
 /// `Pack.counting` (SPEC §8.1). A package that declares several
 /// counting rules and names none in `Lit.toml` is a counting-rule library:
 /// its pack names no rule, and its clock fragment holds them all (§8.2).
@@ -284,27 +313,7 @@ pub(crate) fn pack(
         "/edges",
         edges.iter().map(|(_, e)| e.basis.as_ref()),
     ));
-    for (i, n) in origins.iter().enumerate() {
-        if let Some(p) = &n.payoff_provenance {
-            if let Some(label) = edge::number_label(format!("/nodes/{i}/payoff"), p) {
-                basis.push(label);
-            }
-        }
-    }
-    for (i, (_, e)) in edges.iter().enumerate() {
-        for (field, p) in [
-            ("probability", e.probability_provenance.as_ref()),
-            ("hours", e.hours_provenance.as_ref()),
-            ("cost", e.cost_provenance.as_ref()),
-            ("duration", e.duration_provenance.as_ref()),
-        ] {
-            if let Some(label) =
-                p.and_then(|p| edge::number_label(format!("/edges/{i}/{field}"), p))
-            {
-                basis.push(label);
-            }
-        }
-    }
+    basis.extend(number_basis(&origins, &edges));
     let mut holes = lowered_holes(build, pkg, &syntax, &origins, &edges);
     let filing_limits = limits
         .iter()

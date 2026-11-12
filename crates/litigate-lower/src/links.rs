@@ -5,7 +5,7 @@ use crate::source_map::{Citations, Entry, GuardOpTrace, GuardTrace, SourceMap};
 use crate::Build;
 use litigate_base::{DiagnosticCode as C, Span};
 use litigate_engine::model::{
-    local_edge_ids, pointer_token, CiteSyntax, Hole, Instance, LinkFile, Pack, RawEdge,
+    local_edge_ids, pointer_token, BasisLabel, CiteSyntax, Hole, Instance, LinkFile, Pack, RawEdge,
     LINKS_SCHEMA_VERSION,
 };
 use litigate_sema::guard;
@@ -61,7 +61,8 @@ pub(crate) fn links(
         .iter()
         .enumerate()
         .flat_map(|(i, (_, e))| crate::holes::at(&format!("/links/{i}"), &e.holes));
-    let basis = crate::basis::labels("/links", links.iter().map(|(_, e)| e.basis.as_ref()));
+    let mut basis = crate::basis::labels("/links", links.iter().map(|(_, e)| e.basis.as_ref()));
+    basis.extend(number_basis(&links));
     let lowered = build.lowered(link_holes.chain(instance_holes).collect());
     let file = LinkFile {
         schema_version: Some(LINKS_SCHEMA_VERSION),
@@ -97,6 +98,26 @@ pub(crate) fn links(
         ..build.map_header()
     };
     (file, map)
+}
+
+/// Individual link number suffixes as labels at their scalar pointers.
+fn number_basis(links: &[(RawEdge, &hir::Edge)]) -> Vec<BasisLabel> {
+    let mut labels = Vec::new();
+    for (i, (_, edge)) in links.iter().enumerate() {
+        for (field, provenance) in [
+            ("probability", edge.probability_provenance.as_ref()),
+            ("hours", edge.hours_provenance.as_ref()),
+            ("cost", edge.cost_provenance.as_ref()),
+            ("duration", edge.duration_provenance.as_ref()),
+        ] {
+            if let Some(label) =
+                provenance.and_then(|p| edge::number_label(&format!("/links/{i}/{field}"), p))
+            {
+                labels.push(label);
+            }
+        }
+    }
+    labels
 }
 
 /// The guard provenance of instance `i`'s patches that lowered (SPEC

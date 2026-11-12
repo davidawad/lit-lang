@@ -219,15 +219,15 @@ impl DiagnosticCode {
     pub const fn severity(self, profile: Profile) -> Severity {
         match (self, profile) {
             (
-                Self::NumericProvenanceIncomplete
-                | Self::AnonymousEdge
+                Self::AnonymousEdge
                 | Self::UndeclaredEventId
                 | Self::CiteProvedByHistory
                 | Self::PrecedentNotBinding,
                 _,
             ) => Severity::Info,
             (
-                Self::UnusedDeclaration
+                Self::NumericProvenanceIncomplete
+                | Self::UnusedDeclaration
                 | Self::ObligationBreached
                 | Self::TimelinessUnknown
                 | Self::DesignationShortOfInterpretation

@@ -210,13 +210,17 @@ fn cite_resolves_checks_sourced_bases() {
     );
     let c = verify_one(&lit, Profile::Strict);
     let found = outcome(&c, Obligation::CiteResolves);
-    let text = serde_json::to_string(&found).unwrap_or_default();
-    assert!(
-        text.contains("FRCP 98(a)")
-            && text.contains("FRCP 97(a)")
-            && text.contains("FRCP 4(d)(2)"),
-        "{text}"
+    let without_number_basis = lit.replace(
+        ", effort 2.hours basis sourced(\"FRCP 4(d)(2)\")",
+        ", effort 2.hours",
     );
+    let baseline = verify_one(&without_number_basis, Profile::Strict);
+    let with_count =
+        serde_json::to_value(found).unwrap_or_default()["finding"]["evidence"]["checked"].as_u64();
+    let baseline_count = serde_json::to_value(outcome(&baseline, Obligation::CiteResolves))
+        .unwrap_or_default()["finding"]["evidence"]["checked"]
+        .as_u64();
+    assert_eq!(with_count, baseline_count.map(|count| count + 1));
 }
 
 #[test]

@@ -2,7 +2,7 @@ case frcp-civil-case
 uses frcp-civil-procedure ^2024.12.0
 as_of 2024-12-01
 summary "A civil action under the FRCP: plaintiff sues in federal court, tests personal/subject-matter jurisdiction and service, and litigates through summary judgment and appeal."
-notes "Generic FRCP civil case (e.g. an illustrative breach-of-contract-style claim seeking $500,000), self = plaintiff. Uses `frcp-civil-procedure` alone. The matter's outcome stakes below value plaintiff wins at $500,000 and plaintiff losses at $0; the package now carries judgment direction with the `judgment-for-defendant` state flag through trial and appeal, and splits the win/loss outcomes that the rules identify. A summary-judgment grant is for the movant under FRCP 56(a); the discovery-close decision models either party's motion without assigning a probability to who moves. Appeal-window edges follow the losing party and cross-appeal edges the winning party. The reversal/remand terminal remains a $250,000 interim remand value because the chart does not model what judgment follows the mandate. Post-dismissal branches carry neutral $0 values in this generic fixture because it does not specify claim-specific cost awards or fee entitlement; override these values for a real matter. Rate $650/hr blended partner/associate estimate (illustrative, not sourced)."
+notes "Generic FRCP civil case (e.g. an illustrative breach-of-contract-style claim seeking $500,000), self = plaintiff. Uses `frcp-civil-procedure` alone. The matter's outcome stakes below value plaintiff wins at $500,000 and plaintiff losses at $0; the package carries judgment direction with `judgment-for-plaintiff` and `judgment-for-defendant`; when neither is established, the original neutral `[final]` terminals retain their $0 stake. A summary-judgment grant is for the movant under FRCP 56(a); the discovery-close decision models either party's motion without assigning a probability to who moves. Appeal-window edges follow the losing party and cross-appeal edges the winning party. The reversal/remand terminal remains a $250,000 interim remand value because the chart does not model what judgment follows the mandate. Post-dismissal branches carry neutral $0 values in this generic fixture because it does not specify claim-specific cost awards or fee entitlement; override these values for a real matter. Rate $650/hr blended partner/associate estimate (illustrative, not sourced)."
 // Nothing has happened yet: the matter sits at the package start
 // (`pre-filing`), so there are no events.
 perspective plaintiff
@@ -15,6 +15,7 @@ parties {
 stakes {
   outcome loss: 0.usd
   outcome win: 500_000.usd
+  outcome final: 0.usd
   outcome neutral: 0.usd
   outcome voluntary: 0.usd
   outcome cost: 0.usd

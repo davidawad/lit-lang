@@ -374,8 +374,9 @@ terminal dismissed-with-prejudice: "DISMISSED WITH PREJUDICE" by plaintiff outco
   dismissal-appeal-clock "Dismissal is a final decision -- the losing party weighs an appeal" -> notice-of-appeal-window {
     authority cite "28 U.S.C. 1291; FRAP 4(a)(1)(A)"
     effort 0.hours
-    note "A dismissal with prejudice disposes of the whole action, so it is a final decision appealable under 28 U.S.C. 1291 and the FRAP 4(a)(1)(A) clock runs from entry of the judgment (Twombly: S.D.N.Y. dismissal, 313 F. Supp. 2d 174 (2003), appealed to the Second Circuit, 425 F.3d 99 (2005)). Hours: 0, a no-action transition; the filing itself is the notice-of-appeal edge."
     sets [judgment-for-defendant]
+    clears [judgment-for-plaintiff]
+    note "A dismissal with prejudice disposes of the whole action, so it is a final decision appealable under 28 U.S.C. 1291 and the FRAP 4(a)(1)(A) clock runs from entry of the judgment (Twombly: S.D.N.Y. dismissal, 313 F. Supp. 2d 174 (2003), appealed to the Second Circuit, 425 F.3d 99 (2005)). Hours: 0, a no-action transition; the filing itself is the notice-of-appeal edge."
   }
 }
 
@@ -389,8 +390,10 @@ decision default-entered: "Clerk's Entry of Default" by clerk cite "FRCP 55(a)"
     cost 3_500.usd
     valence good
   }
-  "Clerk or court enters default judgment" -> default-judgment-entered by court {
+  edge-default-judgment-enters "Clerk or court enters default judgment" -> default-judgment-entered by court {
     authority cite "FRCP 55(b)(1); 55(b)(2)"
+    sets [judgment-for-plaintiff]
+    clears [judgment-for-defendant]
   }
 }
 
@@ -458,6 +461,7 @@ state rule60-relief-granted: "Rule 60(b) Relief Granted" by court cite "FRCP 60(
   edge-rule60-relief-granted-reopened-case "Proceed in the reopened action on the terms ordered" -> final-judgment-entered {
     authority cite "FRCP 60(b)"
     effort 0.hours
+    clears [judgment-for-plaintiff, judgment-for-defendant]
   }
 }
 
@@ -782,8 +786,10 @@ chance rule37-sanctions-ruling: "Court Rules on Rule 37 Sanctions" by court disc
   "Case-dispositive sanction -- dismissal for willful noncompliance or spoliation" -> discovery-sanctions-dismissal p 0.15 {
     authority cite "FRCP 37(b)(2)(A)(v); 37(e)(2)(C)"
   }
-  "Case-dispositive sanction -- default judgment against the disobedient defendant" -> discovery-sanctions-default p 0.15 {
+  edge-discovery-sanctions-default "Case-dispositive sanction -- default judgment against the disobedient defendant" -> discovery-sanctions-default p 0.15 {
     authority cite "FRCP 37(b)(2)(A)(vi)"
+    sets [judgment-for-plaintiff]
+    clears [judgment-for-defendant]
   }
 }
 
@@ -894,12 +900,14 @@ chance sj-ruling: "Court Rules on Summary Judgment" by court discretion cite "FR
   "Granted in full -- no genuine dispute of material fact" -> summary-judgment-for-plaintiff p 0.25 {
     authority cite "FRCP 56(a)"
     forbids [sj-by-defendant]
+    sets [judgment-for-plaintiff]
     clears [judgment-for-defendant]
   }
   "Granted in full -- no genuine dispute of material fact" -> summary-judgment-for-defendant p 0.25 {
     authority cite "FRCP 56(a)"
     requires [sj-by-defendant]
     sets [judgment-for-defendant]
+    clears [judgment-for-plaintiff]
   }
   "Granted in part -- remaining claims proceed to trial" -> partial-summary-judgment p 0.2 {
     authority cite "FRCP 56(a)"
@@ -1027,10 +1035,12 @@ chance verdict-rendered: "Verdict / Findings Rendered" by court discretion cite 
   note "For a bench trial, the court must find the facts specially and state its conclusions of law separately (Rule 52(a)(1)). For a jury trial, the jury returns its verdict. Either way, judgment must be set out in a separate document (Rule 58(a)) -- the FRAP 4 appeal clock and the Rule 50(b)/59 clocks both run from ENTRY of that judgment, with a 150-day backstop under FRAP 4(a)(7)(A)(ii) if no separate document is ever entered."
   verdict-for-plaintiff "Verdict / findings for plaintiff" -> final-judgment-entered p 0.5 {
     authority cite "FRCP 52(a); 58"
+    sets [judgment-for-plaintiff]
     clears [judgment-for-defendant]
   }
   verdict-for-defendant "Verdict / findings for defendant" -> final-judgment-entered p 0.5 {
     authority cite "FRCP 52(a); 58"
     sets [judgment-for-defendant]
+    clears [judgment-for-plaintiff]
   }
 }

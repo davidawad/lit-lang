@@ -121,14 +121,14 @@ fn a_party_may_hold_a_bounded_month_grant_with_a_motion_and_no_discretion() {
     let checked = litigate_sema::check_workspace(&db, ws);
     assert!(
         checked.iter().all(|c| c.diagnostics.is_empty()),
-        "{:#?}",
-        checked
+        "{checked:#?}"
     );
     let found: Vec<_> = checked
-        .into_iter()
-        .flat_map(|c| c.package.clone())
-        .flat_map(|p| p.modules.clone())
-        .flat_map(|m| m.declarations.clone())
+        .iter()
+        .filter_map(|c| c.package.as_ref())
+        .flat_map(|p| &p.modules)
+        .flat_map(|m| &m.declarations)
+        .cloned()
         .collect();
     let grant = found
         .iter()

@@ -581,7 +581,7 @@ fn due(
         &|months| {
             let (owner, _) = cx.owner(target);
             counted_months(
-                &clocks,
+                clocks,
                 owner,
                 governing,
                 trigger_event.action,

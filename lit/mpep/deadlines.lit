@@ -62,6 +62,24 @@ event RestrictionRequirementMailed()
 event OfficeActionMailed()
 /// The reply period then running (shortened or extended) ends.
 event ReplyPeriodEnded()
+/// The applicant files a petition and the fee for an extension under § 1.136(a).
+event ExtensionPetitionFiled()
+/// The applicant requests sufficient-cause relief under § 1.136(b).
+event ExtensionForCauseRequested()
+/// The Office records the extended missing-parts reply date.
+event MissingPartsReplyExtended(until: Date) extends missing-parts-reply to until
+/// The Office records the extended election reply date.
+event ElectionReplyExtended(until: Date) extends election-reply to until
+/// The Office records the extended reply date for the non-final SSP.
+event SspReplyExtended(until: Date) extends ssp-reply to until
+/// The Office records the extended reply date for the final SSP.
+event FinalReplyExtended(until: Date) extends final-reply to until
+/// The Office records an extension of the one-month increment window.
+event ExtensionMonthExtended(until: Date) extends extension-month to until
+/// The Office records the extended appeal-brief due date.
+event AppealBriefExtended(until: Date) extends appeal-brief to until
+/// The Office grants sufficient-cause relief for the appeal forwarding fee.
+event AppealForwardingFeeExtended(until: Date) extends appeal-forwarding-fee to until
 /// The examiner mails a final rejection (37 C.F.R. § 1.113).
 event FinalRejectionMailed()
 /// The applicant files a notice of appeal (37 C.F.R. § 41.31).
@@ -88,6 +106,9 @@ event ReexamOrdered()
 /// provisional application was filed"; 37 C.F.R. § 1.7(b) extends a
 /// pendency ending on a Saturday, Sunday or DC federal holiday.
 deadline provisional-pendency: 12.months from ProvisionalFiled() counted_by uspto-1-7 effective [2024-01-31, ..) cite "35 U.S.C. 119(e)(1)"
+{
+  extend { never cite "35 U.S.C. 119(e)(1); 37 CFR 1.78(a)(1)" }
+}
 
 test "provisional-pendency: 12 months from Monday, 2025-03-03" cite "37 CFR 1.7(a)"
 {
@@ -113,6 +134,23 @@ deadline missing-parts-reply: 2.months from MissingPartsNoticeMailed() counted_b
 
   cite "37 CFR 1.136(a)"
 } cite "37 CFR 1.53(f)"
+{
+  extend {
+    by applicant
+    to trigger_date + 6.months
+    after_expiry
+    on ExtensionPetitionFiled()
+    cite "37 CFR 1.136(a); 35 U.S.C. 133"
+  }
+}
+
+test "missing-parts-reply: accepted extension to the statutory ceiling" cite "37 CFR 1.136(a); 35 U.S.C. 133"
+{
+  given MissingPartsNoticeMailed() on 2025-01-31
+  given ExtensionPetitionFiled() by applicant on 2025-07-30
+  given MissingPartsReplyExtended(2025-07-31) by applicant on 2025-07-30
+  expect deadline(missing-parts-reply) == 2025-07-31
+}
 
 test "missing-parts-reply: 2 months from Thursday, 2025-03-06" cite "37 CFR 1.7(a)"
 {
@@ -143,6 +181,23 @@ deadline election-reply: 2.months from RestrictionRequirementMailed() counted_by
 
   cite "37 CFR 1.136(a)"
 } cite "37 CFR 1.142(a)"
+{
+  extend {
+    by applicant
+    to trigger_date + 6.months
+    after_expiry
+    on ExtensionPetitionFiled()
+    cite "37 CFR 1.136(a); 35 U.S.C. 133"
+  }
+}
+
+test "election-reply: accepted extension to the statutory ceiling" cite "37 CFR 1.136(a); 35 U.S.C. 133"
+{
+  given RestrictionRequirementMailed() on 2025-01-31
+  given ExtensionPetitionFiled() by applicant on 2025-07-30
+  given ElectionReplyExtended(2025-07-31) by applicant on 2025-07-30
+  expect deadline(election-reply) == 2025-07-31
+}
 
 test "election-reply: 2 months from Thursday, 2025-04-03" cite "37 CFR 1.7(a)"
 {
@@ -167,6 +222,23 @@ deadline ssp-reply: 3.months from OfficeActionMailed() counted_by uspto-1-7 effe
 
   cite "37 CFR 1.136(a)"
 } cite "37 CFR 1.134"
+{
+  extend {
+    by applicant
+    to trigger_date + 6.months
+    after_expiry
+    on ExtensionPetitionFiled()
+    cite "37 CFR 1.136(a); 35 U.S.C. 133"
+  }
+}
+
+test "ssp-reply: accepted extension to the statutory ceiling from January 31" cite "37 CFR 1.136(a); 35 U.S.C. 133"
+{
+  given OfficeActionMailed() on 2025-01-31
+  given ExtensionPetitionFiled() by applicant on 2025-07-30
+  given SspReplyExtended(2025-07-31) by applicant on 2025-07-30
+  expect deadline(ssp-reply) == 2025-07-31
+}
 
 test "ssp-reply: 3 months from Tuesday, 2025-03-04" cite "37 CFR 1.7(a)"
 {
@@ -208,6 +280,23 @@ test "ssp-reply: from February 28, three months end on May 28, not May 31 (MPEP 
 /// to a short month's last day; the extended periods below count instead
 /// from the action itself.
 deadline extension-month: 1.months from ReplyPeriodEnded() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.136(a); MPEP 710.01(a)"
+{
+  extend {
+    by applicant
+    to trigger_date + 3.months
+    after_expiry
+    on ExtensionPetitionFiled()
+    cite "37 CFR 1.136(a); 35 U.S.C. 133; MPEP 710.01(a)"
+  }
+}
+
+test "extension-month: accepted cumulative extension to the 6-month statutory ceiling" cite "35 U.S.C. 133"
+{
+  given ReplyPeriodEnded() on 2025-04-30
+  given ExtensionPetitionFiled() by applicant on 2025-07-30
+  given ExtensionMonthExtended(2025-07-30) by applicant on 2025-07-30
+  expect deadline(extension-month) == 2025-07-30
+}
 
 test "extension-month: 1 month from Monday, 2025-03-03" cite "37 CFR 1.7(a)"
 {
@@ -272,6 +361,23 @@ deadline final-reply: 3.months from FinalRejectionMailed() counted_by uspto-1-7 
 
   cite "37 CFR 1.136(a)"
 } cite "37 CFR 1.134"
+{
+  extend {
+    by applicant
+    to trigger_date + 6.months
+    after_expiry
+    on ExtensionPetitionFiled()
+    cite "37 CFR 1.136(a); 35 U.S.C. 133"
+  }
+}
+
+test "final-reply: accepted extension to the statutory ceiling from January 31" cite "37 CFR 1.136(a); 35 U.S.C. 133"
+{
+  given FinalRejectionMailed() on 2025-01-31
+  given ExtensionPetitionFiled() by applicant on 2025-07-30
+  given FinalReplyExtended(2025-07-31) by applicant on 2025-07-30
+  expect deadline(final-reply) == 2025-07-31
+}
 
 test "final-reply: 3 months from Wednesday, 2025-06-04" cite "37 CFR 1.7(a)"
 {
@@ -287,7 +393,24 @@ test "final-reply: the last day, 2025-11-27, is a holiday; due Friday" cite "37 
 
 /// 37 C.F.R. § 41.37(a): the appeal brief is due "within two months from the
 /// date of filing the notice of appeal", extendable under § 1.136 (§ 41.37(e)).
-deadline appeal-brief: 2.months from NoticeOfAppealFiled() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 41.37(a)"
+deadline appeal-brief: 2.months from NoticeOfAppealFiled() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 41.37(a); 37 CFR 41.37(e)"
+{
+  extend {
+    by applicant
+    to trigger_date + 7.months
+    after_expiry
+    on ExtensionPetitionFiled()
+    cite "37 CFR 1.136(a); 37 CFR 41.37(e)"
+  }
+}
+
+test "appeal-brief: accepted 5-month extension from its 2-month due date" cite "37 CFR 1.136(a); 37 CFR 41.37(e)"
+{
+  given NoticeOfAppealFiled() on 2025-01-31
+  given ExtensionPetitionFiled() by applicant on 2025-08-30
+  given AppealBriefExtended(2025-08-31) by applicant on 2025-08-30
+  expect deadline(appeal-brief) == 2025-08-31
+}
 
 test "appeal-brief: 2 months from Wednesday, 2025-03-05" cite "37 CFR 1.7(a)"
 {
@@ -306,6 +429,23 @@ test "appeal-brief: the last day, 2025-05-26, is a holiday; due Tuesday" cite "3
 /// answer" or a petition decision; unpaid, the appeal stands dismissed
 /// (§ 41.45(b)).
 deadline appeal-forwarding-fee: 2.months from ExaminersAnswerMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 41.45(a)"
+{
+  extend {
+    by office
+    discretion GoodCause
+    on ExtensionForCauseRequested()
+    within prescribed_due
+    cite "37 CFR 1.136(b); 37 CFR 41.45(c)"
+  }
+}
+
+test "appeal-forwarding-fee: Office grants sufficient-cause extension on timely request" cite "37 CFR 1.136(b); 37 CFR 41.45(c)"
+{
+  given ExaminersAnswerMailed() on 2025-03-06
+  given ExtensionForCauseRequested() by applicant on 2025-05-05
+  given AppealForwardingFeeExtended(2025-06-15) by office on 2025-05-06
+  expect deadline(appeal-forwarding-fee) == 2025-06-15
+}
 
 test "appeal-forwarding-fee: 2 months from Thursday, 2025-03-06" cite "37 CFR 1.7(a)"
 {
@@ -377,6 +517,9 @@ test "issue-fee: the last day, 2025-12-25, is a holiday and the 26th a closure; 
 /// filed more than 1 year after the petitioner is served with a complaint
 /// alleging infringement.
 deadline ipr-time-bar: 1.years from InfringementComplaintServed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "35 U.S.C. 315(b)"
+{
+  extend { never cite "35 U.S.C. 315(b)" }
+}
 
 test "ipr-time-bar: 1 year from Monday, 2025-03-03" cite "37 CFR 1.7(a)"
 {
@@ -393,6 +536,9 @@ test "ipr-time-bar: the last day, 2026-07-03, is a holiday; due Monday" cite "37
 /// 35 U.S.C. § 321(c): a post-grant review petition may be filed only within
 /// 9 months after the grant of the patent.
 deadline pgr-window: 9.months from PatentGranted() counted_by uspto-1-7 effective [2024-01-31, ..) cite "35 U.S.C. 321(c)"
+{
+  extend { never cite "35 U.S.C. 321(c)" }
+}
 
 test "pgr-window: 9 months from Tuesday, 2025-03-04" cite "37 CFR 1.7(a)"
 {
@@ -485,6 +631,9 @@ test "reexam-owner-statement: the last day, 2025-11-11, is a holiday; due Wednes
 /// unless "applied for within two years from the grant of the original
 /// patent".
 deadline broadening-reissue: 2.years from PatentGranted() counted_by uspto-1-7 effective [2024-01-31, ..) cite "35 U.S.C. 251(d)"
+{
+  extend { never cite "35 U.S.C. 251(d)" }
+}
 
 test "broadening-reissue: 2 years from Monday, 2025-03-03" cite "37 CFR 1.7(a)"
 {

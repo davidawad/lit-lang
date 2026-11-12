@@ -30,7 +30,7 @@ import ptab.{
 /// From January 8, 2021 (85 FR 79120): the sur-reply and the response
 /// rules whose text is cited; earlier trial practice is not encoded
 /// (`unknown_before`).
-decision patent-owner-response-window: "Patent Owner Response Window" effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 C.F.R. § 42.120"
+decision patent-owner-response-window: "Patent Owner Response Window" by patent-owner effective [2021-01-08, ..) unknown_before 2021-01-08 cite "37 C.F.R. § 42.120"
 {
   group trial-group
   note "Patent owner's principal merits brief, due per the scheduling order (typically 3 months post-institution). Structural counterpart to mpep-prosecution's response cycle, except the responder is the patent owner defending validity."
@@ -53,7 +53,7 @@ state patent-owner-response-filed: "Patent Owner Response Filed" by patent-owner
 {
   group trial-group
   note "May include expert declarations, claim construction arguments, and objective indicia of nonobviousness. Arguments not raised here (or in prior motion practice) are waived — they cannot be resurrected in sur-reply or at the hearing, and waiver bars any estoppel defense on that theory."
-  "File Petitioner Reply" -> petitioner-reply-brief {
+  "File Petitioner Reply" -> petitioner-reply-brief by petitioner {
     event PetitionerReplyFiled()
     authority cite "37 C.F.R. § 42.23(a)"
     effort 50.hours
@@ -88,7 +88,7 @@ state petitioner-reply-brief: "Petitioner Reply Filed" effective [2021-01-08, ..
 {
   group trial-group
   note "Reply may only respond to arguments raised in the POR or the institution decision — new grounds, new prior-art combinations, or theories not foreshadowed in the petition risk being struck as an improper reply and not considered."
-  "File Patent Owner Sur-Reply" -> patent-owner-sur-reply {
+  "File Patent Owner Sur-Reply" -> patent-owner-sur-reply by patent-owner {
     event SurReplyFiled()
     authority cite "37 C.F.R. § 42.23(b)"
     within sur-reply-period {
@@ -389,7 +389,7 @@ state director-review-request-filed: "Director Review Requested" by board effect
 {
   group rehearing-director-group
   note "Arthrex required some avenue for accountable review of APJ decisions; the Director personally reviews on request or sua sponte, available on institution decisions and final written decisions. Typically decided within 3-9 months, with no hard deadline prescribed."
-  "Director reviews the decision" -> director-review-decision {
+  "Director reviews the decision" -> director-review-decision by director {
     authority cite "37 C.F.R. § 42.75(e)(2)"
   }
 }
@@ -466,6 +466,14 @@ terminal appeal-forfeited-unappealed: "No Timely Appeal — FWD Final" outcome [
   payoff 400_000.usd
 }
 
+/// DECIDED: § 319 lets either dissatisfied party appeal, so this graph does
+/// not identify which party files the notice. The abstract node is nature,
+/// not a Board choice. The node `by board` does not lower an actor for this
+/// state; its sole outgoing review edge inherits `board` (mapped to `nature`)
+/// because PTAB has no separate court role. The incoming notice edge is
+/// `either`, so it does not identify a particular appealing party. The link
+/// replaces the notice edge in a composed graph and sends that party directly
+/// to CAFC.
 state federal-circuit-notice-of-appeal: "Notice of Appeal Filed" by board cite "35 U.S.C. § 319; 28 U.S.C. § 1295(a)(4)(A)"
 {
   group appeal-group

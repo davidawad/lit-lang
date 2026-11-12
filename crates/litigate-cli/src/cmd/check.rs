@@ -222,6 +222,32 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
             .flat_map(|m| m.declarations.iter())
             .collect()
     }
+    // Tests describe expectations about rules; their references are not
+    // dependencies of those rules and must never seed the closure.
+    fn dependency_id(d: &D) -> Option<&str> {
+        match d {
+            D::Test(_) => None,
+            D::Node(x) => Some(&x.meta.id),
+            D::Deadline(x) => Some(&x.meta.id),
+            D::Counting(x) => Some(&x.meta.id),
+            D::Calendar(x) => Some(&x.meta.id),
+            D::Rule(x) => Some(&x.meta.id),
+            D::Default(x) => Some(&x.meta.id),
+            D::Exception(x) => Some(&x.meta.id),
+            D::Transition(x) => Some(&x.meta.id),
+            D::Grant(x) => Some(&x.meta.id),
+            D::Limit(x) => Some(&x.meta.id),
+            D::Recharacterize(x) => Some(&x.meta.id),
+            D::Invalidate(x) => Some(&x.meta.id),
+            D::Calibration(x) => Some(&x.meta.id),
+            D::TypeAlias(x) => Some(&x.name),
+            D::Enum(x) => Some(&x.name),
+            D::Event(x) => Some(&x.name),
+            D::Authority(x) => Some(&x.name),
+            D::Link(x) => x.edge.id.as_deref(),
+            D::Instance(x) => Some(&x.name),
+        }
+    }
     fn string_leaves(value: &serde_json::Value, out: &mut BTreeSet<String>) {
         match value {
             serde_json::Value::String(text) => {
@@ -257,13 +283,13 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
     let mut local_ids: BTreeMap<(String, String), String> = BTreeMap::new();
     for (package_name, package) in &packages {
         for declaration in declarations(package) {
-            let Some(m) = meta(declaration) else { continue };
-            let key = format!("{}::{}", package.manifest.pack_id, m.id);
+            let Some(id) = dependency_id(declaration) else { continue };
+            let key = format!("{}::{}", package.manifest.pack_id, id);
             let mut refs = BTreeSet::new();
             if let Ok(value) = serde_json::to_value(declaration) {
                 string_leaves(&value, &mut refs);
             }
-            local_ids.insert(((*package_name).to_owned(), m.id.clone()), key.clone());
+            local_ids.insert(((*package_name).to_owned(), id.to_owned()), key.clone());
             declaration_refs.insert(key, ((*package_name).to_owned(), refs));
         }
     }
@@ -271,8 +297,8 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
     for root in roots {
         let mut pending = Vec::new();
         for declaration in declarations(root) {
-            let Some(m) = meta(declaration) else { continue };
-            let key = format!("{}::{}", root.manifest.pack_id, m.id);
+            let Some(id) = dependency_id(declaration) else { continue };
+            let key = format!("{}::{}", root.manifest.pack_id, id);
             if let Some((_, refs)) = declaration_refs.get(&key) {
                 pending.extend(
                     refs.iter()
@@ -310,11 +336,11 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
                 continue;
             };
             for declaration in declarations(configured) {
-                let Some(m) = meta(declaration) else { continue };
-                let key = format!("{}::{}", configured.manifest.pack_id, m.id);
-                if m.id == counting || key == counting {
+                let Some(id) = dependency_id(declaration) else { continue };
+                let key = format!("{}::{}", configured.manifest.pack_id, id);
+                if id == counting || key == counting {
                     reachable.insert(key);
-                    let key = format!("{}::{}", configured.manifest.pack_id, m.id);
+                    let key = format!("{}::{}", configured.manifest.pack_id, id);
                     if let Some((_, refs)) = declaration_refs.get(&key) {
                         pending.extend(
                             refs.iter()

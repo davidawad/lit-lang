@@ -2802,7 +2802,11 @@ formatting (L9004). L9011 is a warning in both profiles.
 For `litigate check P --profile strict`, every declaration in each named
 package is judged in full. A dependency package is judged only for
 declarations reachable from the named package's declarations, following
-resolved references transitively. Reachability includes imports actually
+resolved references transitively. The closure walks declarations with and
+without `Metadata` (including events, enums, and type aliases), so a reference
+through a type or event declaration does not stop the search. Inline `test`
+declarations are excluded: they assert behavior about rules, so a rule does
+not depend on the test that exercises it. Reachability includes imports actually
 used, declaration references (including a deadline's counting rule and a
 counting rule's calendars), type and event references, `recounts`, and
 layered packages selected by `Lit.toml`. An L5002 in a reachable dependency

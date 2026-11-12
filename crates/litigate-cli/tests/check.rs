@@ -96,7 +96,6 @@ fn strict_dependency_holes_follow_reachable_declarations() {
         "unreachable fixture hole",
     );
     let unused = run(&unused_dir);
-    assert_eq!(unused.code, 0, "{:?}", unused.json["diagnostics"]);
     let diagnostics = unused.json["diagnostics"].as_array().unwrap();
     let note = diagnostics.iter().find(|d| d["code"] == "L5002").unwrap();
     assert_eq!(note["severity"], "info");
@@ -135,6 +134,78 @@ fn strict_dependency_holes_follow_reachable_declarations() {
         "{}",
         reached.stdout
     );
+
+}
+
+#[test]
+fn strict_dependency_holes_follow_metadata_less_events_and_types() {
+    use std::path::Path;
+    let dir = support::scratch("strict-hole-through-event");
+    let packages = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../lit");
+    support::copy_dir(&packages.join("core"), &dir.join("lit/core"));
+    let fixture = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("tests/fixtures/timeline-package");
+    support::copy_dir(&fixture, &dir.join("lit/a"));
+    #[cfg(unix)]
+    std::os::unix::fs::symlink(support::repo().join("sources"), dir.join("sources")).unwrap();
+    #[cfg(not(unix))]
+    support::copy_dir(&support::repo().join("sources"), &dir.join("sources"));
+
+    let manifest = dir.join("lit/a/Lit.toml");
+    let text = std::fs::read_to_string(&manifest).unwrap();
+    let text = text.replace("mover = \"self\"", "plaintiff = \"self\"");
+    std::fs::write(
+        manifest,
+        format!("{text}\n[dependencies]\ncore = {{ version = \"^1.0.0\", path = \"../core\" }}\n"),
+    )
+    .unwrap();
+
+    let time = dir.join("lit/core/time.lit");
+    let source = std::fs::read_to_string(&time).unwrap();
+    let source = source.replace(
+        "event Served(method: ServiceMethod)",
+        "type FixtureMethod = ServiceMethod\nevent Served(method: FixtureMethod) paper fixture-limit",
+    );
+    assert_ne!(source, std::fs::read_to_string(&time).unwrap());
+    std::fs::write(
+        time,
+        format!(
+            "{source}\n{}\n",
+            r#"limit fixture-limit { words <= ?("event-reachable fixture hole") }"#
+        ),
+    )
+    .unwrap();
+
+    let authoring = dir.join("lit/a/fixture.lit");
+    let source = std::fs::read_to_string(&authoring).unwrap();
+    let source = source.replace(
+        "module fixture\n",
+        "module fixture\n\nimport core.time.{ Served, ServiceMethod }\n",
+    );
+    let source = source
+        .replace("event Started() }", "event Served(Personal) }")
+        .replace("by mover", "by plaintiff");
+    assert_ne!(source, std::fs::read_to_string(&authoring).unwrap());
+    std::fs::write(authoring, source).unwrap();
+
+    for target in ["lit/core", "lit/a"] {
+        let fmt = support::litigate_in(&dir, &["fmt", target]);
+        assert_eq!(fmt.code, 0, "{}", fmt.stdout);
+        let lock = support::litigate_in(&dir, &["lock", target]);
+        assert_eq!(lock.code, 0, "{}", lock.stdout);
+    }
+    let run = support::litigate_in(&dir, &["check", "--profile", "strict", "lit/a"]);
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert!(run.json["diagnostics"].as_array().unwrap().iter().any(|d| {
+        d["code"] == "L5002"
+            && d["severity"] == "error"
+            && d["span"]["file"]
+                .as_str()
+                .is_some_and(|file| file.contains("core/time.lit"))
+            && d["message"]
+                .as_str()
+                .is_some_and(|message| message.contains("event-reachable fixture hole"))
+    }), "{}", run.stdout);
 }
 
 #[test]

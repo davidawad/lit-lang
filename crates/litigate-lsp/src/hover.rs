@@ -378,6 +378,14 @@ pub fn at(
         let def = &analysis.index.defs[analysis.index.at(file, offset)?];
         return Some((definition(analysis, def), def.name_range));
     };
+    if let Some(def) = analysis
+        .index
+        .at(file, offset)
+        .map(|i| &analysis.index.defs[i])
+        .filter(|def| def.kind == K::EdgeDecl && def.name_range == def.full_range)
+    {
+        return Some((definition(analysis, def), def.name_range));
+    }
     let token = token_at(text, kind, offset)?;
     let value = if is_cite(&token) {
         cite_token(analysis, file, text, &token)?

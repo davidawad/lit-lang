@@ -322,6 +322,59 @@ async fn symbols_name_parallel_omitted_edges_with_derived_ordinals() {
             && children.contains(&"edge-answered-judgment-entered-2"),
         "{children:?}"
     );
+    for (name, label) in [
+        ("edge-answered-judgment-entered-1", "Proceed to judgment"),
+        ("edge-answered-judgment-entered-2", "Proceed again"),
+    ] {
+        let symbol = answered["children"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|child| child["name"] == name)
+            .unwrap();
+        let position = symbol["selectionRange"]["start"].clone();
+        let hover = c.at("hover", LIT, position.clone()).await;
+        let value = hover["contents"]["value"].as_str().unwrap_or_default();
+        assert!(value.contains(name), "{value}");
+        assert!(value.contains(label), "{value}");
+        let definition = c.at("definition", LIT, position.clone()).await;
+        assert_eq!(definition["uri"], c.uri(LIT));
+        assert_eq!(definition["range"]["start"], position);
+    }
+}
+
+#[tokio::test]
+async fn omitted_edge_hover_and_definition_use_derived_id() {
+    let mut c = Client::examples("protocol-derived-edge", &[]).await;
+    let text = read(LIT);
+    c.open(LIT, &text).await;
+    let symbols = c
+        .request(
+            "textDocument/documentSymbol",
+            json!({"textDocument": {"uri": c.uri(LIT)}}),
+        )
+        .await;
+    let symbol = symbols
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|symbol| symbol["name"] == "answered")
+        .and_then(|node| node["children"].as_array())
+        .and_then(|children| {
+            children
+                .iter()
+                .find(|symbol| symbol["name"] == "edge-answered-judgment-entered")
+        })
+        .expect("the omitted edge has a derived symbol");
+    let position = symbol["selectionRange"]["start"].clone();
+    let hover = c.at("hover", LIT, position.clone()).await;
+    let value = hover["contents"]["value"].as_str().unwrap_or_default();
+    assert!(value.contains("edge-answered-judgment-entered"), "{value}");
+    assert!(value.contains("Proceed to judgment"), "{value}");
+    assert!(value.contains("judgment-entered"), "{value}");
+    let definition = c.at("definition", LIT, position.clone()).await;
+    assert_eq!(definition["uri"], c.uri(LIT));
+    assert_eq!(definition["range"]["start"], position);
 }
 
 #[tokio::test]

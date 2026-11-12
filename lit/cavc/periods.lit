@@ -190,14 +190,6 @@ deadline untimeliness-motion-period: 45.days after BoardDecisionCopyFiled() coun
     on MotionFiled()
     cite "CAVC R. 26(b)"
   }
-  extend { by court, discretion ExtraordinaryCircumstances, cite "CAVC R. 26(b)" }
-  extend {
-    by court
-    discretion ExtraordinaryCircumstances
-    after_expiry
-    on MotionFiled()
-    cite "CAVC R. 26(b)"
-  }
 }
 
 /// A redaction is challenged by motion within 15 days of the redacted
@@ -219,14 +211,6 @@ deadline record-before-agency-period: 60.days after DocketingNoticeIssued() coun
     by court
     discretion GoodCause
     max 45.days
-    after_expiry
-    on MotionFiled()
-    cite "CAVC R. 26(b)"
-  }
-  extend { by court, discretion ExtraordinaryCircumstances, cite "CAVC R. 26(b)" }
-  extend {
-    by court
-    discretion ExtraordinaryCircumstances
     after_expiry
     on MotionFiled()
     cite "CAVC R. 26(b)"
@@ -397,14 +381,6 @@ deadline appellant-brief-period: 60.days after RecordDisputePeriodExpired() coun
     on MotionFiled()
     cite "CAVC R. 26(b)"
   }
-  extend { by court, discretion ExtraordinaryCircumstances, cite "CAVC R. 26(b)" }
-  extend {
-    by court
-    discretion ExtraordinaryCircumstances
-    after_expiry
-    on MotionFiled()
-    cite "CAVC R. 26(b)"
-  }
 }
 
 test "Counting boundary: appellant-brief-period (weekend)" cite "CAVC R. 31(a)(1)(A)"
@@ -424,14 +400,6 @@ deadline appellant-brief-after-conference-period: 30.days after StaffConferenceC
     on MotionFiled()
     cite "CAVC R. 26(b)"
   }
-  extend { by court, discretion ExtraordinaryCircumstances, cite "CAVC R. 26(b)" }
-  extend {
-    by court
-    discretion ExtraordinaryCircumstances
-    after_expiry
-    on MotionFiled()
-    cite "CAVC R. 26(b)"
-  }
 }
 
 /// The Secretary's brief is due not later than 60 days after service of
@@ -444,14 +412,6 @@ deadline secretary-brief-period: 60.days after ServedPaper(AppellantBrief) count
     by court
     discretion GoodCause
     max 45.days
-    after_expiry
-    on MotionFiled()
-    cite "CAVC R. 26(b)"
-  }
-  extend { by court, discretion ExtraordinaryCircumstances, cite "CAVC R. 26(b)" }
-  extend {
-    by court
-    discretion ExtraordinaryCircumstances
     after_expiry
     on MotionFiled()
     cite "CAVC R. 26(b)"
@@ -528,14 +488,6 @@ deadline reconsideration-period: 21.days after DispositiveAction(Domestic) count
     on ReconsiderationMotionFiled()
     cite "CAVC R. 26(b)"
   }
-  extend { by court, discretion ExtraordinaryCircumstances, cite "CAVC R. 26(b)" }
-  extend {
-    by court
-    discretion ExtraordinaryCircumstances
-    after_expiry
-    on ReconsiderationMotionFiled()
-    cite "CAVC R. 26(b)"
-  }
 }
 
 test "Counting boundary: reconsideration-period (weekend)" cite "CAVC R. 35(d)"
@@ -555,22 +507,11 @@ deadline reconsideration-abroad-period: 51.days after DispositiveAction(Abroad) 
     on ReconsiderationMotionFiled()
     cite "CAVC R. 26(b)"
   }
-  extend { by court, discretion ExtraordinaryCircumstances, cite "CAVC R. 26(b)" }
-  extend {
-    by court
-    discretion ExtraordinaryCircumstances
-    after_expiry
-    on ReconsiderationMotionFiled()
-    cite "CAVC R. 26(b)"
-  }
 }
 
 /// Judgment begins the 60-day time period for appealing to the U.S. Court
 /// of Appeals for the Federal Circuit.
 deadline federal-circuit-appeal-period: 60.days after JudgmentEntered() counted_by cavc26 cite "CAVC R. 36(a)"
-{
-  extend { never cite "CAVC R. 26(b)" }
-}
 
 test "Counting boundary: federal-circuit-appeal-period (weekend)" cite "CAVC R. 36(a)"
 {
@@ -592,14 +533,6 @@ deadline mandate-period: 60.days after JudgmentEntered() counted_by cavc26 cite 
     on MotionFiled()
     cite "CAVC R. 26(b)"
   }
-  extend { by court, discretion ExtraordinaryCircumstances, cite "CAVC R. 26(b)" }
-  extend {
-    by court
-    discretion ExtraordinaryCircumstances
-    after_expiry
-    on MotionFiled()
-    cite "CAVC R. 26(b)"
-  }
 }
 
 test "Counting boundary: mandate-period (weekend)" cite "CAVC R. 41(b)"
@@ -615,14 +548,6 @@ deadline uncontested-mandate-period: 60.days after UncontestedDispositionOrdered
     by court
     discretion GoodCause
     max 45.days
-    after_expiry
-    on MotionFiled()
-    cite "CAVC R. 26(b)"
-  }
-  extend { by court, discretion ExtraordinaryCircumstances, cite "CAVC R. 26(b)" }
-  extend {
-    by court
-    discretion ExtraordinaryCircumstances
     after_expiry
     on MotionFiled()
     cite "CAVC R. 26(b)"
@@ -653,14 +578,6 @@ deadline eaja-response-period: 30.days after FeeApplicationFiled() counted_by ca
     by court
     discretion GoodCause
     max 45.days
-    after_expiry
-    on MotionFiled()
-    cite "CAVC R. 26(b)"
-  }
-  extend { by court, discretion ExtraordinaryCircumstances, cite "CAVC R. 26(b)" }
-  extend {
-    by court
-    discretion ExtraordinaryCircumstances
     after_expiry
     on MotionFiled()
     cite "CAVC R. 26(b)"

@@ -148,9 +148,6 @@ rule duty leave-to-appeal-duty effective [2025-12-01, ..) known_at 2025-12-01 ci
 rule duty election-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8005"
 {
   deadline appellant-election-period: 0.days after NoticeOfAppealFiled() counted_by frbp9006 cite "28 U.S.C. § 158(c)(1)(A)"
-  {
-    extend { never cite "28 U.S.C. § 158(c)(1)" }
-  }
 
   test "Counting boundary: appellant-election-period (weekend)" cite "28 U.S.C. § 158(c)(1)(A)"
   {
@@ -158,9 +155,6 @@ rule duty election-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRB
     expect deadline(appellant-election-period) == 2025-12-08
   }
   deadline other-party-election-period: 30.days after NoticeOfAppealServed() counted_by frbp9006 cite "28 U.S.C. § 158(c)(1)(B)"
-  {
-    extend { never cite "28 U.S.C. § 158(c)(1)" }
-  }
 
   test "Counting boundary: other-party-election-period (holiday)" cite "28 U.S.C. § 158(c)(1)(B)"
   {
@@ -203,22 +197,6 @@ rule duty election-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRB
 rule duty direct-review-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8006"
 {
   deadline direct-certification-request-period: 60.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 8006(f)(1)"
-  {
-    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
-    extend {
-      by court
-      discretion GoodCause
-      on PartEightDeadlineExtensionMoved()
-      cite "FRBP 9006(b)(1)"
-    }
-    extend {
-      by court
-      discretion ExcusableNeglect
-      after_expiry
-      on PartEightDeadlineExtensionMoved()
-      cite "FRBP 9006(b)(1)"
-    }
-  }
   deadline direct-certification-response-period: 14.days after DirectCertificationRequestServed() counted_by frbp9006 cite "FRBP 8006(f)(3)(A)"
   {
     extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
@@ -243,22 +221,6 @@ rule duty direct-review-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
     expect deadline(direct-certification-response-period) == 2025-12-22
   }
   deadline direct-authorization-petition-period: 30.days after CertificationEffective() counted_by frbp9006 cite "FRBP 8006(g)"
-  {
-    extend { by court, discretion GoodCause, cite "FRBP 9006(b)(1)" }
-    extend {
-      by court
-      discretion GoodCause
-      on PartEightDeadlineExtensionMoved()
-      cite "FRBP 9006(b)(1)"
-    }
-    extend {
-      by court
-      discretion ExcusableNeglect
-      after_expiry
-      on PartEightDeadlineExtensionMoved()
-      cite "FRBP 9006(b)(1)"
-    }
-  }
 
   test "Counting boundary: direct-authorization-petition-period (holiday)" cite "FRBP 8006(g)"
   {

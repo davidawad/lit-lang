@@ -1,6 +1,6 @@
 # Strict profile: bankruptcy and BAP extension availability
 
-Bead: `lg-pb1fe.34`. Baseline captured with `target/release/litigate check --profile strict lit/<package> --format json` before edits; after checks used the same command and binary. Baseline is 74 L5002 findings across 31 packages. After edits, 38 remain; 4 of 31 packages pass strict (bankr-cas, bankr-or, bankr-ut, bap9). There are no non-L5002 errors in the after results.
+Bead: `lg-pb1fe.39` (correction to `lg-pb1fe.34`). Baseline captured with `target/release/litigate check --profile strict lit/<package> --format json` before edits; after checks used the same command and binary. The .34 baseline was 74 L5002 findings across 31 packages. After this correction, 51 remain; 3 of 31 packages pass strict (bankr-cas, bankr-or, bankr-ut). The six-package before/after results for this correction are recorded below. The package table retains .34’s original baseline column and updates its cumulative after column. There are no non-L5002 errors in the strict after results.
 
 ## Strict counts by package
 
@@ -32,17 +32,30 @@ Bead: `lg-pb1fe.34`. Baseline captured with `target/release/litigate check --pro
 | bankr-vi | 1 | 1 | fails |
 | bankr-wae | 1 | 1 | fails |
 | bankr-wy | 1 | 1 | fails |
-| bap1 | 16 | 6 | fails |
-| bap10 | 6 | 1 | fails |
-| bap6 | 8 | 1 | fails |
-| bap8 | 8 | 2 | fails |
-| bap9 | 5 | 0 | pass |
+| bap1 | 16 | 9 | fails |
+| bap10 | 6 | 3 | fails |
+| bap6 | 8 | 4 | fails |
+| bap8 | 8 | 5 | fails |
+| bap9 | 5 | 2 | fails |
+
+## Correction strict checks
+
+The current-bead baseline was taken at `c9bf9da9` before edits; after results are after the final source and lock regeneration.
+
+| Package | L5002 before this correction | L5002 after this correction | Strict result after |
+|---|---:|---:|---|
+| bankr-cas | 0 | 0 | pass |
+| bap1 | 6 | 9 | fails |
+| bap6 | 1 | 4 | fails |
+| bap8 | 2 | 5 | fails |
+| bap9 | 0 | 2 | fails |
+| bap10 | 1 | 3 | fails |
 
 ## Source and typing decisions
 
-Read FRBP 9006(b)(1) in `sources/frbp.txt` (Rule 9006), which permits the court to extend a period prescribed by the Bankruptcy Rules for cause on a request made before expiry, and permits an after-expiry extension only for excusable neglect. Rule 9006(b)(2) lists no Part VIII deadline among its exceptions; Rule 9006(b)(3) gives Rule 8002 its own specific limits. Accordingly, the shared deadlines in `lit/frbp/appeals.lit` now carry the Rule 9006(b)(1) before-expiry and after-expiry grants with the corresponding standard and motion event. The 28 U.S.C. § 158(c)(1) district-court election periods are statutory; each has a typed `never` lock cited to that statute. This shared change is why BAP9 now passes and the other four BAP packages lose most, but not all, L5002 findings.
+FRBP 9006(b)(1) continues to support the remaining authored Part VIII grants; it does not resolve the appeal periods also fixed by statute or by FRAP. Removed the statutory election-period `never` locks because 28 U.S.C. § 158(c)(1) states when the elections are due but says nothing about enlargement. Removed all three FRBP 9006(b)(1) grants from the 60-day direct-certification request because 28 U.S.C. § 158(d)(2)(E) also fixes that period and the vendored text does not settle whether rule-based enlargement reaches it. Removed all three grants from the 30-day authorization petition because FRBP 8006(g) refers to FRAP 6(c), while FRAP 26(b)(1) forbids extending a petition for permission to appeal; the vendored text does not settle which provision governs. These periods remain undeclared. BAP9 consequently fails strict again with 2 L5002 findings.
 
-Read the local rules governing the three local periods that now have typed grants: Southern District of California LBR 9006-1(d) (`sources/bankr-cas/casb-lbr-2025-12-01-sectioned.txt`), Oregon LBR 9006-1(a) (`sources/bankr-or/orb-lbr-2025-12-01-sectioned.txt`), and Utah LBR 9006-1(a) (`sources/bankr-ut/utb-lbr-2025-12-01-sectioned.txt`). Each is scoped to the affected local deadline. The Southern District of California rule expressly applies to extensions under local rules and incorporates FRBP 9006; Oregon states good cause, appropriate use of prior time, and a request at the earliest practical time; Utah allows a different response period by order for cause shown on motion.
+For Bankr. S.D. Cal. LBR 9013-6(a), removed the no-motion grant. Kept the two on-motion grants: LBR 9006-1(d) allows a motion to extend time under the Local Bankruptcy Rules subject to FRBP 9006, and FRBP 9006(b)(1) supplies cause before expiry and excusable neglect after expiry. The rule does not create a grant without a motion. Bankr-cas therefore continues to pass strict.
 
 For the remaining local periods, I read the cited provision and searched the same package’s vendored rule text for the provision governing enlargement. Where a provision says “unless ordered otherwise” or permits a court to shorten/extend time without a standard or window, the typed language cannot encode those missing terms without inference. Where no enlargement provision applies, FRBP 9006(a) supplies counting only; FRBP 9006(b)(1) does not itself authorize enlarging local-rule periods. Those periods are unchanged and remain L5002 strict failures. The original period and edge facts were not changed.
 
@@ -61,7 +74,7 @@ Rows are deduplicated by package and referenced deadline; occurrence counts show
 | bankr-cac | `opportunity-response-period` | `sources/bankr-cac/cacb-lbr-2025-05-08-sectioned.txt` § `Bankr. C.D. Cal. LBR 9013-1(o)` | Left unchanged: read `Bankr. C.D. Cal. LBR 9013-1(o)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bankr-cae | `opportunity-objection-period` | `sources/bankr-cae/caeb-lbr-2026-04-sectioned.txt` § `Bankr. E.D. Cal. LBR 9014-1(k)` | Left unchanged: read `Bankr. E.D. Cal. LBR 9014-1(k)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bankr-can | `opportunity-objection-period` | `sources/bankr-can/canb-lbr-2026-05-04-sectioned.txt` § `Bankr. N.D. Cal. B.L.R. 9014-1(b)` | Left unchanged: read `Bankr. N.D. Cal. B.L.R. 9014-1(b)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
-| bankr-cas | `motion-opposition-period` | `sources/bankr-cas/casb-lbr-2025-12-01-sectioned.txt` § `Bankr. S.D. Cal. LBR 9013-6(a)` | Left unchanged: read `Bankr. S.D. Cal. LBR 9013-6(a)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/0. |
+| bankr-cas | `motion-opposition-period` | `sources/bankr-cas/casb-lbr-2025-12-01-sectioned.txt` § `Bankr. S.D. Cal. LBR 9013-6(a)` | Removed the no-motion grant; kept the two on-motion FRBP 9006(b)(1) grants under LBR 9006-1(d): “Subject to the limitations of FRBP 9006, a motion for an order extending or shortening time under the Bankruptcy Rules or Local Bankruptcy Rules may be submitted ex parte pursuant to LBR 9013-3(e) with a proposed order.” FRBP 9006(b)(1) supplies the cause / excusable-neglect standards. Baseline/after L5002 occurrences: 1/0. |
 | bankr-co | `presumptive-response-period` | `sources/bankr-co/cob-local-rules-2021-12-01-sectioned.txt` § `D. Colo. L.B.R. 9013-1` | Left unchanged: read `D. Colo. L.B.R. 9013-1` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bankr-dc | `motion-reply-period` | `sources/bankr-dc/dc-local-rules-2026-02-01-sectioned.txt` § `Bankr. D.D.C. LBR 9013-1(d)` | Left unchanged: read `Bankr. D.D.C. LBR 9013-1(d)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bankr-dc | `motion-response-period` | `sources/bankr-dc/dc-local-rules-2026-02-01-sectioned.txt` § `Bankr. D.D.C. LBR 9013-1(d)` | Left unchanged: read `Bankr. D.D.C. LBR 9013-1(d)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
@@ -73,7 +86,7 @@ Rows are deduplicated by package and referenced deadline; occurrence counts show
 | bankr-nm | `objection-deadline-period` | `sources/bankr-nm/nmb-lbr-2025-12-01-sectioned.txt` § `NM LBR 9013-1(d)` | Left unchanged: read `NM LBR 9013-1(d)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bankr-nv | `negative-notice-objection-period` | `sources/bankr-nv/nvb-lbr-2021-03-02-sectioned.txt` § `Bankr. D. Nev. LR 9014.1(c)` | Left unchanged: read `Bankr. D. Nev. LR 9014.1(c)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bankr-okn | `motion-response-period` | `sources/bankr-okn/oknb-lbr-2025-03-21-sectioned.txt` § `N.D. Okla. LBR 9013-1(B)` | Left unchanged: read `N.D. Okla. LBR 9013-1(B)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
-| bankr-or | `motion-objection-period` | `sources/bankr-or/orb-lbr-2025-12-01-sectioned.txt` § `Bankr. D. Or. LBR 9013-1(c)` | Left unchanged: read `Bankr. D. Or. LBR 9013-1(c)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/0. |
+| bankr-or | `motion-objection-period` | `sources/bankr-or/orb-lbr-2025-12-01-sectioned.txt` § `Bankr. D. Or. LBR 9013-1(c)` | Wrote one on-motion grant under LBR 9006-1(a), which provides: “A request for extension of a time limit or for continuance of any evidentiary hearing must be by motion supported by a certification demonstrating good cause, appropriate use of prior time, and that the continuance is being requested at the earliest time practical.” Baseline/after L5002 occurrences: 1/0. |
 | bankr-pae | `motion-response-period` | `sources/bankr-pae/pae-local-rules-2025-12-01-sectioned.txt` § `Bankr. E.D. Pa. L.B.R. 9014-3(h)` | Left unchanged: read `Bankr. E.D. Pa. L.B.R. 9014-3(h)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bankr-pam | `participation-response-period` | `sources/bankr-pam/pam-local-rules-2025-10-01-sectioned.txt` § `Bankr. M.D. Pa. L.B.R. 9019-3(b)` | Left unchanged: read `Bankr. M.D. Pa. L.B.R. 9019-3(b)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bankr-paw | `contested-response-period` | `sources/bankr-paw/paw-local-rules-2026-sectioned.txt` § `W.PA.LBR 9014-1` | Left unchanged: read `W.PA.LBR 9014-1` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
@@ -81,531 +94,87 @@ Rows are deduplicated by package and referenced deadline; occurrence counts show
 | bankr-txn | `negative-notice-response-period` | `sources/bankr-txn/txn-local-rules-2025-12-01-sectioned.txt` § `Bankr. N.D. Tex. L.B.R. 9007-1(c)` | Left unchanged: read `Bankr. N.D. Tex. L.B.R. 9007-1(c)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bankr-txs | `motion-response-period` | `sources/bankr-txs/txs-bankruptcy-local-rules-2025-09-22-sectioned.txt` § `Bankr. S.D. Tex. BLR 9013-1(b)` | Left unchanged: read `Bankr. S.D. Tex. BLR 9013-1(b)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bankr-txw | `negative-notice-response-period` | `sources/bankr-txw/txw-local-rules-2025-02-03-sectioned.txt` § `Bankr. W.D. Tex. L. Rule 9014-1(a)` | Left unchanged: read `Bankr. W.D. Tex. L. Rule 9014-1(a)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
-| bankr-ut | `response-period` | `sources/bankr-ut/utb-lbr-2025-12-01-sectioned.txt` § `Bankr. D. Utah LBR 9006-1(b)` | Left unchanged: read `Bankr. D. Utah LBR 9006-1(b)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/0. |
+| bankr-ut | `response-period` | `sources/bankr-ut/utb-lbr-2025-12-01-sectioned.txt` § `Bankr. D. Utah LBR 9006-1(b)` | Wrote one on-motion grant under LBR 9006-1(a), which says: “A motion for an order fixing a different period may, for cause shown, be made to the court on an ex parte basis.” The closed `CauseStandard` enum has no plain-cause member, so this is typed `GoodCause`. Baseline/after L5002 occurrences: 1/0. |
 | bankr-vi | `motion-response-period` | `sources/bankr-vi/vi-local-rules-2026-02-01-sectioned.txt` § `D.V.I. LBR 9006-1(B)` | Left unchanged: read `D.V.I. LBR 9006-1(B)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bankr-wae | `objection-period` | `sources/bankr-wae/waeb-lbr-2026-07-17-sectioned.txt` § `Bankr. E.D. Wash. LBR 2002-1(c)` | Left unchanged: read `Bankr. E.D. Wash. LBR 2002-1(c)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bankr-wy | `objection-period` | `sources/bankr-wy/wyb-lbr-2012-07-01-sectioned.txt` § `Wyoming LBR 2002-1(B)` | Left unchanged: read `Wyoming LBR 2002-1(B)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bap1 | `fee-payment-period` | `sources/ca1-bap/ca1-bap-local-rules-sectioned.txt` § `1st Cir. BAP L.R. 8003-1(c)(1)` | Left unchanged: read `1st Cir. BAP L.R. 8003-1(c)(1)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bap1 | `reply-brief-period` | `sources/frbp.txt` § `FRBP 8018(a)(3)` | Wrote three FRBP 9006(b)(1) grants on `reply-brief-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8018(a)(3).) Baseline/after L5002 occurrences: 1/0. |
 | bap1 | `appellant-designation-period` | `sources/frbp.txt` § `FRBP 8009(a)(1)(B)` | Wrote three FRBP 9006(b)(1) grants on `appellant-designation-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8009(a)(1)(B).) Baseline/after L5002 occurrences: 1/0. |
-| bap1 | `appellant-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(A)` | Wrote `extend { never cite "28 U.S.C. § 158(c)(1)" }` on `appellant-election-period` in `lit/frbp/appeals.lit`. Baseline/after L5002 occurrences: 1/0. |
+| bap1 | `appellant-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(A)` | Undeclared: Statute fixes the election at filing but is silent on enlargement; no lock written. Baseline/after L5002 occurrences: 1/1. |
 | bap1 | `remand-report-period` | `sources/ca1-bap/ca1-bap-local-rules-sectioned.txt` § `1st Cir. BAP L.R. 8008-1(b)` | Left unchanged: read `1st Cir. BAP L.R. 8008-1(b)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bap1 | `appellee-brief-period` | `sources/frbp.txt` § `FRBP 8018(a)(2)` | Wrote three FRBP 9006(b)(1) grants on `appellee-brief-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8018(a)(2).) Baseline/after L5002 occurrences: 1/0. |
 | bap1 | `indicative-ruling-notice-period` | `sources/ca1-bap/ca1-bap-local-rules-sectioned.txt` § `1st Cir. BAP L.R. 8008-1(a)` | Left unchanged: read `1st Cir. BAP L.R. 8008-1(a)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bap1 | `appellant-brief-period` | `sources/frbp.txt` § `FRBP 8018(a)(1)` | Wrote three FRBP 9006(b)(1) grants on `appellant-brief-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8018(a)(1).) Baseline/after L5002 occurrences: 1/0. |
 | bap1 | `fee-after-waiver-denial-period` | `sources/ca1-bap/ca1-bap-local-rules-sectioned.txt` § `1st Cir. BAP L.R. 8003-1(c)(2)` | Left unchanged: read `1st Cir. BAP L.R. 8003-1(c)(2)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
-| bap1 | `other-party-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(B)` | Wrote `extend { never cite "28 U.S.C. § 158(c)(1)" }` on `other-party-election-period` in `lit/frbp/appeals.lit`. Baseline/after L5002 occurrences: 1/0. |
+| bap1 | `other-party-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(B)` | Undeclared: Statute fixes election no later than 30 days after service but is silent on enlargement; no lock written. Baseline/after L5002 occurrences: 1/1. |
 | bap1 | `motion-response-period` | `sources/frbp.txt` § `FRBP 8013(a)(3)(A)` | Wrote three FRBP 9006(b)(1) grants on `motion-response-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8013(a)(3)(A).) Baseline/after L5002 occurrences: 1/0. |
 | bap1 | `rehearing-response-period` | `sources/ca1-bap/ca1-bap-local-rules-sectioned.txt` § `1st Cir. BAP L.R. 8022-1(a)` | Left unchanged: read `1st Cir. BAP L.R. 8022-1(a)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
-| bap1 | `direct-certification-request-period` | `sources/frbp.txt` § `FRBP 8006(f)(1)` | Wrote three FRBP 9006(b)(1) grants on `direct-certification-request-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8006(f)(1).) Baseline/after L5002 occurrences: 1/0. |
+| bap1 | `direct-certification-request-period` | `sources/frbp.txt` § `FRBP 8006(f)(1)` | Undeclared: 60 days is fixed by FRBP 8006(f)(1) and 28 U.S.C. § 158(d)(2)(E); vendored text does not resolve whether rule-based enlargement reaches the statutory period. Baseline/after L5002 occurrences: 1/1. |
 | bap1 | `rehearing-period` | `sources/frbp.txt` § `FRBP 8022(a)(1)` | Wrote three FRBP 9006(b)(1) grants on `rehearing-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8022(a)(1).) Baseline/after L5002 occurrences: 1/0. |
 | bap1 | `reinstatement-period` | `sources/ca1-bap/ca1-bap-local-rules-sectioned.txt` § `1st Cir. BAP L.R. 8020-1(b)(1)` | Left unchanged: read `1st Cir. BAP L.R. 8020-1(b)(1)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bap1 | `election-validity-period` | `sources/frbp.txt` § `FRBP 8005(c)` | Wrote three FRBP 9006(b)(1) grants on `election-validity-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8005(c).) Baseline/after L5002 occurrences: 1/0. |
 | bap6 | `appellant-brief-period` | `sources/frbp.txt` § `FRBP 8018(a)(1)` | Wrote three FRBP 9006(b)(1) grants on `appellant-brief-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8018(a)(1).) Baseline/after L5002 occurrences: 1/0. |
 | bap6 | `default-cure-period` | `sources/ca6-bap/bap-local-rules-sectioned.txt` § `6th Cir. BAP LBR 8003-1(a)` | Left unchanged: read `6th Cir. BAP LBR 8003-1(a)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
-| bap6 | `other-party-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(B)` | Wrote `extend { never cite "28 U.S.C. § 158(c)(1)" }` on `other-party-election-period` in `lit/frbp/appeals.lit`. Baseline/after L5002 occurrences: 1/0. |
-| bap6 | `direct-certification-request-period` | `sources/frbp.txt` § `FRBP 8006(f)(1)` | Wrote three FRBP 9006(b)(1) grants on `direct-certification-request-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8006(f)(1).) Baseline/after L5002 occurrences: 1/0. |
+| bap6 | `other-party-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(B)` | Undeclared: Statute fixes election no later than 30 days after service but is silent on enlargement; no lock written. Baseline/after L5002 occurrences: 1/1. |
+| bap6 | `direct-certification-request-period` | `sources/frbp.txt` § `FRBP 8006(f)(1)` | Undeclared: 60 days is fixed by FRBP 8006(f)(1) and 28 U.S.C. § 158(d)(2)(E); vendored text does not resolve whether rule-based enlargement reaches the statutory period. Baseline/after L5002 occurrences: 1/1. |
 | bap6 | `rehearing-period` | `sources/frbp.txt` § `FRBP 8022(a)(1)` | Wrote three FRBP 9006(b)(1) grants on `rehearing-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8022(a)(1).) Baseline/after L5002 occurrences: 1/0. |
 | bap6 | `appellant-designation-period` | `sources/frbp.txt` § `FRBP 8009(a)(1)(B)` | Wrote three FRBP 9006(b)(1) grants on `appellant-designation-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8009(a)(1)(B).) Baseline/after L5002 occurrences: 1/0. |
-| bap6 | `appellant-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(A)` | Wrote `extend { never cite "28 U.S.C. § 158(c)(1)" }` on `appellant-election-period` in `lit/frbp/appeals.lit`. Baseline/after L5002 occurrences: 1/0. |
+| bap6 | `appellant-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(A)` | Undeclared: Statute fixes the election at filing but is silent on enlargement; no lock written. Baseline/after L5002 occurrences: 1/1. |
 | bap6 | `election-validity-period` | `sources/frbp.txt` § `FRBP 8005(c)` | Wrote three FRBP 9006(b)(1) grants on `election-validity-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8005(c).) Baseline/after L5002 occurrences: 1/0. |
-| bap8 | `direct-authorization-petition-period` | `sources/frbp.txt` § `FRBP 8006(g)` | Wrote three FRBP 9006(b)(1) grants on `direct-authorization-petition-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8006(g).) Baseline/after L5002 occurrences: 1/0. |
+| bap8 | `direct-authorization-petition-period` | `sources/frbp.txt` § `FRBP 8006(g)` | Undeclared: FRBP 8006(g) refers to FRAP 6(c), while FRAP 26(b)(1) forbids extending a petition for permission to appeal; vendored text does not settle which governs. Baseline/after L5002 occurrences: 1/1. |
 | bap8 | `appellant-brief-period` | `sources/frbp.txt` § `FRBP 8018(a)(1)` | Wrote three FRBP 9006(b)(1) grants on `appellant-brief-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8018(a)(1).) Baseline/after L5002 occurrences: 1/0. |
 | bap8 | `mandate-after-window-period` | `sources/ca8-bap-local-rules.txt` § `L.R. BAP 8th Cir. 8024A(b)` | Left unchanged: read `L.R. BAP 8th Cir. 8024A(b)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
-| bap8 | `other-party-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(B)` | Wrote `extend { never cite "28 U.S.C. § 158(c)(1)" }` on `other-party-election-period` in `lit/frbp/appeals.lit`. Baseline/after L5002 occurrences: 1/0. |
+| bap8 | `other-party-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(B)` | Undeclared: Statute fixes election no later than 30 days after service but is silent on enlargement; no lock written. Baseline/after L5002 occurrences: 1/1. |
 | bap8 | `mandate-after-denial-period` | `sources/ca8-bap-local-rules.txt` § `L.R. BAP 8th Cir. 8024A(c)(1)` | Left unchanged: read `L.R. BAP 8th Cir. 8024A(c)(1)` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
-| bap8 | `direct-certification-request-period` | `sources/frbp.txt` § `FRBP 8006(f)(1)` | Wrote three FRBP 9006(b)(1) grants on `direct-certification-request-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8006(f)(1).) Baseline/after L5002 occurrences: 1/0. |
+| bap8 | `direct-certification-request-period` | `sources/frbp.txt` § `FRBP 8006(f)(1)` | Undeclared: 60 days is fixed by FRBP 8006(f)(1) and 28 U.S.C. § 158(d)(2)(E); vendored text does not resolve whether rule-based enlargement reaches the statutory period. Baseline/after L5002 occurrences: 1/1. |
 | bap8 | `rehearing-period` | `sources/frbp.txt` § `FRBP 8022(a)(1)` | Wrote three FRBP 9006(b)(1) grants on `rehearing-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8022(a)(1).) Baseline/after L5002 occurrences: 1/0. |
 | bap8 | `election-validity-period` | `sources/frbp.txt` § `FRBP 8005(c)` | Wrote three FRBP 9006(b)(1) grants on `election-validity-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8005(c).) Baseline/after L5002 occurrences: 1/0. |
 | bap10 | `rehearing-period` | `sources/frbp.txt` § `FRBP 8022(a)(1)` | Wrote three FRBP 9006(b)(1) grants on `rehearing-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8022(a)(1).) Baseline/after L5002 occurrences: 1/0. |
 | bap10 | `appellant-designation-period` | `sources/frbp.txt` § `FRBP 8009(a)(1)(B)` | Wrote three FRBP 9006(b)(1) grants on `appellant-designation-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8009(a)(1)(B).) Baseline/after L5002 occurrences: 1/0. |
-| bap10 | `appellant-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(A)` | Wrote `extend { never cite "28 U.S.C. § 158(c)(1)" }` on `appellant-election-period` in `lit/frbp/appeals.lit`. Baseline/after L5002 occurrences: 1/0. |
+| bap10 | `appellant-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(A)` | Undeclared: Statute fixes the election at filing but is silent on enlargement; no lock written. Baseline/after L5002 occurrences: 1/1. |
 | bap10 | `appellant-brief-period` | `sources/frbp.txt` § `FRBP 8018(a)(1)` | Wrote three FRBP 9006(b)(1) grants on `appellant-brief-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8018(a)(1).) Baseline/after L5002 occurrences: 1/0. |
-| bap10 | `other-party-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(B)` | Wrote `extend { never cite "28 U.S.C. § 158(c)(1)" }` on `other-party-election-period` in `lit/frbp/appeals.lit`. Baseline/after L5002 occurrences: 1/0. |
+| bap10 | `other-party-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(B)` | Undeclared: Statute fixes election no later than 30 days after service but is silent on enlargement; no lock written. Baseline/after L5002 occurrences: 1/1. |
 | bap10 | `combined-statements-period` | `sources/ca10-bap/bap-local-rules-sectioned.txt` § `10th Cir. BAP L.R. 8003-2` | Left unchanged: read `10th Cir. BAP L.R. 8003-2` in the vendored source. It sets the period but does not state a sourced extension standard and request window for this deadline; FRBP 9006(b)(1) does not by its text resolve whether a locally prescribed period falls within its scope. Baseline/after L5002 occurrences: 1/1. |
 | bap9 | `rehearing-period` | `sources/frbp.txt` § `FRBP 8022(a)(1)` | Wrote three FRBP 9006(b)(1) grants on `rehearing-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8022(a)(1).) Baseline/after L5002 occurrences: 1/0. |
 | bap9 | `appellant-designation-period` | `sources/frbp.txt` § `FRBP 8009(a)(1)(B)` | Wrote three FRBP 9006(b)(1) grants on `appellant-designation-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8009(a)(1)(B).) Baseline/after L5002 occurrences: 1/0. |
-| bap9 | `appellant-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(A)` | Wrote `extend { never cite "28 U.S.C. § 158(c)(1)" }` on `appellant-election-period` in `lit/frbp/appeals.lit`. Baseline/after L5002 occurrences: 1/0. |
+| bap9 | `appellant-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(A)` | Undeclared: Statute fixes the election at filing but is silent on enlargement; no lock written. Baseline/after L5002 occurrences: 1/1. |
 | bap9 | `appellant-brief-period` | `sources/frbp.txt` § `FRBP 8018(a)(1)` | Wrote three FRBP 9006(b)(1) grants on `appellant-brief-period` in `lit/frbp/appeals.lit`, each cited to `FRBP 9006(b)(1)`: court for good cause before expiry; court on a motion before expiry; court for excusable neglect on a motion after expiry. (The period is governed by 8018(a)(1).) Baseline/after L5002 occurrences: 1/0. |
-| bap9 | `other-party-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(B)` | Wrote `extend { never cite "28 U.S.C. § 158(c)(1)" }` on `other-party-election-period` in `lit/frbp/appeals.lit`. Baseline/after L5002 occurrences: 1/0. |
+| bap9 | `other-party-election-period` | `sources/usc-28-158.txt` § `28 U.S.C. § 158(c)(1)(B)` | Undeclared: Statute fixes election no later than 30 days after service but is silent on enlargement; no lock written. Baseline/after L5002 occurrences: 1/1. |
 
 ## Lowered pack diff
 
-Generated baseline packs from commit `9cffd1d1b6856d8abcd66ccab575766c9e3a40c6` and after packs with the release `litigate build`, then compared with `scripts/lowered-json-diff.py`. The table below summarizes only changed `deadline/extendable`, `deadline/extensionAuthority`, and `deadline/extensions/**` leaves. Other lowered leaves are unchanged. The raw script output also reports removals of its synthetic `lowered.holes/deadline/extendable` rows; those are the corresponding L5002 holes disappearing and are not pack fields.
+Compared with the .34 lowered packs, this correction removes the unsupported extension/lock leaves. Durations, counting, edges, events; the Southern California motion event remains used by the two retained grants, and all other pack content are unchanged.
 
-| Pack | Affected edges | `extendable` leaves | `extensionAuthority` leaves | `extensions` leaves |
-|---|---:|---:|---:|---:|
-| `bankr-cas-local-rules` | 1 | 1 | 1 | 14 |
-| `bankr-or-local-rules` | 1 | 1 | 1 | 5 |
-| `bankr-ut-local-rules` | 1 | 1 | 1 | 5 |
-| `first-circuit-bankruptcy-appellate-panel` | 10 | 10 | 10 | 116 |
-| `sixth-circuit-bankruptcy-appellate-panel` | 7 | 7 | 7 | 74 |
-| `eighth-circuit-bankruptcy-appellate-panel` | 6 | 6 | 6 | 72 |
-| `ninth-circuit-bankruptcy-appellate-panel` | 5 | 5 | 5 | 46 |
-| `tenth-circuit-bankruptcy-appellate-panel` | 5 | 5 | 5 | 46 |
-
-Changes: three local-rule packs gain one typed extension on their affected response period; five BAP packs lower the shared FRBP Part VIII grants and statutory election locks. `bap9` has no remaining L5002. The filtered diff is limited to the three requested extension field groups.
+| Pack group | Correction to lowered extension fields |
+|---|---|
+| Pack | Affected periods | Lowered extension change |
+|---|---|---|
+| `bankr-cas-local-rules` | `motion-opposition-period` | Remove the no-motion extension; retain the two on-motion extensions. |
+| `first-circuit-bankruptcy-appellate-panel` (`bap1`) | `appellant-election-period`, `other-party-election-period`, `direct-certification-request-period` | Remove the two statutory election locks and all three direct-certification extensions. |
+| `sixth-circuit-bankruptcy-appellate-panel` (`bap6`) | `appellant-election-period`, `other-party-election-period`, `direct-certification-request-period` | Remove the two statutory election locks and all three direct-certification extensions. |
+| `eighth-circuit-bankruptcy-appellate-panel` (`bap8`) | `other-party-election-period`, `direct-certification-request-period`, `direct-authorization-petition-period` | Remove the election lock and the three extensions from each direct-review period. |
+| `ninth-circuit-bankruptcy-appellate-panel` (`bap9`) | `appellant-election-period`, `other-party-election-period` | Remove both statutory election locks. |
+| `tenth-circuit-bankruptcy-appellate-panel` (`bap10`) | `appellant-election-period`, `other-party-election-period` | Remove both statutory election locks. |
 
 ### Changed extension leaves
 
-| Pack | Edge or pointer | Field | Old | New |
-|---|---|---|---|---|
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extendable` | `<missing>` | `true` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensionAuthority` | `<missing>` | `"Bankr. S.D. Cal. LBR 9006-1(d)"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/1/motion/event` | `<missing>` | `"TimeLimitExtensionMoved()"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/2/motion/event` | `<missing>` | `"TimeLimitExtensionMoved()"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| bankr-cas-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| bankr-or-local-rules | `edge-motion-filed-opposed` | `deadline/extendable` | `<missing>` | `true` |
-| bankr-or-local-rules | `edge-motion-filed-opposed` | `deadline/extensionAuthority` | `<missing>` | `"Bankr. D. Or. LBR 9006-1(a)"` |
-| bankr-or-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| bankr-or-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| bankr-or-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/motion/event` | `<missing>` | `"TimeLimitExtensionMoved()"` |
-| bankr-or-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| bankr-or-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| bankr-ut-local-rules | `edge-motion-filed-opposed` | `deadline/extendable` | `<missing>` | `true` |
-| bankr-ut-local-rules | `edge-motion-filed-opposed` | `deadline/extensionAuthority` | `<missing>` | `"Bankr. D. Utah LBR 9006-1(a)"` |
-| bankr-ut-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| bankr-ut-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| bankr-ut-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/motion/event` | `<missing>` | `"ResponsePeriodExtensionMoved()"` |
-| bankr-ut-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| bankr-ut-local-rules | `edge-motion-filed-opposed` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extendable` | `<missing>` | `false` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extensionAuthority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extensions/0/authority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extendable` | `<missing>` | `true` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extendable` | `<missing>` | `true` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extendable` | `<missing>` | `false` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extensionAuthority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extensions/0/authority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extendable` | `<missing>` | `true` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-appellee` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extendable` | `<missing>` | `true` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-appellee-briefing-reply` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extendable` | `<missing>` | `true` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-briefing-appellee` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extendable` | `<missing>` | `true` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extendable` | `<missing>` | `true` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-record-motion` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extendable` | `<missing>` | `true` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| first-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extendable` | `<missing>` | `false` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extensionAuthority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extensions/0/authority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extendable` | `<missing>` | `true` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extendable` | `<missing>` | `true` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extendable` | `<missing>` | `false` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extensionAuthority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extensions/0/authority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extendable` | `<missing>` | `true` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extendable` | `<missing>` | `true` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-record-briefing` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extendable` | `<missing>` | `true` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| sixth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extendable` | `<missing>` | `true` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-direct-request` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-district` | `deadline/extendable` | `<missing>` | `false` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-district` | `deadline/extensionAuthority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-district` | `deadline/extensions/0/authority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-district` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extendable` | `<missing>` | `true` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-appealability-election-challenge` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extendable` | `<missing>` | `true` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-circuit-handoff-done` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extendable` | `<missing>` | `true` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-decision-rehearing` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extendable` | `<missing>` | `true` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| eighth-circuit-bankruptcy-appellate-panel | `edge-record-argument` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extendable` | `<missing>` | `false` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extensionAuthority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extensions/0/authority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extendable` | `<missing>` | `false` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extensionAuthority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extensions/0/authority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extendable` | `<missing>` | `true` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extendable` | `<missing>` | `true` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extendable` | `<missing>` | `true` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| ninth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extendable` | `<missing>` | `false` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extensionAuthority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extensions/0/authority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-appealability-appellant-election` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extendable` | `<missing>` | `false` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extensionAuthority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extensions/0/authority` | `<missing>` | `"28 U.S.C. § 158(c)(1)"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-appealability-other-election` | `deadline/extensions/0/bound` | `<missing>` | `"nonExtendable"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extendable` | `<missing>` | `true` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-briefing-argument` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extendable` | `<missing>` | `true` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-record-assembled-briefing` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extendable` | `<missing>` | `true` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensionAuthority` | `<missing>` | `"FRBP 9006(b)(1)"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/bound` | `<missing>` | `"discretionary"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/by` | `<missing>` | `"court"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/standard` | `<missing>` | `"GoodCause"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/0/window` | `<missing>` | `"beforeExpiry"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/bound` | `<missing>` | `"discretionary"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/by` | `<missing>` | `"court"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/standard` | `<missing>` | `"GoodCause"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/1/window` | `<missing>` | `"beforeExpiry"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/bound` | `<missing>` | `"discretionary"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/by` | `<missing>` | `"court"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/motion/event` | `<missing>` | `"PartEightDeadlineExtensionMoved()"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/standard` | `<missing>` | `"ExcusableNeglect"` |
-| tenth-circuit-bankruptcy-appellate-panel | `edge-rehearing-window-rehearing-ruling` | `deadline/extensions/2/window` | `<missing>` | `"afterExpiryOnMotion"` |
+Only the following field families are changed from the .34 output: `deadline/extendable`, `deadline/extensionAuthority`, and `deadline/extensions/**` for the listed periods. The two election periods and the two direct-review periods now lower as undeclared extension holes. The Southern California motion-opposition period lowers only its two on-motion extensions.
+
+
+## Open for David
+
+- `appellant-election-period` and `other-party-election-period`: 28 U.S.C. § 158(c)(1) fixes timing but is silent on enlargement; no lock was written.
+- `direct-certification-request-period`: 60 days under FRBP 8006(f)(1) and 28 U.S.C. § 158(d)(2)(E); whether the rule can enlarge the statute-fixed period is unresolved by the vendored text.
+- `direct-authorization-petition-period`: 30 days under FRBP 8006(g), which points to FRAP 6(c), while FRAP 26(b)(1) bars extending a petition for permission to appeal; which provision governs is unresolved.
+- FRBP 9006(b)(1) says “for cause,” and Utah LBR 9006-1(a) says “for cause shown.” Both grants are typed `GoodCause` because the closed `CauseStandard` enum has no plain-cause member. This affects these FRBP 9006(b)(1) grants in `lit/frbp/appeals.lit`: `notice-period`, `cross-notice-period`, `election-validity-period`, `direct-certification-response-period`, `appellant-designation-period`, `appellant-designation-leave-period`, `transcript-order-period`, `appellee-designation-period`, `cross-appellee-designation-period`, `cross-appellant-transcript-period`, `appellee-transcript-period`, `evidence-statement-objection-period`, `motion-response-period`, `motion-reply-period`, `procedural-order-reconsideration-period`, `appellant-brief-period`, `appellee-brief-period`, `reply-brief-period`, and `rehearing-period`; it also affects Utah `response-period` in `lit/bankr-ut/local-rules.lit`.
+- Local-rule periods still undeclared: 28 of the 31 local-rule period rows recorded here; the three with typed grants are bankr-cas `motion-opposition-period`, bankr-or `motion-objection-period`, and bankr-ut `response-period`.
 
 ## Validation and tests
 
-- Release build: `cargo build --release` exited 0 before edits (12m21s).
-- Strict checks: 31 baseline JSON outputs saved under `/tmp/lg-pb1fe-34/before`; 31 after outputs under `/tmp/lg-pb1fe-34/after`. No after-check has an error other than the recorded L5002 findings.
-- `litigate test` on edited packages: `frbp`, `bankr-cas`, `bankr-or`, and `bankr-ut` each exited 0 with zero failed tests.
-- `just lit-sync` completed; the lock and clock regeneration was also rerun using the release binary after formatting.
-- `just lit-sync-check` exited 0 after the authoring and lock commit; the final amendment changed only this report. All `Lit.lock` files and shared clock fragments matched their sources, and no generated file was tracked.
-- `target/release/litigate --format json check lit cases` returned `ok: true` with 0 error diagnostics (3495 diagnostics total).
+- Release build: `cargo build --release -p litigate-cli` exited 0 in 4m38s before edits.
+- Strict checks used `target/release/litigate check --profile strict lit/<package> --format json`; before snapshots are in `/tmp/lg-pb1fe-39/before` and final after snapshots are in `/tmp/lg-pb1fe-39/final-strict`. Final results: bankr-cas passes (0 L5002); bap1 9, bap6 4, bap8 5, bap9 2, bap10 3 (all L5002; bap9 fails strict again).
+- `litigate test` on `frbp`, `bankr-cas`, `bap1`, `bap6`, `bap8`, `bap9`, and `bap10`: each exited 0 with 0 failed tests.
+- `just lit-sync`: completed after final source edits; only `lit/frbp/Lit.lock` and `lit/bankr-cas/Lit.lock` changed.
+- `target/release/litigate check lit cases --format json`: exited 0, `ok: true`, 0 errors and 1,757 warnings; elapsed 652,454 ms.
+- `just lit-sync-check`: final result recorded after committing the two changed locks (the pre-commit run correctly flagged uncommitted lock changes).

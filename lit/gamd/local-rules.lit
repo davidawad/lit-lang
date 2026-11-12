@@ -8,6 +8,8 @@ forum frcp
 event MotionServed()
 /// The respondent's response, brief or affidavit is served (L.R. 7.3).
 event ResponseServed()
+/// A motion seeking enlargement under FRCP 6(b)(1).
+event ExtensionMotionFiled()
 /// The brief to which a surreply is desired is filed (L.R. 7.3.1(C)).
 event ReplyBriefFiled()
 /// An order is entered (L.R. 7.6).
@@ -28,9 +30,20 @@ event BillOfCostsServed()
 /// in support of or in response to a motion are limited to 20 pages except
 /// on good cause and leave (L.R. 7.4).
 deadline response-period: 21.days after MotionServed() counted_by frcp6 cite "M.D. Ga. L.R. 7.2"
+
 /// L.R. 7.3: a reply is served within 14 days after service of the
 /// response. The movant's reply brief may not exceed 10 pages (L.R. 7.4).
 deadline reply-period: 14.days after ResponseServed() counted_by frcp6 cite "M.D. Ga. L.R. 7.3"
+{
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "FRCP 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "FRCP 6(b)(1)(B)"
+  }
+}
 
 test "Counting boundary: reply-period (weekend)" cite "M.D. Ga. L.R. 7.3"
 {

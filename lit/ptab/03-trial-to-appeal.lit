@@ -56,12 +56,12 @@ state patent-owner-response-filed: "Patent Owner Response Filed" by patent-owner
   "File Petitioner Reply" -> petitioner-reply-brief by petitioner {
     event PetitionerReplyFiled()
     authority cite "37 C.F.R. § 42.23(a)"
-    effort 50.hours
+    effort 50.hours basis estimate
     within petitioner-reply-period {
       note "Missing the petitioner reply deadline (3 months after the POR due date in the Trial Practice Guide's sample scheduling order) results in the reply not being entered or considered; the patent owner's arguments stand unrebutted."
     }
     duration { min 9.days, mode 30.days, max 60.days }
-    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move."
   }
   "Settle after filing response" -> settlement-decision by either {
     authority cite "35 U.S.C. § 317"
@@ -160,9 +160,9 @@ state mta-revised-filed: "Revised Motion to Amend Filed" by petitioner effective
   "Petitioner opposes revised amendment" -> petitioner-opposition-mta {
     event AmendmentOppositionFiled()
     authority cite "37 C.F.R. § 42.121(c)"
-    effort 40.hours
+    effort 40.hours basis estimate
     duration { min 4.5.days, mode 15.days, max 30.days }
-    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move."
   }
 }
 

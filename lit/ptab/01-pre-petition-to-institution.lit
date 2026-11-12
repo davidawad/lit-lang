@@ -48,14 +48,14 @@ state patent-granted: "Patent Granted" by patent-owner cite "35 U.S.C. § 151"
   "File PGR petition directly" -> pgr-petition-filed by petitioner {
     event PgrPetitionFiled()
     authority cite "35 U.S.C. § 321(c)"
-    effort 130.hours
+    effort 130.hours basis estimate
     cost 25_000.usd
     within pgr-filing-period {
       note "PGR window is 9 months from grant date and is unextendable — the PTAB lacks authority to extend it. Failure to file before expiration closes the PGR remedy permanently; post-grant challenges must proceed via IPR (if within the 315(b) window) or ex parte reexamination."
     }
     duration { min 40.5.days, mode 135.days, max 270.days }
     valence good
-    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate. PGR request fee $25,000.00, verified, effective/last-amended 1/14/2025 (37 C.F.R. § 42.15(b)(1)): covers up to 20 claims; $595.00 per claim over 20 at request (42.15(b)(3)). A post-institution fee of $34,375.00 (42.15(b)(2)), plus $1,315.00 per claim over 20 instituted (42.15(b)(4)), falls due only if the Board institutes -- not modeled on this edge."
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move. PGR request fee $25,000.00, verified, effective/last-amended 1/14/2025 (37 C.F.R. § 42.15(b)(1)): covers up to 20 claims; $595.00 per claim over 20 at request (42.15(b)(3)). A post-institution fee of $34,375.00 (42.15(b)(2)), plus $1,315.00 per claim over 20 instituted (42.15(b)(4)), falls due only if the Board institutes -- not modeled on this edge."
   }
 }
 
@@ -71,14 +71,14 @@ state infringement-complaint-served: "Infringement Complaint Served" by patent-o
   "File IPR directly after being sued" -> ipr-petition-filed by petitioner {
     event IprPetitionFiled()
     authority cite "35 U.S.C. § 311; 35 U.S.C. § 315(b)"
-    effort 120.hours
+    effort 120.hours basis estimate
     cost 23_750.usd
     within ipr-time-bar {
       note "IPR petition must be filed within 1 year of service of an infringement complaint. This bar is jurisdictional and unextendable. Failure to file within one year bars all future IPR petitions by that petitioner (or its privies/real parties in interest)."
     }
     duration { min 54.8.days, mode 182.5.days, max 365.days }
     valence good
-    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate. IPR request fee $23,750.00, verified, effective/last-amended 1/14/2025 (37 C.F.R. § 42.15(a)(1)): covers up to 20 claims; $470.00 per claim over 20 at request (42.15(a)(3)). A post-institution fee of $28,125.00 (42.15(a)(2)), plus $940.00 per claim over 20 instituted (42.15(a)(4)), falls due only if the Board institutes -- not modeled on this edge."
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move. IPR request fee $23,750.00, verified, effective/last-amended 1/14/2025 (37 C.F.R. § 42.15(a)(1)): covers up to 20 claims; $470.00 per claim over 20 at request (42.15(a)(3)). A post-institution fee of $28,125.00 (42.15(a)(2)), plus $940.00 per claim over 20 instituted (42.15(a)(4)), falls due only if the Board institutes -- not modeled on this edge."
   }
 }
 
@@ -89,9 +89,9 @@ decision challenge-vehicle-decision: "Petitioner Chooses Challenge Vehicle" by p
   "File IPR petition" -> ipr-petition-filed {
     event IprPetitionFiled()
     authority cite "35 U.S.C. § 311-312; 37 C.F.R. § 42.104"
-    effort 120.hours
+    effort 120.hours basis estimate
     cost 23_750.usd
-    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate. IPR request fee $23,750.00, verified, effective/last-amended 1/14/2025 (37 C.F.R. § 42.15(a)(1)): covers up to 20 claims; $470.00 per claim over 20 at request (42.15(a)(3)). A post-institution fee of $28,125.00 (42.15(a)(2)), plus $940.00 per claim over 20 instituted (42.15(a)(4)), falls due only if the Board institutes -- not modeled on this edge."
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move. IPR request fee $23,750.00, verified, effective/last-amended 1/14/2025 (37 C.F.R. § 42.15(a)(1)): covers up to 20 claims; $470.00 per claim over 20 at request (42.15(a)(3)). A post-institution fee of $28,125.00 (42.15(a)(2)), plus $940.00 per claim over 20 instituted (42.15(a)(4)), falls due only if the Board institutes -- not modeled on this edge."
   }
   "File IPR petition with a motion for joinder to an instituted IPR" -> institution-granted {
     event JoinderMotionFiled()
@@ -103,14 +103,14 @@ decision challenge-vehicle-decision: "Petitioner Chooses Challenge Vehicle" by p
   "File PGR petition within 9 months" -> pgr-petition-filed {
     event PgrPetitionFiled()
     authority cite "35 U.S.C. § 321(c)"
-    effort 130.hours
+    effort 130.hours basis estimate
     cost 25_000.usd
     within pgr-filing-period {
       note "PGR window is 9 months from patent grant, measured from the decision point. If 9 months have already elapsed since grant, the PGR remedy is permanently closed."
     }
     duration { min 40.5.days, mode 135.days, max 270.days }
     valence good
-    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate. PGR request fee $25,000.00, verified, effective/last-amended 1/14/2025 (37 C.F.R. § 42.15(b)(1)): covers up to 20 claims; $595.00 per claim over 20 at request (42.15(b)(3)). A post-institution fee of $34,375.00 (42.15(b)(2)), plus $1,315.00 per claim over 20 instituted (42.15(b)(4)), falls due only if the Board institutes -- not modeled on this edge."
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move. PGR request fee $25,000.00, verified, effective/last-amended 1/14/2025 (37 C.F.R. § 42.15(b)(1)): covers up to 20 claims; $595.00 per claim over 20 at request (42.15(b)(3)). A post-institution fee of $34,375.00 (42.15(b)(2)), plus $1,315.00 per claim over 20 instituted (42.15(b)(4)), falls due only if the Board institutes -- not modeled on this edge."
   }
 }
 
@@ -188,12 +188,12 @@ decision petition-defect-noticed: "Petition Defect Noticed" by petitioner cite "
   "Correct petition defect and refile" -> ipr-petition-filed {
     event PetitionCorrected()
     authority cite "37 C.F.R. § 42.106(b)"
-    effort 5.hours
+    effort 5.hours basis estimate
     within petition-correction-period {
       note "If a minor defect is rejected, applicant must correct and refile within 14 days or lose the filing date; failure results in rejection of the entire petition. The filing date does not relate back."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
-    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move."
   }
 }
 
@@ -304,12 +304,12 @@ terminal institution-denied-merits: "Institution Denied — No Reasonable Likeli
   payoff 0.usd basis placeholder
   "File a follow-on petition" -> challenge-vehicle-decision {
     authority cite "35 U.S.C. § 314(a)"
-    effort 100.hours
+    effort 100.hours basis estimate
     within ipr-time-bar {
       note "Petitioner may file a follow-on IPR on different grounds/claims (subject to the §315(c) joinder bar), but the unextendable one-year bar from service of the infringement complaint under §315(b) still applies to any follow-on petition. Sets prior-petition-denied: General Plastic's multi-factor test for discretionary denial of a follow-on petition (35 U.S.C. §314(a)) turns in part on whether petitioner already had a full opportunity to present its case in an earlier petition on this patent -- a fact that persists into the refiled petition's own petition-time-bar-check (the same §315(b) fact node) and the Office's compliance review."
     }
     duration { min 54.8.days, mode 182.5.days, max 365.days }
-    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move."
     sets [prior-petition-denied]
   }
 }
@@ -322,12 +322,12 @@ terminal institution-denied-fintiv: "Institution Denied — Fintiv Discretion" b
   payoff 0.usd basis placeholder
   "Refile after parallel case resolves" -> challenge-vehicle-decision {
     authority cite "35 U.S.C. § 314(a); 35 U.S.C. § 325(d)"
-    effort 60.hours
+    effort 60.hours basis estimate
     within ipr-time-bar {
       note "If parallel litigation resolves, the Fintiv discretionary bar may no longer apply and petitioner may refile after a material change in circumstances, but the unextendable one-year bar from service of an infringement complaint under §315(b) still constrains timing. Sets prior-petition-denied, same reasoning as institution-denied-merits's edge: General Plastic's follow-on-petition factors apply again if this refiled petition is itself denied and yet another petition follows."
     }
     duration { min 54.8.days, mode 182.5.days, max 365.days }
-    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move."
     sets [prior-petition-denied]
   }
 }

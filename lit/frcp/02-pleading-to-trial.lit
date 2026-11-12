@@ -95,9 +95,9 @@ decision service-completed: "Service of Process Completed" by plaintiff cite "FR
 terminal service-window-blown: "DISMISSED WITHOUT PREJUDICE -- No Timely Service" outcome [loss, procedural-default, waiver-trap] cite "FRCP 4(m)"
 {
   group pleading-group
-  note "PERMADEATH for this action. No service within 90 days and no good-cause showing: the court must dismiss without prejudice as to the unserved defendant (or order service by a date certain). Dismissal without prejudice preserves the underlying claim if the statute of limitations has not since expired -- but for a claim near its limitations period, an unexcused blown Rule 4(m) window can be functionally fatal even though the dismissal itself is nominally 'without prejudice.' PLACEHOLDER PAYOFF: $0, override per matter."
+  note "PERMADEATH for this action. No service within 90 days and no good-cause showing: the court must dismiss without prejudice as to the unserved defendant (or order service by a date certain). Dismissal without prejudice preserves the underlying claim if the statute of limitations has not since expired -- but for a claim near its limitations period, an unexcused blown Rule 4(m) window can be functionally fatal even though the dismissal itself is nominally 'without prejudice.'  $0, override per matter."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 /// Removal pays the district court's $405 civil filing fee, in force from
@@ -169,9 +169,9 @@ chance remand-ruling: "Court Rules on Motion to Remand" by court discretion cite
 terminal remand-ordered: "Remanded to State Court" outcome [neutral] cite "28 U.S.C. 1447(c); 1447(d)"
 {
   group pleading-group
-  note "Case returns to state court; the federal action ends. A remand order based on a 1447(c) defect (lack of subject-matter jurisdiction or timely-raised procedural defect) is generally NOT reviewable on appeal or otherwise, 1447(d) -- one of the few genuinely unreviewable orders in federal practice. Exits the FRCP track modeled by this chart. PLACEHOLDER PAYOFF: $500,000 (stake midpoint), override per matter. The case continues in state court, outside this chart -- genuinely unresolved from here, not a plaintiff win or loss."
+  note "Case returns to state court; the federal action ends. A remand order based on a 1447(c) defect (lack of subject-matter jurisdiction or timely-raised procedural defect) is generally NOT reviewable on appeal or otherwise, 1447(d) -- one of the few genuinely unreviewable orders in federal practice. Exits the FRCP track modeled by this chart.  $500,000 (stake midpoint), override per matter. The case continues in state court, outside this chart -- genuinely unresolved from here, not a plaintiff win or loss."
   valence caution
-  payoff 500_000.usd
+  payoff 500_000.usd basis placeholder
 }
 
 decision rule12-response-window: "Rule 12 Response Window" by defendant cite "FRCP 12(a)(1)(A)(i)"
@@ -367,10 +367,10 @@ chance mtd-ruling: "Court Rules on Motion to Dismiss" by court discretion cite "
 terminal dismissed-with-prejudice: "DISMISSED WITH PREJUDICE" by plaintiff outcome [loss, dismissal, waiver-trap] cite "FRCP 12(b)(6); 41(b)"
 {
   group pleading-group
-  note "PERMADEATH. The complaint fails to state a claim and the court concludes amendment would be futile -- dismissal without leave to amend. Rule 41(b)'s final sentence extends beyond its own subdivision: unless the dismissal order states otherwise, 'any dismissal not under this rule -- except one for lack of jurisdiction, improper venue, or failure to join a party under Rule 19 -- operates as an adjudication on the merits,' which is what makes a with-prejudice 12(b)(6) dismissal claim-preclusive. PLACEHOLDER PAYOFF: $0, override per matter."
+  note "PERMADEATH. The complaint fails to state a claim and the court concludes amendment would be futile -- dismissal without leave to amend. Rule 41(b)'s final sentence extends beyond its own subdivision: unless the dismissal order states otherwise, 'any dismissal not under this rule -- except one for lack of jurisdiction, improper venue, or failure to join a party under Rule 19 -- operates as an adjudication on the merits,' which is what makes a with-prejudice 12(b)(6) dismissal claim-preclusive.  $0, override per matter."
   valence bad
   court_listener_url "https://www.courtlistener.com/opinion/769838/john-andrew-cuoco-v-kenneth-moritsugu/"
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   dismissal-appeal-clock "Dismissal is a final decision -- the losing party weighs an appeal" -> notice-of-appeal-window {
     authority cite "28 U.S.C. 1291; FRAP 4(a)(1)(A)"
     effort 0.hours
@@ -400,9 +400,9 @@ decision default-entered: "Clerk's Entry of Default" by clerk cite "FRCP 55(a)"
 terminal default-judgment-entered: "DEFAULT JUDGMENT ENTERED" outcome [win, default-judgment] cite "FRCP 55(b)(1); 55(b)(2)"
 {
   group pleading-group
-  note "PERMADEATH (absent a successful Rule 60(b) motion, not separately modeled from this terminal). The clerk enters judgment for a sum certain if the defendant has not appeared and is not a minor or incompetent (55(b)(1)); otherwise the court enters it, and may hold a hearing to determine damages, establish the truth of an allegation, or investigate any other matter (55(b)(2)). Well-pleaded factual allegations (other than damages) are taken as true against the defaulting party -- damages must still be proven. PLACEHOLDER PAYOFF: $900,000, override per matter. Entered against a non-appearing defendant -- a real win for the plaintiff (self), discounted from a full $1,000,000 because it was never tested on the merits. The pack's authored `valence` of 'bad' reflects how disfavored/drastic default judgments are procedurally, not who benefits -- flagged since it runs the other way from self's payoff."
+  note "PERMADEATH (absent a successful Rule 60(b) motion, not separately modeled from this terminal). The clerk enters judgment for a sum certain if the defendant has not appeared and is not a minor or incompetent (55(b)(1)); otherwise the court enters it, and may hold a hearing to determine damages, establish the truth of an allegation, or investigate any other matter (55(b)(2)). Well-pleaded factual allegations (other than damages) are taken as true against the defaulting party -- damages must still be proven.  $900,000, override per matter. Entered against a non-appearing defendant -- a real win for the plaintiff (self), discounted from a full $1,000,000 because it was never tested on the merits. The pack's authored `valence` of 'bad' reflects how disfavored/drastic default judgments are procedurally, not who benefits -- flagged since it runs the other way from self's payoff."
   valence bad
-  payoff 900_000.usd
+  payoff 900_000.usd basis placeholder
 }
 
 state voluntary-dismissal: "VOLUNTARY / STIPULATED DISMISSAL" by plaintiff cite "FRCP 41(a)"
@@ -433,9 +433,9 @@ state voluntary-dismissal: "VOLUNTARY / STIPULATED DISMISSAL" by plaintiff cite 
 terminal voluntary-dismissal-final: "VOLUNTARY DISMISSAL LEFT IN PLACE" outcome [settlement, voluntary] cite "FRCP 41(a)"
 {
   group pleading-group
-  note "Dismissal remains in force. A first Rule 41(a)(1) dismissal is ordinarily without prejudice unless the notice or stipulation says otherwise. PLACEHOLDER PAYOFF: $400,000, override per matter."
+  note "Dismissal remains in force. A first Rule 41(a)(1) dismissal is ordinarily without prejudice unless the notice or stipulation says otherwise.  $400,000, override per matter."
   valence good
-  payoff 400_000.usd
+  payoff 400_000.usd basis placeholder
 }
 
 decision rule60-dismissal-motion: "Rule 60(b) Motion After Rule 41(a)(1) Notice" by court cite "FRCP 60(b)"
@@ -796,19 +796,19 @@ chance rule37-sanctions-ruling: "Court Rules on Rule 37 Sanctions" by court disc
 terminal discovery-sanctions-dismissal: "CASE DISMISSED -- Discovery Sanction" outcome [loss, sanctions, dismissal] cite "FRCP 37(b)(2)(A)(v); 37(e)(2)(C)"
 {
   group discovery-group
-  note "PERMADEATH. The plaintiff's own noncompliance or spoliation was severe enough, and sufficiently willful, bad-faith, or intentional, to warrant the case-dispositive sanction of dismissal rather than a lesser remedy -- courts apply heightened scrutiny before imposing this sanction precisely because it forecloses adjudication on the merits. PLACEHOLDER PAYOFF: $0, override per matter. Per this terminal's own note, this sanction runs against the plaintiff's (self's) own discovery misconduct."
+  note "PERMADEATH. The plaintiff's own noncompliance or spoliation was severe enough, and sufficiently willful, bad-faith, or intentional, to warrant the case-dispositive sanction of dismissal rather than a lesser remedy -- courts apply heightened scrutiny before imposing this sanction precisely because it forecloses adjudication on the merits.  $0, override per matter. Per this terminal's own note, this sanction runs against the plaintiff's (self's) own discovery misconduct."
   valence bad
   court_listener_url "https://www.courtlistener.com/opinion/775569/mark-n-silvestri-v-general-motors-corporation-dfendant-appellee/"
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 terminal discovery-sanctions-default: "DEFAULT JUDGMENT -- Discovery Sanction" outcome [win, sanctions, default-judgment] cite "FRCP 37(b)(2)(A)(vi)"
 {
   group discovery-group
-  note "PERMADEATH for the defendant. The defendant's discovery misconduct (disobeying a compel order, spoliating evidence with intent to deprive) was severe enough to warrant default judgment as a sanction -- the adversarial mirror image of dismissal, and equally disfavored absent a clear showing of willfulness or bad faith. PLACEHOLDER PAYOFF: $900,000, override per matter. Per this terminal's own note, this sanction runs against the DEFENDANT's misconduct -- a real win for the plaintiff (self), discounted from a full $1,000,000 because it was never tested on the merits. The pack's authored `valence` of 'bad' reflects how disfavored the sanction is procedurally, not who benefits -- flagged since it runs the other way from self's payoff."
+  note "PERMADEATH for the defendant. The defendant's discovery misconduct (disobeying a compel order, spoliating evidence with intent to deprive) was severe enough to warrant default judgment as a sanction -- the adversarial mirror image of dismissal, and equally disfavored absent a clear showing of willfulness or bad faith.  $900,000, override per matter. Per this terminal's own note, this sanction runs against the DEFENDANT's misconduct -- a real win for the plaintiff (self), discounted from a full $1,000,000 because it was never tested on the merits. The pack's authored `valence` of 'bad' reflects how disfavored the sanction is procedurally, not who benefits -- flagged since it runs the other way from self's payoff."
   valence bad
   court_listener_url "https://www.courtlistener.com/opinion/8776470/victor-stanley-inc-v-creative-pipe-inc/"
-  payoff 900_000.usd
+  payoff 900_000.usd basis placeholder
 }
 
 decision discovery-closed: "Discovery Closed" cite "FRCP 16(b)(3)"
@@ -920,10 +920,10 @@ chance sj-ruling: "Court Rules on Summary Judgment" by court discretion cite "FR
 terminal summary-judgment-for-plaintiff: "SUMMARY JUDGMENT FOR PLAINTIFF" by plaintiff outcome [win] cite "FRCP 56(a)"
 {
   group pretrial-motions-group
-  note "The court enters judgment for the plaintiff movant on the full case because no genuine dispute of material fact exists and the movant is entitled to judgment as a matter of law. A grant of summary judgment is reviewed de novo on appeal, unlike a jury verdict's deferential review. PLACEHOLDER PAYOFF: $500,000, retained for the plaintiff-favourable result; the defendant-side result is separately valued at $0. FRCP 56(a)."
+  note "The court enters judgment for the plaintiff movant on the full case because no genuine dispute of material fact exists and the movant is entitled to judgment as a matter of law. A grant of summary judgment is reviewed de novo on appeal, unlike a jury verdict's deferential review.  $500,000, retained for the plaintiff-favourable result; the defendant-side result is separately valued at $0. FRCP 56(a)."
   valence good
   court_listener_url "https://www.courtlistener.com/opinion/145738/scott-v-harris/"
-  payoff 500_000.usd
+  payoff 500_000.usd basis placeholder
   edge-summary-judgment-for-plaintiff-appeal-clock "Summary judgment disposing of the case is a final decision -- the losing party weighs an appeal" -> notice-of-appeal-window {
     authority cite "28 U.S.C. 1291; FRAP 4(a)(1)(A)"
     effort 0.hours
@@ -934,10 +934,10 @@ terminal summary-judgment-for-plaintiff: "SUMMARY JUDGMENT FOR PLAINTIFF" by pla
 terminal summary-judgment-for-defendant: "SUMMARY JUDGMENT FOR DEFENDANT" by plaintiff outcome [loss] cite "FRCP 56(a)"
 {
   group pretrial-motions-group
-  note "The court enters judgment for the defendant movant on the full case because no genuine dispute of material fact exists and the movant is entitled to judgment as a matter of law. A grant of summary judgment is reviewed de novo on appeal. PLACEHOLDER PAYOFF: $0, the defendant-favourable side of the former blended terminal. FRCP 56(a)."
+  note "The court enters judgment for the defendant movant on the full case because no genuine dispute of material fact exists and the movant is entitled to judgment as a matter of law. A grant of summary judgment is reviewed de novo on appeal.  $0, the defendant-favourable side of the former blended terminal. FRCP 56(a)."
   valence bad
   court_listener_url "https://www.courtlistener.com/opinion/145738/scott-v-harris/"
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   edge-summary-judgment-for-defendant-appeal-clock "Summary judgment disposing of the case is a final decision -- the losing party weighs an appeal" -> notice-of-appeal-window {
     authority cite "28 U.S.C. 1291; FRAP 4(a)(1)(A)"
     effort 0.hours

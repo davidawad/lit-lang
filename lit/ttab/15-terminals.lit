@@ -60,7 +60,7 @@ terminal settle-coexistence: "Settlement: coexistence agreement; registration pr
 
 terminal abandoned-keeps-using: "Abandoned application; the opposer drops C&D; client keeps using unregistered" outcome [abandon, unregistered] {
   group terminals
-  note "Placeholder for lost registration value and continuing exposure. [applicant payoff at defaults = -12,000; judgment inputs rb=0, fx=-12000, sh=0] Applicant payoff at default inputs = -12,000 (rb=0, fx=-12000, sh=0); scenarios recompute it from params."
+  note "Lost registration value and continuing exposure. [applicant payoff at defaults = -12,000; judgment inputs rb=0, fx=-12000, sh=0] Applicant payoff at default inputs = -12,000 (rb=0, fx=-12000, sh=0); scenarios recompute it from params."
   attrs { fx: -12000, rb: 0, sfx: 0, sh: 0, sw: 0.4 }
   payoff -12_000.usd basis placeholder
 }

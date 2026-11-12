@@ -93,9 +93,9 @@ state indictment-returned: "Indictment Returned (True Bill)" by court delegable 
 terminal no-bill: "No Bill — Grand Jury Declines to Indict" by prosecution outcome [win, dismissal] cite "Fed. R. Crim. P. 6(f); United States v. Thompson, 251 U.S. 407 (1920)"
   effective [2023-01-05, ..) known_at 2023-01-05 {
   group investigation-group
-  note "Double jeopardy does not attach at the grand jury stage, so the government may re-present the same charges to a different grand jury. Jeopardy attaches only when the trial jury is sworn (or the first witness is sworn in a bench trial). PLACEHOLDER PAYOFF: $1,000,000, override per matter, treating this playthrough's dispositive outcome as a full win even though double jeopardy has not yet attached and the government could theoretically re-present (not modeled as a loop back in this playthrough's payoff)."
+  note "Double jeopardy does not attach at the grand jury stage, so the government may re-present the same charges to a different grand jury. Jeopardy attaches only when the trial jury is sworn (or the first witness is sworn in a bench trial).  $1,000,000, override per matter, treating this playthrough's dispositive outcome as a full win even though double jeopardy has not yet attached and the government could theoretically re-present (not modeled as a loop back in this playthrough's payoff)."
   valence good
-  payoff 1_000_000.usd
+  payoff 1_000_000.usd basis placeholder
   "Re-present to new grand jury" -> grand-jury-convened {
     authority cite "Fed. R. Crim. P. 6(a); 18 U.S.C. § 3282"
     effort 20.hours
@@ -185,9 +185,9 @@ state bound-over-grand-jury: "Bound Over to Grand Jury" by court delegable {
 terminal complaint-dismissed-no-pc: "Complaint Dismissed — No Probable Cause" outcome [win, dismissal] effective [2009-12-01, ..) known_at 2009-03-26 cite "Fed. R. Crim. P. 5.1(f)"
 {
   group charging-group
-  note "Magistrate finds no probable cause; defendant discharged on this complaint. Not a double jeopardy bar — jeopardy has not attached, so the government routinely re-prosecutes via grand jury indictment on the same conduct. PLACEHOLDER PAYOFF: $800,000, override per matter. Slightly discounted from a full win because, per this terminal's own note, the government 'routinely re-prosecutes via grand jury indictment' on the same conduct."
+  note "Magistrate finds no probable cause; defendant discharged on this complaint. Not a double jeopardy bar — jeopardy has not attached, so the government routinely re-prosecutes via grand jury indictment on the same conduct.  $800,000, override per matter. Slightly discounted from a full win because, per this terminal's own note, the government 'routinely re-prosecutes via grand jury indictment' on the same conduct."
   valence good
-  payoff 800_000.usd
+  payoff 800_000.usd basis placeholder
 }
 
 /// imported
@@ -368,9 +368,9 @@ state suppression-denied: "Suppression Motion Denied" by court effective [2023-1
 terminal indictment-dismissed-defective: "Indictment Dismissed — Defective/Time-Barred" by accused outcome [win, dismissal] effective [2024-12-01, ..) cite "Fed. R. Crim. P. 12(b)(3)(B); 18 U.S.C. § 3282"
 {
   group pretrial-motions-group
-  note "May be with or without prejudice. Dismissal without prejudice is only truly final if the five-year limitations period (18 U.S.C. § 3282) has since run — otherwise re-indictment remains possible. PLACEHOLDER PAYOFF: $700,000, override per matter. Discounted because, per this terminal's own note, dismissal without prejudice leaves re-indictment possible until the five-year limitations period runs."
+  note "May be with or without prejudice. Dismissal without prejudice is only truly final if the five-year limitations period (18 U.S.C. § 3282) has since run — otherwise re-indictment remains possible.  $700,000, override per matter. Discounted because, per this terminal's own note, dismissal without prejudice leaves re-indictment possible until the five-year limitations period runs."
   valence good
-  payoff 700_000.usd
+  payoff 700_000.usd basis placeholder
   "Re-indict after dismissal" -> grand-jury-convened {
     authority cite "Fed. R. Crim. P. 6(a); 18 U.S.C. § 3282"
     effort 15.hours
@@ -382,18 +382,18 @@ terminal indictment-dismissed-defective: "Indictment Dismissed — Defective/Tim
 terminal rule12c-waiver-trap: "Rule 12(c) Waiver — Motion Forfeited" outcome [loss, waiver-trap] cite "Fed. R. Crim. P. 12(c)(3); Davis v. United States, 411 U.S. 233 (1973)"
   effective [2014-12-01, ..) known_at 2014-04-25 {
   group pretrial-motions-group
-  note "TRAP. An untimely Rule 12(b)(3) motion is forfeited absent a showing of good cause for the delay — a flexible but demanding standard. Most defenses are lost for good, though a narrower plain-error path can survive for some suppression claims on direct appeal. PLACEHOLDER PAYOFF: $100,000, override per matter. Not itself a verdict -- the defense loses its best pretrial motion, and the case proceeds toward an assumed unfavorable trial posture in this playthrough."
+  note "TRAP. An untimely Rule 12(b)(3) motion is forfeited absent a showing of good cause for the delay — a flexible but demanding standard. Most defenses are lost for good, though a narrower plain-error path can survive for some suppression claims on direct appeal.  $100,000, override per matter. Not itself a verdict -- the defense loses its best pretrial motion, and the case proceeds toward an assumed unfavorable trial posture in this playthrough."
   valence bad
-  payoff 100_000.usd
+  payoff 100_000.usd basis placeholder
 }
 
 /// imported
 terminal speedy-trial-dismissal: "Dismissed — Speedy Trial Act Violation" outcome [win, dismissal] effective [2024-12-01, ..) cite "18 U.S.C. §§ 3161-3162"
 {
   group pretrial-motions-group
-  note "70-day trial-start clock from indictment or first appearance, whichever is later, minus excludable delay under § 3161(h). Dismissal under § 3162(a)(2) can be with or without prejudice based on offense seriousness and the impact on Speedy Trial Act administration. PLACEHOLDER PAYOFF: $900,000, override per matter."
+  note "70-day trial-start clock from indictment or first appearance, whichever is later, minus excludable delay under § 3161(h). Dismissal under § 3162(a)(2) can be with or without prejudice based on offense seriousness and the impact on Speedy Trial Act administration.  $900,000, override per matter."
   valence good
-  payoff 900_000.usd
+  payoff 900_000.usd basis placeholder
 }
 
 /// imported
@@ -557,9 +557,9 @@ chance rule29-motion: "Rule 29 Motion for Judgment of Acquittal" by court discre
 terminal rule29-granted: "Judgment of Acquittal — Rule 29 Granted" outcome [win, acquittal] cite "Fed. R. Crim. P. 29(a), (c)"
   effective [2009-12-01, ..) known_at 2009-03-26 {
   group trial-group
-  note "Government's evidence was legally insufficient. Double jeopardy bars a government appeal of a pre-verdict Rule 29(a) grant; a post-verdict Rule 29(c) grant CAN be appealed because a guilty verdict already existed before the court set it aside. PLACEHOLDER PAYOFF: $1,000,000, override per matter."
+  note "Government's evidence was legally insufficient. Double jeopardy bars a government appeal of a pre-verdict Rule 29(a) grant; a post-verdict Rule 29(c) grant CAN be appealed because a guilty verdict already existed before the court set it aside.  $1,000,000, override per matter."
   valence good
-  payoff 1_000_000.usd
+  payoff 1_000_000.usd basis placeholder
 }
 
 /// imported
@@ -592,9 +592,9 @@ state mistrial-hung-jury: "Mistrial — Hung Jury" by accused cite "Fed. R. Crim
 terminal case-dismissed-after-hung-jury: "Case Dismissed After Hung Jury" outcome [win, dismissal] effective [2002-12-01, ..) known_at 2002-04-29 cite "Fed. R. Crim. P. 48(a)"
 {
   group trial-group
-  note "Government exercises prosecutorial discretion not to retry, with leave of court. Unlike an acquittal, double jeopardy did not compel this outcome — the government could have retried but chose not to. PLACEHOLDER PAYOFF: $1,000,000, override per matter."
+  note "Government exercises prosecutorial discretion not to retry, with leave of court. Unlike an acquittal, double jeopardy did not compel this outcome — the government could have retried but chose not to.  $1,000,000, override per matter."
   valence good
-  payoff 1_000_000.usd
+  payoff 1_000_000.usd basis placeholder
 }
 
 /// imported
@@ -611,9 +611,9 @@ chance verdict-returned: "Verdict Returned" by court discretion effective [2002-
 terminal acquittal-verdict: "Acquittal by Jury Verdict" outcome [win, acquittal] cite "Fed. R. Crim. P. 31(a); U.S. Const. amend. V"
   effective [2002-12-01, ..) known_at 2002-04-29 {
   group verdict-sentencing-group
-  note "Double jeopardy permanently bars retrial or a government appeal on this charge, no matter how erroneous the verdict looks on the law or the facts. PLACEHOLDER PAYOFF: $1,000,000, override per matter."
+  note "Double jeopardy permanently bars retrial or a government appeal on this charge, no matter how erroneous the verdict looks on the law or the facts.  $1,000,000, override per matter."
   valence good
-  payoff 1_000_000.usd
+  payoff 1_000_000.usd basis placeholder
 }
 
 /// imported
@@ -788,18 +788,18 @@ state notice-of-appeal-filed: "Notice of Appeal Filed" cite "Fed. R. App. P. 3(a
 terminal appeal-window-missed: "Appeal Forfeited — FRAP 4(b) Deadline Missed" outcome [loss, conviction, procedural-default, waiver-trap] cite "Fed. R. App. P. 4(b); Eberhart v. United States, 546 U.S. 12 (2005)"
   effective [2024-12-01, ..) {
   group appeal-group
-  note "TRAP. The deadline is a mandatory claim-processing rule, not jurisdictional: Bowles v. Russell rested on 28 U.S.C. § 2107, which covers only civil appeals, and no statute stands behind FRAP 4(b). But once the government objects to untimeliness, the court must dismiss and no equitable exception applies; only the government's failure to raise the objection saves a late appeal. Only 28 U.S.C. § 2255 collateral review — a far harder standard — remains. PLACEHOLDER PAYOFF: $0, override per matter. Conviction stands and appellate review is forfeited by a missed deadline, not by choice -- worse than a deliberate waiver."
+  note "TRAP. The deadline is a mandatory claim-processing rule, not jurisdictional: Bowles v. Russell rested on 28 U.S.C. § 2107, which covers only civil appeals, and no statute stands behind FRAP 4(b). But once the government objects to untimeliness, the court must dismiss and no equitable exception applies; only the government's failure to raise the objection saves a late appeal. Only 28 U.S.C. § 2255 collateral review — a far harder standard — remains.  $0, override per matter. Conviction stands and appellate review is forfeited by a missed deadline, not by choice -- worse than a deliberate waiver."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 /// imported
 terminal conviction-final-no-appeal: "Conviction Final — No Appeal Taken" outcome [conviction, final] effective [2024-12-01, ..) cite "Fed. R. App. P. 4(b)"
 {
   group appeal-group
-  note "Defendant deliberately lets the window lapse, often pursuant to an appeal-waiver plea agreement. Judgment becomes final for purposes of the AEDPA collateral-review clock under 28 U.S.C. § 2255(f); direct appeal is no longer available. PLACEHOLDER PAYOFF: $100,000, override per matter. Per this terminal's own note, this is often reached 'pursuant to an appeal-waiver plea agreement' -- a deliberate, negotiated finality, valued slightly above an unreviewed trial conviction."
+  note "Defendant deliberately lets the window lapse, often pursuant to an appeal-waiver plea agreement. Judgment becomes final for purposes of the AEDPA collateral-review clock under 28 U.S.C. § 2255(f); direct appeal is no longer available.  $100,000, override per matter. Per this terminal's own note, this is often reached 'pursuant to an appeal-waiver plea agreement' -- a deliberate, negotiated finality, valued slightly above an unreviewed trial conviction."
   valence good
-  payoff 100_000.usd
+  payoff 100_000.usd basis placeholder
 }
 
 /// imported
@@ -825,9 +825,9 @@ chance appellate-decision: "Court of Appeals Decision" by court discretion effec
 terminal conviction-affirmed: "Conviction Affirmed on Appeal" outcome [loss, conviction, affirmed] effective [2024-12-01, ..) cite "28 U.S.C. § 1291"
 {
   group appeal-group
-  note "Judgment is final. Further review is discretionary: en banc rehearing (rarely granted), certiorari to the Supreme Court (rarer still), or a 28 U.S.C. § 2255 collateral attack limited to constitutional/jurisdictional error or newly available structural defects. PLACEHOLDER PAYOFF: $0, override per matter."
+  note "Judgment is final. Further review is discretionary: en banc rehearing (rarely granted), certiorari to the Supreme Court (rarer still), or a 28 U.S.C. § 2255 collateral attack limited to constitutional/jurisdictional error or newly available structural defects.  $0, override per matter."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 /// imported

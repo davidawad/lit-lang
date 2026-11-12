@@ -210,6 +210,11 @@ fn cite_resolves_checks_sourced_bases() {
     );
     let c = verify_one(&lit, Profile::Strict);
     let found = outcome(&c, Obligation::CiteResolves);
+    let text = serde_json::to_string(&found).unwrap_or_default();
+    assert!(
+        text.contains("FRCP 98(a)") && text.contains("FRCP 97(a)"),
+        "{text}"
+    );
     let without_number_basis = lit.replace(
         ", effort 2.hours basis sourced(\"FRCP 4(d)(2)\")",
         ", effort 2.hours",
@@ -221,6 +226,31 @@ fn cite_resolves_checks_sourced_bases() {
         .unwrap_or_default()["finding"]["evidence"]["checked"]
         .as_u64();
     assert_eq!(with_count, baseline_count.map(|count| count + 1));
+}
+
+#[test]
+fn cite_resolves_checks_number_level_sourced_basis() {
+    let with_bad_number_cite = edit(
+        "{ event Answered(complaint), within answer-period }",
+        "{ event Answered(complaint), within answer-period, effort 2.hours basis sourced(\"FRCP 96(a)\") }",
+    );
+    let bad = verify_one(&with_bad_number_cite, Profile::Strict);
+    let finding = outcome(&bad, Obligation::CiteResolves);
+    let text = serde_json::to_string(&finding).unwrap_or_default();
+    assert!(text.contains("FRCP 96(a)"), "{text}");
+    assert_eq!(
+        status(&bad, Obligation::CiteResolves),
+        Some(ObligationStatus::Failed)
+    );
+
+    let with_good_number_cite = with_bad_number_cite.replace("FRCP 96(a)", "FRCP 4(d)(2)");
+    let good = verify_one(&with_good_number_cite, Profile::Strict);
+    assert_eq!(
+        status(&good, Obligation::CiteResolves),
+        Some(ObligationStatus::Passed),
+        "{:#?}",
+        good.verification
+    );
 }
 
 #[test]

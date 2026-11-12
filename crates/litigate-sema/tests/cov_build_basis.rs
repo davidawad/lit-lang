@@ -33,6 +33,15 @@ fn numeric_suffix_uses_object_basis_semantics_and_requires_vintage_for_estimate(
         missing_vintage.iter().any(|line| line.contains("L9012")),
         "{missing_vintage:#?}"
     );
+
+    let placeholder_without_vintage =
+        check_body("terminal t: \"T\" { payoff 1.usd basis placeholder }\n");
+    assert!(
+        placeholder_without_vintage
+            .iter()
+            .any(|line| line.contains("L9012")),
+        "{placeholder_without_vintage:#?}"
+    );
 }
 
 #[test]

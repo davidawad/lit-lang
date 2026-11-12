@@ -90,4 +90,6 @@ text is typed or locked; no strict extension holes remain.
 - `litigate test lit/mpep`: 56 passed, 0 failed (before the seven late-petition cases: 49 passed, 0 failed).
 - Strict MPEP check: baseline 11 L5002 errors; after 0 L5002 errors, 0 other errors, 0 warnings.
 - `litigate fmt --check lit cases`: exit 2 on the known main-branch L9004 in `lit/ptab/03-trial-to-appeal.lit`; `litigate fmt --check lit/mpep`: passed.
-- `just lit-sync-check`: the first run correctly detected the just-regenerated `lit/mpep/Lit.lock` as a pending source change. The generated lock is included with this report; rerun after commit to confirm a clean tree.
+- `just lit-sync`: passed; regenerated the MPEP `Lit.lock` and built packs/scenarios.
+- `just lit-sync-check`: passed on the committed tree; all locks and the shared clock library are current, and no generated files are committed.
+- `cargo test -p litigate-verify --test refinement_bounds`: 10 passed, 0 failed.

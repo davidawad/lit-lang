@@ -68,8 +68,6 @@ event SuccessiveAuthorizationMoved()
 /// The clerk's service of a magistrate judge's proposed findings and
 /// recommendations on the parties (2254 Rule 8(b); 2255 Rule 8(b)).
 event ProposedFindingsServed(method: ServiceMethod)
-/// A motion seeking an enlargement under FRCP 6(b)(1).
-event ExtensionMotionFiled()
 
 /// § 2244(d)(1): a 1-year period for an application by a person in custody
 /// under a state-court judgment, from the latest of its four dates (added
@@ -137,22 +135,18 @@ deadline successive-authorization-ruling: 30.days after SuccessiveAuthorizationM
 }
 
 /// Rule 8(b) of each set: "Within 14 days after being served, a party may
-/// file objections as provided by local court rule." The vendored rules
-/// carry no amendment history, so this is the vintage of the vendored
-/// text (as amended to Dec. 1, 2019); an earlier date is not declared.
-/// FRCP 6(d)'s added days follow the method of service.
+/// file objections as provided by local court rule." 28 U.S.C. § 636(b)(1)
+/// independently fixes the objection period: "Within fourteen days after
+/// being served with a copy, any party may serve and file written
+/// objections." Since both statute and rule fix it, this epic leaves
+/// extension availability undeclared. The vendored rules carry no amendment
+/// history, so this is the vintage of the vendored text (as amended to Dec.
+/// 1, 2019); an earlier date is not declared. FRCP 6(d)'s added days follow
+/// the method of service.
 deadline proposed-findings-objections: 14.days after ProposedFindingsServed() counted_by frcp6 effective [2019-12-01, ..) known_at 2019-12-01 cite "2254 Rule 8(b); 2255 Rule 8(b)"
 {
   forum frcp cite "2254 Rule 12"
     quote "are not inconsistent with any statutory provisions or these rules,"
-  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "FRCP 6(b)(1)(A)" }
-  extend {
-    by court
-    discretion ExcusableNeglect
-    after_expiry
-    on ExtensionMotionFiled()
-    cite "FRCP 6(b)(1)(B)"
-  }
 }
 
 test "the § 2244(d)(1) year ends on the anniversary of finality" cite "28 U.S.C. § 2244(d)(1)(A)"

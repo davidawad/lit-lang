@@ -204,6 +204,25 @@ pub enum QueryKind {
     Versions,
     /// Declarations that override another (`override`, `notwithstanding`, `supersedes`).
     Overrides,
+    /// Authored numeric values and their typed provenance.
+    Provenance,
+}
+
+/// Numeric provenance basis filter.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+pub enum BasisArg {
+    /// Explicit source citation.
+    Sourced,
+    /// Dataset or calibration set.
+    Calibrated,
+    /// Named expert judgment.
+    Expert,
+    /// Working estimate.
+    Estimate,
+    /// Explicit placeholder.
+    Placeholder,
+    /// Explicitly missing value.
+    Hole,
 }
 
 /// `lint-filing`'s paper: its counts, the certificates it carries, and
@@ -541,6 +560,8 @@ pub enum Command {
         /// What to list.
         #[arg(value_enum)]
         kind: QueryKind,
+        /// Target package directory, `.lit` file, or `.case` matter.
+        target: Option<String>,
         /// Only ids or labels containing this text.
         #[arg(long = "match", value_name = "TEXT")]
         text: Option<String>,
@@ -562,6 +583,12 @@ pub enum Command {
         /// Resume after a previous `next_cursor`.
         #[arg(long)]
         cursor: Option<String>,
+        /// Keep only numbers with this provenance basis.
+        #[arg(long, value_enum)]
+        basis: Option<BasisArg>,
+        /// Keep only numbers without an authored vintage.
+        #[arg(long)]
+        no_vintage: bool,
         /// Packages to search (default: the library).
         #[arg(long = "path", value_name = "PATH")]
         paths: Vec<String>,

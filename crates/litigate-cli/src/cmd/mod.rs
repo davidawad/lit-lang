@@ -17,6 +17,7 @@ mod impact;
 mod import;
 mod lock;
 mod query;
+mod query_provenance;
 pub(crate) mod run;
 mod test;
 mod timeline;
@@ -29,7 +30,7 @@ pub use explain::phase;
 pub use fmt::stdin as fmt_stdin;
 
 use crate::cli::Command;
-use crate::out::Outcome;
+use crate::out::{Failure, Outcome};
 use litigate_sema::pkg::source::Source;
 
 /// Runs `command`; [`crate::IN_MEMORY_COMMANDS`] and the op subcommands
@@ -224,6 +225,7 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
         Command::Compat { old, new } => compat::compat(&old, &new),
         Command::Query {
             kind,
+            target,
             text,
             cite,
             effective_on,
@@ -231,20 +233,38 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             package,
             limit,
             cursor,
+            basis,
+            no_vintage,
             paths,
             library,
-        } => query::query(&query::Args {
-            kind,
-            text,
-            cite,
-            effective_on,
-            overrides,
-            package,
-            limit,
-            cursor,
-            paths,
-            lib: library.lib,
-        }),
+        } => {
+            let paths = target.into_iter().chain(paths).collect();
+            if kind == crate::cli::QueryKind::Provenance {
+                query_provenance::query(&query_provenance::Args {
+                    paths,
+                    basis,
+                    no_vintage,
+                    lib: library.lib,
+                })
+            } else if basis.is_some() || no_vintage {
+                Err(Failure::new(
+                    "--basis and --no-vintage are only valid for `query provenance`",
+                ))
+            } else {
+                query::query(&query::Args {
+                    kind,
+                    text,
+                    cite,
+                    effective_on,
+                    overrides,
+                    package,
+                    limit,
+                    cursor,
+                    paths,
+                    lib: library.lib,
+                })
+            }
+        }
         Command::Timeline {
             file,
             dates,

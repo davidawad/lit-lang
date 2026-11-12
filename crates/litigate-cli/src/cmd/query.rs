@@ -205,6 +205,7 @@ fn candidates<'p>(
         QueryKind::Overrides => overrides(pkg),
         QueryKind::Edges => edges(pkg),
         QueryKind::Holes => check.holes.iter().map(|h| (hole(h), None)).collect(),
+        QueryKind::Provenance => Vec::new(),
     }
 }
 

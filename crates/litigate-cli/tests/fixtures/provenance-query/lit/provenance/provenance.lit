@@ -1,0 +1,23 @@
+module provenance.query
+
+package provenance-query { forum test, authority TestRule }
+
+start draw
+
+chance draw: "Provenance values" {
+  sourced "Sourced" -> done p 1/13 basis sourced("Rule 1")
+  sourced-vintage "Sourced with vintage" -> done p 1/13 basis sourced("Rule 1") vintage 2026-02-04
+  calibrated "Calibrated" -> done p 1/13 basis calibrated("dataset", 2026-01-01) vintage 2026-02-01
+  calibrated-old "Calibrated without vintage" -> done p 1/13 basis calibrated("dataset", 2026-01-01)
+  expert "Expert" -> done p 1/13 basis expert("Jane Roe")
+  expert-vintage "Expert with vintage" -> done p 1/13 basis expert("Jane Roe") vintage 2026-02-05
+  estimate "Estimate" -> done p 1/13 basis estimate vintage 2026-02-02
+  estimate-old "Estimate without vintage" -> done p 1/13 basis estimate
+  placeholder "Placeholder" -> done p 1/13 basis placeholder vintage 2026-02-03
+  placeholder-old "Placeholder without vintage" -> done p 1/13 basis placeholder
+  hole "Hole" -> done p 1/13 { cost ?("unknown") }
+  plain "Plain estimate" -> done p 1/13
+  plain-old "Plain estimate without vintage" -> done p 1/13
+}
+
+terminal done: "Done" outcome [neutral] { payoff 1.usd basis sourced("Rule 2") }

@@ -211,7 +211,8 @@ the gate (`scripts/cov-gate`) over fixed known-low and known-ok inputs.
    `sources/ecfr-versions-title-37.txt`) shows no amendment since.
 5. **Probabilities**: only on non-self edges. Put authored provenance in
    the number's `basis` and `vintage` suffix (docs/litigate/SPEC.md §5.1);
-   unauthored beats invented.
+   unauthored beats invented. `litigate query provenance TARGET` lists the
+   compiler's lowered per-number labels, sources, vintages, and spans.
 6. **Pin modes when comparing to v1** (`mixed: optimistic`,
    `prob_fill: uniform`); see tests/parity.rs.
 7. **Composed graphs**: set `scenario.start` explicitly; the default start

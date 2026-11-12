@@ -7,9 +7,9 @@
       "id": "itc-337::complaint-filed",
       "label": "Complaint Filed"
     },
-    "value": 540260.353525,
+    "value": 223274.580971,
     "converged": true,
-    "iterations": 59,
+    "iterations": 52,
     "fee_shift_rounds": 0,
     "best_line": [
       {
@@ -22,7 +22,7 @@
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 540260.353525
+        "q": 223274.580971
       },
       {
         "id": "itc-337::edge-institution-decision-instituted",
@@ -34,7 +34,7 @@
         "p": 0.85,
         "kind": "likely-draw",
         "step_p": 0.85,
-        "q": 635600.415912
+        "q": 262675.977613
       },
       {
         "id": "itc-337::edge-instituted-response-period-open",
@@ -46,7 +46,7 @@
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 635600.415912
+        "q": 262675.977613
       },
       {
         "id": "itc-337::edge-response-period-open-default-track",
@@ -57,7 +57,7 @@
         "authority": "cfr210.13.default",
         "kind": "choice",
         "step_p": 1.0,
-        "q": 635600.415912
+        "q": 262675.977613
       },
       {
         "id": "itc-337::edge-default-track-show-cause-order",
@@ -69,7 +69,7 @@
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 635600.415912
+        "q": 262675.977613
       },
       {
         "id": "itc-337::edge-show-cause-order-default-found",
@@ -80,7 +80,7 @@
         "authority": "cfr210.16.b",
         "kind": "choice",
         "step_p": 1.0,
-        "q": 635600.415912
+        "q": 262675.977613
       },
       {
         "id": "itc-337::edge-default-found-default-relief-determination",
@@ -92,7 +92,7 @@
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 636600.415912
+        "q": 263675.977613
       },
       {
         "id": "itc-337::edge-default-relief-determination-violation-id",
@@ -104,7 +104,7 @@
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 636600.415912
+        "q": 263675.977613
       },
       {
         "id": "itc-337::edge-violation-id-recommended-determination",
@@ -116,7 +116,7 @@
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 636600.415912
+        "q": 263675.977613
       },
       {
         "id": "itc-337::edge-recommended-determination-petition-for-review-window",
@@ -128,7 +128,7 @@
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 636600.415912
+        "q": 263675.977613
       },
       {
         "id": "itc-337::edge-petition-for-review-window-id-becomes-commission-determination",
@@ -139,7 +139,7 @@
         "authority": "cfr210.43.a.4",
         "kind": "choice",
         "step_p": 1.0,
-        "q": 636600.415912
+        "q": 263675.977613
       },
       {
         "id": "itc-337::edge-id-becomes-commission-determination-commission-final-determination",
@@ -151,90 +151,65 @@
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 636600.415912
+        "q": 263675.977613
       },
       {
         "id": "itc-337::edge-commission-final-determination-remedy-determined",
         "label": "Commission's Final Determination: violation found — Commission determines remedy",
         "from": "itc-337::commission-final-determination",
-        "to": "itc-337::remedy-determined",
+        "to": "itc-337::remedy-determined{violation-found}",
         "role": "nature",
         "authority": "usc1337.d",
         "p": 0.65,
         "kind": "likely-draw",
         "step_p": 0.65,
-        "q": 614642.111783
+        "q": 365000.0
       },
       {
-        "id": "itc-337::edge-remedy-determined-presidential-review-window",
+        "id": "itc-337::edge-remedy-determined-presidential-review-window{violation-found}",
         "label": "Commission serves the determination — the 60-day Presidential (USTR) disapproval window begins (§ 1337(j))",
-        "from": "itc-337::remedy-determined",
-        "to": "itc-337::presidential-review-window",
+        "from": "itc-337::remedy-determined{violation-found}",
+        "to": "itc-337::presidential-review-window{violation-found}",
         "role": "nature",
         "authority": "usc1337.j",
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 614642.111783
+        "q": 365000.0
       },
       {
-        "id": "itc-337::edge-presidential-review-window-remedy-in-effect",
+        "id": "itc-337::edge-presidential-review-window-remedy-in-effect{violation-found}",
         "label": "60 days elapse without disapproval — the remedy takes effect (§ 1337(j))",
-        "from": "itc-337::presidential-review-window",
-        "to": "itc-337::remedy-in-effect",
+        "from": "itc-337::presidential-review-window{violation-found}",
+        "to": "itc-337::remedy-in-effect{violation-found}",
         "role": "nature",
         "authority": "usc1337.j",
         "p": 0.9,
         "kind": "likely-draw",
         "step_p": 0.9,
-        "q": 677380.124461
+        "q": 400000.0
       },
       {
-        "id": "itc-337::edge-remedy-in-effect-federal-circuit-appeal-window",
+        "id": "itc-337::edge-remedy-in-effect-federal-circuit-appeal-window{violation-found}",
         "label": "Respondent (or another adversely affected person) considers appeal of the violation determination and remedy",
-        "from": "itc-337::remedy-in-effect",
-        "to": "itc-337::federal-circuit-appeal-window",
-        "role": "self",
+        "from": "itc-337::remedy-in-effect{violation-found}",
+        "to": "itc-337::federal-circuit-appeal-window{violation-found}",
+        "role": "opponent",
         "authority": "usc1337.c",
-        "kind": "choice",
+        "kind": "opponent-choice",
         "step_p": 1.0,
-        "q": 677380.124461
+        "q": 400000.0
       },
       {
-        "id": "itc-337::edge-federal-circuit-appeal-window-appeal-filed",
-        "label": "File Notice of Appeal to the Federal Circuit — 60 days after the determination becomes final (§ 1337(c); 28 U.S.C. § 1295(a)(6))",
-        "from": "itc-337::federal-circuit-appeal-window",
-        "to": "itc-337::appeal-filed",
-        "role": "self",
+        "id": "itc-337::edge-federal-circuit-appeal-window-determination-final-unappealed-violation{violation-found}",
+        "label": "No appeal filed within 60 days — the Commission's determination stands (§ 1337(c))",
+        "from": "itc-337::federal-circuit-appeal-window{violation-found}",
+        "to": "itc-337::determination-final-unappealed-violation{violation-found}",
+        "role": "opponent",
         "authority": "usc1337.c",
-        "deadline_days": 60.0,
-        "kind": "choice",
+        "kind": "opponent-choice",
         "step_p": 1.0,
-        "q": 677380.124461
-      },
-      {
-        "id": "itc-337::edge-appeal-filed-federal-circuit-review",
-        "label": "Federal Circuit reviews the Commission's determination",
-        "from": "itc-337::appeal-filed",
-        "to": "itc-337::federal-circuit-review",
-        "role": "nature",
-        "authority": "usc1337.c",
-        "p": 1.0,
-        "kind": "likely-draw",
-        "step_p": 1.0,
-        "q": 680980.124642
-      },
-      {
-        "id": "itc-337::edge-federal-circuit-review-cafc-affirmed",
-        "label": "Federal Circuit affirms the Commission",
-        "from": "itc-337::federal-circuit-review",
-        "to": "itc-337::cafc-affirmed",
-        "role": "nature",
-        "authority": "usc1337.c",
-        "p": 0.7,
-        "kind": "likely-draw",
-        "step_p": 0.7,
-        "q": 700000.0
+        "q": 400000.0
       }
     ],
     "policy_size": 9,
@@ -243,8 +218,14 @@
   },
   "warnings": [
     {
+      "code": "compile",
+      "count": 1,
+      "example": "state flags expanded the graph: 17 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
       "code": "probability-fill",
-      "count": 24,
+      "count": 29,
       "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
       "at": [
         "itc-337::appeal-filed",
@@ -255,6 +236,16 @@
         "itc-337::default-found",
         "itc-337::default-relief-determination",
         "itc-337::default-track"
+      ]
+    },
+    {
+      "code": "sink",
+      "count": 3,
+      "example": "non-terminal with no active out-edges; valued at 0",
+      "at": [
+        "itc-337::cafc-affirmed-result",
+        "itc-337::federal-circuit-appeal-window",
+        "itc-337::remedy-in-effect"
       ]
     }
   ]

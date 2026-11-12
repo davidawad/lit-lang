@@ -26,6 +26,168 @@ fn response(run: &Run, op: &str) -> Value {
     response
 }
 
+fn itc_explain(node: &str) -> Value {
+    let arg = format!("node={node}");
+    response(&litigate(&["explain", "lit/itc", "--arg", &arg]), "explain")["result"].clone()
+}
+
+fn itc_outcome(terminal: &str) -> Vec<String> {
+    let arg = format!("node={terminal}");
+    let graph = response(&litigate(&["graph", "lit/itc", "--arg", &arg]), "graph");
+    graph["result"]["nodes"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|node| node["id"].as_str().is_some_and(|id| id.ends_with(terminal)))
+        .unwrap_or_else(|| panic!("{terminal} missing from {graph}"))["outcome"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|tag| tag.as_str().unwrap().to_owned())
+        .collect()
+}
+
+fn has_terminal(option: &Value, terminal: &str) -> bool {
+    option["then"].as_array().is_some_and(|xs| {
+        xs.iter().any(|x| {
+            x["terminal"]
+                .as_str()
+                .is_some_and(|id| id.starts_with(terminal))
+        })
+    })
+}
+
+#[test]
+fn itc_violation_without_appeal_reaches_the_violation_win_terminal() {
+    let explain = itc_explain("federal-circuit-appeal-window{violation-found}");
+    let options = explain["options"].as_array().unwrap();
+    assert!(options
+        .iter()
+        .any(|option| { has_terminal(option, "determination-final-unappealed-violation") }));
+    assert_eq!(
+        itc_outcome("determination-final-unappealed-violation"),
+        ["final", "win"]
+    );
+}
+
+#[test]
+fn itc_no_violation_without_appeal_reaches_the_no_violation_loss_terminal() {
+    let explain = itc_explain("federal-circuit-appeal-window{no-violation}");
+    let options = explain["options"].as_array().unwrap();
+    assert!(options
+        .iter()
+        .any(|option| { has_terminal(option, "determination-final-unappealed-no-violation") }));
+    assert_eq!(
+        itc_outcome("determination-final-unappealed-no-violation"),
+        ["final", "loss"]
+    );
+}
+
+#[test]
+fn itc_violation_affirmance_reaches_the_violation_win_terminal() {
+    let review = itc_explain("federal-circuit-review{violation-found}");
+    let affirm = review["options"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|option| {
+            option["to"]
+                .as_str()
+                .is_some_and(|id| id.contains("cafc-affirmed-result"))
+        })
+        .unwrap();
+    assert!(has_terminal(affirm, "cafc-affirmed-violation"));
+    assert_eq!(
+        itc_outcome("cafc-affirmed-violation"),
+        ["affirmed", "final", "win"]
+    );
+}
+
+#[test]
+fn itc_no_violation_affirmance_reaches_the_no_violation_loss_terminal() {
+    let review = itc_explain("federal-circuit-review{no-violation}");
+    let affirm = review["options"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|option| {
+            option["to"]
+                .as_str()
+                .is_some_and(|id| id.contains("cafc-affirmed-result"))
+        })
+        .unwrap();
+    assert!(has_terminal(affirm, "cafc-affirmed-no-violation"));
+    assert_eq!(
+        itc_outcome("cafc-affirmed-no-violation"),
+        ["affirmed", "final", "loss"]
+    );
+}
+
+#[test]
+fn itc_appeal_and_affirmance_copies_follow_the_result_flag() {
+    for (flag, allowed, forbidden) in [
+        ("violation-found", "violation", "no-violation"),
+        ("no-violation", "no-violation", "violation"),
+    ] {
+        let appeal = itc_explain(&format!("federal-circuit-appeal-window{{{flag}}}"));
+        let appeal_options = appeal["options"].as_array().unwrap();
+        assert!(appeal_options.iter().any(|option| {
+            option["to"]
+                .as_str()
+                .is_some_and(|id| id.contains(&format!("determination-final-unappealed-{allowed}")))
+        }));
+        assert!(!appeal_options.iter().any(|option| {
+            option["to"].as_str().is_some_and(|id| {
+                id.contains(&format!("determination-final-unappealed-{forbidden}"))
+            })
+        }));
+
+        let review = itc_explain(&format!("federal-circuit-review{{{flag}}}"));
+        let affirm = review["options"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|option| {
+                option["to"]
+                    .as_str()
+                    .is_some_and(|id| id.contains("cafc-affirmed-result"))
+            })
+            .unwrap();
+        assert!(has_terminal(affirm, &format!("cafc-affirmed-{allowed}")));
+        assert!(!has_terminal(affirm, &format!("cafc-affirmed-{forbidden}")));
+    }
+}
+
+#[test]
+fn itc_remand_clears_the_first_result_and_allows_a_different_second_result() {
+    let review = itc_explain("federal-circuit-review{violation-found}");
+    let remand = review["options"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|option| {
+            option["to"]
+                .as_str()
+                .is_some_and(|id| id.contains("cafc-remanded"))
+        })
+        .unwrap();
+    assert!(has_terminal(remand, "cafc-affirmed-no-violation"));
+    assert!(has_terminal(
+        remand,
+        "determination-final-unappealed-violation"
+    ));
+    let return_to_merits = itc_explain("cafc-remanded");
+    assert!(return_to_merits["options"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|option| {
+            option["to"]
+                .as_str()
+                .is_some_and(|id| id.contains("commission-final-determination"))
+        }));
+}
+
 #[test]
 fn an_op_runs_on_a_matter_with_set_params_composed_onto_it() {
     let base = response(&litigate(&["solve", ACME]), "solve");

@@ -264,11 +264,22 @@ instance cafc@itc {
 }
 
 /// Replaces the ITC pack's abstract appeal edge when both packs are loaded.
-link itc-appeal-to-cafc "Appeal the Commission's final determination to the Federal Circuit": itc-337::federal-circuit-appeal-window -> cafc@itc::entry-itc by complainant {
+link itc-appeal-to-cafc-no-violation "Appeal the Commission's no-violation determination to the Federal Circuit": itc-337::federal-circuit-appeal-window -> cafc@itc::entry-itc by complainant {
   authority cite "19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6)"
-  note "Supersedes the ITC pack's abstract appeal edge when both packs are loaded."
+  note "Replaces the no-violation appeal edge; the complainant is adversely affected by that determination."
   tags [appeal]
-  replaces [itc-337::edge-federal-circuit-appeal-window-appeal-filed]
+  requires [no-violation]
+  forbids [violation-found]
+  replaces [itc-337::edge-federal-circuit-appeal-window-appeal-filed-1]
+}
+
+link itc-appeal-to-cafc-violation "Appeal the Commission's violation determination to the Federal Circuit": itc-337::federal-circuit-appeal-window -> cafc@itc::entry-itc by respondent {
+  authority cite "19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6)"
+  note "Replaces the violation appeal edge; the respondent is adversely affected by that determination."
+  tags [appeal]
+  requires [violation-found]
+  forbids [no-violation]
+  replaces [itc-337::edge-federal-circuit-appeal-window-appeal-filed-2]
 }
 
 /// On remand the Commission issues a new final determination. No statute

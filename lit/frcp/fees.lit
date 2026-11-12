@@ -147,7 +147,7 @@ test "fee-supplement-period: a good-cause extension before expiry is accepted" c
   expect deadline(fee-supplement-period) == 2025-07-28
 }
 
-test "fee-supplement-period: after expiry an extension without a motion is refused" cite "FRCP 6(b)(1)(B)"
+test "fee-supplement-period: with no extension recorded the set day stands" cite "FRCP 6(b)(1)(B)"
 {
   given FeeSupplementScheduled(2025-07-21) on 2025-06-20
   expect deadline(fee-supplement-period) == 2025-07-21

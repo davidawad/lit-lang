@@ -139,25 +139,25 @@ decision cert-petition-window: "Certiorari Petition Window" by movant cite "Sup.
 terminal cert-not-sought: "FINAL — Certiorari Not Sought" outcome [final] cite "Sup. Ct. R. 13.1"
 {
   group cert-group
-  note "The vast majority of court of appeals decisions end here — no petition filed, judgment final and unreviewable by any federal court. Neutral copy: no directional panel result flag is set. PLACEHOLDER PAYOFF: $400,000, override per matter."
+  note "The vast majority of court of appeals decisions end here — no petition filed, judgment final and unreviewable by any federal court. Neutral copy: no directional panel result flag is set.  $400,000, override per matter."
   valence good
-  payoff 400_000.usd
+  payoff 400_000.usd basis placeholder
 }
 
 terminal cert-not-sought-after-affirmance: "FINAL — Certiorari Not Sought After Affirmance" outcome [final, loss] cite "Sup. Ct. R. 13.1"
 {
   group cert-group
-  note "No certiorari petition was filed, so the affirmance stands. PLACEHOLDER PAYOFF: $0, copied from the `affirmed` merits terminal that set `panel-affirmed`."
+  note "No certiorari petition was filed, so the affirmance stands.  $0, copied from the `affirmed` merits terminal that set `panel-affirmed`."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 terminal cert-not-sought-after-reversal: "FINAL — Certiorari Not Sought After Reversal" outcome [final, win] cite "Sup. Ct. R. 13.1"
 {
   group cert-group
-  note "No certiorari petition was filed, so the reversal stands. PLACEHOLDER PAYOFF: $0 fallback only when directly started here with no panel flag; flagged paths use $1,000,000 from `reversed` when `panel-reversed` is set, or $600,000 from `reversed-and-remanded` when `panel-reversed-and-remanded` is set."
+  note "No certiorari petition was filed, so the reversal stands.  $0 fallback only when directly started here with no panel flag; flagged paths use $1,000,000 from `reversed` when `panel-reversed` is set, or $600,000 from `reversed-and-remanded` when `panel-reversed-and-remanded` is set."
   valence good
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   payoff_by_flag { panel-reversed: 1_000_000.usd, panel-reversed-and-remanded: 600_000.usd }
 }
 
@@ -215,32 +215,32 @@ chance cert-review-decision: "Supreme Court Grants or Denies Certiorari" by cour
 terminal cert-denied: "CERT DENIED (Final)" outcome [final] cite "Sup. Ct. R. 10"
 {
   group cert-group
-  note "A denial of certiorari is not a ruling on the merits and carries zero precedential weight — parties cannot cite a cert denial as support for any legal proposition, and the denial expresses no view on the correctness of the lower court's decision. Neutral copy: no directional panel result flag is set. PLACEHOLDER PAYOFF: $400,000, override per matter."
+  note "A denial of certiorari is not a ruling on the merits and carries zero precedential weight — parties cannot cite a cert denial as support for any legal proposition, and the denial expresses no view on the correctness of the lower court's decision. Neutral copy: no directional panel result flag is set.  $400,000, override per matter."
   valence good
-  payoff 400_000.usd
+  payoff 400_000.usd basis placeholder
 }
 
 terminal cert-denied-after-affirmance: "CERT DENIED After Affirmance (Final)" outcome [final, loss] cite "Sup. Ct. R. 10"
 {
   group cert-group
-  note "Certiorari denial leaves the affirmance standing. PLACEHOLDER PAYOFF: $0, copied from the `affirmed` merits terminal that set `panel-affirmed`."
+  note "Certiorari denial leaves the affirmance standing.  $0, copied from the `affirmed` merits terminal that set `panel-affirmed`."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 terminal cert-denied-after-reversal: "CERT DENIED After Reversal (Final)" outcome [final, win] cite "Sup. Ct. R. 10"
 {
   group cert-group
-  note "Certiorari denial leaves the reversal standing. PLACEHOLDER PAYOFF: $0 fallback only when directly started here with no panel flag; flagged paths use $1,000,000 from `reversed` when `panel-reversed` is set, or $600,000 from `reversed-and-remanded` when `panel-reversed-and-remanded` is set."
+  note "Certiorari denial leaves the reversal standing.  $0 fallback only when directly started here with no panel flag; flagged paths use $1,000,000 from `reversed` when `panel-reversed` is set, or $600,000 from `reversed-and-remanded` when `panel-reversed-and-remanded` is set."
   valence good
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   payoff_by_flag { panel-reversed: 1_000_000.usd, panel-reversed-and-remanded: 600_000.usd }
 }
 
 terminal cert-granted: "CERT GRANTED — Case Transfers to the Supreme Court" outcome [pending] cite "28 U.S.C. § 1254(1); Sup. Ct. R. 10"
 {
   group cert-group
-  note "Once certiorari is granted, the case is removed from the court of appeals docket and briefing proceeds under the Supreme Court's own rules, not FRAP. This pack's jurisdiction over the case ends here. PLACEHOLDER PAYOFF: $500,000 (stake midpoint), override per matter. Certiorari being granted decides nothing on the merits -- the case's actual outcome is now genuinely open before the Supreme Court."
+  note "Once certiorari is granted, the case is removed from the court of appeals docket and briefing proceeds under the Supreme Court's own rules, not FRAP. This pack's jurisdiction over the case ends here.  $500,000 (stake midpoint), override per matter. Certiorari being granted decides nothing on the merits -- the case's actual outcome is now genuinely open before the Supreme Court."
   valence good
-  payoff 500_000.usd
+  payoff 500_000.usd basis placeholder
 }

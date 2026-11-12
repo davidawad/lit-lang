@@ -185,9 +185,9 @@ state rehearing-granted-amended-opinion: "Rehearing Granted — Opinion Amended 
 terminal rehearing-en-banc-both-denied: "Rehearing and Rehearing En Banc Both Denied (Final)" by court outcome [final] cite "FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 41(b)"
 {
   group rehearing-group
-  note "Once both panel and en banc petitions are denied (or the deadline to file them passes without filing), the original panel decision is final at the circuit level. The mandate issues 7 days after the later of expiration of the petition period or entry of the order denying it. The 90-day certiorari deadline now runs from this denial. Neutral copy: no directional panel result flag is set. PLACEHOLDER PAYOFF: $400,000, override per matter."
+  note "Once both panel and en banc petitions are denied (or the deadline to file them passes without filing), the original panel decision is final at the circuit level. The mandate issues 7 days after the later of expiration of the petition period or entry of the order denying it. The 90-day certiorari deadline now runs from this denial. Neutral copy: no directional panel result flag is set.  $400,000, override per matter."
   valence good
-  payoff 400_000.usd
+  payoff 400_000.usd basis placeholder
   "Mandate clock resumes" -> mandate-issued {
     authority cite "FRAP (2009 ed.) 41(b)"
     forbids [panel-affirmed, panel-reversed, panel-reversed-and-remanded]
@@ -201,9 +201,9 @@ terminal rehearing-en-banc-both-denied: "Rehearing and Rehearing En Banc Both De
 terminal rehearing-en-banc-both-denied-after-affirmance: "Rehearing and Rehearing En Banc Both Denied After Affirmance (Final)" by court outcome [final, loss] cite "FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 41(b)"
 {
   group rehearing-group
-  note "The affirmance stands after rehearing and en banc review are denied. PLACEHOLDER PAYOFF: $0, copied from the `affirmed` merits terminal that set `panel-affirmed`."
+  note "The affirmance stands after rehearing and en banc review are denied.  $0, copied from the `affirmed` merits terminal that set `panel-affirmed`."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   "Mandate clock resumes" -> mandate-issued {
     authority cite "FRAP (2009 ed.) 41(b)"
     requires [panel-affirmed]
@@ -217,9 +217,9 @@ terminal rehearing-en-banc-both-denied-after-affirmance: "Rehearing and Rehearin
 terminal rehearing-en-banc-both-denied-after-reversal: "Rehearing and Rehearing En Banc Both Denied After Reversal (Final)" by court outcome [final, win] cite "FRAP (2009 ed.) 40(a)(1); FRAP (2009 ed.) 41(b)"
 {
   group rehearing-group
-  note "The reversal stands after rehearing and en banc review are denied. PLACEHOLDER PAYOFF: $0 fallback only when directly started here with no panel flag; flagged paths use $1,000,000 from `reversed` when `panel-reversed` is set, or $600,000 from `reversed-and-remanded` when `panel-reversed-and-remanded` is set."
+  note "The reversal stands after rehearing and en banc review are denied.  $0 fallback only when directly started here with no panel flag; flagged paths use $1,000,000 from `reversed` when `panel-reversed` is set, or $600,000 from `reversed-and-remanded` when `panel-reversed-and-remanded` is set."
   valence good
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   payoff_by_flag { panel-reversed: 1_000_000.usd, panel-reversed-and-remanded: 600_000.usd }
   "Mandate clock resumes" -> mandate-issued {
     authority cite "FRAP (2009 ed.) 41(b)"

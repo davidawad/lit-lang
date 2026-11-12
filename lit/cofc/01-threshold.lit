@@ -78,9 +78,9 @@ chance limitations-check: "Is the Petition Filed Within 6 Years of Accrual?" cit
 terminal dismissed-time-barred: "DISMISSED -- Time-Barred Under §2501" outcome [loss, dismissal, jurisdictional] cite "28 U.S.C. § 2501"
 {
   group threshold-group
-  note "PLACEHOLDER PAYOFF: $0, override per matter (real cost is whatever was sunk in pre-filing investigation). Jurisdictional dismissal; not curable by amendment, waiver, or equitable tolling per John R. Sand & Gravel Co. v. United States, 552 U.S. 130 (2008)."
+  note " $0, override per matter (real cost is whatever was sunk in pre-filing investigation). Jurisdictional dismissal; not curable by amendment, waiver, or equitable tolling per John R. Sand & Gravel Co. v. United States, 552 U.S. 130 (2008)."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 chance section-1500-check: "Is the Same Claim Currently Pending in Any Other Court?" by court cite "28 U.S.C. § 1500"
@@ -103,9 +103,9 @@ chance section-1500-check: "Is the Same Claim Currently Pending in Any Other Cou
 terminal dismissed-1500-bar: "DISMISSED -- §1500 Same-Claim-Pending Bar" outcome [loss, dismissal, jurisdictional, waiver-trap] cite "28 U.S.C. § 1500"
 {
   group threshold-group
-  note "PLACEHOLDER PAYOFF: $0, override per matter. Jurisdictional; can be cured only by dismissing the other pending suit and REFILING in the CoFC (a fresh §2501 filing, not a revival of this one) -- not separately modeled here as a loop to avoid an artificial cycle."
+  note " $0, override per matter. Jurisdictional; can be cured only by dismissing the other pending suit and REFILING in the CoFC (a fresh §2501 filing, not a revival of this one) -- not separately modeled here as a loop to avoid an artificial cycle."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 decision filing-track-fork: "Standard Complaint or Procurement-Protest Complaint?" by movant cite "28 U.S.C. § 1491(b); RCFC App. C 1"

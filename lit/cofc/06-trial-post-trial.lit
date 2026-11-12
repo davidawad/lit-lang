@@ -98,15 +98,15 @@ chance prevailing-party-fork: "Who Prevailed?" by court discretion cite "RCFC 52
 terminal judgment-for-plaintiff: "JUDGMENT FOR PLAINTIFF (Bench Trial Verdict)" outcome [win, judgment, fee-eligible] cite "RCFC 52(a); RCFC 58"
 {
   group trial-post-trial-group
-  note "PLACEHOLDER PAYOFF: $1,000,000 (full parameterized claim value), override per matter -- a real bench-trial damages award can land anywhere between $0 and (for a §1498 claim) 'reasonable and entire compensation,' which is inherently case-specific; this pack uses the full claim value as the illustrative ceiling. EAJA-eligible (28 U.S.C. §2412(d)) if the government's position was not substantially justified."
+  note " $1,000,000 (full parameterized claim value), override per matter -- a real bench-trial damages award can land anywhere between $0 and (for a §1498 claim) 'reasonable and entire compensation,' which is inherently case-specific; this pack uses the full claim value as the illustrative ceiling. EAJA-eligible (28 U.S.C. §2412(d)) if the government's position was not substantially justified."
   valence good
-  payoff 1_000_000.usd
+  payoff 1_000_000.usd basis placeholder
 }
 
 terminal judgment-for-government: "JUDGMENT FOR THE GOVERNMENT (Bench Trial Verdict)" outcome [loss, judgment] cite "RCFC 52(a); RCFC 58"
 {
   group trial-post-trial-group
-  note "PLACEHOLDER PAYOFF: $0, override per matter."
+  note " $0, override per matter."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }

@@ -93,17 +93,17 @@ state amended-complaint-refiled: "Amended Complaint Filed" by movant cite "RCFC 
 terminal dismissed-lack-of-jurisdiction: "DISMISSED -- Lack of Subject-Matter Jurisdiction" outcome [loss, dismissal, jurisdictional] cite "RCFC 12(b)(1); 12(h)(3)"
 {
   group pleading-group
-  note "PLACEHOLDER PAYOFF: $0, override per matter."
+  note " $0, override per matter."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 terminal dismissed-failure-to-state: "DISMISSED -- Failure to State a Claim" outcome [loss, dismissal, merits] cite "RCFC 12(b)(6)"
 {
   group pleading-group
-  note "PLACEHOLDER PAYOFF: $0, override per matter. Unlike (1), this defense is waivable if never raised (RCFC 12(h)(2)) and, if granted without leave, generally operates as an adjudication on the merits (RCFC 41(b))."
+  note " $0, override per matter. Unlike (1), this defense is waivable if never raised (RCFC 12(h)(2)) and, if granted without leave, generally operates as an adjudication on the merits (RCFC 41(b))."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 state answer-filed: "Answer Filed" cite "RCFC 8; 12(a)"
@@ -118,9 +118,9 @@ state answer-filed: "Answer Filed" cite "RCFC 8; 12(a)"
 terminal voluntary-dismissal-early: "VOLUNTARY DISMISSAL (Before Answer/SJ/MJAR)" outcome [voluntary, no-prejudice-unless-second-dismissal] cite "RCFC 41(a)(1)(A)"
 {
   group pleading-group
-  note "PLACEHOLDER PAYOFF: $0 minus sunk cost, override per matter. Plaintiff may dismiss without a court order by notice (before an answer, SJ motion, or motion for judgment on the administrative record is served) or by stipulation signed by all appearing parties. Without-prejudice by default UNLESS the plaintiff previously dismissed the same claim in another federal/state action, in which case a second notice of dismissal operates AS AN ADJUDICATION ON THE MERITS (RCFC 41(a)(1)(B), the 'two-dismissal rule') -- a trap for a plaintiff who tried and abandoned the same claim once before."
+  note " $0 minus sunk cost, override per matter. Plaintiff may dismiss without a court order by notice (before an answer, SJ motion, or motion for judgment on the administrative record is served) or by stipulation signed by all appearing parties. Without-prejudice by default UNLESS the plaintiff previously dismissed the same claim in another federal/state action, in which case a second notice of dismissal operates AS AN ADJUDICATION ON THE MERITS (RCFC 41(a)(1)(B), the 'two-dismissal rule') -- a trap for a plaintiff who tried and abandoned the same claim once before."
   valence caution
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 decision case-type-fork: "General Civil Track or §1498(a) Patent Track (Appendix J)?" cite "PRCFC 1(a)"

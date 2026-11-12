@@ -75,15 +75,15 @@ chance bid-protest-merits-ruling: "Court Rules on the Protest" by court discreti
 terminal protest-sustained: "PROTEST SUSTAINED" outcome [win, injunctive-relief] cite "28 U.S.C. §1491(b)(2)"
 {
   group bid-protest-group
-  note "PLACEHOLDER PAYOFF: $200,000, override per matter. Relief in a sustained protest is typically injunctive/equitable (enjoining award, directing re-evaluation or re-procurement) plus bid-and-proposal-preparation costs -- rarely a damages award on the scale of a §1498 or breach claim, so the payoff here approximates recovered B&P costs and re-compete value rather than the full parameterized $1M claim baseline used elsewhere in this pack."
+  note " $200,000, override per matter. Relief in a sustained protest is typically injunctive/equitable (enjoining award, directing re-evaluation or re-procurement) plus bid-and-proposal-preparation costs -- rarely a damages award on the scale of a §1498 or breach claim, so the payoff here approximates recovered B&P costs and re-compete value rather than the full parameterized $1M claim baseline used elsewhere in this pack."
   valence good
-  payoff 200_000.usd
+  payoff 200_000.usd basis placeholder
 }
 
 terminal protest-denied: "PROTEST DENIED" outcome [loss] cite "28 U.S.C. §1491(b)"
 {
   group bid-protest-group
-  note "PLACEHOLDER PAYOFF: $0, override per matter."
+  note " $0, override per matter."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }

@@ -113,17 +113,17 @@ chance sj-ruling: "Court Rules on Summary Judgment" by court discretion cite "RC
 terminal summary-judgment-for-government: "SUMMARY JUDGMENT FOR THE GOVERNMENT" outcome [loss, judgment, dispositive] cite "RCFC 56(a)"
 {
   group general-track-group
-  note "PLACEHOLDER PAYOFF: $0, override per matter. Case-dispositive; reviewable on appeal de novo."
+  note " $0, override per matter. Case-dispositive; reviewable on appeal de novo."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 terminal judgment-entered: "JUDGMENT ENTERED FOR PLAINTIFF ON FULL SUMMARY JUDGMENT" outcome [win, judgment, fee-eligible, appealable] cite "RCFC 56(a); RCFC 58"
 {
   group general-track-group
-  note "PLACEHOLDER PAYOFF: $1,000,000 (full parameterized claim value), override per matter. This is the pack's designated Federal Circuit composition anchor -- kept at id 'judgment-entered' per the litgraph pack-authoring convention so packs/links.json can attach 'cofc::judgment-entered -> cafc::notice-of-appeal-filed' (28 U.S.C. §1295(a)(3); §2522) without this pack needing to know about the CAFC pack's internals. It models the clean case where the court grants summary judgment for plaintiff on the ENTIRE claim (liability and a liquidated/undisputed damages amount) with no trial needed. A judgment reached instead via bench trial is modeled separately below as 'judgment-for-plaintiff' / 'judgment-for-government' (variable-amount trial verdicts) -- a future links.json revision could add analogous appeal-anchor links from those ids too; this pack does not create packs/links.json itself."
+  note " $1,000,000 (full parameterized claim value), override per matter. This is the pack's designated Federal Circuit composition anchor -- kept at id 'judgment-entered' per the litgraph pack-authoring convention so packs/links.json can attach 'cofc::judgment-entered -> cafc::notice-of-appeal-filed' (28 U.S.C. §1295(a)(3); §2522) without this pack needing to know about the CAFC pack's internals. It models the clean case where the court grants summary judgment for plaintiff on the ENTIRE claim (liability and a liquidated/undisputed damages amount) with no trial needed. A judgment reached instead via bench trial is modeled separately below as 'judgment-for-plaintiff' / 'judgment-for-government' (variable-amount trial verdicts) -- a future links.json revision could add analogous appeal-anchor links from those ids too; this pack does not create packs/links.json itself."
   valence good
-  payoff 1_000_000.usd
+  payoff 1_000_000.usd basis placeholder
 }
 
 decision adr-referral-decision: "Refer Case to ADR?" by movant cite "RCFC 16(a)(5); RCFC App. H 3"
@@ -173,7 +173,7 @@ chance adr-outcome-ruling: "ADR Concludes" by court cite "RCFC App. H 3(h)"
 terminal settled-adr: "SETTLED VIA ADR" outcome [settlement] cite "RCFC App. H 3"
 {
   group adr-group
-  note "PLACEHOLDER PAYOFF: $450,000 (45% of the parameterized $1,000,000 claim), override per matter -- illustrative discount reflecting litigation-risk-adjusted settlement value, not a rule-derived figure."
+  note " $450,000 (45% of the parameterized $1,000,000 claim), override per matter -- illustrative discount reflecting litigation-risk-adjusted settlement value, not a rule-derived figure."
   valence good
-  payoff 450_000.usd
+  payoff 450_000.usd basis placeholder
 }

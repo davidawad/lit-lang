@@ -198,9 +198,9 @@ decision settlement-decision: "Settlement Considered" cite "35 U.S.C. § 317"
 terminal ipr-terminated-settlement: "IPR Terminated by Settlement" outcome [settlement] cite "35 U.S.C. § 317(a); 37 C.F.R. § 42.74"
 {
   group trial-group
-  note "Proceeding terminates before FWD. No 315(e) estoppel attaches to the settling petitioner — estoppel requires a final written decision on the merits. Settlement agreement must be filed with the Office, potentially under seal. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's settlement-tier convention (see cofc/cafc). No 315(e) estoppel attaches, which is itself worth something to the petitioner beyond whatever the settlement pays."
+  note "Proceeding terminates before FWD. No 315(e) estoppel attaches to the settling petitioner — estoppel requires a final written decision on the merits. Settlement agreement must be filed with the Office, potentially under seal.  $400,000, override per matter, matching this project's settlement-tier convention (see cofc/cafc). No 315(e) estoppel attaches, which is itself worth something to the petitioner beyond whatever the settlement pays."
   valence good
-  payoff 400_000.usd
+  payoff 400_000.usd basis placeholder
 }
 
 state adverse-judgment-request: "Patent Owner Requests Adverse Judgment" by board cite "37 C.F.R. § 42.73(b)"
@@ -217,9 +217,9 @@ state adverse-judgment-request: "Patent Owner Requests Adverse Judgment" by boar
 terminal adverse-judgment-terminal: "Adverse Judgment Entered — Claims Cancelled" outcome [win, adverse-judgment] cite "37 C.F.R. § 42.73(b)(2)-(3)"
 {
   group trial-group
-  note "Board cancels the claims without reaching the merits in a FWD. Functionally equivalent to losing on the merits: full 315(e) estoppel attaches to grounds raised or that reasonably could have been raised in the petition. PLACEHOLDER PAYOFF: $900,000, override per matter. The pack's own note calls this 'functionally equivalent to losing on the merits' -- for the PATENT OWNER, whose claims are cancelled; for the petitioner (self, this pack's protagonist) that is a near-full win, reached without the cost of a full trial. The pack's authored `valence` of 'bad' tracks the patent owner's side, not self's payoff -- flagged here since it runs the other way from every other `valence: good` FWD terminal."
+  note "Board cancels the claims without reaching the merits in a FWD. Functionally equivalent to losing on the merits: full 315(e) estoppel attaches to grounds raised or that reasonably could have been raised in the petition.  $900,000, override per matter. The pack's own note calls this 'functionally equivalent to losing on the merits' -- for the PATENT OWNER, whose claims are cancelled; for the petitioner (self, this pack's protagonist) that is a near-full win, reached without the cost of a full trial. The pack's authored `valence` of 'bad' tracks the patent owner's side, not self's payoff -- flagged here since it runs the other way from every other `valence: good` FWD terminal."
   valence bad
-  payoff 900_000.usd
+  payoff 900_000.usd basis placeholder
 }
 
 /// From the May 2, 2016 amendment of 37 C.F.R. § 42.70 (81 FR 18750),
@@ -278,27 +278,27 @@ chance fwd-issued: "Board Issues Final Written Decision" by board discretion cit
 terminal fwd-all-unpatentable: "FWD: All Claims Unpatentable" outcome [win, fwd] cite "35 U.S.C. §§ 318(a), 318(b), 315(e)"
 {
   group fwd-group
-  note "Every instituted claim held unpatentable. Full 315(e) estoppel attaches: petitioner and privies are barred from later asserting in the USPTO, district court, or ITC any ground raised or that reasonably could have been raised here, construed broadly. The worst terminal for the patent owner. PLACEHOLDER PAYOFF: $1,000,000, override per matter. Full win: every instituted claim invalidated."
+  note "Every instituted claim held unpatentable. Full 315(e) estoppel attaches: petitioner and privies are barred from later asserting in the USPTO, district court, or ITC any ground raised or that reasonably could have been raised here, construed broadly. The worst terminal for the patent owner.  $1,000,000, override per matter. Full win: every instituted claim invalidated."
   valence good
-  payoff 1_000_000.usd
+  payoff 1_000_000.usd basis placeholder
   "Patent owner considers post-FWD relief" -> post-fwd-options { authority cite "35 U.S.C. § 319" }
 }
 
 terminal fwd-all-confirmed: "FWD: All Claims Confirmed Patentable" outcome [loss, fwd, estoppel] cite "35 U.S.C. § 318(a)"
 {
   group fwd-group
-  note "Petitioner failed to prove unpatentability of any instituted claim. Trap: 315(e) estoppel STILL attaches to the losing petitioner despite losing on validity — estoppel is triggered by reaching a FWD, not by which side wins it. PLACEHOLDER PAYOFF: $0, override per matter. Full loss on the merits, and per the pack's own note 315(e) estoppel still attaches to the losing petitioner -- worse than a typical loss, though the payoff floor here is the same $0 used for every other full loss in this project."
+  note "Petitioner failed to prove unpatentability of any instituted claim. Trap: 315(e) estoppel STILL attaches to the losing petitioner despite losing on validity — estoppel is triggered by reaching a FWD, not by which side wins it.  $0, override per matter. Full loss on the merits, and per the pack's own note 315(e) estoppel still attaches to the losing petitioner -- worse than a typical loss, though the payoff floor here is the same $0 used for every other full loss in this project."
   valence good
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   "Petitioner considers post-FWD relief" -> post-fwd-options { authority cite "35 U.S.C. § 319" }
 }
 
 terminal fwd-mixed: "FWD: Mixed Result" outcome [mixed, fwd] cite "35 U.S.C. §§ 318(a), 318(b), 315(e)"
 {
   group fwd-group
-  note "Some claims cancelled, others confirmed. 315(e) estoppel attaches claim-by-claim and ground-by-ground to what was actually decided. Patent survives but narrower — the AIA-trial analog of mpep-prosecution's claims-amended terminal. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's partial/mixed-result tier."
+  note "Some claims cancelled, others confirmed. 315(e) estoppel attaches claim-by-claim and ground-by-ground to what was actually decided. Patent survives but narrower — the AIA-trial analog of mpep-prosecution's claims-amended terminal.  $400,000, override per matter, matching this project's partial/mixed-result tier."
   valence good
-  payoff 400_000.usd
+  payoff 400_000.usd basis placeholder
   "Either party considers post-FWD relief" -> post-fwd-options { authority cite "35 U.S.C. § 319" }
 }
 
@@ -488,25 +488,25 @@ decision federal-circuit-window: "Federal Circuit Appeal Window" cite "35 U.S.C.
 terminal appeal-forfeited-unappealed-win: "No Timely Appeal — FWD Final (Unpatentable)" outcome [final, appeal-forfeited, win] cite "35 U.S.C. § 319; 37 C.F.R. § 90.3(a)"
 {
   group appeal-group
-  note "PERMADEATH #2. Missing the 63-day window forfeits all further review; the FWD becomes final and unreviewable. PLACEHOLDER PAYOFF: $1,000,000, carried from fwd-all-unpatentable because that result stands."
+  note "PERMADEATH #2. Missing the 63-day window forfeits all further review; the FWD becomes final and unreviewable.  $1,000,000, carried from fwd-all-unpatentable because that result stands."
   valence bad
-  payoff 1_000_000.usd
+  payoff 1_000_000.usd basis placeholder
 }
 
 terminal appeal-forfeited-unappealed-loss: "No Timely Appeal — FWD Final (Confirmed)" outcome [final, appeal-forfeited, loss] cite "35 U.S.C. § 319; 37 C.F.R. § 90.3(a)"
 {
   group appeal-group
-  note "PERMADEATH #2. Missing the 63-day window forfeits all further review; the FWD becomes final and unreviewable. PLACEHOLDER PAYOFF: $0, carried from fwd-all-confirmed because that result stands."
+  note "PERMADEATH #2. Missing the 63-day window forfeits all further review; the FWD becomes final and unreviewable.  $0, carried from fwd-all-confirmed because that result stands."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 terminal appeal-forfeited-unappealed: "No Timely Appeal — FWD Final" outcome [final, appeal-forfeited] cite "35 U.S.C. § 319; 37 C.F.R. § 90.3(a)"
 {
   group appeal-group
-  note "PERMADEATH #2. Missing the 63-day window forfeits all further review; the FWD becomes final and unreviewable. PLACEHOLDER PAYOFF: $400,000 for a mixed or unknown FWD result."
+  note "PERMADEATH #2. Missing the 63-day window forfeits all further review; the FWD becomes final and unreviewable.  $400,000 for a mixed or unknown FWD result."
   valence bad
-  payoff 400_000.usd
+  payoff 400_000.usd basis placeholder
 }
 
 /// DECIDED: § 319 lets either dissatisfied party appeal, so this graph does
@@ -553,33 +553,33 @@ chance federal-circuit-review: "Federal Circuit Reviews the Decision" by board d
 terminal cafc-affirms-win: "Federal Circuit Affirms (Unpatentable)" outcome [affirmed, final, win] cite "35 U.S.C. § 319"
 {
   group appeal-group
-  note "The Board's FWD and its estoppel consequences stand as issued. PLACEHOLDER PAYOFF: $1,000,000, carried from fwd-all-unpatentable because that result stands."
+  note "The Board's FWD and its estoppel consequences stand as issued.  $1,000,000, carried from fwd-all-unpatentable because that result stands."
   valence good
-  payoff 1_000_000.usd
+  payoff 1_000_000.usd basis placeholder
 }
 
 terminal cafc-affirms-loss: "Federal Circuit Affirms (Confirmed)" outcome [affirmed, final, loss] cite "35 U.S.C. § 319"
 {
   group appeal-group
-  note "The Board's FWD and its estoppel consequences stand as issued. PLACEHOLDER PAYOFF: $0, carried from fwd-all-confirmed because that result stands."
+  note "The Board's FWD and its estoppel consequences stand as issued.  $0, carried from fwd-all-confirmed because that result stands."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 terminal cafc-affirms: "Federal Circuit Affirms" outcome [affirmed, final] cite "35 U.S.C. § 319"
 {
   group appeal-group
-  note "The Board's FWD and its estoppel consequences stand as issued. PLACEHOLDER PAYOFF: $450,000 for a mixed or unknown FWD result."
+  note "The Board's FWD and its estoppel consequences stand as issued.  $450,000 for a mixed or unknown FWD result."
   valence good
-  payoff 450_000.usd
+  payoff 450_000.usd basis placeholder
 }
 
 terminal cafc-vacates-remands: "Federal Circuit Vacates/Remands" by board outcome [remand] cite "35 U.S.C. § 319"
 {
   group appeal-group
-  note "Sends the case back to the Board for further proceedings consistent with the Federal Circuit's opinion; no fixed statutory deadline governs Board reconsideration, but the typical timeline runs 6-18 months. Modeled as this playthrough's terminal disposition even though remand loops back into a new final written decision. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's remand-tier convention (see cafc). Modeled as this playthrough's terminal disposition even though a remand loops back into a new final written decision."
+  note "Sends the case back to the Board for further proceedings consistent with the Federal Circuit's opinion; no fixed statutory deadline governs Board reconsideration, but the typical timeline runs 6-18 months. Modeled as this playthrough's terminal disposition even though remand loops back into a new final written decision.  $400,000, override per matter, matching this project's remand-tier convention (see cafc). Modeled as this playthrough's terminal disposition even though a remand loops back into a new final written decision."
   valence caution
-  payoff 400_000.usd
+  payoff 400_000.usd basis placeholder
   "Board reconsiders on remand" -> fwd-issued {
     authority cite "35 U.S.C. § 319; 37 C.F.R. § 42.73"
     clears [fwd-all-unpatentable, fwd-all-confirmed]

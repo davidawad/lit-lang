@@ -200,9 +200,9 @@ decision petition-defect-noticed: "Petition Defect Noticed" by petitioner cite "
 terminal ipr-time-barred: "Petition Time-Barred — 315(b) Trap" outcome [loss, procedural-default, jurisdictional, waiver-trap] cite "35 U.S.C. § 315(b)"
 {
   group petition-group
-  note "PERMADEATH. Filed more than one year after the petitioner (or real party in interest/privy) was served with an infringement complaint. Jurisdictional defect — the Board must deny or vacate institution once discovered, even post-institution. No revival mechanism or equitable exception exists; the count runs from the earliest service to any real party in interest, not just the named petitioner. PLACEHOLDER PAYOFF: $0, override per matter. The petitioner's challenge is barred outright; the patent survives unchallenged."
+  note "PERMADEATH. Filed more than one year after the petitioner (or real party in interest/privy) was served with an infringement complaint. Jurisdictional defect — the Board must deny or vacate institution once discovered, even post-institution. No revival mechanism or equitable exception exists; the count runs from the earliest service to any real party in interest, not just the named petitioner.  $0, override per matter. The petitioner's challenge is barred outright; the patent survives unchallenged."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }
 
 /// From the May 2, 2016 amendment of 37 C.F.R. § 42.107 (81 FR 18750),
@@ -268,9 +268,9 @@ state popr-waived: "POPR Waived" by board effective [2016-05-02, ..) unknown_bef
 terminal claims-disclaimed-preinstitution: "Claims Disclaimed Pre-Institution" outcome [win, disclaimer] effective [2016-05-02, ..) unknown_before 2016-05-02 cite "37 C.F.R. § 42.107(e)"
 {
   group popr-group
-  note "Patent owner statutorily disclaims all challenged claims before institution; partial disclaimers of some challenged claims are also permitted. No trial is instituted as to disclaimed claims — a clean, low-cost exit avoiding estoppel and a final written decision, but the claims are permanently surrendered with no refund of the trial fee. PLACEHOLDER PAYOFF: $700,000, override per matter. The challenged claims are gone (statutorily disclaimed) without a trial, so this functions as a win for the petitioner even though no FWD or 315(e) estoppel benefit against the patent owner is obtained and the filing fee is not refunded."
+  note "Patent owner statutorily disclaims all challenged claims before institution; partial disclaimers of some challenged claims are also permitted. No trial is instituted as to disclaimed claims — a clean, low-cost exit avoiding estoppel and a final written decision, but the claims are permanently surrendered with no refund of the trial fee.  $700,000, override per matter. The challenged claims are gone (statutorily disclaimed) without a trial, so this functions as a win for the petitioner even though no FWD or 315(e) estoppel benefit against the patent owner is obtained and the filing fee is not refunded."
   valence good
-  payoff 700_000.usd
+  payoff 700_000.usd basis placeholder
 }
 
 /// Tribunal discretion: the Director "may not authorize" review without a
@@ -299,9 +299,9 @@ chance institution-decision: "Institution Decision" by board discretion effectiv
 terminal institution-denied-merits: "Institution Denied — No Reasonable Likelihood" by petitioner outcome [loss, institution-denied] cite "35 U.S.C. § 314(a); 314(d)"
 {
   group institution-group
-  note "Petitioner failed to establish a reasonable likelihood of prevailing on any challenged claim. Denial is unreviewable to the Federal Circuit under 314(d); only Director review (post-Arthrex) can revisit it. Patent survives and petitioner's filing and prosecution costs are sunk. PLACEHOLDER PAYOFF: $0, override per matter. Petitioner never gets a trial; the patent survives."
+  note "Petitioner failed to establish a reasonable likelihood of prevailing on any challenged claim. Denial is unreviewable to the Federal Circuit under 314(d); only Director review (post-Arthrex) can revisit it. Patent survives and petitioner's filing and prosecution costs are sunk.  $0, override per matter. Petitioner never gets a trial; the patent survives."
   valence good
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   "File a follow-on petition" -> challenge-vehicle-decision {
     authority cite "35 U.S.C. § 314(a)"
     effort 100.hours
@@ -317,9 +317,9 @@ terminal institution-denied-merits: "Institution Denied — No Reasonable Likeli
 terminal institution-denied-fintiv: "Institution Denied — Fintiv Discretion" by petitioner outcome [loss, institution-denied, discretionary] cite "35 U.S.C. § 314(a)"
 {
   group institution-group
-  note "Denied despite a merits showing, weighing the six Fintiv factors against parallel district court litigation. Also unreviewable under 314(d). A Sotera-style stipulation not to pursue overlapping invalidity grounds in the parallel case can defeat this denial before it issues. PLACEHOLDER PAYOFF: $0, override per matter. Denied on discretionary grounds despite a merits showing; the patent survives (for this petition -- a later refiling is a new matter, not modeled as a re-entry here)."
+  note "Denied despite a merits showing, weighing the six Fintiv factors against parallel district court litigation. Also unreviewable under 314(d). A Sotera-style stipulation not to pursue overlapping invalidity grounds in the parallel case can defeat this denial before it issues.  $0, override per matter. Denied on discretionary grounds despite a merits showing; the patent survives (for this petition -- a later refiling is a new matter, not modeled as a re-entry here)."
   valence good
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   "Refile after parallel case resolves" -> challenge-vehicle-decision {
     authority cite "35 U.S.C. § 314(a); 35 U.S.C. § 325(d)"
     effort 60.hours

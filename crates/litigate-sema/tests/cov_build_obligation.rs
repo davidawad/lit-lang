@@ -106,6 +106,43 @@ fn trigger_month_bounds_type_and_forbidden_month_origins_are_l2007() {
 }
 
 #[test]
+fn a_party_may_hold_a_bounded_month_grant_with_a_motion_and_no_discretion() {
+    let text = format!(
+        "{}event ExtensionPetitionFiled()\n\
+         deadline monthly: 3.days from Served(complaint, Personal) counted_by c6 {{ extend {{ by applicant, to trigger_date + 7.months, on ExtensionPetitionFiled(), cite \"X\" }} }}\n",
+        common::PRELUDE
+    );
+    let mut pkg = package("demo", &[], &[("main.lit", &text)]);
+    pkg.manifest = pkg.manifest.replace(
+        "plaintiff = \"self\"",
+        "plaintiff = \"self\"\napplicant = \"self\"",
+    );
+    let (db, ws) = workspace(&[pkg]);
+    let checked = litigate_sema::check_workspace(&db, ws);
+    assert!(
+        checked.iter().all(|c| c.diagnostics.is_empty()),
+        "{:#?}",
+        checked
+    );
+    let found: Vec<_> = checked
+        .into_iter()
+        .flat_map(|c| c.package.clone())
+        .flat_map(|p| p.modules.clone())
+        .flat_map(|m| m.declarations.clone())
+        .collect();
+    let grant = found
+        .iter()
+        .find_map(|d| match d {
+            Declaration::Deadline(d) => d.extend.first(),
+            _ => None,
+        })
+        .expect("bounded party grant should typecheck");
+    assert!(
+        matches!(grant, Extension::Bounded { by, standard: None, motion: Some(_), .. } if by == "applicant")
+    );
+}
+
+#[test]
 fn obligation_options_report_each_bad_value() {
     let out = check_body(
         "deadline a: 21.days from Served(complaint) counted_by c6 { bearer Nobody }\n\

@@ -425,6 +425,10 @@ module a
 deadline answer-period: 21.days from Served(complaint) counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 retracted 2010-01-01 unknown_before 2009-12-01 commenced [2009-12-01, ..) delegable { to CaseOrder, op [extend, shorten], max 30.days, cite "FRCP 6(b)" } {
   characterization claim_processing cite "FRCP 12(a)"
 }
+deadline d: 3.months from Filed() counted_by c {
+  extend { by applicant, to trigger_date + 7.months, on ExtensionPetitionFiled(), cite "X" }
+  extend { by court, to min(trigger_date + 6.months, prescribed_due + 30.days) }
+}
 grant covid on [answer-period] effective [2020-03-15, 2020-06-13) cite "FRCP 87(c)(2)" {
   unlock
   extend { by court, discretion GoodCause, to grant_order_entered + 30.days }
@@ -480,6 +484,43 @@ grant covid on [answer-period] effective [2020-03-15, 2020-06-13) cite "FRCP 87(
         (cite
           (string
             (string_content)))))
+    (deadline_decl
+      (identifier)
+      (duration)
+      (call_expression
+        (ref
+          (identifier))
+        (arguments))
+      (ref
+        (identifier))
+      (deadline_decl_opts
+        (capability
+          (identifier)
+          (binary_expression
+            (ref
+              (identifier))
+            (duration))
+          (call_expression
+            (ref
+              (identifier))
+            (arguments))
+          (cite
+            (string
+              (string_content))))
+        (capability
+          (identifier)
+          (call_expression
+            (ref
+              (identifier))
+            (arguments
+              (binary_expression
+                (ref
+                  (identifier))
+                (duration))
+              (binary_expression
+                (ref
+                  (identifier))
+                (duration)))))))
     (grant_decl
       (identifier)
       (id_list

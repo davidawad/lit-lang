@@ -1,10 +1,10 @@
 # PTAB blended-terminal split (lg-pb1fe.52)
 
-Base: `origin/main` at `98ecee7b5471beee5040ecf1909c0ee6f00bcae3`.
+Rebase base: `origin/main` at `85578bb674b46d4ea4ab360cb8764dc916e0b87e`. The original before measurements in the table below are the recorded measurements from the first attempt on `98ecee7b5471beee5040ecf1909c0ee6f00bcae3`; retry Step 3 re-measured this merged tree using the rebuilt release binary.
 
 ## Decision
 
-DECIDED: Use `fwd-all-unpatentable` and `fwd-all-confirmed` as mutually exclusive flags. A mixed FWD clears both, so it and an unknown result share the neutral copies. The authoring verifier checks chance distributions in every flag context, including an unreachable context where both flags are present; the CAFC adverse copy requires `fwd-all-confirmed` without forbidding `fwd-all-unpatentable`, so that context still has the complete authored 0.8/0.2 distribution. On authored paths, every setter clears the other result flag and both flags are never set together.
+DECIDED: Use `fwd-all-unpatentable` and `fwd-all-confirmed` as mutually exclusive flags. A mixed FWD clears both, so it and an unknown result share the neutral copies. On authored paths, every setter clears the other result flag and both flags are never set together. I retained the original guard on `cafc-affirms-loss` after testing the requested symmetric `forbids [fwd-all-unpatentable]`: `litigate check lit/ptab` emitted this new diagnostic: “lit/ptab/03-trial-to-appeal.lit:533:8: L2003 probabilities of chance node `federal-circuit-review` sum to 1/5, not exactly 1 with only flags {fwd-all-confirmed, fwd-all-unpatentable} set.” This verifier-only combination disables both 0.8 affirmation copies while leaving the 0.2 remand edge enabled. I restored the prior adverse-copy guard as instructed.
 
 The `federal-circuit-window` edges currently declare no `by` actor; their lowered `role: nature` comes from the engine's probability-fill behavior for those unassigned edges. They therefore resolve as a 0.5 / 0.5 chance in every result state. I left actors unchanged under the conditional instruction to copy an actor only if an edge has one. Whether the losing party should own that choice is David's decision.
 
@@ -74,3 +74,13 @@ The unrelated baseline failures are stale fixtures: the two FRCP timeline snapsh
 - The solver follows post-FWD continuations from the FWD merits terminals, contrary to the expected-unchanged note in step 1(d). The changed branch and node values are reported above; no matter input was changed.
 
 The PTAB CLI assertion now lives in `crates/litigate-cli/tests/blended_ptab.rs`; `crates/litigate-cli/tests/ops.rs` is unchanged from `origin/main` to avoid recurring test-list conflicts.
+
+The symmetric-guard diagnostic does not arise in FRAP: `en-banc-poll-decision` gates every copy with one affirmative panel-result flag and forbids the other panel-result flags, and its chance distribution is authored over those panel outcomes. PTAB's `federal-circuit-review` models one fixed FWD result as flags carried into a later chance node; the verifier checks a both-flags combination even though every authored FWD setter clears the opposite flag.
+
+## Retry on merged base
+
+The Step 2 symmetric-guard experiment produced the new `L2003` quoted above, so the source retains the original `cafc-affirms-loss` guard. After regenerating locks on `85578bb674b46d4ea4ab360cb8764dc916e0b87e`, `litigate check lit/ptab` passed with 0 errors, while strict check retained its two known PTAB extension-period `L5002` errors and emitted no new error. `litigate test lit/ptab` passed 35/35. `litigate check lit/links` passed with 0 errors and `litigate test lit/links` passed 3/3. `litigate check lit cases` passed with 0 errors; `litigate fmt --check lit cases`, `just lit-sync`, `just lit-sync-check`, `cargo fmt --all --check`, and `cargo clippy -p litigate-cli --all-targets -- -D warnings` all exited 0.
+
+The retry Step 3 release solve returned `543489.544398` / policy size 18 for `lit/ptab`; current solve measurements match the “After” column above for every valid matter. The defense matter remains `1500000.0` with policy size 288, and the four request matters remain `543489.544398` / 18, `341305.909603` / 18, `551360.206142` / 18, and `485562.967553` / 295. The `tests/expect/ptab-ipr-defense` matter remains invalid due to its existing `applicant` actor mismatch; it was not edited. The four PTAB roundtrip tests passed without `LITIGATE_RERECORD`, and no fixture changed during this retry. The new isolated assertion is `crates/litigate-cli/tests/blended_ptab.rs`; `crates/litigate-cli/tests/ops.rs` has no diff from `origin/main`.
+
+The single required `cargo nextest run -p litigate-cli --no-fail-fast` run completed with 661 tests: 658 passed and these three known-main failures: `timeline::a_restarted_or_absorbed_period_names_the_row_replacing_it`, `timeline::frcp_filed_fixture_forks_with_unknown_deadlines`, and `ttab_answer::the_generated_pack_carries_the_designated_answer_window`. The impact test passed. The two timeline failures are stale FRCP source offsets; the TTAB failure expects the older citation spelling.

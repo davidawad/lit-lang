@@ -1,3 +1,4 @@
+//! PTAB terminal splits preserve the last fully modeled final written decision.
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;

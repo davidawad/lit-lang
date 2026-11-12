@@ -76,9 +76,9 @@ fn frcp_civil_case_solve_uses_party_relative_judgment_stakes() {
             "frcp-civil-procedure::edge-discovery-sanctions-default",
         ];
         assert!(
-            line.iter().filter_map(|edge| edge["id"].as_str()).any(|id| {
-                merits_edges.iter().any(|merits| id.starts_with(merits))
-            }),
+            line.iter()
+                .filter_map(|edge| edge["id"].as_str())
+                .any(|id| { merits_edges.iter().any(|merits| id.starts_with(merits)) }),
             "[win] terminal {terminal} has no preceding merits edge: {line:?}"
         );
     }

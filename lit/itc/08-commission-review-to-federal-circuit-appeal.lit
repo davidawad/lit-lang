@@ -113,9 +113,13 @@ chance commission-final-determination: "Commission Final Determination" by commi
   note "The § 1337(b)(1) 'earliest practicable time' mandate resolves here, whether the determination arrived by non-reviewed ID maturation, Commission opinion, or (see cafc-remanded below) a Federal Circuit remand. No-violation authored at 0.35 / violation-with-remedy at 0.65 — APPROXIMATE."
   "Commission's Final Determination: no violation" -> no-violation-outcome p 0.35 {
     authority cite "usc1337.b.1"
+    sets [no-violation]
+    clears [violation-found]
   }
   "Commission's Final Determination: violation found — Commission determines remedy" -> remedy-determined p 0.65 {
     authority cite "usc1337.d"
+    sets [violation-found]
+    clears [no-violation]
   }
 }
 
@@ -167,9 +171,10 @@ state remedy-in-effect: "Remedy Takes Effect" by complainant effective [1995-01-
 {
   group remedy-enforcement-group
   note "The exclusion order and/or cease-and-desist order become enforceable; U.S. Customs and Border Protection administers exclusion at the border. Post-order enforcement mechanics (advisory opinions, modification/enforcement proceedings under 19 CFR 210.75-210.79, and redesign-around fights like Certain Robotic Vacuum Cleaning Devices, 337-TA-1252, or the Masimo/Apple Watch saga, 337-TA-1276) are OUT OF SCOPE for this pack per its own scope note and are not modeled downstream of this node — a deliberate boundary matching content/rulepacks/itc-337-pack.json's stated first-pass limits, not an oversight."
-  "Respondent (or another adversely affected person) considers appeal of the violation determination and remedy" -> federal-circuit-appeal-window {
+  "Respondent (or another adversely affected person) considers appeal of the violation determination and remedy" -> federal-circuit-appeal-window by respondent {
     authority cite "usc1337.c"
     effort 0.hours
+    requires [violation-found]
   }
 }
 
@@ -182,7 +187,7 @@ decision federal-circuit-appeal-window: "Federal Circuit Appeal Window" by compl
 {
   group federal-circuit-appeal-group
   note "Any person adversely affected by a final Commission determination may appeal — reachable from BOTH a no-violation outcome (complainant appeals) and a remedy-in-effect outcome (respondent appeals), the same fork viewed from either side of the caption."
-  "File Notice of Appeal to the Federal Circuit — 60 days after the determination becomes final (§ 1337(c); 28 U.S.C. § 1295(a)(6))" -> appeal-filed {
+  "File Notice of Appeal to the Federal Circuit — 60 days after the determination becomes final (§ 1337(c); 28 U.S.C. § 1295(a)(6))" -> appeal-filed by complainant {
     authority cite "usc1337.c"
     effort 6.hours
     cost 600.usd
@@ -192,12 +197,52 @@ decision federal-circuit-appeal-window: "Federal Circuit Appeal Window" by compl
     duration { min 9.days, mode 30.days, max 60.days }
     valence good
     action_id "file.appeal.fedcir"
+    requires [no-violation]
     note "Filing fee $600.00: the Court of Appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023) alone -- no ITC-clerk equivalent of 28 U.S.C. § 1917's $5.00 district-clerk notice fee applies to a direct agency-to-CAFC appeal (matches cafc-federal-circuit.json's itc-file-noa edge)."
+  }
+  "File Notice of Appeal to the Federal Circuit — 60 days after the determination becomes final (§ 1337(c); 28 U.S.C. § 1295(a)(6))" -> appeal-filed by respondent {
+    authority cite "usc1337.c"
+    effort 6.hours
+    cost 600.usd
+    within federal-circuit-appeal-period {
+      note "19 U.S.C. § 1337(c): 60 days, unextendable. Missing it raises flag itc337/fedcir-appeal-forfeited."
+    }
+    duration { min 9.days, mode 30.days, max 60.days }
+    valence good
+    action_id "file.appeal.fedcir"
+    requires [violation-found]
+    note "Filing fee $600.00: the Court of Appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023) alone -- no ITC-clerk equivalent of 28 U.S.C. § 1917's $5.00 district-clerk notice fee applies to a direct agency-to-CAFC appeal (matches cafc-federal-circuit.json's itc-file-noa edge)."
+  }
+  "File Notice of Appeal to the Federal Circuit — 60 days after the determination becomes final (§ 1337(c); 28 U.S.C. § 1295(a)(6))" -> appeal-filed by complainant {
+    authority cite "usc1337.c"
+    effort 6.hours
+    cost 600.usd
+    within federal-circuit-appeal-period {
+      note "19 U.S.C. § 1337(c): 60 days, unextendable. Missing it raises flag itc337/fedcir-appeal-forfeited."
+    }
+    duration { min 9.days, mode 30.days, max 60.days }
+    valence good
+    action_id "file.appeal.fedcir"
+    forbids [violation-found, no-violation]
+    note "Filing fee $600.00: the Court of Appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023) alone -- no ITC-clerk equivalent of 28 U.S.C. § 1917's $5.00 district-clerk notice fee applies to a direct agency-to-CAFC appeal (matches cafc-federal-circuit.json's itc-file-noa edge)."
+  }
+  "No appeal filed within 60 days — the Commission's determination stands (§ 1337(c))" -> determination-final-unappealed-violation {
+    authority cite "usc1337.c"
+    effort 0.hours
+    valence bad
+    requires [violation-found]
+  }
+  "No appeal filed within 60 days — the Commission's determination stands (§ 1337(c))" -> determination-final-unappealed-no-violation {
+    authority cite "usc1337.c"
+    effort 0.hours
+    valence bad
+    requires [no-violation]
   }
   "No appeal filed within 60 days — the Commission's determination stands (§ 1337(c))" -> determination-final-unappealed {
     authority cite "usc1337.c"
     effort 0.hours
     valence bad
+    forbids [violation-found, no-violation]
   }
 }
 
@@ -212,10 +257,26 @@ state appeal-filed: "Notice of Appeal Filed (Federal Circuit)" by commission eff
   }
 }
 
+terminal determination-final-unappealed-violation: "Commission Violation Determination Stands — Unappealed" outcome [final, win] effective [1995-01-01, ..) cite "usc1337.c"
+{
+  group federal-circuit-appeal-group
+  note "The 60-day window closes with no notice of appeal; the violation determination and remedy stand unreviewed. PLACEHOLDER PAYOFF: $400,000 retained from the former blended terminal because violation stands."
+  valence good
+  payoff 400_000.usd
+}
+
+terminal determination-final-unappealed-no-violation: "Commission No-Violation Determination Stands — Unappealed" outcome [final, loss] effective [1995-01-01, ..) cite "usc1337.c"
+{
+  group federal-circuit-appeal-group
+  note "The 60-day window closes with no notice of appeal; no violation stands unreviewed. PLACEHOLDER PAYOFF: $0 because the adverse no-violation merits result has no authored payoff."
+  valence bad
+  payoff 0.usd
+}
+
 terminal determination-final-unappealed: "Commission Determination Stands — Unappealed" outcome [final] effective [1995-01-01, ..) cite "usc1337.c"
 {
   group federal-circuit-appeal-group
-  note "The 60-day window closes with no notice of appeal; flag itc337/fedcir-appeal-forfeited raised. The Commission's determination and remedy (or its absence) stand unreviewed. PLACEHOLDER PAYOFF: $400,000, override per matter. This terminal is reached from either a no-violation or a violation/remedy-in-effect posture (the graph does not fork by which one before the appeal window lapses), so a single payoff necessarily blends a possible unappealed win with a possible unappealed loss; override once the matter's actual determination is known."
+  note "The 60-day window closes with no notice of appeal; flag itc337/fedcir-appeal-forfeited raised. The Commission's determination stands unreviewed, with the result neutral because no result flag is set or the result is mixed. PLACEHOLDER PAYOFF: $400,000 retained from the former blended terminal."
   valence bad
   payoff 400_000.usd
 }
@@ -227,20 +288,51 @@ chance federal-circuit-review: "Federal Circuit Reviews the Determination" by co
 {
   group federal-circuit-appeal-group
   note "Affirmance authored at 0.7 / reversal-or-remand at 0.3 — APPROXIMATE. Standard of review tracks APA § 706 (substantial evidence for Commission fact-finding, de novo for legal conclusions) — see e.g. TianRui Group Co. v. ITC (337-TA-655, extraterritorial trade-secret jurisdiction affirmed) and ClearCorrect Operating v. ITC (337-TA-833, 'articles' jurisdiction REVERSED as to purely digital transmissions)."
+  "Federal Circuit affirms the Commission" -> cafc-affirmed-violation p 0.7 {
+    authority cite "usc1337.c"
+    requires [violation-found]
+    forbids [no-violation]
+    court_listener_url "https://www.courtlistener.com/opinion/615096/tianrui-group-co-v-international-trade-commission/"
+  }
+  "Federal Circuit affirms the Commission" -> cafc-affirmed-no-violation p 0.7 {
+    authority cite "usc1337.c"
+    requires [no-violation]
+    court_listener_url "https://www.courtlistener.com/opinion/615096/tianrui-group-co-v-international-trade-commission/"
+  }
   "Federal Circuit affirms the Commission" -> cafc-affirmed p 0.7 {
     authority cite "usc1337.c"
+    forbids [violation-found, no-violation]
     court_listener_url "https://www.courtlistener.com/opinion/615096/tianrui-group-co-v-international-trade-commission/"
   }
   "Federal Circuit reverses or remands to the Commission for further proceedings" -> cafc-remanded p 0.3 {
     authority cite "usc1337.c"
     court_listener_url "https://www.courtlistener.com/opinion/3153481/clearcorrect-operating-llc-v-international-trade-commission/"
+    clears [violation-found, no-violation]
   }
+}
+
+terminal cafc-affirmed-violation: "Federal Circuit Affirms Violation Determination" outcome [affirmed, final, win] effective [1995-01-01, ..) cite "usc1337.c"
+{
+  group federal-circuit-appeal-group
+  note "The Commission's violation determination and remedy stand as issued. PLACEHOLDER PAYOFF: $700,000 retained from the former blended terminal because violation stands."
+  valence good
+  court_listener_url "https://www.courtlistener.com/opinion/615096/tianrui-group-co-v-international-trade-commission/"
+  payoff 700_000.usd
+}
+
+terminal cafc-affirmed-no-violation: "Federal Circuit Affirms No-Violation Determination" outcome [affirmed, final, loss] effective [1995-01-01, ..) cite "usc1337.c"
+{
+  group federal-circuit-appeal-group
+  note "The Commission's no-violation determination stands as issued. PLACEHOLDER PAYOFF: $0 because the adverse no-violation merits result has no authored payoff."
+  valence bad
+  court_listener_url "https://www.courtlistener.com/opinion/615096/tianrui-group-co-v-international-trade-commission/"
+  payoff 0.usd
 }
 
 terminal cafc-affirmed: "Federal Circuit Affirms" outcome [affirmed, final] effective [1995-01-01, ..) cite "usc1337.c"
 {
   group federal-circuit-appeal-group
-  note "The Commission's determination and remedy stand as issued. PLACEHOLDER PAYOFF: $700,000, override per matter. Reached by affirming either a violation/remedy determination (a self win, the majority of the probability mass into this terminal) or a no-violation determination (a self loss); this blends both under one id -- override once the matter's actual determination is known."
+  note "The Commission's determination stands as issued; outcome is neutral when no result flag is set or the result is mixed. PLACEHOLDER PAYOFF: $700,000 retained from the former blended terminal."
   valence good
   court_listener_url "https://www.courtlistener.com/opinion/615096/tianrui-group-co-v-international-trade-commission/"
   payoff 700_000.usd
@@ -253,5 +345,6 @@ state cafc-remanded: "Federal Circuit Reverses or Remands" by commission effecti
   court_listener_url "https://www.courtlistener.com/opinion/3153481/clearcorrect-operating-llc-v-international-trade-commission/"
   "Commission reconsiders on remand — a remand determination can genuinely change the outcome (cf. Certain Sleep-Disordered Breathing Treatment Systems, 337-TA-890)" -> commission-final-determination {
     authority cite "usc1337.c"
+    clears [violation-found, no-violation]
   }
 }

@@ -212,6 +212,84 @@ fn strict_dependency_holes_follow_metadata_less_events_and_types() {
 }
 
 #[test]
+fn strict_dependency_holes_follow_earlier_version_of_reachable_deadline() {
+    use std::path::Path;
+    let dir = support::scratch("strict-hole-earlier-deadline-version");
+    let packages = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../lit");
+    support::copy_dir(&packages.join("core"), &dir.join("lit/core"));
+    let fixture = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/timeline-package");
+    support::copy_dir(&fixture, &dir.join("lit/a"));
+    #[cfg(unix)]
+    std::os::unix::fs::symlink(support::repo().join("sources"), dir.join("sources")).unwrap();
+    #[cfg(not(unix))]
+    support::copy_dir(&support::repo().join("sources"), dir.join("sources"));
+
+    let manifest = dir.join("lit/a/Lit.toml");
+    let text = std::fs::read_to_string(&manifest).unwrap();
+    std::fs::write(
+        manifest,
+        format!(
+            "{}\n[dependencies]\ncore = {{ version = \"^1.0.0\", path = \"../core\" }}\n",
+            text.replace("timeline-fixture", "deadline-root")
+                .replace("mover = \"self\"", "plaintiff = \"self\"")
+        ),
+    )
+    .unwrap();
+
+    let time = dir.join("lit/core/time.lit");
+    let source = std::fs::read_to_string(&time).unwrap();
+    let source = source.replacen(
+        "module core.time\n",
+        "module core.time\n\nimport core.calendar.{ us-federal-holidays }\n",
+        1,
+    );
+    let source = format!(
+        "{source}\n\nevent ImportedStart()\n\ncounting hole-count cite ?(\"earlier version hole\")\n{{\n  exclude_trigger_day\n  include_last_day\n  holidays us-federal-holidays\n  anchor trigger_day\n}}\n\ncounting clear-count cite \"Fixture 1\"\n{{\n  exclude_trigger_day\n  include_last_day\n  holidays us-federal-holidays\n  anchor trigger_day\n}}\n\ndeadline imported-period: 10.days after ImportedStart() counted_by hole-count effective [2020-01-01, 2021-01-01) known_at 2020-01-01 cite \"Fixture 2\"\n\ndeadline imported-period: 10.days after ImportedStart() counted_by clear-count effective [2021-01-01, ..) known_at 2021-01-01 cite \"Fixture 2\"\n"
+    );
+    std::fs::write(time, source).unwrap();
+
+    let root = dir.join("lit/a/fixture.lit");
+    let source = std::fs::read_to_string(&root).unwrap();
+    let source = source
+        .replace("timeline-fixture", "deadline-root")
+        .replace(
+            "module fixture\n",
+            "module fixture\n\nimport core.time.{ ImportedStart, imported-period }\n",
+        )
+        .replace("by mover", "by plaintiff")
+        .replace(
+            "event Started() }",
+            "event ImportedStart(), within imported-period }",
+        );
+    assert_ne!(source, std::fs::read_to_string(&root).unwrap());
+    std::fs::write(root, source).unwrap();
+
+    for target in ["lit/core", "lit/a"] {
+        let fmt = support::litigate_in(&dir, &["fmt", target]);
+        assert_eq!(fmt.code, 0, "{target}: {}", fmt.stdout);
+        let lock = support::litigate_in(&dir, &["lock", target]);
+        assert_eq!(lock.code, 0, "{target}: {}", lock.stdout);
+    }
+    let run = support::litigate_in(&dir, &["check", "--profile", "strict", "lit/a"]);
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert!(
+        run.json["diagnostics"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|diagnostic| {
+                diagnostic["code"] == "L5002"
+                    && diagnostic["severity"] == "error"
+                    && diagnostic["message"]
+                        .as_str()
+                        .is_some_and(|message| message.contains("earlier version hole"))
+            }),
+        "{}",
+        run.stdout
+    );
+}
+
+#[test]
 fn human_output_renders_diagnostics_with_source() {
     let out = assert_cmd::Command::cargo_bin("litigate")
         .unwrap()

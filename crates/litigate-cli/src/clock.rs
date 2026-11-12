@@ -343,6 +343,9 @@ pub fn due_of(
 
 /// Counts `months` from the same trigger under the declaration and clock
 /// that counted `d`'s period.
+///
+/// # Errors
+/// When the clock governing the trigger cannot count this month period.
 pub fn months_from(
     clocks: &Clocks<'_>,
     world: &World<'_>,

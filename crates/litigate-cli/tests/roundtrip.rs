@@ -30,7 +30,7 @@
 //! `calibration-gaps` are re-recorded (class b): 20 FRCP edges now assign
 //! defendant moves to the opponent, changing the FRCP case value from
 //! $481,375 to -$16,655 and calibration-gaps from $885,575 to $478,445.
-//! CoFC responses are not re-recorded: the CoFC and `cafc@cofc-gov` role
+//! `CoFC` responses are not re-recorded: the `CoFC` and `cafc@cofc-gov` role
 //! mappings are corrected to preserve their pre-migration decisions. An engine change is
 //! re-recorded the same way: `ptab-calibrated-institution` after explain at
 //! a base node reports its replayed flag context and the others (4f4fad3).

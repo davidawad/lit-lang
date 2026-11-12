@@ -434,6 +434,25 @@ mod tests {
         found.iter().map(|d| (d.code, d.message.clone())).collect()
     }
 
+    fn round_trip_pack(file: &str) -> String {
+        let text =
+            std::fs::read_to_string(std::path::Path::new(litgraph_packs::PACKS_DIR).join(file))
+                .unwrap_or_default();
+        let mut value: serde_json::Value = serde_json::from_str(&text).unwrap_or_default();
+        for edge in value["edges"].as_array_mut().into_iter().flatten() {
+            let Some(deadline) = edge
+                .get_mut("deadline")
+                .and_then(serde_json::Value::as_object_mut)
+            else {
+                continue;
+            };
+            for key in ["extensions", "extendable", "extensionAuthority"] {
+                deadline.remove(key);
+            }
+        }
+        value.to_string()
+    }
+
     /// Every outcome of the round trip in one binary: a pack whose id is
     /// `links` lowers to `packs/links.json`, where the links document
     /// lowers too. The importer names both packages `links` (one
@@ -441,36 +460,24 @@ mod tests {
     /// compared with the links document and is no document of its kind.
     #[test]
     fn every_round_trip_outcome() {
-        let built = |dir: &str, file: &str| {
-            std::fs::read_to_string(std::path::Path::new(dir).join(file)).unwrap_or_default()
-        };
-        let read = |file: &str| {
-            let text = built(litgraph_packs::PACKS_DIR, file);
-            let mut value: serde_json::Value = serde_json::from_str(&text).unwrap_or_default();
-            for edge in value["edges"].as_array_mut().into_iter().flatten() {
-                let Some(deadline) = edge
-                    .get_mut("deadline")
-                    .and_then(serde_json::Value::as_object_mut)
-                else {
-                    continue;
-                };
-                for key in ["extensions", "extendable", "extensionAuthority"] {
-                    deadline.remove(key);
-                }
-            }
-            value.to_string()
-        };
         // These packages use only edge-window shapes the importer can spell;
         // FRCP/FRAP grants are refused by design until the source language
         // has a lossless spelling for their deadline-level grants.
-        let text = read("cofc-court-of-federal-claims.json");
+        let text = round_trip_pack("cofc-court-of-federal-claims.json");
         let mut pack: serde_json::Value = serde_json::from_str(&text).unwrap_or_default();
         let plain = [
             Input::new("pack.json".to_owned(), pack.to_string()),
-            Input::new("mpep.json".to_owned(), read("mpep-prosecution.json")),
+            Input::new(
+                "mpep.json".to_owned(),
+                round_trip_pack("mpep-prosecution.json"),
+            ),
             Input::new(
                 "matter.json".to_owned(),
-                built(litgraph_packs::SCENARIOS_DIR, "cofc-1498-patent-case.json"),
+                std::fs::read_to_string(
+                    std::path::Path::new(litgraph_packs::SCENARIOS_DIR)
+                        .join("cofc-1498-patent-case.json"),
+                )
+                .unwrap_or_default(),
             ),
         ];
         let imported = litigate_import::import(&plain).unwrap_or_default();

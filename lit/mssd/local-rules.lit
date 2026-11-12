@@ -5,6 +5,8 @@ import core.frcp6.{ frcp6 }
 forum frcp
 
 /// The action is removed to this Court (L.U. Civ. R. 5(b)(1)).
+/// A motion seeking enlargement under FRCP 6(b)(1).
+event ExtensionMotionFiled()
 event Removed()
 /// The action is transferred to this District (L.U. Civ. R. 16(b)(2)).
 event Transferred()
@@ -83,9 +85,30 @@ test "Counting boundary: state-motions-period (weekend)" cite "S.D. Miss. L.U. C
 /// 7(b)(5)); a motion itself may not exceed four pages (L.U. Civ. R.
 /// 7(b)(2)(B)).
 deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 7(b)"
+{
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "FRCP 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "FRCP 6(b)(1)(B)"
+  }
+}
+
 /// L.U. Civ. R. 7(b)(4): a movant may file a rebuttal within seven days
 /// after service of the response and memorandum brief.
 deadline rebuttal-period: 7.days after ResponseServed() counted_by frcp6 cite "S.D. Miss. L.U. Civ. R. 7(b)"
+{
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "FRCP 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "FRCP 6(b)(1)(B)"
+  }
+}
 
 test "Counting boundary: rebuttal-period (weekend)" cite "S.D. Miss. L.U. Civ. R. 7(b)"
 {

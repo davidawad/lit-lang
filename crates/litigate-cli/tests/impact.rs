@@ -90,6 +90,12 @@ fn shorten_the_reopening_window(dir: &Path) {
         .replace(
             "expect deadline(reopen-motion-window) == 1999-06-04",
             "expect deadline(reopen-motion-window) == 1999-06-03",
+        )
+        .replace(
+            "expect deadline(reopen-motion-window) == 1991-12-09",
+            // The fixture changes seven days to three: exclude Dec. 1 and
+            // count Dec. 2–4, so this boundary assertion now expects Dec. 4.
+            "expect deadline(reopen-motion-window) == 1991-12-04",
         );
     std::fs::write(&path, text).unwrap();
     relock(dir);
@@ -124,7 +130,7 @@ fn assert_human_table(dir: &Path) {
         .unwrap();
     let text = String::from_utf8(human.stdout).unwrap();
     assert!(
-        text.contains("6 change(s) across 4 expect test(s)"),
+        text.contains("8 change(s) across 4 expect test(s)"),
         "{text}"
     );
     assert!(
@@ -134,6 +140,16 @@ fn assert_human_table(dir: &Path) {
             "verdict filed",
             "timely",
             "late"
+        ])),
+        "{text}"
+    );
+    assert!(
+        text.lines().any(|l| l.split(" | ").map(str::trim).eq([
+            "change-deadline-frap-base::a seven-day reopening window rolls a weekend last day",
+            "-",
+            "deadline(reopen-motion-window) == 1991-12-04",
+            "-",
+            "1991-12-04"
         ])),
         "{text}"
     );
@@ -165,6 +181,8 @@ fn a_layer_edit_lists_every_moved_deadline_verdict_and_expectation() {
     assert_eq!(run.code, 0, "{}{}", run.stdout, run.stderr);
     let window = "deadline change-deadline-frap-base::reopen-motion-window";
     let test = "change-deadline-frap-base::before 2005 a motion to reopen is due 7 days after notice of entry, weekends skipped";
+    let boundary_test =
+        "change-deadline-frap-base::a seven-day reopening window rolls a weekend last day";
     let mut want = vec![
         row(
             "bass-5cir-2000",
@@ -186,6 +204,20 @@ fn a_layer_edit_lists_every_moved_deadline_verdict_and_expectation() {
             "verdict filed",
             "timely",
             "late",
+        ),
+        row(
+            boundary_test,
+            "-",
+            "deadline(reopen-motion-window) == 1991-12-04",
+            "-",
+            "1991-12-04",
+        ),
+        row(
+            boundary_test,
+            "-",
+            "deadline(reopen-motion-window) == 1991-12-09",
+            "1991-12-09",
+            "-",
         ),
         row(
             test,

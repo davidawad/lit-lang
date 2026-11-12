@@ -42,8 +42,8 @@ state patent-granted: "Patent Granted" by patent-owner cite "35 U.S.C. § 151"
   }
   "Consider challenging without suit" -> challenge-vehicle-decision by petitioner {
     authority cite "35 U.S.C. § 311; 35 U.S.C. § 321"
-    effort 2.hours
-    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
+    effort 2.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move."
   }
   "File PGR petition directly" -> pgr-petition-filed by petitioner {
     event PgrPetitionFiled()
@@ -65,8 +65,8 @@ state infringement-complaint-served: "Infringement Complaint Served" by patent-o
   note "Service of an infringement complaint — including amended, counterclaim, or cross-claim allegations — starts the unextendable 1-year clock to file an IPR petition. A voluntarily dismissed complaint still starts or restarts this bar; estoppel under § 315(e)(1) attaches to all invalidation grounds raised or reasonably could have been raised, binding the petitioner in any subsequent proceeding."
   "Evaluate IPR/PGR after being sued" -> challenge-vehicle-decision by petitioner {
     authority cite "35 U.S.C. § 315(b)"
-    effort 8.hours
-    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
+    effort 8.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move."
   }
   "File IPR directly after being sued" -> ipr-petition-filed by petitioner {
     event IprPetitionFiled()
@@ -96,9 +96,9 @@ decision challenge-vehicle-decision: "Petitioner Chooses Challenge Vehicle" by p
   "File IPR petition with a motion for joinder to an instituted IPR" -> institution-granted {
     event JoinderMotionFiled()
     authority cite "35 U.S.C. § 315(c); 37 C.F.R. § 42.122"
-    effort 135.hours
+    effort 135.hours basis estimate
     cost 23_750.usd
-    note "Hours: the IPR petition's 120 plus 15 for the joinder motion, BigLaw-honest estimates; basis: estimate. Fee: the IPR request fee, as on `File IPR petition`. The § 315(b) time bar does not apply to a request for joinder (35 U.S.C. § 315(b), last sentence), so this petition skips the time-bar check; modeled as joined into the instituted trial."
+    note "Hours: the IPR petition's 120 plus 15 for the joinder motion, BigLaw-honest estimates. Fee: the IPR request fee, as on `File IPR petition`. The § 315(b) time bar does not apply to a request for joinder (35 U.S.C. § 315(b), last sentence), so this petition skips the time-bar check; modeled as joined into the instituted trial."
   }
   "File PGR petition within 9 months" -> pgr-petition-filed {
     event PgrPetitionFiled()
@@ -164,12 +164,12 @@ chance petition-time-bar-check: "Is the IPR Petition Filed Within 1 Year of Comp
   group petition-group
   note "Whether THIS petition is time-barred under 35 U.S.C. §315(b) is a matter fact knowable from the petitioner's own service-of-complaint history, not real chance -- see docs/PACK_SCHEMA.md#matter-facts-v2. IPR-only: a PGR petition cannot structurally be filed outside its own 9-month window, so PGR petitions go straight to the preliminary response. Checked after the notice of filing date accorded, as in the proceeding: the bar is raised in the preliminary response and decided at institution, and a corrected petition takes the correction date."
   tags [fact]
-  e-time-bar-clear "Petition filed within 1 year of complaint service" -> popr-window p 0.97 {
+  e-time-bar-clear "Petition filed within 1 year of complaint service" -> popr-window p 0.97 basis estimate {
     when !has_event(PetitionCorrected()) && date_of(IprPetitionFiled()) <= deadline(ipr-time-bar)
     authority cite "35 U.S.C. §315(b)"
-    note "Prior for the fact-tagged node's default (unset scenario.facts) fallback: most petitions aren't §315(b) time-barred. Teaching estimate, not a sourced PTAB statistic -- basis: estimate."
+    note "Prior for the fact-tagged node's default (unset scenario.facts) fallback: most petitions aren't §315(b) time-barred. Not a sourced PTAB statistic."
   }
-  e-time-bar-barred "Board finds petition time-barred" -> ipr-time-barred p 0.03 {
+  e-time-bar-barred "Board finds petition time-barred" -> ipr-time-barred p 0.03 basis estimate {
     when !has_event(PetitionCorrected()) && !(date_of(IprPetitionFiled()) <= deadline(ipr-time-bar))
     authority cite "35 U.S.C. §315(b)"
     within ipr-time-bar {
@@ -177,7 +177,7 @@ chance petition-time-bar-check: "Is the IPR Petition Filed Within 1 Year of Comp
     }
     duration { min 54.8.days, mode 182.5.days, max 365.days }
     valence bad
-    note "Prior for the fact-tagged node's default (unset scenario.facts) fallback, the complement of the timely edge. Teaching estimate -- basis: estimate."
+    note "Prior for the fact-tagged node's default (unset scenario.facts) fallback, the complement of the timely edge."
   }
 }
 

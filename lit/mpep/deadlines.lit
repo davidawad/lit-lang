@@ -101,14 +101,11 @@ event PetitionFilingDateNoticed()
 /// The Office orders ex parte reexamination (35 U.S.C. § 304).
 event ReexamOrdered()
 
-/// 35 U.S.C. § 119(e)(1): a nonprovisional claims a provisional's filing date
-/// only if filed "not later than 12 months after the date on which the
-/// provisional application was filed"; 37 C.F.R. § 1.7(b) extends a
-/// pendency ending on a Saturday, Sunday or DC federal holiday.
+/// 37 C.F.R. § 1.78(b) permits restoration "within two months from the
+/// expiration" if "the delay ... was unintentional." The closed
+/// extension-cause vocabulary cannot express that standard; leave undeclared.
+/// See sources/cfr-37-part1.txt:2428.
 deadline provisional-pendency: 12.months from ProvisionalFiled() counted_by uspto-1-7 effective [2024-01-31, ..) cite "35 U.S.C. 119(e)(1)"
-{
-  extend { never cite "35 U.S.C. 119(e)(1); 37 CFR 1.78(a)(1)" }
-}
 
 test "provisional-pendency: 12 months from Monday, 2025-03-03" cite "37 CFR 1.7(a)"
 {
@@ -137,25 +134,25 @@ deadline missing-parts-reply: 2.months from MissingPartsNoticeMailed() counted_b
 {
   extend {
     by applicant
-    to trigger_date + 6.months
+    to trigger_date + 7.months
     after_expiry
     on ExtensionPetitionFiled()
-    cite "37 CFR 1.136(a); 35 U.S.C. 133"
+    cite "37 CFR 1.136(a); MPEP 710.02(d)"
   }
 }
 
-test "missing-parts-reply: accepted extension to the statutory ceiling" cite "37 CFR 1.136(a); 35 U.S.C. 133"
+test "missing-parts-reply: accepted extension to the five-month ceiling" cite "37 CFR 1.136(a); MPEP 710.02(d)"
 {
   given MissingPartsNoticeMailed() on 2025-01-31
-  given ExtensionPetitionFiled() by applicant on 2025-07-30
-  given MissingPartsReplyExtended(2025-07-31) by applicant on 2025-07-30
-  expect deadline(missing-parts-reply) == 2025-07-31
+  given ExtensionPetitionFiled() by applicant on 2025-08-30
+  given MissingPartsReplyExtended(2025-08-31) by applicant on 2025-08-30
+  expect deadline(missing-parts-reply) == 2025-08-31
 }
 
-test "missing-parts-reply: a petition after the six-month ceiling does not extend the period" cite "35 U.S.C. 133"
+test "missing-parts-reply: a petition after the five-month ceiling does not extend the period" cite "MPEP 710.02(d)"
 {
   given MissingPartsNoticeMailed() on 2025-01-31
-  given ExtensionPetitionFiled() by applicant on 2025-08-01
+  given ExtensionPetitionFiled() by applicant on 2025-09-03
   expect deadline(missing-parts-reply) == 2025-03-31
 }
 

@@ -1,15 +1,19 @@
 # MPEP extension grants (lg-pb1fe.36)
 
+DECIDED: leave `provisional-pendency` extension undeclared — § 1.78(b)'s
+unintentional-delay standard is not expressible by the closed cause type, so
+typing a grant or a lock would misstate the rule.
+
 ## Source and typed periods
 
 | Period | Text relied on | Grant |
 |---|---|---|
-| `provisional-pendency` | `sources/cfr-37-part1.txt:2410` (§ 1.78(a)(1), twelve months for a provisional benefit) and 35 U.S.C. § 119(e)(1) | Locked against extensions. Restoration under § 1.78(b) is a separate petition remedy, not an extension of this filing deadline. |
-| `missing-parts-reply` | `sources/cfr-37-part1.txt:3395` (§ 1.136(a)(1): nonstatutory or shortened statutory reply period; extension by petition and fee) and `sources/usc-cfr-prosecution-fragments.txt:650-651` (§ 133: six months after an action) | Applicant, petition motion, trigger + 6 months, after expiry, no discretion. |
+| `provisional-pendency` | `sources/cfr-37-part1.txt:2428` (§ 1.78(b): restoration within two months after the 12-month period if delay was unintentional) | Undeclared: the closed extension-cause vocabulary cannot express unintentional delay. |
+| `missing-parts-reply` | `sources/cfr-37-part1.txt:3395` (§ 1.136(a): five months after the period set for reply) and `sources/mpep.txt:11130-11136` (§ 710.02(d)) | Applicant, petition motion, trigger + 7 months (two-month set period plus five months), after expiry. |
 | `election-reply` | Same § 1.136(a)(1) and § 133 text | Applicant, petition motion, trigger + 6 months, after expiry, no discretion. |
 | `ssp-reply` | Same § 1.136(a)(1) and § 133 text | Applicant, petition motion, trigger + 6 months, after expiry, no discretion. |
 | `final-reply` | Same § 1.136(a)(1) and § 133 text | Applicant, petition motion, trigger + 6 months, after expiry, no discretion. |
-| `extension-month` | § 1.136(a)(1), § 133, and `sources/mpep.txt` MPEP 710.01(a): the extended date corresponds to the Office action date | Applicant, petition motion, trigger + 3 months from the current one-month increment's trigger (the initial reply due date), after expiry, no discretion. This preserves the action's six-month ceiling for the SSP extension path. |
+| `extension-month` | § 1.136(a)(1), § 133, and `sources/mpep.txt` MPEP 710.01(a): the extended date corresponds to the Office action date | Applicant, petition motion, trigger + 1 month per increment from `ReplyPeriodEnded()`. The SSP path permits three such increments after its initial three-month period, reaching the six-month statutory ceiling. |
 | `appeal-brief` | `sources/cfr-37-part41.txt:321` (§ 41.37(e), applies § 1.136) and `sources/cfr-37-part1.txt:3395` (§ 1.136(a)(1), five months after the period set for reply); `lit/mpep/deadlines.lit` documents § 133 does not govern this period | Applicant, petition motion, trigger + 7 months (two-month original period plus five months), after expiry, no discretion. |
 | `appeal-forwarding-fee` | `sources/cfr-37-part41.txt:379` (§ 41.45(c), § 1.136(a) does not apply; § 1.136(b) does) and `sources/cfr-37-part1.txt:3411` (§ 1.136(b): sufficient cause, reasonable time specified, request on or before due) | Office, `GoodCause` (sufficient cause), `ExtensionForCauseRequested()` within `prescribed_due`; discretionary length set by the Office. |
 | `ipr-time-bar` | `sources/usc-additional.txt:409` (35 U.S.C. § 315(b)) | Locked against extensions. The statute has a joinder exception; it is not an extension of the one-year period. |
@@ -25,6 +29,28 @@ the action that started the period (35 U.S.C. § 133, `sources/usc-cfr-prosecuti
 `appeal-brief`, § 41.37(e) makes § 1.136 applicable, so the two-month period
 can extend five months from its trigger, hence trigger + seven months.
 
+MPEP 710.02(d) states: “The 2-month time period for reply to A Notice to File
+Missing Parts of an Application is not identified on the Notice as a statutory
+period subject to 35 U.S.C. 133.” Accordingly, `missing-parts-reply` follows
+the five-month § 1.136(a) allowance and does not use § 133's six-month cap.
+MPEP § 710.02(b) identifies a restriction/election period as a “shortened
+statutory period” and a three-month reply to an Office action on the merits;
+§ 710.02(d) says of “extensions of the statutory period under 35 U.S.C. 133”:
+“provided the extension does not go beyond the 6-month statutory period from
+the date of the Office action.” Thus `election-reply` is statutory because
+§ 710.02(b)(A) expressly classifies the restriction/election period that way;
+`ssp-reply` and `final-reply` are statutory because they are shortened reply
+periods for Office actions (the SSP is on the merits, and final reply follows
+a final Office action). All three are capped at six months from the action.
+
+`ReplyPeriodEnded()` feeds `extension-month` from the then-current reply due
+date in the SSP path in `lit/mpep/02-filing-to-allowance.lit`; it does not feed
+`missing-parts-reply`, `election-reply`, or `final-reply` in this package. Each
+`extension-month` is one month. The three available increments after the
+initial three-month SSP reach the six-month § 133 ceiling, so this SSP path
+does not understate that ceiling. The separately typed direct reply grants
+use their own six-month-from-action cap.
+
 The four existing `delegable ... cite "37 CFR 1.136(a)"` periods
 (`missing-parts-reply`, `election-reply`, `ssp-reply`, `final-reply`) each
 receive a separate applicant extension grant as well as the `CaseOrder`
@@ -37,8 +63,10 @@ field in this language, so the motion's legal source includes the required
 ## Inline examples and replay
 
 Inline tests in `lit/mpep/deadlines.lit` cover an accepted grant and a
-petition beyond the grant window for each of the seven grant families; each
-late petition leaves the period unextended. The MPEP month-end cases verify
+petition after the window for each of the seven grant families. Those
+“petition after the window” tests do not exercise a refusal: no extension
+event is given, so they only show the unextended date. Refusal is covered in
+`crates/litigate-sema/tests/cov_case_obligations.rs`. The MPEP month-end cases verify
 that the bound is counted from its trigger. The language replay test in
 `crates/litigate-sema/tests/cov_case_obligations.rs` covers the bound refusal:
 a proposal one day beyond a January 31 trigger's May 31 ceiling is rejected;
@@ -62,13 +90,20 @@ The following five MPEP edges use the named deadline grants above and lower
 
 ## Strict check and remaining holes
 
-Strict baseline on `origin/main` (`70b15de0`): 11 L5002 undeclared-extension
-errors. Strict check after these edits: 0 L5002 errors, 0 other errors, and
-0 warnings. Each period with vendored governing extension or no-extension
-text is typed or locked; no strict extension holes remain.
+Strict check on the final tree (`target/release/litigate check --profile
+strict lit/mpep`): exit 2, 2 total errors. Both are L5002 hole diagnostics
+from the single undeclared `provisional-pendency` period, referenced at
+`lit/mpep/01-pre-filing.lit:36` and `lit/mpep/01-pre-filing.lit:74`; there
+are 0 text-in-force proof errors. The check reported no other diagnostics.
 
 ## Open for David
 
+- MPEP 710.02(d) permits `missing-parts-reply` to receive additional time
+  under § 1.136(b), when appropriate; the same section says an appeal brief
+  may be further extended in an exceptional situation under § 1.136(b). The
+  typed `appeal-forwarding-fee` form is specific to § 41.45(c), so neither
+  additional route is modeled without an applicable form that avoids adding
+  a fact.
 - Section 1.136(b)'s distinct sufficient-cause route is typed on
   `appeal-forwarding-fee` because § 41.45(c) expressly invokes it. The request
   must be filed no later than the due date, and the Office actor has
@@ -79,17 +114,20 @@ text is typed or locked; no strict extension holes remain.
   to operate as a constructive petition. The authored motion is the explicit
   petition form; the package does not model constructive petitions or fees
   as independent procedural events.
+- `provisional-pendency`: § 1.78(b) permits restoration for unintentional
+  delay, but the closed `CauseStandard` cannot express that standard. Whether
+  to add an `Unintentional` member is an open language decision.
+- `ipr-time-bar`, `pgr-window`, and `broadening-reissue` are locks resting on
+  prohibitive statutory wording: § 315(b) says institution “may not be
+  instituted,” § 321(c) says a petition “may only be filed” within nine
+  months, and § 251(d) says a broadening reissue must be applied for “within
+  two years.”
 
 ## Gate results
 
-- `cargo nextest run -p litigate-sema -p litigate-lower -p litigate-engine -p litigate-verify -p litigate-syntax --no-fail-fast`: 1,792 passed, 1 skipped, 0 failed.
-- `cargo nextest run -p litigate-cli --no-fail-fast -E 'test(/extension|extend|mpep|given_by|inline_tests|grant/)'`: 34 run, 17 passed, 17 failed. All 17 failures are the known `lg-pb1fe.26` main-branch failures identified in the PM ruling; none are new MPEP failures.
-- `cargo clippy --workspace --all-targets -- -D warnings`: passed.
-- `just tree-sitter-test`: passed, 88 syntax/highlighting cases plus merge test; grammar did not change.
-- `litigate check lit cases`: completed with no errors; it emitted the existing L4016 `as_of` warnings for dates before today.
-- `litigate test lit/mpep`: 56 passed, 0 failed (before the seven late-petition cases: 49 passed, 0 failed).
-- Strict MPEP check: baseline 11 L5002 errors; after 0 L5002 errors, 0 other errors, 0 warnings.
-- `litigate fmt --check lit cases`: exit 2 on the known main-branch L9004 in `lit/ptab/03-trial-to-appeal.lit`; `litigate fmt --check lit/mpep`: passed.
-- `just lit-sync`: passed; regenerated the MPEP `Lit.lock` and built packs/scenarios.
-- `just lit-sync-check`: passed on the committed tree; all locks and the shared clock library are current, and no generated files are committed.
-- `cargo test -p litigate-verify --test refinement_bounds`: 10 passed, 0 failed.
+- `target/release/litigate test lit/mpep`: exit 0, 56 passed, 0 failed.
+- `target/release/litigate check lit cases`: exit 0, 0 errors.
+- `target/release/litigate fmt --check lit/mpep`: exit 0.
+- `just lit-sync`: exit 0; regenerated the MPEP `Lit.lock` and built packs and scenarios.
+- `just lit-sync-check`: final run exit 0; Lit.lock files and the shared clock
+  library are current, and no generated files are committed.

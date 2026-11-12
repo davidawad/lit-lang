@@ -207,6 +207,12 @@ pub struct PackMeta {
     /// hole's `/nodes/i` names once canonical order has sorted the graph.
     #[serde(skip)]
     pub node_ids: Vec<String>,
+    /// Authored number provenance, by JSON pointer in the source pack.
+    #[serde(skip)]
+    pub basis: Vec<super::BasisLabel>,
+    /// Local edge ids in source order, parallel to `basis` edge pointers.
+    #[serde(skip)]
+    pub edge_ids: Vec<String>,
 }
 
 /// Hard cap on compiled product states (`(node, flag-set)` pairs, and the

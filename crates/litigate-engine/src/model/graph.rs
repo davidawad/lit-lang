@@ -39,6 +39,10 @@ pub struct Graph {
     /// id, `n`). Filled by calibration; the probability-uncertainty model
     /// (`scenario::Belief`) reads it as a chance node's prior pseudo-count.
     pub sample_size: BTreeMap<EdgeIx, (String, u64)>,
+    /// Typed number provenance for links.json.
+    pub link_basis: Vec<super::BasisLabel>,
+    /// Link ids in source order.
+    pub link_edge_ids: Vec<String>,
     pub(super) node_ix: HashMap<String, NodeIx>,
     pub(super) edge_ix: HashMap<String, EdgeIx>,
     /// Qualified `spawn` and `joins` nodes by qualified edge id, for the
@@ -125,6 +129,12 @@ impl Graph {
             pack_roles: BTreeMap::new(),
             notes: vec![],
             sample_size: BTreeMap::new(),
+            link_basis: lf
+                .lowered
+                .as_ref()
+                .map(|l| l.basis.clone())
+                .unwrap_or_default(),
+            link_edge_ids: local_edge_ids(&lf.links),
             node_ix: HashMap::new(),
             edge_ix: HashMap::new(),
             tracks: HashMap::new(),
@@ -211,6 +221,12 @@ impl Graph {
                 .iter()
                 .map(|n| qualify(&pack.id, &n.id))
                 .collect(),
+            basis: pack
+                .lowered
+                .as_ref()
+                .map(|l| l.basis.clone())
+                .unwrap_or_default(),
+            edge_ids: local_edge_ids(&pack.edges),
         });
         Ok(())
     }

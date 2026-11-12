@@ -125,6 +125,19 @@ fn calibration_op_lists_gaps_ranked_by_swing() {
     let result = resp.result.unwrap();
     assert!(result["base_value"].is_number());
     assert!(result["base_elapsed_days"].is_number());
+    assert!(result["probabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .all(|row| {
+            row["input"].is_string()
+                && row["low_value"].is_number()
+                && row["high_value"].is_number()
+                && row["v_low"].is_number()
+                && row["v_high"].is_number()
+                && row["swing"].is_number()
+                && row["policy_changes"].is_boolean()
+        }));
     let durations = result["durations"].as_array().unwrap();
     assert!(!durations.is_empty(), "frcp has uncalibrated durations");
     assert!(durations.len() <= 5);

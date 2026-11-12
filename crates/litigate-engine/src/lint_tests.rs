@@ -7,7 +7,7 @@ use crate::clock::{
     calendar::{Holiday, HolidayDate},
     ClockLibrary,
 };
-use crate::model::{CompileOptions, LinkFile, RawNode, Source};
+use crate::model::{Basis, BasisLabel, CompileOptions, LinkFile, Lowered, RawNode, Source};
 
 fn pack_with_cite(sources: Vec<Source>, cite: &str) -> Pack {
     Pack {
@@ -78,6 +78,42 @@ fn observance_clock(cite: Option<&str>) -> ClockLibrary {
         }],
         ..ClockLibrary::default()
     }
+}
+
+#[test]
+fn numeric_basis_lint_names_placeholder_and_estimate_without_vintage() {
+    let mut p = pack_with_cite(vec![], "");
+    p.lowered = Some(
+        Lowered::new(vec![], "2026-01-01".into(), None, vec![]).with_basis(vec![
+            BasisLabel {
+                pointer: "/edges/0/probability".into(),
+                basis: Basis::Placeholder,
+                source: Some("draft".into()),
+                vintage: Some("2026-01-01".into()),
+            },
+            BasisLabel {
+                pointer: "/nodes/0/payoff".into(),
+                basis: Basis::Estimate,
+                source: None,
+                vintage: None,
+            },
+        ]),
+    );
+    let mut findings = vec![];
+    let mut push =
+        |severity, code, at: String, message: String| findings.push((severity, code, at, message));
+    lint_numeric_basis(&p, &mut push);
+    assert_eq!(findings.len(), 2);
+    assert!(findings
+        .iter()
+        .any(|(_, code, at, message)| *code == "placeholder-number"
+            && at.ends_with("/edges/0/probability")
+            && message.contains("placeholder")));
+    assert!(findings
+        .iter()
+        .any(|(_, code, at, message)| *code == "estimate-without-vintage"
+            && at.ends_with("/nodes/0/payoff")
+            && message.contains("estimate")));
 }
 
 #[test]

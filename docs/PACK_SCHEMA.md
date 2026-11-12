@@ -73,6 +73,14 @@ pack. A `payoff` or `payoffByFlag` hole that the scenario's `payoffs` (a
 the warning leaves it out of the count and names it covered by case
 stakes, and a pack whose every hole is covered does not warn. A `strict` build rejects holes, so only `dev` output carries them.
 
+The `calibration` operation adds `pointer`, `basis`, and optional `source`
+and `vintage` to each probability and duration gap row. It ranks rows from
+weakest basis to strongest (`hole`, `placeholder`, `estimate`, `expert`,
+`calibrated`, `sourced`); within a basis it keeps descending sensitivity,
+then sorts by JSON pointer for deterministic ties. The sensitivity values and
+top-level response fields are unchanged. A missing number label falls back
+to its containing node or edge label, then `estimate`.
+
 Generated files are written as RFC 8785 (JCS) canonical JSON, indented by
 two spaces: members sorted by UTF-16 code units and numbers in ECMAScript
 spelling (`1500`, not `1500.0`; `1e+21`). Removing the indentation gives

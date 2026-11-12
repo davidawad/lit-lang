@@ -52,6 +52,7 @@ pub fn lint_with_clock(g: &Graph, packs: &[Pack], clock: &ClockLibrary) -> Vec<D
         };
         let corpus = SourceCorpus::default_source();
         for p in packs {
+            lint_numeric_basis(p, &mut push);
             lint_pack_sources(p, &mut push);
             lint_pack_edges(p, &mut push);
             lint_pack_nodes(p, &mut push);
@@ -82,6 +83,54 @@ pub fn lint_with_clock(g: &Graph, packs: &[Pack], clock: &ClockLibrary) -> Vec<D
         _ => 2,
     });
     d
+}
+
+fn lint_numeric_basis(p: &Pack, push: &mut Push<'_>) {
+    let Some(lowered) = &p.lowered else { return };
+    for label in &lowered.basis {
+        let Some(field) = label.pointer.split('/').nth(3) else {
+            continue;
+        };
+        if ![
+            "probability",
+            "payoff",
+            "payoffByFlag",
+            "duration",
+            "cost",
+            "hours",
+            "stake",
+            "attrs",
+        ]
+        .contains(&field)
+        {
+            continue;
+        }
+        let declaration = format!(
+            "{} basis {}{}",
+            label.pointer,
+            format!("{:?}", label.basis).to_lowercase(),
+            label
+                .vintage
+                .as_ref()
+                .map(|v| format!(" vintage {v}"))
+                .unwrap_or_default()
+        );
+        if label.basis == crate::model::Basis::Placeholder {
+            push(
+                "warn",
+                "placeholder-number",
+                format!("{}::{}", p.id, label.pointer),
+                format!("{declaration}: placeholder numeric value"),
+            );
+        } else if label.basis == crate::model::Basis::Estimate && label.vintage.is_none() {
+            push(
+                "warn",
+                "estimate-without-vintage",
+                format!("{}::{}", p.id, label.pointer),
+                format!("{declaration}: estimate has no vintage"),
+            );
+        }
+    }
 }
 
 fn lint_clock_observances(clock: &ClockLibrary, push: &mut Push<'_>) {

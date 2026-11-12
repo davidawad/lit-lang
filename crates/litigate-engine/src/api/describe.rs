@@ -136,7 +136,7 @@ pub fn describe(catalog: &Catalog) -> Value {
             "pareto": "{from?, to?, objectives?, max_labels?, limit?} N-objective frontier (default dollars × elapsed × surprise)",
             "sweep": "{param, lo?, hi?, steps?, watch?, tol?} value curve + policy breakpoints for ANY param",
             "tornado": "{params?, rel?, dp?, probabilities?, top?} what the answer is most sensitive to",
-            "calibration": "{top?, dp?, rel?, max_candidates?} uncalibrated probabilities/durations ranked by decision sensitivity — what to calibrate next",
+            "calibration": "{top?, dp?, rel?, max_candidates?} uncalibrated probabilities/durations; rows include pointer and effective basis/source/vintage, ranked weakest basis first, then sensitivity descending, then pointer",
             "posterior": "{from?, node?, samples?, seed?, credibility?} Monte Carlo over every chance node's Dirichlet posterior: credible intervals on the value and on each option's Q at node, and P(each option is optimal)",
             "voi": "{from?, samples?, seed?, top?, max_nodes?, studies?: [{node, k, cost? | cost_edge?, label?}]} value of information: EVPI of each chance node's outcome and probabilities, EVPI of everything, EVSI of each study (k observations) vs its cost",
             "structure": "{what: summary|scc|dominators|mincut|betweenness|reachability, from?, to?, capacity?, top?}",

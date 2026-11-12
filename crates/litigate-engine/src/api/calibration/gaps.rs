@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! Ranking uncalibrated probabilities and durations by decision sensitivity,
+//! Ranking uncalibrated probabilities and durations by typed basis, then
+//! decision sensitivity,
 //! so a user knows what to calibrate first — the same one-at-a-time
 //! perturbation method `tornado` (`crate::algo::sweep`) uses for *authored*
 //! inputs, run here over the inputs calibration hasn't reached yet.
@@ -10,13 +11,106 @@ use serde::Serialize;
 
 use crate::algo::{chain, mdp};
 use crate::error::Result;
-use crate::model::{Deadline, Duration, Graph, NodeIx};
+use crate::model::{Basis, BasisLabel, Deadline, Duration, Graph, NodeIx};
 use crate::scenario::{Control, Scenario, View};
 
 /// One row: what was perturbed and how much the answer swung. Reuses
 /// `tornado`'s row shape (`input`/`low_value`/`high_value`/`v_low`/`v_high`/
 /// `swing`/`policy_changes`) so the two are easy to compare.
-pub use crate::algo::sweep::Sensitivity as Gap;
+#[derive(Debug, Clone, Serialize)]
+pub struct Gap {
+    /// Input changed by this perturbation.
+    pub input: String,
+    /// Low perturbation value.
+    pub low_value: f64,
+    /// High perturbation value.
+    pub high_value: f64,
+    /// Output at the low value.
+    pub v_low: f64,
+    /// Output at the high value.
+    pub v_high: f64,
+    /// Absolute output swing.
+    pub swing: f64,
+    /// Whether the preferred first move changed.
+    pub policy_changes: bool,
+    /// JSON pointer of the authored number.
+    pub pointer: String,
+    /// Effective typed provenance basis.
+    pub basis: Basis,
+    /// Authored source, when present.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub source: Option<String>,
+    /// Authored vintage, when present.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub vintage: Option<String>,
+}
+
+fn provenance(g: &Graph, edge: usize, field: &str) -> (String, BasisLabel) {
+    let e = &g.edges[edge];
+    if e.link {
+        let index = g
+            .link_edge_ids
+            .iter()
+            .position(|id| format!("links::{id}") == e.base_id);
+        let pointer = index.map_or_else(
+            || format!("/links/{}", e.base_id),
+            |i| format!("/links/{i}/{field}"),
+        );
+        let label = g
+            .link_basis
+            .iter()
+            .find(|label| label.pointer == pointer)
+            .or_else(|| {
+                let object = format!("/links/{}", index?);
+                g.link_basis.iter().find(|label| label.pointer == object)
+            })
+            .cloned()
+            .unwrap_or(BasisLabel {
+                pointer: pointer.clone(),
+                basis: Basis::Estimate,
+                source: None,
+                vintage: None,
+            });
+        return (pointer, label);
+    }
+    let meta = g.packs.iter().find(|p| p.id == e.pack);
+    let index = meta.and_then(|p| {
+        p.edge_ids
+            .iter()
+            .position(|id| format!("{}::{id}", p.id) == e.base_id)
+    });
+    let pointer = index.map_or_else(
+        || format!("/edges/{}", e.base_id),
+        |i| format!("/edges/{i}/{field}"),
+    );
+    let label = meta
+        .and_then(|p| {
+            p.basis
+                .iter()
+                .find(|b| b.pointer == pointer)
+                .or_else(|| {
+                    let object = format!("/edges/{}", index?);
+                    p.basis.iter().find(|b| b.pointer == object)
+                })
+                .cloned()
+        })
+        .unwrap_or(BasisLabel {
+            pointer: pointer.clone(),
+            basis: Basis::Estimate,
+            source: None,
+            vintage: None,
+        });
+    (pointer, label)
+}
+
+fn sort_gaps(rows: &mut [Gap]) {
+    rows.sort_by(|a, b| {
+        b.basis
+            .cmp(&a.basis)
+            .then_with(|| b.swing.total_cmp(&a.swing))
+            .then_with(|| a.pointer.cmp(&b.pointer))
+    });
+}
 
 /// Uncalibrated probabilities and durations, each ranked by swing.
 #[derive(Debug, Clone, Serialize)]
@@ -88,6 +182,7 @@ fn probability_gaps(
         let mut b = sc.clone();
         b.probabilities.insert(g.edges[e].id.clone(), hi);
         let ((vl, cl), (vh, ch)) = (eval(&a)?, eval(&b)?);
+        let (pointer, label) = provenance(g, e, "probability");
         out.push(Gap {
             input: format!("p:{}", g.edges[e].id),
             low_value: lo,
@@ -96,9 +191,13 @@ fn probability_gaps(
             v_high: vh,
             swing: (vh - vl).abs(),
             policy_changes: cl || ch,
+            pointer,
+            basis: label.basis,
+            source: label.source,
+            vintage: label.vintage,
         });
     }
-    out.sort_by(|a, b| b.swing.total_cmp(&a.swing));
+    sort_gaps(&mut out);
     Ok((out, truncated))
 }
 
@@ -143,6 +242,7 @@ fn duration_gaps(
         });
         let el = expected_elapsed(&ga, sc)?;
         let eh = expected_elapsed(&gb, sc)?;
+        let (pointer, label) = provenance(g, e, "duration");
         out.push(Gap {
             input: format!("duration:{}", g.edges[e].id),
             low_value: lo,
@@ -153,9 +253,13 @@ fn duration_gaps(
             // Duration rarely flips the dollar-optimal policy by itself;
             // this row measures the elapsed-time swing, not V(start).
             policy_changes: false,
+            pointer,
+            basis: label.basis,
+            source: label.source,
+            vintage: label.vintage,
         });
     }
-    out.sort_by(|a, b| b.swing.total_cmp(&a.swing));
+    sort_gaps(&mut out);
     Ok((out, truncated))
 }
 
@@ -253,5 +357,88 @@ mod tests {
             .iter()
             .any(|row| row.input.contains("to-win")));
         assert!(!out.durations.iter().any(|row| row.input.contains("to-win")));
+    }
+
+    #[test]
+    fn basis_rank_precedes_sensitivity_and_pointer_breaks_ties() {
+        let row = |basis, swing, pointer: &str| Gap {
+            input: pointer.into(),
+            low_value: 0.0,
+            high_value: 1.0,
+            v_low: 0.0,
+            v_high: swing,
+            swing,
+            policy_changes: false,
+            pointer: pointer.into(),
+            basis,
+            source: None,
+            vintage: None,
+        };
+        let mut rows = vec![
+            row(Basis::Sourced, 100.0, "/edges/5/probability"),
+            row(Basis::Calibrated, 100.0, "/edges/4/probability"),
+            row(Basis::Expert, 100.0, "/edges/3/probability"),
+            row(Basis::Estimate, 100.0, "/edges/2/probability"),
+            row(Basis::Placeholder, 0.1, "/edges/6/probability"),
+            row(Basis::Placeholder, 0.1, "/edges/1/probability"),
+            row(Basis::Hole, 0.1, "/edges/0/probability"),
+        ];
+        sort_gaps(&mut rows);
+        assert_eq!(
+            rows.iter().map(|r| r.pointer.as_str()).collect::<Vec<_>>(),
+            vec![
+                "/edges/0/probability",
+                "/edges/1/probability",
+                "/edges/6/probability",
+                "/edges/2/probability",
+                "/edges/3/probability",
+                "/edges/4/probability",
+                "/edges/5/probability",
+            ]
+        );
+        assert_eq!(rows[0].basis, Basis::Hole);
+        assert_eq!(rows[3].basis, Basis::Estimate);
+    }
+
+    #[test]
+    fn per_number_labels_are_read_from_pack_pointers() {
+        use crate::model::{CompileOptions, LinkFile, Lowered};
+        let mut pack = Pack::from_json(
+            r#"{"schemaVersion":2,"id":"basis","title":"Basis","startNodeId":"s","nodes":[{"id":"s","label":"Start"},{"id":"t","label":"End","kind":"terminal","payoff":0}],"edges":[{"id":"e0","from":"s","to":"t","label":"0","actor":"examiner"},{"id":"e1","from":"s","to":"t","label":"1","actor":"examiner"},{"id":"e2","from":"s","to":"t","label":"2","actor":"examiner"},{"id":"e3","from":"s","to":"t","label":"3","actor":"examiner"},{"id":"e4","from":"s","to":"t","label":"4","actor":"examiner"},{"id":"e5","from":"s","to":"t","label":"5","actor":"examiner"}]}"#,
+        )
+        .unwrap();
+        let bases = [
+            Basis::Hole,
+            Basis::Placeholder,
+            Basis::Estimate,
+            Basis::Expert,
+            Basis::Calibrated,
+            Basis::Sourced,
+        ];
+        pack.lowered = Some(
+            Lowered::new(vec![], "2026-01-01".into(), None, vec![]).with_basis(
+                bases
+                    .iter()
+                    .enumerate()
+                    .map(|(index, basis)| BasisLabel {
+                        pointer: format!("/edges/{index}/probability"),
+                        basis: *basis,
+                        source: Some(format!("source-{index}")),
+                        vintage: Some("2026-01-01".into()),
+                    })
+                    .collect(),
+            ),
+        );
+        let graph =
+            Graph::compile(&[pack], &LinkFile::default(), &CompileOptions::default()).unwrap();
+        for (index, basis) in bases.iter().enumerate() {
+            let edge = graph.edge(&format!("basis::e{index}")).unwrap();
+            let (pointer, label) = provenance(&graph, edge, "probability");
+            assert_eq!(pointer, format!("/edges/{index}/probability"));
+            assert_eq!(label.basis, *basis);
+            let expected_source = format!("source-{index}");
+            assert_eq!(label.source.as_deref(), Some(expected_source.as_str()));
+            assert_eq!(label.vintage.as_deref(), Some("2026-01-01"));
+        }
     }
 }

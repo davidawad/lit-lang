@@ -11,6 +11,7 @@
 mod support;
 
 use serde_json::Value;
+use std::collections::BTreeMap;
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 use support::{copy_dir, litigate, litigate_in, repo, scratch, Run};
@@ -272,11 +273,39 @@ fn the_shared_clock_library_is_lit_core_lowered_and_sync_builds_under_dev() {
     // the default-profile sync build above is the contract this test covers.
     let (strict, _) = build("ruling-build-strict", &["--profile", "strict"]);
     assert_eq!(strict.code, 2, "{}", strict.stdout);
-    assert!(
-        !errors(&strict).is_empty() && errors(&strict).iter().all(|(code, _)| code == "L5002"),
-        "{:#?}",
-        errors(&strict)
-    );
+    let strict_errors = errors(&strict);
+    if strict_errors.is_empty() || strict_errors.iter().any(|(code, _)| code != "L5002") {
+        let mut counts: BTreeMap<&str, (usize, String)> = BTreeMap::new();
+        for diagnostic in strict.json["diagnostics"].as_array().unwrap() {
+            if diagnostic["severity"] != "error" {
+                continue;
+            }
+            let code = diagnostic["code"].as_str().unwrap();
+            let entry = counts.entry(code).or_insert_with(|| {
+                let span = &diagnostic["span"];
+                let location = format!(
+                    "{}:{}:{}",
+                    span["file"].as_str().unwrap_or("?"),
+                    span["line"],
+                    span["col"]
+                );
+                (0, location)
+            });
+            entry.0 += 1;
+        }
+        let summary = counts
+            .iter()
+            .map(|(code, (count, first))| {
+                if *code == "L5002" {
+                    format!("{code}: {count}")
+                } else {
+                    format!("{code}: {count}, first at {first}")
+                }
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+        panic!("strict build may fail only on authored period holes (L5002):\n{summary}");
+    }
 }
 
 /// `(from, to, known_at)` of each version `litigate where` reports for `id`.

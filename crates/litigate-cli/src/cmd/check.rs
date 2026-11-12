@@ -5,7 +5,9 @@ use crate::out::{Failure, Outcome, Report};
 use crate::queries::{case_check, package_verdict, Build};
 use crate::verdict::Verdict;
 use crate::ws::{self, Session};
-use litigate_base::{Diagnostic, DiagnosticCode, Note, Profile, Severity};
+use litigate_base::{
+    Applicability, Diagnostic, DiagnosticCode, FileId, Fix, Note, Profile, Severity, Span,
+};
 use litigate_lower::Options;
 use litigate_lower::{EngineClock, Lowerer};
 use litigate_sema::change::world::{check_world, WorldCheck};
@@ -164,6 +166,7 @@ pub fn check_session_with(
     if profile == Profile::Strict {
         dependency_holes(&session, &mut diagnostics);
     }
+    source_pin_diagnostics(&session, &mut diagnostics);
     super::vendor::retarget(&session.packages, &mut diagnostics);
     let parts: Vec<&[Finding]> = verdicts
         .iter()
@@ -181,6 +184,140 @@ pub fn check_session_with(
         profile,
         complete,
     }
+}
+
+/// Check every pinned vendored path against the bytes loaded from disk and
+/// the corpus this binary will use. Hashes are memoized by path for this run.
+fn source_pin_diagnostics(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
+    use std::collections::BTreeMap;
+
+    let embedded = litigate_engine::cite::SourceCorpus::embedded_ref();
+    let override_active = std::env::var_os("LITGRAPH_SOURCES").is_some();
+    let mut disk_hashes: BTreeMap<String, Option<String>> = BTreeMap::new();
+    let mut affected_paths = BTreeSet::new();
+    for loaded in &session.packages {
+        let Some(package) = loaded.check.package.as_ref() else {
+            continue;
+        };
+        let input = loaded.input;
+        for binding in &package.manifest.sources {
+            let (Some(path), Some(pinned)) =
+                (binding.path.as_deref(), binding.path_sha256.as_deref())
+            else {
+                continue;
+            };
+            if !path.starts_with("sources/") {
+                continue;
+            }
+            let actual = disk_hashes
+                .entry(path.to_owned())
+                .or_insert_with(|| input.texts(&session.db).get(path).cloned().flatten())
+                .clone();
+            let Some(actual) = actual else { continue };
+            let embedded_hash = embedded.digest(path).map(str::to_owned);
+            let stale_pin = pinned != actual;
+            let skew = !override_active && embedded_hash.as_deref() != Some(actual.as_str());
+            if !stale_pin && !skew {
+                continue;
+            }
+            affected_paths.insert(path.to_owned());
+            let manifest_path = input.manifest_path(&session.db);
+            let manifest_text = input.manifest_text(&session.db);
+            let Some((span, pin_span)) =
+                source_pin_spans(&manifest_path, manifest_text, &binding.id, pinned)
+            else {
+                continue;
+            };
+            let skew_text = if skew {
+                format!(
+                    "; embedded corpus has {} ({}), and that is what cite checks use; rebuild `litigate` from this tree or set `LITGRAPH_SOURCES` to this tree's `sources/`",
+                    embedded_hash.as_deref().unwrap_or("no file"),
+                    if embedded_hash.is_some() { "sha256" } else { "no matching path" }
+                )
+            } else {
+                String::new()
+            };
+            let message = if stale_pin {
+                format!(
+                    "package `{}` source `{}` path `{path}` has path_sha256 {pinned}, but the file on disk hashes to {actual}{skew_text}",
+                    package.manifest.name, binding.id
+                )
+            } else {
+                format!(
+                    "package `{}` source `{}` path `{path}` matches path_sha256 {pinned} on disk, but the embedded corpus has {}{skew_text}",
+                    package.manifest.name,
+                    binding.id,
+                    embedded_hash.as_deref().unwrap_or("no matching file")
+                )
+            };
+            let mut diagnostic = Diagnostic::error(DiagnosticCode::UnboundCite, span, message);
+            if stale_pin {
+                diagnostic.fixes.push(Fix::single(
+                    pin_span,
+                    actual,
+                    Applicability::MachineApplicable,
+                ));
+            }
+            diagnostics.push(diagnostic);
+        }
+    }
+    // One source-level diagnostic explains a bad pin or binary/tree skew;
+    // per-citation L1010s for the same path add no information.
+    diagnostics.retain(|diagnostic| {
+        diagnostic.code != DiagnosticCode::UnboundCite
+            || diagnostic.message.starts_with("package `")
+            || !affected_paths
+                .iter()
+                .any(|path| diagnostic.message.contains(path))
+    });
+}
+
+/// Locate a source binding's `path_sha256` token in its manifest. The parser
+/// already validates this TOML; this only supplies a stable edit range.
+fn source_pin_spans(
+    manifest_path: &str,
+    manifest: &str,
+    source_id: &str,
+    pinned: &str,
+) -> Option<(Span, Span)> {
+    let header = format!("[sources.{source_id}]");
+    let start = manifest.find(&header)?;
+    let tail = &manifest[start..];
+    let pin_at = tail.find(pinned)? + start;
+    let line_start = manifest[..pin_at].rfind('\n').map_or(0, |i| i + 1);
+    let line_end = manifest[pin_at..]
+        .find('\n')
+        .map_or(manifest.len(), |i| pin_at + i);
+    let line = u32::try_from(
+        manifest[..line_start]
+            .bytes()
+            .filter(|b| *b == b'\n')
+            .count(),
+    )
+    .ok()?
+    .checked_add(1)?;
+    let col = u32::try_from(manifest[line_start..pin_at].chars().count())
+        .ok()?
+        .checked_add(1)?;
+    let end_col = col.checked_add(u32::try_from(pinned.chars().count()).ok()?)?;
+    let line_end_col = u32::try_from(manifest[line_start..line_end].chars().count())
+        .ok()?
+        .checked_add(1)?;
+    let line_span = Span {
+        file: FileId(manifest_path.to_owned()),
+        line,
+        col: 1,
+        end_line: line,
+        end_col: line_end_col,
+    };
+    let pin_span = Span {
+        file: FileId(manifest_path.to_owned()),
+        line,
+        col,
+        end_line: line,
+        end_col,
+    };
+    Some((line_span, pin_span))
 }
 
 /// Keep strict-profile holes in dependency packages fatal only when a

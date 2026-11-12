@@ -107,6 +107,16 @@ pub fn load_package_in(
     repo_root: &Path,
     dir: &Path,
 ) -> io::Result<LoadedPackage> {
+    load_package_with_digests(src, repo_root, dir, &mut BTreeMap::new())
+}
+
+/// Loads one package while sharing L0 digests with the rest of a tree load.
+fn load_package_with_digests(
+    src: &dyn Source,
+    repo_root: &Path,
+    dir: &Path,
+    digests: &mut BTreeMap<String, Option<String>>,
+) -> io::Result<LoadedPackage> {
     let manifest = read_lossy(src, &dir.join("Lit.toml"))?;
     let lock_path = dir.join("Lit.lock");
     let lock = if src.exists(&lock_path) {
@@ -123,11 +133,12 @@ pub fn load_package_in(
         .into_iter()
         .filter_map(|s| s.path.filter(|p| is_l0(p)))
         .map(|path| {
-            let digest = src
-                .read(&repo_root.join(&path))
-                .ok()
-                .map(|bytes| super::lock::hex(&Sha256::digest(bytes)));
-            (path, digest)
+            let digest = digests.entry(path.clone()).or_insert_with(|| {
+                src.read(&repo_root.join(&path))
+                    .ok()
+                    .map(|bytes| super::lock::hex(&Sha256::digest(bytes)))
+            });
+            (path, digest.clone())
         })
         .collect();
     Ok(LoadedPackage {
@@ -168,6 +179,7 @@ pub fn load_tree_in(
     let mut queue: Vec<PathBuf> = roots.to_vec();
     queue.extend(stdlib.map(Path::to_path_buf));
     let mut out = Vec::new();
+    let mut digests = BTreeMap::new();
     let mut i = 0;
     while let Some(dir) = queue.get(i).cloned() {
         i += 1;
@@ -175,7 +187,7 @@ pub fn load_tree_in(
         if !seen.insert(key) || !src.is_file(&dir.join("Lit.toml")) {
             continue;
         }
-        let pkg = load_package_in(src, repo_root, &dir)?;
+        let pkg = load_package_with_digests(src, repo_root, &dir, &mut digests)?;
         if let Ok(parsed) = parse_manifest(&pkg.manifest) {
             queue.extend(parsed.dependency_paths.values().map(|p| dir.join(p)));
         }

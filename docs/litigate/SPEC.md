@@ -3337,7 +3337,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L1007 | stale lock | L4004 | missing stake |
 | L1008 | invalid start | L4005 | invalid party/perspective |
 | L1009 | undeclared actor | L4006 | invalid belief |
-| L1010 | unbound cite | L4007 | invalid analysis |
+| L1010 | unbound cite or stale vendored `path_sha256` pin / binary corpus skew | L4007 | invalid analysis |
 | L1011 | unresolved dependencies | | |
 | L1012 | incompatible release | | |
 | L1013 | invalid world | | |
@@ -3795,7 +3795,7 @@ gets one row per condition when the conditions classify differently.
 | C14 | L1007 missing or stale `Lit.lock` (§4.2) | sema, cli | c | Compares SHA-256 digests of files on disk. |
 | C15 | L1008 not exactly one `start` per package; case start invalid (§4.3) | sema | c | A count over every module of the package; no single declaration owns it. Becomes (a) only if `start` moves into `Lit.toml` or the `package` declaration (a syntax change, out of scope). |
 | C16 | L1009 actor not in `[package.roles]` (§4.3) | sema | a | `Role` is a closed enum generated from `[package.roles]` (plus `either`). |
-| C17 | L1010 cite unbound (§4.3, §7) | verify | c | Needs the L0 file to locate the pinpoint heading (O2). The prefix-binding half alone is (b) finite-set membership over `cite_prefixes`. |
+| C17 | L1010 cite unbound, stale vendored `path_sha256`, or binary/tree source skew (§4.3, §7) | verify, cli | c | Cite resolution needs the L0 file to locate the pinpoint heading (O2); disk pin verification is one SHA-256 per path, with an edit to the manifest hash. |
 | C18 | L2001 type mismatch (§6) | sema, lower, verify | a | Nominal typing. |
 | C19 | L2001 deadline direction: versions disagree; `within d` with backward `d` (§5.5) | sema | a | Phantom direction index `Deadline<Fwd\|Bwd>`; a declaration family has one signature; `within : Deadline<Fwd>`. |
 | C20 | L2002 operation not in the §6 table, IO, float, cast, overloading | sema | a | Closed operator signatures. |

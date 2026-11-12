@@ -80,7 +80,7 @@ registry! {
     StaleLock = "L1007" => "Lit.lock is missing or does not match the resolved package graph",
     InvalidStart = "L1008" => "A package must declare exactly one start node",
     UndeclaredActor = "L1009" => "An actor is not declared in the package's roles table",
-    UnboundCite = "L1010" => "A citation does not resolve through a declared source binding",
+    UnboundCite = "L1010" => "A citation or vendored source pin does not resolve against its declared binding and pinned text",
     UnresolvedDependencies = "L1011" => "No choice of loaded package versions satisfies every dependency requirement",
     IncompatibleRelease = "L1012" => "A release's version bump is smaller than its computed compatibility class requires",
     InvalidWorld = "L1013" => "A world file is malformed, names a layer that is not loaded, or has a location its forum family does not have",

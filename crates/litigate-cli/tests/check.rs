@@ -4,7 +4,7 @@
 #![allow(clippy::unwrap_used)]
 mod support;
 
-use support::{codes, litigate, scratch};
+use support::{codes, copy_dir, litigate, scratch};
 
 fn unrelated_frcp_holes(diagnostics: &[serde_json::Value]) -> usize {
     let errors: Vec<_> = diagnostics
@@ -68,6 +68,72 @@ fn strict_check_accepts_the_hole_free_example() {
         "{found:?}"
     );
     insta::assert_json_snapshot!("check_strict", run.json);
+}
+
+#[test]
+fn stale_source_pins_fail_in_both_profiles_and_offer_the_disk_hash() {
+    use std::path::Path;
+    let dir = scratch("stale-source-pin");
+    copy_dir(
+        &Path::new(env!("CARGO_MANIFEST_DIR")).join("../../lit/examples"),
+        &dir.join("lit/examples"),
+    );
+    #[cfg(unix)]
+    std::os::unix::fs::symlink(support::repo().join("sources"), dir.join("sources")).unwrap();
+    #[cfg(not(unix))]
+    copy_dir(&support::repo().join("sources"), &dir.join("sources"));
+    let manifest = dir.join("lit/examples/Lit.toml");
+    let text = std::fs::read_to_string(&manifest).unwrap();
+    let text = format!(
+        "{text}\n[sources.pin-fixture]\ntitle = \"pin fixture\"\npath = \"sources/ga-state-civil/ga-2026-state-holidays.txt\"\npath_sha256 = \"{}\"\n",
+        "0".repeat(64)
+    );
+    std::fs::write(&manifest, text).unwrap();
+    for profile in ["dev", "strict"] {
+        let args = if profile == "dev" {
+            vec!["check", "lit/examples"]
+        } else {
+            vec!["check", "--profile", "strict", "lit/examples"]
+        };
+        let run = support::litigate_in(&dir, &args);
+        assert_eq!(run.code, 2, "{profile}: {}", run.stdout);
+        assert!(
+            support::codes(&run.json)
+                .iter()
+                .any(|(code, severity)| code == "L1010" && severity == "error"),
+            "{profile}: {}",
+            run.stdout
+        );
+    }
+    let fixed = support::litigate_in(
+        &dir,
+        &["fix", "lit/examples", "--code", "L1010", "--dry-run"],
+    );
+    assert_eq!(fixed.code, 0, "{}", fixed.stdout);
+    let expected = "4d365d905e2c0a5e96b166d2311048ed90b770fe68c3a9f6aea7ba393f55e41b";
+    assert!(fixed.stdout.contains(expected), "{}", fixed.stdout);
+    let applied = support::litigate_in(&dir, &["fix", "lit/examples", "--code", "L1010"]);
+    assert_eq!(applied.code, 0, "{}", applied.stdout);
+    assert!(std::fs::read_to_string(&manifest)
+        .unwrap()
+        .contains(expected));
+    let lock = support::litigate_in(&dir, &["lock", "lit/examples"]);
+    assert_eq!(lock.code, 0, "{}", lock.stdout);
+    for profile in ["dev", "strict"] {
+        let args = if profile == "dev" {
+            vec!["check", "lit/examples"]
+        } else {
+            vec!["check", "--profile", "strict", "lit/examples"]
+        };
+        let run = support::litigate_in(&dir, &args);
+        assert!(
+            !support::codes(&run.json)
+                .iter()
+                .any(|(code, _)| code == "L1010"),
+            "{profile}: {}",
+            run.stdout
+        );
+    }
 }
 
 #[test]

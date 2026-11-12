@@ -40,8 +40,6 @@ event RespondentMeritsBriefFiled()
 event MeritsJudgmentEntered()
 /// The order denying the petition is entered (Sup. Ct. R. 16.3).
 event CertDenied()
-/// An application or motion to extend a filing time under Rule 30.
-event ExtensionMotionFiled()
 
 /// The petition is timely when filed with the Clerk within 90 days after
 /// entry of the judgment (Sup. Ct. R. 13.1); in a civil case 28 U.S.C. §
@@ -90,11 +88,6 @@ test "Counting boundary: conditional-cross-petition-period (weekend)" cite "Sup.
 /// the docket, unless the Court or a Justice, or the Clerk under Rule
 /// 30.4, extends the time (Sup. Ct. R. 15.3).
 deadline opposition-period: 30.days after CaseDocketed() counted_by sup-ct-30 cite "Sup. Ct. R. 15.3"
-{
-  extend { by court, on ExtensionMotionFiled(), within current_due, cite "Sup. Ct. R. 15.3" }
-  extend { by justice, on ExtensionMotionFiled(), within current_due, cite "Sup. Ct. R. 15.3" }
-  extend { by clerk, on ExtensionMotionFiled(), within current_due, cite "Sup. Ct. R. 30.4" }
-}
 
 test "Counting boundary: opposition-period (weekend)" cite "Sup. Ct. R. 15.3"
 {
@@ -106,11 +99,6 @@ test "Counting boundary: opposition-period (weekend)" cite "Sup. Ct. R. 15.3"
 /// granting the writ (Sup. Ct. R. 25.1), extendable under Rule 30 (Sup.
 /// Ct. R. 25.5).
 deadline merits-brief-period: 45.days after CertGranted() counted_by sup-ct-30 cite "Sup. Ct. R. 25.1"
-{
-  extend { by court, on ExtensionMotionFiled(), within current_due, cite "Sup. Ct. R. 25.5" }
-  extend { by justice, on ExtensionMotionFiled(), within current_due, cite "Sup. Ct. R. 30.4" }
-  extend { by clerk, on ExtensionMotionFiled(), within current_due, cite "Sup. Ct. R. 30.4" }
-}
 
 test "Counting boundary: merits-brief-period (weekend)" cite "Sup. Ct. R. 25.1"
 {
@@ -121,12 +109,6 @@ test "Counting boundary: merits-brief-period (weekend)" cite "Sup. Ct. R. 25.1"
 /// The respondent's brief on the merits is due within 30 days after the
 /// petitioner's brief is filed (Sup. Ct. R. 25.2).
 deadline respondent-brief-period: 30.days after PetitionerMeritsBriefFiled() counted_by sup-ct-30 cite "Sup. Ct. R. 25.2"
-{
-  extend { by court, on ExtensionMotionFiled(), within current_due, cite "Sup. Ct. R. 25.5" }
-  extend { by justice, on ExtensionMotionFiled(), within current_due, cite "Sup. Ct. R. 30.4" }
-  extend { by clerk, on ExtensionMotionFiled(), within current_due, cite "Sup. Ct. R. 30.4" }
-}
-
 /// The petitioner's reply brief is due within 30 days after the
 /// respondent's brief is filed, and must also be received by the Clerk
 /// not later than 2 p.m. 10 days before oral argument (Sup. Ct. R. 25.3);
@@ -153,10 +135,6 @@ test "Counting boundary: argument-time-motion-period (weekend)" cite "Sup. Ct. R
 /// within 25 days after its entry, unless the Court or a Justice shortens
 /// or extends the time (Sup. Ct. R. 44.1).
 deadline rehearing-period: 25.days after MeritsJudgmentEntered() counted_by sup-ct-30 cite "Sup. Ct. R. 44.1"
-{
-  extend { by court, on ExtensionMotionFiled(), within current_due, cite "Sup. Ct. R. 44.1" }
-  extend { by justice, on ExtensionMotionFiled(), within current_due, cite "Sup. Ct. R. 44.1" }
-}
 
 test "Counting boundary: rehearing-period (weekend)" cite "Sup. Ct. R. 44.1"
 {

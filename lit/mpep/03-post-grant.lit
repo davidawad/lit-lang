@@ -248,24 +248,24 @@ chance epr-examination: "Reexam Examination → Certificate" by office discretio
 terminal claims-confirmed: "Claims Confirmed (Patent Survives)" outcome [win, confirmed] effective [2024-01-31, ..) cite "35 U.S.C. 318(b) / 328(b) / 307"
 {
   group post-grant-group
-  note "The challenge failed (denied institution, upheld on the merits, or settled before a final written decision): the claims stand as granted. The patent asset is preserved at (roughly) its issued value. Best terminal in this region for the owner. PLACEHOLDER PAYOFF: $1,000,000, override per matter. Per this terminal's own note, the patent asset is preserved at roughly its issued value."
+  note "The challenge failed (denied institution, upheld on the merits, or settled before a final written decision): the claims stand as granted. The patent asset is preserved at (roughly) its issued value. Best terminal in this region for the owner.  $1,000,000, override per matter. Per this terminal's own note, the patent asset is preserved at roughly its issued value."
   valence good
-  payoff 1_000_000.usd
+  payoff 1_000_000.usd basis placeholder
 }
 
 terminal claims-amended: "Claims Amended / Narrowed" outcome [mixed, amended] effective [2024-01-31, ..) cite "35 U.S.C. 318(c) / 307(b)"
 {
   group post-grant-group
-  note "Substitute or amended claims survive (via a motion to amend or a reexam certificate). The patent lives on but narrower, and amended claims are subject to INTERVENING RIGHTS (35 U.S.C. 318(c) for AIA trials; 307(b) for reexam) — pre-amendment infringers may be shielded. A partial, discounted win. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's partial/mixed-result tier -- per this terminal's own note, 'a partial, discounted win.'"
+  note "Substitute or amended claims survive (via a motion to amend or a reexam certificate). The patent lives on but narrower, and amended claims are subject to INTERVENING RIGHTS (35 U.S.C. 318(c) for AIA trials; 307(b) for reexam) — pre-amendment infringers may be shielded. A partial, discounted win.  $400,000, override per matter, matching this project's partial/mixed-result tier -- per this terminal's own note, 'a partial, discounted win.'"
   valence caution
-  payoff 400_000.usd
+  payoff 400_000.usd basis placeholder
 }
 
 terminal claims-cancelled: "Claims Cancelled (Patent Lost)" outcome [loss, cancelled] effective [2024-01-31, ..) cite "35 U.S.C. 318(b) / 328(b) / 307"
 {
   group post-grant-group
-  note "A final written decision or reexam certificate CANCELS the challenged claims — the patent's asserted claims are gone, the asset largely destroyed after the litigation spend. The worst terminal in this region; the adversarial mirror image of issuance. PLACEHOLDER PAYOFF: $0, override per matter."
+  note "A final written decision or reexam certificate CANCELS the challenged claims — the patent's asserted claims are gone, the asset largely destroyed after the litigation spend. The worst terminal in this region; the adversarial mirror image of issuance.  $0, override per matter."
   valence bad
   court_listener_url "https://www.courtlistener.com/opinion/4492196/oil-states-energy-services-llc-v-greenes-energy-group-llc/"
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }

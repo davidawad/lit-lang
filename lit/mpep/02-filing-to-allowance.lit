@@ -703,9 +703,9 @@ state issue-fee-paid: "Issue Fee Paid" by office effective [2024-01-31, ..) cite
 terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effective [2024-01-31, 2025-01-19) cite "35 U.S.C. 151; MPEP 1309"
 {
   group allowance-group
-  note "Patent granted. 20-year term from nonprovisional filing date (35 U.S.C. 154(a)(2)), subject to patent term adjustment (PTA) for USPTO delays and patent term extension (PTE) for regulatory review under 35 U.S.C. 156. PLACEHOLDER PAYOFF: $1,000,000, override per matter, matching this project's full-win stake convention."
+  note "Patent granted. 20-year term from nonprovisional filing date (35 U.S.C. 154(a)(2)), subject to patent term adjustment (PTA) for USPTO delays and patent term extension (PTE) for regulatory review under 35 U.S.C. 156.  $1,000,000, override per matter, matching this project's full-win stake convention."
   valence good
-  payoff 1_000_000.usd
+  payoff 1_000_000.usd basis placeholder
   "Maintenance fees become due (3.5 / 7.5 / 11.5 years)" -> maintenance-due {
     authority cite "37 CFR 1.362"
     effort 0.2.hours
@@ -742,9 +742,9 @@ terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effec
 terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effective [2025-01-19, ..) cite "35 U.S.C. 151; MPEP 1309"
 {
   group allowance-group
-  note "Patent granted. 20-year term from nonprovisional filing date (35 U.S.C. 154(a)(2)), subject to patent term adjustment (PTA) for USPTO delays and patent term extension (PTE) for regulatory review under 35 U.S.C. 156. PLACEHOLDER PAYOFF: $1,000,000, override per matter, matching this project's full-win stake convention."
+  note "Patent granted. 20-year term from nonprovisional filing date (35 U.S.C. 154(a)(2)), subject to patent term adjustment (PTA) for USPTO delays and patent term extension (PTE) for regulatory review under 35 U.S.C. 156.  $1,000,000, override per matter, matching this project's full-win stake convention."
   valence good
-  payoff 1_000_000.usd
+  payoff 1_000_000.usd basis placeholder
   "Maintenance fees become due (3.5 / 7.5 / 11.5 years)" -> maintenance-due {
     authority cite "37 CFR 1.362"
     effort 0.2.hours
@@ -817,9 +817,9 @@ state maintenance-due: "Maintenance Fees Required" by applicant effective [2025-
 terminal abandoned-no-reply: "ABANDONED — Failure to Reply" by applicant outcome [loss, abandoned, waiver-trap] effective [2024-01-31, 2025-01-19) cite "35 U.S.C. 133; 37 CFR 1.135"
 {
   group examination-group
-  note "PERMADEATH. Application abandoned for failure to reply within the 6-month statutory ceiling. The 6-month period under 35 U.S.C. 133 cannot be extended for any reason. Revival requires a petition under 37 CFR 1.137 (unintentional delay standard). Revival is not guaranteed. PLACEHOLDER PAYOFF: $0, override per matter."
+  note "PERMADEATH. Application abandoned for failure to reply within the 6-month statutory ceiling. The 6-month period under 35 U.S.C. 133 cannot be extended for any reason. Revival requires a petition under 37 CFR 1.137 (unintentional delay standard). Revival is not guaranteed.  $0, override per matter."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   "Petition to revive — unintentional delay (37 CFR 1.137)" -> applicant-response-window {
     authority cite "37 CFR 1.137; 37 CFR 1.17(m); MPEP 711.03(c)"
     effort 4.hours
@@ -831,9 +831,9 @@ terminal abandoned-no-reply: "ABANDONED — Failure to Reply" by applicant outco
 terminal abandoned-no-reply: "ABANDONED — Failure to Reply" by applicant outcome [loss, abandoned, waiver-trap] effective [2025-01-19, 2026-08-13) cite "35 U.S.C. 133; 37 CFR 1.135"
 {
   group examination-group
-  note "PERMADEATH. Application abandoned for failure to reply within the 6-month statutory ceiling. The 6-month period under 35 U.S.C. 133 cannot be extended for any reason. Revival requires a petition under 37 CFR 1.137 (unintentional delay standard). Revival is not guaranteed. PLACEHOLDER PAYOFF: $0, override per matter."
+  note "PERMADEATH. Application abandoned for failure to reply within the 6-month statutory ceiling. The 6-month period under 35 U.S.C. 133 cannot be extended for any reason. Revival requires a petition under 37 CFR 1.137 (unintentional delay standard). Revival is not guaranteed.  $0, override per matter."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   "Petition to revive — unintentional delay (37 CFR 1.137)" -> applicant-response-window {
     authority cite "37 CFR 1.137; 37 CFR (2025) 1.17(m); MPEP 711.03(c)"
     effort 4.hours
@@ -845,9 +845,9 @@ terminal abandoned-no-reply: "ABANDONED — Failure to Reply" by applicant outco
 terminal abandoned-no-reply: "ABANDONED — Failure to Reply" by applicant outcome [loss, abandoned, waiver-trap] effective [2026-08-13, ..) cite "35 U.S.C. 133; 37 CFR 1.135"
 {
   group examination-group
-  note "PERMADEATH. Application abandoned for failure to reply within the 6-month statutory ceiling. The 6-month period under 35 U.S.C. 133 cannot be extended for any reason. Revival requires a petition under 37 CFR 1.137 (unintentional delay standard). Revival is not guaranteed. PLACEHOLDER PAYOFF: $0, override per matter."
+  note "PERMADEATH. Application abandoned for failure to reply within the 6-month statutory ceiling. The 6-month period under 35 U.S.C. 133 cannot be extended for any reason. Revival requires a petition under 37 CFR 1.137 (unintentional delay standard). Revival is not guaranteed.  $0, override per matter."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   "Petition to revive — unintentional delay (37 CFR 1.137)" -> applicant-response-window {
     authority cite "37 CFR 1.137; 37 CFR (2026) 1.17(m); MPEP 711.03(c)"
     effort 4.hours
@@ -859,9 +859,9 @@ terminal abandoned-no-reply: "ABANDONED — Failure to Reply" by applicant outco
 terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant outcome [loss, abandoned, waiver-trap] effective [2024-01-31, 2025-01-19) cite "37 CFR 1.311; 37 CFR 1.135"
 {
   group allowance-group
-  note "PERMADEATH. Application abandoned for failure to pay the issue fee within the extended period. Revival available under 37 CFR 1.137 for unintentional delay. Competitor may have relied on abandonment — revival does not undo intervening rights. PLACEHOLDER PAYOFF: $0, override per matter."
+  note "PERMADEATH. Application abandoned for failure to pay the issue fee within the extended period. Revival available under 37 CFR 1.137 for unintentional delay. Competitor may have relied on abandonment — revival does not undo intervening rights.  $0, override per matter."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   "Petition to revive — pay issue fee late (37 CFR 1.137)" -> noa-received {
     authority cite "37 CFR 1.137; 37 CFR 1.17(m); MPEP 711.03(c)"
     effort 4.hours
@@ -873,9 +873,9 @@ terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant ou
 terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant outcome [loss, abandoned, waiver-trap] effective [2025-01-19, 2026-08-13) cite "37 CFR 1.311; 37 CFR 1.135"
 {
   group allowance-group
-  note "PERMADEATH. Application abandoned for failure to pay the issue fee within the extended period. Revival available under 37 CFR 1.137 for unintentional delay. Competitor may have relied on abandonment — revival does not undo intervening rights. PLACEHOLDER PAYOFF: $0, override per matter."
+  note "PERMADEATH. Application abandoned for failure to pay the issue fee within the extended period. Revival available under 37 CFR 1.137 for unintentional delay. Competitor may have relied on abandonment — revival does not undo intervening rights.  $0, override per matter."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   "Petition to revive — pay issue fee late (37 CFR 1.137)" -> noa-received {
     authority cite "37 CFR 1.137; 37 CFR (2025) 1.17(m); MPEP 711.03(c)"
     effort 4.hours
@@ -887,9 +887,9 @@ terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant ou
 terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant outcome [loss, abandoned, waiver-trap] effective [2026-08-13, ..) cite "37 CFR 1.311; 37 CFR 1.135"
 {
   group allowance-group
-  note "PERMADEATH. Application abandoned for failure to pay the issue fee within the extended period. Revival available under 37 CFR 1.137 for unintentional delay. Competitor may have relied on abandonment — revival does not undo intervening rights. PLACEHOLDER PAYOFF: $0, override per matter."
+  note "PERMADEATH. Application abandoned for failure to pay the issue fee within the extended period. Revival available under 37 CFR 1.137 for unintentional delay. Competitor may have relied on abandonment — revival does not undo intervening rights.  $0, override per matter."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
   "Petition to revive — pay issue fee late (37 CFR 1.137)" -> noa-received {
     authority cite "37 CFR 1.137; 37 CFR (2026) 1.17(m); MPEP 711.03(c)"
     effort 4.hours
@@ -901,7 +901,7 @@ terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant ou
 terminal patent-expired: "Patent Expired" outcome [loss, expired, waiver-trap] effective [2024-01-31, ..) cite "37 CFR 1.362(g)"
 {
   group allowance-group
-  note "Patent expired for failure to pay maintenance fees after the 6-month grace period. Reinstatement is not available for expired patents (unlike abandoned applications). The invention enters the public domain. PLACEHOLDER PAYOFF: $0, override per matter. Premature expiration for a missed maintenance-fee payment, not the natural end of a full term."
+  note "Patent expired for failure to pay maintenance fees after the 6-month grace period. Reinstatement is not available for expired patents (unlike abandoned applications). The invention enters the public domain.  $0, override per matter. Premature expiration for a missed maintenance-fee payment, not the natural end of a full term."
   valence bad
-  payoff 0.usd
+  payoff 0.usd basis placeholder
 }

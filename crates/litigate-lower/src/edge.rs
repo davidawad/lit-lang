@@ -96,8 +96,9 @@ pub(crate) fn edge(cx: &EdgeCx<'_, '_>, sink: &mut Sink, from: String, e: &hir::
 pub(crate) fn number_label(
     pointer: &str,
     value: &hir::NumberProvenance,
+    default: Option<&hir::Basis>,
 ) -> Option<litigate_engine::model::BasisLabel> {
-    let mut label = value.basis.as_ref().map_or_else(
+    let mut label = value.basis.as_ref().or(default).map_or_else(
         || litigate_engine::model::BasisLabel {
             pointer: pointer.to_owned(),
             basis: litigate_engine::model::Basis::Estimate,
@@ -406,9 +407,25 @@ mod tests {
             vintage: Some("2026-01-01".into()),
         };
         assert_eq!(
-            serde_json::to_value(number_label("/edges/0/probability", &value).unwrap()).unwrap(),
+            serde_json::to_value(number_label("/edges/0/probability", &value, None).unwrap())
+                .unwrap(),
             serde_json::json!({"pointer":"/edges/0/probability","basis":"sourced","source":"FRCP 1","vintage":"2026-01-01"})
         );
+    }
+
+    #[test]
+    fn vintage_only_suffix_uses_the_objects_basis() {
+        let value = hir::NumberProvenance {
+            basis: None,
+            vintage: Some("2026-01-01".into()),
+        };
+        let default = hir::Basis::Sourced {
+            cite: "FRCP 1".into(),
+        };
+        let label = number_label("/edges/0/probability", &value, Some(&default)).unwrap();
+        assert_eq!(label.basis, litigate_engine::model::Basis::Sourced);
+        assert_eq!(label.source.as_deref(), Some("FRCP 1"));
+        assert_eq!(label.vintage.as_deref(), Some("2026-01-01"));
     }
 
     #[test]
@@ -453,7 +470,7 @@ mod tests {
                 basis: Some(basis),
                 vintage: Some("2026-01-01".into()),
             };
-            let label = number_label("/edges/0/probability", &value).unwrap();
+            let label = number_label("/edges/0/probability", &value, None).unwrap();
             assert_eq!(label.pointer, "/edges/0/probability");
             assert_eq!(label.basis, expected);
             assert_eq!(label.vintage.as_deref(), Some("2026-01-01"));

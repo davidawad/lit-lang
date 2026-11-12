@@ -110,9 +110,9 @@ fn number_basis(links: &[(RawEdge, &hir::Edge)]) -> Vec<BasisLabel> {
             ("cost", edge.cost_provenance.as_ref()),
             ("duration", edge.duration_provenance.as_ref()),
         ] {
-            if let Some(label) =
-                provenance.and_then(|p| edge::number_label(&format!("/links/{i}/{field}"), p))
-            {
+            if let Some(label) = provenance.and_then(|p| {
+                edge::number_label(&format!("/links/{i}/{field}"), p, edge.basis.as_ref())
+            }) {
                 labels.push(label);
             }
         }

@@ -205,6 +205,19 @@ impl Cx<'_, '_> {
             .filter_map(|f| Some((kind(f)?, f)))
             .collect();
         let fields = self.once(&written);
+        for field in &written {
+            for (atom, range) in &field.values {
+                if let Atom::NumericProvenance(provenance) = atom {
+                    if provenance.basis.is_some() || provenance.vintage.is_some() {
+                        self.report(Report::new(
+                            C::InvalidField,
+                            *range,
+                            "`basis` is not allowed in a `patch`: the base edge's numbers keep their own basis",
+                        ));
+                    }
+                }
+            }
+        }
         for key in ["event", "replaces", "spawn", "joins", "anytime"] {
             if let Some(f) = fields.get(key) {
                 self.not_allowed(f, "in a `patch`: it writes the base edge's other fields");

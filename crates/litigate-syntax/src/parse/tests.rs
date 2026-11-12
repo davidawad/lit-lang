@@ -79,12 +79,23 @@ fn numeric_provenance_parses_for_probability_payoff_duration_cost_and_effort() {
     ));
     assert!(parsed.is_ok(), "{:?}", parsed.errors());
     let bad = parse_lit("module m\nterminal t: \"t\" { payoff 1.usd basis mystery }\n");
-    assert!(!bad.is_ok());
-    assert!(bad.errors().iter().any(|e| e.message.contains("expected")));
+    assert!(
+        bad.is_ok(),
+        "basis expressions are checked semantically: {:?}",
+        bad.errors()
+    );
     let reversed = parse_lit(
         "module m\nterminal t: \"t\" { payoff 1.usd vintage 2026-01-01 basis estimate }\n",
     );
     assert!(!reversed.is_ok());
+}
+
+#[test]
+fn matter_numbers_do_not_accept_lit_provenance_suffixes() {
+    let matter = parse_case(
+        "case m\nforum frcp\nas_of 2026-01-01\nsummary \"s\"\nstakes { outcome win: 1.usd basis estimate vintage 2026-01-01 }\n",
+    );
+    assert!(!matter.is_ok());
 }
 
 #[test]

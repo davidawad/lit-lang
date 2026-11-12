@@ -19,3 +19,30 @@ fn a_malformed_basis_says_what_a_basis_is() {
     );
     insta::assert_debug_snapshot!(out);
 }
+
+#[test]
+fn numeric_suffix_uses_object_basis_semantics_and_requires_vintage_for_estimate() {
+    let invalid = check_body("terminal t: \"T\" { payoff 1.usd basis mystery }\n");
+    assert!(
+        invalid.iter().any(|line| line.contains("L2001")),
+        "{invalid:#?}"
+    );
+
+    let missing_vintage = check_body("terminal t: \"T\" { payoff 1.usd basis estimate }\n");
+    assert!(
+        missing_vintage.iter().any(|line| line.contains("L9012")),
+        "{missing_vintage:#?}"
+    );
+}
+
+#[test]
+fn a_number_suffix_uses_the_same_calibration_scope_diagnostic_as_object_basis() {
+    let object = check_body("terminal t: \"T\" { basis calibrated(missing) payoff 1.usd }\n");
+    let suffix = check_body(
+        "terminal t: \"T\" { payoff 1.usd basis calibrated(missing) vintage 2026-01-01 }\n",
+    );
+    let object = object.iter().find(|line| line.contains("L9012")).unwrap();
+    let suffix = suffix.iter().find(|line| line.contains("L9012")).unwrap();
+    assert!(object.contains("basis names no calibration set `missing` in scope"));
+    assert!(suffix.contains("basis names no calibration set `missing` in scope"));
+}

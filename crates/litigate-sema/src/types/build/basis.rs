@@ -1,22 +1,28 @@
 //! `basis` on a node or edge (design review 2026-10-23 §2.10): where its
 //! numbers come from, one of `sourced("cite")`, `calibrated("dataset",
-//! date)`, `expert("name")` or `estimate`. The cite of `sourced` resolves
+//! date)`, `calibrated(set-id)`, `expert("name")`, `estimate` or
+//! `placeholder`. The cite of `sourced` resolves
 //! like an `authority` (`cite-resolves`); a number with no `basis` is an
 //! estimate.
 use super::cx::{first_expr, Cx};
-use crate::db::parse::tree::{Expr, ExprKind, Field};
+use crate::db::parse::tree::{Atom, Expr, ExprKind, Field};
 use crate::db::span::Report;
 use crate::hir::Basis;
 use litigate_base::DiagnosticCode as C;
 
 /// The forms a `basis` takes, for the error message.
 const FORMS: &str =
-    "`estimate`, `expert(\"name\")`, `calibrated(\"dataset\", date)` or `sourced(\"cite\")`";
+    "`estimate`, `placeholder`, `expert(\"name\")`, `calibrated(\"dataset\", date)`, `calibrated(set-id)` or `sourced(\"cite\")`";
 
 impl Cx<'_, '_> {
     /// The typed `basis` field, if written (L2001 when malformed).
     pub fn basis(&mut self, f: Option<&&Field>) -> Option<Basis> {
         let x = f.and_then(|f| first_expr(f))?;
+        self.basis_expr(x)
+    }
+
+    /// Resolves either object-level or per-number basis through one path.
+    fn basis_expr(&mut self, x: &Expr) -> Option<Basis> {
         let basis = shape(x);
         if basis.is_none() {
             self.report(
@@ -47,6 +53,37 @@ impl Cx<'_, '_> {
             }
         }
         basis
+    }
+
+    /// Resolves the provenance suffix, checking its semantic completeness.
+    pub fn number_provenance(
+        &mut self,
+        f: Option<&&Field>,
+    ) -> Option<crate::hir::NumberProvenance> {
+        let provenance = f?.values.iter().find_map(|(atom, _)| match atom {
+            Atom::NumericProvenance(p) => Some(p.clone()),
+            _ => None,
+        })?;
+        let basis = provenance
+            .basis
+            .as_ref()
+            .and_then(|expr| self.basis_expr(expr));
+        if matches!(basis.as_ref(), Some(Basis::Estimate | Basis::Placeholder))
+            && provenance.vintage.is_none()
+        {
+            self.report(Report::new(
+                C::NumericProvenanceIncomplete,
+                provenance
+                    .basis
+                    .as_ref()
+                    .map_or(f?.range, |expr| expr.range),
+                "`estimate` and `placeholder` numeric bases should include `vintage <Date>`",
+            ));
+        }
+        Some(crate::hir::NumberProvenance {
+            basis,
+            vintage: provenance.vintage.map(|date| date.text),
+        })
     }
 }
 

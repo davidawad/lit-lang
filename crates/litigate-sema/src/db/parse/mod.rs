@@ -77,20 +77,12 @@ fn numeric_provenance_reports(parse: &litigate_syntax::Parse) -> Vec<Report> {
                 .collect();
             let basis_count = tokens.iter().filter(|t| t.kind() == K::KwBasis).count();
             let vintage_count = tokens.iter().filter(|t| t.kind() == K::KwVintage).count();
-            let informal_basis = tokens
-                .iter()
-                .any(|t| matches!(t.kind(), K::KwEstimate | K::KwPlaceholder));
-            let missing_vintage = informal_basis && vintage_count == 0;
             let duplicate = basis_count > 1 || vintage_count > 1;
-            (missing_vintage || duplicate).then(|| {
+            duplicate.then(|| {
                 Report::new(
                     C::NumericProvenanceIncomplete,
                     significant_range(&n),
-                    if duplicate {
-                        "numeric provenance repeats `basis` or `vintage`"
-                    } else {
-                        "`estimate` and `placeholder` numeric bases should include `vintage <Date>`"
-                    },
+                    "numeric provenance repeats `basis` or `vintage`",
                 )
             })
         })

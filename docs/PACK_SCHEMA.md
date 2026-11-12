@@ -59,7 +59,7 @@ not meaning: `litigate diff` ignores it (SPEC §8.6).
 | `knownAt` | date | corpus date versions were selected among (absent: the latest) |
 | `worldDigest` | `sha256:<hex>` | SHA-256 of the JCS text (RFC 8785) of `{"asOf", "knownAt", "pins"}` (`knownAt` omitted when absent): the identity of the world |
 | `holes` | `[{pointer,reason?}]` | every explicit `?` the source left in an emitted field: `pointer` is the JSON pointer of that field in this document (`/edges/3/probability`, `/nodes/0/cite`, `/instances/cafc@cofc-gov/stake`, `/scenario/payoffs/<terminal>`), `reason` the `?("reason")` text. The field itself is absent, or for a cite or source date holds the reason text |
-| `basis` | `[{pointer,basis,source?}]` | where numbers come from (design review 2026-10-23 §2.10), `basis` one of `sourced` < `calibrated` < `expert` < `estimate` < `hole` (best first; the join of two labels is the worse). A pack or link file labels each node or edge (`/nodes/i`, `/edges/i`, `/links/i`) whose source declares a `basis`, `source` the cite, `dataset@date` or expert; a number with no label is an `estimate`. A scenario has one label at `/scenario`: the join over every number of the packs it uses, a hole where the source wrote `?` and the probabilities of a node the matter gives a `prior` its own estimate |
+| `basis` | `[{pointer,basis,source?,vintage?}]` | where numbers come from (design review 2026-10-23 §2.10), `basis` one of `sourced` < `calibrated` < `expert` < `estimate` < `placeholder` < `hole` (best first; the join of two labels is the worse). A pack or link file labels each node, edge, or authored number (`/nodes/i`, `/edges/i`, `/links/i`, or a numeric value pointer); `source` is the cite, dataset@date, calibration set id, or expert name; `vintage` is the observation date. A number with no explicit suffix or object default is an `estimate`. A scenario has one label at `/scenario`: the join over every number of the packs it uses, a hole where the source wrote `?` and the probabilities of a node the matter gives a `prior` its own estimate |
 
 Reading a document checks the header: `lowered` needs the schema version
 above, `pins` must be sorted and unique, `worldDigest` must match its pins
@@ -648,7 +648,7 @@ generated packs.
    than silently passing; add new vendored text under `sources/` before
    citing a body of law that isn't there yet.
 2. Probabilities are optional. Where you author one, put the basis in `note`
-   (statistic + vintage, or "teaching estimate"). Unauthored is better than
+   (typed `basis` and `vintage` suffix, or "teaching estimate"). Unauthored is better than
    invented; the engine reports unauthored chance nodes.
 3. Hours are BigLaw-honest estimates for the move; `cost` is cash only.
 4. Terminals should carry `payoff` and `outcome` in v2 packs.

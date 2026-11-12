@@ -1245,20 +1245,23 @@ on the same line: `p 0.3 basis calibrated("dataset", 2026-10-26)`;
 `cost 250.usd basis sourced("FRCP 4(d)(2)")`; and
 `effort 3.hours basis expert("Jane Roe")`. A suffix never binds across a
 newline or after a comma; in those positions `basis` is the ordinary
-object-level field. Its forms are the same as `basis B`: `sourced("cite")`,
-`calibrated("dataset", date)`, `expert("name")`, and `estimate`; number
-suffixes additionally accept `placeholder` and `calibrated(set-id)`, where
-the identifier names a calibration set in scope. Unknown set ids warn L9012.
-`vintage <Date>` follows the basis. `estimate` and `placeholder` without a
-vintage, repeated basis, and repeated vintage warn L9012 in both profiles.
+object-level field. Both positions accept the same forms: `sourced("cite")`,
+`calibrated("dataset", date)`, `calibrated(set-id)`, `expert("name")`,
+`estimate`, and `placeholder`; a calibration set id must name a calibration
+set in scope. Unknown set ids warn L9012. `vintage <Date>` follows a number's
+basis. `estimate` and `placeholder` suffixes without a vintage and repeated
+suffix clauses warn L9012 in both profiles.
 
 The provenance lattice is `sourced < calibrated < expert < estimate <
 placeholder < hole`. A number's effective label is its suffix, else its
 node's or edge's `basis`, else `estimate`; explicit holes remain `hole`.
 Labels lower into `lowered.basis[]` (§8.1), with one pointer per labelled
-number, for example `/edges/0/probability` or `/nodes/0/payoff`. A number
-label uses the same `basis` and `source` members as an object label and may
-include `vintage`. Scenario labels join the effective labels of the numbers
+number, for example `/edges/0/probability` or `/nodes/0/payoff`. Each label
+has `{pointer, basis, source?, vintage?}`: `basis` is `sourced`,
+`calibrated`, `expert`, `estimate`, `placeholder`, or `hole`; `source` is
+the cite, dataset and as-of date, calibration set id, or expert name when
+present; `vintage` is the authored observation date. A number label uses
+the suffix basis, else its object's basis, else `estimate`. Scenario labels join the effective labels of the numbers
 in every pack it uses (§8.3).
 
 ### 5.2 Types, enums, events, match
@@ -2896,7 +2899,7 @@ Anything without a lowering is L6001.
 | `deadline N.unit {…}` | same, from the literal; `unit` omitted for calendar days, `"court"` for court days; business days are L6001 |
 | `duration` | `RawEdge.duration {min, mode, max}` (a single duration is `{mode}`) |
 | `valence`, `court_listener_url`, `action_id`, `note`, `tags`, `attrs`, `sets`, `clears`, `requires`, `forbids`, `spawn`, `joins` | same-named `RawEdge` fields (`spawn` and `joins` as local node ids; the engine expands the markings they reach, §5.6) |
-| node or edge `basis` | `lowered.basis[]` `{pointer, basis, source?, vintage?}`: object pointers `/nodes/i`, `/edges/i`, `/links/i`; a numeric suffix points to its value, such as `/nodes/i/payoff` or `/edges/i/probability` |
+| node or edge `basis` | `lowered.basis[]` `{pointer, basis, source?, vintage?}`: `basis` is `sourced`, `calibrated`, `expert`, `estimate`, `placeholder`, or `hole`; `source` holds its cite, dataset@date, calibration set id, or expert name; `vintage` is the authored observation date. Object pointers are `/nodes/i`, `/edges/i`, `/links/i`; a numeric suffix points to its value, such as `/nodes/i/payoff` or `/edges/i/probability` |
 | `counting` / `calendar` | `Pack.counting` (the rule id) plus a clock-library fragment (§8.2) |
 | `event`, authority lattice, relations, defaults, exceptions, transitions, tests, types, recharacterizations, invalidations | not emitted (verification only) |
 
@@ -2943,8 +2946,9 @@ header"):
   extension lowers as a counted window's does, and an edge's own
   a period with no typed extension grant, delegation, or lock has a hole
   at `/edges/<i>/deadline/extendable`;
-- `basis`: one `{pointer, basis, source}` per labelled node, edge or link
-  (§5.1 "basis"), sorted; a scenario's one label is at `/scenario` (§8.3).
+- `basis`: one `{pointer, basis, source?, vintage?}` per labelled node,
+  edge, link, or authored number (§5.1 "basis"), sorted; a scenario's one
+  label is at `/scenario` (§8.3).
 
 The engine checks the header on read (version, sorted pins, recomputed
 digest, holes and basis labels inside the document) and warns `authored-hole` for a pack

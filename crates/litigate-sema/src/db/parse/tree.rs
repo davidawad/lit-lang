@@ -170,27 +170,10 @@ pub enum Atom {
 /// Per-number source label and observation date.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct NumericProvenance {
-    /// Closed provenance basis.
-    pub basis: Option<NumericBasis>,
+    /// Basis expression, checked by the same semantic path as object basis.
+    pub basis: Option<Expr>,
     /// Vintage date, when supplied.
     pub vintage: Option<Name>,
-}
-
-/// Basis forms accepted by the numeric provenance clause.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum NumericBasis {
-    /// `calibrated(set-id)`.
-    Calibrated(Name),
-    /// `calibrated("dataset", date)`.
-    CalibratedDated(String, String),
-    /// `sourced("cite")`.
-    Sourced(String),
-    /// `expert("name")`.
-    Expert(String),
-    /// `estimate`.
-    Estimate,
-    /// `placeholder`.
-    Placeholder,
 }
 
 /// `key value...` (also used for clauses such as `by X`, `cite ...`).
@@ -609,14 +592,6 @@ impl Ranges for NumericProvenance {
     fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
         self.basis.ranges_mut(f);
         self.vintage.ranges_mut(f);
-    }
-}
-
-impl Ranges for NumericBasis {
-    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
-        if let Self::Calibrated(name) = self {
-            name.ranges_mut(f);
-        }
     }
 }
 

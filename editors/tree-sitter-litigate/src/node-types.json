@@ -4151,73 +4151,24 @@
     }
   },
   {
-    "type": "numeric_basis",
+    "type": "numeric_provenance",
     "named": true,
     "fields": {
-      "as_of": {
-        "multiple": false,
+      "value": {
+        "multiple": true,
         "required": false,
         "types": [
           {
-            "type": "date",
-            "named": true
-          }
-        ]
-      },
-      "calibration": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "cite": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "string",
-            "named": true
-          }
-        ]
-      },
-      "dataset": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "string",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "string",
+            "type": "_expression",
             "named": true
           }
         ]
       }
-    }
-  },
-  {
-    "type": "numeric_provenance",
-    "named": true,
-    "fields": {},
+    },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
-        {
-          "type": "numeric_basis",
-          "named": true
-        },
         {
           "type": "numeric_vintage",
           "named": true
@@ -6050,10 +6001,6 @@
     "named": false
   },
   {
-    "type": "calibrated",
-    "named": false
-  },
-  {
     "type": "calibration",
     "named": false
   },
@@ -6199,10 +6146,6 @@
     "named": true
   },
   {
-    "type": "estimate",
-    "named": false
-  },
-  {
     "type": "event",
     "named": false
   },
@@ -6224,10 +6167,6 @@
   },
   {
     "type": "expect",
-    "named": false
-  },
-  {
-    "type": "expert",
     "named": false
   },
   {
@@ -6520,10 +6459,6 @@
     "named": false
   },
   {
-    "type": "placeholder",
-    "named": false
-  },
-  {
     "type": "power",
     "named": false
   },
@@ -6609,10 +6544,6 @@
   },
   {
     "type": "source",
-    "named": false
-  },
-  {
-    "type": "sourced",
     "named": false
   },
   {

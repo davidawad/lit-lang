@@ -95,6 +95,19 @@ instance base@one { pack base,\n  patch go { basis estimate }\n}\n",
     insta::assert_debug_snapshot!(out);
 }
 
+#[test]
+fn patches_reject_per_number_provenance_suffixes() {
+    let out = links(
+        "module links\ninstance base@one { pack base,\n  patch go { cost 5.usd basis estimate vintage 2026-01-01 }\n}\n",
+    );
+    assert!(
+        out.iter()
+            .any(|line| line.contains("L2007")
+                && line.contains("`basis` is not allowed in a `patch`")),
+        "{out:#?}"
+    );
+}
+
 /// A patch may not make an edge `anytime` (SPEC §5.6): replay binds the
 /// postures the base edge is legal from.
 #[test]

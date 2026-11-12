@@ -195,16 +195,9 @@ module.exports = {
   // Tree-sitter has no external scanner here, so this suffix is permissive
   // across newlines; the compiler binds it only on the number's line.
   numeric_provenance: $ => choice(
-    seq(repeat1($.numeric_basis), repeat($.numeric_vintage)),
+    seq(repeat1(seq('basis', field('value', $._expression))), repeat($.numeric_vintage)),
     repeat1($.numeric_vintage),
   ),
-
-  numeric_basis: $ => seq('basis', choice(
-    seq('calibrated', '(', choice(field('calibration', $.identifier), seq(field('dataset', $.string), ',', field('as_of', $.date))), ')'),
-    seq('sourced', '(', field('cite', $.string), ')'),
-    seq('expert', '(', field('name', $.string), ')'),
-    'estimate', 'placeholder',
-  )),
 
   numeric_vintage: $ => seq('vintage', field('date', $.date)),
 

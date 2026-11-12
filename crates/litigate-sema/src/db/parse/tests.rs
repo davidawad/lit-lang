@@ -1,5 +1,5 @@
 use super::parse;
-use super::tree::{Atom, ExprKind, Item, ItemKind, NumericBasis, TestStmt};
+use super::tree::{Atom, ExprKind, Item, ItemKind, TestStmt};
 use litigate_base::DiagnosticCode as C;
 use proptest::prelude::*;
 
@@ -83,25 +83,12 @@ fn item_tree_keeps_numeric_provenance_as_a_typed_atom() {
         panic!("node")
     };
     assert!(node.fields.iter().any(|field| field.values.iter().any(|(atom, _)| {
-        matches!(atom, Atom::NumericProvenance(p) if p.vintage.as_ref().is_some_and(|d| d.text == "2026-01-01") && p.basis == Some(NumericBasis::Placeholder))
+        matches!(atom, Atom::NumericProvenance(p) if p.vintage.as_ref().is_some_and(|d| d.text == "2026-01-01") && matches!(p.basis.as_ref().map(|e| &e.kind), Some(ExprKind::Ref(r)) if r.head.text == "placeholder"))
     })));
 }
 
 #[test]
-fn estimate_and_placeholder_without_vintage_warn_in_the_item_tree() {
-    for basis in ["estimate", "placeholder"] {
-        let parsed = parse(&format!(
-            "module m\nterminal t: \"T\" {{ payoff 1.usd basis {basis} }}\n"
-        ));
-        assert!(
-            parsed
-                .reports
-                .iter()
-                .any(|r| r.code == C::NumericProvenanceIncomplete),
-            "{basis}: {:?}",
-            parsed.reports
-        );
-    }
+fn repeated_numeric_provenance_clauses_warn_in_the_item_tree() {
     let duplicate = parse(concat!(
         "module m\n",
         "terminal t: \"T\" { payoff 1.usd basis estimate basis placeholder vintage 2026-01-01 }\n",

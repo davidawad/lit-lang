@@ -186,7 +186,7 @@ fn number_basis(nodes: &[&hir::Node], edges: &[(RawEdge, &hir::Edge)]) -> Vec<Ba
         if let Some(label) = node
             .payoff_provenance
             .as_ref()
-            .and_then(|p| edge::number_label(&format!("/nodes/{i}/payoff"), p))
+            .and_then(|p| edge::number_label(&format!("/nodes/{i}/payoff"), p, node.basis.as_ref()))
         {
             labels.push(label);
         }
@@ -198,9 +198,9 @@ fn number_basis(nodes: &[&hir::Node], edges: &[(RawEdge, &hir::Edge)]) -> Vec<Ba
             ("cost", edge.cost_provenance.as_ref()),
             ("duration", edge.duration_provenance.as_ref()),
         ] {
-            if let Some(label) =
-                provenance.and_then(|p| edge::number_label(&format!("/edges/{i}/{field}"), p))
-            {
+            if let Some(label) = provenance.and_then(|p| {
+                edge::number_label(&format!("/edges/{i}/{field}"), p, edge.basis.as_ref())
+            }) {
                 labels.push(label);
             }
         }

@@ -1,7 +1,5 @@
 //! Graph nodes and their edges (SPEC §5.1, field types from §6).
-use super::cx::{
-    check_numeric_calibration, first_expr, first_ref, holes_of, numeric_provenance, Cx,
-};
+use super::cx::{first_expr, first_ref, holes_of, Cx};
 use super::edge::Draw;
 use crate::db::parse::tree::{EdgeItem, Expr, ExprKind, Field, Item, Name, NodeItem, RefPath};
 use crate::db::span::Report;
@@ -146,7 +144,6 @@ impl Cx<'_, '_> {
         let meta = self.meta(&n.name, Some(&n.label), item, rule);
         let clauses = self.once(&n.clauses);
         let fields = self.once(&n.fields);
-        check_numeric_calibration(self, fields.get("payoff"));
         let kw = n.keyword.text.as_str();
         let chance = kw == "chance";
         let terminal = kw == "terminal";
@@ -192,7 +189,7 @@ impl Cx<'_, '_> {
                 .filter(|_| kw == "decision")
                 .map(RefPath::display),
             basis: self.basis(fields.get("basis")),
-            payoff_provenance: numeric_provenance(fields.get("payoff")),
+            payoff_provenance: self.number_provenance(fields.get("payoff")),
             edges,
             formerly: self.idents(fields.get("formerly")),
             holes: holes_of(n.clauses.iter().chain(&n.fields)),

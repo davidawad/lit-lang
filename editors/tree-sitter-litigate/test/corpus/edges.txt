@@ -528,9 +528,12 @@ terminal t: "T" { payoff 0.usd basis placeholder vintage 2026-01-01 }
               (number)
               (number))
             (numeric_provenance
-              (numeric_basis
-                (string
-                  (string_content)))
+              (call_expression
+                (ref
+                  (identifier))
+                (arguments
+                  (string
+                    (string_content))))
               (numeric_vintage
                 (date)))))
         (edge_decl
@@ -544,8 +547,12 @@ terminal t: "T" { payoff 0.usd basis placeholder vintage 2026-01-01 }
               (number)
               (number))
             (numeric_provenance
-              (numeric_basis
-                (identifier)))))))
+              (call_expression
+                (ref
+                  (identifier))
+                (arguments
+                  (ref
+                    (identifier)))))))))
     (node_decl
       (identifier)
       (string
@@ -555,6 +562,7 @@ terminal t: "T" { payoff 0.usd basis placeholder vintage 2026-01-01 }
           (signed_money
             (money))
           (numeric_provenance
-            (numeric_basis)
+            (ref
+              (identifier))
             (numeric_vintage
               (date))))))))

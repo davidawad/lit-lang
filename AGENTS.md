@@ -172,8 +172,9 @@ the gate (`scripts/cov-gate`) over fixed known-low and known-ok inputs.
 ## Rules
 
 1. **Report warnings with numbers.** Authored numeric provenance is the
-   per-number `basis` and (for estimates/placeholders) `vintage` in the
-   declaration; do not infer it from `note` prose. `payoff-not-authored`,
+   per-number `basis` and `vintage` fields in the declaration; never infer
+   either from `note` prose. `estimate` and `placeholder` require a dated
+   vintage. `payoff-not-authored`,
    `probability-fill`, `mixed-node`, `sink`, `authored-hole` mean the number
    rests on a fallback (`authored-hole`: a pack's `lowered.holes` left that
    number as an explicit `?`). Say so, or fix the input (scenario
@@ -208,9 +209,9 @@ the gate (`scripts/cov-gate`) over fixed known-low and known-ok inputs.
    vendored text is dated after its version takes effect is a hole unless
    the section's vendored amendment history (`## versions <heading>`, e.g.
    `sources/ecfr-versions-title-37.txt`) shows no amendment since.
-5. **Probabilities**: only on non-self edges, with typed `basis` and
-   `vintage` on the authored number (docs/litigate/SPEC.md §5.1). Unauthored
-   beats invented.
+5. **Probabilities**: only on non-self edges. Put authored provenance in
+   the number's `basis` and `vintage` suffix (docs/litigate/SPEC.md §5.1);
+   unauthored beats invented.
 6. **Pin modes when comparing to v1** (`mixed: optimistic`,
    `prob_fill: uniform`); see tests/parity.rs.
 7. **Composed graphs**: set `scenario.start` explicitly; the default start
@@ -218,8 +219,8 @@ the gate (`scripts/cov-gate`) over fixed known-low and known-ok inputs.
 8. **Calibrate, don't guess.** Before hand-typing a probability/duration
    teaching estimate, check whether a `calibration` set (`lit/*/calibration-*.lit`) already has
    a sourced value, or whether `{"op":"calibration"}` says this input is worth
-   calibrating next. Mark authored values with typed `basis` and `vintage`
-   on the number; see `docs/CALIBRATION.md` and
+   calibrating next. Mark authored numbers with typed `basis` and `vintage`
+   suffixes (and object-level `basis` only as a default); see `docs/CALIBRATION.md` and
    `docs/litigate/SPEC.md` §5.1.
 9. **Soft probabilities are uncertain, say how much.** Matter-specific
    evidence ("this judge granted 3 of 4") goes in `scenario.observe`, not in

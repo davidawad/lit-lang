@@ -22,7 +22,8 @@ decision d: "D" { "go" -> t p 0.5 basis calibrated(cal) vintage 2026-01-01 { cos
           (signed_money
             (money))
           (numeric_provenance
-            (numeric_basis)
+            (ref
+              (identifier))
             (numeric_vintage
               (date))))))
     (node_decl
@@ -38,8 +39,12 @@ decision d: "D" { "go" -> t p 0.5 basis calibrated(cal) vintage 2026-01-01 { cos
           (probability
             (number)
             (numeric_provenance
-              (numeric_basis
-                (identifier))
+              (call_expression
+                (ref
+                  (identifier))
+                (arguments
+                  (ref
+                    (identifier))))
               (numeric_vintage
                 (date))))
           (edge_fields
@@ -47,18 +52,23 @@ decision d: "D" { "go" -> t p 0.5 basis calibrated(cal) vintage 2026-01-01 { cos
               (signed_money
                 (money))
               (numeric_provenance
-                (numeric_basis
-                  (string
-                    (string_content)))))
+                (call_expression
+                  (ref
+                    (identifier))
+                  (arguments
+                    (string
+                      (string_content))))))
             (edge_field
               (duration)
               (numeric_provenance
-                (numeric_basis)
+                (ref
+                  (identifier))
                 (numeric_vintage
                   (date))))
             (edge_field
               (duration)
               (numeric_provenance
-                (numeric_basis)
+                (ref
+                  (identifier))
                 (numeric_vintage
                   (date))))))))))

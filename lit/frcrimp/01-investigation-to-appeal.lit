@@ -98,8 +98,8 @@ terminal no-bill: "No Bill — Grand Jury Declines to Indict" by prosecution out
   payoff 1_000_000.usd basis placeholder
   "Re-present to new grand jury" -> grand-jury-convened {
     authority cite "Fed. R. Crim. P. 6(a); 18 U.S.C. § 3282"
-    effort 20.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 20.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 
@@ -217,8 +217,8 @@ state detained-pretrial: "Detained Pending Trial" by court cite "18 U.S.C. § 31
   "Proceed to arraignment" -> arraignment { authority cite "Fed. R. Crim. P. 10" }
   "Move to reopen detention hearing" -> detention-hearing by accused {
     authority cite "18 U.S.C. § 3142(f)"
-    effort 6.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 6.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 
@@ -237,8 +237,8 @@ state arraignment: "Arraignment" by accused effective [2024-12-01, ..) cite "Fed
   note "Defendant is informed of the charging instrument in open court and enters a plea. Arraignment is the later of the two trigger dates (with indictment/information) for the Speedy Trial Act's unextendable 70-day trial clock."
   "Enter not guilty plea" -> not-guilty-plea {
     authority cite "Fed. R. Crim. P. 10; 11(a)(1)"
-    effort 1.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 1.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 
@@ -373,8 +373,8 @@ terminal indictment-dismissed-defective: "Indictment Dismissed — Defective/Tim
   payoff 700_000.usd basis placeholder
   "Re-indict after dismissal" -> grand-jury-convened {
     authority cite "Fed. R. Crim. P. 6(a); 18 U.S.C. § 3282"
-    effort 15.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 15.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 
@@ -468,8 +468,8 @@ state plea-agreement-reached: "Plea Agreement Reached" by court cite "Fed. R. Cr
   }
   "Withdraw from plea deal" -> proceed-to-trial by accused {
     authority cite "Fed. R. Crim. P. 11(d)"
-    effort 3.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 3.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 
@@ -499,8 +499,8 @@ state plea-rejected-by-court: "Plea Rejected by court" by accused cite "Fed. R. 
   note "Court may reject a (B)-type non-binding recommendation or a (C)-type binding agreement it deems unwarranted or contrary to law. Rejecting a binding agreement under (c)(5) entitles the defendant to withdraw the plea; rejecting a non-binding recommendation does not."
   "Withdraw guilty plea" -> proceed-to-trial {
     authority cite "Fed. R. Crim. P. 11(c)(5), (d)(2)(A)"
-    effort 8.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 8.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "Renegotiate plea agreement" -> plea-negotiations by either
 }
@@ -537,9 +537,9 @@ state trial-in-progress: "Trial in Progress" by accused cite "Fed. R. Crim. P. 2
   note "Government presents its case-in-chief first and must prove every element beyond a reasonable doubt; the defense has no constitutional obligation to present a case at all under the Fifth Amendment."
   "Move for judgment of acquittal" -> rule29-motion {
     authority cite "Fed. R. Crim. P. 29(a)"
-    effort 15.hours
+    effort 15.hours basis estimate
     valence good
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 

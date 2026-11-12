@@ -65,6 +65,9 @@ event FeeMotionPeriodExtended(until: Date) extends fee-motion-period to until
 /// on `due` (FRCP 54(d)(2)(B): "Unless a statute or a court order provides
 /// otherwise"; 54(d)(2)(C)).
 event FeeSupplementScheduled(due: Date)
+/// The court extends the date for a Rule 54(d)(2)(C) supplement to `until`
+/// under FRCP 6(b)(1).
+event FeeSupplementExtended(until: Date) extends fee-supplement-period to until
 /// The movant supplements or amends its fee motion with the full motion,
 /// the submissions on the value of services (FRCP 54(d)(2)(C)).
 event FeeMotionSupplemented()
@@ -108,6 +111,20 @@ deadline fee-supplement-period: 0.days from FeeSupplementScheduled() counted_by 
 {
   designated due
   trigger latest
+  extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion GoodCause
+    on ExtensionMoved(FeeSupplementPeriod)
+    cite "FRCP 6(b)(1)(A)"
+  }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMoved(FeeSupplementPeriod)
+    cite "FRCP 6(b)(1)(B)"
+  }
 }
 
 test "fee-supplement-period: due on the date the court's order sets" cite "FRCP 54(d)(2)(C)"

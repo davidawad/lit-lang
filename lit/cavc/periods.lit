@@ -568,6 +568,9 @@ deadline reconsideration-abroad-period: 51.days after DispositiveAction(Abroad) 
 /// Judgment begins the 60-day time period for appealing to the U.S. Court
 /// of Appeals for the Federal Circuit.
 deadline federal-circuit-appeal-period: 60.days after JudgmentEntered() counted_by cavc26 cite "CAVC R. 36(a)"
+{
+  extend { never cite "CAVC R. 26(b)" }
+}
 
 test "Counting boundary: federal-circuit-appeal-period (weekend)" cite "CAVC R. 36(a)"
 {

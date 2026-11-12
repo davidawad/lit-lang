@@ -43,14 +43,14 @@ state investigation: "Pre-Charge Investigation" by prosecution effective [2024-1
   note "Search warrants (Rule 41) require probable cause before a magistrate judge. The five-year statute of limitations in 18 U.S.C. § 3282 applies to non-capital federal offenses, measured from the offense date, not from discovery of the crime — a trap when investigating old conduct."
   "Present case to grand jury" -> grand-jury-convened {
     authority cite "Fed. R. Crim. P. 6(a)"
-    effort 40.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 40.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "File criminal complaint" -> complaint-filed {
     authority cite "Fed. R. Crim. P. 3, 4"
-    effort 5.hours
+    effort 5.hours basis estimate
     cost 0.usd
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. No filing fee: the district court civil filing fee (28 U.S.C. § 1914(a); District Court Miscellaneous Fee Schedule) applies only to civil actions, and Fed. R. Crim. P. 3/4 impose no fee for a criminal complaint."
+    note "Hours: BigLaw-honest estimate for the effort of this move. No filing fee: the district court civil filing fee (28 U.S.C. § 1914(a); District Court Miscellaneous Fee Schedule) applies only to civil actions, and Fed. R. Crim. P. 3/4 impose no fee for a criminal complaint."
   }
 }
 
@@ -126,9 +126,9 @@ state arrest: "Arrest / Warrant or Summons Executed" by court delegable {
   }
   "File information" -> information-filed by prosecution {
     authority cite "Fed. R. Crim. P. 7(b)"
-    effort 4.hours
+    effort 4.hours basis estimate
     cost 0.usd
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. No filing fee: as with a criminal complaint, 28 U.S.C. § 1914(a)'s civil filing fee doesn't apply, and Fed. R. Crim. P. 7 imposes none."
+    note "Hours: BigLaw-honest estimate for the effort of this move. No filing fee: as with a criminal complaint, 28 U.S.C. § 1914(a)'s civil filing fee doesn't apply, and Fed. R. Crim. P. 7 imposes none."
   }
 }
 
@@ -291,27 +291,27 @@ decision pretrial-motions-window: "Pretrial Motions Window" by accused effective
   note "Motions that MUST be raised before trial include a defective indictment, suppression of evidence, severance, and Speedy Trial Act violations. Failure to raise these by the deadline forfeits them unless good cause is shown — most claims cannot be revived on appeal."
   "File motion to dismiss indictment" -> motion-to-dismiss-filed {
     authority cite "Fed. R. Crim. P. 12(b)(3)(B)"
-    effort 25.hours
+    effort 25.hours basis estimate
     valence good
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "File motion to suppress evidence" -> motion-to-suppress-filed {
     authority cite "Fed. R. Crim. P. 12(b)(3)(C)"
-    effort 30.hours
+    effort 30.hours basis estimate
     valence good
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "Move to dismiss for speedy trial" -> speedy-trial-dismissal {
     authority cite "18 U.S.C. § 3162(a)(2)"
-    effort 15.hours
+    effort 15.hours basis estimate
     valence good
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "Miss pretrial motions deadline" -> rule12c-waiver-trap {
     authority cite "Fed. R. Crim. P. 12(c)(3)"
-    effort 0.hours
+    effort 0.hours basis estimate
     valence bad
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "No pretrial motions filed" -> rule16-discovery by either
 }
@@ -345,14 +345,14 @@ state suppression-granted: "Suppression Motion Granted" by accused cite "Fed. R.
   note "Excluded evidence often cripples the prosecution; the government may instead take an interlocutory appeal under 18 U.S.C. § 3731 to preserve the ruling for review, or proceed without the suppressed evidence if the case is still viable."
   "Move to dismiss after suppression" -> indictment-dismissed-defective {
     authority cite "Fed. R. Crim. P. 48(a) (government motion to dismiss)"
-    effort 10.hours
+    effort 10.hours basis estimate
     valence good
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "Proceed without suppressed evidence" -> rule16-discovery {
     authority cite "Fed. R. Crim. P. 12(d)"
-    effort 2.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 2.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 
@@ -403,13 +403,13 @@ state rule16-discovery: "Rule 16 Discovery Exchange" by accused effective [2023-
   note "Government must disclose the defendant's statements, prior record, documents/objects, and expert reports — only upon the defendant's request. Reciprocal defense discovery is triggered once the defendant requests. Distinct from Brady/Giglio: Brady itself reached evidence suppressed after a defense request (373 U.S. at 87), but the duty to disclose material favorable evidence applies even without a defense request (United States v. Agurs, 427 U.S. 97, 107 (1976); Strickler v. Greene, 527 U.S. 263, 280 (1999))."
   "Disclose Brady/Giglio material" -> brady-giglio-disclosure {
     authority cite "Brady v. Maryland, 373 U.S. 83 (1963); Giglio v. United States, 405 U.S. 150 (1972)"
-    effort 8.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 8.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "Move to compel discovery" -> discovery-dispute {
     authority cite "Fed. R. Crim. P. 16(d)(1)"
-    effort 12.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 12.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 
@@ -577,14 +577,14 @@ state mistrial-hung-jury: "Mistrial — Hung Jury" by accused cite "Fed. R. Crim
   note "A genuinely hung jury is manifest necessity for a mistrial. Double jeopardy does NOT bar retrial after a hung jury, unlike after an acquittal — jeopardy attached but was never terminated."
   "Retry the case" -> jury-selection {
     authority cite "Fed. R. Crim. P. 24; Arizona v. Washington, 434 U.S. 497 (1978)"
-    effort 80.hours
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    effort 80.hours basis estimate
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "Decline to retry" -> case-dismissed-after-hung-jury {
     authority cite "Fed. R. Crim. P. 48(a)"
-    effort 1.hours
+    effort 1.hours basis estimate
     valence good
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 
@@ -626,21 +626,21 @@ state guilty-verdict: "Guilty Verdict" by accused delegable {
   note "Conviction on the merits; the defendant may renew the Rule 29 acquittal motion or move for a new trial before sentencing — the two motions carry distinct deadlines from one another."
   "Renew acquittal motion post-verdict" -> rule29-motion {
     authority cite "Fed. R. Crim. P. 29(c)"
-    effort 10.hours
+    effort 10.hours basis estimate
     within rule29-period {
       note "After 14 days from verdict the court loses jurisdiction to grant judgment of acquittal under Rule 29; failure to file forfeits the claim on the merits."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "Move for new trial" -> rule33-motion {
     authority cite "Fed. R. Crim. P. 33"
-    effort 20.hours
+    effort 20.hours basis estimate
     within rule33-period {
       note "Standard grounds are barred after 14 days post-verdict unless extension is sought within that window; newly-discovered-evidence claims get 3 years but must be genuinely unavailable at trial."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 
@@ -707,9 +707,9 @@ terminal judgment-entered: "Judgment and Commitment Entered" outcome [loss, conv
 } effective [2023-12-01, ..) known_at 2023-04-24 cite "Fed. R. Crim. P. 32(k)"
 {
   group verdict-sentencing-group
-  note "Written judgment is the appealable final disposition; it simultaneously starts the Rule 35(a) 14-day correction clock and the FRAP 4(b) 14-day appeal clock. Modeled as terminal because it is reached identically whether the conviction came by plea or by jury verdict, even though Rule 35/appeal paths still branch from it. PLACEHOLDER PAYOFF: $50,000, override per matter. A conviction (by plea or verdict); modeled as terminal here even though Rule 35/appeal paths still branch from it in the pack's own edges (see this node's note)."
+  note "Written judgment is the appealable final disposition; it simultaneously starts the Rule 35(a) 14-day correction clock and the FRAP 4(b) 14-day appeal clock. Modeled as terminal because it is reached identically whether the conviction came by plea or by jury verdict, even though Rule 35/appeal paths still branch from it.  $50,000, override per matter. A conviction (by plea or verdict); modeled as terminal here even though Rule 35/appeal paths still branch from it in the pack's own edges (see this node's note)."
   valence caution
-  payoff 50_000.usd
+  payoff 50_000.usd basis placeholder
   "Consider Rule 35 relief" -> rule35-motion {
     authority cite "Fed. R. Crim. P. 35(a)"
     within rule35-period {
@@ -747,30 +747,30 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by accused delegable
   note "Defendant has 14 days from judgment entry to file. The district court may extend up to 30 additional days for excusable neglect or good cause, and may do so before or after the 14 days expire, with or without motion and notice (FRAP 4(b)(4)) — but never past 30 days from the original expiry. No statute fixes the criminal appeal time, so Bowles v. Russell (resting on the civil-appeal statute, 28 U.S.C. § 2107) does not make it jurisdictional; after Eberhart v. United States, 546 U.S. 12 (2005), the circuits treat FRAP 4(b) as a mandatory claim-processing rule: enforced without equitable exceptions when the government objects, but forfeited if the government fails to raise untimeliness."
   "File notice of appeal" -> notice-of-appeal-filed {
     authority cite "Fed. R. App. P. 4(b)(1)"
-    effort 3.hours
+    effort 3.hours basis estimate
     cost 605.usd
     within criminal-appeal {
       note "Missing both the original window and the 30-day extension period forecloses direct appeal entirely."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
     valence good
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 fee as a civil appeal applies in principle ($600.00 docketing fee, Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee), but most criminal appellants proceed in forma pauperis with appointed CJA counsel (FRAP 24(a); 28 U.S.C. § 1915), waiving prepayment."
+    note "Hours: BigLaw-honest estimate for the effort of this move. Same $605.00 fee as a civil appeal applies in principle ($600.00 docketing fee, Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee), but most criminal appellants proceed in forma pauperis with appointed CJA counsel (FRAP 24(a); 28 U.S.C. § 1915), waiving prepayment."
   }
   "Miss appeal deadline" -> appeal-window-missed {
     authority cite "Fed. R. App. P. 4(b); Eberhart v. United States, 546 U.S. 12 (2005)"
-    effort 0.hours
+    effort 0.hours basis estimate
     within criminal-appeal {
       note "A mandatory claim-processing rule: once the government objects to untimeliness, the court must dismiss and admits no equitable exception — the conviction becomes unreviewable on direct appeal; only § 2255 collateral relief survives. The government forfeits the objection if it does not raise it."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
     valence bad
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
   "Waive right to appeal" -> conviction-final-no-appeal {
     authority cite "Fed. R. App. P. 4(b)"
-    effort 1.hours
+    effort 1.hours basis estimate
     valence good
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 

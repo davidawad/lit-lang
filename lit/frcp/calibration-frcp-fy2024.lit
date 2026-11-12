@@ -2,7 +2,7 @@
 module frcp.calibration-frcp-fy2024
 
 calibration frcp-fy2024: "District court time-to-disposition by method, 12 months ending 9/30/2024" {
-  note "Expected elapsed time (duration) for two `frcp-civil-procedure` pack edges, from the Administrative Office of the U.S. Courts' median time-to-disposition table (Table C-5), which breaks civil case terminations down by method of disposition. Only a median is published (no min/max), so each entry sets `distribution.mode` alone and leaves `min`/`max` unset — the engine's triangular duration collapses to the median when only `mode` is given. Months are converted to days at 365.25/12 = 30.4375 days/month."
+  note "Expected elapsed time (duration) for three `frcp-civil-procedure` pack edges, from the Administrative Office of the U.S. Courts' median time-to-disposition table (Table C-5), which breaks civil case terminations down by method of disposition. Only a median is published (no min/max), so each entry sets `distribution.mode` alone and leaves `min`/`max` unset — the engine's triangular duration collapses to the median when only `mode` is given. Months are converted to days at 365.25/12 = 30.4375 days/month."
   source table-c5 "Table C-5 — U.S. District Courts: Median Time Intervals From Filing to Disposition of Civil Cases Terminated, by District and Method of Disposition, During the 12-Month Period Ending September 30, 2024" {
     url "https://www.uscourts.gov/sites/default/files/2024-12/jb_c5_0930.2024.pdf"
     vintage [2023-10-01, 2024-10-01)

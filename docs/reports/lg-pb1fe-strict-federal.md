@@ -1,159 +1,96 @@
-# Strict L5002 federal package regression (lg-pb1fe.35)
+# Strict federal extension and version regression (lg-pb1fe.35)
 
-## Result
+## Status
 
-**Partial.** The 20 requested packages were classified from saved strict JSON outputs. Source-backed changes in PTAB, SCOTUS, FRAP, CIT, CAVC, FRCP, and CoFC address explicit statutory locks, the 2012 PTAB rule text, CAVC/USCIT general extension rules, court-set fee deadlines, and 2009 FRAP citations. Remaining periods and source-version proofs are listed below with their source-based reasons. No extension authority was added solely to clear a diagnostic.
+**Partial.** The source-backed fixes below are committed, but strict is not clean across the requested 20 packages. Open periods remain undeclared where the vendored governing text is silent, statutory, or cannot be represented by the typed extension forms. The strict sweep was run with `LITGRAPH_SOURCES=/work/repo/sources` using `target/release/litigate`.
 
-- Baseline strict check: 0 of 20 packages passed; all 20 had L5002 errors.
-- Final strict check: 2 of 20 packages passed. Package errors remaining are shown below.
-- Final `just lit-sync-check`: exit 0 (locks and shared clock library current).
-- `target/release/litigate check lit cases --format json`: exit 0; `ok=true`, 0 errors, 3,496 diagnostics (warnings included).
-- Targeted package tests: CIT 69 passed / 0 failed; CAVC 76 / 0; FRAP 42 / 0; FRCP 49 / 0; CoFC 46 / 0; PTAB 35 / 0; SCOTUS 18 / 0.
-- Every final targeted test command exited 0.
+The previous attempt's strict counts are treated as the origin/main baseline (the PM provided them). No independent pre-epic `038a190cb` build was made, so per-item pre-epic status is unknown. Main baseline: 0/20 strict passes.
 
-## Strict results
-
-| Package | Before errors | After errors | Strict passes after |
+| Package | Main baseline errors | Current strict errors | Current strict pass |
 |---|---:|---:|:---:|
-| `cit` | 12 | 0 | yes |
-| `mpep` | 11 | 11 | no |
-| `frap` | 10 | 8 | no |
-| `caaf` | 9 | 9 | no |
-| `cavc` | 9 | 0 | yes |
-| `ptab` | 9 | 2 | no |
-| `cofc` | 6 | 4 | no |
-| `scotus` | 5 | 4 | no |
-| `frcp` | 4 | 2 | no |
-| `habeas` | 4 | 4 | no |
-| `cafc` | 3 | 3 | no |
-| `ca7` | 2 | 2 | no |
-| `gamd` | 2 | 2 | no |
-| `gand` | 2 | 2 | no |
-| `gasd` | 2 | 2 | no |
-| `msnd` | 2 | 2 | no |
-| `mssd` | 2 | 2 | no |
-| `sdd` | 2 | 2 | no |
-| `itc` | 1 | 1 | no |
-| `ttab` | 1 | 1 | no |
+| ca7 | 2 | 0 | yes |
+| caaf | 9 | 9 | no |
+| cafc | 3 | 3 | no |
+| cavc | 9 | 1 | no |
+| cit | 12 | 2 | no |
+| cofc | 6 | 3 | no |
+| frap | 10 | 0 | yes |
+| frcp | 4 | 2 | no |
+| gamd | 2 | 1 | no |
+| gand | 2 | 1 | no |
+| gasd | 2 | 1 | no |
+| habeas | 4 | 3 | no |
+| itc | 1 | 0 | yes |
+| mpep | 11 | 60 | no |
+| msnd | 2 | 1 | no |
+| mssd | 2 | 1 | no |
+| ptab | 9 | 7 | no |
+| scotus | 5 | 4 | no |
+| sdd | 2 | 1 | no |
+| ttab | 1 | 0 | yes |
 
-2 of 20 packages pass strict after these changes (CIT and CAVC). CIT and CAVC now have zero strict errors. FRAP changed from 10 to 8, PTAB from 9 to 2, SCOTUS from 5 to 4, CoFC from 6 to 4, and FRCP from 4 to 2; other package counts are unchanged. PTAB’s source-version proof is resolved; its remaining errors are the two institution clocks. Several baseline errors repeated the same period across edges.
+Current `cafc`, `cofc`, `gamd`, `gand`, `gasd`, `msnd`, `mssd`, `ptab`, and `sdd` totals include dependency errors caused by open FRCP/Cafc/MPEP diagnostics or stale MPEP lock state; the `ptab` count also includes its known `L9004` owned by lg-pb1fe.33. The MPEP package itself is owned by lg-pb1fe.36 and was not edited.
 
-## Kind A: extension availability
+## Kind A — typed extension availability
 
-One row per distinct `within` period observed in the baseline diagnostics. A cited provision and vendored file are shown as the governing text reference. “Not typed” means the period remains a strict hole; the source question still needs resolution. `lg-pb1fe.36` and `lg-pb1fe.30` ownership is preserved as directed.
+A period was typed only where the cited text covers that court-rule or court-order period. The new FRCP-based grants use the existing grammar: court / GoodCause before expiry under FRCP 6(b)(1)(A), and court / ExcusableNeglect on a motion after expiry under FRCP 6(b)(1)(B). The six district packages inherit FRCP 6 for computation; GAMD, GAND, and GASD response periods now also carry that typed grant. The local clerk extension clauses are not typed because the packages have no clerk role.
 
-| Package | Period | Governing cite / vendored text reference | Action or reason |
-|---|---|---|---|
-| `cit` | `complaint-after-summons-period` (`lit/cit/procedure.lit:37`) | `USCIT R. 3(a)(2)` — `sources/cit/cit-rules-and-forms.txt` | Typed USCIT R. 6(b)(1): court may extend for good cause before expiry; on a motion after expiry, excusable neglect. USCIT R. 4(l) separately states good cause for service. |
-| `cit` | `service-period` (`lit/cit/procedure.lit:52`) | `USCIT R. 4(l)` — `sources/cit/cit-rules-and-forms.txt` | Typed USCIT R. 6(b)(1): court may extend for good cause before expiry; on a motion after expiry, excusable neglect. USCIT R. 4(l) separately states good cause for service. |
-| `cit` | `government-answer-period` (`lit/cit/procedure.lit:64`) | `USCIT R. 12(a)(1)(A)` — `sources/cit/cit-rules-and-forms.txt` | Typed USCIT R. 6(b)(1): court may extend for good cause before expiry; on a motion after expiry, excusable neglect. USCIT R. 4(l) separately states good cause for service. |
-| `cit` | `answer-period` (`lit/cit/procedure.lit:68`) | `USCIT R. 12(a)(1)(B)(i)` — `sources/cit/cit-rules-and-forms.txt` | Typed USCIT R. 6(b)(1): court may extend for good cause before expiry; on a motion after expiry, excusable neglect. USCIT R. 4(l) separately states good cause for service. |
-| `cit` | `answer-after-motion-period` (`lit/cit/procedure.lit:87`) | `USCIT R. 12(a)(2)(A)` — `sources/cit/cit-rules-and-forms.txt` | Typed USCIT R. 6(b)(1): court may extend for good cause before expiry; on a motion after expiry, excusable neglect. USCIT R. 4(l) separately states good cause for service. |
-| `cit` | `summary-judgment-period` (`lit/cit/procedure.lit:103`) | `USCIT R. 56(b)` — `sources/cit/cit-rules-and-forms.txt` | Typed USCIT R. 6(b)(1): court may extend for good cause before expiry; on a motion after expiry, excusable neglect. USCIT R. 4(l) separately states good cause for service. |
-| `cit` | `agency-record-motion-period` (`lit/cit/procedure.lit:114`) | `USCIT R. 56.2(d)` — `sources/cit/cit-rules-and-forms.txt` | Typed USCIT R. 6(b)(1): court may extend for good cause before expiry; on a motion after expiry, excusable neglect. USCIT R. 4(l) separately states good cause for service. |
-| `cit` | `joint-status-report-period` (`lit/cit/procedure.lit:120`) | `USCIT R. 56.2(a)(5)(A)` — `sources/cit/cit-rules-and-forms.txt` | Typed USCIT R. 6(b)(1): court may extend for good cause before expiry; on a motion after expiry, excusable neglect. USCIT R. 4(l) separately states good cause for service. |
-| `cit` | `agency-record-period` (`lit/cit/procedure.lit:124`) | `USCIT R. 73.2(a)` — `sources/cit/cit-rules-and-forms.txt` | Typed USCIT R. 6(b)(1): court may extend for good cause before expiry; on a motion after expiry, excusable neglect. USCIT R. 4(l) separately states good cause for service. |
-| `cit` | `remand-opposition-period` (`lit/cit/procedure.lit:147`) | `USCIT R. 56.2(h)(2)` — `sources/cit/cit-rules-and-forms.txt` | Typed USCIT R. 6(b)(1): court may extend for good cause before expiry; on a motion after expiry, excusable neglect. USCIT R. 4(l) separately states good cause for service. |
-| `mpep` | `provisional-pendency` (`lit/mpep/01-pre-filing.lit:36`) | `35 U.S.C. 111(b)` — `sources/usc-cfr-prosecution-fragments.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `mpep` | `extension-month` (`lit/mpep/02-filing-to-allowance.lit:151`) | `37 CFR 1.136(a)` — `sources/cfr-37-part1.txt` | Owned by lg-pb1fe.36; do not redo the 37 C.F.R. §§ 1.136(a), 41.37(e) month-bound forms. |
-| `mpep` | `appeal-brief` (`lit/mpep/02-filing-to-allowance.lit:418`) | `37 CFR 41.37` — `sources/cfr-37-part1.txt` | Owned by lg-pb1fe.36; do not redo the 37 C.F.R. §§ 1.136(a), 41.37(e) month-bound forms. |
-| `mpep` | `appeal-forwarding-fee` (`lit/mpep/02-filing-to-allowance.lit:472`) | `37 CFR (2025) 41.20(b)(4)` — `sources/cfr-37-fees-2025-07-01.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `mpep` | `broadening-reissue` (`lit/mpep/02-filing-to-allowance.lit:762`) | `35 U.S.C. § 251(d)` — `sources/usc-cfr-prosecution-fragments.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `mpep` | `ipr-time-bar` (`lit/mpep/03-post-grant.lit:47`) | `35 U.S.C. 311–314` — `sources/usc-cfr-prosecution-fragments.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `mpep` | `pgr-window` (`lit/mpep/03-post-grant.lit:56`) | `35 U.S.C. 321–324` — `sources/usc-cfr-prosecution-fragments.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `caaf` | `petition-period` (`lit/caaf/procedure.lit:26`) | `CAAF R. 18(c)` — `sources/caaf/caaf-rules.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `caaf` | `certificate-period` (`lit/caaf/procedure.lit:32`) | `CAAF R. 18(b)` — `sources/caaf/caaf-rules.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `caaf` | `supplement-period` (`lit/caaf/procedure.lit:46`) | `CAAF R. 21(b)` — `sources/caaf/caaf-rules.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `caaf` | `supplement-answer-period` (`lit/caaf/procedure.lit:57`) | `CAAF R. 21(c)(2)` — `sources/caaf/caaf-rules.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `caaf` | `certified-brief-period` (`lit/caaf/procedure.lit:83`) | `CAAF R. 40(a)` — `sources/caaf/caaf-rules.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `caaf` | `mandatory-brief-period` (`lit/caaf/procedure.lit:94`) | `CAAF R. 40(a)` — `sources/caaf/caaf-rules.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `caaf` | `mandate-period` (`lit/caaf/procedure.lit:111`) | `CAAF R. 43A(a)` — `sources/caaf/caaf-rules.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `caaf` | `reconsideration-period` (`lit/caaf/procedure.lit:119`) | `CAAF R. 31(a)` — `sources/caaf/caaf-rules.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `cavc` | `untimeliness-motion-period` (`lit/cavc/procedure.lit:42`) | `CAVC R. 4(a)(3)(B)` — `sources/cavc/cavc-rules-of-practice-2026-10-01.txt` | Typed CAVC R. 26(b): court, GoodCause up to 45 total days and ExtraordinaryCircumstances beyond 45 days, before or after expiry. |
-| `cavc` | `record-before-agency-period` (`lit/cavc/procedure.lit:60`) | `CAVC R. 10(a)` — `sources/cavc/cavc-rules-of-practice-2026-10-01.txt` | Typed CAVC R. 26(b): court, GoodCause up to 45 total days and ExtraordinaryCircumstances beyond 45 days, before or after expiry. |
-| `cavc` | `appellant-brief-period` (`lit/cavc/procedure.lit:71`) | `CAVC R. 31(a)(1)` — `sources/cavc/cavc-rules-of-practice-2026-10-01.txt` | Typed CAVC R. 26(b): court, GoodCause up to 45 total days and ExtraordinaryCircumstances beyond 45 days, before or after expiry. |
-| `cavc` | `secretary-brief-period` (`lit/cavc/procedure.lit:85`) | `CAVC R. 31(a)(2)` — `sources/cavc/cavc-rules-of-practice-2026-10-01.txt` | Typed CAVC R. 26(b): court, GoodCause up to 45 total days and ExtraordinaryCircumstances beyond 45 days, before or after expiry. |
-| `cavc` | `uncontested-mandate-period` (`lit/cavc/procedure.lit:97`) | `CAVC R. 41(c)` — `sources/cavc/cavc-rules-of-practice-2026-10-01.txt` | Typed CAVC R. 26(b): court, GoodCause up to 45 total days and ExtraordinaryCircumstances beyond 45 days, before or after expiry. |
-| `cavc` | `reconsideration-period` (`lit/cavc/procedure.lit:121`) | `CAVC R. 35(d)` — `sources/cavc/cavc-rules-of-practice-2026-10-01.txt` | Typed CAVC R. 26(b): court, GoodCause up to 45 total days and ExtraordinaryCircumstances beyond 45 days, before or after expiry. |
-| `cavc` | `federal-circuit-appeal-period` (`lit/cavc/procedure.lit:144`) | `CAVC R. 36(a)` — `sources/cavc/cavc-rules-of-practice-2026-10-01.txt` | Typed `extend { never cite "CAVC R. 26(b)" }`; Rule 26(b) bars extending a Notice of Appeal except as Rule 4 provides; Rule 4 does not govern this Rule 36(a) appeal. |
-| `cavc` | `mandate-period` (`lit/cavc/procedure.lit:148`) | `CAVC R. 41(b)` — `sources/cavc/cavc-rules-of-practice-2026-10-01.txt` | Typed CAVC R. 26(b): court, GoodCause up to 45 total days and ExtraordinaryCircumstances beyond 45 days, before or after expiry. |
-| `cavc` | `eaja-response-period` (`lit/cavc/procedure.lit:169`) | `CAVC R. 39(a)(1)` — `sources/cavc/cavc-rules-of-practice-2026-10-01.txt` | Typed CAVC R. 26(b): court, GoodCause up to 45 total days and ExtraordinaryCircumstances beyond 45 days, before or after expiry. |
-| `ptab` | `pgr-filing-period` (`lit/ptab/01-pre-petition-to-institution.lit:48`) | `35 U.S.C. § 321(c)` — `sources/usc-additional.txt` | Typed `extend { never ... }` on the period; pack diff limited to extension fields and removal of the hole. |
-| `ptab` | `ipr-time-bar` (`lit/ptab/01-pre-petition-to-institution.lit:71`) | `35 U.S.C. § 315(b)` — `sources/usc-additional.txt` | Typed `extend { never ... }` on the period; pack diff limited to extension fields and removal of the hole. |
-| `ptab` | `institution-period` (`lit/ptab/01-pre-petition-to-institution.lit:240`) | `35 U.S.C. § 314(b)` — `sources/usc-additional.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `ptab` | `institution-period-on-waiver` (`lit/ptab/01-pre-petition-to-institution.lit:256`) | `35 U.S.C. 314(b)(2), 37 CFR 42.107(b)` — `sources/usc-additional.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `cofc` | `protest-notice-window` (`lit/cofc/02-bid-protest.lit:10`) | `RCFC App. C 2` — `sources/rcfc-appendices.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `cofc` | `settlement-discussion-period` (`lit/cofc/05-patent-track.lit:157`) | `PRCFC 16(a)` — `sources/rcfc-appendices.txt` | Typed RCFC 6(b)(1): court extension for good cause before expiry; excusable neglect on a motion after expiry. |
-| `cofc` | `settlement-statement-period` (`lit/cofc/05-patent-track.lit:169`) | `PRCFC 17` — `sources/rcfc-appendices.txt` | Typed RCFC 6(b)(1): court extension for good cause before expiry; excusable neglect on a motion after expiry. |
-| `cofc` | `post-judgment-motion-period` (`lit/cofc/06-trial-post-trial.lit:38`) | `RCFC 59(a)-(b), (e)` — `sources/rcfc.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `cofc` | `costs-period` (`lit/cofc/06-trial-post-trial.lit:79`) | `RCFC 54(d)` — `sources/rcfc.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `scotus` | `opposition-period` (`lit/scotus/cert.lit:268`) | `Sup. Ct. R. 15.3` — `sources/scotus/scotus-rules-2026-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `scotus` | `merits-brief-period` (`lit/scotus/cert.lit:310`) | `Sup. Ct. R. 25.1` — `sources/scotus/scotus-rules-2026-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `scotus` | `respondent-brief-period` (`lit/scotus/cert.lit:319`) | `Sup. Ct. R. 25.2` — `sources/scotus/scotus-rules-2026-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `scotus` | `rehearing-period` (`lit/scotus/cert.lit:354`) | `Sup. Ct. R. 44.1` — `sources/scotus/scotus-rules-2026-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `scotus` | `denial-rehearing-period` (`lit/scotus/cert.lit:373`) | `Sup. Ct. R. 44.2` — `sources/scotus/scotus-rules-2026-sectioned.txt` | Typed `extend { never ... }`; Rule 44.2 expressly says the time will not be extended. |
-| `frcp` | `removal-period` (`lit/frcp/02-pleading-to-trial.lit:109`) | `28 U.S.C. 1446(a)` — `sources/usc-cfr-prosecution-fragments.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `frcp` | `remand-motion-period` (`lit/frcp/02-pleading-to-trial.lit:135`) | `28 U.S.C. 1447(c)` — `sources/usc-cfr-prosecution-fragments.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `frcp` | `fee-supplement-period` (`lit/frcp/03-post-trial-motions.lit:40`) | `FRCP 54(d)(2)(C)` — `sources/frcp.txt` | Typed FRCP 6(b)(1): court extension for good cause before expiry; excusable neglect on a motion after expiry. Added the court-order event that sets the revised due date. |
-| `habeas` | `state-petition-limitation` (`lit/habeas/proceeding.lit:21`) | `28 U.S.C. § 2244(d)(1)` — `sources/habeas/usc-28-ch153.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `habeas` | `federal-motion-limitation` (`lit/habeas/proceeding.lit:27`) | `28 U.S.C. § 2255(f)` — `sources/habeas/usc-28-ch153.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `habeas` | `successive-authorization-ruling` (`lit/habeas/proceeding.lit:44`) | `28 U.S.C. § 2244(b)(3)(C)` — `sources/habeas/usc-28-ch153.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `habeas` | `proposed-findings-objections` (`lit/habeas/proceeding.lit:69`) | `2254 Rule 8(b)` — `sources/habeas/rules-2254-2255-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `cafc` | `appearance-period` (`lit/cafc/02-docketing.lit:23`) | `Fed. Cir. R. 47.3(b)(1)` — `sources/fedcir-rules.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `gamd` | `reply-period` (`lit/gamd/local-rules.lit:120`) | `M.D. Ga. L.R. 7.3` — `sources/md-ga/mdga-local-rules-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `gand` | `reply-period` (`lit/gand/local-rules.lit:237`) | `N.D. Ga. LR 7.1(B)` — `sources/nd-ga/ndga-civil-local-rules-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `gasd` | `reply-period` (`lit/gasd/local-rules.lit:143`) | `S.D. Ga. LR Civ. 7(b)` — `sources/sd-ga/sdga-local-rules-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `msnd` | `response-period` (`lit/msnd/local-rules.lit:322`) | `N.D. Miss. L.U. Civ. R. 7(b)` — `sources/msnd/local-uniform-civil-rules-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `msnd` | `rebuttal-period` (`lit/msnd/local-rules.lit:334`) | `N.D. Miss. L.U. Civ. R. 7(b)` — `sources/msnd/local-uniform-civil-rules-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `mssd` | `response-period` (`lit/mssd/local-rules.lit:322`) | `S.D. Miss. L.U. Civ. R. 7(b)` — `sources/msnd/local-uniform-civil-rules-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `mssd` | `rebuttal-period` (`lit/mssd/local-rules.lit:334`) | `S.D. Miss. L.U. Civ. R. 7(b)` — `sources/msnd/local-uniform-civil-rules-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `sdd` | `response-brief-period` (`lit/sdd/local-rules.lit:213`) | `D.S.D. Civ. LR 7.1(B)` — `sources/sdd/civil-local-rules-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-| `sdd` | `reply-brief-period` (`lit/sdd/local-rules.lit:222`) | `D.S.D. Civ. LR 7.1(B)` — `sources/sdd/civil-local-rules-sectioned.txt` | Not typed: exact extension authority/prohibition remains undetermined; no inference was added. |
-## Kind B: source-version proof
+| Package / period | Text read and result |
+|---|---|
+| CAVC `untimeliness-motion-period`, `record-before-agency-period`, `appellant-brief-period`, `secretary-brief-period`, and other Rule-set filings | CAVC Rule 26(b), `sources/cavc/cavc-rules-of-practice-2026-10-01.txt:747-754`: “The Court, on its own initiative or on a party's motion for good cause shown, may extend the time set by these Rules”; “not to exceed a total of 45 days”; beyond that “only for extraordinary circumstances.” GoodCause grants were retained through 45 days; ExtraordinaryCircumstances grants remain only on `MotionFiled()` before/after expiry. The Rule 36(a) Federal Circuit appeal period at `lit/cavc/procedure.lit:144` remains open: Rule 26(b) excepts a Notice of Appeal except as provided by Rule 4, and Rule 4 does not govern this Federal Circuit appeal. Rule 26(c)'s 15-day ceiling is in Rule 47 expedited proceedings (`sources/cavc/cavc-rules-of-practice-2026-10-01.txt:1872-1875`); none of the retained 45-day periods is a Rule 47 filing. |
+| CIT `complaint-after-summons-period` | USCIT Rule 3(a)(2) restates the statutory clock. The practice comment says “As provided in section 516A(a)(2) and (3) ... a complaint must be filed within 30 days after the filing of the summons” (`sources/cit/cit-rules-and-forms.txt:580-582`). Rule 6 grants were removed from both edges. Other CIT periods use Rule 6(b)(1), whose text also allows “circumstances beyond the control of the party” (`sources/cit/cit-rules-and-forms.txt:1986-1990`); the closed standard enum cannot express that alternative, so those grants are narrower than the rule. |
+| CoFC `costs-period`, `patent-answer-period`, `patent-reply-period` | RCFC 6(b)(1), now bound as `RCFC (2010 ed.) 6(b)`, says the court may “for good cause” extend before expiry and, on post-expiry motion, for “excusable neglect” (`sources/rcfc-2010-time.txt`). Typed grant on the Rule periods. `post-judgment-motion-period` is locked by RCFC 6(b)(2): “The court must not extend the time to act under RCFC 52(b), 59(b), (d), and (e), and 60(b)” (`sources/rcfc.txt:1252`). |
+| SCOTUS `opposition-period`, `merits-brief-period`, `respondent-brief-period`, `rehearing-period` | Rule 15.3 allows extension by “the Court or a Justice, or by the Clerk under Rule 30.4” (`sources/scotus/scotus-rules-2026.txt:681-682`); Rule 25.5 says Rule 25.1-3 periods “may be extended as provided in Rule 30” (`sources/scotus/scotus-rules-2026.txt:1351-1352`); Rule 30.4 assigns first instance action to the Clerk and permits submission to a Justice/Court (`sources/scotus/scotus-rules-2026.txt:1738-1765`); Rule 44.1 says “unless the Court or a Justice ... extends the time” (`sources/scotus/scotus-rules-2026.txt:2433-2435`). No new grant was typed: current package roles omit Clerk, and the grammar cannot represent the rule's unbounded discretion. Rule 44.2's existing lock is supported by “will not be extended” (`sources/scotus/scotus-rules-2026.txt:2462`). |
+| CAAF `petition-period`, `certificate-period`, `supplement-period`, `supplement-answer-period`, `certified-brief-period`, `mandatory-brief-period`, `mandate-period`, `reconsideration-period` | Rule 18(h) says “Unless otherwise prohibited by statute or these rules, a motion for extension of time may be sought within the time for filing the applicable pleading or brief” (`sources/caaf/caaf-rules.txt:730-731`). Rule 9(d) permits the Clerk, on the Court’s behalf, to act on unopposed extensions “not to exceed thirty days” (`sources/caaf/caaf-rules.txt:309-314`). No grant was typed because the package does not assign a Clerk role, Rule 18(h) states no grant standard, and Rule 9(d) is limited to Clerk action. These periods remain honest holes. |
+| FRCP `removal-period`, `remand-motion-period` | FRCP 6(b)(1) applies when an act “may or must be done within a specified time” (`sources/frcp.txt:656-663`), but removal and remand clocks are statutory under 28 U.S.C. §§ 1446(b), 1447(c); the statute does not grant enlargement. Left open. |
+| Habeas `state-petition-limitation`, `federal-motion-limitation`, `successive-authorization-ruling` | Statutory clocks under 28 U.S.C. § 2244(d)(1), which says “A 1-year period of limitation shall apply” (`sources/habeas/usc-28-ch153.txt:237`); § 2255(f), also “A 1-year period of limitation shall apply” (`sources/habeas/usc-28-ch153.txt:1647`); and § 2244(b)(3)(C) (`sources/habeas/usc-28-ch153.txt:216-220`). Those statutes state limitation/authorization time, not an extension grant. Left open. `proposed-findings-objections` was typed under 28 U.S.C. § 636(b)(1) and 2254 Rule 12; its period is set by the court. |
+| GAMD `response-period`, GAND `response-period`, GASD `response-period` | Each local rule sets the response clock (`sources/md-ga/mdga-local-rules-sectioned.txt:704-715`; `sources/nd-ga/ndga-civil-local-rules-sectioned.txt:938-950`; `sources/sd-ga/sdga-local-rules-sectioned.txt:604-611`). The court's FRCP 6(b)(1) authority covers an act within a specified time. Typed good-cause/pre-expiry and excusable-neglect/post-expiry forms. Local Clerk powers are not represented. |
+| PTAB `institution-period`, `institution-period-on-waiver` | 35 U.S.C. § 314(b) says “The Director shall determine whether to institute an inter partes review ... within 3 months after” receiving the preliminary response or the last date to file it (`sources/usc-additional.txt:382-386`). The text sets the Director's decision clock and supplies no extension grant or prohibition. Left open. |
+| PTAB `ipr-time-bar`, `pgr-filing-period` | The prohibitory text is the reason for the existing locks: § 315(b) says “An inter partes review may not be instituted if the petition ... is filed more than 1 year after” (`sources/usc-additional.txt:409`); § 321(c) says “may only be filed not later than” (`sources/usc-additional.txt:504`). These statutory locks are listed for PM review as a reading of prohibitive wording. |
+| CAFC `appearance-period` | Fed. Cir. Rule 26(b) applies to periods prescribed by Federal Circuit rules or court order. A 2018 edition is now bound; the 2009 source proof remains open (see Kind B). |
+| MPEP and ITC inline periods | MPEP (including 37 C.F.R. §§ 1.136(a), 41.37(e)) belongs to lg-pb1fe.36. ITC inline deadlines belong to lg-pb1fe.30. No MPEP or inline ITC deadline was changed. |
 
-One row per distinct package, rule/section and trigger date. A version proof is changed only where the vendored historical text directly supports the binding.
+The six districts' sibling-package pattern was checked. Their reply-period grants follow the same FRCP 6(b)(1) forms; the new response-period grants use that same text. GAMD's LR 6.2 grants the Clerk one extension not exceeding 14 days (`sources/md-ga/mdga-local-rules-sectioned.txt:725-733`); GASD LR Civ. 6 allows the Clerk, with party consent, to extend a response deadline up to 14 days (`sources/sd-ga/sdga-local-rules-sectioned.txt:522-526`). The typed court authority derives from FRCP 6(b), not an expansion of those Clerk clauses.
 
-| Package | Item / date | Pre-epic status | Vendored text and finding | Action or remaining evidence |
-|---|---|---|---|
-| `frap` | `FRAP 26 / 2009-12-01` | Unknown (not checked against 038a190cb) | `frap-rules` — `sources/frap.txt` | Unresolved: source history records later amendments; no historical FRAP 26 text is vendored for the 2009/2018 version dates. |
-| `frap` | `FRAP 11 / 2009-12-01` | Unknown (not checked against 038a190cb) | `frap-rules` — `sources/frap.txt` | Fixed: cite rebound to the vendored 2009 edition in `sources/usc-28-app-frap-editions.txt`; diagnostic gone. |
-| `frap` | `FRAP 31 / 2009-12-01` | Unknown (not checked against 038a190cb) | `frap-rules` — `sources/frap.txt` | Unresolved: `sources/usc-28-app-frap-editions.txt` does not include Rule 31 text, and `sources/rule-amendment-history.txt` records an intervening 2018 amendment; no 2009 Rule 31 text is vendored. |
-| `frap` | `FRAP 26 / 2018-12-01` | Unknown (not checked against 038a190cb) | `frap-rules` — `sources/frap.txt` | Unresolved: source history records later amendments; no historical FRAP 26 text is vendored for the 2009/2018 version dates. |
-| `frap` | `FRAP 41 / 2009-12-01` | Unknown (not checked against 038a190cb) | `frap-rules` — `sources/frap.txt` | Fixed: cite rebound to the vendored 2009 edition in `sources/usc-28-app-frap-editions.txt`; diagnostic gone. |
-| `ptab` | `37 C.F.R. § 42.107 / 2012-09-16 (2012 version)` | Unknown (not checked against 038a190cb) | `cfr-42` — `sources/cfr-37-part42-2012.txt` | Fixed: the delegation cite now uses the vendored 2012 § 42.5(c)(1) text; the current-version diagnostic is gone. |
-| `cofc` | `RCFC 6 / 2010-01-11` | Unknown (not checked against 038a190cb) | `rcfc-rules` — `sources/rcfc.txt` | Unresolved: history lists a 2010 version and later amendments, but no 2010 RCFC 6 text binding is available in the package. |
-| `cafc` | `Fed. Cir. R. 26 / 2009-12-01` | Unknown (not checked against 038a190cb) | `fedcir-rules` — `sources/fedcir-rules.txt` | Unresolved: `sources/rule-amendment-history.txt` records no version on or before these dates; no historical Federal Circuit Rule 26 text is vendored. |
-| `cafc` | `Fed. Cir. R. 26 / 2018-12-01` | Unknown (not checked against 038a190cb) | `fedcir-rules` — `sources/fedcir-rules.txt` | Unresolved: `sources/rule-amendment-history.txt` records no version on or before these dates; no historical Federal Circuit Rule 26 text is vendored. |
-| `ca7` | `FRAP 26 / 2009-12-01` | Unknown (not checked against 038a190cb) | `frap-rules` — `sources/frap.txt` | Unresolved: source history records later amendments; no historical FRAP 26 text is vendored for the 2009/2018 version dates. |
-| `ca7` | `FRAP 26 / 2018-12-01` | Unknown (not checked against 038a190cb) | `frap-rules` — `sources/frap.txt` | Unresolved: source history records later amendments; no historical FRAP 26 text is vendored for the 2009/2018 version dates. |
-| `itc` | `19 C.F.R. § 210.6 / 2025-02-03` | Unknown (not checked against 038a190cb) | `cfr-210` — `sources/cfr-19-part210-2025.txt` | Unresolved: `sources/ecfr-versions-title-19.txt` does not pin a § 210.6 amendment history; no historical text binding proves the 2025-02-03 version. The inline ITC period remains owned by lg-pb1fe.30 and was not changed. |
-| `ttab` | `Rule 6 / 2017-01-14` | Unknown (not checked against 038a190cb) | `frcp-rules` — `sources/frcp.txt` | Unresolved: the FRCP history records an amendment effective 2023-12-01; no FRCP 6 text for the full 2017-to-present period is bound. |
-| `ttab` | `37 C.F.R. § 2.116 / 2017-01-14` | Unknown (not checked against 038a190cb) | `cfr2` — `sources/cfr-37-part2.txt` | Unresolved: `sources/cfr-37-part2-answer-time-history.txt` carries the 2017-01-14 version and unchanged-text note, but its inline version metadata is not in the `## versions <heading>` format recognized by cite checking; no binding change was made. |
+## Kind B — source-version proofs
 
-## Lowered pack diffs
+| Package / source / date | Finding and action | Pre-epic status |
+|---|---|---|
+| FRAP 26 and 31 / 2009-12-01 | Added official GovInfo 2009 Rule 26 and 2018 Rules 26/31 text to `sources/usc-28-app-frap-editions.txt`; bound and cited the period-specific editions. | Unknown; no 038a190cb comparison. |
+| FRAP 26 and 31 / 2018-12-01 | Added official U.S. Courts 2018 rules PDF original and extracted Rules 26/31, with pinned source text and edition cites. | Unknown. |
+| RCFC 6 / 2010-01-11 | Added official Court of Federal Claims 2010 PDF original and a pinned Rule 6 transcription; cites now bind the 2010 version. | Unknown. |
+| Fed. Cir. R. 26 / 2018-12-01 | Added official December 2018 Federal Circuit Rules PDF original and Rule 26 text; updated the 2018 grant cite. | Unknown. |
+| Fed. Cir. R. 26 / 2009-12-01 | Official archive search surfaced June 2011 and December 2018 editions, not a 2009 edition. The 2011 text was not substituted. | Unknown. |
+| 37 C.F.R. § 2.116 / 2017-01-14 (TTAB) | Added the official eCFR versioner metadata in the recognized `## versions` form, updated the source hash and binding. | Unknown. |
+| FRCP 6 / 2017 (TTAB) | Rebound the TTAB cite to the existing official 2017 edition text. | Unknown. |
+| 19 C.F.R. § 210.6 / 2025-02-03 (ITC) | Added official eCFR versioner metadata for the cited section, updated source hash and binding. | Unknown. |
 
-`scripts/lowered-json-diff.py` compared baseline pack JSON built from launch commit `8657133159e84104739176e62acee4545fb3af62` with the final packs. Every changed leaf is an extension field (`extendable`, `extensionAuthority`, `extensions/*`) or removal of `lowered.holes/deadline/extendable`; no duration, counting rule, probability, edge, or test expectation changed.
+`FOLLOWUP: vendor Fed. Cir. R. 26 (2009 edition)` — official archive page checked: https://www.cafc.uscourts.gov/home/rules-procedures-forms/rules-of-practice-archives/ .
 
-- PTAB (`ptab-patent-trial-appeal-board`): 30 changed leaves across six edge instances.
-- SCOTUS (`supreme-court-of-the-united-states`): 5 changed leaves on the denial-rehearing edge.
-- FRAP (`frap-appellate-procedure`): 3 changed `deadline/extensionAuthority` citations for Rules 11 and 41, rebound to the vendored 2009 edition.
-- CIT (`cit`): 204 changed leaves across ten Rule 6 periods.
-- CAVC (`cavc`): 197 changed leaves across the Rule 26(b) periods and Rule 36(a) lock.
-- FRCP (`frcp-civil-procedure`): 34 changed leaves for the court-set fee-supplement period.
-- CoFC (`cofc`): 34 changed leaves for the two patent-track periods.
-- Every other requested package: no lowered pack change.
+## Other acceptance evidence and remaining gaps
 
-## Verification and worktree
+- The single `cargo build --release` attempt failed in the litgraph-packs build script (exit 101). The existing release binary was available and used for scoped authoring commands.
+- `just lit-sync` completed. `just lit-sync-check` exited 1: it regenerated `lit/mpep/Lit.lock` and `lit/ptab/Lit.lock`, then reported those locks stale. The PTAB lock change is from the § 2.116 version-history binding in this bead and is staged for commit. The MPEP lock change reflects `sources/ecfr-versions-title-37.txt` work owned by lg-pb1fe.36; David directed no MPEP edits, so it is not committed here. This leaves the required sync-check acceptance unmet.
+- `target/release/litigate fmt --check lit cases --format json` exited 2 on the known `L9004` in `lit/ptab/03-trial-to-appeal.lit:66`, owned by lg-pb1fe.33.
+- `target/release/litigate check lit cases --format json` exited 0; `ok=true`, 0 errors.
+- Targeted package tests passed: CAVC 76/0, CIT 69/0, PTAB 35/0, SCOTUS 18/0, CoFC 46/0, FRAP 42/0, CAFC 36/0, GAMD 18/0, GAND 36/0, GASD 22/0, Habeas 10/0, ITC 33/0, TTAB 30/0, MSND 0 failures, MSSD 0 failures, SDD 0 failures. FRCP 49/0. These are package test counts; all commands exited 0.
+- Lowered-pack diff was not produced for this retry. Source edits only changed typed extension fields/cites, source bindings, and explanatory notes; durations, counting rules, probabilities, graph edges, and expectations were not intentionally changed. A machine diff remains an acceptance gap.
+- `target/release/litigate solve cases/frcp-civil-case.case` with `LITGRAPH_SOURCES=/work/repo/sources` exited 0 and returned value `-16655.0`. The origin/main value was not captured in this attempt, so an unchanged-value comparison remains unverified.
+- Inline tests accepting/refusing an extension were not added; the existing DSL tests deadline arithmetic, not extension decisions. This remains an acceptance gap.
+- Open for David: CAVC Federal Circuit Rule 36(a) appeal period; CIT statutory 30-day complaint clock; CAAF periods listed above; SCOTUS periods listed above; statutory FRCP removal/remand; habeas statutory periods; PTAB institution clocks; PTAB locks under prohibitory reading; Federal Circuit 2009 Rule 26 source proof; and the CIT standard enum's narrower representation of Rule 6(b)(1)(B).
 
-- `cargo build --release`: exit 0 (one build at launch).
-- `just lit-sync-check`: exit 0; Lit.lock files and the shared clock library are current, generated files remain uncommitted.
-- `target/release/litigate check lit cases --format json`: exit 0; `ok=true`, 0 errors, 3,496 diagnostics (warnings included).
-- Final strict sweep over the 20 packages: 2 pass (CIT, CAVC); 18 retain L5002 errors as shown above.
-- Targeted tests: CIT 69 passed / 0 failed; CAVC 76 / 0; FRAP 42 / 0; FRCP 49 / 0; CoFC 46 / 0; PTAB 35 / 0; SCOTUS 18 / 0. Every command exited 0.
-- Changed paths are in `lit/`, package `Lit.lock` files, and this report. Generated pack JSON remains uncommitted.
+## Commits
 
-## Decisions
-
-- DECIDED: unresolved extension availability stays a hole unless the cited vendored text establishes an exact grant/delegation or prohibition; no inferred GoodCause grant was added.
-- DECIDED: history-backed citations use the already-vendored historic text where it covers the cited rule (FRAP 11/41 and PTAB 2012 § 42.5(c)(1)).
-- Known ownership: MPEP §§ 1.136(a)/41.37(e) month-bound periods are listed for lg-pb1fe.36; frcrimp/ITC inline deadlines remain with lg-pb1fe.30.
+- `8637d178` CAVC corrections.
+- `40cc8502` PTAB prohibitory statutory lock comments.
+- `b99899cf` CIT statutory complaint clock.
+- `fd317725` CoFC extension typing.
+- `4c97c620`, `b873118f`, `23215083`, `3c58ca3b`, `22e00037`, `0fae7c90` district reply grants.
+- `68f49221` CAFC appearance period.
+- `fa081fcc` habeas objections period.
+- `b5222ebd` TTAB eCFR history metadata.
+- `85e10ce2` ITC eCFR history metadata.
+- `c16a21d7` FRAP historical source text and bindings.
+- `cc1782af` RCFC 6 (2010) historical source.
+- `ace231e5` Federal Circuit Rule 26 (2018) historical source.
+- `107119f2` district response grants.

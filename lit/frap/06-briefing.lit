@@ -131,13 +131,13 @@ state appellant-brief-filed: "Opening Brief Filed" by movant cite "FRAP (2009 ed
   note "The opening brief frames the issues, selects the standard of review, and defines the factual universe for appellate review. The appellant is bound by these choices; the reply brief cannot resurrect abandoned arguments, and new theories in reply are waived. The 13,000-word cap forces ruthless economy in issue-spotting."
   "Appellee files response brief" -> appellee-brief-filed {
     authority cite "FRAP (2009 ed.) 31(a)(1); FRAP (2009 ed.) 28(b)"
-    effort 90.hours
+    effort 90.hours basis estimate
     event PrincipalBriefFiled()
     within appellee-brief-period {
       note "Appellee's failure to file within 30 days is grounds for default, but the appellee retains the right to oral argument by court permission even if the brief is late; missing this deadline is far less terminal than the appellant's miss."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
-    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+    note "Hours: BigLaw-honest estimate for the effort of this move."
   }
 }
 

@@ -158,10 +158,26 @@ fn a_min_bound_counts_every_ceiling() {
 }
 
 #[test]
-fn a_day_ceiling_in_a_mixed_month_min_is_still_provable() {
+fn a_mixed_month_min_is_undecided_even_with_a_day_ceiling() {
     let lit = program(" where until <= prescribed_due + 30.days").replace(
         "to max(prescribed_due + 30.days, grant_order_entered + 14.days)",
         "to min(trigger_date + 6.months, prescribed_due + 30.days)",
+    );
+    let (status, messages) = found(&lit);
+    assert_eq!(status, Some(ObligationStatus::Failed));
+    assert_eq!(messages.len(), 1, "{messages:?}");
+    assert!(messages[0].contains("L2015"), "{messages:?}");
+    assert!(
+        messages[0].contains("month bound counted from the trigger is not modelled"),
+        "{messages:?}"
+    );
+}
+
+#[test]
+fn a_day_ceiling_in_a_mixed_month_max_is_still_provable() {
+    let lit = program(" where until <= prescribed_due + 30.days").replace(
+        "to max(prescribed_due + 30.days, grant_order_entered + 14.days)",
+        "to max(trigger_date + 6.months, prescribed_due + 30.days)",
     );
     assert_eq!(found(&lit), (Some(ObligationStatus::Passed), vec![]));
 }

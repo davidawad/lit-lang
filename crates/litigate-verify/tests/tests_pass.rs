@@ -108,7 +108,10 @@ fn l9011_fix_is_machine_applicable_and_generates_a_passing_counting_test() {
         .find(|d| d.code.as_str() == "L9011")
         .expect("L9011");
     assert_eq!(diagnostic.severity, litigate_base::Severity::Error);
-    assert_eq!(diagnostic.fixes[0].applicability, litigate_base::Applicability::MachineApplicable);
+    assert_eq!(
+        diagnostic.fixes[0].applicability,
+        litigate_base::Applicability::MachineApplicable
+    );
     let dev = verify_one(&source, Profile::Dev);
     let diagnostic = dev
         .verification
@@ -129,11 +132,14 @@ fn l9011_fix_is_machine_applicable_and_generates_a_passing_counting_test() {
     applied.push_str(replacement);
     for profile in [Profile::Dev, Profile::Strict] {
         let checked = verify_one(&applied, profile);
-        assert!(!checked
-            .verification
-            .diagnostics
-            .iter()
-            .any(|d| d.code.as_str() == "L9011"), "{profile:?}");
+        assert!(
+            !checked
+                .verification
+                .diagnostics
+                .iter()
+                .any(|d| d.code.as_str() == "L9011"),
+            "{profile:?}"
+        );
     }
     let checked = verify_one(&applied, Profile::Strict);
     assert_eq!(
@@ -248,11 +254,14 @@ fn l9011_anchor_starts_when_the_counting_rule_first_applies() {
     applied.push_str(fix);
     for profile in [Profile::Dev, Profile::Strict] {
         let checked = verify_one(&applied, profile);
-        assert!(!checked
-            .verification
-            .diagnostics
-            .iter()
-            .any(|d| d.code.as_str() == "L9011"), "{profile:?}");
+        assert!(
+            !checked
+                .verification
+                .diagnostics
+                .iter()
+                .any(|d| d.code.as_str() == "L9011"),
+            "{profile:?}"
+        );
     }
     let checked = verify_one(&applied, Profile::Strict);
     assert_eq!(

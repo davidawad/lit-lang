@@ -1,49 +1,45 @@
 # FRAP 26(b) extension typing in the change layers
 
-DECIDED: use the first reachable govinfo Code edition (2000) as the start of typed Rule 26(b) versions -- no earlier Code edition for the requested dates was reachable, so the earlier spans remain explicitly open rather than borrowing later text.
+DECIDED: retain the notice period before the 1997 edition's 1996-12-01 `as_of` as an untyped extension question because no earlier version is proved by the vendored Rule 26 text; type the 1997 and later notice periods only where the printed Rule 26(b) text forbids enlargement.
+
+DECIDED: use `extend { never }` on the notice period only for Rule 26(b)'s independent enlargement authority. Rule 4(a)(5) remains its own move, authorized by Rule 4 and 28 U.S.C. § 2107(c).
 
 ## Source proofs
 
-Official U.S. Code Rule 26 pages and original downloaded HTML:
+The 1997 page's Rule 26(b) sentence is read from the transcription itself: “The court for good cause shown may upon motion enlarge the time prescribed by these rules or by its order for doing any act, or may permit an act to be done after the expiration of such time; but the court may not enlarge the time for filing a notice of appeal, a petition for allowance, or a petition for permission to appeal.” Its printed history line ends with “Apr. 23, 1996, eff. Dec. 1, 1996.” The page's 1996 committee note discusses only subdivision (c); it supplies no earlier effective date for subdivision (b).
 
-| Edition | Official URL | `as_of` | Transcription SHA-256 | Original SHA-256 |
-|---|---|---|---|---|
-| 2000 | <https://www.govinfo.gov/content/pkg/USCODE-2000-title28/html/USCODE-2000-title28-app-federalru-rule26.htm> | 2000-12-01 | `69fb015f59fd86b2b3890325ac5d5b99578d6b073637983e38a5e9161363ea20` | `b60cf061694b74e4b3e0a5c0c9b230174b777d63ebef80c25864eae8ce7db975` |
-| 2002 | <https://www.govinfo.gov/content/pkg/USCODE-2002-title28/html/USCODE-2002-title28-app-federalru-rule26.htm> | 2002-12-01 | `c956d25165e0b6f3f2fa9ca894283c449d4d5119e2da8545e0aa4eb63c570e21` | `376b24ff236b967e9d4b3d3fad881f3f479218e9d3945487b727f226a4b20d0d` |
-| 2008 | <https://www.govinfo.gov/content/pkg/USCODE-2008-title28/html/USCODE-2008-title28-app-federalru-rule26.htm> | 2008-12-01 | `3e2099086c665f26abb5c5c10f8c47a73b11305ee9a7e3d6921e5e024e24be5e` | `c9a9e2174f36cce7706030fa5fb55be3c0661960736086b1de57afc8475d8cdc` |
+| Source | Official URL | Edition and `as_of` | History proving `as_of` | Transcription SHA-256 | As-served original SHA-256 |
+|---|---|---|---|---|---|
+| FRAP Rule 26 | <https://www.govinfo.gov/content/pkg/USCODE-1997-title28/html/USCODE-1997-title28-app-federalru-rule26.htm> | 1997; `1996-12-01` | “Apr. 23, 1996, eff. Dec. 1, 1996.” (`sources/usc-28-app-1997-time.txt:6`) | `4915165f4a157fdd8c4c5bae85519368f9d6ed00591f11815b8b1fcf320c5553` | `a0cd0764bc78a848b77ff9067604fd7fe4e70795978a6fa2a0dcd9f24329ca67` |
+| FRAP Rule 26 | <https://www.govinfo.gov/content/pkg/USCODE-2000-title28/html/USCODE-2000-title28-app-federalru-rule26.htm> | 2000; `1998-12-01` | “Apr. 24, 1998, eff. Dec. 1, 1998.” | `7722e4a1467ea16820efb8cd340f4550d46142fe57d85a1971468b9f865aaca4` | `b60cf061694b74e4b3e0a5c0c9b230174b777d63ebef80c25864eae8ce7db975` |
+| FRAP Rule 26 | <https://www.govinfo.gov/content/pkg/USCODE-2002-title28/html/USCODE-2002-title28-app-federalru-rule26.htm> | 2002; `2002-12-01` | “Apr. 29, 2002, eff. Dec. 1, 2002.” | `8ae71f441bd39ec678a8af7619d05b04f1585def3031aa4ff597f9fbee336309` | `376b24ff236b967e9d4b3d3fad881f3f479218e9d3945487b727f226a4b20d0d` |
+| FRAP Rule 26 | <https://www.govinfo.gov/content/pkg/USCODE-2008-title28/html/USCODE-2008-title28-app-federalru-rule26.htm> | 2008; `2005-12-01` | “Apr. 25, 2005, eff. Dec. 1, 2005.” | `2133d8ea75e56413d8efe5ad058fffba2d27526d74b5c3e23437d2576ed42188` | `c9a9e2174f36cce7706030fa5fb55be3c0661960736086b1de57afc8475d8cdc` |
+| 28 U.S.C. § 2107 | <https://www.govinfo.gov/content/pkg/USCODE-2008-title28/html/USCODE-2008-title28-partV-chap133-sec2107.htm> | 2008 ed.; source page | Statute text is the 2008 Code page; no rule-version boundary is inferred from it. | `d55b39782aeca1dc5d33a36b544569db9746833338a8c2b484f5785ca452426b` | `d44f221964296f6036179e7b8746e5019953acc7440e56abcf975bdeaaee805b` |
 
-The text files contain the full statutory body of Rule 26, one section per official `statutory-body*` paragraph. Each transcription was compared sentence by sentence with its saved as-served HTML; only HTML entity and whitespace normalization was applied. The copies and provenance are under `sources/original/` and in `sources/PROVENANCE.md`.
+The 2000, 2002, and 2008 source transcriptions now include the source-credit history line as well as the rule text. Their Rule 26(b) notice-of-appeal exception is identical; the 2002 and 2008 edition boundaries are therefore not period-version boundaries. The 1997 transcription and original are recorded under `sources/PROVENANCE.md`; the 2008 § 2107 transcription and original are recorded there as well.
 
-Govinfo returned no edition for the 1976, 1990, or 1994 Rule 26 page URLs tried. The saved rule source therefore begins with the 2000 edition.
-
-## Periods
-
-FRAP 26(b) in the 2000, 2002, and 2008 editions says, for the general grant: “For good cause, the court may extend the time prescribed by these rules or by its order to perform any act, or may permit an act to be done after that time expires.” The same editions say: “But the court may not extend the time to file: (1) a notice of appeal (except as authorized in Rule 4) or a petition for permission to appeal.”
+## Periods and typing
 
 | Period | Dates | Controlling sentence | Typing |
 |---|---|---|---|
-| FRCP 23(f) class petition | 1998-12-01–2000-11-30 | Earlier FRAP 26(b) text not in a reachable official Code edition | Open for David; no later edition applied retroactively |
-| FRCP 23(f) class petition | 2000-12-01–2002-11-30 | “...may not extend the time to file: ... a petition for permission to appeal.” | `extend { never }` lock, FRAP (2000 ed.) 26(b) |
-| FRCP 23(f) class petition | 2002-12-01–2008-11-30 | Same petition prohibition | `extend { never }` lock, FRAP (2002 ed.) 26(b) |
-| FRCP 23(f) class petition | 2008-12-01 onward | Same petition prohibition | `extend { never }` lock, FRAP (2008 ed.) 26(b) |
-| Notice of appeal | 1968-07-01–2000-11-30 | Earlier FRAP 26(b) edition not reachable | Open for David; no later edition applied retroactively |
-| Notice of appeal | 2000-12-01–2002-11-30 | “...may not extend the time to file: (1) a notice of appeal (except as authorized in Rule 4)...” | `extend { never }` lock; Rule 4(a)(5) remains the separate extension-motion move, not a second Rule 26 grant |
-| Notice of appeal | 2002-12-01–2008-11-30 | Same Rule 4 exception | `extend { never }` lock, FRAP (2002 ed.) 26(b); Rule 4 move remains separate |
-| Notice of appeal | 2008-12-01 onward | Same Rule 4 exception | `extend { never }` lock, FRAP (2008 ed.) 26(b); Rule 4 move remains separate |
-| Rule 4(a)(5) extension motion | 1968-07-01–2000-11-30 | Earlier FRAP 26(b) edition not reachable | Open for David; no later edition applied retroactively |
-| Rule 4(a)(5) extension motion | 2000-12-01–2002-11-30 | “For good cause, the court may extend the time prescribed by these rules ... to perform any act, or may permit an act to be done after that time expires.” | Good-cause grant over the motion deadline; Rule 4(a)(5) separately extends the notice period |
-| Rule 4(a)(5) extension motion | 2002-12-01–2008-11-30 | Same general grant | Good-cause grant, FRAP (2002 ed.) 26(b) |
-| Rule 4(a)(5) extension motion | 2008-12-01 onward | Same general grant | Good-cause grant, FRAP (2008 ed.) 26(b) |
-| Rule 4(a)(6) reopening motion | 1991-12-01 onward | The reachable 2000/2002/2008 editions give the general grant quoted above, but the period starts before the earliest reachable official edition | Honest hole for the full period: older Rule 26(b) text is missing, so the later grant cannot be applied to the whole span |
+| FRAP notice of appeal | 1968-07-01–1996-11-30 | Earlier Rule 26(b) text is not established by the reachable 1997 edition. | Open for David; no extension classification asserted. |
+| FRAP notice of appeal | 1996-12-01–1998-11-30 | 1997 Rule 26(b): “the court may not enlarge the time for filing a notice of appeal.” | `extend { never }` under Rule 26; Rule 4(a)(5) remains the separate statute-authorized move. |
+| FRAP notice of appeal | 1998-12-01 onward | 2000 Rule 26(b): the court may not extend a notice-of-appeal filing time “except as authorized in Rule 4.” The sentence is unchanged in 2002 and 2008. | One `extend { never }` Rule 26 lock citing the 2000 edition. It blocks a second Rule 26 enlargement, not Rule 4(a)(5). |
+| FRCP 23(f) class-appeal petition | 1998-12-01 onward | 2000 Rule 26(b): “a petition for permission to appeal” is among the prohibited extensions; the 2002 and 2008 text is unchanged. | One `extend { never }` lock from the petition's first day, citing FRAP (2000 ed.) 26(b). |
+| FRAP 4(a)(5) extension-motion period | 1968-07-01 onward | 28 U.S.C. § 2107(c): motion “not later than 30 days after the expiration” of the otherwise-set appeal time. Rule 26(b) (2000 ed.) separately bars extending the notice period except under Rule 4. | Undeclared statutory period; no general Rule 26 grant and no self-triggering `on AppealExtensionMoved()` extension. |
+| FRAP 4(a)(6) reopening-motion period | 1991-12-01 onward | 28 U.S.C. § 2107(c): motion “within 180 days after entry ... or within 7 days after receipt of such notice, whichever is earlier.” | Undeclared statutory period. The 180-day outer bound is also part of this statute-fixed motion limit. |
 
-Inline deadline tests cover the Rule 4(a)(5) and Rule 4(a)(6) period calculations. The inline test language has no extension-action or expected-refusal form, so it cannot exercise grant/refusal behavior; no test-only events were added.
+## Holes and checks
 
-## Checks
+The inherited lg-pb1fe.47 report recorded FRCP base at 0 holes and FRAP base at 1 hole (the reopening option). In this pod, the initial baseline CLI attempts returned 127 because `litigate` was not installed; the inherited report's diagnostics were FRAP dev L9002 at `appeal.lit:163`, L9011 warnings at `:36` and `:140`, and strict L5002 at `:163`.
 
-Before the change, dev checks reported FRCP base 1 hole (L9002 at `periods.lit:68`) and FRAP base 3 holes (L9002 at `appeal.lit:68`, `:72`, `:76`). Strict checks failed on those holes (L5002); FRAP strict also reported existing L9011 warnings at `appeal.lit:34` and `:53`.
+After this change, compilation reports FRCP base 0 holes and FRAP base 2 holes. The FRAP dev diagnostics are L9002 at `appeal.lit:100` (the `extend` option) and `:104` (the `reopen` option); strict reports corresponding L5002 errors. Both are the statutory motion-period holes required by § 2107(c). Existing FRAP L9011 counting-rule warnings remain. The FRCP package reports no diagnostics in `periods.lit`.
 
-After the change, FRCP base dev and strict checks both exited 0 with 0 holes. FRAP base dev exited 0 with 1 hole (L9002 at `appeal.lit:163`); strict exited 2 with that one L5002 error. Its two existing L9011 warnings remain at `appeal.lit:36` and `:140`. The test pins exact counts of 0 and 1 respectively and the exact remaining line.
+The restored inline test is named “before 2005 a motion to reopen is due 7 days after notice of entry, weekends skipped” and uses `1999-05-28` / `1999-06-04`. Its earlier check failure was not a date error: the declarations had applied Rule 26(b)'s general grant to periods whose motion limits are set by § 2107(c). The corrected declarations retain the expected L9002/L5002 holes instead of moving the test dates to silence the checker.
 
-Other measured checks: `litigate check lit cases` exited 0; `litigate test` on the two base packages and their three dependent amendment layers passed 14 tests with 0 failures; `litigate fmt --check lit cases docs/litigate/change` exited 0 with 0 files needing formatting; `cargo nextest run -p litigate-cli --no-fail-fast -E 'binary(change_files) | binary(rulings) | binary(corpus) | binary(roundtrip)'` ran 35 tests, all passed; `cargo clippy -p litigate-cli --all-targets -- -D warnings` and `cargo fmt --all --check` exited 0. The reopening-window timeliness result remained 7 days in the 1991/2005 texts and 14 days in the 2009 text.
+## Open for David
 
-Open for David: obtain and vendor the official pre-2000 Rule 26 text for the FRCP 23(f) 1998–2000 interval and the FRAP 4(a) 1968–2000 intervals, including the Rule 4(a)(6) reopening period beginning in 1991. Until then those spans remain untyped.
+- The Rule 4(a)(5) 30-day motion period and Rule 4(a)(6) 180-day/7-day motion period are fixed by 28 U.S.C. § 2107(c); they remain undeclared unless a source expressly forbids enlargement in terms.
+- The notice-period extension status before 1996-12-01 remains open because the 1997 edition's history only proves its printed Rule 26 text from 1996-12-01. The 1997 Rule 26(b) sentence supports `extend { never }` from that date. From 1998-12-01 the 2000 text's Rule 4 exception supports the same Rule 26 lock because Rule 4(a)(5) is modeled as its own move; the lock does not disable that move.
+
+The release checks completed after lock regeneration: `litigate check lit cases` exited 0 with 0 errors (1,688 warnings across the full tree); dev checks exited 0 for both packages, strict FRCP exited 0, and strict FRAP exited 2 with the two intended L5002 holes. `litigate test` passed 14 of 14 inline tests across the eight change packages (the other four packages contain no inline tests). `litigate fmt --check lit cases docs/litigate/change`, `cargo fmt --all --check`, and `cargo clippy -p litigate-cli --all-targets -- -D warnings` exited 0. The requested `cargo nextest run -p litigate-cli --no-fail-fast -E 'binary(change_files) | binary(rulings) | binary(corpus) | binary(roundtrip)'` passed all 35 tests, including the ruling replay suite.

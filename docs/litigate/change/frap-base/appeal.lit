@@ -28,115 +28,56 @@ event AppealExtensionMoved()
 /// The appellant moves to reopen the time to appeal (FRAP 4(a)(6)).
 event ReopeningMoved()
 
-/// FRAP 4(a)(1)(A): a civil notice of appeal is due 30 days after entry of
-/// the judgment or order appealed from (30 days since FRAP took effect on
-/// July 1, 1968; 28 U.S.C. § 2107(a)). This interval remains an honest
-/// extension hole: no official govinfo Rule 26 edition earlier than 2000
-/// was reachable to establish its extension rule.
-deadline notice-of-appeal: 30.days after JudgmentEntered() counted_by frap26 effective [1968-07-01, 2000-12-01) cite "FRAP (2008 ed.) 4(a)(1)(A)" historical
+/// FRAP 4(a)(1)(A) and 28 U.S.C. § 2107(a): a civil notice of appeal is
+/// due 30 days after entry. Before the 1997 edition's 1996-12-01 as_of,
+/// the extension rule remains open: the reachable page proves no earlier
+/// text. The 1997 Rule 26(b) history (sources/usc-28-app-1997-time.txt:6)
+/// ends with the 1996 amendment effective Dec. 1, 1996.
+deadline notice-of-appeal: 30.days after JudgmentEntered() counted_by frap26 effective [1968-07-01, 1996-12-01) cite "FRAP (2008 ed.) 4(a)(1)(A)" historical
 {
   bearer appellant
 }
 
-/// FRAP 26(b) (2000 ed.) says: "But the court may not extend the time to
-/// file: (1) a notice of appeal (except as authorized in Rule 4) or a
-/// petition for permission to appeal." Rule 4(a)(5) supplies the separate
-/// motion move below; this lock prevents Rule 26 from adding a second,
-/// independent enlargement of the notice period.
-deadline notice-of-appeal: 30.days after JudgmentEntered() counted_by frap26 effective [2000-12-01, 2002-12-01) supersedes notice-of-appeal@1968-07-01 cite "FRAP (2008 ed.) 4(a)(1)(A)" historical
+/// FRAP 26(b) (1997 ed.) says: "but the court may not enlarge the time
+/// for filing a notice of appeal" (sources/usc-28-app-1997-time.txt:4).
+/// Rule 4(a)(5) separately authorizes a motion to extend under 28 U.S.C.
+/// § 2107(c); this lock bars an independent Rule 26 enlargement.
+deadline notice-of-appeal: 30.days after JudgmentEntered() counted_by frap26 effective [1996-12-01, 1998-12-01) supersedes notice-of-appeal@1968-07-01 cite "FRAP (2008 ed.) 4(a)(1)(A)" historical
+{
+  bearer appellant
+  extend { never cite "FRAP (1997 ed.) 26(b)" }
+}
+
+/// FRAP 26(b) (2000 ed.) says: "the court may not extend the time to file:
+/// (1) a notice of appeal (except as authorized in Rule 4)". Rule 4(a)(5)
+/// is the separate, statute-authorized move, not a Rule 26 extension.
+/// The 2002 and 2008 editions repeat this sentence unchanged; their
+/// source histories prove effective dates 2002-12-01 and 2005-12-01.
+deadline notice-of-appeal: 30.days after JudgmentEntered() counted_by frap26 effective [1998-12-01, ..) supersedes notice-of-appeal@1996-12-01 cite "FRAP (2008 ed.) 4(a)(1)(A)" historical
 {
   bearer appellant
   extend { never cite "FRAP (2000 ed.) 26(b)" }
 }
 
-/// The 2002 edition repeats the Rule 26(b) prohibition: "But the court
-/// may not extend the time to file: (1) a notice of appeal (except as
-/// authorized in Rule 4) or a petition for permission to appeal." Rule
-/// 4(a)(5) remains a separate move, not a second extension declaration.
-deadline notice-of-appeal: 30.days after JudgmentEntered() counted_by frap26 effective [2002-12-01, 2008-12-01) supersedes notice-of-appeal@2000-12-01 cite "FRAP (2008 ed.) 4(a)(1)(A)" historical
-{
-  bearer appellant
-  extend { never cite "FRAP (2002 ed.) 26(b)" }
-}
-
-/// The 2008 edition repeats the Rule 26(b) prohibition: "But the court
-/// may not extend the time to file: (1) a notice of appeal (except as
-/// authorized in Rule 4) or a petition for permission to appeal." Rule
-/// 4(a)(5) remains a separate move, not a second extension declaration.
-deadline notice-of-appeal: 30.days after JudgmentEntered() counted_by frap26 effective [2008-12-01, ..) supersedes notice-of-appeal@2002-12-01 cite "FRAP (2008 ed.) 4(a)(1)(A)" historical
-{
-  bearer appellant
-  extend { never cite "FRAP (2008 ed.) 26(b)" }
-}
-
-/// FRAP 4(a)(5)(A)(i): a motion to extend the time to appeal is due no
-/// later than 30 days after the time FRAP 4(a) prescribes expires. The
-/// pre-2000 interval remains an honest hole because no official earlier
-/// Rule 26 edition was reachable to establish whether this motion period
-/// is extendable under the general rule.
-deadline appeal-extension-motion: 30.days after deadline(notice-of-appeal).adjusted counted_by frap26 effective [1968-07-01, 2000-12-01) cite "FRAP (2008 ed.) 4(a)(5)(A)(i)" historical
+/// FRAP 4(a)(5)(A)(i)'s motion period is fixed by statute as well as the
+/// rule: 28 U.S.C. § 2107(c) permits the motion "not later than 30 days
+/// after the expiration" of the appeal time (sources/usc-28-2008-sec2107.txt:4).
+/// FRAP 26(b) (sources/usc-28-2000-frap-rule26.txt:12) also bars enlarging
+/// the notice time except as authorized by Rule 4. The statutory motion
+/// period remains undeclared: no general Rule 26 grant is asserted.
+deadline appeal-extension-motion: 30.days after deadline(notice-of-appeal).adjusted counted_by frap26 effective [1968-07-01, ..) cite "FRAP (2008 ed.) 4(a)(5)(A)(i)" historical
 {
   bearer appellant
 }
 
-/// FRAP 26(b) (2000 ed.) provides: "For good cause, the court may extend
-/// the time prescribed by these rules or by its order to perform any act,
-/// or may permit an act to be done after that time expires." This includes
-/// the separate Rule 4(a)(5) motion deadline; the motion extends the notice
-/// period under Rule 4, while this grant concerns only filing that motion.
-deadline appeal-extension-motion: 30.days after deadline(notice-of-appeal).adjusted counted_by frap26 effective [2000-12-01, 2002-12-01) supersedes appeal-extension-motion@1968-07-01 cite "FRAP (2008 ed.) 4(a)(5)(A)(i)" historical
-{
-  bearer appellant
-  extend {
-    by court
-    discretion GoodCause
-    after_expiry
-    on AppealExtensionMoved()
-    cite "FRAP (2000 ed.) 26(b)"
-  }
-}
-
-/// FRAP 26(b) (2002 ed.) gives the same good-cause authority to extend
-/// "the time prescribed by these rules or by its order to perform any
-/// act" and to permit late performance. It applies to filing the Rule
-/// 4(a)(5) motion, not to the notice period Rule 4 governs.
-deadline appeal-extension-motion: 30.days after deadline(notice-of-appeal).adjusted counted_by frap26 effective [2002-12-01, 2008-12-01) supersedes appeal-extension-motion@2000-12-01 cite "FRAP (2008 ed.) 4(a)(5)(A)(i)" historical
-{
-  bearer appellant
-  extend {
-    by court
-    discretion GoodCause
-    after_expiry
-    on AppealExtensionMoved()
-    cite "FRAP (2002 ed.) 26(b)"
-  }
-}
-
-/// FRAP 26(b) (2008 ed.) retains its good-cause authority to extend "the
-/// time prescribed by these rules or by its order to perform any act, or
-/// [to] permit an act to be done after that time expires." It applies to
-/// filing the Rule 4(a)(5) motion, not to the notice period Rule 4 governs.
-deadline appeal-extension-motion: 30.days after deadline(notice-of-appeal).adjusted counted_by frap26 effective [2008-12-01, ..) supersedes appeal-extension-motion@2002-12-01 cite "FRAP (2008 ed.) 4(a)(5)(A)(i)" historical
-{
-  bearer appellant
-  extend {
-    by court
-    discretion GoodCause
-    after_expiry
-    on AppealExtensionMoved()
-    cite "FRAP (2008 ed.) 26(b)"
-  }
-}
-
-/// FRAP 4(a)(6) as added December 1, 1991 (order of April 30, 1991): a
-/// motion to reopen the time to appeal is due 7 days after the moving
-/// party receives notice of entry, or 180 days after entry, whichever is
-/// earlier (the 2005 Committee Note restates the 1991 conditions). Its
-/// extension status remains a hole: the period starts before any reachable
-/// official Rule 26 edition, so the later text is not applied retroactively. Which
-/// notice opens the window is the circuit split `frap-4a6-notice`
-/// (docs/litigate/validation/splits.lit): a matter gives the receipt its
-/// court held opened it. The layers `frap-2005` and `frap-2009` amend it.
+/// FRAP 4(a)(6)'s motion period is also fixed by 28 U.S.C. § 2107(c):
+/// motion must be filed "within 180 days after entry ... or within 7 days
+/// after receipt of such notice, whichever is earlier"
+/// (sources/usc-28-2008-sec2107.txt:7). It stays undeclared; the later
+/// Rule 26 text does not enlarge this statute-fixed period. Which notice
+/// opens the window is the circuit split `frap-4a6-notice`
+/// (docs/litigate/validation/splits.lit); the layers `frap-2005` and
+/// `frap-2009` amend it.
 deadline reopen-motion-window: 7.days after NoticeOfEntryReceived() counted_by frap26 effective [1991-12-01, ..) known_at 1991-04-30 cite "FRAP (2008 ed.) 4(a)(6)" historical
 {
   bearer appellant
@@ -185,10 +126,10 @@ test "a motion to extend is due 30 days after the appeal time expires" cite "FRA
   expect deadline(appeal-extension-motion) == 2008-12-01
 }
 
-test "after 2000 and before 2005 a motion to reopen is due 7 days after notice of entry, weekends skipped" cite "FRAP (2008 ed.) 4(a)(6)" historical
+test "before 2005 a motion to reopen is due 7 days after notice of entry, weekends skipped" cite "FRAP (2008 ed.) 4(a)(6)" historical
 {
-  given NoticeOfEntryReceived() on 2001-05-28
-  expect deadline(reopen-motion-window) == 2001-06-04
+  given NoticeOfEntryReceived() on 1999-05-28
+  expect deadline(reopen-motion-window) == 1999-06-04
 }
 
 test "the outer bound is 180 days after entry" cite "FRAP (2008 ed.) 4(a)(6)" historical

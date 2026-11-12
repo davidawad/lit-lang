@@ -254,19 +254,21 @@ fn every_layer_and_world_checks() {
             .trim_end_matches('"');
         let package = packages.iter().find(|p| p["name"] == name).unwrap();
         if dir == "frcp-base" {
-            // The active FRCP 23(f) version has its FRAP 26(b) lock from
-            // the vendored 2000 edition; the pre-2000 interval is recorded
-            // as open in periods.lit because no earlier official edition
-            // was reachable.
+            // The FRAP 26(b) petition prohibition starts with FRCP 23(f)
+            // on 1998-12-01, as proved by the 2000 edition's amendment
+            // history. There are no diagnostics in this module.
             assert_eq!(package["holes"], 0, "{dir}: active periods are typed");
-            let periods =
-                std::fs::read_to_string(repo().join(DIR).join(dir).join("periods.lit")).unwrap();
-            assert!(periods.contains("deadline class-appeal-petition:"));
+            let diagnostics = run.json["diagnostics"].as_array().unwrap();
+            assert!(diagnostics.iter().all(|diagnostic| {
+                diagnostic["span"]["file"] != "docs/litigate/change/frcp-base/periods.lit"
+            }));
         } else if dir == "frap-base" {
-            // The Rule 4(a)(6) window spans pre-2000 dates for which the
-            // official Rule 26(b) edition was not reachable; keep that one
-            // extension hole visible and pinned to its declaration.
-            assert_eq!(package["holes"], 1, "{dir}: one dated-source hole");
+            // 28 U.S.C. § 2107(c) fixes the Rule 4(a)(5) and 4(a)(6)
+            // motion periods; neither receives a Rule 26 extension grant.
+            assert_eq!(
+                package["holes"], 2,
+                "{dir}: the two statute-fixed motion periods"
+            );
             let diagnostics = run.json["diagnostics"].as_array().unwrap();
             let lines: Vec<_> = diagnostics
                 .iter()
@@ -276,7 +278,7 @@ fn every_layer_and_world_checks() {
                 })
                 .map(|diagnostic| diagnostic["span"]["line"].as_u64().unwrap())
                 .collect();
-            assert_eq!(lines, [163]);
+            assert_eq!(lines, [100, 104]);
         } else {
             assert_eq!(package["holes"], 0, "{dir}: every cite proved");
         }

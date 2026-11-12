@@ -1950,3 +1950,9 @@ FRBP 8002. Neither decision supports a proposition needed by this outline.
 - Extraction: the Rule 26 heading through subsection (c), with whitespace collapsed.
 - Original: `original/fedcir-2018/FederalCircuitRulesofPractice-December2018.pdf` (sha256 `346c3c83cb999c4444cb9a4e339a840cdf5444df53c5e44f5847e4d84b68db89`).
 - sha256 (extraction): `55dd3858aa64f16dec9801b7d3dd3bbfdf623b8d8858ff8000c2e2dd3ebe81da`.
+
+### `usc-28-2008-sec2107.txt` — 28 U.S.C. § 2107 (2008 ed.)
+
+- Transcription of § 2107 from the official GovInfo 2008 United States Code page. Paragraphs were copied from the statutory-body paragraphs in order, with HTML entities decoded and whitespace collapsed; the printed paragraph text is otherwise unchanged.
+- sha256 (this file): `d55b39782aeca1dc5d33a36b544569db9746833338a8c2b484f5785ca452426b`
+- Original: `original/usc-28-2008-sec2107.html` as served (sha256 `d44f221964296f6036179e7b8746e5019953acc7440e56abcf975bdeaaee805b`); extraction sha256 `d55b39782aeca1dc5d33a36b544569db9746833338a8c2b484f5785ca452426b`. Served at https://www.govinfo.gov/content/pkg/USCODE-2008-title28/html/USCODE-2008-title28-partV-chap133-sec2107.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-11-12.

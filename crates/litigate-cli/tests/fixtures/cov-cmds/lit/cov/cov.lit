@@ -49,12 +49,16 @@ calendar federal-holidays cite "FRCP 6(a)(6)"
 
 rule duty amend-duty cite "FRCP 15(a)(3)"
 {
-  deadline amended-answer-period: 14.days after Served(amended_complaint) counted_by frcp6
+  deadline amended-answer-period: 14.days after Served(amended_complaint) counted_by frcp6 {
+    extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
+  }
 }
 
 rule duty answer-duty cite "FRCP 12(a)(1)(A)(i)"
 {
-  deadline answer-period: 21.days from Served(complaint) counted_by frcp6
+  deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {
+    extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
+  }
 }
 
 deadline brief-period: 7.days before Hearing() counted_by frcp6 delegable { to CaseOrder, op extend, max 7.days, cite "FRCP 6(b)(1)" }

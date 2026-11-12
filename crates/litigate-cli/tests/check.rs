@@ -96,6 +96,7 @@ fn strict_dependency_holes_follow_reachable_declarations() {
         "unreachable fixture hole",
     );
     let unused = run(&unused_dir);
+    assert_eq!(unused.code, 0, "{:?}", unused.json["diagnostics"]);
     let diagnostics = unused.json["diagnostics"].as_array().unwrap();
     let note = diagnostics.iter().find(|d| d["code"] == "L5002").unwrap();
     assert_eq!(note["severity"], "info");

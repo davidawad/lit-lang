@@ -156,3 +156,32 @@ fn a_min_bound_counts_every_ceiling() {
     );
     assert_eq!(found(&entailed), (Some(ObligationStatus::Passed), vec![]));
 }
+
+#[test]
+fn a_day_ceiling_in_a_mixed_month_min_is_still_provable() {
+    let lit = program(" where until <= prescribed_due + 30.days").replace(
+        "to max(prescribed_due + 30.days, grant_order_entered + 14.days)",
+        "to min(trigger_date + 6.months, prescribed_due + 30.days)",
+    );
+    assert_eq!(found(&lit), (Some(ObligationStatus::Passed), vec![]));
+}
+
+#[test]
+fn a_month_only_ceiling_is_undecided_when_the_refinement_admits_a_late_date() {
+    let lit = program(" where until <= prescribed_due + 45.days").replace(
+        "to max(prescribed_due + 30.days, grant_order_entered + 14.days)",
+        "to trigger_date + 6.months",
+    );
+    let (status, messages) = found(&lit);
+    assert_eq!(status, Some(ObligationStatus::Failed));
+    assert_eq!(messages.len(), 1, "{messages:?}");
+    assert!(messages[0].contains("L2015"), "{messages:?}");
+    assert!(
+        messages[0].contains("month bound counted from the trigger is not modelled"),
+        "{messages:?}"
+    );
+    assert!(
+        messages[0].contains("replay checks each extension"),
+        "{messages:?}"
+    );
+}

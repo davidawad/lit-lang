@@ -4,7 +4,11 @@
 //! extension bounds. The SMT tier checks the claim for every matter at
 //! once: the event's refinements, with the bound dates open, together
 //! with `p` past every `extend { .. }` ceiling of each version of `d`. A
-//! model is a counterexample (L2013); `unknown` is a hole (L2015).
+//! model is a counterexample (L2013); `unknown` is a hole (L2015). The SMT
+//! tier does not model calendar-month counting. It treats a counted term as
+//! unsatisfied, while a `min` can still be checked against its day-only
+//! ceiling. If the relaxed search admits an extension, the result is L2015
+//! and replay checks the actual date.
 //!
 //! A version with a discretionary grant (no ceiling) bounds nothing, and
 //! a version with no bounded grant has no bound to stay within: neither
@@ -103,6 +107,15 @@ fn exceeds(
     preds.push(not(join(BinaryOp::Or, false, within)));
     match smt::decide(&smt_vars, &preds) {
         smt::Decision::Unsat(_) => None,
+        smt::Decision::Sat(_model) if ceilings.iter().any(|b| b.counted_months().is_some()) => Some(
+            emit(
+                C::RefinementUndecided,
+                cx.profile,
+                span.clone(),
+                format!("the SMT tier cannot decide whether `{}` stays within a trigger-counted month bound of `{deadline}`: the month bound counted from the trigger is not modelled by this tier; replay checks each extension", e.name),
+            )
+            .note("the month bound counted from the trigger is not modelled by this tier; replay checks each extension"),
+        ),
         smt::Decision::Sat(model) => Some(counterexample(cx, e, to, deadline, ceilings, span, &model)),
         smt::Decision::Unknown(why) => Some(
             emit(
@@ -264,7 +277,7 @@ fn below(to: &str, b: &Bound) -> hir::Expr {
         Bound::Counted { .. } => expr(
             Type::Boolean,
             ExprKind::Literal {
-                value: Value::Boolean(true),
+                value: Value::Boolean(false),
             },
         ),
         Bound::Offset { from, days: n } => cmp(
@@ -278,6 +291,19 @@ fn below(to: &str, b: &Bound) -> hir::Expr {
             binary(Type::Date, BinaryOp::Sub, date(from.name()), days(*n)),
         ),
         Bound::Max(xs) => join(BinaryOp::Or, false, xs.iter().map(|x| below(to, x))),
-        Bound::Min(xs) => join(BinaryOp::And, true, xs.iter().map(|x| below(to, x))),
+        Bound::Min(xs) => {
+            let day_bounds = xs.iter().filter(|x| x.counted_months().is_none());
+            let any = day_bounds.clone().next().is_some();
+            if any {
+                join(BinaryOp::And, true, day_bounds.map(|x| below(to, x)))
+            } else {
+                expr(
+                    Type::Boolean,
+                    ExprKind::Literal {
+                        value: Value::Boolean(false),
+                    },
+                )
+            }
+        }
     }
 }

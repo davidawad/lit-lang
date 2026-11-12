@@ -515,7 +515,12 @@ WhereClause  = "where", Expr ;
   max(prescribed_due + 30.days, grant_order_entered + 14.days) =
   1970-01-31``), recorded under `well-typed`. A version with a
   discretionary extension (no ceiling) or none bounds nothing and is not
-  checked.
+  checked. The SMT tier does not model trigger-counted calendar months. It
+  relaxes a counted term as unsatisfied; for `min(...)`, the remaining
+  day-only ceiling can still prove a bound. If the relaxed search finds a
+  possible violation involving a counted term, it reports L2015 with a note
+  that replay checks each extension, never L2013. A search with no model
+  proves the claim without relying on the month allowance.
 - **Undecided is a hole.** The solver runs under a deterministic work
   budget, not a timeout. `unknown` (the budget, exact arithmetic past
   `i64` while building the question, or a wasm build, which links no

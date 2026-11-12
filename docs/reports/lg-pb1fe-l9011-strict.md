@@ -22,3 +22,13 @@ Each warning remains a warning because the deadline ends before the first record
 | `lit/bankr-ri` | `local-counsel-appearance-period` | `lit/bankr-ri/local-rules.lit:941` | the deadline ends before the first recorded version of its counting rule |
 
 The two warning rows above are the complete strict-profile L9011 warning set. No package newly fails, so no `litigate fix` edits or Lit.lock changes were required.
+
+## Gate results
+
+- `cargo build --release -p litigate-cli` on main and the rebased tree: both exited 0.
+- `cargo nextest run -p litigate-verify -p litigate-syntax -p litigate-base --no-fail-fast`: exit 0; 394 passed, 0 skipped.
+- `cargo nextest run -p litigate-cli --no-fail-fast -E 'binary(tutorial) | binary(core_stdlib) | binary(change_examples) | binary(change_files) | binary(check) | binary(corpus) | binary(roundtrip) | test(/strict|L9011|counting/)'`: exit 0; 71 passed (1 slow), 587 skipped.
+- `cargo clippy --workspace --all-targets -- -D warnings`: exit 0.
+- `cargo fmt --all --check`: exit 0.
+- `target/release/litigate check lit cases`: exit 0; response `ok: true`, `elapsed_ms: 305979.119046`.
+- `target/release/litigate fmt --check lit cases`: exit 0; response `ok: true`, `elapsed_ms: 384.256768`.

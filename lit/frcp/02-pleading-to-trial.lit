@@ -375,6 +375,7 @@ terminal dismissed-with-prejudice: "DISMISSED WITH PREJUDICE" by plaintiff outco
     authority cite "28 U.S.C. 1291; FRAP 4(a)(1)(A)"
     effort 0.hours
     note "A dismissal with prejudice disposes of the whole action, so it is a final decision appealable under 28 U.S.C. 1291 and the FRAP 4(a)(1)(A) clock runs from entry of the judgment (Twombly: S.D.N.Y. dismissal, 313 F. Supp. 2d 174 (2003), appealed to the Second Circuit, 425 F.3d 99 (2005)). Hours: 0, a no-action transition; the filing itself is the notice-of-appeal edge."
+    sets [judgment-for-defendant]
   }
 }
 
@@ -808,10 +809,16 @@ decision discovery-closed: "Discovery Closed" cite "FRCP 16(b)(3)"
 {
   group discovery-group
   note "The scheduling order's discovery cutoff has passed. Rule 56(b) lets a party move for summary judgment at any time until 30 days after the close of all discovery absent a different time set by local rule or court order -- so the SJ clock is anchored to this node, not to trial."
-  "Move for summary judgment" -> summary-judgment-motion {
+  "Move for summary judgment" -> summary-judgment-motion by plaintiff {
     authority cite "FRCP 56(a); 56(b)"
     effort 80.hours
     cost 20_000.usd
+  }
+  "Move for summary judgment" -> summary-judgment-motion by defendant {
+    authority cite "FRCP 56(a); 56(b)"
+    effort 80.hours
+    cost 20_000.usd
+    sets [sj-by-defendant]
   }
   "Move to exclude opposing expert testimony pretrial" -> daubert-motion-filed {
     authority cite "FRE 702"
@@ -884,8 +891,15 @@ chance sj-ruling: "Court Rules on Summary Judgment" by court discretion cite "FR
   group pretrial-motions-group
   note "Outcome distribution authored at 0.25 granted-in-full / 0.20 granted-in-part / 0.55 denied -- APPROXIMATE; wholesale grants are the minority outcome because the standard requires viewing evidence and drawing all reasonable inferences in the nonmovant's favor (Anderson v. Liberty Lobby, Inc., 477 U.S. 242 (1986); Matsushita Elec. Indus. Co. v. Zenith Radio Corp., 475 U.S. 574 (1986)) -- a genuine factual dispute on any material element sends that claim to trial regardless of the movant's confidence."
   court_listener_url "https://www.courtlistener.com/opinion/111719/anderson-v-liberty-lobby-inc/"
-  "Granted in full -- no genuine dispute of material fact" -> summary-judgment-granted p 0.25 {
+  "Granted in full -- no genuine dispute of material fact" -> summary-judgment-for-plaintiff p 0.25 {
     authority cite "FRCP 56(a)"
+    forbids [sj-by-defendant]
+    clears [judgment-for-defendant]
+  }
+  "Granted in full -- no genuine dispute of material fact" -> summary-judgment-for-defendant p 0.25 {
+    authority cite "FRCP 56(a)"
+    requires [sj-by-defendant]
+    sets [judgment-for-defendant]
   }
   "Granted in part -- remaining claims proceed to trial" -> partial-summary-judgment p 0.2 {
     authority cite "FRCP 56(a)"
@@ -895,17 +909,31 @@ chance sj-ruling: "Court Rules on Summary Judgment" by court discretion cite "FR
   }
 }
 
-terminal summary-judgment-granted: "SUMMARY JUDGMENT ENTERED" by plaintiff outcome [final] cite "FRCP 56(a)"
+terminal summary-judgment-for-plaintiff: "SUMMARY JUDGMENT FOR PLAINTIFF" by plaintiff outcome [win] cite "FRCP 56(a)"
 {
   group pretrial-motions-group
-  note "PERMADEATH for the losing party's claims/defenses on the merits (subject to appeal). No genuine dispute of material fact exists and the movant -- plaintiff or defendant -- is entitled to judgment as a matter of law on the full case. A grant of summary judgment is reviewed de novo on appeal, unlike a jury verdict's deferential review. PLACEHOLDER PAYOFF: $500,000 (stake midpoint), override per matter. This pack does not branch on which party a judgment favors -- `verdict-rendered`'s 'for plaintiff'/'for defendant' edges both lead to the same `final-judgment-entered` state, and every downstream terminal (summary judgment, appeal outcomes) tracks only the procedural posture from there, not who won. A single payoff here necessarily blends a possible plaintiff win with a possible plaintiff loss; override with scenario.payoffs once the matter's actual judgment is known."
+  note "The court enters judgment for the plaintiff movant on the full case because no genuine dispute of material fact exists and the movant is entitled to judgment as a matter of law. A grant of summary judgment is reviewed de novo on appeal, unlike a jury verdict's deferential review. PLACEHOLDER PAYOFF: $500,000, retained for the plaintiff-favourable result; the defendant-side result is separately valued at $0. FRCP 56(a)."
   valence good
   court_listener_url "https://www.courtlistener.com/opinion/145738/scott-v-harris/"
   payoff 500_000.usd
-  summary-judgment-appeal-clock "Summary judgment disposing of the case is a final decision -- the losing party weighs an appeal" -> notice-of-appeal-window {
+  edge-summary-judgment-for-plaintiff-appeal-clock "Summary judgment disposing of the case is a final decision -- the losing party weighs an appeal" -> notice-of-appeal-window {
     authority cite "28 U.S.C. 1291; FRAP 4(a)(1)(A)"
     effort 0.hours
     note "Summary judgment on the full case is a final decision appealable under 28 U.S.C. 1291; the FRAP 4(a)(1)(A) clock runs from entry of judgment (Celotex: D.D.C. summary judgment, July 1982, reversed by the D.C. Circuit, 756 F.2d 181 (1985)). A partial summary judgment is not covered here: it is interlocutory absent FRCP 54(b) certification. Hours: 0, a no-action transition."
+  }
+}
+
+terminal summary-judgment-for-defendant: "SUMMARY JUDGMENT FOR DEFENDANT" by plaintiff outcome [loss] cite "FRCP 56(a)"
+{
+  group pretrial-motions-group
+  note "The court enters judgment for the defendant movant on the full case because no genuine dispute of material fact exists and the movant is entitled to judgment as a matter of law. A grant of summary judgment is reviewed de novo on appeal. PLACEHOLDER PAYOFF: $0, the defendant-favourable side of the former blended terminal. FRCP 56(a)."
+  valence bad
+  court_listener_url "https://www.courtlistener.com/opinion/145738/scott-v-harris/"
+  payoff 0.usd
+  edge-summary-judgment-for-defendant-appeal-clock "Summary judgment disposing of the case is a final decision -- the losing party weighs an appeal" -> notice-of-appeal-window {
+    authority cite "28 U.S.C. 1291; FRAP 4(a)(1)(A)"
+    effort 0.hours
+    note "Summary judgment on the full case is a final decision appealable under 28 U.S.C. 1291; the FRAP 4(a)(1)(A) clock runs from entry of judgment. Hours: 0, a no-action transition."
   }
 }
 
@@ -999,8 +1027,10 @@ chance verdict-rendered: "Verdict / Findings Rendered" by court discretion cite 
   note "For a bench trial, the court must find the facts specially and state its conclusions of law separately (Rule 52(a)(1)). For a jury trial, the jury returns its verdict. Either way, judgment must be set out in a separate document (Rule 58(a)) -- the FRAP 4 appeal clock and the Rule 50(b)/59 clocks both run from ENTRY of that judgment, with a 150-day backstop under FRAP 4(a)(7)(A)(ii) if no separate document is ever entered."
   verdict-for-plaintiff "Verdict / findings for plaintiff" -> final-judgment-entered p 0.5 {
     authority cite "FRCP 52(a); 58"
+    clears [judgment-for-defendant]
   }
   verdict-for-defendant "Verdict / findings for defendant" -> final-judgment-entered p 0.5 {
     authority cite "FRCP 52(a); 58"
+    sets [judgment-for-defendant]
   }
 }

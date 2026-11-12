@@ -18,7 +18,12 @@ calibration frcp-fy2024: "District court time-to-disposition by method, 12 month
     n 69436
     method "Same 'No Court Action' figure as the other voluntary-dismissal edge above — the AO table does not distinguish which procedural stage the dismissal was reached at, only that no court ruling was involved."
   }
-  duration edge-sj-ruling-summary-judgment-granted 410.91.days {
+  duration edge-sj-ruling-summary-judgment-for-plaintiff 410.91.days {
+    source table-c5
+    n 21861
+    method "Same 'During or After Pretrial' median proxy for a full-case summary-judgment grant (13.5 months converted to 410.91 days), retained for the plaintiff-movant branch."
+  }
+  duration edge-sj-ruling-summary-judgment-for-defendant 410.91.days {
     source table-c5
     n 21861
     method "'Total' row, 'During or After Pretrial' column (the closest published proxy for a summary-judgment ruling, which is typically decided at or after the close of pretrial/discovery): 21,861 cases, median 13.5 months. 13.5 * 30.4375 = 410.91 days."

@@ -20,9 +20,9 @@ fn check(name: &str, events: &[&str]) -> Run {
         name,
         &["frcp"],
         "frcp-civil-procedure ^2024.12.0",
-        "  plaintiff: plaintiff Corporation\n  judge: court Tribunal\n",
+        "  plaintiff: plaintiff Corporation\n  defendant: defendant Corporation\n  judge: court Tribunal\n",
         events,
-        "frcp-civil-procedure::appeal-window-blown",
+        "frcp-civil-procedure::appeal-window-blown-plaintiff-judgment",
     )
 }
 

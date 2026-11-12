@@ -46,7 +46,7 @@ fn matter(name: &str, as_of: &str, events: &[&str]) -> PathBuf {
              start frcp-civil-procedure::final-judgment-entered\n\n\
              parties {{\n  movant: plaintiff Corporation\n  judge: court Tribunal\n}}\n\n\
              events {{\n  j-1: 2025-06-02 JudgmentEntered() by judge\n{events}}}\n\n\
-             stakes {{ frcp-civil-procedure::appeal-window-blown: 0.usd }}\n"
+             stakes {{ frcp-civil-procedure::appeal-window-blown-plaintiff-judgment: 0.usd }}\n"
         ),
     )
     .unwrap();

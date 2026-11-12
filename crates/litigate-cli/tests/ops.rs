@@ -40,6 +40,24 @@ fn an_op_runs_on_a_matter_with_set_params_composed_onto_it() {
 }
 
 #[test]
+fn frcp_civil_case_solve_uses_party_relative_judgment_stakes() {
+    // Before the judgment-outcome split this was -$16,655: the $0 `final`
+    // stake made serving worse than stopping at the service deadline.
+    let solved = response(&litigate(&["solve", "cases/frcp-civil-case.case"]), "solve");
+    assert_eq!(solved["result"]["value"], 472_895.0);
+    let labels: Vec<&str> = solved["result"]["best_line"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter_map(|edge| edge["label"].as_str())
+        .collect();
+    assert!(
+        labels.contains(&"Serve defendant via formal process"),
+        "{labels:?}"
+    );
+}
+
+#[test]
 fn an_unknown_set_param_returns_an_error_envelope_with_nearest_valid_param() {
     let run = litigate(&["solve", "cases/frcp-civil-case.case", "--set", "raet=900"]);
     assert_eq!(run.code, 2, "{}{}", run.stdout, run.stderr);

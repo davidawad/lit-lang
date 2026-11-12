@@ -29,6 +29,10 @@ rule duty post-judgment-motion cite "RCFC 59(b)(1)"
   /// Corrected July 15, 2011 to 28 days, "in accordance with the final
   /// version of FRCP 59" (2011 Amendment note); unchanged since.
   deadline post-judgment-motion-period: 28.days after JudgmentEntered() counted_by rcfc6 effective [2011-07-15, ..) supersedes post-judgment-motion-period@2010-01-11 cite "RCFC 59(b)(1)"
+  {
+    // RCFC 6(b)(2) excludes motions under RCFC 59(b) from extension.
+    extend { never cite "RCFC 6(b)(2)" }
+  }
 }
 
 /// RCFC 54(d)(1)(B)(i): a Bill of Costs must be filed within 30 days after
@@ -39,6 +43,16 @@ rule duty post-judgment-motion cite "RCFC 59(b)(1)"
 rule duty costs-and-fees cite "RCFC 54(d)(1)(B)"
 {
   deadline costs-period: 30.days after FinalJudgment() counted_by rcfc6 effective [2010-01-11, ..) cite "RCFC 54 (2010 Amendment note)"
+  {
+    extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "RCFC 6(b)(1)(A)" }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on ExtensionMotionFiled()
+      cite "RCFC 6(b)(1)(B)"
+    }
+  }
 }
 
 test "a RCFC 59 motion is due 28 days after entry of judgment" cite "RCFC 59(b)(1)"

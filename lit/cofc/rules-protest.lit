@@ -39,7 +39,16 @@ rule duty protest-prefiling-notice effective [2021-08-02, ..) known_at 2021-08-0
   /// days lie strictly between them. The one-day minimum has no forward
   /// edge window; `protest-notice-latest` states it.
   deadline protest-notice-window: 5.court_days after ProtestNoticeGiven() counted_by rcfc6 cite "RCFC App. C 2"
-  {}
+  {
+    extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "RCFC 6(b)(1)(A)" }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      after_expiry
+      on ExtensionMotionFiled()
+      cite "RCFC 6(b)(1)(B)"
+    }
+  }
 }
 
 test "the earliest notice for a Monday filing is the Monday before" cite "RCFC 6(a)(5)"

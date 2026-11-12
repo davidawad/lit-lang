@@ -3,6 +3,8 @@ module sdd-civil-local-rules.local-rules
 import core.frcp6.{ frcp6 }
 
 /// A motion and its brief are served (LR 7.1(B)).
+/// A motion seeking enlargement under FRCP 6(b)(1).
+event ExtensionMotionFiled()
 event MotionAndBriefServed()
 /// The responsive brief to a motion is served (LR 7.1(B)).
 event ResponsiveBriefServed()
@@ -30,6 +32,16 @@ event FeeResponseServed()
 /// tables, certificate of service and attachments, without prior approval
 /// (LR 7.1(B)(1)).
 deadline response-brief-period: 21.days after MotionAndBriefServed() counted_by frcp6 cite "D.S.D. Civ. LR 7.1(B)"
+{
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "FRCP 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "FRCP 6(b)(1)(B)"
+  }
+}
 
 test "Counting boundary: response-brief-period (weekend)" cite "D.S.D. Civ. LR 7.1(B)"
 {
@@ -40,6 +52,17 @@ test "Counting boundary: response-brief-period (weekend)" cite "D.S.D. Civ. LR 7
 /// LR 7.1(B): the movant may file a reply brief within 14 calendar days
 /// after service of the responsive brief.
 deadline reply-brief-period: 14.days after ResponsiveBriefServed() counted_by frcp6 cite "D.S.D. Civ. LR 7.1(B)"
+{
+  extend { by court, discretion GoodCause, on ExtensionMotionFiled(), cite "FRCP 6(b)(1)(A)" }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMotionFiled()
+    cite "FRCP 6(b)(1)(B)"
+  }
+}
+
 /// LR 15.1: after a motion to amend or supplement is granted, the movant
 /// files a clean original of the amended or supplemental pleading within 7
 /// days.

@@ -63,7 +63,9 @@ event Served(method: ServiceMethod)
 /// with the summons and complaint.
 rule duty answer-duty cite "FRCP 12(a)(1)(A)(i)"
 {
-  deadline answer-period: 21.days from Served() counted_by frcp6
+  deadline answer-period: 21.days from Served() counted_by frcp6 {
+    extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)(A)" }
+  }
 }
 
 decision served: "Answer or let the deadline pass" by defendant cite "FRCP 12(a)(1)(A)(i)"

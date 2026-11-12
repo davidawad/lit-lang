@@ -9,14 +9,14 @@ event MotionFiled()
 rule duty administrative-opposition cite "N.D. Cal. Civ. L.R. 7-11(b)"
 {
   deadline administrative-period: 4.days from MotionFiled() counted_by frcp6 {
-    extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
+    extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)(A)" }
   }
 }
 
 rule duty regular-opposition cite "N.D. Cal. Civ. L.R. 7-3(a)"
 {
   deadline regular-period: 14.days from MotionFiled() counted_by frcp6 {
-    extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
+    extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)(A)" }
   }
 }
 

@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-lsp/tests/protocol.rs
+assertion_line: 156
 expression: respond
 ---
 ```litigate
@@ -8,10 +9,10 @@ decision respond: "Answer or move under Rule 12" by defendant cite "FRCP 12(a)(1
 
 decision `frcp-rule12-example::respond`
 
-decision by `Defendant`; edges `answer` -> `answered`, `move-dismiss` -> `mtd-ruling`, `default` -> `default-risk`
+decision by `defendant`; edges `answer` -> `answered`, `move-dismiss` -> `mtd-ruling`, `default` -> `default-risk`
 
 **versions**
-- [2009-12-01, ..) known_at 2025-01-01 · FederalRule — `lit/examples/rule12.lit:63`
+- [2009-12-01, ..) known_at 2025-01-01 · FederalRule — `lit/examples/rule12.lit:65`
 
 **cite** FRCP 12(a)(1)(A)(i)
 

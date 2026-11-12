@@ -1942,3 +1942,11 @@ FRBP 8002. Neither decision supports a proposition needed by this outline.
 - Source: the Court of Federal Claims' official Rules PDF, amended through January 11, 2010, https://www.uscfc.uscourts.gov/sites/cfc/files/rcfc_complete_20100111.pdf. The relevant Rule 6(b)(1)-(2) text is transcribed from pages 15-16; it authorizes extensions for good cause and identifies the exceptions.
 - Original: `original/rcfc-2010/rcfc_complete_20100111.pdf` (sha256 `5cbd4d4d5ee96991ce12c23f2eabe05f490f107e485bba94d8330af77b9c48ae`).
 - sha256 (extraction): `04d035a4dae6401c18abe332a548c51fc1f1102d98c0f66122396ac1f5af52df`.
+
+
+### `fedcir-2018-rule26.txt` — Federal Circuit Rule 26 as in force December 1, 2018
+
+- Source: official Federal Circuit Rules of Practice, December 1, 2018, Rule 26, pages 78-79, https://www.cafc.uscourts.gov/wp-content/uploads/RulesProceduresAndForms/FederalCircuitRules/FederalCircuitRulesofPractice-December2018.pdf. Rule 26(b)(1) covers periods prescribed by the Federal Rules of Appellate Procedure, Federal Circuit Rules, or court order, requires a motion at least seven days before unless extraordinary circumstances are shown, and requires good cause.
+- Extraction: the Rule 26 heading through subsection (c), with whitespace collapsed.
+- Original: `original/fedcir-2018/FederalCircuitRulesofPractice-December2018.pdf` (sha256 `346c3c83cb999c4444cb9a4e339a840cdf5444df53c5e44f5847e4d84b68db89`).
+- sha256 (extraction): `55dd3858aa64f16dec9801b7d3dd3bbfdf623b8d8858ff8000c2e2dd3ebe81da`.

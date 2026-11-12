@@ -87,3 +87,36 @@ A search of `justfile`, `.github/`, and `crates/*/tests` found no assertion that
 - `cargo clippy -p litigate-cli --all-targets --keep-going -- -D warnings`: exit 0.
 - `cargo fmt --check`: exit 0.
 - No files under `lit/` or `cases/` were changed.
+
+## Attempt 2: union references across versions (lg-pb1fe.40)
+
+### Hole attribution across versions
+
+`dependency_holes` maps an L5002 to the dependency declaration whose `Metadata.span` contains the diagnostic span, then checks `reachable` for `pack_id::Metadata.id` (`crates/litigate-cli/src/cmd/check.rs:397-410`). A hole inside an earlier version of a reachable deadline is therefore attributed to the same reachable key as the later version: the span selects that earlier HIR declaration and both versions carry the same id. No additional attribution change was needed.
+
+The added fixture in `crates/litigate-cli/tests/check.rs:214-290` reaches `core.time::imported-period` from a dependent package. Its earlier deadline version counts by `hole-count`; the later version counts by `clear-count`. The hole in `hole-count` is an L5002 error with the reference union. For the red proof, the index was temporarily restored to last-wins `BTreeMap::insert`: the focused test failed because the specific `earlier version hole` L5002 was downgraded to the informational unreachable summary at `lit/core/time.lit:41`. Restoring the union made the focused test pass (`1 passed`).
+
+### Current strict corpus sweep
+
+Both release binaries ran `litigate check --profile strict` against the 635 immediate package directories under `lit/`, with four workers. The baseline was built at `origin/main` `87e9f302` in `/tmp/lg-pb1fe-main` with its own `CARGO_TARGET_DIR=/tmp/lg-pb1fe-main-target`; the changed binary was built from this branch.
+
+| Binary | Passed | Failed | Other |
+| --- | ---: | ---: | ---: |
+| Baseline (`origin/main` `87e9f302`) | 487 | 148 | 0 |
+| Changed (version-reference union) | 487 | 148 | 0 |
+
+No package changed its diagnostic set or pass/fail status in this corpus sweep. There were no newly failing packages. The focused fixture covers the version collision that is not present as a diagnostic-set change in these 635 current packages.
+
+### Requested checks
+
+`cargo nextest run -p litigate-cli --test check --no-fail-fast` ran 15 tests: 8 passed, 7 failed. The new earlier-version regression test passed. The failures match the known main-branch reds:
+
+- `a_failing_test_is_l5006`
+- `inline_tests_pass_through_the_engine_clock`
+- `dev_check_reports_clean_example_and_replays_acme`
+- `strict_check_accepts_the_hole_free_example`
+- `verbose_check_restores_library_diagnostics`
+- `strict_dependency_holes_follow_reachable_declarations`
+- `ttab_check_human_output_is_limited_to_the_case_when_core_has_no_holes`
+
+`cargo clippy -p litigate-cli --all-targets -- -D warnings` exited 0. `cargo fmt --all --check` exited 0. No files under `lit/` or `cases/` changed.

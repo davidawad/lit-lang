@@ -1,7 +1,8 @@
 # Calibration
 
-A pack's `probability`/`duration` fields are often authored as "teaching
-estimates" — plausible numbers with a `note` saying so, not real data.
+A pack's `probability`/`duration` fields may be authored estimates — plausible
+numbers labeled with a typed `basis estimate` and `vintage` suffix, not real
+data. Their notes explain the modeling judgment, not the provenance label.
 Calibration replaces specific ones with sourced values from published
 statistics, without editing the pack: **data plus mechanism**, the same
 split packs themselves use.

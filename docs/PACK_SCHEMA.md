@@ -156,8 +156,9 @@ scenario says so.
 
 **Tag the node** `"tags": ["fact"]` and **author a prior** — a labeled
 estimate or sourced base rate — as the `probability` on every one of its
-out-edges, same as any chance node, with the basis in each edge's `note`
-(e.g. "estimate: counsel screens for this before filing"). `litigate lint`
+out-edges, same as any chance node, with typed `basis` and `vintage`
+suffixes on each probability (e.g. `p 0.1 basis estimate vintage
+2026-10-26`). Keep explanatory context in the edge's `note`. `litigate lint`
 flags a `fact`-tagged node whose out-edges aren't all authored
 (`fact-no-prior`) — the whole point of tagging it is that a real prior,
 not a 50/50 default, should be there.
@@ -600,7 +601,7 @@ its full shape). It is embedded into the binary the same way packs are
 |---|---|---|
 | `id` | string | name a request references (`"scenario": "<id>"`); by convention matches the file stem |
 | `summary` | string | one line; `litigate describe`'s `scenario_library` lists every scenario by this |
-| `notes` | string | facts, the basis for every rate/stake/probability (sourced vs illustrative), and any modeling judgment calls |
+| `notes` | string | facts and modeling judgment calls; numeric provenance belongs on each number's typed `basis` and `vintage` suffix |
 | `packs` | string[] | pack refs this scenario needs. A request naming this scenario with no `packs` of its own uses these; an explicit request `packs` always wins |
 | `sources` | `[{title,url?,as_of?}]` | sourced facts backing this scenario's numbers |
 | `scenario` | object | the engine scenario (the schema bundle's `scenario`) |
@@ -655,8 +656,9 @@ generated packs.
    `sources[].path`, no matching heading, quote not found, ...) rather
    than silently passing; add new vendored text under `sources/` before
    citing a body of law that isn't there yet.
-2. Probabilities are optional. Where you author one, put the basis in `note`
-   (typed `basis` and `vintage` suffix, or "teaching estimate"). Unauthored is better than
+2. Probabilities are optional. Where you author one, put the basis and
+   observation date in typed `basis` and `vintage` suffixes on the number.
+   Keep explanatory context in `note`. Unauthored is better than
    invented; the engine reports unauthored chance nodes.
 3. Hours are BigLaw-honest estimates for the move; `cost` is cash only.
 4. Terminals should carry `payoff` and `outcome` in v2 packs.

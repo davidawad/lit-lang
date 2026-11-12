@@ -199,7 +199,9 @@ the gate (`scripts/cov-gate`) over fixed known-low and known-ok inputs.
    citation (`sources[].path` is repo-relative only — never a local
    filesystem path); in `.lit` an unresolved cite is a hole. Run
    `validate`, `lint`, and `cargo test` after any pack change. Never invent rule
-   numbers or deadlines; mark uncertainty `UNVERIFIED` in `note`. If
+   numbers or deadlines; explain legal uncertainty in `note`, and label an
+   uncertain authored number with typed `basis estimate` and a dated
+   `vintage` suffix on that number. If
    `sources[].path` points at a file under `sources/`, `lint` verifies the
    cite mechanically (`unverifiable-cite` warning with the exact reason if
    it can't) — see `docs/PACK_SCHEMA.md`'s authoring rule 1.

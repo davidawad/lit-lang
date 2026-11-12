@@ -283,7 +283,9 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
     let mut local_ids: BTreeMap<(String, String), String> = BTreeMap::new();
     for (package_name, package) in &packages {
         for declaration in declarations(package) {
-            let Some(id) = dependency_id(declaration) else { continue };
+            let Some(id) = dependency_id(declaration) else {
+                continue;
+            };
             let key = format!("{}::{}", package.manifest.pack_id, id);
             let mut refs = BTreeSet::new();
             if let Ok(value) = serde_json::to_value(declaration) {
@@ -297,7 +299,9 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
     for root in roots {
         let mut pending = Vec::new();
         for declaration in declarations(root) {
-            let Some(id) = dependency_id(declaration) else { continue };
+            let Some(id) = dependency_id(declaration) else {
+                continue;
+            };
             let key = format!("{}::{}", root.manifest.pack_id, id);
             if let Some((_, refs)) = declaration_refs.get(&key) {
                 pending.extend(
@@ -336,7 +340,9 @@ fn dependency_holes(session: &Session, diagnostics: &mut Vec<Diagnostic>) {
                 continue;
             };
             for declaration in declarations(configured) {
-                let Some(id) = dependency_id(declaration) else { continue };
+                let Some(id) = dependency_id(declaration) else {
+                    continue;
+                };
                 let key = format!("{}::{}", configured.manifest.pack_id, id);
                 if id == counting || key == counting {
                     reachable.insert(key);

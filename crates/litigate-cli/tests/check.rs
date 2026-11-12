@@ -134,7 +134,6 @@ fn strict_dependency_holes_follow_reachable_declarations() {
         "{}",
         reached.stdout
     );
-
 }
 
 #[test]
@@ -143,8 +142,7 @@ fn strict_dependency_holes_follow_metadata_less_events_and_types() {
     let dir = support::scratch("strict-hole-through-event");
     let packages = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../lit");
     support::copy_dir(&packages.join("core"), &dir.join("lit/core"));
-    let fixture = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("tests/fixtures/timeline-package");
+    let fixture = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/timeline-package");
     support::copy_dir(&fixture, &dir.join("lit/a"));
     #[cfg(unix)]
     std::os::unix::fs::symlink(support::repo().join("sources"), dir.join("sources")).unwrap();
@@ -196,16 +194,20 @@ fn strict_dependency_holes_follow_metadata_less_events_and_types() {
     }
     let run = support::litigate_in(&dir, &["check", "--profile", "strict", "lit/a"]);
     assert_eq!(run.code, 2, "{}", run.stdout);
-    assert!(run.json["diagnostics"].as_array().unwrap().iter().any(|d| {
-        d["code"] == "L5002"
-            && d["severity"] == "error"
-            && d["span"]["file"]
-                .as_str()
-                .is_some_and(|file| file.contains("core/time.lit"))
-            && d["message"]
-                .as_str()
-                .is_some_and(|message| message.contains("event-reachable fixture hole"))
-    }), "{}", run.stdout);
+    assert!(
+        run.json["diagnostics"].as_array().unwrap().iter().any(|d| {
+            d["code"] == "L5002"
+                && d["severity"] == "error"
+                && d["span"]["file"]
+                    .as_str()
+                    .is_some_and(|file| file.contains("core/time.lit"))
+                && d["message"]
+                    .as_str()
+                    .is_some_and(|message| message.contains("event-reachable fixture hole"))
+        }),
+        "{}",
+        run.stdout
+    );
 }
 
 #[test]

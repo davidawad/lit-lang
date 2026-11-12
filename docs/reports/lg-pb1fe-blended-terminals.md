@@ -1,5 +1,7 @@
 # Blended terminal inventory and proposed splits
 
+> The FRCP rows in the inventory show the known-direction copies; the final section records the neutral third copy and unknown-direction handling.
+
 ## Operational definition
 
 A **blended terminal** is a `terminal` whose incoming edges, as shown by rule text or node/edge notes, admit both a result favourable to the package's `self` party and a result adverse to that party, while retaining one terminal outcome/payoff. I treated explicit notes using “blended,” “movant,” “losing party,” or “either party,” and converging edges from different actors or branches of a chance node as evidence. Counts below are source-level candidates; a common terminal reached from a prior result is included when the note or graph confirms that the prior result is not carried forward.
@@ -32,58 +34,40 @@ A **blended terminal** is a `terminal` whose incoming edges, as shown by rule te
 
 The repository contains hundreds of additional package families, many of them unrelated state, bankruptcy, criminal, and specialty-court packages. No complete incoming-edge audit of those packages was performed for this focused follow-up; the explicit count of other-family candidates identified by this scan is **0**. This is a scan count, not a certification that every other package is blend-free. File a package-family follow-up when a concrete candidate is confirmed.
 
-## FRCP split
+## FRCP split and three-state judgment direction
 
-**DECIDED: Carry judgment direction in state flags and split terminals by the Rule 56 movant or the carried judgment direction.** This keeps one copy of the post-judgment and appeal subgraphs, uses no new probability, and lets the matter's existing `win`/`loss` stakes value the result. Outcome tags `final` were removed from the split terminals because the matter assigns `final` $0 while `win`/`loss` assign $500,000/$0; a terminal carrying conflicting outcome stakes requires an explicit per-terminal override.
+DECIDED: Use two mutually exclusive flags, judgment-for-plaintiff and judgment-for-defendant. Neither set means the judgment direction is unknown. Merits edges set one flag and clear the other. Rule 60 reopening clears both because it vacates the dismissal without deciding the claim. A generic post-trial grant clears both because its edge does not identify the new judgment's winner. The neutral copy is gated with forbids [judgment-for-plaintiff, judgment-for-defendant], so a third flag is unnecessary. The flags cannot both be set on a replay because every merits setter clears its opposite; the chance-node verifier's unreachable both-flags context follows the defendant copy to keep the authored distribution complete.
 
-### Engine questions and fixture
-
-1. **Different edge actors:** actor roles are resolved per edge from the edge actor or its node default (`crates/litigate-engine/src/scenario/view.rs:203-209`; SPEC §5.1 at `docs/litigate/SPEC.md:1183-1188`). At a node with self and opponent moves, self chooses its edges and opponent/nature edges are interrupts (`crates/litigate-engine/src/scenario/plan.rs:113-153`). The default mixed handling uses act-or-wait when the interrupt has no authored probability (`plan.rs:264-331`). Therefore the two discovery-close Rule 56 edges can be assigned to plaintiff and defendant; this adds `mixed-node` warnings at nodes where the choices meet.
-2. **`requires` / `forbids`:** they gate edge instantiations while flags expand the graph, before solve; the edge is absent when the flag condition fails (`crates/litigate-engine/src/model/flags.rs:41-49`; `docs/PACK_SCHEMA.md:391-394`). A small fixture reviewed before the FRCP edit is the `ESTOPPEL_PACK` at `model/flags.rs:208-226`, with reachable flagged copies and a `forbids` edge exercised at `flags.rs:266-296`.
-3. **Outcome stakes:** each outcome stake is applied to every terminal declaring that tag (`crates/litigate-sema/src/case/resolve/stakes.rs:118-148,173-177`). If one terminal declares tags with different stakes, check reports L4004 unless that terminal gets an explicit override. The win/loss split therefore omits `final` from those outcomes and retains procedural tags such as `affirmed`, `procedural-default`, and `waiver-trap` where they do not name a conflicting matter stake.
-4. **Terminal with an outgoing edge:** solve returns the terminal's utility before considering edges (`crates/litigate-engine/src/algo/mdp.rs:131-136`). The two summary-judgment terminals retain their appeal-clock edges as requested, but solve treats each as terminal, so it does not traverse those edges. This is an existing solver contract, not a duplicated appeal graph.
-
-### Flags and per-edge disposition
-
-`judgment-for-defendant` is absent when the judgment in force favours plaintiff. `sj-by-defendant` is set only when defendant is the Rule 56 movant. Gates are exclusive pairs on the same flag, so each chance context keeps the original total probability. An edge that does not establish who won leaves the judgment flag unchanged.
-
-| Edge or edge family | Flag action | Rule text relied on |
+| Edge or transition | State action | Rule |
 |---|---|---|
-| `discovery-closed` → plaintiff's Rule 56 motion | Does not set either flag; actor `plaintiff`. | FRCP 56(a), (b): a party may move. |
-| `discovery-closed` → defendant's Rule 56 motion | Sets `sj-by-defendant`; actor `defendant`. | FRCP 56(a), (b): a party may move. |
-| `sj-ruling` → plaintiff judgment | Forbids `sj-by-defendant`; clears `judgment-for-defendant`. | FRCP 56(a): judgment is for the successful movant. |
-| `sj-ruling` → defendant judgment | Requires `sj-by-defendant`; sets `judgment-for-defendant`. | FRCP 56(a): judgment is for the successful movant. Both edges retain p=0.25. |
-| `verdict-rendered` → plaintiff findings | Clears `judgment-for-defendant`. | FRCP 52(a), 58: the findings/judgment favour plaintiff. p=0.5. |
-| `verdict-rendered` → defendant findings | Sets `judgment-for-defendant`. | FRCP 52(a), 58: the findings/judgment favour defendant. p=0.5. |
-| `dismissed-with-prejudice` → appeal clock | Sets `judgment-for-defendant`. | Dismissal is adverse to plaintiff; 28 U.S.C. § 1291; FRAP 4(a)(1)(A). |
-| `rule60-relief-granted-reopened-case` → `final-judgment-entered` | Leaves the flag unchanged. | FRCP 60(b) says the terms and further proceedings depend on the order; this edge does not specify the merits result. |
-| `post-trial-ruling` denied → appeal clock | Leaves the flag unchanged. | FRAP 4(a)(4): denial ends tolling and restarts the clock; it does not say the underlying judgment changed. |
-| `post-trial-ruling` granted → `final-judgment-entered` | Leaves the flag unchanged. | The source says amended or new judgment but does not say for which party. |
-| `final-judgment-entered` / `post-trial-motion-window` → appeal clock; Rule 60 denial → appeal clock | Leaves the flag unchanged. | These transitions open an appeal period or appeal the order; they do not specify a merits winner. |
-| Summary judgment terminal → appeal clock | Carries the flag unchanged. | 28 U.S.C. § 1291; FRAP 4(a)(1)(A). Kept on both split terminal declarations; see terminal solver behavior above. |
-| Both `notice-of-appeal-window` versions: missed deadline / no appeal | Plaintiff-judgment gates are by defendant and forbid `judgment-for-defendant`; defendant-judgment gates are by plaintiff and require it. They do not change the flag. | FRAP 4(a)(1)(A); Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 1291. The losing party owns the appeal right. |
-| Both `cross-appeal-window` versions: file / no cross-appeal | Plaintiff-winner gates are by plaintiff and forbid the flag; defendant-winner gates are by defendant and require it. They do not change the flag. | FRAP 4(a)(3): the winning appellee may cross-appeal a different part of the same judgment. |
-| `court-of-appeals-decision` → affirmed | Each 0.55 and 0.10 branch has a plaintiff-judgment / defendant-judgment gated pair; neither changes the flag. | 28 U.S.C. §§ 1291, 2106. Affirmance leaves the judgment in force; the net-affirmance branch preserves that side. |
-| `court-of-appeals-decision` → reversed/remanded | Leaves the flag unchanged and reaches the single `[remand]` terminal. | 28 U.S.C. § 2106; the chart does not model the judgment after remand. |
+| edge-sj-ruling-summary-judgment-for-plaintiff / edge-sj-ruling-summary-judgment-for-defendant | Set the winner and clear the opposing flag; sj-by-defendant gates the defendant-movant outcome. Both grants retain p=0.25. | FRCP 56(a) |
+| verdict-for-plaintiff / verdict-for-defendant | Set the winner and clear the opposing flag; p=0.5 each. | FRCP 52(a), 58 |
+| edge-default-judgment-enters / edge-discovery-sanctions-default | Set plaintiff and clear defendant. | FRCP 55(b); 37(b)(2)(A)(vi) |
+| Dismissal with prejudice → appeal clock | Set defendant and clear plaintiff. | FRCP 12(b)(6), 41(b); 28 U.S.C. § 1291; FRAP 4(a)(1)(A) |
+| edge-rule60-relief-granted-reopened-case | Clear both; the reopened action has no asserted merits winner. | FRCP 60(b) |
+| Post-trial motion denied → appeal clock | Leave flags unchanged. | FRAP 4(a)(4) |
+| Post-trial motion granted → final-judgment-entered | Clear both; the generic amended/new judgment edge does not specify its winner. | FRCP 50(b), 59(a), 59(e) |
+| No appeal / missed notice deadline, both FRAP 4 versions | Triple copies: plaintiff requires plaintiff flag; defendant requires defendant flag; neutral forbids both and has no actor. | FRAP 4(a)(1)(A); Bowles v. Russell; 28 U.S.C. § 1291 |
+| Cross-appeal / no-cross-appeal, both FRAP 4 versions | Same triple; neutral copy has no actor. | FRAP 4(a)(3) |
+| Court affirms / mixed net affirmance | Same-probability triple for known plaintiff, known defendant, and unknown; probabilities 0.55 and 0.10. | 28 U.S.C. §§ 1291, 2106 |
+| Reversal/remand | Keep one remand terminal; post-mandate judgment direction is outside this chart. | 28 U.S.C. § 2106 |
 
-### Solve and explain
+The neutral copies restore the original appeal-window-blown, judgment-final-no-appeal, and judgment-affirmed terminal IDs with outcome [final]. cases/frcp-civil-case.case assigns final $0, win the existing $500,000, and loss $0. The remand terminal retains the case's existing $250,000 override because the chart does not model the post-mandate judgment.
 
-Using the release binary, `litigate solve cases/frcp-civil-case.case` changed from **−$16,655** to **$472,895**. Plaintiff now serves. Before the split, the best line stopped at the service deadline because the eventual shared `final` outcomes were valued at $0. After the split, the selected path reaches `judgment-final-no-appeal-plaintiff`, whose `[win]` outcome takes the existing $500,000 matter stake.
+The terminal solver returns terminal value before considering outgoing edges. Therefore, the Rule 56 terminals retain their appeal-clock edges for the procedural graph, while solve stops at the terminal outcome.
 
-The selected line and its dollar contributions are:
+## Court-ruling edge audit
 
-1. Pre-filing investigation: `$482,645` downstream less 15 hours × `$650` = `$472,895`.
-2. File complaint: `$489,550` downstream less `$6,905` = `$482,645`.
-3. Clerk issues summons: no added cost; service-window value remains `$489,550`.
-4. Serve defendant: service action cost `$2,100`; resulting value is `$489,550` from `$491,650` at service-completed.
-5. Voluntary dismissal: 1 hour × `$650`; resulting value at that node is `$492,300` from `$491,650`.
-6. Move for Rule 60(b) relief: 8 hours × `$650` + `$2,500` = `$7,700`; resulting value is `$500,000` at the motion node.
-7. The selected Rule 60 grant returns to `final-judgment-entered`; no post-trial motion goes to the appeal window; its 0.5 no-appeal branch reaches the plaintiff-judgment `[win]` terminal at `$500,000`. The other 0.5 missed-window branch also retains the plaintiff-favourable judgment and its `[win]` stake.
+DECIDED: rule60-dismissal-motion is by court; grants/denials are unprobabilized nature outcomes, so probability-fill applies. No probability was added. Other Court-labelled FRCP edges found by source search: remand and special-appearance waiver rulings (chance nodes), Rule 41(d) prior-cost orders, dismissal-fee prevailing-party findings, Rule 16(b) scheduling order, Rule 16(e) pretrial order, and Rule 55 default judgment. The Rule 55 judgment edge is explicitly by court. The remaining listed rulings are outside the selected solve trace.
 
-`litigate explain` at `service-window` chooses “Serve defendant via formal process” (`q=$489,550`; waiver `$488,230`; fail to serve `$0`). At `voluntary-dismissal`, it chooses the Rule 60(b) motion (`q=$492,300`) over leaving the dismissal (`$0`), fees (`−$5,400`), or refiling (`−$10,300`). At `final-judgment-entered`, it chooses to proceed directly to appeal. This trace exposes a separate pre-existing modeling issue: `rule60-dismissal-motion` is a plaintiff decision and its “Court grants” edge is therefore treated as plaintiff-controlled; the note says the court’s discretionary ruling has no assigned probability. No probability was added in this bead.
+## Solve and explain
 
-The solve reports 8 state-flag compilation warnings, **18 `mixed-node` warnings** (6 before), and 73 `probability-fill` warnings. These warnings mean the result uses act-or-wait behavior at mixed nodes and default-filled probabilities at some nodes; the number is not a sourced expected result. The check measured 0 errors, 0 L2003 findings, and 49 passed / 0 failed FRCP inline tests.
+Release solve on origin/main at 5f745fe8: value -$16,655; policy_size 103; elapsed_ms 11231.428 (11.231 seconds); best line ended in the 90-day service default. Corrected source: value $75,713.461431; policy_size 373; elapsed_ms 11075.427 (11.075 seconds). The current best line requests waiver, accepts the opponent's Rule 12(b) motion, proceeds to trial, and reaches a defendant verdict. Its verdict edge ID is verdict-for-defendant, which sets judgment-for-defendant and clears judgment-for-plaintiff. The best line ends in a loss, not a win.
 
-The CLI test `crates/litigate-cli/tests/ops.rs::frcp_civil_case_solve_uses_party_relative_judgment_stakes` pins the matter at **−$16,655 before → $472,895 after**, and asserts that the best line serves the defendant. Existing CLI tests that named the prior terminal were changed to the new party-labelled ID in `frcp_extensions.rs`, `frcp_fee_moves.rs`, `pending_moves.rs`, and `rulings.rs`; they do not pin the solve value.
+The selected-line root value is $75,713.461431. The complaint node is $85,463.461431; pre-filing investigation is 15 hours × $650 = $9,750. The complaint filing value is $92,368.461431; the filing/effort cost is $6,905. Issuing summons adds no cost. The chosen service path requests a waiver and the opponent chooses a Rule 12(b) motion. The motion-denial court branch has p=0.45. The selected trial route takes the p=0.5 defendant verdict. Rule 60 can no longer be chosen as if the plaintiff controlled the court; a reopening without a new merits decision has neither direction flag and receives the neutral $0 final stake.
 
-`NEW_BUG: Rule 60 dismissal ruling is plaintiff-controlled -- `rule60-dismissal-motion` is a plaintiff decision whose unprobabilized “Court grants/denies” edges let solve choose the court ruling; this path supplies the $500,000 win in the new trace.`
+Every reachable win terminal requires a merits-setting edge: default-judgment-entered uses edge-default-judgment-enters; discovery-sanctions-default uses edge-discovery-sanctions-default; summary-judgment-for-plaintiff uses edge-sj-ruling-summary-judgment-for-plaintiff; a trial win uses verdict-for-plaintiff. Appeal-window-blown-plaintiff-judgment, judgment-final-no-appeal-plaintiff, and judgment-affirmed-plaintiff preserve a prior setter. A Rule 60 reopening clears both flags, so it cannot reach a win terminal without a new merits edge.
+
+Solve warnings: compile 9 (675 additional reachable flag-state nodes), mixed-node 18 (act-or-wait at mixed nodes), probability-fill 99 (default-filled probabilities, including the Rule 60 ruling). The result is sensitive to these engine assumptions and is not a sourced expected litigation value.
+
+The updated CLI test pins $75,713.461431 and, if the best-line terminal is a win, asserts a preceding merits-setting edge ID. The final FRCP package check reports 0 errors; its inline suite has 49 passed and 0 failed.

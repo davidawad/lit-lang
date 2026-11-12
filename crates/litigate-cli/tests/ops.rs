@@ -41,10 +41,11 @@ fn an_op_runs_on_a_matter_with_set_params_composed_onto_it() {
 
 #[test]
 fn frcp_civil_case_solve_uses_party_relative_judgment_stakes() {
-    // Before the judgment-outcome split this was -$16,655: the $0 `final`
-    // stake made serving worse than stopping at the service deadline.
+    // The three-state judgment split preserves $0 for paths that never
+    // establish a winner; the Rule 60 ruling is court-controlled, not a
+    // plaintiff choice. This value includes both merits outcomes.
     let solved = response(&litigate(&["solve", "cases/frcp-civil-case.case"]), "solve");
-    assert_eq!(solved["result"]["value"], 472_895.0);
+    assert_eq!(solved["result"]["value"], 75_713.461_431);
     let labels: Vec<&str> = solved["result"]["best_line"]
         .as_array()
         .unwrap()
@@ -52,9 +53,35 @@ fn frcp_civil_case_solve_uses_party_relative_judgment_stakes() {
         .filter_map(|edge| edge["label"].as_str())
         .collect();
     assert!(
-        labels.contains(&"Serve defendant via formal process"),
+        labels.contains(&"Request waiver of service instead of formal process"),
         "{labels:?}"
     );
+    let line = solved["result"]["best_line"].as_array().unwrap();
+    let terminal = line.last().unwrap()["to"].as_str().unwrap();
+    let win_terminal = [
+        "default-judgment-entered",
+        "discovery-sanctions-default",
+        "summary-judgment-for-plaintiff",
+        "appeal-window-blown-plaintiff-judgment",
+        "judgment-final-no-appeal-plaintiff",
+        "judgment-affirmed-plaintiff",
+    ]
+    .iter()
+    .any(|id| terminal.contains(id));
+    if win_terminal {
+        let merits_edges = [
+            "frcp-civil-procedure::verdict-for-plaintiff",
+            "frcp-civil-procedure::edge-sj-ruling-summary-judgment-for-plaintiff",
+            "frcp-civil-procedure::edge-default-judgment-enters",
+            "frcp-civil-procedure::edge-discovery-sanctions-default",
+        ];
+        assert!(
+            line.iter().filter_map(|edge| edge["id"].as_str()).any(|id| {
+                merits_edges.iter().any(|merits| id.starts_with(merits))
+            }),
+            "[win] terminal {terminal} has no preceding merits edge: {line:?}"
+        );
+    }
 }
 
 #[test]

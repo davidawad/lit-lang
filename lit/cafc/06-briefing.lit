@@ -122,14 +122,21 @@ rule duty appellee-principal-brief cite "Fed. Cir. R. 31(a)(2)"
 /// Committee Note says so.
 rule duty reply-brief cite "FRAP 31(a)(1)"
 {
-  /// The 14-day reply period of the 2009 text (the 2009 amendment set the
-  /// 7-days-before-argument limit and kept 14 days).
+  /// The 14-day reply period in the version effective December 1, 2009.
+  /// Fed. Cir. R. 26(b)(1) says: "A motion to extend the time prescribed by
+  /// the Federal Rules of Appellate Procedure, the Federal Circuit Rules,
+  /// or an order of this court must be made at least 7 days before the date
+  /// sought to be extended, except that in extraordinary circumstances a
+  /// motion may be made later than that deadline if accompanied by an
+  /// affidavit or unsworn declaration under penalty of perjury under 28
+  /// U.S.C. § 1746 that describes the extraordinary circumstances."
+  /// (`sources/fedcir-2009-rule26.txt:6`).
   deadline reply-brief-period: 14.days after BriefServed(Response) counted_by frap26 effective [2009-12-01, 2018-12-01) known_at 2009-03-26 delegable {
     to CaseOrder
     op set
 
-    cite "Fed. Cir. R. 26(b)"
-  } cite "FRAP (2009 ed.) 31(a)(1)"
+    cite "Fed. Cir. R. (2009 ed.) 26(b)(1)"
+  } cite "FRAP (2009 ed.) 31(a)(1); Fed. Cir. R. (2009 ed.) 26(b)(1)"
 
   deadline reply-brief-period: 21.days after BriefServed(Response) counted_by frap26 effective [2018-12-01, 2025-12-01) known_at 2018-04-26 supersedes reply-brief-period@2009-12-01 delegable {
     to CaseOrder

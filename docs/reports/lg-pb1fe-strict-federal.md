@@ -2,9 +2,10 @@
 
 ## Status
 
-**Complete for the sourced federal extension review.** Strict errors fell from 77 to 25 across the 20 packages; 12 now pass. Remaining L5002 errors are listed by location below where the vendored rule is silent, fixed by statute, lacks a representable typed grant, or needs a missing historical source. No duration, counting rule, probability, edge, or test expectation was changed.
+**Complete for the sourced federal extension review.** The earlier retry snapshot had 25 L5002 errors and 12 passing packages. Follow-up lg-pb1fe.50 closes its CAFC source-version hole: `litigate check --profile strict lit/cafc` now exits 0 with 0 errors and 0 warnings. Re-measurement on the merged tree found two MPEP L5002 errors, so the corrected total is 26 L5002 errors across 20 packages; 12 now pass. Other remaining errors are package-owned, where the vendored rule is silent, fixed by statute, or lacks a representable typed grant. No duration, counting rule, probability, edge, or test expectation was changed.
 
 DECIDED: Leave habeas proposed-findings objections undeclared because 28 U.S.C. § 636(b)(1) and the habeas rules fix the period at 14 days; this follows the PM ruling for similarly fixed statutory/rule periods.
+DECIDED: Bind the 2009 reply-brief extension to the archived official Rule 26(b)(1) revision packet -- it says the revisions took effect December 1, 2009, identifies Rule 26(b)(1) as revised, and contains the operative text; the December 2018 edition is not backdated.
 
 Strict baseline is `origin/main` `10b6a048`, checked with a release binary built from that archived tree; after counts use the release binary built from this tree after its source corpus was current. Counts include only severity `error` L5002 diagnostics (not informational unreachable-dependency notices).
 
@@ -12,7 +13,7 @@ Strict baseline is `origin/main` `10b6a048`, checked with a release binary built
 |---|---:|---:|:---:|
 | ca7 | 2 | 0 | pass |
 | caaf | 9 | 9 | fail |
-| cafc | 3 | 1 | fail |
+| cafc | 3 | 0 | pass |
 | cavc | 9 | 1 | fail |
 | cit | 12 | 2 | fail |
 | cofc | 6 | 0 | pass |
@@ -23,7 +24,7 @@ Strict baseline is `origin/main` `10b6a048`, checked with a release binary built
 | gasd | 2 | 0 | pass |
 | habeas | 4 | 4 | fail |
 | itc | 1 | 0 | pass |
-| mpep | 0 | 0 | pass |
+| mpep | 2 | 2 | fail |
 | msnd | 2 | 0 | pass |
 | mssd | 2 | 0 | pass |
 | ptab | 9 | 2 | fail |
@@ -31,7 +32,7 @@ Strict baseline is `origin/main` `10b6a048`, checked with a release binary built
 | sdd | 2 | 0 | pass |
 | ttab | 1 | 0 | pass |
 
-The 20-package total moved from 77 to 25 L5002 errors; 12/20 strict checks now pass. Remaining errors are package-owned, not stale-lock or unreachable-dependency errors.
+The corrected 20-package review moves from 79 to 26 L5002 errors; 12 of 20 packages pass strict. Remaining errors are package-owned, not stale-lock or unreachable-dependency errors.
 
 ## Kind A — typed extension availability
 
@@ -49,7 +50,7 @@ A period was typed only where the cited text covers that court-rule or court-ord
 | GAMD `response-period`, GAND `response-period`, GASD `response-period` | Each local rule sets the response clock (`sources/md-ga/mdga-local-rules-sectioned.txt:704-715`; `sources/nd-ga/ndga-civil-local-rules-sectioned.txt:938-950`; `sources/sd-ga/sdga-local-rules-sectioned.txt:604-611`). The court's FRCP 6(b)(1) authority covers an act within a specified time. Typed good-cause/pre-expiry and excusable-neglect/post-expiry forms. Local Clerk powers are not represented. |
 | PTAB `institution-period`, `institution-period-on-waiver` | 35 U.S.C. § 314(b) says “The Director shall determine whether to institute an inter partes review ... within 3 months after” receiving the preliminary response or the last date to file it (`sources/usc-additional.txt:382-386`). The text sets the Director's decision clock and supplies no extension grant or prohibition. Left open; these are the two remaining PTAB strict errors. |
 | PTAB `ipr-time-bar`, `pgr-filing-period` | The prohibitory text is the reason for the existing locks: § 315(b) says “An inter partes review may not be instituted if the petition ... is filed more than 1 year after” (`sources/usc-additional.txt:409`); § 321(c) says “may only be filed not later than” (`sources/usc-additional.txt:504`). These statutory locks are listed for PM review as a reading of prohibitive wording. |
-| CAFC `appearance-period` | Fed. Cir. Rule 26(b) applies to periods prescribed by Federal Circuit rules or court order. A 2018 edition is now bound; the 2009 source proof remains open (see Kind B). |
+| CAFC `appearance-period` | Fed. Cir. Rule 26(b) applies to periods prescribed by Federal Circuit rules or court order. Its declaration is effective in 2025; no pre-2018 declaration besides `reply-brief-period` uses an unversioned Federal Circuit Rule cite. |
 | MPEP and ITC inline periods | MPEP (including 37 C.F.R. §§ 1.136(a), 41.37(e)) belongs to lg-pb1fe.36. ITC inline deadlines belong to lg-pb1fe.30. No MPEP or inline ITC deadline was changed. |
 
 The six districts' sibling-package pattern was checked. Their reply-period grants follow the same FRCP 6(b)(1) forms; the new response-period grants use that same text. GAMD's LR 6.2 grants the Clerk one extension not exceeding 14 days (`sources/md-ga/mdga-local-rules-sectioned.txt:725-733`); GASD LR Civ. 6 allows the Clerk, with party consent, to extend a response deadline up to 14 days (`sources/sd-ga/sdga-local-rules-sectioned.txt:522-526`). The typed court authority derives from FRCP 6(b), not an expansion of those Clerk clauses.
@@ -62,7 +63,7 @@ The six districts' sibling-package pattern was checked. Their reply-period grant
 | FRAP 26 and 31 / 2018-12-01 | Added official U.S. Courts 2018 rules PDF original and extracted Rules 26/31, with pinned source text and edition cites. | Unknown. |
 | RCFC 6 / 2010-01-11 | Added official Court of Federal Claims 2010 PDF original and a pinned Rule 6 transcription; cites now bind the 2010 version. | Unknown. |
 | Fed. Cir. R. 26 / 2018-12-01 | Added official December 2018 Federal Circuit Rules PDF original and Rule 26 text; updated the 2018 grant cite. | Unknown. |
-| Fed. Cir. R. 26 / 2009-12-01 | Official archive search surfaced June 2011 and December 2018 editions, not a 2009 edition. The 2011 text was not substituted. | Unknown. |
+| Fed. Cir. R. 26(b)(1) / 2009-12-01 | Bound to the court's December 1, 2009 Rule revisions PDF, captured from the official court URL by the Internet Archive on 2010-02-01. The packet says the revisions take effect December 1, 2009, lists Rule 26(b)(1), and includes the operative subsection. URL: `http://www.cafc.uscourts.gov/pdf/FedCir_Rules_Text_12-1-09.pdf` (archive capture: `https://web.archive.org/web/20100201233454id_/http://www.cafc.uscourts.gov/pdf/FedCir_Rules_Text_12-1-09.pdf`). Original SHA-256 `f968288b6bcef0e38aa60c5321723c71820dd2b6c3e1f740a1f1a2052605b7ff`; transcription SHA-256 `12e62ff1269576ca73ab442895c44f33f3f831326f23817303acc716b757ddd7`. The transcription was compared sentence by sentence with the PDF; deleted strike-through text was excluded. | Unknown. |
 | 37 C.F.R. § 2.116 / 2017-01-14 (TTAB) | Added the official eCFR versioner metadata in the recognized `## versions` form, updated the source hash and binding. | Unknown. |
 | FRCP 6 / 2017 (TTAB) | Rebound the TTAB cite to the existing official 2017 edition text. | Unknown. |
 | 19 C.F.R. § 210.6 / 2025-02-03 (ITC) | Added official eCFR versioner metadata for the cited section, updated source hash and binding. | Unknown. |
@@ -72,7 +73,7 @@ The six districts' sibling-package pattern was checked. Their reply-period grant
 
 ### Strict diagnostics that remain
 
-Each row is one remaining package-owned error, identified by diagnostic span. The kind-A items remain open because the governing text does not grant or prohibit enlargement, or the typed language cannot express the actor/standard. The sole kind-B row needs a Federal Circuit Rule 26 edition not present in `sources/`.
+The table below records the package-owned errors from the prior retry snapshot. The CAFC kind-B row is resolved by this follow-up; the kind-A items remain open where the governing text does not grant or prohibit enlargement, or the typed language cannot express the actor/standard.
 
 | Package | Item / diagnostic location | Governing text and why it remains |
 |---|---|---|
@@ -85,7 +86,7 @@ Each row is one remaining package-owned error, identified by diagnostic span. Th
 | caaf | `lit/caaf/procedure.lit:111` | Same CAAF R. 18(h), 9(d) limitation. |
 | caaf | `lit/caaf/procedure.lit:115` | Same CAAF R. 18(h), 9(d) limitation. |
 | caaf | `lit/caaf/procedure.lit:119` | Same CAAF R. 18(h), 9(d) limitation. |
-| cafc | `lit/cafc/06-briefing.lit:127` | Fed. Cir. R. 26 text history in `sources/rule-amendment-history.txt` records no version on or before 2009-12-01. The 2009 edition is not vendored; no substitute edition was invented. |
+| cafc | `lit/cafc/06-briefing.lit:127` | Resolved by the official court's 2009 Rule 26(b)(1) revision, effective December 1, 2009; see `sources/fedcir-2009-rule26.txt` and its provenance entry. |
 | cavc | `lit/cavc/procedure.lit:144` | CAVC R. 26(b) excepts this Federal Circuit appeal clock; Rule 4 does not govern this appeal. No governing extension text was found for this period. |
 | cit | `lit/cit/procedure.lit:37` | USCIT R. 3(a)(2) restates 19 U.S.C. § 1516a(a)(2), fixing the complaint-after-summons clock; no extension grant appears in the vendored provision. |
 | cit | `lit/cit/procedure.lit:43` | USCIT R. 6(b)(1) includes “circumstances beyond the control of the party,” which the closed typed standard cannot express. |
@@ -102,7 +103,7 @@ Each row is one remaining package-owned error, identified by diagnostic span. Th
 | scotus | `lit/scotus/cert.lit:322` | Sup. Ct. R. 30.4 assigns initial motion action to the Clerk; Clerk is not a package actor. |
 | scotus | `lit/scotus/cert.lit:357` | Sup. Ct. R. 44.1 allows extension by the Court or a Justice but supplies no typed standard. |
 
-No MPEP strict errors remain: this retry corrected the MPEP versions-history pin to match the changed source file. PTAB's nine origin/main errors became two after the extension/source fixes and the corrected MPEP pin; its two remaining periods are the § 314(b) institution clocks above.
+MPEP strict checking reports 2 L5002 errors, at `lit/mpep/01-pre-filing.lit:36` and `:74`; the changed versions-history pin is valid, but these two periods still lack typed extension declarations. PTAB's nine origin/main errors became two after the extension/source fixes; its two remaining periods are the § 314(b) institution clocks above.
 
 ### Kind B source-version proofs
 
@@ -112,7 +113,7 @@ No MPEP strict errors remain: this retry corrected the MPEP versions-history pin
 | FRAP 26 and 31 / 2018-12-01 | Added official U.S. Courts 2018 rules PDF original and extracted Rules 26/31 with pinned source text. | FRAP: 10 L5002 | Unknown |
 | RCFC 6 / 2010-01-11 | Added official Court of Federal Claims 2010 PDF original and pinned Rule 6 transcription. | CoFC: 6 L5002 | Unknown |
 | Fed. Cir. R. 26 / 2018-12-01 | Added official December 2018 Federal Circuit Rules PDF original and Rule 26 text; updated the 2018 grant cite. | CAFC: 3 L5002 | Unknown |
-| Fed. Cir. R. 26 / 2009-12-01 | Official archive search surfaced June 2011 and December 2018 editions, not a 2009 edition. The 2011 text was not substituted; the proof remains open. | CAFC: 3 L5002 | Unknown |
+| Fed. Cir. R. 26(b)(1) / 2009-12-01 | Archived official Rule revisions PDF proves the effective date and supplies Rule 26(b)(1); captured 2010-02-01. Original and transcription SHA-256 values are in the proof table above. Transcription compared sentence by sentence; deleted strike-through text excluded. | CAFC: 3 L5002 | Unknown |
 | 37 C.F.R. § 2.116 / 2017-01-14 (TTAB) | Added official eCFR versioner metadata in `## versions` form and updated source hash/binding. | TTAB: 1 L5002 | Unknown |
 | FRCP 6 / 2017 (TTAB) | Rebound the TTAB cite to the existing official 2017 edition text. | TTAB: 1 L5002 | Unknown |
 | 19 C.F.R. § 210.6 / 2025-02-03 (ITC) | Added official eCFR versioner metadata and updated source hash/binding. | ITC: 1 L5002 | Unknown |
@@ -213,7 +214,7 @@ The fixture failures report `applicant` is not an actor of `frap-appellate-proce
 ### Open for PM
 
 - CAFC `appearance-period`: GoodCause is read from FRAP 26(b) and Fed. Cir. R. 26(b)(3); current Fed. Cir. R. 26(b)(1) states no standard for an extension of 14 days or less. The discretionary typed grant has no `within` bound: its before-expiry form accepts a motion in the last seven days on good cause, while Rule 26(b)(1) requires extraordinary circumstances when the motion is made later than seven days before the sought date. Its after-expiry form carries ExtraordinaryCircumstances. Keep both forms pending a language form that represents the timing condition.
-- Vendor the 2009 Federal Circuit Rule 26 edition for `lit/cafc/06-briefing.lit:127` (`FOLLOWUP: vendor Fed. Cir. R. 26 (2009 edition)`).
+- The prior Federal Circuit Rule 26 (2009 edition) follow-up for `lit/cafc/06-briefing.lit:127` is resolved by the archived Rule 26(b)(1) revision source described below.
 - A stale `path_sha256` on a versions-history source is not reported by `litigate check` in dev; strict exposes the missing text-in-force proof. This retry corrected MPEP and PTAB's pins to the changed `sources/ecfr-versions-title-37.txt` digest.
 - PTAB: retain the existing statute-supported locks under the reading that prohibitory phrases govern extension: § 315(b) “may not be instituted if the petition ... is filed more than 1 year after” and § 321(c) “may only be filed not later than” (`sources/usc-additional.txt:409,504`).
 
@@ -237,4 +238,29 @@ The fixture failures report `applicant` is not an actor of `frap-appellate-proce
 - `452494b2` corrected MPEP and PTAB eCFR history pins; `e2e24e5d` corrected the CAFC Rule 26 comment; `7f5b8f9d` clarified the FRCP no-extension test name.
 - `6382a9c7` regenerated the federal package locks; `8f4cd87c` quoted current Fed. Cir. R. 26(b) text verbatim and synced the final CAFC lock.
 
-FOLLOWUP: vendor Fed. Cir. R. 26 (2009 edition)
+### Fed. Cir. R. 26 (2009)
+
+The accepted source is the court's December 1, 2009 Rule revisions PDF captured by the Internet Archive on 2010-02-01. This is an archive copy of the court's own document. The PDF says the revisions take effect December 1, 2009, lists Rule 26(b)(1) among the revised provisions, and prints its operative text. The current court server no longer serves the original path. Its deleted strike-through text was excluded from the transcription; the remaining sentence was compared word for word with page 10 of the PDF.
+
+URL attempts and HTTP status:
+
+- `https://www.cafc.uscourts.gov/home/rules-procedures-forms/rules-of-practice-archives/` — 200.
+- `https://www.cafc.uscourts.gov/home/rules-procedures-forms/rules-of-practice-amendments/` — 200.
+- `https://www.cafc.uscourts.gov/wp-content/uploads/RulesProceduresAndForms/FederalCircuitRules/FederalCircuitRulesofPractice-June2011.pdf` — 200; later edition, not used for 2009.
+- `https://www.cafc.uscourts.gov/sites/default/files/rules-of-practice/rules.pdf` — 404.
+- `https://www.cafc.uscourts.gov/images/stories/rules-of-practice/rules.pdf` — 404.
+- `http://www.cafc.uscourts.gov/pdf/FedCir_Rules_Text_12-1-09.pdf` — 404 after redirect to HTTPS.
+- `https://www.cafc.uscourts.gov/pdf/FedCir_Rules_Text_12-1-09.pdf` — 404.
+- `https://web.archive.org/web/20100201233454id_/http://www.cafc.uscourts.gov/pdf/FedCir_Rules_Text_12-1-09.pdf` — 200; captured court PDF, timestamp 2010-02-01 23:34:54 UTC.
+- `https://www.govinfo.gov/content/pkg/FR-2008/html/` — 200, but redirects to a GovInfo error page; no relevant document.
+- `https://web.archive.org/cdx/search/cdx?url=cafc.uscourts.gov/*rules*pdf&output=json&filter=statuscode:200&from=2008&to=2010&collapse=urlkey` — 200; no matching captures.
+- `https://web.archive.org/cdx/search/cdx?url=www.cafc.uscourts.gov/*rules*pdf&output=json&filter=statuscode:200&from=2008&to=2010&collapse=urlkey` — 200; no matching captures.
+- `https://web.archive.org/cdx/search/cdx?url=http%3A%2F%2Fwww.cafc.uscourts.gov%2Fsites%2Fdefault%2Ffiles%2Frules-of-practice%2Frules.pdf&output=json&filter=statuscode%3A200&from=2008&to=2010&collapse=urlkey` — 200; no matching captures.
+- `https://web.archive.org/cdx/search/cdx?url=http%3A%2F%2Fwww.cafc.uscourts.gov%2Fimages%2Fstories%2Frules-of-practice%2Frules.pdf&output=json&filter=statuscode%3A200&from=2008&to=2010&collapse=urlkey` — 200; no matching captures.
+- `https://web.archive.org/cdx/search/cdx?url=http%3A%2F%2Fwww.cafc.uscourts.gov%2Fsites%2Fdefault%2Ffiles%2Frules-of-practice%2FFederalCircuitRulesofPractice.pdf&output=json&filter=statuscode%3A200&from=2008&to=2010&collapse=urlkey` — 200; no matching captures.
+- `https://web.archive.org/cdx/search/cdx?url=http%3A%2F%2Fwww.cafc.uscourts.gov%2Frules-of-practice%2Frules.pdf&output=json&filter=statuscode%3A200&from=2008&to=2010&collapse=urlkey` — 200; no matching captures.
+- `https://web.archive.org/cdx/search/cdx?url=www.cafc.uscourts.gov%2F%2A&output=json&filter=statuscode%3A200&from=2008&to=2010&filter=original%3A.%2A%28rule%7CRule%29.%2A&collapse=urlkey` — 200; returned the 2009 revision capture above and other court-rule materials.
+
+Other Federal Circuit cites: among declarations effective before 2018-12-01, `reply-brief-period` was the only one citing a Federal Circuit Rule without an edition. The other unversioned Rule 26 cites occur in declarations effective 2025-12-01 or later; no other pre-2018 declaration cites another Federal Circuit Rule without an edition. The 2009 excerpt proves only Rule 26(b)(1), so no other citation was rebound to it.
+
+Open for David: none for the 2009 Rule 26(b)(1) text-in-force proof.

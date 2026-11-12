@@ -138,7 +138,7 @@ fn counting_expectation<'a>(
 pub(crate) fn counting_boundary(
     cx: &Context<'_>,
     deadline: &hir::Deadline,
-) -> Result<Option<(String, String)>, String> {
+) -> Result<BoundaryResult, String> {
     if deadline.chain.is_some()
         || !matches!(
             deadline.unit,
@@ -148,20 +148,34 @@ pub(crate) fn counting_boundary(
                 | hir::DayUnit::Week
         )
     {
-        return Ok(None);
+        return Ok(BoundaryResult::Exempt(
+            CountingExemption::NoDiscriminatingDate,
+        ));
     }
     let ExprKind::Call {
         callee,
         args: trigger_args,
     } = &deadline.trigger.kind
     else {
-        return Ok(None);
+        return Ok(BoundaryResult::Exempt(
+            CountingExemption::NoDiscriminatingDate,
+        ));
     };
     let owner = cx.owner(&deadline.meta.id).0;
     let clocks = Clocks::new(cx, &deadline.meta.effective.known_at);
-    let (anchor, pkg, counting) = counting_anchor(&clocks, owner, deadline)?;
+    let (anchor, pkg, counting) = match counting_anchor(&clocks, owner, deadline) {
+        Ok(anchor) => anchor,
+        Err(AnchorError::DeadlinePredatesRule) => {
+            return Ok(BoundaryResult::Exempt(
+                CountingExemption::DeadlinePredatesRule,
+            ))
+        }
+        Err(AnchorError::Unavailable(reason)) => return Err(reason),
+    };
     let Some(event) = boundary_event(cx, callee, trigger_args, counting) else {
-        return Ok(None);
+        return Ok(BoundaryResult::Exempt(
+            CountingExemption::NoDiscriminatingDate,
+        ));
     };
     let lib = clocks.get(pkg, counting)?;
     let rule_id = counting.meta.id.as_str();
@@ -194,14 +208,23 @@ pub(crate) fn counting_boundary(
         unit,
         service_method: None,
     };
-    Ok(find_counting_boundary(
-        deadline,
-        &rule,
-        &request,
-        (start, end),
-        delta,
-        &event,
-    ))
+    Ok(
+        find_counting_boundary(deadline, &rule, &request, (start, end), delta, &event).map_or(
+            BoundaryResult::Exempt(CountingExemption::NoDiscriminatingDate),
+            BoundaryResult::Found,
+        ),
+    )
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum CountingExemption {
+    NoDiscriminatingDate,
+    DeadlinePredatesRule,
+}
+
+pub(crate) enum BoundaryResult {
+    Found((String, String)),
+    Exempt(CountingExemption),
 }
 
 fn boundary_event(
@@ -314,11 +337,16 @@ fn find_counting_boundary(
 
 /// The first day on which both the deadline and its counting rule are in
 /// force. A deadline can predate the first recorded version of its rule.
+enum AnchorError {
+    DeadlinePredatesRule,
+    Unavailable(String),
+}
+
 fn counting_anchor<'a>(
     clocks: &Clocks<'a>,
     owner: &hir::Package,
     deadline: &hir::Deadline,
-) -> Result<(String, &'a hir::Package, &'a hir::Counting), String> {
+) -> Result<(String, &'a hir::Package, &'a hir::Counting), AnchorError> {
     let key = clocks
         .world
         .target(&owner.manifest.pack_id, &deadline.counting)
@@ -354,15 +382,12 @@ fn counting_anchor<'a>(
         .map(|version| version.in_force.from.as_str())
         .min();
     if deadline_end.is_some_and(|end| first_rule.is_some_and(|first| end <= first)) {
-        return Err(format!(
-            "deadline ends before the first recorded version of counting rule `{}`",
-            deadline.counting
-        ));
+        return Err(AnchorError::DeadlinePredatesRule);
     }
-    Err(format!(
+    Err(AnchorError::Unavailable(format!(
         "no version of counting rule `{}` is in force during the deadline's effective window",
         deadline.counting
-    ))
+    )))
 }
 
 fn test_arg(arg: &Expr) -> Option<String> {

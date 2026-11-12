@@ -25,13 +25,6 @@ fn every_example_layer_and_world_checks() {
                 || (code == "L9011" && severity == "warning"))),
         "{found:?}"
     );
-    // L9011 allowance: removed by lg-pb1fe.13
-    assert!(
-        found
-            .iter()
-            .all(|(code, severity)| code != "L9011" || severity == "warning"),
-        "{found:?}"
-    );
     let classes: Vec<(String, String)> = run.json["result"]["worlds"]
         .as_array()
         .unwrap()

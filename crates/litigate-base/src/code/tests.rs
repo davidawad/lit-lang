@@ -84,7 +84,7 @@ fn every_registered_code_exercises_its_stable_views() {
                         | DiagnosticCode::NotEncoded
                         | DiagnosticCode::RefinementUndecided
                 ))
-                || code == DiagnosticCode::CountingTestInsensitive
+                || (profile == Profile::Dev && code == DiagnosticCode::CountingTestInsensitive)
             {
                 assert_eq!(severity, Severity::Warning);
             } else {
@@ -93,6 +93,13 @@ fn every_registered_code_exercises_its_stable_views() {
         }
     }
     assert!(serde_json::from_str::<DiagnosticCode>("\"L39990\"").is_err());
+}
+
+#[test]
+fn l9011_severity_depends_on_profile() {
+    let code = DiagnosticCode::CountingTestInsensitive;
+    assert_eq!(code.severity(Profile::Dev), Severity::Warning);
+    assert_eq!(code.severity(Profile::Strict), Severity::Error);
 }
 
 #[test]

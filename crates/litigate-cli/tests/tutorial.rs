@@ -62,13 +62,6 @@ fn the_tutorial_runs_as_written() {
         assert!(file.contains("/core/"), "{d}");
         assert!(message.contains("is not proved the text in force"), "{d}");
     }
-    // L9011 allowance: removed by lg-pb1fe.13
-    assert!(strict.json["diagnostics"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .all(|d| { d["code"] != "L9011" || d["severity"] == "warning" }));
-
     let tested = run(&["test", "lit/my-court"]);
     assert_eq!(
         tested.json["result"]["passed"],

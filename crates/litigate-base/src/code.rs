@@ -155,7 +155,7 @@ registry! {
     CiteProvedByHistory = "L9008" => "A cite's vendored text, dated after its version took effect, is that version's text: the vendored amendment history records no amendment in between",
     PrecedentNotBinding = "L9009" => "A precedent layer does not bind at the world's location: it is persuasive there, and its binding effects are not in force",
     RepeatedTestTrigger = "L9010" => "An inline test repeats a deadline trigger whose default occurrence choice is implicit",
-    CountingTestInsensitive = "L9011" => "Warning in dev and strict: every comparable test of this deadline asserts the same nominal or adjusted date under plain calendar addition with no roll as under its counting rule",
+    CountingTestInsensitive = "L9011" => "Every comparable test asserts the same date under plain calendar addition as under the counting rule; strict errors are exempt when no discriminating date exists or the deadline ends before the first recorded counting-rule version",
     NumericProvenanceIncomplete = "L9012" => "Numeric provenance is incomplete or duplicated, or names no calibration set in scope",
 }
 
@@ -236,12 +236,12 @@ impl DiagnosticCode {
                 | Self::LateClaimProcessing
                 | Self::ConcurrentTracks
                 | Self::StaleAsOf
-                | Self::RepeatedTestTrigger
-                | Self::CountingTestInsensitive,
+                | Self::RepeatedTestTrigger,
                 _,
             )
             | (
-                Self::RuleWithoutTest
+                Self::CountingTestInsensitive
+                | Self::RuleWithoutTest
                 | Self::HolePresent
                 | Self::NonCanonicalFormat
                 | Self::NotEncoded

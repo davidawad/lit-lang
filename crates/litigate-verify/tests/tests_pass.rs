@@ -52,11 +52,21 @@ fn counting_insensitive_lint_fires_on_weekdays_and_clears_on_a_rolled_boundary()
             "",
         );
     let checked = verify_one(&weekday_only, Profile::Strict);
-    assert!(checked
+    let warning = checked
         .verification
         .diagnostics
         .iter()
-        .any(|d| d.code.as_str() == "L9011"));
+        .find(|d| d.code.as_str() == "L9011")
+        .expect("strict L9011");
+    assert_eq!(warning.severity, litigate_base::Severity::Error);
+    let dev = verify_one(&weekday_only, Profile::Dev);
+    let warning = dev
+        .verification
+        .diagnostics
+        .iter()
+        .find(|d| d.code.as_str() == "L9011")
+        .expect("dev L9011");
+    assert_eq!(warning.severity, litigate_base::Severity::Warning);
 
     let boundary = format!(
         "{weekday_only}\ntest \"answer due rolls Sunday\" cite \"FRCP 6(a)\"\n{{\n  given Served(complaint, Personal) on 2025-03-02\n  expect deadline(answer-period) == 2025-03-24\n}}"
@@ -97,6 +107,16 @@ fn l9011_fix_is_machine_applicable_and_generates_a_passing_counting_test() {
         .iter()
         .find(|d| d.code.as_str() == "L9011")
         .expect("L9011");
+    assert_eq!(diagnostic.severity, litigate_base::Severity::Error);
+    assert_eq!(diagnostic.fixes[0].applicability, litigate_base::Applicability::MachineApplicable);
+    let dev = verify_one(&source, Profile::Dev);
+    let diagnostic = dev
+        .verification
+        .diagnostics
+        .iter()
+        .find(|d| d.code.as_str() == "L9011")
+        .expect("dev L9011");
+    assert_eq!(diagnostic.severity, litigate_base::Severity::Warning);
     let fix = diagnostic.fixes.first().expect("boundary fix");
     assert_eq!(
         fix.applicability,
@@ -107,12 +127,15 @@ fn l9011_fix_is_machine_applicable_and_generates_a_passing_counting_test() {
     assert!(!replacement.contains("naive"));
     let mut applied = source.clone();
     applied.push_str(replacement);
+    for profile in [Profile::Dev, Profile::Strict] {
+        let checked = verify_one(&applied, profile);
+        assert!(!checked
+            .verification
+            .diagnostics
+            .iter()
+            .any(|d| d.code.as_str() == "L9011"), "{profile:?}");
+    }
     let checked = verify_one(&applied, Profile::Strict);
-    assert!(!checked
-        .verification
-        .diagnostics
-        .iter()
-        .any(|d| d.code.as_str() == "L9011"));
     assert_eq!(
         outcome(&checked, Obligation::TestsPass)
             .finding
@@ -144,10 +167,11 @@ fn l9011_without_a_roll_keeps_the_warning_without_a_fix() {
         .find(|d| d.code.as_str() == "L9011")
         .expect("L9011 remains for a non-rolling rule");
     assert!(diagnostic.fixes.is_empty());
+    assert_eq!(diagnostic.severity, litigate_base::Severity::Warning);
     assert!(diagnostic
         .notes
         .iter()
-        .any(|n| n.message.contains("no discriminating rolled date")));
+        .any(|n| n.message.contains("no discriminating date")));
 }
 
 #[test]
@@ -222,12 +246,15 @@ fn l9011_anchor_starts_when_the_counting_rule_first_applies() {
     assert!(date >= "2020-01-01", "generated date {date} predates rule");
     let mut applied = source;
     applied.push_str(fix);
+    for profile in [Profile::Dev, Profile::Strict] {
+        let checked = verify_one(&applied, profile);
+        assert!(!checked
+            .verification
+            .diagnostics
+            .iter()
+            .any(|d| d.code.as_str() == "L9011"), "{profile:?}");
+    }
     let checked = verify_one(&applied, Profile::Strict);
-    assert!(!checked
-        .verification
-        .diagnostics
-        .iter()
-        .any(|d| d.code.as_str() == "L9011"));
     assert_eq!(
         outcome(&checked, Obligation::TestsPass)
             .finding

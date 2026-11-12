@@ -1316,7 +1316,12 @@ L9011's counting-sensitivity check applies to both directions: a backward
 period can end on a closed day and roll earlier, so a test that only
 exercises an open-day end may fail to distinguish counting from plain
 calendar subtraction. Its generated test uses a trigger for which the
-backward counted end rolls and records that end as the expected date.
+backward counted end rolls and records that end as the expected date. In
+`dev`, L9011 is a warning; in `strict`, it is an error. It remains a warning
+in both profiles, with an explanatory note, only when no discriminating date
+can be generated or the deadline ends before the first recorded version of
+its counting rule. These are typed generator outcomes; other generation
+failures do not qualify for the exemption.
 
 A **chained period** runs from one end of another deadline's period instead
 of from an event: `T` is `deadline(e).nominal` (the last day as counted,
@@ -2828,7 +2833,7 @@ undecided, which is an L5007 error.
 | `tests-pass` | every `test` assertion holds | L5006 |
 | `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4012 |
 | `holes` | lists every hole with reason and span | L9002 / L5002 |
-| `rule-without-test` | every deadline and counting rule is exercised by a `test`; L9011 warns when a deadline's tests do not distinguish its counting rule from plain calendar addition | L9001 / L9011 |
+| `rule-without-test` | every deadline and counting rule is exercised by a `test`; L9011 warns in `dev` and errors in `strict` when tests do not distinguish its counting rule from plain calendar addition, except when no discriminating date exists or the deadline ends before the rule's first recorded version | L9001 / L9011 |
 
 A rule package's report skips `case-replay`; a matter's report checks
 `case-replay` (and counts its resolution errors against `well-typed`) and
@@ -2844,7 +2849,7 @@ declaration's fallback label. The exemption covers the declaration's own
 `cite` and, for a node, its edges' `authority` texts. `strict` rejects every
 hole (L5002), every `cite-resolves` failure, every untested deadline or
 counting rule (L9001 as an error), `unvalued` stakes, and non-canonical
-formatting (L9004). L9011 is a warning in both profiles.
+formatting (L9004). L9011 is a warning in `dev` and an error in `strict`, except for the typed exemptions described in §5.3.
 For `litigate check P --profile strict`, every declaration in each named
 package is judged in full. A dependency package is judged only for
 declarations reachable from the named package's declarations, following
@@ -3384,14 +3389,17 @@ L4009, L4010, L4011, L4012, L4013, L4014, L4016, L3010 and L2015 is `error`.
 L9003, L9006, L9008 and L9009 are `info`. L4009, L4010, L4011, L4012,
 L4013, L4014, L4016, L9005, L9007 and L9010 are `warning`. L9001, L9002,
 L9004, L3010 (a hole in the corpus) and L2015 (an undecided refinement, a
-hole) are `warning` in `dev` and `error` in `strict`. L9011 is a `warning`
-in both `dev` and `strict` while the corpus tests are being updated; it
-reports when every comparable inline test for a direct-trigger calendar-day,
+hole) are `warning` in `dev` and `error` in `strict`. L9011 is an `error`
+in `strict` and a `warning` in `dev`; it reports when every comparable
+inline test for a direct-trigger calendar-day,
 court-day, business-day, or week deadline asserts the same date under plain
 calendar addition with no roll as under the declared counting rule. A test
 that asserts a date where counting changes the result, such as a rolled
-boundary, discharges this lint. Chained deadlines and hour, month, and year
-units are outside the comparison.
+boundary, discharges this lint. If no discriminating date can be generated,
+or the deadline ends before the first recorded version of its counting rule,
+the diagnostic remains a warning with a note in both profiles. Other failures
+to generate the test are not exempt. Chained deadlines and hour, month, and
+year units are outside the comparison.
 L9012 is a warning in both profiles.
 
 ### 9.2 Shapes

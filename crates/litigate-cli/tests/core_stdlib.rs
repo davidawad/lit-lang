@@ -178,13 +178,6 @@ fn strict_check_of_lit_core_has_no_source_holes() {
     let run = litigate(&["check", "--profile", "strict", "lit/core"]);
     assert_eq!(run.code, 0, "{}", run.stdout);
     let diagnostics = run.json["diagnostics"].as_array().unwrap();
-    // L9011 allowance: removed by lg-pb1fe.13
-    assert!(
-        diagnostics
-            .iter()
-            .all(|d| d["code"] == "L9011" && d["severity"] == "warning"),
-        "{diagnostics:#?}"
-    );
     assert!(
         diagnostics
             .iter()

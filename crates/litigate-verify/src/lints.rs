@@ -78,14 +78,41 @@ fn insensitive_deadline(cx: &Context<'_>, x: &hir::Deadline) -> (String, Diagnos
     );
     let mut d = d;
     match crate::assertions::counting_boundary(cx, x) {
-        Ok(Some((fix, compared))) => {
+        Ok(crate::assertions::BoundaryResult::Found((fix, compared))) => {
             d.message = format!("{}; generated boundary test compares {compared}", d.message);
-            d.fixes.push(Fix::single(end_of(&span), fix, Applicability::MachineApplicable));
+            d.fixes.push(Fix::single(
+                end_of(&span),
+                fix,
+                Applicability::MachineApplicable,
+            ));
         }
-        Ok(None) => d = note(d, None, "no discriminating rolled date exists within two years of the effective-date anchor, or the deadline's trigger cannot be represented as a valid test event"),
-        Err(why) => d = note(d, None, format!("could not generate a counting-boundary test: {why}")),
+        Ok(crate::assertions::BoundaryResult::Exempt(reason)) => {
+            d = exempt_counting_warning(d, reason);
+        }
+        Err(why) => {
+            d = note(
+                d,
+                None,
+                format!("could not generate a counting-boundary test: {why}"),
+            );
+        }
     }
     (format!("counting-insensitive:{id}"), d)
+}
+
+fn exempt_counting_warning(
+    mut diagnostic: Diagnostic,
+    reason: crate::assertions::CountingExemption,
+) -> Diagnostic {
+    diagnostic.severity = litigate_base::Severity::Warning;
+    note(
+        diagnostic,
+        None,
+        match reason {
+            crate::assertions::CountingExemption::NoDiscriminatingDate => "no discriminating date exists within the deadline's effective window, or its trigger cannot be represented as a valid test event",
+            crate::assertions::CountingExemption::DeadlinePredatesRule => "the deadline ends before the first recorded version of its counting rule",
+        },
+    )
 }
 
 /// Local ids of deadlines some test evaluates with `deadline(d)`.
@@ -171,6 +198,7 @@ fn counting(cx: &Context<'_>, c: &hir::Counting) -> (String, Diagnostic) {
 mod tests {
     use super::*;
     use hir::{BinaryOp, Expr, Pattern, Type, UnaryOp, Value};
+    use litigate_base::{Profile, Severity};
 
     fn expr(kind: ExprKind) -> Expr {
         Expr {
@@ -255,6 +283,30 @@ mod tests {
         for (kind, want) in cases {
             let want: Vec<Expr> = want.into_iter().map(leaf).collect();
             assert_eq!(operands(&expr(kind.clone())), want, "{kind:?}");
+        }
+    }
+
+    #[test]
+    fn l9011_exemptions_keep_strict_diagnostics_as_noted_warnings() {
+        for (reason, expected) in [
+            (
+                crate::assertions::CountingExemption::NoDiscriminatingDate,
+                "no discriminating date",
+            ),
+            (
+                crate::assertions::CountingExemption::DeadlinePredatesRule,
+                "ends before the first recorded version",
+            ),
+        ] {
+            let diagnostic = emit(
+                C::CountingTestInsensitive,
+                Profile::Strict,
+                crate::diag::start_of("test.lit"),
+                "insensitive counting test",
+            );
+            let diagnostic = exempt_counting_warning(diagnostic, reason);
+            assert_eq!(diagnostic.severity, Severity::Warning);
+            assert!(diagnostic.notes[0].message.contains(expected));
         }
     }
 }

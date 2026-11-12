@@ -7,12 +7,12 @@
       "id": "ptab-patent-trial-appeal-board::institution-decision",
       "label": "Institution Decision",
       "kind": "state",
-      "cite": "35 U.S.C. 314(a); 37 CFR 42.108",
-      "note": "Board institutes if petitioner shows a reasonable likelihood of prevailing on at least one claim — a lower bar than PGR's more-likely-than-not standard (35 U.S.C. 324(a)). Discretionary denial under the Fintiv factors and §325(d) can block institution even where the merits showing is met."
+      "cite": "35 U.S.C. § 314(a); 37 C.F.R. § 42.108",
+      "note": "Board institutes if petitioner shows a reasonable likelihood of prevailing on at least one claim — a lower bar than PGR's more-likely-than-not standard (35 U.S.C. § 324(a)). Discretionary denial under the Fintiv factors and §325(d) can block institution even where the merits showing is met."
     },
     "control": "chance",
     "who_decides": "tribunal/chance",
-    "value": 572733.783111,
+    "value": 569035.765633,
     "interrupt_mass": 1.0,
     "options": [
       {
@@ -23,7 +23,7 @@
         "role": "nature",
         "authority": "35 U.S.C. § 314(a); 37 C.F.R. § 42.108(a)",
         "p": 0.681,
-        "q": 631748.783111,
+        "q": 628050.765633,
         "cost": 0.0,
         "hours": 0.0,
         "fees": 0.0,
@@ -32,19 +32,19 @@
         "then": [
           {
             "terminal": "adverse-judgment-terminal{ipr-estopped}",
-            "p": 0.321955
+            "p": 0.319589
           },
           {
             "terminal": "ipr-terminated-settlement",
-            "p": 0.319444
+            "p": 0.31713
           },
           {
             "terminal": "fwd-all-unpatentable{ipr-estopped}#end",
-            "p": 0.130835
+            "p": 0.132574
           },
           {
             "terminal": "appeal-forfeited-unappealed{ipr-estopped}",
-            "p": 0.088987
+            "p": 0.09017
           }
         ]
       },
@@ -56,7 +56,7 @@
         "role": "nature",
         "authority": "35 U.S.C. § 314(a); 35 U.S.C. § 325(d)",
         "p": 0.1595,
-        "q": 461748.783111,
+        "q": 458050.765633,
         "cost": 0.0,
         "hours": 0.0,
         "fees": 0.0,
@@ -65,19 +65,19 @@
         "then": [
           {
             "terminal": "adverse-judgment-terminal{ipr-estopped,prior-petition-denied}",
-            "p": 0.321955
+            "p": 0.319589
           },
           {
             "terminal": "ipr-terminated-settlement{prior-petition-denied}",
-            "p": 0.319444
+            "p": 0.31713
           },
           {
             "terminal": "fwd-all-unpatentable{ipr-estopped,prior-petition-denied}#end",
-            "p": 0.130835
+            "p": 0.132574
           },
           {
             "terminal": "appeal-forfeited-unappealed{ipr-estopped,prior-petition-denied}",
-            "p": 0.088987
+            "p": 0.09017
           }
         ]
       },
@@ -87,9 +87,9 @@
         "from": "ptab-patent-trial-appeal-board::institution-decision",
         "to": "ptab-patent-trial-appeal-board::institution-denied-merits",
         "role": "nature",
-        "authority": "35 U.S.C. 314(a); 37 CFR 42.108",
+        "authority": "35 U.S.C. § 314(a); 37 C.F.R. § 42.108",
         "p": 0.1595,
-        "q": 431748.783111,
+        "q": 428050.765633,
         "cost": 0.0,
         "hours": 0.0,
         "fees": 0.0,
@@ -98,19 +98,19 @@
         "then": [
           {
             "terminal": "adverse-judgment-terminal{ipr-estopped,prior-petition-denied}",
-            "p": 0.321955
+            "p": 0.319589
           },
           {
             "terminal": "ipr-terminated-settlement{prior-petition-denied}",
-            "p": 0.319444
+            "p": 0.31713
           },
           {
             "terminal": "fwd-all-unpatentable{ipr-estopped,prior-petition-denied}#end",
-            "p": 0.130835
+            "p": 0.132574
           },
           {
             "terminal": "appeal-forfeited-unappealed{ipr-estopped,prior-petition-denied}",
-            "p": 0.088987
+            "p": 0.09017
           }
         ]
       }
@@ -138,7 +138,7 @@
             "prior-petition-denied"
           ],
           "steps": 10,
-          "value": 572733.783111,
+          "value": 569035.765633,
           "chosen": null,
           "same_choice": true
         }
@@ -163,9 +163,10 @@
     },
     {
       "code": "mixed-node",
-      "count": 5,
+      "count": 6,
       "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
       "at": [
+        "ptab-patent-trial-appeal-board::infringement-complaint-served",
         "ptab-patent-trial-appeal-board::patent-granted",
         "ptab-patent-trial-appeal-board::patent-owner-response-filed",
         "ptab-patent-trial-appeal-board::patent-owner-response-filed{ipr-estopped}",

@@ -63,7 +63,9 @@ state patent-owner-response-filed: "Patent Owner Response Filed" by patent-owner
     duration { min 9.days, mode 30.days, max 60.days }
     note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
   }
-  "Settle after filing response" -> settlement-decision by either { authority cite "35 U.S.C. § 317" }
+  "Settle after filing response" -> settlement-decision by either {
+    authority cite "35 U.S.C. § 317"
+  }
 }
 
 /// From January 8, 2021 (85 FR 79120): the sur-reply and the response
@@ -332,7 +334,9 @@ state rehearing-request-filed: "Rehearing Request Filed" by board effective [202
 {
   group rehearing-director-group
   note "Must specifically identify matters the panel misapprehended or overlooked — no new arguments or evidence. Decided by the same panel that issued the FWD; the panel typically decides within 3-6 months, though no hard deadline governs the Board's own turnaround."
-  "Panel considers rehearing request" -> rehearing-decision { authority cite "37 C.F.R. § 42.71(d)" }
+  "Panel considers rehearing request" -> rehearing-decision {
+    authority cite "37 C.F.R. § 42.71(d)"
+  }
 }
 
 /// Tribunal discretion on rehearing (37 C.F.R. § 42.71(d)). The pack authors

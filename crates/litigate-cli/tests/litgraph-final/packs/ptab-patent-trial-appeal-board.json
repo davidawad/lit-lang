@@ -7,22 +7,46 @@
       "id": "ptab-patent-trial-appeal-board::patent-granted",
       "label": "Patent Granted"
     },
-    "value": 516355.60442,
+    "value": 510737.442007,
     "converged": true,
-    "iterations": 52,
+    "iterations": 56,
     "fee_shift_rounds": 0,
     "best_line": [
       {
-        "id": "ptab-patent-trial-appeal-board::edge-patent-granted-pgr-petition-filed",
-        "label": "File PGR petition directly",
+        "id": "ptab-patent-trial-appeal-board::edge-patent-granted-infringement-complaint-served",
+        "label": "Get sued for infringement",
         "from": "ptab-patent-trial-appeal-board::patent-granted",
+        "to": "ptab-patent-trial-appeal-board::infringement-complaint-served",
+        "role": "nature",
+        "authority": "35 U.S.C. § 315(b)",
+        "p": 1.0,
+        "kind": "opponent-waits-likely-draw",
+        "step_p": 1.0,
+        "q": 510737.442007
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-infringement-complaint-served-challenge-vehicle-decision",
+        "label": "Evaluate IPR/PGR after being sued",
+        "from": "ptab-patent-trial-appeal-board::infringement-complaint-served",
+        "to": "ptab-patent-trial-appeal-board::challenge-vehicle-decision",
+        "role": "opponent",
+        "authority": "35 U.S.C. § 315(b)",
+        "p": 1.0,
+        "kind": "wait-likely-draw",
+        "step_p": 1.0,
+        "q": 510737.442007
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-challenge-vehicle-decision-pgr-petition-filed",
+        "label": "File PGR petition within 9 months",
+        "from": "ptab-patent-trial-appeal-board::challenge-vehicle-decision",
         "to": "ptab-patent-trial-appeal-board::pgr-petition-filed",
         "role": "self",
         "authority": "35 U.S.C. § 321(c)",
         "deadline_days": 273.931875,
         "kind": "choice",
         "step_p": 1.0,
-        "q": 516355.60442
+        "q": 514737.442007
       },
       {
         "id": "ptab-patent-trial-appeal-board::edge-pgr-petition-filed-popr-window",
@@ -30,11 +54,11 @@
         "from": "ptab-patent-trial-appeal-board::pgr-petition-filed",
         "to": "ptab-patent-trial-appeal-board::popr-window",
         "role": "nature",
-        "authority": "37 CFR §42.206(a)",
+        "authority": "37 C.F.R. § 42.206(a)",
         "p": 0.95,
         "kind": "likely-draw",
         "step_p": 0.95,
-        "q": 607398.280789
+        "q": 605777.687487
       },
       {
         "id": "ptab-patent-trial-appeal-board::edge-popr-window-claims-disclaimed-preinstitution",
@@ -42,14 +66,14 @@
         "from": "ptab-patent-trial-appeal-board::popr-window",
         "to": "ptab-patent-trial-appeal-board::claims-disclaimed-preinstitution",
         "role": "nature",
-        "authority": "37 CFR 42.107(e)",
+        "authority": "37 C.F.R. § 42.107(e)",
         "p": 0.333333,
         "kind": "likely-draw",
         "step_p": 0.333333,
         "q": 700000.0
       }
     ],
-    "policy_size": 18,
+    "policy_size": 13,
     "policy": null,
     "values": null
   },
@@ -71,9 +95,10 @@
     },
     {
       "code": "mixed-node",
-      "count": 5,
+      "count": 6,
       "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
       "at": [
+        "ptab-patent-trial-appeal-board::infringement-complaint-served",
         "ptab-patent-trial-appeal-board::patent-granted",
         "ptab-patent-trial-appeal-board::patent-owner-response-filed",
         "ptab-patent-trial-appeal-board::patent-owner-response-filed{ipr-estopped}",

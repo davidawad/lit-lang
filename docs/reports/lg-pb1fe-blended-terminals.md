@@ -1,6 +1,6 @@
 # Blended terminal inventory and proposed splits
 
-> The FRCP rows in the inventory show the known-direction copies; the final section records the neutral third copy and unknown-direction handling.
+> The inventory records each FRCP terminal as it appeared on origin/main before this bead's split; the split column records the resulting party-specific outcomes.
 
 ## Operational definition
 
@@ -10,12 +10,12 @@ A **blended terminal** is a `terminal` whose incoming edges, as shown by rule te
 
 ## Inventory
 
-| Package | File:line | Terminal id (current outcome) | Incoming favourable / adverse edges | Proposed split and separating rule |
+| Package | File:line | Blended terminal (main outcome before split) | Incoming favourable / adverse edges | Proposed split and separating rule |
 |---|---|---|---|---|
-| frcp | `02-pleading-to-trial.lit:898` | `summary-judgment-for-plaintiff` (`win`) / `summary-judgment-for-defendant` (`loss`) | `sj-ruling`: two mutually exclusive Rule 56(a) “Granted in full” edges, selected by the movant flag set at discovery close. | Split by movant under FRCP 56(a): plaintiff or defendant is entitled to judgment as a matter of law. |
-| frcp | `04-judgment-appeal.lit:108` | `appeal-window-blown-plaintiff-judgment` (`procedural-default, waiver-trap, win`) / `appeal-window-blown-defendant-judgment` (`procedural-default, waiver-trap, loss`) | The Rule 4(a) missed-deadline edge pair is selected by `judgment-for-defendant`; the losing party is defendant for a plaintiff judgment and plaintiff for a defendant judgment. | Split by carried judgment direction under FRAP 4(a)(1)(A) and 28 U.S.C. § 1291. |
-| frcp | `04-judgment-appeal.lit:125` | `judgment-final-no-appeal-plaintiff` (`win`) / `judgment-final-no-appeal-defendant` (`loss`) | The no-appeal edge pair is gated by `judgment-for-defendant`; the losing party chooses not to appeal. | Split by carried judgment direction under 28 U.S.C. § 1291 and FRAP 4(a)(1)(A). |
-| frcp | `04-judgment-appeal.lit:274` | `judgment-affirmed-plaintiff` (`affirmed, win`) / `judgment-affirmed-defendant` (`affirmed, loss`) | Both affirmance chance branches (0.55 and 0.10 net affirmance) are split by the carried judgment flag. | Split by carried judgment direction under 28 U.S.C. §§ 1291, 2106. |
+| frcp | `02-pleading-to-trial.lit:898` | `summary-judgment-granted` (`final`; the “movant” may be plaintiff or defendant) | One `sj-ruling` chance edge (“Granted in full,” p=0.25) reaches it. The note leaves movant identity uncarried, so the same edge can mean judgment for plaintiff (self win) or defendant (self loss). | `summary-judgment-for-plaintiff` (`win`) / `summary-judgment-for-defendant` (`loss`), selected by movant under FRCP 56(a). |
+| frcp | `04-judgment-appeal.lit:80` | `appeal-window-blown` (`procedural-default, waiver-trap, final`) | Plaintiff-verdict and defendant-verdict edges both converge at `final-judgment-entered`; one missed-notice edge then reaches this terminal. The note says that converged judgment may favor either side. | Party-direction win/loss copies plus the neutral `appeal-window-blown` (`final`) copy when neither flag is set; FRAP 4(a)(1)(A), 28 U.S.C. § 1291. |
+| frcp | `04-judgment-appeal.lit:89` | `judgment-final-no-appeal` (`final`) | Plaintiff-verdict and defendant-verdict edges both converge at `final-judgment-entered`; one no-appeal edge reaches this terminal, so the waiver can leave either side's win or loss final. | `judgment-final-no-appeal-plaintiff` / `...-defendant` for known directions plus the neutral `judgment-final-no-appeal` when direction is unknown; 28 U.S.C. § 1291, FRAP 4(a)(1)(A). |
+| frcp | `04-judgment-appeal.lit:182` | `judgment-affirmed` (`affirmed, final`) | The p=0.55 affirmance and p=0.10 net-affirmance edges both lead to this terminal after either plaintiff or defendant judgment has been collapsed at `final-judgment-entered`. | `judgment-affirmed-plaintiff` / `...-defendant` for known judgment direction plus the neutral `judgment-affirmed` when unknown; 28 U.S.C. §§ 1291, 2106. |
 | frcp | `04-judgment-appeal.lit:299` | `judgment-reversed-remanded` (`remand`) | The 0.35 reversal/remand edge can reverse either party’s judgment; it retains one remand outcome as directed. | Keep one `[remand]` terminal under 28 U.S.C. § 2106; the chart does not model the post-mandate judgment. |
 | frap | `11-cert.lit:117` | `cert-not-sought` (`final`) | `certiorari-petition-window`: no petition leaves the panel disposition standing, whether affirmance or reversal/remand. | `cert-not-sought-after-affirmance` / `cert-not-sought-after-reversal` (and mixed if represented); carry the panel disposition under 28 U.S.C. § 1254(1), Sup. Ct. R. 13. |
 | frap | `11-cert.lit:142` | `cert-denied` (`final`) | `certiorari-decision`: denial leaves either party's panel result in force; cert denial is not a merits decision. | `cert-denied-after-affirmance` / `cert-denied-after-reversal` (and mixed); carry the panel disposition under Sup. Ct. R. 10. |
@@ -32,7 +32,637 @@ A **blended terminal** is a `terminal` whose incoming edges, as shown by rule te
 
 ## Other package families (count only)
 
-The repository contains hundreds of additional package families, many of them unrelated state, bankruptcy, criminal, and specialty-court packages. No complete incoming-edge audit of those packages was performed for this focused follow-up; the explicit count of other-family candidates identified by this scan is **0**. This is a scan count, not a certification that every other package is blend-free. File a package-family follow-up when a concrete candidate is confirmed.
+The lines below count terminal declarations whose own text contains one of “blended,” “movant,” “losing party,” or “either party” and whose outcome includes win or loss. These are scan candidates only; I did not audit all incoming-edge structures in these families.
+
+- acca: 0
+- afcca: 0
+- ak-court-of-appeals: 0
+- ak-criminal-trial-court: 0
+- ak-rules: 0
+- ak-superior: 0
+- ak-supreme: 0
+- akd: 0
+- akd-criminal: 0
+- al-court-of-criminal-appeals: 0
+- al-criminal-trial-court: 0
+- al-rules: 0
+- al-state-appellate: 0
+- al-state-civil: 1
+- al-supreme-court: 0
+- almd: 0
+- almd-criminal: 0
+- alnd: 0
+- alnd-criminal: 0
+- alsd: 0
+- alsd-criminal: 0
+- ar-circuit: 1
+- ar-criminal-trial-court: 0
+- ar-rules: 0
+- ar-supreme-court: 0
+- ar-workers-compensation-commission: 0
+- ared: 0
+- ared-criminal: 0
+- arkctapp: 0
+- arwd: 0
+- arwd-criminal: 0
+- as-criminal-trial-court: 0
+- as-high-court: 0
+- as-high-court-appellate: 0
+- as-rules: 0
+- az-court-of-appeals: 0
+- az-criminal-trial-court: 0
+- az-rules: 0
+- az-superior: 0
+- az-tax-court: 0
+- azd: 0
+- azd-criminal: 0
+- bankr-ak: 0
+- bankr-alm: 0
+- bankr-aln: 0
+- bankr-als: 0
+- bankr-are: 0
+- bankr-arw: 0
+- bankr-az: 0
+- bankr-cac: 0
+- bankr-cae: 0
+- bankr-can: 0
+- bankr-cas: 0
+- bankr-co: 0
+- bankr-ct: 0
+- bankr-dc: 0
+- bankr-de: 0
+- bankr-flm: 0
+- bankr-fln: 0
+- bankr-fls: 0
+- bankr-gam: 0
+- bankr-gan: 0
+- bankr-gas: 0
+- bankr-gu: 0
+- bankr-hi: 0
+- bankr-ian: 0
+- bankr-ias: 0
+- bankr-id: 0
+- bankr-ilc: 0
+- bankr-iln: 0
+- bankr-ils: 0
+- bankr-inn: 0
+- bankr-ins: 0
+- bankr-ks: 0
+- bankr-kye: 0
+- bankr-kyw: 0
+- bankr-lae: 0
+- bankr-lam: 0
+- bankr-law: 0
+- bankr-ma: 0
+- bankr-md: 0
+- bankr-me: 0
+- bankr-mie: 0
+- bankr-miw: 0
+- bankr-mn: 0
+- bankr-moe: 0
+- bankr-mow: 0
+- bankr-mp: 0
+- bankr-msn: 0
+- bankr-mss: 0
+- bankr-mt: 0
+- bankr-nce: 0
+- bankr-ncm: 0
+- bankr-ncw: 0
+- bankr-nd: 0
+- bankr-ne: 0
+- bankr-nh: 0
+- bankr-nj: 0
+- bankr-nm: 0
+- bankr-nv: 0
+- bankr-nye: 0
+- bankr-nyn: 0
+- bankr-nys: 0
+- bankr-nyw: 0
+- bankr-ohn: 0
+- bankr-ohs: 0
+- bankr-oke: 0
+- bankr-okn: 0
+- bankr-okw: 0
+- bankr-or: 0
+- bankr-pae: 0
+- bankr-pam: 0
+- bankr-paw: 0
+- bankr-pr: 0
+- bankr-ri: 0
+- bankr-sc: 0
+- bankr-sd: 0
+- bankr-tne: 0
+- bankr-tnm: 0
+- bankr-tnw: 0
+- bankr-txe: 0
+- bankr-txn: 0
+- bankr-txs: 0
+- bankr-txw: 0
+- bankr-ut: 0
+- bankr-vae: 0
+- bankr-vaw: 0
+- bankr-vi: 0
+- bankr-vt: 0
+- bankr-wae: 0
+- bankr-waw: 0
+- bankr-wie: 0
+- bankr-wiw: 0
+- bankr-wvn: 0
+- bankr-wvs: 0
+- bankr-wy: 0
+- bap1: 0
+- bap10: 0
+- bap6: 0
+- bap8: 0
+- bap9: 0
+- bia: 0
+- ca-court-of-appeal: 0
+- ca-court-of-appeal-fifth-district: 0
+- ca-court-of-appeal-first-district: 0
+- ca-court-of-appeal-fourth-district: 0
+- ca-court-of-appeal-second-district: 0
+- ca-court-of-appeal-sixth-district: 0
+- ca-court-of-appeal-third-district: 0
+- ca-criminal-trial-court: 0
+- ca-rules: 0
+- ca-superior: 0
+- ca-superior-court-appellate-division: 0
+- ca-superior-court-san-diego-county: 0
+- ca-supreme-court: 0
+- ca1: 0
+- ca10: 0
+- ca11: 0
+- ca2: 0
+- ca3: 0
+- ca4: 0
+- ca5: 0
+- ca6: 0
+- ca7: 0
+- ca8: 0
+- ca9: 0
+- caaf: 0
+- cacd: 0
+- cacd-criminal: 0
+- cadc: 0
+- caed: 0
+- caed-criminal: 0
+- cand: 0
+- cand-criminal: 0
+- casd: 0
+- casd-criminal: 0
+- cavc: 0
+- cgcca: 0
+- cit: 0
+- cmcr: 0
+- co-criminal-trial-court: 0
+- co-industrial-claim-appeals-office: 0
+- co-rules: 0
+- co-state-appellate: 0
+- co-state-civil: 1
+- co-supreme-court: 0
+- cod: 0
+- cod-criminal: 0
+- cofc: 0
+- core: 0
+- ct-appellate-supreme: 0
+- ct-compensation-review-board: 0
+- ct-criminal-trial-court: 0
+- ct-rules: 0
+- ct-superior-civil: 0
+- ctd: 0
+- ctd-criminal: 0
+- dc-criminal-trial-court: 0
+- dc-rules: 0
+- dc-state-appellate: 0
+- dc-state-civil: 1
+- dcd: 0
+- dcd-criminal: 0
+- de-court-of-chancery: 0
+- de-court-on-the-judiciary: 0
+- de-criminal-trial-court: 0
+- de-family-court: 0
+- de-rules: 0
+- de-superior-civil: 0
+- de-supreme-civil: 0
+- ded: 0
+- ded-criminal: 0
+- examples: 0
+- fisc: 0
+- fiscr: 0
+- fl-criminal-trial-court: 0
+- fl-district-court-of-appeal: 0
+- fl-district-court-of-appeal-fifth: 0
+- fl-district-court-of-appeal-first: 0
+- fl-district-court-of-appeal-fourth: 0
+- fl-district-court-of-appeal-second: 0
+- fl-district-court-of-appeal-sixth: 0
+- fl-district-court-of-appeal-third: 0
+- fl-rules: 0
+- fl-state-civil: 1
+- fl-supreme-court: 0
+- flmd: 0
+- flmd-criminal: 0
+- flnd: 0
+- flnd-criminal: 0
+- flsd: 0
+- flsd-criminal: 0
+- frbp: 0
+- frcp-2025: 0
+- frcrimp: 0
+- ga-criminal-trial-court: 0
+- ga-rules: 0
+- ga-state-civil: 1
+- ga-supreme-court: 0
+- gactapp: 0
+- gamd: 0
+- gamd-criminal: 0
+- gand: 0
+- gand-criminal: 0
+- gasd: 0
+- gasd-criminal: 0
+- gu-criminal-trial-court: 0
+- gu-superior: 0
+- gu-supreme: 0
+- gud: 0
+- gud-criminal: 0
+- habeas: 0
+- hi-circuit: 0
+- hi-criminal-trial-court: 0
+- hi-ica: 0
+- hi-rules: 0
+- hi-supreme-court: 0
+- hi-tax-appeal-court: 0
+- hid: 0
+- hid-criminal: 0
+- ia-criminal-trial-court: 0
+- ia-district: 1
+- ia-rules: 0
+- ia-supreme-court: 0
+- iand: 0
+- iand-criminal: 0
+- iasd: 0
+- iasd-criminal: 0
+- id-court-of-appeals: 0
+- id-criminal-trial-court: 0
+- id-district: 0
+- id-rules: 0
+- id-supreme: 0
+- idd: 0
+- idd-criminal: 0
+- il-circuit: 0
+- il-criminal-trial-court: 0
+- il-rules: 0
+- il-supreme-court: 0
+- ilcd: 0
+- ilcd-criminal: 0
+- illappct: 0
+- ilnd: 0
+- ilnd-criminal: 0
+- ilsd: 0
+- ilsd-criminal: 0
+- in-criminal-trial-court: 0
+- in-tax-court: 0
+- in-trial: 0
+- indctapp: 0
+- innd: 0
+- innd-criminal: 0
+- insd: 0
+- insd-criminal: 0
+- iowactapp: 0
+- jpml: 0
+- ks-court-of-appeals: 0
+- ks-criminal-trial-court: 0
+- ks-district: 0
+- ks-rules: 0
+- ks-supreme-court: 0
+- ksd: 0
+- ksd-criminal: 0
+- ky-circuit-court: 0
+- ky-court-of-appeals: 0
+- ky-criminal-trial-court: 0
+- ky-rules: 0
+- ky-supreme-court: 0
+- kyed: 0
+- kyed-criminal: 0
+- kywd: 0
+- kywd-criminal: 0
+- la-appellate: 0
+- la-criminal-trial-court: 0
+- la-district-court: 0
+- la-rules: 0
+- la-supreme: 0
+- laed: 0
+- laed-criminal: 0
+- lamd: 0
+- lamd-criminal: 0
+- lawd: 0
+- lawd-criminal: 0
+- links: 0
+- ma-appeals-court: 0
+- ma-appellate-tax-board: 0
+- ma-criminal-trial-court: 0
+- ma-department-of-industrial-accidents: 0
+- ma-district-court-appellate-division: 0
+- ma-rules: 0
+- ma-sjc: 0
+- ma-superior-civil: 1
+- mad: 0
+- mad-criminal: 0
+- md-appellate-civil: 0
+- md-circuit-civil: 1
+- md-criminal-trial-court: 0
+- md-rules: 0
+- md-supreme-court: 0
+- mdd: 0
+- mdd-criminal: 0
+- me-criminal-trial-court: 0
+- me-law-court: 0
+- me-superior-civil: 1
+- med: 0
+- med-criminal: 0
+- mi-appellate: 0
+- mi-circuit-court: 0
+- mi-criminal-trial-court: 0
+- mi-rules: 0
+- mi-supreme-court: 0
+- mied: 0
+- mied-criminal: 0
+- minnctapp: 0
+- miwd: 0
+- miwd-criminal: 0
+- mn-criminal-trial-court: 0
+- mn-district: 0
+- mn-rules: 0
+- mn-supreme-court: 0
+- mnd: 0
+- mnd-criminal: 0
+- mo-circuit: 0
+- mo-criminal-trial-court: 0
+- mo-rules: 0
+- mo-supreme: 0
+- moctapp: 0
+- moctapp-ed: 0
+- moctapp-sd: 0
+- moctapp-wd: 0
+- moed: 0
+- moed-criminal: 0
+- mowd: 0
+- mowd-criminal: 0
+- mp-criminal-trial-court: 0
+- mp-supreme: 0
+- mp-trial: 0
+- ms-appellate: 0
+- ms-chancery-courts: 0
+- ms-circuit-court: 0
+- ms-criminal-trial-court: 0
+- ms-rules: 0
+- ms-supreme-court: 0
+- msnd: 0
+- msnd-criminal: 0
+- mssd: 0
+- mssd-criminal: 0
+- mt-criminal-trial-court: 0
+- mt-district: 0
+- mt-rules: 0
+- mt-supreme: 0
+- mt-tax-appeal-board: 0
+- mtd: 0
+- mtd-criminal: 0
+- nc-appellate-civil: 0
+- nc-criminal-trial-court: 0
+- nc-industrial-commission: 0
+- nc-rules: 0
+- nc-superior-civil: 0
+- nced: 0
+- nced-criminal: 0
+- ncmd: 0
+- ncmd-criminal: 0
+- ncwd: 0
+- ncwd-criminal: 0
+- nd-criminal-trial-court: 0
+- nd-district: 0
+- nd-rules: 0
+- ndctapp: 0
+- ndd: 0
+- ndd-criminal: 0
+- ne-criminal-trial-court: 0
+- ne-district: 0
+- ne-rules: 0
+- ne-supreme-court: 0
+- nebctapp: 0
+- ned: 0
+- ned-criminal: 0
+- nh-criminal-trial-court: 0
+- nh-rules: 0
+- nh-superior-civil: 1
+- nh-supreme: 0
+- nhd: 0
+- nhd-criminal: 0
+- nj-appellate-civil: 0
+- nj-criminal-trial-court: 0
+- nj-rules: 0
+- nj-superior-law: 0
+- nj-supreme-court: 0
+- nj-tax-court: 0
+- njd: 0
+- njd-criminal: 0
+- nm-criminal-trial-court: 0
+- nm-rules: 0
+- nm-state-appellate: 0
+- nm-state-civil: 1
+- nm-supreme-court: 0
+- nmcca: 0
+- nmd: 0
+- nmd-criminal: 0
+- nmid: 0
+- nmid-criminal: 0
+- nv-court-of-appeals: 0
+- nv-criminal-trial-court: 0
+- nv-district: 0
+- nv-rules: 0
+- nv-supreme: 0
+- nvd: 0
+- nvd-criminal: 0
+- ny-appellate-division: 0
+- ny-appellate-terms: 0
+- ny-commission-of-appeals: 0
+- ny-court-for-the-trial-of-impeachments: 0
+- ny-court-of-appeals: 0
+- ny-criminal-trial-court: 0
+- ny-rules: 0
+- ny-saratoga-chancery-court: 0
+- ny-supreme-civil: 1
+- nyed: 0
+- nyed-criminal: 0
+- nynd: 0
+- nynd-criminal: 0
+- nysd: 0
+- nysd-criminal: 0
+- nywd: 0
+- nywd-criminal: 0
+- oh-common-pleas: 0
+- oh-court-of-appeals: 0
+- oh-court-of-claims: 0
+- oh-criminal-trial-court: 0
+- oh-rules: 0
+- oh-supreme-court: 0
+- ohnd: 0
+- ohnd-criminal: 0
+- ohsd: 0
+- ohsd-criminal: 0
+- ok-court-of-civil-appeals: 0
+- ok-court-of-criminal-appeals: 0
+- ok-court-on-the-judiciary: 0
+- ok-criminal-trial-court: 0
+- ok-district: 1
+- ok-judicial-ethics-advisory-panel: 0
+- ok-rules: 0
+- ok-supreme-court: 0
+- oked: 0
+- oked-criminal: 0
+- oknd: 0
+- oknd-criminal: 0
+- okwd: 0
+- okwd-criminal: 0
+- or-circuit: 0
+- or-court-of-appeals: 0
+- or-criminal-trial-court: 0
+- or-dor: 0
+- or-rules: 0
+- or-tax-court: 0
+- ord-criminal: 0
+- pa-commonwealth-court: 0
+- pa-court-of-judicial-discipline: 0
+- pa-cp-civil: 0
+- pa-criminal-trial-court: 0
+- pa-rules: 0
+- pa-superior-court: 0
+- pa-supreme-court: 0
+- paed: 0
+- paed-criminal: 0
+- pamd: 0
+- pamd-criminal: 0
+- pawd: 0
+- pawd-criminal: 0
+- pr-criminal-trial-court: 0
+- pr-primera-instancia-civil: 0
+- pr-rules: 0
+- pr-supreme-court: 0
+- pr-tribunal-apelaciones: 0
+- prd: 0
+- prd-criminal: 0
+- ri-criminal-trial-court: 0
+- ri-rules: 0
+- ri-superior-civil: 1
+- ri-supreme: 0
+- rid: 0
+- rid-criminal: 0
+- sc-circuit-civil: 0
+- sc-court-of-appeals: 0
+- sc-court-of-chancery: 0
+- sc-criminal-trial-court: 0
+- sc-rules: 0
+- sc-supreme-court: 0
+- scd: 0
+- scd-criminal: 0
+- scotus: 0
+- sd: 0
+- sd-circuit: 0
+- sd-criminal-trial-court: 0
+- sdd: 0
+- sdd-criminal: 0
+- tax-court: 0
+- tn-appellate: 0
+- tn-court-of-criminal-appeals: 0
+- tn-criminal-trial-court: 0
+- tn-rules: 0
+- tn-supreme-court: 0
+- tn-trial-court: 0
+- tned: 0
+- tned-criminal: 0
+- tnmd: 0
+- tnmd-criminal: 0
+- tnwd: 0
+- tnwd-criminal: 0
+- ttab: 0
+- tx-court-of-civil-appeals: 0
+- tx-court-of-criminal-appeals: 0
+- tx-court-of-review-tribunal: 0
+- tx-courts-of-appeals: 0
+- tx-criminal-trial-court: 0
+- tx-district-court: 0
+- tx-district-court-travis: 0
+- tx-judicial-panel-on-multidistrict-litigation: 0
+- tx-rules: 0
+- tx-special-court-of-review: 0
+- tx-supreme-court: 0
+- txed: 0
+- txed-criminal: 0
+- txnd: 0
+- txnd-criminal: 0
+- txsd: 0
+- txsd-criminal: 0
+- txwd: 0
+- txwd-criminal: 0
+- ut-criminal-trial-court: 0
+- ut-rules: 0
+- ut-state-appellate: 0
+- ut-state-civil: 0
+- ut-supreme-court: 0
+- utd: 0
+- utd-criminal: 0
+- va-circuit-civil: 0
+- va-court-of-appeals: 0
+- va-criminal-trial-court: 0
+- va-rules: 0
+- va-supreme-court: 0
+- vaed: 0
+- vaed-criminal: 0
+- vawd: 0
+- vawd-criminal: 0
+- vi-criminal-trial-court: 0
+- vi-superior-civil: 0
+- vi-supreme-civil: 0
+- vid: 0
+- vid-criminal: 0
+- vt-criminal-trial-court: 0
+- vt-superior-civil: 1
+- vt-supreme: 0
+- vtd: 0
+- vtd-criminal: 0
+- wa-court-of-appeals: 0
+- wa-criminal-trial-court: 0
+- wa-rules: 0
+- wa-superior: 0
+- wa-supreme-court: 0
+- waed: 0
+- waed-criminal: 0
+- wawd: 0
+- wawd-criminal: 0
+- wi-circuit: 0
+- wi-court-of-appeals: 0
+- wi-criminal-trial-court: 0
+- wi-rules: 0
+- wi-supreme-court: 0
+- wied: 0
+- wied-criminal: 0
+- wiwd: 0
+- wiwd-criminal: 0
+- wv-appellate-civil: 0
+- wv-circuit-civil: 0
+- wv-criminal-trial-court: 0
+- wv-rules: 0
+- wv-supreme-court: 0
+- wvnd: 0
+- wvnd-criminal: 0
+- wvsd: 0
+- wvsd-criminal: 0
+- wy-criminal-trial-court: 0
+- wy-district: 0
+- wy-rules: 0
+- wy-supreme: 0
+- wyd: 0
+- wyd-criminal: 0
 
 ## FRCP split and three-state judgment direction
 
@@ -72,7 +702,7 @@ Solve warnings: compile 9 (675 additional reachable flag-state nodes), mixed-nod
 
 The updated CLI test pins $75,713.461431 and, if the best-line terminal is a win, asserts a preceding merits-setting edge ID. The final FRCP package check reports 0 errors; its inline suite has 49 passed and 0 failed.
 
-The summary-judgment duration estimate is now attached to both party-specific edges, each at 410.91 days, with the same 21,861-case source and the existing Table C-5 basis. The generated calibration reference was updated for the two new edge ids, and `calibration-gaps.json` was updated for the changed FRCP response. The legacy pinned pack value in `crates/litigate-cli/tests/litgraph-final/packs/frcp-civil-procedure.json` stays $478,445: it is the frozen `litgraph-final` reference and is not regenerated from the current `.lit` source.
+The summary-judgment duration estimate is now attached to both party-specific edges, each at 410.91 days, with the same 21,861-case source and the existing Table C-5 basis. The generated calibration reference was updated for the two new edge ids, and `calibration-gaps.json` was updated for the changed FRCP response. The FRCP package solve fixture is intentionally re-recorded to $477,142.50 below. It is read by `roundtrip::every_package_compiles_and_solves_to_litgraph_final`, which compiles each current package and compares its fresh solve to the recorded response; leaving $478,445 would fail that comparison. It is a historical baseline, but this test deliberately checks current compiled behavior against it, so this intentional package-value change requires updating it.
 
 ## CLI regression filter comparison
 
@@ -86,3 +716,45 @@ The 50 failures present on both revisions:
 - `roundtrip`: `every_package_compiles_and_solves_to_litgraph_final`, `ptab_calibrated_institution`, `ptab_ipr_estoppel_flag`, `ptab_robust_institution`.
 - `rulings`: `a_cited_excusing_event_covers_a_missed_deadline`, `an_event_after_as_of_is_rejected`, `the_shared_clock_library_is_lit_core_lowered_and_sync_builds_under_dev`.
 - `timeline`: `a_child_world_inserting_an_earlier_trigger_keeps_every_inherited_key`, `a_local_rule_raising_a_frap_limit_is_the_layer_of_its_row`, `a_restarted_or_absorbed_period_names_the_row_replacing_it`, `a_standing_order_sets_the_limit_and_its_row_names_every_layer`, `a_world_triggering_a_deadline_its_parent_left_untriggered_re_emits_it`, `an_alternate_world_filing_a_paper_shows_the_layer_that_set_its_limit`, `an_answer_to_a_notice_without_its_due_date_reads_unknown_with_why`, `ttab_opposition_matter`, `ttab_published_fixture_forks_with_unknown_deadlines`.
+
+## Rebase measurements (origin/main `bcc6bef1` → merged branch)
+
+DECIDED: Keep origin/main's typed-provenance fixture as the merge base and re-record it with the merged release binary; this preserves lg-pb1fe.44's pointer/basis fields while recording the split's current values.
+
+`calibration-gaps.json` was resolved from main's typed-provenance fixture and re-recorded with the merged release binary (`LITIGATE_RERECORD=1 cargo test --release -p litigate-cli --test roundtrip calibration_gaps`: 1 passed). Main's fixture had base value **478,445**, 10 probability rows and 10 duration rows. The merged fixture has base value **477,142.5**, with 10 probability and 10 duration rows; rows retain `pointer` and `basis` and remain ordered by basis, descending swing, then pointer.
+
+Rows with pointers present on both sides whose numbers changed:
+
+| Pointer | Main row and values | Merged row and values | Reason |
+|---|---|---|---|
+| `/edges/44/duration` | Rule 60 relief granted, 45–75 days | Same edge, 45–60 days | With the ruling now chance-controlled, the split/cleared judgment flags make the reopened neutral route part of the Rule 60 branch value. |
+| `/edges/46/duration` | Rule 60 relief granted → reopened case, 45–75 days | Same edge, 45–60 days | The reopened case clears both judgment-direction flags; its post-reopen neutral judgment route changes this duration sensitivity. |
+| `/edges/112/probability` | Trial commences → verdict rendered, 478,445 at both endpoints | Final pretrial conference → trial commences, 477,142.5 at both endpoints | The split inserts pack edges, so this array-index pointer now addresses a different edge. Its endpoint values track the base solve change caused by the Rule 60 court chance and neutral judgment direction; it is not a stable edge identity. |
+
+`frcp-fy2024.json` also changed: the 3-entry main calibration now has 4 entries, with the prior single summary-judgment duration (410.91 days) applied to both `edge-sj-ruling-summary-judgment-for-plaintiff` and `edge-sj-ruling-summary-judgment-for-defendant`. The two voluntary-dismissal entries remain 252.63 days. No authored duration changed; the same Table C-5 source, sample count (21,861), and median basis apply to both split edges.
+
+Release solve measurements, main first and merged branch second:
+
+| Target | Value | Opponent value | Policy size | Best line |
+|---|---:|---:|---:|---|
+| `lit/frcp` package | 478,445 → 477,142.5 | Not emitted by `solve` (the default scenario has no `opponent_objective`) | 103 → 373 | Before: voluntary dismissal → Rule 60 relief granted → final no-appeal. After: Rule 60 relief denied (p=0.5) → appeal window → final no-appeal. |
+| `cases/frcp-civil-case.case` | −16,655 → 75,713.461431 | Not emitted (no `opponent_objective`) | 103 → 373 | Before: formal service path reaches the 90-day service default. After: request service waiver → opponent files Rule 12(b) motion → 0.45 motion-denial branch → proceed through trial → defendant verdict (p=0.5) and defendant-judgment loss. |
+
+The current package-level best line ends at the neutral `judgment-final-no-appeal` terminal; its default package payoff is still 500,000. A neutral terminal remains reachable with positive probability from the root: voluntary dismissal → Rule 60 motion → relief granted (default-filled p=0.5) → reopened case (both flags cleared) → final judgment → notice-of-appeal window → neutral no-appeal. The matter overrides the neutral `final` outcome to $0, so that branch does not inherit the package's 500,000 default.
+
+The package value changed because Rule 60 is now a court-controlled chance node, not a choice by `self`; the denied branch and granted/reopened branch are both included. On the matter best line, actor correction is visible edge by edge: formal-service/default on main is replaced by waiver request, the opponent's Rule 12(b) move, the court's p=0.45 denial branch, and the p=0.5 defendant-verdict edge. That edge sets `judgment-for-defendant`, clears `judgment-for-plaintiff`, and selects the loss payoff. The expected matter value rises by $92,368.461431; it is not a new plaintiff-win outcome.
+
+The FRCP package golden in `crates/litigate-cli/tests/litgraph-final/packs/frcp-civil-procedure.json` moved from $478,445 to $477,142.5 because `roundtrip::every_package_compiles_and_solves_to_litgraph_final` compares it to a fresh solve. It is not an immutable external reference. The frozen `litgraph-final` provenance is historical context, not a reason to pin an intentionally changed current result.
+
+## Final gate evidence
+
+- `just lit-sync`: exit 0; regenerated locks and build outputs. `just lit-sync-check`: exit 0, locks and shared clock current, no generated files committed.
+- Release `litigate check lit cases`: `ok: true`, 0 errors. `litigate test lit/frcp`: 49 passed, 0 failed. `litigate fmt --check lit cases`: exit 0.
+- `cargo clippy -p litigate-cli --all-targets -- -D warnings`: exit 0. `cargo fmt --check`: exit 0.
+- Focused release re-records passed: `calibration_gaps` 1/1 and `every_package_compiles_and_solves_to_litgraph_final` 1/1. The corrected line-number snapshot test `cov_cmd_import::a_number_the_typed_source_cannot_hold_fails_the_check` passed 1/1.
+- Final `cargo nextest run -p litigate-cli --no-fail-fast`: 655 tests, 654 passed, 1 failed. The only final failure was `cov_cmd_value::an_edge_without_a_deadline_by_package_name`; it also failed on the separate `origin/main` clone with the same three new L9003 info entries from unchanged `lit/cov/cov.lit`, so it is a main baseline failure. The first full run additionally failed `cov_cmd_import::a_number_the_typed_source_cannot_hold_fails_the_check` because this bead shifted a label in `cases/frcp-civil-case.case` from line 34 to 41; its snapshot was updated, and it passed in the final run. All five PM-listed main reds (`ttab_check_human_output_is_limited_to_the_case_when_core_has_no_holes`, the two named director-extension tests, and the two named TTAB timeline tests) passed on the merged branch.
+
+FOLLOWUP: split blended terminals in `lit/frap`
+FOLLOWUP: split blended terminals in `lit/ptab`
+FOLLOWUP: split blended terminals in `lit/itc`
+FOLLOWUP: split blended terminals in `lit/cafc`

@@ -7,9 +7,9 @@
       "id": "frcp-civil-procedure::pre-filing",
       "label": "Pre-Filing Investigation"
     },
-    "value": 478445.0,
+    "value": 477142.5,
     "converged": true,
-    "iterations": 64,
+    "iterations": 62,
     "fee_shift_rounds": 0,
     "best_line": [
       {
@@ -21,7 +21,7 @@
         "authority": "FRCP 11(b)",
         "kind": "choice",
         "step_p": 1.0,
-        "q": 478445.0
+        "q": 477142.5
       },
       {
         "id": "frcp-civil-procedure::edge-jurisdiction-venue-check-complaint-filed",
@@ -32,7 +32,7 @@
         "authority": "28 U.S.C. 1331; 1332(a); 1391(b); FRCP 3",
         "kind": "choice",
         "step_p": 1.0,
-        "q": 485945.0
+        "q": 484642.5
       },
       {
         "id": "frcp-civil-procedure::edge-complaint-filed-service-window",
@@ -44,7 +44,7 @@
         "p": 1.0,
         "kind": "likely-draw",
         "step_p": 1.0,
-        "q": 491350.0
+        "q": 490047.5
       },
       {
         "id": "frcp-civil-procedure::edge-service-window-service-completed",
@@ -56,7 +56,7 @@
         "deadline_days": 90.0,
         "kind": "choice",
         "step_p": 1.0,
-        "q": 491350.0
+        "q": 490047.5
       },
       {
         "id": "frcp-civil-procedure::edge-service-completed-voluntary-dismissal",
@@ -67,7 +67,7 @@
         "authority": "FRCP 41(a)(1)(A)(i)",
         "kind": "choice",
         "step_p": 1.0,
-        "q": 493000.0
+        "q": 491697.5
       },
       {
         "id": "frcp-civil-procedure::edge-voluntary-dismissal-rule60-motion",
@@ -78,41 +78,30 @@
         "authority": "FRCP 60(b)",
         "kind": "choice",
         "step_p": 1.0,
-        "q": 493500.0
+        "q": 492197.5
       },
       {
-        "id": "frcp-civil-procedure::edge-rule60-dismissal-motion-relief-granted",
-        "label": "Court grants Rule 60(b) relief on just terms",
+        "id": "frcp-civil-procedure::edge-rule60-dismissal-motion-relief-denied",
+        "label": "Court denies Rule 60(b) relief",
         "from": "frcp-civil-procedure::rule60-dismissal-motion",
-        "to": "frcp-civil-procedure::rule60-relief-granted",
-        "role": "self",
-        "authority": "FRCP 60(b)",
-        "kind": "choice",
-        "step_p": 1.0,
-        "q": 500000.0
-      },
-      {
-        "id": "frcp-civil-procedure::edge-rule60-relief-granted-reopened-case",
-        "label": "Proceed in the reopened action on the terms ordered",
-        "from": "frcp-civil-procedure::rule60-relief-granted",
-        "to": "frcp-civil-procedure::final-judgment-entered",
+        "to": "frcp-civil-procedure::rule60-relief-denied",
         "role": "nature",
         "authority": "FRCP 60(b)",
-        "p": 1.0,
+        "p": 0.5,
         "kind": "likely-draw",
-        "step_p": 1.0,
-        "q": 500000.0
+        "step_p": 0.5,
+        "q": 497395.0
       },
       {
-        "id": "frcp-civil-procedure::edge-final-judgment-entered-notice-of-appeal-window",
-        "label": "No post-trial motion -- proceed directly toward appeal",
-        "from": "frcp-civil-procedure::final-judgment-entered",
+        "id": "frcp-civil-procedure::edge-rule60-relief-denied-appeal",
+        "label": "Appeal the order denying Rule 60(b) relief",
+        "from": "frcp-civil-procedure::rule60-relief-denied",
         "to": "frcp-civil-procedure::notice-of-appeal-window",
         "role": "self",
         "authority": "FRAP 4(a)(1)(A)",
         "kind": "choice",
         "step_p": 1.0,
-        "q": 500000.0
+        "q": 497395.0
       },
       {
         "id": "frcp-civil-procedure::edge-notice-of-appeal-window-judgment-final-no-appeal",
@@ -126,28 +115,30 @@
         "q": 500000.0
       }
     ],
-    "policy_size": 103,
+    "policy_size": 373,
     "policy": null,
     "values": null
   },
   "warnings": [
     {
       "code": "compile",
-      "count": 5,
-      "example": "state flags expanded the graph: 136 additional node(s) for reachable flag combinations",
+      "count": 9,
+      "example": "state flags expanded the graph: 675 additional node(s) for reachable flag combinations",
       "at": []
     },
     {
       "code": "mixed-node",
-      "count": 6,
+      "count": 18,
       "example": "opponent may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
       "at": [
         "frcp-civil-procedure::default-entered",
         "frcp-civil-procedure::discovery-closed",
         "frcp-civil-procedure::discovery-open",
+        "frcp-civil-procedure::notice-of-appeal-window{judgment-for-plaintiff}",
+        "frcp-civil-procedure::notice-of-appeal-window{fee-motion-filed,judgment-for-plaintiff}",
+        "frcp-civil-procedure::notice-of-appeal-window{fee-motion-filed,fee-motion-supplemented,judgment-for-plaintiff}",
         "frcp-civil-procedure::default-entered{waived-12h-defenses}",
-        "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
-        "frcp-civil-procedure::discovery-closed{waived-12h-defenses}"
+        "frcp-civil-procedure::discovery-open{waived-12h-defenses}"
       ]
     },
     {
@@ -158,7 +149,7 @@
     },
     {
       "code": "probability-fill",
-      "count": 29,
+      "count": 99,
       "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
       "at": [
         "frcp-civil-procedure::amended-complaint-filed",
@@ -168,7 +159,7 @@
         "frcp-civil-procedure::notice-of-appeal-filed",
         "frcp-civil-procedure::parties-joined",
         "frcp-civil-procedure::reply-evidence-ruling",
-        "frcp-civil-procedure::rule60-relief-granted"
+        "frcp-civil-procedure::rule60-dismissal-motion"
       ]
     }
   ]

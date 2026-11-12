@@ -358,6 +358,7 @@ fn terminal_copy(graph: &Graph, node: usize) -> usize {
 }
 
 #[test]
+#[allow(clippy::too_many_lines)]
 fn cafc_cert_terminals_preserve_panel_direction_and_neutral_stakes() {
     let out = scratch("cafc-cert-terminal-split");
     let built = litigate(&["build", "lit/cafc", "--out", out.to_str().unwrap()]);

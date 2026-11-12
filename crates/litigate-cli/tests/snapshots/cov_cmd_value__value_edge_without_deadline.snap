@@ -1,6 +1,5 @@
 ---
 source: crates/litigate-cli/tests/cov_cmd_value.rs
-assertion_line: 93
 expression: stable(&run.json)
 ---
 {
@@ -20,9 +19,9 @@ expression: stable(&run.json)
     "id": "cov-pack::default",
     "span": {
       "file": "lit/cov/cov.lit",
-      "line": 91,
+      "line": 96,
       "col": 3,
-      "end_line": 91,
+      "end_line": 96,
       "end_col": 84
     },
     "steps": [
@@ -41,9 +40,9 @@ expression: stable(&run.json)
         "known_at": "2025-01-01",
         "span": {
           "file": "lit/cov/cov.lit",
-          "line": 77,
+          "line": 82,
           "col": 1,
-          "end_line": 92,
+          "end_line": 97,
           "end_col": 2
         }
       }
@@ -153,10 +152,10 @@ expression: stable(&run.json)
       "severity": "warning",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 52,
+        "line": 53,
         "col": 3,
-        "end_line": 52,
-        "end_col": 91
+        "end_line": 55,
+        "end_col": 4
       },
       "message": "deadline `amended-answer-period` has no test that evaluates `deadline(amended-answer-period)`",
       "fixes": [
@@ -165,10 +164,10 @@ expression: stable(&run.json)
             {
               "span": {
                 "file": "lit/cov/cov.lit",
-                "line": 52,
-                "col": 91,
-                "end_line": 52,
-                "end_col": 91
+                "line": 55,
+                "col": 4,
+                "end_line": 55,
+                "end_col": 4
               },
               "replacement": "\n\ntest \"amended-answer-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(amended-answer-period) == <YYYY-MM-DD>\n}"
             }
@@ -186,10 +185,10 @@ expression: stable(&run.json)
       "severity": "warning",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 57,
+        "line": 60,
         "col": 3,
-        "end_line": 57,
-        "end_col": 74
+        "end_line": 62,
+        "end_col": 4
       },
       "message": "deadline `answer-period` has no test that evaluates `deadline(answer-period)`",
       "fixes": [
@@ -198,10 +197,10 @@ expression: stable(&run.json)
             {
               "span": {
                 "file": "lit/cov/cov.lit",
-                "line": 57,
-                "col": 74,
-                "end_line": 57,
-                "end_col": 74
+                "line": 62,
+                "col": 4,
+                "end_line": 62,
+                "end_col": 4
               },
               "replacement": "\n\ntest \"answer-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(answer-period) == <YYYY-MM-DD>\n}"
             }
@@ -219,9 +218,9 @@ expression: stable(&run.json)
       "severity": "warning",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 60,
+        "line": 65,
         "col": 1,
-        "end_line": 60,
+        "end_line": 65,
         "end_col": 135
       },
       "message": "deadline `brief-period` has no test that evaluates `deadline(brief-period)`",
@@ -231,9 +230,9 @@ expression: stable(&run.json)
             {
               "span": {
                 "file": "lit/cov/cov.lit",
-                "line": 60,
+                "line": 65,
                 "col": 135,
-                "end_line": 60,
+                "end_line": 65,
                 "end_col": 135
               },
               "replacement": "\n\ntest \"brief-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(brief-period) == <YYYY-MM-DD>\n}"
@@ -252,9 +251,9 @@ expression: stable(&run.json)
       "severity": "warning",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 64,
+        "line": 69,
         "col": 1,
-        "end_line": 64,
+        "end_line": 69,
         "end_col": 123
       },
       "message": "deadline `reply-period` has no test that evaluates `deadline(reply-period)`",
@@ -264,9 +263,9 @@ expression: stable(&run.json)
             {
               "span": {
                 "file": "lit/cov/cov.lit",
-                "line": 64,
+                "line": 69,
                 "col": 123,
-                "end_line": 64,
+                "end_line": 69,
                 "end_col": 123
               },
               "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}"
@@ -281,49 +280,33 @@ expression: stable(&run.json)
       }
     },
     {
-      "code": "L9003",
-      "severity": "info",
+      "code": "L9002",
+      "severity": "warning",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 101,
-        "col": 51,
-        "end_line": 101,
-        "end_col": 94
+        "line": 85,
+        "col": 3,
+        "end_line": 89,
+        "end_col": 4
       },
-      "message": "the edge `answered -> judgment-entered` has no id, so cases and links cannot name it",
-      "fingerprint": "e5c1adf9e8679fff",
+      "message": "hole: the period declares neither a typed `extend` grant, a typed `delegable` extension, nor an `extend { never ... }` lock",
+      "fingerprint": "8c554a3789560f6b",
       "world": {
         "name": "actual"
       }
     },
     {
-      "code": "L9003",
-      "severity": "info",
+      "code": "L9002",
+      "severity": "warning",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 105,
+        "line": 90,
         "col": 3,
-        "end_line": 105,
-        "end_col": 42
+        "end_line": 95,
+        "end_col": 4
       },
-      "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it",
-      "fingerprint": "db655265617c4dcf",
-      "world": {
-        "name": "actual"
-      }
-    },
-    {
-      "code": "L9003",
-      "severity": "info",
-      "span": {
-        "file": "lit/cov/cov.lit",
-        "line": 106,
-        "col": 3,
-        "end_line": 106,
-        "end_col": 56
-      },
-      "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it",
-      "fingerprint": "db61ec6561796aa6",
+      "message": "hole: the period declares neither a typed `extend` grant, a typed `delegable` extension, nor an `extend { never ... }` lock",
+      "fingerprint": "8c51e43789532c42",
       "world": {
         "name": "actual"
       }

@@ -27,7 +27,8 @@ use support::{copy_dir, litigate_in, repo, scratch};
 const LEGACY_OPS: &str = "op [extend, shorten, set, suspend, compute_method]";
 
 /// Clauses in the converted form across the current corpus (including
-/// derived package copies):
+/// derived package copies). The count fell from 368 to 306 when MPEP's
+/// extension delegations became typed grants (lg-pb1fe.36):
 /// lg-flu.29 then removed the four on the certiorari periods (frap, cafc)
 /// and the Federal Circuit PTAB and TTAB notice-of-appeal periods, now
 /// extended only by a Justice or the Director; lg-962.10.1 added two in
@@ -35,7 +36,7 @@ const LEGACY_OPS: &str = "op [extend, shorten, set, suspend, compute_method]";
 /// limits (FRAP 32(e), § 42.24(a)(2)); lg-red5 one, on the FRAP 40(d)(1)
 /// United States party rehearing period. The FRCP 54(d)(2)(B) fee clause
 /// is formatted as a top-level multiline block and counts too (lg-3vd1).
-const CONVERTED: usize = 368;
+const CONVERTED: usize = 306;
 
 /// There are no extra corrections in this corpus: the district-court
 /// notice-of-appeal period is authored once in `appeal-periods.lit`.

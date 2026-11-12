@@ -356,6 +356,7 @@ fn ttab_published_fixture_forks_with_unknown_deadlines() {
     assert!(unknown.iter().any(|r| r["world"] == "w0"));
     assert!(unknown.iter().any(|r| r["world"] == "w1"));
     assert!(unknown.iter().all(|r| r["due"].is_null()));
+    // The fixture now uses TTAB's canonical `respondent` actor, changing the event label and offsets.
     insta::assert_json_snapshot!("ttab_published_fixture", t);
 }
 

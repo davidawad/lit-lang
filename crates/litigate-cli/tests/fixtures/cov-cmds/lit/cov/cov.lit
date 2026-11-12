@@ -49,6 +49,7 @@ calendar federal-holidays cite "FRCP 6(a)(6)"
 
 rule duty amend-duty cite "FRCP 15(a)(3)"
 {
+  // Snapshot reason: typed FRCP 6(b)(1) grants add source spans, moving derived locations.
   deadline amended-answer-period: 14.days after Served(amended_complaint) counted_by frcp6 {
     extend { by court, discretion GoodCause, cite "FRCP 6(b)(1)" }
   }

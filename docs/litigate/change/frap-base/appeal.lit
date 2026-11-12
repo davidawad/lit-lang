@@ -119,6 +119,14 @@ test "a notice of appeal is due 30 days after entry" cite "FRAP (2008 ed.) 4(a)(
   expect deadline(notice-of-appeal) == 2008-10-30
 }
 
+// Hand calculation: exclude July 4, count 30 calendar days through August 3
+// (Saturday), then FRAP 26(a) rolls the last day to Monday, August 5.
+test "a notice of appeal rolls a weekend last day" cite "FRAP (2008 ed.) 4(a)(1)(A)" historical
+{
+  given JudgmentEntered() on 1968-07-04
+  expect deadline(notice-of-appeal) == 1968-08-05
+}
+
 test "a motion to extend is due 30 days after the appeal time expires" cite "FRAP (2008 ed.) 4(a)(5)(A)(i)" historical
 {
   given JudgmentEntered() on 2008-09-30
@@ -130,6 +138,14 @@ test "before 2005 a motion to reopen is due 7 days after notice of entry, weeken
 {
   given NoticeOfEntryReceived() on 1999-05-28
   expect deadline(reopen-motion-window) == 1999-06-04
+}
+
+// Hand calculation: exclude Sunday, December 1; count December 2–8 as
+// seven days. The last day is Sunday, so FRAP 26(a) rolls it to December 9.
+test "a seven-day reopening window rolls a weekend last day" cite "FRAP (2008 ed.) 4(a)(6)" historical
+{
+  given NoticeOfEntryReceived() on 1991-12-01
+  expect deadline(reopen-motion-window) == 1991-12-09
 }
 
 test "the outer bound is 180 days after entry" cite "FRAP (2008 ed.) 4(a)(6)" historical

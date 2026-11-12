@@ -18,3 +18,11 @@ test "from December 1, 2009 the window is 14 days, every day counted" cite "FRAP
   given NoticeOfEntryReceived() on 2012-03-02
   expect deadline(reopen-motion-window-2009) == 2012-03-16
 }
+
+// Hand calculation: exclude December 5; count 14 calendar days through
+// December 19 (Saturday), then FRAP 26(a) rolls the last day to Monday 21.
+test "the 2009 reopening window rolls a weekend last day" cite "FRAP (2009) 4(a)(6)"
+{
+  given NoticeOfEntryReceived() on 2009-12-05
+  expect deadline(reopen-motion-window-2009) == 2009-12-21
+}

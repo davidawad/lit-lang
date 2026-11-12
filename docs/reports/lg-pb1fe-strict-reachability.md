@@ -27,6 +27,8 @@ The index maps one declaration per qualified key; each later declaration encount
 
 These collisions are same-kind versions of one logical declaration id, so they cannot make a different kind of declaration or an unrelated hole reachable. The current one-value index follows the last version's references; it can omit references unique to an earlier version. This is the pre-existing behavior for Metadata declarations and was not changed by the Metadata-less traversal.
 
+DECIDED: retain the qualified bare-id index -- the corpus has no cross-kind collisions, so a kind-qualified index is not needed to prevent unrelated holes from becoming reachable.
+
 ## FRCP timing
 
 Three release-binary runs of `litigate check --profile strict lit/frcp`; baseline is release `origin/main` at `70b15de0`, with its own `CARGO_TARGET_DIR`.

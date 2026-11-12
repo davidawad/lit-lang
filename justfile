@@ -131,6 +131,10 @@ cov-litigate *CRATES=litigate_crates:
 cov-gate-test:
     scripts/cov-gate self-test
 
+# Ratchet for the repository's source-file ceiling (listed files may shrink).
+line-ceiling-test:
+    cargo nextest run -p litigate-base --test line_ceiling
+
 # GitHub-mirrors-GitLab sync verdicts against throwaway bare repositories,
 # including the divergence refusal (maintenance/mirror-sync/README.md).
 mirror-sync-test:
@@ -281,7 +285,7 @@ nix-check:
 
 # The single CI entry point: fast, deterministic gates only. Coverage,
 # audit, and deny hit the network/build cache so they're last.
-ci: fmt-check lint cov-gate-test mirror-sync-test lit-sync-check tree-sitter-test test expect emacs-test ts-test doctest cov cov-litigate audit deny
+ci: fmt-check lint line-ceiling-test cov-gate-test mirror-sync-test lit-sync-check tree-sitter-test test expect emacs-test ts-test doctest cov cov-litigate audit deny
     @echo "ci: all gates passed"
 
 # The expect tests (SPEC §5.8, expect tests): each matter under
